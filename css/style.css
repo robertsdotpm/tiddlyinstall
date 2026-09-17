@@ -257,3 +257,7 @@ td input, td select { min-width: 110px; }
   margin: 0 4px 4px 0;
   white-space: nowrap;
 }
+
+.section-title { font-size: 1.05em; margin: 0 0 2px; }
+.section-intro { margin: 0 0 12px; }
+hr { border: 0; border-top: 1px solid var(--border); margin: 16px 0; }

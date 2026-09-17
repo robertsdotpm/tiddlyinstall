@@ -28,6 +28,39 @@
 
       <!-- ===== Simple view: the only things we need ===== -->
       <section class="panel">
+        <h2 class="section-title">App details</h2>
+        <p class="small muted section-intro">Used for the installer and for the installed app's launcher.
+          Leave blank to take them from the project.</p>
+
+        <div class="row">
+          <div class="field">
+            <label for="app-name">Name</label>
+            <input type="text" id="app-name" name="app_name" maxlength="64" placeholder="My App">
+          </div>
+          <div class="field">
+            <label for="app-version">Version</label>
+            <input type="text" id="app-version" name="app_version" pattern="\d+(\.\d+){0,3}" placeholder="1.4.0">
+            <span class="hint">Numbers only, up to four parts.</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="app-description">Description</label>
+            <input type="text" id="app-description" name="app_description" maxlength="120" placeholder="One line about what the app does">
+          </div>
+          <div class="field">
+            <label for="app-publisher">Publisher</label>
+            <input type="text" id="app-publisher" name="app_publisher" placeholder="Your name or company">
+          </div>
+        </div>
+        <div class="field">
+          <label for="icon">Icon</label>
+          <input type="file" id="icon" name="icon" accept=".png,.svg">
+          <span class="hint">A square PNG, 1024×1024 or larger. We make the Windows, Linux and macOS icon files from it.</span>
+        </div>
+
+        <hr>
+
         <div class="field">
           <label for="source">What do you want to package?</label>
           <input type="text" id="source" name="source" required
@@ -66,25 +99,6 @@
       <h2>Customise <span class="muted small">(optional)</span></h2>
 
       <div class="customise">
-
-        <details>
-          <summary><span>App name and icon</span><span class="default">From the project</span></summary>
-          <div class="row">
-            <div class="field">
-              <label for="app-name">Display name</label>
-              <input type="text" id="app-name" name="app_name" placeholder="Project name">
-            </div>
-            <div class="field">
-              <label for="app-version">Version</label>
-              <input type="text" id="app-version" name="app_version" placeholder="From the release tag">
-            </div>
-          </div>
-          <div class="field">
-            <label for="icon">Icon</label>
-            <input type="file" id="icon" name="icon" accept=".png,.svg,.ico,.icns">
-            <span class="hint">A 1024×1024 PNG or SVG. Default: a generic app icon.</span>
-          </div>
-        </details>
 
         <details>
           <summary><span>Source version</span><span class="default">Latest release</span></summary>
