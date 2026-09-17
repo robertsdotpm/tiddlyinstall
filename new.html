@@ -144,17 +144,13 @@
         </details>
 
         <details>
-          <summary><span>Platforms and signing</span><span class="default">64-bit Intel + ARM, unsigned</span></summary>
+          <summary><span>Platforms</span><span class="default">64-bit Intel + ARM</span></summary>
 
           <div class="platform-block win-settings">
             <span class="label">Windows</span>
             <label class="choice"><input type="checkbox" name="win_x64" checked> x64</label>
             <label class="choice"><input type="checkbox" name="win_arm64" checked> arm64</label>
             <label class="choice"><input type="checkbox" name="win_admin" checked> Require administrator rights</label>
-            <div class="field">
-              <label for="win-cert">Signing certificate (.pfx)</label>
-              <input type="file" id="win-cert" name="win_cert" accept=".pfx,.p12">
-            </div>
           </div>
 
           <div class="platform-block linux-settings">
@@ -180,11 +176,6 @@
                 <option>12 Monterey</option><option>13 Ventura</option><option>14 Sonoma</option><option>15 Sequoia</option>
               </select>
             </div>
-            <div class="field">
-              <label for="mac-identity">Developer ID identity</label>
-              <input type="text" id="mac-identity" name="mac_identity" placeholder="Developer ID Application: Name (TEAMID)">
-            </div>
-            <label class="choice"><input type="checkbox" name="mac_notarize"> Notarize with Apple</label>
           </div>
 
           <p class="small muted platforms-none">Tick at least one platform above.</p>
