@@ -1,0 +1,1302 @@
+[
+  {
+    "runtime": "rust",
+    "major": "1.0",
+    "os": "windows",
+    "arch": "amd64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.0.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.0",
+    "os": "windows",
+    "arch": "x86",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.0.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.0",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.0.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.0",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.0.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.0",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.0.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.0",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.0.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.0",
+    "os": "freebsd",
+    "arch": "amd64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.0.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.1",
+    "os": "windows",
+    "arch": "amd64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.1.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.1",
+    "os": "windows",
+    "arch": "x86",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.1.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.1",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.1.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.1",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.1.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.1",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.1.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.1",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.1.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.1",
+    "os": "freebsd",
+    "arch": "amd64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.1.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.2",
+    "os": "windows",
+    "arch": "x86",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.2.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.2",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.2.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.2",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.2.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.2",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.2.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.2",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.2.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.2",
+    "os": "freebsd",
+    "arch": "amd64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.2.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.3",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.3.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.3",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.3.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.3",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.3.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.3",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.3.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.3",
+    "os": "freebsd",
+    "arch": "amd64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.3.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.4",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.4.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.4",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.4.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.4",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.4.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.4",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.4.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.4",
+    "os": "freebsd",
+    "arch": "amd64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.4.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.5",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.5.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.5",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.5.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.5",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.5.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.5",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.5.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.5",
+    "os": "freebsd",
+    "arch": "amd64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.5.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.6",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.6.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.6",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.6.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.6",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.6.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.6",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.6.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.6",
+    "os": "freebsd",
+    "arch": "amd64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.6.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.7",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.7.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.7",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.7.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.7",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.7.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.7",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.7.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.7",
+    "os": "freebsd",
+    "arch": "amd64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.7.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.8",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.8.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.8",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.8.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.8",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.8.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.8",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.8.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.8",
+    "os": "freebsd",
+    "arch": "amd64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.8.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.9",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.9.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.9",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.9.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.10",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.10.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.10",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.10.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.11",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.11.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.11",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.11.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.12",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.12.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.12",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.12.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.13",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.13.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.13",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.13.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.14",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.14.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.14",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.14.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.15",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.15.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.15",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.15.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.16",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.16.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.16",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.16.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.17",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.17.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.17",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.17.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.18",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.18.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.18",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.18.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.19",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.19.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.19",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.19.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.20",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.20.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.20",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.20.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.21",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.21.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.21",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.21.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.22",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.22.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.22",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.22.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.23",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.23.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.23",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.23.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.24",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.24.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.24",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.24.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.25",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.25.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.25",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.25.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.26",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.26.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.26",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.26.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.27",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.27.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.27",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.27.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.28",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.28.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.28",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.28.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.29",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.29.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.29",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.29.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.30",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.30.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.30",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.30.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.31",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.31.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.31",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.31.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.32",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.32.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.32",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.32.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.33",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.33.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.33",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.33.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.34",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.34.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.34",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.34.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.35",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.35.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.35",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.35.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.36",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.36.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.36",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.36.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.37",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.37.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.37",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.37.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.38",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.38.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.38",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.38.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.39",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.39.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.39",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.39.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.40",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.40.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.40",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.40.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.41",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.41.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.41",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.41.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.42",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.42.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.42",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.42.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.43",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.43.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.43",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.43.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.44",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.44.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.44",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.44.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.45",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.45.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.45",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.45.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.46",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.46.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.46",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.46.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.47",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.47.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.47",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.47.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.48",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.48.0.toml"
+    ]
+  },
+  {
+    "runtime": "rust",
+    "major": "1.48",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no combined toolchain found for this os/arch/variant at this major (hardware/target may postdate this release, or the manifest never listed it as available)",
+    "looked_at": [
+      "https://static.rust-lang.org/dist/channel-rust-1.48.0.toml"
+    ]
+  }
+]

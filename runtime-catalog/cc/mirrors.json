@@ -1,0 +1,1035 @@
+{
+ "note": "GitHub release assets (llvm/llvm-project, brechtsanders/winlibs_mingw, skeeto/w64devkit) are canonical. Raw GitHub-proxy mirrors (ghproxy.com-style services that proxy an arbitrary github.com URL on request) are intentionally excluded per catalog policy: they cache on first request rather than actually mirroring, so a 200 response proves nothing about the file having been there before. Curated 'github-release' mirrors run by university networks (which rsync a fixed list of popular projects ahead of time) are a different thing and are evaluated case by case -- see the NJU entry below, and the 2026-09-17 mirror hunt in NOTES.md for what was tried on TUNA/USTC and rejected.",
+ "confirmed": [
+  {
+   "runtime": "gcc",
+   "url_template": "https://ftp.gwdg.de/pub/misc/gcc/releases/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": [
+    "4.9.4",
+    "10.5.0",
+    "14.4.0",
+    "15.3.0",
+    "16.2.0"
+   ],
+   "method": "HEAD, size matched ftp.gnu.org on 5/5 sampled versions (old and new majors); applied to all gcc-source entries sharing this layout",
+   "source_list": "https://gcc.gnu.org/mirrors.html"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://ftp.fu-berlin.de/unix/languages/gcc/releases/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": [
+    "4.9.4",
+    "10.5.0",
+    "14.4.0",
+    "15.3.0",
+    "16.2.0"
+   ],
+   "method": "HEAD, size matched ftp.gnu.org on 5/5 sampled versions (old and new majors); applied to all gcc-source entries sharing this layout",
+   "source_list": "https://gcc.gnu.org/mirrors.html"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": [
+    "4.9.4",
+    "10.5.0",
+    "14.4.0",
+    "15.3.0",
+    "16.2.0"
+   ],
+   "method": "HEAD, size matched ftp.gnu.org on 5/5 sampled versions (old and new majors); applied to all gcc-source entries sharing this layout",
+   "source_list": "https://gcc.gnu.org/mirrors.html"
+  },
+  {
+   "runtime": "gcc",
+   "region": "Canada (Americas)",
+   "operator": "University of Waterloo Computer Science Club",
+   "url_template": "https://mirror.csclub.uwaterloo.ca/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "protocols": {
+    "https": true,
+    "http": true
+   },
+   "confirmed_on": "all 13 gcc/source releases.json entries (4.9.4 through 16.2.0)",
+   "method": "HEAD, size matched ftp.gnu.org on 13/13 (both https and http)",
+   "hash_verified_sample": "not applicable: every gcc-source file is >60MB and none carry a vendor checksum (checksum is null on all 13 entries)",
+   "source_list": "https://www.gnu.org/prep/ftp.html",
+   "checked_at": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "region": "USA (Americas)",
+   "operator": "Open Computing Facility, UC Berkeley",
+   "url_template": "https://mirrors.ocf.berkeley.edu/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "protocols": {
+    "https": true,
+    "http": true
+   },
+   "confirmed_on": "all 13 gcc/source releases.json entries",
+   "method": "HEAD, size matched ftp.gnu.org on 13/13 (both https and http)",
+   "hash_verified_sample": "not applicable (see uwaterloo entry)",
+   "source_list": "https://www.gnu.org/prep/ftp.html",
+   "checked_at": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "region": "Brazil (Americas)",
+   "operator": "UFPR (C3SL)",
+   "url_template": "https://gnu.c3sl.ufpr.br/ftp/gcc/gcc-{version}/gcc-{version}.{format}",
+   "protocols": {
+    "https": true,
+    "http": true
+   },
+   "confirmed_on": "all 13 gcc/source releases.json entries",
+   "method": "HEAD, size matched ftp.gnu.org on 13/13 (both https and http)",
+   "hash_verified_sample": "not applicable (see uwaterloo entry)",
+   "source_list": "https://www.gnu.org/prep/ftp.html",
+   "checked_at": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "region": "Japan (Asia)",
+   "operator": "JAIST",
+   "url_template": "https://ftp.jaist.ac.jp/pub/GNU/gcc/gcc-{version}/gcc-{version}.{format}",
+   "protocols": {
+    "https": true,
+    "http": true
+   },
+   "confirmed_on": "all 13 gcc/source releases.json entries",
+   "method": "HEAD, size matched ftp.gnu.org on 13/13 (both https and http)",
+   "hash_verified_sample": "not applicable (see uwaterloo entry)",
+   "source_list": "https://www.gnu.org/prep/ftp.html",
+   "checked_at": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "region": "South Korea (Asia)",
+   "operator": "KAIST",
+   "url_template": "https://ftp.kaist.ac.kr/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "protocols": {
+    "https": true,
+    "http": true
+   },
+   "confirmed_on": "all 13 gcc/source releases.json entries",
+   "method": "HEAD, size matched ftp.gnu.org on 13/13 (both https and http)",
+   "hash_verified_sample": "not applicable (see uwaterloo entry)",
+   "source_list": "https://www.gnu.org/prep/ftp.html",
+   "checked_at": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "region": "Taiwan (Asia)",
+   "operator": "TWDS",
+   "url_template": "https://mirror.twds.com.tw/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "protocols": {
+    "https": true,
+    "http": true
+   },
+   "confirmed_on": "all 13 gcc/source releases.json entries",
+   "method": "HEAD, size matched ftp.gnu.org on 13/13 (both https and http)",
+   "hash_verified_sample": "not applicable (see uwaterloo entry)",
+   "notes": "Flaky under this task's automated HEAD-check script specifically -- every request from the long-running Python process failed with a connection error (no HTTP status at all), while isolated single-shot curl/python requests to the exact same URLs always succeeded immediately, including moments before and after the failing runs. Root cause not identified (suspect an abuse heuristic keyed on sustained connections from one process rather than request volume, since requests were paced one at a time). Confirmed instead via a fresh one-off process; downstream users should treat this mirror as usable but not assume a long batch of requests to it will all succeed.",
+   "source_list": "https://www.gnu.org/prep/ftp.html",
+   "checked_at": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "region": "New Caledonia (Oceania)",
+   "operator": "Lagoon",
+   "url_template": "https://mirror.lagoon.nc/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "protocols": {
+    "https": true,
+    "http": true
+   },
+   "confirmed_on": "all 13 gcc/source releases.json entries",
+   "method": "HEAD, size matched ftp.gnu.org on 13/13 (both https and http)",
+   "hash_verified_sample": "not applicable (see uwaterloo entry)",
+   "notes": "Only Oceania-region host on the GNU mirror list; no separate Australia/NZ mirror was found there.",
+   "source_list": "https://www.gnu.org/prep/ftp.html",
+   "checked_at": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "region": "South Africa (Africa)",
+   "operator": "University of the Free State",
+   "url_template": "https://mirror.ufs.ac.za/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "protocols": {
+    "https": true,
+    "http": true
+   },
+   "confirmed_on": "all 13 gcc/source releases.json entries",
+   "method": "HEAD, size matched ftp.gnu.org on 13/13 (both https and http)",
+   "hash_verified_sample": "not applicable (see uwaterloo entry)",
+   "source_list": "https://www.gnu.org/prep/ftp.html",
+   "checked_at": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "region": "Morocco (Africa)",
+   "operator": "MARWAN",
+   "url_template": "https://mirror.marwan.ma/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "protocols": {
+    "https": true,
+    "http": true
+   },
+   "confirmed_on": "all 13 gcc/source releases.json entries",
+   "method": "HEAD, size matched ftp.gnu.org on 13/13 (both https and http)",
+   "hash_verified_sample": "not applicable (see uwaterloo entry)",
+   "source_list": "https://www.gnu.org/prep/ftp.html",
+   "checked_at": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "region": "Netherlands (Europe)",
+   "operator": "NLUUG",
+   "url_template": "https://ftp.nluug.nl/pub/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "protocols": {
+    "https": true,
+    "http": true
+   },
+   "confirmed_on": "all 13 gcc/source releases.json entries",
+   "method": "HEAD, size matched ftp.gnu.org on 13/13 (both https and http)",
+   "hash_verified_sample": "not applicable (see uwaterloo entry)",
+   "source_list": "https://www.gnu.org/prep/ftp.html",
+   "checked_at": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "region": "Spain (Europe)",
+   "operator": "RedIRIS",
+   "url_template": "https://ftp.rediris.es/mirror/GNU/gcc/gcc-{version}/gcc-{version}.{format}",
+   "protocols": {
+    "https": true,
+    "http": true
+   },
+   "confirmed_on": "all 13 gcc/source releases.json entries",
+   "method": "HEAD, size matched ftp.gnu.org on 13/13 (both https and http)",
+   "hash_verified_sample": "not applicable (see uwaterloo entry)",
+   "source_list": "https://www.gnu.org/prep/ftp.html",
+   "checked_at": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "region": "Poland (Europe)",
+   "operator": "ICM, University of Warsaw",
+   "url_template": "https://sunsite.icm.edu.pl/pub/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "protocols": {
+    "https": true,
+    "http": true
+   },
+   "confirmed_on": "all 13 gcc/source releases.json entries",
+   "method": "HEAD, size matched ftp.gnu.org on 13/13 (both https and http)",
+   "hash_verified_sample": "not applicable (see uwaterloo entry)",
+   "source_list": "https://www.gnu.org/prep/ftp.html",
+   "checked_at": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "region": "Russia (Europe/Asia)",
+   "operator": "TrueNetwork",
+   "url_template": "https://mirror.truenetwork.ru/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "protocols": {
+    "https": true,
+    "http": true
+   },
+   "confirmed_on": "all 13 gcc/source releases.json entries",
+   "method": "HEAD, size matched ftp.gnu.org on 13/13 (both https and http)",
+   "hash_verified_sample": "not applicable (see uwaterloo entry)",
+   "source_list": "https://www.gnu.org/prep/ftp.html",
+   "checked_at": "2026-09-17"
+  },
+  {
+   "runtime": "llvm+gcc",
+   "name": "NJU (Nanjing University) github-release mirror",
+   "region": "China",
+   "operator": "e-Science Center, Nanjing University",
+   "base": "https://mirror.nju.edu.cn/github-release/",
+   "covers": [
+    "llvm/llvm-project (only the single newest tagged release at any time -- currently llvmorg-23.1.1)",
+    "brechtsanders/winlibs_mingw (a short rolling window of recent tags -- currently the last ~9: GCC 16.1.0 posix ucrt/msvcrt releases 1-4, and GCC 16.2.0 posix ucrt/msvcrt release 1)"
+   ],
+   "does_not_cover": "skeeto/w64devkit (404 -- not mirrored here at all)",
+   "protocols": {
+    "https": true,
+    "http": "not offered, https only"
+   },
+   "method": "Directory listing fetched live and matched to releases.json entries by exact filename (the mirror's subdirectories are named by human-readable release title, not the GitHub tag, so filename is the only reliable join key); every matched candidate is then HEAD-checked for an exact Content-Length match before being applied -- this is a rolling mirror, never applied by template alone. Requires a warm-up GET (the server 302s once to set a bot-check cookie, then serves normally) -- see extra_mirrors.py.",
+   "confirmed_count": "4/4 llvm-23.1.1 releases.json entries (windows/amd64/msvc, linux/amd64, linux/arm64, macos/arm64); 36/36 currently-listed winlibs files across the 9 rolling-window releases",
+   "hash_verified_sample": "llvm_man_pages-23.1.1.tar.xz (357052 bytes, well under the 60MB cap) downloaded in full from this mirror and sha256-verified byte-for-byte against the GitHub Releases API digest for that exact asset (66f368b2...708427349) -- exact match. This file isn't itself a releases.json entry (only the toolchain archives are catalogued), but it's served from the identical mirror infrastructure as the four llvm-23.1.1 entries that are, so it stands in for them: their own files are all 0.5-2GB, too large to fully download per the task budget. WinLibs files (100-300MB, also over the cap) were instead verified via their `.sha256` sidecar files (tiny: 129 bytes), whose content was fetched and compared textually against the vendor checksum already recorded in each entry -- exact match, e.g. winlibs-i686-posix-dwarf-gcc-16.2.0-mingw-w64ucrt-14.0.0-r1.7z's sidecar reads the same sha256 already in releases.json.",
+   "checked_at": "2026-09-17"
+  },
+  {
+   "runtime": "llvm",
+   "name": "Internet Archive Wayback Machine",
+   "base": "https://web.archive.org/web/{timestamp}id_/{original_url}",
+   "covers": "releases.llvm.org (LLVM majors 3.4-6, the pre-GitHub-Releases era): 142 releases.json entries checked individually",
+   "method": "One CDX API query per run (https://web.archive.org/cdx/search/cdx, filtered to releases.llvm.org and to toolchain-archive file extensions) gets every URL ever captured under that path with a timestamp; each releases.json entry's most recent capture is then HEAD-checked for an exact Content-Length match. Genuinely partial, exactly as expected: never applied by template, every one of the 142 was individually confirmed or rejected.",
+   "confirmed_count": "139/142 (98%) size-matched exactly; 3/142 have no capture in the CDX index at all (real gaps, not errors -- see NOTES.md)",
+   "hash_verified_sample": "no vendor checksum exists for any releases.llvm.org entry (recorded as checksum: null, same as GCC source, per NOTES.md), so a hash comparison isn't possible for this category. Instead, LLVM-3.4-win32.exe (23304447 bytes, under the 60MB cap) was downloaded in full from its Wayback snapshot and confirmed to be a well-formed, complete, non-truncated NSIS installer executable (verified with `file`) at exactly the expected byte count -- the strongest integrity check available without a published hash.",
+   "rate_limiting": "archive.org rate-limits this network hard and unpredictably (plain HEAD requests intermittently returned connection errors with no HTTP status at all, and the CDX endpoint itself failed outright on one run) -- extra_mirrors.py retries with backoff and never caches a negative result from a failed fetch (a bug that briefly did exactly that, on both the per-entry HEAD check and the CDX fetch, was caught and fixed mid-hunt -- see NOTES.md), and time-boxes itself to ~90s of Wayback work per run so a flaky run doesn't hang. Completing all 142 checks took 9 separate runs of the idempotent script.",
+   "checked_at": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://ca.mirrors.cicku.me/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Canada",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://fosszone.csd.auth.gr/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "unknown (host had no country in its source mirror list)",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://ftp.fau.de/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Germany",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://ftp.halifax.rwth-aachen.de/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Germany",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://ftp.man.poznan.pl/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "unknown (host had no country in its source mirror list)",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://ftp.psnc.pl/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Poland",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://ftp.wayne.edu/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "unknown (host had no country in its source mirror list)",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror-hk.koddos.net/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Hong Kong",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.aarnet.edu.au/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Australia",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.cedia.org.ec/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Ecuador",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.checkdomain.de/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Germany",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.clientvps.com/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Finland",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.cs.odu.edu/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "United States",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.cyberbits.asia/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Thailand",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.cyberbits.eu/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "France",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.diyarciftci.xyz/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Germany",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.dogado.de/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Germany",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.hiesoft.net/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "12/13 gcc source releases (per-entry HEAD, not applied to the rest)",
+   "region": "unknown (host had no country in its source mirror list)",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "partial",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.ihost.md/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Moldova, Republic of",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.init7.net/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Switzerland",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.it4i.cz/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Czech Republic",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.koetsier.org/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "unknown (host had no country in its source mirror list)",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.kumi.systems/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Austria",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.lyrahosting.com/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Netherlands",
+   "protocols": {
+    "https": true,
+    "http": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.lzu.edu.cn/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "China",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.metanet.ch/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Switzerland",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.netcologne.de/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Germany",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.nju.edu.cn/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "China",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.nyist.edu.cn/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "China",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.ossplanet.net/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Taiwan",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.rit.edu/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "unknown (host had no country in its source mirror list)",
+   "protocols": {
+    "http": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.team-cymru.com/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "United States",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.techrich.hk/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "unknown (host had no country in its source mirror list)",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror.us-midwest-1.nexcess.net/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "United States",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirror2.evolution-host.com/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Canada",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirrors.aliyun.com/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "China",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirrors.cloud.tencent.com/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "9/13 gcc source releases (per-entry HEAD, not applied to the rest)",
+   "region": "China",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "partial",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirrors.hit.edu.cn/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "China",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirrors.hopbox.net/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "unknown (host had no country in its source mirror list)",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirrors.hust.edu.cn/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "China",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirrors.ibiblio.org/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "unknown (host had no country in its source mirror list)",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirrors.middlendian.com/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "unknown (host had no country in its source mirror list)",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirrors.nav.ro/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "Romania",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirrors.nju.edu.cn/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "China",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirrors.rit.edu/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "United States",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirrors.sjtug.sjtu.edu.cn/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "China",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirrors.tuna.tsinghua.edu.cn/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "China",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirrors.ustc.edu.cn/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "China",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirrors.xjtu.edu.cn/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "China",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://mirrors.xmission.com/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "12/13 gcc source releases (per-entry HEAD, not applied to the rest)",
+   "region": "United States",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "partial",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "gcc",
+   "url_template": "https://us.mirrors.cicku.me/gnu/gcc/gcc-{version}/gcc-{version}.{format}",
+   "confirmed_on": "all 13 gcc source releases in releases.json",
+   "region": "United States",
+   "protocols": {
+    "https": true
+   },
+   "full_or_partial": "full",
+   "method": "package-managers/probe_mirror_networks.py + probe_gnu_gcc.py: HEAD size match against ftp.gnu.org/gnu/gcc/, per-entry (only 13 gcc releases exist, so every host got the full per-entry check rather than a spot sample)",
+   "hash_verified_sample": "not possible: every gcc-*.tar.* release is > 60MB and ftp.gnu.org publishes no vendor checksum for any of them (releases.json checksum is null) -- confirmed by exact Content-Length match on every sampled file instead",
+   "source_list": "https://www.gnu.org/prep/ftp.html (GNU mirror network) or a general package-ecosystem mirror list that happened to also carry the GNU tree -- see NOTES.md",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "runtime": "llvm",
+   "name": "ISCAS (Institute of Software, Chinese Academy of Sciences) github-release mirror",
+   "region": "China",
+   "operator": "Institute of Software, Chinese Academy of Sciences",
+   "base": "https://mirror.iscas.ac.cn/github-release/llvm/llvm-project/LatestRelease/",
+   "full_or_partial": "partial -- single stale snapshot, not rolling",
+   "confirmed_on": [
+    "https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.6/clang%2Bllvm-20.1.6-x86_64-pc-windows-msvc.tar.xz",
+    "https://github.com/llvm/llvm-project/releases/download/llvmorg-20.1.6/LLVM-20.1.6-Linux-ARM64.tar.xz"
+   ],
+   "does_not_cover": "The other 5 llvm-20.1.6 releases.json entries (LLVM-20.1.6-win32.exe, -win64.exe, -woa64.exe, LLVM-20.1.6-Linux-X64.tar.xz, clang+llvm-20.1.6-armv7a-linux-gnueabihf.tar.gz) all 404 on this host even though some appear as metadata-only rows (.sig/.jsonl present, archive itself gone) in its own directory listing -- confirmed absent by direct HEAD, not inferred from the listing. No other llvm-project version has any directory here (the mirror is frozen on its one 'LatestRelease' sync from 30-May-2025, predating the catalog's newest recorded release 23.1.1 by four majors). brechtsanders/winlibs_mingw and skeeto/w64devkit are both 404 at the github-release root -- this host does not carry either project at all.",
+   "protocols": {
+    "https": true,
+    "http": "not tried (https sufficient to confirm)"
+   },
+   "method": "HEAD, exact Content-Length match against the GitHub release asset, per-entry (this is a partial/rolling-style mirror so every candidate in the release was HEAD-checked individually rather than applied by template; 2 of 7 matched).",
+   "hash_verified_sample": "Neither matched asset has a GitHub API digest (both predate GitHub's digest rollout, same as the existing releases.json checksum:null for these rows). Downloaded a same-release sibling file instead as infrastructure corroboration -- cmake-20.1.6.src.tar.xz, 8644 bytes -- confirmed against the GitHub API's recorded size for that exact asset (GitHub also reports no digest for it).",
+   "source_list": "found via targeted probing of known China github-release mirror front-ends (same family as the already-confirmed NJU mirror), not a web search",
+   "date_checked": "2026-09-17"
+  }
+ ],
+ "rejected": [
+  {
+   "candidate": "https://mirrors.tuna.tsinghua.edu.cn/github-release/ (llvm/llvm-project, brechtsanders/winlibs_mingw)",
+   "reason": "Every request (root listing and specific project paths) got an HTTP 403 bot-mitigation page ('the software you're using has characteristics of uncommon/automated software') regardless of URL, User-Agent, or cookies. This is a network-level WAF block on this environment, not evidence the mirror lacks the files -- left unconfirmed rather than rejected on the merits.",
+   "checked_at": "2026-09-17"
+  },
+  {
+   "candidate": "https://mirrors.ustc.edu.cn/github-release/ (llvm/llvm-project, brechtsanders/winlibs_mingw, skeeto/w64devkit)",
+   "reason": "Root listing loads fine (200) and shows USTC mirrors a small curated project list (3-manifolds, adoptium, astral-sh, coder, conda-forge, dbeaver, deepmodeling, git-for-windows, Homebrew, pbatard, TheThirdOne, typst, ungoogled-software, XmacsLabs) -- none of llvm, winlibs_mingw, or w64devkit are on it. Genuinely rejected, not just blocked.",
+   "checked_at": "2026-09-17"
+  },
+  {
+   "candidate": "https://mirror.nju.edu.cn/github-release/skeeto/w64devkit/ and the same path on tuna/ustc",
+   "reason": "404 on NJU (which does mirror llvm and winlibs); tuna blocked as above; absent from ustc's curated list as above. No CN mirror carries w64devkit.",
+   "checked_at": "2026-09-17"
+  },
+  {
+   "candidate": "https://mirror.nju.edu.cn/llvm-releases/ and https://mirrors.tuna.tsinghua.edu.cn/llvm-releases/ (old releases.llvm.org majors 3.4-6)",
+   "reason": "NJU: 404. Tuna: WAF-blocked as above (unconfirmed rather than rejected). USTC: HTTP 204 empty response for the same path, effectively not-found. The Wayback Machine (see confirmed list) covers this gap instead.",
+   "checked_at": "2026-09-17"
+  },
+  {
+   "candidate": "https://sourceforge.net/projects/winlibs-mingw/ (the winlibs project's own secondary distribution point, per the task brief's hint)",
+   "reason": "The project page and every /files/.../download URL are behind a Cloudflare interactive bot challenge ('cf-mitigated: challenge') that a plain HTTP client cannot pass -- confirmed present via web search (the project and its files are real), but no request from this environment got past the challenge to see which physical download host serves the bytes, so this remains unconfirmed rather than added.",
+   "checked_at": "2026-09-17"
+  }
+ ]
+}

@@ -1,0 +1,140 @@
+[
+ {
+  "folder": "java",
+  "url": "https://cdn.azul.com/zulu/bin/zulu12.1.3-ca-jre12.0.0-win_x64.zip",
+  "vendor": {
+   "algo": "sha256",
+   "value": "5eddaa5c4ba4480c3964476a064eabaddd59f81d636706528abfc19d62fbfd55",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/6dc51be4-dd4c-11ea-a8fe-fa163ed8e833"
+  },
+  "found": {
+   "algo": "sha256",
+   "value": "8fa2d3f40b0cd6fa28913ab2e7b032a8dd82b62f7db59904ac8e3bad902384a8"
+  },
+  "source": "scoop Java/zulu12-jre 12.1.3 (HEAD Java/bucket/zulu12-jre.json)"
+ },
+ {
+  "folder": "php",
+  "url": "https://windows.php.net/downloads/releases/php-8.1.34-nts-Win32-vs16-x64.zip",
+  "vendor": {
+   "algo": "sha256",
+   "value": "9cfe246cb144076c16f5913a3ef88a474c3dd7e60f0f0c8bb95faf68674016cc",
+   "source": "https://windows.php.net/downloads/releases/sha256sum.txt"
+  },
+  "found": {
+   "algo": "sha256",
+   "value": "77fabd89a2d9116ce7e8314cc1a6c0d111387a8e2f1c2d19452b1cfef1bd1b8f"
+  },
+  "source": "scoop PHP/php8.1-nts 8.1.34 (HEAD PHP/bucket/php8.1-nts.json)"
+ },
+ {
+  "folder": "php",
+  "url": "https://windows.php.net/downloads/releases/php-8.1.34-nts-Win32-vs16-x86.zip",
+  "vendor": {
+   "algo": "sha256",
+   "value": "925f3b6b098cfc4b324056b8b8b8b870ad11cd22c15c2c29a03067a5eb14dc4c",
+   "source": "https://windows.php.net/downloads/releases/sha256sum.txt"
+  },
+  "found": {
+   "algo": "sha256",
+   "value": "7d1a2640f374fe71331e52a20b378a0599825dfd7a6d1edaf860a88ef178da4d"
+  },
+  "source": "scoop PHP/php8.1-nts 8.1.34 (HEAD PHP/bucket/php8.1-nts.json)"
+ },
+ {
+  "folder": "cc",
+  "url": "https://github.com/brechtsanders/winlibs_mingw/releases/download/16.1.0posix-14.0.0-ucrt-r1/winlibs-x86_64-posix-seh-gcc-16.1.0-mingw-w64ucrt-14.0.0-r1.7z",
+  "vendor": {
+   "algo": "sha256",
+   "value": "2a051d23cb7378ec413341bf94fd4b6404f11c95d4ff58e063fa0dbfe02bed20",
+   "source": "GitHub release asset digest (api.github.com)"
+  },
+  "found": {
+   "algo": "sha256",
+   "value": "be31930854ee009559d82e17c9a3cdbab9c5118c38e0c842581624fbb9f1b8d2"
+  },
+  "source": "scoop Main/mingw-winlibs 16.1.0-14.0.0-r1 (git history 5ef323dab6 (2026-05-02) Main/bucket/mingw-winlibs.json)"
+ },
+ {
+  "folder": "cc",
+  "url": "https://github.com/brechtsanders/winlibs_mingw/releases/download/16.1.0posix-14.0.0-ucrt-r1/winlibs-i686-posix-dwarf-gcc-16.1.0-mingw-w64ucrt-14.0.0-r1.7z",
+  "vendor": {
+   "algo": "sha256",
+   "value": "9c364ec15e5e6627c4c8a30ba1d2163e20a53cd20d2d988ab6d5b2a7b0c92e60",
+   "source": "GitHub release asset digest (api.github.com)"
+  },
+  "found": {
+   "algo": "sha256",
+   "value": "eca3dc6bab7764734b69ca6b9ab8ed7897868e8e32bb97727cd0b7e6fbe29ac9"
+  },
+  "source": "scoop Main/mingw-winlibs 16.1.0-14.0.0-r1 (git history 5ef323dab6 (2026-05-02) Main/bucket/mingw-winlibs.json)"
+ },
+ {
+  "folder": "r",
+  "url": "https://cran.r-project.org/bin/windows/base/old/4.0.3/R-4.0.3-win.exe",
+  "vendor": {
+   "algo": "md5",
+   "value": "2260e461a47cd77268fd325eee3205a3",
+   "source": "https://cran.r-project.org/bin/windows/base/old/4.0.3/md5sum.txt"
+  },
+  "found": {
+   "algo": "md5",
+   "value": "e02906abd36eb9751400487bc185a5e1"
+  },
+  "source": "scoop Main/r 4.0.3 (git history 6d705f4998 (2020-10-10) Main/bucket/r.json)"
+ },
+ {
+  "folder": "python",
+  "url": "https://www.python.org/ftp/python/3.9.4/python-3.9.4-amd64.exe",
+  "vendor": {
+   "algo": "md5",
+   "value": "ebc65aaa142b1d6de450ce241c50e61c"
+  },
+  "found": {
+   "algo": "md5",
+   "value": "1a1412dd7c18aa0c7c7e55b00a244844"
+  },
+  "source": "scoop Main/python 3.9.4 (git history a904676689 (2021-04-04) Main/bucket/python.json)"
+ },
+ {
+  "folder": "python",
+  "url": "https://www.python.org/ftp/python/3.9.4/python-3.9.4.exe",
+  "vendor": {
+   "algo": "md5",
+   "value": "b790fdaff648f757bf0f233e4d05c053"
+  },
+  "found": {
+   "algo": "md5",
+   "value": "f008d17e6beafed3a86eb0f8d13e1850"
+  },
+  "source": "scoop Main/python 3.9.4 (git history a904676689 (2021-04-04) Main/bucket/python.json)"
+ },
+ {
+  "folder": "node",
+  "url": "https://nodejs.org/dist/v22.2.0/node-v22.2.0-win-x64.7z",
+  "vendor": {
+   "algo": "sha256",
+   "value": "740a4d3c613a77268ac856c2c209603236c51745506be1d3237b47491c27e7c7",
+   "source": "https://nodejs.org/dist/v22.2.0/SHASUMS256.txt"
+  },
+  "found": {
+   "algo": "sha256",
+   "value": "5f9080d4cd6cf6ee3994a7d9136a19b7bff924ef98708d99a796fcdce6a6a6c4"
+  },
+  "source": "scoop Main/nodejs 22.2.0 (git history 834f4d8409 (2024-06-07) Main/bucket/nodejs.json)"
+ },
+ {
+  "folder": "node",
+  "url": "https://nodejs.org/dist/v22.1.0/node-v22.1.0-win-x64.7z",
+  "vendor": {
+   "algo": "sha256",
+   "value": "c3c57c78d3a5fbd223a6e17efc3052c5eee19e827a591148d7e5f68cf98e504b",
+   "source": "https://nodejs.org/dist/v22.1.0/SHASUMS256.txt"
+  },
+  "found": {
+   "algo": "sha256",
+   "value": "60017098f3ba622914a753c2d536ac4fab9e091bf306c9f71b78e76c855d6f40"
+  },
+  "source": "scoop Main/nodejs 22.1.0 (git history 2ad70a1046 (2024-05-08) Main/bucket/nodejs.json)"
+ }
+]

@@ -1,0 +1,795 @@
+{
+  "runtime": "go",
+  "languages": [
+    "go"
+  ],
+  "researched": "2026-09-17",
+  "sources": [
+    "https://go.dev/doc/go1.1",
+    "https://go.dev/doc/go1.2",
+    "https://go.dev/doc/go1.3",
+    "https://go.dev/doc/go1.4",
+    "https://go.dev/doc/go1.5",
+    "https://go.dev/doc/go1.6",
+    "https://go.dev/doc/go1.7",
+    "https://go.dev/doc/go1.8",
+    "https://go.dev/doc/go1.9",
+    "https://go.dev/doc/go1.10",
+    "https://go.dev/doc/go1.11",
+    "https://go.dev/doc/go1.12",
+    "https://go.dev/doc/go1.13",
+    "https://go.dev/doc/go1.14",
+    "https://go.dev/doc/go1.15",
+    "https://go.dev/doc/go1.16",
+    "https://go.dev/doc/go1.17",
+    "https://go.dev/doc/go1.18",
+    "https://go.dev/doc/go1.19",
+    "https://go.dev/doc/go1.20",
+    "https://go.dev/doc/go1.21",
+    "https://go.dev/doc/go1.22",
+    "https://go.dev/doc/go1.23",
+    "https://go.dev/doc/go1.24",
+    "https://go.dev/doc/go1.25",
+    "https://go.dev/doc/go1.26",
+    "https://go.dev/doc/go1.27",
+    "catalog/go/releases.json and catalog/go/gaps.json (for the list of majors and the go1.0/go1.1/go1.2 gap)"
+  ],
+  "milestones": [
+    {
+      "capability": "http2_client",
+      "since": "1.6",
+      "notes": "Transparent client AND server support for HTTP/2 in net/http over HTTPS; no protocol-specific exported API. Disable via Transport.TLSNextProto / Server.TLSNextProto set to an empty map."
+    },
+    {
+      "capability": "context_package",
+      "since": "1.7",
+      "notes": "golang.org/x/net/context promoted into the standard library as context; adopted by net, net/http, os/exec. (Not one of SCHEMA.md's listed ids -- added because the task specifically tracks it.)"
+    },
+    {
+      "capability": "arm64_linux",
+      "since": "1.5",
+      "notes": "linux/arm64 shipped mostly complete but cgo only worked with external linking until later releases filled it out."
+    },
+    {
+      "capability": "modules",
+      "since": "1.11",
+      "notes": "Experimental in 1.11 (GO111MODULE=auto/on/off). The auto heuristic broadened and the module proxy/checksum database became the default fetch path in 1.13. Module-aware mode became the unconditional default -- retiring GOPATH mode for ordinary builds -- in 1.16."
+    },
+    {
+      "capability": "tls_1_3",
+      "since": "1.12",
+      "notes": "Opt-in via GODEBUG=tls13=1 in 1.12; enabled by default in 1.13 (opt-out via tls13=0 removed in 1.14)."
+    },
+    {
+      "capability": "error_wrapping",
+      "since": "1.13",
+      "notes": "fmt.Errorf's %w verb plus errors.Unwrap/Is/As. (Custom id -- not in SCHEMA.md's list.)"
+    },
+    {
+      "capability": "embed",
+      "since": "1.16",
+      "notes": "//go:embed directive and the embed package for compiling static files into the binary. (Custom id.)"
+    },
+    {
+      "capability": "arm64_macos",
+      "since": "1.16",
+      "notes": "Apple Silicon: darwin/arm64, full cgo/pie/race support from introduction."
+    },
+    {
+      "capability": "arm64_windows",
+      "since": "1.17",
+      "notes": "windows/arm64, with cgo support from introduction."
+    },
+    {
+      "capability": "generics",
+      "since": "1.18",
+      "notes": "Type parameters per the Type Parameters Proposal; the Go team explicitly flagged the implementation as new and not yet proven in production at release."
+    },
+    {
+      "capability": "true_parallelism",
+      "since": "1.5",
+      "notes": "GOMAXPROCS now defaults to the number of available CPUs instead of 1 -- before 1.5, goroutines were concurrent but ran on a single OS thread by default even on a multi-core machine, unless the program raised GOMAXPROCS itself."
+    },
+    {
+      "capability": "native_threads",
+      "since": "1.0",
+      "notes": "Goroutines have always been multiplexed onto OS threads by the runtime's M:N scheduler; general Go knowledge, not tied to a specific fetched release note."
+    },
+    {
+      "capability": "64bit_windows",
+      "since": "1.0",
+      "notes": "windows/amd64 was supported from Go's original public release; the exact introducing version predates the go.dev/doc/go1.N release-notes archive used for this research."
+    },
+    {
+      "capability": "package_manager_bundled",
+      "since": "1.11",
+      "notes": "go.mod/go.sum plus go get/go mod give the toolchain a real dependency resolver with version pinning; before 1.11, go get had no version resolution and everything lived flatly under GOPATH/src."
+    },
+    {
+      "capability": "loop_var_semantics",
+      "since": "1.22",
+      "notes": "Custom id (not in SCHEMA.md's list) -- each for-loop iteration now gets its own copy of the loop variables, eliminating the classic 'goroutine captured the loop variable' bug class."
+    },
+    {
+      "capability": "range_over_func",
+      "since": "1.23",
+      "notes": "Custom id -- for-range accepts iterator functions (func(func() bool) and friends); previewed behind GOEXPERIMENT=rangefunc in 1.22, shipped as a real, non-experimental language feature in 1.23."
+    }
+  ],
+  "majors": [
+    {
+      "major": "1.0",
+      "released": "2012-03-28",
+      "os_support": {
+        "windows": "windows/386 and windows/amd64 (minimum version not stated in indexed sources)",
+        "macos": "Mac OS X 10.6 Snow Leopard and later, darwin/386 and darwin/amd64",
+        "linux": "any glibc Linux, linux/386, linux/amd64, linux/arm",
+        "freebsd": "freebsd/386 and freebsd/amd64"
+      },
+      "added": [
+        "GOPATH workspace/build model",
+        "the go command (build, test, get, fmt, vet)",
+        "goroutines and channels",
+        "gofmt",
+        "the Go 1 compatibility promise"
+      ],
+      "limitations": [
+        "no built-in HTTP/2 in net/http (added 1.6)",
+        "no context package in the standard library -- cancellation/deadlines/request-scoped values need golang.org/x/net/context or hand-rolled channels (added 1.7)",
+        "no module system at all -- dependencies must live under GOPATH/src with no version pinning (experimental modules added 1.11)",
+        "no TLS 1.3 support of any kind in crypto/tls (opt-in support added 1.12)",
+        "TLS 1.3 exists but is opt-in only (GODEBUG=tls13=1) -- off unless a client/server explicitly enables it (default-on from 1.13)",
+        "no error wrapping -- fmt.Errorf has no %w verb and there is no errors.Is/As/Unwrap, so building/inspecting error chains means a third-party lib (e.g. pkg/errors) or manual type assertions (added 1.13)",
+        "modules are opt-in (GO111MODULE=auto): a go.mod-less checkout under GOPATH still builds in legacy GOPATH mode (module-aware mode became the default, GOPATH mode retired, in 1.16)",
+        "no //go:embed -- bundling static assets into the binary needs a third-party generator (e.g. go-bindata) or reading files from disk at runtime (added 1.16)",
+        "no generics -- type-parameterized containers/algorithms require interface{} plus type assertions/reflection, or per-type code generation (added 1.18)",
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)",
+        "GOMAXPROCS defaults to 1 -- goroutines are concurrent but do not run in parallel on multiple cores unless the program raises GOMAXPROCS itself (default changed in 1.5)"
+      ],
+      "confidence": "low",
+      "notes": "Predates dl.google.com/go.dev's binary index and dedicated go.dev/doc/go1.N release notes; releases.json/gaps.json record go1/go1.0.x as an unconfirmed gap (originally hosted on Google Code, now inaccessible). OS/arch list and dates from general knowledge of the Go 1 launch, not a fetched primary source."
+    },
+    {
+      "major": "1.1",
+      "released": "2013-05-13",
+      "os_support": {
+        "windows": "unchanged from Go 1.0",
+        "macos": "unchanged from Go 1.0",
+        "linux": "adds experimental cgo support on linux/arm",
+        "freebsd": "adds freebsd/arm (ARMv6 or later required)",
+        "netbsd": "new: netbsd/386, netbsd/amd64, netbsd/arm (ARMv6 or later required)",
+        "openbsd": "new: openbsd/386, openbsd/amd64"
+      },
+      "added": [
+        "method values",
+        "race detector (-race)",
+        "integer division/modulus by zero panics consistently across platforms",
+        "experimental cgo on linux/arm",
+        "new experimental ports: freebsd/arm, netbsd/386, netbsd/amd64, netbsd/arm, openbsd/386, openbsd/amd64"
+      ],
+      "limitations": [
+        "no built-in HTTP/2 in net/http (added 1.6)",
+        "no context package in the standard library -- cancellation/deadlines/request-scoped values need golang.org/x/net/context or hand-rolled channels (added 1.7)",
+        "no module system at all -- dependencies must live under GOPATH/src with no version pinning (experimental modules added 1.11)",
+        "no TLS 1.3 support of any kind in crypto/tls (opt-in support added 1.12)",
+        "TLS 1.3 exists but is opt-in only (GODEBUG=tls13=1) -- off unless a client/server explicitly enables it (default-on from 1.13)",
+        "no error wrapping -- fmt.Errorf has no %w verb and there is no errors.Is/As/Unwrap, so building/inspecting error chains means a third-party lib (e.g. pkg/errors) or manual type assertions (added 1.13)",
+        "modules are opt-in (GO111MODULE=auto): a go.mod-less checkout under GOPATH still builds in legacy GOPATH mode (module-aware mode became the default, GOPATH mode retired, in 1.16)",
+        "no //go:embed -- bundling static assets into the binary needs a third-party generator (e.g. go-bindata) or reading files from disk at runtime (added 1.16)",
+        "no generics -- type-parameterized containers/algorithms require interface{} plus type assertions/reflection, or per-type code generation (added 1.18)",
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.2",
+      "released": "2013-12-01",
+      "os_support": {
+        "windows": "unchanged -- no new ports or drops in this release",
+        "macos": "unchanged",
+        "linux": "unchanged",
+        "freebsd": "unchanged"
+      },
+      "added": [
+        "three-index slice expressions",
+        "goroutine preemption in the scheduler (a tight loop no longer starves other goroutines)",
+        "larger default stack size",
+        "go test -cover"
+      ],
+      "limitations": [
+        "no built-in HTTP/2 in net/http (added 1.6)",
+        "no context package in the standard library -- cancellation/deadlines/request-scoped values need golang.org/x/net/context or hand-rolled channels (added 1.7)",
+        "no module system at all -- dependencies must live under GOPATH/src with no version pinning (experimental modules added 1.11)",
+        "no TLS 1.3 support of any kind in crypto/tls (opt-in support added 1.12)",
+        "TLS 1.3 exists but is opt-in only (GODEBUG=tls13=1) -- off unless a client/server explicitly enables it (default-on from 1.13)",
+        "no error wrapping -- fmt.Errorf has no %w verb and there is no errors.Is/As/Unwrap, so building/inspecting error chains means a third-party lib (e.g. pkg/errors) or manual type assertions (added 1.13)",
+        "modules are opt-in (GO111MODULE=auto): a go.mod-less checkout under GOPATH still builds in legacy GOPATH mode (module-aware mode became the default, GOPATH mode retired, in 1.16)",
+        "no //go:embed -- bundling static assets into the binary needs a third-party generator (e.g. go-bindata) or reading files from disk at runtime (added 1.16)",
+        "no generics -- type-parameterized containers/algorithms require interface{} plus type assertions/reflection, or per-type code generation (added 1.18)",
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)",
+        "godoc moved out of the main distribution into golang.org/x/tools",
+        "go doc command removed"
+      ],
+      "confidence": "medium",
+      "notes": "go1.2.html has no Ports/OS-support section; treated as unchanged from Go 1.1 based on the absence of any such announcement."
+    },
+    {
+      "major": "1.3",
+      "released": "2014-06-18",
+      "os_support": {
+        "windows": "Windows 2000 support removed; Windows XP or later required",
+        "macos": "unchanged",
+        "linux": "unchanged",
+        "freebsd": "requires FreeBSD 8 or later; as of 1.3 the kernel must have COMPAT_FREEBSD32 configured; ARM requires FreeBSD 10 (switch to EABI syscalls)",
+        "netbsd": "requires NetBSD 6.0 or later",
+        "openbsd": "requires OpenBSD 5.5 or later",
+        "solaris": "new experimental support: illumos or Solaris 11+ on amd64"
+      },
+      "added": [
+        "experimental DragonFly BSD support (386, amd64)",
+        "experimental Plan 9 support (386)",
+        "experimental Native Client (NaCl) support (386, amd64p32)",
+        "experimental Solaris/illumos support (amd64)"
+      ],
+      "limitations": [
+        "no built-in HTTP/2 in net/http (added 1.6)",
+        "no context package in the standard library -- cancellation/deadlines/request-scoped values need golang.org/x/net/context or hand-rolled channels (added 1.7)",
+        "no module system at all -- dependencies must live under GOPATH/src with no version pinning (experimental modules added 1.11)",
+        "no TLS 1.3 support of any kind in crypto/tls (opt-in support added 1.12)",
+        "TLS 1.3 exists but is opt-in only (GODEBUG=tls13=1) -- off unless a client/server explicitly enables it (default-on from 1.13)",
+        "no error wrapping -- fmt.Errorf has no %w verb and there is no errors.Is/As/Unwrap, so building/inspecting error chains means a third-party lib (e.g. pkg/errors) or manual type assertions (added 1.13)",
+        "modules are opt-in (GO111MODULE=auto): a go.mod-less checkout under GOPATH still builds in legacy GOPATH mode (module-aware mode became the default, GOPATH mode retired, in 1.16)",
+        "no //go:embed -- bundling static assets into the binary needs a third-party generator (e.g. go-bindata) or reading files from disk at runtime (added 1.16)",
+        "no generics -- type-parameterized containers/algorithms require interface{} plus type assertions/reflection, or per-type code generation (added 1.18)",
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.4",
+      "released": "2014-12-10",
+      "os_support": {
+        "windows": "unchanged",
+        "macos": "unchanged",
+        "linux": "unchanged (Android added separately, see below)",
+        "android": "new experimental: android/arm binaries and a loadable .so via the mobile subrepo",
+        "freebsd": "unchanged"
+      },
+      "added": [
+        "for-range loop over integers is NOT this version (that's 1.22) -- 1.4 adds NaCl on ARM and Plan 9 on amd64",
+        "go generate subcommand",
+        "internal packages enforced for all repos",
+        "canonical import paths"
+      ],
+      "limitations": [
+        "no built-in HTTP/2 in net/http (added 1.6)",
+        "no context package in the standard library -- cancellation/deadlines/request-scoped values need golang.org/x/net/context or hand-rolled channels (added 1.7)",
+        "no module system at all -- dependencies must live under GOPATH/src with no version pinning (experimental modules added 1.11)",
+        "no TLS 1.3 support of any kind in crypto/tls (opt-in support added 1.12)",
+        "TLS 1.3 exists but is opt-in only (GODEBUG=tls13=1) -- off unless a client/server explicitly enables it (default-on from 1.13)",
+        "no error wrapping -- fmt.Errorf has no %w verb and there is no errors.Is/As/Unwrap, so building/inspecting error chains means a third-party lib (e.g. pkg/errors) or manual type assertions (added 1.13)",
+        "modules are opt-in (GO111MODULE=auto): a go.mod-less checkout under GOPATH still builds in legacy GOPATH mode (module-aware mode became the default, GOPATH mode retired, in 1.16)",
+        "no //go:embed -- bundling static assets into the binary needs a third-party generator (e.g. go-bindata) or reading files from disk at runtime (added 1.16)",
+        "no generics -- type-parameterized containers/algorithms require interface{} plus type assertions/reflection, or per-type code generation (added 1.18)",
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.5",
+      "released": "2015-08-19",
+      "os_support": {
+        "windows": "unchanged",
+        "macos": "OS X 10.6 Snow Leopard binaries no longer built/released (still ran); official binary downloads now amd64-only, not 386; darwin/arm and darwin/arm64 buildable from source (iOS)",
+        "linux": "linux/arm64 mostly complete (cgo only via external linking); ppc64/ppc64le experimental (cgo internal linking only)",
+        "freebsd": "requires FreeBSD 8-STABLE or later (new use of the SYSCALL instruction)",
+        "dragonfly": "dragonfly/386 dropped (DragonFly BSD itself dropped 32-bit x86)"
+      },
+      "added": [
+        "compiler and linker rewritten from C into Go (self-hosting toolchain, simplifying cross-compilation)",
+        "GOMAXPROCS now defaults to the number of CPUs available, instead of 1 -- Go programs are parallel by default for the first time",
+        "concurrent garbage collector with much lower pause times",
+        "experimental vendoring support for external dependencies",
+        "go tool trace"
+      ],
+      "limitations": [
+        "no built-in HTTP/2 in net/http (added 1.6)",
+        "no context package in the standard library -- cancellation/deadlines/request-scoped values need golang.org/x/net/context or hand-rolled channels (added 1.7)",
+        "no module system at all -- dependencies must live under GOPATH/src with no version pinning (experimental modules added 1.11)",
+        "no TLS 1.3 support of any kind in crypto/tls (opt-in support added 1.12)",
+        "TLS 1.3 exists but is opt-in only (GODEBUG=tls13=1) -- off unless a client/server explicitly enables it (default-on from 1.13)",
+        "no error wrapping -- fmt.Errorf has no %w verb and there is no errors.Is/As/Unwrap, so building/inspecting error chains means a third-party lib (e.g. pkg/errors) or manual type assertions (added 1.13)",
+        "modules are opt-in (GO111MODULE=auto): a go.mod-less checkout under GOPATH still builds in legacy GOPATH mode (module-aware mode became the default, GOPATH mode retired, in 1.16)",
+        "no //go:embed -- bundling static assets into the binary needs a third-party generator (e.g. go-bindata) or reading files from disk at runtime (added 1.16)",
+        "no generics -- type-parameterized containers/algorithms require interface{} plus type assertions/reflection, or per-type code generation (added 1.18)",
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.6",
+      "released": "2016-02-17",
+      "os_support": {
+        "windows": "unchanged",
+        "macos": "unchanged",
+        "linux": "adds experimental linux/mips64 and linux/mips64le (cgo internal linking only); linux/ppc64le now roughly feature-complete with cgo external linking",
+        "android": "adds experimental android/386",
+        "freebsd": "now defaults to clang instead of gcc as the external C compiler"
+      },
+      "added": [
+        "transparent HTTP/2 support in net/http for both client and server over HTTPS (no HTTP/2-specific API; disable via TLSNextProto)"
+      ],
+      "limitations": [
+        "no context package in the standard library -- cancellation/deadlines/request-scoped values need golang.org/x/net/context or hand-rolled channels (added 1.7)",
+        "no module system at all -- dependencies must live under GOPATH/src with no version pinning (experimental modules added 1.11)",
+        "no TLS 1.3 support of any kind in crypto/tls (opt-in support added 1.12)",
+        "TLS 1.3 exists but is opt-in only (GODEBUG=tls13=1) -- off unless a client/server explicitly enables it (default-on from 1.13)",
+        "no error wrapping -- fmt.Errorf has no %w verb and there is no errors.Is/As/Unwrap, so building/inspecting error chains means a third-party lib (e.g. pkg/errors) or manual type assertions (added 1.13)",
+        "modules are opt-in (GO111MODULE=auto): a go.mod-less checkout under GOPATH still builds in legacy GOPATH mode (module-aware mode became the default, GOPATH mode retired, in 1.16)",
+        "no //go:embed -- bundling static assets into the binary needs a third-party generator (e.g. go-bindata) or reading files from disk at runtime (added 1.16)",
+        "no generics -- type-parameterized containers/algorithms require interface{} plus type assertions/reflection, or per-type code generation (added 1.18)",
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.7",
+      "released": "2016-08-15",
+      "os_support": {
+        "windows": "unchanged",
+        "macos": "adds support for macOS 10.12 Sierra (binaries built with pre-1.7 Go do not work correctly on Sierra)",
+        "linux": "adds experimental linux/s390x; linux/mips64 and linux/mips64le gain full cgo + external linking support; linux/ppc64le now requires POWER8+, linux/ppc64 requires POWER5+",
+        "openbsd": "requires OpenBSD 5.6 or later (getentropy(2))",
+        "plan9": "beginning of plan9/arm support"
+      },
+      "added": [
+        "context package promoted from golang.org/x/net/context into the standard library, used by net, net/http, os/exec"
+      ],
+      "limitations": [
+        "no module system at all -- dependencies must live under GOPATH/src with no version pinning (experimental modules added 1.11)",
+        "no TLS 1.3 support of any kind in crypto/tls (opt-in support added 1.12)",
+        "TLS 1.3 exists but is opt-in only (GODEBUG=tls13=1) -- off unless a client/server explicitly enables it (default-on from 1.13)",
+        "no error wrapping -- fmt.Errorf has no %w verb and there is no errors.Is/As/Unwrap, so building/inspecting error chains means a third-party lib (e.g. pkg/errors) or manual type assertions (added 1.13)",
+        "modules are opt-in (GO111MODULE=auto): a go.mod-less checkout under GOPATH still builds in legacy GOPATH mode (module-aware mode became the default, GOPATH mode retired, in 1.16)",
+        "no //go:embed -- bundling static assets into the binary needs a third-party generator (e.g. go-bindata) or reading files from disk at runtime (added 1.16)",
+        "no generics -- type-parameterized containers/algorithms require interface{} plus type assertions/reflection, or per-type code generation (added 1.18)",
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.8",
+      "released": "2017-02-16",
+      "os_support": {
+        "windows": "unchanged",
+        "macos": "requires OS X 10.8 Mountain Lion or later (this was expected to be the last release to support 10.8)",
+        "linux": "adds linux/mips and linux/mipsle (MIPS32r1 + FPU, hardware or kernel-emulated); this is the last release supporting Linux on ARMv5E/ARMv6 (1.9 requires ARMv6K+, e.g. Raspberry Pi 1)",
+        "dragonfly": "requires DragonFly BSD 4.4.4 or later",
+        "openbsd": "requires OpenBSD 5.9 or later"
+      },
+      "added": [
+        "GOOS=zos reserved for a future z/OS port",
+        "struct tags ignored when explicitly converting between struct types"
+      ],
+      "limitations": [
+        "no module system at all -- dependencies must live under GOPATH/src with no version pinning (experimental modules added 1.11)",
+        "no TLS 1.3 support of any kind in crypto/tls (opt-in support added 1.12)",
+        "TLS 1.3 exists but is opt-in only (GODEBUG=tls13=1) -- off unless a client/server explicitly enables it (default-on from 1.13)",
+        "no error wrapping -- fmt.Errorf has no %w verb and there is no errors.Is/As/Unwrap, so building/inspecting error chains means a third-party lib (e.g. pkg/errors) or manual type assertions (added 1.13)",
+        "modules are opt-in (GO111MODULE=auto): a go.mod-less checkout under GOPATH still builds in legacy GOPATH mode (module-aware mode became the default, GOPATH mode retired, in 1.16)",
+        "no //go:embed -- bundling static assets into the binary needs a third-party generator (e.g. go-bindata) or reading files from disk at runtime (added 1.16)",
+        "no generics -- type-parameterized containers/algorithms require interface{} plus type assertions/reflection, or per-type code generation (added 1.18)",
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.9",
+      "released": "2017-08-24",
+      "os_support": {
+        "windows": "unchanged",
+        "macos": "unchanged",
+        "linux": "no new ports or arch support in this release"
+      },
+      "added": [
+        "type aliases (type T1 = T2)",
+        "spec now defines when floating-point operations may be fused (e.g. FMA)"
+      ],
+      "limitations": [
+        "no module system at all -- dependencies must live under GOPATH/src with no version pinning (experimental modules added 1.11)",
+        "no TLS 1.3 support of any kind in crypto/tls (opt-in support added 1.12)",
+        "TLS 1.3 exists but is opt-in only (GODEBUG=tls13=1) -- off unless a client/server explicitly enables it (default-on from 1.13)",
+        "no error wrapping -- fmt.Errorf has no %w verb and there is no errors.Is/As/Unwrap, so building/inspecting error chains means a third-party lib (e.g. pkg/errors) or manual type assertions (added 1.13)",
+        "modules are opt-in (GO111MODULE=auto): a go.mod-less checkout under GOPATH still builds in legacy GOPATH mode (module-aware mode became the default, GOPATH mode retired, in 1.16)",
+        "no //go:embed -- bundling static assets into the binary needs a third-party generator (e.g. go-bindata) or reading files from disk at runtime (added 1.16)",
+        "no generics -- type-parameterized containers/algorithms require interface{} plus type assertions/reflection, or per-type code generation (added 1.18)",
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.10",
+      "released": "2018-02-16",
+      "os_support": {
+        "windows": "this is the last release that runs on Windows XP or Windows Vista -- Go 1.11 requires Windows 7 or later",
+        "macos": "this is the last release that runs on OS X 10.8 Mountain Lion or 10.9 Mavericks -- Go 1.11 requires OS X 10.10 Yosemite or later",
+        "linux": "no new ports",
+        "freebsd": "requires FreeBSD 10.3 or later (9.3 support removed)",
+        "netbsd": "works again, but only on amd64/386 against an at-the-time-unreleased NetBSD 8; netbsd/arm still broken",
+        "openbsd": "this is the last release that runs on OpenBSD 6.0 -- Go 1.11 will require OpenBSD 6.2"
+      },
+      "added": [
+        "GOMIPS=hardfloat/softfloat environment variable for 32-bit MIPS"
+      ],
+      "limitations": [
+        "no module system at all -- dependencies must live under GOPATH/src with no version pinning (experimental modules added 1.11)",
+        "no TLS 1.3 support of any kind in crypto/tls (opt-in support added 1.12)",
+        "TLS 1.3 exists but is opt-in only (GODEBUG=tls13=1) -- off unless a client/server explicitly enables it (default-on from 1.13)",
+        "no error wrapping -- fmt.Errorf has no %w verb and there is no errors.Is/As/Unwrap, so building/inspecting error chains means a third-party lib (e.g. pkg/errors) or manual type assertions (added 1.13)",
+        "modules are opt-in (GO111MODULE=auto): a go.mod-less checkout under GOPATH still builds in legacy GOPATH mode (module-aware mode became the default, GOPATH mode retired, in 1.16)",
+        "no //go:embed -- bundling static assets into the binary needs a third-party generator (e.g. go-bindata) or reading files from disk at runtime (added 1.16)",
+        "no generics -- type-parameterized containers/algorithms require interface{} plus type assertions/reflection, or per-type code generation (added 1.18)",
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.11",
+      "released": "2018-08-24",
+      "os_support": {
+        "windows": "as announced in 1.10, requires Windows 7 or later -- Windows XP and Vista support removed",
+        "macos": "as announced in 1.10, requires macOS 10.10 Yosemite or later",
+        "linux": "race detector now supported on linux/ppc64le; memory sanitizer on linux/arm64",
+        "openbsd": "as announced in 1.10, requires OpenBSD 6.2 or later; 1.11 also supports the then-upcoming OpenBSD 6.4",
+        "freebsd": "c-shared/c-archive build modes now supported on freebsd/amd64",
+        "netbsd": "known issues with NetBSD on i386 hardware; race detector partially supported on netbsd/amd64"
+      },
+      "added": [
+        "modules: preliminary/experimental support for versioned dependency management via GO111MODULE (values on/off/auto, default auto), as an alternative to GOPATH",
+        "GOMIPS64=hardfloat/softfloat for 64-bit MIPS"
+      ],
+      "limitations": [
+        "no TLS 1.3 support of any kind in crypto/tls (opt-in support added 1.12)",
+        "TLS 1.3 exists but is opt-in only (GODEBUG=tls13=1) -- off unless a client/server explicitly enables it (default-on from 1.13)",
+        "no error wrapping -- fmt.Errorf has no %w verb and there is no errors.Is/As/Unwrap, so building/inspecting error chains means a third-party lib (e.g. pkg/errors) or manual type assertions (added 1.13)",
+        "modules are opt-in (GO111MODULE=auto): a go.mod-less checkout under GOPATH still builds in legacy GOPATH mode (module-aware mode became the default, GOPATH mode retired, in 1.16)",
+        "no //go:embed -- bundling static assets into the binary needs a third-party generator (e.g. go-bindata) or reading files from disk at runtime (added 1.16)",
+        "no generics -- type-parameterized containers/algorithms require interface{} plus type assertions/reflection, or per-type code generation (added 1.18)",
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)",
+        "module support is explicitly experimental and details were expected to change before 1.12+"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.12",
+      "released": "2019-02-25",
+      "os_support": {
+        "windows": "unchanged",
+        "macos": "unchanged",
+        "linux": "race detector now supported on linux/arm64; cgo now supported on linux/ppc64",
+        "freebsd": "this is the last release supported on FreeBSD 10.x (EOL) -- Go 1.13 requires FreeBSD 11.2+ or 12.0+ (12.0+ needs COMPAT_FREEBSD11 kernel option, on by default)"
+      },
+      "added": [
+        "TLS 1.3 opt-in support in crypto/tls (RFC 8446), enabled via GODEBUG=tls13=1; will default on in 1.13",
+        "GOOS=hurd reserved for GNU/Hurd (gccgo)",
+        "go.mod 'go' directive records the language version a module was built with"
+      ],
+      "limitations": [
+        "TLS 1.3 exists but is opt-in only (GODEBUG=tls13=1) -- off unless a client/server explicitly enables it (default-on from 1.13)",
+        "no error wrapping -- fmt.Errorf has no %w verb and there is no errors.Is/As/Unwrap, so building/inspecting error chains means a third-party lib (e.g. pkg/errors) or manual type assertions (added 1.13)",
+        "modules are opt-in (GO111MODULE=auto): a go.mod-less checkout under GOPATH still builds in legacy GOPATH mode (module-aware mode became the default, GOPATH mode retired, in 1.16)",
+        "no //go:embed -- bundling static assets into the binary needs a third-party generator (e.g. go-bindata) or reading files from disk at runtime (added 1.16)",
+        "no generics -- type-parameterized containers/algorithms require interface{} plus type assertions/reflection, or per-type code generation (added 1.18)",
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)",
+        "TLS 1.3 early data / 0-RTT is not supported as client or server",
+        "TLS 1.3 cipher suites are not configurable"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.13",
+      "released": "2019-09-03",
+      "os_support": {
+        "windows": "unchanged",
+        "macos": "unchanged",
+        "linux": "this is the last release that runs on Native Client (NaCl)"
+      },
+      "added": [
+        "TLS 1.3 enabled by default in crypto/tls (opt-out via GODEBUG=tls13=0 until the opt-out is removed in 1.14)",
+        "error wrapping: fmt.Errorf's %w verb plus errors.Unwrap/Is/As",
+        "GOPROXY defaults to https://proxy.golang.org,direct and a public checksum database (GOSUMDB, sum.golang.org) verifies downloaded modules by default",
+        "GOPRIVATE environment variable for modules that should skip the public proxy/checksum db",
+        "GO111MODULE=auto now activates module mode whenever a go.mod is found, even inside GOPATH/src",
+        "GOWASM environment variable for experimental WebAssembly features"
+      ],
+      "limitations": [
+        "modules are opt-in (GO111MODULE=auto): a go.mod-less checkout under GOPATH still builds in legacy GOPATH mode (module-aware mode became the default, GOPATH mode retired, in 1.16)",
+        "no //go:embed -- bundling static assets into the binary needs a third-party generator (e.g. go-bindata) or reading files from disk at runtime (added 1.16)",
+        "no generics -- type-parameterized containers/algorithms require interface{} plus type assertions/reflection, or per-type code generation (added 1.18)",
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)",
+        "modules are still not the default outside a go.mod-bearing tree -- GOPATH-only code with no go.mod keeps using GOPATH mode (GO111MODULE defaults to auto, not on, until 1.16)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.14",
+      "released": "2020-02-25",
+      "os_support": {
+        "windows": "Go binaries now have DEP (Data Execution Prevention) enabled",
+        "macos": "this is the last release that runs on macOS 10.11 El Capitan -- Go 1.15 requires macOS 10.12 Sierra+; this is also (likely) the last release with 32-bit darwin/386 and 32-bit iOS/ios/arm binaries, since macOS 10.15 Catalina itself dropped 32-bit app support",
+        "linux": "as announced in 1.13, Native Client (GOOS=nacl) support is dropped entirely",
+        "freebsd": "adds freebsd/arm64 (FreeBSD 12.0+)"
+      },
+      "added": [
+        "experimental 64-bit RISC-V support on Linux (linux/riscv64)"
+      ],
+      "limitations": [
+        "modules are opt-in (GO111MODULE=auto): a go.mod-less checkout under GOPATH still builds in legacy GOPATH mode (module-aware mode became the default, GOPATH mode retired, in 1.16)",
+        "no //go:embed -- bundling static assets into the binary needs a third-party generator (e.g. go-bindata) or reading files from disk at runtime (added 1.16)",
+        "no generics -- type-parameterized containers/algorithms require interface{} plus type assertions/reflection, or per-type code generation (added 1.18)",
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.15",
+      "released": "2020-08-11",
+      "os_support": {
+        "windows": "generates ASLR-enabled (PIE) executables by default via -buildmode=pie, which go build now uses by default on Windows",
+        "macos": "as announced in 1.14, requires macOS 10.12 Sierra or later; as announced in 1.14, drops 32-bit darwin/386 and darwin/arm (iOS) binaries entirely",
+        "linux": "no new ports",
+        "openbsd": "adds OpenBSD 6.7 support on arm/arm64 (386/amd64 already supported)"
+      },
+      "added": [],
+      "limitations": [
+        "modules are opt-in (GO111MODULE=auto): a go.mod-less checkout under GOPATH still builds in legacy GOPATH mode (module-aware mode became the default, GOPATH mode retired, in 1.16)",
+        "no //go:embed -- bundling static assets into the binary needs a third-party generator (e.g. go-bindata) or reading files from disk at runtime (added 1.16)",
+        "no generics -- type-parameterized containers/algorithms require interface{} plus type assertions/reflection, or per-type code generation (added 1.18)",
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)",
+        "this is the last release to support x87-only floating point on 386 (GO386=387); later releases require at least SSE2 (Pentium 4 / Athlon 64 or newer)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.16",
+      "released": "2021-02-16",
+      "os_support": {
+        "windows": "unchanged",
+        "macos": "adds Apple Silicon support: darwin/arm64 (GOOS=darwin, GOARCH=arm64), full cgo/pie/race support; darwin/arm64 (iOS) renamed to ios/arm64, plus a new ios/amd64 simulator port; this is the last release that runs on macOS 10.12 Sierra -- Go 1.17 requires macOS 10.13 High Sierra+",
+        "linux": "no new ports",
+        "netbsd": "adds netbsd/arm64",
+        "openbsd": "adds openbsd/mips64 (no cgo yet)"
+      },
+      "added": [
+        "//go:embed directive and the embed package for bundling static files into the binary",
+        "module-aware mode is now the default (GO111MODULE defaults to on, regardless of whether a go.mod is present) -- GOPATH mode is opt-in via GO111MODULE=auto from here on",
+        "go install pkg@version for installing executables without touching the current module",
+        "go.mod retract directive"
+      ],
+      "limitations": [
+        "no generics -- type-parameterized containers/algorithms require interface{} plus type assertions/reflection, or per-type code generation (added 1.18)",
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)",
+        "GO386=387 (x87-only float mode) removed; use GO386=softfloat on pre-SSE2 hardware"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.17",
+      "released": "2021-08-16",
+      "os_support": {
+        "windows": "adds 64-bit ARM support: windows/arm64 (cgo supported)",
+        "macos": "as announced in 1.16, requires macOS 10.13 High Sierra or later",
+        "linux": "no new ports",
+        "openbsd": "openbsd/mips64 gains cgo support; openbsd/386 and openbsd/arm now also route syscalls through libc (parity with amd64/arm64, needed for OpenBSD 6.9+)"
+      },
+      "added": [
+        "conversions from a slice to an array pointer, e.g. (*[4]byte)(x)",
+        "GOARCH=loong64 value reserved (no compiler support yet)"
+      ],
+      "limitations": [
+        "no generics -- type-parameterized containers/algorithms require interface{} plus type assertions/reflection, or per-type code generation (added 1.18)",
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.18",
+      "released": "2022-03-15",
+      "os_support": {
+        "windows": "windows/arm and windows/arm64 gain non-cooperative preemption",
+        "macos": "no minimum change; ios/arm64 and the ios/amd64 simulator now require iOS 12+",
+        "linux": "requires Linux kernel 2.6.32 or later",
+        "freebsd": "this is the last release supported on FreeBSD 11.x (EOL) -- Go 1.19 requires FreeBSD 12.2+ or 13.0+ (13.0+ needs COMPAT_FREEBSD12)"
+      },
+      "added": [
+        "generics: type parameters for functions and types, the ~ token, and union/embedded-type constraint interfaces (Type Parameters Proposal)",
+        "GOAMD64 environment variable (v1-v4) selecting a minimum x86-64 microarchitecture level at compile time"
+      ],
+      "limitations": [
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)",
+        "the Go team flagged generics as new and not yet battle-tested in production at release: 'please use appropriate caution when deploying generic code in production'"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.19",
+      "released": "2022-08-02",
+      "os_support": {
+        "windows": "unchanged",
+        "macos": "unchanged",
+        "linux": "adds LoongArch 64-bit support (linux/loong64, LP64D ABI, kernel 5.19+ minimum -- most distro kernels at the time were older and incompatible)"
+      },
+      "added": [
+        "formal specification of the Go memory model (doc)",
+        "riscv64 gains register-based argument/result passing (~10%+ perf)"
+      ],
+      "limitations": [
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.20",
+      "released": "2023-02-01",
+      "os_support": {
+        "windows": "this is the last release that runs on any release of Windows 7, 8, Server 2008, or Server 2012 -- Go 1.21 requires Windows 10 or Server 2016+",
+        "macos": "this is the last release that runs on macOS 10.13 High Sierra or 10.14 Mojave -- Go 1.21 requires macOS 10.15 Catalina+",
+        "linux": "no new ports",
+        "freebsd": "adds experimental freebsd/riscv64"
+      },
+      "added": [
+        "conversions from a slice directly to an array (not just an array pointer)",
+        "unsafe.SliceData, unsafe.String, unsafe.StringData"
+      ],
+      "limitations": [
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.21",
+      "released": "2023-08-08",
+      "os_support": {
+        "windows": "as announced in 1.20, requires Windows 10 or Windows Server 2016 or later -- Windows 7, 8, Server 2008 and 2012 support removed",
+        "macos": "as announced in 1.20, requires macOS 10.15 Catalina or later",
+        "linux": "no new ports (wasip1 is not Linux; see below)"
+      },
+      "added": [
+        "min, max, and clear built-in functions",
+        "for-range over an integer, e.g. for i := range 10",
+        "precisely specified package initialization order",
+        "experimental WASI Preview 1 port (GOOS=wasip1, GOARCH=wasm)",
+        "the go.mod 'go' line can now trigger automatic download of a newer toolchain (toolchain management)",
+        "preview of range-over-func via GOEXPERIMENT=rangefunc"
+      ],
+      "limitations": [
+        "for-loop variables are created once and reused by every iteration -- capturing the loop variable in a closure or goroutine without an explicit per-iteration copy is a classic data race/bug (fixed in 1.22)",
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.22",
+      "released": "2024-02-06",
+      "os_support": {
+        "windows": "unchanged",
+        "macos": "this is the last release that runs on macOS 10.15 Catalina -- Go 1.23 requires macOS 11 Big Sur+; darwin/amd64 now builds position-independent executables (PIE) by default like darwin/arm64",
+        "linux": "no new ports",
+        "openbsd": "adds experimental openbsd/ppc64"
+      },
+      "added": [
+        "for-loop variables are now per-iteration (each iteration gets its own copy), fixing the classic goroutine/closure-capture bug -- transition tooling from the proposal still works as in 1.21"
+      ],
+      "limitations": [
+        "cannot range over a function -- custom iterators must be hand-written as callback-taking functions rather than used with for-range (added 1.23)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.23",
+      "released": "2024-08-13",
+      "os_support": {
+        "windows": "unchanged",
+        "macos": "as announced in 1.22, requires macOS 11 Big Sur or later",
+        "linux": "this is the last release that requires only Linux kernel 2.6.32+ -- Go 1.24 will require kernel 3.2+",
+        "openbsd": "adds experimental openbsd/riscv64"
+      },
+      "added": [
+        "range-over-func: for-range now accepts iterator functions of type func(func() bool), func(func(K) bool), func(func(K, V) bool)",
+        "preview of generic type aliases via GOEXPERIMENT=aliastypeparams",
+        "GOARM64 and GORISCV64 environment variables for selecting a minimum microarchitecture profile",
+        "opt-in Go telemetry (go telemetry on)"
+      ],
+      "limitations": [
+        "generic type aliases only work within a single package -- cross-package generic aliases are not yet supported"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.24",
+      "released": "2025-02-11",
+      "os_support": {
+        "windows": "the 32-bit windows/arm port is marked broken (see issue #70705); not yet removed",
+        "macos": "this is the last release that runs on macOS 11 Big Sur -- Go 1.25 requires macOS 12 Monterey+",
+        "linux": "as announced in 1.23, requires Linux kernel 3.2 or later"
+      },
+      "added": [
+        "go:wasmexport directive to export Go functions to the WebAssembly host",
+        "wasip1 reactor/library build mode (-buildmode=c-shared)"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.25",
+      "released": "2025-08-12",
+      "os_support": {
+        "windows": "this is the last release containing the (broken) 32-bit windows/arm port -- it is removed in Go 1.26",
+        "macos": "as announced in 1.24, requires macOS 12 Monterey or later",
+        "linux": "no new ports"
+      },
+      "added": [
+        "GOAMD64=v3+ uses fused multiply-add instructions by default (can change exact floating-point results; cast to avoid fusing)",
+        "linux/riscv64 plugin build mode",
+        "linux/loong64 gains race detector support"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.26",
+      "released": "2026-02-10",
+      "os_support": {
+        "windows": "the broken 32-bit windows/arm port, deprecated in 1.24/1.25, is fully removed",
+        "macos": "this is the last release that runs on macOS 12 Monterey -- Go 1.27 requires macOS 13 Ventura+",
+        "linux": "no new ports",
+        "freebsd": "the experimental freebsd/riscv64 port (added 1.20) is marked broken"
+      },
+      "added": [
+        "linux/riscv64 gains race detector support",
+        "s390x gains register-based argument/result passing"
+      ],
+      "limitations": [
+        "big-endian 64-bit PowerPC on Linux (linux/ppc64) is on its last release using the ELFv1 ABI -- Go 1.27 switches it to ELFv2"
+      ],
+      "confidence": "high",
+      "notes": "Fetched live from go.dev on 2026-09-17 (this is the release preceding current stable at research time); exact release day is from the release notes page, not independently cross-checked against a second source."
+    },
+    {
+      "major": "1.27",
+      "released": "2026-08-11",
+      "os_support": {
+        "windows": "unchanged",
+        "macos": "as announced in 1.26, requires macOS 13 Ventura or later",
+        "linux": "big-endian 64-bit PowerPC (linux/ppc64) switches to the ELFv2 system ABI by default, requiring Linux kernel 3.13+ (RHEL7's backported 3.10 also works); enables cgo, PIE, and external linking on that port. CGO_ENABLED=0 still produces static pure-Go ppc64 binaries."
+      },
+      "added": [
+        "ELFv2 ABI (with cgo/PIE/external-linking support) for linux/ppc64"
+      ],
+      "limitations": [],
+      "confidence": "high",
+      "notes": "Current stable release at research time (go1.27.1 per go.dev/dl as of 2026-09-17); exact release day is from the release notes page, not independently cross-checked against a second source."
+    }
+  ]
+}

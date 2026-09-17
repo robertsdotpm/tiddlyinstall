@@ -1,0 +1,6 @@
+java: 9745 of 9937 entries have no mirror; top groups: java linux archive zulu-jdk=1361; java linux archive zulu-jre=1037; java linux installer zulu-jdk=951; java macos archive zulu-jdk=826; java linux installer zulu-jre=732; java macos archive zulu-jre=660
+ruby: 1471 of 1714 entries have no mirror; top groups: ruby windows installer =323; ruby windows archive =313; ruby linux archive ubuntu-22.04=215; ruby linux archive ubuntu-24.04=215; ruby windows installer devkit=207; ruby macos archive macos-x64=111
+cc: 1224 of 1416 entries have no mirror; top groups: gcc windows archive winlibs-posix-=412; llvm windows installer =220; llvm linux archive =193; llvm macos archive =74; gcc windows archive w64devkit=60; gcc windows archive winlibs-mcf-uc=48
+php: 470 of 2277 entries have no mirror; top groups: php macos archive static-php-cli=170; php linux archive static-php-cli=168; php linux source =95; php windows archive =21; php windows installer =16
+r: 5 of 584 entries have no mirror; top groups: r windows installer =4; r macos installer =1
+node: 580 of 20092 entries have no mirror; top groups: node linux archive iojs=318; node linux source iojs=82; node windows installer iojs=82; node macos archive iojs=53; node macos installer iojs=41; node solaris archive iojs=4

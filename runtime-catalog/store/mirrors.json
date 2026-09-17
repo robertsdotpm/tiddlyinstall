@@ -1,0 +1,12 @@
+[
+ {"id": "python.org",     "template": "https://www.python.org/ftp/python/{version}/{file}", "region": "global CDN", "operator": "Python Software Foundation"},
+ {"id": "huaweicloud",    "template": "https://mirrors.huaweicloud.com/python/{version}/{file}", "region": "China", "operator": "Huawei Cloud"},
+ {"id": "huaweicloud-repo","template": "https://repo.huaweicloud.com/python/{version}/{file}", "region": "China", "operator": "Huawei Cloud"},
+ {"id": "npmmirror",      "template": "https://registry.npmmirror.com/-/binary/python/{version}/{file}", "region": "China", "operator": "npmmirror (Alibaba)"},
+ {"id": "npmmirror-cdn",  "template": "https://cdn.npmmirror.com/binaries/python/{version}/{file}", "region": "China", "operator": "npmmirror (Alibaba)"},
+ {"id": "aliyun",         "template": "https://mirrors.aliyun.com/python-release/windows/{file}", "region": "China", "operator": "Alibaba Cloud"},
+ {"id": "tuna",           "template": "https://mirrors.tuna.tsinghua.edu.cn/python/{version}/{file}", "region": "China", "operator": "Tsinghua University"},
+ {"id": "nju",            "template": "https://mirror.nju.edu.cn/python/{version}/{file}", "region": "China", "operator": "Nanjing University"},
+ {"id": "bfsu",           "template": "https://mirrors.bfsu.edu.cn/python/{version}/{file}", "region": "China", "operator": "Beijing Foreign Studies University"},
+ {"id": "wayback",        "template": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/{version}/{file}", "region": "global", "operator": "Internet Archive (Wayback Machine snapshot of python.org)"}
+]

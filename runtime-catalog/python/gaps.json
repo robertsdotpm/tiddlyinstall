@@ -1,0 +1,194 @@
+[
+  {
+    "runtime": "python",
+    "major": "2.0",
+    "os": "linux",
+    "arch": "any",
+    "reason": "no prebuilt/portable Linux binary: python.org ships no Linux binaries for any Python version, and python-build-standalone only builds CPython 3.8 and later; only the source tarball (kind=source) is available for this major",
+    "looked_at": [
+      "https://www.python.org/downloads/source/",
+      "https://www.python.org/ftp/python/",
+      "https://github.com/astral-sh/python-build-standalone/releases"
+    ]
+  },
+  {
+    "runtime": "python",
+    "major": "2.1",
+    "os": "linux",
+    "arch": "any",
+    "reason": "no prebuilt/portable Linux binary: python.org ships no Linux binaries for any Python version, and python-build-standalone only builds CPython 3.8 and later; only the source tarball (kind=source) is available for this major",
+    "looked_at": [
+      "https://www.python.org/downloads/source/",
+      "https://www.python.org/ftp/python/",
+      "https://github.com/astral-sh/python-build-standalone/releases"
+    ]
+  },
+  {
+    "runtime": "python",
+    "major": "2.2",
+    "os": "linux",
+    "arch": "any",
+    "reason": "no prebuilt/portable Linux binary: python.org ships no Linux binaries for any Python version, and python-build-standalone only builds CPython 3.8 and later; only the source tarball (kind=source) is available for this major",
+    "looked_at": [
+      "https://www.python.org/downloads/source/",
+      "https://www.python.org/ftp/python/",
+      "https://github.com/astral-sh/python-build-standalone/releases"
+    ]
+  },
+  {
+    "runtime": "python",
+    "major": "2.3",
+    "os": "linux",
+    "arch": "any",
+    "reason": "no prebuilt/portable Linux binary: python.org ships no Linux binaries for any Python version, and python-build-standalone only builds CPython 3.8 and later; only the source tarball (kind=source) is available for this major",
+    "looked_at": [
+      "https://www.python.org/downloads/source/",
+      "https://www.python.org/ftp/python/",
+      "https://github.com/astral-sh/python-build-standalone/releases"
+    ]
+  },
+  {
+    "runtime": "python",
+    "major": "2.4",
+    "os": "linux",
+    "arch": "any",
+    "reason": "no prebuilt/portable Linux binary: python.org ships no Linux binaries for any Python version, and python-build-standalone only builds CPython 3.8 and later; only the source tarball (kind=source) is available for this major",
+    "looked_at": [
+      "https://www.python.org/downloads/source/",
+      "https://www.python.org/ftp/python/",
+      "https://github.com/astral-sh/python-build-standalone/releases"
+    ]
+  },
+  {
+    "runtime": "python",
+    "major": "2.5",
+    "os": "linux",
+    "arch": "any",
+    "reason": "no prebuilt/portable Linux binary: python.org ships no Linux binaries for any Python version, and python-build-standalone only builds CPython 3.8 and later; only the source tarball (kind=source) is available for this major",
+    "looked_at": [
+      "https://www.python.org/downloads/source/",
+      "https://www.python.org/ftp/python/",
+      "https://github.com/astral-sh/python-build-standalone/releases"
+    ]
+  },
+  {
+    "runtime": "python",
+    "major": "2.6",
+    "os": "linux",
+    "arch": "any",
+    "reason": "no prebuilt/portable Linux binary: python.org ships no Linux binaries for any Python version, and python-build-standalone only builds CPython 3.8 and later; only the source tarball (kind=source) is available for this major",
+    "looked_at": [
+      "https://www.python.org/downloads/source/",
+      "https://www.python.org/ftp/python/",
+      "https://github.com/astral-sh/python-build-standalone/releases"
+    ]
+  },
+  {
+    "runtime": "python",
+    "major": "2.7",
+    "os": "linux",
+    "arch": "any",
+    "reason": "no prebuilt/portable Linux binary: python.org ships no Linux binaries for any Python version, and python-build-standalone only builds CPython 3.8 and later; only the source tarball (kind=source) is available for this major",
+    "looked_at": [
+      "https://www.python.org/downloads/source/",
+      "https://www.python.org/ftp/python/",
+      "https://github.com/astral-sh/python-build-standalone/releases"
+    ]
+  },
+  {
+    "runtime": "python",
+    "major": "3.0",
+    "os": "linux",
+    "arch": "any",
+    "reason": "no prebuilt/portable Linux binary: python.org ships no Linux binaries for any Python version, and python-build-standalone only builds CPython 3.8 and later; only the source tarball (kind=source) is available for this major",
+    "looked_at": [
+      "https://www.python.org/downloads/source/",
+      "https://www.python.org/ftp/python/",
+      "https://github.com/astral-sh/python-build-standalone/releases"
+    ]
+  },
+  {
+    "runtime": "python",
+    "major": "3.1",
+    "os": "linux",
+    "arch": "any",
+    "reason": "no prebuilt/portable Linux binary: python.org ships no Linux binaries for any Python version, and python-build-standalone only builds CPython 3.8 and later; only the source tarball (kind=source) is available for this major",
+    "looked_at": [
+      "https://www.python.org/downloads/source/",
+      "https://www.python.org/ftp/python/",
+      "https://github.com/astral-sh/python-build-standalone/releases"
+    ]
+  },
+  {
+    "runtime": "python",
+    "major": "3.2",
+    "os": "linux",
+    "arch": "any",
+    "reason": "no prebuilt/portable Linux binary: python.org ships no Linux binaries for any Python version, and python-build-standalone only builds CPython 3.8 and later; only the source tarball (kind=source) is available for this major",
+    "looked_at": [
+      "https://www.python.org/downloads/source/",
+      "https://www.python.org/ftp/python/",
+      "https://github.com/astral-sh/python-build-standalone/releases"
+    ]
+  },
+  {
+    "runtime": "python",
+    "major": "3.3",
+    "os": "linux",
+    "arch": "any",
+    "reason": "no prebuilt/portable Linux binary: python.org ships no Linux binaries for any Python version, and python-build-standalone only builds CPython 3.8 and later; only the source tarball (kind=source) is available for this major",
+    "looked_at": [
+      "https://www.python.org/downloads/source/",
+      "https://www.python.org/ftp/python/",
+      "https://github.com/astral-sh/python-build-standalone/releases"
+    ]
+  },
+  {
+    "runtime": "python",
+    "major": "3.4",
+    "os": "linux",
+    "arch": "any",
+    "reason": "no prebuilt/portable Linux binary: python.org ships no Linux binaries for any Python version, and python-build-standalone only builds CPython 3.8 and later; only the source tarball (kind=source) is available for this major",
+    "looked_at": [
+      "https://www.python.org/downloads/source/",
+      "https://www.python.org/ftp/python/",
+      "https://github.com/astral-sh/python-build-standalone/releases"
+    ]
+  },
+  {
+    "runtime": "python",
+    "major": "3.5",
+    "os": "linux",
+    "arch": "any",
+    "reason": "no prebuilt/portable Linux binary: python.org ships no Linux binaries for any Python version, and python-build-standalone only builds CPython 3.8 and later; only the source tarball (kind=source) is available for this major",
+    "looked_at": [
+      "https://www.python.org/downloads/source/",
+      "https://www.python.org/ftp/python/",
+      "https://github.com/astral-sh/python-build-standalone/releases"
+    ]
+  },
+  {
+    "runtime": "python",
+    "major": "3.6",
+    "os": "linux",
+    "arch": "any",
+    "reason": "no prebuilt/portable Linux binary: python.org ships no Linux binaries for any Python version, and python-build-standalone only builds CPython 3.8 and later; only the source tarball (kind=source) is available for this major",
+    "looked_at": [
+      "https://www.python.org/downloads/source/",
+      "https://www.python.org/ftp/python/",
+      "https://github.com/astral-sh/python-build-standalone/releases"
+    ]
+  },
+  {
+    "runtime": "python",
+    "major": "3.7",
+    "os": "linux",
+    "arch": "any",
+    "reason": "no prebuilt/portable Linux binary: python.org ships no Linux binaries for any Python version, and python-build-standalone only builds CPython 3.8 and later; only the source tarball (kind=source) is available for this major",
+    "looked_at": [
+      "https://www.python.org/downloads/source/",
+      "https://www.python.org/ftp/python/",
+      "https://github.com/astral-sh/python-build-standalone/releases"
+    ]
+  }
+]

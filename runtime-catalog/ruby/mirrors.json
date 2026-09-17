@@ -1,0 +1,169 @@
+{
+ "runtime": "ruby",
+ "canonical": {
+  "source": "https://cache.ruby-lang.org/pub/ruby/<major>/<file>",
+  "windows_2.4+": "https://github.com/oneclick/rubyinstaller2/releases/download/<tag>/<file>",
+  "windows_1.8.7-2.3.3": "https://github.com/oneclick/rubyinstaller/releases/download/<tag>/<file>",
+  "linux_macos_portable": "https://github.com/ruby/ruby-builder/releases/download/<tag>/<file>"
+ },
+ "confirmed": [
+  {
+   "host": "mirror.cyberbits.eu",
+   "url_template": "https://mirror.cyberbits.eu/ruby/{major}/{file}",
+   "applies_to": "source tarballs only (cache.ruby-lang.org tree)",
+   "region": "France / Europe (Scaleway-hosted, per reverse DNS hope.cyberbits.eu and IP range 51.159.x.x)",
+   "operator": "cyberbits.eu (independent OSS mirror)",
+   "protocols": {
+    "https": "works",
+    "http": "works"
+   },
+   "full_or_partial": "full (matched cache.ruby-lang.org's Content-Length on all 6 sample files: 1.8.7-p374, 1.9.3-p551, 2.0.0-p648, 2.7.8, 3.3.5, 4.0.7, across gz/bz2/xz formats)",
+   "confirmed_by": "HEAD request (redirects disabled), Content-Length matched cache.ruby-lang.org for every sample file",
+   "hash_verified_sample": "ruby-1.8.7-p374.tar.gz (4,903,749 bytes) downloaded in full and sha256-verified against releases.json's checksum (876eeeaa...65276c); deleted after verification",
+   "date_checked": "2026-09-17",
+   "applied_to": "every releases.json/download_plan*.json entry with kind=source (extra_mirrors.py, full-mirror rule)"
+  },
+  {
+   "host": "ftp.iij.ad.jp",
+   "url_template": "https://ftp.iij.ad.jp/pub/lang/ruby/{major}/{file}",
+   "applies_to": "source tarballs only",
+   "region": "Japan",
+   "operator": "Internet Initiative Japan Inc.",
+   "protocols": {
+    "https": "works",
+    "http": "works"
+   },
+   "full_or_partial": "full (same 6-file sample, all matched)",
+   "confirmed_by": "HEAD request (redirects disabled), Content-Length matched",
+   "hash_verified_sample": "ruby-1.8.7-p374.tar.gz downloaded in full and sha256-verified; deleted after verification",
+   "date_checked": "2026-09-17",
+   "applied_to": "every releases.json/download_plan*.json entry with kind=source"
+  },
+  {
+   "host": "www.ring.gr.jp",
+   "url_template": "http://www.ring.gr.jp/pub/lang/ruby/{major}/{file}",
+   "applies_to": "source tarballs only",
+   "region": "Japan",
+   "operator": "RING Server Project (academic/OSS mirror network)",
+   "protocols": {
+    "https": "does not work (times out on this hostname; the site's plain-http URL from ruby-lang.org's own mirrors list is the one that works)",
+    "http": "works"
+   },
+   "full_or_partial": "full (same 6-file sample, all matched)",
+   "confirmed_by": "HEAD request (redirects disabled), Content-Length matched",
+   "hash_verified_sample": "ruby-1.8.7-p374.tar.gz downloaded in full and sha256-verified; deleted after verification",
+   "date_checked": "2026-09-17",
+   "applied_to": "every releases.json/download_plan*.json entry with kind=source"
+  },
+  {
+   "host": "ftp.fu-berlin.de",
+   "url_template": "https://ftp.fu-berlin.de/unix/languages/ruby/{major}/{file}",
+   "applies_to": "source tarballs only",
+   "region": "Germany / Europe",
+   "operator": "Freie Universitat Berlin",
+   "protocols": {
+    "https": "works",
+    "http": "works"
+   },
+   "full_or_partial": "partial -- this mirror stopped syncing new Ruby releases around the 2.6 era (its own directory listing has 1.0/ through 2.6/ and nothing newer). HEAD-checked individually against all 237 source entries in releases.json (not just the 6-file sample, per MIRROR-HUNT.md's partial-mirror rule): 142/237 matched (everything through the 2.6 line), 95 (2.6-and-newer-adjacent through 4.0) did not and were not added.",
+   "confirmed_by": "HEAD request (redirects disabled) against every source entry individually",
+   "hash_verified_sample": "ruby-1.8.7-p374.tar.gz downloaded in full and sha256-verified; deleted after verification",
+   "date_checked": "2026-09-17",
+   "applied_to": "only the 142 confirmed-matching source entries (extra_mirrors.py, per-entry rule)"
+  },
+  {
+   "host": "mirrors.nju.edu.cn",
+   "url_template_note": "not a simple template -- see extra_mirrors.py's NJU_RI2_LATEST['files'] for the literal per-file URLs",
+   "applies_to": "RubyInstaller2 Windows assets, ONLY the single newest stable release (RubyInstaller-4.0.7-1, 2026-09-15) -- NJU's github-release proxy keeps a 'LatestRelease' + one dated folder per project, not full history",
+   "region": "China (Nanjing)",
+   "operator": "Nanjing University open-source mirror station",
+   "protocols": {
+    "https": "works, but requires a bot-check cookie round-trip: the first request to a given URL gets a 302 back to itself with a Set-Cookie: bcheck=true, and only a second request carrying that cookie returns the real file/404. A client without cookie-jar support (or that gives up after one redirect) will see this mirror as permanently broken.",
+    "http": "not tried (https worked)"
+   },
+   "full_or_partial": "partial: exactly the 6 non-.asc, non-x86 Windows assets of Ruby 4.0.7 (x64/arm x archive/installer/devkit-installer -- 4.0 dropped x86)",
+   "confirmed_by": "HEAD request after the bcheck cookie round-trip, Content-Length matched GitHub for all 6 files",
+   "hash_verified_sample": "rubyinstaller-4.0.7-1-x64.7z (17,742,012 bytes) downloaded in full and sha256-verified against releases.json's GitHub-digest checksum (7a9be96d...0474f); deleted after verification",
+   "date_checked": "2026-09-17",
+   "applied_to": "the 6 matching releases.json entries, plus their 4 counterparts already selected into download_plan.json"
+  }
+ ],
+ "rejected": [
+  {
+   "host": "cache.ruby-china.com",
+   "candidate_url": "https://cache.ruby-china.com/pub/ruby/{major}/{file}",
+   "reason": "TLS certificate for this host has expired (curl: 'SSL certificate problem: certificate has expired'); with -k or over plain http the server answers every request -- including the bucket root -- with HTTP 405 and body {\"code\":\"40510001\",\"msg\":\"invisible bucket\"}. The backing object-storage bucket appears to have been made private or decommissioned; this mirror is currently dead, not merely slow.",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "host": "ftp.ntua.gr",
+   "candidate_url": "http://ftp.ntua.gr/pub/lang/ruby/{major}/{file}",
+   "reason": "frozen even earlier than fu-berlin -- directory listing tops out at 2.0/, and even within that range one sampled file (1.9.3-p551.tar.bz2) 404'd, suggesting incomplete/inconsistent sync rather than a clean historical snapshot. Superseded by ftp.fu-berlin.de, which covers a strict superset of ntua's range and matched consistently. Not added.",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "host": "ftp.kr.freebsd.org",
+   "candidate_url": "http://ftp.kr.freebsd.org/pub/ruby/{major}/{file}",
+   "reason": "404 on the bare /pub/ruby/ root itself (nginx default 404 page); the path from ruby-lang.org's own mirrors list no longer resolves to anything on this host. Not investigated further (no ftp:// access available from this environment to check for a different path).",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "host": "mirrors.tuna.tsinghua.edu.cn",
+   "candidate_url": "https://mirrors.tuna.tsinghua.edu.cn/github-release/oneclick/rubyinstaller2/",
+   "reason": "explicit access-denied page ('Sorry, you've been denied access to this page') for the github-release path -- reads as a network-reputation block on this environment's egress IP rather than evidence the mirror doesn't exist. Left unconfirmed rather than added without evidence.",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "host": "mirrors.ustc.edu.cn",
+   "candidate_url": "https://mirrors.ustc.edu.cn/github-release/oneclick/rubyinstaller2/",
+   "reason": "plain 404 (nginx default page) -- not mirrored at this path.",
+   "date_checked": "2026-09-17"
+  }
+ ],
+ "no_full_mirror_for": {
+  "windows_rubyinstaller1_and_2": "no general-purpose mirror (Chinese university/CDN or otherwise) was found carrying more than NJU's single-latest-release exception above; every other candidate either doesn't mirror this repo at all or only offers a proxied-on-demand path that isn't a real independent copy.",
+  "linux_macos_ruby_builder": "no mirror found at all; ruby/ruby-builder's assets are only ever on GitHub Releases in every candidate checked."
+ },
+ "note": "populated by extra_mirrors.py; re-run it after every scrape.py run, since scrape.py rebuilds releases.json/download_plan*.json mirrors arrays from scratch with none confirmed.",
+ "round2_rejected": [
+  {
+   "host": "mirror.sjtu.edu.cn / mirrors.sjtug.sjtu.edu.cn",
+   "candidate_url": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/<tag>/<file>",
+   "reason": "Real github-release proxy for oneclick/rubyinstaller2 (confirmed via rubyinstaller.cn, which credits SJTU as its backing mirror), but every request -- including a direct file HEAD -- is gated behind SJTUG's Cerberus bot-check (WASM proof-of-work), not a simple cookie round-trip like NJU's from round 1. mirror.sjtu.edu.cn returns 403 'cerberus-sec: BLOCKED'; mirrors.sjtug.sjtu.edu.cn returns 200 with 'cerberus-sec: CHALLENGE' and a challenge-page body instead of the file. No JS/WASM execution available in this environment to solve it. Left unconfirmed, not added -- best remaining lead if a future pass has a real browser.",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "host": "mirror.iscas.ac.cn / mirrors.hust.edu.cn / mirror.nyist.edu.cn",
+   "candidate_url": "https://<host>/github-release/oneclick/rubyinstaller2/releases/download/<tag>/<file>",
+   "reason": "ISCAS's github-release listing exists but has no oneclick/ or ruby/ owner at all (checked the full org listing). HUST and NYIST 404 on the exact path. Not mirrored on any of these three.",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "host": "mirrors.bfsu.edu.cn",
+   "candidate_url": "https://mirrors.bfsu.edu.cn/github-release/oneclick/rubyinstaller2/",
+   "reason": "403, same shape as round 1's TUNA rejection (network-reputation block on this environment's egress IP, not evidence the mirror doesn't exist). Left unconfirmed.",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "host": "rubies.travis-ci.org, rvm.io/binaries/",
+   "candidate_url": "https://rubies.travis-ci.org/ubuntu/22.04/x86_64/ruby-{version}.tar.bz2",
+   "reason": "Alive and current (up to Ruby 4.0.1), but these are RVM's own independently-built rubies, not copies of ruby/ruby-builder's GitHub release assets: different filename, different compression (.tar.bz2 vs ruby-builder's .tar.gz), and a different size for the one pair checked directly (ubuntu-22.04/x86_64/ruby-3.3.5.tar.bz2: 36,273,464 bytes vs ruby-builder's ruby-3.3.5-ubuntu-22.04-x64.tar.gz: 37,393,816 bytes). A separate build, not a mirror of the cataloged file.",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "host": "cache.ruby-china.com (via ruby-china.org's own wiki)",
+   "candidate_url": "https://cache.ruby-china.com/pub/ruby/{major}/{file}",
+   "reason": "ruby-china.org's wiki still points here; same host round 1 already confirmed dead (expired TLS cert, 405 'invisible bucket' even bypassing TLS). Re-confirmed dead by association, not re-tested directly.",
+   "date_checked": "2026-09-17"
+  }
+ ],
+ "round2_no_mirror_found": {
+  "windows_rubyinstaller_binaries": "SJTU's github-release proxy (via rubyinstaller.cn) is a real, currently-unconfirmable lead behind a WASM bot-check; every other China-mirror candidate in the brief (ISCAS/HUST/NYIST/BFSU) doesn't carry this repo or is blocked. No other distribution project (rvm/travis-ci, Chocolatey) repackages the identical file -- Chocolatey embeds it unmodified inside a .nupkg, which is useful for checksum_corroboration (added, see NOTES.md) but not a fetchable mirror URL.",
+  "linux_macos_ruby_builder": "No mirror found anywhere, same as round 1. ruby/setup-ruby's own source confirms GitHub Releases is the only download path it knows, with no mirror env var or fallback host."
+ },
+ "round2_checksum_corroboration": {
+  "source": "Chocolatey ruby.install package (community.chocolatey.org)",
+  "how": "The .nupkg bundles the exact upstream RubyInstaller .exe rather than downloading it at install time; extracted and sha256-verified 20 files across 10 package versions (2.2.6 through 3.4.4.1) against releases.json entries matched by the embedded filename. 20/20 matched, 0 mismatches, 14 were previously null-checksum. Script: catalog/package-managers/round2/ruby/mine_chocolatey.py (re-runnable, --all mines the remaining ~29 published versions).",
+  "date_checked": "2026-09-17"
+ }
+}

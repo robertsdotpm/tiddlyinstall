@@ -1,0 +1,1 @@
+{"folder": "python", "url": "https://www.python.org/ftp/python/3.12.14/Python-3.12.14.tar.xz", "mirror": "https://downloads.yoctoproject.org/mirror/sources/Python-3.12.14.tar.xz", "evidence": "Yocto Project source mirror (downloads.yoctoproject.org/mirror/sources, populated by BitBake recipe fetches); downloaded sample, sha256 matches vendor checksum exactly 2026-09-17"}

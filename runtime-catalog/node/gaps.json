@@ -1,0 +1,255 @@
+[
+  {
+    "runtime": "node",
+    "major": "14",
+    "os": "solaris",
+    "arch": "amd64",
+    "reason": "nodejs.org shipped SunOS/Solaris builds through major 4-adjacent releases; dist/index.json lists none for major 14, and unofficial-builds.nodejs.org does not build for solaris.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "15",
+    "os": "solaris",
+    "arch": "amd64",
+    "reason": "nodejs.org shipped SunOS/Solaris builds through major 4-adjacent releases; dist/index.json lists none for major 15, and unofficial-builds.nodejs.org does not build for solaris.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "16",
+    "os": "solaris",
+    "arch": "amd64",
+    "reason": "nodejs.org shipped SunOS/Solaris builds through major 4-adjacent releases; dist/index.json lists none for major 16, and unofficial-builds.nodejs.org does not build for solaris.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "17",
+    "os": "solaris",
+    "arch": "amd64",
+    "reason": "nodejs.org shipped SunOS/Solaris builds through major 4-adjacent releases; dist/index.json lists none for major 17, and unofficial-builds.nodejs.org does not build for solaris.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "18",
+    "os": "solaris",
+    "arch": "amd64",
+    "reason": "nodejs.org shipped SunOS/Solaris builds through major 4-adjacent releases; dist/index.json lists none for major 18, and unofficial-builds.nodejs.org does not build for solaris.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "19",
+    "os": "solaris",
+    "arch": "amd64",
+    "reason": "nodejs.org shipped SunOS/Solaris builds through major 4-adjacent releases; dist/index.json lists none for major 19, and unofficial-builds.nodejs.org does not build for solaris.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "19",
+    "os": "linux",
+    "arch": "x86",
+    "reason": "32-bit linux was official through major 4-adjacent releases; dist/index.json lists none for major 19, and unofficial-builds.nodejs.org's index.json also carries no linux-x86 build for this major.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "20",
+    "os": "solaris",
+    "arch": "amd64",
+    "reason": "nodejs.org shipped SunOS/Solaris builds through major 4-adjacent releases; dist/index.json lists none for major 20, and unofficial-builds.nodejs.org does not build for solaris.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "21",
+    "os": "solaris",
+    "arch": "amd64",
+    "reason": "nodejs.org shipped SunOS/Solaris builds through major 4-adjacent releases; dist/index.json lists none for major 21, and unofficial-builds.nodejs.org does not build for solaris.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "22",
+    "os": "solaris",
+    "arch": "amd64",
+    "reason": "nodejs.org shipped SunOS/Solaris builds through major 4-adjacent releases; dist/index.json lists none for major 22, and unofficial-builds.nodejs.org does not build for solaris.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "22",
+    "os": "linux",
+    "arch": "x86",
+    "reason": "32-bit linux was official through major 4-adjacent releases; dist/index.json lists none for major 22, and unofficial-builds.nodejs.org's index.json also carries no linux-x86 build for this major.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "23",
+    "os": "windows",
+    "arch": "x86",
+    "reason": "nodejs.org shipped official win-x86 builds through at least major 4, but none exist for major 23 in dist/index.json, and unofficial-builds.nodejs.org's index.json carries no win-x86 files for this major either.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "23",
+    "os": "solaris",
+    "arch": "amd64",
+    "reason": "nodejs.org shipped SunOS/Solaris builds through major 4-adjacent releases; dist/index.json lists none for major 23, and unofficial-builds.nodejs.org does not build for solaris.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "23",
+    "os": "linux",
+    "arch": "x86",
+    "reason": "32-bit linux was official through major 4-adjacent releases; dist/index.json lists none for major 23, and unofficial-builds.nodejs.org's index.json also carries no linux-x86 build for this major.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "24",
+    "os": "windows",
+    "arch": "x86",
+    "reason": "nodejs.org shipped official win-x86 builds through at least major 4, but none exist for major 24 in dist/index.json, and unofficial-builds.nodejs.org's index.json carries no win-x86 files for this major either.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "24",
+    "os": "solaris",
+    "arch": "amd64",
+    "reason": "nodejs.org shipped SunOS/Solaris builds through major 4-adjacent releases; dist/index.json lists none for major 24, and unofficial-builds.nodejs.org does not build for solaris.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "24",
+    "os": "linux",
+    "arch": "x86",
+    "reason": "32-bit linux was official through major 4-adjacent releases; dist/index.json lists none for major 24, and unofficial-builds.nodejs.org's index.json also carries no linux-x86 build for this major.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "25",
+    "os": "windows",
+    "arch": "x86",
+    "reason": "nodejs.org shipped official win-x86 builds through at least major 4, but none exist for major 25 in dist/index.json, and unofficial-builds.nodejs.org's index.json carries no win-x86 files for this major either.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "25",
+    "os": "solaris",
+    "arch": "amd64",
+    "reason": "nodejs.org shipped SunOS/Solaris builds through major 4-adjacent releases; dist/index.json lists none for major 25, and unofficial-builds.nodejs.org does not build for solaris.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "25",
+    "os": "linux",
+    "arch": "x86",
+    "reason": "32-bit linux was official through major 4-adjacent releases; dist/index.json lists none for major 25, and unofficial-builds.nodejs.org's index.json also carries no linux-x86 build for this major.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "26",
+    "os": "windows",
+    "arch": "x86",
+    "reason": "nodejs.org shipped official win-x86 builds through at least major 4, but none exist for major 26 in dist/index.json, and unofficial-builds.nodejs.org's index.json carries no win-x86 files for this major either.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "26",
+    "os": "solaris",
+    "arch": "amd64",
+    "reason": "nodejs.org shipped SunOS/Solaris builds through major 4-adjacent releases; dist/index.json lists none for major 26, and unofficial-builds.nodejs.org does not build for solaris.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  },
+  {
+    "runtime": "node",
+    "major": "26",
+    "os": "linux",
+    "arch": "x86",
+    "reason": "32-bit linux was official through major 4-adjacent releases; dist/index.json lists none for major 26, and unofficial-builds.nodejs.org's index.json also carries no linux-x86 build for this major.",
+    "looked_at": [
+      "https://nodejs.org/dist/index.json",
+      "https://unofficial-builds.nodejs.org/download/release/index.json"
+    ]
+  }
+]

@@ -1,0 +1,949 @@
+{
+  "runtime": "r",
+  "languages": [
+    "r"
+  ],
+  "researched": "2026-09-17",
+  "sources": [
+    "https://cran.r-project.org/doc/manuals/r-release/NEWS.html",
+    "https://cran.r-project.org/doc/manuals/r-release/NEWS.2.html",
+    "https://cran.r-project.org/doc/manuals/r-release/NEWS.3.html",
+    "https://cran.r-project.org/bin/windows/base/rw-FAQ.html",
+    "https://cran.r-project.org/bin/macosx/",
+    "https://cran.r-project.org/bin/macosx/RMacOSX-FAQ.html",
+    "catalog/r/releases.json (this project's own scrape of CRAN's stated min_os per macOS build, used verbatim for majors 4.0-4.6)"
+  ],
+  "milestones": [
+    {
+      "capability": "package_manager_bundled",
+      "since": "1.0",
+      "notes": "install.packages()/the CRAN client has been part of base R since the first release"
+    },
+    {
+      "capability": "modules",
+      "since": "1.7",
+      "notes": "package namespaces (NAMESPACE) let a package hide internal functions from users and other packages"
+    },
+    {
+      "capability": "true_parallelism",
+      "since": "2.14",
+      "notes": "parallel package (merger of multicore + snow) added to the base distribution; process-based (fork/cluster), not threaded"
+    },
+    {
+      "capability": "64bit_windows",
+      "since": "2.11",
+      "notes": "first, experimental separate 64-bit Windows installer; merged into one combined 32/64-bit installer in 2.12.0; 32-bit dropped entirely in 4.2.0"
+    },
+    {
+      "capability": "long_vectors",
+      "since": "3.0",
+      "notes": "atomic vectors/lists/expressions can hold more than 2^31-1 elements (up to 2^52) on 64-bit platforms; support in individual base functions (e.g. 1-D FFT, which()) was added gradually through later 3.x/4.x releases"
+    },
+    {
+      "capability": "tls_1_2",
+      "since": "3.2",
+      "notes": "download.file()/url() gain method=\"libcurl\" for HTTPS on both Windows and Unix-alikes; libcurl becomes the Unix-alike default in 3.4.0. The actual TLS version negotiated depends on the system libcurl/OpenSSL R links against, not on the R version itself"
+    },
+    {
+      "capability": "byte_compiler_jit_default",
+      "since": "3.4",
+      "notes": "JIT byte-code compiler enabled by default at level 3; all packages byte-compiled on installation by default from 3.5.0"
+    },
+    {
+      "capability": "strings_as_factors_default_false",
+      "since": "4.0",
+      "notes": "data.frame()/read.table() stop converting character columns to factors by default"
+    },
+    {
+      "capability": "raw_strings",
+      "since": "4.0",
+      "notes": "r\"(...)\" literal syntax, avoiding backslash-escaping in regexes and Windows paths"
+    },
+    {
+      "capability": "native_pipe",
+      "since": "4.1",
+      "notes": "|> built into the parser; the _ placeholder for non-first-argument targets follows in 4.2.0"
+    },
+    {
+      "capability": "lambda_syntax",
+      "since": "4.1",
+      "notes": "\\(x) x parsed as function(x) x"
+    },
+    {
+      "capability": "arm64_macos",
+      "since": "4.1",
+      "notes": "first native Apple Silicon (arm64) macOS build, alongside the continuing Intel build"
+    },
+    {
+      "capability": "unicode_default",
+      "since": "4.2",
+      "notes": "UTF-8 becomes the native encoding on Windows via the switch to the Universal C Runtime (UCRT); requires Windows 10 1903+ for full effect. Same release drops 32-bit Windows builds"
+    },
+    {
+      "capability": "arm64_linux",
+      "since": "3.0",
+      "notes": "not from R/CRAN itself -- CRAN ships no Linux binaries at all, only source. Posit's r-builds packaging service provides prebuilt arm64 .deb/.rpm alongside amd64 for every R version it lists, which starts at 3.0.0"
+    }
+  ],
+  "majors": [
+    {
+      "major": "1.0",
+      "released": "2000-02-29",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 95/98/NT4/2000 (32-bit only)",
+        "macos": "none from CRAN; a separate, non-CRAN classic Mac OS / early Mac OS X port existed outside the official distribution",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [
+        "first stable release of R as an open-source, S-compatible statistical language and environment"
+      ],
+      "limitations": [
+        "no package namespaces -- all functions in an attached package are visible/callable (fixed 1.7)",
+        "no 64-bit Windows build (fixed 2.11, merged into one installer in 2.12)",
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "1.1",
+      "released": "2000-06-15",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 95/98/NT4/2000 (32-bit only)",
+        "macos": "none from CRAN; a separate, non-CRAN classic Mac OS / early Mac OS X port existed outside the official distribution",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [],
+      "limitations": [
+        "no package namespaces -- all functions in an attached package are visible/callable (fixed 1.7)",
+        "no 64-bit Windows build (fixed 2.11, merged into one installer in 2.12)",
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "1.2",
+      "released": "2000-12-15",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 95/98/NT4/2000 (32-bit only)",
+        "macos": "none from CRAN; a separate, non-CRAN classic Mac OS / early Mac OS X port existed outside the official distribution",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [],
+      "limitations": [
+        "no package namespaces -- all functions in an attached package are visible/callable (fixed 1.7)",
+        "no 64-bit Windows build (fixed 2.11, merged into one installer in 2.12)",
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "1.3",
+      "released": "2001-06-22",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 95/98/NT4/2000 (32-bit only)",
+        "macos": "none from CRAN; a separate, non-CRAN classic Mac OS / early Mac OS X port existed outside the official distribution",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [],
+      "limitations": [
+        "no package namespaces -- all functions in an attached package are visible/callable (fixed 1.7)",
+        "no 64-bit Windows build (fixed 2.11, merged into one installer in 2.12)",
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "1.4",
+      "released": "2001-12-19",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 98/ME/NT4/2000/XP (32-bit only)",
+        "macos": "none from CRAN; a separate, non-CRAN classic Mac OS / early Mac OS X port existed outside the official distribution",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [],
+      "limitations": [
+        "no package namespaces -- all functions in an attached package are visible/callable (fixed 1.7)",
+        "no 64-bit Windows build (fixed 2.11, merged into one installer in 2.12)",
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "1.5",
+      "released": "2002-04-29",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 98/ME/NT4/2000/XP (32-bit only)",
+        "macos": "early Mac OS X builds appear in CRAN's archive; exact minimum OS version not consistently documented",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [],
+      "limitations": [
+        "no package namespaces -- all functions in an attached package are visible/callable (fixed 1.7)",
+        "no 64-bit Windows build (fixed 2.11, merged into one installer in 2.12)",
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "1.6",
+      "released": "2002-10-01",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 98/ME/NT4/2000/XP (32-bit only)",
+        "macos": "early Mac OS X builds appear in CRAN's archive; exact minimum OS version not consistently documented",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [],
+      "limitations": [
+        "no package namespaces -- all functions in an attached package are visible/callable (fixed 1.7)",
+        "no 64-bit Windows build (fixed 2.11, merged into one installer in 2.12)",
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "1.7",
+      "released": "2003-04-16",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 98/ME/NT4/2000/XP (32-bit only)",
+        "macos": "early Mac OS X builds appear in CRAN's archive; exact minimum OS version not consistently documented",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [
+        "package namespaces (NAMESPACE files) -- packages can now hide internal functions from users and from each other"
+      ],
+      "limitations": [
+        "no 64-bit Windows build (fixed 2.11, merged into one installer in 2.12)",
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "1.8",
+      "released": "2003-10-08",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 98/ME/NT4/2000/XP (32-bit only)",
+        "macos": "early Mac OS X builds appear in CRAN's archive; exact minimum OS version not consistently documented",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [],
+      "limitations": [
+        "no 64-bit Windows build (fixed 2.11, merged into one installer in 2.12)",
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "1.9",
+      "released": "2004-04-12",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 98/ME/NT4/2000/XP (32-bit only)",
+        "macos": "early Mac OS X builds appear in CRAN's archive; exact minimum OS version not consistently documented",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [],
+      "limitations": [
+        "no 64-bit Windows build (fixed 2.11, merged into one installer in 2.12)",
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "2.0",
+      "released": "2004-10-04",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 98/ME/NT4/2000/XP/Vista (32-bit only)",
+        "macos": "Mac OS X builds for PowerPC and Intel Macs; minimum OS version rose gradually (Tiger/Leopard/Snow Leopard) across this era, not consistently documented per patch",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [],
+      "limitations": [
+        "no 64-bit Windows build (fixed 2.11, merged into one installer in 2.12)",
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "2.1",
+      "released": "2005-04-18",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 98/ME/NT4/2000/XP/Vista (32-bit only)",
+        "macos": "Mac OS X builds for PowerPC and Intel Macs; minimum OS version rose gradually (Tiger/Leopard/Snow Leopard) across this era, not consistently documented per patch",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [],
+      "limitations": [
+        "no 64-bit Windows build (fixed 2.11, merged into one installer in 2.12)",
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "2.2",
+      "released": "2005-10-06",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 98/ME/NT4/2000/XP/Vista (32-bit only)",
+        "macos": "Mac OS X builds for PowerPC and Intel Macs; minimum OS version rose gradually (Tiger/Leopard/Snow Leopard) across this era, not consistently documented per patch",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [],
+      "limitations": [
+        "no 64-bit Windows build (fixed 2.11, merged into one installer in 2.12)",
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "2.3",
+      "released": "2006-04-24",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 98/ME/NT4/2000/XP/Vista (32-bit only)",
+        "macos": "Mac OS X builds for PowerPC and Intel Macs; minimum OS version rose gradually (Tiger/Leopard/Snow Leopard) across this era, not consistently documented per patch",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [],
+      "limitations": [
+        "no 64-bit Windows build (fixed 2.11, merged into one installer in 2.12)",
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "2.4",
+      "released": "2006-10-03",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 98/ME/NT4/2000/XP/Vista (32-bit only)",
+        "macos": "Mac OS X builds for PowerPC and Intel Macs; minimum OS version rose gradually (Tiger/Leopard/Snow Leopard) across this era, not consistently documented per patch",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [],
+      "limitations": [
+        "no 64-bit Windows build (fixed 2.11, merged into one installer in 2.12)",
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "2.5",
+      "released": "2007-04-24",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 98/ME/NT4/2000/XP/Vista (32-bit only)",
+        "macos": "Mac OS X builds for PowerPC and Intel Macs; minimum OS version rose gradually (Tiger/Leopard/Snow Leopard) across this era, not consistently documented per patch",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [],
+      "limitations": [
+        "no 64-bit Windows build (fixed 2.11, merged into one installer in 2.12)",
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "2.6",
+      "released": "2007-10-03",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 98/ME/NT4/2000/XP/Vista (32-bit only)",
+        "macos": "Mac OS X builds for PowerPC and Intel Macs; minimum OS version rose gradually (Tiger/Leopard/Snow Leopard) across this era, not consistently documented per patch",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [],
+      "limitations": [
+        "no 64-bit Windows build (fixed 2.11, merged into one installer in 2.12)",
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "2.7",
+      "released": "2008-04-22",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 98/ME/NT4/2000/XP/Vista (32-bit only)",
+        "macos": "Mac OS X builds for PowerPC and Intel Macs; minimum OS version rose gradually (Tiger/Leopard/Snow Leopard) across this era, not consistently documented per patch",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [],
+      "limitations": [
+        "no 64-bit Windows build (fixed 2.11, merged into one installer in 2.12)",
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "2.8",
+      "released": "2008-10-20",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 98/ME/NT4/2000/XP/Vista (32-bit only)",
+        "macos": "Mac OS X builds for PowerPC and Intel Macs; minimum OS version rose gradually (Tiger/Leopard/Snow Leopard) across this era, not consistently documented per patch",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [],
+      "limitations": [
+        "no 64-bit Windows build (fixed 2.11, merged into one installer in 2.12)",
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "2.9",
+      "released": "2009-04-17",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 98/ME/NT4/2000/XP/Vista (32-bit only)",
+        "macos": "Mac OS X builds for PowerPC and Intel Macs; minimum OS version rose gradually (Tiger/Leopard/Snow Leopard) across this era, not consistently documented per patch",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [],
+      "limitations": [
+        "no 64-bit Windows build (fixed 2.11, merged into one installer in 2.12)",
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "2.10",
+      "released": "2009-10-26",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 98/ME/NT4/2000/XP/Vista (32-bit only)",
+        "macos": "Mac OS X builds for PowerPC and Intel Macs; minimum OS version rose gradually (Tiger/Leopard/Snow Leopard) across this era, not consistently documented per patch",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [],
+      "limitations": [
+        "no 64-bit Windows build (fixed 2.11, merged into one installer in 2.12)",
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "2.11",
+      "released": "2010-04-22",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows XP/Vista/7 (32-bit); first 64-bit Windows build offered as a separate, experimental installer alongside the 32-bit one",
+        "macos": "Mac OS X builds for PowerPC and Intel Macs; minimum OS version rose gradually (Tiger/Leopard/Snow Leopard) across this era, not consistently documented per patch",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [
+        "first 64-bit Windows build (separate, experimental installer alongside the existing 32-bit one)"
+      ],
+      "limitations": [
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "2.12",
+      "released": "2010-10-15",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows XP/Vista/7, single installer bundling both 32-bit and 64-bit R",
+        "macos": "Mac OS X builds for PowerPC and Intel Macs; minimum OS version rose gradually (Tiger/Leopard/Snow Leopard) across this era, not consistently documented per patch",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [
+        "32-bit and 64-bit Windows R merged into a single installer"
+      ],
+      "limitations": [
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "2.13",
+      "released": "2011-04-14",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows XP/Vista/7, single installer bundling both 32-bit and 64-bit R",
+        "macos": "Mac OS X builds for PowerPC and Intel Macs; minimum OS version rose gradually (Tiger/Leopard/Snow Leopard) across this era, not consistently documented per patch",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [],
+      "limitations": [
+        "no built-in parallel/multicore support -- concurrency needs a CRAN package like snow or multicore (merged into base as the parallel package in 2.14)",
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "2.14",
+      "released": "2011-10-31",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows XP/Vista/7, single installer bundling both 32-bit and 64-bit R",
+        "macos": "Mac OS X builds for PowerPC and Intel Macs; minimum OS version rose gradually (Tiger/Leopard/Snow Leopard) across this era, not consistently documented per patch",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [
+        "parallel package added to the base distribution (a merger of the multicore and snow packages), giving true multi-process parallelism via mclapply()/makeCluster()/parLapply() without installing anything from CRAN"
+      ],
+      "limitations": [
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "2.15",
+      "released": "2012-03-30",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows XP/Vista/7, single installer bundling both 32-bit and 64-bit R",
+        "macos": "Mac OS X builds for PowerPC and Intel Macs; minimum OS version rose gradually (Tiger/Leopard/Snow Leopard) across this era, not consistently documented per patch",
+        "linux": "none official; CRAN has never shipped Linux binaries -- build from source on any Unix-like system (some distros package R independently)"
+      },
+      "added": [],
+      "limitations": [
+        "vectors/lists are capped at 2^31-1 elements (fixed by long vectors in 3.0)",
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "3.0",
+      "released": "2013-04-03",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows XP SP3/Vista/7/8/8.1, combined 32-bit+64-bit installer",
+        "macos": "Mac OS X 10.6 (Snow Leopard) to 10.8 (Mountain Lion) and higher, Intel only",
+        "linux": "none from CRAN itself (source only); Posit's r-builds project provides prebuilt .deb (Ubuntu 22.04) and .rpm (RHEL 9) packages for amd64 and arm64 from this version onward"
+      },
+      "added": [
+        "long vectors: atomic vectors, lists and expressions can exceed 2^31-1 elements (up to 2^52) on 64-bit platforms"
+      ],
+      "limitations": [
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "medium",
+      "notes": "release date confirmed via web search this session"
+    },
+    {
+      "major": "3.1",
+      "released": "2014-04-10",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows XP SP3/Vista/7/8/8.1, combined 32-bit+64-bit installer",
+        "macos": "Mac OS X 10.6 (Snow Leopard) to 10.8 (Mountain Lion) and higher, Intel only",
+        "linux": "none from CRAN itself (source only); Posit's r-builds project provides prebuilt .deb (Ubuntu 22.04) and .rpm (RHEL 9) packages for amd64 and arm64 from this version onward"
+      },
+      "added": [],
+      "limitations": [
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "3.2",
+      "released": "2015-04-16",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows XP SP3/Vista/7/8/8.1, combined 32-bit+64-bit installer",
+        "macos": "Mac OS X 10.6 (Snow Leopard) to 10.8 (Mountain Lion) and higher, Intel only",
+        "linux": "none from CRAN itself (source only); Posit's r-builds project provides prebuilt .deb (Ubuntu 22.04) and .rpm (RHEL 9) packages for amd64 and arm64 from this version onward"
+      },
+      "added": [
+        "download.file()/url() gain method=\"libcurl\", the first download method to give consistent HTTPS/TLS support on both Windows and Unix-alikes without relying on external wget/curl binaries or Windows-only wininet"
+      ],
+      "limitations": [
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "3.3",
+      "released": "2016-05-03",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows Vista/7/8/8.1/10, combined 32-bit+64-bit installer (Windows XP no longer supported)",
+        "macos": "OS X 10.9 (Mavericks) and higher, Intel only",
+        "linux": "none from CRAN itself (source only); Posit's r-builds project provides prebuilt .deb (Ubuntu 22.04) and .rpm (RHEL 9) packages for amd64 and arm64 from this version onward"
+      },
+      "added": [],
+      "limitations": [
+        "no default byte-code JIT compilation of user functions (fixed 3.4; packages byte-compiled by default from 3.5)",
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "3.4",
+      "released": "2017-04-21",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows Vista/7/8/8.1/10, combined 32-bit+64-bit installer (Windows XP no longer supported)",
+        "macos": "OS X 10.9 (Mavericks) and higher, Intel only",
+        "linux": "none from CRAN itself (source only); Posit's r-builds project provides prebuilt .deb (Ubuntu 22.04) and .rpm (RHEL 9) packages for amd64 and arm64 from this version onward"
+      },
+      "added": [
+        "the JIT byte-code compiler is enabled by default at level 3: functions are compiled on first or second use and top-level loops are compiled and run (R NEWS 3.4.0, quoted verbatim)",
+        "libcurl becomes the default download.file()/url() method on Unix-alikes (R NEWS 3.4.0)"
+      ],
+      "limitations": [
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "3.5",
+      "released": "2018-04-23",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows Vista/7/8/8.1/10, combined 32-bit+64-bit installer (Windows XP no longer supported)",
+        "macos": "OS X 10.9 (Mavericks) and higher, Intel only",
+        "linux": "none from CRAN itself (source only); Posit's r-builds project provides prebuilt .deb (Ubuntu 22.04) and .rpm (RHEL 9) packages for amd64 and arm64 from this version onward"
+      },
+      "added": [
+        "all packages are byte-compiled by default on installation (R NEWS 3.5.0)"
+      ],
+      "limitations": [
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "3.6",
+      "released": "2019-04-26",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows Vista/7/8/8.1/10, combined 32-bit+64-bit installer (Windows XP no longer supported)",
+        "macos": "OS X 10.11 (El Capitan) and higher, Intel only",
+        "linux": "none from CRAN itself (source only); Posit's r-builds project provides prebuilt .deb (Ubuntu 22.04) and .rpm (RHEL 9) packages for amd64 and arm64 from this version onward"
+      },
+      "added": [],
+      "limitations": [
+        "data.frame()/read.table() convert character columns to factors by default (stringsAsFactors=TRUE); no raw string literals, so backslashes in regexes/Windows paths must be double-escaped (both fixed 4.0)",
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "4.0",
+      "released": "2020-04-24",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 7 SP1/8/8.1/10/11, combined 32-bit+64-bit installer (last majors to ship a 32-bit Windows build)",
+        "macos": "macOS 10.13 (High Sierra) and higher, Intel only (no Apple Silicon build yet)",
+        "linux": "none from CRAN itself (source only); Posit's r-builds project provides prebuilt .deb (Ubuntu 22.04) and .rpm (RHEL 9) packages for amd64 and arm64 from this version onward"
+      },
+      "added": [
+        "stringsAsFactors defaults to FALSE in data.frame()/read.table() -- the single most script-breaking default-behavior change in R's history",
+        "raw string literals: r\"(...)\", r\"[...]\", r\"{...}\" etc., avoiding backslash-escaping in regexes and Windows paths"
+      ],
+      "limitations": [
+        "no native pipe operator or lambda shorthand -- piping requires the magrittr package's %>%, and anonymous functions must be written as function(x) ... (both added 4.1)",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "4.1",
+      "released": "2021-05-18",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 7 SP1/8/8.1/10/11, combined 32-bit+64-bit installer (last majors to ship a 32-bit Windows build)",
+        "macos": "macOS 10.13 (High Sierra)+ for Intel; macOS 11 (Big Sur)+ for the new, first native Apple Silicon (arm64) build",
+        "linux": "none from CRAN itself (source only); Posit's r-builds project provides prebuilt .deb (Ubuntu 22.04) and .rpm (RHEL 9) packages for amd64 and arm64 from this version onward"
+      },
+      "added": [
+        "native forward pipe |> built into the parser, no package required",
+        "lambda shorthand \\(x) x, parsed as function(x) x",
+        "first native Apple Silicon (arm64) macOS build, run alongside the Intel build instead of under Rosetta"
+      ],
+      "limitations": [
+        "the new native pipe |> can only insert into the first argument of the right-hand call -- no placeholder for other positions until 4.2's _",
+        "32-bit Windows builds still shipped, doubling the installer and toolchain surface to maintain (dropped 4.2)",
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "high",
+      "notes": "release date confirmed via web search this session"
+    },
+    {
+      "major": "4.2",
+      "released": "2022-04-22",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 7 SP1/8.1/10/11, 64-bit only; requires the Universal C Runtime (UCRT), tested by R Core on 7 and 8.1 through 4.4.0",
+        "macos": "macOS 10.13 (High Sierra)+ for Intel; macOS 11 (Big Sur)+ for Apple Silicon (arm64)",
+        "linux": "none from CRAN itself (source only); Posit's r-builds project provides prebuilt .deb (Ubuntu 22.04) and .rpm (RHEL 9) packages for amd64 and arm64 from this version onward"
+      },
+      "added": [
+        "placeholder _ for the native pipe, so a |> f(x = _) can target a non-first argument",
+        "UTF-8 becomes the native/default encoding on Windows (on Windows 10 1903+) via the switch to the Universal C Runtime (UCRT)",
+        "Windows toolchain moves to Rtools42, a UCRT-based mingw-w64 toolchain (packages built with the old MSVCRT-based Rtools40/Rtools35 are binary-incompatible and must be recompiled)"
+      ],
+      "limitations": [
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session",
+        "32-bit Windows builds discontinued -- 4.2.0 is 64-bit-only on Windows; machines without 64-bit Windows cannot upgrade past 4.1.x",
+        "UTF-8-native behavior only fully applies on Windows 10 1903+; the still-supported Windows 7/8.1 keep legacy code-page behavior"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "4.3",
+      "released": "2023-04-21",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 7 SP1/8.1/10/11, 64-bit only; requires the Universal C Runtime (UCRT), tested by R Core on 7 and 8.1 through 4.4.0",
+        "macos": "macOS 11 (Big Sur) and higher, for both Intel and Apple Silicon (arm64)",
+        "linux": "none from CRAN itself (source only); Posit's r-builds project provides prebuilt .deb (Ubuntu 22.04) and .rpm (RHEL 9) packages for amd64 and arm64 from this version onward"
+      },
+      "added": [
+        "Rtools43 toolchain"
+      ],
+      "limitations": [
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session",
+        "macOS Intel minimum rises from 10.13 (High Sierra) to 11 (Big Sur), dropping older supported Intel Macs"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "4.4",
+      "released": "2024-04-24",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 7 SP1/8.1/10/11, 64-bit only; requires the Universal C Runtime (UCRT), tested by R Core on 7 and 8.1 through 4.4.0",
+        "macos": "macOS 11 (Big Sur) and higher, for both Intel and Apple Silicon (arm64)",
+        "linux": "none from CRAN itself (source only); Posit's r-builds project provides prebuilt .deb (Ubuntu 22.04) and .rpm (RHEL 9) packages for amd64 and arm64 from this version onward"
+      },
+      "added": [
+        "Rtools44 toolchain"
+      ],
+      "limitations": [
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "4.5",
+      "released": "2025-04-11",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 10/11, 64-bit only; no longer tested by R Core on Windows 7/8.1",
+        "macos": "macOS 11 (Big Sur) and higher, for both Intel and Apple Silicon (arm64)",
+        "linux": "none from CRAN itself (source only); Posit's r-builds project provides prebuilt .deb (Ubuntu 22.04) and .rpm (RHEL 9) packages for amd64 and arm64 from this version onward"
+      },
+      "added": [
+        "download.file(method=\"libcurl\") can read HTTP Basic Auth credentials from a netrc file",
+        "Windows builds move to Rtools45 (GCC 14-based)"
+      ],
+      "limitations": [
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session",
+        "Windows 7/8.1 no longer tested by R Core (may still run, but unsupported)",
+        "building R or packages with compiled code now expects a C23-mode-capable C compiler"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "4.6",
+      "released": "2026-04-14",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 10/11, 64-bit only; no longer tested by R Core on Windows 7/8.1",
+        "macos": "macOS 11 (Big Sur)+ for Intel; macOS 14 (Sonoma)+ for Apple Silicon (arm64) -- the arm64 minimum jumped three major macOS versions ahead of the Intel minimum",
+        "linux": "none from CRAN itself (source only); Posit's r-builds project provides prebuilt .deb (Ubuntu 22.04) and .rpm (RHEL 9) packages for amd64 and arm64 from this version onward"
+      },
+      "added": [
+        "Rtools46 toolchain (pattern of one Rtools release per R feature release since 4.2)"
+      ],
+      "limitations": [
+        "no native async/await or coroutines; all concurrency is process-based (parallel package, or the third-party future/promises packages), never threaded within one R session",
+        "Apple Silicon Macs must be on macOS 14 (Sonoma) or later for the native arm64 build -- three macOS majors ahead of the Intel build's Big Sur floor, so an M1 Mac on Big Sur/Monterey/Ventura can only run R 4.6 under Rosetta with the Intel build"
+      ],
+      "confidence": "high",
+      "notes": "R 4.6.1 patch confirmed 2026-06-24 via CRAN macOS page fetch; the 4.6.0 date is inferred from R's usual mid-April cadence, not independently confirmed"
+    }
+  ]
+}

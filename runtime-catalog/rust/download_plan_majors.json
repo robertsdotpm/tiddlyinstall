@@ -1,0 +1,526 @@
+[
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.98",
+  "version": "1.98.1",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-x86_64-unknown-linux-gnu.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2026-09-03/rust-1.98.1-x86_64-unknown-linux-gnu.tar.xz",
+   "https://rsproxy.cn/dist/2026-09-03/rust-1.98.1-x86_64-unknown-linux-gnu.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2026-09-03/rust-1.98.1-x86_64-unknown-linux-gnu.tar.xz",
+   "http://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-x86_64-unknown-linux-gnu.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-x86_64-unknown-linux-gnu.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-x86_64-unknown-linux-gnu.tar.xz",
+   "https://distfiles.gentoo.org/distfiles/39/rust-1.98.1-x86_64-unknown-linux-gnu.tar.xz",
+   "https://sources.buildroot.net/rust-bin/rust-1.98.1-x86_64-unknown-linux-gnu.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "5326b36c53de11d148c8f8dab6553a3d1006c2cfd32123683073fad3c302605b"
+  },
+  "size": 202560136,
+  "released": "2026-09-03",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
+  "notes": null
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.98",
+  "version": "1.98.1",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-aarch64-unknown-linux-gnu.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2026-09-03/rust-1.98.1-aarch64-unknown-linux-gnu.tar.xz",
+   "https://rsproxy.cn/dist/2026-09-03/rust-1.98.1-aarch64-unknown-linux-gnu.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2026-09-03/rust-1.98.1-aarch64-unknown-linux-gnu.tar.xz",
+   "http://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-aarch64-unknown-linux-gnu.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-aarch64-unknown-linux-gnu.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-aarch64-unknown-linux-gnu.tar.xz",
+   "https://distfiles.gentoo.org/distfiles/8d/rust-1.98.1-aarch64-unknown-linux-gnu.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "0b514a8cc1cbcd939bff0f151661fe58b6ea5c7a7f645a5098c69e32e8c1e0a2"
+  },
+  "size": 182826816,
+  "released": "2026-09-03",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
+  "notes": null
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.98",
+  "version": "1.98.1",
+  "os": "linux",
+  "arch": "armv6",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "hardfloat",
+  "libc": "glibc",
+  "url": "https://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-arm-unknown-linux-gnueabihf.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2026-09-03/rust-1.98.1-arm-unknown-linux-gnueabihf.tar.xz",
+   "https://rsproxy.cn/dist/2026-09-03/rust-1.98.1-arm-unknown-linux-gnueabihf.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2026-09-03/rust-1.98.1-arm-unknown-linux-gnueabihf.tar.xz",
+   "http://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-arm-unknown-linux-gnueabihf.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-arm-unknown-linux-gnueabihf.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-arm-unknown-linux-gnueabihf.tar.xz",
+   "https://distfiles.gentoo.org/distfiles/bc/rust-1.98.1-arm-unknown-linux-gnueabihf.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "8efcf610c73924279cc739f6c6f0817a2c9d47d157cd3ea998326ba1807a9381"
+  },
+  "size": 254940280,
+  "released": "2026-09-03",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
+  "notes": null
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.98",
+  "version": "1.98.1",
+  "os": "linux",
+  "arch": "armv6",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "softfloat",
+  "libc": "glibc",
+  "url": "https://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-arm-unknown-linux-gnueabi.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2026-09-03/rust-1.98.1-arm-unknown-linux-gnueabi.tar.xz",
+   "https://rsproxy.cn/dist/2026-09-03/rust-1.98.1-arm-unknown-linux-gnueabi.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2026-09-03/rust-1.98.1-arm-unknown-linux-gnueabi.tar.xz",
+   "http://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-arm-unknown-linux-gnueabi.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-arm-unknown-linux-gnueabi.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-arm-unknown-linux-gnueabi.tar.xz",
+   "https://distfiles.gentoo.org/distfiles/eb/rust-1.98.1-arm-unknown-linux-gnueabi.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "60ce2836d939391ad0c402feca9fe7e5d93b090998e7186841b4d01eb10ad80b"
+  },
+  "size": 256579464,
+  "released": "2026-09-03",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
+  "notes": null
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.98",
+  "version": "1.98.1",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-armv7-unknown-linux-gnueabihf.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2026-09-03/rust-1.98.1-armv7-unknown-linux-gnueabihf.tar.xz",
+   "https://rsproxy.cn/dist/2026-09-03/rust-1.98.1-armv7-unknown-linux-gnueabihf.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2026-09-03/rust-1.98.1-armv7-unknown-linux-gnueabihf.tar.xz",
+   "http://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-armv7-unknown-linux-gnueabihf.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-armv7-unknown-linux-gnueabihf.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-armv7-unknown-linux-gnueabihf.tar.xz",
+   "https://distfiles.gentoo.org/distfiles/93/rust-1.98.1-armv7-unknown-linux-gnueabihf.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "7612646f80fcf9587c4711a9a3ae72783ea76026c5de49792c53a706aa089c11"
+  },
+  "size": 258744412,
+  "released": "2026-09-03",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
+  "notes": null
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.98",
+  "version": "1.98.1",
+  "os": "linux",
+  "arch": "loong64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-loongarch64-unknown-linux-gnu.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2026-09-03/rust-1.98.1-loongarch64-unknown-linux-gnu.tar.xz",
+   "https://rsproxy.cn/dist/2026-09-03/rust-1.98.1-loongarch64-unknown-linux-gnu.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2026-09-03/rust-1.98.1-loongarch64-unknown-linux-gnu.tar.xz",
+   "http://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-loongarch64-unknown-linux-gnu.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-loongarch64-unknown-linux-gnu.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-loongarch64-unknown-linux-gnu.tar.xz",
+   "https://distfiles.gentoo.org/distfiles/54/rust-1.98.1-loongarch64-unknown-linux-gnu.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "64ce14f8f358ec2997fc214f74663cd6909747f503c69512f7cc39bdaec11396"
+  },
+  "size": 292178716,
+  "released": "2026-09-03",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
+  "notes": null
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.98",
+  "version": "1.98.1",
+  "os": "linux",
+  "arch": "ppc64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-powerpc64-unknown-linux-gnu.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2026-09-03/rust-1.98.1-powerpc64-unknown-linux-gnu.tar.xz",
+   "https://rsproxy.cn/dist/2026-09-03/rust-1.98.1-powerpc64-unknown-linux-gnu.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2026-09-03/rust-1.98.1-powerpc64-unknown-linux-gnu.tar.xz",
+   "http://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-powerpc64-unknown-linux-gnu.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-powerpc64-unknown-linux-gnu.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-powerpc64-unknown-linux-gnu.tar.xz",
+   "https://distfiles.gentoo.org/distfiles/54/rust-1.98.1-powerpc64-unknown-linux-gnu.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "2086a3b53bbb40670cbbcd436858279c800c0579ea2588a294d0219775de9ea3"
+  },
+  "size": 283751128,
+  "released": "2026-09-03",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
+  "notes": null
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.98",
+  "version": "1.98.1",
+  "os": "linux",
+  "arch": "ppc64le",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-powerpc64le-unknown-linux-gnu.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2026-09-03/rust-1.98.1-powerpc64le-unknown-linux-gnu.tar.xz",
+   "https://rsproxy.cn/dist/2026-09-03/rust-1.98.1-powerpc64le-unknown-linux-gnu.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2026-09-03/rust-1.98.1-powerpc64le-unknown-linux-gnu.tar.xz",
+   "http://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-powerpc64le-unknown-linux-gnu.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-powerpc64le-unknown-linux-gnu.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-powerpc64le-unknown-linux-gnu.tar.xz",
+   "https://distfiles.gentoo.org/distfiles/83/rust-1.98.1-powerpc64le-unknown-linux-gnu.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "06871396a06f61f2d72f57b5ed31a0da69e8185af3989d2efb2665c6e982c062"
+  },
+  "size": 302535636,
+  "released": "2026-09-03",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
+  "notes": null
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.98",
+  "version": "1.98.1",
+  "os": "linux",
+  "arch": "riscv64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-riscv64gc-unknown-linux-gnu.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2026-09-03/rust-1.98.1-riscv64gc-unknown-linux-gnu.tar.xz",
+   "https://rsproxy.cn/dist/2026-09-03/rust-1.98.1-riscv64gc-unknown-linux-gnu.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2026-09-03/rust-1.98.1-riscv64gc-unknown-linux-gnu.tar.xz",
+   "http://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-riscv64gc-unknown-linux-gnu.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-riscv64gc-unknown-linux-gnu.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-riscv64gc-unknown-linux-gnu.tar.xz",
+   "https://distfiles.gentoo.org/distfiles/b3/rust-1.98.1-riscv64gc-unknown-linux-gnu.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "61a9cbf434ed16982cbd6269cd441f9640ac34ed73ced92f4867bc0ce507dab7"
+  },
+  "size": 276387076,
+  "released": "2026-09-03",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
+  "notes": null
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.98",
+  "version": "1.98.1",
+  "os": "linux",
+  "arch": "s390x",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-s390x-unknown-linux-gnu.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2026-09-03/rust-1.98.1-s390x-unknown-linux-gnu.tar.xz",
+   "https://rsproxy.cn/dist/2026-09-03/rust-1.98.1-s390x-unknown-linux-gnu.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2026-09-03/rust-1.98.1-s390x-unknown-linux-gnu.tar.xz",
+   "http://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-s390x-unknown-linux-gnu.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-s390x-unknown-linux-gnu.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-s390x-unknown-linux-gnu.tar.xz",
+   "https://distfiles.gentoo.org/distfiles/04/rust-1.98.1-s390x-unknown-linux-gnu.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "78b8c29bf499cc9d339f470bf10bb9e70d4f8b97498e68ac87bdc9c90ca76270"
+  },
+  "size": 274406204,
+  "released": "2026-09-03",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
+  "notes": null
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.98",
+  "version": "1.98.1",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-i686-unknown-linux-gnu.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2026-09-03/rust-1.98.1-i686-unknown-linux-gnu.tar.xz",
+   "https://rsproxy.cn/dist/2026-09-03/rust-1.98.1-i686-unknown-linux-gnu.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2026-09-03/rust-1.98.1-i686-unknown-linux-gnu.tar.xz",
+   "http://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-i686-unknown-linux-gnu.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-i686-unknown-linux-gnu.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-i686-unknown-linux-gnu.tar.xz",
+   "https://distfiles.gentoo.org/distfiles/61/rust-1.98.1-i686-unknown-linux-gnu.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "51733c05e0f784825aab7391761199eb090456b2e95e45420c544eb25eaee3ba"
+  },
+  "size": 294851320,
+  "released": "2026-09-03",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
+  "notes": null
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.98",
+  "version": "1.98.1",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-x86_64-apple-darwin.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2026-09-03/rust-1.98.1-x86_64-apple-darwin.tar.xz",
+   "https://rsproxy.cn/dist/2026-09-03/rust-1.98.1-x86_64-apple-darwin.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2026-09-03/rust-1.98.1-x86_64-apple-darwin.tar.xz",
+   "http://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-x86_64-apple-darwin.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-x86_64-apple-darwin.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-x86_64-apple-darwin.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "0d5aea6011d3b553e5aa71580b0cd7f9f0614eef17f7e5767e6bc161541ed85f"
+  },
+  "size": 136886332,
+  "released": "2026-09-03",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
+  "notes": null
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.98",
+  "version": "1.98.1",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-aarch64-apple-darwin.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2026-09-03/rust-1.98.1-aarch64-apple-darwin.tar.xz",
+   "https://rsproxy.cn/dist/2026-09-03/rust-1.98.1-aarch64-apple-darwin.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2026-09-03/rust-1.98.1-aarch64-apple-darwin.tar.xz",
+   "http://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-aarch64-apple-darwin.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-aarch64-apple-darwin.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-aarch64-apple-darwin.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "8f7c9de34c12c66dc55a6dbdd63b2b9645d4418775d4b975b0078a602f66e3e8"
+  },
+  "size": 150912784,
+  "released": "2026-09-03",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
+  "notes": null
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.98",
+  "version": "1.98.1",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "msvc",
+  "libc": null,
+  "url": "https://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-x86_64-pc-windows-msvc.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2026-09-03/rust-1.98.1-x86_64-pc-windows-msvc.tar.xz",
+   "https://rsproxy.cn/dist/2026-09-03/rust-1.98.1-x86_64-pc-windows-msvc.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2026-09-03/rust-1.98.1-x86_64-pc-windows-msvc.tar.xz",
+   "http://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-x86_64-pc-windows-msvc.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-x86_64-pc-windows-msvc.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-x86_64-pc-windows-msvc.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "c34c3f01633efe5edac0e1ed1ee66d5ec13a7f27e57c149059ed6bdbe0534407"
+  },
+  "size": 179790092,
+  "released": "2026-09-03",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
+  "notes": null
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.98",
+  "version": "1.98.1",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "msvc",
+  "libc": null,
+  "url": "https://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-aarch64-pc-windows-msvc.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2026-09-03/rust-1.98.1-aarch64-pc-windows-msvc.tar.xz",
+   "https://rsproxy.cn/dist/2026-09-03/rust-1.98.1-aarch64-pc-windows-msvc.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2026-09-03/rust-1.98.1-aarch64-pc-windows-msvc.tar.xz",
+   "http://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-aarch64-pc-windows-msvc.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-aarch64-pc-windows-msvc.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-aarch64-pc-windows-msvc.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "a9e186a281308cdf876ab6a0e2c37d75ef43e1c466a44641d301120e0f3358c5"
+  },
+  "size": 162291320,
+  "released": "2026-09-03",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
+  "notes": null
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.98",
+  "version": "1.98.1",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "msvc",
+  "libc": null,
+  "url": "https://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-i686-pc-windows-msvc.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2026-09-03/rust-1.98.1-i686-pc-windows-msvc.tar.xz",
+   "https://rsproxy.cn/dist/2026-09-03/rust-1.98.1-i686-pc-windows-msvc.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2026-09-03/rust-1.98.1-i686-pc-windows-msvc.tar.xz",
+   "http://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-i686-pc-windows-msvc.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-i686-pc-windows-msvc.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-i686-pc-windows-msvc.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "990bfa4a0ea73cd1dfbaea3b3647f712b772d3cea87807adb82d4dde75fcd6da"
+  },
+  "size": 150841096,
+  "released": "2026-09-03",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
+  "notes": null
+ }
+]

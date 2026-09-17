@@ -1,0 +1,121 @@
+{
+  "runtime": "python",
+  "templates_source": "../../mirrors.json (root, shared across runtimes)",
+  "method": "HEAD request against a sample of files spanning old/new versions and windows/macos/source, comparing Content-Length to the python.org size; a template is applied to every release of this runtime only if its whole sample matched.",
+  "sample_files": [
+    "https://www.python.org/ftp/python/2.0.1/Python-2.0.1.exe",
+    "https://www.python.org/ftp/python/3.9.9/python-3.9.9-embed-win32.zip",
+    "https://www.python.org/ftp/python/2.4.3/Universal-MacPython-2.4.3.dmg",
+    "https://www.python.org/ftp/python/3.9.9/python-3.9.9-macos11.pkg",
+    "https://www.python.org/ftp/python/2.0.1/Python-2.0.1.tgz",
+    "https://www.python.org/ftp/python/3.9.9/Python-3.9.9.tar.xz"
+  ],
+  "results": {
+    "python.org": {
+      "scope": "general",
+      "checked": 6,
+      "ok": 6,
+      "confirmed": true,
+      "template": "https://www.python.org/ftp/python/{version}/{file}"
+    },
+    "huaweicloud": {
+      "scope": "general",
+      "checked": 6,
+      "ok": 6,
+      "confirmed": true,
+      "template": "https://mirrors.huaweicloud.com/python/{version}/{file}",
+      "protocols": {"https": "confirmed", "http": "confirmed 2026-09-17, same host/layout, 6/6 sample matched by size"}
+    },
+    "huaweicloud-repo": {
+      "scope": "general",
+      "checked": 6,
+      "ok": 6,
+      "confirmed": true,
+      "template": "https://repo.huaweicloud.com/python/{version}/{file}",
+      "protocols": {"https": "confirmed", "http": "confirmed 2026-09-17, same host/layout, 6/6 sample matched by size"}
+    },
+    "npmmirror": {
+      "scope": "general",
+      "checked": 6,
+      "ok": 6,
+      "confirmed": true,
+      "template": "https://registry.npmmirror.com/-/binary/python/{version}/{file}",
+      "protocols": {"https": "confirmed", "http": "rejected 2026-09-17: 301-redirects to its own https, so plain http is not actually served"}
+    },
+    "npmmirror-cdn": {
+      "scope": "general",
+      "checked": 6,
+      "ok": 6,
+      "confirmed": true,
+      "template": "https://cdn.npmmirror.com/binaries/python/{version}/{file}",
+      "protocols": {"https": "confirmed", "http": "rejected 2026-09-17: 301-redirects to its own https"}
+    },
+    "aliyun": {
+      "scope": "windows-only",
+      "checked": 2,
+      "ok": 2,
+      "confirmed": true,
+      "template": "https://mirrors.aliyun.com/python-release/windows/{file}",
+      "protocols": {"https": "confirmed", "http": "confirmed 2026-09-17, same host/layout; CDN throttles plain-http transfers to ~800KB/s so large files need a generous timeout, but content is byte-identical (5/5 sample matched by size, 2 hash-verified)"}
+    },
+    "tuna": {
+      "scope": "general",
+      "checked": 6,
+      "ok": 6,
+      "confirmed": true,
+      "template": "https://mirrors.tuna.tsinghua.edu.cn/python/{version}/{file}",
+      "protocols": {"https": "confirmed", "http": "rejected 2026-09-17: 301-redirects to its own https"}
+    },
+    "nju": {
+      "scope": "general",
+      "checked": 6,
+      "ok": 6,
+      "confirmed": true,
+      "template": "https://mirror.nju.edu.cn/python/{version}/{file}",
+      "protocols": {"https": "confirmed", "http": "rejected 2026-09-17: infinite self-redirect loop, never resolves"}
+    },
+    "bfsu": {
+      "scope": "general",
+      "checked": 6,
+      "ok": 6,
+      "confirmed": true,
+      "template": "https://mirrors.bfsu.edu.cn/python/{version}/{file}",
+      "protocols": {"https": "confirmed", "http": "rejected 2026-09-17: 301-redirects to its own https"}
+    },
+    "wayback": {
+      "scope": "general",
+      "checked": 6,
+      "ok": 6,
+      "confirmed": true,
+      "template": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/{version}/{file}"
+    },
+    "npmmirror-pbs": {
+      "scope": "python-build-standalone only (GitHub-hosted releases; distinct namespace from the python.org ftp templates above)",
+      "region": "China",
+      "operator": "npmmirror (Alibaba)",
+      "checked": "all 130 python-build-standalone entries in releases.json, across all 3 release tags in use (20241002, 20250918, 20260901)",
+      "ok": 130,
+      "confirmed": true,
+      "full_or_partial": "partial/rolling mirror of astral-sh/python-build-standalone -- confirmed complete for the 3 tags this catalog currently references, but not guaranteed for tags outside that set; extra_mirrors.py re-checks every candidate entry against npmmirror's own live directory-listing size on every run rather than assuming coverage",
+      "templates": {
+        "registry": "https://registry.npmmirror.com/-/binary/python-build-standalone/{tag}/{file}",
+        "cdn": "https://cdn.npmmirror.com/binaries/python-build-standalone/{tag}/{file}"
+      },
+      "method": "for each of the 3 tags in use, fetched npmmirror's own JSON directory listing (which reports each file's size) and compared against every matching release entry's vendor size -- 130/130 matched. Two files were additionally downloaded in full and sha256-verified against the vendor checksum: cpython-3.8.20+20241002-x86_64-unknown-linux-gnu-install_only.tar.gz (26,553,578 bytes, no vendor checksum published so size-only) and cpython-3.14.7+20260901-aarch64-apple-darwin-install_only_stripped.tar.gz (26,486,008 bytes, sha256 4632cb1a6edad9e73d3c81b6d2e69131637d995173e3e85005df14102b0592ba matched).",
+      "protocols": {"https": "confirmed", "http": "rejected 2026-09-17: 301-redirects to its own https"},
+      "date_checked": "2026-09-17"
+    }
+  },
+  "rejected_2026-09-17": {
+    "tencent": {"tried": "https://mirrors.cloud.tencent.com/python/", "reason": "directory exists but is empty -- Tencent Cloud does not actually mirror python.org content under this path"},
+    "sjtu": {"tried": "https://mirror.sjtu.edu.cn/python/", "reason": "every file request (even after switching from curl's default UA to a browser UA) returns HTTP 200 with an HTML 'cerberus-sec: CHALLENGE' anti-bot interstitial instead of the file, for every format tried (.exe/.zip/.tar.xz); no automated client can pass it, so file identity can't be confirmed"},
+    "ustc-python": {"tried": "https://mirrors.ustc.edu.cn/python/ (previously 403 with curl's default UA)", "reason": "the earlier 403 is gone with a browser UA, but most requests now return HTTP 200 with an HTML 'Verifying - USTC Mirrors' JS anti-bot interstitial instead of the file; only one sampled file (python-3.9.9-macos11.pkg) happened to pass through, inconsistently and unpredictably across retries -- not reliable enough to add as a mirror"},
+    "ustc-github-release": {"tried": "https://mirrors.ustc.edu.cn/github-release/astral-sh/python-build-standalone/", "reason": "same 'Verifying - USTC Mirrors' anti-bot interstitial as ustc-python"},
+    "tuna-github-release": {"tried": "https://mirrors.tuna.tsinghua.edu.cn/github-release/astral-sh/python-build-standalone/", "reason": "HTTP 403 'Sorry, you've been denied access to this page' -- access blocked outright, not an anti-bot challenge"},
+    "nju-github-release": {"tried": "https://mirror.nju.edu.cn/github-release/astral-sh/python-build-standalone/", "reason": "infinite self-redirect loop, never resolves to content (same failure mode as nju's http:// python template)"},
+    "dotsrc": {"tried": "https://mirrors.dotsrc.org/python/ and site's own /mirrors/ list page", "reason": "dotsrc does not mirror python.org at all -- no python/ path exists (404) and python is absent from dotsrc's own published mirror list"},
+    "jaist": {"tried": "https://ftp.jaist.ac.jp/pub/ (and pub/python, pub/lang/python guesses)", "reason": "JAIST mirrors many distros (Debian, CentOS, etc.) but does not mirror python.org; no python directory found"},
+    "yandex": {"tried": "https://mirror.yandex.ru/", "reason": "Yandex's mirror service covers ~40 Linux-distro/package-ecosystem projects; python.org is not among them"}
+  },
+  "note": "python-build-standalone (GitHub-hosted) releases are covered by the npmmirror-pbs entry above as of 2026-09-17; they still have no python.org-ftp-layout mirror since they were never hosted there."
+}

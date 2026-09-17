@@ -1,0 +1,669 @@
+[
+  {
+    "runtime": "llvm",
+    "major": "3.4",
+    "os": "windows",
+    "arch": "amd64",
+    "reason": "no matching official build published for this major",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "3.4",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "no matching official build published for this major",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "3.4",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "predates Apple Silicon (arm64 macOS did not exist yet)",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "3.5",
+    "os": "windows",
+    "arch": "amd64",
+    "reason": "no matching official build published for this major",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "3.5",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "predates Apple Silicon (arm64 macOS did not exist yet)",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "3.6",
+    "os": "windows",
+    "arch": "amd64",
+    "reason": "no matching official build published for this major",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "3.6",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "predates Apple Silicon (arm64 macOS did not exist yet)",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "3.7",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "predates Apple Silicon (arm64 macOS did not exist yet)",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "3.8",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "predates Apple Silicon (arm64 macOS did not exist yet)",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "3.9",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "predates Apple Silicon (arm64 macOS did not exist yet)",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "4",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "predates Apple Silicon (arm64 macOS did not exist yet)",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "5",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "predates Apple Silicon (arm64 macOS did not exist yet)",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "6",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "predates Apple Silicon (arm64 macOS did not exist yet)",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "7",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "no matching official build published for this major",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "7",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "predates Apple Silicon (arm64 macOS did not exist yet)",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "8",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "no matching official build published for this major",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "8",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "predates Apple Silicon (arm64 macOS did not exist yet)",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "9",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "predates Apple Silicon (arm64 macOS did not exist yet)",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "10",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "predates Apple Silicon (arm64 macOS did not exist yet)",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "11",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no matching official build published for this major",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "12",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no matching official build published for this major",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "13",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no matching official build published for this major",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "16",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "no matching official build published for this major",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "17",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "no matching official build published for this major",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "18",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "no matching official build published for this major",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "18",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "no matching official build published for this major",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "21",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "no matching official build published for this major",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "22",
+    "os": "windows",
+    "arch": "x86",
+    "reason": "no matching official build published for this major",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "22",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "no matching official build published for this major",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "23",
+    "os": "windows",
+    "arch": "x86",
+    "reason": "no matching official build published for this major",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "23",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "no matching official build published for this major",
+    "looked_at": [
+      "https://api.github.com/repos/llvm/llvm-project/releases",
+      "https://releases.llvm.org/download.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "10",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "10",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "11",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "11",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "12",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "12",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "13",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "13",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "14",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "14",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "15",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "15",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "16",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "16",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "4",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "4",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "5",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "5",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "6",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "6",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "7",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "7",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "8",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "8",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "9",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "9",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "gcc.gnu.org publishes source only; no official Linux or macOS binary packages (distros/Homebrew build their own)",
+    "looked_at": [
+      "https://ftp.gnu.org/gnu/gcc/",
+      "https://gcc.gnu.org/releases.html"
+    ]
+  },
+  {
+    "runtime": "gcc",
+    "major": "various",
+    "os": "windows",
+    "arch": "amd64",
+    "reason": "classic 'mingw-builds' SourceForge project (niXman) is defunct; its file tree is not discoverable via a cheap listing call and it has been superseded by WinLibs (already scraped) for current GCC-on-Windows builds",
+    "looked_at": [
+      "https://sourceforge.net/projects/mingw-w64/rss?path=/"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "15",
+    "os": "macos",
+    "arch": "universal",
+    "reason": "Apple Clang / Xcode Command Line Tools require an Apple ID sign-in to download; not scriptable without authenticated credentials",
+    "looked_at": [
+      "https://developer.apple.com/download/all/"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "16",
+    "os": "macos",
+    "arch": "universal",
+    "reason": "Apple Clang / Xcode Command Line Tools require an Apple ID sign-in to download; not scriptable without authenticated credentials",
+    "looked_at": [
+      "https://developer.apple.com/download/all/"
+    ]
+  },
+  {
+    "runtime": "llvm",
+    "major": "17",
+    "os": "macos",
+    "arch": "universal",
+    "reason": "Apple Clang / Xcode Command Line Tools require an Apple ID sign-in to download; not scriptable without authenticated credentials",
+    "looked_at": [
+      "https://developer.apple.com/download/all/"
+    ]
+  }
+]

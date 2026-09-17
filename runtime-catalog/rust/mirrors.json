@@ -1,0 +1,853 @@
+[
+ {
+  "name": "ustc",
+  "base": "https://mirrors.ustc.edu.cn/rust-static/dist/",
+  "url_template": "https://mirrors.ustc.edu.cn/rust-static/dist/<same path as static.rust-lang.org/dist/...>",
+  "confirmed": true,
+  "sampled": [
+   {
+    "version": "1.0.0",
+    "os": "linux",
+    "arch": "amd64",
+    "status": 200,
+    "size_match": true
+   },
+   {
+    "version": "1.0.0",
+    "os": "linux",
+    "arch": "x86",
+    "status": 200,
+    "size_match": true
+   },
+   {
+    "version": "1.0.0",
+    "os": "macos",
+    "arch": "amd64",
+    "status": 200,
+    "size_match": true
+   },
+   {
+    "version": "1.51.0",
+    "os": "freebsd",
+    "arch": "amd64",
+    "status": 200,
+    "size_match": true
+   },
+   {
+    "version": "1.51.0",
+    "os": "illumos",
+    "arch": "amd64",
+    "status": 200,
+    "size_match": true
+   },
+   {
+    "version": "1.51.0",
+    "os": "linux",
+    "arch": "amd64",
+    "status": 200,
+    "size_match": true
+   },
+   {
+    "version": "1.98.1",
+    "os": "freebsd",
+    "arch": "amd64",
+    "status": 200,
+    "size_match": true
+   },
+   {
+    "version": "1.98.1",
+    "os": "freebsd",
+    "arch": "arm64",
+    "status": 200,
+    "size_match": true
+   }
+  ],
+  "note": "size-matched HEAD across old/mid/new releases",
+  "applied_to": "every releases.json entry (path-substitution on the official url)"
+ },
+ {
+  "name": "rsproxy",
+  "base": "https://rsproxy.cn/dist/",
+  "url_template": "https://rsproxy.cn/dist/<same path as static.rust-lang.org/dist/...>",
+  "confirmed": true,
+  "sampled": [
+   {
+    "version": "1.0.0",
+    "os": "linux",
+    "arch": "amd64",
+    "status": 200,
+    "size_match": false
+   },
+   {
+    "version": "1.0.0",
+    "os": "linux",
+    "arch": "x86",
+    "status": 200,
+    "size_match": false
+   },
+   {
+    "version": "1.0.0",
+    "os": "macos",
+    "arch": "amd64",
+    "status": 200,
+    "size_match": false
+   },
+   {
+    "version": "1.51.0",
+    "os": "freebsd",
+    "arch": "amd64",
+    "status": 200,
+    "size_match": true
+   },
+   {
+    "version": "1.51.0",
+    "os": "illumos",
+    "arch": "amd64",
+    "status": 200,
+    "size_match": true
+   },
+   {
+    "version": "1.51.0",
+    "os": "linux",
+    "arch": "amd64",
+    "status": 200,
+    "size_match": true
+   },
+   {
+    "version": "1.98.1",
+    "os": "freebsd",
+    "arch": "amd64",
+    "status": 200,
+    "size_match": true
+   },
+   {
+    "version": "1.98.1",
+    "os": "freebsd",
+    "arch": "arm64",
+    "status": 200,
+    "size_match": true
+   }
+  ],
+  "note": "size-matched HEAD across old/mid/new releases",
+  "applied_to": "every releases.json entry (path-substitution on the official url)"
+ },
+ {
+  "name": "tuna",
+  "base": "https://mirrors.tuna.tsinghua.edu.cn/rustup/dist/",
+  "confirmed": false,
+  "checked": [
+   {
+    "version": "1.0.0",
+    "os": "linux",
+    "arch": "amd64",
+    "status": 404,
+    "size_match": false
+   },
+   {
+    "version": "1.0.0",
+    "os": "linux",
+    "arch": "x86",
+    "status": 404,
+    "size_match": false
+   },
+   {
+    "version": "1.0.0",
+    "os": "macos",
+    "arch": "amd64",
+    "status": 404,
+    "size_match": false
+   },
+   {
+    "version": "1.51.0",
+    "os": "freebsd",
+    "arch": "amd64",
+    "status": 404,
+    "size_match": false
+   },
+   {
+    "version": "1.51.0",
+    "os": "illumos",
+    "arch": "amd64",
+    "status": 404,
+    "size_match": false
+   },
+   {
+    "version": "1.51.0",
+    "os": "linux",
+    "arch": "amd64",
+    "status": 404,
+    "size_match": false
+   },
+   {
+    "version": "1.98.1",
+    "os": "freebsd",
+    "arch": "amd64",
+    "status": 200,
+    "size_match": true
+   },
+   {
+    "version": "1.98.1",
+    "os": "freebsd",
+    "arch": "arm64",
+    "status": 200,
+    "size_match": true
+   }
+  ],
+  "note": "did not consistently return the same file/size (see checked list)",
+  "applied_to": null
+ },
+ {
+  "name": "aliyun",
+  "base": "https://mirrors.aliyun.com/rustup/dist/",
+  "confirmed": false,
+  "checked": [
+   {
+    "version": "1.0.0",
+    "os": "linux",
+    "arch": "amd64",
+    "status": 404,
+    "size_match": false
+   },
+   {
+    "version": "1.0.0",
+    "os": "linux",
+    "arch": "x86",
+    "status": 404,
+    "size_match": false
+   },
+   {
+    "version": "1.0.0",
+    "os": "macos",
+    "arch": "amd64",
+    "status": 404,
+    "size_match": false
+   },
+   {
+    "version": "1.51.0",
+    "os": "freebsd",
+    "arch": "amd64",
+    "status": 404,
+    "size_match": false
+   },
+   {
+    "version": "1.51.0",
+    "os": "illumos",
+    "arch": "amd64",
+    "status": 404,
+    "size_match": false
+   },
+   {
+    "version": "1.51.0",
+    "os": "linux",
+    "arch": "amd64",
+    "status": 404,
+    "size_match": false
+   },
+   {
+    "version": "1.98.1",
+    "os": "freebsd",
+    "arch": "amd64",
+    "status": 404,
+    "size_match": false
+   },
+   {
+    "version": "1.98.1",
+    "os": "freebsd",
+    "arch": "arm64",
+    "status": 404,
+    "size_match": false
+   }
+  ],
+  "note": "did not consistently return the same file/size (see checked list)",
+  "applied_to": null
+ },
+ {
+  "name": "tencent",
+  "base": "https://mirrors.cloud.tencent.com/rustup/dist/",
+  "url_template": "https://mirrors.cloud.tencent.com/rustup/dist/<same path as static.rust-lang.org/dist/...>",
+  "confirmed": true,
+  "region": "China (Tencent Cloud)",
+  "operator": "Tencent Cloud",
+  "protocols": {
+   "https": true,
+   "http": false
+  },
+  "full_or_partial": "full",
+  "sampled": [
+   {
+    "version": "1.0.0",
+    "file": "rust-1.0.0-i686-unknown-linux-gnu.tar.gz",
+    "status": 200,
+    "content_length": 103016274,
+    "expected": 103016274,
+    "size_match": true
+   },
+   {
+    "version": "1.0.0",
+    "file": "rust-1.0.0-x86_64-unknown-linux-gnu.tar.gz",
+    "status": 200,
+    "content_length": 101601508,
+    "expected": 101601508,
+    "size_match": true
+   },
+   {
+    "version": "1.0.0",
+    "file": "rust-1.0.0-x86_64-apple-darwin.tar.gz",
+    "status": 200,
+    "content_length": 92629244,
+    "expected": 92629244,
+    "size_match": true
+   },
+   {
+    "version": "1.51.0",
+    "file": "rust-1.51.0-x86_64-unknown-freebsd.tar.xz",
+    "status": 200,
+    "content_length": 175968188,
+    "expected": 175968188,
+    "size_match": true
+   },
+   {
+    "version": "1.51.0",
+    "file": "rust-1.51.0-x86_64-unknown-illumos.tar.xz",
+    "status": 200,
+    "content_length": 189990920,
+    "expected": 189990920,
+    "size_match": true
+   },
+   {
+    "version": "1.51.0",
+    "file": "rust-1.51.0-x86_64-unknown-linux-gnu.tar.xz",
+    "status": 200,
+    "content_length": 147543532,
+    "expected": 147543532,
+    "size_match": true
+   },
+   {
+    "version": "1.98.1",
+    "file": "rust-1.98.1-x86_64-unknown-freebsd.tar.xz",
+    "status": 200,
+    "content_length": 224607152,
+    "expected": 224607152,
+    "size_match": true
+   },
+   {
+    "version": "1.98.1",
+    "file": "rust-1.98.1-aarch64-unknown-freebsd.tar.xz",
+    "status": 200,
+    "content_length": 208350736,
+    "expected": 208350736,
+    "size_match": true
+   }
+  ],
+  "hash_verified_sample": {
+   "path": "2017-07-20/rust-1.19.0-i686-pc-windows-msvc.tar.xz",
+   "algo": "sha256",
+   "matched": true,
+   "detail": "51167056 bytes, sha256=5e00c99827b795eda1c15d65e2b0425de9e1a891a4ea66af5ed9b7a3f82e8142"
+  },
+  "applied_to": "every releases.json entry and every download_plan*.json entry (path-substitution on the official url)",
+  "date_checked": "2026-09-17"
+ },
+ {
+  "name": "official-http",
+  "base": "http://static.rust-lang.org/dist/",
+  "url_template": "http://static.rust-lang.org/dist/<same path as static.rust-lang.org/dist/...>",
+  "confirmed": true,
+  "region": "Global (official origin, plain HTTP)",
+  "operator": "Rust project (same CloudFront-backed origin as the vendor `url`, reached over plain http instead of https -- not a third-party mirror, but the plain-http reachability the brief specifically asked to check)",
+  "protocols": {
+   "https": true,
+   "http": true
+  },
+  "full_or_partial": "full",
+  "sampled": [
+   {
+    "version": "1.0.0",
+    "file": "rust-1.0.0-i686-unknown-linux-gnu.tar.gz",
+    "status": 200,
+    "content_length": 103016274,
+    "expected": 103016274,
+    "size_match": true
+   },
+   {
+    "version": "1.0.0",
+    "file": "rust-1.0.0-x86_64-unknown-linux-gnu.tar.gz",
+    "status": 200,
+    "content_length": 101601508,
+    "expected": 101601508,
+    "size_match": true
+   },
+   {
+    "version": "1.0.0",
+    "file": "rust-1.0.0-x86_64-apple-darwin.tar.gz",
+    "status": 200,
+    "content_length": 92629244,
+    "expected": 92629244,
+    "size_match": true
+   },
+   {
+    "version": "1.51.0",
+    "file": "rust-1.51.0-x86_64-unknown-freebsd.tar.xz",
+    "status": 200,
+    "content_length": 175968188,
+    "expected": 175968188,
+    "size_match": true
+   },
+   {
+    "version": "1.51.0",
+    "file": "rust-1.51.0-x86_64-unknown-illumos.tar.xz",
+    "status": 200,
+    "content_length": 189990920,
+    "expected": 189990920,
+    "size_match": true
+   },
+   {
+    "version": "1.51.0",
+    "file": "rust-1.51.0-x86_64-unknown-linux-gnu.tar.xz",
+    "status": 200,
+    "content_length": 147543532,
+    "expected": 147543532,
+    "size_match": true
+   },
+   {
+    "version": "1.98.1",
+    "file": "rust-1.98.1-x86_64-unknown-freebsd.tar.xz",
+    "status": 200,
+    "content_length": 224607152,
+    "expected": 224607152,
+    "size_match": true
+   },
+   {
+    "version": "1.98.1",
+    "file": "rust-1.98.1-aarch64-unknown-freebsd.tar.xz",
+    "status": 200,
+    "content_length": 208350736,
+    "expected": 208350736,
+    "size_match": true
+   }
+  ],
+  "hash_verified_sample": {
+   "path": "2017-07-20/rust-1.19.0-i686-pc-windows-msvc.tar.xz",
+   "algo": "sha256",
+   "matched": true,
+   "detail": "51167056 bytes, sha256=5e00c99827b795eda1c15d65e2b0425de9e1a891a4ea66af5ed9b7a3f82e8142"
+  },
+  "applied_to": "every releases.json entry and every download_plan*.json entry (path-substitution on the official url)",
+  "date_checked": "2026-09-17"
+ },
+ {
+  "name": "hust",
+  "base": "https://mirrors.hust.edu.cn/rustup/dist/",
+  "confirmed": false,
+  "region": "China (Huazhong University of Science and Technology)",
+  "operator": "HUST",
+  "checked": [
+   {
+    "version": "1.0.0",
+    "file": "rust-1.0.0-i686-unknown-linux-gnu.tar.gz",
+    "status": 404,
+    "content_length": null,
+    "expected": 103016274,
+    "size_match": false
+   },
+   {
+    "version": "1.0.0",
+    "file": "rust-1.0.0-x86_64-unknown-linux-gnu.tar.gz",
+    "status": 404,
+    "content_length": null,
+    "expected": 101601508,
+    "size_match": false
+   },
+   {
+    "version": "1.0.0",
+    "file": "rust-1.0.0-x86_64-apple-darwin.tar.gz",
+    "status": 404,
+    "content_length": null,
+    "expected": 92629244,
+    "size_match": false
+   },
+   {
+    "version": "1.51.0",
+    "file": "rust-1.51.0-x86_64-unknown-freebsd.tar.xz",
+    "status": 404,
+    "content_length": null,
+    "expected": 175968188,
+    "size_match": false
+   },
+   {
+    "version": "1.51.0",
+    "file": "rust-1.51.0-x86_64-unknown-illumos.tar.xz",
+    "status": 404,
+    "content_length": null,
+    "expected": 189990920,
+    "size_match": false
+   },
+   {
+    "version": "1.51.0",
+    "file": "rust-1.51.0-x86_64-unknown-linux-gnu.tar.xz",
+    "status": 404,
+    "content_length": null,
+    "expected": 147543532,
+    "size_match": false
+   },
+   {
+    "version": "1.98.1",
+    "file": "rust-1.98.1-x86_64-unknown-freebsd.tar.xz",
+    "status": 200,
+    "content_length": 224607152,
+    "expected": 224607152,
+    "size_match": true
+   },
+   {
+    "version": "1.98.1",
+    "file": "rust-1.98.1-aarch64-unknown-freebsd.tar.xz",
+    "status": 200,
+    "content_length": 208350736,
+    "expected": 208350736,
+    "size_match": true
+   }
+  ],
+  "note": "Only the current release's dated directory exists; every older sample 404s (content-length of a generic 404 page). Same rolling-window problem as tuna -- not a stable rule to bake into a catalog spanning 2015-2026. Not applied.",
+  "applied_to": null,
+  "date_checked": "2026-09-17"
+ },
+ {
+  "name": "nju",
+  "base": "https://mirror.nju.edu.cn/rustup/dist/",
+  "confirmed": false,
+  "region": "China (Nanjing University)",
+  "operator": "NJU",
+  "checked": [
+   {
+    "version": "1.0.0",
+    "file": "rust-1.0.0-i686-unknown-linux-gnu.tar.gz",
+    "status": 302,
+    "content_length": null,
+    "expected": 103016274,
+    "size_match": false
+   },
+   {
+    "version": "1.0.0",
+    "file": "rust-1.0.0-x86_64-unknown-linux-gnu.tar.gz",
+    "status": 302,
+    "content_length": null,
+    "expected": 101601508,
+    "size_match": false
+   },
+   {
+    "version": "1.0.0",
+    "file": "rust-1.0.0-x86_64-apple-darwin.tar.gz",
+    "status": 302,
+    "content_length": null,
+    "expected": 92629244,
+    "size_match": false
+   },
+   {
+    "version": "1.51.0",
+    "file": "rust-1.51.0-x86_64-unknown-freebsd.tar.xz",
+    "status": 302,
+    "content_length": null,
+    "expected": 175968188,
+    "size_match": false
+   },
+   {
+    "version": "1.51.0",
+    "file": "rust-1.51.0-x86_64-unknown-illumos.tar.xz",
+    "status": 302,
+    "content_length": null,
+    "expected": 189990920,
+    "size_match": false
+   },
+   {
+    "version": "1.51.0",
+    "file": "rust-1.51.0-x86_64-unknown-linux-gnu.tar.xz",
+    "status": 302,
+    "content_length": null,
+    "expected": 147543532,
+    "size_match": false
+   },
+   {
+    "version": "1.98.1",
+    "file": "rust-1.98.1-x86_64-unknown-freebsd.tar.xz",
+    "status": 302,
+    "content_length": null,
+    "expected": 224607152,
+    "size_match": false
+   },
+   {
+    "version": "1.98.1",
+    "file": "rust-1.98.1-aarch64-unknown-freebsd.tar.xz",
+    "status": 302,
+    "content_length": null,
+    "expected": 208350736,
+    "size_match": false
+   }
+  ],
+  "note": "Same rolling-window problem as hust/tuna: only the current release matches, every older sample 404s. Also requires a same-origin cookie handshake before it will serve anything (first request 302s to itself and sets a `bcheck` cookie; the second request with that cookie succeeds) -- fine for a browser or a cookie-jar-aware client, irrelevant here since it's rejected anyway. Not applied.",
+  "applied_to": null,
+  "date_checked": "2026-09-17"
+ },
+ {
+  "name": "sjtu",
+  "base": "https://mirror.sjtu.edu.cn/rust-static/dist/",
+  "confirmed": false,
+  "region": "China (Shanghai Jiao Tong University)",
+  "operator": "SJTU",
+  "checked": [
+   {
+    "version": "1.0.0",
+    "file": "rust-1.0.0-i686-unknown-linux-gnu.tar.gz",
+    "status": 403,
+    "content_length": null,
+    "expected": 103016274,
+    "size_match": false
+   },
+   {
+    "version": "1.0.0",
+    "file": "rust-1.0.0-x86_64-unknown-linux-gnu.tar.gz",
+    "status": 403,
+    "content_length": null,
+    "expected": 101601508,
+    "size_match": false
+   },
+   {
+    "version": "1.0.0",
+    "file": "rust-1.0.0-x86_64-apple-darwin.tar.gz",
+    "status": 403,
+    "content_length": null,
+    "expected": 92629244,
+    "size_match": false
+   },
+   {
+    "version": "1.51.0",
+    "file": "rust-1.51.0-x86_64-unknown-freebsd.tar.xz",
+    "status": 403,
+    "content_length": null,
+    "expected": 175968188,
+    "size_match": false
+   },
+   {
+    "version": "1.51.0",
+    "file": "rust-1.51.0-x86_64-unknown-illumos.tar.xz",
+    "status": 403,
+    "content_length": null,
+    "expected": 189990920,
+    "size_match": false
+   },
+   {
+    "version": "1.51.0",
+    "file": "rust-1.51.0-x86_64-unknown-linux-gnu.tar.xz",
+    "status": 403,
+    "content_length": null,
+    "expected": 147543532,
+    "size_match": false
+   },
+   {
+    "version": "1.98.1",
+    "file": "rust-1.98.1-x86_64-unknown-freebsd.tar.xz",
+    "status": 403,
+    "content_length": null,
+    "expected": 224607152,
+    "size_match": false
+   },
+   {
+    "version": "1.98.1",
+    "file": "rust-1.98.1-aarch64-unknown-freebsd.tar.xz",
+    "status": 403,
+    "content_length": null,
+    "expected": 208350736,
+    "size_match": false
+   }
+  ],
+  "note": "The very first HEAD from this run's IP succeeded with a byte-identical size match; every request after that -- across UAs, across a fresh run minutes later -- came back 403 with a `cerberus-sec: BLOCKED` response header. That's SJTU's own anti-bot layer blacklisting the source IP after a handful of automated requests, which this script cannot avoid doing on every run. Rejected as unusable for an idempotent, re-run tool, not as broken infra.",
+  "applied_to": null,
+  "date_checked": "2026-09-17"
+ },
+ {
+  "name": "bfsu",
+  "base": "https://mirrors.bfsu.edu.cn/rustup/dist/",
+  "confirmed": false,
+  "region": "China (Beijing Foreign Studies University)",
+  "operator": "BFSU",
+  "checked": [
+   {
+    "version": "1.0.0",
+    "file": "rust-1.0.0-i686-unknown-linux-gnu.tar.gz",
+    "status": 404,
+    "content_length": null,
+    "expected": 103016274,
+    "size_match": false
+   },
+   {
+    "version": "1.0.0",
+    "file": "rust-1.0.0-x86_64-unknown-linux-gnu.tar.gz",
+    "status": 404,
+    "content_length": null,
+    "expected": 101601508,
+    "size_match": false
+   },
+   {
+    "version": "1.0.0",
+    "file": "rust-1.0.0-x86_64-apple-darwin.tar.gz",
+    "status": 404,
+    "content_length": null,
+    "expected": 92629244,
+    "size_match": false
+   },
+   {
+    "version": "1.51.0",
+    "file": "rust-1.51.0-x86_64-unknown-freebsd.tar.xz",
+    "status": 404,
+    "content_length": null,
+    "expected": 175968188,
+    "size_match": false
+   },
+   {
+    "version": "1.51.0",
+    "file": "rust-1.51.0-x86_64-unknown-illumos.tar.xz",
+    "status": 404,
+    "content_length": null,
+    "expected": 189990920,
+    "size_match": false
+   },
+   {
+    "version": "1.51.0",
+    "file": "rust-1.51.0-x86_64-unknown-linux-gnu.tar.xz",
+    "status": 404,
+    "content_length": null,
+    "expected": 147543532,
+    "size_match": false
+   },
+   {
+    "version": "1.98.1",
+    "file": "rust-1.98.1-x86_64-unknown-freebsd.tar.xz",
+    "status": 404,
+    "content_length": null,
+    "expected": 224607152,
+    "size_match": false
+   },
+   {
+    "version": "1.98.1",
+    "file": "rust-1.98.1-aarch64-unknown-freebsd.tar.xz",
+    "status": 404,
+    "content_length": null,
+    "expected": 208350736,
+    "size_match": false
+   }
+  ],
+  "note": "403 'Sorry, you've been denied access to this page' on every path tried, including bare `/` and `/robots.txt`, with a browser User-Agent -- looks like a blanket WAF/geo block on this vantage point's egress IP. Can't be confirmed or ruled out from here; recorded as inconclusive, not confirmed.",
+  "applied_to": null,
+  "date_checked": "2026-09-17"
+ },
+ {
+  "name": "fastly-static (vendor-operated alias)",
+  "base": "https://fastly-static.rust-lang.org/dist/",
+  "url_template": "https://fastly-static.rust-lang.org/dist/<same path as static.rust-lang.org/dist/...>",
+  "source": "discovered via rustup's own source (tests/suite/static_roots.rs / src/anchors.rs), which pins TLS trust anchors for this exact hostname as a fallback for systems with broken/missing CA roots -- not a third-party mirror, but a second public hostname for the same S3-backed static.rust-lang.org bucket (same ETag/Last-Modified as the canonical host)",
+  "confirmed": true,
+  "region": "vendor CDN (Fastly edge), not China",
+  "protocols": {
+   "https": "confirmed",
+   "http": "confirmed 2026-09-17: 200 with no redirect (good for old systems with weak TLS/CA support)"
+  },
+  "sampled": [
+   {
+    "version": "1.0.0",
+    "os": "linux",
+    "arch": "amd64",
+    "content_range_size_match": true
+   },
+   {
+    "version": "1.0.0",
+    "os": "macos",
+    "arch": "amd64",
+    "content_range_size_match": true
+   },
+   {
+    "version": "1.19.0",
+    "os": "windows",
+    "arch": "x86",
+    "content_range_size_match": true
+   },
+   {
+    "version": "1.22.0",
+    "os": "windows",
+    "arch": "x86",
+    "content_range_size_match": true
+   },
+   {
+    "version": "1.98.1",
+    "os": "linux",
+    "arch": "amd64",
+    "content_range_size_match": true
+   },
+   {
+    "version": "1.98.1",
+    "os": "linux",
+    "arch": "arm64",
+    "libc": "musl",
+    "content_range_size_match": true
+   }
+  ],
+  "note": "HEAD gave no Content-Length on this host (chunked via Varnish); confirmed instead via Range: bytes=0-0 -> Content-Range total, which matched releases.json size on all 6 samples",
+  "hash_verified_sample": "rust-1.19.0-i686-pc-windows-msvc.tar.xz (51,167,056 bytes) downloaded in full, sha256 5e00c99827b795eda1c15d65e2b0425de9e1a891a4ea66af5ed9b7a3f82e8142 matched releases.json checksum; deleted after verification",
+  "bogus_path_control": "https://fastly-static.rust-lang.org/dist/rust-9.9.9-bogus-nonexistent.tar.gz -> 404",
+  "date_checked": "2026-09-17",
+  "applied_to": "every releases.json/download_plan*.json entry with url prefix https://static.rust-lang.org (path-substitution, extra_mirrors.py not updated -- applied directly via tools/add_mirrors.py from catalog/package-managers/mine_version_managers.py)"
+ },
+ {
+  "name": "cloudfront-static (vendor-operated alias)",
+  "base": "https://cloudfront-static.rust-lang.org/dist/",
+  "url_template": "https://cloudfront-static.rust-lang.org/dist/<same path as static.rust-lang.org/dist/...>",
+  "source": "same rustup TLS-anchor test as fastly-static above; the second of the two hostnames rustup pins roots for",
+  "confirmed": true,
+  "region": "vendor CDN (CloudFront edge), not China",
+  "protocols": {
+   "https": "confirmed",
+   "http": "rejected 2026-09-17: 301-redirects to its own https, so plain http is not actually served"
+  },
+  "sampled": [
+   {
+    "version": "1.0.0",
+    "os": "linux",
+    "arch": "amd64",
+    "content_length_match": true
+   },
+   {
+    "version": "1.0.0",
+    "os": "macos",
+    "arch": "amd64",
+    "content_length_match": true
+   },
+   {
+    "version": "1.19.0",
+    "os": "windows",
+    "arch": "x86",
+    "content_length_match": true
+   },
+   {
+    "version": "1.22.0",
+    "os": "windows",
+    "arch": "x86",
+    "content_length_match": true
+   },
+   {
+    "version": "1.98.1",
+    "os": "linux",
+    "arch": "amd64",
+    "content_length_match": true
+   },
+   {
+    "version": "1.98.1",
+    "os": "linux",
+    "arch": "arm64",
+    "libc": "musl",
+    "content_length_match": true
+   }
+  ],
+  "hash_verified_sample": "rust-1.19.0-i686-pc-windows-msvc.tar.xz (51,167,056 bytes) downloaded in full, sha256 matched; deleted after verification",
+  "bogus_path_control": "https://cloudfront-static.rust-lang.org/dist/rust-9.9.9-bogus-nonexistent.tar.gz -> 404",
+  "date_checked": "2026-09-17",
+  "applied_to": "every releases.json/download_plan*.json entry with url prefix https://static.rust-lang.org (path-substitution)"
+ }
+]

@@ -1,0 +1,503 @@
+{
+  "runtime": "zig",
+  "languages": [
+    "zig"
+  ],
+  "researched": "2026-09-17",
+  "sources": [
+    "https://ziglang.org/download/index.json",
+    "https://ziglang.org/download/0.1.1/release-notes.html",
+    "https://ziglang.org/download/0.2.0/release-notes.html",
+    "https://ziglang.org/download/0.3.0/release-notes.html",
+    "https://ziglang.org/download/0.4.0/release-notes.html",
+    "https://ziglang.org/download/0.5.0/release-notes.html",
+    "https://ziglang.org/download/0.6.0/release-notes.html",
+    "https://ziglang.org/download/0.7.0/release-notes.html",
+    "https://ziglang.org/download/0.7.1/release-notes.html",
+    "https://ziglang.org/download/0.8.0/release-notes.html",
+    "https://ziglang.org/download/0.8.1/release-notes.html",
+    "https://ziglang.org/download/0.9.0/release-notes.html",
+    "https://ziglang.org/download/0.9.1/release-notes.html",
+    "https://ziglang.org/download/0.10.0/release-notes.html",
+    "https://ziglang.org/download/0.10.1/release-notes.html",
+    "https://ziglang.org/download/0.11.0/release-notes.html",
+    "https://ziglang.org/download/0.12.0/release-notes.html",
+    "https://ziglang.org/download/0.12.1/release-notes.html",
+    "https://ziglang.org/download/0.13.0/release-notes.html",
+    "https://ziglang.org/download/0.14.0/release-notes.html",
+    "https://ziglang.org/download/0.15.1/release-notes.html",
+    "https://ziglang.org/download/0.16.0/release-notes.html"
+  ],
+  "milestones": [
+    {
+      "capability": "async_await",
+      "since": "0.2",
+      "notes": "async/await/suspend/resume/promise keywords added in 0.2.0 (\"stackless coroutines\"); reworked into allocator-free \"async functions\" in 0.5.0. Broke when the self-hosted compiler shipped as the ONLY compiler in 0.11.0 (\"Async functions regressed with the release of 0.11.0\", per the 0.12.0 notes, citing LLVM's inability to optimize them and async function pointers preventing stack size from being known). The keywords were formally removed from the grammar in 0.15.1 (\"it is settled that there will not be async/await keywords in the language\"). Reintroduced conceptually as a library-level API in 0.16.0's std.Io interface (Io.async, Future(T), .await, .cancel) -- a colorblind-async model, not new syntax."
+    },
+    {
+      "capability": "self_hosted_compiler_default",
+      "since": "0.10",
+      "notes": "stage2 (self-hosted, written in Zig) became the DEFAULT compiler in 0.10.0; the old C++ \"stage1\" bootstrap compiler remained available behind -fstage1 for code stage2 didn't support yet (notably async/await). stage1 was deleted entirely in 0.11.0 (\"the C++ implementation of Zig was deleted\"), leaving stage2 -- now bootstrapped via a 2.4 MiB WebAssembly binary plus a C compiler -- as the only compiler."
+    },
+    {
+      "capability": "package_manager_bundled",
+      "since": "0.11",
+      "notes": "build.zig.zon + the new ZON (Zig Object Notation) data format debuted in 0.11.0 (\"the debut of Package Management\"). No central registry: packages are arbitrary directory trees, tarballs, or git URLs pinned by content hash. Still described in 0.11.0's own notes as usable mainly for \"simple pure-Zig projects\"; optional dependencies and first-class binary-dependency support were still only planned."
+    },
+    {
+      "capability": "c_cross_compiler",
+      "since": "0.4",
+      "notes": "\"zig cc\"/\"zig c++\" expose Zig's bundled Clang as a cross-compiling C/C++ compiler; the underlying capability (Zig ships libc for many targets, so it can link/cross-compile C code) existed since 0.4.0. The ergonomic zig cc subcommand with full Clang CLI-flag compatibility -- popularized by the blog post \"zig cc: a Powerful Drop-In Replacement for GCC/Clang\" -- arrived in 0.6.0."
+    },
+    {
+      "capability": "incremental_compilation",
+      "since": "0.14",
+      "notes": "Opt-in and experimental via the -fincremental flag starting in 0.14.0 (\"not ready to be enabled by default\"; completeness varies by linker backend and compiler-state serialization isn't implemented, so it must be paired with --watch and -fno-emit-bin). 0.15.x called it \"stable enough\" only for that no-emit workflow, still with \"known bugs\" that \"can lead to miscompilations\". Not on by default as of 0.16.0."
+    },
+    {
+      "capability": "http2_client",
+      "since": "none",
+      "notes": "std.http.Client debuted in 0.11.0 as a dependency of the package manager's URL fetcher (transfer-encoding: chunked, redirects, connection pooling/keep-alive). It is HTTP/1.1 only; no HTTP/2 or HTTP/3 client exists as of 0.16.0. The HTTP stack was reworked in 0.12.0 (std.http.Headers removed, server rewritten) and again in 0.15.1 (\"Writergate\", moved onto the new std.Io.Writer/Reader interfaces)."
+    },
+    {
+      "capability": "tls_1_3",
+      "since": "0.11",
+      "notes": "std.crypto.tls shipped a TLS 1.3-only client in 0.11.0 (built to support the HTTP client/package manager). No TLS 1.2 fallback, no server implementation, and at launch \"there is not yet any automated testing for this API, so use it at your own risk\". Still client-only and 1.3-only as of 0.16.0."
+    },
+    {
+      "capability": "native_threads",
+      "since": "0.3",
+      "notes": "std.os.spawnThread (later std.Thread.spawn) added in 0.3.0, using pthreads when linking libc and raw syscalls otherwise, \"works on all targets\". Zig has never had a GIL. In 0.16.0 the higher-level primitives built on std.Thread (Mutex, Condition, ResetEvent, WaitGroup, Futex, RwLock, Semaphore) were superseded by std.Io equivalents, and std.Thread.Pool was removed outright in favor of std.Io.Group/async."
+    },
+    {
+      "capability": "arm64_linux",
+      "since": "0.4",
+      "notes": "arm64-linux (Shawn Landden's port) reached Tier 2 in 0.4.0; blocked from Tier 1 by lack of CI at the time. It is STILL Tier 2, not Tier 1, as of 0.16.0's support table."
+    },
+    {
+      "capability": "arm64_macos",
+      "since": "0.8",
+      "notes": "0.8.0's new self-hosted linker gained the ability to generate well-formed, codesigned arm64 (Apple Silicon) macOS binaries and to cross-compile C/C++/Zig to them, though 0.9.0's notes admit \"we don't have any CI coverage for this target yet\". aarch64-macos is STILL Tier 2, not Tier 1, as of 0.16.0."
+    },
+    {
+      "capability": "arm64_windows",
+      "since": "0.9",
+      "notes": "0.9.0 published the first-ever ARM64 Windows build, explicitly flagged as untested (\"Zig developers are still in the process of acquiring the hardware\"). Remains Tier 2 through 0.16.0."
+    },
+    {
+      "capability": "generics",
+      "since": "0.1",
+      "notes": "comptime-parameterized functions and types (Zig's approach to generics) were part of the language from the first public beta; there was never a pre-generics era to graduate from, unlike languages that bolted generics on later."
+    }
+  ],
+  "majors": [
+    {
+      "major": "0.1",
+      "released": "2017-10-17",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "i386 and x86_64 standard-library target support; no stated minimum OS version",
+        "macos": "i386 and x86_64 standard-library target support; no arm64 (Apple Silicon did not exist)",
+        "linux": "x86_64 standard-library target support; freestanding (no OS abstraction) mode additionally covers arm, aarch64, mips, powerpc, s390x, sparc, thumb, bpf, hexagon, r600, amdgcn, spir, lanai"
+      },
+      "added": [
+        "first public beta release",
+        "comptime-based generics",
+        "error unions with mandatory handling",
+        "@cImport C interop",
+        "manual memory management, no GC, no hidden control flow"
+      ],
+      "limitations": [
+        "no async/await keywords yet (added 0.2.0)",
+        "no zig build system yet (0.2.0)",
+        "no zig fmt yet (0.3.0)",
+        "no formal Tier support table yet (introduced 0.4.0)",
+        "no self-hosted compiler roadmap public yet (self-hosted became default 0.10.0)",
+        "no package manager (added 0.11.0)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "0.2",
+      "released": "2018-03-15",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "no formal tier table yet; targeted alongside Linux/macOS",
+        "macos": "no formal tier table yet",
+        "linux": "no formal tier table yet; self-hosted compiler work begins targeting it first"
+      },
+      "added": [
+        "async/await/suspend/resume/promise coroutine keywords",
+        "unions and enums",
+        "error sets and error return traces",
+        "Zig Build System (zig build)",
+        "early self-hosted C-translation",
+        "std.sort, arg-parsing API, crypto (MD5/SHA-1/SHA-2/Blake2/SHA-3)"
+      ],
+      "limitations": [
+        "coroutines are \"brand-spanking new\" with no documentation or non-trivial examples yet",
+        "goto removed in favor of labeled loops/blocks/break/continue",
+        "no zig fmt yet (0.3.0)",
+        "no Tier support table yet (0.4.0)",
+        "self-hosted compiler and package manager both years away"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "0.3",
+      "released": "2018-09-28",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "stack traces added via MSVC/PDB parsing; no formal Tier table yet",
+        "macos": "stack traces added via lldb-style DWARF parsing; no formal Tier table yet",
+        "linux": "automated static x86_64 builds of the master branch begin; no formal Tier table yet"
+      },
+      "added": [
+        "zig fmt",
+        "zig run",
+        "zig init-lib / zig init-exe",
+        "std.os.spawnThread: real OS threads on all targets (pthreads with libc, raw syscalls without)",
+        "ReleaseSmall mode",
+        "f16 and improved f128 support",
+        "new async<allocator> call() syntax",
+        "Zig added to Godbolt Compiler Explorer"
+      ],
+      "limitations": [
+        "async/await still requires an explicit allocator parameter and the call can fail (fixed 0.5.0)",
+        "no formal Tier support table yet (0.4.0)",
+        "no package manager",
+        "self-hosted compiler still an early roadmap item"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "0.4",
+      "released": "2019-04-08",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "i386/x86_64, implied Tier 1; MSVC and MinGW/lldb debugging",
+        "macos": "x86_64 only; no arm64 (Apple Silicon did not exist yet); no native Mach-O linker yet (roadmap item)",
+        "linux": "x86_64 Tier 1; arm64-linux graduates to Tier 2 (blocked from Tier 1 by lack of CI)",
+        "freebsd": "added this release",
+        "netbsd": "added this release, Tier 2 (no CI; system libc startup files not yet built lazily from source)"
+      },
+      "added": [
+        "formal Tier system (1-4) and Support Table introduced",
+        "WebAssembly support (freestanding)",
+        "UEFI support",
+        "\"zig cc\": Zig ships libc and can act as a static cross-compiling C compiler for any listed target, from any host",
+        "static-by-default linking, libc auto-detection",
+        "single-threaded build mode",
+        "vectors/SIMD",
+        "LLVM 8"
+      ],
+      "limitations": [
+        "self-hosted compiler and package manager both still future roadmap items, unusable",
+        "no native macOS/Mach-O linker (must shell out) -- roadmap item",
+        "only Tier 1 targets \"thoroughly tested\"; other libcs planned but not present"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "0.5",
+      "released": "2019-09-30",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 7+ (first explicitly stated minimum), via new MSYS2 support",
+        "macos": "macOS 10.13+ (High Sierra)",
+        "linux": "Linux 3.16+; glibc 2.30 and musl 1.1.23 bundled",
+        "freebsd": "continuing Tier support",
+        "netbsd": "continuing Tier support"
+      },
+      "added": [
+        "Async Functions reworked: allocator-free, non-generic, inferred from suspend points, frame supplied by the caller",
+        "usingnamespace",
+        "@Type",
+        "Result Location Semantics",
+        "RISC-V, 32-bit ARM, iOS, MIPS, Android, UEFI support added",
+        "WebAssembly and WASI reach Tier 2",
+        "mingw-w64 bundled for Windows libc"
+      ],
+      "limitations": [
+        "self-hosted compiler still not the default (C++ \"stage1\" only)",
+        "no package manager",
+        "iOS and Android support brand new and lower-tier"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "0.6",
+      "released": "2020-04-13",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "bumped to Windows 8.1+ (Windows 7 support dropped); 32-bit Windows support added",
+        "macos": "10.13+ unchanged; target-specific OS version ranges (min AND max) introduced",
+        "linux": "3.16+ unchanged; glibc 2.31, musl 1.2.0",
+        "netbsd": "continuing Tier support"
+      },
+      "added": [
+        "\"zig cc\" gains full Clang command-line-flag compatibility (\"a Powerful Drop-In Replacement for GCC/Clang\")",
+        "zig-bootstrap tarball for building LLVM/Clang/LLD/Zig from source with no branching logic",
+        "tuples, @call, callconv, non-exhaustive enums, atomics",
+        "Async I/O added to the stdlib event loop",
+        "LLVM 10"
+      ],
+      "limitations": [
+        "Windows 7 no longer supported (8.1+ required)",
+        "self-hosted compiler still not the default",
+        "no package manager",
+        "zig cc still recommended only as a low-level escape hatch; --c-source / build-system API preferred"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "0.7",
+      "released": "2020-11-08",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "8.1+",
+        "macos": "10.13+; macOS libc headers refreshed",
+        "linux": "3.16+; glibc 2.32, musl 1.2.1, mingw-w64 8.0.0"
+      },
+      "added": [
+        "self-hosted compiler (stage2) becomes the primary development focus and driver code, though .zig files are still compiled by stage1 by default",
+        "C header file generation tracked as a roadmap item"
+      ],
+      "limitations": [
+        "self-hosted compiler (stage2) still cannot be used for normal builds (stage1 remains default until 0.10.0)",
+        "no package manager (tracked as roadmap \"Package Manager Status\")",
+        "the 0.7.0 release notes explicitly say \"These Release Notes are Incomplete\""
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "0.8",
+      "released": "2021-06-04",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "8.1+; MSVC no longer required by default",
+        "macos": "10.13+; arm64 (Apple Silicon) binaries can now be generated and codesigned via the new self-hosted linker, but not yet CI-tested",
+        "linux": "3.16+; glibc 2.33",
+        "other": "Haiku, csky, thumb2, bpf, msp430, sparc64, PowerPC support added"
+      },
+      "added": [
+        "Self-hosted linker (MachO/ELF/COFF/Wasm) lets stage2 codesign arm64 macOS binaries and cross-compile C/C++/Zig to arm64 and x86_64 macOS",
+        "x86-64/AArch64/ARM/Wasm/RISC-V64/C/SPIR-V backends progressing for stage2",
+        "LTO and static PIE support",
+        "MultiArrayList"
+      ],
+      "limitations": [
+        "stage2 (self-hosted) still not the default compiler for .zig source (stays stage1 until 0.10.0)",
+        "arm64 macOS builds have no CI coverage yet, considered experimental",
+        "no package manager yet"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "0.9",
+      "released": "2021-12-20",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "8.1+; first (explicitly untested) ARM64 Windows build published",
+        "macos": "10.13+; per-OS-version C headers added (e.g. aarch64-macos.11/.12); aarch64-macos \"we don't have any CI coverage for this target yet\"",
+        "linux": "3.16+; glibc 2.34; io_uring wrappers added",
+        "other": "OpenBSD, SPARC, Plan 9, Solaris/Illumos, Haiku, and custom-OS sections added; WASI section expanded"
+      },
+      "added": [
+        "Versioned macOS C headers",
+        "first ARM64 Windows build (untested)",
+        "io_uring support",
+        "std.Thread API cleanup (spawn/join/detach/getCurrentId)",
+        "@minimum/@maximum, @select, address spaces"
+      ],
+      "limitations": [
+        "ARM64 Windows binaries unverified by the Zig team",
+        "aarch64-macos has no CI, reliability unknown, flaky OOM failures reported for related CI targets",
+        "still stage1-compiled by default (stage2 not default until 0.10.0)",
+        "no package manager"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "0.10",
+      "released": "2022-10-31",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "8.1+",
+        "macos": "bumped to 11+ (Big Sur); macOS 13 Ventura support added, macOS 10 Catalina support dropped",
+        "linux": "3.16+; glibc 2.34; default C ABI on Linux changed from gnu to none",
+        "other": "OpenBSD, SPARC, PowerPC, WASI, UEFI, and GPU-programming sections added"
+      },
+      "added": [
+        "Self-hosted compiler (stage2) becomes the DEFAULT compiler; old C++ bootstrap (\"stage1\") still available behind -fstage1 for those not ready to upgrade",
+        "Autodoc",
+        "std.builtin.CompilerBackend",
+        "f80 support"
+      ],
+      "limitations": [
+        "async/await \"is not done yet\" in the self-hosted compiler -- users of async/await cannot upgrade to stage2 until it's complete (it never was; async regressed permanently in 0.11.0)",
+        "stage2 has fresh bugs, missing or less-helpful compile errors, and \"falls short of stage1\" on C ABI compatibility, C translation, several codegen backends, and the self-hosted linker (MachO/COFF/ELF)",
+        "macOS 10 (Catalina) no longer supported",
+        "still no package manager"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "0.11",
+      "released": "2023-08-04",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "bumped to Windows 10+ (8.1 support dropped)",
+        "macos": "11+; libc headers/libSystem.tbd updated to macOS 13",
+        "linux": "3.16+; glibc 2.34, musl 1.2.4",
+        "other": "FreeBSD, OpenBSD, NetBSD, WASI, UEFI, Plan9 each get dedicated support sections"
+      },
+      "added": [
+        "Package manager debut: build.zig.zon + ZON format, std.Build.dependency/addModule/anonymousDependency",
+        "stage1 (the C++ compiler) DELETED entirely; stage2 becomes the ONLY compiler, bootstrapped via a 2.4 MiB WebAssembly file plus a C compiler",
+        "std.http.Client (HTTP/1.1; used by the package manager to fetch URLs; chunked transfer-encoding, redirects, connection pooling/keep-alive)",
+        "std.crypto.tls: TLS 1.3-only client",
+        "SIGPIPE ignored by default"
+      ],
+      "limitations": [
+        "async functions regressed with this release and were never fixed in the self-hosted compiler (LLVM cannot optimize them well; async function pointers prevent the stack size from being known)",
+        "TLS client has no server counterpart and \"has not yet been fuzz-tested\" / \"use it at your own risk\"",
+        "package manager has no official registry and no optional dependencies or first-class binary-dependency support yet",
+        "Windows 8.1 no longer supported (10+ required)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "0.12",
+      "released": "2024-04-20",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "10+",
+        "macos": "11+",
+        "linux": "3.16+; glibc 2.38, musl 1.2.4, mingw-w64 updated; LLVM 17"
+      },
+      "added": [
+        "Reworked std.http (std.http.Headers removed, server rewritten from scratch)",
+        "std.os renamed to std.posix",
+        "Build system: System Package Mode, optional system-library integration, lazy dependencies, b.path",
+        "Ryu floating-point formatting"
+      ],
+      "limitations": [
+        "Async/Await formally flagged as an unresolved roadmap item: \"their future in the Zig language is unclear\" due to LLVM optimization limits and async-function-pointer stack-size problems",
+        "\"Bring-Your-Own-OS API Layer Regressed\"",
+        "package manager still pre-1.0, usable mainly for \"simple pure-Zig projects\""
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "0.13",
+      "released": "2024-06-07",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "10+; Windows DLLs now install to <prefix>/bin/ by default",
+        "macos": "11+",
+        "linux": "3.16+; glibc 2.39, musl 1.2.5; LLVM 18"
+      },
+      "added": [
+        "BatBadBut command-injection mitigation for process spawning",
+        "ComptimeStringMap renamed to StaticStringMap and enhanced",
+        "std.zip / zip-archive support usable from build.zig.zon",
+        "zig-cache directory renamed to .zig-cache",
+        "CLICOLOR_FORCE replaces YES_COLOR"
+      ],
+      "limitations": [
+        "small release focused on stdlib renames and a security fix rather than new capability",
+        "async/await status unchanged from 0.12 (still broken in the self-hosted compiler, future undecided)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "0.14",
+      "released": "2025-03-05",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "10+ (no dedicated OS-version table published this cycle; last explicit minimum was 0.13's Windows 10+)",
+        "macos": "11+ (same caveat; dedicated OS-version-requirements table introduced next release, 0.15.1)",
+        "linux": "kernel headers refreshed to 6.13.4; glibc 2.41, musl 1.2.5",
+        "other": "aarch64-macos and aarch64-windows remain Tier 2, not Tier 1, in the new icon-based Support Table"
+      },
+      "added": [
+        "Incremental Compilation: opt-in experimental via -fincremental (recommended with file-system watching; backend-dependent completeness)",
+        "Multithreaded backend support: some compiler backends can now run in parallel with semantic analysis",
+        "DebugAllocator / SmpAllocator replace GeneralPurposeAllocator",
+        "ZON parsing/serialization as a language feature (not just build.zig.zon)",
+        "Labeled switch; @branchHint replaces @setCold"
+      ],
+      "limitations": [
+        "incremental compilation not ready for default use (\"None of them are generally ready for use yet\")",
+        "aarch64-macos and aarch64-windows still Tier 2, without CI parity with x86_64-linux's Tier 1",
+        "std.builtin.Type field renames break existing reflection/comptime code",
+        "@fence removed outright in favor of explicit atomic ordering barriers"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "0.15",
+      "released": "2025-08-19",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "10 (first release with an explicit \"OS Version Requirements\" minimum-version table)",
+        "macos": "13.0",
+        "linux": "5.10 (raised from the long-standing 3.16+ floor)",
+        "freebsd": "14.0; dynamically-linked FreeBSD libc now supported when cross-compiling",
+        "netbsd": "10.1; dynamically-linked NetBSD libc now supported when cross-compiling",
+        "openbsd": "7.6",
+        "solaris": "11 (still listed this release; dropped in 0.16.0)"
+      },
+      "added": [
+        "async/await keywords formally REMOVED from the language grammar (also @frameSize); \"settled that there will not be async/await keywords in the language\", to be replaced eventually by a std.Io interface",
+        "usingnamespace removed from the language",
+        "\"Writergate\": all-new std.Io.Writer/std.Io.Reader interfaces replacing the old generic writer/reader model",
+        "Incremental compilation reaches \"stable enough\" for -fno-emit-bin workflows",
+        "Threaded Codegen: semantic analysis, codegen, and linking can all run in parallel",
+        "ArrayList becomes unmanaged-by-default; BoundedArray removed",
+        "LLVM 20; note: 0.15.0 itself was never released, 0.15.1 is the first build of this line"
+      ],
+      "limitations": [
+        "async/await no longer exists as language syntax; existing code must be rewritten by hand, no automatic migration",
+        "\"Writergate\" is a sweeping breaking change to nearly all I/O code (custom format methods now require \"{f}\"; format strings/options removed from format methods)",
+        "incremental compilation still experimental with \"known bugs\" that \"can lead to miscompilations or incorrect compile errors\"",
+        "Linux minimum jumped from 3.16 to 5.10, dropping support for older kernels",
+        "macOS minimum raised to 13.0",
+        "0.15.0 was never shipped publicly (only 0.15.1 and 0.15.2 patches exist)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "0.16",
+      "released": "2026-04-13",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "10",
+        "macos": "13.0",
+        "linux": "5.10; headers refreshed to 6.19; glibc 2.43, musl 1.2.5",
+        "freebsd": "14.0",
+        "netbsd": "10.1",
+        "openbsd": "7.8",
+        "dragonfly": "6.0",
+        "solaris": "none: support for Solaris (and AIX and z/OS) was REMOVED this release; illumos, as an open-source OpenSolaris fork, remains supported"
+      },
+      "added": [
+        "std.Io interface: Future(T)/io.async/.await/.cancel task-level concurrency -- a colorblind-async-like model reintroducing async concepts as a library API rather than language syntax",
+        "std.Thread's higher-level sync primitives (Mutex, Condition, ResetEvent, WaitGroup, Futex, RwLock, Semaphore) gain std.Io.* equivalents",
+        "Windows networking without ws2_32.dll (NtDll migration completed)",
+        "heap.ArenaAllocator becomes thread-safe and lock-free by default",
+        "Basic support added for Alpha, KVX, MicroBlaze, OpenRISC, PA-RISC, SuperH (via the C backend with GCC, or an external LLVM/Clang fork only)"
+      ],
+      "limitations": [
+        "no HTTP/2 or HTTP/3 client (std.http remains HTTP/1.1-only); std.crypto.tls remains a TLS 1.3-only client with no server implementation",
+        "Io.Evented backend does not yet implement networking, and Io.net has no non-IP networking, so evented (single-threaded async) I/O and real networking cannot yet be combined",
+        "aarch64-macos and aarch64-windows remain Tier 2, still not Tier 1, roughly five years after Apple Silicon macOS support first appeared (0.8.0)",
+        "std.Thread.Pool removed outright; code depending on it must migrate to std.Io.Group/async",
+        "Solaris, AIX, and z/OS support removed entirely (\"the Zig project cannot support proprietary operating systems that make it unreasonably difficult to obtain system headers\")",
+        "heap.ThreadSafeAllocator removed"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

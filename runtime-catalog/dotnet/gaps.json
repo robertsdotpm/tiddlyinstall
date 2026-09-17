@@ -1,0 +1,82 @@
+[
+  {
+    "runtime": "dotnet",
+    "major": "11.0",
+    "os": "windows",
+    "arch": "amd64",
+    "reason": "channel 11.0 has no stable release yet as of this scrape; latest is prerelease '11.0.0-rc.1' (go-live)",
+    "looked_at": [
+      "https://builds.dotnet.microsoft.com/dotnet/release-metadata/11.0/releases.json"
+    ]
+  },
+  {
+    "runtime": "dotnet",
+    "major": "11.0",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "channel 11.0 has no stable release yet as of this scrape; latest is prerelease '11.0.0-rc.1' (go-live)",
+    "looked_at": [
+      "https://builds.dotnet.microsoft.com/dotnet/release-metadata/11.0/releases.json"
+    ]
+  },
+  {
+    "runtime": "dotnet",
+    "major": "11.0",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "channel 11.0 has no stable release yet as of this scrape; latest is prerelease '11.0.0-rc.1' (go-live)",
+    "looked_at": [
+      "https://builds.dotnet.microsoft.com/dotnet/release-metadata/11.0/releases.json"
+    ]
+  },
+  {
+    "runtime": "dotnet-framework",
+    "major": "1.0",
+    "os": "windows",
+    "arch": "amd64",
+    "reason": "no offline-installer link found cheaply on the current dotnet.microsoft.com/download/dotnet-framework pages for this version (EOL / folded into a later in-place-update version); not pursued further per scope",
+    "looked_at": [
+      "https://dotnet.microsoft.com/en-us/download/dotnet-framework"
+    ]
+  },
+  {
+    "runtime": "dotnet-framework",
+    "major": "1.1",
+    "os": "windows",
+    "arch": "amd64",
+    "reason": "no offline-installer link found cheaply on the current dotnet.microsoft.com/download/dotnet-framework pages for this version (EOL / folded into a later in-place-update version); not pursued further per scope",
+    "looked_at": [
+      "https://dotnet.microsoft.com/en-us/download/dotnet-framework"
+    ]
+  },
+  {
+    "runtime": "dotnet-framework",
+    "major": "2.0",
+    "os": "windows",
+    "arch": "amd64",
+    "reason": "no offline-installer link found cheaply on the current dotnet.microsoft.com/download/dotnet-framework pages for this version (EOL / folded into a later in-place-update version); not pursued further per scope",
+    "looked_at": [
+      "https://dotnet.microsoft.com/en-us/download/dotnet-framework"
+    ]
+  },
+  {
+    "runtime": "dotnet-framework",
+    "major": "3.0",
+    "os": "windows",
+    "arch": "amd64",
+    "reason": "no offline-installer link found cheaply on the current dotnet.microsoft.com/download/dotnet-framework pages for this version (EOL / folded into a later in-place-update version); not pursued further per scope",
+    "looked_at": [
+      "https://dotnet.microsoft.com/en-us/download/dotnet-framework"
+    ]
+  },
+  {
+    "runtime": "dotnet-framework",
+    "major": "4.5",
+    "os": "windows",
+    "arch": "amd64",
+    "reason": "page has no offline-installer link (only web-installer)",
+    "looked_at": [
+      "https://dotnet.microsoft.com/en-us/download/dotnet-framework/net45"
+    ]
+  }
+]

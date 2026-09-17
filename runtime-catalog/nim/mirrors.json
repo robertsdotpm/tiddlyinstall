@@ -1,0 +1,143 @@
+{
+  "runtime": "nim",
+  "canonical": "https://nim-lang.org/download/<filename>",
+  "confirmed": [
+    {
+      "host": "distfiles.gentoo.org",
+      "region": "global (CDN-backed)",
+      "operator": "Gentoo Linux distfiles mirror",
+      "url_template": "https://distfiles.gentoo.org/distfiles/<blake2b(filename)[:2]>/<filename>",
+      "protocols": {
+        "https": "works",
+        "http": "works"
+      },
+      "full_or_partial": "partial -- only the version(s) currently in the Gentoo tree; portage prunes distfiles for removed ebuild versions",
+      "confirmed_by": "gentoo/gentoo dev-lang/nim Manifest (BLAKE2B+SHA512 hashes) matched by exact filename+size against releases.json; HEAD size match live; bogus-path control 404s",
+      "sample_files": [
+        "nim-2.2.10.tar.xz",
+        "nim-2.2.12.tar.xz"
+      ],
+      "hash_verified_sample": "nim-2.2.10.tar.xz (8,287,652 bytes) downloaded in full via https, sha256 matched vendor checksum exactly; deleted after",
+      "entries_covered": 2,
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "distcache.freebsd.org",
+      "region": "global (Fastly-fronted)",
+      "operator": "FreeBSD ports distfiles cache",
+      "url_template": "http://distcache.freebsd.org/ports-distfiles/<filename>",
+      "protocols": {
+        "https": "fails from this environment (Fastly SNI/cert error, consistent with every other runtime hunted so far)",
+        "http": "works"
+      },
+      "full_or_partial": "partial -- flat layout (lang/nim's Makefile sets no DIST_SUBDIR), only the current port version is cached",
+      "confirmed_by": "freebsd/freebsd-ports lang/nim distinfo (SHA256+SIZE) matched by exact filename; HEAD size match live over http; bogus-path control 404s",
+      "sample_files": [
+        "nim-2.2.12.tar.xz"
+      ],
+      "hash_verified_sample": "nim-2.2.12.tar.xz (10,259,940 bytes) downloaded in full via http, sha256 matched vendor checksum exactly; deleted after",
+      "entries_covered": 1,
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "distfiles.macports.org",
+      "region": "global",
+      "operator": "MacPorts distfiles mirror",
+      "url_template": "https://distfiles.macports.org/nim/<filename>",
+      "protocols": {
+        "https": "works",
+        "http": "not tried (https already worked with a correct Content-Length, unlike some other runtimes' MacPorts checks)"
+      },
+      "full_or_partial": "partial -- only the version pinned in lang/nim's Portfile, which lags upstream (2.2.6 vs. current 2.2.12)",
+      "confirmed_by": "macports/macports-ports lang/nim Portfile (sha256+rmd160 checksums) matched by version; HEAD size match live; bogus-path control 404s",
+      "sample_files": [
+        "nim-2.2.6.tar.xz"
+      ],
+      "hash_verified_sample": "nim-2.2.6.tar.xz (8,471,204 bytes) downloaded in full, sha256 matched vendor checksum exactly; deleted after",
+      "entries_covered": 1,
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "tarballs.nixos.org",
+      "region": "global (Fastly/Varnish-fronted)",
+      "operator": "NixOS Hydra fallback tarball cache",
+      "url_template": "https://tarballs.nixos.org/sha256/<sha256-hex>  (redirects to the canonical sha512/<hex> path)",
+      "protocols": {
+        "https": "works",
+        "http": "works (301s, same content)"
+      },
+      "full_or_partial": "partial fallback cache -- only whatever Hydra happened to build a fetchurl derivation for across nixpkgs' history, but by far the best HISTORICAL coverage of the four sources since it isn't pruned to 'current version only'",
+      "confirmed_by": "hash-addressed by construction: the lookup key IS the file's own sha256, so any 200/301 response is definitionally the same bytes (still HEAD-confirmed size + one full hash-verify as belt-and-suspenders); bogus all-zero hash 404s",
+      "sample_files": [
+        "nim-0.17.2.tar.xz",
+        "nim-0.18.0.tar.xz",
+        "nim-0.19.4.tar.xz",
+        "nim-0.20.2.tar.xz",
+        "nim-1.4.6.tar.xz",
+        "nim-1.6.12.tar.xz",
+        "nim-1.6.14.tar.xz",
+        "nim-1.6.20.tar.xz",
+        "nim-2.0.0.tar.xz",
+        "nim-2.0.4.tar.xz",
+        "nim-2.0.12.tar.xz",
+        "nim-2.0.16.tar.xz",
+        "nim-2.2.0.tar.xz",
+        "nim-2.2.4.tar.xz"
+      ],
+      "hash_verified_sample": "nim-1.6.20.tar.xz (5,177,500 bytes, https) and nim-0.17.2.tar.xz (4,083,084 bytes, http) both downloaded in full, sha256 matched exactly; deleted after",
+      "entries_covered": 14,
+      "date_checked": "2026-09-17",
+      "method": "Swept all 57 source releases.json entries that carry a vendor sha256; 14 resolved (200/301) on tarballs.nixos.org, 43 did not (404) -- Hydra never built those."
+    }
+  ],
+  "rejected": [
+    {
+      "host": "mirrors.ustc.edu.cn",
+      "url_template": "https://mirrors.ustc.edu.cn/nim/",
+      "reason": "clean 404 (real difference from other confirmed paths on the same host, e.g. /golang/); not mirrored",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "mirror.iscas.ac.cn",
+      "url_template": "https://mirror.iscas.ac.cn/nim/",
+      "reason": "clean 404; not mirrored",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "mirrors.aliyun.com",
+      "url_template": "https://mirrors.aliyun.com/nim/",
+      "reason": "clean 404; not mirrored",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "mirrors.huaweicloud.com",
+      "url_template": "https://mirrors.huaweicloud.com/nim/",
+      "reason": "soft-200 catch-all: a bogus control path (/totally-bogus-pkg-xyz123/) also returns 200 with the same client-side-routed portal shell (base href=\"/mirror/\", an Angular app) -- no evidence this path serves a real nim directory at all",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "mirrors.nju.edu.cn",
+      "url_template": "https://mirrors.nju.edu.cn/nim/",
+      "reason": "inconclusive, not rejected on evidence of absence: /nim/ 302s to itself, but so does a bogus-path control AND /golang/ (a real, already-confirmed mirror per go/mirrors.json) -- every subpath on this host 302s identically at HEAD, so this method cannot distinguish a real nim/ directory from a nonexistent one here",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "mirrors.tuna.tsinghua.edu.cn",
+      "url_template": "https://mirrors.tuna.tsinghua.edu.cn/nim/",
+      "reason": "hard 403 'Sorry, you've been denied access to this page' anti-abuse block page for every path tried (including /help/nim/), matching go/NOTES.md's prior observation of a block on this environment's egress IP -- inconclusive, worth retrying from a different network",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "github.com/nim-lang/Nim (releases)",
+      "reason": "dead end already established in Part 1: `gh api repos/nim-lang/Nim/releases` returns an empty array -- no GitHub Release assets exist on this repo to mirror at all",
+      "date_checked": "2026-09-17"
+    }
+  ],
+  "checked_no_new_information": [
+    {
+      "host": "raw.githubusercontent.com (ScoopInstaller/Main bucket/nim.json)",
+      "note": "Scoop's manifest sha256 for nim-2.2.12_x64.zip/x32.zip matches our vendor checksum exactly, but the download URL it points to IS nim-lang.org itself (not an independent host) and it only tracks the latest version, which already has a vendor checksum -- adds no mirror and no new corroboration information",
+      "date_checked": "2026-09-17"
+    }
+  ]
+}

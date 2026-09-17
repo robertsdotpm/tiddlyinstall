@@ -1,0 +1,635 @@
+{
+  "runtime": "python",
+  "languages": [
+    "python"
+  ],
+  "researched": "2026-09-17",
+  "sources": [
+    "https://peps.python.org/pep-0011/",
+    "https://docs.python.org/3/whatsnew/3.4.html",
+    "https://docs.python.org/3/whatsnew/3.5.html",
+    "https://docs.python.org/3/whatsnew/3.7.html",
+    "https://docs.python.org/3/whatsnew/3.8.html",
+    "https://docs.python.org/3/whatsnew/3.9.html",
+    "https://docs.python.org/3/whatsnew/3.11.html",
+    "https://docs.python.org/3/whatsnew/3.13.html",
+    "https://docs.python.org/3/whatsnew/3.14.html",
+    "https://bugs.python.org/issue32592",
+    "https://github.com/python/cpython/issues/76773",
+    "/home/x/projects/installer-builder-runtimes/TESTED-WINDOWS.md",
+    "/home/x/projects/installer-builder-runtimes/catalog/python/releases.json"
+  ],
+  "milestones": [
+    {
+      "capability": "async_await",
+      "since": "3.5",
+      "notes": "async/await syntax landed in 3.5 (PEP 492); asyncio itself was added provisional one release earlier, in 3.4, written with @asyncio.coroutine + yield from."
+    },
+    {
+      "capability": "native_threads",
+      "since": "2.0",
+      "notes": "threading module wraps real OS threads, but the GIL serializes all Python bytecode execution across them."
+    },
+    {
+      "capability": "true_parallelism",
+      "since": "2.6",
+      "notes": "multiprocessing (PEP 371, 2.6) was the first stdlib way to use multiple cores, via separate processes rather than threads. concurrent.futures (3.2) made pooling either one easier. PEP 703 free-threading (3.13 experimental, 3.14 officially supported but optional) is the first mode giving real parallel threads for Python code itself."
+    },
+    {
+      "capability": "tls_1_2",
+      "since": "3.4",
+      "notes": "ssl.PROTOCOL_TLSv1_1/TLSv1_2 constants added in 3.4 and backported to 2.7.9 (2015-01, PEP 466), which also added SNI and modern certificate verification to the 2.7 ssl module."
+    },
+    {
+      "capability": "tls_1_3",
+      "since": "3.7",
+      "notes": "preliminary/experimental in 3.7.0, dependent on being linked against OpenSSL 1.1.1 (not yet finalized at release); solid by 3.10."
+    },
+    {
+      "capability": "ipv6",
+      "since": "2.2",
+      "notes": "socket module AF_INET6/getaddrinfo support, platform-dependent (exposed via socket.has_ipv6). Dedicated ipaddress module added in 3.3; IPv6 scoped-address (%<scope_id>) support added in 3.9."
+    },
+    {
+      "capability": "unicode_default",
+      "since": "3.0",
+      "notes": "str became unicode text by default in 3.0 (PEP 3137), with a separate immutable bytes type. Python 2.0-2.7 had a separate `unicode` type alongside 8-bit `str`. PEP 393 (3.3) made the internal representation memory-efficient (flexible string representation)."
+    },
+    {
+      "capability": "package_manager_bundled",
+      "since": "3.4",
+      "notes": "pip bundled by default via the new ensurepip module (PEP 453). The venv module itself landed one release earlier, in 3.3 (PEP 405); 2.x and 3.0-3.3 have neither, relying on separately-installed easy_install/pip and third-party virtualenv."
+    },
+    {
+      "capability": "generics",
+      "since": "3.9",
+      "notes": "PEP 585 let builtin collections act as generic types (list[int]) without importing typing. The typing module itself (with its own Generic/List[int]) dates to 3.5 (PEP 484); PEP 695's `class Foo[T]:` syntax followed in 3.12."
+    },
+    {
+      "capability": "64bit_windows",
+      "since": "2.5",
+      "notes": "first Python release with an official amd64 Windows installer, alongside the existing x86 one."
+    },
+    {
+      "capability": "arm64_macos",
+      "since": "3.9",
+      "notes": "full Apple Silicon support, including the universal2 fat-binary installer, arrived in the 3.9.1 patch release specifically, not 3.9.0."
+    },
+    {
+      "capability": "arm64_windows",
+      "since": "3.9",
+      "notes": "3.9 and 3.10 shipped only an arm64 embeddable zip; a full arm64 installer followed in 3.11."
+    },
+    {
+      "capability": "arm64_linux",
+      "since": "3.8",
+      "notes": "python.org itself never ships Linux binaries at all, at any version (source tarball only). Prebuilt arm64 Linux archives exist only via the third-party python-build-standalone project, which starts covering CPython at 3.8."
+    }
+  ],
+  "majors": [
+    {
+      "major": "2.0",
+      "released": "2000-10-16",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 95/98/NT/2000, x86 installer only; no 64-bit Windows build",
+        "macos": "none from python.org; classic Mac OS support existed only via the third-party MacPython project",
+        "linux": "any Unix with a C compiler (source tarball only); no official binaries"
+      },
+      "added": [
+        "list comprehensions",
+        "cyclic garbage collector for container objects",
+        "a unicode string type, separate from the existing 8-bit str",
+        "augmented assignment operators (+=, -=, ...)",
+        "SRE regular-expression engine (new re module)"
+      ],
+      "limitations": [
+        "no generators (added 2.2, default 2.3)",
+        "no builtin bool type (2.3)",
+        "no unified type/class model -- classes and types are different things until new-style classes (2.2)",
+        "GIL-bound threading only; no multiprocessing (2.6) for real multi-core use",
+        "no bundled packaging tool of any kind (distutils exists but no pip/easy_install yet)"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "2.1",
+      "released": "2001-04-17",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 95/98/NT/2000, x86 installer only",
+        "macos": "none from python.org",
+        "linux": "any Unix (source tarball only)"
+      },
+      "added": [
+        "nested scopes (PEP 227), behind `from __future__ import nested_scopes`",
+        "warnings module",
+        "weakref module",
+        "richer __future__ statement mechanism used to phase in later syntax changes"
+      ],
+      "limitations": [
+        "nested scopes not default yet (default in 2.2)",
+        "same threading/GIL and packaging limitations as 2.0",
+        "still no generators or new-style classes"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "2.2",
+      "released": "2001-12-21",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 95/98/NT/2000, x86 installer only",
+        "macos": "none from python.org",
+        "linux": "any Unix (source tarball only)"
+      },
+      "added": [
+        "new-style classes unifying types and classes (PEP 252/253)",
+        "iterator protocol (PEP 234)",
+        "generators, behind `from __future__ import generators` (PEP 255)",
+        "nested scopes now default"
+      ],
+      "limitations": [
+        "generators require a future-import until 2.3",
+        "no builtin set or bool types yet",
+        "no decorators (2.4), no with-statement (2.5)",
+        "still GIL-only threading"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "2.3",
+      "released": "2003-07-29",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Windows 95/98/NT/2000, x86 installer only",
+        "macos": "none from python.org",
+        "linux": "any Unix (source tarball only)"
+      },
+      "added": [
+        "generators enabled by default, no future-import needed",
+        "builtin bool type (PEP 285)",
+        "sets module (set/frozenset as library types, not yet builtins)",
+        "enumerate() builtin",
+        "datetime module",
+        "source encoding declarations (PEP 263)",
+        "basic IPv6 socket support (AF_INET6/getaddrinfo, platform-dependent)"
+      ],
+      "limitations": [
+        "set/frozenset are not builtins until 2.4 (`sets` module only)",
+        "no decorators until 2.4",
+        "no sqlite3 in the standard library until 2.5",
+        "no with-statement/context managers until 2.5"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "2.4",
+      "released": "2004-11-30",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "98/NT/2000/XP; x86 and, new in this release, Itanium (ia64) installers",
+        "macos": "PowerPC/Intel universal installer (\"macpython\" build)",
+        "linux": "any Unix (source tarball only)"
+      },
+      "added": [
+        "function and method decorators (PEP 318)",
+        "builtin set and frozenset types (PEP 218)",
+        "generator expressions (PEP 289)",
+        "subprocess module, replacing os.system/os.popen*",
+        "sorted() and reversed() builtins"
+      ],
+      "limitations": [
+        "no with-statement or conditional (ternary) expression until 2.5",
+        "no absolute/relative import control until 2.5 (PEP 328)",
+        "packaging still distutils + separately-installed easy_install; no pip"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "2.5",
+      "released": "2006-09-19",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "98/NT/2000/XP; x86, amd64 (first 64-bit Windows installer) and ia64",
+        "macos": "universal (PowerPC/Intel) installer",
+        "linux": "any Unix (source tarball only)"
+      },
+      "added": [
+        "with-statement and context managers (PEP 343), behind `from __future__ import with_statement`",
+        "conditional expressions `x if c else y` (PEP 308)",
+        "absolute/relative import control (PEP 328)",
+        "sqlite3 bundled",
+        "ElementTree bundled",
+        "generators as coroutines: send()/throw()/close() (PEP 342)"
+      ],
+      "limitations": [
+        "with-statement needs a future-import in 2.5 itself (default from 2.6)",
+        "no importlib; the import system is still C-level only",
+        "packaging still distutils/easy_install, no pip"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "2.6",
+      "released": "2008-10-01",
+      "end_of_life": "2013-10-29",
+      "os_support": {
+        "windows": "2000/XP/Vista; x86 and amd64 installers",
+        "macos": "universal installer, now stating a Mac OS X 10.3 minimum",
+        "linux": "any Unix (source tarball only)"
+      },
+      "added": [
+        "multiprocessing module (PEP 371) -- the first stdlib way to use more than one core",
+        "json module bundled",
+        "`except X as e` syntax (PEP 3110) backported for 2/3-compatible code",
+        "`__future__` imports (print_function, unicode_literals, ...) to ease porting to 3.x",
+        "io module introduced"
+      ],
+      "limitations": [
+        "GIL still serializes threads; multiprocessing is the only way to use multiple cores",
+        "no TLS SNI support in ssl (arrives 2.7.9)",
+        "no async I/O framework (asyncio is 3.4)"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "2.7",
+      "released": "2010-07-03",
+      "end_of_life": "2020-01-01",
+      "os_support": {
+        "windows": "2000/XP/Vista/7 across its lifetime; x86 and amd64 installers",
+        "macos": "installers spanning Mac OS X 10.3, 10.5, 10.6 and (from 2.7.9-era builds) 10.9 minimums over its lifetime; no build ever supported Apple Silicon",
+        "linux": "any Unix (source tarball only)"
+      },
+      "added": [
+        "dict and set comprehensions",
+        "collections.OrderedDict",
+        "argparse module",
+        "memoryview",
+        "auto-numbered `{}` format fields",
+        "unified except/finally in one try statement"
+      ],
+      "limitations": [
+        "ssl had no SNI (Server Name Indication) or modern certificate-verification defaults until 2.7.9 (2014-12, PEP 466) -- a real problem for HTTPS clients on name-based virtual hosting before then",
+        "no async/await; only generator-based coroutine patterns (send/throw from 2.5)",
+        "str is 8-bit bytes and unicode is a separate type -- the classic Python 2 encode/decode footguns",
+        "official end-of-life 2020-01-01; code still targeting 2.7 today runs on an unsupported, unpatched interpreter",
+        "no venv/pip bundled (bundled pip is a 3.4-only feature); packaging relies on separately-installed setuptools/pip"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "3.0",
+      "released": "2008-12-03",
+      "end_of_life": "2009-06-27",
+      "os_support": {
+        "windows": "2000/XP/Vista; x86 and amd64 installers",
+        "macos": "none published for 3.0 (macOS installers resume at 3.1)",
+        "linux": "any Unix (source tarball only)"
+      },
+      "added": [
+        "print as a function, not a statement",
+        "str is unicode text by default; separate immutable bytes type (PEP 3137)",
+        "true division is the default for `/` (PEP 238)",
+        "extended iterable unpacking, `a, *rest = seq`",
+        "nonlocal keyword",
+        "old-style classes removed -- one unified object model"
+      ],
+      "limitations": [
+        "virtually no third-party libraries were ported yet at release -- real-world adoption of 3.0 itself was very limited",
+        "no `u''` string literal prefix (removed; restored in 3.3 for 2/3-compatible code)",
+        "several operations were measurably slower than 2.6, not addressed until 3.1/3.2",
+        "no async/await (3.5), no venv (3.3), no pip bundling (3.4), no yield from (3.3)"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "3.1",
+      "released": "2009-06-27",
+      "end_of_life": "2012-04-09",
+      "os_support": {
+        "windows": "2000/XP/Vista; x86 and amd64 installers",
+        "macos": "universal installer, Mac OS X 10.3 minimum",
+        "linux": "any Unix (source tarball only)"
+      },
+      "added": [
+        "io module reimplemented in C for speed",
+        "improved float repr (shortest round-trip representation)",
+        "multiple context managers in one with-statement",
+        "ordered-dict groundwork"
+      ],
+      "limitations": [
+        "third-party package availability under Python 3 is still very thin",
+        "no importlib-based import system yet",
+        "no stdlib venv (virtualenv is still third-party only)"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "3.2",
+      "released": "2011-02-20",
+      "end_of_life": "2016-02-20",
+      "os_support": {
+        "windows": "XP/Vista/7; x86 and amd64 installers",
+        "macos": "universal installers, Mac OS X 10.3 and (separately) 10.6 minimum variants",
+        "linux": "any Unix (source tarball only)"
+      },
+      "added": [
+        "concurrent.futures module (thread- and process-pool executors)",
+        "a new GIL implementation (fixed time-slice switching, replacing the old opcode-count heuristic, fixing pathological CPU-bound-thread contention)",
+        "ssl.SSLContext and client-side SNI support added to the ssl module",
+        "sysconfig module"
+      ],
+      "limitations": [
+        "no yield from (3.3)",
+        "no stdlib venv -- virtualenv is still third-party (3.3)",
+        "no asyncio; only low-level select/selectors-based I/O",
+        "the GIL rewrite improved fairness between threads but did not add multi-core parallelism for Python code"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "3.3",
+      "released": "2012-09-29",
+      "end_of_life": "2017-09-29",
+      "os_support": {
+        "windows": "XP/Vista/7; x86 and amd64 installers",
+        "macos": "universal installers, Mac OS X 10.5 and 10.6 minimum variants",
+        "linux": "any Unix (source tarball only)"
+      },
+      "added": [
+        "yield from (PEP 380)",
+        "venv module bundled (PEP 405)",
+        "PEP 393 flexible string representation -- large memory-efficiency win for unicode strings",
+        "ipaddress module",
+        "faulthandler module",
+        "`u''` string prefix restored for 2/3-compatible code"
+      ],
+      "limitations": [
+        "no asyncio yet (provisional in 3.4)",
+        "no pip bundled by default (ensurepip is 3.4)",
+        "no async/await syntax (3.5)"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "3.4",
+      "released": "2014-03-16",
+      "end_of_life": "2019-03-18",
+      "os_support": {
+        "windows": "XP/Vista/7/8; x86 and amd64 installers",
+        "macos": "universal installers, Mac OS X 10.5 and 10.6 minimum variants",
+        "linux": "any Unix (source tarball only)"
+      },
+      "added": [
+        "asyncio module added, provisional (PEP 3156)",
+        "pip bundled by default via the new ensurepip module (PEP 453)",
+        "enum module",
+        "pathlib module, provisional",
+        "statistics module"
+      ],
+      "limitations": [
+        "asyncio's API is explicitly provisional and changed across 3.4.x point releases -- not a stable target yet",
+        "no async/await syntax -- asyncio coroutines are written with `@asyncio.coroutine` and `yield from`",
+        "pathlib is also provisional at this point"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "3.5",
+      "released": "2015-09-13",
+      "end_of_life": "2020-09-30",
+      "os_support": {
+        "windows": "Vista and later -- built with MSVC 14.0/Visual Studio 2015, which dropped Windows XP from the stock installer. Operator-tested exception: a custom 3.5 XP backport (patched so asyncio works) runs on Windows XP for this project -- see TESTED-WINDOWS.md",
+        "macos": "Mac OS X 10.6 and later",
+        "linux": "any Unix (source tarball only)"
+      },
+      "added": [
+        "async/await syntax (PEP 492) -- asyncio module itself still provisional",
+        "typing module (PEP 484), provisional",
+        "matrix multiplication operator @ (PEP 465)",
+        "os.scandir() (PEP 471)",
+        "additional unpacking generalizations (PEP 448)"
+      ],
+      "limitations": [
+        "asyncio and typing are both still provisional APIs and can change without a deprecation cycle",
+        "no f-strings (3.6)",
+        "dict ordering is not guaranteed by the language yet (official in 3.7)",
+        "dropped Windows XP support in the stock installer -- XP is only reachable via unofficial/backport builds"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "3.6",
+      "released": "2016-12-23",
+      "end_of_life": "2021-12-23",
+      "os_support": {
+        "windows": "Vista and later; x86/amd64 installer plus embeddable zip",
+        "macos": "Mac OS X 10.9 (amd64 installer) alongside a 10.6-minimum universal installer",
+        "linux": "any Unix (source tarball only)"
+      },
+      "added": [
+        "f-strings (PEP 498)",
+        "variable annotations (PEP 526)",
+        "async generators and async comprehensions (PEP 525/530)",
+        "secrets module",
+        "underscores in numeric literals (1_000_000)",
+        "dict became insertion-ordered as a CPython implementation detail (made an official language guarantee in 3.7)"
+      ],
+      "limitations": [
+        "dict ordering is only a CPython implementation detail here, not a language guarantee -- other implementations weren't required to match it",
+        "typing module is still evolving rapidly",
+        "no dataclasses (3.7), no breakpoint() (3.7)"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "3.7",
+      "released": "2018-06-27",
+      "end_of_life": "2023-06-27",
+      "os_support": {
+        "windows": "Vista and later; x86/amd64 installer plus embeddable zip. Operator-tested: stock 3.7.0 x86 confirmed with working asyncio on Windows Vista for this project -- see TESTED-WINDOWS.md",
+        "macos": "Mac OS X 10.9 (amd64 installer) alongside a 10.6-minimum universal installer",
+        "linux": "any Unix (source tarball only)"
+      },
+      "added": [
+        "dataclasses (PEP 557)",
+        "dict insertion order made an official language guarantee",
+        "contextvars module (PEP 567)",
+        "breakpoint() builtin",
+        "nanosecond-resolution time functions",
+        "async and await become reserved keywords (can no longer be used as identifiers)"
+      ],
+      "limitations": [
+        "TLS 1.3 support in ssl is preliminary/experimental and depends on OpenSSL 1.1.1, which wasn't finalized when 3.7.0 shipped",
+        "making async/await reserved keywords breaks any code still using them as variable names",
+        "no walrus operator or positional-only parameters (3.8)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "3.8",
+      "released": "2019-10-14",
+      "end_of_life": "2024-10-07",
+      "os_support": {
+        "windows": "Vista/7/8/8.1 and later; x86/amd64 installer plus embeddable zip. Operator-tested: stock 3.8.0 x86 confirmed with working asyncio on Windows 7 and 8/8.1 for this project -- see TESTED-WINDOWS.md. Last CPython line with unmodified upstream support for 7/8/8.1: 3.9 requires Windows 8+ APIs and won't run there without a third-party fork",
+        "macos": "Mac OS X 10.9 installer, plus python-build-standalone amd64/arm64 archives",
+        "linux": "source tarball only from python.org; python-build-standalone (third-party) adds prebuilt amd64/arm64 archives starting this major"
+      },
+      "added": [
+        "walrus operator := (PEP 572)",
+        "positional-only parameters via `/` (PEP 570)",
+        "f-string `=` debug specifier",
+        "multiprocessing.shared_memory",
+        "TLS 1.3 post-handshake authentication support in ssl",
+        "ProactorEventLoop becomes the default Windows asyncio event loop, adding UDP support"
+      ],
+      "limitations": [
+        "still no free-threading or true parallel threads for Python code -- the GIL is unchanged",
+        "no structural pattern matching (3.10), no exception groups (3.11)",
+        "last major with reliable stock support on Windows 7/8/8.1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "3.9",
+      "released": "2020-10-05",
+      "end_of_life": "2025-10-05",
+      "os_support": {
+        "windows": "Windows 8 and later only -- the stock installer statically links api-ms-win-core-path-l1-1-0.dll, which doesn't exist on Vista/7, so 3.9 won't run there without a third-party fork (bpo-32592 dropped Vista/7)",
+        "macos": "10.9+ generally; full Apple Silicon (arm64) support and the universal2 fat-binary installer arrived specifically in the 3.9.1 patch release, not 3.9.0",
+        "linux": "source tarball only from python.org; python-build-standalone adds amd64/arm64/armv7/ppc64le/riscv64/s390x archives"
+      },
+      "added": [
+        "dict union operators | and |= (PEP 584)",
+        "IPv6 scoped-address support in ipaddress (`%<scope_id>`)",
+        "builtin generic collections, e.g. list[int] without importing typing (PEP 585)",
+        "Windows ARM64 build capability (embeddable zip only, no installer yet)",
+        "hashlib SHA3/SHAKE via OpenSSL"
+      ],
+      "limitations": [
+        "3.9.0 itself has no Apple Silicon/arm64 macOS build -- 3.9.1 or later is required for that",
+        "Windows ARM64 at this point is an embeddable zip, not a full installer (that's 3.11)",
+        "no structural pattern matching (3.10)",
+        "dropped Windows Vista and 7 outright"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "3.10",
+      "released": "2021-10-04",
+      "end_of_life": "2026-10-04 (scheduled)",
+      "os_support": {
+        "windows": "Windows 8 and later; x86/amd64/arm64 (embed-only) installers and embeddable zips",
+        "macos": "macOS 11 (Big Sur) baseline for the universal2 installer; python-build-standalone covers amd64/arm64 archives",
+        "linux": "source tarball only from python.org; python-build-standalone covers amd64/arm64/armv7/ppc64le/riscv64/s390x"
+      },
+      "added": [
+        "structural pattern matching, match/case (PEP 634-636)",
+        "parenthesized context managers",
+        "union types written as X | Y (PEP 604)",
+        "much more precise SyntaxError/AttributeError messages"
+      ],
+      "limitations": [
+        "match/case is new syntax -- code using it cannot run on 3.9 or earlier at all, not just a library-availability problem",
+        "still no exception groups (3.11)",
+        "still GIL-bound; free-threading isn't even experimental yet"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "3.11",
+      "released": "2022-10-24",
+      "end_of_life": "2027-10-24 (scheduled)",
+      "os_support": {
+        "windows": "Windows 8 and later; adds a full Windows ARM64 installer (previously embeddable-zip only) alongside amd64/x86",
+        "macos": "macOS 11 (Big Sur) baseline for the universal2 installer; python-build-standalone covers amd64/arm64",
+        "linux": "source tarball only from python.org; python-build-standalone covers amd64/arm64/armv7/ppc64le/riscv64/s390x"
+      },
+      "added": [
+        "exception groups and except* (PEP 654)",
+        "tomllib in the standard library (read-only TOML parser)",
+        "fine-grained error locations in tracebacks (PEP 657), pointing at the exact sub-expression",
+        "about 25% faster on average (10-60% range) via the Specializing Adaptive Interpreter (PEP 659)",
+        "full Windows ARM64 installer"
+      ],
+      "limitations": [
+        "tomllib is read-only -- no TOML writer in the standard library",
+        "no free-threading or JIT yet (3.13)",
+        "no template strings (3.14)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "3.12",
+      "released": "2023-10-02",
+      "end_of_life": "2028-10-02 (scheduled)",
+      "os_support": {
+        "windows": "Windows 8 and later; x86/amd64/arm64 installers and embeddable zips",
+        "macos": "macOS 11 (Big Sur) baseline for the universal2 installer; python-build-standalone covers amd64/arm64",
+        "linux": "source tarball only from python.org; python-build-standalone covers amd64/arm64/armv7/ppc64le/riscv64/s390x"
+      },
+      "added": [
+        "PEP 701: more flexible f-strings (nested same quotes, multi-line expressions, backslashes inside {})",
+        "PEP 695 type-parameter syntax for generics, e.g. `class Foo[T]:`",
+        "the buffer protocol exposed to pure-Python code (PEP 688)",
+        "distutils removed from the standard library",
+        "further interpreter and error-message quality improvements"
+      ],
+      "limitations": [
+        "distutils removal breaks old packaging code that still imports it directly -- must migrate to setuptools",
+        "PEP 695 generics syntax is new and unusable on 3.11 and earlier",
+        "still no free-threaded build (that's 3.13, experimental)"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "3.13",
+      "released": "2024-10-07",
+      "end_of_life": "2029-10 (scheduled)",
+      "os_support": {
+        "windows": "Windows 10/11 is the primary supported target for new features (installs on 8+ per the 3.9-era floor). Operator-tested: stock 3.13.0 x86 confirmed with working asyncio on Windows 10 and 11 for this project -- see TESTED-WINDOWS.md",
+        "macos": "macOS 11 (Big Sur) baseline for the universal2 installer; python-build-standalone covers amd64/arm64",
+        "linux": "source tarball only from python.org; python-build-standalone covers amd64/arm64/armv7/ppc64le/riscv64/s390x"
+      },
+      "added": [
+        "experimental free-threaded build (PEP 703, --disable-gil, separate python3.13t binary; not the default)",
+        "experimental JIT compiler (PEP 744, --enable-experimental-jit, copy-and-patch, off by default)",
+        "much-improved interactive REPL (multiline editing, colored tracebacks, F1/F2/F3 features)",
+        "Tier 3 support for iOS (PEP 730) and Android (PEP 738)",
+        "19 long-deprecated \"dead battery\" modules removed (PEP 594: cgi, telnetlib, imghdr, ...), plus 2to3 removed"
+      ],
+      "limitations": [
+        "free-threading is experimental, has a substantial single-threaded performance hit, and breaks any C extension not rebuilt for it",
+        "the JIT is experimental, off by default, and its own docs describe the performance gains so far as modest",
+        "several stdlib modules developers relied on for decades (cgi, telnetlib, ...) are simply gone, not deprecated-but-present"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "3.14",
+      "released": "2025-10-07",
+      "end_of_life": "2030-10 (scheduled)",
+      "os_support": {
+        "windows": "Windows 10/11 primary target, same floor as 3.13",
+        "macos": "macOS 11 (Big Sur) baseline for the universal2 installer; python-build-standalone covers amd64/arm64",
+        "linux": "source tarball only from python.org; python-build-standalone covers amd64/arm64/armv7/ppc64le/riscv64/s390x"
+      },
+      "added": [
+        "free-threading (PEP 703) promoted from experimental to officially supported, phase two per PEP 779 -- still an optional, non-default build",
+        "template string literals / t-strings (PEP 750)",
+        "deferred evaluation of annotations by default (PEP 649/749)",
+        "concurrent.interpreters -- subinterpreters exposed in the standard library (PEP 734)",
+        "remote/out-of-process debugging support (PEP 768)",
+        "compression.zstd module (PEP 784)"
+      ],
+      "limitations": [
+        "free-threading is officially supported but still optional/non-default -- most C extensions still need an explicit free-threaded rebuild",
+        "t-strings are new syntax: a Template object isn't a str, so tools and libraries built around f-strings don't understand it for free",
+        "the JIT introduced in 3.13 is still experimental in 3.14, not promoted alongside free-threading"
+      ],
+      "confidence": "medium"
+    }
+  ]
+}

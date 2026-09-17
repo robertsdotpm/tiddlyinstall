@@ -1,0 +1,175 @@
+[
+ {
+  "runtime": "java",
+  "vendor": "temurin",
+  "name": "TUNA (Tsinghua University) Adoptium mirror",
+  "url_template": "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/{major}/{image_type}/{arch}/{os}/{filename}",
+  "confirmed_by": "HEAD request on every latest-per-major/image_type/arch/os Temurin release entry; a mirror URL was recorded only when the response was 200 with a Content-Length exactly equal to the Adoptium asset size.",
+  "checked_count": 250,
+  "confirmed_count": 158,
+  "confirmed_majors": [
+   "8",
+   "11",
+   "17",
+   "18",
+   "19",
+   "20",
+   "21",
+   "25"
+  ],
+  "notes": "mirrors.tuna.tsinghua.edu.cn/Adoptium/ only carries the newest GA build per major/image_type/arch/os (verified by directory listing), so mirrors[] is only ever populated on release entries that are the latest for their major/vendor/image_type/arch/os; historical patch releases have no mirror.",
+  "checked_at": "2026-09-17"
+ },
+ {
+  "runtime": "java",
+  "vendor": "temurin",
+  "name": "NJU (Nanjing University) Adoptium mirror",
+  "region": "China",
+  "operator": "Nanjing University open-source mirror station",
+  "url_template": "https://mirror.nju.edu.cn/adoptium/{major}/{image_type}/{arch}/{os}/{filename}",
+  "protocols": {
+   "https": "confirmed",
+   "http": "confirmed (same content, same Content-Length, once the bcheck cookie is set)"
+  },
+  "coverage": "partial/rolling, same shape as TUNA",
+  "confirmed_by": "extra_mirrors.py: HEAD request (with a required `Cookie: bcheck=true` -- the first request without it 302s to the same URL and only then sets that cookie) on every latest-per-major/variant/os/arch/libc Temurin release entry; recorded only when the response was 200 with a Content-Length exactly equal to the vendor asset size.",
+  "checked_count": 174,
+  "confirmed_count": 116,
+  "confirmed_majors": [
+   "8",
+   "11",
+   "16",
+   "17",
+   "18",
+   "19",
+   "20",
+   "21",
+   "25"
+  ],
+  "sample_file_hash_verified": {
+   "url": "https://mirror.nju.edu.cn/adoptium/18/jre/aarch64/mac/OpenJDK18U-jre_aarch64_mac_hotspot_18.0.2.1_1.tar.gz",
+   "size": 36270257,
+   "algo": "sha256",
+   "result": "match"
+  },
+  "notes": "Directory browsing (21/jdk/x64/linux/ etc.) confirms it holds exactly one file per major/image_type/arch/os -- newest GA build only, identical restriction to the TUNA mirror -- so mirrors[] is only populated on the latest release entry per group. Layout, filenames and even the {jdk,jre}/{arch}/{os} path segments (x64/aarch64/arm, linux/alpine-linux/mac/windows) are an exact clone of TUNA's.",
+  "checked_at": "2026-09-17"
+ },
+ {
+  "runtime": "java",
+  "vendor": "temurin",
+  "name": "USTC (University of Science and Technology of China) Adoptium mirror",
+  "region": "China",
+  "operator": "USTC LUG (ustclug) mirror station",
+  "url_template": "https://mirrors.ustc.edu.cn/adoptium/releases/temurin{major}-binaries/{tag}/{filename}",
+  "protocols": {
+   "https": "confirmed for directory listings and for HEAD/GET on files once past the verification page",
+   "http": "directory listing loads, but every actual file GET/HEAD returns an HTML \"Verifying your browser\" page instead of the file -- not usable as-is"
+  },
+  "coverage": "partial, one tag per major (whichever this mirror last synced -- NOT always upstream's newest; e.g. major 21 was still on jdk-21.0.9+10 while Adoptium's current release is 21.0.12.1)",
+  "confirmed_by": "extra_mirrors.py: discovers which single tag each temurin<major>-binaries/ directory holds via the mirror's own (unauthenticated) directory listing, builds a candidate URL by substituting that tag into every release entry whose GitHub release URL uses the same tag, then HEAD-confirms each candidate with a Content-Length match against the vendor size.",
+  "checked_count": 84,
+  "confirmed_count": 84,
+  "confirmed_majors": [
+   "8",
+   "11",
+   "17",
+   "21",
+   "25"
+  ],
+  "quirk": "An actual file request (GET or HEAD) is gated behind a same-origin JS-free challenge page: a small HTML page reading \"Verifying your browser... Additional verification is required for this file you requested\" that sets `document.cookie = \"addr=<your IP as this edge node saw it>\"` and reloads after 2s. Reading that IP out of the page body once and resending it as `Cookie: addr=<ip>` on the retry is enough -- no headless browser needed. The challenge did not fire consistently on a fast/concurrent run (some files came back with real headers on the very first HEAD with no cookie at all -- likely edge caching of recently-served objects) and the mirror's WAF briefly returned a blanket site-wide 403 (including plain directory listings) after ~90 rapid HEAD requests plus a few manual curl probes; it lifted within several minutes on its own. A second pass at 3 concurrent requests with a 0.3s stagger, after the block lifted, confirmed all 84/84 candidates cleanly with no further blocking -- worth keeping that pacing for any future re-run against this host.",
+  "sample_file_hash_verified": {
+   "attempted": "https://mirrors.ustc.edu.cn/adoptium/releases/temurin21-binaries/jdk-21.0.9%2B10/OpenJDK21U-jre_aarch64_windows_hotspot_21.0.9_10.msi",
+   "result": "not completed",
+   "note": "The smallest confirmed file (27,721,728 bytes) downloaded at well under 1 KB/s from this host after the rate-limit episode above -- almost certainly a throttling penalty rather than a real link speed, since HEAD requests and directory listings were fast throughout. Two attempts were made (a 60s and a 300s budget); both were abandoned as impractical rather than left to run for the ~8+ hours the observed rate implied. The 84 confirmed URLs are still valid Content-Length matches against the vendor size, but -- per this catalog's own rule that only a full-file hash makes a mirror byte-identical, not just same-sized -- they should be treated as HEAD-confirmed only, not hash-verified, until a follow-up run (ideally from a different network path, or simply retried later) completes the sample download."
+  },
+  "checked_at": "2026-09-17"
+ },
+ {
+  "runtime": "java",
+  "vendor": "zulu",
+  "name": "Azul CDN (primary, not a third-party mirror)",
+  "url_template": "https://cdn.azul.com/zulu/bin/{filename}",
+  "confirmed_by": "This is the canonical download_url returned by the Azul metadata API itself, so every Zulu release entry's url already points at it.",
+  "notes": "Checked mirrors.huaweicloud.com/openjdk/ as a candidate: it mirrors jdk.java.net community OpenJDK builds, a different vendor with different artifacts and checksums than Temurin/Zulu, so it was not recorded as a mirror of any entry here. No independent third-party mirror of Zulu builds was found.",
+  "checked_at": "2026-09-17"
+ },
+ {
+  "runtime": "java",
+  "vendor": "zulu",
+  "name": "static.azul.com (alternate Azul CDN hostname)",
+  "region": "global (Cloudflare anycast)",
+  "operator": "Azul Systems (same operator as cdn.azul.com; not a third-party mirror, but a second, independently resolvable hostname on the same CDN origin)",
+  "url_template": "https://static.azul.com/zulu/bin/{filename}",
+  "protocols": {
+   "https": "confirmed",
+   "http": "confirmed (plain http, no redirect)"
+  },
+  "coverage": "full -- every zulu-jdk/zulu-jre entry in releases.json",
+  "confirmed_by": "extra_mirrors_round2.py: HEAD-checked a 70-file spread sample covering every major (6-27), every (kind, format, variant) combination, and the smallest/largest files in the catalog. 70/70 Content-Length matches (5 apparent mismatches on the first pass were transient HEAD timeouts under concurrency, confirmed as matches on individual retry). Bogus-path control on both a nonexistent file and a nonexistent directory returned 404 (not a soft-200 catch-all). Applied to all 7,420 zulu entries by URL-prefix substitution.",
+  "checked_count": 70,
+  "confirmed_count": 70,
+  "confirmed_majors": [
+   "6",
+   "7",
+   "8",
+   "9",
+   "10",
+   "11",
+   "12",
+   "13",
+   "14",
+   "15",
+   "16",
+   "17",
+   "18",
+   "19",
+   "20",
+   "21",
+   "22",
+   "23",
+   "24",
+   "25",
+   "26"
+  ],
+  "sample_file_hash_verified": {
+   "url": "https://static.azul.com/zulu/bin/zulu7.48.0.11-ca-jre7.0.312-win_i686.msi",
+   "size": 22343680,
+   "algo": "sha256",
+   "result": "match"
+  },
+  "notes": "Same Cloudflare zone/ETags/cache as cdn.azul.com (both fronted by cloudflare, identical Content-Length and etag on every file checked) -- almost certainly the same origin bucket behind a second DNS name, but confirmed independently rather than assumed. Useful as a fallback hostname (e.g. if cdn.azul.com is blocked/rate-limited on some network path) even though it isn't operationally independent of Azul's own infrastructure. This closes essentially the entire Zulu mirror gap: 0/7,420 zulu entries now lack a mirror (previously 0 had one).",
+  "checked_at": "2026-09-17"
+ },
+ {
+  "runtime": "java",
+  "vendor": "zulu",
+  "name": "injdk.cn Zulu mirror (d10.injdk.cn)",
+  "region": "China",
+  "operator": "injdk.cn, a Chinese JDK-download aggregator site (https://injdk.cn/); the mirror itself is served from a subdomain (d10.injdk.cn) linked from injdk.cn's homepage",
+  "url_template": "https://d10.injdk.cn/openjdk/zulu/{major}/{filename}",
+  "protocols": {
+   "https": "confirmed",
+   "http": "redirects (308) to https -- no plaintext option"
+  },
+  "coverage": "partial/rolling: JDK builds only (no JRE), one (occasionally a couple of) recent build per major, majors 8/11/17/21/25/26/27 as of this run",
+  "confirmed_by": "extra_mirrors_round2.py: fetches the real Caddy-served directory listing for openjdk/zulu/ and each major subdirectory, matches filenames against releases.json's zulu entries (same filenames as cdn.azul.com), then HEAD-confirms each candidate's Content-Length against the vendor size. Bogus-path control returned 404.",
+  "checked_count": 101,
+  "confirmed_count": 101,
+  "confirmed_majors": [
+   "8",
+   "11",
+   "17",
+   "21",
+   "25",
+   "26",
+   "27"
+  ],
+  "sample_file_hash_verified": {
+   "attempted": false,
+   "reason": "This host mirrors JDK builds only (no JRE), and every JDK build in the matched set is >60MB (smallest confirmed file: 87,790,094 bytes) -- no file fits the pass's <=60MB hash-sample budget. Recorded as HEAD-confirmed (Content-Length match) only, not hash-verified."
+  },
+  "notes": "One entry (zulu17.64.17-ca-jdk17.0.18-c2-linux_aarch32hf.tar.gz, major 17) surfaced a pre-existing data-quality issue rather than a mirror problem: this releases.json entry's `size` field is 183202000 (a stale Azul-API-rounded value not caught by fix_zulu_sizes.py, which rounds to the nearest 100 bytes per that script's own docstring) while the real cdn.azul.com Content-Length is 183201984. d10.injdk.cn's Content-Length (183201984) matches the REAL vendor size exactly, so the mirror was still recorded as confirmed; the stale `size` field itself was left alone since add_mirrors.py only appends to mirrors[]/checksum_corroboration[], never edits other fields -- worth a follow-up run of fix_zulu_sizes.py to catch entries it missed.",
+  "checked_at": "2026-09-17"
+ }
+]

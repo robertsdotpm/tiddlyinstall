@@ -1,0 +1,1657 @@
+{
+  "runtime": "rust",
+  "languages": [
+    "rust"
+  ],
+  "researched": "2026-09-17",
+  "sources": [
+    "https://github.com/rust-lang/rust/blob/master/RELEASES.md",
+    "https://blog.rust-lang.org/2024/02/26/Windows-7/",
+    "https://blog.rust-lang.org/2023/09/25/Increasing-Apple-Version-Requirements/",
+    "https://blog.rust-lang.org/2020/01/03/reducing-support-for-32-bit-apple-targets.html",
+    "https://blog.rust-lang.org/2025/05/26/demoting-i686-pc-windows-gnu/",
+    "https://blog.rust-lang.org/2025/08/19/demoting-x86-64-apple-darwin-to-tier-2-with-host-tools",
+    "https://doc.rust-lang.org/rustc/platform-support.html"
+  ],
+  "milestones": [
+    {
+      "capability": "modules",
+      "since": "1.0",
+      "notes": "module/crate system present from the first stable release"
+    },
+    {
+      "capability": "native_threads",
+      "since": "1.0",
+      "notes": "std::thread wraps OS threads"
+    },
+    {
+      "capability": "true_parallelism",
+      "since": "1.0",
+      "notes": "no GIL; Send/Sync enforced at compile time"
+    },
+    {
+      "capability": "package_manager_bundled",
+      "since": "1.0",
+      "notes": "Cargo has shipped with every official installer since 1.0"
+    },
+    {
+      "capability": "unicode_default",
+      "since": "1.0",
+      "notes": "str/String are always valid UTF-8; no separate 'unicode mode'"
+    },
+    {
+      "capability": "ipv6",
+      "since": "1.0",
+      "notes": "std::net::Ipv6Addr present from 1.0"
+    },
+    {
+      "capability": "64bit_windows",
+      "since": "1.0",
+      "notes": "x86_64-pc-windows-gnu tier 1 from 1.0.0; -msvc counterpart from 1.2"
+    },
+    {
+      "capability": "generics",
+      "since": "1.0",
+      "notes": "type/lifetime generics from 1.0; const generics (min_const_generics) added 1.51; full const-generic expressions still incomplete as of the latest release covered here"
+    },
+    {
+      "capability": "async_await",
+      "since": "1.39",
+      "notes": "async fn/await syntax; async fn in traits followed at 1.75; async closures remain unstable as of 1.98"
+    },
+    {
+      "capability": "arm64_macos",
+      "since": "1.49",
+      "notes": "tier 2 (Apple Silicon) at 1.49, promoted to tier 1 at 1.82"
+    },
+    {
+      "capability": "arm64_windows",
+      "since": "1.32",
+      "notes": "tier 3 at 1.32, tier 2 (prebuilt binaries) at 1.49, tier 1 at 1.91"
+    },
+    {
+      "capability": "arm64_linux",
+      "since": "1.9",
+      "notes": "prebuilt aarch64-unknown-linux-gnu binaries from ~1.9 (tier 2), promoted to tier 1 at 1.49"
+    }
+  ],
+  "majors": [
+    {
+      "major": "1.0",
+      "released": "2015-05-15",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for x86_64/i686-pc-windows-gnu on Windows 7 SP1 and later; Windows XP/Vista could sometimes run binaries but were never an officially supported target",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu, tier 1; no formally published minimum kernel/glibc yet (first floor set at 1.47)"
+      },
+      "added": [
+        "Initial stable release: trait-based generics, ownership/borrowing, pattern matching, macro_rules!, Cargo bundled from the start"
+      ],
+      "limitations": [
+        "no ? operator (use the try! macro or manual match)",
+        "no impl Trait, no const generics, no async/await",
+        "no 128-bit integers",
+        "single edition (later called 2015)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.1",
+      "released": "2015-06-25",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for x86_64/i686-pc-windows-gnu on Windows 7 SP1 and later; Windows XP/Vista could sometimes run binaries but were never an officially supported target",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu, tier 1; no formally published minimum kernel/glibc yet (first floor set at 1.47)"
+      },
+      "added": [
+        "The std::fs module has been expanded to expand the set of functionality exposed:",
+        "The compiler now contains extended explanations of many errors. When an error with an explanation occurs the compiler suggests using the..."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.2",
+      "released": "2015-08-07",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu, tier 1; no formally published minimum kernel/glibc yet (first floor set at 1.47)"
+      },
+      "added": [
+        "Patterns with ref mut now correctly invoke [DerefMut] when matching against dereferenceable values."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.3",
+      "released": "2015-09-17",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu, tier 1; no formally published minimum kernel/glibc yet (first floor set at 1.47)"
+      },
+      "added": [
+        "The new object lifetime defaults have been turned on after a cycle of warnings about the change.",
+        "Semicolons may now follow types and paths in macros."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.4",
+      "released": "2015-10-29",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu, tier 1; no formally published minimum kernel/glibc yet (first floor set at 1.47)"
+      },
+      "added": [
+        "use statements that import multiple items can now rename them, as in use foo::{bar as kitten, baz as puppy}.",
+        "Binops work correctly on fat pointers."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.5",
+      "released": "2015-12-10",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu, tier 1; no formally published minimum kernel/glibc yet (first floor set at 1.47)"
+      },
+      "added": [
+        "cargo install for binary crates",
+        "crates.io established as the default registry"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.6",
+      "released": "2016-01-21",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu, tier 1; no formally published minimum kernel/glibc yet (first floor set at 1.47)"
+      },
+      "added": [
+        "libcore stabilized (no_std ecosystem becomes viable)"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.7",
+      "released": "2016-03-03",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu, tier 1; no formally published minimum kernel/glibc yet (first floor set at 1.47)"
+      },
+      "added": [],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.8",
+      "released": "2016-04-14",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu, tier 1; no formally published minimum kernel/glibc yet (first floor set at 1.47)"
+      },
+      "added": [
+        "Rust supports overloading of compound assignment statements like += by implementing the [AddAssign], [SubAssign], [MulAssign], [DivAssign],...",
+        "Empty structs can be defined with braces, as in struct Foo { }, in addition to the non-braced form, struct Foo;. [RFC 218]."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.9",
+      "released": "2016-05-26",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "std::os::unix/windows widened; first aarch64-unknown-linux-gnu prebuilt binaries appear"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.10",
+      "released": "2016-07-07",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "cdylib crate type for producing C-compatible dynamic libraries"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.11",
+      "released": "2016-08-18",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "Support nested cfg_attr attributes",
+        "Allow statement-generating braced macro invocations at the end of blocks"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.12",
+      "released": "2016-09-29",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "macro_rules! invocations can be made within macro_rules! invocations",
+        "macro_rules! meta-variables are hygienic"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.13",
+      "released": "2016-11-10",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "Stabilized the ? operator for error propagation (sugar for the try! macro)",
+        "macros in type position"
+      ],
+      "limitations": [
+        "no impl Trait or const generics yet; ? only works in functions returning Result/Option"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.14",
+      "released": "2016-12-22",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        ".. matches multiple tuple fields in enum variants, structs and tuples. [RFC 1492].",
+        "Safe fn items can be coerced to unsafe fn pointers"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.15",
+      "released": "2017-02-02",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "Basic procedural macros allowing custom #[derive], aka \"macros 1.1\", are stable. This allows popular code-generating crates like Serde and...",
+        "Tuple structs may be empty. Unary and empty tuple structs may be instantiated with curly braces. Part of [RFC 1506]."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.16",
+      "released": "2017-03-16",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "The compiler's dead_code lint now accounts for type aliases.",
+        "Uninhabitable enums (those without any variants) no longer permit wildcard match patterns"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.17",
+      "released": "2017-04-27",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "The lifetime of statics and consts defaults to 'static. [RFC 1623]",
+        "Fields of structs may be initialized without duplicating the field/variable names. [RFC 1682]"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.18",
+      "released": "2017-06-08",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "Stabilize pub(restricted) pub can now accept a module path to make the item visible to just that module tree. Also accepts the keyword...",
+        "[Stabilize #![windows_subsystem] attribute][40870] conservative exposure of the /SUBSYSTEM linker flag on Windows platforms. [RFC 1665]."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.19",
+      "released": "2017-07-20",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "Numeric fields can now be used for creating tuple structs. [RFC 1506] For example struct Point(u32, u32); let x = Point { 0: 7, 1: 0 };.",
+        "Macro recursion limit increased to 1024 from 64."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.20",
+      "released": "2017-08-31",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "Associated constants stabilized"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.21",
+      "released": "2017-10-12",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "You can now use static references for literals. Example: rust fn main() { let x: &'static u32 = &0; }",
+        "Relaxed path syntax. Optional :: before < is now allowed in all contexts. Example: rust my_macro!(Vec<i32>::new); // Always worked..."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.22",
+      "released": "2017-11-22",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "non_snake_case lint now allows extern no-mangle functions",
+        "Now accepts underscores in unicode escapes"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.23",
+      "released": "2018-01-04",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "Arbitrary auto traits are now permitted in trait objects.",
+        "rustc now uses subtyping on the left hand side of binary operations. Which should fix some confusing errors in some operations."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.24",
+      "released": "2018-02-15",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "External sysv64 ffi is now available. eg. extern \"sysv64\" fn foo () {}"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.25",
+      "released": "2018-03-29",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "[The #[repr(align(x))] attribute is now stable.][47006] [RFC 1358]",
+        "You can now use nested groups of imports. e.g. use std::{fs::File, io::Read, path::{Path, PathBuf}};"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.26",
+      "released": "2018-05-10",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "impl Trait in argument and return position",
+        "128-bit integers (i128/u128)",
+        "main() can return Result"
+      ],
+      "limitations": [
+        "impl Trait not yet allowed in trait method signatures; still no async/await or const generics"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.27",
+      "released": "2018-06-21",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "Removed 'proc' from the reserved keywords list. This allows proc to be used as an identifier.",
+        "The dyn syntax is now available. This syntax is equivalent to the bare Trait syntax, and should make it clearer when being used in tandem..."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.28",
+      "released": "2018-08-02",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "#[repr(transparent)]"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.29",
+      "released": "2018-09-13",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.30",
+      "released": "2018-10-25",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "Procedural macros (proc-macro) usable outside of custom derive"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.31",
+      "released": "2018-12-06",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Tier 1 for both -gnu and -msvc, x86_64 and i686, Windows 7 SP1 and later (x86_64-pc-windows-msvc added this release)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "2018 edition stabilized (module path clarity, uniform paths, NLL enabled by default for 2018 code)",
+        "non-lexical lifetimes (2018 edition only)"
+      ],
+      "limitations": [
+        "2015-edition crates don't get NLL yet (arrives 1.36); crates must opt into 2018 via Cargo.toml"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.32",
+      "released": "2019-01-17",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.2, plus aarch64-pc-windows-msvc added as a new tier 3 target (no prebuilt binaries yet)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "? operator usable inside macro_rules! definitions",
+        "aarch64-pc-windows-msvc added as a tier 3 target"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.33",
+      "released": "2019-02-28",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.2, plus aarch64-pc-windows-msvc added as a new tier 3 target (no prebuilt binaries yet)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "You can now use the cfg(target_vendor) attribute. E.g. #[cfg(target_vendor=\"apple\")] fn main() { println!(\"Hello Apple!\"); }",
+        "Integer patterns such as in a match expression can now be exhaustive. E.g. You can have match statement on a u8 that covers 0..=255 and you..."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.34",
+      "released": "2019-04-11",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.2, plus aarch64-pc-windows-msvc added as a new tier 3 target (no prebuilt binaries yet)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "[You can now use #[deprecated = \"reason\"]][58166] as a shorthand for #[deprecated(note = \"reason\")]. This was previously allowed by mistake...",
+        "[You can now accept token streams in #[attr()],#[attr[]], and #[attr{}] procedural macros.][57367]"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.35",
+      "released": "2019-05-23",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.2, plus aarch64-pc-windows-msvc added as a new tier 3 target (no prebuilt binaries yet)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "FnOnce, FnMut, and the Fn traits are now implemented for Box<FnOnce>, Box<FnMut>, and Box<Fn> respectively.",
+        "You can now coerce closures into unsafe function pointers. e.g. rust unsafe fn call_unsafe(func: unsafe fn()) { func() } pub fn main() {..."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.36",
+      "released": "2019-07-04",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.2, plus aarch64-pc-windows-msvc added as a new tier 3 target (no prebuilt binaries yet)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "Non-lexical lifetimes (NLL) extended to the 2015 edition",
+        "std::future::Future trait lands in std ahead of async/await"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.37",
+      "released": "2019-08-15",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.2, plus aarch64-pc-windows-msvc added as a new tier 3 target (no prebuilt binaries yet)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "#[must_use] will now warn if the type is contained in a tuple, Box, or an array and unused.",
+        "You can now use the cfg and cfg_attr attributes on generic parameters."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.38",
+      "released": "2019-09-26",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.2, plus aarch64-pc-windows-msvc added as a new tier 3 target (no prebuilt binaries yet)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "[The #[global_allocator] attribute can now be used in submodules.][62735]",
+        "[The #[deprecated] attribute can now be used on macros.][62042]"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.39",
+      "released": "2019-11-07",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.2, plus aarch64-pc-windows-msvc added as a new tier 3 target (no prebuilt binaries yet)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "async/await stabilized (async fn, async move {}, async {} blocks, .await)"
+      ],
+      "limitations": [
+        "no async fn in traits (needs async-trait crate with boxing until 1.75); no async closures"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.40",
+      "released": "2019-12-19",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.2, plus aarch64-pc-windows-msvc added as a new tier 3 target (no prebuilt binaries yet)",
+        "macos": "Tier 1 for x86_64-apple-darwin on OS X 10.7 (Lion) and later; no official prebuilt toolchain was ever shipped for 32-bit i686-apple-darwin",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "You can now use tuple structs and tuple enum variant's constructors in const contexts. e.g. rust pub struct Point(i32, i32); const ORIGIN:...",
+        "[You can now mark structs, enums, and enum variants with the #[non_exhaustive] attribute to indicate that there may be variants or fields..."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.41",
+      "released": "2020-01-30",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.2, plus aarch64-pc-windows-msvc added as a new tier 3 target (no prebuilt binaries yet)",
+        "macos": "As before; this is the last release with tier 1/2 support for 32-bit Apple targets (i686-apple-darwin, i686-apple-ios) before their demotion to tier 3",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "Type parameters can be passed to foreign items when implementing traits"
+      ],
+      "limitations": [
+        "last release with tier 1/2 support for 32-bit Apple targets (i686-apple-darwin/ios) before their demotion to tier 3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.42",
+      "released": "2020-03-12",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.2, plus aarch64-pc-windows-msvc added as a new tier 3 target (no prebuilt binaries yet)",
+        "macos": "As before; this is the last release with tier 1/2 support for 32-bit Apple targets (i686-apple-darwin, i686-apple-ios) before their demotion to tier 3",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "You can now use the slice pattern syntax with subslices. e.g. rust fn foo(words: &[&str]) { match words { [\"Hello\", \"World\", \"!\", ..] =>...",
+        "[You can now use #[repr(transparent)] on univariant enums.][68122] Meaning that you can create an enum that has the exact layout and ABI of..."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.43",
+      "released": "2020-04-23",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.2, plus aarch64-pc-windows-msvc added as a new tier 3 target (no prebuilt binaries yet)",
+        "macos": "As before; this is the last release with tier 1/2 support for 32-bit Apple targets (i686-apple-darwin, i686-apple-ios) before their demotion to tier 3",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "Fixed using binary operations with &{number} (e.g. &1.0) not having the type inferred correctly.",
+        "[Attributes such as #[cfg()] can now be used on if expressions.][69201]"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.44",
+      "released": "2020-06-04",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.2, plus aarch64-pc-windows-msvc added as a new tier 3 target (no prebuilt binaries yet)",
+        "macos": "As before; this is the last release with tier 1/2 support for 32-bit Apple targets (i686-apple-darwin, i686-apple-ios) before their demotion to tier 3",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "async/.await usable with #![no_std]"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.45",
+      "released": "2020-07-16",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.2, plus aarch64-pc-windows-msvc added as a new tier 3 target (no prebuilt binaries yet)",
+        "macos": "As before; this is the last release with tier 1/2 support for 32-bit Apple targets (i686-apple-darwin, i686-apple-ios) before their demotion to tier 3",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "float-to-int `as` casts made saturating instead of UB"
+      ],
+      "limitations": [
+        "ecosystem note: tokio 1.0 (Dec 2020) set its MSRV at Rust 1.45"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "1.46",
+      "released": "2020-08-27",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.2, plus aarch64-pc-windows-msvc added as a new tier 3 target (no prebuilt binaries yet)",
+        "macos": "As before; this is the last release with tier 1/2 support for 32-bit Apple targets (i686-apple-darwin, i686-apple-ios) before their demotion to tier 3",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu prebuilt binaries begin (tier 2)"
+      },
+      "added": [
+        "if, match, and loop expressions can now be used in const functions.",
+        "[Additionally you are now also able to coerce and cast to slices (&[T]) in const functions.][73862]"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.47",
+      "released": "2020-10-08",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.2, plus aarch64-pc-windows-msvc added as a new tier 3 target (no prebuilt binaries yet)",
+        "macos": "As before; this is the last release with tier 1/2 support for 32-bit Apple targets (i686-apple-darwin, i686-apple-ios) before their demotion to tier 3",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1 (minimum now formally kernel 2.6.32 / glibc 2.11); aarch64-unknown-linux-gnu tier 2"
+      },
+      "added": [
+        "Linux target minimum formally published: kernel 2.6.32, glibc 2.11 for -linux-gnu"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.48",
+      "released": "2020-11-19",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.2, plus aarch64-pc-windows-msvc added as a new tier 3 target (no prebuilt binaries yet)",
+        "macos": "As before; this is the last release with tier 1/2 support for 32-bit Apple targets (i686-apple-darwin, i686-apple-ios) before their demotion to tier 3",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1 (minimum now formally kernel 2.6.32 / glibc 2.11); aarch64-unknown-linux-gnu tier 2"
+      },
+      "added": [
+        "The unsafe keyword is now syntactically permitted on modules. This is still rejected *semantically*, but can now be parsed by procedural..."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.49",
+      "released": "2020-12-31",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu promoted to tier 1 (with an asterisk: no host tools)"
+      },
+      "added": [
+        "Apple Silicon (aarch64-apple-darwin) added as tier 2",
+        "Windows on Arm (aarch64-pc-windows-msvc) promoted to tier 2",
+        "aarch64-unknown-linux-gnu promoted to tier 1"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.50",
+      "released": "2021-02-11",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu promoted to tier 1 (with an asterisk: no host tools)"
+      },
+      "added": [
+        "[You can now use const values for x in [x; N] array expressions.][79270] This has been technically possible since 1.38.0, as it was...",
+        "Assignments to ManuallyDrop<T> union fields are now considered safe."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.51",
+      "released": "2021-03-25",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu promoted to tier 1 (with an asterisk: no host tools)"
+      },
+      "added": [
+        "const generics (min_const_generics): types/functions can be parameterized by const values, e.g. struct Foo<const N: usize>"
+      ],
+      "limitations": [
+        "only 'min' const generics: no const generic expressions (N+1) in signatures yet"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.52",
+      "released": "2021-05-06",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu promoted to tier 1 (with an asterisk: no host tools)"
+      },
+      "added": [
+        "Added the unsafe_op_in_unsafe_fn lint, which checks whether the unsafe code in an unsafe fn is wrapped in a unsafe block. This lint is...",
+        "You can now cast mutable references to arrays to a pointer of the same type as the element."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.53",
+      "released": "2021-06-17",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu promoted to tier 1 (with an asterisk: no host tools)"
+      },
+      "added": [
+        "You can now use unicode for identifiers. This allows multilingual identifiers but still doesn't allow glyphs that are not considered...",
+        "You can now specify \"or patterns\" inside pattern matches. Previously you could only use | (OR) on complete patterns. E.g. rust let x =..."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.54",
+      "released": "2021-07-29",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu promoted to tier 1 (with an asterisk: no host tools)"
+      },
+      "added": [
+        "You can now use macros for values in some built-in attributes. This primarily allows you to call macros within the #[doc] attribute. For...",
+        "You can now cast between unsized slice types (and types which contain unsized slices) in const fn."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.55",
+      "released": "2021-09-09",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu promoted to tier 1 (with an asterisk: no host tools)"
+      },
+      "added": [
+        "You can now write open \"from\" range patterns (X..), which will start at X and will end at the maximum value of the integer.",
+        "You can now explicitly import the prelude of different editions through std::prelude (e.g. use std::prelude::rust_2021::*;)."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.56",
+      "released": "2021-10-21",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu promoted to tier 1 (with an asterisk: no host tools)"
+      },
+      "added": [
+        "2021 edition stabilized (disjoint closure captures, IntoIterator for arrays, panic! macro consistency)"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.57",
+      "released": "2021-12-02",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu promoted to tier 1 (with an asterisk: no host tools)"
+      },
+      "added": [
+        "[Macro attributes may follow #[derive] and will see the original (pre-cfg) input.][87220]",
+        "Accept curly-brace macros in expressions, like m!{ .. }.method() and m!{ .. }?."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.58",
+      "released": "2022-01-13",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu promoted to tier 1 (with an asterisk: no host tools)"
+      },
+      "added": [
+        "Format strings can now capture arguments simply by writing {ident} in the string. This works in all macros accepting format strings....",
+        "*const T pointers can now be dereferenced in const contexts."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.59",
+      "released": "2022-02-24",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu promoted to tier 1 (with an asterisk: no host tools)"
+      },
+      "added": [
+        "Stabilize default arguments for const parameters and remove the ordering restriction for type and const parameters",
+        "Stabilize destructuring assignment"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.60",
+      "released": "2022-04-07",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu promoted to tier 1 (with an asterisk: no host tools)"
+      },
+      "added": [
+        "#[cfg(panic = \"...\")] stabilized"
+      ],
+      "limitations": [
+        "announced (not yet applied) raise of the -linux-gnu minimum to kernel 3.2 / glibc 2.17, effective 1.64"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.61",
+      "released": "2022-05-19",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu promoted to tier 1 (with an asterisk: no host tools)"
+      },
+      "added": [
+        "const fn signatures can now include generic trait bounds",
+        "const fn signatures can now use impl Trait in argument and return position"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.62",
+      "released": "2022-06-30",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu promoted to tier 1 (with an asterisk: no host tools)"
+      },
+      "added": [
+        "[Stabilize #[derive(Default)] on enums with a #[default] variant][94457]",
+        "Teach flow sensitive checks that visibly uninhabited call expressions never return"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.63",
+      "released": "2022-08-11",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "x86_64/i686-unknown-linux-gnu tier 1; aarch64-unknown-linux-gnu promoted to tier 1 (with an asterisk: no host tools)"
+      },
+      "added": [
+        "std::thread::scope: scoped threads in std without external crates like crossbeam"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.64",
+      "released": "2022-09-22",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Linux minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.65",
+      "released": "2022-11-03",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "let-else statements",
+        "Generic associated types (GATs) stabilized"
+      ],
+      "limitations": [
+        "RPITIT / async fn in traits still unstable (arrives 1.75)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.66",
+      "released": "2022-12-15",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Permit specifying explicit discriminants on all repr(Int) enums rust #[repr(u8)] enum Foo { A(u8) = 0, B(i8) = 1, C(bool) = 42, }",
+        "Allow transmutes between the same type differing only in lifetimes"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.67",
+      "released": "2023-01-26",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Make Sized predicates coinductive, allowing cycles.",
+        "[#[must_use] annotations on async fn also affect the Future::Output.](https://github.com/rust-lang/rust/pull/100633/)"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.68",
+      "released": "2023-03-09",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Stabilize default_alloc_error_handler This allows usage of alloc on stable without requiring the definition of a handler for allocation...",
+        "Stabilize efiapi calling convention."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.69",
+      "released": "2023-04-20",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Deriving built-in traits on packed structs works with Copy fields.",
+        "Stabilize the cmpxchg16b target feature on x86 and x86_64."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.70",
+      "released": "2023-06-01",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "std::sync::OnceLock (no more need for once_cell/lazy_static for one-time init)"
+      ],
+      "limitations": [
+        "no LazyLock yet (arrives 1.80); must pair OnceLock with get_or_init by hand"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.71",
+      "released": "2023-07-13",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Stabilize raw-dylib, link_ordinal, import_name_type and -Cdlltool.",
+        "Uplift clippy::{drop,forget}_{ref,copy} lints."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.72",
+      "released": "2023-08-24",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Replace const eval limit by a lint and add an exponential backoff warning",
+        "[expand: Change how #![cfg(FALSE)] behaves on crate root](https://github.com/rust-lang/rust/pull/110141/)"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.73",
+      "released": "2023-10-05",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "x86_64-apple-darwin tier 1 (OS X 10.7+); aarch64-apple-darwin (Apple Silicon) added as tier 2",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Uplift clippy::fn_null_check lint as useless_ptr_null_checks.",
+        "Make noop_method_call warn by default."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.74",
+      "released": "2023-11-16",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "As before, minimum raised from 10.7 to macOS 10.12 (Sierra); iOS/tvOS minimums raised to 10 in the same release",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Minimum macOS raised from 10.7 to 10.12 (Sierra); iOS/tvOS minimum raised to 10"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.75",
+      "released": "2023-12-28",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "As before, minimum raised from 10.7 to macOS 10.12 (Sierra); iOS/tvOS minimums raised to 10 in the same release",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "async fn and return-position impl Trait stabilized in traits (no more async-trait crate/boxing needed for the common case)"
+      ],
+      "limitations": [
+        "still no async closures, no dyn-compatible async trait objects without boxing"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.76",
+      "released": "2024-02-08",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "As before, minimum raised from 10.7 to macOS 10.12 (Sierra); iOS/tvOS minimums raised to 10 in the same release",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Document Rust ABI compatibility between various types",
+        "Also: guarantee that char and u32 are ABI-compatible"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.77",
+      "released": "2024-03-21",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As before, plus aarch64-pc-windows-msvc promoted to tier 2 (first prebuilt arm64 Windows binaries)",
+        "macos": "As before, minimum raised from 10.7 to macOS 10.12 (Sierra); iOS/tvOS minimums raised to 10 in the same release",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Reveal opaque types within the defining body for exhaustiveness checking.",
+        "Stabilize C-string literals."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.78",
+      "released": "2024-05-02",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Minimum raised to Windows 10 for the standard -pc-windows-{msvc,gnu} targets (Windows 7/8/8.1 no longer tier 1); dedicated {x86_64,i686}-win7-windows-msvc tier 3 targets exist for backward compatibility (added 1.76; -gnu counterparts added 1.86)",
+        "macos": "As before, minimum raised from 10.7 to macOS 10.12 (Sierra); iOS/tvOS minimums raised to 10 in the same release",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Windows minimum raised to Windows 10 for standard -pc-windows-{msvc,gnu} targets; Windows 7/8/8.1 no longer tier 1 (tier-3 win7-windows-msvc targets exist for old-OS builds)"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.79",
+      "released": "2024-06-13",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Minimum raised to Windows 10 for the standard -pc-windows-{msvc,gnu} targets (Windows 7/8/8.1 no longer tier 1); dedicated {x86_64,i686}-win7-windows-msvc tier 3 targets exist for backward compatibility (added 1.76; -gnu counterparts added 1.86)",
+        "macos": "As before, minimum raised from 10.7 to macOS 10.12 (Sierra); iOS/tvOS minimums raised to 10 in the same release",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Stabilize inline const {} expressions.",
+        "Prevent opaque types being instantiated twice with different regions within the same function."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.80",
+      "released": "2024-07-25",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Minimum raised to Windows 10 for the standard -pc-windows-{msvc,gnu} targets (Windows 7/8/8.1 no longer tier 1); dedicated {x86_64,i686}-win7-windows-msvc tier 3 targets exist for backward compatibility (added 1.76; -gnu counterparts added 1.86)",
+        "macos": "As before, minimum raised from 10.7 to macOS 10.12 (Sierra); iOS/tvOS minimums raised to 10 in the same release",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "std::sync::LazyLock stabilized"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.81",
+      "released": "2024-09-05",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Minimum raised to Windows 10 for the standard -pc-windows-{msvc,gnu} targets (Windows 7/8/8.1 no longer tier 1); dedicated {x86_64,i686}-win7-windows-msvc tier 3 targets exist for backward compatibility (added 1.76; -gnu counterparts added 1.86)",
+        "macos": "As before, minimum raised from 10.7 to macOS 10.12 (Sierra); iOS/tvOS minimums raised to 10 in the same release",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Abort on uncaught panics in extern \"C\" functions.",
+        "Fix ambiguous cases of multiple & in elided self lifetimes."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.82",
+      "released": "2024-10-17",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Minimum raised to Windows 10 for the standard -pc-windows-{msvc,gnu} targets (Windows 7/8/8.1 no longer tier 1); dedicated {x86_64,i686}-win7-windows-msvc tier 3 targets exist for backward compatibility (added 1.76; -gnu counterparts added 1.86)",
+        "macos": "x86_64-apple-darwin tier 1 (10.12+); aarch64-apple-darwin promoted to tier 1",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Apple Silicon (aarch64-apple-darwin) promoted to tier 1"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.83",
+      "released": "2024-11-28",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Minimum raised to Windows 10 for the standard -pc-windows-{msvc,gnu} targets (Windows 7/8/8.1 no longer tier 1); dedicated {x86_64,i686}-win7-windows-msvc tier 3 targets exist for backward compatibility (added 1.76; -gnu counterparts added 1.86)",
+        "macos": "x86_64-apple-darwin tier 1 (10.12+); aarch64-apple-darwin promoted to tier 1",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Visual Studio 2013 no longer supported for MSVC targets",
+        "more const fn: &mut/*mut/&Cell/*const Cell usable in const contexts"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.84",
+      "released": "2025-01-09",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Minimum raised to Windows 10 for the standard -pc-windows-{msvc,gnu} targets (Windows 7/8/8.1 no longer tier 1); dedicated {x86_64,i686}-win7-windows-msvc tier 3 targets exist for backward compatibility (added 1.76; -gnu counterparts added 1.86)",
+        "macos": "x86_64-apple-darwin tier 1 (10.12+); aarch64-apple-darwin promoted to tier 1",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "[Allow #[deny] inside #[forbid] as a no-op](https://github.com/rust-lang/rust/pull/121560/)",
+        "Show a warning when -Ctarget-feature is used to toggle features that can lead to unsoundness due to ABI mismatches"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.85",
+      "released": "2025-02-20",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Minimum raised to Windows 10 for the standard -pc-windows-{msvc,gnu} targets (Windows 7/8/8.1 no longer tier 1); dedicated {x86_64,i686}-win7-windows-msvc tier 3 targets exist for backward compatibility (added 1.76; -gnu counterparts added 1.86)",
+        "macos": "x86_64-apple-darwin tier 1 (10.12+); aarch64-apple-darwin promoted to tier 1",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "2024 edition stabilized (unsafe extern/unsafe attrs required, unsafe_op_in_unsafe_fn changes, gen keyword reserved, extern crate no longer needed)"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.86",
+      "released": "2025-04-03",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Minimum raised to Windows 10 for the standard -pc-windows-{msvc,gnu} targets (Windows 7/8/8.1 no longer tier 1); dedicated {x86_64,i686}-win7-windows-msvc tier 3 targets exist for backward compatibility (added 1.76; -gnu counterparts added 1.86)",
+        "macos": "x86_64-apple-darwin tier 1 (10.12+); aarch64-apple-darwin promoted to tier 1",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Upcasting trait objects to supertraits stabilized",
+        "win7-windows-gnu tier 3 targets added alongside the existing win7-windows-msvc ones"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.87",
+      "released": "2025-05-15",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.78, plus the legacy i586-pc-windows-msvc (no-SSE2) target removed",
+        "macos": "x86_64-apple-darwin tier 1 (10.12+); aarch64-apple-darwin promoted to tier 1",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Legacy i586-pc-windows-msvc (no-SSE2) target removed"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.88",
+      "released": "2025-06-26",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.87, plus i686-pc-windows-gnu demoted from tier 1 to tier 2",
+        "macos": "x86_64-apple-darwin tier 1 (10.12+); aarch64-apple-darwin promoted to tier 1",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "let_chains stabilized (2024 edition)",
+        "i686-pc-windows-gnu demoted from tier 1 to tier 2"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.89",
+      "released": "2025-08-07",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.87, plus i686-pc-windows-gnu demoted from tier 1 to tier 2",
+        "macos": "x86_64-apple-darwin tier 1 (10.12+); aarch64-apple-darwin promoted to tier 1",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Stabilize explicitly inferred const arguments (feature(generic_arg_infer))",
+        "Add a warn-by-default mismatched_lifetime_syntaxes lint. This lint detects when the same lifetime is referred to by different syntax..."
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.90",
+      "released": "2025-09-18",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.87, plus i686-pc-windows-gnu demoted from tier 1 to tier 2",
+        "macos": "x86_64-apple-darwin demoted from tier 1 to 'tier 2 with host tools' (std/compiler still built, automated testing no longer guaranteed); aarch64-apple-darwin remains tier 1",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "x86_64-apple-darwin (Intel Mac) demoted from tier 1 to tier 2 with host tools"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.91",
+      "released": "2025-10-30",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.88, plus aarch64-pc-windows-msvc (Windows on Arm) promoted from tier 2 to tier 1",
+        "macos": "x86_64-apple-darwin demoted from tier 1 to 'tier 2 with host tools' (std/compiler still built, automated testing no longer guaranteed); aarch64-apple-darwin remains tier 1",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Windows on Arm (aarch64-pc-windows-msvc) promoted from tier 2 to tier 1"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.92",
+      "released": "2025-12-11",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.88, plus aarch64-pc-windows-msvc (Windows on Arm) promoted from tier 2 to tier 1",
+        "macos": "x86_64-apple-darwin demoted from tier 1 to 'tier 2 with host tools' (std/compiler still built, automated testing no longer guaranteed); aarch64-apple-darwin remains tier 1",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Document MaybeUninit representation and validity",
+        "[Allow &raw [mut | const] for union field in safe code](https://github.com/rust-lang/rust/pull/141469)"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.93",
+      "released": "2026-01-22",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.88, plus aarch64-pc-windows-msvc (Windows on Arm) promoted from tier 2 to tier 1",
+        "macos": "x86_64-apple-darwin demoted from tier 1 to 'tier 2 with host tools' (std/compiler still built, automated testing no longer guaranteed); aarch64-apple-darwin remains tier 1",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Stabilize several s390x vector-related target features and the is_s390x_feature_detected! macro",
+        "Stabilize declaration of C-style variadic functions for the system ABI"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.94",
+      "released": "2026-03-05",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.88, plus aarch64-pc-windows-msvc (Windows on Arm) promoted from tier 2 to tier 1",
+        "macos": "x86_64-apple-darwin demoted from tier 1 to 'tier 2 with host tools' (std/compiler still built, automated testing no longer guaranteed); aarch64-apple-darwin remains tier 1",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Impls and impl items inherit dead_code lint level of the corresponding traits and trait items",
+        "Stabilize additional 29 RISC-V target features including large portions of the RVA22U64 / RVA23U64 profiles"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.95",
+      "released": "2026-04-16",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.88, plus aarch64-pc-windows-msvc (Windows on Arm) promoted from tier 2 to tier 1",
+        "macos": "x86_64-apple-darwin demoted from tier 1 to 'tier 2 with host tools' (std/compiler still built, automated testing no longer guaranteed); aarch64-apple-darwin remains tier 1",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Stabilize if let guards on match arms",
+        "irrefutable_let_patterns lint no longer lints on let chains"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.96",
+      "released": "2026-05-28",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.88, plus aarch64-pc-windows-msvc (Windows on Arm) promoted from tier 2 to tier 1",
+        "macos": "x86_64-apple-darwin demoted from tier 1 to 'tier 2 with host tools' (std/compiler still built, automated testing no longer guaranteed); aarch64-apple-darwin remains tier 1",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Allow passing expr metavariable to cfg",
+        "Always coerce never types in tuple expressions"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.97",
+      "released": "2026-07-09",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.88, plus aarch64-pc-windows-msvc (Windows on Arm) promoted from tier 2 to tier 1",
+        "macos": "x86_64-apple-darwin demoted from tier 1 to 'tier 2 with host tools' (std/compiler still built, automated testing no longer guaranteed); aarch64-apple-darwin remains tier 1",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Consider Result<T, Uninhabited> and ControlFlow<Uninhabited, T> to be equivalent to T for must use lint",
+        "Add allow-by-default dead_code_pub_in_binary lint for unused pub items in binary crates"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    },
+    {
+      "major": "1.98",
+      "released": "2026-08-20",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "As 1.88, plus aarch64-pc-windows-msvc (Windows on Arm) promoted from tier 2 to tier 1",
+        "macos": "x86_64-apple-darwin demoted from tier 1 to 'tier 2 with host tools' (std/compiler still built, automated testing no longer guaranteed); aarch64-apple-darwin remains tier 1",
+        "linux": "As 1.49, minimum raised to kernel 3.2 / glibc 2.17 for -linux-gnu targets (announced 1.60, applied 1.64)"
+      },
+      "added": [
+        "Lifetime of &mut can now be shortened when unsize-coercing even in invariant position",
+        "New invalid_runtime_symbol_definitions / c_void_returns lints"
+      ],
+      "limitations": [],
+      "confidence": "high"
+    }
+  ]
+}

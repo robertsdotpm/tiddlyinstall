@@ -1,0 +1,170 @@
+[
+ {
+  "host": "fosszone.csd.auth.gr",
+  "scheme": "https"
+ },
+ {
+  "host": "ftp.fau.de",
+  "scheme": "https"
+ },
+ {
+  "host": "ftp.gnu.org",
+  "scheme": "https"
+ },
+ {
+  "host": "ftp.halifax.rwth-aachen.de",
+  "scheme": "https"
+ },
+ {
+  "host": "ftp.kaist.ac.kr",
+  "scheme": "https"
+ },
+ {
+  "host": "ftp.man.poznan.pl",
+  "scheme": "https"
+ },
+ {
+  "host": "ftp.nluug.nl",
+  "scheme": "http"
+ },
+ {
+  "host": "ftp.wayne.edu",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.cedia.org.ec",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.checkdomain.de",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.clientvps.com",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.cs.odu.edu",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.csclub.uwaterloo.ca",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.cyberbits.asia",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.cyberbits.eu",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.diyarciftci.xyz",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.dogado.de",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.hiesoft.net",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.ihost.md",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.koetsier.org",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.kumi.systems",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.lagoon.nc",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.lyrahosting.com",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.marwan.ma",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.netcologne.de",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.ossplanet.net",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.rit.edu",
+  "scheme": "http"
+ },
+ {
+  "host": "mirror.team-cymru.com",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.techrich.hk",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.truenetwork.ru",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.twds.com.tw",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.ufs.ac.za",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror.us-midwest-1.nexcess.net",
+  "scheme": "https"
+ },
+ {
+  "host": "mirror2.evolution-host.com",
+  "scheme": "https"
+ },
+ {
+  "host": "mirrors.hopbox.net",
+  "scheme": "https"
+ },
+ {
+  "host": "mirrors.ibiblio.org",
+  "scheme": "https"
+ },
+ {
+  "host": "mirrors.middlendian.com",
+  "scheme": "https"
+ },
+ {
+  "host": "mirrors.nav.ro",
+  "scheme": "https"
+ },
+ {
+  "host": "mirrors.nju.edu.cn",
+  "scheme": "https"
+ },
+ {
+  "host": "mirrors.ocf.berkeley.edu",
+  "scheme": "https"
+ },
+ {
+  "host": "mirrors.tuna.tsinghua.edu.cn",
+  "scheme": "https"
+ },
+ {
+  "host": "mirrors.ustc.edu.cn",
+  "scheme": "https"
+ }
+]

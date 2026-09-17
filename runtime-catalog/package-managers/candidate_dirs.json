@@ -1,0 +1,1645 @@
+[
+ {
+  "host": "ca.mirrors.cicku.me",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:CRAN/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "ftp.fau.de",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "ftp.halifax.rwth-aachen.de",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "ftp.kaist.ac.kr",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "ftp.lip6.fr",
+  "hits": {
+   "https:pub/python/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:pub/python/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "ftp.psnc.pl",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "ftp.nluug.nl",
+  "hits": {
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": [
+   "https",
+   "http"
+  ]
+ },
+ {
+  "host": "mirror.aarnet.edu.au",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:php/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:php/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "ftp.uni-sofia.bg",
+  "hits": {
+   "https:CRAN/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:CRAN/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirror-hk.koddos.net",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirror.checkdomain.de",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirror.cs.odu.edu",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirror.clientvps.com",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirror.cedia.org.ec",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": "26638",
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": "8567",
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirror.csclub.uwaterloo.ca",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirror.dogado.de",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirror.ihost.md",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirror.init7.net",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirror.lagoon.nc",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirror.it4i.cz",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirror.lyrahosting.com",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": [
+   "https"
+  ]
+ },
+ {
+  "host": "mirror.kumi.systems",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirror.lzu.edu.cn",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "https:adoptium/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:Adoptium/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:github-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "http:adoptium/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:Adoptium/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:github-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirror.marwan.ma",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirror.metanet.ch",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirror.nju.edu.cn",
+  "hits": {
+   "https:python/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "https:nodejs-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:golang/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:rustup/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:php/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:adoptium/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:github-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:python/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "http:nodejs-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:golang/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:rustup/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:php/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:adoptium/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:github-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirror.nyist.edu.cn",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "https:nodejs-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:rustup/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:Adoptium/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:github-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "http:nodejs-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:rustup/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:Adoptium/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:github-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirror.netcologne.de",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirror.twds.com.tw",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirror.team-cymru.com",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirror.truenetwork.ru",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:CRAN/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirrors.bfsu.edu.cn",
+  "hits": {
+   "https:python/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "https:github-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:python/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "http:github-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirrors.aliyun.com",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:nodejs-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:golang/": {
+    "status": 200,
+    "length": "3610657",
+    "error": null,
+    "location": null
+   },
+   "https:rustup/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": "68640",
+    "error": null,
+    "location": null
+   },
+   "http:CRAN/": {
+    "status": 200,
+    "length": "30478",
+    "error": null,
+    "location": null
+   },
+   "http:nodejs-release/": {
+    "status": 200,
+    "length": "254313",
+    "error": null,
+    "location": null
+   },
+   "http:golang/": {
+    "status": 200,
+    "length": "3610657",
+    "error": null,
+    "location": null
+   },
+   "http:rustup/": {
+    "status": 200,
+    "length": "25319",
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirrors.hit.edu.cn",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirrors.cloud.tencent.com",
+  "hits": {
+   "https:python/": {
+    "status": 200,
+    "length": "149",
+    "error": null,
+    "location": null
+   },
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:nodejs-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirrors.hust.edu.cn",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "https:golang/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:rustup/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:llvm/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:github-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "http:golang/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:rustup/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:llvm/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:github-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirrors.nav.ro",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirrors.nju.edu.cn",
+  "hits": {
+   "https:python/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "https:nodejs-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:golang/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:rustup/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:php/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:adoptium/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:github-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:python/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "http:nodejs-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:golang/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:rustup/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:php/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:adoptium/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:github-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirrors.ocf.berkeley.edu",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirrors.rit.edu",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirrors.sjtug.sjtu.edu.cn",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "https:rust-static/": {
+    "status": 200,
+    "length": "440",
+    "error": null,
+    "location": null
+   },
+   "https:github-release/": {
+    "status": 200,
+    "length": "449",
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirrors.tuna.tsinghua.edu.cn",
+  "hits": {
+   "https:python/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "https:nodejs-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:rustup/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:Adoptium/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:github-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:python/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "http:nodejs-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:rustup/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:Adoptium/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:github-release/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirrors.ustc.edu.cn",
+  "hits": {
+   "https:python/": {
+    "status": 200,
+    "length": "71285",
+    "error": null,
+    "location": null
+   },
+   "https:ruby/": {
+    "status": 200,
+    "length": "6010",
+    "error": null,
+    "location": null
+   },
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": "45411",
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "https:node/": {
+    "status": 200,
+    "length": "233062",
+    "error": null,
+    "location": null
+   },
+   "https:rust-static/": {
+    "status": 200,
+    "length": "6478",
+    "error": null,
+    "location": null
+   },
+   "https:adoptium/": {
+    "status": 200,
+    "length": "6466",
+    "error": null,
+    "location": null
+   },
+   "https:github-release/": {
+    "status": 200,
+    "length": "9143",
+    "error": null,
+    "location": null
+   },
+   "http:python/": {
+    "status": 200,
+    "length": "71285",
+    "error": null,
+    "location": null
+   },
+   "http:ruby/": {
+    "status": 200,
+    "length": "6010",
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": "45411",
+    "error": null,
+    "location": null
+   },
+   "http:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "http:node/": {
+    "status": 200,
+    "length": "233062",
+    "error": null,
+    "location": null
+   },
+   "http:rust-static/": {
+    "status": 200,
+    "length": "6478",
+    "error": null,
+    "location": null
+   },
+   "http:adoptium/": {
+    "status": 200,
+    "length": "6466",
+    "error": null,
+    "location": null
+   },
+   "http:github-release/": {
+    "status": 200,
+    "length": "9143",
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirrors.xmission.com",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirrors.xjtu.edu.cn",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "mirrors.qlu.edu.cn",
+  "hits": {
+   "https:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   },
+   "http:CRAN/": {
+    "status": 200,
+    "length": "866",
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "pkg.adfinis-on-exoscale.ch",
+  "hits": {
+   "https:nodejs/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:nodejs/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ },
+ {
+  "host": "us.mirrors.cicku.me",
+  "hits": {
+   "https:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "https:CRAN/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:gnu/gcc/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   },
+   "http:CRAN/": {
+    "status": 200,
+    "length": null,
+    "error": null,
+    "location": null
+   }
+  },
+  "soft200": [],
+  "unreachable": []
+ }
+]

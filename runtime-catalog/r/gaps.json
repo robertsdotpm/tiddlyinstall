@@ -1,0 +1,34 @@
+[
+  {
+    "runtime": "r",
+    "major": "1.7",
+    "os": "windows",
+    "arch": "amd64",
+    "reason": "installer link found (rw1071.exe) but HEAD failed (status 404)",
+    "looked_at": [
+      "https://cran-archive.r-project.org/bin/windows/base/old/1.7.1/",
+      "https://cran-archive.r-project.org/bin/windows/base/old/1.7.1/rw1071.exe"
+    ]
+  },
+  {
+    "runtime": "r",
+    "major": "1.9",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "pre-2.0.1 macOS builds live under a different CRAN-archive layout (root-level version dirs like '1.9', '2.0', plus el-capitan/, mavericks/, universal/, powerpc/, i686/ subtrees) that this scrape did not walk",
+    "looked_at": [
+      "https://cran-archive.r-project.org/bin/macosx/"
+    ]
+  },
+  {
+    "runtime": "r",
+    "major": "1.x-2.x",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "CRAN ships no generic Linux binaries and Posit r-builds only supports R >= 3.0.0 (per rstudio/r-builds README); no prebuilt Linux package exists for R 1.x/2.x",
+    "looked_at": [
+      "https://cdn.posit.co/r/versions.json",
+      "https://github.com/rstudio/r-builds (README)"
+    ]
+  }
+]

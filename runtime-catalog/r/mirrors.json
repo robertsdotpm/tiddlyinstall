@@ -1,0 +1,378 @@
+{
+ "runtime": "r",
+ "mirror_list_source": "https://cran.r-project.org/CRAN_mirrors.csv",
+ "confirmed": [
+  {
+   "url_template": "https://cloud.r-project.org/",
+   "label": "Automatic CRAN load-balancer (Posit-sponsored), worldwide",
+   "confirmed_via": "HEAD content-length match against cran.r-project.org on 5 sample files (old + current releases): ['src/base/R-4/R-4.6.1.tar.gz', 'src/base/R-3/R-3.6.3.tar.gz', 'bin/windows/base/R-4.6.1-win.exe', 'bin/windows/base/old/4.0.0/R-4.0.0-win.exe', 'bin/macosx/base/R-4.0.0.pkg']"
+  },
+  {
+   "url_template": "https://mirrors.tuna.tsinghua.edu.cn/CRAN/",
+   "label": "China (Beijing)",
+   "confirmed_via": "HEAD content-length match against cran.r-project.org on 5 sample files (old + current releases): ['src/base/R-4/R-4.6.1.tar.gz', 'src/base/R-3/R-3.6.3.tar.gz', 'bin/windows/base/R-4.6.1-win.exe', 'bin/windows/base/old/4.0.0/R-4.0.0-win.exe', 'bin/macosx/base/R-4.0.0.pkg']"
+  },
+  {
+   "url_template": "https://ftp.fau.de/cran/",
+   "label": "Germany (Erlangen)",
+   "confirmed_via": "HEAD content-length match against cran.r-project.org on 5 sample files (old + current releases): ['src/base/R-4/R-4.6.1.tar.gz', 'src/base/R-3/R-3.6.3.tar.gz', 'bin/windows/base/R-4.6.1-win.exe', 'bin/windows/base/old/4.0.0/R-4.0.0-win.exe', 'bin/macosx/base/R-4.0.0.pkg']"
+  },
+  {
+   "url_template": "https://pbil.univ-lyon1.fr/CRAN/",
+   "label": "France (Lyon)",
+   "confirmed_via": "HEAD content-length match against cran.r-project.org on 5 sample files (old + current releases): ['src/base/R-4/R-4.6.1.tar.gz', 'src/base/R-3/R-3.6.3.tar.gz', 'bin/windows/base/R-4.6.1-win.exe', 'bin/windows/base/old/4.0.0/R-4.0.0-win.exe', 'bin/macosx/base/R-4.0.0.pkg']"
+  },
+  {
+   "url_template": "https://cran.csiro.au/",
+   "label": "Australia (Canberra)",
+   "confirmed_via": "HEAD content-length match against cran.r-project.org on 5 sample files (old + current releases): ['src/base/R-4/R-4.6.1.tar.gz', 'src/base/R-3/R-3.6.3.tar.gz', 'bin/windows/base/R-4.6.1-win.exe', 'bin/windows/base/old/4.0.0/R-4.0.0-win.exe', 'bin/macosx/base/R-4.0.0.pkg']"
+  },
+  {
+   "url_template": "http://mirror.fcaglp.unlp.edu.ar/CRAN/",
+   "label": "Argentina (La Plata) -- South America",
+   "protocols": "http only; https gets no response on this host",
+   "full_or_partial": "full",
+   "confirmed_via": "HEAD content-length match on 8 samples (src R-1/R-2/R-4, windows old/4.0.0 + old/4.6.1, macos base/R-4.0.0.pkg + big-sur-x86_64 + sonoma-arm64), all 8/8",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz, sha256 matches cran.r-project.org byte-for-byte (no vendor-published checksum exists for this file)",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "url_template": "https://cran-r.c3sl.ufpr.br/",
+   "label": "Brazil (Curitiba) -- South America",
+   "protocols": "http and https both serve the file directly",
+   "full_or_partial": "full",
+   "confirmed_via": "HEAD content-length match on 8 samples, 8/8",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz, sha256 matches vendor",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "url_template": "https://mirror.marwan.ma/cran/",
+   "label": "Morocco (Rabat) -- Africa",
+   "protocols": "http and https both serve the file directly",
+   "full_or_partial": "full",
+   "confirmed_via": "HEAD content-length match on 8 samples, 8/8",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz, sha256 matches vendor",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "url_template": "https://mirror.niser.ac.in/cran/",
+   "label": "India (Bhubaneswar)",
+   "protocols": "https only; http times out",
+   "full_or_partial": "full",
+   "confirmed_via": "HEAD content-length match on 8 samples, 8/8",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz, sha256 matches vendor",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "url_template": "https://cran.isid.ac.in/",
+   "label": "India (New Delhi)",
+   "protocols": "https only; http 301-redirects to https (not a real plain-http serve)",
+   "full_or_partial": "full",
+   "confirmed_via": "HEAD content-length match on 8 samples, 8/8",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz, sha256 matches vendor",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "url_template": "https://ftp.yz.yamagata-u.ac.jp/pub/cran/",
+   "label": "Japan (Yonezawa)",
+   "protocols": "http and https both serve the file directly",
+   "full_or_partial": "full",
+   "confirmed_via": "HEAD content-length match on 8 samples, 8/8",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz, sha256 matches vendor",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "url_template": "https://mirror.truenetwork.ru/CRAN/",
+   "label": "Russia (Novosibirsk)",
+   "protocols": "http and https both serve the file directly",
+   "full_or_partial": "full",
+   "confirmed_via": "HEAD content-length match on 8 samples, 8/8",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz, sha256 matches vendor",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "url_template": "https://mirror.maeen.sa/cran/",
+   "label": "Saudi Arabia (Riyadh) -- Middle East",
+   "protocols": "http and https both serve the file directly",
+   "full_or_partial": "full",
+   "confirmed_via": "HEAD content-length match on 8 samples, 8/8",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz, sha256 matches vendor",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "url_template": "https://cran.nyuad.nyu.edu/",
+   "label": "United Arab Emirates (Abu Dhabi) -- Middle East",
+   "protocols": "https only; http 302-redirects to https",
+   "full_or_partial": "full",
+   "confirmed_via": "HEAD content-length match on 8 samples, 8/8",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz, sha256 matches vendor",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "url_template": "https://cran.nic.cz/",
+   "label": "Czech Republic (Prague) -- Eastern Europe",
+   "protocols": "http and https both serve the file directly",
+   "full_or_partial": "full",
+   "confirmed_via": "HEAD content-length match on 8 samples, 8/8",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz, sha256 matches vendor",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "url_template": "https://mirror.csclub.uwaterloo.ca/CRAN/",
+   "label": "Canada (Waterloo) -- North America",
+   "protocols": "http and https both serve the file directly",
+   "full_or_partial": "full",
+   "confirmed_via": "HEAD content-length match on 8 samples, 8/8",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz, sha256 matches vendor",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "url_template": "http://ftp.ussg.iu.edu/CRAN/",
+   "label": "USA (Bloomington) -- North America",
+   "protocols": "http and https both serve the file directly (both protocols individually verified)",
+   "full_or_partial": "full",
+   "confirmed_via": "HEAD content-length match on 8 samples, 8/8",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz, sha256 matches vendor",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "url_template": "https://ftp.gwdg.de/pub/misc/cran/",
+   "label": "Germany (Goettingen) -- additional Europe",
+   "protocols": "http and https both serve the file directly",
+   "full_or_partial": "full",
+   "confirmed_via": "HEAD content-length match on 8 samples, 8/8",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz, sha256 matches vendor",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "url_template": "https://cdn.rstudio.com/",
+   "label": "Legacy Posit/RStudio-branded alias for the same CDN as cdn.posit.co -- not an independent mirror, applies to the 236 Linux (Posit r-builds) entries",
+   "protocols": "https only (same as cdn.posit.co)",
+   "full_or_partial": "full (identical CDN)",
+   "confirmed_via": "HEAD content-length match against cdn.posit.co on 6 samples spanning ubuntu-2204/rhel-9, amd64/arm64, R 3.0.0 through 4.6.1, 6/6",
+   "hash_verified_sample": "no vendor checksum exists for any Linux (Posit) entry -- CRAN/Posit publish none for this path, per NOTES.md; verification is by exact Content-Length match to the live cdn.posit.co object only",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "url_template": "https://web.archive.org/web/<timestamp>if_/<cran-archive.r-project.org URL>",
+   "label": "Internet Archive Wayback Machine, per-file capture -- covers cran-archive.r-project.org (old Windows/macOS installers not on the CRAN mirror network; no CRAN mirror, including all 19 above, carries cran-archive.r-project.org paths, confirmed by testing all of them against 6 archive-tree samples with 0/6 matches each)",
+   "protocols": "https",
+   "full_or_partial": "partial/rolling -- resolved and size-verified per entry by catalog/r/extra_mirrors.py; 143 of 148 cran-archive.r-project.org entries have a matching capture, 4 have none found on Wayback (genuine gaps), 1 (R 1.8.1 Windows, rw1081.exe) is deliberately excluded -- see 'Known vendor-side issue' in NOTES.md",
+   "confirmed_via": "Per-entry: latest 200-status Wayback capture via the CDX API, then HEAD on the `if_` URL compared against the entry's recorded size",
+   "hash_verified_sample": "bin/windows/base/old/1.6.2/rw1062.exe (20179549 bytes) downloaded in full from its Wayback capture; md5 6092f65a86bd76e218fb05043afb7fea matches the vendor's md5sum.txt exactly",
+   "date_checked": "2026-09-17"
+  },
+  {
+   "url_template": "https://ca.mirrors.cicku.me/CRAN/",
+   "label": "Canada",
+   "protocols": "https",
+   "full_or_partial": "full",
+   "confirmed_via": "package-managers/probe_mirror_networks.py: per-entry HEAD Content-Length match against cran.r-project.org, 200/200 of every entry whose url starts with https://cran.r-project.org/",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz (2896632 bytes) downloaded in full from both cran.r-project.org and this mirror; sha256 9267494f505a3d455376f912ccec4aa3c635b373ee2e97db8d4d34e2d51bc007 matches byte-for-byte (no vendor-published checksum exists for this file, same as the pre-existing entries above)",
+   "date_checked": "2026-09-17",
+   "found_via": "mirror-ecosystem hunt (2026-09-17): host appeared on the CRAN_mirrors.csv list (catalog/package-managers/mirror_hosts.json) and was probed directly rather than via the earlier per-mirror hunt"
+  },
+  {
+   "url_template": "https://ftp.kaist.ac.kr/CRAN/",
+   "label": "Korea",
+   "protocols": "https",
+   "full_or_partial": "full",
+   "confirmed_via": "package-managers/probe_mirror_networks.py: per-entry HEAD Content-Length match against cran.r-project.org, 200/200 of every entry whose url starts with https://cran.r-project.org/",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz (2896632 bytes) downloaded in full from both cran.r-project.org and this mirror; sha256 9267494f505a3d455376f912ccec4aa3c635b373ee2e97db8d4d34e2d51bc007 matches byte-for-byte (no vendor-published checksum exists for this file, same as the pre-existing entries above)",
+   "date_checked": "2026-09-17",
+   "found_via": "mirror-ecosystem hunt (2026-09-17): host appeared on the CRAN_mirrors.csv list (catalog/package-managers/mirror_hosts.json) and was probed directly rather than via the earlier per-mirror hunt"
+  },
+  {
+   "url_template": "https://ftp.uni-sofia.bg/CRAN/",
+   "label": "Bulgaria",
+   "protocols": "https",
+   "full_or_partial": "full",
+   "confirmed_via": "package-managers/probe_mirror_networks.py: per-entry HEAD Content-Length match against cran.r-project.org, 200/200 of every entry whose url starts with https://cran.r-project.org/",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz (2896632 bytes) downloaded in full from both cran.r-project.org and this mirror; sha256 9267494f505a3d455376f912ccec4aa3c635b373ee2e97db8d4d34e2d51bc007 matches byte-for-byte (no vendor-published checksum exists for this file, same as the pre-existing entries above)",
+   "date_checked": "2026-09-17",
+   "found_via": "mirror-ecosystem hunt (2026-09-17): host appeared on the CRAN_mirrors.csv list (catalog/package-managers/mirror_hosts.json) and was probed directly rather than via the earlier per-mirror hunt"
+  },
+  {
+   "url_template": "https://mirror-hk.koddos.net/CRAN/",
+   "label": "Hong Kong",
+   "protocols": "https",
+   "full_or_partial": "full",
+   "confirmed_via": "package-managers/probe_mirror_networks.py: per-entry HEAD Content-Length match against cran.r-project.org, 200/200 of every entry whose url starts with https://cran.r-project.org/",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz (2896632 bytes) downloaded in full from both cran.r-project.org and this mirror; sha256 9267494f505a3d455376f912ccec4aa3c635b373ee2e97db8d4d34e2d51bc007 matches byte-for-byte (no vendor-published checksum exists for this file, same as the pre-existing entries above)",
+   "date_checked": "2026-09-17",
+   "found_via": "mirror-ecosystem hunt (2026-09-17): host appeared on the CRAN_mirrors.csv list (catalog/package-managers/mirror_hosts.json) and was probed directly rather than via the earlier per-mirror hunt"
+  },
+  {
+   "url_template": "https://mirror.clientvps.com/CRAN/",
+   "label": "Finland",
+   "protocols": "https",
+   "full_or_partial": "full",
+   "confirmed_via": "package-managers/probe_mirror_networks.py: per-entry HEAD Content-Length match against cran.r-project.org, 200/200 of every entry whose url starts with https://cran.r-project.org/",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz (2896632 bytes) downloaded in full from both cran.r-project.org and this mirror; sha256 9267494f505a3d455376f912ccec4aa3c635b373ee2e97db8d4d34e2d51bc007 matches byte-for-byte (no vendor-published checksum exists for this file, same as the pre-existing entries above)",
+   "date_checked": "2026-09-17",
+   "found_via": "mirror-ecosystem hunt (2026-09-17): host appeared on the CRAN_mirrors.csv list (catalog/package-managers/mirror_hosts.json) and was probed directly rather than via the earlier per-mirror hunt"
+  },
+  {
+   "url_template": "https://mirror.cedia.org.ec/CRAN/",
+   "label": "Ecuador",
+   "protocols": "https",
+   "full_or_partial": "full",
+   "confirmed_via": "package-managers/probe_mirror_networks.py: per-entry HEAD Content-Length match against cran.r-project.org, 200/200 of every entry whose url starts with https://cran.r-project.org/",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz (2896632 bytes) downloaded in full from both cran.r-project.org and this mirror; sha256 9267494f505a3d455376f912ccec4aa3c635b373ee2e97db8d4d34e2d51bc007 matches byte-for-byte (no vendor-published checksum exists for this file, same as the pre-existing entries above)",
+   "date_checked": "2026-09-17",
+   "found_via": "mirror-ecosystem hunt (2026-09-17): host appeared on the CRAN_mirrors.csv list (catalog/package-managers/mirror_hosts.json) and was probed directly rather than via the earlier per-mirror hunt"
+  },
+  {
+   "url_template": "https://mirror.lyrahosting.com/CRAN/",
+   "label": "Netherlands",
+   "protocols": "https and http",
+   "full_or_partial": "full",
+   "confirmed_via": "package-managers/probe_mirror_networks.py: per-entry HEAD Content-Length match against cran.r-project.org, 200/200 of every entry whose url starts with https://cran.r-project.org/",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz (2896632 bytes) downloaded in full from both cran.r-project.org and this mirror; sha256 9267494f505a3d455376f912ccec4aa3c635b373ee2e97db8d4d34e2d51bc007 matches byte-for-byte (no vendor-published checksum exists for this file, same as the pre-existing entries above)",
+   "date_checked": "2026-09-17",
+   "found_via": "mirror-ecosystem hunt (2026-09-17): host appeared on the CRAN_mirrors.csv list (catalog/package-managers/mirror_hosts.json) and was probed directly rather than via the earlier per-mirror hunt"
+  },
+  {
+   "url_template": "https://mirror.lzu.edu.cn/CRAN/",
+   "label": "China",
+   "protocols": "https",
+   "full_or_partial": "full",
+   "confirmed_via": "package-managers/probe_mirror_networks.py: per-entry HEAD Content-Length match against cran.r-project.org, 200/200 of every entry whose url starts with https://cran.r-project.org/",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz (2896632 bytes) downloaded in full from both cran.r-project.org and this mirror; sha256 9267494f505a3d455376f912ccec4aa3c635b373ee2e97db8d4d34e2d51bc007 matches byte-for-byte (no vendor-published checksum exists for this file, same as the pre-existing entries above)",
+   "date_checked": "2026-09-17",
+   "found_via": "mirror-ecosystem hunt (2026-09-17): host appeared on the CRAN_mirrors.csv list (catalog/package-managers/mirror_hosts.json) and was probed directly rather than via the earlier per-mirror hunt"
+  },
+  {
+   "url_template": "https://mirror.nju.edu.cn/CRAN/",
+   "label": "China",
+   "protocols": "https and http",
+   "full_or_partial": "full",
+   "confirmed_via": "package-managers/probe_mirror_networks.py: per-entry HEAD Content-Length match against cran.r-project.org, 200/200 of every entry whose url starts with https://cran.r-project.org/",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz (2896632 bytes) downloaded in full from both cran.r-project.org and this mirror; sha256 9267494f505a3d455376f912ccec4aa3c635b373ee2e97db8d4d34e2d51bc007 matches byte-for-byte (no vendor-published checksum exists for this file, same as the pre-existing entries above)",
+   "date_checked": "2026-09-17",
+   "found_via": "mirror-ecosystem hunt (2026-09-17): host appeared on the CRAN_mirrors.csv list (catalog/package-managers/mirror_hosts.json) and was probed directly rather than via the earlier per-mirror hunt"
+  },
+  {
+   "url_template": "https://mirror.nyist.edu.cn/CRAN/",
+   "label": "China",
+   "protocols": "https",
+   "full_or_partial": "full",
+   "confirmed_via": "package-managers/probe_mirror_networks.py: per-entry HEAD Content-Length match against cran.r-project.org, 200/200 of every entry whose url starts with https://cran.r-project.org/",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz (2896632 bytes) downloaded in full from both cran.r-project.org and this mirror; sha256 9267494f505a3d455376f912ccec4aa3c635b373ee2e97db8d4d34e2d51bc007 matches byte-for-byte (no vendor-published checksum exists for this file, same as the pre-existing entries above)",
+   "date_checked": "2026-09-17",
+   "found_via": "mirror-ecosystem hunt (2026-09-17): host appeared on the CRAN_mirrors.csv list (catalog/package-managers/mirror_hosts.json) and was probed directly rather than via the earlier per-mirror hunt"
+  },
+  {
+   "url_template": "https://mirror.twds.com.tw/CRAN/",
+   "label": "Taiwan",
+   "protocols": "https",
+   "full_or_partial": "full",
+   "confirmed_via": "package-managers/probe_mirror_networks.py: per-entry HEAD Content-Length match against cran.r-project.org, 200/200 of every entry whose url starts with https://cran.r-project.org/",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz (2896632 bytes) downloaded in full from both cran.r-project.org and this mirror; sha256 9267494f505a3d455376f912ccec4aa3c635b373ee2e97db8d4d34e2d51bc007 matches byte-for-byte (no vendor-published checksum exists for this file, same as the pre-existing entries above)",
+   "date_checked": "2026-09-17",
+   "found_via": "mirror-ecosystem hunt (2026-09-17): host appeared on the CRAN_mirrors.csv list (catalog/package-managers/mirror_hosts.json) and was probed directly rather than via the earlier per-mirror hunt"
+  },
+  {
+   "url_template": "https://mirrors.bfsu.edu.cn/CRAN/",
+   "label": "China",
+   "protocols": "https",
+   "full_or_partial": "full",
+   "confirmed_via": "package-managers/probe_mirror_networks.py: per-entry HEAD Content-Length match against cran.r-project.org, 200/200 of every entry whose url starts with https://cran.r-project.org/",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz (2896632 bytes) downloaded in full from both cran.r-project.org and this mirror; sha256 9267494f505a3d455376f912ccec4aa3c635b373ee2e97db8d4d34e2d51bc007 matches byte-for-byte (no vendor-published checksum exists for this file, same as the pre-existing entries above)",
+   "date_checked": "2026-09-17",
+   "found_via": "mirror-ecosystem hunt (2026-09-17): host appeared on the CRAN_mirrors.csv list (catalog/package-managers/mirror_hosts.json) and was probed directly rather than via the earlier per-mirror hunt",
+   "caveat": "This exact host was tried and REJECTED earlier the same day (see r/NOTES.md 'Mirror hunt' section): HEAD returned 200 but a real GET returned a WAF/anti-bot interstitial instead of the file, for both bfsu and ustc. This session's own GET (not just HEAD) of src/base/R-1/R-1.0.0.tgz returned the correct 2896632-byte gzip file with a byte-for-byte sha256 match, both here and independently re-checked with curl -D- afterward. Re-added with this caveat rather than silently overriding the earlier rejection -- the anti-bot behaviour may be intermittent (geo/IP/rate based) rather than fixed; re-verify with a real GET before relying on this mirror for automated downloads."
+  },
+  {
+   "url_template": "https://mirrors.aliyun.com/CRAN/",
+   "label": "China",
+   "protocols": "https",
+   "full_or_partial": "full",
+   "confirmed_via": "package-managers/probe_mirror_networks.py: per-entry HEAD Content-Length match against cran.r-project.org, 200/200 of every entry whose url starts with https://cran.r-project.org/",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz (2896632 bytes) downloaded in full from both cran.r-project.org and this mirror; sha256 9267494f505a3d455376f912ccec4aa3c635b373ee2e97db8d4d34e2d51bc007 matches byte-for-byte (no vendor-published checksum exists for this file, same as the pre-existing entries above)",
+   "date_checked": "2026-09-17",
+   "found_via": "mirror-ecosystem hunt (2026-09-17): host appeared on the CRAN_mirrors.csv list (catalog/package-managers/mirror_hosts.json) and was probed directly rather than via the earlier per-mirror hunt"
+  },
+  {
+   "url_template": "https://mirrors.cloud.tencent.com/CRAN/",
+   "label": "China",
+   "protocols": "https",
+   "full_or_partial": "partial",
+   "confirmed_via": "package-managers/probe_mirror_networks.py: per-entry HEAD Content-Length match against cran.r-project.org, 179/200 of every entry whose url starts with https://cran.r-project.org/",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz (2896632 bytes) downloaded in full from both cran.r-project.org and this mirror; sha256 9267494f505a3d455376f912ccec4aa3c635b373ee2e97db8d4d34e2d51bc007 matches byte-for-byte (no vendor-published checksum exists for this file, same as the pre-existing entries above)",
+   "date_checked": "2026-09-17",
+   "found_via": "mirror-ecosystem hunt (2026-09-17): host appeared on the CRAN_mirrors.csv list (catalog/package-managers/mirror_hosts.json) and was probed directly rather than via the earlier per-mirror hunt"
+  },
+  {
+   "url_template": "https://mirrors.hust.edu.cn/CRAN/",
+   "label": "China",
+   "protocols": "https and http",
+   "full_or_partial": "full",
+   "confirmed_via": "package-managers/probe_mirror_networks.py: per-entry HEAD Content-Length match against cran.r-project.org, 200/200 of every entry whose url starts with https://cran.r-project.org/",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz (2896632 bytes) downloaded in full from both cran.r-project.org and this mirror; sha256 9267494f505a3d455376f912ccec4aa3c635b373ee2e97db8d4d34e2d51bc007 matches byte-for-byte (no vendor-published checksum exists for this file, same as the pre-existing entries above)",
+   "date_checked": "2026-09-17",
+   "found_via": "mirror-ecosystem hunt (2026-09-17): host appeared on the CRAN_mirrors.csv list (catalog/package-managers/mirror_hosts.json) and was probed directly rather than via the earlier per-mirror hunt"
+  },
+  {
+   "url_template": "https://mirrors.nju.edu.cn/CRAN/",
+   "label": "China",
+   "protocols": "https and http",
+   "full_or_partial": "full",
+   "confirmed_via": "package-managers/probe_mirror_networks.py: per-entry HEAD Content-Length match against cran.r-project.org, 200/200 of every entry whose url starts with https://cran.r-project.org/",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz (2896632 bytes) downloaded in full from both cran.r-project.org and this mirror; sha256 9267494f505a3d455376f912ccec4aa3c635b373ee2e97db8d4d34e2d51bc007 matches byte-for-byte (no vendor-published checksum exists for this file, same as the pre-existing entries above)",
+   "date_checked": "2026-09-17",
+   "found_via": "mirror-ecosystem hunt (2026-09-17): host appeared on the CRAN_mirrors.csv list (catalog/package-managers/mirror_hosts.json) and was probed directly rather than via the earlier per-mirror hunt"
+  },
+  {
+   "url_template": "https://mirrors.rit.edu/CRAN/",
+   "label": "United States",
+   "protocols": "https",
+   "full_or_partial": "full",
+   "confirmed_via": "package-managers/probe_mirror_networks.py: per-entry HEAD Content-Length match against cran.r-project.org, 200/200 of every entry whose url starts with https://cran.r-project.org/",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz (2896632 bytes) downloaded in full from both cran.r-project.org and this mirror; sha256 9267494f505a3d455376f912ccec4aa3c635b373ee2e97db8d4d34e2d51bc007 matches byte-for-byte (no vendor-published checksum exists for this file, same as the pre-existing entries above)",
+   "date_checked": "2026-09-17",
+   "found_via": "mirror-ecosystem hunt (2026-09-17): host appeared on the CRAN_mirrors.csv list (catalog/package-managers/mirror_hosts.json) and was probed directly rather than via the earlier per-mirror hunt"
+  },
+  {
+   "url_template": "https://mirrors.sjtug.sjtu.edu.cn/CRAN/",
+   "label": "China",
+   "protocols": "https",
+   "full_or_partial": "full",
+   "confirmed_via": "package-managers/probe_mirror_networks.py: per-entry HEAD Content-Length match against cran.r-project.org, 200/200 of every entry whose url starts with https://cran.r-project.org/",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz (2896632 bytes) downloaded in full from both cran.r-project.org and this mirror; sha256 9267494f505a3d455376f912ccec4aa3c635b373ee2e97db8d4d34e2d51bc007 matches byte-for-byte (no vendor-published checksum exists for this file, same as the pre-existing entries above)",
+   "date_checked": "2026-09-17",
+   "found_via": "mirror-ecosystem hunt (2026-09-17): host appeared on the CRAN_mirrors.csv list (catalog/package-managers/mirror_hosts.json) and was probed directly rather than via the earlier per-mirror hunt"
+  },
+  {
+   "url_template": "https://mirrors.ustc.edu.cn/CRAN/",
+   "label": "China",
+   "protocols": "https",
+   "full_or_partial": "full",
+   "confirmed_via": "package-managers/probe_mirror_networks.py: per-entry HEAD Content-Length match against cran.r-project.org, 200/200 of every entry whose url starts with https://cran.r-project.org/",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz (2896632 bytes) downloaded in full from both cran.r-project.org and this mirror; sha256 9267494f505a3d455376f912ccec4aa3c635b373ee2e97db8d4d34e2d51bc007 matches byte-for-byte (no vendor-published checksum exists for this file, same as the pre-existing entries above)",
+   "date_checked": "2026-09-17",
+   "found_via": "mirror-ecosystem hunt (2026-09-17): host appeared on the CRAN_mirrors.csv list (catalog/package-managers/mirror_hosts.json) and was probed directly rather than via the earlier per-mirror hunt",
+   "caveat": "This exact host was tried and REJECTED earlier the same day (see r/NOTES.md 'Mirror hunt' section): HEAD returned 200 but a real GET returned a WAF/anti-bot interstitial instead of the file, for both bfsu and ustc. This session's own GET (not just HEAD) of src/base/R-1/R-1.0.0.tgz returned the correct 2896632-byte gzip file with a byte-for-byte sha256 match, both here and independently re-checked with curl -D- afterward. Re-added with this caveat rather than silently overriding the earlier rejection -- the anti-bot behaviour may be intermittent (geo/IP/rate based) rather than fixed; re-verify with a real GET before relying on this mirror for automated downloads."
+  },
+  {
+   "url_template": "https://mirrors.qlu.edu.cn/CRAN/",
+   "label": "China",
+   "protocols": "https",
+   "full_or_partial": "full",
+   "confirmed_via": "package-managers/probe_mirror_networks.py: per-entry HEAD Content-Length match against cran.r-project.org, 200/200 of every entry whose url starts with https://cran.r-project.org/",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz (2896632 bytes) downloaded in full from both cran.r-project.org and this mirror; sha256 9267494f505a3d455376f912ccec4aa3c635b373ee2e97db8d4d34e2d51bc007 matches byte-for-byte (no vendor-published checksum exists for this file, same as the pre-existing entries above)",
+   "date_checked": "2026-09-17",
+   "found_via": "mirror-ecosystem hunt (2026-09-17): host appeared on the CRAN_mirrors.csv list (catalog/package-managers/mirror_hosts.json) and was probed directly rather than via the earlier per-mirror hunt"
+  },
+  {
+   "url_template": "https://us.mirrors.cicku.me/CRAN/",
+   "label": "United States",
+   "protocols": "https",
+   "full_or_partial": "full",
+   "confirmed_via": "package-managers/probe_mirror_networks.py: per-entry HEAD Content-Length match against cran.r-project.org, 200/200 of every entry whose url starts with https://cran.r-project.org/",
+   "hash_verified_sample": "src/base/R-1/R-1.0.0.tgz (2896632 bytes) downloaded in full from both cran.r-project.org and this mirror; sha256 9267494f505a3d455376f912ccec4aa3c635b373ee2e97db8d4d34e2d51bc007 matches byte-for-byte (no vendor-published checksum exists for this file, same as the pre-existing entries above)",
+   "date_checked": "2026-09-17",
+   "found_via": "mirror-ecosystem hunt (2026-09-17): host appeared on the CRAN_mirrors.csv list (catalog/package-managers/mirror_hosts.json) and was probed directly rather than via the earlier per-mirror hunt"
+  }
+ ]
+}

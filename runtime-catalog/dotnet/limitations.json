@@ -1,0 +1,846 @@
+{
+  "runtime": "dotnet",
+  "languages": [
+    "csharp",
+    "fsharp",
+    "visualbasic"
+  ],
+  "researched": "2026-09-17",
+  "notes": "Key convention: this file covers BOTH runtimes found in releases.json/gaps.json for this folder -- 'dotnet' (.NET Core / .NET 5+) and 'dotnet-framework' (.NET Framework). Each majors[] entry carries its own \"runtime\" field. .NET Core/5+ majors use their bare version string as the key (e.g. \"8.0\"). .NET Framework majors are prefixed with \"framework-\" (e.g. \"framework-4.8\") so that a framework major never collides with a same-numbered dotnet major (there is no numeric collision today -- dotnet has no 4.x -- but the prefix is applied to every framework major for a stable, unambiguous convention). OS-support tables reflect what was supported at that major's own end of life / today for still-supported majors, per dotnet/core release-notes/<N>/supported-os.md and the .NET Framework 'versions and dependencies' docs; older Windows versions that a major supported at RTM but which have since aged out of the vendor's live table are called out in that major's os_support string or limitations instead.",
+  "sources": [
+    "https://learn.microsoft.com/en-us/dotnet/framework/migration-guide/versions-and-dependencies",
+    "https://learn.microsoft.com/en-us/dotnet/framework/whats-new/",
+    "https://learn.microsoft.com/en-us/dotnet/framework/network-programming/tls",
+    "https://learn.microsoft.com/en-us/dotnet/framework/migration-guide/retargeting/4.7-4.7.1",
+    "https://learn.microsoft.com/en-us/dotnet/core/whats-new/",
+    "https://github.com/dotnet/core/blob/main/release-notes/",
+    "https://github.com/dotnet/core/blob/main/release-notes/7.0/supported-os.md",
+    "https://github.com/dotnet/core/blob/main/release-notes/6.0/supported-os.md",
+    "https://github.com/dotnet/core/blob/main/release-notes/8.0/supported-os.md",
+    "https://github.com/dotnet/core/blob/main/releases-index.json",
+    "https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/configure-language-version",
+    "https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-framework",
+    "https://devblogs.microsoft.com/dotnet/"
+  ],
+  "milestones": [
+    {
+      "capability": "generics",
+      "since": "framework-2.0",
+      "notes": "generics, iterators, nullable value types, partial types (C# 2.0); framework-1.0/1.1 had none"
+    },
+    {
+      "capability": "64bit_windows",
+      "since": "framework-2.0",
+      "notes": "first .NET Framework CLR with native AMD64/IA64 JITs; 1.0/1.1 were x86-only (ran under WOW64 on 64-bit Windows)"
+    },
+    {
+      "capability": "true_parallelism",
+      "since": "framework-4.0",
+      "notes": "Task Parallel Library + PLINQ (System.Threading.Tasks); before this, parallel work meant hand-rolled ThreadPool/Thread code"
+    },
+    {
+      "capability": "async_await",
+      "since": "framework-4.5",
+      "notes": "C# 5.0 async/await + System.Net.Http.HttpClient; backported to framework-4.0 only via the unofficial Microsoft.Bcl.Async NuGet package (Task-based, no compiler support for the C# keywords' full diagnostics, no IIS/ASP.NET pipeline integration)"
+    },
+    {
+      "capability": "tls_1_2",
+      "since": "framework-4.5",
+      "notes": "TLS 1.1/1.2 supported by SslStream from 4.5 but NOT the default protocol (ServicePointManager.SecurityProtocol defaults to SSL3/TLS1.0-era values); an app must opt in explicitly until framework-4.7, where the default becomes SystemDefault (inherits the OS/Schannel configuration)"
+    },
+    {
+      "capability": "tls_1_3",
+      "since": "6.0",
+      "notes": "no .NET Framework version ever added TLS 1.3 support (capped at whatever Schannel exposes via SystemDefault, and Schannel itself only gained TLS 1.3 in Windows 11/Server 2022); on dotnet, Linux/OpenSSL 1.1.1+ got TLS 1.3 in 5.0, Windows client support followed once the OS (Windows 11/Server 2022) supports it, and macOS support landed in 6.0"
+    },
+    {
+      "capability": "cross_platform",
+      "since": "1.0",
+      "notes": ".NET Core 1.0 is the first Microsoft-shipped runtime to officially support Windows, macOS, and Linux from one codebase; .NET Framework never left Windows"
+    },
+    {
+      "capability": "http2_client",
+      "since": "2.1",
+      "notes": "SocketsHttpHandler introduced in 2.1 as an opt-in managed handler with experimental HTTP/2 (needed an AppContext switch); HTTP/2 client negotiation became the default handler behavior in 3.0. .NET Framework's HttpClient never negotiates HTTP/2 on its default WinHttpHandler-backed stack"
+    },
+    {
+      "capability": "http3_client",
+      "since": "6.0",
+      "notes": "preview/opt-in in 6.0 (System.Net.Quic, needed an AppContext switch and OpenSSL/msquic), promoted to fully supported in 7.0. Never available on .NET Framework"
+    },
+    {
+      "capability": "span_t",
+      "since": "2.1",
+      "notes": "System.Memory / Span<T>, Memory<T> for allocation-free slicing; back-portable to framework-4.5+ only via the Microsoft.Bcl.Memory / System.Memory NuGet package with reduced JIT intrinsics support"
+    },
+    {
+      "capability": "single_file",
+      "since": "3.0",
+      "notes": "3.0 shipped an experimental single-file publish that still extracted to a temp dir at startup; 5.0 made it a true single native executable with no extraction step (opt-in IncludeNativeLibrariesForSelfExtract etc. still apply for some assets)"
+    },
+    {
+      "capability": "trimming",
+      "since": "3.0",
+      "notes": "ILLink-based assembly trimming introduced experimentally in 3.0; became a supported, warning-driven feature (trim analyzers) in 6.0, and is required groundwork for Native AOT from 7.0 onward. Not available on .NET Framework"
+    },
+    {
+      "capability": "native_aot",
+      "since": "7.0",
+      "notes": "initial Native AOT publish supported Linux x64/arm64 and Windows x64 only, console/library apps, no reflection-heavy or dynamic-loading code, no WinForms/WPF, no ASP.NET Core (until later previews); 8.0 added macOS and Windows/Linux Arm64 host+target combinations and ASP.NET Core minimal-API support. Never available on .NET Framework or as more than a preview before 7.0"
+    },
+    {
+      "capability": "winforms_wpf_windows_only",
+      "since": "3.0",
+      "notes": "3.0 brought WinForms and WPF to .NET Core, but only as Windows-only workloads (windowsdesktop pack) -- there was never a macOS/Linux build; .NET Framework's WinForms/WPF likewise only ever ran on Windows"
+    },
+    {
+      "capability": "arm64_windows",
+      "since": "5.0",
+      "notes": "first .NET version with a native Windows Arm64 SDK/runtime (Core 2.1-3.1 ran on Windows on Arm only via x86 emulation)"
+    },
+    {
+      "capability": "arm64_linux",
+      "since": "2.1",
+      "notes": "Arm32 (Raspberry Pi class) landed 2.1; Arm64 Linux server-class support followed in 3.0"
+    },
+    {
+      "capability": "arm64_macos",
+      "since": "6.0",
+      "notes": "first version with a native Apple Silicon (M1/arm64) build; 5.0 and earlier ran on Apple Silicon only via Rosetta 2 x64 emulation"
+    },
+    {
+      "capability": "musl",
+      "since": "2.1",
+      "notes": "Alpine/musl Linux Docker images and runtime builds introduced in 2.1; earlier Alpine images existed only as community/experimental"
+    }
+  ],
+  "majors": [
+    {
+      "major": "framework-1.0",
+      "runtime": "dotnet-framework",
+      "released": "2002-01-05",
+      "end_of_life": "unsupported since 2016-01-12 under Microsoft's .NET Framework support policy (only the latest service release per major line, and only 4.5.2+, remains serviced)",
+      "csharp_language_version": "C# 1.0",
+      "os_support": {
+        "windows": "Windows 98/ME/NT4 SP6a/2000/XP (98/ME via a separate install); last framework to support Windows 98/ME",
+        "macos": "none (Windows-only runtime)",
+        "linux": "none (Windows-only runtime)"
+      },
+      "added": [
+        "first-party managed runtime (CLR) and BCL",
+        "WinForms",
+        "ASP.NET Web Forms",
+        "Web Services (ASMX)"
+      ],
+      "limitations": [
+        "no generics, no iterators, no partial classes (2.0)",
+        "no LINQ (3.5)",
+        "no async/await, no TPL (4.0/4.5)",
+        "x86 only -- no native 64-bit CLR (2.0)",
+        "no built-in TLS 1.1/1.2 (4.5, and not default until 4.7)"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "framework-1.1",
+      "runtime": "dotnet-framework",
+      "released": "2003-04-24",
+      "end_of_life": "unsupported since 2016-01-12 (see 1.0)",
+      "csharp_language_version": "C# 1.2",
+      "os_support": {
+        "windows": "Windows 98/ME/NT4 SP6a/2000/XP/Server 2003; first version included in a Windows Server SKU by default",
+        "macos": "none (Windows-only runtime)",
+        "linux": "none (Windows-only runtime)"
+      },
+      "added": [
+        "mobile/compact device controls",
+        "IPv6 support",
+        "minor BCL/security fixes over 1.0"
+      ],
+      "limitations": [
+        "same generics/LINQ/async/64-bit gaps as 1.0"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "framework-2.0",
+      "runtime": "dotnet-framework",
+      "released": "2005-11-07",
+      "end_of_life": null,
+      "csharp_language_version": "C# 2.0",
+      "os_support": {
+        "windows": "Windows 2000 SP4+, XP SP2+, Server 2003; first version with a native 64-bit (AMD64/IA64) CLR",
+        "macos": "none (Windows-only runtime)",
+        "linux": "none (Windows-only runtime)"
+      },
+      "added": [
+        "generics",
+        "iterators (yield)",
+        "partial classes/types",
+        "nullable value types (Nullable<T>)",
+        "anonymous methods",
+        "64-bit native JIT",
+        "ASP.NET 2.0 master pages/membership"
+      ],
+      "limitations": [
+        "no LINQ or lambda expressions (3.5)",
+        "no var/extension methods (3.5)",
+        "no async/await or TPL (4.0/4.5)",
+        "no built-in TLS 1.1/1.2 (4.5)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "framework-3.0",
+      "runtime": "dotnet-framework",
+      "released": "2006-11-06",
+      "end_of_life": null,
+      "csharp_language_version": "C# 2.0",
+      "os_support": {
+        "windows": "Windows Vista (included by default), XP SP2+, Server 2003 SP1+; ships on top of the 2.0 CLR (no new runtime)",
+        "macos": "none (Windows-only runtime)",
+        "linux": "none (Windows-only runtime)"
+      },
+      "added": [
+        "Windows Presentation Foundation (WPF)",
+        "Windows Communication Foundation (WCF)",
+        "Windows Workflow Foundation (WF)",
+        "CardSpace"
+      ],
+      "limitations": [
+        "no new CLR or C# version over 2.0 -- LINQ still unavailable",
+        "no async/await or TPL"
+      ],
+      "confidence": "high",
+      "notes": "Microsoft's modern download center no longer offers 3.0 standalone; it ships combined into the dotnetfx35.exe installer as '.NET Framework 2.0 SP2 and 3.0 SP2' (see gaps.json/NOTES.md)."
+    },
+    {
+      "major": "framework-3.5",
+      "runtime": "dotnet-framework",
+      "released": "2007-11-19",
+      "end_of_life": null,
+      "csharp_language_version": "C# 3.0",
+      "os_support": {
+        "windows": "Windows XP SP2+, Vista, Server 2003 SP1+/2008; SP1 (2008) added the Client Profile and Entity Framework",
+        "macos": "none (Windows-only runtime)",
+        "linux": "none (Windows-only runtime)"
+      },
+      "added": [
+        "LINQ (to Objects/SQL/XML)",
+        "lambda expressions",
+        "extension methods",
+        "var (implicit typing)",
+        "automatic properties",
+        "expression trees",
+        "ASP.NET AJAX built in"
+      ],
+      "limitations": [
+        "no async/await or Task Parallel Library (4.0/4.5)",
+        "no dynamic typing (4.0)",
+        "no built-in TLS 1.1/1.2 (4.5)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "framework-4.0",
+      "runtime": "dotnet-framework",
+      "released": "2010-04-12",
+      "end_of_life": null,
+      "csharp_language_version": "C# 4.0",
+      "os_support": {
+        "windows": "Windows XP SP3+, Vista SP1+, Server 2003 SP2+/2008; the LAST .NET Framework version that installs on Windows XP",
+        "macos": "none (Windows-only runtime)",
+        "linux": "none (Windows-only runtime)"
+      },
+      "added": [
+        "Dynamic Language Runtime (dynamic keyword)",
+        "Task Parallel Library + PLINQ (true multi-core parallelism)",
+        "optional/named parameters",
+        "generic covariance/contravariance",
+        "Code Contracts",
+        "in-process side-by-side hosting"
+      ],
+      "limitations": [
+        "no async/await keywords (C# 5.0/4.5) -- Task-based async exists but needs manual continuations, or the unofficial Microsoft.Bcl.Async NuGet backport (partial, no compiler diagnostics for misuse)",
+        "no HttpClient (System.Net.Http ships in 4.5)",
+        "TLS: hard-coded to SSL3/TLS1.0 by default; no TLS 1.1/1.2 support at all (needs 4.5, and even then not default until 4.7)",
+        "this is the last version Windows XP/Server 2003 can run -- targeting XP caps you at 4.0 forever"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "framework-4.5",
+      "runtime": "dotnet-framework",
+      "released": "2012-08-15",
+      "end_of_life": null,
+      "csharp_language_version": "C# 5.0",
+      "os_support": {
+        "windows": "Windows 8, Server 2012, and Vista SP2+/7 SP1+/Server 2008 SP2+/2008 R2 SP1+ (in-place update over 4.0; drops XP and Server 2003)",
+        "macos": "none (Windows-only runtime)",
+        "linux": "none (Windows-only runtime)"
+      },
+      "added": [
+        "async/await",
+        "HttpClient (System.Net.Http)",
+        "TLS 1.1/1.2 support in SslStream (opt-in, not default)",
+        "Task-based Async Pattern (TAP) throughout the BCL",
+        "WinRT interop",
+        "portable class libraries"
+      ],
+      "limitations": [
+        "TLS 1.2 not the default protocol -- must opt in via ServicePointManager.SecurityProtocol (default becomes OS-driven only in 4.7)",
+        "no C# 6/7 language features (string interpolation, pattern matching, tuples)",
+        "cannot run on Windows XP or Server 2003 (dropped from 4.0)"
+      ],
+      "confidence": "high",
+      "notes": "No offline installer for base 4.5 exists on Microsoft's current download center (only 4.5.1/4.5.2 offline installers remain); recorded as a gap in gaps.json, not a missing capability."
+    },
+    {
+      "major": "framework-4.5.1",
+      "runtime": "dotnet-framework",
+      "released": "2013-10-17",
+      "end_of_life": null,
+      "csharp_language_version": "C# 5.0",
+      "os_support": {
+        "windows": "Windows 8.1, Server 2012 R2, and 4.5's Windows 7/8/Server 2008 R2/2012 baseline",
+        "macos": "none (Windows-only runtime)",
+        "linux": "none (Windows-only runtime)"
+      },
+      "added": [
+        "async debugging improvements in Visual Studio",
+        "ADO.NET connection resiliency (retry)",
+        "GC/64-bit array (>2GB) support"
+      ],
+      "limitations": [
+        "same TLS-default and language-version gaps as 4.5"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "framework-4.5.2",
+      "runtime": "dotnet-framework",
+      "released": "2014-05-05",
+      "end_of_life": null,
+      "csharp_language_version": "C# 5.0",
+      "os_support": {
+        "windows": "same Windows 7 SP1 - 8.1/Server 2008 R2 SP1 - 2012 R2 baseline as 4.5.1",
+        "macos": "none (Windows-only runtime)",
+        "linux": "none (Windows-only runtime)"
+      },
+      "added": [
+        "ASP.NET/HTTP module improvements",
+        "profiling/events APIs",
+        "last version covered by Microsoft's older (pre-2022) extended support track"
+      ],
+      "limitations": [
+        "same TLS-default and language-version gaps as 4.5"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "framework-4.6",
+      "runtime": "dotnet-framework",
+      "released": "2015-07-20",
+      "end_of_life": null,
+      "csharp_language_version": "C# 6.0",
+      "os_support": {
+        "windows": "Windows 10 (initial), plus the 4.5.x Windows 7 SP1 - 8.1/Server 2008 R2 SP1 - 2012 R2 baseline",
+        "macos": "none (Windows-only runtime)",
+        "linux": "none (Windows-only runtime)"
+      },
+      "added": [
+        "new 64-bit JIT compiler (RyuJIT)",
+        "C# 6.0 (string interpolation, null-conditional ?., expression-bodied members, nameof)",
+        "improved SIMD/vectorization"
+      ],
+      "limitations": [
+        "TLS 1.2 still not the default protocol (that's 4.7)",
+        "no C# 7 pattern matching/tuples/local functions (4.7-era tooling)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "framework-4.6.1",
+      "runtime": "dotnet-framework",
+      "released": "2015-11-30",
+      "end_of_life": null,
+      "csharp_language_version": "C# 6.0",
+      "os_support": {
+        "windows": "adds Windows Server 2016 TP-era support; same OS baseline otherwise",
+        "macos": "none (Windows-only runtime)",
+        "linux": "none (Windows-only runtime)"
+      },
+      "added": [
+        "support for SHA-2 code signing",
+        "minor SQL/WPF fixes"
+      ],
+      "limitations": [
+        "same TLS-default gap as 4.6"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "framework-4.6.2",
+      "runtime": "dotnet-framework",
+      "released": "2016-08-02",
+      "end_of_life": "4.5.2, 4.6, and 4.6.1 (not 4.6.2 itself) reached end of support 2022-04-26; 4.6.2 is supported for the lifecycle of the Windows OS it ships on",
+      "csharp_language_version": "C# 6.0",
+      "os_support": {
+        "windows": "same baseline; last version formally in the 4.5.2-4.6.1 support cohort that Microsoft retired together on 2022-04-26",
+        "macos": "none (Windows-only runtime)",
+        "linux": "none (Windows-only runtime)"
+      },
+      "added": [
+        "SQL Server connection improvements",
+        "better support for 260+ char file paths in some APIs"
+      ],
+      "limitations": [
+        "same TLS-default gap as 4.6 (fixed 4.7)"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "framework-4.7",
+      "runtime": "dotnet-framework",
+      "released": "2017-04-05",
+      "end_of_life": null,
+      "csharp_language_version": "C# 7.0",
+      "os_support": {
+        "windows": "Windows 10 Creators Update, Server 1709; runs down to the 4.6.2 baseline",
+        "macos": "none (Windows-only runtime)",
+        "linux": "none (Windows-only runtime)"
+      },
+      "added": [
+        "TLS 1.2 (and whatever the OS/Schannel supports) as the DEFAULT SecurityProtocol via SystemDefault -- no more opt-in registry/code needed",
+        "C# 7.0 (tuples, pattern matching, out variables, local functions, ref returns)",
+        "touch/high-DPI improvements, lightweight-transaction improvements"
+      ],
+      "limitations": [
+        "no C# 7.1-7.3 features yet",
+        "TLS 1.3 never arrives on any Framework version"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "framework-4.7.1",
+      "runtime": "dotnet-framework",
+      "released": "2017-10-17",
+      "end_of_life": null,
+      "csharp_language_version": "C# 7.1",
+      "os_support": {
+        "windows": "Windows 10 Fall Creators Update, Server 1709",
+        "macos": "none (Windows-only runtime)",
+        "linux": "none (Windows-only runtime)"
+      },
+      "added": [
+        ".NET Standard 2.0 support",
+        "ECDH key exchange fixes",
+        "C# 7.1 (async Main, default literal expressions)"
+      ],
+      "limitations": [
+        "still capped well below C# 8-era features"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "framework-4.7.2",
+      "runtime": "dotnet-framework",
+      "released": "2018-04-30",
+      "end_of_life": null,
+      "csharp_language_version": "C# 7.3",
+      "os_support": {
+        "windows": "Windows 10 April 2018 Update, Server 1803; also offered for Windows 7 SP1 - 8.1 / Server 2008 R2 - 2012 R2",
+        "macos": "none (Windows-only runtime)",
+        "linux": "none (Windows-only runtime)"
+      },
+      "added": [
+        "C# 7.3 (ref-local reassignment, stackalloc in nested expressions, improved overload resolution)",
+        "ReadyToRun/ngen and TLS diagnostics improvements"
+      ],
+      "limitations": [
+        "last meaningful language-version bump for Framework -- 4.8/4.8.1 stay on C# 7.3 by default"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "framework-4.8",
+      "runtime": "dotnet-framework",
+      "released": "2019-04-18",
+      "end_of_life": null,
+      "csharp_language_version": "C# 7.3",
+      "os_support": {
+        "windows": "Windows 7 SP1 through Windows 11 (including Server 2008 R2 SP1 - 2022); the LAST .NET Framework version ever released -- no 5.x/6.x follows",
+        "macos": "none (Windows-only runtime)",
+        "linux": "none (Windows-only runtime)"
+      },
+      "added": [
+        "WinForms/WPF high-DPI and accessibility improvements",
+        "JIT improvements (hardware intrinsics via ReadyToRun)",
+        "TLS diagnostics",
+        "final feature-complete .NET Framework"
+      ],
+      "limitations": [
+        "still C# 7.3 by default; C# 8.0 syntax can be forced via LangVersion but features needing new runtime/BCL surface (default interface members, async streams, indices/ranges JIT support) do not fully work",
+        "no Span<T> JIT intrinsics (must use the System.Memory NuGet package, non-intrinsic)",
+        "no cross-platform support, no Native AOT, no trimming, no HTTP/2 client, no TLS 1.3 -- Microsoft has stated in writing that .NET Framework will not receive new features going forward; all of that requires the dotnet/.NET Core line"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "framework-4.8.1",
+      "runtime": "dotnet-framework",
+      "released": "2022-08-09",
+      "end_of_life": null,
+      "csharp_language_version": "C# 7.3",
+      "os_support": {
+        "windows": "Windows 11 2022 Update (22H2) and Server 2022; first Framework version with native Windows-on-Arm64 support (runs Arm64-native rather than under x86 emulation)",
+        "macos": "none (Windows-only runtime)",
+        "linux": "none (Windows-only runtime)"
+      },
+      "added": [
+        "native Arm64 Windows support",
+        "additional accessibility (UI Automation) APIs"
+      ],
+      "limitations": [
+        "same C# 7.3 ceiling and missing-feature list as 4.8 (no TLS 1.3, no HTTP/2/3 client, no AOT/trimming)"
+      ],
+      "confidence": "high",
+      "notes": "Servicing-only; Microsoft has not announced a 4.9 or any further .NET Framework major."
+    },
+    {
+      "major": "1.0",
+      "runtime": "dotnet",
+      "released": "2016-06-27",
+      "end_of_life": "2019-06-27",
+      "csharp_language_version": "C# 6.0 (SDK-driven, not framework-pinned)",
+      "os_support": {
+        "windows": "Windows 7 SP1+ / Server 2008 R2 SP1+",
+        "macos": "OS X 10.11+",
+        "linux": "RHEL 7+, Ubuntu 14.04/16.04, Debian 8, Fedora 23, openSUSE 13.2, CentOS 7 (glibc only; no musl)"
+      },
+      "added": [
+        "first cross-platform, open-source, CLI-first .NET runtime (dotnet CLI, project.json/csproj)",
+        "ASP.NET Core, side-by-side runtime versioning",
+        "self-contained deployment from day one"
+      ],
+      "limitations": [
+        "no WinForms/WPF/UWP -- console and ASP.NET Core (web) apps only",
+        "no Span<T>",
+        "no HTTP/2 client",
+        "no Arm support of any kind (x64 only)",
+        "no musl/Alpine support",
+        "API surface much smaller than Framework (no .NET Standard 2.0 yet)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.1",
+      "runtime": "dotnet",
+      "released": "2016-11-16",
+      "end_of_life": "2019-06-27",
+      "csharp_language_version": "C# 7.0 (SDK-driven)",
+      "os_support": {
+        "windows": "same Windows baseline as 1.0",
+        "macos": "same macOS baseline as 1.0",
+        "linux": "adds SLES 12, Fedora 24, and Linux Arm32 preview (Raspberry Pi); still glibc-only, x64-focused"
+      },
+      "added": [
+        "msbuild-based csproj replaces project.json",
+        "minor perf/reliability work"
+      ],
+      "limitations": [
+        "same missing WinForms/WPF/Span/HTTP2/Arm-stable/musl gaps as 1.0"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "2.0",
+      "runtime": "dotnet",
+      "released": "2017-08-14",
+      "end_of_life": "2018-10-01",
+      "csharp_language_version": "C# 7.1 (SDK-driven)",
+      "os_support": {
+        "windows": "Windows 7 SP1+",
+        "macos": "macOS 10.12+",
+        "linux": "RHEL/CentOS 7+, Ubuntu 14.04-17.04, Debian 8-9, Fedora 25-26, openSUSE 42.3, SLES 12 SP2 (glibc only)"
+      },
+      "added": [
+        ".NET Standard 2.0 (huge API surface increase, brings most of Framework's BCL)",
+        "large perf improvements",
+        "Live Unit Testing/Roslyn tooling improvements"
+      ],
+      "limitations": [
+        "still no WinForms/WPF (3.0)",
+        "still no Span<T> (2.1)",
+        "still no HTTP/2 client (3.0)",
+        "no Arm64, no musl support"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "2.1",
+      "runtime": "dotnet",
+      "released": "2018-05-30",
+      "end_of_life": "2021-08-21",
+      "csharp_language_version": "C# 7.1 default (7.3 available via LangVersion)",
+      "os_support": {
+        "windows": "Windows 7 SP1+",
+        "macos": "macOS 10.12+",
+        "linux": "adds Alpine 3.7+ (musl) and Arm32 (Raspberry Pi, Linux) as officially supported; RHEL/Ubuntu/Debian/Fedora/openSUSE/SLES as in 2.0"
+      },
+      "added": [
+        "Span<T>/Memory<T>",
+        "SocketsHttpHandler (new managed HTTP handler, default on Linux/macOS)",
+        "experimental/opt-in HTTP/2 client support (AppContext switch)",
+        "musl/Alpine support",
+        "Arm32 Linux support",
+        "first Long Term Support (LTS) release",
+        "tiered JIT compilation",
+        "global tools"
+      ],
+      "limitations": [
+        "HTTP/2 client negotiation is opt-in/experimental, not automatic (3.0)",
+        "no Arm64 Linux/Windows yet (3.0/5.0)",
+        "no WinForms/WPF (3.0)",
+        "no single-file publish (3.0/5.0)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "2.2",
+      "runtime": "dotnet",
+      "released": "2018-12-04",
+      "end_of_life": "2019-12-23",
+      "csharp_language_version": "C# 7.3 default",
+      "os_support": {
+        "windows": "same as 2.1",
+        "macos": "same as 2.1",
+        "linux": "adds Fedora 28, drops nothing"
+      },
+      "added": [
+        "Kestrel server-side HTTP/2",
+        "ARM64 Linux Docker images (still experimental)",
+        "endpoint routing",
+        "health checks"
+      ],
+      "limitations": [
+        "client-side HTTP/2 still experimental/opt-in",
+        "no Span-based generic math or trimming yet"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "3.0",
+      "runtime": "dotnet",
+      "released": "2019-09-23",
+      "end_of_life": "2020-03-03",
+      "csharp_language_version": "C# 8.0",
+      "os_support": {
+        "windows": "Windows 7 SP1+ (WinForms/WPF require Windows -- no macOS/Linux desktop UI)",
+        "macos": "macOS 10.13+",
+        "linux": "RHEL/CentOS 7+, Ubuntu 16.04+, Debian 9+, Fedora 29+, openSUSE 15+, SLES 12 SP2+, Alpine 3.9+ (Arm64 Linux now stable)"
+      },
+      "added": [
+        "WinForms and WPF on .NET Core (Windows-only)",
+        "HTTP/2 client support on by default via SocketsHttpHandler",
+        "C# 8.0 (nullable reference types, async streams, ranges/indices, switch expressions)",
+        "experimental single-file publish",
+        "experimental assembly trimming (ILLink)",
+        "Arm64 Linux GA",
+        "default 64-bit process on Windows even for x86-targeted machines where possible",
+        "Windows ARM64 (preview)"
+      ],
+      "limitations": [
+        "single-file publish still extracts to a temp folder at startup (true single-binary is 5.0)",
+        "trimming is experimental and can break reflection-based code silently",
+        "no HTTP/3 (7.0)",
+        "no TLS 1.3 (5.0/Linux; later for Windows)",
+        "no Native AOT (7.0)",
+        "no Apple Silicon native build (6.0)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "3.1",
+      "runtime": "dotnet",
+      "released": "2019-12-03",
+      "end_of_life": "2022-12-13",
+      "csharp_language_version": "C# 8.0",
+      "os_support": {
+        "windows": "same as 3.0 (LTS)",
+        "macos": "same as 3.0",
+        "linux": "same distro list as 3.0, extended lifecycle"
+      },
+      "added": [
+        "stabilizes 3.0's WinForms/WPF/HTTP2/trimming work as an LTS release",
+        "Blazor Server shipped as supported"
+      ],
+      "limitations": [
+        "same single-file/trimming/HTTP3/TLS1.3/Native-AOT/Apple-Silicon gaps as 3.0"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "5.0",
+      "runtime": "dotnet",
+      "released": "2020-11-10",
+      "end_of_life": "2022-05-10",
+      "csharp_language_version": "C# 9.0",
+      "os_support": {
+        "windows": "Windows 7 SP1+ (still WinForms/WPF Windows-only)",
+        "macos": "macOS 10.13+ (x64; Apple Silicon via Rosetta 2 only)",
+        "linux": "RHEL/CentOS 8+, Ubuntu 18.04+, Debian 10+, Fedora 32+, openSUSE 15.1+, SLES 12 SP5+, Alpine 3.11+; adds native Windows Arm64"
+      },
+      "added": [
+        "unified 'dotnet' brand (drops 'Core' from the name; 4.x skipped to avoid confusion with Framework)",
+        "true single-file apps (no temp extraction)",
+        "native Windows Arm64 SDK/runtime",
+        "TLS 1.3 on Linux (OpenSSL 1.1.1+)",
+        "records, init-only setters, top-level statements (C# 9)",
+        "improved GC for large heaps"
+      ],
+      "limitations": [
+        "Apple Silicon Macs still run x64-emulated via Rosetta 2, no native arm64 build (6.0)",
+        "no HTTP/3 (preview 6.0, supported 7.0)",
+        "no Native AOT (7.0)",
+        "trimming still warns of many false positives"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "6.0",
+      "runtime": "dotnet",
+      "released": "2021-11-08",
+      "end_of_life": "2024-11-12",
+      "csharp_language_version": "C# 10.0",
+      "os_support": {
+        "windows": "Windows 7 SP1+ through 11 (LTS)",
+        "macos": "macOS 11+ Intel and Apple Silicon (first native arm64 macOS build)",
+        "linux": "RHEL 7+, Ubuntu 18.04+, Debian 10+, Fedora 34+, openSUSE 15.3+, SLES 12 SP5+, Alpine 3.13+, adds Arm64 across the board"
+      },
+      "added": [
+        "native Apple Silicon (arm64 macOS) build",
+        "TLS 1.3 support extended to macOS",
+        "hot reload",
+        "minimal APIs (ASP.NET Core)",
+        "file-scoped namespaces, global usings (C# 10)",
+        "HTTP/3 as an opt-in preview (System.Net.Quic)",
+        "improved (but still experimental) trimming with source-generator-based analyzers"
+      ],
+      "limitations": [
+        "HTTP/3 remains preview/opt-in behind an AppContext switch (7.0 for full support)",
+        "Native AOT not yet available (7.0)",
+        "TLS 1.3 on Windows still depends on the OS (Windows 11/Server 2022) supporting it"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "7.0",
+      "runtime": "dotnet",
+      "released": "2022-11-08",
+      "end_of_life": "2024-05-14",
+      "csharp_language_version": "C# 11.0",
+      "os_support": {
+        "windows": "Windows 10+ only -- Windows 7, 8, and 8.1 support is DROPPED (minimum is now Windows 10)",
+        "macos": "macOS 12+ (Intel and Apple Silicon)",
+        "linux": "RHEL 7+, Ubuntu 18.04+, Debian 10+, Fedora 36+, openSUSE 15.4+, SLES 15+, Alpine 3.15+"
+      },
+      "added": [
+        "Native AOT (initial: Linux x64/arm64 and Windows x64 console/class-library apps only)",
+        "HTTP/3 fully supported (no longer preview)",
+        "generic math (C# 11 static abstract members in interfaces)",
+        "raw string literals, required members (C# 11)",
+        "generic attributes"
+      ],
+      "limitations": [
+        "dropped Windows 7/8/8.1 -- an app pinned to those OSes must stay on 6.0",
+        "Native AOT: no WinForms/WPF, no ASP.NET Core beyond minimal previews, no reflection-heavy/dynamic-loading code, no macOS or Arm64 Windows target yet (8.0)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "8.0",
+      "runtime": "dotnet",
+      "released": "2023-11-14",
+      "end_of_life": "2026-11-10",
+      "csharp_language_version": "C# 12.0",
+      "os_support": {
+        "windows": "Windows 10+ (LTS)",
+        "macos": "macOS 12+ (Intel and Apple Silicon)",
+        "linux": "RHEL 8+, Ubuntu 20.04+, Debian 11+, Fedora 38+, openSUSE 15.5+, SLES 15 SP5+, Alpine 3.18+"
+      },
+      "added": [
+        "Native AOT expanded to macOS and Arm64 Windows/Linux hosts+targets, plus ASP.NET Core minimal APIs",
+        "much more complete trimming (default-on warnings, more trimmer-safe BCL)",
+        "primary constructors, collection expressions (C# 12)",
+        "further GC/JIT (DATAS, PGO) improvements"
+      ],
+      "limitations": [
+        "Native AOT still excludes WinForms/WPF and full ASP.NET Core MVC; still no dynamic assembly loading/full reflection emit",
+        "trimming can still break unannotated third-party libraries that use reflection"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "9.0",
+      "runtime": "dotnet",
+      "released": "2024-11-12",
+      "end_of_life": "2026-11-10",
+      "csharp_language_version": "C# 13.0",
+      "os_support": {
+        "windows": "Windows 10+",
+        "macos": "macOS 13+ (Intel and Apple Silicon)",
+        "linux": "RHEL 8+, Ubuntu 22.04+, Debian 12+, Fedora 39+, openSUSE 15.6+, SLES 15 SP6+, Alpine 3.19+"
+      },
+      "added": [
+        "further Native AOT/trimming size and startup-time improvements",
+        "params collections, partial properties (C# 13)",
+        "JIT: further vectorization (AVX10), improved server GC defaults"
+      ],
+      "limitations": [
+        "Native AOT and trimming gaps from 8.0 (no WinForms/WPF, reflection-heavy code) remain unresolved"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "10.0",
+      "runtime": "dotnet",
+      "released": "2025-11-11",
+      "end_of_life": null,
+      "csharp_language_version": "C# 14.0",
+      "os_support": {
+        "windows": "Windows 10+",
+        "macos": "macOS 14+ (Intel and Apple Silicon)",
+        "linux": "RHEL 8+, Ubuntu 22.04+, Debian 12+, Fedora 40+, openSUSE 15.6+, SLES 15 SP6+, Alpine 3.20+ (exact distro floor per dotnet/core supported-os.md for 10.0; verify at release time)"
+      },
+      "added": [
+        "further C# 14 language features (extension members, field-backed properties)",
+        "continued Native AOT/trimming maturation",
+        "current LTS release as of this research"
+      ],
+      "limitations": [
+        "same class of Native AOT/trimming/reflection limitations carried forward from 8.0/9.0"
+      ],
+      "confidence": "medium",
+      "notes": "Release date is approximate (Microsoft's November major-release cadence); not independently re-verified against a dated announcement in this pass."
+    },
+    {
+      "major": "11.0",
+      "runtime": "dotnet",
+      "released": null,
+      "end_of_life": null,
+      "csharp_language_version": "C# 14.0 (preview; no confirmed new major langversion as of rc.1)",
+      "os_support": {
+        "windows": "not yet GA",
+        "macos": "not yet GA",
+        "linux": "not yet GA"
+      },
+      "added": [],
+      "limitations": [
+        "not released as of 2026-09-17 -- only prerelease builds exist (latest seen: 11.0.0-rc.1, go-live license); no stable download, so no developer-facing capability can yet be pinned to this major"
+      ],
+      "confidence": "low",
+      "notes": "Recorded because dotnet/core's release-metadata already tracks an 11.0 channel with prerelease builds (see gaps.json); revisit once 11.0 GAs."
+    }
+  ]
+}

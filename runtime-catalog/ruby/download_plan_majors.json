@@ -1,0 +1,730 @@
+[
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "1.9",
+  "version": "1.9.3-p551",
+  "os": "linux",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cache.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p551.tar.gz",
+  "mirrors": [
+   "https://mirror.cyberbits.eu/ruby/1.9/ruby-1.9.3-p551.tar.gz",
+   "https://ftp.iij.ad.jp/pub/lang/ruby/1.9/ruby-1.9.3-p551.tar.gz",
+   "http://www.ring.gr.jp/pub/lang/ruby/1.9/ruby-1.9.3-p551.tar.gz",
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.9/ruby-1.9.3-p551.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "bb5be55cd1f49c95bb05b6f587701376b53d310eb1bb7c76fbd445a1c75b51e8",
+   "source": "https://cache.ruby-lang.org/pub/ruby/index.txt"
+  },
+  "size": 12605119,
+  "released": "2014-11-13",
+  "min_os": null,
+  "metadata_source": "https://cache.ruby-lang.org/pub/ruby/index.txt",
+  "notes": "source tarball; serves any Unix-like OS (compiled from source), not just Linux"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "1.9",
+  "version": "1.9.3-p551",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "7z",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller/releases/download/ruby-1.9.3-p551/ruby-1.9.3-p551-i386-mingw32.7z",
+  "mirrors": [],
+  "checksum": null,
+  "size": 8270591,
+  "released": "2014-11-13",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller/releases",
+  "notes": null,
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "207fdb5b2f9436ad1ac27bf51918b913c14c443d1b83cd910cf5a59acaeab756",
+    "source": "scoop Versions/ruby19 1.9.3-p551 (HEAD Versions/bucket/ruby19.json)"
+   }
+  ]
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "2.7",
+  "version": "2.7.8",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "ubuntu-24.04",
+  "libc": "glibc",
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.8/ruby-2.7.8-ubuntu-24.04-x64.tar.gz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "63db9dc0634646d587a0bbab0d30d5ecbf3beaa2e67a7de02b97180e361f1de5",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 18392243,
+  "released": "2025-09-21",
+  "min_os": null,
+  "metadata_source": "https://github.com/ruby/ruby-builder/releases",
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "2.7",
+  "version": "2.7.8",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "ubuntu-24.04",
+  "libc": "glibc",
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.8/ruby-2.7.8-ubuntu-24.04-arm64.tar.gz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "2818981cda4dfed91863c9ffce8603a734b3fe9531e5a57367f0555ef38f704a",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 18175710,
+  "released": "2025-09-21",
+  "min_os": null,
+  "metadata_source": "https://github.com/ruby/ruby-builder/releases",
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "2.7",
+  "version": "2.7.8",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "macos-x64",
+  "libc": null,
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.8/ruby-2.7.8-darwin-x64.tar.gz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "093e157d6e37065d1b05746c8957ef649bf2da3a2a8c2027faae40e6ff107f3b",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 10815742,
+  "released": "2025-09-21",
+  "min_os": null,
+  "metadata_source": "https://github.com/ruby/ruby-builder/releases",
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "2.7",
+  "version": "2.7.8",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "macos-arm64",
+  "libc": null,
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.8/ruby-2.7.8-darwin-arm64.tar.gz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "f69433b6723d15915ecc35aa2532f6e6acb563c3e9403e0722f0cce363328434",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 10425587,
+  "released": "2025-09-21",
+  "min_os": null,
+  "metadata_source": "https://github.com/ruby/ruby-builder/releases",
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "2.7",
+  "version": "2.7.8",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "7z",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-2.7.8-1/rubyinstaller-2.7.8-1-x64.7z",
+  "mirrors": [],
+  "checksum": null,
+  "size": 12767296,
+  "released": "2023-03-30",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
+  "notes": null
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "2.7",
+  "version": "2.7.8",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "exe",
+  "variant": "devkit",
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-2.7.8-1/rubyinstaller-devkit-2.7.8-1-x64.exe",
+  "mirrors": [],
+  "checksum": null,
+  "size": 132420272,
+  "released": "2023-03-30",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
+  "notes": null
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "2.7",
+  "version": "2.7.8",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "7z",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-2.7.8-1/rubyinstaller-2.7.8-1-x86.7z",
+  "mirrors": [],
+  "checksum": null,
+  "size": 12668924,
+  "released": "2023-03-30",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
+  "notes": null
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "2.7",
+  "version": "2.7.8",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "installer",
+  "format": "exe",
+  "variant": "devkit",
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-2.7.8-1/rubyinstaller-devkit-2.7.8-1-x86.exe",
+  "mirrors": [],
+  "checksum": null,
+  "size": 146043128,
+  "released": "2023-03-30",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
+  "notes": null
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "3.4",
+  "version": "3.4.10",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "ubuntu-26.04",
+  "libc": "glibc",
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.10/ruby-3.4.10-ubuntu-26.04-x64.tar.gz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "2d44fc6b908781641d67573f90f1a650fc5ba9a806dc7498343728ef710b430c",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 42515366,
+  "released": "2026-06-30",
+  "min_os": null,
+  "metadata_source": "https://github.com/ruby/ruby-builder/releases",
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "3.4",
+  "version": "3.4.10",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "ubuntu-26.04",
+  "libc": "glibc",
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.10/ruby-3.4.10-ubuntu-26.04-arm64.tar.gz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "2f2bbf25dc1e974090f40614eba53b65f6f0c92656d600461d2c1877338bbe2e",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 42255311,
+  "released": "2026-06-30",
+  "min_os": null,
+  "metadata_source": "https://github.com/ruby/ruby-builder/releases",
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "3.4",
+  "version": "3.4.10",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "macos-x64",
+  "libc": null,
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.10/ruby-3.4.10-darwin-x64.tar.gz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "6540669da7bb84c3b44741cea36435d64a90be276968985d16d8bc5483b1bc7f",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 15244579,
+  "released": "2026-06-30",
+  "min_os": null,
+  "metadata_source": "https://github.com/ruby/ruby-builder/releases",
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "3.4",
+  "version": "3.4.10",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "macos-arm64",
+  "libc": null,
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.10/ruby-3.4.10-darwin-arm64.tar.gz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "753f7ad7ab644e92bf43b57f7022de16b3383a62d314a4d631cba6fe6d71c3d6",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 15176146,
+  "released": "2026-06-30",
+  "min_os": null,
+  "metadata_source": "https://github.com/ruby/ruby-builder/releases",
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "3.4",
+  "version": "3.4.10",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "7z",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-x64.7z",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "89e3c5e235ac88b9b7e8daaf639eaaab74d7c470667354f6bf0f7432f3191ebb",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 16030994,
+  "released": "2026-06-30",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
+  "notes": null
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "3.4",
+  "version": "3.4.10",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "exe",
+  "variant": "devkit",
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-devkit-3.4.10-1-x64.exe",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "7d4cae0a9fb47d1e8c8d4198f9a3bfa6f49ec1b4f3d8d492e8cc8c88471b3f4c",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 149579016,
+  "released": "2026-06-30",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
+  "notes": null
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "3.4",
+  "version": "3.4.10",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "7z",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-arm.7z",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "472da9b8963ce4fca52baae753cafb7788a03fd73baaa1fc430ea7557445d331",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 15571694,
+  "released": "2026-06-30",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
+  "notes": "RubyInstaller names this asset '-arm-'; it targets 64-bit Windows on ARM, not 32-bit ARM"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "3.4",
+  "version": "3.4.10",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "installer",
+  "format": "exe",
+  "variant": "devkit",
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-devkit-3.4.10-1-arm.exe",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "95e2bff28565df0af5403df02969b4c4559a8af8166d9c12fded10cf388d39bd",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 198519584,
+  "released": "2026-06-30",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
+  "notes": "RubyInstaller names this asset '-arm-'; it targets 64-bit Windows on ARM, not 32-bit ARM"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "3.4",
+  "version": "3.4.10",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "7z",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-x86.7z",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "be323ac7b8342de16edcceb1ee04a90023c39aa7e7a544e628c6360fffb602da",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 16227009,
+  "released": "2026-06-30",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
+  "notes": null
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "3.4",
+  "version": "3.4.10",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "installer",
+  "format": "exe",
+  "variant": "devkit",
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-devkit-3.4.10-1-x86.exe",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "f32d73f04b83136afbdf548e74495514e0d0ef1f402ba2956492403328f85a57",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 154417648,
+  "released": "2026-06-30",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
+  "notes": null
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "4.0",
+  "version": "4.0.7",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "ubuntu-26.04",
+  "libc": "glibc",
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.7/ruby-4.0.7-ubuntu-26.04-x64.tar.gz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "1b636abd67dc9afb1fe294f75ae3de45334a8fc49bb3ac0dbc2d0a66f3316c7b",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 49808242,
+  "released": "2026-09-15",
+  "min_os": null,
+  "metadata_source": "https://github.com/ruby/ruby-builder/releases",
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "4.0",
+  "version": "4.0.7",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "ubuntu-26.04",
+  "libc": "glibc",
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.7/ruby-4.0.7-ubuntu-26.04-arm64.tar.gz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "9551a506e72dd2aaf53420c47450f8c8a0d73a769fccd9127c71bd18e433ce2d",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 49438996,
+  "released": "2026-09-15",
+  "min_os": null,
+  "metadata_source": "https://github.com/ruby/ruby-builder/releases",
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "4.0",
+  "version": "4.0.7",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "macos-x64",
+  "libc": null,
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.7/ruby-4.0.7-darwin-x64.tar.gz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "c7207e32c621072e897a397b787d1f5bcafb056583e70407759f68c4ad90a4c1",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 17915827,
+  "released": "2026-09-15",
+  "min_os": null,
+  "metadata_source": "https://github.com/ruby/ruby-builder/releases",
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "4.0",
+  "version": "4.0.7",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "macos-arm64",
+  "libc": null,
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.7/ruby-4.0.7-darwin-arm64.tar.gz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "8b17b22f644115a8cc0be8bc19dce96df29b04ced4ac8ed2cc09f2ba1ef37987",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 17782607,
+  "released": "2026-09-15",
+  "min_os": null,
+  "metadata_source": "https://github.com/ruby/ruby-builder/releases",
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "4.0",
+  "version": "4.0.7",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "7z",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-4.0.7-1-x64.7z",
+  "mirrors": [
+   "https://mirrors.nju.edu.cn/github-release/oneclick/rubyinstaller2/RubyInstaller-4.0.7-1%20-%202026-09-15/rubyinstaller-4.0.7-1-x64.7z"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "7a9be96d3448ecbd9a81eccae1f619131dfcc761f2c98dded03ece6c05d0474f",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 17742012,
+  "released": "2026-09-15",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
+  "notes": null
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "4.0",
+  "version": "4.0.7",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "exe",
+  "variant": "devkit",
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-devkit-4.0.7-1-x64.exe",
+  "mirrors": [
+   "https://mirrors.nju.edu.cn/github-release/oneclick/rubyinstaller2/RubyInstaller-4.0.7-1%20-%202026-09-15/rubyinstaller-devkit-4.0.7-1-x64.exe"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "4eb2fb0c8e7ece557c82ce7cb0411bf53df439831b2a942227606173e32dadfc",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 141377256,
+  "released": "2026-09-15",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
+  "notes": null
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "4.0",
+  "version": "4.0.7",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "7z",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-4.0.7-1-arm.7z",
+  "mirrors": [
+   "https://mirrors.nju.edu.cn/github-release/oneclick/rubyinstaller2/RubyInstaller-4.0.7-1%20-%202026-09-15/rubyinstaller-4.0.7-1-arm.7z"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "54f55648f2e700f497ba1057974824c829ec63336bf4802619837548af6bdcfb",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 17235217,
+  "released": "2026-09-15",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
+  "notes": "RubyInstaller names this asset '-arm-'; it targets 64-bit Windows on ARM, not 32-bit ARM"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "4.0",
+  "version": "4.0.7",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "installer",
+  "format": "exe",
+  "variant": "devkit",
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-devkit-4.0.7-1-arm.exe",
+  "mirrors": [
+   "https://mirrors.nju.edu.cn/github-release/oneclick/rubyinstaller2/RubyInstaller-4.0.7-1%20-%202026-09-15/rubyinstaller-devkit-4.0.7-1-arm.exe"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "a8b262675be9394e73698a9f111f007e5ac5ae729dca8c72c348a273a088d556",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 194256056,
+  "released": "2026-09-15",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
+  "notes": "RubyInstaller names this asset '-arm-'; it targets 64-bit Windows on ARM, not 32-bit ARM"
+ }
+]

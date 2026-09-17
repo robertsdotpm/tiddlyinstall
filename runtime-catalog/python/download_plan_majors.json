@@ -1,0 +1,736 @@
+[
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "2.5",
+  "version": "2.5.4",
+  "os": "windows",
+  "arch": "ia64",
+  "kind": "installer",
+  "format": "msi",
+  "variant": null,
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/2.5.4/python-2.5.4.ia64.msi",
+  "mirrors": [
+   "https://www.python.org/ftp/python/2.5.4/python-2.5.4.ia64.msi",
+   "https://mirrors.huaweicloud.com/python/2.5.4/python-2.5.4.ia64.msi",
+   "https://repo.huaweicloud.com/python/2.5.4/python-2.5.4.ia64.msi",
+   "https://registry.npmmirror.com/-/binary/python/2.5.4/python-2.5.4.ia64.msi",
+   "https://cdn.npmmirror.com/binaries/python/2.5.4/python-2.5.4.ia64.msi",
+   "https://mirrors.aliyun.com/python-release/windows/python-2.5.4.ia64.msi",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/2.5.4/python-2.5.4.ia64.msi",
+   "https://mirror.nju.edu.cn/python/2.5.4/python-2.5.4.ia64.msi",
+   "https://mirrors.bfsu.edu.cn/python/2.5.4/python-2.5.4.ia64.msi",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/2.5.4/python-2.5.4.ia64.msi",
+   "http://mirrors.huaweicloud.com/python/2.5.4/python-2.5.4.ia64.msi",
+   "http://repo.huaweicloud.com/python/2.5.4/python-2.5.4.ia64.msi",
+   "http://mirrors.aliyun.com/python-release/windows/python-2.5.4.ia64.msi"
+  ],
+  "checksum": null,
+  "size": 13567488,
+  "released": "2008-12-23",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/ftp/python/2.5.4/",
+  "notes": "found only via ftp directory listing, not in python.org's downloads API"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "2.7",
+  "version": "2.7.17",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "installer",
+  "format": "pkg",
+  "variant": "macosx10.6",
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/2.7.17/python-2.7.17-macosx10.6.pkg",
+  "mirrors": [
+   "https://www.python.org/ftp/python/2.7.17/python-2.7.17-macosx10.6.pkg",
+   "https://mirrors.huaweicloud.com/python/2.7.17/python-2.7.17-macosx10.6.pkg",
+   "https://repo.huaweicloud.com/python/2.7.17/python-2.7.17-macosx10.6.pkg",
+   "https://registry.npmmirror.com/-/binary/python/2.7.17/python-2.7.17-macosx10.6.pkg",
+   "https://cdn.npmmirror.com/binaries/python/2.7.17/python-2.7.17-macosx10.6.pkg",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/2.7.17/python-2.7.17-macosx10.6.pkg",
+   "https://mirror.nju.edu.cn/python/2.7.17/python-2.7.17-macosx10.6.pkg",
+   "https://mirrors.bfsu.edu.cn/python/2.7.17/python-2.7.17-macosx10.6.pkg",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/2.7.17/python-2.7.17-macosx10.6.pkg",
+   "http://mirrors.huaweicloud.com/python/2.7.17/python-2.7.17-macosx10.6.pkg",
+   "http://repo.huaweicloud.com/python/2.7.17/python-2.7.17-macosx10.6.pkg"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "b19552ee752f62dd07292345aaf740f9"
+  },
+  "size": 30434554,
+  "released": "2019-10-19",
+  "min_os": "Mac OS X 10.6",
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": "universal installer (32/64-bit Intel and/or PPC fat binary)"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "2.7",
+  "version": "2.7.18",
+  "os": "linux",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tar.xz",
+  "mirrors": [
+   "https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tar.xz",
+   "https://mirrors.huaweicloud.com/python/2.7.18/Python-2.7.18.tar.xz",
+   "https://repo.huaweicloud.com/python/2.7.18/Python-2.7.18.tar.xz",
+   "https://registry.npmmirror.com/-/binary/python/2.7.18/Python-2.7.18.tar.xz",
+   "https://cdn.npmmirror.com/binaries/python/2.7.18/Python-2.7.18.tar.xz",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/2.7.18/Python-2.7.18.tar.xz",
+   "https://mirror.nju.edu.cn/python/2.7.18/Python-2.7.18.tar.xz",
+   "https://mirrors.bfsu.edu.cn/python/2.7.18/Python-2.7.18.tar.xz",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tar.xz",
+   "http://mirrors.huaweicloud.com/python/2.7.18/Python-2.7.18.tar.xz",
+   "http://repo.huaweicloud.com/python/2.7.18/Python-2.7.18.tar.xz",
+   "https://distfiles.gentoo.org/distfiles/3d/Python-2.7.18.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/python/Python-2.7.18.tar.xz"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "fd6cc8ec0a78c44036f825e739f36e5a"
+  },
+  "size": 12854736,
+  "released": "2020-04-20",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null,
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "b62c0e7937551d0cc02b8fd5cb0f544f9405bafc9a54d3808ed4594812edef43",
+    "source": "pyenv python-build definition (share/python-build/<version>), install_package URL#sha256"
+   },
+   {
+    "algo": "sha256",
+    "value": "b62c0e7937551d0cc02b8fd5cb0f544f9405bafc9a54d3808ed4594812edef43",
+    "source": "FreeBSD lang/python27 distinfo (freebsd/freebsd-ports GitHub), 2026-09-17"
+   }
+  ]
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "2.7",
+  "version": "2.7.18",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "pkg",
+  "variant": "macosx10.9",
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/2.7.18/python-2.7.18-macosx10.9.pkg",
+  "mirrors": [
+   "https://www.python.org/ftp/python/2.7.18/python-2.7.18-macosx10.9.pkg",
+   "https://mirrors.huaweicloud.com/python/2.7.18/python-2.7.18-macosx10.9.pkg",
+   "https://repo.huaweicloud.com/python/2.7.18/python-2.7.18-macosx10.9.pkg",
+   "https://registry.npmmirror.com/-/binary/python/2.7.18/python-2.7.18-macosx10.9.pkg",
+   "https://cdn.npmmirror.com/binaries/python/2.7.18/python-2.7.18-macosx10.9.pkg",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/2.7.18/python-2.7.18-macosx10.9.pkg",
+   "https://mirror.nju.edu.cn/python/2.7.18/python-2.7.18-macosx10.9.pkg",
+   "https://mirrors.bfsu.edu.cn/python/2.7.18/python-2.7.18-macosx10.9.pkg",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/2.7.18/python-2.7.18-macosx10.9.pkg",
+   "http://mirrors.huaweicloud.com/python/2.7.18/python-2.7.18-macosx10.9.pkg",
+   "http://repo.huaweicloud.com/python/2.7.18/python-2.7.18-macosx10.9.pkg"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "ce98eeb7bdf806685adc265ec1444463"
+  },
+  "size": 24889285,
+  "released": "2020-04-20",
+  "min_os": "Mac OS X 10.9",
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": "Intel 64-bit only (no 32-bit, no PPC)"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "2.7",
+  "version": "2.7.18",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "msi",
+  "variant": null,
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/2.7.18/python-2.7.18.amd64.msi",
+  "mirrors": [
+   "https://www.python.org/ftp/python/2.7.18/python-2.7.18.amd64.msi",
+   "https://mirrors.huaweicloud.com/python/2.7.18/python-2.7.18.amd64.msi",
+   "https://repo.huaweicloud.com/python/2.7.18/python-2.7.18.amd64.msi",
+   "https://registry.npmmirror.com/-/binary/python/2.7.18/python-2.7.18.amd64.msi",
+   "https://cdn.npmmirror.com/binaries/python/2.7.18/python-2.7.18.amd64.msi",
+   "https://mirrors.aliyun.com/python-release/windows/python-2.7.18.amd64.msi",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/2.7.18/python-2.7.18.amd64.msi",
+   "https://mirror.nju.edu.cn/python/2.7.18/python-2.7.18.amd64.msi",
+   "https://mirrors.bfsu.edu.cn/python/2.7.18/python-2.7.18.amd64.msi",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/2.7.18/python-2.7.18.amd64.msi",
+   "http://mirrors.huaweicloud.com/python/2.7.18/python-2.7.18.amd64.msi",
+   "http://repo.huaweicloud.com/python/2.7.18/python-2.7.18.amd64.msi",
+   "http://mirrors.aliyun.com/python-release/windows/python-2.7.18.amd64.msi"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "a425c758d38f8e28b56f4724b499239a"
+  },
+  "size": 20598784,
+  "released": "2020-04-20",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "2.7",
+  "version": "2.7.18",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "installer",
+  "format": "msi",
+  "variant": null,
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/2.7.18/python-2.7.18.msi",
+  "mirrors": [
+   "https://www.python.org/ftp/python/2.7.18/python-2.7.18.msi",
+   "https://mirrors.huaweicloud.com/python/2.7.18/python-2.7.18.msi",
+   "https://repo.huaweicloud.com/python/2.7.18/python-2.7.18.msi",
+   "https://registry.npmmirror.com/-/binary/python/2.7.18/python-2.7.18.msi",
+   "https://cdn.npmmirror.com/binaries/python/2.7.18/python-2.7.18.msi",
+   "https://mirrors.aliyun.com/python-release/windows/python-2.7.18.msi",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/2.7.18/python-2.7.18.msi",
+   "https://mirror.nju.edu.cn/python/2.7.18/python-2.7.18.msi",
+   "https://mirrors.bfsu.edu.cn/python/2.7.18/python-2.7.18.msi",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/2.7.18/python-2.7.18.msi",
+   "http://mirrors.huaweicloud.com/python/2.7.18/python-2.7.18.msi",
+   "http://repo.huaweicloud.com/python/2.7.18/python-2.7.18.msi",
+   "http://mirrors.aliyun.com/python-release/windows/python-2.7.18.msi"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "db6ad9195b3086c6b4cefb9493d738d2"
+  },
+  "size": 19632128,
+  "released": "2020-04-20",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.7",
+  "version": "3.7.6",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "installer",
+  "format": "pkg",
+  "variant": "macosx10.6",
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.7.6/python-3.7.6-macosx10.6.pkg",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.7.6/python-3.7.6-macosx10.6.pkg",
+   "https://mirrors.huaweicloud.com/python/3.7.6/python-3.7.6-macosx10.6.pkg",
+   "https://repo.huaweicloud.com/python/3.7.6/python-3.7.6-macosx10.6.pkg",
+   "https://registry.npmmirror.com/-/binary/python/3.7.6/python-3.7.6-macosx10.6.pkg",
+   "https://cdn.npmmirror.com/binaries/python/3.7.6/python-3.7.6-macosx10.6.pkg",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.7.6/python-3.7.6-macosx10.6.pkg",
+   "https://mirror.nju.edu.cn/python/3.7.6/python-3.7.6-macosx10.6.pkg",
+   "https://mirrors.bfsu.edu.cn/python/3.7.6/python-3.7.6-macosx10.6.pkg",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.7.6/python-3.7.6-macosx10.6.pkg",
+   "http://mirrors.huaweicloud.com/python/3.7.6/python-3.7.6-macosx10.6.pkg",
+   "http://repo.huaweicloud.com/python/3.7.6/python-3.7.6-macosx10.6.pkg"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "0dfc4cdd9404cf0f5274d063eca4ea71"
+  },
+  "size": 35057307,
+  "released": "2019-12-18",
+  "min_os": "Mac OS X 10.6",
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": "universal installer (32/64-bit Intel and/or PPC fat binary)"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.14",
+  "version": "3.14.7",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "pbs_stripped",
+  "libc": "glibc",
+  "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20260901/cpython-3.14.7%2B20260901-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz",
+  "mirrors": [
+   "https://registry.npmmirror.com/-/binary/python-build-standalone/20260901/cpython-3.14.7%2B20260901-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz",
+   "https://cdn.npmmirror.com/binaries/python-build-standalone/20260901/cpython-3.14.7%2B20260901-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "3959f92825141e04adf44982d3a83ee57af0877e893b0796e04c1468749d9b04"
+  },
+  "size": 35945651,
+  "released": "2026-09-01",
+  "min_os": null,
+  "metadata_source": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/latest",
+  "notes": "python-build-standalone install_only_stripped, build tag 20260901"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.14",
+  "version": "3.14.7",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "pbs_stripped",
+  "libc": "glibc",
+  "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20260901/cpython-3.14.7%2B20260901-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz",
+  "mirrors": [
+   "https://registry.npmmirror.com/-/binary/python-build-standalone/20260901/cpython-3.14.7%2B20260901-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz",
+   "https://cdn.npmmirror.com/binaries/python-build-standalone/20260901/cpython-3.14.7%2B20260901-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "8a0798baa8a2c27b5751d590aced543eaa85e20b3f73d93c1af049688acdc9c5"
+  },
+  "size": 30224478,
+  "released": "2026-09-01",
+  "min_os": null,
+  "metadata_source": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/latest",
+  "notes": "python-build-standalone install_only_stripped, build tag 20260901"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.14",
+  "version": "3.14.7",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "pbs_stripped",
+  "libc": "glibc",
+  "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20260901/cpython-3.14.7%2B20260901-armv7-unknown-linux-gnueabihf-install_only_stripped.tar.gz",
+  "mirrors": [
+   "https://registry.npmmirror.com/-/binary/python-build-standalone/20260901/cpython-3.14.7%2B20260901-armv7-unknown-linux-gnueabihf-install_only_stripped.tar.gz",
+   "https://cdn.npmmirror.com/binaries/python-build-standalone/20260901/cpython-3.14.7%2B20260901-armv7-unknown-linux-gnueabihf-install_only_stripped.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "a3b004e158ae4d5d121614a66eb133bc2bdac197ca3a86ff9c140d1e0ec924ed"
+  },
+  "size": 26382908,
+  "released": "2026-09-01",
+  "min_os": null,
+  "metadata_source": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/latest",
+  "notes": "python-build-standalone install_only_stripped, build tag 20260901"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.14",
+  "version": "3.14.7",
+  "os": "linux",
+  "arch": "ppc64le",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "pbs_stripped",
+  "libc": "glibc",
+  "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20260901/cpython-3.14.7%2B20260901-ppc64le-unknown-linux-gnu-install_only_stripped.tar.gz",
+  "mirrors": [
+   "https://registry.npmmirror.com/-/binary/python-build-standalone/20260901/cpython-3.14.7%2B20260901-ppc64le-unknown-linux-gnu-install_only_stripped.tar.gz",
+   "https://cdn.npmmirror.com/binaries/python-build-standalone/20260901/cpython-3.14.7%2B20260901-ppc64le-unknown-linux-gnu-install_only_stripped.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "0ecc62da57ecd1af328d715b2914a395672e56909078c573f86175c78a7c4ce5"
+  },
+  "size": 28816086,
+  "released": "2026-09-01",
+  "min_os": null,
+  "metadata_source": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/latest",
+  "notes": "python-build-standalone install_only_stripped, build tag 20260901"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.14",
+  "version": "3.14.7",
+  "os": "linux",
+  "arch": "riscv64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "pbs_stripped",
+  "libc": "glibc",
+  "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20260901/cpython-3.14.7%2B20260901-riscv64-unknown-linux-gnu-install_only_stripped.tar.gz",
+  "mirrors": [
+   "https://registry.npmmirror.com/-/binary/python-build-standalone/20260901/cpython-3.14.7%2B20260901-riscv64-unknown-linux-gnu-install_only_stripped.tar.gz",
+   "https://cdn.npmmirror.com/binaries/python-build-standalone/20260901/cpython-3.14.7%2B20260901-riscv64-unknown-linux-gnu-install_only_stripped.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d078e7b8a92fa505e19778c3e2808a70d507679b5f18a4b22e2ff1b65746f33c"
+  },
+  "size": 26436290,
+  "released": "2026-09-01",
+  "min_os": null,
+  "metadata_source": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/latest",
+  "notes": "python-build-standalone install_only_stripped, build tag 20260901"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.14",
+  "version": "3.14.7",
+  "os": "linux",
+  "arch": "s390x",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "pbs_stripped",
+  "libc": "glibc",
+  "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20260901/cpython-3.14.7%2B20260901-s390x-unknown-linux-gnu-install_only_stripped.tar.gz",
+  "mirrors": [
+   "https://registry.npmmirror.com/-/binary/python-build-standalone/20260901/cpython-3.14.7%2B20260901-s390x-unknown-linux-gnu-install_only_stripped.tar.gz",
+   "https://cdn.npmmirror.com/binaries/python-build-standalone/20260901/cpython-3.14.7%2B20260901-s390x-unknown-linux-gnu-install_only_stripped.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "75563511537f01d529d1eb3ca561beec90c1c0880271fe2373c3e3f3ec0940ab"
+  },
+  "size": 29227725,
+  "released": "2026-09-01",
+  "min_os": null,
+  "metadata_source": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/latest",
+  "notes": "python-build-standalone install_only_stripped, build tag 20260901"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.14",
+  "version": "3.14.7",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "pbs_stripped",
+  "libc": null,
+  "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20260901/cpython-3.14.7%2B20260901-x86_64-apple-darwin-install_only_stripped.tar.gz",
+  "mirrors": [
+   "https://registry.npmmirror.com/-/binary/python-build-standalone/20260901/cpython-3.14.7%2B20260901-x86_64-apple-darwin-install_only_stripped.tar.gz",
+   "https://cdn.npmmirror.com/binaries/python-build-standalone/20260901/cpython-3.14.7%2B20260901-x86_64-apple-darwin-install_only_stripped.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "7e151a7c9028855b61a7d6e78381f2020a1ef185281399f3b1aafc5e1c9a1a64"
+  },
+  "size": 26604533,
+  "released": "2026-09-01",
+  "min_os": null,
+  "metadata_source": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/latest",
+  "notes": "python-build-standalone install_only_stripped, build tag 20260901"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.14",
+  "version": "3.14.7",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "pbs_stripped",
+  "libc": null,
+  "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20260901/cpython-3.14.7%2B20260901-aarch64-apple-darwin-install_only_stripped.tar.gz",
+  "mirrors": [
+   "https://registry.npmmirror.com/-/binary/python-build-standalone/20260901/cpython-3.14.7%2B20260901-aarch64-apple-darwin-install_only_stripped.tar.gz",
+   "https://cdn.npmmirror.com/binaries/python-build-standalone/20260901/cpython-3.14.7%2B20260901-aarch64-apple-darwin-install_only_stripped.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "4632cb1a6edad9e73d3c81b6d2e69131637d995173e3e85005df14102b0592ba"
+  },
+  "size": 26486008,
+  "released": "2026-09-01",
+  "min_os": null,
+  "metadata_source": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/latest",
+  "notes": "python-build-standalone install_only_stripped, build tag 20260901"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.14",
+  "version": "3.14.7",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "exe",
+  "variant": null,
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.14.7/python-3.14.7-amd64.exe",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.14.7/python-3.14.7-amd64.exe",
+   "https://mirrors.huaweicloud.com/python/3.14.7/python-3.14.7-amd64.exe",
+   "https://repo.huaweicloud.com/python/3.14.7/python-3.14.7-amd64.exe",
+   "https://registry.npmmirror.com/-/binary/python/3.14.7/python-3.14.7-amd64.exe",
+   "https://cdn.npmmirror.com/binaries/python/3.14.7/python-3.14.7-amd64.exe",
+   "https://mirrors.aliyun.com/python-release/windows/python-3.14.7-amd64.exe",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.14.7/python-3.14.7-amd64.exe",
+   "https://mirror.nju.edu.cn/python/3.14.7/python-3.14.7-amd64.exe",
+   "https://mirrors.bfsu.edu.cn/python/3.14.7/python-3.14.7-amd64.exe",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.14.7/python-3.14.7-amd64.exe",
+   "http://mirrors.huaweicloud.com/python/3.14.7/python-3.14.7-amd64.exe",
+   "http://repo.huaweicloud.com/python/3.14.7/python-3.14.7-amd64.exe",
+   "http://mirrors.aliyun.com/python-release/windows/python-3.14.7-amd64.exe"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "9d9eb2709ef81bf5cd30db3c2096bdbc4ea10087c22e62f27d356b36f6ae9649"
+  },
+  "size": 33258168,
+  "released": "2026-08-05",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.14",
+  "version": "3.14.7",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "embed",
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.14.7/python-3.14.7-embed-amd64.zip",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.14.7/python-3.14.7-embed-amd64.zip",
+   "https://mirrors.huaweicloud.com/python/3.14.7/python-3.14.7-embed-amd64.zip",
+   "https://repo.huaweicloud.com/python/3.14.7/python-3.14.7-embed-amd64.zip",
+   "https://registry.npmmirror.com/-/binary/python/3.14.7/python-3.14.7-embed-amd64.zip",
+   "https://cdn.npmmirror.com/binaries/python/3.14.7/python-3.14.7-embed-amd64.zip",
+   "https://mirrors.aliyun.com/python-release/windows/python-3.14.7-embed-amd64.zip",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.14.7/python-3.14.7-embed-amd64.zip",
+   "https://mirror.nju.edu.cn/python/3.14.7/python-3.14.7-embed-amd64.zip",
+   "https://mirrors.bfsu.edu.cn/python/3.14.7/python-3.14.7-embed-amd64.zip",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.14.7/python-3.14.7-embed-amd64.zip",
+   "http://mirrors.huaweicloud.com/python/3.14.7/python-3.14.7-embed-amd64.zip",
+   "http://repo.huaweicloud.com/python/3.14.7/python-3.14.7-embed-amd64.zip",
+   "http://mirrors.aliyun.com/python-release/windows/python-3.14.7-embed-amd64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d297e5ff019966817ad8502465176139f2d3d840fa4ed84b13bed399a6ab1f15"
+  },
+  "size": 12673227,
+  "released": "2026-08-05",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.14",
+  "version": "3.14.7",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "installer",
+  "format": "exe",
+  "variant": null,
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.14.7/python-3.14.7-arm64.exe",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.14.7/python-3.14.7-arm64.exe",
+   "https://mirrors.huaweicloud.com/python/3.14.7/python-3.14.7-arm64.exe",
+   "https://repo.huaweicloud.com/python/3.14.7/python-3.14.7-arm64.exe",
+   "https://registry.npmmirror.com/-/binary/python/3.14.7/python-3.14.7-arm64.exe",
+   "https://cdn.npmmirror.com/binaries/python/3.14.7/python-3.14.7-arm64.exe",
+   "https://mirrors.aliyun.com/python-release/windows/python-3.14.7-arm64.exe",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.14.7/python-3.14.7-arm64.exe",
+   "https://mirror.nju.edu.cn/python/3.14.7/python-3.14.7-arm64.exe",
+   "https://mirrors.bfsu.edu.cn/python/3.14.7/python-3.14.7-arm64.exe",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.14.7/python-3.14.7-arm64.exe",
+   "http://mirrors.huaweicloud.com/python/3.14.7/python-3.14.7-arm64.exe",
+   "http://repo.huaweicloud.com/python/3.14.7/python-3.14.7-arm64.exe",
+   "http://mirrors.aliyun.com/python-release/windows/python-3.14.7-arm64.exe"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "9a3fe120cc81bc2cb099550f794d8356811f96a86c7f438519243c3485db928d"
+  },
+  "size": 32570072,
+  "released": "2026-08-05",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.14",
+  "version": "3.14.7",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "embed",
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.14.7/python-3.14.7-embed-arm64.zip",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.14.7/python-3.14.7-embed-arm64.zip",
+   "https://mirrors.huaweicloud.com/python/3.14.7/python-3.14.7-embed-arm64.zip",
+   "https://repo.huaweicloud.com/python/3.14.7/python-3.14.7-embed-arm64.zip",
+   "https://registry.npmmirror.com/-/binary/python/3.14.7/python-3.14.7-embed-arm64.zip",
+   "https://cdn.npmmirror.com/binaries/python/3.14.7/python-3.14.7-embed-arm64.zip",
+   "https://mirrors.aliyun.com/python-release/windows/python-3.14.7-embed-arm64.zip",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.14.7/python-3.14.7-embed-arm64.zip",
+   "https://mirror.nju.edu.cn/python/3.14.7/python-3.14.7-embed-arm64.zip",
+   "https://mirrors.bfsu.edu.cn/python/3.14.7/python-3.14.7-embed-arm64.zip",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.14.7/python-3.14.7-embed-arm64.zip",
+   "http://mirrors.huaweicloud.com/python/3.14.7/python-3.14.7-embed-arm64.zip",
+   "http://repo.huaweicloud.com/python/3.14.7/python-3.14.7-embed-arm64.zip",
+   "http://mirrors.aliyun.com/python-release/windows/python-3.14.7-embed-arm64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "f6773983c8959d4281e48c4540cb0bdd23e42391e4e951ce17e7ceb52658f21c"
+  },
+  "size": 11980260,
+  "released": "2026-08-05",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.14",
+  "version": "3.14.7",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "installer",
+  "format": "exe",
+  "variant": null,
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.14.7/python-3.14.7.exe",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.14.7/python-3.14.7.exe",
+   "https://mirrors.huaweicloud.com/python/3.14.7/python-3.14.7.exe",
+   "https://repo.huaweicloud.com/python/3.14.7/python-3.14.7.exe",
+   "https://registry.npmmirror.com/-/binary/python/3.14.7/python-3.14.7.exe",
+   "https://cdn.npmmirror.com/binaries/python/3.14.7/python-3.14.7.exe",
+   "https://mirrors.aliyun.com/python-release/windows/python-3.14.7.exe",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.14.7/python-3.14.7.exe",
+   "https://mirror.nju.edu.cn/python/3.14.7/python-3.14.7.exe",
+   "https://mirrors.bfsu.edu.cn/python/3.14.7/python-3.14.7.exe",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.14.7/python-3.14.7.exe",
+   "http://mirrors.huaweicloud.com/python/3.14.7/python-3.14.7.exe",
+   "http://repo.huaweicloud.com/python/3.14.7/python-3.14.7.exe",
+   "http://mirrors.aliyun.com/python-release/windows/python-3.14.7.exe"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "097fc03d4ac2de66ee1d73a0c5d2d323b5c0f14923f7207686ce93149a80f0a6"
+  },
+  "size": 31696736,
+  "released": "2026-08-05",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.14",
+  "version": "3.14.7",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "embed",
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.14.7/python-3.14.7-embed-win32.zip",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.14.7/python-3.14.7-embed-win32.zip",
+   "https://mirrors.huaweicloud.com/python/3.14.7/python-3.14.7-embed-win32.zip",
+   "https://repo.huaweicloud.com/python/3.14.7/python-3.14.7-embed-win32.zip",
+   "https://registry.npmmirror.com/-/binary/python/3.14.7/python-3.14.7-embed-win32.zip",
+   "https://cdn.npmmirror.com/binaries/python/3.14.7/python-3.14.7-embed-win32.zip",
+   "https://mirrors.aliyun.com/python-release/windows/python-3.14.7-embed-win32.zip",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.14.7/python-3.14.7-embed-win32.zip",
+   "https://mirror.nju.edu.cn/python/3.14.7/python-3.14.7-embed-win32.zip",
+   "https://mirrors.bfsu.edu.cn/python/3.14.7/python-3.14.7-embed-win32.zip",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.14.7/python-3.14.7-embed-win32.zip",
+   "http://mirrors.huaweicloud.com/python/3.14.7/python-3.14.7-embed-win32.zip",
+   "http://repo.huaweicloud.com/python/3.14.7/python-3.14.7-embed-win32.zip",
+   "http://mirrors.aliyun.com/python-release/windows/python-3.14.7-embed-win32.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "2bce2347adb05b4565d0bf50f7a44298f6c0bb08ae4f9d88d051b8512a55fcf7"
+  },
+  "size": 11142191,
+  "released": "2026-08-05",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null
+ }
+]

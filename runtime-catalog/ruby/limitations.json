@@ -1,0 +1,402 @@
+{
+  "runtime": "ruby",
+  "languages": ["ruby"],
+  "researched": "2026-09-17",
+  "sources": [
+    "https://www.ruby-lang.org/en/downloads/branches/",
+    "https://www.ruby-lang.org/en/news/",
+    "https://www.ruby-lang.org/en/news/2020/12/25/ruby-3-0-0-released/",
+    "https://www.ruby-lang.org/en/news/2021/12/25/ruby-3-1-0-released/",
+    "https://www.ruby-lang.org/en/news/2023/12/25/ruby-3-3-0-released/",
+    "https://www.ruby-lang.org/en/news/2025/12/25/ruby-4-0-0-released/",
+    "https://raw.githubusercontent.com/oneclick/rubyinstaller2/master/README.md"
+  ],
+  "milestones": [
+    {"capability": "native_threads", "since": "1.9", "notes": "1.9 replaces 1.8's interpreter-scheduled green threads with real OS threads, but a single Global VM Lock (GVL) still serializes Ruby bytecode execution -- see true_parallelism"},
+    {"capability": "true_parallelism", "since": "3.0", "notes": "Ractor (experimental): separate Ractors run on separate OS threads without sharing the main GVL, but objects crossing Ractors must be shareable/frozen and most gems/C extensions are not Ractor-safe; Ractor's API itself was overhauled again in 4.0 (Ractor::Port)"},
+    {"capability": "fibers", "since": "1.9", "notes": "cooperative, explicitly-resumed coroutines (Fiber class); did not exist in 1.8"},
+    {"capability": "fiber_scheduler", "since": "3.0", "notes": "Fiber::SchedulerInterface hooks blocking IO/Mutex/sleep so libraries can provide non-blocking concurrency without rewriting call sites; this is the version floor the `async` gem ecosystem requires"},
+    {"capability": "unicode_default", "since": "1.9", "notes": "1.9 introduces the M17N model (every String/Regexp carries an Encoding) but still requires a `# encoding:` magic comment for non-US-ASCII source; 2.0 makes UTF-8 the default source encoding so the magic comment becomes unnecessary for UTF-8 files"},
+    {"capability": "package_manager_bundled", "since": "1.9", "notes": "RubyGems bundled with the interpreter from 1.9.1; Bundler (a separate gem since 2010) is bundled as a default gem from 2.6"},
+    {"capability": "keyword_args_separation", "since": "3.0", "notes": "2.0 added keyword arguments; 2.7 deprecated implicit Hash-to-kwargs conversion; 3.0 removes it -- one of Ruby's largest breaking changes"},
+    {"capability": "pattern_matching", "since": "2.7", "notes": "case/in pattern matching shipped experimental (with a warning) in 2.7 and stabilized without warning in 3.0"},
+    {"capability": "jit", "since": "2.6", "notes": "MJIT (2.6, shells out to a C compiler at runtime) -> YJIT (3.1, experimental) -> YJIT production-ready (3.2) -> RJIT added experimental/research-only (3.3) -> RJIT removed, ZJIT added experimental (4.0). None of these are enabled by default; YJIT needs an explicit --yjit flag through 4.0."},
+    {"capability": "generics", "since": "3.0", "notes": "RBS type-signature language + bundled TypeProf inferencer; opt-in and unenforced, not a compiler-checked type system, and most gems ship no RBS signatures"},
+    {"capability": "tls_1_3", "since": "2.5", "notes": "depends on the openssl gem being linked against OpenSSL 1.1.1+ on the host; Ruby does not vendor OpenSSL, so actual TLS 1.3 availability tracks the system/build's OpenSSL version rather than the Ruby version alone"},
+    {"capability": "64bit_windows", "since": "2.0", "notes": "RubyInstaller/RubyInstaller2 x64 (mingw-w64) builds; exact first-version cutover is not separately documented by ruby-lang.org, inferred from RubyInstaller release history"},
+    {"capability": "arm64_macos", "since": "3.0", "notes": "no official ruby-lang.org macOS binaries at any version; Apple Silicon support means Homebrew/rbenv/ruby-build building natively rather than under Rosetta 2, which solidified around the 2.7/3.0 era alongside Homebrew's own arm64 rollout"},
+    {"capability": "arm64_windows", "since": "3.3", "notes": "RubyInstaller2 arm64 Windows builds are recent and experimental; exact introduction version is not confirmed against an official changelog here"}
+  ],
+  "majors": [
+    {
+      "major": "1.8",
+      "released": "2003-08-04",
+      "end_of_life": "2013-06-30",
+      "os_support": {
+        "windows": "One-Click Installer (mswin32/mingw32 builds); targeted Windows 2000/XP-era Windows",
+        "macos": "Source build; Fink/MacPorts packages; PowerPC and early Intel Macs, no arm64",
+        "linux": "Source build or distro packages; any glibc Linux"
+      },
+      "added": [
+        "Blocks, mixins and the core object model later versions build on",
+        "$KCODE-based multi-byte string handling (not per-string encoding objects)",
+        "In-process green-thread concurrency (Thread scheduled entirely by the interpreter, no OS threads)"
+      ],
+      "limitations": [
+        "Green threads only: the interpreter schedules Thread objects itself, so one blocking syscall (e.g. a slow read()) stalls every Ruby thread in the process -- fixed by native threads in 1.9",
+        "No Fiber class (added 1.9)",
+        "No per-string Encoding objects; text handling relies on the global $KCODE variable and byte-oriented String methods -- fixed by the M17N model in 1.9",
+        "No keyword arguments; APIs fake them with a trailing Hash argument (real keyword args added in 2.0)",
+        "RubyGems not included in the interpreter; installed separately (bundled from 1.9.1)",
+        "No Bundler (didn't exist yet; released 2010, bundled with Ruby from 2.6)"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "1.9",
+      "released": "2007-12-25",
+      "end_of_life": "2015-02-23",
+      "os_support": {
+        "windows": "One-Click Installer continued (mswin32/mingw32); no official x64 builds",
+        "macos": "Source build; Apple bundled 1.8 as system Ruby throughout this era, so 1.9 was mostly self-installed via source/MacPorts/rvm",
+        "linux": "Source build or distro packages"
+      },
+      "added": [
+        "YARV bytecode VM replaces the old tree-walking MRI interpreter",
+        "Native OS threads, still serialized by a Global VM Lock (GVL) -- only one thread runs Ruby code at a time",
+        "Fiber class: cooperative, explicitly-resumed coroutines",
+        "M17N encoding model: every String/Regexp carries an Encoding",
+        "RubyGems bundled with the interpreter from 1.9.1"
+      ],
+      "limitations": [
+        "Threads are native but still run one at a time under the GVL -- no true CPU parallelism for Ruby code (Ractor arrives 3.0, and even then only across Ractors)",
+        "No keyword arguments (2.0)",
+        "No refinements (2.0 experimental, 2.1 stable)",
+        "Non-ASCII source still needs a `# encoding:` magic comment; UTF-8 isn't assumed until 2.0",
+        "No Bundler bundled (external gem until 2.6)",
+        "1.8 scripts relying on $KCODE or old block-scoping rules broke outright on the 1.9 upgrade"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "2.0",
+      "released": "2013-02-24",
+      "end_of_life": "2016-02-24",
+      "os_support": {
+        "windows": "RubyInstaller one-click installer (pre-RubyInstaller2 mingw toolchain)",
+        "macos": "Bundled as OS X 10.9+ system Ruby (2.0.0); source build/Homebrew for other versions/OS releases",
+        "linux": "Source build or distro packages"
+      },
+      "added": [
+        "Keyword arguments (required and optional)",
+        "Refinements (experimental)",
+        "UTF-8 default source encoding -- no magic comment needed for UTF-8 source",
+        "Enumerable#lazy",
+        "Module#prepend"
+      ],
+      "limitations": [
+        "Refinements are explicitly experimental; semantics still changed through 2.1",
+        "Still GVL-bound native threads; no parallel execution of Ruby code",
+        "No Fiber scheduler / non-blocking IO integration (3.0)",
+        "No pattern matching (2.7 experimental, 3.0 stable)",
+        "No frozen_string_literal magic comment (2.3)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "2.1",
+      "released": "2013-12-25",
+      "end_of_life": "2017-03-31",
+      "os_support": {
+        "windows": "RubyInstaller one-click installer",
+        "macos": "Source build/Homebrew; not the OS X-bundled system Ruby (which stayed on 2.0.0)",
+        "linux": "Source build or distro packages"
+      },
+      "added": [
+        "Refinements promoted from experimental to a supported (though still discouraged-for-libraries) feature",
+        "RGenGC: generational garbage collector",
+        "Rational/Complex numeric literals (1r, 1i)",
+        "Method#parameters improvements for introspecting keyword args"
+      ],
+      "limitations": [
+        "Still no true parallel threads (GVL-bound)",
+        "No pattern matching",
+        "No frozen_string_literal magic comment",
+        "Keyword arguments still implicitly convertible from/to a trailing Hash -- the breaking separation is 3.0"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "2.2",
+      "released": "2014-12-25",
+      "end_of_life": "2018-03-31",
+      "os_support": {
+        "windows": "RubyInstaller one-click installer",
+        "macos": "Source build/Homebrew",
+        "linux": "Source build or distro packages"
+      },
+      "added": [
+        "Incremental garbage collector (reduces GC pause times)",
+        "Symbols are now garbage-collected, fixing the long-standing unbounded Symbol memory growth",
+        "Continued Fixnum/Bignum split (unified into Integer in 2.4)"
+      ],
+      "limitations": [
+        "Fixnum vs Bignum is still an implementation detail programs can observe (e.g. via #class) -- unified in 2.4",
+        "No JIT of any kind (MJIT arrives 2.6)",
+        "TLS support depends entirely on whatever OpenSSL the Ruby build links against; no guarantee of TLS 1.3 (needs OpenSSL 1.1.1, which postdates this release)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "2.3",
+      "released": "2015-12-25",
+      "end_of_life": "2019-03-31",
+      "os_support": {
+        "windows": "Last major covered by the original one-click RubyInstaller (older MinGW toolchain) before RubyInstaller2 takes over Windows builds at 2.4",
+        "macos": "Source build/Homebrew",
+        "linux": "Source build or distro packages"
+      },
+      "added": [
+        "frozen_string_literal magic comment (opt-in, per file)",
+        "Safe navigation operator (&.)",
+        "Hash#dig / Array#dig"
+      ],
+      "limitations": [
+        "frozen_string_literal is opt-in per file; nothing is frozen by default (a later plan to default it to true was never shipped, including in 3.4/4.0)",
+        "No JIT, no pattern matching, no Ractor",
+        "Original RubyInstaller's older MinGW toolchain is less current than RubyInstaller2's MSYS2 base used from 2.4 on"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "2.4",
+      "released": "2016-12-25",
+      "end_of_life": "2020-03-31",
+      "os_support": {
+        "windows": "RubyInstaller2 becomes the standard Windows installer (MSYS2-based build system); the switch away from the old mingw one-click installer also ends practical Windows XP support going forward",
+        "macos": "Source build/Homebrew",
+        "linux": "Source build or distro packages"
+      },
+      "added": [
+        "Fixnum and Bignum unified into a single Integer class",
+        "Hash#transform_keys / #transform_values",
+        "Comparable#clamp"
+      ],
+      "limitations": [
+        "Ractor, Fiber scheduler, YJIT and pattern matching all absent",
+        "RubyInstaller2's newer MSYS2-based toolchain targets a newer Windows baseline than the installer it replaced -- exact minimum Windows version for this specific major is inferred, not confirmed against an archived RubyInstaller2 changelog"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "2.5",
+      "released": "2017-12-25",
+      "end_of_life": "2021-04-05",
+      "os_support": {
+        "windows": "RubyInstaller2 (MSYS2-based)",
+        "macos": "Source build/Homebrew",
+        "linux": "Source build or distro packages"
+      },
+      "added": [
+        "rescue/else usable directly inside do...end blocks without an explicit begin",
+        "Comparable#clamp(range)",
+        "openssl gem/stdlib updates that made enabling TLS 1.2 the practical default for new code"
+      ],
+      "limitations": [
+        "No JIT yet (2.6)",
+        "No YJIT (3.1)",
+        "TLS 1.3 needs the underlying OpenSSL to be 1.1.1+; Ruby's openssl gem doesn't vendor OpenSSL, so TLS 1.3 availability depends on how/when the interpreter was built, not the Ruby version alone"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "2.6",
+      "released": "2018-12-25",
+      "end_of_life": "2022-04-12",
+      "os_support": {
+        "windows": "RubyInstaller2 (MSYS2-based)",
+        "macos": "Source build/Homebrew",
+        "linux": "Source build or distro packages"
+      },
+      "added": [
+        "MJIT: experimental method-based JIT that shells out to a C compiler at runtime to compile hot methods to native code",
+        "Endless ranges ((1..))",
+        "RubyVM::AST for inspecting the parse tree",
+        "Bundler bundled as a default gem for the first time"
+      ],
+      "limitations": [
+        "MJIT requires a C compiler to be present on the machine at *runtime*, not just at build time -- a real constraint on minimal container images and on Windows",
+        "MJIT's compile/warmup overhead often outweighs its benefit outside numeric/game-style workloads; not a general web-app win",
+        "No YJIT (3.1); no Ractor (3.0); pattern matching still absent (2.7 experimental)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "2.7",
+      "released": "2019-12-25",
+      "end_of_life": "2023-03-31",
+      "os_support": {
+        "windows": "RubyInstaller2 (MSYS2-based)",
+        "macos": "Source build/Homebrew",
+        "linux": "Source build or distro packages"
+      },
+      "added": [
+        "Pattern matching (case/in) shipped as an experimental feature (prints a warning)",
+        "Numbered block parameters (_1)",
+        "Compaction GC (GC.compact)",
+        "Deprecation warnings for implicit keyword-argument/Hash conversion, ahead of 3.0's breaking separation"
+      ],
+      "limitations": [
+        "Pattern matching is experimental and warns on use; its syntax still changed before stabilizing in 3.0",
+        "Keyword-argument/Hash auto-conversion still works but is deprecated -- code relying on it breaks outright in 3.0",
+        "No Ractor, no true parallelism",
+        "No Fiber scheduler / non-blocking IO integration"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "3.0",
+      "released": "2020-12-25",
+      "end_of_life": "2024-04-23",
+      "os_support": {
+        "windows": "RubyInstaller2 (MSYS2-based)",
+        "macos": "Source build/Homebrew; Apple Silicon (arm64) support solidifying via Homebrew/rbenv/ruby-build around this release rather than as an official ruby-lang.org binary",
+        "linux": "Source build or distro packages"
+      },
+      "added": [
+        "Ractor (experimental): actor-style true parallelism -- separate Ractors run on separate OS threads without sharing the main GVL",
+        "Fiber Scheduler: hooks blocking calls (IO#read, Mutex#lock, Kernel#sleep, etc.) so libraries such as the `async` gem can provide non-blocking concurrency without rewriting call sites -- this is the version floor the async gem ecosystem requires",
+        "RBS type-signature language plus a bundled TypeProf type inferencer",
+        "Pattern matching stabilized (no warning)",
+        "Keyword arguments formally separated from positional/Hash arguments (breaking change)"
+      ],
+      "limitations": [
+        "Ractor is explicitly experimental: objects passed between Ractors must be shareable/frozen, most existing C extensions and gems are not Ractor-safe, and the main Ractor still has its own GVL",
+        "RBS/TypeProf are opt-in and unenforced -- there is no compiler-checked static typing, and most gems ship no RBS signatures",
+        "Keyword-argument separation breaks any code/gem still relying on implicit Hash-to-kwargs conversion from 2.7 and earlier -- one of the largest breaking changes in Ruby's history",
+        "Fiber Scheduler only helps code paths that go through it; C extensions doing blocking syscalls directly bypass it",
+        "The '3x3' performance goal was measured on a single-threaded benchmark (Optcarrot), not representative of typical web-app workloads"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "3.1",
+      "released": "2021-12-25",
+      "end_of_life": "2025-03-26",
+      "os_support": {
+        "windows": "RubyInstaller2 (MSYS2-based); YJIT not available here (Unix x86-64 only at this release)",
+        "macos": "Source build/Homebrew; Apple Silicon (arm64) builds available via Homebrew/rbenv, but YJIT is x86-64-only so it does not run under Apple Silicon at this release",
+        "linux": "Source build or distro packages; YJIT usable on x86-64"
+      },
+      "added": [
+        "YJIT (experimental): Shopify's in-process JIT using basic-block versioning; disabled by default, opt-in via --yjit",
+        "Debug.gem: full debugger rewrite with remote/multi-process/multi-thread debugging and VS Code/Chrome DevTools integration",
+        "error_highlight gem: precise error-location underlining in backtraces",
+        "Hash/keyword value omission shorthand ({x:})"
+      ],
+      "limitations": [
+        "YJIT at launch only supports Unix-like x86-64 -- no Windows, no arm64/Apple Silicon, no other CPU architectures",
+        "YJIT is off by default and still experimental; needs an explicit flag and extra memory for compiled code",
+        "Ractor still experimental with the same shareability constraints as 3.0",
+        "No default-on JIT of any kind for typical deployments"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "3.2",
+      "released": "2022-12-25",
+      "end_of_life": "2026-04-01",
+      "os_support": {
+        "windows": "RubyInstaller2 (MSYS2-based)",
+        "macos": "Source build/Homebrew; Apple Silicon (arm64) well-supported via community builds, still no official ruby-lang.org binary",
+        "linux": "Source build or distro packages; plus an experimental WASI/WebAssembly build (ruby.wasm) for running Ruby in browsers/WASI runtimes"
+      },
+      "added": [
+        "YJIT declared production-ready / stable enough for general use (still opt-in, off by default)",
+        "WASI-based WebAssembly build (experimental, ruby.wasm)",
+        "Data.define lightweight value-object class",
+        "Anonymous block forwarding (def foo(&); bar(&); end)",
+        "Improved OpenSSL 3.x compatibility in the openssl gem"
+      ],
+      "limitations": [
+        "YJIT is production-ready but still requires an explicit --yjit flag; not on by default",
+        "The WASM/WASI build has no real OS threads, no TCP sockets, and a cut-down stdlib -- most gems with C extensions can't run there",
+        "Ractor still experimental; its API kept changing (overhauled again in 4.0)",
+        "Apple Silicon (arm64 macOS) support remains community-provided (Homebrew, rbenv/ruby-build); ruby-lang.org still ships no official macOS binaries at all"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "3.3",
+      "released": "2023-12-25",
+      "end_of_life": "2027-03-31",
+      "os_support": {
+        "windows": "RubyInstaller2 (MSYS2-based)",
+        "macos": "Source build/Homebrew; Apple Silicon well-supported via community builds",
+        "linux": "Source build or distro packages; WASI/WebAssembly build continues"
+      },
+      "added": [
+        "Prism parser bundled as a default gem (opt-in via --parser=prism): a portable, error-tolerant recursive-descent parser meant to eventually replace the parse.y-based parser",
+        "RJIT: a new pure-Ruby JIT (replacing MJIT) built for experimentation/research, not production",
+        "YJIT: reported >3x faster than the interpreter on Optcarrot; code GC disabled by default; runtime-toggleable via RubyVM::YJIT.enable",
+        "M:N thread scheduler (opt-in via RUBY_MN_THREADS=1): multiple Ruby Threads multiplexed onto fewer OS threads"
+      ],
+      "limitations": [
+        "Prism is bundled but not yet the default parser -- you must pass --parser=prism to use it (default parser switch is 3.4)",
+        "RJIT is explicitly documented as experimental/research-only, x86-64 Unix only, and slower than YJIT -- not a production JIT choice",
+        "M:N thread scheduler is opt-in and disabled by default on the main Ractor for C-extension compatibility",
+        "Ractor API still not finalized (replaced again in 4.0's Ractor::Port)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "3.4",
+      "released": "2024-12-25",
+      "end_of_life": "TBD",
+      "os_support": {
+        "windows": "RubyInstaller2 (MSYS2-based); early/experimental arm64 Windows builds begin appearing around this era",
+        "macos": "Source build/Homebrew; Apple Silicon well-supported via community builds",
+        "linux": "Source build or distro packages; WASI/WebAssembly build continues"
+      },
+      "added": [
+        "Prism becomes the default parser for CRuby (the old parse.y-based parser remains available as a fallback)",
+        "`it` as an implicit single-block-parameter reference, alongside numbered params",
+        "'Happy Eyeballs' Version 2 enabled by default for hostname resolution (races IPv4/IPv6 connections in Socket/TCPSocket)",
+        "Warnings added around frozen-string-literal-adjacent mutation as ecosystem prep work, without flipping the file-level default"
+      ],
+      "limitations": [
+        "The long-floated plan to make string literals frozen by default was NOT shipped in 3.4 (nor in 4.0) after ecosystem pushback -- frozen_string_literal remains opt-in, magic-comment only",
+        "YJIT remains opt-in (not on by default)",
+        "Ractor API instability continues; the bigger overhaul lands in 4.0",
+        "RJIT still present but slated for removal (removed in 4.0)"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "4.0",
+      "released": "2025-12-25",
+      "end_of_life": "TBD",
+      "os_support": {
+        "windows": "RubyInstaller2 (MSYS2-based); building/using 4.0 on Windows requires MSVC 14.0+ (Visual Studio 2015 or later) -- older MSVC toolchains are unsupported",
+        "macos": "Source build/Homebrew; Apple Silicon well-supported via community builds, still no official ruby-lang.org binary",
+        "linux": "Source build or distro packages; WASI/WebAssembly build continues"
+      },
+      "added": [
+        "Ruby Box (experimental, RUBY_BOX=1): isolates constants/monkey-patches/loaded libraries between 'boxes' in one process, aimed at test isolation and blue-green deploys",
+        "ZJIT: a next-generation JIT written in Rust (building Ruby itself now needs Rust 1.85.0+); currently faster than the plain interpreter but slower than YJIT",
+        "Ractor::Port replaces the old Ractor message-passing API",
+        "Pathname promoted from a default gem to a core class; Set promoted from autoloaded stdlib to a core class"
+      ],
+      "limitations": [
+        "ZJIT is explicitly not production-ready; YJIT remains the production JIT choice",
+        "The Ractor rewrite is a breaking change: Ractor.yield, Ractor#take, Ractor#close_incoming and Ractor#close_outgoing are all removed in favor of Ractor::Port -- 3.x Ractor code needs porting",
+        "RJIT removed entirely (--rjit flag gone)",
+        "CGI library gutted to just cgi/escape; SortedSet removed from the standard library (now needs a separate gem)",
+        "Kernel#open/IO.popen-style process spawning via a leading '|' argument removed; Process::Status#& and #>> removed",
+        "Building Ruby itself now requires a Rust toolchain (for ZJIT) in addition to a C compiler -- a new build dependency versus every prior major",
+        "Ruby Box and ZJIT are both experimental/opt-in -- the default single-namespace, YJIT-or-interpreter execution model is unchanged"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

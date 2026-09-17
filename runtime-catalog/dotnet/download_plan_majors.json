@@ -1,0 +1,2107 @@
+[
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "1.1",
+  "version": "1.1.13",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/1.1.13/dotnet-rhel-x64.1.1.13.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/1.1.13/dotnet-rhel-x64.1.1.13.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/1.1.13/dotnet-rhel-x64.1.1.13.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "5200C3D96CFEC700534D119DF4F9505F2A17953828AB213F8614D3BF0F2A700E7096D8778C8843974361311BC9E58DAF44408A927A010A9D837EBC743D3A60FE",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/1.1/releases.json"
+  },
+  "size": 32447160,
+  "released": "2019-05-14",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/1.1/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "1.1",
+  "version": "1.1.13",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/1.1.13/dotnet-osx-x64.1.1.13.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/1.1.13/dotnet-osx-x64.1.1.13.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/1.1.13/dotnet-osx-x64.1.1.13.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "E38C8699B4368D3AF76B7688176F4186BDAE8A86582B1A6130803EEA208DA70F4C14FD3A039E5E0765747F81DD87DD7503FE5A79D358CE89EF8847346FB35834",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/1.1/releases.json"
+  },
+  "size": 31334204,
+  "released": "2019-05-14",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/1.1/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "1.1",
+  "version": "1.1.13",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/1.1.13/dotnet-win-x64.1.1.13.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/1.1.13/dotnet-win-x64.1.1.13.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/1.1.13/dotnet-win-x64.1.1.13.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "AC56ECFCBF638E7F237CCD876DEF9AD17E881ABDBCD86D2BC40F65980146B8761E4294054CBF918BA33DF50EBB34FE5403DBE6393FA05067D3784EE874DB97D6",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/1.1/releases.json"
+  },
+  "size": 33033707,
+  "released": "2019-05-14",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/1.1/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "1.1",
+  "version": "1.1.13",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/1.1.13/dotnet-win-x86.1.1.13.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/1.1.13/dotnet-win-x86.1.1.13.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/1.1.13/dotnet-win-x86.1.1.13.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "6EF25AE12B5C726B82B94821C69BF21640B9E44A5E4F863B31EC9CF2FD16D91D0F60F7E3FAE7CDF2563F7EDE82B7B531E066805798E8860A164AFE55E95449BA",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/1.1/releases.json"
+  },
+  "size": 29978659,
+  "released": "2019-05-14",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/1.1/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "2.2",
+  "version": "2.2.1",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/2.2.1/dotnet-runtime-2.2.1-win-arm64.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/2.2.1/dotnet-runtime-2.2.1-win-arm64.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/2.2.1/dotnet-runtime-2.2.1-win-arm64.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "1EE186BCEF0F5E018D65DEEA7BB32B390FA22813B214E7DCF45BD82A00DBC9DA7DC9068FD0BD252C0CA96DD22B4099A4BD3E96DA49AAD7AF125B88636DF8538A",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json"
+  },
+  "size": 18190936,
+  "released": "2019-01-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "2.2",
+  "version": "2.2.300",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/2.2.5/dotnet-runtime-2.2.5-linux-x64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/2.2.5/dotnet-runtime-2.2.5-linux-x64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/2.2.5/dotnet-runtime-2.2.5-linux-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "7CACC139737A7B05D5ADCEA0125E0D3ED7342E1D81D94D0445DBBCB64D6DB2E9C840311966AC091AD0E4E4C737EDEE09AA0533252EC75510C9285008632ADF03",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json"
+  },
+  "size": 28757756,
+  "released": "2019-05-21",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "2.2",
+  "version": "2.2.300",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/2.2.5/dotnet-runtime-2.2.5-linux-arm64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/2.2.5/dotnet-runtime-2.2.5-linux-arm64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/2.2.5/dotnet-runtime-2.2.5-linux-arm64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "3D0DEABC092865BD3583312FE14211BD94275F569EAE9D32F447B29D55D31B4B61FADA36ECFB88CB7E9B185C1F3D67A1F270DBFD3D691ACE249DEF3797926F06",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json"
+  },
+  "size": 27303478,
+  "released": "2019-05-21",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "2.2",
+  "version": "2.2.300",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/2.2.5/dotnet-runtime-2.2.5-linux-arm.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/2.2.5/dotnet-runtime-2.2.5-linux-arm.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/2.2.5/dotnet-runtime-2.2.5-linux-arm.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "D3A545AE8EE19D6AA19B349CA634FE321A477779E5C74AD6C8BD1657B55C3440142FEB8FB4C46FD41B6697D0B9565BDADD78365B1E36115670037D7FB1041B82",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json"
+  },
+  "size": 28522665,
+  "released": "2019-05-21",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "2.2",
+  "version": "2.2.300",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/2.2.5/dotnet-runtime-2.2.5-osx-x64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/2.2.5/dotnet-runtime-2.2.5-osx-x64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/2.2.5/dotnet-runtime-2.2.5-osx-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "F6770F660259019CD22FC678BF3E389588AEB2B158B68778FE3590293412B9BE6544C75BFE5736CD37500694C549FC47DC0B141CF993B8ED90186444B03B985A",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json"
+  },
+  "size": 27665219,
+  "released": "2019-05-21",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "2.2",
+  "version": "2.2.300",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/2.2.5/dotnet-runtime-2.2.5-win-x64.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/2.2.5/dotnet-runtime-2.2.5-win-x64.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/2.2.5/dotnet-runtime-2.2.5-win-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "E3CCE1A8FA304AFF40FA1CF6B278CEDA60D341DFA25C31449DECD8900B6E49FC1DAC34888853EBA6E9AD610580F1689B90B5E9110826EB5CE80CF781696DA98C",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json"
+  },
+  "size": 29866845,
+  "released": "2019-05-21",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "2.2",
+  "version": "2.2.300",
+  "os": "windows",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/2.2.5/dotnet-runtime-2.2.5-win-arm.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/2.2.5/dotnet-runtime-2.2.5-win-arm.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/2.2.5/dotnet-runtime-2.2.5-win-arm.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "76682D8907FD6B5349C01EB6A1033650E41131B331CD1D3BE83BFADB6AF6E8D59922AA66474CEB96C73248C28148D8AE6AA49763494486530F842781D48C25E6",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json"
+  },
+  "size": 18510199,
+  "released": "2019-05-21",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "2.2",
+  "version": "2.2.300",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/2.2.5/dotnet-runtime-2.2.5-win-x86.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/2.2.5/dotnet-runtime-2.2.5-win-x86.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/2.2.5/dotnet-runtime-2.2.5-win-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "28CFCEC3440E3E4B77D256D2FDBB28CFE8E535DE92983FAFDEF7E7850F074D3D6BCCF6C3BA089F016E93A2A6ADCBCA1CEDC3E2193F59FCCDA01A2EF065D6F870",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json"
+  },
+  "size": 27062868,
+  "released": "2019-05-21",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "3.1",
+  "version": "3.1.32",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-linux-x64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-linux-x64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-linux-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "a1de9bbc3d2e3a4f5f52b7742c678b182a58a724d36232997511e390027044d60144a7e010a29d6ee016ec91f2911daef28ac5712a827fff8bdde73314b7e002",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json"
+  },
+  "size": 30466403,
+  "released": "2022-12-13",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "3.1",
+  "version": "3.1.32",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-linux-arm64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-linux-arm64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-linux-arm64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "ff311df0db488f3b5cc03c7f6724f8442de7e60fa0a503ec8f536361ce7a357ad26d09d2499d68c50ebdfa751a5520bba4aaa77a38b191c892d5a018561ce422",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json"
+  },
+  "size": 30300088,
+  "released": "2022-12-13",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "3.1",
+  "version": "3.1.32",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-linux-arm.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-linux-arm.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-linux-arm.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "eaa5e439e9a70ca72a1de731e4b2b7b97e59c8d60bc694e0a08c8da6246aaecc3498dc14729c83140039a285a8cda8fcd334bdc81e507d97c2f92b9dffcf0140",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json"
+  },
+  "size": 31846724,
+  "released": "2022-12-13",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "3.1",
+  "version": "3.1.32",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-osx-x64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-osx-x64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-osx-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "9fd385812e770525856d734ca62e5d01ddb534ff317bb09e1091ded38ce2c16dc4bd02b5eebad8ea6e01b21755fe6f5ce6ca5183ebbbee04fa1aed956da4c58a",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json"
+  },
+  "size": 29792260,
+  "released": "2022-12-13",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "3.1",
+  "version": "3.1.32",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-win-x64.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-win-x64.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-win-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "72a3feb6784c5c69cb464ad4a8678e719615bd1e4e9a7c3cf5c1f67a4f01e08c073424532772f1e320d05f63c01079c6a089be45f4777abe035f14ffbf06f38b",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json"
+  },
+  "size": 30979360,
+  "released": "2022-12-13",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "3.1",
+  "version": "3.1.32",
+  "os": "windows",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-win-arm.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-win-arm.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-win-arm.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "f06c49699dd3efb7e6a8faea4cc7154c680320c247b258909962739146e7f2bf268d40f762b6753f8b64ea1a59af78eb6c40531f04f1d18eb104370361ce9aba",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json"
+  },
+  "size": 30490724,
+  "released": "2022-12-13",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "3.1",
+  "version": "3.1.32",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-win-x86.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-win-x86.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-win-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "3cddda423359bc178dd5df8695a0b98c69c39ce846d53c316eda1436837147ba863ab01a606c72c9fae47fb82890a69a3c1916b1c4fdc1590c7113026617cf09",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json"
+  },
+  "size": 27703307,
+  "released": "2022-12-13",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "5.0",
+  "version": "5.0.17",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/5.0.17/dotnet-runtime-5.0.17-linux-x64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/5.0.17/dotnet-runtime-5.0.17-linux-x64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/5.0.17/dotnet-runtime-5.0.17-linux-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "a9c4784930a977abbc42aff1337dda06ec588c1ec4769a59f9fcab4d5df4fc9efe65f8e61e5433db078f67a94ea2dfe870c32c482a50d4c16283ffacacff4261",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/5.0/releases.json"
+  },
+  "size": 30877751,
+  "released": "2022-05-10",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/5.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "5.0",
+  "version": "5.0.17",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/5.0.17/dotnet-runtime-5.0.17-linux-arm64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/5.0.17/dotnet-runtime-5.0.17-linux-arm64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/5.0.17/dotnet-runtime-5.0.17-linux-arm64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "99cb11871924d3abedcc9c8079c54bc0c550203c7cbe4e349ed70d4355f40e4620b68d90b797e6461d898c06bed6953580e2cd4ad01483e5de107ca5a3409610",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/5.0/releases.json"
+  },
+  "size": 28684340,
+  "released": "2022-05-10",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/5.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "5.0",
+  "version": "5.0.17",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/5.0.17/dotnet-runtime-5.0.17-linux-arm.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/5.0.17/dotnet-runtime-5.0.17-linux-arm.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/5.0.17/dotnet-runtime-5.0.17-linux-arm.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "b91bec9749838f31f0aa04d8f9c3ebbbb4dcce4ee4ceb30cfd1b901534bbe2c187ae9ed7bd0de64405c4fae99df839836fe68b9d9a2493d52301d7b16d6f3ba6",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/5.0/releases.json"
+  },
+  "size": 28960852,
+  "released": "2022-05-10",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/5.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "5.0",
+  "version": "5.0.17",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/5.0.17/dotnet-runtime-5.0.17-osx-x64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/5.0.17/dotnet-runtime-5.0.17-osx-x64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/5.0.17/dotnet-runtime-5.0.17-osx-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "31add512418640f98bc9511509db2049a2674c7725169d26be89218a02ac7972e03e5d6be5a3d45a0dfa764e6eade503a8f4957b7b198ec6ad412e423d95f1b9",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/5.0/releases.json"
+  },
+  "size": 30609652,
+  "released": "2022-05-10",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/5.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "5.0",
+  "version": "5.0.17",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/5.0.17/dotnet-runtime-5.0.17-win-x64.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/5.0.17/dotnet-runtime-5.0.17-win-x64.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/5.0.17/dotnet-runtime-5.0.17-win-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "424df2b535f73c40aea164623a8a8f549bd18f89406eb2cb84289cb4cfceb3450db7762c5582756263d79ed628a574730e708d87dc906fd2c00d29f64942c782",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/5.0/releases.json"
+  },
+  "size": 30720719,
+  "released": "2022-05-10",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/5.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "5.0",
+  "version": "5.0.17",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/5.0.17/dotnet-runtime-5.0.17-win-arm64.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/5.0.17/dotnet-runtime-5.0.17-win-arm64.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/5.0.17/dotnet-runtime-5.0.17-win-arm64.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "31614b5d75c5bf41d78390746980aa280176158c06bdf2db6f51fa323316807d1636d59a5999689d37ad6d5addc6dec4051709dbf3c229dce35346300acc06a9",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/5.0/releases.json"
+  },
+  "size": 28969316,
+  "released": "2022-05-10",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/5.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "5.0",
+  "version": "5.0.17",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/5.0.17/dotnet-runtime-5.0.17-win-x86.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/5.0.17/dotnet-runtime-5.0.17-win-x86.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/5.0.17/dotnet-runtime-5.0.17-win-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "8983fcdbc302f5e04cc76ce02f2e6c1f011d88534e85f461264e35ed303a072cfa05ca81a794a9aac396c0393d08d55567a7a9c3f7e50e05940e618b0064b9bd",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/5.0/releases.json"
+  },
+  "size": 27486438,
+  "released": "2022-05-10",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/5.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "6.0",
+  "version": "6.0.36",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-linux-x64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-linux-x64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-linux-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "afb6018fcabec468ccd7ae2f1131d8c9de7f4de7645b8f0c223efbbdbfdc515fb0642a399ebfe372c02044416c4cae463c9c802cd156b9da4181efff0e33ee94",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json"
+  },
+  "size": 30710677,
+  "released": "2024-11-12",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "6.0",
+  "version": "6.0.36",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-linux-arm64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-linux-arm64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-linux-arm64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "aa9a35f181204199ac6c44863c4773f8967b25adce218e23ce2822b40b26c38edc1e4e2ff323dabb81ae049bc187f14d209ef1365e68970fd6c32af21f0a1d44",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json"
+  },
+  "size": 28419386,
+  "released": "2024-11-12",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "6.0",
+  "version": "6.0.36",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-linux-arm.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-linux-arm.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-linux-arm.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "f3f9199a97db81d3e3ed249e0e9b8f17afb785e8b9ebad00016576382d3d0f2029a31eaf760be2509fde796a42efeb727b156488a42f48cc08013f87479cacfd",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json"
+  },
+  "size": 28668069,
+  "released": "2024-11-12",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "6.0",
+  "version": "6.0.36",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-osx-x64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-osx-x64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-osx-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "8121a98ac7bc936074c2eb82aa45dae1ba8745c8808870ffb400302a267df71bfaf394e5c6273ad6c7a2ec408740ab369a03ac80aff2d49621ae131f7490ad50",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json"
+  },
+  "size": 30108326,
+  "released": "2024-11-12",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "6.0",
+  "version": "6.0.36",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-osx-arm64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-osx-arm64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-osx-arm64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "d13fa060270c376307c7086da52cff71a02f8550a3a21812e25127308970c99a32d3c4834e342f23365869600c0b51fce03236906e13fe76456fc78964c531d4",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json"
+  },
+  "size": 28255302,
+  "released": "2024-11-12",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "6.0",
+  "version": "6.0.36",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-win-x64.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-win-x64.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-win-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "935db5c6cee19f2c016e67168bfae7b491044735de76c673abb3b125dd325fd5e779d7efe12ba80178d46689ae70a25e558a3fa846417d44c5f4ca256e7f4bf2",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json"
+  },
+  "size": 33057872,
+  "released": "2024-11-12",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "6.0",
+  "version": "6.0.36",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-win-arm64.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-win-arm64.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-win-arm64.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "a8e19612f4fb7166459c7d44a9014281504e1de6ccd6e4d54d1ad1c4caff66ede0c0299d9cc500b847a9ecf063c583c205d661c9ceed98aa18a29f554fd19424",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json"
+  },
+  "size": 31434802,
+  "released": "2024-11-12",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "6.0",
+  "version": "6.0.36",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-win-x86.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-win-x86.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-win-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "1d7ecca39d4d14c27b067358c433ebf90dde716e5c4bdc244861dc7268b23f172d61bf910a4e16b46e4d629f23774b8311ba8d5a45085d995da4ef25b74c75ea",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json"
+  },
+  "size": 30051705,
+  "released": "2024-11-12",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "7.0",
+  "version": "7.0.20",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-linux-x64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-linux-x64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-linux-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "87855297338555a7b577d7e314e5dbf2c2350f8c867a489cd1e535634bad5c123a1871464d37fc9421837ff5d426c2eadecbe0f60bbf3fd32bc2461f47790a40",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json"
+  },
+  "size": 31482932,
+  "released": "2024-05-28",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "7.0",
+  "version": "7.0.20",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-linux-arm64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-linux-arm64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-linux-arm64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "c245125ee2708252119a1544556e1aa9e00aa18b2303de69877da10c6c17e3f25024b749ca93b53be76ee0e8e4a75d403f7019b8bc2e50ed1278f656cb2f7e06",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json"
+  },
+  "size": 29787354,
+  "released": "2024-05-28",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "7.0",
+  "version": "7.0.20",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-linux-arm.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-linux-arm.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-linux-arm.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "a24aa7afe478e62af4e76c40e63e5e5e8324ab01d9ad9cff3183245cdeb70861ffc118c9abda9f2f2fed423735ca27aac15bec8cc5fc352f05bd5b726265849a",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json"
+  },
+  "size": 29665011,
+  "released": "2024-05-28",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "7.0",
+  "version": "7.0.20",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-osx-x64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-osx-x64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-osx-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "acdcde92f2f2e43584ee59be447f778f4a152c308975c7bdc5c2372b5bbd3092eb9d2233aec3b82756ba1e352a0877ffc17e4c8cfb20a9de91ca6db54d79b591",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json"
+  },
+  "size": 30848718,
+  "released": "2024-05-28",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "7.0",
+  "version": "7.0.20",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-osx-arm64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-osx-arm64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-osx-arm64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "af1cb62e29c69648ebe334e651c2703cd5e87fa0bb28c670bacb3b3dd1608aeae35ae53402c5eb4ed8bf34abd831a08ccb5ef84e5ec70617d9f8d9969fe7b8fa",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json"
+  },
+  "size": 29182560,
+  "released": "2024-05-28",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "7.0",
+  "version": "7.0.20",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-win-x64.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-win-x64.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-win-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "4943862d33d3c483396adae24c932d254b218aaaa4638e47b22bdd1d61eea248f90f5a768a0842b8c743db8b96039506941af6384411e8c891aeefdebd7db4fd",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json"
+  },
+  "size": 33021410,
+  "released": "2024-05-28",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "7.0",
+  "version": "7.0.20",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-win-arm64.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-win-arm64.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-win-arm64.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "9caa7979861e7820f644b2a7bf80db53641e03d39f1b1fdb1c1d306dbdc75b476c869a3298cb14f7e419300cd5bf9a11d8aa11c2ce4f0ac9ad69327a18840bfc",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json"
+  },
+  "size": 32655394,
+  "released": "2024-05-28",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "7.0",
+  "version": "7.0.20",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-win-x86.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-win-x86.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-win-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "f4cf05a03b7e568f974202379f662becd8756b8d6755277c19247130d03ce7b5062a6414904bdc52256aa2373501dfc62f3615aea0f92b5e192bb8e11009fdf9",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json"
+  },
+  "size": 30166639,
+  "released": "2024-05-28",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "8.0",
+  "version": "8.0.31",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-linux-x64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-linux-x64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-linux-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "f336bdec58d54bf50d74a1b38efa82f7290d976bd2ed98b845ebcbac42cf0d8cef504684fc088d4b05f98737b996bf3302e52bd9c23005deae7c60780b2652fb",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json"
+  },
+  "size": 31298876,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "8.0",
+  "version": "8.0.31",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-linux-arm64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-linux-arm64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-linux-arm64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "ddc66b65e9377e7f3805ba78a0ec9be857dfb96df866349df2bf963312933c663e5db98bd8443789dcf6457ca8f815404450946ef87562117d326c3a4423466c",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json"
+  },
+  "size": 29894960,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "8.0",
+  "version": "8.0.31",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-linux-arm.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-linux-arm.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-linux-arm.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "0a940d3320f4fc50d5554257be55b0f4b9a514a428571e42cc5d8f32a3de76363300b52014b36f021d8faaa13dbbfe5889395973b5fa8b476a42036f0c3de9a7",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json"
+  },
+  "size": 29516127,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "8.0",
+  "version": "8.0.31",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-osx-x64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-osx-x64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-osx-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "d74c7433ee31dd2a5d6672efafeeb2a2d43fa84b19b1d41e412acadfe04a4cd4046cddd51c0e1027df0a23fa6065887e0123a5c6540de1e731748d21ca75bdb6",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json"
+  },
+  "size": 30717675,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "8.0",
+  "version": "8.0.31",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-osx-arm64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-osx-arm64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-osx-arm64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "1963d2ab3798efdc2b33034ef57d4252849a066a2313ce62a574e556d19e5e981afe13c9545eb6d59437849723e1c8350f10f8068bcfa6b7a2815a07263bb8b3",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json"
+  },
+  "size": 29086664,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "8.0",
+  "version": "8.0.31",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-win-x64.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-win-x64.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-win-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "9c55c58694676ee64b0eed2cd6d8cbf58b9aa8288420acc66841e15ca0099c75d4af0182d23a641c2342e5a151a325df4a12fa0bde2e47c0fb7e9a33e7b09896",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json"
+  },
+  "size": 33322727,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "8.0",
+  "version": "8.0.31",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-win-arm64.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-win-arm64.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-win-arm64.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "4c01f325accb1abdea354b5a7c1422299c6d48b267dd86f4173962259542b25b8f2d19787be4b3753d7aaae9a99386fff9eb90581ffb6564e47bef932aaeeace",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json"
+  },
+  "size": 33203130,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "8.0",
+  "version": "8.0.31",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-win-x86.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-win-x86.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/8.0.31/dotnet-runtime-8.0.31-win-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "c8d8597dcbfa09fa267dde0e04d628360ade272f6ec1dc46f8896a58712bb6ec19e8b9ed1a9061786b99e3b4723cfb4c438e06268b1120c3a568bcae54551c9c",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json"
+  },
+  "size": 30566127,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "9.0",
+  "version": "9.0.20",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-linux-x64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-linux-x64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-linux-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "aaa63e9156fcc9d1c51e15fb38e3c5388a7721ef1b64065c8865b03133906e9de967ae33903c198c6acb9aa8bbae373e9001405074009c2ef2a0bb6e54b509a5",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json"
+  },
+  "size": 33522274,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "9.0",
+  "version": "9.0.20",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-linux-arm64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-linux-arm64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-linux-arm64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "73e2736de18c84e1e5aab71872fd8d48bf58bf7ee1f781a28089308db8d7d3f309700347afdb4ce3e7959a2a6cc54b0d1e46e5aa4cf14d9d87ea0d2a4496f589",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json"
+  },
+  "size": 31824525,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "9.0",
+  "version": "9.0.20",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-linux-arm.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-linux-arm.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-linux-arm.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "d19fd85f8ff2ab104223987b0a4225eef37ceb7322d4a1adaa050ee094e060adcf8e446ec4a4eea88264c4c5551d77d9b681d4a7f9d298a82f39ddd2cee55a29",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json"
+  },
+  "size": 31247450,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "9.0",
+  "version": "9.0.20",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-osx-x64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-osx-x64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-osx-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "b633e36f30af40d1f8114e6e377f93551286105ff4bb9f88713555983399edba7cca21ec7b86f74a6c1debb898c8ec63ecdb214b38866c56b63fac3ff8c3fd02",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json"
+  },
+  "size": 32738639,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "9.0",
+  "version": "9.0.20",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-osx-arm64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-osx-arm64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-osx-arm64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "5bb676b5bac2656eb7e8c847532505007b2154df0f6682e31b1681e35d1b757ca201559677c7e2bb197a6b7563bc584d7fcefb26344a9f8f2a390b41136a2702",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json"
+  },
+  "size": 30809560,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "9.0",
+  "version": "9.0.20",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-win-x64.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-win-x64.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-win-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "6f7241fab7a8003813c3c8a59005e368fe53525e3cf08ab1cc052103f2f422af6bd1b20b838c283283a8a709d52a6aea2379686fe6cb07cc0fa7119f2ef2b2bf",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json"
+  },
+  "size": 35977436,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "9.0",
+  "version": "9.0.20",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-win-arm64.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-win-arm64.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-win-arm64.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "9e8a6252d98f37fe035c7c642be479ea8b16db393e357ef248695c3f3cafb0656548d41e2e1a12d24ce62531f8190b48af02adb933bf25d5ecaa2a94415d2fc7",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json"
+  },
+  "size": 35776051,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "9.0",
+  "version": "9.0.20",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-win-x86.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-win-x86.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/9.0.20/dotnet-runtime-9.0.20-win-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "c9679d5606604ff2970064d6ab9470b3b50e14ceb0a5efa67b3ce9b9e3b24d9edda2af102ac99623a8a0c3b83b645608027ec36483d928c917e83d2d00a60811",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json"
+  },
+  "size": 32625921,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "10.0",
+  "version": "10.0.12",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-linux-x64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-linux-x64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-linux-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "58388fdde4f13bd703c7a6f7defb3300b17e42ba5fe8bca50066f80f64ac7406620dcdfb4acc1eff7992750c8cc5cff8369dd12d09730c8a9e8760d6032f7f6e",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json"
+  },
+  "size": 36638192,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "10.0",
+  "version": "10.0.12",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-linux-arm64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-linux-arm64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-linux-arm64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "ac1e0090391085ba70c7457adaaa8f6cc20dc216b9b368b4227a427de271708d783380c7b955b7be4897ff24849fbe5c3b7ec1cb1c38345a725de9a3812280eb",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json"
+  },
+  "size": 34397485,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "10.0",
+  "version": "10.0.12",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-linux-arm.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-linux-arm.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-linux-arm.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "e157228c9c69387e2d0b105cc6175e8c4212ec0e4d8d9cae2bec88ea69d5401e24a96e7f36bdeed68e765f4940735b46e12e686bbe0d4080de4f012bcf95743e",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json"
+  },
+  "size": 33852316,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "10.0",
+  "version": "10.0.12",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-osx-x64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-osx-x64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-osx-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "c5019357c9d8fbe30b49ec8f81ae85be56a784d8b4b75f470e931583c39e082773c089b39785b322770a298ab08636c6b30e695a2397fc311060f73c98743b48",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json"
+  },
+  "size": 35596837,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "10.0",
+  "version": "10.0.12",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-osx-arm64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-osx-arm64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-osx-arm64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "d1b422c2afecb5e741430584c3e1887d5e0f2df321a80d492fdd13d8c7f99579f0dbbf34e348bc512cb276f0f86b4645423a032ded52808b74ab8eb0d7bf2a6d",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json"
+  },
+  "size": 33249724,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "10.0",
+  "version": "10.0.12",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-win-x64.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-win-x64.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-win-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "844fa99e16fd6f44e0a7c29def7a82d7846902334d6a955248a9519a4dddb3f5acceb9c9223bef69f8c83b8ae2417537e5b76dddf79fb7117dc85b5039bc1297",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json"
+  },
+  "size": 36960258,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "10.0",
+  "version": "10.0.12",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-win-arm64.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-win-arm64.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-win-arm64.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "1f939a42c52919e789038fed6d410771eb41b5d0ff65c6dd117b200a5623a734cb6b2a25e00d4932d779b3bbe200f165977633d18fdb8dec03f9307527169c04",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json"
+  },
+  "size": 35304080,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "10.0",
+  "version": "10.0.12",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-win-x86.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-win-x86.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/10.0.12/dotnet-runtime-10.0.12-win-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "5c19bde0b37a780ee188ecdc338d334caeeb591d6e1f62c3f2a9757bcce7a14a9805359508c29436a56e494ef19167c2843e10e6bb06c1724005d8da874feab2",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json"
+  },
+  "size": 33958503,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet-framework",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "3.5",
+  "version": "3.5",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "exe",
+  "variant": null,
+  "libc": null,
+  "url": "https://download.visualstudio.microsoft.com/download/pr/b635098a-2d1d-4142-bef6-d237545123cb/2651b87007440a15209cac29634a4e45/dotnetfx35.exe",
+  "mirrors": [
+   "https://web.archive.org/web/2id_/https://download.visualstudio.microsoft.com/download/pr/b635098a-2d1d-4142-bef6-d237545123cb/2651b87007440a15209cac29634a4e45/dotnetfx35.exe"
+  ],
+  "checksum": null,
+  "size": 242885528,
+  "released": null,
+  "min_os": null,
+  "metadata_source": "https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net35-sp1-offline-installer",
+  "notes": "combined offline installer for .NET Framework 3.5 SP1, which also carries 2.0 SP2 and 3.0 SP2"
+ },
+ {
+  "runtime": "dotnet-framework",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "4.8.1",
+  "version": "4.8.1",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "exe",
+  "variant": null,
+  "libc": null,
+  "url": "https://download.microsoft.com/download/4/b/2/cd00d4ed-ebdd-49ee-8a33-eabc3d1030e3/NDP481-x86-x64-AllOS-ENU.exe",
+  "mirrors": [
+   "https://web.archive.org/web/2id_/https://download.microsoft.com/download/4/b/2/cd00d4ed-ebdd-49ee-8a33-eabc3d1030e3/NDP481-x86-x64-AllOS-ENU.exe"
+  ],
+  "checksum": null,
+  "size": 77688504,
+  "released": null,
+  "min_os": null,
+  "metadata_source": "https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net481-offline-installer",
+  "notes": "combined x86+x64 (\"AllOS\") offline installer",
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "c0ca2e0c9cd18a24a0a77369a13fae2c2c4e8bc83355dd24e5ddc00f9d791fe3",
+    "source": "winget Microsoft.DotNet.Framework.Runtime 4.8.1 (manifests/m/Microsoft/DotNet/Framework/Runtime/4.8.1/Microsoft.DotNet.Framework.Runtime.installer.yaml)"
+   }
+  ]
+ }
+]

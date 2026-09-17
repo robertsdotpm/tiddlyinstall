@@ -1,0 +1,634 @@
+[
+  {
+    "runtime": "php",
+    "major": "4.4",
+    "os": "windows",
+    "arch": "amd64",
+    "reason": "windows.php.net never shipped an x64 build for this branch (64-bit Windows PHP builds only began with the PHP 5.5 line)",
+    "looked_at": [
+      "https://windows.php.net/downloads/releases/archives/"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "4.4",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "4.4",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "4.4",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "4.4",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.0",
+    "os": "windows",
+    "arch": "amd64",
+    "reason": "windows.php.net never shipped an x64 build for this branch (64-bit Windows PHP builds only began with the PHP 5.5 line)",
+    "looked_at": [
+      "https://windows.php.net/downloads/releases/archives/"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.0",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.0",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.0",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.0",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.1",
+    "os": "windows",
+    "arch": "amd64",
+    "reason": "windows.php.net never shipped an x64 build for this branch (64-bit Windows PHP builds only began with the PHP 5.5 line)",
+    "looked_at": [
+      "https://windows.php.net/downloads/releases/archives/"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.1",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.1",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.1",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.1",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.2",
+    "os": "windows",
+    "arch": "amd64",
+    "reason": "windows.php.net never shipped an x64 build for this branch (64-bit Windows PHP builds only began with the PHP 5.5 line)",
+    "looked_at": [
+      "https://windows.php.net/downloads/releases/archives/"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.2",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.2",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.2",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.2",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.3",
+    "os": "windows",
+    "arch": "amd64",
+    "reason": "windows.php.net never shipped an x64 build for this branch (64-bit Windows PHP builds only began with the PHP 5.5 line)",
+    "looked_at": [
+      "https://windows.php.net/downloads/releases/archives/"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.3",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.3",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.3",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.3",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.4",
+    "os": "windows",
+    "arch": "amd64",
+    "reason": "windows.php.net never shipped an x64 build for this branch (64-bit Windows PHP builds only began with the PHP 5.5 line)",
+    "looked_at": [
+      "https://windows.php.net/downloads/releases/archives/"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.4",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.4",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.4",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.4",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.5",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.5",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.5",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.5",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.6",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.6",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.6",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "5.6",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "7.0",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "7.0",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "7.0",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "7.0",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "7.1",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "7.1",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "7.1",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "7.1",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "7.2",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "7.2",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "7.2",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "7.2",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "7.3",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "7.3",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "7.3",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "7.3",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "7.4",
+    "os": "linux",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "7.4",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "7.4",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  },
+  {
+    "runtime": "php",
+    "major": "7.4",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "php.net publishes no official Linux/macOS binaries; source only",
+    "looked_at": [
+      "https://www.php.net/downloads.php",
+      "https://dl.static-php.dev/static-php-cli/common/?format=json"
+    ]
+  }
+]

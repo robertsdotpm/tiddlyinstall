@@ -1,0 +1,280 @@
+[
+  {
+    "runtime": "nim",
+    "major": "0.8",
+    "os": "all",
+    "arch": "all",
+    "reason": "Predates the project's rename from 'Nimrod' to 'Nim' at v0.10.2 (2014); nim-lang.org has never hosted these (it postdates the rename) and the former nimrod-lang.org domain no longer resolves. No binaries or source could be located for this major.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.8.14.tar.xz",
+      "http://nimrod-lang.org/ (domain does not resolve)"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.9",
+    "os": "all",
+    "arch": "all",
+    "reason": "Predates the project's rename from 'Nimrod' to 'Nim' at v0.10.2 (2014); nim-lang.org has never hosted these (it postdates the rename) and the former nimrod-lang.org domain no longer resolves. No binaries or source could be located for this major.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.9.0.tar.xz",
+      "https://nim-lang.org/download/nim-0.9.2.tar.xz",
+      "https://nim-lang.org/download/nim-0.9.4.tar.xz",
+      "https://nim-lang.org/download/nim-0.9.6.tar.xz",
+      "http://nimrod-lang.org/ (domain does not resolve)"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.10",
+    "os": "linux",
+    "arch": "all",
+    "reason": "No Linux build found on nim-lang.org for any 0.10.x release (Linux binaries only began at 0.20.0); source build is the only option.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.10.2-linux_x64.tar.xz",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.10",
+    "os": "macos",
+    "arch": "all",
+    "reason": "nim-lang.org ships no official macOS binary for this major (confirmed by choosenim's own download.nim, which only builds a binary URL `when defined(Windows) or defined(linux)`), and no nim-lang/nightlies backport build for this version is linked from install.html either.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.10.2-macosx_x64.tar.xz",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.11",
+    "os": "linux",
+    "arch": "all",
+    "reason": "No Linux build found on nim-lang.org for any 0.11.x release (Linux binaries only began at 0.20.0); source build is the only option.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.11.2-linux_x64.tar.xz",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.11",
+    "os": "macos",
+    "arch": "all",
+    "reason": "nim-lang.org ships no official macOS binary for this major (confirmed by choosenim's own download.nim, which only builds a binary URL `when defined(Windows) or defined(linux)`), and no nim-lang/nightlies backport build for this version is linked from install.html either.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.11.2-macosx_x64.tar.xz",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.12",
+    "os": "linux",
+    "arch": "all",
+    "reason": "No Linux build found on nim-lang.org for any 0.12.x release (Linux binaries only began at 0.20.0); source build is the only option.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.12.0-linux_x64.tar.xz",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.12",
+    "os": "macos",
+    "arch": "all",
+    "reason": "nim-lang.org ships no official macOS binary for this major (confirmed by choosenim's own download.nim, which only builds a binary URL `when defined(Windows) or defined(linux)`), and no nim-lang/nightlies backport build for this version is linked from install.html either.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.12.0-macosx_x64.tar.xz",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.13",
+    "os": "linux",
+    "arch": "all",
+    "reason": "No Linux build found on nim-lang.org for any 0.13.x release (Linux binaries only began at 0.20.0); source build is the only option.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.13.0-linux_x64.tar.xz",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.13",
+    "os": "macos",
+    "arch": "all",
+    "reason": "nim-lang.org ships no official macOS binary for this major (confirmed by choosenim's own download.nim, which only builds a binary URL `when defined(Windows) or defined(linux)`), and no nim-lang/nightlies backport build for this version is linked from install.html either.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.13.0-macosx_x64.tar.xz",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.14",
+    "os": "linux",
+    "arch": "all",
+    "reason": "No Linux build found on nim-lang.org for any 0.14.x release (Linux binaries only began at 0.20.0); source build is the only option.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.14.2-linux_x64.tar.xz",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.14",
+    "os": "macos",
+    "arch": "all",
+    "reason": "nim-lang.org ships no official macOS binary for this major (confirmed by choosenim's own download.nim, which only builds a binary URL `when defined(Windows) or defined(linux)`), and no nim-lang/nightlies backport build for this version is linked from install.html either.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.14.2-macosx_x64.tar.xz",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.15",
+    "os": "linux",
+    "arch": "all",
+    "reason": "No Linux build found on nim-lang.org for any 0.15.x release (Linux binaries only began at 0.20.0); source build is the only option.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.15.2-linux_x64.tar.xz",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.15",
+    "os": "macos",
+    "arch": "all",
+    "reason": "nim-lang.org ships no official macOS binary for this major (confirmed by choosenim's own download.nim, which only builds a binary URL `when defined(Windows) or defined(linux)`), and no nim-lang/nightlies backport build for this version is linked from install.html either.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.15.2-macosx_x64.tar.xz",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.16",
+    "os": "linux",
+    "arch": "all",
+    "reason": "No Linux build found on nim-lang.org for any 0.16.x release (Linux binaries only began at 0.20.0); source build is the only option.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.16.0-linux_x64.tar.xz",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.16",
+    "os": "macos",
+    "arch": "all",
+    "reason": "nim-lang.org ships no official macOS binary for this major (confirmed by choosenim's own download.nim, which only builds a binary URL `when defined(Windows) or defined(linux)`), and no nim-lang/nightlies backport build for this version is linked from install.html either.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.16.0-macosx_x64.tar.xz",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.17",
+    "os": "windows",
+    "arch": "all",
+    "reason": "No Windows build (.zip/.exe) found on nim-lang.org for any 0.17.x release.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.17.2_x64.zip",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.17",
+    "os": "linux",
+    "arch": "all",
+    "reason": "No Linux build found on nim-lang.org for any 0.17.x release (Linux binaries only began at 0.20.0); source build is the only option.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.17.2-linux_x64.tar.xz",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.17",
+    "os": "macos",
+    "arch": "all",
+    "reason": "nim-lang.org ships no official macOS binary for this major (confirmed by choosenim's own download.nim, which only builds a binary URL `when defined(Windows) or defined(linux)`), and no nim-lang/nightlies backport build for this version is linked from install.html either.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.17.2-macosx_x64.tar.xz",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.18",
+    "os": "windows",
+    "arch": "all",
+    "reason": "No Windows build (.zip/.exe) found on nim-lang.org for any 0.18.x release.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.18.0_x64.zip",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.18",
+    "os": "linux",
+    "arch": "all",
+    "reason": "No Linux build found on nim-lang.org for any 0.18.x release (Linux binaries only began at 0.20.0); source build is the only option.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.18.0-linux_x64.tar.xz",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.18",
+    "os": "macos",
+    "arch": "all",
+    "reason": "nim-lang.org ships no official macOS binary for this major (confirmed by choosenim's own download.nim, which only builds a binary URL `when defined(Windows) or defined(linux)`), and no nim-lang/nightlies backport build for this version is linked from install.html either.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.18.0-macosx_x64.tar.xz",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.19",
+    "os": "linux",
+    "arch": "all",
+    "reason": "No Linux build found on nim-lang.org for any 0.19.x release (Linux binaries only began at 0.20.0); source build is the only option.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.19.6-linux_x64.tar.xz",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.19",
+    "os": "macos",
+    "arch": "all",
+    "reason": "nim-lang.org ships no official macOS binary for this major (confirmed by choosenim's own download.nim, which only builds a binary URL `when defined(Windows) or defined(linux)`), and no nim-lang/nightlies backport build for this version is linked from install.html either.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.19.6-macosx_x64.tar.xz",
+      "https://nim-lang.org/install.html"
+    ]
+  },
+  {
+    "runtime": "nim",
+    "major": "0.20",
+    "os": "macos",
+    "arch": "all",
+    "reason": "nim-lang.org ships no official macOS binary for this major (confirmed by choosenim's own download.nim, which only builds a binary URL `when defined(Windows) or defined(linux)`), and no nim-lang/nightlies backport build for this version is linked from install.html either.",
+    "looked_at": [
+      "https://nim-lang.org/download/nim-0.20.2-macosx_x64.tar.xz",
+      "https://nim-lang.org/install.html"
+    ]
+  }
+]

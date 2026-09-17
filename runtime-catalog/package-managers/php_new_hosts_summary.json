@@ -1,0 +1,24 @@
+[
+ {
+  "host": "mirror.nju.edu.cn",
+  "dirname": "php/",
+  "full_or_partial": "partial",
+  "matched": 436,
+  "total": 438,
+  "protocols": {
+   "https": true,
+   "http": true
+  }
+ },
+ {
+  "host": "mirrors.nju.edu.cn",
+  "dirname": "php/",
+  "full_or_partial": "partial",
+  "matched": 436,
+  "total": 438,
+  "protocols": {
+   "https": true,
+   "http": false
+  }
+ }
+]

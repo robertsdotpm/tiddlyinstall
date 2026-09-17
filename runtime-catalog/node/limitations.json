@@ -1,0 +1,751 @@
+{
+  "runtime": "node",
+  "languages": [
+    "javascript",
+    "typescript"
+  ],
+  "researched": "2026-09-17",
+  "sources": [
+    "https://raw.githubusercontent.com/nodejs/Release/main/schedule.json",
+    "https://github.com/nodejs/node/blob/main/BUILDING.md (fetched at tags v5.0.0, v6.0.0, v7.0.0, v8.0.0, v9.0.0, v10.0.0, v11.0.0, v12.0.0, v13.0.0, v14.0.0, v15.0.0, v16.0.0, v17.0.0, v18.0.0, v19.0.0, v20.0.0, v21.0.0, v22.0.0, v23.0.0, v24.0.0, v25.0.0, v26.0.0)",
+    "https://nodejs.org/en/blog/release/v26.0.0",
+    "https://nodejs.org/en/blog/release/v22.12.0",
+    "https://nodejs.org/api/typescript.html",
+    "https://nodejs.org/api/esm.html",
+    "https://nodejs.org/api/worker_threads.html",
+    "https://nodejs.org/api/corepack.html",
+    "https://github.com/nodejs/node/issues/3804",
+    "https://github.com/nodejs/corepack/issues/722",
+    "https://socket.dev/blog/node-js-tsc-votes-to-stop-distributing-corepack",
+    "https://joyeecheung.github.io/blog/2025/12/30/require-esm-in-node-js-from-experiment-to-stability/",
+    "https://iojs.org/en/index.html"
+  ],
+  "milestones": [
+    {
+      "capability": "package_manager_bundled",
+      "since": "0.8",
+      "notes": "npm has shipped bundled with the Node.js installer/tarball since the 0.6.x/0.8.x era"
+    },
+    {
+      "capability": "ipv6",
+      "since": "0.8",
+      "notes": "net/dgram/dns supported IPv6 from very early Node; not a per-major milestone worth tracking closely"
+    },
+    {
+      "capability": "64bit_windows",
+      "since": "0.10",
+      "notes": "official x64 Windows .msi/tarball added around 0.10; 0.8 was x86-only"
+    },
+    {
+      "capability": "tls_1_2",
+      "since": "4",
+      "notes": "reliable with the OpenSSL 1.0.2 bump at Node 4; present but flaky under 0.10/0.12's OpenSSL 1.0.1"
+    },
+    {
+      "capability": "async_await",
+      "since": "7.6",
+      "notes": "landed behind --harmony-async-await in 7.0, unflagged in 7.6.0"
+    },
+    {
+      "capability": "http2_client",
+      "since": "8",
+      "notes": "node:http2 added experimental behind --expose-http2 in 8.4.0, no flag needed from 8.8.0, marked stable in 10.10.0/10.13.0"
+    },
+    {
+      "capability": "modules",
+      "since": "8.5",
+      "notes": "ES modules usable behind --experimental-modules with .mjs from 8.5.0; flag no longer required from 12.17.0; package.json \"type\" field and .cjs/.mjs resolution settled by 13-14; require(esm) for synchronous CJS->ESM interop unflagged in 22.12.0/23"
+    },
+    {
+      "capability": "native_threads",
+      "since": "10.5",
+      "notes": "worker_threads added experimental behind --experimental-worker"
+    },
+    {
+      "capability": "true_parallelism",
+      "since": "12",
+      "notes": "worker_threads unflagged/stable in 12.11.0 -- first stable way to run JS on real OS threads, not just processes (cluster) or the single event-loop thread"
+    },
+    {
+      "capability": "tls_1_3",
+      "since": "12",
+      "notes": "OpenSSL 1.1.1 minimum; Node defaults the max negotiated protocol to TLSv1.3 when the peer supports it"
+    },
+    {
+      "capability": "unicode_default",
+      "since": "13",
+      "notes": "full ICU data bundled by default, replacing the old small-icu build -- Intl/String normalization work correctly for all locales out of the box"
+    },
+    {
+      "capability": "arm64_macos",
+      "since": "16",
+      "notes": "Apple Silicon (M1) support shipped Experimental at 16.0.0 GA, promoted to Tier 1 within the 16.x line and reflected as Tier 1 in BUILDING.md by 17.0.0"
+    },
+    {
+      "capability": "arm64_windows",
+      "since": "12",
+      "notes": "Windows-on-ARM64 has been Experimental since it first appeared in Node 12's platform table and had still not reached Tier 1 as of Node 26"
+    },
+    {
+      "capability": "arm64_linux",
+      "since": "4",
+      "notes": "arm64 GNU/Linux has been Tier 1 since the earliest tiered BUILDING.md tables (Node 6-8); believed Tier 1 already at the Node 4 reunification"
+    },
+    {
+      "capability": "http3_client",
+      "since": "23",
+      "notes": "LOW CONFIDENCE / from memory only, not independently verified this pass: an experimental node:quic module reappeared behind --experimental-quic around Node 23/24; Node has no HTTP/3 support in the fetch()/http client stack as of Node 26 researched here"
+    }
+  ],
+  "majors": [
+    {
+      "major": "0.8",
+      "released": "2012-06-25",
+      "end_of_life": "2014-07-31",
+      "os_support": {
+        "windows": "XP SP2+ / Server 2003+, x86 only via the 0.8.6+ .msi installer; no official x64 Windows build",
+        "macos": "10.5 (Leopard) and later, x64; built from source or an unofficial .pkg, no official installer",
+        "linux": "any glibc Linux built from source; official prebuilt x86/x64 tarballs did not arrive until 0.10"
+      },
+      "added": [
+        "first official Windows .msi installer (0.8.6+)",
+        "domains module for error propagation",
+        "cluster module (experimental)",
+        "npm bundled by default"
+      ],
+      "limitations": [
+        "no native Promises -- callbacks/EventEmitter only",
+        "no ES6/harmony syntax of any kind",
+        "V8 3.x -- no let/const/arrow functions even behind flags",
+        "no official 64-bit Windows binaries",
+        "no streams2 (original streams API only, notoriously hard to use correctly)"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "0.10",
+      "released": "2013-03-11",
+      "end_of_life": "2016-10-31",
+      "os_support": {
+        "windows": "XP+/Server 2003+, official x86 and (new) x64 installers",
+        "macos": "10.5+, x64",
+        "linux": "glibc Linux, official prebuilt x86/x64 tarballs introduced"
+      },
+      "added": [
+        "streams2 API",
+        "official prebuilt binary tarballs for Linux/SunOS",
+        "official x64 Windows installer",
+        "domains stabilized"
+      ],
+      "limitations": [
+        "no native Promises without --harmony (added very late in this line's life)",
+        "no ES6 syntax without --harmony flags",
+        "callback-only core APIs",
+        "cluster has no built-in sticky-session load balancing"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "0.12",
+      "released": "2015-02-06",
+      "end_of_life": "2016-12-31",
+      "os_support": {
+        "windows": "XP/Vista+ (last Node.js line released while XP/Vista were still officially supported targets)",
+        "macos": "10.5+, x64",
+        "linux": "glibc Linux, prebuilt x86/x64 tarballs"
+      },
+      "added": [
+        "native V8 Promises unflagged",
+        "streams3",
+        "TLS SNI support",
+        "partial ES6 behind --harmony (classes, let/const experimental)"
+      ],
+      "limitations": [
+        "async/await does not exist -- generators + a library like co are the state of the art",
+        "ES modules do not exist",
+        "no worker_threads (child_process/cluster only)",
+        "OpenSSL 1.0.1 -- no TLS 1.3, weak default cipher list by modern standards"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "1",
+      "released": "2015-02-13",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Vista and later (matching Node 0.12 at the io.js fork point)",
+        "macos": "10.7+",
+        "linux": "glibc Linux, x86/x64/arm"
+      },
+      "added": [
+        "forked from Node.js 0.10/0.12 core by contributors wanting a faster release cadence and current V8",
+        "more ES6 unflagged than Node 0.12 at the time"
+      ],
+      "limitations": [
+        "no async/await",
+        "no ES modules",
+        "no worker_threads",
+        "this was io.js, not Node.js -- a separate project/brand until the 2015-09-08 merger",
+        "lived under 3 months before io.js 2.0.0 superseded it"
+      ],
+      "confidence": "medium",
+      "notes": "io.js major, not a Node.js major. Merged back into the Node.js Foundation as Node.js 4.0.0 on 2015-09-08; treat 'end_of_life' as that merger date in practice."
+    },
+    {
+      "major": "2",
+      "released": "2015-05-04",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Vista and later",
+        "macos": "10.7+",
+        "linux": "glibc Linux, x86/x64/arm"
+      },
+      "added": [
+        "V8 4.2 -- more ES6 (template literals, destructuring) available, some still behind --harmony",
+        "npm updated ahead of what Node 0.12 shipped"
+      ],
+      "limitations": [
+        "no async/await",
+        "no ES modules",
+        "no worker_threads",
+        "io.js, not Node.js",
+        "superseded by io.js 3.0.0 after about 3 months"
+      ],
+      "confidence": "medium",
+      "notes": "io.js major. See note on major \"1\" about the 2015-09-08 merger into Node.js 4.0.0."
+    },
+    {
+      "major": "3",
+      "released": "2015-08-04",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Vista and later",
+        "macos": "10.7+",
+        "linux": "glibc Linux, x86/x64/arm"
+      },
+      "added": [
+        "V8 4.4",
+        "OpenSSL 1.0.2 upgrade -- one of the changes carried directly into the Node 4 reunification"
+      ],
+      "limitations": [
+        "no async/await",
+        "no ES modules",
+        "no worker_threads",
+        "io.js, not Node.js",
+        "shortest-lived io.js major -- about 5 weeks before the Node.js 4.0.0 merger"
+      ],
+      "confidence": "medium",
+      "notes": "io.js major, the last one; merged into Node.js 4.0.0 on 2015-09-08."
+    },
+    {
+      "major": "4",
+      "released": "2015-09-08",
+      "end_of_life": "2018-04-30",
+      "os_support": {
+        "windows": "XP/Vista/7/8/8.1/10, x86 and x64 (XP/Vista support continued past this release -- it was not dropped until Node 6.0.0)",
+        "macos": "10.7+ officially, Tier 1 x64",
+        "linux": "glibc Linux x64/x86, arm64 promoted to full support at the io.js/Node.js reunification"
+      },
+      "added": [
+        "reunification of io.js and Node.js under the Node.js Foundation",
+        "~half of ES2015 unflagged: let/const, classes, arrow functions, template literals, Map/Set",
+        "arm64 Linux support",
+        "V8 4.5",
+        "npm 2 -> 3 mid-life"
+      ],
+      "limitations": [
+        "no async/await (needs 7.6)",
+        "no native ES modules",
+        "no worker_threads -- cluster/child_process are the only concurrency primitives",
+        "still officially supports Windows XP and Vista even though Microsoft had already end-of-lifed XP"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "5",
+      "released": "2015-10-29",
+      "end_of_life": "2016-06-30",
+      "os_support": {
+        "windows": "XP/Vista/7/8/8.1/10, x86/x64 (same floor as 4)",
+        "macos": "10.7+",
+        "linux": "glibc Linux x64/x86/arm64"
+      },
+      "added": [
+        "V8 4.6/4.8 -- more ES2015 (Proxy, Reflect, spread in function calls)",
+        "npm 3 as the default bundled version"
+      ],
+      "limitations": [
+        "no async/await",
+        "no ES modules",
+        "no worker_threads",
+        "never received LTS status -- 8-month lifespan, EOL before Node 6 even shipped its first LTS build"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "6",
+      "released": "2016-04-26",
+      "end_of_life": "2019-04-30",
+      "os_support": {
+        "windows": "Windows 7/Server 2008 R2 and later, x86/x64 (Windows XP and Vista support dropped in this release)",
+        "macos": "10.10+, Tier 1 x64 (formal BUILDING.md tier table introduced this release)",
+        "linux": "Tier 1: kernel >=2.6.32, glibc >=2.12, x64/arm; arm64 kernel >=3.10; Tier 2: ppc64le, s390x, AIX >=7.1 TL04; FreeBSD >=10"
+      },
+      "added": [
+        "official tiered BUILDING.md platform-support table introduced",
+        "~93% of ES2015 unflagged (V8 5.0)",
+        "npm 3.10",
+        "Buffer(num) deprecation warnings begin (precursor to Buffer.alloc)"
+      ],
+      "limitations": [
+        "no async/await (needs 7.6)",
+        "no ES modules",
+        "no worker_threads",
+        "Windows XP and Vista officially dropped as of this release -- 4.x/5.x had still supported them"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "7",
+      "released": "2016-10-25",
+      "end_of_life": "2017-06-30",
+      "os_support": {
+        "windows": "Windows 7/2008 R2+, x86/x64 (same floor as 6)",
+        "macos": "10.10+",
+        "linux": "same tiers as 6: kernel >=2.6.32/glibc >=2.12 x64/arm, arm64 kernel >=3.10, ppc64le/s390x/AIX Tier 2"
+      },
+      "added": [
+        "async/await landed behind --harmony-async-await at 7.0.0, unflagged in 7.6.0 -- the version most guides cite as \"async/await support\"",
+        "V8 5.4/5.5"
+      ],
+      "limitations": [
+        "async/await needs a runtime flag until 7.6.0",
+        "no ES modules",
+        "no worker_threads",
+        "non-LTS, 8-month lifespan"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "8",
+      "released": "2017-05-30",
+      "end_of_life": "2019-12-31",
+      "os_support": {
+        "windows": "Windows 7/2008 R2+, x86/x64 (Tier 1, vs2015 or vs2017 toolchain)",
+        "macos": "10.10+ Tier 1 x64; 10.8-10.10 Experimental, no test coverage",
+        "linux": "Tier 1: kernel >=2.6.32, glibc >=2.12, x64/arm; arm64 kernel >=3.10; Tier 2: ppc64le >=power8, s390x, AIX >=7.1 TL04; Experimental: musl (Alpine) x64"
+      },
+      "added": [
+        "async/await unflagged (carried over from 7.6)",
+        "util.promisify",
+        "N-API introduced, experimental",
+        "node:http2 added experimental behind --expose-http2 in 8.4.0, no flag needed from 8.8.0",
+        "ES modules usable behind --experimental-modules with .mjs from 8.5.0"
+      ],
+      "limitations": [
+        "ES modules require the --experimental-modules flag and .mjs extension",
+        "N-API is experimental -- no ABI stability guarantee yet",
+        "http2 is experimental and warns",
+        "no worker_threads",
+        "OpenSSL 1.0.2 -- no TLS 1.3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "9",
+      "released": "2017-10-01",
+      "end_of_life": "2018-06-30",
+      "os_support": {
+        "windows": "Windows 7/2008 R2+, x86/x64",
+        "macos": "10.10+ Tier 1",
+        "linux": "same tiers as 8"
+      },
+      "added": [
+        "V8 6.2, tighter spec compliance (well-formed JSON.stringify, Promise.prototype.finally)"
+      ],
+      "limitations": [
+        "ES modules still flagged/experimental",
+        "N-API still experimental",
+        "no worker_threads",
+        "OpenSSL 1.0.2, no TLS 1.3",
+        "non-LTS, 8-month lifespan, never received LTS"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "10",
+      "released": "2018-04-24",
+      "end_of_life": "2021-04-30",
+      "os_support": {
+        "windows": "Windows 7/2008 R2/2012 R2+, x86/x64, Tier 1",
+        "macos": "10.11+ Tier 1 x64",
+        "linux": "Tier 1: kernel >=3.10, glibc >=2.17, x64; arm64 kernel >=4.5; armv7 kernel >=4.14; x86 downgraded to Experimental as of this release; Tier 2: ppc64le, s390x, AIX >=7.1 TL02"
+      },
+      "added": [
+        "N-API marked stable (out of experimental)",
+        "worker_threads added, experimental, behind --experimental-worker",
+        "node:http2 marked stable",
+        "OpenSSL upgraded to 1.1.0 -- first Node line to do so",
+        "trace_events and perf_hooks"
+      ],
+      "limitations": [
+        "worker_threads still needs --experimental-worker and is experimental",
+        "ES modules still need --experimental-modules",
+        "no TLS 1.3 (OpenSSL 1.1.0 doesn't have it -- needs 1.1.1)",
+        "32-bit Linux (x86) downgraded from Tier 1 to Experimental this release"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "11",
+      "released": "2018-10-23",
+      "end_of_life": "2019-06-01",
+      "os_support": {
+        "windows": "Windows 7/2008 R2/2012 R2+, x86/x64, Tier 1",
+        "macos": "10.11+ Tier 1",
+        "linux": "same tiers as 10; FreeBSD bumped to >=11"
+      },
+      "added": [
+        "V8 7.0 -- Array.prototype.flat/flatMap, Object.fromEntries",
+        "worker_threads still experimental behind a flag"
+      ],
+      "limitations": [
+        "worker_threads not yet stable",
+        "ES modules still flagged",
+        "no TLS 1.3",
+        "non-LTS, 8-month lifespan"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "12",
+      "released": "2019-04-23",
+      "end_of_life": "2022-04-30",
+      "os_support": {
+        "windows": "Windows 7/2008 R2/2012 R2+, x86/x64 Tier 1; arm64 Windows appears for the first time, Experimental, >=Windows 10",
+        "macos": "10.11+ Tier 1 x64",
+        "linux": "same Tier 1/2 layout as 10-11"
+      },
+      "added": [
+        "worker_threads unflagged/stable (12.11.0) -- first stable true-parallelism primitive",
+        "TLS 1.3 supported and preferred by default when the peer supports it (OpenSSL 1.1.1)",
+        "ES modules usable without --experimental-modules from 12.17.0 (still prints an ExperimentalWarning)",
+        "arm64 Windows support begins, Experimental",
+        "experimental diagnostic report (--report)"
+      ],
+      "limitations": [
+        "ES modules still print ExperimentalWarning",
+        "N-API version 4 only",
+        "arm64 Windows is Experimental only",
+        "no global fetch (needs 18)",
+        "no require(esm) (needs 22.12)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "13",
+      "released": "2019-10-22",
+      "end_of_life": "2020-06-01",
+      "os_support": {
+        "windows": "floor raised to Windows 8.1/2012 R2+ Tier 1; Windows 7 and plain Server 2012 (non-R2) demoted to Experimental -- Windows 7 support effectively dropped here",
+        "macos": "floor raised to 10.13+ Tier 1",
+        "linux": "same Tier 1/2 layout as 12; FreeBSD downgraded to Experimental as of Node 12"
+      },
+      "added": [
+        "full ICU bundled by default (replacing small-icu) -- correct Intl/Unicode behavior for all locales without a custom build",
+        "ES module resolution (package.json \"type\", .cjs/.mjs) stabilizing"
+      ],
+      "limitations": [
+        "Windows 7 / Server 2012 (non-R2) demoted to Experimental -- no longer an officially supported target",
+        "ES modules still experimental with warnings",
+        "worker_threads: no structured-clone support for every JS type yet"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "14",
+      "released": "2020-04-21",
+      "end_of_life": "2023-04-30",
+      "os_support": {
+        "windows": "Windows 8.1/2012 R2+ Tier 1 (unchanged from 13)",
+        "macos": "10.13+ Tier 1",
+        "linux": "same Tier 1/2 layout as 13"
+      },
+      "added": [
+        "--experimental-modules flag requirement fully removed (import/export just work), though parts of ESM resolution remained experimental/warned",
+        "diagnostic report and AsyncLocalStorage marked stable",
+        "V8 8.1 -- optional chaining ?. and nullish coalescing ?? unflagged",
+        "npm 6 continued for most of this line's life (npm 7 was not backported by default)"
+      ],
+      "limitations": [
+        "dynamic import() / ESM loader hooks still experimental",
+        "top-level await not yet available outside ESM tricks",
+        "Windows 8.1/2012 R2 remains the floor -- unchanged from 13",
+        "no worker_threads structured-clone parity with the main thread for all types"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "15",
+      "released": "2020-10-20",
+      "end_of_life": "2021-06-01",
+      "os_support": {
+        "windows": "Windows 8.1/2012 R2+ Tier 1 (no bump yet -- that happens at 16)",
+        "macos": "10.13+ Tier 1, x64 only -- no arm64 row at all (pre-Apple-Silicon)",
+        "linux": "same Tier 1/2 layout as 14"
+      },
+      "added": [
+        "npm 7 bundled by default -- workspaces, automatic peer-dependency installation, and a new lockfile format",
+        "AbortController global, unflagged",
+        "N-API version 7"
+      ],
+      "limitations": [
+        "still no fetch or global Web Streams",
+        "no Apple Silicon support at all -- Mac binaries are x64-only and must run under Rosetta on M1 hardware",
+        "non-LTS, 8-month lifespan"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "16",
+      "released": "2021-04-20",
+      "end_of_life": "2023-09-11",
+      "os_support": {
+        "windows": "floor raised to Windows 10/Server 2016+ Tier 1; Windows 8.1/2012 R2 demoted to Experimental",
+        "macos": "x64 Tier 1 >=10.15; arm64 (Apple Silicon) appears for the first time, Experimental, >=11 -- promoted to Tier 1 later within the 16.x line",
+        "linux": "same Tier 1/2 layout as prior majors"
+      },
+      "added": [
+        "Apple Silicon (arm64 macOS) support, experimental at GA and promoted to Tier 1 during the 16.x LTS life",
+        "corepack shipped experimental (16.9.0), bundling pnpm/yarn shims behind `corepack enable`",
+        "experimental Web Crypto API (RSA-PSS etc.)",
+        "N-API version 8",
+        "V8 9.0 -- Array.prototype.at"
+      ],
+      "limitations": [
+        "Windows 8.1/Server 2012 R2 demoted to Experimental -- Windows 10+ is now the supported floor",
+        "Apple Silicon builds are Experimental at the initial 16.0.0 release",
+        "no global fetch yet",
+        "corepack itself is experimental and opt-in via `corepack enable`"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "17",
+      "released": "2021-10-19",
+      "end_of_life": "2022-06-01",
+      "os_support": {
+        "windows": "Windows 10/Server 2016+ Tier 1 (unchanged from 16)",
+        "macos": "arm64 promoted to Tier 1 (>=11); x64 Tier 1 >=10.15",
+        "linux": "same layout as 16; FreeBSD >=12.2"
+      },
+      "added": [
+        "OpenSSL 3.0 becomes the default (up from 1.1.1) -- new provider architecture",
+        "Apple Silicon reaches Tier 1",
+        "experimental global structuredClone()",
+        "V8 9.5"
+      ],
+      "limitations": [
+        "OpenSSL 3.0 breaks some legacy crypto usage (certain algorithms/PBKDF configs) unless --openssl-legacy-provider is passed",
+        "no global fetch yet",
+        "non-LTS, 6-month lifespan"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "18",
+      "released": "2022-04-19",
+      "end_of_life": "2025-04-30",
+      "os_support": {
+        "windows": "Windows 10/Server 2016+ Tier 1",
+        "macos": "x64 Tier 1 >=10.15; arm64 Tier 1 >=11 (floors unchanged from 17)",
+        "linux": "same Tier 1/2 layout as 16-17"
+      },
+      "added": [
+        "global fetch API available without a flag but marked experimental (undici-based)",
+        "Web Streams globals (ReadableStream, WritableStream, TransformStream) unflagged",
+        "node:test experimental test runner",
+        "global Headers/Request/Response/FormData/Blob"
+      ],
+      "limitations": [
+        "fetch is experimental and prints a warning; no HTTP proxy support in fetch",
+        "OpenSSL 3 legacy-provider friction persists for some crypto users",
+        "still needs `corepack enable` for pnpm/yarn",
+        "Intel Mac floor (10.15) had not risen to match Apple Silicon's 11 yet"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "19",
+      "released": "2022-10-18",
+      "end_of_life": "2023-06-01",
+      "os_support": {
+        "windows": "Windows 10/Server 2016+ Tier 1",
+        "macos": "x64 Tier 1 >=10.15; arm64 Tier 1 >=11 (unchanged from 18)",
+        "linux": "same layout as 18"
+      },
+      "added": [
+        "fetch keep-alive behavior improvements via undici",
+        "V8 10.7 -- experimental Array grouping"
+      ],
+      "limitations": [
+        "fetch still experimental (stable only from 21)",
+        "no require(esm) yet",
+        "non-LTS, 8-month lifespan"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "20",
+      "released": "2023-04-18",
+      "end_of_life": "2026-04-30",
+      "os_support": {
+        "windows": "Windows 10/Server 2016+ Tier 1",
+        "macos": "floor raised to >=11.0 Tier 1 for BOTH x64 and arm64 (10.15 dropped)",
+        "linux": "same Tier 1/2 layout as 16-19"
+      },
+      "added": [
+        "experimental permission model (--experimental-permission)",
+        "experimental single executable applications (SEA)",
+        "experimental WebSocket client (undici-based)",
+        "V8 11.3"
+      ],
+      "limitations": [
+        "fetch remains experimental until 21",
+        "permission model experimental and incomplete (not all subsystems honor it)",
+        "macOS 10.15 (Catalina) support dropped -- 11+ required from here on"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "21",
+      "released": "2023-10-17",
+      "end_of_life": "2024-06-01",
+      "os_support": {
+        "windows": "Windows 10/Server 2016+ Tier 1",
+        "macos": ">=11.0 Tier 1 for x64 and arm64 (unchanged from 20)",
+        "linux": "same layout as 20"
+      },
+      "added": [
+        "global fetch marked STABLE (warning removed)",
+        "WebSocket client marked stable",
+        "import attributes (`with { type: \"json\" }`) replace the older import-assertions syntax for JSON modules",
+        "V8 11.8"
+      ],
+      "limitations": [
+        "non-LTS, 8-month lifespan",
+        "no require(esm) yet -- CommonJS still cannot require() a synchronous ESM-only package"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "22",
+      "released": "2024-04-24",
+      "end_of_life": "2027-04-30",
+      "os_support": {
+        "windows": "Windows 10/Server 2016+ Tier 1 (x86/WoW64 rows still nominally present in BUILDING.md at GA, but on the way out)",
+        "macos": ">=11.0 Tier 1 for x64 and arm64",
+        "linux": "same Tier 1/2 layout as prior majors, plus loong64 added as Experimental"
+      },
+      "added": [
+        "require(esm): experimental support for require()-ing a synchronous ES module",
+        "--experimental-strip-types added in 22.6.0 -- run .ts files directly by stripping type annotations, no type-checking",
+        "--experimental-transform-types added in 22.7.0 for constructs stripping can't handle (enums, namespaces, parameter properties)",
+        "watch mode (--watch) marked stable"
+      ],
+      "limitations": [
+        "require(esm) still needed a flag at GA (unflagged later, in 22.12.0)",
+        "TypeScript support is type-stripping only, never type-checking, and only through experimental flags at this point",
+        "32-bit Windows support was still nominally present but was dropped two majors later, at 24"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "23",
+      "released": "2024-10-16",
+      "end_of_life": "2025-06-01",
+      "os_support": {
+        "windows": "Windows 10/Server 2016+ Tier 1 (still lists x86/WoW64)",
+        "macos": ">=11.0 Tier 1 for x64 and arm64",
+        "linux": "same layout as 22"
+      },
+      "added": [
+        "require(esm) and --experimental-strip-types both unflagged/stable in 23.6.0 -- Node natively runs .ts files with no CLI flag needed",
+        "V8 12.9"
+      ],
+      "limitations": [
+        "still no type-checking -- type-stripping only",
+        "enums, namespaces, and experimental decorators still need the separate --experimental-transform-types flag",
+        "non-LTS, 8-month lifespan"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "24",
+      "released": "2025-05-06",
+      "end_of_life": "2028-04-30",
+      "os_support": {
+        "windows": "floor unchanged at Windows 10/Server 2016+, but 32-bit Windows (x86/WoW64) is REMOVED entirely -- Windows x64 (Tier 1) and arm64 (Tier 2) only from here on",
+        "macos": "floor raised sharply to >=13.5 (Ventura, a later patch) for both x64 and arm64 -- 11.0-13.4 dropped",
+        "linux": "x64/arm64 Tier 1 unchanged; 32-bit ARM (armv7) downgraded from Tier 1 to Experimental"
+      },
+      "added": [
+        "TypeScript type stripping is the default for .ts files, no flag needed (still no type-checking)",
+        "npm 11 bundled",
+        "URLPattern global marked stable",
+        "V8 13.6"
+      ],
+      "limitations": [
+        "32-bit Windows (x86) is no longer an officially supported platform at all",
+        "32-bit ARM Linux (armv7) downgraded to Experimental",
+        "macOS 11-13.4 no longer supported -- 13.5 is the new floor, a much bigger jump than prior majors",
+        "type stripping still can't type-check or handle enums/namespaces without --experimental-transform-types"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "25",
+      "released": "2025-10-15",
+      "end_of_life": "2026-06-01",
+      "os_support": {
+        "windows": "Windows x64 Tier 1 / arm64 Tier 2 only (unchanged from 24)",
+        "macos": ">=13.5 Tier 1 for x64 and arm64 (unchanged from 24)",
+        "linux": "same as 24, plus OpenHarmony arm64 added as an Experimental target"
+      },
+      "added": [
+        "V8 13.9",
+        "OpenHarmony experimental platform target added"
+      ],
+      "limitations": [
+        "corepack is no longer distributed with Node.js by default -- `npm install -g corepack` (or a package manager's own installer) is now required; this ends the bundling era that ran from 14.19/16.9 through 24.x and will break CI/Docker images that assumed `corepack enable` just worked",
+        "non-LTS, 8-month lifespan"
+      ],
+      "confidence": "high",
+      "notes": "Corepack removal confirmed via the nodejs/corepack GitHub issue tracker and Socket.dev coverage of the TSC vote; the platform table itself is high confidence (fetched directly from BUILDING.md at the v25.0.0 tag)."
+    },
+    {
+      "major": "26",
+      "released": "2026-05-05",
+      "end_of_life": "2029-04-30",
+      "os_support": {
+        "windows": "Windows x64 Tier 1 / arm64 Tier 2 only (unchanged from 24-25)",
+        "macos": ">=13.5 Tier 1 for x64 and arm64 (unchanged from 24-25)",
+        "linux": "x64/arm64 Tier 1 unchanged; ppc64le and AIX minimum raised from Power8 to Power9; s390x minimum raised to z14; riscv64 added as a new Experimental target alongside loong64"
+      },
+      "added": [
+        "Temporal API enabled by default -- a modern date/time API intended to replace much of the ad hoc Date/moment.js/date-fns usage",
+        "V8 14.6 -- Map/WeakMap getOrInsert()/getOrInsertComputed(), Iterator.concat()",
+        "Undici 8.0.2 HTTP client updates",
+        "riscv64 Linux experimental target"
+      ],
+      "limitations": [
+        "http.Server.prototype.writeHeader() and the legacy internal _stream_* modules (_stream_wrap, _stream_readable, _stream_writable, _stream_duplex, _stream_transform, _stream_passthrough) are removed entirely -- old shims/polyfills touching them break",
+        "module.register() is now runtime-deprecated ahead of eventual removal",
+        "older POWER8 and pre-z14 mainframe hardware can no longer run official builds -- the AIX/ppc64/s390x floors were raised",
+        "as of this research date (2026-09-17) Node 26 is still Current-only -- it does not enter LTS until 2026-10-28, so treating it as production-stable ahead of that date is premature"
+      ],
+      "confidence": "medium",
+      "notes": "Newest major in scope, only ~4.5 months old at research time. Platform table is high confidence (fetched directly from BUILDING.md at the v26.0.0 tag); the feature/deprecation list comes from the nodejs.org v26.0.0 blog post (a primary source, but not yet cross-checked against a full changelog or field experience the way older majors could be)."
+    }
+  ]
+}

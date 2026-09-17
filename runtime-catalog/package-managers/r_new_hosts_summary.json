@@ -1,0 +1,233 @@
+[
+ {
+  "host": "ca.mirrors.cicku.me",
+  "dirname": "CRAN/",
+  "full_or_partial": "full",
+  "matched": 200,
+  "total": 200,
+  "protocols": {
+   "https": true,
+   "http": false
+  }
+ },
+ {
+  "host": "ftp.kaist.ac.kr",
+  "dirname": "CRAN/",
+  "full_or_partial": "full",
+  "matched": 200,
+  "total": 200,
+  "protocols": {
+   "https": true,
+   "http": false
+  }
+ },
+ {
+  "host": "ftp.uni-sofia.bg",
+  "dirname": "CRAN/",
+  "full_or_partial": "full",
+  "matched": 200,
+  "total": 200,
+  "protocols": {
+   "https": true,
+   "http": false
+  }
+ },
+ {
+  "host": "mirror-hk.koddos.net",
+  "dirname": "CRAN/",
+  "full_or_partial": "full",
+  "matched": 200,
+  "total": 200,
+  "protocols": {
+   "https": true,
+   "http": false
+  }
+ },
+ {
+  "host": "mirror.clientvps.com",
+  "dirname": "CRAN/",
+  "full_or_partial": "full",
+  "matched": 200,
+  "total": 200,
+  "protocols": {
+   "https": true,
+   "http": false
+  }
+ },
+ {
+  "host": "mirror.cedia.org.ec",
+  "dirname": "CRAN/",
+  "full_or_partial": "full",
+  "matched": 200,
+  "total": 200,
+  "protocols": {
+   "https": true,
+   "http": false
+  }
+ },
+ {
+  "host": "mirror.lyrahosting.com",
+  "dirname": "CRAN/",
+  "full_or_partial": "full",
+  "matched": 200,
+  "total": 200,
+  "protocols": {
+   "https": true,
+   "http": true
+  }
+ },
+ {
+  "host": "mirror.lzu.edu.cn",
+  "dirname": "CRAN/",
+  "full_or_partial": "full",
+  "matched": 200,
+  "total": 200,
+  "protocols": {
+   "https": true,
+   "http": false
+  }
+ },
+ {
+  "host": "mirror.nju.edu.cn",
+  "dirname": "CRAN/",
+  "full_or_partial": "full",
+  "matched": 200,
+  "total": 200,
+  "protocols": {
+   "https": true,
+   "http": true
+  }
+ },
+ {
+  "host": "mirror.nyist.edu.cn",
+  "dirname": "CRAN/",
+  "full_or_partial": "full",
+  "matched": 200,
+  "total": 200,
+  "protocols": {
+   "https": true,
+   "http": false
+  }
+ },
+ {
+  "host": "mirror.twds.com.tw",
+  "dirname": "CRAN/",
+  "full_or_partial": "full",
+  "matched": 200,
+  "total": 200,
+  "protocols": {
+   "https": true,
+   "http": false
+  }
+ },
+ {
+  "host": "mirrors.bfsu.edu.cn",
+  "dirname": "CRAN/",
+  "full_or_partial": "full",
+  "matched": 200,
+  "total": 200,
+  "protocols": {
+   "https": true,
+   "http": false
+  }
+ },
+ {
+  "host": "mirrors.aliyun.com",
+  "dirname": "CRAN/",
+  "full_or_partial": "full",
+  "matched": 200,
+  "total": 200,
+  "protocols": {
+   "https": true,
+   "http": false
+  }
+ },
+ {
+  "host": "mirrors.cloud.tencent.com",
+  "dirname": "CRAN/",
+  "full_or_partial": "partial",
+  "matched": 179,
+  "total": 200,
+  "protocols": {
+   "https": true,
+   "http": false
+  }
+ },
+ {
+  "host": "mirrors.hust.edu.cn",
+  "dirname": "CRAN/",
+  "full_or_partial": "full",
+  "matched": 200,
+  "total": 200,
+  "protocols": {
+   "https": true,
+   "http": true
+  }
+ },
+ {
+  "host": "mirrors.nju.edu.cn",
+  "dirname": "CRAN/",
+  "full_or_partial": "full",
+  "matched": 200,
+  "total": 200,
+  "protocols": {
+   "https": true,
+   "http": true
+  }
+ },
+ {
+  "host": "mirrors.rit.edu",
+  "dirname": "CRAN/",
+  "full_or_partial": "full",
+  "matched": 200,
+  "total": 200,
+  "protocols": {
+   "https": true,
+   "http": false
+  }
+ },
+ {
+  "host": "mirrors.sjtug.sjtu.edu.cn",
+  "dirname": "CRAN/",
+  "full_or_partial": "full",
+  "matched": 200,
+  "total": 200,
+  "protocols": {
+   "https": true,
+   "http": false
+  }
+ },
+ {
+  "host": "mirrors.ustc.edu.cn",
+  "dirname": "CRAN/",
+  "full_or_partial": "full",
+  "matched": 200,
+  "total": 200,
+  "protocols": {
+   "https": true,
+   "http": false
+  }
+ },
+ {
+  "host": "mirrors.qlu.edu.cn",
+  "dirname": "CRAN/",
+  "full_or_partial": "full",
+  "matched": 200,
+  "total": 200,
+  "protocols": {
+   "https": true,
+   "http": false
+  }
+ },
+ {
+  "host": "us.mirrors.cicku.me",
+  "dirname": "CRAN/",
+  "full_or_partial": "full",
+  "matched": 200,
+  "total": 200,
+  "protocols": {
+   "https": true,
+   "http": false
+  }
+ }
+]

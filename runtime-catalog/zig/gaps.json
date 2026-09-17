@@ -1,0 +1,35 @@
+[
+  {
+    "runtime": "zig",
+    "major": "0.10",
+    "os": "windows",
+    "arch": "x86",
+    "reason": "ziglang.org's index has no windows/x86 (i386-windows / x86-windows) build for either 0.10.0 or 0.10.1, the only two patches in this major. 32-bit Windows was shipped continuously from 0.6.0 through 0.9.1 (as \"i386-windows\") and comes back at 0.11.0 (renamed \"x86-windows\"), so this looks like a real gap in the 0.10 line rather than a target that didn't exist yet.",
+    "looked_at": [
+      "https://ziglang.org/download/index.json",
+      "https://ziglang.org/download/"
+    ]
+  },
+  {
+    "runtime": "zig",
+    "major": "0.14",
+    "os": "freebsd",
+    "arch": "amd64",
+    "reason": "ziglang.org's index has no freebsd/amd64 (x86_64-freebsd) build for either 0.14.0 or 0.14.1, the only two patches in this major. x86_64-freebsd is present continuously from 0.11.0 through 0.13.0 and comes back at 0.15.1, so this looks like a real gap in the 0.14 line.",
+    "looked_at": [
+      "https://ziglang.org/download/index.json",
+      "https://ziglang.org/download/"
+    ]
+  },
+  {
+    "runtime": "zig",
+    "major": "0.16",
+    "os": "freebsd",
+    "arch": "ppc64",
+    "reason": "ziglang.org's index has no freebsd/ppc64 (powerpc64-freebsd) build for 0.16.0, the only patch in this major so far. powerpc64-freebsd was newly added at 0.15.1 and is present in both 0.15.1 and 0.15.2, so its absence in 0.16.0 looks like a dropped target rather than one not yet built -- worth re-checking once a 0.16.x patch release exists.",
+    "looked_at": [
+      "https://ziglang.org/download/index.json",
+      "https://ziglang.org/download/"
+    ]
+  }
+]

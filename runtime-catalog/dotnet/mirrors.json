@@ -1,0 +1,159 @@
+{
+  "dotnet": [
+    {
+      "template": "https://dotnetcli.blob.core.windows.net/dotnet/<same path as builds.dotnet.microsoft.com>",
+      "applies_to": "any release whose url starts with https://builds.dotnet.microsoft.com/dotnet/ (covers effectively all dotnet runtime/sdk/aspnetcore/windowsdesktop files, majors 1.0-11.0)",
+      "region": "n/a -- Microsoft-operated, same Azure Storage account as the primary host",
+      "operator": "Microsoft",
+      "protocols": {"https": true, "http": false},
+      "full_or_partial": "full",
+      "confirmed": true,
+      "confirmation_method": "HEAD both URLs for a sample spanning the oldest and newest majors; same Content-Length counted as confirmed",
+      "date_checked": "2026-09-17",
+      "sample": [
+        {
+          "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/1.0.0/dotnet-osx-x64.1.0.0.tar.gz",
+          "mirror": "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/1.0.0/dotnet-osx-x64.1.0.0.tar.gz",
+          "orig_size": 30270150,
+          "mirror_size": 30270150,
+          "match": true
+        },
+        {
+          "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/1.0.0/dotnet-win-x86.1.0.0.zip",
+          "mirror": "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/1.0.0/dotnet-win-x86.1.0.0.zip",
+          "orig_size": 29110305,
+          "mirror_size": 29110305,
+          "match": true
+        },
+        {
+          "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/1.0.0/dotnet-win-x64.1.0.0.zip",
+          "mirror": "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/1.0.0/dotnet-win-x64.1.0.0.zip",
+          "orig_size": 31739078,
+          "mirror_size": 31739078,
+          "match": true
+        },
+        {
+          "url": "https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/9.0.9/windowsdesktop-runtime-9.0.9-win-x64.zip",
+          "mirror": "https://dotnetcli.blob.core.windows.net/dotnet/WindowsDesktop/9.0.9/windowsdesktop-runtime-9.0.9-win-x64.zip",
+          "orig_size": 39147081,
+          "mirror_size": 39147081,
+          "match": true
+        },
+        {
+          "url": "https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/9.0.9/windowsdesktop-runtime-9.0.9-win-x86.exe",
+          "mirror": "https://dotnetcli.blob.core.windows.net/dotnet/WindowsDesktop/9.0.9/windowsdesktop-runtime-9.0.9-win-x86.exe",
+          "orig_size": 55565024,
+          "mirror_size": 55565024,
+          "match": true
+        },
+        {
+          "url": "https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/9.0.9/windowsdesktop-runtime-9.0.9-win-x86.zip",
+          "mirror": "https://dotnetcli.blob.core.windows.net/dotnet/WindowsDesktop/9.0.9/windowsdesktop-runtime-9.0.9-win-x86.zip",
+          "orig_size": 36129061,
+          "mirror_size": 36129061,
+          "match": true
+        }
+      ]
+    },
+    {
+      "template": "https://dotnetcli.azureedge.net/dotnet/<same path as builds.dotnet.microsoft.com>",
+      "applies_to": "same population as the dotnetcli.blob.core.windows.net mirror above -- any release whose url starts with https://builds.dotnet.microsoft.com/dotnet/",
+      "region": "n/a -- Microsoft-operated (Azure Front Door)",
+      "operator": "Microsoft",
+      "protocols": {"https": true, "http": false},
+      "full_or_partial": "full",
+      "confirmed": true,
+      "confirmation_method": "Publicly announced as retired (the azureedge.net/Edgio CDN shutdown), so checked whether it actually still resolves before trusting the retirement notice: dig shows it now CNAMEs through Azure Traffic Manager to an azurefd.net (Azure Front Door) endpoint rather than the old Edgio/Verizon CDN. HEAD across 7 files spanning oldest/newest majors, Runtime/Sdk/WindowsDesktop/aspnetcore sections, win/linux/macos, amd64/arm64 -- all Content-Length matches. Plain http 307-redirects to https on the same host (doesn't help TLS-less old clients). Full download + sha512 match for dotnet-runtime-2.1.8-win-arm64.zip against the vendor checksum, sample deleted after.",
+      "date_checked": "2026-09-17",
+      "sample": [
+        {"url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/1.0.0/dotnet-osx-x64.1.0.0.tar.gz", "orig_size": 30270150, "mirror_size": 30270150, "match": true},
+        {"url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/2.1.8/dotnet-runtime-2.1.8-win-arm64.zip", "orig_size": 18134941, "mirror_size": 18134941, "match": true, "hash_verified": "sha512 matches vendor checksum, full download"},
+        {"url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-linux-arm64.tar.gz", "orig_size": 30300088, "mirror_size": 30300088, "match": true},
+        {"url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-win-x64.zip", "orig_size": 33057872, "mirror_size": 33057872, "match": true},
+        {"url": "https://builds.dotnet.microsoft.com/dotnet/aspnetcore/Runtime/5.0.17/aspnetcore-runtime-5.0.17-linux-x64.tar.gz", "orig_size": 39285597, "mirror_size": 39285597, "match": true},
+        {"url": "https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/9.0.9/windowsdesktop-runtime-9.0.9-win-x64.zip", "orig_size": 39147081, "mirror_size": 39147081, "match": true},
+        {"url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/9.0.109/dotnet-sdk-9.0.109-linux-x64.tar.gz", "orig_size": 211307262, "mirror_size": 211307262, "match": true},
+        {"url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.100/dotnet-sdk-10.0.100-osx-arm64.tar.gz", "orig_size": 229936839, "mirror_size": 229936839, "match": true}
+      ]
+    },
+    {
+      "template": "https://web.archive.org/web/2id_/<original url>",
+      "applies_to": "the 117 `dotnet` releases whose url is on download.visualstudio.microsoft.com or download.microsoft.com (mostly windowsdesktop-runtime 3.1.x .exe installers, plus a handful of 5.0.x macOS .pkg files) -- these otherwise have ZERO mirrors: they live on a separate, non-\"dotnetcli\" Azure storage account with no equivalent path on builds.dotnet.microsoft.com (confirmed 404 on the guessed WindowsDesktop/<ver>/<file> path)",
+      "region": "Internet Archive (San Francisco, US, plus its mirrored/replicated storage)",
+      "operator": "Internet Archive (non-profit, third party)",
+      "protocols": {"https": true, "http": false},
+      "full_or_partial": "partial -- coverage confirmed per-entry, see wayback_cache.json beside extra_mirrors.py",
+      "confirmed": true,
+      "confirmation_method": "HEAD each candidate's https://web.archive.org/web/2id_/<url> replay, comparing the x-archive-orig-content-length response header against the entry's recorded size (accepted on a bare 200 when size is null, e.g. all dotnet-framework entries which carry no vendor size). One full download + sha512 match against the vendor checksum for windowsdesktop-runtime-3.1.32-win-x64.exe. Checked via extra_mirrors.py, which caches results in wayback_cache.json and is safe to re-run (network congestion in this sandbox left some candidates unresolved on a given run -- transient failures are never cached as negatives, so a re-run keeps retrying them rather than needing a fresh investigation).",
+      "date_checked": "2026-09-17",
+      "coverage": "128/128 distinct candidate URLs confirmed, covering all 129 release entries on these two hosts (117 dotnet + 12 dotnet-framework, see the dotnet-framework block below for that half; one URL is shared by two release entries -- the same 1.1.5/1.0.8 SDK tarball -- hence 128 URLs for 129 entries). All of releases.json now has at least one mirror per entry. wayback_cache.json holds the per-URL results; re-run catalog/dotnet/extra_mirrors.py if new entries are added later.",
+      "sample": [
+        {
+          "url": "https://download.visualstudio.microsoft.com/download/pr/b92958c6-ae36-4efa-aafe-569fced953a5/1654639ef3b20eb576174c1cc200f33a/windowsdesktop-runtime-3.1.32-win-x64.exe",
+          "mirror": "https://web.archive.org/web/2id_/https://download.visualstudio.microsoft.com/download/pr/b92958c6-ae36-4efa-aafe-569fced953a5/1654639ef3b20eb576174c1cc200f33a/windowsdesktop-runtime-3.1.32-win-x64.exe",
+          "orig_size": 54712856,
+          "mirror_size": 54712856,
+          "match": true,
+          "hash_verified": "sha512 matches vendor checksum, full download"
+        }
+      ]
+    }
+  ],
+  "dotnet-framework": [
+    {
+      "template": "https://web.archive.org/web/2id_/<original url>",
+      "applies_to": "all 12 dotnet-framework entries (download.microsoft.com); Microsoft publishes no checksum for these, so mirror confirmation is by byte-identical full download against the live download.microsoft.com copy, not a vendor hash",
+      "region": "Internet Archive (US)",
+      "operator": "Internet Archive (non-profit, third party)",
+      "protocols": {"https": true, "http": false},
+      "full_or_partial": "partial -- see wayback_cache.json",
+      "confirmed": true,
+      "confirmation_method": "Same HEAD-based x-archive-orig-content-length check as the dotnet entries above; no vendor checksum exists for this runtime (NOTES.md), so full-content confirmation relies on Content-Length + spot download rather than a hash match.",
+      "date_checked": "2026-09-17"
+    }
+  ],
+  "not_confirmed": [
+    {
+      "template": "https://ci.dot.net/public/<path>",
+      "note": "404s for the same path shape; not used"
+    },
+    {
+      "template": "https://mirrors.huaweicloud.com/dotnet/<path>",
+      "note": "Rejected. Returns HTTP 200 with an HTML body for ANY path, including a deliberately bogus nonsense path used as a control -- it's the portal's Angular app catch-all, not a real dotnet mirror. Huawei Cloud's public mirror only proxies language package managers (pypi/npm/maven/etc), not raw vendor archive layouts."
+    },
+    {
+      "template": "https://mirrors.ustc.edu.cn/dotnet/<path>",
+      "note": "Rejected. Same soft-200-for-any-path behavior as huaweicloud, confirmed with the same bogus-path control request; no dotnet mirror actually present."
+    },
+    {
+      "template": "https://mirrors.cloud.tencent.com/dotnet/<path>",
+      "note": "Real 404 (not a soft catch-all) -- no dotnet mirror."
+    },
+    {
+      "template": "https://mirrors.tuna.tsinghua.edu.cn/dotnet/<path>",
+      "note": "Real 404 -- no dotnet mirror."
+    },
+    {
+      "template": "https://mirrors.aliyun.com/dotnet/<path>",
+      "note": "Real 404 (backend 4xx passed through the CDN, not a redirect-to-vendor) -- no dotnet mirror."
+    },
+    {
+      "template": "https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/<ver>/<file> (as a guessed home for the download.visualstudio.microsoft.com-hosted 3.1.x windowsdesktop-runtime files)",
+      "note": "404s -- these old VS-blob-hosted files were never migrated to the builds.dotnet.microsoft.com/\"dotnetcli\" storage account, so that mirror template doesn't reach them. This is why the Wayback mirror was needed for these 117 entries specifically."
+    },
+    {
+      "template": "SourceForge dotnet-sdk.mirror / net.mirror projects",
+      "note": "These mirror the dotnet/sdk GitHub source repository, not built binary archives -- not applicable to this catalog (which tracks downloadable runtime/SDK archives, not source)."
+    },
+    {
+      "template": "UK Mirror Service (mirrorservice.org)",
+      "note": "Checked its site index for a dotnet entry; none found. Its academic mirror list doesn't carry Microsoft .NET binaries."
+    }
+  ],
+  "investigated_not_actionable": [
+    {
+      "issue": "dotnet 7.0.20 macOS runtime (osx-x64 and osx-arm64, both .pkg and .tar.gz) currently serves bytes that do NOT match the sha512 recorded in releases.json/checksum -- confirmed independently (full download of dotnet-runtime-7.0.20-osx-x64.tar.gz, sha512 mismatch against the vendor value in the metadata). This matches a known public report (MacPorts ticket #68580) of Microsoft re-releasing 7.0.x macOS binaries without republishing the checksum.",
+      "wayback_finding": "Internet Archive's earliest capture of both builds.dotnet.microsoft.com/.../dotnet-runtime-7.0.20-osx-{arm64,x64}.tar.gz is 2025-07-09 -- already years after the original 2024-05-28 release -- and every capture from 2025-07 through 2026-09 carries the SAME digest as the file served live today (i.e. the same mismatched bytes). No 2024 capture exists for either URL, and dotnetcli.blob.core.windows.net (the other historical host for this content) has ZERO Wayback captures at all. There is therefore no Wayback copy of the originally-published, checksum-matching bytes to add as a mirror for these two entries; the hint in the brief didn't pan out for this pair. Not added to mirrors.json; noted here so a future pass doesn't re-spend the same searches."
+    }
+  ]
+}

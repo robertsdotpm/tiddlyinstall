@@ -1,0 +1,371 @@
+[
+ {
+  "host": "fosszone.csd.auth.gr",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "ftp.fau.de",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "ftp.halifax.rwth-aachen.de",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "ftp.kaist.ac.kr",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "ftp.man.poznan.pl",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "ftp.nluug.nl",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 6
+ },
+ {
+  "host": "ftp.wayne.edu",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.cedia.org.ec",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.checkdomain.de",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.clientvps.com",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.cs.odu.edu",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.csclub.uwaterloo.ca",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.cyberbits.asia",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.cyberbits.eu",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.diyarciftci.xyz",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.dogado.de",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.hiesoft.net",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 8
+ },
+ {
+  "host": "mirror.ihost.md",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.koetsier.org",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.kumi.systems",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.lagoon.nc",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.lyrahosting.com",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 7
+ },
+ {
+  "host": "mirror.marwan.ma",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.netcologne.de",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.ossplanet.net",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.rit.edu",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "http",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.team-cymru.com",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.techrich.hk",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.truenetwork.ru",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.twds.com.tw",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.ufs.ac.za",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror.us-midwest-1.nexcess.net",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirror2.evolution-host.com",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirrors.hopbox.net",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirrors.ibiblio.org",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirrors.middlendian.com",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirrors.nav.ro",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirrors.nju.edu.cn",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirrors.ocf.berkeley.edu",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirrors.tuna.tsinghua.edu.cn",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ },
+ {
+  "host": "mirrors.ustc.edu.cn",
+  "runtime": "cc",
+  "dirname": "gnu/gcc/",
+  "vendor_prefix": "https://ftp.gnu.org/gnu/gcc/",
+  "scheme": "https",
+  "checked": 9,
+  "matched": 9
+ }
+]

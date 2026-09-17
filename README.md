@@ -22,3 +22,4 @@ All data is sample data. Submitting the form just opens `build.html`.
 - [Design](docs/design.md): the whole design, decisions and open questions
 - [Tested Python on old Windows](docs/windows-python-compat.md): known-good builds with working asyncio, per Windows version
 - [Test machines](docs/test-vms.md): VMs for testing installers
+- [Runtime catalog](runtime-catalog/README.md): where to download 13 languages' runtimes per OS, architecture and major version, mirrors, checksums, and per-version limitations (metadata backup; binaries live outside git)

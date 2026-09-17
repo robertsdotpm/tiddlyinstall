@@ -1,0 +1,1960 @@
+[
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "2.2",
+  "version": "2.2.12",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-2.2.12_x32.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "4f82883c541e67dc2380f23dd302ab999ba8ffdf961efd80541850db8bc998cb",
+   "source": "https://nim-lang.org/download/nim-2.2.12_x32.zip.sha256"
+  },
+  "size": 30995389,
+  "released": "2026-09-07",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "2.2",
+  "version": "2.2.12",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-2.2.12_x64.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "dafe9c81f8118fac2e07ee24f3649448a590d8b0f3b55d1a97c66f99035cc8e6",
+   "source": "https://nim-lang.org/download/nim-2.2.12_x64.zip.sha256"
+  },
+  "size": 30781815,
+  "released": "2026-09-07",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "2.2",
+  "version": "2.2.12",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-2.2.12-macosx_arm64.tar.xz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "130a43eff76c1c3cc78b89329a7efd892c1f65839dbc6d8e53651f3f77516fe5",
+   "source": "https://nim-lang.org/download/nim-2.2.12-macosx_arm64.tar.xz.sha256"
+  },
+  "size": 16287480,
+  "released": "2026-09-07",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "2.2",
+  "version": "2.2.12",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-2.2.12-macosx_x64.tar.xz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "a09fa096aeb5f6ef32f8839eced2591e145e526e42f56c79e04a18519b8b132c",
+   "source": "https://nim-lang.org/download/nim-2.2.12-macosx_x64.tar.xz.sha256"
+  },
+  "size": 16030884,
+  "released": "2026-09-07",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "2.2",
+  "version": "2.2.12",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-2.2.12-linux_x32.tar.xz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "fabe576a48db63d20d6077b3ee921b2806fcfa108b7aaddf8f230d09f4b54e5d",
+   "source": "https://nim-lang.org/download/nim-2.2.12-linux_x32.tar.xz.sha256"
+  },
+  "size": 20059608,
+  "released": "2026-09-07",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "2.2",
+  "version": "2.2.12",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "nightlies",
+  "libc": null,
+  "url": "https://github.com/nim-lang/nightlies/releases/download/2026-09-08-version-2-2-8e8fbf60693418dc95bb0d762fd660231d08a583/nim-2.2.12-linux_armv7l.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 17973128,
+  "released": "2026-09-07",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/install.html",
+  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "2.2",
+  "version": "2.2.12",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-2.2.12-linux_arm64.tar.xz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "3dc04191af72a8310cf1c8ffb6f772cc3716fc5f264bc7c453ab4aecb4085221",
+   "source": "https://nim-lang.org/download/nim-2.2.12-linux_arm64.tar.xz.sha256"
+  },
+  "size": 17826880,
+  "released": "2026-09-07",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "2.2",
+  "version": "2.2.12",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-2.2.12-linux_x64.tar.xz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "7df1611449a6842af69322aa2c1206942982650a5f6bc0d37bc8ec109932f638",
+   "source": "https://nim-lang.org/download/nim-2.2.12-linux_x64.tar.xz.sha256"
+  },
+  "size": 19214212,
+  "released": "2026-09-07",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "2.0",
+  "version": "2.0.16",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-2.0.16_x32.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "202124673576cdeecf8e47f38f19f574a3377fed79bf7f6655e3fa3f307d2368",
+   "source": "https://nim-lang.org/download/nim-2.0.16_x32.zip.sha256"
+  },
+  "size": 26072174,
+  "released": "2025-04-21",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "2.0",
+  "version": "2.0.16",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-2.0.16_x64.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "3ab287e482e2ebd490c25b0de817e3a79015cce54c9e8658ac9dcb6405d828dc",
+   "source": "https://nim-lang.org/download/nim-2.0.16_x64.zip.sha256"
+  },
+  "size": 25869108,
+  "released": "2025-04-21",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "2.0",
+  "version": "2.0.16",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "nightlies",
+  "libc": null,
+  "url": "https://github.com/nim-lang/nightlies/releases/download/2025-04-22-version-2-0-82f3a57612598d73e6fc559bd80b995c4b20edd5/nim-2.0.16-macosx_arm64.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 12628060,
+  "released": "2025-04-21",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/install.html",
+  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "2.0",
+  "version": "2.0.16",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "nightlies",
+  "libc": null,
+  "url": "https://github.com/nim-lang/nightlies/releases/download/2025-04-22-version-2-0-82f3a57612598d73e6fc559bd80b995c4b20edd5/nim-2.0.16-macosx_x64.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 12715532,
+  "released": "2025-04-21",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/install.html",
+  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "2.0",
+  "version": "2.0.16",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-2.0.16-linux_x32.tar.xz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "49a1162ca3cd632cefec9eb18d431c9ce95710e24389e92a4533b90a027e6609",
+   "source": "https://nim-lang.org/download/nim-2.0.16-linux_x32.tar.xz.sha256"
+  },
+  "size": 16133896,
+  "released": "2025-04-21",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "2.0",
+  "version": "2.0.16",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "nightlies",
+  "libc": null,
+  "url": "https://github.com/nim-lang/nightlies/releases/download/2025-04-22-version-2-0-82f3a57612598d73e6fc559bd80b995c4b20edd5/nim-2.0.16-linux_armv7l.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 14155680,
+  "released": "2025-04-21",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/install.html",
+  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "2.0",
+  "version": "2.0.16",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "nightlies",
+  "libc": null,
+  "url": "https://github.com/nim-lang/nightlies/releases/download/2025-04-22-version-2-0-82f3a57612598d73e6fc559bd80b995c4b20edd5/nim-2.0.16-linux_arm64.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 14210488,
+  "released": "2025-04-21",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/install.html",
+  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "2.0",
+  "version": "2.0.16",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-2.0.16-linux_x64.tar.xz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "38deba063bf4b83b7a2769a2b937de1696aca1358c041aef775aff86b6d63c76",
+   "source": "https://nim-lang.org/download/nim-2.0.16-linux_x64.tar.xz.sha256"
+  },
+  "size": 15467544,
+  "released": "2025-04-21",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.6",
+  "version": "1.6.20",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-1.6.20_x32.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "c1bd1c1c23e2fb9b9c94f6e6cc30c439752d350fd61d950b129c2189a09f3275",
+   "source": "https://nim-lang.org/download/nim-1.6.20_x32.zip.sha256"
+  },
+  "size": 21994146,
+  "released": "2024-04-06",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.6",
+  "version": "1.6.20",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-1.6.20_x64.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "21bc0be10169f4dd58a61ea84855f283843aae19dc17803efd302b88b16924e2",
+   "source": "https://nim-lang.org/download/nim-1.6.20_x64.zip.sha256"
+  },
+  "size": 21853854,
+  "released": "2024-04-06",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.6",
+  "version": "1.6.20",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "nightlies",
+  "libc": null,
+  "url": "https://github.com/nim-lang/nightlies/releases/download/2024-04-07-version-1-6-19fdbfc173bfccb64cb64e0a963e69f52f71fc73/nim-1.6.20-macosx_x64.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 10176960,
+  "released": "2024-04-06",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/install.html",
+  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.6",
+  "version": "1.6.20",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-1.6.20-linux_x32.tar.xz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "1099d0ca4d644be9b8ee12d9e983e262cfb2464d0f5abefe734a9f020216e58a",
+   "source": "https://nim-lang.org/download/nim-1.6.20-linux_x32.tar.xz.sha256"
+  },
+  "size": 12509660,
+  "released": "2024-04-06",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.6",
+  "version": "1.6.20",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "nightlies",
+  "libc": null,
+  "url": "https://github.com/nim-lang/nightlies/releases/download/2024-04-07-version-1-6-19fdbfc173bfccb64cb64e0a963e69f52f71fc73/nim-1.6.20-linux_armv7l.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 11047168,
+  "released": "2024-04-06",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/install.html",
+  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.6",
+  "version": "1.6.20",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "nightlies",
+  "libc": null,
+  "url": "https://github.com/nim-lang/nightlies/releases/download/2024-04-07-version-1-6-19fdbfc173bfccb64cb64e0a963e69f52f71fc73/nim-1.6.20-linux_arm64.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 11128496,
+  "released": "2024-04-06",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/install.html",
+  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.6",
+  "version": "1.6.20",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-1.6.20-linux_x64.tar.xz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "73d4672dbecf76d2e8e4cd58f0711ebc131f17be8f3b7fe37e768f9d26c1dcd7",
+   "source": "https://nim-lang.org/download/nim-1.6.20-linux_x64.tar.xz.sha256"
+  },
+  "size": 12066152,
+  "released": "2024-04-06",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.4",
+  "version": "1.4.8",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-1.4.8_x32.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "9ab192c6eda9e8290699b8d6b60d186bc6199941f40894fb5679e846aae5694f",
+   "source": "https://nim-lang.org/download/nim-1.4.8_x32.zip.sha256"
+  },
+  "size": 20616129,
+  "released": "2021-05-24",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.4",
+  "version": "1.4.8",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-1.4.8_x64.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "fa2186ec09825dba55ccff3000ac5ef507d75b8805fcf2695612dd3a98ebbf9a",
+   "source": "https://nim-lang.org/download/nim-1.4.8_x64.zip.sha256"
+  },
+  "size": 20451238,
+  "released": "2021-05-24",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.4",
+  "version": "1.4.8",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "nightlies",
+  "libc": null,
+  "url": "https://github.com/nim-lang/nightlies/releases/download/2021-05-25-version-1-4-44e653a9314e1b8503f0fa4a8a34c3380b26fff3/nim-1.4.8-macosx_x64.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 8676628,
+  "released": "2021-05-24",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/install.html",
+  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.4",
+  "version": "1.4.8",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-1.4.8-linux_x32.tar.xz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "0d094173a454380df384be05d6d7e937583491e4d1c10aa89c477590fb5f180f",
+   "source": "https://nim-lang.org/download/nim-1.4.8-linux_x32.tar.xz.sha256"
+  },
+  "size": 10790544,
+  "released": "2021-05-24",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.4",
+  "version": "1.4.8",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "nightlies",
+  "libc": null,
+  "url": "https://github.com/nim-lang/nightlies/releases/download/2021-05-25-version-1-4-44e653a9314e1b8503f0fa4a8a34c3380b26fff3/nim-1.4.8-linux_armv7l.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 9723896,
+  "released": "2021-05-24",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/install.html",
+  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.4",
+  "version": "1.4.8",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "nightlies",
+  "libc": null,
+  "url": "https://github.com/nim-lang/nightlies/releases/download/2021-05-25-version-1-4-44e653a9314e1b8503f0fa4a8a34c3380b26fff3/nim-1.4.8-linux_arm64.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 10010100,
+  "released": "2021-05-24",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/install.html",
+  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.4",
+  "version": "1.4.8",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-1.4.8-linux_x64.tar.xz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "c066c251db1b852afef8fd65830788be593dbffd178080de14bf5c512905424d",
+   "source": "https://nim-lang.org/download/nim-1.4.8-linux_x64.tar.xz.sha256"
+  },
+  "size": 10488348,
+  "released": "2021-05-24",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.2",
+  "version": "1.2.18",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-1.2.18_x32.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "963e52a676376c121797110b2e050f6f229cc64bc2668f894083df796c23c4c1",
+   "source": "https://nim-lang.org/download/nim-1.2.18_x32.zip.sha256"
+  },
+  "size": 19073750,
+  "released": "2022-02-08",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.2",
+  "version": "1.2.18",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-1.2.18_x64.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "78da2b83d1db1ea42e64cd2d76919655183aa60c4f9ce7affe614a5422b41c16",
+   "source": "https://nim-lang.org/download/nim-1.2.18_x64.zip.sha256"
+  },
+  "size": 18901066,
+  "released": "2022-02-08",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.2",
+  "version": "1.2.18",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "nightlies",
+  "libc": null,
+  "url": "https://github.com/nim-lang/nightlies/releases/download/2022-02-09-version-1-2-8a5c8d3e22d094c93352e61d1ef49995298986d4/nim-1.2.18-macosx_x64.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 8072368,
+  "released": "2022-02-08",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/install.html",
+  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.2",
+  "version": "1.2.18",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-1.2.18-linux_x32.tar.xz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d4fd32fc5effbd15ac1abb084368e8f73ba1c656357ba70d3b9f908d92ac8022",
+   "source": "https://nim-lang.org/download/nim-1.2.18-linux_x32.tar.xz.sha256"
+  },
+  "size": 10175376,
+  "released": "2022-02-08",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.2",
+  "version": "1.2.18",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "nightlies",
+  "libc": null,
+  "url": "https://github.com/nim-lang/nightlies/releases/download/2022-02-09-version-1-2-8a5c8d3e22d094c93352e61d1ef49995298986d4/nim-1.2.18-linux_armv7l.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 9111764,
+  "released": "2022-02-08",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/install.html",
+  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.2",
+  "version": "1.2.18",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "nightlies",
+  "libc": null,
+  "url": "https://github.com/nim-lang/nightlies/releases/download/2022-02-09-version-1-2-8a5c8d3e22d094c93352e61d1ef49995298986d4/nim-1.2.18-linux_arm64.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 9402116,
+  "released": "2022-02-08",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/install.html",
+  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.2",
+  "version": "1.2.18",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-1.2.18-linux_x64.tar.xz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "bd2d32d662b96a5f7c6feadf86a1990692c2e4c7f8207fb318c8cdaefe0a1a08",
+   "source": "https://nim-lang.org/download/nim-1.2.18-linux_x64.tar.xz.sha256"
+  },
+  "size": 9846204,
+  "released": "2022-02-08",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.0",
+  "version": "1.0.10",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-1.0.10_x32.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "3e052fba5ccd62acdd01ff9fe2acfe2e88422c7e131d241ed863fbba61b31f7c",
+   "source": "https://nim-lang.org/download/nim-1.0.10_x32.zip.sha256"
+  },
+  "size": 21125707,
+  "released": "2020-10-26",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.0",
+  "version": "1.0.10",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-1.0.10_x64.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d1d3588766f76061b20f033fd1f7d33fef425e5ea4cc727b25f4ae75c4c800aa",
+   "source": "https://nim-lang.org/download/nim-1.0.10_x64.zip.sha256"
+  },
+  "size": 21175105,
+  "released": "2020-10-26",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.0",
+  "version": "1.0.10",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "nightlies",
+  "libc": null,
+  "url": "https://github.com/nim-lang/nightlies/releases/download/2020-10-26-version-1-0-0ca09f64cf6ecf2050b58bc26ebc622f856b4dc2/nim-1.0.10-macosx_x64.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 7938644,
+  "released": "2020-10-26",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/install.html",
+  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.0",
+  "version": "1.0.10",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-1.0.10-linux_x32.tar.xz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "ff7faad8172439ba74c232821da699de39ea753729514dfded57031a55491ce2",
+   "source": "https://nim-lang.org/download/nim-1.0.10-linux_x32.tar.xz.sha256"
+  },
+  "size": 9581808,
+  "released": "2020-10-26",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.0",
+  "version": "1.0.10",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "nightlies",
+  "libc": null,
+  "url": "https://github.com/nim-lang/nightlies/releases/download/2020-10-26-version-1-0-0ca09f64cf6ecf2050b58bc26ebc622f856b4dc2/nim-1.0.10-linux_armv7l.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 8667192,
+  "released": "2020-10-26",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/install.html",
+  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.0",
+  "version": "1.0.10",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "nightlies",
+  "libc": null,
+  "url": "https://github.com/nim-lang/nightlies/releases/download/2020-10-26-version-1-0-0ca09f64cf6ecf2050b58bc26ebc622f856b4dc2/nim-1.0.10-linux_arm64.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 9115620,
+  "released": "2020-10-26",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/install.html",
+  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "1.0",
+  "version": "1.0.10",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-1.0.10-linux_x64.tar.xz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "c30433a37a1cbdf1bc54645fb39bb286163384208eb297a145e4c7080fad086e",
+   "source": "https://nim-lang.org/download/nim-1.0.10-linux_x64.tar.xz.sha256"
+  },
+  "size": 9460488,
+  "released": "2020-10-26",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.20",
+  "version": "0.20.2",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.20.2_x32.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "4a01f826dec15943fff3a0783f52436576c4c583ef92108c8ec8db1b89363469",
+   "source": "https://nim-lang.org/download/nim-0.20.2_x32.zip.sha256"
+  },
+  "size": 18978289,
+  "released": "2019-07-16",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.20",
+  "version": "0.20.2",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.20.2_x64.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "ccd258ae90d2af2eb1042830f1204920e8d44b6947aedb56458110cf9a714207",
+   "source": "https://nim-lang.org/download/nim-0.20.2_x64.zip.sha256"
+  },
+  "size": 19007529,
+  "released": "2019-07-16",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.20",
+  "version": "0.20.2",
+  "os": "macos",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.20.2.tar.xz",
+  "mirrors": [
+   "https://tarballs.nixos.org/sha256/e1fa5c7e762a45535d82a961f88a6fc82e343985b780c3674081810e028d2b5e"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "e1fa5c7e762a45535d82a961f88a6fc82e343985b780c3674081810e028d2b5e",
+   "source": "https://nim-lang.org/download/nim-0.20.2.tar.xz.sha256"
+  },
+  "size": 5032768,
+  "released": "2019-07-16",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "No macos binary exists for major 0.20; source is the only option."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.20",
+  "version": "0.20.2",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.20.2-linux_x32.tar.xz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "bd1305554849cd7093453072a5389dd370b50c9d075f98ffc46490e03a78f352",
+   "source": "https://nim-lang.org/download/nim-0.20.2-linux_x32.tar.xz.sha256"
+  },
+  "size": 8306088,
+  "released": "2019-07-16",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.20",
+  "version": "0.20.2",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.20.2-linux_x64.tar.xz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "0f9167a011e53fc15d360e497ece18bf979111b6c19dc575b40c98033ab6a8fa",
+   "source": "https://nim-lang.org/download/nim-0.20.2-linux_x64.tar.xz.sha256"
+  },
+  "size": 8077112,
+  "released": "2019-07-16",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.19",
+  "version": "0.19.6",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.19.6_x32.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "109ab127ce55642228aa6399ccde6ebf29c89c7d4b70249e9b521b2534a18f1c",
+   "source": "https://nim-lang.org/download/nim-0.19.6_x32.zip.sha256"
+  },
+  "size": 18293289,
+  "released": "2019-05-10",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.19",
+  "version": "0.19.6",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.19.6_x64.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "99c690e50c2c0afaa5df035eb570e7441de685c747d5f32ba8befb679b9d2d2b",
+   "source": "https://nim-lang.org/download/nim-0.19.6_x64.zip.sha256"
+  },
+  "size": 18369656,
+  "released": "2019-05-10",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.19",
+  "version": "0.19.6",
+  "os": "macos",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.19.6.tar.xz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "a09f0c58d29392434d4fd6d15d4059cf7e013ae948413cb9233b8233d67e3a29",
+   "source": "https://nim-lang.org/download/nim-0.19.6.tar.xz.sha256"
+  },
+  "size": 4166952,
+  "released": "2019-05-10",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "No macos binary exists for major 0.19; source is the only option."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.19",
+  "version": "0.19.6",
+  "os": "linux",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.19.6.tar.xz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "a09f0c58d29392434d4fd6d15d4059cf7e013ae948413cb9233b8233d67e3a29",
+   "source": "https://nim-lang.org/download/nim-0.19.6.tar.xz.sha256"
+  },
+  "size": 4166952,
+  "released": "2019-05-10",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "No linux binary exists for major 0.19; source is the only option."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.18",
+  "version": "0.18.0",
+  "os": "windows",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.18.0.tar.xz",
+  "mirrors": [
+   "https://tarballs.nixos.org/sha256/45c74adb35f08dfa9add1112ae17330e5d902ebb4a36e7046caee8b79e6f3bd0"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "45c74adb35f08dfa9add1112ae17330e5d902ebb4a36e7046caee8b79e6f3bd0",
+   "source": "https://nim-lang.org/download/nim-0.18.0.tar.xz.sha256"
+  },
+  "size": 4415048,
+  "released": "2018-03-01",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "No windows binary exists for major 0.18; source is the only option."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.18",
+  "version": "0.18.0",
+  "os": "macos",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.18.0.tar.xz",
+  "mirrors": [
+   "https://tarballs.nixos.org/sha256/45c74adb35f08dfa9add1112ae17330e5d902ebb4a36e7046caee8b79e6f3bd0"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "45c74adb35f08dfa9add1112ae17330e5d902ebb4a36e7046caee8b79e6f3bd0",
+   "source": "https://nim-lang.org/download/nim-0.18.0.tar.xz.sha256"
+  },
+  "size": 4415048,
+  "released": "2018-03-01",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "No macos binary exists for major 0.18; source is the only option."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.18",
+  "version": "0.18.0",
+  "os": "linux",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.18.0.tar.xz",
+  "mirrors": [
+   "https://tarballs.nixos.org/sha256/45c74adb35f08dfa9add1112ae17330e5d902ebb4a36e7046caee8b79e6f3bd0"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "45c74adb35f08dfa9add1112ae17330e5d902ebb4a36e7046caee8b79e6f3bd0",
+   "source": "https://nim-lang.org/download/nim-0.18.0.tar.xz.sha256"
+  },
+  "size": 4415048,
+  "released": "2018-03-01",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "No linux binary exists for major 0.18; source is the only option."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.17",
+  "version": "0.17.2",
+  "os": "windows",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.17.2.tar.xz",
+  "mirrors": [
+   "https://tarballs.nixos.org/sha256/aaff1b5023fc4a5708f1d7d9fd8e2a29f1a7f58bf496532ff1e9d7e7c7ec82bd"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "aaff1b5023fc4a5708f1d7d9fd8e2a29f1a7f58bf496532ff1e9d7e7c7ec82bd",
+   "source": "https://nim-lang.org/download/nim-0.17.2.tar.xz.sha256"
+  },
+  "size": 4083084,
+  "released": "2017-09-07",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "No windows binary exists for major 0.17; source is the only option."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.17",
+  "version": "0.17.2",
+  "os": "macos",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.17.2.tar.xz",
+  "mirrors": [
+   "https://tarballs.nixos.org/sha256/aaff1b5023fc4a5708f1d7d9fd8e2a29f1a7f58bf496532ff1e9d7e7c7ec82bd"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "aaff1b5023fc4a5708f1d7d9fd8e2a29f1a7f58bf496532ff1e9d7e7c7ec82bd",
+   "source": "https://nim-lang.org/download/nim-0.17.2.tar.xz.sha256"
+  },
+  "size": 4083084,
+  "released": "2017-09-07",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "No macos binary exists for major 0.17; source is the only option."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.17",
+  "version": "0.17.2",
+  "os": "linux",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.17.2.tar.xz",
+  "mirrors": [
+   "https://tarballs.nixos.org/sha256/aaff1b5023fc4a5708f1d7d9fd8e2a29f1a7f58bf496532ff1e9d7e7c7ec82bd"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "aaff1b5023fc4a5708f1d7d9fd8e2a29f1a7f58bf496532ff1e9d7e7c7ec82bd",
+   "source": "https://nim-lang.org/download/nim-0.17.2.tar.xz.sha256"
+  },
+  "size": 4083084,
+  "released": "2017-09-07",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "No linux binary exists for major 0.17; source is the only option."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.16",
+  "version": "0.16.0",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.16.0_x32.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "69af94a6875a02543c1bf0fa03c665f126f8500a2c0e226c32571e64c6842e57",
+   "source": "https://nim-lang.org/download/nim-0.16.0_x32.zip.sha256"
+  },
+  "size": 17347653,
+  "released": "2017-01-08",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.16",
+  "version": "0.16.0",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.16.0_x64.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "e667cdad1ae8e9429147aea5031fa8a80c4ccef6d274cec0e9480252d9c3168c",
+   "source": "https://nim-lang.org/download/nim-0.16.0_x64.zip.sha256"
+  },
+  "size": 17593167,
+  "released": "2017-01-08",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.16",
+  "version": "0.16.0",
+  "os": "macos",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.16.0.tar.xz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "9e199823be47cba55e62dd6982f02cf0aad732f369799fec42a4d8c2265c5167",
+   "source": "https://nim-lang.org/download/nim-0.16.0.tar.xz.sha256"
+  },
+  "size": 2907076,
+  "released": "2017-01-08",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "No macos binary exists for major 0.16; source is the only option."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.16",
+  "version": "0.16.0",
+  "os": "linux",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.16.0.tar.xz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "9e199823be47cba55e62dd6982f02cf0aad732f369799fec42a4d8c2265c5167",
+   "source": "https://nim-lang.org/download/nim-0.16.0.tar.xz.sha256"
+  },
+  "size": 2907076,
+  "released": "2017-01-08",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "No linux binary exists for major 0.16; source is the only option."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.15",
+  "version": "0.15.2",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.15.2_x32.zip",
+  "mirrors": [],
+  "checksum": null,
+  "size": 12502188,
+  "released": "2016-10-23",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.15",
+  "version": "0.15.2",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.15.2_x64.zip",
+  "mirrors": [],
+  "checksum": null,
+  "size": 13125042,
+  "released": "2016-10-23",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.15",
+  "version": "0.15.2",
+  "os": "macos",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.15.2.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 3251764,
+  "released": "2016-10-23",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "No macos binary exists for major 0.15; source is the only option."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.15",
+  "version": "0.15.2",
+  "os": "linux",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.15.2.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 3251764,
+  "released": "2016-10-23",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "No linux binary exists for major 0.15; source is the only option."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.14",
+  "version": "0.14.2",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "installer",
+  "format": "exe",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.14.2_x32.exe",
+  "mirrors": [],
+  "checksum": null,
+  "size": 8461705,
+  "released": "2016-06-10",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.14",
+  "version": "0.14.2",
+  "os": "macos",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.14.2.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 4778444,
+  "released": "2016-06-10",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "No macos binary exists for major 0.14; source is the only option."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.14",
+  "version": "0.14.2",
+  "os": "linux",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.14.2.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 4778444,
+  "released": "2016-06-10",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "No linux binary exists for major 0.14; source is the only option."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.13",
+  "version": "0.13.0",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "installer",
+  "format": "exe",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.13.0_x32.exe",
+  "mirrors": [],
+  "checksum": null,
+  "size": 7277640,
+  "released": "2016-01-18",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.13",
+  "version": "0.13.0",
+  "os": "macos",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.13.0.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 3145360,
+  "released": "2016-01-18",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "No macos binary exists for major 0.13; source is the only option."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.13",
+  "version": "0.13.0",
+  "os": "linux",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.13.0.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 3145360,
+  "released": "2016-01-18",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "No linux binary exists for major 0.13; source is the only option."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.12",
+  "version": "0.12.0",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.12.0.zip",
+  "mirrors": [],
+  "checksum": null,
+  "size": 33841309,
+  "released": "2015-10-27",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.12",
+  "version": "0.12.0",
+  "os": "macos",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.12.0.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 3091564,
+  "released": "2015-10-27",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "No macos binary exists for major 0.12; source is the only option."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.12",
+  "version": "0.12.0",
+  "os": "linux",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.12.0.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 3091564,
+  "released": "2015-10-27",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "No linux binary exists for major 0.12; source is the only option."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.11",
+  "version": "0.11.2",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "installer",
+  "format": "exe",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.11.2_x32.exe",
+  "mirrors": [],
+  "checksum": null,
+  "size": 4425984,
+  "released": "2015-05-04",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.11",
+  "version": "0.11.2",
+  "os": "macos",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.11.2.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 2587012,
+  "released": "2015-05-04",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "No macos binary exists for major 0.11; source is the only option."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.11",
+  "version": "0.11.2",
+  "os": "linux",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.11.2.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 2587012,
+  "released": "2015-05-04",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "No linux binary exists for major 0.11; source is the only option."
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "0.10",
+  "version": "0.10.2",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "installer",
+  "format": "exe",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-0.10.2_x32.exe",
+  "mirrors": [],
+  "checksum": null,
+  "size": 3653649,
+  "released": "2014-12-29",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": null
+ }
+]

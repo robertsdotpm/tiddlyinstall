@@ -1,0 +1,227 @@
+{
+  "runtime": "go",
+  "canonical": "https://dl.google.com/go/<filename>",
+  "confirmed": [
+    {
+      "host": "mirrors.aliyun.com",
+      "url_template": "https://mirrors.aliyun.com/golang/{filename}",
+      "confirmed_by": "HEAD request, Content-Length matched dl.google.com for every sample file",
+      "sample_files": [
+        "go1.2.2.linux-amd64.tar.gz",
+        "go1.5.4.linux-amd64.tar.gz",
+        "go1.10.8.linux-amd64.tar.gz",
+        "go1.16.15.linux-amd64.tar.gz",
+        "go1.21.0.windows-amd64.zip",
+        "go1.27.1.linux-amd64.tar.gz"
+      ],
+      "applied_to": "every release entry with a matching filename (not re-checked per file)"
+    },
+    {
+      "host": "mirrors.nju.edu.cn",
+      "url_template": "https://mirrors.nju.edu.cn/golang/{filename}",
+      "confirmed_by": "HEAD request, Content-Length matched dl.google.com for every sample file",
+      "sample_files": [
+        "go1.2.2.linux-amd64.tar.gz",
+        "go1.5.4.linux-amd64.tar.gz",
+        "go1.10.8.linux-amd64.tar.gz",
+        "go1.16.15.linux-amd64.tar.gz",
+        "go1.21.0.windows-amd64.zip",
+        "go1.27.1.linux-amd64.tar.gz"
+      ],
+      "applied_to": "every release entry with a matching filename (not re-checked per file)"
+    },
+    {
+      "host": "mirrors.hust.edu.cn",
+      "url_template": "https://mirrors.hust.edu.cn/golang/{filename}",
+      "region": "China (Wuhan) -- Huazhong University of Science and Technology",
+      "operator": "HUST open-source mirror station",
+      "protocols": {"https": "works", "http": "works (Content-Length matched on go1.27.1.linux-amd64.tar.gz)"},
+      "full_or_partial": "full (matched dl.google.com on every sample file, old through current, across linux/windows/aix/darwin/freebsd and archive+source kinds)",
+      "confirmed_by": "HEAD request (redirects disabled), Content-Length matched dl.google.com for every sample file",
+      "sample_files": [
+        "go1.2.2.linux-amd64.tar.gz",
+        "go1.5.4.linux-amd64.tar.gz",
+        "go1.10.8.linux-amd64.tar.gz",
+        "go1.16.15.linux-amd64.tar.gz",
+        "go1.21.0.windows-amd64.zip",
+        "go1.27.1.linux-amd64.tar.gz",
+        "go1.27.1.aix-ppc64.tar.gz",
+        "go1.27.1.darwin-arm64.tar.gz",
+        "go1.21.0.freebsd-riscv64.tar.gz",
+        "go1.4.2.darwin-amd64-osx10.6.tar.gz"
+      ],
+      "hash_verified_sample": "go1.5.3.src.tar.gz downloaded in full from https://mirrors.hust.edu.cn/golang/go1.5.3.src.tar.gz (12,057,623 bytes); sha256 754e06dab1c31ab168fc9db9e32596734015ea9e24bc44cae7f237f417ce4efe matched releases.json's checksum (source: go.dev's JSON index); file deleted after verification",
+      "date_checked": "2026-09-17",
+      "applied_to": "every release entry and every download_plan*.json entry (extra_mirrors.py, full-mirror rule -- not re-checked per file)"
+    }
+  ],
+  "rejected": [
+    {
+      "host": "golang.google.cn",
+      "url_template": "https://golang.google.cn/dl/{filename}",
+      "reason": "sample did not confirm",
+      "sample_results": {
+        "go1.2.2.linux-amd64.tar.gz": {
+          "status": 302,
+          "size": null,
+          "matches_canonical": false,
+          "redirects_to": "https://dl.google.com/go/go1.2.2.linux-amd64.tar.gz"
+        },
+        "go1.5.4.linux-amd64.tar.gz": {
+          "status": 302,
+          "size": null,
+          "matches_canonical": false,
+          "redirects_to": "https://dl.google.com/go/go1.5.4.linux-amd64.tar.gz"
+        },
+        "go1.10.8.linux-amd64.tar.gz": {
+          "status": 302,
+          "size": null,
+          "matches_canonical": false,
+          "redirects_to": "https://dl.google.com/go/go1.10.8.linux-amd64.tar.gz"
+        },
+        "go1.16.15.linux-amd64.tar.gz": {
+          "status": 302,
+          "size": null,
+          "matches_canonical": false,
+          "redirects_to": "https://dl.google.com/go/go1.16.15.linux-amd64.tar.gz"
+        },
+        "go1.21.0.windows-amd64.zip": {
+          "status": 302,
+          "size": null,
+          "matches_canonical": false,
+          "redirects_to": "https://dl.google.com/go/go1.21.0.windows-amd64.zip"
+        },
+        "go1.27.1.linux-amd64.tar.gz": {
+          "status": 302,
+          "size": null,
+          "matches_canonical": false,
+          "redirects_to": "https://dl.google.com/go/go1.27.1.linux-amd64.tar.gz"
+        }
+      }
+    },
+    {
+      "host": "mirrors.ustc.edu.cn",
+      "url_template": "https://mirrors.ustc.edu.cn/golang/{filename}",
+      "reason": "sample did not confirm",
+      "sample_results": {
+        "go1.2.2.linux-amd64.tar.gz": {
+          "status": 302,
+          "size": null,
+          "matches_canonical": false,
+          "redirects_to": "https://dl.google.com/go/go1.2.2.linux-amd64.tar.gz"
+        },
+        "go1.5.4.linux-amd64.tar.gz": {
+          "status": 302,
+          "size": null,
+          "matches_canonical": false,
+          "redirects_to": "https://dl.google.com/go/go1.5.4.linux-amd64.tar.gz"
+        },
+        "go1.10.8.linux-amd64.tar.gz": {
+          "status": 302,
+          "size": null,
+          "matches_canonical": false,
+          "redirects_to": "https://dl.google.com/go/go1.10.8.linux-amd64.tar.gz"
+        },
+        "go1.16.15.linux-amd64.tar.gz": {
+          "status": 302,
+          "size": null,
+          "matches_canonical": false,
+          "redirects_to": "https://dl.google.com/go/go1.16.15.linux-amd64.tar.gz"
+        },
+        "go1.21.0.windows-amd64.zip": {
+          "status": 302,
+          "size": null,
+          "matches_canonical": false,
+          "redirects_to": "https://dl.google.com/go/go1.21.0.windows-amd64.zip"
+        },
+        "go1.27.1.linux-amd64.tar.gz": {
+          "status": 302,
+          "size": null,
+          "matches_canonical": false,
+          "redirects_to": "https://dl.google.com/go/go1.27.1.linux-amd64.tar.gz"
+        }
+      }
+    },
+    {
+      "host": "mirrors.huaweicloud.com",
+      "url_template": "https://mirrors.huaweicloud.com/go/{filename}",
+      "reason": "sample did not confirm",
+      "sample_results": {
+        "go1.2.2.linux-amd64.tar.gz": {
+          "status": 404,
+          "size": null,
+          "matches_canonical": false
+        },
+        "go1.5.4.linux-amd64.tar.gz": {
+          "status": 404,
+          "size": null,
+          "matches_canonical": false
+        },
+        "go1.10.8.linux-amd64.tar.gz": {
+          "status": 404,
+          "size": null,
+          "matches_canonical": false
+        },
+        "go1.16.15.linux-amd64.tar.gz": {
+          "status": 404,
+          "size": null,
+          "matches_canonical": false
+        },
+        "go1.21.0.windows-amd64.zip": {
+          "status": 404,
+          "size": null,
+          "matches_canonical": false
+        },
+        "go1.27.1.linux-amd64.tar.gz": {
+          "status": 404,
+          "size": null,
+          "matches_canonical": false
+        }
+      }
+    },
+    {
+      "host": "mirrors.bfsu.edu.cn",
+      "url_template": "https://mirrors.bfsu.edu.cn/golang/{filename}",
+      "reason": "404 (with an HTML error body, not a raw 404) for every sample file; BFSU does not currently mirror golang at this path",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "mirrors.cloud.tencent.com",
+      "url_template": "https://mirrors.cloud.tencent.com/go/{filename}",
+      "reason": "404 (small JSON-style error body) for every sample file; not mirrored at this path",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "studygolang.com",
+      "url_template": "https://studygolang.com/dl/golang/{filename}",
+      "reason": "303 redirect to golang.google.cn (itself a redirector to dl.google.com, already rejected) for every sample file -- not an independent copy",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "mirrors.tuna.tsinghua.edu.cn",
+      "url_template": "https://mirrors.tuna.tsinghua.edu.cn/golang/{filename}",
+      "reason": "inconclusive, not rejected on evidence: both /golang/ and the /help/golang/ doc page returned TUNA's anti-abuse block page (\"your subnet has sent abnormal requests to our site recently\") for every request, before any file-level response was seen. This looks like a network-reputation block on the environment's egress IP, not evidence the mirror doesn't exist -- left unconfirmed rather than added without evidence.",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "mirror.sjtu.edu.cn",
+      "url_template": "https://mirror.sjtu.edu.cn/golang/{filename}",
+      "reason": "inconclusive, not rejected on evidence: first two sample requests returned 200, then every subsequent request to /golang/ got SJTU's \"Cerberus Challenge\" bot-block page (\"blocked due to suspicious activity\"). Reads as rate-limiting on the environment's egress IP rather than a real 403/404, and the two 200s that did land weren't captured with a Content-Length to compare -- left unconfirmed rather than added on a partial, uncertain sample.",
+      "date_checked": "2026-09-17"
+    }
+  ],
+  "outside_china_checked_2026-09-17": {
+    "note": "Per MIRROR-HUNT.md priority 1 (mirrors outside China). None of the following general-purpose mirror networks carry a golang/ (or go/) directory: their root index (or, where indexing is disabled, a guessed /golang/ subpath) was fetched directly and grepped/HEAD-checked for a Go entry. This matches NOTES.md's existing observation that Go isn't widely mirrored outside China -- no full Go release tree was found on any general OSS mirror checked.",
+    "checked": [
+      "mirror.dotsrc.org (Denmark) -- directory indexing disabled site-wide ('temporarily turned off ... due to scraping'); guessed /golang/ 404s",
+      "ftp.jaist.ac.jp/pub/ (Japan) -- full top-level listing fetched, no golang/go entry; guessed /pub/golang/ 404s",
+      "mirror.yandex.ru (Russia) -- full top-level listing fetched, no golang/go entry; guessed /mirrors/golang/ 404s",
+      "www.mirrorservice.org/sites/ (UK) -- full site listing fetched, no golang.org or dl.google.com entry; guessed paths 404",
+      "ftp.fau.de (Germany) -- full top-level listing fetched, no golang entry; guessed /golang/ 404s",
+      "ftp.halifax.rwth-aachen.de (Germany) -- full top-level listing fetched, no golang entry; guessed /golang/ 404s",
+      "mirror.aarnet.edu.au/pub/ (Australia) -- top-level listing fetched, no golang entry; guessed /pub/golang/ 404s",
+      "mirrors.kernel.org, mirror.init7.net (Switzerland), ftp.gwdg.de/pub/ (Germany) -- top-level listings fetched, no golang/go entry"
+    ],
+    "wayback_machine": "archive.org was returning 'Internet Archive services are temporarily offline' for the CDX API at the time of this hunt (2026-09-17), for both go.googlecode.com/files/go1.0*|go1.1* and storage.googleapis.com/golang/go1.1*. Not checked further this run -- a real outage, not a finding one way or the other; worth retrying later per MIRROR-HUNT.md's Wayback guidance for the go1.0/1.1 gap entries."
+  }
+}

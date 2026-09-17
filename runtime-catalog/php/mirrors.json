@@ -1,0 +1,200 @@
+[
+ {
+  "template": "https://museum.php.net/php{major_digit}/{filename}",
+  "applies_to": "source tarballs whose major is fully end-of-life (major_digit = version.split('.')[0])",
+  "confirmed_by": "HEAD request against every candidate source entry (438 files, cached, <=10 concurrent) -- not just a sample, because coverage turned out to be uneven across majors",
+  "files_matched": 300,
+  "files_checked": 438,
+  "majors_fully_mirrored": [
+   "4.4",
+   "5.3",
+   "5.4",
+   "5.5",
+   "7.0",
+   "7.1",
+   "7.2",
+   "7.4",
+   "8.0"
+  ],
+  "majors_not_mirrored_at_all": [
+   "8.1",
+   "8.2",
+   "8.3",
+   "8.4",
+   "8.5"
+  ],
+  "caveat": "museum.php.net only mirrors majors that are fully end-of-life; it does not yet carry the still-maintained 8.x majors' latest patches, so mirrors[] is empty for those entries",
+  "samples": [
+   {
+    "url": "https://www.php.net/distributions/php-5.6.40.tar.xz",
+    "mirror_url": "https://museum.php.net/php5/php-5.6.40.tar.xz",
+    "primary_size": 12472236,
+    "mirror_size": 12472236,
+    "match": true
+   },
+   {
+    "url": "https://www.php.net/distributions/php-5.6.30.tar.xz",
+    "mirror_url": "https://museum.php.net/php5/php-5.6.30.tar.xz",
+    "primary_size": 12449696,
+    "mirror_size": 12449696,
+    "match": true
+   },
+   {
+    "url": "https://www.php.net/distributions/php-5.6.20.tar.xz",
+    "mirror_url": "https://museum.php.net/php5/php-5.6.20.tar.xz",
+    "primary_size": 11642408,
+    "mirror_size": 11642408,
+    "match": true
+   },
+   {
+    "url": "https://www.php.net/distributions/php-5.5.30.tar.xz",
+    "mirror_url": "https://museum.php.net/php5/php-5.5.30.tar.xz",
+    "primary_size": 11103416,
+    "mirror_size": 11103416,
+    "match": true
+   },
+   {
+    "url": "https://www.php.net/distributions/php-5.6.10.tar.xz",
+    "mirror_url": "https://museum.php.net/php5/php-5.6.10.tar.xz",
+    "primary_size": 11565568,
+    "mirror_size": 11565568,
+    "match": true
+   },
+   {
+    "url": "https://www.php.net/distributions/php-5.5.20.tar.xz",
+    "mirror_url": "https://museum.php.net/php5/php-5.5.20.tar.xz",
+    "primary_size": 10801412,
+    "mirror_size": 10801412,
+    "match": true
+   },
+   {
+    "url": "https://www.php.net/distributions/php-5.6.0.tar.xz",
+    "mirror_url": "https://museum.php.net/php5/php-5.6.0.tar.xz",
+    "primary_size": 11082404,
+    "mirror_size": 11082404,
+    "match": true
+   },
+   {
+    "url": "https://www.php.net/distributions/php-5.5.10.tar.bz2",
+    "mirror_url": "https://museum.php.net/php5/php-5.5.10.tar.bz2",
+    "primary_size": 13102742,
+    "mirror_size": 13102742,
+    "match": true
+   }
+  ]
+ },
+ {
+  "template": "https://downloads.php.net/~windows/{rest}",
+  "operator": "php.net (not a third-party mirror -- a second host the project itself runs)",
+  "region": "same operator as windows.php.net; physically a Debian/Apache box, distinct from windows.php.net's BunnyCDN edge",
+  "applies_to": "every release entry whose url starts with https://windows.php.net/downloads/ -- both releases/ (current) and releases/archives/ (historical), since windows.php.net now 302-redirects its entire /downloads/ tree to this host (confirmed by curl -I on windows.php.net/downloads/releases/)",
+  "protocols": {
+   "https": true,
+   "http": "redirects to https (301), not served directly over plain http"
+  },
+  "full_or_partial": "full -- 1:1 layout swap of the whole tree, not a rolling/partial mirror, so it needed spanning-sample confirmation rather than a per-entry check",
+  "confirmed_by": "HEAD request on 6 files spanning old/middle/newest majors (5.6, 7.4, 8.5) and both Windows archs (x86/x64); all 6 Content-Lengths matched exactly. One of the six (php-7.4.33-nts-Win32-vc15-x86.zip, 24327462 bytes) was also fully downloaded and its sha256 checked against the vendor-published checksum in releases.json (14ae3250...->3719efc4... matches) -- see samples below.",
+  "hash_verified_sample": {
+   "url": "https://downloads.php.net/~windows/releases/php-7.4.33-nts-Win32-vc15-x86.zip",
+   "algo": "sha256",
+   "matched_vendor_checksum": true
+  },
+  "files_matched": 6,
+  "files_checked": 6,
+  "entries_covered": 1370,
+  "date_checked": "2026-09-17",
+  "samples": [
+   {
+    "url": "https://windows.php.net/downloads/releases/archives/php-5.6.40-nts-Win32-VC11-x64.zip",
+    "mirror_url": "https://downloads.php.net/~windows/releases/archives/php-5.6.40-nts-Win32-VC11-x64.zip",
+    "primary_size": 23032238,
+    "mirror_size": 23032238,
+    "match": true
+   },
+   {
+    "url": "https://windows.php.net/downloads/releases/archives/php-5.6.40-nts-Win32-VC11-x86.zip",
+    "mirror_url": "https://downloads.php.net/~windows/releases/archives/php-5.6.40-nts-Win32-VC11-x86.zip",
+    "primary_size": 21374398,
+    "mirror_size": 21374398,
+    "match": true
+   },
+   {
+    "url": "https://windows.php.net/downloads/releases/php-7.4.33-nts-Win32-vc15-x64.zip",
+    "mirror_url": "https://downloads.php.net/~windows/releases/php-7.4.33-nts-Win32-vc15-x64.zip",
+    "primary_size": 26132214,
+    "mirror_size": 26132214,
+    "match": true
+   },
+   {
+    "url": "https://windows.php.net/downloads/releases/php-7.4.33-nts-Win32-vc15-x86.zip",
+    "mirror_url": "https://downloads.php.net/~windows/releases/php-7.4.33-nts-Win32-vc15-x86.zip",
+    "primary_size": 24327462,
+    "mirror_size": 24327462,
+    "match": true
+   },
+   {
+    "url": "https://windows.php.net/downloads/releases/php-8.5.10-nts-Win32-vs17-x64.zip",
+    "mirror_url": "https://downloads.php.net/~windows/releases/php-8.5.10-nts-Win32-vs17-x64.zip",
+    "primary_size": 36023055,
+    "mirror_size": 36023055,
+    "match": true
+   },
+   {
+    "url": "https://windows.php.net/downloads/releases/php-8.5.10-nts-Win32-vs17-x86.zip",
+    "mirror_url": "https://downloads.php.net/~windows/releases/php-8.5.10-nts-Win32-vs17-x86.zip",
+    "primary_size": 32335989,
+    "mirror_size": 32335989,
+    "match": true
+   }
+  ]
+ },
+ {
+  "template": "https://mirror.nju.edu.cn/php/{filename}",
+  "operator": "unknown -- found via mirror-ecosystem hunt (2026-09-17), not php.net's own mirror docs",
+  "region": "China",
+  "applies_to": "every releases.json entry whose url starts with https://www.php.net/distributions/ (source tarballs) -- NOT windows.php.net or museum.php.net entries",
+  "protocols": {
+   "https": true
+  },
+  "full_or_partial": "partial",
+  "confirmed_by": "package-managers/apply_r_php_mirrors.py: per-entry HEAD against every www.php.net/distributions/ entry, 436/438 matched (the 2 misses are the still-current 8.5.x latest patch, not yet mirrored here -- same limitation pattern as museum.php.net above)",
+  "hash_verified_sample": {
+   "url": "https://mirror.nju.edu.cn/php/php-4.4.9.tar.bz2",
+   "algo": "md5",
+   "expected": "2e3b2a0e27f10cb84fd00e5ecd7a1880",
+   "matched_vendor_checksum": true
+  },
+  "date_checked": "2026-09-17"
+ },
+ {
+  "template": "https://mirrors.nju.edu.cn/php/{filename}",
+  "operator": "unknown -- found via mirror-ecosystem hunt (2026-09-17), not php.net's own mirror docs",
+  "region": "China",
+  "applies_to": "every releases.json entry whose url starts with https://www.php.net/distributions/ (source tarballs) -- NOT windows.php.net or museum.php.net entries",
+  "protocols": {
+   "https": true
+  },
+  "full_or_partial": "partial",
+  "confirmed_by": "package-managers/apply_r_php_mirrors.py: per-entry HEAD against every www.php.net/distributions/ entry, 436/438 matched (the 2 misses are the still-current 8.5.x latest patch, not yet mirrored here -- same limitation pattern as museum.php.net above)",
+  "hash_verified_sample": {
+   "url": "https://mirrors.nju.edu.cn/php/php-4.4.9.tar.bz2",
+   "algo": "md5",
+   "expected": "2e3b2a0e27f10cb84fd00e5ecd7a1880",
+   "matched_vendor_checksum": true
+  },
+  "date_checked": "2026-09-17"
+ },
+ {
+  "template": "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/{filename}",
+  "operator": "DigitalOcean Spaces (Frankfurt) -- this is the object-storage origin that dl.static-php.dev's CDN redirector (302 -> /down?path=... -> this host) itself serves from, not an independently-operated third party",
+  "region": "Germany (EU)",
+  "applies_to": "every releases.json entry with variant static-php-cli (338 entries, linux+macos archives, common/ build set)",
+  "protocols": {
+   "https": true
+  },
+  "full_or_partial": "full (alias)",
+  "confirmed_by": "mirror hunt round 2 (2026-09-17): HEAD Content-Length match on all 338/338 static-php-cli entries, spanning PHP 8.0.30-8.5.8, linux/macos, amd64/arm64. No vendor checksum exists for static-php-cli builds (confirmed absent in releases.json), so no hash-verified sample was possible -- recorded per MIRROR-HUNT.md's 'say so' clause.",
+  "note": "Because this is the same backing store the CDN serves from (not a copy), it cannot drift out of sync with dl.static-php.dev the way a real third-party mirror could -- addresses the round-2 brief's content-stability concern for this variant. Still labelled an alias, not an independent mirror, same convention as R's cdn.rstudio.com/cdn.posit.co pair.",
+  "date_checked": "2026-09-17"
+ }
+]

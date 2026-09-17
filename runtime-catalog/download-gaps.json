@@ -1,0 +1,53 @@
+{
+ "python": [],
+ "node": [],
+ "java": [],
+ "dotnet": [
+  {
+   "runtime": "dotnet",
+   "major": "7.0",
+   "version": "7.0.20",
+   "os": "macos",
+   "arch": "amd64",
+   "variant": "runtime",
+   "path": "dotnet/macos/amd64/7.0.20-runtime/dotnet-runtime-7.0.20-osx-x64.tar.gz",
+   "size": 30848718,
+   "status": "failed",
+   "errors": [
+    "https://builds.dotnet.microsoft.com/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-osx-x64.tar.gz: verification failed (sha512 vendor)",
+    "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-osx-x64.tar.gz: verification failed (sha512 vendor)"
+   ],
+   "urls_tried": [
+    "https://builds.dotnet.microsoft.com/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-osx-x64.tar.gz",
+    "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-osx-x64.tar.gz"
+   ]
+  },
+  {
+   "runtime": "dotnet",
+   "major": "7.0",
+   "version": "7.0.20",
+   "os": "macos",
+   "arch": "arm64",
+   "variant": "runtime",
+   "path": "dotnet/macos/arm64/7.0.20-runtime/dotnet-runtime-7.0.20-osx-arm64.tar.gz",
+   "size": 29182560,
+   "status": "failed",
+   "errors": [
+    "https://builds.dotnet.microsoft.com/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-osx-arm64.tar.gz: verification failed (sha512 vendor)",
+    "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-osx-arm64.tar.gz: verification failed (sha512 vendor)"
+   ],
+   "urls_tried": [
+    "https://builds.dotnet.microsoft.com/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-osx-arm64.tar.gz",
+    "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/7.0.20/dotnet-runtime-7.0.20-osx-arm64.tar.gz"
+   ]
+  }
+ ],
+ "php": [],
+ "r": [],
+ "go": [],
+ "rust": [],
+ "cc": [],
+ "ruby": [],
+ "nim": [],
+ "zig": []
+}

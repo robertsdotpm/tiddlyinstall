@@ -1,0 +1,68 @@
+[
+  {
+    "runtime": "ruby",
+    "major": "1.8",
+    "os": "linux",
+    "arch": "all",
+    "reason": "ruby-lang.org has never published official prebuilt Linux binaries (source tarball only); ruby/ruby-builder (used by ruby/setup-ruby) has no build for this major either.",
+    "looked_at": [
+      "https://cache.ruby-lang.org/pub/ruby/",
+      "https://github.com/ruby/ruby-builder/releases"
+    ]
+  },
+  {
+    "runtime": "ruby",
+    "major": "1.8",
+    "os": "macos",
+    "arch": "all",
+    "reason": "ruby-lang.org has never published official prebuilt macOS binaries (source tarball only); ruby/ruby-builder has no build for this major either.",
+    "looked_at": [
+      "https://cache.ruby-lang.org/pub/ruby/",
+      "https://github.com/ruby/ruby-builder/releases"
+    ]
+  },
+  {
+    "runtime": "ruby",
+    "major": "1.9",
+    "os": "linux",
+    "arch": "all",
+    "reason": "ruby-lang.org has never published official prebuilt Linux binaries (source tarball only); ruby/ruby-builder (used by ruby/setup-ruby) has no build for this major either.",
+    "looked_at": [
+      "https://cache.ruby-lang.org/pub/ruby/",
+      "https://github.com/ruby/ruby-builder/releases"
+    ]
+  },
+  {
+    "runtime": "ruby",
+    "major": "1.9",
+    "os": "macos",
+    "arch": "all",
+    "reason": "ruby-lang.org has never published official prebuilt macOS binaries (source tarball only); ruby/ruby-builder has no build for this major either.",
+    "looked_at": [
+      "https://cache.ruby-lang.org/pub/ruby/",
+      "https://github.com/ruby/ruby-builder/releases"
+    ]
+  },
+  {
+    "runtime": "ruby",
+    "major": "2.0",
+    "os": "linux",
+    "arch": "all",
+    "reason": "ruby-lang.org has never published official prebuilt Linux binaries (source tarball only); ruby/ruby-builder (used by ruby/setup-ruby) has no build for this major either.",
+    "looked_at": [
+      "https://cache.ruby-lang.org/pub/ruby/",
+      "https://github.com/ruby/ruby-builder/releases"
+    ]
+  },
+  {
+    "runtime": "ruby",
+    "major": "2.0",
+    "os": "macos",
+    "arch": "all",
+    "reason": "ruby-lang.org has never published official prebuilt macOS binaries (source tarball only); ruby/ruby-builder has no build for this major either.",
+    "looked_at": [
+      "https://cache.ruby-lang.org/pub/ruby/",
+      "https://github.com/ruby/ruby-builder/releases"
+    ]
+  }
+]

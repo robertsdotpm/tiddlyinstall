@@ -1,0 +1,2301 @@
+{
+ "generated": "2026-09-17",
+ "layout": "<runtime>/<os>/<arch>/<version>/<file>; deps/<os>/<arch>/<name>/<version>/<file>",
+ "mirrors_file": "mirrors.json",
+ "files": [
+  {
+   "path": "python/windows/x86/3.0.1/python-3.0.1.msi",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "x86",
+   "version": "3.0.1",
+   "size": 13434880,
+   "sha256": "d48afebf88b871ad6a1716a6a41a9070882aa8a4d87f118136c384e332c4aadc",
+   "md5": "ffce874eb1a832927fb705b84720bfc6",
+   "source_url": "https://www.python.org/ftp/python/3.0.1/python-3.0.1.msi",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.0.1/python-3.0.1.msi"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.0.1/python-3.0.1.msi"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.0.1/python-3.0.1.msi"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.0.1/python-3.0.1.msi"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.0.1/python-3.0.1.msi"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.0.1.msi"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.0.1/python-3.0.1.msi"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.0.1/python-3.0.1.msi"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.0.1/python-3.0.1.msi"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.0.1/python-3.0.1.msi"
+    }
+   ],
+   "mirrors_unconfirmed": []
+  },
+  {
+   "path": "python/windows/amd64/3.0.1/python-3.0.1.amd64.msi",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "amd64",
+   "version": "3.0.1",
+   "size": 13702656,
+   "sha256": "fa65ce8ae140e879c5885510725f81dbdebbd4764a0edf8feee5616573a8a993",
+   "md5": "be8f57265e1419330965692a4fa15d9a",
+   "source_url": "https://www.python.org/ftp/python/3.0.1/python-3.0.1.amd64.msi",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.0.1/python-3.0.1.amd64.msi"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.0.1/python-3.0.1.amd64.msi"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.0.1/python-3.0.1.amd64.msi"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.0.1/python-3.0.1.amd64.msi"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.0.1/python-3.0.1.amd64.msi"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.0.1.amd64.msi"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.0.1/python-3.0.1.amd64.msi"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.0.1/python-3.0.1.amd64.msi"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.0.1/python-3.0.1.amd64.msi"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.0.1/python-3.0.1.amd64.msi"
+    }
+   ],
+   "mirrors_unconfirmed": []
+  },
+  {
+   "path": "python/windows/x86/3.1.4/python-3.1.4.msi",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "x86",
+   "version": "3.1.4",
+   "size": 14282752,
+   "sha256": "72132b8641326be501bcb511eeb4db88858665dec9a10eeddf4ea733b8c97c4c",
+   "md5": "142acb595152b322f5341045327a42b8",
+   "source_url": "https://www.python.org/ftp/python/3.1.4/python-3.1.4.msi",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.1.4/python-3.1.4.msi"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.1.4/python-3.1.4.msi"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.1.4/python-3.1.4.msi"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.1.4/python-3.1.4.msi"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.1.4/python-3.1.4.msi"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.1.4.msi"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.1.4/python-3.1.4.msi"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.1.4/python-3.1.4.msi"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.1.4/python-3.1.4.msi"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.1.4/python-3.1.4.msi"
+    }
+   ],
+   "mirrors_unconfirmed": []
+  },
+  {
+   "path": "python/windows/amd64/3.1.4/python-3.1.4.amd64.msi",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "amd64",
+   "version": "3.1.4",
+   "size": 14557184,
+   "sha256": "8399353e8f1a0d83b0b04553cfd47da02b7dc7a90d24b8abf63bd06dad572bc8",
+   "md5": "829794fc7902880e4d55c7937c364541",
+   "source_url": "https://www.python.org/ftp/python/3.1.4/python-3.1.4.amd64.msi",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.1.4/python-3.1.4.amd64.msi"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.1.4/python-3.1.4.amd64.msi"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.1.4/python-3.1.4.amd64.msi"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.1.4/python-3.1.4.amd64.msi"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.1.4/python-3.1.4.amd64.msi"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.1.4.amd64.msi"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.1.4/python-3.1.4.amd64.msi"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.1.4/python-3.1.4.amd64.msi"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.1.4/python-3.1.4.amd64.msi"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.1.4/python-3.1.4.amd64.msi"
+    }
+   ],
+   "mirrors_unconfirmed": []
+  },
+  {
+   "path": "python/windows/x86/3.2.5/python-3.2.5.msi",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "x86",
+   "version": "3.2.5",
+   "size": 18329600,
+   "sha256": "0383b37f59c476efc02f608150618f3c3f9726a29f6790c5f4a5922fda04f3d4",
+   "md5": "cdd6fdc59461c968bd105fdf08f4a17d",
+   "source_url": "https://www.python.org/ftp/python/3.2.5/python-3.2.5.msi",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.2.5/python-3.2.5.msi"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.2.5/python-3.2.5.msi"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.2.5/python-3.2.5.msi"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.2.5/python-3.2.5.msi"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.2.5/python-3.2.5.msi"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.2.5.msi"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.2.5/python-3.2.5.msi"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.2.5/python-3.2.5.msi"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.2.5/python-3.2.5.msi"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.2.5/python-3.2.5.msi"
+    }
+   ],
+   "mirrors_unconfirmed": []
+  },
+  {
+   "path": "python/windows/amd64/3.2.5/python-3.2.5.amd64.msi",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "amd64",
+   "version": "3.2.5",
+   "size": 18812928,
+   "sha256": "c75c2326a79edfa027fc22a9f28dcaac7f88e9969b91a391f4b211386fe6b8fc",
+   "md5": "b3b7bc402c630d61a37516986aaa1c4b",
+   "source_url": "https://www.python.org/ftp/python/3.2.5/python-3.2.5.amd64.msi",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.2.5/python-3.2.5.amd64.msi"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.2.5/python-3.2.5.amd64.msi"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.2.5/python-3.2.5.amd64.msi"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.2.5/python-3.2.5.amd64.msi"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.2.5/python-3.2.5.amd64.msi"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.2.5.amd64.msi"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.2.5/python-3.2.5.amd64.msi"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.2.5/python-3.2.5.amd64.msi"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.2.5/python-3.2.5.amd64.msi"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.2.5/python-3.2.5.amd64.msi"
+    }
+   ],
+   "mirrors_unconfirmed": []
+  },
+  {
+   "path": "python/windows/x86/3.3.5/python-3.3.5.msi",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "x86",
+   "version": "3.3.5",
+   "size": 20676608,
+   "sha256": "e233762dfe98a9cdc13c50980c668698a497e8875a575b6bbdb22f5414212297",
+   "md5": "ee4de0c34fd8c575db8a7805e2b9584a",
+   "source_url": "https://www.python.org/ftp/python/3.3.5/python-3.3.5.msi",
+   "found_via": "python.org FTP directory listing (missing from the downloads API)",
+   "verified": {
+    "method": "gpg",
+    "signature": "python/windows/x86/3.3.5/python-3.3.5.msi.asc",
+    "key_fingerprint": "CBC547978A3964D14B9AB36A6AF053F07D9DC8D2",
+    "key_owner": "Martin v. Löwis",
+    "key_source": "python.org pubkeys.txt as archived by the Internet Archive in 2015; key id 7D9DC8D2 listed on python.org/downloads in 2014"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.3.5/python-3.3.5.msi"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.3.5/python-3.3.5.msi"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.3.5/python-3.3.5.msi"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.3.5/python-3.3.5.msi"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.3.5/python-3.3.5.msi"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.3.5.msi"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.3.5/python-3.3.5.msi"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.3.5/python-3.3.5.msi"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.3.5/python-3.3.5.msi"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.3.5/python-3.3.5.msi"
+    }
+   ],
+   "mirrors_unconfirmed": []
+  },
+  {
+   "path": "python/windows/amd64/3.3.5/python-3.3.5.amd64.msi",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "amd64",
+   "version": "3.3.5",
+   "size": 21221376,
+   "sha256": "4be9dfe84fd5e0bc183fc24680a95a77a86aef21e9989d834084ee6dcc5b2cab",
+   "md5": "ebb3ab0df91389a6dd45317d6f4ac838",
+   "source_url": "https://www.python.org/ftp/python/3.3.5/python-3.3.5.amd64.msi",
+   "found_via": "python.org FTP directory listing (missing from the downloads API)",
+   "verified": {
+    "method": "gpg",
+    "signature": "python/windows/amd64/3.3.5/python-3.3.5.amd64.msi.asc",
+    "key_fingerprint": "CBC547978A3964D14B9AB36A6AF053F07D9DC8D2",
+    "key_owner": "Martin v. Löwis",
+    "key_source": "python.org pubkeys.txt as archived by the Internet Archive in 2015; key id 7D9DC8D2 listed on python.org/downloads in 2014"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.3.5/python-3.3.5.amd64.msi"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.3.5/python-3.3.5.amd64.msi"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.3.5/python-3.3.5.amd64.msi"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.3.5/python-3.3.5.amd64.msi"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.3.5/python-3.3.5.amd64.msi"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.3.5.amd64.msi"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.3.5/python-3.3.5.amd64.msi"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.3.5/python-3.3.5.amd64.msi"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.3.5/python-3.3.5.amd64.msi"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.3.5/python-3.3.5.amd64.msi"
+    }
+   ],
+   "mirrors_unconfirmed": []
+  },
+  {
+   "path": "python/windows/x86/3.4.4/python-3.4.4.msi",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "x86",
+   "version": "3.4.4",
+   "size": 24932352,
+   "sha256": "46c8f9f63cf02987e8bf23934b2f471e1868b24748c5bb551efcf4863b43ca6c",
+   "md5": "e96268f7042d2a3d14f7e23b2535738b",
+   "source_url": "https://www.python.org/ftp/python/3.4.4/python-3.4.4.msi",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.4.4/python-3.4.4.msi"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.4.4/python-3.4.4.msi"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.4.4/python-3.4.4.msi"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.4.4/python-3.4.4.msi"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.4.4/python-3.4.4.msi"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.4.4.msi"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.4.4/python-3.4.4.msi"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.4.4/python-3.4.4.msi"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.4.4/python-3.4.4.msi"
+    }
+   ],
+   "mirrors_unconfirmed": [
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.4.4/python-3.4.4.msi",
+     "probe": "HTTP 000, size 24932352"
+    }
+   ]
+  },
+  {
+   "path": "python/windows/amd64/3.4.4/python-3.4.4.amd64.msi",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "amd64",
+   "version": "3.4.4",
+   "size": 26054656,
+   "sha256": "ace645d104bddd4f4ffbf453bedddaf2496e3609af3fa47173680d2f321d3709",
+   "md5": "963f67116935447fad73e09cc561c713",
+   "source_url": "https://www.python.org/ftp/python/3.4.4/python-3.4.4.amd64.msi",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.4.4/python-3.4.4.amd64.msi"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.4.4/python-3.4.4.amd64.msi"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.4.4/python-3.4.4.amd64.msi"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.4.4/python-3.4.4.amd64.msi"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.4.4/python-3.4.4.amd64.msi"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.4.4.amd64.msi"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.4.4/python-3.4.4.amd64.msi"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.4.4/python-3.4.4.amd64.msi"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.4.4/python-3.4.4.amd64.msi"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.4.4/python-3.4.4.amd64.msi"
+    }
+   ],
+   "mirrors_unconfirmed": []
+  },
+  {
+   "path": "python/windows/x86/3.5.4/python-3.5.4.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "x86",
+   "version": "3.5.4",
+   "size": 28932168,
+   "sha256": "f27c2d67fd9688e4970f3bff799bb9d722a0d6c2c13b04848e1f7d620b524b0e",
+   "md5": "9693575358f41f452d03fd33714f223f",
+   "source_url": "https://www.python.org/ftp/python/3.5.4/python-3.5.4.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.5.4/python-3.5.4.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.5.4/python-3.5.4.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.5.4/python-3.5.4.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.5.4/python-3.5.4.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.5.4/python-3.5.4.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.5.4.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.5.4/python-3.5.4.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.5.4/python-3.5.4.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.5.4/python-3.5.4.exe"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.5.4/python-3.5.4.exe"
+    }
+   ],
+   "mirrors_unconfirmed": []
+  },
+  {
+   "path": "python/windows/amd64/3.5.4/python-3.5.4-amd64.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "amd64",
+   "version": "3.5.4",
+   "size": 29849120,
+   "sha256": "9b7741cc32357573a77d2ee64987717e527628c38fd7eaf3e2aaca853d45a1ee",
+   "md5": "4276742a4a75a8d07260f13fe956eec4",
+   "source_url": "https://www.python.org/ftp/python/3.5.4/python-3.5.4-amd64.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.5.4/python-3.5.4-amd64.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.5.4/python-3.5.4-amd64.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.5.4/python-3.5.4-amd64.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.5.4/python-3.5.4-amd64.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.5.4/python-3.5.4-amd64.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.5.4-amd64.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.5.4/python-3.5.4-amd64.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.5.4/python-3.5.4-amd64.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.5.4/python-3.5.4-amd64.exe"
+    }
+   ],
+   "mirrors_unconfirmed": [
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.5.4/python-3.5.4-amd64.exe",
+     "probe": "HTTP 000, size 29849120"
+    }
+   ]
+  },
+  {
+   "path": "python/windows/x86/3.6.8/python-3.6.8.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "x86",
+   "version": "3.6.8",
+   "size": 30807656,
+   "sha256": "89871d432bc06e4630d7b64cb1a8451e53c80e68de29029976b12aad7dbfa5a0",
+   "md5": "9c7b1ebdd3a8df0eebfda2f107f1742c",
+   "source_url": "https://www.python.org/ftp/python/3.6.8/python-3.6.8.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.6.8/python-3.6.8.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.6.8/python-3.6.8.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.6.8/python-3.6.8.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.6.8/python-3.6.8.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.6.8/python-3.6.8.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.6.8.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.6.8/python-3.6.8.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.6.8/python-3.6.8.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.6.8/python-3.6.8.exe"
+    }
+   ],
+   "mirrors_unconfirmed": [
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.6.8/python-3.6.8.exe",
+     "probe": "HTTP 000, size 0"
+    }
+   ]
+  },
+  {
+   "path": "python/windows/amd64/3.6.8/python-3.6.8-amd64.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "amd64",
+   "version": "3.6.8",
+   "size": 31830944,
+   "sha256": "96088a58b7c43bc83b84e6b67f15e8706c614023dd64f9a5a14e81ff824adadc",
+   "md5": "72f37686b7ab240ef70fdb931bdf3cb5",
+   "source_url": "https://www.python.org/ftp/python/3.6.8/python-3.6.8-amd64.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.6.8/python-3.6.8-amd64.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.6.8/python-3.6.8-amd64.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.6.8/python-3.6.8-amd64.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.6.8/python-3.6.8-amd64.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.6.8/python-3.6.8-amd64.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.6.8-amd64.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.6.8/python-3.6.8-amd64.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.6.8/python-3.6.8-amd64.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.6.8/python-3.6.8-amd64.exe"
+    }
+   ],
+   "mirrors_unconfirmed": [
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.6.8/python-3.6.8-amd64.exe",
+     "probe": "HTTP 000, size 31830944"
+    }
+   ]
+  },
+  {
+   "path": "python/windows/x86/3.7.9/python-3.7.9.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "x86",
+   "version": "3.7.9",
+   "size": 25875560,
+   "sha256": "769bb7c74ad1df6d7d74071cc16a984ff6182e4016e11b8949b93db487977220",
+   "md5": "1e6d31c98c68c723541f0821b3c15d52",
+   "source_url": "https://www.python.org/ftp/python/3.7.9/python-3.7.9.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.7.9/python-3.7.9.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.7.9/python-3.7.9.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.7.9/python-3.7.9.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.7.9/python-3.7.9.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.7.9/python-3.7.9.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.7.9.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.7.9/python-3.7.9.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.7.9/python-3.7.9.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.7.9/python-3.7.9.exe"
+    }
+   ],
+   "mirrors_unconfirmed": [
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.7.9/python-3.7.9.exe",
+     "probe": "HTTP 000, size 0"
+    }
+   ]
+  },
+  {
+   "path": "python/windows/amd64/3.7.9/python-3.7.9-amd64.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "amd64",
+   "version": "3.7.9",
+   "size": 26940592,
+   "sha256": "e69ed52afb5a722e5c56f6c21d594e85c17cb29f12f18bb69751cf1714e0f987",
+   "md5": "7083fed513c3c9a4ea655211df9ade27",
+   "source_url": "https://www.python.org/ftp/python/3.7.9/python-3.7.9-amd64.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.7.9/python-3.7.9-amd64.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.7.9/python-3.7.9-amd64.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.7.9/python-3.7.9-amd64.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.7.9/python-3.7.9-amd64.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.7.9/python-3.7.9-amd64.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.7.9-amd64.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.7.9/python-3.7.9-amd64.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.7.9/python-3.7.9-amd64.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.7.9/python-3.7.9-amd64.exe"
+    }
+   ],
+   "mirrors_unconfirmed": [
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.7.9/python-3.7.9-amd64.exe",
+     "probe": "HTTP 000, size 26940592"
+    }
+   ]
+  },
+  {
+   "path": "python/windows/x86/3.8.10/python-3.8.10.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "x86",
+   "version": "3.8.10",
+   "size": 27204536,
+   "sha256": "ad07633a1f0cd795f3bf9da33729f662281df196b4567fa795829f3bb38a30ac",
+   "md5": "b355cfc84b681ace8908ae50908e8761",
+   "source_url": "https://www.python.org/ftp/python/3.8.10/python-3.8.10.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.8.10/python-3.8.10.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.8.10/python-3.8.10.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.8.10/python-3.8.10.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.8.10/python-3.8.10.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.8.10/python-3.8.10.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.8.10.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.8.10/python-3.8.10.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.8.10/python-3.8.10.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.8.10/python-3.8.10.exe"
+    }
+   ],
+   "mirrors_unconfirmed": [
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.8.10/python-3.8.10.exe",
+     "probe": "HTTP 000, size 27204536"
+    }
+   ]
+  },
+  {
+   "path": "python/windows/amd64/3.8.10/python-3.8.10-amd64.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "amd64",
+   "version": "3.8.10",
+   "size": 28296784,
+   "sha256": "7628244cb53408b50639d2c1287c659f4e29d3dfdb9084b11aed5870c0c6a48a",
+   "md5": "62cf1a12a5276b0259e8761d4cf4fe42",
+   "source_url": "https://www.python.org/ftp/python/3.8.10/python-3.8.10-amd64.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.8.10/python-3.8.10-amd64.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.8.10/python-3.8.10-amd64.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.8.10/python-3.8.10-amd64.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.8.10/python-3.8.10-amd64.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.8.10/python-3.8.10-amd64.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.8.10/python-3.8.10-amd64.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.8.10/python-3.8.10-amd64.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.8.10/python-3.8.10-amd64.exe"
+    }
+   ],
+   "mirrors_unconfirmed": [
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.8.10-amd64.exe",
+     "probe": "HTTP 000, size 0"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.8.10/python-3.8.10-amd64.exe",
+     "probe": "HTTP 000, size 0"
+    }
+   ]
+  },
+  {
+   "path": "python/windows/x86/3.9.13/python-3.9.13.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "x86",
+   "version": "3.9.13",
+   "size": 28096840,
+   "sha256": "f363935897bf32adf6822ba15ed1bfed7ae2ae96477f0262650055b6e9637c35",
+   "md5": "46c35b0a2a4325c275b2ed3187b08ac4",
+   "source_url": "https://www.python.org/ftp/python/3.9.13/python-3.9.13.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.9.13/python-3.9.13.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.9.13/python-3.9.13.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.9.13/python-3.9.13.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.9.13/python-3.9.13.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.9.13/python-3.9.13.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.9.13.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.9.13/python-3.9.13.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.9.13/python-3.9.13.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.9.13/python-3.9.13.exe"
+    }
+   ],
+   "mirrors_unconfirmed": [
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.9.13/python-3.9.13.exe",
+     "probe": "HTTP 200, size 0"
+    }
+   ]
+  },
+  {
+   "path": "python/windows/amd64/3.9.13/python-3.9.13-amd64.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "amd64",
+   "version": "3.9.13",
+   "size": 29235432,
+   "sha256": "fb3d0466f3754752ca7fd839a09ffe53375ff2c981279fd4bc23a005458f7f5d",
+   "md5": "e7062b85c3624af82079794729618eca",
+   "source_url": "https://www.python.org/ftp/python/3.9.13/python-3.9.13-amd64.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.9.13/python-3.9.13-amd64.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.9.13/python-3.9.13-amd64.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.9.13/python-3.9.13-amd64.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.9.13/python-3.9.13-amd64.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.9.13/python-3.9.13-amd64.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.9.13-amd64.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.9.13/python-3.9.13-amd64.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.9.13/python-3.9.13-amd64.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.9.13/python-3.9.13-amd64.exe"
+    }
+   ],
+   "mirrors_unconfirmed": [
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.9.13/python-3.9.13-amd64.exe",
+     "probe": "HTTP 000, size 0"
+    }
+   ]
+  },
+  {
+   "path": "python/windows/x86/3.10.11/python-3.10.11.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "x86",
+   "version": "3.10.11",
+   "size": 27865760,
+   "sha256": "bd115a575e86e61cea9136c5a2c47e090ba484dc2dee8b51a34111bb094266d5",
+   "md5": "83a67e1c4f6f1472bf75dd9681491bf1",
+   "source_url": "https://www.python.org/ftp/python/3.10.11/python-3.10.11.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.10.11/python-3.10.11.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.10.11/python-3.10.11.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.10.11/python-3.10.11.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.10.11/python-3.10.11.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.10.11/python-3.10.11.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.10.11.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.10.11/python-3.10.11.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.10.11/python-3.10.11.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.10.11/python-3.10.11.exe"
+    }
+   ],
+   "mirrors_unconfirmed": [
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.10.11/python-3.10.11.exe",
+     "probe": "HTTP 000, size 0"
+    }
+   ]
+  },
+  {
+   "path": "python/windows/amd64/3.10.11/python-3.10.11-amd64.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "amd64",
+   "version": "3.10.11",
+   "size": 29037240,
+   "sha256": "d8dede5005564b408ba50317108b765ed9c3c510342a598f9fd42681cbe0648b",
+   "md5": "a55e9c1e6421c84a4bd8b4be41492f51",
+   "source_url": "https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.10.11/python-3.10.11-amd64.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.10.11/python-3.10.11-amd64.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.10.11/python-3.10.11-amd64.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.10.11/python-3.10.11-amd64.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.10.11-amd64.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.10.11/python-3.10.11-amd64.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.10.11/python-3.10.11-amd64.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.10.11/python-3.10.11-amd64.exe"
+    }
+   ],
+   "mirrors_unconfirmed": [
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe",
+     "probe": "HTTP 000, size 0"
+    }
+   ]
+  },
+  {
+   "path": "python/windows/x86/3.11.9/python-3.11.9.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "x86",
+   "version": "3.11.9",
+   "size": 24933192,
+   "sha256": "af19e5e2f03e715a822181f2cb7d4efef4eda13fa4a2db6da12e998e46f5cbf9",
+   "md5": "2a1d1ac2d8a0aa847515f9dd121ccbb7",
+   "source_url": "https://www.python.org/ftp/python/3.11.9/python-3.11.9.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.11.9/python-3.11.9.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.11.9/python-3.11.9.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.11.9/python-3.11.9.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.11.9/python-3.11.9.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.11.9/python-3.11.9.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.11.9.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.11.9/python-3.11.9.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.11.9/python-3.11.9.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.11.9/python-3.11.9.exe"
+    }
+   ],
+   "mirrors_unconfirmed": [
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.11.9/python-3.11.9.exe",
+     "probe": "HTTP 000, size 0"
+    }
+   ]
+  },
+  {
+   "path": "python/windows/amd64/3.11.9/python-3.11.9-amd64.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "amd64",
+   "version": "3.11.9",
+   "size": 26216840,
+   "sha256": "5ee42c4eee1e6b4464bb23722f90b45303f79442df63083f05322f1785f5fdde",
+   "md5": "e8dcd502e34932eebcaf1be056d5cbcd",
+   "source_url": "https://www.python.org/ftp/python/3.11.9/python-3.11.9-amd64.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.11.9/python-3.11.9-amd64.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.11.9/python-3.11.9-amd64.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.11.9/python-3.11.9-amd64.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.11.9/python-3.11.9-amd64.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.11.9/python-3.11.9-amd64.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.11.9-amd64.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.11.9/python-3.11.9-amd64.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.11.9/python-3.11.9-amd64.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.11.9/python-3.11.9-amd64.exe"
+    }
+   ],
+   "mirrors_unconfirmed": [
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.11.9/python-3.11.9-amd64.exe",
+     "probe": "HTTP 000, size 0"
+    }
+   ]
+  },
+  {
+   "path": "python/windows/arm64/3.11.9/python-3.11.9-arm64.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "arm64",
+   "version": "3.11.9",
+   "size": 25483288,
+   "sha256": "58f3a4e91b63d5a680ecc77c1db4565a1e3966e8656d4c8b89200d58c1f5c4f3",
+   "md5": "328d93f71cb078965e4cfa2eb2663fa1",
+   "source_url": "https://www.python.org/ftp/python/3.11.9/python-3.11.9-arm64.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.11.9/python-3.11.9-arm64.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.11.9/python-3.11.9-arm64.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.11.9/python-3.11.9-arm64.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.11.9/python-3.11.9-arm64.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.11.9/python-3.11.9-arm64.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.11.9-arm64.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.11.9/python-3.11.9-arm64.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.11.9/python-3.11.9-arm64.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.11.9/python-3.11.9-arm64.exe"
+    }
+   ],
+   "mirrors_unconfirmed": [
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.11.9/python-3.11.9-arm64.exe",
+     "probe": "HTTP 000, size 0"
+    }
+   ]
+  },
+  {
+   "path": "python/windows/x86/3.12.10/python-3.12.10.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "x86",
+   "version": "3.12.10",
+   "size": 25648336,
+   "sha256": "fdfe385b94f5b8785a0226a886979527fd26eb65defdbf29992fd22cc4b0e31e",
+   "md5": "ff3e7e2582811ade44916d9c3d2a64b2",
+   "source_url": "https://www.python.org/ftp/python/3.12.10/python-3.12.10.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.12.10/python-3.12.10.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.12.10/python-3.12.10.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.12.10/python-3.12.10.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.12.10/python-3.12.10.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.12.10/python-3.12.10.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.12.10.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.12.10/python-3.12.10.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.12.10/python-3.12.10.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.12.10/python-3.12.10.exe"
+    }
+   ],
+   "mirrors_unconfirmed": [
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.12.10/python-3.12.10.exe",
+     "probe": "HTTP 000, size 0"
+    }
+   ]
+  },
+  {
+   "path": "python/windows/amd64/3.12.10/python-3.12.10-amd64.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "amd64",
+   "version": "3.12.10",
+   "size": 26964224,
+   "sha256": "67b5635e80ea51072b87941312d00ec8927c4db9ba18938f7ad2d27b328b95fb",
+   "md5": "5eddb0b6f12c852725de071ae681dde4",
+   "source_url": "https://www.python.org/ftp/python/3.12.10/python-3.12.10-amd64.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.12.10/python-3.12.10-amd64.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.12.10/python-3.12.10-amd64.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.12.10/python-3.12.10-amd64.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.12.10/python-3.12.10-amd64.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.12.10/python-3.12.10-amd64.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.12.10-amd64.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.12.10/python-3.12.10-amd64.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.12.10/python-3.12.10-amd64.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.12.10/python-3.12.10-amd64.exe"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.12.10/python-3.12.10-amd64.exe"
+    }
+   ],
+   "mirrors_unconfirmed": []
+  },
+  {
+   "path": "python/windows/arm64/3.12.10/python-3.12.10-arm64.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "arm64",
+   "version": "3.12.10",
+   "size": 26202936,
+   "sha256": "377ac8fd478987940088e879441e702a71b53164d2a1e6f1d51ff77a7e470258",
+   "md5": "37df52717faa6c514342b8d43cae7026",
+   "source_url": "https://www.python.org/ftp/python/3.12.10/python-3.12.10-arm64.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org md5",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.12.10/python-3.12.10-arm64.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.12.10/python-3.12.10-arm64.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.12.10/python-3.12.10-arm64.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.12.10/python-3.12.10-arm64.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.12.10/python-3.12.10-arm64.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.12.10-arm64.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.12.10/python-3.12.10-arm64.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.12.10/python-3.12.10-arm64.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.12.10/python-3.12.10-arm64.exe"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.12.10/python-3.12.10-arm64.exe"
+    }
+   ],
+   "mirrors_unconfirmed": []
+  },
+  {
+   "path": "python/windows/x86/3.13.15/python-3.13.15.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "x86",
+   "version": "3.13.15",
+   "size": 28098408,
+   "sha256": "741c07276eb2d57e7ee012d643f021c58cb38d11c5389be46c15d41d1a10b447",
+   "md5": "f505f870188e2102a5cab779f3508837",
+   "source_url": "https://www.python.org/ftp/python/3.13.15/python-3.13.15.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org sha256",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.13.15/python-3.13.15.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.13.15/python-3.13.15.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.13.15/python-3.13.15.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.13.15/python-3.13.15.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.13.15/python-3.13.15.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.13.15/python-3.13.15.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.13.15/python-3.13.15.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.13.15/python-3.13.15.exe"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.13.15/python-3.13.15.exe"
+    }
+   ],
+   "mirrors_unconfirmed": [
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.13.15.exe",
+     "probe": "HTTP 000, size 28098408"
+    }
+   ]
+  },
+  {
+   "path": "python/windows/amd64/3.13.15/python-3.13.15-amd64.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "amd64",
+   "version": "3.13.15",
+   "size": 29452944,
+   "sha256": "edec09c4853aeae9ac36efb8c9f95b6b8e2fee65eee56d9767a8b7c69c574403",
+   "md5": "d5e619c326a76cc19d8d897b79753c3b",
+   "source_url": "https://www.python.org/ftp/python/3.13.15/python-3.13.15-amd64.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org sha256",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.13.15/python-3.13.15-amd64.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.13.15/python-3.13.15-amd64.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.13.15/python-3.13.15-amd64.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.13.15/python-3.13.15-amd64.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.13.15/python-3.13.15-amd64.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.13.15-amd64.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.13.15/python-3.13.15-amd64.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.13.15/python-3.13.15-amd64.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.13.15/python-3.13.15-amd64.exe"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.13.15/python-3.13.15-amd64.exe"
+    }
+   ],
+   "mirrors_unconfirmed": []
+  },
+  {
+   "path": "python/windows/arm64/3.13.15/python-3.13.15-arm64.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "arm64",
+   "version": "3.13.15",
+   "size": 28799152,
+   "sha256": "c252c676087c49e6b94e95a273536b78921c28a5fc9f86d15d25392328247249",
+   "md5": "457460cd7076c66aa422c3e03b7cbbaf",
+   "source_url": "https://www.python.org/ftp/python/3.13.15/python-3.13.15-arm64.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org sha256",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.13.15/python-3.13.15-arm64.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.13.15/python-3.13.15-arm64.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.13.15/python-3.13.15-arm64.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.13.15/python-3.13.15-arm64.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.13.15/python-3.13.15-arm64.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.13.15-arm64.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.13.15/python-3.13.15-arm64.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.13.15/python-3.13.15-arm64.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.13.15/python-3.13.15-arm64.exe"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.13.15/python-3.13.15-arm64.exe"
+    }
+   ],
+   "mirrors_unconfirmed": []
+  },
+  {
+   "path": "python/windows/x86/3.14.7/python-3.14.7.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "x86",
+   "version": "3.14.7",
+   "size": 31696736,
+   "sha256": "097fc03d4ac2de66ee1d73a0c5d2d323b5c0f14923f7207686ce93149a80f0a6",
+   "md5": "e2d9db79d5ab74fb984456c41df8344f",
+   "source_url": "https://www.python.org/ftp/python/3.14.7/python-3.14.7.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org sha256",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.14.7/python-3.14.7.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.14.7/python-3.14.7.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.14.7/python-3.14.7.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.14.7/python-3.14.7.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.14.7/python-3.14.7.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.14.7.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.14.7/python-3.14.7.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.14.7/python-3.14.7.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.14.7/python-3.14.7.exe"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.14.7/python-3.14.7.exe"
+    }
+   ],
+   "mirrors_unconfirmed": []
+  },
+  {
+   "path": "python/windows/amd64/3.14.7/python-3.14.7-amd64.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "amd64",
+   "version": "3.14.7",
+   "size": 33258168,
+   "sha256": "9d9eb2709ef81bf5cd30db3c2096bdbc4ea10087c22e62f27d356b36f6ae9649",
+   "md5": "b4eb2ef5c124779f262c9e58b03aca41",
+   "source_url": "https://www.python.org/ftp/python/3.14.7/python-3.14.7-amd64.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org sha256",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.14.7/python-3.14.7-amd64.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.14.7/python-3.14.7-amd64.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.14.7/python-3.14.7-amd64.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.14.7/python-3.14.7-amd64.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.14.7/python-3.14.7-amd64.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.14.7-amd64.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.14.7/python-3.14.7-amd64.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.14.7/python-3.14.7-amd64.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.14.7/python-3.14.7-amd64.exe"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.14.7/python-3.14.7-amd64.exe"
+    }
+   ],
+   "mirrors_unconfirmed": []
+  },
+  {
+   "path": "python/windows/arm64/3.14.7/python-3.14.7-arm64.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "arm64",
+   "version": "3.14.7",
+   "size": 32570072,
+   "sha256": "9a3fe120cc81bc2cb099550f794d8356811f96a86c7f438519243c3485db928d",
+   "md5": "47719c932618def836b2b16df3726e8d",
+   "source_url": "https://www.python.org/ftp/python/3.14.7/python-3.14.7-arm64.exe",
+   "found_via": "python.org downloads API",
+   "verified": {
+    "method": "python.org sha256",
+    "source": "https://www.python.org/api/v2/downloads/release_file/"
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.14.7/python-3.14.7-arm64.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.14.7/python-3.14.7-arm64.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.14.7/python-3.14.7-arm64.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.14.7/python-3.14.7-arm64.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.14.7/python-3.14.7-arm64.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.14.7-arm64.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.14.7/python-3.14.7-arm64.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.14.7/python-3.14.7-arm64.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.14.7/python-3.14.7-arm64.exe"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.14.7/python-3.14.7-arm64.exe"
+    }
+   ],
+   "mirrors_unconfirmed": []
+  },
+  {
+   "path": "python/windows/x86/3.5-xp-backport/python_3_5_x86.zip",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "x86",
+   "version": "3.5-xp-backport",
+   "size": 47145815,
+   "sha256": "95e2208f84f493382e7c6c3b776c1e942cdff45f22ff8168232910b7b47ed619",
+   "md5": "5cc87bf8a04c6b9efe7f88e46f1a7eba",
+   "source_url": "https://msfn.org/board/topic/176131-python-35-runtime-redistributable-backported-to-xp/",
+   "other_sources": [
+    "https://archive.org/details/python-35-win-xp (original installer, before modifications)"
+   ],
+   "found_via": "https://github.com/robertsdotpm/win-auto-py3 (win_xp/python_3_5_x86.zip at 4773a6c), file_meta.txt",
+   "verified": {
+    "method": "sha256 from win-auto-py3 file_meta.txt"
+   },
+   "tested": {
+    "by": "operator, win-auto-py3",
+    "on": "Windows XP",
+    "result": "installs and asyncio works",
+    "notes": "See TESTED-WINDOWS.md. Do not substitute another build without re-testing."
+   },
+   "note": "Custom: files extracted from the msfn.org XP backport installer, pip added, changes made so asyncio works. Does not match upstream.",
+   "mirrors": []
+  },
+  {
+   "path": "python/windows/x86/3.7.0/python-3.7.0.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "x86",
+   "version": "3.7.0",
+   "size": 25506832,
+   "sha256": "559e56d293e05ff6159c3676da2b5a93081efad7a8acc74c12bb757e2b93daba",
+   "md5": "ebb6444c284c1447e902e87381afeff0",
+   "source_url": "https://www.python.org/ftp/python/3.7.0/python-3.7.0.exe",
+   "other_sources": [],
+   "found_via": "https://github.com/robertsdotpm/win-auto-py3 (win_vista/python_3_7_0_x86.exe at 4773a6c), file_meta.txt",
+   "verified": {
+    "method": "sha256 from win-auto-py3 file_meta.txt and python.org md5"
+   },
+   "tested": {
+    "by": "operator, win-auto-py3",
+    "on": "Windows Vista",
+    "result": "installs and asyncio works",
+    "notes": "See TESTED-WINDOWS.md. Do not substitute another build without re-testing."
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.7.0/python-3.7.0.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.7.0/python-3.7.0.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.7.0/python-3.7.0.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.7.0/python-3.7.0.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.7.0/python-3.7.0.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.7.0.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.7.0/python-3.7.0.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.7.0/python-3.7.0.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.7.0/python-3.7.0.exe"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.7.0/python-3.7.0.exe"
+    }
+   ],
+   "mirrors_unconfirmed": []
+  },
+  {
+   "path": "python/windows/x86/3.8.0/python-3.8.0.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "x86",
+   "version": "3.8.0",
+   "size": 26406312,
+   "sha256": "b471908de5e10d8fb5c3351a5affb1172da7790c533e0c9ffbaeec9c11611b15",
+   "md5": "412a649d36626d33b8ca5593cf18318c",
+   "source_url": "https://www.python.org/ftp/python/3.8.0/python-3.8.0.exe",
+   "other_sources": [],
+   "found_via": "https://github.com/robertsdotpm/win-auto-py3 (win_7/python_3_8_0_x86.exe at 4773a6c), file_meta.txt",
+   "verified": {
+    "method": "sha256 from win-auto-py3 file_meta.txt and python.org md5"
+   },
+   "tested": {
+    "by": "operator, win-auto-py3",
+    "on": "Windows 7, 8, 8.1",
+    "result": "installs and asyncio works",
+    "notes": "See TESTED-WINDOWS.md. Do not substitute another build without re-testing."
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.8.0/python-3.8.0.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.8.0/python-3.8.0.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.8.0/python-3.8.0.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.8.0/python-3.8.0.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.8.0/python-3.8.0.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.8.0.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.8.0/python-3.8.0.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.8.0/python-3.8.0.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.8.0/python-3.8.0.exe"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.8.0/python-3.8.0.exe"
+    }
+   ],
+   "mirrors_unconfirmed": []
+  },
+  {
+   "path": "python/windows/x86/3.13.0/python-3.13.0.exe",
+   "runtime": "python",
+   "os": "windows",
+   "arch": "x86",
+   "version": "3.13.0",
+   "size": 26817888,
+   "sha256": "a9be7082ccd3d0b947d14a87bceadb1a3551382a68fcb64d245a2ebcc779b272",
+   "md5": "8e96d6243623ff7acc61c9dc7cd3638f",
+   "source_url": "https://www.python.org/ftp/python/3.13.0/python-3.13.0.exe",
+   "other_sources": [],
+   "found_via": "https://github.com/robertsdotpm/win-auto-py3 (generic/python_3_13_x86.exe at 4773a6c), file_meta.txt",
+   "verified": {
+    "method": "sha256 from win-auto-py3 file_meta.txt and python.org md5"
+   },
+   "tested": {
+    "by": "operator, win-auto-py3",
+    "on": "Windows 10, 11",
+    "result": "installs and asyncio works",
+    "notes": "See TESTED-WINDOWS.md. Do not substitute another build without re-testing."
+   },
+   "mirrors": [
+    {
+     "mirror": "python.org",
+     "url": "https://www.python.org/ftp/python/3.13.0/python-3.13.0.exe"
+    },
+    {
+     "mirror": "huaweicloud",
+     "url": "https://mirrors.huaweicloud.com/python/3.13.0/python-3.13.0.exe"
+    },
+    {
+     "mirror": "huaweicloud-repo",
+     "url": "https://repo.huaweicloud.com/python/3.13.0/python-3.13.0.exe"
+    },
+    {
+     "mirror": "npmmirror",
+     "url": "https://registry.npmmirror.com/-/binary/python/3.13.0/python-3.13.0.exe"
+    },
+    {
+     "mirror": "npmmirror-cdn",
+     "url": "https://cdn.npmmirror.com/binaries/python/3.13.0/python-3.13.0.exe"
+    },
+    {
+     "mirror": "aliyun",
+     "url": "https://mirrors.aliyun.com/python-release/windows/python-3.13.0.exe"
+    },
+    {
+     "mirror": "tuna",
+     "url": "https://mirrors.tuna.tsinghua.edu.cn/python/3.13.0/python-3.13.0.exe"
+    },
+    {
+     "mirror": "nju",
+     "url": "https://mirror.nju.edu.cn/python/3.13.0/python-3.13.0.exe"
+    },
+    {
+     "mirror": "bfsu",
+     "url": "https://mirrors.bfsu.edu.cn/python/3.13.0/python-3.13.0.exe"
+    },
+    {
+     "mirror": "wayback",
+     "url": "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.13.0/python-3.13.0.exe"
+    }
+   ],
+   "mirrors_unconfirmed": []
+  },
+  {
+   "path": "deps/windows/any/vcredist-aio/0.35.0/VisualCppRedist_AIO_x86_x64.exe",
+   "runtime": "vcredist-aio",
+   "os": "windows",
+   "arch": "any",
+   "version": "0.35.0",
+   "size": 30043398,
+   "sha256": "04d6878f25e0bb6ce8fe2de7e0e7603edef7dbd6e9270789c819ed678211d2f6",
+   "md5": "1903e8289a150aa43970841c34ddaed2",
+   "source_url": "https://github.com/abbodi1406/vcredist/releases/download/v0.35.0/VisualCppRedist_AIO_x86_x64_35.zip",
+   "other_sources": [
+    "https://github.com/abbodi1406/vcredist/releases/tag/v0.35.0",
+    "https://archive.org/details/visual-cpp-redist-aio-x-86-x-64-35"
+   ],
+   "found_via": "https://github.com/robertsdotpm/win-auto-py3 (generic/VisualCppRedist_AIO_x86_x64.exe at 4773a6c), file_meta.txt",
+   "verified": {
+    "method": "sha256 from win-auto-py3 file_meta.txt"
+   },
+   "tested": {
+    "by": "operator, win-auto-py3",
+    "on": "Windows XP and Vista, installed before Python with /ai",
+    "result": "prerequisite for the tested Python builds"
+   },
+   "note": "Extracted from the release zip.",
+   "mirrors": []
+  }
+ ]
+}

@@ -1,0 +1,1 @@
+{"folder": "go", "url": "https://dl.google.com/go/go1.27.1.src.tar.gz", "mirror": "https://sources.openwrt.org/go1.27.1.src.tar.gz", "evidence": "OpenWrt sources.openwrt.org (package source cache); downloaded sample, sha256 matches vendor checksum exactly 2026-09-17"}

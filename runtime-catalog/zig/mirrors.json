@@ -1,0 +1,501 @@
+{
+  "runtime": "zig",
+  "canonical": "https://ziglang.org/download/<version>/<filename>",
+  "confirmed": [
+    {
+      "host": "pkg.hexops.org",
+      "url_template": "https://pkg.hexops.org/zig/<filename>",
+      "kind": "community mirror (ziglang.org/download/community-mirrors.txt)",
+      "confirmed_by": "9-file sample (0.1.1/0.6.0/0.9.0/0.10.0/0.14.1/0.15.2, linux+macos+windows, old+new filename scheme, src + bootstrap variant, one freebsd binary) HEAD/Range size-matched 2026-09-17; re-verified every script run via a full-download sha256 check of the 1.66 MB 0.1.1 source tarball",
+      "serves_minisig": true,
+      "applied_to": "every releases.json entry and every download_plan*.json entry",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "zig.linus.dev",
+      "url_template": "https://zig.linus.dev/zig/<filename>",
+      "kind": "community mirror (ziglang.org/download/community-mirrors.txt)",
+      "confirmed_by": "9-file sample (0.1.1/0.6.0/0.9.0/0.10.0/0.14.1/0.15.2, linux+macos+windows, old+new filename scheme, src + bootstrap variant, one freebsd binary) HEAD/Range size-matched 2026-09-17; re-verified every script run via a full-download sha256 check of the 1.66 MB 0.1.1 source tarball",
+      "serves_minisig": true,
+      "applied_to": "every releases.json entry and every download_plan*.json entry",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "zig.squirl.dev",
+      "url_template": "https://zig.squirl.dev/<filename>",
+      "kind": "community mirror (ziglang.org/download/community-mirrors.txt)",
+      "confirmed_by": "9-file sample (0.1.1/0.6.0/0.9.0/0.10.0/0.14.1/0.15.2, linux+macos+windows, old+new filename scheme, src + bootstrap variant, one freebsd binary) HEAD/Range size-matched 2026-09-17; re-verified every script run via a full-download sha256 check of the 1.66 MB 0.1.1 source tarball",
+      "serves_minisig": true,
+      "applied_to": "every releases.json entry and every download_plan*.json entry",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "zig.mirror.mschae23.de",
+      "url_template": "https://zig.mirror.mschae23.de/zig/<filename>",
+      "kind": "community mirror (ziglang.org/download/community-mirrors.txt)",
+      "confirmed_by": "9-file sample (0.1.1/0.6.0/0.9.0/0.10.0/0.14.1/0.15.2, linux+macos+windows, old+new filename scheme, src + bootstrap variant, one freebsd binary) HEAD/Range size-matched 2026-09-17; re-verified every script run via a full-download sha256 check of the 1.66 MB 0.1.1 source tarball",
+      "serves_minisig": true,
+      "applied_to": "every releases.json entry and every download_plan*.json entry",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "zig.tilok.dev",
+      "url_template": "https://zig.tilok.dev/<filename>",
+      "kind": "community mirror (ziglang.org/download/community-mirrors.txt)",
+      "confirmed_by": "9-file sample (0.1.1/0.6.0/0.9.0/0.10.0/0.14.1/0.15.2, linux+macos+windows, old+new filename scheme, src + bootstrap variant, one freebsd binary) HEAD/Range size-matched 2026-09-17; re-verified every script run via a full-download sha256 check of the 1.66 MB 0.1.1 source tarball",
+      "serves_minisig": true,
+      "applied_to": "every releases.json entry and every download_plan*.json entry",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "zig-mirror.tsimnet.eu",
+      "url_template": "https://zig-mirror.tsimnet.eu/zig/<filename>",
+      "kind": "community mirror (ziglang.org/download/community-mirrors.txt)",
+      "confirmed_by": "9-file sample (0.1.1/0.6.0/0.9.0/0.10.0/0.14.1/0.15.2, linux+macos+windows, old+new filename scheme, src + bootstrap variant, one freebsd binary) HEAD/Range size-matched 2026-09-17; re-verified every script run via a full-download sha256 check of the 1.66 MB 0.1.1 source tarball",
+      "serves_minisig": true,
+      "applied_to": "every releases.json entry and every download_plan*.json entry",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "zig.karearl.com",
+      "url_template": "https://zig.karearl.com/zig/<filename>",
+      "kind": "community mirror (ziglang.org/download/community-mirrors.txt)",
+      "confirmed_by": "9-file sample (0.1.1/0.6.0/0.9.0/0.10.0/0.14.1/0.15.2, linux+macos+windows, old+new filename scheme, src + bootstrap variant, one freebsd binary) HEAD/Range size-matched 2026-09-17; re-verified every script run via a full-download sha256 check of the 1.66 MB 0.1.1 source tarball",
+      "serves_minisig": true,
+      "applied_to": "every releases.json entry and every download_plan*.json entry",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "pkg.earth",
+      "url_template": "https://pkg.earth/zig/<filename>",
+      "kind": "community mirror (ziglang.org/download/community-mirrors.txt)",
+      "confirmed_by": "9-file sample (0.1.1/0.6.0/0.9.0/0.10.0/0.14.1/0.15.2, linux+macos+windows, old+new filename scheme, src + bootstrap variant, one freebsd binary) HEAD/Range size-matched 2026-09-17; re-verified every script run via a full-download sha256 check of the 1.66 MB 0.1.1 source tarball",
+      "serves_minisig": true,
+      "applied_to": "every releases.json entry and every download_plan*.json entry",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "zig.chainsafe.dev",
+      "url_template": "https://zig.chainsafe.dev/<filename>",
+      "kind": "community mirror (ziglang.org/download/community-mirrors.txt)",
+      "confirmed_by": "9-file sample (0.1.1/0.6.0/0.9.0/0.10.0/0.14.1/0.15.2, linux+macos+windows, old+new filename scheme, src + bootstrap variant, one freebsd binary) HEAD/Range size-matched 2026-09-17; re-verified every script run via a full-download sha256 check of the 1.66 MB 0.1.1 source tarball",
+      "serves_minisig": true,
+      "applied_to": "every releases.json entry and every download_plan*.json entry",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "zig.savalione.com",
+      "url_template": "https://zig.savalione.com/<filename>",
+      "kind": "community mirror (ziglang.org/download/community-mirrors.txt)",
+      "confirmed_by": "9-file sample (0.1.1/0.6.0/0.9.0/0.10.0/0.14.1/0.15.2, linux+macos+windows, old+new filename scheme, src + bootstrap variant, one freebsd binary) HEAD/Range size-matched 2026-09-17; re-verified every script run via a full-download sha256 check of the 1.66 MB 0.1.1 source tarball",
+      "serves_minisig": true,
+      "applied_to": "every releases.json entry and every download_plan*.json entry",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "zig.vortan.dev",
+      "url_template": "https://zig.vortan.dev/zig/<filename>",
+      "kind": "community mirror (ziglang.org/download/community-mirrors.txt)",
+      "confirmed_by": "9-file sample (0.1.1/0.6.0/0.9.0/0.10.0/0.14.1/0.15.2, linux+macos+windows, old+new filename scheme, src + bootstrap variant, one freebsd binary) HEAD/Range size-matched 2026-09-17; re-verified every script run via a full-download sha256 check of the 1.66 MB 0.1.1 source tarball",
+      "serves_minisig": true,
+      "applied_to": "every releases.json entry and every download_plan*.json entry",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "download.zigmirror.com",
+      "url_template": "https://download.zigmirror.com/<filename>",
+      "kind": "community mirror (ziglang.org/download/community-mirrors.txt)",
+      "confirmed_by": "9-file sample (0.1.1/0.6.0/0.9.0/0.10.0/0.14.1/0.15.2, linux+macos+windows, old+new filename scheme, src + bootstrap variant, one freebsd binary) HEAD/Range size-matched 2026-09-17; re-verified every script run via a full-download sha256 check of the 1.66 MB 0.1.1 source tarball",
+      "serves_minisig": false,
+      "applied_to": "every releases.json entry and every download_plan*.json entry",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "zig.bcr.ist",
+      "url_template": "https://zig.bcr.ist/<filename>",
+      "kind": "community mirror (ziglang.org/download/community-mirrors.txt)",
+      "confirmed_by": "9-file sample (0.1.1/0.6.0/0.9.0/0.10.0/0.14.1/0.15.2, linux+macos+windows, old+new filename scheme, src + bootstrap variant, one freebsd binary) HEAD/Range size-matched 2026-09-17; re-verified every script run via a full-download sha256 check of the 1.66 MB 0.1.1 source tarball",
+      "serves_minisig": true,
+      "applied_to": "every releases.json entry and every download_plan*.json entry",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "fs.liujiacai.net",
+      "url_template": "https://fs.liujiacai.net/zigbuilds/<filename>",
+      "kind": "community mirror (ziglang.org/download/community-mirrors.txt)",
+      "confirmed_by": "9-file sample (0.1.1/0.6.0/0.9.0/0.10.0/0.14.1/0.15.2, linux+macos+windows, old+new filename scheme, src + bootstrap variant, one freebsd binary) HEAD/Range size-matched 2026-09-17; re-verified every script run via a full-download sha256 check of the 1.66 MB 0.1.1 source tarball",
+      "serves_minisig": true,
+      "applied_to": "every releases.json entry and every download_plan*.json entry",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "ziglang.freetls.fastly.net",
+      "url_template": "https://ziglang.freetls.fastly.net/<filename>",
+      "kind": "community mirror (ziglang.org/download/community-mirrors.txt)",
+      "confirmed_by": "9-file sample (0.1.1/0.6.0/0.9.0/0.10.0/0.14.1/0.15.2, linux+macos+windows, old+new filename scheme, src + bootstrap variant, one freebsd binary) HEAD/Range size-matched 2026-09-17; re-verified every script run via a full-download sha256 check of the 1.66 MB 0.1.1 source tarball",
+      "serves_minisig": true,
+      "applied_to": "every releases.json entry and every download_plan*.json entry",
+      "date_checked": "2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/12/zig-0.13.0.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.13.0/zig-0.13.0.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig ebuild Manifest); size match 17220728 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/bd/zig-0.14.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.14.1/zig-0.14.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig ebuild Manifest); size match 17787696 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/29/zig-0.15.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.15.1/zig-0.15.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig ebuild Manifest); size match 21359884 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/ef/zig-0.15.2.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.15.2/zig-0.15.2.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig ebuild Manifest); size match 21366268 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/4d/zig-0.16.0.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.16.0/zig-0.16.0.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig ebuild Manifest); size match 22503260 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/d2/zig-aarch64-linux-0.14.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.14.1/zig-aarch64-linux-0.14.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 44954692 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/6f/zig-aarch64-linux-0.15.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.15.1/zig-aarch64-linux-0.15.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 49493872 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/9e/zig-aarch64-linux-0.15.2.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.15.2/zig-aarch64-linux-0.15.2.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 49471996 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/b3/zig-aarch64-linux-0.16.0.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.16.0/zig-aarch64-linux-0.16.0.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 51211944 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/4f/zig-arm-linux-0.15.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.15.1/zig-arm-linux-0.15.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 50477464 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/f4/zig-arm-linux-0.15.2.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.15.2/zig-arm-linux-0.15.2.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 50454216 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/6e/zig-arm-linux-0.16.0.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.16.0/zig-arm-linux-0.16.0.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 52122000 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/d2/zig-armv7a-linux-0.14.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.14.1/zig-armv7a-linux-0.14.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 46137456 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/dd/zig-linux-aarch64-0.10.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.10.1/zig-linux-aarch64-0.10.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 40321280 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/71/zig-linux-aarch64-0.13.0.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.13.0/zig-linux-aarch64-0.13.0.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 43090688 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/92/zig-linux-armv7a-0.13.0.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.13.0/zig-linux-armv7a-0.13.0.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 43998916 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/81/zig-linux-i386-0.10.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.10.1/zig-linux-i386-0.10.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 48367388 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/a7/zig-linux-powerpc64le-0.13.0.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.13.0/zig-linux-powerpc64le-0.13.0.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 46574596 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/de/zig-linux-riscv64-0.10.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.10.1/zig-linux-riscv64-0.10.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 42196008 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/96/zig-linux-riscv64-0.13.0.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.13.0/zig-linux-riscv64-0.13.0.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 45540956 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/ca/zig-linux-x86-0.13.0.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.13.0/zig-linux-x86-0.13.0.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 52062336 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/83/zig-linux-x86_64-0.10.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.10.1/zig-linux-x86_64-0.10.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 44085596 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/d9/zig-linux-x86_64-0.13.0.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.13.0/zig-linux-x86_64-0.13.0.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 47082308 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/39/zig-loongarch64-linux-0.14.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.14.1/zig-loongarch64-linux-0.14.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 45825404 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/8d/zig-loongarch64-linux-0.15.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.15.1/zig-loongarch64-linux-0.15.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 50794376 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/4c/zig-loongarch64-linux-0.15.2.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.15.2/zig-loongarch64-linux-0.15.2.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 50800332 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/ee/zig-loongarch64-linux-0.16.0.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.16.0/zig-loongarch64-linux-0.16.0.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 52515080 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/2a/zig-powerpc64le-linux-0.14.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.14.1/zig-powerpc64le-linux-0.14.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 48720956 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/84/zig-powerpc64le-linux-0.15.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.15.1/zig-powerpc64le-linux-0.15.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 53566944 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/27/zig-powerpc64le-linux-0.15.2.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.15.2/zig-powerpc64le-linux-0.15.2.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 53570632 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/f6/zig-powerpc64le-linux-0.16.0.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.16.0/zig-powerpc64le-linux-0.16.0.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 55242728 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/3b/zig-riscv64-linux-0.14.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.14.1/zig-riscv64-linux-0.14.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 48094380 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/9d/zig-riscv64-linux-0.15.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.15.1/zig-riscv64-linux-0.15.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 53597792 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/18/zig-riscv64-linux-0.15.2.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.15.2/zig-riscv64-linux-0.15.2.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 53613656 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/34/zig-riscv64-linux-0.16.0.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.16.0/zig-riscv64-linux-0.16.0.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 55313616 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/14/zig-s390x-linux-0.14.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.14.1/zig-s390x-linux-0.14.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 55602032 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/a2/zig-s390x-linux-0.15.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.15.1/zig-s390x-linux-0.15.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 53508068 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/d3/zig-s390x-linux-0.15.2.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.15.2/zig-s390x-linux-0.15.2.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 53486436 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/ce/zig-s390x-linux-0.16.0.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.16.0/zig-s390x-linux-0.16.0.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 54995144 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/6f/zig-x86-linux-0.14.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.14.1/zig-x86-linux-0.14.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 51643520 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/53/zig-x86-linux-0.15.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.15.1/zig-x86-linux-0.15.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 56311228 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/6d/zig-x86-linux-0.15.2.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.15.2/zig-x86-linux-0.15.2.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 56334032 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/d0/zig-x86-linux-0.16.0.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.16.0/zig-x86-linux-0.16.0.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 58196012 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/70/zig-x86_64-linux-0.14.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.14.1/zig-x86_64-linux-0.14.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 49086504 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/d9/zig-x86_64-linux-0.15.1.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.15.1/zig-x86_64-linux-0.15.1.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 53734456 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/95/zig-x86_64-linux-0.15.2.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.15.2/zig-x86_64-linux-0.15.2.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 53733924 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.gentoo.org",
+      "url": "https://distfiles.gentoo.org/distfiles/ab/zig-x86_64-linux-0.16.0.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.16.0/zig-x86_64-linux-0.16.0.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "Gentoo distfiles (dev-lang/zig-bin ebuild Manifest); size match 55478392 (BLAKE2B/SHA512 recorded in Manifest, different algo from our sha256 so not directly comparable); live HEAD/Range-confirmed 2026-09-17"
+    },
+    {
+      "host": "distcache.freebsd.org",
+      "url": "http://distcache.freebsd.org/ports-distfiles/zig-0.16.0.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.16.0/zig-0.16.0.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "FreeBSD ports distfiles cache (lang/zig distinfo, current tree version only -- older ones get pruned); size match 22503260; sha256 == vendor checksum (exact byte match) https fails from this environment (Fastly SNI/cert mismatch), http confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.macports.org",
+      "url": "https://distfiles.macports.org/zig/zig-0.15.2.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.15.2/zig-0.15.2.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "MacPorts distfiles cache (lang/zig Portfile via the zig_toolchain PortGroup; only the current per-series toolchain's distfile stays live); size match 21366268, live-confirmed 2026-09-17"
+    },
+    {
+      "host": "distfiles.macports.org",
+      "url": "https://distfiles.macports.org/zig/zig-0.16.0.tar.xz",
+      "applies_to_url": "https://ziglang.org/download/0.16.0/zig-0.16.0.tar.xz",
+      "kind": "OS/ports distro cache",
+      "evidence": "MacPorts distfiles cache (lang/zig Portfile via the zig_toolchain PortGroup; only the current per-series toolchain's distfile stays live); size match 22503260, live-confirmed 2026-09-17"
+    }
+  ],
+  "rejected": [
+    {
+      "host": "zigmirror.hryx.net",
+      "url_template": "https://zigmirror.hryx.net/zig/<filename>",
+      "reason": "502 Bad Gateway (Caddy) on every sample file and a bogus path, every check this session",
+      "date_checked": "2026-09-17"
+    }
+  ],
+  "note": "scrape.py records no mirrors itself; see extra_mirrors.py (catalog/zig/extra_mirrors.py) for the community-mirror and distro-cache mirror hunt, run separately and re-applied after every scrape.py run.",
+  "minisign_public_key": "RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U"
+}

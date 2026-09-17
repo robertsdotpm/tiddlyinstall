@@ -1,0 +1,977 @@
+{
+  "runtime": "cc",
+  "languages": [
+    "c",
+    "cpp"
+  ],
+  "researched": "2026-09-17",
+  "sources": [
+    "https://clang.llvm.org/cxx_status.html",
+    "https://clang.llvm.org/c_status.html",
+    "https://gcc.gnu.org/projects/cxx-status.html",
+    "https://gcc.gnu.org/c99status.html",
+    "https://github.com/brechtsanders/winlibs_mingw (README, via gh api)",
+    "https://github.com/skeeto/w64devkit (README, via gh api)",
+    "https://releases.llvm.org/ (release notes / download page, prior LLVM 3.8 Windows-floor search)",
+    "catalog/cc/releases.json and catalog/cc/gaps.json (this repo, for exact (runtime,major) coverage and release dates)"
+  ],
+  "notes": "Key convention: `majors` is an object (not an array) keyed by \"llvm-<major>\", \"gcc-<major>\", or the fixed key \"msvc-redist-14.x\" -- this deviates from the generic SCHEMA.md example (an array of {major, ...} objects) because this file covers three toolchain families (LLVM/Clang, GCC via WinLibs/w64devkit/GCC-source, and the MSVC redistributable) sharing one file per the SCHEMA.md instruction ('one file per language family folder'). The `gcc` runtime major in releases.json/gaps.json is the BUNDLED GCC version regardless of which of the three GCC distribution projects (WinLibs, w64devkit, GCC source tarballs) produced it; a single 'gcc-<major>' entry here covers all three for that major, and os_support notes where they differ (WinLibs/w64devkit ship Windows binaries with an MSVCRT-vs-UCRT runtime choice; GCC source is build-it-yourself with no official binary for any OS). The 'gcc-various' key corresponds to the single gaps.json row for the defunct mingw-builds (niXman) SourceForge project and carries no real research, only a placeholder. LLVM majors 21-23 postdate this research pass's ability to independently cross-check secondary sources (WebFetch pulled the live, current clang.llvm.org/gcc.gnu.org pages, which speak in aggregated version ranges rather than confirming each individual recent major), so their `added`/`limitations`/`os_support` are marked confidence: low and are best-effort extrapolations, not vendor-confirmed per-version facts.",
+  "standards": [
+    {
+      "standard": "C89/C90",
+      "year": 1989,
+      "key_features": [
+        "function prototypes",
+        "void and void* types",
+        "const/volatile qualifiers",
+        "standard library headers (stdlib.h, string.h)",
+        "preprocessor stringizing/token-pasting"
+      ],
+      "first_full_support": {
+        "clang": "predates catalog (baseline since Clang 1.0)",
+        "gcc": "predates catalog (baseline since GCC 2.x)",
+        "msvc": "supported since early VC++, though never formally certified conforming"
+      },
+      "confidence": "medium"
+    },
+    {
+      "standard": "C99",
+      "year": 1999,
+      "key_features": [
+        "// line comments",
+        "inline functions",
+        "variable-length arrays (VLA)",
+        "designated initializers",
+        "compound literals",
+        "stdint.h/stdbool.h",
+        "restrict keyword",
+        "variadic macros"
+      ],
+      "first_full_support": {
+        "clang": "substantially complete by Clang 17 (clang.llvm.org/c_status.html); most features present since Clang 3.x",
+        "gcc": "substantially complete since GCC 4.5 with -std=c99 -pedantic-errors (gcc.gnu.org/c99status.html)",
+        "msvc": "no dedicated /std:c99 mode ever shipped; partial support only -- notably no VLAs"
+      },
+      "confidence": "high"
+    },
+    {
+      "standard": "C11",
+      "year": 2011,
+      "key_features": [
+        "_Generic type-generic expressions",
+        "_Static_assert",
+        "_Atomic and stdatomic.h",
+        "threads.h (optional)",
+        "anonymous structs/unions",
+        "alignas/alignof"
+      ],
+      "first_full_support": {
+        "clang": "large portion implemented early; full conformance status listed as 'under investigation' by clang.llvm.org as of research date",
+        "gcc": "substantially complete since GCC 4.9 (gcc.gnu.org/c99status.html)",
+        "msvc": "/std:c11 added in VS2019 16.8 (Nov 2020); threads.h never implemented (optional in the standard)"
+      },
+      "confidence": "high"
+    },
+    {
+      "standard": "C17",
+      "year": 2018,
+      "key_features": [
+        "no new language features -- technical corrections and clarifications to C11 only"
+      ],
+      "first_full_support": {
+        "clang": "since Clang 6 (-std=c17/-std=c18)",
+        "gcc": "default C mode from GCC 8 through GCC 14",
+        "msvc": "/std:c17 added alongside /std:c11 in VS2019 16.8"
+      },
+      "confidence": "high"
+    },
+    {
+      "standard": "C23",
+      "year": 2024,
+      "key_features": [
+        "typeof/typeof_unqual",
+        "#embed",
+        "_BitInt(N)",
+        "nullptr constant and nullptr_t",
+        "digit separators",
+        "[[attribute]] syntax",
+        "constexpr objects",
+        "binary literals"
+      ],
+      "first_full_support": {
+        "clang": "-std=c23 available since Clang 18; Annex H (interchange/extended types) and some late items still gaps",
+        "gcc": "most features landed by GCC 13; made the default C standard in GCC 15",
+        "msvc": "no complete /std:c23 mode; individual features appear piecemeal under /std:clatest"
+      },
+      "confidence": "high"
+    },
+    {
+      "standard": "C++98",
+      "year": 1998,
+      "key_features": [
+        "STL containers/iterators/algorithms",
+        "exceptions",
+        "namespaces",
+        "templates",
+        "RTTI"
+      ],
+      "first_full_support": {
+        "clang": "predates catalog (baseline)",
+        "gcc": "predates catalog (baseline, GCC 2.x/3.x)",
+        "msvc": "VC++6/VS.NET era, with well-known template and two-phase-lookup conformance bugs fixed only gradually"
+      },
+      "confidence": "medium"
+    },
+    {
+      "standard": "C++03",
+      "year": 2003,
+      "key_features": [
+        "defect-report cleanup of C++98 (value initialization, no major new language features)"
+      ],
+      "first_full_support": {
+        "clang": "baseline",
+        "gcc": "baseline",
+        "msvc": "VS2005-era"
+      },
+      "confidence": "medium"
+    },
+    {
+      "standard": "C++11",
+      "year": 2011,
+      "key_features": [
+        "auto",
+        "lambda expressions",
+        "rvalue references / move semantics",
+        "<thread> and std::thread",
+        "constexpr",
+        "range-based for",
+        "nullptr",
+        "variadic templates",
+        "std::unique_ptr/shared_ptr"
+      ],
+      "first_full_support": {
+        "clang": "3.3",
+        "gcc": "4.8.1 (first feature-complete implementation, gcc.gnu.org/projects/cxx-status.html)",
+        "msvc": "VS2015 (first feature-complete; VS2013 still missing expression SFINAE, delegating/inherited ctors gaps)"
+      },
+      "confidence": "high"
+    },
+    {
+      "standard": "C++14",
+      "year": 2014,
+      "key_features": [
+        "generic lambdas",
+        "lambda init-capture",
+        "relaxed constexpr",
+        "function return type deduction",
+        "std::make_unique"
+      ],
+      "first_full_support": {
+        "clang": "3.4",
+        "gcc": "5",
+        "msvc": "VS2015 Update 3 / VS2017"
+      },
+      "confidence": "high"
+    },
+    {
+      "standard": "C++17",
+      "year": 2017,
+      "key_features": [
+        "if constexpr",
+        "structured bindings",
+        "std::optional/variant/any",
+        "std::filesystem",
+        "parallel STL algorithms",
+        "fold expressions"
+      ],
+      "first_full_support": {
+        "clang": "5",
+        "gcc": "substantially complete by GCC 7; the std::string/std::variant ABI only stabilized in GCC 9",
+        "msvc": "VS2019 for /std:c++17 conformance; VS2017 had most features but was incomplete"
+      },
+      "confidence": "high"
+    },
+    {
+      "standard": "C++20",
+      "year": 2020,
+      "key_features": [
+        "concepts",
+        "coroutines",
+        "ranges",
+        "modules",
+        "three-way comparison (<=>)",
+        "std::span",
+        "std::format",
+        "std::jthread"
+      ],
+      "first_full_support": {
+        "clang": "no released version is 100% complete; concepts since Clang 10, coroutines experimental since Clang 5 (stable later, unstable ABI on Windows), modules core feature since Clang 15",
+        "gcc": "concepts since GCC 10, coroutines flag-gated since GCC 10 / default under -std=c++20 in GCC 11, modules since GCC 11 (no Private Module Fragment; improved in GCC 16)",
+        "msvc": "VS2019 16.8 declared the core language 'feature complete', but modules and coroutines lagged for several years after"
+      },
+      "confidence": "high"
+    },
+    {
+      "standard": "C++23",
+      "year": 2024,
+      "key_features": [
+        "std::expected",
+        "deducing this",
+        "if consteval",
+        "std::stacktrace",
+        "multidimensional subscript operator",
+        "ranges library additions"
+      ],
+      "first_full_support": {
+        "clang": "no released version fully complete as of research date; substantial support building since Clang 13, most library pieces by Clang 17-18",
+        "gcc": "experimental since GCC 11; most features present by GCC 13-14",
+        "msvc": "partial under /std:c++latest; no complete-conformance claim published"
+      },
+      "confidence": "medium"
+    },
+    {
+      "standard": "C++26",
+      "year": 2026,
+      "key_features": [
+        "std::execution / senders-receivers (P2300)",
+        "reflection (P2996)",
+        "contracts",
+        "pack indexing",
+        "further constexpr relaxations"
+      ],
+      "first_full_support": {
+        "clang": "not complete on any version reviewed; individual papers landing across Clang 17-24 per clang.llvm.org/cxx_status.html",
+        "gcc": "experimental since GCC 14; reflection and contracts still 'No' on gcc.gnu.org/projects/cxx-status.html as of GCC 16",
+        "msvc": "no meaningful support at research date; standard text itself still being finalized"
+      },
+      "confidence": "medium"
+    }
+  ],
+  "milestones": [
+    {
+      "capability": "native_threads",
+      "since": {
+        "c": "C11 threads.h (optional, rarely implemented)",
+        "cpp": "C++11 <thread>",
+        "clang": "clang 3.3 (C++11 <thread>)",
+        "gcc": "gcc 4.8.1 (C++11 <thread>); C11 threads.h largely unimplemented by either compiler"
+      },
+      "notes": "threads.h is an OPTIONAL C11 feature; glibc only added it in 2.28 (2018), and neither MSVC nor most MinGW builds implement it except w64devkit, which ships its own threads.h runtime."
+    },
+    {
+      "capability": "async_await",
+      "since": {
+        "clang": "coroutines experimental from clang 5, core C++20 feature stabilizing through clang 14-16",
+        "gcc": "flag-gated -fcoroutines from gcc 10, default under -std=c++20 from gcc 11"
+      },
+      "notes": "C++20 coroutines are a language primitive, not std::async (C++11) sugar; Windows ABI stability for Clang coroutines lagged Linux for several releases."
+    },
+    {
+      "capability": "modules",
+      "since": {
+        "clang": "core feature since clang 15 (experimental -fmodules-ts earlier)",
+        "gcc": "since gcc 11 with -fmodules (no Private Module Fragment); notably improved gcc 16",
+        "msvc": "VS2019 16.8 experimental, improved through VS2022"
+      },
+      "notes": "cross-compiler and cross-build-system module interop remains a practical limitation industry-wide; CMake/build-system support trailed compiler support by years."
+    },
+    {
+      "capability": "64bit_windows",
+      "since": {
+        "gcc": "MinGW-w64 (all catalog majors) targets both x86 and amd64; upstream mingw.org (32-bit only) is not in this catalog",
+        "clang": "LLVM Windows releases have shipped amd64 binaries since llvm 4"
+      },
+      "notes": "MinGW-w64, despite the name, is the project that added 64-bit Windows support on top of the original 32-bit-only mingw.org project."
+    },
+    {
+      "capability": "arm64_windows",
+      "since": {
+        "clang": "LLVM added an official arm64 (aarch64-pc-windows-msvc) Windows release starting around llvm 11-12; earlier majors are cross-compile-only",
+        "gcc": "no official WinLibs/w64devkit arm64 Windows host build in this catalog; MinGW-w64 arm64 support exists upstream but is not what these projects ship"
+      },
+      "notes": "confidence low-medium: exact first arm64 Windows LLVM release binary was not independently re-verified against every majors's asset list."
+    }
+  ],
+  "majors": {
+    "llvm-3.4": {
+      "released": "2014-01",
+      "added": [
+        "C++11 complete (matches Clang 3.3's completion)",
+        "C++14 in early development"
+      ],
+      "limitations": [
+        "no C++14 support",
+        "libc++ still missing pieces of <regex>/<atomic> corner cases",
+        "no native Windows arm/arm64 target"
+      ],
+      "os_support": {
+        "windows": "Windows Vista SP2 or later (per releases.llvm.org 3.x-era notes)",
+        "macos": "OS X 10.7+ (approx; era-typical Xcode toolchain)",
+        "linux": "older glibc (~2.13+ / RHEL6-era), inferred from contemporaneous CI, not vendor-stated"
+      },
+      "confidence": "low"
+    },
+    "llvm-3.5": {
+      "released": "2014-09",
+      "added": [
+        "OpenMP 3.1 support added",
+        "further C++14 draft feature work"
+      ],
+      "limitations": [
+        "C++14 still incomplete",
+        "no modules, no coroutines"
+      ],
+      "os_support": {
+        "windows": "Windows Vista SP2 or later (per releases.llvm.org 3.x-era notes)",
+        "macos": "OS X 10.7+ (approx)",
+        "linux": "glibc ~2.13+ (inferred)"
+      },
+      "confidence": "low"
+    },
+    "llvm-3.6": {
+      "released": "2015-02",
+      "added": [
+        "C++14 substantially complete (generic lambdas, relaxed constexpr)"
+      ],
+      "limitations": [
+        "no C++17 features",
+        "sanitizers (ASan/TSan/UBSan) still Linux/macOS-only, no Windows support"
+      ],
+      "os_support": {
+        "windows": "Windows Vista SP2 or later (per releases.llvm.org 3.x-era notes)",
+        "macos": "OS X 10.7+ (approx)",
+        "linux": "glibc ~2.13+ (inferred)"
+      },
+      "confidence": "low"
+    },
+    "llvm-3.7": {
+      "released": "2015-09",
+      "added": [
+        "OpenMP 3.1 finalized",
+        "improved C++14 conformance"
+      ],
+      "limitations": [
+        "no C++17",
+        "libc++ filesystem TS not yet available"
+      ],
+      "os_support": {
+        "windows": "Windows Vista SP2 or later (per releases.llvm.org 3.x-era notes)",
+        "macos": "OS X 10.7+ (approx)",
+        "linux": "glibc ~2.13+ (inferred)"
+      },
+      "confidence": "low"
+    },
+    "llvm-3.8": {
+      "released": "2016-03",
+      "added": [
+        "OpenMP 3.1 default-on",
+        "early C++17 draft feature work (fold expressions, etc.)"
+      ],
+      "limitations": [
+        "Windows XP/Vista support formally dropped -- Windows 7+ required from this release on",
+        "no C++17 std library (filesystem TS only, experimental)"
+      ],
+      "os_support": {
+        "windows": "Windows 7 SP1 or later (Vista/XP dropped as of LLVM 3.8, per LLVM 3.8 release notes)",
+        "macos": "OS X 10.7+ (approx)",
+        "linux": "glibc ~2.17+ (inferred, RHEL7-era)"
+      },
+      "confidence": "medium"
+    },
+    "llvm-3.9": {
+      "released": "2016-09",
+      "added": [
+        "OpenMP 4.0 partial",
+        "libc++ filesystem TS"
+      ],
+      "limitations": [
+        "no C++17 complete",
+        "coroutines not yet implemented"
+      ],
+      "os_support": {
+        "windows": "Windows 7 SP1 or later (Vista/XP dropped as of LLVM 3.8, per LLVM 3.8 release notes)",
+        "macos": "OS X 10.7+ (approx)",
+        "linux": "glibc ~2.17+ (inferred)"
+      },
+      "confidence": "low"
+    },
+    "llvm-4": {
+      "released": "2017-03",
+      "added": [
+        "further C++17 draft work",
+        "improved ThinLTO"
+      ],
+      "limitations": [
+        "C++17 not yet complete (that's Clang 5)",
+        "modules still experimental (-fmodules-ts)"
+      ],
+      "os_support": {
+        "windows": "Windows 7 SP1 or later (Vista/XP dropped as of LLVM 3.8, per LLVM 3.8 release notes)",
+        "macos": "OS X 10.9+ (approx)",
+        "linux": "glibc ~2.17+ (inferred)"
+      },
+      "confidence": "low"
+    },
+    "llvm-5": {
+      "released": "2017-09",
+      "added": [
+        "C++17 complete",
+        "coroutines TS experimental (-fcoroutines-ts)"
+      ],
+      "limitations": [
+        "coroutines are TS-only, not standard C++20 coroutines yet",
+        "modules still -fmodules-ts experimental",
+        "no C++20 features"
+      ],
+      "os_support": {
+        "windows": "Windows 7 SP1 or later (Vista/XP dropped as of LLVM 3.8, per LLVM 3.8 release notes)",
+        "macos": "OS X 10.9+ (approx)",
+        "linux": "glibc ~2.17+ (inferred)"
+      },
+      "confidence": "medium"
+    },
+    "llvm-6": {
+      "released": "2018-03",
+      "added": [
+        "ThinLTO improvements",
+        "libc++ C++17 filesystem stabilized"
+      ],
+      "limitations": [
+        "no C++20 features",
+        "modules still experimental"
+      ],
+      "os_support": {
+        "windows": "Windows 7 SP1 or later (Vista/XP dropped as of LLVM 3.8, per LLVM 3.8 release notes)",
+        "macos": "OS X 10.9+ (approx)",
+        "linux": "glibc ~2.17+ (inferred)"
+      },
+      "confidence": "low"
+    },
+    "llvm-7": {
+      "released": "2018-09",
+      "added": [
+        "improved sanitizer coverage",
+        "early C++20 draft work"
+      ],
+      "limitations": [
+        "no C++20 features",
+        "no C11/C17 -std=c17 flag yet (added Clang 6, refined here)"
+      ],
+      "os_support": {
+        "windows": "Windows 7 SP1 or later (Vista/XP dropped as of LLVM 3.8, per LLVM 3.8 release notes)",
+        "macos": "macOS 10.9+ (approx)",
+        "linux": "glibc ~2.17+ (inferred)"
+      },
+      "confidence": "low"
+    },
+    "llvm-8": {
+      "released": "2019-03",
+      "added": [
+        "-fsanitize=hwaddress on AArch64",
+        "AMDGPU improvements"
+      ],
+      "limitations": [
+        "no C++20 features"
+      ],
+      "os_support": {
+        "windows": "Windows 7 SP1 or later (Vista/XP dropped as of LLVM 3.8, per LLVM 3.8 release notes)",
+        "macos": "macOS 10.9+ (approx)",
+        "linux": "glibc ~2.19+ (inferred, Ubuntu 14.04-era CI)"
+      },
+      "confidence": "low"
+    },
+    "llvm-9": {
+      "released": "2019-09",
+      "added": [
+        "libc++ ABI improvements"
+      ],
+      "limitations": [
+        "no C++20 features"
+      ],
+      "os_support": {
+        "windows": "Windows 7 SP1 or later (Vista/XP dropped as of LLVM 3.8, per LLVM 3.8 release notes)",
+        "macos": "macOS 10.9+ (approx)",
+        "linux": "glibc ~2.19+ (inferred)"
+      },
+      "confidence": "low"
+    },
+    "llvm-10": {
+      "released": "2020-03",
+      "added": [
+        "C++20 concepts (early)",
+        "coroutines still TS-flagged"
+      ],
+      "limitations": [
+        "C++20 modules not yet available (-fmodules-ts predecessor only)",
+        "concepts syntax still settling vs final wording"
+      ],
+      "os_support": {
+        "windows": "Windows 7 SP1 or later (Vista/XP dropped as of LLVM 3.8, per LLVM 3.8 release notes)",
+        "macos": "macOS 10.9+ (approx)",
+        "linux": "glibc ~2.19+ (inferred)"
+      },
+      "confidence": "medium"
+    },
+    "llvm-11": {
+      "released": "2020-10",
+      "added": [
+        "improved AArch64/Apple Silicon (M1) codegen work begins"
+      ],
+      "limitations": [
+        "C++20 modules still not implemented",
+        "-std=c++20 concepts syntax still catching up to final standard wording"
+      ],
+      "os_support": {
+        "windows": "Windows 7 SP1 or later (Vista/XP dropped as of LLVM 3.8, per LLVM 3.8 release notes)",
+        "macos": "macOS 10.9+ (approx; arm64 macOS host support emerging)",
+        "linux": "glibc ~2.27+ (inferred, Ubuntu 18.04-era CI)"
+      },
+      "confidence": "low"
+    },
+    "llvm-12": {
+      "released": "2021-04",
+      "added": [
+        "native Apple Silicon (arm64-apple-darwin) support matures"
+      ],
+      "limitations": [
+        "C++20 modules not yet available",
+        "coroutines Windows ABI still unstable"
+      ],
+      "os_support": {
+        "windows": "Windows 7 SP1 or later (Vista/XP dropped as of LLVM 3.8, per LLVM 3.8 release notes)",
+        "macos": "macOS 10.9+ Intel / macOS 11+ Apple Silicon (approx)",
+        "linux": "glibc ~2.27+ (inferred)"
+      },
+      "confidence": "low"
+    },
+    "llvm-13": {
+      "released": "2021-10",
+      "added": [
+        "-std=c++20 default improvements"
+      ],
+      "limitations": [
+        "modules still experimental"
+      ],
+      "os_support": {
+        "windows": "Windows 7 SP1 or later (Vista/XP dropped as of LLVM 3.8, per LLVM 3.8 release notes)",
+        "macos": "macOS 10.9+ Intel / 11+ arm64 (approx)",
+        "linux": "glibc ~2.27+ (inferred)"
+      },
+      "confidence": "low"
+    },
+    "llvm-14": {
+      "released": "2022-03",
+      "added": [
+        "C++20 largely usable end-to-end (minus modules)"
+      ],
+      "limitations": [
+        "modules core feature still not available (that's Clang 15)"
+      ],
+      "os_support": {
+        "windows": "Windows 7 SP1 or later (Vista/XP dropped as of LLVM 3.8, per LLVM 3.8 release notes)",
+        "macos": "macOS 10.9+ Intel / 11+ arm64 (approx)",
+        "linux": "glibc ~2.27+ (inferred)"
+      },
+      "confidence": "low"
+    },
+    "llvm-15": {
+      "released": "2022-09",
+      "added": [
+        "C++20 modules (core language feature usable)"
+      ],
+      "limitations": [
+        "module interop across build systems (CMake/Make) still immature",
+        "no C++23 std library completeness"
+      ],
+      "os_support": {
+        "windows": "Windows 7 SP1 or later (Vista/XP dropped as of LLVM 3.8, per LLVM 3.8 release notes)",
+        "macos": "macOS 10.9+ Intel / 11+ arm64 (approx)",
+        "linux": "glibc ~2.31+ (inferred, Ubuntu 20.04-era CI)"
+      },
+      "confidence": "medium"
+    },
+    "llvm-16": {
+      "released": "2023-03",
+      "added": [
+        "C23 typeof (N2927/N2930)",
+        "continued C++23 library work"
+      ],
+      "limitations": [
+        "C++23 not complete",
+        "C23 not yet -std=c23 (that's Clang 18)"
+      ],
+      "os_support": {
+        "windows": "Windows 7 SP1 or later (Vista/XP dropped as of LLVM 3.8, per LLVM 3.8 release notes)",
+        "macos": "macOS 10.9+ Intel / 11+ arm64 (approx)",
+        "linux": "glibc ~2.31+ (inferred)"
+      },
+      "confidence": "medium"
+    },
+    "llvm-17": {
+      "released": "2023-09",
+      "added": [
+        "-std=c23 groundwork",
+        "char8_t (N2653) and #embed (N3017) for C"
+      ],
+      "limitations": [
+        "C23 not fully complete until Clang 18's -std=c23",
+        "C++23 still partial"
+      ],
+      "os_support": {
+        "windows": "Windows 7 SP1 or later (Vista/XP dropped as of LLVM 3.8, per LLVM 3.8 release notes)",
+        "macos": "macOS 10.13+ Intel / 11+ arm64 (approx, newer Xcode floor)",
+        "linux": "glibc ~2.31+ (inferred)"
+      },
+      "confidence": "medium"
+    },
+    "llvm-18": {
+      "released": "2024-03",
+      "added": [
+        "-std=c23 available",
+        "C99 declared 'all of ISO 9899:1999' implemented"
+      ],
+      "limitations": [
+        "C23 Annex H (interchange/extended types) not implemented",
+        "C++23 still not 100% complete",
+        "C++26 work only just starting"
+      ],
+      "os_support": {
+        "windows": "Windows 7 SP1 or later (Vista/XP dropped as of LLVM 3.8, per LLVM 3.8 release notes)",
+        "macos": "macOS 10.13+ Intel / 11+ arm64 (approx)",
+        "linux": "glibc ~2.35+ (inferred, Ubuntu 22.04-era CI)"
+      },
+      "confidence": "medium"
+    },
+    "llvm-19": {
+      "released": "2024-09",
+      "added": [
+        "C23 char8_t, #embed shipped"
+      ],
+      "limitations": [
+        "C++23 still incomplete in places",
+        "C++26 senders/receivers (std::execution) only beginning"
+      ],
+      "os_support": {
+        "windows": "Windows 7 SP1 or later (Vista/XP dropped as of LLVM 3.8, per LLVM 3.8 release notes)",
+        "macos": "macOS 10.13+ Intel / 11+ arm64 (approx)",
+        "linux": "glibc ~2.35+ (inferred)"
+      },
+      "confidence": "medium"
+    },
+    "llvm-20": {
+      "released": "2025-03",
+      "added": [
+        "further C++23/C++26 library and language paper landings"
+      ],
+      "limitations": [
+        "C++26 reflection (P2996) not implemented",
+        "C23 Annex H still absent"
+      ],
+      "os_support": {
+        "windows": "Windows 7 SP1 or later (Vista/XP dropped as of LLVM 3.8, per LLVM 3.8 release notes)",
+        "macos": "macOS 11+ (approx; older Intel floor likely dropped by this era)",
+        "linux": "glibc ~2.35+ (inferred)"
+      },
+      "confidence": "low"
+    },
+    "llvm-21": {
+      "released": "2025-08",
+      "added": [
+        "continued C++26 paper landings per clang.llvm.org/cxx_status.html"
+      ],
+      "limitations": [
+        "C++26 reflection and several contract proposals still 'not yet implemented' as of the official status page",
+        "no official macOS amd64 release asset for this major (see gaps.json)"
+      ],
+      "os_support": {
+        "windows": "Windows 7 SP1 or later (Vista/XP dropped as of LLVM 3.8, per LLVM 3.8 release notes)",
+        "macos": "no official amd64 build published for this major (see gaps.json); arm64 build only",
+        "linux": "glibc likely ~2.35-2.39 (inferred, not independently confirmed -- past this author's training cutoff)"
+      },
+      "confidence": "low"
+    },
+    "llvm-22": {
+      "released": "2026-02",
+      "added": [
+        "further incremental C++26 work (not independently verified feature-by-feature)"
+      ],
+      "limitations": [
+        "details beyond the aggregate clang.llvm.org/cxx_status.html ranges were not independently verified for this specific major",
+        "no official Windows x86 (32-bit) or macOS amd64 release asset for this major (see gaps.json)"
+      ],
+      "os_support": {
+        "windows": "amd64/arm64 only for this major -- no x86 asset published (see gaps.json)",
+        "macos": "no official amd64 build published for this major (see gaps.json); arm64 build only",
+        "linux": "not independently confirmed"
+      },
+      "confidence": "low"
+    },
+    "llvm-23": {
+      "released": "2026-08",
+      "added": [
+        "most recent release at research time; feature set not independently verified beyond official aggregate status pages"
+      ],
+      "limitations": [
+        "not independently verified feature-by-feature -- this major postdates this research pass's ability to cross-check secondary sources",
+        "no official Windows x86 (32-bit) or macOS amd64 release asset for this major (see gaps.json)"
+      ],
+      "os_support": {
+        "windows": "amd64/arm64 only -- no x86 asset published (see gaps.json)",
+        "macos": "no official amd64 build published for this major (see gaps.json); arm64 build only",
+        "linux": "not independently confirmed"
+      },
+      "confidence": "low"
+    },
+    "gcc-4": {
+      "released": "2014 (GCC 4.9.4 patch in catalog)",
+      "added": [
+        "C++11 complete since 4.8.1",
+        "C11 substantially complete since 4.9"
+      ],
+      "limitations": [
+        "no C++14 (that's GCC 5)",
+        "no -std=c17/c23",
+        "libstdc++ ABI (COW std::string) predates the C++11 SSO string introduced in GCC 5"
+      ],
+      "os_support": {
+        "windows": "GCC source is source-only (no official Windows binaries this major); MinGW-w64 distributions of GCC 4.9 exist upstream but are not in this catalog",
+        "linux": "any glibc Linux able to build from source (glibc ~2.11+, era-typical)",
+        "macos": "buildable from source on contemporaneous Xcode/macOS; not officially distributed by the GCC project as a binary"
+      },
+      "confidence": "medium"
+    },
+    "gcc-5": {
+      "released": "2015",
+      "added": [
+        "C++14 complete",
+        "new libstdc++ dual ABI (COW vs C++11 SSO std::string)"
+      ],
+      "limitations": [
+        "no C++17",
+        "libstdc++ dual-ABI transition itself a source of link-compatibility footguns for years after"
+      ],
+      "os_support": {
+        "windows": "source-only in this catalog (no WinLibs/w64devkit entries this major)",
+        "linux": "glibc ~2.12+ (era-typical, to build/run)",
+        "macos": "source build only"
+      },
+      "confidence": "medium"
+    },
+    "gcc-6": {
+      "released": "2016",
+      "added": [
+        "C++14 refinements",
+        "improved C++17 draft feature work begins"
+      ],
+      "limitations": [
+        "no C++17 complete"
+      ],
+      "os_support": {
+        "windows": "source-only in this catalog",
+        "linux": "glibc ~2.12+ (era-typical)",
+        "macos": "source build only"
+      },
+      "confidence": "low"
+    },
+    "gcc-7": {
+      "released": "2017",
+      "added": [
+        "most C++17 features implemented"
+      ],
+      "limitations": [
+        "C++17 not ABI-stable until GCC 9",
+        "no C++20"
+      ],
+      "os_support": {
+        "windows": "source-only in this catalog",
+        "linux": "glibc ~2.12+ (era-typical)",
+        "macos": "source build only"
+      },
+      "confidence": "low"
+    },
+    "gcc-8": {
+      "released": "2018",
+      "added": [
+        "C++17 substantially complete",
+        "C17 becomes the default C mode"
+      ],
+      "limitations": [
+        "C++17 ABI still not declared stable (GCC 9)",
+        "no C++20 features"
+      ],
+      "os_support": {
+        "windows": "source-only in this catalog",
+        "linux": "glibc ~2.12+ (era-typical)",
+        "macos": "source build only"
+      },
+      "confidence": "medium"
+    },
+    "gcc-9": {
+      "released": "2019",
+      "added": [
+        "C++17 ABI declared stable",
+        "early C++20 concepts work (pre-final syntax, -fconcepts)"
+      ],
+      "limitations": [
+        "-fconcepts predates the final C++20 concepts syntax -- not source-compatible with later -std=c++20 concepts code",
+        "no C++20 coroutines/modules"
+      ],
+      "os_support": {
+        "windows": "w64devkit 9.5.0 bundles this major -- requires Windows 7+ (x64) / XP+ (x86), MSVCRT-based, per w64devkit README",
+        "linux": "glibc ~2.17+ (RHEL7-era, source build)",
+        "macos": "source build only"
+      },
+      "confidence": "medium"
+    },
+    "gcc-10": {
+      "released": "2020",
+      "added": [
+        "C++20 concepts (final syntax)",
+        "coroutines behind -fcoroutines"
+      ],
+      "limitations": [
+        "coroutines require explicit -fcoroutines flag, not on by default",
+        "C++20 modules not yet available"
+      ],
+      "os_support": {
+        "windows": "WinLibs winlibs-*-msvcrt/ucrt variants and w64devkit both bundle this major -- UCRT builds need Windows 7 SP1/8.1 with the UCRT update or Windows 10+; MSVCRT builds run on any Windows back to XP-era",
+        "linux": "glibc ~2.17+ (source build)",
+        "macos": "source build only"
+      },
+      "confidence": "high"
+    },
+    "gcc-11": {
+      "released": "2021",
+      "added": [
+        "C++20 default under -std=c++20 including coroutines",
+        "modules experimental (-fmodules-ts / -fmodules)"
+      ],
+      "limitations": [
+        "modules lack Private Module Fragment support",
+        "C++23 only experimental (-std=c++23)"
+      ],
+      "os_support": {
+        "windows": "WinLibs (msvcrt/ucrt, posix/win32 thread variants) and w64devkit bundle this major -- same UCRT-vs-MSVCRT Windows-version split as GCC 10",
+        "linux": "glibc ~2.17+ (source build)",
+        "macos": "source build only"
+      },
+      "confidence": "high"
+    },
+    "gcc-12": {
+      "released": "2022",
+      "added": [
+        "C++23 experimental support continues",
+        "further modules refinement"
+      ],
+      "limitations": [
+        "modules still incomplete (no full Global Module Entity Merging)",
+        "C++23 std library incomplete"
+      ],
+      "os_support": {
+        "windows": "WinLibs + w64devkit; UCRT vs MSVCRT split as above",
+        "linux": "glibc ~2.17+ (source build)",
+        "macos": "source build only"
+      },
+      "confidence": "medium"
+    },
+    "gcc-13": {
+      "released": "2023",
+      "added": [
+        "major C23 feature push (new keywords, typeof, _BitInt, constexpr)",
+        "C++23 library growth"
+      ],
+      "limitations": [
+        "C++23 still not declared complete",
+        "modules interop with build systems still immature"
+      ],
+      "os_support": {
+        "windows": "WinLibs + w64devkit; UCRT vs MSVCRT split as above",
+        "linux": "glibc ~2.17+ (source build)",
+        "macos": "source build only"
+      },
+      "confidence": "high"
+    },
+    "gcc-14": {
+      "released": "2024",
+      "added": [
+        "C++26 experimental support begins",
+        "continued C23 completion"
+      ],
+      "limitations": [
+        "C++26 reflection/contracts not implemented",
+        "C++23 defect-report items ('Declarations and where to find them') still outstanding"
+      ],
+      "os_support": {
+        "windows": "WinLibs + w64devkit; UCRT vs MSVCRT split as above",
+        "linux": "glibc ~2.17+ (source build)",
+        "macos": "source build only"
+      },
+      "confidence": "high"
+    },
+    "gcc-15": {
+      "released": "2025",
+      "added": [
+        "C23 becomes the default C standard",
+        "C23 #embed, named loops"
+      ],
+      "limitations": [
+        "C++26 still experimental/incomplete",
+        "Annex K bounds-checking interfaces still not implemented for C"
+      ],
+      "os_support": {
+        "windows": "WinLibs + w64devkit; UCRT vs MSVCRT split as above",
+        "linux": "glibc ~2.17+ (source build)",
+        "macos": "source build only"
+      },
+      "confidence": "high"
+    },
+    "gcc-16": {
+      "released": "2026",
+      "added": [
+        "C++20 now the default -std mode (per gcc.gnu.org/projects/cxx-status.html)",
+        "further C++26/modules improvements"
+      ],
+      "limitations": [
+        "C++26 pack indexing for template names and several constraint/template proposals still 'No' per official status page",
+        "modules Global Module Entity Merging still parser-level incomplete"
+      ],
+      "os_support": {
+        "windows": "WinLibs + w64devkit; UCRT vs MSVCRT split as above",
+        "linux": "glibc ~2.17+ (source build)",
+        "macos": "source build only"
+      },
+      "confidence": "high"
+    },
+    "gcc-various": {
+      "released": null,
+      "added": [],
+      "limitations": [
+        "not researched -- this is a catalog GAP, not a shipped release"
+      ],
+      "os_support": {
+        "windows": "n/a -- classic mingw-builds (niXman) SourceForge project is defunct and was not scraped; superseded by WinLibs",
+        "linux": "n/a",
+        "macos": "n/a"
+      },
+      "confidence": "n/a",
+      "notes": "Placeholder entry for the gaps.json row (runtime=gcc, major=various, reason: mingw-builds/niXman SourceForge project defunct, superseded by WinLibs). No release data exists to research."
+    },
+    "msvc-redist-14.x": {
+      "released": "2015-present (VS2015 through current VS2022/2026 -- all share the ABI-compatible 'v140' runtime line)",
+      "added": [
+        "single binary-compatible runtime line since VS2015: vc_redist.x64/x86/arm64.exe installs vcruntime140.dll, msvcp140.dll etc. and later VS versions only ever ADD side-by-side versioned DLLs (140_1, 140_2, ...), never break the v140 ABI"
+      ],
+      "limitations": [
+        "this is a REDISTRIBUTABLE RUNTIME, not a compiler -- it does not itself gate which C/C++ standard your code can use; that's determined by the cl.exe (MSVC) version used to build, which is outside this catalog",
+        "installing the latest vc_redist does not retroactively add e.g. /std:c++20 language support to an old cl.exe",
+        "ARM64 vc_redist only became available well after x86/x64 (Windows on ARM support matured through VS2017-2019)",
+        "no static-linking equivalent shipped via redist -- static CRT linking requires the full VS build tools, not the redist package"
+      ],
+      "os_support": {
+        "windows": "practical floor is Windows 7 SP1 with the Platform Update (KB2670838) for the earliest v140 (VS2015) redist; current vc_redist.x64.exe (aka.ms/vs/17/release/vc_redist.x64.exe) states Windows 10 or later as the supported target, though it has been reported to still install on 7/8.1 in practice",
+        "arm64_windows": "Windows 10 on ARM or later"
+      },
+      "confidence": "medium"
+    }
+  }
+}

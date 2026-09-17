@@ -1,0 +1,44 @@
+[
+  {
+    "runtime": "go",
+    "major": "1.0",
+    "os": "all",
+    "arch": "all",
+    "reason": "go.dev's JSON index (?mode=json&include=all) and its HTML 'all releases' page both start at go1.2.2; the initial go1/go1.0.x release predates the project's move of downloads onto the golang GCS bucket / dl.google.com and is no longer listed by either. Guessed dl.google.com/go/ filenames for it all 404, and anonymous listing of the 'golang' GCS bucket (both the XML and JSON list APIs) now returns 403 Access Denied, so it can't be enumerated programmatically either.",
+    "looked_at": [
+      "https://go.dev/dl/?mode=json&include=all",
+      "https://go.dev/dl/",
+      "https://storage.googleapis.com/golang/?marker=",
+      "https://storage.googleapis.com/storage/v1/b/golang/o",
+      "https://dl.google.com/go/ (guessed pre-1.2.2 filenames, 404)"
+    ]
+  },
+  {
+    "runtime": "go",
+    "major": "1.1",
+    "os": "all",
+    "arch": "all",
+    "reason": "go.dev's JSON index (?mode=json&include=all) and its HTML 'all releases' page both start at go1.2.2; the initial go1.1.x release predates the project's move of downloads onto the golang GCS bucket / dl.google.com and is no longer listed by either. Guessed dl.google.com/go/ filenames for it all 404, and anonymous listing of the 'golang' GCS bucket (both the XML and JSON list APIs) now returns 403 Access Denied, so it can't be enumerated programmatically either.",
+    "looked_at": [
+      "https://go.dev/dl/?mode=json&include=all",
+      "https://go.dev/dl/",
+      "https://storage.googleapis.com/golang/?marker=",
+      "https://storage.googleapis.com/storage/v1/b/golang/o",
+      "https://dl.google.com/go/ (guessed pre-1.2.2 filenames, 404)"
+    ]
+  },
+  {
+    "runtime": "go",
+    "major": "1.2",
+    "os": "all",
+    "arch": "all",
+    "reason": "go.dev's JSON index (?mode=json&include=all) and its HTML 'all releases' page both start at go1.2.2; the initial go1.2 (pre-.2.2) release predates the project's move of downloads onto the golang GCS bucket / dl.google.com and is no longer listed by either. Guessed dl.google.com/go/ filenames for it all 404, and anonymous listing of the 'golang' GCS bucket (both the XML and JSON list APIs) now returns 403 Access Denied, so it can't be enumerated programmatically either.",
+    "looked_at": [
+      "https://go.dev/dl/?mode=json&include=all",
+      "https://go.dev/dl/",
+      "https://storage.googleapis.com/golang/?marker=",
+      "https://storage.googleapis.com/storage/v1/b/golang/o",
+      "https://dl.google.com/go/ (guessed pre-1.2.2 filenames, 404)"
+    ]
+  }
+]

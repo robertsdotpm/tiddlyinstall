@@ -1,0 +1,601 @@
+[
+  {
+    "runtime": "java",
+    "major": "1.0",
+    "os": "any",
+    "arch": "any",
+    "reason": "Oracle Java Archive is login-gated (requires an Oracle account acceptance click-through); no scriptable official index exists, and Temurin/Zulu do not build pre-6 releases.",
+    "looked_at": [
+      "https://www.oracle.com/java/technologies/oracle-java-archive-downloads.html"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "1.1",
+    "os": "any",
+    "arch": "any",
+    "reason": "Oracle Java Archive is login-gated (requires an Oracle account acceptance click-through); no scriptable official index exists, and Temurin/Zulu do not build pre-6 releases.",
+    "looked_at": [
+      "https://www.oracle.com/java/technologies/oracle-java-archive-downloads.html"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "1.2",
+    "os": "any",
+    "arch": "any",
+    "reason": "Oracle Java Archive is login-gated (requires an Oracle account acceptance click-through); no scriptable official index exists, and Temurin/Zulu do not build pre-6 releases.",
+    "looked_at": [
+      "https://www.oracle.com/java/technologies/oracle-java-archive-downloads.html"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "1.3",
+    "os": "any",
+    "arch": "any",
+    "reason": "Oracle Java Archive is login-gated (requires an Oracle account acceptance click-through); no scriptable official index exists, and Temurin/Zulu do not build pre-6 releases.",
+    "looked_at": [
+      "https://www.oracle.com/java/technologies/oracle-java-archive-downloads.html"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "1.4",
+    "os": "any",
+    "arch": "any",
+    "reason": "Oracle Java Archive is login-gated (requires an Oracle account acceptance click-through); no scriptable official index exists, and Temurin/Zulu do not build pre-6 releases.",
+    "looked_at": [
+      "https://www.oracle.com/java/technologies/oracle-java-archive-downloads.html"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "5",
+    "os": "any",
+    "arch": "any",
+    "reason": "Oracle Java Archive is login-gated (requires an Oracle account acceptance click-through); no scriptable official index exists, and Temurin/Zulu do not build pre-6 releases.",
+    "looked_at": [
+      "https://www.oracle.com/java/technologies/oracle-java-archive-downloads.html"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "6",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/6/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=6&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "6",
+    "os": "windows",
+    "arch": "x86",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/6/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=6&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "6",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/6/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=6&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "6",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/6/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=6&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "6",
+    "os": "macos",
+    "arch": "amd64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/6/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=6&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "6",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/6/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=6&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "7",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/7/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=7&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "7",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/7/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=7&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "7",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/7/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=7&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "7",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/7/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=7&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "8",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/8/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=8&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "9",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/9/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=9&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "9",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/9/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=9&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "9",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/9/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=9&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "9",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/9/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=9&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "10",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/10/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=10&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "10",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/10/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=10&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "10",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/10/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=10&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "10",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/10/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=10&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "11",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/11/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=11&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "12",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/12/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=12&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "12",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/12/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=12&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "12",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/12/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=12&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "12",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/12/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=12&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "13",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/13/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=13&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "14",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/14/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=14&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "14",
+    "os": "linux",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/14/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=14&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "14",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/14/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=14&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "14",
+    "os": "macos",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/14/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=14&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "15",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/15/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=15&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "15",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/15/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=15&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "20",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/20/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=20&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "20",
+    "os": "windows",
+    "arch": "x86",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/20/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=20&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "20",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/20/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=20&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "21",
+    "os": "windows",
+    "arch": "x86",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/21/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=21&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "21",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/21/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=21&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "22",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/22/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=22&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "22",
+    "os": "windows",
+    "arch": "x86",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/22/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=22&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "22",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/22/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=22&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "23",
+    "os": "windows",
+    "arch": "x86",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/23/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=23&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "23",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/23/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=23&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "24",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/24/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=24&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "24",
+    "os": "windows",
+    "arch": "x86",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/24/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=24&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "24",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/24/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=24&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "25",
+    "os": "windows",
+    "arch": "x86",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/25/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=25&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "25",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/25/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=25&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "26",
+    "os": "windows",
+    "arch": "arm64",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/26/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=26&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "26",
+    "os": "windows",
+    "arch": "x86",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/26/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=26&release_status=ga"
+    ]
+  },
+  {
+    "runtime": "java",
+    "major": "26",
+    "os": "linux",
+    "arch": "armv7",
+    "reason": "No GA jdk or jre build found from Temurin (Adoptium) or Azul Zulu for this major/os/arch combination (hotspot JVM only; OpenJ9 and other JVM impls were not checked).",
+    "looked_at": [
+      "https://api.adoptium.net/v3/assets/feature_releases/26/ga?image_type=jdk",
+      "https://api.azul.com/metadata/v1/zulu/packages/?java_version=26&release_status=ga"
+    ]
+  }
+]

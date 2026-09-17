@@ -1,0 +1,1505 @@
+[
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "4.4",
+  "version": "4.4.9",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://museum.php.net/php4/php-4.4.9-Win32.zip",
+  "mirrors": [
+   "https://web.archive.org/web/20161024163935id_/https://museum.php.net/php4/php-4.4.9-Win32.zip"
+  ],
+  "checksum": null,
+  "size": 8366326,
+  "released": "2008-08-07",
+  "min_os": null,
+  "metadata_source": "https://museum.php.net/php4/",
+  "notes": null
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "5.0",
+  "version": "5.0.5",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://museum.php.net/php5/php-5.0.5-Win32.zip",
+  "mirrors": [],
+  "checksum": null,
+  "size": 8012442,
+  "released": "2005-09-05",
+  "min_os": null,
+  "metadata_source": "https://museum.php.net/php5/",
+  "notes": null
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "5.1",
+  "version": "5.1.6",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://museum.php.net/php5/php-5.1.6-Win32.zip",
+  "mirrors": [],
+  "checksum": null,
+  "size": 9508221,
+  "released": "2006-08-24",
+  "min_os": null,
+  "metadata_source": "https://museum.php.net/php5/",
+  "notes": null
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "5.2",
+  "version": "5.2.17",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vc6",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/archives/php-5.2.17-nts-Win32-VC6-x86.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/archives/php-5.2.17-nts-Win32-VC6-x86.zip"
+  ],
+  "checksum": null,
+  "size": 10455037,
+  "released": "2011-01-06",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/archives/",
+  "notes": null,
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "c20433d1fbf7d2bcabe591757b8dcdb00a7477f191e091d95d4f774a601d790b",
+    "source": "scoop PHP/php5.2.17-nts 5.2.17 (HEAD PHP/bucket/php5.2.17-nts.json)"
+   }
+  ]
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "5.3",
+  "version": "5.3.29",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vc9",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/archives/php-5.3.29-nts-Win32-VC9-x86.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/archives/php-5.3.29-nts-Win32-VC9-x86.zip"
+  ],
+  "checksum": null,
+  "size": 17034827,
+  "released": "2014-08-14",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/archives/",
+  "notes": null,
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "d63846ede80daacdb1ca2359c4f8bf1bd2f9831fe1b9599d2e4345ede931b75b",
+    "source": "scoop PHP/php5.3-nts 5.3.29 (HEAD PHP/bucket/php5.3-nts.json)"
+   }
+  ]
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "5.4",
+  "version": "5.4.45",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vc9",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/archives/php-5.4.45-nts-Win32-VC9-x86.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/archives/php-5.4.45-nts-Win32-VC9-x86.zip"
+  ],
+  "checksum": null,
+  "size": 17120046,
+  "released": "2015-09-03",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/archives/",
+  "notes": null,
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "63da6fd7c73c25eef1baec7099c3de348390671f9b2e61b74a8ab300fa4eab92",
+    "source": "scoop PHP/php5.4.45-nts 5.4.45 (HEAD PHP/bucket/php5.4.45-nts.json)"
+   }
+  ]
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "5.5",
+  "version": "5.5.38",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vc11",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/archives/php-5.5.38-nts-Win32-VC11-x64.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/archives/php-5.5.38-nts-Win32-VC11-x64.zip"
+  ],
+  "checksum": null,
+  "size": 21081117,
+  "released": "2016-07-21",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/archives/",
+  "notes": null,
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "abdf2fefcd7d1daf75d689e309e8571879b15d4b61726546e4e064f96167387a",
+    "source": "scoop PHP/php5.5.38-nts 5.5.38 (HEAD PHP/bucket/php5.5.38-nts.json)"
+   }
+  ]
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "5.5",
+  "version": "5.5.38",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vc11",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/archives/php-5.5.38-nts-Win32-VC11-x86.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/archives/php-5.5.38-nts-Win32-VC11-x86.zip"
+  ],
+  "checksum": null,
+  "size": 19695908,
+  "released": "2016-07-21",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/archives/",
+  "notes": null,
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "443fba0410873b9d7083c2b815b0d53bbcec8b2f5e8a69469e06e8d8cb2d343e",
+    "source": "scoop PHP/php5.5.38-nts 5.5.38 (HEAD PHP/bucket/php5.5.38-nts.json)"
+   }
+  ]
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "5.6",
+  "version": "5.6.40",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vc11",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/archives/php-5.6.40-nts-Win32-VC11-x64.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/archives/php-5.6.40-nts-Win32-VC11-x64.zip"
+  ],
+  "checksum": null,
+  "size": 23032238,
+  "released": "2019-01-10",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/archives/",
+  "notes": null,
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "3d7668280fa4b16f70705539ba1e4ea17eef344c81e82881cbeca26fb7f181f1",
+    "source": "scoop PHP/php5.6-nts 5.6.40 (HEAD PHP/bucket/php5.6-nts.json)"
+   }
+  ]
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "5.6",
+  "version": "5.6.40",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vc11",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/archives/php-5.6.40-nts-Win32-VC11-x86.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/archives/php-5.6.40-nts-Win32-VC11-x86.zip"
+  ],
+  "checksum": null,
+  "size": 21374398,
+  "released": "2019-01-10",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/archives/",
+  "notes": null,
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "a7ad5a445d74da9c5b6e3e85d922a62cd808477a4a0b3bb24b8ee945ffc620a7",
+    "source": "scoop PHP/php5.6-nts 5.6.40 (HEAD PHP/bucket/php5.6-nts.json)"
+   }
+  ]
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "7.0",
+  "version": "7.0.33",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vc14",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/archives/php-7.0.33-nts-Win32-VC14-x64.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/archives/php-7.0.33-nts-Win32-VC14-x64.zip"
+  ],
+  "checksum": null,
+  "size": 24425705,
+  "released": "2019-01-10",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/archives/",
+  "notes": null,
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "bba39bde5b0bd50efadc11e2716c7528669945f9d1397d707486e401e67e89fb",
+    "source": "scoop PHP/php7.0-nts 7.0.33 (HEAD PHP/bucket/php7.0-nts.json)"
+   }
+  ]
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "7.0",
+  "version": "7.0.33",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vc14",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/archives/php-7.0.33-nts-Win32-VC14-x86.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/archives/php-7.0.33-nts-Win32-VC14-x86.zip"
+  ],
+  "checksum": null,
+  "size": 22346551,
+  "released": "2019-01-10",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/archives/",
+  "notes": null,
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "b3ac2c67a5dceb937d7e56288704d0421d75102de6e49b4f40c20e5386c24629",
+    "source": "scoop PHP/php7.0-nts 7.0.33 (HEAD PHP/bucket/php7.0-nts.json)"
+   }
+  ]
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "7.1",
+  "version": "7.1.33",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vc14",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/archives/php-7.1.33-nts-Win32-VC14-x64.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/archives/php-7.1.33-nts-Win32-VC14-x64.zip"
+  ],
+  "checksum": null,
+  "size": 24268222,
+  "released": "2019-10-24",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/archives/",
+  "notes": null,
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "071438be5bbaee8b34894ddba7852b6040991a3c853ab8141efcb1b6655bbbef",
+    "source": "scoop PHP/php7.1-nts 7.1.33 (HEAD PHP/bucket/php7.1-nts.json)"
+   }
+  ]
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "7.1",
+  "version": "7.1.33",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vc14",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/archives/php-7.1.33-nts-Win32-VC14-x86.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/archives/php-7.1.33-nts-Win32-VC14-x86.zip"
+  ],
+  "checksum": null,
+  "size": 22436869,
+  "released": "2019-10-24",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/archives/",
+  "notes": null,
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "be810f87c0e88282fb8578a1fa3bbd8720c65425669b27e0437d6cde9aa90805",
+    "source": "scoop PHP/php7.1-nts 7.1.33 (HEAD PHP/bucket/php7.1-nts.json)"
+   }
+  ]
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "7.2",
+  "version": "7.2.34",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vc15",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/archives/php-7.2.34-nts-Win32-VC15-x64.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/archives/php-7.2.34-nts-Win32-VC15-x64.zip"
+  ],
+  "checksum": null,
+  "size": 26121534,
+  "released": "2020-10-01",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/archives/",
+  "notes": null,
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "3c673eab656e26fd6bc3ad27fe71169ad888b04e21d63d3c6b3151d5ed216563",
+    "source": "scoop PHP/php7.2-nts 7.2.34 (HEAD PHP/bucket/php7.2-nts.json)"
+   }
+  ]
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "7.2",
+  "version": "7.2.34",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vc15",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/archives/php-7.2.34-nts-Win32-VC15-x86.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/archives/php-7.2.34-nts-Win32-VC15-x86.zip"
+  ],
+  "checksum": null,
+  "size": 24395496,
+  "released": "2020-10-01",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/archives/",
+  "notes": null,
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "d5819614a0a141082408d66970432eec288db2765e0e96197c1ced481fb38783",
+    "source": "scoop PHP/php7.2-nts 7.2.34 (HEAD PHP/bucket/php7.2-nts.json)"
+   }
+  ]
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "7.3",
+  "version": "7.3.33",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vc15",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/archives/php-7.3.33-nts-Win32-VC15-x64.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/archives/php-7.3.33-nts-Win32-VC15-x64.zip"
+  ],
+  "checksum": null,
+  "size": 25625477,
+  "released": "2021-11-18",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/archives/",
+  "notes": null,
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "5eaf3cad80e678623f222a42c99bcefcc60eea359d407fb51e805afdb3b13e5e",
+    "source": "scoop PHP/php7.3-nts 7.3.33 (HEAD PHP/bucket/php7.3-nts.json)"
+   }
+  ]
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "7.3",
+  "version": "7.3.33",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vc15",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/archives/php-7.3.33-nts-Win32-VC15-x86.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/archives/php-7.3.33-nts-Win32-VC15-x86.zip"
+  ],
+  "checksum": null,
+  "size": 23916949,
+  "released": "2021-11-18",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/archives/",
+  "notes": null,
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "5e65873d5fb9d63df17de991c736bac56389342851310bb84d8e2c22f6c9663e",
+    "source": "scoop PHP/php7.3-nts 7.3.33 (HEAD PHP/bucket/php7.3-nts.json)"
+   }
+  ]
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "7.4",
+  "version": "7.4.33",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vc15",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/php-7.4.33-nts-Win32-vc15-x64.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/php-7.4.33-nts-Win32-vc15-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "14ae3250d4447c8ccfc4c45a70d90adfbcd61e728d85f0be56a7ddf8f9c8aace",
+   "source": "https://windows.php.net/downloads/releases/sha256sum.txt"
+  },
+  "size": 26132214,
+  "released": "2022-11-03",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/",
+  "notes": null
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "7.4",
+  "version": "7.4.33",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vc15",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/php-7.4.33-nts-Win32-vc15-x86.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/php-7.4.33-nts-Win32-vc15-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "3719efc430c3b82cf809ff1b4bb7d720e388f793b1e1857e4d892c62fa950b68",
+   "source": "https://windows.php.net/downloads/releases/sha256sum.txt"
+  },
+  "size": 24327462,
+  "released": "2022-11-03",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/",
+  "notes": null
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.0",
+  "version": "8.0.30",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.0.30-cli-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.0.30-cli-linux-x86_64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 7574452,
+  "released": "2024-11-01",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.0",
+  "version": "8.0.30",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.0.30-cli-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.0.30-cli-linux-aarch64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 7695556,
+  "released": "2024-11-01",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.0",
+  "version": "8.0.30",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.0.30-cli-macos-x86_64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.0.30-cli-macos-x86_64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 8124441,
+  "released": "2024-11-01",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.0",
+  "version": "8.0.30",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.0.30-cli-macos-aarch64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.0.30-cli-macos-aarch64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 8178217,
+  "released": "2024-11-01",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.0",
+  "version": "8.0.30",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vs16",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/php-8.0.30-nts-Win32-vs16-x64.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/php-8.0.30-nts-Win32-vs16-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "dfb70498ffa2c617f2f655a155564697e3c9cca41709938fd1a5997d1d5b0785",
+   "source": "https://windows.php.net/downloads/releases/sha256sum.txt"
+  },
+  "size": 26766957,
+  "released": "2023-08-03",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/",
+  "notes": null
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.0",
+  "version": "8.0.30",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vs16",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/php-8.0.30-nts-Win32-vs16-x86.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/php-8.0.30-nts-Win32-vs16-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "b649889ac73add91c02ec7f6fdb9182f148cfa3181761e32a1be02a3b1d85100",
+   "source": "https://windows.php.net/downloads/releases/sha256sum.txt"
+  },
+  "size": 24801083,
+  "released": "2023-08-03",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/",
+  "notes": null
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.1",
+  "version": "8.1.34",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.1.34-cli-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.1.34-cli-linux-x86_64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 11594685,
+  "released": "2026-03-12",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.1",
+  "version": "8.1.34",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.1.34-cli-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.1.34-cli-linux-aarch64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 12045290,
+  "released": "2026-03-12",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.1",
+  "version": "8.1.34",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.1.34-cli-macos-x86_64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.1.34-cli-macos-x86_64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 13899690,
+  "released": "2026-03-12",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.1",
+  "version": "8.1.34",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.1.34-cli-macos-aarch64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.1.34-cli-macos-aarch64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 13504808,
+  "released": "2026-03-12",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.1",
+  "version": "8.1.34",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vs16",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/php-8.1.34-nts-Win32-vs16-x64.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/php-8.1.34-nts-Win32-vs16-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "9cfe246cb144076c16f5913a3ef88a474c3dd7e60f0f0c8bb95faf68674016cc",
+   "source": "https://windows.php.net/downloads/releases/sha256sum.txt"
+  },
+  "size": 30822368,
+  "released": "2025-12-18",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/",
+  "notes": null
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.1",
+  "version": "8.1.34",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vs16",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/php-8.1.34-nts-Win32-vs16-x86.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/php-8.1.34-nts-Win32-vs16-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "925f3b6b098cfc4b324056b8b8b8b870ad11cd22c15c2c29a03067a5eb14dc4c",
+   "source": "https://windows.php.net/downloads/releases/sha256sum.txt"
+  },
+  "size": 27726976,
+  "released": "2025-12-18",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/",
+  "notes": null
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.2",
+  "version": "8.2.32",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.2.32-cli-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.2.32-cli-linux-x86_64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 11666920,
+  "released": "2026-07-07",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.2",
+  "version": "8.2.32",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.2.32-cli-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.2.32-cli-linux-aarch64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 12078551,
+  "released": "2026-07-07",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.2",
+  "version": "8.2.32",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.2.32-cli-macos-x86_64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.2.32-cli-macos-x86_64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 14006663,
+  "released": "2026-07-07",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.2",
+  "version": "8.2.32",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.2.32-cli-macos-aarch64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.2.32-cli-macos-aarch64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 13587943,
+  "released": "2026-07-07",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.2",
+  "version": "8.2.33",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vs16",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/php-8.2.33-nts-Win32-vs16-x64.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/php-8.2.33-nts-Win32-vs16-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d0bd189522fa50255ee94ed4b340ed4330f5ae33a90a74205275b0f0b221d388",
+   "source": "https://windows.php.net/downloads/releases/sha256sum.txt"
+  },
+  "size": 33452452,
+  "released": "2026-07-30",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/",
+  "notes": null
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.2",
+  "version": "8.2.33",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vs16",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/php-8.2.33-nts-Win32-vs16-x86.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/php-8.2.33-nts-Win32-vs16-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "8732dac6084bcad5e8fc363efcd9bdc50afbfc469bc858eeee92da05bd21d8cc",
+   "source": "https://windows.php.net/downloads/releases/sha256sum.txt"
+  },
+  "size": 30175513,
+  "released": "2026-07-30",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/",
+  "notes": null
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.3",
+  "version": "8.3.32",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.3.32-cli-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.3.32-cli-linux-x86_64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 11744291,
+  "released": "2026-07-07",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.3",
+  "version": "8.3.32",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.3.32-cli-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.3.32-cli-linux-aarch64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 12151982,
+  "released": "2026-07-07",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.3",
+  "version": "8.3.32",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.3.32-cli-macos-x86_64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.3.32-cli-macos-x86_64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 14110296,
+  "released": "2026-07-07",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.3",
+  "version": "8.3.32",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.3.32-cli-macos-aarch64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.3.32-cli-macos-aarch64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 13688227,
+  "released": "2026-07-07",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.3",
+  "version": "8.3.33",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vs16",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/php-8.3.33-nts-Win32-vs16-x64.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/php-8.3.33-nts-Win32-vs16-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "534399107056313246f424adbbb7937337e40fbbf6aa7bc26287ba9cfd2e4a2a",
+   "source": "https://windows.php.net/downloads/releases/sha256sum.txt"
+  },
+  "size": 33852188,
+  "released": "2026-07-30",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/",
+  "notes": null
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.3",
+  "version": "8.3.33",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vs16",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/php-8.3.33-nts-Win32-vs16-x86.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/php-8.3.33-nts-Win32-vs16-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "590cc24bed2b3ce52d0ca387d7912e9500715848af834d5346b98d3a81892e07",
+   "source": "https://windows.php.net/downloads/releases/sha256sum.txt"
+  },
+  "size": 30558936,
+  "released": "2026-07-30",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/",
+  "notes": null
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.4",
+  "version": "8.4.23",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.4.23-cli-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.4.23-cli-linux-x86_64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 12375301,
+  "released": "2026-07-07",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.4",
+  "version": "8.4.23",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.4.23-cli-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.4.23-cli-linux-aarch64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 12768307,
+  "released": "2026-07-07",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.4",
+  "version": "8.4.23",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.4.23-cli-macos-x86_64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.4.23-cli-macos-x86_64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 14862400,
+  "released": "2026-07-07",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.4",
+  "version": "8.4.23",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.4.23-cli-macos-aarch64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.4.23-cli-macos-aarch64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 14435029,
+  "released": "2026-07-07",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.4",
+  "version": "8.4.25",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vs17",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/php-8.4.25-nts-Win32-vs17-x64.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/php-8.4.25-nts-Win32-vs17-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "43a8f67ed2e5223fafb21293c85976361808855405278cef2cf3037c3ae2529c",
+   "source": "https://windows.php.net/downloads/releases/sha256sum.txt"
+  },
+  "size": 35081597,
+  "released": "2026-08-27",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/",
+  "notes": null
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.4",
+  "version": "8.4.25",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vs17",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/php-8.4.25-nts-Win32-vs17-x86.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/php-8.4.25-nts-Win32-vs17-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "07ad87d7bf37798468c85a54b4c48189bd4f7561390432aad1502f6afb9cdbfe",
+   "source": "https://windows.php.net/downloads/releases/sha256sum.txt"
+  },
+  "size": 31482344,
+  "released": "2026-08-27",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/",
+  "notes": null
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.5",
+  "version": "8.5.8",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.5.8-cli-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.5.8-cli-linux-x86_64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 12931817,
+  "released": "2026-07-07",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.5",
+  "version": "8.5.8",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.5.8-cli-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.5.8-cli-linux-aarch64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 13570407,
+  "released": "2026-07-07",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.5",
+  "version": "8.5.8",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.5.8-cli-macos-x86_64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.5.8-cli-macos-x86_64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 15606882,
+  "released": "2026-07-07",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.5",
+  "version": "8.5.8",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "static-php-cli",
+  "libc": null,
+  "url": "https://dl.static-php.dev/static-php-cli/common/php-8.5.8-cli-macos-aarch64.tar.gz",
+  "mirrors": [
+   "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.5.8-cli-macos-aarch64.tar.gz"
+  ],
+  "checksum": null,
+  "size": 15106458,
+  "released": "2026-07-07",
+  "min_os": null,
+  "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
+  "notes": "community build (static-php-cli), not an official php.net binary"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.5",
+  "version": "8.5.10",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vs17",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/php-8.5.10-nts-Win32-vs17-x64.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/php-8.5.10-nts-Win32-vs17-x64.zip",
+   "https://downloads.php.net/~windows/releases/archives/php-8.5.10-nts-Win32-vs17-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "22ec430195984d233eb9e62c637a945bbcda06efca2f392d9d96d62c6acd34f8",
+   "source": "https://windows.php.net/downloads/releases/sha256sum.txt"
+  },
+  "size": 36023055,
+  "released": "2026-08-27",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/",
+  "notes": null
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.5",
+  "version": "8.5.10",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vs17",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/php-8.5.10-nts-Win32-vs17-x86.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/php-8.5.10-nts-Win32-vs17-x86.zip",
+   "https://downloads.php.net/~windows/releases/archives/php-8.5.10-nts-Win32-vs17-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "de135a1dec0cca14d47865c957cf6dc40286a7859704488e153042b500387776",
+   "source": "https://windows.php.net/downloads/releases/sha256sum.txt"
+  },
+  "size": 32335989,
+  "released": "2026-08-27",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/",
+  "notes": null
+ }
+]

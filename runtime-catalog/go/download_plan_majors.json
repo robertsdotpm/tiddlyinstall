@@ -1,0 +1,508 @@
+[
+  {
+    "runtime": "go",
+    "languages": [
+      "go"
+    ],
+    "major": "1.4",
+    "version": "1.4.2",
+    "os": "macos",
+    "arch": "x86",
+    "kind": "archive",
+    "format": "tar.gz",
+    "variant": "osx10.6",
+    "libc": null,
+    "url": "https://dl.google.com/go/go1.4.2.darwin-386-osx10.6.tar.gz",
+    "mirrors": [
+      "https://mirrors.aliyun.com/golang/go1.4.2.darwin-386-osx10.6.tar.gz",
+      "https://mirrors.nju.edu.cn/golang/go1.4.2.darwin-386-osx10.6.tar.gz",
+      "https://mirrors.hust.edu.cn/golang/go1.4.2.darwin-386-osx10.6.tar.gz"
+    ],
+    "checksum": null,
+    "size": 51284299,
+    "released": null,
+    "min_os": "OS X 10.6+",
+    "metadata_source": "https://go.dev/dl/?mode=json&include=all",
+    "notes": null
+  },
+  {
+    "runtime": "go",
+    "languages": [
+      "go"
+    ],
+    "major": "1.23",
+    "version": "1.23.12",
+    "os": "windows",
+    "arch": "armv6",
+    "kind": "archive",
+    "format": "zip",
+    "variant": null,
+    "libc": null,
+    "url": "https://dl.google.com/go/go1.23.12.windows-arm.zip",
+    "mirrors": [
+      "https://mirrors.aliyun.com/golang/go1.23.12.windows-arm.zip",
+      "https://mirrors.nju.edu.cn/golang/go1.23.12.windows-arm.zip",
+      "https://mirrors.hust.edu.cn/golang/go1.23.12.windows-arm.zip"
+    ],
+    "checksum": {
+      "algo": "sha256",
+      "value": "69866907e4f80368d21a3be3e6733a3f60b14934df29f571a8d9a9ab58cf6d65",
+      "source": "https://go.dev/dl/?mode=json&include=all"
+    },
+    "size": 79620239,
+    "released": "2025-08-06",
+    "min_os": null,
+    "metadata_source": "https://go.dev/dl/?mode=json&include=all",
+    "notes": null
+  },
+  {
+    "runtime": "go",
+    "languages": [
+      "go"
+    ],
+    "major": "1.27",
+    "version": "1.27.1",
+    "os": "linux",
+    "arch": "amd64",
+    "kind": "archive",
+    "format": "tar.gz",
+    "variant": null,
+    "libc": null,
+    "url": "https://dl.google.com/go/go1.27.1.linux-amd64.tar.gz",
+    "mirrors": [
+      "https://mirrors.aliyun.com/golang/go1.27.1.linux-amd64.tar.gz",
+      "https://mirrors.nju.edu.cn/golang/go1.27.1.linux-amd64.tar.gz",
+      "https://mirrors.hust.edu.cn/golang/go1.27.1.linux-amd64.tar.gz"
+    ],
+    "checksum": {
+      "algo": "sha256",
+      "value": "63d339f0da5ab53635a56f2490a7984dfe12dfcff22ad749f63edaf590168445",
+      "source": "https://go.dev/dl/?mode=json&include=all"
+    },
+    "size": 70553950,
+    "released": "2026-09-01",
+    "min_os": null,
+    "metadata_source": "https://go.dev/dl/?mode=json&include=all",
+    "notes": null
+  },
+  {
+    "runtime": "go",
+    "languages": [
+      "go"
+    ],
+    "major": "1.27",
+    "version": "1.27.1",
+    "os": "linux",
+    "arch": "arm64",
+    "kind": "archive",
+    "format": "tar.gz",
+    "variant": null,
+    "libc": null,
+    "url": "https://dl.google.com/go/go1.27.1.linux-arm64.tar.gz",
+    "mirrors": [
+      "https://mirrors.aliyun.com/golang/go1.27.1.linux-arm64.tar.gz",
+      "https://mirrors.nju.edu.cn/golang/go1.27.1.linux-arm64.tar.gz",
+      "https://mirrors.hust.edu.cn/golang/go1.27.1.linux-arm64.tar.gz"
+    ],
+    "checksum": {
+      "algo": "sha256",
+      "value": "3450b45a3f9ee8568792736a5c5e70a1f2e9b36c35a8f74958c03e51d7d92bec",
+      "source": "https://go.dev/dl/?mode=json&include=all"
+    },
+    "size": 67009954,
+    "released": "2026-09-01",
+    "min_os": null,
+    "metadata_source": "https://go.dev/dl/?mode=json&include=all",
+    "notes": null
+  },
+  {
+    "runtime": "go",
+    "languages": [
+      "go"
+    ],
+    "major": "1.27",
+    "version": "1.27.1",
+    "os": "linux",
+    "arch": "armv6",
+    "kind": "archive",
+    "format": "tar.gz",
+    "variant": null,
+    "libc": null,
+    "url": "https://dl.google.com/go/go1.27.1.linux-armv6l.tar.gz",
+    "mirrors": [
+      "https://mirrors.aliyun.com/golang/go1.27.1.linux-armv6l.tar.gz",
+      "https://mirrors.nju.edu.cn/golang/go1.27.1.linux-armv6l.tar.gz",
+      "https://mirrors.hust.edu.cn/golang/go1.27.1.linux-armv6l.tar.gz"
+    ],
+    "checksum": {
+      "algo": "sha256",
+      "value": "44893f200fb034791d4188df9fc9b9e73eadbb5fceafd5166703f0b9bab73fc2",
+      "source": "https://go.dev/dl/?mode=json&include=all"
+    },
+    "size": 68968196,
+    "released": "2026-09-01",
+    "min_os": null,
+    "metadata_source": "https://go.dev/dl/?mode=json&include=all",
+    "notes": null
+  },
+  {
+    "runtime": "go",
+    "languages": [
+      "go"
+    ],
+    "major": "1.27",
+    "version": "1.27.1",
+    "os": "linux",
+    "arch": "loong64",
+    "kind": "archive",
+    "format": "tar.gz",
+    "variant": null,
+    "libc": null,
+    "url": "https://dl.google.com/go/go1.27.1.linux-loong64.tar.gz",
+    "mirrors": [
+      "https://mirrors.aliyun.com/golang/go1.27.1.linux-loong64.tar.gz",
+      "https://mirrors.nju.edu.cn/golang/go1.27.1.linux-loong64.tar.gz",
+      "https://mirrors.hust.edu.cn/golang/go1.27.1.linux-loong64.tar.gz"
+    ],
+    "checksum": {
+      "algo": "sha256",
+      "value": "a3df3db12e0b16d932bbfd3f6025473faf8bfeb13ea2177de5e8fac1d4124b7f",
+      "source": "https://go.dev/dl/?mode=json&include=all"
+    },
+    "size": 68524216,
+    "released": "2026-09-01",
+    "min_os": null,
+    "metadata_source": "https://go.dev/dl/?mode=json&include=all",
+    "notes": null
+  },
+  {
+    "runtime": "go",
+    "languages": [
+      "go"
+    ],
+    "major": "1.27",
+    "version": "1.27.1",
+    "os": "linux",
+    "arch": "mips64le",
+    "kind": "archive",
+    "format": "tar.gz",
+    "variant": null,
+    "libc": null,
+    "url": "https://dl.google.com/go/go1.27.1.linux-mips64le.tar.gz",
+    "mirrors": [
+      "https://mirrors.aliyun.com/golang/go1.27.1.linux-mips64le.tar.gz",
+      "https://mirrors.nju.edu.cn/golang/go1.27.1.linux-mips64le.tar.gz",
+      "https://mirrors.hust.edu.cn/golang/go1.27.1.linux-mips64le.tar.gz"
+    ],
+    "checksum": {
+      "algo": "sha256",
+      "value": "23f9b4ce864764849ca792d8cf6bd8e00880ef3c6070a2717509f8d3f6059ba5",
+      "source": "https://go.dev/dl/?mode=json&include=all"
+    },
+    "size": 65886681,
+    "released": "2026-09-01",
+    "min_os": null,
+    "metadata_source": "https://go.dev/dl/?mode=json&include=all",
+    "notes": null
+  },
+  {
+    "runtime": "go",
+    "languages": [
+      "go"
+    ],
+    "major": "1.27",
+    "version": "1.27.1",
+    "os": "linux",
+    "arch": "ppc64",
+    "kind": "archive",
+    "format": "tar.gz",
+    "variant": null,
+    "libc": null,
+    "url": "https://dl.google.com/go/go1.27.1.linux-ppc64.tar.gz",
+    "mirrors": [
+      "https://mirrors.aliyun.com/golang/go1.27.1.linux-ppc64.tar.gz",
+      "https://mirrors.nju.edu.cn/golang/go1.27.1.linux-ppc64.tar.gz",
+      "https://mirrors.hust.edu.cn/golang/go1.27.1.linux-ppc64.tar.gz"
+    ],
+    "checksum": {
+      "algo": "sha256",
+      "value": "e91dee51bdfa08e034d9ed4016929a2008f179caa004922d637a97d5cda05778",
+      "source": "https://go.dev/dl/?mode=json&include=all"
+    },
+    "size": 67837731,
+    "released": "2026-09-01",
+    "min_os": null,
+    "metadata_source": "https://go.dev/dl/?mode=json&include=all",
+    "notes": null
+  },
+  {
+    "runtime": "go",
+    "languages": [
+      "go"
+    ],
+    "major": "1.27",
+    "version": "1.27.1",
+    "os": "linux",
+    "arch": "ppc64le",
+    "kind": "archive",
+    "format": "tar.gz",
+    "variant": null,
+    "libc": null,
+    "url": "https://dl.google.com/go/go1.27.1.linux-ppc64le.tar.gz",
+    "mirrors": [
+      "https://mirrors.aliyun.com/golang/go1.27.1.linux-ppc64le.tar.gz",
+      "https://mirrors.nju.edu.cn/golang/go1.27.1.linux-ppc64le.tar.gz",
+      "https://mirrors.hust.edu.cn/golang/go1.27.1.linux-ppc64le.tar.gz"
+    ],
+    "checksum": {
+      "algo": "sha256",
+      "value": "ad1ff83c24f783c2d4a025852b928a05c199e8742a14a5482d88de0293d2bd0d",
+      "source": "https://go.dev/dl/?mode=json&include=all"
+    },
+    "size": 67777684,
+    "released": "2026-09-01",
+    "min_os": null,
+    "metadata_source": "https://go.dev/dl/?mode=json&include=all",
+    "notes": null
+  },
+  {
+    "runtime": "go",
+    "languages": [
+      "go"
+    ],
+    "major": "1.27",
+    "version": "1.27.1",
+    "os": "linux",
+    "arch": "riscv64",
+    "kind": "archive",
+    "format": "tar.gz",
+    "variant": null,
+    "libc": null,
+    "url": "https://dl.google.com/go/go1.27.1.linux-riscv64.tar.gz",
+    "mirrors": [
+      "https://mirrors.aliyun.com/golang/go1.27.1.linux-riscv64.tar.gz",
+      "https://mirrors.nju.edu.cn/golang/go1.27.1.linux-riscv64.tar.gz",
+      "https://mirrors.hust.edu.cn/golang/go1.27.1.linux-riscv64.tar.gz"
+    ],
+    "checksum": {
+      "algo": "sha256",
+      "value": "62287667ee5e5f540f30fb9b7529a27fe582f22c6bfd726ece9b045f4c54ee61",
+      "source": "https://go.dev/dl/?mode=json&include=all"
+    },
+    "size": 68566140,
+    "released": "2026-09-01",
+    "min_os": null,
+    "metadata_source": "https://go.dev/dl/?mode=json&include=all",
+    "notes": null
+  },
+  {
+    "runtime": "go",
+    "languages": [
+      "go"
+    ],
+    "major": "1.27",
+    "version": "1.27.1",
+    "os": "linux",
+    "arch": "s390x",
+    "kind": "archive",
+    "format": "tar.gz",
+    "variant": null,
+    "libc": null,
+    "url": "https://dl.google.com/go/go1.27.1.linux-s390x.tar.gz",
+    "mirrors": [
+      "https://mirrors.aliyun.com/golang/go1.27.1.linux-s390x.tar.gz",
+      "https://mirrors.nju.edu.cn/golang/go1.27.1.linux-s390x.tar.gz",
+      "https://mirrors.hust.edu.cn/golang/go1.27.1.linux-s390x.tar.gz"
+    ],
+    "checksum": {
+      "algo": "sha256",
+      "value": "c9e1ad7bddea40e2eb10b4d3267ae06d462667839bf0ba94c2e2d160b06f9b9e",
+      "source": "https://go.dev/dl/?mode=json&include=all"
+    },
+    "size": 69583572,
+    "released": "2026-09-01",
+    "min_os": null,
+    "metadata_source": "https://go.dev/dl/?mode=json&include=all",
+    "notes": null
+  },
+  {
+    "runtime": "go",
+    "languages": [
+      "go"
+    ],
+    "major": "1.27",
+    "version": "1.27.1",
+    "os": "linux",
+    "arch": "x86",
+    "kind": "archive",
+    "format": "tar.gz",
+    "variant": null,
+    "libc": null,
+    "url": "https://dl.google.com/go/go1.27.1.linux-386.tar.gz",
+    "mirrors": [
+      "https://mirrors.aliyun.com/golang/go1.27.1.linux-386.tar.gz",
+      "https://mirrors.nju.edu.cn/golang/go1.27.1.linux-386.tar.gz",
+      "https://mirrors.hust.edu.cn/golang/go1.27.1.linux-386.tar.gz"
+    ],
+    "checksum": {
+      "algo": "sha256",
+      "value": "3b72028095439d2bc0ce84e271cc70328a878d879020c5721eaa46df5f72fbc0",
+      "source": "https://go.dev/dl/?mode=json&include=all"
+    },
+    "size": 68698442,
+    "released": "2026-09-01",
+    "min_os": null,
+    "metadata_source": "https://go.dev/dl/?mode=json&include=all",
+    "notes": null
+  },
+  {
+    "runtime": "go",
+    "languages": [
+      "go"
+    ],
+    "major": "1.27",
+    "version": "1.27.1",
+    "os": "macos",
+    "arch": "amd64",
+    "kind": "archive",
+    "format": "tar.gz",
+    "variant": null,
+    "libc": null,
+    "url": "https://dl.google.com/go/go1.27.1.darwin-amd64.tar.gz",
+    "mirrors": [
+      "https://mirrors.aliyun.com/golang/go1.27.1.darwin-amd64.tar.gz",
+      "https://mirrors.nju.edu.cn/golang/go1.27.1.darwin-amd64.tar.gz",
+      "https://mirrors.hust.edu.cn/golang/go1.27.1.darwin-amd64.tar.gz"
+    ],
+    "checksum": {
+      "algo": "sha256",
+      "value": "8f8f52c6649542cf027bbc9b9c68d1ec042f9f34808a40413f0b8b3f66f3caa4",
+      "source": "https://go.dev/dl/?mode=json&include=all"
+    },
+    "size": 71621873,
+    "released": "2026-09-01",
+    "min_os": null,
+    "metadata_source": "https://go.dev/dl/?mode=json&include=all",
+    "notes": null
+  },
+  {
+    "runtime": "go",
+    "languages": [
+      "go"
+    ],
+    "major": "1.27",
+    "version": "1.27.1",
+    "os": "macos",
+    "arch": "arm64",
+    "kind": "archive",
+    "format": "tar.gz",
+    "variant": null,
+    "libc": null,
+    "url": "https://dl.google.com/go/go1.27.1.darwin-arm64.tar.gz",
+    "mirrors": [
+      "https://mirrors.aliyun.com/golang/go1.27.1.darwin-arm64.tar.gz",
+      "https://mirrors.nju.edu.cn/golang/go1.27.1.darwin-arm64.tar.gz",
+      "https://mirrors.hust.edu.cn/golang/go1.27.1.darwin-arm64.tar.gz"
+    ],
+    "checksum": {
+      "algo": "sha256",
+      "value": "ee215d57e0ec269c60cc9ceca68e6bda321ba9ee5afe24f4b0988703c2d87d12",
+      "source": "https://go.dev/dl/?mode=json&include=all"
+    },
+    "size": 68100347,
+    "released": "2026-09-01",
+    "min_os": null,
+    "metadata_source": "https://go.dev/dl/?mode=json&include=all",
+    "notes": null
+  },
+  {
+    "runtime": "go",
+    "languages": [
+      "go"
+    ],
+    "major": "1.27",
+    "version": "1.27.1",
+    "os": "windows",
+    "arch": "amd64",
+    "kind": "archive",
+    "format": "zip",
+    "variant": null,
+    "libc": null,
+    "url": "https://dl.google.com/go/go1.27.1.windows-amd64.zip",
+    "mirrors": [
+      "https://mirrors.aliyun.com/golang/go1.27.1.windows-amd64.zip",
+      "https://mirrors.nju.edu.cn/golang/go1.27.1.windows-amd64.zip",
+      "https://mirrors.hust.edu.cn/golang/go1.27.1.windows-amd64.zip"
+    ],
+    "checksum": {
+      "algo": "sha256",
+      "value": "a3911b5e0e1b1053f25ed0675f4c1c6aad1e2bfcf253df2b9be4caabd2edd95d",
+      "source": "https://go.dev/dl/?mode=json&include=all"
+    },
+    "size": 78931360,
+    "released": "2026-09-01",
+    "min_os": null,
+    "metadata_source": "https://go.dev/dl/?mode=json&include=all",
+    "notes": null
+  },
+  {
+    "runtime": "go",
+    "languages": [
+      "go"
+    ],
+    "major": "1.27",
+    "version": "1.27.1",
+    "os": "windows",
+    "arch": "arm64",
+    "kind": "archive",
+    "format": "zip",
+    "variant": null,
+    "libc": null,
+    "url": "https://dl.google.com/go/go1.27.1.windows-arm64.zip",
+    "mirrors": [
+      "https://mirrors.aliyun.com/golang/go1.27.1.windows-arm64.zip",
+      "https://mirrors.nju.edu.cn/golang/go1.27.1.windows-arm64.zip",
+      "https://mirrors.hust.edu.cn/golang/go1.27.1.windows-arm64.zip"
+    ],
+    "checksum": {
+      "algo": "sha256",
+      "value": "13b69b87bb0e83f96bc68560a8cace7f0343b1e03469f1110ea18d17e3234069",
+      "source": "https://go.dev/dl/?mode=json&include=all"
+    },
+    "size": 75038673,
+    "released": "2026-09-01",
+    "min_os": null,
+    "metadata_source": "https://go.dev/dl/?mode=json&include=all",
+    "notes": null
+  },
+  {
+    "runtime": "go",
+    "languages": [
+      "go"
+    ],
+    "major": "1.27",
+    "version": "1.27.1",
+    "os": "windows",
+    "arch": "x86",
+    "kind": "archive",
+    "format": "zip",
+    "variant": null,
+    "libc": null,
+    "url": "https://dl.google.com/go/go1.27.1.windows-386.zip",
+    "mirrors": [
+      "https://mirrors.aliyun.com/golang/go1.27.1.windows-386.zip",
+      "https://mirrors.nju.edu.cn/golang/go1.27.1.windows-386.zip",
+      "https://mirrors.hust.edu.cn/golang/go1.27.1.windows-386.zip"
+    ],
+    "checksum": {
+      "algo": "sha256",
+      "value": "1670510496778ee976de09c91b7960f76cb7dbf90968cfea98bb51fa80c9de91",
+      "source": "https://go.dev/dl/?mode=json&include=all"
+    },
+    "size": 77661871,
+    "released": "2026-09-01",
+    "min_os": null,
+    "metadata_source": "https://go.dev/dl/?mode=json&include=all",
+    "notes": null
+  }
+]

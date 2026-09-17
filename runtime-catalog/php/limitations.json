@@ -1,0 +1,371 @@
+{
+  "runtime": "php",
+  "languages": ["php"],
+  "researched": "2026-09-17",
+  "sources": [
+    "https://www.php.net/supported-versions.php",
+    "https://www.php.net/eol.php",
+    "https://www.php.net/manual/en/migration70.new-features.php",
+    "https://www.php.net/manual/en/migration70.other-changes.php",
+    "https://www.php.net/manual/en/migration81.new-features.php",
+    "https://www.php.net/manual/en/migration56.openssl.php",
+    "https://wiki.php.net/rfc/improved-tls-defaults",
+    "https://windows.php.net/download",
+    "https://windows.php.net/downloads/releases/archives/",
+    "catalog/php/releases.json (variant/arch/kind fields, scraped from windows.php.net and php.net/releases)",
+    "catalog/php/gaps.json (Windows x86/x64 and Linux/macOS binary gaps, with reasons)",
+    "catalog/php/NOTES.md (this catalog's own research notes on sources and mirror coverage)"
+  ],
+  "milestones": [
+    {"capability": "modules", "since": "5.3", "notes": "namespaces (PEP-style single-level, backslash-separated) added in 5.3.0; no autoloading standard until PSR-0/PSR-4 (Composer era)"},
+    {"capability": "generics", "since": "none", "notes": "PHP has never had generics; static analysis tools (PHPStan, Psalm) fake them via PHPDoc"},
+    {"capability": "async_await", "since": "8.1", "notes": "no async/await keyword; Fibers (8.1) give cooperative primitives that ReactPHP/Amp build event loops and coroutine-style APIs on top of; before 8.1 those libraries relied on generators (5.5) and callbacks"},
+    {"capability": "native_threads", "since": "none", "notes": "no native threads in mainstream builds; ext-parallel and pthreads require a ZTS (thread-safe) build and are rarely available prebuilt; Swoole/Fibers give concurrency without OS threads"},
+    {"capability": "true_parallelism", "since": "none", "notes": "single-threaded execution model throughout; parallelism in practice means multiple processes (php-fpm workers, pcntl_fork on Unix only) or the ext-parallel/pthreads extensions on ZTS builds"},
+    {"capability": "tls_1_2", "since": "5.6", "notes": "STREAM_CRYPTO_METHOD_TLS_CLIENT negotiated up to TLS 1.2 in 5.6.0-5.6.6, then a fix reverted default negotiation to TLS 1.0-only for 5.6.7 through 7.1.x; TLS 1.2 became the reliable default again in 7.2.0 (rfc:improved-tls-defaults). Actual availability also depends on the OpenSSL the build was linked against"},
+    {"capability": "tls_1_3", "since": "7.4", "notes": "available only when compiled/linked against OpenSSL 1.1.1+; official Windows builds began bundling an OpenSSL 1.1.1 line around 7.4, Linux distro packages depend on the distro's OpenSSL"},
+    {"capability": "http2_client", "since": "5.5", "notes": "ext-curl exposes whatever the linked libcurl supports; CURL_HTTP_VERSION_2_0 usable once PHP is linked against an nghttp2-enabled libcurl (Windows builds bundled a suitable libcurl from roughly 5.5/5.6 on); no capability without the curl extension"},
+    {"capability": "http3_client", "since": "none", "notes": "no official ext-curl/libcurl build in this catalog exposes HTTP/3; requires a libcurl built with an HTTP/3 backend (quiche/ngtcp2), which php.net/windows.php.net do not ship"},
+    {"capability": "package_manager_bundled", "since": "none", "notes": "Composer (2012) is the de facto package manager but is never bundled with the PHP runtime itself; PEAR shipped with older builds but predates and is unrelated to Composer-era workflows"},
+    {"capability": "64bit_windows", "since": "5.5", "notes": "first Windows x64 archives appear on windows.php.net for the 5.5 line (catalog gaps.json: 'windows.php.net never shipped an x64 build for this branch (64-bit Windows PHP builds only began with the PHP 5.5 line)' for 5.4 and earlier); 5.5/5.6 x64 builds still used a 32-bit PHP integer/long internally, so true 64-bit PHP_INT_MAX on Windows only arrived with the 7.0 engine rewrite"},
+    {"capability": "arm64_windows", "since": "none", "notes": "no official ARM64 Windows build exists in any major covered here; windows.php.net ships x86/x64 only"},
+    {"capability": "arm64_macos", "since": "none", "notes": "php.net ships no macOS binaries at all (any arch); Apple Silicon support comes only from third parties (Homebrew, static-php-cli, distro-style packagers), not from php.net"},
+    {"capability": "arm64_linux", "since": "none", "notes": "php.net ships no Linux binaries at all (any arch); arm64 Linux PHP comes from distro packages or static-php-cli, not php.net"},
+    {"capability": "unicode_default", "since": "none", "notes": "PHP strings remain byte arrays with no native Unicode string type in any released major (the PHP 6 Unicode-string project was abandoned before release); mbstring/intl provide Unicode-aware functions as an opt-in layer"}
+  ],
+  "majors": [
+    {
+      "major": "4.4",
+      "released": "2005-07-11",
+      "end_of_life": "2008-08-07",
+      "os_support": {
+        "windows": "Windows 98/NT4/2000/XP/2003 era; x86 only, VC6-built binaries, no x64 build ever existed for this branch",
+        "macos": "no official php.net binary; ran via source compile or OS-bundled PHP (Mac OS X shipped PHP 4 in /usr/bin from 10.2 onward)",
+        "linux": "no official php.net binary; source tarball only, packaged by distros"
+      },
+      "added": ["PDO-less database access (mysql/pgsql/etc. extensions only)", "Zend Engine 1 with reference-counted, largely value-semantic objects"],
+      "limitations": [
+        "objects behave like values (copied on assignment) rather than references, making OOP code fragile (fixed by Zend Engine 2 object handles in PHP 5.0)",
+        "no exceptions before 5.0 (try/catch does not exist)",
+        "no namespaces (5.3), no closures (5.3)",
+        "no SPL, no PDO",
+        "no built-in opcode cache (bundled OPcache is 5.5); relied on third-party APC/Zend Optimizer",
+        "long since end-of-life; no TLS 1.2/1.3 concerns apply because it predates modern OpenSSL stream wrapper defaults entirely and using it on the internet today is a security liability regardless"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "5.0",
+      "released": "2004-07-13",
+      "end_of_life": "2005-09-05",
+      "os_support": {
+        "windows": "Windows 98/NT4/2000/XP/2003; x86 only, VC6-built, no x64 build",
+        "macos": "no official php.net binary; source compile only",
+        "linux": "no official php.net binary; source tarball only"
+      },
+      "added": ["Zend Engine 2: objects now handled by reference/handle, not copied by value", "exceptions (try/catch/throw)", "abstract classes and interfaces", "static class members", "PHP_EOL, __toString()"],
+      "limitations": [
+        "no namespaces (5.3) -- large codebases used prefix-based faux-namespacing (Zend_Db, PEAR_...)",
+        "no closures/anonymous functions (5.3); callbacks used string/array callables",
+        "no late static binding (5.3), so 'self::' inside inherited static methods could not be overridden politely",
+        "no built-in unit testing, no Composer (2012) -- dependencies were vendored by hand or via PEAR",
+        "no bundled opcode cache",
+        "very early and buggy; many production sites skipped straight to 5.1/5.2"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "5.1",
+      "released": "2005-11-24",
+      "end_of_life": "2006-08-24",
+      "os_support": {
+        "windows": "Windows 98/NT4/2000/XP/2003; x86 only, VC6-built, no x64 build",
+        "macos": "no official php.net binary; source compile only",
+        "linux": "no official php.net binary; source tarball only"
+      },
+      "added": ["PDO extension introduced", "much improved performance and stability over 5.0", "PHP tokenizer/reflection improvements"],
+      "limitations": [
+        "no namespaces, closures, or late static binding (all land in 5.3)",
+        "no Composer-era autoloading standard; spl_autoload_register appears in 5.1.2 but PSR-4 conventions came years later",
+        "no bundled opcode cache"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "5.2",
+      "released": "2006-11-02",
+      "end_of_life": "2011-01-06",
+      "os_support": {
+        "windows": "Windows 2000/XP/2003/Vista; x86 only, VC6-built, no x64 build",
+        "macos": "no official php.net binary; source compile only",
+        "linux": "no official php.net binary; source tarball only"
+      },
+      "added": ["filter extension (input validation/sanitization)", "JSON extension bundled", "improved error handling"],
+      "limitations": [
+        "no namespaces, closures, or late static binding (5.3)",
+        "no Composer (2012); PEAR was the standard package channel",
+        "no bundled opcode cache; APC was the common third-party choice",
+        "last major before the long-lived 5.3 line; widely used but security-EOL since 2011"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "5.3",
+      "released": "2009-06-30",
+      "end_of_life": "2014-08-14",
+      "os_support": {
+        "windows": "Windows XP SP3/2003 and later; x86 only (no x64 build), VC9-built (Visual Studio 2008)",
+        "macos": "no official php.net binary; source compile only",
+        "linux": "no official php.net binary; source tarball only"
+      },
+      "added": ["namespaces (single-backslash-separated)", "closures / anonymous functions (Closure class, 'use' clause for captured variables)", "late static binding (static::)", "nowdoc syntax", "ternary shorthand ?:", "goto", "Zend Optimizer+ predecessor NOT yet bundled (that is 5.5)"],
+      "limitations": [
+        "no generators/yield (5.5)", "no bundled opcode cache -- still relied on APC or commercial Zend Optimizer+",
+        "no scalar type hints or return types (7.0)",
+        "closures could not be bound to arbitrary objects until Closure::bind/bindTo landed in 5.4",
+        "no traits (5.4)",
+        "Composer (published 2012) targets 5.3.2+ as its practical floor, so 5.3.0/5.3.1 predate the ecosystem that made namespaces useful for autoloading"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "5.4",
+      "released": "2012-03-01",
+      "end_of_life": "2015-09-03",
+      "os_support": {
+        "windows": "Windows XP SP3/2003 and later; x86 only (no x64 build for this branch), VC9-built",
+        "macos": "no official php.net binary; source compile only",
+        "linux": "no official php.net binary; source tarball only"
+      },
+      "added": ["traits", "short array syntax []", "built-in webserver (php -S) for development", "array dereferencing on function calls foo()[0]"],
+      "limitations": [
+        "no generators (5.5)", "no bundled opcode cache (5.5)",
+        "no 64-bit Windows build at all -- large in-process arrays/strings were constrained to a 32-bit address space on Windows",
+        "no scalar/return type declarations (7.0)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "5.5",
+      "released": "2013-06-20",
+      "end_of_life": "2016-07-21",
+      "os_support": {
+        "windows": "Windows Vista/Server 2008 and later (Windows XP/Server 2003 support dropped -- first line requiring VC11/Visual Studio 2012 runtime); first line with an official x64 build, alongside x86",
+        "macos": "no official php.net binary; source compile only",
+        "linux": "no official php.net binary; source tarball only"
+      },
+      "added": ["generators (yield)", "OPcache bundled with core for the first time (as the Zend Optimizer+ donation), though disabled by default", "finally clause for try/catch", "list() in foreach", "first official Windows x64 archives"],
+      "limitations": [
+        "OPcache ships but is opt-in (opcache.enable=0 by default) -- enabled-by-default arrives with 7.0",
+        "the new x64 Windows build still used a 32-bit internal integer type, so PHP_INT_MAX on Windows x64 was the same as on x86 until PHP 7's engine rewrite",
+        "no scalar/return type declarations (7.0)",
+        "no Fibers/coroutine primitives -- async libraries of the era (ReactPHP, launched 2012) relied purely on callback-based event loops, not generators-as-coroutines patterns, until this release made generator-based coroutines practical"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "5.6",
+      "released": "2014-08-28",
+      "end_of_life": "2018-12-31",
+      "os_support": {
+        "windows": "Windows Vista/Server 2008 and later; x86 and x64, VC11-built",
+        "macos": "no official php.net binary; source compile only",
+        "linux": "no official php.net binary; source tarball only"
+      },
+      "added": ["constant expressions", "variadic functions (...$args)", "argument unpacking (...$array)", "the ** exponentiation operator", "use function / use const for namespace imports", "phpdbg debugger SAPI"],
+      "limitations": [
+        "OPcache still not enabled by default (7.0)",
+        "TLS negotiation regressed: default STREAM_CRYPTO_METHOD_TLS_CLIENT was widened to include TLS 1.1/1.2 in 5.6.0-5.6.6, then a compatibility fix in 5.6.7 reverted the default to TLS 1.0-only until PHP 7.2 restored a modern default -- code relying on 'default means TLS 1.2' on 5.6.7+ needed to pass explicit crypto-method flags",
+        "no scalar/return type declarations, no null coalescing operator (both 7.0)",
+        "last PHP 5 release; the 5.x object/array-copy-on-write engine is markedly slower than the phpng engine that shipped in 7.0"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "7.0",
+      "released": "2015-12-03",
+      "end_of_life": "2019-01-10",
+      "os_support": {
+        "windows": "Windows 7/Server 2008 R2 and later; x86 and x64, VC14-built (Visual Studio 2015); true 64-bit integers on Windows x64 for the first time",
+        "macos": "no official php.net binary; source compile only",
+        "linux": "no official php.net binary; source tarball only"
+      },
+      "added": ["the phpng engine rewrite: roughly 2x throughput and much lower memory use versus 5.6", "scalar type declarations (int/float/string/bool, coercive and strict modes)", "return type declarations", "null coalescing operator ??", "spaceship operator <=>", "anonymous classes", "OPcache enabled and bundled by default", "PHP 7 finally gives Windows x64 a real 64-bit zend_long, fixing the 32-bit-int-on-x64 limitation of 5.5/5.6"],
+      "limitations": [
+        "no strict_types enforcement unless the file opts in with declare(strict_types=1) -- coercive mode (silent int/string juggling) is still the default everywhere",
+        "no nullable types or void return type (7.1)",
+        "no object return type (7.2), no trailing commas in function calls (7.3)",
+        "no arrow functions, typed properties, or JIT (all land 7.4/8.0)",
+        "no Fibers -- async PHP still built on generators/callbacks (ReactPHP, Amp v1/v2) rather than true coroutines"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "7.1",
+      "released": "2016-12-01",
+      "end_of_life": "2019-12-01",
+      "os_support": {
+        "windows": "Windows 7/Server 2008 R2 and later; x86 and x64, VC14-built",
+        "macos": "no official php.net binary; source compile only",
+        "linux": "no official php.net binary; source tarball only"
+      },
+      "added": ["nullable types (?Type)", "void return type", "class constant visibility modifiers", "list() key => value destructuring", "multi-catch (catch (A | B $e))", "symmetric array unpacking with string keys deferred to 7.1's list() only for numeric"],
+      "limitations": [
+        "no object return type (7.2)", "no arrow functions or typed properties (7.4)", "no JIT (8.0)",
+        "TLS default still regressed to TLS-1.0-only for STREAM_CRYPTO_METHOD_TLS_CLIENT (fixed in 7.2)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "7.2",
+      "released": "2017-11-30",
+      "end_of_life": "2020-11-30",
+      "os_support": {
+        "windows": "Windows 7/Server 2008 R2 and later (Windows Vista/Server 2008 support dropped with the move to VC15/Visual Studio 2017); x86 and x64",
+        "macos": "no official php.net binary; source compile only",
+        "linux": "no official php.net binary; source tarball only"
+      },
+      "added": ["object return/parameter type", "parameter type widening in overrides", "sodium extension bundled", "TLS default crypto-method negotiation restored to include TLS 1.2 (rfc:improved-tls-defaults), after the 5.6.7-7.1.x regression to TLS-1.0-only"],
+      "limitations": [
+        "no arrow functions or typed properties (7.4)", "no JIT (8.0)", "no Fibers (8.1)",
+        "TLS 1.3 not available -- depends on OpenSSL 1.1.1, which ships with 7.4-era builds"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "7.3",
+      "released": "2018-12-06",
+      "end_of_life": "2021-12-06",
+      "os_support": {
+        "windows": "Windows 7/Server 2008 R2 and later; x86 and x64, VC15-built",
+        "macos": "no official php.net binary; source compile only",
+        "linux": "no official php.net binary; source tarball only"
+      },
+      "added": ["flexible heredoc/nowdoc closing markers", "trailing commas in function calls", "array_key_first()/array_key_last()", "is_countable()"],
+      "limitations": [
+        "no arrow functions, typed properties, or bundled OpenSSL 1.1.1/TLS 1.3 (all 7.4)",
+        "no JIT (8.0), no Fibers (8.1)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "7.4",
+      "released": "2019-11-28",
+      "end_of_life": "2022-11-28",
+      "os_support": {
+        "windows": "Windows 7/Server 2008 R2 and later; x86 and x64, VC15-built",
+        "macos": "no official php.net binary; source compile only",
+        "linux": "no official php.net binary; source tarball only"
+      },
+      "added": ["arrow functions (fn() =>)", "typed properties", "null coalescing assignment ??=", "preloading (opcache.preload)", "spread operator in array expressions", "official Windows builds moved to a bundled OpenSSL 1.1.1 line, making TLS 1.3 usable via streams/curl for the first time"],
+      "limitations": [
+        "no JIT (8.0)", "no union types, named arguments, or match expression (8.0)",
+        "no enums, readonly properties, or Fibers (8.1)",
+        "last PHP 7 release -- still using the pre-JIT Zend VM; CPU-bound workloads see no JIT speedup on this line"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "8.0",
+      "released": "2020-11-26",
+      "end_of_life": "2023-11-26",
+      "os_support": {
+        "windows": "Windows 7/Server 2008 R2 and later (Windows XP-era wording no longer applies; effectively 7+); x86 and x64, VS16-built (Visual Studio 2019)",
+        "macos": "no official php.net binary; unofficial static-php-cli builds exist going back to this line",
+        "linux": "no official php.net binary; unofficial static-php-cli builds exist going back to this line"
+      },
+      "added": ["JIT compiler (tracing and function JIT, opcache.jit)", "union types", "named arguments", "match expression", "nullsafe operator ?->", "attributes (annotations)", "constructor property promotion", "throw as an expression", "WeakMap"],
+      "limitations": [
+        "JIT gives little to no benefit for typical I/O-bound web/CMS workloads (it mainly helps CPU-bound/numeric code) and shipped disabled by default",
+        "no enums, readonly properties, or Fibers (8.1) -- so no first-class coroutine primitive yet; ReactPHP/Amp/Swoole still rely on generators or Swoole's own coroutine runtime (a separate C extension) rather than a language-level primitive",
+        "no intersection types or 'never' return type (8.1)",
+        "this is the first major with any official Linux/macOS binaries in this catalog, and even those are the unofficial static-php-cli project, not php.net"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "8.1",
+      "released": "2021-11-25",
+      "end_of_life": "2025-12-31",
+      "os_support": {
+        "windows": "Windows 7/Server 2008 R2 and later (Microsoft's own VS2019 toolset still targets back to 7 SP1); x86 and x64, VS16-built",
+        "macos": "no official php.net binary; static-php-cli unofficial builds available",
+        "linux": "no official php.net binary; static-php-cli unofficial builds available"
+      },
+      "added": ["enumerations (backed and pure enums)", "readonly properties", "Fibers (language-level cooperative-concurrency primitive that ReactPHP/Amp v3 and Revolt build event loops on top of)", "never return type", "first-class callable syntax foo(...)", "intersection types", "pure enums implementing interfaces", "fsync()/fdatasync() in ext/standard"],
+      "limitations": [
+        "Fibers are cooperative, not preemptive -- a fiber that never yields still blocks the whole process; there is still no OS-thread-based true parallelism without ext-parallel/pthreads on a ZTS build, or a separate process model (Swoole, php-fpm workers)",
+        "no readonly promoted-constructor-property shorthand combined with all visibility combos until later patch/minor fixes",
+        "no enum interfaces' constants (8.2 refines), no readonly classes as a whole (8.2 is per-property only until 8.2's class-level readonly)",
+        "JIT still opt-in and still mostly irrelevant to typical web workloads"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "8.2",
+      "released": "2022-12-08",
+      "end_of_life": "2026-12-31",
+      "os_support": {
+        "windows": "Windows 7/Server 2008 R2 and later per Microsoft's VS2019/VS16 toolset floor; x86 and x64, VS16-built",
+        "macos": "no official php.net binary; static-php-cli unofficial builds available",
+        "linux": "no official php.net binary; static-php-cli unofficial builds available"
+      },
+      "added": ["readonly classes (every property implicitly readonly)", "standalone types (null, false, true as full types)", "disjunctive normal form (DNF) types", "new in initializers extended to more positions", "enum implementing UnitEnum/BackedEnum constants exposed", "deprecation of dynamic properties (must opt in with #[AllowDynamicProperties])"],
+      "limitations": [
+        "no first-class support for 'never' unions beyond what 8.1 gave", "no clone-with syntax (that is 8.5)",
+        "JIT and Fibers unchanged from 8.1 -- still opt-in JIT, still cooperative-only concurrency"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "8.3",
+      "released": "2023-11-23",
+      "end_of_life": "2027-12-31",
+      "os_support": {
+        "windows": "Windows 7/Server 2008 R2 and later per the VS16 (Visual Studio 2019) toolset this line still uses; x86 and x64",
+        "macos": "no official php.net binary; static-php-cli unofficial builds available",
+        "linux": "no official php.net binary; static-php-cli unofficial builds available"
+      },
+      "added": ["typed class constants", "readonly amendments (cloning readonly properties inside __clone)", "the #[Override] attribute", "json_validate()", "dynamic class constant fetch", "improvements to the DateTime family"],
+      "limitations": [
+        "Windows 7/8 support was NOT dropped at this line -- that happens at 8.4 with the VS17 (Visual Studio 2022) toolset move; treat any claim that 8.3 drops Windows 7/8 as incorrect",
+        "no clone-with (8.5), no closures-in-const-expressions (8.5)"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "8.4",
+      "released": "2024-11-21",
+      "end_of_life": "2028-12-31",
+      "os_support": {
+        "windows": "minimum bumped to Windows 8/Server 2012 (Windows 7/Server 2008 R2 support dropped with the move to VS17/Visual Studio 2022, whose v143 toolset no longer targets Windows 7); x86 and x64",
+        "macos": "no official php.net binary; static-php-cli unofficial builds available",
+        "linux": "no official php.net binary; static-php-cli unofficial builds available"
+      },
+      "added": ["property hooks (get/set accessors)", "asymmetric visibility (public private(set))", "new Dom\\ and Dom\\HTMLDocument API", "array_find()/array_any()/array_all()", "performance and memory improvements to the engine and standard library"],
+      "limitations": [
+        "this is the line where Windows 7 and Server 2008 R2 stop being supported -- a machine that could run 8.3 may not be able to run 8.4",
+        "property hooks add call overhead versus plain public properties -- not a free abstraction",
+        "JIT still opt-in; still limited benefit for typical web workloads"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "8.5",
+      "released": "2025-11-20",
+      "end_of_life": "2029-12-31",
+      "os_support": {
+        "windows": "Windows 8/Server 2012 and later per the VS17 (Visual Studio 2022) toolset; x86 and x64",
+        "macos": "no official php.net binary; static-php-cli unofficial builds available",
+        "linux": "no official php.net binary; static-php-cli unofficial builds available"
+      },
+      "added": ["pipe operator |>", "clone with property updates (clone(...) with syntax)", "closures in constant expressions", "further standard-library additions"],
+      "limitations": [
+        "still under a year old at research time (2026-09-17, released 2025-11-20) -- ecosystem/extension support (Swoole, Xdebug, etc.) for a fresh major typically lags by months",
+        "still no native async/await keyword or preemptive threading; Fibers plus userland event loops remain the concurrency model",
+        "JIT remains opt-in"
+      ],
+      "confidence": "low"
+    }
+  ]
+}

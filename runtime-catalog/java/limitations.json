@@ -1,0 +1,830 @@
+{
+  "runtime": "java",
+  "languages": [
+    "java"
+  ],
+  "researched": "2026-09-17",
+  "sources": [
+    "https://openjdk.org/projects/jdk/24/",
+    "https://openjdk.org/projects/jdk/25/",
+    "https://openjdk.org/projects/jdk/26/",
+    "https://openjdk.org/jeps/491",
+    "https://openjdk.org/jeps/517",
+    "https://openjdk.org/jeps/525",
+    "https://adoptium.net/supported-platforms/",
+    "https://www.java.com/en/download/help/winxp.html",
+    "https://azul.com/blog/no-jdk-9-for-windows-xp/",
+    "installer-builder-runtimes catalog/java/releases.json and gaps.json (own scrape of Adoptium + Zulu APIs, used as ground truth for which OS/arch builds currently exist per major)"
+  ],
+  "milestones": [
+    {
+      "capability": "generics",
+      "since": "5",
+      "notes": "JEP-less era; generics, enhanced for, autoboxing, enums, varargs, annotations all landed together in J2SE 5.0"
+    },
+    {
+      "capability": "lambdas",
+      "since": "8",
+      "notes": "lambda expressions, method references, functional interfaces, default/static interface methods"
+    },
+    {
+      "capability": "completable_future",
+      "since": "8",
+      "notes": "java.util.concurrent.CompletableFuture; streams API shipped the same release"
+    },
+    {
+      "capability": "nio2_async_io",
+      "since": "7",
+      "notes": "java.nio.file (Path/Files/WatchService) plus true async channels (AsynchronousSocketChannel/AsynchronousFileChannel); 1.4's original java.nio was non-blocking but not asynchronous"
+    },
+    {
+      "capability": "tls_1_2",
+      "since": "7",
+      "notes": "implemented in JSSE from 7 but not enabled by default; became a default-enabled protocol in 8"
+    },
+    {
+      "capability": "tls_1_3",
+      "since": "11",
+      "notes": "JEP 332; backported to Oracle/OpenJDK 8 in update 8u261 (2020)"
+    },
+    {
+      "capability": "http2_client",
+      "since": "11",
+      "notes": "java.net.http.HttpClient standardized (incubated in 9); HTTP/2 and WebSocket support"
+    },
+    {
+      "capability": "http3_client",
+      "since": "26",
+      "notes": "JEP 517, preview only as of 26; HttpClient gains HTTP/3"
+    },
+    {
+      "capability": "modules",
+      "since": "9",
+      "notes": "Java Platform Module System / Project Jigsaw, JEP 261"
+    },
+    {
+      "capability": "var_inference",
+      "since": "10",
+      "notes": "local-variable type inference, JEP 286; extended to lambda params in 11"
+    },
+    {
+      "capability": "records",
+      "since": "16",
+      "notes": "standardized JEP 395; previewed in 14 and 15"
+    },
+    {
+      "capability": "sealed_classes",
+      "since": "17",
+      "notes": "standardized JEP 409; previewed in 15 and 16"
+    },
+    {
+      "capability": "pattern_matching",
+      "since": "21",
+      "notes": "pattern matching for switch standardized (JEP 441); pattern matching for instanceof standardized earlier, in 16"
+    },
+    {
+      "capability": "virtual_threads",
+      "since": "21",
+      "notes": "standardized JEP 444; previewed in 19 and 20; carrier-thread pinning inside synchronized blocks not fixed until 24 (JEP 491)"
+    },
+    {
+      "capability": "structured_concurrency",
+      "since": "19",
+      "notes": "first previewed as an incubator in 19 (JEP 428); still only preview as of 26 (sixth preview, JEP 525) — not yet finalized (targeted for 28)"
+    },
+    {
+      "capability": "jpackage",
+      "since": "16",
+      "notes": "standardized JEP 392 (native per-OS installers/app-images); incubated in 14 (JEP 343)"
+    },
+    {
+      "capability": "arm64_windows",
+      "since": "16",
+      "notes": "Windows/AArch64 port, JEP 388; vendor build availability has been inconsistent release-to-release since (present in Temurin/Zulu for some non-LTS majors, absent for others)"
+    },
+    {
+      "capability": "arm64_macos",
+      "since": "17",
+      "notes": "macOS/AArch64 port, JEP 391 — first native Apple Silicon OpenJDK; earlier majors run under Rosetta 2 only, except that Azul Zulu separately ships a native Apple Silicon build of 8 for legacy compatibility"
+    },
+    {
+      "capability": "arm64_linux",
+      "since": "8",
+      "notes": "Linux/AArch64 available from vendor builds (e.g. Zulu) as far back as 8, ahead of it being a mainline OpenJDK port target; coverage has been inconsistent for some interim (non-LTS) majors"
+    },
+    {
+      "capability": "64bit_windows",
+      "since": "5",
+      "notes": "Sun shipped an official 64-bit Windows (x64) build within the 5.0 update train (~2007); this catalog's own release data only goes back to major 6"
+    },
+    {
+      "capability": "ipv6",
+      "since": "1.4",
+      "notes": "dual-stack IPv4/IPv6 socket support"
+    },
+    {
+      "capability": "native_threads",
+      "since": "1.2",
+      "notes": "Solaris JDK switched from cooperative green threads to native OS threads in 1.2; Windows/Win32 builds used native threads from 1.0"
+    },
+    {
+      "capability": "true_parallelism",
+      "since": "1.2",
+      "notes": "follows native_threads — Java never had a global interpreter lock, so true multi-core parallelism was available once native threading landed"
+    },
+    {
+      "capability": "unicode_default",
+      "since": "18",
+      "notes": "UTF-8 made the default charset everywhere (JEP 400), removing platform-default-encoding surprises; internal String/char representation has been UTF-16 since 1.0"
+    }
+  ],
+  "majors": [
+    {
+      "major": "1.0",
+      "released": "1996-01-23",
+      "end_of_life": "1997-02 (superseded by 1.1)",
+      "os_support": {
+        "windows": "Windows NT 3.51/4.0 and Windows 95 (32-bit only)",
+        "macos": "none from Sun; Apple shipped its own Mac OS Runtime for Java (MRJ), a separate implementation",
+        "linux": "none official; unofficial ports followed later (Blackdown project)"
+      },
+      "added": [
+        "AWT (basic GUI toolkit)",
+        "core language: classes, interfaces, exceptions, single inheritance",
+        "cooperative green threads on Solaris (Win32 used native OS threads from the start)",
+        "applets via the browser plug-in"
+      ],
+      "limitations": [
+        "no inner classes (1.1)",
+        "no collections framework — only Vector/Hashtable (1.2)",
+        "no Swing (1.2)",
+        "no generics — raw Object and casts everywhere (5)",
+        "green threads on Solaris meant no true multi-core parallelism there until 1.2"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "1.1",
+      "released": "1997-02-19",
+      "end_of_life": "1998-12 (superseded by 1.2)",
+      "os_support": {
+        "windows": "Windows 95/98/NT 4.0 (32-bit)",
+        "macos": "none from Sun; Apple's MRJ tracked 1.1 separately for Mac OS Classic",
+        "linux": "none official; Blackdown ported 1.1 unofficially"
+      },
+      "added": [
+        "inner classes",
+        "JavaBeans",
+        "JDBC 1.0",
+        "RMI",
+        "reflection API",
+        "delegation-based AWT event model"
+      ],
+      "limitations": [
+        "no collections framework or Swing (1.2)",
+        "no generics or autoboxing (5)",
+        "no strictfp (1.2)",
+        "no JIT bundled by default (HotSpot arrives 1.3)"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "1.2",
+      "released": "1998-12-08",
+      "end_of_life": "2000-05 (superseded by 1.3)",
+      "os_support": {
+        "windows": "Windows 95/98/NT 4.0",
+        "macos": "none from Sun in this line; Apple's MRJ 2.x tracked 1.1.x APIs rather than a full 1.2",
+        "linux": "Blackdown ported 1.2 unofficially; no Sun-official Linux build yet"
+      },
+      "added": [
+        "Collections framework",
+        "Swing merged into the platform",
+        "strictfp keyword",
+        "switch from cooperative green threads to native OS threads on Solaris",
+        "Java IDL / CORBA support"
+      ],
+      "limitations": [
+        "no HotSpot JVM by default yet (1.3)",
+        "no generics — collections hold Object and need casts (5)",
+        "no regex, NIO, or assert keyword (1.4)",
+        "still 32-bit only"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "1.3",
+      "released": "2000-05-08",
+      "end_of_life": "2002-02 (superseded by 1.4)",
+      "os_support": {
+        "windows": "Windows 95/98/NT 4.0/2000",
+        "macos": "none from Sun; Apple shipped 1.3 support in Mac OS X 10.0/10.1 as its own build",
+        "linux": "Sun began official Linux (x86) builds around this line, alongside continuing unofficial Blackdown ports"
+      },
+      "added": [
+        "HotSpot JVM bundled and default",
+        "JavaSound",
+        "dynamic proxy classes",
+        "JNDI included by default",
+        "RMI-IIOP"
+      ],
+      "limitations": [
+        "no assert keyword or NIO (1.4)",
+        "no regex or logging API (1.4)",
+        "no generics (5)",
+        "still 32-bit only"
+      ],
+      "confidence": "low"
+    },
+    {
+      "major": "1.4",
+      "released": "2002-02-06",
+      "end_of_life": "~2008-10 (Sun/Oracle public updates ended)",
+      "os_support": {
+        "windows": "Windows 95/98/Me/NT4/2000/XP",
+        "macos": "Apple shipped 1.4.2 for Mac OS X 10.3/10.4 as its own build, not Sun's",
+        "linux": "Sun-official x86 builds"
+      },
+      "added": [
+        "assert keyword",
+        "java.nio (buffers, channels, selectors) — non-blocking I/O, but not yet asynchronous I/O (that's NIO.2, 7)",
+        "regular expressions (java.util.regex)",
+        "exception chaining",
+        "java.util.logging",
+        "IPv6 dual-stack sockets",
+        "JAXP (XML) and Java Web Start bundled"
+      ],
+      "limitations": [
+        "no generics — raw types and casts everywhere (5)",
+        "no enhanced for-loop, autoboxing, enums, varargs, or annotations (5)",
+        "no java.util.concurrent — hand-rolled wait/notify and locks only (5)",
+        "NIO added non-blocking I/O but no true async file/socket operations (NIO.2, 7)"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "5",
+      "released": "2004-09-30",
+      "end_of_life": "2015-04 (Oracle Extended Support end; Premier ended 2009-04)",
+      "os_support": {
+        "windows": "Windows 98/Me/NT4/2000/XP; an official 64-bit (x64) Windows build arrived via a later 5.0 update",
+        "macos": "Apple shipped Java 5 for Mac OS X 10.4 Tiger (PowerPC and Intel) as its own build — the last Java Apple shipped for PowerPC Macs",
+        "linux": "Sun-official x86 and x86_64 builds"
+      },
+      "added": [
+        "generics",
+        "enhanced for-each loop",
+        "autoboxing/unboxing",
+        "varargs",
+        "annotations",
+        "enum type",
+        "static imports",
+        "java.util.concurrent (ExecutorService, locks, atomics, concurrent collections)"
+      ],
+      "limitations": [
+        "no closures/lambdas — anonymous inner classes are the only option (8)",
+        "no try-with-resources or diamond operator (7)",
+        "no switch on String (7)",
+        "generics are erased at runtime and don't cover primitives directly",
+        "no module system — flat classpath only (9)"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "6",
+      "released": "2006-12-11",
+      "end_of_life": "2018-12 (Oracle Extended Support end; Premier ended 2013-02)",
+      "os_support": {
+        "windows": "Windows 2000/XP/Server 2003/Vista, with later updates adding Windows 7/8; current Adoptium/Zulu rebuilds of this major provide amd64 only, though Sun originally also shipped 32-bit x86",
+        "macos": "Apple shipped Java 6 for Mac OS X 10.5/10.6 as its own build (32- and 64-bit Intel; PowerPC dropped) — the last Java version Apple bundled directly into the OS. No third-party (Adoptium/Zulu) macOS rebuild of major 6 exists today",
+        "linux": "Sun/Oracle-official x86 and x86_64; current catalog rebuilds (Temurin/Zulu) provide linux/amd64 only, no arm"
+      },
+      "added": [
+        "scripting API (JSR 223)",
+        "JAX-WS/JAXB web services stack",
+        "JDBC 4.0",
+        "pluggable annotation processing",
+        "Compiler API (javax.tools)"
+      ],
+      "limitations": [
+        "no lambdas, streams, or default interface methods (8)",
+        "no module system (9)",
+        "no try-with-resources or diamond operator (7)",
+        "no fork/join framework (7)",
+        "Oracle didn't take over Mac maintenance from Apple until partway through this major's life"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "7",
+      "released": "2011-07-28",
+      "end_of_life": "2022-07 (Oracle Extended Support end; Premier ended 2015-04)",
+      "os_support": {
+        "windows": "Windows XP SP3/Vista/7/8, 32-bit and 64-bit — the last major with routine 32-bit Windows client support before it thinned out industry-wide",
+        "macos": "first release Oracle (not Apple) distributed directly, for OS X 10.7.3 Lion and later, x86_64 only; no arm64 (Apple Silicon didn't exist yet)",
+        "linux": "x86, x86_64; ARM (armv7/armhf) support existed via separate Oracle/OpenJDK embedded builds, not the mainstream desktop ones"
+      },
+      "added": [
+        "try-with-resources",
+        "diamond operator (<>)",
+        "switch on String",
+        "NIO.2 (java.nio.file: Path/Files/WatchService) with true asynchronous channels",
+        "fork/join framework",
+        "invokedynamic bytecode instruction (groundwork for lambdas)",
+        "binary literals and underscores in numeric literals"
+      ],
+      "limitations": [
+        "no lambdas or streams — verbose anonymous classes for callbacks (8)",
+        "TLS 1.1/1.2 implemented in JSSE but not enabled by default (default-enabled in 8)",
+        "no module system (9)",
+        "no java.time — still java.util.Date/Calendar (8)",
+        "no var inference (10)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "8",
+      "released": "2014-03-18",
+      "end_of_life": "2030-12 (Oracle Extended Support); Premier ended 2022-03; free public updates for personal use ended 2019-01",
+      "os_support": {
+        "windows": "Windows Vista SP2/7/8/8.1/10, amd64 and x86; XP dropped. No arm64 build (that port didn't exist until 16, and was never backported here)",
+        "macos": "OS X 10.7.3 Lion and later, x86_64. No native Apple Silicon build from Oracle for this line — Rosetta 2 is required on M-series Macs; Azul Zulu separately ships a native Apple Silicon (arm64) build of 8, added long after 2014, purely for legacy-app compatibility",
+        "linux": "x86, x86_64, arm64, and armv7"
+      },
+      "added": [
+        "lambda expressions and functional interfaces",
+        "Streams API",
+        "default and static interface methods",
+        "java.time (JSR-310)",
+        "CompletableFuture",
+        "Nashorn JavaScript engine (removed 15)",
+        "Metaspace replaces PermGen",
+        "TLS 1.2 enabled by default for client connections",
+        "TLS 1.3 backported in update 8u261 (2020)"
+      ],
+      "limitations": [
+        "no module system — classpath conflicts persist (9)",
+        "no var (10)",
+        "no records, sealed types, or pattern matching (14-21)",
+        "no virtual threads — thread-per-request stays expensive (21)",
+        "no built-in HTTP/2 client (11)",
+        "32-bit Windows/Linux builds still routine here; this is roughly the last major where that's true across most vendors"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "9",
+      "released": "2017-09-21",
+      "end_of_life": "2018-03-20 (superseded by 10; non-LTS, ~6 months of support)",
+      "os_support": {
+        "windows": "Windows 7/8/8.1/10, amd64 and x86 (Oracle's own 32-bit Windows JDK builds ended around this release). No arm64 build",
+        "macos": "OS X 10.10+, x86_64 only",
+        "linux": "x86, x86_64 only — no arm64 or armv7 builds available in mainstream OpenJDK redistributions for this specific major"
+      },
+      "added": [
+        "Java Platform Module System / Project Jigsaw (JEP 261)",
+        "jshell REPL",
+        "private interface methods",
+        "immutable collection factories (List.of/Set.of/Map.of)",
+        "Flow API (reactive streams)",
+        "multi-release JARs"
+      ],
+      "limitations": [
+        "non-LTS: only ~6 months of support before 10 shipped",
+        "modules are opt-in and break reflection-heavy libraries not yet updated for strong encapsulation",
+        "Oracle's own 32-bit Windows JDK builds end around this release",
+        "no var (10)",
+        "no HttpClient standardized yet (11)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "10",
+      "released": "2018-03-20",
+      "end_of_life": "2018-09-25 (superseded by 11; non-LTS, ~6 months of support)",
+      "os_support": {
+        "windows": "Windows 7/8/8.1/10, amd64 and x86; no arm64",
+        "macos": "OS X 10.10+, x86_64 only",
+        "linux": "x86, x86_64 only; no arm64/armv7 for this major"
+      },
+      "added": [
+        "local-variable type inference (var, JEP 286)",
+        "Application Class-Data Sharing (AppCDS)",
+        "pluggable garbage-collector interface",
+        "time-based release versioning scheme begins"
+      ],
+      "limitations": [
+        "var only works for local variables, not fields, parameters, or return types",
+        "only ~6 months of support before 11",
+        "no HttpClient standardized yet (11)",
+        "no single-file source launching (11)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "11",
+      "released": "2018-09-25",
+      "end_of_life": "2032-01 (Oracle Extended Support); Premier ended 2023-09",
+      "os_support": {
+        "windows": "Windows 7 SP1/8.1/10, amd64 and x86; no arm64 build for this major",
+        "macos": "macOS 10.12+, x86_64 and arm64 (arm64 support here is a later vendor backport, not a same-era Apple Silicon port, since Apple Silicon postdates this release by two years)",
+        "linux": "x86, x86_64, arm64, armv7"
+      },
+      "added": [
+        "java.net.http.HttpClient standardized, with HTTP/2 and WebSocket support",
+        "TLS 1.3 (JEP 332)",
+        "var allowed in lambda parameters",
+        "single-file source-code launching (java Foo.java)",
+        "Flight Recorder and Mission Control open-sourced",
+        "Java EE and CORBA modules removed from the JDK"
+      ],
+      "limitations": [
+        "Oracle JDK 11 binaries required a paid subscription for production use beyond personal/development use (Oracle Technology Network License) — free options were OpenJDK builds from Oracle (only ~6 months of updates each) or a third-party LTS vendor; the free-for-production No-Fee Terms and Conditions (NFTC) license didn't arrive until 17",
+        "JavaFX removed from the JDK — separate download required",
+        "no records, sealed types, or pattern matching (14-21)",
+        "no virtual threads (21)",
+        "removed classes (java.xml.ws, CORBA, etc.) break code migrating straight from 8"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "12",
+      "released": "2019-03-19",
+      "end_of_life": "2019-09-17 (superseded by 13; non-LTS, ~6 months of support)",
+      "os_support": {
+        "windows": "Windows 8.1/10, amd64 and x86; no arm64",
+        "macos": "macOS 10.12+, x86_64 only",
+        "linux": "x86, x86_64 only — no arm64/armv7 for this major"
+      },
+      "added": [
+        "switch expressions (preview, JEP 325)",
+        "JVM Constants API",
+        "a single default AppCDS archive",
+        "microbenchmark suite bundled in the JDK build",
+        "experimental Shenandoah low-pause GC (not in Oracle's own build)"
+      ],
+      "limitations": [
+        "switch expressions are preview only — require --enable-preview and can still change",
+        "no text blocks (13)",
+        "non-LTS: only ~6 months of updates",
+        "Shenandoah is unavailable in Oracle's own JDK build for this line"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "13",
+      "released": "2019-09-17",
+      "end_of_life": "2020-03-17 (superseded by 14; non-LTS, ~6 months of support)",
+      "os_support": {
+        "windows": "Windows 8.1/10, amd64 and x86; no arm64",
+        "macos": "macOS 10.12+, x86_64 and arm64",
+        "linux": "x86, x86_64, arm64, armv7"
+      },
+      "added": [
+        "text blocks (preview, JEP 355)",
+        "switch expressions second preview (yield keyword)",
+        "dynamic CDS archives",
+        "reimplemented legacy Socket API on top of NIO"
+      ],
+      "limitations": [
+        "text blocks and switch expressions are both still preview",
+        "no records or pattern matching yet (14)",
+        "only ~6 months of updates"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "14",
+      "released": "2020-03-17",
+      "end_of_life": "2020-09-15 (superseded by 15; non-LTS, ~6 months of support)",
+      "os_support": {
+        "windows": "Windows 8.1/10, amd64 and x86; no arm64",
+        "macos": "macOS 10.12+, x86_64 only",
+        "linux": "x86, x86_64 only — no arm64/armv7 for this major"
+      },
+      "added": [
+        "switch expressions standardized (JEP 361)",
+        "pattern matching for instanceof (preview, JEP 305)",
+        "records (preview, JEP 359)",
+        "helpful NullPointerException messages",
+        "jpackage introduced as an incubator tool (JEP 343) for building native per-OS installers/app-images",
+        "CMS garbage collector removed"
+      ],
+      "limitations": [
+        "records and pattern-matching-for-instanceof are preview only, not a stable API yet",
+        "jpackage is an incubator tool — flags and packaging can still change (standardized 16)",
+        "Solaris/SPARC ports deprecated for removal",
+        "non-LTS: only ~6 months of updates"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "15",
+      "released": "2020-09-15",
+      "end_of_life": "2021-03-16 (superseded by 16; non-LTS, ~6 months of support)",
+      "os_support": {
+        "windows": "Windows 8.1/10, amd64 and x86; no arm64",
+        "macos": "macOS 10.13+, x86_64 and arm64",
+        "linux": "x86, x86_64, arm64; no armv7 for this major"
+      },
+      "added": [
+        "text blocks standardized",
+        "sealed classes (preview, JEP 360)",
+        "hidden classes",
+        "EdDSA signature algorithm",
+        "records second preview",
+        "pattern matching for instanceof second preview"
+      ],
+      "limitations": [
+        "Nashorn JavaScript engine removed — no built-in JS scripting engine remains",
+        "sealed classes still preview (17)",
+        "ZGC/Shenandoah are production-ready but still opt-in, not default",
+        "biased locking disabled by default, which can affect old lock-tuned applications"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "16",
+      "released": "2021-03-16",
+      "end_of_life": "2021-09-14 (superseded by 17; non-LTS, ~6 months of support)",
+      "os_support": {
+        "windows": "Windows 8.1/10, now including a native Windows/AArch64 (arm64) build (JEP 388) alongside amd64 and x86",
+        "macos": "macOS 10.13+, x86_64 only — Apple Silicon still runs under Rosetta 2; native arm64 arrives in 17",
+        "linux": "x86, x86_64, arm64, armv7"
+      },
+      "added": [
+        "records standardized",
+        "pattern matching for instanceof standardized",
+        "jpackage standardized (JEP 392) — stable native installers/app-images (msi/exe, pkg/dmg, deb/rpm)",
+        "Windows/AArch64 port (JEP 388)",
+        "Unix-domain socket channels",
+        "strong encapsulation of JDK internals by default (JEP 396)",
+        "elastic metaspace"
+      ],
+      "limitations": [
+        "no native Apple Silicon build yet — arm64 Macs run it under Rosetta (17)",
+        "sealed classes still preview (17)",
+        "strong encapsulation by default breaks reflection-heavy libraries that poke JDK internals via setAccessible",
+        "non-LTS: only ~6 months of updates"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "17",
+      "released": "2021-09-14",
+      "end_of_life": "~2029-09 (Oracle Extended Support, pattern-based estimate); Premier support to ~2026-09",
+      "os_support": {
+        "windows": "Windows 8.1/10/11, amd64 and arm64",
+        "macos": "macOS 10.13+ for x86_64; native Apple Silicon (aarch64) support added (JEP 391) — the first LTS with a real M-series build",
+        "linux": "x86_64, arm64, armv7"
+      },
+      "added": [
+        "sealed classes standardized",
+        "pattern matching for switch (preview, JEP 406)",
+        "macOS/AArch64 port — native Apple Silicon (JEP 391)",
+        "foreign function & memory API (incubator)",
+        "always-strict floating-point semantics",
+        "Oracle's No-Fee Terms and Conditions (NFTC) license — Oracle JDK is free for production use again from this release on"
+      ],
+      "limitations": [
+        "foreign function & memory API is only an incubator — no stable JNI replacement yet (standardized 22)",
+        "pattern matching for switch still preview (21)",
+        "Security Manager deprecated for removal (fully disabled in 24)",
+        "RMI activation removed",
+        "no virtual threads (21)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "18",
+      "released": "2022-03-22",
+      "end_of_life": "2022-09-20 (superseded by 19; non-LTS, ~6 months of support)",
+      "os_support": {
+        "windows": "Windows 10/11, amd64 and arm64",
+        "macos": "macOS with Apple Silicon and x86_64 support",
+        "linux": "x86_64, arm64, armv7"
+      },
+      "added": [
+        "UTF-8 as the default charset everywhere (JEP 400) — removes platform-dependent default-encoding surprises",
+        "simple web server (jwebserver)",
+        "code snippets in Javadoc (@snippet)",
+        "vector API second incubator",
+        "finalization deprecated for removal"
+      ],
+      "limitations": [
+        "still no virtual threads or structured concurrency (19+)",
+        "vector API not yet stable — the API can change between releases",
+        "finalize() is deprecated but not removed — old cleanup code still runs but shouldn't be written this way"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "19",
+      "released": "2022-09-20",
+      "end_of_life": "2023-03-21 (superseded by 20; non-LTS, ~6 months of support)",
+      "os_support": {
+        "windows": "Windows 10/11, amd64 and arm64",
+        "macos": "macOS with Apple Silicon and x86_64 support",
+        "linux": "x86_64, arm64; first Linux/RISC-V port"
+      },
+      "added": [
+        "virtual threads (preview, Project Loom, JEP 425)",
+        "structured concurrency (incubator, JEP 428)",
+        "pattern matching for switch third preview",
+        "record patterns (preview, JEP 405)",
+        "foreign function & memory API second preview",
+        "Linux/RISC-V port"
+      ],
+      "limitations": [
+        "virtual threads are preview-only and still pin the carrier thread inside synchronized blocks and on some blocking native/JNI calls (fixed in 24, JEP 491)",
+        "structured concurrency is an incubator API — shape and package are still moving (still only preview as of 26)",
+        "record patterns and switch pattern matching not yet final (21)"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "20",
+      "released": "2023-03-21",
+      "end_of_life": "2023-09-19 (superseded by 21; non-LTS, ~6 months of support)",
+      "os_support": {
+        "windows": "Windows 10/11, amd64 only for this major — no arm64 or x86 build currently redistributed by Temurin/Zulu, though the platform itself has supported arm64 since 16 (a build-availability gap, not a language limitation)",
+        "macos": "macOS with Apple Silicon and x86_64 support",
+        "linux": "x86_64, arm64; no armv7 for this major"
+      },
+      "added": [
+        "scoped values (incubator, JEP 429)",
+        "record patterns second preview",
+        "pattern matching for switch fourth preview",
+        "virtual threads second preview",
+        "structured concurrency second incubator"
+      ],
+      "limitations": [
+        "still no finalized virtual threads (21) or structured concurrency (still preview through at least 26)",
+        "scoped values incubator only — not yet a stable ThreadLocal alternative",
+        "no windows/arm64 build from mainstream free vendors for this specific major"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "21",
+      "released": "2023-09-19",
+      "end_of_life": "~2031-09 (Oracle Extended Support, pattern-based estimate); Premier support to ~2028-09",
+      "os_support": {
+        "windows": "Windows 10/11, amd64 and arm64",
+        "macos": "macOS with Apple Silicon and x86_64 support",
+        "linux": "x86_64, arm64; no armv7 build currently redistributed for this and later majors"
+      },
+      "added": [
+        "virtual threads standardized (JEP 444)",
+        "sequenced collections (JEP 431)",
+        "record patterns standardized",
+        "pattern matching for switch standardized",
+        "string templates (preview, later withdrawn)",
+        "structured concurrency (preview, JEP 453)",
+        "generational ZGC (preview)",
+        "key encapsulation mechanism API",
+        "unnamed patterns and variables (preview)"
+      ],
+      "limitations": [
+        "virtual threads still pin the carrier thread during synchronized blocks and some native calls until 24's fix (JEP 491) — a real gotcha for early Loom adopters at this LTS",
+        "structured concurrency remains a preview API here and through 26 (finalization targeted for 28) — don't build a public library surface on its exact shape yet",
+        "string templates shipped as preview and were later withdrawn (23) rather than finalized",
+        "32-bit Windows/x86 and Linux armv7 builds have become scarce from mainstream vendors from this major on"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "22",
+      "released": "2024-03-19",
+      "end_of_life": "2024-09-17 (superseded by 23; non-LTS, ~6 months of support)",
+      "os_support": {
+        "windows": "Windows 10/11, amd64 only for this major — no arm64 or x86 build currently redistributed",
+        "macos": "macOS with Apple Silicon and x86_64 support",
+        "linux": "x86_64, arm64; no armv7 for this major"
+      },
+      "added": [
+        "unnamed variables and patterns standardized",
+        "statements before super()/this() in constructors (preview)",
+        "structured concurrency second preview",
+        "string templates second preview",
+        "Foreign Function & Memory API standardized (JEP 454) — first stable JNI alternative",
+        "stream gatherers (preview)",
+        "G1 region pinning"
+      ],
+      "limitations": [
+        "string templates still preview here and withdrawn entirely next release (23) — code built against the preview had to be rewritten",
+        "structured concurrency still preview",
+        "no Windows x86/arm64 or Linux armv7 builds from Adoptium/Zulu for this major"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "23",
+      "released": "2024-09-17",
+      "end_of_life": "2025-03-18 (superseded by 24; non-LTS, ~6 months of support)",
+      "os_support": {
+        "windows": "Windows 10/11, amd64 and arm64; no x86 build",
+        "macos": "macOS with Apple Silicon and x86_64 support",
+        "linux": "x86_64, arm64; no armv7 for this major"
+      },
+      "added": [
+        "primitive types in patterns/instanceof/switch second preview",
+        "module import declarations (preview)",
+        "structured concurrency third preview",
+        "class-file API second preview",
+        "markdown-style Javadoc comments",
+        "generational Shenandoah",
+        "stream gatherers second preview"
+      ],
+      "limitations": [
+        "string templates preview was withdrawn this release rather than progressing — code written against it must be rewritten again",
+        "primitive patterns, module imports, and the class-file API are all still preview/second-preview",
+        "structured concurrency still preview"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "24",
+      "released": "2025-03-18",
+      "end_of_life": "2025-09-16 (superseded by 25; non-LTS, ~6 months of support)",
+      "os_support": {
+        "windows": "Windows 10/11, amd64 and arm64. The Windows 32-bit x86 port is formally removed from the JDK source (JEP 479) — no 32-bit Windows build exists from this major on",
+        "macos": "macOS with Apple Silicon and x86_64 support",
+        "linux": "x86_64, arm64. The 32-bit x86 Linux port is deprecated for removal (JEP 501) and is actually removed next release (25)"
+      },
+      "added": [
+        "stream gatherers standardized",
+        "class-file API standardized",
+        "structured concurrency fourth preview",
+        "scoped values fourth preview",
+        "quantum-resistant ML-KEM and ML-DSA algorithms",
+        "synchronize virtual threads without pinning (JEP 491) — fixes the synchronized-block pinning limitation present since 19",
+        "ahead-of-time class loading & linking",
+        "generational Shenandoah becomes the only Shenandoah mode",
+        "Security Manager permanently disabled (JEP 486)"
+      ],
+      "limitations": [
+        "Security Manager is gone — code relying on it for sandboxing must migrate to something else",
+        "32-bit x86 Windows support is completely removed from the JDK source (it was already absent from most vendor catalogs since ~19-20)",
+        "structured concurrency and scoped values are still preview/incubator after four-plus rounds",
+        "JNI use starts being restricted and warned about (JEP 472) ahead of tighter future enforcement"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "25",
+      "released": "2025-09-16",
+      "end_of_life": "~2033-09 (Oracle Extended Support, pattern-based estimate); Premier support to ~2030-09",
+      "os_support": {
+        "windows": "Windows 10/11, amd64 and arm64 only — no 32-bit build exists",
+        "macos": "macOS with Apple Silicon and x86_64 support",
+        "linux": "x86_64, arm64. The 32-bit x86 Linux port is fully removed (JEP 503) — Java now ships no 32-bit builds on any OS"
+      },
+      "added": [
+        "PEM encodings of cryptographic objects (preview)",
+        "stable values (preview, JEP 502)",
+        "structured concurrency fifth preview",
+        "scoped values standardized (JEP 506)",
+        "primitive types in patterns third preview",
+        "key derivation function API",
+        "module import declarations standardized",
+        "compact source files and instance main methods standardized",
+        "flexible constructor bodies standardized",
+        "ahead-of-time command-line ergonomics and method profiling",
+        "compact object headers"
+      ],
+      "limitations": [
+        "structured concurrency is in its fifth preview and still not something to build a public library surface on (finalization targeted for 28)",
+        "removal of the last 32-bit port (Linux x86) means this LTS cannot target any 32-bit OS at all",
+        "stable values and PEM encodings are preview — syntax/API can still change"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "26",
+      "released": "2026-03-17",
+      "end_of_life": "~2026-09 (expected; superseded by 27, non-LTS, ~6 months of support)",
+      "os_support": {
+        "windows": "Windows 10/11, amd64 and arm64 build currently absent for this specific major (build-availability gap, not a platform-support drop) — no 32-bit build exists at all",
+        "macos": "macOS with Apple Silicon and x86_64 support",
+        "linux": "x86_64, arm64; no 32-bit build anywhere, following 24/25"
+      },
+      "added": [
+        "HTTP/3 support in the java.net.http HttpClient (preview, JEP 517)",
+        "structured concurrency sixth preview (JEP 525)",
+        "lazy constants second preview (renamed from stable values)",
+        "'Prepare to Make Final Mean Final' (JEP 500) — tightens reflection's ability to overwrite final fields, a forward-looking restriction",
+        "removal of the Applet API (JEP 504) — the last remnants of applets are gone",
+        "G1 GC throughput improvements",
+        "primitive types in patterns fourth preview"
+      ],
+      "limitations": [
+        "structured concurrency is still not finalized after six preview cycles (a seventh preview is slated for 27; finalization targeted for 28) — the single biggest 'you still can't rely on this' item in modern Java concurrency",
+        "HTTP/3 client support is preview-only",
+        "final-field reflection tricks used by some serialization/mocking libraries will stop working once JEP 500 is enforced — an early warning, not yet active",
+        "Applet API is fully gone — code still targeting it cannot run at all"
+      ],
+      "confidence": "medium"
+    }
+  ]
+}

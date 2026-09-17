@@ -1,0 +1,357 @@
+{
+  "runtime": "nim",
+  "languages": ["nim"],
+  "researched": "2026-09-17",
+  "sources": [
+    "https://nim-lang.org/download.html",
+    "https://nim-lang.org/install.html",
+    "https://nim-lang.org/install_unix.html",
+    "https://nim-lang.org/install_windows.html",
+    "https://nim-lang.org/blog.html",
+    "https://nim-lang.org/blog/2018/03/01/version-0180-released.html",
+    "https://nim-lang.org/blog/2018/09/26/version-0190-released.html",
+    "https://nim-lang.org/blog/2019/06/06/version-0200-released.html",
+    "https://nim-lang.org/blog/2019/09/23/version-100-released.html",
+    "https://nim-lang.org/blog/2020/04/03/version-120-released.html",
+    "https://nim-lang.org/blog/2020/10/16/version-140-released.html",
+    "https://nim-lang.org/blog/2021/10/19/version-160-released.html",
+    "https://nim-lang.org/blog/2023/08/01/nim-v20-released.html",
+    "https://nim-lang.org/blog/2024/10/02/nim-220-2010.html",
+    "https://raw.githubusercontent.com/nim-lang/Nim/devel/changelogs/changelog_0_18_1.md",
+    "https://raw.githubusercontent.com/nim-lang/Nim/devel/changelogs/changelog_0_19_0.md",
+    "https://raw.githubusercontent.com/nim-lang/Nim/devel/changelogs/changelog_0_20_0.md",
+    "https://raw.githubusercontent.com/nim-lang/Nim/devel/changelogs/changelog_0_20_2.md",
+    "https://raw.githubusercontent.com/nim-lang/Nim/devel/changelogs/changelog_1_0_0.md",
+    "https://raw.githubusercontent.com/nim-lang/Nim/devel/changelogs/changelog_1_2_0.md",
+    "https://raw.githubusercontent.com/nim-lang/Nim/devel/changelogs/changelog_1_4_0.md",
+    "https://raw.githubusercontent.com/nim-lang/Nim/devel/changelogs/changelog_1_6_0.md",
+    "https://raw.githubusercontent.com/nim-lang/Nim/devel/changelogs/changelog_2_0_0.md",
+    "https://raw.githubusercontent.com/nim-lang/Nim/devel/changelogs/changelog_2_0_0_details.md",
+    "https://raw.githubusercontent.com/nim-lang/Nim/devel/changelogs/changelog_2_2_0.md",
+    "https://api.github.com/repos/nim-lang/Nim/tags (release/tag inventory, to confirm 2.2.12 is current and no 1.8/2.4/3.0 line exists yet)"
+  ],
+  "milestones": [
+    {
+      "capability": "async_await",
+      "since": "0.18",
+      "notes": "async/await macros in std/asyncdispatch predate this catalog's window (present since roughly 0.11, 2015). Nim 0.18 (2018-03-01) merged the previously separate 'upcoming' and standard asyncdispatch implementations into one, and added a JS-target async/await backend (std/asyncjs)."
+    },
+    {
+      "capability": "native_threads",
+      "since": "0.18",
+      "notes": "Thread[T]/createThread (real OS threads) already existed before 0.18. General Nim knowledge, not tied to a specific fetched changelog line."
+    },
+    {
+      "capability": "true_parallelism",
+      "since": "0.18",
+      "notes": "OS-thread parallelism was always possible with --threads:on, but each thread got its own GC heap under the default refc collector (no shared-heap data without manual/raw pointers or std/threadpool's isolated messaging) until ARC/ORC. --threads:on itself was opt-in until it became the default in 2.0 (confirmed: changelog_2_0_0_details.md line 9, 'The threads:on option is now the default')."
+    },
+    {
+      "capability": "package_manager_bundled",
+      "since": "0.18",
+      "notes": "Nimble ships inside the compiler distribution (confirmed present by 0.18's changelog/blog, which calls out an updated bundled Nimble 0.8.10). Nim 2.0 additionally started shipping the alternative package manager Atlas alongside Nimble."
+    },
+    {
+      "capability": "generics",
+      "since": "0.18",
+      "notes": "Generics predate this catalog's window; unchanged fact carried forward, not a new capability in any covered release."
+    },
+    {
+      "capability": "64bit_windows",
+      "since": "0.18",
+      "notes": "64-bit Windows (mingw-w64 x86_64 target) was already a first-class download option in 0.18; not a new capability in this window."
+    },
+    {
+      "capability": "ipv6",
+      "since": "0.18",
+      "notes": "std/net and std/asyncdispatch expose Domain.AF_INET6 from well before 0.18. Medium confidence: general Nim stdlib knowledge, not confirmed against a specific changelog line."
+    },
+    {
+      "capability": "unicode_default",
+      "since": "0.18",
+      "notes": "Not really 'default Unicode': Nim's string type is a raw byte sequence (UTF-8 by convention for source text and literals, but not validated or indexed by codepoint). Codepoint/grapheme-aware operations require importing std/unicode explicitly. This has not changed across 0.18-2.2."
+    },
+    {
+      "capability": "tls_1_2",
+      "since": "0.18",
+      "notes": "Nim's net/asyncnet SSL support (-d:ssl) is a thin wrapper over the system/linked OpenSSL; the protocol versions available are whatever that OpenSSL build offers, not something Nim itself gates."
+    },
+    {
+      "capability": "tls_1_3",
+      "since": "2.0",
+      "notes": "Reachable earlier against an OpenSSL 1.1.1+ build (again, host-library-gated, not Nim-gated). Nim 2.0 is the first changelog in this set to explicitly call out modern OpenSSL support: 'OpenSSL 3 is now supported' (changelog_2_0_0_details.md line 273)."
+    },
+    {
+      "capability": "arm64_macos",
+      "since": "1.6",
+      "notes": "Confirmed: changelog_1_6_0.md, 'OS/platform-specific notes' section: 'Support for Apple silicon/M1.' This is compiler/codegen support for the target; nim-lang.org's own pre-built Apple Silicon tarball is present on the current (2.2.12) install_unix.html but its exact introduction version could not be confirmed from the changelogs checked."
+    },
+    {
+      "capability": "arm64_linux",
+      "since": "0.18",
+      "notes": "Low confidence on the exact 'since': Nim compiles via a C backend and simply invokes whatever cross-compiler is on PATH, so targeting arm64 Linux via a GCC cross-toolchain has been possible since long before this catalog's window -- what changed later is nim-lang.org shipping an official pre-built ARM64 Linux tarball (present on the current install_unix.html, alongside a new ARMv7 tarball), whose introduction version this research could not pin down."
+    },
+    {
+      "capability": "arc_memory_management",
+      "since": "1.2",
+      "notes": "Custom id (not in SCHEMA.md's list). --gc:arc: deterministic, cycle-unsafe reference counting with move semantics, introduced experimental in 1.2.0 (changelog_1_2_0.md is dominated by ARC stabilization fixes). Not the default in 1.2; opt-in only."
+    },
+    {
+      "capability": "orc_memory_management",
+      "since": "1.4",
+      "notes": "Custom id. --gc:orc: ARC plus a backup cycle collector for cyclic data. Introduced in 1.4.0 (extensive --gc:orc fixes appear starting in changelog_1_4_0.md). Became the default memory manager in 2.0 (changelog_2_0_0_details.md line 6: 'ORC is now the default memory management strategy. Use --mm:refc for a transition period.')."
+    },
+    {
+      "capability": "destructors_move_semantics",
+      "since": "0.18",
+      "notes": "Custom id. An experimental destructor-based GC ('newruntime', --gc:destructors) already existed before 0.18 (0.18.1's changelog fixes destructor bugs and references 'old runtime' vs newer ARC in the 1.2 changelog). This experimental system was effectively superseded by ARC (1.2) and ORC (1.4); sink/move/destructor syntax itself (=destroy, =sink, =copy hooks) matured through 1.2-2.0, with the hook signatures changing again in 2.0 (changelog_2_0_0.md, 'ARC/ORC refinements': destructors now take T directly instead of var T)."
+    },
+    {
+      "capability": "mm_flag_rename",
+      "since": "2.0",
+      "notes": "Custom id. The compiler switch was renamed from --gc:<x> to --mm:<x> (memory management) around the 2.0 default-to-ORC change; --gc: continued to work as a compatibility alias in the releases checked."
+    },
+    {
+      "capability": "strictfuncs",
+      "since": "1.4",
+      "notes": "Custom id. Experimental 'strictFuncs' pragma tightening what a .noSideEffect func may do with ref/ptr indirections, added in 1.4.0. Its definition was tightened again in 2.0 (further disallowing heap stores through a ref/ptr) and again afterward -- treat as a moving target across majors, not a single stable feature."
+    },
+    {
+      "capability": "http2_client",
+      "since": null,
+      "notes": "Not supported as of 2.2.12: std/httpclient and std/asynchttpserver only speak HTTP/1.1 in every release checked (0.18 through 2.2); no changelog entry in this set adds HTTP/2. Only reachable via third-party Nimble packages. Listed with since:null to flag the persistent gap rather than a milestone date."
+    },
+    {
+      "capability": "http3_client",
+      "since": null,
+      "notes": "Not supported in the stdlib in any release checked; QUIC/HTTP/3 requires a third-party package. Listed with since:null to flag the persistent gap."
+    }
+  ],
+  "majors": [
+    {
+      "major": "0.18",
+      "released": "2018-03-01",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Zip archive (x86/x86_64); run finish.exe after extracting to add PATH entries and optionally fetch/install a matching MinGW-w64 GCC (32-bit mingw32.7z / 64-bit mingw64.7z) -- MinGW is fetched by finish.exe, not embedded in the zip itself. No minimum Windows version is stated by nim-lang.org in any release checked.",
+        "macos": "No nim-lang.org-built macOS binary found for this era; install by building the Unix source tarball (sh build.sh) with Xcode Command Line Tools' clang, or via a distro package manager (Homebrew's `nim` formula existed by this point). Apple Silicon did not exist yet.",
+        "linux": "Unix source/tarball install (build.sh bootstrap) for x86_64/x86, or distro packages (Arch, Debian/Ubuntu, etc.). Whether nim-lang.org itself hosted a prebuilt (non-source) Linux tarball this early could not be confirmed from the changelogs checked -- current (2.2.12) install_unix.html does, for x86_64/x86/arm64/armv7."
+      },
+      "added": [
+        "strformat module (Python-style f-strings via fmt\"...\")",
+        "runnableExamples for testable doc-comment examples",
+        "New TLSF-based allocator, reducing memory fragmentation and making alloc/dealloc O(1)",
+        "Unified asyncdispatch (merged the old 'upcoming' and standard implementations) plus a getIoHandler proc for direct epoll/kqueue/IOCP access",
+        "asyncjs module: async/await for the JavaScript backend",
+        "mapLiterals macro for typed array/seq literals"
+      ],
+      "limitations": [
+        "No ARC/ORC: only the default refc (deferred reference counting) collector plus experimental --gc:markAndSweep, --gc:boehm, --gc:regions, and an experimental destructor-based 'newruntime' (--gc:destructors) that was not production-ready -- real move semantics/deterministic destruction arrived with ARC in 1.2",
+        "Threads are opt-in (--threads:on) and, under refc, each thread gets its own GC heap -- there is no shared, GC-tracked heap across threads; cross-thread data has to go through raw memory, std/threadpool's spawn/FlowVar, or Channel[T] message passing",
+        "No language stability guarantee yet -- 0.18 itself shipped meaningful breaking changes (e.g. sliced-string indexing now raises IndexError instead of silently truncating; `$` on collections changed format) -- fixed by the 1.0 API-stability promise",
+        "OpenSSL ABI has to be chosen by hand: -d:ssl assumes OpenSSL 1.1.x; linking against 1.0.x additionally requires -d:openssl10 -- no OpenSSL 3 support (that arrives in 2.0)",
+        "No strictFuncs/strictDefs, no top-down type inference, no HTTP/2 or HTTP/3 client in the stdlib (still true through 2.2)"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "0.19",
+      "released": "2018-09-26",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Same zip + finish.exe (MinGW-w64 fetch) model as 0.18.",
+        "macos": "Same as 0.18: source build via build.sh + Xcode clang, or a distro/Homebrew package; no nim-lang.org macOS binary confirmed for this era.",
+        "linux": "Same as 0.18: source tarball / distro packages; prebuilt-binary availability from nim-lang.org itself not confirmed for this era."
+      },
+      "added": [
+        "times module rewritten: nanosecond-resolution Duration type, stricter parse/format",
+        "algorithm.binarySearch/upperBound, floor-based math.floorMod/floorDiv",
+        "system.toOpenArray for zero-copy slicing (C targets only at this point, not yet JS)"
+      ],
+      "limitations": [
+        "Still refc-only for production use; the experimental destructor runtime and ARC/ORC do not exist as usable options yet",
+        "threadpool's await was renamed to blockUntil specifically to avoid confusion with async/await's await -- the two concurrency models (OS-thread threadpool vs single-threaded async event loop) remain separate, non-interoperable systems, as they still are in 2.2",
+        "times.parse became stricter, breaking some previously-tolerated date strings -- a real behavior change developers had to account for when upgrading",
+        "Same OpenSSL 1.0/1.1 manual-selection and no-HTTP/2 limitations as 0.18"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "0.20",
+      "released": "2019-06-06",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Same zip + finish.exe (MinGW-w64 fetch) model.",
+        "macos": "Same as prior 0.x releases; no confirmed nim-lang.org macOS binary.",
+        "linux": "Same as prior 0.x releases; source tarball / distro packages."
+      },
+      "added": [
+        "nimpretty source-code formatter",
+        "OpenMP parallel-iterator (||) generalized to any #pragma omp directive, not just 'parallel for'",
+        "Stricter compile-time integer/float conversion checks; runtime range checks added for most unsigned conversions"
+      ],
+      "limitations": [
+        "Multi-methods are removed from the default dispatch model -- methods are now single-dispatch (first parameter only) unless the program opts back in with --multimethods:on; generic methods are deprecated as 'never worked well'",
+        "`typed` as a template/macro result type changes meaning (now 'expression with a type'); code relying on the old meaning must switch to `void`/no result type -- a real source-breaking change on upgrade",
+        "Still no ARC/ORC and no destructor-based production memory management; refc remains the only supported default GC",
+        "Threads still opt-in and still cannot share a GC heap under refc"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "major": "1.0",
+      "released": "2019-09-23",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Same zip + finish.exe model; x86_64 and x86 zips.",
+        "macos": "Source build (build.sh) + Xcode clang, or Homebrew/choosenim; no dedicated nim-lang.org macOS binary confirmed for this era.",
+        "linux": "Source tarball / distro packages (Arch, Debian/Ubuntu already packaged Nim by this point)."
+      },
+      "added": [
+        "Formal API/language stability guarantee: 'every other stdlib module is API stable with respect to version 1' (a short, explicit unstable-module list was carved out: varints, allocators, hotcodereloading, asyncstreams, threadpool, coro, endians, etc.)",
+        "Windows console apps now default their code page to UTF-8 at startup (-d:nimDontSetUtf8CodePage to opt out)",
+        "testament test runner (renamed from 'tester') made generally available",
+        "Compiler now warns about unused imports ({.used.} pragma to silence)"
+      ],
+      "limitations": [
+        "The stability guarantee explicitly excludes a list of modules (concurrency/threadpool, concurrency/atomics, coro, hotcodereloading, ...) -- these can and did keep changing after 1.0",
+        "No ARC/ORC yet; refc remains the default and only production GC",
+        "threads:on still opt-in; no shared GC heap across threads",
+        "No package-level guarantee: third-party Nimble packages are not covered by the 1.0 stability promise, only the compiler and stdlib are"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.2",
+      "released": "2020-04-02",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Same zip + finish.exe (MinGW-w64) model; `nim.exe` on this line could also cross-compile to mingw from macOS/Linux (existing, refined further by 1.6).",
+        "macos": "Source build + Xcode clang, or Homebrew/choosenim; no dedicated nim-lang.org macOS binary confirmed for this line.",
+        "linux": "Source tarball / distro packages."
+      },
+      "added": [
+        "--gc:arc introduced (experimental): deterministic, move-based reference counting with no stop-the-world cycle collector -- opt-in only, not the default",
+        "std/with macro for method-chaining-style code without designing every API to return self",
+        "std/compilesettings for querying compiler configuration at compile time",
+        "5 new no-op-but-checked pragmas (requires/ensures/assume/assert/invariant) anticipating future verification tooling"
+      ],
+      "limitations": [
+        "--gc:arc is explicitly experimental in 1.2: the changelog is dominated by ARC crash/segfault/leak fixes (double frees, thread-spawn corruption, exception interaction bugs) -- not recommended for production use yet",
+        "--gc:arc has no cycle collector: reference cycles leak by design until ORC (1.4) is available",
+        "system.deepcopy and some stdlib code paths do not yet fully support --gc:arc",
+        "Still no ORC, no strictFuncs, no top-down type inference; refc remains the default GC for ordinary builds"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.4",
+      "released": "2020-10-16",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Same zip + finish.exe (MinGW-w64) model.",
+        "macos": "Source build + Xcode clang, or Homebrew/choosenim; no dedicated nim-lang.org macOS binary confirmed for this line.",
+        "linux": "Source tarball / distro packages."
+      },
+      "added": [
+        "--gc:orc introduced: ARC plus a backup cycle collector, so cyclic ref/closure graphs no longer leak -- still opt-in, not the default",
+        "Experimental strictFuncs pragma: tightens .noSideEffect to also forbid mutating something reached through a ref/ptr",
+        "--backend:js|c|cpp|objc flag to pick the compile target independently of the command (nim r/doc/check/...)",
+        "std/effecttraits for introspecting inferred effects (aimed at making async macros precise about which exceptions they can raise)",
+        "nim r command: compile-and-run with cache reuse, replacing the older nim c -r workflow for quick scripts"
+      ],
+      "limitations": [
+        "system.deepcopy must be explicitly re-enabled (--deepcopy:on) under --gc:arc/--gc:orc -- silent behavior change versus refc",
+        "Sink inference (part of the move-semantics optimizer) is disabled by default for user code (though still on for the stdlib); has to be turned on explicitly with --sinkInference:on, and mainly matters for --gc:arc/--gc:orc",
+        "threadpool's spawn/FlowVar still does not fully work with --gc:arc (open bug fixed only partially in this line)",
+        "ORC is brand new in this release -- changelog is full of orc-specific crash and memory-corruption fixes (e.g. AsyncHttpClient segfaults under --gc:orc); not yet the recommended default",
+        "strictFuncs is experimental and its rules were tightened again later (2.0), so code relying on 1.4's exact semantics needed rechecking on upgrade"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "1.6",
+      "released": "2021-10-14",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Same zip + finish.exe (MinGW-w64) model; cross-compiling to mingw from macOS/Linux ('nim r -d:mingw main') explicitly improved in this release.",
+        "macos": "Apple Silicon (M1) added as a supported compile target for the first time (compiler/codegen support); TLS now uses native macOS TLS (--tlsEmulation:off) instead of emulated thread-locals. Still primarily a source build (Xcode clang) or Homebrew/choosenim install -- a dedicated nim-lang.org-built Apple Silicon binary's exact introduction version could not be confirmed from the changelogs checked, though one exists on the current (2.2.12) install page.",
+        "linux": "Source tarball / distro packages; 32-bit RISC-V and armv8l support added as compile targets in this release."
+      },
+      "added": [
+        "Apple Silicon/M1 support",
+        "iterable[T] type class, letting iterators be passed to templates/generics without the untyped-parameter workarounds used before",
+        "ARC now bootstraps the compiler itself (the compiler can be built with --gc:arc)",
+        "Numerous ARC/ORC performance refinements (ORC reported ~10% faster than before for common workloads); custom container types can now participate in ORC's cycle collection",
+        "--gc:none / --gc:arc / --gc:orc all explicitly documented as the supported non-refc choices; older experimental GCs (v1/v2, markAndSweep-as-primary, etc.) steered users toward these instead"
+      ],
+      "limitations": [
+        "refc is still the compiler's default memory manager for ordinary user code in 1.6 -- ARC/ORC remain opt-in via --gc:arc/--gc:orc, and threads:on is still opt-in (both become the default only in 2.0)",
+        "Apple Silicon support here is compiler/target support, not necessarily an official prebuilt nim-lang.org macOS/arm64 binary at this point (that is confirmed only on the current install page, not dated precisely)",
+        "No stdlib HTTP/2 or HTTP/3, no strictDefs, no top-down type inference, no OpenSSL 3 support yet (arrives 2.0)",
+        "strictFuncs is still experimental and its exact rules change again in 2.0"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "2.0",
+      "released": "2023-08-01",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Same zip + finish.exe (MinGW-w64) model as prior releases.",
+        "macos": "Same install paths as 1.6 (source build, Homebrew, choosenim); current install_unix.html lists official Apple Silicon and Intel prebuilt tarballs, but this research could not confirm 2.0.0 specifically as their introduction point versus 1.6.x patch releases.",
+        "linux": "Source tarball / distro packages; current install_unix.html additionally lists official arm64 and armv7 prebuilt tarballs whose exact introduction version (somewhere between 1.6 and 2.2) could not be pinned down from the changelogs checked."
+      },
+      "added": [
+        "ORC is now the default memory manager (--mm:refc available for a transition period; the --gc: flag continues to work as an alias)",
+        "threads:on is now the default (real OS threads available without an extra flag)",
+        "OpenSSL 3 support",
+        "Compiler switch renamed --gc:<x> -> --mm:<x> (memory management)",
+        "Destructor hooks simplified: =destroy now takes T directly instead of var T; new overridable =wasMoved and more efficient =dup hooks",
+        "Nested tuple-unpacking treated as sugar for multiple assignments",
+        "Top-down type inference for common cases (e.g. `let foo: seq[(float, byte, cstring)] = @[(1, 2, \"abc\")]` now compiles)",
+        "C++ interop: new `.virtual.` and extended `.constructor.` pragmas map directly to C++ virtual methods/constructors",
+        "Markdown becomes the default doc-comment markup (was RST/RstMarkdown)",
+        "Nimble upgraded to 0.14 with lock-file support (packages now live under $nimbleDir/pkgs2); Atlas package manager included as an alternative",
+        "JS backend switches 64-bit ints (int64/uint64) to native BigInt by default (--jsbigint64:off to opt out for platforms without BigInt)",
+        "std/threading/channels (an external 'threading' Nimble package) is the forward-looking replacement for the built-in Channel[T]; with -d:nimPreviewSlimSystem the old channels_builtin is dropped from system in favor of it"
+      ],
+      "limitations": [
+        "ORC-by-default and threads:on-by-default are both breaking changes for code that depended on refc's exact semantics (e.g. shallowCopy/shallow are removed outright for ARC/ORC; use move or copy+assign instead) or assumed threads were off",
+        "strictFuncs' definition changed again: it now additionally disallows heap stores through a ref/ptr indirection -- code that passed under 1.x strictFuncs could fail to compile under 2.0's",
+        "Several stdlib modules (db_sqlite, db_mysql, db_postgres, db_odbc, smtp, asyncftpclient, md5, sha1, punycode, ...) were removed from the stdlib into separate Nimble packages (db_connector, checksums, etc.) -- code importing them directly now needs an explicit `nimble install`",
+        "Destructors must now be `.raises: []` by default (cannot raise) -- existing custom destructors that raised needed rework",
+        "Still no HTTP/2 or HTTP/3 client in the stdlib",
+        "The built-in Channel[T] is only deprecated behind a preview flag in 2.0 (-d:nimPreviewSlimSystem), not removed -- full migration to std/threading/channels was not mandatory yet"
+      ],
+      "confidence": "high"
+    },
+    {
+      "major": "2.2",
+      "released": "2024-10-02",
+      "end_of_life": null,
+      "os_support": {
+        "windows": "Same zip + finish.exe (MinGW-w64) model; current install page ships x86_64/x86 zips.",
+        "macos": "Official prebuilt tarballs for both Apple Silicon (arm64) and Intel (x86_64), confirmed present on the current install_unix.html, alongside choosenim and Homebrew (`brew install nim`).",
+        "linux": "Official prebuilt tarballs for x86_64, x86, arm64 (aarch64) and armv7 (armv7l), confirmed present on the current install_unix.html, alongside choosenim and distro packages (Arch, Debian/Ubuntu, Fedora via the Terra repo, FreeBSD, OpenBSD, openSUSE, Void Linux) and an official Docker image."
+      },
+      "added": [
+        "With -d:nimPreviewNonVarDestructor, non-var destructors (taking T instead of var T) become the default ahead of a future major",
+        "JS backend gains lambda lifting for closures and support for closure iterators (previously JS closures/iterators had gaps versus the C backend)",
+        "--experimental:vtables: methods can now be implemented via a real vtable instead of the default dispatch mechanism (confines a method to the module where its type is defined)",
+        "C++ interop: `.noInit.` to suppress C++ member initializers, `.member.` to attach a proc as a C++ method, `result` usable inside a `.constructor.` body instead of `this`",
+        "Tuple-unpacking gains `_` (discard) support and type annotations on the whole tuple (e.g. `let (a, b): (int, int) = (1, 2)`)",
+        "Nimble upgraded to 0.16.1, adding an opt-in SAT-based dependency solver",
+        "koch can bootstrap using libFFI via -d:nimHasLibFFI"
+      ],
+      "limitations": [
+        "std/htmlparser is removed from the stdlib into a separate Nimble package -- another stdlib module joins the 2.0 list that already moved out",
+        "--experimental:vtables is opt-in and changes method semantics (module-confined dispatch) -- not a drop-in replacement for ordinary methods",
+        "Non-var destructors are opt-in only via -d:nimPreviewNonVarDestructor in 2.2 -- existing var-based =destroy hooks are not yet forced to migrate",
+        "Still no HTTP/2 or HTTP/3 client in the stdlib as of 2.2.12 (the latest patch on this line checked)",
+        "No 1.8, 2.4, 3.0 or newer stable line existed on nim-lang.org's download page or in the GitHub tag list as of this research (2026-09-17); 2.2.x (latest tag found: 2.2.12) is the newest stable minor"
+      ],
+      "confidence": "high"
+    }
+  ]
+}
