@@ -183,36 +183,46 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); ou
 .choice { display: flex; gap: 8px; align-items: baseline; margin-bottom: 6px; font-weight: normal; }
 .choice input { flex: none; }
 
-.option-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
-}
-.option-card {
-  display: block;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 10px 12px;
-  font-weight: normal;
-  cursor: pointer;
-}
-.option-card:has(input:checked) { border-color: var(--accent); outline: 1px solid var(--accent); }
-.option-card strong { display: block; }
+.inline-choices { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+
+main.narrow { max-width: 720px; }
 
 details { margin-top: 10px; }
 summary { cursor: pointer; font-weight: 600; }
 details[open] > summary { margin-bottom: 10px; }
 
-/* Show base-installer inputs only when "reuse a base installer" is picked (no JS). */
-.base-only { display: none; }
-form:has(#start-base:checked) .base-only { display: block; }
-form:has(#start-base:checked) .scratch-only { display: none; }
+/* Drill-down sections: one collapsed row per group, with its default on the right. */
+.customise > details {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 0 0 8px;
+}
+.customise > details > summary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2px 16px;
+}
+.customise > details > summary .default {
+  color: var(--muted);
+  font-weight: normal;
+  font-size: 0.9em;
+}
+.customise > details[open] > summary {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+}
 
-/* Hide per-platform settings for platforms that aren't ticked. */
-.platform-settings { display: none; margin: 8px 0 4px 26px; }
-.platform:has(> label input:checked) .platform-settings { display: block; }
-.platform { border-top: 1px solid var(--border); padding-top: 10px; margin-top: 10px; }
-.platform:first-of-type { border-top: 0; margin-top: 0; padding-top: 0; }
+/* Only show settings for the platforms ticked in the simple view (no JS). */
+.platform-block { margin-bottom: 16px; }
+form:has([name="target_windows"]:not(:checked)) .win-settings,
+form:has([name="target_linux"]:not(:checked)) .linux-settings,
+form:has([name="target_macos"]:not(:checked)) .mac-settings { display: none; }
+.platforms-none { display: none; }
+form:has([name="target_windows"]:not(:checked)):has([name="target_linux"]:not(:checked)):has([name="target_macos"]:not(:checked)) .platforms-none { display: block; }
 
 /* ---- Tables ---- */
 
