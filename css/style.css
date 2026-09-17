@@ -499,10 +499,20 @@ form:has(#mode-unsigned:checked) .mode-unsigned-inline { display: inline; }
 form:has(#runtime option[value="python"]:checked) .python-only { display: block; }
 
 /* Custom runtime download: per-platform tabs, installer arguments only for installers. */
-.custom-runtime { border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; margin: 0 0 14px; }
+.custom-runtime { border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 6px; padding: 12px 14px; margin: 0 0 14px; }
+.lang-other-only { display: none; }
+form:has(#runtime option[value="none"]:checked) .lang-other-only { display: block; }
+.req { font-size: 0.75em; font-weight: 600; color: var(--accent); margin-left: 4px; }
 form:has(#crt-tab-win:checked) .custom-rt-panel-win,
 form:has(#crt-tab-linux:checked) .custom-rt-panel-linux,
 form:has(#crt-tab-mac:checked) .custom-rt-panel-mac { display: block; }
 form:has(#crt-win-type option[value="archive"]:checked) .crt-args-win,
 form:has(#crt-linux-type option[value="archive"]:checked) .crt-args-linux,
 form:has(#crt-mac-type option[value="archive"]:checked) .crt-args-mac { display: none; }
+/* Hide custom runtime tabs and panels for platforms that aren't being built. */
+form:has([name="target_windows"]:not(:checked)) .crt-tab-win,
+form:has([name="target_windows"]:not(:checked)) .custom-rt-panel-win,
+form:has([name="target_linux"]:not(:checked)) .crt-tab-linux,
+form:has([name="target_linux"]:not(:checked)) .custom-rt-panel-linux,
+form:has([name="target_macos"]:not(:checked)) .crt-tab-mac,
+form:has([name="target_macos"]:not(:checked)) .custom-rt-panel-mac { display: none; }
