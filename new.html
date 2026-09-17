@@ -309,6 +309,139 @@
             <label for="install-cmd">Install command</label>
             <input type="text" id="install-cmd" name="install_cmd" placeholder="{python} -m pip install .">
           </div>
+          <details class="custom-runtime">
+            <summary>Use your own runtime download</summary>
+            <p class="small muted" style="margin-top:0">For runtimes or systems we don't have built in yet. Leave a platform empty to use the built-in runtimes there.</p>
+
+            <div class="field">
+              <label for="crt-when">When to use it</label>
+              <select id="crt-when" name="custom_runtime_when">
+                <option value="fallback">Only when no built-in runtime matches</option>
+                <option value="always">Instead of the built-in runtimes</option>
+              </select>
+            </div>
+
+            <div class="tabs" role="tablist">
+              <label class="tab"><input type="radio" name="custom_rt_tab" id="crt-tab-win" checked> Windows</label>
+              <label class="tab"><input type="radio" name="custom_rt_tab" id="crt-tab-linux"> Linux</label>
+              <label class="tab"><input type="radio" name="custom_rt_tab" id="crt-tab-mac"> macOS</label>
+            </div>
+
+            <div class="tab-panel custom-rt-panel-win">
+              <div class="field">
+                <label for="crt-win-urls">Download URLs</label>
+                <textarea class="code code-script" id="crt-win-urls" name="custom_runtime_win_urls" spellcheck="false" placeholder="https://example.com/python-3.12.4-amd64.exe&#10;https://mirror.example.org/python-3.12.4-amd64.exe"></textarea>
+                <span class="hint">One per line. Tried in order until one downloads and matches the SHA-256.</span>
+              </div>
+              <div class="row">
+                <div class="field">
+                  <label for="crt-win-sha">SHA-256</label>
+                  <input type="text" id="crt-win-sha" name="custom_runtime_win_sha256" pattern="[0-9A-Fa-f]{64}" maxlength="64" placeholder="64 hex characters" spellcheck="false">
+                  <span class="hint">Required. The file is refused if it doesn't match.</span>
+                </div>
+                <div class="field">
+                  <label for="crt-win-version">Version</label>
+                  <input type="text" id="crt-win-version" name="custom_runtime_win_version" placeholder="3.12.4">
+                </div>
+              </div>
+              <div class="row">
+                <div class="field">
+                  <label for="crt-win-type">The file is</label>
+                  <select id="crt-win-type" name="custom_runtime_win_type">
+                    <option value="installer">An installer to run</option>
+                    <option value="archive">An archive to unpack (.zip)</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="crt-win-exe">Runtime inside it</label>
+                  <input type="text" id="crt-win-exe" name="custom_runtime_win_exe" placeholder="python.exe" spellcheck="false">
+                  <span class="hint">Path within the install folder. Used for <code>{runtime}</code>.</span>
+                </div>
+              </div>
+              <div class="field crt-args crt-args-win">
+                <label for="crt-win-args">Installer arguments</label>
+                <input type="text" id="crt-win-args" name="custom_runtime_win_args" placeholder="/quiet InstallAllUsers=0 PrependPath=0 TargetDir=&quot;{runtime_dir}&quot;" spellcheck="false">
+                <span class="hint"><code>{runtime_dir}</code> is this app's runtime folder. Run silently, and don't add the runtime to PATH.</span>
+              </div>
+            </div>
+            <div class="tab-panel custom-rt-panel-linux">
+              <div class="field">
+                <label for="crt-linux-urls">Download URLs</label>
+                <textarea class="code code-script" id="crt-linux-urls" name="custom_runtime_linux_urls" spellcheck="false" placeholder="https://example.com/python-3.12.4-x86_64-linux.tar.gz"></textarea>
+                <span class="hint">One per line. Tried in order until one downloads and matches the SHA-256.</span>
+              </div>
+              <div class="row">
+                <div class="field">
+                  <label for="crt-linux-sha">SHA-256</label>
+                  <input type="text" id="crt-linux-sha" name="custom_runtime_linux_sha256" pattern="[0-9A-Fa-f]{64}" maxlength="64" placeholder="64 hex characters" spellcheck="false">
+                  <span class="hint">Required. The file is refused if it doesn't match.</span>
+                </div>
+                <div class="field">
+                  <label for="crt-linux-version">Version</label>
+                  <input type="text" id="crt-linux-version" name="custom_runtime_linux_version" placeholder="3.12.4">
+                </div>
+              </div>
+              <div class="row">
+                <div class="field">
+                  <label for="crt-linux-type">The file is</label>
+                  <select id="crt-linux-type" name="custom_runtime_linux_type">
+                    <option value="installer">An installer to run</option>
+                    <option value="archive">An archive to unpack (.tar.gz, .tar.xz, .zip)</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="crt-linux-exe">Runtime inside it</label>
+                  <input type="text" id="crt-linux-exe" name="custom_runtime_linux_exe" placeholder="bin/python3" spellcheck="false">
+                  <span class="hint">Path within the install folder. Used for <code>{runtime}</code>.</span>
+                </div>
+              </div>
+              <div class="field crt-args crt-args-linux">
+                <label for="crt-linux-args">Installer arguments</label>
+                <input type="text" id="crt-linux-args" name="custom_runtime_linux_args" placeholder="--prefix={runtime_dir}" spellcheck="false">
+                <span class="hint"><code>{runtime_dir}</code> is this app's runtime folder. Run silently, and don't add the runtime to PATH.</span>
+              </div>
+            </div>
+            <div class="tab-panel custom-rt-panel-mac">
+              <div class="field">
+                <label for="crt-mac-urls">Download URLs</label>
+                <textarea class="code code-script" id="crt-mac-urls" name="custom_runtime_mac_urls" spellcheck="false" placeholder="https://example.com/python-3.12.4-macos.tar.gz"></textarea>
+                <span class="hint">One per line. Tried in order until one downloads and matches the SHA-256.</span>
+              </div>
+              <div class="row">
+                <div class="field">
+                  <label for="crt-mac-sha">SHA-256</label>
+                  <input type="text" id="crt-mac-sha" name="custom_runtime_mac_sha256" pattern="[0-9A-Fa-f]{64}" maxlength="64" placeholder="64 hex characters" spellcheck="false">
+                  <span class="hint">Required. The file is refused if it doesn't match.</span>
+                </div>
+                <div class="field">
+                  <label for="crt-mac-version">Version</label>
+                  <input type="text" id="crt-mac-version" name="custom_runtime_mac_version" placeholder="3.12.4">
+                </div>
+              </div>
+              <div class="row">
+                <div class="field">
+                  <label for="crt-mac-type">The file is</label>
+                  <select id="crt-mac-type" name="custom_runtime_mac_type">
+                    <option value="installer">An installer to run</option>
+                    <option value="archive">An archive to unpack (.tar.gz, .zip)</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="crt-mac-exe">Runtime inside it</label>
+                  <input type="text" id="crt-mac-exe" name="custom_runtime_mac_exe" placeholder="bin/python3" spellcheck="false">
+                  <span class="hint">Path within the install folder. Used for <code>{runtime}</code>.</span>
+                </div>
+              </div>
+              <div class="field crt-args crt-args-mac">
+                <label for="crt-mac-args">Installer arguments</label>
+                <input type="text" id="crt-mac-args" name="custom_runtime_mac_args" placeholder="" spellcheck="false">
+                <span class="hint"><code>{runtime_dir}</code> is this app's runtime folder. Run silently, and don't add the runtime to PATH.</span>
+              </div>
+            </div>
+
+            <p class="small muted" style="margin-bottom:0">People see these URLs on the installer's "what this will do" screen before anything is downloaded.</p>
+          </details>
+
           <div class="field">
             <label for="extra-deps">Extra dependencies</label>
             <textarea id="extra-deps" name="extra_deps" placeholder="git >=2.40&#10;ffmpeg ==7.0.*"></textarea>
