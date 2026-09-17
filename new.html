@@ -85,69 +85,92 @@
       <div class="customise">
 
         <details>
-          <summary><span>Signing</span><span class="default">Signed by Installer Builder</span></summary>
+          <summary><span>Platforms</span><span class="default">64-bit Intel + ARM</span></summary>
 
-          <label class="choice"><input type="radio" name="mode" value="ours" id="mode-ours" checked>
-            <span><strong>Signed by Installer Builder</strong><br>
-            <span class="small muted">Fewest security warnings. The installer file is branded as Installer Builder and uses our icon; your name and icon go on the installed app. The file can only be changed by renaming it.</span></span></label>
+          <div class="platform-block win-settings">
+            <span class="label">Windows</span>
+            <label class="choice"><input type="checkbox" name="win_x64" checked> x64</label>
+            <label class="choice"><input type="checkbox" name="win_arm64" checked> arm64</label>
+            <label class="choice"><input type="checkbox" name="win_admin" checked> Require administrator rights</label>
+          </div>
 
-          <label class="choice"><input type="radio" name="mode" value="yours" id="mode-yours">
-            <span><strong>Signed by you</strong><br>
-            <span class="small muted">Your name and icon on the installer itself. You provide the certificate, and the reputation is yours.</span></span></label>
-
-          <label class="choice"><input type="radio" name="mode" value="unsigned" id="mode-unsigned">
-            <span><strong>Unsigned</strong><br>
-            <span class="small muted">Anyone can edit the installer afterwards, including on the <a href="edit.html">Edit installer</a> page. Windows and macOS will show security warnings.</span></span></label>
-
-          <div class="mode-yours-only">
-            <hr>
+          <div class="platform-block linux-settings">
+            <span class="label">Linux</span>
+            <label class="choice"><input type="checkbox" name="linux_x64" checked> x86_64</label>
+            <label class="choice"><input type="checkbox" name="linux_arm64" checked> aarch64</label>
             <div class="field">
-              <label for="win-cert">Windows code signing certificate (.pfx)</label>
-              <input type="file" id="win-cert" name="win_cert" accept=".pfx,.p12">
-              <span class="hint">Planned: signing happens in your browser, so the key never leaves your machine.</span>
-            </div>
-            <div class="row">
-              <div class="field">
-                <label for="apple-team">Apple Team ID</label>
-                <input type="text" id="apple-team" name="apple_team" placeholder="ABCDE12345">
-              </div>
-              <div class="field">
-                <label for="apple-key">App Store Connect API key (.p8)</label>
-                <input type="file" id="apple-key" name="apple_key" accept=".p8">
-                <span class="hint">Used to sign and notarize the macOS build.</span>
-              </div>
+              <label for="linux-min">Oldest supported glibc</label>
+              <select id="linux-min" name="linux_glibc">
+                <option>2.28 (RHEL 8, Debian 10)</option>
+                <option>2.31 (Ubuntu 20.04)</option>
+                <option>2.35 (Ubuntu 22.04)</option>
+              </select>
             </div>
           </div>
 
-          <p class="small muted" style="margin-bottom:0">Whichever you pick, the installer shows people what it will install, where it comes from, and who signed it before it changes anything.</p>
+          <div class="platform-block mac-settings">
+            <span class="label">macOS</span>
+            <label class="choice"><input type="checkbox" name="mac_universal" checked> Universal (Apple silicon + Intel)</label>
+            <div class="field">
+              <label for="mac-min">Minimum macOS</label>
+              <select id="mac-min" name="mac_min">
+                <option>12 Monterey</option><option>13 Ventura</option><option>14 Sonoma</option><option>15 Sequoia</option>
+              </select>
+            </div>
+          </div>
+
+          <p class="small muted platforms-none">Tick at least one platform above.</p>
         </details>
 
         <details>
-          <summary><span>Source version</span><span class="default">Latest release</span></summary>
-          <div class="row">
-            <div class="field">
-              <label for="ref-type">Build from</label>
-              <select id="ref-type" name="ref_type">
-                <option value="latest">Latest release</option>
-                <option value="tag">A specific tag</option>
-                <option value="branch">A branch</option>
-                <option value="commit">A commit</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="ref">Tag, branch or commit</label>
-              <input type="text" id="ref" name="ref" placeholder="v1.4.0">
-            </div>
-            <div class="field">
-              <label for="subdir">Subfolder</label>
-              <input type="text" id="subdir" name="subdir" placeholder="Repo root">
-            </div>
+          <summary><span>Base installer and metadata</span><span class="default">install_python_x</span></summary>
+          <div class="field">
+            <label for="base">Base installer</label>
+            <select id="base" name="base">
+              <option value="auto">Automatic (matches the language)</option>
+              <option value="install_python_x">install_python_x</option>
+              <option value="install_python_gui_x">install_python_gui_x</option>
+              <option value="install_node_x">install_node_x</option>
+              <option value="install_ruby_x">install_ruby_x</option>
+              <option value="install_github_x">install_github_x</option>
+            </select>
+            <span class="hint"><a href="bases.html">What are base installers?</a></span>
           </div>
           <div class="field">
-            <label for="token">Access token (private repos only)</label>
-            <input type="password" id="token" name="token" autocomplete="off">
-            <span class="hint">Only used to download the source. Never put in the installer.</span>
+            <label for="filename">File name</label>
+            <input type="text" id="filename" name="filename" maxlength="255" pattern="[A-Za-z0-9._\-{}]+" placeholder="install_{runtime}_{package}">
+            <span class="hint">Up to 255 characters including the extension. Letters, numbers, <code>_</code> <code>-</code> <code>.</code> only. Installers signed by Installer Builder get a hash of their settings added to the end, e.g. <code>install_python_requests_tjfq5rqw….exe</code>.</span>
           </div>
+          <div class="field">
+            <label for="meta">Extra metadata</label>
+            <textarea id="meta" name="meta" placeholder="channel = stable&#10;homepage = https://example.com"></textarea>
+            <span class="hint">One <code>key = value</code> per line. Stored with the installer's settings. Package, versions and app ID are added automatically.</span>
+          </div>
+          <label class="choice"><input type="checkbox" name="publish_base"> Publish as a base installer others can reuse</label>
+        </details>
+
+        <details>
+          <summary><span>Shortcuts and install behaviour</span><span class="default">Start menu shortcut, uninstaller</span></summary>
+          <div class="field">
+            <label for="entry">Launch command</label>
+            <input type="text" id="entry" name="entry" placeholder="Detected from the project's entry points">
+          </div>
+          <label class="choice"><input type="checkbox" name="shortcut_menu" checked> Start menu / app launcher shortcut</label>
+          <label class="choice"><input type="checkbox" name="shortcut_desktop"> Desktop shortcut</label>
+          <label class="choice"><input type="checkbox" name="cli_on_path"> Add to PATH</label>
+          <label class="choice"><input type="checkbox" name="run_after"> Offer to launch after install</label>
+          <label class="choice"><input type="checkbox" name="uninstaller" checked> Register an uninstaller</label>
+          <details>
+            <summary>Install scripts</summary>
+            <div class="field">
+              <label for="pre-hook">Before install</label>
+              <textarea id="pre-hook" name="pre_hook"></textarea>
+            </div>
+            <div class="field">
+              <label for="post-hook">After install</label>
+              <textarea id="post-hook" name="post_hook"></textarea>
+            </div>
+          </details>
         </details>
 
         <details>
@@ -190,92 +213,69 @@
         </details>
 
         <details>
-          <summary><span>Platforms</span><span class="default">64-bit Intel + ARM</span></summary>
-
-          <div class="platform-block win-settings">
-            <span class="label">Windows</span>
-            <label class="choice"><input type="checkbox" name="win_x64" checked> x64</label>
-            <label class="choice"><input type="checkbox" name="win_arm64" checked> arm64</label>
-            <label class="choice"><input type="checkbox" name="win_admin" checked> Require administrator rights</label>
-          </div>
-
-          <div class="platform-block linux-settings">
-            <span class="label">Linux</span>
-            <label class="choice"><input type="checkbox" name="linux_x64" checked> x86_64</label>
-            <label class="choice"><input type="checkbox" name="linux_arm64" checked> aarch64</label>
+          <summary><span>Source version</span><span class="default">Latest release</span></summary>
+          <div class="row">
             <div class="field">
-              <label for="linux-min">Oldest supported glibc</label>
-              <select id="linux-min" name="linux_glibc">
-                <option>2.28 (RHEL 8, Debian 10)</option>
-                <option>2.31 (Ubuntu 20.04)</option>
-                <option>2.35 (Ubuntu 22.04)</option>
+              <label for="ref-type">Build from</label>
+              <select id="ref-type" name="ref_type">
+                <option value="latest">Latest release</option>
+                <option value="tag">A specific tag</option>
+                <option value="branch">A branch</option>
+                <option value="commit">A commit</option>
               </select>
             </div>
-          </div>
-
-          <div class="platform-block mac-settings">
-            <span class="label">macOS</span>
-            <label class="choice"><input type="checkbox" name="mac_universal" checked> Universal (Apple silicon + Intel)</label>
             <div class="field">
-              <label for="mac-min">Minimum macOS</label>
-              <select id="mac-min" name="mac_min">
-                <option>12 Monterey</option><option>13 Ventura</option><option>14 Sonoma</option><option>15 Sequoia</option>
-              </select>
+              <label for="ref">Tag, branch or commit</label>
+              <input type="text" id="ref" name="ref" placeholder="v1.4.0">
+            </div>
+            <div class="field">
+              <label for="subdir">Subfolder</label>
+              <input type="text" id="subdir" name="subdir" placeholder="Repo root">
             </div>
           </div>
-
-          <p class="small muted platforms-none">Tick at least one platform above.</p>
+          <div class="field">
+            <label for="token">Access token (private repos only)</label>
+            <input type="password" id="token" name="token" autocomplete="off">
+            <span class="hint">Only used to download the source. Never put in the installer.</span>
+          </div>
         </details>
 
         <details>
-          <summary><span>Shortcuts and install behaviour</span><span class="default">Start menu shortcut, uninstaller</span></summary>
-          <div class="field">
-            <label for="entry">Launch command</label>
-            <input type="text" id="entry" name="entry" placeholder="Detected from the project's entry points">
-          </div>
-          <label class="choice"><input type="checkbox" name="shortcut_menu" checked> Start menu / app launcher shortcut</label>
-          <label class="choice"><input type="checkbox" name="shortcut_desktop"> Desktop shortcut</label>
-          <label class="choice"><input type="checkbox" name="cli_on_path"> Add to PATH</label>
-          <label class="choice"><input type="checkbox" name="run_after"> Offer to launch after install</label>
-          <label class="choice"><input type="checkbox" name="uninstaller" checked> Register an uninstaller</label>
-          <details>
-            <summary>Install scripts</summary>
-            <div class="field">
-              <label for="pre-hook">Before install</label>
-              <textarea id="pre-hook" name="pre_hook"></textarea>
-            </div>
-            <div class="field">
-              <label for="post-hook">After install</label>
-              <textarea id="post-hook" name="post_hook"></textarea>
-            </div>
-          </details>
-        </details>
+          <summary><span>Signing</span><span class="default">Signed by Installer Builder</span></summary>
 
-        <details>
-          <summary><span>Base installer and metadata</span><span class="default">install_python_x</span></summary>
-          <div class="field">
-            <label for="base">Base installer</label>
-            <select id="base" name="base">
-              <option value="auto">Automatic (matches the language)</option>
-              <option value="install_python_x">install_python_x</option>
-              <option value="install_python_gui_x">install_python_gui_x</option>
-              <option value="install_node_x">install_node_x</option>
-              <option value="install_ruby_x">install_ruby_x</option>
-              <option value="install_github_x">install_github_x</option>
-            </select>
-            <span class="hint"><a href="bases.html">What are base installers?</a></span>
+          <label class="choice"><input type="radio" name="mode" value="ours" id="mode-ours" checked>
+            <span><strong>Signed by Installer Builder</strong><br>
+            <span class="small muted">Fewest security warnings. The installer file is branded as Installer Builder and uses our icon; your name and icon go on the installed app. The file can only be changed by renaming it.</span></span></label>
+
+          <label class="choice"><input type="radio" name="mode" value="yours" id="mode-yours">
+            <span><strong>Signed by you</strong><br>
+            <span class="small muted">Your name and icon on the installer itself. You provide the certificate, and the reputation is yours.</span></span></label>
+
+          <label class="choice"><input type="radio" name="mode" value="unsigned" id="mode-unsigned">
+            <span><strong>Unsigned</strong><br>
+            <span class="small muted">Anyone can edit the installer afterwards, including on the <a href="edit.html">Edit installer</a> page. Windows and macOS will show security warnings.</span></span></label>
+
+          <div class="mode-yours-only">
+            <hr>
+            <div class="field">
+              <label for="win-cert">Windows code signing certificate (.pfx)</label>
+              <input type="file" id="win-cert" name="win_cert" accept=".pfx,.p12">
+              <span class="hint">Planned: signing happens in your browser, so the key never leaves your machine.</span>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="apple-team">Apple Team ID</label>
+                <input type="text" id="apple-team" name="apple_team" placeholder="ABCDE12345">
+              </div>
+              <div class="field">
+                <label for="apple-key">App Store Connect API key (.p8)</label>
+                <input type="file" id="apple-key" name="apple_key" accept=".p8">
+                <span class="hint">Used to sign and notarize the macOS build.</span>
+              </div>
+            </div>
           </div>
-          <div class="field">
-            <label for="filename">File name</label>
-            <input type="text" id="filename" name="filename" maxlength="255" pattern="[A-Za-z0-9._\-{}]+" placeholder="install_{runtime}_{package}">
-            <span class="hint">Up to 255 characters including the extension. Letters, numbers, <code>_</code> <code>-</code> <code>.</code> only. Installers signed by Installer Builder get a hash of their settings added to the end, e.g. <code>install_python_requests_tjfq5rqw….exe</code>.</span>
-          </div>
-          <div class="field">
-            <label for="meta">Extra metadata</label>
-            <textarea id="meta" name="meta" placeholder="channel = stable&#10;homepage = https://example.com"></textarea>
-            <span class="hint">One <code>key = value</code> per line. Stored with the installer's settings. Package, versions and app ID are added automatically.</span>
-          </div>
-          <label class="choice"><input type="checkbox" name="publish_base"> Publish as a base installer others can reuse</label>
+
+          <p class="small muted" style="margin-bottom:0">Whichever you pick, the installer shows people what it will install, where it comes from, and who signed it before it changes anything.</p>
         </details>
 
       </div>
