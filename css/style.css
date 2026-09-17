@@ -471,3 +471,7 @@ form:has(#runtime option[value="python"]:checked) .lang-python,
 form:has(#runtime option[value="node"]:checked) .lang-node,
 form:has(#runtime option[value="ruby"]:checked) .lang-ruby,
 form:has(#runtime option[value="none"]:checked) .lang-none { display: inline; }
+.by-mode { display: none; }
+form:has(#mode-ours:checked) .mode-ours-inline { display: inline; }
+form:has(#mode-yours:checked) .mode-yours-inline,
+form:has(#mode-unsigned:checked) .mode-unsigned-inline { display: inline; }
