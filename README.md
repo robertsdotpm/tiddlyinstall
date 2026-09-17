@@ -14,3 +14,7 @@ Plain HTML and CSS. No build step, no server. Open `index.html` in a browser.
 | `build.html` | One build: steps, downloads, install layout, metadata, log |
 
 All data is sample data. Submitting the form just opens `build.html`.
+
+## Design notes
+
+- [Base installers: metadata by hash in the file name](docs/base-installer-metadata.md)
