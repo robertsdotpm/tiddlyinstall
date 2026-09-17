@@ -22,7 +22,7 @@
     <h1>Real installers for Windows, Linux and macOS, straight from a GitHub repo.</h1>
     <p class="lede">
       No freezing and no bundlers that break. We install your project's
-      real runtime and dependencies into fixed, shared locations, clone your
+      real runtime and dependencies into a folder of its own, clone your
       project, and install it against them. The result is an ordinary
       installer built with NSIS on Windows and the Qt Installer Framework on
       Linux and macOS.
@@ -42,9 +42,9 @@
       </section>
       <section class="panel">
         <h3>2. Dependencies are handled for you</h3>
-        <p>At install time, the installer picks the newest runtime the
-        computer supports, or a version you pin. Each dependency is installed
-        once, in a fixed per-version folder that other installers can share.</p>
+        <p>At install time, the installer picks the newest runtime that
+        matches your version range and runs on the computer, and installs it
+        in the app's own folder.</p>
       </section>
       <section class="panel">
         <h3>3. Build for every platform</h3>
@@ -54,15 +54,17 @@
       </section>
     </div>
 
-    <h2>Dependencies live in fixed locations</h2>
-    <p>Every dependency is installed to <code>SYS_DRIVE / DEP / DEP_VERSION</code>.
-    Two apps that need the same Python never install it twice, and nothing is
-    stuffed into a frozen bundle.</p>
+    <h2>Every app gets its own folder</h2>
+    <p>Each app is installed with its own copy of every dependency, in a
+    folder named by a hash of what's in it. Nothing is shared, so one app can
+    never break another, and uninstalling just deletes the folder. Disk space
+    is cheap; broken installs aren't.</p>
 <pre>
-Windows   C:\python\3.12.4\
-          C:\git\2.46.0\
-Linux     /python/3.12.4/
-macOS     /python/3.12.4/
+Windows   C:\ib\tjfq5rqwnnrxjpnx\python\3.12.4\
+          C:\ib\tjfq5rqwnnrxjpnx\git\2.46.0\
+          C:\ib\tjfq5rqwnnrxjpnx\app\
+Linux     /opt/ib/tjfq5rqwnnrxjpnx/python/3.12.4/
+macOS     /Library/Application Support/ib/tjfq5rqwnnrxjpnx/python/3.12.4/
 </pre>
 
     <h2>Base installers are reusable</h2>

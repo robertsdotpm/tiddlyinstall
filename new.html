@@ -174,23 +174,12 @@
         </details>
 
         <details>
-          <summary><span>Runtime and dependencies</span><span class="default">Newest runtime the user's OS supports</span></summary>
-          <div class="row">
-            <div class="field">
-              <label for="runtime-choice">Runtime version</label>
-              <select id="runtime-choice" name="runtime_choice">
-                <option value="auto">Newest that runs on the user's OS</option>
-                <option value="pin">Pin a version</option>
-              </select>
-              <span class="hint">The installer detects the OS at install time and picks the highest compatible runtime.</span>
-            </div>
-            <div class="field runtime-pin">
-              <label for="runtime-version">Pinned version</label>
-              <input type="text" id="runtime-version" name="runtime_version" list="python-versions" placeholder="3.12.4">
-              <datalist id="python-versions">
-                <option value="3.13.1"><option value="3.12.4"><option value="3.11.9"><option value="3.10.14">
-              </datalist>
-            </div>
+          <summary><span>Runtime and dependencies</span><span class="default">Newest version the user's OS supports</span></summary>
+          <div class="field">
+            <label for="runtime-version">Runtime versions allowed</label>
+            <input type="text" id="runtime-version" name="runtime_version" placeholder="Any, e.g. >=3.8, <3.13">
+            <span class="hint">At install time the installer picks the highest version that matches and runs on the user's OS.
+              Operators: <code>==</code> <code>!=</code> <code>&gt;=</code> <code>&lt;=</code> <code>&gt;</code> <code>&lt;</code> <code>~=</code>, and wildcards like <code>==3.12.*</code>. Separate with commas.</span>
           </div>
           <div class="field">
             <label for="install-cmd">Install command</label>
@@ -198,17 +187,19 @@
           </div>
           <div class="field">
             <label for="extra-deps">Extra dependencies</label>
-            <textarea id="extra-deps" name="extra_deps" placeholder="git 2.46.0&#10;ffmpeg 7.0.1"></textarea>
-            <span class="hint">One per line: name and version. Project dependencies (requirements.txt, pyproject.toml, package.json…) are found automatically.</span>
+            <textarea id="extra-deps" name="extra_deps" placeholder="git >=2.40&#10;ffmpeg ==7.0.*"></textarea>
+            <span class="hint">One per line: a name and a version range. Project dependencies (requirements.txt, pyproject.toml, package.json…) are found automatically.</span>
           </div>
           <details>
             <summary>Install locations</summary>
-            <p class="small">Each dependency goes to <code>SYS_DRIVE / DEP / DEP_VERSION</code>, for example <code>C:\python\3.13.1\</code> on Windows and <code>/python/3.13.1/</code> on Linux and macOS. The version is whichever one the installer picked.</p>
-            <span class="label">If a dependency is already installed</span>
-            <label class="choice"><input type="radio" name="existing_dep" value="reuse" checked> Reuse it</label>
-            <label class="choice"><input type="radio" name="existing_dep" value="verify"> Reuse it only if its checksum matches</label>
-            <label class="choice"><input type="radio" name="existing_dep" value="reinstall"> Always reinstall it</label>
-            <label class="choice" style="margin-top:8px"><input type="checkbox" name="keep_deps_on_uninstall" checked> Keep shared dependencies on uninstall</label>
+            <p class="small">Every app gets its own folder, with its own copy of every dependency. Nothing is shared between apps, so one app can't break another, and uninstalling deletes the folder.</p>
+<pre class="small">
+Windows  C:\ib\&lt;id&gt;\python\3.12.4\
+         C:\ib\&lt;id&gt;\app\
+Linux    /opt/ib/&lt;id&gt;/python/3.12.4/
+macOS    /Library/Application Support/ib/&lt;id&gt;/python/3.12.4/
+</pre>
+            <span class="hint"><code>&lt;id&gt;</code> is a short hash of everything installed for this app.</span>
           </details>
         </details>
 
