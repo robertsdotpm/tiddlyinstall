@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Write an app · Installer Builder</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">Installer Builder</a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="new.html">New installer</a>
+      <a href="create.html" aria-current="page">Write an app</a>
+      <a href="bases.html">Base installers</a>
+      <a href="edit.html">Edit installer</a>
+      <a href="builds.html">Builds</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Write an app</h1>
+    <p class="lede">Write Python here and turn it into a real app for Windows, Linux and macOS.
+      No GitHub repo needed.</p>
+    <p class="prototype-note">
+      Prototype: nothing runs or saves yet. Pick a template to see its starting code.
+    </p>
+
+    <form action="new.html" method="get" class="create-form">
+
+      <!-- 1. Template -->
+      <section class="panel">
+        <h2 class="section-title">1. Start from a template</h2>
+        <div class="template-cards">
+          <label class="template-card">
+            <input type="radio" name="template" value="script" id="tpl-script" checked>
+            <strong>Script</strong>
+            <span class="small muted">Runs in a console window. The simplest.</span>
+          </label>
+          <label class="template-card">
+            <input type="radio" name="template" value="window" id="tpl-window">
+            <strong>Window app</strong>
+            <span class="small muted">A small desktop window with buttons and text.</span>
+          </label>
+          <label class="template-card">
+            <input type="radio" name="template" value="web" id="tpl-web">
+            <strong>Web page in a window</strong>
+            <span class="small muted">Build the look in HTML, the logic in Python.</span>
+          </label>
+          <label class="template-card">
+            <input type="radio" name="template" value="tray" id="tpl-tray">
+            <strong>Tray app</strong>
+            <span class="small muted">Runs in the background with a menu icon.</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- 2. Editor + side panel -->
+      <div class="editor-layout">
+        <section class="panel editor-panel">
+          <div class="editor-toolbar">
+            <h2 class="section-title">2. Write your code</h2>
+            <div class="actions">
+              <button type="button" class="secondary">▶ Run</button>
+              <button type="submit">Make installer</button>
+            </div>
+          </div>
+
+          <div class="tpl tpl-script-only">
+            <span class="file-tab">main.py</span>
+<textarea class="code" name="code_script" spellcheck="false" aria-label="main.py">name = input("What's your name? ")
+print(f"Hello, {name}!")
+
+input("Press Enter to close")
+</textarea>
+          </div>
+
+          <div class="tpl tpl-window-only">
+            <span class="file-tab">main.py</span>
+<textarea class="code" name="code_window" spellcheck="false" aria-label="main.py">import tkinter as tk
+
+window = tk.Tk()
+window.title("My App")
+
+label = tk.Label(window, text="Hello!", font=("", 18))
+label.pack(padx=40, pady=20)
+
+def clicked():
+    label.config(text="You clicked the button")
+
+tk.Button(window, text="Click me", command=clicked).pack(pady=(0, 20))
+
+window.mainloop()
+</textarea>
+          </div>
+
+          <div class="tpl tpl-web-only">
+            <span class="file-tab">main.py</span>
+<textarea class="code" name="code_web_py" spellcheck="false" aria-label="main.py">import webview
+
+class Api:
+    def greet(self, name):
+        return f"Hello, {name}!"
+
+webview.create_window("My App", "index.html", js_api=Api())
+webview.start()
+</textarea>
+            <span class="file-tab">index.html</span>
+<textarea class="code code-short" name="code_web_html" spellcheck="false" aria-label="index.html">&lt;input id="name" placeholder="Your name"&gt;
+&lt;button onclick="go()"&gt;Greet&lt;/button&gt;
+&lt;p id="out"&gt;&lt;/p&gt;
+&lt;script&gt;
+  async function go() {
+    const name = document.getElementById("name").value;
+    out.textContent = await pywebview.api.greet(name);
+  }
+&lt;/script&gt;
+</textarea>
+          </div>
+
+          <div class="tpl tpl-tray-only">
+            <span class="file-tab">main.py</span>
+<textarea class="code" name="code_tray" spellcheck="false" aria-label="main.py">import pystray
+from PIL import Image
+
+def say_hello(icon, item):
+    icon.notify("Hello from the tray!")
+
+icon = pystray.Icon(
+    "my-app",
+    Image.new("RGB", (64, 64), "royalblue"),
+    menu=pystray.Menu(
+        pystray.MenuItem("Say hello", say_hello),
+        pystray.MenuItem("Quit", lambda icon, item: icon.stop()),
+    ),
+)
+icon.run()
+</textarea>
+          </div>
+
+          <p class="small muted editor-files">
+            <button type="button" class="link-button">+ Add file</button>
+          </p>
+
+          <!-- Output -->
+          <div class="output">
+            <span class="label">Output</span>
+            <div class="tpl tpl-script-only">
+<pre class="output-log">What's your name? Sam
+Hello, Sam!
+Press Enter to close</pre>
+              <span class="hint">Runs in your browser. Nothing is sent to a server.</span>
+            </div>
+            <div class="tpl tpl-gui-only">
+              <p class="small" style="margin:0">App windows and tray icons can't be previewed in the browser.
+                Download a test build to try it on your computer.</p>
+              <div class="actions" style="margin-top:8px">
+                <button type="button" class="secondary">Download test build</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="panel side-panel">
+          <h2 class="section-title">App</h2>
+          <div class="field">
+            <label for="app-name">Name</label>
+            <input type="text" id="app-name" name="app_name" maxlength="64" placeholder="My App">
+          </div>
+          <div class="field">
+            <label for="icon">Icon</label>
+            <input type="file" id="icon" name="icon" accept=".png,.svg">
+            <span class="hint">Square PNG, 1024×1024 or larger.</span>
+          </div>
+
+          <hr>
+
+          <h2 class="section-title">Packages</h2>
+          <div class="field">
+            <label for="deps">Packages your code uses</label>
+            <textarea id="deps" name="deps" placeholder="requests >=2.30"></textarea>
+            <span class="hint tpl tpl-web-only">Includes <code>pywebview</code>.</span>
+            <span class="hint tpl tpl-tray-only">Includes <code>pystray</code> and <code>pillow</code>.</span>
+            <span class="hint">One per line, with an optional version range.</span>
+          </div>
+          <div class="field">
+            <label for="runtime-version">Python versions allowed</label>
+            <input type="text" id="runtime-version" name="runtime_version" placeholder="Any">
+          </div>
+
+          <hr>
+
+          <h2 class="section-title">Your project</h2>
+          <p class="small" style="margin-top:0">Drafts are kept in this browser until you make an installer.</p>
+          <div class="side-actions">
+            <button type="button" class="secondary">Download as .zip</button>
+            <button type="button" class="secondary">Export to GitHub</button>
+          </div>
+        </aside>
+      </div>
+    </form>
+  </main>
+
+  <footer class="site-footer">
+    Prototype. Nothing on these pages is connected to a build service yet.
+  </footer>
+</body>
+</html>

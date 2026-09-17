@@ -265,3 +265,88 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 16px 0; }
 /* Signing mode: certificate fields only for "Signed by you" (no JS). */
 .mode-yours-only { display: none; }
 form:has(#mode-yours:checked) .mode-yours-only { display: block; }
+
+/* ---- Write an app ---- */
+
+.template-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+.template-card {
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-weight: normal;
+}
+.template-card input { margin: 0 0 6px; }
+.template-card strong { display: block; }
+.template-card:has(input:checked) { border-color: var(--accent); outline: 1px solid var(--accent); }
+
+.editor-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 760px) {
+  .editor-layout { grid-template-columns: minmax(0, 1fr); }
+}
+
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px 16px;
+  margin-bottom: 12px;
+}
+.editor-toolbar .section-title { margin: 0; }
+
+.file-tab {
+  display: inline-block;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.85em;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-bottom: 0;
+  border-radius: 5px 5px 0 0;
+  padding: 3px 10px;
+  margin-top: 8px;
+}
+textarea.code {
+  display: block;
+  min-height: 300px;
+  border-top-left-radius: 0;
+  line-height: 1.45;
+  tab-size: 4;
+  white-space: pre;
+  overflow-x: auto;
+}
+textarea.code.code-short { min-height: 220px; }
+
+.editor-files { margin: 8px 0 16px; }
+.link-button {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.output { border-top: 1px solid var(--border); padding-top: 12px; }
+.output-log { margin: 0 0 4px; }
+
+.side-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* Show only the chosen template's code and preview (no JS). */
+.tpl { display: none; }
+form:has(#tpl-script:checked) .tpl-script-only,
+form:has(#tpl-window:checked) .tpl-window-only,
+form:has(#tpl-web:checked) .tpl-web-only,
+form:has(#tpl-tray:checked) .tpl-tray-only,
+form:has(#tpl-window:checked) .tpl-gui-only,
+form:has(#tpl-web:checked) .tpl-gui-only,
+form:has(#tpl-tray:checked) .tpl-gui-only { display: block; }
