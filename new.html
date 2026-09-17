@@ -192,14 +192,14 @@
           </div>
           <details>
             <summary>Install locations</summary>
-            <p class="small">Every app gets its own folder, with its own copy of every dependency. Nothing is shared between apps, so one app can't break another, and uninstalling deletes the folder.</p>
+            <p class="small">Every app gets its own copy of every dependency. Nothing is shared between apps, so one app can't break another, and uninstalling deletes the app's folders.</p>
 <pre class="small">
-Windows  C:\ib\&lt;id&gt;\python\3.12.4\
-         C:\ib\&lt;id&gt;\app\
-Linux    /opt/ib/&lt;id&gt;/python/3.12.4/
-macOS    /Library/Application Support/ib/&lt;id&gt;/python/3.12.4/
+Windows  C:\ib\k3m9q2x7v4p8\     app
+         C:\ib\tjfq5rqwnnrx\     its Python
+Linux    /opt/ib/tjfq5rqwnnrx/
+macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
 </pre>
-            <span class="hint"><code>&lt;id&gt;</code> is a short hash of everything installed for this app.</span>
+            <span class="hint">Folder names are short hashes, to keep paths short. Each folder has a manifest saying what it contains.</span>
           </details>
         </details>
 

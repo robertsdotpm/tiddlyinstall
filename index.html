@@ -55,16 +55,16 @@
     </div>
 
     <h2>Every app gets its own folder</h2>
-    <p>Each app is installed with its own copy of every dependency, in a
-    folder named by a hash of what's in it. Nothing is shared, so one app can
-    never break another, and uninstalling just deletes the folder. Disk space
-    is cheap; broken installs aren't.</p>
+    <p>Each app is installed with its own copy of every dependency, in
+    folders with short hashed names. Nothing is shared, so one app can never
+    break another, and uninstalling just deletes the app's folders. Disk
+    space is cheap; broken installs aren't.</p>
 <pre>
-Windows   C:\ib\tjfq5rqwnnrxjpnx\python\3.12.4\
-          C:\ib\tjfq5rqwnnrxjpnx\git\2.46.0\
-          C:\ib\tjfq5rqwnnrxjpnx\app\
-Linux     /opt/ib/tjfq5rqwnnrxjpnx/python/3.12.4/
-macOS     /Library/Application Support/ib/tjfq5rqwnnrxjpnx/python/3.12.4/
+Windows   C:\ib\k3m9q2x7v4p8\     the app
+          C:\ib\tjfq5rqwnnrx\     its Python 3.12.4
+          C:\ib\a7d2hx9q4mbe\     its git 2.46.0
+Linux     /opt/ib/tjfq5rqwnnrx/
+macOS     /Library/Application Support/ib/tjfq5rqwnnrx/
 </pre>
 
     <h2>Base installers are reusable</h2>
