@@ -13,6 +13,7 @@
       <a href="index.html">Home</a>
       <a href="new.html">New installer</a>
       <a href="bases.html" aria-current="page">Base installers</a>
+      <a href="edit.html">Edit installer</a>
       <a href="builds.html">Builds</a>
     </nav>
   </header>
@@ -21,8 +22,8 @@
     <h1>Base installers</h1>
     <p class="lede">
       A base installer is a finished, tested installer with one open slot,
-      the <code>x</code>. Fill the slot, embed your metadata, swap the icon,
-      and you have a new installer without writing any build config.
+      the <code>x</code>. Its code never changes. What it installs, and the
+      name and icon of the installed app, come from its settings.
     </p>
     <p class="prototype-note">Prototype: sample data.</p>
 
@@ -51,7 +52,7 @@
     <div class="grid">
       <section class="panel">
         <h2><code>install_python_x</code></h2>
-        <p>Installs the Python package <code>x</code> from PyPI or a GitHub repo into a pinned Python.</p>
+        <p>Installs the Python package <code>x</code> from PyPI or a GitHub repo into the newest Python the computer supports.</p>
         <p><span class="tag">Python 3.10–3.13</span><span class="tag">Windows</span><span class="tag">Linux</span><span class="tag">macOS</span></p>
         <p class="small muted">Slot: package name · Used by 1,284 installers</p>
         <a class="button" href="new.html">Use this base</a>
@@ -59,7 +60,7 @@
 
       <section class="panel">
         <h2><code>install_node_x</code></h2>
-        <p>Installs the npm package <code>x</code> globally against a pinned Node.js, with a launcher on PATH.</p>
+        <p>Installs the npm package <code>x</code> globally against the newest Node.js the computer supports, with a launcher on PATH.</p>
         <p><span class="tag">Node 18, 20, 22</span><span class="tag">Windows</span><span class="tag">Linux</span><span class="tag">macOS</span></p>
         <p class="small muted">Slot: package name · Used by 412 installers</p>
         <a class="button" href="new.html">Use this base</a>
@@ -67,7 +68,7 @@
 
       <section class="panel">
         <h2><code>install_ruby_x</code></h2>
-        <p>Installs the gem <code>x</code> into a pinned Ruby and adds its executables to PATH.</p>
+        <p>Installs the gem <code>x</code> into the newest Ruby the computer supports and adds its executables to PATH.</p>
         <p><span class="tag">Ruby 3.2, 3.3</span><span class="tag">Windows</span><span class="tag">Linux</span><span class="tag">macOS</span></p>
         <p class="small muted">Slot: gem name · Used by 97 installers</p>
         <a class="button" href="new.html">Use this base</a>
@@ -90,19 +91,19 @@
       </section>
     </div>
 
-    <h2>What a base installer can change</h2>
+    <h2>Three ways to ship a base installer</h2>
     <div class="table-wrap panel">
       <table>
-        <thead><tr><th>Part</th><th>Changeable without rebuilding?</th><th>How</th></tr></thead>
+        <thead><tr><th></th><th>Signed by Installer Builder</th><th>Signed by you</th><th>Unsigned</th></tr></thead>
         <tbody>
-          <tr><td>Target (<code>x</code>)</td><td class="status ok">Yes</td><td>File name and embedded metadata</td></tr>
-          <tr><td>Metadata (name, version, publisher…)</td><td class="status ok">Yes</td><td>Embedded key/value block</td></tr>
-          <tr><td>Icon</td><td class="status ok">Yes</td><td>Resource replaced in the file</td></tr>
-          <tr><td>Runtime version</td><td class="status running">To be decided</td><td>Metadata, or a new base</td></tr>
-          <tr><td>Signing</td><td class="status pending">No</td><td>Re-signed after changes</td></tr>
+          <tr><th scope="row">Settings stored in</th><td>The file name</td><td>The file, before signing</td><td>The file</td></tr>
+          <tr><th scope="row">Installer file icon</th><td>Installer Builder's</td><td>Yours</td><td>Yours</td></tr>
+          <tr><th scope="row">Change it later</th><td>Rename the file</td><td>Rebuild and re-sign</td><td>Any time, on the <a href="edit.html">Edit installer</a> page</td></tr>
+          <tr><th scope="row">Security warnings</th><td class="status ok">Fewest</td><td class="status running">Depends on your certificate</td><td class="status fail">Yes, on Windows and macOS</td></tr>
         </tbody>
       </table>
     </div>
+    <p class="small muted">All three show people what will be installed, where it comes from and who signed it, before changing anything.</p>
   </main>
 
   <footer class="site-footer">

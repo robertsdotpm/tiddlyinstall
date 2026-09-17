@@ -13,6 +13,7 @@
       <a href="index.html">Home</a>
       <a href="new.html" aria-current="page">New installer</a>
       <a href="bases.html">Base installers</a>
+      <a href="edit.html">Edit installer</a>
       <a href="builds.html">Builds</a>
     </nav>
   </header>
@@ -73,8 +74,8 @@
         </div>
 
         <p class="small muted" style="margin-bottom:0">
-          You'll get <code>install_python_&lt;name&gt;.exe</code>, <code>.run</code> and <code>.dmg</code>.
-          Everything below is optional and already has sensible defaults.
+          You'll get <code>install_python_&lt;name&gt;.exe</code>, <code>.run</code> and <code>.dmg</code>,
+          signed by Installer Builder. Everything below is optional and already has sensible defaults.
         </p>
       </section>
 
@@ -82,6 +83,44 @@
       <h2>Customise <span class="muted small">(optional)</span></h2>
 
       <div class="customise">
+
+        <details>
+          <summary><span>Signing</span><span class="default">Signed by Installer Builder</span></summary>
+
+          <label class="choice"><input type="radio" name="mode" value="ours" id="mode-ours" checked>
+            <span><strong>Signed by Installer Builder</strong><br>
+            <span class="small muted">Fewest security warnings. The installer file is branded as Installer Builder and uses our icon; your name and icon go on the installed app. The file can only be changed by renaming it.</span></span></label>
+
+          <label class="choice"><input type="radio" name="mode" value="yours" id="mode-yours">
+            <span><strong>Signed by you</strong><br>
+            <span class="small muted">Your name and icon on the installer itself. You provide the certificate, and the reputation is yours.</span></span></label>
+
+          <label class="choice"><input type="radio" name="mode" value="unsigned" id="mode-unsigned">
+            <span><strong>Unsigned</strong><br>
+            <span class="small muted">Anyone can edit the installer afterwards, including on the <a href="edit.html">Edit installer</a> page. Windows and macOS will show security warnings.</span></span></label>
+
+          <div class="mode-yours-only">
+            <hr>
+            <div class="field">
+              <label for="win-cert">Windows code signing certificate (.pfx)</label>
+              <input type="file" id="win-cert" name="win_cert" accept=".pfx,.p12">
+              <span class="hint">Planned: signing happens in your browser, so the key never leaves your machine.</span>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="apple-team">Apple Team ID</label>
+                <input type="text" id="apple-team" name="apple_team" placeholder="ABCDE12345">
+              </div>
+              <div class="field">
+                <label for="apple-key">App Store Connect API key (.p8)</label>
+                <input type="file" id="apple-key" name="apple_key" accept=".p8">
+                <span class="hint">Used to sign and notarize the macOS build.</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="small muted" style="margin-bottom:0">Whichever you pick, the installer shows people what it will install, where it comes from, and who signed it before it changes anything.</p>
+        </details>
 
         <details>
           <summary><span>Source version</span><span class="default">Latest release</span></summary>
@@ -229,12 +268,12 @@
           <div class="field">
             <label for="filename">File name</label>
             <input type="text" id="filename" name="filename" maxlength="255" pattern="[A-Za-z0-9._\-{}]+" placeholder="install_{runtime}_{package}">
-            <span class="hint">Up to 255 characters including the extension. Letters, numbers, <code>_</code> <code>-</code> <code>.</code> only.</span>
+            <span class="hint">Up to 255 characters including the extension. Letters, numbers, <code>_</code> <code>-</code> <code>.</code> only. Installers signed by Installer Builder get a hash of their settings added to the end, e.g. <code>install_python_requests_tjfq5rqw….exe</code>.</span>
           </div>
           <div class="field">
-            <label for="meta">Extra embedded metadata</label>
+            <label for="meta">Extra metadata</label>
             <textarea id="meta" name="meta" placeholder="channel = stable&#10;homepage = https://example.com"></textarea>
-            <span class="hint">One <code>key = value</code> per line. Package, versions and app ID are embedded automatically.</span>
+            <span class="hint">One <code>key = value</code> per line. Stored with the installer's settings. Package, versions and app ID are added automatically.</span>
           </div>
           <label class="choice"><input type="checkbox" name="publish_base"> Publish as a base installer others can reuse</label>
         </details>

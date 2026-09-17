@@ -13,6 +13,7 @@
       <a href="index.html" aria-current="page">Home</a>
       <a href="new.html">New installer</a>
       <a href="bases.html">Base installers</a>
+      <a href="edit.html">Edit installer</a>
       <a href="builds.html">Builds</a>
     </nav>
   </header>
@@ -40,8 +41,9 @@
         the actual source code.</p>
       </section>
       <section class="panel">
-        <h3>2. Pin the dependencies</h3>
-        <p>Choose the runtime and its version. Each dependency is installed
+        <h3>2. Dependencies are handled for you</h3>
+        <p>At install time, the installer picks the newest runtime the
+        computer supports, or a version you pin. Each dependency is installed
         once, in a fixed per-version folder that other installers can share.</p>
       </section>
       <section class="panel">
@@ -64,16 +66,38 @@ macOS     /python/3.12.4/
 </pre>
 
     <h2>Base installers are reusable</h2>
-    <p>Every installer is built from a base installer. For example,
+    <p>Every installer is a base installer plus settings. For example,
     <code>install_python_x.exe</code> installs the Python package
-    <code>x</code>. To make a new installer you change the target, embed
-    your own metadata and swap in your own icon. You don't rebuild the whole
-    pipeline.</p>
+    <code>x</code>. The base's code stays the same; only the settings change.</p>
 <pre>
 install_python_requests.exe   -&gt; installs the "requests" package
 install_python_black.exe      -&gt; installs the "black" package
 install_node_prettier.exe     -&gt; installs the "prettier" package
 </pre>
+
+    <h2>Three ways to ship</h2>
+    <div class="grid">
+      <section class="panel">
+        <h3>Signed by us</h3>
+        <p>The fewest security warnings. Settings live in the file name, so
+        renaming the file retargets it and keeps the signature.</p>
+      </section>
+      <section class="panel">
+        <h3>Signed by you</h3>
+        <p>Your name and icon on the installer itself, with your own
+        certificate and your own reputation.</p>
+      </section>
+      <section class="panel">
+        <h3>Unsigned</h3>
+        <p>Fully editable. Change what it installs, its name and its icon
+        in your browser, without uploading the file.</p>
+      </section>
+    </div>
+
+    <h2>Nothing hidden</h2>
+    <p>Every installer, whoever signed it, shows what it will install, where
+    it comes from, what it downloads, where files go and who signed it,
+    before it changes anything.</p>
   </main>
 
   <footer class="site-footer">

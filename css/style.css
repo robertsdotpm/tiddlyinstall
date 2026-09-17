@@ -265,3 +265,7 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 16px 0; }
 /* Pinned runtime version only matters when pinning is chosen (no JS). */
 .runtime-pin { display: none; }
 form:has(#runtime-choice option[value="pin"]:checked) .runtime-pin { display: block; }
+
+/* Signing mode: certificate fields only for "Signed by you" (no JS). */
+.mode-yours-only { display: none; }
+form:has(#mode-yours:checked) .mode-yours-only { display: block; }

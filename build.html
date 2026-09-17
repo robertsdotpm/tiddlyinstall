@@ -13,6 +13,7 @@
       <a href="index.html">Home</a>
       <a href="new.html">New installer</a>
       <a href="bases.html">Base installers</a>
+      <a href="edit.html">Edit installer</a>
       <a href="builds.html" aria-current="page">Builds</a>
     </nav>
   </header>
@@ -25,91 +26,85 @@
     <div class="grid">
       <section class="panel">
         <span class="label">Status</span>
-        <p class="status running" style="margin:0">Building (2 of 3 platforms done)</p>
+        <p class="status ok" style="margin:0">Ready</p>
       </section>
       <section class="panel">
         <span class="label">Source</span>
-        <p style="margin:0"><code>psf/requests</code> @ <code>v2.32.3</code></p>
+        <p style="margin:0"><code>psf/requests</code> @ <code>0e322af</code> (v2.32.3)</p>
+      </section>
+      <section class="panel">
+        <span class="label">Signing</span>
+        <p style="margin:0">Signed by Installer Builder</p>
       </section>
       <section class="panel">
         <span class="label">Base</span>
         <p style="margin:0"><a href="bases.html"><code>install_python_x</code></a></p>
-      </section>
-      <section class="panel">
-        <span class="label">Runtime</span>
-        <p style="margin:0">Python 3.12.4</p>
       </section>
     </div>
 
     <section class="panel">
       <h2>Steps</h2>
       <ol class="steps">
-        <li><span>Clone repository</span><span class="status ok">Done · 4s</span></li>
-        <li><span>Resolve dependencies</span><span class="status ok">Done · 11s</span></li>
-        <li><span>Embed metadata and icon</span><span class="status ok">Done · 1s</span></li>
-        <li><span>Package Windows x64 (NSIS)</span><span class="status ok">Done · 38s</span></li>
-        <li><span>Package Linux x86_64 (Qt IFW)</span><span class="status ok">Done · 52s</span></li>
-        <li><span>Package macOS universal (Qt IFW)</span><span class="status running">Running…</span></li>
-        <li><span>Test-install in clean VMs</span><span class="status pending">Waiting</span></li>
+        <li><span>Resolve v2.32.3 to a commit</span><span class="status ok">Done · 1s</span></li>
+        <li><span>Check source against the takedown list</span><span class="status ok">Done · 1s</span></li>
+        <li><span>Prepare launcher icon</span><span class="status ok">Done · 1s</span></li>
+        <li><span>Publish settings record</span><span class="status ok">Done · 1s</span></li>
+        <li><span>Name signed base installers</span><span class="status ok">Done · 1s</span></li>
       </ol>
+      <p class="small muted" style="margin-bottom:0">No packaging needed: installers signed by Installer Builder are a signed base under a new name.</p>
     </section>
 
     <section class="panel">
       <h2>Downloads</h2>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>File</th><th>Platform</th><th>Size</th><th>SHA-256</th></tr></thead>
+          <thead><tr><th>File</th><th>Platform</th><th>Signed by</th></tr></thead>
           <tbody>
-            <tr><td><a href="#">install_python_requests.exe</a></td><td>Windows x64</td><td>31.2 MB</td><td><code>9f2c…a41e</code></td></tr>
-            <tr><td><a href="#">install_python_requests.run</a></td><td>Linux x86_64</td><td>28.7 MB</td><td><code>3b7d…0c92</code></td></tr>
-            <tr><td class="muted">install_python_requests.dmg</td><td>macOS universal</td><td class="muted">—</td><td class="muted">—</td></tr>
+            <tr><td><a href="#"><code>install_python_requests_tjfq5rqwnnrxjpnx5wdqaerq2hbjqcvcixpdyl6yqnuqx4u3nyqq.exe</code></a></td><td>Windows</td><td>Installer Builder</td></tr>
+            <tr><td><a href="#"><code>install_python_requests_tjfq5rqwnnrxjpnx5wdqaerq2hbjqcvcixpdyl6yqnuqx4u3nyqq.run</code></a></td><td>Linux</td><td>Not needed on Linux</td></tr>
+            <tr><td><a href="#"><code>install_python_requests_tjfq5rqwnnrxjpnx5wdqaerq2hbjqcvcixpdyl6yqnuqx4u3nyqq.dmg</code></a></td><td>macOS</td><td>Installer Builder</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted" style="margin-bottom:0">The long part of the name is a hash of this installer's settings. Renaming the file changes what it installs.</p>
+    </section>
+
+    <section class="panel">
+      <h2>What people see before installing</h2>
+      <p class="small muted">Every installer shows this before it changes anything, whoever signed it.</p>
+      <div class="table-wrap">
+        <table>
+          <tbody>
+            <tr><th scope="row">Installs</th><td><code>requests</code> 2.32.3</td></tr>
+            <tr><th scope="row">From</th><td><code>https://github.com/psf/requests</code> at commit <code>0e322af87745eff34caffe4df68456ebc20d9068</code></td></tr>
+            <tr><th scope="row">Downloads</th><td>Python (newest that runs on this computer) from python.org, checksum checked<br>requests source from GitHub, checksum checked</td></tr>
+            <tr><th scope="row">Writes to</th><td><code>C:\python\&lt;version&gt;\</code> (shared runtime)<br><code>C:\Program Files\requests\</code></td></tr>
+            <tr><th scope="row">Changes</th><td>Start menu shortcut, uninstaller entry</td></tr>
+            <tr><th scope="row">Signed by</th><td>Installer Builder. The installer is made by Installer Builder, not by the authors of <code>requests</code>.</td></tr>
+            <tr><th scope="row">Settings from</th><td>File name hash, verified</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
     <section class="panel">
-      <h2>Install layout</h2>
-      <p class="small muted">Where each installer puts files on the user's machine.</p>
+      <h2>Settings record</h2>
+      <p class="small muted">Stored by the service. The installer fetches it at install time and checks it against the hash in its name.</p>
 <pre>
-Windows
-  C:\python\3.12.4\                           shared runtime
-  C:\Program Files\requests\                  cloned project
-Linux / macOS
-  /python/3.12.4/                             shared runtime
-  /opt/requests/                              cloned project
+{
+  "name": "Requests",
+  "source": "https://github.com/psf/requests",
+  "commit": "0e322af87745eff34caffe4df68456ebc20d9068",
+  "runtime": { "name": "python", "version": "newest-supported" },
+  "shortcuts": { "menu": true, "desktop": false },
+  "uninstaller": true,
+  "base": "install_python_x"
+}
 </pre>
     </section>
-
-    <section class="panel">
-      <h2>Embedded metadata</h2>
-<pre>
-package          = requests
-package_version  = 2.32.3
-runtime          = python
-runtime_version  = 3.12.4
-app_id           = io.python.requests
-base             = install_python_x
-</pre>
-    </section>
-
-    <details class="panel">
-      <summary>Build log</summary>
-<pre>
-[00:00] cloning https://github.com/psf/requests @ v2.32.3
-[00:04] resolved python 3.12.4 -&gt; C:\python\3.12.4 (cached)
-[00:15] embedding metadata block (6 keys), icon 1024x1024 -&gt; .ico, .icns
-[00:16] nsis: makensis install_python_requests.nsi
-[00:54] nsis: wrote install_python_requests.exe (31.2 MB)
-[00:54] qtifw: binarycreator linux-x86_64
-[01:46] qtifw: wrote install_python_requests.run (28.7 MB)
-[01:46] qtifw: binarycreator macos-universal
-</pre>
-    </details>
 
     <div class="actions">
-      <button type="button" class="secondary">Cancel build</button>
-      <a class="button secondary" href="new.html">Edit and rebuild</a>
+      <a class="button secondary" href="new.html">Change and rebuild</a>
     </div>
   </main>
 
