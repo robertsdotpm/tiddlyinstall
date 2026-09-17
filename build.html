@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Build #1042 · Installer Builder</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">Installer Builder</a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="new.html">New installer</a>
+      <a href="bases.html">Base installers</a>
+      <a href="builds.html" aria-current="page">Builds</a>
+    </nav>
+  </header>
+
+  <main>
+    <p class="small"><a href="builds.html">← All builds</a></p>
+    <h1>Build #1042: install_python_requests</h1>
+    <p class="prototype-note">Prototype: sample build. The form you submitted was not processed.</p>
+
+    <div class="grid">
+      <section class="panel">
+        <span class="label">Status</span>
+        <p class="status running" style="margin:0">Building (2 of 3 platforms done)</p>
+      </section>
+      <section class="panel">
+        <span class="label">Source</span>
+        <p style="margin:0"><code>psf/requests</code> @ <code>v2.32.3</code></p>
+      </section>
+      <section class="panel">
+        <span class="label">Base</span>
+        <p style="margin:0"><a href="bases.html"><code>install_python_x</code></a></p>
+      </section>
+      <section class="panel">
+        <span class="label">Runtime</span>
+        <p style="margin:0">Python 3.12.4</p>
+      </section>
+    </div>
+
+    <section class="panel">
+      <h2>Steps</h2>
+      <ol class="steps">
+        <li><span>Clone repository</span><span class="status ok">Done · 4s</span></li>
+        <li><span>Resolve dependencies</span><span class="status ok">Done · 11s</span></li>
+        <li><span>Embed metadata and icon</span><span class="status ok">Done · 1s</span></li>
+        <li><span>Package Windows x64 (NSIS)</span><span class="status ok">Done · 38s</span></li>
+        <li><span>Package Linux x86_64 (Qt IFW)</span><span class="status ok">Done · 52s</span></li>
+        <li><span>Package macOS universal (Qt IFW)</span><span class="status running">Running…</span></li>
+        <li><span>Test-install in clean VMs</span><span class="status pending">Waiting</span></li>
+      </ol>
+    </section>
+
+    <section class="panel">
+      <h2>Downloads</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>File</th><th>Platform</th><th>Size</th><th>SHA-256</th></tr></thead>
+          <tbody>
+            <tr><td><a href="#">install_python_requests.exe</a></td><td>Windows x64</td><td>31.2 MB</td><td><code>9f2c…a41e</code></td></tr>
+            <tr><td><a href="#">install_python_requests.run</a></td><td>Linux x86_64</td><td>28.7 MB</td><td><code>3b7d…0c92</code></td></tr>
+            <tr><td class="muted">install_python_requests.dmg</td><td>macOS universal</td><td class="muted">—</td><td class="muted">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Install layout</h2>
+      <p class="small muted">Where each installer puts files on the user's machine.</p>
+<pre>
+Windows
+  C:\python\3.12.4\                           shared runtime
+  C:\Program Files\requests\                  cloned project
+Linux / macOS
+  /python/3.12.4/                             shared runtime
+  /opt/requests/                              cloned project
+</pre>
+    </section>
+
+    <section class="panel">
+      <h2>Embedded metadata</h2>
+<pre>
+package          = requests
+package_version  = 2.32.3
+runtime          = python
+runtime_version  = 3.12.4
+app_id           = io.python.requests
+base             = install_python_x
+</pre>
+    </section>
+
+    <details class="panel">
+      <summary>Build log</summary>
+<pre>
+[00:00] cloning https://github.com/psf/requests @ v2.32.3
+[00:04] resolved python 3.12.4 -&gt; C:\python\3.12.4 (cached)
+[00:15] embedding metadata block (6 keys), icon 1024x1024 -&gt; .ico, .icns
+[00:16] nsis: makensis install_python_requests.nsi
+[00:54] nsis: wrote install_python_requests.exe (31.2 MB)
+[00:54] qtifw: binarycreator linux-x86_64
+[01:46] qtifw: wrote install_python_requests.run (28.7 MB)
+[01:46] qtifw: binarycreator macos-universal
+</pre>
+    </details>
+
+    <div class="actions">
+      <button type="button" class="secondary">Cancel build</button>
+      <a class="button secondary" href="new.html">Edit and rebuild</a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Prototype. Nothing on these pages is connected to a build service yet.
+  </footer>
+</body>
+</html>

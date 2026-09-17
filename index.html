@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Installer Builder</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">Installer Builder</a>
+    <nav>
+      <a href="index.html" aria-current="page">Home</a>
+      <a href="new.html">New installer</a>
+      <a href="bases.html">Base installers</a>
+      <a href="builds.html">Builds</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Real installers for Windows, Linux and macOS, straight from a GitHub repo.</h1>
+    <p class="lede">
+      No freezing and no bundlers that break. We install your project's
+      real runtime and dependencies into fixed, shared locations, clone your
+      project, and install it against them. The result is an ordinary
+      installer built with NSIS on Windows and the Qt Installer Framework on
+      Linux and macOS.
+    </p>
+
+    <div class="actions">
+      <a class="button" href="new.html">Make an installer</a>
+      <a class="button secondary" href="bases.html">Start from a base installer</a>
+    </div>
+
+    <h2>How it works</h2>
+    <div class="grid">
+      <section class="panel">
+        <h3>1. Point at a repo</h3>
+        <p>Give us a GitHub repository and a branch, tag or commit. We clone
+        the actual source code.</p>
+      </section>
+      <section class="panel">
+        <h3>2. Pin the dependencies</h3>
+        <p>Choose the runtime and its version. Each dependency is installed
+        once, in a fixed per-version folder that other installers can share.</p>
+      </section>
+      <section class="panel">
+        <h3>3. Build for every platform</h3>
+        <p>We package the result as a Windows <code>.exe</code> (NSIS) and a
+        Linux <code>.run</code> and macOS <code>.dmg</code> (Qt Installer
+        Framework).</p>
+      </section>
+    </div>
+
+    <h2>Dependencies live in fixed locations</h2>
+    <p>Every dependency is installed to <code>SYS_DRIVE / DEP / DEP_VERSION</code>.
+    Two apps that need the same Python never install it twice, and nothing is
+    stuffed into a frozen bundle.</p>
+<pre>
+Windows   C:\python\3.12.4\
+          C:\git\2.46.0\
+Linux     /python/3.12.4/
+macOS     /python/3.12.4/
+</pre>
+
+    <h2>Base installers are reusable</h2>
+    <p>Every installer is built from a base installer. For example,
+    <code>install_python_x.exe</code> installs the Python package
+    <code>x</code>. To make a new installer you change the target, embed
+    your own metadata and swap in your own icon. You don't rebuild the whole
+    pipeline.</p>
+<pre>
+install_python_requests.exe   -&gt; installs the "requests" package
+install_python_black.exe      -&gt; installs the "black" package
+install_node_prettier.exe     -&gt; installs the "prettier" package
+</pre>
+  </main>
+
+  <footer class="site-footer">
+    Prototype. Nothing on these pages is connected to a build service yet.
+  </footer>
+</body>
+</html>

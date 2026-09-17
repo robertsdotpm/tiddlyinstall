@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Base installers · Installer Builder</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">Installer Builder</a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="new.html">New installer</a>
+      <a href="bases.html" aria-current="page">Base installers</a>
+      <a href="builds.html">Builds</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Base installers</h1>
+    <p class="lede">
+      A base installer is a finished, tested installer with one open slot,
+      the <code>x</code>. Fill the slot, embed your metadata, swap the icon,
+      and you have a new installer without writing any build config.
+    </p>
+    <p class="prototype-note">Prototype: sample data.</p>
+
+    <form class="panel" action="bases.html" method="get">
+      <div class="row">
+        <div class="field">
+          <label for="q">Search</label>
+          <input type="text" id="q" name="q" placeholder="python, node, cli…">
+        </div>
+        <div class="field">
+          <label for="runtime-filter">Runtime</label>
+          <select id="runtime-filter" name="runtime">
+            <option>Any</option><option>Python</option><option>Node.js</option><option>Ruby</option><option>None</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="platform-filter">Platform</label>
+          <select id="platform-filter" name="platform">
+            <option>Any</option><option>Windows</option><option>Linux</option><option>macOS</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="secondary">Filter</button>
+    </form>
+
+    <div class="grid">
+      <section class="panel">
+        <h2><code>install_python_x</code></h2>
+        <p>Installs the Python package <code>x</code> from PyPI or a GitHub repo into a pinned Python.</p>
+        <p><span class="tag">Python 3.10–3.13</span><span class="tag">Windows</span><span class="tag">Linux</span><span class="tag">macOS</span></p>
+        <p class="small muted">Slot: package name · Used by 1,284 installers</p>
+        <a class="button" href="new.html">Use this base</a>
+      </section>
+
+      <section class="panel">
+        <h2><code>install_node_x</code></h2>
+        <p>Installs the npm package <code>x</code> globally against a pinned Node.js, with a launcher on PATH.</p>
+        <p><span class="tag">Node 18, 20, 22</span><span class="tag">Windows</span><span class="tag">Linux</span><span class="tag">macOS</span></p>
+        <p class="small muted">Slot: package name · Used by 412 installers</p>
+        <a class="button" href="new.html">Use this base</a>
+      </section>
+
+      <section class="panel">
+        <h2><code>install_ruby_x</code></h2>
+        <p>Installs the gem <code>x</code> into a pinned Ruby and adds its executables to PATH.</p>
+        <p><span class="tag">Ruby 3.2, 3.3</span><span class="tag">Windows</span><span class="tag">Linux</span><span class="tag">macOS</span></p>
+        <p class="small muted">Slot: gem name · Used by 97 installers</p>
+        <a class="button" href="new.html">Use this base</a>
+      </section>
+
+      <section class="panel">
+        <h2><code>install_github_x</code></h2>
+        <p>Clones the GitHub repo <code>x</code> at a tag and runs its install command. The most general base.</p>
+        <p><span class="tag">Any runtime</span><span class="tag">Windows</span><span class="tag">Linux</span><span class="tag">macOS</span></p>
+        <p class="small muted">Slot: owner/repo · Used by 356 installers</p>
+        <a class="button" href="new.html">Use this base</a>
+      </section>
+
+      <section class="panel">
+        <h2><code>install_python_gui_x</code></h2>
+        <p>Like <code>install_python_x</code>, but adds desktop shortcuts and runs the app without a console window.</p>
+        <p><span class="tag">Python 3.11–3.13</span><span class="tag">Windows</span><span class="tag">macOS</span></p>
+        <p class="small muted">Slot: package name · Used by 203 installers</p>
+        <a class="button" href="new.html">Use this base</a>
+      </section>
+    </div>
+
+    <h2>What a base installer can change</h2>
+    <div class="table-wrap panel">
+      <table>
+        <thead><tr><th>Part</th><th>Changeable without rebuilding?</th><th>How</th></tr></thead>
+        <tbody>
+          <tr><td>Target (<code>x</code>)</td><td class="status ok">Yes</td><td>File name and embedded metadata</td></tr>
+          <tr><td>Metadata (name, version, publisher…)</td><td class="status ok">Yes</td><td>Embedded key/value block</td></tr>
+          <tr><td>Icon</td><td class="status ok">Yes</td><td>Resource replaced in the file</td></tr>
+          <tr><td>Runtime version</td><td class="status running">To be decided</td><td>Metadata, or a new base</td></tr>
+          <tr><td>Signing</td><td class="status pending">No</td><td>Re-signed after changes</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Prototype. Nothing on these pages is connected to a build service yet.
+  </footer>
+</body>
+</html>

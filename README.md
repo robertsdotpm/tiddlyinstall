@@ -1,2 +1,16 @@
 # installer-builder
 Build installers and executables for Windows, Linux, and macOS
+
+## Prototype front-end
+
+Plain HTML and CSS. No build step, no server. Open `index.html` in a browser.
+
+| Page | What it is |
+| --- | --- |
+| `index.html` | What the service does |
+| `new.html` | The installer form: source repo, runtime and dependencies, platforms, app identity, launch options, embedded metadata, output naming |
+| `bases.html` | Catalogue of reusable base installers (`install_python_x`, …) |
+| `builds.html` | List of builds |
+| `build.html` | One build: steps, downloads, install layout, metadata, log |
+
+All data is sample data. Submitting the form just opens `build.html`.

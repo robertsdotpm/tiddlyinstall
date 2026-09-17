@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>New installer · Installer Builder</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">Installer Builder</a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="new.html" aria-current="page">New installer</a>
+      <a href="bases.html">Base installers</a>
+      <a href="builds.html">Builds</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>New installer</h1>
+    <p class="prototype-note">
+      Prototype: submitting this form opens a sample build page. Nothing is
+      uploaded or built.
+    </p>
+
+    <form action="build.html" method="get">
+
+      <!-- 1. Starting point -->
+      <fieldset>
+        <legend><span class="step">1</span>Starting point</legend>
+
+        <div class="option-cards">
+          <label class="option-card">
+            <input type="radio" name="start" value="scratch" id="start-scratch" checked>
+            <strong>From a GitHub project</strong>
+            <span class="muted small">Clone a repository and install it against pinned dependencies.</span>
+          </label>
+          <label class="option-card">
+            <input type="radio" name="start" value="base" id="start-base">
+            <strong>Reuse a base installer</strong>
+            <span class="muted small">Take an existing installer such as <code>install_python_x</code> and change its target, metadata and icon.</span>
+          </label>
+        </div>
+
+        <div class="base-only">
+          <div class="row" style="margin-top:16px">
+            <div class="field">
+              <label for="base">Base installer</label>
+              <select id="base" name="base">
+                <option value="install_python_x">install_python_x (installs a Python package)</option>
+                <option value="install_node_x">install_node_x (installs an npm package)</option>
+                <option value="install_ruby_x">install_ruby_x (installs a Ruby gem)</option>
+                <option value="install_github_x">install_github_x (clones and installs a repo)</option>
+              </select>
+              <span class="hint"><a href="bases.html">Browse all base installers</a></span>
+            </div>
+            <div class="field">
+              <label for="base-target">Replace <code>x</code> with</label>
+              <input type="text" id="base-target" name="base_target" placeholder="requests" pattern="[A-Za-z0-9._\-]+">
+              <span class="hint">The package or project the installer should install.</span>
+            </div>
+            <div class="field">
+              <label for="base-target-version">Target version</label>
+              <input type="text" id="base-target-version" name="base_target_version" placeholder="latest, 2.32.3, &gt;=2,&lt;3">
+            </div>
+          </div>
+          <p class="small muted">Output name follows the base: <code>install_python_<em>requests</em>.exe</code>.
+            Base installers already include the runtime, dependency layout and
+            build steps, so you can skip steps 2 and 3 unless you want to override them.</p>
+        </div>
+      </fieldset>
+
+      <!-- 2. Source project -->
+      <fieldset>
+        <legend><span class="step">2</span>Source project</legend>
+        <p class="base-only small muted" style="margin-top:0">Optional for base installers.</p>
+
+        <div class="field">
+          <label for="repo">GitHub repository URL</label>
+          <input type="url" id="repo" name="repo" placeholder="https://github.com/owner/project" pattern="https://github\.com/[^/]+/[^/]+/?">
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="ref-type">Build from</label>
+            <select id="ref-type" name="ref_type">
+              <option value="tag">Tag / release</option>
+              <option value="branch">Branch</option>
+              <option value="commit">Commit SHA</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="ref">Ref</label>
+            <input type="text" id="ref" name="ref" placeholder="v1.4.0">
+          </div>
+          <div class="field">
+            <label for="subdir">Subdirectory</label>
+            <input type="text" id="subdir" name="subdir" placeholder="(repo root)">
+            <span class="hint">For monorepos.</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="install-cmd">Install command</label>
+          <textarea id="install-cmd" name="install_cmd" placeholder="{python} -m pip install ."></textarea>
+          <span class="hint">Runs inside the cloned project. <code>{python}</code>, <code>{node}</code>, etc. expand to the pinned runtime's path.</span>
+        </div>
+
+        <details>
+          <summary>Private repositories and submodules</summary>
+          <div class="field">
+            <label for="token">Read-only access token</label>
+            <input type="password" id="token" name="token" autocomplete="off" placeholder="github_pat_…">
+            <span class="hint">Used only to clone the repo. It is never embedded in the installer.</span>
+          </div>
+          <label class="choice"><input type="checkbox" name="submodules" checked> Clone submodules</label>
+          <label class="choice"><input type="checkbox" name="lfs"> Fetch Git LFS files</label>
+        </details>
+      </fieldset>
+
+      <!-- 3. Runtime and dependencies -->
+      <fieldset>
+        <legend><span class="step">3</span>Runtime and dependencies</legend>
+        <p class="base-only small muted" style="margin-top:0">Inherited from the base installer. Change these only to override it.</p>
+
+        <div class="row">
+          <div class="field">
+            <label for="runtime">Runtime</label>
+            <select id="runtime" name="runtime">
+              <option>Python</option>
+              <option>Node.js</option>
+              <option>Ruby</option>
+              <option>Perl</option>
+              <option>PHP</option>
+              <option>Java (JRE)</option>
+              <option>None (native binary)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="runtime-version">Version</label>
+            <input type="text" id="runtime-version" name="runtime_version" list="python-versions" placeholder="3.12.4">
+            <datalist id="python-versions">
+              <option value="3.13.1">
+              <option value="3.12.4">
+              <option value="3.11.9">
+              <option value="3.10.14">
+            </datalist>
+            <span class="hint">Use an exact version. It becomes part of the install path.</span>
+          </div>
+        </div>
+
+        <span class="label">Other dependencies</span>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Name</th><th>Version</th><th>Kind</th><th>Platforms</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="text" name="dep_name" value="git" aria-label="Dependency name"></td>
+                <td><input type="text" name="dep_version" value="2.46.0" aria-label="Dependency version"></td>
+                <td><select name="dep_kind" aria-label="Dependency kind"><option>Tool</option><option>Library</option><option>Runtime</option></select></td>
+                <td><select name="dep_platforms" aria-label="Dependency platforms"><option>All</option><option>Windows only</option><option>Linux only</option><option>macOS only</option></select></td>
+              </tr>
+              <tr>
+                <td><input type="text" name="dep_name" value="ffmpeg" aria-label="Dependency name"></td>
+                <td><input type="text" name="dep_version" value="7.0.1" aria-label="Dependency version"></td>
+                <td><select name="dep_kind" aria-label="Dependency kind"><option>Tool</option><option>Library</option><option>Runtime</option></select></td>
+                <td><select name="dep_platforms" aria-label="Dependency platforms"><option>All</option><option>Windows only</option><option>Linux only</option><option>macOS only</option></select></td>
+              </tr>
+              <tr>
+                <td><input type="text" name="dep_name" aria-label="Dependency name"></td>
+                <td><input type="text" name="dep_version" aria-label="Dependency version"></td>
+                <td><select name="dep_kind" aria-label="Dependency kind"><option>Tool</option><option>Library</option><option>Runtime</option></select></td>
+                <td><select name="dep_platforms" aria-label="Dependency platforms"><option>All</option><option>Windows only</option><option>Linux only</option><option>macOS only</option></select></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="small muted">Prototype: fixed rows. The real form would let you add and remove rows.</p>
+
+        <div class="field">
+          <label for="requirements">Or import from a file in the repo</label>
+          <input type="text" id="requirements" name="requirements_file" placeholder="requirements.txt, package.json, Gemfile">
+        </div>
+
+        <div class="panel" style="margin-top:12px">
+          <span class="label">Where dependencies will be installed</span>
+          <dl class="path-preview small">
+            <dt>Windows</dt><dd><code>C:\python\3.12.4\</code>, <code>C:\git\2.46.0\</code>, <code>C:\ffmpeg\7.0.1\</code></dd>
+            <dt>Linux</dt><dd><code>/python/3.12.4/</code>, <code>/git/2.46.0/</code>, <code>/ffmpeg/7.0.1/</code></dd>
+            <dt>macOS</dt><dd><code>/python/3.12.4/</code>, <code>/git/2.46.0/</code>, <code>/ffmpeg/7.0.1/</code></dd>
+          </dl>
+          <span class="hint">Pattern: <code>SYS_DRIVE / DEP / DEP_VERSION</code>. Sample values shown.</span>
+        </div>
+
+        <span class="label">If a dependency is already installed on the machine</span>
+        <label class="choice"><input type="radio" name="existing_dep" value="reuse" checked> Reuse it (default: shared between installers)</label>
+        <label class="choice"><input type="radio" name="existing_dep" value="verify"> Reuse it only if its checksum matches</label>
+        <label class="choice"><input type="radio" name="existing_dep" value="reinstall"> Always reinstall it</label>
+
+        <label class="choice" style="margin-top:8px"><input type="checkbox" name="keep_deps_on_uninstall" checked> Keep shared dependencies when the app is uninstalled</label>
+      </fieldset>
+
+      <!-- 4. Target platforms -->
+      <fieldset>
+        <legend><span class="step">4</span>Target platforms</legend>
+
+        <div class="platform">
+          <label class="choice"><input type="checkbox" name="target_windows" checked> <strong>Windows</strong> <span class="muted small">(NSIS, <code>.exe</code>)</span></label>
+          <div class="platform-settings">
+            <label class="choice"><input type="checkbox" name="win_x64" checked> x64</label>
+            <label class="choice"><input type="checkbox" name="win_arm64"> arm64</label>
+            <label class="choice"><input type="checkbox" name="win_admin" checked> Require administrator rights</label>
+            <details>
+              <summary>Code signing</summary>
+              <div class="field">
+                <label for="win-cert">Certificate (.pfx)</label>
+                <input type="file" id="win-cert" name="win_cert" accept=".pfx,.p12">
+              </div>
+              <div class="field">
+                <label for="win-cert-pass">Certificate password</label>
+                <input type="password" id="win-cert-pass" name="win_cert_pass" autocomplete="off">
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <div class="platform">
+          <label class="choice"><input type="checkbox" name="target_linux" checked> <strong>Linux</strong> <span class="muted small">(Qt Installer Framework, <code>.run</code>)</span></label>
+          <div class="platform-settings">
+            <label class="choice"><input type="checkbox" name="linux_x64" checked> x86_64</label>
+            <label class="choice"><input type="checkbox" name="linux_arm64"> aarch64</label>
+            <div class="field">
+              <label for="linux-min">Oldest glibc to support</label>
+              <select id="linux-min" name="linux_glibc">
+                <option>2.28 (RHEL 8, Debian 10)</option>
+                <option>2.31 (Ubuntu 20.04)</option>
+                <option>2.35 (Ubuntu 22.04)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="platform">
+          <label class="choice"><input type="checkbox" name="target_macos" checked> <strong>macOS</strong> <span class="muted small">(Qt Installer Framework, <code>.dmg</code>)</span></label>
+          <div class="platform-settings">
+            <label class="choice"><input type="checkbox" name="mac_arm64" checked> Apple silicon (arm64)</label>
+            <label class="choice"><input type="checkbox" name="mac_x64" checked> Intel (x86_64)</label>
+            <div class="field">
+              <label for="mac-min">Minimum macOS</label>
+              <select id="mac-min" name="mac_min">
+                <option>12 Monterey</option>
+                <option>13 Ventura</option>
+                <option>14 Sonoma</option>
+                <option>15 Sequoia</option>
+              </select>
+            </div>
+            <details>
+              <summary>Signing and notarization</summary>
+              <div class="field">
+                <label for="mac-identity">Developer ID Application identity</label>
+                <input type="text" id="mac-identity" name="mac_identity" placeholder="Developer ID Application: Your Name (TEAMID)">
+              </div>
+              <div class="field">
+                <label for="mac-cert">Certificate (.p12)</label>
+                <input type="file" id="mac-cert" name="mac_cert" accept=".p12">
+              </div>
+              <label class="choice"><input type="checkbox" name="mac_notarize"> Notarize with Apple</label>
+            </details>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- 5. App identity -->
+      <fieldset>
+        <legend><span class="step">5</span>App identity</legend>
+
+        <div class="row">
+          <div class="field">
+            <label for="app-name">Display name</label>
+            <input type="text" id="app-name" name="app_name" placeholder="My App">
+          </div>
+          <div class="field">
+            <label for="app-version">Version</label>
+            <input type="text" id="app-version" name="app_version" placeholder="1.4.0">
+          </div>
+          <div class="field">
+            <label for="app-id">App ID</label>
+            <input type="text" id="app-id" name="app_id" placeholder="com.example.myapp">
+            <span class="hint">Reverse-DNS. Used for upgrades and uninstall.</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="publisher">Publisher</label>
+            <input type="text" id="publisher" name="publisher" placeholder="Example Ltd">
+          </div>
+          <div class="field">
+            <label for="website">Website</label>
+            <input type="url" id="website" name="website" placeholder="https://example.com">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="description">Short description</label>
+          <input type="text" id="description" name="description" maxlength="200" placeholder="Shown in the installer and in Add/Remove Programs.">
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="icon">Icon</label>
+            <input type="file" id="icon" name="icon" accept=".png,.ico,.icns,.svg">
+            <span class="hint">A 1024×1024 PNG or SVG. We generate <code>.ico</code> and <code>.icns</code> from it.</span>
+          </div>
+          <div class="field">
+            <label for="license">License</label>
+            <select id="license" name="license">
+              <option value="repo">Use the LICENSE file from the repo</option>
+              <option>MIT</option>
+              <option>Apache-2.0</option>
+              <option>GPL-3.0-only</option>
+              <option>BSD-3-Clause</option>
+              <option value="none">Don't show a license page</option>
+            </select>
+          </div>
+        </div>
+
+        <details>
+          <summary>Installer appearance</summary>
+          <div class="row">
+            <div class="field">
+              <label for="banner">Banner image</label>
+              <input type="file" id="banner" name="banner" accept=".png,.bmp">
+            </div>
+            <div class="field">
+              <label for="welcome">Welcome text</label>
+              <input type="text" id="welcome" name="welcome" placeholder="This will install My App on your computer.">
+            </div>
+          </div>
+        </details>
+      </fieldset>
+
+      <!-- 6. Launch and integration -->
+      <fieldset>
+        <legend><span class="step">6</span>Launch and system integration</legend>
+
+        <div class="row">
+          <div class="field">
+            <label for="entry">Launch command</label>
+            <input type="text" id="entry" name="entry" placeholder="{python} -m myapp">
+            <span class="hint">Used for shortcuts and "run after install".</span>
+          </div>
+          <div class="field">
+            <label for="app-dir">App install folder</label>
+            <input type="text" id="app-dir" name="app_dir" placeholder="{programs}/My App">
+            <span class="hint">Where the cloned project goes. Dependencies stay in their fixed locations.</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <span class="label">Shortcuts</span>
+            <label class="choice"><input type="checkbox" name="shortcut_menu" checked> Start menu / app launcher</label>
+            <label class="choice"><input type="checkbox" name="shortcut_desktop"> Desktop</label>
+            <label class="choice"><input type="checkbox" name="cli_on_path"> Add a command-line launcher to PATH</label>
+          </div>
+          <div>
+            <span class="label">After install</span>
+            <label class="choice"><input type="checkbox" name="run_after"> Offer to launch the app</label>
+            <label class="choice"><input type="checkbox" name="uninstaller" checked> Register an uninstaller</label>
+            <label class="choice"><input type="checkbox" name="auto_update"> Check for updates using GitHub releases</label>
+          </div>
+        </div>
+
+        <details>
+          <summary>Install hooks</summary>
+          <div class="field">
+            <label for="pre-hook">Before install</label>
+            <textarea id="pre-hook" name="pre_hook" placeholder="# runs before the project is installed"></textarea>
+          </div>
+          <div class="field">
+            <label for="post-hook">After install</label>
+            <textarea id="post-hook" name="post_hook" placeholder="{python} -m myapp --init-config"></textarea>
+          </div>
+        </details>
+      </fieldset>
+
+      <!-- 7. Embedded metadata -->
+      <fieldset>
+        <legend><span class="step">7</span>Embedded metadata</legend>
+        <p class="small muted" style="margin-top:0">
+          Key/value data stored inside the installer file. A base installer
+          reads it at run time, so the same binary can be retargeted by
+          changing only this data and the icon.
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Key</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><input type="text" name="meta_key" value="package" aria-label="Metadata key"></td>
+                <td><input type="text" name="meta_value" placeholder="requests" aria-label="Metadata value"></td>
+              </tr>
+              <tr>
+                <td><input type="text" name="meta_key" value="package_version" aria-label="Metadata key"></td>
+                <td><input type="text" name="meta_value" placeholder="2.32.3" aria-label="Metadata value"></td>
+              </tr>
+              <tr>
+                <td><input type="text" name="meta_key" aria-label="Metadata key"></td>
+                <td><input type="text" name="meta_value" aria-label="Metadata value"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </fieldset>
+
+      <!-- 8. Output -->
+      <fieldset>
+        <legend><span class="step">8</span>Output</legend>
+
+        <div class="field">
+          <label for="filename">File name pattern</label>
+          <input type="text" id="filename" name="filename" value="install_{runtime}_{package}">
+          <span class="hint">Tokens: <code>{runtime}</code> <code>{package}</code> <code>{version}</code> <code>{platform}</code> <code>{arch}</code>. The file extension is added for each platform.</span>
+        </div>
+
+        <span class="label">Example output</span>
+        <ul class="small">
+          <li><code>install_python_requests.exe</code> (Windows x64)</li>
+          <li><code>install_python_requests.run</code> (Linux x86_64)</li>
+          <li><code>install_python_requests.dmg</code> (macOS universal)</li>
+        </ul>
+
+        <label class="choice"><input type="checkbox" name="publish_base"> Publish this as a base installer others can reuse</label>
+        <label class="choice"><input type="checkbox" name="public_build"> Make the build page public</label>
+      </fieldset>
+
+      <div class="actions">
+        <button type="submit">Build installers</button>
+        <button type="button" class="secondary">Save draft</button>
+        <span class="small muted">Prototype only. Nothing is uploaded.</span>
+      </div>
+    </form>
+  </main>
+
+  <footer class="site-footer">
+    Prototype. Nothing on these pages is connected to a build service yet.
+  </footer>
+</body>
+</html>
