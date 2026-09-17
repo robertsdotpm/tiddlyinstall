@@ -421,3 +421,53 @@ form:has(#rt-ruby:checked):has(#tpl-tray:checked) .editor-files { display: none;
 form:has(#script-tab-win:checked) .script-panel-win,
 form:has(#script-tab-unix:checked) .script-panel-unix { display: block; }
 textarea.code.code-script { min-height: 110px; border-top-left-radius: 5px; }
+
+/* Icon picker. */
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+  gap: 8px;
+}
+.icon-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: normal;
+}
+.icon-tile input { position: absolute; opacity: 0; pointer-events: none; }
+.icon-tile:has(input:checked) { border-color: var(--accent); outline: 2px solid var(--accent); }
+.icon-tile:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.icon-art {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+}
+.icon-art svg {
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.icon-name { font-size: 0.8em; color: var(--muted); }
+
+/* Launch command follows the Language choice (no JS). */
+.entry { display: none; }
+form:has(#runtime option[value="python"]:checked) .entry-python,
+form:has(#runtime option[value="node"]:checked) .entry-node,
+form:has(#runtime option[value="ruby"]:checked) .entry-ruby,
+form:has(#runtime option[value="none"]:checked) .entry-none { display: block; }
+.by-lang { display: none; }
+form:has(#runtime option[value="python"]:checked) .lang-python,
+form:has(#runtime option[value="node"]:checked) .lang-node,
+form:has(#runtime option[value="ruby"]:checked) .lang-ruby,
+form:has(#runtime option[value="none"]:checked) .lang-none { display: inline; }
