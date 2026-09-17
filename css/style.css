@@ -399,3 +399,25 @@ form:has(#rt-ruby:checked):has(#tpl-web:checked) .output,
 form:has(#rt-ruby:checked):has(#tpl-web:checked) .editor-files,
 form:has(#rt-ruby:checked):has(#tpl-tray:checked) .output,
 form:has(#rt-ruby:checked):has(#tpl-tray:checked) .editor-files { display: none; }
+
+/* Tabs (no JS): radio inputs styled as tabs, panels shown with :has. */
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+.tab {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 6px 12px;
+  border: 1px solid transparent;
+  border-bottom: 0;
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: -1px;
+}
+.tab input { position: absolute; opacity: 0; pointer-events: none; }
+.tab:has(input:checked) { border-color: var(--border); background: var(--panel); }
+.tab:has(input:focus-visible) { outline: 2px solid var(--accent); }
+.tab-panel { display: none; }
+form:has(#script-tab-win:checked) .script-panel-win,
+form:has(#script-tab-unix:checked) .script-panel-unix { display: block; }
+textarea.code.code-script { min-height: 110px; border-top-left-radius: 5px; }

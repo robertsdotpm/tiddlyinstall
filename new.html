@@ -163,13 +163,37 @@
           <label class="choice"><input type="checkbox" name="uninstaller" checked> Register an uninstaller</label>
           <details>
             <summary>Install scripts</summary>
-            <div class="field">
-              <label for="pre-hook">Before install</label>
-              <textarea id="pre-hook" name="pre_hook"></textarea>
+            <p class="small muted" style="margin-top:0">Optional. Scripts run after the user has seen what the installer will do and clicked Install.
+              People can view them on that screen. If a script exits with an error, the install stops and shows its output.</p>
+
+            <div class="tabs" role="tablist">
+              <label class="tab"><input type="radio" name="script_tab" id="script-tab-win" checked> Windows <span class="muted">(batch)</span></label>
+              <label class="tab"><input type="radio" name="script_tab" id="script-tab-unix"> Linux &amp; macOS <span class="muted">(sh)</span></label>
             </div>
-            <div class="field">
-              <label for="post-hook">After install</label>
-              <textarea id="post-hook" name="post_hook"></textarea>
+
+            <div class="tab-panel script-panel-win">
+              <div class="field">
+                <label for="win-pre">Before installing files</label>
+                <textarea class="code code-script" id="win-pre" name="win_pre_script" spellcheck="false" placeholder="@echo off&#10;rem Runs before any files are written"></textarea>
+              </div>
+              <div class="field">
+                <label for="win-post">After installing files</label>
+                <textarea class="code code-script" id="win-post" name="win_post_script" spellcheck="false" placeholder="@echo off&#10;&quot;%IB_RUNTIME_DIR%\python.exe&quot; -m myapp --init-config"></textarea>
+              </div>
+              <span class="hint">Available: <code>%IB_APP_DIR%</code> <code>%IB_RUNTIME_DIR%</code> <code>%IB_APP_NAME%</code>. Runs with the installer's permissions (usually administrator).</span>
+            </div>
+
+            <div class="tab-panel script-panel-unix">
+              <div class="field">
+                <label for="unix-pre">Before installing files</label>
+                <textarea class="code code-script" id="unix-pre" name="unix_pre_script" spellcheck="false" placeholder="#!/bin/sh&#10;# Runs before any files are written"></textarea>
+              </div>
+              <div class="field">
+                <label for="unix-post">After installing files</label>
+                <textarea class="code code-script" id="unix-post" name="unix_post_script" spellcheck="false" placeholder="#!/bin/sh&#10;&quot;$IB_RUNTIME_DIR/bin/python3&quot; -m myapp --init-config"></textarea>
+              </div>
+              <span class="hint">Available: <code>$IB_APP_DIR</code> <code>$IB_RUNTIME_DIR</code> <code>$IB_APP_NAME</code>. Plain POSIX <code>sh</code>, which every Linux and macOS system has; bash isn't guaranteed.
+                Runs with the installer's permissions (root for installs for all users).</span>
             </div>
           </details>
         </details>
