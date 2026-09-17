@@ -228,7 +228,8 @@
           </div>
           <div class="field">
             <label for="filename">File name</label>
-            <input type="text" id="filename" name="filename" placeholder="install_{runtime}_{package}">
+            <input type="text" id="filename" name="filename" maxlength="255" pattern="[A-Za-z0-9._\-{}]+" placeholder="install_{runtime}_{package}">
+            <span class="hint">Up to 255 characters including the extension. Letters, numbers, <code>_</code> <code>-</code> <code>.</code> only.</span>
           </div>
           <div class="field">
             <label for="meta">Extra embedded metadata</label>
