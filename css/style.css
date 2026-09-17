@@ -475,3 +475,25 @@ form:has(#runtime option[value="none"]:checked) .lang-none { display: inline; }
 form:has(#mode-ours:checked) .mode-ours-inline { display: inline; }
 form:has(#mode-yours:checked) .mode-yours-inline,
 form:has(#mode-unsigned:checked) .mode-unsigned-inline { display: inline; }
+
+/* Python-only feature box in the runtime section. */
+.feature-box {
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--ok);
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin: 0 0 14px;
+}
+.feature-box table { margin-top: 6px; }
+.badge {
+  display: inline-block;
+  font-size: 0.75em;
+  font-weight: 600;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--ok);
+  color: var(--ok);
+  vertical-align: middle;
+}
+.python-only { display: none; }
+form:has(#runtime option[value="python"]:checked) .python-only { display: block; }

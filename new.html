@@ -287,6 +287,24 @@
             <span class="hint">At install time the installer picks the highest version that matches and runs on the user's OS.
               Operators: <code>==</code> <code>!=</code> <code>&gt;=</code> <code>&lt;=</code> <code>&gt;</code> <code>&lt;</code> <code>~=</code>, and wildcards like <code>==3.12.*</code>. Separate with commas.</span>
           </div>
+
+          <div class="feature-box python-only">
+            <label class="choice"><input type="checkbox" name="highest_with_asyncio">
+              <span><strong>Choose the highest version with asyncio support</strong> <span class="badge">tested</span><br>
+              <span class="small muted">On each Windows version, install the highest Python that has been tested to install and run <code>asyncio</code> there, instead of whatever python.org lists as newest.</span></span></label>
+            <div class="table-wrap">
+              <table class="small">
+                <thead><tr><th>Windows</th><th>Python installed</th><th>Also installs</th></tr></thead>
+                <tbody>
+                  <tr><td>XP</td><td>3.5, XP backport</td><td>Visual C++ runtimes</td></tr>
+                  <tr><td>Vista</td><td>3.7.0</td><td>Visual C++ runtimes</td></tr>
+                  <tr><td>7, 8, 8.1</td><td>3.8.0</td><td></td></tr>
+                  <tr><td>10, 11</td><td>Newest in your range (3.13.0 tested)</td><td></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <span class="hint">If your version range rules out the tested build, the installer stops on that Windows version and says why.</span>
+          </div>
           <div class="field">
             <label for="install-cmd">Install command</label>
             <input type="text" id="install-cmd" name="install_cmd" placeholder="{python} -m pip install .">
