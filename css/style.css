@@ -350,3 +350,52 @@ form:has(#tpl-tray:checked) .tpl-tray-only,
 form:has(#tpl-window:checked) .tpl-gui-only,
 form:has(#tpl-web:checked) .tpl-gui-only,
 form:has(#tpl-tray:checked) .tpl-gui-only { display: block; }
+
+/* Language choice. */
+.lang-choices { display: flex; flex-wrap: wrap; gap: 8px; }
+.lang-choice {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 14px 5px 10px;
+  cursor: pointer;
+  font-weight: normal;
+}
+.lang-choice:has(input:checked) { border-color: var(--accent); outline: 1px solid var(--accent); }
+
+.unavailable {
+  margin: 8px 0 16px;
+  padding: 12px 14px;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  color: var(--muted);
+}
+
+/* Show only the code, hints and labels for the chosen language and template (no JS). */
+.combo, .rt-inline { display: none; }
+form:has(#rt-python:checked):has(#tpl-script:checked) .combo-python-script,
+form:has(#rt-python:checked):has(#tpl-window:checked) .combo-python-window,
+form:has(#rt-python:checked):has(#tpl-web:checked) .combo-python-web,
+form:has(#rt-python:checked):has(#tpl-tray:checked) .combo-python-tray,
+form:has(#rt-node:checked):has(#tpl-script:checked) .combo-node-script,
+form:has(#rt-node:checked):has(#tpl-web:checked) .combo-node-web,
+form:has(#rt-node:checked):has(#tpl-tray:checked) .combo-node-tray,
+form:has(#rt-ruby:checked):has(#tpl-script:checked) .combo-ruby-script,
+form:has(#rt-ruby:checked):has(#tpl-window:checked) .combo-ruby-window { display: block; }
+form:has(#rt-python:checked) .rt-python-only,
+form:has(#rt-node:checked) .rt-node-only,
+form:has(#rt-ruby:checked) .rt-ruby-only { display: inline; }
+form:has(#rt-node:checked) .card-window,
+form:has(#rt-ruby:checked) .card-web,
+form:has(#rt-ruby:checked) .card-tray { display: none; }
+form:has(#rt-node:checked):has(#tpl-window:checked) .combo-unavailable,
+form:has(#rt-ruby:checked):has(#tpl-web:checked) .combo-unavailable,
+form:has(#rt-ruby:checked):has(#tpl-tray:checked) .combo-unavailable { display: block; }
+form:has(#rt-node:checked):has(#tpl-window:checked) .output,
+form:has(#rt-node:checked):has(#tpl-window:checked) .editor-files,
+form:has(#rt-ruby:checked):has(#tpl-web:checked) .output,
+form:has(#rt-ruby:checked):has(#tpl-web:checked) .editor-files,
+form:has(#rt-ruby:checked):has(#tpl-tray:checked) .output,
+form:has(#rt-ruby:checked):has(#tpl-tray:checked) .editor-files { display: none; }

@@ -9,7 +9,7 @@ Plain HTML and CSS. No build step, no server. Open `index.html` in a browser.
 | --- | --- |
 | `index.html` | What the service does |
 | `new.html` | The installer form. Main view: app name and icon, what to package, language, platforms. Everything else, including the signing choice, is optional and collapsed under "Customise" with its default shown |
-| `create.html` | Write an app in the browser: templates, editor, packages, Run and Make installer |
+| `create.html` | Write an app in the browser: pick Python, Node.js or Ruby and a template, edit, add packages, Run and Make installer |
 | `bases.html` | Catalogue of base installers, and the three ways to ship them |
 | `edit.html` | Mock-up of editing an unsigned installer in the browser |
 | `builds.html` | List of builds |
