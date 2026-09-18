@@ -215,7 +215,7 @@ func (c *Catalog) candidates(rt *Runtime, family, machine string) []*Release {
 		}
 		vi := len(pol.Variants)
 		if pol != nil {
-			if contains(pol.ExcludeVariants, e.VariantStr()) {
+			if contains(pol.ExcludeVariants, e.VariantStr()) || contains(pol.ExcludeVariantsOn[family], e.VariantStr()) {
 				continue
 			}
 			if i := indexOf(pol.Variants, e.VariantStr()); i >= 0 {
@@ -464,6 +464,8 @@ func versionTokens(v Version) *strings.Replacer {
 	return strings.NewReplacer("{version}", v.Raw, "{vmajor}", get(0), "{vminor}", get(1), "{vmm}", get(0)+get(1))
 }
 
+var envRef = regexp.MustCompile(`\{env:[A-Za-z_][A-Za-z0-9_]*\}`)
+
 var appDirPath = regexp.MustCompile(`\{app_dir\}[^ "]*`)
 
 // quoteAppPaths quotes bare {app_dir}/... paths in an app's own commands:
@@ -656,6 +658,28 @@ func (c *Catalog) writeTarget(w *ibtext.Writer, app *App, pol *RuntimePolicy, b 
 			w.Add("path", fix(p))
 		}
 	}
+	// {env:NAME} in the app's own commands takes the value the plan gives
+	// NAME (e.g. JAVA_HOME, which differs between JDK layouts).
+	envVals := map[string]string{}
+	if l := r.Launch; l != nil {
+		for k, v := range l.Env {
+			if v != nil {
+				envVals[k] = fix(*v)
+			}
+		}
+	}
+	if pi := r.ProjectInstall; pi != nil {
+		for k, v := range pi.Env {
+			if v != nil {
+				envVals[k] = fix(*v)
+			}
+		}
+	}
+	expandEnv := func(s string) string {
+		return envRef.ReplaceAllStringFunc(s, func(m string) string {
+			return envVals[m[5:len(m)-1]]
+		})
+	}
 	// Project install.
 	install := ""
 	switch {
@@ -687,7 +711,7 @@ func (c *Catalog) writeTarget(w *ibtext.Writer, app *App, pol *RuntimePolicy, b 
 			}
 		}
 		install = strings.ReplaceAll(install, "{package}", app.PackageCmd)
-		w.Add("install", fix(install))
+		w.Add("install", fix(expandEnv(install)))
 	}
 	// Launch: the app's command, with {runtime} expanded to the runtime's
 	// program and its own flags.
@@ -702,7 +726,7 @@ func (c *Catalog) writeTarget(w *ibtext.Writer, app *App, pol *RuntimePolicy, b 
 		}
 		launch = strings.ReplaceAll(launch, "{runtime}", rc)
 	}
-	w.Add("launch", fix(launch))
+	w.Add("launch", fix(expandEnv(launch)))
 }
 
 func sortedKeys(m map[string]*string) []string {

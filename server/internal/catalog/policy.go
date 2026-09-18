@@ -34,6 +34,9 @@ type RuntimePolicy struct {
 	Variants        []string            `json:"variants"`
 	Only            bool                `json:"only"`
 	ExcludeVariants []string            `json:"exclude_variants"`
+	// Variants to leave out on one OS family only, e.g. macOS Ruby builds
+	// that link Homebrew libraries by absolute path.
+	ExcludeVariantsOn map[string][]string `json:"exclude_variants_on"`
 	Formats         map[string][]string `json:"formats"` // per OS family, best first
 	Kinds           []string            `json:"kinds"`
 	Compiled        bool                `json:"compiled"`

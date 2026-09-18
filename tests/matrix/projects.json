@@ -1,31 +1,42 @@
 {
- "notes": "Hello-world projects for the OS x runtime x mode test matrix (docs/plan.md section 3). Each prints 'hello from <runtime>'. Sent to POST /api/jobs as inline source, so no external repos are needed. {sep} is the OS path separator.",
+ "notes": "Hello-world projects for the OS x runtime x mode test matrix (docs/plan.md section 3). Each prints 'hello from <runtime>'. Sent to POST /api/jobs as inline source, so no external repos are needed. {sep} is the OS path separator. {env:NAME} is the value the plan gives NAME (e.g. JAVA_HOME).",
  "projects": {
   "python": {
    "project": "hello",
    "launch": "{runtime} -m hello",
-   "files": {"hello/__init__.py": "", "hello/__main__.py": "print('hello from python')\n"}
+   "files": {
+    "hello/__init__.py": "",
+    "hello/__main__.py": "print('hello from python')\n"
+   }
   },
   "node": {
    "project": "hello",
    "launch": "{runtime} {app_dir}/index.js",
-   "files": {"index.js": "console.log('hello from node');\n"}
+   "files": {
+    "index.js": "console.log('hello from node');\n"
+   }
   },
   "ruby": {
    "project": "hello",
    "launch": "{runtime} {app_dir}/hello.rb",
-   "files": {"hello.rb": "puts 'hello from ruby'\n"}
+   "files": {
+    "hello.rb": "puts 'hello from ruby'\n"
+   }
   },
   "php": {
    "project": "hello",
    "launch": "{runtime} {app_dir}/index.php",
-   "files": {"index.php": "<?php echo \"hello from php\\n\";\n"}
+   "files": {
+    "index.php": "<?php echo \"hello from php\\n\";\n"
+   }
   },
   "java": {
    "project": "hello",
-   "install": "\"{runtime_dir}{sep}bin{sep}javac\" -d \"{app_dir}\" Hello.java",
+   "install": "\"{env:JAVA_HOME}{sep}bin{sep}javac\" -d \"{app_dir}\" Hello.java",
    "launch": "{runtime} -cp {app_dir} Hello",
-   "files": {"Hello.java": "public class Hello {\n    public static void main(String[] args) {\n        System.out.println(\"hello from java\");\n    }\n}\n"}
+   "files": {
+    "Hello.java": "public class Hello {\n    public static void main(String[] args) {\n        System.out.println(\"hello from java\");\n    }\n}\n"
+   }
   },
   "dotnet": {
    "project": "hello",
@@ -38,12 +49,17 @@
   "r": {
    "project": "hello",
    "launch": "{runtime} {app_dir}/main.R",
-   "files": {"main.R": "cat('hello from r\\n')\n"}
+   "files": {
+    "main.R": "cat('hello from r\\n')\n"
+   }
   },
   "go": {
    "project": "hello",
    "launch": "{app_dir}/hello{exe}",
-   "files": {"go.mod": "module hello\n\ngo 1.20\n", "main.go": "package main\n\nimport \"fmt\"\n\nfunc main() { fmt.Println(\"hello from go\") }\n"}
+   "files": {
+    "go.mod": "module hello\n\ngo 1.20\n",
+    "main.go": "package main\n\nimport \"fmt\"\n\nfunc main() { fmt.Println(\"hello from go\") }\n"
+   }
   },
   "rust": {
    "project": "hello",
@@ -57,17 +73,23 @@
   "zig": {
    "project": "hello",
    "launch": "{app_dir}/hello{exe}",
-   "files": {"main.zig": "const std = @import(\"std\");\n\npub fn main() void {\n    std.debug.print(\"hello from zig\\n\", .{});\n}\n"}
+   "files": {
+    "main.zig": "const std = @import(\"std\");\n\npub fn main() void {\n    std.debug.print(\"hello from zig\\n\", .{});\n}\n"
+   }
   },
   "nim": {
    "project": "hello",
    "launch": "{app_dir}/hello{exe}",
-   "files": {"hello.nim": "echo \"hello from nim\"\n"}
+   "files": {
+    "hello.nim": "echo \"hello from nim\"\n"
+   }
   },
   "cc": {
    "project": "hello",
    "launch": "{app_dir}/hello{exe}",
-   "files": {"hello.c": "#include <stdio.h>\n\nint main(void) {\n    puts(\"hello from cc\");\n    return 0;\n}\n"}
+   "files": {
+    "hello.c": "#include <stdio.h>\n\nint main(void) {\n    puts(\"hello from cc\");\n    return 0;\n}\n"
+   }
   }
  }
 }

@@ -60,6 +60,7 @@ func main() {
 	workers := flag.Int("workers", 2, "concurrent jobs")
 	redisDB := flag.Int("redis-db", 0, "Redis database number (a second instance needs its own)")
 	mirror := flag.String("mirror", "", "URL of our mirror in plans (default: the policy's mirror_base)")
+	mirrorLast := flag.Bool("mirror-last", false, "list our mirror after the vendors' URLs (for machines that reach us over a slow link)")
 	flag.Parse()
 
 	cat, err := catalog.Load(*catDir, *policy, *local, filepath.Join(*data, "sha-cache.json"))
@@ -68,6 +69,9 @@ func main() {
 	}
 	if *mirror != "" {
 		cat.Policy.MirrorBase = *mirror
+	}
+	if *mirrorLast {
+		cat.Policy.MirrorFirst = false
 	}
 	q := queue.New(*redisAddr, *redisDB, *workers)
 	s := &server{q: q, cat: cat, data: *data, local: *local, site: *site, bases: *bases, limiter: newLimiter(20, time.Minute)}
