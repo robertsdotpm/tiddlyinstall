@@ -16,6 +16,7 @@ import os
 import subprocess
 import sys
 import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -36,7 +37,15 @@ def build(backend, runtime, mode, platforms, proj):
             "launch": proj["launch"], "console": True, "menu": True}
     if proj.get("install"):
         body["install"] = proj["install"]
-    j = api(backend, "/api/jobs", body)
+    while True:
+        try:
+            j = api(backend, "/api/jobs", body)
+            break
+        except urllib.error.HTTPError as e:
+            if e.code != 429:
+                raise
+            print("  rate limited; waiting 20 s", flush=True)
+            time.sleep(20)
     print(f"  {runtime} {mode}: ticket {j['ticket']}, {j['position']} ahead", flush=True)
     while j["status"] in ("queued", "running"):
         time.sleep(1)
@@ -71,6 +80,8 @@ def main():
             if j["status"] != "done":
                 print(f"  {key}: FAILED: {j.get('error')}")
                 results[key] = {"status": "failed", "error": j.get("error")}
+                out.mkdir(parents=True, exist_ok=True)
+                (out / "builds.json").write_text(json.dumps(results, indent=1))
                 continue
             res = j["result"]
             files = {}
@@ -84,8 +95,8 @@ def main():
                 files[f["platform"]] = str(p)
             results[key] = {"status": "done", "record": res["record"], "files": files}
             print(f"  {key}: record {res['record']}, {len(files)} files")
-    out.mkdir(parents=True, exist_ok=True)
-    (out / "builds.json").write_text(json.dumps(results, indent=1))
+            out.mkdir(parents=True, exist_ok=True)
+            (out / "builds.json").write_text(json.dumps(results, indent=1))
 
 
 if __name__ == "__main__":

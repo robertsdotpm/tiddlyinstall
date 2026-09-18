@@ -196,11 +196,6 @@
     "archive"
    ],
    "compiled": true,
-   "install_command": {
-    "windows": "\"{runtime_dir}\\dotnet.exe\" build -c Release -o \"{app_dir}\\bin\"",
-    "linux": "\"{runtime_dir}/dotnet\" build -c Release -o \"{app_dir}/bin\"",
-    "macos": "\"{runtime_dir}/dotnet\" build -c Release -o \"{app_dir}/bin\""
-   },
    "launch": "{runtime} {app_dir}/bin/{project}.dll"
   },
   "r": {

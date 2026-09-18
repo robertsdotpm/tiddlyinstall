@@ -583,20 +583,42 @@ ib_unpack() { # format archive dest strip
 	esac
 	if [ $rc = 0 ]; then
 		set +f
-		if [ "$4" = 1 ]; then
-			for top in "$st"/* "$st"/.[!.]* "$st"/..?*; do
-				[ -d "$top" ] && [ ! -h "$top" ] || continue
-				for e in "$top"/* "$top"/.[!.]* "$top"/..?*; do
-					[ -e "$e" ] || [ -h "$e" ] || continue
-					ib_move_into "$e" "$3" || rc=1
+		# Drop "strip" folder levels. Folders at the last level are merged
+		# into dest, so strip 2 on Rust's tarball (one folder per
+		# component) combines the components into one tree.
+		u_lv=$st
+		u_n=${4:-0}
+		u_nl='
+'
+		while [ "$u_n" -gt 0 ]; do
+			u_next=
+			u_ifs=$IFS
+			IFS=$u_nl
+			for u_d in $u_lv; do
+				for top in "$u_d"/* "$u_d"/.[!.]* "$u_d"/..?*; do
+					[ -d "$top" ] && [ ! -h "$top" ] || continue
+					u_next="$u_next$top$u_nl"
 				done
 			done
-		else
-			for e in "$st"/* "$st"/.[!.]* "$st"/..?*; do
+			IFS=$u_ifs
+			u_lv=$u_next
+			u_n=$((u_n - 1))
+		done
+		u_ents=
+		u_ifs=$IFS
+		IFS=$u_nl
+		for u_d in $u_lv; do
+			for e in "$u_d"/* "$u_d"/.[!.]* "$u_d"/..?*; do
 				[ -e "$e" ] || [ -h "$e" ] || continue
-				ib_move_into "$e" "$3" || rc=1
+				u_ents="$u_ents$e$u_nl"
 			done
-		fi
+		done
+		for e in $u_ents; do
+			IFS=$u_ifs
+			ib_move_into "$e" "$3" || rc=1
+			IFS=$u_nl
+		done
+		IFS=$u_ifs
 		set -f
 	fi
 	rm -rf "$st"

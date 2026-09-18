@@ -41,11 +41,28 @@
     "program": "{runtime_dir}/dotnet",
     "args": [],
     "env": {
-     "DOTNET_ROOT": "{runtime_dir}"
+     "DOTNET_ROOT": "{runtime_dir}",
+     "DOTNET_CLI_HOME": "{data_dir}",
+     "DOTNET_NOLOGO": "1"
     },
     "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
    },
-   "project_install": null
+   "project_install": {
+    "command": "\"{runtime_dir}/dotnet\" build -c Release -o \"{app_dir}/bin\"",
+    "env": {
+     "DOTNET_CLI_HOME": "{data_dir}",
+     "NUGET_PACKAGES": "{data_dir}/nuget-packages",
+     "NUGET_HTTP_CACHE_PATH": "{data_dir}/nuget-http-cache",
+     "NUGET_PLUGINS_CACHE_PATH": "{data_dir}/nuget-plugins",
+     "DOTNET_NOLOGO": "1",
+     "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+     "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
+     "DOTNET_ROOT": "{runtime_dir}",
+     "HOME": "{data_dir}"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check."
+   }
   },
   {
    "match": {
@@ -87,11 +104,28 @@
     "program": "{runtime_dir}/dotnet",
     "args": [],
     "env": {
-     "DOTNET_ROOT": "{runtime_dir}"
+     "DOTNET_ROOT": "{runtime_dir}",
+     "DOTNET_CLI_HOME": "{data_dir}",
+     "DOTNET_NOLOGO": "1"
     },
     "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
    },
-   "project_install": null
+   "project_install": {
+    "command": "\"{runtime_dir}/dotnet\" build -c Release -o \"{app_dir}/bin\"",
+    "env": {
+     "DOTNET_CLI_HOME": "{data_dir}",
+     "NUGET_PACKAGES": "{data_dir}/nuget-packages",
+     "NUGET_HTTP_CACHE_PATH": "{data_dir}/nuget-http-cache",
+     "NUGET_PLUGINS_CACHE_PATH": "{data_dir}/nuget-plugins",
+     "DOTNET_NOLOGO": "1",
+     "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+     "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
+     "DOTNET_ROOT": "{runtime_dir}",
+     "HOME": "{data_dir}"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check."
+   }
   },
   {
    "match": {
@@ -133,11 +167,28 @@
     "program": "{runtime_dir}/dotnet",
     "args": [],
     "env": {
-     "DOTNET_ROOT": "{runtime_dir}"
+     "DOTNET_ROOT": "{runtime_dir}",
+     "DOTNET_CLI_HOME": "{data_dir}",
+     "DOTNET_NOLOGO": "1"
     },
     "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
    },
-   "project_install": null
+   "project_install": {
+    "command": "\"{runtime_dir}/dotnet\" build -c Release -o \"{app_dir}/bin\"",
+    "env": {
+     "DOTNET_CLI_HOME": "{data_dir}",
+     "NUGET_PACKAGES": "{data_dir}/nuget-packages",
+     "NUGET_HTTP_CACHE_PATH": "{data_dir}/nuget-http-cache",
+     "NUGET_PLUGINS_CACHE_PATH": "{data_dir}/nuget-plugins",
+     "DOTNET_NOLOGO": "1",
+     "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+     "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
+     "DOTNET_ROOT": "{runtime_dir}",
+     "HOME": "{data_dir}"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check."
+   }
   },
   {
    "match": {
@@ -183,11 +234,28 @@
     "program": "{runtime_dir}/dotnet",
     "args": [],
     "env": {
-     "DOTNET_ROOT": "{runtime_dir}"
+     "DOTNET_ROOT": "{runtime_dir}",
+     "DOTNET_CLI_HOME": "{data_dir}",
+     "DOTNET_NOLOGO": "1"
     },
     "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
    },
-   "project_install": null
+   "project_install": {
+    "command": "\"{runtime_dir}/dotnet\" build -c Release -o \"{app_dir}/bin\"",
+    "env": {
+     "DOTNET_CLI_HOME": "{data_dir}",
+     "NUGET_PACKAGES": "{data_dir}/nuget-packages",
+     "NUGET_HTTP_CACHE_PATH": "{data_dir}/nuget-http-cache",
+     "NUGET_PLUGINS_CACHE_PATH": "{data_dir}/nuget-plugins",
+     "DOTNET_NOLOGO": "1",
+     "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+     "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
+     "DOTNET_ROOT": "{runtime_dir}",
+     "HOME": "{data_dir}"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check."
+   }
   },
   {
    "match": {
@@ -231,11 +299,28 @@
     "program": "{runtime_dir}/dotnet",
     "args": [],
     "env": {
-     "DOTNET_ROOT": "{runtime_dir}"
+     "DOTNET_ROOT": "{runtime_dir}",
+     "DOTNET_CLI_HOME": "{data_dir}",
+     "DOTNET_NOLOGO": "1"
     },
     "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
    },
-   "project_install": null
+   "project_install": {
+    "command": "\"{runtime_dir}/dotnet\" build -c Release -o \"{app_dir}/bin\"",
+    "env": {
+     "DOTNET_CLI_HOME": "{data_dir}",
+     "NUGET_PACKAGES": "{data_dir}/nuget-packages",
+     "NUGET_HTTP_CACHE_PATH": "{data_dir}/nuget-http-cache",
+     "NUGET_PLUGINS_CACHE_PATH": "{data_dir}/nuget-plugins",
+     "DOTNET_NOLOGO": "1",
+     "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+     "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
+     "DOTNET_ROOT": "{runtime_dir}",
+     "HOME": "{data_dir}"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check."
+   }
   },
   {
    "match": {
@@ -279,11 +364,30 @@
     "args": [],
     "env": {
      "DOTNET_ROOT": "{runtime_dir}",
-     "DOTNET_MULTILEVEL_LOOKUP": "0"
+     "DOTNET_MULTILEVEL_LOOKUP": "0",
+     "DOTNET_CLI_HOME": "{data_dir}",
+     "DOTNET_NOLOGO": "1"
     },
     "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
    },
-   "project_install": null
+   "project_install": {
+    "command": "\"{runtime_dir}\\dotnet.exe\" build -c Release -o \"{app_dir}\\bin\"",
+    "env": {
+     "DOTNET_CLI_HOME": "{data_dir}",
+     "NUGET_PACKAGES": "{data_dir}\\nuget-packages",
+     "NUGET_HTTP_CACHE_PATH": "{data_dir}\\nuget-http-cache",
+     "NUGET_PLUGINS_CACHE_PATH": "{data_dir}\\nuget-plugins",
+     "DOTNET_NOLOGO": "1",
+     "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+     "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
+     "DOTNET_ROOT": "{runtime_dir}",
+     "USERPROFILE": "{data_dir}",
+     "APPDATA": "{data_dir}\\appdata",
+     "LOCALAPPDATA": "{data_dir}\\localappdata"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check."
+   }
   },
   {
    "match": {
@@ -328,11 +432,30 @@
     "args": [],
     "env": {
      "DOTNET_ROOT": "{runtime_dir}",
-     "DOTNET_MULTILEVEL_LOOKUP": "0"
+     "DOTNET_MULTILEVEL_LOOKUP": "0",
+     "DOTNET_CLI_HOME": "{data_dir}",
+     "DOTNET_NOLOGO": "1"
     },
     "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
    },
-   "project_install": null
+   "project_install": {
+    "command": "\"{runtime_dir}\\dotnet.exe\" build -c Release -o \"{app_dir}\\bin\"",
+    "env": {
+     "DOTNET_CLI_HOME": "{data_dir}",
+     "NUGET_PACKAGES": "{data_dir}\\nuget-packages",
+     "NUGET_HTTP_CACHE_PATH": "{data_dir}\\nuget-http-cache",
+     "NUGET_PLUGINS_CACHE_PATH": "{data_dir}\\nuget-plugins",
+     "DOTNET_NOLOGO": "1",
+     "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+     "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
+     "DOTNET_ROOT": "{runtime_dir}",
+     "USERPROFILE": "{data_dir}",
+     "APPDATA": "{data_dir}\\appdata",
+     "LOCALAPPDATA": "{data_dir}\\localappdata"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check."
+   }
   },
   {
    "match": {
@@ -373,11 +496,30 @@
     "args": [],
     "env": {
      "DOTNET_ROOT": "{runtime_dir}",
-     "DOTNET_MULTILEVEL_LOOKUP": "0"
+     "DOTNET_MULTILEVEL_LOOKUP": "0",
+     "DOTNET_CLI_HOME": "{data_dir}",
+     "DOTNET_NOLOGO": "1"
     },
     "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
    },
-   "project_install": null
+   "project_install": {
+    "command": "\"{runtime_dir}\\dotnet.exe\" build -c Release -o \"{app_dir}\\bin\"",
+    "env": {
+     "DOTNET_CLI_HOME": "{data_dir}",
+     "NUGET_PACKAGES": "{data_dir}\\nuget-packages",
+     "NUGET_HTTP_CACHE_PATH": "{data_dir}\\nuget-http-cache",
+     "NUGET_PLUGINS_CACHE_PATH": "{data_dir}\\nuget-plugins",
+     "DOTNET_NOLOGO": "1",
+     "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+     "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
+     "DOTNET_ROOT": "{runtime_dir}",
+     "USERPROFILE": "{data_dir}",
+     "APPDATA": "{data_dir}\\appdata",
+     "LOCALAPPDATA": "{data_dir}\\localappdata"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check."
+   }
   },
   {
    "match": {
