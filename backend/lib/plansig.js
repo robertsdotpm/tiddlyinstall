@@ -1,0 +1,158 @@
+// Plan signatures (docs/format.md "Plan signature"; the Go server's plansig
+// package), with node:crypto. A signed plan is the plan's exact bytes and
+// one last line:
+//
+//   sig<TAB>ed25519<TAB><base64 of the 64-byte signature>\n
+//
+// The signature (RFC 8032 Ed25519, no prehash, no context) covers every
+// byte before that line. Ed25519 is deterministic, so the same key and bytes
+// give the same signature as the Go server.
+import crypto from 'node:crypto';
+import fs from 'node:fs';
+import path from 'node:path';
+
+export const KEY_FILE = 'plan-signing-key.pem'; // PKCS#8 private key, mode 0600
+export const PUB_FILE = 'plan-signing-key.pub'; // base64 of the raw 32-byte public key; bases are built with it
+
+const SIG_PREFIX = 'sig\ted25519\t';
+const PLAN_HEAD = Buffer.from('ib-plan\t');
+
+function rawPublic(keyObject) {
+  return Buffer.from(keyObject.export({ format: 'jwk' }).x, 'base64url');
+}
+
+export function publicKeyFromRaw(raw) {
+  return crypto.createPublicKey({ key: { kty: 'OKP', crv: 'Ed25519', x: Buffer.from(raw).toString('base64url') }, format: 'jwk' });
+}
+
+// KeyID: the first 16 hex digits of the SHA-256 of the raw public key.
+export function keyID(raw) {
+  return crypto.createHash('sha256').update(raw).digest('hex').slice(0, 16);
+}
+
+export class Signer {
+  constructor(privateKey) {
+    if (privateKey.asymmetricKeyType !== 'ed25519') throw new Error('not an Ed25519 key');
+    this.priv = privateKey;
+    this.pubKey = crypto.createPublicKey(privateKey);
+    this.pub = rawPublic(this.pubKey);
+  }
+
+  publicBase64() { return this.pub.toString('base64'); }
+
+  // SubjectPublicKeyInfo PEM, what openssl reads.
+  publicPEM() { return this.pubKey.export({ type: 'spki', format: 'pem' }); }
+
+  // plan (bytes or text) with its signature line appended. It must be an
+  // ib-plan and not already signed; a missing final newline is added first.
+  sign(plan) {
+    let b = Buffer.from(plan);
+    if (!b.subarray(0, PLAN_HEAD.length).equals(PLAN_HEAD)) throw new Error('plansig: not an ib-plan');
+    if (split(b).ok) throw new Error('plansig: already signed');
+    if (b.length && b[b.length - 1] !== 0x0a) b = Buffer.concat([b, Buffer.from('\n')]);
+    const sig = crypto.sign(null, b, this.priv);
+    return Buffer.concat([b, Buffer.from(SIG_PREFIX + sig.toString('base64') + '\n')]);
+  }
+
+  signString(plan) { return this.sign(Buffer.from(plan, 'utf8')).toString('utf8'); }
+}
+
+// loadOrCreate reads the key from dir, or makes one if there is none. The
+// public key file is (re)written from the private key every time, so it
+// can't drift from it. Returns {signer, created}.
+export function loadOrCreate(dir, log = console.log) {
+  fs.mkdirSync(dir, { recursive: true });
+  const kp = path.join(dir, KEY_FILE);
+  let signer, created = false;
+  let pem = null;
+  try { pem = fs.readFileSync(kp, 'utf8'); } catch (e) { if (e.code !== 'ENOENT') throw e; }
+  if (pem === null) {
+    const { privateKey } = crypto.generateKeyPairSync('ed25519');
+    const out = privateKey.export({ type: 'pkcs8', format: 'pem' });
+    try {
+      fs.writeFileSync(kp, out, { mode: 0o600, flag: 'wx' });
+    } catch (e) {
+      if (e.code === 'EEXIST') return loadOrCreate(dir, log); // another process made it first: use theirs
+      throw e;
+    }
+    signer = new Signer(privateKey);
+    created = true;
+  } else {
+    const st = fs.statSync(kp);
+    if (st.mode & 0o077) log(`plansig: WARNING: ${kp} is readable by other users (mode ${(st.mode & 0o777).toString(8)}); chmod 600 it`);
+    if (!/^-----BEGIN PRIVATE KEY-----/m.test(pem)) throw new Error(kp + ': not a PEM private key');
+    let key;
+    try { key = crypto.createPrivateKey({ key: pem, format: 'pem' }); } catch (e) { throw new Error(kp + ': ' + e.message); }
+    if (key.asymmetricKeyType !== 'ed25519') throw new Error(kp + ': not an Ed25519 key');
+    signer = new Signer(key);
+  }
+  const pub = signer.publicBase64() + '\n';
+  const pp = path.join(dir, PUB_FILE);
+  let old = null;
+  try { old = fs.readFileSync(pp, 'utf8'); } catch (e) { /* none yet */ }
+  if (old !== pub) {
+    fs.writeFileSync(pp + '.tmp', pub, { mode: 0o644 });
+    fs.renameSync(pp + '.tmp', pp);
+  }
+  return { signer, created };
+}
+
+// split finds the signature line: {msg, line, ok}. ok is false when the last
+// line (what follows the last newline, once one final "\n" or "\r\n" is set
+// aside) isn't a `sig` line.
+export function split(doc) {
+  const b = Buffer.from(doc);
+  let end = b.length;
+  if (end > 0 && b[end - 1] === 0x0a) {
+    end--;
+    if (end > 0 && b[end - 1] === 0x0d) end--;
+  }
+  const nl = b.subarray(0, end).lastIndexOf(0x0a);
+  if (nl < 0) return { msg: b, line: '', ok: false };
+  const last = b.subarray(nl + 1, end).toString('utf8');
+  if (last !== 'sig' && !last.startsWith('sig\t')) return { msg: b, line: '', ok: false };
+  return { msg: b.subarray(0, nl + 1), line: last, ok: true };
+}
+
+export class VerifyError extends Error {}
+
+// verify checks a signed plan against the raw public key and returns the
+// signed bytes (the plan without its signature line).
+export function verify(pubRaw, doc) {
+  const { msg, line, ok } = split(doc);
+  if (!ok) throw new VerifyError('the plan is not signed');
+  if (!line.startsWith(SIG_PREFIX)) throw new VerifyError('the plan\'s signature does not verify: unknown signature type ' + JSON.stringify(line));
+  const b64 = line.slice(SIG_PREFIX.length);
+  const sig = Buffer.from(b64, 'base64');
+  if (b64.length !== 88 || !/^[A-Za-z0-9+/]{86}==$/.test(b64) || sig.length !== 64) throw new VerifyError('the plan\'s signature does not verify: malformed signature');
+  if (!msg.subarray(0, PLAN_HEAD.length).equals(PLAN_HEAD)) throw new VerifyError('the plan\'s signature does not verify: signed bytes are not an ib-plan');
+  if (!crypto.verify(null, msg, publicKeyFromRaw(pubRaw), sig)) throw new VerifyError('the plan\'s signature does not verify');
+  return msg;
+}
+
+// verifyFor is verify plus the record binding: the plan's header `record`
+// line must be exactly `record`.
+export function verifyFor(pubRaw, doc, record) {
+  const msg = verify(pubRaw, doc);
+  const got = recordOf(msg);
+  if (got !== record) throw new VerifyError(`the plan is for record "${got}", not "${record}"`);
+  return msg;
+}
+
+// recordOf: the value of the plan header's first `record` line.
+export function recordOf(plan) {
+  for (let raw of Buffer.from(plan).toString('utf8').split('\n')) {
+    raw = raw.replace(/\r$/, '');
+    if (raw === '[target]') break;
+    if (raw.startsWith('record\t')) return raw.slice(7).split('\t')[0];
+  }
+  return '';
+}
+
+// AddRequestLine puts `request<TAB>vals...` right after the plan's header line.
+export function addRequestLine(plan, ...vals) {
+  const i = plan.indexOf('\n');
+  if (i < 0 || !plan.startsWith('ib-plan\t')) throw new Error('not an ib-plan');
+  const line = ['request', ...vals.map((v) => String(v).replace(/[\t\r\n]/g, ' '))].join('\t') + '\n';
+  return plan.slice(0, i + 1) + line + plan.slice(i + 1);
+}

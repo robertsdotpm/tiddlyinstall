@@ -1,23 +1,45 @@
-// The job builder shared by the build server (Node) and the offline page
-// (plan.md section 1.11): a POST /api/jobs request (docs/api.md) to its
-// record, plans and installer files, following docs/format.md. Everything
-// that differs between the two lives in `env`:
+// The job builder shared by the build server (backend/, Node) and the
+// offline page (plan.md section 1.11): a POST /api/jobs request
+// (docs/api.md) to its record, plans and installer files, following
+// docs/format.md. Everything that differs between the two lives in `env`:
 //
 //   env.catalog        a Catalog from js/resolve.js
-//   env.base(plat)     the unsigned base for "windows" | "linux" | "macos" (bytes)
+//   env.base(plat)     the unsigned base for "windows" | "linux" | "macos" (bytes);
+//                      may throw its own "missing" error
+//   env.signedBase(plat)  mode A: {data, signedBy} for our signed base, or
+//                      null (the unsigned base is used, and says so)
 //   env.backend        written into records
-//   env.fetch          fetch() for package registries (the server passes one
-//                      that only reaches public addresses)
-//   env.fetchSource(r) GitHub and URL sources -> {data, sha256, origin, commit,
-//                      names}; absent: those sources are refused
+//   env.product        the name in messages (default "TiddlyInstall"; the
+//                      server says "Installer Builder" until the bases are
+//                      renamed, plan.md "Open work")
 //   env.modes          the modes this builder makes (default ["B", "C"])
+//   env.packRuntimes   true: offline installers (every download packed) are
+//                      allowed; they need env.packPlan
+//   env.fetch          fetch() for package registries (the browser's)
+//   env.registryJSON(tmpl, name, version)  the server's registry lookups:
+//                      cached, public addresses only, Go's messages; throws
+//                      an error with .noPackage for a 404 or 410
+//   env.fetchSource(r) GitHub and URL sources -> {sha256, size, names,
+//                      project}, plus {origin, commit} for GitHub; absent:
+//                      those sources are refused
+//   env.storeSource(sha256, data)  keeps a written (inline) source
+//   env.storeRecord(hash, record)  publishes the record (the server refuses
+//                      a truncated-hash collision)
+//   env.takenDown(entry)  true if the takedown list has this entry
+//   env.iconPng(icon)  the icon's PNG bytes, or null (the server loads its
+//                      stored upload by icon.sha256); default: icon.data
+//   env.packPlan(hash, plat, progress)  offline: {plan (signed), files:
+//                      [{name: sha256, size, data | path, read()}]}
+//   env.save(hash, name, spec)  the server writes the file itself and
+//                      returns {size, sha256}. spec is {data} or, for .exe
+//                      and .run, {layout: {base, record, plan, pack,
+//                      fixChecksum}} so large packs can be streamed
 //   env.embedPlan      true: each installer carries its plan and packs the
 //                      app's source, so it needs no build server (offline page)
-//
-// Mode A and packing runtimes into the installer are the server's, and are
-// added there around runJob.
-import { toBytes, sha256Hex, recordHash, readInstaller, writeInstaller, tarWrite, installerExt } from './ibfile.js';
-import { resolve, validPackage, packagePolicyFor, packageProject, packageModule, pickBin, jsonField } from './resolve.js';
+//   env.signPlan(plan) signs an embedded plan (optional)
+//   env.now()          the record's `created` time (default: now)
+import { toBytes, sha256Hex, recordHash, readInstaller, writeInstaller, tarWrite, installerExt, zipWrite, peInfo } from './ibfile.js';
+import { resolve, validPackage, packagePolicyFor, packageProject, packageModule, pickBin, jsonField, goQuote, replacer } from './resolve.js';
 import { rasterSource, buildIco, buildIcns, setExeIcon, setMacIcon, checkIconPng } from './icon.js';
 
 const enc = new TextEncoder();
@@ -36,9 +58,16 @@ export class RequestError extends Error {
 const versionRe = /^[A-Za-z0-9.*+!_-]{1,64}$/;
 const projectRe = /^[A-Za-z0-9_.-]{1,64}$/;
 const safeName = /[^a-z0-9_.-]+/g;
+export const githubRe = /^(?:https?:\/\/github\.com\/)?([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+?)(?:\.git)?\/?$/;
 const PLATFORMS = ['windows', 'linux', 'macos'];
+const EXT = { windows: '.exe', linux: '.run', macos: '.zip' };
 
-function hasControl(s) {
+// Pack limits: NSIS reads the block with 32-bit arithmetic (format.md 4),
+// and the macOS zip is built in memory.
+export const MAX_PACK = 2000 * 1024 * 1024;
+export const MAX_MAC_PACK = 1000 * 1024 * 1024;
+
+export function hasControl(s) {
   for (const ch of String(s || '')) {
     const c = ch.codePointAt(0);
     if (c < 0x20 || (c >= 0x7f && c < 0xa0) || (c >= 0x200e && c <= 0x200f) ||
@@ -48,32 +77,40 @@ function hasControl(s) {
 }
 
 const bad = (msg) => new RequestError(msg);
+const own = (o, k) => (o != null && typeof o === 'object' && Object.hasOwn(o, k) ? o[k] : undefined);
+const blen = (x) => enc.encode(x || '').length;   // bytes, as Go counts
 
+// validate checks a request before it is queued (the server) or built (the
+// page), in Go's order, so the first error is Go's. Normalises it as Go
+// does: default platforms, the package name as stored. Returns the job's
+// class: "record" (mode A), "build" (B, C) or "pack" (offline).
 export function validate(r, env) {
   const cat = env.catalog;
-  const pol = cat.policy.runtimes[r.runtime];
-  if (!pol) throw bad('unknown runtime "' + r.runtime + '"');
+  const product = env.product || 'TiddlyInstall';
+  if (!cat.runtimes.get(r.runtime) || !own(cat.policy.runtimes, r.runtime)) throw bad('unknown runtime ' + goQuote(String(r.runtime ?? '')));
   if (!['A', 'B', 'C'].includes(r.mode)) throw bad('mode must be A, B or C');
   if (!(env.modes || ['B', 'C']).includes(r.mode)) {
-    throw bad('Installers signed by TiddlyInstall come from the build server. Without one, choose "Signed by you" or "Unsigned".');
+    throw bad('Installers signed by ' + product + ' come from the build server. Without one, choose "Signed by you" or "Unsigned".');
   }
   if (r.offline && r.mode === 'A') {
-    throw bad('offline installers can\'t be signed by TiddlyInstall (design.md section 3); choose mode B or C');
+    throw bad('offline installers can\'t be signed by ' + product + ' (design.md section 3); choose mode B or C');
   }
   if (r.offline && !env.packRuntimes) {
     throw bad('Packing the runtimes into the installer needs the build server. Without one, untick it: the installer downloads them when it runs.');
   }
   if (!Array.isArray(r.platforms) || !r.platforms.length) r.platforms = PLATFORMS.slice();
-  for (const p of r.platforms) if (!PLATFORMS.includes(p)) throw bad('unknown platform "' + p + '"');
+  for (const p of r.platforms) if (!PLATFORMS.includes(p)) throw bad('unknown platform ' + goQuote(String(p ?? '')));
   const sel = r.select || '';
   if (sel === 'range' || sel === 'exact') {
     if (!String(r.range || '').trim()) throw bad('a version range is needed');
-  } else if (!['', 'newest', 'asyncio'].includes(sel)) throw bad('unknown version choice "' + sel + '"');
-  const len = (x) => enc.encode(x || '').length;   // bytes, as Go counts
-  if (len(r.name) > 80 || len(r.launch) > 400 || len(r.install) > 400 || len(r.range) > 100) {
+  } else if (!['', 'newest', 'asyncio'].includes(sel)) throw bad('unknown version choice ' + goQuote(sel));
+  if (blen(r.name) > 80 || blen(r.launch) > 400 || blen(r.install) > 400 || blen(r.range) > 100) {
     throw bad('a field is too long');
   }
-  const src = r.source || {};
+  // Control and bidi characters could disguise what the installer's review
+  // screen shows (ESC[8m hides the rest of a terminal summary, U+202E
+  // reverses text).
+  const src = r.source || (r.source = {});
   for (const f of [r.name, r.project, r.launch, r.install, r.range, r.root, r.rootname, src.value, src.ref, src.version]) {
     if (hasControl(f)) throw bad('fields can\'t contain control or text-direction characters');
   }
@@ -85,35 +122,43 @@ export function validate(r, env) {
       if (!names.length || names.length > 200) throw bad('inline source needs 1 to 200 files');
       let total = 0;
       for (const p of names) {
-        total += enc.encode(r.files[p]).length;
-        if (!p || p.startsWith('/') || p.includes('..') || /[\\:\0]/.test(p) || hasControl(p) || len(p) > 200) {
-          throw bad('bad file name "' + p + '"');
+        total += blen(r.files[p]);
+        if (!p || p.startsWith('/') || p.includes('..') || /[\\:\0]/.test(p) || hasControl(p) || blen(p) > 200) {
+          throw bad('bad file name ' + goQuote(p));
         }
       }
       if (total > 1 << 20) throw bad('inline source is limited to 1 MB');
       break;
     }
-    case 'package':
-      src.value = validPackage(cat, r.runtime, String(src.value || '').trim(), String(src.version || '').trim());
-      src.version = String(src.version || '').trim();
-      break;
     case 'github':
-      if (!/^(?:https?:\/\/github\.com\/)?([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+?)(?:\.git)?\/?$/.test(String(src.value || '').trim())) {
-        throw bad('GitHub source must be owner/repo or a github.com URL');
-      }
+      if (!githubRe.test(String(src.value || '').trim())) throw bad('GitHub source must be owner/repo or a github.com URL');
       if (!env.fetchSource) throw offlineSource(src);
       break;
     case 'url':
       if (!/^https?:\/\//.test(String(src.value || ''))) throw bad('source URL must be http(s)');
       if (!env.fetchSource) throw offlineSource(src);
       break;
+    case 'package':
+      try {
+        src.value = validPackage(cat, r.runtime, String(src.value || '').trim(), String(src.version || '').trim());
+      } catch (e) { throw bad(e.message); }
+      src.version = String(src.version || '').trim();
+      break;
     default:
       throw bad('source kind must be github, package, url or inline');
   }
   if (r.icon) {
-    if (enc.encode(r.icon.choice || '').length > 64 || hasControl(r.icon.choice)) throw bad('bad icon choice');
-    iconBytes(r.icon);
+    if (blen(r.icon.choice) > 64 || hasControl(r.icon.choice)) throw bad('bad icon choice');
+    delete r.icon.filename;   // not used, and not worth storing
+    delete r.icon.type;
+    if (!r.icon.data) {
+      if (r.icon.sha256 && !/^[0-9a-f]{64}$/.test(r.icon.sha256)) throw bad('bad icon sha256');
+    } else {
+      iconBytes(r.icon);
+    }
   }
+  if (r.offline) return 'pack';
+  return r.mode === 'A' ? 'record' : 'build';
 }
 
 function offlineSource(src) {
@@ -121,12 +166,49 @@ function offlineSource(src) {
     (src.kind === 'github' ? 'GitHub repositories' : 'other sites\' files') + ' itself, so that needs the build server.');
 }
 
+// Go's base64.StdEncoding.DecodeString: padding required, and \r and \n
+// skipped.
+function goBase64(s) {
+  s = s.replace(/[\r\n]/g, '');
+  if (s.length % 4 || !/^[A-Za-z0-9+/]*={0,2}$/.test(s)) throw bad('the icon isn\'t valid base64');
+  let bin;
+  try { bin = atob(s); } catch (e) { throw bad('the icon isn\'t valid base64'); }
+  const u8 = new Uint8Array(bin.length);
+  for (let k = 0; k < bin.length; k++) u8[k] = bin.charCodeAt(k);
+  return u8;
+}
+
+// The uploaded icon's bytes (build.validateIcon): checked, not yet decoded.
+export function iconBytes(icon) {
+  if (!icon || !icon.data) return null;
+  let d = String(icon.data).trim();
+  const i = d.indexOf(';base64,');
+  if (d.startsWith('data:') && i >= 0) d = d.slice(i + 8);
+  // base64.StdEncoding.EncodedLen(icon.MaxBytes) + 4
+  if (d.length > Math.ceil((1 << 20) / 3) * 4 + 4) throw bad('the icon is over 1024 KB');
+  const u8 = goBase64(d);
+  try { checkIconPng(u8); } catch (e) { throw bad(e.message); }
+  return u8;
+}
+
 /* ---------- source, record, plan ---------- */
 
+// path.Base
+function pathBase(p) {
+  if (p === '') return '.';
+  p = p.replace(/\/+$/, '');
+  if (p === '') return '/';
+  return p.slice(p.lastIndexOf('/') + 1);
+}
+
 // build.projectName
-function projectName(r) {
+export function projectName(r) {
   if (projectRe.test(r.project || '')) return r.project;
   let p = String(r.name || '').toLowerCase().replace(safeName, '_').replace(/^[_.-]+|[_.-]+$/g, '');
+  if (r.source && r.source.kind === 'url' && p === '') {
+    const base = pathBase(String(r.source.value || '')).replace(/\.gz$/, '').replace(/\.tar$/, '');
+    p = base.toLowerCase().replace(safeName, '_');
+  }
   if (!p) p = 'app';
   return p.length > 40 ? p.slice(0, 40) : p;
 }
@@ -136,8 +218,9 @@ async function gzip(u8) {
   return new Uint8Array(await new Response(s).arrayBuffer());
 }
 
-// build.inlineTarball: the files under project/, sorted, with folders.
-async function inlineTarball(project, files) {
+// build.inlineTarball: the files under project/, sorted, with folders. The
+// tar is byte for byte Go's; the gzip around it is not (Go's deflate).
+export function inlineTar(project, files) {
   const names = Object.keys(files).sort();
   const members = [];
   const dirs = new Set();
@@ -149,37 +232,61 @@ async function inlineTarball(project, files) {
     }
     members.push({ name: project + '/' + n, data: enc.encode(files[n]), mode: files[n].startsWith('#!') ? 0o755 : 0o644 });
   }
-  return { data: await gzip(tarWrite(members)), names };
+  return { tar: tarWrite(members), names };
 }
 
-// build.LookupPackage, from the browser: registries that answer web pages
-// (PyPI, npm, ...) work when online; the rest need a version given.
+async function inlineTarball(project, files) {
+  const t = inlineTar(project, files);
+  return { data: await gzip(t.tar), names: t.names };
+}
+
+// build.LookupPackage: check a package in its registry, pin the newest
+// version when none is given, and find its program when the policy says
+// where. A runtime whose policy has no lookup (Go, .NET) is left to its
+// package manager at install time.
 export async function lookupPackage(env, runtime, name, version) {
   const cat = env.catalog;
   const p = packagePolicyFor(cat, runtime);
   const info = { name, version, bin: '', binPath: '' };
   if (!p.lookup) return info;
-  const get = async (tmpl, v) => {
-    const u = tmpl.replace('{name}', encodeURIComponent(name).replace(/%2F/g, '/')).replace('{version}', encodeURIComponent(v));
-    let r;
-    try {
-      r = await (env.fetch || fetch)(u, { headers: { Accept: 'application/json' } });
-    } catch (e) {
-      throw bad('Couldn\'t ask ' + (p.registry || 'the registry') + ' about ' + name + ' (offline, or it doesn\'t answer web pages). Give the package\'s version to build without asking.');
-    }
-    if (r.status === 404 || r.status === 410) {
-      throw bad((p.registry || 'The registry') + ' has no ' + (v ? name + ' ' + v : 'package named ' + name));
-    }
-    if (!r.ok) throw bad('package registry: ' + r.status + ' ' + r.statusText);
-    return r.json();
-  };
+  const reg = (dflt) => (typeof p.registry === 'string' && p.registry) || dflt;
+  let get;
+  if (env.registryJSON) {
+    // The server: Go's messages (build.lookupErr).
+    get = async (tmpl, v) => {
+      try {
+        return await env.registryJSON(tmpl, name, v);
+      } catch (e) {
+        if (!e.noPackage) throw e;
+        const err = new Error(reg('the registry') + ' has no ' + (v ? name + ' ' + v : 'package named ' + name) + ': no such package');
+        err.noPackage = true;
+        throw err;
+      }
+    };
+  } else {
+    // The browser: registries that answer web pages (PyPI, npm, ...) work
+    // when online; the rest need a version given.
+    get = async (tmpl, v) => {
+      const u = tmpl.replace('{name}', encodeURIComponent(name).replace(/%2F/g, '/')).replace('{version}', encodeURIComponent(v));
+      let r;
+      try {
+        r = await (env.fetch || fetch)(u, { headers: { Accept: 'application/json' } });
+      } catch (e) {
+        throw bad('Couldn\'t ask ' + reg('the registry') + ' about ' + name + ' (offline, or it doesn\'t answer web pages). Give the package\'s version to build without asking.');
+      }
+      if (r.status === 404 || r.status === 410) throw bad(reg('The registry') + ' has no ' + (v ? name + ' ' + v : 'package named ' + name));
+      if (!r.ok) throw bad('package registry: ' + r.status + ' ' + r.statusText);
+      return r.json();
+    };
+  }
   let doc = null;
   if (!version || !p.lookup_version) {
     doc = await get(p.lookup, '');
     if (!version) {
-      const v = jsonField(doc, p.version_field);
-      try { validPackage(cat, runtime, name, v); } catch (e) { throw bad((p.registry || 'The registry') + ' gave no usable version for ' + name); }
-      if (typeof v !== 'string' || !v) throw bad((p.registry || 'The registry') + ' gave no usable version for ' + name);
+      const v = jsonField(doc, p.version_field || '');
+      let ok = typeof v === 'string' && v !== '';
+      if (ok) { try { validPackage(cat, runtime, name, v); } catch (e) { ok = false; } }
+      if (!ok) throw new Error(reg('The registry') + ' gave no usable version for ' + name);
       info.version = v;
     }
   }
@@ -189,45 +296,54 @@ export async function lookupPackage(env, runtime, name, version) {
       const b = pickBin(jsonField(doc, p.bin_field), packageProject(p, name));
       info.bin = b.name;
       info.binPath = b.path;
-    } catch (e) { throw bad(name + ' ' + info.version + ': ' + e.message); }
+    } catch (e) { throw new Error(name + ' ' + info.version + ': ' + e.message); }
   }
   return info;
 }
 
-// build.PackageLaunch
-function packageLaunch(launch, p, name, info) {
+// build.PackageLaunch: {name}, {module}, and when info is known {bin} and
+// {bin_path}. With info null the last two are left for the plan (records
+// behind plain file names).
+export function packageLaunch(launch, p, name, info) {
   const project = packageProject(p, name);
-  let out = launch.split('{name}').join(name).split('{module}').join(packageModule(name));
+  const pairs = ['{name}', name, '{module}', packageModule(name)];
   if (info) {
-    out = out.split('{bin}').join(info.bin || project);
-    if (out.includes('{bin_path}')) {
-      if (!info.binPath) throw bad((p.registry || 'The registry') + ' doesn\'t say which program ' + name + ' runs; give a launch command');
-      out = out.split('{bin_path}').join(info.binPath);
+    pairs.push('{bin}', info.bin || project);
+    if (launch.includes('{bin_path}')) {
+      if (!info.binPath) throw new Error(((typeof p.registry === 'string' && p.registry) || 'The registry') + ' doesn\'t say which program ' + name + ' runs; give a launch command');
+      pairs.push('{bin_path}', info.binPath);
     }
   }
-  return out;
+  return replacer(...pairs)(launch);
 }
 
 // catalog.RuntimePolicy.MatchInstall and build.projectInstall
-function projectInstall(pol, given, pkg, names) {
+export function projectInstall(pol, given, pkg, names) {
   if (given) return given;
-  if (pkg || pol.compiled) return 'default';
+  if (pkg || pol.compiled === true) return 'default';
   const have = new Set(names);
   for (const rule of pol.install_rules || []) {
     if ((rule.files || []).some((f) => have.has(f))) {
-      if (rule.unsupported) throw bad(rule.unsupported);
+      if (rule.unsupported) throw new Error(rule.unsupported);
       return 'default:' + rule.id;
     }
   }
   return (pol.install_files || []).some((f) => have.has(f)) ? 'default' : '';
 }
 
-function clean(s) { return String(s).replace(/[\t\r\n]/g, ' '); }
+// ibtext.Writer: values can't break the format.
+export function kvLine(key, ...vals) {
+  return [key, ...vals.map((v) => String(v).replace(/[\t\r\n]/g, ' '))].join('\t') + '\n';
+}
 
-// build.recordFor
-function writeRecord(r, fields, backend) {
-  const lines = [];
-  const add = (k, ...v) => lines.push([k, ...v.map(clean)].join('\t'));
+function rfc3339(d) {
+  return d.toISOString().replace(/\.\d+Z$/, 'Z');
+}
+
+// The record (build.Run, format.md section 2).
+function writeRecord(r, fields, backend, now) {
+  let out = '';
+  const add = (k, ...v) => { out += kvLine(k, ...v); };
   add('ib-record', '1');
   add('name', fields.name);
   add('project', fields.project);
@@ -243,45 +359,50 @@ function writeRecord(r, fields, backend) {
   add('console', r.console === false ? '0' : '1');
   add('menu', r.menu === false ? '0' : '1');
   add('desktop', r.desktop ? '1' : '0');
+  // In every mode, so the record's hash covers the icon; the PNG is served
+  // at /icons/<sha256>.png (format.md section 2).
   if (fields.iconSha) add('icon', fields.iconSha);
   add('root', r.root || 'user');
   add('rootname', r.rootname || 'ib');
   add('platforms', r.platforms.join(' '));
   add('backend', backend || '');
-  add('created', new Date().toISOString().replace(/\.\d+Z$/, 'Z'));
-  return lines.join('\n') + '\n';
+  add('created', rfc3339(now));
+  return out;
 }
 
-function iconBytes(icon) {
-  if (!icon || !icon.data) return null;
-  let d = String(icon.data).trim();
-  const i = d.indexOf(';base64,');
-  if (d.startsWith('data:') && i >= 0) d = d.slice(i + 8);
-  let s;
-  try { s = atob(d); } catch (e) { throw bad('the icon isn\'t valid base64'); }
-  const u8 = new Uint8Array(s.length);
-  for (let k = 0; k < s.length; k++) u8[k] = s.charCodeAt(k);
-  try { checkIconPng(u8); } catch (e) { throw bad(e.message); }
-  return u8;
+// ibfile.PackSize: the exact length of a pack's tar.
+export function packSize(files) {
+  let n = 1024;
+  for (const f of files) n += 512 + Math.ceil(f.size / 512) * 512;
+  return n;
 }
 
-// runJob builds a checked request. Returns {record, hash, app, stem, src,
-// files: [{platform, name, data, size, sha256}]}: the installers for modes
-// B and C (with env.embedPlan, self-contained). The server wraps it for
-// mode A and packs.
+function dedupPack(files) {
+  const seen = new Set();
+  return files.filter((f) => (seen.has(f.name) ? false : (seen.add(f.name), true)));
+}
+
+const MB = (n) => Math.floor(n / (1024 * 1024));
+
+// runJob builds a request (validate()d here too). Returns {record, hash,
+// app, stem, src, files: [{platform, name, data?, size, sha256, signed,
+// offline}]}: without env.save each file's bytes are in `data`.
 export async function runJob(r, env, progress = () => {}) {
   const cat = env.catalog;
   validate(r, env);
   const pol = cat.policy.runtimes[r.runtime];
-  const png = iconBytes(r.icon);
+  const png = env.iconPng ? await env.iconPng(r.icon) : iconBytes(r.icon);
   progress('Resolving the source');
   let src = null, pkg = null, project, names = [];
   if (r.source.kind === 'inline') {
     project = projectName(r);
     const t = await inlineTarball(project, r.files);
     names = t.names;
-    src = { data: t.data, sha256: await sha256Hex(t.data), strip: 1, urls: [] };
+    src = { data: t.data, sha256: await sha256Hex(t.data), size: t.data.length, strip: 1, urls: [] };
+    if (env.storeSource) await env.storeSource(src.sha256, src.data);
   } else if (r.source.kind === 'package') {
+    // Pin the version now (design.md section 4: records name what they
+    // install), while the registry can be asked.
     pkg = await lookupPackage(env, r.runtime, r.source.value, r.source.version);
     project = packageProject(pol.package, pkg.name);
   } else {
@@ -289,57 +410,140 @@ export async function runJob(r, env, progress = () => {}) {
     names = src.names || [];
     project = r.source.kind === 'github' ? src.project : projectName(r);
   }
-  progress('Writing the record');
-  let launch = r.launch || (pkg ? pol.package.launch : pol.launch);
+  if (src && env.takenDown && await env.takenDown('sha ' + src.sha256)) throw new Error('this source has been taken down');
+  let launch = r.launch || (pkg ? pol.package.launch : pol.launch) || '';
   if (pkg) launch = packageLaunch(launch, pol.package, pkg.name, pkg);
   const install = projectInstall(pol, r.install || '', !!pkg, names);
+
+  progress('Writing the record');
   const iconSha = png ? await sha256Hex(png) : '';
-  const record = writeRecord(r, { name: r.name || project, project, src, pkg, launch, install, iconSha }, env.backend);
+  const name = r.name || project;
+  const record = writeRecord(r, { name, project, src, pkg, launch, install, iconSha }, env.backend,
+    env.now ? env.now() : new Date());
   const hash = await recordHash(record);
+  if (env.storeRecord) await env.storeRecord(hash, record);
 
   const app = {
-    recordHash: hash, name: r.name || project, project, runtime: r.runtime, select: r.select || 'newest',
+    recordHash: hash, name, project, runtime: r.runtime, select: r.select || 'newest',
     range: r.range || '', launch, install, console: r.console !== false, menu: r.menu !== false,
     desktop: !!r.desktop, root: r.root || 'user', rootName: r.rootname || 'ib', platforms: [],
-    source: src ? { name: src.sha256 + '.tar.gz', sha256: src.sha256, size: src.data.length, format: 'tar.gz', strip: src.strip, urls: src.urls } : null,
+    source: src ? { name: src.sha256 + '.tar.gz', sha256: src.sha256, size: src.size, format: 'tar.gz', strip: src.strip, urls: src.urls || [] } : null,
     package: pkg ? pkg.name : '', packageVersion: pkg ? pkg.version : '',
   };
   let stem = 'install_' + r.runtime + '_' + project.toLowerCase().replace(safeName, '-');
   if (r.mode === 'A') stem += '_' + hash;
+  const job = { r, env, record, hash, app, stem, src, png, iconSha, progress, iconSrc: null };
   const out = { record, hash, app, stem, src, png, iconSha, files: [] };
-  if (r.mode === 'A') return out;       // the server renames its signed bases
-  const iconSrc = png ? await rasterSource(png) : null;
   try {
+    if (png && r.mode !== 'A') job.iconSrc = await rasterSource(png);
     for (const plat of r.platforms) {
       progress('Building the ' + plat + ' installer');
-      const base = env.base(plat);
-      if (!base) throw new Error('There is no ' + plat + ' base installer here.');
-      const info = await readInstaller(base, 'base' + (plat === 'windows' ? '.exe' : plat === 'macos' ? '.zip' : '.run'));
-      let plan = null;
-      const pack = [];
-      if (env.embedPlan) {
-        plan = await resolve(cat, Object.assign({}, app, { platforms: [plat] }));
-        if (src) pack.push({ name: src.sha256, data: src.data });
+      try {
+        out.files.push(await (r.mode === 'A' ? modeAFile(job, plat) : buildFile(job, plat)));
+      } catch (e) {
+        const err = new Error(plat + ': ' + (e && e.message ? e.message : String(e)));
+        err.cause = e;
+        throw err;
       }
-      if (iconSrc) {
-        if (info.kind === 'exe') {
-          info.base = await setExeIcon(info.base, await buildIco(iconSrc));
-          info.pe = (await readInstaller(info.base, 'x.exe')).pe;
-          info.signed = false;
-        } else if (info.kind === 'zip') {
-          await setMacIcon(info, await buildIcns(iconSrc));
-        } else if (!pack.some((m) => m.name === iconSha)) {
-          pack.push({ name: iconSha, data: png });
-        }
-      }
-      if (info.kind === 'zip') renameApp(info, stem + '.app');
-      const data = await writeInstaller(info, { record, plan, pack });
-      out.files.push({ platform: plat, name: stem + installerExt(info.kind), data, size: data.length, sha256: await sha256Hex(data) });
     }
   } finally {
-    if (iconSrc && typeof iconSrc.close === 'function') iconSrc.close();
+    if (job.iconSrc && typeof job.iconSrc.close === 'function') job.iconSrc.close();
   }
   return out;
+}
+
+async function baseFor(env, plat) {
+  const base = await env.base(plat);
+  if (!base) throw new Error('There is no ' + plat + ' base installer here.');
+  return toBytes(base);
+}
+
+// Mode A: our signed base, renamed; the file name carries the record hash
+// (design.md section 3). The file is never changed (that would break our
+// signature), so no icon and no block: the record is only on the backend.
+async function modeAFile(job, plat) {
+  const { env, stem } = job;
+  const name = stem + EXT[plat];
+  let data = null, signedBy = '';
+  if (plat === 'windows' && env.signedBase) {
+    const sb = await env.signedBase(plat);
+    if (sb) { data = toBytes(sb.data); signedBy = sb.signedBy || ''; }
+  }
+  if (!data) data = await baseFor(env, plat);
+  if (plat === 'macos') {
+    // The .app is renamed after the file; its entries are copied as they
+    // are, so its signature stays (ibfile.MacZip with nothing added).
+    const info = await readInstaller(data, 'base.zip');
+    renameApp(info, stem + '.app');
+    data = zipWrite(info.entries);
+    signedBy = 'ad-hoc (test)';
+  }
+  return emit(job, plat, name, { data }, signedBy);
+}
+
+// Modes B and C: the record (and for offline installers the signed plan and
+// every download) in a metadata block, and the icon in the file, all before
+// any signature.
+async function buildFile(job, plat) {
+  const { r, env, record, hash, app, stem, src, png, iconSha, progress, iconSrc } = job;
+  const base = await baseFor(env, plat);
+  const info = await readInstaller(base, 'base' + EXT[plat]);
+  let plan = null;
+  let pack = [];
+  if (r.offline) {
+    const p = await env.packPlan(hash, plat, progress);
+    plan = p.plan;
+    pack = dedupPack(p.files);
+    if (info.kind === 'zip' && packSize(pack) > MAX_MAC_PACK) {
+      throw new Error('the packed files come to ' + MB(packSize(pack)) + ' MB; macOS offline installers are limited to ' + MB(MAX_MAC_PACK) + ' MB for now');
+    }
+  } else if (env.embedPlan) {
+    plan = resolve(env.catalog, Object.assign({}, app, { platforms: [plat] }));
+    if (env.signPlan) plan = await env.signPlan(plan);
+    if (src) pack.push({ name: src.sha256, size: src.data.length, data: src.data });
+  }
+  if (iconSrc) {
+    if (info.kind === 'exe') {
+      info.base = await setExeIcon(info.base, await buildIco(iconSrc));
+      info.pe = peInfo(info.base);
+      info.signed = false;
+    } else if (info.kind === 'zip') {
+      await setMacIcon(info, await buildIcns(iconSrc));
+    } else if (!pack.some((m) => m.name === iconSha)) {
+      // Linux carries the PNG in the pack, named by the record's `icon`.
+      pack.push({ name: iconSha, size: png.length, data: png });
+    }
+  }
+  if (info.kind !== 'zip' && packSize(pack) > MAX_PACK && pack.length) {
+    throw new Error('the packed files come to ' + MB(packSize(pack)) + ' MB; the limit is ' + MB(MAX_PACK) + ' MB (installers use 32-bit offsets)');
+  }
+  if (info.kind === 'zip') renameApp(info, stem + '.app');
+  const name = stem + installerExt(info.kind);
+  if (env.save && info.kind !== 'zip') {
+    // The server writes .exe and .run files straight to disk: offline packs
+    // can be large. A checksum the base has is kept up to date (setExeIcon
+    // sets one; the plain base has none).
+    const pe = info.kind === 'exe' ? info.pe : null;
+    const fixChecksum = !!(pe && new DataView(info.base.buffer, info.base.byteOffset, info.base.byteLength).getUint32(pe.checksumOff, true) !== 0);
+    return emit(job, plat, name, { layout: { base: info.base, record: enc.encode(record), plan: enc.encode(plan || ''), pack, fixChecksum, checksumOff: pe ? pe.checksumOff : 0 } }, '');
+  }
+  for (const m of pack) if (!m.data) m.data = await m.read();
+  const data = await writeInstaller(info, { record, plan, pack });
+  return emit(job, plat, name, { data }, '');
+}
+
+async function emit(job, plat, name, spec, signed) {
+  const f = { platform: plat, name, size: 0, sha256: '', signed, offline: !!job.r.offline };
+  if (job.env.save) {
+    const s = await job.env.save(job.hash, name, spec);
+    f.size = s.size;
+    f.sha256 = s.sha256;
+  } else {
+    f.data = spec.data;
+    f.size = spec.data.length;
+    f.sha256 = await sha256Hex(spec.data);
+  }
+  return f;
 }
 
 // The server names the .app after the installer (ibfile.MacZip).
@@ -355,4 +559,3 @@ function renameApp(info, app) {
   }
   info.app = to;
 }
-

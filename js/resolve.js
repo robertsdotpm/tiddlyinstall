@@ -100,7 +100,7 @@ function goFloat(f) {
 }
 
 // fmt's %q (strconv.Quote).
-function goQuote(s) {
+export function goQuote(s) {
   let out = '"';
   for (let ch of s) {
     const r = ch.codePointAt(0);
@@ -118,7 +118,7 @@ function goQuote(s) {
 
 // strings.NewReplacer(old1, new1, ...).Replace: at each position the first
 // old string (in argument order) that matches wins.
-function replacer(...pairs) {
+export function replacer(...pairs) {
   const olds = [], news = [];
   for (let i = 0; i < pairs.length; i += 2) { olds.push(pairs[i]); news.push(pairs[i + 1]); }
   return (s) => {

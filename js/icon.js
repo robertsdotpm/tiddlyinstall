@@ -70,16 +70,36 @@ function isPng(u8) {
 }
 
 // The upload rules (Go's icon.Decode): a real, square PNG of 16 to 1024
-// pixels and at most 1 MB. The header is read before anything is decoded.
+// pixels and at most 1 MB. The header is read before anything is decoded,
+// with image/png's DecodeConfig checks (IHDR first, its CRC and fields), so
+// the messages are the server's.
 export function checkIconPng(bytes) {
   const u8 = toBytes(bytes);
   if (!u8.length) throw new Error('the icon is empty');
   if (u8.length > ICON_MAX_BYTES) throw new Error('the icon is over ' + (ICON_MAX_BYTES >> 10) + ' KB');
-  if (!isPng(u8) || u8.length < 33) throw new Error('the icon must be a PNG');
+  if (!isPng(u8)) throw new Error('the icon must be a PNG');
+  const invalid = () => new Error('the icon isn\'t a valid PNG');
+  if (u8.length < 33) throw invalid();
   const dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
-  const w = dv.getUint32(16), h = dv.getUint32(20);
+  if (dv.getUint32(8) !== 13 || String.fromCharCode(u8[12], u8[13], u8[14], u8[15]) !== 'IHDR') throw invalid();
+  if (crc32(u8.subarray(12, 29)) !== dv.getUint32(29)) throw invalid();
+  const w = dv.getUint32(16), h = dv.getUint32(20), depth = u8[24], ctype = u8[25];
+  const depths = { 0: [1, 2, 4, 8, 16], 2: [8, 16], 3: [1, 2, 4, 8], 4: [8, 16], 6: [8, 16] }[ctype];
+  if (!w || !h || w > 0x7fffffff || h > 0x7fffffff || !depths || !depths.includes(depth) ||
+      u8[26] !== 0 || u8[27] !== 0 || u8[28] > 1) throw invalid();
   if (w !== h) throw new Error('the icon must be square (it is ' + w + 'x' + h + ')');
   if (w < ICON_MIN || w > ICON_MAX) throw new Error('the icon must be ' + ICON_MIN + ' to ' + ICON_MAX + ' pixels across (it is ' + w + ')');
+}
+
+// checkIconPng, then a full decode (Go's icon.Decode decodes every upload
+// before it is stored). Returns the decoded image.
+export async function decodeIconPng(bytes) {
+  checkIconPng(bytes);
+  try {
+    return await pngDecode(bytes);
+  } catch (e) {
+    throw new Error('the icon isn\'t a valid PNG');
+  }
 }
 
 async function inflateZlib(u8) {
@@ -99,7 +119,9 @@ export async function pngDecode(bytes) {
     const len = dv.getUint32(o);
     const type = String.fromCharCode(u8[o + 4], u8[o + 5], u8[o + 6], u8[o + 7]);
     const data = u8.subarray(o + 8, o + 8 + len);
-    if (data.length !== len) throw new Error('the icon isn\'t a valid PNG');
+    if (data.length !== len || o + 12 + len > u8.length) throw new Error('the icon isn\'t a valid PNG');
+    // Every chunk's CRC, as image/png checks them.
+    if (crc32(u8.subarray(o + 4, o + 8 + len)) !== dv.getUint32(o + 8 + len)) throw new Error('the icon isn\'t a valid PNG');
     if (type === 'IHDR') {
       ihdr = { w: dv.getUint32(o + 8), h: dv.getUint32(o + 12), depth: u8[o + 16], ctype: u8[o + 17], interlace: u8[o + 20] };
     } else if (type === 'PLTE') palette = data;

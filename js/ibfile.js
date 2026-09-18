@@ -231,6 +231,8 @@ export function tarWrite(members) {
     h[156] = m.dir ? 0x35 : 0x30;        // '5' folder, '0' regular file
     tarField(h, 257, 6, 'ustar\0');
     tarField(h, 263, 2, '00');
+    tarField(h, 329, 8, octal(0, 8));    // devmajor, devminor: as Go's archive/tar
+    tarField(h, 337, 8, octal(0, 8));    // writes them, so packs match byte for byte
     let sum = 0;
     for (let i = 0; i < 512; i++) sum += h[i];
     tarField(h, 148, 8, sum.toString(8).padStart(6, '0') + '\0 ');
