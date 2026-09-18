@@ -363,6 +363,18 @@ func (c *Catalog) ResolveFiles(app *App) (string, []FileRef, error) {
 					cur = nil
 				}
 			}
+			// A block reaches up to just below the next newer OS version, and
+			// the newest is open-ended, so point releases (macOS 26.2 is
+			// 2602) and future versions are covered.
+			top := func(o OSID) int {
+				hi := 9999
+				for _, n := range c.OS.ByFamily[family] {
+					if n.Int > o.Int && n.Int-1 < hi {
+						hi = n.Int - 1
+					}
+				}
+				return hi
+			}
 			for _, o := range c.OS.ByFamily[family] {
 				if !contains(o.Arches, machine) {
 					flush()
@@ -380,7 +392,7 @@ func (c *Catalog) ResolveFiles(app *App) (string, []FileRef, error) {
 						}
 					} else {
 						flush()
-						cur = &block{family: family, min: o.Int, max: o.Int, minBuild: cond.minBuild, arches: []string{machine}, p: cond,
+						cur = &block{family: family, min: o.Int, max: top(o), minBuild: cond.minBuild, arches: []string{machine}, p: cond,
 							labels: []string{o.Label + " (build " + strconv.Itoa(cond.minBuild) + "+)"}}
 					}
 					flush()
@@ -394,7 +406,7 @@ func (c *Catalog) ResolveFiles(app *App) (string, []FileRef, error) {
 					continue
 				}
 				flush()
-				cur = &block{family: family, min: o.Int, max: o.Int, arches: []string{machine}, p: p, labels: []string{o.Label}}
+				cur = &block{family: family, min: o.Int, max: top(o), arches: []string{machine}, p: p, labels: []string{o.Label}}
 				if o.ID == "11" {
 					cur.minBuild = o.Build
 				}
@@ -453,6 +465,24 @@ func versionTokens(v Version) *strings.Replacer {
 }
 
 var appDirPath = regexp.MustCompile(`\{app_dir\}[^ "]*`)
+
+// quoteAppPaths quotes bare {app_dir}/... paths in an app's own commands:
+// install roots can contain spaces (macOS "Application Support").
+func quoteAppPaths(s string) string {
+	var b strings.Builder
+	last := 0
+	for _, m := range appDirPath.FindAllStringIndex(s, -1) {
+		b.WriteString(s[last:m[0]])
+		if m[0] > 0 && s[m[0]-1] == '"' {
+			b.WriteString(s[m[0]:m[1]])
+		} else {
+			b.WriteString(`"` + s[m[0]:m[1]] + `"`)
+		}
+		last = m[1]
+	}
+	b.WriteString(s[last:])
+	return b.String()
+}
 
 func (c *Catalog) write(app *App, rt *Runtime, blocks []block) string {
 	var w ibtext.Writer
@@ -636,7 +666,7 @@ func (c *Catalog) writeTarget(w *ibtext.Writer, app *App, pol *RuntimePolicy, b 
 			install = r.ProjectInstall.Command
 		}
 	case app.Install != "":
-		install = app.Install
+		install = quoteAppPaths(app.Install)
 	}
 	if app.PackageCmd != "" && install == "" && r.ProjectInstall != nil {
 		install = r.ProjectInstall.Command
@@ -661,7 +691,7 @@ func (c *Catalog) writeTarget(w *ibtext.Writer, app *App, pol *RuntimePolicy, b 
 	}
 	// Launch: the app's command, with {runtime} expanded to the runtime's
 	// program and its own flags.
-	launch := app.Launch
+	launch := quoteAppPaths(app.Launch)
 	if l := r.Launch; l != nil && l.Program != nil {
 		rc := `"` + fix(*l.Program) + `"`
 		for _, a := range l.Args {
