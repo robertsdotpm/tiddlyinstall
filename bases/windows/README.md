@@ -15,14 +15,16 @@ code in it. Unicode NSIS 3.09; runs on Windows XP SP3 to 11 and Server
 | `base.nsi` | The installer and its uninstaller (`WriteUninstaller`) |
 | `launcher.nsi` | `launch.exe`, copied into every app folder |
 | `include/ibutil.nsh` | Helpers shared by both: UTF-8 in and out, tab-separated fields, base32, environment, elevation |
-| `build.sh` | Builds `out/launcher.exe`, then `out/base.exe`, which embeds it |
+| `build.sh` | Builds `out/launcher.exe`, then `out/base.exe`, which embeds it and the plan signing key |
 | `append_meta.py` | Appends a metadata block (format.md section 4) to a base, for testing |
-| `plugins/x86-unicode/` | Third-party NSIS plugins (below) |
+| `plugins/x86-unicode/` | NSIS plugins (below) |
+| `plugin-src/` | Source of our `ibsig` plugin and its `build.sh` |
 | `tools/7za.exe` | 7-Zip 9.20 command line, for `7z` and `tar.*` |
 
 ```sh
 ./build.sh                                        # out/launcher.exe, out/base.exe
 IB_BACKEND=http://127.0.0.1:8091 IB_OUTFILE=out/base-test.exe ./build.sh
+IB_PLAN_PUBKEY_FILE=/srv/ib/data/plan-signing-key.pub ./build.sh
 python3 append_meta.py out/base.exe app.exe --record record.txt --plan plan.txt [--pack FILE...]
 python3 append_meta.py --hash record.txt          # the record's 26-character hash
 python3 append_meta.py --show app.exe             # the footer an exe carries
@@ -31,16 +33,43 @@ python3 append_meta.py --show app.exe             # the footer an exe carries
 `makensis` is `~/.local/bin/makensis` (NSIS 3.09 with its stubs under
 `~/.local/opt/ib-tools`). `out/` is not committed.
 
+**The plan signing key** ([format.md](../../docs/format.md), "Plan
+signature") is built into the base: `build.sh` reads one line of base64
+(the raw 32-byte Ed25519 public key) from `IB_PLAN_PUBKEY_FILE`, by
+default `../../server/data/plan-signing-key.pub`, which the server writes
+on its first start. It refuses to build without one. A base only trusts
+plans from the server whose key it was built with, so production bases
+must be built with production's `plan-signing-key.pub`.
+
 ## Command line
+
+Values end at the next space, or at a closing `"` if they start with one
+(`/log="C:\My logs\i.log"`). `/` inside a value is fine.
 
 | Option | Meaning |
 | --- | --- |
-| `/S` | Silent: no pages, same engine. Exit code 0 = installed, 2 = couldn't start (no metadata, no matching target, a `fail` block, no admin rights), 3 = install failed and was rolled back |
+| `/S` | Silent: no pages, same engine. Exit code 0 = installed, 2 = couldn't start (no metadata, no matching target, a `fail` block, no admin rights, a plan refused), 3 = install failed and was rolled back |
 | `/log=<path>` | Append the detail log (the transparency text, every download, step and command output) to a UTF-8 file |
 | `/record=<path>` | Use this record; the plan comes from `/plan=` or the backend |
-| `/plan=<path>` | Use this plan |
+| `/plan=<path>` | Use this plan. It must be signed by the built-in key (save it from `<backend>/api/plan/<record>`) |
+| `/unsigned-plan` | Accept an unsigned (or edited) `/plan=`, for plans you wrote yourself. The review page says so |
 | `/backend=<url>` | Backend for records and plans. Otherwise the record's `backend` line, otherwise the built-in `IB_BACKEND` (`http://10.0.1.76:8080`) |
 | `/ib-elevated` | Internal: marks the copy started with `runas` |
+
+**Mode A (a signed base with no appended block)** accepts none of
+`/record=`, `/plan=`, `/unsigned-plan` and `/backend=` (it stops with
+exit code 2 and says why), ignores `install.txt` and the record's
+`backend` line, and installs only the record named in its file name,
+from the built-in backend (design.md section 3). Use an unsigned base
+(mode C) or your own signed build (mode B) for custom settings.
+
+**Plans must be signed.** A plan fetched from a backend, and a
+`/plan=` file without `/unsigned-plan`, is refused unless the `ibsig`
+plugin finds a valid signature by the built-in key; a plan embedded in
+the installer may be unsigned (the review page warns). Every plan must
+name the record being installed, and a plan by name must say, in its
+signed `request` line, the runtime and package the file name asked for.
+The review page shows the key id.
 
 Metadata is looked for in plan.md 1.1 order: command line, the appended
 block (on a signed exe it ends at the certificate table, after skipping
@@ -63,7 +92,13 @@ name").
 `<root>` is `%LOCALAPPDATA%\<rootname>`, or `C:\<rootname>` on XP/2003
 (short paths) and for `root system`, which also means HKLM and all-users
 shortcuts. `root system` or `admin 1` make the installer start itself
-again with `runas` (Vista and later) and wait for that copy.
+again with `runas` (Vista and later) and wait for that copy. With `root
+system`, `C:\<rootname>` gets a protected ACL (owner Administrators;
+Administrators and SYSTEM full control, Users read and execute, nothing
+inherited from `C:\`), set with `SetNamedSecurityInfoW` from SDDL so it
+works the same from XP on and doesn't depend on localised group names.
+Every folder the installer makes holds a `.ib-owner` file naming the app
+(format.md section 5).
 
 Shortcuts: Start menu folder `<App>` holding `<App>.lnk` (to
 `launch.exe`) and `Uninstall <App>.lnk`, plus a desktop shortcut if
@@ -71,12 +106,16 @@ Shortcuts: Start menu folder `<App>` holding `<App>.lnk` (to
 `Software\Microsoft\Windows\CurrentVersion\Uninstall\ib-<appid>`.
 
 The uninstaller reads `manifest.txt` in its own folder and removes only
-`dir` entries that are `<root>\<12 base32 chars>`, `.lnk` shortcuts in a
-Start menu or desktop folder (then the app's Start menu folder, if
-empty), and the app's own `ib-<appid>` uninstall key; then its own folder,
-and the root if that is now empty. Like every NSIS uninstaller it runs
+`dir` entries that are `<root>\<12 base32 chars>` and whose `.ib-owner`
+names this app, `.lnk` shortcuts in a Start menu or desktop folder (then
+the app's Start menu folder, if empty), and the app's own `ib-<appid>`
+uninstall key; then its own folder, if its `.ib-owner` names the app, and
+the root if that is now empty. A folder with a missing or different
+`.ib-owner` is kept and reported. Like every NSIS uninstaller it runs
 from a copy in `%TEMP%\~nsuN.tmp`, which Windows deletes at the next
-reboot.
+reboot; the `uninstall.exe` it was started as may still be running for a
+moment, so removing the app folder is retried for up to 15 s, then left
+to the next restart (`/REBOOTOK`).
 
 ## Launcher
 
@@ -106,6 +145,43 @@ the shortcuts carry the app's name.
   run, plus shortcuts and the uninstall key, is removed.
 - NSIS strings are at most 1024 characters, so plan lines must be shorter
   than that (a longer line would be split).
+- The review page and error dialogs show control characters (C0 but tab
+  and newlines, DEL, C1) and bidi controls (U+200E/F, U+202A-202E,
+  U+2066-2069) from the record and plan as `?` (`ibsig::cleanfile`,
+  `ibsig::cleanstr`), so a name can't reorder or hide what is shown.
+- An HTTP 451 from the backend is reported as a takedown (design.md 7).
+
+## The `ibsig` plugin
+
+`plugins/x86-unicode/ibsig.dll` (ours, built from `plugin-src/`):
+
+```nsis
+ibsig::check "<plan file>" "<base64 public key>"  ; Pop: ok | unsigned: … | bad: … | error: …
+ibsig::cleanfile "<UTF-16LE file>"                ; rewrites it with unsafe characters as '?'
+ibsig::cleanstr "<text>"                          ; Pop: the cleaned text
+```
+
+Ed25519 verification is TweetNaCl 20140427 (public domain), cut down to
+what verifying needs (SHA-512, field and point arithmetic, reduction mod
+L, point decompression) plus the RFC 8032 check that S < L, which
+TweetNaCl leaves out. `plancheck.c` finds the `sig` line and checks the
+signed bytes start with `ib-plan<TAB>`. The DLL links no C runtime and
+imports only `CreateFileW`, `ReadFile`, `WriteFile`, `SetFilePointer`,
+`GetFileSize`, `CloseHandle`, `GlobalAlloc`, `GlobalFree` and
+`lstrcpynW` from kernel32; it is built for Pentium MMX (no SSE2) with
+subsystem and OS version 5.1, so XP's loader takes it. Tested on XP SP3
+and Windows 10. The committed DLL (llvm-mingw 20260908, no timestamp) has
+sha256 `ea410feaa925069054c30bd38266cde3ac095c36e8dc91892af8daca250ec1cd`.
+
+```sh
+LLVM_MINGW=~/.local/opt/llvm-mingw-20260908-msvcrt-ubuntu-22.04-x86_64 plugin-src/build.sh
+```
+
+`plugin-src/build.sh` also builds `test_host.c` with the host compiler
+and runs the RFC 8032 test vectors; `test_host <plan> <key>` checks a
+plan file the way the plugin does. llvm-mingw
+(https://github.com/mstorsjo/llvm-mingw) is a tarball: unpack it
+anywhere, nothing is installed.
 
 ## Third-party binaries
 

@@ -25,10 +25,11 @@ Install.app/Contents/MacOS/install          # macOS, from a terminal
 
 | Option | Meaning |
 | --- | --- |
-| `--yes` | Don't ask (install or uninstall unattended). Also skips the done/failed dialogs |
+| `--yes` | Don't ask (install or uninstall unattended). No dialog of any kind is opened: messages go to stderr, and when administrator rights are needed without a terminal only `sudo -n` is tried |
 | `--log=PATH` | Write the log here. Otherwise it goes to `$TMPDIR/ib-<time>-<pid>.log`, is kept on failure, and is copied to `<app>/install.log` on success |
 | `--record=PATH` | Use this `ib-record` |
-| `--plan=PATH` | Use this `ib-plan` (without it, the plan comes from the metadata or the backend) |
+| `--plan=PATH` | Use this `ib-plan` (without it, the plan comes from the metadata or the backend). It must be signed by the built-in key: save it from `<backend>/api/plan/<record>` |
+| `--unsigned-plan` | Accept an unsigned or edited `--plan` (or `install.txt` plan), for plans you wrote yourself; the transparency screen says so |
 | `--backend=URL` | Where records and plans are fetched from. Otherwise the record's `backend` line, then `http://10.0.1.76:8080` |
 | `--uninstall` | Uninstall mode. `uninstall.sh` also switches to it by itself when `manifest.txt` is next to it |
 
@@ -62,10 +63,55 @@ In order (plan.md 1.1):
    `<backend>/api/plan/name/<runtime>/<package>` (docs/api.md, "Plans by
    name"): the package from the runtime's registry with default settings.
 
-With a record and no plan, the plan comes from `<backend>/api/plan/<hash>`
-and its `record` line must match. An embedded plan whose `record` line
-doesn't match the record (someone edited the record) is used, with a
-warning on the transparency screen.
+With a record and no plan, the plan comes from `<backend>/api/plan/<hash>`.
+
+### Plan signatures
+
+The plan signing key ([format.md](../../docs/format.md), "Plan
+signature") is baked in at build time: `make_run.sh` and `make_app.sh`
+fill the engine's `IB_PLAN_PUBKEY=` and `IB_PLAN_KEYID=` lines
+(`plankey.sh`) from `IB_PLAN_PUBKEY_FILE`, by default
+`../../server/data/plan-signing-key.pub`, which the server writes on its
+first start. They refuse to build without it.
+
+The engine checks the signature with `openssl pkeyutl -verify -pubin
+-rawin`, after proving that works on RFC 8032 test vector 2 (and that a
+changed message fails). Then:
+
+| Plan from | Signed by the built-in key | Unsigned or wrong | No way to check (see below) |
+| --- | --- | --- | --- |
+| a backend (`/api/plan/…`) | used | refused | used only if fetched over **HTTPS**, with a warning; refused over plain HTTP |
+| `--plan`, or `install.txt` that is a plan | used | refused unless `--unsigned-plan` | refused unless `--unsigned-plan` |
+| embedded (`.run` block, `.app` Resources) | used | used, with a warning | used, with a warning |
+
+Every plan's `record` line must be the record being installed (an
+embedded plan for an edited record is refused; the browser editor
+rewrites the line and drops the signature). A plan by name must carry
+the signed `request<TAB>name<TAB><runtime><TAB><package>` line the file
+name asked for.
+
+**When openssl can't check Ed25519.** That needs OpenSSL 1.1.1 or later.
+RHEL/CentOS 7 (1.0.2), CentOS 6, and macOS's `/usr/bin/openssl`
+(LibreSSL) can't; neither can a machine with no `openssl`. The engine
+then fails closed on plain HTTP and accepts a plan only when it came over
+HTTPS (curl and wget check the certificate, so it came from the
+backend), and says so on the transparency screen. A warning instead of
+refusing would have made the signature optional for exactly the old
+machines on plain HTTP it exists for. On such machines, install OpenSSL
+1.1.1+ (it only needs to be on `PATH`) or use an HTTPS backend.
+
+**Mode A on macOS.** An `.app` signed with an identity (not ad hoc) whose
+signature verifies and which has no files in `Contents/Resources/ib` is a
+mode A base: it refuses `--record`, `--plan`, `--unsigned-plan` and
+`--backend`, ignores `install.txt` and the record's `backend` line, and
+only installs the record named in its bundle name from the built-in
+backend (design.md section 3). Linux `.run` files carry no signature, so
+nothing is locked there. `IB_TEST_MODE_A=1` turns the restriction on
+anywhere, for tests.
+
+curl, wget and openssl run with `HOME` set to the engine's temp folder,
+so they can't leave `~/.pki` (curl with NSS on CentOS 7), `~/.wget-hsts`
+or `~/.rnd` behind, and don't read the user's `~/.curlrc`.
 
 The pack is used whatever the metadata's source: before downloading a
 `file` (or the source), the engine looks for its SHA-256 in the pack.
@@ -84,8 +130,9 @@ The pack is used whatever the metadata's source: before downloading a
    in, every folder, the shortcuts and uninstaller, `note`s, whether
    admin rights are needed, who signed the installer (Linux: nobody,
    plus the file's SHA-256; macOS: `codesign -dv`, and whether the
-   signature still verifies), and where the metadata and plan came from,
-   with a warning when the plan came over plain HTTP.
+   signature still verifies), where the metadata and plan came from,
+   the plan signing key's id when the plan is signed, and a warning when
+   a plan was accepted without a checked signature (above).
 3. `root system` or `admin 1`: re-runs itself as root, with the record
    and plan already resolved: `sudo` in a terminal, `pkexec` on a Linux
    desktop, `osascript ... with administrator privileges` on macOS.
@@ -120,6 +167,13 @@ path and last lines in an `osascript` dialog.
 | `unpack` | `tar` (`-o` when root); `tar.gz` via `gzip -dc`; `tar.xz` via `xz -dc`, else `tar -xJf` (macOS has no `xz`, its libarchive `tar` reads it); `tar.bz2` via `bzip2 -dc`; `zip` via `unzip`, else `ditto -x -k`; `7z` via `7zz`/`7z`/`7za`/`7zr` if present, else it fails saying so. Extraction goes to a staging folder; `strip 1` then moves the contents of each top-level folder into `dest` (merging), and drops top-level plain files, like `tar --strip-components=1`. `strip` isn't passed to `tar` because busybox and old tars lack it. A leading `./` is not counted as a component |
 | `run` | `sh -c` in `{dir}`, stdin from `/dev/null`, output to the log. Non-zero fails. `IB_APP_DIR`, `IB_RUNTIME_DIR`, `IB_APP_NAME` are exported (design 1.5) |
 | `mkdir`, `write`, `delete` | Only inside the app's folders or `{tmp}` (no `..`); anything else fails the install. `write` appends a line ending in `\n` |
+| anything else | Fails the install (format.md: an unknown step is never skipped) |
+
+Everything shown on screen (the transparency text, dialogs, the log tail
+on failure) passes through `ib_clean`: control characters (C0 but tab
+and newline, DEL, C1) and bidi controls (U+200E/F, U+202A-202E,
+U+2066-2069) become `?`, so plan text can't blank or reorder the
+terminal or a dialog.
 
 Tokens are replaced by plain string substitution in `awk`, with values
 passed through the environment so nothing is re-escaped; unknown `{...}`
@@ -165,8 +219,10 @@ reads `manifest.txt` next to it and removes exactly what it lists:
 - `shortcut` files only if named `ib-<appid>*`; symlinks; `.app` bundles
   only if their `Contents/Resources/ib-appid` names this app;
 - `dir` entries only if they are directly in the install root, 12
-  base32 characters, not the app folder, and not owned by another app;
-- then the app folder, then the root if empty;
+  base32 characters, not the app folder, and their `.ib-owner` names this
+  app (a missing `.ib-owner` counts as someone else's);
+- then the app folder, if its own `.ib-owner` names the app, then the
+  root if empty;
 - `shortcut` entries that are folders (parents the installer created,
   such as `~/Applications/<App>` or `~/.config/menus`) only if empty.
 
