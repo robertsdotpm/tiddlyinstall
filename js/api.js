@@ -13,6 +13,16 @@
 // thrown as an ApiError carrying the server's {error, code}.
 
 export const DEFAULT_REMOTE = 'http://10.0.1.76:8080';
+// The site is one file (tools/build_site.py, plan.md section 1.11) that
+// also carries its own builder, js/local-api.js, as globalThis.ibLocalApi.
+// LOCAL as the backend means "no build server: this page answers every
+// call itself". Opened from disk, the page starts that way.
+export const LOCAL = 'local';
+const HAS_LOCAL = !!globalThis.IB_HAS_LOCAL;
+// The page's pages are sections of one file (#new, #build&job=...).
+const ONE_FILE = !!globalThis.IB_ONE_FILE;
+// The name "Save this page" suggests.
+export const SAVE_AS = 'tiddlyinstall.html';
 const API_KEY = 'ib.api';
 const SAME_ORIGIN_KEY = 'ib.api.sameorigin';
 const REQUEST_TIMEOUT_MS = 20000;
@@ -48,9 +58,14 @@ export function normalizeApi(v) {
 }
 
 const pageIsHttp = typeof location !== 'undefined' && /^https?:$/.test(location.protocol);
-const explicitApi = normalizeApi(readParamApi()) || normalizeApi(readStoredApi());
-let apiBaseUrl = explicitApi || DEFAULT_REMOTE;
-let defaultApi = DEFAULT_REMOTE;
+const localOk = (v) => (HAS_LOCAL && String(v || '').trim() === LOCAL ? LOCAL : null);
+const explicitApi = localOk(readParamApi()) || normalizeApi(readParamApi()) || localOk(readStoredApi()) || normalizeApi(readStoredApi());
+// Opened from disk (or any non-http page) with its own builder: no server.
+let defaultApi = HAS_LOCAL && !pageIsHttp ? LOCAL : DEFAULT_REMOTE;
+let apiBaseUrl = explicitApi || defaultApi;
+
+// True when this page builds installers itself (no build server).
+export function apiLocal() { return apiBaseUrl === LOCAL; }
 let readyPromise = null;
 
 // Is this page served by a build server? Asked once per tab, and only when
@@ -83,6 +98,7 @@ export function apiReady() {
         defaultApi = location.origin;
         if (!explicitApi) apiBaseUrl = defaultApi;
       }
+      paintMode();
       paintApiFooter();
       return apiBaseUrl;
     })();
@@ -99,6 +115,11 @@ export function apiDefault() { return defaultApi; }
 // link onto the page. Anything else, or a value that isn't a URL, returns ''.
 export function absUrl(path) {
   if (!path) return '';
+  if (apiLocal()) {
+    // Only what this page made: blob: URLs, and paths it can answer.
+    if (/^blob:/i.test(path)) return path;
+    return globalThis.ibLocalApi ? globalThis.ibLocalApi.url(path) : '';
+  }
   if (/^[a-z][a-z0-9+.-]*:/i.test(path)) {
     return /^https?:\/\//i.test(path) ? path : '';
   }
@@ -107,6 +128,7 @@ export function absUrl(path) {
 
 export function setApiBase(url) {
   apiBaseUrl = url;
+  paintMode();
   try {
     if (url === defaultApi) localStorage.removeItem(API_KEY);
     else localStorage.setItem(API_KEY, url);
@@ -114,8 +136,12 @@ export function setApiBase(url) {
   paintApiFooter();
   if (banner) banner.querySelector('.api-url').textContent = apiBaseUrl;
   window.dispatchEvent(new CustomEvent('ib-api-change', { detail: { url } }));
-  // A new server deserves an immediate try rather than the old backoff.
-  if (isDown) tryNow();
+  // A new server deserves an immediate try rather than the old backoff;
+  // this page's own builder is never down.
+  if (isDown) {
+    if (url === LOCAL) markUp();
+    else tryNow();
+  }
 }
 
 /* ---------- down / up ---------- */
@@ -143,8 +169,10 @@ function ensureBanner() {
   banner.innerHTML =
     '<span class="api-banner-text">Can\'t reach the build server at <code class="api-url"></code>. ' +
     '<span class="api-wait"></span></span> ' +
-    '<button type="button" class="secondary api-try">Try now</button>';
+    '<button type="button" class="secondary api-try">Try now</button>' +
+    (HAS_LOCAL ? ' <button type="button" class="secondary api-use-local">Build in this page instead</button>' : '');
   banner.querySelector('.api-try').addEventListener('click', tryNow);
+  if (HAS_LOCAL) banner.querySelector('.api-use-local').addEventListener('click', () => setApiBase(LOCAL));
   document.body.prepend(banner);
   return banner;
 }
@@ -236,8 +264,11 @@ async function timedFetch(url, opts) {
 // returns the body as a string or Uint8Array instead.
 export async function apiRequest(path, opts = {}) {
   await apiReady();
+  if (apiLocal()) return globalThis.ibLocalApi.request(path, opts);
   for (;;) {
     await whenUp();
+    // Switched to this page's own builder while waiting for a server.
+    if (apiLocal()) return globalThis.ibLocalApi.request(path, opts);
     const init = { method: opts.method || 'GET', cache: 'no-store', headers: {} };
     if (opts.body !== undefined) {
       init.body = JSON.stringify(opts.body);
@@ -292,20 +323,32 @@ export function errorText(e) {
 let footerEl = null;
 
 function prettyApi(u) {
-  return String(u).replace(/^https?:\/\//, '');
+  return u === LOCAL ? 'none, this page builds installers itself' : String(u).replace(/^https?:\/\//, '');
+}
+
+// Which features show: html.ib-local hides what needs a build server (mode
+// A, packing runtimes, the timestamp relay; css/style.css .online-only).
+function paintMode() {
+  document.documentElement.classList.toggle('ib-local', apiLocal());
 }
 
 function paintApiFooter() {
   if (!footerEl) return;
   const a = footerEl.querySelector('.api-ctl-url');
-  a.href = apiBaseUrl + '/api/health';
+  if (apiLocal()) {
+    a.removeAttribute('href');
+  } else {
+    a.href = apiBaseUrl + '/api/health';
+  }
   a.textContent = prettyApi(apiBaseUrl);
-  a.title = apiBaseUrl === defaultApi ? apiBaseUrl + ' (default)' : apiBaseUrl + ' (custom)';
+  a.title = apiBaseUrl === defaultApi ? apiBaseUrl + ' (default)' : apiBaseUrl + ' (chosen)';
 }
 
-// Adds "Build server: <url> [change]" to the page footer, and carries a
-// ?api= from the URL onto links to the site's other pages.
+// Adds "Build server: <url> [change]" to the page footer, and "Save this
+// page" when the page is the one-file site. Carries a ?api= from the URL
+// onto links to the site's other pages.
 export function mountApiFooter() {
+  if (footerEl) return;   // the one-file site's pages share one footer
   const footer = document.querySelector('.site-footer') || document.body;
   footerEl = document.createElement('div');
   footerEl.className = 'api-ctl';
@@ -319,11 +362,13 @@ export function mountApiFooter() {
     '<div class="actions">' +
     '<button type="submit">Use</button>' +
     '<button type="button" class="secondary api-ctl-default">Default</button>' +
+    (HAS_LOCAL ? '<button type="button" class="secondary api-ctl-local">No server</button>' : '') +
     '<button type="button" class="secondary api-ctl-cancel">Cancel</button>' +
     '</div>' +
     '<p class="hint">Kept in this browser only, and shareable as <code>?api=</code> on the page URL. ' +
-    'A page served over HTTPS can\'t use a plain http:// server.</p>' +
-    '</form>';
+    'A page served over HTTPS can\'t use a plain http:// server.' +
+    (HAS_LOCAL ? ' With no server, this page builds installers itself: modes B and C, code written here or package names.' : '') +
+    '</p></form>';
   footer.appendChild(footerEl);
   const form = footerEl.querySelector('form');
   const input = footerEl.querySelector('.api-ctl-input');
@@ -333,7 +378,7 @@ export function mountApiFooter() {
   const close = () => { form.hidden = true; showErr(''); };
   edit.addEventListener('click', () => {
     if (form.hidden) {
-      input.value = apiBaseUrl;
+      input.value = apiLocal() ? '' : apiBaseUrl;
       form.hidden = false;
       input.focus();
       input.select();
@@ -342,7 +387,7 @@ export function mountApiFooter() {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     e.stopPropagation();
-    const url = normalizeApi(input.value);
+    const url = localOk(input.value) || normalizeApi(input.value);
     if (!url) { showErr('That is not an http(s) URL.'); return; }
     setApiBase(url);
     close();
@@ -351,13 +396,28 @@ export function mountApiFooter() {
     setApiBase(defaultApi);
     close();
   });
+  if (HAS_LOCAL) {
+    footerEl.querySelector('.api-ctl-local').addEventListener('click', () => {
+      setApiBase(LOCAL);
+      close();
+    });
+  }
   footerEl.querySelector('.api-ctl-cancel').addEventListener('click', close);
+  if (typeof IB_PRISTINE !== 'undefined') {
+    const save = document.createElement('p');
+    save.className = 'save-ctl';
+    save.innerHTML = '<button type="button" class="link-button save-page">Save this page</button> ' +
+      '<span class="muted">One file with everything inside. Opened from your disk it works with no build server.</span>';
+    footer.appendChild(save);
+    save.querySelector('.save-page').addEventListener('click', savePage);
+  }
+  paintMode();
   paintApiFooter();
   apiReady();
 
   // Keep a ?api= while moving between pages, so a shared link keeps working.
   const p = readParamApi();
-  if (p) {
+  if (p && !ONE_FILE) {
     document.querySelectorAll('a[href]').forEach((a) => {
       const h = a.getAttribute('href');
       if (!/^[\w./-]+\.html(#.*)?$/.test(h)) return;
@@ -367,8 +427,22 @@ export function mountApiFooter() {
   }
 }
 
+// Saves the page exactly as it was loaded (IB_PRISTINE, captured before any
+// script changed it), so the saved copy is as good as the original.
+export function savePage() {
+  const html = typeof IB_PRISTINE !== 'undefined' ? IB_PRISTINE : '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+  a.download = SAVE_AS;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+
 // A link to another page of the site that keeps ?api= (for navigation from JS).
+// In the one-file site the pages are sections: #<page>&<hash>.
 export function pageUrl(file, hash) {
+  if (ONE_FILE) return '#' + file.replace(/\.html$/, '').replace(/^index$/, 'home') + (hash ? '&' + hash : '');
   const p = readParamApi();
   return file + (p ? '?api=' + encodeURIComponent(p) : '') + (hash ? '#' + hash : '');
 }

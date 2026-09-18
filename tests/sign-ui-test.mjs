@@ -2,9 +2,9 @@
 // protocol and checks what it downloads with osslsigncode and gpg.
 //
 //   node --experimental-websocket tests/sign-ui-test.mjs --site http://127.0.0.1:8080
-//        [--page file:///path/editor-standalone.html] [--no-timestamp]
+//        [--page file:///path/dist/index.html] [--no-timestamp]
 //
-// --site is a running ibserver (it serves edit.html, and /api/tsa for the
+// --site is a running ibserver (it serves the site, and /api/tsa for the
 // timestamp); --page tests another copy of the editor against it. Keys are
 // made fresh in a temporary folder and deleted afterwards.
 import { spawn, execFileSync, spawnSync } from 'node:child_process';
@@ -20,7 +20,7 @@ if (!SITE || typeof WebSocket === 'undefined') {
   console.log('usage: node --experimental-websocket tests/sign-ui-test.mjs --site http://127.0.0.1:8080 [--page URL] [--no-timestamp]');
   process.exit(2);
 }
-const PAGE = arg('--page') || SITE + '/edit.html';
+const PAGE = arg('--page') || SITE + '/#edit';
 const TIMESTAMP = !process.argv.includes('--no-timestamp');
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'ib-sign-ui-'));
 const DL = path.join(TMP, 'dl');

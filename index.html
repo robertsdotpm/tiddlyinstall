@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Installer Builder</title>
+  <title>TiddlyInstall</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="index.html">Installer Builder</a>
+    <a class="brand" href="index.html">TiddlyInstall</a>
     <nav>
       <a href="index.html" aria-current="page">Home</a>
       <a href="new.html">New installer</a>
@@ -32,6 +32,16 @@
       <a class="button secondary" href="new.html#write">Write an app</a>
       <a class="button secondary" href="bases.html">Start from a base installer</a>
     </div>
+
+    <h2>One file, like TiddlyWiki</h2>
+    <p>TiddlyInstall is a single HTML file. This page carries the base
+    installers, the runtime catalogue and all the code that makes, edits
+    and signs installers. Save it (at the bottom of the page) and open it
+    from your disk, and it keeps working with no server: it builds
+    installers for code you write here or for packages, edits any unsigned
+    installer, and signs with your own key. When a build server is there,
+    it uses it for the rest: installers signed by us, GitHub repos, and
+    installers with their runtimes packed inside.</p>
 
     <h2>How it works</h2>
     <div class="grid">

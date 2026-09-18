@@ -4,7 +4,7 @@ dependency, both MIT, (c) 2018 jet) into one classic script,
 vendor/resedit-bundle.js, that sets globalThis.__IB_RESEDIT to the resedit
 module namespace.
 
-The site pages load it with <script src>, and tools/make_standalone.py inlines
+The site pages load it with <script src>, and tools/build_site.py inlines
 its text into the self-contained editor page, so icon editing needs no network.
 
     python3 tools/build_resedit_bundle.py

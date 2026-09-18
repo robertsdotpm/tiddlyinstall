@@ -8,7 +8,7 @@ import { beginPE, finishPE, pfxSigner, signPE } from './authenticode.js';
 import { parseCertBundle } from './x509.js';
 import { b64, unb64, hex } from './der.js';
 import * as pgp from './pgp.js';
-import { apiReady, errorText } from './api.js';
+import { apiReady, errorText, apiLocal } from './api.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -41,7 +41,7 @@ function describeCert(c, chain) {
 }
 
 function timestampFn() {
-  if (!$('ts-on').checked) return null;
+  if (apiLocal() || !$('ts-on').checked) return null;   // the relay is the build server's
   const name = $('ts-name').value;
   return async (req) => {
     let r;

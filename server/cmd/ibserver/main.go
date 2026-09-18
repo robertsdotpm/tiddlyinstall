@@ -60,7 +60,7 @@ func main() {
 	local := flag.String("local", filepath.Join(home, "projects/installer-builder-runtimes"), "our copies of catalogue files (served at /mirror/)")
 	policy := flag.String("policy", filepath.Join(repo, "server/policy.json"), "resolver policy")
 	data := flag.String("data", filepath.Join(repo, "server/data"), "data folder")
-	site := flag.String("site", repo, "static site to serve at /")
+	site := flag.String("site", filepath.Join(repo, "dist"), "static site to serve at / (tools/build_site.py writes it)")
 	bases := flag.String("bases", filepath.Join(repo, "bases"), "base installers")
 	public := flag.String("public", "http://10.0.1.76:8080", "this server's public URL")
 	workers := flag.Int("workers", 2, "concurrent jobs")

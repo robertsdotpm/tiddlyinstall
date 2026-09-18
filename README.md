@@ -1,4 +1,4 @@
-# installer-builder
+# TiddlyInstall (installer-builder)
 Build installers and executables for Windows, Linux, and macOS
 
 ## Front end
@@ -31,8 +31,9 @@ page is lost.
 | `js/ibfile.js` | Installer metadata (docs/format.md section 4): the appended block for `.exe` (it stops before a certificate table) and `.run`, the files in the `.app` of a macOS `.zip`, tar packs, record hashes, and a small zip reader and writer that keeps permissions and symlinks |
 | `js/new.js`, `js/build.js`, `js/edit.js` | The three live pages |
 | `js/icon.js` | Icons in the browser: a `.ico` (BMP for XP + PNG) written into a `.exe` with resedit-js, an `.icns` for the `.app`, and the Linux launcher PNG packed with an `icon` record key. PNG is encoded in JS so it is deterministic |
-| `vendor/resedit-bundle.js` | resedit-js 2.0.3 + pe-library 1.0.1 (MIT, (c) 2018 jet; see `vendor/LICENSE.*`), bundled by `tools/build_resedit_bundle.py`. `edit.html` loads it; the standalone editor inlines it |
-| `tools/make_standalone.py` | Builds `editor-standalone.html` (gitignored): the editor as one self-contained file with the CSS, the JS, the resedit bundle and the three unsigned bases inside (from `bases/*/out/`, or placeholders if a base isn't built yet). Works from `file://` with no network (icon editing included), and has a **Save this page** button |
+| `vendor/resedit-bundle.js` | resedit-js 2.0.3 + pe-library 1.0.1 (MIT, (c) 2018 jet; see `vendor/LICENSE.*`), bundled by `tools/build_resedit_bundle.py`. `edit.html` loads it; the one-file site inlines it |
+| `tools/build_site.py` | Builds the site: one HTML file, `dist/index.html` (gitignored), with every page, the CSS, the JS, the resedit bundle, the three unsigned bases and the catalogue snapshot inside. The build server serves it; saved and opened from disk it builds installers with no server (docs/plan.md section 1.11). `--multi` also writes separate pages |
+| `js/resolve.js`, `js/builder.js`, `js/local-api.js`, `js/router.js` | The plan resolver, the job builder (shared with the server), the in-page API used when there is no build server, and the one-file site's page switching |
 | `tests/ibfile.html`, `tests/icon.html` | Unit tests for `js/ibfile.js` and `js/icon.js` in the browser. Print PASS/FAIL. Fixtures come from `tests/make_fixtures.py` (Python's tarfile and zipfile, plus a synthetic PE with an icon resource) |
 | `tests/mock_server.py` | A stand-in build server for trying the pages (`python3 tests/mock_server.py 8094`, then open `new.html?api=http://127.0.0.1:8094`) |
 

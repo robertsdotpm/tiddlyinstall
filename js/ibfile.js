@@ -200,23 +200,35 @@ function octal(n, width) {   // width includes the trailing NUL
   return n.toString(8).padStart(width - 1, '0') + '\0';
 }
 
-// members: [{name, data: Uint8Array}] -> ustar bytes
+// members: [{name, data: Uint8Array, mode?, dir?}] -> ustar bytes. A name
+// over 100 bytes is split into ustar's prefix and name at a '/'.
 export function tarWrite(members) {
   const parts = [];
   for (const m of members) {
-    const data = toBytes(m.data);
+    const data = m.dir ? new Uint8Array(0) : toBytes(m.data);
     if (data.length > 0o77777777777) throw new RangeError('tar member too large');
-    const nameBytes = ibEnc.encode(m.name);
-    if (nameBytes.length > 100) throw new RangeError('tar name too long: ' + m.name);
+    let nameBytes = ibEnc.encode(m.name);
+    let prefixBytes = null;
+    if (nameBytes.length > 100) {
+      const n = m.name;
+      let cut = -1;
+      for (let i = n.indexOf('/'); i >= 0; i = n.indexOf('/', i + 1)) {
+        if (ibEnc.encode(n.slice(0, i)).length <= 155 && ibEnc.encode(n.slice(i + 1)).length <= 100) { cut = i; break; }
+      }
+      if (cut < 0) throw new RangeError('tar name too long: ' + m.name);
+      prefixBytes = ibEnc.encode(n.slice(0, cut));
+      nameBytes = ibEnc.encode(n.slice(cut + 1));
+    }
     const h = new Uint8Array(512);
     h.set(nameBytes, 0);
+    if (prefixBytes) h.set(prefixBytes, 345);
     tarField(h, 100, 8, octal(m.mode || 0o644, 8));
     tarField(h, 108, 8, octal(0, 8));
     tarField(h, 116, 8, octal(0, 8));
     tarField(h, 124, 12, octal(data.length, 12));
     tarField(h, 136, 12, octal(m.mtime || 0, 12));
     tarField(h, 148, 8, '        ');
-    h[156] = 0x30;                       // '0' regular file
+    h[156] = m.dir ? 0x35 : 0x30;        // '5' folder, '0' regular file
     tarField(h, 257, 6, 'ustar\0');
     tarField(h, 263, 2, '00');
     let sum = 0;

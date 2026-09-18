@@ -2,7 +2,7 @@
 // ticket page. Also fills the "Newest that runs on the user's system" table
 // from GET /api/catalog/runtimes. Without JS the form still works as the
 // no-JS prototype did.
-import { apiRequest, errorText, mountApiFooter, pageUrl } from './api.js';
+import { apiRequest, errorText, mountApiFooter, pageUrl, apiLocal } from './api.js';
 
 mountApiFooter();
 
@@ -212,7 +212,7 @@ form.addEventListener('submit', async (e) => {
     const r = await apiRequest('/api/jobs', { method: 'POST', body: job });
     location.href = pageUrl('build.html', 'job=' + encodeURIComponent(r.id));
   } catch (err) {
-    showError('The build server refused this: ' + errorText(err));
+    showError((apiLocal() ? 'Couldn\'t build this: ' : 'The build server refused this: ') + errorText(err));
   } finally {
     sending = false;
     submitButtons.forEach((b, i) => { b.disabled = false; b.textContent = labels[i]; });

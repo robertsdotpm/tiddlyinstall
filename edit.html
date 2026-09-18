@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Edit installer · Installer Builder</title>
+  <title>Edit installer · TiddlyInstall</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="index.html">Installer Builder</a>
+    <a class="brand" href="index.html">TiddlyInstall</a>
     <nav>
       <a href="index.html">Home</a>
       <a href="new.html">New installer</a>
@@ -53,7 +53,7 @@
       <div class="notice-list small">
         <p><strong>Signed installers can't be edited without losing their signature.</strong>
           If you open one, it will be saved unsigned and Windows and macOS will warn people who run it.
-          To retarget an installer signed by Installer Builder, <a href="#rename">rename it</a> instead.</p>
+          To retarget an installer signed by TiddlyInstall, <a href="#rename">rename it</a> instead.</p>
       </div>
     </section>
 
@@ -284,6 +284,7 @@
               <input type="url" id="sign-url" placeholder="Optional" spellcheck="false">
             </div>
           </div>
+          <div class="online-only">
           <label class="choice"><input type="checkbox" id="ts-on" checked> Timestamp the signature, so it stays valid after your certificate expires</label>
           <div class="field">
             <label for="ts-name">Timestamp server</label>
@@ -296,6 +297,7 @@
             </select>
             <span class="hint">Timestamp servers don't accept calls from web pages, so the request goes through the build server,
               which forwards it. It carries only a hash of your signature.</span>
+          </div>
           </div>
         </div>
 
@@ -373,7 +375,7 @@ xcrun stapler staple Install.app &amp;&amp; ditto -c -k --keepParent Install.app
 
     <section class="panel" id="rename">
       <h2 class="section-title">Retarget a signed installer by renaming it</h2>
-      <p class="small">Installers signed by Installer Builder read their file name. Renaming keeps the signature.</p>
+      <p class="small">Installers signed by TiddlyInstall read their file name. Renaming keeps the signature.</p>
 <pre>
 install_python_requests.exe   installs requests
 install_python_black.exe      installs black

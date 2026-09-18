@@ -1,15 +1,15 @@
-// edit.html (and the self-contained editor-standalone.html): open an
+// edit.html (the Edit section of the one-file site, dist/index.html): open an
 // unsigned installer, edit its record, plan and packed files, download it.
 // Nothing leaves the browser. Base installers for "start a new one" come
 // from <script type="application/octet-stream" id="base-*"> blocks when the
 // page has them (the standalone page), else from the build server.
 import {
   readInstaller, writeInstaller, parseKv, serializeKv, kvGet, kvSet, newRecordText,
-  recordHash, packMember, installerExt, toBytes, peInfo, zipEntryData, zipNewEntry, bindPlan,
+  recordHash, packMember, installerExt, toBytes, peInfo, bindPlan,
 } from './ibfile.js';
 import { apiRequest, errorText, mountApiFooter } from './api.js';
 import {
-  rasterSource, buildIco, buildIcns, setExeIcon, setPlistIcon, setLinuxIcon,
+  rasterSource, buildIco, buildIcns, setExeIcon, setMacIcon, setLinuxIcon,
 } from './icon.js';
 import { mountSign, paintSign } from './sign-ui.js';
 
@@ -189,18 +189,6 @@ function resetIcon() {
   setIconStatus('');
 }
 
-// Put the .icns into the .app and point Info.plist at it. Mutates info.entries.
-async function applyIconZip(info, icnsBytes) {
-  const iconName = 'AppIcon';
-  const icnsPath = info.app + 'Contents/Resources/' + iconName + '.icns';
-  const plistPath = info.app + 'Contents/Info.plist';
-  const plist = info.entries.find((e) => e.name === plistPath);
-  if (!plist) throw new Error('This .app has no Info.plist.');
-  const xml = new TextDecoder().decode(await zipEntryData(plist));
-  const newPlist = await zipNewEntry(plistPath, setPlistIcon(xml, iconName));
-  info.entries = info.entries.filter((e) => e.name !== plistPath && e.name !== icnsPath);
-  info.entries.push(newPlist, await zipNewEntry(icnsPath, icnsBytes));
-}
 
 async function applyIcon(bytes) {
   if (!current) return;
@@ -218,7 +206,7 @@ async function applyIcon(bytes) {
       setIconStatus('Icon set. It goes into the .exe when you download it.');
     } else if (current.kind === 'zip') {
       const icns = await buildIcns(source);
-      await applyIconZip(current, icns);
+      await setMacIcon(current, icns);
       setIconStatus('Icon set. It goes into the .app when you download it.');
     } else {
       await setLinuxIcon(recEntries, packFiles, toBytes(bytes));

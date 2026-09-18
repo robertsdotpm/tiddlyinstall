@@ -589,7 +589,7 @@ form:has(#runtime option[value="cc"]:checked) .lang-cc { display: inline; }
 .lang-compiled-only { display: none; }
 form:has(#runtime option:is([value="go"], [value="rust"], [value="zig"], [value="nim"]):checked) .lang-compiled-only { display: block; }
 
-/* Signed by Installer Builder: no packed files or offline copies (no JS). */
+/* Signed by TiddlyInstall: no packed files or offline copies (no JS). */
 .ours-only, .ours-only-inline { display: none; }
 form:has(#mode-ours:checked) .ours-only { display: block; }
 form:has(#mode-ours:checked) .ours-only-inline { display: inline; }
@@ -681,3 +681,16 @@ form:not(:has(#runtime option[value="python"]:checked)) .py-panel { display: non
 .icon-edit img { border-radius: 8px; background: var(--code-bg); object-fit: contain; flex: none; }
 .icon-edit img[hidden] { display: none; }
 .error-text { color: var(--fail); }
+
+/* ---- The one-file site (plan.md 1.11): with no build server (html.ib-local)
+   what needs one is hidden. ---- */
+.local-only { display: none; }
+html.ib-local .local-only { display: inline; }
+html.ib-local .online-only { display: none !important; }
+.ib-page[hidden] { display: none; }
+.save-ctl { margin-top: 8px; }
+
+/* Customise: the sections in groups, so the list can be scanned. */
+.customise > .customise-group { margin: 28px 0 2px; font-size: 1.05em; }
+.customise > .customise-group:first-child { margin-top: 4px; }
+.customise > .customise-group-hint { margin: 0 0 10px; }

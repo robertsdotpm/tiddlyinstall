@@ -2,7 +2,7 @@
 // (so a reload keeps it). Polls GET /api/jobs/{id} every 2 s while it is
 // queued or running, less often while the tab is hidden, and rides out
 // outages through api.js.
-import { apiRequest, absUrl, ApiError, apiBase, apiDefault, errorText, mountApiFooter } from './api.js';
+import { apiRequest, absUrl, ApiError, apiBase, apiDefault, apiLocal, errorText, mountApiFooter } from './api.js';
 
 mountApiFooter();
 
@@ -98,7 +98,7 @@ function paintFiles(job) {
   if (res && res.record) {
     rec.hidden = false;
     rec.innerHTML = 'Settings record <a href="' + esc(absUrl('/api/records/' + encodeURIComponent(res.record))) +
-      '"><code>' + esc(res.record) + '</code></a>. Installers signed by Installer Builder fetch it at install time and check it against the hash in their name.';
+      '"><code>' + esc(res.record) + '</code></a>. Installers signed by TiddlyInstall fetch it at install time and check it against the hash in their name.';
   } else rec.hidden = true;
 }
 
@@ -108,7 +108,7 @@ function paintBackend() {
   // link could have set. The footer lets people change it back.
   const b = $('job-backend');
   if (!b) return;
-  if (apiBase() !== apiDefault()) {
+  if (apiBase() !== apiDefault() && !apiLocal()) {
     b.textContent = 'This build and its downloads come from ' + apiBase() +
       ', not the default build server. If you did not choose that, change it at the bottom of the page before downloading anything.';
     b.hidden = false;
@@ -123,7 +123,7 @@ function paint(job) {
   paintBackend();
   const title = job.ticket != null ? 'Build #' + job.ticket : 'Build';
   $('job-title').textContent = title;
-  document.title = title + ' · Installer Builder';
+  document.title = title + ' · TiddlyInstall';
 
   const [label, cls] = STATUS[job.status] || [job.status || 'Unknown', 'pending'];
   const st = $('job-status');
@@ -186,7 +186,7 @@ async function poll() {
     if (seq !== pollSeq) return;
     if (e instanceof ApiError && e.status === 404) {
       $('job-view').hidden = true;
-      showError('No build with id ' + id + ' on ' + apiBase() + '. It may have expired, or this page is pointed at a different build server (see the bottom of the page).');
+      showError(apiLocal() ? e.message : 'No build with id ' + id + ' on ' + apiBase() + '. It may have expired, or this page is pointed at a different build server (see the bottom of the page).');
       finished = true;
       return;
     }

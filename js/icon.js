@@ -13,13 +13,13 @@
 //
 // resedit-js and pe-library (both MIT, (c) 2018 jet) do the PE resource edit.
 // They are loaded from globalThis.__IB_RESEDIT (set by vendor/resedit-bundle.js
-// on the site pages, and inlined into the self-contained editor page by
-// tools/make_standalone.py), falling back to cdn.jsdelivr.net/npm. So the
+// on the site pages, and inlined into the one-file site by
+// tools/build_site.py), falling back to cdn.jsdelivr.net/npm. So the
 // standalone page never reaches the network.
 //
 // PNG encoding is done here in JS (a canvas encoder is skipped) so the output
 // is byte-for-byte deterministic and the tests are reliable.
-import { toBytes, peInfo, peChecksum, sha256Hex, kvSet, crc32, deflateRaw } from './ibfile.js';
+import { toBytes, peInfo, peChecksum, sha256Hex, kvSet, crc32, deflateRaw, zipEntryData, zipNewEntry } from './ibfile.js';
 
 const RESEDIT_URL = 'https://cdn.jsdelivr.net/npm/resedit@2.0.3/+esm';
 
@@ -35,9 +35,17 @@ export async function loadResEdit() {
 
 // Decode PNG/SVG bytes into a source that can produce a square RGBA raster at
 // any size. Kept separate from the icon builders so tests can pass a synthetic
-// source without needing the browser's image decoder.
+// source without needing the browser's image decoder. PNGs are decoded and
+// scaled here in JS (pngDecode, resizeRGBA), so the build server and the
+// browser make the same bytes; anything else (SVG) needs the browser.
 export async function rasterSource(bytes) {
-  const bmp = await createImageBitmap(new Blob([toBytes(bytes)]));
+  const u8 = toBytes(bytes);
+  if (isPng(u8)) {
+    const img = await pngDecode(u8);
+    return { raster: (size) => resizeRGBA(img, size), close() {} };
+  }
+  if (typeof createImageBitmap !== 'function') throw new Error('The icon must be a PNG.');
+  const bmp = await createImageBitmap(new Blob([u8]));
   return {
     raster(size) {
       const cv = new OffscreenCanvas(size, size);
@@ -48,6 +56,194 @@ export async function rasterSource(bytes) {
     },
     close() { if (typeof bmp.close === 'function') bmp.close(); },
   };
+}
+
+/* ---------- a small PNG decoder and resizer ---------- */
+
+const PNG_SIG = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+export const ICON_MAX_BYTES = 1 << 20;
+export const ICON_MIN = 16;
+export const ICON_MAX = 1024;
+
+function isPng(u8) {
+  return u8.length > 8 && PNG_SIG.every((b, i) => u8[i] === b);
+}
+
+// The upload rules (Go's icon.Decode): a real, square PNG of 16 to 1024
+// pixels and at most 1 MB. The header is read before anything is decoded.
+export function checkIconPng(bytes) {
+  const u8 = toBytes(bytes);
+  if (!u8.length) throw new Error('the icon is empty');
+  if (u8.length > ICON_MAX_BYTES) throw new Error('the icon is over ' + (ICON_MAX_BYTES >> 10) + ' KB');
+  if (!isPng(u8) || u8.length < 33) throw new Error('the icon must be a PNG');
+  const dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+  const w = dv.getUint32(16), h = dv.getUint32(20);
+  if (w !== h) throw new Error('the icon must be square (it is ' + w + 'x' + h + ')');
+  if (w < ICON_MIN || w > ICON_MAX) throw new Error('the icon must be ' + ICON_MIN + ' to ' + ICON_MAX + ' pixels across (it is ' + w + ')');
+}
+
+async function inflateZlib(u8) {
+  const s = new Blob([u8]).stream().pipeThrough(new DecompressionStream('deflate'));
+  return new Uint8Array(await new Response(s).arrayBuffer());
+}
+
+// PNG bytes -> {width, height, data} with 8-bit RGBA data (not
+// premultiplied). Every colour type and bit depth, and Adam7 interlacing.
+export async function pngDecode(bytes) {
+  const u8 = toBytes(bytes);
+  if (!isPng(u8)) throw new Error('not a PNG');
+  const dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+  let o = 8, ihdr = null, palette = null, trns = null;
+  const idat = [];
+  while (o + 8 <= u8.length) {
+    const len = dv.getUint32(o);
+    const type = String.fromCharCode(u8[o + 4], u8[o + 5], u8[o + 6], u8[o + 7]);
+    const data = u8.subarray(o + 8, o + 8 + len);
+    if (data.length !== len) throw new Error('the icon isn\'t a valid PNG');
+    if (type === 'IHDR') {
+      ihdr = { w: dv.getUint32(o + 8), h: dv.getUint32(o + 12), depth: u8[o + 16], ctype: u8[o + 17], interlace: u8[o + 20] };
+    } else if (type === 'PLTE') palette = data;
+    else if (type === 'tRNS') trns = data;
+    else if (type === 'IDAT') idat.push(data);
+    else if (type === 'IEND') break;
+    o += 12 + len;
+  }
+  if (!ihdr || !idat.length) throw new Error('the icon isn\'t a valid PNG');
+  const { w, h, depth, ctype, interlace } = ihdr;
+  const channels = { 0: 1, 2: 3, 3: 1, 4: 2, 6: 4 }[ctype];
+  if (!channels || ![1, 2, 4, 8, 16].includes(depth) || (ctype === 3 && !palette)) throw new Error('the icon isn\'t a valid PNG');
+  let total = 0;
+  for (const d of idat) total += d.length;
+  const z = new Uint8Array(total);
+  total = 0;
+  for (const d of idat) { z.set(d, total); total += d.length; }
+  const raw = await inflateZlib(z);
+  const bpp = Math.max(1, (channels * depth) >> 3);        // bytes per pixel, for filtering
+  const out = new Uint8Array(w * h * 4);
+  const maxv = (1 << depth) - 1;
+  let pos = 0;
+
+  // One (sub)image: unfilter its rows, then write its pixels.
+  function pass(x0, y0, dx, dy) {
+    const pw = Math.ceil((w - x0) / dx), ph = Math.ceil((h - y0) / dy);
+    if (pw <= 0 || ph <= 0) return;
+    const stride = Math.ceil(pw * channels * depth / 8);
+    let prev = new Uint8Array(stride);
+    for (let y = 0; y < ph; y++) {
+      const f = raw[pos++];
+      const line = raw.slice(pos, pos + stride);
+      pos += stride;
+      if (line.length !== stride) throw new Error('the icon isn\'t a valid PNG');
+      for (let i = 0; i < stride; i++) {
+        const a = i >= bpp ? line[i - bpp] : 0, b = prev[i], c = i >= bpp ? prev[i - bpp] : 0;
+        let v = line[i];
+        if (f === 1) v += a;
+        else if (f === 2) v += b;
+        else if (f === 3) v += (a + b) >> 1;
+        else if (f === 4) {
+          const p = a + b - c, pa = Math.abs(p - a), pb = Math.abs(p - b), pc = Math.abs(p - c);
+          v += pa <= pb && pa <= pc ? a : pb <= pc ? b : c;
+        } else if (f !== 0) throw new Error('the icon isn\'t a valid PNG');
+        line[i] = v & 255;
+      }
+      prev = line;
+      for (let x = 0; x < pw; x++) {
+        const sample = (k) => {        // channel k of pixel x, scaled to 0..255
+          if (depth === 16) return line[(x * channels + k) * 2];
+          if (depth === 8) return line[x * channels + k];
+          const bit = (x * channels + k) * depth;
+          const v = (line[bit >> 3] >> (8 - depth - (bit & 7))) & maxv;
+          return ctype === 3 ? v : Math.round(v * 255 / maxv);
+        };
+        const rawAt = (k) => {         // unscaled, for tRNS matching
+          if (depth === 16) return (line[(x * channels + k) * 2] << 8) | line[(x * channels + k) * 2 + 1];
+          if (depth === 8) return line[x * channels + k];
+          const bit = (x * channels + k) * depth;
+          return (line[bit >> 3] >> (8 - depth - (bit & 7))) & maxv;
+        };
+        let r, g, bl, al = 255;
+        if (ctype === 3) {
+          const i = sample(0);
+          r = palette[i * 3]; g = palette[i * 3 + 1]; bl = palette[i * 3 + 2];
+          if (trns && i < trns.length) al = trns[i];
+        } else if (ctype === 0 || ctype === 4) {
+          r = g = bl = sample(0);
+          if (ctype === 4) al = sample(1);
+          else if (trns && trns.length >= 2 && rawAt(0) === ((trns[0] << 8) | trns[1])) al = 0;
+        } else {
+          r = sample(0); g = sample(1); bl = sample(2);
+          if (ctype === 6) al = sample(3);
+          else if (trns && trns.length >= 6 && rawAt(0) === ((trns[0] << 8) | trns[1]) &&
+                   rawAt(1) === ((trns[2] << 8) | trns[3]) && rawAt(2) === ((trns[4] << 8) | trns[5])) al = 0;
+        }
+        const d = ((y0 + y * dy) * w + (x0 + x * dx)) * 4;
+        out[d] = r; out[d + 1] = g; out[d + 2] = bl; out[d + 3] = al;
+      }
+    }
+  }
+  if (interlace) {
+    for (const [x0, y0, dx, dy] of [[0, 0, 8, 8], [4, 0, 8, 8], [0, 4, 4, 8], [2, 0, 4, 4], [0, 2, 2, 4], [1, 0, 2, 2], [0, 1, 1, 2]]) pass(x0, y0, dx, dy);
+  } else pass(0, 0, 1, 1);
+  return { width: w, height: h, data: out };
+}
+
+// Catmull-Rom, widened when shrinking (as Go's x/image/draw scales).
+function catmullRom(t) {
+  t = Math.abs(t);
+  if (t < 1) return (1.5 * t - 2.5) * t * t + 1;
+  if (t < 2) return ((-0.5 * t + 2.5) * t - 4) * t + 2;
+  return 0;
+}
+
+function resampleAxis(src, sw, sh, dw, horizontal) {
+  // Resamples along one axis; src is premultiplied float RGBA, sw x sh.
+  const n = horizontal ? sw : sh, m = horizontal ? sh : sw;
+  const scale = n / dw, support = 2 * Math.max(1, scale);
+  const out = new Float64Array((horizontal ? dw * sh : sw * dw) * 4);
+  for (let i = 0; i < dw; i++) {
+    const center = (i + 0.5) * scale - 0.5;
+    const lo = Math.max(0, Math.floor(center - support)), hi = Math.min(n - 1, Math.ceil(center + support));
+    const ws = [];
+    let sum = 0;
+    for (let k = lo; k <= hi; k++) {
+      const wt = catmullRom((k - center) / Math.max(1, scale));
+      ws.push(wt);
+      sum += wt;
+    }
+    for (let j = 0; j < m; j++) {
+      let r = 0, g = 0, b = 0, a = 0;
+      for (let k = lo; k <= hi; k++) {
+        const wt = ws[k - lo] / sum;
+        const s = (horizontal ? j * sw + k : k * sw + j) * 4;
+        r += src[s] * wt; g += src[s + 1] * wt; b += src[s + 2] * wt; a += src[s + 3] * wt;
+      }
+      const d = (horizontal ? j * dw + i : i * sw + j) * 4;
+      out[d] = r; out[d + 1] = g; out[d + 2] = b; out[d + 3] = a;
+    }
+  }
+  return out;
+}
+
+// {width, height, data RGBA} -> size x size, as ImageData-like
+// {width, height, data: Uint8ClampedArray}. Scaled in premultiplied alpha,
+// so transparent pixels don't bleed their colour.
+export function resizeRGBA(img, size) {
+  const { width: w, height: h, data } = img;
+  let f = new Float64Array(w * h * 4);
+  for (let i = 0; i < w * h; i++) {
+    const a = data[i * 4 + 3] / 255;
+    f[i * 4] = data[i * 4] * a; f[i * 4 + 1] = data[i * 4 + 1] * a; f[i * 4 + 2] = data[i * 4 + 2] * a; f[i * 4 + 3] = data[i * 4 + 3];
+  }
+  if (w !== size) f = resampleAxis(f, w, h, size, true);
+  if (h !== size) f = resampleAxis(f, size, h, size, false);
+  const out = new Uint8ClampedArray(size * size * 4);
+  for (let i = 0; i < size * size; i++) {
+    const a = Math.min(255, Math.max(0, f[i * 4 + 3]));
+    const k = a > 0 ? 255 / a : 0;
+    out[i * 4] = Math.round(f[i * 4] * k); out[i * 4 + 1] = Math.round(f[i * 4 + 1] * k);
+    out[i * 4 + 2] = Math.round(f[i * 4 + 2] * k); out[i * 4 + 3] = Math.round(a);
+  }
+  return { width: size, height: size, data: out };
 }
 
 /* ---------- a small PNG encoder (RGBA, no filtering) ---------- */
@@ -239,6 +435,20 @@ export function setPlistIcon(xml, name) {
   const entry = '\t<key>CFBundleIconFile</key>\n\t<string>' + name + '</string>\n';
   if (/<dict>/.test(xml)) return xml.replace('<dict>', '<dict>\n' + entry);
   throw new Error('Info.plist has no <dict> to add the icon to.');
+}
+
+// Put the .icns into the .app of a readInstaller() zip and point
+// Info.plist at it. Mutates info.entries.
+export async function setMacIcon(info, icnsBytes) {
+  const iconName = 'AppIcon';
+  const icnsPath = info.app + 'Contents/Resources/' + iconName + '.icns';
+  const plistPath = info.app + 'Contents/Info.plist';
+  const plist = info.entries.find((e) => e.name === plistPath);
+  if (!plist) throw new Error('This .app has no Info.plist.');
+  const xml = new TextDecoder().decode(await zipEntryData(plist));
+  const newPlist = await zipNewEntry(plistPath, setPlistIcon(xml, iconName));
+  info.entries = info.entries.filter((e) => e.name !== plistPath && e.name !== icnsPath);
+  info.entries.push(newPlist, await zipNewEntry(icnsPath, icnsBytes));
 }
 
 /* ---------- linux record key ---------- */

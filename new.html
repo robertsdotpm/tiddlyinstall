@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>New installer · Installer Builder</title>
+  <title>New installer · TiddlyInstall</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="index.html">Installer Builder</a>
+    <a class="brand" href="index.html">TiddlyInstall</a>
     <nav>
       <a href="index.html">Home</a>
       <a href="new.html" aria-current="page">New installer</a>
@@ -520,9 +520,9 @@ Press Enter to close</pre>
           <label class="choice"><input type="checkbox" name="target_macos" checked> macOS</label>
         </div>
 
-        <label class="choice not-ours" style="margin-top:10px"><input type="checkbox" id="offline-on" name="offline">
+        <label class="choice not-ours online-only" style="margin-top:10px"><input type="checkbox" id="offline-on" name="offline">
           <span>Also make offline installers <span class="small muted">for computers without internet. Bigger files, packed in your browser.</span></span></label>
-        <p class="small muted ours-only" style="margin:10px 0 0">Offline installers need the installer signed by you or left unsigned (Customise → Signing).</p>
+        <p class="small muted ours-only online-only" style="margin:10px 0 0">Offline installers need the installer signed by you or left unsigned (Customise → Signing).</p>
 
         <div class="actions" style="margin-top:16px">
           <button type="submit">Build installers</button>
@@ -530,7 +530,7 @@ Press Enter to close</pre>
 
         <p class="small muted" style="margin-bottom:0">
           You'll get <code>install_<span class="by-lang lang-python">python</span><span class="by-lang lang-python2">python2</span><span class="by-lang lang-node">node</span><span class="by-lang lang-ruby">ruby</span><span class="by-lang lang-php">php</span><span class="by-lang lang-java">java</span><span class="by-lang lang-dotnet">dotnet</span><span class="by-lang lang-r">r</span><span class="by-lang lang-cc">cpp</span><span class="by-lang lang-go">go</span><span class="by-lang lang-rust">rust</span><span class="by-lang lang-zig">zig</span><span class="by-lang lang-nim">nim</span><span class="by-lang lang-none">app</span>_&lt;name&gt;<span class="by-mode mode-ours-inline">_&lt;hash&gt;</span>.exe</code>, <code>.run</code> and <code>.dmg</code><span class="offline-inline">, plus offline <code>…_offline.exe</code>, <code>.run</code> and <code>.zip</code></span>,
-          <span class="by-mode mode-ours-inline">signed by Installer Builder (the hash points to your settings, so the signature stays valid)</span><span class="by-mode mode-yours-inline">signed by you</span><span class="by-mode mode-unsigned-inline">unsigned</span>. Everything below is optional and already has sensible defaults.
+          <span class="by-mode mode-ours-inline">signed by TiddlyInstall (the hash points to your settings, so the signature stays valid)</span><span class="by-mode mode-yours-inline">signed by you</span><span class="by-mode mode-unsigned-inline">unsigned</span>. Everything below is optional and already has sensible defaults.
         </p>
       </section>
 
@@ -538,232 +538,35 @@ Press Enter to close</pre>
       <h2>Customise <span class="muted small">(optional)</span></h2>
 
       <div class="customise">
+        <h3 class="customise-group">What gets installed</h3>
+        <p class="customise-group-hint small muted">Where the code comes from, the runtime it runs on, and what goes on each computer.</p>
 
-        <details>
-          <summary><span>Platforms</span><span class="default">64-bit Intel + ARM</span></summary>
-
-          <div class="platform-block win-settings">
-            <span class="label">Windows</span>
-            <label class="choice"><input type="checkbox" name="win_x64" checked> x64</label>
-            <label class="choice"><input type="checkbox" name="win_arm64" checked> arm64</label>
-            <label class="choice"><input type="checkbox" name="win_admin" checked> Require administrator rights</label>
-          </div>
-
-          <div class="platform-block linux-settings">
-            <span class="label">Linux</span>
-            <label class="choice"><input type="checkbox" name="linux_x64" checked> x86_64</label>
-            <label class="choice"><input type="checkbox" name="linux_arm64" checked> aarch64</label>
+        <details class="src-repo-only">
+          <summary><span>Source version</span><span class="default">Latest release</span></summary>
+          <div class="row">
             <div class="field">
-              <label for="linux-min">Oldest supported glibc</label>
-              <select id="linux-min" name="linux_glibc">
-                <option>2.28 (RHEL 8, Debian 10)</option>
-                <option>2.31 (Ubuntu 20.04)</option>
-                <option>2.35 (Ubuntu 22.04)</option>
+              <label for="ref-type">Build from</label>
+              <select id="ref-type" name="ref_type">
+                <option value="latest">Latest release</option>
+                <option value="tag">A specific tag</option>
+                <option value="branch">A branch</option>
+                <option value="commit">A commit</option>
               </select>
             </div>
-          </div>
-
-          <div class="platform-block mac-settings">
-            <span class="label">macOS</span>
-            <label class="choice"><input type="checkbox" name="mac_universal" checked> Universal (Apple silicon + Intel)</label>
             <div class="field">
-              <label for="mac-min">Minimum macOS</label>
-              <select id="mac-min" name="mac_min">
-                <option>12 Monterey</option><option>13 Ventura</option><option>14 Sonoma</option><option>15 Sequoia</option>
-              </select>
+              <label for="ref">Tag, branch or commit</label>
+              <input type="text" id="ref" name="ref" placeholder="v1.4.0">
+            </div>
+            <div class="field">
+              <label for="subdir">Subfolder</label>
+              <input type="text" id="subdir" name="subdir" placeholder="Repo root">
             </div>
           </div>
-
-          <p class="small muted platforms-none">Tick at least one platform above.</p>
-        </details>
-
-        <details>
-          <summary><span>Icon</span><span class="default">Default app icon</span></summary>
-          <p class="small muted" style="margin-top:0">Used for the installed app's shortcuts and launcher. Pick one, or upload your own.</p>
-          <div class="icon-grid" role="radiogroup" aria-label="Icon">
-            <label class="icon-tile">
-              <input type="radio" name="icon_choice" value="default" checked>
-              <span class="icon-art" style="background:#5b6472"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg></span>
-              <span class="icon-name">App</span>
-            </label>
-            <label class="icon-tile">
-              <input type="radio" name="icon_choice" value="terminal">
-              <span class="icon-art" style="background:#1f2937"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="5 8 10 12 5 16"/><line x1="12" y1="17" x2="19" y2="17"/></svg></span>
-              <span class="icon-name">Terminal</span>
-            </label>
-            <label class="icon-tile">
-              <input type="radio" name="icon_choice" value="globe">
-              <span class="icon-art" style="background:#2563eb"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><line x1="3" y1="12" x2="21" y2="12"/></svg></span>
-              <span class="icon-name">Web</span>
-            </label>
-            <label class="icon-tile">
-              <input type="radio" name="icon_choice" value="settings">
-              <span class="icon-art" style="background:#475569"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg></span>
-              <span class="icon-name">Tools</span>
-            </label>
-            <label class="icon-tile">
-              <input type="radio" name="icon_choice" value="chart">
-              <span class="icon-art" style="background:#0d9488"><svg viewBox="0 0 24 24" aria-hidden="true"><line x1="6" y1="20" x2="6" y2="12"/><line x1="12" y1="20" x2="12" y2="5"/><line x1="18" y1="20" x2="18" y2="14"/></svg></span>
-              <span class="icon-name">Data</span>
-            </label>
-            <label class="icon-tile">
-              <input type="radio" name="icon_choice" value="music">
-              <span class="icon-art" style="background:#db2777"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="16" r="2"/></svg></span>
-              <span class="icon-name">Music</span>
-            </label>
-            <label class="icon-tile">
-              <input type="radio" name="icon_choice" value="camera">
-              <span class="icon-art" style="background:#7c3aed"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.5"/><path d="M8 7l1.5-3h5L16 7"/></svg></span>
-              <span class="icon-name">Photo</span>
-            </label>
-            <label class="icon-tile">
-              <input type="radio" name="icon_choice" value="game">
-              <span class="icon-art" style="background:#16a34a"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="8" width="20" height="10" rx="5"/><line x1="7" y1="11" x2="7" y2="15"/><line x1="5" y1="13" x2="9" y2="13"/><circle cx="16" cy="12" r="1"/><circle cx="18" cy="14.5" r="1"/></svg></span>
-              <span class="icon-name">Game</span>
-            </label>
-            <label class="icon-tile">
-              <input type="radio" name="icon_choice" value="book">
-              <span class="icon-art" style="background:#b45309"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/></svg></span>
-              <span class="icon-name">Notes</span>
-            </label>
-            <label class="icon-tile">
-              <input type="radio" name="icon_choice" value="chat">
-              <span class="icon-art" style="background:#0284c7"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg></span>
-              <span class="icon-name">Chat</span>
-            </label>
-            <label class="icon-tile">
-              <input type="radio" name="icon_choice" value="folder">
-              <span class="icon-art" style="background:#ca8a04"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h6l2 2h10v11H3z"/></svg></span>
-              <span class="icon-name">Files</span>
-            </label>
-            <label class="icon-tile">
-              <input type="radio" name="icon_choice" value="bolt">
-              <span class="icon-art" style="background:#ea580c"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="13 2 4 14 11 14 10 22 20 9 13 9"/></svg></span>
-              <span class="icon-name">Utility</span>
-            </label>
-            <label class="icon-tile">
-              <input type="radio" name="icon_choice" value="heart">
-              <span class="icon-art" style="background:#dc2626"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg></span>
-              <span class="icon-name">Health</span>
-            </label>
-          </div>
-          <div class="field" style="margin-top:14px">
-            <label for="icon">Or upload your own</label>
-            <input type="file" id="icon" name="icon" accept=".png,.svg">
-            <span class="hint">A square PNG or SVG, 1024×1024 or larger. An uploaded icon replaces the one picked above.
-              We make the Windows, Linux and macOS icon files from it.</span>
-          </div>
-        </details>
-
-        <details>
-          <summary><span>Base installer and metadata</span><span class="default"><span class="by-lang lang-python">install_python_x</span><span class="by-lang lang-python2">install_python2_x</span><span class="by-lang lang-node">install_node_x</span><span class="by-lang lang-ruby">install_ruby_x</span><span class="by-lang lang-php">install_php_x</span><span class="by-lang lang-java">install_java_x</span><span class="by-lang lang-dotnet">install_dotnet_x</span><span class="by-lang lang-r">install_r_x</span><span class="by-lang lang-cc">install_cpp_x</span><span class="by-lang lang-go">install_go_x</span><span class="by-lang lang-rust">install_rust_x</span><span class="by-lang lang-zig">install_zig_x</span><span class="by-lang lang-nim">install_nim_x</span><span class="by-lang lang-none">install_github_x</span></span></summary>
           <div class="field">
-            <label for="base">Base installer</label>
-            <select id="base" name="base">
-              <option value="auto">Automatic (matches the language)</option>
-              <option value="install_python_x">install_python_x</option>
-              <option value="install_python_gui_x">install_python_gui_x</option>
-              <option value="install_node_x">install_node_x</option>
-              <option value="install_ruby_x">install_ruby_x</option>
-              <option value="install_php_x">install_php_x</option>
-              <option value="install_java_x">install_java_x</option>
-              <option value="install_dotnet_x">install_dotnet_x</option>
-              <option value="install_r_x">install_r_x</option>
-              <option value="install_cpp_x">install_cpp_x</option>
-              <option value="install_go_x">install_go_x</option>
-              <option value="install_rust_x">install_rust_x</option>
-              <option value="install_zig_x">install_zig_x</option>
-              <option value="install_nim_x">install_nim_x</option>
-              <option value="install_github_x">install_github_x</option>
-            </select>
-            <span class="hint"><a href="bases.html">What are base installers?</a></span>
+            <label for="token">Access token (private repos only)</label>
+            <input type="password" id="token" name="token" autocomplete="off">
+            <span class="hint">Only used to download the source. Never put in the installer.</span>
           </div>
-          <div class="field">
-            <label for="filename">File name</label>
-            <input type="text" id="filename" name="filename" maxlength="255" pattern="[A-Za-z0-9._\-{}]+" placeholder="install_{runtime}_{package}">
-            <span class="hint">Up to 255 characters including the extension. Letters, numbers, <code>_</code> <code>-</code> <code>.</code> only. Installers signed by Installer Builder get a hash of their settings added to the end, e.g. <code>install_python_requests_tjfq5rqw….exe</code>.</span>
-          </div>
-          <div class="field">
-            <label for="meta">Extra metadata</label>
-            <textarea id="meta" name="meta" placeholder="channel = stable&#10;homepage = https://example.com"></textarea>
-            <span class="hint">One <code>key = value</code> per line. Stored with the installer's settings. Package, versions and app ID are added automatically.</span>
-          </div>
-          <label class="choice"><input type="checkbox" name="publish_base"> Publish as a base installer others can reuse</label>
-        </details>
-
-        <details>
-          <summary><span>Shortcuts and install behaviour</span><span class="default">Start menu shortcut, uninstaller</span></summary>
-          <div class="field">
-            <label for="entry-python">Launch command</label>
-            <input type="text" class="entry entry-python" id="entry-python" name="entry_python" value="{runtime} -m {project}">
-            <input type="text" class="entry entry-node" id="entry-node" name="entry_node" value="{runtime} {app_dir}" aria-label="Launch command">
-            <input type="text" class="entry entry-ruby" id="entry-ruby" name="entry_ruby" value="{bin}/{project}" aria-label="Launch command">
-            <input type="text" class="entry entry-php" name="entry_php" value="{runtime} {app_dir}/index.php" aria-label="Launch command">
-            <input type="text" class="entry entry-java" name="entry_java" value="{runtime} -jar {app_dir}/{project}.jar" aria-label="Launch command">
-            <input type="text" class="entry entry-dotnet" name="entry_dotnet" value="{runtime} {app_dir}/{project}.dll" aria-label="Launch command">
-            <input type="text" class="entry entry-r" name="entry_r" value="{runtime} {app_dir}/main.R" aria-label="Launch command">
-            <input type="text" class="entry entry-cc" id="entry-cc" name="entry_cc" value="{app_dir}/{project}" aria-label="Launch command">
-            <input type="text" class="entry entry-go" name="entry_go" value="{app_dir}/{project}" aria-label="Launch command">
-            <input type="text" class="entry entry-rust" name="entry_rust" value="{app_dir}/target/release/{project}" aria-label="Launch command">
-            <input type="text" class="entry entry-zig" name="entry_zig" value="{app_dir}/bin/{project}" aria-label="Launch command">
-            <input type="text" class="entry entry-nim" name="entry_nim" value="{app_dir}/{project}" aria-label="Launch command">
-            <input type="text" class="entry entry-none" id="entry-none" name="entry_none" value="{app_dir}/{project}" aria-label="Launch command">
-            <span class="hint">Filled in for the language you picked; change it if your app starts differently.
-              <code>{runtime}</code> the runtime (python, node, ruby, php, java, dotnet, Rscript) ·
-              <code>{project}</code> your package name ·
-              <code>{app_dir}</code> the app's folder ·
-              <code>{bin}</code> the runtime's scripts folder</span>
-          </div>
-          <label class="choice"><input type="checkbox" name="shortcut_menu" checked> Start menu / app launcher shortcut</label>
-          <label class="choice"><input type="checkbox" name="shortcut_desktop"> Desktop shortcut</label>
-          <label class="choice"><input type="checkbox" name="cli_on_path"> Add to PATH</label>
-          <label class="choice"><input type="checkbox" name="run_after"> Offer to launch after install</label>
-
-          <span class="label" style="margin-top:10px">Install for</span>
-          <label class="choice"><input type="radio" name="root" value="user" checked>
-            <span>The person installing it <span class="badge">default</span> <span class="small muted">(no administrator rights needed)</span></span></label>
-          <label class="choice"><input type="radio" name="root" value="system">
-            <span>Everyone on the computer <span class="small muted">(needs administrator or root)</span></span></label>
-          <div class="field">
-            <label for="rootname">Root folder name</label>
-            <input type="text" id="rootname" name="rootname" value="ib" maxlength="32" pattern="[A-Za-z0-9._\-]+" spellcheck="false">
-            <span class="hint">Every app installed this way goes under one folder with this name, each in its own subfolder.</span>
-          </div>
-          <details>
-            <summary>Install scripts</summary>
-            <p class="small muted" style="margin-top:0">Optional. Scripts run after the user has seen what the installer will do and clicked Install.
-              People can view them on that screen. If a script exits with an error, the install stops and shows its output.</p>
-
-            <div class="tabs" role="tablist">
-              <label class="tab"><input type="radio" name="script_tab" id="script-tab-win" checked> Windows <span class="muted">(batch)</span></label>
-              <label class="tab"><input type="radio" name="script_tab" id="script-tab-unix"> Linux &amp; macOS <span class="muted">(sh)</span></label>
-            </div>
-
-            <div class="tab-panel script-panel-win">
-              <div class="field">
-                <label for="win-pre">Before installing files</label>
-                <textarea class="code code-script" id="win-pre" name="win_pre_script" spellcheck="false" placeholder="@echo off&#10;rem Runs before any files are written"></textarea>
-              </div>
-              <div class="field">
-                <label for="win-post">After installing files</label>
-                <textarea class="code code-script" id="win-post" name="win_post_script" spellcheck="false" placeholder="@echo off&#10;&quot;%IB_RUNTIME_DIR%\python.exe&quot; -m myapp --init-config"></textarea>
-              </div>
-              <span class="hint">Available: <code>%IB_APP_DIR%</code> <code>%IB_RUNTIME_DIR%</code> <code>%IB_APP_NAME%</code>. Runs with the installer's permissions (usually administrator).</span>
-            </div>
-
-            <div class="tab-panel script-panel-unix">
-              <div class="field">
-                <label for="unix-pre">Before installing files</label>
-                <textarea class="code code-script" id="unix-pre" name="unix_pre_script" spellcheck="false" placeholder="#!/bin/sh&#10;# Runs before any files are written"></textarea>
-              </div>
-              <div class="field">
-                <label for="unix-post">After installing files</label>
-                <textarea class="code code-script" id="unix-post" name="unix_post_script" spellcheck="false" placeholder="#!/bin/sh&#10;&quot;$IB_RUNTIME_DIR/bin/python3&quot; -m myapp --init-config"></textarea>
-              </div>
-              <span class="hint">Available: <code>$IB_APP_DIR</code> <code>$IB_RUNTIME_DIR</code> <code>$IB_APP_NAME</code>. Plain POSIX <code>sh</code>, which every Linux and macOS system has; bash isn't guaranteed.
-                Runs with the installer's permissions (root for installs for all users).</span>
-            </div>
-          </details>
         </details>
 
         <details>
@@ -861,79 +664,47 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
         </details>
 
         <details>
-          <summary><span>Uninstall</span><span class="default">Uninstaller registered, asks about your app's data</span></summary>
-          <label class="choice"><input type="checkbox" name="uninstaller" checked>
-            <span>Register an uninstaller <span class="small muted">(Programs and Features on Windows, a menu entry and <code>--uninstall</code> elsewhere)</span></span></label>
+          <summary><span>Platforms</span><span class="default">64-bit Intel + ARM</span></summary>
 
-          <span class="label" style="margin-top:10px">The app's data</span>
-          <p class="small muted" style="margin-top:0">Files the app saved in its data folder while it was used.</p>
-          <label class="choice"><input type="radio" name="uninstall_data" value="ask" checked>
-            <span><strong>Ask</strong> <span class="badge">default</span> <span class="small muted">(a "Also delete my data" box, not ticked)</span></span></label>
-          <label class="choice"><input type="radio" name="uninstall_data" value="keep">
-            <span><strong>Keep it</strong></span></label>
-          <label class="choice"><input type="radio" name="uninstall_data" value="remove">
-            <span><strong>Delete it</strong></span></label>
+          <div class="platform-block win-settings">
+            <span class="label">Windows</span>
+            <label class="choice"><input type="checkbox" name="win_x64" checked> x64</label>
+            <label class="choice"><input type="checkbox" name="win_arm64" checked> arm64</label>
+            <label class="choice"><input type="checkbox" name="win_admin" checked> Require administrator rights</label>
+          </div>
 
-          <details>
-            <summary>Before-removal script</summary>
-            <p class="small muted" style="margin-top:0">Runs before anything is removed, e.g. to stop a background service. People can view it before uninstalling.
-              If it fails, its output is shown and the removal carries on.</p>
-            <div class="tabs" role="tablist">
-              <label class="tab"><input type="radio" name="unscript_tab" id="unscript-tab-win" checked> Windows <span class="muted">(batch)</span></label>
-              <label class="tab"><input type="radio" name="unscript_tab" id="unscript-tab-unix"> Linux &amp; macOS <span class="muted">(sh)</span></label>
+          <div class="platform-block linux-settings">
+            <span class="label">Linux</span>
+            <label class="choice"><input type="checkbox" name="linux_x64" checked> x86_64</label>
+            <label class="choice"><input type="checkbox" name="linux_arm64" checked> aarch64</label>
+            <div class="field">
+              <label for="linux-min">Oldest supported glibc</label>
+              <select id="linux-min" name="linux_glibc">
+                <option>2.28 (RHEL 8, Debian 10)</option>
+                <option>2.31 (Ubuntu 20.04)</option>
+                <option>2.35 (Ubuntu 22.04)</option>
+              </select>
             </div>
-            <div class="tab-panel unscript-panel-win">
-              <textarea class="code code-script" name="win_unpre_script" spellcheck="false" aria-label="Windows before-removal script" placeholder="@echo off&#10;taskkill /im myapp.exe /f 2&gt;nul"></textarea>
+          </div>
+
+          <div class="platform-block mac-settings">
+            <span class="label">macOS</span>
+            <label class="choice"><input type="checkbox" name="mac_universal" checked> Universal (Apple silicon + Intel)</label>
+            <div class="field">
+              <label for="mac-min">Minimum macOS</label>
+              <select id="mac-min" name="mac_min">
+                <option>12 Monterey</option><option>13 Ventura</option><option>14 Sonoma</option><option>15 Sequoia</option>
+              </select>
             </div>
-            <div class="tab-panel unscript-panel-unix">
-              <textarea class="code code-script" name="unix_unpre_script" spellcheck="false" aria-label="Linux and macOS before-removal script" placeholder="#!/bin/sh&#10;pkill -x myapp || true"></textarea>
-            </div>
-            <span class="hint">Same variables as install scripts: <code>IB_APP_DIR</code>, <code>IB_RUNTIME_DIR</code>, <code>IB_APP_NAME</code>.</span>
-          </details>
-          <p class="small muted" style="margin-bottom:0">Uninstalling deletes the app's own folders. Nothing shared with other apps is touched.</p>
-        </details>
+          </div>
 
-        <details>
-          <summary><span>Cleanup</span><span class="default">Remove build tools after building</span></summary>
-          <p class="small muted" style="margin-top:0">What the installer removes once the app is installed. Downloads and temporary files are always removed.</p>
-
-          <span class="label">Build tools</span>
-          <p class="small muted" style="margin-top:0">The compiler and build caches, when the app is built on the user's computer (C/C++, Go, Rust, Zig, Nim). Often several hundred MB.</p>
-          <label class="choice"><input type="radio" name="cleanup_tools" value="remove" checked>
-            <span><strong>Remove automatically</strong> <span class="badge">default</span><br>
-            <span class="small muted">Smallest install. Updating or repairing the app downloads the build tools again.</span></span></label>
-          <label class="choice"><input type="radio" name="cleanup_tools" value="ask">
-            <span><strong>Let the user decide</strong><br>
-            <span class="small muted">The last screen of the installer has a ticked box: "Remove build tools (frees about 600 MB)". The uninstaller can remove them later too.</span></span></label>
-          <label class="choice"><input type="radio" name="cleanup_tools" value="keep">
-            <span><strong>Keep</strong><br>
-            <span class="small muted">Faster updates and repairs, and the user can rebuild the app themselves.</span></span></label>
-
-          <hr>
-
-          <span class="label">Also remove</span>
-          <label class="choice"><input type="checkbox" name="cleanup_source">
-            <span>Source code after building <span class="small muted">(compiled apps only; interpreted apps run from their source)</span></span></label>
-          <label class="choice"><input type="checkbox" name="cleanup_pkg_cache" checked>
-            <span>Package manager caches <span class="small muted">(pip, npm, Composer, Bundler, Cargo and Go module caches)</span></span></label>
-          <label class="choice"><input type="checkbox" name="cleanup_docs">
-            <span>The runtime's documentation, tests and examples <span class="small muted">(where the runtime still works without them)</span></span></label>
-
-          <hr>
-
-          <span class="label">If the install fails</span>
-          <label class="choice"><input type="radio" name="cleanup_fail" value="remove" checked>
-            <span><strong>Remove everything it installed</strong> <span class="badge">default</span></span></label>
-          <label class="choice"><input type="radio" name="cleanup_fail" value="ask">
-            <span><strong>Ask</strong> <span class="small muted">(offer to keep the files and build log for troubleshooting)</span></span></label>
-
-          <p class="small muted" style="margin-bottom:0">The install log is always kept in the app's folder. Nothing outside the app's own folders is ever removed.</p>
+          <p class="small muted platforms-none">Tick at least one platform above.</p>
         </details>
 
         <details>
           <summary><span>Files in the installer</span><span class="default"><span class="ours-only-inline">Not with our signature</span><span class="not-ours-inline"><span class="offline-off-inline">2 of your files</span><span class="offline-inline">2 of your files, plus offline copies</span></span></span></summary>
 
-          <p class="small ours-only" style="margin:0">Installers signed by Installer Builder can't carry packed files or offline copies, because our signature would then cover files we've never seen.
+          <p class="small ours-only" style="margin:0">Installers signed by TiddlyInstall can't carry packed files or offline copies, because our signature would then cover files we've never seen.
             To add files, choose <strong>Signed by you</strong> or <strong>Unsigned</strong> under Signing.</p>
           <div class="not-ours">
 
@@ -1075,40 +846,241 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
           </div>
         </details>
 
-        <details class="src-repo-only">
-          <summary><span>Source version</span><span class="default">Latest release</span></summary>
-          <div class="row">
-            <div class="field">
-              <label for="ref-type">Build from</label>
-              <select id="ref-type" name="ref_type">
-                <option value="latest">Latest release</option>
-                <option value="tag">A specific tag</option>
-                <option value="branch">A branch</option>
-                <option value="commit">A commit</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="ref">Tag, branch or commit</label>
-              <input type="text" id="ref" name="ref" placeholder="v1.4.0">
-            </div>
-            <div class="field">
-              <label for="subdir">Subfolder</label>
-              <input type="text" id="subdir" name="subdir" placeholder="Repo root">
-            </div>
+        <h3 class="customise-group">How it looks and behaves</h3>
+        <p class="customise-group-hint small muted">What people see, and what happens when they install and remove it.</p>
+
+        <details>
+          <summary><span>Icon</span><span class="default">Default app icon</span></summary>
+          <p class="small muted" style="margin-top:0">Used for the installed app's shortcuts and launcher. Pick one, or upload your own.</p>
+          <div class="icon-grid" role="radiogroup" aria-label="Icon">
+            <label class="icon-tile">
+              <input type="radio" name="icon_choice" value="default" checked>
+              <span class="icon-art" style="background:#5b6472"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg></span>
+              <span class="icon-name">App</span>
+            </label>
+            <label class="icon-tile">
+              <input type="radio" name="icon_choice" value="terminal">
+              <span class="icon-art" style="background:#1f2937"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="5 8 10 12 5 16"/><line x1="12" y1="17" x2="19" y2="17"/></svg></span>
+              <span class="icon-name">Terminal</span>
+            </label>
+            <label class="icon-tile">
+              <input type="radio" name="icon_choice" value="globe">
+              <span class="icon-art" style="background:#2563eb"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><line x1="3" y1="12" x2="21" y2="12"/></svg></span>
+              <span class="icon-name">Web</span>
+            </label>
+            <label class="icon-tile">
+              <input type="radio" name="icon_choice" value="settings">
+              <span class="icon-art" style="background:#475569"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg></span>
+              <span class="icon-name">Tools</span>
+            </label>
+            <label class="icon-tile">
+              <input type="radio" name="icon_choice" value="chart">
+              <span class="icon-art" style="background:#0d9488"><svg viewBox="0 0 24 24" aria-hidden="true"><line x1="6" y1="20" x2="6" y2="12"/><line x1="12" y1="20" x2="12" y2="5"/><line x1="18" y1="20" x2="18" y2="14"/></svg></span>
+              <span class="icon-name">Data</span>
+            </label>
+            <label class="icon-tile">
+              <input type="radio" name="icon_choice" value="music">
+              <span class="icon-art" style="background:#db2777"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="16" r="2"/></svg></span>
+              <span class="icon-name">Music</span>
+            </label>
+            <label class="icon-tile">
+              <input type="radio" name="icon_choice" value="camera">
+              <span class="icon-art" style="background:#7c3aed"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.5"/><path d="M8 7l1.5-3h5L16 7"/></svg></span>
+              <span class="icon-name">Photo</span>
+            </label>
+            <label class="icon-tile">
+              <input type="radio" name="icon_choice" value="game">
+              <span class="icon-art" style="background:#16a34a"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="8" width="20" height="10" rx="5"/><line x1="7" y1="11" x2="7" y2="15"/><line x1="5" y1="13" x2="9" y2="13"/><circle cx="16" cy="12" r="1"/><circle cx="18" cy="14.5" r="1"/></svg></span>
+              <span class="icon-name">Game</span>
+            </label>
+            <label class="icon-tile">
+              <input type="radio" name="icon_choice" value="book">
+              <span class="icon-art" style="background:#b45309"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/></svg></span>
+              <span class="icon-name">Notes</span>
+            </label>
+            <label class="icon-tile">
+              <input type="radio" name="icon_choice" value="chat">
+              <span class="icon-art" style="background:#0284c7"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg></span>
+              <span class="icon-name">Chat</span>
+            </label>
+            <label class="icon-tile">
+              <input type="radio" name="icon_choice" value="folder">
+              <span class="icon-art" style="background:#ca8a04"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h6l2 2h10v11H3z"/></svg></span>
+              <span class="icon-name">Files</span>
+            </label>
+            <label class="icon-tile">
+              <input type="radio" name="icon_choice" value="bolt">
+              <span class="icon-art" style="background:#ea580c"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="13 2 4 14 11 14 10 22 20 9 13 9"/></svg></span>
+              <span class="icon-name">Utility</span>
+            </label>
+            <label class="icon-tile">
+              <input type="radio" name="icon_choice" value="heart">
+              <span class="icon-art" style="background:#dc2626"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg></span>
+              <span class="icon-name">Health</span>
+            </label>
           </div>
-          <div class="field">
-            <label for="token">Access token (private repos only)</label>
-            <input type="password" id="token" name="token" autocomplete="off">
-            <span class="hint">Only used to download the source. Never put in the installer.</span>
+          <div class="field" style="margin-top:14px">
+            <label for="icon">Or upload your own</label>
+            <input type="file" id="icon" name="icon" accept=".png,.svg">
+            <span class="hint">A square PNG or SVG, 1024×1024 or larger. An uploaded icon replaces the one picked above.
+              We make the Windows, Linux and macOS icon files from it.</span>
           </div>
         </details>
 
         <details>
-          <summary><span>Signing</span><span class="default">Signed by Installer Builder</span></summary>
+          <summary><span>Shortcuts and install behaviour</span><span class="default">Start menu shortcut, uninstaller</span></summary>
+          <div class="field">
+            <label for="entry-python">Launch command</label>
+            <input type="text" class="entry entry-python" id="entry-python" name="entry_python" value="{runtime} -m {project}">
+            <input type="text" class="entry entry-node" id="entry-node" name="entry_node" value="{runtime} {app_dir}" aria-label="Launch command">
+            <input type="text" class="entry entry-ruby" id="entry-ruby" name="entry_ruby" value="{bin}/{project}" aria-label="Launch command">
+            <input type="text" class="entry entry-php" name="entry_php" value="{runtime} {app_dir}/index.php" aria-label="Launch command">
+            <input type="text" class="entry entry-java" name="entry_java" value="{runtime} -jar {app_dir}/{project}.jar" aria-label="Launch command">
+            <input type="text" class="entry entry-dotnet" name="entry_dotnet" value="{runtime} {app_dir}/{project}.dll" aria-label="Launch command">
+            <input type="text" class="entry entry-r" name="entry_r" value="{runtime} {app_dir}/main.R" aria-label="Launch command">
+            <input type="text" class="entry entry-cc" id="entry-cc" name="entry_cc" value="{app_dir}/{project}" aria-label="Launch command">
+            <input type="text" class="entry entry-go" name="entry_go" value="{app_dir}/{project}" aria-label="Launch command">
+            <input type="text" class="entry entry-rust" name="entry_rust" value="{app_dir}/target/release/{project}" aria-label="Launch command">
+            <input type="text" class="entry entry-zig" name="entry_zig" value="{app_dir}/bin/{project}" aria-label="Launch command">
+            <input type="text" class="entry entry-nim" name="entry_nim" value="{app_dir}/{project}" aria-label="Launch command">
+            <input type="text" class="entry entry-none" id="entry-none" name="entry_none" value="{app_dir}/{project}" aria-label="Launch command">
+            <span class="hint">Filled in for the language you picked; change it if your app starts differently.
+              <code>{runtime}</code> the runtime (python, node, ruby, php, java, dotnet, Rscript) ·
+              <code>{project}</code> your package name ·
+              <code>{app_dir}</code> the app's folder ·
+              <code>{bin}</code> the runtime's scripts folder</span>
+          </div>
+          <label class="choice"><input type="checkbox" name="shortcut_menu" checked> Start menu / app launcher shortcut</label>
+          <label class="choice"><input type="checkbox" name="shortcut_desktop"> Desktop shortcut</label>
+          <label class="choice"><input type="checkbox" name="cli_on_path"> Add to PATH</label>
+          <label class="choice"><input type="checkbox" name="run_after"> Offer to launch after install</label>
 
-          <label class="choice"><input type="radio" name="mode" value="ours" id="mode-ours" checked>
-            <span><strong>Signed by Installer Builder</strong><br>
-            <span class="small muted">Fewest security warnings. The installer file is branded as Installer Builder and uses our icon; your name and icon go on the installed app. The file can only be changed by renaming it.</span></span></label>
+          <span class="label" style="margin-top:10px">Install for</span>
+          <label class="choice"><input type="radio" name="root" value="user" checked>
+            <span>The person installing it <span class="badge">default</span> <span class="small muted">(no administrator rights needed)</span></span></label>
+          <label class="choice"><input type="radio" name="root" value="system">
+            <span>Everyone on the computer <span class="small muted">(needs administrator or root)</span></span></label>
+          <div class="field">
+            <label for="rootname">Root folder name</label>
+            <input type="text" id="rootname" name="rootname" value="ib" maxlength="32" pattern="[A-Za-z0-9._\-]+" spellcheck="false">
+            <span class="hint">Every app installed this way goes under one folder with this name, each in its own subfolder.</span>
+          </div>
+          <details>
+            <summary>Install scripts</summary>
+            <p class="small muted" style="margin-top:0">Optional. Scripts run after the user has seen what the installer will do and clicked Install.
+              People can view them on that screen. If a script exits with an error, the install stops and shows its output.</p>
+
+            <div class="tabs" role="tablist">
+              <label class="tab"><input type="radio" name="script_tab" id="script-tab-win" checked> Windows <span class="muted">(batch)</span></label>
+              <label class="tab"><input type="radio" name="script_tab" id="script-tab-unix"> Linux &amp; macOS <span class="muted">(sh)</span></label>
+            </div>
+
+            <div class="tab-panel script-panel-win">
+              <div class="field">
+                <label for="win-pre">Before installing files</label>
+                <textarea class="code code-script" id="win-pre" name="win_pre_script" spellcheck="false" placeholder="@echo off&#10;rem Runs before any files are written"></textarea>
+              </div>
+              <div class="field">
+                <label for="win-post">After installing files</label>
+                <textarea class="code code-script" id="win-post" name="win_post_script" spellcheck="false" placeholder="@echo off&#10;&quot;%IB_RUNTIME_DIR%\python.exe&quot; -m myapp --init-config"></textarea>
+              </div>
+              <span class="hint">Available: <code>%IB_APP_DIR%</code> <code>%IB_RUNTIME_DIR%</code> <code>%IB_APP_NAME%</code>. Runs with the installer's permissions (usually administrator).</span>
+            </div>
+
+            <div class="tab-panel script-panel-unix">
+              <div class="field">
+                <label for="unix-pre">Before installing files</label>
+                <textarea class="code code-script" id="unix-pre" name="unix_pre_script" spellcheck="false" placeholder="#!/bin/sh&#10;# Runs before any files are written"></textarea>
+              </div>
+              <div class="field">
+                <label for="unix-post">After installing files</label>
+                <textarea class="code code-script" id="unix-post" name="unix_post_script" spellcheck="false" placeholder="#!/bin/sh&#10;&quot;$IB_RUNTIME_DIR/bin/python3&quot; -m myapp --init-config"></textarea>
+              </div>
+              <span class="hint">Available: <code>$IB_APP_DIR</code> <code>$IB_RUNTIME_DIR</code> <code>$IB_APP_NAME</code>. Plain POSIX <code>sh</code>, which every Linux and macOS system has; bash isn't guaranteed.
+                Runs with the installer's permissions (root for installs for all users).</span>
+            </div>
+          </details>
+        </details>
+
+        <details>
+          <summary><span>Uninstall</span><span class="default">Uninstaller registered, asks about your app's data</span></summary>
+          <label class="choice"><input type="checkbox" name="uninstaller" checked>
+            <span>Register an uninstaller <span class="small muted">(Programs and Features on Windows, a menu entry and <code>--uninstall</code> elsewhere)</span></span></label>
+
+          <span class="label" style="margin-top:10px">The app's data</span>
+          <p class="small muted" style="margin-top:0">Files the app saved in its data folder while it was used.</p>
+          <label class="choice"><input type="radio" name="uninstall_data" value="ask" checked>
+            <span><strong>Ask</strong> <span class="badge">default</span> <span class="small muted">(a "Also delete my data" box, not ticked)</span></span></label>
+          <label class="choice"><input type="radio" name="uninstall_data" value="keep">
+            <span><strong>Keep it</strong></span></label>
+          <label class="choice"><input type="radio" name="uninstall_data" value="remove">
+            <span><strong>Delete it</strong></span></label>
+
+          <details>
+            <summary>Before-removal script</summary>
+            <p class="small muted" style="margin-top:0">Runs before anything is removed, e.g. to stop a background service. People can view it before uninstalling.
+              If it fails, its output is shown and the removal carries on.</p>
+            <div class="tabs" role="tablist">
+              <label class="tab"><input type="radio" name="unscript_tab" id="unscript-tab-win" checked> Windows <span class="muted">(batch)</span></label>
+              <label class="tab"><input type="radio" name="unscript_tab" id="unscript-tab-unix"> Linux &amp; macOS <span class="muted">(sh)</span></label>
+            </div>
+            <div class="tab-panel unscript-panel-win">
+              <textarea class="code code-script" name="win_unpre_script" spellcheck="false" aria-label="Windows before-removal script" placeholder="@echo off&#10;taskkill /im myapp.exe /f 2&gt;nul"></textarea>
+            </div>
+            <div class="tab-panel unscript-panel-unix">
+              <textarea class="code code-script" name="unix_unpre_script" spellcheck="false" aria-label="Linux and macOS before-removal script" placeholder="#!/bin/sh&#10;pkill -x myapp || true"></textarea>
+            </div>
+            <span class="hint">Same variables as install scripts: <code>IB_APP_DIR</code>, <code>IB_RUNTIME_DIR</code>, <code>IB_APP_NAME</code>.</span>
+          </details>
+          <p class="small muted" style="margin-bottom:0">Uninstalling deletes the app's own folders. Nothing shared with other apps is touched.</p>
+        </details>
+
+        <details>
+          <summary><span>Cleanup</span><span class="default">Remove build tools after building</span></summary>
+          <p class="small muted" style="margin-top:0">What the installer removes once the app is installed. Downloads and temporary files are always removed.</p>
+
+          <span class="label">Build tools</span>
+          <p class="small muted" style="margin-top:0">The compiler and build caches, when the app is built on the user's computer (C/C++, Go, Rust, Zig, Nim). Often several hundred MB.</p>
+          <label class="choice"><input type="radio" name="cleanup_tools" value="remove" checked>
+            <span><strong>Remove automatically</strong> <span class="badge">default</span><br>
+            <span class="small muted">Smallest install. Updating or repairing the app downloads the build tools again.</span></span></label>
+          <label class="choice"><input type="radio" name="cleanup_tools" value="ask">
+            <span><strong>Let the user decide</strong><br>
+            <span class="small muted">The last screen of the installer has a ticked box: "Remove build tools (frees about 600 MB)". The uninstaller can remove them later too.</span></span></label>
+          <label class="choice"><input type="radio" name="cleanup_tools" value="keep">
+            <span><strong>Keep</strong><br>
+            <span class="small muted">Faster updates and repairs, and the user can rebuild the app themselves.</span></span></label>
+
+          <hr>
+
+          <span class="label">Also remove</span>
+          <label class="choice"><input type="checkbox" name="cleanup_source">
+            <span>Source code after building <span class="small muted">(compiled apps only; interpreted apps run from their source)</span></span></label>
+          <label class="choice"><input type="checkbox" name="cleanup_pkg_cache" checked>
+            <span>Package manager caches <span class="small muted">(pip, npm, Composer, Bundler, Cargo and Go module caches)</span></span></label>
+          <label class="choice"><input type="checkbox" name="cleanup_docs">
+            <span>The runtime's documentation, tests and examples <span class="small muted">(where the runtime still works without them)</span></span></label>
+
+          <hr>
+
+          <span class="label">If the install fails</span>
+          <label class="choice"><input type="radio" name="cleanup_fail" value="remove" checked>
+            <span><strong>Remove everything it installed</strong> <span class="badge">default</span></span></label>
+          <label class="choice"><input type="radio" name="cleanup_fail" value="ask">
+            <span><strong>Ask</strong> <span class="small muted">(offer to keep the files and build log for troubleshooting)</span></span></label>
+
+          <p class="small muted" style="margin-bottom:0">The install log is always kept in the app's folder. Nothing outside the app's own folders is ever removed.</p>
+        </details>
+
+        <h3 class="customise-group">Signing and the installer file</h3>
+        <p class="customise-group-hint small muted">Who signs the installer, and the file it is built from.</p>
+
+        <details>
+          <summary><span>Signing</span><span class="default"><span class="online-only">Signed by TiddlyInstall</span><span class="local-only">Unsigned</span></span></summary>
+
+          <label class="choice online-only"><input type="radio" name="mode" value="ours" id="mode-ours" checked>
+            <span><strong>Signed by TiddlyInstall</strong><br>
+            <span class="small muted">Fewest security warnings. The installer file is branded as TiddlyInstall and uses our icon; your name and icon go on the installed app. The file can only be changed by renaming it.</span></span></label>
 
           <label class="choice"><input type="radio" name="mode" value="yours" id="mode-yours">
             <span><strong>Signed by you</strong><br>
@@ -1154,6 +1126,42 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
           <p class="small muted" style="margin-bottom:0">Whichever you pick, the installer shows people what it will install, where it comes from, and who signed it before it changes anything.</p>
         </details>
 
+        <details>
+          <summary><span>Base installer and metadata</span><span class="default"><span class="by-lang lang-python">install_python_x</span><span class="by-lang lang-python2">install_python2_x</span><span class="by-lang lang-node">install_node_x</span><span class="by-lang lang-ruby">install_ruby_x</span><span class="by-lang lang-php">install_php_x</span><span class="by-lang lang-java">install_java_x</span><span class="by-lang lang-dotnet">install_dotnet_x</span><span class="by-lang lang-r">install_r_x</span><span class="by-lang lang-cc">install_cpp_x</span><span class="by-lang lang-go">install_go_x</span><span class="by-lang lang-rust">install_rust_x</span><span class="by-lang lang-zig">install_zig_x</span><span class="by-lang lang-nim">install_nim_x</span><span class="by-lang lang-none">install_github_x</span></span></summary>
+          <div class="field">
+            <label for="base">Base installer</label>
+            <select id="base" name="base">
+              <option value="auto">Automatic (matches the language)</option>
+              <option value="install_python_x">install_python_x</option>
+              <option value="install_python_gui_x">install_python_gui_x</option>
+              <option value="install_node_x">install_node_x</option>
+              <option value="install_ruby_x">install_ruby_x</option>
+              <option value="install_php_x">install_php_x</option>
+              <option value="install_java_x">install_java_x</option>
+              <option value="install_dotnet_x">install_dotnet_x</option>
+              <option value="install_r_x">install_r_x</option>
+              <option value="install_cpp_x">install_cpp_x</option>
+              <option value="install_go_x">install_go_x</option>
+              <option value="install_rust_x">install_rust_x</option>
+              <option value="install_zig_x">install_zig_x</option>
+              <option value="install_nim_x">install_nim_x</option>
+              <option value="install_github_x">install_github_x</option>
+            </select>
+            <span class="hint"><a href="bases.html">What are base installers?</a></span>
+          </div>
+          <div class="field">
+            <label for="filename">File name</label>
+            <input type="text" id="filename" name="filename" maxlength="255" pattern="[A-Za-z0-9._\-{}]+" placeholder="install_{runtime}_{package}">
+            <span class="hint">Up to 255 characters including the extension. Letters, numbers, <code>_</code> <code>-</code> <code>.</code> only. Installers signed by TiddlyInstall get a hash of their settings added to the end, e.g. <code>install_python_requests_tjfq5rqw….exe</code>.</span>
+          </div>
+          <div class="field">
+            <label for="meta">Extra metadata</label>
+            <textarea id="meta" name="meta" placeholder="channel = stable&#10;homepage = https://example.com"></textarea>
+            <span class="hint">One <code>key = value</code> per line. Stored with the installer's settings. Package, versions and app ID are added automatically.</span>
+          </div>
+          <label class="choice"><input type="checkbox" name="publish_base"> Publish as a base installer others can reuse</label>
+        </details>
+
       </div>
 
       <div class="actions" style="margin-top:20px">
@@ -1163,7 +1171,7 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
   </main>
 
   <!-- Links to new.html#write open with "I'll write it here" chosen (classic script, so it works from file:// too). -->
-  <script>if (location.hash === "#write") document.getElementById("src-write").checked = true;</script>
+  <script>if (/^#(new&)?write(&|$)/.test(location.hash)) document.getElementById("src-write").checked = true;</script>
 
   <footer class="site-footer">
     A Matthew Roberts and Claude production.
