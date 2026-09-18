@@ -186,6 +186,8 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); ou
 .inline-choices { display: flex; flex-wrap: wrap; gap: 4px 20px; }
 
 main.narrow { max-width: 720px; }
+/* Wider when the editor is showing. */
+main.narrow:has(#src-write:checked) { max-width: 1040px; }
 
 details { margin-top: 10px; }
 summary { cursor: pointer; font-weight: 600; }
@@ -375,30 +377,30 @@ form:has(#tpl-tray:checked) .tpl-gui-only { display: block; }
 
 /* Show only the code, hints and labels for the chosen language and template (no JS). */
 .combo, .rt-inline { display: none; }
-form:has(#rt-python:checked):has(#tpl-script:checked) .combo-python-script,
-form:has(#rt-python:checked):has(#tpl-window:checked) .combo-python-window,
-form:has(#rt-python:checked):has(#tpl-web:checked) .combo-python-web,
-form:has(#rt-python:checked):has(#tpl-tray:checked) .combo-python-tray,
-form:has(#rt-node:checked):has(#tpl-script:checked) .combo-node-script,
-form:has(#rt-node:checked):has(#tpl-web:checked) .combo-node-web,
-form:has(#rt-node:checked):has(#tpl-tray:checked) .combo-node-tray,
-form:has(#rt-ruby:checked):has(#tpl-script:checked) .combo-ruby-script,
-form:has(#rt-ruby:checked):has(#tpl-window:checked) .combo-ruby-window { display: block; }
-form:has(#rt-python:checked) .rt-python-only,
-form:has(#rt-node:checked) .rt-node-only,
-form:has(#rt-ruby:checked) .rt-ruby-only { display: inline; }
-form:has(#rt-node:checked) .card-window,
-form:has(#rt-ruby:checked) .card-web,
-form:has(#rt-ruby:checked) .card-tray { display: none; }
-form:has(#rt-node:checked):has(#tpl-window:checked) .combo-unavailable,
-form:has(#rt-ruby:checked):has(#tpl-web:checked) .combo-unavailable,
-form:has(#rt-ruby:checked):has(#tpl-tray:checked) .combo-unavailable { display: block; }
-form:has(#rt-node:checked):has(#tpl-window:checked) .output,
-form:has(#rt-node:checked):has(#tpl-window:checked) .editor-files,
-form:has(#rt-ruby:checked):has(#tpl-web:checked) .output,
-form:has(#rt-ruby:checked):has(#tpl-web:checked) .editor-files,
-form:has(#rt-ruby:checked):has(#tpl-tray:checked) .output,
-form:has(#rt-ruby:checked):has(#tpl-tray:checked) .editor-files { display: none; }
+form:has(#runtime option[value="python"]:checked):has(#tpl-script:checked) .combo-python-script,
+form:has(#runtime option[value="python"]:checked):has(#tpl-window:checked) .combo-python-window,
+form:has(#runtime option[value="python"]:checked):has(#tpl-web:checked) .combo-python-web,
+form:has(#runtime option[value="python"]:checked):has(#tpl-tray:checked) .combo-python-tray,
+form:has(#runtime option[value="node"]:checked):has(#tpl-script:checked) .combo-node-script,
+form:has(#runtime option[value="node"]:checked):has(#tpl-web:checked) .combo-node-web,
+form:has(#runtime option[value="node"]:checked):has(#tpl-tray:checked) .combo-node-tray,
+form:has(#runtime option[value="ruby"]:checked):has(#tpl-script:checked) .combo-ruby-script,
+form:has(#runtime option[value="ruby"]:checked):has(#tpl-window:checked) .combo-ruby-window { display: block; }
+form:has(#runtime option[value="python"]:checked) .rt-python-only,
+form:has(#runtime option[value="node"]:checked) .rt-node-only,
+form:has(#runtime option[value="ruby"]:checked) .rt-ruby-only { display: inline; }
+form:has(#runtime option[value="node"]:checked) .card-window,
+form:has(#runtime option[value="ruby"]:checked) .card-web,
+form:has(#runtime option[value="ruby"]:checked) .card-tray { display: none; }
+form:has(#runtime option[value="node"]:checked):has(#tpl-window:checked) .combo-unavailable,
+form:has(#runtime option[value="ruby"]:checked):has(#tpl-web:checked) .combo-unavailable,
+form:has(#runtime option[value="ruby"]:checked):has(#tpl-tray:checked) .combo-unavailable { display: block; }
+form:has(#runtime option[value="node"]:checked):has(#tpl-window:checked) .output,
+form:has(#runtime option[value="node"]:checked):has(#tpl-window:checked) .editor-files,
+form:has(#runtime option[value="ruby"]:checked):has(#tpl-web:checked) .output,
+form:has(#runtime option[value="ruby"]:checked):has(#tpl-web:checked) .editor-files,
+form:has(#runtime option[value="ruby"]:checked):has(#tpl-tray:checked) .output,
+form:has(#runtime option[value="ruby"]:checked):has(#tpl-tray:checked) .editor-files { display: none; }
 
 /* Tabs (no JS): radio inputs styled as tabs, panels shown with :has. */
 .tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
@@ -525,3 +527,12 @@ form:has(#offline-on:checked) .offline-off-only,
 form:has(#offline-on:checked) .offline-off-inline { display: none; }
 .offline-targets .choice { margin: 0; }
 .offline-targets td input { min-width: 0; }
+
+/* Where's the code: a repo or package, or written on the site (no JS). */
+.src-write-only, .write-needs-lang { display: none; }
+form:has(#src-write:checked) .src-write-only { display: block; }
+form:has(#src-write:checked) .src-repo-only,
+form:has(#src-write:checked):has(#runtime option[value="none"]:checked) .lang-other-only { display: none; }
+.write-block .output { margin-bottom: 14px; }
+form:has(#src-write:checked):has(#runtime option[value="none"]:checked) .write-needs-lang { display: block; }
+form:has(#src-write:checked):has(#runtime option[value="none"]:checked) .write-editor { display: none; }
