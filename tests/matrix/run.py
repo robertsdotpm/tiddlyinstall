@@ -33,9 +33,9 @@ WINDOWS = {
 }
 # Linux test VMs on the ESXi host (docs/test-vms.md): name -> ssh target.
 LINUX_VMS = {
-    "centos6": "x@ib-centos6", "centos7": "x@10.0.1.221", "ubuntu1404": "x@10.0.1.117",
-    "ubuntu1604": "x@10.0.1.112", "ubuntu1804": "x@ib-ubuntu1804", "rocky8": "x@ib-rocky8",
-    "ubuntu2004": "x@ib-ubuntu2004", "ubuntu2204": "x@10.0.1.203", "debian12": "x@ib-debian12",
+    "centos6": "x@10.0.1.183", "centos7": "x@10.0.1.221", "ubuntu1404": "x@10.0.1.117",
+    "ubuntu1604": "x@10.0.1.112", "ubuntu1804": "x@10.0.1.144", "rocky8": "x@10.0.1.131",
+    "ubuntu2004": "x@10.0.1.118", "ubuntu2204": "x@10.0.1.203", "debian12": "x@10.0.1.235",
     "alpine": "x@10.0.1.200",
 }
 INSTALL_TIMEOUT = 1800
