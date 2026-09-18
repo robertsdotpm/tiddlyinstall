@@ -19,10 +19,9 @@
 
   <main class="narrow">
     <h1>New installer</h1>
-    <p class="prototype-note">
-      Prototype: submitting this form opens a sample build page. Nothing is
-      uploaded or built.
-    </p>
+    <noscript><p class="prototype-note">
+      Building needs JavaScript. Without it, submitting this form opens a sample build page.
+    </p></noscript>
 
     <form action="build.html" method="get">
 
@@ -718,6 +717,17 @@ Press Enter to close</pre>
           <label class="choice"><input type="checkbox" name="shortcut_desktop"> Desktop shortcut</label>
           <label class="choice"><input type="checkbox" name="cli_on_path"> Add to PATH</label>
           <label class="choice"><input type="checkbox" name="run_after"> Offer to launch after install</label>
+
+          <span class="label" style="margin-top:10px">Install for</span>
+          <label class="choice"><input type="radio" name="root" value="user" checked>
+            <span>The person installing it <span class="badge">default</span> <span class="small muted">(no administrator rights needed)</span></span></label>
+          <label class="choice"><input type="radio" name="root" value="system">
+            <span>Everyone on the computer <span class="small muted">(needs administrator or root)</span></span></label>
+          <div class="field">
+            <label for="rootname">Root folder name</label>
+            <input type="text" id="rootname" name="rootname" value="ib" maxlength="32" pattern="[A-Za-z0-9._\-]+" spellcheck="false">
+            <span class="hint">Every app installed this way goes under one folder with this name, each in its own subfolder.</span>
+          </div>
           <details>
             <summary>Install scripts</summary>
             <p class="small muted" style="margin-top:0">Optional. Scripts run after the user has seen what the installer will do and clicked Install.
@@ -1148,12 +1158,12 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
     </form>
   </main>
 
-  <!-- The only script in the prototype: links to new.html#write open with "I'll write it here" chosen. -->
+  <!-- Links to new.html#write open with "I'll write it here" chosen (classic script, so it works from file:// too). -->
   <script>if (location.hash === "#write") document.getElementById("src-write").checked = true;</script>
 
   <footer class="site-footer">
-    Prototype. Nothing on these pages is connected to a build service yet.<br>
     A Matthew Roberts and Claude production.
   </footer>
+  <script type="module" src="js/new.js"></script>
 </body>
 </html>

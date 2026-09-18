@@ -23,69 +23,188 @@
       Change what an unsigned installer installs, its name and its icon.
       Editing happens in your browser. Your file is never uploaded.
     </p>
-    <p class="prototype-note">
-      Prototype: this page is a mock-up. Real editing will need JavaScript,
-      and nothing here reads or changes files yet.
-    </p>
+    <div class="prototype-note" id="standalone-note" hidden>
+      <p style="margin-top:0">This is the self-contained editor: one file with the Windows, Linux and macOS base
+        installers inside. It works offline, from a USB stick or any web host.</p>
+      <div class="actions"><button type="button" id="save-page" class="secondary">Save this page</button></div>
+    </div>
+    <noscript><p class="prototype-note">The editor needs JavaScript. Your file still never leaves your computer.</p></noscript>
 
-    <form action="edit.html" method="get">
+    <section class="panel">
+      <h2 class="section-title">Open an installer</h2>
+      <div class="drop-zone" id="drop">
+        <input type="file" id="installer" accept=".exe,.run,.zip" aria-label="Installer">
+        <span class="hint">Or drop it here. <code>.exe</code> for Windows, <code>.run</code> for Linux, <code>.zip</code> for macOS,
+          made on this site as an unsigned installer.</span>
+      </div>
+
+      <span class="label" style="margin-top:14px">Or start a new one from a base installer</span>
+      <div class="actions">
+        <button type="button" class="secondary" data-base="windows">Windows <code>.exe</code></button>
+        <button type="button" class="secondary" data-base="linux">Linux <code>.run</code></button>
+        <button type="button" class="secondary" data-base="macos">macOS <code>.zip</code></button>
+      </div>
+      <span class="hint" id="base-hint">Base installers come from the build server, or from inside this page when it is the self-contained editor.</span>
+
+      <p class="file-summary" id="file-summary" hidden></p>
+      <div class="warn-box small" id="signed-warning" hidden></div>
+      <div class="error-box" id="edit-error" role="alert" hidden></div>
+
+      <div class="notice-list small">
+        <p><strong>Signed installers can't be edited without losing their signature.</strong>
+          If you open one, it will be saved unsigned and Windows and macOS will warn people who run it.
+          To retarget an installer signed by Installer Builder, <a href="#rename">rename it</a> instead.</p>
+      </div>
+    </section>
+
+    <form id="editor" hidden>
       <section class="panel">
-        <div class="field">
-          <label for="installer">Installer</label>
-          <input type="file" id="installer" name="installer" accept=".exe,.run,.zip">
-          <span class="hint"><code>.exe</code> for Windows, <code>.run</code> for Linux, <code>.zip</code> for macOS. Made on this site as an unsigned installer.</span>
+        <h2 class="section-title">App details</h2>
+        <div class="row">
+          <div class="field">
+            <label for="f-name">Name</label>
+            <input type="text" id="f-name" data-key="name" maxlength="64">
+          </div>
+          <div class="field">
+            <label for="f-project">Project or package</label>
+            <input type="text" id="f-project" data-key="project" spellcheck="false">
+            <span class="hint">Fills <code>{project}</code> in commands.</span>
+          </div>
         </div>
-
-        <div class="notice-list small">
-          <p><strong>Signed installers can't be edited without losing their signature.</strong>
-            If you open one, it will be saved unsigned and Windows and macOS will warn people who run it.
-            To retarget an installer signed by Installer Builder, <a href="#rename">rename it</a> instead.</p>
+        <div class="field">
+          <span class="label">Icon</span>
+          <span class="hint">Not editable here yet (to do: Windows icons with resedit-js, macOS <code>.icns</code>). The installer keeps its current icon.</span>
         </div>
 
         <hr>
-
         <h2 class="section-title">What it installs</h2>
         <div class="row">
           <div class="field">
-            <label for="source">Package or GitHub repo</label>
-            <input type="text" id="source" name="source" placeholder="requests">
+            <label for="f-src-kind">Source</label>
+            <select id="f-src-kind">
+              <option value="github">GitHub repo</option>
+              <option value="package">Package</option>
+              <option value="url">Download URL</option>
+              <option value="inline">Written on the site</option>
+            </select>
           </div>
           <div class="field">
-            <label for="ref">Version or commit</label>
-            <input type="text" id="ref" name="ref" placeholder="Latest release">
+            <label for="f-src-a" id="f-src-a-label">Repo</label>
+            <input type="text" id="f-src-a" spellcheck="false">
+          </div>
+          <div class="field">
+            <label for="f-src-b" id="f-src-b-label">Commit</label>
+            <input type="text" id="f-src-b" spellcheck="false">
           </div>
         </div>
-
-        <h2 class="section-title">App details</h2>
-        <div class="field">
-          <label for="app-name">Name</label>
-          <input type="text" id="app-name" name="app_name" maxlength="64" placeholder="Current: Requests">
+        <div class="row">
+          <div class="field">
+            <label for="f-runtime">Language</label>
+            <select id="f-runtime" data-key="runtime">
+                <option value="python">Python</option>
+                <option value="node">Node.js</option>
+                <option value="ruby">Ruby</option>
+                <option value="php">PHP</option>
+                <option value="java">Java</option>
+                <option value="dotnet">.NET</option>
+                <option value="r">R</option>
+                <option value="cc">C / C++</option>
+                <option value="go">Go</option>
+                <option value="rust">Rust</option>
+                <option value="zig">Zig</option>
+                <option value="nim">Nim</option>
+                <option value="none">Other (own runtime)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-select">Which version</label>
+            <select id="f-select" data-key="select">
+              <option value="newest">Newest that runs on the user's system</option>
+              <option value="asyncio">Newest tested with asyncio</option>
+              <option value="range">Newest within a range</option>
+              <option value="exact">One exact version</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-range">Range or version</label>
+            <input type="text" id="f-range" data-key="range" placeholder="e.g. >=3.8" spellcheck="false">
+          </div>
         </div>
         <div class="field">
-          <label for="icon">Icon</label>
-          <input type="file" id="icon" name="icon" accept=".png,.svg">
-          <span class="hint">A square PNG, 1024×1024 or larger.</span>
+          <label for="f-launch">Launch command</label>
+          <input type="text" id="f-launch" data-key="launch" spellcheck="false">
+        </div>
+        <div class="field">
+          <label for="f-install">Install command</label>
+          <input type="text" id="f-install" data-key="install" placeholder="The project's usual install command" spellcheck="false">
+        </div>
+
+        <hr>
+        <h2 class="section-title">Shortcuts and install behaviour</h2>
+        <label class="choice"><input type="checkbox" data-key="console"> A console program (keep its window open)</label>
+        <label class="choice"><input type="checkbox" data-key="menu"> Start menu / app launcher shortcut</label>
+        <label class="choice"><input type="checkbox" data-key="desktop"> Desktop shortcut</label>
+        <div class="row" style="margin-top:10px">
+          <div class="field">
+            <label for="f-root">Install for</label>
+            <select id="f-root" data-key="root">
+              <option value="user">The person installing it</option>
+              <option value="system">Everyone on the computer</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-rootname">Root folder name</label>
+            <input type="text" id="f-rootname" data-key="rootname" spellcheck="false">
+          </div>
+          <div class="field">
+            <label for="f-backend">Plans fetched from</label>
+            <input type="text" id="f-backend" data-key="backend" placeholder="https://ib.example" spellcheck="false">
+          </div>
         </div>
 
         <details>
-          <summary>Everything else in the installer's settings</summary>
+          <summary>Everything in the installer's settings</summary>
           <div class="field">
-            <label for="settings">Settings</label>
-            <textarea id="settings" name="settings" rows="10">{
-  "name": "Requests",
-  "source": "https://github.com/psf/requests",
-  "commit": "0e322af87745eff34caffe4df68456ebc20d9068",
-  "runtime": { "name": "python", "versions": ">=3.8" },
-  "shortcuts": { "menu": true, "desktop": false },
-  "uninstaller": true
-}</textarea>
-            <span class="hint">Sample settings. The real editor will show what is stored in your installer.</span>
+            <label for="record-raw">Settings record</label>
+            <textarea id="record-raw" rows="12" spellcheck="false"></textarea>
+            <span class="hint">One <code>key&lt;TAB&gt;value</code> per line, as in <code>docs/format.md</code>.
+              Its hash: <code id="record-hash">…</code></span>
           </div>
         </details>
+        <details>
+          <summary>Install plan</summary>
+          <div class="field">
+            <label for="plan-raw">Plan</label>
+            <textarea id="plan-raw" rows="8" spellcheck="false" placeholder="Empty: the installer fetches the current plan online when it runs."></textarea>
+            <span class="hint">Leave empty for an installer that always gets the current plan. A plan here makes it work without our server.</span>
+          </div>
+        </details>
+      </section>
 
-        <div class="actions" style="margin-top:16px">
-          <button type="submit">Save edited installer</button>
+      <section class="panel">
+        <h2 class="section-title">Packed files</h2>
+        <p class="small muted" style="margin-top:0">Files carried inside the installer. The installer uses a packed copy of any download
+          whose SHA-256 matches, instead of downloading it.</p>
+        <ul class="pack-list" id="pack-list"></ul>
+        <div class="field">
+          <label for="pack-add">Add files</label>
+          <input type="file" id="pack-add" multiple>
         </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="section-title">Save</h2>
+        <div class="field">
+          <label for="out-name">File name</label>
+          <input type="text" id="out-name" maxlength="255" spellcheck="false">
+        </div>
+        <label class="choice" id="ack-signed-row" hidden><input type="checkbox" id="ack-signed">
+          <span>I understand the saved copy won't be signed.</span></label>
+        <div class="actions" style="margin-top:10px">
+          <button type="submit">Download edited installer</button>
+          <span class="small muted" id="save-status"></span>
+        </div>
+        <span class="hint">Made in your browser. Nothing is uploaded.</span>
       </section>
     </form>
 
@@ -101,8 +220,8 @@ install_python_black.exe      installs black
   </main>
 
   <footer class="site-footer">
-    Prototype. Nothing on these pages is connected to a build service yet.<br>
     A Matthew Roberts and Claude production.
   </footer>
+  <script type="module" src="js/edit.js"></script>
 </body>
 </html>

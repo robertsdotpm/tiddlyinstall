@@ -608,3 +608,70 @@ form:has(#rv-range:checked) .rv-range-only,
 form:has(#rv-exact:checked) .rv-exact-only { display: block; }
 /* python-only panels also need Python chosen. */
 form:not(:has(#runtime option[value="python"]:checked)) .py-panel { display: none; }
+
+/* ---- Live client: backend banner, footer control, errors ---- */
+
+.api-banner {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 10px 14px;
+  background: var(--panel);
+  border: 1px solid var(--fail);
+  border-left-width: 4px;
+  border-radius: 0 0 8px 8px;
+  font-size: 0.95em;
+}
+.api-banner[hidden] { display: none; }
+.api-banner button { padding: 4px 12px; }
+
+.api-ctl { margin-top: 8px; }
+.api-ctl-url { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.9em; }
+.api-ctl-form { margin-top: 8px; max-width: 480px; }
+.api-ctl-form label { display: block; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+.api-ctl-form input { margin-top: 4px; }
+.api-ctl-form .actions { margin-top: 8px; gap: 8px; }
+.api-ctl-form button { padding: 4px 12px; }
+.api-ctl-err, .form-error { color: var(--fail); font-weight: 600; }
+.form-error[hidden], .api-ctl-err[hidden] { display: none; }
+
+.error-box {
+  border-left: 4px solid var(--fail);
+  background: var(--panel);
+  padding: 10px 14px;
+  margin-bottom: 20px;
+}
+.error-box[hidden] { display: none; }
+
+.big-number { font-size: 1.6em; font-weight: 700; margin: 0; line-height: 1.2; }
+.sha { font-size: 0.8em; word-break: break-all; }
+
+/* ---- Browser editor ---- */
+
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: 8px;
+  padding: 18px;
+  text-align: center;
+}
+.drop-zone.dragging { border-color: var(--accent); background: var(--code-bg); }
+.file-summary { margin: 12px 0 0; }
+.pack-list { list-style: none; padding: 0; margin: 0 0 10px; }
+.pack-list li { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid var(--border); }
+.pack-list li:last-child { border-bottom: 0; }
+.warn-box {
+  border-left: 4px solid var(--warn);
+  background: var(--code-bg);
+  padding: 8px 12px;
+  margin: 12px 0;
+}
+.warn-box[hidden] { display: none; }
+[data-needs-file][hidden] { display: none; }
+.choice[hidden] { display: none; }

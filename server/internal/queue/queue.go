@@ -43,9 +43,9 @@ type Queue struct {
 	Workers int
 }
 
-func New(addr string, workers int) *Queue {
-	opt := asynq.RedisClientOpt{Addr: addr}
-	return &Queue{rdb: redis.NewClient(&redis.Options{Addr: addr}), client: asynq.NewClient(opt), opt: opt, Workers: workers}
+func New(addr string, db, workers int) *Queue {
+	opt := asynq.RedisClientOpt{Addr: addr, DB: db}
+	return &Queue{rdb: redis.NewClient(&redis.Options{Addr: addr, DB: db}), client: asynq.NewClient(opt), opt: opt, Workers: workers}
 }
 
 func (q *Queue) Ping(ctx context.Context) error { return q.rdb.Ping(ctx).Err() }

@@ -47,8 +47,17 @@ type RuntimePolicy struct {
 	Asyncio map[string]string `json:"asyncio"`
 	// compilers_min_os.json toolchain name for each variant (cc only).
 	Toolchains map[string]string `json:"toolchains"`
+	// Other catalogue runtimes this one needs, per OS family: installed
+	// alongside as extra plan files, with their bin folder on PATH (e.g.
+	// Nim on Windows needs a C compiler).
+	Requires map[string][]Requirement `json:"requires"`
 	// Launch default per the form (design.md section 4).
 	Launch string `json:"launch"`
+}
+
+type Requirement struct {
+	Runtime string `json:"runtime"`
+	Bin     string `json:"bin"` // folder inside it to put on PATH, e.g. "bin"
 }
 
 func LoadPolicy(path string) (*Policy, error) {

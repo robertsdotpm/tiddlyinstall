@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Build #1042 · Installer Builder</title>
+  <title>Build · Installer Builder</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -18,143 +18,61 @@
   </header>
 
   <main>
-    <h1>Build #1042: install_python_requests</h1>
-    <p class="prototype-note">Prototype: sample build. The form you submitted was not processed.</p>
+    <h1 id="job-title">Build</h1>
 
-    <div class="grid">
-      <section class="panel">
-        <span class="label">Status</span>
-        <p class="status ok" style="margin:0">Ready</p>
-      </section>
-      <section class="panel">
-        <span class="label">Source</span>
-        <p style="margin:0"><code>psf/requests</code> @ <code>0e322af</code> (v2.32.3)</p>
-      </section>
-      <section class="panel">
-        <span class="label">Signing</span>
-        <p style="margin:0">Signed by Installer Builder</p>
-      </section>
-      <section class="panel">
-        <span class="label">Base</span>
-        <p style="margin:0"><a href="bases.html"><code>install_python_x</code></a></p>
-      </section>
-    </div>
+    <div class="error-box" id="job-error" role="alert" hidden></div>
 
-    <section class="panel">
-      <h2>Steps</h2>
-      <ol class="steps">
-        <li><span>Resolve v2.32.3 to a commit</span><span class="status ok">Done · 1s</span></li>
-        <li><span>Check source against the takedown list</span><span class="status ok">Done · 1s</span></li>
-        <li><span>Prepare launcher icon</span><span class="status ok">Done · 1s</span></li>
-        <li><span>Publish settings record</span><span class="status ok">Done · 1s</span></li>
-        <li><span>Name signed base installers</span><span class="status ok">Done · 1s</span></li>
-      </ol>
-      <p class="small muted" style="margin-bottom:0">No packaging needed: installers signed by Installer Builder are a signed base under a new name.</p>
+    <section class="panel" id="no-job" hidden>
+      <p style="margin-top:0">No build selected. This page shows one build: its address ends in <code>#job=</code> and the build's id.</p>
+      <div class="actions"><a class="button" href="new.html">New installer</a></div>
     </section>
 
-    <section class="panel">
-      <h2>Downloads</h2>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>File</th><th>Platform</th><th>Signed by</th></tr></thead>
-          <tbody>
-            <tr><td><a href="#"><code>install_python_requests_tjfq5rqwnnrxjpnx5wdqaerq2h.exe</code></a></td><td>Windows</td><td>Installer Builder</td></tr>
-            <tr><td><a href="#"><code>install_python_requests_tjfq5rqwnnrxjpnx5wdqaerq2h.run</code></a></td><td>Linux</td><td>Not needed on Linux</td></tr>
-            <tr><td><a href="#"><code>install_python_requests_tjfq5rqwnnrxjpnx5wdqaerq2h.dmg</code></a></td><td>macOS</td><td>Installer Builder</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="small muted" style="margin-bottom:0">The long part of the name is a hash of this installer's settings. Renaming the file changes what it installs.</p>
-    </section>
-
-    <section class="panel">
-      <h2>Packing in your browser</h2>
-      <p class="small muted">Shown when an installer has packed files: your own, or offline copies. Each file goes from your computer or its download site
-        straight into the installer and is checked against the settings' checksum. Sites that don't let browsers download from them go through our
-        download relay, which only fetches catalogued files and keeps nothing. Nothing is uploaded to us. Keep this page open until it finishes.</p>
-      <span class="label">Your files, in every installer</span>
-      <ol class="steps">
-        <li><span><code>sample-data.zip</code> <span class="muted small">from your computer</span></span><span class="status ok">Checked · 12 MB</span></li>
-      </ol>
-      <span class="label" style="margin-top:12px">Offline copies only</span>
-      <ol class="steps">
-        <li><span><code>vc_redist.x64.exe</code> <span class="muted small">your file, from aka.ms</span></span><span class="status fail">Needs you</span></li>
-        <li><span>Python 3.13.0, Windows x64 <span class="muted small">from npmmirror.com</span></span><span class="status ok">Checked · 27 MB</span></li>
-        <li><span>Python 3.13.0, Windows arm64 <span class="muted small">from npmmirror.com</span></span><span class="status ok">Checked · 26 MB</span></li>
-        <li><span>Python 3.12.4, Linux x86_64 and aarch64 <span class="muted small">from github.com, through our relay</span></span><span class="status running">Downloading · 61%</span></li>
-        <li><span>Python 3.12.4, macOS universal <span class="muted small">from python.org, through our relay</span></span><span class="status pending">Waiting</span></li>
-        <li><span>requests 2.32.3 and 4 dependencies <span class="muted small">wheels from PyPI</span></span><span class="status ok">Checked · 0.6 MB</span></li>
-        <li><span>requests source at <code>0e322af</code> <span class="muted small">from GitHub</span></span><span class="status ok">Checked · 0.1 MB</span></li>
-      </ol>
-
-      <div class="custom-runtime" style="margin-top:14px">
-        <p style="margin-top:0"><strong>aka.ms doesn't let browsers download <code>vc_redist.x64.exe</code>.</strong>
-          Our relay only fetches catalogued runtimes, so download it yourself and drop it here. It's checked against the same checksum and stays on your computer.</p>
-        <input type="file" aria-label="vc_redist.x64.exe">
+    <div id="job-view" hidden>
+      <div class="grid">
+        <section class="panel">
+          <span class="label">Status</span>
+          <p class="status pending big-number" id="job-status">Checking…</p>
+        </section>
+        <section class="panel">
+          <span class="label">Queue</span>
+          <p class="big-number" id="job-position">…</p>
+          <span class="hint" id="job-class"></span>
+        </section>
+        <section class="panel">
+          <span class="label">Estimated wait</span>
+          <p class="big-number" id="job-eta">…</p>
+          <span class="hint">Worked out from recent builds, updated as you wait.</span>
+        </section>
       </div>
 
-      <div class="table-wrap" style="margin-top:14px">
-        <table>
-          <thead><tr><th>File</th><th>Platform</th><th>Size</th><th>Signed by</th></tr></thead>
-          <tbody>
-            <tr><td><a href="#"><code>install_python_requests.exe</code></a></td><td>Windows</td><td>15 MB</td><td>Installer Builder (signature unchanged)</td></tr>
-            <tr><td><a href="#"><code>install_python_requests.run</code></a></td><td>Linux</td><td>15 MB</td><td>Not needed on Linux</td></tr>
-            <tr><td><a href="#"><code>install_python_requests.zip</code></a></td><td>macOS</td><td>17 MB</td><td>Installer Builder (the app inside)</td></tr>
-            <tr><td><a href="#"><code>install_python_requests_offline.exe</code></a></td><td>Windows</td><td>54 MB</td><td>Installer Builder (signature unchanged)</td></tr>
-            <tr><td><span class="muted"><code>install_python_requests_offline.run</code></span></td><td>Linux</td><td>…</td><td>Not needed on Linux</td></tr>
-            <tr><td><span class="muted"><code>install_python_requests_offline.zip</code></span></td><td>macOS</td><td>…</td><td>Installer Builder (the app inside)</td></tr>
-          </tbody>
-        </table>
+      <section class="panel">
+        <h2>Progress</h2>
+        <ol class="steps" id="job-steps">
+          <li><span>Waiting for the build server</span><span class="status pending">…</span></li>
+        </ol>
+        <p class="small muted" style="margin-bottom:0">You can close this page and come back: the address keeps your place.</p>
+      </section>
+
+      <section class="panel" id="job-downloads" hidden>
+        <h2>Downloads</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>File</th><th>Platform</th><th>Size</th><th>Signed by</th></tr></thead>
+            <tbody id="job-files"></tbody>
+          </table>
+        </div>
+        <p class="small muted" id="job-record" style="margin-bottom:0" hidden></p>
+      </section>
+
+      <div class="actions">
+        <a class="button secondary" href="new.html">New installer</a>
       </div>
-      <p class="small muted" style="margin-bottom:0">Installers with packed files carry their settings inside, signed by us, so their names don't need a hash.
-        Without packed files they'd be the plain renamed downloads above.
-        The macOS <code>.zip</code> holds the app and a folder of files; users keep the two together.</p>
-    </section>
-
-    <section class="panel">
-      <h2>What people see before installing</h2>
-      <p class="small muted">Every installer shows this before it changes anything, whoever signed it.</p>
-      <div class="table-wrap">
-        <table>
-          <tbody>
-            <tr><th scope="row">Installs</th><td><code>requests</code> 2.32.3</td></tr>
-            <tr><th scope="row">From</th><td><code>https://github.com/psf/requests</code> at commit <code>0e322af87745eff34caffe4df68456ebc20d9068</code></td></tr>
-            <tr><th scope="row">Downloads</th><td>Python 3.12.4 (newest matching <code>&gt;=3.8</code> that runs on this computer) from python.org or a mirror, checksum checked<br>requests source from GitHub, checksum checked<br><span class="muted">Offline installers: the same files, from inside the installer, checksums checked</span></td></tr>
-            <tr><th scope="row">Writes to</th><td><code>C:\ib\k3m9q2x7v4p8\</code> (requests)<br><code>C:\ib\tjfq5rqwnnrx\</code> (Python 3.12.4, for this app only)</td></tr>
-            <tr><th scope="row">Publisher's files</th><td><code>sample-data.zip</code> (12 MB, packed), unpacked into the app's <code>data\</code> folder<br><code>vc_redist.x64.exe</code> (from aka.ms), run with <code>/install /quiet /norestart</code> <a href="#">(checksums)</a><br><span class="muted">Added by the installer's publisher, not taken from a public source</span></td></tr>
-            <tr><th scope="row">Changes</th><td>Start menu shortcut, uninstaller entry</td></tr>
-            <tr><th scope="row">Runs scripts</th><td>After installing files: 2 lines of batch <a href="#">(view)</a></td></tr>
-            <tr><th scope="row">Signed by</th><td>Installer Builder. The installer is made by Installer Builder, not by the authors of <code>requests</code>.</td></tr>
-            <tr><th scope="row">Settings from</th><td>File name hash, verified<br><span class="muted">Offline installers: inside the file, signature by Installer Builder verified</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2>Settings record</h2>
-      <p class="small muted">Stored by the service. The installer fetches it at install time and checks it against the hash in its name.</p>
-<pre>
-{
-  "name": "Requests",
-  "source": "https://github.com/psf/requests",
-  "commit": "0e322af87745eff34caffe4df68456ebc20d9068",
-  "runtime": { "name": "python", "versions": ">=3.8" },
-  "shortcuts": { "menu": true, "desktop": false },
-  "uninstaller": true,
-  "base": "install_python_x"
-}
-</pre>
-    </section>
-
-    <div class="actions">
-      <a class="button secondary" href="new.html">Change and rebuild</a>
     </div>
   </main>
 
   <footer class="site-footer">
-    Prototype. Nothing on these pages is connected to a build service yet.<br>
     A Matthew Roberts and Claude production.
   </footer>
+  <script type="module" src="js/build.js"></script>
 </body>
 </html>

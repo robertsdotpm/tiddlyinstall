@@ -1,9 +1,12 @@
 package catalog
 
 import (
+	"regexp"
 	"strconv"
 	"strings"
 )
+
+var preRe = regexp.MustCompile(`^[-_.~]?(a|b|c|rc|alpha|beta|pre|preview|dev)([-_.]?[0-9]|$)`)
 
 // Version is a dotted release number. Pre-releases (anything with letters
 // after the numbers, e.g. 3.13.0rc1) are flagged so "newest" skips them.
@@ -26,7 +29,11 @@ func ParseVersion(s string) Version {
 			n, _ = strconv.Atoi(p[:j])
 		}
 		if j < len(p) {
-			v.Pre = true
+			// Only real pre-release markers count (3.13.0rc1, 1.0.0-beta);
+			// build labels such as WinLibs' 16.2.0posix-14.0.0-ucrt-r1 don't.
+			if preRe.MatchString(p[j:]) {
+				v.Pre = true
+			}
 			if j == 0 && i > 0 {
 				break
 			}

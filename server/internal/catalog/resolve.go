@@ -47,6 +47,7 @@ type pick struct {
 	recipe   *Recipe
 	minBuild int
 	known    bool
+	needs    []companion // other runtimes this one needs on this OS
 }
 
 // Recipe support --------------------------------------------------------
@@ -269,7 +270,10 @@ func (c *Catalog) best(rt *Runtime, cands []*Release, o OSID, app *App) (p, cond
 		if r == nil || c.sha(e) == "" {
 			continue
 		}
-		pk := &pick{e, r, minBuild, known}
+		pk := &pick{rel: e, recipe: r, minBuild: minBuild, known: known}
+		if !c.attachNeeds(rt, pk, o) {
+			continue
+		}
 		if minBuild > o.Build && minBuild > 0 {
 			if cond == nil {
 				cond = pk
@@ -281,6 +285,33 @@ func (c *Catalog) best(rt *Runtime, cands []*Release, o OSID, app *App) (p, cond
 	return nil, cond
 }
 
+// attachNeeds finds the companion runtimes (policy "requires") for a pick
+// on one OS version, built for the same architecture as the pick.
+func (c *Catalog) attachNeeds(rt *Runtime, pk *pick, o OSID) bool {
+	pol := c.Policy.Runtimes[rt.ID]
+	if pol == nil {
+		return true
+	}
+	for _, req := range pol.Requires[o.Family] {
+		crt := c.Runtimes[req.Runtime]
+		if crt == nil {
+			return false
+		}
+		var native []*Release
+		for _, e := range c.candidates(crt, o.Family, pk.rel.Arch) {
+			if e.Arch == pk.rel.Arch || e.Arch == "any" || e.Arch == "universal" {
+				native = append(native, e)
+			}
+		}
+		cp, _ := c.best(crt, native, o, &App{Runtime: req.Runtime})
+		if cp == nil {
+			return false
+		}
+		pk.needs = append(pk.needs, companion{req, cp})
+	}
+	return true
+}
+
 // Plans ----------------------------------------------------------------
 
 type block struct {
@@ -290,6 +321,11 @@ type block struct {
 	arches   []string
 	p        *pick
 	labels   []string
+}
+
+type companion struct {
+	req Requirement
+	p   *pick
 }
 
 // FileRef is a file a plan downloads, for packing (packed-files.md).
@@ -338,13 +374,14 @@ func (c *Catalog) ResolveFiles(app *App) (string, []FileRef, error) {
 					// block of its own, checked before the fallback.
 					if cur != nil && samePick(cur.p, cond) && cur.minBuild <= cond.minBuild {
 						cur.min = o.Int
-						cur.labels = append(cur.labels, o.Label+" (build "+strconv.Itoa(cond.minBuild)+"+)")
+							cur.labels = append(cur.labels, o.Label+" (build "+strconv.Itoa(cond.minBuild)+"+)")
 						if cur.minBuild < cond.minBuild {
 							cur.minBuild = cond.minBuild
 						}
 					} else {
 						flush()
-						cur = &block{family, o.Int, o.Int, cond.minBuild, []string{machine}, cond, []string{o.Label + " (build " + strconv.Itoa(cond.minBuild) + "+)"}}
+						cur = &block{family: family, min: o.Int, max: o.Int, minBuild: cond.minBuild, arches: []string{machine}, p: cond,
+							labels: []string{o.Label + " (build " + strconv.Itoa(cond.minBuild) + "+)"}}
 					}
 					flush()
 				}
@@ -367,17 +404,25 @@ func (c *Catalog) ResolveFiles(app *App) (string, []FileRef, error) {
 	}
 	var files []FileRef
 	seen := map[string]bool{}
-	for _, b := range blocks {
-		if b.p == nil || seen[b.p.rel.SHA256] {
-			continue
+	add := func(e *Release) {
+		if seen[e.SHA256] {
+			return
 		}
-		seen[b.p.rel.SHA256] = true
-		e := b.p.rel
+		seen[e.SHA256] = true
 		f := FileRef{Name: e.FileName(), SHA256: e.SHA256, Size: e.Size, URLs: append([]string{e.URL}, e.Mirrors...)}
 		if e.Local != "" && c.local != nil {
 			f.Local = filepath.Join(c.local.Root, e.Local)
 		}
 		files = append(files, f)
+	}
+	for _, b := range blocks {
+		if b.p == nil {
+			continue
+		}
+		add(b.p.rel)
+		for _, n := range b.p.needs {
+			add(n.p.rel)
+		}
 	}
 	return c.write(app, rt, blocks), files, nil
 }
@@ -386,7 +431,15 @@ func samePick(a, b *pick) bool {
 	if a == nil || b == nil {
 		return a == nil && b == nil
 	}
-	return a.rel == b.rel && a.recipe == b.recipe
+	if a.rel != b.rel || a.recipe != b.recipe || len(a.needs) != len(b.needs) {
+		return false
+	}
+	for i := range a.needs {
+		if a.needs[i].p.rel != b.needs[i].p.rel {
+			return false
+		}
+	}
+	return true
 }
 
 func versionTokens(v Version) *strings.Replacer {
@@ -504,8 +557,59 @@ func (c *Catalog) writeTarget(w *ibtext.Writer, app *App, pol *RuntimePolicy, b 
 			w.Add("step", "mkdir", fix(fmt.Sprint(st["mkdir"])))
 		}
 	}
+	// Companion runtimes (policy "requires"): their own files and folders,
+	// with their bin folder on PATH for install and launch.
+	var compPath []string
+	for _, n := range b.p.needs {
+		ce := n.p.rel
+		cvt := versionTokens(ce.V)
+		cfix := func(s string) string {
+			return fix(cvt.Replace(strings.ReplaceAll(s, "{runtime_dir}", "{dir}")))
+		}
+		w.Add("file", n.req.Runtime, ce.FileName(), ce.SHA256, strconv.FormatInt(ce.Size, 10))
+		cm := ""
+		if ce.Local != "" && c.Policy.MirrorBase != "" {
+			cm = strings.TrimRight(c.Policy.MirrorBase, "/") + "/" + strings.ReplaceAll(ce.Local, "\\", "/")
+		}
+		cseen := map[string]bool{}
+		for _, u := range append(append([]string{cm, ce.URL}, ce.Mirrors...), cm) {
+			if u != "" && !cseen[u] {
+				cseen[u] = true
+				w.Add("url", u)
+			}
+		}
+		for _, st := range n.p.recipe.Steps {
+			switch {
+			case st["unpack"] != nil:
+				f := fmt.Sprint(st["unpack"])
+				if f == "7z-sfx" {
+					f = "7z"
+				}
+				strip := 0
+				if x, ok := st["strip_components"].(float64); ok {
+					strip = int(x)
+				}
+				to, _ := st["to"].(string)
+				w.Add("step", "unpack", f, cfix(orDefault(to, "{dir}")), strconv.Itoa(strip))
+			case st["run"] != nil:
+				w.Add("step", "run", cfix(fmt.Sprint(st["run"])))
+			}
+		}
+		sep := "/"
+		if win {
+			sep = `\`
+		}
+		bin := "{dir:" + n.req.Runtime + "}"
+		if n.req.Bin != "" {
+			bin += sep + n.req.Bin
+		}
+		compPath = append(compPath, bin)
+	}
 	if r.Executable != "" {
 		w.Add("exe", fix(r.Executable))
+	}
+	for _, p := range compPath {
+		w.Add("path", p)
 	}
 	// Launch environment (design.md 1.7): the runtime's part from the recipe.
 	path := map[string]bool{}

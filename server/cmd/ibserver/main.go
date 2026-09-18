@@ -58,13 +58,18 @@ func main() {
 	bases := flag.String("bases", filepath.Join(repo, "bases"), "base installers")
 	public := flag.String("public", "http://10.0.1.76:8080", "this server's public URL")
 	workers := flag.Int("workers", 2, "concurrent jobs")
+	redisDB := flag.Int("redis-db", 0, "Redis database number (a second instance needs its own)")
+	mirror := flag.String("mirror", "", "URL of our mirror in plans (default: the policy's mirror_base)")
 	flag.Parse()
 
 	cat, err := catalog.Load(*catDir, *policy, *local, filepath.Join(*data, "sha-cache.json"))
 	if err != nil {
 		log.Fatal(err)
 	}
-	q := queue.New(*redisAddr, *workers)
+	if *mirror != "" {
+		cat.Policy.MirrorBase = *mirror
+	}
+	q := queue.New(*redisAddr, *redisDB, *workers)
 	s := &server{q: q, cat: cat, data: *data, local: *local, site: *site, bases: *bases, limiter: newLimiter(20, time.Minute)}
 	s.b = &build.Builder{Cat: cat, Data: *data, Bases: *bases, Public: *public, Backend: *public,
 		HTTP: &http.Client{Timeout: 10 * time.Minute}}
