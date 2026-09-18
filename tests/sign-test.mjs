@@ -18,6 +18,7 @@ import { openPfx } from '../js/pkcs12.js';
 import * as ac from '../js/authenticode.js';
 import { parseCertBundle } from '../js/x509.js';
 import { readInstaller, writeInstaller, newRecordText, recordHash } from '../js/ibfile.js';
+import * as pgp from '../js/pgp.js';
 import { FX } from './fixtures.js';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -140,6 +141,17 @@ const RECORD = newRecordText({ name: 'Sign Test', project: 'signtest', runtime: 
 async function withRecord(pe) {
   const info = await readInstaller(pe, 'x.exe');
   return writeInstaller(info, { record: RECORD, plan: '', pack: [{ name: 'a'.repeat(64), data: new TextEncoder().encode('packed') }] });
+}
+
+const eqB = (a, b) => a.length === b.length && a.every((x, i) => x === b[i]);
+const hex = (u8) => Buffer.from(u8).toString('hex');
+
+// A Linux .run: the Linux base when built, else a stand-in script.
+async function withRunFile() {
+  const base = path.join(REPO, 'bases/unix/out/ib-base.run');
+  const bytes = fs.existsSync(base) ? read(base) : new TextEncoder().encode('#!/bin/sh\necho stand-in\nexit 0\n');
+  const info = await readInstaller(bytes, 'x.run');
+  return writeInstaller(info, { record: RECORD, plan: '', pack: [] });
 }
 
 async function checkFile(name, file, caFile, certFile, { record = true } = {}) {
@@ -295,6 +307,68 @@ for (const [name, url] of TSAS) {
   });
 }
 
+/* ---------- OpenPGP (Linux .run) ---------- */
+
+function gpg(home, args, input) {
+  const r = spawnSync('gpg', ['--homedir', home, '--batch', '--no-tty', '--pinentry-mode', 'loopback', ...args], { cwd: TMP, encoding: 'utf8', input });
+  return { code: r.status, out: (r.stdout || '') + (r.stderr || '') };
+}
+const GPG = which('gpg');
+if (!GPG) skip('OpenPGP', 'gpg not found');
+else await run('openpgp', async () => {
+  const run_ = await withRunFile();
+  fs.writeFileSync(t('app.run'), run_);
+  const home = t('gnupg-verify');
+  fs.mkdirSync(home, { mode: 0o700 });
+
+  for (const type of ['ed25519', 'rsa']) {
+    const k = await pgp.generateKey(type, 'Sign Test ' + type + ' TEST <' + type + '@example.invalid>');
+    fs.writeFileSync(t(type + '.pub.asc'), pgp.publicKeyArmored(k));
+    fs.writeFileSync(t('app-' + type + '.run.asc'), await pgp.signDetached(k, run_));
+    const imp = gpg(home, ['--import', type + '.pub.asc']);
+    ok(/imported: 1/.test(imp.out), 'pgp ' + type + ': gpg imports the page-made public key (self-signature valid)', imp.out);
+    const v = gpg(home, ['--status-fd', '1', '--verify', 'app-' + type + '.run.asc', 'app.run']);
+    ok(v.code === 0 && v.out.includes('[GNUPG:] GOODSIG ' + hex(k.keyId).toUpperCase()) && v.out.includes('VALIDSIG ' + hex(k.fingerprint).toUpperCase()),
+      'pgp ' + type + ': gpg --verify says Good signature', v.out.split('\n').filter((l) => /GOODSIG|BADSIG|Good|BAD|ERRSIG/.test(l)).join(' | '));
+
+    // The secret key the page offers for download: gpg takes it, and so do we.
+    const sec = await pgp.secretKeyArmored(k, PW);
+    fs.writeFileSync(t(type + '.sec.asc'), sec);
+    const home2 = t('gnupg-' + type);
+    fs.mkdirSync(home2, { mode: 0o700 });
+    const si = gpg(home2, ['--passphrase', PW, '--import', type + '.sec.asc']);
+    ok(/secret keys imported: 1/.test(si.out), 'pgp ' + type + ': gpg imports the page-made secret key with its passphrase', si.out);
+    const gs = gpg(home2, ['--passphrase', PW, '--armor', '--output', 'gpg-' + type + '.asc', '--detach-sign', 'app.run']);
+    const gv = gpg(home, ['--verify', 'gpg-' + type + '.asc', 'app.run']);
+    ok(gs.code === 0 && /Good signature/.test(gv.out), 'pgp ' + type + ': gpg signs with that secret key and it verifies (the secret material is right)', gs.out + gv.out);
+    const back = await pgp.importSecretKey(sec, PW);
+    ok(eqB(back.fingerprint, k.fingerprint), 'pgp ' + type + ': the page reads its own passphrase-protected export');
+  }
+
+  // Keys made by gpg, exported with its default protection, signed here.
+  const home3 = t('gnupg-gen');
+  fs.mkdirSync(home3, { mode: 0o700 });
+  for (const [id, algo] of [['ed', 'ed25519'], ['rsa', 'rsa3072'], ['def', 'default']]) {
+    const g = gpg(home3, ['--passphrase', PW, '--quick-gen-key', 'GPG ' + id + ' TEST <' + id + '@example.invalid>', algo, algo === 'default' ? 'default' : 'sign', 'never']);
+    if (g.code !== 0) { ok(false, 'gpg --quick-gen-key ' + algo, g.out); continue; }
+    const ex = gpg(home3, ['--passphrase', PW, '--armor', '--export-secret-keys', id + '@example.invalid']);
+    const k = await pgp.importSecretKey(ex.out.slice(ex.out.indexOf('-----BEGIN')), PW);
+    fs.writeFileSync(t('app-gpg' + id + '.run.asc'), await pgp.signDetached(k, run_));
+    const v = gpg(home3, ['--status-fd', '1', '--verify', 'app-gpg' + id + '.run.asc', 'app.run']);
+    ok(v.code === 0 && /GOODSIG/.test(v.out), 'pgp: a gpg ' + algo + ' key, imported with its passphrase, makes a signature gpg verifies', v.out.split('\n').filter((l) => /SIG|Good|BAD/.test(l)).join(' | '));
+    let msg = '';
+    try { await pgp.importSecretKey(ex.out.slice(ex.out.indexOf('-----BEGIN')), PW + 'x'); } catch (e) { msg = e.message; }
+    ok(/Wrong passphrase/.test(msg), 'pgp ' + algo + ': a wrong passphrase is reported', msg);
+  }
+
+  const bad = run_.slice();
+  bad[100] ^= 1;
+  fs.writeFileSync(t('app-bad.run'), bad);
+  const v = gpg(home, ['--verify', 'app-ed25519.run.asc', 'app-bad.run']);
+  ok(v.code !== 0 && /BAD signature/.test(v.out), 'pgp: a flipped bit gives BAD signature (negative control)');
+});
+
 console.log(`\n${passed} passed, ${failed} failed, ${skipped} skipped`);
+for (const d of fs.readdirSync(TMP)) if (d.startsWith('gnupg-')) spawnSync('gpgconf', ['--homedir', t(d), '--kill', 'all']);
 fs.rmSync(TMP, { recursive: true, force: true });
 process.exit(failed ? 1 : 0);
