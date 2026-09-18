@@ -2,6 +2,7 @@ package catalog
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"sort"
 )
@@ -25,6 +26,57 @@ type Policy struct {
 	// Versions with no OS support data are assumed to run only on these
 	// OS versions and newer.
 	UnknownFloor map[string]int `json:"unknown_floor"`
+	// System-wide prerequisites (VC++ redistributable, distro packages,
+	// Xcode CLT), by id. Runtimes name the ones they need in "needs";
+	// the plan carries them as `need` entries (format.md, "Prerequisites").
+	Prerequisites map[string]*Prerequisite `json:"prerequisites"`
+}
+
+// Prerequisite is something installed for the whole machine that a
+// runtime needs and can't carry in its own folder. The engine checks for
+// it first and installs it (with administrator or root rights) only when
+// every check fails.
+type Prerequisite struct {
+	Label string `json:"label"`
+	OS    string `json:"os"`   // windows, linux or macos
+	Arch  string `json:"arch"` // the runtime release's arch this is for; "" any
+	// Checks, any one of which passing means it is present:
+	// ["reg", "32|64", "HKLM\\key", "value", "min"], ["file", "path"],
+	// ["lib", "soname"], ["cmd", "name"].
+	Checks [][]string `json:"checks"`
+	// Windows: an installer to download and run elevated ({file} is it).
+	File *PrereqFile `json:"file"`
+	Run  string      `json:"run"`
+	OK   []int       `json:"ok_codes"` // exit codes meaning success (default 0)
+	// Linux: package names per package manager command (apt-get, dnf,
+	// yum, zypper, apk, pacman), space separated.
+	Packages map[string]string `json:"packages"`
+	// When it can't be installed unattended: what the user must do, and
+	// (optional) a command run as the user to start the system's own
+	// installer (macOS: xcode-select --install).
+	How   string `json:"how"`
+	Start string `json:"start"`
+}
+
+// PrereqFile is a prerequisite's installer, pinned like an extra file.
+type PrereqFile struct {
+	Name   string   `json:"name"`
+	SHA256 string   `json:"sha256"`
+	Size   int64    `json:"size"`
+	Local  string   `json:"local"` // path of our copy under the local root, served at the mirror
+	URLs   []string `json:"urls"`
+}
+
+// NeedRule attaches prerequisites to a runtime's releases.
+type NeedRule struct {
+	// Prerequisite ids; those for the plan block's OS family and the
+	// release's architecture apply.
+	Prerequisites []string `json:"prerequisites"`
+	Why           string   `json:"why"`      // shown on the transparency screen
+	Variants      []string `json:"variants"` // only these variants ("" = no variant); empty: all
+	Versions      string   `json:"versions"` // only these runtime versions; "": all
+	MinOS         int      `json:"min_os"`   // only on these OS versions (format.md integers); 0: no bound
+	MaxOS         int      `json:"max_os"`
 }
 
 type RuntimePolicy struct {
@@ -55,6 +107,9 @@ type RuntimePolicy struct {
 	// alongside as extra plan files, with their bin folder on PATH (e.g.
 	// Nim on Windows needs a C compiler).
 	Requires map[string][]Requirement `json:"requires"`
+	// System-wide prerequisites (Policy.Prerequisites) this runtime needs,
+	// e.g. the VC++ redistributable for PHP on Windows.
+	Needs []NeedRule `json:"needs"`
 	// Launch default per the form (design.md section 4).
 	Launch string `json:"launch"`
 	// Files a recipe names as {tmp}/<name> that the catalogue doesn't
@@ -148,6 +203,9 @@ func LoadPolicy(path string) (*Policy, error) {
 	p := &Policy{}
 	if err := json.Unmarshal(b, p); err != nil {
 		return nil, err
+	}
+	if err := p.validatePrereqs(); err != nil {
+		return nil, fmt.Errorf("%s: %w", path, err)
 	}
 	return p, nil
 }

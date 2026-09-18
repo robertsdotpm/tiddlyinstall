@@ -17,6 +17,18 @@
   "macos": 1100,
   "linux": 228
  },
+ "prerequisites": {
+  "vcredist-x64": {"label": "Microsoft Visual C++ 2015-2022 Redistributable (x64)", "os": "windows", "arch": "amd64", "checks": [["reg", "64", "HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\x64", "Minor", "30"]], "file": {"name": "vc_redist.x64.exe", "sha256": "cc0ff0eb1dc3f5188ae6300faef32bf5beeba4bdd6e8e445a9184072096b713b", "size": 25635768, "local": "msvc-redist/windows/amd64/latest/vc_redist.x64.exe", "urls": ["https://aka.ms/vs/17/release/vc_redist.x64.exe"]}, "run": "\"{file}\" /install /quiet /norestart", "ok_codes": [0, 1638, 3010], "how": "Install the Microsoft Visual C++ 2015-2022 Redistributable (x64) from https://aka.ms/vs/17/release/vc_redist.x64.exe, then run this installer again."},
+  "vcredist-x86": {"label": "Microsoft Visual C++ 2015-2022 Redistributable (x86)", "os": "windows", "arch": "x86", "checks": [["reg", "32", "HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\x86", "Minor", "30"]], "file": {"name": "vc_redist.x86.exe", "sha256": "0c09f2611660441084ce0df425c51c11e147e6447963c3690f97e0b25c55ed64", "size": 13953392, "local": "msvc-redist/windows/x86/latest/vc_redist.x86.exe", "urls": ["https://aka.ms/vs/17/release/vc_redist.x86.exe"]}, "run": "\"{file}\" /install /quiet /norestart", "ok_codes": [0, 1638, 3010], "how": "Install the Microsoft Visual C++ 2015-2022 Redistributable (x86) from https://aka.ms/vs/17/release/vc_redist.x86.exe, then run this installer again."},
+  "vcredist-arm64": {"label": "Microsoft Visual C++ 2015-2022 Redistributable (arm64)", "os": "windows", "arch": "arm64", "checks": [["reg", "64", "HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\arm64", "Minor", "30"]], "file": {"name": "vc_redist.arm64.exe", "sha256": "5139e1440c3a20b92153a4db561c069a0175aaf76c276c3e5b6f56099edcf4b0", "size": 11722336, "local": "msvc-redist/windows/arm64/latest/vc_redist.arm64.exe", "urls": ["https://aka.ms/vs/17/release/vc_redist.arm64.exe"]}, "run": "\"{file}\" /install /quiet /norestart", "ok_codes": [0, 1638, 3010], "how": "Install the Microsoft Visual C++ 2015-2022 Redistributable (arm64) from https://aka.ms/vs/17/release/vc_redist.arm64.exe, then run this installer again."},
+  "libatomic": {"label": "libatomic.so.1 (GCC's atomics library)", "os": "linux", "checks": [["lib", "libatomic.so.1"]], "packages": {"apt-get": "libatomic1", "dnf": "libatomic", "yum": "libatomic", "zypper": "libatomic1", "apk": "libatomic", "pacman": "gcc-libs"}},
+  "libblas": {"label": "libblas.so.3 (BLAS linear algebra library)", "os": "linux", "checks": [["lib", "libblas.so.3"]], "packages": {"apt-get": "libblas3", "dnf": "blas", "yum": "blas", "zypper": "libblas3", "apk": "blas", "pacman": "blas"}},
+  "libgomp": {"label": "libgomp.so.1 (GCC's OpenMP library)", "os": "linux", "checks": [["lib", "libgomp.so.1"]], "packages": {"apt-get": "libgomp1", "dnf": "libgomp", "yum": "libgomp", "zypper": "libgomp1", "apk": "libgomp", "pacman": "gcc-libs"}},
+  "libdeflate": {"label": "libdeflate.so.0 (compression library)", "os": "linux", "checks": [["lib", "libdeflate.so.0"]], "packages": {"apt-get": "libdeflate0", "dnf": "libdeflate", "yum": "libdeflate", "zypper": "libdeflate0", "apk": "libdeflate", "pacman": "libdeflate"}},
+  "cc": {"label": "A system C compiler (cc) and the C library's development files", "os": "linux", "checks": [["cmd", "cc"]], "packages": {"apt-get": "gcc libc6-dev", "dnf": "gcc glibc-devel", "yum": "gcc glibc-devel", "zypper": "gcc glibc-devel", "apk": "gcc musl-dev", "pacman": "gcc"}},
+  "gcc": {"label": "GCC (gcc) and the C library's development files", "os": "linux", "checks": [["cmd", "gcc"]], "packages": {"apt-get": "gcc libc6-dev", "dnf": "gcc glibc-devel", "yum": "gcc glibc-devel", "zypper": "gcc glibc-devel", "apk": "gcc musl-dev", "pacman": "gcc"}},
+  "xcode-clt": {"label": "Xcode Command Line Tools", "os": "macos", "checks": [["file", "/Library/Developer/CommandLineTools/usr/bin/clang"], ["file", "/Applications/Xcode.app/Contents/Developer/usr/bin/clang"]], "start": "xcode-select --install", "how": "Install Apple's Command Line Tools: run xcode-select --install in Terminal and click Install in the dialog that opens (it can take a while), then run this installer again."}
+ },
  "runtimes": {
   "python": {
    "label": "Python",
@@ -121,6 +133,9 @@
    ],
    "install_files": [
     "package.json"
+   ],
+   "needs": [
+    {"prerequisites": ["libatomic"], "versions": ">=25", "why": "Node.js 25 and later are linked against libatomic.so.1 (GCC's atomics library), which minimal systems such as cloud images and containers leave out."}
    ],
    "launch": "{runtime} {app_dir}",
    "package": {
@@ -235,6 +250,9 @@
    "install_files": [
     "composer.json"
    ],
+   "needs": [
+    {"prerequisites": ["vcredist-x64", "vcredist-x86", "vcredist-arm64"], "variants": ["nts-vs17", "nts-vs16", "nts-vc15", "nts-vc14"], "min_os": 601, "why": "PHP for Windows is built with Visual Studio and needs its C/C++ runtime DLLs (vcruntime140.dll and friends). Windows 10 and 11 usually have them already; Windows 7, 8 and 8.1 usually don't."}
+   ],
    "launch": "{runtime} {app_dir}/index.php"
   },
   "java": {
@@ -314,6 +332,9 @@
      "pkg"
     ]
    },
+   "needs": [
+    {"prerequisites": ["libblas", "libgomp", "libdeflate"], "variants": ["posit-ubuntu-2204"], "why": "R's Ubuntu build links shared libraries from the distribution (BLAS, OpenMP, libdeflate) that minimal installs leave out."}
+   ],
    "launch": "{runtime} {app_dir}/main.R"
   },
   "go": {
@@ -383,6 +404,10 @@
     "archive"
    ],
    "compiled": true,
+   "needs": [
+    {"prerequisites": ["cc"], "why": "Rust links programs through the system C compiler (cc) and the C library's development files, which minimal installs leave out."},
+    {"prerequisites": ["xcode-clt"], "why": "Rust links programs with Apple's linker and the macOS SDK, which come with the Xcode Command Line Tools."}
+   ],
    "launch": "{app_dir}/target/release/{project}{exe}",
    "package": {
     "_comment": "cargo install --root into the app's folder (builds on the user's machine, design.md 1.8). crates.io names the crate's programs (bin_names), so launch runs the right one.",
@@ -453,6 +478,10 @@
     "linux": "\"{runtime_dir}/bin/nim\" c -d:release --nimcache:\"{data_dir}/nimcache\" -o:\"{app_dir}/{project}\" {project}.nim",
     "macos": "\"{runtime_dir}/bin/nim\" c -d:release --nimcache:\"{data_dir}/nimcache\" -o:\"{app_dir}/{project}\" {project}.nim"
    },
+   "needs": [
+    {"prerequisites": ["gcc"], "why": "Nim compiles to C and builds it with the system gcc and the C library's development files, which minimal installs leave out."},
+    {"prerequisites": ["xcode-clt"], "why": "Nim compiles to C and builds it with clang and the macOS SDK from the Xcode Command Line Tools."}
+   ],
    "launch": "{app_dir}/{project}{exe}",
    "requires": {
     "windows": [
@@ -497,6 +526,10 @@
     "linux": "\"{runtime_dir}/bin/clang\" -O2 -o \"{app_dir}/{project}\" *.c",
     "macos": "\"{runtime_dir}/bin/clang\" -O2 -isysroot \"$(xcrun --show-sdk-path)\" -o \"{app_dir}/{project}\" *.c"
    },
+   "needs": [
+    {"prerequisites": ["gcc"], "why": "The catalogue's clang uses the system's C library headers and GCC's start files and libgcc to link, which minimal installs leave out."},
+    {"prerequisites": ["xcode-clt"], "why": "C and C++ programs need the macOS SDK (headers and libraries) and Apple's linker from the Xcode Command Line Tools."}
+   ],
    "launch": "{app_dir}/{project}{exe}"
   }
  }
