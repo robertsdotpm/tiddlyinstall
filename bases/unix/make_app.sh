@@ -6,6 +6,9 @@
 #   Install.app/Contents/Resources/ib/      empty; modes B/C put record.txt,
 #                                           plan.txt and pack/ here
 #
+# The plan signing key is baked in (plankey.sh): IB_PLAN_PUBKEY_FILE, or
+# ../../server/data/plan-signing-key.pub.
+#
 # On a Mac the bundle is ad-hoc signed (codesign -s -) and zipped with
 # ditto, which keeps permissions and the signature's extended attributes.
 # Elsewhere it is zipped with `zip -r -y` (permissions kept, unsigned).
@@ -16,7 +19,8 @@ app=$outdir/Install.app
 zipf=$outdir/ib-base-macos.zip
 rm -rf "$app" "$zipf"
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources/ib"
-cp "$here/ib-engine.sh" "$app/Contents/MacOS/install"
+. "$here/plankey.sh"
+bake_engine "$here/ib-engine.sh" "$app/Contents/MacOS/install"
 chmod 755 "$app/Contents/MacOS/install"
 cat > "$app/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>

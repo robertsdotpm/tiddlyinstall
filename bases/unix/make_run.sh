@@ -1,6 +1,9 @@
 #!/bin/sh
 # Build the Linux base: out/ib-base.run.
 #
+# The plan signing key is baked in (plankey.sh): IB_PLAN_PUBKEY_FILE, or
+# ../../server/data/plan-signing-key.pub.
+#
 # The engine IS the .run. A metadata block (format.md section 4) may be
 # appended later, after the engine's final `exit $?` line: sh stops
 # reading at `exit`, so the appended bytes are never parsed.
@@ -24,6 +27,7 @@ for sh in dash sh "bash --posix" "busybox sh"; do
 	$sh -n "$eng" || { echo "make_run: syntax error under $sh" >&2; exit 1; }
 done
 
-cp "$eng" "$out"
+. "$here/plankey.sh"
+bake_engine "$eng" "$out"
 chmod 755 "$out"
 echo "$out ($(wc -c < "$out" | tr -d ' ') bytes)"

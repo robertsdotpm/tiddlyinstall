@@ -5,7 +5,7 @@
 // page has them (the standalone page), else from the build server.
 import {
   readInstaller, writeInstaller, parseKv, serializeKv, kvGet, kvSet, newRecordText,
-  recordHash, packMember, installerExt, toBytes, peInfo, zipEntryData, zipNewEntry,
+  recordHash, packMember, installerExt, toBytes, peInfo, zipEntryData, zipNewEntry, bindPlan,
 } from './ibfile.js';
 import { apiRequest, errorText, mountApiFooter } from './api.js';
 import {
@@ -376,9 +376,13 @@ editor.addEventListener('submit', async (e) => {
   }
   status.textContent = 'Building…';
   try {
-    const plan = planRaw.value.trim() ? planRaw.value.replace(/\r\n/g, '\n').replace(/\n*$/, '\n') : '';
+    const record = recordRaw.value.replace(/\r\n/g, '\n').replace(/\n*$/, '\n');
+    let plan = planRaw.value.trim() ? planRaw.value.replace(/\r\n/g, '\n').replace(/\n*$/, '\n') : '';
+    // The installer refuses a plan made for another record, and an edited
+    // plan's signature no longer matches (docs/format.md "Plan signature").
+    ({ plan } = await bindPlan(plan, record, plan !== (current.plan || '')));
     const out = await writeInstaller(current, {
-      record: recordRaw.value.replace(/\r\n/g, '\n').replace(/\n*$/, '\n'),
+      record,
       plan,
       pack: packFiles.map((m) => ({ name: m.name, data: m.data })),
     });

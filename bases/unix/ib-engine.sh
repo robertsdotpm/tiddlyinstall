@@ -14,6 +14,10 @@
 
 IB_ENGINE_VERSION=1
 IB_DEFAULT_BACKEND=http://10.0.1.76:8080
+# The plan signing key (docs/format.md "Plan signature"): base64 of the raw Ed25519
+# public key, and its id. make_run.sh / make_app.sh fill these in.
+IB_PLAN_PUBKEY=
+IB_PLAN_KEYID=
 
 tab=$(printf '\t')
 cr=$(printf '\r')
@@ -39,6 +43,19 @@ ib_say() {
 
 ib_have() { command -v "$1" >/dev/null 2>&1; }
 
+# Text for the screen (stdin -> stdout): C0 controls except tab and
+# newline, DEL, C1 controls and the bidi controls (U+200E/F, U+202A-202E,
+# U+2066-2069) become '?', so plan text can't hide or reorder what the
+# transparency screen shows (an ESC sequence can blank a terminal).
+ib_re_c1=$(printf '\302[\200-\237]')
+ib_re_bidi1=$(printf '\342\200[\216\217\252-\256]')
+ib_re_bidi2=$(printf '\342\201[\246-\251]')
+ib_clean() {
+	LC_ALL=C tr -d '\000' | LC_ALL=C tr '\001-\010\013-\037\177' '??????????????????????????????' |
+		LC_ALL=C sed -e "s/$ib_re_c1/?/g" -e "s/$ib_re_bidi1/?/g" -e "s/$ib_re_bidi2/?/g"
+}
+ib_cleans() { printf '%s' "$1" | ib_clean; }
+
 # Quote a string for sh.
 ib_shq() {
 	printf "'%s'" "$(printf '%s' "$1" | sed "s/'/'\\\\''/g")"
@@ -59,13 +76,15 @@ ib_fail() {
 	tty | none | '')
 		if [ -n "$IB_LOG" ] && [ -s "$IB_LOG" ]; then
 			printf '%s\n' '--- last lines of the log ---' >&2
-			tail -n 15 "$IB_LOG" >&2
+			tail -n 15 "$IB_LOG" | ib_clean >&2
 		fi
-		printf 'Installer Builder: %s\n' "$*" >&2
+		printf 'Installer Builder: %s\n' "$(ib_cleans "$*")" >&2
 		[ -n "$IB_LOG" ] && printf 'Log: %s\n' "$IB_LOG" >&2
 		;;
 	zenity)
-		[ "$opt_yes" = 1 ] || zenity --text-info --title="Installer Builder: failed - $*" --filename="$IB_LOG" --width=780 --height=560 2>/dev/null
+		ib_clean < "$IB_LOG" > "$IB_LOG.screen" 2>/dev/null
+		[ "$opt_yes" = 1 ] || zenity --text-info --title="Installer Builder: failed - $(ib_cleans "$*")" --filename="$IB_LOG.screen" --width=780 --height=560 2>/dev/null
+		rm -f "$IB_LOG.screen"
 		;;
 	*)
 		[ "$opt_yes" = 1 ] || ib_message error "Installer Builder" "$*$nl${nl}Log: $IB_LOG$nl$nl$(tail -n 8 "$IB_LOG" 2>/dev/null)"
@@ -144,9 +163,10 @@ ib_b32() {
 
 ib_download() { # url out
 	ib_log "  GET $1"
+	ib_http=
 	if ib_have curl; then
-		curl -fL -sS --connect-timeout 20 --speed-limit 1024 --speed-time 60 --retry 2 \
-			-o "$2" "$1" >> "$IB_LOG" 2>&1
+		ib_http=$(curl -fL -sS --connect-timeout 20 --speed-limit 1024 --speed-time 60 --retry 2 \
+			-w '%{http_code}' -o "$2" "$1" 2>> "$IB_LOG")
 	elif ib_have wget; then
 		wget -q -T 60 -t 2 -O "$2" "$1" >> "$IB_LOG" 2>&1
 	else
@@ -174,6 +194,7 @@ ib_osa() { # script-on-stdin args...; plan text goes in argv, never into the scr
 }
 
 ib_message() { # info|error title text
+	set -- "$1" "$(ib_cleans "$2")" "$(ib_cleans "$3")"
 	case $ib_ui in
 	tty | none) printf '%s\n' "$3" >&2 ;;
 	zenity) zenity --"$1" --title="$2" --no-markup --text="$3" 2>/dev/null ;;
@@ -197,6 +218,9 @@ EOF
 # Ask to go ahead. $1 title, $2 full text file, $3 short question.
 ib_confirm() {
 	[ "$opt_yes" = 1 ] && return 0
+	ib_clean < "$2" > "$IB_WORK/confirm.txt"
+	[ -f "$IB_WORK/short.txt" ] && { ib_clean < "$IB_WORK/short.txt" > "$IB_WORK/short.clean"; mv "$IB_WORK/short.clean" "$IB_WORK/short.txt"; }
+	set -- "$(ib_cleans "$1")" "$IB_WORK/confirm.txt" "$(ib_cleans "$3")"
 	case $ib_ui in
 	tty)
 		cat "$2" >&2
@@ -326,6 +350,129 @@ ib_subst() {
 		printf "%s", s }'
 }
 
+# ---------------------------------------------------------------- plan signatures
+
+# Why a fetch failed, for messages.
+ib_http_why() {
+	[ "$ib_http" = 451 ] && printf ' The backend says this installer has been taken down (HTTP 451).'
+	return 0
+}
+
+# Can this machine check Ed25519 signatures? Needs `openssl pkeyutl
+# -rawin` (OpenSSL 1.1.1 or later; LibreSSL and 1.0.x can't). Proved by
+# checking RFC 8032 test vector 2, and that a changed message fails.
+# Sets ib_ed_why when it can't. Cached.
+ib_ed25519_ready() {
+	[ -n "$ib_ed_ok" ] && return "$ib_ed_ok"
+	ib_ed_ok=1
+	case $IB_PLAN_PUBKEY in
+	'' | *[!A-Za-z0-9+/=]*) ib_ed_why="this installer was built without a plan signing key"; return 1 ;;
+	esac
+	ib_have openssl || { ib_ed_why="no openssl on this machine"; return 1; }
+	t=$IB_WORK/edtest
+	mkdir -p "$t"
+	printf -- '-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAPUAXw+hDiVqStwqnTRt+vJyYLM8uxJaMwM1V8Sr0Zgw=\n-----END PUBLIC KEY-----\n' > "$t/pub.pem"
+	printf '%s\n' 'kqAJqfDUyrhyDoILX2QlQKKye1QWUD+Ps3YiI+vbadoIWsHkPhWZbkWPNhPQ8R2MOHsurrQwKu6wDSkWErsMAA==' |
+		openssl base64 -d -A > "$t/sig" 2>/dev/null
+	printf 'r' > "$t/good"
+	printf 's' > "$t/bad"
+	if openssl pkeyutl -verify -pubin -inkey "$t/pub.pem" -rawin -in "$t/good" -sigfile "$t/sig" > /dev/null 2>&1 &&
+		! openssl pkeyutl -verify -pubin -inkey "$t/pub.pem" -rawin -in "$t/bad" -sigfile "$t/sig" > /dev/null 2>&1; then
+		printf -- '-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA%s\n-----END PUBLIC KEY-----\n' "$IB_PLAN_PUBKEY" > "$IB_WORK/plan-key.pem"
+		ib_ed_ok=0
+		return 0
+	fi
+	ib_ed_why="$(openssl version 2>/dev/null | sed -n 1p) can't check Ed25519 signatures (OpenSSL 1.1.1 or later can)"
+	return 1
+}
+
+# The signature of plan $1 (format.md "Plan signature"): prints ok, unsigned,
+# bad:<why> or cannot:<why> (no way to check it here).
+ib_plan_sig() {
+	f=$1
+	last=$(tail -n 1 "$f" | tr -d '\r')
+	case $last in
+	sig"$tab"ed25519"$tab"*) ;;
+	sig | sig"$tab"*) echo "bad:unknown signature type"; return 0 ;;
+	*) echo unsigned; return 0 ;;
+	esac
+	b64=${last#sig"$tab"ed25519"$tab"}
+	case $b64 in *[!A-Za-z0-9+/=]*) echo "bad:malformed signature"; return 0 ;; esac
+	[ ${#b64} -eq 88 ] || { echo "bad:malformed signature"; return 0; }
+	n=$(($(wc -c < "$f") - $(tail -n 1 "$f" | wc -c)))
+	[ "$n" -gt 0 ] || { echo unsigned; return 0; }
+	ib_ed25519_ready || { echo "cannot:$ib_ed_why"; return 0; }
+	head -c "$n" "$f" > "$IB_WORK/plan.signed"
+	[ "$(head -c 8 "$IB_WORK/plan.signed")" = "ib-plan$tab" ] || { echo "bad:the signed bytes are not an ib-plan"; return 0; }
+	printf '%s\n' "$b64" | openssl base64 -d -A > "$IB_WORK/plan.sig" 2>/dev/null
+	[ "$(wc -c < "$IB_WORK/plan.sig" | tr -d ' ')" = 64 ] || { echo "bad:malformed signature"; return 0; }
+	if openssl pkeyutl -verify -pubin -inkey "$IB_WORK/plan-key.pem" -rawin -in "$IB_WORK/plan.signed" \
+		-sigfile "$IB_WORK/plan.sig" > /dev/null 2>&1; then
+		echo ok
+	else
+		echo "bad:the signature does not match this plan and this installer's key"
+	fi
+}
+
+# Decide whether the plan may be used (format.md "Plan signature"). Fetched plans must
+# be signed by the built-in key; when this machine can't check signatures,
+# only a plan fetched over HTTPS (curl and wget check the certificate) is
+# accepted. --plan / install.txt plans must be signed unless
+# --unsigned-plan. Embedded plans are as trustworthy as the installer
+# file, so an unsigned one is used with a warning.
+ib_check_plan() {
+	ib_plan_warn=
+	sig=$(ib_plan_sig "$IB_PLAN")
+	ib_log "Plan signature: $sig (key ${IB_PLAN_KEYID:-none})"
+	why=${sig#*:}
+	case $sig in
+	ok)
+		IB_PLAN_FROM="$IB_PLAN_FROM; signed by the Installer Builder key $IB_PLAN_KEYID"
+		return 0
+		;;
+	esac
+	case $IB_PLAN_KIND in
+	embedded)
+		ib_plan_warn="The embedded plan is not signed by the Installer Builder key ($why). It is only as trustworthy as this installer file."
+		;;
+	cmdline)
+		[ "$opt_unsigned" = 1 ] || ib_fail "The plan $IB_PLAN is not signed by the Installer Builder key ${IB_PLAN_KEYID:-} ($why). Use a plan saved from <backend>/api/plan/<record>, or add --unsigned-plan if you wrote it yourself."
+		ib_plan_warn="The plan is not signed ($why); --unsigned-plan was given."
+		;;
+	*)
+		case $sig in
+		cannot:*)
+			case $IB_PLAN_URL in
+			https://*)
+				ib_plan_warn="The plan's signature could not be checked ($why); it was accepted because it came over HTTPS from ${IB_PLAN_URL%%/api/*}."
+				return 0
+				;;
+			esac
+			ib_fail "The install plan came over plain HTTP and its signature can't be checked here: $why. Install OpenSSL 1.1.1 or later, or use an HTTPS backend (--backend=https://...)."
+			;;
+		esac
+		ib_fail "The install plan from ${IB_PLAN_URL%%/api/*} is not signed by the Installer Builder key ${IB_PLAN_KEYID:-} ($why). It may have been changed on the way; nothing was installed."
+		;;
+	esac
+}
+
+# Mode A on macOS: an app bundle signed with an identity (not ad-hoc)
+# whose signature verifies and that carries no settings of its own. It
+# installs only what its name names, from the built-in backend (design.md
+# 3 and 7): its signature must not vouch for anyone's --record or --plan.
+# Linux .run files carry no signature, so there is nothing to protect.
+# IB_TEST_MODE_A=1 turns the restriction on anywhere (tests).
+ib_detect_mode_a() {
+	IB_MODE_A=0
+	[ "${IB_TEST_MODE_A:-}" = 1 ] && { IB_MODE_A=1; return 0; }
+	[ -n "$IB_BUNDLE" ] && ib_have codesign || return 0
+	d=$IB_BUNDLE/Contents/Resources/ib
+	[ -e "$d/record.txt" ] || [ -e "$d/plan.txt" ] && return 0
+	case $(codesign -dvv "$IB_BUNDLE" 2>&1) in *Authority=*) ;; *) return 0 ;; esac
+	codesign --verify "$IB_BUNDLE" > /dev/null 2>&1 && IB_MODE_A=1
+	return 0
+}
+
 # ---------------------------------------------------------------- finding the metadata
 
 # Fill IB_REC / IB_PLAN (files, either may be empty), IB_PACK_TAR or
@@ -376,22 +523,35 @@ ib_find_metadata() {
 		tar -tf "$IB_PACK_TAR" > "$IB_WORK/pack.list" 2>/dev/null || ib_fail "The packed files in this installer are damaged."
 	fi
 
+	ib_detect_mode_a
+	if [ "$IB_MODE_A" = 1 ]; then
+		given=
+		[ -n "$opt_record" ] && given="$given --record"
+		[ -n "$opt_plan" ] && given="$given --plan"
+		[ "$opt_unsigned" = 1 ] && given="$given --unsigned-plan"
+		[ -n "$opt_backend" ] && given="$given --backend"
+		[ -n "$given" ] && ib_fail "This installer is signed and only installs the app its name names, from $IB_DEFAULT_BACKEND. It doesn't accept$given. For your own settings use an unsigned base or one you sign yourself (modes B and C)."
+		ib_log "Signed base with no settings inside: mode A (its name and the built-in backend only)"
+	fi
 	# 1. Command-line options.
 	if [ -n "$opt_record$opt_plan" ]; then
-		IB_REC=$opt_record IB_PLAN=$opt_plan
+		IB_REC=$opt_record IB_PLAN=$opt_plan IB_PLAN_KIND=cmdline
 		IB_ORIGIN=${opt_origin:-command-line options}
 		return 0
 	fi
 	# 2. The embedded block.
 	if [ -n "$ib_block_rec$ib_block_plan" ]; then
-		IB_REC=$ib_block_rec IB_PLAN=$ib_block_plan
+		IB_REC=$ib_block_rec IB_PLAN=$ib_block_plan IB_PLAN_KIND=embedded
 		IB_ORIGIN=$ib_block_where
 		return 0
 	fi
-	# 3. install.txt next to the installer (a record, or a plan).
-	if [ -f "$IB_HOME_DIR/install.txt" ]; then
+	# 3. install.txt next to the installer (a record, or a plan: a plan
+	# there is treated like --plan). Not in mode A.
+	if [ -f "$IB_HOME_DIR/install.txt" ] && [ "$IB_MODE_A" = 1 ]; then
+		ib_log "Ignoring $IB_HOME_DIR/install.txt: a signed installer only uses its name."
+	elif [ -f "$IB_HOME_DIR/install.txt" ]; then
 		case $(sed -n 1p "$IB_HOME_DIR/install.txt") in
-		ib-plan*) IB_PLAN=$IB_HOME_DIR/install.txt ;;
+		ib-plan*) IB_PLAN=$IB_HOME_DIR/install.txt IB_PLAN_KIND=cmdline ;;
 		*) IB_REC=$IB_HOME_DIR/install.txt ;;
 		esac
 		IB_ORIGIN="install.txt next to the installer"
@@ -408,7 +568,7 @@ ib_find_metadata() {
 		backend=${opt_backend:-$IB_DEFAULT_BACKEND}
 		IB_REC=$IB_WORK/record.txt
 		ib_download "$backend/api/records/$last" "$IB_REC" ||
-			ib_fail "Could not fetch this installer's settings from $backend/api/records/$last"
+			ib_fail "Could not fetch this installer's settings from $backend/api/records/$last.$(ib_http_why)"
 		got=$(ib_b32 "$(ib_sha256 "$IB_REC")" 26)
 		[ "$got" = "$last" ] ||
 			ib_fail "The settings fetched from $backend do not match this installer's name (hash $got, expected $last). Not installing."
@@ -424,9 +584,9 @@ ib_find_metadata() {
 		rt=${rt%%_*}
 		case $rt$pk in *[!A-Za-z0-9_.-]*) ib_fail "Unusable installer name: $IB_NAME" ;; esac
 		backend=${opt_backend:-$IB_DEFAULT_BACKEND}
-		IB_PLAN=$IB_WORK/plan.txt
-		ib_download "$backend/api/plan/name/$rt/$pk" "$IB_PLAN" ||
-			ib_fail "This installer is named for $pk ($rt) but $backend has no plan for that name."
+		IB_PLAN=$IB_WORK/plan.txt IB_PLAN_KIND=fetched IB_PLAN_URL=$backend/api/plan/name/$rt/$pk
+		ib_download "$IB_PLAN_URL" "$IB_PLAN" ||
+			ib_fail "This installer is named for $pk ($rt) but $backend has no plan for that name.$(ib_http_why)"
 		IB_ORIGIN="the file name (runtime $rt, package $pk); plan from $backend"
 		return 0
 		;;
@@ -659,7 +819,7 @@ ib_step() { # type fields...
 		case $d in "$IB_APP_DIR" | "$IB_TMP") ib_fail "Step delete: refusing to delete $d" ;; esac
 		rm -rf "$d"
 		;;
-	*) ib_log "  ignoring unknown step $s_type" ;;
+	*) ib_fail "Unknown step '$s_type' in the plan. Download the installer again." ;;
 	esac
 }
 
@@ -927,13 +1087,19 @@ ib_uninstall() {
 		????????????) ;;
 		*) ib_say "refusing $p: not an install folder"; bad=1; continue ;;
 		esac
+		[ -e "$p" ] || continue
 		o=$(ib_get "$p/.ib-owner" appid 2>/dev/null)
-		if [ -n "$o" ] && [ "$o" != "$appid" ]; then
-			ib_say "refusing $p: it belongs to $o"; bad=1; continue
+		if [ "$o" != "$appid" ]; then
+			ib_say "refusing $p: its .ib-owner doesn't name this app (${o:-none})"; bad=1; continue
 		fi
-		[ -e "$p" ] && rm -rf "$p" && ib_say "removed $p"
+		rm -rf "$p" && ib_say "removed $p"
 	done < "$IB_WORK/items"
-	cd / && rm -rf "$app" && ib_say "removed $app"
+	o=$(ib_get "$app/.ib-owner" appid 2>/dev/null)
+	if [ "$o" = "$appid" ]; then
+		cd / && rm -rf "$app" && ib_say "removed $app"
+	else
+		ib_say "refusing $app: its .ib-owner doesn't name this app (${o:-none})"; bad=1
+	fi
 	rmdir "$root" 2>/dev/null
 	# Folders the installer created for shortcuts: removed only if empty.
 	while IFS="$tab" read -r kind p; do
@@ -954,8 +1120,13 @@ ib_uninstall() {
 
 ib_elevate() { # extra args...
 	set -- "$@" --yes --log="$IB_LOG"
-	[ -n "$IB_REC" ] && set -- "$@" --record="$IB_REC"
-	[ -n "$IB_PLAN" ] && set -- "$@" --plan="$IB_PLAN"
+	if [ "$IB_MODE_A" != 1 ]; then
+		# The root copy checks the plan again; one this run accepted
+		# without a signature (embedded, or --unsigned-plan) stays accepted.
+		[ -n "$IB_REC" ] && set -- "$@" --record="$IB_REC"
+		[ -n "$IB_PLAN" ] && set -- "$@" --plan="$IB_PLAN"
+		[ -n "$IB_PLAN" ] && [ -n "$ib_plan_warn" ] && set -- "$@" --unsigned-plan
+	fi
 	[ -n "$IB_ORIGIN" ] && set -- "$@" --ib-origin="$IB_ORIGIN"
 	[ -n "$opt_backend" ] && set -- "$@" --backend="$opt_backend"
 	ib_log "Asking for administrator rights"
@@ -1020,23 +1191,28 @@ ib_install_main() {
 	IB_RECHASH=
 	[ -n "$IB_REC" ] && IB_RECHASH=$(ib_b32 "$(ib_sha256 "$IB_REC")" 26)
 	backend=$opt_backend
-	[ -z "$backend" ] && [ -n "$IB_REC" ] && backend=$(ib_get "$IB_REC" backend)
+	[ -z "$backend" ] && [ -n "$IB_REC" ] && [ "$IB_MODE_A" != 1 ] && backend=$(ib_get "$IB_REC" backend)
 	[ -z "$backend" ] && backend=$IB_DEFAULT_BACKEND
 	backend=${backend%/}
-	IB_PLAN_FROM=embedded
+	case $IB_PLAN_KIND in
+	embedded) IB_PLAN_FROM=embedded ;;
+	cmdline) IB_PLAN_FROM="given: $IB_PLAN" ;;
+	*) IB_PLAN_FROM=$IB_PLAN_URL ;;
+	esac
 	if [ -z "$IB_PLAN" ]; then
-		IB_PLAN=$IB_WORK/plan.txt
+		IB_PLAN=$IB_WORK/plan.txt IB_PLAN_KIND=fetched IB_PLAN_URL=$backend/api/plan/$IB_RECHASH
 		ib_say "Fetching the install plan from $backend"
-		ib_download "$backend/api/plan/$IB_RECHASH" "$IB_PLAN" ||
-			ib_fail "Could not fetch the install plan from $backend/api/plan/$IB_RECHASH"
-		IB_PLAN_FROM="$backend/api/plan/$IB_RECHASH"
+		ib_download "$IB_PLAN_URL" "$IB_PLAN" ||
+			ib_fail "Could not fetch the install plan from $IB_PLAN_URL.$(ib_http_why)"
+		IB_PLAN_FROM=$IB_PLAN_URL
 	fi
 	ib_check_header "$IB_PLAN" ib-plan
+	ib_check_plan
+	# The plan must be for this record (format.md "Plan signature"): a signed plan for
+	# another app can't be replayed.
 	prec=$(ib_get "$IB_PLAN" record)
-	ib_plan_warn=
-	if [ -n "$IB_RECHASH" ] && [ -n "$prec" ] && [ "$prec" != "$IB_RECHASH" ]; then
-		[ "$IB_PLAN_FROM" = embedded ] || ib_fail "The plan from $backend is for record $prec, not $IB_RECHASH."
-		ib_plan_warn="The embedded plan was made for record $prec, but the record here hashes to $IB_RECHASH (it was edited)."
+	if [ -n "$IB_RECHASH" ] && [ "$prec" != "$IB_RECHASH" ]; then
+		ib_fail "The install plan is for record ${prec:-none}, but this installer's record is $IB_RECHASH. Nothing was installed."
 	fi
 	[ -z "$IB_RECHASH" ] && IB_RECHASH=$prec
 
@@ -1163,8 +1339,8 @@ ib_install_main() {
 		fi
 		printf '\nWHO SIGNED THIS INSTALLER\n  %s\n' "$ib_signed_by"
 		printf 'WHERE ITS SETTINGS CAME FROM\n  %s\n' "$IB_ORIGIN"
+		[ "$IB_MODE_A" = 1 ] && printf '  mode A: a signed installer; only what its name names, from %s\n' "$IB_DEFAULT_BACKEND"
 		printf '  plan: %s\n' "$IB_PLAN_FROM"
-		case $IB_PLAN_FROM in http:*) printf '  WARNING: the plan came over plain HTTP; downloads are still checked against their SHA-256.\n' ;; esac
 		[ -n "$ib_plan_warn" ] && printf '  WARNING: %s\n' "$ib_plan_warn"
 		printf '\nLog: %s\n' "$IB_LOG"
 	} > "$sum"
@@ -1207,6 +1383,7 @@ ib_install_main() {
 	ib_mkdirs "$IB_ROOT" || ib_fail "Could not create $IB_ROOT"
 	mkdir "$IB_APP_DIR" || ib_fail "Could not create $IB_APP_DIR"
 	ib_created r "$IB_APP_DIR"
+	printf 'ib-folder\t1\nappid\t%s\nname\t(app)\n' "$IB_APPID" > "$IB_APP_DIR/.ib-owner" || ib_fail "Could not write $IB_APP_DIR/.ib-owner"
 	mkdir -p "$IB_DATA_DIR" "$IB_TMP/dl"
 
 	i=1
@@ -1319,7 +1496,9 @@ Installer Builder (Linux and macOS)
   --yes               install (or uninstall) without asking
   --log=PATH          write the log to PATH
   --record=PATH       use this ib-record file
-  --plan=PATH         use this ib-plan file (else the plan is fetched)
+  --plan=PATH         use this ib-plan file (else the plan is fetched); it
+                      must be signed by the Installer Builder key
+  --unsigned-plan     accept an unsigned --plan or install.txt plan
   --backend=URL       where to fetch records and plans
   --uninstall         remove the app this uninstall.sh belongs to
 EOF
@@ -1330,6 +1509,7 @@ ib_main() {
 		case $a in
 		--record=*) opt_record=$(ib_abs "${a#*=}") ;;
 		--plan=*) opt_plan=$(ib_abs "${a#*=}") ;;
+		--unsigned-plan) opt_unsigned=1 ;;
 		--backend=*) opt_backend=${a#*=} ;;
 		--log=*) opt_log=$(ib_abs "${a#*=}") ;;
 		--yes | -y) opt_yes=1 ;;

@@ -1,5 +1,5 @@
 // Command ibplansig signs and checks plan files with the server's plan
-// signing key (docs/format.md section 3.2). For tests and for operators;
+// signing key (docs/format.md "Plan signature"). For tests and for operators;
 // the server signs plans itself.
 //
 //	ibplansig -data DIR sign plan.txt > signed.txt   (makes the key if DIR has none)

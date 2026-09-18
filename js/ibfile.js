@@ -71,6 +71,46 @@ export async function recordHash(record) {
   return base32(await sha256(record)).slice(0, 26);
 }
 
+// Plans are signed by the backend (docs/format.md "Plan signature"): the signature is
+// the last line, `sig<TAB>ed25519<TAB>...`, over every byte before it,
+// and the plan's `record` line must name the record it installs.
+export function stripPlanSig(plan) {
+  const body = plan.replace(/\r?\n$/, '');
+  const i = body.lastIndexOf('\n');
+  const last = body.slice(i + 1);
+  if (i < 0 || !(last === 'sig' || last.startsWith('sig\t'))) return plan;
+  return body.slice(0, i + 1);
+}
+
+// Make an embedded plan fit an edited record: its header `record` line is
+// set to the record's hash, and the signature, which no longer matches, is
+// dropped. `edited` says the plan text itself was changed (its signature
+// is then wrong too). An untouched plan for an untouched record keeps its
+// exact bytes and its signature. Returns {plan, changed}.
+export async function bindPlan(plan, record, edited = false) {
+  if (!plan) return { plan, changed: false };
+  const h = await recordHash(record);
+  const lines = plan.split('\n');
+  let changed = false, found = false;
+  for (let i = 1; i < lines.length; i++) {
+    const l = lines[i].replace(/\r$/, '');
+    if (l === '[target]') break;
+    if (l.startsWith('record\t')) {
+      found = true;
+      if (l !== 'record\t' + h) { lines[i] = 'record\t' + h; changed = true; }
+      break;
+    }
+  }
+  if (!found) { lines.splice(1, 0, 'record\t' + h); changed = true; }
+  let out = lines.join('\n');
+  if (changed || edited) {
+    const stripped = stripPlanSig(out);
+    changed = changed || stripped !== out;
+    out = stripped;
+  }
+  return { plan: out, changed };
+}
+
 /* ---------- footer ---------- */
 
 function pad12(n) {

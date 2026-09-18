@@ -85,6 +85,22 @@ await run('record kv', async () => {
   ok(ib.newRecordText({ name: 'N', menu: '1' }) === 'ib-record\t1\nname\tN\nmenu\t1\n', 'new record text');
 });
 
+await run('plan binding', async () => {
+  const rec = 'ib-record\t1\nname\tA\n';
+  const h = await ib.recordHash(rec);
+  const signed = 'ib-plan\t1\nrecord\t' + h + '\nname\tA\n\n[target]\nwhen\tlinux\t0\t9999\t*\nsig\ted25519\t' + 'A'.repeat(86) + '==\n';
+  let r = await ib.bindPlan(signed, rec, false);
+  ok(!r.changed && r.plan === signed, 'untouched plan keeps its bytes and signature');
+  r = await ib.bindPlan(signed, 'ib-record\t1\nname\tB\n', false);
+  const h2 = await ib.recordHash('ib-record\t1\nname\tB\n');
+  ok(r.changed && r.plan.includes('record\t' + h2 + '\n') && !r.plan.includes('sig\t'), 'edited record: record line updated, signature dropped', r.plan);
+  r = await ib.bindPlan(signed.replace('linux', 'macos'), rec, true);
+  ok(r.changed && !r.plan.includes('sig\t') && r.plan.endsWith('*\n'), 'edited plan: signature dropped');
+  r = await ib.bindPlan('ib-plan\t1\nname\tA\n', rec, false);
+  ok(r.plan.startsWith('ib-plan\t1\nrecord\t' + h + '\n'), 'missing record line added');
+  ok(ib.stripPlanSig('ib-plan\t1\nx\ty\n') === 'ib-plan\t1\nx\ty\n', 'unsigned plan unchanged by stripPlanSig');
+});
+
 await run('linux .run', async () => {
   const base = ib.toBytes('#!/bin/sh\n# base\nexit 0\n' + 'x'.repeat(300));
   const info0 = await ib.readInstaller(base, 'a.run');

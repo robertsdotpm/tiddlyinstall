@@ -1,6 +1,6 @@
 // Package plansig signs install plans with the backend's long-lived
 // Ed25519 key, so a plan fetched over plain HTTP (old machines, design.md
-// 1.3) can't be swapped or edited on the way (docs/format.md section 3.2).
+// 1.3) can't be swapped or edited on the way (docs/format.md "Plan signature").
 //
 // A signed plan is the plan's exact bytes followed by one last line:
 //

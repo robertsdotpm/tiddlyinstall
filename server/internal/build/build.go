@@ -174,7 +174,7 @@ type Builder struct {
 	Backend string // written into records so online installers find us
 	// TakenDown reports whether a takedown list entry matches.
 	TakenDown func(entry string) bool
-	// Signer signs every plan that leaves the server (format.md 3.2).
+	// Signer signs every plan that leaves the server (format.md "Plan signature").
 	Signer *plansig.Signer
 }
 
