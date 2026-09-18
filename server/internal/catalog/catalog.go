@@ -297,6 +297,10 @@ func LoadOSScale(path string) (*OSScale, error) {
 			ID      string   `json:"id"`
 			Distros []string `json:"distros"`
 		} `json:"linux_glibc"`
+		Musl []struct {
+			ID      string   `json:"id"`
+			Distros []string `json:"distros"`
+		} `json:"linux_musl"`
 	}
 	if err := readJSON(path, &raw); err != nil {
 		return nil, err
@@ -344,6 +348,13 @@ func LoadOSScale(path string) (*OSScale, error) {
 			o.Arches = []string{"amd64", "arm64"}
 		}
 		s.byID["linux/"+l.ID] = o
+		s.ByFamily["linux"] = append(s.ByFamily["linux"], o)
+	}
+	// musl systems (Alpine) report glibc 0 (format.md section 3), so they
+	// sit below every glibc version; only rules written for musl apply.
+	for _, m := range raw.Musl {
+		o := OSID{Family: "linux", ID: m.ID, Int: 0, Label: "Linux, musl (" + strings.Join(m.Distros, ", ") + ")", Arches: []string{"amd64", "arm64"}}
+		s.byID["linux/"+m.ID] = o
 		s.ByFamily["linux"] = append(s.ByFamily["linux"], o)
 	}
 	for f := range s.ByFamily {

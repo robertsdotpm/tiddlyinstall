@@ -2975,6 +2975,68 @@
      "archive"
     ]
    }
+  },
+  {
+   "versions": ">=8.0.30",
+   "os": "linux",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "musl",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli Linux builds (fully static, musl)",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "catalog/php/install.json: 'the binary is fully static (musl), no glibc/libstdc++ needed'"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "Added 2026-09-18 by installer-builder so musl systems (Alpine) get the static build; not yet tested on Alpine."
+  },
+  {
+   "versions": ">=8.0.30",
+   "os": "linux",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "musl",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli Linux builds (fully static, musl)",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "catalog/php/install.json: 'the binary is fully static (musl), no glibc/libstdc++ needed'"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "Added 2026-09-18 by installer-builder so musl systems (Alpine) get the static build; not yet tested on Alpine."
   }
  ],
  "max_per_os": [

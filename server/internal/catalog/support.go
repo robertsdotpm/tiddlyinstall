@@ -167,6 +167,9 @@ func (c *Catalog) runsOn(rt *Runtime, e *Release, o OSID) (ok bool, minBuild int
 		if _, onScale := c.OS.Lookup(o.Family, *r.MinOS); !onScale {
 			continue
 		}
+		if (*r.MinOS == "musl") != (o.ID == "musl") {
+			continue // musl and glibc rules each speak only for their own libc
+		}
 		hits = append(hits, r)
 	}
 	if len(hits) > 0 {
@@ -213,6 +216,10 @@ func (c *Catalog) runsOn(rt *Runtime, e *Release, o OSID) (ok bool, minBuild int
 		}
 		return o.Int >= m, 0, true
 	}
-	// 3. Unknown: assume only recent systems.
+	// 3. Unknown: assume only recent systems (never musl: glibc builds
+	// don't run there).
+	if o.ID == "musl" {
+		return false, 0, false
+	}
 	return o.Int >= c.Policy.UnknownFloor[o.Family], 0, false
 }

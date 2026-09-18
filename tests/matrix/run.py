@@ -31,6 +31,13 @@ WINDOWS = {
     "11": ("matth@10.0.1.123", "powershell"),
     "2022": ("administrator@10.0.1.248", "cmd"),
 }
+# Linux test VMs on the ESXi host (docs/test-vms.md): name -> ssh target.
+LINUX_VMS = {
+    "centos6": "x@ib-centos6", "centos7": "x@10.0.1.221", "ubuntu1404": "x@10.0.1.117",
+    "ubuntu1604": "x@10.0.1.112", "ubuntu1804": "x@ib-ubuntu1804", "rocky8": "x@ib-rocky8",
+    "ubuntu2004": "x@ib-ubuntu2004", "ubuntu2204": "x@10.0.1.203", "debian12": "x@ib-debian12",
+    "alpine": "x@10.0.1.200",
+}
 INSTALL_TIMEOUT = 1800
 
 
@@ -89,6 +96,56 @@ def run_linux(rt, mode, f):
         return "pass", "hello + clean uninstall"
     finally:
         subprocess.run(["rm", "-rf", home])
+
+
+# Linux VMs: the same steps over SSH, in a throwaway home ------------------
+
+LINUX_SCRIPT = r'''
+set -u
+H=$(mktemp -d /tmp/ibm-XXXXXX)
+cp "$HOME/ibtest/$F" "$H/$F"
+env -i HOME="$H" PATH=/usr/local/bin:/usr/bin:/bin LANG=C sh "$H/$F" --yes --log="$H/i.log" </dev/null >/dev/null 2>&1
+echo "@install $?"
+d=$(ls -d "$H"/.local/share/ib/*/launch.txt 2>/dev/null | head -1)
+if [ -n "$d" ]; then
+  d=$(dirname "$d")
+  echo "@launch"; env -i HOME="$H" PATH=/usr/local/bin:/usr/bin:/bin sh "$d/launch.sh" </dev/null 2>&1 | tail -5
+  env -i HOME="$H" PATH=/usr/local/bin:/usr/bin:/bin sh "$d/uninstall.sh" --yes </dev/null >/dev/null 2>&1; echo "@uninstall $?"
+fi
+echo "@left"; (cd "$H" && find . -mindepth 1 ! -name i.log ! -name "$F" ! -path './.cache*' | head -5)
+echo "@log"; tail -8 "$H/i.log" 2>/dev/null
+rm -rf "$H" "$HOME/ibtest"
+'''
+
+
+def run_linux_vm(host, rt, mode, f):
+    # Keep the file's own name: mode A reads the record hash from it.
+    name = Path(f).name
+    sh(["ssh", host, "rm -rf ibtest; mkdir -p ibtest"], timeout=60)
+    code, _, err = sh(["scp", "-q", f, f"{host}:ibtest/{name}"], timeout=300)
+    if code:
+        return "fail", "scp: " + err.strip()
+    code, out, err = sh(["ssh", host, f"F={shlex.quote(name)} sh -s"], input=LINUX_SCRIPT)
+    return parse_unix(rt, out, err)
+
+
+def parse_unix(rt, out, err):
+    parts, cur = {}, None
+    for line in out.splitlines():
+        if line.startswith("@"):
+            k, _, v = line[1:].partition(" ")
+            parts[k], cur = v, k
+        elif cur:
+            parts[cur + "_out"] = parts.get(cur + "_out", "") + line + "\n"
+    if parts.get("install") != "0":
+        reason = plan_fails(parts.get("log_out", ""))
+        return ("n/a", reason) if reason else ("fail", "install: " + tail(parts.get("log_out", "") + err, 6))
+    if f"hello from {rt}" not in parts.get("launch_out", ""):
+        return "fail", "launch: " + tail(parts.get("launch_out", ""), 6)
+    left = parts.get("left_out", "").strip()
+    if parts.get("uninstall") != "0" or left:
+        return "fail", f"uninstall exit {parts.get('uninstall')}, left: {left[:200]}"
+    return "pass", "hello + clean uninstall"
 
 
 # macOS: the Mac test server through the reverse tunnel -----------------
@@ -151,7 +208,7 @@ def main():
     builds = json.loads((out / "builds.json").read_text())
     projects = json.loads((HERE / "projects.json").read_text())["projects"]
     runtimes = a.runtimes.split(",") if a.runtimes else list(projects)
-    plat = {"linux": "linux", "mac": "macos"}.get(a.target, "windows")
+    plat = "linux" if a.target in LINUX_VMS else {"linux": "linux", "mac": "macos"}.get(a.target, "windows")
     for rt in runtimes:
         for mode in a.modes.split(","):
             b = builds.get(f"{rt}/{mode}")
@@ -165,6 +222,8 @@ def main():
                 r, d = run_linux(rt, mode, f)
             elif a.target == "mac":
                 r, d = run_mac(rt, mode, f)
+            elif a.target in LINUX_VMS:
+                r, d = run_linux_vm(LINUX_VMS[a.target], rt, mode, f)
             else:
                 from run_windows import run_windows
                 r, d = run_windows(WINDOWS[a.target], rt, mode, f, b["record"])
