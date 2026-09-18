@@ -10,7 +10,7 @@
    "arch": [
     "amd64"
    ],
-   "min_os": "glibc-2.5",
+   "min_os": "glibc-2.17",
    "min_build": null,
    "max_os": null,
    "extra": [],
@@ -32,7 +32,7 @@
     }
    ],
    "confidence": "high",
-   "notes": "static binary: every glibc id and musl systems qualify; 86 releases, 16 archives read (8.0.30, 8.1.23, 8.1.29, 8.1.34, 8.2.10, 8.2.22, 8.2.32, 8.3.0, 8.3.17, 8.3.32, 8.4.1, 8.4.14, 8.4.23, 8.5.2, 8.5.5, 8.5.8)",
+   "notes": "static binary: every glibc id and musl systems qualify; 86 releases, 16 archives read (8.0.30, 8.1.23, 8.1.29, 8.1.34, 8.2.10, 8.2.22, 8.2.32, 8.3.0, 8.3.17, 8.3.32, 8.4.1, 8.4.14, 8.4.23, 8.5.2, 8.5.5, 8.5.8) Floor raised 2026-09-19 by installer-builder: the static binary segfaults on CentOS 6 (kernel 2.6.32); glibc-2.17 stands for RHEL 7's kernel 3.10.",
    "format": [
     "tar.gz"
    ],
@@ -57,7 +57,7 @@
    "arch": [
     "arm64"
    ],
-   "min_os": "glibc-2.5",
+   "min_os": "glibc-2.17",
    "min_build": null,
    "max_os": null,
    "extra": [],
@@ -74,7 +74,7 @@
     }
    ],
    "confidence": "high",
-   "notes": "static binary: every glibc id and musl systems qualify; 82 releases, 16 archives read (8.0.30, 8.1.25, 8.1.29, 8.1.34, 8.2.12, 8.2.23, 8.2.32, 8.3.0, 8.3.17, 8.3.32, 8.4.1, 8.4.14, 8.4.23, 8.5.2, 8.5.5, 8.5.8)",
+   "notes": "static binary: every glibc id and musl systems qualify; 82 releases, 16 archives read (8.0.30, 8.1.25, 8.1.29, 8.1.34, 8.2.12, 8.2.23, 8.2.32, 8.3.0, 8.3.17, 8.3.32, 8.4.1, 8.4.14, 8.4.23, 8.5.2, 8.5.5, 8.5.8) Floor raised 2026-09-19 by installer-builder: the static binary segfaults on CentOS 6 (kernel 2.6.32); glibc-2.17 stands for RHEL 7's kernel 3.10.",
    "format": [
     "tar.gz"
    ],

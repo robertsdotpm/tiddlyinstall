@@ -62,8 +62,11 @@ def record(res):
 
 
 def plan_fails(log):
-    """The engine's message when no plan block matches, or a block says `fail`."""
+    """The engine's message when no plan block matches, or a block says `fail`,
+    or a prerequisite needs root that an unattended install can't get."""
     for line in log.splitlines():
+        if "needs system packages" in line or "needs administrator rights" in line:
+            return "needs root: " + line.strip()
         if "nothing for this machine" in line or "No " in line and "release in the catalogue runs" in line:
             return line.strip()
     return None

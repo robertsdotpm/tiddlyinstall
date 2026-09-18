@@ -234,6 +234,96 @@
    ],
    "start": "xcode-select --install",
    "how": "Install Apple's Command Line Tools: run xcode-select --install in Terminal and click Install in the dialog that opens (it can take a while), then run this installer again."
+  },
+  "libicu": {
+   "label": "ICU (libicuuc), the Unicode and time-zone library .NET uses",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libicuuc.so.50"
+    ],
+    [
+     "lib",
+     "libicuuc.so.52"
+    ],
+    [
+     "lib",
+     "libicuuc.so.55"
+    ],
+    [
+     "lib",
+     "libicuuc.so.56"
+    ],
+    [
+     "lib",
+     "libicuuc.so.57"
+    ],
+    [
+     "lib",
+     "libicuuc.so.60"
+    ],
+    [
+     "lib",
+     "libicuuc.so.63"
+    ],
+    [
+     "lib",
+     "libicuuc.so.65"
+    ],
+    [
+     "lib",
+     "libicuuc.so.66"
+    ],
+    [
+     "lib",
+     "libicuuc.so.67"
+    ],
+    [
+     "lib",
+     "libicuuc.so.69"
+    ],
+    [
+     "lib",
+     "libicuuc.so.70"
+    ],
+    [
+     "lib",
+     "libicuuc.so.71"
+    ],
+    [
+     "lib",
+     "libicuuc.so.72"
+    ],
+    [
+     "lib",
+     "libicuuc.so.73"
+    ],
+    [
+     "lib",
+     "libicuuc.so.74"
+    ],
+    [
+     "lib",
+     "libicuuc.so.75"
+    ],
+    [
+     "lib",
+     "libicuuc.so.76"
+    ],
+    [
+     "lib",
+     "libicuuc.so.77"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libicu-dev",
+    "dnf": "libicu",
+    "yum": "libicu",
+    "zypper": "libicu",
+    "apk": "icu-libs",
+    "pacman": "icu"
+   }
   }
  },
  "runtimes": {
@@ -633,7 +723,15 @@
      "macos": "\"{runtime}\" tool install --tool-path \"{app_dir}/bin\" {package}"
     },
     "launch": "{app_dir}/bin/{bin}{exe}"
-   }
+   },
+   "needs": [
+    {
+     "prerequisites": [
+      "libicu"
+     ],
+     "why": ".NET uses ICU for time zones and cultures and aborts without it (minimal systems such as Rocky's cloud image leave it out)."
+    }
+   ]
   },
   "r": {
    "label": "R",
