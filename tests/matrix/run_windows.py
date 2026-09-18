@@ -91,6 +91,10 @@ def run_windows(vm, rt, mode, f, record):
         return "fail", "launch: " + tail(parts.get("launch_out", "") + log, 6)
     left = parts.get("left_out", "").strip()
     if left:
+        # Clean up so one bad uninstall doesn't fail every later cell.
+        here = Path(__file__).resolve().parent
+        sh(["scp", "-q", str(here / "clean_windows.bat"), f"{host}:C:/ibclean.bat"], timeout=60)
+        sh(["ssh", host, "cmd /c C:\\ibclean.bat"], timeout=120)
         return "fail", f"uninstall exit {parts.get('uninstall')}, left: {left[:200]}"
     menu = "startmenu-ok" in parts.get("menu_out", "")
     return "pass", "hello + clean uninstall" + ("" if menu else " (no Start menu shortcut seen)")

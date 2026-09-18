@@ -291,9 +291,9 @@
    },
    "compiled": true,
    "install_command": {
-    "windows": "\"{runtime_dir}\\zig.exe\" build-exe -O ReleaseSafe -femit-bin=\"{app_dir}\\{project}.exe\" main.zig",
-    "linux": "\"{runtime_dir}/zig\" build-exe -O ReleaseSafe -femit-bin=\"{app_dir}/{project}\" main.zig",
-    "macos": "\"{runtime_dir}/zig\" build-exe -O ReleaseSafe -femit-bin=\"{app_dir}/{project}\" main.zig"
+    "windows": "\"{runtime_dir}\\zig.exe\" build-exe --name {project} main.zig",
+    "linux": "\"{runtime_dir}/zig\" build-exe --name {project} main.zig",
+    "macos": "\"{runtime_dir}/zig\" build-exe --name {project} main.zig"
    },
    "launch": "{app_dir}/{project}{exe}"
   },
