@@ -583,3 +583,12 @@ form:has(#mode-ours:checked) .offline-only { display: none; }
 /* Uninstall script tabs. */
 form:has(#unscript-tab-win:checked) .unscript-panel-win,
 form:has(#unscript-tab-unix:checked) .unscript-panel-unix { display: block; }
+
+/* Runtime version choice: show the chosen option's details (no JS). */
+.rv-panel { display: none; margin: 0 0 12px 26px; }
+form:has(#rv-newest:checked) .rv-newest-only,
+form:has(#rv-asyncio:checked) .rv-asyncio-only,
+form:has(#rv-range:checked) .rv-range-only,
+form:has(#rv-exact:checked) .rv-exact-only { display: block; }
+/* python-only panels also need Python chosen. */
+form:not(:has(#runtime option[value="python"]:checked)) .py-panel { display: none; }

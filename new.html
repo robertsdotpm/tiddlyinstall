@@ -709,18 +709,37 @@ Press Enter to close</pre>
         </details>
 
         <details>
-          <summary><span>Runtime and dependencies</span><span class="default">Newest version the user's OS supports</span></summary>
-          <div class="field">
-            <label for="runtime-version">Runtime versions allowed</label>
-            <input type="text" id="runtime-version" name="runtime_version" placeholder="Any, e.g. >=3.8, <3.13">
-            <span class="hint">At install time the installer picks the highest version that matches and runs on the user's OS.
-              Operators: <code>==</code> <code>!=</code> <code>&gt;=</code> <code>&lt;=</code> <code>&gt;</code> <code>&lt;</code> <code>~=</code>, and wildcards like <code>==3.12.*</code>. Separate with commas.</span>
+          <summary><span>Runtime and dependencies</span><span class="default">Newest that runs on the user's system</span></summary>
+          <span class="label">Which version</span>
+          <p class="small muted" style="margin-top:0">Chosen by the installer on each user's computer, from the catalogue's record of which versions run on which systems.</p>
+
+          <label class="choice"><input type="radio" name="rv_mode" value="newest" id="rv-newest" checked>
+            <span><strong>Newest that runs on the user's system</strong> <span class="badge">default</span><br>
+            <span class="small muted">Each computer gets the newest release that works on its Windows, macOS or Linux version.</span></span></label>
+          <div class="rv-panel rv-newest-only py-panel">
+            <div class="table-wrap">
+              <table class="small">
+                <thead><tr><th>System</th><th>Python installed</th></tr></thead>
+                <tbody>
+                  <tr><td>Windows XP</td><td>3.4</td></tr>
+                  <tr><td>Windows Vista, 7</td><td>3.8</td></tr>
+                  <tr><td>Windows 8, 8.1</td><td>3.12</td></tr>
+                  <tr><td>Windows 10, 11</td><td>3.14</td></tr>
+                  <tr><td>macOS 10.9 to 10.15</td><td>…</td></tr>
+                  <tr><td>macOS 11 and later</td><td>3.14</td></tr>
+                  <tr><td>Linux (by glibc version)</td><td>…</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <span class="hint">Sample figures from the current catalogue, being checked against the actual files and on test machines.</span>
           </div>
 
-          <div class="feature-box python-only">
-            <label class="choice"><input type="checkbox" name="highest_with_asyncio">
-              <span><strong>Choose the highest version with asyncio support</strong> <span class="badge">tested</span><br>
-              <span class="small muted">On each Windows version, install the highest Python that has been tested to install and run <code>asyncio</code> there, instead of whatever python.org lists as newest.</span></span></label>
+          <div class="python-only">
+          <label class="choice"><input type="radio" name="rv_mode" value="asyncio" id="rv-asyncio">
+            <span><strong>Newest tested with asyncio</strong> <span class="badge">tested</span><br>
+            <span class="small muted">On each Windows version, the highest Python tested to install and run <code>asyncio</code> there, instead of the newest release.</span></span></label>
+          </div>
+          <div class="rv-panel rv-asyncio-only py-panel">
             <div class="table-wrap">
               <table class="small">
                 <thead><tr><th>Windows</th><th>Python installed</th><th>Also installs</th></tr></thead>
@@ -728,12 +747,33 @@ Press Enter to close</pre>
                   <tr><td>XP</td><td>3.5, XP backport</td><td>Visual C++ runtimes</td></tr>
                   <tr><td>Vista</td><td>3.7.0</td><td>Visual C++ runtimes</td></tr>
                   <tr><td>7, 8, 8.1</td><td>3.8.0</td><td></td></tr>
-                  <tr><td>10, 11</td><td>Newest in your range (3.13.0 tested)</td><td></td></tr>
+                  <tr><td>10, 11</td><td>3.13.0</td><td></td></tr>
                 </tbody>
               </table>
             </div>
-            <span class="hint">If your version range rules out the tested build, the installer stops on that Windows version and says why.</span>
+            <span class="hint">macOS and Linux get the newest that runs there.</span>
           </div>
+
+          <label class="choice"><input type="radio" name="rv_mode" value="range" id="rv-range">
+            <span><strong>Newest within a range</strong><br>
+            <span class="small muted">For apps that need, or can't handle, certain versions.</span></span></label>
+          <div class="field rv-panel rv-range-only">
+            <label for="runtime-version">Versions allowed</label>
+            <input type="text" id="runtime-version" name="runtime_version" placeholder="e.g. >=3.8, <3.13">
+            <span class="hint">Operators: <code>==</code> <code>!=</code> <code>&gt;=</code> <code>&lt;=</code> <code>&gt;</code> <code>&lt;</code> <code>~=</code>, and wildcards like <code>==3.12.*</code>. Separate with commas.
+              If no version in the range runs on a user's system, the installer stops and says which versions would.</span>
+          </div>
+
+          <label class="choice"><input type="radio" name="rv_mode" value="exact" id="rv-exact">
+            <span><strong>One exact version</strong><br>
+            <span class="small muted">The same version everywhere. Systems it doesn't run on can't install the app.</span></span></label>
+          <div class="field rv-panel rv-exact-only">
+            <label for="runtime-exact">Version</label>
+            <input type="text" id="runtime-exact" name="runtime_exact" placeholder="e.g. 3.12.4">
+          </div>
+
+          <hr>
+
           <div class="field">
             <label for="install-cmd">Install command</label>
             <input type="text" id="install-cmd" name="install_cmd" placeholder="{python} -m pip install .">
