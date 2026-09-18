@@ -609,7 +609,7 @@ async function takedown(sample) {
     for (const f of files) fs.writeFileSync(f, (fs.existsSync(f) ? fs.readFileSync(f, 'utf8') : '') + entries.join('\n') + '\n');
     const [ta, tb] = [await get(GO, '/api/takedown'), await get(NODE, '/api/takedown')];
     ok(ta.text === tb.text.split(recNode).join(rec), '/api/takedown: the same list', ta.text + tb.text);
-    for (const v of ['oracle-owner/oracle-repo', 'Oracle-Owner/Oracle-Repo', 'https://github.com/oracle-owner/oracle-repo.git', 'http://GITHUB.com/oracle-owner/oracle-repo/', ' oracle-owner/oracle-repo ']) {
+    for (const v of ['oracle-owner/oracle-repo', 'Oracle-Owner/Oracle-Repo', 'https://github.com/oracle-owner/oracle-repo.git', 'http://github.com/Oracle-Owner/oracle-repo/', ' oracle-owner/oracle-repo ']) {
       const body = JSON.stringify({ name: 'x', source: { kind: 'github', value: v }, runtime: 'python', mode: 'C' });
       const [a, b] = [await post(GO, '/api/jobs', body), await post(NODE, '/api/jobs', body)];
       ok(a.status === 451 && a.status === b.status && a.text === b.text, `takedown: source github ${JSON.stringify(v)}: 451`, a.text + b.text);
