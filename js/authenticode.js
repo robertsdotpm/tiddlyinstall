@@ -246,6 +246,14 @@ export function pfxSigner(p) {
   };
 }
 
+// A signer for any service that signs a SHA-256 digest (a cloud KMS, an
+// HSM, a signing service's sign-hash call, or a person pasting the result
+// back): signDigest(digest) returns the signature, RSA PKCS#1 v1.5 or
+// ECDSA (DER or r||s). certs: the certificate chain, parsed.
+export function digestSigner(certs, signDigest) {
+  return { certs, sign: ({ digest }) => signDigest(digest) };
+}
+
 // All three steps with one signer {certs, sign({data, digest})}.
 export async function signPE(u8, signer, opts = {}) {
   const state = await beginPE(u8, opts);

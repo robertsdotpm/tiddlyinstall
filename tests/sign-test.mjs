@@ -226,6 +226,48 @@ if (fs.existsSync(signedBase)) {
   });
 } else skip('re-sign base-signed.exe', 'not built');
 
+// Remote signing: openssl stands in for an HSM or KMS that only ever sees
+// the digest. It signs D with the key; the page never has the key.
+await run('remote signing', async () => {
+  for (const [label, keyFile, certs, ca] of [
+    ['RSA', 'rsa.key', 'rsa.crt', 'rsa.crt'],
+    ['ECDSA', 'ec.key', 'ec.crt', 'ca.crt'],
+  ]) {
+    const unsigned = await withRecord(b64(FX.peIcon));
+    const chain = parseCertBundle(fs.readFileSync(t(certs), 'utf8') + (label === 'ECDSA' ? fs.readFileSync(t('ca.crt'), 'utf8') : ''));
+    const signer = ac.digestSigner(chain, async (digest) => {
+      fs.writeFileSync(t('digest.bin'), digest);
+      const args = ['pkeyutl', '-sign', '-inkey', keyFile, '-in', 'digest.bin', '-out', 'remote.sig'];
+      if (label === 'RSA') args.push('-pkeyopt', 'digest:sha256');
+      execFileSync('openssl', args, { cwd: TMP });
+      // As pasted: base64 text.
+      return der.unb64(fs.readFileSync(t('remote.sig')).toString('base64').replace(/(.{64})/g, '$1\n'));
+    });
+    const r = await ac.signPE(unsigned, signer, {});
+    const f = t('remote-' + label + '.exe');
+    fs.writeFileSync(f, r.file);
+    await checkFile('remote ' + label + ' (openssl pkeyutl signs the digest)', f, t(ca), t(certs));
+  }
+
+  // ECDSA as r||s (what WebCrypto and some KMS APIs return).
+  const state = await ac.beginPE(await withRecord(b64(FX.peIcon)));
+  const raw = new Uint8Array(await crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, ec.key, state.toBeSigned));
+  const r = await ac.finishPE(state, raw, ec.chain);
+  fs.writeFileSync(t('remote-raw.exe'), r.file);
+  await checkFile('remote ECDSA r||s', t('remote-raw.exe'), t('ca.crt'), t('ec.crt'));
+
+  // A signature for something else, or from another key, is refused.
+  const state2 = await ac.beginPE(await withRecord(b64(FX.peIcon)));
+  const wrong = new Uint8Array(await crypto.subtle.sign(rsa.algorithm, rsa.key, new TextEncoder().encode('other')));
+  let msg = '';
+  try { await ac.finishPE(state2, wrong, rsa.chain); } catch (e) { msg = e.message; }
+  ok(/does not verify/.test(msg), 'remote: a signature over the wrong data is refused before writing the file', msg);
+  msg = '';
+  const good = new Uint8Array(await crypto.subtle.sign(rsa.algorithm, rsa.key, state2.toBeSigned));
+  try { await ac.finishPE(state2, good, ec.chain); } catch (e) { msg = e.message; }
+  ok(/does not verify/.test(msg), 'remote: a certificate that does not match the key is refused', msg);
+});
+
 const tsaFetch = (url) => async (req) => {
   const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/timestamp-query' }, body: req });
   if (!r.ok) throw new Error(url + ': HTTP ' + r.status);
