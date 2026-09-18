@@ -59,6 +59,7 @@ type pick struct {
 	known    bool
 	needs    []companion // other runtimes this one needs on this OS
 	extras   []extraUse  // policy extra_files the recipe's steps name
+	prereqs  []prereqUse // system-wide prerequisites (policy needs)
 }
 
 // extraUse is one policy extra file (e.g. get-pip.py) a recipe needs.
@@ -344,7 +345,7 @@ func (c *Catalog) best(rt *Runtime, cands []*Release, o OSID, app *App) (p, cond
 		if r == nil || c.sha(e) == "" {
 			continue
 		}
-		pk := &pick{rel: e, recipe: r, minBuild: minBuild, known: known, extras: extras}
+		pk := &pick{rel: e, recipe: r, minBuild: minBuild, known: known, extras: extras, prereqs: c.prereqsFor(rt, e, o)}
 		if !c.attachNeeds(rt, pk, o) {
 			continue
 		}
@@ -515,6 +516,12 @@ func (c *Catalog) ResolveFiles(app *App) (string, []FileRef, error) {
 		for _, n := range b.p.needs {
 			add(n.p.rel)
 		}
+		for _, u := range b.p.allPrereqs() {
+			if f := u.p.File; f != nil && !seen[f.SHA256] {
+				seen[f.SHA256] = true
+				files = append(files, c.prereqFileRef(f))
+			}
+		}
 	}
 	return c.write(app, rt, blocks), files, nil
 }
@@ -531,7 +538,7 @@ func samePick(a, b *pick) bool {
 			return false
 		}
 	}
-	return true
+	return samePrereqs(a, b)
 }
 
 func versionTokens(v Version) *strings.Replacer {
@@ -630,6 +637,9 @@ func (c *Catalog) writeTarget(w *ibtext.Writer, app *App, pol *RuntimePolicy, b 
 	if !b.p.known {
 		w.Add("note", "Not confirmed to run on every OS version in this range; chosen by the catalogue's default floor.")
 	}
+	// System-wide prerequisites first: engines check (and if need be
+	// install) them before anything else.
+	c.writeNeeds(w, b.p.allPrereqs())
 	w.Add("file", app.Runtime, e.FileName(), e.SHA256, strconv.FormatInt(e.Size, 10))
 	seen := map[string]bool{}
 	addURL := func(u string) {

@@ -27,6 +27,7 @@ import base64
 import hashlib
 import io
 import os
+import re
 import stat
 import sys
 import tarfile
@@ -81,7 +82,17 @@ def strip_block(data: bytes) -> bytes:
 
 def cmd_run(a):
     base = strip_block(open(a.base, "rb").read())
-    if not base.endswith(b"\nexit $?\n"):
+    # The script ends with `exit $?`; the verifier binaries make_run.sh puts
+    # after it (IB_VERIFY_BLOBS) are part of the base.
+    script = base
+    m = re.search(rb"^IB_VERIFY_BLOBS='([^'\n]*)'$", base, re.M)
+    if m and m.group(1):
+        ents = [e.split(b":") for e in m.group(1).split()]
+        start = min(int(e[1]) for e in ents)
+        if max(int(e[1]) + int(e[2]) for e in ents) != len(base):
+            sys.exit("base: the verifier table doesn't match the file; refusing to append")
+        script = base[:start]
+    if not script.endswith(b"\nexit $?\n"):
         sys.exit("base does not end with an 'exit $?' line; refusing to append")
     rec = open(a.record, "rb").read() if a.record else b""
     plan = open(a.plan, "rb").read() if a.plan else b""

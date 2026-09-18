@@ -12,6 +12,9 @@ version, dialogs, and menu entries.
 | `ib-engine.sh` | The engine. Also copied into every installed app as `uninstall.sh` |
 | `make_run.sh` | Builds the Linux base `out/ib-base.run` (the engine, syntax-checked with dash, bash and busybox) |
 | `make_app.sh` | Builds the macOS base `out/Install.app` and `out/ib-base-macos.zip`. On a Mac it is ad-hoc signed and zipped with `ditto` |
+| `verify/` | `ibverify`, the Ed25519 verifier the bases carry: source, `build.sh` (Zig), the built binaries |
+| `test_verify.sh` | Plan signature cases (good over plain HTTP, `--plan`, tampered, replayed, unsigned) with openssl shadowed |
+| `test_prereqs.sh` | Prerequisites and the record icon |
 | `append_meta.py` | Test tool: adds a record, plan and pack to a `.run` (appended block) or a base zip (`Contents/Resources/ib/`). The Go server has its own implementation |
 
 Builds go to `out/` (ignored by git).
@@ -74,9 +77,18 @@ fill the engine's `IB_PLAN_PUBKEY=` and `IB_PLAN_KEYID=` lines
 `../../server/data/plan-signing-key.pub`, which the server writes on its
 first start. They refuse to build without it.
 
-The engine checks the signature with `openssl pkeyutl -verify -pubin
--rawin`, after proving that works on RFC 8032 test vector 2 (and that a
-changed message fails). Then:
+The engine checks the signature with its own verifier, `ibverify`
+([verify/](verify/README.md)): a static binary per CPU, TweetNaCl like the
+Windows `ibsig` plugin. The `.run` carries the Linux ones after the
+script's final `exit $?` line (before any metadata block), and the
+script's `IB_VERIFY_BLOBS` line, filled in by `make_run.sh`, gives each
+one's arch, byte offset and length in fixed-width numbers; the engine cuts
+out the one for `uname -m` with `tail -c +N | head -c LEN` into its temp
+folder. The `.app` has `Contents/Resources/ibverify-x86_64` and
+`-arm64`. If that doesn't run here, it uses `openssl pkeyutl -verify
+-pubin -rawin`. Either is used only after it accepts RFC 8032 test vector
+2 and rejects it with a changed message; the log says which checked the
+plan (`Plan signature: ok:ibverify`). Then:
 
 | Plan from | Signed by the built-in key | Unsigned or wrong | No way to check (see below) |
 | --- | --- | --- | --- |
@@ -90,10 +102,11 @@ rewrites the line and drops the signature). A plan by name must carry
 the signed `request<TAB>name<TAB><runtime><TAB><package>` line the file
 name asked for.
 
-**When openssl can't check Ed25519.** That needs OpenSSL 1.1.1 or later.
-RHEL/CentOS 7 (1.0.2), CentOS 6, and macOS's `/usr/bin/openssl`
-(LibreSSL) can't; neither can a machine with no `openssl`. The engine
-then fails closed on plain HTTP and accepts a plan only when it came over
+**When nothing can check Ed25519.** Only when the built-in verifier
+can't run (a CPU it isn't built for, a `noexec` temp folder) and openssl
+can't either (it needs OpenSSL 1.1.1 or later; RHEL/CentOS 7 has 1.0.2,
+macOS LibreSSL, some 1.1.1 builds fail the test, Alpine has none). The
+engine then fails closed on plain HTTP and accepts a plan only when it came over
 HTTPS (curl and wget check the certificate, so it came from the
 backend), and says so on the transparency screen. A warning instead of
 refusing would have made the signature optional for exactly the old
@@ -150,10 +163,54 @@ The pack is used whatever the metadata's source: before downloading a
    2`), SHA-256 checked (`sha256sum`, `shasum -a 256` or `openssl`), a
    wrong checksum moves on to the next URL. Then the steps. A file with no
    steps is copied into its folder as is.
+   Before that, the block's **prerequisites** (`need` entries, format.md
+   "Prerequisites") are checked and, if missing, installed (below).
 6. Unpacks the source into the app folder, runs `install` in it with
    `env`, `unset`, `ienv`, `iunset` and `path` applied.
 7. Writes `launch.txt` (format.md 5), `launch.sh`, `uninstall.sh`, the
-   menu entries, and `manifest.txt` last.
+   menu entries, and `manifest.txt` last. If the record has an `icon`
+   (format.md section 2) and the pack holds that PNG, it is copied to
+   `<app>/icon.png` and the `.desktop` file's `Icon=` is its absolute
+   path; otherwise `Icon=application-x-executable`.
+
+### Prerequisites
+
+A plan block can list system-wide prerequisites (`need`, format.md
+"Prerequisites"): a shared library (`ncheck lib`), a command (`ncheck
+cmd`) or a file (`ncheck file`), with distro package names per package
+manager (`npkg`). Checks only look (`ldconfig -p` for this arch, else the
+usual library folders; `command -v`; `[ -e ]`), so they run before the
+transparency screen, which lists each prerequisite as present or
+missing, why it is needed, the packages and the exact root command.
+
+After the user agrees, the missing ones are installed with the first
+package manager found (`apt-get`, `dnf`, `yum`, `zypper`, `apk`,
+`pacman`), in one command, as root, for **that command only** (the app
+still installs for the user):
+
+| Situation | How it becomes root |
+| --- | --- |
+| already root | runs it |
+| `sudo -n` works (no password needed) | `sudo -n sh -c ...` |
+| `--yes` otherwise | doesn't: stops with **exit code 2** and the command to run, e.g. `sudo apt-get update && sudo apt-get install -y libatomic1` |
+| a terminal | `sudo` (asks for the password there) |
+| a desktop, no terminal | `pkexec` |
+
+`apt-get install` is retried after `apt-get update` (fresh cloud images
+have no package lists). The checks then run again; one still failing
+stops the install. Nothing is removed on uninstall: other programs may
+use the packages.
+
+A missing prerequisite with no package for this machine's manager (or on
+macOS, where there is no package manager to use) stops the install with
+exit code 2 and the plan's `nhow` text. With a terminal or dialogs and
+without `--yes`, the plan's `nstart` command is run first, as the user:
+for Xcode's Command Line Tools that is `xcode-select --install`, which
+opens Apple's own installer; the user runs this installer again after it.
+
+`test_prereqs.sh` tests all of this offline in a clean environment
+(`env -i`, a throwaway `HOME`, no display) with a fake package manager
+and `sudo` on `PATH`, plus the icon.
 
 On any failure, everything this run created is removed, newest first
 (folders it only created as parents are removed only if empty), and the

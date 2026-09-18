@@ -3,6 +3,7 @@
 #
 #   Install.app/Contents/Info.plist
 #   Install.app/Contents/MacOS/install      = ib-engine.sh
+#   Install.app/Contents/Resources/ibverify-{x86_64,arm64}   Ed25519 verifiers
 #   Install.app/Contents/Resources/ib/      empty; modes B/C put record.txt,
 #                                           plan.txt and pack/ here
 #
@@ -22,6 +23,11 @@ mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources/ib"
 . "$here/plankey.sh"
 bake_engine "$here/ib-engine.sh" "$app/Contents/MacOS/install"
 chmod 755 "$app/Contents/MacOS/install"
+# Our Ed25519 verifiers (verify/), picked by `uname -m`.
+for a in x86_64 arm64; do
+	cp "$here/verify/bin/ibverify-macos-$a" "$app/Contents/Resources/ibverify-$a"
+	chmod 755 "$app/Contents/Resources/ibverify-$a"
+done
 cat > "$app/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">

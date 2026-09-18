@@ -18,6 +18,9 @@ IB_DEFAULT_BACKEND=http://10.0.1.76:8080
 # public key, and its id. make_run.sh / make_app.sh fill these in.
 IB_PLAN_PUBKEY=
 IB_PLAN_KEYID=
+# Our Ed25519 verifiers appended after this script: <arch>:<offset>:<length>
+# (make_run.sh fills it; empty in the source and in the macOS .app).
+IB_VERIFY_BLOBS=
 
 tab=$(printf '\t')
 cr=$(printf '\r')
@@ -74,6 +77,7 @@ ib_abs() {
 }
 
 ib_fail() {
+	ib_rc=${ib_fail_rc:-1}
 	ib_progress_stop
 	ib_log "FAILED: $*"
 	[ -n "$IB_CREATED" ] && [ -f "$IB_CREATED" ] && ib_rollback
@@ -95,7 +99,7 @@ ib_fail() {
 		[ "$opt_yes" = 1 ] || ib_message error "Installer Builder" "$*$nl${nl}Log: $IB_LOG$nl$nl$(tail -n 8 "$IB_LOG" 2>/dev/null)"
 		;;
 	esac
-	exit 1
+	exit "$ib_rc"
 }
 
 ib_cleanup() {
@@ -315,11 +319,15 @@ ib_select_target() { # plan > selection
 	END {
 		if (!chosen) { print "fail\tThis installer has nothing for this machine (" os " " ver " " arch ")."; exit }
 		print "target\t" chosen
-		f = 0
+		f = 0; nd = 0
 		for (i = 1; i <= n[chosen]; i++) {
 			$0 = L[chosen, i]
 			if ($1 == "file") { f++; print "file\t" f "\t" rest(2) }
 			else if ($1 == "url" || $1 == "step") print $1 "\t" f "\t" rest(2)
+			# Prerequisites (format.md "Prerequisites"): need, and the n* lines
+			# after it, get the need index.
+			else if ($1 == "need") { nd++; print "need\t" nd "\t" rest(2) }
+			else if ($1 ~ /^n(why|check|file|url|run|ok|pkg|start|how)$/) { if (nd) print $1 "\t" nd "\t" rest(2) }
 			else print
 		}
 	}' "$1"
@@ -365,31 +373,62 @@ ib_http_why() {
 	return 0
 }
 
-# Can this machine check Ed25519 signatures? Needs `openssl pkeyutl
-# -rawin` (OpenSSL 1.1.1 or later; LibreSSL and 1.0.x can't). Proved by
-# checking RFC 8032 test vector 2, and that a changed message fails.
-# Sets ib_ed_why when it can't. Cached.
+# Our own Ed25519 verifier (bases/unix/verify): a static binary per CPU,
+# carried in the .run after the script (IB_VERIFY_BLOBS: arch, byte
+# offset in this file, length; make_run.sh fills it) or in the .app's
+# Resources. Prints its path, or nothing if there is none for this CPU.
+ib_verifier_path() {
+	if [ -n "$IB_BUNDLE" ]; then
+		case $IB_ARCH in amd64) v=x86_64 ;; arm64) v=arm64 ;; *) return 0 ;; esac
+		[ -f "$IB_BUNDLE/Contents/Resources/ibverify-$v" ] && printf '%s' "$IB_BUNDLE/Contents/Resources/ibverify-$v"
+		return 0
+	fi
+	[ -n "$IB_VERIFY_BLOBS" ] || return 0
+	set -- $(printf '%s\n' $IB_VERIFY_BLOBS | awk -F: -v a="$IB_ARCH" '$1 == a { print $2 + 0, $3 + 0; exit }')
+	[ $# = 2 ] && [ "$2" -gt 0 ] || return 0
+	tail -c +"$(($1 + 1))" "$IB_SELF" 2>/dev/null | head -c "$2" > "$IB_WORK/ibverify" 2>/dev/null
+	[ "$(wc -c < "$IB_WORK/ibverify" | tr -d ' ')" = "$2" ] || return 0
+	chmod 755 "$IB_WORK/ibverify"
+	printf '%s' "$IB_WORK/ibverify"
+}
+
+# Can this machine check Ed25519 signatures? First our own verifier, then
+# `openssl pkeyutl -rawin` (OpenSSL 1.1.1 or later; LibreSSL, 1.0.x and
+# some 1.1.1 builds can't). Either is trusted only after it accepts RFC
+# 8032 test vector 2 and rejects it with a changed message. Sets ib_ed_how
+# (ibverify or openssl), or ib_ed_why when neither works. Cached.
 ib_ed25519_ready() {
 	[ -n "$ib_ed_ok" ] && return "$ib_ed_ok"
 	ib_ed_ok=1
 	case $IB_PLAN_PUBKEY in
 	'' | *[!A-Za-z0-9+/=]*) ib_ed_why="this installer was built without a plan signing key"; return 1 ;;
 	esac
-	ib_have openssl || { ib_ed_why="no openssl on this machine"; return 1; }
 	t=$IB_WORK/edtest
 	mkdir -p "$t"
-	printf -- '-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAPUAXw+hDiVqStwqnTRt+vJyYLM8uxJaMwM1V8Sr0Zgw=\n-----END PUBLIC KEY-----\n' > "$t/pub.pem"
-	printf '%s\n' 'kqAJqfDUyrhyDoILX2QlQKKye1QWUD+Ps3YiI+vbadoIWsHkPhWZbkWPNhPQ8R2MOHsurrQwKu6wDSkWErsMAA==' |
-		ib_nohome openssl base64 -d -A > "$t/sig" 2>/dev/null
+	tpk=PUAXw+hDiVqStwqnTRt+vJyYLM8uxJaMwM1V8Sr0Zgw=
+	tsig=kqAJqfDUyrhyDoILX2QlQKKye1QWUD+Ps3YiI+vbadoIWsHkPhWZbkWPNhPQ8R2MOHsurrQwKu6wDSkWErsMAA==
 	printf 'r' > "$t/good"
 	printf 's' > "$t/bad"
+	ib_ibv=$(ib_verifier_path)
+	if [ -n "$ib_ibv" ] && "$ib_ibv" "$tpk" "$tsig" < "$t/good" > /dev/null 2>&1; then
+		"$ib_ibv" "$tpk" "$tsig" < "$t/bad" > /dev/null 2>&1
+		if [ $? = 1 ]; then
+			ib_ed_how=ibverify ib_ed_ok=0
+			return 0
+		fi
+	fi
+	ib_ed_why="no built-in verifier for this CPU ($(uname -m))"
+	[ -n "$ib_ibv" ] && ib_ed_why="the built-in verifier doesn't run here"
+	ib_have openssl || { ib_ed_why="$ib_ed_why, and no openssl"; return 1; }
+	printf -- '-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA%s\n-----END PUBLIC KEY-----\n' "$tpk" > "$t/pub.pem"
+	printf '%s\n' "$tsig" | ib_nohome openssl base64 -d -A > "$t/sig" 2>/dev/null
 	if ib_nohome openssl pkeyutl -verify -pubin -inkey "$t/pub.pem" -rawin -in "$t/good" -sigfile "$t/sig" > /dev/null 2>&1 &&
 		! ib_nohome openssl pkeyutl -verify -pubin -inkey "$t/pub.pem" -rawin -in "$t/bad" -sigfile "$t/sig" > /dev/null 2>&1; then
 		printf -- '-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA%s\n-----END PUBLIC KEY-----\n' "$IB_PLAN_PUBKEY" > "$IB_WORK/plan-key.pem"
-		ib_ed_ok=0
+		ib_ed_how=openssl ib_ed_ok=0
 		return 0
 	fi
-	ib_ed_why="$(ib_nohome openssl version 2>/dev/null | sed -n 1p) can't check Ed25519 signatures (OpenSSL 1.1.1 or later can)"
+	ib_ed_why="$ib_ed_why, and $(ib_nohome openssl version 2>/dev/null | sed -n 1p) can't check Ed25519 signatures"
 	return 1
 }
 
@@ -411,11 +450,20 @@ ib_plan_sig() {
 	ib_ed25519_ready || { echo "cannot:$ib_ed_why"; return 0; }
 	head -c "$n" "$f" > "$IB_WORK/plan.signed"
 	[ "$(head -c 8 "$IB_WORK/plan.signed")" = "ib-plan$tab" ] || { echo "bad:the signed bytes are not an ib-plan"; return 0; }
+	if [ "$ib_ed_how" = ibverify ]; then
+		"$ib_ibv" "$IB_PLAN_PUBKEY" "$b64" < "$IB_WORK/plan.signed" > /dev/null 2>&1
+		case $? in
+		0) echo "ok:ibverify" ;;
+		1) echo "bad:the signature does not match this plan and this installer's key" ;;
+		*) echo "bad:malformed signature" ;;
+		esac
+		return 0
+	fi
 	printf '%s\n' "$b64" | ib_nohome openssl base64 -d -A > "$IB_WORK/plan.sig" 2>/dev/null
 	[ "$(wc -c < "$IB_WORK/plan.sig" | tr -d ' ')" = 64 ] || { echo "bad:malformed signature"; return 0; }
 	if ib_nohome openssl pkeyutl -verify -pubin -inkey "$IB_WORK/plan-key.pem" -rawin -in "$IB_WORK/plan.signed" \
 		-sigfile "$IB_WORK/plan.sig" > /dev/null 2>&1; then
-		echo ok
+		echo "ok:openssl"
 	else
 		echo "bad:the signature does not match this plan and this installer's key"
 	fi
@@ -433,8 +481,8 @@ ib_check_plan() {
 	ib_log "Plan signature: $sig (key ${IB_PLAN_KEYID:-none})"
 	why=${sig#*:}
 	case $sig in
-	ok)
-		IB_PLAN_FROM="$IB_PLAN_FROM; signed by the Installer Builder key $IB_PLAN_KEYID"
+	ok:*)
+		IB_PLAN_FROM="$IB_PLAN_FROM; signed by the Installer Builder key $IB_PLAN_KEYID (checked with ${sig#ok:})"
 		return 0
 		;;
 	esac
@@ -857,6 +905,227 @@ ib_apply_env() { # with_install_extras(0/1)
 	return 0
 }
 
+# ---------------------------------------------------------------- prerequisites
+
+# System-wide prerequisites (format.md "Prerequisites"): `need` entries in
+# the chosen block. Their checks only look (ldconfig's cache, the
+# library folders, PATH, a file), so they run before the transparency
+# screen; anything is installed only after the user agreed.
+
+# Is shared library $1 (a soname) available for this machine's arch?
+ib_have_lib() {
+	lc=
+	for c in ldconfig /sbin/ldconfig /usr/sbin/ldconfig; do
+		if command -v "$c" > /dev/null 2>&1; then lc=$c; break; fi
+	done
+	if [ -n "$lc" ] && "$lc" -p > "$IB_WORK/ldcache" 2> /dev/null && [ -s "$IB_WORK/ldcache" ]; then
+		awk -v so="$1" -v arch="$IB_ARCH" '
+			$1 == so {
+				ok = 1
+				if (arch == "amd64" && $0 !~ /x86-64/) ok = 0
+				if (arch == "arm64" && $0 !~ /AArch64/) ok = 0
+				if (arch == "x86" && ($0 ~ /x86-64/ || $0 ~ /AArch64/)) ok = 0
+				if (ok) { found = 1; exit }
+			}
+			END { exit !found }' "$IB_WORK/ldcache"
+		return $?
+	fi
+	# No ldconfig cache (musl): the usual library folders.
+	case $IB_ARCH in
+	amd64) tr=x86_64-linux-gnu ;;
+	arm64) tr=aarch64-linux-gnu ;;
+	*) tr=i386-linux-gnu ;;
+	esac
+	for d in /lib /usr/lib /lib64 /usr/lib64 /usr/local/lib "/lib/$tr" "/usr/lib/$tr"; do
+		[ -e "$d/$1" ] && return 0
+	done
+	return 1
+}
+
+# Does need $1 pass any of its checks? Unknown check kinds never pass.
+ib_need_present() {
+	ib_sel ncheck "$1" > "$IB_WORK/checks.$1"
+	while IFS="$tab" read -r k a b; do
+		case $k in
+		lib) [ "$IB_OS" = linux ] && ib_have_lib "$a" && return 0 ;;
+		cmd) command -v "$a" > /dev/null 2>&1 && return 0 ;;
+		file) [ -e "$a" ] && return 0 ;;
+		esac
+	done < "$IB_WORK/checks.$1"
+	return 1
+}
+
+# The distribution's package manager, first found.
+ib_pkg_mgr() {
+	for m in apt-get dnf yum zypper apk pacman; do
+		for d in '' /usr/bin/ /bin/ /usr/sbin/ /sbin/; do
+			if [ -z "$d" ]; then command -v $m > /dev/null 2>&1 && { echo $m; return 0; }
+			elif [ -x "$d$m" ]; then echo $m; return 0; fi
+		done
+	done
+	return 1
+}
+
+# Commands installing packages $2 with manager $1: what the engine runs as
+# root (IB_PKG_RUN), and what the user is told to run (IB_PKG_SAY).
+ib_pkg_cmds() {
+	case $1 in
+	apt-get)
+		IB_PKG_RUN="DEBIAN_FRONTEND=noninteractive apt-get install -y $2 || { apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y $2; }"
+		IB_PKG_SAY="sudo apt-get update && sudo apt-get install -y $2"
+		;;
+	dnf | yum) IB_PKG_RUN="$1 install -y $2" IB_PKG_SAY="sudo $1 install -y $2" ;;
+	zypper) IB_PKG_RUN="zypper --non-interactive install $2" IB_PKG_SAY="sudo zypper install $2" ;;
+	apk) IB_PKG_RUN="apk add $2" IB_PKG_SAY="sudo apk add $2" ;;
+	pacman) IB_PKG_RUN="pacman -S --noconfirm --needed $2" IB_PKG_SAY="sudo pacman -S --needed $2" ;;
+	esac
+}
+
+# Run command $1 as root. Returns its exit code, or 99 when there is no
+# way to become root without asking and asking isn't allowed (--yes), or
+# nothing can ask (no terminal, no desktop).
+ib_as_root() {
+	if [ "$(id -u)" = 0 ]; then
+		sh -c "$1" < /dev/null >> "$IB_LOG" 2>&1
+		return $?
+	fi
+	if ib_have sudo && sudo -n true > /dev/null 2>&1; then
+		sudo -n sh -c "$1" < /dev/null >> "$IB_LOG" 2>&1
+		return $?
+	fi
+	[ "$opt_yes" = 1 ] && return 99
+	if [ "$ib_ui" = tty ] && ib_have sudo; then
+		ib_say "  sudo may ask for your password."
+		sudo sh -c "$1" < /dev/null >> "$IB_LOG" 2>&1
+		return $?
+	fi
+	if [ "$IB_OS" = linux ] && [ -n "$DISPLAY$WAYLAND_DISPLAY" ] && ib_have pkexec; then
+		pkexec /bin/sh -c "$1" < /dev/null >> "$IB_LOG" 2>&1
+		return $?
+	fi
+	return 99
+}
+
+# Check every need. Sets ib_need_n, ib_need_missing (indexes), ib_need_manual
+# (indexes with no way to install them here), ib_need_pkgs, ib_pm.
+ib_needs_eval() {
+	ib_need_n=$(ib_sel need | wc -l | tr -d ' ')
+	ib_need_missing= ib_need_manual= ib_need_pkgs= ib_pm=
+	[ "$ib_need_n" -gt 0 ] || return 0
+	[ "$IB_OS" = linux ] && ib_pm=$(ib_pkg_mgr)
+	i=1
+	while [ "$i" -le "$ib_need_n" ]; do
+		if ib_need_present "$i"; then
+			ib_log "Prerequisite $i ($(ib_sel need "$i" | cut -f1)): present"
+		else
+			ib_log "Prerequisite $i ($(ib_sel need "$i" | cut -f1)): missing"
+			ib_need_missing="$ib_need_missing $i"
+			pk=
+			[ -n "$ib_pm" ] && pk=$(ib_sel npkg "$i" | awk -F'\t' -v m="$ib_pm" '$1 == m { print $2; exit }')
+			case $pk in *[!A-Za-z0-9.+_:\ -]*) ib_fail "The plan names a package with characters that don't belong in one: $pk" ;; esac
+			if [ -n "$pk" ]; then
+				ib_need_pkgs="${ib_need_pkgs:+$ib_need_pkgs }$pk"
+			else
+				ib_need_manual="$ib_need_manual $i"
+			fi
+		fi
+		i=$((i + 1))
+	done
+	[ -n "$ib_need_pkgs" ] && ib_pkg_cmds "$ib_pm" "$ib_need_pkgs"
+	return 0
+}
+
+# The transparency screen's part.
+ib_needs_summary() {
+	[ "$ib_need_n" -gt 0 ] || return 0
+	printf '\nSYSTEM-WIDE PREREQUISITES (checked on this machine; installed for every user, not removed by the uninstaller)\n'
+	i=1
+	while [ "$i" -le "$ib_need_n" ]; do
+		lbl=$(ib_sel need "$i" | cut -f2)
+		case " $ib_need_missing " in
+		*" $i "*)
+			case " $ib_need_manual " in
+			*" $i "*)
+				printf '  %s: MISSING, and this installer can'\''t install it here\n' "$lbl"
+				h=$(ib_sel1 nhow "$i")
+				[ -n "$h" ] && printf '    what to do: %s\n' "$h"
+				[ -z "$h" ] && [ "$IB_OS" = linux ] && printf '    no package is known for %s\n' "${ib_pm:-this distribution (no apt-get, dnf, yum, zypper, apk or pacman found)}"
+				;;
+			*) printf '  %s: MISSING, will be installed\n' "$lbl" ;;
+			esac
+			;;
+		*) printf '  %s: present\n' "$lbl" ;;
+		esac
+		w=$(ib_sel1 nwhy "$i")
+		[ -n "$w" ] && printf '    why: %s\n' "$w"
+		i=$((i + 1))
+	done
+	if [ -n "$ib_need_pkgs" ]; then
+		printf '  Packages: %s (with %s)\n' "$ib_need_pkgs" "$ib_pm"
+		printf '  Runs as root: %s\n' "$IB_PKG_RUN"
+		if [ "$(id -u)" = 0 ]; then printf '  (this installer is running as root)\n'
+		else printf '  NEEDS ROOT for this step only (sudo, or pkexec on a desktop); the app itself installs for you\n'; fi
+	fi
+	return 0
+}
+
+# After the user agreed: install what is missing, then check again.
+ib_needs_install() {
+	[ -n "$ib_need_missing" ] || return 0
+	for i in $ib_need_manual; do
+		lbl=$(ib_sel need "$i" | cut -f2)
+		h=$(ib_sel1 nhow "$i")
+		st=$(ib_sel1 nstart "$i")
+		# Start the system's own installer (xcode-select --install) for the
+		# user to finish, but never with --yes: it opens a dialog.
+		if [ -n "$st" ] && [ "$opt_yes" != 1 ] && [ "$ib_ui" != none ]; then
+			ib_say "Starting: $st"
+			sh -c "$st" < /dev/null >> "$IB_LOG" 2>&1
+		fi
+		[ -n "$h" ] || h="Install it, then run this installer again."
+		ib_fail_rc=2; ib_fail "$lbl is needed first and this installer can't install it here. $h"
+	done
+	if [ -n "$ib_need_pkgs" ]; then
+		ib_say "Installing system packages ($ib_pm): $ib_need_pkgs"
+		ib_log "  as root: $IB_PKG_RUN"
+		ib_as_root "$IB_PKG_RUN"
+		rc=$?
+		if [ $rc = 99 ]; then
+			ib_fail_rc=2; ib_fail "This app needs system packages that aren't installed ($ib_need_pkgs), and installing them needs root, which this installer can't ask for here$([ "$opt_yes" = 1 ] && printf ' (--yes)'). Run this, then run the installer again:$nl  $IB_PKG_SAY"
+		fi
+		[ $rc = 0 ] || ib_fail "Installing $ib_need_pkgs failed ($ib_pm exit code $rc). To try yourself: $IB_PKG_SAY"
+	fi
+	for i in $ib_need_missing; do
+		ib_need_present "$i" || ib_fail "$(ib_sel need "$i" | cut -f2) is still missing after installing $ib_need_pkgs."
+	done
+	ib_say "Prerequisites installed."
+	return 0
+}
+
+# The record's launcher icon (format.md section 2, `icon`): the packed PNG,
+# copied into the app folder for the .desktop Icon= line. Only from the
+# pack; without it the generic icon stays.
+ib_install_icon() {
+	ib_icon=
+	[ "$IB_OS" = linux ] && [ -n "$IB_REC" ] || return 0
+	ic=$(ib_get "$IB_REC" icon)
+	[ -n "$ic" ] || return 0
+	case $ic in *[!0-9a-f]*) ib_log "Ignoring the record's icon: not a sha256"; return 0 ;; esac
+	[ ${#ic} = 64 ] || { ib_log "Ignoring the record's icon: not a sha256"; return 0; }
+	if ! ib_obtain "$ic" "$IB_APP_DIR/icon.png" /dev/null icon; then
+		ib_log "The record's icon $ic is not packed in this installer; using the generic icon"
+		rm -f "$IB_APP_DIR/icon.png"
+		return 0
+	fi
+	if [ "$(head -c 8 "$IB_APP_DIR/icon.png" | od -An -tx1 | tr -d ' \n')" != 89504e470d0a1a0a ]; then
+		ib_log "The packed icon is not a PNG; using the generic icon"
+		rm -f "$IB_APP_DIR/icon.png"
+		return 0
+	fi
+	ib_icon=$IB_APP_DIR/icon.png
+	ib_log "Icon: $ib_icon"
+}
+
 # ---------------------------------------------------------------- launcher, menus
 
 ib_write_launcher() {
@@ -923,7 +1192,7 @@ Comment=Installed by Installer Builder
 Exec=$(ib_desktop_exec_arg "$IB_APP_DIR/launch.sh")
 Path=$IB_APP_DIR
 Terminal=$term
-Icon=application-x-executable
+Icon=${ib_icon:-application-x-executable}
 Categories=Utility;
 EOF
 		ib_add_shortcut "$f"
@@ -1296,6 +1565,7 @@ ib_install_main() {
 	IB_RUNTIME=
 	[ -n "$exe" ] && [ -n "$IB_RUNTIME_DIR" ] && IB_RUNTIME=$IB_RUNTIME_DIR/$exe
 	export IB_RUNTIME
+	ib_needs_eval
 
 	# ---- transparency
 	sum=$IB_WORK/summary.txt
@@ -1350,9 +1620,13 @@ ib_install_main() {
 			fi
 		fi
 		[ "$IB_DESKTOP" = 1 ] && printf '  A desktop shortcut\n'
+		ic=
+		[ -n "$IB_REC" ] && [ "$IB_OS" = linux ] && ic=$(ib_get "$IB_REC" icon)
+		[ -n "$ic" ] && printf '  Menu icon: the PNG packed in this installer (sha256 %s), copied to %s/icon.png\n' "$ic" "$IB_APP_DIR"
 		printf '  Uninstaller: %s/uninstall.sh\n' "$IB_APP_DIR"
 		printf '  PATH: not changed\n'
 		ib_sel note | sed 's/^/\nNOTE: /'
+		ib_needs_summary
 		if [ $need_root = 1 ]; then
 			printf '\nNEEDS ADMINISTRATOR RIGHTS'
 			[ $IB_SYSTEM = 1 ] && printf ' (installing for all users)'
@@ -1373,6 +1647,8 @@ ib_install_main() {
 		printf 'Signed by: %s\n' "$ib_signed_by"
 		printf 'Settings from: %s\n' "$IB_ORIGIN"
 		[ $need_root = 1 ] && printf 'Needs administrator rights.\n'
+		[ -n "$ib_need_pkgs" ] && printf 'Installs system packages as root first: %s\n' "$ib_need_pkgs"
+		[ -n "$ib_need_manual" ] && printf 'Something it needs is missing and must be installed first (see Details).\n'
 		printf '\nChoose Details for URLs, checksums and commands.'
 	} > "$IB_WORK/short.txt"
 	ib_confirm "Installer Builder" "$sum" "Install $IB_NAME_DISP?" || { ib_say "Cancelled; nothing was installed."; [ "$ib_log_is_temp" = 1 ] && rm -f "$IB_LOG"; exit 1; }
@@ -1386,6 +1662,7 @@ ib_install_main() {
 	fi
 
 	# ---- install
+	ib_needs_install
 	ib_progress_start "Installing $IB_NAME_DISP…"
 	IB_CREATED=$IB_WORK/created
 	: > "$IB_CREATED"
@@ -1481,6 +1758,7 @@ ib_install_main() {
 	head -c "$IB_ENGINE_LEN" "$IB_SELF" > "$IB_APP_DIR/uninstall.sh" && chmod 755 "$IB_APP_DIR/uninstall.sh" ||
 		ib_fail "Could not write the uninstaller."
 
+	ib_install_icon
 	if [ "$IB_OS" = macos ]; then ib_menus_macos; else ib_menus_linux; fi
 
 	{
