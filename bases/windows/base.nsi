@@ -154,6 +154,9 @@ Var UP_file
 Var UP_fmt
 Var UP_dest
 Var UP_strip
+Var SI_src
+Var SI_level
+Var SI_dest
 Var CR_h
 Var CR_off
 Var CR_len
@@ -1566,7 +1569,63 @@ Function SevenZip
   ${EndIf}
 FunctionEnd
 
-; Unpack $UP_file ($UP_fmt) into $UP_dest, dropping $UP_strip (0/1) levels.
+; Move what is $SI_level folder levels below $SI_src into $SI_dest,
+; merging folders that already exist (format.md: strip 2 turns Rust's
+; one-folder-per-component tarball into one tree). Recursive.
+Function StripInto
+  Push $0
+  Push $1
+  Push $2
+  Push $3
+  StrCpy $0 $SI_src
+  StrCpy $1 $SI_level
+  FindFirst $2 $3 "$0\*"
+  si_loop:
+    StrCmp $3 "" si_done
+    StrCmp $3 "." si_next
+    StrCmp $3 ".." si_next
+    ${If} $1 > 0
+      ${If} ${FileExists} "$0\$3\*.*"
+        Push $SI_src
+        Push $SI_level
+        StrCpy $SI_src "$0\$3"
+        IntOp $SI_level $1 - 1
+        Call StripInto
+        Pop $SI_level
+        Pop $SI_src
+      ${EndIf}
+    ${Else}
+      ${If} ${FileExists} "$0\$3\*.*"
+      ${AndIf} ${FileExists} "$SI_dest\$3\*.*"
+        ClearErrors
+        CopyFiles /SILENT "$0\$3\*.*" "$SI_dest\$3"
+        ${If} ${Errors}
+          ${FailWith} "Couldn't merge $3 into $SI_dest."
+        ${EndIf}
+      ${Else}
+        ClearErrors
+        Rename "$0\$3" "$SI_dest\$3"
+        ${If} ${Errors}
+          ClearErrors
+          CopyFiles /SILENT "$0\$3" "$SI_dest"
+          ${If} ${Errors}
+            ${FailWith} "Couldn't move $3 into $SI_dest."
+          ${EndIf}
+        ${EndIf}
+      ${EndIf}
+    ${EndIf}
+  si_next:
+    FindNext $2 $3
+    Goto si_loop
+  si_done:
+  FindClose $2
+  Pop $3
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; Unpack $UP_file ($UP_fmt) into $UP_dest, dropping $UP_strip folder levels.
 Function Unpack
   Push $0
   Push $1
@@ -1574,7 +1633,8 @@ Function Unpack
   Push $3
   Push $4
   CreateDirectory "$UP_dest"
-  ${If} $UP_strip == "1"
+  ${If} $UP_strip != "0"
+  ${AndIf} $UP_strip != ""
     StrCpy $0 "$TmpDir\ux"
     RMDir /r "$0"
   ${Else}
@@ -1637,49 +1697,12 @@ Function Unpack
     ${FailWith} "Unknown archive format '$UP_fmt'."
     Goto up_end
   ${EndIf}
-  ${If} $UP_strip == "1"
-    ; exactly one top-level folder; move its contents up
-    StrCpy $4 ""
-    StrCpy $1 0
-    FindFirst $2 $3 "$0\*"
-    ${Do}
-      ${If} $3 == ""
-        ${Break}
-      ${EndIf}
-      ${If} $3 != "."
-      ${AndIf} $3 != ".."
-        StrCpy $4 $3
-        IntOp $1 $1 + 1
-      ${EndIf}
-      FindNext $2 $3
-    ${Loop}
-    FindClose $2
-    ${If} $1 <> 1
-    ${OrIfNot} ${FileExists} "$0\$4\*.*"
-      ${FailWith} "strip 1: $UP_file doesn't have exactly one top-level folder."
-      Goto up_end
-    ${EndIf}
-    FindFirst $2 $3 "$0\$4\*"
-    ${Do}
-      ${If} $3 == ""
-        ${Break}
-      ${EndIf}
-      ${If} $3 != "."
-      ${AndIf} $3 != ".."
-        ClearErrors
-        Rename "$0\$4\$3" "$UP_dest\$3"
-        ${If} ${Errors}
-          ClearErrors
-          CopyFiles /SILENT "$0\$4\$3" "$UP_dest"
-          ${If} ${Errors}
-            ${FailWith} "Couldn't move $3 into $UP_dest."
-            ${Break}
-          ${EndIf}
-        ${EndIf}
-      ${EndIf}
-      FindNext $2 $3
-    ${Loop}
-    FindClose $2
+  ${If} $UP_strip != "0"
+  ${AndIf} $UP_strip != ""
+    StrCpy $SI_src $0
+    StrCpy $SI_level $UP_strip
+    StrCpy $SI_dest $UP_dest
+    Call StripInto
     RMDir /r "$0"
   ${EndIf}
   up_end:
