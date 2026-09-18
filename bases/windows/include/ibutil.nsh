@@ -154,6 +154,62 @@ Function ${P}IbAppendUtf8
   Pop $0
 FunctionEnd
 
+; The app that owns folder $U_a: the `appid` line of its .ib-owner file
+; (format.md section 5) -> $U_out, or "" if there is none. Uses $PLUGINSDIR.
+; Keeps the caller's parsed line ($K, $F1-$F6, $T_*).
+Function ${P}IbOwnerOf
+  Push $0
+  Push $1
+  Push $K
+  Push $F1
+  Push $F2
+  Push $F3
+  Push $F4
+  Push $F5
+  Push $F6
+  Push $T_line
+  Push $T_rest
+  Push $T_field
+  Push $T_more
+  StrCpy $1 ""
+  ${If} ${FileExists} "$U_a\.ib-owner"
+    StrCpy $U_a "$U_a\.ib-owner"
+    StrCpy $U_b "$PLUGINSDIR\owner.u16"
+    Call ${P}IbUtf8ToUtf16
+    ClearErrors
+    FileOpen $0 "$PLUGINSDIR\owner.u16" r
+    ${IfNot} ${Errors}
+      ${Do}
+        StrCpy $U_a $0
+        Call ${P}IbReadLine
+        ${If} ${Errors}
+          ${Break}
+        ${EndIf}
+        Call ${P}IbParseLine
+        ${If} $K S== "appid"
+          StrCpy $1 $F1
+          ${Break}
+        ${EndIf}
+      ${Loop}
+      FileClose $0
+    ${EndIf}
+  ${EndIf}
+  StrCpy $U_out $1
+  Pop $T_more
+  Pop $T_field
+  Pop $T_rest
+  Pop $T_line
+  Pop $F6
+  Pop $F5
+  Pop $F4
+  Pop $F3
+  Pop $F2
+  Pop $F1
+  Pop $K
+  Pop $1
+  Pop $0
+FunctionEnd
+
 ; Take the text up to the first tab of $T_rest into $T_field; $T_rest keeps
 ; what follows the tab. $T_more = 1 if there was a tab.
 Function ${P}IbSplitTab

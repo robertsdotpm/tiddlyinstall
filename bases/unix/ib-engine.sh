@@ -43,6 +43,11 @@ ib_say() {
 
 ib_have() { command -v "$1" >/dev/null 2>&1; }
 
+# Run a helper (curl, wget, openssl) with HOME in our temp folder, so it
+# can't leave ~/.pki (curl with NSS, CentOS 7), ~/.wget-hsts or ~/.rnd in
+# the user's home, and doesn't read their ~/.curlrc or ~/.wgetrc.
+ib_nohome() { HOME=${IB_HOME_TMP:-$HOME} "$@"; }
+
 # Text for the screen (stdin -> stdout): C0 controls except tab and
 # newline, DEL, C1 controls and the bidi controls (U+200E/F, U+202A-202E,
 # U+2066-2069) become '?', so plan text can't hide or reorder what the
@@ -138,7 +143,7 @@ ib_sha256() { # [file]; reads stdin without an argument
 	elif ib_have shasum; then
 		shasum -a 256 ${1:+"$1"} | awk '{ print tolower($1) }'
 	elif ib_have openssl; then
-		openssl dgst -sha256 ${1:+"$1"} | awk '{ print tolower($NF) }'
+		ib_nohome openssl dgst -sha256 ${1:+"$1"} | awk '{ print tolower($NF) }'
 	else
 		ib_fail "No SHA-256 tool (sha256sum, shasum or openssl) on this machine."
 	fi
@@ -165,10 +170,10 @@ ib_download() { # url out
 	ib_log "  GET $1"
 	ib_http=
 	if ib_have curl; then
-		ib_http=$(curl -fL -sS --connect-timeout 20 --speed-limit 1024 --speed-time 60 --retry 2 \
+		ib_http=$(ib_nohome curl -fL -sS --connect-timeout 20 --speed-limit 1024 --speed-time 60 --retry 2 \
 			-w '%{http_code}' -o "$2" "$1" 2>> "$IB_LOG")
 	elif ib_have wget; then
-		wget -q -T 60 -t 2 -O "$2" "$1" >> "$IB_LOG" 2>&1
+		ib_nohome wget -q -T 60 -t 2 -O "$2" "$1" >> "$IB_LOG" 2>&1
 	else
 		ib_fail "No downloader (curl or wget) on this machine."
 	fi
@@ -373,16 +378,16 @@ ib_ed25519_ready() {
 	mkdir -p "$t"
 	printf -- '-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAPUAXw+hDiVqStwqnTRt+vJyYLM8uxJaMwM1V8Sr0Zgw=\n-----END PUBLIC KEY-----\n' > "$t/pub.pem"
 	printf '%s\n' 'kqAJqfDUyrhyDoILX2QlQKKye1QWUD+Ps3YiI+vbadoIWsHkPhWZbkWPNhPQ8R2MOHsurrQwKu6wDSkWErsMAA==' |
-		openssl base64 -d -A > "$t/sig" 2>/dev/null
+		ib_nohome openssl base64 -d -A > "$t/sig" 2>/dev/null
 	printf 'r' > "$t/good"
 	printf 's' > "$t/bad"
-	if openssl pkeyutl -verify -pubin -inkey "$t/pub.pem" -rawin -in "$t/good" -sigfile "$t/sig" > /dev/null 2>&1 &&
-		! openssl pkeyutl -verify -pubin -inkey "$t/pub.pem" -rawin -in "$t/bad" -sigfile "$t/sig" > /dev/null 2>&1; then
+	if ib_nohome openssl pkeyutl -verify -pubin -inkey "$t/pub.pem" -rawin -in "$t/good" -sigfile "$t/sig" > /dev/null 2>&1 &&
+		! ib_nohome openssl pkeyutl -verify -pubin -inkey "$t/pub.pem" -rawin -in "$t/bad" -sigfile "$t/sig" > /dev/null 2>&1; then
 		printf -- '-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA%s\n-----END PUBLIC KEY-----\n' "$IB_PLAN_PUBKEY" > "$IB_WORK/plan-key.pem"
 		ib_ed_ok=0
 		return 0
 	fi
-	ib_ed_why="$(openssl version 2>/dev/null | sed -n 1p) can't check Ed25519 signatures (OpenSSL 1.1.1 or later can)"
+	ib_ed_why="$(ib_nohome openssl version 2>/dev/null | sed -n 1p) can't check Ed25519 signatures (OpenSSL 1.1.1 or later can)"
 	return 1
 }
 
@@ -404,9 +409,9 @@ ib_plan_sig() {
 	ib_ed25519_ready || { echo "cannot:$ib_ed_why"; return 0; }
 	head -c "$n" "$f" > "$IB_WORK/plan.signed"
 	[ "$(head -c 8 "$IB_WORK/plan.signed")" = "ib-plan$tab" ] || { echo "bad:the signed bytes are not an ib-plan"; return 0; }
-	printf '%s\n' "$b64" | openssl base64 -d -A > "$IB_WORK/plan.sig" 2>/dev/null
+	printf '%s\n' "$b64" | ib_nohome openssl base64 -d -A > "$IB_WORK/plan.sig" 2>/dev/null
 	[ "$(wc -c < "$IB_WORK/plan.sig" | tr -d ' ')" = 64 ] || { echo "bad:malformed signature"; return 0; }
-	if openssl pkeyutl -verify -pubin -inkey "$IB_WORK/plan-key.pem" -rawin -in "$IB_WORK/plan.signed" \
+	if ib_nohome openssl pkeyutl -verify -pubin -inkey "$IB_WORK/plan-key.pem" -rawin -in "$IB_WORK/plan.signed" \
 		-sigfile "$IB_WORK/plan.sig" > /dev/null 2>&1; then
 		echo ok
 	else
@@ -1523,6 +1528,8 @@ ib_main() {
 	ib_detect_os
 	ib_pick_ui
 	IB_WORK=$(mktemp -d "${TMPDIR:-/tmp}/ib.XXXXXX") || { echo "mktemp failed" >&2; exit 1; }
+	IB_HOME_TMP=$IB_WORK/home
+	mkdir "$IB_HOME_TMP" || { echo "mktemp failed" >&2; exit 1; }
 	trap ib_cleanup EXIT
 	trap 'ib_fail "Interrupted."' INT TERM HUP
 	if [ -n "$opt_log" ]; then

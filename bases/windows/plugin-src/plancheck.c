@@ -1,5 +1,5 @@
 /*
- * Checks a signed ib-plan (docs/format.md section 3.2). Portable C, no
+ * Checks a signed ib-plan (docs/format.md "Plan signature"). Portable C, no
  * libc: used by the ibsig NSIS plugin and by the host test.
  *
  * The last line of a signed plan is

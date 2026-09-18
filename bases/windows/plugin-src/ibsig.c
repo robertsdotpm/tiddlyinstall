@@ -1,10 +1,12 @@
 /*
  * ibsig: an NSIS plugin (x86-unicode) that checks a plan's Ed25519
- * signature (docs/format.md section 3.2). Windows XP SP3 and later: it
+ * signature (docs/format.md "Plan signature"). Windows XP SP3 and later: it
  * uses only kernel32 functions XP has, and no C runtime.
  *
  *   ibsig::check "<plan file>" "<public key, base64 of 32 bytes>"
  *   Pop $0    ; "ok", "unsigned: <why>", "bad: <why>" or "error: <why>"
+ *
+ *   ibsig::cleanstr / ibsig::cleanfile: below (display hygiene)
  */
 #include <windows.h>
 #include "plancheck.h"
@@ -118,6 +120,97 @@ void __declspec(dllexport) __cdecl check(HWND parent, int size, WCHAR *vars, sta
   r = ib_plan_check(buf, n, pk, &why);
   GlobalFree(buf);
   result(top, size, r == IB_PLAN_OK ? "ok" : r == IB_PLAN_UNSIGNED ? "unsigned" : "bad", r == IB_PLAN_OK ? "" : why);
+}
+
+/*
+ * Characters that must not reach the transparency screen or a dialog:
+ * C0 controls other than tab, CR and LF, DEL, C1 controls, and the bidi
+ * controls that reorder text (U+200E/F, U+202A-202E, U+2066-2069).
+ */
+static int unsafe(WCHAR c)
+{
+  if (c < 0x20) return c != '\t' && c != '\r' && c != '\n';
+  if (c == 0x7F || (c >= 0x80 && c <= 0x9F)) return 1;
+  if (c == 0x200E || c == 0x200F) return 1;
+  if (c >= 0x202A && c <= 0x202E) return 1;
+  if (c >= 0x2066 && c <= 0x2069) return 1;
+  return 0;
+}
+
+/*
+ *   ibsig::cleanstr "<text>"   Pop $0: the text with unsafe characters as '?'
+ *   (tab, CR and LF become spaces too: the result is one line)
+ */
+void __declspec(dllexport) __cdecl cleanstr(HWND parent, int size, WCHAR *vars, stack_t **top, void *extra)
+{
+  WCHAR *s;
+  int i;
+  (void)parent; (void)vars; (void)extra;
+  s = (WCHAR *)GlobalAlloc(GPTR, (size_t)size * sizeof(WCHAR));
+  if (!s) return;
+  if (pop(top, s, size)) s[0] = 0;
+  for (i = 0; s[i]; ++i) {
+    if (s[i] == '\t' || s[i] == '\r' || s[i] == '\n') s[i] = ' ';
+    else if (unsafe(s[i])) s[i] = '?';
+  }
+  push(top, s, size);
+  GlobalFree(s);
+}
+
+/*
+ *   ibsig::cleanfile "<UTF-16LE file>"   rewrites it in place, unsafe
+ *   characters as '?'. Pop $0: "ok" or "error: <why>".
+ */
+void __declspec(dllexport) __cdecl cleanfile(HWND parent, int size, WCHAR *vars, stack_t **top, void *extra)
+{
+  WCHAR *path, *w;
+  HANDLE h;
+  DWORD n, got = 0, put = 0, i;
+  unsigned char *buf;
+  (void)parent; (void)vars; (void)extra;
+  path = (WCHAR *)GlobalAlloc(GPTR, (size_t)size * sizeof(WCHAR));
+  if (!path) return;
+  if (pop(top, path, size)) {
+    GlobalFree(path);
+    result(top, size, "error", "ibsig::cleanfile needs a file");
+    return;
+  }
+  h = CreateFileW(path, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+  GlobalFree(path);
+  if (h == INVALID_HANDLE_VALUE) {
+    result(top, size, "error", "can't open the file");
+    return;
+  }
+  n = GetFileSize(h, NULL);
+  if (n == INVALID_FILE_SIZE || n > 4 * MAX_PLAN) {
+    CloseHandle(h);
+    result(top, size, "error", "the file is too large");
+    return;
+  }
+  buf = (unsigned char *)GlobalAlloc(GPTR, (SIZE_T)n + 2);
+  if (!buf) {
+    CloseHandle(h);
+    result(top, size, "error", "out of memory");
+    return;
+  }
+  if (n && (!ReadFile(h, buf, n, &got, NULL) || got != n)) {
+    CloseHandle(h);
+    GlobalFree(buf);
+    result(top, size, "error", "can't read the file");
+    return;
+  }
+  w = (WCHAR *)buf;
+  for (i = 0; i < n / 2; ++i)
+    if (unsafe(w[i])) w[i] = '?';
+  if (SetFilePointer(h, 0, NULL, FILE_BEGIN) != 0 || (n && (!WriteFile(h, buf, n, &put, NULL) || put != n))) {
+    CloseHandle(h);
+    GlobalFree(buf);
+    result(top, size, "error", "can't write the file");
+    return;
+  }
+  CloseHandle(h);
+  GlobalFree(buf);
+  result(top, size, "ok", "");
 }
 
 BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved)

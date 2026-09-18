@@ -26,6 +26,14 @@ XPStyle on
 !ifndef IB_OUTFILE
   !define IB_OUTFILE "out\base.exe"
 !endif
+; The plan signing key (docs/format.md "Plan signature"), base64 of the raw 32-byte
+; Ed25519 public key, and its short id. build.sh reads them from a file.
+!ifndef IB_PLAN_PUBKEY
+  !error "IB_PLAN_PUBKEY is not defined: build with build.sh"
+!endif
+!ifndef IB_PLAN_KEYID
+  !define IB_PLAN_KEYID "?"
+!endif
 
 !addplugindir /x86-unicode "plugins\x86-unicode"
 !addincludedir "include"
@@ -73,6 +81,13 @@ Var Backend
 Var OptBackend
 Var MetaSrc          ; where the record came from, for the transparency page
 Var PlanSrc
+Var PlanKind         ; fetched, cmdline or embedded
+Var PlanSig          ; ibsig::check's answer
+Var PlanWarn         ; a warning for the review page
+Var PlanRec          ; the plan header's `record`
+Var UnsignedOK       ; 1: /unsigned-plan
+Var HasBlock         ; 1: an appended metadata block
+Var ModeA            ; 1: signed base with no block (design.md 3): file name + built-in backend only
 Var SignedBy
 Var PackOff          ; offset of the pack in $EXEPATH (0 = none)
 Var PackLen
@@ -489,6 +504,86 @@ Function Subst
   Pop $0
 FunctionEnd
 
+; Command-line option $U_a ("/name=" or a "/flag") -> $U_out, error flag
+; set if it isn't there. Unlike GetOptions, which ends a value at the next
+; "/" (so /backend=http://host lost everything after "http:"), a value
+; ends at the next space, or at the closing quote if it starts with one.
+Function IbGetOpt
+  Push $0
+  Push $1
+  Push $2
+  Push $3
+  Push $4
+  Push $5
+  StrCpy $U_out ""
+  StrCpy $3 " $Params"
+  StrLen $1 $3
+  StrLen $2 $U_a
+  StrCpy $0 0
+  StrCpy $5 0                           ; found
+  ${Do}
+    ${If} $0 >= $1
+      ${Break}
+    ${EndIf}
+    StrCpy $4 $3 1 $0
+    ${If} $4 == " "
+      IntOp $4 $0 + 1
+      StrCpy $4 $3 $2 $4
+      ${If} $4 == $U_a
+        IntOp $0 $0 + 1
+        IntOp $0 $0 + $2                ; value start
+        StrCpy $4 $U_a 1 -1
+        ${If} $4 != "="
+          ; a flag: must end here
+          StrCpy $4 $3 1 $0
+          ${If} $4 != " "
+          ${AndIf} $4 != ""
+            ${Continue}
+          ${EndIf}
+          StrCpy $5 1
+          ${Break}
+        ${EndIf}
+        StrCpy $5 1
+        StrCpy $4 $3 1 $0
+        ${If} $4 == '"'
+          IntOp $0 $0 + 1
+          StrCpy $4 '"'
+        ${Else}
+          StrCpy $4 " "
+        ${EndIf}
+        ${Do}
+          StrCpy $2 $3 1 $0
+          ${If} $2 == ""
+          ${OrIf} $2 == $4
+            ${Break}
+          ${EndIf}
+          StrCpy $U_out "$U_out$2"
+          IntOp $0 $0 + 1
+        ${Loop}
+        ${Break}
+      ${EndIf}
+    ${EndIf}
+    IntOp $0 $0 + 1
+  ${Loop}
+  ${If} $5 = 1
+    ClearErrors
+  ${Else}
+    SetErrors
+  ${EndIf}
+  Pop $5
+  Pop $4
+  Pop $3
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+!macro IbGetOpt OPT OUT
+  StrCpy $U_a "${OPT}"
+  Call IbGetOpt
+  StrCpy ${OUT} $U_out
+!macroend
+!define IbGetOpt "!insertmacro IbGetOpt"
+
 ; Download $U_a to file $U_b with INetC. $U_out = "OK" or an error.
 Function Download
   Delete "$U_b"
@@ -622,7 +717,8 @@ Function FindBlock
     StrCpy $1 $3
     IntOp $2 $2 + 1
   ${Loop}
-  ; footer
+  ; footer (from here on $U_out is "found?"; ReadU32 used it above)
+  StrCpy $U_out 0
   ${If} $1 < 64
     FileClose $0
     Goto fb_end
@@ -875,6 +971,7 @@ Function ReadRecord
     Call IbParseLine
     ${If} $K S== "backend"
     ${AndIf} $OptBackend == ""
+    ${AndIf} $ModeA = 0
       StrCpy $Backend $F1
     ${ElseIf} $K S== "source"
       StrCpy $RecSource "$F1 $F2"
@@ -953,8 +1050,8 @@ Function ReadPlan
     ${If} $1 = 0
       ; header
       ${If} $K S== "record"
-        ${If} $RecHash == ""
-          StrCpy $RecHash $F1
+        ${If} $PlanRec == ""
+          StrCpy $PlanRec $F1
         ${EndIf}
       ${ElseIf} $K S== "name"
         StrCpy $AppName $F1
@@ -1099,33 +1196,12 @@ Function FindMetadata
   StrCpy $RecHash ""
   StrCpy $PackOff 0
   StrCpy $PackLen 0
-  ; 1. command line
-  ClearErrors
-  ${GetOptions} $Params "/record=" $0
-  ${IfNot} ${Errors}
-    StrCpy $RecFile $0
-    StrCpy $MetaSrc "the command line (/record=$0)"
-  ${EndIf}
-  ClearErrors
-  ${GetOptions} $Params "/plan=" $0
-  ${IfNot} ${Errors}
-    StrCpy $PlanFile $0
-    StrCpy $PlanSrc "the command line (/plan=$0)"
-    ${If} $RecFile == ""
-      StrCpy $MetaSrc "the command line (/plan=$0)"
-    ${EndIf}
-  ${EndIf}
-  ${If} $RecFile != ""
-    ${IfNot} ${FileExists} "$RecFile"
-      ${FailWith} "Can't read $RecFile."
-    ${EndIf}
-    Return
-  ${EndIf}
-  ${If} $PlanFile != ""
-    Return
-  ${EndIf}
-  ; 2. appended block (also finds a signature)
+  StrCpy $PlanKind ""
+  ; The appended block first, only to learn which mode this file is in:
+  ; a certificate table with no block before it is a signed base (mode A),
+  ; which only installs what its file name names (design.md 3 and 7).
   Call FindBlock
+  StrCpy $HasBlock $U_out
   ${If} $SignedBy == "signed"
     Call GetSigner
     ${If} $SignedBy == "signed"
@@ -1133,22 +1209,88 @@ Function FindMetadata
       StrCpy $SignedBy "an Authenticode signature whose signer couldn't be read"
     ${EndIf}
   ${EndIf}
-  ${If} $U_out = 1
+  StrCpy $ModeA 0
+  ${If} $SignedBy != ""
+  ${AndIf} $HasBlock = 0
+    StrCpy $ModeA 1
+    ${Log} "Signed base with no metadata block: mode A (file name and the built-in backend only)"
+  ${EndIf}
+  ; 1. command line (not in mode A)
+  StrCpy $1 ""
+  ClearErrors
+  ${IbGetOpt} "/record=" $0
+  ${IfNot} ${Errors}
+    StrCpy $1 "/record="
+  ${EndIf}
+  ClearErrors
+  ${IbGetOpt} "/plan=" $2
+  ${IfNot} ${Errors}
+    StrCpy $1 "$1 /plan="
+  ${EndIf}
+  ${If} $UnsignedOK = 1
+    StrCpy $1 "$1 /unsigned-plan"
+  ${EndIf}
+  ${If} $OptBackend != ""
+  ${AndIf} $ModeA = 1
+    StrCpy $1 "$1 /backend="
+  ${EndIf}
+  ${If} $1 != ""
+  ${AndIf} $ModeA = 1
+    ${FailWith} "This installer is signed by $SignedBy and only installs the app its file name names, from ${IB_BACKEND}. It doesn't accept $1. For your own settings use an unsigned base or one you sign yourself (modes B and C)."
+    Return
+  ${EndIf}
+  ${If} $1 == ""
+  ${OrIf} $1 == " /unsigned-plan"
+    Goto fm_block
+  ${EndIf}
+  ; the command line replaces the block entirely, pack included
+  StrCpy $RecFile ""
+  StrCpy $PlanFile ""
+  StrCpy $PackOff 0
+  StrCpy $PackLen 0
+  ClearErrors
+  ${IbGetOpt} "/record=" $0
+  ${IfNot} ${Errors}
+    StrCpy $RecFile $0
+    StrCpy $MetaSrc "the command line (/record=$0)"
+    ${IfNot} ${FileExists} "$RecFile"
+      ${FailWith} "Can't read $RecFile."
+    ${EndIf}
+  ${EndIf}
+  ClearErrors
+  ${IbGetOpt} "/plan=" $0
+  ${IfNot} ${Errors}
+    StrCpy $PlanFile $0
+    StrCpy $PlanKind "cmdline"
+    StrCpy $PlanSrc "the command line (/plan=$0)"
+    ${If} $RecFile == ""
+      StrCpy $MetaSrc "the command line (/plan=$0)"
+    ${EndIf}
+  ${EndIf}
+  Return
+  fm_block:
+  ; 2. appended block (FindBlock extracted it)
+  ${If} $HasBlock = 1
     ${If} $SignedBy != ""
       StrCpy $MetaSrc "the block appended to this installer, before its signature"
     ${Else}
       StrCpy $MetaSrc "the block appended to this installer (unsigned, editable)"
     ${EndIf}
     ${If} $PlanFile != ""
+      StrCpy $PlanKind "embedded"
       StrCpy $PlanSrc "embedded in this installer"
     ${EndIf}
     Return
   ${EndIf}
-  ; 3. install.txt next to the installer
+  ; 3. install.txt next to the installer (not in mode A)
   ${If} ${FileExists} "$EXEDIR\install.txt"
-    StrCpy $RecFile "$EXEDIR\install.txt"
-    StrCpy $MetaSrc "install.txt next to the installer"
-    Return
+    ${If} $ModeA = 1
+      ${Log} "Ignoring $EXEDIR\install.txt: a signed installer only uses its file name."
+    ${Else}
+      StrCpy $RecFile "$EXEDIR\install.txt"
+      StrCpy $MetaSrc "install.txt next to the installer"
+      Return
+    ${EndIf}
   ${EndIf}
   ; 4. record hash in the file name (mode A)
   Call ParseFileName
@@ -1158,7 +1300,8 @@ Function FindMetadata
     ${Log} "Fetching the record: $U_a"
     Call DownloadQuiet
     ${If} $U_out != "OK"
-      ${FailWith} "Couldn't fetch this installer's settings from $Backend/api/records/$RecHash ($U_out). Check the internet connection and try again."
+      Call TakenDownHint
+      ${FailWith} "Couldn't fetch this installer's settings from $Backend/api/records/$RecHash ($U_out).$U_c"
       Return
     ${EndIf}
     StrCpy $U_a "$PLUGINSDIR\record.txt"
@@ -1183,6 +1326,7 @@ Function FindMetadata
       Return
     ${EndIf}
     StrCpy $PlanFile "$PLUGINSDIR\plan.txt"
+    StrCpy $PlanKind "fetched"
     StrCpy $MetaSrc "the file name (runtime $TokRuntime, project $TokProject; no record hash)"
     StrCpy $PlanSrc "fetched from $U_a"
     Return
@@ -1190,10 +1334,57 @@ Function FindMetadata
   ${FailWith} "This installer has no settings: no appended block, no install.txt and no record hash in its file name ($EXEFILE)."
 FunctionEnd
 
+; $U_out = an INetC error. $U_c = a sentence to add when it looks like the
+; backend's "taken down" answer (HTTP 451, design.md 7), else "".
+Function TakenDownHint
+  StrCpy $U_c ""
+  Push $U_out
+  StrCpy $U_a $U_out
+  StrCpy $U_b "451"
+  Call IbContains
+  ${If} $U_out = 1
+    StrCpy $U_c " The backend says this installer has been taken down (HTTP 451)."
+  ${EndIf}
+  Pop $U_out
+FunctionEnd
+
+; The plan's signature (format.md "Plan signature") and where it came from decide
+; whether it may be used. Fetched plans must be signed by the key built
+; into this base; so must /plan= files unless /unsigned-plan is given.
+; Embedded plans are as trustworthy as the file carrying them, so an
+; unsigned one is used with a warning on the review page.
+Function CheckPlan
+  ibsig::check "$PlanFile" "${IB_PLAN_PUBKEY}"
+  Pop $PlanSig
+  ${Log} "Plan signature: $PlanSig (key ${IB_PLAN_KEYID})"
+  StrCpy $PlanWarn ""
+  StrCpy $0 $PlanSig 2
+  ${If} $0 == "ok"
+    StrCpy $PlanSrc "$PlanSrc; signed by the Installer Builder key ${IB_PLAN_KEYID}"
+    Return
+  ${EndIf}
+  ${If} $PlanKind == "embedded"
+    StrCpy $PlanWarn "The embedded plan isn't signed by the Installer Builder key ($PlanSig). It is only as trustworthy as this installer file."
+    Return
+  ${EndIf}
+  ${If} $PlanKind == "cmdline"
+  ${AndIf} $UnsignedOK = 1
+    StrCpy $PlanWarn "The plan from the command line isn't signed ($PlanSig); /unsigned-plan was given."
+    Return
+  ${EndIf}
+  ${If} $PlanKind == "cmdline"
+    ${FailWith} "The plan $PlanFile isn't signed by the Installer Builder key ${IB_PLAN_KEYID} ($PlanSig). Use a plan saved from <backend>/api/plan/<record>, or add /unsigned-plan if you wrote it yourself."
+  ${Else}
+    ${FailWith} "The install plan from $Backend isn't signed by the Installer Builder key ${IB_PLAN_KEYID} ($PlanSig). It may have been changed on the way; nothing was installed."
+  ${EndIf}
+FunctionEnd
+
 ; ---------------------------------------------------------------- init
 
 Function InitFail
   ${Log} "ERROR: $FailMsg"
+  ibsig::cleanstr "$FailMsg"
+  Pop $FailMsg
   ${IfNot} ${Silent}
     MessageBox MB_OK|MB_ICONSTOP "$FailMsg"
   ${EndIf}
@@ -1206,12 +1397,12 @@ Function .onInit
   StrCpy $Failed 0
   ${GetParameters} $Params
   ClearErrors
-  ${GetOptions} $Params "/log=" $LogPath
+  ${IbGetOpt} "/log=" $LogPath
   ${If} ${Errors}
     StrCpy $LogPath ""
   ${EndIf}
   ClearErrors
-  ${GetOptions} $Params "/ib-elevated" $0
+  ${IbGetOpt} "/ib-elevated" $0
   ${If} ${Errors}
     StrCpy $Elevated 0
   ${Else}
@@ -1235,9 +1426,18 @@ Function .onInit
   StrCpy $SysDrv $WINDIR 2
   ${Log} "Windows $WinVer build $WinBuild, $Arch"
 
+  ClearErrors
+  ${IbGetOpt} "/unsigned-plan" $0
+  ${If} ${Errors}
+    StrCpy $UnsignedOK 0
+  ${Else}
+    StrCpy $UnsignedOK 1
+  ${EndIf}
+  StrCpy $PlanRec ""
+
   StrCpy $Backend "${IB_BACKEND}"
   ClearErrors
-  ${GetOptions} $Params "/backend=" $OptBackend
+  ${IbGetOpt} "/backend=" $OptBackend
   ${If} ${Errors}
     StrCpy $OptBackend ""
   ${Else}
@@ -1266,24 +1466,45 @@ Function .onInit
     ${Log} "Fetching the plan: $U_a"
     Call DownloadQuiet
     ${If} $U_out != "OK"
-      ${FailWith} "Couldn't fetch the install plan from $Backend/api/plan/$RecHash ($U_out). Check the internet connection and try again."
+      Call TakenDownHint
+      ${FailWith} "Couldn't fetch the install plan from $Backend/api/plan/$RecHash ($U_out).$U_c Check the internet connection and try again."
       Call InitFail
     ${EndIf}
     StrCpy $PlanFile "$PLUGINSDIR\plan.txt"
+    StrCpy $PlanKind "fetched"
     StrCpy $PlanSrc "fetched from $Backend/api/plan/$RecHash"
     StrCpy $0 $Backend 5
     ${If} $0 == "http:"
-      StrCpy $PlanSrc "$PlanSrc (plain HTTP: its downloads are still checked by SHA-256)"
+      StrCpy $PlanSrc "$PlanSrc over plain HTTP"
     ${EndIf}
   ${EndIf}
   ${IfNot} ${FileExists} "$PlanFile"
     ${FailWith} "Can't read the plan $PlanFile."
     Call InitFail
   ${EndIf}
+  Call CheckPlan
+  ${If} $Failed = 1
+    Call InitFail
+  ${EndIf}
   Call ReadPlan
   ${If} $Failed = 1
     Call InitFail
   ${EndIf}
+  ; the plan must be for this record (format.md "Plan signature"): a signed plan for
+  ; another app can't be replayed
+  ${If} $RecHash != ""
+    ${If} $PlanRec S!= $RecHash
+      ${If} $PlanRec == ""
+        StrCpy $PlanRec "none"
+      ${EndIf}
+      ${FailWith} "The install plan is for record $PlanRec, but this installer's record is $RecHash. Nothing was installed."
+      Call InitFail
+    ${EndIf}
+  ${Else}
+    StrCpy $RecHash $PlanRec
+  ${EndIf}
+  ibsig::cleanstr "$AppName"
+  Pop $AppName
 
   ; validate the header
   StrCpy $U_a $AppId
@@ -1476,10 +1697,19 @@ Function WriteSummary
   ${Else}
     ${Sum} "Signed by:  nobody (this installer is unsigned)"
   ${EndIf}
+  ${If} $ModeA = 1
+    ${Sum} "Mode:  signed by Installer Builder (mode A): installs only what its file name names, from ${IB_BACKEND}"
+  ${EndIf}
   ${Sum} "Settings from:  $MetaSrc"
   ${Sum} "Record:  $RecHash"
   ${Sum} "Plan:  $PlanSrc"
+  ${If} $PlanWarn != ""
+    ${Sum} "WARNING:  $PlanWarn"
+  ${EndIf}
   FileClose $SumH
+  ; no control or bidi characters on the review page (plan text is shown as is otherwise)
+  ibsig::cleanfile "$PLUGINSDIR\summary.txt"
+  Pop $0
   Pop $1
   Pop $0
 FunctionEnd
@@ -1963,6 +2193,9 @@ Function DoFiles
         ${Break}
       ${EndIf}
       CreateDirectory "$CurDir"
+      StrCpy $U_a "$CurDir\.ib-owner"
+      StrCpy $U_b "ib-folder$\t1$\nappid$\t$AppId$\nname$\t$CurName$\nfile$\t$CurFname$\n"
+      Call IbAppendUtf8
       StrCpy $FF_line $LineNo
       StrCpy $FF_sha $CurSha
       StrCpy $FF_name $CurFname
@@ -2193,8 +2426,14 @@ Function ClearOldInstall
       StrCpy $1 $F1 -13
       ${If} $U_out = 1
       ${AndIf} $1 == $Root
-        ${Log} "  remove $F1"
-        RMDir /r "$F1"
+        StrCpy $U_a $F1
+        Call IbOwnerOf
+        ${If} $U_out S== $AppId
+          ${Log} "  remove $F1"
+          RMDir /r "$F1"
+        ${Else}
+          ${Log} "  kept $F1: its .ib-owner doesn't name this app"
+        ${EndIf}
       ${EndIf}
     ${EndIf}
   ${Loop}
@@ -2242,6 +2481,43 @@ Function Cleanup
   RMDir "$Root"
 FunctionEnd
 
+; root system: only administrators and SYSTEM may change <root> and what
+; is in it; users may read and run (an admin-installed runtime must not be
+; writable by the users who run it). Owner: Administrators, so a folder a
+; user created first can't keep its permissions. Works back to XP.
+Function SecureRoot
+  Push $0
+  Push $1
+  Push $2
+  Push $3
+  Push $4
+  Push $5
+  StrCpy $1 0
+  System::Call 'advapi32::ConvertStringSecurityDescriptorToSecurityDescriptorW(w "O:BAD:PAI(A;OICI;FA;;;BA)(A;OICI;FA;;;SY)(A;OICI;0x1200a9;;;BU)", i 1, *p .r1, p 0) i .r0'
+  ${If} $0 = 0
+  ${OrIf} $1 = 0
+    ${FailWith} "Couldn't build the permissions for $Root."
+    Goto sr_end
+  ${EndIf}
+  System::Call 'advapi32::GetSecurityDescriptorDacl(p r1, *i .r2, *p .r3, *i .r4) i .r0'
+  System::Call 'advapi32::GetSecurityDescriptorOwner(p r1, *p .r5, *i .r4) i .r0'
+  ; SE_FILE_OBJECT; OWNER | DACL | PROTECTED_DACL
+  System::Call 'advapi32::SetNamedSecurityInfoW(w "$Root", i 1, i 0x80000005, p r5, p 0, p r3, p 0) i .r0'
+  System::Call 'kernel32::LocalFree(p r1)'
+  ${If} $0 <> 0
+    ${FailWith} "Couldn't restrict the permissions of $Root to administrators (error $0). Nothing was installed."
+    Goto sr_end
+  ${EndIf}
+  ${Log} "Permissions of $Root: administrators and SYSTEM full control, users read and run"
+  sr_end:
+  Pop $5
+  Pop $4
+  Pop $3
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
 Function InstallMain
   StrCpy $Created 0
   StrCpy $LnkApp ""
@@ -2269,12 +2545,21 @@ Function InstallMain
   ${EndIf}
   ClearErrors
   CreateDirectory "$Root"
+  ${If} $RootMode == "system"
+    Call SecureRoot
+    ${If} $Failed = 1
+      Return
+    ${EndIf}
+  ${EndIf}
   CreateDirectory "$AppDir"
   ${IfNot} ${FileExists} "$AppDir\*.*"
     ${FailWith} "Couldn't create $AppDir."
     Return
   ${EndIf}
   StrCpy $Created 1
+  StrCpy $U_a "$AppDir\.ib-owner"
+  StrCpy $U_b "ib-folder$\t1$\nappid$\t$AppId$\nname$\t(app)$\n"
+  Call IbAppendUtf8
   CreateDirectory "$DataDir"
   StrCpy $U_c 0
   Call WriteManifest
@@ -2567,8 +2852,14 @@ Section "Uninstall"
       ${If} $U_out = 1
       ${AndIf} $1 == $UnRoot
       ${AndIf} $2 == "\"
-        DetailPrint "Remove folder $F1"
-        RMDir /r "$F1"
+        StrCpy $U_a $F1
+        Call un.IbOwnerOf
+        ${If} $U_out S== $AppId
+          DetailPrint "Remove folder $F1"
+          RMDir /r "$F1"
+        ${Else}
+          DetailPrint "Skipped (its .ib-owner doesn't name this app): $F1"
+        ${EndIf}
       ${Else}
         DetailPrint "Skipped (not under $UnRoot): $F1"
       ${EndIf}
@@ -2603,8 +2894,31 @@ Section "Uninstall"
     ${EndIf}
   ${Loop}
   FileClose $0
-  DetailPrint "Remove folder $INSTDIR"
-  RMDir /r "$INSTDIR"
+  StrCpy $U_a $INSTDIR
+  Call un.IbOwnerOf
+  ${If} $U_out S== $AppId
+    DetailPrint "Remove folder $INSTDIR"
+    SetOutPath "$TEMP"
+    ; This runs from the %TEMP% copy; the uninstall.exe it was started as
+    ; may not have exited yet, and Windows won't delete a running file.
+    ; Retry for up to 15 s, then leave the rest for the next reboot.
+    StrCpy $1 0
+    ${Do}
+      RMDir /r "$INSTDIR"
+      ${IfNot} ${FileExists} "$INSTDIR\*.*"
+        ${Break}
+      ${EndIf}
+      IntOp $1 $1 + 1
+      ${If} $1 >= 30
+        DetailPrint "Some files in $INSTDIR are in use; they are removed at the next restart."
+        RMDir /r /REBOOTOK "$INSTDIR"
+        ${Break}
+      ${EndIf}
+      Sleep 500
+    ${Loop}
+  ${Else}
+    DetailPrint "Kept $INSTDIR: its .ib-owner doesn't name this app"
+  ${EndIf}
   RMDir "$UnRoot"                 ; the install root, if nothing else is in it
   SetErrorLevel 0
 SectionEnd
