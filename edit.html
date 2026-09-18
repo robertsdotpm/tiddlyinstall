@@ -215,6 +215,157 @@
         </div>
         <span class="hint">Made in your browser. Nothing is uploaded.</span>
       </section>
+
+      <section class="panel" id="sign-panel">
+        <h2 class="section-title">Sign it yourself (optional)</h2>
+        <p class="small muted" style="margin-top:0">Sign the installer with your own certificate or key, here in the page.
+          Your key is never uploaded and never stored: it stays in this tab's memory until you close it.</p>
+
+        <div id="sign-exe" hidden>
+          <span class="label">Your key</span>
+          <div class="inline-choices">
+            <label class="choice"><input type="radio" name="sign-src" id="sign-src-pfx" value="pfx" checked> A <code>.pfx</code> or <code>.p12</code> file</label>
+            <label class="choice"><input type="radio" name="sign-src" id="sign-src-remote" value="remote"> A signing service, cloud KMS or HSM</label>
+          </div>
+          <div id="sign-pfx">
+            <div class="row">
+              <div class="field">
+                <label for="pfx-file">Certificate and private key</label>
+                <input type="file" id="pfx-file" accept=".pfx,.p12,application/x-pkcs12">
+              </div>
+              <div class="field">
+                <label for="pfx-pass">Its password</label>
+                <input type="password" id="pfx-pass" autocomplete="off">
+              </div>
+            </div>
+            <div class="actions">
+              <button type="button" class="secondary" id="pfx-open">Open key</button>
+              <button type="button" class="link-button" id="pfx-forget" hidden>Forget key</button>
+            </div>
+            <pre class="small" id="pfx-status" hidden></pre>
+            <span class="hint">Certificates issued since June 2023 keep their key on a token or in a cloud service,
+              so they can't be exported as a <code>.pfx</code>; use the signing-service option for those.</span>
+          </div>
+          <div id="sign-remote" hidden>
+            <div class="field">
+              <label for="remote-certs">Your certificate and its chain</label>
+              <input type="file" id="remote-certs-file" accept=".pem,.cer,.crt,.der,.p7b">
+              <textarea id="remote-certs" rows="4" spellcheck="false" placeholder="Or paste PEM: -----BEGIN CERTIFICATE----- …"></textarea>
+              <span class="hint">From your signing service or certificate authority (PEM, <code>.cer</code>, <code>.crt</code> or <code>.p7b</code>).</span>
+            </div>
+            <div id="remote-step" hidden>
+              <span class="label">Have your service sign this SHA-256 digest</span>
+              <p class="small" style="margin:4px 0">Base64 <code class="sha" id="remote-digest-b64"></code>
+                <button type="button" class="link-button" id="remote-copy">Copy</button><br>
+                Hex <code class="sha" id="remote-digest-hex"></code></p>
+              <details>
+                <summary>Example commands</summary>
+                <pre class="small" id="remote-example"></pre>
+              </details>
+              <div class="field">
+                <label for="remote-sig">The signature it returns (base64)</label>
+                <textarea id="remote-sig" rows="3" spellcheck="false"></textarea>
+                <span class="hint">RSA PKCS#1 v1.5 or ECDSA (DER or raw). The page checks it against your certificate before writing the file.</span>
+              </div>
+              <div class="actions">
+                <button type="button" id="remote-finish">Finish and download</button>
+                <button type="button" class="link-button" id="remote-cancel">Cancel</button>
+              </div>
+            </div>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <div class="field">
+              <label for="sign-name">Program name</label>
+              <input type="text" id="sign-name" maxlength="128">
+              <span class="hint">Windows shows it when asking for administrator rights.</span>
+            </div>
+            <div class="field">
+              <label for="sign-url">More-information URL</label>
+              <input type="url" id="sign-url" placeholder="Optional" spellcheck="false">
+            </div>
+          </div>
+          <label class="choice"><input type="checkbox" id="ts-on" checked> Timestamp the signature, so it stays valid after your certificate expires</label>
+          <div class="field">
+            <label for="ts-name">Timestamp server</label>
+            <select id="ts-name">
+              <option value="digicert">DigiCert</option>
+              <option value="sectigo">Sectigo</option>
+              <option value="globalsign">GlobalSign</option>
+              <option value="sslcom">SSL.com</option>
+              <option value="certum">Certum</option>
+            </select>
+            <span class="hint">Timestamp servers don't accept calls from web pages, so the request goes through the build server,
+              which forwards it. It carries only a hash of your signature.</span>
+          </div>
+        </div>
+
+        <div id="sign-run" hidden>
+          <p class="small" style="margin-top:0">Linux doesn't check signatures itself. This makes a detached OpenPGP signature
+            (<code>.run.asc</code>) that people can check with <code>gpg --verify</code> against your public key.</p>
+          <span class="label">Your key</span>
+          <div class="inline-choices">
+            <label class="choice"><input type="radio" name="pgp-src" id="pgp-src-new" value="new" checked> Make a new key</label>
+            <label class="choice"><input type="radio" name="pgp-src" id="pgp-src-import" value="import"> Use my GnuPG key</label>
+          </div>
+          <div id="pgp-new">
+            <div class="row">
+              <div class="field">
+                <label for="pgp-uid">Name and email</label>
+                <input type="text" id="pgp-uid" placeholder="Your Name &lt;you@example.com&gt;" spellcheck="false">
+              </div>
+              <div class="field">
+                <label for="pgp-type">Key type</label>
+                <select id="pgp-type">
+                  <option value="ed25519">Ed25519</option>
+                  <option value="rsa3072">RSA 3072</option>
+                  <option value="rsa4096">RSA 4096</option>
+                </select>
+              </div>
+            </div>
+            <div class="actions"><button type="button" class="secondary" id="pgp-make">Make key</button></div>
+          </div>
+          <div id="pgp-import" hidden>
+            <div class="field">
+              <label for="pgp-file">Secret key from <code>gpg --export-secret-keys --armor &lt;id&gt;</code></label>
+              <input type="file" id="pgp-file" accept=".asc,.gpg,.key,.pgp">
+              <textarea id="pgp-paste" rows="3" spellcheck="false" placeholder="Or paste it: -----BEGIN PGP PRIVATE KEY BLOCK----- …"></textarea>
+            </div>
+            <div class="field">
+              <label for="pgp-pass">Its passphrase</label>
+              <input type="password" id="pgp-pass" autocomplete="off">
+            </div>
+            <div class="actions"><button type="button" class="secondary" id="pgp-open">Open key</button></div>
+          </div>
+          <pre class="small" id="pgp-status" hidden></pre>
+          <div id="pgp-downloads" hidden>
+            <div class="row">
+              <div class="field">
+                <label for="pgp-sec-pass">Passphrase for the saved secret key</label>
+                <input type="password" id="pgp-sec-pass" autocomplete="new-password">
+              </div>
+            </div>
+            <div class="actions">
+              <button type="button" class="secondary" id="pgp-pub-dl">Download public key</button>
+              <button type="button" class="secondary" id="pgp-sec-dl">Download secret key</button>
+            </div>
+            <span class="hint">Publish the public key where your users can find it. Keep the secret key to sign later versions.</span>
+          </div>
+        </div>
+
+        <div id="sign-zip" hidden>
+          <p class="small" style="margin-top:0">macOS apps can't be signed in the browser yet. Download the installer above, then sign
+            and notarize it on any computer with <a href="https://github.com/indygreg/apple-platform-rs">rcodesign</a>:</p>
+<pre class="small">unzip install.zip
+rcodesign sign --p12-file developer-id.p12 --code-signature-flags runtime Install.app
+ditto -c -k --keepParent Install.app install-signed.zip
+rcodesign notary-submit --api-key-file key.json --staple Install.app</pre>
+        </div>
+
+        <div class="actions" style="margin-top:10px">
+          <button type="button" id="sign-go">Sign and download</button>
+          <span class="small muted" id="sign-status" role="status"></span>
+        </div>
+      </section>
     </form>
 
     <section class="panel" id="rename">

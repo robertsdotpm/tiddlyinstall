@@ -290,4 +290,3 @@ export async function openPfx(bytes, password) {
   return { key, algorithm, cert: leaf, chain: orderChain(leaf, out.certs) };
 }
 
-export { p12kdf as _p12kdf };

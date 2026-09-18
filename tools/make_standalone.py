@@ -3,9 +3,9 @@
 self-contained page, TiddlyWiki-style (plan.md section 1.10).
 
 - css/style.css is inlined as <style>.
-- js/api.js, js/ibfile.js and js/edit.js are joined into one inline module
-  (imports and `export` keywords removed), so it runs from file:// with no
-  network.
+- The js/ modules edit.js needs are joined into one inline module, each in
+  its own scope (a function returning its exports; imports become reads
+  from those), so it runs from file:// with no network.
 - The three unsigned bases are embedded as base64 in
   <script type="application/octet-stream" id="base-windows|base-linux|base-macos">
   from bases/windows/out/base.exe, bases/unix/out/ib.run (or ib-base.run)
@@ -27,7 +27,9 @@ import sys
 import zipfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MODULES = ["js/api.js", "js/ibfile.js", "js/icon.js", "js/edit.js"]
+# Dependency order: each module comes after everything it imports.
+MODULES = ["js/api.js", "js/ibfile.js", "js/icon.js", "js/der.js", "js/x509.js", "js/legacy.js",
+           "js/pkcs12.js", "js/authenticode.js", "js/pgp.js", "js/sign-ui.js", "js/edit.js"]
 # The resedit-js/pe-library bundle (icon editing) is a classic script, inlined
 # so the page works from file:// with no network. See tools/build_resedit_bundle.py.
 RESEDIT_BUNDLE = "vendor/resedit-bundle.js"
@@ -96,24 +98,48 @@ PLACEHOLDERS = {"windows": placeholder_windows, "linux": placeholder_linux, "mac
 
 # ---------- JS ----------
 
-IMPORT_RE = re.compile(r"^import\s[\s\S]*?from\s+['\"][^'\"]+['\"];[ \t]*\n", re.M)
-DECL_RE = re.compile(r"^(?:async\s+)?(?:function\*?|const|let|var|class)\s+([A-Za-z_$][\w$]*)", re.M)
+IMPORT_RE = re.compile(r"^import\s+([\s\S]*?)\s+from\s+['\"](\./[^'\"]+)['\"];[ \t]*\n", re.M)
+EXPORT_DECL_RE = re.compile(r"^export\s+((?:async\s+)?(?:function\*?|const|let|var|class)\s+([A-Za-z_$][\w$]*))", re.M)
+EXPORT_LIST_RE = re.compile(r"^export\s*\{([^}]*)\};?[ \t]*\n", re.M)
+
+
+def ns_name(rel):
+    return "__ib_" + re.sub(r"\W", "_", os.path.splitext(os.path.basename(rel))[0])
+
+
+def import_to_const(m, rel, done):
+    what, src = m.group(1).strip(), m.group(2)
+    dep = os.path.normpath(os.path.join(os.path.dirname(rel), src))
+    if dep not in done:
+        sys.exit(f"{rel} imports {src}, which is not earlier in MODULES")
+    ns = ns_name(dep)
+    if what.startswith("* as "):
+        return f"const {what[5:].strip()} = {ns};\n"
+    if what.startswith("{") and what.endswith("}"):
+        names = [n.strip() for n in what[1:-1].split(",") if n.strip()]
+        parts = [(a.strip() + ": " + b.strip()) if " as " in n else n for n in names for a, _, b in [n.partition(" as ")]]
+        return "const { " + ", ".join(parts) + " } = " + ns + ";\n"
+    sys.exit(f"{rel}: an import form this script can't bundle: {what}")
 
 
 def join_modules():
-    seen = {}
-    out = []
+    out, done = [], set()
     for rel in MODULES:
         src = read(rel)
-        src = IMPORT_RE.sub("", src)
-        src = re.sub(r"^export\s+(?=(?:async\s+)?(?:function|const|let|var|class)\b)", "", src, flags=re.M)
+        src = IMPORT_RE.sub(lambda m: import_to_const(m, rel, done), src)
+        exports = [m.group(2) for m in EXPORT_DECL_RE.finditer(src)]
+        src = EXPORT_DECL_RE.sub(r"\1", src)
+        for m in EXPORT_LIST_RE.finditer(src):
+            for n in m.group(1).split(","):
+                n = n.strip()
+                if n:
+                    a, _, b = n.partition(" as ")
+                    exports.append(f"{b.strip()}: {a.strip()}" if b else a)
+        src = EXPORT_LIST_RE.sub("", src)
         if re.search(r"^\s*(?:import|export)\b", src, re.M):
-            sys.exit(f"{rel}: an import/export form this script can't flatten")
-        for name in DECL_RE.findall(src):
-            if name in seen:
-                sys.exit(f"top-level name {name!r} is in both {seen[name]} and {rel}; rename one")
-            seen[name] = rel
-        out.append(f"/* ---- {rel} ---- */\n{src}")
+            sys.exit(f"{rel}: an import/export form this script can't bundle")
+        out.append(f"/* ---- {rel} ---- */\nconst {ns_name(rel)} = (() => {{\n{src}\nreturn {{ {', '.join(exports)} }};\n}})();")
+        done.add(rel)
     js = "\n".join(out)
     # Must not end the <script> early.
     js = re.sub(r"</(script)", r"<\\/\1", js, flags=re.I)

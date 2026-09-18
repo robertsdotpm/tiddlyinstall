@@ -11,6 +11,7 @@ import { apiRequest, errorText, mountApiFooter } from './api.js';
 import {
   rasterSource, buildIco, buildIcns, setExeIcon, setPlistIcon, setLinuxIcon,
 } from './icon.js';
+import { mountSign, paintSign } from './sign-ui.js';
 
 // The standalone build defines IB_PRISTINE (the page as loaded) before any
 // script touches the DOM, for "Save this page".
@@ -103,6 +104,7 @@ async function paintRecord({ fromRaw = false } = {}) {
 }
 
 editor.addEventListener('input', (e) => {
+  if (e.target.closest('#sign-panel')) return;
   if (e.target === recordRaw) {
     recEntries = parseKv(recordRaw.value);
     fieldsFromRecord();
@@ -116,6 +118,7 @@ editor.addEventListener('input', (e) => {
   paintRecord();
 });
 editor.addEventListener('change', (e) => {
+  if (e.target.closest('#sign-panel')) return;
   if (e.target.matches('select, input[type="checkbox"][data-key]')) {
     if (e.target.id === 'f-src-kind') paintSourceLabels();
     recordFromFields();
@@ -285,6 +288,7 @@ function load(info, displayName, note) {
 
   outNameAuto = fresh;
   el('out-name').value = fresh ? defaultOutName() : displayName;
+  paintSign(info.kind, (kvGet(recEntries, 'name') || [''])[0]);
   editor.hidden = false;
 }
 
@@ -361,6 +365,26 @@ function download(bytes, name, type) {
   setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
 
+// The installer as it would be saved: {out, name}. Throws with a message
+// for the person on bad settings.
+async function buildOutput() {
+  const lines = recordRaw.value.split('\n');
+  if (!/^ib-record\t/.test(lines[0] || '')) throw new Error('The settings must start with the line "ib-record<TAB>1".');
+  const record = recordRaw.value.replace(/\r\n/g, '\n').replace(/\n*$/, '\n');
+  let plan = planRaw.value.trim() ? planRaw.value.replace(/\r\n/g, '\n').replace(/\n*$/, '\n') : '';
+  // The installer refuses a plan made for another record, and an edited
+  // plan's signature no longer matches (docs/format.md "Plan signature").
+  ({ plan } = await bindPlan(plan, record, plan !== (current.plan || '')));
+  const out = await writeInstaller(current, {
+    record,
+    plan,
+    pack: packFiles.map((m) => ({ name: m.name, data: m.data })),
+  });
+  let name = el('out-name').value.trim() || defaultOutName();
+  if (!name.toLowerCase().endsWith(installerExt(current.kind))) name += installerExt(current.kind);
+  return { out, name };
+}
+
 editor.addEventListener('submit', async (e) => {
   e.preventDefault();
   if (!current) return;
@@ -369,30 +393,23 @@ editor.addEventListener('submit', async (e) => {
     status.textContent = 'Tick the box above first: saving removes the signature.';
     return;
   }
-  const lines = recordRaw.value.split('\n');
-  if (!/^ib-record\t/.test(lines[0] || '')) {
-    status.textContent = 'The settings must start with the line "ib-record<TAB>1".';
-    return;
-  }
   status.textContent = 'Building…';
   try {
-    const record = recordRaw.value.replace(/\r\n/g, '\n').replace(/\n*$/, '\n');
-    let plan = planRaw.value.trim() ? planRaw.value.replace(/\r\n/g, '\n').replace(/\n*$/, '\n') : '';
-    // The installer refuses a plan made for another record, and an edited
-    // plan's signature no longer matches (docs/format.md "Plan signature").
-    ({ plan } = await bindPlan(plan, record, plan !== (current.plan || '')));
-    const out = await writeInstaller(current, {
-      record,
-      plan,
-      pack: packFiles.map((m) => ({ name: m.name, data: m.data })),
-    });
-    let name = el('out-name').value.trim() || defaultOutName();
-    if (!name.toLowerCase().endsWith(installerExt(current.kind))) name += installerExt(current.kind);
+    const { out, name } = await buildOutput();
     download(out, name);
     status.textContent = 'Saved ' + name + ' (' + humanBytes(out.length) + ').';
   } catch (err) {
     status.textContent = 'Couldn\'t build it: ' + errorText(err);
   }
+});
+
+mountSign({
+  build: () => {
+    if (!current) throw new Error('Open an installer first.');
+    return buildOutput();
+  },
+  download,
+  kind: () => current && current.kind,
 });
 
 /* ---------- standalone page ---------- */
