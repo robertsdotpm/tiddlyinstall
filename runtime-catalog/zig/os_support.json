@@ -1,0 +1,158 @@
+{
+ "runtime": "zig",
+ "researched": "2026-09-19",
+ "notes": " Linux rules added 2026-09-19 by installer-builder (static builds).",
+ "rules": [
+  {
+   "versions": ">=0.6",
+   "os": "linux",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "glibc-2.5",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static Linux release tarballs (zig is a fully static musl executable)",
+   "match": {
+    "kind": [
+     "archive"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://ziglang.org/download/ (Linux releases are statically linked)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "Added 2026-09-19 by installer-builder; zig cc output is built for the host by default."
+  },
+  {
+   "versions": ">=0.6",
+   "os": "linux",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "musl",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static Linux release tarballs (zig is a fully static musl executable)",
+   "match": {
+    "kind": [
+     "archive"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://ziglang.org/download/ (Linux releases are statically linked)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "Added 2026-09-19 by installer-builder; zig cc output is built for the host by default."
+  },
+  {
+   "versions": ">=0.6",
+   "os": "linux",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "glibc-2.5",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static Linux release tarballs (zig is a fully static musl executable)",
+   "match": {
+    "kind": [
+     "archive"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://ziglang.org/download/ (Linux releases are statically linked)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "Added 2026-09-19 by installer-builder; zig cc output is built for the host by default."
+  },
+  {
+   "versions": ">=0.6",
+   "os": "linux",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "musl",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static Linux release tarballs (zig is a fully static musl executable)",
+   "match": {
+    "kind": [
+     "archive"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://ziglang.org/download/ (Linux releases are statically linked)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "Added 2026-09-19 by installer-builder; zig cc output is built for the host by default."
+  },
+  {
+   "versions": ">=0.6",
+   "os": "linux",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "glibc-2.5",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static Linux release tarballs (zig is a fully static musl executable)",
+   "match": {
+    "kind": [
+     "archive"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://ziglang.org/download/ (Linux releases are statically linked)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "Added 2026-09-19 by installer-builder; zig cc output is built for the host by default."
+  },
+  {
+   "versions": ">=0.6",
+   "os": "linux",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "musl",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static Linux release tarballs (zig is a fully static musl executable)",
+   "match": {
+    "kind": [
+     "archive"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://ziglang.org/download/ (Linux releases are statically linked)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "Added 2026-09-19 by installer-builder; zig cc output is built for the host by default."
+  }
+ ],
+ "max_per_os": []
+}

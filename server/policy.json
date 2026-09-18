@@ -18,16 +18,223 @@
   "linux": 228
  },
  "prerequisites": {
-  "vcredist-x64": {"_comment": "Minor >= 44, the version stored in msvc-redist: PHP builds refuse an older vcruntime140.dll (on Windows 8.1 with 14.32: \"VCRUNTIME140.dll 14.31 is not compatible with this PHP build linked with 14.44\"). Raise it with the stored redistributable.", "label": "Microsoft Visual C++ 2015-2022 Redistributable (x64)", "os": "windows", "arch": "amd64", "checks": [["reg", "64", "HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\x64", "Minor", "44"]], "file": {"name": "vc_redist.x64.exe", "sha256": "cc0ff0eb1dc3f5188ae6300faef32bf5beeba4bdd6e8e445a9184072096b713b", "size": 25635768, "local": "msvc-redist/windows/amd64/latest/vc_redist.x64.exe", "urls": ["https://aka.ms/vs/17/release/vc_redist.x64.exe"]}, "run": "\"{file}\" /install /quiet /norestart", "ok_codes": [0, 1638, 3010], "how": "Install the Microsoft Visual C++ 2015-2022 Redistributable (x64) from https://aka.ms/vs/17/release/vc_redist.x64.exe, then run this installer again."},
-  "vcredist-x86": {"_comment": "Minor >= 44, the version stored in msvc-redist: PHP builds refuse an older vcruntime140.dll (on Windows 8.1 with 14.32: \"VCRUNTIME140.dll 14.31 is not compatible with this PHP build linked with 14.44\"). Raise it with the stored redistributable.", "label": "Microsoft Visual C++ 2015-2022 Redistributable (x86)", "os": "windows", "arch": "x86", "checks": [["reg", "32", "HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\x86", "Minor", "44"]], "file": {"name": "vc_redist.x86.exe", "sha256": "0c09f2611660441084ce0df425c51c11e147e6447963c3690f97e0b25c55ed64", "size": 13953392, "local": "msvc-redist/windows/x86/latest/vc_redist.x86.exe", "urls": ["https://aka.ms/vs/17/release/vc_redist.x86.exe"]}, "run": "\"{file}\" /install /quiet /norestart", "ok_codes": [0, 1638, 3010], "how": "Install the Microsoft Visual C++ 2015-2022 Redistributable (x86) from https://aka.ms/vs/17/release/vc_redist.x86.exe, then run this installer again."},
-  "vcredist-arm64": {"_comment": "Minor >= 44, the version stored in msvc-redist: PHP builds refuse an older vcruntime140.dll (on Windows 8.1 with 14.32: \"VCRUNTIME140.dll 14.31 is not compatible with this PHP build linked with 14.44\"). Raise it with the stored redistributable.", "label": "Microsoft Visual C++ 2015-2022 Redistributable (arm64)", "os": "windows", "arch": "arm64", "checks": [["reg", "64", "HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\arm64", "Minor", "44"]], "file": {"name": "vc_redist.arm64.exe", "sha256": "5139e1440c3a20b92153a4db561c069a0175aaf76c276c3e5b6f56099edcf4b0", "size": 11722336, "local": "msvc-redist/windows/arm64/latest/vc_redist.arm64.exe", "urls": ["https://aka.ms/vs/17/release/vc_redist.arm64.exe"]}, "run": "\"{file}\" /install /quiet /norestart", "ok_codes": [0, 1638, 3010], "how": "Install the Microsoft Visual C++ 2015-2022 Redistributable (arm64) from https://aka.ms/vs/17/release/vc_redist.arm64.exe, then run this installer again."},
-  "libatomic": {"label": "libatomic.so.1 (GCC's atomics library)", "os": "linux", "checks": [["lib", "libatomic.so.1"]], "packages": {"apt-get": "libatomic1", "dnf": "libatomic", "yum": "libatomic", "zypper": "libatomic1", "apk": "libatomic", "pacman": "gcc-libs"}},
-  "libblas": {"label": "libblas.so.3 (BLAS linear algebra library)", "os": "linux", "checks": [["lib", "libblas.so.3"]], "packages": {"apt-get": "libblas3", "dnf": "blas", "yum": "blas", "zypper": "libblas3", "apk": "blas", "pacman": "blas"}},
-  "libgomp": {"label": "libgomp.so.1 (GCC's OpenMP library)", "os": "linux", "checks": [["lib", "libgomp.so.1"]], "packages": {"apt-get": "libgomp1", "dnf": "libgomp", "yum": "libgomp", "zypper": "libgomp1", "apk": "libgomp", "pacman": "gcc-libs"}},
-  "libdeflate": {"label": "libdeflate.so.0 (compression library)", "os": "linux", "checks": [["lib", "libdeflate.so.0"]], "packages": {"apt-get": "libdeflate0", "dnf": "libdeflate", "yum": "libdeflate", "zypper": "libdeflate0", "apk": "libdeflate", "pacman": "libdeflate"}},
-  "cc": {"label": "A system C compiler (cc) and the C library's development files", "os": "linux", "checks": [["cmd", "cc"]], "packages": {"apt-get": "gcc libc6-dev", "dnf": "gcc glibc-devel", "yum": "gcc glibc-devel", "zypper": "gcc glibc-devel", "apk": "gcc musl-dev", "pacman": "gcc"}},
-  "gcc": {"label": "GCC (gcc) and the C library's development files", "os": "linux", "checks": [["cmd", "gcc"]], "packages": {"apt-get": "gcc libc6-dev", "dnf": "gcc glibc-devel", "yum": "gcc glibc-devel", "zypper": "gcc glibc-devel", "apk": "gcc musl-dev", "pacman": "gcc"}},
-  "xcode-clt": {"label": "Xcode Command Line Tools", "os": "macos", "checks": [["file", "/Library/Developer/CommandLineTools/usr/bin/clang"], ["file", "/Applications/Xcode.app/Contents/Developer/usr/bin/clang"]], "start": "xcode-select --install", "how": "Install Apple's Command Line Tools: run xcode-select --install in Terminal and click Install in the dialog that opens (it can take a while), then run this installer again."}
+  "vcredist-x64": {
+   "_comment": "Minor >= 44, the version stored in msvc-redist: PHP builds refuse an older vcruntime140.dll (on Windows 8.1 with 14.32: \"VCRUNTIME140.dll 14.31 is not compatible with this PHP build linked with 14.44\"). Raise it with the stored redistributable.",
+   "label": "Microsoft Visual C++ 2015-2022 Redistributable (x64)",
+   "os": "windows",
+   "arch": "amd64",
+   "checks": [
+    [
+     "reg",
+     "64",
+     "HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\x64",
+     "Minor",
+     "44"
+    ]
+   ],
+   "file": {
+    "name": "vc_redist.x64.exe",
+    "sha256": "cc0ff0eb1dc3f5188ae6300faef32bf5beeba4bdd6e8e445a9184072096b713b",
+    "size": 25635768,
+    "local": "msvc-redist/windows/amd64/latest/vc_redist.x64.exe",
+    "urls": [
+     "https://aka.ms/vs/17/release/vc_redist.x64.exe"
+    ]
+   },
+   "run": "\"{file}\" /install /quiet /norestart",
+   "ok_codes": [
+    0,
+    1638,
+    3010
+   ],
+   "how": "Install the Microsoft Visual C++ 2015-2022 Redistributable (x64) from https://aka.ms/vs/17/release/vc_redist.x64.exe, then run this installer again."
+  },
+  "vcredist-x86": {
+   "_comment": "Minor >= 44, the version stored in msvc-redist: PHP builds refuse an older vcruntime140.dll (on Windows 8.1 with 14.32: \"VCRUNTIME140.dll 14.31 is not compatible with this PHP build linked with 14.44\"). Raise it with the stored redistributable.",
+   "label": "Microsoft Visual C++ 2015-2022 Redistributable (x86)",
+   "os": "windows",
+   "arch": "x86",
+   "checks": [
+    [
+     "reg",
+     "32",
+     "HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\x86",
+     "Minor",
+     "44"
+    ]
+   ],
+   "file": {
+    "name": "vc_redist.x86.exe",
+    "sha256": "0c09f2611660441084ce0df425c51c11e147e6447963c3690f97e0b25c55ed64",
+    "size": 13953392,
+    "local": "msvc-redist/windows/x86/latest/vc_redist.x86.exe",
+    "urls": [
+     "https://aka.ms/vs/17/release/vc_redist.x86.exe"
+    ]
+   },
+   "run": "\"{file}\" /install /quiet /norestart",
+   "ok_codes": [
+    0,
+    1638,
+    3010
+   ],
+   "how": "Install the Microsoft Visual C++ 2015-2022 Redistributable (x86) from https://aka.ms/vs/17/release/vc_redist.x86.exe, then run this installer again."
+  },
+  "vcredist-arm64": {
+   "_comment": "Minor >= 44, the version stored in msvc-redist: PHP builds refuse an older vcruntime140.dll (on Windows 8.1 with 14.32: \"VCRUNTIME140.dll 14.31 is not compatible with this PHP build linked with 14.44\"). Raise it with the stored redistributable.",
+   "label": "Microsoft Visual C++ 2015-2022 Redistributable (arm64)",
+   "os": "windows",
+   "arch": "arm64",
+   "checks": [
+    [
+     "reg",
+     "64",
+     "HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\arm64",
+     "Minor",
+     "44"
+    ]
+   ],
+   "file": {
+    "name": "vc_redist.arm64.exe",
+    "sha256": "5139e1440c3a20b92153a4db561c069a0175aaf76c276c3e5b6f56099edcf4b0",
+    "size": 11722336,
+    "local": "msvc-redist/windows/arm64/latest/vc_redist.arm64.exe",
+    "urls": [
+     "https://aka.ms/vs/17/release/vc_redist.arm64.exe"
+    ]
+   },
+   "run": "\"{file}\" /install /quiet /norestart",
+   "ok_codes": [
+    0,
+    1638,
+    3010
+   ],
+   "how": "Install the Microsoft Visual C++ 2015-2022 Redistributable (arm64) from https://aka.ms/vs/17/release/vc_redist.arm64.exe, then run this installer again."
+  },
+  "libatomic": {
+   "label": "libatomic.so.1 (GCC's atomics library)",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libatomic.so.1"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libatomic1",
+    "dnf": "libatomic",
+    "yum": "libatomic",
+    "zypper": "libatomic1",
+    "apk": "libatomic",
+    "pacman": "gcc-libs"
+   }
+  },
+  "libblas": {
+   "label": "libblas.so.3 (BLAS linear algebra library)",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libblas.so.3"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libblas3",
+    "dnf": "blas",
+    "yum": "blas",
+    "zypper": "libblas3",
+    "apk": "blas",
+    "pacman": "blas"
+   }
+  },
+  "libgomp": {
+   "label": "libgomp.so.1 (GCC's OpenMP library)",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libgomp.so.1"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libgomp1",
+    "dnf": "libgomp",
+    "yum": "libgomp",
+    "zypper": "libgomp1",
+    "apk": "libgomp",
+    "pacman": "gcc-libs"
+   }
+  },
+  "libdeflate": {
+   "label": "libdeflate.so.0 (compression library)",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libdeflate.so.0"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libdeflate0",
+    "dnf": "libdeflate",
+    "yum": "libdeflate",
+    "zypper": "libdeflate0",
+    "apk": "libdeflate",
+    "pacman": "libdeflate"
+   }
+  },
+  "cc": {
+   "label": "A system C compiler (cc) and the C library's development files",
+   "os": "linux",
+   "checks": [
+    [
+     "cmd",
+     "cc"
+    ]
+   ],
+   "packages": {
+    "apt-get": "gcc libc6-dev",
+    "dnf": "gcc glibc-devel",
+    "yum": "gcc glibc-devel",
+    "zypper": "gcc glibc-devel",
+    "apk": "gcc musl-dev",
+    "pacman": "gcc"
+   }
+  },
+  "gcc": {
+   "label": "GCC (gcc) and the C library's development files",
+   "os": "linux",
+   "checks": [
+    [
+     "cmd",
+     "gcc"
+    ]
+   ],
+   "packages": {
+    "apt-get": "gcc libc6-dev",
+    "dnf": "gcc glibc-devel",
+    "yum": "gcc glibc-devel",
+    "zypper": "gcc glibc-devel",
+    "apk": "gcc musl-dev",
+    "pacman": "gcc"
+   }
+  },
+  "xcode-clt": {
+   "label": "Xcode Command Line Tools",
+   "os": "macos",
+   "checks": [
+    [
+     "file",
+     "/Library/Developer/CommandLineTools/usr/bin/clang"
+    ],
+    [
+     "file",
+     "/Applications/Xcode.app/Contents/Developer/usr/bin/clang"
+    ]
+   ],
+   "start": "xcode-select --install",
+   "how": "Install Apple's Command Line Tools: run xcode-select --install in Terminal and click Install in the dialog that opens (it can take a while), then run this installer again."
+  }
  },
  "runtimes": {
   "python": {
@@ -55,15 +262,26 @@
     ]
    },
    "install_rules": [
-    {"_comment": "A package project: pip install . (the recipe's project_install), which also installs its dependencies. Takes precedence over a requirements.txt next to it.",
-     "id": "project", "files": ["pyproject.toml", "setup.py"]},
-    {"_comment": "Only a requirements.txt: install the dependencies; the app itself runs from {app_dir} as its launch command says.",
-     "id": "requirements", "files": ["requirements.txt"],
+    {
+     "_comment": "A package project: pip install . (the recipe's project_install), which also installs its dependencies. Takes precedence over a requirements.txt next to it.",
+     "id": "project",
+     "files": [
+      "pyproject.toml",
+      "setup.py"
+     ]
+    },
+    {
+     "_comment": "Only a requirements.txt: install the dependencies; the app itself runs from {app_dir} as its launch command says.",
+     "id": "requirements",
+     "files": [
+      "requirements.txt"
+     ],
      "command": {
       "windows": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt",
       "linux": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt",
       "macos": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt"
-     }}
+     }
+    }
    ],
    "asyncio": {
     "xp": "==3.5.*",
@@ -80,18 +298,60 @@
      "_comment": "The embeddable Windows zip has no pip; its catalogue recipe runs {tmp}\\get-pip.py. Pinned to pypa/get-pip commit f6f64415 (pip 26.2.1, 2026-08-04); bootstrap.pypa.io serves the same bytes today and is the fallback. Main get-pip.py needs 3.10+; older minors have their own.",
      "for": "install",
      "sources": [
-      {"versions": "==3.5.*", "sha256": "311afebb7cdd310eb3a3a6bb6fffef53d84493db98c7cebf4008a18d3418c8be", "size": 1908223,
-       "urls": ["https://raw.githubusercontent.com/pypa/get-pip/f6f644156f23dfe9acc06e7b9ca75eee311f2e37/public/3.5/get-pip.py", "https://bootstrap.pypa.io/pip/3.5/get-pip.py"]},
-      {"versions": "==3.6.*", "sha256": "7e2d052458c1802dc0a9a97b98ffcc33c5e89cc203247f8e2d5451998f012092", "size": 2159254,
-       "urls": ["https://raw.githubusercontent.com/pypa/get-pip/f6f644156f23dfe9acc06e7b9ca75eee311f2e37/public/3.6/get-pip.py", "https://bootstrap.pypa.io/pip/3.6/get-pip.py"]},
-      {"versions": "==3.7.*", "sha256": "5b9e2f9bb476ce76f84942bb7247dec8d6c0bb9dbc8c62ba2543b81fd7a4243c", "size": 2636033,
-       "urls": ["https://raw.githubusercontent.com/pypa/get-pip/f6f644156f23dfe9acc06e7b9ca75eee311f2e37/public/3.7/get-pip.py", "https://bootstrap.pypa.io/pip/3.7/get-pip.py"]},
-      {"versions": "==3.8.*", "sha256": "6ed6e98282a504ee0a6632856e16c39f222d313fc38be33de216d4afb6ac12f7", "size": 2300180,
-       "urls": ["https://raw.githubusercontent.com/pypa/get-pip/f6f644156f23dfe9acc06e7b9ca75eee311f2e37/public/3.8/get-pip.py", "https://bootstrap.pypa.io/pip/3.8/get-pip.py"]},
-      {"versions": "==3.9.*", "sha256": "95c0ae79ccf9ac1e47e4187f49081d6ae1f45997afd4549e14f37337cbcfd766", "size": 2193444,
-       "urls": ["https://raw.githubusercontent.com/pypa/get-pip/f6f644156f23dfe9acc06e7b9ca75eee311f2e37/public/3.9/get-pip.py", "https://bootstrap.pypa.io/pip/3.9/get-pip.py"]},
-      {"versions": ">=3.10", "sha256": "fb24e693bab954209a063d90953621412ccad4a500905a726286e038f508ddf6", "size": 2230488,
-       "urls": ["https://raw.githubusercontent.com/pypa/get-pip/f6f644156f23dfe9acc06e7b9ca75eee311f2e37/public/get-pip.py", "https://bootstrap.pypa.io/get-pip.py"]}
+      {
+       "versions": "==3.5.*",
+       "sha256": "311afebb7cdd310eb3a3a6bb6fffef53d84493db98c7cebf4008a18d3418c8be",
+       "size": 1908223,
+       "urls": [
+        "https://raw.githubusercontent.com/pypa/get-pip/f6f644156f23dfe9acc06e7b9ca75eee311f2e37/public/3.5/get-pip.py",
+        "https://bootstrap.pypa.io/pip/3.5/get-pip.py"
+       ]
+      },
+      {
+       "versions": "==3.6.*",
+       "sha256": "7e2d052458c1802dc0a9a97b98ffcc33c5e89cc203247f8e2d5451998f012092",
+       "size": 2159254,
+       "urls": [
+        "https://raw.githubusercontent.com/pypa/get-pip/f6f644156f23dfe9acc06e7b9ca75eee311f2e37/public/3.6/get-pip.py",
+        "https://bootstrap.pypa.io/pip/3.6/get-pip.py"
+       ]
+      },
+      {
+       "versions": "==3.7.*",
+       "sha256": "5b9e2f9bb476ce76f84942bb7247dec8d6c0bb9dbc8c62ba2543b81fd7a4243c",
+       "size": 2636033,
+       "urls": [
+        "https://raw.githubusercontent.com/pypa/get-pip/f6f644156f23dfe9acc06e7b9ca75eee311f2e37/public/3.7/get-pip.py",
+        "https://bootstrap.pypa.io/pip/3.7/get-pip.py"
+       ]
+      },
+      {
+       "versions": "==3.8.*",
+       "sha256": "6ed6e98282a504ee0a6632856e16c39f222d313fc38be33de216d4afb6ac12f7",
+       "size": 2300180,
+       "urls": [
+        "https://raw.githubusercontent.com/pypa/get-pip/f6f644156f23dfe9acc06e7b9ca75eee311f2e37/public/3.8/get-pip.py",
+        "https://bootstrap.pypa.io/pip/3.8/get-pip.py"
+       ]
+      },
+      {
+       "versions": "==3.9.*",
+       "sha256": "95c0ae79ccf9ac1e47e4187f49081d6ae1f45997afd4549e14f37337cbcfd766",
+       "size": 2193444,
+       "urls": [
+        "https://raw.githubusercontent.com/pypa/get-pip/f6f644156f23dfe9acc06e7b9ca75eee311f2e37/public/3.9/get-pip.py",
+        "https://bootstrap.pypa.io/pip/3.9/get-pip.py"
+       ]
+      },
+      {
+       "versions": ">=3.10",
+       "sha256": "fb24e693bab954209a063d90953621412ccad4a500905a726286e038f508ddf6",
+       "size": 2230488,
+       "urls": [
+        "https://raw.githubusercontent.com/pypa/get-pip/f6f644156f23dfe9acc06e7b9ca75eee311f2e37/public/get-pip.py",
+        "https://bootstrap.pypa.io/get-pip.py"
+       ]
+      }
      ]
     }
    },
@@ -137,10 +397,22 @@
     "archive"
    ],
    "install_rules": [
-    {"_comment": "npm install (the recipe's project_install).", "id": "npm", "files": ["package.json"]}
+    {
+     "_comment": "npm install (the recipe's project_install).",
+     "id": "npm",
+     "files": [
+      "package.json"
+     ]
+    }
    ],
    "needs": [
-    {"prerequisites": ["libatomic"], "versions": ">=25", "why": "Node.js 25 and later are linked against libatomic.so.1 (GCC's atomics library), which minimal systems such as cloud images and containers leave out."}
+    {
+     "prerequisites": [
+      "libatomic"
+     ],
+     "versions": ">=25",
+     "why": "Node.js 25 and later are linked against libatomic.so.1 (GCC's atomics library), which minimal systems such as cloud images and containers leave out."
+    }
    ],
    "launch": "{runtime} {app_dir}",
    "package": {
@@ -161,9 +433,15 @@
      "macos": "\"{runtime}\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" install --prefix \"{app_dir}\" --no-audit --no-fund --no-update-notifier {package}"
     },
     "ienv": {
-     "windows": {"npm_config_cache": "{data_dir}\\npm-cache"},
-     "linux": {"npm_config_cache": "{data_dir}/npm-cache"},
-     "macos": {"npm_config_cache": "{data_dir}/npm-cache"}
+     "windows": {
+      "npm_config_cache": "{data_dir}\\npm-cache"
+     },
+     "linux": {
+      "npm_config_cache": "{data_dir}/npm-cache"
+     },
+     "macos": {
+      "npm_config_cache": "{data_dir}/npm-cache"
+     }
     },
     "launch": "{runtime} {app_dir}/node_modules/{name}/{bin_path}"
    }
@@ -195,7 +473,13 @@
     "archive"
    ],
    "install_rules": [
-    {"_comment": "bundle install (the recipe's project_install).", "id": "bundler", "files": ["Gemfile"]}
+    {
+     "_comment": "bundle install (the recipe's project_install).",
+     "id": "bundler",
+     "files": [
+      "Gemfile"
+     ]
+    }
    ],
    "launch": "{runtime} {app_dir}/{project}.rb",
    "package": {
@@ -212,9 +496,18 @@
      "macos": "\"{runtime}\" \"{runtime_dir}/bin/gem\" install --no-document --install-dir \"{app_dir}/gems\" --bindir \"{app_dir}/gems/bin\" {package}"
     },
     "env": {
-     "windows": {"GEM_HOME": "{app_dir}\\gems", "GEM_PATH": "{app_dir}\\gems"},
-     "linux": {"GEM_HOME": "{app_dir}/gems", "GEM_PATH": "{app_dir}/gems"},
-     "macos": {"GEM_HOME": "{app_dir}/gems", "GEM_PATH": "{app_dir}/gems"}
+     "windows": {
+      "GEM_HOME": "{app_dir}\\gems",
+      "GEM_PATH": "{app_dir}\\gems"
+     },
+     "linux": {
+      "GEM_HOME": "{app_dir}/gems",
+      "GEM_PATH": "{app_dir}/gems"
+     },
+     "macos": {
+      "GEM_HOME": "{app_dir}/gems",
+      "GEM_PATH": "{app_dir}/gems"
+     }
     },
     "launch": "{runtime} {app_dir}/gems/bin/{bin}"
    },
@@ -254,12 +547,31 @@
     "archive"
    ],
    "install_rules": [
-    {"_comment": "The catalogue's recipes name composer.phar, but it isn't in the download plan, so their project_install would fail. Refused until it is.",
-     "id": "composer", "files": ["composer.json"],
-     "unsupported": "PHP projects with a composer.json can't be installed yet: Composer isn't in Installer Builder's runtime catalogue. Remove composer.json (or give your own install command) if the app doesn't need it."}
+    {
+     "_comment": "The catalogue's recipes name composer.phar, but it isn't in the download plan, so their project_install would fail. Refused until it is.",
+     "id": "composer",
+     "files": [
+      "composer.json"
+     ],
+     "unsupported": "PHP projects with a composer.json can't be installed yet: Composer isn't in Installer Builder's runtime catalogue. Remove composer.json (or give your own install command) if the app doesn't need it."
+    }
    ],
    "needs": [
-    {"prerequisites": ["vcredist-x64", "vcredist-x86", "vcredist-arm64"], "variants": ["nts-vs17", "nts-vs16", "nts-vc15", "nts-vc14"], "min_os": 601, "why": "PHP for Windows is built with Visual Studio and needs its C/C++ runtime DLLs (vcruntime140.dll and friends). Windows 10 and 11 usually have them already; Windows 7, 8 and 8.1 usually don't."}
+    {
+     "prerequisites": [
+      "vcredist-x64",
+      "vcredist-x86",
+      "vcredist-arm64"
+     ],
+     "variants": [
+      "nts-vs17",
+      "nts-vs16",
+      "nts-vc15",
+      "nts-vc14"
+     ],
+     "min_os": 601,
+     "why": "PHP for Windows is built with Visual Studio and needs its C/C++ runtime DLLs (vcruntime140.dll and friends). Windows 10 and 11 usually have them already; Windows 7, 8 and 8.1 usually don't."
+    }
    ],
    "launch": "{runtime} {app_dir}/index.php"
   },
@@ -341,7 +653,17 @@
     ]
    },
    "needs": [
-    {"prerequisites": ["libblas", "libgomp", "libdeflate"], "variants": ["posit-ubuntu-2204"], "why": "R's Ubuntu build links shared libraries from the distribution (BLAS, OpenMP, libdeflate) that minimal installs leave out."}
+    {
+     "prerequisites": [
+      "libblas",
+      "libgomp",
+      "libdeflate"
+     ],
+     "variants": [
+      "posit-ubuntu-2204"
+     ],
+     "why": "R's Ubuntu build links shared libraries from the distribution (BLAS, OpenMP, libdeflate) that minimal installs leave out."
+    }
    ],
    "launch": "{runtime} {app_dir}/main.R"
   },
@@ -380,9 +702,15 @@
      "macos": "\"{runtime_dir}/bin/go\" install {package}"
     },
     "ienv": {
-     "windows": {"GOBIN": "{app_dir}"},
-     "linux": {"GOBIN": "{app_dir}"},
-     "macos": {"GOBIN": "{app_dir}"}
+     "windows": {
+      "GOBIN": "{app_dir}"
+     },
+     "linux": {
+      "GOBIN": "{app_dir}"
+     },
+     "macos": {
+      "GOBIN": "{app_dir}"
+     }
     },
     "launch": "{app_dir}/{project}{exe}"
    }
@@ -413,8 +741,18 @@
    ],
    "compiled": true,
    "needs": [
-    {"prerequisites": ["cc"], "why": "Rust links programs through the system C compiler (cc) and the C library's development files, which minimal installs leave out."},
-    {"prerequisites": ["xcode-clt"], "why": "Rust links programs with Apple's linker and the macOS SDK, which come with the Xcode Command Line Tools."}
+    {
+     "prerequisites": [
+      "cc"
+     ],
+     "why": "Rust links programs through the system C compiler (cc) and the C library's development files, which minimal installs leave out."
+    },
+    {
+     "prerequisites": [
+      "xcode-clt"
+     ],
+     "why": "Rust links programs with Apple's linker and the macOS SDK, which come with the Xcode Command Line Tools."
+    }
    ],
    "launch": "{app_dir}/target/release/{project}{exe}",
    "package": {
@@ -487,8 +825,18 @@
     "macos": "\"{runtime_dir}/bin/nim\" c -d:release --nimcache:\"{data_dir}/nimcache\" -o:\"{app_dir}/{project}\" {project}.nim"
    },
    "needs": [
-    {"prerequisites": ["gcc"], "why": "Nim compiles to C and builds it with the system gcc and the C library's development files, which minimal installs leave out."},
-    {"prerequisites": ["xcode-clt"], "why": "Nim compiles to C and builds it with clang and the macOS SDK from the Xcode Command Line Tools."}
+    {
+     "prerequisites": [
+      "gcc"
+     ],
+     "why": "Nim compiles to C and builds it with the system gcc and the C library's development files, which minimal installs leave out."
+    },
+    {
+     "prerequisites": [
+      "xcode-clt"
+     ],
+     "why": "Nim compiles to C and builds it with clang and the macOS SDK from the Xcode Command Line Tools."
+    }
    ],
    "launch": "{app_dir}/{project}{exe}",
    "requires": {
@@ -531,14 +879,15 @@
    },
    "install_command": {
     "windows": "\"{runtime_dir}\\bin\\gcc.exe\" -O2 -o \"{app_dir}\\{project}.exe\" *.c",
-    "linux": "\"{runtime_dir}/bin/clang\" -O2 -o \"{app_dir}/{project}\" *.c",
-    "macos": "\"{runtime_dir}/bin/clang\" -O2 -isysroot \"$(xcrun --show-sdk-path)\" -o \"{app_dir}/{project}\" *.c"
+    "linux": "\"{runtime_dir}/zig\" cc -O2 -o \"{app_dir}/{project}\" *.c",
+    "macos": "\"{runtime_dir}/zig\" cc -O2 -o \"{app_dir}/{project}\" *.c"
    },
-   "needs": [
-    {"prerequisites": ["gcc"], "why": "The catalogue's clang uses the system's C library headers and GCC's start files and libgcc to link, which minimal installs leave out."},
-    {"prerequisites": ["xcode-clt"], "why": "C and C++ programs need the macOS SDK (headers and libraries) and Apple's linker from the Xcode Command Line Tools."}
-   ],
-   "launch": "{app_dir}/{project}{exe}"
+   "needs": [],
+   "launch": "{app_dir}/{project}{exe}",
+   "via": {
+    "linux": "zig",
+    "macos": "zig"
+   }
   }
  }
 }

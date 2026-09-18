@@ -116,6 +116,11 @@ type RuntimePolicy struct {
 	// System-wide prerequisites (Policy.Prerequisites) this runtime needs,
 	// e.g. the VC++ redistributable for PHP on Windows.
 	Needs []NeedRule `json:"needs"`
+	// Via: on these OS families the runtime is provided by another
+	// catalogue runtime's releases and recipes (e.g. C/C++ on Linux and
+	// macOS via Zig's self-contained `zig cc`); this runtime's install
+	// command and launch still apply.
+	Via map[string]string `json:"via"`
 	// Launch default per the form (design.md section 4).
 	Launch string `json:"launch"`
 	// Files a recipe names as {tmp}/<name> that the catalogue doesn't

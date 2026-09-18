@@ -429,8 +429,13 @@ func (c *Catalog) ResolveFiles(app *App) (string, []FileRef, error) {
 		if len(app.Platforms) > 0 && !contains(app.Platforms, family) {
 			continue
 		}
+		// A runtime may be provided by another on this family (policy via).
+		frt := rt
+		if v := c.Policy.Runtimes[app.Runtime].Via[family]; v != "" && c.Runtimes[v] != nil {
+			frt = c.Runtimes[v]
+		}
 		for _, machine := range []string{"amd64", "arm64", "x86"} {
-			cands := c.candidates(rt, family, machine)
+			cands := c.candidates(frt, family, machine)
 			var cur *block
 			flush := func() {
 				if cur != nil {
@@ -455,7 +460,7 @@ func (c *Catalog) ResolveFiles(app *App) (string, []FileRef, error) {
 					flush()
 					continue
 				}
-				p, cond := c.best(rt, cands, o, app)
+				p, cond := c.best(frt, cands, o, app)
 				if cond != nil && (p == nil || cond.rel != p.rel) {
 					// Needs a newer build than this OS version starts at: a
 					// block of its own, checked before the fallback.
