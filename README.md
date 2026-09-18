@@ -12,7 +12,7 @@ Plain HTML and CSS. No build step, no server. Open `index.html` in a browser.
 | `create.html` | Redirects to `new.html`; writing an app is now a choice there |
 | `bases.html` | Catalogue of base installers, and the three ways to ship them |
 | `edit.html` | Mock-up of editing an unsigned installer in the browser |
-| `builds.html` | List of builds |
+| `builds.html` | List of builds. Not linked from the site; kept for a future admin view |
 | `build.html` | One build: steps, downloads with hashed file names, what users see before installing, the settings record |
 
 All data is sample data. Submitting the form just opens `build.html`.
