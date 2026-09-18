@@ -126,6 +126,7 @@ func main() {
 	mux.HandleFunc("GET /api/relay", s.relay)
 	mux.HandleFunc("GET /dl/{hash}/{name}", s.dl)
 	mux.HandleFunc("GET /bases/{os}", s.base)
+	mux.HandleFunc("GET /icons/{file}", s.icon)
 	mux.Handle("GET /src/", http.StripPrefix("/src/", noDirs(s.srcTakedown(http.FileServer(http.Dir(filepath.Join(*data, "src")))))))
 	mux.Handle("GET /mirror/", http.StripPrefix("/mirror/", noDirs(http.FileServer(http.Dir(*local)))))
 	mux.Handle("GET /", noDirs(siteOnly(http.FileServer(http.Dir(*site)))))
@@ -272,7 +273,8 @@ func (s *server) submit(w http.ResponseWriter, r *http.Request) {
 		apiError(w, http.StatusTooManyRequests, "rate_limited", "Too many builds from your address; try again in a minute.")
 		return
 	}
-	body, err := io.ReadAll(io.LimitReader(r.Body, 2<<20))
+	// Up to 1 MB of inline source plus a 1 MB icon in base64.
+	body, err := io.ReadAll(io.LimitReader(r.Body, 4<<20))
 	if err != nil {
 		apiError(w, 400, "bad_request", "couldn't read the request")
 		return
@@ -289,6 +291,11 @@ func (s *server) submit(w http.ResponseWriter, r *http.Request) {
 	}
 	if s.takenDown(sourceKey(req.Source.Kind, req.Source.Value)) {
 		apiError(w, 451, "taken_down", "This source has been taken down.")
+		return
+	}
+	// The icon is stored now and the job carries only its hash.
+	if err := s.b.StoreIcon(&req); err != nil {
+		apiError(w, 500, "store_failed", "couldn't store the icon")
 		return
 	}
 	norm, _ := json.Marshal(req)
@@ -545,6 +552,28 @@ func (s *server) dl(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%q", name))
 	w.Header().Set("Content-Type", "application/octet-stream")
+	http.ServeFile(w, r, p)
+}
+
+// icon serves an uploaded icon by its SHA-256 (records name it in `icon`).
+func (s *server) icon(w http.ResponseWriter, r *http.Request) {
+	sha, ok := strings.CutSuffix(r.PathValue("file"), ".png")
+	if !ok || !build.IsSHA256(sha) {
+		http.NotFound(w, r)
+		return
+	}
+	if s.takenDown("sha " + sha) {
+		apiError(w, 451, "taken_down", "This icon has been taken down.")
+		return
+	}
+	p := s.b.IconPath(sha)
+	if _, err := os.Stat(p); err != nil {
+		http.NotFound(w, r)
+		return
+	}
+	w.Header().Set("Content-Type", "image/png")
+	w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
 	http.ServeFile(w, r, p)
 }
 

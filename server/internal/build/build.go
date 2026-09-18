@@ -9,10 +9,12 @@ import (
 	"compress/gzip"
 	"context"
 	"crypto/sha256"
+	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"image"
 	"io"
 	"net/http"
 	"os"
@@ -26,6 +28,7 @@ import (
 	"github.com/robertsdotpm/installer-builder/server/internal/catalog"
 	"github.com/robertsdotpm/installer-builder/server/internal/ibfile"
 	"github.com/robertsdotpm/installer-builder/server/internal/ibtext"
+	"github.com/robertsdotpm/installer-builder/server/internal/icon"
 	"github.com/robertsdotpm/installer-builder/server/internal/plansig"
 	"github.com/robertsdotpm/installer-builder/server/internal/queue"
 )
@@ -54,6 +57,22 @@ type Request struct {
 	Mode      string            `json:"mode"`
 	Offline   bool              `json:"offline"`
 	Files     map[string]string `json:"files"`
+	Icon      *IconField        `json:"icon,omitempty"`
+
+	iconPNG []byte      // an upload checked by Validate, not yet stored
+	iconImg image.Image // the stored icon, loaded by Run
+}
+
+// IconField is the request's `icon` (docs/api.md). Data is the uploaded
+// PNG in base64; the server stores it (StoreIcon) and replaces it with
+// SHA256 before the job is queued. A gallery Choice without Data is not
+// rendered yet: the base keeps its own icon.
+type IconField struct {
+	Choice   string `json:"choice,omitempty"`
+	Data     string `json:"data,omitempty"`
+	Filename string `json:"filename,omitempty"`
+	Type     string `json:"type,omitempty"`
+	SHA256   string `json:"sha256,omitempty"`
 }
 
 // hasControl reports C0/C1 control characters and bidi controls.
@@ -73,7 +92,46 @@ var (
 	projectRe  = regexp.MustCompile(`^[A-Za-z0-9_.-]{1,64}$`)
 	githubRe   = regexp.MustCompile(`^(?:https?://github\.com/)?([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+?)(?:\.git)?/?$`)
 	platformOK = map[string]bool{"windows": true, "linux": true, "macos": true}
+	sha256Re   = regexp.MustCompile(`^[0-9a-f]{64}$`)
 )
+
+// IsSHA256 reports a lowercase hex SHA-256.
+func IsSHA256(s string) bool { return sha256Re.MatchString(s) }
+
+// validateIcon checks the request's icon: an upload must be a square PNG
+// of at most 1 MB and 1024 pixels (icon.Decode).
+func (r *Request) validateIcon() error {
+	ic := r.Icon
+	if ic == nil {
+		return nil
+	}
+	if len(ic.Choice) > 64 || hasControl(ic.Choice) {
+		return errors.New("bad icon choice")
+	}
+	ic.Filename, ic.Type = "", "" // not used, and not worth storing
+	if ic.Data == "" {
+		if ic.SHA256 != "" && !IsSHA256(ic.SHA256) {
+			return errors.New("bad icon sha256")
+		}
+		return nil
+	}
+	data := strings.TrimSpace(ic.Data)
+	if i := strings.Index(data, ";base64,"); strings.HasPrefix(data, "data:") && i >= 0 {
+		data = data[i+len(";base64,"):]
+	}
+	if len(data) > base64.StdEncoding.EncodedLen(icon.MaxBytes)+4 {
+		return fmt.Errorf("the icon is over %d KB", icon.MaxBytes>>10)
+	}
+	raw, err := base64.StdEncoding.DecodeString(data)
+	if err != nil {
+		return errors.New("the icon isn't valid base64")
+	}
+	if _, err := icon.Decode(raw); err != nil {
+		return err
+	}
+	r.iconPNG = raw
+	return nil
+}
 
 // Validate checks a request before it is queued, and picks its class.
 func (r *Request) Validate(cat *catalog.Catalog) (class string, err error) {
@@ -155,6 +213,9 @@ func (r *Request) Validate(cat *catalog.Catalog) (class string, err error) {
 	default:
 		return "", errors.New("source kind must be github, package, url or inline")
 	}
+	if err := r.validateIcon(); err != nil {
+		return "", err
+	}
 	if r.Offline {
 		return "pack", nil
 	}
@@ -201,6 +262,9 @@ func (b *Builder) Run(ctx context.Context, j *queue.Job, progress func(string)) 
 		return nil, err
 	}
 	if _, err := r.Validate(b.Cat); err != nil {
+		return nil, err
+	}
+	if err := b.loadIcon(&r); err != nil {
 		return nil, err
 	}
 	progress("Resolving the source")
@@ -262,6 +326,11 @@ func (b *Builder) Run(ctx context.Context, j *queue.Job, progress func(string)) 
 	w.Add("console", b01(console))
 	w.Add("menu", b01(menu))
 	w.Add("desktop", b01(r.Desktop))
+	if r.iconImg != nil {
+		// In every mode, so the record's hash covers the icon; the PNG is
+		// served at /icons/<sha256>.png (format.md section 2).
+		w.Add("icon", r.Icon.SHA256)
+	}
 	w.Add("root", orDefault(r.Root, "user"))
 	w.Add("rootname", orDefault(r.RootName, "ib"))
 	w.Add("platforms", strings.Join(r.Platforms, " "))
@@ -287,6 +356,53 @@ func (b *Builder) Run(ctx context.Context, j *queue.Job, progress func(string)) 
 		res.Files = append(res.Files, *f)
 	}
 	return json.Marshal(res)
+}
+
+// Icons ------------------------------------------------------------------
+
+// IconPath is where an uploaded icon is stored, by its SHA-256.
+func (b *Builder) IconPath(sha string) string {
+	return filepath.Join(b.Data, "icons", sha+".png")
+}
+
+// StoreIcon stores an upload checked by Validate under its SHA-256 and
+// replaces the request's base64 with the hash, so the queued job stays
+// small.
+func (b *Builder) StoreIcon(r *Request) error {
+	if r.iconPNG == nil {
+		return nil
+	}
+	sha := sha256hex(r.iconPNG)
+	if !fileExists(b.IconPath(sha)) {
+		if err := ibfile.WriteAtomic(b.IconPath(sha), r.iconPNG); err != nil {
+			return err
+		}
+	}
+	r.Icon.SHA256, r.Icon.Data, r.iconPNG = sha, "", nil
+	return nil
+}
+
+// loadIcon stores (if needed) and decodes the job's icon.
+func (b *Builder) loadIcon(r *Request) error {
+	if err := b.StoreIcon(r); err != nil {
+		return err
+	}
+	if r.Icon == nil || r.Icon.SHA256 == "" {
+		return nil
+	}
+	data, err := os.ReadFile(b.IconPath(r.Icon.SHA256))
+	if err != nil {
+		return errors.New("the icon wasn't found; upload it again")
+	}
+	if sha256hex(data) != r.Icon.SHA256 {
+		return errors.New("the stored icon is damaged; upload it again")
+	}
+	img, err := icon.Decode(data)
+	if err != nil {
+		return err
+	}
+	r.iconImg = img
+	return nil
 }
 
 // Records ----------------------------------------------------------------
@@ -723,7 +839,11 @@ func (b *Builder) output(ctx context.Context, r *Request, plat, stem, hash strin
 				}
 			}
 		}
-		if err := ibfile.MacZip(base, stem+".app", extra, &buf); err != nil {
+		var icns []byte
+		if r.Mode != "A" && r.iconImg != nil {
+			icns = icon.ICNS(r.iconImg)
+		}
+		if err := ibfile.MacZip(base, stem+".app", extra, icns, &buf); err != nil {
 			return nil, err
 		}
 		if r.Mode == "A" {
@@ -735,9 +855,32 @@ func (b *Builder) output(ctx context.Context, r *Request, plat, stem, hash strin
 			signedBy = "Installer Builder TEST"
 		}
 	default:
+		// Modes B and C: the icon goes into the file before the metadata
+		// block (and before any signature). Mode A files are never changed.
+		iconSet := false
+		if plat == "windows" && r.iconImg != nil {
+			if base, err = icon.SetExeIcon(base, icon.WindowsImages(r.iconImg)); err != nil {
+				return nil, fmt.Errorf("setting the icon: %w", err)
+			}
+			iconSet = true
+		}
+		// Linux carries the PNG in the pack, named by the record's `icon`.
+		var iconPack []ibfile.PackFile
+		if plat == "linux" && r.iconImg != nil {
+			st, err := os.Stat(b.IconPath(r.Icon.SHA256))
+			if err != nil {
+				return nil, err
+			}
+			iconPack = []ibfile.PackFile{{SHA256: r.Icon.SHA256, Path: b.IconPath(r.Icon.SHA256), Size: st.Size()}}
+		}
 		var plan []byte
 		var pack io.Reader
 		var packLen int64
+		if len(iconPack) > 0 && !r.Offline {
+			pr, pw := io.Pipe()
+			go func() { pw.CloseWithError(ibfile.WritePack(iconPack, pw)) }()
+			pack, packLen = pr, ibfile.PackSize(iconPack)
+		}
 		if r.Offline {
 			p, files, err := b.SignedPlan(hash, []string{plat})
 			if err != nil {
@@ -748,6 +891,7 @@ func (b *Builder) output(ctx context.Context, r *Request, plat, stem, hash strin
 			if err != nil {
 				return nil, err
 			}
+			pf = ibfile.DedupPack(append(pf, iconPack...))
 			if ibfile.PackSize(pf) > MaxPack {
 				return nil, fmt.Errorf("the packed files come to %d MB; the limit is %d MB (installers use 32-bit offsets)", ibfile.PackSize(pf)>>20, MaxPack>>20)
 			}
@@ -768,6 +912,14 @@ func (b *Builder) output(ctx context.Context, r *Request, plat, stem, hash strin
 		if err != nil {
 			os.Remove(f.Name())
 			return nil, err
+		}
+		// The block changed the file, so the checksum set with the icon is
+		// recomputed over the whole of it.
+		if iconSet {
+			if err := icon.FixChecksumFile(f.Name()); err != nil {
+				os.Remove(f.Name())
+				return nil, err
+			}
 		}
 		if err := os.Rename(f.Name(), out); err != nil {
 			return nil, err
