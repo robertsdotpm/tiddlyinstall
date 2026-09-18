@@ -42,11 +42,16 @@
      "tar.gz"
     ]
    },
-   "install_files": [
-    "requirements.txt",
-    "setup.py",
-    "pyproject.toml",
-    "setup.cfg"
+   "install_rules": [
+    {"_comment": "A package project: pip install . (the recipe's project_install), which also installs its dependencies. Takes precedence over a requirements.txt next to it.",
+     "id": "project", "files": ["pyproject.toml", "setup.py"]},
+    {"_comment": "Only a requirements.txt: install the dependencies; the app itself runs from {app_dir} as its launch command says.",
+     "id": "requirements", "files": ["requirements.txt"],
+     "command": {
+      "windows": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt",
+      "linux": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt",
+      "macos": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt"
+     }}
    ],
    "asyncio": {
     "xp": "==3.5.*",
@@ -119,15 +124,16 @@
    "kinds": [
     "archive"
    ],
-   "install_files": [
-    "package.json"
+   "install_rules": [
+    {"_comment": "npm install (the recipe's project_install).", "id": "npm", "files": ["package.json"]}
    ],
    "launch": "{runtime} {app_dir}",
    "package": {
-    "_comment": "npm install into the app's folder (--prefix, so a package.json in a parent folder is never used). Launch runs the package's own program file from its package.json bin, with the private node, so no .cmd shims are needed on Windows. npm's cache (and its _logs) would go to ~/.npm, so ienv keeps it in the app's data folder. Scoped names (@scope/name) aren't accepted yet.",
+    "_comment": "npm install into the app's folder (--prefix, so a package.json in a parent folder is never used). Launch runs the package's own program file from its package.json bin, with the private node, so no .cmd shims are needed on Windows. npm's cache (and its _logs) would go to ~/.npm, so ienv keeps it in the app's data folder. Scoped names (@scope/name) are accepted in jobs; the project (and the bin looked for) is the part after the slash. Plain file names can't carry them (api.md, Plans by name).",
     "registry": "npm",
-    "name": "^[a-z0-9][a-z0-9._-]{0,213}$",
+    "name": "^(@[a-z0-9][a-z0-9._-]{0,100}/)?[a-z0-9][a-z0-9._-]{0,100}$",
     "lower": true,
+    "project_from": "unscoped",
     "spec": "\"{name}@{version}\"",
     "spec_any": "\"{name}\"",
     "lookup": "https://registry.npmjs.org/{name}/latest",
@@ -173,8 +179,8 @@
    "kinds": [
     "archive"
    ],
-   "install_files": [
-    "Gemfile"
+   "install_rules": [
+    {"_comment": "bundle install (the recipe's project_install).", "id": "bundler", "files": ["Gemfile"]}
    ],
    "launch": "{runtime} {app_dir}/{project}.rb",
    "package": {
@@ -232,8 +238,10 @@
    "kinds": [
     "archive"
    ],
-   "install_files": [
-    "composer.json"
+   "install_rules": [
+    {"_comment": "The catalogue's recipes name composer.phar, but it isn't in the download plan, so their project_install would fail. Refused until it is.",
+     "id": "composer", "files": ["composer.json"],
+     "unsupported": "PHP projects with a composer.json can't be installed yet: Composer isn't in Installer Builder's runtime catalogue. Remove composer.json (or give your own install command) if the app doesn't need it."}
    ],
    "launch": "{runtime} {app_dir}/index.php"
   },

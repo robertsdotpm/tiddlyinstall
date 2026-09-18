@@ -10,9 +10,11 @@ import (
 // Package names and versions are pasted into install commands run by
 // `cmd /c` and `sh -c` on the user's machine, so whatever a runtime's
 // policy allows, they must also fit these: no quotes, spaces, `%`, `$`,
-// backticks, `;`, `&`, `|`, `<`, `>` or backslashes.
+// backticks, `;`, `&`, `|`, `<`, `>` or backslashes. `@` only starts a
+// scoped npm name (@scope/name); it is inert in both shells, and the name
+// is always pasted inside double quotes.
 var (
-	pkgNameFloor = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9@/._~-]{0,199}$`)
+	pkgNameFloor = regexp.MustCompile(`^@?[A-Za-z0-9][A-Za-z0-9/._~-]{0,199}$`)
 	pkgVersionRe = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9.*+!_-]{0,63}$`)
 	defaultName  = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$`)
 )
@@ -71,10 +73,16 @@ func PackageTokens(p *PackagePolicy, name, version string) *strings.Replacer {
 	return strings.NewReplacer("{package}", spec, "{name}", name, "{version}", version)
 }
 
-// PackageProject is the project name for a package: the name itself, or
-// for Go module paths its last element (skipping a /vN suffix), which is
-// what `go install` names the program.
+// PackageProject is the project name for a package: the name itself; for
+// Go module paths ("last") its last element (skipping a /vN suffix), which
+// is what `go install` names the program; for npm ("unscoped") the name
+// without its @scope/, which is what a string `bin` names the program.
 func PackageProject(p *PackagePolicy, name string) string {
+	if p != nil && p.ProjectFrom == "unscoped" && strings.HasPrefix(name, "@") {
+		if i := strings.IndexByte(name, '/'); i > 0 {
+			return name[i+1:]
+		}
+	}
 	if p == nil || p.ProjectFrom != "last" {
 		return name
 	}

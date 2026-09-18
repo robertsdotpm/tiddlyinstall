@@ -44,6 +44,12 @@ type RuntimePolicy struct {
 	// Source files that mean the project must be installed with the
 	// runtime's package manager (otherwise the source just runs).
 	InstallFiles []string `json:"install_files"`
+	// Which install command a project source gets, by the files at the top
+	// of its source, checked in order: the first rule naming a file the
+	// source has wins, and its id goes in the record (`install
+	// default:<id>`), so the plan never needs the source to know it.
+	// Checked before InstallFiles, whose match means plain "default".
+	InstallRules []*InstallRule `json:"install_rules"`
 	// Replacement project install commands per OS family, when the
 	// catalogue's default doesn't suit a simple project.
 	InstallCommand map[string]string `json:"install_command"`
@@ -66,6 +72,57 @@ type RuntimePolicy struct {
 	// How to install a project from this runtime's package registry
 	// (record source `package`). Nil: package sources are refused.
 	Package *PackagePolicy `json:"package"`
+}
+
+// InstallRule is one way to install a project (RuntimePolicy.InstallRules).
+type InstallRule struct {
+	// Recorded as `install default:<id>`: [a-z0-9-]+, never changed once
+	// records name it.
+	ID    string   `json:"id"`
+	Files []string `json:"files"`
+	// Install command per OS family, with the plan tokens; it runs in
+	// {app_dir} with the recipe's project install environment. A family
+	// without one uses the recipe's own project_install command.
+	Command map[string]string `json:"command"`
+	// Set: sources matching this rule are refused with this message
+	// (unless the publisher gives their own install command).
+	Unsupported string `json:"unsupported"`
+}
+
+// Rule returns the runtime's install rule with this id, or nil.
+func (p *RuntimePolicy) Rule(id string) *InstallRule {
+	if p == nil {
+		return nil
+	}
+	for _, r := range p.InstallRules {
+		if r.ID == id {
+			return r
+		}
+	}
+	return nil
+}
+
+// MatchInstall picks a project's install from the file names at the top
+// of its source: a rule (first match in policy order), else "default" when
+// an InstallFiles name is present, else nothing to install.
+func (p *RuntimePolicy) MatchInstall(names []string) (rule *InstallRule, install string) {
+	have := map[string]bool{}
+	for _, n := range names {
+		have[n] = true
+	}
+	for _, r := range p.InstallRules {
+		for _, f := range r.Files {
+			if have[f] {
+				return r, "default:" + r.ID
+			}
+		}
+	}
+	for _, f := range p.InstallFiles {
+		if have[f] {
+			return nil, "default"
+		}
+	}
+	return nil, ""
 }
 
 // ExtraFile is one {tmp} file a recipe needs, per runtime version.
@@ -130,6 +187,7 @@ type PackagePolicy struct {
 	Launch string `json:"launch"`
 	// "last": the project name is the last path element of the package
 	// name (Go module paths), skipping a /vN major-version suffix.
+	// "unscoped": a scoped npm name's part after @scope/.
 	ProjectFrom string `json:"project_from"`
 	// Lowercase names before use (registries that ignore case).
 	Lower bool `json:"lower"`

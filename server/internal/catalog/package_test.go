@@ -237,6 +237,7 @@ func TestValidPackageRefusesInjection(t *testing.T) {
 		{"python", "requests", "2.32.3"}, {"python", "Zope.Interface", ""}, {"python", "backports.zoneinfo", "0.2.1"},
 		{"node", "cowsay", "1.6.0"}, {"ruby", "cowsay", "0.3.0"}, {"rust", "ripgrep", "14.1.1"},
 		{"go", "golang.org/x/tools/cmd/stringer", "v0.30.0"}, {"python", "pip", "25.*"}, {"python", "x", "1.0rc1+local.2"},
+		{"node", "@scope/pkg", ""}, {"node", "@antfu/ni", "30.6.0"}, {"node", "@a.b-c_d/x.y-z_1", "1.0.0-rc.1"},
 	}
 	for _, g := range good {
 		if _, err := c.ValidPackage(g.rt, g.name, g.ver); err != nil {
@@ -246,7 +247,18 @@ func TestValidPackageRefusesInjection(t *testing.T) {
 	bad := []struct{ rt, name, ver string }{
 		{"python", "requests", `2.32.3; echo INJECTED #`}, {"python", `requests"`, ""}, {"python", "a b", ""},
 		{"python", "requests", "1.0 && calc"}, {"python", "requests", "%PATH%"}, {"python", "$(id)", ""},
-		{"python", "requests", "`id`"}, {"node", "@scope/pkg", ""}, {"node", "../../etc", ""},
+		{"python", "requests", "`id`"}, {"node", "../../etc", ""},
+		// Scoped npm names: only @scope/name, nothing that leaves the quotes.
+		{"node", `@scope/pkg"`, ""}, {"node", `@scope/pkg" & calc & "`, ""}, {"node", "@scope/$(id)", ""},
+		{"node", "@scope/`id`", ""}, {"node", "@scope/pkg;rm -rf ~", ""}, {"node", "@scope/pkg|x", ""},
+		{"node", "@scope/pkg&calc", ""}, {"node", "@scope/pkg>x", ""}, {"node", "@%PATH%/pkg", ""},
+		{"node", "@scope/pkg\\x", ""}, {"node", "@scope/pk g", ""}, {"node", "@scope/pkg\nid", ""},
+		{"node", "@@scope/pkg", ""}, {"node", "@/pkg", ""}, {"node", "@scope/", ""}, {"node", "@scope", ""},
+		{"node", "@scope/a/b", ""}, {"node", "@scope/../../etc", ""}, {"node", "@../pkg", ""},
+		{"node", "@scope/.hidden", ""}, {"node", "@scope/pkg@1.0.0", ""}, {"node", "pkg@1.0.0", ""},
+		{"node", "a@scope/pkg", ""}, {"node", "@scope%2fpkg", ""}, {"node", "@scope/pkg", "1.0; id"},
+		{"python", "@scope/pkg", ""}, {"ruby", "@scope/pkg", ""}, {"rust", "@scope/pkg", ""},
+		{"go", "@golang.org/x/tools", ""},
 		{"go", "golang.org/x/../../evil", ""}, {"go", "golang.org/x/tools;rm", ""}, {"python", "-e", ""},
 		{"python", "requests", "1|x"}, {"python", "requests", "1>x"}, {"ruby", "cowsay\\x", ""},
 		{"python", strings.Repeat("a", 300), ""},
@@ -255,6 +267,9 @@ func TestValidPackageRefusesInjection(t *testing.T) {
 		if _, err := c.ValidPackage(b.rt, b.name, b.ver); err == nil {
 			t.Errorf("accepted %s %q %q", b.rt, b.name, b.ver)
 		}
+	}
+	if n, _ := c.ValidPackage("node", "@Scope/Pkg", ""); n != "@scope/pkg" {
+		t.Errorf("npm names should be lowercased, got %q", n)
 	}
 	if n, _ := c.ValidPackage("python", "Requests", ""); n != "requests" {
 		t.Errorf("PyPI names should be lowercased, got %q", n)
@@ -266,6 +281,12 @@ func TestPackageHelpers(t *testing.T) {
 	for in, want := range map[string]string{"golang.org/x/example/hello": "hello", "github.com/a/tool/v2": "tool", "example.com/x": "x"} {
 		if got := PackageProject(p, in); got != want {
 			t.Errorf("PackageProject(%s) = %s", in, got)
+		}
+	}
+	npm := &PackagePolicy{ProjectFrom: "unscoped"}
+	for in, want := range map[string]string{"@antfu/ni": "ni", "cowsay": "cowsay", "@scope/a.b": "a.b"} {
+		if got := PackageProject(npm, in); got != want {
+			t.Errorf("PackageProject(npm, %s) = %s", in, got)
 		}
 	}
 	if PackageModule("typing-extensions") != "typing_extensions" || PackageModule("zope.interface") != "zope_interface" {
@@ -291,10 +312,83 @@ func TestPackageHelpers(t *testing.T) {
 		{v: map[string]any{"cowsay": `x.js" & calc & "`}, wantErr: true},
 		{v: map[string]any{"a b": "x.js"}, wantErr: true},
 		{v: nil, none: true},
+		// A scoped package's bin is named without the scope.
+		{v: map[string]any{"@evil/cowsay": "x.js"}, wantErr: true},
 	} {
 		n, p, err := PickBin(tc.v, "cowsay")
 		if tc.wantErr != (err != nil) || !tc.wantErr && !tc.none && (n != tc.name || p != tc.path) || tc.none && n != "" {
 			t.Errorf("PickBin(%v) = %q %q %v", tc.v, n, p, err)
 		}
+	}
+}
+
+// Scoped npm names are pasted quoted, name and version together.
+func TestScopedNpmInstall(t *testing.T) {
+	c := realCatalog(t)
+	p := c.Policy.Runtimes["node"].Package
+	plan := resolve(t, c, &App{Runtime: "node", Package: "@antfu/ni", PackageVersion: "30.6.0", Project: PackageProject(p, "@antfu/ni"),
+		Launch: "{runtime} {app_dir}/node_modules/@antfu/ni/bin/ni.mjs", Install: "default", Platforms: []string{"linux", "windows"}})
+	for _, label := range []string{"glibc-2.39", "Windows 10"} {
+		b := blockOf(t, plan, label)
+		ins := keys(b, "install")
+		if len(ins) != 1 || !strings.HasSuffix(ins[0], ` --no-update-notifier "@antfu/ni@30.6.0"`) {
+			t.Errorf("%s: install %q", label, ins)
+		}
+		if l := strings.ReplaceAll(strings.Join(keys(b, "launch"), ""), `\`, "/"); !strings.Contains(l, `"{app_dir}/node_modules/@antfu/ni/bin/ni.mjs"`) {
+			t.Errorf("%s: launch %q", label, l)
+		}
+	}
+}
+
+// Project installs follow the policy rule the record names.
+func TestInstallRules(t *testing.T) {
+	c := realCatalog(t)
+	py := c.Policy.Runtimes["python"]
+	for _, tc := range []struct {
+		names []string
+		want  string
+	}{
+		{[]string{"main.py", "requirements.txt"}, "default:requirements"},
+		{[]string{"requirements.txt", "pyproject.toml"}, "default:project"},
+		{[]string{"setup.py"}, "default:project"},
+		{[]string{"main.py", "setup.cfg"}, ""},
+		{[]string{"sub/requirements.txt", "main.py"}, ""},
+		{nil, ""},
+	} {
+		if _, got := py.MatchInstall(tc.names); got != tc.want {
+			t.Errorf("python %v: %q, want %q", tc.names, got, tc.want)
+		}
+	}
+	for rt, want := range map[string]string{"node": "default:npm", "ruby": "default:bundler", "php": "default:composer"} {
+		files := map[string]string{"node": "package.json", "ruby": "Gemfile", "php": "composer.json"}
+		if r, got := c.Policy.Runtimes[rt].MatchInstall([]string{files[rt]}); got != want || (rt == "php") != (r.Unsupported != "") {
+			t.Errorf("%s: %q", rt, got)
+		}
+	}
+	app := func(install string) []ibtext.Line {
+		return blockOf(t, resolve(t, c, &App{Runtime: "python", Launch: "{runtime} {app_dir}/main.py", Install: install, Platforms: []string{"linux"}}), "glibc-2.39")
+	}
+	b := app("default:requirements")
+	if ins := keys(b, "install"); len(ins) != 1 || ins[0] != `"{runtime}" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt` {
+		t.Errorf("requirements install %q", ins)
+	}
+	if !contains(keys(b, "ienv"), "PIP_CONFIG_FILE\t/dev/null") {
+		t.Errorf("the recipe's install environment is missing: %q", keys(b, "ienv"))
+	}
+	if l := keys(b, "launch"); len(l) != 1 || !strings.HasSuffix(l[0], ` "{app_dir}/main.py"`) {
+		t.Errorf("launch %q", l)
+	}
+	for _, id := range []string{"default:project", "default"} {
+		if ins := keys(app(id), "install"); len(ins) != 1 || !strings.HasSuffix(ins[0], "pip install --no-warn-script-location .") {
+			t.Errorf("%s install %q", id, ins)
+		}
+	}
+	b = app("default:no-such-rule")
+	if len(keys(b, "install")) != 0 || len(keys(b, "fail")) != 1 {
+		t.Errorf("unknown rule: install %q fail %q", keys(b, "install"), keys(b, "fail"))
+	}
+	php := blockOf(t, resolve(t, c, &App{Runtime: "php", Launch: "{runtime} {app_dir}/index.php", Install: "default:composer", Platforms: []string{"linux"}}), "glibc")
+	if len(keys(php, "install")) != 0 || len(keys(php, "fail")) != 1 {
+		t.Errorf("composer: install %q fail %q", keys(php, "install"), keys(php, "fail"))
 	}
 }

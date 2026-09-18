@@ -33,6 +33,10 @@ func (s *server) planByName(w http.ResponseWriter, r *http.Request) {
 		apiError(w, 404, "no_registry", err.Error())
 		return
 	}
+	if err := build.PlainNameOK(name); err != nil {
+		apiError(w, 400, "invalid", err.Error())
+		return
+	}
 	norm, err := s.cat.ValidPackage(rt, name, "")
 	if err != nil {
 		apiError(w, 400, "invalid", err.Error())

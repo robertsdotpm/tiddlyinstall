@@ -819,6 +819,21 @@ func (c *Catalog) writeTarget(w *ibtext.Writer, app *App, pol *RuntimePolicy, b 
 		if install == "" {
 			w.Add("fail", fmt.Sprintf("Installing %s packages isn't supported on %s yet.", label(pol, app.Runtime), b.family))
 		}
+	case strings.HasPrefix(app.Install, "default:"):
+		// The policy rule the server chose from the source's files
+		// (RuntimePolicy.InstallRules).
+		id := strings.TrimPrefix(app.Install, "default:")
+		switch rule := pol.Rule(id); {
+		case rule == nil:
+			w.Add("fail", fmt.Sprintf("This installer asks for a %s project install (%q) that Installer Builder doesn't know.", label(pol, app.Runtime), id))
+		case rule.Unsupported != "":
+			w.Add("fail", rule.Unsupported)
+		case rule.Command[b.family] != "":
+			install = rule.Command[b.family]
+		case r.ProjectInstall != nil:
+			// Like plain "default": the recipe's command, or none.
+			install = r.ProjectInstall.Command
+		}
 	case pol != nil && pol.InstallCommand[b.family] != "" && (app.Install == "default" || pol.Compiled):
 		install = pol.InstallCommand[b.family]
 	case app.Install == "default" || pol != nil && pol.Compiled:

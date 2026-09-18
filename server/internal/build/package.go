@@ -172,6 +172,20 @@ func (b *Builder) preparePackage(ctx context.Context, app *catalog.App) error {
 	return err
 }
 
+// PlainNameOK refuses package names a plain file name can't carry. Scoped
+// npm names (@scope/name) need a `/`, which no file name can hold, and the
+// Linux and macOS engines already in use only take [A-Za-z0-9_.-] in the
+// name's package token, so any encoding (e.g. @scope+name) would need new
+// bases; and the only encodings inside that set are ambiguous, since npm
+// names may contain `_`, `.` and `-`. Scoped packages are for jobs (the form
+// and POST /api/jobs), whose files carry their record.
+func PlainNameOK(name string) error {
+	if strings.HasPrefix(name, "@") {
+		return fmt.Errorf("scoped package names (%s) can't be used in a plain file name; make an installer for it with the form instead", name)
+	}
+	return nil
+}
+
 // NameRecord makes (or finds) the record behind a plain file name,
 // install_<runtime>_<package>: the package from the runtime's registry with
 // every setting at its default. Its bytes depend only on the runtime, the
@@ -179,6 +193,9 @@ func (b *Builder) preparePackage(ctx context.Context, app *catalog.App) error {
 // hash, which the takedown list and the transparency screen can name. It
 // pins no version: each plan names the registry's newest at the time.
 func (b *Builder) NameRecord(runtime, name string) (string, error) {
+	if err := PlainNameOK(name); err != nil {
+		return "", err
+	}
 	name, err := b.Cat.ValidPackage(runtime, name, "")
 	if err != nil {
 		return "", err

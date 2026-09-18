@@ -204,7 +204,7 @@ func (b *Builder) Run(ctx context.Context, j *queue.Job, progress func(string)) 
 		return nil, err
 	}
 	progress("Resolving the source")
-	src, project, installNeeded, err := b.source(ctx, &r)
+	src, project, names, err := b.source(ctx, &r)
 	if err != nil {
 		return nil, err
 	}
@@ -224,9 +224,9 @@ func (b *Builder) Run(ctx context.Context, j *queue.Job, progress func(string)) 
 			return nil, err
 		}
 	}
-	install := r.Install
-	if install == "" && (installNeeded || pol.Compiled) {
-		install = "default"
+	install, err := projectInstall(pol, r.Install, src.pkg != nil, names)
+	if err != nil {
+		return nil, err
 	}
 	name := r.Name
 	if name == "" {
@@ -287,6 +287,24 @@ func (b *Builder) Run(ctx context.Context, j *queue.Job, progress func(string)) 
 		res.Files = append(res.Files, *f)
 	}
 	return json.Marshal(res)
+}
+
+// projectInstall is the record's `install`: the publisher's command, else
+// the policy's rule for the files at the top of the source (recorded as
+// default:<rule id>, so a plan never needs the source to choose), else the
+// recipe's default when the source or runtime needs one.
+func projectInstall(pol *catalog.RuntimePolicy, given string, pkg bool, names []string) (string, error) {
+	if given != "" {
+		return given, nil
+	}
+	if pkg || pol.Compiled {
+		return "default", nil
+	}
+	rule, install := pol.MatchInstall(names)
+	if rule != nil && rule.Unsupported != "" {
+		return "", errors.New(rule.Unsupported)
+	}
+	return install, nil
 }
 
 // Records ----------------------------------------------------------------
@@ -447,63 +465,65 @@ func (b *Builder) srcFile(sha string, strip int) *catalog.SourceFile {
 		URLs: []string{strings.TrimRight(b.Public, "/") + "/src/" + sha + ".tar.gz"}}
 }
 
-func (b *Builder) source(ctx context.Context, r *Request) (*source, string, bool, error) {
+// source fetches and stores the app's source, and returns it with the
+// project name and the file names at the top of the source.
+func (b *Builder) source(ctx context.Context, r *Request) (*source, string, []string, error) {
 	pol := b.Cat.Policy.Runtimes[r.Runtime]
 	switch r.Source.Kind {
 	case "inline":
 		project := projectName(r)
 		data, names, err := inlineTarball(project, r.Files)
 		if err != nil {
-			return nil, "", false, err
+			return nil, "", nil, err
 		}
 		sha := sha256hex(data)
 		if err := ibfile.WriteAtomic(b.srcPath(sha), data); err != nil {
-			return nil, "", false, err
+			return nil, "", nil, err
 		}
-		return &source{SourceFile: catalog.SourceFile{SHA256: sha}}, project, anyOf(names, pol.InstallFiles), nil
+		return &source{SourceFile: catalog.SourceFile{SHA256: sha}}, project, names, nil
 	case "github":
 		m := githubRe.FindStringSubmatch(strings.TrimSpace(r.Source.Value))
 		owner, repo := m[1], m[2]
 		ref := orDefault(r.Source.Ref, "HEAD")
 		commit, err := b.githubCommit(ctx, owner, repo, ref)
 		if err != nil {
-			return nil, "", false, err
+			return nil, "", nil, err
 		}
 		data, err := b.fetch(ctx, "https://codeload.github.com/"+owner+"/"+repo+"/tar.gz/"+commit, 200<<20)
 		if err != nil {
-			return nil, "", false, err
+			return nil, "", nil, err
 		}
 		sha := sha256hex(data)
 		if err := ibfile.WriteAtomic(b.srcPath(sha), data); err != nil {
-			return nil, "", false, err
+			return nil, "", nil, err
 		}
 		names, _ := tarNames(data)
 		project := strings.ToLower(repo)
-		return &source{SourceFile: catalog.SourceFile{SHA256: sha}, origin: owner + "/" + repo, commit: commit}, project, anyOf(names, pol.InstallFiles), nil
+		return &source{SourceFile: catalog.SourceFile{SHA256: sha}, origin: owner + "/" + repo, commit: commit}, project, names, nil
 	case "url":
 		data, err := b.fetch(ctx, r.Source.Value, 200<<20)
 		if err != nil {
-			return nil, "", false, err
+			return nil, "", nil, err
 		}
 		if !bytes.HasPrefix(data, []byte{0x1f, 0x8b}) {
-			return nil, "", false, errors.New("source URL must be a .tar.gz for now")
+			return nil, "", nil, errors.New("source URL must be a .tar.gz for now")
 		}
 		sha := sha256hex(data)
 		if err := ibfile.WriteAtomic(b.srcPath(sha), data); err != nil {
-			return nil, "", false, err
+			return nil, "", nil, err
 		}
 		names, _ := tarNames(data)
-		return &source{SourceFile: catalog.SourceFile{SHA256: sha}}, projectName(r), anyOf(names, pol.InstallFiles), nil
+		return &source{SourceFile: catalog.SourceFile{SHA256: sha}}, projectName(r), names, nil
 	case "package":
 		// Pin the version now (design.md section 4: records name what they
 		// install), where the registry can be asked.
 		info, err := b.LookupPackage(ctx, r.Runtime, r.Source.Value, r.Source.Version)
 		if err != nil {
-			return nil, "", false, err
+			return nil, "", nil, err
 		}
-		return &source{pkg: info}, catalog.PackageProject(pol.Package, info.Name), true, nil
+		return &source{pkg: info}, catalog.PackageProject(pol.Package, info.Name), nil, nil
 	}
-	return nil, "", false, errors.New("unknown source kind")
+	return nil, "", nil, errors.New("unknown source kind")
 }
 
 func projectName(r *Request) string {
@@ -612,15 +632,6 @@ func topFolder(p string) int {
 		return 0
 	}
 	return 1
-}
-
-func anyOf(names, want []string) bool {
-	for _, n := range names {
-		if contains(want, n) {
-			return true
-		}
-	}
-	return false
 }
 
 func (b *Builder) githubCommit(ctx context.Context, owner, repo, ref string) (string, error) {
@@ -866,15 +877,6 @@ func sha256hex(b []byte) string {
 func fileExists(p string) bool {
 	_, err := os.Stat(p)
 	return err == nil
-}
-
-func contains(l []string, s string) bool {
-	for _, x := range l {
-		if x == s {
-			return true
-		}
-	}
-	return false
 }
 
 func orDefault(s, d string) string {
