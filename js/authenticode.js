@@ -10,7 +10,7 @@
 // signPE() does all three with a signer {sign({data, digest}) -> bytes, certs}.
 import * as der from './der.js';
 import { peInfo, peChecksum } from './ibfile.js';
-import { verifyWith, orderChain, ecdsaRawToDer, curveBytes } from './x509.js';
+import { verifyWith, orderChain, ecdsaRawToDer, curveBytes, nameString } from './x509.js';
 
 export const OID = {
   signedData: '1.2.840.113549.1.7.2',
@@ -154,7 +154,13 @@ export function parseTimestampResponse(resp, { nonce, imprint }) {
   // The TSA's own name, from its signer certificate if present.
   let tsa = '';
   const tsaName = rest.find((k) => k.cls === 2 && k.num === 0);
-  if (tsaName) { try { tsa = der.readStr(tsaName.kid(0).kid(0).kid(0).kid(0).kid(1)); } catch (e) { /* not a directoryName */ } }
+  const gn = tsaName && tsaName.kids[0];
+  if (gn && gn.cls === 2 && gn.num === 4) {
+    try {
+      const name = nameString(gn.kid(0));
+      tsa = (/(?:^|, )CN=([^,]+)/.exec(name) || /(?:^|, )O=([^,]+)/.exec(name) || [0, name])[1];
+    } catch (e) { /* leave it blank */ }
+  }
   return { token: token.raw.slice(), genTime, tsa };
 }
 

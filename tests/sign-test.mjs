@@ -2,11 +2,12 @@
 // with the real tools. Test keys are made fresh in a temporary folder and
 // deleted afterwards; none is ever committed.
 //
-//   node tests/sign-test.mjs [--no-network]
+//   node tests/sign-test.mjs [--no-network] [--relay http://127.0.0.1:8080]
 //
 // Needs Node 20+, openssl and gpg; osslsigncode (on PATH or in
 // ~/.local/opt/ib-tools) and go are used when present. --no-network skips
-// the RFC 3161 timestamp tests, which call DigiCert's and Sectigo's TSAs.
+// the RFC 3161 timestamp tests, which call DigiCert's and Sectigo's TSAs;
+// --relay also sends one through a running server's POST /api/tsa.
 import { execFileSync, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -21,6 +22,7 @@ import { FX } from './fixtures.js';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const NETWORK = !process.argv.includes('--no-network');
+const RELAY = process.argv.includes('--relay') ? process.argv[process.argv.indexOf('--relay') + 1] : null;
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'ib-sign-test-'));
 const PW = 'test-' + Math.random().toString(36).slice(2);   // throwaway, for throwaway keys
 
@@ -89,7 +91,7 @@ function osslVerify(file, caFile) {
   const calc = /Calculated message digest\s*:\s*([0-9A-F]+)/.exec(r.out);
   return {
     ok: r.code === 0 && /Signature verification: ok/.test(r.out) && !!cur && !!calc && cur[1] === calc[1],
-    timestamp: /Timestamp Verified by/.test(r.out) || /The signature is timestamped/.test(r.out),
+    timestamp: /Timestamp Server Signature verification: ok/.test(r.out),
     out: r.out,
   };
 }
@@ -223,6 +225,33 @@ if (fs.existsSync(signedBase)) {
     await checkFile('base-signed.exe re-signed', t('base-resigned.exe'), t('rsa.crt'), t('rsa.crt'), { record: false });
   });
 } else skip('re-sign base-signed.exe', 'not built');
+
+const tsaFetch = (url) => async (req) => {
+  const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/timestamp-query' }, body: req });
+  if (!r.ok) throw new Error(url + ': HTTP ' + r.status);
+  return new Uint8Array(await r.arrayBuffer());
+};
+const TSAS = [['DigiCert', 'http://timestamp.digicert.com'], ['Sectigo', 'http://timestamp.sectigo.com']];
+if (RELAY) TSAS.push(['relay (DigiCert)', RELAY.replace(/\/$/, '') + '/api/tsa?name=digicert']);
+for (const [name, url] of TSAS) {
+  if (!NETWORK) { skip('timestamp ' + name, '--no-network'); continue; }
+  await run('timestamp ' + name, async () => {
+    const unsigned = await withRecord(b64(FX.peIcon));
+    let r;
+    try {
+      r = await ac.signPE(unsigned, ac.pfxSigner(rsa), { timestamp: tsaFetch(url) });
+    } catch (e) {
+      if (/fetch failed|ENOTFOUND|EAI_AGAIN|HTTP 5/.test(String(e && (e.cause || e.message)))) { skip('timestamp ' + name, 'TSA unreachable: ' + e.message); return; }
+      throw e;
+    }
+    const f = t('ts-' + name.replace(/\W+/g, '') + '.exe');
+    fs.writeFileSync(f, r.file);
+    ok(r.timestamp && Math.abs(r.timestamp.genTime - Date.now()) < 10 * 60e3 && ac.describeSignature(r.file).timestamped,
+      'timestamp ' + name + ': token added, time ' + (r.timestamp && r.timestamp.genTime.toISOString()));
+    const v = await checkFile('timestamp ' + name, f, t('rsa.crt'), t('rsa.crt'));
+    if (v) ok(v.timestamp, 'timestamp ' + name + ': osslsigncode verifies the timestamp', v.out.split('\n').filter((l) => /Timestamp/.test(l)).join(' | '));
+  });
+}
 
 console.log(`\n${passed} passed, ${failed} failed, ${skipped} skipped`);
 fs.rmSync(TMP, { recursive: true, force: true });

@@ -4,6 +4,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -124,6 +125,7 @@ func main() {
 	mux.HandleFunc("GET /api/catalog/runtimes", s.runtimesHandler)
 	mux.HandleFunc("GET /api/takedown", s.takedownHandler)
 	mux.HandleFunc("GET /api/relay", s.relay)
+	mux.HandleFunc("POST /api/tsa", s.tsa)
 	mux.HandleFunc("GET /dl/{hash}/{name}", s.dl)
 	mux.HandleFunc("GET /bases/{os}", s.base)
 	mux.HandleFunc("GET /icons/{file}", s.icon)
@@ -533,6 +535,54 @@ func (s *server) relay(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/octet-stream")
 	io.Copy(w, resp.Body)
+}
+
+// tsaURLs are the only timestamp servers /api/tsa forwards to. None of them
+// sends CORS headers and most are plain HTTP, so a page can't call them.
+var tsaURLs = map[string]string{
+	"digicert":   "http://timestamp.digicert.com",
+	"sectigo":    "http://timestamp.sectigo.com",
+	"globalsign": "http://timestamp.globalsign.com/tsa/r6advanced1",
+	"sslcom":     "http://ts.ssl.com",
+	"certum":     "http://time.certum.pl",
+}
+
+// tsa relays an RFC 3161 TimeStampReq for browser signing
+// (docs/browser-signing.md 2.4). The request holds only a hash of a
+// signature. Nothing is stored or logged beyond the usual request line.
+func (s *server) tsa(w http.ResponseWriter, r *http.Request) {
+	if !s.relayLimiter.allow(clientIP(r)) {
+		apiError(w, http.StatusTooManyRequests, "rate_limited", "Too many relay requests; try again in a minute.")
+		return
+	}
+	u, ok := tsaURLs[r.URL.Query().Get("name")]
+	if !ok {
+		apiError(w, 403, "not_allowed", "Unknown timestamp server; the relay only forwards to a fixed list.")
+		return
+	}
+	body, err := io.ReadAll(io.LimitReader(r.Body, 4097))
+	if err != nil || len(body) < 2 || len(body) > 4096 || body[0] != 0x30 {
+		apiError(w, 400, "bad_request", "The body must be one DER TimeStampReq of at most 4 KB.")
+		return
+	}
+	ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
+	defer cancel()
+	req, _ := http.NewRequestWithContext(ctx, "POST", u, bytes.NewReader(body))
+	req.Header.Set("Content-Type", "application/timestamp-query")
+	resp, err := s.b.HTTP.Do(req)
+	if err != nil {
+		apiError(w, 502, "upstream", "The timestamp server did not answer.")
+		return
+	}
+	defer resp.Body.Close()
+	out, err := io.ReadAll(io.LimitReader(resp.Body, 256<<10))
+	if resp.StatusCode != 200 || err != nil || len(out) == 0 {
+		apiError(w, 502, "upstream", "The timestamp server answered "+resp.Status+".")
+		return
+	}
+	w.Header().Set("Content-Type", "application/timestamp-reply")
+	w.Header().Set("Cache-Control", "no-store")
+	w.Write(out)
 }
 
 func (s *server) dl(w http.ResponseWriter, r *http.Request) {
