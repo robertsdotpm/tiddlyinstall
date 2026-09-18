@@ -24,6 +24,7 @@ import (
 	"github.com/robertsdotpm/installer-builder/server/internal/build"
 	"github.com/robertsdotpm/installer-builder/server/internal/catalog"
 	"github.com/robertsdotpm/installer-builder/server/internal/ibtext"
+	"github.com/robertsdotpm/installer-builder/server/internal/netsafe"
 	"github.com/robertsdotpm/installer-builder/server/internal/queue"
 )
 
@@ -38,6 +39,8 @@ type server struct {
 	site     string
 	bases    string
 	limiter  *limiter
+	// relayLimiter caps /api/relay per address, so it can't burn bandwidth.
+	relayLimiter *limiter
 	runtimes struct {
 		sync.Mutex
 		body []byte
@@ -75,8 +78,11 @@ func main() {
 	}
 	q := queue.New(*redisAddr, *redisDB, *workers)
 	s := &server{q: q, cat: cat, data: *data, local: *local, site: *site, bases: *bases, limiter: newLimiter(20, time.Minute)}
+	// Every outgoing fetch that a user can influence (sources, packs, the
+	// relay) goes through a client that only reaches public addresses.
 	s.b = &build.Builder{Cat: cat, Data: *data, Bases: *bases, Public: *public, Backend: *public,
-		HTTP: &http.Client{Timeout: 10 * time.Minute}}
+		HTTP: netsafe.Client(10 * time.Minute), TakenDown: s.takenDown}
+	s.relayLimiter = newLimiter(30, time.Minute)
 	s.relayOK = map[string]bool{}
 	for _, rt := range cat.Runtimes {
 		for _, e := range rt.Releases {
@@ -106,9 +112,9 @@ func main() {
 	mux.HandleFunc("GET /api/catalog/runtimes", s.runtimesHandler)
 	mux.HandleFunc("GET /api/takedown", s.takedownHandler)
 	mux.HandleFunc("GET /api/relay", s.relay)
-	mux.HandleFunc("GET /dl/{name}", s.dl)
+	mux.HandleFunc("GET /dl/{hash}/{name}", s.dl)
 	mux.HandleFunc("GET /bases/{os}", s.base)
-	mux.Handle("GET /src/", http.StripPrefix("/src/", noDirs(http.FileServer(http.Dir(filepath.Join(*data, "src"))))))
+	mux.Handle("GET /src/", http.StripPrefix("/src/", noDirs(s.srcTakedown(http.FileServer(http.Dir(filepath.Join(*data, "src")))))))
 	mux.Handle("GET /mirror/", http.StripPrefix("/mirror/", noDirs(http.FileServer(http.Dir(*local)))))
 	mux.Handle("GET /", noDirs(siteOnly(http.FileServer(http.Dir(*site)))))
 
@@ -157,7 +163,8 @@ func logReq(h http.Handler) http.Handler {
 // noDirs stops directory listings.
 func noDirs(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if strings.HasSuffix(r.URL.Path, "/") && r.URL.Path != "/" && r.URL.Path != "" {
+		// After StripPrefix, "" is the prefix's own folder: never list it.
+		if r.URL.Path == "" || strings.HasSuffix(r.URL.Path, "/") && r.URL.Path != "/" {
 			http.NotFound(w, r)
 			return
 		}
@@ -213,6 +220,14 @@ func (l *limiter) allow(ip string) bool {
 		return false
 	}
 	l.hits[ip] = append(keep, now)
+	// Forget addresses that have gone quiet, so the map can't grow forever.
+	if len(l.hits) > 10000 {
+		for k, ts := range l.hits {
+			if len(ts) == 0 || now.Sub(ts[len(ts)-1]) > l.window {
+				delete(l.hits, k)
+			}
+		}
+	}
 	return true
 }
 
@@ -260,7 +275,7 @@ func (s *server) submit(w http.ResponseWriter, r *http.Request) {
 		apiError(w, 400, "invalid", err.Error())
 		return
 	}
-	if s.takenDown("source " + req.Source.Kind + " " + strings.ToLower(req.Source.Value)) {
+	if s.takenDown(sourceKey(req.Source.Kind, req.Source.Value)) {
 		apiError(w, 451, "taken_down", "This source has been taken down.")
 		return
 	}
@@ -426,6 +441,30 @@ func (s *server) takedownList() []string {
 	return out
 }
 
+// sourceKey normalises a source for the takedown list, so owner/repo,
+// https://github.com/owner/repo(.git)(/) and case variants all match.
+func sourceKey(kind, value string) string {
+	v := strings.ToLower(strings.TrimSpace(value))
+	if kind == "github" {
+		v = strings.TrimPrefix(strings.TrimPrefix(v, "https://"), "http://")
+		v = strings.TrimPrefix(v, "github.com/")
+		v = strings.TrimSuffix(strings.TrimSuffix(v, "/"), ".git")
+	}
+	return "source " + kind + " " + v
+}
+
+// srcTakedown refuses stored sources whose hash is on the takedown list.
+func (s *server) srcTakedown(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sha := strings.TrimSuffix(r.URL.Path, ".tar.gz")
+		if s.takenDown("sha " + sha) {
+			http.Error(w, "taken down", 451)
+			return
+		}
+		h.ServeHTTP(w, r)
+	})
+}
+
 func (s *server) takenDown(entry string) bool {
 	for _, l := range s.takedownList() {
 		if l == entry {
@@ -442,6 +481,10 @@ func (s *server) takedownHandler(w http.ResponseWriter, r *http.Request) {
 // relay fetches catalogue files for pages on hosts without CORS
 // (packed-files.md 4.2). Only URLs the catalogue lists are allowed.
 func (s *server) relay(w http.ResponseWriter, r *http.Request) {
+	if !s.relayLimiter.allow(clientIP(r)) {
+		apiError(w, http.StatusTooManyRequests, "rate_limited", "Too many relay requests; try again in a minute.")
+		return
+	}
 	u := r.URL.Query().Get("url")
 	if !s.relayOK[u] {
 		apiError(w, 403, "not_in_catalogue", "The relay only fetches files listed in the runtime catalogue.")
@@ -466,12 +509,16 @@ func (s *server) relay(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *server) dl(w http.ResponseWriter, r *http.Request) {
-	name := r.PathValue("name")
-	if strings.ContainsAny(name, "/\\") || strings.HasPrefix(name, ".") {
+	hash, name := r.PathValue("hash"), r.PathValue("name")
+	if !ibtext.IsHash26(hash) || strings.ContainsAny(name, "/\\") || strings.HasPrefix(name, ".") {
 		http.NotFound(w, r)
 		return
 	}
-	p := filepath.Join(s.data, "dl", name)
+	if s.takenDown("record " + hash) {
+		apiError(w, 451, "taken_down", "This installer has been taken down.")
+		return
+	}
+	p := filepath.Join(s.data, "dl", hash, name)
 	if _, err := os.Stat(p); err != nil {
 		http.NotFound(w, r)
 		return

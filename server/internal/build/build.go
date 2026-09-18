@@ -55,7 +55,19 @@ type Request struct {
 	Files     map[string]string `json:"files"`
 }
 
+// hasControl reports C0/C1 control characters and bidi controls.
+func hasControl(s string) bool {
+	for _, c := range s {
+		if c < 0x20 || c >= 0x7f && c < 0xa0 || c >= 0x200e && c <= 0x200f ||
+			c >= 0x202a && c <= 0x202e || c >= 0x2066 && c <= 0x2069 {
+			return true
+		}
+	}
+	return false
+}
+
 var (
+	versionRe  = regexp.MustCompile(`^[A-Za-z0-9.*+!_-]{1,64}$`)
 	safeName   = regexp.MustCompile(`[^a-z0-9_.-]+`)
 	projectRe  = regexp.MustCompile(`^[A-Za-z0-9_.-]{1,64}$`)
 	githubRe   = regexp.MustCompile(`^(?:https?://github\.com/)?([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+?)(?:\.git)?/?$`)
@@ -95,6 +107,21 @@ func (r *Request) Validate(cat *catalog.Catalog) (class string, err error) {
 	if len(r.Name) > 80 || len(r.Launch) > 400 || len(r.Install) > 400 || len(r.Range) > 100 {
 		return "", errors.New("a field is too long")
 	}
+	// Control and bidi characters could disguise what the installer's
+	// review screen shows (e.g. ESC[8m hides the rest of a terminal
+	// summary, U+202E reverses text).
+	for _, f := range []string{r.Name, r.Project, r.Launch, r.Install, r.Range, r.Root, r.RootName,
+		r.Source.Value, r.Source.Ref, r.Source.Version} {
+		if hasControl(f) {
+			return "", errors.New("fields can't contain control or text-direction characters")
+		}
+	}
+	if r.Source.Version != "" && !versionRe.MatchString(r.Source.Version) {
+		return "", errors.New("bad package version")
+	}
+	if r.RootName != "" && !projectRe.MatchString(r.RootName) {
+		return "", errors.New("bad install folder name")
+	}
 	switch r.Source.Kind {
 	case "inline":
 		total := 0
@@ -103,7 +130,7 @@ func (r *Request) Validate(cat *catalog.Catalog) (class string, err error) {
 		}
 		for p, c := range r.Files {
 			total += len(c)
-			if p == "" || strings.HasPrefix(p, "/") || strings.Contains(p, "..") || strings.ContainsAny(p, "\\:\x00") {
+			if p == "" || strings.HasPrefix(p, "/") || strings.Contains(p, "..") || strings.ContainsAny(p, "\\:\x00") || hasControl(p) || len(p) > 200 {
 				return "", fmt.Errorf("bad file name %q", p)
 			}
 		}
@@ -142,6 +169,8 @@ type Builder struct {
 	Public  string // this server's URL, e.g. http://10.0.1.76:8080
 	HTTP    *http.Client
 	Backend string // written into records so online installers find us
+	// TakenDown reports whether a takedown list entry matches.
+	TakenDown func(entry string) bool
 }
 
 // Result is what a finished job returns (docs/api.md).
@@ -173,6 +202,9 @@ func (b *Builder) Run(ctx context.Context, j *queue.Job, progress func(string)) 
 	src, project, installNeeded, err := b.source(ctx, &r)
 	if err != nil {
 		return nil, err
+	}
+	if b.TakenDown != nil && src.SHA256 != "" && b.TakenDown("sha "+src.SHA256) {
+		return nil, errors.New("this source has been taken down")
 	}
 	pol := b.Cat.Policy.Runtimes[r.Runtime]
 	launch := r.Launch
@@ -531,11 +563,11 @@ func (b *Builder) fetch(ctx context.Context, url string, limit int64) ([]byte, e
 	req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
 	resp, err := b.HTTP.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("couldn't download the source (only public internet addresses are allowed)")
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("%s: %s", url, resp.Status)
+		return nil, fmt.Errorf("couldn't download the source: the server answered %s", resp.Status)
 	}
 	data, err := io.ReadAll(io.LimitReader(resp.Body, limit+1))
 	if err != nil {
@@ -548,6 +580,12 @@ func (b *Builder) fetch(ctx context.Context, url string, limit int64) ([]byte, e
 }
 
 // Outputs ----------------------------------------------------------------
+
+// Pack limits: NSIS reads the block with 32-bit arithmetic (format.md 4).
+const (
+	MaxPack    = 2000 << 20
+	MaxMacPack = 1000 << 20
+)
 
 func (b *Builder) basePath(plat string, signed bool) string {
 	switch plat {
@@ -572,7 +610,9 @@ var extFor = map[string]string{"windows": ".exe", "linux": ".run", "macos": ".zi
 
 func (b *Builder) output(ctx context.Context, r *Request, plat, stem, hash string, record []byte, progress func(string)) (*ResultFile, error) {
 	name := stem + extFor[plat]
-	out := filepath.Join(b.Data, "dl", name)
+	// Under the record's hash, so two jobs with the same project name can
+	// never replace each other's download.
+	out := filepath.Join(b.Data, "dl", hash, name)
 	signedBy := ""
 	signed := r.Mode == "A" && plat == "windows"
 	basePath := b.basePath(plat, signed)
@@ -625,6 +665,9 @@ func (b *Builder) output(ctx context.Context, r *Request, plat, stem, hash strin
 			if err != nil {
 				return nil, err
 			}
+			if ibfile.PackSize(pf) > MaxPack {
+				return nil, fmt.Errorf("the packed files come to %d MB; the limit is %d MB (installers use 32-bit offsets)", ibfile.PackSize(pf)>>20, MaxPack>>20)
+			}
 			pr, pw := io.Pipe()
 			go func() { pw.CloseWithError(ibfile.WritePack(pf, pw)) }()
 			pack, packLen = pr, ibfile.PackSize(pf)
@@ -633,32 +676,33 @@ func (b *Builder) output(ctx context.Context, r *Request, plat, stem, hash strin
 		if err := os.MkdirAll(filepath.Dir(out), 0o755); err != nil {
 			return nil, err
 		}
-		f, err := os.Create(out + ".tmp")
+		f, err := os.CreateTemp(filepath.Dir(out), ".build-*")
 		if err != nil {
 			return nil, err
 		}
 		err = ibfile.Append(base, record, plan, pack, packLen, f)
 		f.Close()
 		if err != nil {
+			os.Remove(f.Name())
 			return nil, err
 		}
-		if err := os.Rename(out+".tmp", out); err != nil {
+		if err := os.Rename(f.Name(), out); err != nil {
 			return nil, err
 		}
-		return b.describe(plat, name, out, signedBy, r.Offline)
+		return b.describe(plat, hash, name, out, signedBy, r.Offline)
 	}
 	if err := ibfile.WriteAtomic(out, buf.Bytes()); err != nil {
 		return nil, err
 	}
-	return b.describe(plat, name, out, signedBy, r.Offline)
+	return b.describe(plat, hash, name, out, signedBy, r.Offline)
 }
 
-func (b *Builder) describe(plat, name, path, signed string, offline bool) (*ResultFile, error) {
+func (b *Builder) describe(plat, hash, name, path, signed string, offline bool) (*ResultFile, error) {
 	sha, size, err := ibfile.SHA256File(path)
 	if err != nil {
 		return nil, err
 	}
-	return &ResultFile{Platform: plat, Name: name, URL: "/dl/" + name, Size: size, SHA256: sha, Signed: signed, Offline: offline}, nil
+	return &ResultFile{Platform: plat, Name: name, URL: "/dl/" + hash + "/" + name, Size: size, SHA256: sha, Signed: signed, Offline: offline}, nil
 }
 
 // packFiles finds a local copy of every file a plan needs, downloading and
@@ -685,6 +729,10 @@ func (b *Builder) addPackFiles(ctx context.Context, files []catalog.FileRef, ext
 	pf, err := b.packFiles(ctx, files, progress)
 	if err != nil {
 		return err
+	}
+	// The macOS zip is built in memory for now, so its pack is capped lower.
+	if ibfile.PackSize(pf) > MaxMacPack {
+		return fmt.Errorf("the packed files come to %d MB; macOS offline installers are limited to %d MB for now", ibfile.PackSize(pf)>>20, MaxMacPack>>20)
 	}
 	for _, f := range pf {
 		data, err := os.ReadFile(f.Path)
