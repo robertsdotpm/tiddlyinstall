@@ -119,9 +119,11 @@ func (r *Request) Validate(cat *catalog.Catalog) (class string, err error) {
 			return "", errors.New("source URL must be http(s)")
 		}
 	case "package":
-		if !projectRe.MatchString(r.Source.Value) {
-			return "", errors.New("bad package name")
+		name, err := cat.ValidPackage(r.Runtime, strings.TrimSpace(r.Source.Value), strings.TrimSpace(r.Source.Version))
+		if err != nil {
+			return "", err
 		}
+		r.Source.Value, r.Source.Version = name, strings.TrimSpace(r.Source.Version)
 	default:
 		return "", errors.New("source kind must be github, package, url or inline")
 	}
@@ -178,6 +180,14 @@ func (b *Builder) Run(ctx context.Context, j *queue.Job, progress func(string)) 
 	launch := r.Launch
 	if launch == "" {
 		launch = pol.Launch
+		if src.pkg != nil {
+			launch = pol.Package.Launch
+		}
+	}
+	if src.pkg != nil {
+		if launch, err = PackageLaunch(launch, r.Runtime, pol.Package, src.pkg.Name, src.pkg); err != nil {
+			return nil, err
+		}
 	}
 	install := r.Install
 	if install == "" && (installNeeded || pol.Compiled) {
@@ -208,7 +218,7 @@ func (b *Builder) Run(ctx context.Context, j *queue.Job, progress func(string)) 
 	case "url":
 		w.Add("source", "url", r.Source.Value, src.SHA256)
 	case "package":
-		w.Add("source", "package", r.Source.Value, r.Source.Version)
+		w.Add("source", "package", src.pkg.Name, src.pkg.Version)
 	}
 	w.Add("launch", launch)
 	if install != "" {
@@ -292,10 +302,11 @@ func (b *Builder) LoadApp(hash string) (*catalog.App, []byte, error) {
 				app.Source.URLs = append(app.Source.URLs, l.Val(1))
 			}
 		case "package":
-			app.PackageCmd = l.Val(1)
-			if v := l.Val(2); v != "" {
-				app.PackageCmd += "==" + v
+			name, err := b.Cat.ValidPackage(app.Runtime, l.Val(1), l.Val(2))
+			if err != nil {
+				return nil, nil, fmt.Errorf("record %s: %w", hash, err)
 			}
+			app.Package, app.PackageVersion = name, l.Val(2)
 		}
 	}
 	return app, rec, nil
@@ -310,6 +321,11 @@ func (b *Builder) Plan(hash string, platforms []string) (string, []catalog.FileR
 	if platforms != nil {
 		app.Platforms = platforms
 	}
+	if app.Package != "" {
+		if err := b.preparePackage(context.Background(), app); err != nil {
+			return "", nil, err
+		}
+	}
 	return b.Cat.ResolveFiles(app)
 }
 
@@ -318,6 +334,7 @@ func (b *Builder) Plan(hash string, platforms []string) (string, []catalog.FileR
 type source struct {
 	catalog.SourceFile
 	origin, commit string
+	pkg            *PkgInfo // package sources: name and pinned version
 }
 
 func (b *Builder) srcPath(sha string) string {
@@ -386,7 +403,13 @@ func (b *Builder) source(ctx context.Context, r *Request) (*source, string, bool
 		names, _ := tarNames(data)
 		return &source{SourceFile: catalog.SourceFile{SHA256: sha}}, projectName(r), anyOf(names, pol.InstallFiles), nil
 	case "package":
-		return &source{}, strings.ToLower(r.Source.Value), true, nil
+		// Pin the version now (design.md section 4: records name what they
+		// install), where the registry can be asked.
+		info, err := b.LookupPackage(ctx, r.Runtime, r.Source.Value, r.Source.Version)
+		if err != nil {
+			return nil, "", false, err
+		}
+		return &source{pkg: info}, catalog.PackageProject(pol.Package, info.Name), true, nil
 	}
 	return nil, "", false, errors.New("unknown source kind")
 }

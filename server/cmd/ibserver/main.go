@@ -103,6 +103,7 @@ func main() {
 	mux.HandleFunc("GET /api/jobs/{id}", s.job)
 	mux.HandleFunc("GET /api/records/{hash}", s.record)
 	mux.HandleFunc("GET /api/plan/{hash}", s.plan)
+	mux.HandleFunc("GET /api/plan/name/{runtime}/{project}", s.planByName)
 	mux.HandleFunc("GET /api/catalog/runtimes", s.runtimesHandler)
 	mux.HandleFunc("GET /api/takedown", s.takedownHandler)
 	mux.HandleFunc("GET /api/relay", s.relay)
