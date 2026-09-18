@@ -21,7 +21,72 @@
   "released": "2008-08-07",
   "min_os": null,
   "metadata_source": "https://museum.php.net/php4/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "5.2",
+  "version": "5.2.17",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vc6",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/archives/php-5.2.17-nts-Win32-VC6-x86.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/archives/php-5.2.17-nts-Win32-VC6-x86.zip"
+  ],
+  "checksum": null,
+  "size": 10455037,
+  "released": "2011-01-06",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/archives/",
+  "notes": null,
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "c20433d1fbf7d2bcabe591757b8dcdb00a7477f191e091d95d4f774a601d790b",
+    "source": "scoop PHP/php5.2.17-nts 5.2.17 (HEAD PHP/bucket/php5.2.17-nts.json)"
+   }
+  ],
+  "reason": "newest for windows 2000"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "5.4",
+  "version": "5.4.45",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vc9",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/archives/php-5.4.45-nts-Win32-VC9-x86.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/archives/php-5.4.45-nts-Win32-VC9-x86.zip"
+  ],
+  "checksum": null,
+  "size": 17120046,
+  "released": "2015-09-03",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/archives/",
+  "notes": null,
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "63da6fd7c73c25eef1baec7099c3de348390671f9b2e61b74a8ab300fa4eab92",
+    "source": "scoop PHP/php5.4.45-nts 5.4.45 (HEAD PHP/bucket/php5.4.45-nts.json)"
+   }
+  ],
+  "reason": "newest for windows xp, xp-x64, server2003"
  },
  {
   "runtime": "php",
@@ -53,7 +118,8 @@
     "value": "3d7668280fa4b16f70705539ba1e4ea17eef344c81e82881cbeca26fb7f181f1",
     "source": "scoop PHP/php5.6-nts 5.6.40 (HEAD PHP/bucket/php5.6-nts.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 5"
  },
  {
   "runtime": "php",
@@ -85,7 +151,72 @@
     "value": "a7ad5a445d74da9c5b6e3e85d922a62cd808477a4a0b3bb24b8ee945ffc620a7",
     "source": "scoop PHP/php5.6-nts 5.6.40 (HEAD PHP/bucket/php5.6-nts.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 5"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "7.1",
+  "version": "7.1.33",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vc14",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/archives/php-7.1.33-nts-Win32-VC14-x64.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/archives/php-7.1.33-nts-Win32-VC14-x64.zip"
+  ],
+  "checksum": null,
+  "size": 24268222,
+  "released": "2019-10-24",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/archives/",
+  "notes": null,
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "071438be5bbaee8b34894ddba7852b6040991a3c853ab8141efcb1b6655bbbef",
+    "source": "scoop PHP/php7.1-nts 7.1.33 (HEAD PHP/bucket/php7.1-nts.json)"
+   }
+  ],
+  "reason": "newest for windows vista, server2008"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "7.1",
+  "version": "7.1.33",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vc14",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/archives/php-7.1.33-nts-Win32-VC14-x86.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/archives/php-7.1.33-nts-Win32-VC14-x86.zip"
+  ],
+  "checksum": null,
+  "size": 22436869,
+  "released": "2019-10-24",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/archives/",
+  "notes": null,
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "be810f87c0e88282fb8578a1fa3bbd8720c65425669b27e0437d6cde9aa90805",
+    "source": "scoop PHP/php7.1-nts 7.1.33 (HEAD PHP/bucket/php7.1-nts.json)"
+   }
+  ],
+  "reason": "newest for windows vista, server2008"
  },
  {
   "runtime": "php",
@@ -114,7 +245,8 @@
   "released": "2022-11-03",
   "min_os": null,
   "metadata_source": "https://windows.php.net/downloads/releases/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "php",
@@ -143,7 +275,66 @@
   "released": "2022-11-03",
   "min_os": null,
   "metadata_source": "https://windows.php.net/downloads/releases/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.2",
+  "version": "8.2.33",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vs16",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/php-8.2.33-nts-Win32-vs16-x64.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/php-8.2.33-nts-Win32-vs16-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d0bd189522fa50255ee94ed4b340ed4330f5ae33a90a74205275b0f0b221d388",
+   "source": "https://windows.php.net/downloads/releases/sha256sum.txt"
+  },
+  "size": 33452452,
+  "released": "2026-07-30",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/",
+  "notes": null,
+  "reason": "newest for windows 7, server2008r2"
+ },
+ {
+  "runtime": "php",
+  "languages": [
+   "php"
+  ],
+  "major": "8.2",
+  "version": "8.2.33",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "nts-vs16",
+  "libc": null,
+  "url": "https://windows.php.net/downloads/releases/php-8.2.33-nts-Win32-vs16-x86.zip",
+  "mirrors": [
+   "https://downloads.php.net/~windows/releases/php-8.2.33-nts-Win32-vs16-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "8732dac6084bcad5e8fc363efcd9bdc50afbfc469bc858eeee92da05bd21d8cc",
+   "source": "https://windows.php.net/downloads/releases/sha256sum.txt"
+  },
+  "size": 30175513,
+  "released": "2026-07-30",
+  "min_os": null,
+  "metadata_source": "https://windows.php.net/downloads/releases/",
+  "notes": null,
+  "reason": "newest for windows 7, server2008r2"
  },
  {
   "runtime": "php",
@@ -167,7 +358,8 @@
   "released": "2026-07-07",
   "min_os": null,
   "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
-  "notes": "community build (static-php-cli), not an official php.net binary"
+  "notes": "community build (static-php-cli), not an official php.net binary",
+  "reason": "newest in major 8; newest for linux glibc-2.5, glibc-2.12, glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "php",
@@ -191,7 +383,8 @@
   "released": "2026-07-07",
   "min_os": null,
   "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
-  "notes": "community build (static-php-cli), not an official php.net binary"
+  "notes": "community build (static-php-cli), not an official php.net binary",
+  "reason": "newest in major 8; newest for linux glibc-2.5, glibc-2.12, glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "php",
@@ -215,7 +408,8 @@
   "released": "2026-07-07",
   "min_os": null,
   "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
-  "notes": "community build (static-php-cli), not an official php.net binary"
+  "notes": "community build (static-php-cli), not an official php.net binary",
+  "reason": "newest in major 8; newest for macos 12, 13, 14, 15, 26"
  },
  {
   "runtime": "php",
@@ -239,7 +433,8 @@
   "released": "2026-07-07",
   "min_os": null,
   "metadata_source": "https://dl.static-php.dev/static-php-cli/common/?format=json",
-  "notes": "community build (static-php-cli), not an official php.net binary"
+  "notes": "community build (static-php-cli), not an official php.net binary",
+  "reason": "newest in major 8; newest for macos 12, 13, 14, 15, 26"
  },
  {
   "runtime": "php",
@@ -268,7 +463,8 @@
   "released": "2026-08-27",
   "min_os": null,
   "metadata_source": "https://windows.php.net/downloads/releases/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8; newest for windows 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "php",
@@ -297,6 +493,7 @@
   "released": "2026-08-27",
   "min_os": null,
   "metadata_source": "https://windows.php.net/downloads/releases/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8; newest for windows 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  }
 ]

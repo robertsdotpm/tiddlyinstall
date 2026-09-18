@@ -4,6 +4,29 @@
   "languages": [
    "ruby"
   ],
+  "major": "1.8",
+  "version": "1.8.7-p374",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "7z",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller/releases/download/ruby-1.8.7-p374/ruby-1.8.7-p374-i386-mingw32.7z",
+  "mirrors": [],
+  "checksum": null,
+  "size": 5347369,
+  "released": "2013-06-27",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller/releases",
+  "notes": null,
+  "reason": "newest for windows 2000"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
   "major": "1.9",
   "version": "1.9.3-p551",
   "os": "linux",
@@ -28,7 +51,8 @@
   "released": "2014-11-13",
   "min_os": null,
   "metadata_source": "https://cache.ruby-lang.org/pub/ruby/index.txt",
-  "notes": "source tarball; serves any Unix-like OS (compiled from source), not just Linux"
+  "notes": "source tarball; serves any Unix-like OS (compiled from source), not just Linux",
+  "reason": "newest in major 1"
  },
  {
   "runtime": "ruby",
@@ -57,7 +81,54 @@
     "value": "207fdb5b2f9436ad1ac27bf51918b913c14c443d1b83cd910cf5a59acaeab756",
     "source": "scoop Versions/ruby19 1.9.3-p551 (HEAD Versions/bucket/ruby19.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 1"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "2.0",
+  "version": "2.0.0-p648",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "7z",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller/releases/download/ruby-2.0.0-p648/ruby-2.0.0-p648-x64-mingw32.7z",
+  "mirrors": [],
+  "checksum": null,
+  "size": 9973780,
+  "released": "2015-12-16",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller/releases",
+  "notes": null,
+  "reason": "newest for windows xp-x64, server2003"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "2.5",
+  "version": "2.5.3",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "7z",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/rubyinstaller-2.5.3-1/rubyinstaller-2.5.3-1-x86.7z",
+  "mirrors": [],
+  "checksum": null,
+  "size": 9342058,
+  "released": "2018-10-18",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
+  "notes": null,
+  "reason": "newest for windows xp, xp-x64, server2003"
  },
  {
   "runtime": "ruby",
@@ -83,7 +154,8 @@
   "released": "2025-09-21",
   "min_os": null,
   "metadata_source": "https://github.com/ruby/ruby-builder/releases",
-  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself",
+  "reason": "newest in major 2"
  },
  {
   "runtime": "ruby",
@@ -109,7 +181,8 @@
   "released": "2025-09-21",
   "min_os": null,
   "metadata_source": "https://github.com/ruby/ruby-builder/releases",
-  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself",
+  "reason": "newest in major 2"
  },
  {
   "runtime": "ruby",
@@ -135,7 +208,8 @@
   "released": "2025-09-21",
   "min_os": null,
   "metadata_source": "https://github.com/ruby/ruby-builder/releases",
-  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself",
+  "reason": "newest in major 2"
  },
  {
   "runtime": "ruby",
@@ -161,7 +235,8 @@
   "released": "2025-09-21",
   "min_os": null,
   "metadata_source": "https://github.com/ruby/ruby-builder/releases",
-  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself",
+  "reason": "newest in major 2"
  },
  {
   "runtime": "ruby",
@@ -185,7 +260,8 @@
   "released": "2023-03-30",
   "min_os": null,
   "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2"
  },
  {
   "runtime": "ruby",
@@ -207,7 +283,8 @@
   "released": "2023-03-30",
   "min_os": null,
   "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2"
  },
  {
   "runtime": "ruby",
@@ -231,7 +308,8 @@
   "released": "2023-03-30",
   "min_os": null,
   "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2"
  },
  {
   "runtime": "ruby",
@@ -253,7 +331,297 @@
   "released": "2023-03-30",
   "min_os": null,
   "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "3.2",
+  "version": "3.2.1",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "macos-x64",
+  "libc": null,
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.1/ruby-3.2.1-darwin-x64.tar.gz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "56296fe94127661cb9db248d19c091bec1e01ebd76abaf0ff83fe8365b576141",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 16598252,
+  "released": "2025-09-21",
+  "min_os": null,
+  "metadata_source": "https://github.com/ruby/ruby-builder/releases",
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself",
+  "reason": "newest for macos 10.15"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "3.3",
+  "version": "3.3.2",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "exe",
+  "variant": "devkit",
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.2-1/rubyinstaller-devkit-3.3.2-1-x64.exe",
+  "mirrors": [],
+  "checksum": null,
+  "size": 133025896,
+  "released": "2024-05-30",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
+  "notes": null,
+  "reason": "newest for windows vista, server2008"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "3.3",
+  "version": "3.3.2",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "installer",
+  "format": "exe",
+  "variant": "devkit",
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.2-1/rubyinstaller-devkit-3.3.2-1-x86.exe",
+  "mirrors": [],
+  "checksum": null,
+  "size": 147203376,
+  "released": "2024-05-30",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
+  "notes": null,
+  "reason": "newest for windows vista, server2008"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "3.3",
+  "version": "3.3.3",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "macos-x64",
+  "libc": null,
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.3/ruby-3.3.3-darwin-x64.tar.gz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "ecd55ac9ddb015e3679c95b8957953ca06f215bc20332a1a0c0b4c2b40627813",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 11397326,
+  "released": "2025-09-21",
+  "min_os": null,
+  "metadata_source": "https://github.com/ruby/ruby-builder/releases",
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself",
+  "reason": "newest for macos 11"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "3.3",
+  "version": "3.3.3",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "macos-arm64",
+  "libc": null,
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.3/ruby-3.3.3-darwin-arm64.tar.gz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "13409b686daf488a9018d8599fd7d1e4ff050c025678fc7ab5fd2d46a26e6783",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 11058988,
+  "released": "2025-09-21",
+  "min_os": null,
+  "metadata_source": "https://github.com/ruby/ruby-builder/releases",
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself",
+  "reason": "newest for macos 13"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "3.3",
+  "version": "3.3.6",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "macos-x64",
+  "libc": null,
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.6/ruby-3.3.6-darwin-x64.tar.gz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "34fb7ac8be01f297991f6d61c51e0a169215a2f26bf429d657cc02f652a33b09",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 11569649,
+  "released": "2025-09-21",
+  "min_os": null,
+  "metadata_source": "https://github.com/ruby/ruby-builder/releases",
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself",
+  "reason": "newest for macos 12"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "3.3",
+  "version": "3.3.12",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "7z",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-3.3.12-1-x64.7z",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "f8d534a44e47e5b72abe557497763128b93e9356bd91397a3d7b9e0a11572943",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 14911393,
+  "released": "2026-07-16",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
+  "notes": null,
+  "reason": "newest for windows vista, server2008, 7, server2008r2"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "3.3",
+  "version": "3.3.12",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "exe",
+  "variant": "devkit",
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-devkit-3.3.12-1-x64.exe",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "e5d77c59b3388d0e7f803fd3caad910934ff78f5a55fc69dde40edcb042fe0d8",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 146192640,
+  "released": "2026-07-16",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
+  "notes": null,
+  "reason": "newest for windows 7, server2008r2"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "3.3",
+  "version": "3.3.12",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "7z",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-3.3.12-1-x86.7z",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "38fad8b2b77580291d52a473b5a7bfab37a35ba322e88fac5f5fec79912094b7",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 15097846,
+  "released": "2026-07-16",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
+  "notes": null,
+  "reason": "newest for windows vista, server2008, 7, server2008r2"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "3.3",
+  "version": "3.3.12",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "installer",
+  "format": "exe",
+  "variant": "devkit",
+  "libc": null,
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-devkit-3.3.12-1-x86.exe",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "8e4cc81a70cc33cbd1df44efa7d104b2ecdb98873b57fa1bad1e8f685e3110f9",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 148620408,
+  "released": "2026-07-16",
+  "min_os": null,
+  "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
+  "notes": null,
+  "reason": "newest for windows 7, server2008r2"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "3.4",
+  "version": "3.4.7",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "macos-x64",
+  "libc": null,
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.7/ruby-3.4.7-darwin-x64.tar.gz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "0f414290ff9d6140440fcb4439c5cbe1ea17f330ccb18a5810bef7f2bb0a0702",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 15540183,
+  "released": "2025-10-08",
+  "min_os": null,
+  "metadata_source": "https://github.com/ruby/ruby-builder/releases",
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself",
+  "reason": "newest for macos 13, 14"
  },
  {
   "runtime": "ruby",
@@ -279,7 +647,8 @@
   "released": "2026-06-30",
   "min_os": null,
   "metadata_source": "https://github.com/ruby/ruby-builder/releases",
-  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself",
+  "reason": "newest in major 3"
  },
  {
   "runtime": "ruby",
@@ -305,7 +674,8 @@
   "released": "2026-06-30",
   "min_os": null,
   "metadata_source": "https://github.com/ruby/ruby-builder/releases",
-  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself",
+  "reason": "newest in major 3"
  },
  {
   "runtime": "ruby",
@@ -331,7 +701,8 @@
   "released": "2026-06-30",
   "min_os": null,
   "metadata_source": "https://github.com/ruby/ruby-builder/releases",
-  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself",
+  "reason": "newest in major 3"
  },
  {
   "runtime": "ruby",
@@ -357,7 +728,8 @@
   "released": "2026-06-30",
   "min_os": null,
   "metadata_source": "https://github.com/ruby/ruby-builder/releases",
-  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself",
+  "reason": "newest in major 3"
  },
  {
   "runtime": "ruby",
@@ -383,7 +755,8 @@
   "released": "2026-06-30",
   "min_os": null,
   "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3"
  },
  {
   "runtime": "ruby",
@@ -409,7 +782,8 @@
   "released": "2026-06-30",
   "min_os": null,
   "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3"
  },
  {
   "runtime": "ruby",
@@ -435,7 +809,8 @@
   "released": "2026-06-30",
   "min_os": null,
   "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
-  "notes": "RubyInstaller names this asset '-arm-'; it targets 64-bit Windows on ARM, not 32-bit ARM"
+  "notes": "RubyInstaller names this asset '-arm-'; it targets 64-bit Windows on ARM, not 32-bit ARM",
+  "reason": "newest in major 3"
  },
  {
   "runtime": "ruby",
@@ -461,7 +836,8 @@
   "released": "2026-06-30",
   "min_os": null,
   "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
-  "notes": "RubyInstaller names this asset '-arm-'; it targets 64-bit Windows on ARM, not 32-bit ARM"
+  "notes": "RubyInstaller names this asset '-arm-'; it targets 64-bit Windows on ARM, not 32-bit ARM",
+  "reason": "newest in major 3"
  },
  {
   "runtime": "ruby",
@@ -487,7 +863,8 @@
   "released": "2026-06-30",
   "min_os": null,
   "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3; newest for windows 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "ruby",
@@ -513,7 +890,35 @@
   "released": "2026-06-30",
   "min_os": null,
   "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3; newest for windows 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "4.0",
+  "version": "4.0.7",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "ubuntu-24.04",
+  "libc": "glibc",
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.7/ruby-4.0.7-ubuntu-24.04-x64.tar.gz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "a11b84469b76a38175bce72176f66389fc05b87a3e7545329e8685b01dcb2176",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 49022298,
+  "released": "2026-09-15",
+  "min_os": null,
+  "metadata_source": "https://github.com/ruby/ruby-builder/releases",
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself",
+  "reason": "newest for linux glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "ruby",
@@ -539,7 +944,35 @@
   "released": "2026-09-15",
   "min_os": null,
   "metadata_source": "https://github.com/ruby/ruby-builder/releases",
-  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself",
+  "reason": "newest in major 4; newest for linux glibc-2.41"
+ },
+ {
+  "runtime": "ruby",
+  "languages": [
+   "ruby"
+  ],
+  "major": "4.0",
+  "version": "4.0.7",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "ubuntu-24.04",
+  "libc": "glibc",
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.7/ruby-4.0.7-ubuntu-24.04-arm64.tar.gz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "30c6da2834405ef77ec775b380b1636001c8a7c6bdc2af771e8e19cf2c9be1c6",
+   "source": "GitHub API asset digest field"
+  },
+  "size": 48803590,
+  "released": "2026-09-15",
+  "min_os": null,
+  "metadata_source": "https://github.com/ruby/ruby-builder/releases",
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself",
+  "reason": "newest for linux glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "ruby",
@@ -565,7 +998,8 @@
   "released": "2026-09-15",
   "min_os": null,
   "metadata_source": "https://github.com/ruby/ruby-builder/releases",
-  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself",
+  "reason": "newest in major 4; newest for linux glibc-2.41"
  },
  {
   "runtime": "ruby",
@@ -591,7 +1025,8 @@
   "released": "2026-09-15",
   "min_os": null,
   "metadata_source": "https://github.com/ruby/ruby-builder/releases",
-  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself",
+  "reason": "newest in major 4; newest for macos 15, 26"
  },
  {
   "runtime": "ruby",
@@ -617,7 +1052,8 @@
   "released": "2026-09-15",
   "min_os": null,
   "metadata_source": "https://github.com/ruby/ruby-builder/releases",
-  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself"
+  "notes": "prebuilt 'toolcache' archive from ruby/ruby-builder, as used by the ruby/setup-ruby GitHub Action; not published by ruby-lang.org itself",
+  "reason": "newest in major 4; newest for macos 14, 15, 26"
  },
  {
   "runtime": "ruby",
@@ -645,7 +1081,8 @@
   "released": "2026-09-15",
   "min_os": null,
   "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4; newest for windows 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "ruby",
@@ -673,7 +1110,8 @@
   "released": "2026-09-15",
   "min_os": null,
   "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4; newest for windows 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "ruby",
@@ -701,7 +1139,8 @@
   "released": "2026-09-15",
   "min_os": null,
   "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
-  "notes": "RubyInstaller names this asset '-arm-'; it targets 64-bit Windows on ARM, not 32-bit ARM"
+  "notes": "RubyInstaller names this asset '-arm-'; it targets 64-bit Windows on ARM, not 32-bit ARM",
+  "reason": "newest in major 4; newest for windows 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "ruby",
@@ -729,6 +1168,7 @@
   "released": "2026-09-15",
   "min_os": null,
   "metadata_source": "https://github.com/oneclick/rubyinstaller2/releases",
-  "notes": "RubyInstaller names this asset '-arm-'; it targets 64-bit Windows on ARM, not 32-bit ARM"
+  "notes": "RubyInstaller names this asset '-arm-'; it targets 64-bit Windows on ARM, not 32-bit ARM",
+  "reason": "newest in major 4; newest for windows 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  }
 ]

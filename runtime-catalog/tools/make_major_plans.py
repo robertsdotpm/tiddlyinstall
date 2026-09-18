@@ -42,7 +42,7 @@ FULL_PLAN = {"python": "download_plan.json", "node": "download_plan.json", "java
 
 # Runtime folders that also keep the newest release per OS floor. Others keep
 # the plain one-per-major behaviour until their os_support.json is reviewed.
-OS_FLOOR_RUNTIMES = ["go", "rust", "zig", "nim", "cc", "python", "java", "dotnet", "r"]
+OS_FLOOR_RUNTIMES = ["go", "rust", "zig", "nim", "cc", "python", "java", "dotnet", "r", "node", "ruby", "php"]
 
 
 def vkey(v):
@@ -132,11 +132,12 @@ def load_rules(folder, runtimes):
 def rule_applies(rule, e):
     if rule["os"] != e["os"]:
         return False
-    if rule.get("arch") and e["arch"] not in rule["arch"]:
+    if rule.get("arch") and e["arch"] not in ([rule["arch"]] if isinstance(rule["arch"], str) else rule["arch"]):
         return False
-    if rule.get("variant") and e.get("variant") not in rule["variant"]:
+    as_list = lambda v: [v] if isinstance(v, str) else (v or [])
+    if rule.get("variant") and e.get("variant") not in as_list(rule["variant"]):
         return False
-    if rule.get("format") and e.get("format") not in rule["format"]:
+    if rule.get("format") and e.get("format") not in as_list(rule["format"]):
         return False
     if rule.get("file_match") and not re.search(rule["file_match"], e["url"].rsplit("/", 1)[-1]):
         return False
@@ -153,7 +154,9 @@ def runs_on(e, os_id_key, rules, keys):
     """True/False when rules cover e, None when none apply. Every applying rule must allow it."""
     # Rules with no min_os (e.g. musl-only or source-only lines) don't place a
     # release on this OS scale; they're ignored here.
-    hits = [r for r in rules if rule_applies(r, e) and r.get("min_os") is not None]
+    # ...nor do rules on another scale, e.g. min_os "musl" for Linux builds that
+    # need a musl libc (keys only cover glibc).
+    hits = [r for r in rules if rule_applies(r, e) and r.get("min_os") in keys]
     if not hits:
         return None
     for r in hits:

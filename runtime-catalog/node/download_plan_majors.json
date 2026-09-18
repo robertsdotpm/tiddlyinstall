@@ -35,7 +35,8 @@
   "released": "2017-02-22",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0"
  },
  {
   "runtime": "node",
@@ -73,7 +74,8 @@
   "released": "2017-02-22",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0"
  },
  {
   "runtime": "node",
@@ -111,7 +113,8 @@
   "released": "2017-02-22",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0"
  },
  {
   "runtime": "node",
@@ -150,7 +153,8 @@
   "released": "2017-02-22",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0; newest for macos 10.5, 10.6, 10.7, 10.8, 10.9, 10.10, 10.11, 10.12"
  },
  {
   "runtime": "node",
@@ -188,7 +192,44 @@
   "released": "2017-02-22",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0; newest for macos 10.5, 10.6, 10.7, 10.8, 10.9, 10.10, 10.11, 10.12, 10.13, 10.14"
+ },
+ {
+  "runtime": "node",
+  "languages": [
+   "javascript",
+   "typescript"
+  ],
+  "major": "0.12",
+  "version": "0.12.18",
+  "os": "macos",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nodejs.org/dist/v0.12.18/node-v0.12.18-darwin-x86.tar.gz",
+  "mirrors": [
+   "https://cdn.npmmirror.com/binaries/node/v0.12.18/node-v0.12.18-darwin-x86.tar.gz",
+   "https://registry.npmmirror.com/-/binary/node/v0.12.18/node-v0.12.18-darwin-x86.tar.gz",
+   "https://nodejs.org/download/release/v0.12.18/node-v0.12.18-darwin-x86.tar.gz",
+   "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v0.12.18/node-v0.12.18-darwin-x86.tar.gz",
+   "https://mirrors.aliyun.com/nodejs-release/v0.12.18/node-v0.12.18-darwin-x86.tar.gz",
+   "https://mirrors.huaweicloud.com/nodejs/v0.12.18/node-v0.12.18-darwin-x86.tar.gz",
+   "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v0.12.18/node-v0.12.18-darwin-x86.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d7202b8e0131626437435e40c79afbee5daa891569e5f82fa37b1cca86927d69",
+   "source": "https://nodejs.org/dist/v0.12.18/SHASUMS256.txt"
+  },
+  "size": null,
+  "released": "2017-02-22",
+  "min_os": null,
+  "metadata_source": "https://nodejs.org/dist/index.json",
+  "notes": null,
+  "reason": "newest for macos 10.5, 10.6, 10.7, 10.8, 10.9, 10.10, 10.11, 10.12, 10.13, 10.14"
  },
  {
   "runtime": "node",
@@ -222,7 +263,8 @@
   "released": "2017-02-22",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0"
  },
  {
   "runtime": "node",
@@ -261,7 +303,8 @@
   "released": "2017-02-22",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0"
  },
  {
   "runtime": "node",
@@ -290,7 +333,8 @@
   "released": "2015-07-12",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1"
  },
  {
   "runtime": "node",
@@ -320,7 +364,8 @@
   "released": "2015-07-12",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1"
  },
  {
   "runtime": "node",
@@ -349,7 +394,8 @@
   "released": "2015-07-12",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1"
  },
  {
   "runtime": "node",
@@ -378,7 +424,8 @@
   "released": "2015-07-12",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1"
  },
  {
   "runtime": "node",
@@ -407,7 +454,8 @@
   "released": "2015-07-12",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1"
  },
  {
   "runtime": "node",
@@ -436,7 +484,8 @@
   "released": "2015-07-12",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1"
  },
  {
   "runtime": "node",
@@ -465,7 +514,8 @@
   "released": "2015-07-12",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1"
  },
  {
   "runtime": "node",
@@ -495,7 +545,8 @@
   "released": "2015-07-28",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2"
  },
  {
   "runtime": "node",
@@ -524,7 +575,8 @@
   "released": "2015-07-28",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2"
  },
  {
   "runtime": "node",
@@ -553,7 +605,8 @@
   "released": "2015-07-28",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2"
  },
  {
   "runtime": "node",
@@ -582,7 +635,8 @@
   "released": "2015-07-28",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2"
  },
  {
   "runtime": "node",
@@ -611,7 +665,8 @@
   "released": "2015-07-28",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2"
  },
  {
   "runtime": "node",
@@ -640,7 +695,8 @@
   "released": "2015-07-28",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2"
  },
  {
   "runtime": "node",
@@ -669,7 +725,8 @@
   "released": "2015-07-28",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2"
  },
  {
   "runtime": "node",
@@ -699,7 +756,8 @@
   "released": "2015-09-15",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3"
  },
  {
   "runtime": "node",
@@ -729,7 +787,8 @@
   "released": "2015-09-15",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3"
  },
  {
   "runtime": "node",
@@ -759,7 +818,8 @@
   "released": "2015-09-15",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3"
  },
  {
   "runtime": "node",
@@ -789,7 +849,8 @@
   "released": "2015-09-15",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3"
  },
  {
   "runtime": "node",
@@ -819,7 +880,8 @@
   "released": "2015-09-15",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3"
  },
  {
   "runtime": "node",
@@ -849,7 +911,8 @@
   "released": "2015-09-15",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3"
  },
  {
   "runtime": "node",
@@ -879,7 +942,8 @@
   "released": "2015-09-15",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3"
  },
  {
   "runtime": "node",
@@ -909,7 +973,8 @@
   "released": "2015-09-15",
   "min_os": null,
   "metadata_source": "https://iojs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3"
  },
  {
   "runtime": "node",
@@ -947,7 +1012,8 @@
   "released": "2018-03-29",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4"
  },
  {
   "runtime": "node",
@@ -985,7 +1051,8 @@
   "released": "2018-03-29",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4"
  },
  {
   "runtime": "node",
@@ -1023,7 +1090,8 @@
   "released": "2018-03-29",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4"
  },
  {
   "runtime": "node",
@@ -1061,7 +1129,8 @@
   "released": "2018-03-29",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4"
  },
  {
   "runtime": "node",
@@ -1099,7 +1168,8 @@
   "released": "2018-03-29",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4"
  },
  {
   "runtime": "node",
@@ -1137,7 +1207,8 @@
   "released": "2018-03-29",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4"
  },
  {
   "runtime": "node",
@@ -1175,7 +1246,8 @@
   "released": "2018-03-29",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4"
  },
  {
   "runtime": "node",
@@ -1213,7 +1285,8 @@
   "released": "2018-03-29",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4"
  },
  {
   "runtime": "node",
@@ -1251,7 +1324,8 @@
   "released": "2018-03-29",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4; newest for windows xp-x64, server2003, vista, server2008"
  },
  {
   "runtime": "node",
@@ -1289,7 +1363,8 @@
   "released": "2018-03-29",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4; newest for windows xp, xp-x64, server2003, vista, server2008"
  },
  {
   "runtime": "node",
@@ -1327,7 +1402,8 @@
   "released": "2016-06-23",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5"
  },
  {
   "runtime": "node",
@@ -1365,7 +1441,8 @@
   "released": "2016-06-23",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5"
  },
  {
   "runtime": "node",
@@ -1403,7 +1480,8 @@
   "released": "2016-06-23",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5"
  },
  {
   "runtime": "node",
@@ -1441,7 +1519,8 @@
   "released": "2016-06-23",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5"
  },
  {
   "runtime": "node",
@@ -1478,7 +1557,8 @@
   "released": "2016-06-23",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5"
  },
  {
   "runtime": "node",
@@ -1516,7 +1596,8 @@
   "released": "2016-06-23",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5"
  },
  {
   "runtime": "node",
@@ -1554,7 +1635,8 @@
   "released": "2016-06-23",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5"
  },
  {
   "runtime": "node",
@@ -1591,7 +1673,44 @@
   "released": "2016-06-23",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5; newest for macos 10.5, 10.6"
+ },
+ {
+  "runtime": "node",
+  "languages": [
+   "javascript",
+   "typescript"
+  ],
+  "major": "5",
+  "version": "5.12.0",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nodejs.org/dist/v5.12.0/node-v5.12.0-darwin-x64.tar.gz",
+  "mirrors": [
+   "https://cdn.npmmirror.com/binaries/node/v5.12.0/node-v5.12.0-darwin-x64.tar.gz",
+   "https://registry.npmmirror.com/-/binary/node/v5.12.0/node-v5.12.0-darwin-x64.tar.gz",
+   "https://nodejs.org/download/release/v5.12.0/node-v5.12.0-darwin-x64.tar.gz",
+   "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v5.12.0/node-v5.12.0-darwin-x64.tar.gz",
+   "https://mirrors.aliyun.com/nodejs-release/v5.12.0/node-v5.12.0-darwin-x64.tar.gz",
+   "https://mirrors.huaweicloud.com/nodejs/v5.12.0/node-v5.12.0-darwin-x64.tar.gz",
+   "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v5.12.0/node-v5.12.0-darwin-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "bcbfb16896d4b13e08184343420ab00822e9ef09a72f9dbc41ef0cfcc84b99c2",
+   "source": "https://nodejs.org/dist/v5.12.0/SHASUMS256.txt"
+  },
+  "size": null,
+  "released": "2016-06-23",
+  "min_os": null,
+  "metadata_source": "https://nodejs.org/dist/index.json",
+  "notes": null,
+  "reason": "newest for macos 10.5, 10.6"
  },
  {
   "runtime": "node",
@@ -1630,7 +1749,8 @@
   "released": "2016-06-23",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5; newest for windows xp-x64, server2003, vista, server2008"
  },
  {
   "runtime": "node",
@@ -1669,7 +1789,8 @@
   "released": "2016-06-23",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5; newest for windows xp, xp-x64, server2003, vista, server2008"
  },
  {
   "runtime": "node",
@@ -1707,7 +1828,8 @@
   "released": "2019-04-03",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "node",
@@ -1745,7 +1867,8 @@
   "released": "2019-04-03",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "node",
@@ -1783,7 +1906,8 @@
   "released": "2019-04-03",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "node",
@@ -1821,7 +1945,8 @@
   "released": "2019-04-03",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "node",
@@ -1859,7 +1984,8 @@
   "released": "2019-04-03",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "node",
@@ -1897,7 +2023,8 @@
   "released": "2019-04-03",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "node",
@@ -1935,7 +2062,8 @@
   "released": "2019-04-03",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "node",
@@ -1973,7 +2101,8 @@
   "released": "2019-04-03",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "node",
@@ -2011,7 +2140,8 @@
   "released": "2019-04-03",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "node",
@@ -2049,7 +2179,8 @@
   "released": "2019-04-03",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "node",
@@ -2087,7 +2218,152 @@
   "released": "2019-04-03",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
+ },
+ {
+  "runtime": "node",
+  "languages": [
+   "javascript",
+   "typescript"
+  ],
+  "major": "7",
+  "version": "7.10.0",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://nodejs.org/dist/v7.10.0/node-v7.10.0-linux-x64.tar.gz",
+  "mirrors": [
+   "https://cdn.npmmirror.com/binaries/node/v7.10.0/node-v7.10.0-linux-x64.tar.gz",
+   "https://registry.npmmirror.com/-/binary/node/v7.10.0/node-v7.10.0-linux-x64.tar.gz",
+   "https://nodejs.org/download/release/v7.10.0/node-v7.10.0-linux-x64.tar.gz",
+   "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v7.10.0/node-v7.10.0-linux-x64.tar.gz",
+   "https://mirrors.aliyun.com/nodejs-release/v7.10.0/node-v7.10.0-linux-x64.tar.gz",
+   "https://mirrors.huaweicloud.com/nodejs/v7.10.0/node-v7.10.0-linux-x64.tar.gz",
+   "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v7.10.0/node-v7.10.0-linux-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "9da0e99091897795491d21d58c40186f75ca7bf505d145d1a2e558f8c754a81b",
+   "source": "https://nodejs.org/dist/v7.10.0/SHASUMS256.txt"
+  },
+  "size": null,
+  "released": "2017-05-02",
+  "min_os": null,
+  "metadata_source": "https://nodejs.org/dist/index.json",
+  "notes": null,
+  "reason": "newest for linux glibc-2.5"
+ },
+ {
+  "runtime": "node",
+  "languages": [
+   "javascript",
+   "typescript"
+  ],
+  "major": "7",
+  "version": "7.10.0",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://nodejs.org/dist/v7.10.0/node-v7.10.0-linux-x64.tar.xz",
+  "mirrors": [
+   "https://cdn.npmmirror.com/binaries/node/v7.10.0/node-v7.10.0-linux-x64.tar.xz",
+   "https://registry.npmmirror.com/-/binary/node/v7.10.0/node-v7.10.0-linux-x64.tar.xz",
+   "https://nodejs.org/download/release/v7.10.0/node-v7.10.0-linux-x64.tar.xz",
+   "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v7.10.0/node-v7.10.0-linux-x64.tar.xz",
+   "https://mirrors.aliyun.com/nodejs-release/v7.10.0/node-v7.10.0-linux-x64.tar.xz",
+   "https://mirrors.huaweicloud.com/nodejs/v7.10.0/node-v7.10.0-linux-x64.tar.xz",
+   "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v7.10.0/node-v7.10.0-linux-x64.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "6166b9f3fb1a9e861335d864688fee5366f040db808080856a1a2b71b6019786",
+   "source": "https://nodejs.org/dist/v7.10.0/SHASUMS256.txt"
+  },
+  "size": null,
+  "released": "2017-05-02",
+  "min_os": null,
+  "metadata_source": "https://nodejs.org/dist/index.json",
+  "notes": null,
+  "reason": "newest for linux glibc-2.5"
+ },
+ {
+  "runtime": "node",
+  "languages": [
+   "javascript",
+   "typescript"
+  ],
+  "major": "7",
+  "version": "7.10.0",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://nodejs.org/dist/v7.10.0/node-v7.10.0-linux-x86.tar.gz",
+  "mirrors": [
+   "https://cdn.npmmirror.com/binaries/node/v7.10.0/node-v7.10.0-linux-x86.tar.gz",
+   "https://registry.npmmirror.com/-/binary/node/v7.10.0/node-v7.10.0-linux-x86.tar.gz",
+   "https://nodejs.org/download/release/v7.10.0/node-v7.10.0-linux-x86.tar.gz",
+   "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v7.10.0/node-v7.10.0-linux-x86.tar.gz",
+   "https://mirrors.aliyun.com/nodejs-release/v7.10.0/node-v7.10.0-linux-x86.tar.gz",
+   "https://mirrors.huaweicloud.com/nodejs/v7.10.0/node-v7.10.0-linux-x86.tar.gz",
+   "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v7.10.0/node-v7.10.0-linux-x86.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "ca37e75a605497b1f33d085353b1a8315b5a9b4de9463885bf62831f7f4511c1",
+   "source": "https://nodejs.org/dist/v7.10.0/SHASUMS256.txt"
+  },
+  "size": null,
+  "released": "2017-05-02",
+  "min_os": null,
+  "metadata_source": "https://nodejs.org/dist/index.json",
+  "notes": null,
+  "reason": "newest for linux glibc-2.5"
+ },
+ {
+  "runtime": "node",
+  "languages": [
+   "javascript",
+   "typescript"
+  ],
+  "major": "7",
+  "version": "7.10.0",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://nodejs.org/dist/v7.10.0/node-v7.10.0-linux-x86.tar.xz",
+  "mirrors": [
+   "https://cdn.npmmirror.com/binaries/node/v7.10.0/node-v7.10.0-linux-x86.tar.xz",
+   "https://registry.npmmirror.com/-/binary/node/v7.10.0/node-v7.10.0-linux-x86.tar.xz",
+   "https://nodejs.org/download/release/v7.10.0/node-v7.10.0-linux-x86.tar.xz",
+   "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v7.10.0/node-v7.10.0-linux-x86.tar.xz",
+   "https://mirrors.aliyun.com/nodejs-release/v7.10.0/node-v7.10.0-linux-x86.tar.xz",
+   "https://mirrors.huaweicloud.com/nodejs/v7.10.0/node-v7.10.0-linux-x86.tar.xz",
+   "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v7.10.0/node-v7.10.0-linux-x86.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d9eaa35170eeeb07f3eaa9e5f03e68c5729071d65e4a3d933411136ec82c9edd",
+   "source": "https://nodejs.org/dist/v7.10.0/SHASUMS256.txt"
+  },
+  "size": null,
+  "released": "2017-05-02",
+  "min_os": null,
+  "metadata_source": "https://nodejs.org/dist/index.json",
+  "notes": null,
+  "reason": "newest for linux glibc-2.5"
  },
  {
   "runtime": "node",
@@ -2125,7 +2401,8 @@
   "released": "2017-07-11",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "node",
@@ -2163,7 +2440,8 @@
   "released": "2017-07-11",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "node",
@@ -2201,7 +2479,8 @@
   "released": "2017-07-11",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "node",
@@ -2239,7 +2518,8 @@
   "released": "2017-07-11",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "node",
@@ -2277,7 +2557,8 @@
   "released": "2017-07-11",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "node",
@@ -2315,7 +2596,8 @@
   "released": "2017-07-11",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "node",
@@ -2353,7 +2635,8 @@
   "released": "2017-07-11",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "node",
@@ -2391,7 +2674,8 @@
   "released": "2017-07-11",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "node",
@@ -2428,7 +2712,8 @@
   "released": "2017-07-11",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "node",
@@ -2466,7 +2751,8 @@
   "released": "2017-07-11",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "node",
@@ -2504,7 +2790,8 @@
   "released": "2017-07-11",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "node",
@@ -2542,7 +2829,8 @@
   "released": "2017-11-07",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "node",
@@ -2580,7 +2868,8 @@
   "released": "2019-12-17",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "node",
@@ -2610,7 +2899,8 @@
   "released": "2019-12-18",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)"
+  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)",
+  "reason": "newest in major 8"
  },
  {
   "runtime": "node",
@@ -2648,7 +2938,8 @@
   "released": "2019-12-17",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "node",
@@ -2686,7 +2977,8 @@
   "released": "2019-12-17",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "node",
@@ -2724,7 +3016,8 @@
   "released": "2019-12-17",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "node",
@@ -2762,7 +3055,8 @@
   "released": "2019-12-17",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "node",
@@ -2800,7 +3094,8 @@
   "released": "2019-12-17",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "node",
@@ -2838,7 +3133,8 @@
   "released": "2019-12-17",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "node",
@@ -2876,7 +3172,8 @@
   "released": "2019-12-17",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "node",
@@ -2914,7 +3211,8 @@
   "released": "2019-12-17",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "node",
@@ -2952,7 +3250,8 @@
   "released": "2019-12-17",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "node",
@@ -2990,7 +3289,8 @@
   "released": "2017-11-14",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "node",
@@ -3028,7 +3328,8 @@
   "released": "2018-06-12",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "node",
@@ -3066,7 +3367,8 @@
   "released": "2018-06-12",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "node",
@@ -3104,7 +3406,8 @@
   "released": "2018-06-12",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9; newest for linux glibc-2.17, glibc-2.19"
  },
  {
   "runtime": "node",
@@ -3142,7 +3445,8 @@
   "released": "2018-06-12",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9; newest for linux glibc-2.17, glibc-2.19"
  },
  {
   "runtime": "node",
@@ -3180,7 +3484,8 @@
   "released": "2018-06-12",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "node",
@@ -3218,7 +3523,8 @@
   "released": "2018-06-12",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "node",
@@ -3256,7 +3562,44 @@
   "released": "2018-06-12",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9; newest for linux glibc-2.12"
+ },
+ {
+  "runtime": "node",
+  "languages": [
+   "javascript",
+   "typescript"
+  ],
+  "major": "9",
+  "version": "9.11.2",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://nodejs.org/dist/v9.11.2/node-v9.11.2-linux-x86.tar.gz",
+  "mirrors": [
+   "https://cdn.npmmirror.com/binaries/node/v9.11.2/node-v9.11.2-linux-x86.tar.gz",
+   "https://registry.npmmirror.com/-/binary/node/v9.11.2/node-v9.11.2-linux-x86.tar.gz",
+   "https://nodejs.org/download/release/v9.11.2/node-v9.11.2-linux-x86.tar.gz",
+   "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v9.11.2/node-v9.11.2-linux-x86.tar.gz",
+   "https://mirrors.aliyun.com/nodejs-release/v9.11.2/node-v9.11.2-linux-x86.tar.gz",
+   "https://mirrors.huaweicloud.com/nodejs/v9.11.2/node-v9.11.2-linux-x86.tar.gz",
+   "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v9.11.2/node-v9.11.2-linux-x86.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "166cc28bd9c8217c533b2921edd5e980b14f1d670d828e9d40c1d5b37f51496d",
+   "source": "https://nodejs.org/dist/v9.11.2/SHASUMS256.txt"
+  },
+  "size": null,
+  "released": "2018-06-12",
+  "min_os": null,
+  "metadata_source": "https://nodejs.org/dist/index.json",
+  "notes": null,
+  "reason": "newest for linux glibc-2.12"
  },
  {
   "runtime": "node",
@@ -3294,7 +3637,8 @@
   "released": "2018-06-12",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "node",
@@ -3332,7 +3676,8 @@
   "released": "2018-06-12",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "node",
@@ -3370,7 +3715,8 @@
   "released": "2018-06-12",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "node",
@@ -3408,7 +3754,8 @@
   "released": "2021-04-06",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10"
  },
  {
   "runtime": "node",
@@ -3438,7 +3785,8 @@
   "released": "2021-04-06",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)"
+  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)",
+  "reason": "newest in major 10"
  },
  {
   "runtime": "node",
@@ -3476,7 +3824,8 @@
   "released": "2021-04-06",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10"
  },
  {
   "runtime": "node",
@@ -3514,7 +3863,8 @@
   "released": "2021-04-06",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10"
  },
  {
   "runtime": "node",
@@ -3552,7 +3902,8 @@
   "released": "2021-04-06",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10"
  },
  {
   "runtime": "node",
@@ -3590,7 +3941,8 @@
   "released": "2021-04-06",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10"
  },
  {
   "runtime": "node",
@@ -3628,7 +3980,8 @@
   "released": "2021-04-06",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10"
  },
  {
   "runtime": "node",
@@ -3658,7 +4011,8 @@
   "released": "2021-04-06",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 10"
  },
  {
   "runtime": "node",
@@ -3696,7 +4050,8 @@
   "released": "2021-04-06",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10"
  },
  {
   "runtime": "node",
@@ -3734,7 +4089,8 @@
   "released": "2021-04-06",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10"
  },
  {
   "runtime": "node",
@@ -3772,7 +4128,8 @@
   "released": "2021-04-06",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10"
  },
  {
   "runtime": "node",
@@ -3810,7 +4167,44 @@
   "released": "2019-04-30",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 11; newest for linux glibc-2.12"
+ },
+ {
+  "runtime": "node",
+  "languages": [
+   "javascript",
+   "typescript"
+  ],
+  "major": "11",
+  "version": "11.15.0",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://nodejs.org/dist/v11.15.0/node-v11.15.0-linux-x64.tar.gz",
+  "mirrors": [
+   "https://cdn.npmmirror.com/binaries/node/v11.15.0/node-v11.15.0-linux-x64.tar.gz",
+   "https://registry.npmmirror.com/-/binary/node/v11.15.0/node-v11.15.0-linux-x64.tar.gz",
+   "https://nodejs.org/download/release/v11.15.0/node-v11.15.0-linux-x64.tar.gz",
+   "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v11.15.0/node-v11.15.0-linux-x64.tar.gz",
+   "https://mirrors.aliyun.com/nodejs-release/v11.15.0/node-v11.15.0-linux-x64.tar.gz",
+   "https://mirrors.huaweicloud.com/nodejs/v11.15.0/node-v11.15.0-linux-x64.tar.gz",
+   "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v11.15.0/node-v11.15.0-linux-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "98bd18051cbdb39bbcda1ab169ca3fd3935d87e9cfc36e1b6fd6f609d46856bb",
+   "source": "https://nodejs.org/dist/v11.15.0/SHASUMS256.txt"
+  },
+  "size": null,
+  "released": "2019-04-30",
+  "min_os": null,
+  "metadata_source": "https://nodejs.org/dist/index.json",
+  "notes": null,
+  "reason": "newest for linux glibc-2.12"
  },
  {
   "runtime": "node",
@@ -3840,7 +4234,8 @@
   "released": "2019-04-30",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)"
+  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)",
+  "reason": "newest in major 11; newest for linux glibc-2.12"
  },
  {
   "runtime": "node",
@@ -3878,7 +4273,8 @@
   "released": "2019-04-30",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 11"
  },
  {
   "runtime": "node",
@@ -3916,7 +4312,8 @@
   "released": "2019-04-30",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 11"
  },
  {
   "runtime": "node",
@@ -3954,7 +4351,8 @@
   "released": "2019-04-30",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 11"
  },
  {
   "runtime": "node",
@@ -3992,7 +4390,8 @@
   "released": "2019-04-30",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 11"
  },
  {
   "runtime": "node",
@@ -4030,7 +4429,8 @@
   "released": "2019-04-30",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 11"
  },
  {
   "runtime": "node",
@@ -4060,7 +4460,8 @@
   "released": "2019-04-30",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 11"
  },
  {
   "runtime": "node",
@@ -4098,7 +4499,44 @@
   "released": "2019-04-30",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 11; newest for macos 10.7, 10.8, 10.9"
+ },
+ {
+  "runtime": "node",
+  "languages": [
+   "javascript",
+   "typescript"
+  ],
+  "major": "11",
+  "version": "11.15.0",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nodejs.org/dist/v11.15.0/node-v11.15.0-darwin-x64.tar.gz",
+  "mirrors": [
+   "https://cdn.npmmirror.com/binaries/node/v11.15.0/node-v11.15.0-darwin-x64.tar.gz",
+   "https://registry.npmmirror.com/-/binary/node/v11.15.0/node-v11.15.0-darwin-x64.tar.gz",
+   "https://nodejs.org/download/release/v11.15.0/node-v11.15.0-darwin-x64.tar.gz",
+   "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v11.15.0/node-v11.15.0-darwin-x64.tar.gz",
+   "https://mirrors.aliyun.com/nodejs-release/v11.15.0/node-v11.15.0-darwin-x64.tar.gz",
+   "https://mirrors.huaweicloud.com/nodejs/v11.15.0/node-v11.15.0-darwin-x64.tar.gz",
+   "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v11.15.0/node-v11.15.0-darwin-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "e953b657b1049e1de509a3fd0700cfeecd175f75a0d141d71393aa0d71fa29a9",
+   "source": "https://nodejs.org/dist/v11.15.0/SHASUMS256.txt"
+  },
+  "size": null,
+  "released": "2019-04-30",
+  "min_os": null,
+  "metadata_source": "https://nodejs.org/dist/index.json",
+  "notes": null,
+  "reason": "newest for macos 10.7, 10.8, 10.9"
  },
  {
   "runtime": "node",
@@ -4136,7 +4574,8 @@
   "released": "2019-04-30",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 11"
  },
  {
   "runtime": "node",
@@ -4174,7 +4613,8 @@
   "released": "2019-04-30",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 11"
  },
  {
   "runtime": "node",
@@ -4204,7 +4644,8 @@
   "released": "2020-02-06",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 12; newest for windows 8, server2012"
  },
  {
   "runtime": "node",
@@ -4234,7 +4675,8 @@
   "released": "2020-04-28",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 12"
  },
  {
   "runtime": "node",
@@ -4272,7 +4714,8 @@
   "released": "2022-04-05",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 12"
  },
  {
   "runtime": "node",
@@ -4302,7 +4745,8 @@
   "released": "2022-04-05",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)"
+  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)",
+  "reason": "newest in major 12"
  },
  {
   "runtime": "node",
@@ -4340,7 +4784,8 @@
   "released": "2022-04-05",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 12"
  },
  {
   "runtime": "node",
@@ -4371,7 +4816,8 @@
   "released": "2022-04-05",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 12"
  },
  {
   "runtime": "node",
@@ -4409,7 +4855,8 @@
   "released": "2022-04-05",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 12"
  },
  {
   "runtime": "node",
@@ -4447,7 +4894,8 @@
   "released": "2022-04-05",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 12"
  },
  {
   "runtime": "node",
@@ -4485,7 +4933,8 @@
   "released": "2022-04-05",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 12"
  },
  {
   "runtime": "node",
@@ -4523,7 +4972,8 @@
   "released": "2022-04-05",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 12"
  },
  {
   "runtime": "node",
@@ -4561,7 +5011,8 @@
   "released": "2022-04-05",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 12"
  },
  {
   "runtime": "node",
@@ -4599,7 +5050,8 @@
   "released": "2022-04-05",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 12"
  },
  {
   "runtime": "node",
@@ -4629,7 +5081,8 @@
   "released": "2020-03-26",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 13"
  },
  {
   "runtime": "node",
@@ -4667,7 +5120,8 @@
   "released": "2020-04-29",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 13"
  },
  {
   "runtime": "node",
@@ -4697,7 +5151,8 @@
   "released": "2020-04-29",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)"
+  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)",
+  "reason": "newest in major 13"
  },
  {
   "runtime": "node",
@@ -4735,7 +5190,8 @@
   "released": "2020-04-29",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 13"
  },
  {
   "runtime": "node",
@@ -4765,7 +5221,8 @@
   "released": "2020-04-29",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 13"
  },
  {
   "runtime": "node",
@@ -4803,7 +5260,8 @@
   "released": "2020-04-29",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 13"
  },
  {
   "runtime": "node",
@@ -4841,7 +5299,8 @@
   "released": "2020-04-29",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 13"
  },
  {
   "runtime": "node",
@@ -4879,7 +5338,8 @@
   "released": "2020-04-29",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 13"
  },
  {
   "runtime": "node",
@@ -4917,7 +5377,44 @@
   "released": "2020-04-29",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 13; newest for macos 10.10, 10.11, 10.12"
+ },
+ {
+  "runtime": "node",
+  "languages": [
+   "javascript",
+   "typescript"
+  ],
+  "major": "13",
+  "version": "13.14.0",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nodejs.org/dist/v13.14.0/node-v13.14.0-darwin-x64.tar.gz",
+  "mirrors": [
+   "https://cdn.npmmirror.com/binaries/node/v13.14.0/node-v13.14.0-darwin-x64.tar.gz",
+   "https://registry.npmmirror.com/-/binary/node/v13.14.0/node-v13.14.0-darwin-x64.tar.gz",
+   "https://nodejs.org/download/release/v13.14.0/node-v13.14.0-darwin-x64.tar.gz",
+   "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v13.14.0/node-v13.14.0-darwin-x64.tar.gz",
+   "https://mirrors.aliyun.com/nodejs-release/v13.14.0/node-v13.14.0-darwin-x64.tar.gz",
+   "https://mirrors.huaweicloud.com/nodejs/v13.14.0/node-v13.14.0-darwin-x64.tar.gz",
+   "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v13.14.0/node-v13.14.0-darwin-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "a56eb353fecd45f731d74fc77c58dde052320c1bc272de9b03151fbaf962feaf",
+   "source": "https://nodejs.org/dist/v13.14.0/SHASUMS256.txt"
+  },
+  "size": null,
+  "released": "2020-04-29",
+  "min_os": null,
+  "metadata_source": "https://nodejs.org/dist/index.json",
+  "notes": null,
+  "reason": "newest for macos 10.10, 10.11, 10.12"
  },
  {
   "runtime": "node",
@@ -4955,7 +5452,44 @@
   "released": "2020-04-29",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 13; newest for windows 7, server2008r2, 8, server2012"
+ },
+ {
+  "runtime": "node",
+  "languages": [
+   "javascript",
+   "typescript"
+  ],
+  "major": "13",
+  "version": "13.14.0",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "msi",
+  "variant": null,
+  "libc": null,
+  "url": "https://nodejs.org/dist/v13.14.0/node-v13.14.0-x64.msi",
+  "mirrors": [
+   "https://cdn.npmmirror.com/binaries/node/v13.14.0/node-v13.14.0-x64.msi",
+   "https://registry.npmmirror.com/-/binary/node/v13.14.0/node-v13.14.0-x64.msi",
+   "https://nodejs.org/download/release/v13.14.0/node-v13.14.0-x64.msi",
+   "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v13.14.0/node-v13.14.0-x64.msi",
+   "https://mirrors.aliyun.com/nodejs-release/v13.14.0/node-v13.14.0-x64.msi",
+   "https://mirrors.huaweicloud.com/nodejs/v13.14.0/node-v13.14.0-x64.msi",
+   "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v13.14.0/node-v13.14.0-x64.msi"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "4413ade3aa25c2efec47e6b2819455a7bcda86c0b9a8d245748280549c05b103",
+   "source": "https://nodejs.org/dist/v13.14.0/SHASUMS256.txt"
+  },
+  "size": null,
+  "released": "2020-04-29",
+  "min_os": null,
+  "metadata_source": "https://nodejs.org/dist/index.json",
+  "notes": null,
+  "reason": "newest for windows 7, server2008r2, 8, server2012"
  },
  {
   "runtime": "node",
@@ -4993,7 +5527,44 @@
   "released": "2020-04-29",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 13; newest for windows 7, server2008r2, 8, server2012"
+ },
+ {
+  "runtime": "node",
+  "languages": [
+   "javascript",
+   "typescript"
+  ],
+  "major": "13",
+  "version": "13.14.0",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "installer",
+  "format": "msi",
+  "variant": null,
+  "libc": null,
+  "url": "https://nodejs.org/dist/v13.14.0/node-v13.14.0-x86.msi",
+  "mirrors": [
+   "https://cdn.npmmirror.com/binaries/node/v13.14.0/node-v13.14.0-x86.msi",
+   "https://registry.npmmirror.com/-/binary/node/v13.14.0/node-v13.14.0-x86.msi",
+   "https://nodejs.org/download/release/v13.14.0/node-v13.14.0-x86.msi",
+   "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v13.14.0/node-v13.14.0-x86.msi",
+   "https://mirrors.aliyun.com/nodejs-release/v13.14.0/node-v13.14.0-x86.msi",
+   "https://mirrors.huaweicloud.com/nodejs/v13.14.0/node-v13.14.0-x86.msi",
+   "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v13.14.0/node-v13.14.0-x86.msi"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "3ee8964e399e98ec4f6a430922c1713041251e4f7c8a24285d9cc2d36bab0b15",
+   "source": "https://nodejs.org/dist/v13.14.0/SHASUMS256.txt"
+  },
+  "size": null,
+  "released": "2020-04-29",
+  "min_os": null,
+  "metadata_source": "https://nodejs.org/dist/index.json",
+  "notes": null,
+  "reason": "newest for windows 7, server2008r2, 8, server2012"
  },
  {
   "runtime": "node",
@@ -5023,7 +5594,8 @@
   "released": "2021-08-11",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 14"
  },
  {
   "runtime": "node",
@@ -5061,7 +5633,8 @@
   "released": "2023-02-16",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 14"
  },
  {
   "runtime": "node",
@@ -5092,7 +5665,8 @@
   "released": "2023-02-17",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)"
+  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)",
+  "reason": "newest in major 14"
  },
  {
   "runtime": "node",
@@ -5130,7 +5704,8 @@
   "released": "2023-02-16",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 14"
  },
  {
   "runtime": "node",
@@ -5161,7 +5736,8 @@
   "released": "2023-02-17",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 14"
  },
  {
   "runtime": "node",
@@ -5199,7 +5775,8 @@
   "released": "2023-02-16",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 14"
  },
  {
   "runtime": "node",
@@ -5237,7 +5814,8 @@
   "released": "2023-02-16",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 14"
  },
  {
   "runtime": "node",
@@ -5275,7 +5853,8 @@
   "released": "2023-02-16",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 14"
  },
  {
   "runtime": "node",
@@ -5306,7 +5885,8 @@
   "released": "2023-02-17",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 14"
  },
  {
   "runtime": "node",
@@ -5344,7 +5924,8 @@
   "released": "2023-02-16",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 14"
  },
  {
   "runtime": "node",
@@ -5382,7 +5963,8 @@
   "released": "2023-02-16",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 14"
  },
  {
   "runtime": "node",
@@ -5420,7 +6002,8 @@
   "released": "2023-02-16",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 14"
  },
  {
   "runtime": "node",
@@ -5450,7 +6033,8 @@
   "released": "2021-02-02",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 15"
  },
  {
   "runtime": "node",
@@ -5488,7 +6072,8 @@
   "released": "2021-04-06",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 15"
  },
  {
   "runtime": "node",
@@ -5518,7 +6103,8 @@
   "released": "2021-04-07",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)"
+  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)",
+  "reason": "newest in major 15"
  },
  {
   "runtime": "node",
@@ -5556,7 +6142,8 @@
   "released": "2021-04-06",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 15"
  },
  {
   "runtime": "node",
@@ -5586,7 +6173,8 @@
   "released": "2021-04-07",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 15"
  },
  {
   "runtime": "node",
@@ -5624,7 +6212,8 @@
   "released": "2021-04-06",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 15"
  },
  {
   "runtime": "node",
@@ -5662,7 +6251,8 @@
   "released": "2021-04-06",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 15"
  },
  {
   "runtime": "node",
@@ -5700,7 +6290,8 @@
   "released": "2021-04-06",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 15"
  },
  {
   "runtime": "node",
@@ -5730,7 +6321,8 @@
   "released": "2021-04-07",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 15"
  },
  {
   "runtime": "node",
@@ -5768,7 +6360,8 @@
   "released": "2021-04-06",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 15"
  },
  {
   "runtime": "node",
@@ -5806,7 +6399,8 @@
   "released": "2021-04-06",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 15"
  },
  {
   "runtime": "node",
@@ -5844,7 +6438,8 @@
   "released": "2021-04-06",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 15"
  },
  {
   "runtime": "node",
@@ -5874,7 +6469,8 @@
   "released": "2023-03-29",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 16"
  },
  {
   "runtime": "node",
@@ -5912,7 +6508,8 @@
   "released": "2023-08-08",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
  },
  {
   "runtime": "node",
@@ -5942,7 +6539,8 @@
   "released": "2023-08-09",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)"
+  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)",
+  "reason": "newest in major 16"
  },
  {
   "runtime": "node",
@@ -5980,7 +6578,8 @@
   "released": "2023-08-08",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
  },
  {
   "runtime": "node",
@@ -6010,7 +6609,8 @@
   "released": "2023-08-09",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 16"
  },
  {
   "runtime": "node",
@@ -6048,7 +6648,8 @@
   "released": "2023-08-08",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
  },
  {
   "runtime": "node",
@@ -6086,7 +6687,8 @@
   "released": "2023-08-08",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
  },
  {
   "runtime": "node",
@@ -6124,7 +6726,8 @@
   "released": "2023-08-08",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
  },
  {
   "runtime": "node",
@@ -6154,7 +6757,8 @@
   "released": "2023-08-09",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 16"
  },
  {
   "runtime": "node",
@@ -6191,7 +6795,8 @@
   "released": "2023-08-08",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
  },
  {
   "runtime": "node",
@@ -6229,7 +6834,8 @@
   "released": "2023-08-08",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
  },
  {
   "runtime": "node",
@@ -6268,7 +6874,8 @@
   "released": "2023-08-08",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
  },
  {
   "runtime": "node",
@@ -6306,7 +6913,8 @@
   "released": "2023-08-08",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
  },
  {
   "runtime": "node",
@@ -6344,7 +6952,8 @@
   "released": "2023-08-08",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
  },
  {
   "runtime": "node",
@@ -6374,7 +6983,8 @@
   "released": "2022-02-10",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 17"
  },
  {
   "runtime": "node",
@@ -6412,7 +7022,44 @@
   "released": "2022-06-01",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27"
+ },
+ {
+  "runtime": "node",
+  "languages": [
+   "javascript",
+   "typescript"
+  ],
+  "major": "17",
+  "version": "17.9.1",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://nodejs.org/dist/v17.9.1/node-v17.9.1-linux-x64.tar.gz",
+  "mirrors": [
+   "https://cdn.npmmirror.com/binaries/node/v17.9.1/node-v17.9.1-linux-x64.tar.gz",
+   "https://registry.npmmirror.com/-/binary/node/v17.9.1/node-v17.9.1-linux-x64.tar.gz",
+   "https://nodejs.org/download/release/v17.9.1/node-v17.9.1-linux-x64.tar.gz",
+   "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v17.9.1/node-v17.9.1-linux-x64.tar.gz",
+   "https://mirrors.aliyun.com/nodejs-release/v17.9.1/node-v17.9.1-linux-x64.tar.gz",
+   "https://mirrors.huaweicloud.com/nodejs/v17.9.1/node-v17.9.1-linux-x64.tar.gz",
+   "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v17.9.1/node-v17.9.1-linux-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "efa39656f3a9761b5696dbd68efdff3a9be3ce00004171be53250a8a6f120272",
+   "source": "https://nodejs.org/dist/v17.9.1/SHASUMS256.txt"
+  },
+  "size": null,
+  "released": "2022-06-01",
+  "min_os": null,
+  "metadata_source": "https://nodejs.org/dist/index.json",
+  "notes": null,
+  "reason": "newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27"
  },
  {
   "runtime": "node",
@@ -6442,7 +7089,8 @@
   "released": "2022-06-03",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)"
+  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)",
+  "reason": "newest in major 17; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27"
  },
  {
   "runtime": "node",
@@ -6479,7 +7127,8 @@
   "released": "2022-06-01",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27"
  },
  {
   "runtime": "node",
@@ -6509,7 +7158,8 @@
   "released": "2022-06-03",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 17"
  },
  {
   "runtime": "node",
@@ -6547,7 +7197,8 @@
   "released": "2022-06-01",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17; newest for linux glibc-2.23, glibc-2.24, glibc-2.27"
  },
  {
   "runtime": "node",
@@ -6585,7 +7236,8 @@
   "released": "2022-06-01",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27"
  },
  {
   "runtime": "node",
@@ -6615,7 +7267,8 @@
   "released": "2022-06-03",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 17"
  },
  {
   "runtime": "node",
@@ -6653,7 +7306,8 @@
   "released": "2022-06-01",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27"
  },
  {
   "runtime": "node",
@@ -6683,7 +7337,8 @@
   "released": "2022-06-03",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 17"
  },
  {
   "runtime": "node",
@@ -6721,7 +7376,44 @@
   "released": "2022-06-01",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17; newest for macos 10.13, 10.14"
+ },
+ {
+  "runtime": "node",
+  "languages": [
+   "javascript",
+   "typescript"
+  ],
+  "major": "17",
+  "version": "17.9.1",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nodejs.org/dist/v17.9.1/node-v17.9.1-darwin-x64.tar.gz",
+  "mirrors": [
+   "https://cdn.npmmirror.com/binaries/node/v17.9.1/node-v17.9.1-darwin-x64.tar.gz",
+   "https://registry.npmmirror.com/-/binary/node/v17.9.1/node-v17.9.1-darwin-x64.tar.gz",
+   "https://nodejs.org/download/release/v17.9.1/node-v17.9.1-darwin-x64.tar.gz",
+   "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v17.9.1/node-v17.9.1-darwin-x64.tar.gz",
+   "https://mirrors.aliyun.com/nodejs-release/v17.9.1/node-v17.9.1-darwin-x64.tar.gz",
+   "https://mirrors.huaweicloud.com/nodejs/v17.9.1/node-v17.9.1-darwin-x64.tar.gz",
+   "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v17.9.1/node-v17.9.1-darwin-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "ef8ef450425db95a1e91c1dd4bc6d05ca40bbbbdab9a71f59c5a02e13cc039fb",
+   "source": "https://nodejs.org/dist/v17.9.1/SHASUMS256.txt"
+  },
+  "size": null,
+  "released": "2022-06-01",
+  "min_os": null,
+  "metadata_source": "https://nodejs.org/dist/index.json",
+  "notes": null,
+  "reason": "newest for macos 10.13, 10.14"
  },
  {
   "runtime": "node",
@@ -6759,7 +7451,8 @@
   "released": "2022-06-01",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17"
  },
  {
   "runtime": "node",
@@ -6798,7 +7491,8 @@
   "released": "2022-06-01",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17; newest for macos 10.13, 10.14"
  },
  {
   "runtime": "node",
@@ -6836,7 +7530,8 @@
   "released": "2022-06-01",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17"
  },
  {
   "runtime": "node",
@@ -6874,7 +7569,8 @@
   "released": "2022-06-01",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17"
  },
  {
   "runtime": "node",
@@ -6904,7 +7600,8 @@
   "released": "2023-06-21",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 18"
  },
  {
   "runtime": "node",
@@ -6934,7 +7631,8 @@
   "released": "2025-01-22",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 18"
  },
  {
   "runtime": "node",
@@ -6972,7 +7670,8 @@
   "released": "2025-03-27",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18"
  },
  {
   "runtime": "node",
@@ -7003,7 +7702,8 @@
   "released": "2025-03-27",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)"
+  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)",
+  "reason": "newest in major 18"
  },
  {
   "runtime": "node",
@@ -7041,7 +7741,8 @@
   "released": "2025-03-27",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18"
  },
  {
   "runtime": "node",
@@ -7072,7 +7773,8 @@
   "released": "2025-03-27",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 18"
  },
  {
   "runtime": "node",
@@ -7110,7 +7812,8 @@
   "released": "2025-03-27",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18"
  },
  {
   "runtime": "node",
@@ -7148,7 +7851,8 @@
   "released": "2025-03-27",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18"
  },
  {
   "runtime": "node",
@@ -7179,7 +7883,8 @@
   "released": "2025-03-27",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 18"
  },
  {
   "runtime": "node",
@@ -7217,7 +7922,8 @@
   "released": "2025-03-27",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18"
  },
  {
   "runtime": "node",
@@ -7248,7 +7954,8 @@
   "released": "2025-03-27",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 18"
  },
  {
   "runtime": "node",
@@ -7286,7 +7993,8 @@
   "released": "2025-03-27",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18"
  },
  {
   "runtime": "node",
@@ -7323,7 +8031,8 @@
   "released": "2025-03-27",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18"
  },
  {
   "runtime": "node",
@@ -7362,7 +8071,8 @@
   "released": "2025-03-27",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18"
  },
  {
   "runtime": "node",
@@ -7400,7 +8110,8 @@
   "released": "2025-03-27",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18"
  },
  {
   "runtime": "node",
@@ -7438,7 +8149,8 @@
   "released": "2025-03-27",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18"
  },
  {
   "runtime": "node",
@@ -7476,7 +8188,8 @@
   "released": "2023-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19"
  },
  {
   "runtime": "node",
@@ -7506,7 +8219,8 @@
   "released": "2023-04-11",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)"
+  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)",
+  "reason": "newest in major 19"
  },
  {
   "runtime": "node",
@@ -7544,7 +8258,8 @@
   "released": "2023-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19"
  },
  {
   "runtime": "node",
@@ -7574,7 +8289,8 @@
   "released": "2023-04-11",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 19"
  },
  {
   "runtime": "node",
@@ -7612,7 +8328,8 @@
   "released": "2023-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19; newest for linux glibc-2.28"
  },
  {
   "runtime": "node",
@@ -7650,7 +8367,8 @@
   "released": "2023-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19"
  },
  {
   "runtime": "node",
@@ -7680,7 +8398,8 @@
   "released": "2023-04-11",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 19"
  },
  {
   "runtime": "node",
@@ -7718,7 +8437,8 @@
   "released": "2023-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19"
  },
  {
   "runtime": "node",
@@ -7756,7 +8476,8 @@
   "released": "2023-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19"
  },
  {
   "runtime": "node",
@@ -7793,7 +8514,8 @@
   "released": "2023-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19"
  },
  {
   "runtime": "node",
@@ -7832,7 +8554,8 @@
   "released": "2023-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19"
  },
  {
   "runtime": "node",
@@ -7870,7 +8593,8 @@
   "released": "2023-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19"
  },
  {
   "runtime": "node",
@@ -7907,7 +8631,8 @@
   "released": "2023-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19"
  },
  {
   "runtime": "node",
@@ -7945,7 +8670,8 @@
   "released": "2023-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19"
  },
  {
   "runtime": "node",
@@ -7981,7 +8707,8 @@
   "released": "2026-03-24",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20"
  },
  {
   "runtime": "node",
@@ -8011,7 +8738,8 @@
   "released": "2026-03-25",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)"
+  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)",
+  "reason": "newest in major 20"
  },
  {
   "runtime": "node",
@@ -8047,7 +8775,8 @@
   "released": "2026-03-24",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20"
  },
  {
   "runtime": "node",
@@ -8077,7 +8806,8 @@
   "released": "2026-03-25",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)"
+  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)",
+  "reason": "newest in major 20"
  },
  {
   "runtime": "node",
@@ -8107,7 +8837,8 @@
   "released": "2026-03-25",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 20"
  },
  {
   "runtime": "node",
@@ -8143,7 +8874,8 @@
   "released": "2026-03-24",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20"
  },
  {
   "runtime": "node",
@@ -8173,7 +8905,8 @@
   "released": "2026-03-25",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 20"
  },
  {
   "runtime": "node",
@@ -8209,7 +8942,8 @@
   "released": "2026-03-24",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20"
  },
  {
   "runtime": "node",
@@ -8239,7 +8973,8 @@
   "released": "2026-03-25",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 20"
  },
  {
   "runtime": "node",
@@ -8275,7 +9010,8 @@
   "released": "2026-03-24",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20"
  },
  {
   "runtime": "node",
@@ -8305,7 +9041,8 @@
   "released": "2026-03-25",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 20"
  },
  {
   "runtime": "node",
@@ -8340,7 +9077,43 @@
   "released": "2026-03-24",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20; newest for macos 10.15"
+ },
+ {
+  "runtime": "node",
+  "languages": [
+   "javascript",
+   "typescript"
+  ],
+  "major": "20",
+  "version": "20.20.2",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nodejs.org/dist/v20.20.2/node-v20.20.2-darwin-x64.tar.gz",
+  "mirrors": [
+   "https://cdn.npmmirror.com/binaries/node/v20.20.2/node-v20.20.2-darwin-x64.tar.gz",
+   "https://registry.npmmirror.com/-/binary/node/v20.20.2/node-v20.20.2-darwin-x64.tar.gz",
+   "https://nodejs.org/download/release/v20.20.2/node-v20.20.2-darwin-x64.tar.gz",
+   "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v20.20.2/node-v20.20.2-darwin-x64.tar.gz",
+   "https://mirrors.aliyun.com/nodejs-release/v20.20.2/node-v20.20.2-darwin-x64.tar.gz",
+   "https://mirrors.huaweicloud.com/nodejs/v20.20.2/node-v20.20.2-darwin-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "8be6f5e4bb128c82774f8a0b8d7a1cc1365a7977d9657cece0ca647b3fe04e61",
+   "source": "https://nodejs.org/dist/v20.20.2/SHASUMS256.txt"
+  },
+  "size": null,
+  "released": "2026-03-24",
+  "min_os": null,
+  "metadata_source": "https://nodejs.org/dist/index.json",
+  "notes": null,
+  "reason": "newest for macos 10.15"
  },
  {
   "runtime": "node",
@@ -8375,7 +9148,8 @@
   "released": "2026-03-24",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20"
  },
  {
   "runtime": "node",
@@ -8412,7 +9186,8 @@
   "released": "2026-03-24",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20; newest for macos 10.15"
  },
  {
   "runtime": "node",
@@ -8447,7 +9222,8 @@
   "released": "2026-03-24",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20"
  },
  {
   "runtime": "node",
@@ -8482,7 +9258,8 @@
   "released": "2026-03-24",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20"
  },
  {
   "runtime": "node",
@@ -8517,7 +9294,8 @@
   "released": "2026-03-24",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20"
  },
  {
   "runtime": "node",
@@ -8547,7 +9325,8 @@
   "released": "2024-04-03",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 21; newest for linux glibc-2.36"
  },
  {
   "runtime": "node",
@@ -8577,7 +9356,8 @@
   "released": "2024-04-03",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 21; newest for linux glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36"
  },
  {
   "runtime": "node",
@@ -8615,7 +9395,8 @@
   "released": "2024-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "node",
@@ -8645,7 +9426,8 @@
   "released": "2024-04-11",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)"
+  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)",
+  "reason": "newest in major 21"
  },
  {
   "runtime": "node",
@@ -8683,7 +9465,8 @@
   "released": "2024-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "node",
@@ -8713,7 +9496,8 @@
   "released": "2024-04-11",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 21; newest for linux glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34"
  },
  {
   "runtime": "node",
@@ -8751,7 +9535,8 @@
   "released": "2024-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "node",
@@ -8789,7 +9574,8 @@
   "released": "2024-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "node",
@@ -8827,7 +9613,8 @@
   "released": "2024-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "node",
@@ -8857,7 +9644,8 @@
   "released": "2024-04-11",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 21; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "node",
@@ -8895,7 +9683,8 @@
   "released": "2024-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "node",
@@ -8933,7 +9722,8 @@
   "released": "2024-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "node",
@@ -8972,7 +9762,8 @@
   "released": "2024-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "node",
@@ -9010,7 +9801,8 @@
   "released": "2024-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "node",
@@ -9048,7 +9840,8 @@
   "released": "2024-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "node",
@@ -9086,7 +9879,8 @@
   "released": "2024-04-10",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "node",
@@ -9122,7 +9916,8 @@
   "released": "2026-07-28",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22"
  },
  {
   "runtime": "node",
@@ -9152,7 +9947,8 @@
   "released": "2026-07-29",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)"
+  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)",
+  "reason": "newest in major 22"
  },
  {
   "runtime": "node",
@@ -9188,7 +9984,8 @@
   "released": "2026-07-28",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22"
  },
  {
   "runtime": "node",
@@ -9218,7 +10015,8 @@
   "released": "2026-07-29",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)"
+  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)",
+  "reason": "newest in major 22"
  },
  {
   "runtime": "node",
@@ -9248,7 +10046,8 @@
   "released": "2026-07-29",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 22; newest for linux glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "node",
@@ -9284,7 +10083,8 @@
   "released": "2026-07-28",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22; newest for linux glibc-2.31, glibc-2.34"
  },
  {
   "runtime": "node",
@@ -9314,7 +10114,8 @@
   "released": "2026-07-29",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 22"
  },
  {
   "runtime": "node",
@@ -9350,7 +10151,8 @@
   "released": "2026-07-28",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22"
  },
  {
   "runtime": "node",
@@ -9380,7 +10182,8 @@
   "released": "2026-07-29",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 22"
  },
  {
   "runtime": "node",
@@ -9415,7 +10218,8 @@
   "released": "2026-07-28",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22"
  },
  {
   "runtime": "node",
@@ -9450,7 +10254,8 @@
   "released": "2026-07-28",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22"
  },
  {
   "runtime": "node",
@@ -9485,7 +10290,8 @@
   "released": "2026-07-28",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22"
  },
  {
   "runtime": "node",
@@ -9521,7 +10327,8 @@
   "released": "2026-07-28",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22"
  },
  {
   "runtime": "node",
@@ -9556,7 +10363,43 @@
   "released": "2026-07-28",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22; newest for windows 8.1, server2012r2"
+ },
+ {
+  "runtime": "node",
+  "languages": [
+   "javascript",
+   "typescript"
+  ],
+  "major": "22",
+  "version": "22.23.2",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "msi",
+  "variant": null,
+  "libc": null,
+  "url": "https://nodejs.org/dist/v22.23.2/node-v22.23.2-x64.msi",
+  "mirrors": [
+   "https://cdn.npmmirror.com/binaries/node/v22.23.2/node-v22.23.2-x64.msi",
+   "https://registry.npmmirror.com/-/binary/node/v22.23.2/node-v22.23.2-x64.msi",
+   "https://nodejs.org/download/release/v22.23.2/node-v22.23.2-x64.msi",
+   "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v22.23.2/node-v22.23.2-x64.msi",
+   "https://mirrors.aliyun.com/nodejs-release/v22.23.2/node-v22.23.2-x64.msi",
+   "https://mirrors.huaweicloud.com/nodejs/v22.23.2/node-v22.23.2-x64.msi"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "ce9572ae220c345fbae2340bbb4d084e8ca5e0fe093ee7067d43094ae23be989",
+   "source": "https://nodejs.org/dist/v22.23.2/SHASUMS256.txt"
+  },
+  "size": null,
+  "released": "2026-07-28",
+  "min_os": null,
+  "metadata_source": "https://nodejs.org/dist/index.json",
+  "notes": null,
+  "reason": "newest for windows 8.1, server2012r2"
  },
  {
   "runtime": "node",
@@ -9591,7 +10434,8 @@
   "released": "2026-07-28",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22; newest for windows 8.1, server2012r2"
  },
  {
   "runtime": "node",
@@ -9626,7 +10470,43 @@
   "released": "2026-07-28",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22; newest for windows 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
+ },
+ {
+  "runtime": "node",
+  "languages": [
+   "javascript",
+   "typescript"
+  ],
+  "major": "22",
+  "version": "22.23.2",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "installer",
+  "format": "msi",
+  "variant": null,
+  "libc": null,
+  "url": "https://nodejs.org/dist/v22.23.2/node-v22.23.2-x86.msi",
+  "mirrors": [
+   "https://cdn.npmmirror.com/binaries/node/v22.23.2/node-v22.23.2-x86.msi",
+   "https://registry.npmmirror.com/-/binary/node/v22.23.2/node-v22.23.2-x86.msi",
+   "https://nodejs.org/download/release/v22.23.2/node-v22.23.2-x86.msi",
+   "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v22.23.2/node-v22.23.2-x86.msi",
+   "https://mirrors.aliyun.com/nodejs-release/v22.23.2/node-v22.23.2-x86.msi",
+   "https://mirrors.huaweicloud.com/nodejs/v22.23.2/node-v22.23.2-x86.msi"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "bacc6689c6b6953e120fedaf0bba9f16349bb2755f6ee9fecf33317daab9d029",
+   "source": "https://nodejs.org/dist/v22.23.2/SHASUMS256.txt"
+  },
+  "size": null,
+  "released": "2026-07-28",
+  "min_os": null,
+  "metadata_source": "https://nodejs.org/dist/index.json",
+  "notes": null,
+  "reason": "newest for windows 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "node",
@@ -9663,7 +10543,8 @@
   "released": "2025-05-14",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 23"
  },
  {
   "runtime": "node",
@@ -9693,7 +10574,8 @@
   "released": "2025-05-15",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)"
+  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)",
+  "reason": "newest in major 23"
  },
  {
   "runtime": "node",
@@ -9730,7 +10612,8 @@
   "released": "2025-05-14",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 23"
  },
  {
   "runtime": "node",
@@ -9767,7 +10650,8 @@
   "released": "2025-05-14",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 23; newest for linux glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "node",
@@ -9797,7 +10681,8 @@
   "released": "2025-05-15",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 23"
  },
  {
   "runtime": "node",
@@ -9834,7 +10719,8 @@
   "released": "2025-05-14",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 23"
  },
  {
   "runtime": "node",
@@ -9871,7 +10757,8 @@
   "released": "2025-05-14",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 23"
  },
  {
   "runtime": "node",
@@ -9908,7 +10795,44 @@
   "released": "2025-05-14",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 23; newest for macos 11, 12"
+ },
+ {
+  "runtime": "node",
+  "languages": [
+   "javascript",
+   "typescript"
+  ],
+  "major": "23",
+  "version": "23.11.1",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nodejs.org/dist/v23.11.1/node-v23.11.1-darwin-x64.tar.gz",
+  "mirrors": [
+   "https://cdn.npmmirror.com/binaries/node/v23.11.1/node-v23.11.1-darwin-x64.tar.gz",
+   "https://registry.npmmirror.com/-/binary/node/v23.11.1/node-v23.11.1-darwin-x64.tar.gz",
+   "https://nodejs.org/download/release/v23.11.1/node-v23.11.1-darwin-x64.tar.gz",
+   "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v23.11.1/node-v23.11.1-darwin-x64.tar.gz",
+   "https://mirrors.aliyun.com/nodejs-release/v23.11.1/node-v23.11.1-darwin-x64.tar.gz",
+   "https://mirrors.huaweicloud.com/nodejs/v23.11.1/node-v23.11.1-darwin-x64.tar.gz",
+   "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v23.11.1/node-v23.11.1-darwin-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "7e384a0cfa8b44ee4833b3823485baad78bf258e54f47020d2d2b4b75e9275d3",
+   "source": "https://nodejs.org/dist/v23.11.1/SHASUMS256.txt"
+  },
+  "size": null,
+  "released": "2025-05-14",
+  "min_os": null,
+  "metadata_source": "https://nodejs.org/dist/index.json",
+  "notes": null,
+  "reason": "newest for macos 11, 12"
  },
  {
   "runtime": "node",
@@ -9945,7 +10869,8 @@
   "released": "2025-05-14",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 23; newest for macos 11, 12"
  },
  {
   "runtime": "node",
@@ -9983,7 +10908,8 @@
   "released": "2025-05-14",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 23; newest for macos 11, 12"
  },
  {
   "runtime": "node",
@@ -10020,7 +10946,8 @@
   "released": "2025-05-14",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 23"
  },
  {
   "runtime": "node",
@@ -10057,7 +10984,8 @@
   "released": "2025-05-14",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 23"
  },
  {
   "runtime": "node",
@@ -10091,7 +11019,8 @@
   "released": "2026-09-07",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 24"
  },
  {
   "runtime": "node",
@@ -10121,7 +11050,8 @@
   "released": "2026-09-07",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 24"
  },
  {
   "runtime": "node",
@@ -10155,7 +11085,8 @@
   "released": "2026-09-07",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 24"
  },
  {
   "runtime": "node",
@@ -10185,7 +11116,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)"
+  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)",
+  "reason": "newest in major 24"
  },
  {
   "runtime": "node",
@@ -10215,7 +11147,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 24"
  },
  {
   "runtime": "node",
@@ -10249,7 +11182,8 @@
   "released": "2026-09-07",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 24"
  },
  {
   "runtime": "node",
@@ -10279,7 +11213,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 24"
  },
  {
   "runtime": "node",
@@ -10313,7 +11248,8 @@
   "released": "2026-09-07",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 24"
  },
  {
   "runtime": "node",
@@ -10347,7 +11283,8 @@
   "released": "2026-09-07",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 24"
  },
  {
   "runtime": "node",
@@ -10381,7 +11318,8 @@
   "released": "2026-09-07",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 24"
  },
  {
   "runtime": "node",
@@ -10415,7 +11353,8 @@
   "released": "2026-09-07",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 24"
  },
  {
   "runtime": "node",
@@ -10449,7 +11388,8 @@
   "released": "2026-09-07",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 24"
  },
  {
   "runtime": "node",
@@ -10483,7 +11423,8 @@
   "released": "2026-09-07",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 24"
  },
  {
   "runtime": "node",
@@ -10518,7 +11459,8 @@
   "released": "2026-03-31",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 25"
  },
  {
   "runtime": "node",
@@ -10548,7 +11490,8 @@
   "released": "2026-04-01",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)"
+  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)",
+  "reason": "newest in major 25"
  },
  {
   "runtime": "node",
@@ -10583,7 +11526,8 @@
   "released": "2026-03-31",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 25"
  },
  {
   "runtime": "node",
@@ -10613,7 +11557,8 @@
   "released": "2026-04-01",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)"
+  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)",
+  "reason": "newest in major 25"
  },
  {
   "runtime": "node",
@@ -10643,7 +11588,8 @@
   "released": "2026-04-01",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 25"
  },
  {
   "runtime": "node",
@@ -10678,7 +11624,8 @@
   "released": "2026-03-31",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 25"
  },
  {
   "runtime": "node",
@@ -10708,7 +11655,8 @@
   "released": "2026-04-01",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 25"
  },
  {
   "runtime": "node",
@@ -10743,7 +11691,8 @@
   "released": "2026-03-31",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 25"
  },
  {
   "runtime": "node",
@@ -10778,7 +11727,8 @@
   "released": "2026-03-31",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 25"
  },
  {
   "runtime": "node",
@@ -10813,7 +11763,8 @@
   "released": "2026-03-31",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 25"
  },
  {
   "runtime": "node",
@@ -10849,7 +11800,8 @@
   "released": "2026-03-31",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 25"
  },
  {
   "runtime": "node",
@@ -10884,7 +11836,8 @@
   "released": "2026-03-31",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 25"
  },
  {
   "runtime": "node",
@@ -10919,7 +11872,8 @@
   "released": "2026-03-31",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 25"
  },
  {
   "runtime": "node",
@@ -10949,7 +11903,8 @@
   "released": "2026-05-05",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 26; newest for linux glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "node",
@@ -10979,7 +11934,8 @@
   "released": "2026-09-09",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)"
+  "notes": "unofficial-builds.nodejs.org gap-filler (nodejs.org ships no official build for this os/arch at this version)",
+  "reason": "newest in major 26; newest for linux glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "node",
@@ -11012,7 +11968,42 @@
   "released": "2026-09-16",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 26; newest for linux glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
+ },
+ {
+  "runtime": "node",
+  "languages": [
+   "javascript",
+   "typescript"
+  ],
+  "major": "26",
+  "version": "26.9.0",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://nodejs.org/dist/v26.9.0/node-v26.9.0-linux-x64.tar.gz",
+  "mirrors": [
+   "https://cdn.npmmirror.com/binaries/node/v26.9.0/node-v26.9.0-linux-x64.tar.gz",
+   "https://registry.npmmirror.com/-/binary/node/v26.9.0/node-v26.9.0-linux-x64.tar.gz",
+   "https://nodejs.org/download/release/v26.9.0/node-v26.9.0-linux-x64.tar.gz",
+   "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v26.9.0/node-v26.9.0-linux-x64.tar.gz",
+   "https://mirrors.aliyun.com/nodejs-release/v26.9.0/node-v26.9.0-linux-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "03d9104fc4f19652e74480fed11c023d75981464b7292f21a601c3f95ce7d90d",
+   "source": "https://nodejs.org/dist/v26.9.0/SHASUMS256.txt"
+  },
+  "size": null,
+  "released": "2026-09-16",
+  "min_os": null,
+  "metadata_source": "https://nodejs.org/dist/index.json",
+  "notes": null,
+  "reason": "newest for linux glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "node",
@@ -11042,7 +12033,8 @@
   "released": "2026-09-16",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 26; newest for linux glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "node",
@@ -11075,7 +12067,8 @@
   "released": "2026-09-16",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 26; newest for linux glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "node",
@@ -11105,7 +12098,8 @@
   "released": "2026-09-16",
   "min_os": null,
   "metadata_source": "https://unofficial-builds.nodejs.org/download/release/index.json",
-  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)"
+  "notes": "unofficial-builds.nodejs.org musl build (nodejs.org itself ships no musl build for this os/arch/version)",
+  "reason": "newest in major 26; newest for linux glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "node",
@@ -11138,7 +12132,8 @@
   "released": "2026-09-16",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 26; newest for linux glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "node",
@@ -11171,7 +12166,8 @@
   "released": "2026-09-16",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 26; newest for linux glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "node",
@@ -11204,7 +12200,42 @@
   "released": "2026-09-16",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 26; newest for macos 13, 14, 15, 26"
+ },
+ {
+  "runtime": "node",
+  "languages": [
+   "javascript",
+   "typescript"
+  ],
+  "major": "26",
+  "version": "26.9.0",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nodejs.org/dist/v26.9.0/node-v26.9.0-darwin-x64.tar.gz",
+  "mirrors": [
+   "https://cdn.npmmirror.com/binaries/node/v26.9.0/node-v26.9.0-darwin-x64.tar.gz",
+   "https://registry.npmmirror.com/-/binary/node/v26.9.0/node-v26.9.0-darwin-x64.tar.gz",
+   "https://nodejs.org/download/release/v26.9.0/node-v26.9.0-darwin-x64.tar.gz",
+   "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v26.9.0/node-v26.9.0-darwin-x64.tar.gz",
+   "https://mirrors.aliyun.com/nodejs-release/v26.9.0/node-v26.9.0-darwin-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "06b2e742ed9025dc84adc830243b3f731956eac9c321bccd0ede384209af02a8",
+   "source": "https://nodejs.org/dist/v26.9.0/SHASUMS256.txt"
+  },
+  "size": null,
+  "released": "2026-09-16",
+  "min_os": null,
+  "metadata_source": "https://nodejs.org/dist/index.json",
+  "notes": null,
+  "reason": "newest for macos 13, 14, 15, 26"
  },
  {
   "runtime": "node",
@@ -11237,7 +12268,8 @@
   "released": "2026-09-16",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 26; newest for macos 13, 14, 15, 26"
  },
  {
   "runtime": "node",
@@ -11270,7 +12302,8 @@
   "released": "2026-09-16",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 26; newest for macos 13, 14, 15, 26"
  },
  {
   "runtime": "node",
@@ -11303,7 +12336,42 @@
   "released": "2026-09-16",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 26; newest for windows 10, server2016, server2019, server2022, 11, server2025"
+ },
+ {
+  "runtime": "node",
+  "languages": [
+   "javascript",
+   "typescript"
+  ],
+  "major": "26",
+  "version": "26.9.0",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "msi",
+  "variant": null,
+  "libc": null,
+  "url": "https://nodejs.org/dist/v26.9.0/node-v26.9.0-x64.msi",
+  "mirrors": [
+   "https://cdn.npmmirror.com/binaries/node/v26.9.0/node-v26.9.0-x64.msi",
+   "https://registry.npmmirror.com/-/binary/node/v26.9.0/node-v26.9.0-x64.msi",
+   "https://nodejs.org/download/release/v26.9.0/node-v26.9.0-x64.msi",
+   "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v26.9.0/node-v26.9.0-x64.msi",
+   "https://mirrors.aliyun.com/nodejs-release/v26.9.0/node-v26.9.0-x64.msi"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "9abc94e80f63feca139725812c2a8a78e00db986477d12c3042e876045f056bb",
+   "source": "https://nodejs.org/dist/v26.9.0/SHASUMS256.txt"
+  },
+  "size": null,
+  "released": "2026-09-16",
+  "min_os": null,
+  "metadata_source": "https://nodejs.org/dist/index.json",
+  "notes": null,
+  "reason": "newest for windows 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "node",
@@ -11336,6 +12404,7 @@
   "released": "2026-09-16",
   "min_os": null,
   "metadata_source": "https://nodejs.org/dist/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 26; newest for windows 10, server2016, server2019, server2022, 11, server2025"
  }
 ]

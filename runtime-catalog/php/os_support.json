@@ -1,0 +1,4118 @@
+{
+ "runtime": "php",
+ "researched": "2026-09-18",
+ "notes": "Windows: every php.net zip from 4.4.0 to 8.5.x was grouped by toolchain; per minor line the first, middle and last zips (plus bisection where they differed) were downloaded and every PE inside read (subsystem version + imports vs the Windows version that introduced each API). min_os is set by the core files (php.exe, php-cgi.exe, php-win.exe, phpN[ts].dll); where an optional extension or bundled library needs more, the rule's notes say so. Linux/macOS: php.net ships no binaries; rules cover static-php-cli 'common' builds, every macOS file read, Linux first/middle/last per minor. Scratch tooling: binscan.py/aggscan.py in the researcher's scratchpad (not kept in the repo).",
+ "rules": [
+  {
+   "versions": ">=8.0.30",
+   "last_release": "8.5.8",
+   "os": "linux",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "glibc-2.5",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.0.30, 8.1.29, 8.1.34, 8.2.10, 8.2.22, 8.2.32, 8.3.0, 8.3.17, 8.3.32, 8.4.1, 8.4.14, 8.4.23, 8.5.2, 8.5.5, 8.5.8: statically linked ELF (no PT_INTERP, no GLIBC_ symbol versions): libc-independent, runs on musl too",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.0.30-cli-linux-x86_64.tar.gz"
+    },
+    {
+     "kind": "binary",
+     "source": "8.1.23: GLIBC_None",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.1.23-cli-linux-x86_64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "static binary: every glibc id and musl systems qualify; 86 releases, 16 archives read (8.0.30, 8.1.23, 8.1.29, 8.1.34, 8.2.10, 8.2.22, 8.2.32, 8.3.0, 8.3.17, 8.3.32, 8.4.1, 8.4.14, 8.4.23, 8.5.2, 8.5.5, 8.5.8)",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.0.30",
+   "last_release": "8.5.8",
+   "os": "linux",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "glibc-2.5",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.0.30, 8.1.25, 8.1.29, 8.1.34, 8.2.12, 8.2.23, 8.2.32, 8.3.0, 8.3.17, 8.3.32, 8.4.1, 8.4.14, 8.4.23, 8.5.2, 8.5.5, 8.5.8: statically linked ELF (no PT_INTERP, no GLIBC_ symbol versions): libc-independent, runs on musl too",
+     "file": "https://static-php-cli.fra1.digitaloceanspaces.com/static-php-cli/common/php-8.0.30-cli-linux-aarch64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "static binary: every glibc id and musl systems qualify; 82 releases, 16 archives read (8.0.30, 8.1.25, 8.1.29, 8.1.34, 8.2.12, 8.2.23, 8.2.32, 8.3.0, 8.3.17, 8.3.32, 8.4.1, 8.4.14, 8.4.23, 8.5.2, 8.5.5, 8.5.8)",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.0.30,<8.1.23",
+   "last_release": "8.0.30",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "13",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.0.30: Mach-O X86_64 minos 13.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.0.30-cli-macos-x86_64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "1 releases, 1 archives read (8.0.30); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.1.23,<8.1.28",
+   "last_release": "8.1.27",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "12",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.1.23, 8.1.25, 8.1.26, 8.1.27: Mach-O X86_64 minos 12.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.1.23-cli-macos-x86_64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "4 releases, 4 archives read (8.1.23, 8.1.25, 8.1.26, 8.1.27); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.1.28,<8.1.33",
+   "last_release": "8.1.32",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "13",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.1.28, 8.1.29, 8.1.30, 8.1.31, 8.1.32: Mach-O X86_64 minos 13.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.1.28-cli-macos-x86_64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "5 releases, 5 archives read (8.1.28, 8.1.29, 8.1.30, 8.1.31, 8.1.32); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.1.33,<8.1.34",
+   "last_release": "8.1.33",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "15",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.1.33: Mach-O X86_64 minos 15.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.1.33-cli-macos-x86_64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "1 releases, 1 archives read (8.1.33); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.1.34,<8.2.18",
+   "last_release": "8.2.17",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "12",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.1.34, 8.2.10, 8.2.12, 8.2.13, 8.2.14, 8.2.15, 8.2.16, 8.2.17: Mach-O X86_64 minos 12.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.1.34-cli-macos-x86_64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "8 releases, 8 archives read (8.1.34, 8.2.10, 8.2.12, 8.2.13, 8.2.14, 8.2.15, 8.2.16, 8.2.17); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.2.18,<8.2.29",
+   "last_release": "8.2.28",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "13",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.2.18, 8.2.19, 8.2.21, 8.2.22, 8.2.23, 8.2.24, 8.2.25, 8.2.26, 8.2.27, 8.2.28: Mach-O X86_64 minos 13.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.2.18-cli-macos-x86_64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "10 releases, 10 archives read (8.2.18, 8.2.19, 8.2.21, 8.2.22, 8.2.23, 8.2.24, 8.2.25, 8.2.26, 8.2.27, 8.2.28); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.2.29,<8.2.30",
+   "last_release": "8.2.29",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "15",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.2.29: Mach-O X86_64 minos 15.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.2.29-cli-macos-x86_64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "1 releases, 1 archives read (8.2.29); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.2.30,<8.3.6",
+   "last_release": "8.3.4",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "12",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.2.30, 8.2.31, 8.2.32, 8.3.0, 8.3.1, 8.3.2, 8.3.3, 8.3.4: Mach-O X86_64 minos 12.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.2.30-cli-macos-x86_64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "8 releases, 8 archives read (8.2.30, 8.2.31, 8.2.32, 8.3.0, 8.3.1, 8.3.2, 8.3.3, 8.3.4); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.3.6,<8.3.26",
+   "last_release": "8.3.25",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "13",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.3.6, 8.3.7, 8.3.9, 8.3.10, 8.3.11, 8.3.12, 8.3.13, 8.3.14, 8.3.17, 8.3.19, 8.3.20, 8.3.22, 8.3.23, 8.3.24, 8.3.25: Mach-O X86_64 minos 13.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.3.6-cli-macos-x86_64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "15 releases, 15 archives read (8.3.6, 8.3.7, 8.3.9, 8.3.10, 8.3.11, 8.3.12, 8.3.13, 8.3.14, 8.3.17, 8.3.19, 8.3.20, 8.3.22, 8.3.23, 8.3.24, 8.3.25); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.3.26,<8.3.30",
+   "last_release": "8.3.29",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "15",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.3.26, 8.3.27, 8.3.28, 8.3.29: Mach-O X86_64 minos 15.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.3.26-cli-macos-x86_64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "4 releases, 4 archives read (8.3.26, 8.3.27, 8.3.28, 8.3.29); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.3.30,<8.4.1",
+   "last_release": "8.3.32",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "12",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.3.30, 8.3.31, 8.3.32: Mach-O X86_64 minos 12.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.3.30-cli-macos-x86_64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "3 releases, 3 archives read (8.3.30, 8.3.31, 8.3.32); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.4.1,<8.4.13",
+   "last_release": "8.4.12",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "13",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.4.1, 8.4.4, 8.4.5, 8.4.6, 8.4.8, 8.4.10, 8.4.11, 8.4.12: Mach-O X86_64 minos 13.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.4.1-cli-macos-x86_64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "8 releases, 8 archives read (8.4.1, 8.4.4, 8.4.5, 8.4.6, 8.4.8, 8.4.10, 8.4.11, 8.4.12); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.4.13,<8.4.16",
+   "last_release": "8.4.15",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "15",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.4.13, 8.4.14, 8.4.15: Mach-O X86_64 minos 15.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.4.13-cli-macos-x86_64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "3 releases, 3 archives read (8.4.13, 8.4.14, 8.4.15); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.4.16",
+   "last_release": "8.5.8",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "12",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.4.16, 8.4.17, 8.4.18, 8.4.19, 8.4.20, 8.4.21, 8.4.22, 8.4.23, 8.5.3, 8.5.4, 8.5.5, 8.5.6, 8.5.7, 8.5.8: Mach-O X86_64 minos 12.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.4.16-cli-macos-x86_64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "14 releases, 14 archives read (8.4.16, 8.4.17, 8.4.18, 8.4.19, 8.4.20, 8.4.21, 8.4.22, 8.4.23, 8.5.3, 8.5.4, 8.5.5, 8.5.6, 8.5.7, 8.5.8); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.0.30,<8.1.23",
+   "last_release": "8.0.30",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "14",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.0.30: Mach-O ARM64 minos 14.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.0.30-cli-macos-aarch64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "1 releases, 1 archives read (8.0.30); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.1.23,<8.1.26",
+   "last_release": "8.1.25",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "13",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.1.23, 8.1.25: Mach-O ARM64 minos 13.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.1.23-cli-macos-aarch64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "2 releases, 2 archives read (8.1.23, 8.1.25); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.1.26,<8.1.33",
+   "last_release": "8.1.32",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "14",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.1.26, 8.1.27, 8.1.28, 8.1.29, 8.1.30, 8.1.31, 8.1.32: Mach-O ARM64 minos 14.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.1.26-cli-macos-aarch64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "7 releases, 7 archives read (8.1.26, 8.1.27, 8.1.28, 8.1.29, 8.1.30, 8.1.31, 8.1.32); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.1.33,<8.1.34",
+   "last_release": "8.1.33",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "15",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.1.33: Mach-O ARM64 minos 15.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.1.33-cli-macos-aarch64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "1 releases, 1 archives read (8.1.33); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.1.34,<8.2.10",
+   "last_release": "8.1.34",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "12",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.1.34: Mach-O ARM64 minos 12.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.1.34-cli-macos-aarch64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "1 releases, 1 archives read (8.1.34); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.2.10,<8.2.14",
+   "last_release": "8.2.13",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "13",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.2.10, 8.2.12, 8.2.13: Mach-O ARM64 minos 13.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.2.10-cli-macos-aarch64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "3 releases, 3 archives read (8.2.10, 8.2.12, 8.2.13); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.2.14,<8.2.29",
+   "last_release": "8.2.28",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "14",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.2.14, 8.2.15, 8.2.16, 8.2.17, 8.2.18, 8.2.19, 8.2.21, 8.2.22, 8.2.23, 8.2.24, 8.2.25, 8.2.26, 8.2.27, 8.2.28: Mach-O ARM64 minos 14.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.2.14-cli-macos-aarch64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "14 releases, 14 archives read (8.2.14, 8.2.15, 8.2.16, 8.2.17, 8.2.18, 8.2.19, 8.2.21, 8.2.22, 8.2.23, 8.2.24, 8.2.25, 8.2.26, 8.2.27, 8.2.28); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.2.29,<8.2.30",
+   "last_release": "8.2.29",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "15",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.2.29: Mach-O ARM64 minos 15.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.2.29-cli-macos-aarch64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "1 releases, 1 archives read (8.2.29); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.2.30,<8.3.0",
+   "last_release": "8.2.32",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "12",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.2.30, 8.2.31, 8.2.32: Mach-O ARM64 minos 12.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.2.30-cli-macos-aarch64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "3 releases, 3 archives read (8.2.30, 8.2.31, 8.2.32); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.3.0,<8.3.1",
+   "last_release": "8.3.0",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "13",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.3.0: Mach-O ARM64 minos 13.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.3.0-cli-macos-aarch64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "1 releases, 1 archives read (8.3.0); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.3.1,<8.3.26",
+   "last_release": "8.3.25",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "14",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.3.1, 8.3.2, 8.3.3, 8.3.4, 8.3.6, 8.3.7, 8.3.9, 8.3.10, 8.3.11, 8.3.12, 8.3.13, 8.3.14, 8.3.17, 8.3.19, 8.3.20, 8.3.22, 8.3.23, 8.3.24, 8.3.25: Mach-O ARM64 minos 14.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.3.1-cli-macos-aarch64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "19 releases, 19 archives read (8.3.1, 8.3.2, 8.3.3, 8.3.4, 8.3.6, 8.3.7, 8.3.9, 8.3.10, 8.3.11, 8.3.12, 8.3.13, 8.3.14, 8.3.17, 8.3.19, 8.3.20, 8.3.22, 8.3.23, 8.3.24, 8.3.25); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.3.26,<8.3.29",
+   "last_release": "8.3.28",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "15",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.3.26, 8.3.27, 8.3.28: Mach-O ARM64 minos 15.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.3.26-cli-macos-aarch64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "3 releases, 3 archives read (8.3.26, 8.3.27, 8.3.28); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.3.29,<8.4.1",
+   "last_release": "8.3.32",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "12",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.3.29, 8.3.30, 8.3.31, 8.3.32: Mach-O ARM64 minos 12.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.3.29-cli-macos-aarch64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "4 releases, 4 archives read (8.3.29, 8.3.30, 8.3.31, 8.3.32); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.4.1,<8.4.13",
+   "last_release": "8.4.12",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "14",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.4.1, 8.4.4, 8.4.5, 8.4.6, 8.4.8, 8.4.10, 8.4.11, 8.4.12: Mach-O ARM64 minos 14.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.4.1-cli-macos-aarch64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "8 releases, 8 archives read (8.4.1, 8.4.4, 8.4.5, 8.4.6, 8.4.8, 8.4.10, 8.4.11, 8.4.12); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.4.13,<8.4.16",
+   "last_release": "8.4.15",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "15",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.4.13, 8.4.14, 8.4.15: Mach-O ARM64 minos 15.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.4.13-cli-macos-aarch64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "3 releases, 3 archives read (8.4.13, 8.4.14, 8.4.15); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.4.16",
+   "last_release": "8.5.8",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "12",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "static-php-cli 'common' builds (unofficial)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.4.16, 8.4.17, 8.4.18, 8.4.19, 8.4.20, 8.4.21, 8.4.22, 8.4.23, 8.5.3, 8.5.4, 8.5.5, 8.5.6, 8.5.7, 8.5.8: Mach-O ARM64 minos 12.0.0; no non-system dylibs",
+     "file": "https://dl.static-php.dev/static-php-cli/common/php-8.4.16-cli-macos-aarch64.tar.gz"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/crazywhalecc/static-php-cli (unofficial static builds; dl.static-php.dev/static-php-cli/common/)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "14 releases, 14 archives read (8.4.16, 8.4.17, 8.4.18, 8.4.19, 8.4.20, 8.4.21, 8.4.22, 8.4.23, 8.5.3, 8.5.4, 8.5.5, 8.5.6, 8.5.7, 8.5.8); static-php-cli rebuilds and overwrites these files in place (no checksums), so minos was read from the files served on 2026-09-18 and a later rebuild can change it",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "static-php-cli",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "static-php-cli"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=5.5.38,<=5.6.40",
+   "last_release": "5.6.40",
+   "os": "windows",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "vista",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "SP2 (VC++ 2012/2015 redistributables need Vista SP2)",
+    "Visual C++ 2012 Update 4 redistributable (msvcr110.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant nts-vc11 (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "5.5.38, 5.6.40: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import vista (php5.dll: ws2_32.dll!inet_ntop)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-5.5.38-nts-Win32-VC11-x64.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "2 releases, 2 archives read (5.5.38, 5.6.40)",
+   "format": [
+    "zip"
+   ],
+   "variant": "nts-vc11",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "nts-vc11"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=5.5.38,<=5.6.40",
+   "last_release": "5.6.40",
+   "os": "windows",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "vista",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "SP2 (VC++ 2012/2015 redistributables need Vista SP2)",
+    "Visual C++ 2012 Update 4 redistributable (msvcr110.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant ts-vc11 (inferred from the scanned nts- zip) (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "5.5.38, 5.6.40: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import vista (php5.dll: ws2_32.dll!inet_ntop)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-5.5.38-nts-Win32-VC11-x64.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "2 releases, 2 archives read (5.5.38, 5.6.40)",
+   "format": [
+    "zip"
+   ],
+   "variant": "ts-vc11",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "ts-vc11"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=7.0.0,<=7.1.33",
+   "last_release": "7.1.33",
+   "os": "windows",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "vista",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "SP2 (VC++ 2012/2015 redistributables need Vista SP2)",
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant nts-vc14 (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "7.0.0, 7.0.16, 7.0.33, 7.1.0, 7.1.16, 7.1.33: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import vista (php-cgi.exe: ws2_32.dll!inet_pton)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-7.0.0-nts-Win32-VC14-x64.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "68 releases, 6 archives read (7.0.0, 7.0.16, 7.0.33, 7.1.0, 7.1.16, 7.1.33)",
+   "format": [
+    "zip"
+   ],
+   "variant": "nts-vc14",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "nts-vc14"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=7.0.0,<=7.1.33",
+   "last_release": "7.1.33",
+   "os": "windows",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "vista",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "SP2 (VC++ 2012/2015 redistributables need Vista SP2)",
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant ts-vc14 (inferred from the scanned nts- zip) (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "7.0.0, 7.0.16, 7.0.33, 7.1.0, 7.1.16, 7.1.33: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import vista (php-cgi.exe: ws2_32.dll!inet_pton)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-7.0.0-nts-Win32-VC14-x64.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "68 releases, 6 archives read (7.0.0, 7.0.16, 7.0.33, 7.1.0, 7.1.16, 7.1.33)",
+   "format": [
+    "zip"
+   ],
+   "variant": "ts-vc14",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "ts-vc14"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=7.2.0,<=7.4.33",
+   "last_release": "7.4.33",
+   "os": "windows",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "7",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "SP1 (the VC++ 2015-2022 redistributable needs Windows 7 SP1)",
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant nts-vc15 (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "7.2.0, 7.2.17, 7.2.34, 7.3.0, 7.3.16, 7.3.33, 7.4.0, 7.4.15, 7.4.33: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 7 (php7.dll: kernel32.dll!K32GetProcessMemoryInfo)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-7.2.0-nts-Win32-VC15-x64.zip"
+    },
+    {
+     "kind": "binary",
+     "source": "8.0.0, 8.0.15, 8.0.30, 8.1.0, 8.1.17, 8.1.34, 8.2.0, 8.2.16, 8.2.33: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 7 (php8.dll: kernel32.dll!K32GetProcessMemoryInfo)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-8.0.0-nts-Win32-vs16-x64.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/php/php-src/blob/PHP-7.2/UPGRADING ('Minimum supported Windows versions are Windows 7/Server 2008 R2')"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "200 releases, 18 archives read (7.2.0, 7.2.17, 7.2.34, 7.3.0, 7.3.16, 7.3.33, 7.4.0, 7.4.15, 7.4.33, 8.0.0, 8.0.15, 8.0.30, 8.1.0, 8.1.17, 8.1.34, 8.2.0, 8.2.16, 8.2.33)",
+   "format": [
+    "zip"
+   ],
+   "variant": "nts-vc15",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "nts-vc15"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=7.2.0,<=7.4.33",
+   "last_release": "7.4.33",
+   "os": "windows",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "7",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "SP1 (the VC++ 2015-2022 redistributable needs Windows 7 SP1)",
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant ts-vc15 (inferred from the scanned nts- zip) (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "7.2.0, 7.2.17, 7.2.34, 7.3.0, 7.3.16, 7.3.33, 7.4.0, 7.4.15, 7.4.33: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 7 (php7.dll: kernel32.dll!K32GetProcessMemoryInfo)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-7.2.0-nts-Win32-VC15-x64.zip"
+    },
+    {
+     "kind": "binary",
+     "source": "8.0.0, 8.0.15, 8.0.30, 8.1.0, 8.1.17, 8.1.34, 8.2.0, 8.2.16, 8.2.33: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 7 (php8.dll: kernel32.dll!K32GetProcessMemoryInfo)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-8.0.0-nts-Win32-vs16-x64.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/php/php-src/blob/PHP-7.2/UPGRADING ('Minimum supported Windows versions are Windows 7/Server 2008 R2')"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "200 releases, 18 archives read (7.2.0, 7.2.17, 7.2.34, 7.3.0, 7.3.16, 7.3.33, 7.4.0, 7.4.15, 7.4.33, 8.0.0, 8.0.15, 8.0.30, 8.1.0, 8.1.17, 8.1.34, 8.2.0, 8.2.16, 8.2.33)",
+   "format": [
+    "zip"
+   ],
+   "variant": "ts-vc15",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "ts-vc15"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.0.0,<=8.2.33",
+   "last_release": "8.2.33",
+   "os": "windows",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "7",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "SP1 (the VC++ 2015-2022 redistributable needs Windows 7 SP1)",
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant nts-vs16 (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "7.2.0, 7.2.17, 7.2.34, 7.3.0, 7.3.16, 7.3.33, 7.4.0, 7.4.15, 7.4.33: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 7 (php7.dll: kernel32.dll!K32GetProcessMemoryInfo)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-7.2.0-nts-Win32-VC15-x64.zip"
+    },
+    {
+     "kind": "binary",
+     "source": "8.0.0, 8.0.15, 8.0.30, 8.1.0, 8.1.17, 8.1.34, 8.2.0, 8.2.16, 8.2.33: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 7 (php8.dll: kernel32.dll!K32GetProcessMemoryInfo)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-8.0.0-nts-Win32-vs16-x64.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/php/php-src/blob/PHP-7.2/UPGRADING ('Minimum supported Windows versions are Windows 7/Server 2008 R2')"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "200 releases, 18 archives read (7.2.0, 7.2.17, 7.2.34, 7.3.0, 7.3.16, 7.3.33, 7.4.0, 7.4.15, 7.4.33, 8.0.0, 8.0.15, 8.0.30, 8.1.0, 8.1.17, 8.1.34, 8.2.0, 8.2.16, 8.2.33)",
+   "format": [
+    "zip"
+   ],
+   "variant": "nts-vs16",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "nts-vs16"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.0.0,<=8.2.33",
+   "last_release": "8.2.33",
+   "os": "windows",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "7",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "SP1 (the VC++ 2015-2022 redistributable needs Windows 7 SP1)",
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant ts-vs16 (inferred from the scanned nts- zip) (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "7.2.0, 7.2.17, 7.2.34, 7.3.0, 7.3.16, 7.3.33, 7.4.0, 7.4.15, 7.4.33: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 7 (php7.dll: kernel32.dll!K32GetProcessMemoryInfo)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-7.2.0-nts-Win32-VC15-x64.zip"
+    },
+    {
+     "kind": "binary",
+     "source": "8.0.0, 8.0.15, 8.0.30, 8.1.0, 8.1.17, 8.1.34, 8.2.0, 8.2.16, 8.2.33: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 7 (php8.dll: kernel32.dll!K32GetProcessMemoryInfo)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-8.0.0-nts-Win32-vs16-x64.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/php/php-src/blob/PHP-7.2/UPGRADING ('Minimum supported Windows versions are Windows 7/Server 2008 R2')"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "200 releases, 18 archives read (7.2.0, 7.2.17, 7.2.34, 7.3.0, 7.3.16, 7.3.33, 7.4.0, 7.4.15, 7.4.33, 8.0.0, 8.0.15, 8.0.30, 8.1.0, 8.1.17, 8.1.34, 8.2.0, 8.2.16, 8.2.33)",
+   "format": [
+    "zip"
+   ],
+   "variant": "ts-vs16",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "ts-vs16"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.3.0,<=8.3.33",
+   "last_release": "8.3.33",
+   "os": "windows",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "8",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant nts-vs16 (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.3.0, 8.3.17, 8.3.33, 8.4.0, 8.4.12, 8.4.25, 8.5.0, 8.5.5, 8.5.10: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 8 (php8.dll: kernel32.dll!GetCurrentThreadStackLimits)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-8.3.0-nts-Win32-vs16-x64.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/php/php-src/blob/PHP-8.3/UPGRADING ('Minimum supported Windows version has been bumped to Windows 8 or Windows Server 2012')"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "70 releases, 9 archives read (8.3.0, 8.3.17, 8.3.33, 8.4.0, 8.4.12, 8.4.25, 8.5.0, 8.5.5, 8.5.10)",
+   "format": [
+    "zip"
+   ],
+   "variant": "nts-vs16",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "nts-vs16"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.3.0,<=8.3.33",
+   "last_release": "8.3.33",
+   "os": "windows",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "8",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant ts-vs16 (inferred from the scanned nts- zip) (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.3.0, 8.3.17, 8.3.33, 8.4.0, 8.4.12, 8.4.25, 8.5.0, 8.5.5, 8.5.10: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 8 (php8.dll: kernel32.dll!GetCurrentThreadStackLimits)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-8.3.0-nts-Win32-vs16-x64.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/php/php-src/blob/PHP-8.3/UPGRADING ('Minimum supported Windows version has been bumped to Windows 8 or Windows Server 2012')"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "70 releases, 9 archives read (8.3.0, 8.3.17, 8.3.33, 8.4.0, 8.4.12, 8.4.25, 8.5.0, 8.5.5, 8.5.10)",
+   "format": [
+    "zip"
+   ],
+   "variant": "ts-vs16",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "ts-vs16"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.4.0,<=8.5.10",
+   "last_release": "8.5.10",
+   "os": "windows",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "8",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant nts-vs17 (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.3.0, 8.3.17, 8.3.33, 8.4.0, 8.4.12, 8.4.25, 8.5.0, 8.5.5, 8.5.10: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 8 (php8.dll: kernel32.dll!GetCurrentThreadStackLimits)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-8.3.0-nts-Win32-vs16-x64.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/php/php-src/blob/PHP-8.3/UPGRADING ('Minimum supported Windows version has been bumped to Windows 8 or Windows Server 2012')"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "70 releases, 9 archives read (8.3.0, 8.3.17, 8.3.33, 8.4.0, 8.4.12, 8.4.25, 8.5.0, 8.5.5, 8.5.10)",
+   "format": [
+    "zip"
+   ],
+   "variant": "nts-vs17",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "nts-vs17"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.4.0,<=8.5.10",
+   "last_release": "8.5.10",
+   "os": "windows",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "8",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant ts-vs17 (inferred from the scanned nts- zip) (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.3.0, 8.3.17, 8.3.33, 8.4.0, 8.4.12, 8.4.25, 8.5.0, 8.5.5, 8.5.10: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 8 (php8.dll: kernel32.dll!GetCurrentThreadStackLimits)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-8.3.0-nts-Win32-vs16-x64.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/php/php-src/blob/PHP-8.3/UPGRADING ('Minimum supported Windows version has been bumped to Windows 8 or Windows Server 2012')"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "70 releases, 9 archives read (8.3.0, 8.3.17, 8.3.33, 8.4.0, 8.4.12, 8.4.25, 8.5.0, 8.5.5, 8.5.10)",
+   "format": [
+    "zip"
+   ],
+   "variant": "ts-vs17",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "ts-vs17"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=4.4.0,<=5.1.6",
+   "last_release": "5.1.6",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "2000",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant none (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "4.4.0, 4.4.4, 4.4.9, 5.0.0, 5.0.2, 5.0.5, 5.1.0, 5.1.2, 5.1.6, 5.2.17: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 4.0, highest import 2000 (None)",
+     "file": "https://museum.php.net/php4/php-4.4.0-Win32.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "23 releases, 10 archives read (4.4.0, 4.4.4, 4.4.9, 5.0.0, 5.0.2, 5.0.5, 5.1.0, 5.1.2, 5.1.6, 5.2.17)",
+   "format": [
+    "zip"
+   ],
+   "variant": null,
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     null
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=5.2.17,<=5.2.17",
+   "last_release": "5.2.17",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "2000",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant nts-vc6 (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "4.4.0, 4.4.4, 4.4.9, 5.0.0, 5.0.2, 5.0.5, 5.1.0, 5.1.2, 5.1.6, 5.2.17: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 4.0, highest import 2000 (None)",
+     "file": "https://museum.php.net/php4/php-4.4.0-Win32.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "23 releases, 10 archives read (4.4.0, 4.4.4, 4.4.9, 5.0.0, 5.0.2, 5.0.5, 5.1.0, 5.1.2, 5.1.6, 5.2.17)",
+   "format": [
+    "zip"
+   ],
+   "variant": "nts-vc6",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "nts-vc6"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=5.2.17,<=5.2.17",
+   "last_release": "5.2.17",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "2000",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant ts-vc6 (inferred from the scanned nts- zip) (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "4.4.0, 4.4.4, 4.4.9, 5.0.0, 5.0.2, 5.0.5, 5.1.0, 5.1.2, 5.1.6, 5.2.17: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 4.0, highest import 2000 (None)",
+     "file": "https://museum.php.net/php4/php-4.4.0-Win32.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "23 releases, 10 archives read (4.4.0, 4.4.4, 4.4.9, 5.0.0, 5.0.2, 5.0.5, 5.1.0, 5.1.2, 5.1.6, 5.2.17)",
+   "format": [
+    "zip"
+   ],
+   "variant": "ts-vc6",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "ts-vc6"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=4.4.0,<=5.1.5",
+   "last_release": "5.2.17",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "2000",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "php.net Windows .exe installers (4.4.0, 4.4.1, 4.4.2, 4.4.3, 4.4.4, 5.0.0, 5.0.2, 5.0.3, 5.0.4, 5.0.5, 5.1.0, 5.1.1, 5.1.2, 5.1.3, 5.1.4, 5.1.5)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "4.4.0, 4.4.4, 4.4.9, 5.0.0, 5.0.2, 5.0.5, 5.1.0, 5.1.2, 5.1.6, 5.2.17: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 4.0, highest import 2000 (None)",
+     "file": "https://museum.php.net/php4/php-4.4.0-Win32.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "low",
+   "notes": "same binaries as the zip of that version; the installer's own launch conditions were not read",
+   "format": [
+    "exe"
+   ],
+   "variant": null,
+   "kind": "installer",
+   "match": {
+    "format": [
+     "exe"
+    ],
+    "variant": [
+     null
+    ],
+    "kind": [
+     "installer"
+    ]
+   }
+  },
+  {
+   "versions": ">=5.2.17,<=5.2.17",
+   "last_release": "5.2.17",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "2000",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "php.net Windows .msi installers (5.2.17)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "4.4.0, 4.4.4, 4.4.9, 5.0.0, 5.0.2, 5.0.5, 5.1.0, 5.1.2, 5.1.6, 5.2.17: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 4.0, highest import 2000 (None)",
+     "file": "https://museum.php.net/php4/php-4.4.0-Win32.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "low",
+   "notes": "same binaries as the zip of that version; the installer's own launch conditions were not read",
+   "format": [
+    "msi"
+   ],
+   "variant": "nts-vc6",
+   "kind": "installer",
+   "match": {
+    "format": [
+     "msi"
+    ],
+    "variant": [
+     "nts-vc6"
+    ],
+    "kind": [
+     "installer"
+    ]
+   }
+  },
+  {
+   "versions": ">=5.2.17,<=5.2.17",
+   "last_release": "5.2.17",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "2000",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "php.net Windows .msi installers (5.2.17)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "4.4.0, 4.4.4, 4.4.9, 5.0.0, 5.0.2, 5.0.5, 5.1.0, 5.1.2, 5.1.6, 5.2.17: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 4.0, highest import 2000 (None)",
+     "file": "https://museum.php.net/php4/php-4.4.0-Win32.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "low",
+   "notes": "same binaries as the zip of that version; the installer's own launch conditions were not read",
+   "format": [
+    "msi"
+   ],
+   "variant": "ts-vc6",
+   "kind": "installer",
+   "match": {
+    "format": [
+     "msi"
+    ],
+    "variant": [
+     "ts-vc6"
+    ],
+    "kind": [
+     "installer"
+    ]
+   }
+  },
+  {
+   "versions": ">=5.3.29,<=5.4.45",
+   "last_release": "5.4.45",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "xp",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "Visual C++ 2008 SP1 redistributable (msvcr90.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant nts-vc9 (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "5.3.29, 5.4.45: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 5.0, highest import xp (php5.dll: ws2_32.dll!freeaddrinfo)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-5.3.29-nts-Win32-VC9-x86.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "2 releases, 2 archives read (5.3.29, 5.4.45)",
+   "format": [
+    "zip"
+   ],
+   "variant": "nts-vc9",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "nts-vc9"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=5.3.29,<=5.4.45",
+   "last_release": "5.4.45",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "xp",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "Visual C++ 2008 SP1 redistributable (msvcr90.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant ts-vc9 (inferred from the scanned nts- zip) (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "5.3.29, 5.4.45: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 5.0, highest import xp (php5.dll: ws2_32.dll!freeaddrinfo)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-5.3.29-nts-Win32-VC9-x86.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "2 releases, 2 archives read (5.3.29, 5.4.45)",
+   "format": [
+    "zip"
+   ],
+   "variant": "ts-vc9",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "ts-vc9"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=5.3.29,<=5.3.29",
+   "last_release": "5.4.45",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "xp",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "Visual C++ 2008 SP1 redistributable (msvcr90.dll, same arch)"
+   ],
+   "applies_to": "php.net Windows .msi installers (5.3.29)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "5.3.29, 5.4.45: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 5.0, highest import xp (php5.dll: ws2_32.dll!freeaddrinfo)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-5.3.29-nts-Win32-VC9-x86.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "low",
+   "notes": "same binaries as the zip of that version; the installer's own launch conditions were not read",
+   "format": [
+    "msi"
+   ],
+   "variant": "nts-vc9",
+   "kind": "installer",
+   "match": {
+    "format": [
+     "msi"
+    ],
+    "variant": [
+     "nts-vc9"
+    ],
+    "kind": [
+     "installer"
+    ]
+   }
+  },
+  {
+   "versions": ">=5.3.29,<=5.3.29",
+   "last_release": "5.4.45",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "xp",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "Visual C++ 2008 SP1 redistributable (msvcr90.dll, same arch)"
+   ],
+   "applies_to": "php.net Windows .msi installers (5.3.29)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "5.3.29, 5.4.45: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 5.0, highest import xp (php5.dll: ws2_32.dll!freeaddrinfo)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-5.3.29-nts-Win32-VC9-x86.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "low",
+   "notes": "same binaries as the zip of that version; the installer's own launch conditions were not read",
+   "format": [
+    "msi"
+   ],
+   "variant": "ts-vc9",
+   "kind": "installer",
+   "match": {
+    "format": [
+     "msi"
+    ],
+    "variant": [
+     "ts-vc9"
+    ],
+    "kind": [
+     "installer"
+    ]
+   }
+  },
+  {
+   "versions": ">=5.5.38,<=5.6.40",
+   "last_release": "5.6.40",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "vista",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "SP2 (VC++ 2012/2015 redistributables need Vista SP2)",
+    "Visual C++ 2012 Update 4 redistributable (msvcr110.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant nts-vc11 (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "5.5.38, 5.6.40: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import vista (php5.dll: ws2_32.dll!inet_ntop)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-5.5.38-nts-Win32-VC11-x86.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "2 releases, 2 archives read (5.5.38, 5.6.40)",
+   "format": [
+    "zip"
+   ],
+   "variant": "nts-vc11",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "nts-vc11"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=5.5.38,<=5.6.40",
+   "last_release": "5.6.40",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "vista",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "SP2 (VC++ 2012/2015 redistributables need Vista SP2)",
+    "Visual C++ 2012 Update 4 redistributable (msvcr110.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant ts-vc11 (inferred from the scanned nts- zip) (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "5.5.38, 5.6.40: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import vista (php5.dll: ws2_32.dll!inet_ntop)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-5.5.38-nts-Win32-VC11-x86.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "2 releases, 2 archives read (5.5.38, 5.6.40)",
+   "format": [
+    "zip"
+   ],
+   "variant": "ts-vc11",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "ts-vc11"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=7.0.0,<=7.1.33",
+   "last_release": "7.1.33",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "vista",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "SP2 (VC++ 2012/2015 redistributables need Vista SP2)",
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant nts-vc14 (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "7.0.0, 7.0.16, 7.0.33, 7.1.0, 7.1.16, 7.1.33: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import vista (php-cgi.exe: ws2_32.dll!inet_pton)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-7.0.0-nts-Win32-VC14-x86.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "68 releases, 6 archives read (7.0.0, 7.0.16, 7.0.33, 7.1.0, 7.1.16, 7.1.33)",
+   "format": [
+    "zip"
+   ],
+   "variant": "nts-vc14",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "nts-vc14"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=7.0.0,<=7.1.33",
+   "last_release": "7.1.33",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "vista",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "SP2 (VC++ 2012/2015 redistributables need Vista SP2)",
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant ts-vc14 (inferred from the scanned nts- zip) (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "7.0.0, 7.0.16, 7.0.33, 7.1.0, 7.1.16, 7.1.33: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import vista (php-cgi.exe: ws2_32.dll!inet_pton)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-7.0.0-nts-Win32-VC14-x86.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "68 releases, 6 archives read (7.0.0, 7.0.16, 7.0.33, 7.1.0, 7.1.16, 7.1.33)",
+   "format": [
+    "zip"
+   ],
+   "variant": "ts-vc14",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "ts-vc14"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=7.2.0,<=7.4.33",
+   "last_release": "7.4.33",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "7",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "SP1 (the VC++ 2015-2022 redistributable needs Windows 7 SP1)",
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant nts-vc15 (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "7.2.0, 7.2.17, 7.2.34, 7.3.0, 7.3.16, 7.3.33, 7.4.0, 7.4.15, 7.4.33: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 7 (php7.dll: kernel32.dll!K32GetProcessMemoryInfo)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-7.2.0-nts-Win32-VC15-x86.zip"
+    },
+    {
+     "kind": "binary",
+     "source": "8.0.0, 8.0.15, 8.0.30, 8.1.0, 8.1.17, 8.1.34, 8.2.0, 8.2.16, 8.2.33: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 7 (php8.dll: kernel32.dll!K32GetProcessMemoryInfo)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-8.0.0-nts-Win32-vs16-x86.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/php/php-src/blob/PHP-7.2/UPGRADING ('Minimum supported Windows versions are Windows 7/Server 2008 R2')"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "200 releases, 18 archives read (7.2.0, 7.2.17, 7.2.34, 7.3.0, 7.3.16, 7.3.33, 7.4.0, 7.4.15, 7.4.33, 8.0.0, 8.0.15, 8.0.30, 8.1.0, 8.1.17, 8.1.34, 8.2.0, 8.2.16, 8.2.33)",
+   "format": [
+    "zip"
+   ],
+   "variant": "nts-vc15",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "nts-vc15"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=7.2.0,<=7.4.33",
+   "last_release": "7.4.33",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "7",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "SP1 (the VC++ 2015-2022 redistributable needs Windows 7 SP1)",
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant ts-vc15 (inferred from the scanned nts- zip) (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "7.2.0, 7.2.17, 7.2.34, 7.3.0, 7.3.16, 7.3.33, 7.4.0, 7.4.15, 7.4.33: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 7 (php7.dll: kernel32.dll!K32GetProcessMemoryInfo)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-7.2.0-nts-Win32-VC15-x86.zip"
+    },
+    {
+     "kind": "binary",
+     "source": "8.0.0, 8.0.15, 8.0.30, 8.1.0, 8.1.17, 8.1.34, 8.2.0, 8.2.16, 8.2.33: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 7 (php8.dll: kernel32.dll!K32GetProcessMemoryInfo)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-8.0.0-nts-Win32-vs16-x86.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/php/php-src/blob/PHP-7.2/UPGRADING ('Minimum supported Windows versions are Windows 7/Server 2008 R2')"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "200 releases, 18 archives read (7.2.0, 7.2.17, 7.2.34, 7.3.0, 7.3.16, 7.3.33, 7.4.0, 7.4.15, 7.4.33, 8.0.0, 8.0.15, 8.0.30, 8.1.0, 8.1.17, 8.1.34, 8.2.0, 8.2.16, 8.2.33)",
+   "format": [
+    "zip"
+   ],
+   "variant": "ts-vc15",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "ts-vc15"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.0.0,<=8.2.33",
+   "last_release": "8.2.33",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "7",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "SP1 (the VC++ 2015-2022 redistributable needs Windows 7 SP1)",
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant nts-vs16 (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "7.2.0, 7.2.17, 7.2.34, 7.3.0, 7.3.16, 7.3.33, 7.4.0, 7.4.15, 7.4.33: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 7 (php7.dll: kernel32.dll!K32GetProcessMemoryInfo)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-7.2.0-nts-Win32-VC15-x86.zip"
+    },
+    {
+     "kind": "binary",
+     "source": "8.0.0, 8.0.15, 8.0.30, 8.1.0, 8.1.17, 8.1.34, 8.2.0, 8.2.16, 8.2.33: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 7 (php8.dll: kernel32.dll!K32GetProcessMemoryInfo)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-8.0.0-nts-Win32-vs16-x86.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/php/php-src/blob/PHP-7.2/UPGRADING ('Minimum supported Windows versions are Windows 7/Server 2008 R2')"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "200 releases, 18 archives read (7.2.0, 7.2.17, 7.2.34, 7.3.0, 7.3.16, 7.3.33, 7.4.0, 7.4.15, 7.4.33, 8.0.0, 8.0.15, 8.0.30, 8.1.0, 8.1.17, 8.1.34, 8.2.0, 8.2.16, 8.2.33)",
+   "format": [
+    "zip"
+   ],
+   "variant": "nts-vs16",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "nts-vs16"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.0.0,<=8.2.33",
+   "last_release": "8.2.33",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "7",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "SP1 (the VC++ 2015-2022 redistributable needs Windows 7 SP1)",
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant ts-vs16 (inferred from the scanned nts- zip) (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "7.2.0, 7.2.17, 7.2.34, 7.3.0, 7.3.16, 7.3.33, 7.4.0, 7.4.15, 7.4.33: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 7 (php7.dll: kernel32.dll!K32GetProcessMemoryInfo)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-7.2.0-nts-Win32-VC15-x86.zip"
+    },
+    {
+     "kind": "binary",
+     "source": "8.0.0, 8.0.15, 8.0.30, 8.1.0, 8.1.17, 8.1.34, 8.2.0, 8.2.16, 8.2.33: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 7 (php8.dll: kernel32.dll!K32GetProcessMemoryInfo)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-8.0.0-nts-Win32-vs16-x86.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/php/php-src/blob/PHP-7.2/UPGRADING ('Minimum supported Windows versions are Windows 7/Server 2008 R2')"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "200 releases, 18 archives read (7.2.0, 7.2.17, 7.2.34, 7.3.0, 7.3.16, 7.3.33, 7.4.0, 7.4.15, 7.4.33, 8.0.0, 8.0.15, 8.0.30, 8.1.0, 8.1.17, 8.1.34, 8.2.0, 8.2.16, 8.2.33)",
+   "format": [
+    "zip"
+   ],
+   "variant": "ts-vs16",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "ts-vs16"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.3.0,<=8.3.33",
+   "last_release": "8.3.33",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "8",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant nts-vs16 (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.3.0, 8.3.17, 8.3.33, 8.4.0, 8.4.12, 8.4.25, 8.5.0, 8.5.5, 8.5.10: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 8 (php8.dll: kernel32.dll!GetCurrentThreadStackLimits)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-8.3.0-nts-Win32-vs16-x86.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/php/php-src/blob/PHP-8.3/UPGRADING ('Minimum supported Windows version has been bumped to Windows 8 or Windows Server 2012')"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "70 releases, 9 archives read (8.3.0, 8.3.17, 8.3.33, 8.4.0, 8.4.12, 8.4.25, 8.5.0, 8.5.5, 8.5.10)",
+   "format": [
+    "zip"
+   ],
+   "variant": "nts-vs16",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "nts-vs16"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.3.0,<=8.3.33",
+   "last_release": "8.3.33",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "8",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant ts-vs16 (inferred from the scanned nts- zip) (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.3.0, 8.3.17, 8.3.33, 8.4.0, 8.4.12, 8.4.25, 8.5.0, 8.5.5, 8.5.10: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 8 (php8.dll: kernel32.dll!GetCurrentThreadStackLimits)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-8.3.0-nts-Win32-vs16-x86.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/php/php-src/blob/PHP-8.3/UPGRADING ('Minimum supported Windows version has been bumped to Windows 8 or Windows Server 2012')"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "70 releases, 9 archives read (8.3.0, 8.3.17, 8.3.33, 8.4.0, 8.4.12, 8.4.25, 8.5.0, 8.5.5, 8.5.10)",
+   "format": [
+    "zip"
+   ],
+   "variant": "ts-vs16",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "ts-vs16"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.4.0,<=8.5.10",
+   "last_release": "8.5.10",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "8",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant nts-vs17 (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.3.0, 8.3.17, 8.3.33, 8.4.0, 8.4.12, 8.4.25, 8.5.0, 8.5.5, 8.5.10: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 8 (php8.dll: kernel32.dll!GetCurrentThreadStackLimits)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-8.3.0-nts-Win32-vs16-x86.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/php/php-src/blob/PHP-8.3/UPGRADING ('Minimum supported Windows version has been bumped to Windows 8 or Windows Server 2012')"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "70 releases, 9 archives read (8.3.0, 8.3.17, 8.3.33, 8.4.0, 8.4.12, 8.4.25, 8.5.0, 8.5.5, 8.5.10)",
+   "format": [
+    "zip"
+   ],
+   "variant": "nts-vs17",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "nts-vs17"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=8.4.0,<=8.5.10",
+   "last_release": "8.5.10",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "8",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "applies_to": "windows.php.net / museum.php.net .zip, variant ts-vs17 (inferred from the scanned nts- zip) (the ts- twin of an nts- build uses the same toolchain and runtime DLLs)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "8.3.0, 8.3.17, 8.3.33, 8.4.0, 8.4.12, 8.4.25, 8.5.0, 8.5.5, 8.5.10: core (php.exe, php-cgi.exe, php-win.exe, php{N}.dll): PE subsystem 6.0, highest import 8 (php8.dll: kernel32.dll!GetCurrentThreadStackLimits)",
+     "file": "https://windows.php.net/downloads/releases/archives/php-8.3.0-nts-Win32-vs16-x86.zip"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/php/php-src/blob/PHP-8.3/UPGRADING ('Minimum supported Windows version has been bumped to Windows 8 or Windows Server 2012')"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://windows.php.net/download/ (VS16/VS17 builds need the Visual C++ 2015-2022 redistributable)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "70 releases, 9 archives read (8.3.0, 8.3.17, 8.3.33, 8.4.0, 8.4.12, 8.4.25, 8.5.0, 8.5.5, 8.5.10)",
+   "format": [
+    "zip"
+   ],
+   "variant": "ts-vs17",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "ts-vs17"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  }
+ ],
+ "max_per_os": [
+  {
+   "os": "linux",
+   "os_version": "glibc-2.5",
+   "arch": "amd64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.12",
+   "arch": "amd64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.17",
+   "arch": "amd64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.19",
+   "arch": "amd64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.23",
+   "arch": "amd64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.24",
+   "arch": "amd64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.27",
+   "arch": "amd64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.28",
+   "arch": "amd64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.31",
+   "arch": "amd64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.34",
+   "arch": "amd64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.35",
+   "arch": "amd64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.36",
+   "arch": "amd64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.39",
+   "arch": "amd64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.41",
+   "arch": "amd64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "musl",
+   "arch": "amd64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "notes": "static binary"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.5",
+   "arch": "arm64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.12",
+   "arch": "arm64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.17",
+   "arch": "arm64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.19",
+   "arch": "arm64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.23",
+   "arch": "arm64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.24",
+   "arch": "arm64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.27",
+   "arch": "arm64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.28",
+   "arch": "arm64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.31",
+   "arch": "arm64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.34",
+   "arch": "arm64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.35",
+   "arch": "arm64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.36",
+   "arch": "arm64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.39",
+   "arch": "arm64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.41",
+   "arch": "arm64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "musl",
+   "arch": "arm64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "notes": "static binary"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.3",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.4",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "no release in releases.json runs here"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.5",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "no release in releases.json runs here"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.6",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "no release in releases.json runs here"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.7",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "no release in releases.json runs here"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.8",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "no release in releases.json runs here"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.9",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "no release in releases.json runs here"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.10",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "no release in releases.json runs here"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.11",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "no release in releases.json runs here"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.12",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "no release in releases.json runs here"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.13",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "no release in releases.json runs here"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.14",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "no release in releases.json runs here"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.15",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "no release in releases.json runs here"
+  },
+  {
+   "os": "macos",
+   "os_version": "11",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "no release in releases.json runs here"
+  },
+  {
+   "os": "macos",
+   "os_version": "12",
+   "arch": "amd64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "runs on Apple silicon under Rosetta 2"
+  },
+  {
+   "os": "macos",
+   "os_version": "13",
+   "arch": "amd64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "runs on Apple silicon under Rosetta 2"
+  },
+  {
+   "os": "macos",
+   "os_version": "14",
+   "arch": "amd64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "runs on Apple silicon under Rosetta 2"
+  },
+  {
+   "os": "macos",
+   "os_version": "15",
+   "arch": "amd64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "runs on Apple silicon under Rosetta 2"
+  },
+  {
+   "os": "macos",
+   "os_version": "26",
+   "arch": "amd64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "runs on Apple silicon under Rosetta 2"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.3",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "Apple silicon needs macOS 11+"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.4",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "Apple silicon needs macOS 11+"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.5",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "Apple silicon needs macOS 11+"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.6",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "Apple silicon needs macOS 11+"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.7",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "Apple silicon needs macOS 11+"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.8",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "Apple silicon needs macOS 11+"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.9",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "Apple silicon needs macOS 11+"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.10",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "Apple silicon needs macOS 11+"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.11",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "Apple silicon needs macOS 11+"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.12",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "Apple silicon needs macOS 11+"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.13",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "Apple silicon needs macOS 11+"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.14",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "Apple silicon needs macOS 11+"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.15",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "Apple silicon needs macOS 11+"
+  },
+  {
+   "os": "macos",
+   "os_version": "11",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": "no release in releases.json runs here"
+  },
+  {
+   "os": "macos",
+   "os_version": "12",
+   "arch": "arm64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "13",
+   "arch": "arm64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "14",
+   "arch": "arm64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "15",
+   "arch": "arm64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "26",
+   "arch": "arm64",
+   "max_version": "8.5.8",
+   "variant": "static-php-cli",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "2000",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "extra": [],
+   "notes": "no amd64 edition of this Windows"
+  },
+  {
+   "os": "windows",
+   "os_version": "xp",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "extra": [],
+   "notes": "no amd64 edition of this Windows"
+  },
+  {
+   "os": "windows",
+   "os_version": "xp-x64",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "extra": [],
+   "notes": "no release in releases.json runs here"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2003",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "extra": [],
+   "notes": "no release in releases.json runs here"
+  },
+  {
+   "os": "windows",
+   "os_version": "vista",
+   "arch": "amd64",
+   "max_version": "7.1.33",
+   "variant": "nts-vc14",
+   "tested": false,
+   "extra": [
+    "SP2 (VC++ 2012/2015 redistributables need Vista SP2)",
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008",
+   "arch": "amd64",
+   "max_version": "7.1.33",
+   "variant": "nts-vc14",
+   "tested": false,
+   "extra": [
+    "SP2 (VC++ 2012/2015 redistributables need Vista SP2)",
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "7",
+   "arch": "amd64",
+   "max_version": "8.2.33",
+   "variant": "nts-vs16",
+   "tested": false,
+   "extra": [
+    "SP1 (the VC++ 2015-2022 redistributable needs Windows 7 SP1)",
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008r2",
+   "arch": "amd64",
+   "max_version": "8.2.33",
+   "variant": "nts-vs16",
+   "tested": false,
+   "extra": [
+    "SP1 (the VC++ 2015-2022 redistributable needs Windows 7 SP1)",
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "8",
+   "arch": "amd64",
+   "max_version": "8.5.10",
+   "variant": "nts-vs17",
+   "tested": false,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012",
+   "arch": "amd64",
+   "max_version": "8.5.10",
+   "variant": "nts-vs17",
+   "tested": false,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "8.1",
+   "arch": "amd64",
+   "max_version": "8.5.10",
+   "variant": "nts-vs17",
+   "tested": false,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012r2",
+   "arch": "amd64",
+   "max_version": "8.5.10",
+   "variant": "nts-vs17",
+   "tested": false,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "10",
+   "arch": "amd64",
+   "max_version": "8.5.10",
+   "variant": "nts-vs17",
+   "tested": false,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2016",
+   "arch": "amd64",
+   "max_version": "8.5.10",
+   "variant": "nts-vs17",
+   "tested": false,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2019",
+   "arch": "amd64",
+   "max_version": "8.5.10",
+   "variant": "nts-vs17",
+   "tested": false,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2022",
+   "arch": "amd64",
+   "max_version": "8.5.10",
+   "variant": "nts-vs17",
+   "tested": false,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "11",
+   "arch": "amd64",
+   "max_version": "8.5.10",
+   "variant": "nts-vs17",
+   "tested": false,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2025",
+   "arch": "amd64",
+   "max_version": "8.5.10",
+   "variant": "nts-vs17",
+   "tested": false,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "2000",
+   "arch": "x86",
+   "max_version": "5.2.17",
+   "variant": "nts-vc6",
+   "tested": false,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "xp",
+   "arch": "x86",
+   "max_version": "5.4.45",
+   "variant": "nts-vc9",
+   "tested": false,
+   "extra": [
+    "Visual C++ 2008 SP1 redistributable (msvcr90.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "xp-x64",
+   "arch": "x86",
+   "max_version": "5.4.45",
+   "variant": "nts-vc9",
+   "tested": false,
+   "extra": [
+    "Visual C++ 2008 SP1 redistributable (msvcr90.dll, same arch)"
+   ],
+   "notes": "x86 build under WoW64"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2003",
+   "arch": "x86",
+   "max_version": "5.4.45",
+   "variant": "nts-vc9",
+   "tested": false,
+   "extra": [
+    "Visual C++ 2008 SP1 redistributable (msvcr90.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "vista",
+   "arch": "x86",
+   "max_version": "7.1.33",
+   "variant": "nts-vc14",
+   "tested": false,
+   "extra": [
+    "SP2 (VC++ 2012/2015 redistributables need Vista SP2)",
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008",
+   "arch": "x86",
+   "max_version": "7.1.33",
+   "variant": "nts-vc14",
+   "tested": false,
+   "extra": [
+    "SP2 (VC++ 2012/2015 redistributables need Vista SP2)",
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "7",
+   "arch": "x86",
+   "max_version": "8.2.33",
+   "variant": "nts-vs16",
+   "tested": false,
+   "extra": [
+    "SP1 (the VC++ 2015-2022 redistributable needs Windows 7 SP1)",
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008r2",
+   "arch": "x86",
+   "max_version": "8.2.33",
+   "variant": "nts-vs16",
+   "tested": false,
+   "extra": [
+    "SP1 (the VC++ 2015-2022 redistributable needs Windows 7 SP1)",
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": "x86 build under WoW64"
+  },
+  {
+   "os": "windows",
+   "os_version": "8",
+   "arch": "x86",
+   "max_version": "8.5.10",
+   "variant": "nts-vs17",
+   "tested": false,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012",
+   "arch": "x86",
+   "max_version": "8.5.10",
+   "variant": "nts-vs17",
+   "tested": false,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": "x86 build under WoW64"
+  },
+  {
+   "os": "windows",
+   "os_version": "8.1",
+   "arch": "x86",
+   "max_version": "8.5.10",
+   "variant": "nts-vs17",
+   "tested": false,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012r2",
+   "arch": "x86",
+   "max_version": "8.5.10",
+   "variant": "nts-vs17",
+   "tested": false,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": "x86 build under WoW64"
+  },
+  {
+   "os": "windows",
+   "os_version": "10",
+   "arch": "x86",
+   "max_version": "8.5.10",
+   "variant": "nts-vs17",
+   "tested": false,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2016",
+   "arch": "x86",
+   "max_version": "8.5.10",
+   "variant": "nts-vs17",
+   "tested": false,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": "x86 build under WoW64"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2019",
+   "arch": "x86",
+   "max_version": "8.5.10",
+   "variant": "nts-vs17",
+   "tested": false,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": "x86 build under WoW64"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2022",
+   "arch": "x86",
+   "max_version": "8.5.10",
+   "variant": "nts-vs17",
+   "tested": false,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": "x86 build under WoW64"
+  },
+  {
+   "os": "windows",
+   "os_version": "11",
+   "arch": "x86",
+   "max_version": "8.5.10",
+   "variant": "nts-vs17",
+   "tested": false,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": "x86 build under WoW64"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2025",
+   "arch": "x86",
+   "max_version": "8.5.10",
+   "variant": "nts-vs17",
+   "tested": false,
+   "extra": [
+    "Universal C Runtime on Vista SP2/7/8/8.1 (KB2999226, or installed by the VC++ redistributable); built into 10+",
+    "Visual C++ 2015-2022 redistributable (vcruntime140.dll, same arch)"
+   ],
+   "notes": "x86 build under WoW64"
+  }
+ ]
+}
