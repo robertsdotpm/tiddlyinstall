@@ -31,8 +31,9 @@ import (
 
 // Request is the body of POST /api/jobs (docs/api.md).
 type Request struct {
-	Name   string `json:"name"`
-	Source struct {
+	Name    string `json:"name"`
+	Project string `json:"project"`
+	Source  struct {
 		Kind    string `json:"kind"`
 		Value   string `json:"value"`
 		Ref     string `json:"ref"`
@@ -391,6 +392,9 @@ func (b *Builder) source(ctx context.Context, r *Request) (*source, string, bool
 }
 
 func projectName(r *Request) string {
+	if projectRe.MatchString(r.Project) {
+		return r.Project
+	}
 	p := strings.ToLower(safeName.ReplaceAllString(strings.ToLower(r.Name), "_"))
 	p = strings.Trim(p, "_.-")
 	if r.Source.Kind == "url" {

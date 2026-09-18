@@ -363,6 +363,186 @@
     "cwd": "{app_dir}",
     "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). The config-folder variable keeps Go telemetry (1.23+) out of the user's home. cgo projects also need a C compiler."
    }
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": "<1.27",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin/go",
+   "package_manager": "\"{runtime_dir}/bin/go\" mod download (with the launch environment in notes)",
+   "verify": "\"{runtime_dir}/bin/go\" version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Linux kernel 3.2+ (1.24+); ppc64 (big-endian) 1.27 is ELFv2 (checked: `file` reports OpenPOWER ELF V2 ABI) so kernel 3.13+ per catalog limitations.json; no glibc requirement for the toolchain (every bin/go is statically linked, checked); CPU: amd64 v1, 386 with SSE2, armv6l = ARMv6 with VFP, ppc64/ppc64le POWER8+, s390x z13+, riscv64 RVA20U64, loong64 LA364+ (MinimumRequirements wiki)",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://go.dev/doc/go1.9",
+    "https://go.dev/doc/toolchain",
+    "https://go.dev/doc/telemetry",
+    "https://go.dev/wiki/MinimumRequirements",
+    "https://pkg.go.dev/cmd/go#hdr-Environment_variables",
+    "https://go.dev/doc/install"
+   ],
+   "notes": "Added 2026-09-18 by installer-builder: the 1.27 recipe without `go telemetry off`, which versions before 1.23 do not have. Not tested per version.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly; it needs no runtime environment."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/go\" build -o \"{app_dir}/{project}\" .",
+    "env": {
+     "GOROOT": "{runtime_dir}",
+     "GOPATH": "{data_dir}/gopath",
+     "GOBIN": null,
+     "GOMODCACHE": "{data_dir}/gopath/pkg/mod",
+     "GOCACHE": "{data_dir}/go-cache",
+     "GOENV": "off",
+     "GOTOOLCHAIN": "local",
+     "GOFLAGS": "-modcacherw",
+     "XDG_CONFIG_HOME": "{data_dir}/config"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). The config-folder variable keeps Go telemetry (1.23+) out of the user's home. cgo projects also need a C compiler."
+   },
+   "id": "go-old-linux"
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": "<1.27",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin/go",
+   "package_manager": "\"{runtime_dir}/bin/go\" mod download (with the launch environment in notes)",
+   "verify": "\"{runtime_dir}/bin/go\" version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "macOS 13 Ventura or later for 1.27 (1.25/1.26: 12 Monterey); amd64 or arm64 (Apple Silicon)",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://go.dev/doc/go1.9",
+    "https://go.dev/doc/toolchain",
+    "https://go.dev/doc/telemetry",
+    "https://go.dev/wiki/MinimumRequirements",
+    "https://pkg.go.dev/cmd/go#hdr-Environment_variables",
+    "https://go.dev/doc/install"
+   ],
+   "notes": "Added 2026-09-18 by installer-builder: the 1.27 recipe without `go telemetry off`, which versions before 1.23 do not have. Not tested per version.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly; it needs no runtime environment."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/go\" build -o \"{app_dir}/{project}\" .",
+    "env": {
+     "GOROOT": "{runtime_dir}",
+     "GOPATH": "{data_dir}/gopath",
+     "GOBIN": null,
+     "GOMODCACHE": "{data_dir}/gopath/pkg/mod",
+     "GOCACHE": "{data_dir}/go-cache",
+     "GOENV": "off",
+     "GOTOOLCHAIN": "local",
+     "GOFLAGS": "-modcacherw",
+     "HOME": "{data_dir}/config"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). The config-folder variable keeps Go telemetry (1.23+) out of the user's home. cgo projects also need a C compiler."
+   },
+   "id": "go-old-macos"
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": "<1.27",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin\\go.exe",
+   "package_manager": "\"{runtime_dir}\\bin\\go.exe\" mod download (with the launch environment in notes)",
+   "verify": "\"{runtime_dir}\\bin\\go.exe\" version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Windows 10 / Server 2016 or later (1.21+); the PE header of bin\\go.exe declares OS and subsystem version 10.0 for amd64, 386 and arm64 (checked), so older Windows refuses to load it. The last Go for Windows XP/Vista is 1.10 and for 7/8/2008/2012 is 1.20, neither of which is in the download plan.",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://go.dev/doc/go1.9",
+    "https://go.dev/doc/toolchain",
+    "https://go.dev/doc/telemetry",
+    "https://go.dev/wiki/MinimumRequirements",
+    "https://pkg.go.dev/cmd/go#hdr-Environment_variables",
+    "https://go.dev/doc/install"
+   ],
+   "notes": "Added 2026-09-18 by installer-builder: the 1.27 recipe without `go telemetry off`, which versions before 1.23 do not have. Not tested per version.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly; it needs no runtime environment."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\bin\\go.exe\" build -o \"{app_dir}\\{project}\" .",
+    "env": {
+     "GOROOT": "{runtime_dir}",
+     "GOPATH": "{data_dir}\\gopath",
+     "GOBIN": null,
+     "GOMODCACHE": "{data_dir}\\gopath\\pkg\\mod",
+     "GOCACHE": "{data_dir}\\go-cache",
+     "GOENV": "off",
+     "GOTOOLCHAIN": "local",
+     "GOFLAGS": "-modcacherw",
+     "APPDATA": "{data_dir}\\config"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). The config-folder variable keeps Go telemetry (1.23+) out of the user's home. cgo projects also need a C compiler."
+   },
+   "id": "go-old-windows"
   }
  ]
 }

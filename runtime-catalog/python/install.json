@@ -292,6 +292,67 @@
     "os": "windows",
     "kind": "archive",
     "format": "zip",
+    "versions": ">=3.5",
+    "arch": null,
+    "variant": "embed"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 0
+    },
+    {
+     "write": "{runtime_dir}\\python{vmm}._pth",
+     "text": "{app_dir}"
+    }
+   ],
+   "prerequisites": [
+    "UCRT (KB2999226 or VC++ 2015-2022 redistributable) on Windows < 10; vcruntime140.dll is included in the zip",
+    "get-pip.py (https://bootstrap.pypa.io/get-pip.py, or the version-pinned https://bootstrap.pypa.io/pip/X.Y/get-pip.py) or a pip wheel, only if the app needs pip"
+   ],
+   "executable": "python.exe",
+   "package_manager": "\"{runtime_dir}\\python.exe\" -m pip  (after the bootstrap steps; not officially supported for the embeddable package)",
+   "verify": "\"{runtime_dir}\\python.exe\" -c \"import sys, ssl, sqlite3, asyncio; print(sys.version)\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "as for the .exe of the same version (3.14.7: Windows 10+)",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://docs.python.org/3/using/windows.html",
+    "https://pip.pypa.io/en/stable/installation/"
+   ],
+   "notes": "Added 2026-09-18 by installer-builder: the embeddable zip without pip, for apps with no dependencies. The ._pth file fixes sys.path, so the app's folder is added to it; the get-pip recipe above is used when the app needs its dependencies installed.",
+   "preferred": true,
+   "launch": {
+    "program": "{runtime_dir}\\python.exe",
+    "args": [
+     "-E",
+     "-s"
+    ],
+    "env": {},
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\python.exe\" -E -s -m pip install --no-warn-script-location .",
+    "env": {
+     "PIP_CONFIG_FILE": "nul",
+     "PIP_CACHE_DIR": "{data_dir}\\pip-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "PIP_CONFIG_FILE=devnull stops pip reading the user's pip.conf. Python <2.7.9 and 3.0-3.3 have no bundled pip."
+   },
+   "id": "embed-nopip"
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
     "versions": "==3.5.*",
     "arch": "x86",
     "variant": "xp-backport"
