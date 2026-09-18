@@ -462,7 +462,7 @@ textarea.code.code-script { min-height: 110px; border-top-left-radius: 5px; }
 
 /* Launch command follows the Language choice (no JS). */
 .entry { display: none; }
-form:has(#runtime option[value="python"]:checked) .entry-python,
+form:has(#runtime option:is([value="python"], [value="python2"]):checked) .entry-python,
 form:has(#runtime option[value="node"]:checked) .entry-node,
 form:has(#runtime option[value="ruby"]:checked) .entry-ruby,
 form:has(#runtime option[value="php"]:checked) .entry-php,
@@ -476,6 +476,7 @@ form:has(#runtime option[value="nim"]:checked) .entry-nim,
 form:has(#runtime option[value="none"]:checked) .entry-none { display: block; }
 .by-lang { display: none; }
 form:has(#runtime option[value="python"]:checked) .lang-python,
+form:has(#runtime option[value="python2"]:checked) .lang-python2,
 form:has(#runtime option[value="node"]:checked) .lang-node,
 form:has(#runtime option[value="ruby"]:checked) .lang-ruby,
 form:has(#runtime option[value="php"]:checked) .lang-php,

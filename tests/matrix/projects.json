@@ -9,6 +9,14 @@
     "hello/__main__.py": "print('hello from python')\n"
    }
   },
+  "python2": {
+   "project": "hello",
+   "launch": "{runtime} -m hello",
+   "files": {
+    "hello/__init__.py": "",
+    "hello/__main__.py": "print 'hello from python2'\n"
+   }
+  },
   "node": {
    "project": "hello",
    "launch": "{runtime} {app_dir}/index.js",

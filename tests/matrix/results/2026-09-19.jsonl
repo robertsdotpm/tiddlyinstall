@@ -2311,3 +2311,12 @@
 {"target": "ubuntu1404", "runtime": "cc", "mode": "A", "result": "pass", "detail": "hello + clean uninstall", "record": "ksa2c372yyo7hfhcccz2vswttz", "time": "2026-09-19T02:38:48"}
 {"target": "ubuntu1404", "runtime": "cc", "mode": "B", "result": "pass", "detail": "hello + clean uninstall", "record": "xs6euh7kpb7whq76rrz3qzfedo", "time": "2026-09-19T02:39:12"}
 {"target": "ubuntu1404", "runtime": "cc", "mode": "C", "result": "pass", "detail": "hello + clean uninstall", "record": "3jkg6zqwr2ptuevxn4lixadttz", "time": "2026-09-19T02:39:36"}
+{"target": "7", "runtime": "python2", "mode": "A", "result": "pass", "detail": "hello + clean uninstall", "record": "iezdwtq4cuu4meotx6dgwdsrh5", "time": "2026-09-19T05:27:32"}
+{"target": "10", "runtime": "python2", "mode": "A", "result": "pass", "detail": "hello + clean uninstall", "record": "iezdwtq4cuu4meotx6dgwdsrh5", "time": "2026-09-19T05:27:43"}
+{"target": "7", "runtime": "python2", "mode": "B", "result": "pass", "detail": "hello + clean uninstall", "record": "iezdwtq4cuu4meotx6dgwdsrh5", "time": "2026-09-19T05:27:49"}
+{"target": "7", "runtime": "python2", "mode": "C", "result": "pass", "detail": "hello + clean uninstall", "record": "q3nqzelzcebu24d5chzfa3ea7d", "time": "2026-09-19T05:28:05"}
+{"target": "10", "runtime": "python2", "mode": "B", "result": "pass", "detail": "hello + clean uninstall", "record": "iezdwtq4cuu4meotx6dgwdsrh5", "time": "2026-09-19T05:28:06"}
+{"target": "xp", "runtime": "python2", "mode": "A", "result": "pass", "detail": "hello + clean uninstall", "record": "iezdwtq4cuu4meotx6dgwdsrh5", "time": "2026-09-19T05:28:25"}
+{"target": "10", "runtime": "python2", "mode": "C", "result": "pass", "detail": "hello + clean uninstall", "record": "q3nqzelzcebu24d5chzfa3ea7d", "time": "2026-09-19T05:28:30"}
+{"target": "xp", "runtime": "python2", "mode": "B", "result": "pass", "detail": "hello + clean uninstall", "record": "iezdwtq4cuu4meotx6dgwdsrh5", "time": "2026-09-19T05:29:31"}
+{"target": "xp", "runtime": "python2", "mode": "C", "result": "pass", "detail": "hello + clean uninstall", "record": "q3nqzelzcebu24d5chzfa3ea7d", "time": "2026-09-19T05:30:36"}

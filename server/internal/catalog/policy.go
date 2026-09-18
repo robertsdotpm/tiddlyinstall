@@ -82,6 +82,9 @@ type NeedRule struct {
 type RuntimePolicy struct {
 	Folder string `json:"folder"` // catalogue folder, if not the runtime id
 	Label  string `json:"label"`
+	// The folder's releases this runtime offers (a version spec, e.g.
+	// Python 2 and 3 share one folder); "": all.
+	Versions string `json:"versions"`
 	// Variants in order of preference; "" means no variant. Variants not
 	// listed are allowed after the listed ones unless Only is set.
 	Variants        []string `json:"variants"`

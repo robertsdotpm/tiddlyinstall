@@ -162,11 +162,16 @@ func Load(dir, policyPath, localRoot, cachePath string) (*Catalog, error) {
 			}
 			rt.Rules = sup.Rules
 		}
+		keep := rt.Releases[:0]
 		for _, r := range rt.Releases {
 			r.Folder = folder
 			r.V = ParseVersion(r.Version)
 			r.SHA256 = checksumSHA256(r.Checksum)
+			if Matches(r.V, c.Policy.Runtimes[id].Versions) {
+				keep = append(keep, r)
+			}
 		}
+		rt.Releases = keep
 		c.Runtimes[id] = rt
 	}
 	return c, nil

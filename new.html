@@ -55,7 +55,8 @@
           <label for="runtime">Language</label>
           <select id="runtime" name="runtime">
             <optgroup label="Runs on a runtime the installer sets up">
-              <option value="python">Python</option>
+              <option value="python">Python 3</option>
+              <option value="python2">Python 2</option>
               <option value="node">Node.js</option>
               <option value="ruby">Ruby</option>
               <option value="php">PHP</option>
@@ -528,7 +529,7 @@ Press Enter to close</pre>
         </div>
 
         <p class="small muted" style="margin-bottom:0">
-          You'll get <code>install_<span class="by-lang lang-python">python</span><span class="by-lang lang-node">node</span><span class="by-lang lang-ruby">ruby</span><span class="by-lang lang-php">php</span><span class="by-lang lang-java">java</span><span class="by-lang lang-dotnet">dotnet</span><span class="by-lang lang-r">r</span><span class="by-lang lang-cc">cpp</span><span class="by-lang lang-go">go</span><span class="by-lang lang-rust">rust</span><span class="by-lang lang-zig">zig</span><span class="by-lang lang-nim">nim</span><span class="by-lang lang-none">app</span>_&lt;name&gt;<span class="by-mode mode-ours-inline">_&lt;hash&gt;</span>.exe</code>, <code>.run</code> and <code>.dmg</code><span class="offline-inline">, plus offline <code>…_offline.exe</code>, <code>.run</code> and <code>.zip</code></span>,
+          You'll get <code>install_<span class="by-lang lang-python">python</span><span class="by-lang lang-python2">python2</span><span class="by-lang lang-node">node</span><span class="by-lang lang-ruby">ruby</span><span class="by-lang lang-php">php</span><span class="by-lang lang-java">java</span><span class="by-lang lang-dotnet">dotnet</span><span class="by-lang lang-r">r</span><span class="by-lang lang-cc">cpp</span><span class="by-lang lang-go">go</span><span class="by-lang lang-rust">rust</span><span class="by-lang lang-zig">zig</span><span class="by-lang lang-nim">nim</span><span class="by-lang lang-none">app</span>_&lt;name&gt;<span class="by-mode mode-ours-inline">_&lt;hash&gt;</span>.exe</code>, <code>.run</code> and <code>.dmg</code><span class="offline-inline">, plus offline <code>…_offline.exe</code>, <code>.run</code> and <code>.zip</code></span>,
           <span class="by-mode mode-ours-inline">signed by Installer Builder (the hash points to your settings, so the signature stays valid)</span><span class="by-mode mode-yours-inline">signed by you</span><span class="by-mode mode-unsigned-inline">unsigned</span>. Everything below is optional and already has sensible defaults.
         </p>
       </section>
@@ -655,7 +656,7 @@ Press Enter to close</pre>
         </details>
 
         <details>
-          <summary><span>Base installer and metadata</span><span class="default"><span class="by-lang lang-python">install_python_x</span><span class="by-lang lang-node">install_node_x</span><span class="by-lang lang-ruby">install_ruby_x</span><span class="by-lang lang-php">install_php_x</span><span class="by-lang lang-java">install_java_x</span><span class="by-lang lang-dotnet">install_dotnet_x</span><span class="by-lang lang-r">install_r_x</span><span class="by-lang lang-cc">install_cpp_x</span><span class="by-lang lang-go">install_go_x</span><span class="by-lang lang-rust">install_rust_x</span><span class="by-lang lang-zig">install_zig_x</span><span class="by-lang lang-nim">install_nim_x</span><span class="by-lang lang-none">install_github_x</span></span></summary>
+          <summary><span>Base installer and metadata</span><span class="default"><span class="by-lang lang-python">install_python_x</span><span class="by-lang lang-python2">install_python2_x</span><span class="by-lang lang-node">install_node_x</span><span class="by-lang lang-ruby">install_ruby_x</span><span class="by-lang lang-php">install_php_x</span><span class="by-lang lang-java">install_java_x</span><span class="by-lang lang-dotnet">install_dotnet_x</span><span class="by-lang lang-r">install_r_x</span><span class="by-lang lang-cc">install_cpp_x</span><span class="by-lang lang-go">install_go_x</span><span class="by-lang lang-rust">install_rust_x</span><span class="by-lang lang-zig">install_zig_x</span><span class="by-lang lang-nim">install_nim_x</span><span class="by-lang lang-none">install_github_x</span></span></summary>
           <div class="field">
             <label for="base">Base installer</label>
             <select id="base" name="base">

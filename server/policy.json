@@ -328,7 +328,8 @@
  },
  "runtimes": {
   "python": {
-   "label": "Python",
+   "label": "Python 3",
+   "versions": ">=3",
    "variants": [
     "pbs_stripped",
     "embed",
@@ -445,6 +446,67 @@
      ]
     }
    },
+   "package": {
+    "_comment": "pip into the app's own runtime folder. Launch runs the module named like the package; publishers override it for packages whose command differs.",
+    "registry": "PyPI",
+    "name": "^[A-Za-z0-9]([A-Za-z0-9._-]{0,98}[A-Za-z0-9])?$",
+    "lower": true,
+    "spec": "\"{name}=={version}\"",
+    "spec_any": "\"{name}\"",
+    "lookup": "https://pypi.org/pypi/{name}/json",
+    "lookup_version": "https://pypi.org/pypi/{name}/{version}/json",
+    "version_field": "info.version",
+    "install": {
+     "windows": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check {package}",
+     "linux": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check {package}",
+     "macos": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check {package}"
+    },
+    "launch": "{runtime} -m {module}"
+   }
+  },
+  "python2": {
+   "_comment": "Python 2 from the Python catalogue folder. Windows: the 2.7 MSIs (down to XP); python.org has no relocatable Linux or macOS builds of 2.x, so those plans say so.",
+   "folder": "python",
+   "label": "Python 2",
+   "versions": ">=2,<3",
+   "variants": [
+    ""
+   ],
+   "formats": {
+    "windows": [
+     "msi",
+     "exe"
+    ],
+    "linux": [
+     "tar.gz"
+    ],
+    "macos": [
+     "tar.gz"
+    ]
+   },
+   "install_rules": [
+    {
+     "_comment": "A package project: pip install . (the recipe's project_install), which also installs its dependencies. Takes precedence over a requirements.txt next to it.",
+     "id": "project",
+     "files": [
+      "pyproject.toml",
+      "setup.py"
+     ]
+    },
+    {
+     "_comment": "Only a requirements.txt: install the dependencies; the app itself runs from {app_dir} as its launch command says.",
+     "id": "requirements",
+     "files": [
+      "requirements.txt"
+     ],
+     "command": {
+      "windows": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt",
+      "linux": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt",
+      "macos": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt"
+     }
+    }
+   ],
+   "launch": "{runtime} -m {project}",
    "package": {
     "_comment": "pip into the app's own runtime folder. Launch runs the module named like the package; publishers override it for packages whose command differs.",
     "registry": "PyPI",

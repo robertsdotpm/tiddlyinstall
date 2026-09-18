@@ -9,7 +9,7 @@ self-contained page, TiddlyWiki-style (plan.md section 1.10).
 - The three unsigned bases are embedded as base64 in
   <script type="application/octet-stream" id="base-windows|base-linux|base-macos">
   from bases/windows/out/base.exe, bases/unix/out/ib.run (or ib-base.run)
-  and bases/unix/out/Install.zip. A missing base is replaced by a small
+  and bases/unix/out/ib-base-macos.zip. A missing base is replaced by a small
   placeholder (marked data-placeholder="1"; the page says so when used).
 
     python3 tools/make_standalone.py [-o editor-standalone.html]
@@ -36,7 +36,7 @@ RESEDIT_TAG = '<script src="vendor/resedit-bundle.js"></script>'
 BASES = [
     ("windows", ["bases/windows/out/base.exe"]),
     ("linux", ["bases/unix/out/ib.run", "bases/unix/out/ib-base.run"]),
-    ("macos", ["bases/unix/out/Install.zip"]),
+    ("macos", ["bases/unix/out/ib-base-macos.zip", "bases/unix/out/Install.zip"]),
 ]
 
 
