@@ -365,7 +365,7 @@
    "install_command": {
     "windows": "\"{runtime_dir}\\bin\\gcc.exe\" -O2 -o \"{app_dir}\\{project}.exe\" *.c",
     "linux": "\"{runtime_dir}/bin/clang\" -O2 -o \"{app_dir}/{project}\" *.c",
-    "macos": "\"{runtime_dir}/bin/clang\" -O2 -o \"{app_dir}/{project}\" *.c"
+    "macos": "\"{runtime_dir}/bin/clang\" -O2 -isysroot \"$(xcrun --show-sdk-path)\" -o \"{app_dir}/{project}\" *.c"
    },
    "launch": "{app_dir}/{project}{exe}"
   }
