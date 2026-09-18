@@ -192,12 +192,15 @@
           <label class="choice"><input type="checkbox" name="target_macos" checked> macOS</label>
         </div>
 
+        <label class="choice" style="margin-top:10px"><input type="checkbox" id="offline-on" name="offline">
+          <span>Also make offline installers <span class="small muted">for computers without internet. Bigger files, packed in your browser.</span></span></label>
+
         <div class="actions" style="margin-top:16px">
           <button type="submit">Build installers</button>
         </div>
 
         <p class="small muted" style="margin-bottom:0">
-          You'll get <code>install_<span class="by-lang lang-python">python</span><span class="by-lang lang-node">node</span><span class="by-lang lang-ruby">ruby</span><span class="by-lang lang-none">app</span>_&lt;name&gt;<span class="by-mode mode-ours-inline">_&lt;hash&gt;</span>.exe</code>, <code>.run</code> and <code>.dmg</code>,
+          You'll get <code>install_<span class="by-lang lang-python">python</span><span class="by-lang lang-node">node</span><span class="by-lang lang-ruby">ruby</span><span class="by-lang lang-none">app</span>_&lt;name&gt;<span class="by-mode mode-ours-inline">_&lt;hash&gt;</span>.exe</code>, <code>.run</code> and <code>.dmg</code><span class="offline-inline">, plus offline <code>…_offline.exe</code>, <code>.run</code> and <code>.zip</code></span>,
           <span class="by-mode mode-ours-inline">signed by Installer Builder (the hash points to your settings, so the signature stays valid)</span><span class="by-mode mode-yours-inline">signed by you</span><span class="by-mode mode-unsigned-inline">unsigned</span>. Everything below is optional and already has sensible defaults.
         </p>
       </section>
@@ -452,6 +455,65 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
 </pre>
             <span class="hint">Folder names are short hashes, to keep paths short. Each folder has a manifest saying what it contains.</span>
           </details>
+        </details>
+
+        <details>
+          <summary><span>Offline installers</span><span class="default"><span class="offline-off-inline">Not made</span><span class="offline-inline">Everything, newest systems only</span></span></summary>
+
+          <p class="small muted offline-off-only" style="margin-top:0">Tick <strong>Also make offline installers</strong> above to set these.</p>
+
+          <div class="offline-only">
+            <p class="small" style="margin-top:0">An offline installer carries the files the normal one would download.
+              It's made in your browser: files go from the download sites straight into the installer, and are never uploaded to us.
+              The normal installers are still made too.</p>
+
+            <span class="label">Include</span>
+            <label class="choice"><input type="radio" name="offline_include" value="all" checked>
+              <span><strong>Everything</strong><br><span class="small muted">Installs with no internet at all.</span></span></label>
+            <label class="choice"><input type="radio" name="offline_include" value="runtime">
+              <span><strong>The runtime only</strong><br><span class="small muted">Smaller. Your app's packages are still downloaded at install time.</span></span></label>
+
+            <hr>
+
+            <span class="label">Must work offline on</span>
+            <p class="small muted" style="margin-top:0">Online installers choose the right versions on the user's computer. Offline ones choose now,
+              so each system ticked here adds its own runtime and packages to the file.</p>
+
+            <div class="table-wrap">
+              <table class="small offline-targets">
+                <thead><tr><th>System</th><th>Runtime included</th><th>Adds about</th></tr></thead>
+                <tbody>
+                  <tr class="win-settings"><td><label class="choice"><input type="checkbox" name="offline_win_1011" checked> Windows 10, 11</label></td><td>Newest in your range</td><td>30 MB</td></tr>
+                  <tr class="win-settings"><td><label class="choice"><input type="checkbox" name="offline_win_78"> Windows 7, 8, 8.1</label></td><td>Newest that runs there</td><td>28 MB</td></tr>
+                  <tr class="win-settings"><td><label class="choice"><input type="checkbox" name="offline_win_vista"> Windows Vista (32-bit)</label></td><td>Newest that runs there, plus Visual C++ runtimes</td><td>55 MB</td></tr>
+                  <tr class="win-settings"><td><label class="choice"><input type="checkbox" name="offline_win_xp"> Windows XP (32-bit)</label></td><td>Newest that runs there, plus Visual C++ runtimes</td><td>50 MB</td></tr>
+                  <tr class="linux-settings"><td><label class="choice"><input type="checkbox" name="offline_linux" checked> Linux</label></td><td>Newest in your range, for your glibc minimum</td><td>35 MB</td></tr>
+                  <tr class="mac-settings"><td><label class="choice"><input type="checkbox" name="offline_mac" checked> macOS</label></td><td>Newest in your range, for your macOS minimum</td><td>45 MB</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <span class="hint">Sizes are per architecture ticked under Platforms. With <strong>Choose the highest version with asyncio support</strong>,
+              the older Windows rows use the tested builds.</span>
+
+            <hr>
+
+            <span class="label">What you'll get</span>
+            <div class="table-wrap">
+              <table class="small">
+                <tbody>
+                  <tr class="win-settings"><th scope="row">Windows</th><td>One <code>.exe</code>. The files sit inside its signature block, so the signature stays valid.</td></tr>
+                  <tr class="linux-settings"><th scope="row">Linux</th><td>One <code>.run</code>.</td></tr>
+                  <tr class="mac-settings"><th scope="row">macOS</th><td>A <code>.zip</code> with the app and a folder of files next to it. macOS apps can't carry extra files without breaking their signature.
+                    Users keep the two together.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="small muted">Every included file is checked against a checksum in the installer's settings, so a changed file is refused.
+              Some download sites don't allow browsers to fetch from them; if so, the build page asks you to download that file yourself and drop it in.</p>
+            <p class="small muted" style="margin-bottom:0">IT departments can also make an offline copy of any online installer, on a computer with internet:
+              <code>install_…exe --make-pack --targets win10-x64</code></p>
+          </div>
         </details>
 
         <details>

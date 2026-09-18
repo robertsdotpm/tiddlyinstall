@@ -516,3 +516,12 @@ form:has([name="target_linux"]:not(:checked)) .crt-tab-linux,
 form:has([name="target_linux"]:not(:checked)) .custom-rt-panel-linux,
 form:has([name="target_macos"]:not(:checked)) .crt-tab-mac,
 form:has([name="target_macos"]:not(:checked)) .custom-rt-panel-mac { display: none; }
+
+/* Offline installers: options only when the main-view checkbox is ticked (no JS). */
+.offline-only, .offline-inline { display: none; }
+form:has(#offline-on:checked) .offline-only { display: block; }
+form:has(#offline-on:checked) .offline-inline { display: inline; }
+form:has(#offline-on:checked) .offline-off-only,
+form:has(#offline-on:checked) .offline-off-inline { display: none; }
+.offline-targets .choice { margin: 0; }
+.offline-targets td input { min-width: 0; }
