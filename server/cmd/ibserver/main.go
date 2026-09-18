@@ -177,7 +177,7 @@ func noDirs(h http.Handler) http.Handler {
 func siteOnly(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		p := r.URL.Path
-		ok := p == "/" || strings.HasPrefix(p, "/css/") || strings.HasPrefix(p, "/js/") || strings.HasPrefix(p, "/img/") ||
+		ok := p == "/" || strings.HasPrefix(p, "/css/") || strings.HasPrefix(p, "/js/") || strings.HasPrefix(p, "/img/") || strings.HasPrefix(p, "/vendor/") ||
 			(strings.Count(p, "/") == 1 && (strings.HasSuffix(p, ".html") || strings.HasSuffix(p, ".ico")))
 		if !ok {
 			http.NotFound(w, r)
