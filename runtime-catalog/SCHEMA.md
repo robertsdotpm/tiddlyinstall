@@ -295,3 +295,62 @@ collected):
 - `ip_with_host_header`: a request to the IP, sending the host name in
   `Host`, gets the file (skips only DNS). `ip_bare`: it works without it.
 - `tls_versions` / `sni_required`: which old clients can use its HTTPS.
+
+## os_support.json (added 2026-09-18)
+
+Machine-readable OS support per runtime, precise enough for the installer
+to pick **the newest version that runs on the user's system** with no
+human in the loop. OS ids come from `catalog/os_versions.json`.
+
+```json
+{
+  "runtime": "python",
+  "researched": "2026-09-18",
+  "rules": [
+    {
+      "versions": ">=3.9,<3.13",
+      "os": "windows",
+      "arch": ["x86", "amd64"],
+      "min_os": "8.1",
+      "min_build": null,
+      "max_os": null,
+      "extra": [],
+      "applies_to": "python.org installers and embeddable zips",
+      "evidence": [
+        {"kind": "vendor-doc", "source": "https://peps.python.org/pep-0011/"},
+        {"kind": "binary", "source": "python39.dll imports ... (absent before 8)"}
+      ],
+      "confidence": "high",
+      "notes": null
+    }
+  ],
+  "max_per_os": [
+    {"os": "windows", "os_version": "xp", "arch": "x86",
+     "max_version": "3.4.4", "variant": null, "tested": false, "notes": null}
+  ]
+}
+```
+
+- `rules`: version ranges (PEP 440 style, down to the patch where support
+  changed mid-series) with the minimum OS per os/arch. `max_os` is for
+  builds that stop working on newer systems (e.g. 32-bit on macOS 10.15+).
+  `extra` lists required OS updates (SP1, KB numbers).
+- `evidence` kinds: `vendor-doc` (release notes, support pages),
+  `binary` (read from the actual file: PE subsystem version and imported
+  functions compared with what each Windows version exports; Mach-O
+  `LC_BUILD_VERSION`/`LC_VERSION_MIN_MACOSX`; the highest `GLIBC_x.y`
+  symbol an ELF needs), `vm-test` (ran on a test machine), `secondary`.
+- When vendor docs and the binary disagree, the binary wins and the
+  disagreement goes in `notes`.
+- `max_per_os`: for every OS id and arch, the newest release in
+  `releases.json` that runs there, derived from `rules`. This is what the
+  form's "newest that runs on the user's system" shows.
+- `format` (optional, list): limits a rule to those file formats, e.g.
+  `["zip"]` vs `["exe"]` when a vendor's installer refuses an OS that
+  the same release's archive runs on (Python 3.9–3.11 on Windows 8).
+  `variant` and `kind` limit rules the same way. Without them a rule
+  applies to every file of that os/arch/version, and every applying rule
+  must allow the OS.
+- `tools/make_major_plans.py` uses these rules to keep, per OS id, the
+  newest release that runs there (runtimes listed in its
+  `OS_FLOOR_RUNTIMES`); each such plan entry gets a `reason`.

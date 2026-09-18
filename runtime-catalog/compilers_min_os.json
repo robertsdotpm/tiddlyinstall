@@ -1,0 +1,3695 @@
+{
+ "generated": "2026-09-18",
+ "purpose": "Pick the newest compiler version that runs on the user's OS. Match versions, os and arch, then compare the OS to `min`.",
+ "windows_nt_versions": {
+  "2000": "5.0",
+  "xp": "5.1",
+  "xp-x64": "5.2",
+  "vista": "6.0",
+  "7": "6.1",
+  "8": "6.2",
+  "8.1": "6.3",
+  "10": "10.0"
+ },
+ "fields": {
+  "min": "Windows: NT version string (5.1 = XP, 6.0 = Vista, 6.1 = 7, 6.2 = 8, 6.3 = 8.1, 10.0 = 10/11). macOS: version string, or an object per arch. Linux: {kernel, glibc}, null = no requirement found.",
+  "source": "vendor = release notes or docs; binary = read from the files (PE subsystem version and imported functions, Mach-O LC_BUILD_VERSION/LC_VERSION_MIN_MACOSX minos, highest GLIBC_ symbol version or static); binary(catalogue) = recorded by an earlier pass in <runtime>/install.json; vendor+binary = both agree or the stricter one is given",
+  "rule": "Where vendor and binary differ, `min` is the vendor floor (supported) unless the binary floor is stricter; the looser binary floor is in evidence/notes."
+ },
+ "sources": {
+  "go_wiki": "https://go.dev/wiki/MinimumRequirements",
+  "go_notes": "https://go.dev/doc/go1.N (catalog/go/limitations.json cites each)",
+  "rust_ps": "https://doc.rust-lang.org/rustc/platform-support.html",
+  "rust_win7": "https://blog.rust-lang.org/2024/02/26/Windows-7/",
+  "rust_apple": "https://blog.rust-lang.org/2023/09/25/Increasing-Apple-Version-Requirements/",
+  "rust_linux": "https://blog.rust-lang.org/2022/08/01/Increasing-glibc-kernel-requirements/",
+  "zig_notes": "https://ziglang.org/download/<version>/release-notes.html (catalog/zig/limitations.json cites each)",
+  "nim_dl": "https://nim-lang.org/install.html",
+  "llvm38": "https://releases.llvm.org/3.8.0/docs/ReleaseNotes.html",
+  "winlibs": "https://github.com/brechtsanders/winlibs_mingw (README)",
+  "w64devkit": "https://github.com/skeeto/w64devkit (README)"
+ },
+ "compilers": [
+  {
+   "compiler": "go",
+   "toolchain_needs": "nothing for pure Go; cgo needs a C compiler (WinLibs on Windows, the system cc elsewhere)",
+   "ranges": [
+    {
+     "versions": ">=1.0,<1.3",
+     "os": "windows",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "min": "5.0",
+     "label": "Windows 2000",
+     "source": "vendor",
+     "evidence": [
+      "Go 1.3 release notes: Windows 2000 support removed"
+     ],
+     "confidence": "medium"
+    },
+    {
+     "versions": ">=1.3,<1.11",
+     "os": "windows",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "min": "5.1",
+     "label": "Windows XP",
+     "source": "vendor",
+     "evidence": [
+      "Go 1.3 notes: XP or later required",
+      "Go 1.10 notes: last release to run on XP and Vista"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": ">=1.11,<1.21",
+     "os": "windows",
+     "arch": [
+      "x86",
+      "amd64",
+      "arm64"
+     ],
+     "min": "6.1",
+     "label": "Windows 7 / Server 2008 R2",
+     "source": "vendor",
+     "evidence": [
+      "Go 1.11 notes: Windows 7 or later",
+      "Go 1.20 notes: last release for 7, 8, 2008, 2012"
+     ],
+     "confidence": "high",
+     "notes": "windows/arm64 from 1.17"
+    },
+    {
+     "versions": ">=1.21",
+     "os": "windows",
+     "arch": [
+      "x86",
+      "amd64",
+      "arm64"
+     ],
+     "min": "10.0",
+     "label": "Windows 10 / Server 2016",
+     "source": "vendor+binary",
+     "evidence": [
+      "go.dev/wiki/MinimumRequirements: Go 1.21+ Windows 10 / Server 2016",
+      "binary 1.27.1 go.exe, compile.exe, link.exe (x86, amd64, arm64): PE subsystem 10.0, so the loader refuses them on 8.1 and older; imported APIs are only Vista-level"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": ">=1.21,<1.26",
+     "os": "windows",
+     "arch": [
+      "armv6"
+     ],
+     "min": "10.0",
+     "label": "Windows 10 on 32-bit ARM",
+     "source": "vendor+binary",
+     "evidence": [
+      "binary 1.23.12 windows-arm: PE subsystem 6.1, Vista-level APIs; vendor floor Windows 10"
+     ],
+     "confidence": "high",
+     "notes": "port removed in 1.26; Windows 11 24H2 dropped 32-bit ARM apps"
+    },
+    {
+     "versions": ">=1.0,<1.5",
+     "os": "macos",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "min": "10.6",
+     "label": "Mac OS X 10.6",
+     "source": "vendor+binary",
+     "evidence": [
+      "Go 1.0 notes: 10.6+",
+      "binary 1.4.2 darwin-386-osx10.6 go: no LC_VERSION_MIN/LC_BUILD_VERSION, so dyld imposes no floor"
+     ],
+     "confidence": "high",
+     "notes": "Go before 1.7 builds binaries that misbehave on 10.12+; 32-bit apps stop at 10.14"
+    },
+    {
+     "versions": ">=1.5,<1.8",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "min": "10.7",
+     "label": "OS X 10.7",
+     "source": "vendor",
+     "evidence": [
+      "Go 1.5: 10.6 builds no longer shipped",
+      "Go 1.8 raised the floor to 10.8"
+     ],
+     "confidence": "medium"
+    },
+    {
+     "versions": ">=1.8,<1.11",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "min": "10.8",
+     "label": "OS X 10.8",
+     "source": "vendor",
+     "evidence": [
+      "Go 1.8 notes",
+      "Go 1.10 notes: last for 10.8/10.9"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": ">=1.11,<1.15",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "min": "10.10",
+     "label": "OS X 10.10",
+     "source": "vendor",
+     "evidence": [
+      "Go 1.11 notes",
+      "Go 1.14 notes: last for 10.11"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": ">=1.15,<1.17",
+     "os": "macos",
+     "arch": [
+      "amd64",
+      "arm64"
+     ],
+     "min": "10.12",
+     "label": "macOS 10.12",
+     "source": "vendor",
+     "evidence": [
+      "Go 1.15 notes",
+      "Go 1.16 notes: last for 10.12"
+     ],
+     "confidence": "high",
+     "notes": "arm64 from 1.16 (macOS 11+ hardware)"
+    },
+    {
+     "versions": ">=1.17,<1.21",
+     "os": "macos",
+     "arch": [
+      "amd64",
+      "arm64"
+     ],
+     "min": "10.13",
+     "label": "macOS 10.13",
+     "source": "vendor",
+     "evidence": [
+      "Go 1.17 notes",
+      "Go 1.20 notes: last for 10.13/10.14"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": ">=1.21,<1.23",
+     "os": "macos",
+     "arch": [
+      "amd64",
+      "arm64"
+     ],
+     "min": "10.15",
+     "label": "macOS 10.15",
+     "source": "vendor",
+     "evidence": [
+      "Go 1.21 notes",
+      "Go 1.22 notes: last for 10.15"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": ">=1.23,<1.25",
+     "os": "macos",
+     "arch": [
+      "amd64",
+      "arm64"
+     ],
+     "min": "11.0",
+     "label": "macOS 11",
+     "source": "vendor",
+     "evidence": [
+      "Go 1.23 notes",
+      "Go 1.24 notes: last for 11"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": ">=1.25,<1.27",
+     "os": "macos",
+     "arch": [
+      "amd64",
+      "arm64"
+     ],
+     "min": "12.0",
+     "label": "macOS 12",
+     "source": "vendor",
+     "evidence": [
+      "go.dev/wiki/MinimumRequirements: 1.25-1.26 macOS 12"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": ">=1.27",
+     "os": "macos",
+     "arch": [
+      "amd64",
+      "arm64"
+     ],
+     "min": "13.0",
+     "label": "macOS 13",
+     "source": "vendor+binary",
+     "evidence": [
+      "go.dev/wiki/MinimumRequirements: 1.27+ macOS 13",
+      "binary 1.27.1 go/compile/link: LC_BUILD_VERSION minos 13.0 (amd64 and arm64)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": ">=1.0,<1.18",
+     "os": "linux",
+     "arch": [
+      "x86",
+      "amd64",
+      "armv6",
+      "arm64"
+     ],
+     "min": {
+      "kernel": "2.6.23",
+      "glibc": null
+     },
+     "label": "Linux 2.6.23",
+     "source": "vendor",
+     "evidence": [
+      "older go.dev/wiki/MinimumRequirements: kernel 2.6.23"
+     ],
+     "confidence": "medium",
+     "notes": "toolchain is statically linked; glibc only matters for cgo"
+    },
+    {
+     "versions": ">=1.18,<1.24",
+     "os": "linux",
+     "arch": null,
+     "min": {
+      "kernel": "2.6.32",
+      "glibc": null
+     },
+     "label": "Linux 2.6.32",
+     "source": "vendor",
+     "evidence": [
+      "Go 1.18 notes: kernel 2.6.32"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": ">=1.24",
+     "os": "linux",
+     "arch": null,
+     "min": {
+      "kernel": "3.2",
+      "glibc": null
+     },
+     "label": "Linux 3.2",
+     "source": "vendor+binary",
+     "evidence": [
+      "go.dev/wiki/MinimumRequirements: 1.24+ kernel 3.2",
+      "binary 1.27.1 go/compile/link on all 10 Linux arches: statically linked (no NEEDED)"
+     ],
+     "confidence": "high",
+     "notes": "ppc64 1.27: kernel 3.13 (ELFv2)"
+    }
+   ]
+  },
+  {
+   "compiler": "rust",
+   "toolchain_needs": "a linker: -gnu Windows toolchains bundle one (rust-mingw); -msvc needs Visual Studio Build Tools; macOS needs Xcode CLT; Linux needs cc",
+   "ranges": [
+    {
+     "versions": ">=1.0,<1.78",
+     "os": "windows",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "min": "6.1",
+     "label": "Windows 7",
+     "source": "vendor",
+     "evidence": [
+      "platform-support page of the time: Windows 7+ for -msvc and -gnu",
+      "Windows 7 blog post: 1.77 is the last release for 7, 8, 8.1"
+     ],
+     "confidence": "medium",
+     "notes": "XP and Vista were never supported hosts. 1.77 not downloaded, so no binary check.",
+     "variants": [
+      "msvc",
+      "gnu"
+     ]
+    },
+    {
+     "versions": ">=1.78",
+     "os": "windows",
+     "arch": [
+      "x86",
+      "amd64",
+      "arm64"
+     ],
+     "min": "10.0",
+     "label": "Windows 10 / Server 2016",
+     "source": "vendor+binary",
+     "evidence": [
+      "platform-support: Windows 10+, Server 2016+ for x86_64/i686 -msvc and -gnu",
+      "binary 1.98.1 -msvc (catalogue) and -gnu (this pass): std/rustc_driver DLLs import WaitOnAddress/WakeByAddress* (api-ms-win-core-synch-l1-2-0), GetSystemTimePreciseAsFileTime and ProcessPrng (bcryptprimitives); cannot load on 7; PE header 5.2/6.0 is not the real floor",
+      "binary: programs built by 1.98.1 for x86_64/i686 -gnu import the same (cross-built hello world)"
+     ],
+     "confidence": "high",
+     "notes": "Programs built by 1.78+ also need Windows 10; tier-3 *-win7-windows-* targets need nightly build-std",
+     "variants": [
+      "msvc",
+      "gnu",
+      "gnullvm"
+     ]
+    },
+    {
+     "versions": ">=1.0,<1.74",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "min": "10.7",
+     "label": "OS X 10.7",
+     "source": "vendor",
+     "evidence": [
+      "Apple version requirements blog post: 1.74 raised x86_64 from 10.7 to 10.12"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": ">=1.74",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "min": "10.12",
+     "label": "macOS 10.12",
+     "source": "vendor",
+     "evidence": [
+      "platform-support: x86_64-apple-darwin 10.12+"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": ">=1.49",
+     "os": "macos",
+     "arch": [
+      "arm64"
+     ],
+     "min": "11.0",
+     "label": "macOS 11",
+     "source": "vendor",
+     "evidence": [
+      "platform-support: aarch64-apple-darwin 11.0+"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": ">=1.0,<1.64",
+     "os": "linux",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "min": {
+      "kernel": "2.6.32",
+      "glibc": "2.11"
+     },
+     "label": "Linux 2.6.32 / glibc 2.11",
+     "source": "vendor",
+     "evidence": [
+      "glibc/kernel requirements blog post (2022-08-01): 1.64 raises the floor from 2.6.32/2.11"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": ">=1.64",
+     "os": "linux",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "min": {
+      "kernel": "3.2",
+      "glibc": "2.17"
+     },
+     "label": "Linux 3.2 / glibc 2.17",
+     "source": "vendor+binary",
+     "evidence": [
+      "platform-support: kernel 3.2+, glibc 2.17+",
+      "binary 1.98.1 amd64 (catalogue): highest GLIBC_ symbol 2.17"
+     ],
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "compiler": "zig",
+   "toolchain_needs": "nothing: carries its own linker, libc headers and MinGW-w64 libraries",
+   "ranges": [
+    {
+     "versions": ">=0.1,<0.4",
+     "os": "windows",
+     "arch": [
+      "amd64"
+     ],
+     "min": "6.0",
+     "label": "Vista SP2 in principle, 7 SP1 in practice",
+     "source": "binary",
+     "evidence": [
+      "binary 0.1.1/0.2.0/0.3.0 zig.exe: PE 6.0, newest APIs Vista-level (GetFinalPathNameByHandleW, GetFileInformationByHandleEx), imports UCRT and vcruntime140 (needs the VC++ 2015+ redistributable)",
+      "vendor: no minimum stated"
+     ],
+     "confidence": "low",
+     "requires": [
+      "VC++ 2015-2022 redistributable (installs UCRT)"
+     ]
+    },
+    {
+     "versions": ">=0.4,<0.6",
+     "os": "windows",
+     "arch": [
+      "amd64"
+     ],
+     "min": "6.1",
+     "label": "Windows 7",
+     "source": "vendor+binary",
+     "evidence": [
+      "0.5.0 release notes: Windows 7+",
+      "binary 0.4.0/0.5.0 zig.exe: K32EnumProcessModulesEx (7), imports UCRT + vcruntime140"
+     ],
+     "confidence": "high",
+     "requires": [
+      "VC++ 2015-2022 redistributable"
+     ]
+    },
+    {
+     "versions": ">=0.6,<0.11",
+     "os": "windows",
+     "arch": [
+      "x86",
+      "amd64",
+      "arm64"
+     ],
+     "min": "6.3",
+     "label": "Windows 8.1",
+     "source": "vendor+binary",
+     "evidence": [
+      "0.6-0.10 release notes: Windows 8.1+",
+      "binary: 0.6.0 amd64 loads on 7 (K32EnumProcessModulesEx only); 0.6.0 x86 and 0.7.1-0.10.1 import GetSystemTimePreciseAsFileTime (8), 0.10 also RtlWaitOnAddress; no VC++ runtime needed"
+     ],
+     "confidence": "high",
+     "notes": "arm64 zip from 0.9.1; no x86 zip in 0.10"
+    },
+    {
+     "versions": ">=0.11",
+     "os": "windows",
+     "arch": [
+      "x86",
+      "amd64",
+      "arm64"
+     ],
+     "min": "10.0",
+     "label": "Windows 10",
+     "source": "vendor+binary",
+     "evidence": [
+      "0.11 release notes: Windows 10+; 0.15/0.16 OS table: Windows 10",
+      "binary 0.11.0-0.16.0: loader-level floor is Windows 8 (GetSystemTimePreciseAsFileTime, RtlWaitOnAddress); 0.12+ import UCRT"
+     ],
+     "confidence": "high",
+     "notes": "unsupported but loadable on 8/8.1 (0.12+ need the UCRT update there)"
+    },
+    {
+     "versions": "==0.3.*",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "min": "10.13",
+     "label": "macOS 10.13.7 (binary minos)",
+     "source": "binary",
+     "evidence": [
+      "binary 0.3.0: LC_VERSION_MIN_MACOSX 10.13.7"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": "==0.4.*",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "min": "10.13",
+     "label": "macOS 10.13",
+     "source": "binary",
+     "evidence": [
+      "binary 0.4.0 minos 10.13"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": ">=0.5,<0.7",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "min": "10.14",
+     "label": "macOS 10.14 (binary; notes say 10.13)",
+     "source": "vendor+binary",
+     "evidence": [
+      "0.5/0.6 release notes: 10.13+",
+      "binary 0.5.0/0.6.0 minos 10.14: dyld enforces the stricter one"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": "==0.7.*",
+     "os": "macos",
+     "arch": [
+      "amd64",
+      "arm64"
+     ],
+     "min": {
+      "amd64": "10.15.7",
+      "arm64": "11.0"
+     },
+     "label": "macOS 10.15.7 / 11.0",
+     "source": "binary",
+     "evidence": [
+      "binary 0.7.1 amd64 minos 10.15.7 (also links system libncurses.5.4)",
+      "binary 0.7.0 arm64 minos 11.0"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": "==0.8.*",
+     "os": "macos",
+     "arch": [
+      "amd64",
+      "arm64"
+     ],
+     "min": {
+      "amd64": "10.13",
+      "arm64": "11.0"
+     },
+     "label": "macOS 10.13 / 11",
+     "source": "vendor+binary",
+     "evidence": [
+      "0.8 release notes: 10.13+",
+      "binary 0.8.1: no minos load command"
+     ],
+     "confidence": "medium"
+    },
+    {
+     "versions": "==0.9.*",
+     "os": "macos",
+     "arch": [
+      "amd64",
+      "arm64"
+     ],
+     "min": {
+      "amd64": "10.13",
+      "arm64": "11.6"
+     },
+     "label": "macOS 10.13 / 11.6",
+     "source": "binary",
+     "evidence": [
+      "binary 0.9.1 amd64 minos 10.13, arm64 minos 11.6"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": ">=0.10,<0.12",
+     "os": "macos",
+     "arch": [
+      "amd64",
+      "arm64"
+     ],
+     "min": "11.7",
+     "label": "macOS 11.7 (binary; notes say 11)",
+     "source": "vendor+binary",
+     "evidence": [
+      "0.10 notes: 11+",
+      "binary 0.10.1/0.11.0 minos 11.7"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": ">=0.12,<0.14",
+     "os": "macos",
+     "arch": [
+      "amd64",
+      "arm64"
+     ],
+     "min": "11.7.1",
+     "label": "macOS 11.7.1",
+     "source": "binary",
+     "evidence": [
+      "binary 0.12.1/0.13.0 minos 11.7.1"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": ">=0.14",
+     "os": "macos",
+     "arch": [
+      "amd64",
+      "arm64"
+     ],
+     "min": "13.0",
+     "label": "macOS 13",
+     "source": "vendor+binary",
+     "evidence": [
+      "0.15/0.16 OS table: macOS 13.0",
+      "binary 0.14.1-0.16.0 minos 13.0"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": ">=0.2,<0.5",
+     "os": "linux",
+     "arch": [
+      "amd64"
+     ],
+     "min": {
+      "kernel": null,
+      "glibc": null
+     },
+     "label": "any x86_64 Linux",
+     "source": "binary",
+     "evidence": [
+      "binary 0.2.0-0.4.0: statically linked"
+     ],
+     "confidence": "medium"
+    },
+    {
+     "versions": ">=0.5,<0.15",
+     "os": "linux",
+     "arch": null,
+     "min": {
+      "kernel": "3.16",
+      "glibc": null
+     },
+     "label": "Linux 3.16",
+     "source": "vendor+binary",
+     "evidence": [
+      "0.5-0.14 release notes: Linux 3.16+",
+      "binary: every zig binary statically linked (all arches scanned)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": ">=0.15",
+     "os": "linux",
+     "arch": null,
+     "min": {
+      "kernel": "5.10",
+      "glibc": null
+     },
+     "label": "Linux 5.10",
+     "source": "vendor+binary",
+     "evidence": [
+      "0.15/0.16 OS table: Linux 5.10",
+      "binary: statically linked; may start on older kernels but unsupported"
+     ],
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "compiler": "nim",
+   "toolchain_needs": "a C compiler. Windows: MinGW-w64 (WinLibs; msvcrt i686 9.5/10.5 for XP); the MinGW that Nim's finish.exe downloads (GCC 11.1) needs Vista+. macOS: Xcode CLT. Linux: gcc/clang",
+   "ranges": [
+    {
+     "versions": ">=0.20",
+     "os": "windows",
+     "arch": [
+      "x86"
+     ],
+     "min": "5.1",
+     "label": "Windows XP (compiler only)",
+     "source": "binary",
+     "evidence": [
+      "binary 0.20.2, 1.6.20, 2.2.12 nim.exe/nimble.exe x86: PE subsystem 4.0, imports only KERNEL32 + msvcrt, no post-XP APIs",
+      "vendor: no minimum stated"
+     ],
+     "confidence": "medium",
+     "notes": "pair with a C compiler that also runs on the target (WinLibs i686 msvcrt 9.5/10.5 on XP)"
+    },
+    {
+     "versions": ">=0.20",
+     "os": "windows",
+     "arch": [
+      "amd64"
+     ],
+     "min": "5.2",
+     "label": "Windows XP x64 / Server 2003 (compiler only)",
+     "source": "binary",
+     "evidence": [
+      "binary 0.20.2, 1.6.20, 2.2.12 x64: PE subsystem 5.2, no post-XP APIs"
+     ],
+     "confidence": "medium"
+    },
+    {
+     "versions": "==0.20.*",
+     "os": "macos",
+     "arch": null,
+     "min": null,
+     "label": "build from source (no nim-lang.org macOS binary)",
+     "source": "vendor",
+     "evidence": [
+      "catalog/nim: 0.20 on macOS is a source build with Xcode CLT"
+     ],
+     "confidence": "medium"
+    },
+    {
+     "versions": "==1.6.*",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "min": "11.0",
+     "label": "macOS 11",
+     "source": "binary",
+     "evidence": [
+      "binary 1.6.20 nim/nimble: LC_BUILD_VERSION minos 11.0 (x86_64 only; Rosetta on Apple Silicon)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": "==2.2.*",
+     "os": "macos",
+     "arch": [
+      "amd64",
+      "arm64"
+     ],
+     "min": "15.0",
+     "label": "macOS 15",
+     "source": "binary",
+     "evidence": [
+      "binary 2.2.12 nim/nimble amd64 and arm64: minos 15.0"
+     ],
+     "confidence": "high",
+     "notes": "older macOS must build 2.2.x from the source tarball"
+    },
+    {
+     "versions": "==0.20.*",
+     "os": "linux",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "min": {
+      "kernel": null,
+      "glibc": "2.7"
+     },
+     "label": "glibc 2.7",
+     "source": "binary",
+     "evidence": [
+      "binary 0.20.2: nim needs GLIBC 2.3, nimble 2.7"
+     ],
+     "confidence": "high"
+    },
+    {
+     "versions": ">=1.6",
+     "os": "linux",
+     "arch": [
+      "x86",
+      "amd64",
+      "arm64",
+      "armv7"
+     ],
+     "min": {
+      "kernel": null,
+      "glibc": null
+     },
+     "label": "any Linux (static)",
+     "source": "binary",
+     "evidence": [
+      "binary 1.6.20, 2.2.12: nim and nimble statically linked"
+     ],
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "compiler": "cc",
+   "toolchains": {
+    "gcc-winlibs-msvcrt": [
+     {
+      "versions": ">=9.5,<11",
+      "os": "windows",
+      "arch": [
+       "x86"
+      ],
+      "min": "5.1",
+      "label": "Windows XP",
+      "source": "binary(catalogue)",
+      "evidence": [
+       "catalog/cc/install.json: gcc, g++, cc1, cc1plus, as, ld of 9.5.0 and 10.5.0 i686 import no post-XP APIs"
+      ],
+      "confidence": "high",
+      "notes": "bundled cmake/ninja/ccache/gdb need Vista/7"
+     },
+     {
+      "versions": ">=9.5,<11",
+      "os": "windows",
+      "arch": [
+       "amd64"
+      ],
+      "min": "6.0",
+      "label": "Windows Vista x64",
+      "source": "binary(catalogue)",
+      "evidence": [
+       "catalog/cc/install.json: as.exe/ld.exe of 10.5.0 x64 import GetFinalPathNameByHandleA"
+      ],
+      "confidence": "medium",
+      "notes": "9.5.0 x64 not separately recorded; treat as Vista"
+     }
+    ],
+    "gcc-winlibs-ucrt": [
+     {
+      "versions": ">=11",
+      "os": "windows",
+      "arch": [
+       "x86",
+       "amd64"
+      ],
+      "min": "6.1",
+      "label": "Windows 7 SP1 + UCRT update",
+      "source": "binary(catalogue)",
+      "evidence": [
+       "catalog/cc/install.json: every tool imports api-ms-win-crt-*.dll and GetFinalPathNameByHandleA (16.2.0 x86)"
+      ],
+      "confidence": "high",
+      "requires": [
+       "Universal C Runtime (KB2999226) on 7 SP1/8.1; built into 10"
+      ]
+     }
+    ],
+    "w64devkit": [
+     {
+      "versions": null,
+      "os": "windows",
+      "arch": [
+       "x86"
+      ],
+      "min": "5.1",
+      "label": "Windows XP, SSE2 CPU",
+      "source": "vendor",
+      "evidence": [
+       "w64devkit README: x86 kit runs on XP; CMake/Ninja/ccache need 7"
+      ],
+      "confidence": "high"
+     },
+     {
+      "versions": null,
+      "os": "windows",
+      "arch": [
+       "amd64"
+      ],
+      "min": "6.1",
+      "label": "Windows 7",
+      "source": "vendor",
+      "evidence": [
+       "w64devkit README: x64 kit Windows 7 (some tools need 10 for Unicode paths)"
+      ],
+      "confidence": "high"
+     }
+    ],
+    "llvm": [
+     {
+      "versions": "<3.8",
+      "os": "windows",
+      "arch": [
+       "x86",
+       "amd64"
+      ],
+      "min": "6.0",
+      "label": "Windows Vista (XP by some builds)",
+      "source": "vendor",
+      "evidence": [
+       "LLVM 3.8 notes: earlier versions supported Vista and XP"
+      ],
+      "confidence": "medium",
+      "notes": "none in the catalogue (plan starts at 3.9); LLVM on Windows targets the MSVC ABI and needs Build Tools headers/libs anyway"
+     },
+     {
+      "versions": ">=3.8",
+      "os": "windows",
+      "arch": [
+       "x86",
+       "amd64",
+       "arm64"
+      ],
+      "min": "6.1",
+      "label": "Windows 7",
+      "source": "vendor",
+      "evidence": [
+       "LLVM 3.8 release notes: \"the minimum Windows version required for running LLVM is Windows 7. Earlier versions, including Windows Vista and XP are no longer supported.\""
+      ],
+      "confidence": "high",
+      "notes": "x86 builds stop at 21.x; arm64 from 12.0.0; 23.x only ships an amd64 -msvc tar.xz (not checked)"
+     },
+     {
+      "versions": "per build",
+      "os": "macos",
+      "arch": [
+       "amd64",
+       "arm64"
+      ],
+      "min": "see minos table",
+      "label": "per build",
+      "source": "binary(catalogue)",
+      "evidence": [
+       "catalog/cc/install.json LC_BUILD_VERSION: amd64 3.9.0 10.11, 4.0.1 10.12, 5.0.2 10.9, 6.0.0 10.13, 9.0.1-11.0.0 10.15, 12.0.0 11.0, 13.0.1-14.0.6 11.6, 15.0.7 12.6, 19.1.7-20.1.7 13.7; arm64 14.0.6 13.2, 15.0.7-16.0.5 13.0, 17.0.6 13.6, 19.1.7-23.1.1 14.0"
+      ],
+      "confidence": "high",
+      "minos": {
+       "amd64": {
+        "3.9.0": "10.11",
+        "4.0.1": "10.12",
+        "5.0.2": "10.9",
+        "6.0.0": "10.13",
+        "9.0.1": "10.15",
+        "10.0.1": "10.15",
+        "11.0.0": "10.15",
+        "12.0.0": "11.0",
+        "13.0.1": "11.6",
+        "14.0.6": "11.6",
+        "15.0.7": "12.6",
+        "19.1.7": "13.7",
+        "20.1.7": "13.7"
+       },
+       "arm64": {
+        "14.0.6": "13.2",
+        "15.0.7": "13.0",
+        "16.0.5": "13.0",
+        "17.0.6": "13.6",
+        "19.1.7": "14.0",
+        "20.1.8": "14.0",
+        "21.1.8": "14.0",
+        "22.1.8": "14.0",
+        "23.1.1": "14.0"
+       }
+      }
+     },
+     {
+      "versions": "per build",
+      "os": "linux",
+      "arch": [
+       "amd64"
+      ],
+      "min": "see glibc table",
+      "label": "per build",
+      "source": "binary",
+      "evidence": [
+       "this pass: clang/lld 14.0.6 (rhel-8.4) and 18.1.8 (ubuntu-18.04) highest GLIBC_ 2.27",
+       "this pass: clang/lld 19.1.7 highest GLIBC_ 2.34 (catalogue recipe says 2.35 for 19+; 20+ not re-checked)",
+       "catalog/cc/install.json: 3.9-18 builds need glibc 2.15-2.32 by build"
+      ],
+      "confidence": "high",
+      "glibc": {
+       "14.0.6-rhel-8.4": "2.27",
+       "18.1.8-ubuntu-18.04": "2.27",
+       "19.1.7": "2.34",
+       ">=20": "2.35 (catalogue, not re-checked)"
+      }
+     }
+    ],
+    "gcc-source": [
+     {
+      "versions": ">=4.9",
+      "os": "linux",
+      "arch": [
+       "any"
+      ],
+      "min": {
+       "kernel": null,
+       "glibc": "the build host's"
+      },
+      "label": "build from source",
+      "source": "vendor",
+      "evidence": [
+       "gcc.gnu.org ships source only; the result runs on the build host's glibc or newer"
+      ],
+      "confidence": "medium"
+     }
+    ]
+   }
+  }
+ ],
+ "newest_version_for": {
+  "go": {
+   "windows": {
+    "xp": "1.10.8",
+    "vista": "1.10.8",
+    "7": "1.20.14",
+    "8.1": "1.20.14",
+    "10": "latest"
+   },
+   "macos": {
+    "10.6": "1.4.3 (x86 osx10.6 build: 1.4.2)",
+    "10.7": "1.7.6",
+    "10.8": "1.10.8",
+    "10.9": "1.10.8",
+    "10.10": "1.14.15",
+    "10.11": "1.14.15",
+    "10.12": "1.16.15",
+    "10.13": "1.20.14",
+    "10.14": "1.20.14",
+    "10.15": "1.22.12",
+    "11": "1.24.13",
+    "12": "1.26.8",
+    "13": "latest"
+   },
+   "linux": {
+    "kernel <2.6.32": "1.17.x",
+    "kernel <3.2": "1.23.12"
+   }
+  },
+  "rust": {
+   "windows": {
+    "xp": null,
+    "vista": null,
+    "7": "1.77.2",
+    "8.1": "1.77.2",
+    "10": "latest"
+   },
+   "macos": {
+    "10.6": null,
+    "10.7": "1.73.0",
+    "10.8": "1.73.0",
+    "10.9": "1.73.0",
+    "10.10": "1.73.0",
+    "10.11": "1.73.0",
+    "10.12": "latest (x86_64)",
+    "11": "latest"
+   },
+   "linux": {
+    "glibc 2.11-2.16 / kernel <3.2": "1.63.0"
+   }
+  },
+  "zig": {
+   "windows": {
+    "xp": null,
+    "vista": "0.3.0 (amd64, binary only, needs VC++ 2015 redist; unofficial)",
+    "7": "0.5.0 (vendor); 0.6.0 amd64 loads (binary)",
+    "8": "0.10.1 (vendor 8.1; 0.11+ load but unsupported)",
+    "8.1": "0.10.1",
+    "10": "latest"
+   },
+   "macos": {
+    "10.12": null,
+    "10.13": "0.9.1",
+    "10.14": "0.9.1",
+    "10.15": "0.9.1",
+    "11.0-11.5": "0.9.1 amd64; arm64: 0.8.1 (no minos) or 0.7.0 (11.0)",
+    "11.6": "0.9.1",
+    "11.7": "0.11.0",
+    "11.7.1-12": "0.13.0",
+    "13": "latest"
+   },
+   "linux": {
+    "kernel <3.16": "0.4.0 (unstated minimum)",
+    "kernel <5.10": "0.14.1"
+   }
+  },
+  "nim": {
+   "windows": {
+    "xp": "2.2.12 compiler + WinLibs i686 msvcrt 9.5/10.5",
+    "vista": "2.2.12 + WinLibs msvcrt",
+    "7": "2.2.12 + WinLibs UCRT 11+",
+    "8.1": "2.2.12",
+    "10": "latest"
+   },
+   "macos": {
+    "<11": "build 2.2.x from source (no binary)",
+    "11-14": "1.6.20 binary, or 2.2.x from source",
+    "15": "2.2.12"
+   },
+   "linux": {
+    "any": "latest (static)"
+   }
+  },
+  "gcc-winlibs": {
+   "windows": {
+    "xp": "10.5.0 i686 msvcrt",
+    "vista": "10.5.0 msvcrt (x64 or i686)",
+    "7": "latest UCRT (with the UCRT update)",
+    "8.1": "latest UCRT",
+    "10": "latest"
+   }
+  },
+  "w64devkit": {
+   "windows": {
+    "xp": "x86 kit (SSE2)",
+    "7": "x64 kit"
+   }
+  },
+  "llvm": {
+   "windows": {
+    "xp": "3.7.1 (not in catalogue)",
+    "vista": "3.7.1 (not in catalogue)",
+    "7": "latest (vendor)",
+    "10": "latest"
+   },
+   "macos": {
+    "10.8": null,
+    "10.9-10.12": "5.0.2 (minos 10.9; 3.9.0 needs 10.11, 4.0.1 10.12)",
+    "10.13-10.14": "6.0.0",
+    "10.15": "11.0.0",
+    "11.0-11.5": "12.0.0",
+    "11.6-12.5": "14.0.6 amd64",
+    "12.6-13.6": "15.0.7 amd64; arm64 13.0-13.5: 16.0.5, 13.2+: 14.0.6",
+    "13.6": "17.0.6 arm64",
+    "13.7": "20.1.7 amd64 (last amd64 build)",
+    "14+": "latest (arm64)"
+   }
+  }
+ },
+ "download_plan_gaps": [
+  {
+   "compiler": "go",
+   "os": "windows",
+   "systems": [
+    "xp",
+    "vista"
+   ],
+   "add": "1.10.8 (windows x86, amd64 zip)",
+   "why": "plan has 1.27 (Windows 10+) and 1.23 windows/arm only"
+  },
+  {
+   "compiler": "go",
+   "os": "windows",
+   "systems": [
+    "7",
+    "8",
+    "8.1"
+   ],
+   "add": "1.20.14 (windows x86, amd64 zip)"
+  },
+  {
+   "compiler": "go",
+   "os": "macos",
+   "systems": [
+    "10.7"
+   ],
+   "add": "1.7.6 (darwin amd64)"
+  },
+  {
+   "compiler": "go",
+   "os": "macos",
+   "systems": [
+    "10.8",
+    "10.9"
+   ],
+   "add": "1.10.8 (darwin amd64)"
+  },
+  {
+   "compiler": "go",
+   "os": "macos",
+   "systems": [
+    "10.10",
+    "10.11"
+   ],
+   "add": "1.14.15 (darwin amd64)"
+  },
+  {
+   "compiler": "go",
+   "os": "macos",
+   "systems": [
+    "10.12"
+   ],
+   "add": "1.16.15"
+  },
+  {
+   "compiler": "go",
+   "os": "macos",
+   "systems": [
+    "10.13",
+    "10.14"
+   ],
+   "add": "1.20.14"
+  },
+  {
+   "compiler": "go",
+   "os": "macos",
+   "systems": [
+    "10.15"
+   ],
+   "add": "1.22.12"
+  },
+  {
+   "compiler": "go",
+   "os": "macos",
+   "systems": [
+    "11"
+   ],
+   "add": "1.24.13"
+  },
+  {
+   "compiler": "go",
+   "os": "macos",
+   "systems": [
+    "12"
+   ],
+   "add": "1.26.8"
+  },
+  {
+   "compiler": "go",
+   "os": "macos",
+   "systems": [
+    "10.6 amd64"
+   ],
+   "add": "1.4.3 darwin amd64 (plan only has the 1.4.2 x86 osx10.6 build)",
+   "priority": "low"
+  },
+  {
+   "compiler": "go",
+   "os": "linux",
+   "systems": [
+    "kernel 2.6.32-3.1 (RHEL/CentOS 6)"
+   ],
+   "add": "1.23.12 linux amd64/386"
+  },
+  {
+   "compiler": "rust",
+   "os": "windows",
+   "systems": [
+    "xp",
+    "vista"
+   ],
+   "add": null,
+   "why": "no official Rust host has ever supported XP or Vista; use Go 1.10, Nim + WinLibs, or C/C++ there"
+  },
+  {
+   "compiler": "rust",
+   "os": "windows",
+   "systems": [
+    "7",
+    "8",
+    "8.1"
+   ],
+   "add": "1.77.2 x86_64/i686 -gnu (and -msvc if wanted)",
+   "why": "plan has only 1.98.1 (Windows 10+); -gnu 1.77.2 needs no Build Tools, which themselves need Windows 10 1909+"
+  },
+  {
+   "compiler": "rust",
+   "os": "macos",
+   "systems": [
+    "10.7-10.11"
+   ],
+   "add": "1.73.0 x86_64-apple-darwin"
+  },
+  {
+   "compiler": "rust",
+   "os": "linux",
+   "systems": [
+    "glibc 2.11-2.16, kernel 2.6.32-3.1"
+   ],
+   "add": "1.63.0 x86_64/i686-unknown-linux-gnu"
+  },
+  {
+   "compiler": "zig",
+   "os": "windows",
+   "systems": [
+    "xp",
+    "vista"
+   ],
+   "add": null,
+   "why": "no Zig runs on XP; 0.1-0.3 x64 might on Vista SP2 with the VC++ 2015 redistributable (binary-only reasoning, untested)"
+  },
+  {
+   "compiler": "zig",
+   "os": "macos",
+   "systems": [
+    "10.12 and older"
+   ],
+   "add": null,
+   "why": "no Zig binary has a lower minos than 10.13"
+  },
+  {
+   "compiler": "nim",
+   "os": "macos",
+   "systems": [
+    "<11",
+    "11-14 for Nim 2.x"
+   ],
+   "add": "nim 2.2.12 source tarball for macOS (build with Xcode CLT; untested on old macOS)",
+   "why": "2.2.12 binaries need macOS 15, 1.6.20 needs 11; 0.20 is already source-only"
+  },
+  {
+   "compiler": "nim",
+   "os": "windows",
+   "systems": [
+    "xp"
+   ],
+   "add": null,
+   "why": "covered: nim.exe runs on XP; pair with WinLibs i686 msvcrt 9.5/10.5 (already planned) instead of the finish.exe MinGW (Vista+)"
+  },
+  {
+   "compiler": "llvm",
+   "os": "windows",
+   "systems": [
+    "xp",
+    "vista"
+   ],
+   "add": "3.7.1 only if Clang on XP/Vista is ever wanted (low priority: needs MSVC libraries)",
+   "priority": "low"
+  },
+  {
+   "compiler": "llvm",
+   "os": "macos",
+   "systems": [
+    "10.8 and older"
+   ],
+   "add": null,
+   "why": "lowest planned minos is 10.9 (5.0.2)"
+  },
+  {
+   "compiler": "gcc",
+   "os": "macos",
+   "systems": [
+    "all"
+   ],
+   "add": null,
+   "why": "GCC for macOS is source-only in the catalogue; Xcode CLT clang is the practical compiler"
+  }
+ ],
+ "os_support": {
+  "go": {
+   "runtime": "go",
+   "researched": "2026-09-18",
+   "rules": [
+    {
+     "versions": ">=1.0,<1.3",
+     "os": "windows",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "2000",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "go.dev/doc/go1.3: Windows 2000 dropped"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    },
+    {
+     "versions": ">=1.3,<1.11",
+     "os": "windows",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "xp",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "go.dev/doc/go1.3, go1.10: XP/Vista until 1.10"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.11,<1.21",
+     "os": "windows",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "7",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "go.dev/doc/go1.11, go1.20"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.21",
+     "os": "windows",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "https://go.dev/wiki/MinimumRequirements"
+      },
+      {
+       "kind": "binary",
+       "source": "1.27.1 go.exe/compile.exe/link.exe PE subsystem 10.0"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.17",
+     "os": "windows",
+     "arch": [
+      "arm64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "windows/arm64 from 1.17; Windows on Arm64 is 10+"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.0",
+     "os": "windows",
+     "arch": [
+      "armv6"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary",
+       "source": "1.23.12 windows-arm PE subsystem 6.1; vendor floor 10 (1.21+); only Windows 10 ran on 32-bit ARM"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.0,<1.5",
+     "os": "macos",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10.6",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "go1 notes: 10.6+"
+      },
+      {
+       "kind": "binary",
+       "source": "1.4.2 osx10.6 go: no minos load command"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.5,<1.8",
+     "os": "macos",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10.7",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "10.6 builds stop at 1.4; 1.8 raised the floor to 10.8"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    },
+    {
+     "versions": ">=1.8,<1.11",
+     "os": "macos",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10.8",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "go.dev/doc/go1.8, go1.10"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.11,<1.15",
+     "os": "macos",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10.10",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "go.dev/doc/go1.11, go1.14"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.15,<1.17",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10.12",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "go.dev/doc/go1.15, go1.16"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.17,<1.21",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10.13",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "go.dev/doc/go1.17, go1.20"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.21,<1.23",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10.15",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "go.dev/doc/go1.21, go1.22"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.23,<1.25",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "11",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "go.dev/doc/go1.23, go1.24"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.25,<1.27",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "12",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "https://go.dev/wiki/MinimumRequirements"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.27",
+     "os": "macos",
+     "arch": [
+      "amd64",
+      "arm64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "13",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "https://go.dev/wiki/MinimumRequirements"
+      },
+      {
+       "kind": "binary",
+       "source": "1.27.1 minos 13.0"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.16,<1.25",
+     "os": "macos",
+     "arch": [
+      "arm64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "11",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "darwin/arm64 from 1.16; Apple silicon ships with 11+"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.25,<1.27",
+     "os": "macos",
+     "arch": [
+      "arm64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "12",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "https://go.dev/wiki/MinimumRequirements"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.0",
+     "os": "macos",
+     "arch": [
+      "x86"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10.6",
+     "min_build": null,
+     "max_os": "10.14",
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "macOS 10.15 dropped 32-bit apps"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.0,<1.24",
+     "os": "linux",
+     "arch": null,
+     "variant": null,
+     "kind": null,
+     "min_os": "glibc-2.12",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "kernel 2.6.23 (<1.18) / 2.6.32 (1.18+); RHEL5's 2.6.18 is below both"
+      },
+      {
+       "kind": "binary",
+       "source": "toolchain statically linked"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.24",
+     "os": "linux",
+     "arch": null,
+     "variant": null,
+     "kind": null,
+     "min_os": "glibc-2.17",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "https://go.dev/wiki/MinimumRequirements: kernel 3.2"
+      },
+      {
+       "kind": "binary",
+       "source": "1.27.1 statically linked on all arches"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    }
+   ]
+  },
+  "rust": {
+   "runtime": "rust",
+   "researched": "2026-09-18",
+   "rules": [
+    {
+     "versions": ">=1.0,<1.78",
+     "os": "windows",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "variant": [
+      "gnu"
+     ],
+     "kind": null,
+     "min_os": "7",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "https://blog.rust-lang.org/2024/02/26/Windows-7/"
+      }
+     ],
+     "confidence": "medium",
+     "notes": "XP/Vista never supported. The -gnu toolchain links with its own rust-mingw files, so it builds on 7 without Build Tools."
+    },
+    {
+     "versions": ">=1.0,<1.78",
+     "os": "windows",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "variant": [
+      "msvc"
+     ],
+     "kind": null,
+     "min_os": "7",
+     "min_build": null,
+     "max_os": null,
+     "extra": [
+      "Visual Studio Build Tools 2019 or older (the catalogue's vs_BuildTools needs Windows 10 1909)"
+     ],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "https://blog.rust-lang.org/2024/02/26/Windows-7/"
+      }
+     ],
+     "confidence": "medium",
+     "notes": "plan_floor false: runs on 7, but can't build there with anything in the catalogue; use -gnu.",
+     "plan_floor": false
+    },
+    {
+     "versions": ">=1.78",
+     "os": "windows",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "variant": [
+      "gnu",
+      "msvc",
+      "gnullvm"
+     ],
+     "kind": null,
+     "min_os": "10",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "https://doc.rust-lang.org/rustc/platform-support.html"
+      },
+      {
+       "kind": "binary",
+       "source": "1.98.1 -msvc and -gnu DLLs import WaitOnAddress, GetSystemTimePreciseAsFileTime, ProcessPrng"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.0",
+     "os": "windows",
+     "arch": [
+      "arm64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "https://doc.rust-lang.org/rustc/platform-support.html"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.0,<1.74",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10.7",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "https://blog.rust-lang.org/2023/09/25/Increasing-Apple-Version-Requirements/"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.74",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10.12",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "https://blog.rust-lang.org/2023/09/25/Increasing-Apple-Version-Requirements/"
+      },
+      {
+       "kind": "vendor-doc",
+       "source": "https://doc.rust-lang.org/rustc/platform-support.html"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.0",
+     "os": "macos",
+     "arch": [
+      "arm64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "11",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "https://doc.rust-lang.org/rustc/platform-support.html"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.0,<1.64",
+     "os": "linux",
+     "arch": null,
+     "variant": null,
+     "kind": null,
+     "min_os": "glibc-2.12",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "https://blog.rust-lang.org/2022/08/01/Increasing-glibc-kernel-requirements/"
+      }
+     ],
+     "confidence": "high",
+     "notes": "x86/amd64 floor; arm64 etc. need newer kernels, which RHEL7-era systems on those arches already had"
+    },
+    {
+     "versions": ">=1.64",
+     "os": "linux",
+     "arch": null,
+     "variant": null,
+     "kind": null,
+     "min_os": "glibc-2.17",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "https://doc.rust-lang.org/rustc/platform-support.html"
+      },
+      {
+       "kind": "binary(catalogue)",
+       "source": "1.98.1 amd64 highest GLIBC_ 2.17"
+      }
+     ],
+     "confidence": "high",
+     "notes": "riscv64 needs glibc 2.29 and loong64 2.36 (platform-support); not modelled per arch"
+    }
+   ]
+  },
+  "zig": {
+   "runtime": "zig",
+   "researched": "2026-09-18",
+   "rules": [
+    {
+     "versions": ">=0.1,<0.4",
+     "os": "windows",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "vista",
+     "min_build": null,
+     "max_os": null,
+     "extra": [
+      "VC++ 2015-2022 redistributable (UCRT, vcruntime140)"
+     ],
+     "evidence": [
+      {
+       "kind": "binary",
+       "source": "0.1.1-0.3.0 zig.exe: PE 6.0, Vista-level imports, UCRT + vcruntime140"
+      },
+      {
+       "kind": "vendor-doc",
+       "source": "no minimum stated"
+      }
+     ],
+     "confidence": "low",
+     "notes": null
+    },
+    {
+     "versions": ">=0.4,<0.6",
+     "os": "windows",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "7",
+     "min_build": null,
+     "max_os": null,
+     "extra": [
+      "VC++ 2015-2022 redistributable"
+     ],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "0.5.0 release notes: Windows 7+"
+      },
+      {
+       "kind": "binary",
+       "source": "K32EnumProcessModulesEx"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=0.6,<0.11",
+     "os": "windows",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "8.1",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "0.6-0.10 release notes: 8.1+"
+      },
+      {
+       "kind": "binary",
+       "source": "0.7.1-0.10.1 GetSystemTimePreciseAsFileTime (8)"
+      }
+     ],
+     "confidence": "high",
+     "notes": "0.6.0 amd64 loads on 7 (binary) but is unsupported"
+    },
+    {
+     "versions": ">=0.11",
+     "os": "windows",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "0.11 notes; 0.15/0.16 OS table"
+      },
+      {
+       "kind": "binary",
+       "source": "loader floor 8; 0.12+ UCRT"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=0.9",
+     "os": "windows",
+     "arch": [
+      "arm64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "Windows on Arm64 is 10+"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=0.3,<0.5",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10.13",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary",
+       "source": "0.3.0 minos 10.13.7, 0.4.0 10.13"
+      }
+     ],
+     "confidence": "high",
+     "notes": "0.3.0 needs 10.13.7 (the last High Sierra update)"
+    },
+    {
+     "versions": ">=0.5,<0.7",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10.14",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary",
+       "source": "0.5.0/0.6.0 minos 10.14 (notes say 10.13)"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==0.7.*",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10.15",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary",
+       "source": "0.7.1 minos 10.15.7"
+      }
+     ],
+     "confidence": "high",
+     "notes": "needs 10.15.7"
+    },
+    {
+     "versions": ">=0.8,<0.10",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10.13",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "0.8 notes 10.13+"
+      },
+      {
+       "kind": "binary",
+       "source": "0.8.1 no minos; 0.9.1 minos 10.13"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=0.10,<0.14",
+     "os": "macos",
+     "arch": [
+      "amd64",
+      "arm64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "11",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary",
+       "source": "0.10.1/0.11.0 minos 11.7; 0.12.1/0.13.0 11.7.1"
+      }
+     ],
+     "confidence": "high",
+     "notes": "needs 11.7 (0.12+: 11.7.1), i.e. an updated Big Sur"
+    },
+    {
+     "versions": ">=0.7,<0.10",
+     "os": "macos",
+     "arch": [
+      "arm64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "11",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary",
+       "source": "0.7.0 minos 11.0, 0.8.1 none, 0.9.1 11.6"
+      }
+     ],
+     "confidence": "high",
+     "notes": "0.9.1 needs 11.6"
+    },
+    {
+     "versions": ">=0.14",
+     "os": "macos",
+     "arch": [
+      "amd64",
+      "arm64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "13",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "0.15/0.16 OS table"
+      },
+      {
+       "kind": "binary",
+       "source": "0.14.1-0.16.0 minos 13.0"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=0.1,<0.5",
+     "os": "linux",
+     "arch": null,
+     "variant": null,
+     "kind": null,
+     "min_os": "glibc-2.5",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary",
+       "source": "statically linked"
+      },
+      {
+       "kind": "vendor-doc",
+       "source": "no minimum stated"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    },
+    {
+     "versions": ">=0.5,<0.15",
+     "os": "linux",
+     "arch": null,
+     "variant": null,
+     "kind": null,
+     "min_os": "glibc-2.23",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "release notes: Linux 3.16+"
+      },
+      {
+       "kind": "binary",
+       "source": "statically linked"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=0.15",
+     "os": "linux",
+     "arch": null,
+     "variant": null,
+     "kind": null,
+     "min_os": "glibc-2.34",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "0.15/0.16 OS table: Linux 5.10"
+      },
+      {
+       "kind": "binary",
+       "source": "statically linked"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    }
+   ]
+  },
+  "nim": {
+   "runtime": "nim",
+   "researched": "2026-09-18",
+   "rules": [
+    {
+     "versions": ">=0.20",
+     "os": "windows",
+     "arch": [
+      "x86"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "xp",
+     "min_build": null,
+     "max_os": null,
+     "extra": [
+      "a C compiler that also runs there (WinLibs i686 msvcrt 9.5/10.5 on XP)"
+     ],
+     "evidence": [
+      {
+       "kind": "binary",
+       "source": "0.20.2/1.6.20/2.2.12 nim.exe, nimble.exe: PE subsystem 4.0, KERNEL32 + msvcrt only"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    },
+    {
+     "versions": ">=0.20",
+     "os": "windows",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "xp-x64",
+     "min_build": null,
+     "max_os": null,
+     "extra": [
+      "a C compiler"
+     ],
+     "evidence": [
+      {
+       "kind": "binary",
+       "source": "0.20.2/1.6.20/2.2.12 x64: PE subsystem 5.2, no post-XP imports"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    },
+    {
+     "versions": "==1.6.*",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "11",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary",
+       "source": "1.6.20 minos 11.0"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==2.2.*",
+     "os": "macos",
+     "arch": [
+      "amd64",
+      "arm64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "15",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary",
+       "source": "2.2.12 minos 15.0"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=0.20",
+     "os": "macos",
+     "arch": [
+      "any"
+     ],
+     "variant": null,
+     "kind": "source",
+     "min_os": "10.7",
+     "min_build": null,
+     "max_os": null,
+     "extra": [
+      "Xcode Command Line Tools"
+     ],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "nim-lang.org: build from the source tarball with build.sh"
+      }
+     ],
+     "confidence": "low",
+     "notes": "untested: assumes any macOS with standalone Xcode CLT (10.7+) can build it; relabelled from the linux/any source tarball in the plan"
+    },
+    {
+     "versions": "==0.20.*",
+     "os": "linux",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "glibc-2.12",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary",
+       "source": "0.20.2 nimble GLIBC_2.7, nim 2.3"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=1.6",
+     "os": "linux",
+     "arch": null,
+     "variant": null,
+     "kind": null,
+     "min_os": "glibc-2.5",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary",
+       "source": "1.6.20/2.2.12 nim, nimble statically linked"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    }
+   ]
+  },
+  "gcc": {
+   "runtime": "gcc",
+   "researched": "2026-09-18",
+   "rules": [
+    {
+     "versions": null,
+     "os": "windows",
+     "arch": [
+      "x86"
+     ],
+     "variant": [
+      "winlibs-posix-msvcrt"
+     ],
+     "kind": null,
+     "min_os": "xp",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "9.5.0/10.5.0 i686 tools import no post-XP APIs"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": null,
+     "os": "windows",
+     "arch": [
+      "amd64"
+     ],
+     "variant": [
+      "winlibs-posix-msvcrt"
+     ],
+     "kind": null,
+     "min_os": "vista",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "10.5.0 x64 as/ld import GetFinalPathNameByHandleA"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    },
+    {
+     "versions": null,
+     "os": "windows",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "variant": [
+      "winlibs-posix-ucrt"
+     ],
+     "kind": null,
+     "min_os": "7",
+     "min_build": null,
+     "max_os": null,
+     "extra": [
+      "UCRT update KB2999226 on 7 SP1/8.1"
+     ],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "api-ms-win-crt-* + GetFinalPathNameByHandleA"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": null,
+     "os": "windows",
+     "arch": [
+      "x86"
+     ],
+     "variant": [
+      "w64devkit"
+     ],
+     "kind": null,
+     "min_os": "xp",
+     "min_build": null,
+     "max_os": null,
+     "extra": [
+      "SSE2 CPU"
+     ],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "https://github.com/skeeto/w64devkit (README)"
+      }
+     ],
+     "confidence": "medium",
+     "notes": "its CMake/Ninja/ccache need 7"
+    },
+    {
+     "versions": null,
+     "os": "windows",
+     "arch": [
+      "amd64"
+     ],
+     "variant": [
+      "w64devkit"
+     ],
+     "kind": null,
+     "min_os": "7",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "https://github.com/skeeto/w64devkit (README)"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    }
+   ]
+  },
+  "llvm": {
+   "runtime": "llvm",
+   "researched": "2026-09-18",
+   "rules": [
+    {
+     "versions": ">=3.8",
+     "os": "windows",
+     "arch": [
+      "x86",
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "7",
+     "min_build": null,
+     "max_os": null,
+     "extra": [
+      "Visual Studio Build Tools headers and libraries (MSVC ABI)"
+     ],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "https://releases.llvm.org/3.8.0/docs/ReleaseNotes.html"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=3.8",
+     "os": "windows",
+     "arch": [
+      "arm64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "Windows on Arm64 is 10+"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==3.9.0",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10.11",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==4.0.1",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10.12",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==5.0.2",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10.9",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==6.0.0",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10.13",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==9.0.1",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10.15",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==10.0.1",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10.15",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==11.0.0",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "10.15",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==12.0.0",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "11",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==13.0.1",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "11",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==14.0.6",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "11",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==15.0.7",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "12",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==19.1.7",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "13",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==20.1.7",
+     "os": "macos",
+     "arch": [
+      "amd64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "13",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==14.0.6",
+     "os": "macos",
+     "arch": [
+      "arm64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "13",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==15.0.7",
+     "os": "macos",
+     "arch": [
+      "arm64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "13",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==16.0.5",
+     "os": "macos",
+     "arch": [
+      "arm64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "13",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==17.0.6",
+     "os": "macos",
+     "arch": [
+      "arm64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "13",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==19.1.7",
+     "os": "macos",
+     "arch": [
+      "arm64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "14",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==20.1.8",
+     "os": "macos",
+     "arch": [
+      "arm64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "14",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==21.1.8",
+     "os": "macos",
+     "arch": [
+      "arm64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "14",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==22.1.8",
+     "os": "macos",
+     "arch": [
+      "arm64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "14",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": "==23.1.1",
+     "os": "macos",
+     "arch": [
+      "arm64"
+     ],
+     "variant": null,
+     "kind": null,
+     "min_os": "14",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "LC_BUILD_VERSION minos of bin/clang"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": null,
+     "os": "linux",
+     "arch": [
+      "amd64"
+     ],
+     "variant": [
+      "ubuntu-13.10"
+     ],
+     "kind": null,
+     "min_os": "glibc-2.17",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "built on ubuntu-13.10 (glibc 2.17); a binary needs at most its build system's glibc"
+      },
+      {
+       "kind": "binary",
+       "source": "checked: 14.0.6 rhel-8.4 and 18.1.8 ubuntu-18.04 need 2.27"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    },
+    {
+     "versions": null,
+     "os": "linux",
+     "arch": [
+      "amd64"
+     ],
+     "variant": [
+      "ubuntu-14.04"
+     ],
+     "kind": null,
+     "min_os": "glibc-2.19",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "built on ubuntu-14.04 (glibc 2.19); a binary needs at most its build system's glibc"
+      },
+      {
+       "kind": "binary",
+       "source": "checked: 14.0.6 rhel-8.4 and 18.1.8 ubuntu-18.04 need 2.27"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    },
+    {
+     "versions": null,
+     "os": "linux",
+     "arch": [
+      "amd64"
+     ],
+     "variant": [
+      "ubuntu-15.04"
+     ],
+     "kind": null,
+     "min_os": "glibc-2.23",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "built on ubuntu-15.04 (glibc 2.21); a binary needs at most its build system's glibc"
+      },
+      {
+       "kind": "binary",
+       "source": "checked: 14.0.6 rhel-8.4 and 18.1.8 ubuntu-18.04 need 2.27"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    },
+    {
+     "versions": null,
+     "os": "linux",
+     "arch": [
+      "amd64"
+     ],
+     "variant": [
+      "ubuntu-15.10"
+     ],
+     "kind": null,
+     "min_os": "glibc-2.23",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "built on ubuntu-15.10 (glibc 2.21); a binary needs at most its build system's glibc"
+      },
+      {
+       "kind": "binary",
+       "source": "checked: 14.0.6 rhel-8.4 and 18.1.8 ubuntu-18.04 need 2.27"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    },
+    {
+     "versions": null,
+     "os": "linux",
+     "arch": [
+      "amd64"
+     ],
+     "variant": [
+      "ubuntu-16.04"
+     ],
+     "kind": null,
+     "min_os": "glibc-2.23",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "built on ubuntu-16.04 (glibc 2.23); a binary needs at most its build system's glibc"
+      },
+      {
+       "kind": "binary",
+       "source": "checked: 14.0.6 rhel-8.4 and 18.1.8 ubuntu-18.04 need 2.27"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    },
+    {
+     "versions": null,
+     "os": "linux",
+     "arch": [
+      "amd64"
+     ],
+     "variant": [
+      "Fedora-25"
+     ],
+     "kind": null,
+     "min_os": "glibc-2.24",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "built on Fedora-25 (glibc 2.24); a binary needs at most its build system's glibc"
+      },
+      {
+       "kind": "binary",
+       "source": "checked: 14.0.6 rhel-8.4 and 18.1.8 ubuntu-18.04 need 2.27"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    },
+    {
+     "versions": null,
+     "os": "linux",
+     "arch": [
+      "amd64"
+     ],
+     "variant": [
+      "Fedora-27"
+     ],
+     "kind": null,
+     "min_os": "glibc-2.27",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "built on Fedora-27 (glibc 2.26); a binary needs at most its build system's glibc"
+      },
+      {
+       "kind": "binary",
+       "source": "checked: 14.0.6 rhel-8.4 and 18.1.8 ubuntu-18.04 need 2.27"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    },
+    {
+     "versions": null,
+     "os": "linux",
+     "arch": [
+      "amd64"
+     ],
+     "variant": [
+      "Fedora27"
+     ],
+     "kind": null,
+     "min_os": "glibc-2.27",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "built on Fedora27 (glibc 2.26); a binary needs at most its build system's glibc"
+      },
+      {
+       "kind": "binary",
+       "source": "checked: 14.0.6 rhel-8.4 and 18.1.8 ubuntu-18.04 need 2.27"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    },
+    {
+     "versions": null,
+     "os": "linux",
+     "arch": [
+      "amd64"
+     ],
+     "variant": [
+      "ubuntu-18.04"
+     ],
+     "kind": null,
+     "min_os": "glibc-2.27",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "built on ubuntu-18.04 (glibc 2.27); a binary needs at most its build system's glibc"
+      },
+      {
+       "kind": "binary",
+       "source": "checked: 14.0.6 rhel-8.4 and 18.1.8 ubuntu-18.04 need 2.27"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    },
+    {
+     "versions": null,
+     "os": "linux",
+     "arch": [
+      "amd64"
+     ],
+     "variant": [
+      "ubuntu-18.04.5"
+     ],
+     "kind": null,
+     "min_os": "glibc-2.27",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "built on ubuntu-18.04.5 (glibc 2.27); a binary needs at most its build system's glibc"
+      },
+      {
+       "kind": "binary",
+       "source": "checked: 14.0.6 rhel-8.4 and 18.1.8 ubuntu-18.04 need 2.27"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    },
+    {
+     "versions": null,
+     "os": "linux",
+     "arch": [
+      "amd64"
+     ],
+     "variant": [
+      "rhel-8.4"
+     ],
+     "kind": null,
+     "min_os": "glibc-2.28",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "built on rhel-8.4 (glibc 2.28); a binary needs at most its build system's glibc"
+      },
+      {
+       "kind": "binary",
+       "source": "checked: 14.0.6 rhel-8.4 and 18.1.8 ubuntu-18.04 need 2.27"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    },
+    {
+     "versions": null,
+     "os": "linux",
+     "arch": [
+      "amd64"
+     ],
+     "variant": [
+      "rhel-8.7"
+     ],
+     "kind": null,
+     "min_os": "glibc-2.28",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "built on rhel-8.7 (glibc 2.28); a binary needs at most its build system's glibc"
+      },
+      {
+       "kind": "binary",
+       "source": "checked: 14.0.6 rhel-8.4 and 18.1.8 ubuntu-18.04 need 2.27"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    },
+    {
+     "versions": null,
+     "os": "linux",
+     "arch": [
+      "amd64"
+     ],
+     "variant": [
+      "rhel-8.8"
+     ],
+     "kind": null,
+     "min_os": "glibc-2.28",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "built on rhel-8.8 (glibc 2.28); a binary needs at most its build system's glibc"
+      },
+      {
+       "kind": "binary",
+       "source": "checked: 14.0.6 rhel-8.4 and 18.1.8 ubuntu-18.04 need 2.27"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    },
+    {
+     "versions": null,
+     "os": "linux",
+     "arch": [
+      "amd64"
+     ],
+     "variant": [
+      "ubuntu-20.10"
+     ],
+     "kind": null,
+     "min_os": "glibc-2.34",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "built on ubuntu-20.10 (glibc 2.32); a binary needs at most its build system's glibc"
+      },
+      {
+       "kind": "binary",
+       "source": "checked: 14.0.6 rhel-8.4 and 18.1.8 ubuntu-18.04 need 2.27"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    },
+    {
+     "versions": null,
+     "os": "linux",
+     "arch": [
+      "amd64"
+     ],
+     "variant": [
+      "ubuntu-22.04"
+     ],
+     "kind": null,
+     "min_os": "glibc-2.35",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "vendor-doc",
+       "source": "built on ubuntu-22.04 (glibc 2.35); a binary needs at most its build system's glibc"
+      },
+      {
+       "kind": "binary",
+       "source": "checked: 14.0.6 rhel-8.4 and 18.1.8 ubuntu-18.04 need 2.27"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    },
+    {
+     "versions": "==19.*",
+     "os": "linux",
+     "arch": [
+      "amd64"
+     ],
+     "variant": [
+      null
+     ],
+     "kind": null,
+     "min_os": "glibc-2.34",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary",
+       "source": "19.1.7 clang/lld highest GLIBC_ 2.34"
+      }
+     ],
+     "confidence": "high",
+     "notes": null
+    },
+    {
+     "versions": ">=20",
+     "os": "linux",
+     "arch": [
+      "amd64"
+     ],
+     "variant": [
+      null
+     ],
+     "kind": null,
+     "min_os": "glibc-2.35",
+     "min_build": null,
+     "max_os": null,
+     "extra": [],
+     "evidence": [
+      {
+       "kind": "binary(catalogue)",
+       "source": "catalog/cc/install.json: glibc 2.35 for the official Linux-X64 builds"
+      }
+     ],
+     "confidence": "medium",
+     "notes": null
+    }
+   ]
+  }
+ },
+ "os_support_notes": "Same rule format as <runtime>/os_support.json (SCHEMA.md); min_os/max_os are ids from os_versions.json. tools/make_major_plans.py uses these for go, rust, zig, nim and cc (gcc, llvm) when the runtime has no os_support.json. A rule with plan_floor false is not used to pick plan versions. Point-release macOS floors (e.g. 11.7) are mapped to the major id; kernel floors to the lowest glibc id whose distros all ship that kernel."
+}

@@ -41,7 +41,8 @@
   "released": "2017-10-17",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.1"
  },
  {
   "runtime": "zig",
@@ -85,7 +86,8 @@
   "released": "2018-03-15",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.2"
  },
  {
   "runtime": "zig",
@@ -129,7 +131,8 @@
   "released": "2018-03-15",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.2"
  },
  {
   "runtime": "zig",
@@ -173,7 +176,8 @@
   "released": "2018-09-28",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.3"
  },
  {
   "runtime": "zig",
@@ -217,7 +221,8 @@
   "released": "2018-09-28",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.3"
  },
  {
   "runtime": "zig",
@@ -261,7 +266,8 @@
   "released": "2018-09-28",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.3; newest for windows vista, server2008"
  },
  {
   "runtime": "zig",
@@ -305,7 +311,8 @@
   "released": "2019-04-08",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.4; newest for linux glibc-2.5, glibc-2.12, glibc-2.17, glibc-2.19"
  },
  {
   "runtime": "zig",
@@ -349,7 +356,8 @@
   "released": "2019-04-08",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.4"
  },
  {
   "runtime": "zig",
@@ -393,7 +401,8 @@
   "released": "2019-04-08",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.4"
  },
  {
   "runtime": "zig",
@@ -437,7 +446,8 @@
   "released": "2019-09-30",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.5"
  },
  {
   "runtime": "zig",
@@ -481,7 +491,8 @@
   "released": "2019-09-30",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.5"
  },
  {
   "runtime": "zig",
@@ -525,7 +536,8 @@
   "released": "2019-09-30",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.5; newest for windows 7, server2008r2, 8, server2012"
  },
  {
   "runtime": "zig",
@@ -569,7 +581,8 @@
   "released": "2020-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.6"
  },
  {
   "runtime": "zig",
@@ -613,7 +626,8 @@
   "released": "2020-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.6"
  },
  {
   "runtime": "zig",
@@ -657,7 +671,8 @@
   "released": "2020-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.6; newest for linux glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "zig",
@@ -701,7 +716,8 @@
   "released": "2020-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.6"
  },
  {
   "runtime": "zig",
@@ -745,7 +761,8 @@
   "released": "2020-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.6"
  },
  {
   "runtime": "zig",
@@ -789,7 +806,8 @@
   "released": "2020-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.6"
  },
  {
   "runtime": "zig",
@@ -833,7 +851,8 @@
   "released": "2020-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.6"
  },
  {
   "runtime": "zig",
@@ -877,7 +896,8 @@
   "released": "2020-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.6"
  },
  {
   "runtime": "zig",
@@ -921,7 +941,8 @@
   "released": "2020-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.6"
  },
  {
   "runtime": "zig",
@@ -965,7 +986,8 @@
   "released": "2020-11-08",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.7"
  },
  {
   "runtime": "zig",
@@ -1009,7 +1031,8 @@
   "released": "2020-12-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.7"
  },
  {
   "runtime": "zig",
@@ -1053,7 +1076,8 @@
   "released": "2020-12-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.7"
  },
  {
   "runtime": "zig",
@@ -1097,7 +1121,8 @@
   "released": "2020-12-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.7"
  },
  {
   "runtime": "zig",
@@ -1141,7 +1166,8 @@
   "released": "2020-12-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.7"
  },
  {
   "runtime": "zig",
@@ -1185,7 +1211,8 @@
   "released": "2020-12-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.7"
  },
  {
   "runtime": "zig",
@@ -1229,7 +1256,8 @@
   "released": "2020-12-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.7"
  },
  {
   "runtime": "zig",
@@ -1273,7 +1301,8 @@
   "released": "2020-12-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.7"
  },
  {
   "runtime": "zig",
@@ -1317,7 +1346,8 @@
   "released": "2020-12-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.7"
  },
  {
   "runtime": "zig",
@@ -1361,7 +1391,8 @@
   "released": "2021-09-06",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.8"
  },
  {
   "runtime": "zig",
@@ -1405,7 +1436,8 @@
   "released": "2021-09-06",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.8"
  },
  {
   "runtime": "zig",
@@ -1449,7 +1481,8 @@
   "released": "2021-09-06",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.8"
  },
  {
   "runtime": "zig",
@@ -1493,7 +1526,8 @@
   "released": "2021-09-06",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.8"
  },
  {
   "runtime": "zig",
@@ -1537,7 +1571,8 @@
   "released": "2021-09-06",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.8"
  },
  {
   "runtime": "zig",
@@ -1581,7 +1616,8 @@
   "released": "2021-09-06",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.8"
  },
  {
   "runtime": "zig",
@@ -1625,7 +1661,8 @@
   "released": "2021-09-06",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.8"
  },
  {
   "runtime": "zig",
@@ -1669,7 +1706,8 @@
   "released": "2021-09-06",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.8"
  },
  {
   "runtime": "zig",
@@ -1713,7 +1751,8 @@
   "released": "2021-09-06",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.8"
  },
  {
   "runtime": "zig",
@@ -1757,7 +1796,8 @@
   "released": "2022-02-14",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.9"
  },
  {
   "runtime": "zig",
@@ -1801,7 +1841,8 @@
   "released": "2022-02-14",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.9"
  },
  {
   "runtime": "zig",
@@ -1845,7 +1886,8 @@
   "released": "2022-02-14",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.9"
  },
  {
   "runtime": "zig",
@@ -1889,7 +1931,8 @@
   "released": "2022-02-14",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.9"
  },
  {
   "runtime": "zig",
@@ -1933,7 +1976,8 @@
   "released": "2022-02-14",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.9"
  },
  {
   "runtime": "zig",
@@ -1977,7 +2021,8 @@
   "released": "2022-02-14",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.9; newest for macos 10.13, 10.14, 10.15"
  },
  {
   "runtime": "zig",
@@ -2021,7 +2066,8 @@
   "released": "2022-02-14",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.9"
  },
  {
   "runtime": "zig",
@@ -2065,7 +2111,8 @@
   "released": "2022-02-14",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.9"
  },
  {
   "runtime": "zig",
@@ -2109,7 +2156,8 @@
   "released": "2022-02-14",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.9"
  },
  {
   "runtime": "zig",
@@ -2153,7 +2201,8 @@
   "released": "2022-02-14",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.9; newest for windows 8.1, server2012r2"
  },
  {
   "runtime": "zig",
@@ -2197,7 +2246,8 @@
   "released": "2022-10-31",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.10"
  },
  {
   "runtime": "zig",
@@ -2242,7 +2292,8 @@
   "released": "2023-01-19",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.10"
  },
  {
   "runtime": "zig",
@@ -2287,7 +2338,8 @@
   "released": "2023-01-19",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.10"
  },
  {
   "runtime": "zig",
@@ -2332,7 +2384,8 @@
   "released": "2023-01-19",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.10"
  },
  {
   "runtime": "zig",
@@ -2377,7 +2430,8 @@
   "released": "2023-01-19",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.10"
  },
  {
   "runtime": "zig",
@@ -2421,7 +2475,8 @@
   "released": "2023-01-19",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.10"
  },
  {
   "runtime": "zig",
@@ -2465,7 +2520,8 @@
   "released": "2023-01-19",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.10"
  },
  {
   "runtime": "zig",
@@ -2509,7 +2565,8 @@
   "released": "2023-01-19",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.10; newest for windows 8.1, server2012r2"
  },
  {
   "runtime": "zig",
@@ -2553,7 +2610,8 @@
   "released": "2023-01-19",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.10"
  },
  {
   "runtime": "zig",
@@ -2597,7 +2655,8 @@
   "released": "2023-08-04",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.11"
  },
  {
   "runtime": "zig",
@@ -2641,7 +2700,8 @@
   "released": "2023-08-04",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.11"
  },
  {
   "runtime": "zig",
@@ -2685,7 +2745,8 @@
   "released": "2023-08-04",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.11"
  },
  {
   "runtime": "zig",
@@ -2729,7 +2790,8 @@
   "released": "2023-08-04",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.11"
  },
  {
   "runtime": "zig",
@@ -2773,7 +2835,8 @@
   "released": "2023-08-04",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.11"
  },
  {
   "runtime": "zig",
@@ -2817,7 +2880,8 @@
   "released": "2023-08-04",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.11"
  },
  {
   "runtime": "zig",
@@ -2861,7 +2925,8 @@
   "released": "2023-08-04",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.11"
  },
  {
   "runtime": "zig",
@@ -2905,7 +2970,8 @@
   "released": "2023-08-04",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.11"
  },
  {
   "runtime": "zig",
@@ -2949,7 +3015,8 @@
   "released": "2023-08-04",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.11"
  },
  {
   "runtime": "zig",
@@ -2993,7 +3060,8 @@
   "released": "2023-08-04",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.11"
  },
  {
   "runtime": "zig",
@@ -3037,7 +3105,8 @@
   "released": "2023-08-04",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.11"
  },
  {
   "runtime": "zig",
@@ -3081,7 +3150,8 @@
   "released": "2024-06-08",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.12"
  },
  {
   "runtime": "zig",
@@ -3125,7 +3195,8 @@
   "released": "2024-06-08",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.12"
  },
  {
   "runtime": "zig",
@@ -3169,7 +3240,8 @@
   "released": "2024-06-08",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.12"
  },
  {
   "runtime": "zig",
@@ -3213,7 +3285,8 @@
   "released": "2024-06-08",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.12"
  },
  {
   "runtime": "zig",
@@ -3257,7 +3330,8 @@
   "released": "2024-06-08",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.12"
  },
  {
   "runtime": "zig",
@@ -3301,7 +3375,8 @@
   "released": "2024-06-08",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.12"
  },
  {
   "runtime": "zig",
@@ -3345,7 +3420,8 @@
   "released": "2024-06-08",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.12"
  },
  {
   "runtime": "zig",
@@ -3389,7 +3465,8 @@
   "released": "2024-06-08",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.12"
  },
  {
   "runtime": "zig",
@@ -3433,7 +3510,8 @@
   "released": "2024-06-08",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.12"
  },
  {
   "runtime": "zig",
@@ -3477,7 +3555,8 @@
   "released": "2024-06-08",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.12"
  },
  {
   "runtime": "zig",
@@ -3521,7 +3600,8 @@
   "released": "2024-06-08",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.12"
  },
  {
   "runtime": "zig",
@@ -3566,7 +3646,8 @@
   "released": "2024-06-07",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.13"
  },
  {
   "runtime": "zig",
@@ -3611,7 +3692,8 @@
   "released": "2024-06-07",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.13"
  },
  {
   "runtime": "zig",
@@ -3656,7 +3738,8 @@
   "released": "2024-06-07",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.13"
  },
  {
   "runtime": "zig",
@@ -3701,7 +3784,8 @@
   "released": "2024-06-07",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.13"
  },
  {
   "runtime": "zig",
@@ -3746,7 +3830,8 @@
   "released": "2024-06-07",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.13"
  },
  {
   "runtime": "zig",
@@ -3791,7 +3876,8 @@
   "released": "2024-06-07",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.13"
  },
  {
   "runtime": "zig",
@@ -3835,7 +3921,8 @@
   "released": "2024-06-07",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.13; newest for macos 11, 12"
  },
  {
   "runtime": "zig",
@@ -3879,7 +3966,8 @@
   "released": "2024-06-07",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.13; newest for macos 11, 12"
  },
  {
   "runtime": "zig",
@@ -3923,7 +4011,8 @@
   "released": "2024-06-07",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.13"
  },
  {
   "runtime": "zig",
@@ -3967,7 +4056,8 @@
   "released": "2024-06-07",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.13"
  },
  {
   "runtime": "zig",
@@ -4011,7 +4101,8 @@
   "released": "2024-06-07",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.13"
  },
  {
   "runtime": "zig",
@@ -4056,7 +4147,8 @@
   "released": "2025-05-21",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.14; newest for linux glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31"
  },
  {
   "runtime": "zig",
@@ -4101,7 +4193,8 @@
   "released": "2025-05-21",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.14; newest for linux glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31"
  },
  {
   "runtime": "zig",
@@ -4146,7 +4239,8 @@
   "released": "2025-05-21",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.14; newest for linux glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31"
  },
  {
   "runtime": "zig",
@@ -4191,7 +4285,8 @@
   "released": "2025-05-21",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.14; newest for linux glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31"
  },
  {
   "runtime": "zig",
@@ -4236,7 +4331,8 @@
   "released": "2025-05-21",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.14; newest for linux glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31"
  },
  {
   "runtime": "zig",
@@ -4281,7 +4377,8 @@
   "released": "2025-05-21",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.14; newest for linux glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31"
  },
  {
   "runtime": "zig",
@@ -4326,7 +4423,8 @@
   "released": "2025-05-21",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.14; newest for linux glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31"
  },
  {
   "runtime": "zig",
@@ -4371,7 +4469,8 @@
   "released": "2025-05-21",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.14; newest for linux glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31"
  },
  {
   "runtime": "zig",
@@ -4415,7 +4514,8 @@
   "released": "2025-05-21",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.14"
  },
  {
   "runtime": "zig",
@@ -4459,7 +4559,8 @@
   "released": "2025-05-21",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.14"
  },
  {
   "runtime": "zig",
@@ -4503,7 +4604,8 @@
   "released": "2025-05-21",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.14"
  },
  {
   "runtime": "zig",
@@ -4547,7 +4649,8 @@
   "released": "2025-05-21",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.14"
  },
  {
   "runtime": "zig",
@@ -4591,7 +4694,8 @@
   "released": "2025-05-21",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.14"
  },
  {
   "runtime": "zig",
@@ -4636,7 +4740,8 @@
   "released": "2025-10-11",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.15"
  },
  {
   "runtime": "zig",
@@ -4681,7 +4786,8 @@
   "released": "2025-10-11",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.15"
  },
  {
   "runtime": "zig",
@@ -4726,7 +4832,8 @@
   "released": "2025-10-11",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.15"
  },
  {
   "runtime": "zig",
@@ -4771,7 +4878,8 @@
   "released": "2025-10-11",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.15"
  },
  {
   "runtime": "zig",
@@ -4816,7 +4924,8 @@
   "released": "2025-10-11",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.15"
  },
  {
   "runtime": "zig",
@@ -4861,7 +4970,8 @@
   "released": "2025-10-11",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.15"
  },
  {
   "runtime": "zig",
@@ -4906,7 +5016,8 @@
   "released": "2025-10-11",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.15"
  },
  {
   "runtime": "zig",
@@ -4951,7 +5062,8 @@
   "released": "2025-10-11",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.15"
  },
  {
   "runtime": "zig",
@@ -4995,7 +5107,8 @@
   "released": "2025-10-11",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.15"
  },
  {
   "runtime": "zig",
@@ -5039,7 +5152,8 @@
   "released": "2025-10-11",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.15"
  },
  {
   "runtime": "zig",
@@ -5083,7 +5197,8 @@
   "released": "2025-10-11",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.15"
  },
  {
   "runtime": "zig",
@@ -5127,7 +5242,8 @@
   "released": "2025-10-11",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.15"
  },
  {
   "runtime": "zig",
@@ -5171,7 +5287,8 @@
   "released": "2025-10-11",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.15"
  },
  {
   "runtime": "zig",
@@ -5216,7 +5333,8 @@
   "released": "2026-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.16; newest for linux glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "zig",
@@ -5261,7 +5379,8 @@
   "released": "2026-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.16; newest for linux glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "zig",
@@ -5306,7 +5425,8 @@
   "released": "2026-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.16; newest for linux glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "zig",
@@ -5351,7 +5471,8 @@
   "released": "2026-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.16; newest for linux glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "zig",
@@ -5396,7 +5517,8 @@
   "released": "2026-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.16; newest for linux glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "zig",
@@ -5441,7 +5563,8 @@
   "released": "2026-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.16; newest for linux glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "zig",
@@ -5486,7 +5609,8 @@
   "released": "2026-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.16; newest for linux glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "zig",
@@ -5531,7 +5655,8 @@
   "released": "2026-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.16; newest for linux glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "zig",
@@ -5575,7 +5700,8 @@
   "released": "2026-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.16; newest for macos 13, 14, 15, 26"
  },
  {
   "runtime": "zig",
@@ -5619,7 +5745,8 @@
   "released": "2026-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.16; newest for macos 13, 14, 15, 26"
  },
  {
   "runtime": "zig",
@@ -5663,7 +5790,8 @@
   "released": "2026-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.16; newest for windows 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "zig",
@@ -5707,7 +5835,8 @@
   "released": "2026-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.16; newest for windows 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "zig",
@@ -5751,6 +5880,7 @@
   "released": "2026-04-13",
   "min_os": null,
   "metadata_source": "https://ziglang.org/download/index.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0.16; newest for windows 10, server2016, server2019, server2022, 11, server2025"
  }
 ]

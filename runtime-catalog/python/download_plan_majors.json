@@ -33,7 +33,46 @@
   "released": "2008-12-23",
   "min_os": null,
   "metadata_source": "https://www.python.org/ftp/python/2.5.4/",
-  "notes": "found only via ftp directory listing, not in python.org's downloads API"
+  "notes": "found only via ftp directory listing, not in python.org's downloads API",
+  "reason": "newest in major 2; newest for windows xp, xp-x64, server2003, vista, server2008, 7, server2008r2, 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "2.6",
+  "version": "2.6.6",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "installer",
+  "format": "dmg",
+  "variant": "macosx10.3",
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/2.6.6/python-2.6.6-macosx10.3.dmg",
+  "mirrors": [
+   "https://www.python.org/ftp/python/2.6.6/python-2.6.6-macosx10.3.dmg",
+   "https://mirrors.huaweicloud.com/python/2.6.6/python-2.6.6-macosx10.3.dmg",
+   "https://repo.huaweicloud.com/python/2.6.6/python-2.6.6-macosx10.3.dmg",
+   "https://registry.npmmirror.com/-/binary/python/2.6.6/python-2.6.6-macosx10.3.dmg",
+   "https://cdn.npmmirror.com/binaries/python/2.6.6/python-2.6.6-macosx10.3.dmg",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/2.6.6/python-2.6.6-macosx10.3.dmg",
+   "https://mirror.nju.edu.cn/python/2.6.6/python-2.6.6-macosx10.3.dmg",
+   "https://mirrors.bfsu.edu.cn/python/2.6.6/python-2.6.6-macosx10.3.dmg",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/2.6.6/python-2.6.6-macosx10.3.dmg",
+   "http://mirrors.huaweicloud.com/python/2.6.6/python-2.6.6-macosx10.3.dmg",
+   "http://repo.huaweicloud.com/python/2.6.6/python-2.6.6-macosx10.3.dmg"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "f9b532a7e674a4d67fa214419c83398a"
+  },
+  "size": 20452372,
+  "released": "2010-08-24",
+  "min_os": "Mac OS X 10.3",
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": "universal installer (32/64-bit Intel and/or PPC fat binary)",
+  "reason": "newest for macos 10.3, 10.4, 10.5"
  },
  {
   "runtime": "python",
@@ -70,7 +109,8 @@
   "released": "2019-10-19",
   "min_os": "Mac OS X 10.6",
   "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
-  "notes": "universal installer (32/64-bit Intel and/or PPC fat binary)"
+  "notes": "universal installer (32/64-bit Intel and/or PPC fat binary)",
+  "reason": "newest in major 2"
  },
  {
   "runtime": "python",
@@ -121,7 +161,8 @@
     "value": "b62c0e7937551d0cc02b8fd5cb0f544f9405bafc9a54d3808ed4594812edef43",
     "source": "FreeBSD lang/python27 distinfo (freebsd/freebsd-ports GitHub), 2026-09-17"
    }
-  ]
+  ],
+  "reason": "newest in major 2"
  },
  {
   "runtime": "python",
@@ -158,7 +199,8 @@
   "released": "2020-04-20",
   "min_os": "Mac OS X 10.9",
   "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
-  "notes": "Intel 64-bit only (no 32-bit, no PPC)"
+  "notes": "Intel 64-bit only (no 32-bit, no PPC)",
+  "reason": "newest in major 2"
  },
  {
   "runtime": "python",
@@ -197,7 +239,8 @@
   "released": "2020-04-20",
   "min_os": null,
   "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2"
  },
  {
   "runtime": "python",
@@ -236,7 +279,128 @@
   "released": "2020-04-20",
   "min_os": null,
   "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.2",
+  "version": "3.2.5",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "installer",
+  "format": "msi",
+  "variant": null,
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.2.5/python-3.2.5.msi",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.2.5/python-3.2.5.msi",
+   "https://mirrors.huaweicloud.com/python/3.2.5/python-3.2.5.msi",
+   "https://repo.huaweicloud.com/python/3.2.5/python-3.2.5.msi",
+   "https://registry.npmmirror.com/-/binary/python/3.2.5/python-3.2.5.msi",
+   "https://cdn.npmmirror.com/binaries/python/3.2.5/python-3.2.5.msi",
+   "https://mirrors.aliyun.com/python-release/windows/python-3.2.5.msi",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.2.5/python-3.2.5.msi",
+   "https://mirror.nju.edu.cn/python/3.2.5/python-3.2.5.msi",
+   "https://mirrors.bfsu.edu.cn/python/3.2.5/python-3.2.5.msi",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.2.5/python-3.2.5.msi",
+   "http://mirrors.huaweicloud.com/python/3.2.5/python-3.2.5.msi",
+   "http://repo.huaweicloud.com/python/3.2.5/python-3.2.5.msi",
+   "http://mirrors.aliyun.com/python-release/windows/python-3.2.5.msi"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "cdd6fdc59461c968bd105fdf08f4a17d"
+  },
+  "size": 18329600,
+  "released": "2013-05-15",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null,
+  "reason": "newest for windows 2000"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.4",
+  "version": "3.4.4",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "msi",
+  "variant": null,
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.4.4/python-3.4.4.amd64.msi",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.4.4/python-3.4.4.amd64.msi",
+   "https://mirrors.huaweicloud.com/python/3.4.4/python-3.4.4.amd64.msi",
+   "https://repo.huaweicloud.com/python/3.4.4/python-3.4.4.amd64.msi",
+   "https://registry.npmmirror.com/-/binary/python/3.4.4/python-3.4.4.amd64.msi",
+   "https://cdn.npmmirror.com/binaries/python/3.4.4/python-3.4.4.amd64.msi",
+   "https://mirrors.aliyun.com/python-release/windows/python-3.4.4.amd64.msi",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.4.4/python-3.4.4.amd64.msi",
+   "https://mirror.nju.edu.cn/python/3.4.4/python-3.4.4.amd64.msi",
+   "https://mirrors.bfsu.edu.cn/python/3.4.4/python-3.4.4.amd64.msi",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.4.4/python-3.4.4.amd64.msi",
+   "http://mirrors.huaweicloud.com/python/3.4.4/python-3.4.4.amd64.msi",
+   "http://repo.huaweicloud.com/python/3.4.4/python-3.4.4.amd64.msi",
+   "http://mirrors.aliyun.com/python-release/windows/python-3.4.4.amd64.msi"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "963f67116935447fad73e09cc561c713"
+  },
+  "size": 26054656,
+  "released": "2015-12-21",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null,
+  "reason": "newest for windows xp-x64, server2003"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.4",
+  "version": "3.4.4",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "installer",
+  "format": "msi",
+  "variant": null,
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.4.4/python-3.4.4.msi",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.4.4/python-3.4.4.msi",
+   "https://mirrors.huaweicloud.com/python/3.4.4/python-3.4.4.msi",
+   "https://repo.huaweicloud.com/python/3.4.4/python-3.4.4.msi",
+   "https://registry.npmmirror.com/-/binary/python/3.4.4/python-3.4.4.msi",
+   "https://cdn.npmmirror.com/binaries/python/3.4.4/python-3.4.4.msi",
+   "https://mirrors.aliyun.com/python-release/windows/python-3.4.4.msi",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.4.4/python-3.4.4.msi",
+   "https://mirror.nju.edu.cn/python/3.4.4/python-3.4.4.msi",
+   "https://mirrors.bfsu.edu.cn/python/3.4.4/python-3.4.4.msi",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.4.4/python-3.4.4.msi",
+   "http://mirrors.huaweicloud.com/python/3.4.4/python-3.4.4.msi",
+   "http://repo.huaweicloud.com/python/3.4.4/python-3.4.4.msi",
+   "http://mirrors.aliyun.com/python-release/windows/python-3.4.4.msi"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "e96268f7042d2a3d14f7e23b2535738b"
+  },
+  "size": 24932352,
+  "released": "2015-12-21",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null,
+  "reason": "newest for windows xp, xp-x64, server2003"
  },
  {
   "runtime": "python",
@@ -273,7 +437,552 @@
   "released": "2019-12-18",
   "min_os": "Mac OS X 10.6",
   "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
-  "notes": "universal installer (32/64-bit Intel and/or PPC fat binary)"
+  "notes": "universal installer (32/64-bit Intel and/or PPC fat binary)",
+  "reason": "newest in major 3; newest for macos 10.6, 10.7, 10.8, 10.9, 10.10, 10.11, 10.12, 10.13, 10.14, 10.15, 11, 12, 13, 14, 15, 26"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.7",
+  "version": "3.7.9",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "pkg",
+  "variant": "macosx10.9",
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.7.9/python-3.7.9-macosx10.9.pkg",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.7.9/python-3.7.9-macosx10.9.pkg",
+   "https://mirrors.huaweicloud.com/python/3.7.9/python-3.7.9-macosx10.9.pkg",
+   "https://repo.huaweicloud.com/python/3.7.9/python-3.7.9-macosx10.9.pkg",
+   "https://registry.npmmirror.com/-/binary/python/3.7.9/python-3.7.9-macosx10.9.pkg",
+   "https://cdn.npmmirror.com/binaries/python/3.7.9/python-3.7.9-macosx10.9.pkg",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.7.9/python-3.7.9-macosx10.9.pkg",
+   "https://mirror.nju.edu.cn/python/3.7.9/python-3.7.9-macosx10.9.pkg",
+   "https://mirrors.bfsu.edu.cn/python/3.7.9/python-3.7.9-macosx10.9.pkg",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.7.9/python-3.7.9-macosx10.9.pkg",
+   "http://mirrors.huaweicloud.com/python/3.7.9/python-3.7.9-macosx10.9.pkg",
+   "http://repo.huaweicloud.com/python/3.7.9/python-3.7.9-macosx10.9.pkg"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "4b544fc0ac8c3cffdb67dede23ddb79e"
+  },
+  "size": 29305353,
+  "released": "2020-08-17",
+  "min_os": "Mac OS X 10.9",
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": "Intel 64-bit only (no 32-bit, no PPC)",
+  "reason": "newest for macos 10.9, 10.10, 10.11, 10.12, 10.13, 10.14, 10.15, 11, 12, 13, 14, 15, 26"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.7",
+  "version": "3.7.9",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "exe",
+  "variant": null,
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.7.9/python-3.7.9-amd64.exe",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.7.9/python-3.7.9-amd64.exe",
+   "https://mirrors.huaweicloud.com/python/3.7.9/python-3.7.9-amd64.exe",
+   "https://repo.huaweicloud.com/python/3.7.9/python-3.7.9-amd64.exe",
+   "https://registry.npmmirror.com/-/binary/python/3.7.9/python-3.7.9-amd64.exe",
+   "https://cdn.npmmirror.com/binaries/python/3.7.9/python-3.7.9-amd64.exe",
+   "https://mirrors.aliyun.com/python-release/windows/python-3.7.9-amd64.exe",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.7.9/python-3.7.9-amd64.exe",
+   "https://mirror.nju.edu.cn/python/3.7.9/python-3.7.9-amd64.exe",
+   "https://mirrors.bfsu.edu.cn/python/3.7.9/python-3.7.9-amd64.exe",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.7.9/python-3.7.9-amd64.exe",
+   "http://mirrors.huaweicloud.com/python/3.7.9/python-3.7.9-amd64.exe",
+   "http://repo.huaweicloud.com/python/3.7.9/python-3.7.9-amd64.exe",
+   "http://mirrors.aliyun.com/python-release/windows/python-3.7.9-amd64.exe"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "7083fed513c3c9a4ea655211df9ade27"
+  },
+  "size": 26940592,
+  "released": "2020-08-17",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null,
+  "reason": "newest for windows vista, server2008"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.7",
+  "version": "3.7.9",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "embed",
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.7.9/python-3.7.9-embed-amd64.zip",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.7.9/python-3.7.9-embed-amd64.zip",
+   "https://mirrors.huaweicloud.com/python/3.7.9/python-3.7.9-embed-amd64.zip",
+   "https://repo.huaweicloud.com/python/3.7.9/python-3.7.9-embed-amd64.zip",
+   "https://registry.npmmirror.com/-/binary/python/3.7.9/python-3.7.9-embed-amd64.zip",
+   "https://cdn.npmmirror.com/binaries/python/3.7.9/python-3.7.9-embed-amd64.zip",
+   "https://mirrors.aliyun.com/python-release/windows/python-3.7.9-embed-amd64.zip",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.7.9/python-3.7.9-embed-amd64.zip",
+   "https://mirror.nju.edu.cn/python/3.7.9/python-3.7.9-embed-amd64.zip",
+   "https://mirrors.bfsu.edu.cn/python/3.7.9/python-3.7.9-embed-amd64.zip",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.7.9/python-3.7.9-embed-amd64.zip",
+   "http://mirrors.huaweicloud.com/python/3.7.9/python-3.7.9-embed-amd64.zip",
+   "http://repo.huaweicloud.com/python/3.7.9/python-3.7.9-embed-amd64.zip",
+   "http://mirrors.aliyun.com/python-release/windows/python-3.7.9-embed-amd64.zip"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "60f77740b30030b22699dbd14883a4a3"
+  },
+  "size": 7502379,
+  "released": "2020-08-17",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null,
+  "reason": "newest for windows vista, server2008"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.7",
+  "version": "3.7.9",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "installer",
+  "format": "exe",
+  "variant": null,
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.7.9/python-3.7.9.exe",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.7.9/python-3.7.9.exe",
+   "https://mirrors.huaweicloud.com/python/3.7.9/python-3.7.9.exe",
+   "https://repo.huaweicloud.com/python/3.7.9/python-3.7.9.exe",
+   "https://registry.npmmirror.com/-/binary/python/3.7.9/python-3.7.9.exe",
+   "https://cdn.npmmirror.com/binaries/python/3.7.9/python-3.7.9.exe",
+   "https://mirrors.aliyun.com/python-release/windows/python-3.7.9.exe",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.7.9/python-3.7.9.exe",
+   "https://mirror.nju.edu.cn/python/3.7.9/python-3.7.9.exe",
+   "https://mirrors.bfsu.edu.cn/python/3.7.9/python-3.7.9.exe",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.7.9/python-3.7.9.exe",
+   "http://mirrors.huaweicloud.com/python/3.7.9/python-3.7.9.exe",
+   "http://repo.huaweicloud.com/python/3.7.9/python-3.7.9.exe",
+   "http://mirrors.aliyun.com/python-release/windows/python-3.7.9.exe"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "1e6d31c98c68c723541f0821b3c15d52"
+  },
+  "size": 25875560,
+  "released": "2020-08-17",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null,
+  "reason": "newest for windows vista, server2008"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.7",
+  "version": "3.7.9",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "embed",
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.7.9/python-3.7.9-embed-win32.zip",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.7.9/python-3.7.9-embed-win32.zip",
+   "https://mirrors.huaweicloud.com/python/3.7.9/python-3.7.9-embed-win32.zip",
+   "https://repo.huaweicloud.com/python/3.7.9/python-3.7.9-embed-win32.zip",
+   "https://registry.npmmirror.com/-/binary/python/3.7.9/python-3.7.9-embed-win32.zip",
+   "https://cdn.npmmirror.com/binaries/python/3.7.9/python-3.7.9-embed-win32.zip",
+   "https://mirrors.aliyun.com/python-release/windows/python-3.7.9-embed-win32.zip",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.7.9/python-3.7.9-embed-win32.zip",
+   "https://mirror.nju.edu.cn/python/3.7.9/python-3.7.9-embed-win32.zip",
+   "https://mirrors.bfsu.edu.cn/python/3.7.9/python-3.7.9-embed-win32.zip",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.7.9/python-3.7.9-embed-win32.zip",
+   "http://mirrors.huaweicloud.com/python/3.7.9/python-3.7.9-embed-win32.zip",
+   "http://repo.huaweicloud.com/python/3.7.9/python-3.7.9-embed-win32.zip",
+   "http://mirrors.aliyun.com/python-release/windows/python-3.7.9-embed-win32.zip"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "97c6558d479dc53bf448580b66ad7c1e"
+  },
+  "size": 6659999,
+  "released": "2020-08-17",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null,
+  "reason": "newest for windows vista, server2008"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.8",
+  "version": "3.8.10",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "exe",
+  "variant": null,
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.8.10/python-3.8.10-amd64.exe",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.8.10/python-3.8.10-amd64.exe",
+   "https://mirrors.huaweicloud.com/python/3.8.10/python-3.8.10-amd64.exe",
+   "https://repo.huaweicloud.com/python/3.8.10/python-3.8.10-amd64.exe",
+   "https://registry.npmmirror.com/-/binary/python/3.8.10/python-3.8.10-amd64.exe",
+   "https://cdn.npmmirror.com/binaries/python/3.8.10/python-3.8.10-amd64.exe",
+   "https://mirrors.aliyun.com/python-release/windows/python-3.8.10-amd64.exe",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.8.10/python-3.8.10-amd64.exe",
+   "https://mirror.nju.edu.cn/python/3.8.10/python-3.8.10-amd64.exe",
+   "https://mirrors.bfsu.edu.cn/python/3.8.10/python-3.8.10-amd64.exe",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.8.10/python-3.8.10-amd64.exe",
+   "http://mirrors.huaweicloud.com/python/3.8.10/python-3.8.10-amd64.exe",
+   "http://repo.huaweicloud.com/python/3.8.10/python-3.8.10-amd64.exe",
+   "http://mirrors.aliyun.com/python-release/windows/python-3.8.10-amd64.exe"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "62cf1a12a5276b0259e8761d4cf4fe42"
+  },
+  "size": 28296784,
+  "released": "2021-05-03",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null,
+  "reason": "newest for windows 7, server2008r2, 8, server2012"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.8",
+  "version": "3.8.10",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "embed",
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.8.10/python-3.8.10-embed-amd64.zip",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.8.10/python-3.8.10-embed-amd64.zip",
+   "https://mirrors.huaweicloud.com/python/3.8.10/python-3.8.10-embed-amd64.zip",
+   "https://repo.huaweicloud.com/python/3.8.10/python-3.8.10-embed-amd64.zip",
+   "https://registry.npmmirror.com/-/binary/python/3.8.10/python-3.8.10-embed-amd64.zip",
+   "https://cdn.npmmirror.com/binaries/python/3.8.10/python-3.8.10-embed-amd64.zip",
+   "https://mirrors.aliyun.com/python-release/windows/python-3.8.10-embed-amd64.zip",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.8.10/python-3.8.10-embed-amd64.zip",
+   "https://mirror.nju.edu.cn/python/3.8.10/python-3.8.10-embed-amd64.zip",
+   "https://mirrors.bfsu.edu.cn/python/3.8.10/python-3.8.10-embed-amd64.zip",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.8.10/python-3.8.10-embed-amd64.zip",
+   "http://mirrors.huaweicloud.com/python/3.8.10/python-3.8.10-embed-amd64.zip",
+   "http://repo.huaweicloud.com/python/3.8.10/python-3.8.10-embed-amd64.zip",
+   "http://mirrors.aliyun.com/python-release/windows/python-3.8.10-embed-amd64.zip"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "3acb1d7d9bde5a79f840167b166bb633"
+  },
+  "size": 8211403,
+  "released": "2021-05-03",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null,
+  "reason": "newest for windows 7, server2008r2"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.8",
+  "version": "3.8.10",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "installer",
+  "format": "exe",
+  "variant": null,
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.8.10/python-3.8.10.exe",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.8.10/python-3.8.10.exe",
+   "https://mirrors.huaweicloud.com/python/3.8.10/python-3.8.10.exe",
+   "https://repo.huaweicloud.com/python/3.8.10/python-3.8.10.exe",
+   "https://registry.npmmirror.com/-/binary/python/3.8.10/python-3.8.10.exe",
+   "https://cdn.npmmirror.com/binaries/python/3.8.10/python-3.8.10.exe",
+   "https://mirrors.aliyun.com/python-release/windows/python-3.8.10.exe",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.8.10/python-3.8.10.exe",
+   "https://mirror.nju.edu.cn/python/3.8.10/python-3.8.10.exe",
+   "https://mirrors.bfsu.edu.cn/python/3.8.10/python-3.8.10.exe",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.8.10/python-3.8.10.exe",
+   "http://mirrors.huaweicloud.com/python/3.8.10/python-3.8.10.exe",
+   "http://repo.huaweicloud.com/python/3.8.10/python-3.8.10.exe",
+   "http://mirrors.aliyun.com/python-release/windows/python-3.8.10.exe"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "b355cfc84b681ace8908ae50908e8761"
+  },
+  "size": 27204536,
+  "released": "2021-05-03",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null,
+  "reason": "newest for windows 7, server2008r2, 8, server2012"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.8",
+  "version": "3.8.10",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "embed",
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.8.10/python-3.8.10-embed-win32.zip",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.8.10/python-3.8.10-embed-win32.zip",
+   "https://mirrors.huaweicloud.com/python/3.8.10/python-3.8.10-embed-win32.zip",
+   "https://repo.huaweicloud.com/python/3.8.10/python-3.8.10-embed-win32.zip",
+   "https://registry.npmmirror.com/-/binary/python/3.8.10/python-3.8.10-embed-win32.zip",
+   "https://cdn.npmmirror.com/binaries/python/3.8.10/python-3.8.10-embed-win32.zip",
+   "https://mirrors.aliyun.com/python-release/windows/python-3.8.10-embed-win32.zip",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.8.10/python-3.8.10-embed-win32.zip",
+   "https://mirror.nju.edu.cn/python/3.8.10/python-3.8.10-embed-win32.zip",
+   "https://mirrors.bfsu.edu.cn/python/3.8.10/python-3.8.10-embed-win32.zip",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.8.10/python-3.8.10-embed-win32.zip",
+   "http://mirrors.huaweicloud.com/python/3.8.10/python-3.8.10-embed-win32.zip",
+   "http://repo.huaweicloud.com/python/3.8.10/python-3.8.10-embed-win32.zip",
+   "http://mirrors.aliyun.com/python-release/windows/python-3.8.10-embed-win32.zip"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "659adf421e90fba0f56a9631f79e70fb"
+  },
+  "size": 7348969,
+  "released": "2021-05-03",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null,
+  "reason": "newest for windows 7, server2008r2"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.8",
+  "version": "3.8.20",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "pbs_stripped",
+  "libc": null,
+  "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20241002/cpython-3.8.20%2B20241002-x86_64-apple-darwin-install_only_stripped.tar.gz",
+  "mirrors": [
+   "https://registry.npmmirror.com/-/binary/python-build-standalone/20241002/cpython-3.8.20%2B20241002-x86_64-apple-darwin-install_only_stripped.tar.gz",
+   "https://cdn.npmmirror.com/binaries/python-build-standalone/20241002/cpython-3.8.20%2B20241002-x86_64-apple-darwin-install_only_stripped.tar.gz"
+  ],
+  "checksum": null,
+  "size": 17738861,
+  "released": "2024-10-02",
+  "min_os": null,
+  "metadata_source": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/tags/20241002",
+  "notes": "python-build-standalone install_only_stripped, build tag 20241002 (historical anchor: newer releases dropped this EOL minor)",
+  "reason": "newest for macos 10.9, 10.10, 10.11, 10.12, 10.13, 10.14"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.11",
+  "version": "3.11.9",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "embed",
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip",
+   "https://mirrors.huaweicloud.com/python/3.11.9/python-3.11.9-embed-amd64.zip",
+   "https://repo.huaweicloud.com/python/3.11.9/python-3.11.9-embed-amd64.zip",
+   "https://registry.npmmirror.com/-/binary/python/3.11.9/python-3.11.9-embed-amd64.zip",
+   "https://cdn.npmmirror.com/binaries/python/3.11.9/python-3.11.9-embed-amd64.zip",
+   "https://mirrors.aliyun.com/python-release/windows/python-3.11.9-embed-amd64.zip",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.11.9/python-3.11.9-embed-amd64.zip",
+   "https://mirror.nju.edu.cn/python/3.11.9/python-3.11.9-embed-amd64.zip",
+   "https://mirrors.bfsu.edu.cn/python/3.11.9/python-3.11.9-embed-amd64.zip",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip",
+   "http://mirrors.huaweicloud.com/python/3.11.9/python-3.11.9-embed-amd64.zip",
+   "http://repo.huaweicloud.com/python/3.11.9/python-3.11.9-embed-amd64.zip",
+   "http://mirrors.aliyun.com/python-release/windows/python-3.11.9-embed-amd64.zip"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "6d9aa08531d48fcc261ba667e2df17c4"
+  },
+  "size": 11249023,
+  "released": "2024-04-02",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null,
+  "reason": "newest for windows 8, server2012"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.11",
+  "version": "3.11.9",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "embed",
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-win32.zip",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-win32.zip",
+   "https://mirrors.huaweicloud.com/python/3.11.9/python-3.11.9-embed-win32.zip",
+   "https://repo.huaweicloud.com/python/3.11.9/python-3.11.9-embed-win32.zip",
+   "https://registry.npmmirror.com/-/binary/python/3.11.9/python-3.11.9-embed-win32.zip",
+   "https://cdn.npmmirror.com/binaries/python/3.11.9/python-3.11.9-embed-win32.zip",
+   "https://mirrors.aliyun.com/python-release/windows/python-3.11.9-embed-win32.zip",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.11.9/python-3.11.9-embed-win32.zip",
+   "https://mirror.nju.edu.cn/python/3.11.9/python-3.11.9-embed-win32.zip",
+   "https://mirrors.bfsu.edu.cn/python/3.11.9/python-3.11.9-embed-win32.zip",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-win32.zip",
+   "http://mirrors.huaweicloud.com/python/3.11.9/python-3.11.9-embed-win32.zip",
+   "http://repo.huaweicloud.com/python/3.11.9/python-3.11.9-embed-win32.zip",
+   "http://mirrors.aliyun.com/python-release/windows/python-3.11.9-embed-win32.zip"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "31e7648158376e92a4463aa6f22a78e1"
+  },
+  "size": 10113050,
+  "released": "2024-04-02",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null,
+  "reason": "newest for windows 8, server2012"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.13",
+  "version": "3.13.15",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "exe",
+  "variant": null,
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.13.15/python-3.13.15-amd64.exe",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.13.15/python-3.13.15-amd64.exe",
+   "https://mirrors.huaweicloud.com/python/3.13.15/python-3.13.15-amd64.exe",
+   "https://repo.huaweicloud.com/python/3.13.15/python-3.13.15-amd64.exe",
+   "https://registry.npmmirror.com/-/binary/python/3.13.15/python-3.13.15-amd64.exe",
+   "https://cdn.npmmirror.com/binaries/python/3.13.15/python-3.13.15-amd64.exe",
+   "https://mirrors.aliyun.com/python-release/windows/python-3.13.15-amd64.exe",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.13.15/python-3.13.15-amd64.exe",
+   "https://mirror.nju.edu.cn/python/3.13.15/python-3.13.15-amd64.exe",
+   "https://mirrors.bfsu.edu.cn/python/3.13.15/python-3.13.15-amd64.exe",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.13.15/python-3.13.15-amd64.exe",
+   "http://mirrors.huaweicloud.com/python/3.13.15/python-3.13.15-amd64.exe",
+   "http://repo.huaweicloud.com/python/3.13.15/python-3.13.15-amd64.exe",
+   "http://mirrors.aliyun.com/python-release/windows/python-3.13.15-amd64.exe"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "edec09c4853aeae9ac36efb8c9f95b6b8e2fee65eee56d9767a8b7c69c574403"
+  },
+  "size": 29452944,
+  "released": "2026-08-05",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null,
+  "reason": "newest for windows 8.1, server2012r2"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.13",
+  "version": "3.13.15",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "installer",
+  "format": "exe",
+  "variant": null,
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.13.15/python-3.13.15.exe",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.13.15/python-3.13.15.exe",
+   "https://mirrors.huaweicloud.com/python/3.13.15/python-3.13.15.exe",
+   "https://repo.huaweicloud.com/python/3.13.15/python-3.13.15.exe",
+   "https://registry.npmmirror.com/-/binary/python/3.13.15/python-3.13.15.exe",
+   "https://cdn.npmmirror.com/binaries/python/3.13.15/python-3.13.15.exe",
+   "https://mirrors.aliyun.com/python-release/windows/python-3.13.15.exe",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.13.15/python-3.13.15.exe",
+   "https://mirror.nju.edu.cn/python/3.13.15/python-3.13.15.exe",
+   "https://mirrors.bfsu.edu.cn/python/3.13.15/python-3.13.15.exe",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.13.15/python-3.13.15.exe",
+   "http://mirrors.huaweicloud.com/python/3.13.15/python-3.13.15.exe",
+   "http://repo.huaweicloud.com/python/3.13.15/python-3.13.15.exe",
+   "http://mirrors.aliyun.com/python-release/windows/python-3.13.15.exe"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "741c07276eb2d57e7ee012d643f021c58cb38d11c5389be46c15d41d1a10b447"
+  },
+  "size": 28098408,
+  "released": "2026-08-05",
+  "min_os": null,
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": null,
+  "reason": "newest for windows 8.1, server2012r2"
  },
  {
   "runtime": "python",
@@ -301,7 +1010,8 @@
   "released": "2026-09-01",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/latest",
-  "notes": "python-build-standalone install_only_stripped, build tag 20260901"
+  "notes": "python-build-standalone install_only_stripped, build tag 20260901",
+  "reason": "newest in major 3; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "python",
@@ -329,7 +1039,8 @@
   "released": "2026-09-01",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/latest",
-  "notes": "python-build-standalone install_only_stripped, build tag 20260901"
+  "notes": "python-build-standalone install_only_stripped, build tag 20260901",
+  "reason": "newest in major 3; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "python",
@@ -357,7 +1068,8 @@
   "released": "2026-09-01",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/latest",
-  "notes": "python-build-standalone install_only_stripped, build tag 20260901"
+  "notes": "python-build-standalone install_only_stripped, build tag 20260901",
+  "reason": "newest in major 3; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "python",
@@ -385,7 +1097,8 @@
   "released": "2026-09-01",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/latest",
-  "notes": "python-build-standalone install_only_stripped, build tag 20260901"
+  "notes": "python-build-standalone install_only_stripped, build tag 20260901",
+  "reason": "newest in major 3; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "python",
@@ -413,7 +1126,8 @@
   "released": "2026-09-01",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/latest",
-  "notes": "python-build-standalone install_only_stripped, build tag 20260901"
+  "notes": "python-build-standalone install_only_stripped, build tag 20260901",
+  "reason": "newest in major 3; newest for linux glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "python",
@@ -441,7 +1155,8 @@
   "released": "2026-09-01",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/latest",
-  "notes": "python-build-standalone install_only_stripped, build tag 20260901"
+  "notes": "python-build-standalone install_only_stripped, build tag 20260901",
+  "reason": "newest in major 3; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "python",
@@ -469,7 +1184,8 @@
   "released": "2026-09-01",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/latest",
-  "notes": "python-build-standalone install_only_stripped, build tag 20260901"
+  "notes": "python-build-standalone install_only_stripped, build tag 20260901",
+  "reason": "newest in major 3; newest for macos 10.15, 11, 12, 13, 14, 15, 26"
  },
  {
   "runtime": "python",
@@ -497,7 +1213,8 @@
   "released": "2026-09-01",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/latest",
-  "notes": "python-build-standalone install_only_stripped, build tag 20260901"
+  "notes": "python-build-standalone install_only_stripped, build tag 20260901",
+  "reason": "newest in major 3; newest for macos 11, 12, 13, 14, 15, 26"
  },
  {
   "runtime": "python",
@@ -536,7 +1253,8 @@
   "released": "2026-08-05",
   "min_os": null,
   "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3; newest for windows 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "python",
@@ -575,7 +1293,8 @@
   "released": "2026-08-05",
   "min_os": null,
   "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3; newest for windows 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "python",
@@ -614,7 +1333,8 @@
   "released": "2026-08-05",
   "min_os": null,
   "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3; newest for windows 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "python",
@@ -653,7 +1373,8 @@
   "released": "2026-08-05",
   "min_os": null,
   "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3; newest for windows 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "python",
@@ -692,7 +1413,8 @@
   "released": "2026-08-05",
   "min_os": null,
   "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3; newest for windows 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "python",
@@ -731,6 +1453,7 @@
   "released": "2026-08-05",
   "min_os": null,
   "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3; newest for windows 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  }
 ]

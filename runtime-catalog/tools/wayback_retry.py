@@ -32,7 +32,7 @@ from pathlib import Path
 
 CATALOG = Path(__file__).resolve().parents[1]
 CACHE = CATALOG / "wayback_cache.json"
-FOLDERS = ["python", "node", "java", "dotnet", "go", "rust", "php", "r", "ruby", "nim", "zig", "cc"]
+FOLDERS = ["python", "node", "java", "dotnet", "go", "rust", "php", "r", "ruby", "nim", "zig", "cc", "cmake", "meson", "ninja"]
 UA = "Mozilla/5.0 (X11; Linux x86_64) installer-builder-catalog/1.0 (archive lookup; slow)"
 
 

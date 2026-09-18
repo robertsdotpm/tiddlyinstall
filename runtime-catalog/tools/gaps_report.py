@@ -10,7 +10,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 CATALOG = Path(__file__).resolve().parents[1]
-FOLDERS = ["python", "node", "java", "dotnet", "go", "rust", "php", "r", "ruby", "nim", "zig", "cc"]
+FOLDERS = ["python", "node", "java", "dotnet", "go", "rust", "php", "r", "ruby", "nim", "zig", "cc", "cmake", "meson", "ninja"]
 
 # (runtime, version, os, variant-or-None) -> explanation, found by investigating the failure.
 KNOWN = {

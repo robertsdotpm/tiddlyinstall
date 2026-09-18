@@ -125,6 +125,23 @@ def rust(r):
     ext = ".exe" if s == "\\" else ""
     env = {"CARGO_HOME": "{data_dir}" + s + "cargo-home", "RUSTC": j(r, "bin", "rustc" + ext), "RUSTDOC": j(r, "bin", "rustdoc" + ext),
            "RUSTFLAGS": None, "RUSTDOCFLAGS": None, "CARGO_ENCODED_RUSTFLAGS": None, "RUSTC_WRAPPER": None, "CARGO_TARGET_DIR": None}
+    m = r["match"]
+    if m.get("os") == "windows" and m.get("variant") == "gnu":
+        # -gnu toolchains link with their own rust-mingw files, no Build Tools.
+        triple = {"amd64": "x86_64-pc-windows-gnu", "x86": "i686-pc-windows-gnu"}[m["arch"]]
+        return (
+            {"program": None, "args": [], "env": {}, "notes": "The app is the program built by project_install and runs directly."},
+            {"command": f'"{j(r, "bin", "cargo" + ext)}" build --release --locked', "env": env, "cwd": "{app_dir}",
+             "path_prepend": [j(r, "lib", "rustlib", triple, "bin", "self-contained"), j(r, "bin")],
+             "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Without RUSTC cargo can't find rustc (tested). "
+                      "Links with the toolchain's own rust-mingw linker and import libraries, so pure-Rust crates need nothing else. The self-contained "
+                      "folder is put on PATH so rustc finds dlltool.exe, which raw-dylib crates (windows-link, windows-sys 0.60+) need on -gnu: as far as "
+                      "rustc's source shows (find_binutils_dlltool) it looks for dlltool.exe on PATH, not in its sysroot; not tested on Windows. Without a "
+                      "dlltool a Linux cross-build failed with 'error calling dlltool'. rustc ignores linkers under its "
+                      "own sysroot when deciding self-contained linking, so this PATH entry doesn't change that. Crates that compile C/C++ (ring, "
+                      "bundled SQLite, zstd-sys...) need a real MinGW-w64 GCC: prepend the catalogue's WinLibs mingw64\\bin as well; rustc then links "
+                      "with it instead of the bundled files."},
+        )
     return (
         {"program": None, "args": [], "env": {}, "notes": "The app is the program built by project_install and runs directly."},
         {"command": f'"{j(r, "bin", "cargo" + ext)}" build --release --locked', "env": env, "cwd": "{app_dir}",

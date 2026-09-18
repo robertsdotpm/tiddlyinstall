@@ -202,3 +202,62 @@ Checked RUSTUP_DIST_SERVER itself: it has no built-in default beyond
 `https://static.rust-lang.org` (`src/dist/mod.rs::DEFAULT_DIST_SERVER`) --
 it's purely an override point, not a mirror list, matching what the prior
 mirror hunt already found.
+
+## Windows without Build Tools (2026-09-18)
+
+The `-msvc` toolchains need Microsoft's linker, CRT and SDK libraries
+(Visual Studio Build Tools: system-wide, Windows 10 1909+, licensed per
+Visual Studio user). The `-gnu` toolchains don't: their `rust-mingw`
+component carries a link-only `x86_64-w64-mingw32-gcc.exe`, `ld.exe`
+(MinGW-Builds GCC 14.2.0, binutils 2.44), `dlltool.exe`, the MinGW CRT
+(`crt2.o`, `libmingw32.a`, `libmsvcrt.a`...) and 40 Windows import
+libraries under `lib/rustlib/<triple>/{bin,lib}/self-contained`.
+`scrape.py` now puts windows `gnu` (x86_64 and i686) in the plans next to
+`msvc`; `--plans-only` rebuilds the plans offline from `releases.json`
+(copying entries as they are, mirrors included). Then run
+`tools/make_major_plans.py rust`. Result: full plan 1,483 files / 248.2 GB
+(+198 gnu), slim 212 / 36.1 GB (+28), majors 18 files / 4.3 GB (+1.98.1
+x86_64 and i686 gnu). Recipes are in `install.json` (variant `gnu`).
+
+Tested, by cross-building from Linux with the 1.98.1 Linux rustc and the
+Windows `rust-std` + `rust-mingw` files (this host can't run Windows exes, so
+rust-lld linked in self-contained mode with the same libraries `ld.exe`
+would use):
+
+| Target | Hello world | serde, regex, rand, clap, anyhow, windows-sys 0.59/0.61, windows 0.58 | ring + a `cc` build script |
+| --- | --- | --- | --- |
+| x86_64-pc-windows-gnu, bundled files only | builds | builds once a `dlltool` is available (windows-link raw-dylib); fails with "error calling dlltool" without one | fails: no C compiler |
+| i686-pc-windows-gnu, bundled files only | builds | builds (same dlltool note) | not tried |
+| x86_64 -gnu with WinLibs 16.2.0 UCRT headers/libs (clang+lld standing in for WinLibs' gcc driver) | builds, also against WinLibs 10.5.0 MSVCRT libs | - | builds |
+| x86_64/i686 -gnu via cargo-zigbuild 0.23.4 + Zig 0.16.0 | - | builds | builds |
+| x86_64-pc-windows-gnullvm, bundled files only | builds with `+crt-static` (otherwise needs `libunwind.dll`, which Rust doesn't ship) | fails: no `libbcrypt.a`/`libadvapi32.a` (only 13 libraries bundled), and no linker is bundled | - |
+
+Findings:
+- `-gnu` builds ordinary pure-Rust crates with nothing else installed. On
+  Windows, `dlltool.exe` must be findable: rustc searches PATH for it
+  (per its source; not tested on Windows), hence the recipe's
+  `path_prepend` of the self-contained folder.
+- The bundled gcc.exe is link-only (its `GCC-WARNING.txt` says so). Crates
+  that compile C/C++ need a real MinGW-w64 GCC: WinLibs from `catalog/cc`
+  works. The Rust `-gnu` std is msvcrt-based, and linking it with UCRT
+  WinLibs worked. With WinLibs on PATH, rustc links with it instead of the
+  bundled files (it treats a linker found outside its sysroot as external).
+- Also breaks: `#[link]`/`rustc-link-lib` to Windows libraries outside the
+  40 bundled import libs (d3d11, dxgi, dwmapi, version, shlwapi...);
+  most crates use raw-dylib or the winapi/windows-targets import-lib crates
+  instead, and WinLibs has them all. Crates that link prebuilt MSVC `.lib`
+  files only work with `-msvc`.
+- The toolchain's own DLLs need Windows 10 in 1.78+ (import `WaitOnAddress`,
+  `GetSystemTimePreciseAsFileTime`, `ProcessPrng`); `ld.exe`/`gcc.exe`/
+  `dlltool.exe` need Vista. Programs built for `-gnu` need Windows 10 (same
+  imports). For Windows 7/8.1 the toolchain is 1.77.2 `-gnu`
+  (recipe added, untested; not in the plans yet).
+- Zig (cargo-zigbuild) works as linker and C compiler for `-gnu`. Plain
+  `zig cc` as linker fails on crates with C, because the `cc` crate passes
+  `--target=x86_64-pc-windows-gnu`, which Zig can't parse; cargo-zigbuild
+  rewrites that. Zig links UCRT. cargo-zigbuild is a third-party tool not in
+  the catalogue, and Zig needs Windows 10, which is no worse than Rust 1.78+.
+  Its advantage over WinLibs is only for C deps.
+- `-gnullvm` is not self-sufficient: no linker (default
+  `x86_64-w64-mingw32-clang`, i.e. llvm-mingw), few import libs, a
+  `libunwind.dll` dependency, and UCRT. Left out of the plans.

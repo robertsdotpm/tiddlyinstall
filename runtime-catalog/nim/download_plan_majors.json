@@ -23,7 +23,8 @@
   "released": "2019-07-16",
   "min_os": null,
   "metadata_source": "https://nim-lang.org/download/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0"
  },
  {
   "runtime": "nim",
@@ -49,7 +50,8 @@
   "released": "2019-07-16",
   "min_os": null,
   "metadata_source": "https://nim-lang.org/download/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0"
  },
  {
   "runtime": "nim",
@@ -77,7 +79,8 @@
   "released": "2019-07-16",
   "min_os": null,
   "metadata_source": "https://nim-lang.org/download/",
-  "notes": "No macos binary exists for major 0.20; source is the only option."
+  "notes": "No macos binary exists for major 0.20; source is the only option.",
+  "reason": "newest in major 0"
  },
  {
   "runtime": "nim",
@@ -103,7 +106,8 @@
   "released": "2019-07-16",
   "min_os": null,
   "metadata_source": "https://nim-lang.org/download/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0"
  },
  {
   "runtime": "nim",
@@ -129,7 +133,8 @@
   "released": "2019-07-16",
   "min_os": null,
   "metadata_source": "https://nim-lang.org/download/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 0"
  },
  {
   "runtime": "nim",
@@ -157,7 +162,8 @@
   "released": "2024-04-06",
   "min_os": null,
   "metadata_source": "https://nim-lang.org/download/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1"
  },
  {
   "runtime": "nim",
@@ -179,7 +185,8 @@
   "released": "2024-04-06",
   "min_os": null,
   "metadata_source": "https://nim-lang.org/install.html",
-  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version."
+  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version.",
+  "reason": "newest in major 1"
  },
  {
   "runtime": "nim",
@@ -201,7 +208,8 @@
   "released": "2024-04-06",
   "min_os": null,
   "metadata_source": "https://nim-lang.org/install.html",
-  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version."
+  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version.",
+  "reason": "newest in major 1"
  },
  {
   "runtime": "nim",
@@ -229,7 +237,8 @@
   "released": "2024-04-06",
   "min_os": null,
   "metadata_source": "https://nim-lang.org/download/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1"
  },
  {
   "runtime": "nim",
@@ -251,7 +260,8 @@
   "released": "2024-04-06",
   "min_os": null,
   "metadata_source": "https://nim-lang.org/install.html",
-  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version."
+  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version.",
+  "reason": "newest in major 1; newest for macos 11, 12, 13, 14"
  },
  {
   "runtime": "nim",
@@ -279,7 +289,8 @@
   "released": "2024-04-06",
   "min_os": null,
   "metadata_source": "https://nim-lang.org/download/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1"
  },
  {
   "runtime": "nim",
@@ -307,7 +318,8 @@
   "released": "2024-04-06",
   "min_os": null,
   "metadata_source": "https://nim-lang.org/download/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1"
  },
  {
   "runtime": "nim",
@@ -333,7 +345,8 @@
   "released": "2026-09-07",
   "min_os": null,
   "metadata_source": "https://nim-lang.org/download/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2; newest for linux glibc-2.5, glibc-2.12, glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "nim",
@@ -359,7 +372,8 @@
   "released": "2026-09-07",
   "min_os": null,
   "metadata_source": "https://nim-lang.org/download/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2; newest for linux glibc-2.5, glibc-2.12, glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "nim",
@@ -381,7 +395,8 @@
   "released": "2026-09-07",
   "min_os": null,
   "metadata_source": "https://nim-lang.org/install.html",
-  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version."
+  "notes": "Built by nim-lang/nightlies' backport-to-stable CI for this tagged release and linked from nim-lang.org's own install.html 'Install previous versions' table (not a devel-branch nightly); nim-lang.org itself hosts no direct copy of this file for this version.",
+  "reason": "newest in major 2; newest for linux glibc-2.5, glibc-2.12, glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "nim",
@@ -407,7 +422,8 @@
   "released": "2026-09-07",
   "min_os": null,
   "metadata_source": "https://nim-lang.org/download/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2; newest for linux glibc-2.5, glibc-2.12, glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "nim",
@@ -433,7 +449,38 @@
   "released": "2026-09-07",
   "min_os": null,
   "metadata_source": "https://nim-lang.org/download/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2; newest for macos 15, 26"
+ },
+ {
+  "runtime": "nim",
+  "languages": [
+   "nim"
+  ],
+  "major": "2.2",
+  "version": "2.2.12",
+  "os": "macos",
+  "arch": "any",
+  "kind": "source",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://nim-lang.org/download/nim-2.2.12.tar.xz",
+  "mirrors": [
+   "https://distfiles.gentoo.org/distfiles/f4/nim-2.2.12.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/nim-2.2.12.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "2639a06a5ea7a7fcf57df1e7e1ef4d1b2bee58c7ac9bd00dbd2aa5bea1e5a56a",
+   "source": "https://nim-lang.org/download/nim-2.2.12.tar.xz.sha256"
+  },
+  "size": 10259940,
+  "released": "2026-09-07",
+  "min_os": null,
+  "metadata_source": "https://nim-lang.org/download/",
+  "notes": "Source tarball (published without an os; listed under linux in releases.json), relabelled for macos where no binary runs.",
+  "reason": "newest for macos 10.7, 10.8, 10.9, 10.10, 10.11, 10.12, 10.13, 10.14, 10.15, 11, 12, 13, 14, 15, 26"
  },
  {
   "runtime": "nim",
@@ -459,7 +506,8 @@
   "released": "2026-09-07",
   "min_os": null,
   "metadata_source": "https://nim-lang.org/download/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2; newest for macos 15, 26"
  },
  {
   "runtime": "nim",
@@ -485,7 +533,8 @@
   "released": "2026-09-07",
   "min_os": null,
   "metadata_source": "https://nim-lang.org/download/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2; newest for windows xp-x64, server2003, vista, server2008, 7, server2008r2, 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "nim",
@@ -511,6 +560,7 @@
   "released": "2026-09-07",
   "min_os": null,
   "metadata_source": "https://nim-lang.org/download/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2; newest for windows xp, xp-x64, server2003, vista, server2008, 7, server2008r2, 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  }
 ]

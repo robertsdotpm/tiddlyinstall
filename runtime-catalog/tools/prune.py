@@ -18,7 +18,7 @@ from download import target_path  # noqa: E402  same path rules as the downloade
 
 CATALOG = Path(__file__).resolve().parents[1]
 ROOT = CATALOG.parent
-FOLDERS = ["python", "node", "java", "dotnet", "go", "rust", "php", "r", "ruby", "nim", "zig", "cc"]
+FOLDERS = ["python", "node", "java", "dotnet", "go", "rust", "php", "r", "ruby", "nim", "zig", "cc", "cmake", "meson", "ninja"]
 
 
 def main():

@@ -413,7 +413,24 @@ def installer_entry(url, fmt, os_, arch, variant, libc, version, major, size, ch
     }
 
 
+def plans_only():
+    """Rebuild download_plan.json and download_plan_slim.json from the existing
+    releases.json, offline. Entries are copied as they are (mirrors included), so
+    unlike a full run this doesn't need extra_mirrors.py re-run afterwards. Run
+    tools/make_major_plans.py rust after it."""
+    releases = json.loads((HERE / "releases.json").read_text())
+    majors = sorted({int(e["major"].split(".")[1]) for e in releases})
+    plan_full, plan_slim = build_plans(releases, majors)
+    (HERE / "download_plan.json").write_text(json.dumps(plan_full, indent=2))
+    (HERE / "download_plan_slim.json").write_text(json.dumps(plan_slim, indent=2))
+    gb = lambda p: sum(e.get("size") or 0 for e in p) / 1e9
+    print(f"plan: {len(plan_full)} files {gb(plan_full):.1f} GB; slim: {len(plan_slim)} files {gb(plan_slim):.1f} GB")
+
+
 def main():
+    if "--plans-only" in sys.argv:
+        plans_only()
+        return
     debug_max = None
     if "--debug-majors" in sys.argv:
         debug_max = int(sys.argv[sys.argv.index("--debug-majors") + 1])
@@ -606,11 +623,15 @@ def build_plans(releases, majors):
         return (e["major"], e["os"], e["arch"], e.get("variant"))
 
     def is_plan_combo(e):
-        # restricted to windows/linux/macos; windows -> msvc variant only,
+        # restricted to windows/linux/macos; windows -> msvc and gnu variants,
         # linux -> glibc only; every arch available for that os/variant/libc
         # is kept (no arch allow-list), per task instructions.
+        # gnu added 2026-09-18: its rust-mingw component carries a linker and
+        # MinGW import libraries, so it builds pure-Rust crates without Visual
+        # Studio Build Tools (see NOTES.md "Windows without Build Tools").
+        # gnullvm is left out: it ships no linker and too few import libraries.
         if e["os"] == "windows":
-            return e.get("variant") == "msvc"
+            return e.get("variant") in ("msvc", "gnu")
         if e["os"] == "linux":
             return e.get("libc") == "glibc"
         if e["os"] == "macos":

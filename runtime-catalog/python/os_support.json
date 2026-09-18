@@ -1,0 +1,4933 @@
+{
+ "runtime": "python",
+ "researched": "2026-09-18",
+ "notes": "Rules and max_per_os follow catalog/SCHEMA.md 'os_support.json'. Extra fields: rule.match (format/variant/libc of the releases.json entries a rule covers; variant null = the python.org installer), rule.also_os (ids accepted despite being below min_os, e.g. Server 2012 for the 3.9-3.11 installer), max_per_os.role ('newest' = derived from rules over releases.json; 'known-good' = an operator-tested build from TESTED-WINDOWS.md), max_per_os.file and max_per_os.extra (the matching rule's prerequisites). arch in max_per_os is the build's arch: x86 builds also run on 64-bit Windows, amd64 needs a 64-bit edition, macOS universal builds carry the slices noted per rule, and Apple silicon Macs run amd64 builds under Rosetta 2. Windows OS ids are compared by NT version from os_versions.json; macOS ids by list order; glibc ids numerically. Windows 'min_os' for x86 on '2000'/'xp' means 32-bit editions; 'xp-x64' is the only XP id that runs amd64 builds.",
+ "rules": [
+  {
+   "versions": ">=2.0,<2.4",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "2000",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python.org Wise .exe installers (2.0-2.3.5)",
+   "match": {
+    "format": [
+     "exe"
+    ],
+    "variant": [
+     null
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://peps.python.org/pep-0011/ (unsupported-platforms list: Win9x/ME/NT4 dropped in 2.6, Windows 2000 in 3.3; nothing earlier than 2000 is dropped before 2.4)"
+    },
+    {
+     "kind": "secondary",
+     "source": "release era (2000-2005); binaries inside the Wise installers were not extracted"
+    }
+   ],
+   "confidence": "low",
+   "notes": "Also ran on Windows 95/98/ME/NT4, which have no id in os_versions.json. No binary or VM check; upper OS bound not verified.",
+   "format": [
+    "exe"
+   ]
+  },
+  {
+   "versions": ">=2.4,<3.3",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "2000",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "2000: SP3 or later (Windows Installer 2.0)"
+   ],
+   "applies_to": "python.org x86 .msi installers",
+   "match": {
+    "format": [
+     "msi"
+    ],
+    "variant": [
+     null
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://peps.python.org/pep-0011/ -- 'Windows 2000: unsupported in Python 3.3'; https://docs.python.org/3/whatsnew/3.3.html 'Windows 2000 ... no longer supported'"
+    },
+    {
+     "kind": "binary",
+     "source": "python.exe/pythonXY.dll PE MajorOperatingSystemVersion 4.0, SubsystemVersion 4.0 in 2.4.4, 2.5.4, 2.6.6, 2.7.0, 2.7.3, 2.7.6, 2.7.9, 2.7.12, 2.7.15, 2.7.18, 3.1.4, 3.2.5 (extracted from the .msi cabinets; 3.0.1 x86 cab would not decompress, 3.0.1 amd64 used as proxy)"
+    },
+    {
+     "kind": "binary",
+     "source": "every import of every PE in those MSIs resolves against kernel32/ws2_32/advapi32/... export tables copied from the XP SP3 VM (5.1.2600.7682); none of them imports EncodePointer/DecodePointer, GetNativeSystemInfo, GetModuleHandleEx, SList or Fls functions (XP-or-later exports)"
+    },
+    {
+     "kind": "binary",
+     "source": "MSI SummaryInformation PageCount 200 = Windows Installer 2.0 (Windows 2000 SP3+)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "XP support is export-table verified; Windows 2000 is inferred from the PE header, a hand list of XP-only functions and PEP 11 (no 2000 VM or 2000 export tables were available). 2.4 and 2.5 also supported Win9x/NT4 (no id).",
+   "format": [
+    "msi"
+   ]
+  },
+  {
+   "versions": ">=3.3,<3.5",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "min_os": "xp",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "xp: SP2 or later (EncodePointer/DecodePointer)",
+    "server2003: SP1 or later"
+   ],
+   "applies_to": "python.org x86 .msi installers",
+   "match": {
+    "format": [
+     "msi"
+    ],
+    "variant": [
+     null
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://docs.python.org/3/whatsnew/3.3.html (Windows 2000 unsupported); https://docs.python.org/3.5/using/windows.html 'If you require Windows XP support then please install Python 3.4'"
+    },
+    {
+     "kind": "binary",
+     "source": "3.3.0, 3.3.5, 3.4.0, 3.4.4: PE header 4.0/4.0; msvcr100.dll, python3x.dll, python.exe and the socket/select/ssl .pyds import kernel32 EncodePointer/DecodePointer (XP SP2 / Server 2003 SP1 and later; absent on Windows 2000). All imports resolve against the XP SP3 VM's export tables"
+    }
+   ],
+   "confidence": "high",
+   "notes": "3.4.4 is the last python.org release that runs on XP. Not VM-run here (there is no 3.4 embeddable zip); binary evidence only.",
+   "format": [
+    "msi"
+   ]
+  },
+  {
+   "versions": ">=2.5,<3.5",
+   "os": "windows",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "xp-x64",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "xp-x64/server2003: SP1 or later for 3.3+ (msvcr100)"
+   ],
+   "applies_to": "python.org amd64 .msi installers",
+   "match": {
+    "format": [
+     "msi"
+    ],
+    "variant": [
+     null
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "python.exe/pythonXY.dll: 2.5.4 amd64 OS 4.0/subsystem 5.2; 2.7.18, 3.0.1, 3.1.4, 3.2.5, 3.3.5, 3.4.0, 3.4.4 amd64 OS 5.2/subsystem 5.2 (XP x64 / Server 2003 x64). Imports resolve against XP SP3 exports except Fls*/SetThreadStackGuarantee, which NT 5.2 x64 has"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://peps.python.org/pep-0011/"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "No 64-bit XP/2003 VM: 64-bit XP export tables were approximated by the 32-bit XP SP3 ones plus the x64-only exports.",
+   "format": [
+    "msi"
+   ]
+  },
+  {
+   "versions": ">=2.4,<2.6",
+   "os": "windows",
+   "arch": [
+    "ia64"
+   ],
+   "min_os": "xp",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python.org Itanium .msi installers (2.4.0-2.5.4)",
+   "match": {
+    "format": [
+     "msi"
+    ],
+    "variant": [
+     null
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "2.5.4 ia64 python.exe/python25.dll: machine 0x200 (IA-64), OS 4.0, subsystem 5.1"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://www.python.org/ftp/python/2.5.4/ (ia64 msi); PEP 11"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "Itanium editions only: Windows XP 64-bit Edition (NT 5.1/5.2 IA-64), Server 2003, 2008 and 2008 R2 for Itanium. Microsoft never shipped Vista, 7 or any later client, or Server 2012+, for IA-64.",
+   "format": [
+    "msi"
+   ]
+  },
+  {
+   "versions": ">=3.5.0,<3.8",
+   "os": "windows",
+   "arch": [
+    "x86",
+    "amd64"
+   ],
+   "min_os": "vista",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "vista/server2008: SP2",
+    "7/server2008r2: SP1",
+    "7/server2008r2, 3.7.7-3.7.9: KB2533623"
+   ],
+   "applies_to": "python.org .exe installers",
+   "match": {
+    "format": [
+     "exe"
+    ],
+    "variant": [
+     null
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://docs.python.org/3/whatsnew/3.5.html (XP unsupported); https://docs.python.org/3.7/using/windows.html 'Python 3.7 supports Windows Vista and newer'; https://www.python.org/downloads/windows/ ('cannot be used on Windows XP or earlier')"
+    },
+    {
+     "kind": "binary",
+     "source": "installer ValidateOperatingSystem(): Vista SP2+, 7 SP1+, Server 2008 SP2+, 2008 R2 SP1+; from 3.7.7, Windows 7 SP1 must also have KB2533623 (checks for kernel32!AddDllDirectory) -- https://github.com/python/cpython/blob/v3.7.9/Tools/msi/bundle/bootstrap/PythonBootstrapperApplication.cpp; bootstrapper strings FailureVistaMissingSP2/FailureWin7MissingSP1 read from the .exe UX container"
+    },
+    {
+     "kind": "binary",
+     "source": "python.exe/python3x.dll PE OS 6.0/subsystem 6.0 (the XP loader refuses it); imports GetTickCount64, GetFinalPathNameByHandleW (3.5+), inet_pton/inet_ntop and ProcThreadAttributeList (3.7+), BCryptGenRandom (3.7.4+) -- all Vista+. Every import of every PE in all 3.5.0-3.7.9 embeddable zips resolves against the Vista SP2 VM export tables (6.0.6003.20708)"
+    },
+    {
+     "kind": "binary",
+     "source": "Burn manifest in the .exe: 3.5.4 carries crt_14.0 MSU packages for NT 6.0-6.3; 3.7.0, 3.8.0, 3.9.13, 3.13.0 and 3.14.7 carry ucrt_AllUsers/ucrt_JustForMe MSIs, installed when UCRT is missing"
+    },
+    {
+     "kind": "vm-test",
+     "source": "/home/x/projects/installer-builder-runtimes/TESTED-WINDOWS.md: operator-tested python-3.7.0.exe (x86) on Vista, installs and asyncio works (VC++ AIO installed first)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "3.7.9 is the last 3.7 release with Windows binaries (3.7.10+ are source-only).",
+   "format": [
+    "exe"
+   ]
+  },
+  {
+   "versions": ">=3.5.0,<3.8",
+   "os": "windows",
+   "arch": [
+    "x86",
+    "amd64"
+   ],
+   "min_os": "vista",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "vista/server2008: SP2",
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "applies_to": "python.org embeddable zips",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "embed"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "python.exe/python3x.dll PE OS 6.0/subsystem 6.0 (the XP loader refuses it); imports GetTickCount64, GetFinalPathNameByHandleW (3.5+), inet_pton/inet_ntop and ProcThreadAttributeList (3.7+), BCryptGenRandom (3.7.4+) -- all Vista+. Every import of every PE in all 3.5.0-3.7.9 embeddable zips resolves against the Vista SP2 VM export tables (6.0.6003.20708)"
+    },
+    {
+     "kind": "vm-test",
+     "source": "operator test VMs (installer-builder/docs/test-vms.md), 2026-09-18: Vista SP2 (6.0.6003, x86): 3.7.0 and 3.7.9 x86 embeddable zips -> 'import sys, asyncio' OK. XP SP3: 3.5.0 x86 embeddable zip never started (hung on a loader error dialog, killed after 90 s)"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://docs.python.org/3.7/using/windows.html"
+    }
+   ],
+   "confidence": "high",
+   "notes": null,
+   "format": [
+    "zip"
+   ]
+  },
+  {
+   "versions": ">=3.8.0,<3.9",
+   "os": "windows",
+   "arch": [
+    "x86",
+    "amd64"
+   ],
+   "min_os": "7",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "7/server2008r2: SP1 and KB2533623"
+   ],
+   "applies_to": "python.org .exe installers",
+   "match": {
+    "format": [
+     "exe"
+    ],
+    "variant": [
+     null
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://docs.python.org/3.8/using/windows.html says 'Python 3.8 supports Windows Vista and newer'; https://docs.python.org/3/whatsnew/3.8.html: 'Windows 7 users will need to ensure that Windows Update KB2533623 has been installed (this is also verified by the installer)'"
+    },
+    {
+     "kind": "binary",
+     "source": "python38.dll (3.8.0-3.8.10, x86 and amd64) imports kernel32!GetActiveProcessorCount, which Vista/Server 2008 do not export (Windows 7+: https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getactiveprocessorcount); nothing else is missing on 7 SP1"
+    },
+    {
+     "kind": "vm-test",
+     "source": "operator test VMs (installer-builder/docs/test-vms.md), 2026-09-18: Vista SP2: 3.8.0 x86 embeddable zip exits 0xC0000139 (STATUS_ENTRYPOINT_NOT_FOUND). Windows 7 SP1 (6.1.7601.24545, x64): 3.8.10 x86 and amd64 embeddable zips -> asyncio OK"
+    },
+    {
+     "kind": "vm-test",
+     "source": "/home/x/projects/installer-builder-runtimes/TESTED-WINDOWS.md: operator-tested python-3.8.0.exe (x86) on Windows 7, 8 and 8.1, installs and asyncio works"
+    },
+    {
+     "kind": "binary",
+     "source": "installer ValidateOperatingSystem() still accepts Vista SP2 (https://github.com/python/cpython/blob/v3.8.10/Tools/msi/bundle/bootstrap/PythonBootstrapperApplication.cpp); on 7 SP1 it requires KB2533623"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Docs and the installer both say Vista; the binary says 7. On Vista SP2 the installer completes, then python.exe fails to start (entry point not found). The binary wins.",
+   "format": [
+    "exe"
+   ]
+  },
+  {
+   "versions": ">=3.8.0,<3.9",
+   "os": "windows",
+   "arch": [
+    "x86",
+    "amd64"
+   ],
+   "min_os": "7",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "7/server2008r2: SP1 and KB2533623 (3.8 loads extension DLLs with LOAD_LIBRARY_SEARCH_* flags)",
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "applies_to": "python.org embeddable zips",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "embed"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://docs.python.org/3.8/using/windows.html says 'Python 3.8 supports Windows Vista and newer'; https://docs.python.org/3/whatsnew/3.8.html: 'Windows 7 users will need to ensure that Windows Update KB2533623 has been installed (this is also verified by the installer)'"
+    },
+    {
+     "kind": "binary",
+     "source": "python38.dll (3.8.0-3.8.10, x86 and amd64) imports kernel32!GetActiveProcessorCount, which Vista/Server 2008 do not export (Windows 7+: https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getactiveprocessorcount); nothing else is missing on 7 SP1"
+    },
+    {
+     "kind": "vm-test",
+     "source": "operator test VMs (installer-builder/docs/test-vms.md), 2026-09-18: Vista SP2: 3.8.0 x86 embeddable zip exits 0xC0000139 (STATUS_ENTRYPOINT_NOT_FOUND). Windows 7 SP1 (6.1.7601.24545, x64): 3.8.10 x86 and amd64 embeddable zips -> asyncio OK"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Docs say Vista; binary and VM say 7.",
+   "format": [
+    "zip"
+   ]
+  },
+  {
+   "versions": ">=3.9.0,<3.12",
+   "os": "windows",
+   "arch": [
+    "x86",
+    "amd64"
+   ],
+   "min_os": "8",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "applies_to": "python.org embeddable zips",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "embed"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://docs.python.org/3.9/using/windows.html 'Python 3.9 supports Windows 8.1 and newer. If you require Windows 7 support, please install Python 3.8'; https://www.python.org/downloads/windows/ ('cannot be used on Windows 7 or earlier')"
+    },
+    {
+     "kind": "binary",
+     "source": "python39.dll ... python314.dll import api-ms-win-core-path-l1-1-0.dll (PathCchCombineEx, PathCchCanonicalizeEx/PathCchSkipRoot/PathCchFindExtension), Windows 8 / Server 2012+ (https://learn.microsoft.com/en-us/windows/win32/api/pathcch/nf-pathcch-pathcchcombineex). 3.9.0-3.11.9: nothing else missing against Windows 7 SP1 exports, and the only other post-Vista imports (GetActiveProcessorCount, SetWaitableTimerEx) are Windows 7 functions, so no import is newer than Windows 8"
+    },
+    {
+     "kind": "vm-test",
+     "source": "operator test VMs (installer-builder/docs/test-vms.md), 2026-09-18: Windows 7 SP1: 3.9.0 x86 and amd64 embeddable zips exit 0xC0000135 (STATUS_DLL_NOT_FOUND). Windows 8.1 (6.3.9600, x64): 3.11.9 amd64 embeddable zip -> asyncio OK"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "Docs say 8.1; the binary needs only Windows 8 APIs. No Windows 8.0 VM was available, so 8.0 is inferred from import tables (confidence medium).",
+   "format": [
+    "zip"
+   ]
+  },
+  {
+   "versions": ">=3.9.0,<3.12",
+   "os": "windows",
+   "arch": [
+    "x86",
+    "amd64"
+   ],
+   "min_os": "8.1",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python.org .exe installers",
+   "match": {
+    "format": [
+     "exe"
+    ],
+    "variant": [
+     null
+    ]
+   },
+   "also_os": [
+    "server2012"
+   ],
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://docs.python.org/3.9/using/windows.html 'Python 3.9 supports Windows 8.1 and newer. If you require Windows 7 support, please install Python 3.8'; https://www.python.org/downloads/windows/ ('cannot be used on Windows 7 or earlier')"
+    },
+    {
+     "kind": "binary",
+     "source": "installer ValidateOperatingSystem() for 3.9-3.13: client Windows 8.1+, Windows Server 2012+ (https://github.com/python/cpython/blob/v3.13.0/Tools/msi/bundle/bootstrap/PythonBootstrapperApplication.cpp); UX string 'At least Windows 8.1 or Windows Server 2012 are required' read from 3.9.13, 3.12.10 and 3.13.0 .exe"
+    },
+    {
+     "kind": "binary",
+     "source": "python39.dll ... python314.dll import api-ms-win-core-path-l1-1-0.dll (PathCchCombineEx, PathCchCanonicalizeEx/PathCchSkipRoot/PathCchFindExtension), Windows 8 / Server 2012+ (https://learn.microsoft.com/en-us/windows/win32/api/pathcch/nf-pathcch-pathcchcombineex). 3.9.0-3.11.9: nothing else missing against Windows 7 SP1 exports, and the only other post-Vista imports (GetActiveProcessorCount, SetWaitableTimerEx) are Windows 7 functions, so no import is newer than Windows 8"
+    },
+    {
+     "kind": "vm-test",
+     "source": "operator test VMs (installer-builder/docs/test-vms.md), 2026-09-18: Windows 7 SP1: 3.9.0 x86 and amd64 embeddable zips exit 0xC0000135 (STATUS_DLL_NOT_FOUND). Windows 8.1 (6.3.9600, x64): 3.11.9 amd64 embeddable zip -> asyncio OK"
+    }
+   ],
+   "confidence": "high",
+   "notes": "The installer refuses client Windows 8.0 but accepts Server 2012 (NT 6.2); the binaries themselves run on 8.0 (see the embeddable-zip rule).",
+   "format": [
+    "exe"
+   ]
+  },
+  {
+   "versions": ">=3.12.0,<3.13.16",
+   "os": "windows",
+   "arch": [
+    "x86",
+    "amd64"
+   ],
+   "min_os": "8.1",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "applies_to": "python.org embeddable zips",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "embed"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "python312.dll/python313.dll/python314.dll import kernel32!PssCaptureSnapshot/PssQuerySnapshot/PssFreeSnapshot (Windows 8.1 / Server 2012 R2 and later: https://learn.microsoft.com/en-us/windows/win32/api/processsnapshot/nf-processsnapshot-psscapturesnapshot) plus CopyFile2 (8), GetSystemTimePreciseAsFileTime (8, 3.13+) and GetCurrentThreadStackLimits (8, 3.14+). Every import of every PE in every 3.12.0-3.14.7 x86/amd64 embeddable zip resolves against the Windows 8.1 VM's export tables"
+    },
+    {
+     "kind": "vm-test",
+     "source": "operator test VMs (installer-builder/docs/test-vms.md), 2026-09-18: Windows 8.1 (6.3.9600.20778, x64): 3.12.10 x86+amd64, 3.13.0 x86+amd64, 3.13.15 amd64, 3.14.0 amd64 and 3.14.7 x86+amd64 embeddable zips -> 'import sys, asyncio' OK. Windows 10 22H2 (19045), 11 (26100) and Server 2022 (20348): 3.14.7 x86+amd64 -> OK"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://docs.python.org/3.14/using/windows.html 'Python 3.14 supports Windows 10 and newer ... If you require Windows 8.1 support, please install Python 3.12'; https://peps.python.org/pep-0011/ (a feature release supports Windows versions still in extended support at X.Y.0: 8.1/2012 R2 ended Oct 2023, before 3.13.0)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Upstream support for 8.1 officially ends with 3.12 (3.13's own docs still say 8.1; 3.14's say 3.12). The 3.13 binaries nevertheless run on 8.1: binary and VM win. Not guaranteed for later 3.13 patches.",
+   "format": [
+    "zip"
+   ]
+  },
+  {
+   "versions": ">=3.14.0,<3.14.8",
+   "os": "windows",
+   "arch": [
+    "x86",
+    "amd64"
+   ],
+   "min_os": "8.1",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "applies_to": "python.org embeddable zips",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "embed"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "python312.dll/python313.dll/python314.dll import kernel32!PssCaptureSnapshot/PssQuerySnapshot/PssFreeSnapshot (Windows 8.1 / Server 2012 R2 and later: https://learn.microsoft.com/en-us/windows/win32/api/processsnapshot/nf-processsnapshot-psscapturesnapshot) plus CopyFile2 (8), GetSystemTimePreciseAsFileTime (8, 3.13+) and GetCurrentThreadStackLimits (8, 3.14+). Every import of every PE in every 3.12.0-3.14.7 x86/amd64 embeddable zip resolves against the Windows 8.1 VM's export tables"
+    },
+    {
+     "kind": "vm-test",
+     "source": "operator test VMs (installer-builder/docs/test-vms.md), 2026-09-18: Windows 8.1 (6.3.9600.20778, x64): 3.12.10 x86+amd64, 3.13.0 x86+amd64, 3.13.15 amd64, 3.14.0 amd64 and 3.14.7 x86+amd64 embeddable zips -> 'import sys, asyncio' OK. Windows 10 22H2 (19045), 11 (26100) and Server 2022 (20348): 3.14.7 x86+amd64 -> OK"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://docs.python.org/3.14/using/windows.html 'Python 3.14 supports Windows 10 and newer ... If you require Windows 8.1 support, please install Python 3.12'; https://peps.python.org/pep-0011/ (a feature release supports Windows versions still in extended support at X.Y.0: 8.1/2012 R2 ended Oct 2023, before 3.13.0)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Vendor docs say Windows 10+; the 3.14.0-3.14.7 binaries import nothing newer than 8.1 and ran on the 8.1 VM with asyncio. Unsupported upstream: a later 3.14 patch may add a Windows 10-only import, so re-check every new release (see the >3.14.7 rule).",
+   "format": [
+    "zip"
+   ]
+  },
+  {
+   "versions": ">=3.13.16,<3.14",
+   "os": "windows",
+   "arch": [
+    "x86",
+    "amd64"
+   ],
+   "min_os": "10",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python.org embeddable zips released after this research",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "embed"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://docs.python.org/3.14/using/windows.html 'Python 3.14 supports Windows 10 and newer ... If you require Windows 8.1 support, please install Python 3.12'; https://peps.python.org/pep-0011/ (a feature release supports Windows versions still in extended support at X.Y.0: 8.1/2012 R2 ended Oct 2023, before 3.13.0)"
+    }
+   ],
+   "confidence": "low",
+   "notes": "Placeholder for releases newer than the catalogue: assume the vendor floor (Windows 10) until the binary is checked.",
+   "format": [
+    "zip"
+   ]
+  },
+  {
+   "versions": ">=3.14.8",
+   "os": "windows",
+   "arch": [
+    "x86",
+    "amd64"
+   ],
+   "min_os": "10",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python.org embeddable zips released after this research",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "embed"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://docs.python.org/3.14/using/windows.html 'Python 3.14 supports Windows 10 and newer ... If you require Windows 8.1 support, please install Python 3.12'; https://peps.python.org/pep-0011/ (a feature release supports Windows versions still in extended support at X.Y.0: 8.1/2012 R2 ended Oct 2023, before 3.13.0)"
+    }
+   ],
+   "confidence": "low",
+   "notes": "Placeholder for releases newer than the catalogue: assume the vendor floor (Windows 10) until the binary is checked.",
+   "format": [
+    "zip"
+   ]
+  },
+  {
+   "versions": ">=3.12.0,<3.14",
+   "os": "windows",
+   "arch": [
+    "x86",
+    "amd64"
+   ],
+   "min_os": "8.1",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python.org .exe installers",
+   "match": {
+    "format": [
+     "exe"
+    ],
+    "variant": [
+     null
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "installer ValidateOperatingSystem() for 3.9-3.13: client Windows 8.1+, Windows Server 2012+ (https://github.com/python/cpython/blob/v3.13.0/Tools/msi/bundle/bootstrap/PythonBootstrapperApplication.cpp); UX string 'At least Windows 8.1 or Windows Server 2012 are required' read from 3.9.13, 3.12.10 and 3.13.0 .exe"
+    },
+    {
+     "kind": "binary",
+     "source": "python312.dll/python313.dll/python314.dll import kernel32!PssCaptureSnapshot/PssQuerySnapshot/PssFreeSnapshot (Windows 8.1 / Server 2012 R2 and later: https://learn.microsoft.com/en-us/windows/win32/api/processsnapshot/nf-processsnapshot-psscapturesnapshot) plus CopyFile2 (8), GetSystemTimePreciseAsFileTime (8, 3.13+) and GetCurrentThreadStackLimits (8, 3.14+). Every import of every PE in every 3.12.0-3.14.7 x86/amd64 embeddable zip resolves against the Windows 8.1 VM's export tables"
+    },
+    {
+     "kind": "vm-test",
+     "source": "operator test VMs (installer-builder/docs/test-vms.md), 2026-09-18: Windows 8.1 (6.3.9600.20778, x64): 3.12.10 x86+amd64, 3.13.0 x86+amd64, 3.13.15 amd64, 3.14.0 amd64 and 3.14.7 x86+amd64 embeddable zips -> 'import sys, asyncio' OK. Windows 10 22H2 (19045), 11 (26100) and Server 2022 (20348): 3.14.7 x86+amd64 -> OK"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://docs.python.org/3.14/using/windows.html 'Python 3.14 supports Windows 10 and newer ... If you require Windows 8.1 support, please install Python 3.12'; https://peps.python.org/pep-0011/ (a feature release supports Windows versions still in extended support at X.Y.0: 8.1/2012 R2 ended Oct 2023, before 3.13.0)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "The installer also accepts Server 2012 (NT 6.2), but python312+.dll then fails to load there (PssCaptureSnapshot is 2012 R2+), so Server 2012 is excluded. The installer .exe itself was not run on 8.1; the embeddable zip of the same build was.",
+   "format": [
+    "exe"
+   ]
+  },
+  {
+   "versions": ">=3.14.0",
+   "os": "windows",
+   "arch": [
+    "x86",
+    "amd64"
+   ],
+   "min_os": "10",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python.org .exe installers",
+   "match": {
+    "format": [
+     "exe"
+    ],
+    "variant": [
+     null
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "installer ValidateOperatingSystem(): client Windows 10+, Server 2016+ (https://github.com/python/cpython/blob/v3.14.0/Tools/msi/bundle/bootstrap/PythonBootstrapperApplication.cpp); UX string 'At least Windows 10 or Windows Server 2016 are required' read from the 3.14.7 .exe"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://docs.python.org/3.14/using/windows.html 'Python 3.14 supports Windows 10 and newer ... If you require Windows 8.1 support, please install Python 3.12'; https://peps.python.org/pep-0011/ (a feature release supports Windows versions still in extended support at X.Y.0: 8.1/2012 R2 ended Oct 2023, before 3.13.0)"
+    },
+    {
+     "kind": "vm-test",
+     "source": "operator test VMs (installer-builder/docs/test-vms.md), 2026-09-18: Windows 8.1 (6.3.9600.20778, x64): 3.12.10 x86+amd64, 3.13.0 x86+amd64, 3.13.15 amd64, 3.14.0 amd64 and 3.14.7 x86+amd64 embeddable zips -> 'import sys, asyncio' OK. Windows 10 22H2 (19045), 11 (26100) and Server 2022 (20348): 3.14.7 x86+amd64 -> OK"
+    }
+   ],
+   "confidence": "high",
+   "notes": "The payload runs on 8.1 (see the embeddable-zip rule), but the installer refuses anything below Windows 10.",
+   "format": [
+    "exe"
+   ]
+  },
+  {
+   "versions": ">=3.9.7",
+   "os": "windows",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "10",
+   "min_build": 16299,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python.org arm64 embeddable zips",
+   "match": {
+    "format": [
+     "zip"
+    ],
+    "variant": [
+     "embed"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "arm64 python.exe/python3x.dll: machine 0xAA64, OS/subsystem 6.2; imports resolve against Windows 10 22H2 export names (x64 tables used as proxy). The x64 vcruntime140_1.dll shipped in the arm64 zips is for emulated x64 extensions and is not imported by the arm64 interpreter"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://docs.python.org/3/whatsnew/3.9.html ('Python can now be built for Windows 10 ARM64')"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "Windows on ARM64 exists only from Windows 10 1709 (build 16299); no ARM64 VM was available. Windows 11 on ARM also runs the x86 and amd64 builds under emulation; Windows 10 on ARM runs x86 only.",
+   "format": [
+    "zip"
+   ]
+  },
+  {
+   "versions": ">=3.11.0",
+   "os": "windows",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "10",
+   "min_build": 16299,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python.org arm64 .exe installers",
+   "match": {
+    "format": [
+     "exe"
+    ],
+    "variant": [
+     null
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "arm64 python.exe/python3x.dll: machine 0xAA64, OS/subsystem 6.2; imports resolve against Windows 10 22H2 export names (x64 tables used as proxy). The x64 vcruntime140_1.dll shipped in the arm64 zips is for emulated x64 extensions and is not imported by the arm64 interpreter"
+    },
+    {
+     "kind": "binary",
+     "source": "installer ValidateOperatingSystem() (3.11-3.13: 8.1+, 3.14: 10+) -- ARM64 Windows is always 10+"
+    }
+   ],
+   "confidence": "medium",
+   "notes": null,
+   "format": [
+    "exe"
+   ]
+  },
+  {
+   "versions": ">=2.4,<2.5",
+   "os": "macos",
+   "arch": [
+    "universal"
+   ],
+   "min_os": "10.3",
+   "min_build": null,
+   "max_os": "10.14",
+   "extra": [],
+   "applies_to": "MacPython 2.4.3 universal .dmg",
+   "match": {
+    "format": [
+     "dmg"
+    ],
+    "variant": [
+     "macpython"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "secondary",
+     "source": "variant name 'macpython' (Bob Ippolito's universal build) and release era; dmg not opened"
+    }
+   ],
+   "confidence": "low",
+   "notes": "32-bit only (PPC + i386 slices): needs macOS 10.14 or older (10.15 dropped 32-bit apps); PPC Macs top out at 10.5, and 10.4-10.6 Intel Macs could also run the PPC slice under Rosetta.",
+   "format": [
+    "dmg"
+   ]
+  },
+  {
+   "versions": ">=2.5,<3.2",
+   "os": "macos",
+   "arch": [
+    "universal"
+   ],
+   "min_os": "10.3",
+   "min_build": null,
+   "max_os": "10.14",
+   "extra": [],
+   "applies_to": "python.org universal .dmg (2.5.0-2.6.3, 3.1.0-3.1.1)",
+   "match": {
+    "format": [
+     "dmg"
+    ],
+    "variant": [
+     "macosx"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "secondary",
+     "source": "release era and the following macosx10.3 series; dmg not opened (UDIF/HFS+ not parsed)"
+    }
+   ],
+   "confidence": "low",
+   "notes": "32-bit only (PPC + i386 slices): needs macOS 10.14 or older (10.15 dropped 32-bit apps); PPC Macs top out at 10.5, and 10.4-10.6 Intel Macs could also run the PPC slice under Rosetta.",
+   "format": [
+    "dmg"
+   ]
+  },
+  {
+   "versions": ">=2.6,<3.3",
+   "os": "macos",
+   "arch": [
+    "universal"
+   ],
+   "min_os": "10.3",
+   "min_build": null,
+   "max_os": "10.14",
+   "extra": [],
+   "applies_to": "python.org 'macosx10.3' universal .dmg",
+   "match": {
+    "format": [
+     "dmg"
+    ],
+    "variant": [
+     "macosx10.3"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "file name suffix macosx10.3 = python.org's stated minimum ('for Mac OS X 10.3 and later' on the 2.7.x/3.2.x release pages)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "32-bit only (PPC + i386 slices): needs macOS 10.14 or older (10.15 dropped 32-bit apps); PPC Macs top out at 10.5, and 10.4-10.6 Intel Macs could also run the PPC slice under Rosetta. dmg not opened; the minimum is the vendor's.",
+   "format": [
+    "dmg"
+   ]
+  },
+  {
+   "versions": ">=2.7,<3.6",
+   "os": "macos",
+   "arch": [
+    "universal"
+   ],
+   "min_os": "10.5",
+   "min_build": null,
+   "max_os": "10.14",
+   "extra": [],
+   "applies_to": "python.org 'macosx10.5' 32-bit PPC/i386 installers",
+   "match": {
+    "format": [
+     "dmg",
+     "pkg"
+    ],
+    "variant": [
+     "macosx10.5"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://www.python.org/downloads/release/python-354/ and https://www.python.org/downloads/release/python-344/ ('Mac OS X 10.5 and later')"
+    },
+    {
+     "kind": "binary",
+     "source": "Mach-O LC_BUILD_VERSION/LC_VERSION_MIN_MACOSX of the framework's Python, bin/python3.x and _socket/select/_ssl/_asyncio/_ctypes/_hashlib: python-2.7.9-macosx10.5.pkg: ppc minos no LC_VERSION_MIN, LC_DYLD_INFO absent (pre-10.6 target), x86 minos no LC_VERSION_MIN, LC_DYLD_INFO absent (pre-10.6 target); python-3.5.4-macosx10.5.pkg: ppc minos no LC_VERSION_MIN, LC_DYLD_INFO absent (pre-10.6 target), x86 minos no LC_VERSION_MIN, LC_DYLD_INFO absent (pre-10.6 target)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "32-bit only (PPC + i386 slices): needs macOS 10.14 or older (10.15 dropped 32-bit apps); PPC Macs top out at 10.5, and 10.4-10.6 Intel Macs could also run the PPC slice under Rosetta."
+  },
+  {
+   "versions": ">=2.7,<3.8",
+   "os": "macos",
+   "arch": [
+    "universal"
+   ],
+   "min_os": "10.6",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python.org 'macosx10.6' 64/32-bit Intel installers",
+   "match": {
+    "format": [
+     "dmg",
+     "pkg"
+    ],
+    "variant": [
+     "macosx10.6"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://www.python.org/downloads/release/python-368/ / https://www.python.org/downloads/release/python-370/ ('Mac OS X 10.6 and later')"
+    },
+    {
+     "kind": "binary",
+     "source": "Mach-O LC_BUILD_VERSION/LC_VERSION_MIN_MACOSX of the framework's Python, bin/python3.x and _socket/select/_ssl/_asyncio/_ctypes/_hashlib: python-2.7.9-macosx10.6.pkg: x86 minos no LC_VERSION_MIN, x86_64 minos no LC_VERSION_MIN; python-3.4.2-macosx10.6.pkg: x86 minos no LC_VERSION_MIN, LC_DYLD_INFO present (10.6+ linker output), x86_64 minos no LC_VERSION_MIN, LC_DYLD_INFO present (10.6+ linker output); python-3.5.0-macosx10.6.pkg: x86 minos no LC_VERSION_MIN, x86_64 minos no LC_VERSION_MIN; python-3.6.0-macosx10.6.pkg: x86 minos no LC_VERSION_MIN, x86_64 minos no LC_VERSION_MIN; python-3.6.8-macosx10.6.pkg: x86 minos no LC_VERSION_MIN, x86_64 minos no LC_VERSION_MIN; python-3.7.0-macosx10.6.pkg: x86 minos no LC_VERSION_MIN, x86_64 minos no LC_VERSION_MIN; python-2.7.17-macosx10.6.pkg: x86 minos no LC_VERSION_MIN, LC_DYLD_INFO present (10.6+ linker output), x86_64 minos no LC_VERSION_MIN, LC_DYLD_INFO present (10.6+ linker output); python-3.7.6-macosx10.6.pkg: x86 minos no LC_VERSION_MIN, LC_DYLD_INFO present (10.6+ linker output), x86_64 minos no LC_VERSION_MIN, LC_DYLD_INFO present (10.6+ linker output)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Intel only (i386 + x86_64); runs on 10.15+ through the x86_64 slice and on Apple silicon under Rosetta 2. The 3.7.4 'macosx10.6' dmg is taken as the same build family (not opened)."
+  },
+  {
+   "versions": ">=2.7,<3.10",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "10.9",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python.org 'macosx10.9' 64-bit Intel .pkg",
+   "match": {
+    "format": [
+     "pkg"
+    ],
+    "variant": [
+     "macosx10.9"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://www.python.org/downloads/release/python-3913/ ('macOS 10.9 and later'); https://www.python.org/downloads/release/python-2718/"
+    },
+    {
+     "kind": "binary",
+     "source": "Mach-O LC_BUILD_VERSION/LC_VERSION_MIN_MACOSX of the framework's Python, bin/python3.x and _socket/select/_ssl/_asyncio/_ctypes/_hashlib: python-2.7.15-macosx10.9.pkg: x86_64 minos 10.9.0; python-3.6.5-macosx10.9.pkg: x86_64 minos 10.9.0; python-3.7.0-macosx10.9.pkg: x86_64 minos 10.9.0; python-3.8.0-macosx10.9.pkg: x86_64 minos 10.9.0; python-3.9.0-macosx10.9.pkg: x86_64 minos 10.9.0; python-3.9.13-macosx10.9.pkg: x86_64 minos 10.9.0; python-2.7.18-macosx10.9.pkg: x86_64 minos 10.9.0"
+    }
+   ],
+   "confidence": "high",
+   "notes": "x86_64 only; runs on Apple silicon under Rosetta 2.",
+   "format": [
+    "pkg"
+   ]
+  },
+  {
+   "versions": "==3.8.10",
+   "os": "macos",
+   "arch": [
+    "universal"
+   ],
+   "min_os": "11",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python.org 3.8.10 universal2 .pkg",
+   "match": {
+    "format": [
+     "pkg"
+    ],
+    "variant": [
+     "macos11"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://docs.python.org/3/whatsnew/3.8.html ('As of 3.8.10, Python now supports building and running on macOS 11 (Big Sur) and on Apple Silicon Macs')"
+    },
+    {
+     "kind": "binary",
+     "source": "Mach-O LC_BUILD_VERSION/LC_VERSION_MIN_MACOSX of the framework's Python, bin/python3.x and _socket/select/_ssl/_asyncio/_ctypes/_hashlib: python-3.8.10-macos11.pkg: x86_64 minos 11.0.0, arm64 minos 11.0.0"
+    }
+   ],
+   "confidence": "high",
+   "notes": "universal2 (x86_64 + arm64). Both slices need macOS 11; on 10.9-10.15 use the 3.8.10 macosx10.9 pkg instead.",
+   "format": [
+    "pkg"
+   ]
+  },
+  {
+   "versions": ">=3.9.1,<3.12.6",
+   "os": "macos",
+   "arch": [
+    "universal"
+   ],
+   "min_os": "10.9",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python.org universal2 .pkg ('macos11' in the file name)",
+   "match": {
+    "format": [
+     "pkg"
+    ],
+    "variant": [
+     "macos11",
+     "macos11.0"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://www.python.org/downloads/release/python-391/, https://www.python.org/downloads/release/python-3119/, https://www.python.org/downloads/release/python-3125/ ('for macOS 10.9 and later')"
+    },
+    {
+     "kind": "binary",
+     "source": "Mach-O LC_BUILD_VERSION/LC_VERSION_MIN_MACOSX of the framework's Python, bin/python3.x and _socket/select/_ssl/_asyncio/_ctypes/_hashlib: python-3.9.1-macos11.0.pkg: x86_64 minos 10.9.0, arm64 minos 11.0.0; python-3.9.13-macos11.pkg: x86_64 minos 10.9.0, arm64 minos 11.0.0; python-3.10.0-macos11.pkg: x86_64 minos 10.9.0, arm64 minos 11.0.0; python-3.10.11-macos11.pkg: x86_64 minos 10.9.0, arm64 minos 11.0.0; python-3.11.0-macos11.pkg: x86_64 minos 10.9.0, arm64 minos 11.0.0; python-3.11.9-macos11.pkg: x86_64 minos 10.9.0, arm64 minos 11.0.0; python-3.12.0-macos11.pkg: x86_64 minos 10.9.0, arm64 minos 11.0.0; python-3.12.5-macos11.pkg: x86_64 minos 10.9.0, arm64 minos 11.0.0"
+    }
+   ],
+   "confidence": "high",
+   "notes": "universal2: x86_64 slice minos 10.9, arm64 slice minos 11.0 (Apple silicon ships with 11+). The 'macos11' in the file name is not the minimum.",
+   "format": [
+    "pkg"
+   ]
+  },
+  {
+   "versions": ">=3.12.6,<3.14",
+   "os": "macos",
+   "arch": [
+    "universal"
+   ],
+   "min_os": "10.13",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python.org universal2 .pkg",
+   "match": {
+    "format": [
+     "pkg"
+    ],
+    "variant": [
+     "macos11"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://www.python.org/downloads/release/python-3126/, https://www.python.org/downloads/release/python-3130/, https://www.python.org/downloads/release/python-31315/ ('for macOS 10.13 and later'; 3.12.5 still said 10.9)"
+    },
+    {
+     "kind": "binary",
+     "source": "Mach-O LC_BUILD_VERSION/LC_VERSION_MIN_MACOSX of the framework's Python, bin/python3.x and _socket/select/_ssl/_asyncio/_ctypes/_hashlib: python-3.12.5-macos11.pkg: x86_64 minos 10.9.0, arm64 minos 11.0.0; python-3.12.6-macos11.pkg: x86_64 minos 10.13.0, arm64 minos 11.0.0; python-3.12.10-macos11.pkg: x86_64 minos 10.13.0, arm64 minos 11.0.0; python-3.13.0-macos11.pkg: x86_64 minos 10.13.0, arm64 minos 11.0.0; python-3.13.15-macos11.pkg: x86_64 minos 10.13.0, arm64 minos 11.0.0"
+    }
+   ],
+   "confidence": "high",
+   "notes": "x86_64 slice minos 10.13 from 3.12.6 (3.12.5 is still 10.9); arm64 slice 11.0.",
+   "format": [
+    "pkg"
+   ]
+  },
+  {
+   "versions": ">=3.14",
+   "os": "macos",
+   "arch": [
+    "universal"
+   ],
+   "min_os": "10.15",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python.org universal2 .pkg",
+   "match": {
+    "format": [
+     "pkg"
+    ],
+    "variant": [
+     "macos11"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://www.python.org/downloads/release/python-3140/, https://www.python.org/downloads/release/python-3147/ ('for macOS 10.15 and later')"
+    },
+    {
+     "kind": "binary",
+     "source": "Mach-O LC_BUILD_VERSION/LC_VERSION_MIN_MACOSX of the framework's Python, bin/python3.x and _socket/select/_ssl/_asyncio/_ctypes/_hashlib: python-3.14.0-macos11.pkg: x86_64 minos 10.15.0, arm64 minos 11.0.0; python-3.14.7-macos11.pkg: x86_64 minos 10.15.0, arm64 minos 11.0.0"
+    }
+   ],
+   "confidence": "high",
+   "notes": "x86_64 slice minos 10.15; arm64 slice 11.0.",
+   "format": [
+    "pkg"
+   ]
+  },
+  {
+   "versions": ">=3.8",
+   "os": "linux",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "glibc-2.17",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python-build-standalone install_only / install_only_stripped archives (glibc)",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "pbs",
+     "pbs_stripped"
+    ],
+    "libc": "glibc"
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/astral-sh/python-build-standalone/blob/main/docs/running.rst ('The minimum glibc version required for most targets is 2.17 ... For riscv64-unknown-linux-gnu ... 2.28')"
+    },
+    {
+     "kind": "binary",
+     "source": "highest GLIBC_x.y version needed (.gnu.version_r) across bin/python3.x, libpython and lib-dynload/*.so of the stripped archive: 3.8.20 (20241002): GLIBC_2.17 max, from libpython3.8.so.1.0; 3.9.23 (20250918): GLIBC_2.17 max, from python3.9; 3.10.21 (20260901): GLIBC_2.17 max, from python3.10; 3.11.16 (20260901): GLIBC_2.17 max, from python3.11; 3.12.14 (20260901): GLIBC_2.17 max, from python3.12; 3.13.15 (20260901): GLIBC_2.17 max, from python3.13; 3.14.7 (20260901): GLIBC_2.17 max, from python3.14"
+    }
+   ],
+   "confidence": "high",
+   "notes": null
+  },
+  {
+   "versions": ">=3.8",
+   "os": "linux",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "glibc-2.17",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python-build-standalone install_only / install_only_stripped archives (glibc)",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "pbs",
+     "pbs_stripped"
+    ],
+    "libc": "glibc"
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/astral-sh/python-build-standalone/blob/main/docs/running.rst ('The minimum glibc version required for most targets is 2.17 ... For riscv64-unknown-linux-gnu ... 2.28')"
+    },
+    {
+     "kind": "binary",
+     "source": "highest GLIBC_x.y version needed (.gnu.version_r) across bin/python3.x, libpython and lib-dynload/*.so of the stripped archive: 3.8.20 (20241002): GLIBC_2.17 max, from python3.8; 3.9.23 (20250918): GLIBC_2.17 max, from python3.9; 3.10.21 (20260901): GLIBC_2.17 max, from python3.10; 3.11.16 (20260901): GLIBC_2.17 max, from python3.11; 3.12.14 (20260901): GLIBC_2.17 max, from python3.12; 3.13.15 (20260901): GLIBC_2.17 max, from python3.13; 3.14.7 (20260901): GLIBC_2.17 max, from python3.14"
+    }
+   ],
+   "confidence": "high",
+   "notes": null
+  },
+  {
+   "versions": ">=3.9",
+   "os": "linux",
+   "arch": [
+    "armv7"
+   ],
+   "min_os": "glibc-2.17",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python-build-standalone install_only / install_only_stripped archives (glibc)",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "pbs",
+     "pbs_stripped"
+    ],
+    "libc": "glibc"
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/astral-sh/python-build-standalone/blob/main/docs/running.rst ('The minimum glibc version required for most targets is 2.17 ... For riscv64-unknown-linux-gnu ... 2.28')"
+    },
+    {
+     "kind": "binary",
+     "source": "highest GLIBC_x.y version needed (.gnu.version_r) across bin/python3.x, libpython and lib-dynload/*.so of the stripped archive: 3.9.23 (20250918): GLIBC_2.17 max, from python3.9; 3.10.21 (20260901): GLIBC_2.17 max, from python3.10; 3.11.16 (20260901): GLIBC_2.17 max, from python3.11; 3.12.14 (20260901): GLIBC_2.17 max, from python3.12; 3.13.15 (20260901): GLIBC_2.17 max, from python3.13; 3.14.7 (20260901): GLIBC_2.17 max, from python3.14"
+    }
+   ],
+   "confidence": "high",
+   "notes": null
+  },
+  {
+   "versions": ">=3.9",
+   "os": "linux",
+   "arch": [
+    "ppc64le"
+   ],
+   "min_os": "glibc-2.17",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python-build-standalone install_only / install_only_stripped archives (glibc)",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "pbs",
+     "pbs_stripped"
+    ],
+    "libc": "glibc"
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/astral-sh/python-build-standalone/blob/main/docs/running.rst ('The minimum glibc version required for most targets is 2.17 ... For riscv64-unknown-linux-gnu ... 2.28')"
+    },
+    {
+     "kind": "binary",
+     "source": "highest GLIBC_x.y version needed (.gnu.version_r) across bin/python3.x, libpython and lib-dynload/*.so of the stripped archive: 3.9.23 (20250918): GLIBC_2.17 max, from python3.9; 3.10.21 (20260901): GLIBC_2.17 max, from python3.10; 3.11.16 (20260901): GLIBC_2.17 max, from python3.11; 3.12.14 (20260901): GLIBC_2.17 max, from python3.12; 3.13.15 (20260901): GLIBC_2.17 max, from python3.13; 3.14.7 (20260901): GLIBC_2.17 max, from python3.14"
+    }
+   ],
+   "confidence": "high",
+   "notes": null
+  },
+  {
+   "versions": ">=3.9",
+   "os": "linux",
+   "arch": [
+    "riscv64"
+   ],
+   "min_os": "glibc-2.28",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python-build-standalone install_only / install_only_stripped archives (glibc)",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "pbs",
+     "pbs_stripped"
+    ],
+    "libc": "glibc"
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/astral-sh/python-build-standalone/blob/main/docs/running.rst ('The minimum glibc version required for most targets is 2.17 ... For riscv64-unknown-linux-gnu ... 2.28')"
+    },
+    {
+     "kind": "binary",
+     "source": "highest GLIBC_x.y version needed (.gnu.version_r) across bin/python3.x, libpython and lib-dynload/*.so of the stripped archive: 3.9.23 (20250918): GLIBC_2.28 max, from python3.9; 3.10.21 (20260901): GLIBC_2.28 max, from python3.10; 3.11.16 (20260901): GLIBC_2.28 max, from python3.11; 3.12.14 (20260901): GLIBC_2.28 max, from python3.12; 3.13.15 (20260901): GLIBC_2.28 max, from python3.13; 3.14.7 (20260901): GLIBC_2.28 max, from python3.14"
+    }
+   ],
+   "confidence": "high",
+   "notes": null
+  },
+  {
+   "versions": ">=3.9",
+   "os": "linux",
+   "arch": [
+    "s390x"
+   ],
+   "min_os": "glibc-2.17",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python-build-standalone install_only / install_only_stripped archives (glibc)",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "pbs",
+     "pbs_stripped"
+    ],
+    "libc": "glibc"
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/astral-sh/python-build-standalone/blob/main/docs/running.rst ('The minimum glibc version required for most targets is 2.17 ... For riscv64-unknown-linux-gnu ... 2.28')"
+    },
+    {
+     "kind": "binary",
+     "source": "highest GLIBC_x.y version needed (.gnu.version_r) across bin/python3.x, libpython and lib-dynload/*.so of the stripped archive: 3.9.23 (20250918): GLIBC_2.17 max, from python3.9; 3.10.21 (20260901): GLIBC_2.17 max, from python3.10; 3.11.16 (20260901): GLIBC_2.17 max, from python3.11; 3.12.14 (20260901): GLIBC_2.17 max, from python3.12; 3.13.15 (20260901): GLIBC_2.17 max, from python3.13; 3.14.7 (20260901): GLIBC_2.17 max, from python3.14"
+    }
+   ],
+   "confidence": "high",
+   "notes": null
+  },
+  {
+   "versions": "==3.8.20",
+   "os": "linux",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "glibc-2.5",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python-build-standalone musl archive (fully static)",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "pbs",
+     "pbs_stripped"
+    ],
+    "libc": "musl"
+   },
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "3.8.20 (20241002): bin/python3.x has no PT_INTERP and no DT_NEEDED version refs -- a static executable"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "Static: runs on any Linux kernel of this arch, glibc or musl (min_os set to the oldest glibc id only because the schema needs one). Cannot load dynamically linked extension modules."
+  },
+  {
+   "versions": ">=3.9",
+   "os": "linux",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": null,
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python-build-standalone musl archives (dynamically linked)",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "pbs",
+     "pbs_stripped"
+    ],
+    "libc": "musl"
+   },
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "PT_INTERP /lib/ld-musl-x86_64.so.1 in 6 archives (3.9.23..3.14.7)"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/astral-sh/python-build-standalone/blob/main/docs/running.rst ('By default, musl distributions are dynamically linked and require musl to be installed on the host')"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Needs a musl-based distro (e.g. Alpine); does not run on glibc systems without a musl loader. No glibc id applies (min_os null)."
+  },
+  {
+   "versions": ">=3.9",
+   "os": "linux",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": null,
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python-build-standalone musl archives (dynamically linked)",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "pbs",
+     "pbs_stripped"
+    ],
+    "libc": "musl"
+   },
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "PT_INTERP /lib/ld-musl-aarch64.so.1 in 6 archives (3.9.23..3.14.7)"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/astral-sh/python-build-standalone/blob/main/docs/running.rst ('By default, musl distributions are dynamically linked and require musl to be installed on the host')"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Needs a musl-based distro (e.g. Alpine); does not run on glibc systems without a musl loader. No glibc id applies (min_os null)."
+  },
+  {
+   "versions": ">=2.0",
+   "os": "linux",
+   "arch": [
+    "any"
+   ],
+   "min_os": null,
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python.org source tarballs (build from source)",
+   "match": {
+    "format": [
+     "tgz",
+     "tar.xz"
+    ],
+    "variant": [
+     null
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://docs.python.org/3/using/unix.html (building from source)"
+    }
+   ],
+   "confidence": "low",
+   "notes": "Source only: the floor is whatever C compiler, OpenSSL and libffi the target has (3.10+ needs OpenSSL 1.1.1, 3.11+ a C11 compiler). Not researched per glibc level; never selected by max_per_os."
+  },
+  {
+   "versions": ">=3.8,<3.9",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "10.9",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python-build-standalone install_only / install_only_stripped archives (macOS)",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "pbs",
+     "pbs_stripped"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "LC_BUILD_VERSION minos 10.9.0 in every Mach-O (bin/python3.x, libpython, lib-dynload) of the amd64 stripped archive for 3.8.20"
+    }
+   ],
+   "confidence": "high",
+   "notes": "x86_64 build; also runs on Apple silicon under Rosetta 2."
+  },
+  {
+   "versions": ">=3.9",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "10.15",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python-build-standalone install_only / install_only_stripped archives (macOS)",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "pbs",
+     "pbs_stripped"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "LC_BUILD_VERSION minos 10.15.0 in every Mach-O (bin/python3.x, libpython, lib-dynload) of the amd64 stripped archive for 3.9.23, 3.10.21, 3.11.16, 3.12.14, 3.13.15, 3.14.7"
+    }
+   ],
+   "confidence": "high",
+   "notes": "x86_64 build; also runs on Apple silicon under Rosetta 2."
+  },
+  {
+   "versions": ">=3.8",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "11",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "python-build-standalone install_only / install_only_stripped archives (macOS)",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "pbs",
+     "pbs_stripped"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "LC_BUILD_VERSION minos 11.0.0 in every Mach-O (bin/python3.x, libpython, lib-dynload) of the arm64 stripped archive for 3.8.20, 3.9.23, 3.10.21, 3.11.16, 3.12.14, 3.13.15, 3.14.7"
+    }
+   ],
+   "confidence": "high",
+   "notes": null
+  }
+ ],
+ "max_per_os": [
+  {
+   "os": "windows",
+   "os_version": "2000",
+   "arch": "x86",
+   "max_version": "3.2.5",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.2.5.msi",
+   "extra": [
+    "2000: SP3 or later (Windows Installer 2.0)"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "2000",
+   "arch": "x86",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "2000",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "32-bit only; use xp-x64 for 64-bit XP"
+  },
+  {
+   "os": "windows",
+   "os_version": "2000",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "32-bit only; use xp-x64 for 64-bit XP"
+  },
+  {
+   "os": "windows",
+   "os_version": "2000",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "2000",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "2000",
+   "arch": "ia64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Itanium edition of this Windows exists"
+  },
+  {
+   "os": "windows",
+   "os_version": "xp",
+   "arch": "x86",
+   "max_version": "3.4.4",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.4.4.msi",
+   "extra": [
+    "xp: SP2 or later (EncodePointer/DecodePointer)",
+    "server2003: SP1 or later"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "xp",
+   "arch": "x86",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "xp",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "32-bit only; use xp-x64 for 64-bit XP"
+  },
+  {
+   "os": "windows",
+   "os_version": "xp",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "32-bit only; use xp-x64 for 64-bit XP"
+  },
+  {
+   "os": "windows",
+   "os_version": "xp",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "xp",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "xp",
+   "arch": "ia64",
+   "max_version": "2.5.4",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-2.5.4.ia64.msi",
+   "extra": [],
+   "notes": "Itanium editions only"
+  },
+  {
+   "os": "windows",
+   "os_version": "xp-x64",
+   "arch": "x86",
+   "max_version": "3.4.4",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.4.4.msi",
+   "extra": [
+    "xp: SP2 or later (EncodePointer/DecodePointer)",
+    "server2003: SP1 or later"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "xp-x64",
+   "arch": "x86",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "xp-x64",
+   "arch": "amd64",
+   "max_version": "3.4.4",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.4.4.amd64.msi",
+   "extra": [
+    "xp-x64/server2003: SP1 or later for 3.3+ (msvcr100)"
+   ],
+   "notes": "needs a 64-bit edition of this Windows"
+  },
+  {
+   "os": "windows",
+   "os_version": "xp-x64",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "needs a 64-bit edition of this Windows"
+  },
+  {
+   "os": "windows",
+   "os_version": "xp-x64",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "xp-x64",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "xp-x64",
+   "arch": "ia64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Itanium edition of this Windows exists"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2003",
+   "arch": "x86",
+   "max_version": "3.4.4",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.4.4.msi",
+   "extra": [
+    "xp: SP2 or later (EncodePointer/DecodePointer)",
+    "server2003: SP1 or later"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2003",
+   "arch": "x86",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2003",
+   "arch": "amd64",
+   "max_version": "3.4.4",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.4.4.amd64.msi",
+   "extra": [
+    "xp-x64/server2003: SP1 or later for 3.3+ (msvcr100)"
+   ],
+   "notes": "needs a 64-bit edition of this Windows"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2003",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "needs a 64-bit edition of this Windows"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2003",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2003",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2003",
+   "arch": "ia64",
+   "max_version": "2.5.4",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-2.5.4.ia64.msi",
+   "extra": [],
+   "notes": "Itanium editions only"
+  },
+  {
+   "os": "windows",
+   "os_version": "vista",
+   "arch": "x86",
+   "max_version": "3.7.9",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.7.9.exe",
+   "extra": [
+    "vista/server2008: SP2",
+    "7/server2008r2: SP1",
+    "7/server2008r2, 3.7.7-3.7.9: KB2533623"
+   ],
+   "notes": "3.8 installers accept Vista SP2 but python38.dll needs Windows 7 (GetActiveProcessorCount): 3.8 installs, then fails to start"
+  },
+  {
+   "os": "windows",
+   "os_version": "vista",
+   "arch": "x86",
+   "max_version": "3.7.9",
+   "variant": "embed",
+   "tested": true,
+   "role": "newest",
+   "file": "python-3.7.9-embed-win32.zip",
+   "extra": [
+    "vista/server2008: SP2",
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "3.8 installers accept Vista SP2 but python38.dll needs Windows 7 (GetActiveProcessorCount): 3.8 installs, then fails to start; VM-tested here: import sys, asyncio OK"
+  },
+  {
+   "os": "windows",
+   "os_version": "vista",
+   "arch": "amd64",
+   "max_version": "3.7.9",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.7.9-amd64.exe",
+   "extra": [
+    "vista/server2008: SP2",
+    "7/server2008r2: SP1",
+    "7/server2008r2, 3.7.7-3.7.9: KB2533623"
+   ],
+   "notes": "needs a 64-bit edition of this Windows; 3.8 installers accept Vista SP2 but python38.dll needs Windows 7 (GetActiveProcessorCount): 3.8 installs, then fails to start"
+  },
+  {
+   "os": "windows",
+   "os_version": "vista",
+   "arch": "amd64",
+   "max_version": "3.7.9",
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.7.9-embed-amd64.zip",
+   "extra": [
+    "vista/server2008: SP2",
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "needs a 64-bit edition of this Windows; 3.8 installers accept Vista SP2 but python38.dll needs Windows 7 (GetActiveProcessorCount): 3.8 installs, then fails to start"
+  },
+  {
+   "os": "windows",
+   "os_version": "vista",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports); 3.8 installers accept Vista SP2 but python38.dll needs Windows 7 (GetActiveProcessorCount): 3.8 installs, then fails to start"
+  },
+  {
+   "os": "windows",
+   "os_version": "vista",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports); 3.8 installers accept Vista SP2 but python38.dll needs Windows 7 (GetActiveProcessorCount): 3.8 installs, then fails to start"
+  },
+  {
+   "os": "windows",
+   "os_version": "vista",
+   "arch": "ia64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Itanium edition of this Windows exists; 3.8 installers accept Vista SP2 but python38.dll needs Windows 7 (GetActiveProcessorCount): 3.8 installs, then fails to start"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008",
+   "arch": "x86",
+   "max_version": "3.7.9",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.7.9.exe",
+   "extra": [
+    "vista/server2008: SP2",
+    "7/server2008r2: SP1",
+    "7/server2008r2, 3.7.7-3.7.9: KB2533623"
+   ],
+   "notes": "3.8 installers accept Vista SP2 but python38.dll needs Windows 7 (GetActiveProcessorCount): 3.8 installs, then fails to start"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008",
+   "arch": "x86",
+   "max_version": "3.7.9",
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.7.9-embed-win32.zip",
+   "extra": [
+    "vista/server2008: SP2",
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "3.8 installers accept Vista SP2 but python38.dll needs Windows 7 (GetActiveProcessorCount): 3.8 installs, then fails to start"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008",
+   "arch": "amd64",
+   "max_version": "3.7.9",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.7.9-amd64.exe",
+   "extra": [
+    "vista/server2008: SP2",
+    "7/server2008r2: SP1",
+    "7/server2008r2, 3.7.7-3.7.9: KB2533623"
+   ],
+   "notes": "needs a 64-bit edition of this Windows; 3.8 installers accept Vista SP2 but python38.dll needs Windows 7 (GetActiveProcessorCount): 3.8 installs, then fails to start"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008",
+   "arch": "amd64",
+   "max_version": "3.7.9",
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.7.9-embed-amd64.zip",
+   "extra": [
+    "vista/server2008: SP2",
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "needs a 64-bit edition of this Windows; 3.8 installers accept Vista SP2 but python38.dll needs Windows 7 (GetActiveProcessorCount): 3.8 installs, then fails to start"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports); 3.8 installers accept Vista SP2 but python38.dll needs Windows 7 (GetActiveProcessorCount): 3.8 installs, then fails to start"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports); 3.8 installers accept Vista SP2 but python38.dll needs Windows 7 (GetActiveProcessorCount): 3.8 installs, then fails to start"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008",
+   "arch": "ia64",
+   "max_version": "2.5.4",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-2.5.4.ia64.msi",
+   "extra": [],
+   "notes": "Itanium editions only; 3.8 installers accept Vista SP2 but python38.dll needs Windows 7 (GetActiveProcessorCount): 3.8 installs, then fails to start"
+  },
+  {
+   "os": "windows",
+   "os_version": "7",
+   "arch": "x86",
+   "max_version": "3.8.10",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.8.10.exe",
+   "extra": [
+    "7/server2008r2: SP1 and KB2533623"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "7",
+   "arch": "x86",
+   "max_version": "3.8.10",
+   "variant": "embed",
+   "tested": true,
+   "role": "newest",
+   "file": "python-3.8.10-embed-win32.zip",
+   "extra": [
+    "7/server2008r2: SP1 and KB2533623 (3.8 loads extension DLLs with LOAD_LIBRARY_SEARCH_* flags)",
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "VM-tested here: import sys, asyncio OK"
+  },
+  {
+   "os": "windows",
+   "os_version": "7",
+   "arch": "amd64",
+   "max_version": "3.8.10",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.8.10-amd64.exe",
+   "extra": [
+    "7/server2008r2: SP1 and KB2533623"
+   ],
+   "notes": "needs a 64-bit edition of this Windows"
+  },
+  {
+   "os": "windows",
+   "os_version": "7",
+   "arch": "amd64",
+   "max_version": "3.8.10",
+   "variant": "embed",
+   "tested": true,
+   "role": "newest",
+   "file": "python-3.8.10-embed-amd64.zip",
+   "extra": [
+    "7/server2008r2: SP1 and KB2533623 (3.8 loads extension DLLs with LOAD_LIBRARY_SEARCH_* flags)",
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "needs a 64-bit edition of this Windows; VM-tested here: import sys, asyncio OK"
+  },
+  {
+   "os": "windows",
+   "os_version": "7",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "7",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "7",
+   "arch": "ia64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Itanium edition of this Windows exists"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008r2",
+   "arch": "x86",
+   "max_version": "3.8.10",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.8.10.exe",
+   "extra": [
+    "7/server2008r2: SP1 and KB2533623"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008r2",
+   "arch": "x86",
+   "max_version": "3.8.10",
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.8.10-embed-win32.zip",
+   "extra": [
+    "7/server2008r2: SP1 and KB2533623 (3.8 loads extension DLLs with LOAD_LIBRARY_SEARCH_* flags)",
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008r2",
+   "arch": "amd64",
+   "max_version": "3.8.10",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.8.10-amd64.exe",
+   "extra": [
+    "7/server2008r2: SP1 and KB2533623"
+   ],
+   "notes": "needs a 64-bit edition of this Windows"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008r2",
+   "arch": "amd64",
+   "max_version": "3.8.10",
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.8.10-embed-amd64.zip",
+   "extra": [
+    "7/server2008r2: SP1 and KB2533623 (3.8 loads extension DLLs with LOAD_LIBRARY_SEARCH_* flags)",
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "needs a 64-bit edition of this Windows"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008r2",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008r2",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008r2",
+   "arch": "ia64",
+   "max_version": "2.5.4",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-2.5.4.ia64.msi",
+   "extra": [],
+   "notes": "Itanium editions only"
+  },
+  {
+   "os": "windows",
+   "os_version": "8",
+   "arch": "x86",
+   "max_version": "3.8.10",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.8.10.exe",
+   "extra": [
+    "7/server2008r2: SP1 and KB2533623"
+   ],
+   "notes": "the 3.9-3.13 installers refuse client Windows 8.0 (they want 8.1), so the installer tops out at 3.8.10 while the embeddable zip reaches 3.11.9 (3.12+ imports 8.1-only PssCaptureSnapshot)"
+  },
+  {
+   "os": "windows",
+   "os_version": "8",
+   "arch": "x86",
+   "max_version": "3.11.9",
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.11.9-embed-win32.zip",
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "the 3.9-3.13 installers refuse client Windows 8.0 (they want 8.1), so the installer tops out at 3.8.10 while the embeddable zip reaches 3.11.9 (3.12+ imports 8.1-only PssCaptureSnapshot)"
+  },
+  {
+   "os": "windows",
+   "os_version": "8",
+   "arch": "amd64",
+   "max_version": "3.8.10",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.8.10-amd64.exe",
+   "extra": [
+    "7/server2008r2: SP1 and KB2533623"
+   ],
+   "notes": "needs a 64-bit edition of this Windows; the 3.9-3.13 installers refuse client Windows 8.0 (they want 8.1), so the installer tops out at 3.8.10 while the embeddable zip reaches 3.11.9 (3.12+ imports 8.1-only PssCaptureSnapshot)"
+  },
+  {
+   "os": "windows",
+   "os_version": "8",
+   "arch": "amd64",
+   "max_version": "3.11.9",
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.11.9-embed-amd64.zip",
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "needs a 64-bit edition of this Windows; the 3.9-3.13 installers refuse client Windows 8.0 (they want 8.1), so the installer tops out at 3.8.10 while the embeddable zip reaches 3.11.9 (3.12+ imports 8.1-only PssCaptureSnapshot)"
+  },
+  {
+   "os": "windows",
+   "os_version": "8",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "8",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "8",
+   "arch": "ia64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Itanium edition of this Windows exists"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012",
+   "arch": "x86",
+   "max_version": "3.11.9",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.11.9.exe",
+   "extra": [],
+   "notes": "the 3.12 and 3.13 installers accept Server 2012 but their python3xx.dll imports PssCaptureSnapshot (2012 R2+) and will not load"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012",
+   "arch": "x86",
+   "max_version": "3.11.9",
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.11.9-embed-win32.zip",
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "the 3.12 and 3.13 installers accept Server 2012 but their python3xx.dll imports PssCaptureSnapshot (2012 R2+) and will not load"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012",
+   "arch": "amd64",
+   "max_version": "3.11.9",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.11.9-amd64.exe",
+   "extra": [],
+   "notes": "needs a 64-bit edition of this Windows; the 3.12 and 3.13 installers accept Server 2012 but their python3xx.dll imports PssCaptureSnapshot (2012 R2+) and will not load"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012",
+   "arch": "amd64",
+   "max_version": "3.11.9",
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.11.9-embed-amd64.zip",
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "needs a 64-bit edition of this Windows; the 3.12 and 3.13 installers accept Server 2012 but their python3xx.dll imports PssCaptureSnapshot (2012 R2+) and will not load"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012",
+   "arch": "ia64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Itanium edition of this Windows exists"
+  },
+  {
+   "os": "windows",
+   "os_version": "8.1",
+   "arch": "x86",
+   "max_version": "3.13.15",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.13.15.exe",
+   "extra": [],
+   "notes": "the 3.14 installer refuses 8.1, but the 3.14.0-3.14.7 embeddable zips run there (VM-tested 3.14.7 x86+amd64 with asyncio); unsupported upstream since 3.13"
+  },
+  {
+   "os": "windows",
+   "os_version": "8.1",
+   "arch": "x86",
+   "max_version": "3.14.7",
+   "variant": "embed",
+   "tested": true,
+   "role": "newest",
+   "file": "python-3.14.7-embed-win32.zip",
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "the 3.14 installer refuses 8.1, but the 3.14.0-3.14.7 embeddable zips run there (VM-tested 3.14.7 x86+amd64 with asyncio); unsupported upstream since 3.13; VM-tested here: import sys, asyncio OK"
+  },
+  {
+   "os": "windows",
+   "os_version": "8.1",
+   "arch": "amd64",
+   "max_version": "3.13.15",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.13.15-amd64.exe",
+   "extra": [],
+   "notes": "needs a 64-bit edition of this Windows; the 3.14 installer refuses 8.1, but the 3.14.0-3.14.7 embeddable zips run there (VM-tested 3.14.7 x86+amd64 with asyncio); unsupported upstream since 3.13"
+  },
+  {
+   "os": "windows",
+   "os_version": "8.1",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "embed",
+   "tested": true,
+   "role": "newest",
+   "file": "python-3.14.7-embed-amd64.zip",
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "needs a 64-bit edition of this Windows; the 3.14 installer refuses 8.1, but the 3.14.0-3.14.7 embeddable zips run there (VM-tested 3.14.7 x86+amd64 with asyncio); unsupported upstream since 3.13; VM-tested here: import sys, asyncio OK"
+  },
+  {
+   "os": "windows",
+   "os_version": "8.1",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "8.1",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "8.1",
+   "arch": "ia64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Itanium edition of this Windows exists"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012r2",
+   "arch": "x86",
+   "max_version": "3.13.15",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.13.15.exe",
+   "extra": [],
+   "notes": "the 3.14 installer refuses 8.1, but the 3.14.0-3.14.7 embeddable zips run there (VM-tested 3.14.7 x86+amd64 with asyncio); unsupported upstream since 3.13"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012r2",
+   "arch": "x86",
+   "max_version": "3.14.7",
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-embed-win32.zip",
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "the 3.14 installer refuses 8.1, but the 3.14.0-3.14.7 embeddable zips run there (VM-tested 3.14.7 x86+amd64 with asyncio); unsupported upstream since 3.13"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012r2",
+   "arch": "amd64",
+   "max_version": "3.13.15",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.13.15-amd64.exe",
+   "extra": [],
+   "notes": "needs a 64-bit edition of this Windows; the 3.14 installer refuses 8.1, but the 3.14.0-3.14.7 embeddable zips run there (VM-tested 3.14.7 x86+amd64 with asyncio); unsupported upstream since 3.13"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012r2",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-embed-amd64.zip",
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "needs a 64-bit edition of this Windows; the 3.14 installer refuses 8.1, but the 3.14.0-3.14.7 embeddable zips run there (VM-tested 3.14.7 x86+amd64 with asyncio); unsupported upstream since 3.13"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012r2",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012r2",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012r2",
+   "arch": "ia64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Itanium edition of this Windows exists"
+  },
+  {
+   "os": "windows",
+   "os_version": "10",
+   "arch": "x86",
+   "max_version": "3.14.7",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7.exe",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "10",
+   "arch": "x86",
+   "max_version": "3.14.7",
+   "variant": "embed",
+   "tested": true,
+   "role": "newest",
+   "file": "python-3.14.7-embed-win32.zip",
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "VM-tested here: import sys, asyncio OK"
+  },
+  {
+   "os": "windows",
+   "os_version": "10",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-amd64.exe",
+   "extra": [],
+   "notes": "needs a 64-bit edition of this Windows"
+  },
+  {
+   "os": "windows",
+   "os_version": "10",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "embed",
+   "tested": true,
+   "role": "newest",
+   "file": "python-3.14.7-embed-amd64.zip",
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "needs a 64-bit edition of this Windows; VM-tested here: import sys, asyncio OK"
+  },
+  {
+   "os": "windows",
+   "os_version": "10",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-arm64.exe",
+   "extra": [],
+   "notes": "Windows on ARM64 only"
+  },
+  {
+   "os": "windows",
+   "os_version": "10",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-embed-arm64.zip",
+   "extra": [],
+   "notes": "Windows on ARM64 only"
+  },
+  {
+   "os": "windows",
+   "os_version": "10",
+   "arch": "ia64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Itanium edition of this Windows exists"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2016",
+   "arch": "x86",
+   "max_version": "3.14.7",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7.exe",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2016",
+   "arch": "x86",
+   "max_version": "3.14.7",
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-embed-win32.zip",
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2016",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-amd64.exe",
+   "extra": [],
+   "notes": "needs a 64-bit edition of this Windows"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2016",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-embed-amd64.zip",
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "needs a 64-bit edition of this Windows"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2016",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2016",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2016",
+   "arch": "ia64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Itanium edition of this Windows exists"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2019",
+   "arch": "x86",
+   "max_version": "3.14.7",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7.exe",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2019",
+   "arch": "x86",
+   "max_version": "3.14.7",
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-embed-win32.zip",
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2019",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-amd64.exe",
+   "extra": [],
+   "notes": "needs a 64-bit edition of this Windows"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2019",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-embed-amd64.zip",
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "needs a 64-bit edition of this Windows"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2019",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2019",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2019",
+   "arch": "ia64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Itanium edition of this Windows exists"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2022",
+   "arch": "x86",
+   "max_version": "3.14.7",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7.exe",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2022",
+   "arch": "x86",
+   "max_version": "3.14.7",
+   "variant": "embed",
+   "tested": true,
+   "role": "newest",
+   "file": "python-3.14.7-embed-win32.zip",
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "VM-tested here: import sys, asyncio OK"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2022",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-amd64.exe",
+   "extra": [],
+   "notes": "needs a 64-bit edition of this Windows"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2022",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "embed",
+   "tested": true,
+   "role": "newest",
+   "file": "python-3.14.7-embed-amd64.zip",
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "needs a 64-bit edition of this Windows; VM-tested here: import sys, asyncio OK"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2022",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2022",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2022",
+   "arch": "ia64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Itanium edition of this Windows exists"
+  },
+  {
+   "os": "windows",
+   "os_version": "11",
+   "arch": "x86",
+   "max_version": "3.14.7",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7.exe",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "11",
+   "arch": "x86",
+   "max_version": "3.14.7",
+   "variant": "embed",
+   "tested": true,
+   "role": "newest",
+   "file": "python-3.14.7-embed-win32.zip",
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "VM-tested here: import sys, asyncio OK"
+  },
+  {
+   "os": "windows",
+   "os_version": "11",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-amd64.exe",
+   "extra": [],
+   "notes": "needs a 64-bit edition of this Windows"
+  },
+  {
+   "os": "windows",
+   "os_version": "11",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "embed",
+   "tested": true,
+   "role": "newest",
+   "file": "python-3.14.7-embed-amd64.zip",
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "needs a 64-bit edition of this Windows; VM-tested here: import sys, asyncio OK"
+  },
+  {
+   "os": "windows",
+   "os_version": "11",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-arm64.exe",
+   "extra": [],
+   "notes": "Windows on ARM64 only"
+  },
+  {
+   "os": "windows",
+   "os_version": "11",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-embed-arm64.zip",
+   "extra": [],
+   "notes": "Windows on ARM64 only"
+  },
+  {
+   "os": "windows",
+   "os_version": "11",
+   "arch": "ia64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Itanium edition of this Windows exists"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2025",
+   "arch": "x86",
+   "max_version": "3.14.7",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7.exe",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2025",
+   "arch": "x86",
+   "max_version": "3.14.7",
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-embed-win32.zip",
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2025",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-amd64.exe",
+   "extra": [],
+   "notes": "needs a 64-bit edition of this Windows"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2025",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-embed-amd64.zip",
+   "extra": [
+    "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
+   ],
+   "notes": "needs a 64-bit edition of this Windows"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2025",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2025",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": "embed",
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no ARM64 edition of this Windows exists (or none Python supports)"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2025",
+   "arch": "ia64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Itanium edition of this Windows exists"
+  },
+  {
+   "os": "windows",
+   "os_version": "xp",
+   "arch": "x86",
+   "max_version": "3.5.0",
+   "variant": "xp-backport",
+   "tested": true,
+   "role": "known-good",
+   "file": "python_3_5_x86.zip",
+   "extra": [
+    "VC++ AIO redistributable v0.35.0 installed first (/ai)"
+   ],
+   "notes": "python_3_5_x86.zip (custom 3.5 XP backport, SHA-256 95E2208F...ED619); unzip to %SystemDrive%\\py3 after VC++ AIO v0.35.0 /ai. Not a python.org release, not in releases.json. Re-run here: asyncio OK on the XP VM, and every PE imports only functions XP SP3 exports (PE subsystem 5.1)"
+  },
+  {
+   "os": "windows",
+   "os_version": "vista",
+   "arch": "x86",
+   "max_version": "3.7.0",
+   "variant": null,
+   "tested": true,
+   "role": "known-good",
+   "file": "python-3.7.0.exe",
+   "extra": [
+    "VC++ AIO redistributable v0.35.0 installed first (/ai)"
+   ],
+   "notes": "python-3.7.0.exe x86 after VC++ AIO v0.35.0; operator-tested. The 3.7.9 embeddable zip also passed here"
+  },
+  {
+   "os": "windows",
+   "os_version": "7",
+   "arch": "x86",
+   "max_version": "3.8.0",
+   "variant": null,
+   "tested": true,
+   "role": "known-good",
+   "file": "python-3.8.0.exe",
+   "extra": [
+    "SP1",
+    "KB2533623 (the 3.8 installer checks for it)"
+   ],
+   "notes": "python-3.8.0.exe x86; operator-tested. Do not swap for 3.8.10 without re-testing asyncio (TESTED-WINDOWS.md); the 3.8.10 embeddable zip did pass 'import asyncio' on the 7 VM here"
+  },
+  {
+   "os": "windows",
+   "os_version": "8",
+   "arch": "x86",
+   "max_version": "3.8.0",
+   "variant": null,
+   "tested": true,
+   "role": "known-good",
+   "file": "python-3.8.0.exe",
+   "extra": [],
+   "notes": "python-3.8.0.exe x86; operator-tested"
+  },
+  {
+   "os": "windows",
+   "os_version": "8.1",
+   "arch": "x86",
+   "max_version": "3.8.0",
+   "variant": null,
+   "tested": true,
+   "role": "known-good",
+   "file": "python-3.8.0.exe",
+   "extra": [],
+   "notes": "python-3.8.0.exe x86; operator-tested"
+  },
+  {
+   "os": "windows",
+   "os_version": "10",
+   "arch": "x86",
+   "max_version": "3.13.0",
+   "variant": null,
+   "tested": true,
+   "role": "known-good",
+   "file": "python-3.13.0.exe",
+   "extra": [],
+   "notes": "python-3.13.0.exe x86; operator-tested"
+  },
+  {
+   "os": "windows",
+   "os_version": "11",
+   "arch": "x86",
+   "max_version": "3.13.0",
+   "variant": null,
+   "tested": true,
+   "role": "known-good",
+   "file": "python-3.13.0.exe",
+   "extra": [],
+   "notes": "python-3.13.0.exe x86; operator-tested"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.3",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.3",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Apple silicon Mac runs this macOS"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.3",
+   "arch": "universal",
+   "max_version": "3.2.5",
+   "variant": "macosx10.3",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.2.5-macosx10.3.dmg",
+   "extra": [],
+   "notes": "32-bit only (PPC + i386 slices): needs macOS 10.14 or older (10.15 dropped 32-bit apps); PPC Macs top out at 10.5, and 10.4-10.6 Intel Macs could also run the PPC slice under Rosetta. dmg not opened; the minimum is the vendor's."
+  },
+  {
+   "os": "macos",
+   "os_version": "10.4",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.4",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Apple silicon Mac runs this macOS"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.4",
+   "arch": "universal",
+   "max_version": "3.2.5",
+   "variant": "macosx10.3",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.2.5-macosx10.3.dmg",
+   "extra": [],
+   "notes": "32-bit only (PPC + i386 slices): needs macOS 10.14 or older (10.15 dropped 32-bit apps); PPC Macs top out at 10.5, and 10.4-10.6 Intel Macs could also run the PPC slice under Rosetta. dmg not opened; the minimum is the vendor's."
+  },
+  {
+   "os": "macos",
+   "os_version": "10.5",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.5",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Apple silicon Mac runs this macOS"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.5",
+   "arch": "universal",
+   "max_version": "3.5.4",
+   "variant": "macosx10.5",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.5.4-macosx10.5.pkg",
+   "extra": [],
+   "notes": "32-bit only (PPC + i386 slices): needs macOS 10.14 or older (10.15 dropped 32-bit apps); PPC Macs top out at 10.5, and 10.4-10.6 Intel Macs could also run the PPC slice under Rosetta."
+  },
+  {
+   "os": "macos",
+   "os_version": "10.6",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.6",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Apple silicon Mac runs this macOS"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.6",
+   "arch": "universal",
+   "max_version": "3.7.6",
+   "variant": "macosx10.6",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.7.6-macosx10.6.pkg",
+   "extra": [],
+   "notes": "Intel only (i386 + x86_64); runs on 10.15+ through the x86_64 slice and on Apple silicon under Rosetta 2. The 3.7.4 'macosx10.6' dmg is taken as the same build family (not opened)."
+  },
+  {
+   "os": "macos",
+   "os_version": "10.7",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.7",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Apple silicon Mac runs this macOS"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.7",
+   "arch": "universal",
+   "max_version": "3.7.6",
+   "variant": "macosx10.6",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.7.6-macosx10.6.pkg",
+   "extra": [],
+   "notes": "Intel only (i386 + x86_64); runs on 10.15+ through the x86_64 slice and on Apple silicon under Rosetta 2. The 3.7.4 'macosx10.6' dmg is taken as the same build family (not opened)."
+  },
+  {
+   "os": "macos",
+   "os_version": "10.8",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.8",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Apple silicon Mac runs this macOS"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.8",
+   "arch": "universal",
+   "max_version": "3.7.6",
+   "variant": "macosx10.6",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.7.6-macosx10.6.pkg",
+   "extra": [],
+   "notes": "Intel only (i386 + x86_64); runs on 10.15+ through the x86_64 slice and on Apple silicon under Rosetta 2. The 3.7.4 'macosx10.6' dmg is taken as the same build family (not opened)."
+  },
+  {
+   "os": "macos",
+   "os_version": "10.9",
+   "arch": "amd64",
+   "max_version": "3.9.13",
+   "variant": "macosx10.9",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.9.13-macosx10.9.pkg",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.9",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Apple silicon Mac runs this macOS"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.9",
+   "arch": "universal",
+   "max_version": "3.12.5",
+   "variant": "macos11",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.12.5-macos11.pkg",
+   "extra": [],
+   "notes": "universal2: x86_64 slice minos 10.9, arm64 slice minos 11.0 (Apple silicon ships with 11+). The 'macos11' in the file name is not the minimum."
+  },
+  {
+   "os": "macos",
+   "os_version": "10.10",
+   "arch": "amd64",
+   "max_version": "3.9.13",
+   "variant": "macosx10.9",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.9.13-macosx10.9.pkg",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.10",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Apple silicon Mac runs this macOS"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.10",
+   "arch": "universal",
+   "max_version": "3.12.5",
+   "variant": "macos11",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.12.5-macos11.pkg",
+   "extra": [],
+   "notes": "universal2: x86_64 slice minos 10.9, arm64 slice minos 11.0 (Apple silicon ships with 11+). The 'macos11' in the file name is not the minimum."
+  },
+  {
+   "os": "macos",
+   "os_version": "10.11",
+   "arch": "amd64",
+   "max_version": "3.9.13",
+   "variant": "macosx10.9",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.9.13-macosx10.9.pkg",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.11",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Apple silicon Mac runs this macOS"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.11",
+   "arch": "universal",
+   "max_version": "3.12.5",
+   "variant": "macos11",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.12.5-macos11.pkg",
+   "extra": [],
+   "notes": "universal2: x86_64 slice minos 10.9, arm64 slice minos 11.0 (Apple silicon ships with 11+). The 'macos11' in the file name is not the minimum."
+  },
+  {
+   "os": "macos",
+   "os_version": "10.12",
+   "arch": "amd64",
+   "max_version": "3.9.13",
+   "variant": "macosx10.9",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.9.13-macosx10.9.pkg",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.12",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Apple silicon Mac runs this macOS"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.12",
+   "arch": "universal",
+   "max_version": "3.12.5",
+   "variant": "macos11",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.12.5-macos11.pkg",
+   "extra": [],
+   "notes": "universal2: x86_64 slice minos 10.9, arm64 slice minos 11.0 (Apple silicon ships with 11+). The 'macos11' in the file name is not the minimum."
+  },
+  {
+   "os": "macos",
+   "os_version": "10.13",
+   "arch": "amd64",
+   "max_version": "3.9.13",
+   "variant": "macosx10.9",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.9.13-macosx10.9.pkg",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.13",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Apple silicon Mac runs this macOS"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.13",
+   "arch": "universal",
+   "max_version": "3.13.15",
+   "variant": "macos11",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.13.15-macos11.pkg",
+   "extra": [],
+   "notes": "x86_64 slice minos 10.13 from 3.12.6 (3.12.5 is still 10.9); arm64 slice 11.0."
+  },
+  {
+   "os": "macos",
+   "os_version": "10.14",
+   "arch": "amd64",
+   "max_version": "3.9.13",
+   "variant": "macosx10.9",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.9.13-macosx10.9.pkg",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.14",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Apple silicon Mac runs this macOS"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.14",
+   "arch": "universal",
+   "max_version": "3.13.15",
+   "variant": "macos11",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.13.15-macos11.pkg",
+   "extra": [],
+   "notes": "x86_64 slice minos 10.13 from 3.12.6 (3.12.5 is still 10.9); arm64 slice 11.0."
+  },
+  {
+   "os": "macos",
+   "os_version": "10.15",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-x86_64-apple-darwin-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.15",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no Apple silicon Mac runs this macOS"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.15",
+   "arch": "universal",
+   "max_version": "3.14.7",
+   "variant": "macos11",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-macos11.pkg",
+   "extra": [],
+   "notes": "x86_64 slice minos 10.15; arm64 slice 11.0."
+  },
+  {
+   "os": "macos",
+   "os_version": "11",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-x86_64-apple-darwin-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "11",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-aarch64-apple-darwin-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "11",
+   "arch": "universal",
+   "max_version": "3.14.7",
+   "variant": "macos11",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-macos11.pkg",
+   "extra": [],
+   "notes": "x86_64 slice minos 10.15; arm64 slice 11.0."
+  },
+  {
+   "os": "macos",
+   "os_version": "12",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-x86_64-apple-darwin-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "12",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-aarch64-apple-darwin-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "12",
+   "arch": "universal",
+   "max_version": "3.14.7",
+   "variant": "macos11",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-macos11.pkg",
+   "extra": [],
+   "notes": "x86_64 slice minos 10.15; arm64 slice 11.0."
+  },
+  {
+   "os": "macos",
+   "os_version": "13",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-x86_64-apple-darwin-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "13",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-aarch64-apple-darwin-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "13",
+   "arch": "universal",
+   "max_version": "3.14.7",
+   "variant": "macos11",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-macos11.pkg",
+   "extra": [],
+   "notes": "x86_64 slice minos 10.15; arm64 slice 11.0."
+  },
+  {
+   "os": "macos",
+   "os_version": "14",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-x86_64-apple-darwin-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "14",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-aarch64-apple-darwin-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "14",
+   "arch": "universal",
+   "max_version": "3.14.7",
+   "variant": "macos11",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-macos11.pkg",
+   "extra": [],
+   "notes": "x86_64 slice minos 10.15; arm64 slice 11.0."
+  },
+  {
+   "os": "macos",
+   "os_version": "15",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-x86_64-apple-darwin-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "15",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-aarch64-apple-darwin-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "15",
+   "arch": "universal",
+   "max_version": "3.14.7",
+   "variant": "macos11",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-macos11.pkg",
+   "extra": [],
+   "notes": "x86_64 slice minos 10.15; arm64 slice 11.0."
+  },
+  {
+   "os": "macos",
+   "os_version": "26",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-x86_64-apple-darwin-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "26",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-aarch64-apple-darwin-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "26",
+   "arch": "universal",
+   "max_version": "3.14.7",
+   "variant": "macos11",
+   "tested": false,
+   "role": "newest",
+   "file": "python-3.14.7-macos11.pkg",
+   "extra": [],
+   "notes": "x86_64 slice minos 10.15; arm64 slice 11.0."
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.5",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no prebuilt CPython in the catalogue for this glibc; build from the source tarball (os linux, arch any)"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.5",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no prebuilt CPython in the catalogue for this glibc; build from the source tarball (os linux, arch any)"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.5",
+   "arch": "armv7",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no prebuilt CPython in the catalogue for this glibc; build from the source tarball (os linux, arch any)"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.5",
+   "arch": "ppc64le",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no prebuilt CPython in the catalogue for this glibc; build from the source tarball (os linux, arch any)"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.5",
+   "arch": "riscv64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no prebuilt CPython in the catalogue for this glibc; build from the source tarball (os linux, arch any)"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.5",
+   "arch": "s390x",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no prebuilt CPython in the catalogue for this glibc; build from the source tarball (os linux, arch any)"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.12",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no prebuilt CPython in the catalogue for this glibc; build from the source tarball (os linux, arch any)"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.12",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no prebuilt CPython in the catalogue for this glibc; build from the source tarball (os linux, arch any)"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.12",
+   "arch": "armv7",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no prebuilt CPython in the catalogue for this glibc; build from the source tarball (os linux, arch any)"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.12",
+   "arch": "ppc64le",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no prebuilt CPython in the catalogue for this glibc; build from the source tarball (os linux, arch any)"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.12",
+   "arch": "riscv64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no prebuilt CPython in the catalogue for this glibc; build from the source tarball (os linux, arch any)"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.12",
+   "arch": "s390x",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no prebuilt CPython in the catalogue for this glibc; build from the source tarball (os linux, arch any)"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.17",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-x86_64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.17",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-aarch64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.17",
+   "arch": "armv7",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-armv7-unknown-linux-gnueabihf-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.17",
+   "arch": "ppc64le",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-ppc64le-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.17",
+   "arch": "riscv64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no prebuilt CPython in the catalogue for this glibc; build from the source tarball (os linux, arch any)"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.17",
+   "arch": "s390x",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-s390x-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.19",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-x86_64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.19",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-aarch64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.19",
+   "arch": "armv7",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-armv7-unknown-linux-gnueabihf-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.19",
+   "arch": "ppc64le",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-ppc64le-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.19",
+   "arch": "riscv64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no prebuilt CPython in the catalogue for this glibc; build from the source tarball (os linux, arch any)"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.19",
+   "arch": "s390x",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-s390x-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.23",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-x86_64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.23",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-aarch64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.23",
+   "arch": "armv7",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-armv7-unknown-linux-gnueabihf-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.23",
+   "arch": "ppc64le",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-ppc64le-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.23",
+   "arch": "riscv64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no prebuilt CPython in the catalogue for this glibc; build from the source tarball (os linux, arch any)"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.23",
+   "arch": "s390x",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-s390x-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.24",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-x86_64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.24",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-aarch64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.24",
+   "arch": "armv7",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-armv7-unknown-linux-gnueabihf-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.24",
+   "arch": "ppc64le",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-ppc64le-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.24",
+   "arch": "riscv64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no prebuilt CPython in the catalogue for this glibc; build from the source tarball (os linux, arch any)"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.24",
+   "arch": "s390x",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-s390x-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.27",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-x86_64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.27",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-aarch64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.27",
+   "arch": "armv7",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-armv7-unknown-linux-gnueabihf-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.27",
+   "arch": "ppc64le",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-ppc64le-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.27",
+   "arch": "riscv64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "role": "newest",
+   "file": null,
+   "extra": [],
+   "notes": "no prebuilt CPython in the catalogue for this glibc; build from the source tarball (os linux, arch any)"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.27",
+   "arch": "s390x",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-s390x-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.28",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-x86_64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.28",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-aarch64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.28",
+   "arch": "armv7",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-armv7-unknown-linux-gnueabihf-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.28",
+   "arch": "ppc64le",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-ppc64le-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.28",
+   "arch": "riscv64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-riscv64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.28",
+   "arch": "s390x",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-s390x-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.31",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-x86_64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.31",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-aarch64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.31",
+   "arch": "armv7",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-armv7-unknown-linux-gnueabihf-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.31",
+   "arch": "ppc64le",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-ppc64le-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.31",
+   "arch": "riscv64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-riscv64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.31",
+   "arch": "s390x",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-s390x-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.34",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-x86_64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.34",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-aarch64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.34",
+   "arch": "armv7",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-armv7-unknown-linux-gnueabihf-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.34",
+   "arch": "ppc64le",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-ppc64le-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.34",
+   "arch": "riscv64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-riscv64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.34",
+   "arch": "s390x",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-s390x-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.35",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-x86_64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.35",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-aarch64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.35",
+   "arch": "armv7",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-armv7-unknown-linux-gnueabihf-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.35",
+   "arch": "ppc64le",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-ppc64le-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.35",
+   "arch": "riscv64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-riscv64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.35",
+   "arch": "s390x",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-s390x-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.36",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-x86_64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.36",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-aarch64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.36",
+   "arch": "armv7",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-armv7-unknown-linux-gnueabihf-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.36",
+   "arch": "ppc64le",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-ppc64le-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.36",
+   "arch": "riscv64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-riscv64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.36",
+   "arch": "s390x",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-s390x-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.39",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-x86_64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.39",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-aarch64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.39",
+   "arch": "armv7",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-armv7-unknown-linux-gnueabihf-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.39",
+   "arch": "ppc64le",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-ppc64le-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.39",
+   "arch": "riscv64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-riscv64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.39",
+   "arch": "s390x",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-s390x-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.41",
+   "arch": "amd64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-x86_64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.41",
+   "arch": "arm64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-aarch64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.41",
+   "arch": "armv7",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-armv7-unknown-linux-gnueabihf-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.41",
+   "arch": "ppc64le",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-ppc64le-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.41",
+   "arch": "riscv64",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-riscv64-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.41",
+   "arch": "s390x",
+   "max_version": "3.14.7",
+   "variant": "pbs",
+   "tested": false,
+   "role": "newest",
+   "file": "cpython-3.14.7%2B20260901-s390x-unknown-linux-gnu-install_only.tar.gz",
+   "extra": [],
+   "notes": null
+  }
+ ]
+}

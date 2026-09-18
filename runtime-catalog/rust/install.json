@@ -231,6 +231,262 @@
     "cwd": "{app_dir}",
     "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Without RUSTC cargo can't find rustc (tested). Needs the system linker (see prerequisites)."
    }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "tar.xz",
+    "variant": "gnu",
+    "versions": "==1.98.*",
+    "arch": "amd64"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 2
+    }
+   ],
+   "prerequisites": [
+    "none for pure-Rust crates (tested by cross-build, see notes); a MinGW-w64 GCC (catalog/cc WinLibs, UCRT for Windows 10) on PATH for crates that compile C/C++"
+   ],
+   "executable": "bin/rustc.exe",
+   "package_manager": "\"{runtime_dir}\\bin\\cargo.exe\"",
+   "verify": "\"{runtime_dir}\\bin\\rustc.exe\" -vV",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Windows 10+ / Server 2016+ (platform-support page; i686 needs a Pentium 4/SSE2). Checked in 1.98.1 x86_64: rustc_driver and std DLLs import WaitOnAddress/WakeByAddress* (api-ms-win-core-synch-l1-2-0.dll), GetSystemTimePreciseAsFileTime and ProcessPrng (bcryptprimitives.dll), so they cannot load on Windows 7; PE headers say 5.2, which is not the real floor. Programs it builds need Windows 10 too (same imports, checked on cross-built x86_64 and i686 executables). The bundled ld.exe, dlltool.exe and gcc.exe (MinGW-Builds GCC 14.2.0, binutils 2.44) import GetFinalPathNameByHandleA, i.e. Vista+.",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://doc.rust-lang.org/rustc/platform-support.html",
+    "https://doc.rust-lang.org/cargo/reference/environment-variables.html",
+    "https://blog.rust-lang.org/2024/02/26/Windows-7/",
+    "https://rust-lang.github.io/rustup/installation/windows.html",
+    "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml"
+   ],
+   "notes": "x86_64-pc-windows-gnu. Same rust-installer format-3 layout as the -msvc file, so the same strip_components 2 unpack applies (checked: 1.98.1 x86_64 tarball, 303 MB, 2.7 GB unpacked with docs). Components: cargo, clippy-preview, llvm-bitcode-linker-preview, llvm-tools-preview, rust-analysis, rust-analyzer-preview, rustc, rust-docs, rust-docs-json-preview, rustfmt-preview, rust-mingw, rust-std. rust-mingw puts a link-only x86_64-w64-mingw32-gcc.exe/i686-w64-mingw32-gcc.exe, ld.exe, dlltool.exe and libwinpthread-1.dll in lib\\rustlib\\x86_64-pc-windows-gnu\\bin\\self-contained, and crt2.o, dllcrt2.o, libgcc*.a, libmingw32/mingwex/msvcrt.a and 40 Windows import libraries (kernel32, advapi32, bcrypt, ws2_32, userenv, ntdll, synchronization, user32, gdi32, ole32, oleaut32, shell32, crypt32, winhttp, iphlpapi, secur32, ...) in lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\self-contained. The C runtime is msvcrt.dll, not UCRT. TESTED (cross-built from Linux with the same std and rust-mingw files, linked by rust-lld in self-contained mode, since this host can't run the Windows ld.exe): hello world with threads for x86_64 and i686; a cargo project using serde, serde_json, regex, rand 0.8, clap 4, anyhow, windows-sys 0.59 and 0.61 (windows-link raw-dylib) and windows 0.58 built for both, once a dlltool was provided; without one it failed with \"error calling dlltool\". On Windows the dlltool.exe in self-contained must be on PATH (project_install.path_prepend does this). What breaks: (1) crates that compile C/C++ through the cc crate (ring, rustls' default aws-lc-rs, libsqlite3-sys bundled, zstd-sys, openssl-src...): the bundled gcc.exe is link-only (its own GCC-WARNING.txt says so), so they need a full MinGW-w64 GCC, e.g. the catalogue's WinLibs gcc (tested from Linux: ring + a cc build script built and linked against WinLibs 16.2.0 UCRT headers and libraries; Rust std also linked against WinLibs 10.5.0 MSVCRT libraries); (2) crates or build scripts that link a Windows library outside the 40 bundled import libraries (e.g. d3d11, dxgi, dwmapi, version, shlwapi, ncrypt) with #[link] or cargo:rustc-link-lib: most crates now use windows-sys/windows-link raw-dylib or the winapi/windows-targets crates, which carry their own import libraries, so this is rare; WinLibs has them all; (3) crates that only support MSVC (anything linking prebuilt .lib files, e.g. some vendor SDK bindings). Run the toolchain with an explicit environment in the app's own process only, as for the -msvc recipe: CARGO_HOME in an app-owned folder, RUSTC/RUSTDOC pointing into {runtime_dir}\\bin, {runtime_dir}\\bin first on PATH, and inherited RUSTFLAGS, RUSTDOCFLAGS, CARGO_BUILD_*, CARGO_TARGET_DIR, CARGO_ENCODED_RUSTFLAGS and RUSTC_WRAPPER cleared. Cargo still reads .cargo/config.toml from the project folder and every parent. Slim copy: rust-docs, rust-docs-json-preview, rust-analysis, rust-analyzer-preview, llvm-tools-preview and llvm-bitcode-linker-preview are not needed to build; keep rust-mingw.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\bin\\cargo.exe\" build --release --locked",
+    "env": {
+     "CARGO_HOME": "{data_dir}\\cargo-home",
+     "RUSTC": "{runtime_dir}\\bin\\rustc.exe",
+     "RUSTDOC": "{runtime_dir}\\bin\\rustdoc.exe",
+     "RUSTFLAGS": null,
+     "RUSTDOCFLAGS": null,
+     "CARGO_ENCODED_RUSTFLAGS": null,
+     "RUSTC_WRAPPER": null,
+     "CARGO_TARGET_DIR": null
+    },
+    "cwd": "{app_dir}",
+    "path_prepend": [
+     "{runtime_dir}\\lib\\rustlib\\x86_64-pc-windows-gnu\\bin\\self-contained",
+     "{runtime_dir}\\bin"
+    ],
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Without RUSTC cargo can't find rustc (tested). Links with the toolchain's own rust-mingw linker and import libraries, so pure-Rust crates need nothing else. The self-contained folder is put on PATH so rustc finds dlltool.exe, which raw-dylib crates (windows-link, windows-sys 0.60+) need on -gnu: as far as rustc's source shows (find_binutils_dlltool) it looks for dlltool.exe on PATH, not in its sysroot; not tested on Windows. Without a dlltool a Linux cross-build failed with 'error calling dlltool'. rustc ignores linkers under its own sysroot when deciding self-contained linking, so this PATH entry doesn't change that. Crates that compile C/C++ (ring, bundled SQLite, zstd-sys...) need a real MinGW-w64 GCC: prepend the catalogue's WinLibs mingw64\\bin as well; rustc then links with it instead of the bundled files."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "tar.xz",
+    "variant": "gnu",
+    "versions": "==1.98.*",
+    "arch": "x86"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 2
+    }
+   ],
+   "prerequisites": [
+    "none for pure-Rust crates (tested by cross-build, see notes); a MinGW-w64 GCC (catalog/cc WinLibs, UCRT for Windows 10) on PATH for crates that compile C/C++"
+   ],
+   "executable": "bin/rustc.exe",
+   "package_manager": "\"{runtime_dir}\\bin\\cargo.exe\"",
+   "verify": "\"{runtime_dir}\\bin\\rustc.exe\" -vV",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Windows 10+ / Server 2016+ (platform-support page; i686 needs a Pentium 4/SSE2). Checked in 1.98.1 x86_64: rustc_driver and std DLLs import WaitOnAddress/WakeByAddress* (api-ms-win-core-synch-l1-2-0.dll), GetSystemTimePreciseAsFileTime and ProcessPrng (bcryptprimitives.dll), so they cannot load on Windows 7; PE headers say 5.2, which is not the real floor. Programs it builds need Windows 10 too (same imports, checked on cross-built x86_64 and i686 executables). The bundled ld.exe, dlltool.exe and gcc.exe (MinGW-Builds GCC 14.2.0, binutils 2.44) import GetFinalPathNameByHandleA, i.e. Vista+.",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://doc.rust-lang.org/rustc/platform-support.html",
+    "https://doc.rust-lang.org/cargo/reference/environment-variables.html",
+    "https://blog.rust-lang.org/2024/02/26/Windows-7/",
+    "https://rust-lang.github.io/rustup/installation/windows.html",
+    "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml"
+   ],
+   "notes": "i686-pc-windows-gnu. Same rust-installer format-3 layout as the -msvc file, so the same strip_components 2 unpack applies (checked: 1.98.1 x86_64 tarball, 303 MB, 2.7 GB unpacked with docs). Components: cargo, clippy-preview, llvm-bitcode-linker-preview, llvm-tools-preview, rust-analysis, rust-analyzer-preview, rustc, rust-docs, rust-docs-json-preview, rustfmt-preview, rust-mingw, rust-std. rust-mingw puts a link-only x86_64-w64-mingw32-gcc.exe/i686-w64-mingw32-gcc.exe, ld.exe, dlltool.exe and libwinpthread-1.dll in lib\\rustlib\\i686-pc-windows-gnu\\bin\\self-contained, and crt2.o, dllcrt2.o, libgcc*.a, libmingw32/mingwex/msvcrt.a and 40 Windows import libraries (kernel32, advapi32, bcrypt, ws2_32, userenv, ntdll, synchronization, user32, gdi32, ole32, oleaut32, shell32, crypt32, winhttp, iphlpapi, secur32, ...) in lib\\rustlib\\i686-pc-windows-gnu\\lib\\self-contained. The C runtime is msvcrt.dll, not UCRT. TESTED (cross-built from Linux with the same std and rust-mingw files, linked by rust-lld in self-contained mode, since this host can't run the Windows ld.exe): hello world with threads for x86_64 and i686; a cargo project using serde, serde_json, regex, rand 0.8, clap 4, anyhow, windows-sys 0.59 and 0.61 (windows-link raw-dylib) and windows 0.58 built for both, once a dlltool was provided; without one it failed with \"error calling dlltool\". On Windows the dlltool.exe in self-contained must be on PATH (project_install.path_prepend does this). What breaks: (1) crates that compile C/C++ through the cc crate (ring, rustls' default aws-lc-rs, libsqlite3-sys bundled, zstd-sys, openssl-src...): the bundled gcc.exe is link-only (its own GCC-WARNING.txt says so), so they need a full MinGW-w64 GCC, e.g. the catalogue's WinLibs gcc (tested from Linux: ring + a cc build script built and linked against WinLibs 16.2.0 UCRT headers and libraries; Rust std also linked against WinLibs 10.5.0 MSVCRT libraries); (2) crates or build scripts that link a Windows library outside the 40 bundled import libraries (e.g. d3d11, dxgi, dwmapi, version, shlwapi, ncrypt) with #[link] or cargo:rustc-link-lib: most crates now use windows-sys/windows-link raw-dylib or the winapi/windows-targets crates, which carry their own import libraries, so this is rare; WinLibs has them all; (3) crates that only support MSVC (anything linking prebuilt .lib files, e.g. some vendor SDK bindings). Run the toolchain with an explicit environment in the app's own process only, as for the -msvc recipe: CARGO_HOME in an app-owned folder, RUSTC/RUSTDOC pointing into {runtime_dir}\\bin, {runtime_dir}\\bin first on PATH, and inherited RUSTFLAGS, RUSTDOCFLAGS, CARGO_BUILD_*, CARGO_TARGET_DIR, CARGO_ENCODED_RUSTFLAGS and RUSTC_WRAPPER cleared. Cargo still reads .cargo/config.toml from the project folder and every parent. Slim copy: rust-docs, rust-docs-json-preview, rust-analysis, rust-analyzer-preview, llvm-tools-preview and llvm-bitcode-linker-preview are not needed to build; keep rust-mingw.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\bin\\cargo.exe\" build --release --locked",
+    "env": {
+     "CARGO_HOME": "{data_dir}\\cargo-home",
+     "RUSTC": "{runtime_dir}\\bin\\rustc.exe",
+     "RUSTDOC": "{runtime_dir}\\bin\\rustdoc.exe",
+     "RUSTFLAGS": null,
+     "RUSTDOCFLAGS": null,
+     "CARGO_ENCODED_RUSTFLAGS": null,
+     "RUSTC_WRAPPER": null,
+     "CARGO_TARGET_DIR": null
+    },
+    "cwd": "{app_dir}",
+    "path_prepend": [
+     "{runtime_dir}\\lib\\rustlib\\i686-pc-windows-gnu\\bin\\self-contained",
+     "{runtime_dir}\\bin"
+    ],
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Without RUSTC cargo can't find rustc (tested). Links with the toolchain's own rust-mingw linker and import libraries, so pure-Rust crates need nothing else. The self-contained folder is put on PATH so rustc finds dlltool.exe, which raw-dylib crates (windows-link, windows-sys 0.60+) need on -gnu: as far as rustc's source shows (find_binutils_dlltool) it looks for dlltool.exe on PATH, not in its sysroot; not tested on Windows. Without a dlltool a Linux cross-build failed with 'error calling dlltool'. rustc ignores linkers under its own sysroot when deciding self-contained linking, so this PATH entry doesn't change that. Crates that compile C/C++ (ring, bundled SQLite, zstd-sys...) need a real MinGW-w64 GCC: prepend the catalogue's WinLibs mingw64\\bin as well; rustc then links with it instead of the bundled files."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "tar.xz",
+    "variant": "gnu",
+    "versions": ">=1.0,<1.78",
+    "arch": "amd64"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 2
+    }
+   ],
+   "prerequisites": [
+    "none for pure-Rust crates on Windows 7 SP1/8.1 (not tested); a MinGW-w64 GCC (catalog/cc WinLibs) for crates that compile C/C++"
+   ],
+   "executable": "bin/rustc.exe",
+   "package_manager": "\"{runtime_dir}\\bin\\cargo.exe\"",
+   "verify": "\"{runtime_dir}\\bin\\rustc.exe\" -vV",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Windows 7 SP1+ per the platform-support page of the time (Windows 7 was tier 1 up to 1.77; see the Windows 7 blog post). Not checked in the binaries: 1.77 is not downloaded. XP and Vista were never supported hosts.",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://doc.rust-lang.org/rustc/platform-support.html",
+    "https://doc.rust-lang.org/cargo/reference/environment-variables.html",
+    "https://blog.rust-lang.org/2024/02/26/Windows-7/",
+    "https://rust-lang.github.io/rustup/installation/windows.html",
+    "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml"
+   ],
+   "notes": "x86_64-pc-windows-gnu, versions before 1.78: the last Rust releases that run on Windows 7 and 8.1, and target them, without Visual Studio Build Tools. Same format-3 layout and strip_components 2 unpack assumed from the tested 1.98.1 file (not checked for these versions). rust-mingw in these versions also carries a link-only gcc.exe and ld.exe plus MinGW libraries; whether it already has dlltool.exe was not checked, so crates that use raw-dylib (windows-link, windows-sys 0.60+) may need WinLibs on PATH; those crates also need a newer Rust than old releases anyway (lockfile MSRV). Same C/C++ caveat as 1.98: the bundled gcc.exe can't compile C. Run the toolchain with an explicit environment in the app's own process only, as for the -msvc recipe: CARGO_HOME in an app-owned folder, RUSTC/RUSTDOC pointing into {runtime_dir}\\bin, {runtime_dir}\\bin first on PATH, and inherited RUSTFLAGS, RUSTDOCFLAGS, CARGO_BUILD_*, CARGO_TARGET_DIR, CARGO_ENCODED_RUSTFLAGS and RUSTC_WRAPPER cleared. Cargo still reads .cargo/config.toml from the project folder and every parent.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\bin\\cargo.exe\" build --release --locked",
+    "env": {
+     "CARGO_HOME": "{data_dir}\\cargo-home",
+     "RUSTC": "{runtime_dir}\\bin\\rustc.exe",
+     "RUSTDOC": "{runtime_dir}\\bin\\rustdoc.exe",
+     "RUSTFLAGS": null,
+     "RUSTDOCFLAGS": null,
+     "CARGO_ENCODED_RUSTFLAGS": null,
+     "RUSTC_WRAPPER": null,
+     "CARGO_TARGET_DIR": null
+    },
+    "cwd": "{app_dir}",
+    "path_prepend": [
+     "{runtime_dir}\\lib\\rustlib\\x86_64-pc-windows-gnu\\bin\\self-contained",
+     "{runtime_dir}\\bin"
+    ],
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Without RUSTC cargo can't find rustc (tested). Links with the toolchain's own rust-mingw linker and import libraries, so pure-Rust crates need nothing else. The self-contained folder is put on PATH so rustc finds dlltool.exe, which raw-dylib crates (windows-link, windows-sys 0.60+) need on -gnu: as far as rustc's source shows (find_binutils_dlltool) it looks for dlltool.exe on PATH, not in its sysroot; not tested on Windows. Without a dlltool a Linux cross-build failed with 'error calling dlltool'. rustc ignores linkers under its own sysroot when deciding self-contained linking, so this PATH entry doesn't change that. Crates that compile C/C++ (ring, bundled SQLite, zstd-sys...) need a real MinGW-w64 GCC: prepend the catalogue's WinLibs mingw64\\bin as well; rustc then links with it instead of the bundled files."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "tar.xz",
+    "variant": "gnu",
+    "versions": ">=1.0,<1.78",
+    "arch": "x86"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 2
+    }
+   ],
+   "prerequisites": [
+    "none for pure-Rust crates on Windows 7 SP1/8.1 (not tested); a MinGW-w64 GCC (catalog/cc WinLibs) for crates that compile C/C++"
+   ],
+   "executable": "bin/rustc.exe",
+   "package_manager": "\"{runtime_dir}\\bin\\cargo.exe\"",
+   "verify": "\"{runtime_dir}\\bin\\rustc.exe\" -vV",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Windows 7 SP1+ per the platform-support page of the time (Windows 7 was tier 1 up to 1.77; see the Windows 7 blog post). Not checked in the binaries: 1.77 is not downloaded. XP and Vista were never supported hosts.",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://doc.rust-lang.org/rustc/platform-support.html",
+    "https://doc.rust-lang.org/cargo/reference/environment-variables.html",
+    "https://blog.rust-lang.org/2024/02/26/Windows-7/",
+    "https://rust-lang.github.io/rustup/installation/windows.html",
+    "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml"
+   ],
+   "notes": "i686-pc-windows-gnu, versions before 1.78: the last Rust releases that run on Windows 7 and 8.1, and target them, without Visual Studio Build Tools. Same format-3 layout and strip_components 2 unpack assumed from the tested 1.98.1 file (not checked for these versions). rust-mingw in these versions also carries a link-only gcc.exe and ld.exe plus MinGW libraries; whether it already has dlltool.exe was not checked, so crates that use raw-dylib (windows-link, windows-sys 0.60+) may need WinLibs on PATH; those crates also need a newer Rust than old releases anyway (lockfile MSRV). Same C/C++ caveat as 1.98: the bundled gcc.exe can't compile C. Run the toolchain with an explicit environment in the app's own process only, as for the -msvc recipe: CARGO_HOME in an app-owned folder, RUSTC/RUSTDOC pointing into {runtime_dir}\\bin, {runtime_dir}\\bin first on PATH, and inherited RUSTFLAGS, RUSTDOCFLAGS, CARGO_BUILD_*, CARGO_TARGET_DIR, CARGO_ENCODED_RUSTFLAGS and RUSTC_WRAPPER cleared. Cargo still reads .cargo/config.toml from the project folder and every parent.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\bin\\cargo.exe\" build --release --locked",
+    "env": {
+     "CARGO_HOME": "{data_dir}\\cargo-home",
+     "RUSTC": "{runtime_dir}\\bin\\rustc.exe",
+     "RUSTDOC": "{runtime_dir}\\bin\\rustdoc.exe",
+     "RUSTFLAGS": null,
+     "RUSTDOCFLAGS": null,
+     "CARGO_ENCODED_RUSTFLAGS": null,
+     "RUSTC_WRAPPER": null,
+     "CARGO_TARGET_DIR": null
+    },
+    "cwd": "{app_dir}",
+    "path_prepend": [
+     "{runtime_dir}\\lib\\rustlib\\i686-pc-windows-gnu\\bin\\self-contained",
+     "{runtime_dir}\\bin"
+    ],
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Without RUSTC cargo can't find rustc (tested). Links with the toolchain's own rust-mingw linker and import libraries, so pure-Rust crates need nothing else. The self-contained folder is put on PATH so rustc finds dlltool.exe, which raw-dylib crates (windows-link, windows-sys 0.60+) need on -gnu: as far as rustc's source shows (find_binutils_dlltool) it looks for dlltool.exe on PATH, not in its sysroot; not tested on Windows. Without a dlltool a Linux cross-build failed with 'error calling dlltool'. rustc ignores linkers under its own sysroot when deciding self-contained linking, so this PATH entry doesn't change that. Crates that compile C/C++ (ring, bundled SQLite, zstd-sys...) need a real MinGW-w64 GCC: prepend the catalogue's WinLibs mingw64\\bin as well; rustc then links with it instead of the bundled files."
+   }
   }
  ]
 }

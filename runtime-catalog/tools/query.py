@@ -15,7 +15,7 @@ from collections import defaultdict
 from pathlib import Path
 
 CATALOG = Path(__file__).resolve().parents[1]
-FOLDERS = ["python", "node", "java", "dotnet", "go", "rust", "php", "r", "ruby", "nim", "zig", "cc"]
+FOLDERS = ["python", "node", "java", "dotnet", "go", "rust", "php", "r", "ruby", "nim", "zig", "cc", "cmake", "meson", "ninja"]
 ALIASES = {"javascript": "node", "typescript": "node", "js": "node", "ts": "node", "nodejs": "node",
            "kotlin": "java", "scala": "java", "jvm": "java",
            "csharp": "dotnet", "c#": "dotnet", "fsharp": "dotnet", "vb": "dotnet", "visualbasic": "dotnet", ".net": "dotnet",

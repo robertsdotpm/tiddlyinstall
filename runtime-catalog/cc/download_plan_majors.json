@@ -5,6 +5,34 @@
    "c",
    "cpp"
   ],
+  "major": "16",
+  "version": "2.10.0",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "7z-sfx",
+  "variant": "w64devkit",
+  "libc": null,
+  "url": "https://github.com/skeeto/w64devkit/releases/download/v2.10.0/w64devkit-x86-2.10.0.7z.exe",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "513ff7fc571cf6764a5aedbca92f43c513f8d01085c65df5133a82db13a7e63d",
+   "source": "GitHub release asset digest (api.github.com)"
+  },
+  "size": 60988472,
+  "released": "2026-09-14",
+  "min_os": "Windows 7 or later",
+  "metadata_source": "https://api.github.com/repos/skeeto/w64devkit/releases",
+  "notes": "bundled GCC 16.2",
+  "reason": "newest for windows xp, xp-x64, server2003, vista, server2008"
+ },
+ {
+  "runtime": "gcc",
+  "languages": [
+   "c",
+   "cpp"
+  ],
   "major": "4",
   "version": "4.9.4",
   "os": "linux",
@@ -88,7 +116,8 @@
   "released": "2016-08-03",
   "min_os": null,
   "metadata_source": "https://ftp.gnu.org/gnu/gcc/",
-  "notes": "GNU ships no official GCC binaries for Linux or macOS; source must be built."
+  "notes": "GNU ships no official GCC binaries for Linux or macOS; source must be built.",
+  "reason": "newest in major 4"
  },
  {
   "runtime": "gcc",
@@ -180,7 +209,8 @@
   "released": "2017-10-10",
   "min_os": null,
   "metadata_source": "https://ftp.gnu.org/gnu/gcc/",
-  "notes": "GNU ships no official GCC binaries for Linux or macOS; source must be built."
+  "notes": "GNU ships no official GCC binaries for Linux or macOS; source must be built.",
+  "reason": "newest in major 5"
  },
  {
   "runtime": "gcc",
@@ -271,7 +301,8 @@
   "released": "2018-10-30",
   "min_os": null,
   "metadata_source": "https://ftp.gnu.org/gnu/gcc/",
-  "notes": "GNU ships no official GCC binaries for Linux or macOS; source must be built."
+  "notes": "GNU ships no official GCC binaries for Linux or macOS; source must be built.",
+  "reason": "newest in major 6"
  },
  {
   "runtime": "gcc",
@@ -362,7 +393,8 @@
   "released": "2019-11-14",
   "min_os": null,
   "metadata_source": "https://ftp.gnu.org/gnu/gcc/",
-  "notes": "GNU ships no official GCC binaries for Linux or macOS; source must be built."
+  "notes": "GNU ships no official GCC binaries for Linux or macOS; source must be built.",
+  "reason": "newest in major 7"
  },
  {
   "runtime": "gcc",
@@ -462,7 +494,8 @@
     "value": "92f599680e6b7fbce88bcdda810f468777d541e5fddfbb287f7977d51093de2a5178bd0e6a08dfe37090ea10a0508a43ccd00220041abbbec33f1179bfc174d8",
     "source": "Gentoo sys-devel/gcc Manifest (gentoo/gentoo GitHub), 2026-09-17"
    }
-  ]
+  ],
+  "reason": "newest in major 8"
  },
  {
   "runtime": "gcc",
@@ -562,7 +595,8 @@
     "value": "cdd144ce4f747e051480410afc8506c90a57cb45da89071ddae377b1453bca3014422455ade9fe4563ebe51f4b6348cbc0c61905a9b8801cd597d51ad0ec62b3",
     "source": "Gentoo sys-devel/gcc Manifest (gentoo/gentoo GitHub), 2026-09-17"
    }
-  ]
+  ],
+  "reason": "newest in major 9"
  },
  {
   "runtime": "gcc",
@@ -589,7 +623,8 @@
   "released": "2022-11-05",
   "min_os": "Windows XP or later",
   "metadata_source": "https://api.github.com/repos/brechtsanders/winlibs_mingw/releases",
-  "notes": "bundles GCC 9.5.0, mingw-w64 10.0.0, exception model seh, build r1"
+  "notes": "bundles GCC 9.5.0, mingw-w64 10.0.0, exception model seh, build r1",
+  "reason": "newest in major 9"
  },
  {
   "runtime": "gcc",
@@ -616,7 +651,8 @@
   "released": "2022-11-05",
   "min_os": "Windows XP or later",
   "metadata_source": "https://api.github.com/repos/brechtsanders/winlibs_mingw/releases",
-  "notes": "bundles GCC 9.5.0, mingw-w64 10.0.0, exception model dwarf, build r1"
+  "notes": "bundles GCC 9.5.0, mingw-w64 10.0.0, exception model dwarf, build r1",
+  "reason": "newest in major 9"
  },
  {
   "runtime": "gcc",
@@ -716,7 +752,8 @@
     "value": "d86dbc18b978771531f4039465e7eb7c19845bf607dc513c97abf8e45ffe1086a99d98f83dfb7b37204af22431574186de9d5ff80c8c3c3a98dbe3983195bffd",
     "source": "Gentoo sys-devel/gcc Manifest (gentoo/gentoo GitHub), 2026-09-17"
    }
-  ]
+  ],
+  "reason": "newest in major 10"
  },
  {
   "runtime": "gcc",
@@ -743,7 +780,8 @@
   "released": "2023-10-02",
   "min_os": "Windows XP or later",
   "metadata_source": "https://api.github.com/repos/brechtsanders/winlibs_mingw/releases",
-  "notes": "bundles GCC 10.5.0, mingw-w64 11.0.1, exception model seh, build r2"
+  "notes": "bundles GCC 10.5.0, mingw-w64 11.0.1, exception model seh, build r2",
+  "reason": "newest in major 10; newest for windows vista, server2008"
  },
  {
   "runtime": "gcc",
@@ -772,7 +810,8 @@
   "released": "2023-10-02",
   "min_os": "Windows XP or later",
   "metadata_source": "https://api.github.com/repos/brechtsanders/winlibs_mingw/releases",
-  "notes": "bundles GCC 10.5.0, mingw-w64 11.0.1, exception model dwarf, build r2"
+  "notes": "bundles GCC 10.5.0, mingw-w64 11.0.1, exception model dwarf, build r2",
+  "reason": "newest in major 10"
  },
  {
   "runtime": "gcc",
@@ -872,7 +911,8 @@
     "value": "88f17d5a5e69eeb53aaf0a9bc9daab1c4e501d145b388c5485ebeb2cc36178fbb2d3e49ebef4a8c007a05e88471a06b97cf9b08870478249f77fbfa3d4abd9a8",
     "source": "Gentoo sys-devel/gcc Manifest (gentoo/gentoo GitHub), 2026-09-17"
    }
-  ]
+  ],
+  "reason": "newest in major 11"
  },
  {
   "runtime": "gcc",
@@ -899,7 +939,8 @@
   "released": "2024-07-27",
   "min_os": "Windows 7 SP1 / Server 2008 R2 SP1 or later (needs the Universal C Runtime update on those; native on Windows 10+)",
   "metadata_source": "https://api.github.com/repos/brechtsanders/winlibs_mingw/releases",
-  "notes": "bundles GCC 11.5.0, mingw-w64 12.0.0, exception model seh, build r1"
+  "notes": "bundles GCC 11.5.0, mingw-w64 12.0.0, exception model seh, build r1",
+  "reason": "newest in major 11"
  },
  {
   "runtime": "gcc",
@@ -926,7 +967,8 @@
   "released": "2024-07-27",
   "min_os": "Windows 7 SP1 / Server 2008 R2 SP1 or later (needs the Universal C Runtime update on those; native on Windows 10+)",
   "metadata_source": "https://api.github.com/repos/brechtsanders/winlibs_mingw/releases",
-  "notes": "bundles GCC 11.5.0, mingw-w64 12.0.0, exception model dwarf, build r1"
+  "notes": "bundles GCC 11.5.0, mingw-w64 12.0.0, exception model dwarf, build r1",
+  "reason": "newest in major 11"
  },
  {
   "runtime": "gcc",
@@ -953,7 +995,8 @@
   "released": "2024-06-23",
   "min_os": "Windows 7 SP1 / Server 2008 R2 SP1 or later (needs the Universal C Runtime update on those; native on Windows 10+)",
   "metadata_source": "https://api.github.com/repos/brechtsanders/winlibs_mingw/releases",
-  "notes": "bundles GCC 12.4.0, mingw-w64 12.0.0, exception model seh, build r1"
+  "notes": "bundles GCC 12.4.0, mingw-w64 12.0.0, exception model seh, build r1",
+  "reason": "newest in major 12"
  },
  {
   "runtime": "gcc",
@@ -980,7 +1023,8 @@
   "released": "2024-06-23",
   "min_os": "Windows 7 SP1 / Server 2008 R2 SP1 or later (needs the Universal C Runtime update on those; native on Windows 10+)",
   "metadata_source": "https://api.github.com/repos/brechtsanders/winlibs_mingw/releases",
-  "notes": "bundles GCC 12.4.0, mingw-w64 12.0.0, exception model dwarf, build r1"
+  "notes": "bundles GCC 12.4.0, mingw-w64 12.0.0, exception model dwarf, build r1",
+  "reason": "newest in major 12"
  },
  {
   "runtime": "gcc",
@@ -1079,7 +1123,8 @@
     "value": "c76020e4c844b53485502cb8a4e295221c9d37487d66c9f4559031fb14c85de20602e6387310005386cb0ef25e55067d2cfef141423bb445f3b77e7456a23533",
     "source": "Gentoo sys-devel/gcc Manifest (gentoo/gentoo GitHub), 2026-09-17"
    }
-  ]
+  ],
+  "reason": "newest in major 12"
  },
  {
   "runtime": "gcc",
@@ -1106,7 +1151,8 @@
   "released": "2024-05-27",
   "min_os": "Windows 7 SP1 / Server 2008 R2 SP1 or later (needs the Universal C Runtime update on those; native on Windows 10+)",
   "metadata_source": "https://api.github.com/repos/brechtsanders/winlibs_mingw/releases",
-  "notes": "bundles GCC 13.3.0, mingw-w64 11.0.1, exception model seh, build r1"
+  "notes": "bundles GCC 13.3.0, mingw-w64 11.0.1, exception model seh, build r1",
+  "reason": "newest in major 13"
  },
  {
   "runtime": "gcc",
@@ -1133,7 +1179,8 @@
   "released": "2024-05-27",
   "min_os": "Windows 7 SP1 / Server 2008 R2 SP1 or later (needs the Universal C Runtime update on those; native on Windows 10+)",
   "metadata_source": "https://api.github.com/repos/brechtsanders/winlibs_mingw/releases",
-  "notes": "bundles GCC 13.3.0, mingw-w64 11.0.1, exception model dwarf, build r1"
+  "notes": "bundles GCC 13.3.0, mingw-w64 11.0.1, exception model dwarf, build r1",
+  "reason": "newest in major 13"
  },
  {
   "runtime": "gcc",
@@ -1230,7 +1277,8 @@
     "value": "709237ff8f10d46eb10cad53a71bdcacbd3d56f4559e9a5bb3323f743fdba78b7e505586135560b27e88320927a065ec4f5e45273d5504b542f67c7326eb683c",
     "source": "Gentoo sys-devel/gcc Manifest (gentoo/gentoo GitHub), 2026-09-17"
    }
-  ]
+  ],
+  "reason": "newest in major 13"
  },
  {
   "runtime": "gcc",
@@ -1257,7 +1305,8 @@
   "released": "2025-05-31",
   "min_os": "Windows 7 SP1 / Server 2008 R2 SP1 or later (needs the Universal C Runtime update on those; native on Windows 10+)",
   "metadata_source": "https://api.github.com/repos/brechtsanders/winlibs_mingw/releases",
-  "notes": "bundles GCC 14.3.0, mingw-w64 12.0.0, exception model seh, build r1"
+  "notes": "bundles GCC 14.3.0, mingw-w64 12.0.0, exception model seh, build r1",
+  "reason": "newest in major 14"
  },
  {
   "runtime": "gcc",
@@ -1284,7 +1333,8 @@
   "released": "2025-05-31",
   "min_os": "Windows 7 SP1 / Server 2008 R2 SP1 or later (needs the Universal C Runtime update on those; native on Windows 10+)",
   "metadata_source": "https://api.github.com/repos/brechtsanders/winlibs_mingw/releases",
-  "notes": "bundles GCC 14.3.0, mingw-w64 12.0.0, exception model dwarf, build r1"
+  "notes": "bundles GCC 14.3.0, mingw-w64 12.0.0, exception model dwarf, build r1",
+  "reason": "newest in major 14"
  },
  {
   "runtime": "gcc",
@@ -1384,7 +1434,8 @@
     "value": "725ed8bdd43ef1726ffe8b5e8615a13e247fac9575b7626ae013a2975d000ea213212dc414b2f2631ac4785c1c8beca85555222faf9904d3b2fa6a3807a83a15",
     "source": "Gentoo sys-devel/gcc Manifest (gentoo/gentoo GitHub), 2026-09-17"
    }
-  ]
+  ],
+  "reason": "newest in major 14"
  },
  {
   "runtime": "gcc",
@@ -1483,7 +1534,8 @@
     "value": "0de9e296153b52c021b1c7e63c9c62151d7a0ac03f23ce6e9f772c1b0eb783f6acdd81cc4567bfe4128a6f64968c2cfc8eff40b36229cba7425349f7d637c654",
     "source": "Gentoo sys-devel/gcc Manifest (gentoo/gentoo GitHub), 2026-09-17"
    }
-  ]
+  ],
+  "reason": "newest in major 15"
  },
  {
   "runtime": "gcc",
@@ -1510,7 +1562,8 @@
   "released": "2026-06-15",
   "min_os": "Windows 7 SP1 / Server 2008 R2 SP1 or later (needs the Universal C Runtime update on those; native on Windows 10+)",
   "metadata_source": "https://api.github.com/repos/brechtsanders/winlibs_mingw/releases",
-  "notes": "bundles GCC 15.3.0, mingw-w64 14.0.0, exception model seh, build r1"
+  "notes": "bundles GCC 15.3.0, mingw-w64 14.0.0, exception model seh, build r1",
+  "reason": "newest in major 15"
  },
  {
   "runtime": "gcc",
@@ -1537,7 +1590,8 @@
   "released": "2026-06-15",
   "min_os": "Windows 7 SP1 / Server 2008 R2 SP1 or later (needs the Universal C Runtime update on those; native on Windows 10+)",
   "metadata_source": "https://api.github.com/repos/brechtsanders/winlibs_mingw/releases",
-  "notes": "bundles GCC 15.3.0, mingw-w64 14.0.0, exception model dwarf, build r1"
+  "notes": "bundles GCC 15.3.0, mingw-w64 14.0.0, exception model dwarf, build r1",
+  "reason": "newest in major 15"
  },
  {
   "runtime": "gcc",
@@ -1637,7 +1691,8 @@
     "value": "c51c30ca7422d0cbecf504b2e0f33c3aca31e0f90a76b65217f465163fa6fa17b3f5de39e145c47e5bab90ac0ce7fff3b03c8d553ae36e01faaea5a50f8648d1",
     "source": "Gentoo sys-devel/gcc Manifest (gentoo/gentoo GitHub), 2026-09-17"
    }
-  ]
+  ],
+  "reason": "newest in major 16"
  },
  {
   "runtime": "gcc",
@@ -1666,7 +1721,8 @@
   "released": "2026-08-09",
   "min_os": "Windows 7 SP1 / Server 2008 R2 SP1 or later (needs the Universal C Runtime update on those; native on Windows 10+)",
   "metadata_source": "https://api.github.com/repos/brechtsanders/winlibs_mingw/releases",
-  "notes": "bundles GCC 16.2.0, mingw-w64 14.0.0, exception model seh, build r1"
+  "notes": "bundles GCC 16.2.0, mingw-w64 14.0.0, exception model seh, build r1",
+  "reason": "newest in major 16; newest for windows 7, server2008r2, 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "gcc",
@@ -1695,7 +1751,34 @@
   "released": "2026-08-09",
   "min_os": "Windows 7 SP1 / Server 2008 R2 SP1 or later (needs the Universal C Runtime update on those; native on Windows 10+)",
   "metadata_source": "https://api.github.com/repos/brechtsanders/winlibs_mingw/releases",
-  "notes": "bundles GCC 16.2.0, mingw-w64 14.0.0, exception model dwarf, build r1"
+  "notes": "bundles GCC 16.2.0, mingw-w64 14.0.0, exception model dwarf, build r1",
+  "reason": "newest in major 16; newest for windows 7, server2008r2, 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
+ },
+ {
+  "runtime": "llvm",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.4",
+  "version": "3.4",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "ubuntu-13.10",
+  "libc": "glibc",
+  "url": "https://releases.llvm.org/3.4/clang+llvm-3.4-x86_64-linux-gnu-ubuntu-13.10.tar.xz",
+  "mirrors": [
+   "https://web.archive.org/web/20191031044057id_/https://releases.llvm.org/3.4/clang+llvm-3.4-x86_64-linux-gnu-ubuntu-13.10.tar.xz"
+  ],
+  "checksum": null,
+  "size": 59204776,
+  "released": "2017-04-27",
+  "min_os": null,
+  "metadata_source": "https://releases.llvm.org/download.html",
+  "notes": null,
+  "reason": "newest for linux glibc-2.17"
  },
  {
   "runtime": "llvm",
@@ -1721,7 +1804,8 @@
   "released": "2017-04-27",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3"
  },
  {
   "runtime": "llvm",
@@ -1747,7 +1831,8 @@
   "released": "2017-04-27",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3"
  },
  {
   "runtime": "llvm",
@@ -1773,7 +1858,8 @@
   "released": "2017-04-27",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3"
  },
  {
   "runtime": "llvm",
@@ -1799,7 +1885,8 @@
   "released": "2017-04-27",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3"
  },
  {
   "runtime": "llvm",
@@ -1825,7 +1912,8 @@
   "released": "2017-04-27",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3"
  },
  {
   "runtime": "llvm",
@@ -1851,7 +1939,8 @@
   "released": "2017-04-27",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3"
  },
  {
   "runtime": "llvm",
@@ -1877,7 +1966,8 @@
   "released": "2017-07-07",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4"
  },
  {
   "runtime": "llvm",
@@ -1903,7 +1993,8 @@
   "released": "2017-06-27",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4"
  },
  {
   "runtime": "llvm",
@@ -1929,7 +2020,8 @@
   "released": "2017-06-27",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4"
  },
  {
   "runtime": "llvm",
@@ -1955,7 +2047,8 @@
   "released": "2017-07-07",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4"
  },
  {
   "runtime": "llvm",
@@ -1981,7 +2074,8 @@
   "released": "2017-06-27",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4"
  },
  {
   "runtime": "llvm",
@@ -2007,7 +2101,8 @@
   "released": "2017-06-27",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4"
  },
  {
   "runtime": "llvm",
@@ -2033,7 +2128,8 @@
   "released": "2017-06-27",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4"
  },
  {
   "runtime": "llvm",
@@ -2059,7 +2155,8 @@
   "released": "2017-12-19",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5"
  },
  {
   "runtime": "llvm",
@@ -2085,7 +2182,8 @@
   "released": "2017-12-19",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5"
  },
  {
   "runtime": "llvm",
@@ -2111,7 +2209,8 @@
   "released": "2017-12-20",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5"
  },
  {
   "runtime": "llvm",
@@ -2137,7 +2236,8 @@
   "released": "2017-12-20",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5"
  },
  {
   "runtime": "llvm",
@@ -2163,7 +2263,8 @@
   "released": "2018-05-10",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5"
  },
  {
   "runtime": "llvm",
@@ -2189,7 +2290,8 @@
   "released": "2018-05-10",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5; newest for macos 10.9, 10.10, 10.11, 10.12"
  },
  {
   "runtime": "llvm",
@@ -2215,7 +2317,8 @@
   "released": "2018-05-10",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5"
  },
  {
   "runtime": "llvm",
@@ -2241,7 +2344,8 @@
   "released": "2018-05-10",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5"
  },
  {
   "runtime": "llvm",
@@ -2266,7 +2370,8 @@
   "released": "2018-04-05",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "llvm",
@@ -2292,7 +2397,8 @@
   "released": "2018-03-08",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6; newest for macos 10.13, 10.14"
  },
  {
   "runtime": "llvm",
@@ -2318,7 +2424,8 @@
   "released": "2018-06-30",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "llvm",
@@ -2344,7 +2451,8 @@
   "released": "2018-09-27",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "llvm",
@@ -2370,7 +2478,8 @@
   "released": "2018-09-27",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "llvm",
@@ -2396,7 +2505,8 @@
   "released": "2018-06-30",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "llvm",
@@ -2422,7 +2532,8 @@
   "released": "2018-06-30",
   "min_os": null,
   "metadata_source": "https://releases.llvm.org/download.html",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "llvm",
@@ -2447,7 +2558,8 @@
   "released": "2019-05-11",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-7.1.0",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "llvm",
@@ -2472,7 +2584,8 @@
   "released": "2019-05-11",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-7.1.0",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "llvm",
@@ -2497,7 +2610,8 @@
   "released": "2019-05-11",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-7.1.0",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "llvm",
@@ -2522,7 +2636,8 @@
   "released": "2019-05-11",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-7.1.0",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "llvm",
@@ -2547,7 +2662,8 @@
   "released": "2019-05-11",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-7.1.0",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "llvm",
@@ -2572,7 +2688,8 @@
   "released": "2019-07-19",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-8.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8; newest for linux glibc-2.19"
  },
  {
   "runtime": "llvm",
@@ -2597,7 +2714,8 @@
   "released": "2019-07-19",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-8.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "llvm",
@@ -2622,7 +2740,8 @@
   "released": "2019-07-19",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-8.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "llvm",
@@ -2647,7 +2766,8 @@
   "released": "2019-07-19",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-8.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "llvm",
@@ -2679,7 +2799,8 @@
     "value": "e3af139c2f93075c13dcbc4091c1311f66fc6e4e8705649fcaf9bef8b3368f41",
     "source": "scoop Main/llvm 8.0.1 (git history 7c0f32597e (2019-08-09) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 8"
  },
  {
   "runtime": "llvm",
@@ -2711,7 +2832,8 @@
     "value": "5d992a41f1ff6296659e66eabbcbaec34f5533fe9d1376fc94fba7450383fe69",
     "source": "scoop Main/llvm 8.0.1 (git history 7c0f32597e (2019-08-09) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 8"
  },
  {
   "runtime": "llvm",
@@ -2734,7 +2856,8 @@
   "released": "2019-12-19",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-9.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "llvm",
@@ -2757,7 +2880,8 @@
   "released": "2019-12-19",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-9.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "llvm",
@@ -2782,7 +2906,8 @@
   "released": "2019-12-19",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-9.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "llvm",
@@ -2807,7 +2932,8 @@
   "released": "2019-12-19",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-9.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "llvm",
@@ -2830,7 +2956,8 @@
   "released": "2019-12-19",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-9.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "llvm",
@@ -2855,7 +2982,8 @@
   "released": "2019-12-19",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-9.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "llvm",
@@ -2880,7 +3008,8 @@
   "released": "2019-12-19",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-9.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "llvm",
@@ -2910,7 +3039,8 @@
     "value": "893f8a12506f8ad29ca464d868fb432fdadd782786a10655b86575fc7fc1a562",
     "source": "scoop Main/llvm 10.0.0 (git history be1eea819c (2020-03-26) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 10"
  },
  {
   "runtime": "llvm",
@@ -2942,7 +3072,8 @@
     "value": "322f93717ce2b27a966779254d41be0fcd618a624619a8e2bb5aa6313ab4157b",
     "source": "scoop Main/llvm 10.0.0 (git history be1eea819c (2020-03-26) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 10"
  },
  {
   "runtime": "llvm",
@@ -2965,7 +3096,8 @@
   "released": "2020-07-22",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-10.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10"
  },
  {
   "runtime": "llvm",
@@ -2988,7 +3120,8 @@
   "released": "2020-07-22",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-10.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10"
  },
  {
   "runtime": "llvm",
@@ -3011,7 +3144,8 @@
   "released": "2020-07-22",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-10.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10"
  },
  {
   "runtime": "llvm",
@@ -3036,7 +3170,8 @@
   "released": "2020-07-22",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-10.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10"
  },
  {
   "runtime": "llvm",
@@ -3061,7 +3196,8 @@
   "released": "2020-07-22",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-10.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10"
  },
  {
   "runtime": "llvm",
@@ -3086,7 +3222,8 @@
   "released": "2020-10-12",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-11.0.0",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 11; newest for macos 10.15"
  },
  {
   "runtime": "llvm",
@@ -3111,7 +3248,8 @@
   "released": "2021-02-17",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-11.1.0",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 11"
  },
  {
   "runtime": "llvm",
@@ -3136,7 +3274,8 @@
   "released": "2021-02-17",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-11.1.0",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 11"
  },
  {
   "runtime": "llvm",
@@ -3159,7 +3298,8 @@
   "released": "2021-02-17",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-11.1.0",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 11"
  },
  {
   "runtime": "llvm",
@@ -3184,7 +3324,8 @@
   "released": "2021-02-17",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-11.1.0",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 11"
  },
  {
   "runtime": "llvm",
@@ -3214,7 +3355,8 @@
     "value": "b5770bbfac712d273938cd155e232afaa85c2e8d865c7ca504a104a838568516",
     "source": "scoop Main/llvm 11.1.0 (git history ee6858687a (2021-03-04) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 11"
  },
  {
   "runtime": "llvm",
@@ -3244,7 +3386,8 @@
     "value": "b92f7c74ccd132dba0089cdf4efe9096a3f6018f14290611a408aea329845727",
     "source": "scoop Main/llvm 11.1.0 (git history ee6858687a (2021-03-04) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 11"
  },
  {
   "runtime": "llvm",
@@ -3267,7 +3410,8 @@
   "released": "2021-04-14",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-12.0.0",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 12"
  },
  {
   "runtime": "llvm",
@@ -3297,7 +3441,8 @@
     "value": "2a0a05d3c9e07642a1bc017105120c833b6360f4db1edb77563c81199f267c3a",
     "source": "winget LLVM.LLVM 12.0.0 (manifests/l/LLVM/LLVM/12.0.0/LLVM.LLVM.installer.yaml)"
    }
-  ]
+  ],
+  "reason": "newest in major 12"
  },
  {
   "runtime": "llvm",
@@ -3322,7 +3467,8 @@
   "released": "2021-07-09",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-12.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 12; newest for linux glibc-2.23, glibc-2.24"
  },
  {
   "runtime": "llvm",
@@ -3347,7 +3493,8 @@
   "released": "2021-07-09",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-12.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 12"
  },
  {
   "runtime": "llvm",
@@ -3372,7 +3519,8 @@
   "released": "2021-07-09",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-12.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 12"
  },
  {
   "runtime": "llvm",
@@ -3395,7 +3543,8 @@
   "released": "2021-07-09",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-12.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 12"
  },
  {
   "runtime": "llvm",
@@ -3425,7 +3574,8 @@
     "value": "fcbabc9a170208bb344f7bba8366cca57ff103d72a316781bbb77d634b9e9433",
     "source": "scoop Main/llvm 12.0.1 (git history 4066cf1e89 (2021-07-14) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 12"
  },
  {
   "runtime": "llvm",
@@ -3455,7 +3605,8 @@
     "value": "62f8bc1328a8d9e3fcd4663139891aaeda2ea4fe83eb510cba1c9ca943c76d51",
     "source": "scoop Main/llvm 12.0.1 (git history 4066cf1e89 (2021-07-14) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 12"
  },
  {
   "runtime": "llvm",
@@ -3478,7 +3629,8 @@
   "released": "2022-02-02",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-13.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 13"
  },
  {
   "runtime": "llvm",
@@ -3501,7 +3653,8 @@
   "released": "2022-02-02",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-13.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 13"
  },
  {
   "runtime": "llvm",
@@ -3524,7 +3677,8 @@
   "released": "2022-02-02",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-13.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 13"
  },
  {
   "runtime": "llvm",
@@ -3547,7 +3701,8 @@
   "released": "2022-02-02",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-13.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 13"
  },
  {
   "runtime": "llvm",
@@ -3570,7 +3725,8 @@
   "released": "2022-02-02",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-13.0.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 13"
  },
  {
   "runtime": "llvm",
@@ -3600,7 +3756,8 @@
     "value": "9d15be034d52ec57cfc97615634099604d88a54761649498daa7405983a7e12f",
     "source": "scoop Main/llvm 13.0.1 (git history 099f63d99f (2022-02-03) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 13"
  },
  {
   "runtime": "llvm",
@@ -3630,7 +3787,8 @@
     "value": "e3fe488076686de281a334ade7bb3cbc6080b009782d39d2ac024f8bd897be4b",
     "source": "scoop Main/llvm 13.0.1 (git history 099f63d99f (2022-02-03) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 13"
  },
  {
   "runtime": "llvm",
@@ -3653,7 +3811,8 @@
   "released": "2022-06-25",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-14.0.6",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 14"
  },
  {
   "runtime": "llvm",
@@ -3678,7 +3837,8 @@
   "released": "2022-06-25",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-14.0.6",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 14"
  },
  {
   "runtime": "llvm",
@@ -3701,7 +3861,8 @@
   "released": "2022-06-25",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-14.0.6",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 14"
  },
  {
   "runtime": "llvm",
@@ -3726,7 +3887,8 @@
   "released": "2022-06-25",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-14.0.6",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 14"
  },
  {
   "runtime": "llvm",
@@ -3751,7 +3913,8 @@
   "released": "2022-06-25",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-14.0.6",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 14; newest for macos 11"
  },
  {
   "runtime": "llvm",
@@ -3774,7 +3937,8 @@
   "released": "2022-06-25",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-14.0.6",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 14"
  },
  {
   "runtime": "llvm",
@@ -3804,7 +3968,8 @@
     "value": "e8dbb2f7de8e37915273d65c1c2f2d96844b96bb8e8035f62c5182475e80b9fc",
     "source": "scoop Main/llvm 14.0.6 (git history 08ded26706 (2022-06-27) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 14"
  },
  {
   "runtime": "llvm",
@@ -3834,7 +3999,8 @@
     "value": "76d0f6f37e22e0bd1f6a9e62e0c66edcd225b97cce1dbefb5d047a9dbfb9d4c8",
     "source": "scoop Main/llvm 14.0.6 (git history 08ded26706 (2022-06-27) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 14"
  },
  {
   "runtime": "llvm",
@@ -3859,7 +4025,8 @@
   "released": "2022-11-29",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-15.0.6",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 15"
  },
  {
   "runtime": "llvm",
@@ -3884,7 +4051,8 @@
   "released": "2022-11-29",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-15.0.6",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 15"
  },
  {
   "runtime": "llvm",
@@ -3907,7 +4075,8 @@
   "released": "2022-11-29",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-15.0.6",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 15"
  },
  {
   "runtime": "llvm",
@@ -3937,7 +4106,8 @@
     "value": "79d18b9498d7a6c36114f0277c83c91caf9258194c683a73e5886b68b4d304d1",
     "source": "winget LLVM.LLVM 15.0.6 (manifests/l/LLVM/LLVM/15.0.6/LLVM.LLVM.installer.yaml)"
    }
-  ]
+  ],
+  "reason": "newest in major 15"
  },
  {
   "runtime": "llvm",
@@ -3960,7 +4130,8 @@
   "released": "2023-01-12",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-15.0.7",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 15"
  },
  {
   "runtime": "llvm",
@@ -3983,7 +4154,8 @@
   "released": "2023-01-12",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-15.0.7",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 15; newest for macos 12"
  },
  {
   "runtime": "llvm",
@@ -4006,7 +4178,8 @@
   "released": "2023-01-12",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-15.0.7",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 15"
  },
  {
   "runtime": "llvm",
@@ -4036,7 +4209,8 @@
     "value": "5428cb72acf63ce3bc4328e546a36674c9736ec040ecc176d362201c6548e6a8",
     "source": "scoop Main/llvm 15.0.7 (git history 6520ffc3f7 (2023-01-16) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 15"
  },
  {
   "runtime": "llvm",
@@ -4066,7 +4240,8 @@
     "value": "2d1316258946e04d21ee6d14172f6e47ca205213da0980e583f518fbba045645",
     "source": "scoop Main/llvm 15.0.7 (git history 6520ffc3f7 (2023-01-16) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 15"
  },
  {
   "runtime": "llvm",
@@ -4091,7 +4266,8 @@
   "released": "2023-05-17",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-16.0.4",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
  },
  {
   "runtime": "llvm",
@@ -4116,7 +4292,8 @@
   "released": "2023-05-17",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-16.0.4",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
  },
  {
   "runtime": "llvm",
@@ -4139,7 +4316,8 @@
   "released": "2023-06-02",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-16.0.5",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
  },
  {
   "runtime": "llvm",
@@ -4162,7 +4340,8 @@
   "released": "2023-06-14",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-16.0.6",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
  },
  {
   "runtime": "llvm",
@@ -4185,7 +4364,8 @@
   "released": "2023-06-14",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-16.0.6",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
  },
  {
   "runtime": "llvm",
@@ -4215,7 +4395,8 @@
     "value": "9a8cd30cc92fdf403d96217347861545a5bbff7a1a1a8527b5785ff0e9101111",
     "source": "scoop Main/llvm 16.0.6 (git history c2d77ff5fb (2023-09-03) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 16"
  },
  {
   "runtime": "llvm",
@@ -4245,7 +4426,8 @@
     "value": "74b37b2eaa0b3632c15ecbb5c1c1c5bc2d093a48cc872c4991a34a75ccda805f",
     "source": "scoop Main/llvm 16.0.6 (git history c2d77ff5fb (2023-09-03) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 16"
  },
  {
   "runtime": "llvm",
@@ -4275,7 +4457,8 @@
     "value": "2b2ffd454e1d4eac6915c41e29de02d214c6cb33390098468bf088dbc7410629",
     "source": "scoop Main/llvm 16.0.6 (git history c2d77ff5fb (2023-09-03) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 16"
  },
  {
   "runtime": "llvm",
@@ -4300,7 +4483,8 @@
   "released": "2023-11-28",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-17.0.6",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17"
  },
  {
   "runtime": "llvm",
@@ -4323,7 +4507,8 @@
   "released": "2023-11-28",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-17.0.6",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17"
  },
  {
   "runtime": "llvm",
@@ -4346,7 +4531,8 @@
   "released": "2023-11-28",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-17.0.6",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17"
  },
  {
   "runtime": "llvm",
@@ -4369,7 +4555,8 @@
   "released": "2023-11-28",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-17.0.6",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17"
  },
  {
   "runtime": "llvm",
@@ -4392,7 +4579,8 @@
   "released": "2023-11-28",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-17.0.6",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17; newest for macos 13"
  },
  {
   "runtime": "llvm",
@@ -4422,7 +4610,8 @@
     "value": "89dc351af8e8fa1cafc6b48411e608aa9457c930a10f984aad5d21ab020165b2",
     "source": "scoop Main/llvm 17.0.6 (git history e4b1abfa7d (2023-12-04) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 17"
  },
  {
   "runtime": "llvm",
@@ -4452,7 +4641,8 @@
     "value": "1efda890c79d597fb9e9c1ae62ececf53e9b56b979b1e37234b5c8dac56461fe",
     "source": "scoop Main/llvm 17.0.6 (git history e4b1abfa7d (2023-12-04) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 17"
  },
  {
   "runtime": "llvm",
@@ -4482,7 +4672,8 @@
     "value": "766332eaedbc83a57ecd5b719912ed4bc0be1ef0df952581d2b3edb9135b7c2a",
     "source": "scoop Main/llvm 17.0.6 (git history e4b1abfa7d (2023-12-04) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 17"
  },
  {
   "runtime": "llvm",
@@ -4505,7 +4696,8 @@
   "released": "2024-06-19",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-18.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18; newest for linux glibc-2.27, glibc-2.28, glibc-2.31"
  },
  {
   "runtime": "llvm",
@@ -4528,7 +4720,8 @@
   "released": "2024-06-19",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-18.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18"
  },
  {
   "runtime": "llvm",
@@ -4551,7 +4744,8 @@
   "released": "2024-06-19",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-18.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18"
  },
  {
   "runtime": "llvm",
@@ -4574,7 +4768,8 @@
   "released": "2024-06-19",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-18.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18"
  },
  {
   "runtime": "llvm",
@@ -4604,7 +4799,8 @@
     "value": "94af030060d88cc17e9f00ef1663ebdc1126b35e16bebdfa1e807984b70abd8f",
     "source": "scoop Main/llvm 18.1.8 (git history 09b7fc044a (2024-06-29) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 18"
  },
  {
   "runtime": "llvm",
@@ -4634,7 +4830,8 @@
     "value": "e25bf44d67fe86708490cf08de085fe1d6e1e50f3249c212c9077a06247cdc9e",
     "source": "scoop Main/llvm 18.1.8 (git history 09b7fc044a (2024-06-29) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 18"
  },
  {
   "runtime": "llvm",
@@ -4664,7 +4861,8 @@
     "value": "4ce39685d593a33cdbcdd10bec2288b65e020b38995d684c19cb56cad0fa43ac",
     "source": "scoop Main/llvm 18.1.8 (git history 09b7fc044a (2024-06-29) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 18"
  },
  {
   "runtime": "llvm",
@@ -4687,7 +4885,8 @@
   "released": "2025-01-14",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-19.1.7",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19; newest for linux glibc-2.34"
  },
  {
   "runtime": "llvm",
@@ -4710,7 +4909,8 @@
   "released": "2025-01-14",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-19.1.7",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19"
  },
  {
   "runtime": "llvm",
@@ -4733,7 +4933,8 @@
   "released": "2025-01-14",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-19.1.7",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19"
  },
  {
   "runtime": "llvm",
@@ -4756,7 +4957,8 @@
   "released": "2025-01-14",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-19.1.7",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19"
  },
  {
   "runtime": "llvm",
@@ -4779,7 +4981,8 @@
   "released": "2025-01-14",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-19.1.7",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19"
  },
  {
   "runtime": "llvm",
@@ -4809,7 +5012,8 @@
     "value": "f19ae5bc4823ac69ec01dc2ded503ec80a04ad2208dda1595d1f0413c148ef90",
     "source": "scoop Main/llvm 19.1.7 (git history 65eca0ff6f (2025-01-15) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 19"
  },
  {
   "runtime": "llvm",
@@ -4839,7 +5043,8 @@
     "value": "08d871c9a20caf0987ede1a4e44d489e28854c9f2fff3da98b486891f4856e05",
     "source": "scoop Main/llvm-arm64 19.1.7 (git history c41fa675ea (2025-02-12) Main/bucket/llvm-arm64.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 19"
  },
  {
   "runtime": "llvm",
@@ -4869,7 +5074,8 @@
     "value": "3d7044fa307d3183e4ee2a98e12dd0523ced58f1d1c95c5e057694fb75beb51a",
     "source": "scoop Main/llvm 19.1.7 (git history 65eca0ff6f (2025-01-15) Main/bucket/llvm.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 19"
  },
  {
   "runtime": "llvm",
@@ -4896,7 +5102,8 @@
   "released": "2025-06-13",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-20.1.7",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20; newest for macos 13, 14, 15, 26"
  },
  {
   "runtime": "llvm",
@@ -4923,7 +5130,8 @@
   "released": "2025-07-09",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-20.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20"
  },
  {
   "runtime": "llvm",
@@ -4950,7 +5158,8 @@
   "released": "2025-07-09",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-20.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20"
  },
  {
   "runtime": "llvm",
@@ -4977,7 +5186,8 @@
   "released": "2025-07-09",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-20.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20"
  },
  {
   "runtime": "llvm",
@@ -5004,7 +5214,8 @@
   "released": "2025-07-09",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-20.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20"
  },
  {
   "runtime": "llvm",
@@ -5031,7 +5242,8 @@
   "released": "2025-07-09",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-20.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20"
  },
  {
   "runtime": "llvm",
@@ -5058,7 +5270,8 @@
   "released": "2025-07-09",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-20.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20"
  },
  {
   "runtime": "llvm",
@@ -5085,7 +5298,8 @@
   "released": "2025-07-09",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-20.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20"
  },
  {
   "runtime": "llvm",
@@ -5112,7 +5326,8 @@
   "released": "2025-12-16",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-21.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "llvm",
@@ -5139,7 +5354,8 @@
   "released": "2025-12-16",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-21.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "llvm",
@@ -5166,7 +5382,8 @@
   "released": "2025-12-16",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-21.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "llvm",
@@ -5193,7 +5410,8 @@
   "released": "2025-12-16",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-21.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "llvm",
@@ -5220,7 +5438,8 @@
   "released": "2025-12-16",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-21.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "llvm",
@@ -5249,7 +5468,8 @@
   "released": "2025-12-16",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-21.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "llvm",
@@ -5276,7 +5496,8 @@
   "released": "2025-12-16",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-21.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21; newest for windows 7, server2008r2, 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "llvm",
@@ -5303,7 +5524,8 @@
   "released": "2026-06-16",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-22.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22"
  },
  {
   "runtime": "llvm",
@@ -5330,7 +5552,8 @@
   "released": "2026-06-16",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-22.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22"
  },
  {
   "runtime": "llvm",
@@ -5357,7 +5580,8 @@
   "released": "2026-06-16",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-22.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22"
  },
  {
   "runtime": "llvm",
@@ -5384,7 +5608,8 @@
   "released": "2026-06-16",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-22.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22"
  },
  {
   "runtime": "llvm",
@@ -5411,7 +5636,8 @@
   "released": "2026-06-16",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-22.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22; newest for windows 7, server2008r2, 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "llvm",
@@ -5438,7 +5664,8 @@
   "released": "2026-06-16",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-22.1.8",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22; newest for windows 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "llvm",
@@ -5465,7 +5692,8 @@
   "released": "2026-08-25",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-23.1.0",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 23"
  },
  {
   "runtime": "llvm",
@@ -5494,7 +5722,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-23.1.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 23; newest for linux glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "llvm",
@@ -5523,7 +5752,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-23.1.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 23"
  },
  {
   "runtime": "llvm",
@@ -5552,7 +5782,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-23.1.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 23; newest for macos 14, 15, 26"
  },
  {
   "runtime": "llvm",
@@ -5581,7 +5812,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-23.1.1",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 23; newest for windows 7, server2008r2, 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "msvc-redist",
@@ -5613,7 +5845,8 @@
     "value": "843068991daaa1f73ad9f6239bce4d0f6a07a51f18c37ea2a867e9beca71295c",
     "source": "scoop Extras/vcredist 14.51.36247.0 (HEAD Extras/bucket/vcredist.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 14"
  },
  {
   "runtime": "msvc-redist",
@@ -5636,7 +5869,8 @@
   "released": "2026-09-10",
   "min_os": null,
   "metadata_source": "https://learn.microsoft.com/en-us/visualstudio/install/build-tools-container",
-  "notes": "Bootstrapper only: this .exe (a few MB) downloads the actual MSVC/Windows-SDK components at install time, so its own size is not representative of install size."
+  "notes": "Bootstrapper only: this .exe (a few MB) downloads the actual MSVC/Windows-SDK components at install time, so its own size is not representative of install size.",
+  "reason": "newest in major 14"
  },
  {
   "runtime": "msvc-redist",
@@ -5661,7 +5895,8 @@
   "released": "2025-06-12",
   "min_os": null,
   "metadata_source": "https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist",
-  "notes": "Microsoft permalink, always serves the current VC++ 14.x redistributable; redirects to VC_redist.arm64.exe at scrape time. 'version' is nominal, not pinned -- re-running this script later will see a newer build at the same URL."
+  "notes": "Microsoft permalink, always serves the current VC++ 14.x redistributable; redirects to VC_redist.arm64.exe at scrape time. 'version' is nominal, not pinned -- re-running this script later will see a newer build at the same URL.",
+  "reason": "newest in major 14"
  },
  {
   "runtime": "msvc-redist",
@@ -5686,6 +5921,7 @@
   "released": "2026-08-28",
   "min_os": null,
   "metadata_source": "https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist",
-  "notes": "Microsoft permalink, always serves the current VC++ 14.x redistributable; redirects to VC_redist.x86.exe at scrape time. 'version' is nominal, not pinned -- re-running this script later will see a newer build at the same URL."
+  "notes": "Microsoft permalink, always serves the current VC++ 14.x redistributable; redirects to VC_redist.x86.exe at scrape time. 'version' is nominal, not pinned -- re-running this script later will see a newer build at the same URL.",
+  "reason": "newest in major 14"
  }
 ]

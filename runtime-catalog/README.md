@@ -52,6 +52,11 @@ LLVM 3.9 and 4–23, GCC per major.
   platform keeps the newest minor that still had it (e.g. Go 1.23 for
   platforms Go 1.24+ dropped).
 - Source tarballs only where no prebuilt binary exists for that major and OS.
+- OS floors (go, rust, zig, nim, cc only, 2026-09-18): also the newest release
+  that runs on each OS id in `os_versions.json` (e.g. Go 1.10.8 for XP and
+  Vista, Rust 1.77.2 -gnu for 7 to 8.1), from the `os_support` rules in
+  `compilers_min_os.json`. Each entry says why it's there in `reason`. These
+  43 added files (about 5 GB) are in the plans but **not downloaded yet**.
 - Verified against the vendor checksum where one exists (size otherwise),
   into `../<runtime>/<os>/<arch>/<version>[-<variant>]/`.
 - Everything else was deleted by `tools/prune.py`, except files in the root

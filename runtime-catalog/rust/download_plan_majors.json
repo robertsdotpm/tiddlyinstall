@@ -4,6 +4,435 @@
   "languages": [
    "rust"
   ],
+  "major": "1.63",
+  "version": "1.63.0",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://static.rust-lang.org/dist/2022-08-11/rust-1.63.0-x86_64-unknown-linux-gnu.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2022-08-11/rust-1.63.0-x86_64-unknown-linux-gnu.tar.xz",
+   "https://rsproxy.cn/dist/2022-08-11/rust-1.63.0-x86_64-unknown-linux-gnu.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2022-08-11/rust-1.63.0-x86_64-unknown-linux-gnu.tar.xz",
+   "http://static.rust-lang.org/dist/2022-08-11/rust-1.63.0-x86_64-unknown-linux-gnu.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2022-08-11/rust-1.63.0-x86_64-unknown-linux-gnu.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2022-08-11/rust-1.63.0-x86_64-unknown-linux-gnu.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "be9b25bcf1e564876762e653688e0b5df11fab53048ac18bf77761cf0a0cc465"
+  },
+  "size": 155435832,
+  "released": "2022-08-11",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.63.0.toml",
+  "notes": null,
+  "reason": "newest for linux glibc-2.12"
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.63",
+  "version": "1.63.0",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://static.rust-lang.org/dist/2022-08-11/rust-1.63.0-aarch64-unknown-linux-gnu.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2022-08-11/rust-1.63.0-aarch64-unknown-linux-gnu.tar.xz",
+   "https://rsproxy.cn/dist/2022-08-11/rust-1.63.0-aarch64-unknown-linux-gnu.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2022-08-11/rust-1.63.0-aarch64-unknown-linux-gnu.tar.xz",
+   "http://static.rust-lang.org/dist/2022-08-11/rust-1.63.0-aarch64-unknown-linux-gnu.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2022-08-11/rust-1.63.0-aarch64-unknown-linux-gnu.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2022-08-11/rust-1.63.0-aarch64-unknown-linux-gnu.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "963dd3c8b0b1ba970e8608b5bf457c24d5dc471d68f40e5cb62582fbd0461988"
+  },
+  "size": 230083616,
+  "released": "2022-08-11",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.63.0.toml",
+  "notes": null,
+  "reason": "newest for linux glibc-2.12"
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.63",
+  "version": "1.63.0",
+  "os": "linux",
+  "arch": "armv6",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "hardfloat",
+  "libc": "glibc",
+  "url": "https://static.rust-lang.org/dist/2022-08-11/rust-1.63.0-arm-unknown-linux-gnueabihf.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2022-08-11/rust-1.63.0-arm-unknown-linux-gnueabihf.tar.xz",
+   "https://rsproxy.cn/dist/2022-08-11/rust-1.63.0-arm-unknown-linux-gnueabihf.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2022-08-11/rust-1.63.0-arm-unknown-linux-gnueabihf.tar.xz",
+   "http://static.rust-lang.org/dist/2022-08-11/rust-1.63.0-arm-unknown-linux-gnueabihf.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2022-08-11/rust-1.63.0-arm-unknown-linux-gnueabihf.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2022-08-11/rust-1.63.0-arm-unknown-linux-gnueabihf.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "9bb5b2661a9351ed78a923c6e8add346061cf926e5147b4ca5536b01af1917c4"
+  },
+  "size": 204273564,
+  "released": "2022-08-11",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.63.0.toml",
+  "notes": null,
+  "reason": "newest for linux glibc-2.12"
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.63",
+  "version": "1.63.0",
+  "os": "linux",
+  "arch": "armv6",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "softfloat",
+  "libc": "glibc",
+  "url": "https://static.rust-lang.org/dist/2022-08-11/rust-1.63.0-arm-unknown-linux-gnueabi.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2022-08-11/rust-1.63.0-arm-unknown-linux-gnueabi.tar.xz",
+   "https://rsproxy.cn/dist/2022-08-11/rust-1.63.0-arm-unknown-linux-gnueabi.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2022-08-11/rust-1.63.0-arm-unknown-linux-gnueabi.tar.xz",
+   "http://static.rust-lang.org/dist/2022-08-11/rust-1.63.0-arm-unknown-linux-gnueabi.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2022-08-11/rust-1.63.0-arm-unknown-linux-gnueabi.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2022-08-11/rust-1.63.0-arm-unknown-linux-gnueabi.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "83d3f96645cf745006ecee757e4d924d9026162e547b2419dee32f8b7a6c65d5"
+  },
+  "size": 203850320,
+  "released": "2022-08-11",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.63.0.toml",
+  "notes": null,
+  "reason": "newest for linux glibc-2.12"
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.63",
+  "version": "1.63.0",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://static.rust-lang.org/dist/2022-08-11/rust-1.63.0-armv7-unknown-linux-gnueabihf.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2022-08-11/rust-1.63.0-armv7-unknown-linux-gnueabihf.tar.xz",
+   "https://rsproxy.cn/dist/2022-08-11/rust-1.63.0-armv7-unknown-linux-gnueabihf.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2022-08-11/rust-1.63.0-armv7-unknown-linux-gnueabihf.tar.xz",
+   "http://static.rust-lang.org/dist/2022-08-11/rust-1.63.0-armv7-unknown-linux-gnueabihf.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2022-08-11/rust-1.63.0-armv7-unknown-linux-gnueabihf.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2022-08-11/rust-1.63.0-armv7-unknown-linux-gnueabihf.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "81e9e3dc569047f2a26512609978a4e5d4c06a05a071d44a6d9aadb4d7cbc079"
+  },
+  "size": 209545116,
+  "released": "2022-08-11",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.63.0.toml",
+  "notes": null,
+  "reason": "newest for linux glibc-2.12"
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.63",
+  "version": "1.63.0",
+  "os": "linux",
+  "arch": "ppc64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://static.rust-lang.org/dist/2022-08-11/rust-1.63.0-powerpc64-unknown-linux-gnu.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2022-08-11/rust-1.63.0-powerpc64-unknown-linux-gnu.tar.xz",
+   "https://rsproxy.cn/dist/2022-08-11/rust-1.63.0-powerpc64-unknown-linux-gnu.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2022-08-11/rust-1.63.0-powerpc64-unknown-linux-gnu.tar.xz",
+   "http://static.rust-lang.org/dist/2022-08-11/rust-1.63.0-powerpc64-unknown-linux-gnu.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2022-08-11/rust-1.63.0-powerpc64-unknown-linux-gnu.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2022-08-11/rust-1.63.0-powerpc64-unknown-linux-gnu.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "5b86ff84cd38f757d54e542b85bf22d3560a8d8cda8d85fec40d74ad49867c9f"
+  },
+  "size": 192446060,
+  "released": "2022-08-11",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.63.0.toml",
+  "notes": null,
+  "reason": "newest for linux glibc-2.12"
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.63",
+  "version": "1.63.0",
+  "os": "linux",
+  "arch": "ppc64le",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://static.rust-lang.org/dist/2022-08-11/rust-1.63.0-powerpc64le-unknown-linux-gnu.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2022-08-11/rust-1.63.0-powerpc64le-unknown-linux-gnu.tar.xz",
+   "https://rsproxy.cn/dist/2022-08-11/rust-1.63.0-powerpc64le-unknown-linux-gnu.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2022-08-11/rust-1.63.0-powerpc64le-unknown-linux-gnu.tar.xz",
+   "http://static.rust-lang.org/dist/2022-08-11/rust-1.63.0-powerpc64le-unknown-linux-gnu.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2022-08-11/rust-1.63.0-powerpc64le-unknown-linux-gnu.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2022-08-11/rust-1.63.0-powerpc64le-unknown-linux-gnu.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "763ac0659b3a7f3a57ff9eb01f4c77eaf8485bd19997ec6fdf2149afb3823ca8"
+  },
+  "size": 202613736,
+  "released": "2022-08-11",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.63.0.toml",
+  "notes": null,
+  "reason": "newest for linux glibc-2.12"
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.63",
+  "version": "1.63.0",
+  "os": "linux",
+  "arch": "riscv64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://static.rust-lang.org/dist/2022-08-11/rust-1.63.0-riscv64gc-unknown-linux-gnu.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2022-08-11/rust-1.63.0-riscv64gc-unknown-linux-gnu.tar.xz",
+   "https://rsproxy.cn/dist/2022-08-11/rust-1.63.0-riscv64gc-unknown-linux-gnu.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2022-08-11/rust-1.63.0-riscv64gc-unknown-linux-gnu.tar.xz",
+   "http://static.rust-lang.org/dist/2022-08-11/rust-1.63.0-riscv64gc-unknown-linux-gnu.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2022-08-11/rust-1.63.0-riscv64gc-unknown-linux-gnu.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2022-08-11/rust-1.63.0-riscv64gc-unknown-linux-gnu.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "f6f0f40cb1ccf1ea45f2452713067b0efb073f631d52f72415a3b5e6058b064c"
+  },
+  "size": 195670272,
+  "released": "2022-08-11",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.63.0.toml",
+  "notes": null,
+  "reason": "newest for linux glibc-2.12"
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.63",
+  "version": "1.63.0",
+  "os": "linux",
+  "arch": "s390x",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://static.rust-lang.org/dist/2022-08-11/rust-1.63.0-s390x-unknown-linux-gnu.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2022-08-11/rust-1.63.0-s390x-unknown-linux-gnu.tar.xz",
+   "https://rsproxy.cn/dist/2022-08-11/rust-1.63.0-s390x-unknown-linux-gnu.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2022-08-11/rust-1.63.0-s390x-unknown-linux-gnu.tar.xz",
+   "http://static.rust-lang.org/dist/2022-08-11/rust-1.63.0-s390x-unknown-linux-gnu.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2022-08-11/rust-1.63.0-s390x-unknown-linux-gnu.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2022-08-11/rust-1.63.0-s390x-unknown-linux-gnu.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "2558afc56c4c6a16095868fc25efae623aff7371d855348e86788a659c2d94d4"
+  },
+  "size": 219060812,
+  "released": "2022-08-11",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.63.0.toml",
+  "notes": null,
+  "reason": "newest for linux glibc-2.12"
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.63",
+  "version": "1.63.0",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://static.rust-lang.org/dist/2022-08-11/rust-1.63.0-i686-unknown-linux-gnu.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2022-08-11/rust-1.63.0-i686-unknown-linux-gnu.tar.xz",
+   "https://rsproxy.cn/dist/2022-08-11/rust-1.63.0-i686-unknown-linux-gnu.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2022-08-11/rust-1.63.0-i686-unknown-linux-gnu.tar.xz",
+   "http://static.rust-lang.org/dist/2022-08-11/rust-1.63.0-i686-unknown-linux-gnu.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2022-08-11/rust-1.63.0-i686-unknown-linux-gnu.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2022-08-11/rust-1.63.0-i686-unknown-linux-gnu.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "17081489b7efeb3936ed9bee2d21deaa86d76c3fed9be9e582c4325ca6aafae8"
+  },
+  "size": 224058112,
+  "released": "2022-08-11",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.63.0.toml",
+  "notes": null,
+  "reason": "newest for linux glibc-2.12"
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.73",
+  "version": "1.73.0",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": null,
+  "libc": null,
+  "url": "https://static.rust-lang.org/dist/2023-10-05/rust-1.73.0-x86_64-apple-darwin.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2023-10-05/rust-1.73.0-x86_64-apple-darwin.tar.xz",
+   "https://rsproxy.cn/dist/2023-10-05/rust-1.73.0-x86_64-apple-darwin.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2023-10-05/rust-1.73.0-x86_64-apple-darwin.tar.xz",
+   "http://static.rust-lang.org/dist/2023-10-05/rust-1.73.0-x86_64-apple-darwin.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2023-10-05/rust-1.73.0-x86_64-apple-darwin.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2023-10-05/rust-1.73.0-x86_64-apple-darwin.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "f6488a32cab29a517b657965e707c736147a7b08356c53c837c70ca21a58f094"
+  },
+  "size": 167113788,
+  "released": "2023-10-05",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.73.0.toml",
+  "notes": null,
+  "reason": "newest for macos 10.7, 10.8, 10.9, 10.10, 10.11"
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.77",
+  "version": "1.77.2",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "gnu",
+  "libc": null,
+  "url": "https://static.rust-lang.org/dist/2024-04-09/rust-1.77.2-x86_64-pc-windows-gnu.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2024-04-09/rust-1.77.2-x86_64-pc-windows-gnu.tar.xz",
+   "https://rsproxy.cn/dist/2024-04-09/rust-1.77.2-x86_64-pc-windows-gnu.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2024-04-09/rust-1.77.2-x86_64-pc-windows-gnu.tar.xz",
+   "http://static.rust-lang.org/dist/2024-04-09/rust-1.77.2-x86_64-pc-windows-gnu.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2024-04-09/rust-1.77.2-x86_64-pc-windows-gnu.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2024-04-09/rust-1.77.2-x86_64-pc-windows-gnu.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "1d3fdc7a1322e4a8f81e2ad09894b69c9cb9ae8bf3d40de7abed95a751571349"
+  },
+  "size": 229549248,
+  "released": "2024-04-09",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.77.2.toml",
+  "notes": null,
+  "reason": "newest for windows 7, server2008r2, 8, server2012, 8.1, server2012r2"
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.77",
+  "version": "1.77.2",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "gnu",
+  "libc": null,
+  "url": "https://static.rust-lang.org/dist/2024-04-09/rust-1.77.2-i686-pc-windows-gnu.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2024-04-09/rust-1.77.2-i686-pc-windows-gnu.tar.xz",
+   "https://rsproxy.cn/dist/2024-04-09/rust-1.77.2-i686-pc-windows-gnu.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2024-04-09/rust-1.77.2-i686-pc-windows-gnu.tar.xz",
+   "http://static.rust-lang.org/dist/2024-04-09/rust-1.77.2-i686-pc-windows-gnu.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2024-04-09/rust-1.77.2-i686-pc-windows-gnu.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2024-04-09/rust-1.77.2-i686-pc-windows-gnu.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "5d17a560687516d99283fe7f7486a0514279d877ed0fd12d5dec970fd03bcdb1"
+  },
+  "size": 228352484,
+  "released": "2024-04-09",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.77.2.toml",
+  "notes": null,
+  "reason": "newest for windows 7, server2008r2, 8, server2012, 8.1, server2012r2"
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
   "major": "1.98",
   "version": "1.98.1",
   "os": "linux",
@@ -31,7 +460,8 @@
   "released": "2026-09-03",
   "min_os": null,
   "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "rust",
@@ -64,7 +494,8 @@
   "released": "2026-09-03",
   "min_os": null,
   "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "rust",
@@ -97,7 +528,8 @@
   "released": "2026-09-03",
   "min_os": null,
   "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "rust",
@@ -130,7 +562,8 @@
   "released": "2026-09-03",
   "min_os": null,
   "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "rust",
@@ -163,7 +596,8 @@
   "released": "2026-09-03",
   "min_os": null,
   "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "rust",
@@ -196,7 +630,8 @@
   "released": "2026-09-03",
   "min_os": null,
   "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "rust",
@@ -229,7 +664,8 @@
   "released": "2026-09-03",
   "min_os": null,
   "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "rust",
@@ -262,7 +698,8 @@
   "released": "2026-09-03",
   "min_os": null,
   "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "rust",
@@ -295,7 +732,8 @@
   "released": "2026-09-03",
   "min_os": null,
   "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "rust",
@@ -328,7 +766,8 @@
   "released": "2026-09-03",
   "min_os": null,
   "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "rust",
@@ -361,7 +800,8 @@
   "released": "2026-09-03",
   "min_os": null,
   "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "rust",
@@ -393,7 +833,8 @@
   "released": "2026-09-03",
   "min_os": null,
   "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1; newest for macos 10.12, 10.13, 10.14, 10.15, 11, 12, 13, 14, 15, 26"
  },
  {
   "runtime": "rust",
@@ -425,7 +866,41 @@
   "released": "2026-09-03",
   "min_os": null,
   "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1; newest for macos 11, 12, 13, 14, 15, 26"
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.98",
+  "version": "1.98.1",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "gnu",
+  "libc": null,
+  "url": "https://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-x86_64-pc-windows-gnu.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2026-09-03/rust-1.98.1-x86_64-pc-windows-gnu.tar.xz",
+   "https://rsproxy.cn/dist/2026-09-03/rust-1.98.1-x86_64-pc-windows-gnu.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2026-09-03/rust-1.98.1-x86_64-pc-windows-gnu.tar.xz",
+   "http://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-x86_64-pc-windows-gnu.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-x86_64-pc-windows-gnu.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-x86_64-pc-windows-gnu.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "04b8372ceb1ca2c3ab2897c1a8ca563f9323979f2c81af5f99389a46f1b0343b"
+  },
+  "size": 303640080,
+  "released": "2026-09-03",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
+  "notes": null,
+  "reason": "newest in major 1; newest for windows 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "rust",
@@ -457,7 +932,8 @@
   "released": "2026-09-03",
   "min_os": null,
   "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1; newest for windows 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "rust",
@@ -489,7 +965,41 @@
   "released": "2026-09-03",
   "min_os": null,
   "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1; newest for windows 10, server2016, server2019, server2022, 11, server2025"
+ },
+ {
+  "runtime": "rust",
+  "languages": [
+   "rust"
+  ],
+  "major": "1.98",
+  "version": "1.98.1",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "gnu",
+  "libc": null,
+  "url": "https://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-i686-pc-windows-gnu.tar.xz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/rust-static/dist/2026-09-03/rust-1.98.1-i686-pc-windows-gnu.tar.xz",
+   "https://rsproxy.cn/dist/2026-09-03/rust-1.98.1-i686-pc-windows-gnu.tar.xz",
+   "https://mirrors.cloud.tencent.com/rustup/dist/2026-09-03/rust-1.98.1-i686-pc-windows-gnu.tar.xz",
+   "http://static.rust-lang.org/dist/2026-09-03/rust-1.98.1-i686-pc-windows-gnu.tar.xz",
+   "https://fastly-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-i686-pc-windows-gnu.tar.xz",
+   "https://cloudfront-static.rust-lang.org/dist/2026-09-03/rust-1.98.1-i686-pc-windows-gnu.tar.xz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "cf81006ff86f157d512bc8d364578533de4ef0bac262e47aa1ab3eb7957ad614"
+  },
+  "size": 297614828,
+  "released": "2026-09-03",
+  "min_os": null,
+  "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
+  "notes": null,
+  "reason": "newest in major 1; newest for windows 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "rust",
@@ -521,6 +1031,7 @@
   "released": "2026-09-03",
   "min_os": null,
   "metadata_source": "https://static.rust-lang.org/dist/channel-rust-1.98.1.toml",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1; newest for windows 10, server2016, server2019, server2022, 11, server2025"
  }
 ]
