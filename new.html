@@ -490,8 +490,9 @@ Press Enter to close</pre>
           <label class="choice"><input type="checkbox" name="target_macos" checked> macOS</label>
         </div>
 
-        <label class="choice" style="margin-top:10px"><input type="checkbox" id="offline-on" name="offline">
+        <label class="choice not-ours" style="margin-top:10px"><input type="checkbox" id="offline-on" name="offline">
           <span>Also make offline installers <span class="small muted">for computers without internet. Bigger files, packed in your browser.</span></span></label>
+        <p class="small muted ours-only" style="margin:10px 0 0">Offline installers need the installer signed by you or left unsigned (Customise → Signing).</p>
 
         <div class="actions" style="margin-top:16px">
           <button type="submit">Build installers</button>
@@ -670,7 +671,6 @@ Press Enter to close</pre>
           <label class="choice"><input type="checkbox" name="shortcut_desktop"> Desktop shortcut</label>
           <label class="choice"><input type="checkbox" name="cli_on_path"> Add to PATH</label>
           <label class="choice"><input type="checkbox" name="run_after"> Offer to launch after install</label>
-          <label class="choice"><input type="checkbox" name="uninstaller" checked> Register an uninstaller</label>
           <details>
             <summary>Install scripts</summary>
             <p class="small muted" style="margin-top:0">Optional. Scripts run after the user has seen what the installer will do and clicked Install.
@@ -757,6 +757,39 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
         </details>
 
         <details>
+          <summary><span>Uninstall</span><span class="default">Uninstaller registered, asks about your app's data</span></summary>
+          <label class="choice"><input type="checkbox" name="uninstaller" checked>
+            <span>Register an uninstaller <span class="small muted">(Programs and Features on Windows, a menu entry and <code>--uninstall</code> elsewhere)</span></span></label>
+
+          <span class="label" style="margin-top:10px">The app's data</span>
+          <p class="small muted" style="margin-top:0">Files the app saved in its data folder while it was used.</p>
+          <label class="choice"><input type="radio" name="uninstall_data" value="ask" checked>
+            <span><strong>Ask</strong> <span class="badge">default</span> <span class="small muted">(a "Also delete my data" box, not ticked)</span></span></label>
+          <label class="choice"><input type="radio" name="uninstall_data" value="keep">
+            <span><strong>Keep it</strong></span></label>
+          <label class="choice"><input type="radio" name="uninstall_data" value="remove">
+            <span><strong>Delete it</strong></span></label>
+
+          <details>
+            <summary>Before-removal script</summary>
+            <p class="small muted" style="margin-top:0">Runs before anything is removed, e.g. to stop a background service. People can view it before uninstalling.
+              If it fails, its output is shown and the removal carries on.</p>
+            <div class="tabs" role="tablist">
+              <label class="tab"><input type="radio" name="unscript_tab" id="unscript-tab-win" checked> Windows <span class="muted">(batch)</span></label>
+              <label class="tab"><input type="radio" name="unscript_tab" id="unscript-tab-unix"> Linux &amp; macOS <span class="muted">(sh)</span></label>
+            </div>
+            <div class="tab-panel unscript-panel-win">
+              <textarea class="code code-script" name="win_unpre_script" spellcheck="false" aria-label="Windows before-removal script" placeholder="@echo off&#10;taskkill /im myapp.exe /f 2&gt;nul"></textarea>
+            </div>
+            <div class="tab-panel unscript-panel-unix">
+              <textarea class="code code-script" name="unix_unpre_script" spellcheck="false" aria-label="Linux and macOS before-removal script" placeholder="#!/bin/sh&#10;pkill -x myapp || true"></textarea>
+            </div>
+            <span class="hint">Same variables as install scripts: <code>IB_APP_DIR</code>, <code>IB_RUNTIME_DIR</code>, <code>IB_APP_NAME</code>.</span>
+          </details>
+          <p class="small muted" style="margin-bottom:0">Uninstalling deletes the app's own folders. Nothing shared with other apps is touched.</p>
+        </details>
+
+        <details>
           <summary><span>Cleanup</span><span class="default">Remove build tools after building</span></summary>
           <p class="small muted" style="margin-top:0">What the installer removes once the app is installed. Downloads and temporary files are always removed.</p>
 
@@ -794,7 +827,11 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
         </details>
 
         <details>
-          <summary><span>Files in the installer</span><span class="default"><span class="offline-off-inline">2 of your files</span><span class="offline-inline">2 of your files, plus offline copies</span></span></summary>
+          <summary><span>Files in the installer</span><span class="default"><span class="ours-only-inline">Not with our signature</span><span class="not-ours-inline"><span class="offline-off-inline">2 of your files</span><span class="offline-inline">2 of your files, plus offline copies</span></span></span></summary>
+
+          <p class="small ours-only" style="margin:0">Installers signed by Installer Builder can't carry packed files or offline copies, because our signature would then cover files we've never seen.
+            To add files, choose <strong>Signed by you</strong> or <strong>Unsigned</strong> under Signing.</p>
+          <div class="not-ours">
 
           <p class="small" style="margin-top:0">Add files for the installer to put in your app's folder, or to run while installing:
             data, a model, a manual, a driver. Packed files go into the installer in your browser. They're never uploaded to us, only their checksums.</p>
@@ -928,6 +965,7 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
             <p class="small muted" style="margin-bottom:0">IT departments can also make an offline copy of any online installer, on a computer with internet:
               <code>install_…exe --make-pack --targets win10-x64</code></p>
           </div>
+          </div>
         </details>
 
         <details class="src-repo-only">
@@ -975,10 +1013,23 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
 
           <div class="mode-yours-only">
             <hr>
-            <div class="field">
-              <label for="win-cert">Windows code signing certificate (.pfx)</label>
+            <p class="small" style="margin-top:0">Signing happens in your browser. Your key is never uploaded to us.</p>
+            <span class="label">Windows</span>
+            <label class="choice"><input type="radio" name="win_sign" value="service" checked>
+              <span><strong>A cloud signing service</strong> <span class="small muted">(Azure Trusted Signing, DigiCert KeyLocker, SSL.com eSigner…)</span><br>
+              <span class="small muted">Your browser works out the installer's fingerprint and your service signs it. Certificates issued since June 2023 keep their key on hardware or in such a service.</span></span></label>
+            <label class="choice"><input type="radio" name="win_sign" value="pfx">
+              <span><strong>A certificate file</strong> <span class="small muted">(.pfx / .p12, older certificates)</span><br>
+              <span class="small muted">Loaded into this page only, like a wallet file.</span></span></label>
+            <div class="field" style="margin-top:6px">
+              <label for="win-cert">Certificate file</label>
               <input type="file" id="win-cert" name="win_cert" accept=".pfx,.p12">
-              <span class="hint">Planned: signing happens in your browser, so the key never leaves your machine.</span>
+            </div>
+            <span class="label" style="margin-top:6px">macOS</span>
+            <div class="field">
+              <label for="mac-cert">Developer ID Application certificate (.p12)</label>
+              <input type="file" id="mac-cert" name="mac_cert" accept=".p12">
+              <span class="hint">Loaded into this page only.</span>
             </div>
             <div class="row">
               <div class="field">
@@ -988,7 +1039,7 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
               <div class="field">
                 <label for="apple-key">App Store Connect API key (.p8)</label>
                 <input type="file" id="apple-key" name="apple_key" accept=".p8">
-                <span class="hint">Used to sign and notarize the macOS build.</span>
+                <span class="hint">Used to send the macOS build to Apple for notarization, from your browser.</span>
               </div>
             </div>
           </div>

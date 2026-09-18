@@ -571,3 +571,15 @@ form:has(#runtime option[value="cc"]:checked) .lang-cc { display: inline; }
 form:has(#src-write:checked):has(#runtime option[value="cc"]:checked) .write-needs-lang { display: block; }
 form:has(#src-write:checked):has(#runtime option[value="cc"]:checked) .write-editor { display: none; }
 .lang-cc-only .win-settings .choice { margin-bottom: 8px; }
+
+/* Signed by Installer Builder: no packed files or offline copies (no JS). */
+.ours-only, .ours-only-inline { display: none; }
+form:has(#mode-ours:checked) .ours-only { display: block; }
+form:has(#mode-ours:checked) .ours-only-inline { display: inline; }
+form:has(#mode-ours:checked) .not-ours,
+form:has(#mode-ours:checked) .not-ours-inline,
+form:has(#mode-ours:checked) .offline-inline,
+form:has(#mode-ours:checked) .offline-only { display: none; }
+/* Uninstall script tabs. */
+form:has(#unscript-tab-win:checked) .unscript-panel-win,
+form:has(#unscript-tab-unix:checked) .unscript-panel-unix { display: block; }
