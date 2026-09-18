@@ -224,6 +224,12 @@ async function signClicked() {
 
 // Called by edit.js whenever an installer is opened.
 export function paintSign(kind, programName) {
+  // WebCrypto only exists on https://, localhost and file:// pages.
+  if (!globalThis.crypto || !crypto.subtle) {
+    ['sign-exe', 'sign-run', 'sign-zip', 'sign-go'].forEach((id) => { $(id).hidden = true; });
+    status('Signing needs this page over https:// (or the downloaded self-contained editor): the browser keeps its cryptography away from plain http:// pages.', true);
+    return;
+  }
   $('sign-exe').hidden = kind !== 'exe';
   $('sign-run').hidden = kind !== 'run';
   $('sign-zip').hidden = kind !== 'zip';

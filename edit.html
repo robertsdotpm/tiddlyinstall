@@ -353,12 +353,15 @@
         </div>
 
         <div id="sign-zip" hidden>
-          <p class="small" style="margin-top:0">macOS apps can't be signed in the browser yet. Download the installer above, then sign
-            and notarize it on any computer with <a href="https://github.com/indygreg/apple-platform-rs">rcodesign</a>:</p>
-<pre class="small">unzip install.zip
-rcodesign sign --p12-file developer-id.p12 --code-signature-flags runtime Install.app
-ditto -c -k --keepParent Install.app install-signed.zip
-rcodesign notary-submit --api-key-file key.json --staple Install.app</pre>
+          <p class="small" style="margin-top:0">macOS apps can't be signed in the browser: macOS only opens a downloaded app
+            that Apple has notarized, and notarizing means uploading the whole app to Apple with your developer account.
+            Download the installer above, then on a Mac with your Developer ID certificate:</p>
+<pre class="small">ditto -x -k install.zip . &amp;&amp; cd Install.app/Contents/Resources
+codesign -f -o runtime --timestamp -s "Developer ID Application: …" ibverify-arm64 ibverify-x86_64
+cd ../../.. &amp;&amp; codesign -f -o runtime --timestamp -s "Developer ID Application: …" Install.app
+ditto -c -k --keepParent Install.app upload.zip
+xcrun notarytool submit upload.zip --keychain-profile &lt;profile&gt; --wait
+xcrun stapler staple Install.app &amp;&amp; ditto -c -k --keepParent Install.app install-signed.zip</pre>
         </div>
 
         <div class="actions" style="margin-top:10px">

@@ -129,6 +129,11 @@ try {
   // Windows, .pfx
   await setFile('#installer', t('in.exe'));
   await waitFor(`!document.getElementById('sign-exe').hidden`, 'the Windows sign panel');
+  // The plain save still works (edit.js shares its build step with signing).
+  await setVal('out-name', 'plain.exe');
+  await js(`document.querySelector('#editor button[type=submit]').click()`);
+  const plain = await readInstaller(new Uint8Array(fs.readFileSync(await download('plain.exe'))), 'plain.exe');
+  ok(plain.record === RECORD && !plain.signed, 'ui: "Download edited installer" still saves the unsigned installer with its record');
   await check('ts-on', TIMESTAMP);
   await setFile('#pfx-file', t('rsa.pfx'));
   await setVal('pfx-pass', PW + 'x');
