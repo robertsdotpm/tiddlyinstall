@@ -68,11 +68,17 @@
     </section>
 
     <section class="panel">
-      <h2>Offline installers</h2>
-      <p class="small muted">Shown when offline installers were ticked. Packed here in your browser: each file goes from its download site
+      <h2>Packing in your browser</h2>
+      <p class="small muted">Shown when an installer has packed files: your own, or offline copies. Each file goes from your computer or its download site
         straight into the installer and is checked against the settings' checksum. Sites that don't let browsers download from them go through our
         download relay, which only fetches catalogued files and keeps nothing. Nothing is uploaded to us. Keep this page open until it finishes.</p>
+      <span class="label">Your files, in every installer</span>
       <ol class="steps">
+        <li><span><code>sample-data.zip</code> <span class="muted small">from your computer</span></span><span class="status ok">Checked · 12 MB</span></li>
+      </ol>
+      <span class="label" style="margin-top:12px">Offline copies only</span>
+      <ol class="steps">
+        <li><span><code>vc_redist.x64.exe</code> <span class="muted small">your file, from aka.ms</span></span><span class="status fail">Needs you</span></li>
         <li><span>Python 3.13.0, Windows x64 <span class="muted small">from npmmirror.com</span></span><span class="status ok">Checked · 27 MB</span></li>
         <li><span>Python 3.13.0, Windows arm64 <span class="muted small">from npmmirror.com</span></span><span class="status ok">Checked · 26 MB</span></li>
         <li><span>Python 3.12.4, Linux x86_64 and aarch64 <span class="muted small">from github.com, through our relay</span></span><span class="status running">Downloading · 61%</span></li>
@@ -81,18 +87,27 @@
         <li><span>requests source at <code>0e322af</code> <span class="muted small">from GitHub</span></span><span class="status ok">Checked · 0.1 MB</span></li>
       </ol>
 
+      <div class="custom-runtime" style="margin-top:14px">
+        <p style="margin-top:0"><strong>aka.ms doesn't let browsers download <code>vc_redist.x64.exe</code>.</strong>
+          Our relay only fetches catalogued runtimes, so download it yourself and drop it here. It's checked against the same checksum and stays on your computer.</p>
+        <input type="file" aria-label="vc_redist.x64.exe">
+      </div>
 
       <div class="table-wrap" style="margin-top:14px">
         <table>
           <thead><tr><th>File</th><th>Platform</th><th>Size</th><th>Signed by</th></tr></thead>
           <tbody>
+            <tr><td><a href="#"><code>install_python_requests.exe</code></a></td><td>Windows</td><td>15 MB</td><td>Installer Builder (signature unchanged)</td></tr>
+            <tr><td><a href="#"><code>install_python_requests.run</code></a></td><td>Linux</td><td>15 MB</td><td>Not needed on Linux</td></tr>
+            <tr><td><a href="#"><code>install_python_requests.zip</code></a></td><td>macOS</td><td>17 MB</td><td>Installer Builder (the app inside)</td></tr>
             <tr><td><a href="#"><code>install_python_requests_offline.exe</code></a></td><td>Windows</td><td>54 MB</td><td>Installer Builder (signature unchanged)</td></tr>
             <tr><td><span class="muted"><code>install_python_requests_offline.run</code></span></td><td>Linux</td><td>…</td><td>Not needed on Linux</td></tr>
             <tr><td><span class="muted"><code>install_python_requests_offline.zip</code></span></td><td>macOS</td><td>…</td><td>Installer Builder (the app inside)</td></tr>
           </tbody>
         </table>
       </div>
-      <p class="small muted" style="margin-bottom:0">Offline installers carry their settings inside, signed by us, so their names don't need a hash.
+      <p class="small muted" style="margin-bottom:0">Installers with packed files carry their settings inside, signed by us, so their names don't need a hash.
+        Without packed files they'd be the plain renamed downloads above.
         The macOS <code>.zip</code> holds the app and a folder of files; users keep the two together.</p>
     </section>
 
@@ -106,6 +121,7 @@
             <tr><th scope="row">From</th><td><code>https://github.com/psf/requests</code> at commit <code>0e322af87745eff34caffe4df68456ebc20d9068</code></td></tr>
             <tr><th scope="row">Downloads</th><td>Python 3.12.4 (newest matching <code>&gt;=3.8</code> that runs on this computer) from python.org or a mirror, checksum checked<br>requests source from GitHub, checksum checked<br><span class="muted">Offline installers: the same files, from inside the installer, checksums checked</span></td></tr>
             <tr><th scope="row">Writes to</th><td><code>C:\ib\k3m9q2x7v4p8\</code> (requests)<br><code>C:\ib\tjfq5rqwnnrx\</code> (Python 3.12.4, for this app only)</td></tr>
+            <tr><th scope="row">Publisher's files</th><td><code>sample-data.zip</code> (12 MB, packed), unpacked into the app's <code>data\</code> folder<br><code>vc_redist.x64.exe</code> (from aka.ms), run with <code>/install /quiet /norestart</code> <a href="#">(checksums)</a><br><span class="muted">Added by the installer's publisher, not taken from a public source</span></td></tr>
             <tr><th scope="row">Changes</th><td>Start menu shortcut, uninstaller entry</td></tr>
             <tr><th scope="row">Runs scripts</th><td>After installing files: 2 lines of batch <a href="#">(view)</a></td></tr>
             <tr><th scope="row">Signed by</th><td>Installer Builder. The installer is made by Installer Builder, not by the authors of <code>requests</code>.</td></tr>

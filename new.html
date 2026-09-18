@@ -716,14 +716,91 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
         </details>
 
         <details>
-          <summary><span>Offline installers</span><span class="default"><span class="offline-off-inline">Not made</span><span class="offline-inline">Everything, newest systems only</span></span></summary>
+          <summary><span>Files in the installer</span><span class="default"><span class="offline-off-inline">2 of your files</span><span class="offline-inline">2 of your files, plus offline copies</span></span></summary>
 
-          <p class="small muted offline-off-only" style="margin-top:0">Tick <strong>Also make offline installers</strong> above to set these.</p>
+          <p class="small" style="margin-top:0">Add files for the installer to put in your app's folder, or to run while installing:
+            data, a model, a manual, a driver. Packed files go into the installer in your browser. They're never uploaded to us, only their checksums.</p>
+
+          <h3 class="section-title">Your files</h3>
+          <div class="table-wrap">
+            <table class="small packed-files">
+              <thead><tr><th>File</th><th>Then</th><th>On</th><th>How</th><th></th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><code>sample-data.zip</code><br><span class="muted">Uploaded · 12 MB</span></td>
+                  <td>Unpack into <code>data/</code></td>
+                  <td>All</td>
+                  <td>Packed</td>
+                  <td><button type="button" class="link-button">Remove</button></td>
+                </tr>
+                <tr>
+                  <td><code>vc_redist.x64.exe</code><br><span class="muted">From <code>https://aka.ms/vs/17/release/vc_redist.x64.exe</code> · 25 MB</span></td>
+                  <td>Run <code>/install /quiet /norestart</code></td>
+                  <td>Windows</td>
+                  <td>Downloaded when installing<br><span class="muted">Packed in offline copies</span></td>
+                  <td><button type="button" class="link-button">Remove</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <span class="hint">Sample files. Everyone sees this list, with checksums, on the installer's "what this will do" screen.</span>
+
+          <details class="add-file">
+            <summary>+ Add a file</summary>
+            <div class="row">
+              <div class="field">
+                <label for="pf-upload">Upload</label>
+                <input type="file" id="pf-upload" name="pf_upload">
+              </div>
+              <div class="field">
+                <label for="pf-url">Or a URL</label>
+                <input type="text" id="pf-url" name="pf_url" placeholder="https://example.com/model.onnx" spellcheck="false">
+              </div>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="pf-action">Then</label>
+                <select id="pf-action" name="pf_action">
+                  <option value="copy">Copy into the app's folder</option>
+                  <option value="unpack">Unpack into the app's folder (.zip, .tar.gz)</option>
+                  <option value="run">Run it while installing</option>
+                </select>
+              </div>
+              <div class="field pf-dest">
+                <label for="pf-dest">Where</label>
+                <input type="text" id="pf-dest" name="pf_dest" placeholder="data/" spellcheck="false">
+                <span class="hint">A path inside the app's folder. Files can't go anywhere else.</span>
+              </div>
+              <div class="field pf-args">
+                <label for="pf-args">Arguments</label>
+                <input type="text" id="pf-args" name="pf_args" placeholder="/quiet" spellcheck="false">
+                <span class="hint">Runs after the user clicks Install, with the installer's permissions, like an install script.</span>
+              </div>
+            </div>
+            <span class="label">On</span>
+            <div class="inline-choices">
+              <label class="choice win-settings"><input type="checkbox" name="pf_windows" checked> Windows</label>
+              <label class="choice linux-settings"><input type="checkbox" name="pf_linux" checked> Linux</label>
+              <label class="choice mac-settings"><input type="checkbox" name="pf_macos" checked> macOS</label>
+            </div>
+            <span class="label" style="margin-top:8px">How</span>
+            <label class="choice"><input type="radio" name="pf_how" value="packed" checked>
+              <span><strong>Packed in the installer</strong><br><span class="small muted">Bigger installer; works without that site. Uploads are always packed.</span></span></label>
+            <label class="choice"><input type="radio" name="pf_how" value="download">
+              <span><strong>Downloaded when installing</strong> <span class="small muted">(URLs only)</span><br><span class="small muted">Smaller installer. We fetch it once now to record its checksum, so a changed file is refused.</span></span></label>
+            <div class="actions" style="margin-top:8px">
+              <button type="button" class="secondary">Add file</button>
+            </div>
+          </details>
+
+          <hr>
+
+          <h3 class="section-title">Offline copies</h3>
+          <p class="small muted offline-off-only" style="margin:0">Packs everything the installer would download, for computers without internet. Tick <strong>Also make offline installers</strong> above to set this up.</p>
 
           <div class="offline-only">
-            <p class="small" style="margin-top:0">An offline installer carries the files the normal one would download.
-              It's made in your browser: files go from the download sites straight into the installer, and are never uploaded to us.
-              The normal installers are still made too.</p>
+            <p class="small" style="margin-top:0">Offline copies also carry everything the normal installers would download:
+              the runtime, packages and source, and any of your files set to download when installing. The normal installers are still made too.</p>
 
             <span class="label">Include</span>
             <label class="choice"><input type="radio" name="offline_include" value="all" checked>

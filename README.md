@@ -20,7 +20,7 @@ All data is sample data. Submitting the form just opens `build.html`.
 ## Design notes
 
 - [Design](docs/design.md): the whole design, decisions and open questions
-- [Offline installers](docs/offline.md): single-file installers carrying their own downloads, and how they stay signed
+- [Packed files](docs/packed-files.md): files carried inside an installer (your own files, extra installers to run, offline copies of downloads), and how the installer stays signed
 - [Tested Python on old Windows](docs/windows-python-compat.md): known-good builds with working asyncio, per Windows version
 - [Test machines](docs/test-vms.md): VMs for testing installers
 - [Runtime catalog](runtime-catalog/README.md): where to download 13 languages' runtimes per OS, architecture and major version, mirrors, checksums, and per-version limitations (metadata backup; binaries live outside git)
