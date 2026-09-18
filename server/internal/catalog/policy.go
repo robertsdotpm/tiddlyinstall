@@ -32,15 +32,15 @@ type RuntimePolicy struct {
 	Label  string `json:"label"`
 	// Variants in order of preference; "" means no variant. Variants not
 	// listed are allowed after the listed ones unless Only is set.
-	Variants        []string            `json:"variants"`
-	Only            bool                `json:"only"`
-	ExcludeVariants []string            `json:"exclude_variants"`
+	Variants        []string `json:"variants"`
+	Only            bool     `json:"only"`
+	ExcludeVariants []string `json:"exclude_variants"`
 	// Variants to leave out on one OS family only, e.g. macOS Ruby builds
 	// that link Homebrew libraries by absolute path.
 	ExcludeVariantsOn map[string][]string `json:"exclude_variants_on"`
-	Formats         map[string][]string `json:"formats"` // per OS family, best first
-	Kinds           []string            `json:"kinds"`
-	Compiled        bool                `json:"compiled"`
+	Formats           map[string][]string `json:"formats"` // per OS family, best first
+	Kinds             []string            `json:"kinds"`
+	Compiled          bool                `json:"compiled"`
 	// Source files that mean the project must be installed with the
 	// runtime's package manager (otherwise the source just runs).
 	InstallFiles []string `json:"install_files"`

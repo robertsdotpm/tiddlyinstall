@@ -42,6 +42,16 @@ func (s *server) planByName(w http.ResponseWriter, r *http.Request) {
 		apiError(w, 451, "taken_down", "This package has been taken down.")
 		return
 	}
+	// Ask the registry first (the answer is cached for the plan), so names
+	// that don't exist never leave a record behind.
+	if _, err := s.b.LookupPackage(r.Context(), rt, norm, ""); err != nil {
+		if errors.Is(err, build.ErrNoPackage) {
+			apiError(w, 404, "no_such_package", err.Error())
+		} else {
+			apiError(w, 502, "registry_failed", err.Error())
+		}
+		return
+	}
 	hash, err := s.b.NameRecord(rt, norm)
 	if err != nil {
 		apiError(w, 500, "record_failed", err.Error())

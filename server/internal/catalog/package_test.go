@@ -132,8 +132,8 @@ func TestPipRecipeOnlyWhenInstalling(t *testing.T) {
 func TestGetPipPerVersion(t *testing.T) {
 	c := realCatalog(t)
 	want := map[string]string{
-		"3.8": "6ed6e98282a504ee0a6632856e16c39f222d313fc38be33de216d4afb6ac12f7",
-		"3.9": "95c0ae79ccf9ac1e47e4187f49081d6ae1f45997afd4549e14f37337cbcfd766",
+		"3.8":  "6ed6e98282a504ee0a6632856e16c39f222d313fc38be33de216d4afb6ac12f7",
+		"3.9":  "95c0ae79ccf9ac1e47e4187f49081d6ae1f45997afd4549e14f37337cbcfd766",
 		"3.13": "fb24e693bab954209a063d90953621412ccad4a500905a726286e038f508ddf6",
 	}
 	for minor, sha := range want {
@@ -171,7 +171,7 @@ func TestPackageInstallCommands(t *testing.T) {
 	c := realCatalog(t)
 	for _, tc := range []struct {
 		rt, name, version, label string
-		install, launch             string
+		install, launch          string
 	}{
 		{"python", "httpie", "3.2.4", "glibc-2.39", `-m pip install --no-warn-script-location --disable-pip-version-check "httpie==3.2.4"`, `-m httpie`},
 		{"python", "httpie", "", "glibc-2.39", ` "httpie"`, ``},

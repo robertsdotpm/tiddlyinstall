@@ -460,7 +460,7 @@ func (c *Catalog) ResolveFiles(app *App) (string, []FileRef, error) {
 					// block of its own, checked before the fallback.
 					if cur != nil && samePick(cur.p, cond) && cur.minBuild <= cond.minBuild {
 						cur.min = o.Int
-							cur.labels = append(cur.labels, o.Label+" (build "+strconv.Itoa(cond.minBuild)+"+)")
+						cur.labels = append(cur.labels, o.Label+" (build "+strconv.Itoa(cond.minBuild)+"+)")
 						if cur.minBuild < cond.minBuild {
 							cur.minBuild = cond.minBuild
 						}

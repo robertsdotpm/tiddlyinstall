@@ -124,7 +124,7 @@
    ],
    "launch": "{runtime} {app_dir}",
    "package": {
-    "_comment": "npm install into the app's folder (--prefix, so a package.json in a parent folder is never used). Launch runs the package's own program file from its package.json bin, with the private node, so no .cmd shims are needed on Windows. Scoped names (@scope/name) aren't accepted yet.",
+    "_comment": "npm install into the app's folder (--prefix, so a package.json in a parent folder is never used). Launch runs the package's own program file from its package.json bin, with the private node, so no .cmd shims are needed on Windows. npm's cache (and its _logs) would go to ~/.npm, so ienv keeps it in the app's data folder. Scoped names (@scope/name) aren't accepted yet.",
     "registry": "npm",
     "name": "^[a-z0-9][a-z0-9._-]{0,213}$",
     "lower": true,
@@ -138,6 +138,11 @@
      "windows": "\"{runtime}\" \"{runtime_dir}\\node_modules\\npm\\bin\\npm-cli.js\" install --prefix \"{app_dir}\" --no-audit --no-fund --no-update-notifier {package}",
      "linux": "\"{runtime}\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" install --prefix \"{app_dir}\" --no-audit --no-fund --no-update-notifier {package}",
      "macos": "\"{runtime}\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" install --prefix \"{app_dir}\" --no-audit --no-fund --no-update-notifier {package}"
+    },
+    "ienv": {
+     "windows": {"npm_config_cache": "{data_dir}\\npm-cache"},
+     "linux": {"npm_config_cache": "{data_dir}/npm-cache"},
+     "macos": {"npm_config_cache": "{data_dir}/npm-cache"}
     },
     "launch": "{runtime} {app_dir}/node_modules/{name}/{bin_path}"
    }
