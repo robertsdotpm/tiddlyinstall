@@ -220,11 +220,9 @@
               </label>
             </div>
 
-            <div class="editor-toolbar" style="margin-top:18px">
+            <div class="editor-toolbar" id="write-code" style="margin-top:18px">
               <span class="label" style="margin:0">Your code</span>
-              <div class="actions">
-                <button type="button" class="secondary">▶ Run</button>
-              </div>
+              <a class="button secondary run-link" href="#run-output">▶ Run</a>
             </div>
 
           <!-- Python -->
@@ -422,40 +420,25 @@ window("My App", 300, 120) {
             <button type="button" class="link-button">+ Add file</button>
           </p>
 
-          <!-- Output -->
-          <div class="output">
-            <span class="label">Output</span>
-            <div class="tpl tpl-script-only">
+          <!-- Run output: an overlay opened by the Run link (no JS, :target) -->
+          <div class="run-overlay" id="run-output" role="dialog" aria-label="Run output">
+            <div class="run-dialog">
+              <div class="run-head"><strong>Output</strong><a href="#write-code" aria-label="Close">✕</a></div>
+              <div class="tpl tpl-script-only">
 <pre class="output-log">What's your name? Sam
 Hello, Sam!
 Press Enter to close</pre>
-              <span class="hint">Runs in your browser. Nothing is sent to a server.</span>
-            </div>
-            <div class="tpl tpl-gui-only">
-              <p class="small" style="margin:0">App windows and tray icons can't be previewed in the browser.
-                Download a test build to try it on your computer.</p>
-              <div class="actions" style="margin-top:8px">
-                <button type="button" class="secondary">Download test build</button>
+                <span class="hint">Runs in your browser. Nothing is sent to a server.</span>
+              </div>
+              <div class="tpl tpl-gui-only">
+                <p class="small" style="margin:0">App windows and tray icons can't be previewed in the browser.
+                  Download a test build to try it on your computer.</p>
+                <div class="actions" style="margin-top:8px">
+                  <button type="button" class="secondary">Download test build</button>
+                </div>
               </div>
             </div>
           </div>
-
-          <div class="field">
-            <label for="deps">Packages your code uses</label>
-            <textarea id="deps" name="deps" placeholder="name &gt;=version"></textarea>
-            <span class="hint combo combo-python-web">Includes <code>pywebview</code>.</span>
-            <span class="hint combo combo-python-tray">Includes <code>pystray</code> and <code>pillow</code>.</span>
-            <span class="hint combo combo-node-web combo-node-tray">Includes <code>electron</code>.</span>
-            <span class="hint combo combo-ruby-window">Includes <code>glimmer-dsl-libui</code>.</span>
-            <span class="hint">One per line, with an optional version range.
-              <span class="rt-inline rt-python-only">Packages come from PyPI.</span><span class="rt-inline rt-node-only">Packages come from npm. We write <code>package.json</code> for you.</span><span class="rt-inline rt-ruby-only">Packages come from RubyGems. We write the <code>Gemfile</code> for you.</span></span>
-          </div>
-
-            <p class="small muted" style="margin-top:0">Drafts are kept in this browser until you build.</p>
-            <div class="side-actions">
-              <button type="button" class="secondary">Download as .zip</button>
-              <button type="button" class="secondary">Export to GitHub</button>
-            </div>
           </div>
         </div>
 

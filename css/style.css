@@ -338,10 +338,8 @@ textarea.code.code-short { min-height: 220px; }
   font-weight: 600;
 }
 
-.output { border-top: 1px solid var(--border); padding-top: 12px; }
 .output-log { margin: 0 0 4px; }
 
-.side-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 
 /* Show only the chosen template's code and preview (no JS). */
 .tpl { display: none; }
@@ -395,11 +393,11 @@ form:has(#runtime option[value="ruby"]:checked) .card-tray { display: none; }
 form:has(#runtime option[value="node"]:checked):has(#tpl-window:checked) .combo-unavailable,
 form:has(#runtime option[value="ruby"]:checked):has(#tpl-web:checked) .combo-unavailable,
 form:has(#runtime option[value="ruby"]:checked):has(#tpl-tray:checked) .combo-unavailable { display: block; }
-form:has(#runtime option[value="node"]:checked):has(#tpl-window:checked) .output,
+form:has(#runtime option[value="node"]:checked):has(#tpl-window:checked) .run-link,
 form:has(#runtime option[value="node"]:checked):has(#tpl-window:checked) .editor-files,
-form:has(#runtime option[value="ruby"]:checked):has(#tpl-web:checked) .output,
+form:has(#runtime option[value="ruby"]:checked):has(#tpl-web:checked) .run-link,
 form:has(#runtime option[value="ruby"]:checked):has(#tpl-web:checked) .editor-files,
-form:has(#runtime option[value="ruby"]:checked):has(#tpl-tray:checked) .output,
+form:has(#runtime option[value="ruby"]:checked):has(#tpl-tray:checked) .run-link,
 form:has(#runtime option[value="ruby"]:checked):has(#tpl-tray:checked) .editor-files { display: none; }
 
 /* Tabs (no JS): radio inputs styled as tabs, panels shown with :has. */
@@ -533,6 +531,27 @@ form:has(#offline-on:checked) .offline-off-inline { display: none; }
 form:has(#src-write:checked) .src-write-only { display: block; }
 form:has(#src-write:checked) .src-repo-only,
 form:has(#src-write:checked):has(#runtime option[value="none"]:checked) .lang-other-only { display: none; }
-.write-block .output { margin-bottom: 14px; }
 form:has(#src-write:checked):has(#runtime option[value="none"]:checked) .write-needs-lang { display: block; }
 form:has(#src-write:checked):has(#runtime option[value="none"]:checked) .write-editor { display: none; }
+
+/* Run output overlay, opened by the Run link via :target (no JS). */
+.run-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgb(0 0 0 / 0.55);
+}
+.run-overlay:target { display: flex; }
+.run-dialog {
+  width: min(560px, 100%);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.run-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.run-head a { text-decoration: none; font-size: 1.1em; }
