@@ -1,0 +1,990 @@
+{
+ "runtime": "java",
+ "researched": "2026-09-18",
+ "assumes": "root/administrator",
+ "recipes": [
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": "==6.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [
+    "glibc 2.4+",
+    "libnsl.so.1 (libjava.so and libnet.so link it; newer distros ship it separately, e.g. the libnsl package)",
+    "AWT/Swing/sound only (not needed headless): libX11, libXext, libXi, libXrender, libXtst, libasound; fonts need fontconfig and a font package"
+   ],
+   "executable": "bin/java",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/bin/java\" -version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Linux amd64, glibc 2.4+ (highest GLIBC symbol version in the binaries)",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://adoptium.net/installation/archives/",
+    "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+   ],
+   "notes": "Zulu 6 JDK (the only major 6 build). JDK layout: bin/java at the top and a jre/ subfolder; java.home reports {runtime_dir}/jre. JAVA_HOME={runtime_dir}. Tested: unpacked into a path with a space, `java -version` and a hello-world class ran. Its bundled cacerts is old, so TLS to modern hosts may fail without an updated trust store. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir} only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} at install time. At run time the JVM itself writes hsperfdata_<user>/<pid> under /tmp on Linux (hard-coded /tmp, TMPDIR is ignored) or $TMPDIR on macOS, which -XX:-UsePerfData suppresses. The Preferences API, if the app uses it, writes ~/.java/.userPrefs on Linux (tested: Java takes user.home from the password database, not $HOME, so pass -Djava.util.prefs.userRoot=<app dir> or -Duser.home to keep it private) or ~/Library/Preferences on macOS; system prefs go to /etc/.java when run as root. The unpacker must keep Unix modes (bin/* and lib/jspawnhelper are executable) and recreate symlinks: every Linux archive has some (legal/* files, man/ja; lib/<arch>/server/libjsig.so in 6 and 8, which JNI signal chaining needs).",
+   "launch": {
+    "program": "{runtime_dir}/bin/java",
+    "args": [],
+    "env": {
+     "JAVA_HOME": "{runtime_dir}",
+     "JAVA_TOOL_OPTIONS": null,
+     "_JAVA_OPTIONS": null,
+     "JDK_JAVA_OPTIONS": null,
+     "CLASSPATH": null
+    },
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "zip",
+    "versions": "==7.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [
+    "glibc 2.4+",
+    "libfreetype (and through it libz, libbz2, libpng12) only for font rendering"
+   ],
+   "executable": "bin/java",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/bin/java\" -version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Linux amd64, glibc 2.4+",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://adoptium.net/installation/archives/",
+    "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+   ],
+   "notes": "Zulu 7 headless JRE .zip (zre1.7.0_72, the last Zulu 7 published as a Linux zip). The zip stores Unix modes, so the unpacker must apply them from the zip entries' external attributes; otherwise bin/java is not executable. Headless: no AWT/X11 libraries needed. Tested: unpacked, `java -version` and a hello-world class ran from a path with a space. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir} only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} at install time. At run time the JVM itself writes hsperfdata_<user>/<pid> under /tmp on Linux (hard-coded /tmp, TMPDIR is ignored) or $TMPDIR on macOS, which -XX:-UsePerfData suppresses. The Preferences API, if the app uses it, writes ~/.java/.userPrefs on Linux (tested: Java takes user.home from the password database, not $HOME, so pass -Djava.util.prefs.userRoot=<app dir> or -Duser.home to keep it private) or ~/Library/Preferences on macOS; system prefs go to /etc/.java when run as root. The unpacker must keep Unix modes (bin/* and lib/jspawnhelper are executable) and recreate symlinks: every Linux archive has some (legal/* files, man/ja; lib/<arch>/server/libjsig.so in 6 and 8, which JNI signal chaining needs).",
+   "launch": {
+    "program": "{runtime_dir}/bin/java",
+    "args": [],
+    "env": {
+     "JAVA_HOME": "{runtime_dir}",
+     "JAVA_TOOL_OPTIONS": null,
+     "_JAVA_OPTIONS": null,
+     "JDK_JAVA_OPTIONS": null,
+     "CLASSPATH": null
+    },
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": "==8.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [
+    "glibc 2.4+ (amd64, armv7) / 2.17+ (arm64)",
+    "armv7 only: libatomic.so.1 (bin/java and every native library link it)",
+    "AWT/Swing/sound only (not needed headless): libX11, libXext, libXi, libXrender, libXtst, libasound; fonts need fontconfig and a font package"
+   ],
+   "executable": "bin/java",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/bin/java\" -version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Linux amd64/armv7 glibc 2.4+, arm64 glibc 2.17+",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://adoptium.net/installation/archives/",
+    "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+   ],
+   "notes": "Temurin 8 JRE. Tested: amd64 natively, arm64 under qemu-user; a path with a space and two copies side by side both work. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir} only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} at install time. At run time the JVM itself writes hsperfdata_<user>/<pid> under /tmp on Linux (hard-coded /tmp, TMPDIR is ignored) or $TMPDIR on macOS, which -XX:-UsePerfData suppresses. The Preferences API, if the app uses it, writes ~/.java/.userPrefs on Linux (tested: Java takes user.home from the password database, not $HOME, so pass -Djava.util.prefs.userRoot=<app dir> or -Duser.home to keep it private) or ~/Library/Preferences on macOS; system prefs go to /etc/.java when run as root. The unpacker must keep Unix modes (bin/* and lib/jspawnhelper are executable) and recreate symlinks: every Linux archive has some (legal/* files, man/ja; lib/<arch>/server/libjsig.so in 6 and 8, which JNI signal chaining needs).",
+   "launch": {
+    "program": "{runtime_dir}/bin/java",
+    "args": [],
+    "env": {
+     "JAVA_HOME": "{runtime_dir}",
+     "JAVA_TOOL_OPTIONS": null,
+     "_JAVA_OPTIONS": null,
+     "JDK_JAVA_OPTIONS": null,
+     "CLASSPATH": null
+    },
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": ">=9,<17",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [
+    "zlib (libz.so.1): bin/java, libjli.so and libzip.so link the system zlib in these Zulu 9-16 builds (Temurin 11 and armv7 Zulu 13 bundle it)",
+    "glibc 2.7-2.10+ (amd64), 2.17+ (arm64)",
+    "AWT/Swing/sound only (not needed headless): libX11, libXext, libXi, libXrender, libXtst, libasound; fonts need fontconfig and a font package"
+   ],
+   "executable": "bin/java",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/bin/java\" -version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Linux amd64 glibc 2.10+, arm64 glibc 2.17+",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://adoptium.net/installation/archives/",
+    "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+   ],
+   "notes": "Covers Zulu 9/10/12 JDK, Zulu 14/15/16 JRE, Temurin 11 JRE, Temurin 16 JDK (armv7) and Zulu 13 JDK (armv7). A JDK is a superset of a JRE (adds javac, jlink); from 9 on neither has a jre/ subfolder. Tested on amd64 (9, 10, 11, 12, 14, 15, 16) from a path with a space. Zulu 13 arm64 under qemu failed only because the test sysroot lacks libz.so.1, which confirms that prerequisite. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir} only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} at install time. At run time the JVM itself writes hsperfdata_<user>/<pid> under /tmp on Linux (hard-coded /tmp, TMPDIR is ignored) or $TMPDIR on macOS, which -XX:-UsePerfData suppresses. The Preferences API, if the app uses it, writes ~/.java/.userPrefs on Linux (tested: Java takes user.home from the password database, not $HOME, so pass -Djava.util.prefs.userRoot=<app dir> or -Duser.home to keep it private) or ~/Library/Preferences on macOS; system prefs go to /etc/.java when run as root. The unpacker must keep Unix modes (bin/* and lib/jspawnhelper are executable) and recreate symlinks: every Linux archive has some (legal/* files, man/ja; lib/<arch>/server/libjsig.so in 6 and 8, which JNI signal chaining needs).",
+   "launch": {
+    "program": "{runtime_dir}/bin/java",
+    "args": [],
+    "env": {
+     "JAVA_HOME": "{runtime_dir}",
+     "JAVA_TOOL_OPTIONS": null,
+     "_JAVA_OPTIONS": null,
+     "JDK_JAVA_OPTIONS": null,
+     "CLASSPATH": null
+    },
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "zip",
+    "versions": "==13.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [
+    "zlib (libz.so.1)",
+    "glibc 2.7+",
+    "AWT/Swing/sound only (not needed headless): libX11, libXext, libXi, libXrender, libXtst, libasound; fonts need fontconfig and a font package"
+   ],
+   "executable": "bin/java",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/bin/java\" -version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Linux amd64, glibc 2.7+",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://adoptium.net/installation/archives/",
+    "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+   ],
+   "notes": "Zulu 13 JRE published as a Linux .zip. It contains symlinks and Unix modes in the zip external attributes, and the unpacker must honour both. Tested: runs from a path with a space. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir} only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} at install time. At run time the JVM itself writes hsperfdata_<user>/<pid> under /tmp on Linux (hard-coded /tmp, TMPDIR is ignored) or $TMPDIR on macOS, which -XX:-UsePerfData suppresses. The Preferences API, if the app uses it, writes ~/.java/.userPrefs on Linux (tested: Java takes user.home from the password database, not $HOME, so pass -Djava.util.prefs.userRoot=<app dir> or -Duser.home to keep it private) or ~/Library/Preferences on macOS; system prefs go to /etc/.java when run as root. The unpacker must keep Unix modes (bin/* and lib/jspawnhelper are executable) and recreate symlinks: every Linux archive has some (legal/* files, man/ja; lib/<arch>/server/libjsig.so in 6 and 8, which JNI signal chaining needs).",
+   "launch": {
+    "program": "{runtime_dir}/bin/java",
+    "args": [],
+    "env": {
+     "JAVA_HOME": "{runtime_dir}",
+     "JAVA_TOOL_OPTIONS": null,
+     "_JAVA_OPTIONS": null,
+     "JDK_JAVA_OPTIONS": null,
+     "CLASSPATH": null
+    },
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": ">=17",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [
+    "zlib (libz.so.1) for 18, 19 and 20 only (Temurin bundles zlib in 17 and 21+)",
+    "glibc 2.9+ (17-19), 2.15+ (20-24), 2.17+ (25+ and all arm64)",
+    "AWT/Swing/sound only (not needed headless): libX11, libXext, libXi, libXrender, libXtst, libasound; fonts need fontconfig and a font package"
+   ],
+   "executable": "bin/java",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/bin/java\" -version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Linux amd64: glibc 2.9 (17-19), 2.15 (20-24), 2.17 (25, 26); arm64 glibc 2.17",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://adoptium.net/installation/archives/",
+    "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+   ],
+   "notes": "Temurin JRE 17-26 (Temurin publishes JRE images again; the gap was only around 16). armv7 builds exist only up to 19. Tested: every amd64 major 17-26 runs from a path with a space, 21 as two side-by-side copies run at once, and arm64 21 under qemu-user. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir} only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} at install time. At run time the JVM itself writes hsperfdata_<user>/<pid> under /tmp on Linux (hard-coded /tmp, TMPDIR is ignored) or $TMPDIR on macOS, which -XX:-UsePerfData suppresses. The Preferences API, if the app uses it, writes ~/.java/.userPrefs on Linux (tested: Java takes user.home from the password database, not $HOME, so pass -Djava.util.prefs.userRoot=<app dir> or -Duser.home to keep it private) or ~/Library/Preferences on macOS; system prefs go to /etc/.java when run as root. The unpacker must keep Unix modes (bin/* and lib/jspawnhelper are executable) and recreate symlinks: every Linux archive has some (legal/* files, man/ja; lib/<arch>/server/libjsig.so in 6 and 8, which JNI signal chaining needs).",
+   "launch": {
+    "program": "{runtime_dir}/bin/java",
+    "args": [],
+    "env": {
+     "JAVA_HOME": "{runtime_dir}",
+     "JAVA_TOOL_OPTIONS": null,
+     "_JAVA_OPTIONS": null,
+     "JDK_JAVA_OPTIONS": null,
+     "CLASSPATH": null
+    },
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": null,
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null || true",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [],
+   "executable": "Contents/Home/bin/java",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/Contents/Home/bin/java\" -version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "macOS 11 Big Sur for the current Temurin 8, 11, 17 and 21-26 builds (highest LC_BUILD_VERSION minos across every Mach-O in the archive, both x64 and arm64); 10.12 for the frozen Temurin 18-20 x64 builds; arm64 always 11",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://adoptium.net/installation/archives/",
+    "https://docs.azul.com/core/install/macos",
+    "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+   ],
+   "notes": "Temurin JRE archives use the bundle layout <top>/Contents/Home/{bin,lib,...} (Adoptium: 'macOS archives include a Contents/Home directory structure'), so after stripping one component JAVA_HOME is {runtime_dir}/Contents/Home. Adoptium's older published floors (10.12 for 11, 10.13 for 17) no longer hold for the current patch builds, whose binaries declare 11.0. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir}/Contents/Home only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} at install time. At run time the JVM itself writes hsperfdata_<user>/<pid> under /tmp on Linux (hard-coded /tmp, TMPDIR is ignored) or $TMPDIR on macOS, which -XX:-UsePerfData suppresses. The Preferences API, if the app uses it, writes ~/.java/.userPrefs on Linux (tested: Java takes user.home from the password database, not $HOME, so pass -Djava.util.prefs.userRoot=<app dir> or -Duser.home to keep it private) or ~/Library/Preferences on macOS; system prefs go to /etc/.java when run as root. macOS: the unpacker must keep symlinks and exec bits and must not modify any file (the vendor binaries are code-signed, and on Apple Silicon unsigned or altered arm64 code will not run). The quarantine attribute is added when a quarantine-aware process (a browser, or an installer that was itself quarantined) writes the file. Removing it keeps Gatekeeper from checking every dylib the first time it loads, and harmlessly does nothing when it is absent. Not registered with /usr/libexec/java_home (that only scans /Library/Java/JavaVirtualMachines), which is what we want.",
+   "launch": {
+    "program": "{runtime_dir}/Contents/Home/bin/java",
+    "args": [],
+    "env": {
+     "JAVA_HOME": "{runtime_dir}/Contents/Home",
+     "JAVA_TOOL_OPTIONS": null,
+     "_JAVA_OPTIONS": null,
+     "JDK_JAVA_OPTIONS": null,
+     "CLASSPATH": null
+    },
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": "==7.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null || true",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [],
+   "executable": "zulu-7.jre/Contents/Home/bin/java",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/zulu-7.jre/Contents/Home/bin/java\" -version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "OS X 10.9 (binary minos)",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://adoptium.net/installation/archives/",
+    "https://docs.azul.com/core/install/macos",
+    "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+   ],
+   "notes": "Zulu 7 JRE: <top>/zulu-7.jre/Contents/Home plus top-level convenience symlinks (bin, lib, release... -> zulu-7.jre/Contents/Home/...). Point JAVA_HOME at the real Contents/Home. {runtime_dir}/bin/java also works through the symlink if the unpacker kept it. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir}/zulu-7.jre/Contents/Home only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} at install time. At run time the JVM itself writes hsperfdata_<user>/<pid> under /tmp on Linux (hard-coded /tmp, TMPDIR is ignored) or $TMPDIR on macOS, which -XX:-UsePerfData suppresses. The Preferences API, if the app uses it, writes ~/.java/.userPrefs on Linux (tested: Java takes user.home from the password database, not $HOME, so pass -Djava.util.prefs.userRoot=<app dir> or -Duser.home to keep it private) or ~/Library/Preferences on macOS; system prefs go to /etc/.java when run as root. macOS: the unpacker must keep symlinks and exec bits and must not modify any file (the vendor binaries are code-signed, and on Apple Silicon unsigned or altered arm64 code will not run). The quarantine attribute is added when a quarantine-aware process (a browser, or an installer that was itself quarantined) writes the file. Removing it keeps Gatekeeper from checking every dylib the first time it loads, and harmlessly does nothing when it is absent. Not registered with /usr/libexec/java_home (that only scans /Library/Java/JavaVirtualMachines), which is what we want.",
+   "launch": {
+    "program": "{runtime_dir}/zulu-7.jre/Contents/Home/bin/java",
+    "args": [],
+    "env": {
+     "JAVA_HOME": "{runtime_dir}/zulu-7.jre/Contents/Home",
+     "JAVA_TOOL_OPTIONS": null,
+     "_JAVA_OPTIONS": null,
+     "JDK_JAVA_OPTIONS": null,
+     "CLASSPATH": null
+    },
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": "==14.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null || true",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [],
+   "executable": "zulu-14.jre/Contents/Home/bin/java",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/zulu-14.jre/Contents/Home/bin/java\" -version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "macOS 10.13 (libjvm.dylib minos)",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://adoptium.net/installation/archives/",
+    "https://docs.azul.com/core/install/macos",
+    "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+   ],
+   "notes": "Zulu 14 JRE: <top>/zulu-14.jre/Contents/Home with top-level symlinks into it (Azul documents <installation_folder>/bin/java, which works through those symlinks). Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir}/zulu-14.jre/Contents/Home only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} at install time. At run time the JVM itself writes hsperfdata_<user>/<pid> under /tmp on Linux (hard-coded /tmp, TMPDIR is ignored) or $TMPDIR on macOS, which -XX:-UsePerfData suppresses. The Preferences API, if the app uses it, writes ~/.java/.userPrefs on Linux (tested: Java takes user.home from the password database, not $HOME, so pass -Djava.util.prefs.userRoot=<app dir> or -Duser.home to keep it private) or ~/Library/Preferences on macOS; system prefs go to /etc/.java when run as root. macOS: the unpacker must keep symlinks and exec bits and must not modify any file (the vendor binaries are code-signed, and on Apple Silicon unsigned or altered arm64 code will not run). The quarantine attribute is added when a quarantine-aware process (a browser, or an installer that was itself quarantined) writes the file. Removing it keeps Gatekeeper from checking every dylib the first time it loads, and harmlessly does nothing when it is absent. Not registered with /usr/libexec/java_home (that only scans /Library/Java/JavaVirtualMachines), which is what we want.",
+   "launch": {
+    "program": "{runtime_dir}/zulu-14.jre/Contents/Home/bin/java",
+    "args": [],
+    "env": {
+     "JAVA_HOME": "{runtime_dir}/zulu-14.jre/Contents/Home",
+     "JAVA_TOOL_OPTIONS": null,
+     "_JAVA_OPTIONS": null,
+     "JDK_JAVA_OPTIONS": null,
+     "CLASSPATH": null
+    },
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "zip",
+    "versions": "==8.*",
+    "arch": "arm64"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null || true",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [],
+   "executable": "Contents/Home/bin/java",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/Contents/Home/bin/java\" -version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "macOS 11 (arm64)",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://adoptium.net/installation/archives/",
+    "https://docs.azul.com/core/install/macos",
+    "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+   ],
+   "notes": "Zulu 8 JRE for Apple Silicon (the plan's only macOS arm64 build for 8): <top>/Contents/Home, with no zulu-8.jre wrapper. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir}/Contents/Home only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} at install time. At run time the JVM itself writes hsperfdata_<user>/<pid> under /tmp on Linux (hard-coded /tmp, TMPDIR is ignored) or $TMPDIR on macOS, which -XX:-UsePerfData suppresses. The Preferences API, if the app uses it, writes ~/.java/.userPrefs on Linux (tested: Java takes user.home from the password database, not $HOME, so pass -Djava.util.prefs.userRoot=<app dir> or -Duser.home to keep it private) or ~/Library/Preferences on macOS; system prefs go to /etc/.java when run as root. macOS: the unpacker must keep symlinks and exec bits and must not modify any file (the vendor binaries are code-signed, and on Apple Silicon unsigned or altered arm64 code will not run). The quarantine attribute is added when a quarantine-aware process (a browser, or an installer that was itself quarantined) writes the file. Removing it keeps Gatekeeper from checking every dylib the first time it loads, and harmlessly does nothing when it is absent. Not registered with /usr/libexec/java_home (that only scans /Library/Java/JavaVirtualMachines), which is what we want.",
+   "launch": {
+    "program": "{runtime_dir}/Contents/Home/bin/java",
+    "args": [],
+    "env": {
+     "JAVA_HOME": "{runtime_dir}/Contents/Home",
+     "JAVA_TOOL_OPTIONS": null,
+     "_JAVA_OPTIONS": null,
+     "JDK_JAVA_OPTIONS": null,
+     "CLASSPATH": null
+    },
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "zip",
+    "versions": ">=9,<13",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null || true",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin/java",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/bin/java\" -version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "OS X 10.10 (9, 10); macOS 10.13 (12, libjvm.dylib minos)",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://adoptium.net/installation/archives/",
+    "https://docs.azul.com/core/install/macos",
+    "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+   ],
+   "notes": "Zulu 9 JRE, 10 JDK and 12 JDK macOS zips are flat (<top>/bin/java, no Contents/Home), so JAVA_HOME={runtime_dir}. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir} only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} at install time. At run time the JVM itself writes hsperfdata_<user>/<pid> under /tmp on Linux (hard-coded /tmp, TMPDIR is ignored) or $TMPDIR on macOS, which -XX:-UsePerfData suppresses. The Preferences API, if the app uses it, writes ~/.java/.userPrefs on Linux (tested: Java takes user.home from the password database, not $HOME, so pass -Djava.util.prefs.userRoot=<app dir> or -Duser.home to keep it private) or ~/Library/Preferences on macOS; system prefs go to /etc/.java when run as root. macOS: the unpacker must keep symlinks and exec bits and must not modify any file (the vendor binaries are code-signed, and on Apple Silicon unsigned or altered arm64 code will not run). The quarantine attribute is added when a quarantine-aware process (a browser, or an installer that was itself quarantined) writes the file. Removing it keeps Gatekeeper from checking every dylib the first time it loads, and harmlessly does nothing when it is absent. Not registered with /usr/libexec/java_home (that only scans /Library/Java/JavaVirtualMachines), which is what we want.",
+   "launch": {
+    "program": "{runtime_dir}/bin/java",
+    "args": [],
+    "env": {
+     "JAVA_HOME": "{runtime_dir}",
+     "JAVA_TOOL_OPTIONS": null,
+     "_JAVA_OPTIONS": null,
+     "JDK_JAVA_OPTIONS": null,
+     "CLASSPATH": null
+    },
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "zip",
+    "versions": "==13.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null || true",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [],
+   "executable": "zulu-13.jre/Contents/Home/bin/java",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/zulu-13.jre/Contents/Home/bin/java\" -version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "macOS 10.9 (x64) / 11 (arm64)",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://adoptium.net/installation/archives/",
+    "https://docs.azul.com/core/install/macos",
+    "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+   ],
+   "notes": "Zulu 13 JRE zip: <top>/zulu-13.jre/Contents/Home plus top-level symlinks stored in the zip (mode 0120000; the link target is the entry data). An unpacker that cannot make symlinks may skip those top-level links, because the executable path here is the real one. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir}/zulu-13.jre/Contents/Home only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} at install time. At run time the JVM itself writes hsperfdata_<user>/<pid> under /tmp on Linux (hard-coded /tmp, TMPDIR is ignored) or $TMPDIR on macOS, which -XX:-UsePerfData suppresses. The Preferences API, if the app uses it, writes ~/.java/.userPrefs on Linux (tested: Java takes user.home from the password database, not $HOME, so pass -Djava.util.prefs.userRoot=<app dir> or -Duser.home to keep it private) or ~/Library/Preferences on macOS; system prefs go to /etc/.java when run as root. macOS: the unpacker must keep symlinks and exec bits and must not modify any file (the vendor binaries are code-signed, and on Apple Silicon unsigned or altered arm64 code will not run). The quarantine attribute is added when a quarantine-aware process (a browser, or an installer that was itself quarantined) writes the file. Removing it keeps Gatekeeper from checking every dylib the first time it loads, and harmlessly does nothing when it is absent. Not registered with /usr/libexec/java_home (that only scans /Library/Java/JavaVirtualMachines), which is what we want.",
+   "launch": {
+    "program": "{runtime_dir}/zulu-13.jre/Contents/Home/bin/java",
+    "args": [],
+    "env": {
+     "JAVA_HOME": "{runtime_dir}/zulu-13.jre/Contents/Home",
+     "JAVA_TOOL_OPTIONS": null,
+     "_JAVA_OPTIONS": null,
+     "JDK_JAVA_OPTIONS": null,
+     "CLASSPATH": null
+    },
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "zip",
+    "versions": "==15.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null || true",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [],
+   "executable": "zulu-15.jre/Contents/Home/bin/java",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/zulu-15.jre/Contents/Home/bin/java\" -version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "macOS 10.9 (x64) / 11 (arm64)",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://adoptium.net/installation/archives/",
+    "https://docs.azul.com/core/install/macos",
+    "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+   ],
+   "notes": "Zulu 15 JRE zip: <top>/zulu-15.jre/Contents/Home plus top-level symlinks stored in the zip (mode 0120000; the link target is the entry data). An unpacker that cannot make symlinks may skip those top-level links, because the executable path here is the real one. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir}/zulu-15.jre/Contents/Home only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} at install time. At run time the JVM itself writes hsperfdata_<user>/<pid> under /tmp on Linux (hard-coded /tmp, TMPDIR is ignored) or $TMPDIR on macOS, which -XX:-UsePerfData suppresses. The Preferences API, if the app uses it, writes ~/.java/.userPrefs on Linux (tested: Java takes user.home from the password database, not $HOME, so pass -Djava.util.prefs.userRoot=<app dir> or -Duser.home to keep it private) or ~/Library/Preferences on macOS; system prefs go to /etc/.java when run as root. macOS: the unpacker must keep symlinks and exec bits and must not modify any file (the vendor binaries are code-signed, and on Apple Silicon unsigned or altered arm64 code will not run). The quarantine attribute is added when a quarantine-aware process (a browser, or an installer that was itself quarantined) writes the file. Removing it keeps Gatekeeper from checking every dylib the first time it loads, and harmlessly does nothing when it is absent. Not registered with /usr/libexec/java_home (that only scans /Library/Java/JavaVirtualMachines), which is what we want.",
+   "launch": {
+    "program": "{runtime_dir}/zulu-15.jre/Contents/Home/bin/java",
+    "args": [],
+    "env": {
+     "JAVA_HOME": "{runtime_dir}/zulu-15.jre/Contents/Home",
+     "JAVA_TOOL_OPTIONS": null,
+     "_JAVA_OPTIONS": null,
+     "JDK_JAVA_OPTIONS": null,
+     "CLASSPATH": null
+    },
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "zip",
+    "versions": "==16.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null || true",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [],
+   "executable": "zulu-16.jre/Contents/Home/bin/java",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/zulu-16.jre/Contents/Home/bin/java\" -version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "macOS 10.9 (x64) / 11 (arm64)",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://adoptium.net/installation/archives/",
+    "https://docs.azul.com/core/install/macos",
+    "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+   ],
+   "notes": "Zulu 16 JRE zip: <top>/zulu-16.jre/Contents/Home plus top-level symlinks stored in the zip (mode 0120000; the link target is the entry data). An unpacker that cannot make symlinks may skip those top-level links, because the executable path here is the real one. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir}/zulu-16.jre/Contents/Home only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} at install time. At run time the JVM itself writes hsperfdata_<user>/<pid> under /tmp on Linux (hard-coded /tmp, TMPDIR is ignored) or $TMPDIR on macOS, which -XX:-UsePerfData suppresses. The Preferences API, if the app uses it, writes ~/.java/.userPrefs on Linux (tested: Java takes user.home from the password database, not $HOME, so pass -Djava.util.prefs.userRoot=<app dir> or -Duser.home to keep it private) or ~/Library/Preferences on macOS; system prefs go to /etc/.java when run as root. macOS: the unpacker must keep symlinks and exec bits and must not modify any file (the vendor binaries are code-signed, and on Apple Silicon unsigned or altered arm64 code will not run). The quarantine attribute is added when a quarantine-aware process (a browser, or an installer that was itself quarantined) writes the file. Removing it keeps Gatekeeper from checking every dylib the first time it loads, and harmlessly does nothing when it is absent. Not registered with /usr/libexec/java_home (that only scans /Library/Java/JavaVirtualMachines), which is what we want.",
+   "launch": {
+    "program": "{runtime_dir}/zulu-16.jre/Contents/Home/bin/java",
+    "args": [],
+    "env": {
+     "JAVA_HOME": "{runtime_dir}/zulu-16.jre/Contents/Home",
+     "JAVA_TOOL_OPTIONS": null,
+     "_JAVA_OPTIONS": null,
+     "JDK_JAVA_OPTIONS": null,
+     "CLASSPATH": null
+    },
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": "==6.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin\\java.exe",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}\\bin\\java.exe\" -version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Windows XP x64 / Server 2003 (PE subsystem 5.2); amd64 only, no 32-bit build of 6 in the plan",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://adoptium.net/installation/archives/",
+    "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+   ],
+   "notes": "Zulu 6 JDK, x64. msvcr100.dll is bundled in bin/. The Fls* imports it uses exist on XP x64 and Server 2003 (NT 5.2). Use bin\\javaw.exe for GUI apps without a console. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir} only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} and the registry is not touched at install time (unlike the vendor .msi). At run time the JVM writes %TEMP%\\hsperfdata_<user> (suppress with -XX:-UsePerfData); the Preferences API, if used, writes HKCU\\Software\\JavaSoft\\Prefs, and system prefs try to create HKLM\\Software\\JavaSoft\\Prefs when run as administrator. No MSI, no registry keys, no PATH; the launcher does not consult HKLM\\Software\\JavaSoft when started from its own folder.",
+   "launch": {
+    "program": "{runtime_dir}\\bin\\java.exe",
+    "args": [],
+    "env": {
+     "JAVA_HOME": "{runtime_dir}",
+     "JAVA_TOOL_OPTIONS": null,
+     "_JAVA_OPTIONS": null,
+     "JDK_JAVA_OPTIONS": null,
+     "CLASSPATH": null
+    },
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": "==7.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin\\java.exe",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}\\bin\\java.exe\" -version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "x86 JRE: Windows XP (PE subsystem 5.1, no Vista-only kernel32/ws2_32 imports in any of its 56 PE files); x64 JDK: XP x64 / Server 2003 (5.2)",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://adoptium.net/installation/archives/",
+    "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+   ],
+   "notes": "Zulu 7: x86 JRE and x64 JDK. msvcr100.dll is bundled. This is the ONLY Java in the catalogue whose binaries can load on 32-bit Windows XP: every 8+ build is marked subsystem 6.0 (Vista), which XP refuses. XP support is from static PE inspection only and has not been run on XP; Azul does not list XP. Use bin\\javaw.exe for GUI apps without a console. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir} only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} and the registry is not touched at install time (unlike the vendor .msi). At run time the JVM writes %TEMP%\\hsperfdata_<user> (suppress with -XX:-UsePerfData); the Preferences API, if used, writes HKCU\\Software\\JavaSoft\\Prefs, and system prefs try to create HKLM\\Software\\JavaSoft\\Prefs when run as administrator. No MSI, no registry keys, no PATH; the launcher does not consult HKLM\\Software\\JavaSoft when started from its own folder.",
+   "launch": {
+    "program": "{runtime_dir}\\bin\\java.exe",
+    "args": [],
+    "env": {
+     "JAVA_HOME": "{runtime_dir}",
+     "JAVA_TOOL_OPTIONS": null,
+     "_JAVA_OPTIONS": null,
+     "JDK_JAVA_OPTIONS": null,
+     "CLASSPATH": null
+    },
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": "==8.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin\\java.exe",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}\\bin\\java.exe\" -version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Windows Vista (PE subsystem 6.0 floor); vendors state Windows 7+",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://adoptium.net/installation/archives/",
+    "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+   ],
+   "notes": "Temurin 8 JRE (x64) and Zulu 8 JRE (x86). Both bundle the Universal CRT app-locally (ucrtbase.dll, api-ms-win-crt-*.dll, vcruntime140.dll, msvcp140.dll), so no redistributable or KB2999226 is needed on Vista/7/8.1. On Windows 10+ the OS copy of the UCRT is used instead. Not usable on XP. Use bin\\javaw.exe for GUI apps without a console. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir} only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} and the registry is not touched at install time (unlike the vendor .msi). At run time the JVM writes %TEMP%\\hsperfdata_<user> (suppress with -XX:-UsePerfData); the Preferences API, if used, writes HKCU\\Software\\JavaSoft\\Prefs, and system prefs try to create HKLM\\Software\\JavaSoft\\Prefs when run as administrator. No MSI, no registry keys, no PATH; the launcher does not consult HKLM\\Software\\JavaSoft when started from its own folder.",
+   "launch": {
+    "program": "{runtime_dir}\\bin\\java.exe",
+    "args": [],
+    "env": {
+     "JAVA_HOME": "{runtime_dir}",
+     "JAVA_TOOL_OPTIONS": null,
+     "_JAVA_OPTIONS": null,
+     "JDK_JAVA_OPTIONS": null,
+     "CLASSPATH": null
+    },
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": ">=9,<11",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin\\java.exe",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}\\bin\\java.exe\" -version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Windows Vista (PE subsystem 6.0 floor); Azul states Windows 7+",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://adoptium.net/installation/archives/",
+    "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+   ],
+   "notes": "Zulu 9 and 10 JDK (x86, x64): bundle msvcr120.dll/msvcp120.dll (VS2013), so no redistributable is needed. Use bin\\javaw.exe for GUI apps without a console. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir} only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} and the registry is not touched at install time (unlike the vendor .msi). At run time the JVM writes %TEMP%\\hsperfdata_<user> (suppress with -XX:-UsePerfData); the Preferences API, if used, writes HKCU\\Software\\JavaSoft\\Prefs, and system prefs try to create HKLM\\Software\\JavaSoft\\Prefs when run as administrator. No MSI, no registry keys, no PATH; the launcher does not consult HKLM\\Software\\JavaSoft when started from its own folder.",
+   "launch": {
+    "program": "{runtime_dir}\\bin\\java.exe",
+    "args": [],
+    "env": {
+     "JAVA_HOME": "{runtime_dir}",
+     "JAVA_TOOL_OPTIONS": null,
+     "_JAVA_OPTIONS": null,
+     "JDK_JAVA_OPTIONS": null,
+     "CLASSPATH": null
+    },
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": ">=11",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin\\java.exe",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}\\bin\\java.exe\" -version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Windows Vista PE floor for x86/x64 (vendors state Windows 7 SP1 for 11 and Windows 10 / Server 2016 for current Temurin); arm64: Windows 10/11 on Arm",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://adoptium.net/installation/archives/",
+    "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+   ],
+   "notes": "Temurin JRE (x64 11-26), Zulu JRE/JDK (x86 11-19, arm64). x86/x64 builds bundle the UCRT app-locally, so no prerequisite. Windows arm64 builds bundle only vcruntime140/msvcp140 and use the OS UCRT, which every Windows 10+ has. No 32-bit x86 build exists after 19 in this plan (the x86 port was removed in 24, JEP 479). Use bin\\javaw.exe for GUI apps without a console. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir} only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} and the registry is not touched at install time (unlike the vendor .msi). At run time the JVM writes %TEMP%\\hsperfdata_<user> (suppress with -XX:-UsePerfData); the Preferences API, if used, writes HKCU\\Software\\JavaSoft\\Prefs, and system prefs try to create HKLM\\Software\\JavaSoft\\Prefs when run as administrator. No MSI, no registry keys, no PATH; the launcher does not consult HKLM\\Software\\JavaSoft when started from its own folder.",
+   "launch": {
+    "program": "{runtime_dir}\\bin\\java.exe",
+    "args": [],
+    "env": {
+     "JAVA_HOME": "{runtime_dir}",
+     "JAVA_TOOL_OPTIONS": null,
+     "_JAVA_OPTIONS": null,
+     "JDK_JAVA_OPTIONS": null,
+     "CLASSPATH": null
+    },
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": ">=16",
+    "arch": "arm64"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin\\java.exe",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}\\bin\\java.exe\" -version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Windows 10 on Arm (PE subsystem 6.2; Windows-on-Arm64 only exists from 10)",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://adoptium.net/installation/archives/",
+    "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+   ],
+   "notes": "Windows arm64 builds: Zulu 16 JRE, Zulu 17-19 JDK, Temurin 21/23 JRE, Zulu 25 JRE. The JDK variants are used where no arm64 JRE was published; they work identically and add javac/jlink. Use bin\\javaw.exe for GUI apps without a console. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir} only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} and the registry is not touched at install time (unlike the vendor .msi). At run time the JVM writes %TEMP%\\hsperfdata_<user> (suppress with -XX:-UsePerfData); the Preferences API, if used, writes HKCU\\Software\\JavaSoft\\Prefs, and system prefs try to create HKLM\\Software\\JavaSoft\\Prefs when run as administrator. No MSI, no registry keys, no PATH; the launcher does not consult HKLM\\Software\\JavaSoft when started from its own folder.",
+   "launch": {
+    "program": "{runtime_dir}\\bin\\java.exe",
+    "args": [],
+    "env": {
+     "JAVA_HOME": "{runtime_dir}",
+     "JAVA_TOOL_OPTIONS": null,
+     "_JAVA_OPTIONS": null,
+     "JDK_JAVA_OPTIONS": null,
+     "CLASSPATH": null
+    },
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+   },
+   "project_install": null
+  }
+ ]
+}

@@ -159,3 +159,139 @@ redirect the origin becomes `null`).
   CORS too.
 - `path_rules`: for `partial`, `[{"prefix": "/dist/", "status": "yes"}]`.
 - `browser_confirmed`: a real headless Chrome `fetch()` gave the same answer.
+
+## install.json
+
+How to install each downloaded file into an app's own runtime folder,
+assuming the installer runs as root / administrator. One file per runtime
+folder. Written by a research pass; `tested` says whether a recipe was
+actually run.
+
+The goal is installer-builder's per-app isolation (its `docs/design.md`
+section 1.1): everything inside `{runtime_dir}`, nothing added to PATH, no
+file associations or shortcuts, and **two copies of the same version able
+to exist side by side** for two different apps. Anything a recipe does
+outside `{runtime_dir}` is listed in `side_effects`.
+
+```json
+{
+  "runtime": "python",
+  "researched": "2026-09-18",
+  "assumes": "root/administrator",
+  "recipes": [
+    {
+      "match": {"os": "windows", "kind": "installer", "format": "exe", "versions": ">=3.5", "arch": null},
+      "method": "extract",
+      "steps": [
+        {"run": "\"{file}\" /quiet /layout ...", "shell": "cmd"},
+        {"unpack": "zip", "to": "{runtime_dir}", "strip_components": 0}
+      ],
+      "prerequisites": ["msvc-redist 2015-2022 x86 on Windows < 10"],
+      "executable": "python.exe",
+      "package_manager": "\"{runtime_dir}\\python.exe\" -m pip",
+      "verify": "\"{runtime_dir}\\python.exe\" -c \"import sys; print(sys.version)\"",
+      "uninstall": "delete {runtime_dir}",
+      "side_effects": [],
+      "isolation": "full",
+      "relocatable": true,
+      "min_os": "Windows 8.1 for 3.9+",
+      "tested": false,
+      "confidence": "high",
+      "sources": ["https://docs.python.org/3/using/windows.html"],
+      "notes": null
+    }
+  ]
+}
+```
+
+- `match`: which catalogue files the recipe applies to. `versions` is a
+  PEP 440-style range over the release `version`; null fields match
+  anything. The most specific match wins.
+- `method`: `unpack` (archive, just extract), `extract` (take the files out
+  of an installer without running its setup logic, e.g. `msiexec /a`,
+  `pkgutil --expand-full`, `dpkg-deb -x`, `innoextract`, `7z x`), `run`
+  (the vendor's installer with silent flags and a target folder), or
+  `build` (compile from source).
+- `steps`: in order. `run` is a command (`shell`: `cmd` on Windows, which
+  must work back to XP, so no PowerShell; `sh` elsewhere). `unpack` is done
+  by the base installer itself (it bundles its own zip/7z/tar/xz code), so
+  it names the format, not a tool. Tokens: `{file}` the downloaded file,
+  `{runtime_dir}` the target folder (absolute, may contain spaces),
+  `{tmp}` a scratch folder deleted afterwards.
+- `executable`: the runtime's main program, relative to `{runtime_dir}`.
+- `package_manager`: how the app's dependencies get installed with this
+  runtime, if it has one.
+- `isolation`: `full` (nothing outside `{runtime_dir}`), `leaks` (works,
+  but see `side_effects`), `impossible` (only installs to a fixed system
+  location or once per machine).
+- `relocatable`: works from any folder, including one with spaces.
+
+### Launch and project install (added 2026-09-18)
+
+Two more recipe fields, used by installer-builder to run apps and install
+projects without anything leaking out of `{runtime_dir}` (its
+`docs/design.md` section 1.7):
+
+```json
+"launch": {
+  "program": "{runtime_dir}/bin/java",
+  "args": [],
+  "env": {"JAVA_HOME": "{runtime_dir}"},
+  "notes": null
+},
+"project_install": {
+  "command": "\"{runtime_dir}/bin/python3\" -s -m pip install --no-warn-script-location .",
+  "env": {"PIP_CONFIG_FILE": "{runtime_dir}/pip.conf"},
+  "cwd": "{app_dir}",
+  "notes": null
+}
+```
+
+- `launch.program` / `args`: what to start and the runtime's own flags
+  (e.g. Python `-s`, PHP `-c {runtime_dir}/php.ini`). The app's own
+  command (`-m myapp`) is appended by installer-builder.
+- `launch.env`: environment the runtime needs on every run. Tokens:
+  `{runtime_dir}`, `{app_dir}` (the app's folder), `{data_dir}` (a
+  writable folder inside the app's folder for caches).
+- `project_install`: the default command to install the app's project
+  and its dependencies with this runtime, and the environment for it.
+  `null` if the runtime has no package manager.
+- `env` values: a string sets the variable, `""` sets it empty, and
+  `null` **removes** it from the app's environment (used to stop a user's
+  global settings such as `JAVA_TOOL_OPTIONS` or `RUSTFLAGS` leaking in).
+- `path_prepend`: folders put first on PATH for the app's own process
+  only (Node.js scripts start with `#!/usr/bin/env node`).
+- `launch.program` is `null` for compiled languages (Go, Rust, Nim, Zig, C/C++),
+  which are built on the user's machine by `project_install`; the built program
+  then runs directly.
+- Filled by `tools/add_launch.py <runtime>`, which applies the research
+  findings uniformly; re-running it only rewrites these two fields.
+
+## Old-machine reachability (planned, 2026-09-18)
+
+Very old systems often have broken DNS and can't do modern HTTPS (XP:
+TLS 1.0 only, no SNI, old root certificates). Plain HTTP and fixed IPs
+are still useful there, because every file is checked against its pinned
+checksum. Per mirror host, record in `reachability.json` (to be
+collected):
+
+```json
+{"hosts": {"mirrors.huaweicloud.com": {
+  "http_plain": true,
+  "ips": [{"ip": "203.0.113.7", "seen": "2026-09-18"}],
+  "ip_with_host_header": true,
+  "ip_bare": false,
+  "tls_versions": ["1.2", "1.3"],
+  "sni_required": true,
+  "tested": "2026-09-18",
+  "notes": null
+}}}
+```
+
+- `http_plain`: the same files are served over `http://` (same size or
+  hash on a sample), not just a redirect to https.
+- `ips`: addresses the name resolved to, with dates; they go stale,
+  especially behind CDNs.
+- `ip_with_host_header`: a request to the IP, sending the host name in
+  `Host`, gets the file (skips only DNS). `ip_bare`: it works without it.
+- `tls_versions` / `sni_required`: which old clients can use its HTTPS.

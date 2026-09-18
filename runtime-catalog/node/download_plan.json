@@ -2741,7 +2741,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v7.10.1/node-v7.10.1-linux-armv7l.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v7.10.1/node-v7.10.1-linux-armv7l.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v7.10.1/node-v7.10.1-linux-armv7l.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v7.10.1/node-v7.10.1-linux-armv7l.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v7.10.1/node-v7.10.1-linux-armv7l.tar.xz",
+   "https://web.archive.org/web/20250720220701id_/https://nodejs.org/dist/v7.10.1/node-v7.10.1-linux-armv7l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2778,7 +2779,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v7.10.1/node-v7.10.1-linux-ppc64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v7.10.1/node-v7.10.1-linux-ppc64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v7.10.1/node-v7.10.1-linux-ppc64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v7.10.1/node-v7.10.1-linux-ppc64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v7.10.1/node-v7.10.1-linux-ppc64.tar.xz",
+   "https://web.archive.org/web/20250527164436id_/https://nodejs.org/dist/v7.10.1/node-v7.10.1-linux-ppc64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2815,7 +2817,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v7.10.1/node-v7.10.1-linux-ppc64le.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v7.10.1/node-v7.10.1-linux-ppc64le.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v7.10.1/node-v7.10.1-linux-ppc64le.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v7.10.1/node-v7.10.1-linux-ppc64le.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v7.10.1/node-v7.10.1-linux-ppc64le.tar.xz",
+   "https://web.archive.org/web/20250720220630id_/https://nodejs.org/dist/v7.10.1/node-v7.10.1-linux-ppc64le.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2852,7 +2855,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v7.10.1/node-v7.10.1-linux-s390x.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v7.10.1/node-v7.10.1-linux-s390x.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v7.10.1/node-v7.10.1-linux-s390x.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v7.10.1/node-v7.10.1-linux-s390x.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v7.10.1/node-v7.10.1-linux-s390x.tar.xz",
+   "https://web.archive.org/web/20250720220654id_/https://nodejs.org/dist/v7.10.1/node-v7.10.1-linux-s390x.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2889,7 +2893,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v7.10.1/node-v7.10.1-linux-x86.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v7.10.1/node-v7.10.1-linux-x86.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v7.10.1/node-v7.10.1-linux-x86.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v7.10.1/node-v7.10.1-linux-x86.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v7.10.1/node-v7.10.1-linux-x86.tar.xz",
+   "https://web.archive.org/web/20260208042711id_/https://nodejs.org/dist/v7.10.1/node-v7.10.1-linux-x86.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2963,7 +2968,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v7.10.1/node-v7.10.1-win-x64.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v7.10.1/node-v7.10.1-win-x64.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v7.10.1/node-v7.10.1-win-x64.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v7.10.1/node-v7.10.1-win-x64.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v7.10.1/node-v7.10.1-win-x64.7z",
+   "https://web.archive.org/web/20251202152708id_/https://nodejs.org/dist/v7.10.1/node-v7.10.1-win-x64.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3000,7 +3006,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v7.10.1/node-v7.10.1-win-x86.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v7.10.1/node-v7.10.1-win-x86.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v7.10.1/node-v7.10.1-win-x86.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v7.10.1/node-v7.10.1-win-x86.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v7.10.1/node-v7.10.1-win-x86.7z",
+   "https://web.archive.org/web/20251202152708id_/https://nodejs.org/dist/v7.10.1/node-v7.10.1-win-x86.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3037,7 +3044,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v8.17.0/node-v8.17.0-linux-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v8.17.0/node-v8.17.0-linux-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v8.17.0/node-v8.17.0-linux-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v8.17.0/node-v8.17.0-linux-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v8.17.0/node-v8.17.0-linux-x64.tar.xz",
+   "https://web.archive.org/web/20260208043151id_/https://nodejs.org/dist/v8.17.0/node-v8.17.0-linux-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3104,7 +3112,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v8.17.0/node-v8.17.0-linux-arm64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v8.17.0/node-v8.17.0-linux-arm64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v8.17.0/node-v8.17.0-linux-arm64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v8.17.0/node-v8.17.0-linux-arm64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v8.17.0/node-v8.17.0-linux-arm64.tar.xz",
+   "https://web.archive.org/web/20250719175559id_/https://nodejs.org/dist/v8.17.0/node-v8.17.0-linux-arm64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3141,7 +3150,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v8.17.0/node-v8.17.0-linux-armv6l.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v8.17.0/node-v8.17.0-linux-armv6l.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v8.17.0/node-v8.17.0-linux-armv6l.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v8.17.0/node-v8.17.0-linux-armv6l.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v8.17.0/node-v8.17.0-linux-armv6l.tar.xz",
+   "https://web.archive.org/web/20250610173338id_/https://nodejs.org/dist/v8.17.0/node-v8.17.0-linux-armv6l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3178,7 +3188,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v8.17.0/node-v8.17.0-linux-armv7l.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v8.17.0/node-v8.17.0-linux-armv7l.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v8.17.0/node-v8.17.0-linux-armv7l.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v8.17.0/node-v8.17.0-linux-armv7l.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v8.17.0/node-v8.17.0-linux-armv7l.tar.xz",
+   "https://web.archive.org/web/20250719175559id_/https://nodejs.org/dist/v8.17.0/node-v8.17.0-linux-armv7l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3215,7 +3226,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v8.9.1/node-v8.9.1-linux-ppc64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v8.9.1/node-v8.9.1-linux-ppc64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v8.9.1/node-v8.9.1-linux-ppc64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v8.9.1/node-v8.9.1-linux-ppc64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v8.9.1/node-v8.9.1-linux-ppc64.tar.xz",
+   "https://web.archive.org/web/20250608145503id_/https://nodejs.org/dist/v8.9.1/node-v8.9.1-linux-ppc64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3252,7 +3264,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v8.17.0/node-v8.17.0-linux-ppc64le.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v8.17.0/node-v8.17.0-linux-ppc64le.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v8.17.0/node-v8.17.0-linux-ppc64le.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v8.17.0/node-v8.17.0-linux-ppc64le.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v8.17.0/node-v8.17.0-linux-ppc64le.tar.xz",
+   "https://web.archive.org/web/20250507234435id_/https://nodejs.org/dist/v8.17.0/node-v8.17.0-linux-ppc64le.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3289,7 +3302,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v8.17.0/node-v8.17.0-linux-s390x.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v8.17.0/node-v8.17.0-linux-s390x.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v8.17.0/node-v8.17.0-linux-s390x.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v8.17.0/node-v8.17.0-linux-s390x.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v8.17.0/node-v8.17.0-linux-s390x.tar.xz",
+   "https://web.archive.org/web/20250506133132id_/https://nodejs.org/dist/v8.17.0/node-v8.17.0-linux-s390x.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3326,7 +3340,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v8.17.0/node-v8.17.0-linux-x86.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v8.17.0/node-v8.17.0-linux-x86.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v8.17.0/node-v8.17.0-linux-x86.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v8.17.0/node-v8.17.0-linux-x86.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v8.17.0/node-v8.17.0-linux-x86.tar.xz",
+   "https://web.archive.org/web/20250522155417id_/https://nodejs.org/dist/v8.17.0/node-v8.17.0-linux-x86.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3363,7 +3378,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v8.17.0/node-v8.17.0-darwin-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v8.17.0/node-v8.17.0-darwin-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v8.17.0/node-v8.17.0-darwin-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v8.17.0/node-v8.17.0-darwin-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v8.17.0/node-v8.17.0-darwin-x64.tar.xz",
+   "https://web.archive.org/web/20250523084935id_/https://nodejs.org/dist/v8.17.0/node-v8.17.0-darwin-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3400,7 +3416,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v8.17.0/node-v8.17.0-win-x64.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v8.17.0/node-v8.17.0-win-x64.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v8.17.0/node-v8.17.0-win-x64.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v8.17.0/node-v8.17.0-win-x64.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v8.17.0/node-v8.17.0-win-x64.7z",
+   "https://web.archive.org/web/20250810134455id_/https://nodejs.org/dist/v8.17.0/node-v8.17.0-win-x64.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3437,7 +3454,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v8.17.0/node-v8.17.0-win-x86.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v8.17.0/node-v8.17.0-win-x86.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v8.17.0/node-v8.17.0-win-x86.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v8.17.0/node-v8.17.0-win-x86.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v8.17.0/node-v8.17.0-win-x86.7z",
+   "https://web.archive.org/web/20250810160343id_/https://nodejs.org/dist/v8.17.0/node-v8.17.0-win-x86.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3474,7 +3492,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v9.11.2/node-v9.11.2-linux-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v9.11.2/node-v9.11.2-linux-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v9.11.2/node-v9.11.2-linux-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v9.11.2/node-v9.11.2-linux-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v9.11.2/node-v9.11.2-linux-x64.tar.xz",
+   "https://web.archive.org/web/20260208043001id_/https://nodejs.org/dist/v9.11.2/node-v9.11.2-linux-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3511,7 +3530,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v9.11.2/node-v9.11.2-linux-arm64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v9.11.2/node-v9.11.2-linux-arm64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v9.11.2/node-v9.11.2-linux-arm64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v9.11.2/node-v9.11.2-linux-arm64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v9.11.2/node-v9.11.2-linux-arm64.tar.xz",
+   "https://web.archive.org/web/20250425184958id_/https://nodejs.org/dist/v9.11.2/node-v9.11.2-linux-arm64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3548,7 +3568,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v9.11.2/node-v9.11.2-linux-armv6l.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v9.11.2/node-v9.11.2-linux-armv6l.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v9.11.2/node-v9.11.2-linux-armv6l.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v9.11.2/node-v9.11.2-linux-armv6l.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v9.11.2/node-v9.11.2-linux-armv6l.tar.xz",
+   "https://web.archive.org/web/20250720081135id_/https://nodejs.org/dist/v9.11.2/node-v9.11.2-linux-armv6l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3585,7 +3606,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v9.11.2/node-v9.11.2-linux-armv7l.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v9.11.2/node-v9.11.2-linux-armv7l.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v9.11.2/node-v9.11.2-linux-armv7l.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v9.11.2/node-v9.11.2-linux-armv7l.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v9.11.2/node-v9.11.2-linux-armv7l.tar.xz",
+   "https://web.archive.org/web/20250720081137id_/https://nodejs.org/dist/v9.11.2/node-v9.11.2-linux-armv7l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3622,7 +3644,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v9.2.0/node-v9.2.0-linux-ppc64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v9.2.0/node-v9.2.0-linux-ppc64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v9.2.0/node-v9.2.0-linux-ppc64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v9.2.0/node-v9.2.0-linux-ppc64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v9.2.0/node-v9.2.0-linux-ppc64.tar.xz",
+   "https://web.archive.org/web/20250720162403id_/https://nodejs.org/dist/v9.2.0/node-v9.2.0-linux-ppc64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3659,7 +3682,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v9.11.2/node-v9.11.2-linux-ppc64le.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v9.11.2/node-v9.11.2-linux-ppc64le.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v9.11.2/node-v9.11.2-linux-ppc64le.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v9.11.2/node-v9.11.2-linux-ppc64le.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v9.11.2/node-v9.11.2-linux-ppc64le.tar.xz",
+   "https://web.archive.org/web/20250609164818id_/https://nodejs.org/dist/v9.11.2/node-v9.11.2-linux-ppc64le.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3696,7 +3720,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v9.11.2/node-v9.11.2-linux-s390x.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v9.11.2/node-v9.11.2-linux-s390x.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v9.11.2/node-v9.11.2-linux-s390x.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v9.11.2/node-v9.11.2-linux-s390x.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v9.11.2/node-v9.11.2-linux-s390x.tar.xz",
+   "https://web.archive.org/web/20250720081125id_/https://nodejs.org/dist/v9.11.2/node-v9.11.2-linux-s390x.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3733,7 +3758,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v9.11.2/node-v9.11.2-linux-x86.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v9.11.2/node-v9.11.2-linux-x86.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v9.11.2/node-v9.11.2-linux-x86.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v9.11.2/node-v9.11.2-linux-x86.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v9.11.2/node-v9.11.2-linux-x86.tar.xz",
+   "https://web.archive.org/web/20250720081043id_/https://nodejs.org/dist/v9.11.2/node-v9.11.2-linux-x86.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3770,7 +3796,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v9.11.2/node-v9.11.2-darwin-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v9.11.2/node-v9.11.2-darwin-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v9.11.2/node-v9.11.2-darwin-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v9.11.2/node-v9.11.2-darwin-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v9.11.2/node-v9.11.2-darwin-x64.tar.xz",
+   "https://web.archive.org/web/20250527073803id_/https://nodejs.org/dist/v9.11.2/node-v9.11.2-darwin-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3807,7 +3834,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v9.11.2/node-v9.11.2-win-x64.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v9.11.2/node-v9.11.2-win-x64.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v9.11.2/node-v9.11.2-win-x64.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v9.11.2/node-v9.11.2-win-x64.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v9.11.2/node-v9.11.2-win-x64.7z",
+   "https://web.archive.org/web/20241204073831id_/https://nodejs.org/dist/v9.11.2/node-v9.11.2-win-x64.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3844,7 +3872,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v9.11.2/node-v9.11.2-win-x86.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v9.11.2/node-v9.11.2-win-x86.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v9.11.2/node-v9.11.2-win-x86.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v9.11.2/node-v9.11.2-win-x86.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v9.11.2/node-v9.11.2-win-x86.7z",
+   "https://web.archive.org/web/20250525054124id_/https://nodejs.org/dist/v9.11.2/node-v9.11.2-win-x86.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3881,7 +3910,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v10.24.1/node-v10.24.1-linux-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v10.24.1/node-v10.24.1-linux-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v10.24.1/node-v10.24.1-linux-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v10.24.1/node-v10.24.1-linux-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v10.24.1/node-v10.24.1-linux-x64.tar.xz",
+   "https://web.archive.org/web/20260714160926id_/https://nodejs.org/dist/v10.24.1/node-v10.24.1-linux-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3948,7 +3978,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v10.24.1/node-v10.24.1-linux-arm64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v10.24.1/node-v10.24.1-linux-arm64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v10.24.1/node-v10.24.1-linux-arm64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v10.24.1/node-v10.24.1-linux-arm64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v10.24.1/node-v10.24.1-linux-arm64.tar.xz",
+   "https://web.archive.org/web/20250523110119id_/https://nodejs.org/dist/v10.24.1/node-v10.24.1-linux-arm64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3985,7 +4016,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v10.24.1/node-v10.24.1-linux-armv6l.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v10.24.1/node-v10.24.1-linux-armv6l.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v10.24.1/node-v10.24.1-linux-armv6l.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v10.24.1/node-v10.24.1-linux-armv6l.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v10.24.1/node-v10.24.1-linux-armv6l.tar.xz",
+   "https://web.archive.org/web/20250719052614id_/https://nodejs.org/dist/v10.24.1/node-v10.24.1-linux-armv6l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4022,7 +4054,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v10.24.1/node-v10.24.1-linux-armv7l.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v10.24.1/node-v10.24.1-linux-armv7l.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v10.24.1/node-v10.24.1-linux-armv7l.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v10.24.1/node-v10.24.1-linux-armv7l.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v10.24.1/node-v10.24.1-linux-armv7l.tar.xz",
+   "https://web.archive.org/web/20260202091302id_/https://nodejs.org/dist/v10.24.1/node-v10.24.1-linux-armv7l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4059,7 +4092,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v10.24.1/node-v10.24.1-linux-ppc64le.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v10.24.1/node-v10.24.1-linux-ppc64le.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v10.24.1/node-v10.24.1-linux-ppc64le.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v10.24.1/node-v10.24.1-linux-ppc64le.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v10.24.1/node-v10.24.1-linux-ppc64le.tar.xz",
+   "https://web.archive.org/web/20260206230606id_/https://nodejs.org/dist/v10.24.1/node-v10.24.1-linux-ppc64le.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4096,7 +4130,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v10.24.1/node-v10.24.1-linux-s390x.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v10.24.1/node-v10.24.1-linux-s390x.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v10.24.1/node-v10.24.1-linux-s390x.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v10.24.1/node-v10.24.1-linux-s390x.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v10.24.1/node-v10.24.1-linux-s390x.tar.xz",
+   "https://web.archive.org/web/20250523065155id_/https://nodejs.org/dist/v10.24.1/node-v10.24.1-linux-s390x.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4163,7 +4198,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v10.24.1/node-v10.24.1-darwin-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v10.24.1/node-v10.24.1-darwin-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v10.24.1/node-v10.24.1-darwin-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v10.24.1/node-v10.24.1-darwin-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v10.24.1/node-v10.24.1-darwin-x64.tar.xz",
+   "https://web.archive.org/web/20250427181331id_/https://nodejs.org/dist/v10.24.1/node-v10.24.1-darwin-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4200,7 +4236,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v10.24.1/node-v10.24.1-win-x64.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v10.24.1/node-v10.24.1-win-x64.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v10.24.1/node-v10.24.1-win-x64.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v10.24.1/node-v10.24.1-win-x64.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v10.24.1/node-v10.24.1-win-x64.7z",
+   "https://web.archive.org/web/20241204075746id_/https://nodejs.org/dist/v10.24.1/node-v10.24.1-win-x64.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4237,7 +4274,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v10.24.1/node-v10.24.1-win-x86.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v10.24.1/node-v10.24.1-win-x86.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v10.24.1/node-v10.24.1-win-x86.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v10.24.1/node-v10.24.1-win-x86.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v10.24.1/node-v10.24.1-win-x86.7z",
+   "https://web.archive.org/web/20250810205839id_/https://nodejs.org/dist/v10.24.1/node-v10.24.1-win-x86.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4274,7 +4312,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v11.15.0/node-v11.15.0-linux-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v11.15.0/node-v11.15.0-linux-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v11.15.0/node-v11.15.0-linux-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v11.15.0/node-v11.15.0-linux-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v11.15.0/node-v11.15.0-linux-x64.tar.xz",
+   "https://web.archive.org/web/20260831022702id_/https://nodejs.org/dist/v11.15.0/node-v11.15.0-linux-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4341,7 +4380,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v11.15.0/node-v11.15.0-linux-arm64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v11.15.0/node-v11.15.0-linux-arm64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v11.15.0/node-v11.15.0-linux-arm64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v11.15.0/node-v11.15.0-linux-arm64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v11.15.0/node-v11.15.0-linux-arm64.tar.xz",
+   "https://web.archive.org/web/20260831022700id_/https://nodejs.org/dist/v11.15.0/node-v11.15.0-linux-arm64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4378,7 +4418,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v11.15.0/node-v11.15.0-linux-armv6l.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v11.15.0/node-v11.15.0-linux-armv6l.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v11.15.0/node-v11.15.0-linux-armv6l.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v11.15.0/node-v11.15.0-linux-armv6l.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v11.15.0/node-v11.15.0-linux-armv6l.tar.xz",
+   "https://web.archive.org/web/20260831022700id_/https://nodejs.org/dist/v11.15.0/node-v11.15.0-linux-armv6l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4415,7 +4456,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v11.15.0/node-v11.15.0-linux-armv7l.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v11.15.0/node-v11.15.0-linux-armv7l.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v11.15.0/node-v11.15.0-linux-armv7l.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v11.15.0/node-v11.15.0-linux-armv7l.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v11.15.0/node-v11.15.0-linux-armv7l.tar.xz",
+   "https://web.archive.org/web/20260831022703id_/https://nodejs.org/dist/v11.15.0/node-v11.15.0-linux-armv7l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4452,7 +4494,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v11.15.0/node-v11.15.0-linux-ppc64le.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v11.15.0/node-v11.15.0-linux-ppc64le.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v11.15.0/node-v11.15.0-linux-ppc64le.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v11.15.0/node-v11.15.0-linux-ppc64le.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v11.15.0/node-v11.15.0-linux-ppc64le.tar.xz",
+   "https://web.archive.org/web/20260831022702id_/https://nodejs.org/dist/v11.15.0/node-v11.15.0-linux-ppc64le.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4489,7 +4532,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v11.15.0/node-v11.15.0-linux-s390x.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v11.15.0/node-v11.15.0-linux-s390x.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v11.15.0/node-v11.15.0-linux-s390x.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v11.15.0/node-v11.15.0-linux-s390x.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v11.15.0/node-v11.15.0-linux-s390x.tar.xz",
+   "https://web.archive.org/web/20260831022702id_/https://nodejs.org/dist/v11.15.0/node-v11.15.0-linux-s390x.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4556,7 +4600,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v11.15.0/node-v11.15.0-darwin-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v11.15.0/node-v11.15.0-darwin-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v11.15.0/node-v11.15.0-darwin-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v11.15.0/node-v11.15.0-darwin-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v11.15.0/node-v11.15.0-darwin-x64.tar.xz",
+   "https://web.archive.org/web/20250427010146id_/https://nodejs.org/dist/v11.15.0/node-v11.15.0-darwin-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4593,7 +4638,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v11.15.0/node-v11.15.0-win-x64.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v11.15.0/node-v11.15.0-win-x64.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v11.15.0/node-v11.15.0-win-x64.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v11.15.0/node-v11.15.0-win-x64.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v11.15.0/node-v11.15.0-win-x64.7z",
+   "https://web.archive.org/web/20250427075648id_/https://nodejs.org/dist/v11.15.0/node-v11.15.0-win-x64.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4630,7 +4676,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v11.15.0/node-v11.15.0-win-x86.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v11.15.0/node-v11.15.0-win-x86.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v11.15.0/node-v11.15.0-win-x86.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v11.15.0/node-v11.15.0-win-x86.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v11.15.0/node-v11.15.0-win-x86.7z",
+   "https://web.archive.org/web/20250810100818id_/https://nodejs.org/dist/v11.15.0/node-v11.15.0-win-x86.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4667,7 +4714,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v12.22.12/node-v12.22.12-linux-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v12.22.12/node-v12.22.12-linux-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v12.22.12/node-v12.22.12-linux-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v12.22.12/node-v12.22.12-linux-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v12.22.12/node-v12.22.12-linux-x64.tar.xz",
+   "https://web.archive.org/web/20260208043637id_/https://nodejs.org/dist/v12.22.12/node-v12.22.12-linux-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4734,7 +4782,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v12.22.12/node-v12.22.12-linux-arm64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v12.22.12/node-v12.22.12-linux-arm64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v12.22.12/node-v12.22.12-linux-arm64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v12.22.12/node-v12.22.12-linux-arm64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v12.22.12/node-v12.22.12-linux-arm64.tar.xz",
+   "https://web.archive.org/web/20260208043642id_/https://nodejs.org/dist/v12.22.12/node-v12.22.12-linux-arm64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4764,7 +4813,8 @@
   "url": "https://unofficial-builds.nodejs.org/download/release/v12.22.12/node-v12.22.12-linux-armv6l.tar.xz",
   "mirrors": [
    "https://cdn.npmmirror.com/binaries/node-unofficial-builds/v12.22.12/node-v12.22.12-linux-armv6l.tar.xz",
-   "https://registry.npmmirror.com/-/binary/node-unofficial-builds/v12.22.12/node-v12.22.12-linux-armv6l.tar.xz"
+   "https://registry.npmmirror.com/-/binary/node-unofficial-builds/v12.22.12/node-v12.22.12-linux-armv6l.tar.xz",
+   "https://web.archive.org/web/20260414054737id_/https://unofficial-builds.nodejs.org/download/release/v12.22.12/node-v12.22.12-linux-armv6l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4801,7 +4851,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v12.22.12/node-v12.22.12-linux-armv7l.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v12.22.12/node-v12.22.12-linux-armv7l.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v12.22.12/node-v12.22.12-linux-armv7l.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v12.22.12/node-v12.22.12-linux-armv7l.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v12.22.12/node-v12.22.12-linux-armv7l.tar.xz",
+   "https://web.archive.org/web/20260208043641id_/https://nodejs.org/dist/v12.22.12/node-v12.22.12-linux-armv7l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4838,7 +4889,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v12.22.12/node-v12.22.12-linux-ppc64le.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v12.22.12/node-v12.22.12-linux-ppc64le.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v12.22.12/node-v12.22.12-linux-ppc64le.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v12.22.12/node-v12.22.12-linux-ppc64le.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v12.22.12/node-v12.22.12-linux-ppc64le.tar.xz",
+   "https://web.archive.org/web/20250906090040id_/https://nodejs.org/dist/v12.22.12/node-v12.22.12-linux-ppc64le.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4875,7 +4927,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v12.22.12/node-v12.22.12-linux-s390x.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v12.22.12/node-v12.22.12-linux-s390x.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v12.22.12/node-v12.22.12-linux-s390x.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v12.22.12/node-v12.22.12-linux-s390x.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v12.22.12/node-v12.22.12-linux-s390x.tar.xz",
+   "https://web.archive.org/web/20250718215337id_/https://nodejs.org/dist/v12.22.12/node-v12.22.12-linux-s390x.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4942,7 +4995,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v12.22.12/node-v12.22.12-darwin-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v12.22.12/node-v12.22.12-darwin-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v12.22.12/node-v12.22.12-darwin-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v12.22.12/node-v12.22.12-darwin-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v12.22.12/node-v12.22.12-darwin-x64.tar.xz",
+   "https://web.archive.org/web/20250425164208id_/https://nodejs.org/dist/v12.22.12/node-v12.22.12-darwin-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4979,7 +5033,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v12.22.12/node-v12.22.12-win-x64.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v12.22.12/node-v12.22.12-win-x64.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v12.22.12/node-v12.22.12-win-x64.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v12.22.12/node-v12.22.12-win-x64.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v12.22.12/node-v12.22.12-win-x64.7z",
+   "https://web.archive.org/web/20250923114939id_/https://nodejs.org/dist/v12.22.12/node-v12.22.12-win-x64.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5046,7 +5101,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v12.22.12/node-v12.22.12-win-x86.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v12.22.12/node-v12.22.12-win-x86.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v12.22.12/node-v12.22.12-win-x86.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v12.22.12/node-v12.22.12-win-x86.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v12.22.12/node-v12.22.12-win-x86.7z",
+   "https://web.archive.org/web/20250923114939id_/https://nodejs.org/dist/v12.22.12/node-v12.22.12-win-x86.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5083,7 +5139,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v13.14.0/node-v13.14.0-linux-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v13.14.0/node-v13.14.0-linux-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v13.14.0/node-v13.14.0-linux-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v13.14.0/node-v13.14.0-linux-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v13.14.0/node-v13.14.0-linux-x64.tar.xz",
+   "https://web.archive.org/web/20260208043221id_/https://nodejs.org/dist/v13.14.0/node-v13.14.0-linux-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5150,7 +5207,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v13.14.0/node-v13.14.0-linux-arm64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v13.14.0/node-v13.14.0-linux-arm64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v13.14.0/node-v13.14.0-linux-arm64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v13.14.0/node-v13.14.0-linux-arm64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v13.14.0/node-v13.14.0-linux-arm64.tar.xz",
+   "https://web.archive.org/web/20260704151322id_/https://nodejs.org/dist/v13.14.0/node-v13.14.0-linux-arm64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5217,7 +5275,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v13.14.0/node-v13.14.0-linux-armv7l.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v13.14.0/node-v13.14.0-linux-armv7l.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v13.14.0/node-v13.14.0-linux-armv7l.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v13.14.0/node-v13.14.0-linux-armv7l.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v13.14.0/node-v13.14.0-linux-armv7l.tar.xz",
+   "https://web.archive.org/web/20251123010122id_/https://nodejs.org/dist/v13.14.0/node-v13.14.0-linux-armv7l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5254,7 +5313,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v13.14.0/node-v13.14.0-linux-ppc64le.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v13.14.0/node-v13.14.0-linux-ppc64le.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v13.14.0/node-v13.14.0-linux-ppc64le.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v13.14.0/node-v13.14.0-linux-ppc64le.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v13.14.0/node-v13.14.0-linux-ppc64le.tar.xz",
+   "https://web.archive.org/web/20251130082530id_/https://nodejs.org/dist/v13.14.0/node-v13.14.0-linux-ppc64le.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5291,7 +5351,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v13.14.0/node-v13.14.0-linux-s390x.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v13.14.0/node-v13.14.0-linux-s390x.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v13.14.0/node-v13.14.0-linux-s390x.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v13.14.0/node-v13.14.0-linux-s390x.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v13.14.0/node-v13.14.0-linux-s390x.tar.xz",
+   "https://web.archive.org/web/20260309182902id_/https://nodejs.org/dist/v13.14.0/node-v13.14.0-linux-s390x.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5358,7 +5419,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v13.14.0/node-v13.14.0-darwin-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v13.14.0/node-v13.14.0-darwin-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v13.14.0/node-v13.14.0-darwin-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v13.14.0/node-v13.14.0-darwin-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v13.14.0/node-v13.14.0-darwin-x64.tar.xz",
+   "https://web.archive.org/web/20250426143126id_/https://nodejs.org/dist/v13.14.0/node-v13.14.0-darwin-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5395,7 +5457,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v13.14.0/node-v13.14.0-win-x64.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v13.14.0/node-v13.14.0-win-x64.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v13.14.0/node-v13.14.0-win-x64.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v13.14.0/node-v13.14.0-win-x64.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v13.14.0/node-v13.14.0-win-x64.7z",
+   "https://web.archive.org/web/20220523082700id_/https://nodejs.org/dist/v13.14.0/node-v13.14.0-win-x64.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5432,7 +5495,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v13.14.0/node-v13.14.0-win-x86.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v13.14.0/node-v13.14.0-win-x86.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v13.14.0/node-v13.14.0-win-x86.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v13.14.0/node-v13.14.0-win-x86.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v13.14.0/node-v13.14.0-win-x86.7z",
+   "https://web.archive.org/web/20250425093054id_/https://nodejs.org/dist/v13.14.0/node-v13.14.0-win-x86.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5469,7 +5533,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v14.21.3/node-v14.21.3-linux-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v14.21.3/node-v14.21.3-linux-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v14.21.3/node-v14.21.3-linux-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v14.21.3/node-v14.21.3-linux-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v14.21.3/node-v14.21.3-linux-x64.tar.xz",
+   "https://web.archive.org/web/20260208044542id_/https://nodejs.org/dist/v14.21.3/node-v14.21.3-linux-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5499,7 +5564,8 @@
   "url": "https://unofficial-builds.nodejs.org/download/release/v14.21.3/node-v14.21.3-linux-x64-musl.tar.xz",
   "mirrors": [
    "https://cdn.npmmirror.com/binaries/node-unofficial-builds/v14.21.3/node-v14.21.3-linux-x64-musl.tar.xz",
-   "https://registry.npmmirror.com/-/binary/node-unofficial-builds/v14.21.3/node-v14.21.3-linux-x64-musl.tar.xz"
+   "https://registry.npmmirror.com/-/binary/node-unofficial-builds/v14.21.3/node-v14.21.3-linux-x64-musl.tar.xz",
+   "https://web.archive.org/web/20250724225350id_/https://unofficial-builds.nodejs.org/download/release/v14.21.3/node-v14.21.3-linux-x64-musl.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5536,7 +5602,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v14.21.3/node-v14.21.3-linux-arm64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v14.21.3/node-v14.21.3-linux-arm64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v14.21.3/node-v14.21.3-linux-arm64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v14.21.3/node-v14.21.3-linux-arm64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v14.21.3/node-v14.21.3-linux-arm64.tar.xz",
+   "https://web.archive.org/web/20260830100039id_/https://nodejs.org/dist/v14.21.3/node-v14.21.3-linux-arm64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5566,7 +5633,8 @@
   "url": "https://unofficial-builds.nodejs.org/download/release/v14.21.3/node-v14.21.3-linux-armv6l.tar.xz",
   "mirrors": [
    "https://cdn.npmmirror.com/binaries/node-unofficial-builds/v14.21.3/node-v14.21.3-linux-armv6l.tar.xz",
-   "https://registry.npmmirror.com/-/binary/node-unofficial-builds/v14.21.3/node-v14.21.3-linux-armv6l.tar.xz"
+   "https://registry.npmmirror.com/-/binary/node-unofficial-builds/v14.21.3/node-v14.21.3-linux-armv6l.tar.xz",
+   "https://web.archive.org/web/20250724225350id_/https://unofficial-builds.nodejs.org/download/release/v14.21.3/node-v14.21.3-linux-armv6l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5603,7 +5671,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v14.21.3/node-v14.21.3-linux-armv7l.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v14.21.3/node-v14.21.3-linux-armv7l.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v14.21.3/node-v14.21.3-linux-armv7l.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v14.21.3/node-v14.21.3-linux-armv7l.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v14.21.3/node-v14.21.3-linux-armv7l.tar.xz",
+   "https://web.archive.org/web/20260208044543id_/https://nodejs.org/dist/v14.21.3/node-v14.21.3-linux-armv7l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5640,7 +5709,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v14.21.3/node-v14.21.3-linux-ppc64le.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v14.21.3/node-v14.21.3-linux-ppc64le.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v14.21.3/node-v14.21.3-linux-ppc64le.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v14.21.3/node-v14.21.3-linux-ppc64le.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v14.21.3/node-v14.21.3-linux-ppc64le.tar.xz",
+   "https://web.archive.org/web/20250512204604id_/https://nodejs.org/dist/v14.21.3/node-v14.21.3-linux-ppc64le.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5677,7 +5747,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v14.21.3/node-v14.21.3-linux-s390x.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v14.21.3/node-v14.21.3-linux-s390x.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v14.21.3/node-v14.21.3-linux-s390x.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v14.21.3/node-v14.21.3-linux-s390x.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v14.21.3/node-v14.21.3-linux-s390x.tar.xz",
+   "https://web.archive.org/web/20250512204604id_/https://nodejs.org/dist/v14.21.3/node-v14.21.3-linux-s390x.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5707,7 +5778,8 @@
   "url": "https://unofficial-builds.nodejs.org/download/release/v14.21.3/node-v14.21.3-linux-x86.tar.xz",
   "mirrors": [
    "https://cdn.npmmirror.com/binaries/node-unofficial-builds/v14.21.3/node-v14.21.3-linux-x86.tar.xz",
-   "https://registry.npmmirror.com/-/binary/node-unofficial-builds/v14.21.3/node-v14.21.3-linux-x86.tar.xz"
+   "https://registry.npmmirror.com/-/binary/node-unofficial-builds/v14.21.3/node-v14.21.3-linux-x86.tar.xz",
+   "https://web.archive.org/web/20250724225350id_/https://unofficial-builds.nodejs.org/download/release/v14.21.3/node-v14.21.3-linux-x86.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5744,7 +5816,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v14.21.3/node-v14.21.3-darwin-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v14.21.3/node-v14.21.3-darwin-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v14.21.3/node-v14.21.3-darwin-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v14.21.3/node-v14.21.3-darwin-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v14.21.3/node-v14.21.3-darwin-x64.tar.xz",
+   "https://web.archive.org/web/20250426084146id_/https://nodejs.org/dist/v14.21.3/node-v14.21.3-darwin-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5781,7 +5854,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v14.21.3/node-v14.21.3-win-x64.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v14.21.3/node-v14.21.3-win-x64.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v14.21.3/node-v14.21.3-win-x64.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v14.21.3/node-v14.21.3-win-x64.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v14.21.3/node-v14.21.3-win-x64.7z",
+   "https://web.archive.org/web/20241204073019id_/https://nodejs.org/dist/v14.21.3/node-v14.21.3-win-x64.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5848,7 +5922,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v14.21.3/node-v14.21.3-win-x86.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v14.21.3/node-v14.21.3-win-x86.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v14.21.3/node-v14.21.3-win-x86.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v14.21.3/node-v14.21.3-win-x86.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v14.21.3/node-v14.21.3-win-x86.7z",
+   "https://web.archive.org/web/20250810071602id_/https://nodejs.org/dist/v14.21.3/node-v14.21.3-win-x86.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5885,7 +5960,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v15.14.0/node-v15.14.0-linux-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v15.14.0/node-v15.14.0-linux-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v15.14.0/node-v15.14.0-linux-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v15.14.0/node-v15.14.0-linux-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v15.14.0/node-v15.14.0-linux-x64.tar.xz",
+   "https://web.archive.org/web/20260825223052id_/https://nodejs.org/dist/v15.14.0/node-v15.14.0-linux-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5952,7 +6028,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v15.14.0/node-v15.14.0-linux-arm64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v15.14.0/node-v15.14.0-linux-arm64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v15.14.0/node-v15.14.0-linux-arm64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v15.14.0/node-v15.14.0-linux-arm64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v15.14.0/node-v15.14.0-linux-arm64.tar.xz",
+   "https://web.archive.org/web/20250606090341id_/https://nodejs.org/dist/v15.14.0/node-v15.14.0-linux-arm64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6019,7 +6096,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v15.14.0/node-v15.14.0-linux-armv7l.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v15.14.0/node-v15.14.0-linux-armv7l.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v15.14.0/node-v15.14.0-linux-armv7l.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v15.14.0/node-v15.14.0-linux-armv7l.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v15.14.0/node-v15.14.0-linux-armv7l.tar.xz",
+   "https://web.archive.org/web/20250530204430id_/https://nodejs.org/dist/v15.14.0/node-v15.14.0-linux-armv7l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6056,7 +6134,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v15.14.0/node-v15.14.0-linux-ppc64le.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v15.14.0/node-v15.14.0-linux-ppc64le.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v15.14.0/node-v15.14.0-linux-ppc64le.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v15.14.0/node-v15.14.0-linux-ppc64le.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v15.14.0/node-v15.14.0-linux-ppc64le.tar.xz",
+   "https://web.archive.org/web/20250719051840id_/https://nodejs.org/dist/v15.14.0/node-v15.14.0-linux-ppc64le.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6093,7 +6172,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v15.14.0/node-v15.14.0-linux-s390x.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v15.14.0/node-v15.14.0-linux-s390x.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v15.14.0/node-v15.14.0-linux-s390x.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v15.14.0/node-v15.14.0-linux-s390x.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v15.14.0/node-v15.14.0-linux-s390x.tar.xz",
+   "https://web.archive.org/web/20250918105919id_/https://nodejs.org/dist/v15.14.0/node-v15.14.0-linux-s390x.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6160,7 +6240,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v15.14.0/node-v15.14.0-darwin-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v15.14.0/node-v15.14.0-darwin-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v15.14.0/node-v15.14.0-darwin-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v15.14.0/node-v15.14.0-darwin-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v15.14.0/node-v15.14.0-darwin-x64.tar.xz",
+   "https://web.archive.org/web/20250425052730id_/https://nodejs.org/dist/v15.14.0/node-v15.14.0-darwin-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6197,7 +6278,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v15.14.0/node-v15.14.0-win-x64.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v15.14.0/node-v15.14.0-win-x64.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v15.14.0/node-v15.14.0-win-x64.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v15.14.0/node-v15.14.0-win-x64.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v15.14.0/node-v15.14.0-win-x64.7z",
+   "https://web.archive.org/web/20250505050423id_/https://nodejs.org/dist/v15.14.0/node-v15.14.0-win-x64.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6264,7 +6346,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v15.14.0/node-v15.14.0-win-x86.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v15.14.0/node-v15.14.0-win-x86.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v15.14.0/node-v15.14.0-win-x86.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v15.14.0/node-v15.14.0-win-x86.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v15.14.0/node-v15.14.0-win-x86.7z",
+   "https://web.archive.org/web/20250511140914id_/https://nodejs.org/dist/v15.14.0/node-v15.14.0-win-x86.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6301,7 +6384,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v16.20.2/node-v16.20.2-linux-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v16.20.2/node-v16.20.2-linux-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v16.20.2/node-v16.20.2-linux-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v16.20.2/node-v16.20.2-linux-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v16.20.2/node-v16.20.2-linux-x64.tar.xz",
+   "https://web.archive.org/web/20260608010814id_/https://nodejs.org/dist/v16.20.2/node-v16.20.2-linux-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6368,7 +6452,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v16.20.2/node-v16.20.2-linux-arm64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v16.20.2/node-v16.20.2-linux-arm64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v16.20.2/node-v16.20.2-linux-arm64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v16.20.2/node-v16.20.2-linux-arm64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v16.20.2/node-v16.20.2-linux-arm64.tar.xz",
+   "https://web.archive.org/web/20260830100039id_/https://nodejs.org/dist/v16.20.2/node-v16.20.2-linux-arm64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6435,7 +6520,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v16.20.2/node-v16.20.2-linux-armv7l.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v16.20.2/node-v16.20.2-linux-armv7l.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v16.20.2/node-v16.20.2-linux-armv7l.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v16.20.2/node-v16.20.2-linux-armv7l.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v16.20.2/node-v16.20.2-linux-armv7l.tar.xz",
+   "https://web.archive.org/web/20260208044555id_/https://nodejs.org/dist/v16.20.2/node-v16.20.2-linux-armv7l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6472,7 +6558,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v16.20.2/node-v16.20.2-linux-ppc64le.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v16.20.2/node-v16.20.2-linux-ppc64le.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v16.20.2/node-v16.20.2-linux-ppc64le.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v16.20.2/node-v16.20.2-linux-ppc64le.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v16.20.2/node-v16.20.2-linux-ppc64le.tar.xz",
+   "https://web.archive.org/web/20250725072215id_/https://nodejs.org/dist/v16.20.2/node-v16.20.2-linux-ppc64le.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6509,7 +6596,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v16.20.2/node-v16.20.2-linux-s390x.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v16.20.2/node-v16.20.2-linux-s390x.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v16.20.2/node-v16.20.2-linux-s390x.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v16.20.2/node-v16.20.2-linux-s390x.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v16.20.2/node-v16.20.2-linux-s390x.tar.xz",
+   "https://web.archive.org/web/20251204045505id_/https://nodejs.org/dist/v16.20.2/node-v16.20.2-linux-s390x.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6613,7 +6701,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v16.20.2/node-v16.20.2-darwin-arm64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v16.20.2/node-v16.20.2-darwin-arm64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v16.20.2/node-v16.20.2-darwin-arm64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v16.20.2/node-v16.20.2-darwin-arm64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v16.20.2/node-v16.20.2-darwin-arm64.tar.xz",
+   "https://web.archive.org/web/20250426034751id_/https://nodejs.org/dist/v16.20.2/node-v16.20.2-darwin-arm64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6651,7 +6740,8 @@
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v16.20.2/node-v16.20.2.pkg",
    "https://mirrors.ustc.edu.cn/node/v16.20.2/node-v16.20.2.pkg",
    "https://mirrors.cloud.tencent.com/nodejs-release/v16.20.2/node-v16.20.2.pkg",
-   "https://mirrors.dotsrc.org/nodejs/release/v16.20.2/node-v16.20.2.pkg"
+   "https://mirrors.dotsrc.org/nodejs/release/v16.20.2/node-v16.20.2.pkg",
+   "https://web.archive.org/web/20251125132550id_/https://nodejs.org/dist/v16.20.2/node-v16.20.2.pkg"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6688,7 +6778,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v16.20.2/node-v16.20.2-win-x64.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v16.20.2/node-v16.20.2-win-x64.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v16.20.2/node-v16.20.2-win-x64.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v16.20.2/node-v16.20.2-win-x64.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v16.20.2/node-v16.20.2-win-x64.7z",
+   "https://web.archive.org/web/20251222094444id_/https://nodejs.org/dist/v16.20.2/node-v16.20.2-win-x64.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6755,7 +6846,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v16.20.2/node-v16.20.2-win-x86.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v16.20.2/node-v16.20.2-win-x86.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v16.20.2/node-v16.20.2-win-x86.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v16.20.2/node-v16.20.2-win-x86.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v16.20.2/node-v16.20.2-win-x86.7z",
+   "https://web.archive.org/web/20251222094444id_/https://nodejs.org/dist/v16.20.2/node-v16.20.2-win-x86.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6792,7 +6884,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v17.9.1/node-v17.9.1-linux-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v17.9.1/node-v17.9.1-linux-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v17.9.1/node-v17.9.1-linux-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v17.9.1/node-v17.9.1-linux-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v17.9.1/node-v17.9.1-linux-x64.tar.xz",
+   "https://web.archive.org/web/20260208043700id_/https://nodejs.org/dist/v17.9.1/node-v17.9.1-linux-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6926,7 +7019,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v17.9.1/node-v17.9.1-linux-armv7l.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v17.9.1/node-v17.9.1-linux-armv7l.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v17.9.1/node-v17.9.1-linux-armv7l.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v17.9.1/node-v17.9.1-linux-armv7l.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v17.9.1/node-v17.9.1-linux-armv7l.tar.xz",
+   "https://web.archive.org/web/20260208043700id_/https://nodejs.org/dist/v17.9.1/node-v17.9.1-linux-armv7l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6963,7 +7057,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v17.9.1/node-v17.9.1-linux-ppc64le.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v17.9.1/node-v17.9.1-linux-ppc64le.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v17.9.1/node-v17.9.1-linux-ppc64le.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v17.9.1/node-v17.9.1-linux-ppc64le.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v17.9.1/node-v17.9.1-linux-ppc64le.tar.xz",
+   "https://web.archive.org/web/20250718205153id_/https://nodejs.org/dist/v17.9.1/node-v17.9.1-linux-ppc64le.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7030,7 +7125,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v17.9.1/node-v17.9.1-linux-s390x.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v17.9.1/node-v17.9.1-linux-s390x.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v17.9.1/node-v17.9.1-linux-s390x.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v17.9.1/node-v17.9.1-linux-s390x.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v17.9.1/node-v17.9.1-linux-s390x.tar.xz",
+   "https://web.archive.org/web/20250718205226id_/https://nodejs.org/dist/v17.9.1/node-v17.9.1-linux-s390x.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7097,7 +7193,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v17.9.1/node-v17.9.1-darwin-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v17.9.1/node-v17.9.1-darwin-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v17.9.1/node-v17.9.1-darwin-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v17.9.1/node-v17.9.1-darwin-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v17.9.1/node-v17.9.1-darwin-x64.tar.xz",
+   "https://web.archive.org/web/20250505103312id_/https://nodejs.org/dist/v17.9.1/node-v17.9.1-darwin-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7134,7 +7231,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v17.9.1/node-v17.9.1-darwin-arm64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v17.9.1/node-v17.9.1-darwin-arm64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v17.9.1/node-v17.9.1-darwin-arm64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v17.9.1/node-v17.9.1-darwin-arm64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v17.9.1/node-v17.9.1-darwin-arm64.tar.xz",
+   "https://web.archive.org/web/20250517124842id_/https://nodejs.org/dist/v17.9.1/node-v17.9.1-darwin-arm64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7172,7 +7270,8 @@
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v17.9.1/node-v17.9.1.pkg",
    "https://mirrors.ustc.edu.cn/node/v17.9.1/node-v17.9.1.pkg",
    "https://mirrors.cloud.tencent.com/nodejs-release/v17.9.1/node-v17.9.1.pkg",
-   "https://mirrors.dotsrc.org/nodejs/release/v17.9.1/node-v17.9.1.pkg"
+   "https://mirrors.dotsrc.org/nodejs/release/v17.9.1/node-v17.9.1.pkg",
+   "https://web.archive.org/web/20250718205029id_/https://nodejs.org/dist/v17.9.1/node-v17.9.1.pkg"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7209,7 +7308,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v17.9.1/node-v17.9.1-win-x64.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v17.9.1/node-v17.9.1-win-x64.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v17.9.1/node-v17.9.1-win-x64.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v17.9.1/node-v17.9.1-win-x64.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v17.9.1/node-v17.9.1-win-x64.7z",
+   "https://web.archive.org/web/20250609172052id_/https://nodejs.org/dist/v17.9.1/node-v17.9.1-win-x64.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7276,7 +7376,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v17.9.1/node-v17.9.1-win-x86.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v17.9.1/node-v17.9.1-win-x86.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v17.9.1/node-v17.9.1-win-x86.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v17.9.1/node-v17.9.1-win-x86.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v17.9.1/node-v17.9.1-win-x86.7z",
+   "https://web.archive.org/web/20250502000843id_/https://nodejs.org/dist/v17.9.1/node-v17.9.1-win-x86.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7313,7 +7414,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v18.20.8/node-v18.20.8-linux-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v18.20.8/node-v18.20.8-linux-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v18.20.8/node-v18.20.8-linux-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v18.20.8/node-v18.20.8-linux-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v18.20.8/node-v18.20.8-linux-x64.tar.xz",
+   "https://web.archive.org/web/20260208044805id_/https://nodejs.org/dist/v18.20.8/node-v18.20.8-linux-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7343,7 +7445,8 @@
   "url": "https://unofficial-builds.nodejs.org/download/release/v18.20.8/node-v18.20.8-linux-x64-musl.tar.xz",
   "mirrors": [
    "https://cdn.npmmirror.com/binaries/node-unofficial-builds/v18.20.8/node-v18.20.8-linux-x64-musl.tar.xz",
-   "https://registry.npmmirror.com/-/binary/node-unofficial-builds/v18.20.8/node-v18.20.8-linux-x64-musl.tar.xz"
+   "https://registry.npmmirror.com/-/binary/node-unofficial-builds/v18.20.8/node-v18.20.8-linux-x64-musl.tar.xz",
+   "https://web.archive.org/web/20251130092434id_/https://unofficial-builds.nodejs.org/download/release/v18.20.8/node-v18.20.8-linux-x64-musl.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7380,7 +7483,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v18.20.8/node-v18.20.8-linux-arm64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v18.20.8/node-v18.20.8-linux-arm64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v18.20.8/node-v18.20.8-linux-arm64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v18.20.8/node-v18.20.8-linux-arm64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v18.20.8/node-v18.20.8-linux-arm64.tar.xz",
+   "https://web.archive.org/web/20260208044807id_/https://nodejs.org/dist/v18.20.8/node-v18.20.8-linux-arm64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7410,7 +7514,8 @@
   "url": "https://unofficial-builds.nodejs.org/download/release/v18.20.8/node-v18.20.8-linux-armv6l.tar.xz",
   "mirrors": [
    "https://cdn.npmmirror.com/binaries/node-unofficial-builds/v18.20.8/node-v18.20.8-linux-armv6l.tar.xz",
-   "https://registry.npmmirror.com/-/binary/node-unofficial-builds/v18.20.8/node-v18.20.8-linux-armv6l.tar.xz"
+   "https://registry.npmmirror.com/-/binary/node-unofficial-builds/v18.20.8/node-v18.20.8-linux-armv6l.tar.xz",
+   "https://web.archive.org/web/20251202232706id_/https://unofficial-builds.nodejs.org/download/release/v18.20.8/node-v18.20.8-linux-armv6l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7447,7 +7552,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v18.20.8/node-v18.20.8-linux-armv7l.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v18.20.8/node-v18.20.8-linux-armv7l.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v18.20.8/node-v18.20.8-linux-armv7l.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v18.20.8/node-v18.20.8-linux-armv7l.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v18.20.8/node-v18.20.8-linux-armv7l.tar.xz",
+   "https://web.archive.org/web/20260208044806id_/https://nodejs.org/dist/v18.20.8/node-v18.20.8-linux-armv7l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7514,7 +7620,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v18.20.8/node-v18.20.8-linux-ppc64le.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v18.20.8/node-v18.20.8-linux-ppc64le.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v18.20.8/node-v18.20.8-linux-ppc64le.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v18.20.8/node-v18.20.8-linux-ppc64le.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v18.20.8/node-v18.20.8-linux-ppc64le.tar.xz",
+   "https://web.archive.org/web/20250720203622id_/https://nodejs.org/dist/v18.20.8/node-v18.20.8-linux-ppc64le.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7544,7 +7651,8 @@
   "url": "https://unofficial-builds.nodejs.org/download/release/v18.20.8/node-v18.20.8-linux-riscv64.tar.xz",
   "mirrors": [
    "https://cdn.npmmirror.com/binaries/node-unofficial-builds/v18.20.8/node-v18.20.8-linux-riscv64.tar.xz",
-   "https://registry.npmmirror.com/-/binary/node-unofficial-builds/v18.20.8/node-v18.20.8-linux-riscv64.tar.xz"
+   "https://registry.npmmirror.com/-/binary/node-unofficial-builds/v18.20.8/node-v18.20.8-linux-riscv64.tar.xz",
+   "https://web.archive.org/web/20251209014106id_/https://unofficial-builds.nodejs.org/download/release/v18.20.8/node-v18.20.8-linux-riscv64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7581,7 +7689,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v18.20.8/node-v18.20.8-linux-s390x.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v18.20.8/node-v18.20.8-linux-s390x.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v18.20.8/node-v18.20.8-linux-s390x.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v18.20.8/node-v18.20.8-linux-s390x.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v18.20.8/node-v18.20.8-linux-s390x.tar.xz",
+   "https://web.archive.org/web/20250516011647id_/https://nodejs.org/dist/v18.20.8/node-v18.20.8-linux-s390x.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7611,7 +7720,8 @@
   "url": "https://unofficial-builds.nodejs.org/download/release/v18.20.8/node-v18.20.8-linux-x86.tar.xz",
   "mirrors": [
    "https://cdn.npmmirror.com/binaries/node-unofficial-builds/v18.20.8/node-v18.20.8-linux-x86.tar.xz",
-   "https://registry.npmmirror.com/-/binary/node-unofficial-builds/v18.20.8/node-v18.20.8-linux-x86.tar.xz"
+   "https://registry.npmmirror.com/-/binary/node-unofficial-builds/v18.20.8/node-v18.20.8-linux-x86.tar.xz",
+   "https://web.archive.org/web/20251206182125id_/https://unofficial-builds.nodejs.org/download/release/v18.20.8/node-v18.20.8-linux-x86.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7648,7 +7758,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v18.20.8/node-v18.20.8-darwin-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v18.20.8/node-v18.20.8-darwin-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v18.20.8/node-v18.20.8-darwin-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v18.20.8/node-v18.20.8-darwin-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v18.20.8/node-v18.20.8-darwin-x64.tar.xz",
+   "https://web.archive.org/web/20250501011822id_/https://nodejs.org/dist/v18.20.8/node-v18.20.8-darwin-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7723,7 +7834,8 @@
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v18.20.8/node-v18.20.8.pkg",
    "https://mirrors.ustc.edu.cn/node/v18.20.8/node-v18.20.8.pkg",
    "https://mirrors.cloud.tencent.com/nodejs-release/v18.20.8/node-v18.20.8.pkg",
-   "https://mirrors.dotsrc.org/nodejs/release/v18.20.8/node-v18.20.8.pkg"
+   "https://mirrors.dotsrc.org/nodejs/release/v18.20.8/node-v18.20.8.pkg",
+   "https://web.archive.org/web/20250515030034id_/https://nodejs.org/dist/v18.20.8/node-v18.20.8.pkg"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7760,7 +7872,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v18.20.8/node-v18.20.8-win-x64.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v18.20.8/node-v18.20.8-win-x64.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v18.20.8/node-v18.20.8-win-x64.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v18.20.8/node-v18.20.8-win-x64.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v18.20.8/node-v18.20.8-win-x64.7z",
+   "https://web.archive.org/web/20250901120332id_/https://nodejs.org/dist/v18.20.8/node-v18.20.8-win-x64.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7827,7 +7940,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v18.20.8/node-v18.20.8-win-x86.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v18.20.8/node-v18.20.8-win-x86.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v18.20.8/node-v18.20.8-win-x86.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v18.20.8/node-v18.20.8-win-x86.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v18.20.8/node-v18.20.8-win-x86.7z",
+   "https://web.archive.org/web/20250901101635id_/https://nodejs.org/dist/v18.20.8/node-v18.20.8-win-x86.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7864,7 +7978,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v19.9.0/node-v19.9.0-linux-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v19.9.0/node-v19.9.0-linux-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v19.9.0/node-v19.9.0-linux-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v19.9.0/node-v19.9.0-linux-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v19.9.0/node-v19.9.0-linux-x64.tar.xz",
+   "https://web.archive.org/web/20260525103129id_/https://nodejs.org/dist/v19.9.0/node-v19.9.0-linux-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7931,7 +8046,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v19.9.0/node-v19.9.0-linux-arm64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v19.9.0/node-v19.9.0-linux-arm64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v19.9.0/node-v19.9.0-linux-arm64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v19.9.0/node-v19.9.0-linux-arm64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v19.9.0/node-v19.9.0-linux-arm64.tar.xz",
+   "https://web.archive.org/web/20260208043914id_/https://nodejs.org/dist/v19.9.0/node-v19.9.0-linux-arm64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7998,7 +8114,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v19.9.0/node-v19.9.0-linux-armv7l.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v19.9.0/node-v19.9.0-linux-armv7l.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v19.9.0/node-v19.9.0-linux-armv7l.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v19.9.0/node-v19.9.0-linux-armv7l.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v19.9.0/node-v19.9.0-linux-armv7l.tar.xz",
+   "https://web.archive.org/web/20260208043911id_/https://nodejs.org/dist/v19.9.0/node-v19.9.0-linux-armv7l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -8035,7 +8152,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v19.9.0/node-v19.9.0-linux-ppc64le.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v19.9.0/node-v19.9.0-linux-ppc64le.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v19.9.0/node-v19.9.0-linux-ppc64le.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v19.9.0/node-v19.9.0-linux-ppc64le.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v19.9.0/node-v19.9.0-linux-ppc64le.tar.xz",
+   "https://web.archive.org/web/20260306022714id_/https://nodejs.org/dist/v19.9.0/node-v19.9.0-linux-ppc64le.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -8102,7 +8220,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v19.9.0/node-v19.9.0-linux-s390x.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v19.9.0/node-v19.9.0-linux-s390x.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v19.9.0/node-v19.9.0-linux-s390x.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v19.9.0/node-v19.9.0-linux-s390x.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v19.9.0/node-v19.9.0-linux-s390x.tar.xz",
+   "https://web.archive.org/web/20250903024045id_/https://nodejs.org/dist/v19.9.0/node-v19.9.0-linux-s390x.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -8139,7 +8258,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v19.9.0/node-v19.9.0-darwin-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v19.9.0/node-v19.9.0-darwin-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v19.9.0/node-v19.9.0-darwin-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v19.9.0/node-v19.9.0-darwin-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v19.9.0/node-v19.9.0-darwin-x64.tar.xz",
+   "https://web.archive.org/web/20250427163213id_/https://nodejs.org/dist/v19.9.0/node-v19.9.0-darwin-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -8214,7 +8334,8 @@
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v19.9.0/node-v19.9.0.pkg",
    "https://mirrors.ustc.edu.cn/node/v19.9.0/node-v19.9.0.pkg",
    "https://mirrors.cloud.tencent.com/nodejs-release/v19.9.0/node-v19.9.0.pkg",
-   "https://mirrors.dotsrc.org/nodejs/release/v19.9.0/node-v19.9.0.pkg"
+   "https://mirrors.dotsrc.org/nodejs/release/v19.9.0/node-v19.9.0.pkg",
+   "https://web.archive.org/web/20250903024025id_/https://nodejs.org/dist/v19.9.0/node-v19.9.0.pkg"
   ],
   "checksum": {
    "algo": "sha256",
@@ -8251,7 +8372,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v19.9.0/node-v19.9.0-win-x64.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v19.9.0/node-v19.9.0-win-x64.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v19.9.0/node-v19.9.0-win-x64.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v19.9.0/node-v19.9.0-win-x64.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v19.9.0/node-v19.9.0-win-x64.7z",
+   "https://web.archive.org/web/20250425130207id_/https://nodejs.org/dist/v19.9.0/node-v19.9.0-win-x64.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -8355,7 +8477,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v19.9.0/node-v19.9.0-win-x86.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v19.9.0/node-v19.9.0-win-x86.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v19.9.0/node-v19.9.0-win-x86.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v19.9.0/node-v19.9.0-win-x86.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v19.9.0/node-v19.9.0-win-x86.7z",
+   "https://web.archive.org/web/20250425183121id_/https://nodejs.org/dist/v19.9.0/node-v19.9.0-win-x86.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -8390,7 +8513,8 @@
    "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v20.20.2/node-v20.20.2-linux-x64.tar.xz",
    "https://mirrors.aliyun.com/nodejs-release/v20.20.2/node-v20.20.2-linux-x64.tar.xz",
    "https://mirrors.huaweicloud.com/nodejs/v20.20.2/node-v20.20.2-linux-x64.tar.xz",
-   "https://mirrors.cloud.tencent.com/nodejs-release/v20.20.2/node-v20.20.2-linux-x64.tar.xz"
+   "https://mirrors.cloud.tencent.com/nodejs-release/v20.20.2/node-v20.20.2-linux-x64.tar.xz",
+   "https://web.archive.org/web/20260326060205id_/https://nodejs.org/dist/v20.20.2/node-v20.20.2-linux-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -8455,7 +8579,8 @@
    "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v20.20.2/node-v20.20.2-linux-arm64.tar.xz",
    "https://mirrors.aliyun.com/nodejs-release/v20.20.2/node-v20.20.2-linux-arm64.tar.xz",
    "https://mirrors.huaweicloud.com/nodejs/v20.20.2/node-v20.20.2-linux-arm64.tar.xz",
-   "https://mirrors.cloud.tencent.com/nodejs-release/v20.20.2/node-v20.20.2-linux-arm64.tar.xz"
+   "https://mirrors.cloud.tencent.com/nodejs-release/v20.20.2/node-v20.20.2-linux-arm64.tar.xz",
+   "https://web.archive.org/web/20260326060036id_/https://nodejs.org/dist/v20.20.2/node-v20.20.2-linux-arm64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -8550,7 +8675,8 @@
    "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v20.20.2/node-v20.20.2-linux-armv7l.tar.xz",
    "https://mirrors.aliyun.com/nodejs-release/v20.20.2/node-v20.20.2-linux-armv7l.tar.xz",
    "https://mirrors.huaweicloud.com/nodejs/v20.20.2/node-v20.20.2-linux-armv7l.tar.xz",
-   "https://mirrors.cloud.tencent.com/nodejs-release/v20.20.2/node-v20.20.2-linux-armv7l.tar.xz"
+   "https://mirrors.cloud.tencent.com/nodejs-release/v20.20.2/node-v20.20.2-linux-armv7l.tar.xz",
+   "https://web.archive.org/web/20260326060205id_/https://nodejs.org/dist/v20.20.2/node-v20.20.2-linux-armv7l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -8615,7 +8741,8 @@
    "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v20.20.2/node-v20.20.2-linux-ppc64le.tar.xz",
    "https://mirrors.aliyun.com/nodejs-release/v20.20.2/node-v20.20.2-linux-ppc64le.tar.xz",
    "https://mirrors.huaweicloud.com/nodejs/v20.20.2/node-v20.20.2-linux-ppc64le.tar.xz",
-   "https://mirrors.cloud.tencent.com/nodejs-release/v20.20.2/node-v20.20.2-linux-ppc64le.tar.xz"
+   "https://mirrors.cloud.tencent.com/nodejs-release/v20.20.2/node-v20.20.2-linux-ppc64le.tar.xz",
+   "https://web.archive.org/web/20260326060205id_/https://nodejs.org/dist/v20.20.2/node-v20.20.2-linux-ppc64le.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -8680,7 +8807,8 @@
    "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v20.20.2/node-v20.20.2-linux-s390x.tar.xz",
    "https://mirrors.aliyun.com/nodejs-release/v20.20.2/node-v20.20.2-linux-s390x.tar.xz",
    "https://mirrors.huaweicloud.com/nodejs/v20.20.2/node-v20.20.2-linux-s390x.tar.xz",
-   "https://mirrors.cloud.tencent.com/nodejs-release/v20.20.2/node-v20.20.2-linux-s390x.tar.xz"
+   "https://mirrors.cloud.tencent.com/nodejs-release/v20.20.2/node-v20.20.2-linux-s390x.tar.xz",
+   "https://web.archive.org/web/20260326060205id_/https://nodejs.org/dist/v20.20.2/node-v20.20.2-linux-s390x.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -8816,7 +8944,8 @@
    "https://mirrors.aliyun.com/nodejs-release/v20.20.2/node-v20.20.2.pkg",
    "https://mirrors.huaweicloud.com/nodejs/v20.20.2/node-v20.20.2.pkg",
    "https://mirrors.ustc.edu.cn/node/v20.20.2/node-v20.20.2.pkg",
-   "https://mirrors.cloud.tencent.com/nodejs-release/v20.20.2/node-v20.20.2.pkg"
+   "https://mirrors.cloud.tencent.com/nodejs-release/v20.20.2/node-v20.20.2.pkg",
+   "https://web.archive.org/web/20260326060204id_/https://nodejs.org/dist/v20.20.2/node-v20.20.2.pkg"
   ],
   "checksum": {
    "algo": "sha256",
@@ -8958,7 +9087,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v21.7.3/node-v21.7.3-linux-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v21.7.3/node-v21.7.3-linux-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v21.7.3/node-v21.7.3-linux-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3-linux-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3-linux-x64.tar.xz",
+   "https://web.archive.org/web/20260517091759id_/https://nodejs.org/dist/v21.7.3/node-v21.7.3-linux-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -9025,7 +9155,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v21.7.3/node-v21.7.3-linux-arm64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v21.7.3/node-v21.7.3-linux-arm64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v21.7.3/node-v21.7.3-linux-arm64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3-linux-arm64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3-linux-arm64.tar.xz",
+   "https://web.archive.org/web/20260208044227id_/https://nodejs.org/dist/v21.7.3/node-v21.7.3-linux-arm64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -9092,7 +9223,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v21.7.3/node-v21.7.3-linux-armv7l.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v21.7.3/node-v21.7.3-linux-armv7l.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v21.7.3/node-v21.7.3-linux-armv7l.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3-linux-armv7l.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3-linux-armv7l.tar.xz",
+   "https://web.archive.org/web/20260208044226id_/https://nodejs.org/dist/v21.7.3/node-v21.7.3-linux-armv7l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -9159,7 +9291,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v21.7.3/node-v21.7.3-linux-ppc64le.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v21.7.3/node-v21.7.3-linux-ppc64le.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v21.7.3/node-v21.7.3-linux-ppc64le.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3-linux-ppc64le.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3-linux-ppc64le.tar.xz",
+   "https://web.archive.org/web/20250718094602id_/https://nodejs.org/dist/v21.7.3/node-v21.7.3-linux-ppc64le.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -9226,7 +9359,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v21.7.3/node-v21.7.3-linux-s390x.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v21.7.3/node-v21.7.3-linux-s390x.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v21.7.3/node-v21.7.3-linux-s390x.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3-linux-s390x.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3-linux-s390x.tar.xz",
+   "https://web.archive.org/web/20250718094602id_/https://nodejs.org/dist/v21.7.3/node-v21.7.3-linux-s390x.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -9293,7 +9427,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v21.7.3/node-v21.7.3-darwin-x64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v21.7.3/node-v21.7.3-darwin-x64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v21.7.3/node-v21.7.3-darwin-x64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3-darwin-x64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3-darwin-x64.tar.xz",
+   "https://web.archive.org/web/20250614164335id_/https://nodejs.org/dist/v21.7.3/node-v21.7.3-darwin-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -9330,7 +9465,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v21.7.3/node-v21.7.3-darwin-arm64.tar.xz",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v21.7.3/node-v21.7.3-darwin-arm64.tar.xz",
    "https://mirrors.cloud.tencent.com/nodejs-release/v21.7.3/node-v21.7.3-darwin-arm64.tar.xz",
-   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3-darwin-arm64.tar.xz"
+   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3-darwin-arm64.tar.xz",
+   "https://web.archive.org/web/20240423023458id_/https://nodejs.org/dist/v21.7.3/node-v21.7.3-darwin-arm64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -9368,7 +9504,8 @@
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v21.7.3/node-v21.7.3.pkg",
    "https://mirrors.ustc.edu.cn/node/v21.7.3/node-v21.7.3.pkg",
    "https://mirrors.cloud.tencent.com/nodejs-release/v21.7.3/node-v21.7.3.pkg",
-   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3.pkg"
+   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3.pkg",
+   "https://web.archive.org/web/20250718094459id_/https://nodejs.org/dist/v21.7.3/node-v21.7.3.pkg"
   ],
   "checksum": {
    "algo": "sha256",
@@ -9405,7 +9542,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v21.7.3/node-v21.7.3-win-x64.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v21.7.3/node-v21.7.3-win-x64.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v21.7.3/node-v21.7.3-win-x64.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3-win-x64.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3-win-x64.7z",
+   "https://web.archive.org/web/20250612161651id_/https://nodejs.org/dist/v21.7.3/node-v21.7.3-win-x64.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -9442,7 +9580,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v21.7.3/node-v21.7.3-win-arm64.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v21.7.3/node-v21.7.3-win-arm64.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v21.7.3/node-v21.7.3-win-arm64.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3-win-arm64.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3-win-arm64.7z",
+   "https://web.archive.org/web/20250426120054id_/https://nodejs.org/dist/v21.7.3/node-v21.7.3-win-arm64.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -9479,7 +9618,8 @@
    "https://mirrors.huaweicloud.com/nodejs/v21.7.3/node-v21.7.3-win-x86.7z",
    "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/v21.7.3/node-v21.7.3-win-x86.7z",
    "https://mirrors.cloud.tencent.com/nodejs-release/v21.7.3/node-v21.7.3-win-x86.7z",
-   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3-win-x86.7z"
+   "https://mirrors.dotsrc.org/nodejs/release/v21.7.3/node-v21.7.3-win-x86.7z",
+   "https://web.archive.org/web/20250425014137id_/https://nodejs.org/dist/v21.7.3/node-v21.7.3-win-x86.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -9514,7 +9654,8 @@
    "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v22.23.2/node-v22.23.2-linux-x64.tar.xz",
    "https://mirrors.aliyun.com/nodejs-release/v22.23.2/node-v22.23.2-linux-x64.tar.xz",
    "https://mirrors.huaweicloud.com/nodejs/v22.23.2/node-v22.23.2-linux-x64.tar.xz",
-   "https://mirrors.cloud.tencent.com/nodejs-release/v22.23.2/node-v22.23.2-linux-x64.tar.xz"
+   "https://mirrors.cloud.tencent.com/nodejs-release/v22.23.2/node-v22.23.2-linux-x64.tar.xz",
+   "https://web.archive.org/web/20260904084759id_/https://nodejs.org/dist/v22.23.2/node-v22.23.2-linux-x64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -9579,7 +9720,8 @@
    "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v22.23.2/node-v22.23.2-linux-arm64.tar.xz",
    "https://mirrors.aliyun.com/nodejs-release/v22.23.2/node-v22.23.2-linux-arm64.tar.xz",
    "https://mirrors.huaweicloud.com/nodejs/v22.23.2/node-v22.23.2-linux-arm64.tar.xz",
-   "https://mirrors.cloud.tencent.com/nodejs-release/v22.23.2/node-v22.23.2-linux-arm64.tar.xz"
+   "https://mirrors.cloud.tencent.com/nodejs-release/v22.23.2/node-v22.23.2-linux-arm64.tar.xz",
+   "https://web.archive.org/web/20260829043943id_/https://nodejs.org/dist/v22.23.2/node-v22.23.2-linux-arm64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -9674,7 +9816,8 @@
    "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v22.23.2/node-v22.23.2-linux-armv7l.tar.xz",
    "https://mirrors.aliyun.com/nodejs-release/v22.23.2/node-v22.23.2-linux-armv7l.tar.xz",
    "https://mirrors.huaweicloud.com/nodejs/v22.23.2/node-v22.23.2-linux-armv7l.tar.xz",
-   "https://mirrors.cloud.tencent.com/nodejs-release/v22.23.2/node-v22.23.2-linux-armv7l.tar.xz"
+   "https://mirrors.cloud.tencent.com/nodejs-release/v22.23.2/node-v22.23.2-linux-armv7l.tar.xz",
+   "https://web.archive.org/web/20260807070558id_/https://nodejs.org/dist/v22.23.2/node-v22.23.2-linux-armv7l.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -9739,7 +9882,8 @@
    "https://mirror.yandex.ru/mirrors/nodejs.org/dist/v22.23.2/node-v22.23.2-linux-ppc64le.tar.xz",
    "https://mirrors.aliyun.com/nodejs-release/v22.23.2/node-v22.23.2-linux-ppc64le.tar.xz",
    "https://mirrors.huaweicloud.com/nodejs/v22.23.2/node-v22.23.2-linux-ppc64le.tar.xz",
-   "https://mirrors.cloud.tencent.com/nodejs-release/v22.23.2/node-v22.23.2-linux-ppc64le.tar.xz"
+   "https://mirrors.cloud.tencent.com/nodejs-release/v22.23.2/node-v22.23.2-linux-ppc64le.tar.xz",
+   "https://web.archive.org/web/20260807070558id_/https://nodejs.org/dist/v22.23.2/node-v22.23.2-linux-ppc64le.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",

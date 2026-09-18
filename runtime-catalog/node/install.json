@@ -1,0 +1,808 @@
+{
+ "runtime": "node",
+ "researched": "2026-09-18",
+ "assumes": "root/administrator",
+ "recipes": [
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": null,
+    "arch": null,
+    "variant": null,
+    "libc": "glibc"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "mkdir -p \"{runtime_dir}/etc\" && printf 'cache=%s\\nupdate-notifier=false\\nfund=false\\n' \"{runtime_dir}/npm-cache\" > \"{runtime_dir}/etc/npmrc\"",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "glibc Linux; for 10+: glibc>=2.17 and kernel>=3.10 (x64), 18+: glibc>=2.28 for the official builds; 6-9: glibc>=2.12"
+   ],
+   "executable": "bin/node",
+   "package_manager": "\"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" --userconfig \"{runtime_dir}/etc/npmrc-user\"",
+   "verify": "\"{runtime_dir}/bin/node\" -e \"console.log(process.version)\" && \"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" --userconfig \"{runtime_dir}/etc/npmrc-user\" -v",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "see limitations.json per major (Linux kernel/glibc tiers)",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://nodejs.org/en/download",
+    "https://github.com/nodejs/node/blob/main/BUILDING.md",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/npmrc",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/folders",
+    "https://docs.npmjs.com/cli/v10/using-npm/config"
+   ],
+   "notes": "Tested 2026-09-18 on Ubuntu 24.04 x86_64 (glibc 2.39), as a normal user, amd64 builds of 0.12.18, io.js 1.8.4 and 3.3.1, 4.9.1, 8.17.0, 12.22.12, 16.20.2, 20.20.2, 22.23.2, 26.9.0: unpacked under a path containing spaces, node -v, npm -v, 'npm install is-number' into a project folder with spaces and require() it, 'npm install -g' (landed in {runtime_dir}/lib/node_modules), npx --version; HOME pointed at an empty folder stayed empty with etc/npmrc in place (without it npm wrote ~/.npm/_cacache, _logs, _update-notifier-last-checked); a hostile ~/.npmrc setting prefix/cache was ignored with --userconfig; two copies of 26.9.0 and 0.12.18 side by side; a copy renamed after install still ran. x86/arm/ppc/s390x archives are the same layout but were not run. io.js archives ship bin/iojs with bin/node as a symlink. npm config: prefix defaults to the folder above bin/node (POSIX) or the node.exe folder (Windows), so -g installs and the global npmrc ({prefix}/etc/npmrc) land inside {runtime_dir}. The one default that escapes is the cache (~/.npm on POSIX, %LocalAppData%\\npm-cache for npm>=5 / %APPDATA%\\npm-cache for npm<=4 on Windows, also holding _logs and the update-notifier stamp); the etc/npmrc step moves it inside. --userconfig pointing at a file that need not exist stops a user's ~/.npmrc (which outranks the global npmrc) from redirecting prefix/cache; it must NOT be the same file as etc/npmrc (npm>=7 refuses: 'double-loading config'). A project's own .npmrc is still honoured. Call npm as node + npm-cli.js: the bin/npm and bin/npx shims of npm>=3 are '#!/usr/bin/env node' symlinks and fail unless {runtime_dir}/bin is on PATH (tested). Scripts installed into node_modules/.bin also use '/usr/bin/env node', so the app launcher should put {runtime_dir}/bin (Windows: {runtime_dir}) first on PATH for the app's own process. npx: \"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npx-cli.js\" (npm>=5.2, node>=8). etc/npmrc holds an absolute cache path: if the folder were ever moved, rewrite it (design says folders never move).",
+   "launch": {
+    "program": "{runtime_dir}/bin/node",
+    "args": [],
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}/etc/npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "notes": "Scripts installed by npm start with '#!/usr/bin/env node', so the runtime's folder goes first on PATH for the app's own process only."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" install",
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}/etc/npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Add --omit=dev (npm 7+) or --production (older npm) to skip dev dependencies; use `ci` when the project has package-lock.json."
+   }
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": null,
+    "arch": null,
+    "variant": "iojs",
+    "libc": "glibc"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "mkdir -p \"{runtime_dir}/etc\" && printf 'cache=%s\\nupdate-notifier=false\\nfund=false\\n' \"{runtime_dir}/npm-cache\" > \"{runtime_dir}/etc/npmrc\"",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "glibc Linux"
+   ],
+   "executable": "bin/iojs",
+   "package_manager": "\"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" --userconfig \"{runtime_dir}/etc/npmrc-user\"",
+   "verify": "\"{runtime_dir}/bin/node\" -e \"console.log(process.version)\" && \"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" --userconfig \"{runtime_dir}/etc/npmrc-user\" -v",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": null,
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://iojs.org/dist/",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/npmrc",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/folders",
+    "https://docs.npmjs.com/cli/v10/using-npm/config"
+   ],
+   "notes": "bin/node is a relative symlink to iojs, so bin/node also works. npm 2.x: bin/npm is a shell script and works without node on PATH. Tested amd64 1.8.4 and 3.3.1 (see the glibc recipe). npm config: prefix defaults to the folder above bin/node (POSIX) or the node.exe folder (Windows), so -g installs and the global npmrc ({prefix}/etc/npmrc) land inside {runtime_dir}. The one default that escapes is the cache (~/.npm on POSIX, %LocalAppData%\\npm-cache for npm>=5 / %APPDATA%\\npm-cache for npm<=4 on Windows, also holding _logs and the update-notifier stamp); the etc/npmrc step moves it inside. --userconfig pointing at a file that need not exist stops a user's ~/.npmrc (which outranks the global npmrc) from redirecting prefix/cache; it must NOT be the same file as etc/npmrc (npm>=7 refuses: 'double-loading config'). A project's own .npmrc is still honoured. Call npm as node + npm-cli.js: the bin/npm and bin/npx shims of npm>=3 are '#!/usr/bin/env node' symlinks and fail unless {runtime_dir}/bin is on PATH (tested). Scripts installed into node_modules/.bin also use '/usr/bin/env node', so the app launcher should put {runtime_dir}/bin (Windows: {runtime_dir}) first on PATH for the app's own process. npx: \"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npx-cli.js\" (npm>=5.2, node>=8). etc/npmrc holds an absolute cache path: if the folder were ever moved, rewrite it (design says folders never move).",
+   "launch": {
+    "program": "{runtime_dir}/bin/iojs",
+    "args": [],
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}/etc/npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "notes": "Scripts installed by npm start with '#!/usr/bin/env node', so the runtime's folder goes first on PATH for the app's own process only."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/iojs\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" install",
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}/etc/npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Add --omit=dev (npm 7+) or --production (older npm) to skip dev dependencies; use `ci` when the project has package-lock.json."
+   }
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": null,
+    "arch": null,
+    "variant": "unofficial",
+    "libc": "glibc"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "mkdir -p \"{runtime_dir}/etc\" && printf 'cache=%s\\nupdate-notifier=false\\nfund=false\\n' \"{runtime_dir}/npm-cache\" > \"{runtime_dir}/etc/npmrc\"",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "glibc Linux on x86 / armv6l / riscv64 / loong64 (unofficial-builds.nodejs.org; experimental tier)"
+   ],
+   "executable": "bin/node",
+   "package_manager": "\"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" --userconfig \"{runtime_dir}/etc/npmrc-user\"",
+   "verify": "\"{runtime_dir}/bin/node\" -e \"console.log(process.version)\" && \"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" --userconfig \"{runtime_dir}/etc/npmrc-user\" -v",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": null,
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://unofficial-builds.nodejs.org/",
+    "https://github.com/nodejs/unofficial-builds",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/npmrc",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/folders",
+    "https://docs.npmjs.com/cli/v10/using-npm/config"
+   ],
+   "notes": "Same layout as the official tarballs; not run here because no matching CPU is available. npm config: prefix defaults to the folder above bin/node (POSIX) or the node.exe folder (Windows), so -g installs and the global npmrc ({prefix}/etc/npmrc) land inside {runtime_dir}. The one default that escapes is the cache (~/.npm on POSIX, %LocalAppData%\\npm-cache for npm>=5 / %APPDATA%\\npm-cache for npm<=4 on Windows, also holding _logs and the update-notifier stamp); the etc/npmrc step moves it inside. --userconfig pointing at a file that need not exist stops a user's ~/.npmrc (which outranks the global npmrc) from redirecting prefix/cache; it must NOT be the same file as etc/npmrc (npm>=7 refuses: 'double-loading config'). A project's own .npmrc is still honoured. Call npm as node + npm-cli.js: the bin/npm and bin/npx shims of npm>=3 are '#!/usr/bin/env node' symlinks and fail unless {runtime_dir}/bin is on PATH (tested). Scripts installed into node_modules/.bin also use '/usr/bin/env node', so the app launcher should put {runtime_dir}/bin (Windows: {runtime_dir}) first on PATH for the app's own process. npx: \"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npx-cli.js\" (npm>=5.2, node>=8). etc/npmrc holds an absolute cache path: if the folder were ever moved, rewrite it (design says folders never move).",
+   "launch": {
+    "program": "{runtime_dir}/bin/node",
+    "args": [],
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}/etc/npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "notes": "Scripts installed by npm start with '#!/usr/bin/env node', so the runtime's folder goes first on PATH for the app's own process only."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" install",
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}/etc/npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Add --omit=dev (npm 7+) or --production (older npm) to skip dev dependencies; use `ci` when the project has package-lock.json."
+   }
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": null,
+    "arch": null,
+    "variant": "musl",
+    "libc": "musl"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "mkdir -p \"{runtime_dir}/etc\" && printf 'cache=%s\\nupdate-notifier=false\\nfund=false\\n' \"{runtime_dir}/npm-cache\" > \"{runtime_dir}/etc/npmrc\"",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "musl Linux (Alpine)",
+    "libstdc++ and libgcc from the distribution (Alpine: apk add libstdc++); these are system packages outside {runtime_dir}"
+   ],
+   "executable": "bin/node",
+   "package_manager": "\"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" --userconfig \"{runtime_dir}/etc/npmrc-user\"",
+   "verify": "\"{runtime_dir}/bin/node\" -e \"console.log(process.version)\" && \"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" --userconfig \"{runtime_dir}/etc/npmrc-user\" -v",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "may need libstdc++/libgcc installed system-wide via the distro package manager if absent"
+   ],
+   "isolation": "leaks",
+   "relocatable": true,
+   "min_os": null,
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://unofficial-builds.nodejs.org/",
+    "https://github.com/nodejs/unofficial-builds",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/npmrc",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/folders",
+    "https://docs.npmjs.com/cli/v10/using-npm/config"
+   ],
+   "notes": "Not run here: the host is glibc. The unofficial musl binaries link dynamically against libstdc++.so.6 and libgcc_s.so.1. Alternative that keeps isolation full: copy those two .so files into {runtime_dir}/lib and run with LD_LIBRARY_PATH (untested). npm config: prefix defaults to the folder above bin/node (POSIX) or the node.exe folder (Windows), so -g installs and the global npmrc ({prefix}/etc/npmrc) land inside {runtime_dir}. The one default that escapes is the cache (~/.npm on POSIX, %LocalAppData%\\npm-cache for npm>=5 / %APPDATA%\\npm-cache for npm<=4 on Windows, also holding _logs and the update-notifier stamp); the etc/npmrc step moves it inside. --userconfig pointing at a file that need not exist stops a user's ~/.npmrc (which outranks the global npmrc) from redirecting prefix/cache; it must NOT be the same file as etc/npmrc (npm>=7 refuses: 'double-loading config'). A project's own .npmrc is still honoured. Call npm as node + npm-cli.js: the bin/npm and bin/npx shims of npm>=3 are '#!/usr/bin/env node' symlinks and fail unless {runtime_dir}/bin is on PATH (tested). Scripts installed into node_modules/.bin also use '/usr/bin/env node', so the app launcher should put {runtime_dir}/bin (Windows: {runtime_dir}) first on PATH for the app's own process. npx: \"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npx-cli.js\" (npm>=5.2, node>=8). etc/npmrc holds an absolute cache path: if the folder were ever moved, rewrite it (design says folders never move).",
+   "launch": {
+    "program": "{runtime_dir}/bin/node",
+    "args": [],
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}/etc/npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "notes": "Scripts installed by npm start with '#!/usr/bin/env node', so the runtime's folder goes first on PATH for the app's own process only."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" install",
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}/etc/npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Add --omit=dev (npm 7+) or --production (older npm) to skip dev dependencies; use `ci` when the project has package-lock.json."
+   }
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": null,
+    "arch": null,
+    "variant": null,
+    "libc": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null; true",
+     "shell": "sh"
+    },
+    {
+     "run": "mkdir -p \"{runtime_dir}/etc\" && printf 'cache=%s\\nupdate-notifier=false\\nfund=false\\n' \"{runtime_dir}/npm-cache\" > \"{runtime_dir}/etc/npmrc\"",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin/node",
+   "package_manager": "\"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" --userconfig \"{runtime_dir}/etc/npmrc-user\"",
+   "verify": "\"{runtime_dir}/bin/node\" -e \"console.log(process.version)\" && \"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" --userconfig \"{runtime_dir}/etc/npmrc-user\" -v",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "0.12: 10.5+ (x64/x86); 4-5: 10.7+; 6-9: 10.10+; 10-12: 10.11+; 13-15: 10.13+; 16-19: 10.15+ (arm64 11+); 20-23: 11.0+; 24+: 13.5+",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://github.com/nodejs/node/blob/main/BUILDING.md",
+    "https://nodejs.org/en/download",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/npmrc",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/folders",
+    "https://docs.npmjs.com/cli/v10/using-npm/config"
+   ],
+   "notes": "Same layout as the Linux tarball, so the Linux test results carry over except for Gatekeeper. The quarantine attribute only exists if the downloader set it; removing it is harmless and keeps Gatekeeper from checking a binary exec'd from Terminal-less contexts. Official darwin binaries are code-signed (and the arm64 ones must be). The all-users root '/Library/Application Support/ib/' contains a space: node and npm handle that (tested on Linux), but some native-addon builds (node-gyp with old gyp/make) have historically broken on spaces in the node path. npm config: prefix defaults to the folder above bin/node (POSIX) or the node.exe folder (Windows), so -g installs and the global npmrc ({prefix}/etc/npmrc) land inside {runtime_dir}. The one default that escapes is the cache (~/.npm on POSIX, %LocalAppData%\\npm-cache for npm>=5 / %APPDATA%\\npm-cache for npm<=4 on Windows, also holding _logs and the update-notifier stamp); the etc/npmrc step moves it inside. --userconfig pointing at a file that need not exist stops a user's ~/.npmrc (which outranks the global npmrc) from redirecting prefix/cache; it must NOT be the same file as etc/npmrc (npm>=7 refuses: 'double-loading config'). A project's own .npmrc is still honoured. Call npm as node + npm-cli.js: the bin/npm and bin/npx shims of npm>=3 are '#!/usr/bin/env node' symlinks and fail unless {runtime_dir}/bin is on PATH (tested). Scripts installed into node_modules/.bin also use '/usr/bin/env node', so the app launcher should put {runtime_dir}/bin (Windows: {runtime_dir}) first on PATH for the app's own process. npx: \"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npx-cli.js\" (npm>=5.2, node>=8). etc/npmrc holds an absolute cache path: if the folder were ever moved, rewrite it (design says folders never move).",
+   "launch": {
+    "program": "{runtime_dir}/bin/node",
+    "args": [],
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}/etc/npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "notes": "Scripts installed by npm start with '#!/usr/bin/env node', so the runtime's folder goes first on PATH for the app's own process only."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" install",
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}/etc/npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Add --omit=dev (npm 7+) or --production (older npm) to skip dev dependencies; use `ci` when the project has package-lock.json."
+   }
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "installer",
+    "format": "pkg",
+    "versions": ">=16",
+    "arch": "universal",
+    "variant": null,
+    "libc": null
+   },
+   "method": "extract",
+   "steps": [
+    {
+     "run": "pkgutil --expand \"{file}\" \"{tmp}/pkg\"",
+     "shell": "sh"
+    },
+    {
+     "run": "mkdir -p \"{tmp}/root\" && cd \"{tmp}/root\" && for p in \"{tmp}\"/pkg/node-*.pkg \"{tmp}\"/pkg/npm-*.pkg; do gzip -dc \"$p/Payload\" | cpio -idm || exit 1; done",
+     "shell": "sh"
+    },
+    {
+     "run": "mkdir -p \"{runtime_dir}\" && ditto \"{tmp}/root/usr/local\" \"{runtime_dir}\"",
+     "shell": "sh"
+    },
+    {
+     "run": "cd \"{runtime_dir}/bin\" && ln -sf ../lib/node_modules/npm/bin/npm-cli.js npm && ln -sf ../lib/node_modules/npm/bin/npx-cli.js npx",
+     "shell": "sh"
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null; true",
+     "shell": "sh"
+    },
+    {
+     "run": "mkdir -p \"{runtime_dir}/etc\" && printf 'cache=%s\\nupdate-notifier=false\\nfund=false\\n' \"{runtime_dir}/npm-cache\" > \"{runtime_dir}/etc/npmrc\"",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin/node",
+   "package_manager": "\"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" --userconfig \"{runtime_dir}/etc/npmrc-user\"",
+   "verify": "\"{runtime_dir}/bin/node\" -e \"console.log(process.version)\" && \"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" --userconfig \"{runtime_dir}/etc/npmrc-user\" -v",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "16-19: 10.15+ (x64), 11+ (arm64); 20-23: 11.0+; 24+: 13.5+",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://github.com/nodejs/node/tree/main/tools/macos-installer",
+    "https://keith.github.io/xcode-man-pages/pkgutil.1.html",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/npmrc",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/folders",
+    "https://docs.npmjs.com/cli/v10/using-npm/config"
+   ],
+   "notes": "Inspected the downloaded 16.20.2 and 26.9.0 .pkg files: a flat xar product archive with two components, node-vX.pkg and npm-vY.pkg, both relocatable=false, payload = gzip'd odc cpio rooted at ./usr/local (bin/node, include/, lib/node_modules/, share/). npm's preinstall only rm -rf's /usr/local/lib/node_modules/npm and its postinstall only makes the bin/npm and bin/npx symlinks, recreated above. Running 'installer -pkg' is NOT usable: fixed target /usr/local, registers org.nodejs.node.pkg receipts (once per machine) and would clobber a system Node. 'pkgutil --expand-full' would also work on newer macOS but plain --expand + gzip|cpio works back to 10.5. Prefer the per-arch .tar.xz (same files, no extraction logic) whenever the plan has one. npm config: prefix defaults to the folder above bin/node (POSIX) or the node.exe folder (Windows), so -g installs and the global npmrc ({prefix}/etc/npmrc) land inside {runtime_dir}. The one default that escapes is the cache (~/.npm on POSIX, %LocalAppData%\\npm-cache for npm>=5 / %APPDATA%\\npm-cache for npm<=4 on Windows, also holding _logs and the update-notifier stamp); the etc/npmrc step moves it inside. --userconfig pointing at a file that need not exist stops a user's ~/.npmrc (which outranks the global npmrc) from redirecting prefix/cache; it must NOT be the same file as etc/npmrc (npm>=7 refuses: 'double-loading config'). A project's own .npmrc is still honoured. Call npm as node + npm-cli.js: the bin/npm and bin/npx shims of npm>=3 are '#!/usr/bin/env node' symlinks and fail unless {runtime_dir}/bin is on PATH (tested). Scripts installed into node_modules/.bin also use '/usr/bin/env node', so the app launcher should put {runtime_dir}/bin (Windows: {runtime_dir}) first on PATH for the app's own process. npx: \"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npx-cli.js\" (npm>=5.2, node>=8). etc/npmrc holds an absolute cache path: if the folder were ever moved, rewrite it (design says folders never move).",
+   "launch": {
+    "program": "{runtime_dir}/bin/node",
+    "args": [],
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}/etc/npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "notes": "Scripts installed by npm start with '#!/usr/bin/env node', so the runtime's folder goes first on PATH for the app's own process only."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" install",
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}/etc/npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Add --omit=dev (npm 7+) or --production (older npm) to skip dev dependencies; use `ci` when the project has package-lock.json."
+   }
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "installer",
+    "format": "pkg",
+    "versions": "<1",
+    "arch": "universal",
+    "variant": null,
+    "libc": null
+   },
+   "method": "extract",
+   "steps": [
+    {
+     "run": "pkgutil --expand \"{file}\" \"{tmp}/pkg\"",
+     "shell": "sh"
+    },
+    {
+     "run": "mkdir -p \"{runtime_dir}/lib/node_modules/npm\" && cd \"{runtime_dir}\" && gzip -dc \"{tmp}/pkg/local.pkg/Payload\" | cpio -idm && cd \"{runtime_dir}/lib/node_modules/npm\" && gzip -dc \"{tmp}/pkg/npm.pkg/Payload\" | cpio -idm",
+     "shell": "sh"
+    },
+    {
+     "run": "cd \"{runtime_dir}/bin\" && ln -sf ../lib/node_modules/npm/bin/npm-cli.js npm",
+     "shell": "sh"
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null; true",
+     "shell": "sh"
+    },
+    {
+     "run": "mkdir -p \"{runtime_dir}/etc\" && printf 'cache=%s\\nupdate-notifier=false\\nfund=false\\n' \"{runtime_dir}/npm-cache\" > \"{runtime_dir}/etc/npmrc\"",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin/node",
+   "package_manager": "\"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" --userconfig \"{runtime_dir}/etc/npmrc-user\"",
+   "verify": "\"{runtime_dir}/bin/node\" -e \"console.log(process.version)\" && \"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" --userconfig \"{runtime_dir}/etc/npmrc-user\" -v",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "10.5+ (x64)",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://keith.github.io/xcode-man-pages/pkgutil.1.html",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/npmrc",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/folders",
+    "https://docs.npmjs.com/cli/v10/using-npm/config"
+   ],
+   "notes": "Inspected node-v0.12.18.pkg: PackageMaker-era xar with components local.pkg (install-location /usr/local, payload ./bin ./include ./lib ./share) and npm.pkg (install-location /usr/local/lib/node_modules/npm, payload rooted at the npm folder). The postinstall only creates /usr/local/bin/npm. The plan also has 0.12.18 darwin x64/x86 .tar.xz archives, which are simpler. npm config: prefix defaults to the folder above bin/node (POSIX) or the node.exe folder (Windows), so -g installs and the global npmrc ({prefix}/etc/npmrc) land inside {runtime_dir}. The one default that escapes is the cache (~/.npm on POSIX, %LocalAppData%\\npm-cache for npm>=5 / %APPDATA%\\npm-cache for npm<=4 on Windows, also holding _logs and the update-notifier stamp); the etc/npmrc step moves it inside. --userconfig pointing at a file that need not exist stops a user's ~/.npmrc (which outranks the global npmrc) from redirecting prefix/cache; it must NOT be the same file as etc/npmrc (npm>=7 refuses: 'double-loading config'). A project's own .npmrc is still honoured. Call npm as node + npm-cli.js: the bin/npm and bin/npx shims of npm>=3 are '#!/usr/bin/env node' symlinks and fail unless {runtime_dir}/bin is on PATH (tested). Scripts installed into node_modules/.bin also use '/usr/bin/env node', so the app launcher should put {runtime_dir}/bin (Windows: {runtime_dir}) first on PATH for the app's own process. npx: \"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npx-cli.js\" (npm>=5.2, node>=8). etc/npmrc holds an absolute cache path: if the folder were ever moved, rewrite it (design says folders never move).",
+   "launch": {
+    "program": "{runtime_dir}/bin/node",
+    "args": [],
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}/etc/npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "notes": "Scripts installed by npm start with '#!/usr/bin/env node', so the runtime's folder goes first on PATH for the app's own process only."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" install",
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}/etc/npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Add --omit=dev (npm 7+) or --production (older npm) to skip dev dependencies; use `ci` when the project has package-lock.json."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "7z",
+    "versions": null,
+    "arch": null,
+    "variant": null,
+    "libc": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "7z",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "if not exist \"{runtime_dir}\\etc\" mkdir \"{runtime_dir}\\etc\"",
+     "shell": "cmd"
+    },
+    {
+     "run": ">\"{runtime_dir}\\etc\\npmrc\" echo cache={runtime_dir}\\npm-cache",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\etc\\npmrc\" echo update-notifier=false",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "the base installer's 7z decoder must support the BCJ2 filter: every node .7z in the plan is LZMA2+LZMA+BCJ2 (py7zr cannot decode it; 7-Zip/Nsis7z can)"
+   ],
+   "executable": "node.exe",
+   "package_manager": "\"{runtime_dir}\\node.exe\" \"{runtime_dir}\\node_modules\\npm\\bin\\npm-cli.js\" --userconfig \"{runtime_dir}\\etc\\npmrc-user\"",
+   "verify": "\"{runtime_dir}\\node.exe\" -e \"console.log(process.version)\" && \"{runtime_dir}\\node.exe\" \"{runtime_dir}\\node_modules\\npm\\bin\\npm-cli.js\" --userconfig \"{runtime_dir}\\etc\\npmrc-user\" -v",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "<=5.x (0.12, io.js 1-3, 4, 5): no platform check, PE subsystem 5.1, runs on XP (x86; io.js/4/5 not officially supported on XP). 6-11: node.exe exits on < Windows 7 / 2008 R2 (PE 5.1). 12-13: same Windows 7 check (PE 6.0). 14-22: exits on < Windows 8.1 / 2012 R2 (overridable with NODE_SKIP_PLATFORM_CHECK=1, unsupported). 23+: exits on < Windows 10 / Server 2016 (same override). 24+ has no x86 build. arm64: Windows 10+ (unofficial 12-18 builds, official 19+).",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://github.com/nodejs/node/blob/main/BUILDING.md",
+    "https://github.com/nodejs/node/blob/main/src/node_main.cc",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/npmrc",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/folders",
+    "https://docs.npmjs.com/cli/v10/using-npm/config"
+   ],
+   "notes": "Inspected 4.9.1, 12.22.12 and 26.9.0 archives: node.exe, npm/npm.cmd, npx/npx.cmd (npm>=5.2), node_modules/npm, nodevars.bat, install_tools.bat (12+; Chocolatey + VS build tools, never run it). No builtin node_modules/npm/npmrc, so npm's prefix is the node.exe folder. min_os comes from the platform check strings and PE headers inside each node.exe in the plan. npm.cmd/npx.cmd look up 'npm prefix -g' and, if that prefix has its own node_modules/npm, run THAT npm instead: a user's ~/.npmrc prefix pointing at an upgraded npm would hijack the shim. Calling node.exe + npm-cli.js with --userconfig avoids this. cmd: the '>file echo' form avoids a stray trailing space and the digit-before-> redirect bug. Native addons need Python + VS build tools, which are outside this recipe. npm config: prefix defaults to the folder above bin/node (POSIX) or the node.exe folder (Windows), so -g installs and the global npmrc ({prefix}/etc/npmrc) land inside {runtime_dir}. The one default that escapes is the cache (~/.npm on POSIX, %LocalAppData%\\npm-cache for npm>=5 / %APPDATA%\\npm-cache for npm<=4 on Windows, also holding _logs and the update-notifier stamp); the etc/npmrc step moves it inside. --userconfig pointing at a file that need not exist stops a user's ~/.npmrc (which outranks the global npmrc) from redirecting prefix/cache; it must NOT be the same file as etc/npmrc (npm>=7 refuses: 'double-loading config'). A project's own .npmrc is still honoured. Call npm as node + npm-cli.js: the bin/npm and bin/npx shims of npm>=3 are '#!/usr/bin/env node' symlinks and fail unless {runtime_dir}/bin is on PATH (tested). Scripts installed into node_modules/.bin also use '/usr/bin/env node', so the app launcher should put {runtime_dir}/bin (Windows: {runtime_dir}) first on PATH for the app's own process. npx: \"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npx-cli.js\" (npm>=5.2, node>=8). etc/npmrc holds an absolute cache path: if the folder were ever moved, rewrite it (design says folders never move).",
+   "launch": {
+    "program": "{runtime_dir}\\node.exe",
+    "args": [],
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}\\etc\\npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}"
+    ],
+    "notes": "Scripts installed by npm start with '#!/usr/bin/env node', so the runtime's folder goes first on PATH for the app's own process only."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\node.exe\" \"{runtime_dir}\\node_modules\\npm\\bin\\npm-cli.js\" install",
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}\\etc\\npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Add --omit=dev (npm 7+) or --production (older npm) to skip dev dependencies; use `ci` when the project has package-lock.json."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "7z",
+    "versions": null,
+    "arch": "arm64",
+    "variant": "unofficial",
+    "libc": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "7z",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "if not exist \"{runtime_dir}\\etc\" mkdir \"{runtime_dir}\\etc\"",
+     "shell": "cmd"
+    },
+    {
+     "run": ">\"{runtime_dir}\\etc\\npmrc\" echo cache={runtime_dir}\\npm-cache",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\etc\\npmrc\" echo update-notifier=false",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "Windows 10/11 on arm64",
+    "7z decoder with BCJ2 support"
+   ],
+   "executable": "node.exe",
+   "package_manager": "\"{runtime_dir}\\node.exe\" \"{runtime_dir}\\node_modules\\npm\\bin\\npm-cli.js\" --userconfig \"{runtime_dir}\\etc\\npmrc-user\"",
+   "verify": "\"{runtime_dir}\\node.exe\" -e \"console.log(process.version)\" && \"{runtime_dir}\\node.exe\" \"{runtime_dir}\\node_modules\\npm\\bin\\npm-cli.js\" --userconfig \"{runtime_dir}\\etc\\npmrc-user\" -v",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Windows 10 arm64 (PE header 6.2; experimental unofficial builds 12-18)",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://unofficial-builds.nodejs.org/",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/npmrc",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/folders",
+    "https://docs.npmjs.com/cli/v10/using-npm/config"
+   ],
+   "notes": "Same layout as the official Windows archives. npm config: prefix defaults to the folder above bin/node (POSIX) or the node.exe folder (Windows), so -g installs and the global npmrc ({prefix}/etc/npmrc) land inside {runtime_dir}. The one default that escapes is the cache (~/.npm on POSIX, %LocalAppData%\\npm-cache for npm>=5 / %APPDATA%\\npm-cache for npm<=4 on Windows, also holding _logs and the update-notifier stamp); the etc/npmrc step moves it inside. --userconfig pointing at a file that need not exist stops a user's ~/.npmrc (which outranks the global npmrc) from redirecting prefix/cache; it must NOT be the same file as etc/npmrc (npm>=7 refuses: 'double-loading config'). A project's own .npmrc is still honoured. Call npm as node + npm-cli.js: the bin/npm and bin/npx shims of npm>=3 are '#!/usr/bin/env node' symlinks and fail unless {runtime_dir}/bin is on PATH (tested). Scripts installed into node_modules/.bin also use '/usr/bin/env node', so the app launcher should put {runtime_dir}/bin (Windows: {runtime_dir}) first on PATH for the app's own process. npx: \"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npx-cli.js\" (npm>=5.2, node>=8). etc/npmrc holds an absolute cache path: if the folder were ever moved, rewrite it (design says folders never move).",
+   "launch": {
+    "program": "{runtime_dir}\\node.exe",
+    "args": [],
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}\\etc\\npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}"
+    ],
+    "notes": "Scripts installed by npm start with '#!/usr/bin/env node', so the runtime's folder goes first on PATH for the app's own process only."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\node.exe\" \"{runtime_dir}\\node_modules\\npm\\bin\\npm-cli.js\" install",
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}\\etc\\npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Add --omit=dev (npm 7+) or --production (older npm) to skip dev dependencies; use `ci` when the project has package-lock.json."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "installer",
+    "format": "msi",
+    "versions": null,
+    "arch": null,
+    "variant": null,
+    "libc": null
+   },
+   "method": "extract",
+   "steps": [
+    {
+     "run": "start \"\" /wait msiexec /a \"{file}\" /qn TARGETDIR=\"{tmp}\\admin\" /l*v \"{tmp}\\msi.log\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "xcopy \"{tmp}\\admin\\nodejs\\*\" \"{runtime_dir}\" /e /i /h /k /q /y",
+     "shell": "cmd"
+    },
+    {
+     "run": "del /f /q \"{runtime_dir}\\node_modules\\npm\\npmrc\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "if not exist \"{runtime_dir}\\etc\" mkdir \"{runtime_dir}\\etc\"",
+     "shell": "cmd"
+    },
+    {
+     "run": ">\"{runtime_dir}\\etc\\npmrc\" echo cache={runtime_dir}\\npm-cache",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\etc\\npmrc\" echo update-notifier=false",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "Windows Installer 2.0+ (any XP)"
+   ],
+   "executable": "node.exe",
+   "package_manager": "\"{runtime_dir}\\node.exe\" \"{runtime_dir}\\node_modules\\npm\\bin\\npm-cli.js\" --userconfig \"{runtime_dir}\\etc\\npmrc-user\"",
+   "verify": "\"{runtime_dir}\\node.exe\" -e \"console.log(process.version)\" && \"{runtime_dir}\\node.exe\" \"{runtime_dir}\\node_modules\\npm\\bin\\npm-cli.js\" --userconfig \"{runtime_dir}\\etc\\npmrc-user\" -v",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "0.12 and 5.x: node.exe has no platform check and a 5.1 PE header, so it runs on XP (0.12 was the last line to support XP officially; 5.x on XP works but is unsupported). x64 MSIs need 64-bit Windows.",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://learn.microsoft.com/en-us/windows/win32/msi/administrative-installation",
+    "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/msiexec",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/npmrc",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/folders",
+    "https://docs.npmjs.com/cli/v10/using-npm/config"
+   ],
+   "notes": "Tables read with pymsi from node-v0.12.18 and node-v5.12.0 (x86 and x64); payload extracted off-line to confirm the layout. An administrative install (msiexec /a) only copies files: the AdminExecuteSequence of every node/io.js MSI in the plan is CostInitialize, FileCost, CostFinalize, InstallValidate, InstallInitialize, InstallAdminPackage, InstallFiles, InstallFinalize - no custom actions, so no PATH edits (Environment table), no ETW/perf-counter manifest registration, no Start-menu shortcuts, no ARP/product registration, and it can be repeated any number of times (a normal install is once per machine and fixed to Program Files\\nodejs). Directory table: ProgramFilesFolder/ProgramFiles64Folder has DefaultDir '.', so files land in <TARGETDIR>\\nodejs (io.js: \\iojs); InstallAdminPackage also drops a copy of the .msi in TARGETDIR, hence the {tmp} staging and xcopy. Minimum Windows Installer 2.0 (summary PageCount 200), fine on XP. 'start /wait' makes cmd wait for msiexec (a GUI-subsystem program). The MSIs ship node_modules\\npm\\npmrc = 'prefix=${APPDATA}\\npm' (npm's builtin config), which sends -g installs to the user's %APPDATA%\\npm, so the recipe deletes it. The base installer's own 7z code is not an alternative: 7-Zip lists MSI files by their File-table keys, not real names. npm config: prefix defaults to the folder above bin/node (POSIX) or the node.exe folder (Windows), so -g installs and the global npmrc ({prefix}/etc/npmrc) land inside {runtime_dir}. The one default that escapes is the cache (~/.npm on POSIX, %LocalAppData%\\npm-cache for npm>=5 / %APPDATA%\\npm-cache for npm<=4 on Windows, also holding _logs and the update-notifier stamp); the etc/npmrc step moves it inside. --userconfig pointing at a file that need not exist stops a user's ~/.npmrc (which outranks the global npmrc) from redirecting prefix/cache; it must NOT be the same file as etc/npmrc (npm>=7 refuses: 'double-loading config'). A project's own .npmrc is still honoured. Call npm as node + npm-cli.js: the bin/npm and bin/npx shims of npm>=3 are '#!/usr/bin/env node' symlinks and fail unless {runtime_dir}/bin is on PATH (tested). Scripts installed into node_modules/.bin also use '/usr/bin/env node', so the app launcher should put {runtime_dir}/bin (Windows: {runtime_dir}) first on PATH for the app's own process. npx: \"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npx-cli.js\" (npm>=5.2, node>=8). etc/npmrc holds an absolute cache path: if the folder were ever moved, rewrite it (design says folders never move).",
+   "launch": {
+    "program": "{runtime_dir}\\node.exe",
+    "args": [],
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}\\etc\\npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}"
+    ],
+    "notes": "Scripts installed by npm start with '#!/usr/bin/env node', so the runtime's folder goes first on PATH for the app's own process only."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\node.exe\" \"{runtime_dir}\\node_modules\\npm\\bin\\npm-cli.js\" install",
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}\\etc\\npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Add --omit=dev (npm 7+) or --production (older npm) to skip dev dependencies; use `ci` when the project has package-lock.json."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "installer",
+    "format": "msi",
+    "versions": null,
+    "arch": null,
+    "variant": "iojs",
+    "libc": null
+   },
+   "method": "extract",
+   "steps": [
+    {
+     "run": "start \"\" /wait msiexec /a \"{file}\" /qn TARGETDIR=\"{tmp}\\admin\" /l*v \"{tmp}\\msi.log\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "xcopy \"{tmp}\\admin\\iojs\\*\" \"{runtime_dir}\" /e /i /h /k /q /y",
+     "shell": "cmd"
+    },
+    {
+     "run": "copy /y \"{runtime_dir}\\iojs.exe\" \"{runtime_dir}\\node.exe\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "del /f /q \"{runtime_dir}\\node_modules\\npm\\npmrc\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "if not exist \"{runtime_dir}\\etc\" mkdir \"{runtime_dir}\\etc\"",
+     "shell": "cmd"
+    },
+    {
+     "run": ">\"{runtime_dir}\\etc\\npmrc\" echo cache={runtime_dir}\\npm-cache",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\etc\\npmrc\" echo update-notifier=false",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "Windows Installer 2.0+"
+   ],
+   "executable": "iojs.exe",
+   "package_manager": "\"{runtime_dir}\\node.exe\" \"{runtime_dir}\\node_modules\\npm\\bin\\npm-cli.js\" --userconfig \"{runtime_dir}\\etc\\npmrc-user\"",
+   "verify": "\"{runtime_dir}\\node.exe\" -e \"console.log(process.version)\" && \"{runtime_dir}\\node.exe\" \"{runtime_dir}\\node_modules\\npm\\bin\\npm-cli.js\" --userconfig \"{runtime_dir}\\etc\\npmrc-user\" -v",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "io.js said Vista+; iojs.exe has a 5.1 PE header and no platform check, so XP may work but is unsupported",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://learn.microsoft.com/en-us/windows/win32/msi/administrative-installation",
+    "https://iojs.org/dist/",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/npmrc",
+    "https://docs.npmjs.com/cli/v10/configuring-npm/folders",
+    "https://docs.npmjs.com/cli/v10/using-npm/config"
+   ],
+   "notes": "The io.js MSIs ship only iojs.exe; node.exe is made at install time (component NodeAlias, not in the admin sequence), and npm.cmd falls back to whatever 'node' is on PATH if node.exe is missing - hence the copy step. An administrative install (msiexec /a) only copies files: the AdminExecuteSequence of every node/io.js MSI in the plan is CostInitialize, FileCost, CostFinalize, InstallValidate, InstallInitialize, InstallAdminPackage, InstallFiles, InstallFinalize - no custom actions, so no PATH edits (Environment table), no ETW/perf-counter manifest registration, no Start-menu shortcuts, no ARP/product registration, and it can be repeated any number of times (a normal install is once per machine and fixed to Program Files\\nodejs). Directory table: ProgramFilesFolder/ProgramFiles64Folder has DefaultDir '.', so files land in <TARGETDIR>\\nodejs (io.js: \\iojs); InstallAdminPackage also drops a copy of the .msi in TARGETDIR, hence the {tmp} staging and xcopy. Minimum Windows Installer 2.0 (summary PageCount 200), fine on XP. 'start /wait' makes cmd wait for msiexec (a GUI-subsystem program). The MSIs ship node_modules\\npm\\npmrc = 'prefix=${APPDATA}\\npm' (npm's builtin config), which sends -g installs to the user's %APPDATA%\\npm, so the recipe deletes it. The base installer's own 7z code is not an alternative: 7-Zip lists MSI files by their File-table keys, not real names. npm config: prefix defaults to the folder above bin/node (POSIX) or the node.exe folder (Windows), so -g installs and the global npmrc ({prefix}/etc/npmrc) land inside {runtime_dir}. The one default that escapes is the cache (~/.npm on POSIX, %LocalAppData%\\npm-cache for npm>=5 / %APPDATA%\\npm-cache for npm<=4 on Windows, also holding _logs and the update-notifier stamp); the etc/npmrc step moves it inside. --userconfig pointing at a file that need not exist stops a user's ~/.npmrc (which outranks the global npmrc) from redirecting prefix/cache; it must NOT be the same file as etc/npmrc (npm>=7 refuses: 'double-loading config'). A project's own .npmrc is still honoured. Call npm as node + npm-cli.js: the bin/npm and bin/npx shims of npm>=3 are '#!/usr/bin/env node' symlinks and fail unless {runtime_dir}/bin is on PATH (tested). Scripts installed into node_modules/.bin also use '/usr/bin/env node', so the app launcher should put {runtime_dir}/bin (Windows: {runtime_dir}) first on PATH for the app's own process. npx: \"{runtime_dir}/bin/node\" \"{runtime_dir}/lib/node_modules/npm/bin/npx-cli.js\" (npm>=5.2, node>=8). etc/npmrc holds an absolute cache path: if the folder were ever moved, rewrite it (design says folders never move).",
+   "launch": {
+    "program": "{runtime_dir}\\iojs.exe",
+    "args": [],
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}\\etc\\npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}"
+    ],
+    "notes": "Scripts installed by npm start with '#!/usr/bin/env node', so the runtime's folder goes first on PATH for the app's own process only."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\iojs.exe\" \"{runtime_dir}\\node_modules\\npm\\bin\\npm-cli.js\" install",
+    "env": {
+     "npm_config_userconfig": "{runtime_dir}\\etc\\npmrc-user"
+    },
+    "path_prepend": [
+     "{runtime_dir}"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Add --omit=dev (npm 7+) or --production (older npm) to skip dev dependencies; use `ci` when the project has package-lock.json."
+   }
+  }
+ ]
+}

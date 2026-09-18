@@ -1,0 +1,651 @@
+{
+ "runtime": "python",
+ "researched": "2026-09-18",
+ "assumes": "root/administrator",
+ "notes": "Extra fields beyond SCHEMA.md: match.variant (catalogue variant; null matches any) and preferred (true = recommended recipe when several share a match). No Windows/macOS recipe was run; only Linux.",
+ "user_site_leak": "Every recipe except the embeddable zip (whose ._pth doesn't list the user site) leaves Python's per-user site-packages on sys.path: ~/.local/lib/pythonX.Y/site-packages on Linux, ~/Library/Python/X.Y/lib/python/site-packages for macOS framework builds, %APPDATA%\\Python\\PythonXY\\site-packages on Windows. It's shared by every copy of X.Y for that user, and `pip install --user` writes there. To keep app copies isolated, launch with `-s` (or `-I`), or set PYTHONNOUSERSITE=1. Source: https://docs.python.org/3/library/site.html",
+ "recipes": [
+  {
+   "match": {
+    "os": "windows",
+    "kind": "installer",
+    "format": "exe",
+    "versions": ">=3.5",
+    "arch": null,
+    "variant": null
+   },
+   "method": "extract",
+   "steps": [
+    {
+     "run": "\"{file}\" /quiet /layout \"{tmp}\\layout\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "msiexec /a \"{tmp}\\layout\\core.msi\" /qn TARGETDIR=\"{runtime_dir}\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "msiexec /a \"{tmp}\\layout\\exe.msi\" /qn TARGETDIR=\"{runtime_dir}\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "msiexec /a \"{tmp}\\layout\\lib.msi\" /qn TARGETDIR=\"{runtime_dir}\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "msiexec /a \"{tmp}\\layout\\dev.msi\" /qn TARGETDIR=\"{runtime_dir}\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "msiexec /a \"{tmp}\\layout\\tcltk.msi\" /qn TARGETDIR=\"{runtime_dir}\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "msiexec /a \"{tmp}\\layout\\tools.msi\" /qn TARGETDIR=\"{runtime_dir}\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "del /q \"{runtime_dir}\\*.msi\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "\"{runtime_dir}\\python.exe\" -E -s -m ensurepip --default-pip",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "Universal C Runtime on Windows Vista/7/8/8.1 (KB2999226, or the VC++ 2015-2022 redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0 `/ai` on Vista). The normal bundle installs this itself via ucrt.msi; an administrative install does not. Windows 10+ has it built in.",
+    "Network access to python.org during /layout, or a layout prepared in advance (see notes)"
+   ],
+   "executable": "python.exe",
+   "package_manager": "\"{runtime_dir}\\python.exe\" -m pip",
+   "verify": "\"{runtime_dir}\\python.exe\" -E -s -c \"import sys, ssl, sqlite3, asyncio; print(sys.version)\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "3.5-3.8: Windows Vista (3.7.0 x86 operator-tested on Vista, 3.8.0 x86 on 7/8/8.1); 3.9+: Windows 8.1; 3.13+/3.14: Windows 10 in practice (3.13.0 x86 operator-tested on 10/11)",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://docs.python.org/3/using/windows.html",
+    "https://github.com/python/cpython/blob/3.14/Tools/msi/README.txt",
+    "https://github.com/python/cpython/blob/3.14/Tools/msi/common.wxs",
+    "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/msiexec",
+    "installer-builder-runtimes/TESTED-WINDOWS.md"
+   ],
+   "notes": "The .exe is a WiX Burn bundle (.wixburn section confirmed in 3.7.0, 3.8.0 and 3.14.7). Running it normally registers a Burn bundle plus one MSI product per component, so a second copy of the same version only offers Modify/Repair/Uninstall. Instead `/layout` writes the component MSIs (core.msi, exe.msi, lib.msi, ...) flat into a folder without installing anything, and `msiexec /a` (administrative install) unpacks each one. In common.wxs the InstallDirectory has no Name under TARGETDIR, so files land directly in {runtime_dir}; an admin install writes no registry keys and registers no product. Add doc/test to the MSI list if wanted. Skip launcher.msi (py.exe normally goes to %SystemRoot%), path.msi/appendpath.msi (PATH), ucrt.msi (a system update) and pip.msi (it only runs a custom action; ensurepip replaces it). What's lost: the py launcher, PEP 514 keys under HKLM\\Software\\Python\\PythonCore\\X.Y (wanted: TESTED-WINDOWS.md says a second registered Python conflicts), Start-menu shortcuts, .py file associations, a Programs and Features entry, Modify/Repair, and the optional precompile of the standard library (run `python -m compileall -q \"{runtime_dir}\\Lib\"` if startup time matters). Risks: (1) the full installer embeds only the default MSIs. The docs say /layout fetches ALL components, including the *_d.msi/*_pdb.msi debug packages, from python.org. With no network, whether Burn still writes the embedded MSIs is UNVERIFIED (bpo-25126 is a related offline failure). The safest approach is to run /layout once at build time and ship the layout folder, or to extract the attached container with WiX `dark.exe -x`. (2) Don't let {runtime_dir} end in a backslash: `TARGETDIR=\"C:\\x\\\"` escapes the quote. (3) TESTED-WINDOWS.md confirmed asyncio with the vendor installer run normally, not with this extraction, so re-test 3.7.0 on Vista and 3.8.0 on 7/8 with this method before relying on it. Relocation: python.exe finds its home from the Lib\\os.py landmark next to it, so the folder can be moved or have spaces. Only the Scripts\\*.exe launchers pip generates hold an absolute (quoted) python.exe path; `python -m <module>` always works. Registry leakage in: if a registered Python of the same X.Y exists, its PythonCore\\X.Y\\PythonPath subkeys can be added to sys.path. Adding a pythonXY._pth file (3.6+) stops that, but it also changes site/sys.path behaviour.",
+   "preferred": true,
+   "launch": {
+    "program": "{runtime_dir}\\python.exe",
+    "args": [
+     "-E",
+     "-s"
+    ],
+    "env": {},
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\python.exe\" -E -s -m pip install --no-warn-script-location .",
+    "env": {
+     "PIP_CONFIG_FILE": "nul",
+     "PIP_CACHE_DIR": "{data_dir}\\pip-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "PIP_CONFIG_FILE=devnull stops pip reading the user's pip.conf. Python <2.7.9 and 3.0-3.3 have no bundled pip."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "installer",
+    "format": "exe",
+    "versions": ">=3.5",
+    "arch": null,
+    "variant": null
+   },
+   "method": "run",
+   "steps": [
+    {
+     "run": "\"{file}\" /quiet InstallAllUsers=1 TargetDir=\"{runtime_dir}\" DefaultAllUsersTargetDir=\"{runtime_dir}\" AssociateFiles=0 Shortcuts=0 Include_launcher=0 InstallLauncherAllUsers=0 PrependPath=0 AppendPath=0 Include_doc=0 Include_test=0 Include_debug=0 Include_symbols=0",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "VC++ AIO redistributable (`VisualCppRedist_AIO_x86_x64.exe /ai`) first on XP/Vista per TESTED-WINDOWS.md"
+   ],
+   "executable": "python.exe",
+   "package_manager": "\"{runtime_dir}\\python.exe\" -m pip",
+   "verify": "\"{runtime_dir}\\python.exe\" -c \"import sys, asyncio; print(sys.version)\"",
+   "uninstall": "\"{file}\" /quiet /uninstall",
+   "side_effects": [
+    "Programs and Features entry for the bundle; each component MSI registered with Windows Installer (one ProductCode per version and arch)",
+    "HKLM\\Software\\Python\\PythonCore\\X.Y (or X.Y-32; Wow6432Node on 64-bit Windows): InstallPath, ExecutablePath, PythonPath, per PEP 514",
+    "Cached copies of the bundle and MSIs under %ProgramData%\\Package Cache",
+    "On Windows < 10, the UCRT update (ucrt.msi) is installed system-wide"
+   ],
+   "isolation": "impossible",
+   "relocatable": false,
+   "min_os": "as for the extract recipe",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://docs.python.org/3/using/windows.html",
+    "https://github.com/python/cpython/blob/3.14/Tools/msi/README.txt",
+    "installer-builder-runtimes/TESTED-WINDOWS.md"
+   ],
+   "notes": "This is how TESTED-WINDOWS.md installs (with TargetDir C:\\py3 and /passive). It cannot give two apps the same version: the second run finds the registered bundle and switches to Modify/Repair, and PEP 514 keys are written whatever the options. It's also not relocatable, because Repair/Uninstall remember the path. Listed only as the fallback if the extract recipe fails on a given Windows version.",
+   "preferred": false,
+   "launch": {
+    "program": "{runtime_dir}\\python.exe",
+    "args": [
+     "-E",
+     "-s"
+    ],
+    "env": {},
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\python.exe\" -E -s -m pip install --no-warn-script-location .",
+    "env": {
+     "PIP_CONFIG_FILE": "nul",
+     "PIP_CACHE_DIR": "{data_dir}\\pip-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "PIP_CONFIG_FILE=devnull stops pip reading the user's pip.conf. Python <2.7.9 and 3.0-3.3 have no bundled pip."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "installer",
+    "format": "msi",
+    "versions": "<3.5",
+    "arch": null,
+    "variant": null
+   },
+   "method": "extract",
+   "steps": [
+    {
+     "run": "msiexec /a \"{file}\" /qn TARGETDIR=\"{runtime_dir}\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "del /q \"{runtime_dir}\\*.msi\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "if exist \"{runtime_dir}\\Lib\\ensurepip\\__init__.py\" \"{runtime_dir}\\python.exe\" -E -s -m ensurepip --default-pip",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "Windows Installer 2.0+ (built into XP; 3.1 via XP SP2/SP3)"
+   ],
+   "executable": "python.exe",
+   "package_manager": "\"{runtime_dir}\\python.exe\" -m pip  (2.7.9+ and 3.4+ only, via ensurepip; older versions have no bundled pip)",
+   "verify": "\"{runtime_dir}\\python.exe\" -E -s -c \"import sys; print(sys.version)\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "2.5-2.7: Windows 2000/XP; 3.0-3.4: XP",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://github.com/python/cpython/blob/2.7/Tools/msi/msi.py",
+    "https://github.com/python/cpython/blob/3.4/Tools/msi/msi.py",
+    "https://github.com/python/cpython/blob/2.5/Tools/msi/msi.py",
+    "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/msiexec"
+   ],
+   "notes": "These MSIs are built by CPython's own Tools/msi/msi.py, which defines an AdminExecuteSequence ('InitialTargetDir', 'SetDLLDirToTarget', and in 3.3/3.4 'SetLauncherDirToTarget'). So under `msiexec /a` pythonXY.dll and py.exe land in TARGETDIR rather than System32/%WINDIR%. 2.6/2.7 carry msvcr90.dll plus its manifest as a private-CRT file in the install root, and an admin install extracts it, so no VC++ 2008 redistributable is needed (not confirmed on a real XP). An admin install writes no registry keys (no PythonCore key, no .py association, no Programs and Features entry) and leaves a copy of the .msi in the root, which the second step deletes. What's lost: ensurepip and CompilePyc custom actions, shortcuts, file associations. 3.3/3.4 py.exe does land in the folder, but it isn't registered as the system launcher. 2.5.4 is ia64 (Itanium) only: same mechanism (2.5's msi.py has the same admin sequence), but its CRT handling (msvcr71 merge module) targets x86; untested and of little practical use. Old pip versions can no longer reach PyPI (TLS/SNI and index changes), so install packages from local wheels (`pip install --no-index --find-links`).",
+   "preferred": true,
+   "launch": {
+    "program": "{runtime_dir}\\python.exe",
+    "args": [
+     "-E",
+     "-s"
+    ],
+    "env": {},
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\python.exe\" -E -s -m pip install --no-warn-script-location .",
+    "env": {
+     "PIP_CONFIG_FILE": "nul",
+     "PIP_CACHE_DIR": "{data_dir}\\pip-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "PIP_CONFIG_FILE=devnull stops pip reading the user's pip.conf. Python <2.7.9 and 3.0-3.3 have no bundled pip."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": ">=3.5",
+    "arch": null,
+    "variant": "embed"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 0
+    },
+    {
+     "run": "echo Lib\\site-packages>>\"{runtime_dir}\\python3XX._pth\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "echo import site>>\"{runtime_dir}\\python3XX._pth\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "\"{runtime_dir}\\python.exe\" \"{tmp}\\get-pip.py\" --no-warn-script-location",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "UCRT (KB2999226 or VC++ 2015-2022 redistributable) on Windows < 10; vcruntime140.dll is included in the zip",
+    "get-pip.py (https://bootstrap.pypa.io/get-pip.py, or the version-pinned https://bootstrap.pypa.io/pip/X.Y/get-pip.py) or a pip wheel, only if the app needs pip"
+   ],
+   "executable": "python.exe",
+   "package_manager": "\"{runtime_dir}\\python.exe\" -m pip  (after the bootstrap steps; not officially supported for the embeddable package)",
+   "verify": "\"{runtime_dir}\\python.exe\" -c \"import sys, ssl, sqlite3, asyncio; print(sys.version)\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "as for the .exe of the same version (3.14.7: Windows 10+)",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://docs.python.org/3/using/windows.html",
+    "https://pip.pypa.io/en/stable/installation/"
+   ],
+   "notes": "Checked the 3.14.7 amd64 zip: python.exe, python314.dll, vcruntime140(_1).dll, OpenSSL, sqlite, libffi; stdlib as python314.zip; python314._pth holds 'python314.zip', '.' and a commented '#import site'. Replace python3XX with the version's own name (python314._pth for 3.14). The ._pth file makes it ignore the registry and PYTHON* environment variables, which is the strongest isolation of any Windows option. Missing compared with the full installer: pip, ensurepip, venv, tkinter/IDLE, the test suite, headers/libs (so it can't build C extensions). The pip steps are only for apps that need it; the alternative is vendoring packages into a folder listed in the ._pth. Relocatable, spaces fine.",
+   "preferred": true,
+   "launch": {
+    "program": "{runtime_dir}\\python.exe",
+    "args": [
+     "-E",
+     "-s"
+    ],
+    "env": {},
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\python.exe\" -E -s -m pip install --no-warn-script-location .",
+    "env": {
+     "PIP_CONFIG_FILE": "nul",
+     "PIP_CACHE_DIR": "{data_dir}\\pip-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "PIP_CONFIG_FILE=devnull stops pip reading the user's pip.conf. Python <2.7.9 and 3.0-3.3 have no bundled pip."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": "==3.5.*",
+    "arch": "x86",
+    "variant": "xp-backport"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 0
+    }
+   ],
+   "prerequisites": [
+    "VC++ all-in-one redistributable v0.35.0 installed first: `VisualCppRedist_AIO_x86_x64.exe /ai` (TESTED-WINDOWS.md); machine-wide and shared, not removed on uninstall"
+   ],
+   "executable": "python.exe",
+   "package_manager": "\"{runtime_dir}\\python.exe\" -m pip",
+   "verify": "\"{runtime_dir}\\python.exe\" -E -s -c \"import sys, asyncio; print(sys.version)\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Windows XP (NT 5.1), x86; operator-tested",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "installer-builder-runtimes/TESTED-WINDOWS.md",
+    "https://msfn.org/board/topic/176131-python-35-runtime-redistributable-backported-to-xp/"
+   ],
+   "notes": "Not in download_plan_majors.json, but it's the operator-tested XP build (python/windows/x86/3.5-xp-backport/python_3_5_x86.zip, SHA-256 in TESTED-WINDOWS.md). Checked the contents: python.exe, python35.dll, DLLs, Lib (with pip in site-packages), tcl, py.exe/pyw.exe and get-pip.py, all at the zip root (strip 0). There's no ._pth/pyvenv.cfg (3.5 predates ._pth). TESTED-WINDOWS.md unzips to %SystemDrive%\\py3; any folder works for python.exe. But the Scripts\\pip.exe/pip3.exe/easy_install.exe/wheel.exe launchers embed `#!c:\\py3\\python35\\python.exe` and won't work elsewhere, so always use `python.exe -m pip`. Leaks in, not out: 3.5 still reads HKLM/HKCU\\Software\\Python\\PythonCore\\3.5\\PythonPath if another 3.5 is registered on the machine. py.exe/pyw.exe in the folder are harmless unless someone runs them.",
+   "preferred": true,
+   "launch": {
+    "program": "{runtime_dir}\\python.exe",
+    "args": [
+     "-E",
+     "-s"
+    ],
+    "env": {},
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\python.exe\" -E -s -m pip install --no-warn-script-location .",
+    "env": {
+     "PIP_CONFIG_FILE": "nul",
+     "PIP_CACHE_DIR": "{data_dir}\\pip-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "PIP_CONFIG_FILE=devnull stops pip reading the user's pip.conf. Python <2.7.9 and 3.0-3.3 have no bundled pip."
+   }
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": ">=3.8",
+    "arch": null,
+    "variant": "pbs_stripped"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [
+    "glibc >= 2.17 (checked: highest GLIBC symbol version needed by bin/python3.14 and libpython on amd64); everything else (OpenSSL 3.5, sqlite, Tcl/Tk, ncurses, readline/libedit) is bundled",
+    "CA certificates at the distro's usual path (/etc/ssl/certs) for HTTPS/pip"
+   ],
+   "executable": "bin/python3",
+   "package_manager": "\"{runtime_dir}/bin/python3\" -m pip",
+   "verify": "\"{runtime_dir}/bin/python3\" -c \"import sys, ssl, sqlite3, asyncio; print(sys.version, ssl.OPENSSL_VERSION)\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Linux with glibc 2.17+ (CentOS 7 era) on the matching arch",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://gregoryszorc.com/docs/python-build-standalone/main/",
+    "https://gregoryszorc.com/docs/python-build-standalone/main/quirks.html",
+    "https://github.com/astral-sh/python-build-standalone/releases"
+   ],
+   "notes": "TESTED on Ubuntu 24.04 amd64 with 3.14.7+20260901 install_only_stripped: unpacked twice side by side into '.../app one/rt' and '.../app two/rt' (paths with spaces). Both ran, with sys.prefix pointing at their own folder. ssl, sqlite3, ctypes, asyncio, tkinter (import), lzma, bz2 and readline all imported. `python -m pip install pyflakes` went into app one only. Moved 'app one' to 'app one moved': python3 and the shipped bin/pip3 still worked (PBS writes a relative `#!/bin/sh` + `exec \"$(dirname -- \"$(realpath -- \"$0\")\")/python3.14\"` shebang), but console scripts pip installed later (bin/pyflakes) hold the absolute old path and broke. So: relocatable as shipped; after moving, reinstall or rewrite shebangs of pip-installed scripts, or always call `python3 -m <module>`. Only other arches (arm64, armv7, ppc64le, riscv64, s390x) were not run. Known PBS quirk: `python3-config`/sysconfig report the build machine's compiler flags, so building C extensions may need CC overrides.",
+   "preferred": true,
+   "launch": {
+    "program": "{runtime_dir}/bin/python3",
+    "args": [
+     "-E",
+     "-s"
+    ],
+    "env": {},
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/python3\" -E -s -m pip install --no-warn-script-location .",
+    "env": {
+     "PIP_CONFIG_FILE": "/dev/null",
+     "PIP_CACHE_DIR": "{data_dir}/pip-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "PIP_CONFIG_FILE=devnull stops pip reading the user's pip.conf. Python <2.7.9 and 3.0-3.3 have no bundled pip."
+   }
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "source",
+    "format": "tar.xz",
+    "versions": "<3.8",
+    "arch": "any",
+    "variant": null
+   },
+   "method": "build",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{tmp}/src",
+     "strip_components": 1
+    },
+    {
+     "run": "P=$(mktemp -d /tmp/pybuild.XXXXXX) && cd \"{tmp}/src\" && ./configure --prefix=\"$P\" && make -j\"$(nproc)\" && make install && cp -a \"$P\"/. \"{runtime_dir}/\" && rm -rf \"$P\"",
+     "shell": "sh"
+    },
+    {
+     "run": "\"{runtime_dir}/bin/python2.7\" -E -s -m ensurepip --default-pip",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "gcc, make and development headers: zlib, OpenSSL, bzip2, sqlite3, readline, ncurses, libffi (for ctypes on newer distros), tk (for tkinter); on Debian/Ubuntu: build-essential zlib1g-dev libssl-dev libbz2-dev libsqlite3-dev libreadline-dev libncurses-dev libffi-dev tk-dev",
+    "Runtime: the same shared libraries (libssl/libcrypto, libsqlite3, libreadline, ...) stay required from the system at the sonames the build linked"
+   ],
+   "executable": "bin/python2.7",
+   "package_manager": "\"{runtime_dir}/bin/python2.7\" -m pip",
+   "verify": "\"{runtime_dir}/bin/python2.7\" -c \"import sys, ssl, zlib, sqlite3; print(sys.version)\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "Needs build packages installed system-wide (the operator's call; not done by this recipe)"
+   ],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "any glibc Linux with a C compiler",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://docs.python.org/2.7/using/unix.html",
+    "https://github.com/python/cpython/blob/2.7/README"
+   ],
+   "notes": "TESTED with Python-2.7.18.tar.xz on Ubuntu 24.04 (gcc 13, OpenSSL 3.0.13). Building with --prefix containing a space FAILS at `make install` (Makefile install targets aren't quoted), so the recipe builds into a space-free temp prefix and copies the tree. The default build is a static libpython, and getpath finds its home from lib/python2.7/os.py, so copies in '.../app a/rt' and '.../app b/rt' each reported their own sys.prefix. ssl worked against system OpenSSL 3 (_ssl built); _hashlib did NOT build against OpenSSL 3, so hashlib falls back to the builtin md5/sha implementations. ensurepip installed pip 19.2.3 and setuptools 41.2.0, and pip wrote space-safe `#!/bin/sh` exec shebangs. But the shebangs of bin/pydoc, bin/idle, bin/2to3 and bin/python2.7-config point at the temp build prefix, so rewrite them with sed or use `python2.7 -m pydoc`. Not portable between distros: _ssl/_sqlite3/readline link to system .so versions (libssl.so.3 here). For a portable result, build on the oldest target distro, or link OpenSSL 1.1.1 statically (not tried). --enable-shared would add an RPATH problem; don't use it.",
+   "preferred": true,
+   "launch": {
+    "program": "{runtime_dir}/bin/python2.7",
+    "args": [
+     "-E",
+     "-s"
+    ],
+    "env": {},
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/python2.7\" -E -s -m pip install --no-warn-script-location .",
+    "env": {
+     "PIP_CONFIG_FILE": "/dev/null",
+     "PIP_CACHE_DIR": "{data_dir}/pip-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "PIP_CONFIG_FILE=devnull stops pip reading the user's pip.conf. Python <2.7.9 and 3.0-3.3 have no bundled pip."
+   }
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": ">=3.8",
+    "arch": null,
+    "variant": "pbs_stripped"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null || true",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin/python3",
+   "package_manager": "\"{runtime_dir}/bin/python3\" -m pip",
+   "verify": "\"{runtime_dir}/bin/python3\" -c \"import sys, ssl, sqlite3, asyncio; print(sys.version)\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "3.14.7+20260901: macOS 10.15 (x86_64) and 11.0 (arm64), read from LC_BUILD_VERSION of bin/python3.14",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://gregoryszorc.com/docs/python-build-standalone/main/",
+    "https://gregoryszorc.com/docs/python-build-standalone/main/quirks.html"
+   ],
+   "notes": "Same install_only layout as Linux (python/ top folder), relocatable (checked arm64: bin/python3.14 links only /usr/lib and /System libraries; an LC_CODE_SIGNATURE is present) with a relative `#!/bin/sh` shebang in bin/pip*. The binaries carry a code signature (whether ad-hoc or Developer ID was not checked); a plain tarball cannot carry a notarization ticket. If the downloaded tarball carries com.apple.quarantine (a browser download, or an installer app with LSFileQuarantineEnabled), Gatekeeper blocks the unpacked binaries, so the xattr step clears it. It's a no-op when the attribute is absent. The same shebang caveat as Linux applies to scripts pip installs later if the folder is moved.",
+   "preferred": true,
+   "launch": {
+    "program": "{runtime_dir}/bin/python3",
+    "args": [
+     "-E",
+     "-s"
+    ],
+    "env": {},
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/python3\" -E -s -m pip install --no-warn-script-location .",
+    "env": {
+     "PIP_CONFIG_FILE": "/dev/null",
+     "PIP_CACHE_DIR": "{data_dir}/pip-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "PIP_CONFIG_FILE=devnull stops pip reading the user's pip.conf. Python <2.7.9 and 3.0-3.3 have no bundled pip."
+   }
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "installer",
+    "format": "pkg",
+    "versions": "<3.8",
+    "arch": null,
+    "variant": null
+   },
+   "method": "extract",
+   "steps": [
+    {
+     "run": "pkgutil --expand \"{file}\" \"{tmp}/pkg\"",
+     "shell": "sh"
+    },
+    {
+     "run": "mkdir -p \"{runtime_dir}/Python.framework\" && cd \"{runtime_dir}/Python.framework\" && gunzip -c \"{tmp}/pkg/Python_Framework.pkg/Payload\" | cpio -idm",
+     "shell": "sh"
+    },
+    {
+     "run": "V=$(ls \"{runtime_dir}/Python.framework/Versions\" | grep -v Current); OLD=\"/Library/Frameworks/Python.framework/Versions/$V\"; cd \"{runtime_dir}/Python.framework/Versions/$V\" && for f in $(find . -type f -perm -u+x -o -name '*.so' -o -name '*.dylib' -o -name Python); do file \"$f\" | grep -q Mach-O || continue; d=$(dirname \"$f\" | sed 's#^\\./##; s#[^/][^/]*#..#g; s#^\\.$##'); for l in $(otool -L \"$f\" | awk 'NR>1{print $1}' | grep \"^$OLD\"); do install_name_tool -change \"$l\" \"@loader_path/${d:+$d/}${l#$OLD/}\" \"$f\"; done; otool -D \"$f\" | grep -q \"^$OLD\" && install_name_tool -id \"@rpath/${f#./}\" \"$f\"; codesign -f -s - \"$f\" 2>/dev/null; done",
+     "shell": "sh"
+    },
+    {
+     "run": "V=$(ls \"{runtime_dir}/Python.framework/Versions\" | grep -v Current); \"{runtime_dir}/Python.framework/Versions/$V/bin/python$V\" -E -s -m ensurepip --default-pip",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "install_name_tool and otool (Xcode Command Line Tools), which aren't in a stock macOS; or a Mach-O load-command patcher bundled with the base installer (the new paths are shorter than the old, so an in-place rewrite fits)",
+    "Rosetta 2 on Apple Silicon (these builds are x86_64/i386 only)"
+   ],
+   "executable": "Python.framework/Versions/X.Y/bin/pythonX.Y",
+   "package_manager": "\"{runtime_dir}/Python.framework/Versions/X.Y/bin/pythonX.Y\" -m pip",
+   "verify": "\"{runtime_dir}/Python.framework/Versions/X.Y/bin/pythonX.Y\" -E -s -c \"import sys, ssl; print(sys.version, sys.prefix)\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "macosx10.6 pkgs: Mac OS X 10.6+; macosx10.9 pkg: 10.9+",
+   "tested": false,
+   "confidence": "low",
+   "sources": [
+    "https://www.python.org/downloads/macos/",
+    "https://docs.python.org/3/using/mac.html",
+    "https://github.com/python/cpython/tree/3.7/Mac/BuildScript"
+   ],
+   "notes": "Inspected the files read-only: xar pkgs whose Python_Framework.pkg has install-location=/Library/Frameworks/Python.framework and relocatable=false, with a gzip cpio Payload. Other components: Applications (/Applications/Python X.Y), UnixTools (/usr/local/bin symlinks), Documentation, Shell_Profile_Updater (edits shell profiles), Install_Pip (postinstall runs ensurepip and symlinks pip into /usr/local/bin). Every Mach-O file references absolute /Library/Frameworks/Python.framework/Versions/X.Y/... install names (the Python dylib, and lib/libssl/libcrypto/libtcl/libtk). So the extracted tree only runs after those are rewritten to @loader_path-relative paths. The stub bin/pythonX.Y finds Resources/Python.app via dladdr on the framework, and sys.prefix comes from the framework's location, so once the load paths are fixed it should run from any folder. Signing: the 3.7.6 macosx10.6 binaries have NO code signature; 2.7.18 macosx10.9 is signed, so rewriting breaks it, hence the ad-hoc `codesign -f -s -` (codesign ships with macOS). The step 3 script is a sketch and has NOT been run. The alternative is the vendor pkg: `installer -pkg {file} -target /` with a choices XML deselecting everything but the framework. That writes into /Library/Frameworks and pkgutil receipts, gives one copy per X.Y per machine and replaces an existing one (isolation: impossible).",
+   "preferred": true,
+   "launch": {
+    "program": "{runtime_dir}/Python.framework/Versions/X.Y/bin/pythonX.Y",
+    "args": [
+     "-E",
+     "-s"
+    ],
+    "env": {},
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/Python.framework/Versions/X.Y/bin/pythonX.Y\" -E -s -m pip install --no-warn-script-location .",
+    "env": {
+     "PIP_CONFIG_FILE": "/dev/null",
+     "PIP_CACHE_DIR": "{data_dir}/pip-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "PIP_CONFIG_FILE=devnull stops pip reading the user's pip.conf. Python <2.7.9 and 3.0-3.3 have no bundled pip."
+   }
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "installer",
+    "format": "pkg",
+    "versions": "<3.8",
+    "arch": null,
+    "variant": null
+   },
+   "method": "run",
+   "steps": [
+    {
+     "run": "installer -pkg \"{file}\" -target / -applyChoiceChangesXML \"{tmp}/choices.xml\"",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "{tmp}/choices.xml deselecting PythonApplications, PythonUnixTools, PythonDocumentation, PythonProfileChanges (choice ids org.python.Python.*-X.Y from the pkg's Distribution)"
+   ],
+   "executable": "/Library/Frameworks/Python.framework/Versions/X.Y/bin/pythonX.Y",
+   "package_manager": "/Library/Frameworks/Python.framework/Versions/X.Y/bin/pythonX.Y -m pip",
+   "verify": "/Library/Frameworks/Python.framework/Versions/X.Y/bin/pythonX.Y -c \"import sys; print(sys.version)\"",
+   "uninstall": "rm -rf /Library/Frameworks/Python.framework/Versions/X.Y && pkgutil --forget org.python.Python.PythonFramework-X.Y (only when no other app uses it)",
+   "side_effects": [
+    "/Library/Frameworks/Python.framework/Versions/X.Y (shared by every app using X.Y)",
+    "pkgutil receipt org.python.Python.PythonFramework-X.Y",
+    "Install_Pip postinstall may symlink pip into /usr/local/bin if python symlinks exist there"
+   ],
+   "isolation": "impossible",
+   "relocatable": false,
+   "min_os": "as above",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://docs.python.org/3/using/mac.html"
+   ],
+   "notes": "Fallback only. Fixed path, one copy per X.Y, and a reinstall overwrites it.",
+   "preferred": false,
+   "launch": {
+    "program": "/Library/Frameworks/Python.framework/Versions/X.Y/bin/pythonX.Y",
+    "args": [
+     "-E",
+     "-s"
+    ],
+    "env": {},
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+   },
+   "project_install": {
+    "command": "\"/Library/Frameworks/Python.framework/Versions/X.Y/bin/pythonX.Y\" -E -s -m pip install --no-warn-script-location .",
+    "env": {
+     "PIP_CONFIG_FILE": "/dev/null",
+     "PIP_CACHE_DIR": "{data_dir}/pip-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "PIP_CONFIG_FILE=devnull stops pip reading the user's pip.conf. Python <2.7.9 and 3.0-3.3 have no bundled pip."
+   }
+  }
+ ]
+}

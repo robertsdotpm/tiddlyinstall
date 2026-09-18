@@ -1,0 +1,814 @@
+{
+ "runtime": "cc",
+ "researched": "2026-09-18",
+ "assumes": "root/administrator",
+ "notes": "C/C++ toolchains from download_plan_majors.json (LLVM/Clang, GCC via WinLibs, GCC source, the MSVC permalinks), plus w64devkit, which is in download_plan.json/_slim.json but NOT in the majors plan and has no stored files. `match` may also carry `variant` / `libc` (release-entry fields) where the recipe depends on them. Every toolchain here unpacks to a private folder with no registry, PATH or shortcut changes, so isolation is `full` for the toolchain itself; what makes C/C++ different from Python/Node is that a compiler is only half a toolchain: on Linux clang still uses the system's glibc headers/crt files, libgcc and (for C++) libstdc++ from the distro's GCC and binutils' ld; on macOS it needs Apple's SDK (Xcode Command Line Tools); on Windows clang's default MSVC target needs Visual Studio Build Tools + the Windows SDK. Those are listed in `prerequisites`, not `side_effects`, because the recipe does not install them. Tested for real on Ubuntu 24.04 (glibc 2.39, system GCC 13.3, x86_64) as a normal user, unpacked under a folder named 'app one' (with a space): every amd64 Linux LLVM tarball in the plan, and a GCC 14.4.0 source build relocated into a spaced path. Windows and macOS recipes are research-only, from reading the stored files read-only (7-Zip listings, the NSIS header strings of the LLVM installers, PE import tables, Mach-O load commands). FILE PROBLEM FOUND: llvm/linux/amd64/10.0.1-ubuntu-16.04/clang+llvm-10.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz has the catalogue's size (380908816) but fails `xz -t` ('Compressed data is corrupt'); the plan entry has no checksum, so it cannot be told apart from a good file by size. It needs re-downloading (left untouched here). How C/C++ fits installer-builder at all (build on the user's machine vs ship binaries) is still the open question in installer-builder docs/compiled_languages.md; these recipes only cover getting a working compiler into {runtime_dir}.",
+ "recipes": [
+  {
+   "match": {
+    "runtime": "llvm",
+    "os": "windows",
+    "kind": "installer",
+    "format": "exe",
+    "versions": ">=3.9.1",
+    "arch": null
+   },
+   "method": "extract",
+   "steps": [
+    {
+     "run": "\"{tmp}\\7z.exe\" x -y -o\"{runtime_dir}\" \"{file}\" -x!$PLUGINSDIR -x!Uninstall.exe",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "a full 7-Zip console (7z.exe + 7z.dll, e.g. 7-Zip 9.20+) shipped in {tmp}: the standalone 7za.exe cannot read NSIS installers, and NSIS is not one of the formats the base installer unpacks itself. Alternative: extract once at build time on the server (7z x as above) and ship the result as a 7z/zip, which the base installer can `unpack`.",
+    "to COMPILE with the default *-pc-windows-msvc target: MSVC headers/libs + Windows SDK (Visual Studio Build Tools, see catalog/prereqs vs_BuildTools.exe; system-wide). Alternative without Microsoft: --target=x86_64-w64-mingw32 (or i686-) with --sysroot pointing at a WinLibs/w64devkit folder",
+    "no VC++ redistributable needed: 5.x, 6.x and 8.x-19.x ship vcruntime140/msvcp140 + the UCRT DLLs app-locally in bin\\ (arm64 16-20 ship vcruntime/msvcp only; the UCRT is built into Windows 10/11 on ARM); 3.9.1, 4.0.1, 7.1.0 and 20+ link the CRT statically (clang.exe imports only KERNEL32/ADVAPI32/VERSION/OLEAUT32/ntdll)"
+   ],
+   "executable": "bin\\clang.exe",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}\\bin\\clang.exe\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Windows 7 SP1 (LLVM dropped XP/Vista in 3.8; the PE headers say 6.0 but Vista is not supported). x86 builds stop at 21.x; arm64 (woa64) from 12.0.0.",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://github.com/llvm/llvm-project/blob/release/18.x/llvm/CMakeLists.txt (CPACK_NSIS_MODIFY_PATH ON, CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)",
+    "https://gitlab.kitware.com/cmake/cmake/-/blob/v3.29.0/Modules/Internal/CPack/NSIS.template.in (.onInit uninstall-before-install with /SD IDYES; registry and Start-menu writes)",
+    "https://nsis.sourceforge.io/Docs/Chapter3.html#installerusage (/S, /D=)",
+    "stored files llvm/windows/*/*/LLVM-*.exe: every one is 'Nullsoft Installer, NSIS-3'; 7-Zip lists them with paths relative to $INSTDIR (bin/, lib/, include/, share/, libexec/, plus $PLUGINSDIR/ and Uninstall.exe), no duplicate paths in any version; header strings of 3.9.1, 7.1.0, 18.1.8, 22.1.8 and woa64 12.0.0 decompressed and checked"
+   ],
+   "notes": "Recommended: EXTRACT, do not run. Why not `\"{file}\" /S /D={runtime_dir}` (which does install silently to a chosen folder; /D must be last and unquoted even with spaces): the installer is CMake's CPack NSIS template, and in every stored version it (1) writes HKLM\\Software\\LLVM\\LLVM (install dir) and a single HKLM\\...\\Uninstall\\LLVM key, (2) creates a Start Menu folder with Uninstall.lnk, (3) offers PATH changes (default 'do not add', so silent mode leaves PATH alone), and (4) because LLVM sets CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL=ON, its .onInit reads that single Uninstall\\LLVM key and, with /SD IDYES in silent mode, runs the PREVIOUS copy's uninstaller ('\"<old>\\Uninstall.exe\" /S _?=<old dir>') before installing. So a second app's silent install would delete the first app's LLVM: two copies cannot coexist via /S, and uninstalling via Uninstall.exe would also remove the shared keys. 3.9.1 additionally ships tools\\msbuild\\install.bat (Visual Studio integration), which extraction does not run. Extraction gives the identical file tree with none of that. Excluding $PLUGINSDIR (NSIS plugins) and Uninstall.exe is cosmetic. Unpacked sizes are large (e.g. 18.1.8 win64: 2.8 GB from a 357 MB exe).",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build build",
+    "env": {
+     "CC": "{runtime_dir}\\bin\\clang.exe",
+     "CXX": "{runtime_dir}\\bin\\clang++.exe",
+     "CFLAGS": null,
+     "CXXFLAGS": null,
+     "LDFLAGS": null,
+     "CPATH": null,
+     "LIBRARY_PATH": null
+    },
+    "path_prepend": [
+     "{runtime_dir}\\bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine (installer-builder design.md 1.8). The default command assumes CMake and Ninja from the catalogue (catalog/cmake, catalog/ninja); the publisher's Build command replaces it (Meson: `meson setup build && meson compile -C build`; make: `make`). The cleared variables would inject a user's global compiler settings. See the recipe's prerequisites for what the system must still provide (headers, linker, SDK)."
+   }
+  },
+  {
+   "match": {
+    "runtime": "llvm",
+    "os": "windows",
+    "kind": "archive",
+    "format": "tar.xz",
+    "variant": "msvc",
+    "versions": ">=23",
+    "arch": "amd64"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [
+    "MSVC headers/libs + Windows SDK (Visual Studio Build Tools) for the default x86_64-pc-windows-msvc target, or a MinGW-w64 sysroot with --target=x86_64-w64-mingw32",
+    "no VC++ redistributable (no DLLs in bin\\; same static-CRT build as the 20+ installers)"
+   ],
+   "executable": "bin\\clang.exe",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}\\bin\\clang.exe\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Windows 7 SP1 (not independently confirmed for 23.x; LLVM targets Windows 10 in practice)",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "stored file llvm/windows/amd64/23.1.1-msvc/clang+llvm-23.1.1-x86_64-pc-windows-msvc.tar.xz: 4986 entries, single top folder clang+llvm-23.1.1-x86_64-pc-windows-msvc/, no DLLs under bin/"
+   ],
+   "notes": "Plain archive: the preferred shape for LLVM on Windows. Tar symlinks/hardlinks, if any, must be materialised as copies by the base installer on Windows (FAT32/XP-era NTFS without symlink rights).",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build build",
+    "env": {
+     "CC": "{runtime_dir}\\bin\\clang.exe",
+     "CXX": "{runtime_dir}\\bin\\clang++.exe",
+     "CFLAGS": null,
+     "CXXFLAGS": null,
+     "LDFLAGS": null,
+     "CPATH": null,
+     "LIBRARY_PATH": null
+    },
+    "path_prepend": [
+     "{runtime_dir}\\bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine (installer-builder design.md 1.8). The default command assumes CMake and Ninja from the catalogue (catalog/cmake, catalog/ninja); the publisher's Build command replaces it (Meson: `meson setup build && meson compile -C build`; make: `make`). The cleared variables would inject a user's global compiler settings. See the recipe's prerequisites for what the system must still provide (headers, linker, SDK)."
+   }
+  },
+  {
+   "match": {
+    "runtime": "llvm",
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.xz",
+    "variant": null,
+    "libc": "glibc",
+    "versions": ">=19",
+    "arch": "amd64"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [
+    "glibc >= 2.35 and libstdc++ with GLIBCXX_3.4.30 (GCC 12+) on the host -- measured from the binaries' symbol versions (19.1.7, 20.1.8, 21.1.8, 22.1.8, 23.1.1); i.e. Ubuntu 22.04 / Debian 12 / RHEL 10 era or newer",
+    "host shared libs: libz.so.1 (clang itself); lld also needs liblzma.so.5 and, in 23.1.1, ICU 70 (libicuuc/libicui18n/libicudata .so.70 -- only Ubuntu 22.04 has that soname; on Ubuntu 24.04 ld.lld fails to start); lldb/clangd-adjacent tools need libxml2.so.2, libtinfo.so.6, libncurses.so.6, libform/libpanel.so.6, libzstd",
+    "to compile and link: the distro's libc headers + crt files (libc6-dev / glibc-devel), a GCC installation for libgcc and crtbegin.o and, for C++ with the default -stdlib=libstdc++, its libstdc++ headers (g++ / libstdc++-dev), and binutils ld unless -fuse-ld=lld. clang finds these under /usr automatically.",
+    "-stdlib=libc++ works from the tarball's own libc++ (programs need -Wl,-rpath,{runtime_dir}/lib/x86_64-unknown-linux-gnu or LD_LIBRARY_PATH at run time)"
+   ],
+   "executable": "bin/clang",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/bin/clang\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "glibc 2.35 (Ubuntu 22.04+)",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://releases.llvm.org/",
+    "https://clang.llvm.org/docs/Toolchain.html",
+    "tested 2026-09-18 on Ubuntu 24.04: 19.1.7, 20.1.8, 22.1.8, 23.1.1 unpacked to '.../app one/<ver>'; C hello, C++ hello (libstdc++), -fuse-ld=lld and -stdlib=libc++ all compiled and ran, except 23.1.1 -fuse-ld=lld (ld.lld: libicui18n.so.70 missing)"
+   ],
+   "notes": "Binaries carry RUNPATH $ORIGIN/../lib, so the folder can live anywhere (spaces OK -- tested). Unpacked sizes are huge: 8.2 GB (19.1.7) to 12 GB (22/23) because every tool is a separate statically-linked-LLVM executable; if only a compiler is needed, unpack just bin/clang*, bin/ld.lld, bin/lld, bin/llvm-ar, lib/clang/ and include/ (a few hundred MB). For 23.1.1 lld: either require ICU 70 or skip -fuse-ld=lld (use the host's ld).",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build build",
+    "env": {
+     "CC": "{runtime_dir}/bin/clang",
+     "CXX": "{runtime_dir}/bin/clang++",
+     "CFLAGS": null,
+     "CXXFLAGS": null,
+     "LDFLAGS": null,
+     "CPATH": null,
+     "LIBRARY_PATH": null
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine (installer-builder design.md 1.8). The default command assumes CMake and Ninja from the catalogue (catalog/cmake, catalog/ninja); the publisher's Build command replaces it (Meson: `meson setup build && meson compile -C build`; make: `make`). The cleared variables would inject a user's global compiler settings. See the recipe's prerequisites for what the system must still provide (headers, linker, SDK)."
+   }
+  },
+  {
+   "match": {
+    "runtime": "llvm",
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.xz",
+    "variant": "ubuntu-22.04",
+    "libc": "glibc",
+    "versions": ">=16,<18",
+    "arch": "amd64"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [
+    "glibc >= 2.34 (16.0.4) / 2.35 (17.0.6), GLIBCXX_3.4.30",
+    "host libs: libz, libzstd, libxml2, libtinfo.so.6/libncurses.so.6 (tools other than clang)",
+    "host libc dev files + GCC install (libgcc, libstdc++ headers) + binutils ld, as for the recipe above"
+   ],
+   "executable": "bin/clang",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/bin/clang\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Ubuntu 22.04 / glibc 2.34",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "tested 2026-09-18 on Ubuntu 24.04: 16.0.4-ubuntu-22.04 and 17.0.6-ubuntu-22.04 -- C, C++, lld and libc++ hello worlds all ran from a spaced path"
+   ],
+   "notes": null,
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build build",
+    "env": {
+     "CC": "{runtime_dir}/bin/clang",
+     "CXX": "{runtime_dir}/bin/clang++",
+     "CFLAGS": null,
+     "CXXFLAGS": null,
+     "LDFLAGS": null,
+     "CPATH": null,
+     "LIBRARY_PATH": null
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine (installer-builder design.md 1.8). The default command assumes CMake and Ninja from the catalogue (catalog/cmake, catalog/ninja); the publisher's Build command replaces it (Meson: `meson setup build && meson compile -C build`; make: `make`). The cleared variables would inject a user's global compiler settings. See the recipe's prerequisites for what the system must still provide (headers, linker, SDK)."
+   }
+  },
+  {
+   "match": {
+    "runtime": "llvm",
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.xz",
+    "variant": "ubuntu-14.04|ubuntu-16.04|ubuntu-18.04|ubuntu-20.10|rhel-8.4|Fedora-25",
+    "libc": "glibc",
+    "versions": ">=3.9,<19",
+    "arch": "amd64"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [
+    "glibc: >= 2.15 for the ubuntu-14.04/16.04 and Fedora-25 builds (measured), >= 2.27 for ubuntu-18.04 and rhel-8.4, >= 2.32 for ubuntu-20.10 (11.1.0)",
+    "libtinfo.so.5 (ncurses 5 ABI) for 3.9.1, 7.1.0, 8.0.1, 13.0.1 and 18.1.8: clang itself will not start without it. Modern distros no longer install it (Ubuntu 24.04 dropped the libtinfo5 package; Fedora has ncurses-compat-libs). Either require it, or drop a libtinfo.so.5 into {runtime_dir}/lib (clang's RUNPATH is $ORIGIN/../lib) -- operator decision, untested",
+    "3.9.1, 7.1.0, 8.0.1 lldb additionally want libpython2.7.so.1.0, libedit.so.2, libpfm.so.4 (only for lldb, not the compiler)",
+    "host libc dev files + a GCC install + binutils ld, as above. Old clang (<= ~6) cannot parse the C++ headers of a modern system libstdc++ (GCC 13/14): use -stdlib=libc++ from the tarball, or an older host GCC"
+   ],
+   "executable": "bin/clang",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/bin/clang\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "see prerequisites: glibc 2.15 to 2.32 depending on build, plus ncurses-5 compat libs for the builds named there",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "tested 2026-09-18 on Ubuntu 24.04 (glibc 2.39, GCC 13 libstdc++) from '.../app one/': WORKS (C, C++, lld, libc++): 15.0.6-ubuntu-18.04, 14.0.6-rhel-8.4, 12.0.1-ubuntu-16.04, 11.1.0-ubuntu-20.10, 9.0.1-ubuntu-16.04, 5.0.2-ubuntu-16.04. PARTIAL: 6.0.1-ubuntu-16.04 (C, lld, libc++ OK; C++ against system libstdc++ 13 headers fails to compile), 4.0.1-Fedora-25 (C, C++, lld OK; -stdlib=libc++ fails). FAILS TO START (libtinfo.so.5 missing): 18.1.8-ubuntu-18.04, 13.0.1-ubuntu-18.04, 8.0.1-ubuntu-14.04, 7.1.0-ubuntu-14.04, 3.9.1-ubuntu-16.04. NOT TESTABLE: 10.0.1-ubuntu-16.04 (stored file is corrupt, see top-level notes)"
+   ],
+   "notes": "The version range per variant follows the plan: ubuntu-14.04 = 7.1.0, 8.0.1; ubuntu-16.04 = 3.9.1, 5.0.2, 6.0.1, 9.0.1, 10.0.1, 12.0.1; ubuntu-18.04 = 11.1.0 (ppc64le), 13.0.1, 15.0.6, 18.1.8; ubuntu-20.10 = 11.1.0; rhel-8.4 = 14.0.6; Fedora-25 = 4.0.1. Where a plan offers both a distro-tagged and an untagged build of the same version, prefer the one that starts on the target distro (e.g. 18.1.8: the ubuntu-18.04 build needs libtinfo5).",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build build",
+    "env": {
+     "CC": "{runtime_dir}/bin/clang",
+     "CXX": "{runtime_dir}/bin/clang++",
+     "CFLAGS": null,
+     "CXXFLAGS": null,
+     "LDFLAGS": null,
+     "CPATH": null,
+     "LIBRARY_PATH": null
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine (installer-builder design.md 1.8). The default command assumes CMake and Ninja from the catalogue (catalog/cmake, catalog/ninja); the publisher's Build command replaces it (Meson: `meson setup build && meson compile -C build`; make: `make`). The cleared variables would inject a user's global compiler settings. See the recipe's prerequisites for what the system must still provide (headers, linker, SDK)."
+   }
+  },
+  {
+   "match": {
+    "runtime": "llvm",
+    "os": "linux",
+    "kind": "archive",
+    "format": null,
+    "libc": "glibc",
+    "versions": null,
+    "arch": "arm64|armv7|ppc64le|x86"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz or tar.gz (per the file)",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [
+    "arm64 (measured from symbol versions of bin/clang-N, lld, clangd): 3.9.1-8.0.1 glibc 2.17 + libtinfo.so.5; 9.0.1-14.0.6 glibc 2.27 + libtinfo.so.5; 15.0.6-18.1.8 glibc 2.30 + libtinfo.so.6; 19.1.7-23.1.1 glibc 2.34 + GLIBCXX_3.4.30 (+ libxml2 for lldb tools; 23.1.1 lld needs ICU 70 like amd64)",
+    "armv7 (armv7a-linux-gnueabihf, measured): 3.9.1-8.0.1 glibc 2.15 + libtinfo.so.5; 9.0.1-14.0.6 glibc 2.27 + libtinfo.so.5; 15.0.6-18.1.8 glibc 2.30 (+ libtinfo.so.6 from 16); 19.1.7-23.1.0 glibc 2.34 + GLIBCXX_3.4.30",
+    "ppc64le (measured, partial): Fedora-25/27 and ubuntu-16.04 builds glibc ~2.22; ubuntu-18.04(.5) and rhel-8.x builds glibc 2.27",
+    "x86 (i686 Fedora-25/27 builds): a 32-bit userland (ld-linux.so.2, 32-bit libz, libtinfo.so.6, libxml2, libstdc++)",
+    "host libc dev files + GCC install + binutils, as for amd64"
+   ],
+   "executable": "bin/clang",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/bin/clang\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "per build, see prerequisites",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "stored tarballs (all arm64 and armv7, most ppc64le): bin/clang-N, bin/lld, bin/clangd extracted to scratch and inspected with readelf (GLIBC_/GLIBCXX_ symbol versions, NEEDED)",
+    "x86_6.0.0-Fedora27 was tried on the amd64 host: fails to start without 32-bit libz.so.1 (no i386 multiarch libs installed), so not tested"
+   ],
+   "notes": "Same layout and RUNPATH ($ORIGIN/../lib) as the amd64 builds, so the amd64 test results on relocation and spaces carry over; only the host-library requirements differ. 17.0.6+ armv7 files are tar.gz, the rest tar.xz.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build build",
+    "env": {
+     "CC": "{runtime_dir}/bin/clang",
+     "CXX": "{runtime_dir}/bin/clang++",
+     "CFLAGS": null,
+     "CXXFLAGS": null,
+     "LDFLAGS": null,
+     "CPATH": null,
+     "LIBRARY_PATH": null
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine (installer-builder design.md 1.8). The default command assumes CMake and Ninja from the catalogue (catalog/cmake, catalog/ninja); the publisher's Build command replaces it (Meson: `meson setup build && meson compile -C build`; make: `make`). The cleared variables would inject a user's global compiler settings. See the recipe's prerequisites for what the system must still provide (headers, linker, SDK)."
+   }
+  },
+  {
+   "match": {
+    "runtime": "llvm",
+    "os": "macos",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": ">=3.9",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null || true",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "Apple SDK + ld64: Xcode Command Line Tools (xcode-select --install; system-wide, Apple licence, cannot be redistributed or put in {runtime_dir}). Without it there are no C headers (/usr/include is gone since macOS 10.14) and no libSystem stubs to link against. Upstream clang does not call xcrun itself: pass -isysroot \"$(xcrun --show-sdk-path)\" or export SDKROOT=$(xcrun --show-sdk-path)",
+    "linker: Apple's ld from the CLT (default), or -fuse-ld=lld with the tarball's ld64.lld (13+) -- still needs the SDK",
+    "C++: the tarball ships libc++ headers (include/c++/v1); linking uses the OS libc++.dylib from the SDK"
+   ],
+   "executable": "bin/clang",
+   "package_manager": null,
+   "verify": "SDKROOT=\"$(xcrun --show-sdk-path)\" \"{runtime_dir}/bin/clang\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "amd64: 3.9.0 10.11, 4.0.1 10.12, 5.0.2 10.9, 6.0.0 10.13, 9.0.1-11.0.0 10.15, 12.0.0 11.0, 13.0.1-14.0.6 11.6, 15.0.7 12.6, 19.1.7-20.1.7 13.7. arm64: 14.0.6 13.2, 15.0.7-16.0.5 13.0, 17.0.6 13.6, 19.1.7-23.1.1 14.0 (LC_BUILD_VERSION minos read from bin/clang-N). No amd64 build after 20.1.7.",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://clang.llvm.org/docs/UsersManual.html",
+    "https://developer.apple.com/documentation/xcode/installing-the-command-line-tools/",
+    "stored tarballs: Mach-O headers of bin/clang-N (thin x86_64 or arm64; arm64 ones carry a code signature, x86_64 ones do not); they link only libSystem, libc++, libz and (<= 17) libncurses.5.4 -- all present in macOS"
+   ],
+   "notes": "The binaries use @rpath/@loader_path, so any folder works. Quarantine: files fetched by the installer's own HTTP code are normally NOT quarantined (only LSQuarantine-aware apps set the attribute), but if the archive was downloaded by a browser Gatekeeper will block every unsigned x86_64 binary -- the xattr step clears it and is harmless otherwise. Apple Silicon requires at least an ad-hoc signature (present); don't strip or modify the binaries after unpacking or the signature breaks. Apple Clang (Xcode) is a different compiler and is not in the catalogue (Apple-ID gated, see gaps.json).",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build build",
+    "env": {
+     "CC": "{runtime_dir}/bin/clang",
+     "CXX": "{runtime_dir}/bin/clang++",
+     "CFLAGS": null,
+     "CXXFLAGS": null,
+     "LDFLAGS": null,
+     "CPATH": null,
+     "LIBRARY_PATH": null
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine (installer-builder design.md 1.8). The default command assumes CMake and Ninja from the catalogue (catalog/cmake, catalog/ninja); the publisher's Build command replaces it (Meson: `meson setup build && meson compile -C build`; make: `make`). The cleared variables would inject a user's global compiler settings. See the recipe's prerequisites for what the system must still provide (headers, linker, SDK)."
+   }
+  },
+  {
+   "match": {
+    "runtime": "gcc",
+    "os": "linux",
+    "kind": "source",
+    "format": null,
+    "versions": ">=4.9",
+    "arch": "any"
+   },
+   "method": "build",
+   "steps": [
+    {
+     "unpack": "tar.xz (tar.bz2 for 4.9.4)",
+     "to": "{tmp}/src",
+     "strip_components": 1
+    },
+    {
+     "run": "cd \"{tmp}/src\" && ./contrib/download_prerequisites",
+     "shell": "sh"
+    },
+    {
+     "run": "mkdir -p \"{tmp}/obj\" && cd \"{tmp}/obj\" && \"{tmp}/src/configure\" --prefix=/opt/gcc-stage --disable-bootstrap --disable-multilib --enable-languages=c,c++",
+     "shell": "sh"
+    },
+    {
+     "run": "cd \"{tmp}/obj\" && make -j\"$(nproc)\" && make install-strip DESTDIR=\"{tmp}/stage\"",
+     "shell": "sh"
+    },
+    {
+     "run": "cp -a \"{tmp}/stage/opt/gcc-stage/.\" \"{runtime_dir}/\"",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "a working host C and C++ compiler: GCC 11+ sources need a C++11 compiler (GCC >= 4.8 / clang >= 3.3); GCC 4.9-10 need C++98",
+    "make, perl, tar/xz/bzip2, the host's libc headers + crt files (libc6-dev / glibc-devel) and binutils (as, ld): the built GCC keeps using the host's /usr/bin/as and ld",
+    "GMP, MPFR, MPC, ISL: download_prerequisites fetches pinned versions from gcc.gnu.org/pub/gcc/infrastructure (needs network + wget or curl at build time), or install libgmp-dev libmpfr-dev libmpc-dev and drop that step. For offline installers fetch them at build-server time.",
+    "~6 GB of scratch space, several GB RAM, 30-60+ min on 8 cores (GCC 14.4.0: 36 min with -j5, --disable-bootstrap)",
+    "old majors on a modern host: releases that predate the 2017 glibc 2.26 'struct ucontext' -> 'ucontext_t' change (e.g. 4.9.4) fail in libgcc/libsanitizer unless patched, and older sources often fail when the host compiler defaults to C++17 (add CXXFLAGS=-std=gnu++98 or use an older host GCC) -- not tested here"
+   ],
+   "executable": "bin/gcc",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/bin/gcc\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "any glibc Linux with the prerequisites; the result runs only on hosts with that glibc or newer",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://gcc.gnu.org/install/",
+    "https://gcc.gnu.org/install/configure.html",
+    "https://gcc.gnu.org/install/prerequisites.html",
+    "tested 2026-09-18: gcc-14.4.0.tar.xz built with exactly these steps (prefix without spaces, --disable-bootstrap, c,c++), then the installed tree was MOVED into '.../app one/gcc-14'; gcc and g++ compiled and ran C/C++ hello worlds from there (256 MB installed)"
+   ],
+   "notes": "Build with a space-free prefix in {tmp} and copy: GCC's own build breaks in paths with spaces, but an installed GCC is relocatable (the driver finds cc1, headers and libs relative to its own location, verified by moving it). Using DESTDIR keeps `make install` out of the real /opt. Programs compiled with this g++ link libstdc++.so.6 dynamically and at run time pick up the SYSTEM libstdc++ unless told otherwise: on a host whose libstdc++ is older than the built GCC they fail with 'GLIBCXX_3.4.xx not found'. Use -static-libstdc++ -static-libgcc, or -Wl,-rpath,{runtime_dir}/lib64. Only 14.4.0 was actually built; other majors are the same recipe with the caveats above. macOS is not covered: the plan only has these tarballs under linux/any; Intel macOS can build them with the CLT SDK, but Apple Silicon support lives in Iain Sandoe's out-of-tree darwin branch (what Homebrew uses) rather than these upstream releases, as far as this research found (low confidence, not researched further).",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build build",
+    "env": {
+     "CC": "{runtime_dir}/bin/gcc",
+     "CXX": "{runtime_dir}/bin/g++",
+     "CFLAGS": null,
+     "CXXFLAGS": null,
+     "LDFLAGS": null,
+     "CPATH": null,
+     "LIBRARY_PATH": null
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine (installer-builder design.md 1.8). The default command assumes CMake and Ninja from the catalogue (catalog/cmake, catalog/ninja); the publisher's Build command replaces it (Meson: `meson setup build && meson compile -C build`; make: `make`). The cleared variables would inject a user's global compiler settings. See the recipe's prerequisites for what the system must still provide (headers, linker, SDK)."
+   }
+  },
+  {
+   "match": {
+    "runtime": "gcc",
+    "os": "windows",
+    "kind": "archive",
+    "format": "7z",
+    "variant": "winlibs-posix-msvcrt",
+    "versions": null,
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "7z",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [
+    "none: MSVCRT builds use the msvcrt.dll every Windows version ships; all helper DLLs (libgmp, libmpfr, libisl, zlib1, libzstd, libiconv, libintl, libwinpthread) are in bin\\ next to the tools",
+    "programs built with it need libstdc++-6.dll, libgcc_s_seh-1.dll (x64) / libgcc_s_dw2-1.dll (x86) and libwinpthread-1.dll next to them, or link with -static"
+   ],
+   "executable": "bin\\gcc.exe",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}\\bin\\gcc.exe\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": false,
+   "min_os": "x86 (i686, dwarf): Windows XP -- gcc, g++, cc1, cc1plus, as, ld import no post-XP APIs (checked in 9.5.0 and 10.5.0). x64 (seh): Windows Vista x64 or later -- as.exe and ld.exe of 10.5.0 statically import GetFinalPathNameByHandleA, so they will not load on XP x64. Bundled extras need more: cmake/ctest/cpack/ninja/ccache and gdb (libpython3.9) import Vista/7-only APIs.",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://winlibs.com/",
+    "https://github.com/brechtsanders/winlibs_mingw",
+    "stored files gcc/windows/{x86,amd64}/*msvcrt*/winlibs-*.7z: single top folder mingw32/ (x86) or mingw64/ (x64), no symlinks, 6.7k-10.2k files; PE import tables of every .exe/.dll in the x86 builds scanned for post-XP kernel32 APIs"
+   ],
+   "notes": "WinLibs: 'no installation or registry requirements and disk location independent', no PATH needed if called by full path (the tools find each other relative to gcc.exe). relocatable is false only because WinLibs' own instructions say the location must not contain spaces -- GCC's driver generally copes, but make/shell-based builds and some specs quoting do not. Choose a space-free {runtime_dir} (e.g. %SystemDrive%\\ib\\<app>\\gcc) for this toolchain. This is the only toolchain in the catalogue that can target and run on Windows XP (x86).",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build build",
+    "env": {
+     "CC": "{runtime_dir}\\bin\\gcc.exe",
+     "CXX": "{runtime_dir}\\bin\\g++.exe",
+     "CFLAGS": null,
+     "CXXFLAGS": null,
+     "LDFLAGS": null,
+     "CPATH": null,
+     "LIBRARY_PATH": null
+    },
+    "path_prepend": [
+     "{runtime_dir}\\bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine (installer-builder design.md 1.8). The default command assumes CMake and Ninja from the catalogue (catalog/cmake, catalog/ninja); the publisher's Build command replaces it (Meson: `meson setup build && meson compile -C build`; make: `make`). The cleared variables would inject a user's global compiler settings. See the recipe's prerequisites for what the system must still provide (headers, linker, SDK)."
+   }
+  },
+  {
+   "match": {
+    "runtime": "gcc",
+    "os": "windows",
+    "kind": "archive",
+    "format": "7z",
+    "variant": "winlibs-posix-ucrt",
+    "versions": null,
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "7z",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [
+    "Universal C Runtime: built into Windows 10/11; on Windows 7 SP1 / 8 / 8.1 it must be installed system-wide first (KB2999226 / KB3118401, or the VC++ 2015-2022 redistributable which carries it -- see catalog/prereqs), or ucrtbase.dll + api-ms-win-crt-*.dll placed app-locally in {runtime_dir}\\bin",
+    "programs built with it need the UCRT on the target machine too, plus libstdc++-6.dll / libgcc_s_*.dll / libwinpthread-1.dll unless linked -static"
+   ],
+   "executable": "bin\\gcc.exe",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}\\bin\\gcc.exe\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": false,
+   "min_os": "Windows 7 SP1 with the UCRT update (native on 10+). Not XP/Vista: every tool imports api-ms-win-crt-*.dll and GetFinalPathNameByHandleA (checked in 16.2.0 x86).",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://winlibs.com/ (MSVCRT or UCRT runtime library?)",
+    "https://learn.microsoft.com/en-us/cpp/windows/universal-crt-deployment",
+    "stored files gcc/windows/*/*ucrt*/winlibs-*.7z: top folder mingw32/ or mingw64/"
+   ],
+   "notes": "Same layout and space caveat as the MSVCRT builds. None of the planned WinLibs files bundle LLVM/Clang (file names lack '-llvm-').",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build build",
+    "env": {
+     "CC": "{runtime_dir}\\bin\\gcc.exe",
+     "CXX": "{runtime_dir}\\bin\\g++.exe",
+     "CFLAGS": null,
+     "CXXFLAGS": null,
+     "LDFLAGS": null,
+     "CPATH": null,
+     "LIBRARY_PATH": null
+    },
+    "path_prepend": [
+     "{runtime_dir}\\bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine (installer-builder design.md 1.8). The default command assumes CMake and Ninja from the catalogue (catalog/cmake, catalog/ninja); the publisher's Build command replaces it (Meson: `meson setup build && meson compile -C build`; make: `make`). The cleared variables would inject a user's global compiler settings. See the recipe's prerequisites for what the system must still provide (headers, linker, SDK)."
+   }
+  },
+  {
+   "match": {
+    "runtime": "gcc",
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip|7z-sfx",
+    "variant": "w64devkit",
+    "versions": null,
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip (1.x releases) or 7z (2.x .7z.exe: a 7-Zip SFX stub followed by a normal 7z archive; the base installer must seek past the stub to the 7z signature)",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [
+    "none (MSVCRT toolchain, runtime components statically linked)"
+   ],
+   "executable": "bin\\gcc.exe",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}\\bin\\gcc.exe\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "x64 kit: Windows 7 (some tools need Windows 10 for Unicode paths). x86 kit: Windows XP with an SSE2 CPU (Pentium 4+); its CMake, Ninja and ccache need Windows 7.",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://github.com/skeeto/w64devkit (README: Usage, Main features, Operating system support, Library installation)"
+   ],
+   "notes": "NOT IN download_plan_majors.json and no file is stored, so the archive layout was not inspected; the top folder is expected to be w64devkit/. README: 'No installation required. Run it anywhere as any user. Simply delete when no longer needed'; w64devkit.exe opens a console with the environment set (W64DEVKIT_HOME), or put bin\\ on PATH for a process; its sysroot design is 'designed to work correctly even if w64devkit or the libraries have paths containing spaces'. Fallback for the .7z.exe: run \"{file}\" -o\"{runtime_dir}\" -y (7-Zip SFX switches) and drop strip_components -- untested.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build build",
+    "env": {
+     "CC": "{runtime_dir}\\bin\\gcc.exe",
+     "CXX": "{runtime_dir}\\bin\\g++.exe",
+     "CFLAGS": null,
+     "CXXFLAGS": null,
+     "LDFLAGS": null,
+     "CPATH": null,
+     "LIBRARY_PATH": null
+    },
+    "path_prepend": [
+     "{runtime_dir}\\bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine (installer-builder design.md 1.8). The default command assumes CMake and Ninja from the catalogue (catalog/cmake, catalog/ninja); the publisher's Build command replaces it (Meson: `meson setup build && meson compile -C build`; make: `make`). The cleared variables would inject a user's global compiler settings. See the recipe's prerequisites for what the system must still provide (headers, linker, SDK)."
+   }
+  },
+  {
+   "match": {
+    "runtime": "msvc-redist",
+    "os": "windows",
+    "kind": "installer",
+    "format": "exe",
+    "variant": null,
+    "versions": "==latest",
+    "arch": null
+   },
+   "method": "run",
+   "steps": [
+    {
+     "run": "\"{file}\" /install /quiet /norestart",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "Windows 7 SP1+ (stored 14.44.35211 bundle)"
+   ],
+   "executable": null,
+   "package_manager": null,
+   "verify": "reg query \"HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\<x86|x64|arm64>\" /v Installed",
+   "uninstall": "do not uninstall (shared system runtime)",
+   "side_effects": [
+    "system-wide VC++ 2015-2022 runtime DLLs, MSI products, Package Cache, possibly KB2999226 and a reboot (3010)"
+   ],
+   "isolation": "leaks",
+   "relocatable": true,
+   "min_os": "Windows 7 SP1",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist",
+    "catalog/prereqs/install.json"
+   ],
+   "notes": "Full recipes, exit codes and the app-local (isolation: full) alternative are in catalog/prereqs/install.json. None of the toolchains above need it: the LLVM Windows builds carry or statically link their CRT, and MinGW builds use msvcrt.dll/UCRT.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "A system-wide prerequisite; nothing to launch."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "runtime": "msvc-redist",
+    "os": "windows",
+    "kind": "installer",
+    "format": "exe",
+    "variant": "buildtools",
+    "versions": "==latest",
+    "arch": "amd64"
+   },
+   "method": "run",
+   "steps": [
+    {
+     "run": "\"{file}\" --quiet --wait --norestart --nocache --installPath \"{runtime_dir}\" --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "Windows 10 1909+ / Server 2016+",
+    "internet access (bootstrapper)",
+    "a Visual Studio licence covering the use"
+   ],
+   "executable": "VC\\Auxiliary\\Build\\vcvarsall.bat",
+   "package_manager": null,
+   "verify": "\"%ProgramFiles(x86)%\\Microsoft Visual Studio\\Installer\\vswhere.exe\" -path \"{runtime_dir}\" -property installationVersion",
+   "uninstall": "\"%ProgramFiles(x86)%\\Microsoft Visual Studio\\Installer\\setup.exe\" uninstall --installPath \"{runtime_dir}\" --quiet --wait --norestart",
+   "side_effects": [
+    "VS Installer in %ProgramFiles(x86)%\\Microsoft Visual Studio\\Installer",
+    "instance registration in %ProgramData% + HKLM",
+    "Windows SDK system-wide in %ProgramFiles(x86)%\\Windows Kits\\10",
+    "VC++ redist system-wide"
+   ],
+   "isolation": "leaks",
+   "relocatable": false,
+   "min_os": "Windows 10 1909",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://learn.microsoft.com/en-us/visualstudio/install/use-command-line-parameters-to-install-visual-studio",
+    "catalog/prereqs/install.json"
+   ],
+   "notes": "Needed only for MSVC or clang targeting *-windows-msvc. See catalog/prereqs/install.json for exit codes.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install."
+   },
+   "project_install": {
+    "command": "call \"{runtime_dir}\\VC\\Auxiliary\\Build\\vcvarsall.bat\" x64 && cmake -S . -B build -G Ninja && cmake --build build --config Release",
+    "env": {},
+    "cwd": "{app_dir}",
+    "notes": "Build Tools are installed system-wide; vcvarsall.bat sets up the compiler for this one command. CMake/Ninja come from the catalogue (catalog/cmake, catalog/ninja) and must be on PATH."
+   }
+  }
+ ]
+}

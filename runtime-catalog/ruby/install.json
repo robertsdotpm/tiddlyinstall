@@ -1,0 +1,495 @@
+{
+ "runtime": "ruby",
+ "researched": "2026-09-18",
+ "assumes": "root/administrator",
+ "notes": "Extra fields beyond SCHEMA.md: match.variant (catalogue variant; '*' is a glob, null matches any) and preferred. Linux recipes were run on Ubuntu 24.04 amd64 in a scratch folder; Windows and macOS are research-only (the 7z listings were read from copies downloaded to scratch).",
+ "recipes": [
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": ">=2.0",
+    "arch": null,
+    "variant": "ubuntu-*"
+   },
+   "method": "unpack",
+   "preferred": true,
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "R=\"{runtime_dir}\"; V=$(ls \"$R/lib/ruby\" | grep -E '^[0-9]+\\.[0-9]+\\.[0-9]+$' | head -1); A=$(ls \"$R/lib/ruby/$V\" | grep -E -- '-linux|-darwin' | head -1); mv \"$R/bin/ruby\" \"$R/bin/ruby.bin\"; printf '%s\\n' '#!/bin/sh' 'd=$(dirname -- \"$(readlink -f -- \"$0\")\"); r=$(dirname -- \"$d\")' \"V=$V; A=$A\" 'LD_LIBRARY_PATH=\"$r/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"' '[ -d \"$r/openssl/lib\" ] && LD_LIBRARY_PATH=\"$r/openssl/lib:$LD_LIBRARY_PATH\"' 'RUBYLIB=\"$r/lib/ruby/$V:$r/lib/ruby/$V/$A${RUBYLIB:+:$RUBYLIB}\"' 'if [ -d \"$r/openssl/ssl\" ] && [ -z \"$SSL_CERT_FILE\" ]; then for f in /etc/ssl/certs/ca-certificates.crt /etc/pki/tls/certs/ca-bundle.crt /etc/ssl/cert.pem; do [ -f \"$f\" ] && SSL_CERT_FILE=\"$f\" && break; done; fi' 'export LD_LIBRARY_PATH RUBYLIB SSL_CERT_FILE' 'exec \"$d/ruby.bin\" \"$@\"' > \"$R/bin/ruby\"; chmod 755 \"$R/bin/ruby\"",
+     "shell": "sh"
+    },
+    {
+     "run": "for f in \"{runtime_dir}\"/bin/*; do case \"$f\" in */ruby|*/ruby.bin) continue;; esac; head -1 \"$f\" | grep -q '^#!.*/bin/ruby' || continue; { printf '#!/bin/sh\\n# -*- ruby -*-\\n_=_\\\\\\n=begin\\nbindir=\"${0%%/*}\"\\nexec \"$bindir/ruby\" \"-x\" \"$0\" \"$@\"\\n=end\\n#!/usr/bin/env ruby\\n'; tail -n +2 \"$f\"; } > \"$f.tmp\" && chmod 755 \"$f.tmp\" && mv \"$f.tmp\" \"$f\"; done",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "glibc >= 2.38 for the ubuntu-24.04 and ubuntu-26.04 builds (highest GLIBC_ symbol version in bin/ruby, libruby and the ext .so files, measured for 2.7.8-ubuntu-24.04, 3.4.10-ubuntu-24.04 and 3.4.10-ubuntu-26.04)",
+    "System shared libraries at these sonames: libz.so.1, libgmp.so.10, libffi.so.8, libyaml-0.so.2, libcrypt.so.1 (24.04 builds), libgcc_s.so.1; for 3.x also libssl.so.3/libcrypto.so.3 (the ubuntu-26.04 openssl.so needs symbol version OPENSSL_3.4.0, i.e. OpenSSL >= 3.4); 2.7.8 bundles its own OpenSSL 1.1.1w under openssl/ and also needs libreadline.so.8 and libgdbm.so.6",
+    "A system CA bundle (/etc/ssl/certs/ca-certificates.crt or /etc/pki/tls/certs/ca-bundle.crt)",
+    "gcc/make only if the app installs gems with native extensions"
+   ],
+   "executable": "bin/ruby",
+   "package_manager": "\"{runtime_dir}/bin/ruby\" \"{runtime_dir}/bin/gem\"   (and \"{runtime_dir}/bin/ruby\" \"{runtime_dir}/bin/bundle\")",
+   "verify": "\"{runtime_dir}/bin/ruby\" -ropenssl -rpsych -rzlib -e 'puts RUBY_DESCRIPTION, RbConfig.ruby, Gem.dir'",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "The Ubuntu release named in the variant, or a distro with the same or newer glibc and library sonames. ubuntu-26.04 builds effectively need a 2026-era distro (OpenSSL >= 3.4).",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://github.com/ruby/ruby-builder",
+    "https://github.com/ruby/setup-ruby",
+    "https://github.com/ruby/ruby-builder/releases"
+   ],
+   "notes": "ruby-builder tarballs are the setup-ruby GitHub Actions toolcache builds, and they are NOT relocatable as shipped: RUNPATH=/opt/hostedtoolcache/Ruby/<ver>/x64/lib (plus x64/openssl/lib on 2.7), the load path is compiled in (not --enable-load-relative), and bin/gem, bundle, rake etc. have `#!/opt/hostedtoolcache/Ruby/<ver>/x64/bin/ruby`. Unpacked elsewhere, bin/ruby fails with 'libruby.so.X.Y: cannot open shared object file'. The fix steps replace bin/ruby with a sh wrapper (the real binary becomes bin/ruby.bin) that sets LD_LIBRARY_PATH to {runtime_dir}/lib (and openssl/lib), and RUBYLIB to lib/ruby/<ver> and its arch dir. rbconfig.rb then computes TOPDIR from its own location, so RbConfig prefix, Gem.dir and RbConfig.ruby all point into {runtime_dir}. The shebangs of bin/* become the same /bin/sh + `ruby -x` stub that `--enable-load-relative` installs use. TESTED on Ubuntu 24.04 amd64: 3.4.10-ubuntu-24.04 unpacked into '.../app one/rt' and '.../app two/rt' (spaces). After the fix: openssl, psych and zlib loaded, `gem install rainbow` stayed in app one (app two couldn't require it), `gem install bcrypt` compiled its native extension in the path with spaces, and `bundle --version` worked. 2.7.8-ubuntu-24.04 (the plan's file) also worked. Its bundled OpenSSL has OPENSSLDIR under /opt/hostedtoolcache, so without SSL_CERT_FILE, HTTPS verification failed; the wrapper sets it, and after that an HTTPS GET to rubygems.org returned 200. The plan's 3.4.10-ubuntu-26.04 build started on 24.04, but `require 'openssl'` failed (libcrypto.so.3 lacks OPENSSL_3.4.0). Caveats found: (1) executables that gems install later get `#!\"{runtime_dir}/bin/ruby\"` with quotes, and when the path has a space Linux can't run them directly. `\"{runtime_dir}/bin/ruby\" \"{runtime_dir}/bin/<tool>\"` worked. `ruby -S` doesn't, because bin isn't on PATH. (2) The wrapper's environment is inherited by child processes. (3) Only amd64 was run; arm64 tarballs have the same layout. Alternative with no wrapper: build from the source tarball with --enable-load-relative (see the source recipe), which gives RUNPATH ${ORIGIN}/../lib and relative load paths.",
+   "launch": {
+    "program": "{runtime_dir}/bin/ruby",
+    "args": [],
+    "env": {
+     "RUBYOPT": null,
+     "RUBYLIB": null,
+     "GEM_HOME": null,
+     "GEM_PATH": null,
+     "BUNDLE_USER_HOME": "{data_dir}/bundle",
+     "BUNDLE_APP_CONFIG": "{app_dir}/.bundle"
+    },
+    "notes": "Clearing GEM_HOME/GEM_PATH makes gems resolve to the runtime's own folder; RUBYOPT/RUBYLIB would inject a user's settings."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/ruby\" \"{runtime_dir}/bin/bundle\" install",
+    "env": {
+     "RUBYOPT": null,
+     "RUBYLIB": null,
+     "GEM_HOME": null,
+     "GEM_PATH": null,
+     "BUNDLE_USER_HOME": "{data_dir}/bundle",
+     "BUNDLE_APP_CONFIG": "{app_dir}/.bundle"
+    },
+    "cwd": "{app_dir}",
+    "notes": "When the project has a Gemfile; otherwise `gem install` the app's gem."
+   }
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "source",
+    "format": "tar.gz",
+    "versions": ">=2.0",
+    "arch": "any",
+    "variant": null
+   },
+   "method": "build",
+   "preferred": true,
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{tmp}/src",
+     "strip_components": 1
+    },
+    {
+     "run": "P=$(mktemp -d /tmp/rubybuild.XXXXXX) && cd \"{tmp}/src\" && ./configure --prefix=\"$P\" --enable-load-relative --enable-shared --disable-install-doc && make -j\"$(nproc)\" && make install && cp -a \"$P\"/. \"{runtime_dir}/\" && rm -rf \"$P\"",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "gcc, make, autoconf-free (release tarballs ship configure)",
+    "dev headers: libssl-dev, libyaml-dev (psych; without it `gem` cannot run), zlib1g-dev, libffi-dev, libgmp-dev (optional), libreadline-dev (<3.3)"
+   ],
+   "executable": "bin/ruby",
+   "package_manager": "\"{runtime_dir}/bin/gem\"",
+   "verify": "\"{runtime_dir}/bin/ruby\" -ropenssl -rpsych -e 'puts RUBY_DESCRIPTION, RbConfig::CONFIG[\"prefix\"]'",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "Build dependencies installed system-wide (the operator's call; not done by the recipe)"
+   ],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "any glibc Linux with a C compiler",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://www.ruby-lang.org/en/documentation/installation/#building-from-source",
+    "https://github.com/ruby/ruby/blob/master/doc/contributing/building_ruby.md"
+   ],
+   "notes": "TESTED with ruby-3.4.10.tar.gz (from releases.json; not in the majors plan) on Ubuntu 24.04. With --enable-load-relative, RUNPATH is ${ORIGIN}/../lib and bin/gem etc. get a relative /bin/sh + `ruby -x` stub. Two copies in '.../app one/rt' and '.../app two/rt' each reported their own prefix and Gem.dir, and openssl loaded against system OpenSSL 3. psych was NOT built because libyaml-dev wasn't installed here, and so `gem install` failed ('cannot load such file -- psych'). libyaml-dev is required. Built into a space-free temp prefix and copied, like Python (not tried with a spaced --prefix). The result links the build host's libssl/libyaml/libffi sonames, so build on the oldest target distro.",
+   "launch": {
+    "program": "{runtime_dir}/bin/ruby",
+    "args": [],
+    "env": {
+     "RUBYOPT": null,
+     "RUBYLIB": null,
+     "GEM_HOME": null,
+     "GEM_PATH": null,
+     "BUNDLE_USER_HOME": "{data_dir}/bundle",
+     "BUNDLE_APP_CONFIG": "{app_dir}/.bundle"
+    },
+    "notes": "Clearing GEM_HOME/GEM_PATH makes gems resolve to the runtime's own folder; RUBYOPT/RUBYLIB would inject a user's settings."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/ruby\" \"{runtime_dir}/bin/bundle\" install",
+    "env": {
+     "RUBYOPT": null,
+     "RUBYLIB": null,
+     "GEM_HOME": null,
+     "GEM_PATH": null,
+     "BUNDLE_USER_HOME": "{data_dir}/bundle",
+     "BUNDLE_APP_CONFIG": "{app_dir}/.bundle"
+    },
+    "cwd": "{app_dir}",
+    "notes": "When the project has a Gemfile; otherwise `gem install` the app's gem."
+   }
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "source",
+    "format": "tar.gz",
+    "versions": "<2.0",
+    "arch": "any",
+    "variant": null
+   },
+   "method": "build",
+   "preferred": true,
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{tmp}/src",
+     "strip_components": 1
+    },
+    {
+     "run": "P=$(mktemp -d /tmp/rubybuild.XXXXXX) && cd \"{tmp}/src\" && ./configure --prefix=\"$P\" --enable-load-relative --enable-shared --disable-install-doc && make && make install && cp -a \"$P\"/. \"{runtime_dir}/\" && rm -rf \"$P\"",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "A period toolchain: gcc <= ~6 and OpenSSL 1.0.x headers (ext/openssl in 1.9.3 predates OpenSSL 1.1). In practice, a build container of CentOS 7 / Ubuntu 14.04 or older."
+   ],
+   "executable": "bin/ruby",
+   "package_manager": "\"{runtime_dir}/bin/gem\"",
+   "verify": "\"{runtime_dir}/bin/ruby\" -e 'puts RUBY_DESCRIPTION'",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "Build dependencies installed system-wide"
+   ],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "old glibc Linux",
+   "tested": true,
+   "confidence": "medium",
+   "sources": [
+    "https://cache.ruby-lang.org/pub/ruby/1.9/",
+    "https://github.com/rbenv/ruby-build/wiki"
+   ],
+   "notes": "TESTED and it FAILED on Ubuntu 24.04 (gcc 13.3): ruby-1.9.3-p551 (sha256 verified against index.txt) configures, but miniruby aborts (SIGABRT, 'Aborted (core dumped)') while generating exts.mk. The same happens with optflags='-O1 -fno-tree-dce -fno-optimize-sibling-calls'. A modern host needs ruby-build's 1.9.3 patches or an old build environment. --enable-load-relative exists in 1.9.3, so once built the tree should relocate like newer versions (not verified). There is no binary option on Linux for 1.9.",
+   "launch": {
+    "program": "{runtime_dir}/bin/ruby",
+    "args": [],
+    "env": {
+     "RUBYOPT": null,
+     "RUBYLIB": null,
+     "GEM_HOME": null,
+     "GEM_PATH": null,
+     "BUNDLE_USER_HOME": "{data_dir}/bundle",
+     "BUNDLE_APP_CONFIG": "{app_dir}/.bundle"
+    },
+    "notes": "Clearing GEM_HOME/GEM_PATH makes gems resolve to the runtime's own folder; RUBYOPT/RUBYLIB would inject a user's settings."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/ruby\" \"{runtime_dir}/bin/bundle\" install",
+    "env": {
+     "RUBYOPT": null,
+     "RUBYLIB": null,
+     "GEM_HOME": null,
+     "GEM_PATH": null,
+     "BUNDLE_USER_HOME": "{data_dir}/bundle",
+     "BUNDLE_APP_CONFIG": "{app_dir}/.bundle"
+    },
+    "cwd": "{app_dir}",
+    "notes": "When the project has a Gemfile; otherwise `gem install` the app's gem."
+   }
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": ">=2.0",
+    "arch": null,
+    "variant": "macos-*"
+   },
+   "method": "unpack",
+   "preferred": true,
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null || true",
+     "shell": "sh"
+    },
+    {
+     "run": "R=\"{runtime_dir}\"; OLD=$(sed -n 's/.*DESTDIR + \"\\(.*\\)\")$/\\1/p' \"$R\"/lib/ruby/*/*/rbconfig.rb | head -1); find \"$R\" -type f \\( -name '*.bundle' -o -name '*.dylib' -o -path '*/bin/ruby' \\) | while IFS= read -r f; do for l in $(otool -L \"$f\" | awk 'NR>1{print $1}' | grep \"^$OLD/lib/\"); do install_name_tool -change \"$l\" \"@executable_path/../lib/${l##*/}\" \"$f\"; done; otool -D \"$f\" | grep -q \"^$OLD\" && install_name_tool -id \"@rpath/${f##*/}\" \"$f\"; codesign -f -s - \"$f\"; done",
+     "shell": "sh"
+    },
+    {
+     "run": "for f in \"{runtime_dir}\"/bin/*; do case \"$f\" in */ruby|*/ruby.bin) continue;; esac; head -1 \"$f\" | grep -q '^#!.*/bin/ruby' || continue; { printf '#!/bin/sh\\n# -*- ruby -*-\\n_=_\\\\\\n=begin\\nbindir=\"${0%%/*}\"\\nexec \"$bindir/ruby\" \"-x\" \"$0\" \"$@\"\\n=end\\n#!/usr/bin/env ruby\\n'; tail -n +2 \"$f\"; } > \"$f.tmp\" && chmod 755 \"$f.tmp\" && mv \"$f.tmp\" \"$f\"; done",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "Homebrew packages gmp, openssl@3 and libyaml at /opt/homebrew/opt/... (arm64) or /usr/local/opt/... (x64): the binaries link them by absolute path",
+    "install_name_tool/otool (Xcode Command Line Tools) for the rewrite step",
+    "RUBYLIB set as in the Linux wrapper (lib/ruby/<ver> and its arch dir), because the load path is compiled in as /Users/runner/hostedtoolcache/Ruby/<ver>/<arch>"
+   ],
+   "executable": "bin/ruby",
+   "package_manager": "\"{runtime_dir}/bin/ruby\" \"{runtime_dir}/bin/gem\"",
+   "verify": "\"{runtime_dir}/bin/ruby\" -ropenssl -rpsych -e 'puts RUBY_DESCRIPTION, Gem.dir'",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "Depends on Homebrew-installed gmp/openssl@3/libyaml outside {runtime_dir}, which are shared, upgraded by `brew upgrade`, and absent on most machines"
+   ],
+   "isolation": "leaks",
+   "relocatable": true,
+   "min_os": "The macOS of the GitHub runner that built it (macos-arm64: Apple Silicon; the exact minimum wasn't read from LC_BUILD_VERSION)",
+   "tested": false,
+   "confidence": "low",
+   "sources": [
+    "https://github.com/ruby/ruby-builder",
+    "https://github.com/ruby/setup-ruby"
+   ],
+   "notes": "Checked the 3.4.10 darwin-arm64 tarball read-only: rbconfig prefix is /Users/runner/hostedtoolcache/Ruby/3.4.10/arm64. 98 bundles link /Users/runner/hostedtoolcache/.../lib/libruby.3.4.dylib, and bin/ruby, gmp, openssl and psych link /opt/homebrew/opt/{gmp,openssl@3,libyaml}. The binaries are code-signed, so any rewrite needs an ad-hoc re-sign on arm64. The rewrite step is an untested sketch, and a sh wrapper setting RUBYLIB (as on Linux; DYLD_LIBRARY_PATH also works, since SIP only strips DYLD_* when a protected binary is exec'd) is still needed. To reach isolation 'full', copy those three Homebrew dylibs into {runtime_dir}/lib and point the rewritten paths at them. That's the operator's call, because it means shipping Homebrew builds. A cleaner option is building from source with --enable-load-relative and --with-openssl-dir pointing to a private OpenSSL (needs Xcode CLT).",
+   "launch": {
+    "program": "{runtime_dir}/bin/ruby",
+    "args": [],
+    "env": {
+     "RUBYOPT": null,
+     "RUBYLIB": null,
+     "GEM_HOME": null,
+     "GEM_PATH": null,
+     "BUNDLE_USER_HOME": "{data_dir}/bundle",
+     "BUNDLE_APP_CONFIG": "{app_dir}/.bundle"
+    },
+    "notes": "Clearing GEM_HOME/GEM_PATH makes gems resolve to the runtime's own folder; RUBYOPT/RUBYLIB would inject a user's settings."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/ruby\" \"{runtime_dir}/bin/bundle\" install",
+    "env": {
+     "RUBYOPT": null,
+     "RUBYLIB": null,
+     "GEM_HOME": null,
+     "GEM_PATH": null,
+     "BUNDLE_USER_HOME": "{data_dir}/bundle",
+     "BUNDLE_APP_CONFIG": "{app_dir}/.bundle"
+    },
+    "cwd": "{app_dir}",
+    "notes": "When the project has a Gemfile; otherwise `gem install` the app's gem."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "7z",
+    "versions": ">=2.4",
+    "arch": null,
+    "variant": null
+   },
+   "method": "unpack",
+   "preferred": true,
+   "steps": [
+    {
+     "unpack": "7z",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [
+    "Windows 7 or later (the RubyInstaller2 installer has MinVersion=6.1); arm64 builds need Windows 11 on ARM",
+    "Universal C Runtime on Windows 7/8/8.1 for the UCRT builds (Ruby 3.1+: x64-ucrt-ruby*.dll); built into Windows 10+",
+    "For gems with C extensions: a private MSYS2 in {runtime_dir}\\msys64 (see the devkit recipe, or unpack an msys2-base archive there and run `\"{runtime_dir}\\bin\\ridk.cmd\" install 2 3`, which needs network)"
+   ],
+   "executable": "bin\\ruby.exe",
+   "package_manager": "\"{runtime_dir}\\bin\\gem.cmd\"   (bundler: \"{runtime_dir}\\bin\\bundle.bat\")",
+   "verify": "\"{runtime_dir}\\bin\\ruby.exe\" -ropenssl -e \"puts RUBY_DESCRIPTION, RbConfig::TOPDIR\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Windows 7 (x86/x64); Windows 11 ARM64 for -arm builds; Ruby 4.0 has no x86 build",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://github.com/oneclick/rubyinstaller2/wiki/FAQ",
+    "https://github.com/oneclick/rubyinstaller2/blob/master/README.md",
+    "https://github.com/oneclick/rubyinstaller2/blob/master/recipes/installer-inno/rubyinstaller.iss.erb",
+    "https://github.com/oneclick/rubyinstaller2/blob/master/resources/ssl/README-SSL.md"
+   ],
+   "notes": "Listed the 3.4.10 x64 7z (in scratch, not the catalogue): one top folder rubyinstaller-3.4.10-1-x64\\ with bin (ruby.exe, x64-ucrt-ruby340.dll, ruby_builtin_dlls), lib, include, share, packages and ridk_use. So strip_components 1. The bin\\*.bat/*.cmd launchers call `\"%~dp0ruby.exe\"` and are relative. The RubyInstaller FAQ says both the exe and the 7z are suitable for portable use. The 7z writes nothing outside the folder: no PATH, no .rb association, no Start-menu entry, no registry. CA certificates: the installer adds a `ssl` junction, but the 7z doesn't need it, because OpenSSL finds the bundled cert.pem at lib\\ruby\\<ver>\\etc\\ssl (3.4+), bin\\etc\\ssl (3.2-3.3) or ssl (<=3.1) (README-SSL.md). Spaces: RubyInstaller advises against paths with spaces or non-ASCII, because some gems won't install, and on <=3.0 ridk won't run at all. So choose a space-free {runtime_dir} on Windows if gems are compiled. MSYS2 lookup (msys2_installation.rb) order: MSYS2_PATH env, {runtime_dir}\\msys64, {runtime_dir}\\msys32, <parent of runtime_dir>\\msys64, then C:\\msys64, C:\\msys32, the MSYS2 uninstall registry entries, PATH and scoop. So a private {runtime_dir}\\msys64 always wins, but without one a machine-wide C:\\msys64 is picked up (leak in).",
+   "launch": {
+    "program": "{runtime_dir}\\bin\\ruby.exe",
+    "args": [],
+    "env": {
+     "RUBYOPT": null,
+     "RUBYLIB": null,
+     "GEM_HOME": null,
+     "GEM_PATH": null,
+     "BUNDLE_USER_HOME": "{data_dir}\\bundle",
+     "BUNDLE_APP_CONFIG": "{app_dir}\\.bundle"
+    },
+    "notes": "Clearing GEM_HOME/GEM_PATH makes gems resolve to the runtime's own folder; RUBYOPT/RUBYLIB would inject a user's settings."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\bin\\bundle.bat\" install",
+    "env": {
+     "RUBYOPT": null,
+     "RUBYLIB": null,
+     "GEM_HOME": null,
+     "GEM_PATH": null,
+     "BUNDLE_USER_HOME": "{data_dir}\\bundle",
+     "BUNDLE_APP_CONFIG": "{app_dir}\\.bundle"
+    },
+    "cwd": "{app_dir}",
+    "notes": "When the project has a Gemfile; otherwise `gem install` the app's gem."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "7z",
+    "versions": "<2.4",
+    "arch": null,
+    "variant": null
+   },
+   "method": "unpack",
+   "preferred": true,
+   "steps": [
+    {
+     "unpack": "7z",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [
+    "For C extensions: the matching RubyInstaller DevKit (1.9.3: DevKit-tdm-32-4.5.2 self-extracting 7z, not in the catalogue) unpacked into {runtime_dir}\\devkit, then `\"{runtime_dir}\\bin\\ruby.exe\" \"{runtime_dir}\\devkit\\dk.rb\" init` and `... dk.rb install` run from the devkit folder"
+   ],
+   "executable": "bin\\ruby.exe",
+   "package_manager": "\"{runtime_dir}\\bin\\gem.bat\"",
+   "verify": "\"{runtime_dir}\\bin\\ruby.exe\" -e \"puts RUBY_DESCRIPTION\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Windows 2000/XP (RubyInstaller 1.x, i386-mingw32, msvcrt.dll)",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://rubyinstaller.org/downloads/archives/",
+    "https://github.com/oneclick/rubyinstaller/wiki/Development-Kit"
+   ],
+   "notes": "Listed ruby-1.9.3-p551-i386-mingw32.7z: one top folder with bin\\ruby.exe, msvcrt-ruby191.dll and bundled OpenSSL/zlib/yaml/tcl DLLs, and lib\\ruby. bin\\gem.bat uses `\"%~dp0ruby.exe\"` (relative). Runs on XP, which none of the RubyInstaller2 builds do. dk.rb install writes a config.yml holding the absolute ruby path and adds devkit.rb into this ruby's site_ruby/operating_system.rb (private), so re-run it after a move. Its bundled OpenSSL 1.0.x has no current CA bundle, so rubygems.org over HTTPS fails: set SSL_CERT_FILE to a current cacert.pem, or install gems from local .gem files.",
+   "launch": {
+    "program": "{runtime_dir}\\bin\\ruby.exe",
+    "args": [],
+    "env": {
+     "RUBYOPT": null,
+     "RUBYLIB": null,
+     "GEM_HOME": null,
+     "GEM_PATH": null,
+     "BUNDLE_USER_HOME": "{data_dir}\\bundle",
+     "BUNDLE_APP_CONFIG": "{app_dir}\\.bundle"
+    },
+    "notes": "Clearing GEM_HOME/GEM_PATH makes gems resolve to the runtime's own folder; RUBYOPT/RUBYLIB would inject a user's settings."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "installer",
+    "format": "exe",
+    "versions": ">=2.4",
+    "arch": null,
+    "variant": "devkit"
+   },
+   "method": "run",
+   "preferred": true,
+   "steps": [
+    {
+     "run": "\"{file}\" /verysilent /allusers /suppressmsgboxes /norestart /dir=\"{runtime_dir}\" /tasks=\"nomodpath,noassocfiles,noridkinstall\" /components=\"ruby,msys2\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "for /f \"tokens=2,*\" %A in ('reg query \"HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\RubyInstaller-X.Y-ARCH_is1\" /v InstallLocation 2^>nul ^| find \"InstallLocation\"') do if /i \"%B\"==\"{runtime_dir}\\\" reg delete \"HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\RubyInstaller-X.Y-ARCH_is1\" /f",
+     "shell": "cmd"
+    },
+    {
+     "run": "del /q \"{runtime_dir}\\unins000.exe\" \"{runtime_dir}\\unins000.dat\" \"{runtime_dir}\\unins000.msg\" 2>nul",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "Windows 7+ for the installer; the bundled MSYS2 toolchain itself needs a Windows version MSYS2 still supports (Windows 10+ for recent builds)",
+    "Replace X.Y/ARCH in the registry step with the installer's AppId parts (e.g. RubyInstaller-3.4-x64; -x86, -arm)"
+   ],
+   "executable": "bin\\ruby.exe",
+   "package_manager": "\"{runtime_dir}\\bin\\gem.cmd\"",
+   "verify": "\"{runtime_dir}\\bin\\ruby.exe\" -e \"require 'ruby_installer/runtime'; puts RubyInstaller::Runtime.msys2_installation.msys_path\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "Start-menu shortcut {autoprograms}\\Ruby X.Y (unconditional in the .iss; there's no AllowNoIcons, so /NOICONS can't suppress it). It's shared by every RubyInstaller X.Y on the machine and points at the last one installed",
+    "Programs and Features key HKLM\\...\\Uninstall\\RubyInstaller-X.Y-ARCH_is1 until step 2 removes it (only when its InstallLocation is this {runtime_dir})",
+    "If the user already has their own RubyInstaller X.Y (same AppId), this install takes over its Programs and Features entry"
+   ],
+   "isolation": "leaks",
+   "relocatable": true,
+   "min_os": "Windows 7 (installer MinVersion=6.1)",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://github.com/oneclick/rubyinstaller2/wiki/FAQ",
+    "https://github.com/oneclick/rubyinstaller2/blob/master/recipes/installer-inno/rubyinstaller.iss.erb",
+    "https://jrsoftware.org/ishelp/index.php?topic=setupcmdline"
+   ],
+   "notes": "The devkit .exe is the only catalogue file that ships MSYS2 (the compiler toolchain for native gems). It's Inno Setup: 'Inno Setup Setup Data (6.7.0)' in the 3.4.10-1 x64 installer. Its [Setup] has AppId=RubyInstaller-<X.Y>-<arch> (per major.minor, not per patch), PrivilegesRequired=lowest with a command-line override, ChangesEnvironment/ChangesAssociations, and tasks modpath/assocfiles/ridkinstall (all turned off above). [Run] only runs icacls on {app} and {app}\\msys64\\tmp and makes the `ssl` junction, all inside {runtime_dir}. Two copies of the same X.Y: files install fine to each /dir, but the uninstall key and Start-menu shortcut are shared. Step 2 removes the key only if it belongs to this copy (the cmd `for /f` is written for the command line; double the % signs in a .bat). The Start-menu shortcut is left behind: deleting it risks removing a user's own RubyInstaller shortcut. Safer alternative, pending the operator: take MSYS2 out of the exe without running it. innoextract 1.9 (2020) predates Inno 6.7 data, so it needs a newer innoextract (support unverified). Or use the 7z recipe plus an MSYS2 base archive (msys2.org) unpacked into {runtime_dir}\\msys64 and `ridk install 2 3` (network, pacman).",
+   "launch": {
+    "program": "{runtime_dir}\\bin\\ruby.exe",
+    "args": [],
+    "env": {
+     "RUBYOPT": null,
+     "RUBYLIB": null,
+     "GEM_HOME": null,
+     "GEM_PATH": null,
+     "BUNDLE_USER_HOME": "{data_dir}\\bundle",
+     "BUNDLE_APP_CONFIG": "{app_dir}\\.bundle"
+    },
+    "notes": "Clearing GEM_HOME/GEM_PATH makes gems resolve to the runtime's own folder; RUBYOPT/RUBYLIB would inject a user's settings."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\bin\\bundle.bat\" install",
+    "env": {
+     "RUBYOPT": null,
+     "RUBYLIB": null,
+     "GEM_HOME": null,
+     "GEM_PATH": null,
+     "BUNDLE_USER_HOME": "{data_dir}\\bundle",
+     "BUNDLE_APP_CONFIG": "{app_dir}\\.bundle"
+    },
+    "cwd": "{app_dir}",
+    "notes": "When the project has a Gemfile; otherwise `gem install` the app's gem."
+   }
+  }
+ ]
+}

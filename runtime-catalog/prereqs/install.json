@@ -1,0 +1,351 @@
+{
+  "runtime": "prereqs",
+  "researched": "2026-09-18",
+  "assumes": "root/administrator",
+  "notes": "Shared Windows prerequisites stored in msvc-redist/, dotnet-framework/ and deps/. These folders have no download plans, so `match` here differs from the other install.json files: it is {\"folder\": \"<top-level folder>\", \"file\": \"<filename glob>\", \"arch\": ..., \"versions\": ...} instead of catalogue os/kind/format fields. Recipes whose file glob matches nothing stored today (VC++ 2005-2013 standalone redists) are research-only entries for files the operator may add later; they say so in `notes`. Everything that installs system-wide is `isolation: \"leaks\"` by design: the VC++ runtime and .NET Framework are serviced by Windows Update and shared by every program. Where Microsoft documents an app-local alternative (copying the CRT DLLs next to the runtime's own executable) a separate `method: \"extract\"` recipe gives it with `isolation: \"full\"`; the installer picks one per app. `uninstall` for shared components is deliberately 'do not uninstall': another app (or the OS) may depend on them. Nothing here was run: this Linux host has no Windows, and the test VMs were off limits, so every recipe is `tested: false`; facts marked 'verified against the stored file' came from reading the files read-only (7-Zip listings, WiX Burn manifests, the 7z-SFX config block, PE import tables).",
+  "recipes": [
+    {
+      "match": {"folder": "msvc-redist", "file": "vc_redist.x86.exe", "arch": "x86", "versions": "==latest"},
+      "method": "run",
+      "steps": [
+        {"run": "\"{file}\" /install /quiet /norestart", "shell": "cmd"}
+      ],
+      "prerequisites": ["Windows 7 SP1 or later (bundle condition VersionNT >= v6.1; the bundled UCRT update KB2999226 needs SP1)"],
+      "executable": null,
+      "package_manager": null,
+      "verify": "reg query \"HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\x86\" /v Installed /reg:32",
+      "uninstall": "do not uninstall: shared, system-wide runtime that other programs use. (Silent removal would be \"{file}\" /uninstall /quiet /norestart.)",
+      "side_effects": [
+        "vcruntime140*.dll, msvcp140*.dll, concrt140.dll, vcomp140.dll, mfc140*.dll, vccorlib140.dll, vcamp140.dll into %SystemRoot%\\System32 (64-bit Windows: %SystemRoot%\\SysWOW64)",
+        "Windows 7/8/8.1 without the Universal CRT: installs update KB2999226 (ucrtbase.dll + api-ms-win-crt-*.dll into the system directory, via the Windows servicing stack)",
+        "two MSI products (vc_runtimeMinimum_x86, vc_runtimeAdditional_x86) and a Burn bundle registered in Add/Remove Programs",
+        "HKLM\\SOFTWARE\\(WOW6432Node\\)Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\x86",
+        "bundle cached under %ProgramData%\\Package Cache",
+        "may need a reboot (exit code 3010) if the CRT DLLs are in use"
+      ],
+      "isolation": "leaks",
+      "relocatable": true,
+      "min_os": "Windows 7 SP1 (verified against the stored file: Burn bundle condition 'VersionNT >= v6.1', message 'can only be installed on Windows 7 and newer platforms')",
+      "tested": false,
+      "confidence": "high",
+      "sources": [
+        "https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist",
+        "https://learn.microsoft.com/en-us/cpp/windows/redistributing-visual-cpp-files",
+        "https://learn.microsoft.com/en-us/cpp/windows/universal-crt-deployment",
+        "stored file msvc-redist/windows/x86/latest/vc_redist.x86.exe: version resource 14.44.35211.0, WiX Burn bundle; manifest lists MsuPackages KB2999226 for 6.0/6.1/6.2/6.3 and MsiPackages vcRuntimeMinimum_x86/vcRuntimeAdditional_x86"
+      ],
+      "notes": "The stored file is 14.44.35211 (Visual C++ 2015-2022, v14 ABI; one install satisfies apps built with VS 2015 through 2022). Burn exit codes: 0 success; 3010 success, reboot required; 1641 success, reboot started; 1638 a same-or-newer 14.x is already installed (treat as success); 5100 system requirements not met. Always call with the full path to the exe. On an x64 installer running this x86 package on 64-bit Windows the registry key is under WOW6432Node; `/reg:32` handles that on Windows 7+. NOT for Windows XP or Vista: 14.28 and later drop XP (Microsoft: the last XP-capable redist is 14.27.29114), and this 14.44 msvcp140.dll statically imports Vista-and-later APIs (SRW locks, condition variables, GetTickCount64, CompareStringEx...) -- verified from its import table. For XP/Vista use the VC++ AIO recipe (deps/) or the app-local XP recipe below."
+    },
+    {
+      "match": {"folder": "msvc-redist", "file": "vc_redist.x64.exe", "arch": "amd64", "versions": "==latest"},
+      "method": "run",
+      "steps": [
+        {"run": "\"{file}\" /install /quiet /norestart", "shell": "cmd"}
+      ],
+      "prerequisites": ["64-bit Windows 7 SP1 or later"],
+      "executable": null,
+      "package_manager": null,
+      "verify": "reg query \"HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\x64\" /v Installed /reg:64",
+      "uninstall": "do not uninstall: shared, system-wide runtime that other programs use. (Silent removal would be \"{file}\" /uninstall /quiet /norestart.)",
+      "side_effects": [
+        "x64 CRT/C++ DLLs (vcruntime140.dll, vcruntime140_1.dll, msvcp140*.dll, ...) into %SystemRoot%\\System32",
+        "Windows 7/8/8.1 without the UCRT: installs KB2999226",
+        "on ARM64 Windows 11 this same bundle also installs the ARM64 runtime (manifest contains vcRuntime_arm64)",
+        "MSI products + bundle in Add/Remove Programs; HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\x64",
+        "bundle cached under %ProgramData%\\Package Cache",
+        "may need a reboot (3010)"
+      ],
+      "isolation": "leaks",
+      "relocatable": true,
+      "min_os": "Windows 7 SP1 x64 (verified against the stored file's Burn condition)",
+      "tested": false,
+      "confidence": "high",
+      "sources": [
+        "https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist",
+        "stored file msvc-redist/windows/amd64/latest/vc_redist.x64.exe: 14.44.35211.0, WiX Burn bundle"
+      ],
+      "notes": "Same exit codes as the x86 package. A 32-bit runtime on 64-bit Windows needs the x86 package as well; the x64 package does not provide it."
+    },
+    {
+      "match": {"folder": "msvc-redist", "file": "vc_redist.arm64.exe", "arch": "arm64", "versions": "==latest"},
+      "method": "run",
+      "steps": [
+        {"run": "\"{file}\" /install /quiet /norestart", "shell": "cmd"}
+      ],
+      "prerequisites": ["Windows 10/11 on ARM64"],
+      "executable": null,
+      "package_manager": null,
+      "verify": "reg query \"HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\arm64\" /v Installed",
+      "uninstall": "do not uninstall: shared system runtime.",
+      "side_effects": [
+        "ARM64 CRT/C++ DLLs into %SystemRoot%\\System32",
+        "MSI product + bundle in Add/Remove Programs, %ProgramData%\\Package Cache",
+        "may need a reboot (3010)"
+      ],
+      "isolation": "leaks",
+      "relocatable": true,
+      "min_os": "Windows 10 on ARM",
+      "tested": false,
+      "confidence": "high",
+      "sources": [
+        "https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist",
+        "stored file msvc-redist/windows/arm64/latest/vc_redist.arm64.exe: 'Microsoft Visual C++ 2022 Redistributable (Arm64) - 14.44.35211', Burn bundle with one MsiPackage vcRuntime_arm64"
+      ],
+      "notes": "x86 and x64 programs running under emulation on ARM64 Windows need the x86/x64 packages, not this one."
+    },
+    {
+      "match": {"folder": "msvc-redist", "file": "vc_redist.*.exe", "arch": null, "versions": "==latest"},
+      "method": "extract",
+      "steps": [
+        {"run": "BUILD TIME, not on the user's machine: carve the Burn attached container (the second 'MSCF' cabinet in the exe) and unpack it with 7-Zip; the cabinet whose files are named concrt140.dll_<arch>, msvcp140*.dll_<arch>, vcruntime140*.dll_<arch>, vcomp140.dll_<arch> is the vcRuntimeMinimum payload. Strip the _<arch> suffix and repack those DLLs as a zip.", "shell": "sh"},
+        {"unpack": "zip", "to": "{runtime_dir}\\<directory of the runtime's main executable>", "strip_components": 0}
+      ],
+      "prerequisites": [
+        "Windows 10/11: nothing else (the UCRT is part of the OS and the system copy always wins)",
+        "Windows 7 SP1 / 8 / 8.1: either the Universal CRT update (KB2999226 / KB3118401, system-wide) or an app-local UCRT: ucrtbase.dll + every api-ms-win-*.dll from the Windows 10 SDK's Redist\\ucrt\\DLLs\\<arch>, copied into the same folder (not stored in this repo today)"
+      ],
+      "executable": null,
+      "package_manager": null,
+      "verify": "run the runtime's main executable (e.g. its --version); a missing DLL fails with 'The program can't start because VCRUNTIME140.dll is missing'",
+      "uninstall": "delete {runtime_dir}",
+      "side_effects": [],
+      "isolation": "full",
+      "relocatable": true,
+      "min_os": "Windows 7 SP1 for 14.44 (msvcp140.dll imports Vista+ APIs; Microsoft: 14.28+ does not support XP)",
+      "tested": false,
+      "confidence": "medium",
+      "sources": [
+        "https://learn.microsoft.com/en-us/cpp/windows/deployment-in-visual-cpp",
+        "https://learn.microsoft.com/en-us/cpp/windows/universal-crt-deployment",
+        "https://learn.microsoft.com/en-us/cpp/windows/redistributing-visual-cpp-files",
+        "stored file vc_redist.x86.exe: attached container unpacked read-only in scratch; cabinets a10 (vcRuntimeMinimum: concrt140, msvcp140, msvcp140_1, msvcp140_2, msvcp140_atomic_wait, msvcp140_codecvt_ids, vcamp140, vccorlib140, vcomp140, vcruntime140, vcruntime140_threads) and a11 (MFC)"
+      ],
+      "notes": "App-local ('local') deployment is documented and supported by Microsoft: the DLLs go in the SAME folder as the executable that loads them (for a runtime like Python that is the folder holding python.exe, not the app's own folder). Two apps each get their own copy, so this is the per-app answer to the system-wide redist. Caveats from Microsoft: app-local copies are not serviced by Windows Update; on Windows 10/11 the system UCRT is always used even if a local copy exists; before Windows 8 an app-local UCRT only works next to the main exe, not next to a plugin DLL in another folder. Microsoft's redistribution terms allow redistributing these files; the operator should still confirm the licence for shipping them from our mirror. The build-time extraction step is not a base-installer 'unpack' (Burn is not zip/7z); alternatively take the same DLLs from a VS install's VC\\Redist\\MSVC\\<ver>\\<arch>\\Microsoft.VC143.CRT folder."
+    },
+    {
+      "match": {"folder": "msvc-redist", "file": "vs_BuildTools.exe", "arch": "amd64", "versions": "==latest"},
+      "method": "run",
+      "steps": [
+        {"run": "\"{file}\" --quiet --wait --norestart --nocache --installPath \"{runtime_dir}\" --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended", "shell": "cmd"}
+      ],
+      "prerequisites": ["Windows 10 1909+ / Windows 11 / Server 2016+ (Visual Studio 2022 requirements)", "internet access at install time: the stored exe is only a 4.5 MB bootstrapper; offline needs a pre-made --layout", "a Visual Studio licence that covers the use (Build Tools licence terms)"],
+      "executable": "VC\\Auxiliary\\Build\\vcvarsall.bat",
+      "package_manager": null,
+      "verify": "\"%ProgramFiles(x86)%\\Microsoft Visual Studio\\Installer\\vswhere.exe\" -path \"{runtime_dir}\" -property installationVersion",
+      "uninstall": "\"%ProgramFiles(x86)%\\Microsoft Visual Studio\\Installer\\setup.exe\" uninstall --installPath \"{runtime_dir}\" --quiet --wait --norestart   (deleting the folder alone leaves the instance registered)",
+      "side_effects": [
+        "installs the Visual Studio Installer itself to %ProgramFiles(x86)%\\Microsoft Visual Studio\\Installer (shared by all instances)",
+        "registers the instance under %ProgramData%\\Microsoft\\VisualStudio\\Packages\\_Instances and in HKLM; package cache under %ProgramData%\\Microsoft\\VisualStudio\\Packages unless --nocache",
+        "the Windows SDK in the recommended set installs system-wide to %ProgramFiles(x86)%\\Windows Kits\\10 as ordinary MSIs, shared by every instance",
+        "installs/updates the VC++ redistributable system-wide",
+        "Add/Remove Programs entry; may need a reboot (3010)"
+      ],
+      "isolation": "leaks",
+      "relocatable": false,
+      "min_os": "Windows 10 1909 / Server 2016 (VS 2022 17.x)",
+      "tested": false,
+      "confidence": "medium",
+      "sources": [
+        "https://learn.microsoft.com/en-us/visualstudio/install/use-command-line-parameters-to-install-visual-studio",
+        "https://learn.microsoft.com/en-us/visualstudio/install/build-tools-container",
+        "https://learn.microsoft.com/en-us/visualstudio/releases/2022/system-requirements",
+        "stored file msvc-redist/windows/amd64/latest-buildtools/vs_BuildTools.exe: version 17.14.37710.0 'Microsoft Visual Studio BuildTools', 7z-packed bootstrapper"
+      ],
+      "notes": "Only needed if an app compiles C/C++ with MSVC (or with clang-cl / clang targeting *-windows-msvc, which uses MSVC's headers, libraries and the Windows SDK). Exit codes: 0 ok; 3010 ok, reboot needed; 1641 ok, reboot started; 740 elevation required; 1001 installer already running; 1618 another install running; 5003 bootstrapper download failed; 5007 machine doesn't meet requirements; 8006 VS processes running. --installPath gives the MSVC toolset its own folder, but the installer, instance registry and Windows SDK are machine-wide, so this cannot be 'full'. Moving the folder after install breaks the instance registration."
+    },
+    {
+      "match": {"folder": "deps", "file": "VisualCppRedist_AIO_x86_x64.exe", "arch": null, "versions": "==0.35.0"},
+      "method": "run",
+      "steps": [
+        {"run": "\"{file}\" /ai /gm2", "shell": "cmd"}
+      ],
+      "prerequisites": ["none; this is itself the prerequisite the operator's tested XP and Vista setups install first (TESTED-WINDOWS.md)"],
+      "executable": null,
+      "package_manager": null,
+      "verify": "if exist \"%SystemRoot%\\System32\\vcruntime140.dll\" if exist \"%SystemRoot%\\System32\\msvcr120.dll\" if exist \"%SystemRoot%\\System32\\msvcr100.dll\" echo ok   (on 64-bit Windows check %SystemRoot%\\SysWOW64 for the x86 copies)",
+      "uninstall": "do not uninstall (shared). The package's own remover is \"{file}\" /aiR, which removes ALL detected VC++ runtimes, including ones other programs installed -- never run it from an app uninstaller.",
+      "side_effects": [
+        "installs VC++ 2005, 2008, 2010, 2012, 2013 and 2015-2019 (14.28.29213) runtimes, x86 and (on 64-bit Windows) x64, system-wide, plus VSTOR 2010 and the VB/C 'extra' runtimes",
+        "BEFORE installing, UNINSTALLS existing VC++ runtime packages it considers non-compliant (older MSI versions and the original EXE/WiX-bundle installs of 2012-2019), on Vista and later (Installer.cmd, :x64skip / msi.txt / wix.txt sections)",
+        "Vista to 8.1 without the UCRT: adds the Universal CRT package with PkgMgr (Vista) or DISM (7/8/8.1) from its ucrt\\ folder",
+        "on XP: copies the UCRT and the 14.28 DLLs into the system directory via its MSIs",
+        "writes MSI products and Add/Remove Programs entries (hidden only with /aiA or /aiH)",
+        "may need a reboot; the script passes /norestart to every MSI"
+      ],
+      "isolation": "leaks",
+      "relocatable": true,
+      "min_os": "Windows XP SP3 (operator-tested on XP and Vista per TESTED-WINDOWS.md; the script has explicit XP branches)",
+      "tested": false,
+      "confidence": "high",
+      "sources": [
+        "https://github.com/abbodi1406/vcredist/releases/tag/v0.35.0",
+        "/home/x/projects/installer-builder-runtimes/TESTED-WINDOWS.md",
+        "stored file deps/windows/any/vcredist-aio/0.35.0/VisualCppRedist_AIO_x86_x64.exe: 7z SFX; switches read from its ;!@Install@! config block and Installer.cmd (v0.35.0)"
+      ],
+      "notes": "Identified: abbodi1406's 'Visual C++ Redistributable AIO' v0.35.0, a 7-Zip SFX (version resource 14.28.29213.0) wrapping Installer.cmd and the Microsoft MSIs. Switches, verified from the SFX config: /ai quiet, all packages (runs 'Installer.cmd /quiet'); /gm2 hides the extraction dialog; /y passive with progress; /aiA quiet + hide ARP entries; /aiV VC++ only (no VSTOR / VB extras); /ai5 /ai8 /aiX /ai2 /ai3 /ai9 install only 2005 / 2008 / 2010 / 2012 / 2013 / 2015-2019 and combine (e.g. /aiX239); /aiT VSTOR only; /aiE extras only; /aiC passive without the UCRT; /aiR auto-uninstall everything; /aiD debug log to the Desktop without installing. The single-version switches run msiexec on the bundled MSIs directly with '/qn /norestart' and skip the removal pass. /ai is what the operator's tested XP/Vista setup uses; consider '/ai9 /gm2' (2015-2019 only) when an app needs just vcruntime140, to shrink the blast radius. It is a third-party repackaging of Microsoft files, which is a licence and supply-chain question for the operator; the SHA-256 in TESTED-WINDOWS.md should be checked before running it."
+    },
+    {
+      "match": {"folder": "deps", "file": "VisualCppRedist_AIO_x86_x64.exe", "arch": null, "versions": "==0.35.0"},
+      "method": "extract",
+      "steps": [
+        {"unpack": "7z", "to": "{tmp}", "strip_components": 0},
+        {"run": "xcopy /y /q \"{tmp}\\2019\\x86\\System\\*.dll\" \"{runtime_dir}\\\"", "shell": "cmd"}
+      ],
+      "prerequisites": ["the runtime is x86 (for x64 use {tmp}\\2019\\x64\\System64\\*.dll instead)"],
+      "executable": null,
+      "package_manager": null,
+      "verify": "run the runtime's main executable from {runtime_dir}",
+      "uninstall": "delete {runtime_dir}",
+      "side_effects": [],
+      "isolation": "full",
+      "relocatable": true,
+      "min_os": "Windows XP SP3",
+      "tested": false,
+      "confidence": "medium",
+      "sources": [
+        "https://learn.microsoft.com/en-us/cpp/windows/universal-crt-deployment",
+        "https://learn.microsoft.com/en-us/cpp/windows/deployment-in-visual-cpp",
+        "stored AIO file: 2019\\x86\\System contains vcruntime140.dll, msvcp140*.dll, concrt140.dll 14.28.29213 with no Vista-only imports, ucrtbase.dll 10.0.10586.15 (subsystem 5.1 = XP) and the api-ms-win-*.dll forwarders"
+      ],
+      "notes": "App-local VC++ 2015-2019 runtime + Universal CRT that works on XP, taken from the files already stored (the AIO is a 7z SFX, so the base installer's 7z code can open it; the 7z data follows the SFX stub). The {runtime_dir} destination must be the folder holding the runtime's main .exe (see the msvc-redist app-local recipe for the rules). Microsoft documents that app-local UCRT on XP works the same as on other versions, and that XP needs a redist no newer than 14.27 officially; these 14.28.29213 DLLs import no post-XP APIs, and are what the operator's tested XP Python runs on after /ai, but app-local use of them has not been tested on XP. For VC++ 2010/2012/2013 the same pattern works from 2010\\x86\\Win\\System, 2012\\x86\\Win\\System and 2013\\x86\\System (msvcr100/110/120.dll + msvcp*.dll; no manifests needed from 2010 on). 2005/2008 are WinSxS assemblies: app-local needs the private-assembly form (the Microsoft.VC80.CRT / Microsoft.VC90.CRT folder with its manifest next to the exe), and machine-wide publisher policy can still redirect to a newer system copy."
+    },
+    {
+      "match": {"folder": "msvc-redist", "file": "vcredist_x86.exe|vcredist_x64.exe", "arch": null, "versions": "2005 (8.0.50727.x)"},
+      "method": "run",
+      "steps": [
+        {"run": "\"{file}\" /q", "shell": "cmd"}
+      ],
+      "prerequisites": ["Windows 2000 SP4 / XP or later", "Windows Installer 3.0+"],
+      "executable": null,
+      "package_manager": null,
+      "verify": "if exist \"%SystemRoot%\\WinSxS\\Manifests\\x86_Microsoft.VC80.CRT_1fc8b3b9a1e18e3b_8.0.50727.*.manifest\" echo ok",
+      "uninstall": "do not uninstall (shared)",
+      "side_effects": ["Microsoft.VC80.CRT/MFC/ATL/OpenMP assemblies and publisher policies into %SystemRoot%\\WinSxS", "MSI product in Add/Remove Programs"],
+      "isolation": "leaks",
+      "relocatable": true,
+      "min_os": "Windows 2000 SP4",
+      "tested": false,
+      "confidence": "medium",
+      "sources": [
+        "https://learn.microsoft.com/en-us/archive/blogs/astebner/update-regarding-silent-install-of-the-vc-8-0-runtime-vcredist-packages"
+      ],
+      "notes": "NOT STORED: no standalone 2005 redist is in msvc-redist/ today (the AIO contains 2005). '/q' is the switch for the current download (the VS 2005 SP1 MFC Security Update package, 8.0.50727.6195). The older IExpress-wrapped releases (RTM, SP1, SP1 ATL update) ignore /q and need Stebner's form: vcredist_x86.exe /q:a /c:\"VCREDI~3.EXE /q:a /c:\"\"msiexec /i vcredist.msi /qn\"\" \" (x64: VCREDI~2.EXE; the inner short name differs per release). Always pass the full path to the exe."
+    },
+    {
+      "match": {"folder": "msvc-redist", "file": "vcredist_x86.exe|vcredist_x64.exe", "arch": null, "versions": "2008 (9.0.x)"},
+      "method": "run",
+      "steps": [
+        {"run": "\"{file}\" /q", "shell": "cmd"}
+      ],
+      "prerequisites": ["Windows 2000 SP4 / XP or later"],
+      "executable": null,
+      "package_manager": null,
+      "verify": "if exist \"%SystemRoot%\\WinSxS\\Manifests\\x86_Microsoft.VC90.CRT_1fc8b3b9a1e18e3b_9.0.30729.*.manifest\" echo ok",
+      "uninstall": "do not uninstall (shared)",
+      "side_effects": ["Microsoft.VC90.* assemblies and policies into %SystemRoot%\\WinSxS", "MSI product in Add/Remove Programs"],
+      "isolation": "leaks",
+      "relocatable": true,
+      "min_os": "Windows 2000 SP4",
+      "tested": false,
+      "confidence": "high",
+      "sources": ["https://learn.microsoft.com/en-us/archive/blogs/astebner/mailbag-how-to-perform-a-silent-install-of-the-visual-c-2008-redistributable-packages"],
+      "notes": "NOT STORED (the AIO contains 2008). Stebner: the same switches work for 2008 RTM and SP1; /qb is unattended with progress; the full path to the exe is required or UI appears. Log: %temp%\\dd_vcredist*.txt."
+    },
+    {
+      "match": {"folder": "msvc-redist", "file": "vcredist_x86.exe|vcredist_x64.exe", "arch": null, "versions": "2010 (10.0.x)"},
+      "method": "run",
+      "steps": [
+        {"run": "\"{file}\" /q /norestart", "shell": "cmd"}
+      ],
+      "prerequisites": ["Windows XP SP3 or later"],
+      "executable": null,
+      "package_manager": null,
+      "verify": "reg query \"HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\10.0\\VC\\VCRedist\\x86\" /v Installed",
+      "uninstall": "do not uninstall (shared). Silent removal: \"{file}\" /q /uninstall /norestart",
+      "side_effects": ["msvcr100.dll, msvcp100.dll, ... into the system directory", "MSI product in Add/Remove Programs", "HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\10.0\\VC\\VCRedist\\<arch>"],
+      "isolation": "leaks",
+      "relocatable": true,
+      "min_os": "Windows XP SP3",
+      "tested": false,
+      "confidence": "high",
+      "sources": ["https://learn.microsoft.com/en-us/archive/blogs/astebner/mailbag-how-to-perform-a-silent-install-of-the-visual-c-2010-redistributable-packages"],
+      "notes": "NOT STORED (the AIO contains 2010). App-local alternative: copy msvcr100.dll/msvcp100.dll next to the exe (no manifest from 2010 on). /passive /norestart shows progress; /norestart hands the reboot decision (3010) to the caller."
+    },
+    {
+      "match": {"folder": "msvc-redist", "file": "vcredist_x86.exe|vcredist_x64.exe", "arch": null, "versions": "2012 (11.0.x) or 2013 (12.0.x)"},
+      "method": "run",
+      "steps": [
+        {"run": "\"{file}\" /install /quiet /norestart", "shell": "cmd"}
+      ],
+      "prerequisites": ["2012: Windows XP SP3 / Vista SP2 / 7 SP1 or later; 2013: same"],
+      "executable": null,
+      "package_manager": null,
+      "verify": "reg query \"HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\12.0\\VC\\Runtimes\\x86\" /v Installed   (11.0 for 2012)",
+      "uninstall": "do not uninstall (shared). Silent removal: \"{file}\" /uninstall /quiet /norestart",
+      "side_effects": ["msvcr110/120.dll, msvcp110/120.dll, ... into the system directory", "Burn bundle + MSI products in Add/Remove Programs, %ProgramData%\\Package Cache"],
+      "isolation": "leaks",
+      "relocatable": true,
+      "min_os": "Windows XP SP3",
+      "tested": false,
+      "confidence": "high",
+      "sources": ["https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist", "https://learn.microsoft.com/en-us/cpp/windows/redistributing-visual-cpp-files"],
+      "notes": "NOT STORED (the AIO contains both). These are WiX Burn bundles like the 14.x ones: same /install /quiet /norestart and exit codes (0, 3010, 1638). App-local alternative: msvcr1x0.dll + msvcp1x0.dll next to the exe."
+    },
+    {
+      "match": {"folder": "dotnet-framework", "file": "NDP481-x86-x64-AllOS-ENU.exe", "arch": null, "versions": "==4.8.1"},
+      "method": "run",
+      "steps": [
+        {"run": "\"{file}\" /q /norestart", "shell": "cmd"}
+      ],
+      "prerequisites": ["Windows 10 20H2 (October 2020 Update) or later, Windows 11, or Server 2022+; built into Windows 11 22H2 and later"],
+      "executable": null,
+      "package_manager": null,
+      "verify": "reg query \"HKLM\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full\" /v Release   (533320 or higher = 4.8.1)",
+      "uninstall": "do not uninstall: in-place, OS-level component shared by every .NET Framework 4.x program (it replaces 4.0-4.8).",
+      "side_effects": [
+        "replaces the machine's .NET Framework 4.x in place under %SystemRoot%\\Microsoft.NET\\Framework(64)\\v4.0.30319 and the GAC; registered as a Windows update",
+        "may require a reboot (exit 3010 or 1641)",
+        "may stop or require closing running .NET 4 apps (Restart Manager)"
+      ],
+      "isolation": "impossible",
+      "relocatable": false,
+      "min_os": "Windows 10 20H2 / Server 2022",
+      "tested": false,
+      "confidence": "high",
+      "sources": [
+        "https://learn.microsoft.com/en-us/dotnet/framework/deployment/deployment-guide-for-developers",
+        "https://learn.microsoft.com/en-us/dotnet/framework/get-started/system-requirements",
+        "https://learn.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed",
+        "stored file dotnet-framework/windows/amd64/4.8.1/NDP481-x86-x64-AllOS-ENU.exe: version 4.8.09195.10, 7z-packed self-extractor"
+      ],
+      "notes": "System-wide by nature: there is exactly one .NET Framework 4.x per machine, so two versions side by side, or a private copy, is impossible (hence `impossible`, not `leaks`). Exit codes (same for all 4.x installers): 0 success; 3010 success, reboot required; 1641 success, reboot initiated; 1602 cancelled; 1603 fatal error; 5100 system requirements not met. With /norestart the installer must read the exit code and tell the user to reboot on 3010. Optional: /ChainingPackage <name> for Microsoft's telemetry, /passive /showrmui to let the user close running .NET apps. Not for Windows 7/8.1/early 10 (use a 4.8 installer, not stored) and not for XP (max 4.0) or Vista (max 4.6)."
+    },
+    {
+      "match": {"folder": "dotnet-framework", "file": "dotnetfx35.exe", "arch": null, "versions": "==3.5 (3.5.30729.01, SP1)"},
+      "method": "run",
+      "steps": [
+        {"run": "\"{file}\" /q /norestart", "shell": "cmd"}
+      ],
+      "prerequisites": ["Windows XP SP2+, Server 2003 SP1+, Vista, Server 2008 (the installer's own targets)"],
+      "executable": null,
+      "package_manager": null,
+      "verify": "reg query \"HKLM\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v3.5\" /v Install   (1 = installed; SP value 1 = SP1)",
+      "uninstall": "do not uninstall (shared OS-level component)",
+      "side_effects": [
+        "installs .NET 2.0 SP2, 3.0 SP2 and 3.5 SP1 system-wide (%SystemRoot%\\Microsoft.NET\\Framework(64)\\v2.0.50727, v3.0, v3.5, GAC)",
+        "may require a reboot (3010)"
+      ],
+      "isolation": "impossible",
+      "relocatable": false,
+      "min_os": "Windows XP SP2",
+      "tested": false,
+      "confidence": "medium",
+      "sources": [
+        "https://learn.microsoft.com/en-us/dotnet/framework/install/dotnet-35-windows",
+        "https://learn.microsoft.com/en-us/dotnet/framework/deployment/deployment-guide-for-developers",
+        "stored file dotnet-framework/windows/amd64/3.5/dotnetfx35.exe: version 3.5.30729.01 '.NET Framework 3.5 Setup', cabinet self-extractor (full offline package, 243 MB)"
+      ],
+      "notes": "Per Windows version: XP/Vista -> run this file with /q /norestart. Windows 7 / Server 2008 R2 -> .NET 3.5.1 is a Windows feature and this installer refuses to run; it is on by default on Windows 7 client, otherwise: dism /online /enable-feature /featurename:NetFx3 /norestart. Windows 8 to 11 (before 26H1) -> Features on Demand: DISM /Online /Enable-Feature /FeatureName:NetFx3 /All /NoRestart (downloads from Windows Update; offline needs /Source:<install media>\\sources\\sxs /LimitAccess from the SAME Windows version); this exe only triggers that same download. Windows 11 26H1 (build 28000) and later -> NetFx3 is no longer a Windows component; Microsoft ships a new standalone installer that only works on that Windows version (not stored). Exit codes 0 / 3010 as for 4.x. Microsoft's own guidance is to move apps off 3.5."
+    }
+  ]
+}

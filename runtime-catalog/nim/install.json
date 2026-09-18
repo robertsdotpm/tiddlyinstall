@@ -1,0 +1,673 @@
+{
+ "runtime": "nim",
+ "researched": "2026-09-18",
+ "assumes": "root/administrator",
+ "notes": "Nim compiles to C and needs a C compiler at build time on every OS; none of the Linux/macOS archives bundle one and the Windows zips do not either (MinGW is a separate nim-lang.org download that finish.exe fetches). Zig: Nim has no built-in zig entry (checked extccomp.nim in 0.20.2, 1.6.20, 2.2.12). `zig cc` can stand in through a one-line wrapper (zigcc = `zig cc \"$@\"`, zigcc.cmd = `@zig cc %*`) with --cc:clang --clang.exe:zigcc --clang.linkerexe:zigcc; tested on Linux amd64 with Zig 0.13.0 for 0.20.2, 1.6.20 and 2.2.12 (hello world built and ran, wrapper in a path with a space), and 2.2.12 also cross-compiled a Windows x86_64 exe with --os:windows --cpu:amd64 and -target x86_64-windows-gnu in --passC/--passL. Set ZIG_GLOBAL_CACHE_DIR/ZIG_LOCAL_CACHE_DIR, or Zig caches in ~/.cache/zig. Zig is itself a ~47 MB self-contained archive that could live in {runtime_dir}, so it is a way to make Linux fully self-contained and to avoid installing Xcode CLT on macOS (zig ships macOS libc stubs; untested on a Mac). It does not help Windows XP: current Zig needs Windows 10. Package manager: nimble ships in every archive; keep packages in {runtime_dir}\\nimble via --nimbleDir. All tests were run as an unprivileged user on Linux amd64 only.",
+ "recipes": [
+  {
+   "prerequisites": [
+    "A system C compiler: gcc (default, `cc = gcc` in config/nim.cfg) or clang via --cc:clang, plus libc headers (build-essential / gcc + glibc-devel). Not bundled.",
+    "glibc 2.3+ for bin/nim, 2.7+ for bin/nimble (dynamically linked)",
+    "git on PATH, only for nimble installs of remote packages"
+   ],
+   "package_manager": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>",
+   "side_effects": [],
+   "uninstall": "delete {runtime_dir}",
+   "notes": "Tested as a normal user: unpacked twice side by side under paths with spaces ('app one/rt/0.20.2', 'app two/rt/0.20.2'), compiled and ran hello world with system gcc 13.3 from both; nimble 0.10.2 installed a local package (with a `requires \"nim >= 0.19.0\"` line) into \"{runtime_dir}/nimble pkgs\" via --nimbleDir and the compiler found it via --nimblePath. Nothing was written to HOME. The archive also carries build.sh/c_code (not needed). Nim finds lib/ and config/ relative to bin/nim, so moving the folder works. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time.",
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": "==0.20.*",
+    "arch": "amd64"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "executable": "bin/nim",
+   "verify": "\"{runtime_dir}/bin/nim\" --version",
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Linux amd64 with glibc 2.7+ (highest GLIBC symbol in bin/nimble; bin/nim needs 2.3)",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://nim-lang.org/install_unix.html",
+    "https://nim-lang.org/docs/nimc.html",
+    "https://github.com/nim-lang/nimble#readme",
+    "compiler/nimconf.nim, compiler/options.nim, dist/nimble/src/nimblepkg/options.nim inside the archives (read locally)"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{data_dir}/nimble\" -y build",
+    "env": {
+     "NIMBLE_DIR": "{data_dir}/nimble"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround."
+   }
+  },
+  {
+   "prerequisites": [
+    "A system C compiler producing 32-bit x86 code (gcc/clang with 32-bit libc headers). Not bundled.",
+    "glibc 2.3+ (bin/nim), 2.7+ (bin/nimble), i386",
+    "git on PATH, only for nimble remote packages"
+   ],
+   "package_manager": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>",
+   "side_effects": [],
+   "uninstall": "delete {runtime_dir}",
+   "notes": "Same layout as the amd64 recipe. Only `bin/nim --version` was run (on an amd64 host); compiling was not tested because the host has no 32-bit libc development files. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time.",
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": "==0.20.*",
+    "arch": "x86"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "executable": "bin/nim",
+   "verify": "\"{runtime_dir}/bin/nim\" --version",
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Linux i386 with glibc 2.7+",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://nim-lang.org/install_unix.html",
+    "https://nim-lang.org/docs/nimc.html",
+    "https://github.com/nim-lang/nimble#readme",
+    "compiler/nimconf.nim, compiler/options.nim, dist/nimble/src/nimblepkg/options.nim inside the archives (read locally)"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{data_dir}/nimble\" -y build",
+    "env": {
+     "NIMBLE_DIR": "{data_dir}/nimble"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround."
+   }
+  },
+  {
+   "prerequisites": [
+    "A system C compiler: gcc (default) or clang via --cc:clang, plus libc headers. Not bundled.",
+    "git on PATH, only for nimble installs of remote packages"
+   ],
+   "package_manager": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>",
+   "side_effects": [],
+   "uninstall": "delete {runtime_dir}",
+   "notes": "Tested as a normal user: unpacked twice side by side under paths with spaces, compiled and ran hello world with system gcc 13.3 from both copies; installed a local package and jsony (from GitHub via git) into {runtime_dir}/nimble and compiled a program importing both. Nothing was written to HOME when --nimbleDir, --nimcache and HOME/XDG_* pointed elsewhere. bin/nim and bin/nimble (0.13.1) are static binaries, so the only host dependency is the C compiler. nimble 0.13.1 (bundled with 1.6.20) breaks when {runtime_dir} contains a space: it runs `<path to nim> --version` unquoted when resolving a package's `requires \"nim >= x\"`, failing with \"'/path/app' not in PATH\" (tested; packages without a nim requirement install fine). Workaround, tested: during install create a space-free symlink in {tmp} to {runtime_dir} and run nimble through it, keeping --nimbleDir on the real path: `ln -s \"{runtime_dir}\" \"{tmp}/nimrt\" && \"{tmp}/nimrt/bin/nimble\" --nim:\"{tmp}/nimrt/bin/nim\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>`; nothing referencing the symlink path is stored in the nimble folder (checked), so it can be deleted afterwards. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time.",
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": "==1.6.*",
+    "arch": "amd64"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "executable": "bin/nim",
+   "verify": "\"{runtime_dir}/bin/nim\" --version",
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Linux amd64, any glibc/musl: bin/nim and bin/nimble are statically linked (musl)",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://nim-lang.org/install_unix.html",
+    "https://nim-lang.org/docs/nimc.html",
+    "https://github.com/nim-lang/nimble#readme",
+    "compiler/nimconf.nim, compiler/options.nim, dist/nimble/src/nimblepkg/options.nim inside the archives (read locally)"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{data_dir}/nimble\" -y build",
+    "env": {
+     "NIMBLE_DIR": "{data_dir}/nimble"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround."
+   }
+  },
+  {
+   "prerequisites": [
+    "A system C compiler for the same architecture (gcc or clang) plus libc headers. Not bundled.",
+    "git on PATH, only for nimble remote packages"
+   ],
+   "package_manager": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>",
+   "side_effects": [],
+   "uninstall": "delete {runtime_dir}",
+   "notes": "Covers the x86, arm64 and armv7 archives (arm64 1.6.20 and armv7 builds come from nim-lang/nightlies). Same layout and behaviour as the amd64 recipe, which was tested; here only the x86 `bin/nim --version` was run on an amd64 host, and the arm binaries were only inspected (static ELF). nimble 0.13.1 (bundled with 1.6.20) breaks when {runtime_dir} contains a space: it runs `<path to nim> --version` unquoted when resolving a package's `requires \"nim >= x\"`, failing with \"'/path/app' not in PATH\" (tested; packages without a nim requirement install fine). Workaround, tested: during install create a space-free symlink in {tmp} to {runtime_dir} and run nimble through it, keeping --nimbleDir on the real path: `ln -s \"{runtime_dir}\" \"{tmp}/nimrt\" && \"{tmp}/nimrt/bin/nimble\" --nim:\"{tmp}/nimrt/bin/nim\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>`; nothing referencing the symlink path is stored in the nimble folder (checked), so it can be deleted afterwards. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time.",
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": "==1.6.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "executable": "bin/nim",
+   "verify": "\"{runtime_dir}/bin/nim\" --version",
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Linux x86 / arm64 / armv7 (armv7l hard-float), any libc: bin/nim and bin/nimble are statically linked",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://nim-lang.org/install_unix.html",
+    "https://nim-lang.org/docs/nimc.html",
+    "https://github.com/nim-lang/nimble#readme",
+    "compiler/nimconf.nim, compiler/options.nim, dist/nimble/src/nimblepkg/options.nim inside the archives (read locally)"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{data_dir}/nimble\" -y build",
+    "env": {
+     "NIMBLE_DIR": "{data_dir}/nimble"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround."
+   }
+  },
+  {
+   "prerequisites": [
+    "A system C compiler: gcc (default) or clang via --cc:clang, plus libc headers. Not bundled.",
+    "git on PATH, only for nimble installs of remote packages"
+   ],
+   "package_manager": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>",
+   "side_effects": [],
+   "uninstall": "delete {runtime_dir}",
+   "notes": "Tested as a normal user: unpacked twice side by side under paths with spaces, compiled and ran hello world with system gcc 13.3 from both copies and with clang from a copied (relocated) folder; installed jsony and a local package into {runtime_dir}/nimble and compiled a program importing both. Nothing was written to HOME when --nimbleDir, --nimcache and HOME/XDG_* pointed elsewhere. bin/nim and bin/nimble (0.24.1) are static binaries, so the only host dependency is the C compiler. nimble 0.24.1 (bundled with 2.2.12) does not work at all when {runtime_dir} contains a space: it runs `<path to nim> --version` unquoted and stops with 'Unable to get version from `nim` binary' (tested; nimblepkg/options.nim getNimVersionFromBin). Workaround, tested: run it through a space-free symlink in {tmp}: `ln -s \"{runtime_dir}\" \"{tmp}/nimrt\" && \"{tmp}/nimrt/bin/nimble\" --nim:\"{tmp}/nimrt/bin/nim\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>` (jsony and a local package installed; the symlink path is not recorded). Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time.",
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": "==2.2.*",
+    "arch": "amd64"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "executable": "bin/nim",
+   "verify": "\"{runtime_dir}/bin/nim\" --version",
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Linux amd64, any glibc/musl: bin/nim and bin/nimble are statically linked (musl)",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://nim-lang.org/install_unix.html",
+    "https://nim-lang.org/docs/nimc.html",
+    "https://github.com/nim-lang/nimble#readme",
+    "compiler/nimconf.nim, compiler/options.nim, dist/nimble/src/nimblepkg/options.nim inside the archives (read locally)"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{data_dir}/nimble\" -y build",
+    "env": {
+     "NIMBLE_DIR": "{data_dir}/nimble"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround."
+   }
+  },
+  {
+   "prerequisites": [
+    "A system C compiler for the same architecture (gcc or clang) plus libc headers. Not bundled.",
+    "git on PATH, only for nimble remote packages"
+   ],
+   "package_manager": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>",
+   "side_effects": [],
+   "uninstall": "delete {runtime_dir}",
+   "notes": "Covers the x86, arm64 and armv7 archives (arm64 1.6.20 and armv7 builds come from nim-lang/nightlies). Same layout and behaviour as the amd64 recipe, which was tested; here only the x86 `bin/nim --version` was run on an amd64 host, and the arm binaries were only inspected (static ELF). nimble 0.24.1 (bundled with 2.2.12) does not work at all when {runtime_dir} contains a space: it runs `<path to nim> --version` unquoted and stops with 'Unable to get version from `nim` binary' (tested; nimblepkg/options.nim getNimVersionFromBin). Workaround, tested: run it through a space-free symlink in {tmp}: `ln -s \"{runtime_dir}\" \"{tmp}/nimrt\" && \"{tmp}/nimrt/bin/nimble\" --nim:\"{tmp}/nimrt/bin/nim\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>` (jsony and a local package installed; the symlink path is not recorded). Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time.",
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": "==2.2.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "executable": "bin/nim",
+   "verify": "\"{runtime_dir}/bin/nim\" --version",
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Linux x86 / arm64 / armv7 (armv7l hard-float), any libc: bin/nim and bin/nimble are statically linked",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://nim-lang.org/install_unix.html",
+    "https://nim-lang.org/docs/nimc.html",
+    "https://github.com/nim-lang/nimble#readme",
+    "compiler/nimconf.nim, compiler/options.nim, dist/nimble/src/nimblepkg/options.nim inside the archives (read locally)"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{data_dir}/nimble\" -y build",
+    "env": {
+     "NIMBLE_DIR": "{data_dir}/nimble"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround."
+   }
+  },
+  {
+   "prerequisites": [
+    "Xcode Command Line Tools (clang, SDK headers). Nim invokes `clang` on macOS (build.sh and nim.cfg use clang). Installing CLT is system-wide and outside {runtime_dir} (`xcode-select --install` opens a GUI prompt; unattended installs use softwareupdate with the CLT label), so treat it as a machine prerequisite, not part of the runtime."
+   ],
+   "package_manager": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>",
+   "side_effects": [],
+   "uninstall": "delete {runtime_dir}",
+   "notes": "No macOS binary exists for 0.20, so it is built in place from the source tarball (the same tarball used for any Unix). build.sh compiles the pre-generated C in c_code/ into bin/nim with clang (set CC to override); `koch boot` is optional (it rebuilds the compiler from Nim, already done by build.sh for a release tarball) and `koch tools` builds nimble (from the bundled dist/nimble, no network), nimsuggest, nimgrep and nimpretty. Tested on Linux as a proxy (amd64, gcc 13.3, path with a space): the same three commands succeeded in about 7 minutes (most of it `koch tools`) and the result compiled hello world; not run on a Mac. Apple Silicon caveat (read from build.sh, untested): `uname -m` is `arm64`, which matches build.sh's `*arm*` case before `*aarch64*`, so plain `sh build.sh` picks 32-bit ARM C sources and fails; `--cpu aarch64` selects the arm64 sources, but 0.20.2 has no official Apple Silicon support, so the safer choice on an M-series Mac is an x86_64 build under Rosetta 2 (`arch -x86_64 sh build.sh`, then everything including compiled apps is x86_64). koch writes a nimcache for itself; the HOME/XDG_* exports keep that and nimble's first-run files out of root's home. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is ~/.cache/nim (XDG_CACHE_HOME if set)/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (Nim uses ~/.config on macOS too, not ~/Library) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time.",
+   "match": {
+    "os": "macos",
+    "kind": "source",
+    "format": "tar.xz",
+    "versions": "==0.20.*",
+    "arch": null
+   },
+   "method": "build",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "cd \"{runtime_dir}\" && if [ \"$(uname -m)\" = arm64 ]; then CPU=--cpu\\ aarch64; else CPU=; fi && sh build.sh $CPU",
+     "shell": "sh"
+    },
+    {
+     "run": "cd \"{runtime_dir}\" && export HOME=\"{tmp}/home\" XDG_CACHE_HOME=\"{tmp}/cache\" XDG_CONFIG_HOME=\"{tmp}/config\" && mkdir -p \"$HOME\" && bin/nim c --skipUserCfg --nimcache:\"{tmp}/nc-koch\" koch && ./koch tools",
+     "shell": "sh"
+    }
+   ],
+   "executable": "bin/nim",
+   "verify": "\"{runtime_dir}/bin/nim\" --version",
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Whatever the local Xcode CLT targets (built on the machine). Intel Macs: fine. Apple Silicon: 0.20.2 predates Nim's Apple Silicon support (added in 1.6), see notes.",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://nim-lang.org/install_unix.html",
+    "https://nim-lang.org/docs/nimc.html",
+    "https://github.com/nim-lang/nimble#readme",
+    "compiler/nimconf.nim, compiler/options.nim, dist/nimble/src/nimblepkg/options.nim inside the archives (read locally)",
+    "https://nim-lang.org/install_unix.html (\"Installation from the source tarball\": sh build.sh; bin/nim c koch; ./koch boot -d:release; ./koch tools)"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{data_dir}/nimble\" -y build",
+    "env": {
+     "NIMBLE_DIR": "{data_dir}/nimble"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround."
+   }
+  },
+  {
+   "prerequisites": [
+    "Xcode Command Line Tools (clang, SDK headers). Nim invokes `clang` on macOS (build.sh and nim.cfg use clang). Installing CLT is system-wide and outside {runtime_dir} (`xcode-select --install` opens a GUI prompt; unattended installs use softwareupdate with the CLT label), so treat it as a machine prerequisite, not part of the runtime.",
+    "git on PATH, only for nimble remote packages (CLT provides it)"
+   ],
+   "package_manager": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>",
+   "side_effects": [],
+   "uninstall": "delete {runtime_dir}",
+   "notes": "Built by nim-lang/nightlies' backport CI for the tagged 1.6.20 release. Binaries link only /usr/lib/libSystem and are unsigned (fine for x86_64). Same layout as the Linux archive, so the Linux findings apply: relocatable, two copies side by side are independent, nimble must be given --nimbleDir, and the nimble 0.13.1 space-in-path bug applies (use a space-free symlink in {tmp} when installing packages). Not run on a Mac. Gatekeeper: if the archive was fetched by something that sets com.apple.quarantine, clear it with `xattr -dr com.apple.quarantine \"{runtime_dir}\"` (the binaries are not notarised); an installer that downloads with its own HTTP code and extracts as root normally never sets the attribute. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is ~/.cache/nim (XDG_CACHE_HOME if set)/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (Nim uses ~/.config on macOS too, not ~/Library) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time.",
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": "==1.6.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "executable": "bin/nim",
+   "verify": "\"{runtime_dir}/bin/nim\" --version",
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "macOS 11.0 (LC_BUILD_VERSION minos 11.0 in bin/nim and bin/nimble). x86_64 only; runs under Rosetta 2 on Apple Silicon and then compiles x86_64 programs unless --cpu:arm64 plus clang -arch arm64 flags are passed.",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://nim-lang.org/install_unix.html",
+    "https://nim-lang.org/docs/nimc.html",
+    "https://github.com/nim-lang/nimble#readme",
+    "compiler/nimconf.nim, compiler/options.nim, dist/nimble/src/nimblepkg/options.nim inside the archives (read locally)",
+    "https://nim-lang.org/install.html (previous-versions table linking the nim-lang/nightlies build)"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{data_dir}/nimble\" -y build",
+    "env": {
+     "NIMBLE_DIR": "{data_dir}/nimble"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround."
+   }
+  },
+  {
+   "prerequisites": [
+    "Xcode Command Line Tools (clang, SDK headers). Nim invokes `clang` on macOS (build.sh and nim.cfg use clang). Installing CLT is system-wide and outside {runtime_dir} (`xcode-select --install` opens a GUI prompt; unattended installs use softwareupdate with the CLT label), so treat it as a machine prerequisite, not part of the runtime.",
+    "git on PATH, only for nimble remote packages (CLT provides it)"
+   ],
+   "package_manager": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>",
+   "side_effects": [],
+   "uninstall": "delete {runtime_dir}",
+   "notes": "nim-lang.org hosts these itself from 2.2.8 on. arm64 binaries carry an (ad-hoc) code signature, which the unpacker must preserve byte for byte (it is inside the Mach-O, so plain extraction is enough); x86_64 ones are unsigned. The minos 15.0 is a surprise worth knowing: 2.2.12 will not start on macOS 14 or older, so for older Macs build from the nim-2.2.12.tar.xz source tarball (not in the download plan) with the official steps (sh build.sh; bin/nim c koch; ./koch boot -d:release; ./koch tools), as in the 0.20 source recipe. Same layout and isolation as the Linux archive; nimble 0.24.1 fails in paths with spaces (use a space-free symlink in {tmp} when installing packages). Not run on a Mac. Gatekeeper: if the archive was fetched by something that sets com.apple.quarantine, clear it with `xattr -dr com.apple.quarantine \"{runtime_dir}\"` (the binaries are not notarised); an installer that downloads with its own HTTP code and extracts as root normally never sets the attribute. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is ~/.cache/nim (XDG_CACHE_HOME if set)/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (Nim uses ~/.config on macOS too, not ~/Library) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time.",
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": "==2.2.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "executable": "bin/nim",
+   "verify": "\"{runtime_dir}/bin/nim\" --version",
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "macOS 15.0 for the 2.2.12 binaries (LC_BUILD_VERSION minos 15.0 in bin/nim and bin/nimble, both arm64 and x86_64). Older macOS needs a build from the 2.2.12 source tarball instead.",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://nim-lang.org/install_unix.html",
+    "https://nim-lang.org/docs/nimc.html",
+    "https://github.com/nim-lang/nimble#readme",
+    "compiler/nimconf.nim, compiler/options.nim, dist/nimble/src/nimblepkg/options.nim inside the archives (read locally)"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{data_dir}/nimble\" -y build",
+    "env": {
+     "NIMBLE_DIR": "{data_dir}/nimble"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround."
+   }
+  },
+  {
+   "prerequisites": [
+    "MinGW-w64 GCC, a SEPARATE download not in the zip: https://nim-lang.org/download/mingw64.7z (62,290,033 bytes, sha256 04a535d1e0880364ca9609713744f1a9a36835c4ced834cf435c4dc4eca2159a) or https://nim-lang.org/download/mingw32.7z (61,793,563 bytes, sha256 588794e11be36389501610cf78de777e52a920e03db256ee8bd1a7c2c45e39a4). Both are WinLibs GCC 11.1.0 / MinGW-w64 8.0.2 builds (2021-05). The 7z uses the BCJ2 filter, so the base installer's 7z decoder must support BCJ2.",
+    "git on PATH, only for nimble remote packages (not bundled)"
+   ],
+   "package_manager": "\"{runtime_dir}\\bin\\nimble.exe\" --nimbleDir:\"{runtime_dir}\\nimble\" -y install <pkg>",
+   "side_effects": [],
+   "uninstall": "delete {runtime_dir}",
+   "notes": "The zip does NOT include a C compiler: only nim.exe, nimble.exe, the other tools and runtime DLLs (OpenSSL 1.1, PCRE, SQLite, SDL2, etc.) in bin\\. finish.exe is an interactive post-install helper that adds bin\\ to the user PATH in the registry, creates Start-menu shortcuts and offers to download mingw<bits>.7z into dist\\ and unpack it with bin\\7zG.exe, then patches config\\nim.cfg with an ABSOLUTE gcc.path. Do not run it (PATH, shortcuts, absolute path). Instead: unpack the zip, unpack the MinGW 7z into {runtime_dir}\\dist (it contains a single top folder, mingw64\\ or mingw32\\), and point Nim at it with a relative setting in the system config.nims, which Nim reads from {runtime_dir}\\config next to nim.cfg. thisDir() is the folder of that config.nims, so the setting survives moving the folder and works with spaces. Tested on Linux with a wrapper compiler in dist/mingw64/bin for 0.20.2, 1.6.20 and 2.2.12 (0.20.2 has no config.nims, and the append creates it, which also worked); not run on Windows. For the x86 zip, replace mingw64 with mingw32 in the cmd step. In that cmd line the & must stay escaped as ^& (it sits outside quotes); a % in {runtime_dir} would be expanded by cmd, so the installer should reject or escape it. Nim does not expand $nim in gcc.path, and the commented `#gcc.path = r\"$nim\\dist\\mingw\\bin\"` line in nim.cfg is only a search string for finish.exe. Adding {runtime_dir}\\dist\\mingw64\\bin to the PATH of the app's own process works too. MinGW is self-contained: cc1.exe has its DLLs beside it in libexec, so it does not need to be on PATH. Programs built with -d:ssl, the re module (PCRE), db_sqlite and similar load DLLs from bin\\ at run time; ship the ones the app needs next to the app's exe, because {runtime_dir}\\bin is not on PATH. Run-time isolation on Windows: nimcache defaults to %USERPROFILE%\\nimcache\\<project>_d (pass --nimcache), user config is %APPDATA%\\nim\\nim.cfg and config.nims (pass --skipUserCfg), nimble defaults to %USERPROFILE%\\.nimble (pass --nimbleDir; compile with NIMBLE_DIR set or --nimblePath) and reads %APPDATA%\\nimble\\nimble.ini. 0.20.2's finish.exe still points at mingw<bits>-6.3.0.7z, which now returns 404 on nim-lang.org, so the current GCC 11.1 archive is the only official one; generated C from 0.20 compiling cleanly with GCC 11 is untested. nimble 0.10.2 handled paths with spaces in Linux tests.",
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": "==0.20.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "unpack": "7z",
+     "file": "mingw64.7z (x64) or mingw32.7z (x86), see notes",
+     "to": "{runtime_dir}\\dist",
+     "strip_components": 0
+    },
+    {
+     "run": ">>\"{runtime_dir}\\config\\config.nims\" echo switch(\"gcc.path\", thisDir() ^& \"/../dist/mingw64/bin\")",
+     "shell": "cmd"
+    }
+   ],
+   "executable": "bin\\nim.exe",
+   "verify": "\"{runtime_dir}\\bin\\nim.exe\" --version",
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Compiler (bin\\nim.exe) runs on Windows XP (PE subsystem 4.0 on x86, 5.2 on x64; imports only KERNEL32 and msvcrt with no post-XP functions, and inet_ntop is emulated below Vista). The bundled-by-download MinGW (GCC 11.1) needs Vista+: its libzstd-1.dll, loaded by cc1.exe, imports InitializeConditionVariable. nimble.exe 0.10.2 has no post-XP imports. So a working compile needs Vista or later unless an XP-capable MinGW is supplied.",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://nim-lang.org/install_windows.html",
+    "https://nim-lang.org/download/mingw64.7z.sha256",
+    "https://nim-lang.org/download/mingw32.7z.sha256",
+    "tools/finish.nim and config/nim.cfg inside the zips (read locally)"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\bin\\nimble.exe\" --nimbleDir:\"{data_dir}\\nimble\" -y build",
+    "env": {
+     "NIMBLE_DIR": "{data_dir}\\nimble"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround."
+   }
+  },
+  {
+   "prerequisites": [
+    "MinGW-w64 GCC, a SEPARATE download not in the zip: https://nim-lang.org/download/mingw64.7z (62,290,033 bytes, sha256 04a535d1e0880364ca9609713744f1a9a36835c4ced834cf435c4dc4eca2159a) or https://nim-lang.org/download/mingw32.7z (61,793,563 bytes, sha256 588794e11be36389501610cf78de777e52a920e03db256ee8bd1a7c2c45e39a4). Both are WinLibs GCC 11.1.0 / MinGW-w64 8.0.2 builds (2021-05). The 7z uses the BCJ2 filter, so the base installer's 7z decoder must support BCJ2.",
+    "git on PATH, only for nimble remote packages (not bundled)"
+   ],
+   "package_manager": "\"{runtime_dir}\\bin\\nimble.exe\" --nimbleDir:\"{runtime_dir}\\nimble\" -y install <pkg>",
+   "side_effects": [],
+   "uninstall": "delete {runtime_dir}",
+   "notes": "The zip does NOT include a C compiler: only nim.exe, nimble.exe, the other tools and runtime DLLs (OpenSSL 1.1, PCRE, SQLite, SDL2, etc.) in bin\\. finish.exe is an interactive post-install helper that adds bin\\ to the user PATH in the registry, creates Start-menu shortcuts and offers to download mingw<bits>.7z into dist\\ and unpack it with bin\\7zG.exe, then patches config\\nim.cfg with an ABSOLUTE gcc.path. Do not run it (PATH, shortcuts, absolute path). Instead: unpack the zip, unpack the MinGW 7z into {runtime_dir}\\dist (it contains a single top folder, mingw64\\ or mingw32\\), and point Nim at it with a relative setting in the system config.nims, which Nim reads from {runtime_dir}\\config next to nim.cfg. thisDir() is the folder of that config.nims, so the setting survives moving the folder and works with spaces. Tested on Linux with a wrapper compiler in dist/mingw64/bin for 0.20.2, 1.6.20 and 2.2.12 (0.20.2 has no config.nims, and the append creates it, which also worked); not run on Windows. For the x86 zip, replace mingw64 with mingw32 in the cmd step. In that cmd line the & must stay escaped as ^& (it sits outside quotes); a % in {runtime_dir} would be expanded by cmd, so the installer should reject or escape it. Nim does not expand $nim in gcc.path, and the commented `#gcc.path = r\"$nim\\dist\\mingw\\bin\"` line in nim.cfg is only a search string for finish.exe. Adding {runtime_dir}\\dist\\mingw64\\bin to the PATH of the app's own process works too. MinGW is self-contained: cc1.exe has its DLLs beside it in libexec, so it does not need to be on PATH. Programs built with -d:ssl, the re module (PCRE), db_sqlite and similar load DLLs from bin\\ at run time; ship the ones the app needs next to the app's exe, because {runtime_dir}\\bin is not on PATH. Run-time isolation on Windows: nimcache defaults to %USERPROFILE%\\nimcache\\<project>_d (pass --nimcache), user config is %APPDATA%\\nim\\nim.cfg and config.nims (pass --skipUserCfg), nimble defaults to %USERPROFILE%\\.nimble (pass --nimbleDir; compile with NIMBLE_DIR set or --nimblePath) and reads %APPDATA%\\nimble\\nimble.ini. nimble 0.13.1 runs `nim --version` unquoted (seen on Linux, where it breaks with spaces). On Windows CreateProcess retries an unquoted path at each space, so it may work, but that is untested; if it fails, run nimble from a space-free path (subst a drive letter to {runtime_dir} for the duration of the install, or use the 8.3 short name via `for %I in (\"{runtime_dir}\") do @echo %~sI` when 8.3 names are enabled).",
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": "==1.6.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "unpack": "7z",
+     "file": "mingw64.7z (x64) or mingw32.7z (x86), see notes",
+     "to": "{runtime_dir}\\dist",
+     "strip_components": 0
+    },
+    {
+     "run": ">>\"{runtime_dir}\\config\\config.nims\" echo switch(\"gcc.path\", thisDir() ^& \"/../dist/mingw64/bin\")",
+     "shell": "cmd"
+    }
+   ],
+   "executable": "bin\\nim.exe",
+   "verify": "\"{runtime_dir}\\bin\\nim.exe\" --version",
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Compiler (bin\\nim.exe) runs on Windows XP (PE subsystem 4.0 on x86, 5.2 on x64; imports only KERNEL32 and msvcrt with no post-XP functions, and inet_ntop is emulated below Vista). The bundled-by-download MinGW (GCC 11.1) needs Vista+: its libzstd-1.dll, loaded by cc1.exe, imports InitializeConditionVariable. nimble.exe 0.13.1 has no post-XP imports. So a working compile needs Vista or later unless an XP-capable MinGW is supplied.",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://nim-lang.org/install_windows.html",
+    "https://nim-lang.org/download/mingw64.7z.sha256",
+    "https://nim-lang.org/download/mingw32.7z.sha256",
+    "tools/finish.nim and config/nim.cfg inside the zips (read locally)"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\bin\\nimble.exe\" --nimbleDir:\"{data_dir}\\nimble\" -y build",
+    "env": {
+     "NIMBLE_DIR": "{data_dir}\\nimble"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround."
+   }
+  },
+  {
+   "prerequisites": [
+    "MinGW-w64 GCC, a SEPARATE download not in the zip: https://nim-lang.org/download/mingw64.7z (62,290,033 bytes, sha256 04a535d1e0880364ca9609713744f1a9a36835c4ced834cf435c4dc4eca2159a) or https://nim-lang.org/download/mingw32.7z (61,793,563 bytes, sha256 588794e11be36389501610cf78de777e52a920e03db256ee8bd1a7c2c45e39a4). Both are WinLibs GCC 11.1.0 / MinGW-w64 8.0.2 builds (2021-05). The 7z uses the BCJ2 filter, so the base installer's 7z decoder must support BCJ2.",
+    "git on PATH, only for nimble remote packages (not bundled)"
+   ],
+   "package_manager": "\"{runtime_dir}\\bin\\nimble.exe\" --nimbleDir:\"{runtime_dir}\\nimble\" -y install <pkg>",
+   "side_effects": [],
+   "uninstall": "delete {runtime_dir}",
+   "notes": "The zip does NOT include a C compiler: only nim.exe, nimble.exe, the other tools and runtime DLLs (OpenSSL 1.1, PCRE, SQLite, SDL2, etc.) in bin\\. finish.exe is an interactive post-install helper that adds bin\\ to the user PATH in the registry, creates Start-menu shortcuts and offers to download mingw<bits>.7z into dist\\ and unpack it with bin\\7zG.exe, then patches config\\nim.cfg with an ABSOLUTE gcc.path. Do not run it (PATH, shortcuts, absolute path). Instead: unpack the zip, unpack the MinGW 7z into {runtime_dir}\\dist (it contains a single top folder, mingw64\\ or mingw32\\), and point Nim at it with a relative setting in the system config.nims, which Nim reads from {runtime_dir}\\config next to nim.cfg. thisDir() is the folder of that config.nims, so the setting survives moving the folder and works with spaces. Tested on Linux with a wrapper compiler in dist/mingw64/bin for 0.20.2, 1.6.20 and 2.2.12 (0.20.2 has no config.nims, and the append creates it, which also worked); not run on Windows. For the x86 zip, replace mingw64 with mingw32 in the cmd step. In that cmd line the & must stay escaped as ^& (it sits outside quotes); a % in {runtime_dir} would be expanded by cmd, so the installer should reject or escape it. Nim does not expand $nim in gcc.path, and the commented `#gcc.path = r\"$nim\\dist\\mingw\\bin\"` line in nim.cfg is only a search string for finish.exe. Adding {runtime_dir}\\dist\\mingw64\\bin to the PATH of the app's own process works too. MinGW is self-contained: cc1.exe has its DLLs beside it in libexec, so it does not need to be on PATH. Programs built with -d:ssl, the re module (PCRE), db_sqlite and similar load DLLs from bin\\ at run time; ship the ones the app needs next to the app's exe, because {runtime_dir}\\bin is not on PATH. Run-time isolation on Windows: nimcache defaults to %USERPROFILE%\\nimcache\\<project>_d (pass --nimcache), user config is %APPDATA%\\nim\\nim.cfg and config.nims (pass --skipUserCfg), nimble defaults to %USERPROFILE%\\.nimble (pass --nimbleDir; compile with NIMBLE_DIR set or --nimblePath) and reads %APPDATA%\\nimble\\nimble.ini. nimble 0.24.1 runs `nim --version` unquoted and failed outright in a path with spaces on Linux; on Windows CreateProcess's unquoted-path retry may rescue it (untested). If not, use a subst drive letter or the 8.3 short name for the install step. The zip also has atlas.exe (alternative package manager). Nim 2.x stdlib declares GetSystemTimePreciseAsFileTime (Windows 8) via dynlib in winlean, but nim.exe does not reference it.",
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": "==2.2.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "unpack": "7z",
+     "file": "mingw64.7z (x64) or mingw32.7z (x86), see notes",
+     "to": "{runtime_dir}\\dist",
+     "strip_components": 0
+    },
+    {
+     "run": ">>\"{runtime_dir}\\config\\config.nims\" echo switch(\"gcc.path\", thisDir() ^& \"/../dist/mingw64/bin\")",
+     "shell": "cmd"
+    }
+   ],
+   "executable": "bin\\nim.exe",
+   "verify": "\"{runtime_dir}\\bin\\nim.exe\" --version",
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Compiler (bin\\nim.exe) runs on Windows XP (PE subsystem 4.0 on x86, 5.2 on x64; imports only KERNEL32 and msvcrt with no post-XP functions, and inet_ntop is emulated below Vista). The bundled-by-download MinGW (GCC 11.1) needs Vista+: its libzstd-1.dll, loaded by cc1.exe, imports InitializeConditionVariable. nimble.exe 0.24.1 needs Vista+ (it loads CreateSymbolicLinkW and GetQueuedCompletionStatusEx from kernel32 at startup through Nim's dynlib mechanism, which quits if a symbol is missing). So a working compile needs Vista or later unless an XP-capable MinGW is supplied.",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://nim-lang.org/install_windows.html",
+    "https://nim-lang.org/download/mingw64.7z.sha256",
+    "https://nim-lang.org/download/mingw32.7z.sha256",
+    "tools/finish.nim and config/nim.cfg inside the zips (read locally)"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\bin\\nimble.exe\" --nimbleDir:\"{data_dir}\\nimble\" -y build",
+    "env": {
+     "NIMBLE_DIR": "{data_dir}\\nimble"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround."
+   }
+  }
+ ]
+}

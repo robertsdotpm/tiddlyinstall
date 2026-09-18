@@ -1,0 +1,236 @@
+{
+ "runtime": "rust",
+ "researched": "2026-09-18",
+ "assumes": "root/administrator",
+ "recipes": [
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": "==1.98.*",
+    "arch": "amd64"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 2
+    }
+   ],
+   "prerequisites": [
+    "a system C compiler/linker driver `cc` (gcc or clang) plus libc development files (crt objects, libc.so): rustc links through `cc` by default; TESTED: with {runtime_dir}/bin as the only PATH entry, cargo build fails with 'linker `cc` not found'. See catalog/cc for a per-app compiler; point at it with CARGO_TARGET_<TRIPLE>_LINKER or -C linker if the system has none."
+   ],
+   "executable": "bin/rustc",
+   "package_manager": "\"{runtime_dir}/bin/cargo\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "verify": "\"{runtime_dir}/bin/rustc\" -vV",
+   "min_os": "Linux amd64, kernel 3.2+, glibc 2.17+ (highest GLIBC symbol version checked: 2.17)",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://doc.rust-lang.org/rustc/platform-support.html",
+    "https://doc.rust-lang.org/cargo/reference/environment-variables.html",
+    "https://blog.rust-lang.org/2024/02/26/Windows-7/"
+   ],
+   "notes": "x86_64-unknown-linux-gnu. Layout: the tarball is rust-installer format 3 (rust-installer-version = 3 in all 16 planned files): rust-<ver>-<triple>/{components,install.sh,manifest.in per component,...} with each component in rust-<ver>-<triple>/<component>/{bin,lib,libexec,etc,share}. install.sh only copies <component>/<path> to <prefix>/<path> for each file:/dir: line of manifest.in (bin 755, others 644), writes bookkeeping into lib/rustlib/ (components, manifest-*, install.log, uninstall.sh, rust-installer-version, none needed at run time) and on Linux runs ldconfig. The components never overlap (checked: 0 duplicate paths across components, no symlinks in the Linux, Windows or macOS tarballs), so unpacking with strip_components 2 merges every component straight into {runtime_dir}: entries with only 1-2 path parts (top-level install.sh, components, etc.) are dropped; each component's manifest.in lands on {runtime_dir}/manifest.in and overwrites the previous one (harmless, delete it if tidy). The unpacker must skip entries with fewer path parts than strip_components and keep Unix modes. TESTED on Linux amd64: the file tree and modes from this unpack are identical to install.sh's apart from the bookkeeping files. Run the toolchain with an explicit environment in the app's own process only (never PATH/registry/profile changes): CARGO_HOME={runtime_dir}/cargo-home (or an app-owned writable dir; cargo writes its registry index, crate cache and installed binaries there, default is ~/.cargo), RUSTC={runtime_dir}/bin/rustc and RUSTDOC={runtime_dir}/bin/rustdoc (TESTED: without RUSTC or {runtime_dir}/bin on PATH, cargo fails with 'could not execute process `rustc -vV`' - it does NOT look next to itself, and with a user's rustup on PATH it would silently use the user's rustc), and prepend {runtime_dir}/bin to PATH in that process so `cargo clippy`/`cargo fmt` find cargo-clippy/cargo-fmt (tested). RUSTUP_HOME is not used at all: this is a plain toolchain with no rustup proxies; set it to {runtime_dir}/rustup-home and unset RUSTUP_TOOLCHAIN only as belt-and-braces. Clear inherited RUSTFLAGS, RUSTDOCFLAGS, CARGO_BUILD_*, CARGO_TARGET_DIR, CARGO_ENCODED_RUSTFLAGS and RUSTC_WRAPPER, which a user's global environment would inject. Cargo also reads .cargo/config.toml from the project dir and EVERY parent directory (then $CARGO_HOME/config.toml), so a project under a user's home picks up ~/.cargo/config.toml; keep app projects outside home or accept that. rustc finds its sysroot from its own location (tested: `rustc --print sysroot` = the folder it was run from) and binaries use RUNPATH $ORIGIN/../lib on Linux, so no LD_LIBRARY_PATH is needed. Slim alternative (tested on Linux, 601 MB and 156 files instead of ~1.9 GB and ~66,000 files; rust-docs alone is 727 MB / 67,212 HTML files and is only present in some tarballs): unpack with strip_components 1 into {tmp}, then copy only rustc, rust-std-<triple>, cargo and optionally clippy-preview and rustfmt-preview, e.g. `cp -R \"{tmp}/rustc/.\" \"{runtime_dir}/\"` per component on POSIX or `xcopy \"{tmp}\\rustc\" \"{runtime_dir}\\\" /E /I /Y /Q` per component in cmd. rust-analyzer-preview, llvm-tools-preview, rust-analysis, rust-docs-json-preview and llvm-bitcode-linker-preview are not needed to build. TESTED (Linux amd64, Ubuntu 24.04, normal user): direct unpack to '<scratch>/a b/copy1', a second identical copy side by side in '<scratch>/a b/copy2', a slim copy, and an install.sh result moved to '<scratch>/a b/sh-moved': in every one `cargo new`, `cargo run` (Hello, world!), `cargo test`, `cargo build` with a crates.io dependency (itoa), `cargo clippy`, `cargo fmt --check` and `cargo doc` succeeded with HOME and TMPDIR pointed at empty sentinel folders, which stayed empty; all caches landed in the per-copy CARGO_HOME. install.sh alternative (also tested): `sh install.sh --prefix=<dir> --disable-ldconfig` works but CANNOT take a prefix containing a space (it word-splits its own arguments: `--prefix=/a b/x` fails with \"Option 'b/x' is not recognized\", quoting does not help), and without --disable-ldconfig it runs ldconfig as root, rebuilding the system /etc/ld.so.cache (and, only for prefix /usr/local, writes /etc/ld.so.conf.d/rust-installer-v1-rustlib.conf). An install.sh result moved afterwards into a path with a space still works (tested); only the uninstall bookkeeping holds absolute paths. The direct unpack avoids all of this.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/cargo\" build --release --locked",
+    "env": {
+     "CARGO_HOME": "{data_dir}/cargo-home",
+     "RUSTC": "{runtime_dir}/bin/rustc",
+     "RUSTDOC": "{runtime_dir}/bin/rustdoc",
+     "RUSTFLAGS": null,
+     "RUSTDOCFLAGS": null,
+     "CARGO_ENCODED_RUSTFLAGS": null,
+     "RUSTC_WRAPPER": null,
+     "CARGO_TARGET_DIR": null
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Without RUSTC cargo can't find rustc (tested). Needs the system linker (see prerequisites)."
+   }
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": "==1.98.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 2
+    }
+   ],
+   "prerequisites": [
+    "a system C compiler/linker driver `cc` (gcc or clang) plus libc development files (crt objects, libc.so): rustc links through `cc` by default; TESTED: with {runtime_dir}/bin as the only PATH entry, cargo build fails with 'linker `cc` not found'. See catalog/cc for a per-app compiler; point at it with CARGO_TARGET_<TRIPLE>_LINKER or -C linker if the system has none."
+   ],
+   "executable": "bin/rustc",
+   "package_manager": "\"{runtime_dir}/bin/cargo\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "verify": "\"{runtime_dir}/bin/rustc\" -vV",
+   "min_os": "glibc 2.17+ and kernel 3.2+ for x86 (i686, Pentium 4/SSE2), amd64, armv6 (gnueabi, gnueabihf), armv7, ppc64 and s390x; arm64 kernel 4.1+/glibc 2.17; ppc64le kernel 3.10+/glibc 2.17; riscv64 kernel 4.20+/glibc 2.29; loong64 kernel 5.19+/glibc 2.36 with LSX. Checked on amd64: highest GLIBC symbol version in bin/* and lib/*.so is 2.17.",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://doc.rust-lang.org/rustc/platform-support.html",
+    "https://doc.rust-lang.org/cargo/reference/environment-variables.html",
+    "https://blog.rust-lang.org/2024/02/26/Windows-7/"
+   ],
+   "notes": "Other Linux triples in the plan: aarch64-, arm-(gnueabi, gnueabihf), armv7-(gnueabihf), loongarch64-, powerpc64-, powerpc64le-, riscv64gc-, s390x-, i686-unknown-linux-gnu. Same format-3 layout and component list as the tested amd64 file (components file checked in all 16 planned tarballs; rust-docs and rust-docs-json-preview are absent from the arm, armv7, loongarch64, powerpc64(le), riscv64 and s390x files as well as x86_64-apple-darwin and i686-pc-windows-msvc), so the same strip_components 2 unpack applies; not run because this host is amd64. Run the toolchain with an explicit environment in the app's own process only (never PATH/registry/profile changes): CARGO_HOME={runtime_dir}/cargo-home (or an app-owned writable dir; cargo writes its registry index, crate cache and installed binaries there, default is ~/.cargo), RUSTC={runtime_dir}/bin/rustc and RUSTDOC={runtime_dir}/bin/rustdoc (TESTED: without RUSTC or {runtime_dir}/bin on PATH, cargo fails with 'could not execute process `rustc -vV`' - it does NOT look next to itself, and with a user's rustup on PATH it would silently use the user's rustc), and prepend {runtime_dir}/bin to PATH in that process so `cargo clippy`/`cargo fmt` find cargo-clippy/cargo-fmt (tested). RUSTUP_HOME is not used at all: this is a plain toolchain with no rustup proxies; set it to {runtime_dir}/rustup-home and unset RUSTUP_TOOLCHAIN only as belt-and-braces. Clear inherited RUSTFLAGS, RUSTDOCFLAGS, CARGO_BUILD_*, CARGO_TARGET_DIR, CARGO_ENCODED_RUSTFLAGS and RUSTC_WRAPPER, which a user's global environment would inject. Cargo also reads .cargo/config.toml from the project dir and EVERY parent directory (then $CARGO_HOME/config.toml), so a project under a user's home picks up ~/.cargo/config.toml; keep app projects outside home or accept that. rustc finds its sysroot from its own location (tested: `rustc --print sysroot` = the folder it was run from) and binaries use RUNPATH $ORIGIN/../lib on Linux, so no LD_LIBRARY_PATH is needed. Slim alternative (tested on Linux, 601 MB and 156 files instead of ~1.9 GB and ~66,000 files; rust-docs alone is 727 MB / 67,212 HTML files and is only present in some tarballs): unpack with strip_components 1 into {tmp}, then copy only rustc, rust-std-<triple>, cargo and optionally clippy-preview and rustfmt-preview, e.g. `cp -R \"{tmp}/rustc/.\" \"{runtime_dir}/\"` per component on POSIX or `xcopy \"{tmp}\\rustc\" \"{runtime_dir}\\\" /E /I /Y /Q` per component in cmd. rust-analyzer-preview, llvm-tools-preview, rust-analysis, rust-docs-json-preview and llvm-bitcode-linker-preview are not needed to build. install.sh alternative (also tested): `sh install.sh --prefix=<dir> --disable-ldconfig` works but CANNOT take a prefix containing a space (it word-splits its own arguments: `--prefix=/a b/x` fails with \"Option 'b/x' is not recognized\", quoting does not help), and without --disable-ldconfig it runs ldconfig as root, rebuilding the system /etc/ld.so.cache (and, only for prefix /usr/local, writes /etc/ld.so.conf.d/rust-installer-v1-rustlib.conf). An install.sh result moved afterwards into a path with a space still works (tested); only the uninstall bookkeeping holds absolute paths. The direct unpack avoids all of this.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/cargo\" build --release --locked",
+    "env": {
+     "CARGO_HOME": "{data_dir}/cargo-home",
+     "RUSTC": "{runtime_dir}/bin/rustc",
+     "RUSTDOC": "{runtime_dir}/bin/rustdoc",
+     "RUSTFLAGS": null,
+     "RUSTDOCFLAGS": null,
+     "CARGO_ENCODED_RUSTFLAGS": null,
+     "RUSTC_WRAPPER": null,
+     "CARGO_TARGET_DIR": null
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Without RUSTC cargo can't find rustc (tested). Needs the system linker (see prerequisites)."
+   }
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": "==1.98.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 2
+    }
+   ],
+   "prerequisites": [
+    "Xcode Command Line Tools (`xcode-select --install`, system-wide, one per machine): rustc links through `cc`/`ld` and needs the macOS SDK. See catalog/prereqs or catalog/cc."
+   ],
+   "executable": "bin/rustc",
+   "package_manager": "\"{runtime_dir}/bin/cargo\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "verify": "\"{runtime_dir}/bin/rustc\" -vV",
+   "min_os": "macOS 10.12+ for x86_64-apple-darwin (raised from 10.7 at 1.74; tier 2 with host tools since 1.90); macOS 11.0+ for aarch64-apple-darwin",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://doc.rust-lang.org/rustc/platform-support.html",
+    "https://doc.rust-lang.org/cargo/reference/environment-variables.html",
+    "https://blog.rust-lang.org/2024/02/26/Windows-7/"
+   ],
+   "notes": "x86_64-apple-darwin and aarch64-apple-darwin. Same format-3 layout (no symlinks, checked on the arm64 tarball); unpack with strip_components 2. Binaries find their dylibs via @loader_path-relative install names like the Linux RUNPATH (not checked on a Mac). Files written by the installer itself carry no com.apple.quarantine attribute, so Gatekeeper should not prompt; not verified. Run the toolchain with an explicit environment in the app's own process only (never PATH/registry/profile changes): CARGO_HOME={runtime_dir}/cargo-home (or an app-owned writable dir; cargo writes its registry index, crate cache and installed binaries there, default is ~/.cargo), RUSTC={runtime_dir}/bin/rustc and RUSTDOC={runtime_dir}/bin/rustdoc (TESTED: without RUSTC or {runtime_dir}/bin on PATH, cargo fails with 'could not execute process `rustc -vV`' - it does NOT look next to itself, and with a user's rustup on PATH it would silently use the user's rustc), and prepend {runtime_dir}/bin to PATH in that process so `cargo clippy`/`cargo fmt` find cargo-clippy/cargo-fmt (tested). RUSTUP_HOME is not used at all: this is a plain toolchain with no rustup proxies; set it to {runtime_dir}/rustup-home and unset RUSTUP_TOOLCHAIN only as belt-and-braces. Clear inherited RUSTFLAGS, RUSTDOCFLAGS, CARGO_BUILD_*, CARGO_TARGET_DIR, CARGO_ENCODED_RUSTFLAGS and RUSTC_WRAPPER, which a user's global environment would inject. Cargo also reads .cargo/config.toml from the project dir and EVERY parent directory (then $CARGO_HOME/config.toml), so a project under a user's home picks up ~/.cargo/config.toml; keep app projects outside home or accept that. rustc finds its sysroot from its own location (tested: `rustc --print sysroot` = the folder it was run from) and binaries use RUNPATH $ORIGIN/../lib on Linux, so no LD_LIBRARY_PATH is needed. Slim alternative (tested on Linux, 601 MB and 156 files instead of ~1.9 GB and ~66,000 files; rust-docs alone is 727 MB / 67,212 HTML files and is only present in some tarballs): unpack with strip_components 1 into {tmp}, then copy only rustc, rust-std-<triple>, cargo and optionally clippy-preview and rustfmt-preview, e.g. `cp -R \"{tmp}/rustc/.\" \"{runtime_dir}/\"` per component on POSIX or `xcopy \"{tmp}\\rustc\" \"{runtime_dir}\\\" /E /I /Y /Q` per component in cmd. rust-analyzer-preview, llvm-tools-preview, rust-analysis, rust-docs-json-preview and llvm-bitcode-linker-preview are not needed to build.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/cargo\" build --release --locked",
+    "env": {
+     "CARGO_HOME": "{data_dir}/cargo-home",
+     "RUSTC": "{runtime_dir}/bin/rustc",
+     "RUSTDOC": "{runtime_dir}/bin/rustdoc",
+     "RUSTFLAGS": null,
+     "RUSTDOCFLAGS": null,
+     "CARGO_ENCODED_RUSTFLAGS": null,
+     "RUSTC_WRAPPER": null,
+     "CARGO_TARGET_DIR": null
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Without RUSTC cargo can't find rustc (tested). Needs the system linker (see prerequisites)."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": "==1.98.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 2
+    }
+   ],
+   "prerequisites": [
+    "MSVC linker, CRT and Windows SDK import libraries: Visual Studio Build Tools with 'MSVC v143 - VS 2022 C++ x64/x86 build tools' (plus the ARM64 build tools for aarch64) and a Windows 10/11 SDK, installed system-wide (catalog/prereqs vs_BuildTools.exe, isolation leaks; Build Tools licence requires a VS licence). The toolchain itself needs no VC++ redistributable: rustc.exe, cargo.exe and the bundled DLLs import only OS DLLs (checked)."
+   ],
+   "executable": "bin/rustc.exe",
+   "package_manager": "\"{runtime_dir}\\bin\\cargo.exe\"",
+   "verify": "\"{runtime_dir}\\bin\\rustc.exe\" -vV",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Windows 10+ / Server 2016+ for x86_64-, i686- (Pentium 4/SSE2) and aarch64-pc-windows-msvc from 1.78; checked in 1.98.1: cargo.exe, std-*.dll and rustc_driver-*.dll import WaitOnAddress/WakeByAddress* from api-ms-win-core-synch-l1-2-0.dll and bcryptprimitives.dll, so they cannot even load on Windows 7 or XP (PE header says 6.0, which is not the real floor). Windows 7 was tier 1 up to 1.77. No planned file runs on XP.",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://doc.rust-lang.org/rustc/platform-support.html",
+    "https://doc.rust-lang.org/cargo/reference/environment-variables.html",
+    "https://blog.rust-lang.org/2024/02/26/Windows-7/",
+    "https://rust-lang.github.io/rustup/installation/windows-msvc.html"
+   ],
+   "notes": "Triples in the plan: x86_64-pc-windows-msvc, i686-pc-windows-msvc, aarch64-pc-windows-msvc; no -gnu triple is planned (a -gnu tarball would add a rust-mingw component with a self-contained gcc/ld and MinGW CRT under lib/rustlib/<triple>/bin/self-contained and lib/.../self-contained, avoiding Build Tools; not checked here, and it would need adding to the plan). The install.sh inside needs a POSIX shell and is not used: the base installer's own tar.xz unpack with strip_components 2 gives the same tree (layout identical to the tested Linux file: 0 overlapping paths, no symlinks; bin\\rustc.exe, bin\\cargo.exe, bin\\*.dll, lib\\rustlib\\<triple>\\{lib,bin}). Longest relative path is 127 chars (rust-docs HTML; 90 without docs), so keep {runtime_dir} under ~130 chars for MAX_PATH or use the slim copy. rust-lld.exe is bundled (lib\\rustlib\\<triple>\\bin) but still needs the MSVC CRT and SDK .lib files, so Build Tools remain required; rustc locates link.exe itself through the VS installer's vswhere/COM registration, no vcvars needed. Run the toolchain with an explicit environment in the app's own process only (never PATH/registry/profile changes): CARGO_HOME={runtime_dir}/cargo-home (or an app-owned writable dir; cargo writes its registry index, crate cache and installed binaries there, default is ~/.cargo), RUSTC={runtime_dir}\\bin\\rustc.exe and RUSTDOC={runtime_dir}\\bin\\rustdoc.exe (TESTED: without RUSTC or {runtime_dir}/bin on PATH, cargo fails with 'could not execute process `rustc -vV`' - it does NOT look next to itself, and with a user's rustup on PATH it would silently use the user's rustc), and prepend {runtime_dir}/bin to PATH in that process so `cargo clippy`/`cargo fmt` find cargo-clippy/cargo-fmt (tested). RUSTUP_HOME is not used at all: this is a plain toolchain with no rustup proxies; set it to {runtime_dir}/rustup-home and unset RUSTUP_TOOLCHAIN only as belt-and-braces. Clear inherited RUSTFLAGS, RUSTDOCFLAGS, CARGO_BUILD_*, CARGO_TARGET_DIR, CARGO_ENCODED_RUSTFLAGS and RUSTC_WRAPPER, which a user's global environment would inject. Cargo also reads .cargo/config.toml from the project dir and EVERY parent directory (then $CARGO_HOME/config.toml), so a project under a user's home picks up ~/.cargo/config.toml; keep app projects outside home or accept that. rustc finds its sysroot from its own location (tested: `rustc --print sysroot` = the folder it was run from) and binaries use RUNPATH $ORIGIN/../lib on Linux, so no LD_LIBRARY_PATH is needed. On Windows the default CARGO_HOME is %USERPROFILE%\\.cargo. Slim alternative (tested on Linux, 601 MB and 156 files instead of ~1.9 GB and ~66,000 files; rust-docs alone is 727 MB / 67,212 HTML files and is only present in some tarballs): unpack with strip_components 1 into {tmp}, then copy only rustc, rust-std-<triple>, cargo and optionally clippy-preview and rustfmt-preview, e.g. `cp -R \"{tmp}/rustc/.\" \"{runtime_dir}/\"` per component on POSIX or `xcopy \"{tmp}\\rustc\" \"{runtime_dir}\\\" /E /I /Y /Q` per component in cmd. rust-analyzer-preview, llvm-tools-preview, rust-analysis, rust-docs-json-preview and llvm-bitcode-linker-preview are not needed to build.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\bin\\cargo.exe\" build --release --locked",
+    "env": {
+     "CARGO_HOME": "{data_dir}\\cargo-home",
+     "RUSTC": "{runtime_dir}\\bin\\rustc.exe",
+     "RUSTDOC": "{runtime_dir}\\bin\\rustdoc.exe",
+     "RUSTFLAGS": null,
+     "RUSTDOCFLAGS": null,
+     "CARGO_ENCODED_RUSTFLAGS": null,
+     "RUSTC_WRAPPER": null,
+     "CARGO_TARGET_DIR": null
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Without RUSTC cargo can't find rustc (tested). Needs the system linker (see prerequisites)."
+   }
+  }
+ ]
+}

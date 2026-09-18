@@ -1,0 +1,366 @@
+{
+ "runtime": "r",
+ "researched": "2026-09-18",
+ "assumes": "root/administrator",
+ "notes": "Extra fields beyond SCHEMA.md: match.variant and preferred. {version} in Windows registry steps is the release version. Only the Linux .deb recipe was run (Ubuntu 24.04 amd64, with two jammy libraries supplied locally).",
+ "recipes": [
+  {
+   "match": {
+    "os": "windows",
+    "kind": "installer",
+    "format": "exe",
+    "versions": ">=2.0",
+    "arch": null,
+    "variant": null
+   },
+   "method": "run",
+   "preferred": true,
+   "steps": [
+    {
+     "run": "\"{file}\" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- /ALLUSERS /DIR=\"{runtime_dir}\" /NOICONS /MERGETASKS=\"!desktopicon,!quicklaunchicon,!recordversion,!associate\" /LOG=\"{tmp}\\r-setup.log\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "for /f \"tokens=2,*\" %A in ('reg query \"HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\R for Windows {version}_is1\" /v InstallLocation 2^>nul ^| find \"InstallLocation\"') do if /i \"%B\"==\"{runtime_dir}\\\" reg delete \"HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\R for Windows {version}_is1\" /f",
+     "shell": "cmd"
+    },
+    {
+     "run": "del /q \"{runtime_dir}\\unins000.exe\" \"{runtime_dir}\\unins000.dat\" 2>nul",
+     "shell": "cmd"
+    },
+    {
+     "run": "echo R_LIBS_USER=${R_HOME}/site-library>>\"{runtime_dir}\\etc\\Renviron.site\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "if not exist \"{runtime_dir}\\site-library\" mkdir \"{runtime_dir}\\site-library\"",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "None for R itself. Rtools matching the R version, only if the app compiles packages from source (it installs to its own folder; not in the catalogue)"
+   ],
+   "executable": "bin\\Rscript.exe  (R 2.12-4.1 also have bin\\x64\\Rscript.exe and bin\\i386\\Rscript.exe; bin\\Rscript.exe picks the arch)",
+   "package_manager": "\"{runtime_dir}\\bin\\Rscript.exe\" -e \"install.packages('PKG', lib=file.path(R.home(), 'site-library'), repos='https://cloud.r-project.org')\"",
+   "verify": "\"{runtime_dir}\\bin\\Rscript.exe\" --vanilla -e \"cat(R.version.string, R.home(), .libPaths(), sep='\\n')\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "During install, HKLM\\...\\Uninstall\\R for Windows <version>_is1 is written and then deleted by step 2 (only if its InstallLocation is this {runtime_dir}). If the user had installed the same R version normally, Inno writes its key over theirs, and step 2 then deletes it, so their Programs and Features entry is lost",
+    "Setup log in {tmp} (deleted with {tmp})"
+   ],
+   "isolation": "leaks",
+   "relocatable": true,
+   "min_os": "R 2.x: Windows XP; R 3.x: Vista+ (3.6: Vista/7/8/10); R 4.2+: Windows 10/11 64-bit (the 4.6.1 installer's .iss says MinVersion 6.1, but R Core no longer tests 7/8.1)",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://cran.r-project.org/bin/windows/base/rw-FAQ.html",
+    "https://github.com/wch/r-source/blob/trunk/src/gnuwin32/installer/JRins.R",
+    "https://github.com/wch/r-source/blob/trunk/src/gnuwin32/installer/header1.iss",
+    "https://github.com/wch/r-source/blob/trunk/src/gnuwin32/installer/reg.iss",
+    "https://jrsoftware.org/ishelp/index.php?topic=setupcmdline"
+   ],
+   "notes": "Checked read-only: R-2.11.1 is Inno Setup 5.3.8, R-2.15.3 5.5.0, R-3.6.3 6.0.0 and R-4.6.1 6.1.0 (setup data). R's installer script (JRins.R + header1.iss + reg.iss) has no AppId, so AppId = AppName 'R for Windows <ver>' and the uninstall key is 'R for Windows <ver>_is1'. It sets AllowNoIcons=yes (so /NOICONS skips the Start-menu group) and UsePreviousAppDir=no, so /DIR always wins. Tasks desktopicon, quicklaunchicon, recordversion (HKLM\\Software\\R-core\\R 'Current Version'/InstallPath) and associate (.RData in HKCR) are all turned off with /MERGETASKS. The [Registry] section has nothing else, and the [Code] section only edits etc\\Rconsole and Rprofile.site when the user customises startup (a skipped page). So after steps 2-3 only the files remain. The rw-FAQ says 'A basic R installation is relocatable' (it can run from a USB drive), and R doesn't read the registry when running, so two copies of the same version work side by side. Components: R 2.12-4.1 installers hold both i386 and x64. Add /COMPONENTS=\"main,x64,translations\" (64-bit) or \"main,i386,translations\" (32-bit Windows) to install only one. Replace {version} in the registry step with the R version (e.g. 4.6.1). On 4.x, when started elevated with /ALLUSERS, Inno writes the key in the 64-bit HKLM view; `reg query` from a 32-bit cmd would see Wow6432Node instead, so run it from the native cmd.exe. Double the % signs if these lines go in a .bat. Isolation of packages: by default R also puts a per-user library (%LOCALAPPDATA%\\R\\win-library\\X.Y on 4.2+, Documents\\R\\win-library\\X.Y before) on .libPaths(), and it's shared by every copy of R X.Y for that user. Steps 3-4 point R_LIBS_USER at {runtime_dir}\\site-library through etc\\Renviron.site (the same fix was TESTED on Linux). The ~/.Renviron and ~/.Rprofile files of whoever runs R are still read unless the app runs R with --vanilla or --no-environ. Alternative with no registry writes at all: `innoextract -d \"{tmp}\\x\" \"{file}\"` and copy {tmp}\\x\\app to {runtime_dir}. It needs an innoextract build that supports the installer's Inno version (6.1.0 for 4.6.1), which has to be shipped as a helper, and it loses nothing that matters (no [Run] steps). Its support for 6.1 wasn't verified.",
+   "launch": {
+    "program": "{runtime_dir}\\bin\\Rscript.exe",
+    "args": [],
+    "env": {
+     "R_LIBS": null,
+     "R_LIBS_USER": null,
+     "R_ENVIRON_USER": "{data_dir}\\Renviron",
+     "R_PROFILE_USER": "{data_dir}\\Rprofile"
+    },
+    "notes": "R_ENVIRON_USER/R_PROFILE_USER point at files that don't exist, so the user's ~/.Renviron and ~/.Rprofile aren't read, while the recipe's Renviron.site (which points R_LIBS_USER inside the runtime folder) still is. Not --no-environ: that would skip Renviron.site too."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\bin\\Rcmd.exe\" INSTALL .",
+    "env": {
+     "R_LIBS": null,
+     "R_LIBS_USER": null,
+     "R_ENVIRON_USER": "{data_dir}\\Renviron",
+     "R_PROFILE_USER": "{data_dir}\\Rprofile"
+    },
+    "cwd": "{app_dir}",
+    "notes": "For an R package project; a script-only app installs its packages with install.packages (see package_manager)."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "installer",
+    "format": "exe",
+    "versions": "<2.0",
+    "arch": "x86",
+    "variant": null
+   },
+   "method": "run",
+   "preferred": true,
+   "steps": [
+    {
+     "run": "\"{file}\" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- /DIR=\"{runtime_dir}\" /NOICONS",
+     "shell": "cmd"
+    },
+    {
+     "run": "reg delete \"HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\R for Windows {version}_is1\" /f 2>nul",
+     "shell": "cmd"
+    },
+    {
+     "run": "del /q \"{runtime_dir}\\unins000.exe\" \"{runtime_dir}\\unins000.dat\" 2>nul",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin\\Rterm.exe  (R 1.9 has no Rscript; use `Rterm.exe --vanilla --slave -f script.R` or `Rcmd BATCH`)",
+   "package_manager": "\"{runtime_dir}\\bin\\Rcmd.exe\" INSTALL <package.zip or dir>",
+   "verify": "echo cat(R.version.string) | \"{runtime_dir}\\bin\\Rterm.exe\" --vanilla --slave",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "Probably HKLM\\Software\\R-core\\R\\{version} and 'Current Version' (1.9's installer had registry entries on by default; unverified whether its tasks can be turned off from the command line)",
+    "Programs and Features entry until step 2"
+   ],
+   "isolation": "leaks",
+   "relocatable": true,
+   "min_os": "Windows 95/98/ME/NT4/2000/XP (32-bit)",
+   "tested": false,
+   "confidence": "low",
+   "sources": [
+    "https://cran.r-project.org/bin/windows/base/rw-FAQ.html",
+    "https://jrsoftware.org/ishelp/index.php?topic=setupcmdline",
+    "https://cran-archive.r-project.org/bin/windows/base/old/1.9.1/"
+   ],
+   "notes": "rw1091.exe is Inno Setup 4.2.2 (setup data; messages 4.1.4). Inno 4 supports /VERYSILENT, /DIR and /NOICONS, but /MERGETASKS came later, and whether 4.2's /TASKS can clear R's registry task is unknown. Don't delete HKLM\\Software\\R-core\\R 'Current Version' blindly: another R on the machine may own it. Removing only the {version} subkey is safe. innoextract supports Inno 4.x, and that route writes nothing to the registry.",
+   "launch": {
+    "program": "{runtime_dir}\\bin\\Rterm.exe",
+    "args": [],
+    "env": {
+     "R_LIBS": null,
+     "R_LIBS_USER": null,
+     "R_ENVIRON_USER": "{data_dir}\\Renviron",
+     "R_PROFILE_USER": "{data_dir}\\Rprofile"
+    },
+    "notes": "R_ENVIRON_USER/R_PROFILE_USER point at files that don't exist, so the user's ~/.Renviron and ~/.Rprofile aren't read, while the recipe's Renviron.site (which points R_LIBS_USER inside the runtime folder) still is. Not --no-environ: that would skip Renviron.site too."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\bin\\Rcmd.exe\" INSTALL .",
+    "env": {
+     "R_LIBS": null,
+     "R_LIBS_USER": null,
+     "R_ENVIRON_USER": "{data_dir}\\Renviron",
+     "R_PROFILE_USER": "{data_dir}\\Rprofile"
+    },
+    "cwd": "{app_dir}",
+    "notes": "For an R package project; a script-only app installs its packages with install.packages (see package_manager)."
+   }
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "installer",
+    "format": "deb",
+    "versions": ">=3.0",
+    "arch": null,
+    "variant": "posit-ubuntu-2204"
+   },
+   "method": "extract",
+   "preferred": true,
+   "steps": [
+    {
+     "run": "dpkg-deb -x \"{file}\" \"{tmp}/deb\"  ||  (mkdir -p \"{tmp}/deb\" && cd \"{tmp}/deb\" && ar p \"{file}\" data.tar.gz | tar xz)",
+     "shell": "sh"
+    },
+    {
+     "run": "V=$(ls \"{tmp}/deb/opt/R\"); cp -a \"{tmp}/deb/opt/R/$V/.\" \"{runtime_dir}/\" && grep -rlI \"/opt/R/$V\" \"{runtime_dir}\" | while IFS= read -r f; do sed -i \"s|/opt/R/$V|{runtime_dir}|g\" \"$f\"; done",
+     "shell": "sh"
+    },
+    {
+     "run": "mv \"{runtime_dir}/bin/Rscript\" \"{runtime_dir}/bin/Rscript.bin\" && printf '%s\\n' '#!/bin/sh' 'd=$(dirname -- \"$(readlink -f -- \"$0\")\")' 'RHOME=\"$(dirname -- \"$d\")/lib/R\"; export RHOME' 'exec \"$d/Rscript.bin\" \"$@\"' > \"{runtime_dir}/bin/Rscript\" && chmod 755 \"{runtime_dir}/bin/Rscript\"",
+     "shell": "sh"
+    },
+    {
+     "run": "echo 'R_LIBS_USER=${R_HOME}/site-library' >> \"{runtime_dir}/lib/R/etc/Renviron.site\" && mkdir -p \"{runtime_dir}/lib/R/site-library\"",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "Ubuntu 22.04 (or a distro with the same sonames), with the runtime libraries from the deb's Depends installed system-wide: libc6 (glibc >= 2.35 for 4.6.1's libR.so), libicu70 (libicuuc/libicui18n.so.70), libtiff5, libjpeg8, libpng16-16, libcairo2, libpango-1.0-0, libpangocairo-1.0-0, libcurl4, libreadline8, libgomp1, libopenblas, libtcl8.6/libtk8.6, libx11-6, libxt6, libglib2.0-0, liblzma, libbz2, libpcre2 (3.6.3 also libpcre3)",
+    "For packages with compiled code: gcc, g++, gfortran, make and the -dev packages from Depends",
+    "dpkg-deb, or binutils `ar` (the .deb is an ar archive, which the base installer can't read directly)"
+   ],
+   "executable": "bin/Rscript",
+   "package_manager": "\"{runtime_dir}/bin/Rscript\" -e \"install.packages('PKG', repos='https://cloud.r-project.org')\"   (goes to {runtime_dir}/lib/R/site-library)",
+   "verify": "\"{runtime_dir}/bin/Rscript\" -e 'cat(R.version.string, R.home(), .libPaths(), sep=\"\\n\")'",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "Needs Ubuntu 22.04 system libraries installed (shared, via apt; the operator's call)"
+   ],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Ubuntu 22.04 (Posit's ubuntu-2204 build); it does NOT run on a stock 24.04 (no libicu70/libtiff5)",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://github.com/rstudio/r-builds",
+    "https://cran.r-project.org/doc/manuals/r-release/R-admin.html",
+    "https://docs.posit.co/resources/install-r/"
+   ],
+   "notes": "r-4.6.1_1_amd64.deb has no maintainer scripts (control, md5sums and an empty conffiles only) and puts everything under /opt/R/4.6.1, so extracting loses nothing. Only 4 text files contain the prefix: bin/R, lib/R/bin/R (R_HOME_DIR, R_SHARE_DIR, R_INCLUDE_DIR, R_DOC_DIR), lib/R/etc/Makeconf and lib/pkgconfig/libR.pc, which step 2 rewrites. The binaries have no RPATH; etc/ldpaths adds ${R_HOME}/lib to LD_LIBRARY_PATH. The exception is bin/Rscript, which has /opt/R/<ver>/lib/R compiled in but honours the RHOME environment variable, hence the step 3 wrapper. TESTED on Ubuntu 24.04 amd64 with 4.6.1. This host lacks the 22.04 libraries libicu70 and libtiff5, so for the test only, those two were taken from the Ubuntu jammy pool with `dpkg-deb -x` and copied into lib/R/lib. That substitutes for the system packages the recipe expects; on 22.04 it isn't needed, and shipping them this way is a possible operator choice. Two copies, '.../app one/rt' and '.../app two/rt' (spaces): R and Rscript each report their own R.home(). A third copy without spaces ('app_three') installed the compiled CRAN package bitops from source, and the other copies didn't see it. The same install in the path WITH spaces FAILED: make splits R_HOME at the space ('one/rt/lib/R/share/make/vars.mk: No such file'). So compiled packages need a space-free {runtime_dir} (R-admin also warns about spaces on Unix). Isolation: without step 4, .libPaths() also held ~/R/x86_64-pc-linux-gnu-library/4.6, which is shared by every copy of R 4.6 for that user (verified). With R_LIBS_USER=${R_HOME}/site-library in etc/Renviron.site it held only paths inside {runtime_dir}. ~/.Renviron and ~/.Rprofile are still read unless R runs with --vanilla. 3.6.3 has the same layout and the same 4 prefixed files (checked). It additionally needs libpcre3 and wasn't run. After a move, repeat step 2 with the old path.",
+   "launch": {
+    "program": "{runtime_dir}/bin/Rscript",
+    "args": [],
+    "env": {
+     "R_LIBS": null,
+     "R_LIBS_USER": null,
+     "R_ENVIRON_USER": "{data_dir}/Renviron",
+     "R_PROFILE_USER": "{data_dir}/Rprofile"
+    },
+    "notes": "R_ENVIRON_USER/R_PROFILE_USER point at files that don't exist, so the user's ~/.Renviron and ~/.Rprofile aren't read, while the recipe's Renviron.site (which points R_LIBS_USER inside the runtime folder) still is. Not --no-environ: that would skip Renviron.site too."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/R\" CMD INSTALL .",
+    "env": {
+     "R_LIBS": null,
+     "R_LIBS_USER": null,
+     "R_ENVIRON_USER": "{data_dir}/Renviron",
+     "R_PROFILE_USER": "{data_dir}/Rprofile"
+    },
+    "cwd": "{app_dir}",
+    "notes": "For an R package project; a script-only app installs its packages with install.packages (see package_manager)."
+   }
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "installer",
+    "format": "pkg",
+    "versions": null,
+    "arch": null,
+    "variant": null
+   },
+   "method": "run",
+   "preferred": true,
+   "steps": [
+    {
+     "run": "pkgutil --forget org.R-project.R.fw.pkg 2>/dev/null; pkgutil --forget org.R-project.arm64.R.fw.pkg 2>/dev/null; pkgutil --forget org.R-project.x86_64.R.fw.pkg 2>/dev/null; installer -pkg \"{file}\" -target /",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "XQuartz for tcltk/X11 graphics; gfortran and Xcode CLT only for source packages"
+   ],
+   "executable": "/Library/Frameworks/R.framework/Versions/X.Y[-arch]/Resources/bin/Rscript",
+   "package_manager": "/Library/Frameworks/R.framework/Versions/X.Y/Resources/bin/Rscript -e \"install.packages('PKG', lib=Sys.getenv('APP_R_LIB'))\"  (a per-app library outside the framework)",
+   "verify": "/Library/Frameworks/R.framework/Versions/X.Y/Resources/bin/Rscript -e 'cat(R.version.string, R.home())'",
+   "uninstall": "Only when no other app uses that R version: rm -rf /Library/Frameworks/R.framework/Versions/X.Y (and /Applications/R.app, /usr/local/bin/R and Rscript if no R remains)",
+   "side_effects": [
+    "/Library/Frameworks/R.framework/Versions/X.Y[-arch] (fixed location, shared by every app that uses X.Y)",
+    "R-fw postflight: /usr/local/bin/R and /usr/local/bin/Rscript symlinks (in /usr/bin on macOS < 10.11), chown root:admin on the framework",
+    "R-app.pkg: /Applications/R.app; tcltk.pkg (4.x): X11 Tcl/Tk under /opt/R/<arch> (arm64) or /usr/local (x86_64)",
+    "Receipts in /var/db/receipts; 'Current' symlink in R.framework/Versions switches to this version"
+   ],
+   "isolation": "impossible",
+   "relocatable": false,
+   "min_os": "4.6.1: macOS 11 (x86_64) / macOS 14 (arm64); 3.6.3: OS X 10.11; 2.15.3: 10.5/10.6",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://cran.r-project.org/doc/manuals/r-release/R-admin.html",
+    "https://cran.r-project.org/bin/macosx/RMacOSX-FAQ.html"
+   ],
+   "notes": "Checked the pkgs read-only: R-fw.pkg has install-location=/Library/Frameworks and relocatable=false, R-app.pkg goes to /Applications and tcltk.pkg to /. The R-fw postflight script links /usr/local/bin/R and Rscript to /Library/Frameworks/R.framework/Resources/bin. R-admin: 'The installer will remove any previous version of the R framework which it finds installed. This can be avoided by using pkgutil --forget', which is what the pre-step does. Different X.Y versions then coexist under Versions/, but two copies of the SAME X.Y can't, and a later install of that X.Y replaces it for every app. Use a choices XML (-applyChoiceChangesXML) to leave out R.app and tcltk if unwanted; the framework is required. Per-app package libraries are still possible (R_LIBS_USER or lib= pointing into {runtime_dir}), which gives package isolation on a shared interpreter.",
+   "launch": {
+    "program": "/Library/Frameworks/R.framework/Versions/X.Y[-arch]/Resources/bin/Rscript",
+    "args": [],
+    "env": {
+     "R_LIBS": null,
+     "R_LIBS_USER": null,
+     "R_ENVIRON_USER": "{data_dir}/Renviron",
+     "R_PROFILE_USER": "{data_dir}/Rprofile"
+    },
+    "notes": "R_ENVIRON_USER/R_PROFILE_USER point at files that don't exist, so the user's ~/.Renviron and ~/.Rprofile aren't read, while the recipe's Renviron.site (which points R_LIBS_USER inside the runtime folder) still is. Not --no-environ: that would skip Renviron.site too."
+   },
+   "project_install": {
+    "command": "\"/Library/Frameworks/R.framework/Versions/X.Y[-arch]/Resources/bin/R\" CMD INSTALL .",
+    "env": {
+     "R_LIBS": null,
+     "R_LIBS_USER": null,
+     "R_ENVIRON_USER": "{data_dir}/Renviron",
+     "R_PROFILE_USER": "{data_dir}/Rprofile"
+    },
+    "cwd": "{app_dir}",
+    "notes": "For an R package project; a script-only app installs its packages with install.packages (see package_manager)."
+   }
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "installer",
+    "format": "pkg",
+    "versions": null,
+    "arch": null,
+    "variant": null
+   },
+   "method": "extract",
+   "preferred": false,
+   "steps": [
+    {
+     "run": "pkgutil --expand \"{file}\" \"{tmp}/pkg\" && FW=$(ls -d \"{tmp}\"/pkg/*R-fw.pkg \"{tmp}\"/pkg/r.pkg 2>/dev/null | head -1) && mkdir -p \"{runtime_dir}\" && cd \"{runtime_dir}\" && gunzip -c \"$FW/Payload\" | cpio -idm",
+     "shell": "sh"
+    },
+    {
+     "run": "R=\"{runtime_dir}/R.framework\"; OLD=/Library/Frameworks/R.framework; grep -rlI \"$OLD\" \"$R\" | while IFS= read -r f; do sed -i '' \"s|$OLD|$R|g\" \"$f\"; done",
+     "shell": "sh"
+    },
+    {
+     "run": "R=\"{runtime_dir}/R.framework\"; OLD=/Library/Frameworks/R.framework; find \"$R\" -type f \\( -name '*.dylib' -o -name '*.so' -o -path '*/bin/exec/R' -o -name Rscript \\) | while IFS= read -r f; do file \"$f\" | grep -q Mach-O || continue; for l in $(otool -L \"$f\" | awk 'NR>1{print $1}' | grep \"^$OLD\"); do install_name_tool -change \"$l\" \"$R${l#$OLD}\" \"$f\"; done; otool -D \"$f\" | grep -q \"^$OLD\" && install_name_tool -id \"$R$(otool -D \"$f\" | tail -1 | sed \"s|^$OLD||\")\" \"$f\"; codesign -f -s - \"$f\"; done",
+     "shell": "sh"
+    },
+    {
+     "run": "echo 'R_LIBS_USER=${R_HOME}/site-library' >> \"{runtime_dir}/R.framework/Resources/etc/Renviron.site\" && mkdir -p \"{runtime_dir}/R.framework/Resources/site-library\"",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "install_name_tool/otool (Xcode Command Line Tools), not in stock macOS; codesign is built in",
+    "{runtime_dir} path must not be longer than the space in each Mach-O's load commands allows, unless the libraries were linked with -headerpad_max_install_names (not checked)",
+    "XQuartz for X11/tcltk"
+   ],
+   "executable": "R.framework/Resources/bin/Rscript",
+   "package_manager": "\"{runtime_dir}/R.framework/Resources/bin/Rscript\" -e \"install.packages('PKG', type='source')\"",
+   "verify": "\"{runtime_dir}/R.framework/Resources/bin/Rscript\" -e 'cat(R.version.string, R.home(), .libPaths(), sep=\"\\n\")'",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": false,
+   "min_os": "as for the pkg",
+   "tested": false,
+   "confidence": "low",
+   "sources": [
+    "https://cran.r-project.org/doc/manuals/r-release/R-admin.html",
+    "https://cran.r-project.org/bin/macosx/RMacOSX-FAQ.html"
+   ],
+   "notes": "An untested sketch for true per-app R on macOS. Checked in the 4.6.1 arm64 pkg: bin/R hard-codes R_HOME_DIR=/Library/Frameworks/R.framework/Resources (plus R_SHARE_DIR, R_INCLUDE_DIR, R_DOC_DIR), and etc/Renviron and etc/Makeconf contain the path. exec/R, libR.dylib and every library/*/libs/*.so link /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/{libR,libRblas,libRlapack,libgfortran.5,libquadmath.0}.dylib by absolute path, and all are code-signed (hardened runtime, notarized pkg), so every rewritten file must be re-signed ad hoc. The rewrite uses absolute {runtime_dir} paths rather than @loader_path, which keeps bin/R simple but makes the result NOT relocatable (redo steps 2-3 after a move). Also: CRAN's macOS BINARY packages link /Library/Frameworks/R.framework/... too, so later installs must use type='source' (needs Xcode CLT + gfortran) or be rewritten the same way. The tcltk.pkg Tcl/Tk (/opt/R/arm64) would also need to be extracted and rewritten. 2.15.3's pkg uses the older r.pkg/r-1.pkg/r64.pkg split; step 1 picks r.pkg. It's listed so the operator can decide whether per-app R on macOS is worth this, compared with the shared-framework `run` recipe.",
+   "launch": {
+    "program": "{runtime_dir}/R.framework/Resources/bin/Rscript",
+    "args": [],
+    "env": {
+     "R_LIBS": null,
+     "R_LIBS_USER": null,
+     "R_ENVIRON_USER": "{data_dir}/Renviron",
+     "R_PROFILE_USER": "{data_dir}/Rprofile"
+    },
+    "notes": "R_ENVIRON_USER/R_PROFILE_USER point at files that don't exist, so the user's ~/.Renviron and ~/.Rprofile aren't read, while the recipe's Renviron.site (which points R_LIBS_USER inside the runtime folder) still is. Not --no-environ: that would skip Renviron.site too."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/R.framework/Resources/bin/R\" CMD INSTALL .",
+    "env": {
+     "R_LIBS": null,
+     "R_LIBS_USER": null,
+     "R_ENVIRON_USER": "{data_dir}/Renviron",
+     "R_PROFILE_USER": "{data_dir}/Rprofile"
+    },
+    "cwd": "{app_dir}",
+    "notes": "For an R package project; a script-only app installs its packages with install.packages (see package_manager)."
+   }
+  }
+ ]
+}

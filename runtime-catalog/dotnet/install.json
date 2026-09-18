@@ -1,0 +1,476 @@
+{
+ "runtime": "dotnet",
+ "researched": "2026-09-18",
+ "assumes": "root/administrator",
+ "recipes": [
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": "==1.1.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 0
+    }
+   ],
+   "prerequisites": [
+    "RHEL/CentOS 7-era system libraries: libssl.so.10 + libcrypto.so.10 (RHEL's OpenSSL 1.0.2 soname), libicuuc.so.50/libicui18n.so.50, libunwind.so.8, libuuid, libcurl, libgssapi_krb5, zlib"
+   ],
+   "executable": "dotnet",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/dotnet\" --info",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "RHEL/CentOS 7 (and binary-compatible distros) x64 only; glibc 2.14+",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-environment-variables",
+    "https://github.com/dotnet/runtime/blob/main/docs/design/features/sharedfx-lookup.md"
+   ],
+   "notes": "The plan's .NET Core 1.1 Linux file is the RHEL-specific tarball (dotnet-rhel-x64.1.1.13.tar.gz); 1.x had no portable linux-x64 runtime. Its native libraries link RHEL 7 sonames directly (libssl.so.10, ICU 50), and 1.x has no globalization-invariant mode, so it will not run on current distros. Unpacked and the muxer ran here (Ubuntu 24.04), but no app could run, so this counts as untested. The 1.x muxer has no --list-runtimes; `dotnet --info` without an SDK prints 'Did you mean to run dotnet SDK commands?' and exits 145, which only proves the host starts. Verify properly by running the app's dll. How to launch a framework-dependent app from this private copy: run the MUXER with the app's dll, \"{runtime_dir}/dotnet\" \"<app>/app.dll\". The muxer looks for host/fxr and shared/Microsoft.NETCore.App only relative to its own location. Tested: it ignores DOTNET_ROOT, and two copies side by side each resolve their own framework. Do NOT rely on the app's generated apphost (app.exe / ./app): it looks at DOTNET_ROOT_<ARCH>, then DOTNET_ROOT(x86) on 64-bit Windows for 32-bit apps, then DOTNET_ROOT, then the global location (registry HKLM\\SOFTWARE\\dotnet\\Setup\\InstalledVersions\\<arch>\\InstallLocation or %ProgramFiles%\\dotnet on Windows; /etc/dotnet/install_location, then /usr/share/dotnet or /usr/lib/dotnet on Linux; /usr/local/share/dotnet on macOS). Tested: without DOTNET_ROOT it failed with 'You must install .NET'; with DOTNET_ROOT set it used the private copy. If an apphost must be used, set DOTNET_ROOT and DOTNET_ROOT_<ARCH> to {runtime_dir} in the app's process environment only. Clear variables a user may have set globally that would reach into the private runtime: DOTNET_STARTUP_HOOKS, DOTNET_ADDITIONAL_DEPS, DOTNET_SHARED_STORE, DOTNET_ROLL_FORWARD*, CORECLR_ENABLE_PROFILING/CORECLR_PROFILER*, and COMPlus_* / DOTNET_* runtime knobs. Only Microsoft.NETCore.App is in this archive: apps that need ASP.NET Core (Microsoft.AspNetCore.App) or WinForms/WPF (Microsoft.WindowsDesktop.App) need those runtime archives unpacked into the same {runtime_dir} (they add shared/<name>/<ver>), and the plan does not include them. A patch roll-forward inside the folder works (tested: an app built for 8.0.0 ran on 8.0.31, and a netcoreapp2.1 app ran on 2.2.5 through the default Minor roll-forward). Running on a newer major needs rollForward Major/LatestMajor in the app's runtimeconfig.json (3.0+). Nothing is written outside {runtime_dir} at install time. At run time the runtime creates $TMPDIR/dotnet-diagnostic-<pid>-*-socket and clr-debug-pipe-<pid>-* (removed on a clean exit; DOTNET_EnableDiagnostics=0 turns them off). If the app opens a CurrentUser X509Store it writes ~/.dotnet/corefx/cryptography/x509stores. No NuGet or SDK caches are involved because this is a runtime, not an SDK (tested: a runtime-only run left the test HOME and TMPDIR empty). The unpacker must keep exec bits (dotnet, createdump). The archives have no leading directory, so strip_components is 0. ",
+   "launch": {
+    "program": "{runtime_dir}/dotnet",
+    "args": [],
+    "env": {
+     "DOTNET_ROOT": "{runtime_dir}"
+    },
+    "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": ">=2.2,<5",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 0
+    }
+   ],
+   "prerequisites": [
+    "libstdc++, libgcc, zlib (libz.so.1), Kerberos GSSAPI (libgssapi_krb5.so.2), ICU (libicu), OpenSSL: the distro 'dotnet-runtime-deps' set; libcurl (libcurl.so.4)",
+    "OpenSSL 1.0.x or 1.1.x (probes libssl.so.1.1/1.0.2/1.0.0/10 only, never OpenSSL 3): without it any TLS/HTTPS/crypto call fails, so on OpenSSL-3-only distros (Ubuntu 22.04+, RHEL 9, Debian 12) HTTPS is impossible",
+    "ICU no newer than the runtime knows: 2.2/3.1 probe a fixed range of ICU sonames and FailFast on newer ICU (tested: ICU 74 fails). Launch with CLR_ICU_VERSION_OVERRIDE=<installed ICU major> or DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 (both tested working)"
+   ],
+   "executable": "dotnet",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/dotnet\" --list-runtimes",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Linux x64/arm64/arm32, glibc 2.14+ (2.2: RHEL 7, Ubuntu 14.04, Debian 8; 3.1: RHEL 7, Ubuntu 16.04, Debian 9)",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-environment-variables",
+    "https://github.com/dotnet/runtime/blob/main/docs/design/features/sharedfx-lookup.md"
+   ],
+   "notes": "Tested on Ubuntu 24.04 amd64: unpacked 2.2.5 and 3.1.32 into a path with a space, `--list-runtimes` worked, and a framework-dependent hello-world (netcoreapp2.1) ran through the private muxer once CLR_ICU_VERSION_OVERRIDE=74 or invariant mode was set; without it both FailFast on 'Couldn't find a valid ICU package'. Running on 3.1 needs DOTNET_ROLL_FORWARD=LatestMajor for a 2.x app. How to launch a framework-dependent app from this private copy: run the MUXER with the app's dll, \"{runtime_dir}/dotnet\" \"<app>/app.dll\". The muxer looks for host/fxr and shared/Microsoft.NETCore.App only relative to its own location. Tested: it ignores DOTNET_ROOT, and two copies side by side each resolve their own framework. Do NOT rely on the app's generated apphost (app.exe / ./app): it looks at DOTNET_ROOT_<ARCH>, then DOTNET_ROOT(x86) on 64-bit Windows for 32-bit apps, then DOTNET_ROOT, then the global location (registry HKLM\\SOFTWARE\\dotnet\\Setup\\InstalledVersions\\<arch>\\InstallLocation or %ProgramFiles%\\dotnet on Windows; /etc/dotnet/install_location, then /usr/share/dotnet or /usr/lib/dotnet on Linux; /usr/local/share/dotnet on macOS). Tested: without DOTNET_ROOT it failed with 'You must install .NET'; with DOTNET_ROOT set it used the private copy. If an apphost must be used, set DOTNET_ROOT and DOTNET_ROOT_<ARCH> to {runtime_dir} in the app's process environment only. Clear variables a user may have set globally that would reach into the private runtime: DOTNET_STARTUP_HOOKS, DOTNET_ADDITIONAL_DEPS, DOTNET_SHARED_STORE, DOTNET_ROLL_FORWARD*, CORECLR_ENABLE_PROFILING/CORECLR_PROFILER*, and COMPlus_* / DOTNET_* runtime knobs. Only Microsoft.NETCore.App is in this archive: apps that need ASP.NET Core (Microsoft.AspNetCore.App) or WinForms/WPF (Microsoft.WindowsDesktop.App) need those runtime archives unpacked into the same {runtime_dir} (they add shared/<name>/<ver>), and the plan does not include them. A patch roll-forward inside the folder works (tested: an app built for 8.0.0 ran on 8.0.31, and a netcoreapp2.1 app ran on 2.2.5 through the default Minor roll-forward). Running on a newer major needs rollForward Major/LatestMajor in the app's runtimeconfig.json (3.0+). Nothing is written outside {runtime_dir} at install time. At run time the runtime creates $TMPDIR/dotnet-diagnostic-<pid>-*-socket and clr-debug-pipe-<pid>-* (removed on a clean exit; DOTNET_EnableDiagnostics=0 turns them off). If the app opens a CurrentUser X509Store it writes ~/.dotnet/corefx/cryptography/x509stores. No NuGet or SDK caches are involved because this is a runtime, not an SDK (tested: a runtime-only run left the test HOME and TMPDIR empty). The unpacker must keep exec bits (dotnet, createdump). The archives have no leading directory, so strip_components is 0. ",
+   "launch": {
+    "program": "{runtime_dir}/dotnet",
+    "args": [],
+    "env": {
+     "DOTNET_ROOT": "{runtime_dir}"
+    },
+    "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": ">=5",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 0
+    }
+   ],
+   "prerequisites": [
+    "libstdc++, libgcc, zlib (libz.so.1), Kerberos GSSAPI (libgssapi_krb5.so.2), ICU (libicu), OpenSSL: the distro 'dotnet-runtime-deps' set",
+    "OpenSSL: 5.0 probes only 1.x sonames (no OpenSSL 3, so no TLS on OpenSSL-3-only distros); 6.0+ also loads libssl.so.3",
+    "ICU (any version, loaded by dlopen), or run with DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 / InvariantGlobalization"
+   ],
+   "executable": "dotnet",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/dotnet\" --list-runtimes",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "glibc 2.16 (5.0, 6.0), 2.17 (7.0-9.0), 2.27 (10.0), from the highest GLIBC symbol version in the binaries; see limitations.json for the vendor distro lists (for example 8.0: RHEL 8, Ubuntu 20.04, Debian 11)",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-environment-variables",
+    "https://github.com/dotnet/runtime/blob/main/docs/design/features/sharedfx-lookup.md"
+   ],
+   "notes": "Tested on Ubuntu 24.04 amd64 for 5.0.17, 6.0.36, 7.0.20, 8.0.31, 9.0.20 and 10.0.12: unpacked into a path with a space, `--list-runtimes`, and a framework-dependent hello-world ran through the private muxer (netcoreapp2.1 with DOTNET_ROLL_FORWARD=LatestMajor on every major, and a net8.0 build on 8/9/10). Two 8.0.31 copies ran side by side concurrently, each using its own shared/ folder. The build used a .NET 8 SDK unpacked into the scratch folder, with HOME, DOTNET_CLI_HOME and NUGET_PACKAGES all pointed inside it. arm64/arm32 builds use the same layout and were not run. liblttng-ust.so.0 is needed only by the optional libcoreclrtraceptprovider.so (LTTng tracing) and can be absent. How to launch a framework-dependent app from this private copy: run the MUXER with the app's dll, \"{runtime_dir}/dotnet\" \"<app>/app.dll\". The muxer looks for host/fxr and shared/Microsoft.NETCore.App only relative to its own location. Tested: it ignores DOTNET_ROOT, and two copies side by side each resolve their own framework. Do NOT rely on the app's generated apphost (app.exe / ./app): it looks at DOTNET_ROOT_<ARCH>, then DOTNET_ROOT(x86) on 64-bit Windows for 32-bit apps, then DOTNET_ROOT, then the global location (registry HKLM\\SOFTWARE\\dotnet\\Setup\\InstalledVersions\\<arch>\\InstallLocation or %ProgramFiles%\\dotnet on Windows; /etc/dotnet/install_location, then /usr/share/dotnet or /usr/lib/dotnet on Linux; /usr/local/share/dotnet on macOS). Tested: without DOTNET_ROOT it failed with 'You must install .NET'; with DOTNET_ROOT set it used the private copy. If an apphost must be used, set DOTNET_ROOT and DOTNET_ROOT_<ARCH> to {runtime_dir} in the app's process environment only. Clear variables a user may have set globally that would reach into the private runtime: DOTNET_STARTUP_HOOKS, DOTNET_ADDITIONAL_DEPS, DOTNET_SHARED_STORE, DOTNET_ROLL_FORWARD*, CORECLR_ENABLE_PROFILING/CORECLR_PROFILER*, and COMPlus_* / DOTNET_* runtime knobs. Only Microsoft.NETCore.App is in this archive: apps that need ASP.NET Core (Microsoft.AspNetCore.App) or WinForms/WPF (Microsoft.WindowsDesktop.App) need those runtime archives unpacked into the same {runtime_dir} (they add shared/<name>/<ver>), and the plan does not include them. A patch roll-forward inside the folder works (tested: an app built for 8.0.0 ran on 8.0.31, and a netcoreapp2.1 app ran on 2.2.5 through the default Minor roll-forward). Running on a newer major needs rollForward Major/LatestMajor in the app's runtimeconfig.json (3.0+). Nothing is written outside {runtime_dir} at install time. At run time the runtime creates $TMPDIR/dotnet-diagnostic-<pid>-*-socket and clr-debug-pipe-<pid>-* (removed on a clean exit; DOTNET_EnableDiagnostics=0 turns them off). If the app opens a CurrentUser X509Store it writes ~/.dotnet/corefx/cryptography/x509stores. No NuGet or SDK caches are involved because this is a runtime, not an SDK (tested: a runtime-only run left the test HOME and TMPDIR empty). The unpacker must keep exec bits (dotnet, createdump). The archives have no leading directory, so strip_components is 0. ",
+   "launch": {
+    "program": "{runtime_dir}/dotnet",
+    "args": [],
+    "env": {
+     "DOTNET_ROOT": "{runtime_dir}"
+    },
+    "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": "==1.1.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 0
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null || true",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "OpenSSL 1.0.x from Homebrew, with libcrypto.1.0.0.dylib and libssl.1.0.0.dylib linked into /usr/local/lib (the documented .NET Core 1.x macOS prerequisite)"
+   ],
+   "executable": "dotnet",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/dotnet\" --info",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "The OpenSSL 1.0 prerequisite is installed machine-wide (Homebrew prefix plus symlinks in /usr/local/lib), not inside {runtime_dir}"
+   ],
+   "isolation": "leaks",
+   "relocatable": true,
+   "min_os": "macOS 10.12 (binary minos; vendor said 10.11+), x64",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-environment-variables",
+    "https://github.com/dotnet/runtime/blob/main/docs/design/features/sharedfx-lookup.md"
+   ],
+   "notes": "The runtime itself unpacks privately, but .NET Core 1.x on macOS loads OpenSSL 1.0 from /usr/local/lib, so it only works with a machine-wide OpenSSL install. Homebrew no longer ships OpenSSL 1.0. 2.0+ uses Apple's Security framework and has no such dependency. How to launch a framework-dependent app from this private copy: run the MUXER with the app's dll, \"{runtime_dir}/dotnet\" \"<app>/app.dll\". The muxer looks for host/fxr and shared/Microsoft.NETCore.App only relative to its own location. Tested: it ignores DOTNET_ROOT, and two copies side by side each resolve their own framework. Do NOT rely on the app's generated apphost (app.exe / ./app): it looks at DOTNET_ROOT_<ARCH>, then DOTNET_ROOT(x86) on 64-bit Windows for 32-bit apps, then DOTNET_ROOT, then the global location (registry HKLM\\SOFTWARE\\dotnet\\Setup\\InstalledVersions\\<arch>\\InstallLocation or %ProgramFiles%\\dotnet on Windows; /etc/dotnet/install_location, then /usr/share/dotnet or /usr/lib/dotnet on Linux; /usr/local/share/dotnet on macOS). Tested: without DOTNET_ROOT it failed with 'You must install .NET'; with DOTNET_ROOT set it used the private copy. If an apphost must be used, set DOTNET_ROOT and DOTNET_ROOT_<ARCH> to {runtime_dir} in the app's process environment only. Clear variables a user may have set globally that would reach into the private runtime: DOTNET_STARTUP_HOOKS, DOTNET_ADDITIONAL_DEPS, DOTNET_SHARED_STORE, DOTNET_ROLL_FORWARD*, CORECLR_ENABLE_PROFILING/CORECLR_PROFILER*, and COMPlus_* / DOTNET_* runtime knobs. Only Microsoft.NETCore.App is in this archive: apps that need ASP.NET Core (Microsoft.AspNetCore.App) or WinForms/WPF (Microsoft.WindowsDesktop.App) need those runtime archives unpacked into the same {runtime_dir} (they add shared/<name>/<ver>), and the plan does not include them. A patch roll-forward inside the folder works (tested: an app built for 8.0.0 ran on 8.0.31, and a netcoreapp2.1 app ran on 2.2.5 through the default Minor roll-forward). Running on a newer major needs rollForward Major/LatestMajor in the app's runtimeconfig.json (3.0+). Nothing is written outside {runtime_dir} at install time. At run time the runtime creates $TMPDIR/dotnet-diagnostic-<pid>-*-socket and clr-debug-pipe-<pid>-* (removed on a clean exit; DOTNET_EnableDiagnostics=0 turns them off). If the app opens a CurrentUser X509Store it writes ~/.dotnet/corefx/cryptography/x509stores. No NuGet or SDK caches are involved because this is a runtime, not an SDK (tested: a runtime-only run left the test HOME and TMPDIR empty). The unpacker must keep exec bits (dotnet, createdump). The archives have no leading directory, so strip_components is 0. ",
+   "launch": {
+    "program": "{runtime_dir}/dotnet",
+    "args": [],
+    "env": {
+     "DOTNET_ROOT": "{runtime_dir}"
+    },
+    "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": ">=2.2",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 0
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null || true",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "ICU is not needed on macOS (it uses the system libicucore)"
+   ],
+   "executable": "dotnet",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/dotnet\" --list-runtimes",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Highest LC_BUILD_VERSION minos in the binaries: 2.2 10.12; 3.1 10.13 (one native lib, System.Net.Security.Native, says 10.15); 5.0 10.13; 6.0 10.14 x64 / 11 arm64; 8.0 10.15 x64 / 11 arm64; 9.0 and 10.0 macOS 12. Vendor floors (limitations.json) are 7.0/8.0 macOS 12, 9.0 macOS 13, 10.0 macOS 14",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-environment-variables",
+    "https://github.com/dotnet/runtime/blob/main/docs/design/features/sharedfx-lookup.md"
+   ],
+   "notes": "Same layout as Linux (dotnet, host/fxr, shared/Microsoft.NETCore.App). The binaries are signed by Microsoft; the unpacker must not modify them and must keep exec bits. The quarantine attribute (present if a quarantine-aware process wrote the file) is removed so Gatekeeper doesn't check each dylib on first load. Microsoft's .pkg installers put .NET in /usr/local/share/dotnet and add /etc/paths.d/dotnet. This recipe does neither. The plan's 7.0.20 macOS files (x64 and arm64) are not downloaded: Microsoft re-released them without updating the published sha512 (see NOTES.md), so there is nothing verified to install for macOS 7.0. How to launch a framework-dependent app from this private copy: run the MUXER with the app's dll, \"{runtime_dir}/dotnet\" \"<app>/app.dll\". The muxer looks for host/fxr and shared/Microsoft.NETCore.App only relative to its own location. Tested: it ignores DOTNET_ROOT, and two copies side by side each resolve their own framework. Do NOT rely on the app's generated apphost (app.exe / ./app): it looks at DOTNET_ROOT_<ARCH>, then DOTNET_ROOT(x86) on 64-bit Windows for 32-bit apps, then DOTNET_ROOT, then the global location (registry HKLM\\SOFTWARE\\dotnet\\Setup\\InstalledVersions\\<arch>\\InstallLocation or %ProgramFiles%\\dotnet on Windows; /etc/dotnet/install_location, then /usr/share/dotnet or /usr/lib/dotnet on Linux; /usr/local/share/dotnet on macOS). Tested: without DOTNET_ROOT it failed with 'You must install .NET'; with DOTNET_ROOT set it used the private copy. If an apphost must be used, set DOTNET_ROOT and DOTNET_ROOT_<ARCH> to {runtime_dir} in the app's process environment only. Clear variables a user may have set globally that would reach into the private runtime: DOTNET_STARTUP_HOOKS, DOTNET_ADDITIONAL_DEPS, DOTNET_SHARED_STORE, DOTNET_ROLL_FORWARD*, CORECLR_ENABLE_PROFILING/CORECLR_PROFILER*, and COMPlus_* / DOTNET_* runtime knobs. Only Microsoft.NETCore.App is in this archive: apps that need ASP.NET Core (Microsoft.AspNetCore.App) or WinForms/WPF (Microsoft.WindowsDesktop.App) need those runtime archives unpacked into the same {runtime_dir} (they add shared/<name>/<ver>), and the plan does not include them. A patch roll-forward inside the folder works (tested: an app built for 8.0.0 ran on 8.0.31, and a netcoreapp2.1 app ran on 2.2.5 through the default Minor roll-forward). Running on a newer major needs rollForward Major/LatestMajor in the app's runtimeconfig.json (3.0+). Nothing is written outside {runtime_dir} at install time. At run time the runtime creates $TMPDIR/dotnet-diagnostic-<pid>-*-socket and clr-debug-pipe-<pid>-* (removed on a clean exit; DOTNET_EnableDiagnostics=0 turns them off). If the app opens a CurrentUser X509Store it writes ~/.dotnet/corefx/cryptography/x509stores. No NuGet or SDK caches are involved because this is a runtime, not an SDK (tested: a runtime-only run left the test HOME and TMPDIR empty). The unpacker must keep exec bits (dotnet, createdump). The archives have no leading directory, so strip_components is 0. ",
+   "launch": {
+    "program": "{runtime_dir}/dotnet",
+    "args": [],
+    "env": {
+     "DOTNET_ROOT": "{runtime_dir}"
+    },
+    "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": "==1.1.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 0
+    }
+   ],
+   "prerequisites": [
+    "Windows 7 SP1 / 8.1: Universal CRT (KB2999226, or the VC++ 2015 redistributable which carries it). The 1.1 zip does NOT bundle the UCRT (every native DLL imports api-ms-win-crt-*.dll, none shipped)",
+    "Windows 7 SP1: KB2533623 (or its successor KB3063858) for SetDefaultDllDirectories/AddDllDirectory"
+   ],
+   "executable": "dotnet.exe",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}\\dotnet.exe\" --info",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Windows 7 SP1 (all native PEs are subsystem 6.0; .NET Core never supported XP or Vista)",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://learn.microsoft.com/en-us/dotnet/core/install/windows",
+    "https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-environment-variables",
+    "https://learn.microsoft.com/en-us/dotnet/core/compatibility/deployment/7.0/multilevel-lookup",
+    "https://github.com/dotnet/runtime/blob/main/docs/design/features/sharedfx-lookup.md"
+   ],
+   "notes": "x86 and x64 zips. `--info` without an SDK exits 145 after printing 'Did you mean to run dotnet SDK commands?', which only proves the host starts. Verify properly by running the app's dll. Multi-level lookup is ON by default in 1.x-6.0 hosts on Windows: besides {runtime_dir}, the host also scans %ProgramFiles%\\dotnet (or %ProgramFiles(x86)%\\dotnet for 32-bit) and picks the most appropriate version across both, so a newer global patch of the same major beats the private copy. Launch with DOTNET_MULTILEVEL_LOOKUP=0 in the app's environment. How to launch a framework-dependent app from this private copy: run the MUXER with the app's dll, \"{runtime_dir}/dotnet\" \"<app>/app.dll\". The muxer looks for host/fxr and shared/Microsoft.NETCore.App only relative to its own location. Tested: it ignores DOTNET_ROOT, and two copies side by side each resolve their own framework. Do NOT rely on the app's generated apphost (app.exe / ./app): it looks at DOTNET_ROOT_<ARCH>, then DOTNET_ROOT(x86) on 64-bit Windows for 32-bit apps, then DOTNET_ROOT, then the global location (registry HKLM\\SOFTWARE\\dotnet\\Setup\\InstalledVersions\\<arch>\\InstallLocation or %ProgramFiles%\\dotnet on Windows; /etc/dotnet/install_location, then /usr/share/dotnet or /usr/lib/dotnet on Linux; /usr/local/share/dotnet on macOS). Tested: without DOTNET_ROOT it failed with 'You must install .NET'; with DOTNET_ROOT set it used the private copy. If an apphost must be used, set DOTNET_ROOT and DOTNET_ROOT_<ARCH> to {runtime_dir} in the app's process environment only. Clear variables a user may have set globally that would reach into the private runtime: DOTNET_STARTUP_HOOKS, DOTNET_ADDITIONAL_DEPS, DOTNET_SHARED_STORE, DOTNET_ROLL_FORWARD*, CORECLR_ENABLE_PROFILING/CORECLR_PROFILER*, and COMPlus_* / DOTNET_* runtime knobs. Only Microsoft.NETCore.App is in this archive: apps that need ASP.NET Core (Microsoft.AspNetCore.App) or WinForms/WPF (Microsoft.WindowsDesktop.App) need those runtime archives unpacked into the same {runtime_dir} (they add shared/<name>/<ver>), and the plan does not include them. A patch roll-forward inside the folder works (tested: an app built for 8.0.0 ran on 8.0.31, and a netcoreapp2.1 app ran on 2.2.5 through the default Minor roll-forward). Running on a newer major needs rollForward Major/LatestMajor in the app's runtimeconfig.json (3.0+). Nothing is written outside {runtime_dir}, no registry key is created and nothing is added to PATH at install time (unlike the .exe/.msi installers, which register HKLM\\SOFTWARE\\dotnet\\Setup\\InstalledVersions and would make the copy global). At run time the diagnostics IPC uses a named pipe, not a file. Unpack only: no installer, no registry, no PATH. ",
+   "launch": {
+    "program": "{runtime_dir}\\dotnet.exe",
+    "args": [],
+    "env": {
+     "DOTNET_ROOT": "{runtime_dir}",
+     "DOTNET_MULTILEVEL_LOOKUP": "0"
+    },
+    "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": ">=2.2,<7",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 0
+    }
+   ],
+   "prerequisites": [
+    "Windows 7 SP1: KB3063858 (or KB2533623), required by the host's LoadLibraryEx search flags",
+    "Microsoft lists the VC++ 2015-2019 redistributable for Windows 7 SP1 / 8.1 / Server 2012(R2). The x86/x64 (and 2.2/3.1 win-arm) zips bundle the UCRT app-locally (ucrtbase.dll + api-ms-win-crt-*.dll) and no native DLL imports vcruntime140.dll, so this looks unnecessary for the base runtime. It is kept as Microsoft's stated requirement and has not been checked on Windows 7",
+    "Windows arm64 zips (2.2.1, 5.0, 6.0) do not bundle the UCRT; Windows 10 on Arm always has it"
+   ],
+   "executable": "dotnet.exe",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}\\dotnet.exe\" --list-runtimes",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Windows 7 SP1 / Server 2012 for x86/x64 (native PEs subsystem 6.0-6.1; no XP or Vista); arm64: Windows 10 on Arm; win-arm (32-bit, 2.2/3.1): Windows 10 IoT Core on ARM32 only (Windows RT 8.1 can't run it)",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://learn.microsoft.com/en-us/dotnet/core/install/windows",
+    "https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-environment-variables",
+    "https://learn.microsoft.com/en-us/dotnet/core/compatibility/deployment/7.0/multilevel-lookup",
+    "https://github.com/dotnet/runtime/blob/main/docs/design/features/sharedfx-lookup.md"
+   ],
+   "notes": "IMPORTANT for the base installer's unzip: the 2.2 zips (dotnet-runtime-2.2.5-win-x64/x86/arm.zip and 2.2.1-win-arm64.zip) store entry names with BACKSLASH separators (e.g. 'host\\fxr\\2.2.5\\hostfxr.dll'), which breaks the zip spec. The unzipper must treat '\\' as a directory separator, or it will create files literally named 'host\\fxr\\...' (on Linux) or fail to create parent folders. Multi-level lookup is ON by default in these hosts (2.2-6.0) on Windows: the host compares the frameworks in {runtime_dir} with those in the global %ProgramFiles%\\dotnet (or %ProgramFiles(x86)%\\dotnet for 32-bit) and picks the most appropriate version from the two, so a newer global patch of the same major wins over the private one. That breaks isolation and reproducibility. Always launch with DOTNET_MULTILEVEL_LOOKUP=0 in the app's environment (only in the app's environment, never machine-wide). Linux and macOS have no multi-level lookup. How to launch a framework-dependent app from this private copy: run the MUXER with the app's dll, \"{runtime_dir}/dotnet\" \"<app>/app.dll\". The muxer looks for host/fxr and shared/Microsoft.NETCore.App only relative to its own location. Tested: it ignores DOTNET_ROOT, and two copies side by side each resolve their own framework. Do NOT rely on the app's generated apphost (app.exe / ./app): it looks at DOTNET_ROOT_<ARCH>, then DOTNET_ROOT(x86) on 64-bit Windows for 32-bit apps, then DOTNET_ROOT, then the global location (registry HKLM\\SOFTWARE\\dotnet\\Setup\\InstalledVersions\\<arch>\\InstallLocation or %ProgramFiles%\\dotnet on Windows; /etc/dotnet/install_location, then /usr/share/dotnet or /usr/lib/dotnet on Linux; /usr/local/share/dotnet on macOS). Tested: without DOTNET_ROOT it failed with 'You must install .NET'; with DOTNET_ROOT set it used the private copy. If an apphost must be used, set DOTNET_ROOT and DOTNET_ROOT_<ARCH> to {runtime_dir} in the app's process environment only. Clear variables a user may have set globally that would reach into the private runtime: DOTNET_STARTUP_HOOKS, DOTNET_ADDITIONAL_DEPS, DOTNET_SHARED_STORE, DOTNET_ROLL_FORWARD*, CORECLR_ENABLE_PROFILING/CORECLR_PROFILER*, and COMPlus_* / DOTNET_* runtime knobs. Only Microsoft.NETCore.App is in this archive: apps that need ASP.NET Core (Microsoft.AspNetCore.App) or WinForms/WPF (Microsoft.WindowsDesktop.App) need those runtime archives unpacked into the same {runtime_dir} (they add shared/<name>/<ver>), and the plan does not include them. A patch roll-forward inside the folder works (tested: an app built for 8.0.0 ran on 8.0.31, and a netcoreapp2.1 app ran on 2.2.5 through the default Minor roll-forward). Running on a newer major needs rollForward Major/LatestMajor in the app's runtimeconfig.json (3.0+). Nothing is written outside {runtime_dir}, no registry key is created and nothing is added to PATH at install time (unlike the .exe/.msi installers, which register HKLM\\SOFTWARE\\dotnet\\Setup\\InstalledVersions and would make the copy global). At run time the diagnostics IPC uses a named pipe, not a file. Unpack only: no installer, no registry, no PATH. ",
+   "launch": {
+    "program": "{runtime_dir}\\dotnet.exe",
+    "args": [],
+    "env": {
+     "DOTNET_ROOT": "{runtime_dir}",
+     "DOTNET_MULTILEVEL_LOOKUP": "0"
+    },
+    "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": ">=7",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 0
+    }
+   ],
+   "prerequisites": [],
+   "executable": "dotnet.exe",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}\\dotnet.exe\" --list-runtimes",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Windows 10 / Server 2012+ (vendor: 7.0 dropped Windows 7, 8 and 8.1; the PE headers still say 6.1, but the UCRT is not bundled and the platform is unsupported). arm64: Windows 10/11 on Arm",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://learn.microsoft.com/en-us/dotnet/core/install/windows",
+    "https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-environment-variables",
+    "https://learn.microsoft.com/en-us/dotnet/core/compatibility/deployment/7.0/multilevel-lookup",
+    "https://github.com/dotnet/runtime/blob/main/docs/design/features/sharedfx-lookup.md"
+   ],
+   "notes": "x86, x64 and arm64 zips. The UCRT is not bundled; it is part of Windows 10+. From .NET 7, multi-level lookup is gone: the muxer only uses its own folder, and DOTNET_MULTILEVEL_LOOKUP is ignored (setting it to 0 anyway is harmless and covers older hosts). How to launch a framework-dependent app from this private copy: run the MUXER with the app's dll, \"{runtime_dir}/dotnet\" \"<app>/app.dll\". The muxer looks for host/fxr and shared/Microsoft.NETCore.App only relative to its own location. Tested: it ignores DOTNET_ROOT, and two copies side by side each resolve their own framework. Do NOT rely on the app's generated apphost (app.exe / ./app): it looks at DOTNET_ROOT_<ARCH>, then DOTNET_ROOT(x86) on 64-bit Windows for 32-bit apps, then DOTNET_ROOT, then the global location (registry HKLM\\SOFTWARE\\dotnet\\Setup\\InstalledVersions\\<arch>\\InstallLocation or %ProgramFiles%\\dotnet on Windows; /etc/dotnet/install_location, then /usr/share/dotnet or /usr/lib/dotnet on Linux; /usr/local/share/dotnet on macOS). Tested: without DOTNET_ROOT it failed with 'You must install .NET'; with DOTNET_ROOT set it used the private copy. If an apphost must be used, set DOTNET_ROOT and DOTNET_ROOT_<ARCH> to {runtime_dir} in the app's process environment only. Clear variables a user may have set globally that would reach into the private runtime: DOTNET_STARTUP_HOOKS, DOTNET_ADDITIONAL_DEPS, DOTNET_SHARED_STORE, DOTNET_ROLL_FORWARD*, CORECLR_ENABLE_PROFILING/CORECLR_PROFILER*, and COMPlus_* / DOTNET_* runtime knobs. Only Microsoft.NETCore.App is in this archive: apps that need ASP.NET Core (Microsoft.AspNetCore.App) or WinForms/WPF (Microsoft.WindowsDesktop.App) need those runtime archives unpacked into the same {runtime_dir} (they add shared/<name>/<ver>), and the plan does not include them. A patch roll-forward inside the folder works (tested: an app built for 8.0.0 ran on 8.0.31, and a netcoreapp2.1 app ran on 2.2.5 through the default Minor roll-forward). Running on a newer major needs rollForward Major/LatestMajor in the app's runtimeconfig.json (3.0+). Nothing is written outside {runtime_dir}, no registry key is created and nothing is added to PATH at install time (unlike the .exe/.msi installers, which register HKLM\\SOFTWARE\\dotnet\\Setup\\InstalledVersions and would make the copy global). At run time the diagnostics IPC uses a named pipe, not a file. Unpack only: no installer, no registry, no PATH. ",
+   "launch": {
+    "program": "{runtime_dir}\\dotnet.exe",
+    "args": [],
+    "env": {
+     "DOTNET_ROOT": "{runtime_dir}",
+     "DOTNET_MULTILEVEL_LOOKUP": "0"
+    },
+    "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "installer",
+    "format": "exe",
+    "versions": "==3.5",
+    "arch": null
+   },
+   "method": "run",
+   "steps": [
+    {
+     "run": "\"{file}\" /q /norestart",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "Windows XP SP2+, Server 2003 SP1+, or Vista (the only systems where dotnetfx35.exe itself installs 3.5 SP1)",
+    "Windows 7 / Server 2008 R2: 3.5.1 is an OS component. Enable it with `dism /online /enable-feature /featurename:NetFx3 /norestart` (it is on by default on Windows 7 client) instead of running this file",
+    "Windows 8+ / Server 2012+: 3.5 is a Feature on Demand. Use `dism /online /enable-feature /featurename:NetFx3 /all /norestart`, which downloads from Windows Update, or add /source:<media>\\sources\\sxs /limitaccess offline. dotnetfx35.exe does not install it there"
+   ],
+   "executable": null,
+   "package_manager": null,
+   "verify": "reg query \"HKLM\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v3.5\" /v Install",
+   "uninstall": "none: leave it installed (a shared OS component; other apps may use it)",
+   "side_effects": [
+    "Installs the OS-wide .NET Framework: %WINDIR%\\Microsoft.NET\\Framework(64)\\, the GAC, HKLM\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\ registry keys, NGEN scheduled tasks and Windows Update servicing",
+    "Machine-wide and shared by every .NET Framework app; it can't be installed twice or into a chosen folder, and uninstalling it with one app would break others",
+    "May require a reboot (exit code 3010 or 1641)"
+   ],
+   "isolation": "impossible",
+   "relocatable": false,
+   "min_os": "Windows XP SP2 (x86/x64); on 7+ it is enabled as a Windows feature instead",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://learn.microsoft.com/en-us/dotnet/framework/deployment/deployment-guide-for-developers",
+    "https://learn.microsoft.com/en-us/dotnet/framework/install/dotnet-35-windows"
+   ],
+   "notes": ".NET Framework is not a private runtime. The CLR is activated through the System32 mscoree.dll shim and binds framework assemblies from the Windows GAC, so it can't be unpacked into {runtime_dir} or run from there. Extracting the package (/x) only yields MSIs that install the same machine-wide component. So the recipe is 'run the vendor installer once per machine, if missing': query the verify key first and skip when Install=1. Exit codes: 0 ok, 3010/1641 ok but reboot needed, 1603 fatal, 5100 system requirements not met. The schema has no per-Windows-version branch for steps, so the installer-builder must pick the exe (XP/2003/Vista) or the DISM command (7+) itself. Can it be avoided? Only by not using .NET Framework: an app that can be rebuilt for modern .NET should use the private runtime archives above. There is no xcopy option for Framework apps.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": ".NET Framework is part of Windows; apps start directly."
+   },
+   "project_install": null
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "installer",
+    "format": "exe",
+    "versions": "==4.8.1",
+    "arch": null
+   },
+   "method": "run",
+   "steps": [
+    {
+     "run": "\"{file}\" /q /norestart",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "Windows 10 21H2+ / Windows 11 / Server 2022 (x86, x64, arm64). 4.8.1 does not install on Windows 7/8.1 (4.8 was the last for those), and XP's last is 4.0"
+   ],
+   "executable": null,
+   "package_manager": null,
+   "verify": "reg query \"HKLM\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full\" /v Release",
+   "uninstall": "none: leave it installed (an in-place, machine-wide update of every 4.x)",
+   "side_effects": [
+    "Installs the OS-wide .NET Framework: %WINDIR%\\Microsoft.NET\\Framework(64)\\, the GAC, HKLM\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\ registry keys, NGEN scheduled tasks and Windows Update servicing",
+    "Machine-wide and shared by every .NET Framework app; it can't be installed twice or into a chosen folder, and uninstalling it with one app would break others",
+    "May require a reboot (exit code 3010 or 1641)",
+    "In-place update: replaces whatever 4.x was installed, so it changes the Framework used by every 4.x app on the machine"
+   ],
+   "isolation": "impossible",
+   "relocatable": false,
+   "min_os": "Windows 10 21H2 / Windows 11 / Server 2022",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://learn.microsoft.com/en-us/dotnet/framework/deployment/deployment-guide-for-developers",
+    "https://learn.microsoft.com/en-us/dotnet/framework/get-started/system-requirements"
+   ],
+   "notes": "Same reasoning as 3.5: .NET Framework 4.x is an OS component, activated through System32 mscoree.dll and the GAC; it can't be private or side by side (4.5-4.8.1 are in-place updates of 4.0). Detect first: Release DWORD >= 533325 means 4.8.1 is present (Microsoft: compare with >=, never ==). An app built for 4.x <= 4.8 runs on the 4.8 that ships in Windows 10 1903+ and Windows 11, so if Release >= the app's target (528040 for 4.8), skip this installer entirely. Windows 11 22H2+ already includes 4.8.1. `reg query` output is text; the installer should parse the hex value. Exit codes: 0 ok, 3010/1641 ok but reboot needed, 1603 fatal, 5100 OS not supported. Can it be avoided? Usually yes on Windows 10+ (the OS already has 4.8.x), and never on Windows 7/8.1 for an app that truly needs 4.8.1 APIs (impossible there).",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": ".NET Framework is part of Windows; apps start directly."
+   },
+   "project_install": null
+  }
+ ]
+}

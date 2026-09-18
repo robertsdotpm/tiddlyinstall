@@ -1,0 +1,678 @@
+{
+ "runtime": "zig",
+ "researched": "2026-09-18",
+ "assumes": "root/administrator",
+ "recipes": [
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": "==0.2.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "prerequisites": [],
+   "package_manager": null,
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "relocatable": false,
+   "tested": true,
+   "confidence": "high",
+   "notes": "Every archive has one top-level folder (zig-<os>-<arch>-<ver>/ or zig-<arch>-<os>-<ver>/; zig-0.2.0/ for the 0.2.0 Windows zip) holding the zig binary with lib/ (and doc/, LICENSE) beside it: strip 1. No symlinks in any archive (checked all 130 listings). Tar modes must be kept (zig is 0755). NOT relocatable on its own: the binary only looks for its lib at the build machine's prefix (strace: a single access() of /root/zig-bootstrap/out/stage1/lib/zig/std/index.zig) and fails with 'Unable to find zig lib directory'. Every invocation must pass --zig-install-prefix \"{runtime_dir}\" (checked: build-exe of a hello world then works from a path with spaces). 0.2.0 has no global cache; the per-build cache goes to ./zig-cache unless --cache-dir is passed. No zig cc in this version. The mkdir step is only for parity with later recipes. Launch with the absolute path to the zig executable; it finds lib/ next to itself (no PATH, no registry). Clear in the app's process environment: ZIG_LIB_DIR (checked: 0.16 fails outright with ZIG_LIB_DIR=/nonexistent, so a user's global setting would hijack the private copy), ZIG_LIBC, ZIG_BUILD_RUNNER, CC, C_INCLUDE_PATH, CPLUS_INCLUDE_PATH, LIBRARY_PATH and the NIX_CFLAGS_COMPILE/NIX_CFLAGS_LINK/NIX_LDFLAGS trio, all of which `zig env` 0.16 lists as read (checked: C_INCLUDE_PATH is honoured by zig cc even with an explicit -target). Use `zig version` to verify, not `zig env`: env creates the global cache folder as a side effect (checked).",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "mkdir -p \"{runtime_dir}/cache\"",
+     "shell": "sh"
+    }
+   ],
+   "executable": "zig",
+   "verify": "\"{runtime_dir}/zig\" version",
+   "isolation": "full",
+   "min_os": "Linux x86_64, any kernel that runs static-pie binaries (static-pie, no libc dependency)",
+   "sources": [
+    "https://ziglang.org/download/",
+    "https://ziglang.org/download/0.2.0/release-notes.html"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/zig\" build -Doptimize=ReleaseSafe --prefix \"{app_dir}\"",
+    "env": {},
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). `zig build` exists from 0.3; older versions compile with `zig build-exe`. Before 0.6 (0.7 on macOS, 0.8 on Windows) the global cache can't be moved and lands in the user's folder (isolation: leaks). The same environment applies when zig is used as a C compiler (`zig cc`)."
+   }
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": ">=0.3,<0.6",
+    "arch": null
+   },
+   "method": "unpack",
+   "prerequisites": [],
+   "package_manager": null,
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "run time: global cache at $HOME/.local/share/zig (hard-coded from $HOME; XDG_DATA_HOME and XDG_CACHE_HOME are ignored, checked on 0.3.0 and 0.5.0)",
+    "run time: ./zig-cache in the current directory unless --cache-dir is passed"
+   ],
+   "relocatable": true,
+   "tested": true,
+   "confidence": "high",
+   "notes": "Every archive has one top-level folder (zig-<os>-<arch>-<ver>/ or zig-<arch>-<os>-<ver>/; zig-0.2.0/ for the 0.2.0 Windows zip) holding the zig binary with lib/ (and doc/, LICENSE) beside it: strip 1. No symlinks in any archive (checked all 130 listings). Tar modes must be kept (zig is 0755). Relocatable: finds lib/ from /proc/self/exe; checked from a path with spaces. The global cache can only be kept private by running zig with HOME set to a folder inside the app (e.g. HOME={runtime_dir}/home), which also changes HOME for everything zig spawns. No ZIG_GLOBAL_CACHE_DIR in these versions. zig cc is NOT usable: 0.3 has no cc subcommand; in 0.4/0.5 `zig cc` is a bare clang driver that fails on stdio.h ('stddef.h' file not found, checked). Launch with the absolute path to the zig executable; it finds lib/ next to itself (no PATH, no registry). Clear in the app's process environment: ZIG_LIB_DIR (checked: 0.16 fails outright with ZIG_LIB_DIR=/nonexistent, so a user's global setting would hijack the private copy), ZIG_LIBC, ZIG_BUILD_RUNNER, CC, C_INCLUDE_PATH, CPLUS_INCLUDE_PATH, LIBRARY_PATH and the NIX_CFLAGS_COMPILE/NIX_CFLAGS_LINK/NIX_LDFLAGS trio, all of which `zig env` 0.16 lists as read (checked: C_INCLUDE_PATH is honoured by zig cc even with an explicit -target). Use `zig version` to verify, not `zig env`: env creates the global cache folder as a side effect (checked).",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "executable": "zig",
+   "verify": "\"{runtime_dir}/zig\" version",
+   "isolation": "leaks",
+   "min_os": "Linux x86_64, static-pie binary (no glibc requirement); 0.5 release notes say kernel 3.16+",
+   "sources": [
+    "https://ziglang.org/download/",
+    "https://ziglang.org/download/0.4.0/release-notes.html",
+    "https://ziglang.org/download/0.5.0/release-notes.html",
+    "https://github.com/ziglang/zig/blob/0.4.0/src/os.cpp (os_get_app_data_dir)"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/zig\" build -Doptimize=ReleaseSafe --prefix \"{app_dir}\"",
+    "env": {},
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). `zig build` exists from 0.3; older versions compile with `zig build-exe`. Before 0.6 (0.7 on macOS, 0.8 on Windows) the global cache can't be moved and lands in the user's folder (isolation: leaks). The same environment applies when zig is used as a C compiler (`zig cc`)."
+   }
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": ">=0.6,<0.8",
+    "arch": null
+   },
+   "method": "unpack",
+   "prerequisites": [],
+   "package_manager": null,
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "run time, only if XDG_CACHE_HOME is not set for the zig process: global cache at $HOME/.cache/zig",
+    "run time: ./zig-cache in the project directory (per-project cache; --cache-dir overrides it; ZIG_LOCAL_CACHE_DIR is ignored in these versions)"
+   ],
+   "relocatable": true,
+   "tested": true,
+   "confidence": "high",
+   "notes": "Every archive has one top-level folder (zig-<os>-<arch>-<ver>/ or zig-<arch>-<os>-<ver>/; zig-0.2.0/ for the 0.2.0 Windows zip) holding the zig binary with lib/ (and doc/, LICENSE) beside it: strip 1. No symlinks in any archive (checked all 130 listings). Tar modes must be kept (zig is 0755). ZIG_GLOBAL_CACHE_DIR does not exist yet (checked: ignored by 0.6.0 and 0.7.1). The global cache follows XDG_CACHE_HOME, so run zig with XDG_CACHE_HOME={runtime_dir}/cache and it lands in {runtime_dir}/cache/zig (checked on 0.6.0 and 0.7.1: nothing written to the fake HOME). Tested on amd64 0.6.0 and 0.7.1 from a path with spaces: Zig hello world, zig cc and zig c++ all built and ran. i386 0.6.0 on an amd64 kernel: Zig hello world built, but zig cc segfaulted (not investigated; may be specific to running the 32-bit binary on a 64-bit host). Other arches (arm64, armv6kz, armv7a, riscv64) are the same layout and static but were not run. {runtime_dir} is root/Administrator-owned, so {runtime_dir}/cache must be made writable by whichever account runs the app's builds (or point the cache variable at the app's own writable data folder instead; either stays inside the app). The cache is safe to share between concurrent zig processes of the same version (file locks), but should not be shared between apps if they must stay independent; deleting it is always safe. zig cc / zig c++ (0.6+) is a working C/C++ cross-compiler in this one archive (checked hello.c and hello.cpp). Caveat: with NO -target, a native Linux build detects the host glibc and puts /usr/include, /usr/include/<triple> and /usr/local/include on the include path (seen in `zig cc -v`), so native builds are not hermetic. Pass an explicit target (e.g. -target x86_64-linux-musl, or x86_64-linux-gnu.2.28 for a chosen glibc floor) to use only the bundled libc headers; checked working with musl. Install size: archive ~45-55 MB xz, ~260-400 MB unpacked (0.16.0: 165 MB binary + 231 MB lib, of which lib/libc is 175 MB); the global cache then grows by roughly 25-100+ MB per target/version as libc, libc++ and compiler_rt get built on first use. Launch with the absolute path to the zig executable; it finds lib/ next to itself (no PATH, no registry). Clear in the app's process environment: ZIG_LIB_DIR (checked: 0.16 fails outright with ZIG_LIB_DIR=/nonexistent, so a user's global setting would hijack the private copy), ZIG_LIBC, ZIG_BUILD_RUNNER, CC, C_INCLUDE_PATH, CPLUS_INCLUDE_PATH, LIBRARY_PATH and the NIX_CFLAGS_COMPILE/NIX_CFLAGS_LINK/NIX_LDFLAGS trio, all of which `zig env` 0.16 lists as read (checked: C_INCLUDE_PATH is honoured by zig cc even with an explicit -target). Use `zig version` to verify, not `zig env`: env creates the global cache folder as a side effect (checked).",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "mkdir -p \"{runtime_dir}/cache\"",
+     "shell": "sh"
+    }
+   ],
+   "executable": "zig",
+   "verify": "\"{runtime_dir}/zig\" version",
+   "isolation": "full",
+   "min_os": "Linux, static binary (no libc dependency); kernel 3.16+ per release notes",
+   "sources": [
+    "https://ziglang.org/download/",
+    "https://ziglang.org/download/0.6.0/release-notes.html",
+    "https://ziglang.org/download/0.7.1/release-notes.html",
+    "https://github.com/ziglang/zig/blob/0.6.0/src/os.cpp (os_get_app_data_dir)",
+    "https://github.com/ziglang/zig/blob/0.7.1/src/introspect.zig"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/zig\" build -Doptimize=ReleaseSafe --prefix \"{app_dir}\"",
+    "env": {
+     "XDG_CACHE_HOME": "{data_dir}/cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). `zig build` exists from 0.3; older versions compile with `zig build-exe`. Before 0.6 (0.7 on macOS, 0.8 on Windows) the global cache can't be moved and lands in the user's folder (isolation: leaks). The same environment applies when zig is used as a C compiler (`zig cc`)."
+   }
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": ">=0.8",
+    "arch": null
+   },
+   "method": "unpack",
+   "prerequisites": [],
+   "package_manager": null,
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "run time, only if ZIG_GLOBAL_CACHE_DIR is not set: global cache at $XDG_CACHE_HOME/zig or $HOME/.cache/zig",
+    "run time: per-project cache in the project directory (zig-cache before 0.13, .zig-cache from 0.13) unless ZIG_LOCAL_CACHE_DIR/--cache-dir is set; `zig build` in 0.8.1 ignored ZIG_LOCAL_CACHE_DIR (checked) so pass --cache-dir there",
+    "run time, 0.16: fetched packages in zig-pkg/ next to the project's build.zig"
+   ],
+   "relocatable": true,
+   "tested": true,
+   "confidence": "high",
+   "notes": "Every archive has one top-level folder (zig-<os>-<arch>-<ver>/ or zig-<arch>-<os>-<ver>/; zig-0.2.0/ for the 0.2.0 Windows zip) holding the zig binary with lib/ (and doc/, LICENSE) beside it: strip 1. No symlinks in any archive (checked all 130 listings). Tar modes must be kept (zig is 0755). Run zig with ZIG_GLOBAL_CACHE_DIR={runtime_dir}/cache (and ideally ZIG_LOCAL_CACHE_DIR per project). Checked on amd64 0.8.1, 0.9.1, 0.10.1, 0.11.0, 0.12.1, 0.13.0, 0.14.1, 0.15.2, 0.16.0 from paths with spaces: Zig hello world, zig cc hello.c and zig c++ hello.cpp built and ran, nothing written to HOME, XDG dirs or TMPDIR; `zig init` + `zig build run` also checked on 0.8.1, 0.11.0, 0.13.0, 0.16.0. Side by side: two copies of 0.15.2 in two app folders ran builds concurrently, each filling only its own cache (83 MB each); one copy then still worked after its folder was renamed. Package fetches from build.zig.zon (0.11+): 0.11-0.15 unpack into the global cache (p/<hash>), so they stay private with it; 0.16 unpacks them into a zig-pkg/ folder next to the project's build.zig and keeps a recompressed p/<hash>.tar.gz in the global cache (0.16 release notes, 'Fetch Packages Into Project-Local Directory'). `zig build --system <dir>` disables fetching for offline builds. i386 on an amd64 host: 0.9.1 segfaulted on every compile; 0.16.0 worked (zig cc needs -target x86-linux-musl there, since native detection picks the 64-bit host's glibc headers). Not run: arm64, armv7a, riscv64, ppc64le, loongarch64, s390x (same layout, static). {runtime_dir} is root/Administrator-owned, so {runtime_dir}/cache must be made writable by whichever account runs the app's builds (or point the cache variable at the app's own writable data folder instead; either stays inside the app). The cache is safe to share between concurrent zig processes of the same version (file locks), but should not be shared between apps if they must stay independent; deleting it is always safe. zig cc / zig c++ (0.6+) is a working C/C++ cross-compiler in this one archive (checked hello.c and hello.cpp). Caveat: with NO -target, a native Linux build detects the host glibc and puts /usr/include, /usr/include/<triple> and /usr/local/include on the include path (seen in `zig cc -v`), so native builds are not hermetic. Pass an explicit target (e.g. -target x86_64-linux-musl, or x86_64-linux-gnu.2.28 for a chosen glibc floor) to use only the bundled libc headers; checked working with musl. Install size: archive ~45-55 MB xz, ~260-400 MB unpacked (0.16.0: 165 MB binary + 231 MB lib, of which lib/libc is 175 MB); the global cache then grows by roughly 25-100+ MB per target/version as libc, libc++ and compiler_rt get built on first use. Launch with the absolute path to the zig executable; it finds lib/ next to itself (no PATH, no registry). Clear in the app's process environment: ZIG_LIB_DIR (checked: 0.16 fails outright with ZIG_LIB_DIR=/nonexistent, so a user's global setting would hijack the private copy), ZIG_LIBC, ZIG_BUILD_RUNNER, CC, C_INCLUDE_PATH, CPLUS_INCLUDE_PATH, LIBRARY_PATH and the NIX_CFLAGS_COMPILE/NIX_CFLAGS_LINK/NIX_LDFLAGS trio, all of which `zig env` 0.16 lists as read (checked: C_INCLUDE_PATH is honoured by zig cc even with an explicit -target). Use `zig version` to verify, not `zig env`: env creates the global cache folder as a side effect (checked).",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "mkdir -p \"{runtime_dir}/cache\"",
+     "shell": "sh"
+    }
+   ],
+   "executable": "zig",
+   "verify": "\"{runtime_dir}/zig\" version",
+   "isolation": "full",
+   "min_os": "Linux, static binary on every arch (no PT_INTERP, no DT_NEEDED; checked all 70 Linux zig binaries). Kernel 3.16+ per release notes up to 0.14; 0.15+ release notes state Linux 5.10 (the documented minimum, though a static binary may start on older kernels)",
+   "sources": [
+    "https://ziglang.org/download/",
+    "https://ziglang.org/download/0.8.0/release-notes.html",
+    "https://ziglang.org/download/0.15.1/release-notes.html",
+    "https://ziglang.org/download/0.16.0/release-notes.html",
+    "https://github.com/ziglang/zig/blob/0.8.1/src/introspect.zig",
+    "https://github.com/ziglang/zig/blob/0.15.2/src/introspect.zig (resolveGlobalCacheDir)"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/zig\" build -Doptimize=ReleaseSafe --prefix \"{app_dir}\"",
+    "env": {
+     "ZIG_GLOBAL_CACHE_DIR": "{data_dir}/zig-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). `zig build` exists from 0.3; older versions compile with `zig build-exe`. Before 0.6 (0.7 on macOS, 0.8 on Windows) the global cache can't be moved and lands in the user's folder (isolation: leaks). The same environment applies when zig is used as a C compiler (`zig cc`)."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": "<0.3",
+    "arch": null
+   },
+   "method": "unpack",
+   "prerequisites": [
+    "Visual C++ 2015 (or later 14.x) x64 redistributable (imports VCRUNTIME140, MSVCP140, CONCRT140)",
+    "Universal C Runtime on Windows < 10 (KB2999226; api-ms-win-crt-* imports)",
+    "for linking any program: an installed Visual Studio (2015/2017) + Windows 10 SDK; these versions ship no Windows libc (mingw-w64 was bundled only from 0.5)"
+   ],
+   "package_manager": null,
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "run time: .\\zig-cache in the current directory unless --cache-dir is passed"
+   ],
+   "relocatable": false,
+   "tested": false,
+   "confidence": "medium",
+   "notes": "Windows XP / Server 2003: impossible for every Zig version: all 34 zig.exe files have PE OS/subsystem version 6.0, which the XP loader refuses. Not run (no Windows host used); from PE import/header inspection of every zig.exe plus the source. Like the Linux 0.2.0 build, these binaries embed the build machine's prefix (strings: C:/msys64/home/andy/zig/build-msvc in 0.1.1, C:/projects/zig-d3l86/build-msvc-release in 0.2.0) and print 'Unable to find zig lib directory. Reinstall Zig or use --zig-install-prefix.' Always pass --zig-install-prefix \"{runtime_dir}\". This matters for safety as well as function: on Windows any user can create C:\\projects\\... or C:\\msys64\\..., so without the flag a planted folder there could supply the standard library. Launch with the absolute path to the zig executable; it finds lib/ next to itself (no PATH, no registry). Clear in the app's process environment: ZIG_LIB_DIR (checked: 0.16 fails outright with ZIG_LIB_DIR=/nonexistent, so a user's global setting would hijack the private copy), ZIG_LIBC, ZIG_BUILD_RUNNER, CC, C_INCLUDE_PATH, CPLUS_INCLUDE_PATH, LIBRARY_PATH and the NIX_CFLAGS_COMPILE/NIX_CFLAGS_LINK/NIX_LDFLAGS trio, all of which `zig env` 0.16 lists as read (checked: C_INCLUDE_PATH is honoured by zig cc even with an explicit -target). Use `zig version` to verify, not `zig env`: env creates the global cache folder as a side effect (checked).",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "if not exist \"{runtime_dir}\\cache\\nul\" mkdir \"{runtime_dir}\\cache\"",
+     "shell": "cmd"
+    }
+   ],
+   "executable": "zig.exe",
+   "verify": "\"{runtime_dir}\\zig.exe\" version",
+   "isolation": "full",
+   "min_os": "Windows Vista x64 in principle (PE 6.0, no Win7-only imports), realistically Windows 7 SP1+ for the VC++ 2015 runtime; no XP",
+   "sources": [
+    "https://ziglang.org/download/",
+    "https://ziglang.org/download/0.1.1/release-notes.html",
+    "https://ziglang.org/download/0.2.0/release-notes.html"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\zig.exe\" build -Doptimize=ReleaseSafe --prefix \"{app_dir}\"",
+    "env": {},
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). `zig build` exists from 0.3; older versions compile with `zig build-exe`. Before 0.6 (0.7 on macOS, 0.8 on Windows) the global cache can't be moved and lands in the user's folder (isolation: leaks). The same environment applies when zig is used as a C compiler (`zig cc`)."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": ">=0.3,<0.6",
+    "arch": null
+   },
+   "method": "unpack",
+   "prerequisites": [
+    "Visual C++ 2015-2019 x64 redistributable (0.3/0.4 import VCRUNTIME140, MSVCP140, CONCRT140; 0.5 also VCRUNTIME140_1, so it needs the 2019 version)",
+    "Universal C Runtime on Windows < 10 (KB2999226)",
+    "0.3/0.4 only, to link programs: an installed Visual Studio + Windows SDK (0.5 bundles mingw-w64)"
+   ],
+   "package_manager": null,
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "run time: global cache at %LOCALAPPDATA%\\zig, located with SHGetKnownFolderPath(FOLDERID_LocalAppData) so neither an environment variable nor a flag moves it",
+    "run time: .\\zig-cache in the current directory unless --cache-dir is passed"
+   ],
+   "relocatable": true,
+   "tested": false,
+   "confidence": "medium",
+   "notes": "Windows XP / Server 2003: impossible for every Zig version: all 34 zig.exe files have PE OS/subsystem version 6.0, which the XP loader refuses. Not run (no Windows host used); from PE import/header inspection of every zig.exe plus the source. Relocatable (finds lib\\ next to zig.exe; the Linux builds of the same versions were checked from a path with spaces). Isolation leaks because the global cache path comes from the Known Folder API, not from an overridable variable. zig cc is not usable in these versions (see the Linux 0.3-0.5 recipe). Launch with the absolute path to the zig executable; it finds lib/ next to itself (no PATH, no registry). Clear in the app's process environment: ZIG_LIB_DIR (checked: 0.16 fails outright with ZIG_LIB_DIR=/nonexistent, so a user's global setting would hijack the private copy), ZIG_LIBC, ZIG_BUILD_RUNNER, CC, C_INCLUDE_PATH, CPLUS_INCLUDE_PATH, LIBRARY_PATH and the NIX_CFLAGS_COMPILE/NIX_CFLAGS_LINK/NIX_LDFLAGS trio, all of which `zig env` 0.16 lists as read (checked: C_INCLUDE_PATH is honoured by zig cc even with an explicit -target). Use `zig version` to verify, not `zig env`: env creates the global cache folder as a side effect (checked).",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "executable": "zig.exe",
+   "verify": "\"{runtime_dir}\\zig.exe\" version",
+   "isolation": "leaks",
+   "min_os": "0.3: Windows Vista x64 in principle (PE 6.0), 7 SP1 realistically; 0.4-0.5: Windows 7 (imports K32EnumProcessModulesEx from kernel32; 0.5 release notes say Windows 7+); no XP",
+   "sources": [
+    "https://ziglang.org/download/",
+    "https://ziglang.org/download/0.4.0/release-notes.html",
+    "https://ziglang.org/download/0.5.0/release-notes.html",
+    "https://github.com/ziglang/zig/blob/0.4.0/src/os.cpp (os_get_app_data_dir)"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\zig.exe\" build -Doptimize=ReleaseSafe --prefix \"{app_dir}\"",
+    "env": {},
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). `zig build` exists from 0.3; older versions compile with `zig build-exe`. Before 0.6 (0.7 on macOS, 0.8 on Windows) the global cache can't be moved and lands in the user's folder (isolation: leaks). The same environment applies when zig is used as a C compiler (`zig cc`)."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": ">=0.6,<0.8",
+    "arch": null
+   },
+   "method": "unpack",
+   "prerequisites": [],
+   "package_manager": null,
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "run time: global cache at %LOCALAPPDATA%\\zig via SHGetKnownFolderPath (not overridable; ZIG_GLOBAL_CACHE_DIR arrives in 0.8)",
+    "run time: .\\zig-cache in the project directory unless --cache-dir is passed"
+   ],
+   "relocatable": true,
+   "tested": false,
+   "confidence": "medium",
+   "notes": "Windows XP / Server 2003: impossible for every Zig version: all 34 zig.exe files have PE OS/subsystem version 6.0, which the XP loader refuses. Not run (no Windows host used); from PE import/header inspection of every zig.exe plus the source. No runtime DLLs needed: from 0.6 zig.exe imports only system DLLs (kernel32, ntdll, advapi32, ole32, shell32, version, msvcrt). Relocatable. zig cc works here and bundles mingw-w64, so no Visual Studio is needed to compile C for Windows. Launch with the absolute path to the zig executable; it finds lib/ next to itself (no PATH, no registry). Clear in the app's process environment: ZIG_LIB_DIR (checked: 0.16 fails outright with ZIG_LIB_DIR=/nonexistent, so a user's global setting would hijack the private copy), ZIG_LIBC, ZIG_BUILD_RUNNER, CC, C_INCLUDE_PATH, CPLUS_INCLUDE_PATH, LIBRARY_PATH and the NIX_CFLAGS_COMPILE/NIX_CFLAGS_LINK/NIX_LDFLAGS trio, all of which `zig env` 0.16 lists as read (checked: C_INCLUDE_PATH is honoured by zig cc even with an explicit -target). Use `zig version` to verify, not `zig env`: env creates the global cache folder as a side effect (checked).",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "executable": "zig.exe",
+   "verify": "\"{runtime_dir}\\zig.exe\" version",
+   "isolation": "leaks",
+   "min_os": "Official Windows 8.1+ (0.6/0.7 release notes). From the imports: amd64 0.6.0 would load on Windows 7 (K32EnumProcessModulesEx); x86 0.6.0 and both 0.7.1 builds import GetSystemTimePreciseAsFileTime and need Windows 8. No XP",
+   "sources": [
+    "https://ziglang.org/download/",
+    "https://ziglang.org/download/0.6.0/release-notes.html",
+    "https://ziglang.org/download/0.7.1/release-notes.html",
+    "https://github.com/ziglang/zig/blob/0.6.0/src/os.cpp (os_get_app_data_dir)"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\zig.exe\" build -Doptimize=ReleaseSafe --prefix \"{app_dir}\"",
+    "env": {},
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). `zig build` exists from 0.3; older versions compile with `zig build-exe`. Before 0.6 (0.7 on macOS, 0.8 on Windows) the global cache can't be moved and lands in the user's folder (isolation: leaks). The same environment applies when zig is used as a C compiler (`zig cc`)."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": ">=0.8,<0.11",
+    "arch": null
+   },
+   "method": "unpack",
+   "prerequisites": [],
+   "package_manager": null,
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "run time, only if ZIG_GLOBAL_CACHE_DIR is not set: global cache at %LOCALAPPDATA%\\zig",
+    "run time: per-project zig-cache\\ in the project directory unless ZIG_LOCAL_CACHE_DIR/--cache-dir is set"
+   ],
+   "relocatable": true,
+   "tested": false,
+   "confidence": "medium",
+   "notes": "Windows XP / Server 2003: impossible for every Zig version: all 34 zig.exe files have PE OS/subsystem version 6.0, which the XP loader refuses. Not run (no Windows host used); from PE import/header inspection of every zig.exe plus the source. Set ZIG_GLOBAL_CACHE_DIR={runtime_dir}\\cache in the app's process environment (the same code path that was checked on Linux). No runtime DLLs needed (system DLLs + msvcrt.dll only). {runtime_dir} is root/Administrator-owned, so {runtime_dir}/cache must be made writable by whichever account runs the app's builds (or point the cache variable at the app's own writable data folder instead; either stays inside the app). The cache is safe to share between concurrent zig processes of the same version (file locks), but should not be shared between apps if they must stay independent; deleting it is always safe. zig cc bundles mingw-w64 headers and libs, so C/C++ for Windows builds without Visual Studio. Launch with the absolute path to the zig executable; it finds lib/ next to itself (no PATH, no registry). Clear in the app's process environment: ZIG_LIB_DIR (checked: 0.16 fails outright with ZIG_LIB_DIR=/nonexistent, so a user's global setting would hijack the private copy), ZIG_LIBC, ZIG_BUILD_RUNNER, CC, C_INCLUDE_PATH, CPLUS_INCLUDE_PATH, LIBRARY_PATH and the NIX_CFLAGS_COMPILE/NIX_CFLAGS_LINK/NIX_LDFLAGS trio, all of which `zig env` 0.16 lists as read (checked: C_INCLUDE_PATH is honoured by zig cc even with an explicit -target). Use `zig version` to verify, not `zig env`: env creates the global cache folder as a side effect (checked).",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "if not exist \"{runtime_dir}\\cache\\nul\" mkdir \"{runtime_dir}\\cache\"",
+     "shell": "cmd"
+    }
+   ],
+   "executable": "zig.exe",
+   "verify": "\"{runtime_dir}\\zig.exe\" version",
+   "isolation": "full",
+   "min_os": "Windows 8.1+ per release notes (imports GetSystemTimePreciseAsFileTime, RtlWaitOnAddress from 0.10: Windows 8 at the loader level). arm64 zip from 0.9.1. No x86 zip in 0.10. No XP or 7",
+   "sources": [
+    "https://ziglang.org/download/",
+    "https://ziglang.org/download/0.8.0/release-notes.html",
+    "https://ziglang.org/download/0.9.0/release-notes.html",
+    "https://ziglang.org/download/0.10.0/release-notes.html",
+    "https://github.com/ziglang/zig/blob/0.8.1/src/introspect.zig"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\zig.exe\" build -Doptimize=ReleaseSafe --prefix \"{app_dir}\"",
+    "env": {
+     "ZIG_GLOBAL_CACHE_DIR": "{data_dir}\\zig-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). `zig build` exists from 0.3; older versions compile with `zig build-exe`. Before 0.6 (0.7 on macOS, 0.8 on Windows) the global cache can't be moved and lands in the user's folder (isolation: leaks). The same environment applies when zig is used as a C compiler (`zig cc`)."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": ">=0.11",
+    "arch": null
+   },
+   "method": "unpack",
+   "prerequisites": [],
+   "package_manager": null,
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "run time, only if ZIG_GLOBAL_CACHE_DIR is not set: global cache at %LOCALAPPDATA%\\zig",
+    "run time: per-project cache in the project directory (zig-cache\\, .zig-cache\\ from 0.13) unless ZIG_LOCAL_CACHE_DIR/--cache-dir is set",
+    "run time, 0.16: fetched packages in zig-pkg\\ next to the project's build.zig"
+   ],
+   "relocatable": true,
+   "tested": false,
+   "confidence": "medium",
+   "notes": "Windows XP / Server 2003: impossible for every Zig version: all 34 zig.exe files have PE OS/subsystem version 6.0, which the XP loader refuses. Not run (no Windows host used); from PE import/header inspection of every zig.exe plus the source. Set ZIG_GLOBAL_CACHE_DIR={runtime_dir}\\cache in the app's process environment. Package fetches from build.zig.zon go into the global cache (0.11-0.15), or into zig-pkg\\ next to build.zig plus a .tar.gz in the global cache (0.16), so they stay private. {runtime_dir} is root/Administrator-owned, so {runtime_dir}/cache must be made writable by whichever account runs the app's builds (or point the cache variable at the app's own writable data folder instead; either stays inside the app). The cache is safe to share between concurrent zig processes of the same version (file locks), but should not be shared between apps if they must stay independent; deleting it is always safe. zig cc bundles mingw-w64, so C/C++ for Windows builds without Visual Studio. Launch with the absolute path to the zig executable; it finds lib/ next to itself (no PATH, no registry). Clear in the app's process environment: ZIG_LIB_DIR (checked: 0.16 fails outright with ZIG_LIB_DIR=/nonexistent, so a user's global setting would hijack the private copy), ZIG_LIBC, ZIG_BUILD_RUNNER, CC, C_INCLUDE_PATH, CPLUS_INCLUDE_PATH, LIBRARY_PATH and the NIX_CFLAGS_COMPILE/NIX_CFLAGS_LINK/NIX_LDFLAGS trio, all of which `zig env` 0.16 lists as read (checked: C_INCLUDE_PATH is honoured by zig cc even with an explicit -target). Use `zig version` to verify, not `zig env`: env creates the global cache folder as a side effect (checked).",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "if not exist \"{runtime_dir}\\cache\\nul\" mkdir \"{runtime_dir}\\cache\"",
+     "shell": "cmd"
+    }
+   ],
+   "executable": "zig.exe",
+   "verify": "\"{runtime_dir}\\zig.exe\" version",
+   "isolation": "full",
+   "min_os": "Windows 10 (0.11+ release notes; 0.15/0.16 OS Version Requirements table: Windows 10). 0.12+ import the api-ms-win-crt-* Universal CRT, which is built into Windows 10. amd64, arm64 and x86 zips",
+   "sources": [
+    "https://ziglang.org/download/",
+    "https://ziglang.org/download/0.11.0/release-notes.html",
+    "https://ziglang.org/download/0.15.1/release-notes.html",
+    "https://ziglang.org/download/0.16.0/release-notes.html",
+    "https://github.com/ziglang/zig/blob/0.15.2/src/introspect.zig (resolveGlobalCacheDir)"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\zig.exe\" build -Doptimize=ReleaseSafe --prefix \"{app_dir}\"",
+    "env": {
+     "ZIG_GLOBAL_CACHE_DIR": "{data_dir}\\zig-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). `zig build` exists from 0.3; older versions compile with `zig build-exe`. Before 0.6 (0.7 on macOS, 0.8 on Windows) the global cache can't be moved and lands in the user's folder (isolation: leaks). The same environment applies when zig is used as a C compiler (`zig cc`)."
+   }
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": ">=0.3,<0.7",
+    "arch": null
+   },
+   "method": "unpack",
+   "prerequisites": [],
+   "package_manager": null,
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "run time: global cache at $HOME/Library/Application Support/zig (from $HOME; no variable or flag moves it except overriding HOME for the zig process)",
+    "run time: ./zig-cache in the current directory unless --cache-dir is passed"
+   ],
+   "relocatable": true,
+   "tested": false,
+   "confidence": "medium",
+   "notes": "Not run (no macOS host); from Mach-O inspection and the source. Links only libSystem. Every archive has one top-level folder (zig-<os>-<arch>-<ver>/ or zig-<arch>-<os>-<ver>/; zig-0.2.0/ for the 0.2.0 Windows zip) holding the zig binary with lib/ (and doc/, LICENSE) beside it: strip 1. No symlinks in any archive (checked all 130 listings). Tar modes must be kept (zig is 0755). Signing: none of the macOS builds is notarized or Developer-ID signed. x86_64 binaries carry no signature at all; arm64 binaries carry only the linker's ad-hoc signature (CodeDirectory flags 0x2 adhoc, plus 0x20000 linker-signed from 0.7.0 and 0.10+, no CMS blob), which is the minimum Apple Silicon needs to execute. Gatekeeper only assesses files with the com.apple.quarantine xattr. Files the installer downloads with its own HTTP code are not quarantined unless the installer process opted in to quarantine (LSFileQuarantineEnabled) or is sandboxed; a browser download of the archive would be, and then `zig` would be refused as from an unidentified developer. The xattr step strips quarantine from the private copy only, defensively (the 2>/dev/null || true covers an absent attribute). Do not re-sign: the ad-hoc signature is valid and editing the binary would break it. zig cc is not usable before 0.6; in 0.6 it may need the Xcode command line tools for native macOS linking (not verified). Launch with the absolute path to the zig executable; it finds lib/ next to itself (no PATH, no registry). Clear in the app's process environment: ZIG_LIB_DIR (checked: 0.16 fails outright with ZIG_LIB_DIR=/nonexistent, so a user's global setting would hijack the private copy), ZIG_LIBC, ZIG_BUILD_RUNNER, CC, C_INCLUDE_PATH, CPLUS_INCLUDE_PATH, LIBRARY_PATH and the NIX_CFLAGS_COMPILE/NIX_CFLAGS_LINK/NIX_LDFLAGS trio, all of which `zig env` 0.16 lists as read (checked: C_INCLUDE_PATH is honoured by zig cc even with an explicit -target). Use `zig version` to verify, not `zig env`: env creates the global cache folder as a side effect (checked).",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null || true",
+     "shell": "sh"
+    }
+   ],
+   "executable": "zig",
+   "verify": "\"{runtime_dir}/zig\" version",
+   "isolation": "leaks",
+   "min_os": "x86_64 only. Mach-O minimums enforced by dyld: 0.3.0 10.13.7 (LC_VERSION_MIN_MACOSX), 0.4.0 10.13, 0.5.0 and 0.6.0 10.14 (LC_BUILD_VERSION), although the 0.5/0.6 release notes say 10.13+",
+   "sources": [
+    "https://ziglang.org/download/",
+    "https://ziglang.org/download/0.5.0/release-notes.html",
+    "https://ziglang.org/download/0.6.0/release-notes.html",
+    "https://github.com/ziglang/zig/blob/0.4.0/src/os.cpp (os_get_app_data_dir)",
+    "https://github.com/ziglang/zig/blob/0.6.0/src/os.cpp (os_get_app_data_dir)"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/zig\" build -Doptimize=ReleaseSafe --prefix \"{app_dir}\"",
+    "env": {},
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). `zig build` exists from 0.3; older versions compile with `zig build-exe`. Before 0.6 (0.7 on macOS, 0.8 on Windows) the global cache can't be moved and lands in the user's folder (isolation: leaks). The same environment applies when zig is used as a C compiler (`zig cc`)."
+   }
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": ">=0.7,<0.8",
+    "arch": null
+   },
+   "method": "unpack",
+   "prerequisites": [
+    "arm64 0.7.0 only: links the system libz.1, libxml2.2, libc++.1 and libncurses.5.4 dylibs (all shipped with macOS 11)"
+   ],
+   "package_manager": null,
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "run time, only if XDG_CACHE_HOME is not set for the zig process: global cache at $HOME/.cache/zig",
+    "run time: ./zig-cache in the project directory unless --cache-dir is passed"
+   ],
+   "relocatable": true,
+   "tested": false,
+   "confidence": "medium",
+   "notes": "Not run on macOS; the cache logic is the same resolveGlobalCacheDir (XDG_CACHE_HOME, then $HOME/.cache/zig) that was checked on Linux 0.7.1, so run zig with XDG_CACHE_HOME={runtime_dir}/cache. The arm64 build is 0.7.0 because 0.7.1 shipped none. Every archive has one top-level folder (zig-<os>-<arch>-<ver>/ or zig-<arch>-<os>-<ver>/; zig-0.2.0/ for the 0.2.0 Windows zip) holding the zig binary with lib/ (and doc/, LICENSE) beside it: strip 1. No symlinks in any archive (checked all 130 listings). Tar modes must be kept (zig is 0755). Signing: none of the macOS builds is notarized or Developer-ID signed. x86_64 binaries carry no signature at all; arm64 binaries carry only the linker's ad-hoc signature (CodeDirectory flags 0x2 adhoc, plus 0x20000 linker-signed from 0.7.0 and 0.10+, no CMS blob), which is the minimum Apple Silicon needs to execute. Gatekeeper only assesses files with the com.apple.quarantine xattr. Files the installer downloads with its own HTTP code are not quarantined unless the installer process opted in to quarantine (LSFileQuarantineEnabled) or is sandboxed; a browser download of the archive would be, and then `zig` would be refused as from an unidentified developer. The xattr step strips quarantine from the private copy only, defensively (the 2>/dev/null || true covers an absent attribute). Do not re-sign: the ad-hoc signature is valid and editing the binary would break it. Launch with the absolute path to the zig executable; it finds lib/ next to itself (no PATH, no registry). Clear in the app's process environment: ZIG_LIB_DIR (checked: 0.16 fails outright with ZIG_LIB_DIR=/nonexistent, so a user's global setting would hijack the private copy), ZIG_LIBC, ZIG_BUILD_RUNNER, CC, C_INCLUDE_PATH, CPLUS_INCLUDE_PATH, LIBRARY_PATH and the NIX_CFLAGS_COMPILE/NIX_CFLAGS_LINK/NIX_LDFLAGS trio, all of which `zig env` 0.16 lists as read (checked: C_INCLUDE_PATH is honoured by zig cc even with an explicit -target). Use `zig version` to verify, not `zig env`: env creates the global cache folder as a side effect (checked).",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null || true",
+     "shell": "sh"
+    },
+    {
+     "run": "mkdir -p \"{runtime_dir}/cache\"",
+     "shell": "sh"
+    }
+   ],
+   "executable": "zig",
+   "verify": "\"{runtime_dir}/zig\" version",
+   "isolation": "full",
+   "min_os": "x86_64 0.7.1: macOS 10.15.7 (LC_VERSION_MIN_MACOSX; also links the system libncurses.5.4). arm64 0.7.0: macOS 11.0",
+   "sources": [
+    "https://ziglang.org/download/",
+    "https://ziglang.org/download/0.7.0/release-notes.html",
+    "https://ziglang.org/download/0.7.1/release-notes.html",
+    "https://github.com/ziglang/zig/blob/0.7.1/src/introspect.zig"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/zig\" build -Doptimize=ReleaseSafe --prefix \"{app_dir}\"",
+    "env": {
+     "XDG_CACHE_HOME": "{data_dir}/cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). `zig build` exists from 0.3; older versions compile with `zig build-exe`. Before 0.6 (0.7 on macOS, 0.8 on Windows) the global cache can't be moved and lands in the user's folder (isolation: leaks). The same environment applies when zig is used as a C compiler (`zig cc`)."
+   }
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "tar.xz",
+    "versions": ">=0.8",
+    "arch": null
+   },
+   "method": "unpack",
+   "prerequisites": [],
+   "package_manager": null,
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "run time, only if ZIG_GLOBAL_CACHE_DIR is not set: global cache at $XDG_CACHE_HOME/zig or $HOME/.cache/zig (not ~/Library/Caches)",
+    "run time: per-project cache in the project directory unless ZIG_LOCAL_CACHE_DIR/--cache-dir is set",
+    "run time, 0.16: fetched packages in zig-pkg/ next to the project's build.zig"
+   ],
+   "relocatable": true,
+   "tested": false,
+   "confidence": "medium",
+   "notes": "Not run (no macOS host); from Mach-O inspection and the source. Links only libSystem. Run zig with ZIG_GLOBAL_CACHE_DIR={runtime_dir}/cache. Every archive has one top-level folder (zig-<os>-<arch>-<ver>/ or zig-<arch>-<os>-<ver>/; zig-0.2.0/ for the 0.2.0 Windows zip) holding the zig binary with lib/ (and doc/, LICENSE) beside it: strip 1. No symlinks in any archive (checked all 130 listings). Tar modes must be kept (zig is 0755). Signing: none of the macOS builds is notarized or Developer-ID signed. x86_64 binaries carry no signature at all; arm64 binaries carry only the linker's ad-hoc signature (CodeDirectory flags 0x2 adhoc, plus 0x20000 linker-signed from 0.7.0 and 0.10+, no CMS blob), which is the minimum Apple Silicon needs to execute. Gatekeeper only assesses files with the com.apple.quarantine xattr. Files the installer downloads with its own HTTP code are not quarantined unless the installer process opted in to quarantine (LSFileQuarantineEnabled) or is sandboxed; a browser download of the archive would be, and then `zig` would be refused as from an unidentified developer. The xattr step strips quarantine from the private copy only, defensively (the 2>/dev/null || true covers an absent attribute). Do not re-sign: the ad-hoc signature is valid and editing the binary would break it. zig cc ships libSystem .tbd stubs and macOS libc headers from 0.9 (lib/libc/darwin; absent in 0.8.1), so plain C/C++ for macOS should build without Xcode; frameworks beyond libSystem need an SDK (not verified here). {runtime_dir} is root/Administrator-owned, so {runtime_dir}/cache must be made writable by whichever account runs the app's builds (or point the cache variable at the app's own writable data folder instead; either stays inside the app). The cache is safe to share between concurrent zig processes of the same version (file locks), but should not be shared between apps if they must stay independent; deleting it is always safe. Launch with the absolute path to the zig executable; it finds lib/ next to itself (no PATH, no registry). Clear in the app's process environment: ZIG_LIB_DIR (checked: 0.16 fails outright with ZIG_LIB_DIR=/nonexistent, so a user's global setting would hijack the private copy), ZIG_LIBC, ZIG_BUILD_RUNNER, CC, C_INCLUDE_PATH, CPLUS_INCLUDE_PATH, LIBRARY_PATH and the NIX_CFLAGS_COMPILE/NIX_CFLAGS_LINK/NIX_LDFLAGS trio, all of which `zig env` 0.16 lists as read (checked: C_INCLUDE_PATH is honoured by zig cc even with an explicit -target). Use `zig version` to verify, not `zig env`: env creates the global cache folder as a side effect (checked).",
+   "steps": [
+    {
+     "unpack": "tar.xz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null || true",
+     "shell": "sh"
+    },
+    {
+     "run": "mkdir -p \"{runtime_dir}/cache\"",
+     "shell": "sh"
+    }
+   ],
+   "executable": "zig",
+   "verify": "\"{runtime_dir}/zig\" version",
+   "isolation": "full",
+   "min_os": "dyld-enforced LC_BUILD_VERSION minos: 0.8.1 has none (release notes 10.13+ x86_64, 11 arm64); 0.9.1 10.13 x86_64 / 11.6 arm64; 0.10.1-0.11.0 11.7; 0.12.1-0.13.0 11.7.1; 0.14.1+ 13.0 (0.15/0.16 notes: macOS 13.0). The binary's minos is stricter than the release notes (11+) for 0.10-0.14",
+   "sources": [
+    "https://ziglang.org/download/",
+    "https://ziglang.org/download/0.8.0/release-notes.html",
+    "https://ziglang.org/download/0.10.0/release-notes.html",
+    "https://ziglang.org/download/0.15.1/release-notes.html",
+    "https://ziglang.org/download/0.16.0/release-notes.html",
+    "https://github.com/ziglang/zig/blob/0.8.1/src/introspect.zig",
+    "https://github.com/ziglang/zig/blob/0.15.2/src/introspect.zig (resolveGlobalCacheDir)"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/zig\" build -Doptimize=ReleaseSafe --prefix \"{app_dir}\"",
+    "env": {
+     "ZIG_GLOBAL_CACHE_DIR": "{data_dir}/zig-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). `zig build` exists from 0.3; older versions compile with `zig build-exe`. Before 0.6 (0.7 on macOS, 0.8 on Windows) the global cache can't be moved and lands in the user's folder (isolation: leaks). The same environment applies when zig is used as a C compiler (`zig cc`)."
+   }
+  }
+ ]
+}
