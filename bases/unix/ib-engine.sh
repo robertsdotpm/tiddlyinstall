@@ -198,9 +198,11 @@ ib_osa() { # script-on-stdin args...; plan text goes in argv, never into the scr
 	osascript - "$@"
 }
 
-ib_message() { # info|error title text
+ib_message() { # info|error title text; never a dialog with --yes
 	set -- "$1" "$(ib_cleans "$2")" "$(ib_cleans "$3")"
-	case $ib_ui in
+	ui=$ib_ui
+	[ "$opt_yes" = 1 ] && ui=none
+	case $ui in
 	tty | none) printf '%s\n' "$3" >&2 ;;
 	zenity) zenity --"$1" --title="$2" --no-markup --text="$3" 2>/dev/null ;;
 	kdialog) if [ "$1" = error ]; then kdialog --title "$2" --error "$3"; else kdialog --title "$2" --msgbox "$3"; fi ;;
@@ -590,6 +592,7 @@ ib_find_metadata() {
 		case $rt$pk in *[!A-Za-z0-9_.-]*) ib_fail "Unusable installer name: $IB_NAME" ;; esac
 		backend=${opt_backend:-$IB_DEFAULT_BACKEND}
 		IB_PLAN=$IB_WORK/plan.txt IB_PLAN_KIND=fetched IB_PLAN_URL=$backend/api/plan/name/$rt/$pk
+		IB_PLAN_REQUEST="name$tab$rt$tab$pk"
 		ib_download "$IB_PLAN_URL" "$IB_PLAN" ||
 			ib_fail "This installer is named for $pk ($rt) but $backend has no plan for that name.$(ib_http_why)"
 		IB_ORIGIN="the file name (runtime $rt, package $pk); plan from $backend"
@@ -1135,6 +1138,14 @@ ib_elevate() { # extra args...
 	[ -n "$IB_ORIGIN" ] && set -- "$@" --ib-origin="$IB_ORIGIN"
 	[ -n "$opt_backend" ] && set -- "$@" --backend="$opt_backend"
 	ib_log "Asking for administrator rights"
+	if [ "$opt_yes" = 1 ] && [ "$ib_ui" != tty ]; then
+		# --yes with no terminal: no password dialog either.
+		if ib_have sudo && sudo -n true 2> /dev/null; then
+			sudo -n /bin/sh "$IB_SELF" "$@"
+			return $?
+		fi
+		ib_fail "This needs administrator rights, and with --yes and no terminal nothing may ask for them. Run it as root, or in a terminal."
+	fi
 	if [ "$IB_OS" = macos ] && [ "$ib_ui" != tty ]; then
 		c="/bin/sh $(ib_shq "$IB_SELF")"
 		for a in "$@"; do c="$c $(ib_shq "$a")"; done
@@ -1220,6 +1231,11 @@ ib_install_main() {
 		ib_fail "The install plan is for record ${prec:-none}, but this installer's record is $IB_RECHASH. Nothing was installed."
 	fi
 	[ -z "$IB_RECHASH" ] && IB_RECHASH=$prec
+	# A plan by name has no record to check against; it says (signed)
+	# which name it answers.
+	if [ -n "$IB_PLAN_REQUEST" ] && [ "$(ib_get "$IB_PLAN" request)" != "$IB_PLAN_REQUEST" ]; then
+		ib_fail "The plan from $backend is not the answer for $(printf '%s' "$IB_PLAN_REQUEST" | tr '\t' ' '). Nothing was installed."
+	fi
 
 	IB_SEL=$IB_WORK/selection.txt
 	ib_select_target "$IB_PLAN" > "$IB_SEL"

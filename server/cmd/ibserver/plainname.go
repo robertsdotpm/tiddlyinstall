@@ -65,7 +65,7 @@ func (s *server) planByName(w http.ResponseWriter, r *http.Request) {
 	if p := r.URL.Query().Get("os"); p != "" {
 		plats = []string{p}
 	}
-	plan, _, err := s.b.SignedPlan(hash, plats)
+	plan, _, err := s.b.SignedNamePlan(hash, plats, rt, name)
 	if err != nil {
 		if errors.Is(err, build.ErrNoPackage) {
 			apiError(w, 404, "no_such_package", err.Error())

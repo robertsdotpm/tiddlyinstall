@@ -378,6 +378,39 @@ func (b *Builder) SignedPlan(hash string, platforms []string) (string, []catalog
 	return signed, files, err
 }
 
+// SignedNamePlan is SignedPlan for GET /api/plan/name/{runtime}/{name}.
+// The engine asking has no record to hold the plan's `record` line
+// against, so the plan also says, inside the signature, which name it
+// answers: `request<TAB>name<TAB><runtime><TAB><name>`, exactly as asked
+// (format.md "Plan signature"). Another app's signed plan can't be passed
+// off as the answer.
+func (b *Builder) SignedNamePlan(hash string, platforms []string, runtime, name string) (string, []catalog.FileRef, error) {
+	plan, files, err := b.Plan(hash, platforms)
+	if err != nil {
+		return "", nil, err
+	}
+	if b.Signer == nil {
+		return "", nil, errors.New("no plan signing key")
+	}
+	plan, err = AddRequestLine(plan, "name", runtime, name)
+	if err != nil {
+		return "", nil, err
+	}
+	signed, err := b.Signer.SignString(plan)
+	return signed, files, err
+}
+
+// AddRequestLine puts `request<TAB>vals...` right after the plan's header line.
+func AddRequestLine(plan string, vals ...string) (string, error) {
+	i := strings.IndexByte(plan, '\n')
+	if i < 0 || !strings.HasPrefix(plan, "ib-plan\t") {
+		return "", errors.New("not an ib-plan")
+	}
+	var w ibtext.Writer
+	w.Add("request", vals...)
+	return plan[:i+1] + w.String() + plan[i+1:], nil
+}
+
 // Sources ----------------------------------------------------------------
 
 type source struct {

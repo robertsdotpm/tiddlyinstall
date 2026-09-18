@@ -85,6 +85,8 @@ Var PlanKind         ; fetched, cmdline or embedded
 Var PlanSig          ; ibsig::check's answer
 Var PlanWarn         ; a warning for the review page
 Var PlanRec          ; the plan header's `record`
+Var PlanReq          ; the plan header's `request` (plans by name), fields joined by |
+Var PlanReqWant      ; what a plan by name must say there
 Var UnsignedOK       ; 1: /unsigned-plan
 Var HasBlock         ; 1: an appended metadata block
 Var ModeA            ; 1: signed base with no block (design.md 3): file name + built-in backend only
@@ -1053,6 +1055,8 @@ Function ReadPlan
         ${If} $PlanRec == ""
           StrCpy $PlanRec $F1
         ${EndIf}
+      ${ElseIf} $K S== "request"
+        StrCpy $PlanReq "$F1|$F2|$F3"
       ${ElseIf} $K S== "name"
         StrCpy $AppName $F1
       ${ElseIf} $K S== "project"
@@ -1327,6 +1331,7 @@ Function FindMetadata
     ${EndIf}
     StrCpy $PlanFile "$PLUGINSDIR\plan.txt"
     StrCpy $PlanKind "fetched"
+    StrCpy $PlanReqWant "name|$TokRuntime|$TokProject"
     StrCpy $MetaSrc "the file name (runtime $TokRuntime, project $TokProject; no record hash)"
     StrCpy $PlanSrc "fetched from $U_a"
     Return
@@ -1434,6 +1439,8 @@ Function .onInit
     StrCpy $UnsignedOK 1
   ${EndIf}
   StrCpy $PlanRec ""
+  StrCpy $PlanReq ""
+  StrCpy $PlanReqWant ""
 
   StrCpy $Backend "${IB_BACKEND}"
   ClearErrors
@@ -1502,6 +1509,13 @@ Function .onInit
     ${EndIf}
   ${Else}
     StrCpy $RecHash $PlanRec
+  ${EndIf}
+  ; a plan by name has no record to check against; it says (signed)
+  ; which name it answers
+  ${If} $PlanReqWant != ""
+  ${AndIf} $PlanReq S!= $PlanReqWant
+    ${FailWith} "The plan from $Backend is not the answer for $TokRuntime/$TokProject. Nothing was installed."
+    Call InitFail
   ${EndIf}
   ibsig::cleanstr "$AppName"
   Pop $AppName
