@@ -128,6 +128,16 @@ Var TgtLaunch
 Var TgtAdmin
 Var TgtNote
 Var TgtFail
+; system-wide prerequisites (format.md "Prerequisites"): the block's `need` entries
+Var NdCount          ; how many
+Var NdSat            ; one character per need, in order: 1 present, 0 missing
+Var NdMissing        ; how many are missing
+Var NdManual         ; missing ones with no way to install them here (no nrun)
+Var NdLabels         ; the missing ones' labels, joined by ", "
+Var NdHow            ; the first missing one's nhow
+Var NdManualMsg      ; the message for the first missing one that can't be installed
+Var NdFail           ; 1: installing a prerequisite failed (nothing of the app was touched)
+Var FF_ukey          ; FetchFile: the url key after the file line (url, or nurl for a need)
 ; paths
 Var SysDrv
 Var Root
@@ -1384,6 +1394,321 @@ Function CheckPlan
   ${EndIf}
 FunctionEnd
 
+; ---------------------------------------------------------------- prerequisites
+
+; System-wide prerequisites (format.md "Prerequisites"): each `need` in the
+; chosen block, with its ncheck lines (any one passing means present) and,
+; to install it, nfile/nurl (an installer, checked by SHA-256) and nrun
+; (run with administrator rights; exit codes in nok mean success).
+
+; One check, $F1 kind and $F2.. its fields -> $U_out 1 if it passes.
+; Unknown kinds never pass.
+Function NeedCheckOne
+  Push $R0
+  Push $R1
+  Push $R2
+  StrCpy $U_out 0
+  ${If} $F1 S== "reg"
+    ; reg <32|64> <HKLM\key|HKCU\key> <DWORD value> [minimum]
+    StrCpy $R0 $F3 5
+    StrCpy $R1 $F3 "" 5
+    ${If} $F2 == "64"
+      ${IfNot} ${RunningX64}
+        Goto nc_end                    ; 32-bit Windows has no 64-bit view
+      ${EndIf}
+      SetRegView 64
+    ${Else}
+      SetRegView 32
+    ${EndIf}
+    ClearErrors
+    ${If} $R0 == "HKLM\"
+      ReadRegDWORD $R2 HKLM "$R1" "$F4"
+    ${ElseIf} $R0 == "HKCU\"
+      ReadRegDWORD $R2 HKCU "$R1" "$F4"
+    ${Else}
+      SetErrors
+    ${EndIf}
+    ${IfNot} ${Errors}
+      ${If} $F5 == ""
+        StrCpy $U_out 1
+      ${ElseIf} $R2 >= $F5
+        StrCpy $U_out 1
+      ${EndIf}
+    ${EndIf}
+    SetRegView default
+    ${Log} "  check $F1 $F2 $F3 $F4 >= $F5: $U_out (read '$R2')"
+  ${ElseIf} $F1 S== "file"
+    ; file <path>, %VARIABLES% expanded; System32 is the native one
+    ExpandEnvStrings $R0 "$F2"
+    ${DisableX64FSRedirection}
+    ${If} ${FileExists} "$R0"
+      StrCpy $U_out 1
+    ${EndIf}
+    ${EnableX64FSRedirection}
+    ${Log} "  check file $R0: $U_out"
+  ${Else}
+    ${Log} "  check $F1: not a check this installer knows; counts as missing"
+  ${EndIf}
+  nc_end:
+  Pop $R2
+  Pop $R1
+  Pop $R0
+FunctionEnd
+
+; Close one need in NeedChecks: $0 its state ("" none, "0", "1"), $1 1 if it
+; has nrun, $2 its label, $3 its nhow.
+!macro NeedFinish
+  ${If} $0 != ""
+    StrCpy $NdSat "$NdSat$0"
+    ${If} $0 == "0"
+      IntOp $NdMissing $NdMissing + 1
+      ${If} $NdLabels == ""
+        StrCpy $NdLabels "$2"
+        StrCpy $NdHow "$3"
+      ${Else}
+        StrCpy $NdLabels "$NdLabels, $2"
+      ${EndIf}
+      ${If} $1 = 0
+        IntOp $NdManual $NdManual + 1
+        ${If} $NdManualMsg == ""
+          StrCpy $NdManualMsg "This app needs $2 first, and this installer can't install it. $3"
+        ${EndIf}
+      ${EndIf}
+    ${EndIf}
+  ${EndIf}
+!macroend
+
+; Check every need of the chosen block: $NdCount, $NdSat, $NdMissing,
+; $NdManual, $NdLabels, $NdHow, $NdManualMsg.
+Function NeedChecks
+  Push $0
+  Push $1
+  Push $2
+  Push $3
+  StrCpy $NdCount 0
+  StrCpy $NdSat ""
+  StrCpy $NdMissing 0
+  StrCpy $NdManual 0
+  StrCpy $NdLabels ""
+  StrCpy $NdHow ""
+  StrCpy $NdManualMsg ""
+  StrCpy $0 ""
+  Call OpenBlock
+  ${Do}
+    ${IbRead} $BH
+    ${If} ${Errors}
+      ${Break}
+    ${EndIf}
+    Call IbParseLine
+    ${If} $K S== "[target]"
+      ${Break}
+    ${ElseIf} $K S== "need"
+      !insertmacro NeedFinish
+      IntOp $NdCount $NdCount + 1
+      StrCpy $0 "0"
+      StrCpy $1 0
+      StrCpy $2 "$F2"
+      StrCpy $3 ""
+      ${Log} "Prerequisite $F1 ($F2):"
+    ${ElseIf} $0 == ""
+      ${Continue}
+    ${ElseIf} $K S== "ncheck"
+      ${If} $0 == "0"
+        Call NeedCheckOne
+        ${If} $U_out = 1
+          StrCpy $0 "1"
+        ${EndIf}
+      ${EndIf}
+    ${ElseIf} $K S== "nrun"
+      StrCpy $1 1
+    ${ElseIf} $K S== "nhow"
+      StrCpy $3 "$F1"
+    ${ElseIf} $K S== "file"
+      !insertmacro NeedFinish
+      StrCpy $0 ""
+    ${EndIf}
+  ${Loop}
+  FileClose $BH
+  !insertmacro NeedFinish
+  ${If} $NdCount > 0
+    ${Log} "Prerequisites: $NdCount, missing $NdMissing ($NdSat)"
+  ${EndIf}
+  Pop $3
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; The review page's part (WriteSummary has $SumH open).
+Function NeedSummary
+  Push $0
+  Push $1
+  Push $2
+  ${Sum} "System-wide prerequisites (checked on this computer; installed for every user and not removed by the uninstaller):"
+  StrCpy $0 -1         ; need index
+  StrCpy $1 ""         ; this need's state
+  Call OpenBlock
+  ${Do}
+    ${IbRead} $BH
+    ${If} ${Errors}
+      ${Break}
+    ${EndIf}
+    Call IbParseLine
+    ${If} $K S== "[target]"
+    ${OrIf} $K S== "file"
+      ${Break}
+    ${ElseIf} $K S== "need"
+      IntOp $0 $0 + 1
+      StrCpy $1 $NdSat 1 $0
+      ${If} $1 == "1"
+        ${Sum} "  $F2:  already installed"
+      ${Else}
+        ${Sum} "  $F2:  MISSING, will be installed (needs administrator rights)"
+      ${EndIf}
+    ${ElseIf} $K S== "nwhy"
+      ${Sum} "      why: $F1"
+    ${ElseIf} $1 != "0"
+      ${Continue}
+    ${ElseIf} $K S== "nfile"
+      ${Sum} "      $F1   ($F3 bytes)"
+      ${Sum} "      sha256 $F2"
+      StrCpy $2 "$DlDir\$F1"
+    ${ElseIf} $K S== "nurl"
+      ${Sum} "      from $F1"
+    ${ElseIf} $K S== "nrun"
+      StrCpy $CurFile $2
+      StrCpy $U_a $F1
+      Call Subst
+      StrCpy $CurFile ""
+      ${Sum} "      then runs: $U_out"
+    ${EndIf}
+  ${Loop}
+  FileClose $BH
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; Install the missing prerequisites (we have administrator rights here),
+; then check again. Sets $Failed.
+Function NeedInstall
+  Push $0
+  Push $1
+  Push $2
+  Push $3
+  Push $4
+  Push $5
+  Push $6
+  Push $R8
+  Push $R9
+  ${If} $NdMissing = 0
+    Goto ni_end
+  ${EndIf}
+  StrCpy $0 -1         ; need index
+  StrCpy $1 ""         ; state of the current need
+  StrCpy $2 0          ; nfile line
+  StrCpy $3 ""         ; nrun command
+  StrCpy $4 "0"        ; nok codes
+  StrCpy $5 ""         ; label
+  Call OpenBlock
+  StrCpy $6 $TgtLine   ; line number, for FetchFile
+  ; each need is acted on when the next entry (or the end) is reached
+  ${Do}
+    ${IbRead} $BH
+    ${If} ${Errors}
+      StrCpy $K "[end]"
+    ${Else}
+      IntOp $6 $6 + 1
+      Call IbParseLine
+    ${EndIf}
+    ${If} $K S== "need"
+    ${OrIf} $K S== "file"
+    ${OrIf} $K S== "[target]"
+    ${OrIf} $K S== "[end]"
+      ${If} $1 == "0"
+        ; install the one just read (FetchFile reads the plan with its own handle)
+        ${Log} "Installing $5"
+        StrCpy $CurFile ""
+        ${If} $2 > 0
+          StrCpy $FF_line $2
+          StrCpy $FF_sha $R8
+          StrCpy $FF_name $R9
+          StrCpy $FF_ukey "nurl"
+          Call FetchFile
+          StrCpy $FF_ukey "url"
+          ${If} $Failed = 1
+            ${Break}
+          ${EndIf}
+          StrCpy $CurFile $FF_path
+        ${EndIf}
+        StrCpy $U_a $3
+        Call Subst
+        StrCpy $RC_cmd $U_out
+        StrCpy $RC_cwd ""
+        StrCpy $RC_quiet 0
+        Call RunCmd
+        ${If} $CurFile != ""
+          Delete "$CurFile"
+        ${EndIf}
+        StrCpy $CurFile ""
+        StrCpy $U_a " $4 "
+        StrCpy $U_b " $RC_code "
+        Call IbContains
+        ${If} $U_out = 0
+          ${FailWith} "Installing $5 failed (exit code $RC_code). $NdHow"
+          ${Break}
+        ${EndIf}
+        ${If} $RC_code = 3010
+          ${Log} "$5 is installed; Windows wants a restart to finish (the app may work before that)"
+        ${EndIf}
+      ${EndIf}
+      StrCpy $1 ""
+      ${If} $K S== "need"
+        IntOp $0 $0 + 1
+        StrCpy $1 $NdSat 1 $0
+        StrCpy $2 0
+        StrCpy $3 ""
+        StrCpy $4 "0"
+        StrCpy $5 "$F2"
+      ${ElseIf} $K S!= "file"
+        ${Break}
+      ${EndIf}
+    ${ElseIf} $1 != "0"
+      ${Continue}
+    ${ElseIf} $K S== "nfile"
+      StrCpy $2 $6
+      StrCpy $R9 $F1
+      StrCpy $R8 $F2
+    ${ElseIf} $K S== "nrun"
+      StrCpy $3 $F1
+    ${ElseIf} $K S== "nok"
+      StrCpy $4 $F1
+    ${EndIf}
+  ${Loop}
+  FileClose $BH
+  ${If} $Failed = 1
+    Goto ni_end
+  ${EndIf}
+  ; installed: every check must pass now
+  StrCpy $0 $NdLabels
+  Call NeedChecks
+  ${If} $NdMissing > 0
+    ${FailWith} "$NdLabels is still missing after running its installer. $NdHow"
+  ${Else}
+    ${Log} "Prerequisites installed: $0"
+  ${EndIf}
+  ni_end:
+  Pop $R9
+  Pop $R8
+  Pop $6
+  Pop $5
+  Pop $4
+  Pop $3
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
 ; ---------------------------------------------------------------- init
 
 Function InitFail
@@ -1400,6 +1725,8 @@ FunctionEnd
 Function .onInit
   InitPluginsDir
   StrCpy $Failed 0
+  StrCpy $NdFail 0
+  StrCpy $FF_ukey "url"
   ${GetParameters} $Params
   ClearErrors
   ${IbGetOpt} "/log=" $LogPath
@@ -1582,8 +1909,27 @@ Function .onInit
     StrCpy $NeedAdmin 1
   ${EndIf}
 
+  ; system-wide prerequisites: the checks only read the registry and look
+  ; for files, so they run now; a missing one means administrator rights
+  Call NeedChecks
+  ${If} $NdManual > 0
+    ${FailWith} "$NdManualMsg"
+    Call InitFail
+  ${EndIf}
+  ${If} $NdMissing > 0
+    StrCpy $NeedAdmin 1
+  ${EndIf}
+
   ; administrator rights, if the plan needs them
   Call IbIsAdmin
+  ${If} $NeedAdmin = 1
+  ${AndIf} $U_out = 0
+  ${AndIf} $NdMissing > 0
+  ${AndIf} ${Silent}
+    ; no UAC prompt in a silent install
+    ${FailWith} "This app needs $NdLabels installed first, for the whole computer, which needs administrator rights, and this silent install (/S) doesn't have them. Run it from an elevated command prompt, or install that first. $NdHow"
+    Call InitFail
+  ${EndIf}
   ${If} $NeedAdmin = 1
   ${AndIf} $U_out = 0
     ${If} $WinVer < 600
@@ -1623,6 +1969,10 @@ Function WriteSummary
   ${EndIf}
   ${Sum} "This machine:  Windows $WinVer build $WinBuild, $Arch (plan block $TgtNo)"
   ${Sum} ""
+  ${If} $NdCount > 0
+    Call NeedSummary
+    ${Sum} ""
+  ${EndIf}
   ${Sum} "Files to download (each is checked by SHA-256 before use):"
   StrCpy $1 ""
   Call OpenBlock
@@ -1697,7 +2047,9 @@ Function WriteSummary
     ${Sum} "Uninstaller:  $AppDir\uninstall.exe, listed in Add/Remove Programs (HKCU ...\Uninstall\ib-$AppId)"
   ${EndIf}
   ${Sum} "PATH:  not changed"
-  ${If} $NeedAdmin = 1
+  ${If} $NdMissing > 0
+    ${Sum} "Administrator rights:  yes, to install $NdLabels for the whole computer"
+  ${ElseIf} $NeedAdmin = 1
     ${Sum} "Administrator rights:  yes"
   ${Else}
     ${Sum} "Administrator rights:  not needed"
@@ -2045,11 +2397,23 @@ Function FetchFile
       ${Break}
     ${EndIf}
     Call IbParseLine
-    ${If} $K S== "step"
-      ${Continue}
-    ${EndIf}
-    ${If} $K S!= "url"
-      ${Break}
+    ${If} $FF_ukey S== "nurl"
+      ; a need's lines: nurl among nwhy, ncheck, nrun...; stop at the next entry
+      ${If} $K S== "need"
+      ${OrIf} $K S== "file"
+      ${OrIf} $K S== "[target]"
+        ${Break}
+      ${EndIf}
+      ${If} $K S!= "nurl"
+        ${Continue}
+      ${EndIf}
+    ${Else}
+      ${If} $K S== "step"
+        ${Continue}
+      ${EndIf}
+      ${If} $K S!= "url"
+        ${Break}
+      ${EndIf}
     ${EndIf}
     StrCpy $1 1
     ${Log} "Downloading $F1"
@@ -2553,6 +2917,13 @@ Function InstallMain
   CreateDirectory "$TmpDir"
   CreateDirectory "$DlDir"
 
+  ; system-wide prerequisites, before anything of the app is touched
+  Call NeedInstall
+  ${If} $Failed = 1
+    StrCpy $NdFail 1
+    Return
+  ${EndIf}
+
   Call ClearOldInstall
   ${If} $Failed = 1
     Return
@@ -2690,7 +3061,9 @@ Section "Install"
   RMDir /r "$DlDir"
   ${If} $Failed = 1
     ${Log} "ERROR: $FailMsg"
-    Call Cleanup
+    ${If} $NdFail != 1
+      Call Cleanup
+    ${EndIf}
     ${Log} "Install failed."
     SetErrorLevel 3
     ${IfNot} ${Silent}

@@ -48,7 +48,7 @@ Values end at the next space, or at a closing `"` if they start with one
 
 | Option | Meaning |
 | --- | --- |
-| `/S` | Silent: no pages, same engine. Exit code 0 = installed, 2 = couldn't start (no metadata, no matching target, a `fail` block, no admin rights, a plan refused), 3 = install failed and was rolled back |
+| `/S` | Silent: no pages, same engine. Exit code 0 = installed, 2 = couldn't start (no metadata, no matching target, a `fail` block, no admin rights, a plan refused, a missing prerequisite it may not install), 3 = install failed and was rolled back |
 | `/log=<path>` | Append the detail log (the transparency text, every download, step and command output) to a UTF-8 file |
 | `/record=<path>` | Use this record; the plan comes from `/plan=` or the backend |
 | `/plan=<path>` | Use this plan. It must be signed by the built-in key (save it from `<backend>/api/plan/<record>`) |
@@ -116,6 +116,32 @@ from a copy in `%TEMP%\~nsuN.tmp`, which Windows deletes at the next
 reboot; the `uninstall.exe` it was started as may still be running for a
 moment, so removing the app folder is retried for up to 15 s, then left
 to the next restart (`/REBOOTOK`).
+
+## Prerequisites
+
+A plan block's `need` entries (format.md "Prerequisites") are checked in
+`.onInit`, before the review page: `reg` reads a DWORD in the 32- or
+64-bit registry view (present if at least the minimum), `file` looks for
+a path with `%VARIABLES%` expanded and file-system redirection off (so
+`System32` is the native one). The review page lists each as already
+installed or missing, why the app needs it, and for missing ones the
+installer file, its SHA-256 and URLs, and the command that will run.
+
+Any missing one with an `nrun` makes the install need administrator
+rights, through the same `runas` relaunch as `root system` and `admin 1`
+(Vista and later; XP must be run as an administrator). A silent install
+(`/S`) without administrator rights doesn't prompt: it stops with exit
+code 2 and a message naming what is missing. A missing one without
+`nrun` stops with exit code 2 and the plan's `nhow`.
+
+In the install, prerequisites come first, before anything of the app
+(or an earlier install of it) is touched: each missing one's `nfile` is
+taken from the pack or downloaded from its `nurl`s and checked by
+SHA-256, `nrun` is run through `cmd /c` with `{file}` as its path, and
+an exit code outside `nok` (default `0`) fails the install (exit code
+3). `3010` means Windows wants a restart; it is logged and the install
+goes on. Then every check must pass. A prerequisite is never removed,
+on failure or by the uninstaller: it is shared with other programs.
 
 ## Launcher
 
