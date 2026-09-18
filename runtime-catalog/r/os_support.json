@@ -1,0 +1,2053 @@
+{
+ "runtime": "r",
+ "researched": "2026-09-18",
+ "method": "Binary floors read from the CRAN installers (Inno Setup .exe unpacked with innoextract 1.9, macOS flat .pkg unpacked in Python) and Posit's r-builds .deb/.rpm: first and last release of each build flavour, bisected to adjacent releases wherever the floor changed. Windows: EXE subsystem version plus static imports of R's own core files (R.dll, Rblas, Rlapack, Rgraphapp, Riconv, R/Rgui/Rterm/Rscript.exe), per machine (the 2.12-4.1 installers carry both i386 and x64 R). The Inno Setup MinVersion that the installer enforces is a separate rule (both must pass). macOS: highest LC_BUILD_VERSION / LC_VERSION_MIN_MACOSX minos of any Mach-O in the pkg payloads, plus the pkg Distribution volume check where the binaries predate minos load commands (R 2.x). Linux: highest GLIBC_x.y symbol, but the Posit builds are distro-locked (they link that release's ICU, libtiff, readline sonames), so each is pinned to its distro's glibc id.",
+ "filters": "variant: null = CRAN builds, posit-* = Posit r-builds. file_match (regex on the download file name) separates CRAN macOS build flavours that overlap in version (R-3.1.x.pkg vs R-3.1.x-mavericks.pkg). The binary rules and the Inno Setup MinVersion rules for Windows both apply to the same .exe and both must pass.",
+ "rules": [
+  {
+   "versions": ">=3.0.0,<=4.6.1",
+   "os": "linux",
+   "arch": [
+    "amd64"
+   ],
+   "variant": [
+    "posit-rhel-9"
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "rpm"
+   ],
+   "distro": "RHEL 9 and rebuilds",
+   "min_os": "glibc-2.34",
+   "min_build": null,
+   "max_os": "glibc-2.34",
+   "extra": [],
+   "applies_to": "Posit r-builds .rpm for RHEL 9 (amd64)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-3.0.0-1-1.x86_64.rpm (3.0.0): highest GLIBC_2.34 (R, Rscript, libR.so)"
+    },
+    {
+     "kind": "binary",
+     "source": "R-4.6.1-1-1.x86_64.rpm (4.6.1): highest GLIBC_2.34 (R, Rscript, lapack.so)"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/rstudio/r-builds (per-distro builds)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Exact floor GLIBC_2.34; distro-locked build (links that release's libicu, libtiff, libreadline, libjpeg sonames), pinned with max_os."
+  },
+  {
+   "versions": ">=3.0.0,<=4.6.1",
+   "os": "linux",
+   "arch": [
+    "amd64"
+   ],
+   "variant": [
+    "posit-ubuntu-2204"
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "deb"
+   ],
+   "distro": "Ubuntu 22.04",
+   "min_os": "glibc-2.35",
+   "min_build": null,
+   "max_os": "glibc-2.35",
+   "extra": [],
+   "applies_to": "Posit r-builds .deb for Ubuntu 22.04 (amd64)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "r-3.0.0_1_amd64.deb (3.0.0): highest GLIBC_2.35 (libR.so)"
+    },
+    {
+     "kind": "binary",
+     "source": "r-4.6.1_1_amd64.deb (4.6.1): highest GLIBC_2.35 (Matrix.so, libR.so, nlme.so)"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/rstudio/r-builds (per-distro builds)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Exact floor GLIBC_2.35; distro-locked build (links that release's libicu, libtiff, libreadline, libjpeg sonames), pinned with max_os."
+  },
+  {
+   "versions": ">=3.0.0,<=4.6.1",
+   "os": "linux",
+   "arch": [
+    "arm64"
+   ],
+   "variant": [
+    "posit-rhel-9"
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "rpm"
+   ],
+   "distro": "RHEL 9 and rebuilds",
+   "min_os": "glibc-2.34",
+   "min_build": null,
+   "max_os": "glibc-2.34",
+   "extra": [],
+   "applies_to": "Posit r-builds .rpm for RHEL 9 (arm64)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-3.0.0-1-1.aarch64.rpm (3.0.0): highest GLIBC_2.34 (R, Rscript, libR.so)"
+    },
+    {
+     "kind": "binary",
+     "source": "R-4.6.1-1-1.aarch64.rpm (4.6.1): highest GLIBC_2.34 (R, Rscript, lapack.so)"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/rstudio/r-builds (per-distro builds)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Exact floor GLIBC_2.34; distro-locked build (links that release's libicu, libtiff, libreadline, libjpeg sonames), pinned with max_os."
+  },
+  {
+   "versions": ">=3.0.0,<=4.6.1",
+   "os": "linux",
+   "arch": [
+    "arm64"
+   ],
+   "variant": [
+    "posit-ubuntu-2204"
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "deb"
+   ],
+   "distro": "Ubuntu 22.04",
+   "min_os": "glibc-2.35",
+   "min_build": null,
+   "max_os": "glibc-2.35",
+   "extra": [],
+   "applies_to": "Posit r-builds .deb for Ubuntu 22.04 (arm64)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "r-3.0.0_1_arm64.deb (3.0.0): highest GLIBC_2.35 (libR.so)"
+    },
+    {
+     "kind": "binary",
+     "source": "r-4.6.1_1_arm64.deb (4.6.1): highest GLIBC_2.35 (Matrix.so, libR.so, nlme.so)"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/rstudio/r-builds (per-distro builds)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Exact floor GLIBC_2.35; distro-locked build (links that release's libicu, libtiff, libreadline, libjpeg sonames), pinned with max_os."
+  },
+  {
+   "versions": ">=3.0.0,<3.2.0",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "pkg"
+   ],
+   "file_match": "^R-[0-9.]+\\.pkg$",
+   "min_os": "10.6",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "CRAN macOS installer (bin/macosx/base: Leopard, Snow Leopard, Mavericks, El Capitan and High Sierra builds) (amd64)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-3.0.0.pkg (3.0.0): amd64 highest minos 10.6.0 (R, SDK 0.0)"
+    },
+    {
+     "kind": "binary",
+     "source": "R-3.0.3.pkg (3.0.3): amd64 highest minos 10.6.0 (R, SDK 0.0)"
+    },
+    {
+     "kind": "binary",
+     "source": "R-3.1.3.pkg (3.1.3): amd64 highest minos 10.6.0 (R, SDK 0.0); x86 highest minos 10.6.0 (fc-cache, SDK 0.0)"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://cran.r-project.org/bin/macosx/ (per-build minimum macOS)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Binary minos 10.6.0."
+  },
+  {
+   "versions": ">=3.2.0,<3.4.0",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "pkg"
+   ],
+   "file_match": "^R-[0-9.]+\\.pkg$",
+   "min_os": "10.9",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "CRAN macOS installer (bin/macosx/base: Leopard, Snow Leopard, Mavericks, El Capitan and High Sierra builds) (amd64)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-3.2.0.pkg (3.2.0): amd64 highest minos 10.9.0 (R, SDK 10.9); x86 highest minos 10.9.0 (libgcc_s.1.dylib, SDK 10.9)"
+    },
+    {
+     "kind": "binary",
+     "source": "R-3.3.3.pkg (3.3.3): amd64 highest minos 10.9.0 (R, SDK 10.9); x86 highest minos 10.9.0 (libgcc_s.1.dylib, SDK 10.9)"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://cran.r-project.org/bin/macosx/ (per-build minimum macOS)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Binary minos 10.9.0."
+  },
+  {
+   "versions": ">=3.4.0,<4.0.0",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "pkg"
+   ],
+   "file_match": "^R-[0-9.]+\\.pkg$",
+   "min_os": "10.11",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "OS X / macOS 10.11.4 or later"
+   ],
+   "applies_to": "CRAN macOS installer (bin/macosx/base: Leopard, Snow Leopard, Mavericks, El Capitan and High Sierra builds) (amd64)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-3.4.0.pkg (3.4.0): amd64 highest minos 10.11.4 (libgcc_s.1.dylib, SDK 10.11); x86 highest minos 10.11.4 (libgcc_s.1.dylib, SDK 10.11)"
+    },
+    {
+     "kind": "binary",
+     "source": "R-3.6.3.pkg (3.6.3): amd64 highest minos 10.11.4 (libgcc_s.1.dylib, SDK 10.11); x86 highest minos 10.11.4 (libgcc_s.1.dylib, SDK 10.11)"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://cran.r-project.org/bin/macosx/ (per-build minimum macOS)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Binary minos 10.11.4."
+  },
+  {
+   "versions": ">=4.0.0,<4.0.4",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "pkg"
+   ],
+   "file_match": "^R-[0-9.]+\\.pkg$",
+   "min_os": "10.15",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "CRAN macOS installer (bin/macosx/base: Leopard, Snow Leopard, Mavericks, El Capitan and High Sierra builds) (amd64)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-4.0.0.pkg (4.0.0): amd64 highest minos 10.15.0 (sush, SDK 10.15)"
+    },
+    {
+     "kind": "binary",
+     "source": "R-4.0.3.pkg (4.0.3): amd64 highest minos 10.15.0 (sush, SDK 10.15)"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://cran.r-project.org/bin/macosx/ (per-build minimum macOS)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Binary minos 10.15.0."
+  },
+  {
+   "versions": ">=4.0.4,<=4.2.3",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "pkg"
+   ],
+   "file_match": "^R-[0-9.]+\\.pkg$",
+   "min_os": "10.14",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "CRAN macOS installer (bin/macosx/base: Leopard, Snow Leopard, Mavericks, El Capitan and High Sierra builds) (amd64)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-4.0.4.pkg (4.0.4): amd64 highest minos 10.14.0 (libgfortran.5.dylib, SDK 10.14)"
+    },
+    {
+     "kind": "binary",
+     "source": "R-4.1.0.pkg (4.1.0): amd64 highest minos 10.14.0 (libgfortran.5.dylib, SDK 10.14)"
+    },
+    {
+     "kind": "binary",
+     "source": "R-4.1.1.pkg (4.1.1): amd64 highest minos 10.14.0 (libgfortran.5.dylib, SDK 10.14); arm64 highest minos 11.0.0 (libRblas.vecLib.dylib, SDK 11.1)"
+    },
+    {
+     "kind": "binary",
+     "source": "R-4.2.3.pkg (4.2.3): amd64 highest minos 10.14.0 (libgfortran.5.dylib, SDK 10.14); arm64 highest minos 11.0.0 (libRblas.vecLib.dylib, SDK 11.1)"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://cran.r-project.org/bin/macosx/ (per-build minimum macOS)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Binary minos 10.14.0."
+  },
+  {
+   "versions": ">=4.3.0,<=4.6.1",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "pkg"
+   ],
+   "file_match": "-x86_64\\.pkg$",
+   "min_os": "11",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "CRAN macOS big-sur-x86_64 build (amd64)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-4.3.0-x86_64.pkg (4.3.0): amd64 highest minos 11.0.0 (Rscript, SDK 11.3); arm64 highest minos 11.0.0 (libomp.dylib, SDK 11.3)"
+    },
+    {
+     "kind": "binary",
+     "source": "R-4.6.1-x86_64.pkg (4.6.1): amd64 highest minos 11.0.0 (Rscript, SDK 11.3); arm64 highest minos 11.0.0 (libomp.dylib, SDK 11.3)"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://cran.r-project.org/bin/macosx/ (per-build minimum macOS)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Binary minos 11.0.0."
+  },
+  {
+   "versions": ">=3.1.0,<3.1.2",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "pkg"
+   ],
+   "file_match": "-mavericks\\.pkg$",
+   "min_os": "10.9",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "CRAN macOS Mavericks build (R-x.y.z-mavericks.pkg) (amd64)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-3.1.0-mavericks.pkg (3.1.0): amd64 highest minos 10.9.0 (R, SDK 10.9); x86 highest minos 10.9.0 (libgcc_s.1.dylib, SDK 10.9)"
+    },
+    {
+     "kind": "binary",
+     "source": "R-3.1.1-mavericks.pkg (3.1.1): amd64 highest minos 10.9.0 (R, SDK 10.9); x86 highest minos 10.9.0 (libgcc_s.1.dylib, SDK 10.9)"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://cran.r-project.org/bin/macosx/ (per-build minimum macOS)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Binary minos 10.9.0."
+  },
+  {
+   "versions": ">=3.1.2,<=3.1.2",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "pkg"
+   ],
+   "file_match": "-mavericks\\.pkg$",
+   "min_os": "10.10",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "CRAN macOS Mavericks build (R-x.y.z-mavericks.pkg) (amd64)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-3.1.2-mavericks.pkg (3.1.2): amd64 highest minos 10.10.0 (R, SDK 10.10); x86 highest minos 10.9.0 (libgcc_s.1.dylib, SDK 10.9)"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://cran.r-project.org/bin/macosx/ (per-build minimum macOS)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Binary minos 10.10.0."
+  },
+  {
+   "versions": ">=4.1.0,<4.1.3",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "pkg"
+   ],
+   "file_match": "-arm64\\.pkg$",
+   "min_os": "11",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "CRAN macOS big-sur-arm64 build (arm64)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-4.1.0-arm64.pkg (4.1.0): arm64 highest minos 11.0.0 (R, SDK 11.1)"
+    },
+    {
+     "kind": "binary",
+     "source": "R-4.1.1-arm64.pkg (4.1.1): amd64 highest minos 10.13.0 (libRblas.vecLib.dylib, SDK 10.15); arm64 highest minos 11.0.0 (R, SDK 11.1)"
+    },
+    {
+     "kind": "binary",
+     "source": "R-4.1.2-arm64.pkg (4.1.2): amd64 highest minos 10.13.0 (libRblas.vecLib.dylib, SDK 10.15); arm64 highest minos 11.0.0 (R, SDK 11.3)"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://cran.r-project.org/bin/macosx/ (per-build minimum macOS)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Binary minos 11.0.0."
+  },
+  {
+   "versions": ">=4.1.3,<4.2.0",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "pkg"
+   ],
+   "file_match": "-arm64\\.pkg$",
+   "min_os": "26",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "CRAN macOS big-sur-arm64 build (arm64)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-4.1.3-arm64.pkg (4.1.3): amd64 highest minos 10.13.0 (libRblas.vecLib.dylib, SDK 10.15); arm64 highest minos 20.0.0 (Rscript, SDK 12.0)"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://cran.r-project.org/bin/macosx/ (per-build minimum macOS)"
+    }
+   ],
+   "confidence": "low",
+   "notes": "Binary minos 20.0.0 (platform macOS) in bin/exec/R and Rscript of 4.1.3 arm64 only: almost certainly the Darwin version (20 = macOS 11) written by mistake. Taken literally no macOS before 26 qualifies, so the rule says 26; whether dyld on macOS 11-15 actually refuses it was not tested."
+  },
+  {
+   "versions": ">=4.2.0,<4.4.3",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "pkg"
+   ],
+   "file_match": "-arm64\\.pkg$",
+   "min_os": "12",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "CRAN macOS big-sur-arm64 build (arm64)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-4.2.0-arm64.pkg (4.2.0): amd64 highest minos 10.13.0 (libRblas.vecLib.dylib, SDK 10.15); arm64 highest minos 12.0.0 (qpdf, SDK 12.0)"
+    },
+    {
+     "kind": "binary",
+     "source": "R-4.2.3-arm64.pkg (4.2.3): amd64 highest minos 10.13.0 (libRblas.vecLib.dylib, SDK 10.15); arm64 highest minos 12.0.0 (qpdf, SDK 12.0)"
+    },
+    {
+     "kind": "binary",
+     "source": "R-4.3.0-arm64.pkg (4.3.0): amd64 highest minos 11.0.0 (libomp.dylib, SDK 11.3); arm64 highest minos 12.0.0 (qpdf, SDK 12.0)"
+    },
+    {
+     "kind": "binary",
+     "source": "R-4.4.2-arm64.pkg (4.4.2): amd64 highest minos 11.0.0 (libomp.dylib, SDK 11.3); arm64 highest minos 12.0.0 (qpdf, SDK 12.0)"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://cran.r-project.org/bin/macosx/ (per-build minimum macOS)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Binary minos 12.0.0."
+  },
+  {
+   "versions": ">=4.4.3,<=4.5.3",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "pkg"
+   ],
+   "file_match": "-arm64\\.pkg$",
+   "min_os": "11",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "CRAN macOS big-sur-arm64 build (arm64)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-4.4.3-arm64.pkg (4.4.3): amd64 highest minos 11.0.0 (libomp.dylib, SDK 11.3); arm64 highest minos 11.0.0 (R, SDK 13.1)"
+    },
+    {
+     "kind": "binary",
+     "source": "R-4.5.3-arm64.pkg (4.5.3): amd64 highest minos 11.0.0 (libomp.dylib, SDK 11.3); arm64 highest minos 11.0.0 (R, SDK 15.2)"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://cran.r-project.org/bin/macosx/ (per-build minimum macOS)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Binary minos 11.0.0."
+  },
+  {
+   "versions": ">=4.6.0,<=4.6.1",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "pkg"
+   ],
+   "file_match": "-arm64\\.pkg$",
+   "min_os": "14",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "CRAN macOS sonoma-arm64 build (arm64)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-4.6.0-arm64.pkg (4.6.0): amd64 highest minos 11.0.0 (libomp.dylib, SDK 11.3); arm64 highest minos 14.0.0 (fc-cache, SDK 14.5)"
+    },
+    {
+     "kind": "binary",
+     "source": "R-4.6.1-arm64.pkg (4.6.1): amd64 highest minos 11.0.0 (libomp.dylib, SDK 11.3); arm64 highest minos 14.0.0 (fc-cache, SDK 14.5)"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://cran.r-project.org/bin/macosx/ (per-build minimum macOS)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Binary minos 14.0.0."
+  },
+  {
+   "versions": ">=2.12.0,<4.2.0",
+   "os": "windows",
+   "arch": [
+    "amd64"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "exe"
+   ],
+   "min_os": "xp-x64",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "XP SP3 / XP x64 SP2 / Server 2003 SP2 (VS2008+ C runtimes and EncodePointer need them)"
+   ],
+   "applies_to": "CRAN Windows installer (.exe), 64-bit R",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-2.12.0-win.exe (2.12.0): EXE subsystem 5.2; static imports of the core runtime files need xp; no UCRT"
+    },
+    {
+     "kind": "binary",
+     "source": "R-3.1.3-win.exe (3.1.3): EXE subsystem 5.2; static imports of the core runtime files need xp; no UCRT"
+    },
+    {
+     "kind": "binary",
+     "source": "R-3.2.0-win.exe (3.2.0): EXE subsystem 5.2; static imports of the core runtime files need xp; optional libraries need vista (internet.dll:kernel32.dll!IdnToAscii, internet.dll:kernel32.dll!IdnToUnicode); no UCRT"
+    },
+    {
+     "kind": "binary",
+     "source": "R-4.1.3-win.exe (4.1.3): EXE subsystem 5.2; static imports of the core runtime files need xp; optional libraries need vista (internet.dll:kernel32.dll!IdnToAscii, internet.dll:kernel32.dll!IdnToUnicode); no UCRT"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://cran.r-project.org/bin/windows/base/rw-FAQ.html (Q2.23: R 4.2+ needs the UCRT; current builds known to run on Windows 10+; 4.5 no longer tested on 7/8.1)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "Binary floor xp-x64 (R's own files); the installer's Inno Setup MinVersion is a separate rule."
+  },
+  {
+   "versions": ">=4.2.0,<4.3.0",
+   "os": "windows",
+   "arch": [
+    "amd64"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "exe"
+   ],
+   "min_os": "vista",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "KB2999226 Universal C Runtime (Vista SP2 / 7 SP1 / 8 / 8.1; built into 10+)"
+   ],
+   "applies_to": "CRAN Windows installer (.exe), 64-bit R",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-4.2.0-win.exe (4.2.0): EXE subsystem 5.2; static imports of the core runtime files need vista (r.dll:kernel32.dll!GetDynamicTimeZoneInformation, r.dll:kernel32.dll!GetFinalPathNameByHandleA, r.dll:kernel32.dll!GetFinalPathNameByHandleW); needs the system UCRT"
+    },
+    {
+     "kind": "binary",
+     "source": "R-4.2.3-win.exe (4.2.3): EXE subsystem 5.2; static imports of the core runtime files need vista (r.dll:kernel32.dll!GetDynamicTimeZoneInformation, r.dll:kernel32.dll!GetFinalPathNameByHandleA, r.dll:kernel32.dll!GetFinalPathNameByHandleW); needs the system UCRT"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://cran.r-project.org/bin/windows/base/rw-FAQ.html (Q2.23: R 4.2+ needs the UCRT; current builds known to run on Windows 10+; 4.5 no longer tested on 7/8.1)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "Binary floor vista (R's own files); the installer's Inno Setup MinVersion is a separate rule."
+  },
+  {
+   "versions": ">=4.3.0,<4.4.3",
+   "os": "windows",
+   "arch": [
+    "amd64"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "exe"
+   ],
+   "min_os": "7",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "KB2999226 Universal C Runtime (Vista SP2 / 7 SP1 / 8 / 8.1; built into 10+)"
+   ],
+   "applies_to": "CRAN Windows installer (.exe), 64-bit R",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-4.3.0-win.exe (4.3.0): EXE subsystem 5.2; static imports of the core runtime files need 7 (r.dll:kernel32.dll!ResolveLocaleName); needs the system UCRT"
+    },
+    {
+     "kind": "binary",
+     "source": "R-4.4.2-win.exe (4.4.2): EXE subsystem 5.2; static imports of the core runtime files need 7 (r.dll:kernel32.dll!ResolveLocaleName); needs the system UCRT"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://cran.r-project.org/bin/windows/base/rw-FAQ.html (Q2.23: R 4.2+ needs the UCRT; current builds known to run on Windows 10+; 4.5 no longer tested on 7/8.1)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Binary floor 7 (R's own files); the installer's Inno Setup MinVersion is a separate rule."
+  },
+  {
+   "versions": ">=4.4.3,<=4.6.1",
+   "os": "windows",
+   "arch": [
+    "amd64"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "exe"
+   ],
+   "min_os": "vista",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "KB2999226 Universal C Runtime (Vista SP2 / 7 SP1 / 8 / 8.1; built into 10+)"
+   ],
+   "applies_to": "CRAN Windows installer (.exe), 64-bit R",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-4.4.3-win.exe (4.4.3): EXE subsystem 5.2; static imports of the core runtime files need vista (r.dll:kernel32.dll!CreateSymbolicLinkW, r.dll:kernel32.dll!GetDynamicTimeZoneInformation, r.dll:kernel32.dll!GetFileInformationByHandleEx); needs the system UCRT"
+    },
+    {
+     "kind": "binary",
+     "source": "R-4.6.1-win.exe (4.6.1): EXE subsystem 5.2; static imports of the core runtime files need vista (r.dll:kernel32.dll!CreateSymbolicLinkW, r.dll:kernel32.dll!GetDynamicTimeZoneInformation, r.dll:kernel32.dll!GetFileInformationByHandleEx); needs the system UCRT"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://cran.r-project.org/bin/windows/base/rw-FAQ.html (Q2.23: R 4.2+ needs the UCRT; current builds known to run on Windows 10+; 4.5 no longer tested on 7/8.1)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "Binary floor vista (R's own files); the installer's Inno Setup MinVersion is a separate rule."
+  },
+  {
+   "versions": ">=2.12.0,<3.3.0",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "exe"
+   ],
+   "min_os": "xp",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "XP SP3 / XP x64 SP2 / Server 2003 SP2 (VS2008+ C runtimes and EncodePointer need them)"
+   ],
+   "applies_to": "CRAN Windows installer R-x.y.z-win.exe, 32-bit R (i386) part, R 2.12-4.1",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-2.12.0-win.exe (2.12.0): EXE subsystem 4.0; static imports of the core runtime files need xp; no UCRT"
+    },
+    {
+     "kind": "binary",
+     "source": "R-3.2.5-win.exe (3.2.5): EXE subsystem 4.0; static imports of the core runtime files need xp; no UCRT"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://cran.r-project.org/bin/windows/base/rw-FAQ.html (Q2.23: R 4.2+ needs the UCRT; current builds known to run on Windows 10+; 4.5 no longer tested on 7/8.1)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "Binary floor xp (R's own files); the installer's Inno Setup MinVersion is a separate rule."
+  },
+  {
+   "versions": ">=1.0.0,<=2.11.1",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "exe",
+    "zip"
+   ],
+   "min_os": "xp",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "XP SP3 / XP x64 SP2 / Server 2003 SP2 (VS2008+ C runtimes and EncodePointer need them)"
+   ],
+   "applies_to": "CRAN Windows installer (.exe), 32-bit only builds",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R1000.zip (1.0.0): EXE subsystem 4.0; static imports of the core runtime files need xp; no UCRT"
+    },
+    {
+     "kind": "binary",
+     "source": "R-2.11.1-win32.exe (2.11.1): EXE subsystem 4.0; static imports of the core runtime files need xp; no UCRT"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://cran.r-project.org/bin/windows/base/rw-FAQ.html (Q2.23: R 4.2+ needs the UCRT; current builds known to run on Windows 10+; 4.5 no longer tested on 7/8.1)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "Binary floor xp (R's own files); the installer's Inno Setup MinVersion is a separate rule."
+  },
+  {
+   "versions": ">=3.3.0,<4.2",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "exe"
+   ],
+   "min_os": "xp",
+   "min_build": null,
+   "max_os": null,
+   "extra": [
+    "XP SP3 / XP x64 SP2 / Server 2003 SP2 (VS2008+ C runtimes and EncodePointer need them)"
+   ],
+   "applies_to": "CRAN Windows installer R-x.y.z-win.exe, 32-bit R (i386) part, R 2.12-4.1",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-3.4.4-win.exe (3.4.4): EXE subsystem 4.0; static imports of the core runtime files need xp; optional libraries need vista (internet.dll:kernel32.dll!IdnToAscii, internet.dll:kernel32.dll!IdnToUnicode); no UCRT"
+    },
+    {
+     "kind": "binary",
+     "source": "R-4.1.3-win.exe (4.1.3): EXE subsystem 4.0; static imports of the core runtime files need xp; optional libraries need vista (internet.dll:kernel32.dll!IdnToAscii, internet.dll:kernel32.dll!IdnToUnicode); no UCRT"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://cran.r-project.org/bin/windows/base/rw-FAQ.html (Q2.23: R 4.2+ needs the UCRT; current builds known to run on Windows 10+; 4.5 no longer tested on 7/8.1)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "Binary floor xp (R's own files); the installer's Inno Setup MinVersion is a separate rule."
+  },
+  {
+   "versions": ">=2.12,<3.6.1",
+   "os": "windows",
+   "arch": [
+    "amd64"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "exe"
+   ],
+   "min_os": "xp-x64",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "CRAN Windows installer: Inno Setup MinVersion=0,5.0 (setup refuses older Windows)",
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/wch/r-source/blob/R-3-5-branch/src/gnuwin32/installer/header1.iss (MinVersion=0,5.0)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Installer-enforced minimum, independent of what R's binaries import; both this rule and the binary rule must pass."
+  },
+  {
+   "versions": ">=2.12,<3.6.1",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "exe"
+   ],
+   "min_os": "2000",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "CRAN Windows installer: Inno Setup MinVersion=0,5.0 (setup refuses older Windows)",
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/wch/r-source/blob/R-3-5-branch/src/gnuwin32/installer/header1.iss (MinVersion=0,5.0)"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Installer-enforced minimum, independent of what R's binaries import; both this rule and the binary rule must pass."
+  },
+  {
+   "versions": ">=3.6.1,<4.4.0",
+   "os": "windows",
+   "arch": [
+    "amd64"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "exe"
+   ],
+   "min_os": "vista",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "CRAN Windows installer: Inno Setup MinVersion=0,6.0 (setup refuses older Windows)",
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/wch/r-source/commit/d253331f57 (R-3-6-branch, 2019-05-02: 'need Installer version >= 0,6.0 for R 3.6.0 and higher'); R-4-3-branch header1.iss MinVersion=0,6.0"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Installer-enforced minimum, independent of what R's binaries import; both this rule and the binary rule must pass."
+  },
+  {
+   "versions": ">=3.6.1,<4.4.0",
+   "os": "windows",
+   "arch": [
+    "x86"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "exe"
+   ],
+   "min_os": "vista",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "CRAN Windows installer: Inno Setup MinVersion=0,6.0 (setup refuses older Windows)",
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/wch/r-source/commit/d253331f57 (R-3-6-branch, 2019-05-02: 'need Installer version >= 0,6.0 for R 3.6.0 and higher'); R-4-3-branch header1.iss MinVersion=0,6.0"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Installer-enforced minimum, independent of what R's binaries import; both this rule and the binary rule must pass."
+  },
+  {
+   "versions": ">=4.4.0",
+   "os": "windows",
+   "arch": [
+    "amd64"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "exe"
+   ],
+   "min_os": "7",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "CRAN Windows installer: Inno Setup MinVersion=0,6.1 (setup refuses older Windows)",
+   "evidence": [
+    {
+     "kind": "vendor-doc",
+     "source": "https://github.com/wch/r-source/commit/80923b13b0 (trunk 2023-09-01 'Bump minimum Windows version in installer'); R-4-4-branch header1.iss MinVersion=0,6.1"
+    }
+   ],
+   "confidence": "high",
+   "notes": "Installer-enforced minimum, independent of what R's binaries import; both this rule and the binary rule must pass."
+  },
+  {
+   "versions": ">=2.10,<3.0",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "variant": [
+    null
+   ],
+   "kind": [
+    "installer"
+   ],
+   "format": [
+    "pkg"
+   ],
+   "file_match": "^R-[0-9.]+\\.pkg$",
+   "min_os": "10.5",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "CRAN macOS Leopard build (bin/macosx/base R-2.x.pkg, i386 + x86_64)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "R-2.15.3.pkg Distribution volume-check: ProductVersion >= '10.5.0', 'Leopard build of R requires Mac OS X 10.5 or higher'; its Mach-O files carry no LC_VERSION_MIN (pre-10.6 SDK)"
+    },
+    {
+     "kind": "vendor-doc",
+     "source": "https://cran.r-project.org/bin/macosx/ (old builds: Leopard 10.5+; Tiger builds were separate and are not in the catalogue)"
+    }
+   ],
+   "confidence": "medium",
+   "notes": "Samples 2.10.0, 2.15.1, 2.15.2, 2.15.3 have no minos in any Mach-O; the installer's own check is the only floor. Behaviour on current macOS (no code signature, 2012-era Tcl/Tk/X11) not verified; no max_os set."
+  }
+ ],
+ "max_per_os": [
+  {
+   "os": "windows",
+   "os_version": "2000",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "no amd64 edition of this Windows version"
+  },
+  {
+   "os": "windows",
+   "os_version": "xp",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "no amd64 edition of this Windows version"
+  },
+  {
+   "os": "windows",
+   "os_version": "xp-x64",
+   "arch": "amd64",
+   "max_version": "3.6.0",
+   "variant": null,
+   "tested": false,
+   "notes": "needs XP x64 SP2 or later"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2003",
+   "arch": "amd64",
+   "max_version": "3.6.0",
+   "variant": null,
+   "tested": false,
+   "notes": "needs Server 2003 SP2 or later"
+  },
+  {
+   "os": "windows",
+   "os_version": "vista",
+   "arch": "amd64",
+   "max_version": "4.2.3",
+   "variant": null,
+   "tested": false,
+   "notes": "needs KB2999226 (Universal C Runtime)"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008",
+   "arch": "amd64",
+   "max_version": "4.2.3",
+   "variant": null,
+   "tested": false,
+   "notes": "needs KB2999226 (Universal C Runtime)"
+  },
+  {
+   "os": "windows",
+   "os_version": "7",
+   "arch": "amd64",
+   "max_version": "4.6.1",
+   "variant": null,
+   "tested": false,
+   "notes": "needs KB2999226 (Universal C Runtime)"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008r2",
+   "arch": "amd64",
+   "max_version": "4.6.1",
+   "variant": null,
+   "tested": false,
+   "notes": "needs KB2999226 (Universal C Runtime)"
+  },
+  {
+   "os": "windows",
+   "os_version": "8",
+   "arch": "amd64",
+   "max_version": "4.6.1",
+   "variant": null,
+   "tested": false,
+   "notes": "needs KB2999226 (Universal C Runtime)"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012",
+   "arch": "amd64",
+   "max_version": "4.6.1",
+   "variant": null,
+   "tested": false,
+   "notes": "needs KB2999226 (Universal C Runtime)"
+  },
+  {
+   "os": "windows",
+   "os_version": "8.1",
+   "arch": "amd64",
+   "max_version": "4.6.1",
+   "variant": null,
+   "tested": false,
+   "notes": "needs KB2999226 (Universal C Runtime)"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012r2",
+   "arch": "amd64",
+   "max_version": "4.6.1",
+   "variant": null,
+   "tested": false,
+   "notes": "needs KB2999226 (Universal C Runtime)"
+  },
+  {
+   "os": "windows",
+   "os_version": "10",
+   "arch": "amd64",
+   "max_version": "4.6.1",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2016",
+   "arch": "amd64",
+   "max_version": "4.6.1",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2019",
+   "arch": "amd64",
+   "max_version": "4.6.1",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2022",
+   "arch": "amd64",
+   "max_version": "4.6.1",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "11",
+   "arch": "amd64",
+   "max_version": "4.6.1",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2025",
+   "arch": "amd64",
+   "max_version": "4.6.1",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "2000",
+   "arch": "x86",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "no catalogued release runs here"
+  },
+  {
+   "os": "windows",
+   "os_version": "xp",
+   "arch": "x86",
+   "max_version": "3.6.0",
+   "variant": null,
+   "tested": false,
+   "notes": "needs XP SP3 or later"
+  },
+  {
+   "os": "windows",
+   "os_version": "xp-x64",
+   "arch": "x86",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "no x86 edition of this Windows version"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2003",
+   "arch": "x86",
+   "max_version": "3.6.0",
+   "variant": null,
+   "tested": false,
+   "notes": "needs Server 2003 SP2 or later"
+  },
+  {
+   "os": "windows",
+   "os_version": "vista",
+   "arch": "x86",
+   "max_version": "4.1.3",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008",
+   "arch": "x86",
+   "max_version": "4.1.3",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "7",
+   "arch": "x86",
+   "max_version": "4.1.3",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2008r2",
+   "arch": "x86",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "no x86 edition of this Windows version"
+  },
+  {
+   "os": "windows",
+   "os_version": "8",
+   "arch": "x86",
+   "max_version": "4.1.3",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012",
+   "arch": "x86",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "no x86 edition of this Windows version"
+  },
+  {
+   "os": "windows",
+   "os_version": "8.1",
+   "arch": "x86",
+   "max_version": "4.1.3",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2012r2",
+   "arch": "x86",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "no x86 edition of this Windows version"
+  },
+  {
+   "os": "windows",
+   "os_version": "10",
+   "arch": "x86",
+   "max_version": "4.1.3",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "windows",
+   "os_version": "server2016",
+   "arch": "x86",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "no x86 edition of this Windows version"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2019",
+   "arch": "x86",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "no x86 edition of this Windows version"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2022",
+   "arch": "x86",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "no x86 edition of this Windows version"
+  },
+  {
+   "os": "windows",
+   "os_version": "11",
+   "arch": "x86",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "no x86 edition of this Windows version"
+  },
+  {
+   "os": "windows",
+   "os_version": "server2025",
+   "arch": "x86",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "no x86 edition of this Windows version"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.3",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "no catalogued release runs here"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.4",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "no catalogued release runs here"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.5",
+   "arch": "amd64",
+   "max_version": "2.15.3",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.6",
+   "arch": "amd64",
+   "max_version": "3.1.3",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.7",
+   "arch": "amd64",
+   "max_version": "3.1.3",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.8",
+   "arch": "amd64",
+   "max_version": "3.1.3",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.9",
+   "arch": "amd64",
+   "max_version": "3.3.3",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.10",
+   "arch": "amd64",
+   "max_version": "3.3.3",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.11",
+   "arch": "amd64",
+   "max_version": "3.6.3",
+   "variant": null,
+   "tested": false,
+   "notes": "needs OS X / macOS 10.11.4 or later"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.12",
+   "arch": "amd64",
+   "max_version": "3.6.3",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.13",
+   "arch": "amd64",
+   "max_version": "3.6.3",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.14",
+   "arch": "amd64",
+   "max_version": "4.2.3",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.15",
+   "arch": "amd64",
+   "max_version": "4.2.3",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "11",
+   "arch": "amd64",
+   "max_version": "4.6.1",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "12",
+   "arch": "amd64",
+   "max_version": "4.6.1",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "13",
+   "arch": "amd64",
+   "max_version": "4.6.1",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "14",
+   "arch": "amd64",
+   "max_version": "4.6.1",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "15",
+   "arch": "amd64",
+   "max_version": "4.6.1",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "26",
+   "arch": "amd64",
+   "max_version": "4.6.1",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "10.3",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Apple silicon Macs start at macOS 11"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.4",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Apple silicon Macs start at macOS 11"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.5",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Apple silicon Macs start at macOS 11"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.6",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Apple silicon Macs start at macOS 11"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.7",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Apple silicon Macs start at macOS 11"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.8",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Apple silicon Macs start at macOS 11"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.9",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Apple silicon Macs start at macOS 11"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.10",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Apple silicon Macs start at macOS 11"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.11",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Apple silicon Macs start at macOS 11"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.12",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Apple silicon Macs start at macOS 11"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.13",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Apple silicon Macs start at macOS 11"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.14",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Apple silicon Macs start at macOS 11"
+  },
+  {
+   "os": "macos",
+   "os_version": "10.15",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Apple silicon Macs start at macOS 11"
+  },
+  {
+   "os": "macos",
+   "os_version": "11",
+   "arch": "arm64",
+   "max_version": "4.5.3",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "12",
+   "arch": "arm64",
+   "max_version": "4.5.3",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "13",
+   "arch": "arm64",
+   "max_version": "4.5.3",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "14",
+   "arch": "arm64",
+   "max_version": "4.6.1",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "15",
+   "arch": "arm64",
+   "max_version": "4.6.1",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "macos",
+   "os_version": "26",
+   "arch": "arm64",
+   "max_version": "4.6.1",
+   "variant": null,
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.5",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.12",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.17",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.19",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.23",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.24",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.27",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.28",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.31",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.34",
+   "arch": "amd64",
+   "max_version": "4.6.1",
+   "variant": "posit-rhel-9",
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.35",
+   "arch": "amd64",
+   "max_version": "4.6.1",
+   "variant": "posit-ubuntu-2204",
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.36",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.39",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.41",
+   "arch": "amd64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.5",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.12",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.17",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.19",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.23",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.24",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.27",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.28",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.31",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.34",
+   "arch": "arm64",
+   "max_version": "4.6.1",
+   "variant": "posit-rhel-9",
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.35",
+   "arch": "arm64",
+   "max_version": "4.6.1",
+   "variant": "posit-ubuntu-2204",
+   "tested": false,
+   "notes": null
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.36",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.39",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  },
+  {
+   "os": "linux",
+   "os_version": "glibc-2.41",
+   "arch": "arm64",
+   "max_version": null,
+   "variant": null,
+   "tested": false,
+   "notes": "Posit builds exist only for Ubuntu 22.04 and RHEL 9 in this catalogue; elsewhere build from source"
+  }
+ ]
+}

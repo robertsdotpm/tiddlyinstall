@@ -447,44 +447,6 @@
   ],
   "major": "3.7",
   "version": "3.7.9",
-  "os": "macos",
-  "arch": "amd64",
-  "kind": "installer",
-  "format": "pkg",
-  "variant": "macosx10.9",
-  "libc": null,
-  "url": "https://www.python.org/ftp/python/3.7.9/python-3.7.9-macosx10.9.pkg",
-  "mirrors": [
-   "https://www.python.org/ftp/python/3.7.9/python-3.7.9-macosx10.9.pkg",
-   "https://mirrors.huaweicloud.com/python/3.7.9/python-3.7.9-macosx10.9.pkg",
-   "https://repo.huaweicloud.com/python/3.7.9/python-3.7.9-macosx10.9.pkg",
-   "https://registry.npmmirror.com/-/binary/python/3.7.9/python-3.7.9-macosx10.9.pkg",
-   "https://cdn.npmmirror.com/binaries/python/3.7.9/python-3.7.9-macosx10.9.pkg",
-   "https://mirrors.tuna.tsinghua.edu.cn/python/3.7.9/python-3.7.9-macosx10.9.pkg",
-   "https://mirror.nju.edu.cn/python/3.7.9/python-3.7.9-macosx10.9.pkg",
-   "https://mirrors.bfsu.edu.cn/python/3.7.9/python-3.7.9-macosx10.9.pkg",
-   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.7.9/python-3.7.9-macosx10.9.pkg",
-   "http://mirrors.huaweicloud.com/python/3.7.9/python-3.7.9-macosx10.9.pkg",
-   "http://repo.huaweicloud.com/python/3.7.9/python-3.7.9-macosx10.9.pkg"
-  ],
-  "checksum": {
-   "algo": "md5",
-   "value": "4b544fc0ac8c3cffdb67dede23ddb79e"
-  },
-  "size": 29305353,
-  "released": "2020-08-17",
-  "min_os": "Mac OS X 10.9",
-  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
-  "notes": "Intel 64-bit only (no 32-bit, no PPC)",
-  "reason": "newest for macos 10.9, 10.10, 10.11, 10.12, 10.13, 10.14, 10.15, 11, 12, 13, 14, 15, 26"
- },
- {
-  "runtime": "python",
-  "languages": [
-   "python"
-  ],
-  "major": "3.7",
-  "version": "3.7.9",
   "os": "windows",
   "arch": "amd64",
   "kind": "installer",
@@ -637,6 +599,44 @@
   "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
   "notes": null,
   "reason": "newest for windows vista, server2008"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.8",
+  "version": "3.8.10",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "pkg",
+  "variant": "macosx10.9",
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.8.10/python-3.8.10-macosx10.9.pkg",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.8.10/python-3.8.10-macosx10.9.pkg",
+   "https://mirrors.huaweicloud.com/python/3.8.10/python-3.8.10-macosx10.9.pkg",
+   "https://repo.huaweicloud.com/python/3.8.10/python-3.8.10-macosx10.9.pkg",
+   "https://registry.npmmirror.com/-/binary/python/3.8.10/python-3.8.10-macosx10.9.pkg",
+   "https://cdn.npmmirror.com/binaries/python/3.8.10/python-3.8.10-macosx10.9.pkg",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.8.10/python-3.8.10-macosx10.9.pkg",
+   "https://mirror.nju.edu.cn/python/3.8.10/python-3.8.10-macosx10.9.pkg",
+   "https://mirrors.bfsu.edu.cn/python/3.8.10/python-3.8.10-macosx10.9.pkg",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.8.10/python-3.8.10-macosx10.9.pkg",
+   "http://mirrors.huaweicloud.com/python/3.8.10/python-3.8.10-macosx10.9.pkg",
+   "http://repo.huaweicloud.com/python/3.8.10/python-3.8.10-macosx10.9.pkg"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "690ddb1be403a7efb202e93f3a994a49"
+  },
+  "size": 29896827,
+  "released": "2021-05-03",
+  "min_os": "Mac OS X 10.9",
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": "Intel 64-bit only (no 32-bit, no PPC)",
+  "reason": "newest for macos 10.9, 10.10, 10.11, 10.12, 10.13, 10.14"
  },
  {
   "runtime": "python",
@@ -823,6 +823,44 @@
   "metadata_source": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/tags/20241002",
   "notes": "python-build-standalone install_only_stripped, build tag 20241002 (historical anchor: newer releases dropped this EOL minor)",
   "reason": "newest for macos 10.9, 10.10, 10.11, 10.12, 10.13, 10.14"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.9",
+  "version": "3.9.13",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "pkg",
+  "variant": "macosx10.9",
+  "libc": null,
+  "url": "https://www.python.org/ftp/python/3.9.13/python-3.9.13-macosx10.9.pkg",
+  "mirrors": [
+   "https://www.python.org/ftp/python/3.9.13/python-3.9.13-macosx10.9.pkg",
+   "https://mirrors.huaweicloud.com/python/3.9.13/python-3.9.13-macosx10.9.pkg",
+   "https://repo.huaweicloud.com/python/3.9.13/python-3.9.13-macosx10.9.pkg",
+   "https://registry.npmmirror.com/-/binary/python/3.9.13/python-3.9.13-macosx10.9.pkg",
+   "https://cdn.npmmirror.com/binaries/python/3.9.13/python-3.9.13-macosx10.9.pkg",
+   "https://mirrors.tuna.tsinghua.edu.cn/python/3.9.13/python-3.9.13-macosx10.9.pkg",
+   "https://mirror.nju.edu.cn/python/3.9.13/python-3.9.13-macosx10.9.pkg",
+   "https://mirrors.bfsu.edu.cn/python/3.9.13/python-3.9.13-macosx10.9.pkg",
+   "https://web.archive.org/web/2021id_/https://www.python.org/ftp/python/3.9.13/python-3.9.13-macosx10.9.pkg",
+   "http://mirrors.huaweicloud.com/python/3.9.13/python-3.9.13-macosx10.9.pkg",
+   "http://repo.huaweicloud.com/python/3.9.13/python-3.9.13-macosx10.9.pkg"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "671848930809decf27f586ddf98c6e9b"
+  },
+  "size": 30997161,
+  "released": "2022-05-17",
+  "min_os": "Mac OS X 10.9",
+  "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
+  "notes": "Intel 64-bit only (no 32-bit, no PPC)",
+  "reason": "newest for macos 10.15, 11, 12, 13, 14, 15, 26"
  },
  {
   "runtime": "python",
@@ -1021,6 +1059,35 @@
   "major": "3.14",
   "version": "3.14.7",
   "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "pbs_stripped",
+  "libc": "musl",
+  "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20260901/cpython-3.14.7%2B20260901-x86_64-unknown-linux-musl-install_only_stripped.tar.gz",
+  "mirrors": [
+   "https://registry.npmmirror.com/-/binary/python-build-standalone/20260901/cpython-3.14.7%2B20260901-x86_64-unknown-linux-musl-install_only_stripped.tar.gz",
+   "https://cdn.npmmirror.com/binaries/python-build-standalone/20260901/cpython-3.14.7%2B20260901-x86_64-unknown-linux-musl-install_only_stripped.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "c773f8a7357c0d1a29e208a14bc16386731ca9c0d2e51f1b6741967fb0632cdc"
+  },
+  "size": 29008293,
+  "released": "2026-09-01",
+  "min_os": null,
+  "metadata_source": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/latest",
+  "notes": "python-build-standalone install_only_stripped, build tag 20260901",
+  "reason": "newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.14",
+  "version": "3.14.7",
+  "os": "linux",
   "arch": "arm64",
   "kind": "archive",
   "format": "tar.gz",
@@ -1041,6 +1108,35 @@
   "metadata_source": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/latest",
   "notes": "python-build-standalone install_only_stripped, build tag 20260901",
   "reason": "newest in major 3; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "3.14",
+  "version": "3.14.7",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "pbs_stripped",
+  "libc": "musl",
+  "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20260901/cpython-3.14.7%2B20260901-aarch64-unknown-linux-musl-install_only_stripped.tar.gz",
+  "mirrors": [
+   "https://registry.npmmirror.com/-/binary/python-build-standalone/20260901/cpython-3.14.7%2B20260901-aarch64-unknown-linux-musl-install_only_stripped.tar.gz",
+   "https://cdn.npmmirror.com/binaries/python-build-standalone/20260901/cpython-3.14.7%2B20260901-aarch64-unknown-linux-musl-install_only_stripped.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "701c31d72187242302922a29f3bc6023ceb68b6b68fb8d4ed7568d1e6ef34548"
+  },
+  "size": 29235824,
+  "released": "2026-09-01",
+  "min_os": null,
+  "metadata_source": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/latest",
+  "notes": "python-build-standalone install_only_stripped, build tag 20260901",
+  "reason": "newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "python",

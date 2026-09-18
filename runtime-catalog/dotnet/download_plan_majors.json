@@ -7,6 +7,34 @@
    "visualbasic"
   ],
   "major": "1.1",
+  "version": "1.1.2",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/1.1.2/dotnet-osx-x64.1.1.2.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/1.1.2/dotnet-osx-x64.1.1.2.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/1.1.2/dotnet-osx-x64.1.1.2.tar.gz"
+  ],
+  "checksum": null,
+  "size": null,
+  "released": "2017-05-09",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/1.1/releases.json",
+  "notes": null,
+  "reason": "newest for macos 10.11"
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "1.1",
   "version": "1.1.13",
   "os": "linux",
   "arch": "amd64",
@@ -28,7 +56,8 @@
   "released": "2019-05-14",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/1.1/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1"
  },
  {
   "runtime": "dotnet",
@@ -59,7 +88,8 @@
   "released": "2019-05-14",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/1.1/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1"
  },
  {
   "runtime": "dotnet",
@@ -90,7 +120,8 @@
   "released": "2019-05-14",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/1.1/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1"
  },
  {
   "runtime": "dotnet",
@@ -121,7 +152,8 @@
   "released": "2019-05-14",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/1.1/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 1"
  },
  {
   "runtime": "dotnet",
@@ -152,7 +184,8 @@
   "released": "2019-01-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2"
  },
  {
   "runtime": "dotnet",
@@ -183,7 +216,8 @@
   "released": "2019-05-21",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2"
  },
  {
   "runtime": "dotnet",
@@ -214,7 +248,8 @@
   "released": "2019-05-21",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2"
  },
  {
   "runtime": "dotnet",
@@ -245,7 +280,8 @@
   "released": "2019-05-21",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2"
  },
  {
   "runtime": "dotnet",
@@ -276,7 +312,8 @@
   "released": "2019-05-21",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2; newest for macos 10.12"
  },
  {
   "runtime": "dotnet",
@@ -307,7 +344,8 @@
   "released": "2019-05-21",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2"
  },
  {
   "runtime": "dotnet",
@@ -338,7 +376,8 @@
   "released": "2019-05-21",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2"
  },
  {
   "runtime": "dotnet",
@@ -369,7 +408,40 @@
   "released": "2019-05-21",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/2.2/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2"
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "3.1",
+  "version": "3.1.11",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/3.1.11/dotnet-runtime-3.1.11-rhel.6-x64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/3.1.11/dotnet-runtime-3.1.11-rhel.6-x64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/3.1.11/dotnet-runtime-3.1.11-rhel.6-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "cb6cfb4b0dafdf2176551ed6b6b7dd7ae70cc232fa857126f3b3de0dd593293a416b0f279b0972da64e823f8bffa52a6d31b7a17e7a106cefaba0359f0f854f3",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json"
+  },
+  "size": null,
+  "released": "2021-01-12",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json",
+  "notes": null,
+  "reason": "newest for linux glibc-2.12"
  },
  {
   "runtime": "dotnet",
@@ -400,7 +472,8 @@
   "released": "2022-12-13",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3"
  },
  {
   "runtime": "dotnet",
@@ -431,7 +504,8 @@
   "released": "2022-12-13",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3"
  },
  {
   "runtime": "dotnet",
@@ -462,7 +536,8 @@
   "released": "2022-12-13",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3; newest for linux glibc-2.12"
  },
  {
   "runtime": "dotnet",
@@ -493,7 +568,8 @@
   "released": "2022-12-13",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3"
  },
  {
   "runtime": "dotnet",
@@ -524,7 +600,8 @@
   "released": "2022-12-13",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3"
  },
  {
   "runtime": "dotnet",
@@ -555,7 +632,8 @@
   "released": "2022-12-13",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3; newest for windows 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "dotnet",
@@ -586,7 +664,8 @@
   "released": "2022-12-13",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/3.1/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3"
  },
  {
   "runtime": "dotnet",
@@ -617,7 +696,8 @@
   "released": "2022-05-10",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/5.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5"
  },
  {
   "runtime": "dotnet",
@@ -648,7 +728,8 @@
   "released": "2022-05-10",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/5.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5"
  },
  {
   "runtime": "dotnet",
@@ -679,7 +760,8 @@
   "released": "2022-05-10",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/5.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5"
  },
  {
   "runtime": "dotnet",
@@ -710,7 +792,8 @@
   "released": "2022-05-10",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/5.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5"
  },
  {
   "runtime": "dotnet",
@@ -741,7 +824,8 @@
   "released": "2022-05-10",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/5.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5"
  },
  {
   "runtime": "dotnet",
@@ -772,7 +856,8 @@
   "released": "2022-05-10",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/5.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5"
  },
  {
   "runtime": "dotnet",
@@ -803,7 +888,40 @@
   "released": "2022-05-10",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/5.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 5"
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "6.0",
+  "version": "6.0.1",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "runtime",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/6.0.1/dotnet-runtime-6.0.1-osx-x64.tar.gz",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Runtime/6.0.1/dotnet-runtime-6.0.1-osx-x64.tar.gz",
+   "https://dotnetcli.azureedge.net/dotnet/Runtime/6.0.1/dotnet-runtime-6.0.1-osx-x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "45ed27f5cfd1674c4cb67a1242730928699608f6523a7fa7150c9a1b1e2ae972d32f7eae2fff119bccedfbfe1c7666ac8db882b442624157355e2f5e452b3900",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json"
+  },
+  "size": null,
+  "released": "2021-12-14",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json",
+  "notes": null,
+  "reason": "newest for macos 10.13"
  },
  {
   "runtime": "dotnet",
@@ -834,7 +952,8 @@
   "released": "2024-11-12",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "dotnet",
@@ -865,7 +984,8 @@
   "released": "2024-11-12",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "dotnet",
@@ -896,7 +1016,8 @@
   "released": "2024-11-12",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "dotnet",
@@ -927,7 +1048,8 @@
   "released": "2024-11-12",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "dotnet",
@@ -958,7 +1080,8 @@
   "released": "2024-11-12",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "dotnet",
@@ -989,7 +1112,8 @@
   "released": "2024-11-12",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "dotnet",
@@ -1020,7 +1144,8 @@
   "released": "2024-11-12",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "dotnet",
@@ -1051,7 +1176,8 @@
   "released": "2024-11-12",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/6.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "dotnet",
@@ -1082,7 +1208,8 @@
   "released": "2024-05-28",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "dotnet",
@@ -1113,7 +1240,8 @@
   "released": "2024-05-28",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "dotnet",
@@ -1144,7 +1272,8 @@
   "released": "2024-05-28",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "dotnet",
@@ -1175,7 +1304,8 @@
   "released": "2024-05-28",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7; newest for macos 10.14"
  },
  {
   "runtime": "dotnet",
@@ -1206,7 +1336,8 @@
   "released": "2024-05-28",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "dotnet",
@@ -1237,7 +1368,8 @@
   "released": "2024-05-28",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "dotnet",
@@ -1268,7 +1400,8 @@
   "released": "2024-05-28",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "dotnet",
@@ -1299,7 +1432,8 @@
   "released": "2024-05-28",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "dotnet",
@@ -1330,7 +1464,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "dotnet",
@@ -1361,7 +1496,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "dotnet",
@@ -1392,7 +1528,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31"
  },
  {
   "runtime": "dotnet",
@@ -1423,7 +1560,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8; newest for macos 10.15, 11"
  },
  {
   "runtime": "dotnet",
@@ -1454,7 +1592,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8; newest for macos 11"
  },
  {
   "runtime": "dotnet",
@@ -1485,7 +1624,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "dotnet",
@@ -1516,7 +1656,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "dotnet",
@@ -1547,7 +1688,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "dotnet",
@@ -1578,7 +1720,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24"
  },
  {
   "runtime": "dotnet",
@@ -1609,7 +1752,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24"
  },
  {
   "runtime": "dotnet",
@@ -1640,7 +1784,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "dotnet",
@@ -1671,7 +1816,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "dotnet",
@@ -1702,7 +1848,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "dotnet",
@@ -1733,7 +1880,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "dotnet",
@@ -1764,7 +1912,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "dotnet",
@@ -1795,7 +1944,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "dotnet",
@@ -1826,7 +1976,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10; newest for linux glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "dotnet",
@@ -1857,7 +2008,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10; newest for linux glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "dotnet",
@@ -1888,7 +2040,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10; newest for linux glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "dotnet",
@@ -1919,7 +2072,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10; newest for macos 12, 13, 14, 15, 26"
  },
  {
   "runtime": "dotnet",
@@ -1950,7 +2104,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10; newest for macos 12, 13, 14, 15, 26"
  },
  {
   "runtime": "dotnet",
@@ -1981,7 +2136,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10; newest for windows 7, server2008r2, 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "dotnet",
@@ -2012,7 +2168,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10; newest for windows 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "dotnet",
@@ -2043,7 +2200,8 @@
   "released": "2026-09-08",
   "min_os": null,
   "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10; newest for windows 7, server2008r2, 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "dotnet-framework",
@@ -2069,7 +2227,8 @@
   "released": null,
   "min_os": null,
   "metadata_source": "https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net35-sp1-offline-installer",
-  "notes": "combined offline installer for .NET Framework 3.5 SP1, which also carries 2.0 SP2 and 3.0 SP2"
+  "notes": "combined offline installer for .NET Framework 3.5 SP1, which also carries 2.0 SP2 and 3.0 SP2",
+  "reason": "newest in major 3"
  },
  {
   "runtime": "dotnet-framework",
@@ -2102,6 +2261,7 @@
     "value": "c0ca2e0c9cd18a24a0a77369a13fae2c2c4e8bc83355dd24e5ddc00f9d791fe3",
     "source": "winget Microsoft.DotNet.Framework.Runtime 4.8.1 (manifests/m/Microsoft/DotNet/Framework/Runtime/4.8.1/Microsoft.DotNet.Framework.Runtime.installer.yaml)"
    }
-  ]
+  ],
+  "reason": "newest in major 4"
  }
 ]

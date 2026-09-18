@@ -26,7 +26,8 @@
   "released": null,
   "min_os": null,
   "metadata_source": "https://cran-archive.r-project.org/bin/windows/base/old/1.9.1/",
-  "notes": "32-bit only installer"
+  "notes": "32-bit only installer",
+  "reason": "newest in major 1"
  },
  {
   "runtime": "r",
@@ -55,7 +56,8 @@
   "released": null,
   "min_os": null,
   "metadata_source": "https://cran-archive.r-project.org/bin/windows/base/old/2.11.1/",
-  "notes": "32-bit only installer"
+  "notes": "32-bit only installer",
+  "reason": "newest in major 2; newest for windows xp, xp-x64, server2003, vista, server2008, 7, server2008r2, 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "r",
@@ -80,7 +82,8 @@
   "released": null,
   "min_os": null,
   "metadata_source": "https://cran-archive.r-project.org/bin/macosx/base/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 2; newest for macos 10.5"
  },
  {
   "runtime": "r",
@@ -109,7 +112,87 @@
   "released": null,
   "min_os": null,
   "metadata_source": "https://cran-archive.r-project.org/bin/windows/base/old/2.15.3/",
-  "notes": "combined 32-bit/64-bit installer (recorded as amd64)"
+  "notes": "combined 32-bit/64-bit installer (recorded as amd64)",
+  "reason": "newest in major 2"
+ },
+ {
+  "runtime": "r",
+  "languages": [
+   "r"
+  ],
+  "major": "3.1",
+  "version": "3.1.3",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "pkg",
+  "variant": null,
+  "libc": null,
+  "url": "https://cran-archive.r-project.org/bin/macosx/base/R-3.1.3.pkg",
+  "mirrors": [
+   "https://web.archive.org/web/20250524190522if_/https://cran-archive.r-project.org/bin/macosx/base/R-3.1.3.pkg"
+  ],
+  "checksum": null,
+  "size": 71676530,
+  "released": null,
+  "min_os": null,
+  "metadata_source": "https://cran-archive.r-project.org/bin/macosx/base/",
+  "notes": null,
+  "reason": "newest for macos 10.6, 10.7, 10.8"
+ },
+ {
+  "runtime": "r",
+  "languages": [
+   "r"
+  ],
+  "major": "3.3",
+  "version": "3.3.3",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "pkg",
+  "variant": null,
+  "libc": null,
+  "url": "https://cran-archive.r-project.org/bin/macosx/base/R-3.3.3.pkg",
+  "mirrors": [
+   "https://web.archive.org/web/20260610184143if_/https://cran-archive.r-project.org/bin/macosx/base/R-3.3.3.pkg"
+  ],
+  "checksum": null,
+  "size": 74888743,
+  "released": null,
+  "min_os": null,
+  "metadata_source": "https://cran-archive.r-project.org/bin/macosx/base/",
+  "notes": null,
+  "reason": "newest for macos 10.9, 10.10"
+ },
+ {
+  "runtime": "r",
+  "languages": [
+   "r"
+  ],
+  "major": "3.6",
+  "version": "3.6.0",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "exe",
+  "variant": null,
+  "libc": null,
+  "url": "https://cran-archive.r-project.org/bin/windows/base/old/3.6.0/R-3.6.0-win.exe",
+  "mirrors": [
+   "https://web.archive.org/web/20260218065907if_/https://cran-archive.r-project.org/bin/windows/base/old/3.6.0/R-3.6.0-win.exe"
+  ],
+  "checksum": {
+   "algo": "md5",
+   "value": "45e628a7b23333bb330cbcebef878b07",
+   "source": "https://cran-archive.r-project.org/bin/windows/base/old/3.6.0/md5sum.txt"
+  },
+  "size": 83735016,
+  "released": null,
+  "min_os": null,
+  "metadata_source": "https://cran-archive.r-project.org/bin/windows/base/old/3.6.0/",
+  "notes": "combined 32-bit/64-bit installer (recorded as amd64)",
+  "reason": "newest for windows xp-x64, server2003"
  },
  {
   "runtime": "r",
@@ -133,7 +216,8 @@
   "released": null,
   "min_os": null,
   "metadata_source": "https://cdn.posit.co/r/versions.json",
-  "notes": "Posit r-builds prebuilt R for ubuntu-2204"
+  "notes": "Posit r-builds prebuilt R for ubuntu-2204",
+  "reason": "newest in major 3"
  },
  {
   "runtime": "r",
@@ -158,7 +242,8 @@
   "released": null,
   "min_os": null,
   "metadata_source": "https://cran-archive.r-project.org/bin/macosx/base/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 3; newest for macos 10.11, 10.12, 10.13"
  },
  {
   "runtime": "r",
@@ -187,7 +272,212 @@
   "released": null,
   "min_os": null,
   "metadata_source": "https://cran-archive.r-project.org/bin/windows/base/old/3.6.3/",
-  "notes": "combined 32-bit/64-bit installer (recorded as amd64)"
+  "notes": "combined 32-bit/64-bit installer (recorded as amd64)",
+  "reason": "newest in major 3"
+ },
+ {
+  "runtime": "r",
+  "languages": [
+   "r"
+  ],
+  "major": "4.2",
+  "version": "4.2.3",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "pkg",
+  "variant": null,
+  "libc": null,
+  "url": "https://cran.r-project.org/bin/macosx/base/R-4.2.3.pkg",
+  "mirrors": [
+   "https://cloud.r-project.org/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirrors.tuna.tsinghua.edu.cn/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://ftp.fau.de/cran/bin/macosx/base/R-4.2.3.pkg",
+   "https://pbil.univ-lyon1.fr/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://cran.csiro.au/bin/macosx/base/R-4.2.3.pkg",
+   "http://mirror.fcaglp.unlp.edu.ar/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://cran-r.c3sl.ufpr.br/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirror.marwan.ma/cran/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirror.niser.ac.in/cran/bin/macosx/base/R-4.2.3.pkg",
+   "https://cran.isid.ac.in/bin/macosx/base/R-4.2.3.pkg",
+   "https://ftp.yz.yamagata-u.ac.jp/pub/cran/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirror.truenetwork.ru/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirror.maeen.sa/cran/bin/macosx/base/R-4.2.3.pkg",
+   "https://cran.nyuad.nyu.edu/bin/macosx/base/R-4.2.3.pkg",
+   "https://cran.nic.cz/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirror.csclub.uwaterloo.ca/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "http://ftp.ussg.iu.edu/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://ftp.gwdg.de/pub/misc/cran/bin/macosx/base/R-4.2.3.pkg",
+   "https://cran.rstudio.com/bin/macosx/base/R-4.2.3.pkg",
+   "https://ca.mirrors.cicku.me/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://ftp.kaist.ac.kr/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://ftp.uni-sofia.bg/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirror-hk.koddos.net/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirror.clientvps.com/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirror.cedia.org.ec/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirror.lyrahosting.com/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirror.lzu.edu.cn/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirror.nju.edu.cn/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirror.nyist.edu.cn/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirror.twds.com.tw/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirrors.bfsu.edu.cn/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirrors.aliyun.com/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirrors.cloud.tencent.com/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirrors.hust.edu.cn/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirrors.nju.edu.cn/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirrors.rit.edu/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirrors.sjtug.sjtu.edu.cn/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirrors.ustc.edu.cn/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://mirrors.qlu.edu.cn/CRAN/bin/macosx/base/R-4.2.3.pkg",
+   "https://us.mirrors.cicku.me/CRAN/bin/macosx/base/R-4.2.3.pkg"
+  ],
+  "checksum": null,
+  "size": 92946158,
+  "released": null,
+  "min_os": "10.13 (High Sierra) or higher, Intel",
+  "metadata_source": "https://cran.r-project.org/bin/macosx/base/",
+  "notes": null,
+  "reason": "newest for macos 10.14, 10.15"
+ },
+ {
+  "runtime": "r",
+  "languages": [
+   "r"
+  ],
+  "major": "4.2",
+  "version": "4.2.3",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "exe",
+  "variant": null,
+  "libc": null,
+  "url": "https://cran.r-project.org/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+  "mirrors": [
+   "https://cloud.r-project.org/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirrors.tuna.tsinghua.edu.cn/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://ftp.fau.de/cran/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://pbil.univ-lyon1.fr/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://cran.csiro.au/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "http://mirror.fcaglp.unlp.edu.ar/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://cran-r.c3sl.ufpr.br/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirror.marwan.ma/cran/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirror.niser.ac.in/cran/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://cran.isid.ac.in/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://ftp.yz.yamagata-u.ac.jp/pub/cran/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirror.truenetwork.ru/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirror.maeen.sa/cran/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://cran.nyuad.nyu.edu/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://cran.nic.cz/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirror.csclub.uwaterloo.ca/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "http://ftp.ussg.iu.edu/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://ftp.gwdg.de/pub/misc/cran/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://cran.rstudio.com/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://ca.mirrors.cicku.me/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://ftp.kaist.ac.kr/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://ftp.uni-sofia.bg/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirror-hk.koddos.net/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirror.clientvps.com/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirror.cedia.org.ec/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirror.lyrahosting.com/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirror.lzu.edu.cn/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirror.nju.edu.cn/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirror.nyist.edu.cn/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirror.twds.com.tw/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirrors.bfsu.edu.cn/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirrors.aliyun.com/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirrors.cloud.tencent.com/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirrors.hust.edu.cn/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirrors.nju.edu.cn/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirrors.rit.edu/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirrors.sjtug.sjtu.edu.cn/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirrors.ustc.edu.cn/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://mirrors.qlu.edu.cn/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe",
+   "https://us.mirrors.cicku.me/CRAN/bin/windows/base/old/4.2.3/R-4.2.3-win.exe"
+  ],
+  "checksum": null,
+  "size": 79836488,
+  "released": null,
+  "min_os": null,
+  "metadata_source": "https://cran.r-project.org/bin/windows/base/old/4.2.3/",
+  "notes": "64-bit only installer",
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "655852cbfcd50cb5410c55e022241eba6edd88706a93dadf6294e5cd05ff3b2d",
+    "source": "winget RProject.R 4.2.3 (manifests/r/RProject/R/4.2.3/RProject.R.installer.yaml)"
+   },
+   {
+    "algo": "md5",
+    "value": "0e574240913afec505abad7295ac9cfd",
+    "source": "scoop Main/r 4.2.3 (git history 5b3950eb5f (2023-03-16) Main/bucket/r.json)"
+   }
+  ],
+  "reason": "newest for windows vista, server2008"
+ },
+ {
+  "runtime": "r",
+  "languages": [
+   "r"
+  ],
+  "major": "4.5",
+  "version": "4.5.3",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "installer",
+  "format": "pkg",
+  "variant": null,
+  "libc": null,
+  "url": "https://cran.r-project.org/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+  "mirrors": [
+   "https://cloud.r-project.org/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirrors.tuna.tsinghua.edu.cn/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://ftp.fau.de/cran/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://pbil.univ-lyon1.fr/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://cran.csiro.au/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "http://mirror.fcaglp.unlp.edu.ar/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://cran-r.c3sl.ufpr.br/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirror.marwan.ma/cran/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirror.niser.ac.in/cran/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://cran.isid.ac.in/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://ftp.yz.yamagata-u.ac.jp/pub/cran/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirror.truenetwork.ru/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirror.maeen.sa/cran/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://cran.nyuad.nyu.edu/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://cran.nic.cz/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirror.csclub.uwaterloo.ca/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "http://ftp.ussg.iu.edu/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://ftp.gwdg.de/pub/misc/cran/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://cran.rstudio.com/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://ca.mirrors.cicku.me/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://ftp.kaist.ac.kr/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://ftp.uni-sofia.bg/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirror-hk.koddos.net/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirror.clientvps.com/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirror.cedia.org.ec/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirror.lyrahosting.com/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirror.lzu.edu.cn/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "http://mirror.nju.edu.cn/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirror.nyist.edu.cn/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirror.twds.com.tw/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirrors.bfsu.edu.cn/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirrors.aliyun.com/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirrors.cloud.tencent.com/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirrors.hust.edu.cn/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirrors.nju.edu.cn/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirrors.rit.edu/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirrors.sjtug.sjtu.edu.cn/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirrors.ustc.edu.cn/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://mirrors.qlu.edu.cn/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg",
+   "https://us.mirrors.cicku.me/CRAN/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg"
+  ],
+  "checksum": null,
+  "size": 101786791,
+  "released": null,
+  "min_os": "11 (Big Sur) or higher, Apple silicon",
+  "metadata_source": "https://cran.r-project.org/bin/macosx/big-sur-arm64/base/",
+  "notes": null,
+  "reason": "newest for macos 11, 12, 13"
  },
  {
   "runtime": "r",
@@ -211,7 +501,8 @@
   "released": null,
   "min_os": null,
   "metadata_source": "https://cdn.posit.co/r/versions.json",
-  "notes": "Posit r-builds prebuilt R for ubuntu-2204"
+  "notes": "Posit r-builds prebuilt R for ubuntu-2204",
+  "reason": "newest in major 4; newest for linux glibc-2.35"
  },
  {
   "runtime": "r",
@@ -275,7 +566,8 @@
   "released": null,
   "min_os": "11 (Big Sur) or higher, Intel",
   "metadata_source": "https://cran.r-project.org/bin/macosx/big-sur-x86_64/base/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4; newest for macos 11, 12, 13, 14, 15, 26"
  },
  {
   "runtime": "r",
@@ -339,7 +631,8 @@
   "released": null,
   "min_os": "14 (Sonoma) or higher, Apple silicon",
   "metadata_source": "https://cran.r-project.org/bin/macosx/sonoma-arm64/base/",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 4; newest for macos 14, 15, 26"
  },
  {
   "runtime": "r",
@@ -414,6 +707,7 @@
     "value": "7907f3a20ec8ec88cd0da279024b8e27",
     "source": "scoop Main/r 4.6.1 (git history 0eb968855a (2026-06-27) Main/bucket/r.json)"
    }
-  ]
+  ],
+  "reason": "newest in major 4; newest for windows 7, server2008r2, 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  }
 ]

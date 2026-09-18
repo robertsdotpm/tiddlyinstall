@@ -5,34 +5,6 @@
    "c",
    "cpp"
   ],
-  "major": "16",
-  "version": "2.10.0",
-  "os": "windows",
-  "arch": "x86",
-  "kind": "archive",
-  "format": "7z-sfx",
-  "variant": "w64devkit",
-  "libc": null,
-  "url": "https://github.com/skeeto/w64devkit/releases/download/v2.10.0/w64devkit-x86-2.10.0.7z.exe",
-  "mirrors": [],
-  "checksum": {
-   "algo": "sha256",
-   "value": "513ff7fc571cf6764a5aedbca92f43c513f8d01085c65df5133a82db13a7e63d",
-   "source": "GitHub release asset digest (api.github.com)"
-  },
-  "size": 60988472,
-  "released": "2026-09-14",
-  "min_os": "Windows 7 or later",
-  "metadata_source": "https://api.github.com/repos/skeeto/w64devkit/releases",
-  "notes": "bundled GCC 16.2",
-  "reason": "newest for windows xp, xp-x64, server2003, vista, server2008"
- },
- {
-  "runtime": "gcc",
-  "languages": [
-   "c",
-   "cpp"
-  ],
   "major": "4",
   "version": "4.9.4",
   "os": "linux",
@@ -781,7 +753,7 @@
   "min_os": "Windows XP or later",
   "metadata_source": "https://api.github.com/repos/brechtsanders/winlibs_mingw/releases",
   "notes": "bundles GCC 10.5.0, mingw-w64 11.0.1, exception model seh, build r2",
-  "reason": "newest in major 10; newest for windows vista, server2008"
+  "reason": "newest in major 10"
  },
  {
   "runtime": "gcc",
@@ -1693,6 +1665,66 @@
    }
   ],
   "reason": "newest in major 16"
+ },
+ {
+  "runtime": "gcc",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "16",
+  "version": "16.2.0posix-14.0.0-msvcrt-r1",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "7z",
+  "variant": "winlibs-posix-msvcrt",
+  "libc": null,
+  "url": "https://github.com/brechtsanders/winlibs_mingw/releases/download/16.2.0posix-14.0.0-msvcrt-r1/winlibs-x86_64-posix-seh-gcc-16.2.0-mingw-w64msvcrt-14.0.0-r1.7z",
+  "mirrors": [
+   "https://mirror.nju.edu.cn/github-release/brechtsanders/winlibs_mingw/GCC%2016.2.0%20%28POSIX%20threads%29%20%2B%20MinGW-w64%2014.0.0%20MSVCRT%20%28release%201%29/winlibs-x86_64-posix-seh-gcc-16.2.0-mingw-w64msvcrt-14.0.0-r1.7z"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "983f680245a3200f9a3b1ced23ed56581d752b1b7cbcc6a0cace924edf9bca0d",
+   "source": "GitHub release asset digest (api.github.com)"
+  },
+  "size": 110160702,
+  "released": "2026-08-09",
+  "min_os": "Windows XP or later",
+  "metadata_source": "https://api.github.com/repos/brechtsanders/winlibs_mingw/releases",
+  "notes": "bundles GCC 16.2.0, mingw-w64 14.0.0, exception model seh, build r1",
+  "reason": "newest for windows vista, server2008"
+ },
+ {
+  "runtime": "gcc",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "16",
+  "version": "16.2.0posix-14.0.0-msvcrt-r1",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "7z",
+  "variant": "winlibs-posix-msvcrt",
+  "libc": null,
+  "url": "https://github.com/brechtsanders/winlibs_mingw/releases/download/16.2.0posix-14.0.0-msvcrt-r1/winlibs-i686-posix-dwarf-gcc-16.2.0-mingw-w64msvcrt-14.0.0-r1.7z",
+  "mirrors": [
+   "https://mirror.nju.edu.cn/github-release/brechtsanders/winlibs_mingw/GCC%2016.2.0%20%28POSIX%20threads%29%20%2B%20MinGW-w64%2014.0.0%20MSVCRT%20%28release%201%29/winlibs-i686-posix-dwarf-gcc-16.2.0-mingw-w64msvcrt-14.0.0-r1.7z"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "14eb747488761d8ad59eaff7423908250b393b6bbe20b856cf93191c8a26c7d3",
+   "source": "GitHub release asset digest (api.github.com)"
+  },
+  "size": 110933678,
+  "released": "2026-08-09",
+  "min_os": "Windows XP or later",
+  "metadata_source": "https://api.github.com/repos/brechtsanders/winlibs_mingw/releases",
+  "notes": "bundles GCC 16.2.0, mingw-w64 14.0.0, exception model dwarf, build r1",
+  "reason": "newest for windows xp, xp-x64, server2003, vista, server2008"
  },
  {
   "runtime": "gcc",
@@ -3468,7 +3500,7 @@
   "min_os": null,
   "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-12.0.1",
   "notes": null,
-  "reason": "newest in major 12; newest for linux glibc-2.23, glibc-2.24"
+  "reason": "newest in major 12"
  },
  {
   "runtime": "llvm",
@@ -3607,6 +3639,30 @@
    }
   ],
   "reason": "newest in major 12"
+ },
+ {
+  "runtime": "llvm",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "13",
+  "version": "13.0.0",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.xz",
+  "variant": "ubuntu-16.04",
+  "libc": "glibc",
+  "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.0/clang%2Bllvm-13.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 509663904,
+  "released": "2021-10-01",
+  "min_os": null,
+  "metadata_source": "https://api.github.com/repos/llvm/llvm-project/releases/tags/llvmorg-13.0.0",
+  "notes": null,
+  "reason": "newest for linux glibc-2.23, glibc-2.24"
  },
  {
   "runtime": "llvm",

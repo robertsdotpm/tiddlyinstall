@@ -56,5 +56,8 @@
   {"id": "glibc-2.36", "year": 2022, "distros": ["Debian 12"]},
   {"id": "glibc-2.39", "year": 2024, "distros": ["Ubuntu 24.04"]},
   {"id": "glibc-2.41", "year": 2025, "distros": ["Debian 13"]}
+ ],
+ "linux_musl": [
+  {"id": "musl", "year": 2011, "distros": ["Alpine 3.x"], "notes": "added 2026-09-18 by the node/ruby/php os_support pass: one id for any musl libc system (Alpine), for musl builds and fully static binaries; no finer versioning because the builds in the catalogue need only musl >= 1.1.x"}
  ]
 }

@@ -42,7 +42,7 @@ FULL_PLAN = {"python": "download_plan.json", "node": "download_plan.json", "java
 
 # Runtime folders that also keep the newest release per OS floor. Others keep
 # the plain one-per-major behaviour until their os_support.json is reviewed.
-OS_FLOOR_RUNTIMES = ["go", "rust", "zig", "nim", "cc", "python"]
+OS_FLOOR_RUNTIMES = ["go", "rust", "zig", "nim", "cc", "python", "java", "dotnet", "r"]
 
 
 def vkey(v):
@@ -138,8 +138,11 @@ def rule_applies(rule, e):
         return False
     if rule.get("format") and e.get("format") not in rule["format"]:
         return False
+    if rule.get("file_match") and not re.search(rule["file_match"], e["url"].rsplit("/", 1)[-1]):
+        return False
     kind = rule.get("kind")
-    if kind and e["kind"] != kind:
+    kinds = [kind] if isinstance(kind, str) else (kind or [])
+    if kinds and e["kind"] not in kinds:
         return False
     if not kind and e["kind"] == "source":
         return False
@@ -198,7 +201,20 @@ def floor_entries(folder, plan):
     runtimes = sorted({e["runtime"] for e in plan})
     rules = load_rules(folder, runtimes)
     ids = os_ids()
-    pool = plan + source_candidates(folder, rules, plan)
+    # Candidates: the plan, plus every release in releases.json that fills the
+    # same slot as a plan entry (runtime, os, arch, variant, kind, format), so an
+    # older patch that is the newest for some old OS can be picked even when the
+    # plan only kept the newest patch of its major.
+    slots = {(e["runtime"], e["os"], e["arch"], e.get("variant"), e["kind"], e.get("format")) for e in plan}
+    in_plan = {(e["url"], e["os"]) for e in plan}
+    releases_path = CATALOG / folder / "releases.json"
+    extra = []
+    if releases_path.exists():
+        for e in json.loads(releases_path.read_text()):
+            if (e["runtime"], e["os"], e["arch"], e.get("variant"), e["kind"], e.get("format")) in slots \
+                    and (e["url"], e["os"]) not in in_plan:
+                extra.append(e)
+    pool = plan + extra + source_candidates(folder, rules, plan)
     groups = defaultdict(list)
     for e in pool:
         if e["runtime"] in rules and e["os"] in ids:

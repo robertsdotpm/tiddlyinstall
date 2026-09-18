@@ -28,7 +28,8 @@
   "released": "2018-10-31",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=6&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "java",
@@ -59,7 +60,8 @@
   "released": "2018-10-31",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=6&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 6"
  },
  {
   "runtime": "java",
@@ -90,7 +92,8 @@
   "released": "2014-11-21",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=7&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "java",
@@ -121,7 +124,8 @@
   "released": "2022-07-11",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=7&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "java",
@@ -152,7 +156,8 @@
   "released": "2022-07-11",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=7&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
  },
  {
   "runtime": "java",
@@ -183,7 +188,132 @@
   "released": "2022-07-11",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=7&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 7"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "8",
+  "version": "8.0.292",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "zulu-jdk",
+  "libc": null,
+  "url": "https://cdn.azul.com/zulu/bin/zulu8.54.0.21-ca-jdk8.0.292-win_x64.zip",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu8.54.0.21-ca-jdk8.0.292-win_x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "35fc03994a65f62afa9510ff0044f52228208fddc7bbfa0cfd8e332b6e52c384",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/ba1a2040-18b8-4357-b377-8b19e7d283a1"
+  },
+  "size": 107519467,
+  "released": "2021-04-07",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=8&release_status=ga&availability_types=CA&page_size=1000&page=2&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for windows xp-x64, server2003"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "8",
+  "version": "8.0.292",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "zulu-jre",
+  "libc": null,
+  "url": "https://cdn.azul.com/zulu/bin/zulu8.54.0.21-ca-jre8.0.292-win_x64.zip",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu8.54.0.21-ca-jre8.0.292-win_x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "5c66a05f496721ab50171d1e50f2e0fccdc70049586466659f76f7e5306615d9",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/c0c54dcf-ea44-47fa-8ea8-7f1ce0816b69"
+  },
+  "size": 40342873,
+  "released": "2021-04-07",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=8&release_status=ga&availability_types=CA&page_size=1000&page=2&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for windows xp-x64, server2003"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "8",
+  "version": "8.0.292",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "zulu-jdk",
+  "libc": null,
+  "url": "https://cdn.azul.com/zulu/bin/zulu8.54.0.21-ca-jdk8.0.292-win_i686.zip",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu8.54.0.21-ca-jdk8.0.292-win_i686.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "31d1644a44509b51433b9051873d38e4fa20d1fdc6d17411c1e678c3b0f1e72c",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/6eab5d66-3551-47c3-8949-bffceb77caff"
+  },
+  "size": 108495122,
+  "released": "2021-04-07",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=8&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for windows xp, xp-x64, server2003"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "8",
+  "version": "8.0.292",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "zulu-jre",
+  "libc": null,
+  "url": "https://cdn.azul.com/zulu/bin/zulu8.54.0.21-ca-jre8.0.292-win_i686.zip",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu8.54.0.21-ca-jre8.0.292-win_i686.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "bd69dc7a81b89c2e573bcc7bbc0d2a2937bcb51979679c9f0cb42d702491dea7",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/84644660-57cc-4033-838e-b5c5c7f5d534"
+  },
+  "size": 38784741,
+  "released": "2021-04-07",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=8&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for windows xp, xp-x64, server2003"
  },
  {
   "runtime": "java",
@@ -216,7 +346,196 @@
   "released": "2026-08-25",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/8/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8; newest for linux glibc-2.5"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "8",
+  "version": "8.0.504",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "temurin-jre",
+  "libc": "musl",
+  "url": "https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u504-b01/OpenJDK8U-jre_x64_alpine-linux_hotspot_8u504b01.tar.gz",
+  "mirrors": [
+   "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/8/jre/x64/alpine-linux/OpenJDK8U-jre_x64_alpine-linux_hotspot_8u504b01.tar.gz",
+   "https://mirror.nju.edu.cn/adoptium/8/jre/x64/alpine-linux/OpenJDK8U-jre_x64_alpine-linux_hotspot_8u504b01.tar.gz",
+   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin8-binaries/jdk8u504-b01/OpenJDK8U-jre_x64_alpine-linux_hotspot_8u504b01.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "0b8a29d654d4ea5cd2ee7bbcf3e89fe0f66596eb17870255e683a526757d2b8c",
+   "source": "https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u504-b01/OpenJDK8U-jre_x64_alpine-linux_hotspot_8u504b01.tar.gz.sha256.txt"
+  },
+  "size": 41761913,
+  "released": "2026-08-25",
+  "min_os": null,
+  "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/8/ga?page_size=50&page=0&image_type=jre",
+  "notes": null,
+  "reason": "newest for linux glibc-2.5"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "8",
+  "version": "8.0.504",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "zulu-jdk",
+  "libc": "glibc",
+  "url": "https://cdn.azul.com/zulu/bin/zulu8.96.0.205-ca-jdk8.0.504-linux_x64.tar.gz",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu8.96.0.205-ca-jdk8.0.504-linux_x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "fdb93d3789f740c62b85c57a1c55db9960eb8bf6d7966ca8becd2a6be89bfcbf",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/5c5a5b24-c269-4ba3-b780-ffb627612884"
+  },
+  "size": 106674581,
+  "released": "2026-08-07",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=8&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for linux glibc-2.5"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "8",
+  "version": "8.0.504",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "zulu-jdk",
+  "libc": "musl",
+  "url": "https://cdn.azul.com/zulu/bin/zulu8.96.0.205-ca-jdk8.0.504-linux_musl_x64.tar.gz",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu8.96.0.205-ca-jdk8.0.504-linux_musl_x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "1f376ac138a1b9598e283f3d7929640aa3235a8ec6e46d00fa81a141057aaf3b",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/1f0cf2b4-be02-44a8-a1e4-5b64702a892a"
+  },
+  "size": 107103674,
+  "released": "2026-08-07",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=8&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for linux glibc-2.5"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "8",
+  "version": "8.0.504",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "zulu-jre",
+  "libc": "glibc",
+  "url": "https://cdn.azul.com/zulu/bin/zulu8.96.0.205-ca-jre8.0.504-linux_x64.zip",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu8.96.0.205-ca-jre8.0.504-linux_x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "fea28f937216909751399edf47656982957593fb60792e7e82a3521837209e52",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/18a71efd-1e7f-4af9-ab4c-ac5822f6f45c"
+  },
+  "size": 42040151,
+  "released": "2026-08-07",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=8&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for linux glibc-2.5"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "8",
+  "version": "8.0.504",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "zulu-jre",
+  "libc": "glibc",
+  "url": "https://cdn.azul.com/zulu/bin/zulu8.96.0.205-ca-jre8.0.504-linux_x64.tar.gz",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu8.96.0.205-ca-jre8.0.504-linux_x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "f443c5f525d1fd6a1e51739f7ae589e8a8e142e8cdc5674375261f8889449db4",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/59357c25-2fb2-4406-a453-9800f88cf50c"
+  },
+  "size": 41950727,
+  "released": "2026-08-07",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=8&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for linux glibc-2.5"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "8",
+  "version": "8.0.504",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "zulu-jre",
+  "libc": "musl",
+  "url": "https://cdn.azul.com/zulu/bin/zulu8.96.0.205-ca-jre8.0.504-linux_musl_x64.tar.gz",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu8.96.0.205-ca-jre8.0.504-linux_musl_x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "c3af1e8e49327ea23eb3b5ded66bbdeb28c4af766ef6fa6bb001ff5a9eede414",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/d22eaa45-a0bb-4405-813d-f3bd6f3e5f0d"
+  },
+  "size": 42180954,
+  "released": "2026-08-07",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=8&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for linux glibc-2.5"
  },
  {
   "runtime": "java",
@@ -248,7 +567,41 @@
   "released": "2026-08-25",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/8/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "8",
+  "version": "8.0.504",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "temurin-jdk",
+  "libc": "glibc",
+  "url": "https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u504-b01/OpenJDK8U-jdk_arm_linux_hotspot_8u504b01.tar.gz",
+  "mirrors": [
+   "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/8/jdk/arm/linux/OpenJDK8U-jdk_arm_linux_hotspot_8u504b01.tar.gz",
+   "https://mirror.nju.edu.cn/adoptium/8/jdk/arm/linux/OpenJDK8U-jdk_arm_linux_hotspot_8u504b01.tar.gz",
+   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin8-binaries/jdk8u504-b01/OpenJDK8U-jdk_arm_linux_hotspot_8u504b01.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "b3e720d6515ec36b7de8a885e7e59a9b41968038644167aaff9c88d98b5e2aa7",
+   "source": "https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u504-b01/OpenJDK8U-jdk_arm_linux_hotspot_8u504b01.tar.gz.sha256.txt"
+  },
+  "size": 98818044,
+  "released": "2026-08-25",
+  "min_os": null,
+  "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/8/ga?page_size=50&page=0&image_type=jdk",
+  "notes": null,
+  "reason": "newest for linux glibc-2.5"
  },
  {
   "runtime": "java",
@@ -280,7 +633,70 @@
   "released": "2026-08-25",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/8/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8; newest for linux glibc-2.5"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "8",
+  "version": "8.0.504",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "zulu-jdk",
+  "libc": "glibc",
+  "url": "https://cdn.azul.com/zulu/bin/zulu8.96.0.205-ca-jdk8.0.504-linux_aarch32sf.tar.gz",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu8.96.0.205-ca-jdk8.0.504-linux_aarch32sf.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "314a49cae7d4069d75abf6d3cbcb365d8488a3d6dc8b2224f918028726b172c0",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/a6c20c4f-b187-4326-b9df-faa557534105"
+  },
+  "size": 114696769,
+  "released": "2026-08-10",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=8&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for linux glibc-2.5"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "8",
+  "version": "8.0.504",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "zulu-jdk",
+  "libc": "glibc",
+  "url": "https://cdn.azul.com/zulu/bin/zulu8.96.0.205-ca-jdk8.0.504-linux_aarch32hf.tar.gz",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu8.96.0.205-ca-jdk8.0.504-linux_aarch32hf.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "4f8d4e38842c0aa1f0ff92823039f5b6d75a0bb4732d605db6da8cedd2bec303",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/869b8454-30c7-47b3-8c57-3b89ebbb6d5e"
+  },
+  "size": 114357220,
+  "released": "2026-08-10",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=8&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for linux glibc-2.5"
  },
  {
   "runtime": "java",
@@ -312,7 +728,8 @@
   "released": "2026-08-25",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/8/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "java",
@@ -343,7 +760,8 @@
   "released": "2026-08-07",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=8&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "java",
@@ -375,7 +793,8 @@
   "released": "2026-08-25",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/8/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "java",
@@ -406,7 +825,8 @@
   "released": "2026-08-07",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=8&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 8"
  },
  {
   "runtime": "java",
@@ -437,7 +857,8 @@
   "released": "2017-09-12",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=9&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "java",
@@ -468,7 +889,8 @@
   "released": "2018-04-06",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=9&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9"
  },
  {
   "runtime": "java",
@@ -499,7 +921,8 @@
   "released": "2018-04-16",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=9&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9; newest for windows vista, server2008"
  },
  {
   "runtime": "java",
@@ -530,7 +953,8 @@
   "released": "2018-04-18",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=9&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 9; newest for windows vista, server2008"
  },
  {
   "runtime": "java",
@@ -561,7 +985,8 @@
   "released": "2018-07-26",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=10&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10"
  },
  {
   "runtime": "java",
@@ -592,7 +1017,8 @@
   "released": "2018-07-26",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=10&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10"
  },
  {
   "runtime": "java",
@@ -623,7 +1049,8 @@
   "released": "2018-07-26",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=10&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10"
  },
  {
   "runtime": "java",
@@ -654,7 +1081,8 @@
   "released": "2018-07-26",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=10&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 10"
  },
  {
   "runtime": "java",
@@ -687,7 +1115,8 @@
   "released": "2026-08-24",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/11/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 11"
  },
  {
   "runtime": "java",
@@ -719,7 +1148,8 @@
   "released": "2026-08-24",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/11/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 11"
  },
  {
   "runtime": "java",
@@ -751,7 +1181,8 @@
   "released": "2026-08-24",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/11/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 11"
  },
  {
   "runtime": "java",
@@ -783,7 +1214,8 @@
   "released": "2026-08-24",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/11/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 11"
  },
  {
   "runtime": "java",
@@ -815,7 +1247,8 @@
   "released": "2026-08-24",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/11/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 11"
  },
  {
   "runtime": "java",
@@ -847,7 +1280,8 @@
   "released": "2026-08-24",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/11/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 11"
  },
  {
   "runtime": "java",
@@ -878,7 +1312,8 @@
   "released": "2026-08-07",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=11&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 11"
  },
  {
   "runtime": "java",
@@ -909,7 +1344,8 @@
   "released": "2019-03-29",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=12&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 12"
  },
  {
   "runtime": "java",
@@ -940,7 +1376,8 @@
   "released": "2019-07-16",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=12&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 12"
  },
  {
   "runtime": "java",
@@ -971,7 +1408,8 @@
   "released": "2019-07-16",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=12&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 12"
  },
  {
   "runtime": "java",
@@ -1002,7 +1440,8 @@
   "released": "2019-07-19",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=12&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 12"
  },
  {
   "runtime": "java",
@@ -1033,7 +1472,8 @@
   "released": "2020-07-10",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=13&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 13; newest for linux glibc-2.12"
  },
  {
   "runtime": "java",
@@ -1064,7 +1504,8 @@
   "released": "2023-01-07",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=13&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 13"
  },
  {
   "runtime": "java",
@@ -1095,7 +1536,8 @@
   "released": "2023-01-07",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=13&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 13"
  },
  {
   "runtime": "java",
@@ -1126,7 +1568,8 @@
   "released": "2023-01-07",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=13&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 13"
  },
  {
   "runtime": "java",
@@ -1157,7 +1600,8 @@
   "released": "2023-01-07",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=13&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 13"
  },
  {
   "runtime": "java",
@@ -1188,7 +1632,8 @@
   "released": "2023-01-07",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=13&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 13"
  },
  {
   "runtime": "java",
@@ -1219,7 +1664,8 @@
   "released": "2023-01-07",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=13&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 13"
  },
  {
   "runtime": "java",
@@ -1250,7 +1696,8 @@
   "released": "2020-07-11",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=14&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 14"
  },
  {
   "runtime": "java",
@@ -1281,7 +1728,8 @@
   "released": "2020-07-11",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=14&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 14"
  },
  {
   "runtime": "java",
@@ -1312,7 +1760,8 @@
   "released": "2020-07-11",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=14&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 14"
  },
  {
   "runtime": "java",
@@ -1343,7 +1792,8 @@
   "released": "2020-07-11",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=14&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 14"
  },
  {
   "runtime": "java",
@@ -1374,7 +1824,8 @@
   "released": "2023-01-07",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=15&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 15"
  },
  {
   "runtime": "java",
@@ -1405,7 +1856,8 @@
   "released": "2023-01-07",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=15&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 15"
  },
  {
   "runtime": "java",
@@ -1436,7 +1888,8 @@
   "released": "2023-01-07",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=15&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 15"
  },
  {
   "runtime": "java",
@@ -1467,7 +1920,8 @@
   "released": "2023-01-07",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=15&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 15"
  },
  {
   "runtime": "java",
@@ -1498,7 +1952,8 @@
   "released": "2023-01-07",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=15&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 15"
  },
  {
   "runtime": "java",
@@ -1529,7 +1984,8 @@
   "released": "2023-01-07",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=15&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 15"
  },
  {
   "runtime": "java",
@@ -1560,7 +2016,8 @@
   "released": "2021-07-22",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=16&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
  },
  {
   "runtime": "java",
@@ -1591,7 +2048,8 @@
   "released": "2021-07-22",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=16&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
  },
  {
   "runtime": "java",
@@ -1622,7 +2080,39 @@
   "released": "2021-07-30",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/16/ga?page_size=50&page=0&image_type=jdk",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "16",
+  "version": "16.0.2",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "zulu-jdk",
+  "libc": null,
+  "url": "https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jdk16.0.2-macosx_x64.zip",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu16.32.15-ca-jdk16.0.2-macosx_x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "61d48b253e57e74f23309632d27ad0b1ef53182a8402445a15c7fa3a76a7560d",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/55ea6ac9-c1c9-4ee4-8507-0a85211a0709"
+  },
+  "size": 211440304,
+  "released": "2021-07-22",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=16&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for macos 10.9, 10.10, 10.11"
  },
  {
   "runtime": "java",
@@ -1653,7 +2143,39 @@
   "released": "2021-07-22",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=16&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16; newest for macos 10.9, 10.10, 10.11"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "16",
+  "version": "16.0.2",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "zulu-jre",
+  "libc": null,
+  "url": "https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-macosx_x64.tar.gz",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-macosx_x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "89b1503948625ee368e0698671f87e768ef6b1d2b11f2afe83fedbe876987354",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/bad27804-270a-48aa-8760-70814163e97b"
+  },
+  "size": 46600119,
+  "released": "2021-07-22",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=16&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for macos 10.9, 10.10, 10.11"
  },
  {
   "runtime": "java",
@@ -1684,7 +2206,8 @@
   "released": "2021-07-22",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=16&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
  },
  {
   "runtime": "java",
@@ -1715,7 +2238,8 @@
   "released": "2021-07-22",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=16&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
  },
  {
   "runtime": "java",
@@ -1746,7 +2270,8 @@
   "released": "2021-07-22",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=16&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
  },
  {
   "runtime": "java",
@@ -1777,7 +2302,8 @@
   "released": "2021-07-22",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=16&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 16"
  },
  {
   "runtime": "java",
@@ -1809,7 +2335,8 @@
   "released": "2026-08-19",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/17/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17"
  },
  {
   "runtime": "java",
@@ -1840,7 +2367,8 @@
   "released": "2026-08-19",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/17/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17"
  },
  {
   "runtime": "java",
@@ -1871,7 +2399,8 @@
   "released": "2026-08-19",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/17/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17"
  },
  {
   "runtime": "java",
@@ -1902,7 +2431,8 @@
   "released": "2026-08-19",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/17/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17"
  },
  {
   "runtime": "java",
@@ -1933,7 +2463,8 @@
   "released": "2026-08-19",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/17/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17"
  },
  {
   "runtime": "java",
@@ -1964,7 +2495,8 @@
   "released": "2026-08-19",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/17/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17"
  },
  {
   "runtime": "java",
@@ -1994,7 +2526,8 @@
   "released": "2026-08-03",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=17&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17"
  },
  {
   "runtime": "java",
@@ -2025,7 +2558,8 @@
   "released": "2026-08-03",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=17&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 17"
  },
  {
   "runtime": "java",
@@ -2056,7 +2590,8 @@
   "released": "2022-08-26",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/18/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18"
  },
  {
   "runtime": "java",
@@ -2087,7 +2622,40 @@
   "released": "2022-08-26",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/18/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "18",
+  "version": "18.0.2.1",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "temurin-jdk",
+  "libc": "glibc",
+  "url": "https://github.com/adoptium/temurin18-binaries/releases/download/jdk-18.0.2.1%2B1/OpenJDK18U-jdk_arm_linux_hotspot_18.0.2.1_1.tar.gz",
+  "mirrors": [
+   "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/18/jdk/arm/linux/OpenJDK18U-jdk_arm_linux_hotspot_18.0.2.1_1.tar.gz",
+   "https://mirror.nju.edu.cn/adoptium/18/jdk/arm/linux/OpenJDK18U-jdk_arm_linux_hotspot_18.0.2.1_1.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "4cd49b92d13847bfad7b3bf635cca349e2c89c7641748c5288bc40d612cdbbd6",
+   "source": "https://github.com/adoptium/temurin18-binaries/releases/download/jdk-18.0.2.1%2B1/OpenJDK18U-jdk_arm_linux_hotspot_18.0.2.1_1.tar.gz.sha256.txt"
+  },
+  "size": 189555639,
+  "released": "2022-08-26",
+  "min_os": null,
+  "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/18/ga?page_size=50&page=0&image_type=jdk",
+  "notes": null,
+  "reason": "newest for linux glibc-2.17"
  },
  {
   "runtime": "java",
@@ -2118,7 +2686,8 @@
   "released": "2022-08-26",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/18/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18; newest for linux glibc-2.17"
  },
  {
   "runtime": "java",
@@ -2149,7 +2718,8 @@
   "released": "2022-08-26",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/18/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18"
  },
  {
   "runtime": "java",
@@ -2180,7 +2750,8 @@
   "released": "2022-08-26",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/18/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18"
  },
  {
   "runtime": "java",
@@ -2211,7 +2782,8 @@
   "released": "2022-08-26",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/18/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18"
  },
  {
   "runtime": "java",
@@ -2242,7 +2814,8 @@
   "released": "2022-08-23",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=18&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18"
  },
  {
   "runtime": "java",
@@ -2273,7 +2846,8 @@
   "released": "2022-08-23",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=18&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 18"
  },
  {
   "runtime": "java",
@@ -2304,7 +2878,39 @@
   "released": "2022-09-07",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=19&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "19",
+  "version": "19.0.0",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "zulu-jdk",
+  "libc": null,
+  "url": "https://cdn.azul.com/zulu/bin/zulu19.28.81-ca-jdk19.0.0-win_i686.zip",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu19.28.81-ca-jdk19.0.0-win_i686.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "271ef48102e4a786a137517070f2d5d89254696c0e597d70adf13293a5dd1b9c",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/4891d2e6-f07e-407e-befd-8905488d245b"
+  },
+  "size": 197756388,
+  "released": "2022-09-07",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=19&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for windows 7, server2008r2, 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "java",
@@ -2335,7 +2941,8 @@
   "released": "2022-09-07",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=19&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19; newest for windows 7, server2008r2, 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "java",
@@ -2366,7 +2973,8 @@
   "released": "2023-01-20",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/19/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19"
  },
  {
   "runtime": "java",
@@ -2397,7 +3005,40 @@
   "released": "2023-01-20",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/19/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "19",
+  "version": "19.0.2",
+  "os": "linux",
+  "arch": "armv7",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "temurin-jdk",
+  "libc": "glibc",
+  "url": "https://github.com/adoptium/temurin19-binaries/releases/download/jdk-19.0.2%2B7/OpenJDK19U-jdk_arm_linux_hotspot_19.0.2_7.tar.gz",
+  "mirrors": [
+   "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/19/jdk/arm/linux/OpenJDK19U-jdk_arm_linux_hotspot_19.0.2_7.tar.gz",
+   "https://mirror.nju.edu.cn/adoptium/19/jdk/arm/linux/OpenJDK19U-jdk_arm_linux_hotspot_19.0.2_7.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "6a51cb3868b5a3b81848a0d276267230ff3f8639f20ba9ae9ef1d386440bf1fd",
+   "source": "https://github.com/adoptium/temurin19-binaries/releases/download/jdk-19.0.2%2B7/OpenJDK19U-jdk_arm_linux_hotspot_19.0.2_7.tar.gz.sha256.txt"
+  },
+  "size": 196366803,
+  "released": "2023-01-20",
+  "min_os": null,
+  "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/19/ga?page_size=50&page=0&image_type=jdk",
+  "notes": null,
+  "reason": "newest for linux glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "java",
@@ -2428,7 +3069,8 @@
   "released": "2023-01-20",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/19/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19; newest for linux glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "java",
@@ -2459,7 +3101,8 @@
   "released": "2023-01-20",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/19/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19"
  },
  {
   "runtime": "java",
@@ -2490,7 +3133,8 @@
   "released": "2023-01-20",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/19/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19"
  },
  {
   "runtime": "java",
@@ -2521,7 +3165,8 @@
   "released": "2023-01-20",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/19/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 19"
  },
  {
   "runtime": "java",
@@ -2552,7 +3197,8 @@
   "released": "2023-07-21",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/20/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20"
  },
  {
   "runtime": "java",
@@ -2583,7 +3229,8 @@
   "released": "2023-07-21",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/20/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20"
  },
  {
   "runtime": "java",
@@ -2614,7 +3261,8 @@
   "released": "2023-07-21",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/20/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20"
  },
  {
   "runtime": "java",
@@ -2645,7 +3293,8 @@
   "released": "2023-07-21",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/20/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20"
  },
  {
   "runtime": "java",
@@ -2676,7 +3325,132 @@
   "released": "2023-07-21",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/20/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 20"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "21",
+  "version": "21.0.9",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "temurin-jre",
+  "libc": null,
+  "url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.9%2B10/OpenJDK21U-jre_x64_mac_hotspot_21.0.9_10.tar.gz",
+  "mirrors": [
+   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin21-binaries/jdk-21.0.9%2B10/OpenJDK21U-jre_x64_mac_hotspot_21.0.9_10.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "945abc49249f1e89a2a6a008d70d63dc42b25bbe5e1711ff97aeec70063008d2",
+   "source": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.9%2B10/OpenJDK21U-jre_x64_mac_hotspot_21.0.9_10.tar.gz.sha256.txt"
+  },
+  "size": 42065404,
+  "released": "2025-10-23",
+  "min_os": null,
+  "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/21/ga?page_size=50&page=0&image_type=jre",
+  "notes": null,
+  "reason": "newest for macos 10.12, 10.13, 10.14, 10.15"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "21",
+  "version": "21.0.9",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "zulu-jdk",
+  "libc": null,
+  "url": "https://cdn.azul.com/zulu/bin/zulu21.46.19-ca-jdk21.0.9-macosx_x64.zip",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu21.46.19-ca-jdk21.0.9-macosx_x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d2a8914f6e1489c9b27aeece3d8de393842242187204cf5b14684535ec116602",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/5a016fcb-d111-4ff3-a9bd-c3d0b1872454"
+  },
+  "size": 212485726,
+  "released": "2025-10-04",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=21&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for macos 10.12, 10.13, 10.14, 10.15"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "21",
+  "version": "21.0.9",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "zulu-jre",
+  "libc": null,
+  "url": "https://cdn.azul.com/zulu/bin/zulu21.46.19-ca-jre21.0.9-macosx_x64.zip",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu21.46.19-ca-jre21.0.9-macosx_x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "00e3a17b9ae48460c05de081eb1cb6fbf8ee0544f17d2a5b26cae63c1823825a",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/2338b3d6-7398-4be0-820e-0808ffd2aa67"
+  },
+  "size": 49943600,
+  "released": "2025-10-04",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=21&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for macos 10.12, 10.13, 10.14, 10.15"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "21",
+  "version": "21.0.9",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "zulu-jre",
+  "libc": null,
+  "url": "https://cdn.azul.com/zulu/bin/zulu21.46.19-ca-jre21.0.9-macosx_x64.tar.gz",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu21.46.19-ca-jre21.0.9-macosx_x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "c4ed94fc42bc1ca4e4b1e258fe6b05024125448ae2f0e24acbe809c2a900ecbe",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/eb5777ca-8f05-4f1d-9a2b-f0c1b2201f82"
+  },
+  "size": 49706484,
+  "released": "2025-10-04",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=21&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for macos 10.12, 10.13, 10.14, 10.15"
  },
  {
   "runtime": "java",
@@ -2708,7 +3482,8 @@
   "released": "2026-08-19",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/21/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "java",
@@ -2739,7 +3514,8 @@
   "released": "2026-08-19",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/21/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "java",
@@ -2770,7 +3546,8 @@
   "released": "2026-08-19",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/21/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "java",
@@ -2801,7 +3578,8 @@
   "released": "2026-08-19",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/21/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "java",
@@ -2832,7 +3610,8 @@
   "released": "2026-08-19",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/21/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "java",
@@ -2863,7 +3642,8 @@
   "released": "2026-08-19",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/21/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 21"
  },
  {
   "runtime": "java",
@@ -2891,7 +3671,8 @@
   "released": "2024-07-17",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/22/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22"
  },
  {
   "runtime": "java",
@@ -2919,7 +3700,8 @@
   "released": "2024-07-17",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/22/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22"
  },
  {
   "runtime": "java",
@@ -2947,7 +3729,8 @@
   "released": "2024-07-17",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/22/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22"
  },
  {
   "runtime": "java",
@@ -2975,7 +3758,8 @@
   "released": "2024-07-17",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/22/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22"
  },
  {
   "runtime": "java",
@@ -3003,7 +3787,8 @@
   "released": "2024-07-17",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/22/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 22"
  },
  {
   "runtime": "java",
@@ -3033,7 +3818,8 @@
   "released": "2025-01-23",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/23/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 23"
  },
  {
   "runtime": "java",
@@ -3061,7 +3847,8 @@
   "released": "2025-01-23",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/23/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 23"
  },
  {
   "runtime": "java",
@@ -3089,7 +3876,8 @@
   "released": "2025-01-23",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/23/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 23"
  },
  {
   "runtime": "java",
@@ -3117,7 +3905,8 @@
   "released": "2025-01-23",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/23/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 23"
  },
  {
   "runtime": "java",
@@ -3145,7 +3934,8 @@
   "released": "2025-01-23",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/23/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 23"
  },
  {
   "runtime": "java",
@@ -3173,7 +3963,8 @@
   "released": "2025-01-23",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/23/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 23"
  },
  {
   "runtime": "java",
@@ -3201,7 +3992,8 @@
   "released": "2025-07-17",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/24/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 24"
  },
  {
   "runtime": "java",
@@ -3229,7 +4021,8 @@
   "released": "2025-07-17",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/24/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 24"
  },
  {
   "runtime": "java",
@@ -3257,7 +4050,8 @@
   "released": "2025-07-17",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/24/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 24"
  },
  {
   "runtime": "java",
@@ -3285,7 +4079,8 @@
   "released": "2025-07-17",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/24/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 24"
  },
  {
   "runtime": "java",
@@ -3313,7 +4108,8 @@
   "released": "2025-07-17",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/24/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 24"
  },
  {
   "runtime": "java",
@@ -3346,7 +4142,8 @@
   "released": "2026-08-19",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/25/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 25"
  },
  {
   "runtime": "java",
@@ -3378,7 +4175,8 @@
   "released": "2026-08-19",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/25/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 25"
  },
  {
   "runtime": "java",
@@ -3410,7 +4208,8 @@
   "released": "2026-08-19",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/25/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 25"
  },
  {
   "runtime": "java",
@@ -3442,7 +4241,8 @@
   "released": "2026-08-19",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/25/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 25"
  },
  {
   "runtime": "java",
@@ -3474,7 +4274,39 @@
   "released": "2026-08-19",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/25/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 25"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "25",
+  "version": "25.0.4.1",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "zulu-jdk",
+  "libc": null,
+  "url": "https://cdn.azul.com/zulu/bin/zulu25.36.205-ca-jdk25.0.4.1-win_aarch64.zip",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu25.36.205-ca-jdk25.0.4.1-win_aarch64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "654b92047fcc4e5106f7b73a2f93d9c5fcb399f4658ce4d693228c7acb52e4ad",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/1b39f50f-d426-4b04-a4ba-bd7f05f4a7d5"
+  },
+  "size": 206316170,
+  "released": "2026-08-11",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=25&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for windows 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "java",
@@ -3505,7 +4337,8 @@
   "released": "2026-08-11",
   "min_os": null,
   "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=25&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 25; newest for windows 10, server2016, server2019, server2022, 11, server2025"
  },
  {
   "runtime": "java",
@@ -3533,7 +4366,192 @@
   "released": "2026-08-25",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/26/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 26; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "26",
+  "version": "26.0.2.1",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "temurin-jre",
+  "libc": "musl",
+  "url": "https://github.com/adoptium/temurin26-binaries/releases/download/jdk-26.0.2.1%2B1/OpenJDK26U-jre_x64_alpine-linux_hotspot_26.0.2.1_1.tar.gz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "6e888041f134826787d62bbf35fd007ea27ad18588c4c5e46e78d2706449d368",
+   "source": "https://github.com/adoptium/temurin26-binaries/releases/download/jdk-26.0.2.1%2B1/OpenJDK26U-jre_x64_alpine-linux_hotspot_26.0.2.1_1.tar.gz.sha256.txt"
+  },
+  "size": 62576243,
+  "released": "2026-08-25",
+  "min_os": null,
+  "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/26/ga?page_size=50&page=0&image_type=jre",
+  "notes": null,
+  "reason": "newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "26",
+  "version": "26.0.2.1",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "zulu-jdk",
+  "libc": "glibc",
+  "url": "https://cdn.azul.com/zulu/bin/zulu26.32.203-ca-jdk26.0.2.1-linux_x64.tar.gz",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu26.32.203-ca-jdk26.0.2.1-linux_x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "c6b810ca659e3293205444f47ac4af163396fd6d025c51fd5f767e628b2ceede",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/4a7c8b7c-4cec-4121-bc4a-905ff4692427"
+  },
+  "size": 236428048,
+  "released": "2026-08-03",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=26&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for linux glibc-2.12, glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "26",
+  "version": "26.0.2.1",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "zulu-jdk",
+  "libc": "musl",
+  "url": "https://cdn.azul.com/zulu/bin/zulu26.32.203-ca-jdk26.0.2.1-linux_musl_x64.tar.gz",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu26.32.203-ca-jdk26.0.2.1-linux_musl_x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "aadcca0249b6e07b06747d475ce5a0d3ab1aaaadd5acb4ae3eed0c9f942dac2e",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/09a89bc1-9602-4575-8e3c-1046acca80ca"
+  },
+  "size": 238566516,
+  "released": "2026-08-03",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=26&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for linux glibc-2.12, glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "26",
+  "version": "26.0.2.1",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "zulu-jre",
+  "libc": "glibc",
+  "url": "https://cdn.azul.com/zulu/bin/zulu26.32.203-ca-jre26.0.2.1-linux_x64.zip",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu26.32.203-ca-jre26.0.2.1-linux_x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "0b05c37f4313a7cd5dd1388d168ca9bf860564ad4f8b9543e09c5e008621e635",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/8b3df38c-1d71-4593-9d2a-210dbbf63aa6"
+  },
+  "size": 62566751,
+  "released": "2026-08-03",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=26&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for linux glibc-2.12, glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "26",
+  "version": "26.0.2.1",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "zulu-jre",
+  "libc": "glibc",
+  "url": "https://cdn.azul.com/zulu/bin/zulu26.32.203-ca-jre26.0.2.1-linux_x64.tar.gz",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu26.32.203-ca-jre26.0.2.1-linux_x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "b4eef6dd37ca5c39480c3a3744875e8669666c0a9785dfd325af4953b9e35a8a",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/337e573e-a92d-4e20-a25a-01a69b1e1616"
+  },
+  "size": 62446552,
+  "released": "2026-08-03",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=26&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for linux glibc-2.12, glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "26",
+  "version": "26.0.2.1",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "zulu-jre",
+  "libc": "musl",
+  "url": "https://cdn.azul.com/zulu/bin/zulu26.32.203-ca-jre26.0.2.1-linux_musl_x64.tar.gz",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu26.32.203-ca-jre26.0.2.1-linux_musl_x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d7c72710ffc6364a8c907fddfaaecdf32ea8e1f3e85b3ce8afef09f0cf5018f6",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/80d2548d-fff7-41bc-8059-8d2976c88460"
+  },
+  "size": 63512940,
+  "released": "2026-08-03",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=26&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for linux glibc-2.12, glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "java",
@@ -3561,7 +4579,99 @@
   "released": "2026-08-25",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/26/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 26; newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "26",
+  "version": "26.0.2.1",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "temurin-jre",
+  "libc": "musl",
+  "url": "https://github.com/adoptium/temurin26-binaries/releases/download/jdk-26.0.2.1%2B1/OpenJDK26U-jre_aarch64_alpine-linux_hotspot_26.0.2.1_1.tar.gz",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "e69231c395189e522128c0cd4a77ba51afdb8a4d20043432e782c64598e75f09",
+   "source": "https://github.com/adoptium/temurin26-binaries/releases/download/jdk-26.0.2.1%2B1/OpenJDK26U-jre_aarch64_alpine-linux_hotspot_26.0.2.1_1.tar.gz.sha256.txt"
+  },
+  "size": 61354935,
+  "released": "2026-08-25",
+  "min_os": null,
+  "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/26/ga?page_size=50&page=0&image_type=jre",
+  "notes": null,
+  "reason": "newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "26",
+  "version": "26.0.2.1",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "zulu-jre",
+  "libc": "glibc",
+  "url": "https://cdn.azul.com/zulu/bin/zulu26.32.203-ca-jre26.0.2.1-linux_aarch64.tar.gz",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu26.32.203-ca-jre26.0.2.1-linux_aarch64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "e1b075ad9f32128c951855bfae2508b9e9d812e354d17b78f535f8574ec4b156",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/19533c7e-52ff-4493-b918-256c2025639a"
+  },
+  "size": 62243754,
+  "released": "2026-08-03",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=26&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "26",
+  "version": "26.0.2.1",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "zulu-jre",
+  "libc": "musl",
+  "url": "https://cdn.azul.com/zulu/bin/zulu26.32.203-ca-jre26.0.2.1-linux_musl_aarch64.tar.gz",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu26.32.203-ca-jre26.0.2.1-linux_musl_aarch64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d7f6372aa84b0c782eb1f3199b56eca88b3779f0404b7301ff4302f398498e30",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/36daaac0-ca81-4316-8cf7-ba38176f7a23"
+  },
+  "size": 62185525,
+  "released": "2026-08-03",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=26&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for linux glibc-2.17, glibc-2.19, glibc-2.23, glibc-2.24, glibc-2.27, glibc-2.28, glibc-2.31, glibc-2.34, glibc-2.35, glibc-2.36, glibc-2.39, glibc-2.41"
  },
  {
   "runtime": "java",
@@ -3589,7 +4699,101 @@
   "released": "2026-08-25",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/26/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 26; newest for macos 11, 12, 13, 14, 15, 26"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "26",
+  "version": "26.0.2.1",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "zulu-jdk",
+  "libc": null,
+  "url": "https://cdn.azul.com/zulu/bin/zulu26.32.203-ca-jdk26.0.2.1-macosx_x64.zip",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu26.32.203-ca-jdk26.0.2.1-macosx_x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "95b0801bed00e24a1bdcf5883550a26b950b25366ddeb40cf1f638e44844a8c8",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/be383a34-9973-457d-9a8c-5fd569ea5bfd"
+  },
+  "size": 235009004,
+  "released": "2026-08-03",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=26&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for macos 11, 12, 13, 14, 15, 26"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "26",
+  "version": "26.0.2.1",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "zulu-jre",
+  "libc": null,
+  "url": "https://cdn.azul.com/zulu/bin/zulu26.32.203-ca-jre26.0.2.1-macosx_x64.zip",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu26.32.203-ca-jre26.0.2.1-macosx_x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "0203aedf1456c7f9d6ff05ac280faaa1de8e36df285aa8b40b35555d47fc43cd",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/c4c965f6-654c-4511-987c-dce3a44fbcc2"
+  },
+  "size": 59608021,
+  "released": "2026-08-03",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=26&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for macos 11, 12, 13, 14, 15, 26"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "26",
+  "version": "26.0.2.1",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "zulu-jre",
+  "libc": null,
+  "url": "https://cdn.azul.com/zulu/bin/zulu26.32.203-ca-jre26.0.2.1-macosx_x64.tar.gz",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu26.32.203-ca-jre26.0.2.1-macosx_x64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "95eae15e723de70334c51c312e1c1f3bdf607e9a24c2549abdc6ff59fb535652",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/24bf1d3f-34d9-4fe1-a28f-b7f2341f82c7"
+  },
+  "size": 59389440,
+  "released": "2026-08-03",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=26&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for macos 11, 12, 13, 14, 15, 26"
  },
  {
   "runtime": "java",
@@ -3617,7 +4821,39 @@
   "released": "2026-08-25",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/26/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 26; newest for macos 11, 12, 13, 14, 15, 26"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "26",
+  "version": "26.0.2.1",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "zulu-jre",
+  "libc": null,
+  "url": "https://cdn.azul.com/zulu/bin/zulu26.32.203-ca-jre26.0.2.1-macosx_aarch64.zip",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu26.32.203-ca-jre26.0.2.1-macosx_aarch64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "0a5653fbf72b480889af983ef2ad3abd64e83c6b40e5aa31ae02836c4fe31d6c",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/19286d27-dd97-4c1a-be45-65db17953129"
+  },
+  "size": 58310311,
+  "released": "2026-08-03",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=26&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for macos 11, 12, 13, 14, 15, 26"
  },
  {
   "runtime": "java",
@@ -3645,6 +4881,69 @@
   "released": "2026-08-25",
   "min_os": null,
   "metadata_source": "https://api.adoptium.net/v3/assets/feature_releases/26/ga?page_size=50&page=0&image_type=jre",
-  "notes": null
+  "notes": null,
+  "reason": "newest in major 26; newest for windows 7, server2008r2, 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "26",
+  "version": "26.0.2.1",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "zulu-jdk",
+  "libc": null,
+  "url": "https://cdn.azul.com/zulu/bin/zulu26.32.203-ca-jdk26.0.2.1-win_x64.zip",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu26.32.203-ca-jdk26.0.2.1-win_x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d76294c46dcd0a1d532f7a5b7023fc404d14f3a7e7a7f602329201f20908cd71",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/b506da37-420b-400c-b6d3-9fa794d15d35"
+  },
+  "size": 234971610,
+  "released": "2026-08-03",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=26&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for windows 7, server2008r2, 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
+ },
+ {
+  "runtime": "java",
+  "languages": [
+   "java",
+   "kotlin",
+   "scala"
+  ],
+  "major": "26",
+  "version": "26.0.2.1",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "zulu-jre",
+  "libc": null,
+  "url": "https://cdn.azul.com/zulu/bin/zulu26.32.203-ca-jre26.0.2.1-win_x64.zip",
+  "mirrors": [
+   "https://static.azul.com/zulu/bin/zulu26.32.203-ca-jre26.0.2.1-win_x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "098c6320c5bd8755eb4b8bef1072b016684d6f494ee3f0997d8d861feacb26e1",
+   "source": "https://api.azul.com/metadata/v1/zulu/packages/a4bab906-80c7-4dc8-8342-32ceb2ae72ab"
+  },
+  "size": 60113638,
+  "released": "2026-08-03",
+  "min_os": null,
+  "metadata_source": "https://api.azul.com/metadata/v1/zulu/packages/?java_version=26&release_status=ga&availability_types=CA&page_size=1000&page=1&include_fields=java_version,os,arch,hw_bitness,archive_type,java_package_type,javafx_bundled,crac_supported,lib_c_type,sha256_hash,size,download_url,name,build_date,latest,package_uuid",
+  "notes": null,
+  "reason": "newest for windows 7, server2008r2, 8, server2012, 8.1, server2012r2, 10, server2016, server2019, server2022, 11, server2025"
  }
 ]

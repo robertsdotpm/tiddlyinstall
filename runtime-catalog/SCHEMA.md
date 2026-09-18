@@ -354,3 +354,6 @@ human in the loop. OS ids come from `catalog/os_versions.json`.
 - `tools/make_major_plans.py` uses these rules to keep, per OS id, the
   newest release that runs there (runtimes listed in its
   `OS_FLOOR_RUNTIMES`); each such plan entry gets a `reason`.
+- `file_match` (optional): a regular expression matched against the
+  download's file name, for builds that variant, kind and format can't
+  tell apart (e.g. .NET's rhel.6 builds, R's Mavericks .pkg).
