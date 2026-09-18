@@ -150,10 +150,54 @@ The pack is used whatever the metadata's source: before downloading a
    2`), SHA-256 checked (`sha256sum`, `shasum -a 256` or `openssl`), a
    wrong checksum moves on to the next URL. Then the steps. A file with no
    steps is copied into its folder as is.
+   Before that, the block's **prerequisites** (`need` entries, format.md
+   "Prerequisites") are checked and, if missing, installed (below).
 6. Unpacks the source into the app folder, runs `install` in it with
    `env`, `unset`, `ienv`, `iunset` and `path` applied.
 7. Writes `launch.txt` (format.md 5), `launch.sh`, `uninstall.sh`, the
-   menu entries, and `manifest.txt` last.
+   menu entries, and `manifest.txt` last. If the record has an `icon`
+   (format.md section 2) and the pack holds that PNG, it is copied to
+   `<app>/icon.png` and the `.desktop` file's `Icon=` is its absolute
+   path; otherwise `Icon=application-x-executable`.
+
+### Prerequisites
+
+A plan block can list system-wide prerequisites (`need`, format.md
+"Prerequisites"): a shared library (`ncheck lib`), a command (`ncheck
+cmd`) or a file (`ncheck file`), with distro package names per package
+manager (`npkg`). Checks only look (`ldconfig -p` for this arch, else the
+usual library folders; `command -v`; `[ -e ]`), so they run before the
+transparency screen, which lists each prerequisite as present or
+missing, why it is needed, the packages and the exact root command.
+
+After the user agrees, the missing ones are installed with the first
+package manager found (`apt-get`, `dnf`, `yum`, `zypper`, `apk`,
+`pacman`), in one command, as root, for **that command only** (the app
+still installs for the user):
+
+| Situation | How it becomes root |
+| --- | --- |
+| already root | runs it |
+| `sudo -n` works (no password needed) | `sudo -n sh -c ...` |
+| `--yes` otherwise | doesn't: stops with **exit code 2** and the command to run, e.g. `sudo apt-get update && sudo apt-get install -y libatomic1` |
+| a terminal | `sudo` (asks for the password there) |
+| a desktop, no terminal | `pkexec` |
+
+`apt-get install` is retried after `apt-get update` (fresh cloud images
+have no package lists). The checks then run again; one still failing
+stops the install. Nothing is removed on uninstall: other programs may
+use the packages.
+
+A missing prerequisite with no package for this machine's manager (or on
+macOS, where there is no package manager to use) stops the install with
+exit code 2 and the plan's `nhow` text. With a terminal or dialogs and
+without `--yes`, the plan's `nstart` command is run first, as the user:
+for Xcode's Command Line Tools that is `xcode-select --install`, which
+opens Apple's own installer; the user runs this installer again after it.
+
+`test_prereqs.sh` tests all of this offline in a clean environment
+(`env -i`, a throwaway `HOME`, no display) with a fake package manager
+and `sudo` on `PATH`, plus the icon.
 
 On any failure, everything this run created is removed, newest first
 (folders it only created as parents are removed only if empty), and the
