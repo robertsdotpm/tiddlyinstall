@@ -131,7 +131,7 @@ test('request checks: versions and scoped names', { skip }, (t) => {
   assert.equal(validate(inline({ mode: 'B' }), env), 'build');
   assert.equal(validate(inline({ mode: 'C', offline: true }), env), 'pack');
   assert.throws(() => validate(inline({ mode: 'A', offline: true }), env), /offline installers can't be signed by Installer Builder/);
-  assert.throws(() => validate(inline({ mode: 'C', name: 'x‮' }), env), /control or text-direction/);
+  assert.throws(() => validate(inline({ mode: 'C', name: 'x\u202e' }), env), /control or text-direction/);
   assert.throws(() => validate(inline({ mode: 'C', runtime: 'constructor' }), env), /unknown runtime "constructor"/);
 });
 

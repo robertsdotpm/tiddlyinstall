@@ -112,8 +112,11 @@ test('the server', { skip }, async (t) => {
   await t.test('bad requests', async () => {
     const post = (b) => json('/api/jobs', { method: 'POST', body: b });
     assert.deepEqual((await post('{')).j, { code: 'bad_json', error: 'the request isn\'t valid JSON' });
+    // Over 4 MB: read up to the limit (so not valid JSON), and the connection closed.
+    const big = await get('/api/jobs', { method: 'POST', body: JSON.stringify({ files: { a: 'x'.repeat(5 << 20) } }) });
+    assert.deepEqual([big.status, JSON.parse(big.text).code, big.headers.connection], [400, 'bad_json', 'close']);
     assert.deepEqual((await post('{"runtime":"python","mode":"D"}')).j, { code: 'invalid', error: 'mode must be A, B or C' });
-    const ctl = await post(JSON.stringify({ runtime: 'python', mode: 'C', name: 'a‮b', source: { kind: 'inline' }, files: { a: 'b' } }));
+    const ctl = await post(JSON.stringify({ runtime: 'python', mode: 'C', name: 'a' + String.fromCharCode(0x202e) + 'b', source: { kind: 'inline' }, files: { a: 'b' } }));
     assert.equal(ctl.j.error, 'fields can\'t contain control or text-direction characters');
     assert.equal((await json('/api/records/xyz')).j.code, 'bad_hash');
     assert.equal((await json('/api/plan/' + 'a'.repeat(26))).status, 404);

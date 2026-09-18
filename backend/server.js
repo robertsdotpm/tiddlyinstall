@@ -114,16 +114,29 @@ function apiError(res, status, code, msg) {
   writeJSON(res, status, sorted({ error: msg, code }));
 }
 
-async function readBody(req, limit) {
-  const chunks = [];
-  let n = 0;
-  for await (const c of req) {
-    if (n >= limit) continue;          // Go's io.LimitReader: the rest is ignored
-    const take = c.subarray(0, limit - n);
-    chunks.push(take);
-    n += take.length;
-  }
-  return Buffer.concat(chunks);
+// Reads at most `limit` bytes of a request body (Go's io.LimitReader): the
+// rest is not read, and the connection is closed after the answer.
+function readBody(req, res, limit) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    let n = 0;
+    const onData = (c) => {
+      const take = c.subarray(0, limit - n);
+      chunks.push(take);
+      n += take.length;
+      if (n >= limit) {
+        req.removeListener('data', onData);
+        req.removeListener('end', onEnd);
+        req.pause();
+        res.setHeader('Connection', 'close');
+        resolve(Buffer.concat(chunks));
+      }
+    };
+    const onEnd = () => resolve(Buffer.concat(chunks));
+    req.on('data', onData);
+    req.on('end', onEnd);
+    req.on('error', reject);
+  });
 }
 
 // path.Clean, keeping a trailing slash (net/http's cleanPath).
@@ -209,7 +222,7 @@ export class Server {
     try { text = fs.readFileSync(path.join(this.data, 'takedown.txt'), 'utf8'); } catch (e) { return null; }
     const out = [];
     for (const raw of text.split('\n')) {
-      const l = raw.replace(/^[\s ]+|[\s ]+$/g, '');
+      const l = raw.replace(/^[\s\u0085\u00a0]+|[\s\u0085\u00a0]+$/g, '');
       if (l !== '' && !l.startsWith('#')) out.push(l);
     }
     return out.length ? out : null;   // Go's nil slice: "entries": null
@@ -335,7 +348,7 @@ export class Server {
     // Up to 1 MB of inline source plus a 1 MB icon in base64.
     let body;
     try {
-      body = await readBody(req, 4 << 20);
+      body = await readBody(req, res, 4 << 20);
     } catch (e) {
       return apiError(res, 400, 'bad_request', 'couldn\'t read the request');
     }
@@ -509,7 +522,7 @@ export class Server {
     const u = Object.hasOwn(TSA_URLS, name) ? TSA_URLS[name] : null;
     if (!u) return apiError(res, 403, 'not_allowed', 'Unknown timestamp server; the relay only forwards to a fixed list.');
     let body;
-    try { body = await readBody(req, 4097); } catch (e) { body = null; }
+    try { body = await readBody(req, res, 4097); } catch (e) { body = null; }
     if (!body || body.length < 2 || body.length > 4096 || body[0] !== 0x30) {
       return apiError(res, 400, 'bad_request', 'The body must be one DER TimeStampReq of at most 4 KB.');
     }
@@ -574,7 +587,7 @@ async function main() {
     o = parseFlags(process.argv.slice(2));
   } catch (e) {
     process.stderr.write(e.message + '\n');
-    process.exit(2);
+    process.exit(e.help ? 0 : 2);
   }
   const s = new Server(o);
   try {

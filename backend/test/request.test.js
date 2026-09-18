@@ -36,7 +36,7 @@ test('decoding: wrong types and non-objects are bad JSON', () => {
 test('JSON as Go writes it', () => {
   const ls = String.fromCharCode(0x2028), ps = String.fromCharCode(0x2029);
   assert.equal(goJSON(sorted({ error: 'a <b> & c', code: 'x' })), '{"code":"x","error":"a \\u003cb\\u003e \\u0026 c"}');
-  assert.equal(goJSON({ s: ls + ps + '\b\f\n' }), '{"s":"\\u2028\\u2029\\u001b\\b\\f\\n"}');
+  assert.equal(goJSON({ s: ls + ps + '\u001b\b\f\n' }), '{"s":"\\u2028\\u2029\\u001b\\b\\f\\n"}');
   assert.equal(goJSON({ a: null, b: undefined, c: [1, true], d: new Raw('{"x":1}') }), '{"a":null,"c":[1,true],"d":{"x":1}}');
 });
 

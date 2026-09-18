@@ -33,7 +33,7 @@ page is lost.
 | `js/icon.js` | Icons in the browser: a `.ico` (BMP for XP + PNG) written into a `.exe` with resedit-js, an `.icns` for the `.app`, and the Linux launcher PNG packed with an `icon` record key. PNG is encoded in JS so it is deterministic |
 | `vendor/resedit-bundle.js` | resedit-js 2.0.3 + pe-library 1.0.1 (MIT, (c) 2018 jet; see `vendor/LICENSE.*`), bundled by `tools/build_resedit_bundle.py`. `edit.html` loads it; the one-file site inlines it |
 | `tools/build_site.py` | Builds the site: one HTML file, `dist/index.html` (gitignored), with every page, the CSS, the JS, the resedit bundle, the three unsigned bases and the catalogue snapshot inside. The build server serves it; saved and opened from disk it builds installers with no server (docs/plan.md section 1.11). `--multi` also writes separate pages |
-| `js/resolve.js`, `js/builder.js`, `js/local-api.js`, `js/router.js` | The plan resolver, the job builder (shared with the server), the in-page API used when there is no build server, and the one-file site's page switching |
+| `js/resolve.js`, `js/builder.js`, `js/local-api.js`, `js/router.js` | The plan resolver and the job builder (both shared with the build server in `backend/`), the in-page API used when there is no build server, and the one-file site's page switching |
 | `tests/ibfile.html`, `tests/icon.html` | Unit tests for `js/ibfile.js` and `js/icon.js` in the browser. Print PASS/FAIL. Fixtures come from `tests/make_fixtures.py` (Python's tarfile and zipfile, plus a synthetic PE with an icon resource) |
 | `tests/mock_server.py` | A stand-in build server for trying the pages (`python3 tests/mock_server.py 8094`, then open `new.html?api=http://127.0.0.1:8094`) |
 
@@ -43,6 +43,46 @@ Headless test run:
 python3 -m http.server 8093 &
 google-chrome --headless=new --virtual-time-budget=20000 --dump-dom http://127.0.0.1:8093/tests/ibfile.html | grep -o 'PASS all [0-9]*\|FAIL [^<]*'
 ```
+
+## Build server
+
+`backend/` is the build server: plain ES modules on Node.js 20 or later
+(`node:http`, no web framework), with BullMQ and ioredis for the job queue
+on Redis. It runs the same JavaScript as the page: `js/resolve.js` (plans),
+`js/builder.js` (jobs), `js/ibfile.js` (installer files) and `js/icon.js`
+(icons). It serves the API ([docs/api.md](docs/api.md)), the one-file site
+from `dist/` (`python3 tools/build_site.py` writes it), our copies of the
+runtime files at `/mirror/`, and the built installers. The Go server in
+`server/` is the same service and is kept, for now, as the reference the
+Node one is checked against.
+
+```
+cd backend && npm ci                     # BullMQ and ioredis
+node backend/server.js -addr :8080 -redis 127.0.0.1:6390 -public http://10.0.1.76:8080
+```
+
+The flags are the Go server's (`node backend/server.js -h` lists them):
+`-addr`, `-redis`, `-redis-db`, `-data` (records, sources, icons, built
+files and the plan signing key; default `server/data`), `-catalog` and
+`-local` (the runtime catalogue and our copies of its files, default under
+`~/projects/installer-builder-runtimes`), `-policy`, `-site`, `-bases`,
+`-public` (this server's URL, written into records), `-workers`, `-mirror`
+and `-mirror-last` (where plans point for our mirror, and whether it comes
+last). A second instance needs its own `-redis-db` and `-data`.
+
+Tests:
+
+```
+cd backend && npm test                   # node --test: the Go unit tests, ported, and the server end to end
+node tests/backend-oracle.mjs --go http://127.0.0.1:8080 --node http://127.0.0.1:8090 \
+     --node-data server/data-node --go-data server/data
+                                         # the same requests to the Go and Node servers, answers compared
+```
+
+The server test needs Redis and uses database 5 (`IB_TEST_REDIS`,
+`IB_TEST_REDIS_DB`). For the oracle, run the Node server with the same
+`-public` as the Go server, so plans, records and signatures can be
+compared byte for byte.
 
 ## Design notes
 
