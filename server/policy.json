@@ -1,0 +1,132 @@
+{
+ "mirror_base": "http://10.0.1.76:8080/mirror",
+ "mirror_first": true,
+ "external_tmp_files": ["get-pip.py", "7z.exe", "7z.dll", "choices.xml"],
+ "method_order": ["unpack", "extract", "run"],
+ "unknown_floor": {"windows": 1000, "macos": 1100, "linux": 228},
+ "runtimes": {
+  "python": {
+   "label": "Python",
+   "variants": ["pbs_stripped", "embed", "xp-backport", ""],
+   "exclude_variants": ["pbs"],
+   "formats": {"windows": ["zip", "msi", "exe"], "linux": ["tar.gz"], "macos": ["tar.gz"]},
+   "install_files": ["requirements.txt", "setup.py", "pyproject.toml", "setup.cfg"],
+   "asyncio": {"xp": "==3.5.*", "vista": "==3.7.0", "7": "==3.8.0", "8": "==3.8.0", "8.1": "==3.8.0", "10": "==3.13.0", "11": "==3.13.0"},
+   "launch": "{runtime} -m {project}"
+  },
+  "node": {
+   "label": "Node.js",
+   "variants": [""],
+   "only": true,
+   "formats": {"windows": ["7z", "zip"], "linux": ["tar.gz", "tar.xz"], "macos": ["tar.gz", "tar.xz"]},
+   "kinds": ["archive"],
+   "install_files": ["package.json"],
+   "launch": "{runtime} {app_dir}"
+  },
+  "ruby": {
+   "label": "Ruby",
+   "variants": ["", "ubuntu-22.04", "ubuntu-24.04", "macos-arm64", "macos-x64"],
+   "exclude_variants": ["devkit"],
+   "formats": {"windows": ["7z"], "linux": ["tar.gz"], "macos": ["tar.gz"]},
+   "kinds": ["archive"],
+   "install_files": ["Gemfile"],
+   "launch": "{runtime} {app_dir}/{project}.rb"
+  },
+  "php": {
+   "label": "PHP",
+   "variants": ["nts-vs17", "nts-vs16", "nts-vc15", "nts-vc14", "nts-vc11", "nts-vc9", "nts-vc6", "", "static-php-cli"],
+   "only": true,
+   "formats": {"windows": ["zip"], "linux": ["tar.gz"], "macos": ["tar.gz"]},
+   "kinds": ["archive"],
+   "install_files": ["composer.json"],
+   "launch": "{runtime} {app_dir}/index.php"
+  },
+  "java": {
+   "label": "Java",
+   "variants": ["zulu-jdk", "temurin-jdk"],
+   "only": true,
+   "formats": {"windows": ["zip"], "linux": ["tar.gz"], "macos": ["tar.gz", "zip"]},
+   "kinds": ["archive"],
+   "launch": "{runtime} -jar {app_dir}/{project}.jar"
+  },
+  "dotnet": {
+   "label": ".NET",
+   "variants": ["sdk"],
+   "only": true,
+   "formats": {"windows": ["zip"], "linux": ["tar.gz"], "macos": ["tar.gz"]},
+   "kinds": ["archive"],
+   "compiled": true,
+   "install_command": {
+    "windows": "\"{runtime_dir}\\dotnet.exe\" build -c Release -o \"{app_dir}\\bin\"",
+    "linux": "\"{runtime_dir}/dotnet\" build -c Release -o \"{app_dir}/bin\"",
+    "macos": "\"{runtime_dir}/dotnet\" build -c Release -o \"{app_dir}/bin\""
+   },
+   "launch": "{runtime} {app_dir}/bin/{project}.dll"
+  },
+  "r": {
+   "label": "R",
+   "variants": ["", "posit-ubuntu-2204"],
+   "formats": {"windows": ["exe"], "linux": ["deb"], "macos": ["pkg"]},
+   "launch": "{runtime} {app_dir}/main.R"
+  },
+  "go": {
+   "label": "Go",
+   "variants": [""],
+   "only": true,
+   "formats": {"windows": ["zip"], "linux": ["tar.gz"], "macos": ["tar.gz"]},
+   "kinds": ["archive"],
+   "compiled": true,
+   "launch": "{app_dir}/{project}{exe}"
+  },
+  "rust": {
+   "label": "Rust",
+   "variants": ["gnu", ""],
+   "only": true,
+   "formats": {"windows": ["tar.xz", "tar.gz"], "linux": ["tar.xz", "tar.gz"], "macos": ["tar.xz", "tar.gz"]},
+   "kinds": ["archive"],
+   "compiled": true,
+   "launch": "{app_dir}/target/release/{project}{exe}"
+  },
+  "zig": {
+   "label": "Zig",
+   "variants": [""],
+   "formats": {"windows": ["zip"], "linux": ["tar.xz"], "macos": ["tar.xz"]},
+   "compiled": true,
+   "install_command": {
+    "windows": "\"{runtime_dir}\\zig.exe\" build-exe -O ReleaseSafe -femit-bin=\"{app_dir}\\{project}.exe\" main.zig",
+    "linux": "\"{runtime_dir}/zig\" build-exe -O ReleaseSafe -femit-bin=\"{app_dir}/{project}\" main.zig",
+    "macos": "\"{runtime_dir}/zig\" build-exe -O ReleaseSafe -femit-bin=\"{app_dir}/{project}\" main.zig"
+   },
+   "launch": "{app_dir}/{project}{exe}"
+  },
+  "nim": {
+   "label": "Nim",
+   "variants": [""],
+   "only": true,
+   "formats": {"windows": ["zip"], "linux": ["tar.xz"], "macos": ["tar.xz"]},
+   "kinds": ["archive"],
+   "compiled": true,
+   "install_command": {
+    "windows": "\"{runtime_dir}\\bin\\nim.exe\" c -d:release --nimcache:\"{data_dir}\\nimcache\" -o:\"{app_dir}\\{project}.exe\" {project}.nim",
+    "linux": "\"{runtime_dir}/bin/nim\" c -d:release --nimcache:\"{data_dir}/nimcache\" -o:\"{app_dir}/{project}\" {project}.nim",
+    "macos": "\"{runtime_dir}/bin/nim\" c -d:release --nimcache:\"{data_dir}/nimcache\" -o:\"{app_dir}/{project}\" {project}.nim"
+   },
+   "launch": "{app_dir}/{project}{exe}"
+  },
+  "cc": {
+   "label": "C/C++",
+   "variants": ["winlibs-posix-ucrt", "winlibs-posix-msvcrt", ""],
+   "only": true,
+   "formats": {"windows": ["zip", "7z"], "linux": ["tar.xz"], "macos": ["tar.xz"]},
+   "kinds": ["archive"],
+   "compiled": true,
+   "toolchains": {"winlibs-posix-ucrt": "gcc-winlibs-ucrt", "winlibs-posix-msvcrt": "gcc-winlibs-msvcrt", "": "llvm"},
+   "install_command": {
+    "windows": "\"{runtime_dir}\\bin\\gcc.exe\" -O2 -o \"{app_dir}\\{project}.exe\" *.c",
+    "linux": "\"{runtime_dir}/bin/clang\" -O2 -o \"{app_dir}/{project}\" *.c",
+    "macos": "\"{runtime_dir}/bin/clang\" -O2 -o \"{app_dir}/{project}\" *.c"
+   },
+   "launch": "{app_dir}/{project}{exe}"
+  }
+ }
+}
