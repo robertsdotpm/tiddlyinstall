@@ -2,6 +2,8 @@ package catalog
 
 import (
 	"encoding/json"
+	"errors"
+	"io/fs"
 	"regexp"
 	"strings"
 )
@@ -19,7 +21,7 @@ type compRange struct {
 	Variants []string // cc toolchains only
 }
 
-func loadCompilerMin(path string) ([]compRange, error) {
+func loadCompilerMin(fsys fs.FS, name string) ([]compRange, error) {
 	var raw struct {
 		Compilers []struct {
 			Compiler string `json:"compiler"`
@@ -37,10 +39,9 @@ func loadCompilerMin(path string) ([]compRange, error) {
 			} `json:"toolchains"`
 		} `json:"compilers"`
 	}
-	if !fileExists(path) {
+	if err := readJSON(fsys, name, &raw); errors.Is(err, fs.ErrNotExist) {
 		return nil, nil
-	}
-	if err := readJSON(path, &raw); err != nil {
+	} else if err != nil {
 		return nil, err
 	}
 	var out []compRange

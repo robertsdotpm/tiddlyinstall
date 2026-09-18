@@ -266,12 +266,17 @@ func LoadPolicy(path string) (*Policy, error) {
 	if err != nil {
 		return nil, err
 	}
+	return ParsePolicy(b, path)
+}
+
+// ParsePolicy reads a policy file's contents; name is for errors.
+func ParsePolicy(b []byte, name string) (*Policy, error) {
 	p := &Policy{}
 	if err := json.Unmarshal(b, p); err != nil {
 		return nil, err
 	}
 	if err := p.validatePrereqs(); err != nil {
-		return nil, fmt.Errorf("%s: %w", path, err)
+		return nil, fmt.Errorf("%s: %w", name, err)
 	}
 	return p, nil
 }

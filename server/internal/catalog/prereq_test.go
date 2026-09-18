@@ -1,6 +1,8 @@
 package catalog
 
 import (
+	"bytes"
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -211,12 +213,18 @@ func TestPrereqPolicyValidation(t *testing.T) {
 	if _, err := LoadPolicy(filepath.Join(filepath.Dir(me), "..", "..", "policy.json")); err != nil {
 		t.Fatalf("the repo's policy: %v", err)
 	}
+	// Compacted, so the patterns don't depend on how the file is laid out.
+	var cb bytes.Buffer
+	if err := json.Compact(&cb, good); err != nil {
+		t.Fatal(err)
+	}
+	good = cb.Bytes()
 	bad := map[string][2]string{
-		"unknown prerequisite": {`"prerequisites": ["libatomic"]`, `"prerequisites": ["libatomicc"]`},
-		"shell in a package":   {`"apt-get": "libatomic1"`, `"apt-get": "libatomic1; rm -rf /"`},
-		"unknown check":        {`["lib", "libatomic.so.1"]`, `["exec", "true"]`},
-		"lib check on windows": {`["reg", "64", "HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\x64", "Minor", "44"]`, `["lib", "x"]`},
-		"bad sha":              {`"sha256": "cc0ff0eb`, `"sha256": "CC0ff0eb`},
+		"unknown prerequisite": {`"prerequisites":["libatomic"]`, `"prerequisites":["libatomicc"]`},
+		"shell in a package":   {`"apt-get":"libatomic1"`, `"apt-get":"libatomic1; rm -rf /"`},
+		"unknown check":        {`["lib","libatomic.so.1"]`, `["exec","true"]`},
+		"lib check on windows": {`["reg","64","HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\x64","Minor","44"]`, `["lib","x"]`},
+		"bad sha":              {`"sha256":"cc0ff0eb`, `"sha256":"CC0ff0eb`},
 		"bad registry root":    {`"HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\x86"`, `"HKXX\\SOFTWARE"`},
 	}
 	for name, r := range bad {

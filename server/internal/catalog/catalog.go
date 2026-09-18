@@ -6,9 +6,11 @@ package catalog
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io/fs"
 	"os"
-	"path/filepath"
+	"path"
 	"sort"
 	"strconv"
 	"strings"
@@ -16,8 +18,8 @@ import (
 
 // Release is one downloadable file from <runtime>/releases.json.
 type Release struct {
-	Runtime  string          `json:"runtime"`
-	Major    string          `json:"major"`
+	Runtime  string          `json:"runtime,omitempty"`
+	Major    string          `json:"major,omitempty"`
 	Version  string          `json:"version"`
 	OS       string          `json:"os"`
 	Arch     string          `json:"arch"`
@@ -27,14 +29,15 @@ type Release struct {
 	Libc     *string         `json:"libc"`
 	URL      string          `json:"url"`
 	Mirrors  []string        `json:"mirrors"`
-	Checksum json.RawMessage `json:"checksum"`
+	Checksum json.RawMessage `json:"checksum,omitempty"`
 	Size     int64           `json:"size"`
 	MinOS    json.RawMessage `json:"min_os"`
 
 	Folder string  `json:"-"` // catalogue folder (cc holds llvm, gcc, ...)
 	V      Version `json:"-"`
-	SHA256 string  `json:"-"`
-	Local  string  `json:"-"` // path of our copy, if downloaded
+	// Filled in by the loader; a snapshot (snapshot.go) carries them.
+	SHA256 string `json:"ib_sha256,omitempty"`
+	Local  string `json:"ib_local,omitempty"` // path of our copy, if downloaded
 }
 
 func (r *Release) VariantStr() string {
@@ -120,19 +123,35 @@ type Catalog struct {
 
 // Load reads the catalogue folder, the policy file and our local copies.
 func Load(dir, policyPath, localRoot, cachePath string) (*Catalog, error) {
-	c := &Catalog{Dir: dir, Runtimes: map[string]*Runtime{}}
-	var err error
-	if c.Policy, err = LoadPolicy(policyPath); err != nil {
+	pb, err := os.ReadFile(policyPath)
+	if err != nil {
 		return nil, err
 	}
-	if c.OS, err = LoadOSScale(filepath.Join(dir, "os_versions.json")); err != nil {
+	pol, err := ParsePolicy(pb, policyPath)
+	if err != nil {
 		return nil, err
 	}
-	if c.compMin, err = loadCompilerMin(filepath.Join(dir, "compilers_min_os.json")); err != nil {
+	c, err := load(os.DirFS(dir), pol)
+	if err != nil {
 		return nil, err
 	}
+	c.Dir = dir
 	if localRoot != "" {
 		c.local = NewLocalIndex(localRoot, cachePath)
+	}
+	return c, nil
+}
+
+// load reads the catalogue from fsys: the folder on disk, or a snapshot
+// (snapshot.go) whose releases already carry their SHA-256 and our copy.
+func load(fsys fs.FS, pol *Policy) (*Catalog, error) {
+	c := &Catalog{Runtimes: map[string]*Runtime{}, Policy: pol}
+	var err error
+	if c.OS, err = loadOSScale(fsys, "os_versions.json"); err != nil {
+		return nil, err
+	}
+	if c.compMin, err = loadCompilerMin(fsys, "compilers_min_os.json"); err != nil {
+		return nil, err
 	}
 	for _, id := range c.Policy.RuntimeIDs() {
 		rt := &Runtime{ID: id}
@@ -140,13 +159,13 @@ func Load(dir, policyPath, localRoot, cachePath string) (*Catalog, error) {
 		if folder == "" {
 			folder = id
 		}
-		if err := readJSON(filepath.Join(dir, folder, "releases.json"), &rt.Releases); err != nil {
+		if err := readJSON(fsys, path.Join(folder, "releases.json"), &rt.Releases); err != nil {
 			return nil, err
 		}
 		var inst struct {
 			Recipes []*Recipe `json:"recipes"`
 		}
-		if err := readJSON(filepath.Join(dir, folder, "install.json"), &inst); err != nil {
+		if err := readJSON(fsys, path.Join(folder, "install.json"), &inst); err != nil {
 			return nil, err
 		}
 		for i, r := range inst.Recipes {
@@ -156,17 +175,18 @@ func Load(dir, policyPath, localRoot, cachePath string) (*Catalog, error) {
 		var sup struct {
 			Rules []SupportRule `json:"rules"`
 		}
-		if p := filepath.Join(dir, folder, "os_support.json"); fileExists(p) {
-			if err := readJSON(p, &sup); err != nil {
-				return nil, err
-			}
+		if err := readJSON(fsys, path.Join(folder, "os_support.json"), &sup); err == nil {
 			rt.Rules = sup.Rules
+		} else if !errors.Is(err, fs.ErrNotExist) {
+			return nil, err
 		}
 		keep := rt.Releases[:0]
 		for _, r := range rt.Releases {
 			r.Folder = folder
 			r.V = ParseVersion(r.Version)
-			r.SHA256 = checksumSHA256(r.Checksum)
+			if r.SHA256 == "" {
+				r.SHA256 = checksumSHA256(r.Checksum)
+			}
 			if Matches(r.V, c.Policy.Runtimes[id].Versions) {
 				keep = append(keep, r)
 			}
@@ -177,13 +197,13 @@ func Load(dir, policyPath, localRoot, cachePath string) (*Catalog, error) {
 	return c, nil
 }
 
-func readJSON(path string, v any) error {
-	b, err := os.ReadFile(path)
+func readJSON(fsys fs.FS, name string, v any) error {
+	b, err := fs.ReadFile(fsys, name)
 	if err != nil {
 		return err
 	}
 	if err := json.Unmarshal(b, v); err != nil {
-		return fmt.Errorf("%s: %w", path, err)
+		return fmt.Errorf("%s: %w", name, err)
 	}
 	return nil
 }
@@ -288,7 +308,7 @@ func verInt(s string) int {
 	return a*100 + b
 }
 
-func LoadOSScale(path string) (*OSScale, error) {
+func loadOSScale(fsys fs.FS, name string) (*OSScale, error) {
 	var raw struct {
 		Windows []struct {
 			ID string `json:"id"`
@@ -307,7 +327,7 @@ func LoadOSScale(path string) (*OSScale, error) {
 			Distros []string `json:"distros"`
 		} `json:"linux_musl"`
 	}
-	if err := readJSON(path, &raw); err != nil {
+	if err := readJSON(fsys, name, &raw); err != nil {
 		return nil, err
 	}
 	s := &OSScale{ByFamily: map[string][]OSID{}, byID: map[string]OSID{}}

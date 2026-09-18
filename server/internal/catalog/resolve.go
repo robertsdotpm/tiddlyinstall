@@ -269,6 +269,27 @@ func (c *Catalog) sha(e *Release) string {
 	return e.SHA256
 }
 
+// usable reports whether the policy lets the resolver pick a release on
+// any machine of its OS family (candidates, and what Snapshot keeps).
+func usable(pol *RuntimePolicy, e *Release) bool {
+	if e.Kind == "source" || e.V.Pre {
+		return false
+	}
+	if pol == nil {
+		return true
+	}
+	if len(pol.Kinds) > 0 && !contains(pol.Kinds, e.Kind) {
+		return false
+	}
+	if contains(pol.ExcludeVariants, e.VariantStr()) || contains(pol.ExcludeVariantsOn[e.OS], e.VariantStr()) {
+		return false
+	}
+	if pol.Only && indexOf(pol.Variants, e.VariantStr()) < 0 {
+		return false
+	}
+	return pol.Formats[e.OS] == nil || indexOf(pol.Formats[e.OS], e.Format) >= 0
+}
+
 func (c *Catalog) candidates(rt *Runtime, family, machine string) []*Release {
 	pol := c.Policy.Runtimes[rt.ID]
 	type ranked struct {
@@ -278,32 +299,20 @@ func (c *Catalog) candidates(rt *Runtime, family, machine string) []*Release {
 	}
 	var list []ranked
 	for _, e := range rt.Releases {
-		if e.OS != family || e.Kind == "source" || e.V.Pre {
+		if e.OS != family || !usable(pol, e) {
 			continue
 		}
 		ok, native := archOK(family, machine, e.Arch)
 		if !ok {
 			continue
 		}
-		if pol != nil && len(pol.Kinds) > 0 && !contains(pol.Kinds, e.Kind) {
-			continue
-		}
-		vi := len(pol.Variants)
+		vi, fi := len(pol.Variants), 0
 		if pol != nil {
-			if contains(pol.ExcludeVariants, e.VariantStr()) || contains(pol.ExcludeVariantsOn[family], e.VariantStr()) {
-				continue
-			}
 			if i := indexOf(pol.Variants, e.VariantStr()); i >= 0 {
 				vi = i
-			} else if pol.Only {
-				continue
 			}
-		}
-		fi := 0
-		if pol != nil && pol.Formats[family] != nil {
-			fi = indexOf(pol.Formats[family], e.Format)
-			if fi < 0 {
-				continue
+			if pol.Formats[family] != nil {
+				fi = indexOf(pol.Formats[family], e.Format)
 			}
 		}
 		list = append(list, ranked{e, native, vi, fi})
