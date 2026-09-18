@@ -1,0 +1,1365 @@
+#!/bin/sh
+# Installer Builder base engine for Linux and macOS (POSIX sh + awk).
+#
+# One file, identical in every installer. It is the whole Linux `.run`
+# (with a metadata block appended after the final `exit` line) and the
+# executable of the macOS `Install.app`. A copy of it is kept in each
+# installed app's folder as `uninstall.sh`.
+#
+# Spec: docs/format.md (records, plans, metadata block, manifest, launch),
+# docs/plan.md 1.1-1.7. See bases/unix/README.md.
+#
+# Nothing in here is per-runtime. Only platform plumbing (downloader,
+# sha256 tool, OS version, dialogs, menu entries) branches on the OS.
+
+IB_ENGINE_VERSION=1
+IB_DEFAULT_BACKEND=http://10.0.1.76:8080
+
+tab=$(printf '\t')
+cr=$(printf '\r')
+nl='
+'
+ifs0=$IFS
+set -f
+umask 022
+
+# ---------------------------------------------------------------- basics
+
+ib_log() {
+	[ -n "$IB_LOG" ] && printf '%s\n' "$*" >> "$IB_LOG"
+	return 0
+}
+
+# Progress line: log it, and show it when a terminal is watching.
+ib_say() {
+	ib_log "$*"
+	[ "$ib_ui" = tty ] && printf '%s\n' "$*" >&2
+	return 0
+}
+
+ib_have() { command -v "$1" >/dev/null 2>&1; }
+
+# Quote a string for sh.
+ib_shq() {
+	printf "'%s'" "$(printf '%s' "$1" | sed "s/'/'\\\\''/g")"
+}
+
+ib_abs() {
+	case $1 in
+	/*) printf '%s' "$1" ;;
+	*) printf '%s/%s' "$PWD" "$1" ;;
+	esac
+}
+
+ib_fail() {
+	ib_progress_stop
+	ib_log "FAILED: $*"
+	[ -n "$IB_CREATED" ] && [ -f "$IB_CREATED" ] && ib_rollback
+	case $ib_ui in
+	tty | none | '')
+		if [ -n "$IB_LOG" ] && [ -s "$IB_LOG" ]; then
+			printf '%s\n' '--- last lines of the log ---' >&2
+			tail -n 15 "$IB_LOG" >&2
+		fi
+		printf 'Installer Builder: %s\n' "$*" >&2
+		[ -n "$IB_LOG" ] && printf 'Log: %s\n' "$IB_LOG" >&2
+		;;
+	zenity)
+		[ "$opt_yes" = 1 ] || zenity --text-info --title="Installer Builder: failed - $*" --filename="$IB_LOG" --width=780 --height=560 2>/dev/null
+		;;
+	*)
+		[ "$opt_yes" = 1 ] || ib_message error "Installer Builder" "$*$nl${nl}Log: $IB_LOG$nl$nl$(tail -n 8 "$IB_LOG" 2>/dev/null)"
+		;;
+	esac
+	exit 1
+}
+
+ib_cleanup() {
+	[ -n "$IB_WORK" ] && [ -d "$IB_WORK" ] && rm -rf "$IB_WORK"
+	[ -n "$ib_progress_pid" ] && kill "$ib_progress_pid" 2>/dev/null
+	return 0
+}
+
+# ---------------------------------------------------------------- platform plumbing
+
+ib_detect_os() {
+	case $(uname -s) in
+	Linux) IB_OS=linux ;;
+	Darwin) IB_OS=macos ;;
+	*) IB_OS=unknown ;;
+	esac
+	m=$(uname -m)
+	case $m in
+	x86_64 | amd64) IB_ARCH=amd64 ;;
+	i[3-6]86 | x86) IB_ARCH=x86 ;;
+	aarch64 | arm64) IB_ARCH=arm64 ;;
+	*) IB_ARCH=$m ;;
+	esac
+	if [ "$IB_OS" = macos ]; then
+		# Under Rosetta uname says x86_64; the hardware is what counts.
+		[ "$(sysctl -n hw.optional.arm64 2>/dev/null)" = 1 ] && IB_ARCH=arm64
+		v=$(sw_vers -productVersion 2>/dev/null)
+		IB_OSVER=$(printf '%s\n' "$v" | awk -F. '{ printf "%d", $1 * 100 + $2 }')
+		IB_OSDESC="macOS $v $IB_ARCH"
+	else
+		v=$(getconf GNU_LIBC_VERSION 2>/dev/null)
+		[ -z "$v" ] && v=$(ldd --version 2>&1 | sed -n 1p)
+		IB_OSVER=$(printf '%s\n' "$v" | awk '
+			/musl/ { print 0; exit }
+			{ for (i = NF; i > 0; i--) if ($i ~ /^[0-9]+\.[0-9]+/) { split($i, p, "."); print p[1] * 100 + p[2]; exit } }
+			END { if (NR == 0) print 0 }')
+		[ -z "$IB_OSVER" ] && IB_OSVER=0
+		IB_OSDESC="Linux, ${v#glibc } ($IB_OSVER), $IB_ARCH"
+	fi
+}
+
+ib_sha256() { # [file]; reads stdin without an argument
+	if ib_have sha256sum; then
+		sha256sum ${1:+"$1"} | awk '{ print tolower($1) }'
+	elif ib_have shasum; then
+		shasum -a 256 ${1:+"$1"} | awk '{ print tolower($1) }'
+	elif ib_have openssl; then
+		openssl dgst -sha256 ${1:+"$1"} | awk '{ print tolower($NF) }'
+	else
+		ib_fail "No SHA-256 tool (sha256sum, shasum or openssl) on this machine."
+	fi
+}
+
+# Lowercase RFC 4648 base32 (no padding) of a hex string, first $2 chars.
+ib_b32() {
+	awk -v h="$1" -v n="$2" 'BEGIN {
+		a = "abcdefghijklmnopqrstuvwxyz234567"; hx = "0123456789abcdef"; b = ""
+		for (i = 1; i <= length(h); i++) {
+			v = index(hx, substr(h, i, 1)) - 1
+			b = b int(v / 8) % 2 int(v / 4) % 2 int(v / 2) % 2 v % 2
+		}
+		o = ""
+		for (i = 0; i < n; i++) {
+			v = 0
+			for (j = 1; j <= 5; j++) { c = substr(b, i * 5 + j, 1); v = v * 2 + (c == "" ? 0 : c) }
+			o = o substr(a, v + 1, 1)
+		}
+		print o }'
+}
+
+ib_download() { # url out
+	ib_log "  GET $1"
+	if ib_have curl; then
+		curl -fL -sS --connect-timeout 20 --speed-limit 1024 --speed-time 60 --retry 2 \
+			-o "$2" "$1" >> "$IB_LOG" 2>&1
+	elif ib_have wget; then
+		wget -q -T 60 -t 2 -O "$2" "$1" >> "$IB_LOG" 2>&1
+	else
+		ib_fail "No downloader (curl or wget) on this machine."
+	fi
+}
+
+# How the UI talks to the user: tty, zenity, kdialog, osascript, or none.
+ib_pick_ui() {
+	if [ -t 0 ] && [ -t 2 ]; then
+		ib_ui=tty
+	elif [ "$IB_OS" = macos ] && ib_have osascript; then
+		ib_ui=osascript
+	elif [ -n "$DISPLAY$WAYLAND_DISPLAY" ] && ib_have zenity; then
+		ib_ui=zenity
+	elif [ -n "$DISPLAY$WAYLAND_DISPLAY" ] && ib_have kdialog; then
+		ib_ui=kdialog
+	else
+		ib_ui=none
+	fi
+}
+
+ib_osa() { # script-on-stdin args...; plan text goes in argv, never into the script
+	osascript - "$@"
+}
+
+ib_message() { # info|error title text
+	case $ib_ui in
+	tty | none) printf '%s\n' "$3" >&2 ;;
+	zenity) zenity --"$1" --title="$2" --no-markup --text="$3" 2>/dev/null ;;
+	kdialog) if [ "$1" = error ]; then kdialog --title "$2" --error "$3"; else kdialog --title "$2" --msgbox "$3"; fi ;;
+	osascript)
+		ib_osa "$2" "$3" "$1" <<'EOF' >/dev/null 2>&1
+on run argv
+	activate
+	if item 3 of argv is "error" then
+		display dialog (item 2 of argv) with title (item 1 of argv) buttons {"OK"} default button "OK" with icon stop
+	else
+		display dialog (item 2 of argv) with title (item 1 of argv) buttons {"OK"} default button "OK" with icon note
+	end if
+end run
+EOF
+		;;
+	esac
+	return 0
+}
+
+# Ask to go ahead. $1 title, $2 full text file, $3 short question.
+ib_confirm() {
+	[ "$opt_yes" = 1 ] && return 0
+	case $ib_ui in
+	tty)
+		cat "$2" >&2
+		printf '\n%s [y/N] ' "$3" >&2
+		read -r ans || return 1
+		case $ans in y | Y | yes | YES | Yes) return 0 ;; esac
+		return 1
+		;;
+	zenity)
+		zenity --text-info --title="$1 - $3" --filename="$2" --width=780 --height=560 2>/dev/null
+		;;
+	kdialog)
+		kdialog --title "$1" --textbox "$2" 780 560 && kdialog --title "$1" --yesno "$3"
+		;;
+	osascript)
+		while :; do
+			r=$(ib_osa "$1" "$(cat "$IB_WORK/short.txt")" "$3" <<'EOF' 2>/dev/null
+on run argv
+	activate
+	set r to display dialog ((item 2 of argv) & return & return & (item 3 of argv)) with title (item 1 of argv) buttons {"Cancel", "Details...", "Continue"} default button "Continue" cancel button "Cancel" with icon note
+	return button returned of r
+end run
+EOF
+)
+			case $r in
+			Continue) return 0 ;;
+			Details*) open -e "$2" ;;
+			*) return 1 ;;
+			esac
+		done
+		;;
+	*)
+		ib_fail "No terminal or dialog tool to ask before installing. Run it in a terminal, or pass --yes to accept without asking."
+		;;
+	esac
+}
+
+ib_progress_start() {
+	[ "$ib_ui" = zenity ] && [ "$opt_yes" != 1 ] || return 0
+	(while :; do printf '# %s\n' "$1"; sleep 2; done) |
+		zenity --progress --pulsate --no-cancel --title="Installer Builder" 2>/dev/null &
+	ib_progress_pid=$!
+}
+
+ib_progress_stop() {
+	[ -n "$ib_progress_pid" ] && kill "$ib_progress_pid" 2>/dev/null
+	ib_progress_pid=
+	return 0
+}
+
+# ---------------------------------------------------------------- text formats
+
+# Check the first line: `<kind><TAB><version>`, refuse a higher major.
+ib_check_header() { # file kind
+	h=$(awk -F'\t' '{ sub(/\r$/, "") } /^#/ || /^[ \t]*$/ { next } { print $1 "\t" $2; exit }' "$1")
+	[ "${h%%"$tab"*}" = "$2" ] || ib_fail "$1 is not an $2 file."
+	major=${h#*"$tab"}
+	major=${major%%.*}
+	case $major in '' | *[!0-9]*) ib_fail "$1: bad $2 version line." ;; esac
+	[ "$major" -le 1 ] || ib_fail "$1 is $2 version $major; this installer reads version 1. Download a newer installer."
+}
+
+# First value(s) of key in a text file (header part only for plans).
+ib_get() { # file key
+	awk -F'\t' -v k="$2" '{ sub(/\r$/, "") } $0 == "[target]" { exit }
+		$1 == k { s = $2; for (i = 3; i <= NF; i++) s = s "\t" $i; print s; exit }' "$1"
+}
+
+# The plan header plus the first matching [target], normalised:
+# header `url` -> `srcurl`; `file`, and the `url`/`step` lines after it,
+# get the file's index as their first value.
+ib_select_target() { # plan > selection
+	awk -F'\t' -v os="$IB_OS" -v ver="$IB_OSVER" -v arch="$IB_ARCH" '
+	function rest(from,   s, i) { s = $from; for (i = from + 1; i <= NF; i++) s = s "\t" $i; return s }
+	{ sub(/\r$/, "") }
+	/^#/ || /^[ \t]*$/ { next }
+	!head { head = 1; next }
+	$0 == "[target]" { t++; n[t] = 0; next }
+	t == 0 { if ($1 == "url") print "srcurl\t" rest(2); else print; next }
+	{ n[t]++; L[t, n[t]] = $0 }
+	$1 == "when" && !chosen && $2 == os && ver + 0 >= $3 + 0 && ver + 0 <= $4 + 0 {
+		k = split($5, a, " ")
+		for (i = 1; i <= k; i++) if (a[i] == "*" || a[i] == arch) { chosen = t; break }
+	}
+	END {
+		if (!chosen) { print "fail\tThis installer has nothing for this machine (" os " " ver " " arch ")."; exit }
+		print "target\t" chosen
+		f = 0
+		for (i = 1; i <= n[chosen]; i++) {
+			$0 = L[chosen, i]
+			if ($1 == "file") { f++; print "file\t" f "\t" rest(2) }
+			else if ($1 == "url" || $1 == "step") print $1 "\t" f "\t" rest(2)
+			else print
+		}
+	}' "$1"
+}
+
+ib_sel() { # key [index] -> every matching line, key (and index) removed
+	awk -F'\t' -v k="$1" -v i="$2" '$1 == k && (i == "" || $2 == i) {
+		b = (i == "" ? 2 : 3); s = $b
+		for (j = b + 1; j <= NF; j++) s = s "\t" $j
+		print s }' "$IB_SEL"
+}
+
+ib_sel1() { ib_sel "$@" | sed -n 1p; }
+
+# Replace the format.md tokens in $1. Values come in through ENVIRON so
+# nothing is re-escaped; unknown `{...}` is left alone.
+ib_subst() {
+	IB_S=$1 awk 'function rep(s, tok, val,   o, i) {
+		o = ""
+		while ((i = index(s, tok)) > 0) { o = o substr(s, 1, i - 1) val; s = substr(s, i + length(tok)) }
+		return o s }
+	BEGIN {
+		s = ENVIRON["IB_S"]
+		n = split(ENVIRON["IB_DIRMAP"], m, "\n")
+		for (k = 1; k <= n; k++) if (split(m[k], kv, "\t") == 2) s = rep(s, "{dir:" kv[1] "}", kv[2])
+		s = rep(s, "{app_dir}", ENVIRON["IB_APP_DIR"])
+		s = rep(s, "{data_dir}", ENVIRON["IB_DATA_DIR"])
+		s = rep(s, "{runtime_dir}", ENVIRON["IB_RUNTIME_DIR"])
+		s = rep(s, "{runtime}", ENVIRON["IB_RUNTIME"])
+		s = rep(s, "{dir}", ENVIRON["IB_CUR_DIR"])
+		s = rep(s, "{file}", ENVIRON["IB_CUR_FILE"])
+		s = rep(s, "{tmp}", ENVIRON["IB_TMP"])
+		s = rep(s, "{project}", ENVIRON["IB_PROJECT"])
+		s = rep(s, "{sep}", "/")
+		printf "%s", s }'
+}
+
+# ---------------------------------------------------------------- finding the metadata
+
+# Fill IB_REC / IB_PLAN (files, either may be empty), IB_PACK_TAR or
+# IB_PACK_DIR, IB_ORIGIN, IB_ENGINE_LEN.
+ib_find_metadata() {
+	IB_ENGINE_LEN=$(wc -c < "$IB_SELF" | tr -d ' ')
+	# The appended block (Linux .run) or the .app's Resources/ib (macOS).
+	if [ -n "$IB_BUNDLE" ]; then
+		d=$IB_BUNDLE/Contents/Resources/ib
+		[ -f "$d/record.txt" ] && ib_block_rec=$d/record.txt
+		[ -f "$d/plan.txt" ] && ib_block_plan=$d/plan.txt
+		[ -d "$d/pack" ] && IB_PACK_DIR=$d/pack
+		[ -f "$d/pack.tar" ] && IB_PACK_TAR=$d/pack.tar
+		ib_block_where="files in $(basename "$IB_BUNDLE")/Contents/Resources/ib"
+	else
+		foot=$(tail -c 64 "$IB_SELF" 2>/dev/null)
+		case $foot in
+		"IBMETA1 "*)
+			IFS=' '
+			set -- $foot
+			IFS=$ifs0
+			lens=$(printf '%s %s %s\n' "$2" "$3" "$4" | awk '{ printf "%d %d %d", $1, $2, $3 }')
+			set -- $lens
+			r=$1 p=$2 k=$3
+			total=$IB_ENGINE_LEN
+			IB_ENGINE_LEN=$((total - 64 - r - p - k))
+			[ "$IB_ENGINE_LEN" -gt 0 ] || ib_fail "The metadata block at the end of this installer is damaged."
+			off=$((IB_ENGINE_LEN + 1))
+			if [ "$r" -gt 0 ]; then
+				tail -c +"$off" "$IB_SELF" | head -c "$r" > "$IB_WORK/block-record.txt"
+				ib_block_rec=$IB_WORK/block-record.txt
+			fi
+			off=$((off + r))
+			if [ "$p" -gt 0 ]; then
+				tail -c +"$off" "$IB_SELF" | head -c "$p" > "$IB_WORK/block-plan.txt"
+				ib_block_plan=$IB_WORK/block-plan.txt
+			fi
+			off=$((off + p))
+			if [ "$k" -gt 0 ]; then
+				tail -c +"$off" "$IB_SELF" | head -c "$k" > "$IB_WORK/pack.tar"
+				IB_PACK_TAR=$IB_WORK/pack.tar
+			fi
+			ib_block_where="the block appended to $(basename "$IB_SELF")"
+			;;
+		esac
+	fi
+	if [ -n "$IB_PACK_TAR" ]; then
+		tar -tf "$IB_PACK_TAR" > "$IB_WORK/pack.list" 2>/dev/null || ib_fail "The packed files in this installer are damaged."
+	fi
+
+	# 1. Command-line options.
+	if [ -n "$opt_record$opt_plan" ]; then
+		IB_REC=$opt_record IB_PLAN=$opt_plan
+		IB_ORIGIN=${opt_origin:-command-line options}
+		return 0
+	fi
+	# 2. The embedded block.
+	if [ -n "$ib_block_rec$ib_block_plan" ]; then
+		IB_REC=$ib_block_rec IB_PLAN=$ib_block_plan
+		IB_ORIGIN=$ib_block_where
+		return 0
+	fi
+	# 3. install.txt next to the installer (a record, or a plan).
+	if [ -f "$IB_HOME_DIR/install.txt" ]; then
+		case $(sed -n 1p "$IB_HOME_DIR/install.txt") in
+		ib-plan*) IB_PLAN=$IB_HOME_DIR/install.txt ;;
+		*) IB_REC=$IB_HOME_DIR/install.txt ;;
+		esac
+		IB_ORIGIN="install.txt next to the installer"
+		return 0
+	fi
+	# 4. A record hash as the last `_` token of the file name (mode A).
+	nm=$IB_NAME
+	nm=$(printf '%s' "$nm" | sed -e 's/ - Copy$//' -e 's/ *([0-9]*)$//')
+	last=${nm##*_}
+	last=$(printf '%s' "$last" | tr 'A-Z' 'a-z')
+	case $last in
+	*[!a-z2-7]*) ;;
+	??????????????????????????)
+		backend=${opt_backend:-$IB_DEFAULT_BACKEND}
+		IB_REC=$IB_WORK/record.txt
+		ib_download "$backend/api/records/$last" "$IB_REC" ||
+			ib_fail "Could not fetch this installer's settings from $backend/api/records/$last"
+		got=$(ib_b32 "$(ib_sha256 "$IB_REC")" 26)
+		[ "$got" = "$last" ] ||
+			ib_fail "The settings fetched from $backend do not match this installer's name (hash $got, expected $last). Not installing."
+		IB_ORIGIN="record $last named in the file name, fetched from $backend and checked against its SHA-256"
+		return 0
+		;;
+	esac
+	# 5. Plain tokens: install_<runtime>_<package>.
+	case $nm in
+	install_*_*)
+		rt=${nm#install_}
+		pk=${rt#*_}
+		rt=${rt%%_*}
+		case $rt$pk in *[!A-Za-z0-9_.-]*) ib_fail "Unusable installer name: $IB_NAME" ;; esac
+		backend=${opt_backend:-$IB_DEFAULT_BACKEND}
+		IB_PLAN=$IB_WORK/plan.txt
+		ib_download "$backend/api/plan/name/$rt/$pk" "$IB_PLAN" ||
+			ib_fail "This installer is named for $pk ($rt) but $backend has no plan for that name."
+		IB_ORIGIN="the file name (runtime $rt, package $pk); plan from $backend"
+		return 0
+		;;
+	esac
+	ib_fail "This installer carries no settings: no metadata block, no install.txt, and no record hash in its name ($IB_NAME)."
+}
+
+# ---------------------------------------------------------------- install helpers
+
+# mkdir -p, remembering each folder it made (for rollback and the manifest).
+ib_mkdirs() {
+	[ -d "$1" ] && return 0
+	ib_mk_missing=
+	p=$1
+	while [ ! -d "$p" ]; do
+		ib_mk_missing="$p$nl$ib_mk_missing"
+		p=$(dirname "$p")
+	done
+	mkdir -p "$1" || return 1
+	printf '%s' "$ib_mk_missing" | while IFS= read -r p; do
+		[ -n "$p" ] && printf 'e\t%s\n' "$p" >> "$IB_CREATED"
+	done
+	return 0
+}
+
+ib_created() { printf '%s\t%s\n' "$1" "$2" >> "$IB_CREATED"; }
+
+# On failure: remove what this run made, newest first.
+ib_rollback() {
+	ib_log "Removing what was installed so far"
+	awk '{ a[NR] = $0 } END { for (i = NR; i > 0; i--) print a[i] }' "$IB_CREATED" > "$IB_CREATED.rev"
+	while IFS="$tab" read -r kind p; do
+		case $kind in
+		r) rm -rf "$p" && ib_log "  removed $p" ;;
+		e) rmdir "$p" 2>/dev/null && ib_log "  removed $p" ;;
+		esac
+	done < "$IB_CREATED.rev"
+	rm -f "$IB_CREATED" "$IB_CREATED.rev"
+	IB_CREATED=
+}
+
+# Is $1 inside one of the app's own folders (or {tmp})?
+ib_inside() {
+	case $1 in */../* | */.. | ../*) return 1 ;; esac
+	case $1 in
+	"$IB_APP_DIR" | "$IB_APP_DIR"/* | "$IB_TMP" | "$IB_TMP"/*) return 0 ;;
+	esac
+	printf '%s' "$IB_DIRMAP" | while IFS="$tab" read -r n d; do
+		[ -n "$d" ] || continue
+		case $1 in "$d" | "$d"/*) exit 3 ;; esac
+	done
+	[ $? = 3 ]
+}
+
+# Get a verified file: from the pack, else from each URL in turn.
+ib_obtain() { # sha256 out urls-file label
+	if [ -n "$IB_PACK_DIR" ] && [ -f "$IB_PACK_DIR/$1" ]; then
+		cp "$IB_PACK_DIR/$1" "$2"
+		ib_log "  from the pack"
+	elif [ -n "$IB_PACK_TAR" ] && grep -qx "$1" "$IB_WORK/pack.list"; then
+		(cd "$(dirname "$2")" && tar -xf "$IB_PACK_TAR" "$1" && mv "$1" "$(basename "$2")")
+		ib_log "  from the pack"
+	fi
+	if [ -f "$2" ]; then
+		[ "$(ib_sha256 "$2")" = "$1" ] && return 0
+		ib_say "  the packed copy of $4 has the wrong SHA-256; trying downloads"
+		rm -f "$2"
+	fi
+	while IFS= read -r u <&4; do
+		[ -n "$u" ] || continue
+		ib_say "  downloading $u"
+		if ib_download "$u" "$2.part"; then
+			got=$(ib_sha256 "$2.part")
+			if [ "$got" = "$1" ]; then
+				mv "$2.part" "$2"
+				return 0
+			fi
+			ib_say "  wrong SHA-256 from $u ($got); trying the next source"
+		else
+			ib_say "  download failed: $u"
+		fi
+		rm -f "$2.part"
+	done 4< "$3"
+	return 1
+}
+
+ib_move_into() { # entry dest: move, merging folders that already exist
+	b=$(basename "$1")
+	if [ -d "$2/$b" ] && [ -d "$1" ] && [ ! -h "$1" ]; then
+		cp -RPp "$1/." "$2/$b/" && rm -rf "$1"
+	else
+		mv -f "$1" "$2/"
+	fi
+}
+
+ib_unpack() { # format archive dest strip
+	ib_mkdirs "$3" || return 1
+	st=$3/.ib-unpack.$$
+	rm -rf "$st"
+	mkdir "$st" || return 1
+	to=
+	[ "$(id -u)" = 0 ] && to=o
+	rc=0
+	case $1 in
+	tar) (cd "$st" && tar -x${to}f "$2") >> "$IB_LOG" 2>&1 || rc=1 ;;
+	tar.gz | tgz)
+		rm -f "$IB_WORK/pipe.err"
+		{ gzip -dc "$2" || : > "$IB_WORK/pipe.err"; } | (cd "$st" && tar -x${to}f -) >> "$IB_LOG" 2>&1 || rc=1
+		[ -f "$IB_WORK/pipe.err" ] && rc=1
+		;;
+	tar.bz2 | tbz2)
+		if ib_have bzip2; then
+			rm -f "$IB_WORK/pipe.err"
+			{ bzip2 -dc "$2" || : > "$IB_WORK/pipe.err"; } | (cd "$st" && tar -x${to}f -) >> "$IB_LOG" 2>&1 || rc=1
+			[ -f "$IB_WORK/pipe.err" ] && rc=1
+		else
+			(cd "$st" && tar -xj${to}f "$2") >> "$IB_LOG" 2>&1 || rc=1
+		fi
+		;;
+	tar.xz | txz)
+		if ib_have xz; then
+			rm -f "$IB_WORK/pipe.err"
+			{ xz -dc "$2" || : > "$IB_WORK/pipe.err"; } | (cd "$st" && tar -x${to}f -) >> "$IB_LOG" 2>&1 || rc=1
+			[ -f "$IB_WORK/pipe.err" ] && rc=1
+		else
+			# macOS has no xz, but its tar (libarchive) reads .xz itself.
+			(cd "$st" && tar -xJ${to}f "$2") >> "$IB_LOG" 2>&1 || rc=1
+		fi
+		;;
+	zip)
+		if ib_have unzip; then
+			unzip -q -o "$2" -d "$st" >> "$IB_LOG" 2>&1 || rc=1
+		elif ib_have ditto; then
+			ditto -x -k "$2" "$st" >> "$IB_LOG" 2>&1 || rc=1
+		else
+			ib_log "no unzip on this machine"
+			rc=1
+		fi
+		;;
+	7z)
+		z=
+		for c in 7zz 7z 7za 7zr; do ib_have $c && z=$c && break; done
+		if [ -z "$z" ]; then
+			ib_log "This machine has no 7-Zip (7z, 7za, 7zz), which this .7z file needs."
+			rc=1
+		else
+			(cd "$st" && $z x -y "$2") >> "$IB_LOG" 2>&1 || rc=1
+		fi
+		;;
+	*)
+		ib_log "unknown archive format: $1"
+		rc=1
+		;;
+	esac
+	if [ $rc = 0 ]; then
+		set +f
+		if [ "$4" = 1 ]; then
+			for top in "$st"/* "$st"/.[!.]* "$st"/..?*; do
+				[ -d "$top" ] && [ ! -h "$top" ] || continue
+				for e in "$top"/* "$top"/.[!.]* "$top"/..?*; do
+					[ -e "$e" ] || [ -h "$e" ] || continue
+					ib_move_into "$e" "$3" || rc=1
+				done
+			done
+		else
+			for e in "$st"/* "$st"/.[!.]* "$st"/..?*; do
+				[ -e "$e" ] || [ -h "$e" ] || continue
+				ib_move_into "$e" "$3" || rc=1
+			done
+		fi
+		set -f
+	fi
+	rm -rf "$st"
+	return $rc
+}
+
+ib_step() { # type fields...
+	s_type=$1
+	shift
+	case $s_type in
+	unpack)
+		d=$(ib_subst "$2")
+		ib_inside "$d" || ib_fail "Step unpack: $d is outside the app's folders."
+		ib_say "  unpack $1 into $d"
+		if [ "$1" = 7z ] && ! ib_have 7zz && ! ib_have 7z && ! ib_have 7za && ! ib_have 7zr; then
+			ib_fail "$(basename "$IB_CUR_FILE") is a .7z archive, and this machine has no 7-Zip (7z, 7za or 7zz) to unpack it."
+		fi
+		ib_unpack "$1" "$IB_CUR_FILE" "$d" "${3:-0}" || ib_fail "Could not unpack $(basename "$IB_CUR_FILE") ($1)."
+		;;
+	run)
+		c=$(ib_subst "$1")
+		ib_say "  run: $c"
+		(cd "$IB_CUR_DIR" && sh -c "$c") < /dev/null >> "$IB_LOG" 2>&1 || ib_fail "Step failed: $c"
+		;;
+	mkdir)
+		d=$(ib_subst "$1")
+		ib_inside "$d" || ib_fail "Step mkdir: $d is outside the app's folders."
+		mkdir -p "$d" || ib_fail "Could not create $d"
+		;;
+	write)
+		d=$(ib_subst "$1")
+		ib_inside "$d" || ib_fail "Step write: $d is outside the app's folders."
+		printf '%s\n' "$(ib_subst "$2")" >> "$d" || ib_fail "Could not write $d"
+		;;
+	delete)
+		d=$(ib_subst "$1")
+		ib_inside "$d" || ib_fail "Step delete: $d is outside the app's folders."
+		case $d in "$IB_APP_DIR" | "$IB_TMP") ib_fail "Step delete: refusing to delete $d" ;; esac
+		rm -rf "$d"
+		;;
+	*) ib_log "  ignoring unknown step $s_type" ;;
+	esac
+}
+
+# Environment for `install` (and, written to launch.txt, for the app).
+ib_apply_env() { # with_install_extras(0/1)
+	for k in env ienv; do
+		[ "$k" = ienv ] && [ "$1" != 1 ] && continue
+		ib_sel $k > "$IB_WORK/env.tmp"
+		while IFS="$tab" read -r n v; do
+			case $n in '' | [0-9]* | *[!A-Za-z0-9_]*) continue ;; esac
+			export "$n=$(ib_subst "$v")"
+		done < "$IB_WORK/env.tmp"
+	done
+	for k in unset iunset; do
+		[ "$k" = iunset ] && [ "$1" != 1 ] && continue
+		for n in $(ib_sel $k); do
+			case $n in '' | [0-9]* | *[!A-Za-z0-9_]*) continue ;; esac
+			unset "$n"
+		done
+	done
+	pre=
+	ib_sel path > "$IB_WORK/path.tmp"
+	while IFS= read -r p; do
+		[ -n "$p" ] && pre=${pre:+$pre:}$(ib_subst "$p")
+	done < "$IB_WORK/path.tmp"
+	[ -n "$pre" ] && PATH=$pre:$PATH && export PATH
+	return 0
+}
+
+# ---------------------------------------------------------------- launcher, menus
+
+ib_write_launcher() {
+	cat > "$IB_APP_DIR/launch.sh" <<'EOF'
+#!/bin/sh
+# Installer Builder launcher: runs the app described by launch.txt next
+# to this file (cwd, env, unset, path, exec). Identical for every app.
+d=$(dirname "$0")
+f=$d/launch.txt
+[ -f "$f" ] || { echo "launch.sh: $f is missing" >&2; exit 1; }
+tab=$(printf '\t'); cr=$(printf '\r'); pre=; cmd=; cwd=$d
+while IFS= read -r line || [ -n "$line" ]; do
+	line=${line%"$cr"}
+	case $line in '' | '#'*) continue ;; esac
+	key=${line%%"$tab"*}
+	rest=${line#*"$tab"}
+	[ "$rest" = "$line" ] && rest=
+	case $key in
+	ib-launch) case ${rest%%.*} in 0 | 1) ;; *) echo "launch.sh: launch.txt is a newer version" >&2; exit 1 ;; esac ;;
+	cwd) cwd=$rest ;;
+	env) n=${rest%%"$tab"*}; v=${rest#*"$tab"}; [ "$v" = "$rest" ] && v=; export "$n=$v" ;;
+	unset) unset "$rest" ;;
+	path) pre=${pre:+$pre:}$rest ;;
+	exec) cmd=$rest ;;
+	esac
+done < "$f"
+[ -n "$cmd" ] || { echo "launch.sh: no exec line in $f" >&2; exit 1; }
+[ -n "$pre" ] && PATH=$pre:$PATH && export PATH
+cd "$cwd" || exit 1
+eval "exec $cmd \"\$@\""
+EOF
+	chmod 755 "$IB_APP_DIR/launch.sh"
+}
+
+ib_desktop_exec_arg() { # quote an argument for a .desktop Exec= line
+	printf '"%s"' "$(printf '%s' "$1" | sed -e 's/[\\"`$]/\\&/g' -e 's/\\/\\\\/g' -e 's/%/%%/g')"
+}
+
+ib_add_shortcut() { printf 'shortcut\t%s\n' "$1" >> "$IB_WORK/shortcuts"; ib_created r "$1"; }
+
+ib_menus_linux() {
+	if [ "$IB_SYSTEM" = 1 ]; then
+		apps=/usr/local/share/applications
+		dirs=/usr/local/share/desktop-directories
+		menus=/etc/xdg/menus/applications-merged
+	else
+		data=${XDG_DATA_HOME:-$HOME/.local/share}
+		apps=$data/applications
+		dirs=$data/desktop-directories
+		menus=${XDG_CONFIG_HOME:-$HOME/.config}/menus/applications-merged
+	fi
+	id=ib-$IB_APPID
+	term=false
+	[ "$IB_CONSOLE" = 1 ] && term=true
+	ename=$(printf '%s' "$IB_NAME_DISP" | sed 's/\\/\\\\/g')
+	if [ "$IB_MENU" != 0 ]; then
+		ib_mkdirs "$apps" && ib_mkdirs "$dirs" && ib_mkdirs "$menus" || ib_fail "Could not create the menu folders."
+		f=$apps/$id.desktop
+		cat > "$f" <<EOF
+[Desktop Entry]
+Type=Application
+Name=$ename
+Comment=Installed by Installer Builder
+Exec=$(ib_desktop_exec_arg "$IB_APP_DIR/launch.sh")
+Path=$IB_APP_DIR
+Terminal=$term
+Icon=application-x-executable
+Categories=Utility;
+EOF
+		ib_add_shortcut "$f"
+		f=$apps/$id-uninstall.desktop
+		cat > "$f" <<EOF
+[Desktop Entry]
+Type=Application
+Name=Uninstall $ename
+Comment=Remove $ename and everything its installer added
+Exec=/bin/sh $(ib_desktop_exec_arg "$IB_APP_DIR/uninstall.sh") --uninstall
+Terminal=true
+Icon=edit-delete
+NoDisplay=false
+Categories=Utility;
+EOF
+		ib_add_shortcut "$f"
+		f=$dirs/$id.directory
+		cat > "$f" <<EOF
+[Desktop Entry]
+Type=Directory
+Name=$ename
+Icon=folder
+EOF
+		ib_add_shortcut "$f"
+		f=$menus/$id.menu
+		cat > "$f" <<EOF
+<!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
+ "http://www.freedesktop.org/standards/menu-spec/1.0/menu.dtd">
+<Menu>
+  <Name>Applications</Name>
+  <Menu>
+    <Name>$id</Name>
+    <Directory>$id.directory</Directory>
+    <Include>
+      <Filename>$id.desktop</Filename>
+      <Filename>$id-uninstall.desktop</Filename>
+    </Include>
+  </Menu>
+</Menu>
+EOF
+		ib_add_shortcut "$f"
+	fi
+	if [ "$IB_DESKTOP" = 1 ] && [ "$IB_SYSTEM" != 1 ]; then
+		desk=$(xdg-user-dir DESKTOP 2>/dev/null)
+		[ -n "$desk" ] || desk=$HOME/Desktop
+		if [ -d "$desk" ] && [ -f "$apps/$id.desktop" ]; then
+			f=$desk/$id.desktop
+			cp "$apps/$id.desktop" "$f" && chmod 755 "$f" && ib_add_shortcut "$f"
+			# GNOME asks before running an untrusted desktop file. Mark it, but
+			# only where the desktop's metadata store already exists.
+			[ -d "${XDG_DATA_HOME:-$HOME/.local/share}/gvfs-metadata" ] && ib_have gio &&
+				gio set "$f" metadata::trusted true >/dev/null 2>&1
+		fi
+	fi
+	return 0
+}
+
+ib_xml() { printf '%s' "$1" | sed -e 's/&/\&amp;/g' -e 's/</\&lt;/g' -e 's/>/\&gt;/g'; }
+
+ib_mac_app() { # bundle-path display-name bundle-id exec-script-body
+	mkdir -p "$1/Contents/MacOS" "$1/Contents/Resources" || return 1
+	ib_created r "$1"
+	cat > "$1/Contents/Info.plist" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleExecutable</key><string>run</string>
+	<key>CFBundleIdentifier</key><string>$3</string>
+	<key>CFBundleName</key><string>$(ib_xml "$2")</string>
+	<key>CFBundleDisplayName</key><string>$(ib_xml "$2")</string>
+	<key>CFBundlePackageType</key><string>APPL</string>
+	<key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
+	<key>CFBundleShortVersionString</key><string>1.0</string>
+	<key>CFBundleVersion</key><string>1</string>
+	<key>NSHumanReadableCopyright</key><string>Installed by Installer Builder</string>
+</dict>
+</plist>
+EOF
+	printf '#!/bin/sh\n%s\n' "$4" > "$1/Contents/MacOS/run"
+	chmod 755 "$1/Contents/MacOS/run"
+	printf '%s\n' "$IB_APPID" > "$1/Contents/Resources/ib-appid"
+}
+
+ib_menus_macos() {
+	[ "$IB_MENU" = 0 ] && [ "$IB_DESKTOP" != 1 ] && return 0
+	if [ "$IB_SYSTEM" = 1 ]; then base=/Applications; else base=$HOME/Applications; fi
+	safe=$(printf '%s' "$IB_NAME_DISP" | sed -e 's#[/:]#-#g' -e 's/^\.*//')
+	[ -n "$safe" ] || safe=$IB_APPID
+	folder=$base/$safe
+	[ -e "$folder" ] && ib_fail "$folder already exists; not overwriting it."
+	ib_mkdirs "$folder" || ib_fail "Could not create $folder"
+	q=$(ib_shq "$IB_APP_DIR/launch.sh")
+	if [ "$IB_CONSOLE" = 1 ]; then
+		body="if [ -t 1 ] || [ -n \"\$IB_NO_TERMINAL\" ]; then exec $q \"\$@\"; fi
+exec open -a Terminal $q"
+	else
+		body="exec $q \"\$@\""
+	fi
+	ib_mac_app "$folder/$safe.app" "$IB_NAME_DISP" "pm.ib.app.$IB_APPID" "$body" || ib_fail "Could not create $folder/$safe.app"
+	printf 'shortcut\t%s\n' "$folder/$safe.app" >> "$IB_WORK/shortcuts"
+	ib_mac_app "$folder/Uninstall $safe.app" "Uninstall $IB_NAME_DISP" "pm.ib.uninstall.$IB_APPID" \
+		"exec /bin/sh $(ib_shq "$IB_APP_DIR/uninstall.sh") --uninstall \"\$@\"" || ib_fail "Could not create the uninstaller app"
+	printf 'shortcut\t%s\n' "$folder/Uninstall $safe.app" >> "$IB_WORK/shortcuts"
+	if [ "$IB_DESKTOP" = 1 ] && [ "$IB_SYSTEM" != 1 ] && [ -d "$HOME/Desktop" ] && [ ! -e "$HOME/Desktop/$safe" ]; then
+		ln -s "$folder/$safe.app" "$HOME/Desktop/$safe" && ib_add_shortcut "$HOME/Desktop/$safe"
+	fi
+	return 0
+}
+
+# ---------------------------------------------------------------- uninstall
+
+ib_uninstall() {
+	app=$(cd "$(dirname "$IB_SELF")" && pwd)
+	man=$app/manifest.txt
+	[ -f "$man" ] || ib_fail "No manifest.txt next to the uninstaller ($app)."
+	ib_check_header "$man" ib-manifest
+	appid=$(ib_get "$man" appid)
+	name=$(ib_get "$man" name)
+	[ "$(basename "$app")" = "$appid" ] || ib_fail "The manifest in $app is for a different app ($appid); not removing anything."
+	root=$(dirname "$app")
+	if [ ! -w "$root" ] && [ "$(id -u)" != 0 ]; then
+		ib_elevate --uninstall
+		exit $?
+	fi
+	{
+		printf 'Remove %s?\n\nThis deletes:\n  %s\n' "$name" "$app"
+		awk -F'\t' '$1 == "dir" || $1 == "shortcut" { print "  " $2 }' "$man"
+	} > "$IB_WORK/uninstall.txt"
+	cp "$IB_WORK/uninstall.txt" "$IB_WORK/short.txt"
+	ib_confirm "Uninstall $name" "$IB_WORK/uninstall.txt" "Remove $name?" || { ib_say "Nothing removed."; [ "$ib_log_is_temp" = 1 ] && rm -f "$IB_LOG"; exit 1; }
+	ib_log "Uninstalling $name ($appid) from $root"
+	bad=0
+	awk -F'\t' '{ sub(/\r$/, "") } $1 == "dir" || $1 == "shortcut" { print $1 "\t" $2 }' "$man" > "$IB_WORK/items"
+	# Shortcut files and launcher apps first.
+	while IFS="$tab" read -r kind p; do
+		[ "$kind" = shortcut ] || continue
+		case $p in /*) ;; *) ib_say "refusing relative path $p"; bad=1; continue ;; esac
+		case $p in */../* | */./* | */.. | */.) ib_say "refusing $p"; bad=1; continue ;; esac
+		if [ -h "$p" ]; then
+			rm -f "$p" && ib_say "removed $p"
+		elif [ -d "$p" ]; then
+			case $p in
+			*.app)
+				if [ "$(cat "$p/Contents/Resources/ib-appid" 2>/dev/null)" = "$appid" ]; then
+					rm -rf "$p" && ib_say "removed $p"
+				else
+					ib_say "refusing $p: not one of this app's launchers"; bad=1
+				fi
+				;;
+			esac
+		elif [ -f "$p" ]; then
+			case $(basename "$p") in
+			"ib-$appid".* | "ib-$appid"-*) rm -f "$p" && ib_say "removed $p" ;;
+			*) ib_say "refusing $p: not named for this app"; bad=1 ;;
+			esac
+		fi
+	done < "$IB_WORK/items"
+	# Dependency folders: only <root>/<12 base32 chars>.
+	while IFS="$tab" read -r kind p; do
+		[ "$kind" = dir ] || continue
+		b=$(basename "$p")
+		pd=$(cd "$(dirname "$p")" 2>/dev/null && pwd -P)
+		if [ "$pd" != "$(cd "$root" && pwd -P)" ] || [ "$b" = "$appid" ]; then
+			ib_say "refusing $p: not in $root"; bad=1; continue
+		fi
+		case $b in
+		*[!a-z2-7]*) ib_say "refusing $p: not an install folder"; bad=1; continue ;;
+		????????????) ;;
+		*) ib_say "refusing $p: not an install folder"; bad=1; continue ;;
+		esac
+		o=$(ib_get "$p/.ib-owner" appid 2>/dev/null)
+		if [ -n "$o" ] && [ "$o" != "$appid" ]; then
+			ib_say "refusing $p: it belongs to $o"; bad=1; continue
+		fi
+		[ -e "$p" ] && rm -rf "$p" && ib_say "removed $p"
+	done < "$IB_WORK/items"
+	cd / && rm -rf "$app" && ib_say "removed $app"
+	rmdir "$root" 2>/dev/null
+	# Folders the installer created for shortcuts: removed only if empty.
+	while IFS="$tab" read -r kind p; do
+		[ "$kind" = shortcut ] && [ -d "$p" ] && [ ! -h "$p" ] || continue
+		case $p in *.app) continue ;; esac
+		rmdir "$p" 2>/dev/null && ib_say "removed $p"
+	done < "$IB_WORK/items"
+	if [ $bad = 0 ]; then
+		[ "$opt_yes" = 1 ] || [ "$ib_ui" = tty ] || ib_message info "Installer Builder" "$name has been removed."
+		ib_say "$name has been removed."
+	else
+		ib_message error "Installer Builder" "$name was removed, but some listed items were refused (see above)."
+		exit 1
+	fi
+}
+
+# ---------------------------------------------------------------- elevation
+
+ib_elevate() { # extra args...
+	set -- "$@" --yes --log="$IB_LOG"
+	[ -n "$IB_REC" ] && set -- "$@" --record="$IB_REC"
+	[ -n "$IB_PLAN" ] && set -- "$@" --plan="$IB_PLAN"
+	[ -n "$IB_ORIGIN" ] && set -- "$@" --ib-origin="$IB_ORIGIN"
+	[ -n "$opt_backend" ] && set -- "$@" --backend="$opt_backend"
+	ib_log "Asking for administrator rights"
+	if [ "$IB_OS" = macos ] && [ "$ib_ui" != tty ]; then
+		c="/bin/sh $(ib_shq "$IB_SELF")"
+		for a in "$@"; do c="$c $(ib_shq "$a")"; done
+		ib_osa "$c" <<'EOF' >> "$IB_LOG" 2>&1
+on run argv
+	do shell script (item 1 of argv) with administrator privileges
+end run
+EOF
+	elif [ "$ib_ui" = tty ] && ib_have sudo; then
+		sudo /bin/sh "$IB_SELF" "$@"
+	elif ib_have pkexec && [ -n "$DISPLAY$WAYLAND_DISPLAY" ]; then
+		pkexec /bin/sh "$IB_SELF" "$@"
+	else
+		ib_fail "This install needs administrator rights. Run it in a terminal (it will use sudo)."
+	fi
+}
+
+# ---------------------------------------------------------------- main install
+
+ib_describe_source() {
+	s=
+	[ -n "$IB_REC" ] && s=$(ib_get "$IB_REC" source)
+	[ -n "$s" ] || { printf 'not given'; return; }
+	IFS=$tab
+	set -- $s
+	IFS=$ifs0
+	case $1 in
+	github) printf 'GitHub %s, commit %s' "$2" "$3" ;;
+	package) printf 'package %s, version %s' "$2" "$3" ;;
+	url) printf '%s (sha256 %s)' "$2" "$3" ;;
+	inline) printf 'code written on the site (sha256 %s)' "$2" ;;
+	*) printf '%s' "$s" ;;
+	esac
+}
+
+ib_signer() {
+	if [ -n "$IB_BUNDLE" ]; then
+		if ! ib_have codesign; then printf 'unknown (no codesign tool)'; return; fi
+		info=$(codesign -dvv "$IB_BUNDLE" 2>&1)
+		case $info in
+		*"not signed"*) printf 'nobody (the app is not signed)' ;;
+		*Authority=*) printf '%s' "$(printf '%s\n' "$info" | sed -n 's/^Authority=//p' | sed -n 1p)" ;;
+		*adhoc*) printf 'nobody (ad-hoc signature, no identity)' ;;
+		*) printf 'unknown' ;;
+		esac
+		case $info in *"not signed"*) ;; *)
+			codesign --verify "$IB_BUNDLE" >/dev/null 2>&1 ||
+				printf '; the signature does NOT verify (the app was changed after signing)' ;;
+		esac
+	else
+		[ -n "$ib_self_sha" ] || ib_self_sha=$(ib_sha256 "$IB_SELF")
+		printf 'nobody (.run files carry no signature); this file has sha256 %s' "$ib_self_sha"
+	fi
+}
+
+ib_install_main() {
+	ib_find_metadata
+	[ -n "$IB_REC" ] && ib_check_header "$IB_REC" ib-record
+	IB_RECHASH=
+	[ -n "$IB_REC" ] && IB_RECHASH=$(ib_b32 "$(ib_sha256 "$IB_REC")" 26)
+	backend=$opt_backend
+	[ -z "$backend" ] && [ -n "$IB_REC" ] && backend=$(ib_get "$IB_REC" backend)
+	[ -z "$backend" ] && backend=$IB_DEFAULT_BACKEND
+	backend=${backend%/}
+	IB_PLAN_FROM=embedded
+	if [ -z "$IB_PLAN" ]; then
+		IB_PLAN=$IB_WORK/plan.txt
+		ib_say "Fetching the install plan from $backend"
+		ib_download "$backend/api/plan/$IB_RECHASH" "$IB_PLAN" ||
+			ib_fail "Could not fetch the install plan from $backend/api/plan/$IB_RECHASH"
+		IB_PLAN_FROM="$backend/api/plan/$IB_RECHASH"
+	fi
+	ib_check_header "$IB_PLAN" ib-plan
+	prec=$(ib_get "$IB_PLAN" record)
+	ib_plan_warn=
+	if [ -n "$IB_RECHASH" ] && [ -n "$prec" ] && [ "$prec" != "$IB_RECHASH" ]; then
+		[ "$IB_PLAN_FROM" = embedded ] || ib_fail "The plan from $backend is for record $prec, not $IB_RECHASH."
+		ib_plan_warn="The embedded plan was made for record $prec, but the record here hashes to $IB_RECHASH (it was edited)."
+	fi
+	[ -z "$IB_RECHASH" ] && IB_RECHASH=$prec
+
+	IB_SEL=$IB_WORK/selection.txt
+	ib_select_target "$IB_PLAN" > "$IB_SEL"
+	f=$(ib_sel1 fail)
+	[ -n "$f" ] && ib_fail "$f"
+
+	IB_NAME_DISP=$(ib_get "$IB_PLAN" name)
+	IB_PROJECT=$(ib_get "$IB_PLAN" project)
+	IB_APPID=$(ib_get "$IB_PLAN" appid)
+	IB_CONSOLE=$(ib_get "$IB_PLAN" console)
+	IB_MENU=$(ib_get "$IB_PLAN" menu)
+	IB_DESKTOP=$(ib_get "$IB_PLAN" desktop)
+	rootmode=$(ib_get "$IB_PLAN" root)
+	rootname=$(ib_get "$IB_PLAN" rootname)
+	[ -n "$rootname" ] || rootname=ib
+	[ -n "$IB_NAME_DISP" ] || IB_NAME_DISP=$IB_PROJECT
+	case $IB_APPID in
+	*[!a-z2-7]* | '') ib_fail "The plan's appid ($IB_APPID) is not 12 base32 characters." ;;
+	????????????) ;;
+	*) ib_fail "The plan's appid ($IB_APPID) is not 12 base32 characters." ;;
+	esac
+	case $rootname in '' | . | .. | */* | *[!A-Za-z0-9._-]*) ib_fail "Bad rootname: $rootname" ;; esac
+
+	IB_SYSTEM=0
+	[ "$rootmode" = system ] && IB_SYSTEM=1
+	if [ "$IB_OS" = macos ]; then
+		if [ $IB_SYSTEM = 1 ]; then IB_ROOT="/Library/Application Support/$rootname"; else IB_ROOT="$HOME/Library/Application Support/$rootname"; fi
+	else
+		if [ $IB_SYSTEM = 1 ]; then IB_ROOT=/opt/$rootname; else IB_ROOT=${XDG_DATA_HOME:-$HOME/.local/share}/$rootname; fi
+	fi
+	case $IB_ROOT in
+	*[\"\$\`\\]* | *"$nl"*) ib_fail "The install folder $IB_ROOT contains characters (\" \$ \` \\) that commands can't quote." ;;
+	/*) ;;
+	*) ib_fail "HOME is not set to an absolute path." ;;
+	esac
+	need_root=$IB_SYSTEM
+	[ "$(ib_sel1 admin)" = 1 ] && need_root=1
+
+	export IB_APP_DIR="$IB_ROOT/$IB_APPID"
+	export IB_DATA_DIR="$IB_APP_DIR/data"
+	export IB_TMP="$IB_WORK/tmp"
+	export IB_PROJECT
+	export IB_APP_NAME="$IB_NAME_DISP"
+	nfiles=$(ib_sel file | wc -l | tr -d ' ')
+	IB_DIRMAP=
+	i=1
+	while [ "$i" -le "$nfiles" ]; do
+		IFS=$tab
+		set -- $(ib_sel file "$i")
+		IFS=$ifs0
+		h=$(ib_b32 "$(printf '%s%s' "$IB_APPID" "$1" | ib_sha256)" 12)
+		IB_DIRMAP="$IB_DIRMAP$1$tab$IB_ROOT/$h$nl"
+		[ "$i" = 1 ] && IB_RUNTIME_DIR=$IB_ROOT/$h
+		i=$((i + 1))
+	done
+	export IB_DIRMAP IB_RUNTIME_DIR
+	exe=$(ib_sel1 exe)
+	IB_RUNTIME=
+	[ -n "$exe" ] && [ -n "$IB_RUNTIME_DIR" ] && IB_RUNTIME=$IB_RUNTIME_DIR/$exe
+	export IB_RUNTIME
+
+	# ---- transparency
+	sum=$IB_WORK/summary.txt
+	ib_signed_by=$(ib_signer)
+	{
+		printf 'Installer Builder will install: %s\n\n' "$IB_NAME_DISP"
+		printf 'WHAT\n'
+		printf '  Project:  %s\n' "$IB_PROJECT"
+		printf '  Source:   %s\n' "$(ib_describe_source)"
+		rt=$(ib_sel1 runtime)
+		[ -n "$rt" ] && printf '  Runtime:  %s\n' "$(printf '%s' "$rt" | tr '\t' ' ')"
+		printf '  Record:   %s\n' "${IB_RECHASH:-none}"
+		printf '  Machine:  %s\n' "$IB_OSDESC"
+		printf '\nDOWNLOADS (each is checked against its SHA-256 before use)\n'
+		i=1
+		while [ "$i" -le "$nfiles" ]; do
+			IFS=$tab
+			set -- $(ib_sel file "$i")
+			IFS=$ifs0
+			printf '  %s  (%s bytes)\n    sha256 %s\n' "$2" "$4" "$3"
+			if { [ -n "$IB_PACK_DIR" ] && [ -f "$IB_PACK_DIR/$3" ]; } || { [ -n "$IB_PACK_TAR" ] && grep -qx "$3" "$IB_WORK/pack.list"; }; then
+				printf '    from: the copy packed in this installer\n'
+			fi
+			ib_sel url "$i" | sed 's/^/    from: /'
+			i=$((i + 1))
+		done
+		src=$(ib_sel1 source)
+		if [ -n "$src" ]; then
+			IFS=$tab
+			set -- $src
+			IFS=$ifs0
+			printf '  %s (the project, %s bytes)\n    sha256 %s\n' "$1" "$3" "$2"
+			if { [ -n "$IB_PACK_DIR" ] && [ -f "$IB_PACK_DIR/$2" ]; } || { [ -n "$IB_PACK_TAR" ] && grep -qx "$2" "$IB_WORK/pack.list"; }; then
+				printf '    from: the copy packed in this installer\n'
+			fi
+			ib_sel srcurl | sed 's/^/    from: /'
+		fi
+		printf '\nCOMMANDS IT WILL RUN\n'
+		ib_sel step | awk -F'\t' '$2 == "run" { print $3 }' | while IFS= read -r c; do printf '  %s\n' "$(ib_subst "$c")"; done
+		ins=$(ib_sel1 install)
+		[ -n "$ins" ] && printf '  install: %s\n' "$(ib_subst "$ins")"
+		printf '  launch:  %s\n' "$(ib_subst "$(ib_sel1 launch)")"
+		printf '\nWHERE FILES GO\n'
+		printf '  App:      %s\n' "$IB_APP_DIR"
+		printf '%s' "$IB_DIRMAP" | while IFS="$tab" read -r n d; do [ -n "$n" ] && printf '  %-9s %s\n' "$n:" "$d"; done
+		printf '\nSHORTCUTS AND UNINSTALLER\n'
+		if [ "$IB_MENU" != 0 ]; then
+			if [ "$IB_OS" = macos ]; then
+				printf '  Folder %s/%s with %s and Uninstall %s\n' "$([ $IB_SYSTEM = 1 ] && echo /Applications || echo "$HOME/Applications")" "$IB_NAME_DISP" "$IB_NAME_DISP" "$IB_NAME_DISP"
+			else
+				printf '  App menu folder "%s" with "%s" and "Uninstall %s" (ib-%s.* in the XDG menu folders)\n' "$IB_NAME_DISP" "$IB_NAME_DISP" "$IB_NAME_DISP" "$IB_APPID"
+			fi
+		fi
+		[ "$IB_DESKTOP" = 1 ] && printf '  A desktop shortcut\n'
+		printf '  Uninstaller: %s/uninstall.sh\n' "$IB_APP_DIR"
+		printf '  PATH: not changed\n'
+		ib_sel note | sed 's/^/\nNOTE: /'
+		if [ $need_root = 1 ]; then
+			printf '\nNEEDS ADMINISTRATOR RIGHTS'
+			[ $IB_SYSTEM = 1 ] && printf ' (installing for all users)'
+			printf '\n'
+		fi
+		printf '\nWHO SIGNED THIS INSTALLER\n  %s\n' "$ib_signed_by"
+		printf 'WHERE ITS SETTINGS CAME FROM\n  %s\n' "$IB_ORIGIN"
+		printf '  plan: %s\n' "$IB_PLAN_FROM"
+		case $IB_PLAN_FROM in http:*) printf '  WARNING: the plan came over plain HTTP; downloads are still checked against their SHA-256.\n' ;; esac
+		[ -n "$ib_plan_warn" ] && printf '  WARNING: %s\n' "$ib_plan_warn"
+		printf '\nLog: %s\n' "$IB_LOG"
+	} > "$sum"
+	cat "$sum" >> "$IB_LOG"
+	{
+		printf 'Install %s (%s)\n' "$IB_NAME_DISP" "$(ib_describe_source)"
+		printf 'Into: %s\n' "$IB_APP_DIR"
+		printf 'Downloads: %s file(s), each checked against its SHA-256\n' "$((nfiles + $([ -n "$src" ] && echo 1 || echo 0)))"
+		printf 'Signed by: %s\n' "$ib_signed_by"
+		printf 'Settings from: %s\n' "$IB_ORIGIN"
+		[ $need_root = 1 ] && printf 'Needs administrator rights.\n'
+		printf '\nChoose Details for URLs, checksums and commands.'
+	} > "$IB_WORK/short.txt"
+	ib_confirm "Installer Builder" "$sum" "Install $IB_NAME_DISP?" || { ib_say "Cancelled; nothing was installed."; [ "$ib_log_is_temp" = 1 ] && rm -f "$IB_LOG"; exit 1; }
+
+	if [ $need_root = 1 ] && [ "$(id -u)" != 0 ]; then
+		ib_elevate
+		rc=$?
+		[ $rc = 0 ] && [ "$opt_yes" != 1 ] && [ "$ib_ui" != tty ] && ib_message info "Installer Builder" "$IB_NAME_DISP is installed."
+		[ $rc = 0 ] || ib_fail "The administrator install did not finish."
+		exit $rc
+	fi
+
+	# ---- install
+	ib_progress_start "Installing $IB_NAME_DISP…"
+	IB_CREATED=$IB_WORK/created
+	: > "$IB_CREATED"
+	: > "$IB_WORK/shortcuts"
+	if [ -e "$IB_APP_DIR" ]; then
+		o=$(ib_get "$IB_APP_DIR/manifest.txt" appid 2>/dev/null)
+		IB_CREATED=
+		if [ "$o" = "$IB_APPID" ]; then
+			ib_fail "$IB_NAME_DISP is already installed in $IB_APP_DIR. Run its uninstall.sh first."
+		elif [ -n "$o" ]; then
+			ib_fail "$IB_APP_DIR belongs to another app ($o). Not installing."
+		else
+			ib_fail "$IB_APP_DIR already exists (a leftover?). Remove it, then try again."
+		fi
+	fi
+	ib_mkdirs "$IB_ROOT" || ib_fail "Could not create $IB_ROOT"
+	mkdir "$IB_APP_DIR" || ib_fail "Could not create $IB_APP_DIR"
+	ib_created r "$IB_APP_DIR"
+	mkdir -p "$IB_DATA_DIR" "$IB_TMP/dl"
+
+	i=1
+	while [ "$i" -le "$nfiles" ]; do
+		IFS=$tab
+		set -- $(ib_sel file "$i")
+		IFS=$ifs0
+		f_name=$1 f_file=$2 f_sha=$3
+		d=$(printf '%s' "$IB_DIRMAP" | awk -F'\t' -v n="$f_name" '$1 == n { print $2; exit }')
+		if [ -e "$d" ]; then
+			o=$(ib_get "$d/.ib-owner" appid 2>/dev/null)
+			[ "$o" = "$IB_APPID" ] || ib_fail "$d already exists and is not this app's; not installing."
+			rm -rf "$d"
+		fi
+		mkdir "$d" || ib_fail "Could not create $d"
+		ib_created r "$d"
+		printf 'ib-folder\t1\nappid\t%s\nname\t%s\nfile\t%s\n' "$IB_APPID" "$f_name" "$f_file" > "$d/.ib-owner"
+		mkdir -p "$IB_TMP/dl/$i"
+		export IB_CUR_DIR="$d" IB_CUR_FILE="$IB_TMP/dl/$i/$f_file"
+		ib_say "Getting $f_file"
+		ib_sel url "$i" > "$IB_WORK/urls"
+		ib_obtain "$f_sha" "$IB_CUR_FILE" "$IB_WORK/urls" "$f_file" ||
+			ib_fail "Could not get $f_file with the expected SHA-256 from any source."
+		ib_sel step "$i" > "$IB_WORK/steps.$i"
+		if [ ! -s "$IB_WORK/steps.$i" ]; then
+			cp "$IB_CUR_FILE" "$d/" || ib_fail "Could not copy $f_file into $d"
+		fi
+		while IFS= read -r st <&5; do
+			IFS=$tab
+			set -- $st
+			IFS=$ifs0
+			ib_step "$@"
+		done 5< "$IB_WORK/steps.$i"
+		rm -f "$IB_CUR_FILE"
+		i=$((i + 1))
+	done
+	export IB_CUR_DIR="$IB_APP_DIR" IB_CUR_FILE=
+
+	if [ -n "$src" ]; then
+		IFS=$tab
+		set -- $src
+		IFS=$ifs0
+		s_file=$1 s_sha=$2 s_fmt=$4 s_strip=${5:-0}
+		ib_say "Getting the project ($s_file)"
+		ib_sel srcurl > "$IB_WORK/urls"
+		mkdir -p "$IB_TMP/dl/src"
+		ib_obtain "$s_sha" "$IB_TMP/dl/src/$s_file" "$IB_WORK/urls" "$s_file" ||
+			ib_fail "Could not get the project ($s_file) with the expected SHA-256 from any source."
+		ib_unpack "$s_fmt" "$IB_TMP/dl/src/$s_file" "$IB_APP_DIR" "$s_strip" ||
+			ib_fail "Could not unpack the project ($s_file)."
+	fi
+
+	ins=$(ib_sel1 install)
+	if [ -n "$ins" ]; then
+		c=$(ib_subst "$ins")
+		ib_say "Installing the project: $c"
+		(ib_apply_env 1 && cd "$IB_APP_DIR" && sh -c "$c") < /dev/null >> "$IB_LOG" 2>&1 ||
+			ib_fail "The project's install command failed: $c"
+	fi
+
+	# ---- launch.txt, launcher, uninstaller
+	l=$(ib_sel1 launch)
+	[ -n "$l" ] || ib_fail "The plan has no launch command."
+	{
+		printf 'ib-launch\t1\n'
+		printf 'cwd\t%s\n' "$IB_APP_DIR"
+		ib_sel env | while IFS="$tab" read -r n v; do printf 'env\t%s\t%s\n' "$n" "$(ib_subst "$v")"; done
+		ib_sel unset | while IFS= read -r n; do printf 'unset\t%s\n' "$n"; done
+		ib_sel path | while IFS= read -r p; do printf 'path\t%s\n' "$(ib_subst "$p")"; done
+		printf 'console\t%s\n' "${IB_CONSOLE:-0}"
+		printf 'exec\t%s\n' "$(ib_subst "$l")"
+	} > "$IB_APP_DIR/launch.txt"
+	ib_write_launcher
+	head -c "$IB_ENGINE_LEN" "$IB_SELF" > "$IB_APP_DIR/uninstall.sh" && chmod 755 "$IB_APP_DIR/uninstall.sh" ||
+		ib_fail "Could not write the uninstaller."
+
+	if [ "$IB_OS" = macos ]; then ib_menus_macos; else ib_menus_linux; fi
+
+	{
+		printf 'ib-manifest\t1\n'
+		printf 'name\t%s\n' "$IB_NAME_DISP"
+		printf 'appid\t%s\n' "$IB_APPID"
+		printf 'record\t%s\n' "$IB_RECHASH"
+		printf 'installed\t%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+		printf '%s' "$IB_DIRMAP" | while IFS="$tab" read -r n d; do [ -n "$d" ] && printf 'dir\t%s\n' "$d"; done
+		cat "$IB_WORK/shortcuts"
+		# Folders this install created outside the root, deepest first;
+		# the uninstaller removes them only if they are empty.
+		awk -F'\t' -v root="$IB_ROOT" '$1 == "e" && $2 != root && index($2, root "/") != 1 {
+				if (index(root "/", $2 "/") == 1) b[++m] = $2; else a[++n] = $2 }
+			END { for (i = n; i > 0; i--) print "shortcut\t" a[i]; for (i = m; i > 0; i--) print "shortcut\t" b[i] }' "$IB_CREATED"
+	} > "$IB_APP_DIR/manifest.txt"
+
+	ib_progress_stop
+	IB_CREATED=
+	ib_say "Installed $IB_NAME_DISP in $IB_APP_DIR"
+	ib_log "Launcher: $IB_APP_DIR/launch.sh"
+	cp "$IB_LOG" "$IB_APP_DIR/install.log" 2>/dev/null
+	if [ "$opt_yes" != 1 ] && [ "$ib_ui" != tty ]; then
+		ib_message info "Installer Builder" "$IB_NAME_DISP is installed.${nl}${nl}Start it from $([ "$IB_OS" = macos ] && echo "Applications > $IB_NAME_DISP" || echo "the app menu").${nl}Log: $IB_APP_DIR/install.log"
+	fi
+	[ "$ib_log_is_temp" = 1 ] && rm -f "$IB_LOG" && IB_LOG=
+	return 0
+}
+
+ib_usage() {
+	cat <<'EOF'
+Installer Builder (Linux and macOS)
+
+  --yes               install (or uninstall) without asking
+  --log=PATH          write the log to PATH
+  --record=PATH       use this ib-record file
+  --plan=PATH         use this ib-plan file (else the plan is fetched)
+  --backend=URL       where to fetch records and plans
+  --uninstall         remove the app this uninstall.sh belongs to
+EOF
+}
+
+ib_main() {
+	for a in "$@"; do
+		case $a in
+		--record=*) opt_record=$(ib_abs "${a#*=}") ;;
+		--plan=*) opt_plan=$(ib_abs "${a#*=}") ;;
+		--backend=*) opt_backend=${a#*=} ;;
+		--log=*) opt_log=$(ib_abs "${a#*=}") ;;
+		--yes | -y) opt_yes=1 ;;
+		--uninstall) opt_uninstall=1 ;;
+		--ib-origin=*) opt_origin=${a#*=} ;;
+		--help | -h) ib_usage; exit 0 ;;
+		-psn_*) ;; # old macOS Finder launch argument
+		*) printf 'Unknown option: %s\n' "$a" >&2; ib_usage >&2; exit 2 ;;
+		esac
+	done
+	ib_detect_os
+	ib_pick_ui
+	IB_WORK=$(mktemp -d "${TMPDIR:-/tmp}/ib.XXXXXX") || { echo "mktemp failed" >&2; exit 1; }
+	trap ib_cleanup EXIT
+	trap 'ib_fail "Interrupted."' INT TERM HUP
+	if [ -n "$opt_log" ]; then
+		IB_LOG=$opt_log
+		: >> "$IB_LOG" || { echo "Can't write $IB_LOG" >&2; exit 1; }
+	else
+		IB_LOG=${TMPDIR:-/tmp}/ib-$(date +%Y%m%d-%H%M%S)-$$.log
+		: > "$IB_LOG"
+		ib_log_is_temp=1
+	fi
+	ib_log "Installer Builder engine $IB_ENGINE_VERSION, $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+	s=$0
+	# `sh file.run` gives a bare name; a file here wins over a PATH lookup.
+	case $s in */*) ;; *) [ -f "$s" ] || s=$(command -v "$s") ;; esac
+	IB_SELF=$(ib_abs "$s")
+	IB_BUNDLE=
+	case $IB_SELF in
+	*.app/Contents/MacOS/*) IB_BUNDLE=${IB_SELF%/Contents/MacOS/*} ;;
+	esac
+	if [ -n "$IB_BUNDLE" ]; then
+		IB_NAME=$(basename "$IB_BUNDLE" .app)
+		IB_HOME_DIR=$(dirname "$IB_BUNDLE")
+	else
+		IB_NAME=$(basename "$IB_SELF")
+		IB_NAME=${IB_NAME%.run}
+		IB_NAME=${IB_NAME%.sh}
+		IB_HOME_DIR=$(dirname "$IB_SELF")
+	fi
+	ib_log "Running as $IB_SELF on $IB_OSDESC"
+
+	if [ "$opt_uninstall" = 1 ] ||
+		{ [ "$(basename "$IB_SELF")" = uninstall.sh ] && [ -f "$(dirname "$IB_SELF")/manifest.txt" ]; }; then
+		ib_uninstall
+		[ "$ib_log_is_temp" = 1 ] && rm -f "$IB_LOG"
+		exit 0
+	fi
+	ib_install_main
+}
+
+ib_main "$@"
+exit $?

@@ -521,7 +521,7 @@ async function readMacZip(u8, name) {
   const info = { kind: 'zip', name, entries, app, record: null, plan: null, pack: [], signed: false, signedWhy: '', hadBlock: false };
   if (entries.some((e) => e.name.startsWith(app + 'Contents/_CodeSignature/'))) {
     info.signed = true;
-    info.signedWhy = 'The app in this zip is code-signed. Changing its files breaks the signature, so macOS will treat it as damaged unless it is signed again.';
+    info.signedWhy = 'The app in this zip is code-signed. Saving removes that signature (macOS treats a broken signature as damaged, which is worse than unsigned); sign it again if you publish it.';
   }
   for (const e of entries) {
     if (!e.name.startsWith(ib) || zipIsDir(e)) continue;
@@ -563,7 +563,10 @@ export async function writeInstaller(info, edits = {}) {
 
 async function writeMacZip(info, record, plan, pack) {
   const ib = info.app + 'Contents/Resources/ib/';
-  const kept = info.entries.filter((e) => !e.name.startsWith(ib));
+  // Changing the app breaks its signature, and macOS calls an app with a
+  // broken signature "damaged" (worse than unsigned), so drop the old one.
+  const sig = info.app + 'Contents/_CodeSignature/';
+  const kept = info.entries.filter((e) => !e.name.startsWith(ib) && !e.name.startsWith(sig));
   const add = [];
   add.push(await zipNewEntry(ib, null, { kind: 'dir' }));
   add.push(await zipNewEntry(ib + 'record.txt', record));

@@ -480,8 +480,8 @@ func (s *server) dl(w http.ResponseWriter, r *http.Request) {
 func (s *server) base(w http.ResponseWriter, r *http.Request) {
 	files := map[string][2]string{
 		"windows": {"windows/out/base.exe", "base.exe"},
-		"linux":   {"unix/out/ib.run", "ib.run"},
-		"macos":   {"unix/out/Install.zip", "Install.zip"},
+		"linux":   {"unix/out/ib-base.run", "ib-base.run"},
+		"macos":   {"unix/out/ib-base-macos.zip", "ib-base-macos.zip"},
 	}
 	f, ok := files[r.PathValue("os")]
 	if !ok {

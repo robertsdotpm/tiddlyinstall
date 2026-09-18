@@ -557,9 +557,14 @@ func (b *Builder) basePath(plat string, signed bool) string {
 		}
 		return filepath.Join(b.Bases, "windows", "out", "base.exe")
 	case "linux":
-		return filepath.Join(b.Bases, "unix", "out", "ib.run")
+		for _, n := range []string{"ib-base.run", "ib.run"} {
+			if p := filepath.Join(b.Bases, "unix", "out", n); fileExists(p) {
+				return p
+			}
+		}
+		return filepath.Join(b.Bases, "unix", "out", "ib-base.run")
 	default:
-		return filepath.Join(b.Bases, "unix", "out", "Install.zip")
+		return filepath.Join(b.Bases, "unix", "out", "ib-base-macos.zip")
 	}
 }
 

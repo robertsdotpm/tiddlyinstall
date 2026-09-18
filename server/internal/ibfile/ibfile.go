@@ -172,7 +172,10 @@ func DedupPack(files []PackFile) []PackFile {
 // MacZip rewrites the macOS base zip: the .app folder is renamed to
 // newApp (mode A puts the record hash in this name) and extra files are
 // added under <newApp>/Contents/Resources/ib/. Entries are copied raw, so
-// Unix permissions and symlinks are kept.
+// Unix permissions and symlinks are kept. Adding files invalidates the
+// base's signature, and macOS reports an app with a broken signature as
+// "damaged" (worse than unsigned), so the old signature is dropped then;
+// a mode B publisher signs the result themselves.
 func MacZip(base []byte, newApp string, extra map[string][]byte, out io.Writer) error {
 	zr, err := zip.NewReader(bytes.NewReader(base), int64(len(base)))
 	if err != nil {
@@ -190,6 +193,9 @@ func MacZip(base []byte, newApp string, extra map[string][]byte, out io.Writer) 
 	}
 	zw := zip.NewWriter(out)
 	for _, f := range zr.File {
+		if len(extra) > 0 && strings.HasPrefix(f.Name, oldApp+"/Contents/_CodeSignature/") {
+			continue
+		}
 		h := f.FileHeader
 		if strings.HasPrefix(h.Name, oldApp) {
 			h.Name = newApp + strings.TrimPrefix(h.Name, oldApp)
