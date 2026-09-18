@@ -562,3 +562,12 @@ form:has(#pf-action option[value="run"]:checked) .pf-args { display: block; }
 form:has(#pf-action option[value="run"]:checked) .pf-dest { display: none; }
 .add-file { border: 1px dashed var(--border); border-radius: 6px; padding: 8px 12px; margin: 12px 0 0; }
 .add-file > summary { color: var(--accent); }
+
+/* C / C++: build tools panel, and the same "write it here" limits as Other (no JS). */
+.lang-cc-only { display: none; }
+form:has(#runtime option[value="cc"]:checked) .lang-cc-only { display: block; }
+form:has(#runtime option[value="cc"]:checked) .entry-cc { display: block; }
+form:has(#runtime option[value="cc"]:checked) .lang-cc { display: inline; }
+form:has(#src-write:checked):has(#runtime option[value="cc"]:checked) .write-needs-lang { display: block; }
+form:has(#src-write:checked):has(#runtime option[value="cc"]:checked) .write-editor { display: none; }
+.lang-cc-only .win-settings .choice { margin-bottom: 8px; }

@@ -58,6 +58,7 @@
             <option value="python">Python</option>
             <option value="node">Node.js</option>
             <option value="ruby">Ruby</option>
+            <option value="cc">C / C++ (built on the user's computer)</option>
             <option value="none">Other (use your own runtime)</option>
           </select>
         </div>
@@ -189,6 +190,45 @@
           <p class="small muted" style="margin-bottom:0">People see these URLs on the installer's "what this will do" screen before anything is downloaded.</p>
         </div>
 
+
+        <div class="custom-runtime lang-cc-only">
+          <h3 class="section-title">Build tools</h3>
+          <p class="small muted" style="margin-top:0">The installer installs a compiler into the app's own folder and builds your project on the user's computer.</p>
+
+          <div class="win-settings">
+            <span class="label">Windows</span>
+            <label class="choice"><input type="radio" name="cc_win" value="auto" checked>
+              <span><strong>Automatic</strong> <span class="badge">default</span><br>
+              <span class="small muted">MinGW-w64 GCC, or Visual Studio Build Tools if the project only builds with Visual Studio (it has <code>.sln</code>/<code>.vcxproj</code> files and no other build files).</span></span></label>
+            <label class="choice"><input type="radio" name="cc_win" value="gcc-ucrt">
+              <span><strong>MinGW-w64 GCC</strong> <span class="small muted">(WinLibs, UCRT) · Windows 7 SP1+ · about 110 MB download</span><br>
+              <span class="small muted">GCC for Windows in the app's own folder. Nothing installed system-wide.</span></span></label>
+            <label class="choice"><input type="radio" name="cc_win" value="gcc-msvcrt">
+              <span><strong>MinGW-w64 GCC for old Windows</strong> <span class="small muted">(WinLibs, MSVCRT) · Windows XP+ · 32-bit · about 90 MB download</span><br>
+              <span class="small muted">The only choice that builds on XP and Vista.</span></span></label>
+            <label class="choice"><input type="radio" name="cc_win" value="w64devkit">
+              <span><strong>w64devkit</strong> <span class="small muted">· Windows 7+</span><br>
+              <span class="small muted">GCC plus <code>make</code> and a small Unix shell, for projects with Makefiles or shell build scripts.</span></span></label>
+            <label class="choice"><input type="radio" name="cc_win" value="llvm">
+              <span><strong>LLVM / Clang</strong> <span class="small muted">· Windows 7 SP1+ · about 400 MB download</span><br>
+              <span class="small muted">Clang in the app's own folder. Builds for the Visual Studio ABI, so it also needs Visual Studio Build Tools' headers and libraries.</span></span></label>
+            <label class="choice"><input type="radio" name="cc_win" value="zig">
+              <span><strong>Zig (<code>zig cc</code>)</strong> <span class="small muted">· Windows 10+ · about 95 MB download</span><br>
+              <span class="small muted">A small self-contained C/C++ compiler with its own headers and linker.</span></span></label>
+            <label class="choice"><input type="radio" name="cc_win" value="msvc">
+              <span><strong>Visual Studio Build Tools</strong> <span class="small muted">· Windows 10 1909+ · several GB, downloaded by Microsoft's installer</span><br>
+              <span class="small muted">Microsoft's compiler, for projects that only build with Visual Studio. Installed system-wide, not in the app's folder,
+              and Microsoft's licence requires every user to have a Visual Studio licence.</span></span></label>
+          </div>
+
+          <div class="field" style="margin-top:10px">
+            <label for="cc-build">Build command</label>
+            <input type="text" id="cc-build" name="cc_build" placeholder="Automatic: cmake, meson or make, from the project's files" spellcheck="false">
+            <span class="hint">Runs in the project's folder with the compiler set up. The built program is what the app launches.</span>
+          </div>
+          <p class="small muted" style="margin-bottom:0"><span class="linux-settings">Linux: GCC or Clang from the catalogue. </span><span class="mac-settings">macOS: Clang from the catalogue, plus Apple's Xcode Command Line Tools. </span>
+            People see the compiler, and that the project's build scripts will run, before anything is installed.</p>
+        </div>
 
         <!-- Code written on the site: templates, editor and preview -->
         <div class="write-block src-write-only">
@@ -458,7 +498,7 @@ Press Enter to close</pre>
         </div>
 
         <p class="small muted" style="margin-bottom:0">
-          You'll get <code>install_<span class="by-lang lang-python">python</span><span class="by-lang lang-node">node</span><span class="by-lang lang-ruby">ruby</span><span class="by-lang lang-none">app</span>_&lt;name&gt;<span class="by-mode mode-ours-inline">_&lt;hash&gt;</span>.exe</code>, <code>.run</code> and <code>.dmg</code><span class="offline-inline">, plus offline <code>…_offline.exe</code>, <code>.run</code> and <code>.zip</code></span>,
+          You'll get <code>install_<span class="by-lang lang-python">python</span><span class="by-lang lang-node">node</span><span class="by-lang lang-ruby">ruby</span><span class="by-lang lang-cc">cpp</span><span class="by-lang lang-none">app</span>_&lt;name&gt;<span class="by-mode mode-ours-inline">_&lt;hash&gt;</span>.exe</code>, <code>.run</code> and <code>.dmg</code><span class="offline-inline">, plus offline <code>…_offline.exe</code>, <code>.run</code> and <code>.zip</code></span>,
           <span class="by-mode mode-ours-inline">signed by Installer Builder (the hash points to your settings, so the signature stays valid)</span><span class="by-mode mode-yours-inline">signed by you</span><span class="by-mode mode-unsigned-inline">unsigned</span>. Everything below is optional and already has sensible defaults.
         </p>
       </section>
@@ -618,6 +658,7 @@ Press Enter to close</pre>
             <input type="text" class="entry entry-python" id="entry-python" name="entry_python" value="{runtime} -m {project}">
             <input type="text" class="entry entry-node" id="entry-node" name="entry_node" value="{runtime} {app_dir}" aria-label="Launch command">
             <input type="text" class="entry entry-ruby" id="entry-ruby" name="entry_ruby" value="{bin}/{project}" aria-label="Launch command">
+            <input type="text" class="entry entry-cc" id="entry-cc" name="entry_cc" value="{app_dir}/{project}" aria-label="Launch command">
             <input type="text" class="entry entry-none" id="entry-none" name="entry_none" value="{app_dir}/{project}" aria-label="Launch command">
             <span class="hint">Filled in for the language you picked; change it if your app starts differently.
               <code>{runtime}</code> the runtime (python, node, ruby) ·
