@@ -93,10 +93,15 @@ export function apiReady() {
 export function apiBase() { return apiBaseUrl; }
 export function apiDefault() { return defaultApi; }
 
-// A backend-relative path ("/dl/x") as an absolute URL. Absolute URLs pass.
+// A backend-relative path ("/dl/x") as an absolute URL. An absolute value from
+// the server (a download URL) is only trusted when it is http(s): a hostile
+// backend chosen with ?api= must not be able to smuggle a javascript:/data:
+// link onto the page. Anything else, or a value that isn't a URL, returns ''.
 export function absUrl(path) {
   if (!path) return '';
-  if (/^[a-z][a-z0-9+.-]*:/i.test(path)) return path;
+  if (/^[a-z][a-z0-9+.-]*:/i.test(path)) {
+    return /^https?:\/\//i.test(path) ? path : '';
+  }
   return apiBaseUrl + (path.startsWith('/') ? '' : '/') + path;
 }
 

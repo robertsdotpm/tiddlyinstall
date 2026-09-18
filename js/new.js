@@ -36,6 +36,86 @@ export function parseSource(text, refType, ref) {
   return s;
 }
 
+function radio(name, fallback) {
+  const el = form.elements[name];
+  const v = el instanceof RadioNodeList ? el.value : (el ? el.value : '');
+  return v || fallback;
+}
+
+function bytesToBase64(u8) {
+  let s = '';
+  for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000));
+  return btoa(s);
+}
+
+const ICON_MAX = 1024 * 1024; // 1 MB, docs/api.md
+
+// The launcher icon: the gallery choice, plus base64 for an uploaded image.
+async function iconField(problems) {
+  const icon = { choice: radio('icon_choice', 'default') };
+  const input = form.elements.icon;
+  const file = input && input.files && input.files[0];
+  if (file) {
+    if (file.size > ICON_MAX) {
+      problems.push('The icon is over 1 MB. Use a smaller PNG (a 512×512 or 1024×1024 PNG is plenty).');
+    } else {
+      icon.data = bytesToBase64(new Uint8Array(await file.arrayBuffer()));
+      icon.filename = file.name;
+      icon.type = file.type || 'image/png';
+    }
+  }
+  return icon;
+}
+
+// The Customise sections the server may act on (docs/api.md optional fields).
+function optionFields(runtime, mode) {
+  const fields = {
+    cleanup: {
+      tools: radio('cleanup_tools', 'remove'),
+      source: checked('cleanup_source'),
+      pkg_cache: checked('cleanup_pkg_cache'),
+      docs: checked('cleanup_docs'),
+      fail: radio('cleanup_fail', 'remove'),
+    },
+    uninstall: {
+      register: checked('uninstaller'),
+      data: radio('uninstall_data', 'ask'),
+      before_windows: (val('win_unpre_script') || '').trim(),
+      before_unix: (val('unix_unpre_script') || '').trim(),
+    },
+  };
+  if (runtime === 'cc') fields.tools = { cc_win: radio('cc_win', 'auto') };
+  if (mode === 'B') fields.sign = { win_method: radio('win_sign', 'service') };
+  return fields;
+}
+
+// Packed and offline files. Uploaded local files are NOT sent: for modes B/C
+// they are added to the built file in the browser afterwards (packed-files.md).
+function packField(mode) {
+  if (mode === 'A') return null;   // mode A never carries packed content
+  const pack = {};
+  if (checked('offline')) {
+    pack.offline_include = radio('offline_include', 'all');
+    const targets = ['win_1011', 'win_78', 'win_vista', 'win_xp', 'linux', 'mac']
+      .filter((t) => checked('offline_' + t));
+    pack.offline_targets = targets;
+  }
+  // One URL-sourced file from the "+ Add a file" form, if given. Uploads stay
+  // in the browser and are added after the build, so they aren't sent.
+  const url = (val('pf_url') || '').trim();
+  if (url) {
+    pack.files = [{
+      source: 'url', url,
+      action: radio('pf_action', 'copy'),
+      dest: (val('pf_dest') || '').trim(),
+      args: (val('pf_args') || '').trim(),
+      platforms: ['windows', 'linux', 'macos'].filter((p) => checked('pf_' + p)),
+      packed: radio('pf_how', 'packed') === 'packed',
+    }];
+  }
+  return Object.keys(pack).length ? pack : null;
+}
+
 // The files of the chosen template, from the visible editor.
 function inlineFiles(runtime, template) {
   const combo = form.querySelector('.combo-' + runtime + '-' + template);
@@ -47,7 +127,7 @@ function inlineFiles(runtime, template) {
   return files;
 }
 
-function buildJob() {
+async function buildJob() {
   const runtime = val('runtime');
   const write = val('source_kind') === 'write';
   const rv = val('rv_mode');
@@ -76,6 +156,12 @@ function buildJob() {
   }
 
   const problems = [];
+  // Optional Customise fields the server may act on (docs/api.md).
+  Object.assign(job, optionFields(runtime, mode));
+  job.icon = await iconField(problems);
+  const pack = packField(mode);
+  if (pack) job.pack = pack;
+
   if (!platforms.length) problems.push('Pick at least one platform under "Build for".');
   if (write) {
     const template = val('template');
@@ -116,13 +202,13 @@ let sending = false;
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   if (sending) return;
-  const { job, problems } = buildJob();
-  if (problems.length) { showError(problems.join(' ')); return; }
-  showError('');
   sending = true;
   const labels = submitButtons.map((b) => b.textContent);
   submitButtons.forEach((b) => { b.disabled = true; b.textContent = 'Sending…'; });
   try {
+    const { job, problems } = await buildJob();
+    if (problems.length) { showError(problems.join(' ')); return; }
+    showError('');
     const r = await apiRequest('/api/jobs', { method: 'POST', body: job });
     location.href = pageUrl('build.html', 'job=' + encodeURIComponent(r.id));
   } catch (err) {

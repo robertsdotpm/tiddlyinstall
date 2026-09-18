@@ -73,7 +73,15 @@
         </div>
         <div class="field">
           <span class="label">Icon</span>
-          <span class="hint">Not editable here yet (to do: Windows icons with resedit-js, macOS <code>.icns</code>). The installer keeps its current icon.</span>
+          <div class="icon-edit">
+            <img id="icon-preview" alt="" width="48" height="48" hidden>
+            <div style="flex:1">
+              <input type="file" id="icon-file" accept=".png,.svg,image/png,image/svg+xml">
+              <span class="hint" id="icon-hint">A square PNG (or SVG), 256×256 or larger. Applied when you pick it.</span>
+            </div>
+            <button type="button" class="link-button" id="icon-clear" hidden>Undo</button>
+          </div>
+          <span class="small" id="icon-status"></span>
         </div>
 
         <hr>
@@ -222,6 +230,7 @@ install_python_black.exe      installs black
   <footer class="site-footer">
     A Matthew Roberts and Claude production.
   </footer>
+  <script src="vendor/resedit-bundle.js"></script>
   <script type="module" src="js/edit.js"></script>
 </body>
 </html>

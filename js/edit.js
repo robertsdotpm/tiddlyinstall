@@ -5,9 +5,12 @@
 // page has them (the standalone page), else from the build server.
 import {
   readInstaller, writeInstaller, parseKv, serializeKv, kvGet, kvSet, newRecordText,
-  recordHash, packMember, installerExt,
+  recordHash, packMember, installerExt, toBytes, peInfo, zipEntryData, zipNewEntry,
 } from './ibfile.js';
 import { apiRequest, errorText, mountApiFooter } from './api.js';
+import {
+  rasterSource, buildIco, buildIcns, setExeIcon, setPlistIcon, setLinuxIcon,
+} from './icon.js';
 
 // The standalone build defines IB_PRISTINE (the page as loaded) before any
 // script touches the DOM, for "Save this page".
@@ -129,7 +132,7 @@ function paintPack() {
     return;
   }
   list.innerHTML = packFiles.map((m, i) =>
-    '<li><span><code class="sha">' + m.name + '</code>' +
+    '<li><span><code class="sha">' + escHtml(m.name) + '</code>' +
     (m.label ? '<br><span class="small">' + escHtml(m.label) + '</span>' : '') + '</span>' +
     '<span class="small">' + humanBytes(m.data.length) +
     ' <button type="button" class="link-button" data-remove="' + i + '">Remove</button></span></li>').join('');
@@ -153,6 +156,94 @@ el('pack-add').addEventListener('change', async (e) => {
   paintPack();
 });
 
+/* ---------- icon ---------- */
+
+const ICON_HINT = {
+  exe: 'A square PNG (or SVG), 256×256 or larger. Written into the .exe as a Windows .ico (16/32/48 for old Windows, up to 256). Applied when you pick it.',
+  zip: 'A square PNG (or SVG), 256×256 or larger. Written into the .app as an .icns. Applied when you pick it.',
+  run: 'A square PNG (or SVG), 256×256 or larger. Kept inside the installer for the Linux launcher icon. Applied when you pick it.',
+};
+
+let iconPreviewUrl = null;
+function setIconStatus(msg, isError) {
+  const s = el('icon-status');
+  s.textContent = msg || '';
+  s.className = 'small' + (isError ? ' error-text' : msg ? ' muted' : '');
+}
+function showIconPreview(bytes) {
+  if (iconPreviewUrl) URL.revokeObjectURL(iconPreviewUrl);
+  iconPreviewUrl = URL.createObjectURL(new Blob([bytes]));
+  const img = el('icon-preview');
+  img.src = iconPreviewUrl;
+  img.hidden = false;
+  el('icon-clear').hidden = false;
+}
+function resetIcon() {
+  if (iconPreviewUrl) { URL.revokeObjectURL(iconPreviewUrl); iconPreviewUrl = null; }
+  el('icon-preview').hidden = true;
+  el('icon-clear').hidden = true;
+  el('icon-file').value = '';
+  setIconStatus('');
+}
+
+// Put the .icns into the .app and point Info.plist at it. Mutates info.entries.
+async function applyIconZip(info, icnsBytes) {
+  const iconName = 'AppIcon';
+  const icnsPath = info.app + 'Contents/Resources/' + iconName + '.icns';
+  const plistPath = info.app + 'Contents/Info.plist';
+  const plist = info.entries.find((e) => e.name === plistPath);
+  if (!plist) throw new Error('This .app has no Info.plist.');
+  const xml = new TextDecoder().decode(await zipEntryData(plist));
+  const newPlist = await zipNewEntry(plistPath, setPlistIcon(xml, iconName));
+  info.entries = info.entries.filter((e) => e.name !== plistPath && e.name !== icnsPath);
+  info.entries.push(newPlist, await zipNewEntry(icnsPath, icnsBytes));
+}
+
+async function applyIcon(bytes) {
+  if (!current) return;
+  setIconStatus('Making the icon…');
+  try {
+    const source = await rasterSource(bytes);
+    if (current.kind === 'exe') {
+      const ico = await buildIco(source);
+      const newBase = await setExeIcon(current.base, ico);
+      current.base = newBase;
+      current.pe = peInfo(newBase);
+      current.signed = false;      // resedit drops any signature
+      el('signed-warning').hidden = true;
+      el('ack-signed-row').hidden = true;
+      setIconStatus('Icon set. It goes into the .exe when you download it.');
+    } else if (current.kind === 'zip') {
+      const icns = await buildIcns(source);
+      await applyIconZip(current, icns);
+      setIconStatus('Icon set. It goes into the .app when you download it.');
+    } else {
+      await setLinuxIcon(recEntries, packFiles, toBytes(bytes));
+      paintRecord();
+      paintPack();
+      setIconStatus('Icon packed and named in the settings (Icon= is an engine TODO).');
+    }
+    if (typeof source.close === 'function') source.close();
+    showIconPreview(bytes);
+  } catch (e) {
+    setIconStatus('Couldn\'t use that icon: ' + errorText(e), true);
+    resetIcon();
+  }
+}
+
+el('icon-file').addEventListener('change', async (e) => {
+  const f = e.target.files && e.target.files[0];
+  if (!f) return;
+  if (f.size > 8 * 1024 * 1024) { setIconStatus('That image is over 8 MB; use a smaller PNG.', true); e.target.value = ''; return; }
+  applyIcon(new Uint8Array(await f.arrayBuffer()));
+});
+el('icon-clear').addEventListener('click', () => {
+  // The icon is baked into the base/entries once applied; "Undo" clears the
+  // picker and preview. Re-open the file to fully revert.
+  resetIcon();
+  setIconStatus('Reopen the installer to fully undo an icon change.', false);
+});
+
 /* ---------- opening ---------- */
 
 function defaultOutName() {
@@ -174,6 +265,8 @@ function load(info, displayName, note) {
   recEntries = parseKv(text);
   planRaw.value = info.plan || '';
   packFiles = info.pack.map((m) => ({ name: m.name, data: m.data, label: '' }));
+  resetIcon();
+  el('icon-hint').textContent = ICON_HINT[info.kind] || ICON_HINT.exe;
   fieldsFromRecord();
   paintRecord();
   paintPack();

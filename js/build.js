@@ -2,7 +2,7 @@
 // (so a reload keeps it). Polls GET /api/jobs/{id} every 2 s while it is
 // queued or running, less often while the tab is hidden, and rides out
 // outages through api.js.
-import { apiRequest, absUrl, ApiError, apiBase, errorText, mountApiFooter } from './api.js';
+import { apiRequest, absUrl, ApiError, apiBase, apiDefault, errorText, mountApiFooter } from './api.js';
 
 mountApiFooter();
 
@@ -83,10 +83,12 @@ function paintFiles(job) {
   const files = res && Array.isArray(res.files) ? res.files : [];
   $('job-downloads').hidden = !files.length;
   $('job-files').innerHTML = files.map((f) => {
-    const url = absUrl(f.url);
+    const url = absUrl(f.url);   // '' if the backend gave a non-http(s) URL
+    const name = '<code>' + esc(f.name) + '</code>';
+    const link = url ? '<a href="' + esc(url) + '" download="' + esc(f.name) + '">' + name + '</a>' : name;
     let signed = f.signed;
     if (!signed) signed = f.platform === 'linux' ? 'Not needed on Linux' : 'Unsigned';
-    return '<tr><td><a href="' + esc(url) + '" download="' + esc(f.name) + '"><code>' + esc(f.name) + '</code></a>' +
+    return '<tr><td>' + link +
       (f.sha256 ? '<br><span class="muted sha">SHA-256 <code>' + esc(f.sha256) + '</code></span>' : '') + '</td>' +
       '<td>' + esc(PLATFORM[f.platform] || f.platform) + '</td>' +
       '<td>' + esc(humanSize(f.size)) + '</td>' +
@@ -100,9 +102,25 @@ function paintFiles(job) {
   } else rec.hidden = true;
 }
 
+function paintBackend() {
+  // Make a non-default backend visible: a build (and its download links) came
+  // from whatever ?api= or saved server this page points at, which a phishing
+  // link could have set. The footer lets people change it back.
+  const b = $('job-backend');
+  if (!b) return;
+  if (apiBase() !== apiDefault()) {
+    b.textContent = 'This build and its downloads come from ' + apiBase() +
+      ', not the default build server. If you did not choose that, change it at the bottom of the page before downloading anything.';
+    b.hidden = false;
+  } else {
+    b.hidden = true;
+  }
+}
+
 function paint(job) {
   $('job-view').hidden = false;
   $('job-error').hidden = true;
+  paintBackend();
   const title = job.ticket != null ? 'Build #' + job.ticket : 'Build';
   $('job-title').textContent = title;
   document.title = title + ' · Installer Builder';
