@@ -24,11 +24,11 @@ func TestVersions(t *testing.T) {
 
 func TestQuoteAppPaths(t *testing.T) {
 	for in, want := range map[string]string{
-		"{runtime} {app_dir}/index.js":          `{runtime} "{app_dir}/index.js"`,
-		`{runtime} "{app_dir}/index.js"`:        `{runtime} "{app_dir}/index.js"`,
-		"{app_dir}/hello{exe}":                  `"{app_dir}/hello{exe}"`,
-		`javac -d "{app_dir}" Hello.java`:       `javac -d "{app_dir}" Hello.java`,
-		"{runtime} -cp {app_dir} Hello":         `{runtime} -cp "{app_dir}" Hello`,
+		"{runtime} {app_dir}/index.js":    `{runtime} "{app_dir}/index.js"`,
+		`{runtime} "{app_dir}/index.js"`:  `{runtime} "{app_dir}/index.js"`,
+		"{app_dir}/hello{exe}":            `"{app_dir}/hello{exe}"`,
+		`javac -d "{app_dir}" Hello.java`: `javac -d "{app_dir}" Hello.java`,
+		"{runtime} -cp {app_dir} Hello":   `{runtime} -cp "{app_dir}" Hello`,
 	} {
 		if got := quoteAppPaths(in); got != want {
 			t.Errorf("%q: got %q", in, got)

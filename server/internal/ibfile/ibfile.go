@@ -18,6 +18,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/robertsdotpm/installer-builder/server/internal/icon"
 )
 
 const FooterLen = 64
@@ -169,6 +171,12 @@ func DedupPack(files []PackFile) []PackFile {
 	return out
 }
 
+// The app icon in a macOS bundle, and the CFBundleIconFile value naming it.
+const (
+	MacIconName = "AppIcon"
+	MacIconPath = "Contents/Resources/AppIcon.icns"
+)
+
 // MacZip rewrites the macOS base zip: the .app folder is renamed to
 // newApp (mode A puts the record hash in this name) and extra files are
 // added under <newApp>/Contents/Resources/ib/. Entries are copied raw, so
@@ -176,7 +184,11 @@ func DedupPack(files []PackFile) []PackFile {
 // base's signature, and macOS reports an app with a broken signature as
 // "damaged" (worse than unsigned), so the old signature is dropped then;
 // a mode B publisher signs the result themselves.
-func MacZip(base []byte, newApp string, extra map[string][]byte, out io.Writer) error {
+//
+// A non-nil icns is written to Contents/Resources/AppIcon.icns and
+// Info.plist's CFBundleIconFile is set to it. That changes the bundle too,
+// so the signature is dropped as well.
+func MacZip(base []byte, newApp string, extra map[string][]byte, icns []byte, out io.Writer) error {
 	zr, err := zip.NewReader(bytes.NewReader(base), int64(len(base)))
 	if err != nil {
 		return err
@@ -191,14 +203,45 @@ func MacZip(base []byte, newApp string, extra map[string][]byte, out io.Writer) 
 	if oldApp == "" {
 		return errors.New("no .app in the macOS base")
 	}
+	modified := len(extra) > 0 || icns != nil
+	plistDone := false
 	zw := zip.NewWriter(out)
 	for _, f := range zr.File {
-		if len(extra) > 0 && strings.HasPrefix(f.Name, oldApp+"/Contents/_CodeSignature/") {
+		if modified && strings.HasPrefix(f.Name, oldApp+"/Contents/_CodeSignature/") {
 			continue
+		}
+		if icns != nil && f.Name == oldApp+"/"+MacIconPath {
+			continue // replaced below
 		}
 		h := f.FileHeader
 		if strings.HasPrefix(h.Name, oldApp) {
 			h.Name = newApp + strings.TrimPrefix(h.Name, oldApp)
+		}
+		if icns != nil && f.Name == oldApp+"/Contents/Info.plist" {
+			// Rewritten, so recompressed; the header (mode, time) is kept.
+			rc, err := f.Open()
+			if err != nil {
+				return err
+			}
+			plist, err := io.ReadAll(io.LimitReader(rc, 1<<20))
+			rc.Close()
+			if err != nil {
+				return err
+			}
+			if plist, err = icon.SetPlistIcon(plist, MacIconName); err != nil {
+				return err
+			}
+			h.Method = zip.Deflate
+			h.CRC32, h.CompressedSize, h.UncompressedSize, h.CompressedSize64, h.UncompressedSize64 = 0, 0, 0, 0, 0
+			w, err := zw.CreateHeader(&h)
+			if err != nil {
+				return err
+			}
+			if _, err := w.Write(plist); err != nil {
+				return err
+			}
+			plistDone = true
+			continue
 		}
 		r, err := f.OpenRaw()
 		if err != nil {
@@ -209,6 +252,21 @@ func MacZip(base []byte, newApp string, extra map[string][]byte, out io.Writer) 
 			return err
 		}
 		if _, err := io.Copy(w, r); err != nil {
+			return err
+		}
+	}
+	if icns != nil {
+		if !plistDone {
+			return errors.New("no Contents/Info.plist in the macOS base to set the icon in")
+		}
+		h := &zip.FileHeader{Name: newApp + "/" + MacIconPath, Method: zip.Deflate}
+		h.SetMode(0o644)
+		h.Modified = time.Unix(0, 0).UTC()
+		w, err := zw.CreateHeader(h)
+		if err != nil {
+			return err
+		}
+		if _, err := w.Write(icns); err != nil {
 			return err
 		}
 	}
