@@ -59,8 +59,8 @@ In order (plan.md 1.1):
    record comes from `<backend>/api/records/<hash>` and must hash to the
    same name, or nothing is installed.
 5. **Plain tokens** `install_<runtime>_<package>`: fetches
-   `<backend>/api/plan/name/<runtime>/<package>`. That route is a proposal;
-   the API doesn't have it yet, so these fail with a clear message.
+   `<backend>/api/plan/name/<runtime>/<package>` (docs/api.md, "Plans by
+   name"): the package from the runtime's registry with default settings.
 
 With a record and no plan, the plan comes from `<backend>/api/plan/<hash>`
 and its `record` line must match. An embedded plan whose `record` line
