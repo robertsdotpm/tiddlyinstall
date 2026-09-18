@@ -757,6 +757,43 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
         </details>
 
         <details>
+          <summary><span>Cleanup</span><span class="default">Remove build tools after building</span></summary>
+          <p class="small muted" style="margin-top:0">What the installer removes once the app is installed. Downloads and temporary files are always removed.</p>
+
+          <span class="label">Build tools</span>
+          <p class="small muted" style="margin-top:0">The compiler and build caches, when the app is built on the user's computer (C/C++, Go, Rust, Zig, Nim). Often several hundred MB.</p>
+          <label class="choice"><input type="radio" name="cleanup_tools" value="remove" checked>
+            <span><strong>Remove automatically</strong> <span class="badge">default</span><br>
+            <span class="small muted">Smallest install. Updating or repairing the app downloads the build tools again.</span></span></label>
+          <label class="choice"><input type="radio" name="cleanup_tools" value="ask">
+            <span><strong>Let the user decide</strong><br>
+            <span class="small muted">The last screen of the installer has a ticked box: "Remove build tools (frees about 600 MB)". The uninstaller can remove them later too.</span></span></label>
+          <label class="choice"><input type="radio" name="cleanup_tools" value="keep">
+            <span><strong>Keep</strong><br>
+            <span class="small muted">Faster updates and repairs, and the user can rebuild the app themselves.</span></span></label>
+
+          <hr>
+
+          <span class="label">Also remove</span>
+          <label class="choice"><input type="checkbox" name="cleanup_source">
+            <span>Source code after building <span class="small muted">(compiled apps only; interpreted apps run from their source)</span></span></label>
+          <label class="choice"><input type="checkbox" name="cleanup_pkg_cache" checked>
+            <span>Package manager caches <span class="small muted">(pip, npm, Composer, Bundler, Cargo and Go module caches)</span></span></label>
+          <label class="choice"><input type="checkbox" name="cleanup_docs">
+            <span>The runtime's documentation, tests and examples <span class="small muted">(where the runtime still works without them)</span></span></label>
+
+          <hr>
+
+          <span class="label">If the install fails</span>
+          <label class="choice"><input type="radio" name="cleanup_fail" value="remove" checked>
+            <span><strong>Remove everything it installed</strong> <span class="badge">default</span></span></label>
+          <label class="choice"><input type="radio" name="cleanup_fail" value="ask">
+            <span><strong>Ask</strong> <span class="small muted">(offer to keep the files and build log for troubleshooting)</span></span></label>
+
+          <p class="small muted" style="margin-bottom:0">The install log is always kept in the app's folder. Nothing outside the app's own folders is ever removed.</p>
+        </details>
+
+        <details>
           <summary><span>Files in the installer</span><span class="default"><span class="offline-off-inline">2 of your files</span><span class="offline-inline">2 of your files, plus offline copies</span></span></summary>
 
           <p class="small" style="margin-top:0">Add files for the installer to put in your app's folder, or to run while installing:
