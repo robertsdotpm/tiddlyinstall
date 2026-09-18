@@ -15,7 +15,7 @@ Refresh from the working copy:
 ```sh
 rsync -a --delete \
   --exclude '.cache/' --exclude '*cache*.json' --exclude '*.log' --exclude '*.tmp' --exclude '*.part' \
-  --exclude '.write.lock' --exclude '.busy' --exclude 'pending_updates/' --exclude '__pycache__/' \
+  --exclude '*.pid' --exclude '*.dbg' --exclude '.write.lock' --exclude '.busy' --exclude 'pending_updates/' --exclude '__pycache__/' \
   --exclude 'store/' --exclude 'BACKUP.md' \
   ~/projects/installer-builder-runtimes/catalog/ runtime-catalog/
 cp ~/projects/installer-builder-runtimes/{manifest.json,mirrors.json,README.md,TESTED-WINDOWS.md} runtime-catalog/store/

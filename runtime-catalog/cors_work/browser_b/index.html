@@ -1,0 +1,22 @@
+<!doctype html><meta charset=utf-8><title>cors b</title><pre id=o></pre>
+<script>
+const report = (h, s) => fetch('/__RESULT/' + encodeURIComponent(h + '|' + s)).catch(()=>{});
+(async () => {
+  const samples = await (await fetch('samples.json')).json();
+  const q = Object.entries(samples);
+  async function worker() {
+    while (q.length) {
+      const [h, url] = q.shift();
+      const ac = new AbortController(); const t = setTimeout(() => ac.abort(), 30000);
+      try {
+        const r = await fetch(url, {headers: {Range: 'bytes=0-0'}, signal: ac.signal, cache: 'no-store'});
+        await report(h, 'ok ' + r.status + ' ' + r.url);
+        try { await r.body.cancel(); } catch (e) {}
+      } catch (e) { await report(h, 'error ' + e.name + ': ' + e.message); }
+      clearTimeout(t);
+    }
+  }
+  await Promise.all([worker(), worker(), worker(), worker(), worker(), worker()]);
+  await report('__DONE__', 'done');
+})();
+</script>

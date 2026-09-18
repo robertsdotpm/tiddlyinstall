@@ -177,7 +177,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-2.7.8-1/rubyinstaller-2.7.8-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://web.archive.org/web/20230912041544id_/https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-2.7.8-1/rubyinstaller-2.7.8-1-x64.7z"
+  ],
   "checksum": null,
   "size": 12767296,
   "released": "2023-03-30",
@@ -221,7 +223,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-2.7.8-1/rubyinstaller-2.7.8-1-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://web.archive.org/web/20230912041614id_/https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-2.7.8-1/rubyinstaller-2.7.8-1-x86.7z"
+  ],
   "checksum": null,
   "size": 12668924,
   "released": "2023-03-30",

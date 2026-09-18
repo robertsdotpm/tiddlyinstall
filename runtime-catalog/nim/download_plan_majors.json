@@ -145,7 +145,9 @@
   "variant": null,
   "libc": null,
   "url": "https://nim-lang.org/download/nim-1.6.20-linux_x64.tar.xz",
-  "mirrors": [],
+  "mirrors": [
+   "https://web.archive.org/web/20260301164850id_/https://nim-lang.org/download/nim-1.6.20-linux_x64.tar.xz"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "73d4672dbecf76d2e8e4cd58f0711ebc131f17be8f3b7fe37e768f9d26c1dcd7",
@@ -215,7 +217,9 @@
   "variant": null,
   "libc": null,
   "url": "https://nim-lang.org/download/nim-1.6.20-linux_x32.tar.xz",
-  "mirrors": [],
+  "mirrors": [
+   "https://web.archive.org/web/20251210085221id_/https://nim-lang.org/download/nim-1.6.20-linux_x32.tar.xz"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "1099d0ca4d644be9b8ee12d9e983e262cfb2464d0f5abefe734a9f020216e58a",
@@ -263,7 +267,9 @@
   "variant": null,
   "libc": null,
   "url": "https://nim-lang.org/download/nim-1.6.20_x64.zip",
-  "mirrors": [],
+  "mirrors": [
+   "https://web.archive.org/web/20260218120930id_/https://nim-lang.org/download/nim-1.6.20_x64.zip"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "21bc0be10169f4dd58a61ea84855f283843aae19dc17803efd302b88b16924e2",
@@ -289,7 +295,9 @@
   "variant": null,
   "libc": null,
   "url": "https://nim-lang.org/download/nim-1.6.20_x32.zip",
-  "mirrors": [],
+  "mirrors": [
+   "https://web.archive.org/web/20250929045122id_/https://nim-lang.org/download/nim-1.6.20_x32.zip"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "c1bd1c1c23e2fb9b9c94f6e6cc30c439752d350fd61d950b129c2189a09f3275",

@@ -126,3 +126,36 @@ toolchains).
   checksum be verified against an independent record.
 - Mirrors found after scraping are added through `tools/add_mirrors.py`, which
   also logs evidence to `<runtime>/mirror_evidence.jsonl`.
+
+## cors.json
+
+Whether a web page can download from each host with `fetch()` (CORS), used
+to build offline installers in the browser (installer-builder
+`docs/offline.md`). One record per host, written through
+`tools/add_cors.py`; evidence appended to `cors_evidence.jsonl`.
+`tools/cors_probe.py` checks sample catalogue URLs following the browser's
+rules (every redirect hop must allow the origin; after a cross-origin
+redirect the origin becomes `null`).
+
+```json
+{"hosts": {"cdn.npmmirror.com": {
+  "host": "cdn.npmmirror.com",
+  "status": "yes",
+  "allow_origin": "echo",
+  "redirects_to": [],
+  "path_rules": [],
+  "browser_confirmed": true,
+  "tested": "2026-09-18",
+  "samples": ["https://cdn.npmmirror.com/binaries/node/v0.10.48/node-v0.10.48-darwin-x86.tar.xz"],
+  "notes": null
+}}}
+```
+
+- `status`: `yes` (every sample works from a browser), `no`, `partial`
+  (depends on the path; see `path_rules`), `unreachable` (couldn't test).
+- `allow_origin`: `"*"`, `"echo"` (the request's origin is sent back), or
+  `null`.
+- `redirects_to`: other hosts the downloads redirect through; they must allow
+  CORS too.
+- `path_rules`: for `partial`, `[{"prefix": "/dist/", "status": "yes"}]`.
+- `browser_confirmed`: a real headless Chrome `fetch()` gave the same answer.

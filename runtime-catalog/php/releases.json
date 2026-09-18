@@ -15840,7 +15840,8 @@
   "libc": null,
   "url": "https://windows.php.net/downloads/releases/archives/php-5.6.40-nts-Win32-VC11-x64.zip",
   "mirrors": [
-   "https://downloads.php.net/~windows/releases/archives/php-5.6.40-nts-Win32-VC11-x64.zip"
+   "https://downloads.php.net/~windows/releases/archives/php-5.6.40-nts-Win32-VC11-x64.zip",
+   "https://web.archive.org/web/20250911012605id_/https://windows.php.net/downloads/releases/archives/php-5.6.40-nts-Win32-VC11-x64.zip"
   ],
   "checksum": null,
   "size": 23032238,
@@ -15871,7 +15872,8 @@
   "libc": null,
   "url": "https://windows.php.net/downloads/releases/archives/php-5.6.40-nts-Win32-VC11-x86.zip",
   "mirrors": [
-   "https://downloads.php.net/~windows/releases/archives/php-5.6.40-nts-Win32-VC11-x86.zip"
+   "https://downloads.php.net/~windows/releases/archives/php-5.6.40-nts-Win32-VC11-x86.zip",
+   "https://web.archive.org/web/20250912052112id_/https://windows.php.net/downloads/releases/archives/php-5.6.40-nts-Win32-VC11-x86.zip"
   ],
   "checksum": null,
   "size": 21374398,
@@ -33570,7 +33572,8 @@
   "libc": null,
   "url": "https://windows.php.net/downloads/releases/php-7.4.33-nts-Win32-vc15-x64.zip",
   "mirrors": [
-   "https://downloads.php.net/~windows/releases/php-7.4.33-nts-Win32-vc15-x64.zip"
+   "https://downloads.php.net/~windows/releases/php-7.4.33-nts-Win32-vc15-x64.zip",
+   "https://web.archive.org/web/20250909151840id_/https://windows.php.net/downloads/releases/php-7.4.33-nts-Win32-vc15-x64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -33598,7 +33601,8 @@
   "libc": null,
   "url": "https://windows.php.net/downloads/releases/php-7.4.33-nts-Win32-vc15-x86.zip",
   "mirrors": [
-   "https://downloads.php.net/~windows/releases/php-7.4.33-nts-Win32-vc15-x86.zip"
+   "https://downloads.php.net/~windows/releases/php-7.4.33-nts-Win32-vc15-x86.zip",
+   "https://web.archive.org/web/20260311113846id_/https://windows.php.net/downloads/releases/php-7.4.33-nts-Win32-vc15-x86.zip"
   ],
   "checksum": {
    "algo": "sha256",

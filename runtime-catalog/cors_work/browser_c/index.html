@@ -1,0 +1,16 @@
+<!doctype html><meta charset=utf-8><title>cors c</title><script>
+(async () => {
+  const tests = await (await fetch('tests.json')).json();
+  await Promise.all(tests.map(async ([label, url]) => {
+    let res;
+    try {
+      const ctl = new AbortController(); setTimeout(() => ctl.abort(), 45000);
+      const r = await fetch(url, {headers: {Range: 'bytes=0-0'}, signal: ctl.signal});
+      res = 'ok ' + r.status;
+      ctl.abort();
+    } catch (e) { res = 'error ' + e.name; }
+    await fetch('/__RESULT/' + encodeURIComponent(label + '|' + res)).catch(() => {});
+  }));
+  await fetch('/__RESULT/' + encodeURIComponent('__DONE__|' + tests.length)).catch(() => {});
+})();
+</script>

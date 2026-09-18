@@ -1,0 +1,6 @@
+{
+ "mirror.clientvps.com": "https://mirror.clientvps.com/CRAN/src/base/R-1/R-1.0.0.tgz",
+ "ftp.gwdg.de": "https://ftp.gwdg.de/pub/misc/gcc/releases/gcc-7.5.0/gcc-7.5.0.tar.xz",
+ "zig.vortan.dev": "https://zig.vortan.dev/zig/zig-0.1.1.tar.xz",
+ "zig-mirror.tsimnet.eu": "https://zig-mirror.tsimnet.eu/zig/zig-0.1.1.tar.xz"
+}

@@ -1,0 +1,6 @@
+<!doctype html><meta charset=utf-8><title>dbg</title><script>
+const U='https://registry.npmmirror.com/-/binary/python/2.0.1/Python-2.0.1.tgz';
+async function t(tag,opts){let r;try{const res=await fetch(U,opts);r='ok_'+res.status+'_'+res.url;}catch(e){r='error_'+e.name+'_'+e.message;}
+ await fetch('/__RESULT/'+encodeURIComponent('npm-'+tag+'|'+r)).catch(()=>{});}
+(async()=>{await t('range',{headers:{Range:'bytes=0-0'}});await t('norange',{method:'HEAD'});await fetch('/__RESULT/DBGDONE');})();
+</script>

@@ -498,7 +498,9 @@
   "variant": null,
   "libc": "glibc",
   "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.4/clang%2Bllvm-16.0.4-armv7a-linux-gnueabihf.tar.xz",
-  "mirrors": [],
+  "mirrors": [
+   "https://web.archive.org/web/20230924134342id_/https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.4/clang%2Bllvm-16.0.4-armv7a-linux-gnueabihf.tar.xz"
+  ],
   "checksum": null,
   "size": 681073328,
   "released": "2023-05-17",
@@ -521,7 +523,9 @@
   "variant": "ubuntu-22.04",
   "libc": "glibc",
   "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.4/clang%2Bllvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz",
-  "mirrors": [],
+  "mirrors": [
+   "https://web.archive.org/web/20240718151259id_/https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.4/clang%2Bllvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz"
+  ],
   "checksum": null,
   "size": 965756016,
   "released": "2023-05-17",
@@ -765,7 +769,9 @@
   "variant": "ubuntu-16.04",
   "libc": "glibc",
   "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/clang%2Bllvm-10.0.1-powerpc64le-linux-ubuntu-16.04.tar.xz",
-  "mirrors": [],
+  "mirrors": [
+   "https://web.archive.org/web/20220418011912id_/https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/clang%2Bllvm-10.0.1-powerpc64le-linux-ubuntu-16.04.tar.xz"
+  ],
   "checksum": null,
   "size": 442863192,
   "released": "2020-07-22",
@@ -788,7 +794,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/clang%2Bllvm-10.0.1-x86_64-apple-darwin.tar.xz",
-  "mirrors": [],
+  "mirrors": [
+   "https://web.archive.org/web/20220228191001id_/https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/clang%2Bllvm-10.0.1-x86_64-apple-darwin.tar.xz"
+  ],
   "checksum": null,
   "size": 448541784,
   "released": "2020-07-22",
@@ -864,7 +872,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/LLVM-10.0.0-win32.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://web.archive.org/web/20250531202625id_/https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/LLVM-10.0.0-win32.exe"
+  ],
   "checksum": null,
   "size": 155809563,
   "released": "2020-03-24",
@@ -894,7 +904,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-7.1.0/LLVM-7.1.0-win32.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://web.archive.org/web/20241213164404id_/https://github.com/llvm/llvm-project/releases/download/llvmorg-7.1.0/LLVM-7.1.0-win32.exe"
+  ],
   "checksum": null,
   "size": 97739365,
   "released": "2019-05-11",
@@ -917,7 +929,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-7.1.0/LLVM-7.1.0-win64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://web.archive.org/web/20241213164346id_/https://github.com/llvm/llvm-project/releases/download/llvmorg-7.1.0/LLVM-7.1.0-win64.exe"
+  ],
   "checksum": null,
   "size": 97314822,
   "released": "2019-05-11",
@@ -940,7 +954,9 @@
   "variant": "ubuntu-14.04",
   "libc": "glibc",
   "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-7.1.0/clang%2Bllvm-7.1.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz",
-  "mirrors": [],
+  "mirrors": [
+   "https://web.archive.org/web/20241213164412id_/https://github.com/llvm/llvm-project/releases/download/llvmorg-7.1.0/clang%2Bllvm-7.1.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz"
+  ],
   "checksum": null,
   "size": 375903264,
   "released": "2019-05-11",
@@ -963,7 +979,9 @@
   "variant": null,
   "libc": "glibc",
   "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-7.1.0/clang%2Bllvm-7.1.0-armv7a-linux-gnueabihf.tar.xz",
-  "mirrors": [],
+  "mirrors": [
+   "https://web.archive.org/web/20241213164418id_/https://github.com/llvm/llvm-project/releases/download/llvmorg-7.1.0/clang%2Bllvm-7.1.0-armv7a-linux-gnueabihf.tar.xz"
+  ],
   "checksum": null,
   "size": 290788972,
   "released": "2019-05-11",
@@ -986,7 +1004,9 @@
   "variant": null,
   "libc": "glibc",
   "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-7.1.0/clang%2Bllvm-7.1.0-aarch64-linux-gnu.tar.xz",
-  "mirrors": [],
+  "mirrors": [
+   "https://web.archive.org/web/20241213164346id_/https://github.com/llvm/llvm-project/releases/download/llvmorg-7.1.0/clang%2Bllvm-7.1.0-aarch64-linux-gnu.tar.xz"
+  ],
   "checksum": null,
   "size": 274473812,
   "released": "2019-05-11",
@@ -1010,7 +1030,8 @@
   "libc": "glibc",
   "url": "https://releases.llvm.org/3.9.1/clang+llvm-3.9.1-aarch64-linux-gnu.tar.xz",
   "mirrors": [
-   "https://web.archive.org/web/20191031075400id_/https://releases.llvm.org/3.9.1/clang+llvm-3.9.1-aarch64-linux-gnu.tar.xz"
+   "https://web.archive.org/web/20191031075400id_/https://releases.llvm.org/3.9.1/clang+llvm-3.9.1-aarch64-linux-gnu.tar.xz",
+   "https://web.archive.org/web/20221217053639id_/https://releases.llvm.org/3.9.1/clang+llvm-3.9.1-aarch64-linux-gnu.tar.xz"
   ],
   "checksum": null,
   "size": 148057548,
@@ -1035,7 +1056,8 @@
   "libc": "glibc",
   "url": "https://releases.llvm.org/3.9.1/clang+llvm-3.9.1-armv7a-linux-gnueabihf.tar.xz",
   "mirrors": [
-   "https://web.archive.org/web/20191031075751id_/https://releases.llvm.org/3.9.1/clang+llvm-3.9.1-armv7a-linux-gnueabihf.tar.xz"
+   "https://web.archive.org/web/20191031075751id_/https://releases.llvm.org/3.9.1/clang+llvm-3.9.1-armv7a-linux-gnueabihf.tar.xz",
+   "https://web.archive.org/web/20260113131802id_/https://releases.llvm.org/3.9.1/clang+llvm-3.9.1-armv7a-linux-gnueabihf.tar.xz"
   ],
   "checksum": null,
   "size": 158690192,
@@ -1060,7 +1082,8 @@
   "libc": "glibc",
   "url": "https://releases.llvm.org/3.9.1/clang+llvm-3.9.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz",
   "mirrors": [
-   "https://web.archive.org/web/20191031080529id_/https://releases.llvm.org/3.9.1/clang+llvm-3.9.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz"
+   "https://web.archive.org/web/20191031080529id_/https://releases.llvm.org/3.9.1/clang+llvm-3.9.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz",
+   "https://web.archive.org/web/20221217053639id_/https://releases.llvm.org/3.9.1/clang+llvm-3.9.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz"
   ],
   "checksum": null,
   "size": 189312136,
@@ -1085,7 +1108,8 @@
   "libc": null,
   "url": "https://releases.llvm.org/3.9.1/LLVM-3.9.1-win32.exe",
   "mirrors": [
-   "https://web.archive.org/web/20190105094204id_/https://releases.llvm.org/3.9.1/LLVM-3.9.1-win32.exe"
+   "https://web.archive.org/web/20190105094204id_/https://releases.llvm.org/3.9.1/LLVM-3.9.1-win32.exe",
+   "https://web.archive.org/web/20250601152701id_/https://releases.llvm.org/3.9.1/LLVM-3.9.1-win32.exe"
   ],
   "checksum": null,
   "size": 56276700,
@@ -1110,7 +1134,8 @@
   "libc": null,
   "url": "https://releases.llvm.org/3.9.1/LLVM-3.9.1-win64.exe",
   "mirrors": [
-   "https://web.archive.org/web/20170215015125id_/https://releases.llvm.org/3.9.1/LLVM-3.9.1-win64.exe"
+   "https://web.archive.org/web/20170215015125id_/https://releases.llvm.org/3.9.1/LLVM-3.9.1-win64.exe",
+   "https://web.archive.org/web/20250725084654id_/https://releases.llvm.org/3.9.1/LLVM-3.9.1-win64.exe"
   ],
   "checksum": null,
   "size": 56099038,
@@ -1135,7 +1160,8 @@
   "libc": null,
   "url": "https://releases.llvm.org/3.9.0/clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz",
   "mirrors": [
-   "https://web.archive.org/web/20191031073834id_/https://releases.llvm.org/3.9.0/clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz"
+   "https://web.archive.org/web/20191031073834id_/https://releases.llvm.org/3.9.0/clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz",
+   "https://web.archive.org/web/20251117215802id_/https://releases.llvm.org/3.9.0/clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz"
   ],
   "checksum": null,
   "size": 162736100,
@@ -1487,7 +1513,9 @@
   "variant": "winlibs-posix-msvcrt",
   "libc": null,
   "url": "https://github.com/brechtsanders/winlibs_mingw/releases/download/10.5.0-11.0.1-msvcrt-r2/winlibs-i686-posix-dwarf-gcc-10.5.0-mingw-w64msvcrt-11.0.1-r2.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://web.archive.org/web/20240825191351id_/https://github.com/brechtsanders/winlibs_mingw/releases/download/10.5.0-11.0.1-msvcrt-r2/winlibs-i686-posix-dwarf-gcc-10.5.0-mingw-w64msvcrt-11.0.1-r2.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "bcf7f7c51384ce6ba67fcae396deaeff6ad2b12ba42fd9336fc8c3072742a257",
@@ -1978,7 +2006,8 @@
    "https://mirrors.xjtu.edu.cn/gnu/gcc/gcc-10.5.0/gcc-10.5.0.tar.xz",
    "https://mirrors.xmission.com/gnu/gcc/gcc-10.5.0/gcc-10.5.0.tar.xz",
    "https://us.mirrors.cicku.me/gnu/gcc/gcc-10.5.0/gcc-10.5.0.tar.xz",
-   "https://distfiles.gentoo.org/distfiles/77/gcc-10.5.0.tar.xz"
+   "https://distfiles.gentoo.org/distfiles/77/gcc-10.5.0.tar.xz",
+   "https://web.archive.org/web/20260301131837id_/https://ftp.gnu.org/gnu/gcc/gcc-10.5.0/gcc-10.5.0.tar.xz"
   ],
   "checksum": null,
   "size": 77846412,
@@ -2077,7 +2106,8 @@
    "https://mirrors.xjtu.edu.cn/gnu/gcc/gcc-11.5.0/gcc-11.5.0.tar.xz",
    "https://mirrors.xmission.com/gnu/gcc/gcc-11.5.0/gcc-11.5.0.tar.xz",
    "https://us.mirrors.cicku.me/gnu/gcc/gcc-11.5.0/gcc-11.5.0.tar.xz",
-   "https://distfiles.gentoo.org/distfiles/a0/gcc-11.5.0.tar.xz"
+   "https://distfiles.gentoo.org/distfiles/a0/gcc-11.5.0.tar.xz",
+   "https://web.archive.org/web/20260729182827id_/https://ftp.gnu.org/gnu/gcc/gcc-11.5.0/gcc-11.5.0.tar.xz"
   ],
   "checksum": null,
   "size": 82399864,
@@ -2372,7 +2402,8 @@
    "https://mirrors.xjtu.edu.cn/gnu/gcc/gcc-14.4.0/gcc-14.4.0.tar.xz",
    "https://mirrors.xmission.com/gnu/gcc/gcc-14.4.0/gcc-14.4.0.tar.xz",
    "https://us.mirrors.cicku.me/gnu/gcc/gcc-14.4.0/gcc-14.4.0.tar.xz",
-   "https://distfiles.gentoo.org/distfiles/45/gcc-14.4.0.tar.xz"
+   "https://distfiles.gentoo.org/distfiles/45/gcc-14.4.0.tar.xz",
+   "https://web.archive.org/web/20260729182353id_/https://ftp.gnu.org/gnu/gcc/gcc-14.4.0/gcc-14.4.0.tar.xz"
   ],
   "checksum": null,
   "size": 91586872,
@@ -2470,7 +2501,8 @@
    "https://mirrors.xjtu.edu.cn/gnu/gcc/gcc-15.3.0/gcc-15.3.0.tar.xz",
    "https://mirrors.xmission.com/gnu/gcc/gcc-15.3.0/gcc-15.3.0.tar.xz",
    "https://us.mirrors.cicku.me/gnu/gcc/gcc-15.3.0/gcc-15.3.0.tar.xz",
-   "https://distfiles.gentoo.org/distfiles/a0/gcc-15.3.0.tar.xz"
+   "https://distfiles.gentoo.org/distfiles/a0/gcc-15.3.0.tar.xz",
+   "https://web.archive.org/web/20260729182510id_/https://ftp.gnu.org/gnu/gcc/gcc-15.3.0/gcc-15.3.0.tar.xz"
   ],
   "checksum": null,
   "size": 101253696,
@@ -2569,7 +2601,8 @@
    "https://mirrors.xjtu.edu.cn/gnu/gcc/gcc-16.2.0/gcc-16.2.0.tar.xz",
    "https://mirrors.xmission.com/gnu/gcc/gcc-16.2.0/gcc-16.2.0.tar.xz",
    "https://us.mirrors.cicku.me/gnu/gcc/gcc-16.2.0/gcc-16.2.0.tar.xz",
-   "https://distfiles.gentoo.org/distfiles/e3/gcc-16.2.0.tar.xz"
+   "https://distfiles.gentoo.org/distfiles/e3/gcc-16.2.0.tar.xz",
+   "https://web.archive.org/web/20260813203408id_/https://ftp.gnu.org/gnu/gcc/gcc-16.2.0/gcc-16.2.0.tar.xz"
   ],
   "checksum": null,
   "size": 107200820,
@@ -2666,7 +2699,8 @@
    "https://mirrors.ustc.edu.cn/gnu/gcc/gcc-4.9.4/gcc-4.9.4.tar.bz2",
    "https://mirrors.xjtu.edu.cn/gnu/gcc/gcc-4.9.4/gcc-4.9.4.tar.bz2",
    "https://mirrors.xmission.com/gnu/gcc/gcc-4.9.4/gcc-4.9.4.tar.bz2",
-   "https://us.mirrors.cicku.me/gnu/gcc/gcc-4.9.4/gcc-4.9.4.tar.bz2"
+   "https://us.mirrors.cicku.me/gnu/gcc/gcc-4.9.4/gcc-4.9.4.tar.bz2",
+   "https://web.archive.org/web/20260826203118id_/https://ftp.gnu.org/gnu/gcc/gcc-4.9.4/gcc-4.9.4.tar.bz2"
   ],
   "checksum": null,
   "size": 90097606,
@@ -2757,7 +2791,8 @@
    "https://mirrors.ustc.edu.cn/gnu/gcc/gcc-5.5.0/gcc-5.5.0.tar.xz",
    "https://mirrors.xjtu.edu.cn/gnu/gcc/gcc-5.5.0/gcc-5.5.0.tar.xz",
    "https://mirrors.xmission.com/gnu/gcc/gcc-5.5.0/gcc-5.5.0.tar.xz",
-   "https://us.mirrors.cicku.me/gnu/gcc/gcc-5.5.0/gcc-5.5.0.tar.xz"
+   "https://us.mirrors.cicku.me/gnu/gcc/gcc-5.5.0/gcc-5.5.0.tar.xz",
+   "https://web.archive.org/web/20250119144551id_/https://ftp.gnu.org/gnu/gcc/gcc-5.5.0/gcc-5.5.0.tar.xz"
   ],
   "checksum": null,
   "size": 71096120,
@@ -2847,7 +2882,8 @@
    "https://mirrors.ustc.edu.cn/gnu/gcc/gcc-6.5.0/gcc-6.5.0.tar.xz",
    "https://mirrors.xjtu.edu.cn/gnu/gcc/gcc-6.5.0/gcc-6.5.0.tar.xz",
    "https://mirrors.xmission.com/gnu/gcc/gcc-6.5.0/gcc-6.5.0.tar.xz",
-   "https://us.mirrors.cicku.me/gnu/gcc/gcc-6.5.0/gcc-6.5.0.tar.xz"
+   "https://us.mirrors.cicku.me/gnu/gcc/gcc-6.5.0/gcc-6.5.0.tar.xz",
+   "https://web.archive.org/web/20250824234549id_/https://ftp.gnu.org/gnu/gcc/gcc-6.5.0/gcc-6.5.0.tar.xz"
   ],
   "checksum": null,
   "size": 74355588,
@@ -2937,7 +2973,8 @@
    "https://mirrors.ustc.edu.cn/gnu/gcc/gcc-7.5.0/gcc-7.5.0.tar.xz",
    "https://mirrors.xjtu.edu.cn/gnu/gcc/gcc-7.5.0/gcc-7.5.0.tar.xz",
    "https://mirrors.xmission.com/gnu/gcc/gcc-7.5.0/gcc-7.5.0.tar.xz",
-   "https://us.mirrors.cicku.me/gnu/gcc/gcc-7.5.0/gcc-7.5.0.tar.xz"
+   "https://us.mirrors.cicku.me/gnu/gcc/gcc-7.5.0/gcc-7.5.0.tar.xz",
+   "https://web.archive.org/web/20251117003400id_/https://ftp.gnu.org/gnu/gcc/gcc-7.5.0/gcc-7.5.0.tar.xz"
   ],
   "checksum": null,
   "size": 62783088,
@@ -3029,7 +3066,8 @@
    "https://mirrors.xjtu.edu.cn/gnu/gcc/gcc-8.5.0/gcc-8.5.0.tar.xz",
    "https://mirrors.xmission.com/gnu/gcc/gcc-8.5.0/gcc-8.5.0.tar.xz",
    "https://us.mirrors.cicku.me/gnu/gcc/gcc-8.5.0/gcc-8.5.0.tar.xz",
-   "https://distfiles.gentoo.org/distfiles/7e/gcc-8.5.0.tar.xz"
+   "https://distfiles.gentoo.org/distfiles/7e/gcc-8.5.0.tar.xz",
+   "https://web.archive.org/web/20250111193110id_/https://ftp.gnu.org/gnu/gcc/gcc-8.5.0/gcc-8.5.0.tar.xz"
   ],
   "checksum": null,
   "size": 63841008,
@@ -3128,7 +3166,8 @@
    "https://mirrors.xjtu.edu.cn/gnu/gcc/gcc-9.5.0/gcc-9.5.0.tar.xz",
    "https://mirrors.xmission.com/gnu/gcc/gcc-9.5.0/gcc-9.5.0.tar.xz",
    "https://us.mirrors.cicku.me/gnu/gcc/gcc-9.5.0/gcc-9.5.0.tar.xz",
-   "https://distfiles.gentoo.org/distfiles/2e/gcc-9.5.0.tar.xz"
+   "https://distfiles.gentoo.org/distfiles/2e/gcc-9.5.0.tar.xz",
+   "https://web.archive.org/web/20230118224444id_/https://ftp.gnu.org/gnu/gcc/gcc-9.5.0/gcc-9.5.0.tar.xz"
   ],
   "checksum": null,
   "size": 72462752,
@@ -3159,7 +3198,9 @@
   "variant": null,
   "libc": null,
   "url": "https://aka.ms/vs/17/release/vc_redist.x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://web.archive.org/web/20260916191937id_/https://aka.ms/vs/17/release/vc_redist.x64.exe"
+  ],
   "checksum": null,
   "size": 25635768,
   "released": "2026-08-28",
@@ -3189,7 +3230,9 @@
   "variant": null,
   "libc": null,
   "url": "https://aka.ms/vs/17/release/vc_redist.x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://web.archive.org/web/20260915174253id_/https://aka.ms/vs/17/release/vc_redist.x86.exe"
+  ],
   "checksum": null,
   "size": 13953392,
   "released": "2026-08-28",
@@ -3212,7 +3255,9 @@
   "variant": null,
   "libc": null,
   "url": "https://aka.ms/vs/17/release/vc_redist.arm64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://web.archive.org/web/20260826222155id_/https://aka.ms/vs/17/release/vc_redist.arm64.exe"
+  ],
   "checksum": null,
   "size": 11722336,
   "released": "2025-06-12",
