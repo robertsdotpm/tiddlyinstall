@@ -361,7 +361,17 @@ func (b *Builder) Plan(hash string, platforms []string) (string, []catalog.FileR
 			return "", nil, err
 		}
 	}
-	return b.Cat.ResolveFiles(app)
+	plan, files, err := b.Cat.ResolveFiles(app)
+	if err != nil {
+		return "", nil, err
+	}
+	// The app's own source goes in offline packs too, so an offline install
+	// never needs the network (packed-files.md).
+	if s := app.Source; s != nil {
+		files = append(files, catalog.FileRef{Name: s.Name, SHA256: s.SHA256, Size: s.Size,
+			Local: b.srcPath(s.SHA256), URLs: s.URLs})
+	}
+	return plan, files, nil
 }
 
 // SignedPlan is Plan with the signature line appended: what GET
