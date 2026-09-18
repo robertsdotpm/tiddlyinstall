@@ -12,6 +12,9 @@ version, dialogs, and menu entries.
 | `ib-engine.sh` | The engine. Also copied into every installed app as `uninstall.sh` |
 | `make_run.sh` | Builds the Linux base `out/ib-base.run` (the engine, syntax-checked with dash, bash and busybox) |
 | `make_app.sh` | Builds the macOS base `out/Install.app` and `out/ib-base-macos.zip`. On a Mac it is ad-hoc signed and zipped with `ditto` |
+| `verify/` | `ibverify`, the Ed25519 verifier the bases carry: source, `build.sh` (Zig), the built binaries |
+| `test_verify.sh` | Plan signature cases (good over plain HTTP, `--plan`, tampered, replayed, unsigned) with openssl shadowed |
+| `test_prereqs.sh` | Prerequisites and the record icon |
 | `append_meta.py` | Test tool: adds a record, plan and pack to a `.run` (appended block) or a base zip (`Contents/Resources/ib/`). The Go server has its own implementation |
 
 Builds go to `out/` (ignored by git).
@@ -74,9 +77,18 @@ fill the engine's `IB_PLAN_PUBKEY=` and `IB_PLAN_KEYID=` lines
 `../../server/data/plan-signing-key.pub`, which the server writes on its
 first start. They refuse to build without it.
 
-The engine checks the signature with `openssl pkeyutl -verify -pubin
--rawin`, after proving that works on RFC 8032 test vector 2 (and that a
-changed message fails). Then:
+The engine checks the signature with its own verifier, `ibverify`
+([verify/](verify/README.md)): a static binary per CPU, TweetNaCl like the
+Windows `ibsig` plugin. The `.run` carries the Linux ones after the
+script's final `exit $?` line (before any metadata block), and the
+script's `IB_VERIFY_BLOBS` line, filled in by `make_run.sh`, gives each
+one's arch, byte offset and length in fixed-width numbers; the engine cuts
+out the one for `uname -m` with `tail -c +N | head -c LEN` into its temp
+folder. The `.app` has `Contents/Resources/ibverify-x86_64` and
+`-arm64`. If that doesn't run here, it uses `openssl pkeyutl -verify
+-pubin -rawin`. Either is used only after it accepts RFC 8032 test vector
+2 and rejects it with a changed message; the log says which checked the
+plan (`Plan signature: ok:ibverify`). Then:
 
 | Plan from | Signed by the built-in key | Unsigned or wrong | No way to check (see below) |
 | --- | --- | --- | --- |
@@ -90,10 +102,11 @@ rewrites the line and drops the signature). A plan by name must carry
 the signed `request<TAB>name<TAB><runtime><TAB><package>` line the file
 name asked for.
 
-**When openssl can't check Ed25519.** That needs OpenSSL 1.1.1 or later.
-RHEL/CentOS 7 (1.0.2), CentOS 6, and macOS's `/usr/bin/openssl`
-(LibreSSL) can't; neither can a machine with no `openssl`. The engine
-then fails closed on plain HTTP and accepts a plan only when it came over
+**When nothing can check Ed25519.** Only when the built-in verifier
+can't run (a CPU it isn't built for, a `noexec` temp folder) and openssl
+can't either (it needs OpenSSL 1.1.1 or later; RHEL/CentOS 7 has 1.0.2,
+macOS LibreSSL, some 1.1.1 builds fail the test, Alpine has none). The
+engine then fails closed on plain HTTP and accepts a plan only when it came over
 HTTPS (curl and wget check the certificate, so it came from the
 backend), and says so on the transparency screen. A warning instead of
 refusing would have made the signature optional for exactly the old

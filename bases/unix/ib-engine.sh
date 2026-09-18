@@ -18,6 +18,9 @@ IB_DEFAULT_BACKEND=http://10.0.1.76:8080
 # public key, and its id. make_run.sh / make_app.sh fill these in.
 IB_PLAN_PUBKEY=
 IB_PLAN_KEYID=
+# Our Ed25519 verifiers appended after this script: <arch>:<offset>:<length>
+# (make_run.sh fills it; empty in the source and in the macOS .app).
+IB_VERIFY_BLOBS=
 
 tab=$(printf '\t')
 cr=$(printf '\r')
@@ -370,31 +373,62 @@ ib_http_why() {
 	return 0
 }
 
-# Can this machine check Ed25519 signatures? Needs `openssl pkeyutl
-# -rawin` (OpenSSL 1.1.1 or later; LibreSSL and 1.0.x can't). Proved by
-# checking RFC 8032 test vector 2, and that a changed message fails.
-# Sets ib_ed_why when it can't. Cached.
+# Our own Ed25519 verifier (bases/unix/verify): a static binary per CPU,
+# carried in the .run after the script (IB_VERIFY_BLOBS: arch, byte
+# offset in this file, length; make_run.sh fills it) or in the .app's
+# Resources. Prints its path, or nothing if there is none for this CPU.
+ib_verifier_path() {
+	if [ -n "$IB_BUNDLE" ]; then
+		case $IB_ARCH in amd64) v=x86_64 ;; arm64) v=arm64 ;; *) return 0 ;; esac
+		[ -f "$IB_BUNDLE/Contents/Resources/ibverify-$v" ] && printf '%s' "$IB_BUNDLE/Contents/Resources/ibverify-$v"
+		return 0
+	fi
+	[ -n "$IB_VERIFY_BLOBS" ] || return 0
+	set -- $(printf '%s\n' $IB_VERIFY_BLOBS | awk -F: -v a="$IB_ARCH" '$1 == a { print $2 + 0, $3 + 0; exit }')
+	[ $# = 2 ] && [ "$2" -gt 0 ] || return 0
+	tail -c +"$(($1 + 1))" "$IB_SELF" 2>/dev/null | head -c "$2" > "$IB_WORK/ibverify" 2>/dev/null
+	[ "$(wc -c < "$IB_WORK/ibverify" | tr -d ' ')" = "$2" ] || return 0
+	chmod 755 "$IB_WORK/ibverify"
+	printf '%s' "$IB_WORK/ibverify"
+}
+
+# Can this machine check Ed25519 signatures? First our own verifier, then
+# `openssl pkeyutl -rawin` (OpenSSL 1.1.1 or later; LibreSSL, 1.0.x and
+# some 1.1.1 builds can't). Either is trusted only after it accepts RFC
+# 8032 test vector 2 and rejects it with a changed message. Sets ib_ed_how
+# (ibverify or openssl), or ib_ed_why when neither works. Cached.
 ib_ed25519_ready() {
 	[ -n "$ib_ed_ok" ] && return "$ib_ed_ok"
 	ib_ed_ok=1
 	case $IB_PLAN_PUBKEY in
 	'' | *[!A-Za-z0-9+/=]*) ib_ed_why="this installer was built without a plan signing key"; return 1 ;;
 	esac
-	ib_have openssl || { ib_ed_why="no openssl on this machine"; return 1; }
 	t=$IB_WORK/edtest
 	mkdir -p "$t"
-	printf -- '-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAPUAXw+hDiVqStwqnTRt+vJyYLM8uxJaMwM1V8Sr0Zgw=\n-----END PUBLIC KEY-----\n' > "$t/pub.pem"
-	printf '%s\n' 'kqAJqfDUyrhyDoILX2QlQKKye1QWUD+Ps3YiI+vbadoIWsHkPhWZbkWPNhPQ8R2MOHsurrQwKu6wDSkWErsMAA==' |
-		ib_nohome openssl base64 -d -A > "$t/sig" 2>/dev/null
+	tpk=PUAXw+hDiVqStwqnTRt+vJyYLM8uxJaMwM1V8Sr0Zgw=
+	tsig=kqAJqfDUyrhyDoILX2QlQKKye1QWUD+Ps3YiI+vbadoIWsHkPhWZbkWPNhPQ8R2MOHsurrQwKu6wDSkWErsMAA==
 	printf 'r' > "$t/good"
 	printf 's' > "$t/bad"
+	ib_ibv=$(ib_verifier_path)
+	if [ -n "$ib_ibv" ] && "$ib_ibv" "$tpk" "$tsig" < "$t/good" > /dev/null 2>&1; then
+		"$ib_ibv" "$tpk" "$tsig" < "$t/bad" > /dev/null 2>&1
+		if [ $? = 1 ]; then
+			ib_ed_how=ibverify ib_ed_ok=0
+			return 0
+		fi
+	fi
+	ib_ed_why="no built-in verifier for this CPU ($(uname -m))"
+	[ -n "$ib_ibv" ] && ib_ed_why="the built-in verifier doesn't run here"
+	ib_have openssl || { ib_ed_why="$ib_ed_why, and no openssl"; return 1; }
+	printf -- '-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA%s\n-----END PUBLIC KEY-----\n' "$tpk" > "$t/pub.pem"
+	printf '%s\n' "$tsig" | ib_nohome openssl base64 -d -A > "$t/sig" 2>/dev/null
 	if ib_nohome openssl pkeyutl -verify -pubin -inkey "$t/pub.pem" -rawin -in "$t/good" -sigfile "$t/sig" > /dev/null 2>&1 &&
 		! ib_nohome openssl pkeyutl -verify -pubin -inkey "$t/pub.pem" -rawin -in "$t/bad" -sigfile "$t/sig" > /dev/null 2>&1; then
 		printf -- '-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA%s\n-----END PUBLIC KEY-----\n' "$IB_PLAN_PUBKEY" > "$IB_WORK/plan-key.pem"
-		ib_ed_ok=0
+		ib_ed_how=openssl ib_ed_ok=0
 		return 0
 	fi
-	ib_ed_why="$(ib_nohome openssl version 2>/dev/null | sed -n 1p) can't check Ed25519 signatures (OpenSSL 1.1.1 or later can)"
+	ib_ed_why="$ib_ed_why, and $(ib_nohome openssl version 2>/dev/null | sed -n 1p) can't check Ed25519 signatures"
 	return 1
 }
 
@@ -416,11 +450,20 @@ ib_plan_sig() {
 	ib_ed25519_ready || { echo "cannot:$ib_ed_why"; return 0; }
 	head -c "$n" "$f" > "$IB_WORK/plan.signed"
 	[ "$(head -c 8 "$IB_WORK/plan.signed")" = "ib-plan$tab" ] || { echo "bad:the signed bytes are not an ib-plan"; return 0; }
+	if [ "$ib_ed_how" = ibverify ]; then
+		"$ib_ibv" "$IB_PLAN_PUBKEY" "$b64" < "$IB_WORK/plan.signed" > /dev/null 2>&1
+		case $? in
+		0) echo "ok:ibverify" ;;
+		1) echo "bad:the signature does not match this plan and this installer's key" ;;
+		*) echo "bad:malformed signature" ;;
+		esac
+		return 0
+	fi
 	printf '%s\n' "$b64" | ib_nohome openssl base64 -d -A > "$IB_WORK/plan.sig" 2>/dev/null
 	[ "$(wc -c < "$IB_WORK/plan.sig" | tr -d ' ')" = 64 ] || { echo "bad:malformed signature"; return 0; }
 	if ib_nohome openssl pkeyutl -verify -pubin -inkey "$IB_WORK/plan-key.pem" -rawin -in "$IB_WORK/plan.signed" \
 		-sigfile "$IB_WORK/plan.sig" > /dev/null 2>&1; then
-		echo ok
+		echo "ok:openssl"
 	else
 		echo "bad:the signature does not match this plan and this installer's key"
 	fi
@@ -438,8 +481,8 @@ ib_check_plan() {
 	ib_log "Plan signature: $sig (key ${IB_PLAN_KEYID:-none})"
 	why=${sig#*:}
 	case $sig in
-	ok)
-		IB_PLAN_FROM="$IB_PLAN_FROM; signed by the Installer Builder key $IB_PLAN_KEYID"
+	ok:*)
+		IB_PLAN_FROM="$IB_PLAN_FROM; signed by the Installer Builder key $IB_PLAN_KEYID (checked with ${sig#ok:})"
 		return 0
 		;;
 	esac
