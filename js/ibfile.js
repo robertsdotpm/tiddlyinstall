@@ -214,7 +214,13 @@ export function tarRead(u8) {
     const type = h[156];
     o += 512;
     if (o + size > u8.length) throw new Error('tar member runs past the end');
-    if (type === 0x30 || type === 0) out.push({ name, data: u8.subarray(o, o + size) });
+    if (type === 0x30 || type === 0) {
+      // Pack members are named by the lowercase hex SHA-256 of their content
+      // (docs/format.md section 4). Refuse anything else: a crafted name is
+      // untrusted attacker text that must never be treated as markup or a path.
+      if (!/^[0-9a-f]{64}$/.test(name)) throw new Error('pack member has a non-hash name: ' + JSON.stringify(name.slice(0, 80)));
+      out.push({ name, data: u8.subarray(o, o + size) });
+    }
     o += Math.ceil(size / 512) * 512;
   }
   return out;

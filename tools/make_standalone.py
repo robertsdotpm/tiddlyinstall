@@ -27,7 +27,11 @@ import sys
 import zipfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MODULES = ["js/api.js", "js/ibfile.js", "js/edit.js"]
+MODULES = ["js/api.js", "js/ibfile.js", "js/icon.js", "js/edit.js"]
+# The resedit-js/pe-library bundle (icon editing) is a classic script, inlined
+# so the page works from file:// with no network. See tools/build_resedit_bundle.py.
+RESEDIT_BUNDLE = "vendor/resedit-bundle.js"
+RESEDIT_TAG = '<script src="vendor/resedit-bundle.js"></script>'
 # First existing path wins.
 BASES = [
     ("windows", ["bases/windows/out/base.exe"]),
@@ -164,6 +168,14 @@ def main():
             report.append(f"  {os_name:8} PLACEHOLDER ({' or '.join(rels)} not found)")
         blocks.append(f'  <script type="application/octet-stream" id="base-{os_name}"{attr}>\n'
                       f"{b64_block(data)}\n  </script>")
+
+    # Inline the resedit-js/pe-library bundle (icon editing) as a classic script,
+    # so IB_PRISTINE (captured next) already contains it and "Save this page"
+    # keeps it. It runs before the main module and sets globalThis.__IB_RESEDIT.
+    assert RESEDIT_TAG in page, "edit.html no longer loads the resedit bundle the expected way"
+    resedit = read(RESEDIT_BUNDLE)
+    resedit = re.sub(r"</(script)", r"<\\/\1", resedit, flags=re.I)
+    page = page.replace(RESEDIT_TAG, "<script>\n" + resedit + "\n  </script>")
 
     js = ("// The page exactly as loaded, for \"Save this page\". Must run before\n"
           "// anything changes the DOM.\n"

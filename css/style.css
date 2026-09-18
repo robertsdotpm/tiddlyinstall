@@ -675,3 +675,8 @@ form:not(:has(#runtime option[value="python"]:checked)) .py-panel { display: non
 .warn-box[hidden] { display: none; }
 [data-needs-file][hidden] { display: none; }
 .choice[hidden] { display: none; }
+
+.icon-edit { display: flex; align-items: center; gap: 12px; }
+.icon-edit img { border-radius: 8px; background: var(--code-bg); object-fit: contain; flex: none; }
+.icon-edit img[hidden] { display: none; }
+.error-text { color: var(--fail); }
