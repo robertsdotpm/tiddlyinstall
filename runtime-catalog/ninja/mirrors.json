@@ -1,0 +1,24 @@
+{
+ "runtime": "ninja",
+ "canonical": "https://github.com/ninja-build/ninja/releases/download/v{version}/{filename}",
+ "confirmed": [],
+ "rejected": [
+  {
+   "host": "github-release mirrors: mirrors.ustc.edu.cn, mirror.nju.edu.cn, mirrors.iscas.ac.cn, mirrors.hust.edu.cn, mirrors.tuna.tsinghua.edu.cn",
+   "reason": "ninja-build/ninja is not in any of their curated lists (404, NJU redirect loop, absent from the ISCAS/HUST listings)"
+  },
+  {
+   "host": "registry.npmmirror.com/-/binary/ninja/",
+   "reason": "404"
+  },
+  {
+   "host": "PyPI 'ninja' package (scikit-build ninja-python-distributions) and its China PyPI mirrors",
+   "reason": "different binaries built by a third party (manylinux/musllinux/macOS/Windows wheels, many more architectures), not copies of the vendor zips. A usable alternative source, not a mirror; see NOTES.md"
+  },
+  {
+   "host": "winget / Scoop",
+   "reason": "manifests point at the GitHub URLs (no copy of the file); winget's hashes are recorded as checksum_corroboration instead"
+  }
+ ],
+ "note": "No mirror serving the vendor's own ninja zips was found. The files are tiny (under 320 KB), so GitHub is the only source."
+}

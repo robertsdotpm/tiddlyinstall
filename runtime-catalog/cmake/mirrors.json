@@ -1,0 +1,70 @@
+{
+ "runtime": "cmake",
+ "canonical": "https://cmake.org/files/v<major>/<filename>",
+ "confirmed": [
+  {
+   "host": "github.com",
+   "url_template": "https://github.com/Kitware/CMake/releases/download/v{version}/{filename}",
+   "kind": "vendor's second channel (Kitware uploads every release to GitHub; 2.4.8-3.x back-filled in 2018)",
+   "confirmed_by": "per file by scrape.py: GitHub asset digest equals the vendor SHA-256 (3.0+), or where either hash is missing, GitHub asset size equals the HEAD size from cmake.org. Zero mismatches.",
+   "applied_to": "each releases.json entry whose GitHub copy matched (see scrape_stats)",
+   "date_checked": "2026-09-18"
+  },
+  {
+   "host": "distfiles.gentoo.org",
+   "url_template": "https://distfiles.gentoo.org/distfiles/{blake2b(filename)[:2]}/{filename}",
+   "kind": "OS distro source cache (only tarballs dev-build/cmake currently references)",
+   "confirmed_by": "per file HEAD size match in scrape.py; cmake-4.4.3.tar.gz downloaded in full, sha256 matched cmake-4.4.3-SHA-256.txt; bogus filename returns 404",
+   "applied_to": "source .tar.gz entries that matched",
+   "date_checked": "2026-09-18"
+  },
+  {
+   "host": "distcache.freebsd.org",
+   "url_template": "http://distcache.freebsd.org/ports-distfiles/{filename}",
+   "kind": "OS distro source cache (http only; https fails from here, as in other runtimes' hunts)",
+   "confirmed_by": "per file HEAD size match in scrape.py; cmake-3.31.12.tar.gz downloaded in full, sha256 matched cmake-3.31.12-SHA-256.txt; bogus filename returns 404",
+   "applied_to": "source .tar.gz entries that matched",
+   "date_checked": "2026-09-18"
+  },
+  {
+   "host": "distfiles.macports.org",
+   "url_template": "https://distfiles.macports.org/cmake/{filename}",
+   "kind": "OS distro source cache",
+   "confirmed_by": "per file HEAD size match in scrape.py; bogus filename returns 404",
+   "applied_to": "source .tar.gz entries that matched",
+   "date_checked": "2026-09-18"
+  }
+ ],
+ "rejected": [
+  {
+   "host": "mirrors.huaweicloud.com/cmake/",
+   "reason": "soft-200 catch-all: /cmake/, /cmake/v3.31/, a file path and a bogus path all return the same 12 KB portal page"
+  },
+  {
+   "host": "mirrors.aliyun.com/cmake/, mirrors.cloud.tencent.com/cmake/",
+   "reason": "404"
+  },
+  {
+   "host": "registry.npmmirror.com/-/binary/cmake/, cdn.npmmirror.com/binaries/cmake/",
+   "reason": "404, npmmirror has no cmake binary mirror"
+  },
+  {
+   "host": "github-release mirrors: mirrors.ustc.edu.cn, mirror.nju.edu.cn, mirrors.iscas.ac.cn, mirrors.hust.edu.cn, mirrors.tuna.tsinghua.edu.cn",
+   "reason": "Kitware/CMake is not in any of their curated lists (404 / not listed / NJU redirect loop); TUNA 404"
+  },
+  {
+   "host": "PyPI 'cmake' package (scikit-build wheels)",
+   "reason": "different binaries built by a third party, not copies of Kitware's files; see NOTES.md"
+  },
+  {
+   "host": "winget / Scoop / Chocolatey",
+   "reason": "manifests point at cmake.org or GitHub URLs; they add no copy of the file (the vendor already publishes SHA-256, so no corroboration was needed)"
+  }
+ ],
+ "note": "Hand-maintained. scrape.py confirms and applies GitHub and the distro caches per file on every run and writes scrape_stats here.",
+ "scrape_stats": {
+  "github_confirmed_files": 3381,
+  "github_mismatch": [],
+  "distro_cache_files": 167
+ }
+}

@@ -1,0 +1,534 @@
+{
+ "runtime": "cmake",
+ "researched": "2026-09-18",
+ "assumes": "root/administrator",
+ "notes": "CMake installs by unpacking: every archive has one top-level folder (cmake-<ver>-<platform>/) with bin/, share/cmake-<X.Y>/, doc/ and man/ (macOS: CMake.app/Contents/...). CMake finds its modules relative to its own executable, so a copy works from any folder, side by side with other versions, with nothing on PATH and no registry keys. Tested on Linux only (3.13.5, 3.31.12, 4.4.3 into a path with spaces, hello-world configure+build+install with Ninja, empty fake HOME stayed empty).",
+ "recipes": [
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": ">=3.13",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin/cmake",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/bin/cmake\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "glibc 2.6 (3.13), 2.10 (3.19-3.27), 2.17 (3.28+); aarch64 glibc 2.28 from 4.3",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://cmake.org/files/",
+    "https://cmake.org/cmake/help/latest/manual/cmake.1.html",
+    "https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html",
+    "https://cmake.org/cmake/help/latest/manual/cmake-packages.7.html#package-registry"
+   ],
+   "notes": "Run 2026-09-18 for 3.13.5, 3.31.12 and 4.4.3 x86_64: unpacked with strip 1 into a folder with a space, `cmake --version`, then the project_install command built and installed a hello-world C project with Ninja 1.13.2 (3.13.5 also with Ninja 1.6.0). Keep tar modes. Statically linked apart from glibc (no libstdc++ dependency).",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "Build tool, not an app runtime: used by project_install; the built program runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/cmake\" -S . -B \"{data_dir}/cmake-build\" -G Ninja -DCMAKE_BUILD_TYPE=Release \"-DCMAKE_INSTALL_PREFIX={app_dir}\" -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON -DCMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY=ON -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON && \"{runtime_dir}/bin/cmake\" --build \"{data_dir}/cmake-build\" --target install",
+    "env": {
+     "CMAKE_GENERATOR": null,
+     "CMAKE_GENERATOR_PLATFORM": null,
+     "CMAKE_GENERATOR_TOOLSET": null,
+     "CMAKE_GENERATOR_INSTANCE": null,
+     "CMAKE_BUILD_TYPE": null,
+     "CMAKE_CONFIGURATION_TYPES": null,
+     "CMAKE_TOOLCHAIN_FILE": null,
+     "CMAKE_INSTALL_PREFIX": null,
+     "CMAKE_PREFIX_PATH": null,
+     "CMAKE_PROGRAM_PATH": null,
+     "CMAKE_LIBRARY_PATH": null,
+     "CMAKE_INCLUDE_PATH": null,
+     "CMAKE_FRAMEWORK_PATH": null,
+     "CMAKE_APPBUNDLE_PATH": null,
+     "CMAKE_BUILD_PARALLEL_LEVEL": null,
+     "CMAKE_EXPORT_COMPILE_COMMANDS": null,
+     "CMAKE_C_COMPILER_LAUNCHER": null,
+     "CMAKE_CXX_COMPILER_LAUNCHER": null,
+     "CMAKE_OSX_ARCHITECTURES": null,
+     "CFLAGS": null,
+     "CXXFLAGS": null,
+     "LDFLAGS": null
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Builds and installs the app's CMake project on the user's machine (installer-builder design.md 1.8). Needs Ninja (catalog/ninja) on PATH through that runtime's path_prepend, and a C/C++ compiler (catalog/cc). The cleared variables are CMake's own environment inputs that would let a user's global settings pick another generator, toolchain or prefix. The package-registry flags stop find_package reading ~/.cmake/packages / HKCU\\Software\\Kitware\\CMake\\Packages and export(PACKAGE) writing there. `cmake --build --target install` rather than `cmake --install` so the same command works on 3.13/3.14."
+   }
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": ">=2.4,<3.13",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin/cmake",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/bin/cmake\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "i386 builds up to 3.6, x86_64 from 3.1; glibc floor not measured before 3.13 (3.13.5 needs 2.6)",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://cmake.org/files/",
+    "https://cmake.org/cmake/help/latest/manual/cmake.1.html",
+    "https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html",
+    "https://cmake.org/cmake/help/latest/manual/cmake-packages.7.html#package-registry"
+   ],
+   "notes": "Same layout as 3.13+ (cmake-<ver>-Linux-<arch>/bin/cmake) by the file listings; not run. Prefer .tar.gz over the identical .tar.Z.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "Build tool, not an app runtime: used by project_install; the built program runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/cmake\" -H. \"-B{data_dir}/cmake-build\" -G Ninja -DCMAKE_BUILD_TYPE=Release \"-DCMAKE_INSTALL_PREFIX={app_dir}\" -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON -DCMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY=ON -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON && \"{runtime_dir}/bin/cmake\" --build \"{data_dir}/cmake-build\" --target install",
+    "env": {
+     "CMAKE_GENERATOR": null,
+     "CMAKE_GENERATOR_PLATFORM": null,
+     "CMAKE_GENERATOR_TOOLSET": null,
+     "CMAKE_GENERATOR_INSTANCE": null,
+     "CMAKE_BUILD_TYPE": null,
+     "CMAKE_CONFIGURATION_TYPES": null,
+     "CMAKE_TOOLCHAIN_FILE": null,
+     "CMAKE_INSTALL_PREFIX": null,
+     "CMAKE_PREFIX_PATH": null,
+     "CMAKE_PROGRAM_PATH": null,
+     "CMAKE_LIBRARY_PATH": null,
+     "CMAKE_INCLUDE_PATH": null,
+     "CMAKE_FRAMEWORK_PATH": null,
+     "CMAKE_APPBUNDLE_PATH": null,
+     "CMAKE_BUILD_PARALLEL_LEVEL": null,
+     "CMAKE_EXPORT_COMPILE_COMMANDS": null,
+     "CMAKE_C_COMPILER_LAUNCHER": null,
+     "CMAKE_CXX_COMPILER_LAUNCHER": null,
+     "CMAKE_OSX_ARCHITECTURES": null,
+     "CFLAGS": null,
+     "CXXFLAGS": null,
+     "LDFLAGS": null
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Builds and installs the app's CMake project on the user's machine (installer-builder design.md 1.8). Needs Ninja (catalog/ninja) on PATH through that runtime's path_prepend, and a C/C++ compiler (catalog/cc). The cleared variables are CMake's own environment inputs that would let a user's global settings pick another generator, toolchain or prefix. The package-registry flags stop find_package reading ~/.cmake/packages / HKCU\\Software\\Kitware\\CMake\\Packages and export(PACKAGE) writing there. Before 3.13 there is no -S/-B, so the long-standing undocumented -H/-B form is used; CMake before 2.8.8 has no Ninja generator (use -G \"Unix Makefiles\" / \"NMake Makefiles\" instead)."
+   }
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "installer",
+    "format": "sh",
+    "versions": ">=2.4",
+    "arch": null
+   },
+   "method": "extract",
+   "steps": [
+    {
+     "run": "mkdir -p \"{runtime_dir}\" && sh \"{file}\" --prefix=\"{runtime_dir}\" --skip-license --exclude-subdir",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin/cmake",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/bin/cmake\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "as the .tar.gz of the same version",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://cmake.org/files/",
+    "https://cmake.org/cmake/help/latest/manual/cmake.1.html",
+    "https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html",
+    "https://cmake.org/cmake/help/latest/manual/cmake-packages.7.html#package-registry"
+   ],
+   "notes": "CPack STGZ self-extractor: a shell script with the same tree as the .tar.gz appended. Every version with a .sh also has a .tar.gz, which the download plan prefers; this recipe is only a fallback.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "Build tool, not an app runtime: used by project_install; the built program runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/cmake\" -S . -B \"{data_dir}/cmake-build\" -G Ninja -DCMAKE_BUILD_TYPE=Release \"-DCMAKE_INSTALL_PREFIX={app_dir}\" -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON -DCMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY=ON -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON && \"{runtime_dir}/bin/cmake\" --build \"{data_dir}/cmake-build\" --target install",
+    "env": {
+     "CMAKE_GENERATOR": null,
+     "CMAKE_GENERATOR_PLATFORM": null,
+     "CMAKE_GENERATOR_TOOLSET": null,
+     "CMAKE_GENERATOR_INSTANCE": null,
+     "CMAKE_BUILD_TYPE": null,
+     "CMAKE_CONFIGURATION_TYPES": null,
+     "CMAKE_TOOLCHAIN_FILE": null,
+     "CMAKE_INSTALL_PREFIX": null,
+     "CMAKE_PREFIX_PATH": null,
+     "CMAKE_PROGRAM_PATH": null,
+     "CMAKE_LIBRARY_PATH": null,
+     "CMAKE_INCLUDE_PATH": null,
+     "CMAKE_FRAMEWORK_PATH": null,
+     "CMAKE_APPBUNDLE_PATH": null,
+     "CMAKE_BUILD_PARALLEL_LEVEL": null,
+     "CMAKE_EXPORT_COMPILE_COMMANDS": null,
+     "CMAKE_C_COMPILER_LAUNCHER": null,
+     "CMAKE_CXX_COMPILER_LAUNCHER": null,
+     "CMAKE_OSX_ARCHITECTURES": null,
+     "CFLAGS": null,
+     "CXXFLAGS": null,
+     "LDFLAGS": null
+    },
+    "path_prepend": [
+     "{runtime_dir}/bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Builds and installs the app's CMake project on the user's machine (installer-builder design.md 1.8). Needs Ninja (catalog/ninja) on PATH through that runtime's path_prepend, and a C/C++ compiler (catalog/cc). The cleared variables are CMake's own environment inputs that would let a user's global settings pick another generator, toolchain or prefix. The package-registry flags stop find_package reading ~/.cmake/packages / HKCU\\Software\\Kitware\\CMake\\Packages and export(PACKAGE) writing there. `cmake --build --target install` rather than `cmake --install` so the same command works on 3.13/3.14."
+   }
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": ">=3.0",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null || true",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "Xcode Command Line Tools or another compiler (catalog/cc) to build anything"
+   ],
+   "executable": "CMake.app/Contents/bin/cmake",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/CMake.app/Contents/bin/cmake\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "10.7 (3.6-3.18, measured), 10.13 for macos-universal / 10.10 for macos10.10-universal (3.19.3+); cmake-gui needs 12 from 4.3",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://cmake.org/files/",
+    "https://cmake.org/cmake/help/latest/manual/cmake.1.html",
+    "https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html",
+    "https://cmake.org/cmake/help/latest/manual/cmake-packages.7.html#package-registry"
+   ],
+   "notes": "Not run (no macOS host). Layout checked in the 3.6.3, 3.13.5, 3.18.6, 3.31.12 and 4.4.3 archives: cmake-<ver>-<platform>/CMake.app/Contents/{bin,share}. Code signing was not checked; the xattr step only matters if the file was quarantined. Don't use the .dmg; the .tar.gz has the same app.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "Build tool, not an app runtime: used by project_install; the built program runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/CMake.app/Contents/bin/cmake\" -S . -B \"{data_dir}/cmake-build\" -G Ninja -DCMAKE_BUILD_TYPE=Release \"-DCMAKE_INSTALL_PREFIX={app_dir}\" -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON -DCMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY=ON -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON && \"{runtime_dir}/CMake.app/Contents/bin/cmake\" --build \"{data_dir}/cmake-build\" --target install",
+    "env": {
+     "CMAKE_GENERATOR": null,
+     "CMAKE_GENERATOR_PLATFORM": null,
+     "CMAKE_GENERATOR_TOOLSET": null,
+     "CMAKE_GENERATOR_INSTANCE": null,
+     "CMAKE_BUILD_TYPE": null,
+     "CMAKE_CONFIGURATION_TYPES": null,
+     "CMAKE_TOOLCHAIN_FILE": null,
+     "CMAKE_INSTALL_PREFIX": null,
+     "CMAKE_PREFIX_PATH": null,
+     "CMAKE_PROGRAM_PATH": null,
+     "CMAKE_LIBRARY_PATH": null,
+     "CMAKE_INCLUDE_PATH": null,
+     "CMAKE_FRAMEWORK_PATH": null,
+     "CMAKE_APPBUNDLE_PATH": null,
+     "CMAKE_BUILD_PARALLEL_LEVEL": null,
+     "CMAKE_EXPORT_COMPILE_COMMANDS": null,
+     "CMAKE_C_COMPILER_LAUNCHER": null,
+     "CMAKE_CXX_COMPILER_LAUNCHER": null,
+     "CMAKE_OSX_ARCHITECTURES": null,
+     "CFLAGS": null,
+     "CXXFLAGS": null,
+     "LDFLAGS": null
+    },
+    "path_prepend": [
+     "{runtime_dir}/CMake.app/Contents/bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Builds and installs the app's CMake project on the user's machine (installer-builder design.md 1.8). Needs Ninja (catalog/ninja) on PATH through that runtime's path_prepend, and a C/C++ compiler (catalog/cc). The cleared variables are CMake's own environment inputs that would let a user's global settings pick another generator, toolchain or prefix. The package-registry flags stop find_package reading ~/.cmake/packages / HKCU\\Software\\Kitware\\CMake\\Packages and export(PACKAGE) writing there. `cmake --build --target install` rather than `cmake --install` so the same command works on 3.13/3.14."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": ">=2.4",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin\\cmake.exe",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}\\bin\\cmake.exe\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "XP up to 3.13.x (x86; x64 zip: XP x64/2003), 7 for 3.14-4.2, 8 for 4.3+ (measured PE subsystem/imports); arm64 zip: Windows 10/11 on ARM",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://cmake.org/files/",
+    "https://cmake.org/cmake/help/latest/manual/cmake.1.html",
+    "https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html",
+    "https://cmake.org/cmake/help/latest/manual/cmake-packages.7.html#package-registry"
+   ],
+   "notes": "Not run (Linux-only testing). Preferred over the .msi: same files, no Windows Installer involved, works from cmd.exe on XP. Layout checked in the 3.13.5, 3.14.7, 3.31.12 and 4.4.3 zips: cmake-<ver>-<platform>\\bin\\cmake.exe with share\\cmake-<X.Y> beside it. cmake.exe links only system DLLs (kernel32, advapi32, ws2_32, crypt32, ...), no VC++ redistributable needed. 1.4-2.0 ship CMake<ver>-x86-win.zip / cmake-<ver>-x86-win.zip with a different layout (not checked); 2.2.3, 2.4.0 and 2.4.1 have no zip, only the installer .exe.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "Build tool, not an app runtime: used by project_install; the built program runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\bin\\cmake.exe\" -S . -B \"{data_dir}\\cmake-build\" -G Ninja -DCMAKE_BUILD_TYPE=Release \"-DCMAKE_INSTALL_PREFIX={app_dir}\" -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON -DCMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY=ON -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON && \"{runtime_dir}\\bin\\cmake.exe\" --build \"{data_dir}\\cmake-build\" --target install",
+    "env": {
+     "CMAKE_GENERATOR": null,
+     "CMAKE_GENERATOR_PLATFORM": null,
+     "CMAKE_GENERATOR_TOOLSET": null,
+     "CMAKE_GENERATOR_INSTANCE": null,
+     "CMAKE_BUILD_TYPE": null,
+     "CMAKE_CONFIGURATION_TYPES": null,
+     "CMAKE_TOOLCHAIN_FILE": null,
+     "CMAKE_INSTALL_PREFIX": null,
+     "CMAKE_PREFIX_PATH": null,
+     "CMAKE_PROGRAM_PATH": null,
+     "CMAKE_LIBRARY_PATH": null,
+     "CMAKE_INCLUDE_PATH": null,
+     "CMAKE_FRAMEWORK_PATH": null,
+     "CMAKE_APPBUNDLE_PATH": null,
+     "CMAKE_BUILD_PARALLEL_LEVEL": null,
+     "CMAKE_EXPORT_COMPILE_COMMANDS": null,
+     "CMAKE_C_COMPILER_LAUNCHER": null,
+     "CMAKE_CXX_COMPILER_LAUNCHER": null,
+     "CMAKE_OSX_ARCHITECTURES": null,
+     "CFLAGS": null,
+     "CXXFLAGS": null,
+     "LDFLAGS": null
+    },
+    "path_prepend": [
+     "{runtime_dir}\\bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Builds and installs the app's CMake project on the user's machine (installer-builder design.md 1.8). Needs Ninja (catalog/ninja) on PATH through that runtime's path_prepend, and a C/C++ compiler (catalog/cc). The cleared variables are CMake's own environment inputs that would let a user's global settings pick another generator, toolchain or prefix. The package-registry flags stop find_package reading ~/.cmake/packages / HKCU\\Software\\Kitware\\CMake\\Packages and export(PACKAGE) writing there. `cmake --build --target install` rather than `cmake --install` so the same command works on 3.13/3.14."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "installer",
+    "format": "msi",
+    "versions": ">=3.5",
+    "arch": null
+   },
+   "method": "extract",
+   "steps": [
+    {
+     "run": "msiexec /a \"{file}\" /qn TARGETDIR=\"{tmp}\\msi\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "for %D in (\"{tmp}\\msi\\CMake\" \"{tmp}\\msi\\PFiles\\CMake\" \"{tmp}\\msi\\PFiles64\\CMake\") do @if exist \"%~D\\bin\\cmake.exe\" xcopy \"%~D\" \"{runtime_dir}\\\" /e /i /q /y",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "Windows Installer 3.1+ (XP SP3 has it)"
+   ],
+   "executable": "bin\\cmake.exe",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}\\bin\\cmake.exe\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "as the .zip of the same version",
+   "tested": false,
+   "confidence": "low",
+   "sources": [
+    "https://cmake.org/files/",
+    "https://cmake.org/cmake/help/latest/manual/cmake.1.html",
+    "https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html",
+    "https://cmake.org/cmake/help/latest/manual/cmake-packages.7.html#package-registry",
+    "https://learn.microsoft.com/windows/win32/msi/administrative-installation"
+   ],
+   "notes": "Fallback only: every .msi has a .zip with the same files, which the download plan prefers. An administrative install (msiexec /a) copies the files without running the installer's custom actions, so nothing is registered, added to PATH or to Programs and Features. The folder the image lands in under TARGETDIR depends on the MSI's Directory table (WiX INSTALL_ROOT 'CMake' under the Program Files folder); it could not be read on Linux, so the second step copies from whichever of the three candidate folders holds bin\\cmake.exe. Single % because steps run through cmd /c, not a batch file.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "Build tool, not an app runtime: used by project_install; the built program runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\bin\\cmake.exe\" -S . -B \"{data_dir}\\cmake-build\" -G Ninja -DCMAKE_BUILD_TYPE=Release \"-DCMAKE_INSTALL_PREFIX={app_dir}\" -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON -DCMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY=ON -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON && \"{runtime_dir}\\bin\\cmake.exe\" --build \"{data_dir}\\cmake-build\" --target install",
+    "env": {
+     "CMAKE_GENERATOR": null,
+     "CMAKE_GENERATOR_PLATFORM": null,
+     "CMAKE_GENERATOR_TOOLSET": null,
+     "CMAKE_GENERATOR_INSTANCE": null,
+     "CMAKE_BUILD_TYPE": null,
+     "CMAKE_CONFIGURATION_TYPES": null,
+     "CMAKE_TOOLCHAIN_FILE": null,
+     "CMAKE_INSTALL_PREFIX": null,
+     "CMAKE_PREFIX_PATH": null,
+     "CMAKE_PROGRAM_PATH": null,
+     "CMAKE_LIBRARY_PATH": null,
+     "CMAKE_INCLUDE_PATH": null,
+     "CMAKE_FRAMEWORK_PATH": null,
+     "CMAKE_APPBUNDLE_PATH": null,
+     "CMAKE_BUILD_PARALLEL_LEVEL": null,
+     "CMAKE_EXPORT_COMPILE_COMMANDS": null,
+     "CMAKE_C_COMPILER_LAUNCHER": null,
+     "CMAKE_CXX_COMPILER_LAUNCHER": null,
+     "CMAKE_OSX_ARCHITECTURES": null,
+     "CFLAGS": null,
+     "CXXFLAGS": null,
+     "LDFLAGS": null
+    },
+    "path_prepend": [
+     "{runtime_dir}\\bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Builds and installs the app's CMake project on the user's machine (installer-builder design.md 1.8). Needs Ninja (catalog/ninja) on PATH through that runtime's path_prepend, and a C/C++ compiler (catalog/cc). The cleared variables are CMake's own environment inputs that would let a user's global settings pick another generator, toolchain or prefix. The package-registry flags stop find_package reading ~/.cmake/packages / HKCU\\Software\\Kitware\\CMake\\Packages and export(PACKAGE) writing there. `cmake --build --target install` rather than `cmake --install` so the same command works on 3.13/3.14."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "installer",
+    "format": "exe",
+    "versions": ">=2.2,<2.5",
+    "arch": null
+   },
+   "method": "run",
+   "steps": [
+    {
+     "run": "\"{file}\" /S /D={runtime_dir}",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin\\cmake.exe",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}\\bin\\cmake.exe\" --version",
+   "uninstall": "\"{runtime_dir}\\Uninstall.exe\" /S, then delete {runtime_dir}",
+   "side_effects": [
+    "Start menu shortcuts",
+    "an uninstall entry under HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
+    "possibly HKLM\\Software\\Kitware keys"
+   ],
+   "isolation": "leaks",
+   "relocatable": true,
+   "min_os": "Windows 9x/NT era builds (not measured)",
+   "tested": false,
+   "confidence": "low",
+   "sources": [
+    "https://cmake.org/files/",
+    "https://cmake.org/cmake/help/latest/manual/cmake.1.html",
+    "https://cmake.org/cmake/help/latest/manual/cmake-env-variables.7.html",
+    "https://cmake.org/cmake/help/latest/manual/cmake-packages.7.html#package-registry",
+    "https://nsis.sourceforge.io/Docs/Chapter3.html#installerusagecommon"
+   ],
+   "notes": "NSIS installers (cmake-2.2.3-win32.exe, 2.4.0, 2.4.1 -- the only Windows builds of those versions). /D= must be last and unquoted even with spaces. From 2.4.2 use the zip. 1.4-2.0.6's CMSetup*.exe are older installers with unknown switches; use the x86-win.zip of those versions instead.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "Build tool, not an app runtime: used by project_install; the built program runs directly."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\bin\\cmake.exe\" -H. \"-B{data_dir}\\cmake-build\" -G Ninja -DCMAKE_BUILD_TYPE=Release \"-DCMAKE_INSTALL_PREFIX={app_dir}\" -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON -DCMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY=ON -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON && \"{runtime_dir}\\bin\\cmake.exe\" --build \"{data_dir}\\cmake-build\" --target install",
+    "env": {
+     "CMAKE_GENERATOR": null,
+     "CMAKE_GENERATOR_PLATFORM": null,
+     "CMAKE_GENERATOR_TOOLSET": null,
+     "CMAKE_GENERATOR_INSTANCE": null,
+     "CMAKE_BUILD_TYPE": null,
+     "CMAKE_CONFIGURATION_TYPES": null,
+     "CMAKE_TOOLCHAIN_FILE": null,
+     "CMAKE_INSTALL_PREFIX": null,
+     "CMAKE_PREFIX_PATH": null,
+     "CMAKE_PROGRAM_PATH": null,
+     "CMAKE_LIBRARY_PATH": null,
+     "CMAKE_INCLUDE_PATH": null,
+     "CMAKE_FRAMEWORK_PATH": null,
+     "CMAKE_APPBUNDLE_PATH": null,
+     "CMAKE_BUILD_PARALLEL_LEVEL": null,
+     "CMAKE_EXPORT_COMPILE_COMMANDS": null,
+     "CMAKE_C_COMPILER_LAUNCHER": null,
+     "CMAKE_CXX_COMPILER_LAUNCHER": null,
+     "CMAKE_OSX_ARCHITECTURES": null,
+     "CFLAGS": null,
+     "CXXFLAGS": null,
+     "LDFLAGS": null
+    },
+    "path_prepend": [
+     "{runtime_dir}\\bin"
+    ],
+    "cwd": "{app_dir}",
+    "notes": "Builds and installs the app's CMake project on the user's machine (installer-builder design.md 1.8). Needs Ninja (catalog/ninja) on PATH through that runtime's path_prepend, and a C/C++ compiler (catalog/cc). The cleared variables are CMake's own environment inputs that would let a user's global settings pick another generator, toolchain or prefix. The package-registry flags stop find_package reading ~/.cmake/packages / HKCU\\Software\\Kitware\\CMake\\Packages and export(PACKAGE) writing there. Before 3.13 there is no -S/-B, so the long-standing undocumented -H/-B form is used; CMake before 2.8.8 has no Ninja generator (use -G \"Unix Makefiles\" / \"NMake Makefiles\" instead)."
+   }
+  }
+ ]
+}

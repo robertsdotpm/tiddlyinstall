@@ -1,0 +1,163 @@
+{
+ "runtime": "ninja",
+ "researched": "2026-09-18",
+ "assumes": "root/administrator",
+ "notes": "Every release zip holds one file at its root: ninja (Linux/macOS) or ninja.exe. No other files, no configuration, no registry, no environment needed; it reads only build.ninja in the directory it is run in.",
+ "recipes": [
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "zip",
+    "versions": ">=1.4",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 0
+    },
+    {
+     "run": "chmod 755 \"{runtime_dir}/ninja\"",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [],
+   "executable": "ninja",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/ninja\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "glibc 2.4 (1.5-1.8), 2.14 (1.4.0), 2.15 (1.9+); aarch64 (1.12+) glibc 2.17, except 1.13.0 aarch64 which needs 2.38",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://github.com/ninja-build/ninja/releases"
+   ],
+   "notes": "Run 2026-09-18: 1.13.2 and 1.6.0 unzipped into folders with spaces, `ninja --version`, then used by CMake 3.13.5/3.31.12/4.4.3 and Meson 1.11.1/1.12.0 to build a hello-world C project. The zip stores Unix mode 0755; the chmod covers unzip code that doesn't apply it. Links only libc/libstdc++/libgcc.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "Build tool, not an app runtime."
+   },
+   "project_install": {
+    "command": null,
+    "env": {
+     "NINJA_STATUS": null
+    },
+    "path_prepend": [
+     "{runtime_dir}"
+    ],
+    "cwd": null,
+    "notes": "Ninja has no project install of its own: CMake (-G Ninja) and Meson run it. The runtime folder is put on PATH for their project_install commands (both find `ninja` on PATH; Meson also honours NINJA=<path>, which should then point here). NINJA_STATUS only changes the progress line."
+   }
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "zip",
+    "versions": ">=1.4",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 0
+    },
+    {
+     "run": "chmod 755 \"{runtime_dir}/ninja\" && (xattr -d com.apple.quarantine \"{runtime_dir}/ninja\" 2>/dev/null || true)",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [],
+   "executable": "ninja",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/ninja\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "10.6 x86_64 (1.4-1.8), 10.13 (1.9), 10.15/10.12 (1.10.0/1.10.1), universal 10.12 x86_64 / 11.0 arm64 (1.10.2-1.11.1), 10.15 / 11.0 (1.12+)",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://github.com/ninja-build/ninja/releases"
+   ],
+   "notes": "Not run (no macOS host); minimums from the Mach-O headers of every release. Code signing not checked.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "Build tool, not an app runtime."
+   },
+   "project_install": {
+    "command": null,
+    "env": {
+     "NINJA_STATUS": null
+    },
+    "path_prepend": [
+     "{runtime_dir}"
+    ],
+    "cwd": null,
+    "notes": "Ninja has no project install of its own: CMake (-G Ninja) and Meson run it. The runtime folder is put on PATH for their project_install commands (both find `ninja` on PATH; Meson also honours NINJA=<path>, which should then point here). NINJA_STATUS only changes the progress line."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": ">=1.4",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 0
+    }
+   ],
+   "prerequisites": [],
+   "executable": "ninja.exe",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}\\ninja.exe\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "XP, x86 (1.4.0-1.6.0); Vista x64 (1.7.1+, x86-64 only); arm64 zip (1.12+): Windows 10/11 on ARM",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://github.com/ninja-build/ninja/releases"
+   ],
+   "notes": "Not run on Windows; floors from the PE headers and imports of every ninja.exe (kernel32.dll only, statically linked CRT, no redistributable). The x86 1.6.0 build is the only choice for XP and for 32-bit Windows of any version. 1.7.2's ninja-win.zip is a dead link (404).",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "Build tool, not an app runtime."
+   },
+   "project_install": {
+    "command": null,
+    "env": {
+     "NINJA_STATUS": null
+    },
+    "path_prepend": [
+     "{runtime_dir}"
+    ],
+    "cwd": null,
+    "notes": "Ninja has no project install of its own: CMake (-G Ninja) and Meson run it. The runtime folder is put on PATH for their project_install commands (both find `ninja` on PATH; Meson also honours NINJA=<path>, which should then point here). NINJA_STATUS only changes the progress line."
+   }
+  }
+ ]
+}

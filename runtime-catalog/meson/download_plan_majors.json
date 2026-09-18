@@ -1,0 +1,346 @@
+[
+ {
+  "runtime": "meson",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "0.53",
+  "version": "0.53.1",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "installer",
+  "format": "msi",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/mesonbuild/meson/releases/download/0.53.1/meson-0.53.1-32.msi",
+  "mirrors": [],
+  "checksum": null,
+  "size": 8540160,
+  "released": "2020-01-23",
+  "min_os": null,
+  "metadata_source": "https://github.com/mesonbuild/meson/releases/tag/0.53.1",
+  "notes": "PyInstaller build: bundles its own Python and ninja.exe; no Python needed. Vendor publishes no checksum for the MSI."
+ },
+ {
+  "runtime": "meson",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "0.63",
+  "version": "0.63.1",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "pkg",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/mesonbuild/meson/releases/download/0.63.1/meson-0.63.1.pkg",
+  "mirrors": [],
+  "checksum": null,
+  "size": 8973665,
+  "released": "2022-08-13",
+  "min_os": null,
+  "metadata_source": "https://github.com/mesonbuild/meson/releases/tag/0.63.1",
+  "notes": "PyInstaller build, x86_64 only (arm64 Macs need Rosetta); bundles Python and ninja; installs to /usr/local/bin and /usr/local/share/meson-<ver>. Vendor publishes no checksum."
+ },
+ {
+  "runtime": "meson",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "0.64",
+  "version": "0.64.1",
+  "os": "linux",
+  "arch": "any",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "pure-python",
+  "libc": null,
+  "url": "https://files.pythonhosted.org/packages/b5/5b/e7b84f1107a9cd07df1436d474bb85b4d157f691ecc0c502124bb7f9275b/meson-0.64.1.tar.gz",
+  "mirrors": [
+   "https://github.com/mesonbuild/meson/releases/download/0.64.1/meson-0.64.1.tar.gz",
+   "https://mirrors.aliyun.com/pypi/packages/b5/5b/e7b84f1107a9cd07df1436d474bb85b4d157f691ecc0c502124bb7f9275b/meson-0.64.1.tar.gz",
+   "https://mirrors.huaweicloud.com/repository/pypi/packages/b5/5b/e7b84f1107a9cd07df1436d474bb85b4d157f691ecc0c502124bb7f9275b/meson-0.64.1.tar.gz",
+   "https://mirrors.cloud.tencent.com/pypi/packages/b5/5b/e7b84f1107a9cd07df1436d474bb85b4d157f691ecc0c502124bb7f9275b/meson-0.64.1.tar.gz",
+   "https://pypi.doubanio.com/packages/b5/5b/e7b84f1107a9cd07df1436d474bb85b4d157f691ecc0c502124bb7f9275b/meson-0.64.1.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "3a8e030c2334f782085f81627062cc6d4a6771edf31e055ffe374f9e6b089ab9",
+   "source": "https://pypi.org/pypi/meson/json"
+  },
+  "size": 2089752,
+  "released": "2022-11-22",
+  "min_os": "needs Python >=3.7",
+  "metadata_source": "https://pypi.org/pypi/meson/json",
+  "notes": "Pure Python; runs with any Python meeting requires_python. Unpack and run `python meson.py`, or pip install."
+ },
+ {
+  "runtime": "meson",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "0.64",
+  "version": "0.64.1",
+  "os": "macos",
+  "arch": "any",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "pure-python",
+  "libc": null,
+  "url": "https://files.pythonhosted.org/packages/b5/5b/e7b84f1107a9cd07df1436d474bb85b4d157f691ecc0c502124bb7f9275b/meson-0.64.1.tar.gz",
+  "mirrors": [
+   "https://github.com/mesonbuild/meson/releases/download/0.64.1/meson-0.64.1.tar.gz",
+   "https://mirrors.aliyun.com/pypi/packages/b5/5b/e7b84f1107a9cd07df1436d474bb85b4d157f691ecc0c502124bb7f9275b/meson-0.64.1.tar.gz",
+   "https://mirrors.huaweicloud.com/repository/pypi/packages/b5/5b/e7b84f1107a9cd07df1436d474bb85b4d157f691ecc0c502124bb7f9275b/meson-0.64.1.tar.gz",
+   "https://mirrors.cloud.tencent.com/pypi/packages/b5/5b/e7b84f1107a9cd07df1436d474bb85b4d157f691ecc0c502124bb7f9275b/meson-0.64.1.tar.gz",
+   "https://pypi.doubanio.com/packages/b5/5b/e7b84f1107a9cd07df1436d474bb85b4d157f691ecc0c502124bb7f9275b/meson-0.64.1.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "3a8e030c2334f782085f81627062cc6d4a6771edf31e055ffe374f9e6b089ab9",
+   "source": "https://pypi.org/pypi/meson/json"
+  },
+  "size": 2089752,
+  "released": "2022-11-22",
+  "min_os": "needs Python >=3.7",
+  "metadata_source": "https://pypi.org/pypi/meson/json",
+  "notes": "Pure Python; runs with any Python meeting requires_python. Unpack and run `python meson.py`, or pip install."
+ },
+ {
+  "runtime": "meson",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "0.64",
+  "version": "0.64.1",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "msi",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/mesonbuild/meson/releases/download/0.64.1/meson-0.64.1-64.msi",
+  "mirrors": [],
+  "checksum": null,
+  "size": 11501568,
+  "released": "2022-11-22",
+  "min_os": null,
+  "metadata_source": "https://github.com/mesonbuild/meson/releases/tag/0.64.1",
+  "notes": "PyInstaller build: bundles its own Python and ninja.exe; no Python needed. Vendor publishes no checksum for the MSI."
+ },
+ {
+  "runtime": "meson",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "0.64",
+  "version": "0.64.1",
+  "os": "windows",
+  "arch": "any",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "pure-python",
+  "libc": null,
+  "url": "https://files.pythonhosted.org/packages/b5/5b/e7b84f1107a9cd07df1436d474bb85b4d157f691ecc0c502124bb7f9275b/meson-0.64.1.tar.gz",
+  "mirrors": [
+   "https://github.com/mesonbuild/meson/releases/download/0.64.1/meson-0.64.1.tar.gz",
+   "https://mirrors.aliyun.com/pypi/packages/b5/5b/e7b84f1107a9cd07df1436d474bb85b4d157f691ecc0c502124bb7f9275b/meson-0.64.1.tar.gz",
+   "https://mirrors.huaweicloud.com/repository/pypi/packages/b5/5b/e7b84f1107a9cd07df1436d474bb85b4d157f691ecc0c502124bb7f9275b/meson-0.64.1.tar.gz",
+   "https://mirrors.cloud.tencent.com/pypi/packages/b5/5b/e7b84f1107a9cd07df1436d474bb85b4d157f691ecc0c502124bb7f9275b/meson-0.64.1.tar.gz",
+   "https://pypi.doubanio.com/packages/b5/5b/e7b84f1107a9cd07df1436d474bb85b4d157f691ecc0c502124bb7f9275b/meson-0.64.1.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "3a8e030c2334f782085f81627062cc6d4a6771edf31e055ffe374f9e6b089ab9",
+   "source": "https://pypi.org/pypi/meson/json"
+  },
+  "size": 2089752,
+  "released": "2022-11-22",
+  "min_os": "needs Python >=3.7",
+  "metadata_source": "https://pypi.org/pypi/meson/json",
+  "notes": "Pure Python; runs with any Python meeting requires_python. Unpack and run `python meson.py`, or pip install."
+ },
+ {
+  "runtime": "meson",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "1.2",
+  "version": "1.2.2",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "pkg",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/mesonbuild/meson/releases/download/1.2.2/meson-1.2.2.pkg",
+  "mirrors": [],
+  "checksum": null,
+  "size": 10574366,
+  "released": "2023-09-29",
+  "min_os": null,
+  "metadata_source": "https://github.com/mesonbuild/meson/releases/tag/1.2.2",
+  "notes": "PyInstaller build, x86_64 only (arm64 Macs need Rosetta); bundles Python and ninja; installs to /usr/local/bin and /usr/local/share/meson-<ver>. Vendor publishes no checksum."
+ },
+ {
+  "runtime": "meson",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "1.8",
+  "version": "1.8.2",
+  "os": "macos",
+  "arch": "arm64",
+  "kind": "installer",
+  "format": "pkg",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/mesonbuild/meson/releases/download/1.8.2/meson-1.8.2.pkg",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "f4368bc3523080ba5eaa99183046052daad50268194ebbb8aa9352f2ca2fac22",
+   "source": "GitHub release asset digest (api.github.com)"
+  },
+  "size": 12872307,
+  "released": "2025-06-09",
+  "min_os": "macOS 11.0 (Mach-O minos, measured)",
+  "metadata_source": "https://github.com/mesonbuild/meson/releases/tag/1.8.2",
+  "notes": "PyInstaller build, arm64 only (no Intel build); bundles Python and ninja; installs to /usr/local/bin and /usr/local/share/meson-<ver>. Vendor publishes no checksum."
+ },
+ {
+  "runtime": "meson",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "1.12",
+  "version": "1.12.0",
+  "os": "linux",
+  "arch": "any",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "pure-python",
+  "libc": null,
+  "url": "https://files.pythonhosted.org/packages/48/91/d58a3eb45ed54bf32b96806dd2f4efd407f7a9675953e15e8ef257840a0d/meson-1.12.0.tar.gz",
+  "mirrors": [
+   "https://github.com/mesonbuild/meson/releases/download/1.12.0/meson-1.12.0.tar.gz",
+   "https://mirrors.aliyun.com/pypi/packages/48/91/d58a3eb45ed54bf32b96806dd2f4efd407f7a9675953e15e8ef257840a0d/meson-1.12.0.tar.gz",
+   "https://mirrors.huaweicloud.com/repository/pypi/packages/48/91/d58a3eb45ed54bf32b96806dd2f4efd407f7a9675953e15e8ef257840a0d/meson-1.12.0.tar.gz",
+   "https://mirrors.cloud.tencent.com/pypi/packages/48/91/d58a3eb45ed54bf32b96806dd2f4efd407f7a9675953e15e8ef257840a0d/meson-1.12.0.tar.gz",
+   "https://pypi.doubanio.com/packages/48/91/d58a3eb45ed54bf32b96806dd2f4efd407f7a9675953e15e8ef257840a0d/meson-1.12.0.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "88afe0c20e52030218924ac37d0c81c59b4b5f3ae3752c8c6d7470c7d365886c",
+   "source": "https://pypi.org/pypi/meson/json"
+  },
+  "size": 2518280,
+  "released": "2026-08-10",
+  "min_os": "needs Python >=3.10",
+  "metadata_source": "https://pypi.org/pypi/meson/json",
+  "notes": "Pure Python; runs with any Python meeting requires_python. Unpack and run `python meson.py`, or pip install."
+ },
+ {
+  "runtime": "meson",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "1.12",
+  "version": "1.12.0",
+  "os": "macos",
+  "arch": "any",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "pure-python",
+  "libc": null,
+  "url": "https://files.pythonhosted.org/packages/48/91/d58a3eb45ed54bf32b96806dd2f4efd407f7a9675953e15e8ef257840a0d/meson-1.12.0.tar.gz",
+  "mirrors": [
+   "https://github.com/mesonbuild/meson/releases/download/1.12.0/meson-1.12.0.tar.gz",
+   "https://mirrors.aliyun.com/pypi/packages/48/91/d58a3eb45ed54bf32b96806dd2f4efd407f7a9675953e15e8ef257840a0d/meson-1.12.0.tar.gz",
+   "https://mirrors.huaweicloud.com/repository/pypi/packages/48/91/d58a3eb45ed54bf32b96806dd2f4efd407f7a9675953e15e8ef257840a0d/meson-1.12.0.tar.gz",
+   "https://mirrors.cloud.tencent.com/pypi/packages/48/91/d58a3eb45ed54bf32b96806dd2f4efd407f7a9675953e15e8ef257840a0d/meson-1.12.0.tar.gz",
+   "https://pypi.doubanio.com/packages/48/91/d58a3eb45ed54bf32b96806dd2f4efd407f7a9675953e15e8ef257840a0d/meson-1.12.0.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "88afe0c20e52030218924ac37d0c81c59b4b5f3ae3752c8c6d7470c7d365886c",
+   "source": "https://pypi.org/pypi/meson/json"
+  },
+  "size": 2518280,
+  "released": "2026-08-10",
+  "min_os": "needs Python >=3.10",
+  "metadata_source": "https://pypi.org/pypi/meson/json",
+  "notes": "Pure Python; runs with any Python meeting requires_python. Unpack and run `python meson.py`, or pip install."
+ },
+ {
+  "runtime": "meson",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "1.12",
+  "version": "1.12.0",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "installer",
+  "format": "msi",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/mesonbuild/meson/releases/download/1.12.0/meson-1.12.0-64.msi",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "c35383106327e20795a3c4010d40db0bfe952baf5490584c2535f70899833dce",
+   "source": "GitHub release asset digest (api.github.com)"
+  },
+  "size": 15646720,
+  "released": "2026-08-10",
+  "min_os": null,
+  "metadata_source": "https://github.com/mesonbuild/meson/releases/tag/1.12.0",
+  "notes": "PyInstaller build: bundles its own Python and ninja.exe; no Python needed. Vendor publishes no checksum for the MSI."
+ },
+ {
+  "runtime": "meson",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "1.12",
+  "version": "1.12.0",
+  "os": "windows",
+  "arch": "any",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "pure-python",
+  "libc": null,
+  "url": "https://files.pythonhosted.org/packages/48/91/d58a3eb45ed54bf32b96806dd2f4efd407f7a9675953e15e8ef257840a0d/meson-1.12.0.tar.gz",
+  "mirrors": [
+   "https://github.com/mesonbuild/meson/releases/download/1.12.0/meson-1.12.0.tar.gz",
+   "https://mirrors.aliyun.com/pypi/packages/48/91/d58a3eb45ed54bf32b96806dd2f4efd407f7a9675953e15e8ef257840a0d/meson-1.12.0.tar.gz",
+   "https://mirrors.huaweicloud.com/repository/pypi/packages/48/91/d58a3eb45ed54bf32b96806dd2f4efd407f7a9675953e15e8ef257840a0d/meson-1.12.0.tar.gz",
+   "https://mirrors.cloud.tencent.com/pypi/packages/48/91/d58a3eb45ed54bf32b96806dd2f4efd407f7a9675953e15e8ef257840a0d/meson-1.12.0.tar.gz",
+   "https://pypi.doubanio.com/packages/48/91/d58a3eb45ed54bf32b96806dd2f4efd407f7a9675953e15e8ef257840a0d/meson-1.12.0.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "88afe0c20e52030218924ac37d0c81c59b4b5f3ae3752c8c6d7470c7d365886c",
+   "source": "https://pypi.org/pypi/meson/json"
+  },
+  "size": 2518280,
+  "released": "2026-08-10",
+  "min_os": "needs Python >=3.10",
+  "metadata_source": "https://pypi.org/pypi/meson/json",
+  "notes": "Pure Python; runs with any Python meeting requires_python. Unpack and run `python meson.py`, or pip install."
+ }
+]

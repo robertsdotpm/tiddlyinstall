@@ -1,0 +1,290 @@
+{
+ "runtime": "meson",
+ "researched": "2026-09-18",
+ "assumes": "root/administrator",
+ "notes": "Recommendation: install Meson as pure Python. The sdist recipe (unpack into {runtime_dir}, run meson.py with the app's Python or the catalogue's Python) is the default on every OS: vendor sha256 from PyPI, four confirmed China mirrors, no pip, network or compiler needed, and the Python chosen sets the OS floor. If the app is itself a Python app, installing the wheel with its own pip is equivalent. The Windows MSI is a fallback for apps with no Python: self-contained (PyInstaller Python + ninja.exe) but x64-only from 0.54, no vendor checksum, absent for some releases, and its bundled Python sets a Windows 8+ floor from 0.56. The macOS .pkg is not recommended (installs to /usr/local, single-arch, stopped after 1.8.2). {python} is the Python interpreter of a Python runtime installed for this app (the app's own, or the catalogue's Python installed as a build-only runtime): a new token installer-builder must resolve, since Meson is pure Python. ",
+ "recipes": [
+  {
+   "match": {
+    "os": null,
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": ">=0.29",
+    "arch": "any"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    }
+   ],
+   "prerequisites": [
+    "a Python runtime meeting the version's requires_python (3.3 for 0.29-0.41, 3.4 for 0.42-0.44, 3.5 for 0.45-0.56, 3.6 for 0.57-0.61, 3.7 for 0.62-1.11, 3.10 for 1.12+)"
+   ],
+   "executable": "meson.py",
+   "package_manager": null,
+   "verify": "\"{python}\" -E -s \"{runtime_dir}/meson.py\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "that of the Python used",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://mesonbuild.com/Getting-meson.html",
+    "https://mesonbuild.com/Quick-guide.html",
+    "https://pypi.org/project/meson/"
+   ],
+   "notes": "Run 2026-09-18 on Linux: meson-1.12.0.tar.gz unpacked (strip 1) into a folder with a space, run with the system Python 3.12 and with the catalogue's python-build-standalone 3.14.7; setup + install of a hello-world C project with Ninja 1.13.2 worked and HOME stayed empty. meson.py puts its own folder first on sys.path, so no PYTHONPATH is needed and -E is safe. On Windows use backslashes; same command. {python} is the Python interpreter of a Python runtime installed for this app (the app's own, or the catalogue's Python installed as a build-only runtime): a new token installer-builder must resolve, since Meson is pure Python. ",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "Build tool, not an app runtime."
+   },
+   "project_install": {
+    "command": "\"{python}\" -E -s \"{runtime_dir}/meson.py\" setup \"{data_dir}/meson-build\" --prefix \"{app_dir}\" --buildtype release && \"{python}\" -E -s \"{runtime_dir}/meson.py\" install -C \"{data_dir}/meson-build\"",
+    "env": {
+     "NINJA": null,
+     "PYTHONPATH": null,
+     "PYTHONHOME": null,
+     "MESON_CMD_PATH": null
+    },
+    "cwd": "{app_dir}",
+    "notes": "Configures, builds and installs the app's Meson project (installer-builder design.md 1.8). Ninja comes from catalog/ninja via its path_prepend (Meson looks for `ninja` on PATH; a user's NINJA variable is cleared so it can't substitute another). Meson writes nothing outside the build folder and --prefix (checked with an empty fake HOME). Minimum Ninja: 1.5 (Meson 0.40-0.53), 1.7 (0.54-0.56), 1.8.2 (0.57+)."
+   }
+  },
+  {
+   "match": {
+    "os": null,
+    "kind": "archive",
+    "format": "whl",
+    "versions": ">=0.59",
+    "arch": "any"
+   },
+   "method": "run",
+   "steps": [
+    {
+     "run": "\"{python}\" -E -s -m pip install --no-index --no-deps --no-warn-script-location \"{file}\"",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "the app's own Python runtime with pip, meeting requires_python"
+   ],
+   "executable": null,
+   "package_manager": null,
+   "verify": "\"{python}\" -E -s -m mesonbuild.mesonmain --version",
+   "uninstall": "\"{python}\" -E -s -m pip uninstall -y meson (or delete the app's Python runtime)",
+   "side_effects": [
+    "installs into the app's Python runtime folder (site-packages and its bin/Scripts), not into {runtime_dir}"
+   ],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "that of the Python used",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://mesonbuild.com/Getting-meson.html",
+    "https://mesonbuild.com/Quick-guide.html",
+    "https://pypi.org/project/meson/"
+   ],
+   "notes": "Run 2026-09-18 on Linux with PIP_CONFIG_FILE=/dev/null and PIP_CACHE_DIR inside the data folder: meson-1.12.0-py3-none-any.whl into a copy of the catalogue's python-build-standalone 3.14.7 in a folder with a space; `python -m mesonbuild.mesonmain` and the generated bin/meson (a relocatable /bin/sh wrapper) both built the hello-world project. Wheels exist from 0.59.3; older versions use the sdist recipe. Use `-m mesonbuild.mesonmain` rather than the script so the call works the same on Windows. {python} is the Python interpreter of a Python runtime installed for this app (the app's own, or the catalogue's Python installed as a build-only runtime): a new token installer-builder must resolve, since Meson is pure Python. ",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "Build tool, not an app runtime."
+   },
+   "project_install": {
+    "command": "\"{python}\" -E -s -m mesonbuild.mesonmain setup \"{data_dir}/meson-build\" --prefix \"{app_dir}\" --buildtype release && \"{python}\" -E -s -m mesonbuild.mesonmain install -C \"{data_dir}/meson-build\"",
+    "env": {
+     "NINJA": null,
+     "PYTHONPATH": null,
+     "PYTHONHOME": null,
+     "MESON_CMD_PATH": null
+    },
+    "cwd": "{app_dir}",
+    "notes": "Configures, builds and installs the app's Meson project (installer-builder design.md 1.8). Ninja comes from catalog/ninja via its path_prepend (Meson looks for `ninja` on PATH; a user's NINJA variable is cleared so it can't substitute another). Meson writes nothing outside the build folder and --prefix (checked with an empty fake HOME). Minimum Ninja: 1.5 (Meson 0.40-0.53), 1.7 (0.54-0.56), 1.8.2 (0.57+)."
+   }
+  },
+  {
+   "match": {
+    "os": null,
+    "kind": "archive",
+    "format": "pyz",
+    "versions": ">=1.7",
+    "arch": "any"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "run": "mkdir -p \"{runtime_dir}\" && cp \"{file}\" \"{runtime_dir}/meson.pyz\"",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "a Python runtime meeting requires_python"
+   ],
+   "executable": "meson.pyz",
+   "package_manager": null,
+   "verify": "\"{python}\" -E -s \"{runtime_dir}/meson.pyz\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "that of the Python used",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://mesonbuild.com/Getting-meson.html",
+    "https://mesonbuild.com/Quick-guide.html",
+    "https://pypi.org/project/meson/"
+   ],
+   "notes": "Run 2026-09-18 on Linux: meson.pyz 1.11.1 from a folder with a space built the hello-world project. Only attached to a few releases (1.7.2, 1.8.5, 1.9.1, 1.11.1); on Windows copy with `copy`. {python} is the Python interpreter of a Python runtime installed for this app (the app's own, or the catalogue's Python installed as a build-only runtime): a new token installer-builder must resolve, since Meson is pure Python. ",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "Build tool, not an app runtime."
+   },
+   "project_install": {
+    "command": "\"{python}\" -E -s \"{runtime_dir}/meson.pyz\" setup \"{data_dir}/meson-build\" --prefix \"{app_dir}\" --buildtype release && \"{python}\" -E -s \"{runtime_dir}/meson.pyz\" install -C \"{data_dir}/meson-build\"",
+    "env": {
+     "NINJA": null,
+     "PYTHONPATH": null,
+     "PYTHONHOME": null,
+     "MESON_CMD_PATH": null
+    },
+    "cwd": "{app_dir}",
+    "notes": "Configures, builds and installs the app's Meson project (installer-builder design.md 1.8). Ninja comes from catalog/ninja via its path_prepend (Meson looks for `ninja` on PATH; a user's NINJA variable is cleared so it can't substitute another). Meson writes nothing outside the build folder and --prefix (checked with an empty fake HOME). Minimum Ninja: 1.5 (Meson 0.40-0.53), 1.7 (0.54-0.56), 1.8.2 (0.57+)."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "installer",
+    "format": "msi",
+    "versions": ">=0.42",
+    "arch": null
+   },
+   "method": "extract",
+   "steps": [
+    {
+     "run": "msiexec /a \"{file}\" /qn TARGETDIR=\"{tmp}\\msi\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "for %D in (\"{tmp}\\msi\\Meson\" \"{tmp}\\msi\\PFiles\\Meson\" \"{tmp}\\msi\\PFiles64\\Meson\" \"{tmp}\\msi\\ProgramFiles64Folder\\Meson\") do @if exist \"%~D\\meson.exe\" xcopy \"%~D\" \"{runtime_dir}\\\" /e /i /q /y",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "Windows Installer 3.1+"
+   ],
+   "executable": "meson.exe",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}\\meson.exe\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "from the bundled Python: Vista (0.42-0.54, Python 3.6/3.7), Windows 8 (0.56-1.10, Python 3.9-3.12), Windows 10 as the safe floor for 1.11+ (Python 3.14)",
+   "tested": false,
+   "confidence": "low",
+   "sources": [
+    "https://mesonbuild.com/Getting-meson.html",
+    "https://mesonbuild.com/Quick-guide.html",
+    "https://pypi.org/project/meson/",
+    "https://learn.microsoft.com/windows/win32/msi/administrative-installation"
+   ],
+   "notes": "Not run (Linux-only testing). The MSI holds a PyInstaller-frozen meson.exe with its Python DLL, the UCRT DLLs and ninja.exe (seen in the MSI's file table strings), so no Python or Ninja runtime is needed: put {runtime_dir} on PATH so the bundled ninja.exe is found. A normal install is per-machine (and may add itself to PATH, not verified); an administrative install (msiexec /a) runs none of that. The image folder name under TARGETDIR could not be read on Linux, so the copy step tries the likely candidates. x86 MSIs stop at 0.53.1.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "Build tool, not an app runtime."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\meson.exe\" setup \"{data_dir}\\meson-build\" --prefix \"{app_dir}\" --buildtype release && \"{runtime_dir}\\meson.exe\" install -C \"{data_dir}\\meson-build\"",
+    "env": {
+     "NINJA": null,
+     "PYTHONPATH": null,
+     "PYTHONHOME": null,
+     "MESON_CMD_PATH": null
+    },
+    "cwd": "{app_dir}",
+    "notes": "Configures, builds and installs the app's Meson project (installer-builder design.md 1.8). Ninja comes from catalog/ninja via its path_prepend (Meson looks for `ninja` on PATH; a user's NINJA variable is cleared so it can't substitute another). Meson writes nothing outside the build folder and --prefix (checked with an empty fake HOME). Minimum Ninja: 1.5 (Meson 0.40-0.53), 1.7 (0.54-0.56), 1.8.2 (0.57+).",
+    "path_prepend": [
+     "{runtime_dir}"
+    ]
+   }
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "installer",
+    "format": "pkg",
+    "versions": ">=0.58",
+    "arch": null
+   },
+   "method": "extract",
+   "steps": [
+    {
+     "run": "pkgutil --expand-full \"{file}\" \"{tmp}/pkg\"",
+     "shell": "sh"
+    },
+    {
+     "run": "mkdir -p \"{runtime_dir}\" && cp -R \"{tmp}\"/pkg/*.pkg/Payload/usr/local/share/meson-*/. \"{runtime_dir}/\" && cp \"{tmp}\"/pkg/*.pkg/Payload/usr/local/bin/ninja \"{runtime_dir}/ninja\"",
+     "shell": "sh"
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null || true",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "Rosetta 2 on Apple Silicon for the x86_64-only 0.58.1-1.2.2 packages"
+   ],
+   "executable": "meson",
+   "package_manager": null,
+   "verify": "\"{runtime_dir}/meson\" --version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "x86_64 10.7 (0.58.1) / 10.13 (1.1.1-1.2.2); arm64-only 11.0 (1.6.1-1.8.2), bundled ninja 11.0/14.0",
+   "tested": false,
+   "confidence": "low",
+   "sources": [
+    "https://mesonbuild.com/Getting-meson.html",
+    "https://mesonbuild.com/Quick-guide.html",
+    "https://pypi.org/project/meson/"
+   ],
+   "notes": "Not recommended; recorded for completeness. Not run (no macOS host). Payload layout read from the 0.58.1, 1.1.1 and 1.8.2 packages: usr/local/bin/ninja and the PyInstaller folder usr/local/share/meson-<ver>/ (meson plus its Python). Running the .pkg itself would install system-wide into /usr/local, so it is expanded instead. Whether the frozen meson runs from a moved folder was not checked.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "Build tool, not an app runtime."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/meson\" setup \"{data_dir}/meson-build\" --prefix \"{app_dir}\" --buildtype release && \"{runtime_dir}/meson\" install -C \"{data_dir}/meson-build\"",
+    "env": {
+     "NINJA": null,
+     "PYTHONPATH": null,
+     "PYTHONHOME": null,
+     "MESON_CMD_PATH": null
+    },
+    "cwd": "{app_dir}",
+    "notes": "Configures, builds and installs the app's Meson project (installer-builder design.md 1.8). Ninja comes from catalog/ninja via its path_prepend (Meson looks for `ninja` on PATH; a user's NINJA variable is cleared so it can't substitute another). Meson writes nothing outside the build folder and --prefix (checked with an empty fake HOME). Minimum Ninja: 1.5 (Meson 0.40-0.53), 1.7 (0.54-0.56), 1.8.2 (0.57+).",
+    "path_prepend": [
+     "{runtime_dir}"
+    ]
+   }
+  }
+ ]
+}

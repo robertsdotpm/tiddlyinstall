@@ -1,0 +1,197 @@
+[
+ {
+  "runtime": "ninja",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "1.6",
+  "version": "1.6.0",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/ninja-build/ninja/releases/download/v1.6.0/ninja-win.zip",
+  "mirrors": [],
+  "checksum": null,
+  "size": 159957,
+  "released": "2015-06-29",
+  "min_os": "PE subsystem 5.1, kernel32 only: Windows XP (measured)",
+  "metadata_source": "https://api.github.com/repos/ninja-build/ninja/releases",
+  "notes": "Vendor publishes no checksum; checksum (if any) is GitHub's upload digest."
+ },
+ {
+  "runtime": "ninja",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "1.10",
+  "version": "1.10.1",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-mac.zip",
+  "mirrors": [],
+  "checksum": null,
+  "size": 116967,
+  "released": "2020-08-18",
+  "min_os": "Mach-O minos 10.12 (measured)",
+  "metadata_source": "https://api.github.com/repos/ninja-build/ninja/releases",
+  "notes": "Vendor publishes no checksum; checksum (if any) is GitHub's upload digest."
+ },
+ {
+  "runtime": "ninja",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "1.13",
+  "version": "1.13.2",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://github.com/ninja-build/ninja/releases/download/v1.13.2/ninja-linux.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "5749cbc4e668273514150a80e387a957f933c6ed3f5f11e03fb30955e2bbead6",
+   "source": "GitHub release asset digest (api.github.com)"
+  },
+  "size": 134040,
+  "released": "2025-11-20",
+  "min_os": "glibc 2.15 (highest GLIBC_ symbol version, measured)",
+  "metadata_source": "https://api.github.com/repos/ninja-build/ninja/releases",
+  "notes": "Vendor publishes no checksum; checksum (if any) is GitHub's upload digest."
+ },
+ {
+  "runtime": "ninja",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "1.13",
+  "version": "1.13.2",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://github.com/ninja-build/ninja/releases/download/v1.13.2/ninja-linux-aarch64.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "fd2cacc8050a7f12a16a2e48f9e06fca5c14fc4c2bee2babb67b58be17a607fc",
+   "source": "GitHub release asset digest (api.github.com)"
+  },
+  "size": 126256,
+  "released": "2025-11-20",
+  "min_os": "glibc 2.17 (highest GLIBC_ symbol version, measured)",
+  "metadata_source": "https://api.github.com/repos/ninja-build/ninja/releases",
+  "notes": "Vendor publishes no checksum; checksum (if any) is GitHub's upload digest."
+ },
+ {
+  "runtime": "ninja",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "1.13",
+  "version": "1.13.2",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/ninja-build/ninja/releases/download/v1.13.2/ninja-mac.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "c99048673aa765960a99cf10c6ddb9f1fad506099ff0a0e137ad8960a88f321b",
+   "source": "GitHub release asset digest (api.github.com)"
+  },
+  "size": 314051,
+  "released": "2025-11-20",
+  "min_os": "Mach-O minos 10.15 x86_64 / 11.0 arm64 (measured)",
+  "metadata_source": "https://api.github.com/repos/ninja-build/ninja/releases",
+  "notes": "Vendor publishes no checksum; checksum (if any) is GitHub's upload digest."
+ },
+ {
+  "runtime": "ninja",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "1.13",
+  "version": "1.13.2",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/ninja-build/ninja/releases/download/v1.13.2/ninja-win.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "07fc8261b42b20e71d1720b39068c2e14ffcee6396b76fb7a795fb460b78dc65",
+   "source": "GitHub release asset digest (api.github.com)"
+  },
+  "size": 291570,
+  "released": "2025-11-20",
+  "min_os": "PE subsystem 6.0, x86-64: Windows Vista x64 (measured)",
+  "metadata_source": "https://api.github.com/repos/ninja-build/ninja/releases",
+  "notes": "Vendor publishes no checksum; checksum (if any) is GitHub's upload digest.",
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "07fc8261b42b20e71d1720b39068c2e14ffcee6396b76fb7a795fb460b78dc65",
+    "source": "https://github.com/microsoft/winget-pkgs/blob/master/manifests/n/Ninja-build/Ninja/1.13.2/Ninja-build.Ninja.installer.yaml"
+   }
+  ]
+ },
+ {
+  "runtime": "ninja",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "1.13",
+  "version": "1.13.2",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://github.com/ninja-build/ninja/releases/download/v1.13.2/ninja-winarm64.zip",
+  "mirrors": [],
+  "checksum": {
+   "algo": "sha256",
+   "value": "e52f0bdef9dfb1003229dbd6508a508c4073fd017247002adc66e5e806cb0391",
+   "source": "GitHub release asset digest (api.github.com)"
+  },
+  "size": 270354,
+  "released": "2025-11-20",
+  "min_os": "PE subsystem 6.2 ARM64: Windows 10 on ARM (measured)",
+  "metadata_source": "https://api.github.com/repos/ninja-build/ninja/releases",
+  "notes": "Vendor publishes no checksum; checksum (if any) is GitHub's upload digest.",
+  "checksum_corroboration": [
+   {
+    "algo": "sha256",
+    "value": "e52f0bdef9dfb1003229dbd6508a508c4073fd017247002adc66e5e806cb0391",
+    "source": "https://github.com/microsoft/winget-pkgs/blob/master/manifests/n/Ninja-build/Ninja/1.13.2/Ninja-build.Ninja.installer.yaml"
+   }
+  ]
+ }
+]

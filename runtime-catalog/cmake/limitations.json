@@ -1,0 +1,819 @@
+{
+ "runtime": "cmake",
+ "languages": [
+  "c",
+  "cpp"
+ ],
+ "researched": "2026-09-18",
+ "sources": [
+  "https://cmake.org/files/",
+  "https://cmake.org/cmake/help/latest/release/3.6.html",
+  "https://cmake.org/cmake/help/latest/release/3.14.html",
+  "https://cmake.org/cmake/help/latest/release/3.19.html",
+  "https://cmake.org/cmake/help/latest/release/3.20.html",
+  "https://cmake.org/cmake/help/latest/release/3.28.html",
+  "https://cmake.org/cmake/help/latest/release/4.0.html",
+  "https://cmake.org/cmake/help/latest/release/4.3.html",
+  "cmake-<ver>-files-v1.json macOSmin fields",
+  "binary inspection 2026-09-18: PE subsystem/imports of cmake.exe (2.8.12.2, 3.0.2, 3.6.3, 3.10.3, 3.13.5 x86+x64, 3.14.0, 3.14.7, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0, 4.2.3-4.2.5, 4.2.8, 4.3.0, 4.4.3; arm64 3.27.9, 3.28.0), Mach-O minos (3.6.3, 3.13.5, 3.18.6, 3.31.12, 4.4.3), highest GLIBC_ symbol (3.13.5, 3.19.8, 3.27.9, 3.31.12, 4.4.3)"
+ ],
+ "choosing": "Pick the newest major whose os_support covers the user's system: Windows XP/Vista -> 3.13.5 (win32-x86 zip; x64 zip for XP x64); Windows 7 -> 4.2.8; Windows 8+ -> newest. macOS 10.7-10.9 -> 3.18.x (or 3.19.0/1); 10.10-10.12 -> newest macos10.10-universal build; 10.13+ -> newest. Linux x86_64 glibc 2.6-2.9 -> 3.13.x; 2.10-2.16 -> 3.27.x; 2.17+ -> newest (aarch64: glibc <2.28 -> 4.2.x).",
+ "milestones": [
+  {
+   "capability": "64bit_windows",
+   "since": "3.6",
+   "notes": "win64-x64 zip/msi from 3.6; x86 builds continue through 4.4"
+  },
+  {
+   "capability": "arm64_macos",
+   "since": "3.19",
+   "notes": "universal x86_64+arm64 from 3.19.2"
+  },
+  {
+   "capability": "arm64_linux",
+   "since": "3.19",
+   "notes": "linux-aarch64 from 3.19.3"
+  },
+  {
+   "capability": "arm64_windows",
+   "since": "3.24",
+   "notes": "windows-arm64 zip/msi"
+  },
+  {
+   "capability": "ninja_generator",
+   "since": "2.8",
+   "notes": "2.8.8; Ninja Multi-Config 3.17"
+  },
+  {
+   "capability": "presets",
+   "since": "3.19",
+   "notes": "CMakePresets.json"
+  },
+  {
+   "capability": "fetchcontent",
+   "since": "3.11",
+   "notes": "FetchContent_MakeAvailable 3.14"
+  },
+  {
+   "capability": "cxx20_modules",
+   "since": "3.28",
+   "notes": "with Ninja 1.11+"
+  }
+ ],
+ "majors": [
+  {
+   "major": "1.2",
+   "released": "2003-08-04",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "none",
+    "macos": "none",
+    "linux": "i386 build only (statically linked in 1.x); glibc floor not measured [x86]"
+   },
+   "added": [],
+   "limitations": [
+    "no CMAKE_CXX_STANDARD (3.1); C++ standard set by hand with compiler flags",
+    "no Ninja generator (2.8.8): Makefiles / Visual Studio / NMake only"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "major": "1.4",
+   "released": "2003-08-04",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows x86 builds (1990s/2000s era: Windows 9x/NT/2000/XP); not measured [x86]",
+    "macos": "none",
+    "linux": "i386 build only (statically linked in 1.x); glibc floor not measured [x86]"
+   },
+   "added": [],
+   "limitations": [
+    "no CMAKE_CXX_STANDARD (3.1); C++ standard set by hand with compiler flags",
+    "no Ninja generator (2.8.8): Makefiles / Visual Studio / NMake only"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "major": "1.6",
+   "released": "2003-07-31",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows x86 builds (1990s/2000s era: Windows 9x/NT/2000/XP); not measured [x86]",
+    "macos": "none",
+    "linux": "i386 build only (statically linked in 1.x); glibc floor not measured [x86]"
+   },
+   "added": [],
+   "limitations": [
+    "no CMAKE_CXX_STANDARD (3.1); C++ standard set by hand with compiler flags",
+    "no Ninja generator (2.8.8): Makefiles / Visual Studio / NMake only"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "major": "1.8",
+   "released": "2004-01-07",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows x86 builds (1990s/2000s era: Windows 9x/NT/2000/XP); not measured [x86]",
+    "macos": "none",
+    "linux": "i386 build only (statically linked in 1.x); glibc floor not measured [x86]"
+   },
+   "added": [],
+   "limitations": [
+    "no CMAKE_CXX_STANDARD (3.1); C++ standard set by hand with compiler flags",
+    "no Ninja generator (2.8.8): Makefiles / Visual Studio / NMake only"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "major": "2.0",
+   "released": "2005-04-13",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows x86 builds (1990s/2000s era: Windows 9x/NT/2000/XP); not measured [x86]",
+    "macos": "none",
+    "linux": "i386 build only (statically linked in 1.x); glibc floor not measured [x86]"
+   },
+   "added": [],
+   "limitations": [
+    "no CMAKE_CXX_STANDARD (3.1); C++ standard set by hand with compiler flags",
+    "no Ninja generator (2.8.8): Makefiles / Visual Studio / NMake only"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "major": "2.2",
+   "released": "2006-11-30",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows x86 builds (1990s/2000s era: Windows 9x/NT/2000/XP); not measured [x86]",
+    "macos": "none",
+    "linux": "i386 build only (statically linked in 1.x); glibc floor not measured [x86]"
+   },
+   "added": [],
+   "limitations": [
+    "no CMAKE_CXX_STANDARD (3.1); C++ standard set by hand with compiler flags",
+    "no Ninja generator (2.8.8): Makefiles / Visual Studio / NMake only"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "major": "2.4",
+   "released": "2006-04-18",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows x86 builds (1990s/2000s era: Windows 9x/NT/2000/XP); not measured [x86]",
+    "macos": "Darwin-universal (PowerPC + i386) builds from 2.4; Mac OS X 10.4/10.5 era, not measured. 1.x-2.2 shipped PowerPC-only 'darwin'/'osx' builds (not representable in this catalogue)",
+    "linux": "i386 build only (statically linked in 1.x); glibc floor not measured [x86]"
+   },
+   "added": [],
+   "limitations": [
+    "no CMAKE_CXX_STANDARD (3.1); C++ standard set by hand with compiler flags",
+    "no Ninja generator (2.8.8): Makefiles / Visual Studio / NMake only"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "major": "2.6",
+   "released": "2008-05-06",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows x86 builds (1990s/2000s era: Windows 9x/NT/2000/XP); not measured [x86]",
+    "macos": "Darwin-universal (PowerPC + i386) builds from 2.4; Mac OS X 10.4/10.5 era, not measured. 1.x-2.2 shipped PowerPC-only 'darwin'/'osx' builds (not representable in this catalogue)",
+    "linux": "i386 build only (statically linked in 1.x); glibc floor not measured [x86]"
+   },
+   "added": [],
+   "limitations": [
+    "no CMAKE_CXX_STANDARD (3.1); C++ standard set by hand with compiler flags",
+    "no Ninja generator (2.8.8): Makefiles / Visual Studio / NMake only"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "major": "2.8",
+   "released": "2009-11-13",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "XP and later (x86): PE subsystem 5.0 measured on 2.8.12.2 and 3.0.2, 5.1 on 3.6.3, 3.10.3 and 3.13.5, with no post-XP kernel32 imports [x86]",
+    "macos": "Darwin-universal (PowerPC + i386) builds from 2.4; Mac OS X 10.4/10.5 era, not measured. 1.x-2.2 shipped PowerPC-only 'darwin'/'osx' builds (not representable in this catalogue)",
+    "linux": "i386 build only (statically linked in 1.x); glibc floor not measured [x86]"
+   },
+   "added": [
+    "target_link_libraries PUBLIC/PRIVATE/INTERFACE usage requirements (2.8.11-2.8.12)",
+    "Ninja generator (2.8.8)"
+   ],
+   "limitations": [
+    "no CMAKE_CXX_STANDARD (3.1); C++ standard set by hand with compiler flags"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "major": "3.0",
+   "released": "2014-06-10",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "XP and later (x86): PE subsystem 5.0 measured on 2.8.12.2 and 3.0.2, 5.1 on 3.6.3, 3.10.3 and 3.13.5, with no post-XP kernel32 imports [x86]",
+    "macos": "Mac OS X 10.6 or so for the x86_64 build (inferred: 3.6 release notes say it 'now requires OS X 10.7'); 3.0-3.1 also ship Darwin-universal (ppc+i386) and Darwin64-universal (i386+x86_64)",
+    "linux": "i386 build only (statically linked in 1.x); glibc floor not measured [x86]"
+   },
+   "added": [
+    "INTERFACE libraries",
+    "bracket arguments and comments"
+   ],
+   "limitations": [
+    "no CMAKE_CXX_STANDARD (3.1); C++ standard set by hand with compiler flags"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.1",
+   "released": "2014-12-17",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "XP and later (x86): PE subsystem 5.0 measured on 2.8.12.2 and 3.0.2, 5.1 on 3.6.3, 3.10.3 and 3.13.5, with no post-XP kernel32 imports [x86]",
+    "macos": "Mac OS X 10.6 or so for the x86_64 build (inferred: 3.6 release notes say it 'now requires OS X 10.7'); 3.0-3.1 also ship Darwin-universal (ppc+i386) and Darwin64-universal (i386+x86_64)",
+    "linux": "glibc 2.6 for x86_64 (highest GLIBC_ symbol measured on 3.13.5); i386 build up to 3.6 [amd64, x86]"
+   },
+   "added": [
+    "CMAKE_C_STANDARD / CMAKE_CXX_STANDARD",
+    "target_sources",
+    "compile features"
+   ],
+   "limitations": [
+    "no FetchContent (3.11); no cmake -S/-B (3.13); no cmake --install (3.15)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.2",
+   "released": "2015-03-10",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "XP and later (x86): PE subsystem 5.0 measured on 2.8.12.2 and 3.0.2, 5.1 on 3.6.3, 3.10.3 and 3.13.5, with no post-XP kernel32 imports [x86]",
+    "macos": "Mac OS X 10.6 or so for the x86_64 build (inferred: 3.6 release notes say it 'now requires OS X 10.7'); 3.0-3.1 also ship Darwin-universal (ppc+i386) and Darwin64-universal (i386+x86_64)",
+    "linux": "glibc 2.6 for x86_64 (highest GLIBC_ symbol measured on 3.13.5); i386 build up to 3.6 [amd64, x86]"
+   },
+   "added": [],
+   "limitations": [
+    "no FetchContent (3.11); no cmake -S/-B (3.13); no cmake --install (3.15)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.3",
+   "released": "2015-07-23",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "XP and later (x86): PE subsystem 5.0 measured on 2.8.12.2 and 3.0.2, 5.1 on 3.6.3, 3.10.3 and 3.13.5, with no post-XP kernel32 imports [x86]",
+    "macos": "Mac OS X 10.6 or so for the x86_64 build (inferred: 3.6 release notes say it 'now requires OS X 10.7'); 3.0-3.1 also ship Darwin-universal (ppc+i386) and Darwin64-universal (i386+x86_64)",
+    "linux": "glibc 2.6 for x86_64 (highest GLIBC_ symbol measured on 3.13.5); i386 build up to 3.6 [amd64, x86]"
+   },
+   "added": [],
+   "limitations": [
+    "no FetchContent (3.11); no cmake -S/-B (3.13); no cmake --install (3.15)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.4",
+   "released": "2015-11-12",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "XP and later (x86): PE subsystem 5.0 measured on 2.8.12.2 and 3.0.2, 5.1 on 3.6.3, 3.10.3 and 3.13.5, with no post-XP kernel32 imports [x86]",
+    "macos": "Mac OS X 10.6 or so for the x86_64 build (inferred: 3.6 release notes say it 'now requires OS X 10.7'); 3.0-3.1 also ship Darwin-universal (ppc+i386) and Darwin64-universal (i386+x86_64)",
+    "linux": "glibc 2.6 for x86_64 (highest GLIBC_ symbol measured on 3.13.5); i386 build up to 3.6 [amd64, x86]"
+   },
+   "added": [],
+   "limitations": [
+    "no FetchContent (3.11); no cmake -S/-B (3.13); no cmake --install (3.15)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.5",
+   "released": "2016-03-08",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "XP and later (x86): PE subsystem 5.0 measured on 2.8.12.2 and 3.0.2, 5.1 on 3.6.3, 3.10.3 and 3.13.5, with no post-XP kernel32 imports [x86]",
+    "macos": "Mac OS X 10.6 or so for the x86_64 build (inferred: 3.6 release notes say it 'now requires OS X 10.7'); 3.0-3.1 also ship Darwin-universal (ppc+i386) and Darwin64-universal (i386+x86_64)",
+    "linux": "glibc 2.6 for x86_64 (highest GLIBC_ symbol measured on 3.13.5); i386 build up to 3.6 [amd64, x86]"
+   },
+   "added": [],
+   "limitations": [
+    "no FetchContent (3.11); no cmake -S/-B (3.13); no cmake --install (3.15)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.6",
+   "released": "2016-07-07",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "XP and later (x86): PE subsystem 5.0 measured on 2.8.12.2 and 3.0.2, 5.1 on 3.6.3, 3.10.3 and 3.13.5, with no post-XP kernel32 imports; x64 build: XP x64 / Server 2003 (3.13.5 x64 subsystem 5.2) [amd64, x86]",
+    "macos": "OS X 10.7 and later, x86_64 only (3.6 release notes; measured Mach-O minos 10.7 on 3.6.3, 3.13.5 and 3.18.6)",
+    "linux": "glibc 2.6 for x86_64 (highest GLIBC_ symbol measured on 3.13.5); i386 build up to 3.6 [amd64, x86]"
+   },
+   "added": [],
+   "limitations": [
+    "no FetchContent (3.11); no cmake -S/-B (3.13); no cmake --install (3.15)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.7",
+   "released": "2016-11-11",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "XP and later (x86): PE subsystem 5.0 measured on 2.8.12.2 and 3.0.2, 5.1 on 3.6.3, 3.10.3 and 3.13.5, with no post-XP kernel32 imports; x64 build: XP x64 / Server 2003 (3.13.5 x64 subsystem 5.2) [amd64, x86]",
+    "macos": "OS X 10.7 and later, x86_64 only (3.6 release notes; measured Mach-O minos 10.7 on 3.6.3, 3.13.5 and 3.18.6)",
+    "linux": "glibc 2.6 for x86_64 (highest GLIBC_ symbol measured on 3.13.5); i386 build up to 3.6 [amd64]"
+   },
+   "added": [],
+   "limitations": [
+    "no FetchContent (3.11); no cmake -S/-B (3.13); no cmake --install (3.15)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.8",
+   "released": "2017-04-10",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "XP and later (x86): PE subsystem 5.0 measured on 2.8.12.2 and 3.0.2, 5.1 on 3.6.3, 3.10.3 and 3.13.5, with no post-XP kernel32 imports; x64 build: XP x64 / Server 2003 (3.13.5 x64 subsystem 5.2) [amd64, x86]",
+    "macos": "OS X 10.7 and later, x86_64 only (3.6 release notes; measured Mach-O minos 10.7 on 3.6.3, 3.13.5 and 3.18.6)",
+    "linux": "glibc 2.6 for x86_64 (highest GLIBC_ symbol measured on 3.13.5); i386 build up to 3.6 [amd64]"
+   },
+   "added": [
+    "C++17 compile feature",
+    "CUDA as a first-class language"
+   ],
+   "limitations": [
+    "no FetchContent (3.11); no cmake -S/-B (3.13); no cmake --install (3.15)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.9",
+   "released": "2017-07-18",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "XP and later (x86): PE subsystem 5.0 measured on 2.8.12.2 and 3.0.2, 5.1 on 3.6.3, 3.10.3 and 3.13.5, with no post-XP kernel32 imports; x64 build: XP x64 / Server 2003 (3.13.5 x64 subsystem 5.2) [amd64, x86]",
+    "macos": "OS X 10.7 and later, x86_64 only (3.6 release notes; measured Mach-O minos 10.7 on 3.6.3, 3.13.5 and 3.18.6)",
+    "linux": "glibc 2.6 for x86_64 (highest GLIBC_ symbol measured on 3.13.5); i386 build up to 3.6 [amd64]"
+   },
+   "added": [],
+   "limitations": [
+    "no FetchContent (3.11); no cmake -S/-B (3.13); no cmake --install (3.15)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.10",
+   "released": "2017-11-20",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "XP and later (x86): PE subsystem 5.0 measured on 2.8.12.2 and 3.0.2, 5.1 on 3.6.3, 3.10.3 and 3.13.5, with no post-XP kernel32 imports; x64 build: XP x64 / Server 2003 (3.13.5 x64 subsystem 5.2) [amd64, x86]",
+    "macos": "OS X 10.7 and later, x86_64 only (3.6 release notes; measured Mach-O minos 10.7 on 3.6.3, 3.13.5 and 3.18.6)",
+    "linux": "glibc 2.6 for x86_64 (highest GLIBC_ symbol measured on 3.13.5); i386 build up to 3.6 [amd64]"
+   },
+   "added": [],
+   "limitations": [
+    "no FetchContent_MakeAvailable (3.14); no cmake --install (3.15)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.11",
+   "released": "2018-03-28",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "XP and later (x86): PE subsystem 5.0 measured on 2.8.12.2 and 3.0.2, 5.1 on 3.6.3, 3.10.3 and 3.13.5, with no post-XP kernel32 imports; x64 build: XP x64 / Server 2003 (3.13.5 x64 subsystem 5.2) [amd64, x86]",
+    "macos": "OS X 10.7 and later, x86_64 only (3.6 release notes; measured Mach-O minos 10.7 on 3.6.3, 3.13.5 and 3.18.6)",
+    "linux": "glibc 2.6 for x86_64 (highest GLIBC_ symbol measured on 3.13.5); i386 build up to 3.6 [amd64]"
+   },
+   "added": [
+    "FetchContent module"
+   ],
+   "limitations": [
+    "no CMakePresets.json (3.19); no Apple Silicon build (3.19)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.12",
+   "released": "2018-07-17",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "XP and later (x86): PE subsystem 5.0 measured on 2.8.12.2 and 3.0.2, 5.1 on 3.6.3, 3.10.3 and 3.13.5, with no post-XP kernel32 imports; x64 build: XP x64 / Server 2003 (3.13.5 x64 subsystem 5.2) [amd64, x86]",
+    "macos": "OS X 10.7 and later, x86_64 only (3.6 release notes; measured Mach-O minos 10.7 on 3.6.3, 3.13.5 and 3.18.6)",
+    "linux": "glibc 2.6 for x86_64 (highest GLIBC_ symbol measured on 3.13.5); i386 build up to 3.6 [amd64]"
+   },
+   "added": [
+    "cmake --build -j",
+    "C++20 compile feature"
+   ],
+   "limitations": [
+    "no CMakePresets.json (3.19); no Apple Silicon build (3.19)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.13",
+   "released": "2018-11-20",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "XP and later (x86): PE subsystem 5.0 measured on 2.8.12.2 and 3.0.2, 5.1 on 3.6.3, 3.10.3 and 3.13.5, with no post-XP kernel32 imports; x64 build: XP x64 / Server 2003 (3.13.5 x64 subsystem 5.2). 3.13.x is the LAST line that runs on XP and Vista [amd64, x86]",
+    "macos": "OS X 10.7 and later, x86_64 only (3.6 release notes; measured Mach-O minos 10.7 on 3.6.3, 3.13.5 and 3.18.6)",
+    "linux": "glibc 2.6 for x86_64 (highest GLIBC_ symbol measured on 3.13.5); i386 build up to 3.6 [amd64]"
+   },
+   "added": [
+    "cmake -S/-B",
+    "target_link_options"
+   ],
+   "limitations": [
+    "no FetchContent_MakeAvailable (3.14), no cmake --install (3.15: use `cmake --build <dir> --target install`)",
+    "no precompiled headers / unity builds (3.16)",
+    "no presets (3.19)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.14",
+   "released": "2019-03-14",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 7 and later (3.14 release notes: XP and Vista dropped, binaries require Windows 7; measured PE subsystem 6.1 and no Windows 8 APIs on 3.14.0, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0-4.2.8) [amd64, x86]",
+    "macos": "OS X 10.7 and later, x86_64 only (3.6 release notes; measured Mach-O minos 10.7 on 3.6.3, 3.13.5 and 3.18.6)",
+    "linux": "glibc 2.6-2.10 for x86_64 (2.6 measured on 3.13.5, 2.10 on 3.19.8; the step is between them, not bisected) [amd64]"
+   },
+   "added": [
+    "FetchContent_MakeAvailable",
+    "file-based API"
+   ],
+   "limitations": [
+    "no CMakePresets.json (3.19); no Apple Silicon build (3.19)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.15",
+   "released": "2019-07-17",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 7 and later (3.14 release notes: XP and Vista dropped, binaries require Windows 7; measured PE subsystem 6.1 and no Windows 8 APIs on 3.14.0, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0-4.2.8) [amd64, x86]",
+    "macos": "OS X 10.7 and later, x86_64 only (3.6 release notes; measured Mach-O minos 10.7 on 3.6.3, 3.13.5 and 3.18.6)",
+    "linux": "glibc 2.6-2.10 for x86_64 (2.6 measured on 3.13.5, 2.10 on 3.19.8; the step is between them, not bisected) [amd64]"
+   },
+   "added": [
+    "cmake --install",
+    "CMAKE_MSVC_RUNTIME_LIBRARY"
+   ],
+   "limitations": [
+    "no CMakePresets.json (3.19); no Apple Silicon build (3.19)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.16",
+   "released": "2019-11-26",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 7 and later (3.14 release notes: XP and Vista dropped, binaries require Windows 7; measured PE subsystem 6.1 and no Windows 8 APIs on 3.14.0, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0-4.2.8) [amd64, x86]",
+    "macos": "OS X 10.7 and later, x86_64 only (3.6 release notes; measured Mach-O minos 10.7 on 3.6.3, 3.13.5 and 3.18.6)",
+    "linux": "glibc 2.6-2.10 for x86_64 (2.6 measured on 3.13.5, 2.10 on 3.19.8; the step is between them, not bisected) [amd64]"
+   },
+   "added": [
+    "precompiled headers",
+    "unity builds",
+    "CMAKE_FIND_USE_PACKAGE_REGISTRY"
+   ],
+   "limitations": [
+    "no CMakePresets.json (3.19); no Apple Silicon build (3.19)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.17",
+   "released": "2020-03-20",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 7 and later (3.14 release notes: XP and Vista dropped, binaries require Windows 7; measured PE subsystem 6.1 and no Windows 8 APIs on 3.14.0, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0-4.2.8) [amd64, x86]",
+    "macos": "OS X 10.7 and later, x86_64 only (3.6 release notes; measured Mach-O minos 10.7 on 3.6.3, 3.13.5 and 3.18.6)",
+    "linux": "glibc 2.6-2.10 for x86_64 (2.6 measured on 3.13.5, 2.10 on 3.19.8; the step is between them, not bisected) [amd64]"
+   },
+   "added": [
+    "Ninja Multi-Config generator (needs ninja 1.10)"
+   ],
+   "limitations": [
+    "no CMakePresets.json (3.19); no Apple Silicon build (3.19)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.18",
+   "released": "2020-07-15",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 7 and later (3.14 release notes: XP and Vista dropped, binaries require Windows 7; measured PE subsystem 6.1 and no Windows 8 APIs on 3.14.0, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0-4.2.8) [amd64, x86]",
+    "macos": "OS X 10.7 and later, x86_64 only (3.6 release notes; measured Mach-O minos 10.7 on 3.6.3, 3.13.5 and 3.18.6)",
+    "linux": "glibc 2.6-2.10 for x86_64 (2.6 measured on 3.13.5, 2.10 on 3.19.8; the step is between them, not bisected) [amd64]"
+   },
+   "added": [],
+   "limitations": [
+    "no CMakePresets.json (3.19); no Apple Silicon build (3.19)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.19",
+   "released": "2020-11-18",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 7 and later (3.14 release notes: XP and Vista dropped, binaries require Windows 7; measured PE subsystem 6.1 and no Windows 8 APIs on 3.14.0, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0-4.2.8) [amd64, x86]",
+    "macos": "3.19.0-3.19.1: 10.7 x86_64; 3.19.2: universal x86_64+arm64, 10.10; 3.19.3+: two universal builds, macos-universal (10.13) and macos10.10-universal (10.10) (3.19 release notes)",
+    "linux": "glibc 2.10 for x86_64 (measured on 3.19.8 and 3.27.9); aarch64 build from 3.19.3 (glibc floor not measured) [amd64, arm64]"
+   },
+   "added": [
+    "CMakePresets.json",
+    "Apple Silicon universal binaries",
+    "Linux aarch64 binaries (3.19.3)"
+   ],
+   "limitations": [
+    "C++20 named modules not supported (3.28)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.20",
+   "released": "2021-03-23",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 7 and later (3.14 release notes: XP and Vista dropped, binaries require Windows 7; measured PE subsystem 6.1 and no Windows 8 APIs on 3.14.0, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0-4.2.8) [amd64, x86]",
+    "macos": "two universal (x86_64 + arm64) builds: macos-universal needs 10.13 (files-v1.json macOSmin; measured Mach-O minos 10.13 x86_64 / 11.0 arm64 on 3.31.12 and 4.4.3) and macos10.10-universal needs 10.10 (vendor macOSmin)",
+    "linux": "glibc 2.10 for x86_64 (measured on 3.19.8 and 3.27.9); aarch64 build from 3.19.3 (glibc floor not measured) [amd64, arm64]"
+   },
+   "added": [
+    "C++23 compile feature",
+    "cmake_path()"
+   ],
+   "limitations": [
+    "C++20 named modules not supported (3.28)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.21",
+   "released": "2021-07-14",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 7 and later (3.14 release notes: XP and Vista dropped, binaries require Windows 7; measured PE subsystem 6.1 and no Windows 8 APIs on 3.14.0, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0-4.2.8) [amd64, x86]",
+    "macos": "two universal (x86_64 + arm64) builds: macos-universal needs 10.13 (files-v1.json macOSmin; measured Mach-O minos 10.13 x86_64 / 11.0 arm64 on 3.31.12 and 4.4.3) and macos10.10-universal needs 10.10 (vendor macOSmin)",
+    "linux": "glibc 2.10 for x86_64 (measured on 3.19.8 and 3.27.9); aarch64 build from 3.19.3 (glibc floor not measured) [amd64, arm64]"
+   },
+   "added": [
+    "CMAKE_TOOLCHAIN_FILE environment variable",
+    "C17/C23 standards",
+    "--install-prefix"
+   ],
+   "limitations": [
+    "C++20 named modules not supported (3.28)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.22",
+   "released": "2021-11-18",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 7 and later (3.14 release notes: XP and Vista dropped, binaries require Windows 7; measured PE subsystem 6.1 and no Windows 8 APIs on 3.14.0, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0-4.2.8) [amd64, x86]",
+    "macos": "two universal (x86_64 + arm64) builds: macos-universal needs 10.13 (files-v1.json macOSmin; measured Mach-O minos 10.13 x86_64 / 11.0 arm64 on 3.31.12 and 4.4.3) and macos10.10-universal needs 10.10 (vendor macOSmin)",
+    "linux": "glibc 2.10 for x86_64 (measured on 3.19.8 and 3.27.9); aarch64 build from 3.19.3 (glibc floor not measured) [amd64, arm64]"
+   },
+   "added": [
+    "CMAKE_BUILD_TYPE environment variable default"
+   ],
+   "limitations": [
+    "C++20 named modules not supported (3.28)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.23",
+   "released": "2022-03-29",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 7 and later (3.14 release notes: XP and Vista dropped, binaries require Windows 7; measured PE subsystem 6.1 and no Windows 8 APIs on 3.14.0, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0-4.2.8) [amd64, x86]",
+    "macos": "two universal (x86_64 + arm64) builds: macos-universal needs 10.13 (files-v1.json macOSmin; measured Mach-O minos 10.13 x86_64 / 11.0 arm64 on 3.31.12 and 4.4.3) and macos10.10-universal needs 10.10 (vendor macOSmin)",
+    "linux": "glibc 2.10 for x86_64 (measured on 3.19.8 and 3.27.9); aarch64 build from 3.19.3 (glibc floor not measured) [amd64, arm64]"
+   },
+   "added": [],
+   "limitations": [
+    "C++20 named modules not supported (3.28)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.24",
+   "released": "2022-08-04",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 7 and later (3.14 release notes: XP and Vista dropped, binaries require Windows 7; measured PE subsystem 6.1 and no Windows 8 APIs on 3.14.0, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0-4.2.8); arm64 build (3.24+): Windows 10/11 on ARM (PE subsystem 6.2) [amd64, arm64, x86]",
+    "macos": "two universal (x86_64 + arm64) builds: macos-universal needs 10.13 (files-v1.json macOSmin; measured Mach-O minos 10.13 x86_64 / 11.0 arm64 on 3.31.12 and 4.4.3) and macos10.10-universal needs 10.10 (vendor macOSmin)",
+    "linux": "glibc 2.10 for x86_64 (measured on 3.19.8 and 3.27.9); aarch64 build from 3.19.3 (glibc floor not measured) [amd64, arm64]"
+   },
+   "added": [
+    "dependency providers / FetchContent tries find_package",
+    "Windows arm64 binaries"
+   ],
+   "limitations": [
+    "C++20 named modules not supported (3.28)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.25",
+   "released": "2022-11-16",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 7 and later (3.14 release notes: XP and Vista dropped, binaries require Windows 7; measured PE subsystem 6.1 and no Windows 8 APIs on 3.14.0, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0-4.2.8); arm64 build (3.24+): Windows 10/11 on ARM (PE subsystem 6.2) [amd64, arm64, x86]",
+    "macos": "two universal (x86_64 + arm64) builds: macos-universal needs 10.13 (files-v1.json macOSmin; measured Mach-O minos 10.13 x86_64 / 11.0 arm64 on 3.31.12 and 4.4.3) and macos10.10-universal needs 10.10 (vendor macOSmin)",
+    "linux": "glibc 2.10 for x86_64 (measured on 3.19.8 and 3.27.9); aarch64 build from 3.19.3 (glibc floor not measured) [amd64, arm64]"
+   },
+   "added": [
+    "block()",
+    "C++26 compile feature"
+   ],
+   "limitations": [
+    "C++20 named modules not supported (3.28)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.26",
+   "released": "2023-03-14",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 7 and later (3.14 release notes: XP and Vista dropped, binaries require Windows 7; measured PE subsystem 6.1 and no Windows 8 APIs on 3.14.0, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0-4.2.8); arm64 build (3.24+): Windows 10/11 on ARM (PE subsystem 6.2) [amd64, arm64, x86]",
+    "macos": "two universal (x86_64 + arm64) builds: macos-universal needs 10.13 (files-v1.json macOSmin; measured Mach-O minos 10.13 x86_64 / 11.0 arm64 on 3.31.12 and 4.4.3) and macos10.10-universal needs 10.10 (vendor macOSmin)",
+    "linux": "glibc 2.10 for x86_64 (measured on 3.19.8 and 3.27.9); aarch64 build from 3.19.3 (glibc floor not measured) [amd64, arm64]"
+   },
+   "added": [],
+   "limitations": [
+    "C++20 named modules not supported (3.28)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.27",
+   "released": "2023-07-18",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 7 and later (3.14 release notes: XP and Vista dropped, binaries require Windows 7; measured PE subsystem 6.1 and no Windows 8 APIs on 3.14.0, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0-4.2.8); arm64 build (3.24+): Windows 10/11 on ARM (PE subsystem 6.2) [amd64, arm64, x86]",
+    "macos": "two universal (x86_64 + arm64) builds: macos-universal needs 10.13 (files-v1.json macOSmin; measured Mach-O minos 10.13 x86_64 / 11.0 arm64 on 3.31.12 and 4.4.3) and macos10.10-universal needs 10.10 (vendor macOSmin)",
+    "linux": "glibc 2.10 for x86_64 (measured on 3.19.8 and 3.27.9); aarch64 build from 3.19.3 (glibc floor not measured) [amd64, arm64]"
+   },
+   "added": [],
+   "limitations": [
+    "C++20 named modules still experimental (3.28)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "3.28",
+   "released": "2023-12-06",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 7 and later (3.14 release notes: XP and Vista dropped, binaries require Windows 7; measured PE subsystem 6.1 and no Windows 8 APIs on 3.14.0, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0-4.2.8); arm64 build (3.24+): Windows 10/11 on ARM (PE subsystem 6.2) [amd64, arm64, x86]",
+    "macos": "two universal (x86_64 + arm64) builds: macos-universal needs 10.13 (files-v1.json macOSmin; measured Mach-O minos 10.13 x86_64 / 11.0 arm64 on 3.31.12 and 4.4.3) and macos10.10-universal needs 10.10 (vendor macOSmin)",
+    "linux": "glibc 2.17 for x86_64 (3.28 release notes; measured on 3.31.12 and 4.4.3); aarch64 glibc 2.17 [amd64, arm64]"
+   },
+   "added": [
+    "C++20 named modules supported (Ninja 1.11+ or VS 2022)"
+   ],
+   "limitations": [],
+   "confidence": "high"
+  },
+  {
+   "major": "3.29",
+   "released": "2024-03-21",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 7 and later (3.14 release notes: XP and Vista dropped, binaries require Windows 7; measured PE subsystem 6.1 and no Windows 8 APIs on 3.14.0, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0-4.2.8); arm64 build (3.24+): Windows 10/11 on ARM (PE subsystem 6.2) [amd64, arm64, x86]",
+    "macos": "two universal (x86_64 + arm64) builds: macos-universal needs 10.13 (files-v1.json macOSmin; measured Mach-O minos 10.13 x86_64 / 11.0 arm64 on 3.31.12 and 4.4.3) and macos10.10-universal needs 10.10 (vendor macOSmin)",
+    "linux": "glibc 2.17 for x86_64 (3.28 release notes; measured on 3.31.12 and 4.4.3); aarch64 glibc 2.17 [amd64, arm64]"
+   },
+   "added": [],
+   "limitations": [],
+   "confidence": "high"
+  },
+  {
+   "major": "3.30",
+   "released": "2024-07-02",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 7 and later (3.14 release notes: XP and Vista dropped, binaries require Windows 7; measured PE subsystem 6.1 and no Windows 8 APIs on 3.14.0, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0-4.2.8); arm64 build (3.24+): Windows 10/11 on ARM (PE subsystem 6.2) [amd64, arm64, x86]",
+    "macos": "two universal (x86_64 + arm64) builds: macos-universal needs 10.13 (files-v1.json macOSmin; measured Mach-O minos 10.13 x86_64 / 11.0 arm64 on 3.31.12 and 4.4.3) and macos10.10-universal needs 10.10 (vendor macOSmin)",
+    "linux": "glibc 2.17 for x86_64 (3.28 release notes; measured on 3.31.12 and 4.4.3); aarch64 glibc 2.17 [amd64, arm64]"
+   },
+   "added": [],
+   "limitations": [],
+   "confidence": "high"
+  },
+  {
+   "major": "3.31",
+   "released": "2024-11-06",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 7 and later (3.14 release notes: XP and Vista dropped, binaries require Windows 7; measured PE subsystem 6.1 and no Windows 8 APIs on 3.14.0, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0-4.2.8); arm64 build (3.24+): Windows 10/11 on ARM (PE subsystem 6.2) [amd64, arm64, x86]",
+    "macos": "two universal (x86_64 + arm64) builds: macos-universal needs 10.13 (files-v1.json macOSmin; measured Mach-O minos 10.13 x86_64 / 11.0 arm64 on 3.31.12 and 4.4.3) and macos10.10-universal needs 10.10 (vendor macOSmin)",
+    "linux": "glibc 2.17 for x86_64 (3.28 release notes; measured on 3.31.12 and 4.4.3); aarch64 glibc 2.17 [amd64, arm64]"
+   },
+   "added": [],
+   "limitations": [],
+   "confidence": "high"
+  },
+  {
+   "major": "4.0",
+   "released": "2025-03-27",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 7 and later (3.14 release notes: XP and Vista dropped, binaries require Windows 7; measured PE subsystem 6.1 and no Windows 8 APIs on 3.14.0, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0-4.2.8); arm64 build (3.24+): Windows 10/11 on ARM (PE subsystem 6.2) [amd64, arm64, x86]",
+    "macos": "two universal (x86_64 + arm64) builds: macos-universal needs 10.13 (files-v1.json macOSmin; measured Mach-O minos 10.13 x86_64 / 11.0 arm64 on 3.31.12 and 4.4.3) and macos10.10-universal needs 10.10 (vendor macOSmin)",
+    "linux": "glibc 2.17 for x86_64 (3.28 release notes; measured on 3.31.12 and 4.4.3); aarch64 glibc 2.17 [amd64, arm64]",
+    "solaris": "Solaris/illumos x86_64 build from 4.0 (release notes)"
+   },
+   "added": [
+    "removed compatibility with cmake_minimum_required(VERSION <3.5)",
+    "Solaris x86_64/sparc64 binaries"
+   ],
+   "limitations": [
+    "projects declaring cmake_minimum_required(VERSION <3.5) fail to configure unless -DCMAKE_POLICY_VERSION_MINIMUM=3.5 is passed"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "4.1",
+   "released": "2025-08-05",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 7 and later (3.14 release notes: XP and Vista dropped, binaries require Windows 7; measured PE subsystem 6.1 and no Windows 8 APIs on 3.14.0, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0-4.2.8); arm64 build (3.24+): Windows 10/11 on ARM (PE subsystem 6.2) [amd64, arm64, x86]",
+    "macos": "two universal (x86_64 + arm64) builds: macos-universal needs 10.13 (files-v1.json macOSmin; measured Mach-O minos 10.13 x86_64 / 11.0 arm64 on 3.31.12 and 4.4.3) and macos10.10-universal needs 10.10 (vendor macOSmin)",
+    "linux": "glibc 2.17 for x86_64 (3.28 release notes; measured on 3.31.12 and 4.4.3); aarch64 glibc 2.17 [amd64, arm64]",
+    "solaris": "Solaris/illumos x86_64 build from 4.0 (release notes)"
+   },
+   "added": [],
+   "limitations": [
+    "cmake_minimum_required(VERSION <3.5) is an error (4.0)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "4.2",
+   "released": "2025-11-19",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 7 and later (3.14 release notes: XP and Vista dropped, binaries require Windows 7; measured PE subsystem 6.1 and no Windows 8 APIs on 3.14.0, 3.31.12, 4.0.0, 4.0.6, 4.1.0, 4.1.4, 4.2.0-4.2.8); arm64 build (3.24+): Windows 10/11 on ARM (PE subsystem 6.2). 4.2.x is the LAST line that runs on Windows 7 [amd64, arm64, x86]",
+    "macos": "two universal (x86_64 + arm64) builds: macos-universal needs 10.13 (files-v1.json macOSmin; measured Mach-O minos 10.13 x86_64 / 11.0 arm64 on 3.31.12 and 4.4.3) and macos10.10-universal needs 10.10 (vendor macOSmin)",
+    "linux": "glibc 2.17 for x86_64 (3.28 release notes; measured on 3.31.12 and 4.4.3); aarch64 glibc 2.17 [amd64, arm64]",
+    "solaris": "Solaris/illumos x86_64 build from 4.0 (release notes)"
+   },
+   "added": [],
+   "limitations": [
+    "cmake_minimum_required(VERSION <3.5) is an error (4.0)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "4.3",
+   "released": "2026-03-17",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 8 and later: measured PE subsystem 6.2 on 4.3.0 (x64 and i386) and 4.4.3, and cmake.exe imports CreateFile2 and GetSystemTimePreciseAsFileTime (Windows 8 APIs), so it will not start on Windows 7. Not stated in the 4.3/4.4 release notes; arm64: Windows 10/11 on ARM [amd64, arm64, x86]",
+    "macos": "two universal (x86_64 + arm64) builds: macos-universal needs 10.13 (files-v1.json macOSmin; measured Mach-O minos 10.13 x86_64 / 11.0 arm64 on 3.31.12 and 4.4.3) and macos10.10-universal needs 10.10 (vendor macOSmin); 4.3+: the 10.13 build's cmake-gui needs macOS 12 (release notes; measured GUI minos 12.0 on 4.4.3), command-line tools still 10.13",
+    "linux": "glibc 2.17 for x86_64 (3.28 release notes; measured on 3.31.12 and 4.4.3); aarch64 glibc 2.28 (4.3 release notes) [amd64, arm64]",
+    "solaris": "Solaris/illumos x86_64 build from 4.0 (release notes)"
+   },
+   "added": [],
+   "limitations": [
+    "cmake_minimum_required(VERSION <3.5) is an error (4.0)"
+   ],
+   "confidence": "high"
+  },
+  {
+   "major": "4.4",
+   "released": "2026-07-09",
+   "end_of_life": null,
+   "os_support": {
+    "windows": "Windows 8 and later: measured PE subsystem 6.2 on 4.3.0 (x64 and i386) and 4.4.3, and cmake.exe imports CreateFile2 and GetSystemTimePreciseAsFileTime (Windows 8 APIs), so it will not start on Windows 7. Not stated in the 4.3/4.4 release notes; arm64: Windows 10/11 on ARM [amd64, arm64, x86]",
+    "macos": "two universal (x86_64 + arm64) builds: macos-universal needs 10.13 (files-v1.json macOSmin; measured Mach-O minos 10.13 x86_64 / 11.0 arm64 on 3.31.12 and 4.4.3) and macos10.10-universal needs 10.10 (vendor macOSmin); 4.3+: the 10.13 build's cmake-gui needs macOS 12 (release notes; measured GUI minos 12.0 on 4.4.3), command-line tools still 10.13",
+    "linux": "glibc 2.17 for x86_64 (3.28 release notes; measured on 3.31.12 and 4.4.3); aarch64 glibc 2.28 (4.3 release notes) [amd64, arm64]",
+    "solaris": "Solaris/illumos x86_64 build from 4.0 (release notes)"
+   },
+   "added": [],
+   "limitations": [
+    "cmake_minimum_required(VERSION <3.5) is an error (4.0)"
+   ],
+   "confidence": "high"
+  }
+ ]
+}

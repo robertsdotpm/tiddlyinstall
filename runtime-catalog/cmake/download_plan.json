@@ -1,0 +1,5810 @@
+[
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.4",
+  "version": "4.4.3",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v4.4/cmake-4.4.3-windows-i386.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.4.3/cmake-4.4.3-windows-i386.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "018024d05e2fc77d386046da87f90345f9beea21e35c5c8ab02fd15421b7da18",
+   "source": "https://cmake.org/files/v4.4/cmake-4.4.3-SHA-256.txt"
+  },
+  "size": 50822149,
+  "released": "2026-08-25",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.4/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.4",
+  "version": "4.4.3",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v4.4/cmake-4.4.3-windows-arm64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.4.3/cmake-4.4.3-windows-arm64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "7b410ddd00e24c7250eec7452da2348a4a70437aa87e9cda0a20d6a85662fcff",
+   "source": "https://cmake.org/files/v4.4/cmake-4.4.3-SHA-256.txt"
+  },
+  "size": 52561255,
+  "released": "2026-08-25",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.4/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.4",
+  "version": "4.4.3",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v4.4/cmake-4.4.3-windows-x86_64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.4.3/cmake-4.4.3-windows-x86_64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "4d52ebab7193a698651639ed80d8d04fd903358843572cf44c7fd234cb7c26ab",
+   "source": "https://cmake.org/files/v4.4/cmake-4.4.3-SHA-256.txt"
+  },
+  "size": 54408599,
+  "released": "2026-08-25",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.4/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.4",
+  "version": "4.4.3",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v4.4/cmake-4.4.3-macos-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.4.3/cmake-4.4.3-macos-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "0c5d65251c14cc884bfa16bdbed3c263ce5bffe2e21c0d0d00962cb0610464fa",
+   "source": "https://cmake.org/files/v4.4/cmake-4.4.3-SHA-256.txt"
+  },
+  "size": 89445170,
+  "released": "2026-08-25",
+  "min_os": "macOS 10.13 (files-v1.json macOSmin)",
+  "metadata_source": "https://cmake.org/files/v4.4/",
+  "notes": "x86_64 + arm64 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.4",
+  "version": "4.4.3",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v4.4/cmake-4.4.3-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.4.3/cmake-4.4.3-linux-aarch64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "2efc974dbd63b4444c0e8494b92f2e80c2d7e635b4b80eac2916985ddd8f72a6",
+   "source": "https://cmake.org/files/v4.4/cmake-4.4.3-SHA-256.txt"
+  },
+  "size": 52036576,
+  "released": "2026-08-25",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.4/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.4",
+  "version": "4.4.3",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v4.4/cmake-4.4.3-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.4.3/cmake-4.4.3-linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d6c83076c575bc00b823522ac974bda66d0af05d6ddc30e739c12385cf32c6cc",
+   "source": "https://cmake.org/files/v4.4/cmake-4.4.3-SHA-256.txt"
+  },
+  "size": 64872980,
+  "released": "2026-08-25",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.4/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.3",
+  "version": "4.3.5",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v4.3/cmake-4.3.5-windows-i386.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.3.5/cmake-4.3.5-windows-i386.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "dfb4f62da5bf151d255cd6badbc71259b17a916cc4675bd7c2fc29855db033a5",
+   "source": "https://cmake.org/files/v4.3/cmake-4.3.5-SHA-256.txt"
+  },
+  "size": 49493418,
+  "released": "2026-09-04",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.3/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.3",
+  "version": "4.3.5",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v4.3/cmake-4.3.5-windows-arm64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.3.5/cmake-4.3.5-windows-arm64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "c33af80e37ba676c120c9c6ff305276b683f3a24d7914602c067a35314bee0b3",
+   "source": "https://cmake.org/files/v4.3/cmake-4.3.5-SHA-256.txt"
+  },
+  "size": 51306135,
+  "released": "2026-09-04",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.3/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.3",
+  "version": "4.3.5",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v4.3/cmake-4.3.5-windows-x86_64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.3.5/cmake-4.3.5-windows-x86_64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "c05a60d22d5df22d75a72ae9b6628ef5f20daee4f4ba380920e1fbbeaf244fc1",
+   "source": "https://cmake.org/files/v4.3/cmake-4.3.5-SHA-256.txt"
+  },
+  "size": 52979296,
+  "released": "2026-09-04",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.3/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.3",
+  "version": "4.3.5",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v4.3/cmake-4.3.5-macos-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.3.5/cmake-4.3.5-macos-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "6582cace312c720fc3c70f2ccbcbb26771997409bb4fda490591e07ab4084a5d",
+   "source": "https://cmake.org/files/v4.3/cmake-4.3.5-SHA-256.txt"
+  },
+  "size": 87477585,
+  "released": "2026-09-04",
+  "min_os": "macOS 10.13 (files-v1.json macOSmin)",
+  "metadata_source": "https://cmake.org/files/v4.3/",
+  "notes": "x86_64 + arm64 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.3",
+  "version": "4.3.5",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v4.3/cmake-4.3.5-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.3.5/cmake-4.3.5-linux-aarch64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "0ccecc2ba6b5ed4a97fbfd1f52136a9120262908185d8419c1ed2abb09199245",
+   "source": "https://cmake.org/files/v4.3/cmake-4.3.5-SHA-256.txt"
+  },
+  "size": 51279536,
+  "released": "2026-09-04",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.3/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.3",
+  "version": "4.3.5",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v4.3/cmake-4.3.5-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.3.5/cmake-4.3.5-linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "ecb787a0439cf4324a3554b08bf0bb4894fb8c497763a43c6895d2a1bfd6a9fa",
+   "source": "https://cmake.org/files/v4.3/cmake-4.3.5-SHA-256.txt"
+  },
+  "size": 64036374,
+  "released": "2026-09-04",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.3/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.2",
+  "version": "4.2.8",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v4.2/cmake-4.2.8-windows-i386.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.2.8/cmake-4.2.8-windows-i386.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "873f2695936ccc3777f667093cc5952e34d52328c6661100590906a592520c75",
+   "source": "https://cmake.org/files/v4.2/cmake-4.2.8-SHA-256.txt"
+  },
+  "size": 46977826,
+  "released": "2026-09-04",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.2/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.2",
+  "version": "4.2.8",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v4.2/cmake-4.2.8-windows-arm64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.2.8/cmake-4.2.8-windows-arm64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "01a3c1c619b882973feade8a4fcd2c798269827bf4f7cf6d9b12fc200bb41bfa",
+   "source": "https://cmake.org/files/v4.2/cmake-4.2.8-SHA-256.txt"
+  },
+  "size": 49501638,
+  "released": "2026-09-04",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.2/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.2",
+  "version": "4.2.8",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v4.2/cmake-4.2.8-windows-x86_64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.2.8/cmake-4.2.8-windows-x86_64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d33720a4e03114ae7c964c184e88f68a640be419f973bf4fb685f0900d1864ee",
+   "source": "https://cmake.org/files/v4.2/cmake-4.2.8-SHA-256.txt"
+  },
+  "size": 50407107,
+  "released": "2026-09-04",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.2/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.2",
+  "version": "4.2.8",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v4.2/cmake-4.2.8-macos-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.2.8/cmake-4.2.8-macos-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "e1c46a8a27153a15a0c24eece25e3d54e71396828c904a15e4ea0fa899fab861",
+   "source": "https://cmake.org/files/v4.2/cmake-4.2.8-SHA-256.txt"
+  },
+  "size": 84717619,
+  "released": "2026-09-04",
+  "min_os": "macOS 10.13 (files-v1.json macOSmin)",
+  "metadata_source": "https://cmake.org/files/v4.2/",
+  "notes": "x86_64 + arm64 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.2",
+  "version": "4.2.8",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v4.2/cmake-4.2.8-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.2.8/cmake-4.2.8-linux-aarch64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "a7f1974cc46ac494a0e02833f9ecaff394aafdc2729fbe751e829dbbe322c313",
+   "source": "https://cmake.org/files/v4.2/cmake-4.2.8-SHA-256.txt"
+  },
+  "size": 59517287,
+  "released": "2026-09-04",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.2/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.2",
+  "version": "4.2.8",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v4.2/cmake-4.2.8-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.2.8/cmake-4.2.8-linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "fdc99bf2cc077f3a7dc783bc1a064fcb3d1deb806add09a355814ccff6e40914",
+   "source": "https://cmake.org/files/v4.2/cmake-4.2.8-SHA-256.txt"
+  },
+  "size": 58195651,
+  "released": "2026-09-04",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.2/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.1",
+  "version": "4.1.6",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v4.1/cmake-4.1.6-windows-i386.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.1.6/cmake-4.1.6-windows-i386.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "481b578e9069ed638f982ffcbb976a1f49aba80431ea6e06579f5e855872e89b",
+   "source": "https://cmake.org/files/v4.1/cmake-4.1.6-SHA-256.txt"
+  },
+  "size": 45313849,
+  "released": "2026-04-20",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.1/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.1",
+  "version": "4.1.6",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v4.1/cmake-4.1.6-windows-arm64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.1.6/cmake-4.1.6-windows-arm64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "bfbab6426a36504d3b9c7b858c8a0dae3cf5de7a19e2cd077b06e38cb2189967",
+   "source": "https://cmake.org/files/v4.1/cmake-4.1.6-SHA-256.txt"
+  },
+  "size": 47400126,
+  "released": "2026-04-20",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.1/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.1",
+  "version": "4.1.6",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v4.1/cmake-4.1.6-windows-x86_64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.1.6/cmake-4.1.6-windows-x86_64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d06278857a65a7a6cdd042c7f033d8a9fda67923fd6654e13296fa22186dca9e",
+   "source": "https://cmake.org/files/v4.1/cmake-4.1.6-SHA-256.txt"
+  },
+  "size": 48623936,
+  "released": "2026-04-20",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.1/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.1",
+  "version": "4.1.6",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v4.1/cmake-4.1.6-macos-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.1.6/cmake-4.1.6-macos-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "7a91286ce968455d5121d566b2c7f9f30e9f384d3fd4f0a07032e38c3198d744",
+   "source": "https://cmake.org/files/v4.1/cmake-4.1.6-SHA-256.txt"
+  },
+  "size": 81665325,
+  "released": "2026-04-20",
+  "min_os": "macOS 10.13 (files-v1.json macOSmin)",
+  "metadata_source": "https://cmake.org/files/v4.1/",
+  "notes": "x86_64 + arm64 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.1",
+  "version": "4.1.6",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v4.1/cmake-4.1.6-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.1.6/cmake-4.1.6-linux-aarch64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "8b3e3af8e4b4e95224a4490f4772adb7a512be34c8380fe76e7be003e0fd4394",
+   "source": "https://cmake.org/files/v4.1/cmake-4.1.6-SHA-256.txt"
+  },
+  "size": 57730038,
+  "released": "2026-04-20",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.1/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.1",
+  "version": "4.1.6",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v4.1/cmake-4.1.6-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.1.6/cmake-4.1.6-linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d5c2e72820e01f1c3a07092d0a29e209263a7d22f55b4ad7f414ee870ae6b8e0",
+   "source": "https://cmake.org/files/v4.1/cmake-4.1.6-SHA-256.txt"
+  },
+  "size": 56413738,
+  "released": "2026-04-20",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.1/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.0",
+  "version": "4.0.7",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v4.0/cmake-4.0.7-windows-i386.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.0.7/cmake-4.0.7-windows-i386.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d1252c83ccf19511ae5ed54497b8488fd9b96e0f2b1f7fbb97bfdb55edb9067f",
+   "source": "https://cmake.org/files/v4.0/cmake-4.0.7-SHA-256.txt"
+  },
+  "size": 44389992,
+  "released": "2026-04-20",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.0/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.0",
+  "version": "4.0.7",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v4.0/cmake-4.0.7-windows-arm64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.0.7/cmake-4.0.7-windows-arm64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "790049744f7a414f44e9d921600f5190a363e83629567e7096613603c18ff17d",
+   "source": "https://cmake.org/files/v4.0/cmake-4.0.7-SHA-256.txt"
+  },
+  "size": 46430308,
+  "released": "2026-04-20",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.0/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.0",
+  "version": "4.0.7",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v4.0/cmake-4.0.7-windows-x86_64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.0.7/cmake-4.0.7-windows-x86_64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "3c0bfe3ef9956b39a741afe1385499969bcd100dba7b5076d648bd2fbc56131c",
+   "source": "https://cmake.org/files/v4.0/cmake-4.0.7-SHA-256.txt"
+  },
+  "size": 47650281,
+  "released": "2026-04-20",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.0/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.0",
+  "version": "4.0.7",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v4.0/cmake-4.0.7-macos-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.0.7/cmake-4.0.7-macos-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "dba00f8ad22a832dad0f6754e62384780684a4c9d127de472fb0e92df719f1c4",
+   "source": "https://cmake.org/files/v4.0/cmake-4.0.7-SHA-256.txt"
+  },
+  "size": 80588028,
+  "released": "2026-04-20",
+  "min_os": "macOS 10.13 (files-v1.json macOSmin)",
+  "metadata_source": "https://cmake.org/files/v4.0/",
+  "notes": "x86_64 + arm64 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.0",
+  "version": "4.0.7",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v4.0/cmake-4.0.7-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.0.7/cmake-4.0.7-linux-aarch64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "ad77fb21981b774f5d33b5ec0987071d93fee1d080599f7f61e59545f4cb0b50",
+   "source": "https://cmake.org/files/v4.0/cmake-4.0.7-SHA-256.txt"
+  },
+  "size": 56812004,
+  "released": "2026-04-20",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.0/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "4.0",
+  "version": "4.0.7",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v4.0/cmake-4.0.7-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v4.0.7/cmake-4.0.7-linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "dba36a8e7898e02c3a66dbe169dc776ffc81c2ee6d5bcab3c526d3f3976b4e91",
+   "source": "https://cmake.org/files/v4.0/cmake-4.0.7-SHA-256.txt"
+  },
+  "size": 55495562,
+  "released": "2026-04-20",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v4.0/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.31",
+  "version": "3.31.12",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.31/cmake-3.31.12-windows-i386.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.31.12/cmake-3.31.12-windows-i386.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "722c3b553e18e8bb1a038474b4d7c52159c00a37b5e04091434507ccd4ce162c",
+   "source": "https://cmake.org/files/v3.31/cmake-3.31.12-SHA-256.txt"
+  },
+  "size": 43418438,
+  "released": "2026-04-20",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.31/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.31",
+  "version": "3.31.12",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.31/cmake-3.31.12-windows-arm64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.31.12/cmake-3.31.12-windows-arm64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "e4160c1842dea858ad376ff2ec17587104515b51714eca5963b8bdd798105553",
+   "source": "https://cmake.org/files/v3.31/cmake-3.31.12-SHA-256.txt"
+  },
+  "size": 45474386,
+  "released": "2026-04-20",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.31/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.31",
+  "version": "3.31.12",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.31/cmake-3.31.12-windows-x86_64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.31.12/cmake-3.31.12-windows-x86_64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "0c4baa40f28b3f8225eb3fdf6946c987b4fe901403b4eaf2fbbd9378100aaa0c",
+   "source": "https://cmake.org/files/v3.31/cmake-3.31.12-SHA-256.txt"
+  },
+  "size": 46666397,
+  "released": "2026-04-20",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.31/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.31",
+  "version": "3.31.12",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.31/cmake-3.31.12-macos-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.31.12/cmake-3.31.12-macos-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "799af7fd545db9bf1b9cfe72f8095880e727a2d4e0df0e3dffc3bc7b95c2d3b0",
+   "source": "https://cmake.org/files/v3.31/cmake-3.31.12-SHA-256.txt"
+  },
+  "size": 79954716,
+  "released": "2026-04-20",
+  "min_os": "macOS 10.13 (files-v1.json macOSmin)",
+  "metadata_source": "https://cmake.org/files/v3.31/",
+  "notes": "x86_64 + arm64 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.31",
+  "version": "3.31.12",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.31/cmake-3.31.12-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.31.12/cmake-3.31.12-linux-aarch64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "83f8fd91d2038a56556e1400390fcfe42f79602940c494f6c6f1cdae7f9e7f40",
+   "source": "https://cmake.org/files/v3.31/cmake-3.31.12-SHA-256.txt"
+  },
+  "size": 56324822,
+  "released": "2026-04-20",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.31/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.31",
+  "version": "3.31.12",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.31/cmake-3.31.12-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.31.12/cmake-3.31.12-linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "0dc2e9a6860f06bf10bd8fadc03e35d9eeb4df46e33763a7e480e987758f385c",
+   "source": "https://cmake.org/files/v3.31/cmake-3.31.12-SHA-256.txt"
+  },
+  "size": 55005786,
+  "released": "2026-04-20",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.31/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.30",
+  "version": "3.30.9",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.30/cmake-3.30.9-windows-i386.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.30.9/cmake-3.30.9-windows-i386.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "0ec7d45b8705f019015dca50603600bb68407201f94205f3cba6d1004da5c086",
+   "source": "https://cmake.org/files/v3.30/cmake-3.30.9-SHA-256.txt"
+  },
+  "size": 42367143,
+  "released": "2025-06-11",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.30/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.30",
+  "version": "3.30.9",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.30/cmake-3.30.9-windows-arm64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.30.9/cmake-3.30.9-windows-arm64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "e526cd30d1df769889ff679a739df7d4b3e92a74f8b4f61a97db962a4a084ed6",
+   "source": "https://cmake.org/files/v3.30/cmake-3.30.9-SHA-256.txt"
+  },
+  "size": 44168796,
+  "released": "2025-06-11",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.30/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.30",
+  "version": "3.30.9",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.30/cmake-3.30.9-windows-x86_64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.30.9/cmake-3.30.9-windows-x86_64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "b60b316b4827852b3f49f3a6e35e1a9c2301f8c2dca81d135ba0731d4fd9338b",
+   "source": "https://cmake.org/files/v3.30/cmake-3.30.9-SHA-256.txt"
+  },
+  "size": 45487324,
+  "released": "2025-06-11",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.30/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.30",
+  "version": "3.30.9",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.30/cmake-3.30.9-macos-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.30.9/cmake-3.30.9-macos-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "572bf27e2e98d7513e0835525a2b9dc0f3947f6ad7494615e22b60369e87db11",
+   "source": "https://cmake.org/files/v3.30/cmake-3.30.9-SHA-256.txt"
+  },
+  "size": 76512689,
+  "released": "2025-06-11",
+  "min_os": "macOS 10.13 (files-v1.json macOSmin)",
+  "metadata_source": "https://cmake.org/files/v3.30/",
+  "notes": "x86_64 + arm64 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.30",
+  "version": "3.30.9",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.30/cmake-3.30.9-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.30.9/cmake-3.30.9-linux-aarch64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "9ae2b709ed3aaef504dd25fb6abe7dd4df68cd46824e45d7ee89ae57951d215a",
+   "source": "https://cmake.org/files/v3.30/cmake-3.30.9-SHA-256.txt"
+  },
+  "size": 54918333,
+  "released": "2025-06-11",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.30/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.30",
+  "version": "3.30.9",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.30/cmake-3.30.9-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.30.9/cmake-3.30.9-linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "9114e33358a9efc93d6ea658805280fc3201b882b944a4d946edd9472fd1eec7",
+   "source": "https://cmake.org/files/v3.30/cmake-3.30.9-SHA-256.txt"
+  },
+  "size": 53656166,
+  "released": "2025-06-11",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.30/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.29",
+  "version": "3.29.9",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.29/cmake-3.29.9-windows-i386.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.29.9/cmake-3.29.9-windows-i386.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "70556ace59d1651fcc40a1712d9a6d900791cc21235ece7158ca7244410c1005",
+   "source": "https://cmake.org/files/v3.29/cmake-3.29.9-SHA-256.txt"
+  },
+  "size": 42118458,
+  "released": "2024-11-21",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.29/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.29",
+  "version": "3.29.9",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.29/cmake-3.29.9-windows-arm64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.29.9/cmake-3.29.9-windows-arm64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "41649783cb7da1dc03c75039e80b83867db1af4dbabb03e43a2a0f8b0565106f",
+   "source": "https://cmake.org/files/v3.29/cmake-3.29.9-SHA-256.txt"
+  },
+  "size": 44471653,
+  "released": "2024-11-21",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.29/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.29",
+  "version": "3.29.9",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.29/cmake-3.29.9-windows-x86_64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.29.9/cmake-3.29.9-windows-x86_64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "7858d849d4061b0684366a81701a9b2bad2d3c332a40cc67cf11eef40c08fddb",
+   "source": "https://cmake.org/files/v3.29/cmake-3.29.9-SHA-256.txt"
+  },
+  "size": 45944934,
+  "released": "2024-11-21",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.29/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.29",
+  "version": "3.29.9",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.29/cmake-3.29.9-macos-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.29.9/cmake-3.29.9-macos-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "4502ccc9f9eb9e7bf495666b637a9e63a695537b0d0850c1ca0ebcc61c5149e5",
+   "source": "https://cmake.org/files/v3.29/cmake-3.29.9-SHA-256.txt"
+  },
+  "size": 83019234,
+  "released": "2024-11-21",
+  "min_os": "macOS 10.13 (files-v1.json macOSmin)",
+  "metadata_source": "https://cmake.org/files/v3.29/",
+  "notes": "x86_64 + arm64 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.29",
+  "version": "3.29.9",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.29/cmake-3.29.9-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.29.9/cmake-3.29.9-linux-aarch64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "3fc32b2c0701b16d42db5e5062bdb6bf5b6ef831278535ee5946793fa4460954",
+   "source": "https://cmake.org/files/v3.29/cmake-3.29.9-SHA-256.txt"
+  },
+  "size": 54534166,
+  "released": "2024-11-21",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.29/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.29",
+  "version": "3.29.9",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.29/cmake-3.29.9-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.29.9/cmake-3.29.9-linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "dd433a0d9babf08cbd79eac319c06b8287929ad88ff8c1b83cbc6cfd5ea90acc",
+   "source": "https://cmake.org/files/v3.29/cmake-3.29.9-SHA-256.txt"
+  },
+  "size": 53245576,
+  "released": "2024-11-21",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.29/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.28",
+  "version": "3.28.6",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.28/cmake-3.28.6-windows-i386.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.28.6/cmake-3.28.6-windows-i386.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "29503bc5525592c95a51a0f58eea9a9e38650dbbe7bbeb1caab7fc8f4048d7c5",
+   "source": "https://cmake.org/files/v3.28/cmake-3.28.6-SHA-256.txt"
+  },
+  "size": 41511457,
+  "released": "2024-06-03",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.28/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.28",
+  "version": "3.28.6",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.28/cmake-3.28.6-windows-arm64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.28.6/cmake-3.28.6-windows-arm64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "63e4ebd2dadb5ad63faaf4ed38db40d3fec92d1b050d2a4e69011ea3ee699d29",
+   "source": "https://cmake.org/files/v3.28/cmake-3.28.6-SHA-256.txt"
+  },
+  "size": 43817986,
+  "released": "2024-06-03",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.28/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.28",
+  "version": "3.28.6",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.28/cmake-3.28.6-windows-x86_64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.28.6/cmake-3.28.6-windows-x86_64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "a8f2e684ead94a64fd3517a38857a5b3f7f8d68d15c49ca1143d18797eaf9cac",
+   "source": "https://cmake.org/files/v3.28/cmake-3.28.6-SHA-256.txt"
+  },
+  "size": 45149675,
+  "released": "2024-06-03",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.28/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.28",
+  "version": "3.28.6",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.28/cmake-3.28.6-macos-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.28.6/cmake-3.28.6-macos-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "e992f382a98839aefc9292142699af5d43952e3087509d7671aef0dbeb33e852",
+   "source": "https://cmake.org/files/v3.28/cmake-3.28.6-SHA-256.txt"
+  },
+  "size": 81959925,
+  "released": "2024-06-03",
+  "min_os": "macOS 10.13 (files-v1.json macOSmin)",
+  "metadata_source": "https://cmake.org/files/v3.28/",
+  "notes": "x86_64 + arm64 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.28",
+  "version": "3.28.6",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.28/cmake-3.28.6-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.28.6/cmake-3.28.6-linux-aarch64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "7909cc2128ce9442c63ce674a0bfb0e4f4ce04cef667d887e15ad5670d594ba7",
+   "source": "https://cmake.org/files/v3.28/cmake-3.28.6-SHA-256.txt"
+  },
+  "size": 53907530,
+  "released": "2024-06-03",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.28/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.28",
+  "version": "3.28.6",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.28/cmake-3.28.6-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.28.6/cmake-3.28.6-linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "931e3c0d546ee03ca72bb147ccd9b49e3b6252f765f66bf21b9d165519940458",
+   "source": "https://cmake.org/files/v3.28/cmake-3.28.6-SHA-256.txt"
+  },
+  "size": 52631175,
+  "released": "2024-06-03",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.28/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.27",
+  "version": "3.27.9",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.27/cmake-3.27.9-windows-i386.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.27.9/cmake-3.27.9-windows-i386.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "7296b5a46eb53bfd0e0ff1d818067745cb831ab8d3cef9d266bfc842a435d515",
+   "source": "https://cmake.org/files/v3.27/cmake-3.27.9-SHA-256.txt"
+  },
+  "size": 40644684,
+  "released": "2023-11-28",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.27/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.27",
+  "version": "3.27.9",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.27/cmake-3.27.9-windows-arm64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.27.9/cmake-3.27.9-windows-arm64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "bca795134956264ede142f79aa513476985f4f410f6501a727d602760e9212dd",
+   "source": "https://cmake.org/files/v3.27/cmake-3.27.9-SHA-256.txt"
+  },
+  "size": 43671449,
+  "released": "2023-11-28",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.27/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.27",
+  "version": "3.27.9",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.27/cmake-3.27.9-windows-x86_64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.27.9/cmake-3.27.9-windows-x86_64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "c14e8b5d1c7be0baf0e7936ce8b5a39c5ee3450b14d7e3b32435083eddd9aff7",
+   "source": "https://cmake.org/files/v3.27/cmake-3.27.9-SHA-256.txt"
+  },
+  "size": 44104267,
+  "released": "2023-11-28",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.27/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.27",
+  "version": "3.27.9",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.27/cmake-3.27.9-macos-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.27.9/cmake-3.27.9-macos-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "ae1fdfd3f74864d0432f2e4a93ff6488125cd8f2869a40a1c2d5166feb6c607c",
+   "source": "https://cmake.org/files/v3.27/cmake-3.27.9-SHA-256.txt"
+  },
+  "size": 78560413,
+  "released": "2023-11-28",
+  "min_os": "macOS 10.13 (files-v1.json macOSmin)",
+  "metadata_source": "https://cmake.org/files/v3.27/",
+  "notes": "x86_64 + arm64 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.27",
+  "version": "3.27.9",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.27/cmake-3.27.9-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.27.9/cmake-3.27.9-linux-aarch64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "11bf3d30697df465cdf43664a9473a586f010c528376a966fd310a3a22082461",
+   "source": "https://cmake.org/files/v3.27/cmake-3.27.9-SHA-256.txt"
+  },
+  "size": 53604675,
+  "released": "2023-11-28",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.27/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.27",
+  "version": "3.27.9",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.27/cmake-3.27.9-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.27.9/cmake-3.27.9-linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "72b01478eeb312bf1a0136208957784fe55a7b587f8d9f9142a7fc9b0b9e9a28",
+   "source": "https://cmake.org/files/v3.27/cmake-3.27.9-SHA-256.txt"
+  },
+  "size": 51671447,
+  "released": "2023-11-28",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.27/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.26",
+  "version": "3.26.6",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.26/cmake-3.26.6-windows-i386.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.26.6/cmake-3.26.6-windows-i386.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "dc3f535d880d1ffa7cfa86a0eefdc1fc9bf8b9ede59d1deb7a2bb41f0a58d2d4",
+   "source": "https://cmake.org/files/v3.26/cmake-3.26.6-SHA-256.txt"
+  },
+  "size": 38658425,
+  "released": "2023-11-27",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.26/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.26",
+  "version": "3.26.6",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.26/cmake-3.26.6-windows-arm64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.26.6/cmake-3.26.6-windows-arm64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "16cf13c42d3f4d63ad1d61d0333b6101c0e88f893ac39f435ef472b46f50e9b2",
+   "source": "https://cmake.org/files/v3.26/cmake-3.26.6-SHA-256.txt"
+  },
+  "size": 41439985,
+  "released": "2023-11-27",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.26/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.26",
+  "version": "3.26.6",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.26/cmake-3.26.6-windows-x86_64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.26.6/cmake-3.26.6-windows-x86_64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "07b1c4cae3182ca1782a4d9775b5e5d164b475eb010e1dd98ce0c206c38fa73d",
+   "source": "https://cmake.org/files/v3.26/cmake-3.26.6-SHA-256.txt"
+  },
+  "size": 42047980,
+  "released": "2023-11-27",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.26/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.26",
+  "version": "3.26.6",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.26/cmake-3.26.6-macos-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.26.6/cmake-3.26.6-macos-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "2d7a4e5f48ad23ef962b5b7c602c4b0163dd44e51b6d4c33b336a1d663ab1445",
+   "source": "https://cmake.org/files/v3.26/cmake-3.26.6-SHA-256.txt"
+  },
+  "size": 75379015,
+  "released": "2023-11-27",
+  "min_os": "macOS 10.13 (files-v1.json macOSmin)",
+  "metadata_source": "https://cmake.org/files/v3.26/",
+  "notes": "x86_64 + arm64 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.26",
+  "version": "3.26.6",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.26/cmake-3.26.6-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.26.6/cmake-3.26.6-linux-aarch64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "7b91a212b9e8ca38c1482ae40ff2d3e33e9d1c7b337b39f74bd4f34fd070bb1d",
+   "source": "https://cmake.org/files/v3.26/cmake-3.26.6-SHA-256.txt"
+  },
+  "size": 49914438,
+  "released": "2023-11-27",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.26/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.26",
+  "version": "3.26.6",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.26/cmake-3.26.6-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.26.6/cmake-3.26.6-linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "2dd48ccd3e3d872ee4cc916f3f4e24812612421007e895f82bf9fc7e49831d62",
+   "source": "https://cmake.org/files/v3.26/cmake-3.26.6-SHA-256.txt"
+  },
+  "size": 48321185,
+  "released": "2023-11-27",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.26/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.25",
+  "version": "3.25.3",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.25/cmake-3.25.3-windows-i386.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.25.3/cmake-3.25.3-windows-i386.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "2e66cf7cbd35f392f6b9406910c68f4adfca1de9ab7a2fc4cec658c5c5cd9190",
+   "source": "https://cmake.org/files/v3.25/cmake-3.25.3-SHA-256.txt"
+  },
+  "size": 38114288,
+  "released": "2023-03-08",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.25/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.25",
+  "version": "3.25.3",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.25/cmake-3.25.3-windows-arm64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.25.3/cmake-3.25.3-windows-arm64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "3498fea26257eebfbfc89ed17963f3d8d83c19362b90fb23517842de777a522a",
+   "source": "https://cmake.org/files/v3.25/cmake-3.25.3-SHA-256.txt"
+  },
+  "size": 40937837,
+  "released": "2023-03-08",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.25/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.25",
+  "version": "3.25.3",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.25/cmake-3.25.3-windows-x86_64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.25.3/cmake-3.25.3-windows-x86_64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d129425d569140b729210f3383c246dec19c4183f7d0afae1837044942da3b4b",
+   "source": "https://cmake.org/files/v3.25/cmake-3.25.3-SHA-256.txt"
+  },
+  "size": 41490629,
+  "released": "2023-03-08",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.25/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.25",
+  "version": "3.25.3",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.25/cmake-3.25.3-macos-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.25.3/cmake-3.25.3-macos-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "771548ed2abae17f3fd28dcfa572ba3fe9f970652a72c36c2e1aafdee93a234e",
+   "source": "https://cmake.org/files/v3.25/cmake-3.25.3-SHA-256.txt"
+  },
+  "size": 74422023,
+  "released": "2023-03-08",
+  "min_os": "macOS 10.13 (files-v1.json macOSmin)",
+  "metadata_source": "https://cmake.org/files/v3.25/",
+  "notes": "x86_64 + arm64 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.25",
+  "version": "3.25.3",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.25/cmake-3.25.3-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.25.3/cmake-3.25.3-linux-aarch64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "cd6e853639f858569e22e6298f009eb24b4702c51c0d5bc1cb36c688f7ce246d",
+   "source": "https://cmake.org/files/v3.25/cmake-3.25.3-SHA-256.txt"
+  },
+  "size": 49416355,
+  "released": "2023-03-08",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.25/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.25",
+  "version": "3.25.3",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.25/cmake-3.25.3-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.25.3/cmake-3.25.3-linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d4d2ba83301b215857d3b6590cd4434a414fa151c5807693abe587bd6c03581e",
+   "source": "https://cmake.org/files/v3.25/cmake-3.25.3-SHA-256.txt"
+  },
+  "size": 47921598,
+  "released": "2023-03-08",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.25/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.24",
+  "version": "3.24.4",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.24/cmake-3.24.4-windows-i386.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.24.4/cmake-3.24.4-windows-i386.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "2839c1286e5a5f08316fc608af4911f7262cd50a166146bf561f2eec49ef2cd6",
+   "source": "https://cmake.org/files/v3.24/cmake-3.24.4-SHA-256.txt"
+  },
+  "size": 37117510,
+  "released": "2023-03-08",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.24/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.24",
+  "version": "3.24.4",
+  "os": "windows",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.24/cmake-3.24.4-windows-arm64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.24.4/cmake-3.24.4-windows-arm64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "55e81f0c95b06a4435b708cdee7d5739e38cc29c909d3d3134c1a3117e09b965",
+   "source": "https://cmake.org/files/v3.24/cmake-3.24.4-SHA-256.txt"
+  },
+  "size": 39343001,
+  "released": "2023-03-08",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.24/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.24",
+  "version": "3.24.4",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.24/cmake-3.24.4-windows-x86_64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.24.4/cmake-3.24.4-windows-x86_64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "c135c7ab78143c46e6686b1e9652bc1dd07e0cf71fd4decee777cdca77019c39",
+   "source": "https://cmake.org/files/v3.24/cmake-3.24.4-SHA-256.txt"
+  },
+  "size": 40213130,
+  "released": "2023-03-08",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.24/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.24",
+  "version": "3.24.4",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.24/cmake-3.24.4-macos-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.24.4/cmake-3.24.4-macos-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "16f68724ccd6c2e63e803d3d1dbc2961e5c84d3e123a7bf91825515d750eeac6",
+   "source": "https://cmake.org/files/v3.24/cmake-3.24.4-SHA-256.txt"
+  },
+  "size": 73055260,
+  "released": "2023-03-08",
+  "min_os": "macOS 10.13 (files-v1.json macOSmin)",
+  "metadata_source": "https://cmake.org/files/v3.24/",
+  "notes": "x86_64 + arm64 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.24",
+  "version": "3.24.4",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.24/cmake-3.24.4-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.24.4/cmake-3.24.4-linux-aarch64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "86f823f2636bf715af89da10e04daa476755a799d451baee66247846e95d7bee",
+   "source": "https://cmake.org/files/v3.24/cmake-3.24.4-SHA-256.txt"
+  },
+  "size": 48481198,
+  "released": "2023-03-08",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.24/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.24",
+  "version": "3.24.4",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.24/cmake-3.24.4-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.24.4/cmake-3.24.4-linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "cac77d28fb8668c179ac02c283b058aeb846fe2133a57d40b503711281ed9f19",
+   "source": "https://cmake.org/files/v3.24/cmake-3.24.4-SHA-256.txt"
+  },
+  "size": 47059916,
+  "released": "2023-03-08",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.24/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.23",
+  "version": "3.23.5",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.23/cmake-3.23.5-windows-i386.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.23.5/cmake-3.23.5-windows-i386.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "ac454a9bcdfad932c8658c864c239506b2b2ebaf88b75ff96bc27a672f8ce7f9",
+   "source": "https://cmake.org/files/v3.23/cmake-3.23.5-SHA-256.txt"
+  },
+  "size": 36058189,
+  "released": "2022-11-01",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.23/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.23",
+  "version": "3.23.5",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.23/cmake-3.23.5-windows-x86_64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.23.5/cmake-3.23.5-windows-x86_64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "51c75f93ebfe295701df205e5e78808b1e707996b26b5c26c3f680ab7b543881",
+   "source": "https://cmake.org/files/v3.23/cmake-3.23.5-SHA-256.txt"
+  },
+  "size": 39097271,
+  "released": "2022-11-01",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.23/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.23",
+  "version": "3.23.5",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.23/cmake-3.23.5-macos-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.23.5/cmake-3.23.5-macos-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "245f07d6e346d2b3fdda600b3705579cf956fdd82ac4f4326b96e7d2c43a9312",
+   "source": "https://cmake.org/files/v3.23/cmake-3.23.5-SHA-256.txt"
+  },
+  "size": 71307153,
+  "released": "2022-11-01",
+  "min_os": "macOS 10.13 (files-v1.json macOSmin)",
+  "metadata_source": "https://cmake.org/files/v3.23/",
+  "notes": "x86_64 + arm64 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.23",
+  "version": "3.23.5",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.23/cmake-3.23.5-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.23.5/cmake-3.23.5-linux-aarch64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "dcf25a81de6bd4e646389a0635b050ed04d0f27e4f07ae22d975391f38f3c4b8",
+   "source": "https://cmake.org/files/v3.23/cmake-3.23.5-SHA-256.txt"
+  },
+  "size": 47469417,
+  "released": "2022-11-01",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.23/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.23",
+  "version": "3.23.5",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.23/cmake-3.23.5-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.23.5/cmake-3.23.5-linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "bbd7ad93d2a14ed3608021a9466ae63db76a24efd1fae7a5f7798c1de7ab9344",
+   "source": "https://cmake.org/files/v3.23/cmake-3.23.5-SHA-256.txt"
+  },
+  "size": 46031464,
+  "released": "2022-11-01",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.23/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.22",
+  "version": "3.22.6",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.22/cmake-3.22.6-windows-i386.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.22.6/cmake-3.22.6-windows-i386.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "058572b13af626e48cc8cba235c14491117b761354fb3c567b11c29835ff8283",
+   "source": "https://cmake.org/files/v3.22/cmake-3.22.6-SHA-256.txt"
+  },
+  "size": 35582861,
+  "released": "2022-07-28",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.22/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.22",
+  "version": "3.22.6",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.22/cmake-3.22.6-windows-x86_64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.22.6/cmake-3.22.6-windows-x86_64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "48bcc3e71e918b72e2682f9ca9d44dd6c416379071c1ecb530d0633374f91f15",
+   "source": "https://cmake.org/files/v3.22/cmake-3.22.6-SHA-256.txt"
+  },
+  "size": 38583206,
+  "released": "2022-07-28",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.22/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.22",
+  "version": "3.22.6",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.22/cmake-3.22.6-macos-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.22.6/cmake-3.22.6-macos-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "b4569e10b0f86ed4fad23aae879a197de6fb14aca057bfc2e3baf236c3e876c5",
+   "source": "https://cmake.org/files/v3.22/cmake-3.22.6-SHA-256.txt"
+  },
+  "size": 70429808,
+  "released": "2022-07-28",
+  "min_os": "macOS 10.13 (files-v1.json macOSmin)",
+  "metadata_source": "https://cmake.org/files/v3.22/",
+  "notes": "x86_64 + arm64 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.22",
+  "version": "3.22.6",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.22/cmake-3.22.6-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.22.6/cmake-3.22.6-linux-aarch64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "79be85d3e76565faacd60695cee11d030f7e7dd8691476144fa25eb93dbd0397",
+   "source": "https://cmake.org/files/v3.22/cmake-3.22.6-SHA-256.txt"
+  },
+  "size": 46797308,
+  "released": "2022-07-28",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.22/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.22",
+  "version": "3.22.6",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.22/cmake-3.22.6-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.22.6/cmake-3.22.6-linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "09e1b34026c406c5bf4d1b053eadb3a8519cb360e37547ebf4b70ab766d94fbc",
+   "source": "https://cmake.org/files/v3.22/cmake-3.22.6-SHA-256.txt"
+  },
+  "size": 45368747,
+  "released": "2022-07-28",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.22/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.21",
+  "version": "3.21.7",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.21/cmake-3.21.7-windows-i386.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.21.7/cmake-3.21.7-windows-i386.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "a1df7917fd649638d030afe045c1e2cb3df783568f130575cfc04502072955a5",
+   "source": "https://cmake.org/files/v3.21/cmake-3.21.7-SHA-256.txt"
+  },
+  "size": 34811617,
+  "released": "2022-06-01",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.21/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.21",
+  "version": "3.21.7",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.21/cmake-3.21.7-windows-x86_64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.21.7/cmake-3.21.7-windows-x86_64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "4c4840e2dc2bf82e8a16081ff506bba54f3a228b91ce36317129fed4035ef2e3",
+   "source": "https://cmake.org/files/v3.21/cmake-3.21.7-SHA-256.txt"
+  },
+  "size": 37782801,
+  "released": "2022-06-01",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.21/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.21",
+  "version": "3.21.7",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.21/cmake-3.21.7-macos-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.21.7/cmake-3.21.7-macos-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "3c968c5877a99a801ea30ff3edd3f5a42e10fb715bef295ba611e62c50a2e87c",
+   "source": "https://cmake.org/files/v3.21/cmake-3.21.7-SHA-256.txt"
+  },
+  "size": 68444862,
+  "released": "2022-06-01",
+  "min_os": "macOS 10.13 (files-v1.json macOSmin)",
+  "metadata_source": "https://cmake.org/files/v3.21/",
+  "notes": "x86_64 + arm64 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.21",
+  "version": "3.21.7",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.21/cmake-3.21.7-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.21.7/cmake-3.21.7-linux-aarch64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "fa7e82170391c71dcc958ff57a63e9d6be9742a8b85a8b1386da9e571980474a",
+   "source": "https://cmake.org/files/v3.21/cmake-3.21.7-SHA-256.txt"
+  },
+  "size": 46028602,
+  "released": "2022-06-01",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.21/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.21",
+  "version": "3.21.7",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.21/cmake-3.21.7-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.21.7/cmake-3.21.7-linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "f84e209d903a96e54f398bb8760693969b13fc50bce2f8278a9ee9dca01406b2",
+   "source": "https://cmake.org/files/v3.21/cmake-3.21.7-SHA-256.txt"
+  },
+  "size": 44687035,
+  "released": "2022-06-01",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.21/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.20",
+  "version": "3.20.6",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.20/cmake-3.20.6-windows-i386.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.20.6/cmake-3.20.6-windows-i386.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "3166300cce9336cd6d9c468fcb8421086baf1c3f0821bddf5f37703d00adb1cd",
+   "source": "https://cmake.org/files/v3.20/cmake-3.20.6-SHA-256.txt"
+  },
+  "size": 34076609,
+  "released": "2021-09-20",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.20/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.20",
+  "version": "3.20.6",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.20/cmake-3.20.6-windows-x86_64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.20.6/cmake-3.20.6-windows-x86_64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "f240a38c964712aac474644b3ba21bdc2b4e8d5e31179f67bd2e6f45fa349419",
+   "source": "https://cmake.org/files/v3.20/cmake-3.20.6-SHA-256.txt"
+  },
+  "size": 36999960,
+  "released": "2021-09-20",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.20/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.20",
+  "version": "3.20.6",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.20/cmake-3.20.6-macos-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.20.6/cmake-3.20.6-macos-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "bc75cfbcbd95851d2e712c884de80814d7a7939441612af0ae6c5ccc2d94929f",
+   "source": "https://cmake.org/files/v3.20/cmake-3.20.6-SHA-256.txt"
+  },
+  "size": 66548002,
+  "released": "2021-09-20",
+  "min_os": "macOS 10.13 (files-v1.json macOSmin)",
+  "metadata_source": "https://cmake.org/files/v3.20/",
+  "notes": "x86_64 + arm64 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.20",
+  "version": "3.20.6",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.20/cmake-3.20.6-linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.20.6/cmake-3.20.6-linux-aarch64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "9ac2035174d3c62827c85fb052372d70cf35fb565e8d47b8241fbe451c29b2f2",
+   "source": "https://cmake.org/files/v3.20/cmake-3.20.6-SHA-256.txt"
+  },
+  "size": 45158072,
+  "released": "2021-09-20",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.20/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.20",
+  "version": "3.20.6",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.20/cmake-3.20.6-linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.20.6/cmake-3.20.6-linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "458777097903b0f35a0452266b923f0a2f5b62fe331e636e2dcc4b636b768e36",
+   "source": "https://cmake.org/files/v3.20/cmake-3.20.6-SHA-256.txt"
+  },
+  "size": 43871660,
+  "released": "2021-09-20",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.20/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.19",
+  "version": "3.19.8",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.19/cmake-3.19.8-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.19.8/cmake-3.19.8-win32-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "f82bbfc56fe1c9f9f137991f742d09b79ec31168ef99eb67f8f4fa92276d9efb",
+   "source": "https://cmake.org/files/v3.19/cmake-3.19.8-SHA-256.txt"
+  },
+  "size": 33291386,
+  "released": "2021-04-06",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.19/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.19",
+  "version": "3.19.8",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.19/cmake-3.19.8-win64-x64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.19.8/cmake-3.19.8-win64-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "2a30877a3d6b50da305b289f4d1c03befdfaeb2edba02a563c681e883d810380",
+   "source": "https://cmake.org/files/v3.19/cmake-3.19.8-SHA-256.txt"
+  },
+  "size": 36153624,
+  "released": "2021-04-06",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.19/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.19",
+  "version": "3.19.8",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.19/cmake-3.19.8-macos-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.19.8/cmake-3.19.8-macos-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "0976d23d982af05dcbfb3aa34fcb62ead43bea27f0e3bb95222f2a78161423f2",
+   "source": "https://cmake.org/files/v3.19/cmake-3.19.8-SHA-256.txt"
+  },
+  "size": 64452749,
+  "released": "2021-04-06",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.19/",
+  "notes": "x86_64 + arm64 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.19",
+  "version": "3.19.8",
+  "os": "linux",
+  "arch": "arm64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.19/cmake-3.19.8-Linux-aarch64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.19.8/cmake-3.19.8-Linux-aarch64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "807f5afb2a560e00af9640e496d5673afefc2888bf0ed076412884a5ebb547a1",
+   "source": "https://cmake.org/files/v3.19/cmake-3.19.8-SHA-256.txt"
+  },
+  "size": 44180062,
+  "released": "2021-04-06",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.19/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.19",
+  "version": "3.19.8",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.19/cmake-3.19.8-Linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.19.8/cmake-3.19.8-Linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "db0d7d225150dd6e08ce54995e671f9b4801b8e93e22df1eef52339f6bbbecd9",
+   "source": "https://cmake.org/files/v3.19/cmake-3.19.8-SHA-256.txt"
+  },
+  "size": 42943100,
+  "released": "2021-04-06",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.19/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.19",
+  "version": "3.19.1",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.19/cmake-3.19.1-Darwin-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.19.1/cmake-3.19.1-Darwin-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "8b1caf1da7bc738a27c820ca8dc2ddb610b7526b4507095de87d79cd5a27028b",
+   "source": "https://cmake.org/files/v3.19/cmake-3.19.1-SHA-256.txt"
+  },
+  "size": 39404148,
+  "released": "2020-11-24",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.19/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.18",
+  "version": "3.18.6",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.18/cmake-3.18.6-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.18.6/cmake-3.18.6-win32-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "f6531568def18afecf3d54abd7ccf1f9cf092c683b14fde36b47910c7f822e8d",
+   "source": "https://cmake.org/files/v3.18/cmake-3.18.6-SHA-256.txt"
+  },
+  "size": 32307712,
+  "released": "2021-02-11",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.18/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.18",
+  "version": "3.18.6",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.18/cmake-3.18.6-win64-x64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.18.6/cmake-3.18.6-win64-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "6a7166841bf2d72d56b5ff8c7c7606901bd8a0d87194f509b759d3ae3b6fdd6e",
+   "source": "https://cmake.org/files/v3.18/cmake-3.18.6-SHA-256.txt"
+  },
+  "size": 35099569,
+  "released": "2021-02-11",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.18/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.18",
+  "version": "3.18.6",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.18/cmake-3.18.6-Darwin-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.18.6/cmake-3.18.6-Darwin-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "676dc3f1d6f15cd7c1d9f4fa7e2a43613f426cd20783c02d4fdb5e139f39eec3",
+   "source": "https://cmake.org/files/v3.18/cmake-3.18.6-SHA-256.txt"
+  },
+  "size": 37899683,
+  "released": "2021-02-11",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.18/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.18",
+  "version": "3.18.6",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.18/cmake-3.18.6-Linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.18.6/cmake-3.18.6-Linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "87136646867ed65e935d6bacd44d52a740c448ad0806f6897d8c3d47ce438c8b",
+   "source": "https://cmake.org/files/v3.18/cmake-3.18.6-SHA-256.txt"
+  },
+  "size": 41762176,
+  "released": "2021-02-11",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.18/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.17",
+  "version": "3.17.5",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.17/cmake-3.17.5-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.17.5/cmake-3.17.5-win32-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "666a4f46957aee89c18664a51e1373b3d80c07045b1aada25a9625d208be46bc",
+   "source": "https://cmake.org/files/v3.17/cmake-3.17.5-SHA-256.txt"
+  },
+  "size": 31309126,
+  "released": "2020-09-15",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.17/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.17",
+  "version": "3.17.5",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.17/cmake-3.17.5-win64-x64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.17.5/cmake-3.17.5-win64-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "7134ba36fc031565eb9eb50e37c24be2e4d902e090b5cfd48b5f434aaf6eefa8",
+   "source": "https://cmake.org/files/v3.17/cmake-3.17.5-SHA-256.txt"
+  },
+  "size": 33979300,
+  "released": "2020-09-15",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.17/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.17",
+  "version": "3.17.5",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.17/cmake-3.17.5-Darwin-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.17.5/cmake-3.17.5-Darwin-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "7556e90cdf69b3f16e2efe10b3f3557c82488c93de89d7c192729178b573d679",
+   "source": "https://cmake.org/files/v3.17/cmake-3.17.5-SHA-256.txt"
+  },
+  "size": 37046351,
+  "released": "2020-09-15",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.17/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.17",
+  "version": "3.17.5",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.17/cmake-3.17.5-Linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.17.5/cmake-3.17.5-Linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "897142368b15a5693c999a7ed2187be20c1b41a68c3711379d32a33469bb29ba",
+   "source": "https://cmake.org/files/v3.17/cmake-3.17.5-SHA-256.txt"
+  },
+  "size": 40658960,
+  "released": "2020-09-15",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.17/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.16",
+  "version": "3.16.9",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.16/cmake-3.16.9-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.16.9/cmake-3.16.9-win32-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "5362139fe0540f5eb88a964a97f5d3a6c74ea5a93bace9916fde3de11fb5af2e",
+   "source": "https://cmake.org/files/v3.16/cmake-3.16.9-SHA-256.txt"
+  },
+  "size": 30177371,
+  "released": "2020-09-15",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.16/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.16",
+  "version": "3.16.9",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.16/cmake-3.16.9-win64-x64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.16.9/cmake-3.16.9-win64-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "60f2296c241b1188c4a5870bbdebf01a2a25a87d21b6f95c1bba924adb94c62f",
+   "source": "https://cmake.org/files/v3.16/cmake-3.16.9-SHA-256.txt"
+  },
+  "size": 32858499,
+  "released": "2020-09-15",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.16/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.16",
+  "version": "3.16.9",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.16/cmake-3.16.9-Darwin-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.16.9/cmake-3.16.9-Darwin-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "ed0583446e6ee1ff6347c0011a0f7141d7a4fd5b97b51e213a418f12789ea9f9",
+   "source": "https://cmake.org/files/v3.16/cmake-3.16.9-SHA-256.txt"
+  },
+  "size": 35839541,
+  "released": "2020-09-15",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.16/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.16",
+  "version": "3.16.9",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.16/cmake-3.16.9-Linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.16.9/cmake-3.16.9-Linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "96d79367dcafb47d606573a4687021d3cb18dd53d83458fc1d6d9c89bf31b553",
+   "source": "https://cmake.org/files/v3.16/cmake-3.16.9-SHA-256.txt"
+  },
+  "size": 39530724,
+  "released": "2020-09-15",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.16/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.15",
+  "version": "3.15.7",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.15/cmake-3.15.7-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.15.7/cmake-3.15.7-win32-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "9616ad2a72ac1ad76cd25ba8f5c73be8bf881be85af44e442cab9a1700800008",
+   "source": "https://cmake.org/files/v3.15/cmake-3.15.7-SHA-256.txt"
+  },
+  "size": 28959889,
+  "released": "2020-02-04",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.15/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.15",
+  "version": "3.15.7",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.15/cmake-3.15.7-win64-x64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.15.7/cmake-3.15.7-win64-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d5c691fd40ba84983a05e205d1db810adf77b90ca76106a27821e9e9405bc31b",
+   "source": "https://cmake.org/files/v3.15/cmake-3.15.7-SHA-256.txt"
+  },
+  "size": 31781022,
+  "released": "2020-02-04",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.15/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.15",
+  "version": "3.15.7",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.15/cmake-3.15.7-Darwin-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.15.7/cmake-3.15.7-Darwin-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "cafa3c3b96cf9877c7bddc024edb3a0dd8abdc123add0f141f825ce61eeb5d1e",
+   "source": "https://cmake.org/files/v3.15/cmake-3.15.7-SHA-256.txt"
+  },
+  "size": 34779255,
+  "released": "2020-02-04",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.15/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.15",
+  "version": "3.15.7",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.15/cmake-3.15.7-Linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.15.7/cmake-3.15.7-Linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "8456a10ac2fd0dc97d13aa4753431a232cf32aecb0976541f7bf867a3f90ec57",
+   "source": "https://cmake.org/files/v3.15/cmake-3.15.7-SHA-256.txt"
+  },
+  "size": 38880121,
+  "released": "2020-02-04",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.15/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.14",
+  "version": "3.14.7",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.14/cmake-3.14.7-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.14.7/cmake-3.14.7-win32-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "55eafae4327cc8cedaf69eb012e3dcfd88e2045279d12c49c7af253c49786237",
+   "source": "https://cmake.org/files/v3.14/cmake-3.14.7-SHA-256.txt"
+  },
+  "size": 27665071,
+  "released": "2019-10-02",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.14/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.14",
+  "version": "3.14.7",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.14/cmake-3.14.7-win64-x64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.14.7/cmake-3.14.7-win64-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "e3ce0bdd966dc9a8e9c57ea949bc195c36c6f843bd3e431990d59c381be7ba8e",
+   "source": "https://cmake.org/files/v3.14/cmake-3.14.7-SHA-256.txt"
+  },
+  "size": 30484608,
+  "released": "2019-10-02",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.14/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.14",
+  "version": "3.14.7",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.14/cmake-3.14.7-Darwin-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.14.7/cmake-3.14.7-Darwin-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "5d69fc79f7dff65a999b5c321d606d9152d7cde0717817c5f4d2b14be4a5862b",
+   "source": "https://cmake.org/files/v3.14/cmake-3.14.7-SHA-256.txt"
+  },
+  "size": 33533593,
+  "released": "2019-10-02",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.14/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.14",
+  "version": "3.14.7",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.14/cmake-3.14.7-Linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.14.7/cmake-3.14.7-Linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "85aa7e9d77a9848bfae26289424d4f1cb4a0b0579b0e30e31148a37f140c33c2",
+   "source": "https://cmake.org/files/v3.14/cmake-3.14.7-SHA-256.txt"
+  },
+  "size": 37190362,
+  "released": "2019-10-02",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.14/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.13",
+  "version": "3.13.5",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.13/cmake-3.13.5-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.13.5/cmake-3.13.5-win32-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "0b61adede8f858464849d79d55044127032564c4c8a091322f8efb30ff4da3c4",
+   "source": "https://cmake.org/files/v3.13/cmake-3.13.5-SHA-256.txt"
+  },
+  "size": 26384882,
+  "released": "2019-05-14",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.13/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.13",
+  "version": "3.13.5",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.13/cmake-3.13.5-win64-x64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.13.5/cmake-3.13.5-win64-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "bdc4622f2fcf26cc16838d264b1cef0d5bc2e5b455d4a26ab7952781965eae79",
+   "source": "https://cmake.org/files/v3.13/cmake-3.13.5-SHA-256.txt"
+  },
+  "size": 29696788,
+  "released": "2019-05-14",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.13/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.13",
+  "version": "3.13.5",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.13/cmake-3.13.5-Darwin-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.13.5/cmake-3.13.5-Darwin-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "e04bcd52c64c2ee44f6def2ac4d5a610f01b329d0db65aecc2bb5135602ebfe0",
+   "source": "https://cmake.org/files/v3.13/cmake-3.13.5-SHA-256.txt"
+  },
+  "size": 32062458,
+  "released": "2019-05-14",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.13/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.13",
+  "version": "3.13.5",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.13/cmake-3.13.5-Linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.13.5/cmake-3.13.5-Linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "e2fd0080a6f0fc1ec84647acdcd8e0b4019770f48d83509e6a5b0b6ea27e5864",
+   "source": "https://cmake.org/files/v3.13/cmake-3.13.5-SHA-256.txt"
+  },
+  "size": 38405028,
+  "released": "2019-05-14",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.13/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.12",
+  "version": "3.12.4",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.12/cmake-3.12.4-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.12.4/cmake-3.12.4-win32-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "2c1c3c269ca4a222c8768d8f966d8556365b9bf7af77f9885d0b29a19cbf5354",
+   "source": "https://cmake.org/files/v3.12/cmake-3.12.4-SHA-256.txt"
+  },
+  "size": 23383556,
+  "released": "2018-11-02",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.12/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.12",
+  "version": "3.12.4",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.12/cmake-3.12.4-win64-x64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.12.4/cmake-3.12.4-win64-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "4dd43cdc0fef6c70e3d92a8aef4f2c66a8c5f4ad08a66ed2b376766dbd815069",
+   "source": "https://cmake.org/files/v3.12/cmake-3.12.4-SHA-256.txt"
+  },
+  "size": 26584375,
+  "released": "2018-11-02",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.12/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.12",
+  "version": "3.12.4",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.12/cmake-3.12.4-Darwin-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.12.4/cmake-3.12.4-Darwin-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "95d76c00ccb9ecb5cb51de137de00965c5e8d34b2cf71556cf8ba40577d1cff3",
+   "source": "https://cmake.org/files/v3.12/cmake-3.12.4-SHA-256.txt"
+  },
+  "size": 29010989,
+  "released": "2018-11-02",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.12/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.12",
+  "version": "3.12.4",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.12/cmake-3.12.4-Linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.12.4/cmake-3.12.4-Linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "486edd6710b5250946b4b199406ccbf8f567ef0e23cfe38f7938b8c78a2ffa5f",
+   "source": "https://cmake.org/files/v3.12/cmake-3.12.4-SHA-256.txt"
+  },
+  "size": 34951069,
+  "released": "2018-11-02",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.12/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.11",
+  "version": "3.11.4",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.11/cmake-3.11.4-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.11.4/cmake-3.11.4-win32-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "b068001ff879f86e704977c50a8c5917e4b4406c66242366dba2674abe316579",
+   "source": "https://cmake.org/files/v3.11/cmake-3.11.4-SHA-256.txt"
+  },
+  "size": 23193291,
+  "released": "2018-06-14",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.11/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.11",
+  "version": "3.11.4",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.11/cmake-3.11.4-win64-x64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.11.4/cmake-3.11.4-win64-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d3102abd0ded446c898252b58857871ee170312d8e7fd5cbff01fbcb1068a6e5",
+   "source": "https://cmake.org/files/v3.11/cmake-3.11.4-SHA-256.txt"
+  },
+  "size": 26047900,
+  "released": "2018-06-14",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.11/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.11",
+  "version": "3.11.4",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.11/cmake-3.11.4-Darwin-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.11.4/cmake-3.11.4-Darwin-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "2b5eb705f036b1906a5e0bce996e9cd56d43d73bdee8318ece3e5ce31657b812",
+   "source": "https://cmake.org/files/v3.11/cmake-3.11.4-SHA-256.txt"
+  },
+  "size": 27403153,
+  "released": "2018-06-14",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.11/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.11",
+  "version": "3.11.4",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.11/cmake-3.11.4-Linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.11.4/cmake-3.11.4-Linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "6dab016a6b82082b8bcd0f4d1e53418d6372015dd983d29367b9153f1a376435",
+   "source": "https://cmake.org/files/v3.11/cmake-3.11.4-SHA-256.txt"
+  },
+  "size": 34439437,
+  "released": "2018-06-14",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.11/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.10",
+  "version": "3.10.3",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.10/cmake-3.10.3-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.10.3/cmake-3.10.3-win32-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "edbbfb7f6f4e4f913de4a16d228cf6156ac7071596b6d25f2891a60a006735ea",
+   "source": "https://cmake.org/files/v3.10/cmake-3.10.3-SHA-256.txt"
+  },
+  "size": 21941891,
+  "released": "2018-03-16",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.10/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.10",
+  "version": "3.10.3",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.10/cmake-3.10.3-win64-x64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.10.3/cmake-3.10.3-win64-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "3bd57d1cfcf720a4cc72db77bda4c76a7b700fb0341821ad868963ad28856cd0",
+   "source": "https://cmake.org/files/v3.10/cmake-3.10.3-SHA-256.txt"
+  },
+  "size": 26010262,
+  "released": "2018-03-16",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.10/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.10",
+  "version": "3.10.3",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.10/cmake-3.10.3-Darwin-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.10.3/cmake-3.10.3-Darwin-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "e88d31a5200274407b7ea83cb2195ffc18cd6ceb1278b36c0501be6a118039a8",
+   "source": "https://cmake.org/files/v3.10/cmake-3.10.3-SHA-256.txt"
+  },
+  "size": 27155435,
+  "released": "2018-03-16",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.10/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.10",
+  "version": "3.10.3",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.10/cmake-3.10.3-Linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.10.3/cmake-3.10.3-Linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "9e7c48b797484f74c5ee3ae55132b40b16ed8e81ee762402da8971205b0a896b",
+   "source": "https://cmake.org/files/v3.10/cmake-3.10.3-SHA-256.txt"
+  },
+  "size": 34223478,
+  "released": "2018-03-16",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.10/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.9",
+  "version": "3.9.6",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.9/cmake-3.9.6-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.9.6/cmake-3.9.6-win32-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "8dd4b6c35afa8e0c044789b55645327cc4bb75276f87c6758f9997c08f559256",
+   "source": "https://cmake.org/files/v3.9/cmake-3.9.6-SHA-256.txt"
+  },
+  "size": 22985339,
+  "released": "2017-11-10",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.9/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.9",
+  "version": "3.9.6",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.9/cmake-3.9.6-win64-x64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.9.6/cmake-3.9.6-win64-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "fa667bf658fa526e4e2489a9704f83f851e5ded66a18904424ba1b8505fd4dc0",
+   "source": "https://cmake.org/files/v3.9/cmake-3.9.6-SHA-256.txt"
+  },
+  "size": 25949645,
+  "released": "2017-11-10",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.9/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.9",
+  "version": "3.9.6",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.9/cmake-3.9.6-Darwin-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.9.6/cmake-3.9.6-Darwin-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "1694f3e183954ab6aadb2d7f85552aa2e050fab97ef4cbc817b1165255703599",
+   "source": "https://cmake.org/files/v3.9/cmake-3.9.6-SHA-256.txt"
+  },
+  "size": 26703313,
+  "released": "2017-11-10",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.9/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.9",
+  "version": "3.9.6",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.9/cmake-3.9.6-Linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.9.6/cmake-3.9.6-Linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "062bf45bee36ce7c2a55ae26b8b5324720f370d420a05cba91b9448c64ffdbea",
+   "source": "https://cmake.org/files/v3.9/cmake-3.9.6-SHA-256.txt"
+  },
+  "size": 32482671,
+  "released": "2017-11-10",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.9/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.8",
+  "version": "3.8.2",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.8/cmake-3.8.2-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.8.2/cmake-3.8.2-win32-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "3fa45a8ad473a8e0579ec826b3355f864750a7455987ed425a9c6fdf4820b5f2",
+   "source": "https://cmake.org/files/v3.8/cmake-3.8.2-SHA-256.txt"
+  },
+  "size": 22640935,
+  "released": "2017-05-31",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.8/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.8",
+  "version": "3.8.2",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.8/cmake-3.8.2-win64-x64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.8.2/cmake-3.8.2-win64-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "202c2416c964fb7199e5d7ce92336a44c7ba65d5ccca36246f41d7d09bd8ffe2",
+   "source": "https://cmake.org/files/v3.8/cmake-3.8.2-SHA-256.txt"
+  },
+  "size": 25581947,
+  "released": "2017-05-31",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.8/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.8",
+  "version": "3.8.2",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.8/cmake-3.8.2-Darwin-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.8.2/cmake-3.8.2-Darwin-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d164a1fa2a3d2f276c83ab55c7014b14b501b939d1a5a56f6788eb5cddc7acb6",
+   "source": "https://cmake.org/files/v3.8/cmake-3.8.2-SHA-256.txt"
+  },
+  "size": 26445344,
+  "released": "2017-05-31",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.8/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.8",
+  "version": "3.8.2",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.8/cmake-3.8.2-Linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.8.2/cmake-3.8.2-Linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "33e4851d3219b720f4b64fcf617151168f1bffdf5afad25eb4b7f5f58cee3a08",
+   "source": "https://cmake.org/files/v3.8/cmake-3.8.2-SHA-256.txt"
+  },
+  "size": 32270964,
+  "released": "2017-05-31",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.8/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.7",
+  "version": "3.7.2",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.7/cmake-3.7.2-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.7.2/cmake-3.7.2-win32-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "ec5e299d412e0272e01d4de5bf07718f42c96361f83d51cc39f91bf49cc3e5c3",
+   "source": "https://cmake.org/files/v3.7/cmake-3.7.2-SHA-256.txt"
+  },
+  "size": 21997539,
+  "released": "2017-01-13",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.7/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.7",
+  "version": "3.7.2",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.7/cmake-3.7.2-win64-x64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.7.2/cmake-3.7.2-win64-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "def3bb81dfd922ce1ea2a0647645eefb60e128d520c8ca707c5996c331bc8b48",
+   "source": "https://cmake.org/files/v3.7/cmake-3.7.2-SHA-256.txt"
+  },
+  "size": 24896028,
+  "released": "2017-01-13",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.7/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.7",
+  "version": "3.7.2",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.7/cmake-3.7.2-Darwin-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.7.2/cmake-3.7.2-Darwin-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "0175e97748052dfc15ebd3c0aa65286e5ec20ca22ed606ce88940e699496b03c",
+   "source": "https://cmake.org/files/v3.7/cmake-3.7.2-SHA-256.txt"
+  },
+  "size": 26367672,
+  "released": "2017-01-13",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.7/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.7",
+  "version": "3.7.2",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.7.2/cmake-3.7.2-Linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "0e6ec35d4fa9bf79800118916b51928b6471d5725ff36f1d0de5ebb34dcd5406",
+   "source": "https://cmake.org/files/v3.7/cmake-3.7.2-SHA-256.txt"
+  },
+  "size": 30681434,
+  "released": "2017-01-13",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.7/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.6",
+  "version": "3.6.3",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.6/cmake-3.6.3-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.6.3/cmake-3.6.3-win32-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "556628f134b2372b8f02688787ca44b02d893c57b6eeaa9271ac51a4a2d4a4ed",
+   "source": "https://cmake.org/files/v3.6/cmake-3.6.3-SHA-256.txt"
+  },
+  "size": 21434613,
+  "released": "2016-11-03",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.6/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.6",
+  "version": "3.6.3",
+  "os": "windows",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.6/cmake-3.6.3-win64-x64.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.6.3/cmake-3.6.3-win64-x64.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "263b78aba6e63098353b2f8beecf293f5f307f9a70575a81867c3f8cb18a6a99",
+   "source": "https://cmake.org/files/v3.6/cmake-3.6.3-SHA-256.txt"
+  },
+  "size": 24239664,
+  "released": "2016-11-03",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.6/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.6",
+  "version": "3.6.3",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.6/cmake-3.6.3-Darwin-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.6.3/cmake-3.6.3-Darwin-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "cba5b50365fa79c36bb954dc44d6e3455e431c47937fe13e6ddd06b61fe428a4",
+   "source": "https://cmake.org/files/v3.6/cmake-3.6.3-SHA-256.txt"
+  },
+  "size": 26058692,
+  "released": "2016-11-03",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.6/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.6",
+  "version": "3.6.3",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.6/cmake-3.6.3-Linux-i386.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.6.3/cmake-3.6.3-Linux-i386.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "65e8341738086b2973d33e3a5688f87b5bb4de0267822d057c8dbe4c3eadcf2c",
+   "source": "https://cmake.org/files/v3.6/cmake-3.6.3-SHA-256.txt"
+  },
+  "size": 28150292,
+  "released": "2016-11-03",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.6/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.6",
+  "version": "3.6.3",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.6/cmake-3.6.3-Linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.6.3/cmake-3.6.3-Linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "9d915d505c07d84b610e1be6242c7cad68b4b7a4090ce85ecf9cec5effa47c43",
+   "source": "https://cmake.org/files/v3.6/cmake-3.6.3-SHA-256.txt"
+  },
+  "size": 28542477,
+  "released": "2016-11-03",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.6/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.5",
+  "version": "3.5.2",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.5/cmake-3.5.2-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.5.2/cmake-3.5.2-win32-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "671073aee66b3480a564d0736792e40570a11e861bb34819bb7ae7858bbdfb80",
+   "source": "https://cmake.org/files/v3.5/cmake-3.5.2-SHA-256.txt"
+  },
+  "size": 21386508,
+  "released": "2016-04-15",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.5/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.5",
+  "version": "3.5.2",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.5/cmake-3.5.2-Darwin-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.5.2/cmake-3.5.2-Darwin-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "0263be8f59ba1ae88172d5db769c2af69bcd8b2cbd4a9b1a981c406ce609a4ca",
+   "source": "https://cmake.org/files/v3.5/cmake-3.5.2-SHA-256.txt"
+  },
+  "size": 22853687,
+  "released": "2016-04-15",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.5/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.5",
+  "version": "3.5.2",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.5/cmake-3.5.2-Linux-i386.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.5.2/cmake-3.5.2-Linux-i386.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "053d158dfc1393ec2c4b7f142868b6c92b3e10297068c9ff73bc9e654821c304",
+   "source": "https://cmake.org/files/v3.5/cmake-3.5.2-SHA-256.txt"
+  },
+  "size": 27975653,
+  "released": "2016-04-15",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.5/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.5",
+  "version": "3.5.2",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.5/cmake-3.5.2-Linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.5.2/cmake-3.5.2-Linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "5f7aeaebe33521647625e0411467de71a2886743e4aa2c179e04c9e141c6c8cd",
+   "source": "https://cmake.org/files/v3.5/cmake-3.5.2-SHA-256.txt"
+  },
+  "size": 28434362,
+  "released": "2016-04-15",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.5/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.4",
+  "version": "3.4.3",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.4/cmake-3.4.3-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.4.3/cmake-3.4.3-win32-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "448e894dd3df7f3f1ae509ab940f6fd5653ce86eba0677e19ad4bccb44a585ae",
+   "source": "https://cmake.org/files/v3.4/cmake-3.4.3-SHA-256.txt"
+  },
+  "size": 16925266,
+  "released": "2016-01-25",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.4/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.4",
+  "version": "3.4.3",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.4/cmake-3.4.3-Darwin-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.4.3/cmake-3.4.3-Darwin-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "dec18a78b8ed6b2ff24bd61d578063c2cd667327d62892592121cf600c83f635",
+   "source": "https://cmake.org/files/v3.4/cmake-3.4.3-SHA-256.txt"
+  },
+  "size": 22636550,
+  "released": "2016-01-25",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.4/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.4",
+  "version": "3.4.3",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.4/cmake-3.4.3-Linux-i386.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.4.3/cmake-3.4.3-Linux-i386.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "5dfe85abe8cf176975efe0ac025eb00d0b796e887fd4471d0f39b0ee816d916c",
+   "source": "https://cmake.org/files/v3.4/cmake-3.4.3-SHA-256.txt"
+  },
+  "size": 27658650,
+  "released": "2016-01-25",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.4/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.4",
+  "version": "3.4.3",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.4/cmake-3.4.3-Linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.4.3/cmake-3.4.3-Linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "66b8d315c852908be9f79e1a18b8778714659fce4ddb2d041af8680a239202fc",
+   "source": "https://cmake.org/files/v3.4/cmake-3.4.3-SHA-256.txt"
+  },
+  "size": 28268935,
+  "released": "2016-01-25",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.4/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.3",
+  "version": "3.3.2",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.3/cmake-3.3.2-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.3.2/cmake-3.3.2-win32-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "eaaa54ebb915fe56f4117edf78d9f8197623e8559918860079d3c63a075f58db",
+   "source": "https://cmake.org/files/v3.3/cmake-3.3.2-SHA-256.txt"
+  },
+  "size": 16406326,
+  "released": "2015-09-17",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.3/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.3",
+  "version": "3.3.2",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "darwin-universal",
+  "libc": null,
+  "url": "https://cmake.org/files/v3.3/cmake-3.3.2-Darwin-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.3.2/cmake-3.3.2-Darwin-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "9a53972f07819812a32ae8b9e18bdac0acf58d372b55967701a041fcb9d09c9e",
+   "source": "https://cmake.org/files/v3.3/cmake-3.3.2-SHA-256.txt"
+  },
+  "size": 49658642,
+  "released": "2015-09-17",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.3/",
+  "notes": "PowerPC + i386 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.3",
+  "version": "3.3.2",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.3/cmake-3.3.2-Darwin-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.3.2/cmake-3.3.2-Darwin-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "7e685d4e2ef90e0b9b837138049c98f4b0cbda2ee27db77c3d39b6053b7a7e71",
+   "source": "https://cmake.org/files/v3.3/cmake-3.3.2-SHA-256.txt"
+  },
+  "size": 22378062,
+  "released": "2015-09-17",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.3/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.3",
+  "version": "3.3.2",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.3/cmake-3.3.2-Linux-i386.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.3.2/cmake-3.3.2-Linux-i386.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "330b7bc01c6d790a66da08d16cd30b1e0538a32fca148b42fe5fe4be4cd01ca0",
+   "source": "https://cmake.org/files/v3.3/cmake-3.3.2-SHA-256.txt"
+  },
+  "size": 27390817,
+  "released": "2015-09-17",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.3/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.3",
+  "version": "3.3.2",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.3/cmake-3.3.2-Linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.3.2/cmake-3.3.2-Linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "0c6e1d1dedf58b21f6bd3de9f03ca435c3d13c4e709b1d67432ca12df07d8208",
+   "source": "https://cmake.org/files/v3.3/cmake-3.3.2-SHA-256.txt"
+  },
+  "size": 27896803,
+  "released": "2015-09-17",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.3/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.2",
+  "version": "3.2.3",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.2/cmake-3.2.3-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.2.3/cmake-3.2.3-win32-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d4dccb7dfba6c788efde1906474ff4039af05b6b44256e776977b5660dee2231",
+   "source": "https://cmake.org/files/v3.2/cmake-3.2.3-SHA-256.txt"
+  },
+  "size": 15553127,
+  "released": "2015-06-01",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.2/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.2",
+  "version": "3.2.3",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "darwin-universal",
+  "libc": null,
+  "url": "https://cmake.org/files/v3.2/cmake-3.2.3-Darwin-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.2.3/cmake-3.2.3-Darwin-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "6257c10ba8e653cfd391440617b856f6ba29916a033ea0ab09d5bd6886e7f2e6",
+   "source": "https://cmake.org/files/v3.2/cmake-3.2.3-SHA-256.txt"
+  },
+  "size": 48677251,
+  "released": "2015-06-01",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.2/",
+  "notes": "PowerPC + i386 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.2",
+  "version": "3.2.3",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.2/cmake-3.2.3-Darwin-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.2.3/cmake-3.2.3-Darwin-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "76dbf1f37bb716a39d720a6ec517d0c7f71784f0be9549574cb05a881aa89374",
+   "source": "https://cmake.org/files/v3.2/cmake-3.2.3-SHA-256.txt"
+  },
+  "size": 27716824,
+  "released": "2015-06-01",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.2/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.2",
+  "version": "3.2.3",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.2/cmake-3.2.3-Linux-i386.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.2.3/cmake-3.2.3-Linux-i386.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "18679b4b0576f565e191bf01ca78cfe93b4c3e47b57373b7a62e943c276de59e",
+   "source": "https://cmake.org/files/v3.2/cmake-3.2.3-SHA-256.txt"
+  },
+  "size": 26558578,
+  "released": "2015-06-01",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.2/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.2",
+  "version": "3.2.3",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.2/cmake-3.2.3-Linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.2.3/cmake-3.2.3-Linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "f65c5533079bac88deafeee00df6d62d640622d874d4bc207d46efed5720ca5b",
+   "source": "https://cmake.org/files/v3.2/cmake-3.2.3-SHA-256.txt"
+  },
+  "size": 26997309,
+  "released": "2015-06-01",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.2/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.1",
+  "version": "3.1.3",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.1/cmake-3.1.3-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.1.3/cmake-3.1.3-win32-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "ec7c3c7e2e071cda54a3718e65e50af322685b960d12046525063c1633c7865c",
+   "source": "https://cmake.org/files/v3.1/cmake-3.1.3-SHA-256.txt"
+  },
+  "size": 15847870,
+  "released": "2015-02-12",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.1/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.1",
+  "version": "3.1.3",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "darwin-universal",
+  "libc": null,
+  "url": "https://cmake.org/files/v3.1/cmake-3.1.3-Darwin-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.1.3/cmake-3.1.3-Darwin-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "46fadd82277acbb44280758d74eeb24053d6027fc6b8a0ef06bff2f2372c6ff3",
+   "source": "https://cmake.org/files/v3.1/cmake-3.1.3-SHA-256.txt"
+  },
+  "size": 46656712,
+  "released": "2015-02-12",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.1/",
+  "notes": "PowerPC + i386 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.1",
+  "version": "3.1.3",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.1/cmake-3.1.3-Darwin-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.1.3/cmake-3.1.3-Darwin-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "11d79718f10ba5b181f129d44eae7bece2ced0c98f41fcad003556d28d896001",
+   "source": "https://cmake.org/files/v3.1/cmake-3.1.3-SHA-256.txt"
+  },
+  "size": 29967010,
+  "released": "2015-02-12",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.1/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.1",
+  "version": "3.1.3",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.1/cmake-3.1.3-Linux-i386.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.1.3/cmake-3.1.3-Linux-i386.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "dfcb139e5c640164580270dda052cad5fa5f21a8344231a3429b9d7aa24f640b",
+   "source": "https://cmake.org/files/v3.1/cmake-3.1.3-SHA-256.txt"
+  },
+  "size": 24891432,
+  "released": "2015-02-12",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.1/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.1",
+  "version": "3.1.3",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.1/cmake-3.1.3-Linux-x86_64.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.1.3/cmake-3.1.3-Linux-x86_64.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "d251b95829d29e4529dfdbc1e676cd0ef86e9544976603db2f5c26364ad71146",
+   "source": "https://cmake.org/files/v3.1/cmake-3.1.3-SHA-256.txt"
+  },
+  "size": 26051536,
+  "released": "2015-02-12",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.1/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.0",
+  "version": "3.0.2",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v3.0/cmake-3.0.2-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.0.2/cmake-3.0.2-win32-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "4a83978bf2f5b92f66398ab3a2630d65e9c1942aed7d51599c056bd419b39bb5",
+   "source": "https://cmake.org/files/v3.0/cmake-3.0.2-SHA-256.txt"
+  },
+  "size": 14439582,
+  "released": "2014-09-11",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.0/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.0",
+  "version": "3.0.2",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "darwin64-universal",
+  "libc": null,
+  "url": "https://cmake.org/files/v3.0/cmake-3.0.2-Darwin64-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.0.2/cmake-3.0.2-Darwin64-universal.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "231581ccdb433dffa3a070d7e06710543f145688ce8ba4aa4d1bed098cb6804b",
+   "source": "https://cmake.org/files/v3.0/cmake-3.0.2-SHA-256.txt"
+  },
+  "size": 40603247,
+  "released": "2014-09-11",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.0/",
+  "notes": "i386 + x86_64 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "3.0",
+  "version": "3.0.2",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v3.0/cmake-3.0.2-Linux-i386.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v3.0.2/cmake-3.0.2-Linux-i386.tar.gz"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "fde6f0c9fab58a71c315cdd833cf0e5c077afcad74c32de1017568509d16bd51",
+   "source": "https://cmake.org/files/v3.0/cmake-3.0.2-SHA-256.txt"
+  },
+  "size": 23127237,
+  "released": "2014-09-11",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v3.0/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "2.8",
+  "version": "2.8.12.2",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v2.8/cmake-2.8.12.2-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v2.8.12.2/cmake-2.8.12.2-win32-x86.zip"
+  ],
+  "checksum": null,
+  "size": 13578816,
+  "released": "2014-01-16",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v2.8/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "2.8",
+  "version": "2.8.12.2",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "darwin64-universal",
+  "libc": null,
+  "url": "https://cmake.org/files/v2.8/cmake-2.8.12.2-Darwin64-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v2.8.12.2/cmake-2.8.12.2-Darwin64-universal.tar.gz"
+  ],
+  "checksum": null,
+  "size": 42476930,
+  "released": "2014-01-16",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v2.8/",
+  "notes": "i386 + x86_64 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "2.8",
+  "version": "2.8.12.2",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v2.8/cmake-2.8.12.2-Linux-i386.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v2.8.12.2/cmake-2.8.12.2-Linux-i386.tar.gz"
+  ],
+  "checksum": null,
+  "size": 24735980,
+  "released": "2014-01-16",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v2.8/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "2.6",
+  "version": "2.6.4",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v2.6/cmake-2.6.4-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v2.6.4/cmake-2.6.4-win32-x86.zip"
+  ],
+  "checksum": null,
+  "size": 10400192,
+  "released": "2009-04-28",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v2.6/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "2.6",
+  "version": "2.6.4",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "darwin-universal",
+  "libc": null,
+  "url": "https://cmake.org/files/v2.6/cmake-2.6.4-Darwin-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v2.6.4/cmake-2.6.4-Darwin-universal.tar.gz"
+  ],
+  "checksum": null,
+  "size": 24415451,
+  "released": "2009-04-28",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v2.6/",
+  "notes": "PowerPC + i386 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "2.6",
+  "version": "2.6.4",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v2.6/cmake-2.6.4-Linux-i386.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v2.6.4/cmake-2.6.4-Linux-i386.tar.gz"
+  ],
+  "checksum": null,
+  "size": 15146103,
+  "released": "2009-04-28",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v2.6/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "2.4",
+  "version": "2.4.8",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v2.4/cmake-2.4.8-win32-x86.zip",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v2.4.8/cmake-2.4.8-win32-x86.zip"
+  ],
+  "checksum": null,
+  "size": 3755714,
+  "released": "2008-01-21",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v2.4/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "2.4",
+  "version": "2.4.8",
+  "os": "macos",
+  "arch": "universal",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": "darwin-universal",
+  "libc": null,
+  "url": "https://cmake.org/files/v2.4/cmake-2.4.8-Darwin-universal.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v2.4.8/cmake-2.4.8-Darwin-universal.tar.gz"
+  ],
+  "checksum": null,
+  "size": 7965105,
+  "released": "2008-01-21",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v2.4/",
+  "notes": "PowerPC + i386 fat binary"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "2.4",
+  "version": "2.4.8",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v2.4/cmake-2.4.8-Linux-i386.tar.gz",
+  "mirrors": [
+   "https://github.com/Kitware/CMake/releases/download/v2.4.8/cmake-2.4.8-Linux-i386.tar.gz"
+  ],
+  "checksum": null,
+  "size": 4556754,
+  "released": "2008-01-21",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v2.4/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "2.4",
+  "version": "2.4.2",
+  "os": "macos",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v2.4/cmake-2.4.2-Darwin-i386.tar.gz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 3914812,
+  "released": "2006-05-17",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v2.4/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "2.2",
+  "version": "2.2.3",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "installer",
+  "format": "exe",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v2.2/cmake-2.2.3-win32.exe",
+  "mirrors": [],
+  "checksum": null,
+  "size": 2364743,
+  "released": "2006-11-30",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v2.2/",
+  "notes": "NSIS installer (CMSetup*.exe for 1.x/2.0)"
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "2.2",
+  "version": "2.2.3",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v2.2/cmake-2.2.3-x86-linux.tar.gz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 6007333,
+  "released": "2006-11-30",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v2.2/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "2.0",
+  "version": "2.0.6",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v2.0/cmake-2.0.6-x86-win.zip",
+  "mirrors": [],
+  "checksum": null,
+  "size": 1835104,
+  "released": "2005-04-14",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v2.0/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "2.0",
+  "version": "2.0.6",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v2.0/cmake-2.0.6-x86-linux.tar.gz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 5155355,
+  "released": "2005-04-13",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v2.0/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "1.8",
+  "version": "1.8.3",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v1.8/cmake-1.8.3-x86-win.zip",
+  "mirrors": [],
+  "checksum": null,
+  "size": 1212532,
+  "released": "2004-01-07",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v1.8/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "1.8",
+  "version": "1.8.3",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v1.8/cmake-1.8.3-x86-linux.tar.gz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 4494076,
+  "released": "2004-01-07",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v1.8/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "1.6",
+  "version": "1.6.7",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v1.6/cmake-1.6.7-x86-win.zip",
+  "mirrors": [],
+  "checksum": null,
+  "size": 1068938,
+  "released": "2003-07-31",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v1.6/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "1.6",
+  "version": "1.6.7",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v1.6/cmake-1.6.7-x86-linux.tar.gz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 5581587,
+  "released": "2003-07-31",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v1.6/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "1.4",
+  "version": "1.4.7",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": null,
+  "libc": null,
+  "url": "https://cmake.org/files/v1.4/CMake1.4.7-x86-win.zip",
+  "mirrors": [],
+  "checksum": null,
+  "size": 1014780,
+  "released": "2003-08-04",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v1.4/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "1.4",
+  "version": "1.4.7",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v1.4/CMake1.4.7-x86-linux-static.tar.gz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 1931825,
+  "released": "2003-08-04",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v1.4/",
+  "notes": null
+ },
+ {
+  "runtime": "cmake",
+  "languages": [
+   "c",
+   "cpp"
+  ],
+  "major": "1.2",
+  "version": "1.2",
+  "os": "linux",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "tar.gz",
+  "variant": null,
+  "libc": "glibc",
+  "url": "https://cmake.org/files/v1.2/CMake1.2-x86-linux-static.tar.gz",
+  "mirrors": [],
+  "checksum": null,
+  "size": 2921128,
+  "released": "2003-08-04",
+  "min_os": null,
+  "metadata_source": "https://cmake.org/files/v1.2/",
+  "notes": null
+ }
+]

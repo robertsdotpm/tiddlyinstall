@@ -1,0 +1,145 @@
+[
+ {
+  "runtime": "ninja",
+  "major": "1.0",
+  "os": "windows",
+  "arch": "x86",
+  "reason": "tagged (1.0.0) but no binaries were ever attached to a GitHub release; the first release with binaries is 1.4.0",
+  "looked_at": [
+   "https://api.github.com/repos/ninja-build/ninja/releases",
+   "https://api.github.com/repos/ninja-build/ninja/tags"
+  ]
+ },
+ {
+  "runtime": "ninja",
+  "major": "1.0",
+  "os": "linux",
+  "arch": "amd64",
+  "reason": "tagged (1.0.0) but no binaries were ever attached to a GitHub release; the first release with binaries is 1.4.0",
+  "looked_at": [
+   "https://api.github.com/repos/ninja-build/ninja/releases",
+   "https://api.github.com/repos/ninja-build/ninja/tags"
+  ]
+ },
+ {
+  "runtime": "ninja",
+  "major": "1.0",
+  "os": "macos",
+  "arch": "amd64",
+  "reason": "tagged (1.0.0) but no binaries were ever attached to a GitHub release; the first release with binaries is 1.4.0",
+  "looked_at": [
+   "https://api.github.com/repos/ninja-build/ninja/releases",
+   "https://api.github.com/repos/ninja-build/ninja/tags"
+  ]
+ },
+ {
+  "runtime": "ninja",
+  "major": "1.1",
+  "os": "windows",
+  "arch": "x86",
+  "reason": "tagged (1.1.0) but no binaries were ever attached to a GitHub release; the first release with binaries is 1.4.0",
+  "looked_at": [
+   "https://api.github.com/repos/ninja-build/ninja/releases",
+   "https://api.github.com/repos/ninja-build/ninja/tags"
+  ]
+ },
+ {
+  "runtime": "ninja",
+  "major": "1.1",
+  "os": "linux",
+  "arch": "amd64",
+  "reason": "tagged (1.1.0) but no binaries were ever attached to a GitHub release; the first release with binaries is 1.4.0",
+  "looked_at": [
+   "https://api.github.com/repos/ninja-build/ninja/releases",
+   "https://api.github.com/repos/ninja-build/ninja/tags"
+  ]
+ },
+ {
+  "runtime": "ninja",
+  "major": "1.1",
+  "os": "macos",
+  "arch": "amd64",
+  "reason": "tagged (1.1.0) but no binaries were ever attached to a GitHub release; the first release with binaries is 1.4.0",
+  "looked_at": [
+   "https://api.github.com/repos/ninja-build/ninja/releases",
+   "https://api.github.com/repos/ninja-build/ninja/tags"
+  ]
+ },
+ {
+  "runtime": "ninja",
+  "major": "1.2",
+  "os": "windows",
+  "arch": "x86",
+  "reason": "tagged (1.2.0) but no binaries were ever attached to a GitHub release; the first release with binaries is 1.4.0",
+  "looked_at": [
+   "https://api.github.com/repos/ninja-build/ninja/releases",
+   "https://api.github.com/repos/ninja-build/ninja/tags"
+  ]
+ },
+ {
+  "runtime": "ninja",
+  "major": "1.2",
+  "os": "linux",
+  "arch": "amd64",
+  "reason": "tagged (1.2.0) but no binaries were ever attached to a GitHub release; the first release with binaries is 1.4.0",
+  "looked_at": [
+   "https://api.github.com/repos/ninja-build/ninja/releases",
+   "https://api.github.com/repos/ninja-build/ninja/tags"
+  ]
+ },
+ {
+  "runtime": "ninja",
+  "major": "1.2",
+  "os": "macos",
+  "arch": "amd64",
+  "reason": "tagged (1.2.0) but no binaries were ever attached to a GitHub release; the first release with binaries is 1.4.0",
+  "looked_at": [
+   "https://api.github.com/repos/ninja-build/ninja/releases",
+   "https://api.github.com/repos/ninja-build/ninja/tags"
+  ]
+ },
+ {
+  "runtime": "ninja",
+  "major": "1.3",
+  "os": "windows",
+  "arch": "x86",
+  "reason": "tagged (1.3.0, 1.3.1, 1.3.2, 1.3.3, 1.3.4) but no binaries were ever attached to a GitHub release; the first release with binaries is 1.4.0",
+  "looked_at": [
+   "https://api.github.com/repos/ninja-build/ninja/releases",
+   "https://api.github.com/repos/ninja-build/ninja/tags"
+  ]
+ },
+ {
+  "runtime": "ninja",
+  "major": "1.3",
+  "os": "linux",
+  "arch": "amd64",
+  "reason": "tagged (1.3.0, 1.3.1, 1.3.2, 1.3.3, 1.3.4) but no binaries were ever attached to a GitHub release; the first release with binaries is 1.4.0",
+  "looked_at": [
+   "https://api.github.com/repos/ninja-build/ninja/releases",
+   "https://api.github.com/repos/ninja-build/ninja/tags"
+  ]
+ },
+ {
+  "runtime": "ninja",
+  "major": "1.3",
+  "os": "macos",
+  "arch": "amd64",
+  "reason": "tagged (1.3.0, 1.3.1, 1.3.2, 1.3.3, 1.3.4) but no binaries were ever attached to a GitHub release; the first release with binaries is 1.4.0",
+  "looked_at": [
+   "https://api.github.com/repos/ninja-build/ninja/releases",
+   "https://api.github.com/repos/ninja-build/ninja/tags"
+  ]
+ },
+ {
+  "runtime": "ninja",
+  "major": "1.7",
+  "os": "windows",
+  "arch": "amd64",
+  "version": "1.7.2",
+  "reason": "listed as a release asset by the GitHub API but https://github.com/ninja-build/ninja/releases/download/v1.7.2/ninja-win.zip returns 404 (asset lost)",
+  "looked_at": [
+   "https://github.com/ninja-build/ninja/releases/download/v1.7.2/ninja-win.zip"
+  ]
+ }
+]

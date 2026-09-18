@@ -1,0 +1,64 @@
+{
+ "runtime": "meson",
+ "canonical": "https://files.pythonhosted.org/packages/<hash-path>/<filename> (PyPI) and https://github.com/mesonbuild/meson/releases/download/<ver>/<filename>",
+ "confirmed": [
+  {
+   "host": "github.com",
+   "prefix": null,
+   "applies_to": "PyPI sdists",
+   "url_template": "https://github.com/mesonbuild/meson/releases/download/{version}/meson-{version}.tar.gz",
+   "kind": "vendor's second channel",
+   "confirmed_by": "per file by scrape.py: GitHub asset digest equals PyPI sha256, or (no digest) GitHub size equals PyPI size",
+   "applied_to": "each PyPI sdist entry whose GitHub copy matched",
+   "date_checked": "2026-09-18"
+  },
+  {
+   "host": "mirrors.aliyun.com",
+   "prefix": "https://mirrors.aliyun.com/pypi/",
+   "applies_to": "files.pythonhosted.org",
+   "url_template": "https://mirrors.aliyun.com/pypi/<same path as files.pythonhosted.org>",
+   "kind": "China PyPI mirror (pull-through)",
+   "confirmed_by": "HEAD Content-Length matched PyPI for 5 samples (meson-0.29.0.tar.gz, 0.61.5 wheel+sdist, 1.12.0 wheel+sdist); meson-1.12.0-py3-none-any.whl downloaded in full, sha256 matched PyPI; a bogus filename under the same path returned 404",
+   "applied_to": "every PyPI wheel/sdist entry",
+   "date_checked": "2026-09-18"
+  },
+  {
+   "host": "mirrors.huaweicloud.com",
+   "prefix": "https://mirrors.huaweicloud.com/repository/pypi/",
+   "applies_to": "files.pythonhosted.org",
+   "url_template": "https://mirrors.huaweicloud.com/repository/pypi/<same path as files.pythonhosted.org>",
+   "kind": "China PyPI mirror (pull-through)",
+   "confirmed_by": "same 5-sample size match, full sha256 match of the 1.12.0 wheel, bogus-path 404 control",
+   "applied_to": "every PyPI wheel/sdist entry",
+   "date_checked": "2026-09-18"
+  },
+  {
+   "host": "mirrors.cloud.tencent.com",
+   "prefix": "https://mirrors.cloud.tencent.com/pypi/",
+   "applies_to": "files.pythonhosted.org",
+   "url_template": "https://mirrors.cloud.tencent.com/pypi/<same path as files.pythonhosted.org>",
+   "kind": "China PyPI mirror (pull-through)",
+   "confirmed_by": "same 5-sample size match, full sha256 match of the 1.12.0 wheel, bogus-path 404 control",
+   "applied_to": "every PyPI wheel/sdist entry",
+   "date_checked": "2026-09-18"
+  },
+  {
+   "host": "pypi.doubanio.com",
+   "prefix": "https://pypi.doubanio.com/",
+   "applies_to": "files.pythonhosted.org",
+   "url_template": "https://pypi.doubanio.com/<same path as files.pythonhosted.org>",
+   "kind": "China PyPI mirror (Douban)",
+   "confirmed_by": "same 5-sample size match, full sha256 match of the 1.12.0 wheel, bogus-path 404 control",
+   "applied_to": "every PyPI wheel/sdist entry",
+   "date_checked": "2026-09-18"
+  }
+ ],
+ "rejected": [
+  {"host": "pypi.tuna.tsinghua.edu.cn", "reason": "HEAD sizes matched on all 5 samples, but a full GET was refused with 403 (TUNA's anti-abuse block on this environment, as in other runtimes' hunts). Inconclusive, not added."},
+  {"host": "mirrors.bfsu.edu.cn/pypi/web", "reason": "HEAD sizes matched, full GET 403 (same TUNA-operated block). Inconclusive, not added."},
+  {"host": "mirrors.ustc.edu.cn/pypi", "reason": "403 on every sample."},
+  {"host": "mirror.nju.edu.cn/pypi/web", "reason": "302 redirect on every sample (not a copy served from the mirror)."},
+  {"host": "github-release mirrors (USTC, NJU, ISCAS, HUST, TUNA)", "reason": "none carries mesonbuild/meson (404, redirect loop, or absent from the curated list); the MSI and .pkg have no mirror."}
+ ],
+ "note": "mirrors.json is hand-maintained; scrape.py reads the PyPI prefixes from here and re-applies them on every run."
+}
