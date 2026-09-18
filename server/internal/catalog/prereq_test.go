@@ -73,7 +73,7 @@ func TestPHPWindowsNeedsVCRedist(t *testing.T) {
 			t.Fatalf("windows %d %s: needs %q, want %s", tc.ver, tc.arch, needs, tc.need)
 		}
 		chk := keys(b, "ncheck")
-		if len(chk) != 1 || !strings.HasPrefix(chk[0], "reg\t"+tc.view+"\tHKLM\\") || !strings.Contains(chk[0], tc.key+"\tMinor\t30") {
+		if len(chk) != 1 || !strings.HasPrefix(chk[0], "reg\t"+tc.view+"\tHKLM\\") || !strings.Contains(chk[0], tc.key+"\tMinor\t44") {
 			t.Errorf("windows %d %s: check %q", tc.ver, tc.arch, chk)
 		}
 		if run := keys(b, "nrun"); len(run) != 1 || run[0] != `"{file}" /install /quiet /norestart` {
@@ -215,7 +215,7 @@ func TestPrereqPolicyValidation(t *testing.T) {
 		"unknown prerequisite": {`"prerequisites": ["libatomic"]`, `"prerequisites": ["libatomicc"]`},
 		"shell in a package":   {`"apt-get": "libatomic1"`, `"apt-get": "libatomic1; rm -rf /"`},
 		"unknown check":        {`["lib", "libatomic.so.1"]`, `["exec", "true"]`},
-		"lib check on windows": {`["reg", "64", "HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\x64", "Minor", "30"]`, `["lib", "x"]`},
+		"lib check on windows": {`["reg", "64", "HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\x64", "Minor", "44"]`, `["lib", "x"]`},
 		"bad sha":              {`"sha256": "cc0ff0eb`, `"sha256": "CC0ff0eb`},
 		"bad registry root":    {`"HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\x86"`, `"HKXX\\SOFTWARE"`},
 	}
