@@ -49,8 +49,8 @@ record hash as the last `_` token of the file name (copy suffixes such as
 ` (1)` and ` - Copy` are stripped first; the record is fetched from
 `<backend>/api/records/<hash>` and must hash to the name), and last plain
 `install_<runtime>_<project>` tokens, for which the plan is fetched from
-`<backend>/api/plan/name/<runtime>/<project>` (a proposed route; the
-server doesn't have it yet).
+`<backend>/api/plan/name/<runtime>/<project>` (docs/api.md, "Plans by
+name").
 
 ## What gets installed
 

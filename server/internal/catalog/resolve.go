@@ -28,7 +28,17 @@ type App struct {
 	RootName   string
 	Platforms  []string
 	Source     *SourceFile // nil for package sources
-	PackageCmd string      // for package sources: what to install, e.g. "requests==2.32.3"
+	// Package sources (record `source package <name> <version>`): the
+	// registry name and, if pinned, the version. Both are checked with
+	// ValidPackage before they get here.
+	Package        string
+	PackageVersion string
+}
+
+// needsInstall: the app installs a project or package, so it needs the
+// runtime's package manager (design.md 1.7).
+func (a *App) needsInstall() bool {
+	return a.Package != "" || a.Install != ""
 }
 
 // SourceFile is the project's source archive.
@@ -48,33 +58,89 @@ type pick struct {
 	minBuild int
 	known    bool
 	needs    []companion // other runtimes this one needs on this OS
+	extras   []extraUse  // policy extra_files the recipe's steps name
+}
+
+// extraUse is one policy extra file (e.g. get-pip.py) a recipe needs.
+type extraUse struct {
+	name string // the {tmp} file name
+	src  *ExtraSource
 }
 
 // Recipe support --------------------------------------------------------
 
 var tmpRef = regexp.MustCompile(`\{tmp\}[\\/]+([A-Za-z0-9_.-]+)`)
 
-func (c *Catalog) supported(r *Recipe) bool {
+// supported says whether the engines can run a recipe for this release.
+// A step naming a {tmp} file the catalogue doesn't download makes the
+// recipe usable only when the runtime's policy pins that file
+// (extra_files); those files are returned. prefer: the recipe needs a
+// package-manager file and the app installs something, so it wins over an
+// equally specific recipe without it.
+func (c *Catalog) supported(rt *Runtime, r *Recipe, e *Release, install bool) (ok bool, extras []extraUse, prefer bool) {
 	if indexOf(c.Policy.MethodOrder, r.Method) < 0 || r.Isolation == "impossible" {
-		return false
+		return false, nil, false
 	}
+	pol := c.Policy.Runtimes[rt.ID]
+	seen := map[string]bool{}
+	deferred := false
 	for _, st := range r.Steps {
 		for k := range st {
 			switch k {
 			case "unpack", "to", "strip_components", "run", "shell", "write", "text", "mkdir":
 			default:
-				return false
+				return false, nil, false
 			}
 		}
-		if s, ok := st["run"].(string); ok {
-			for _, m := range tmpRef.FindAllStringSubmatch(s, -1) {
-				if contains(c.Policy.ExternalTmpFiles, m[1]) {
-					return false
+		s, _ := st["run"].(string)
+		for _, m := range tmpRef.FindAllStringSubmatch(s, -1) {
+			if !contains(c.Policy.ExternalTmpFiles, m[1]) {
+				continue
+			}
+			var ef *ExtraFile
+			if pol != nil {
+				ef = pol.ExtraFiles[m[1]]
+			}
+			if ef == nil {
+				return false, nil, false
+			}
+			src := ef.source(e.V)
+			if src == nil || src.SHA256 == "" || len(src.URLs) == 0 {
+				return false, nil, false
+			}
+			if ef.For == "install" {
+				if !install {
+					return false, nil, false
 				}
+				prefer = true
+			}
+			deferred = true
+			if !seen[m[1]] {
+				seen[m[1]] = true
+				extras = append(extras, extraUse{m[1], src})
+			}
+		}
+		// Steps from the first one needing an extra file on run after the
+		// extra files are fetched (writeTarget), when the runtime's own
+		// download is gone: they can't use {file} or unpack it.
+		if deferred && (st["unpack"] != nil || strings.Contains(s, "{file}")) {
+			return false, nil, false
+		}
+	}
+	return true, extras, prefer
+}
+
+// usesExtra: a recipe step names one of the pick's extra files.
+func usesExtra(st Step, extras []extraUse) bool {
+	s, _ := st["run"].(string)
+	for _, m := range tmpRef.FindAllStringSubmatch(s, -1) {
+		for _, x := range extras {
+			if x.name == m[1] {
+				return true
 			}
 		}
 	}
-	return true
+	return false
 }
 
 func matchField(m map[string]any, key, val string) (ok bool, specific bool) {
@@ -93,8 +159,10 @@ func matchField(m map[string]any, key, val string) (ok bool, specific bool) {
 }
 
 // recipeFor finds the most specific supported recipe for a release.
-func (c *Catalog) recipeFor(rt *Runtime, e *Release) *Recipe {
+// install: the app installs a project or package (App.needsInstall).
+func (c *Catalog) recipeFor(rt *Runtime, e *Release, install bool) (*Recipe, []extraUse) {
 	var best *Recipe
+	var bestExtras []extraUse
 	bestScore := -1
 	libc := ""
 	if e.Libc != nil {
@@ -130,19 +198,25 @@ func (c *Catalog) recipeFor(rt *Runtime, e *Release) *Recipe {
 			}
 			score++
 		}
-		if !c.supported(r) {
+		ok, extras, prefer := c.supported(rt, r, e, install)
+		if !ok {
 			continue
 		}
-		// Most specific first, then preferred method, then better isolation.
+		// Most specific first, then preferred method, then better
+		// isolation, then (for apps that install something) the recipe
+		// that brings a package manager.
 		score = score*100 + (10-indexOf(c.Policy.MethodOrder, r.Method))*5
 		if r.Isolation == "full" {
 			score += 2
 		}
+		if prefer {
+			score++
+		}
 		if score > bestScore {
-			best, bestScore = r, score
+			best, bestExtras, bestScore = r, extras, score
 		}
 	}
-	return best
+	return best, bestExtras
 }
 
 // Candidates -----------------------------------------------------------
@@ -266,11 +340,11 @@ func (c *Catalog) best(rt *Runtime, cands []*Release, o OSID, app *App) (p, cond
 		if !ok {
 			continue
 		}
-		r := c.recipeFor(rt, e)
+		r, extras := c.recipeFor(rt, e, app.needsInstall())
 		if r == nil || c.sha(e) == "" {
 			continue
 		}
-		pk := &pick{rel: e, recipe: r, minBuild: minBuild, known: known}
+		pk := &pick{rel: e, recipe: r, minBuild: minBuild, known: known, extras: extras}
 		if !c.attachNeeds(rt, pk, o) {
 			continue
 		}
@@ -386,7 +460,7 @@ func (c *Catalog) ResolveFiles(app *App) (string, []FileRef, error) {
 					// block of its own, checked before the fallback.
 					if cur != nil && samePick(cur.p, cond) && cur.minBuild <= cond.minBuild {
 						cur.min = o.Int
-							cur.labels = append(cur.labels, o.Label+" (build "+strconv.Itoa(cond.minBuild)+"+)")
+						cur.labels = append(cur.labels, o.Label+" (build "+strconv.Itoa(cond.minBuild)+"+)")
 						if cur.minBuild < cond.minBuild {
 							cur.minBuild = cond.minBuild
 						}
@@ -432,6 +506,12 @@ func (c *Catalog) ResolveFiles(app *App) (string, []FileRef, error) {
 			continue
 		}
 		add(b.p.rel)
+		for _, x := range b.p.extras {
+			if !seen[x.src.SHA256] {
+				seen[x.src.SHA256] = true
+				files = append(files, FileRef{Name: x.name, SHA256: x.src.SHA256, Size: x.src.Size, URLs: x.src.URLs})
+			}
+		}
 		for _, n := range b.p.needs {
 			add(n.p.rel)
 		}
@@ -461,7 +541,11 @@ func versionTokens(v Version) *strings.Replacer {
 		}
 		return "0"
 	}
-	return strings.NewReplacer("{version}", v.Raw, "{vmajor}", get(0), "{vminor}", get(1), "{vmm}", get(0)+get(1))
+	// "3XX" is the catalogue's spelling for the embeddable Python's
+	// python3XX._pth ("replace python3XX with the version's own name",
+	// python/install.json notes): the same as {vmm}.
+	return strings.NewReplacer("{version}", v.Raw, "{vmajor}", get(0), "{vminor}", get(1), "{vmm}", get(0)+get(1),
+		get(0)+"XX", get(0)+get(1))
 }
 
 var envRef = regexp.MustCompile(`\{env:[A-Za-z_][A-Za-z0-9_]*\}`)
@@ -568,7 +652,14 @@ func (c *Catalog) writeTarget(w *ibtext.Writer, app *App, pol *RuntimePolicy, b 
 	// Last resort for old machines: our mirror over plain HTTP by IP
 	// address (design.md 1.3).
 	addURL(mirror)
-	for _, st := range r.Steps {
+	// Recipe steps. From the first step that needs an extra file (policy
+	// extra_files, e.g. get-pip.py) on, steps wait: each extra file is
+	// fetched as a `file` of its own and copied to {tmp}/<name>, where the
+	// recipe expects it, and the waiting steps follow under the last one.
+	// They only use {runtime_dir} and {tmp} (supported() checks), so
+	// which file they sit under doesn't matter; {dir} is pinned to the
+	// runtime's folder.
+	step := func(st Step, fix func(string) string) {
 		switch {
 		case st["unpack"] != nil:
 			f := fmt.Sprint(st["unpack"])
@@ -587,6 +678,33 @@ func (c *Catalog) writeTarget(w *ibtext.Writer, app *App, pol *RuntimePolicy, b 
 			w.Add("step", "write", fix(fmt.Sprint(st["write"])), fix(fmt.Sprint(st["text"])))
 		case st["mkdir"] != nil:
 			w.Add("step", "mkdir", fix(fmt.Sprint(st["mkdir"])))
+		}
+	}
+	split := len(r.Steps)
+	for i, st := range r.Steps {
+		if usesExtra(st, b.p.extras) {
+			split = i
+			break
+		}
+	}
+	for _, st := range r.Steps[:split] {
+		step(st, fix)
+	}
+	if len(b.p.extras) > 0 {
+		for _, x := range b.p.extras {
+			w.Add("file", strings.TrimSuffix(x.name, filepath.Ext(x.name)), x.name, x.src.SHA256, strconv.FormatInt(x.src.Size, 10))
+			for _, u := range x.src.URLs {
+				w.Add("url", u)
+			}
+			if win {
+				w.Add("step", "run", `copy /y "{file}" "{tmp}\`+x.name+`" >nul`)
+			} else {
+				w.Add("step", "run", `cp "{file}" "{tmp}/`+x.name+`"`)
+			}
+		}
+		later := func(s string) string { return fix(strings.ReplaceAll(s, "{dir}", "{runtime_dir}")) }
+		for _, st := range r.Steps[split:] {
+			step(st, later)
 		}
 	}
 	// Companion runtimes (policy "requires"): their own files and folders,
@@ -643,16 +761,36 @@ func (c *Catalog) writeTarget(w *ibtext.Writer, app *App, pol *RuntimePolicy, b 
 	for _, p := range compPath {
 		w.Add("path", p)
 	}
+	// Package sources: the runtime's package policy (design.md 1.7,
+	// "Packages") adds to the recipe's environment and replaces its
+	// project install command.
+	var pkg *PackagePolicy
+	if app.Package != "" && pol != nil {
+		pkg = pol.Package
+	}
+	launchEnv := map[string]*string{}
+	installEnv := map[string]*string{}
+	if l := r.Launch; l != nil {
+		mergeEnv(launchEnv, l.Env)
+	}
+	if pi := r.ProjectInstall; pi != nil {
+		mergeEnv(installEnv, pi.Env)
+	}
+	if pkg != nil {
+		mergeEnv(launchEnv, pkg.Env[b.family])
+		mergeEnv(installEnv, pkg.Env[b.family])
+		mergeEnv(installEnv, pkg.IEnv[b.family])
+	}
 	// Launch environment (design.md 1.7): the runtime's part from the recipe.
 	path := map[string]bool{}
-	if l := r.Launch; l != nil {
-		for _, k := range sortedKeys(l.Env) {
-			if v := l.Env[k]; v == nil {
-				w.Add("unset", k)
-			} else {
-				w.Add("env", k, fix(*v))
-			}
+	for _, k := range sortedKeys(launchEnv) {
+		if v := launchEnv[k]; v == nil {
+			w.Add("unset", k)
+		} else {
+			w.Add("env", k, fix(*v))
 		}
+	}
+	if l := r.Launch; l != nil {
 		for _, p := range l.PathPrepend {
 			path[fix(p)] = true
 			w.Add("path", fix(p))
@@ -661,15 +799,8 @@ func (c *Catalog) writeTarget(w *ibtext.Writer, app *App, pol *RuntimePolicy, b 
 	// {env:NAME} in the app's own commands takes the value the plan gives
 	// NAME (e.g. JAVA_HOME, which differs between JDK layouts).
 	envVals := map[string]string{}
-	if l := r.Launch; l != nil {
-		for k, v := range l.Env {
-			if v != nil {
-				envVals[k] = fix(*v)
-			}
-		}
-	}
-	if pi := r.ProjectInstall; pi != nil {
-		for k, v := range pi.Env {
+	for _, m := range []map[string]*string{launchEnv, installEnv} {
+		for k, v := range m {
 			if v != nil {
 				envVals[k] = fix(*v)
 			}
@@ -683,6 +814,11 @@ func (c *Catalog) writeTarget(w *ibtext.Writer, app *App, pol *RuntimePolicy, b 
 	// Project install.
 	install := ""
 	switch {
+	case pkg != nil && (app.Install == "" || app.Install == "default"):
+		install = pkg.Install[b.family]
+		if install == "" {
+			w.Add("fail", fmt.Sprintf("Installing %s packages isn't supported on %s yet.", label(pol, app.Runtime), b.family))
+		}
 	case pol != nil && pol.InstallCommand[b.family] != "" && (app.Install == "default" || pol.Compiled):
 		install = pol.InstallCommand[b.family]
 	case app.Install == "default" || pol != nil && pol.Compiled:
@@ -692,25 +828,24 @@ func (c *Catalog) writeTarget(w *ibtext.Writer, app *App, pol *RuntimePolicy, b 
 	case app.Install != "":
 		install = quoteAppPaths(app.Install)
 	}
-	if app.PackageCmd != "" && install == "" && r.ProjectInstall != nil {
-		install = r.ProjectInstall.Command
-	}
 	if install != "" {
-		if pi := r.ProjectInstall; pi != nil {
-			for _, k := range sortedKeys(pi.Env) {
-				if v := pi.Env[k]; v == nil {
-					w.Add("iunset", k)
-				} else {
-					w.Add("ienv", k, fix(*v))
-				}
+		for _, k := range sortedKeys(installEnv) {
+			if v := installEnv[k]; v == nil {
+				w.Add("iunset", k)
+			} else {
+				w.Add("ienv", k, fix(*v))
 			}
+		}
+		if pi := r.ProjectInstall; pi != nil {
 			for _, p := range pi.PathPrepend {
 				if !path[fix(p)] {
 					w.Add("path", fix(p))
 				}
 			}
 		}
-		install = strings.ReplaceAll(install, "{package}", app.PackageCmd)
+		if pkg != nil {
+			install = PackageTokens(pkg, app.Package, app.PackageVersion).Replace(install)
+		}
 		w.Add("install", fix(expandEnv(install)))
 	}
 	// Launch: the app's command, with {runtime} expanded to the runtime's
@@ -727,6 +862,20 @@ func (c *Catalog) writeTarget(w *ibtext.Writer, app *App, pol *RuntimePolicy, b 
 		launch = strings.ReplaceAll(launch, "{runtime}", rc)
 	}
 	w.Add("launch", fix(expandEnv(launch)))
+}
+
+// mergeEnv copies src over dst (a nil value means unset).
+func mergeEnv(dst, src map[string]*string) {
+	for k, v := range src {
+		dst[k] = v
+	}
+}
+
+func label(pol *RuntimePolicy, id string) string {
+	if pol != nil && pol.Label != "" {
+		return pol.Label
+	}
+	return id
 }
 
 func sortedKeys(m map[string]*string) []string {
