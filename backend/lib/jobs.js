@@ -65,6 +65,8 @@ export class Builder {
     this.backend = o.backend ?? o.public;
     this.signer = o.signer;
     this.takenDown = o.takenDown || (() => false);
+    // Every fetch goes through the public-only client (tests pass their own).
+    this.fetch = o.fetch || safeFetch;
     this.lookupCache = new Map();
   }
 
@@ -219,7 +221,7 @@ export class Builder {
     }
     let res;
     try {
-      res = await safeFetch(u, { timeout: 30000, headers: { Accept: 'application/json', 'User-Agent': 'installer-builder/0.1 (+' + this.public + ')' } });
+      res = await this.fetch(u, { timeout: 30000, headers: { Accept: 'application/json', 'User-Agent': 'installer-builder/0.1 (+' + this.public + ')' } });
     } catch (e) {
       throw new Error('Get "' + u + '": ' + e.message);
     }
@@ -276,7 +278,7 @@ export class Builder {
   async fetchLimited(url, limit) {
     let res;
     try {
-      res = await safeFetch(url);
+      res = await this.fetch(url);
     } catch (e) {
       throw new Error('couldn\'t download the source (only public internet addresses are allowed)');
     }
@@ -291,7 +293,7 @@ export class Builder {
     const u = 'https://api.github.com/repos/' + owner + '/' + repo + '/commits/' + ref;
     let res;
     try {
-      res = await safeFetch(u, { headers: { Accept: 'application/vnd.github.sha' } });
+      res = await this.fetch(u, { headers: { Accept: 'application/vnd.github.sha' } });
     } catch (e) {
       throw new Error('Get "' + u + '": ' + e.message);
     }
@@ -379,7 +381,7 @@ export class Builder {
     for (const u of f.urls || []) {
       let res;
       try {
-        res = await safeFetch(u);
+        res = await this.fetch(u);
       } catch (e) {
         last = e.message;
         continue;

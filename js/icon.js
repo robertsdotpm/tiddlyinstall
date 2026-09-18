@@ -450,13 +450,17 @@ export async function setExeIcon(peBytes, icoBytes) {
 
 /* ---------- macOS Info.plist ---------- */
 
-// Set CFBundleIconFile to `name` in an Info.plist's XML text.
+// Set CFBundleIconFile to `name` in an Info.plist's XML text, byte for byte
+// as the Go server's icon.SetPlistIcon does it.
 export function setPlistIcon(xml, name) {
-  const keyRe = /(<key>\s*CFBundleIconFile\s*<\/key>\s*)<string>[^<]*<\/string>/;
-  if (keyRe.test(xml)) return xml.replace(keyRe, '$1<string>' + name + '</string>');
-  const entry = '\t<key>CFBundleIconFile</key>\n\t<string>' + name + '</string>\n';
-  if (/<dict>/.test(xml)) return xml.replace('<dict>', '<dict>\n' + entry);
-  throw new Error('Info.plist has no <dict> to add the icon to.');
+  const keyRe = /(<key>[\t\n\f\r ]*CFBundleIconFile[\t\n\f\r ]*<\/key>[\t\n\f\r ]*)<string>[^<]*<\/string>/g;
+  if (keyRe.test(xml)) {
+    keyRe.lastIndex = 0;
+    return xml.replace(keyRe, (m, key) => key + '<string>' + name + '</string>');
+  }
+  const i = xml.indexOf('<dict>');
+  if (i < 0) throw new Error('Info.plist has no <dict> to add the icon to.');
+  return xml.slice(0, i + 6) + '\n\t<key>CFBundleIconFile</key><string>' + name + '</string>' + xml.slice(i + 6);
 }
 
 // Put the .icns into the .app of a readInstaller() zip and point
@@ -469,6 +473,8 @@ export async function setMacIcon(info, icnsBytes) {
   if (!plist) throw new Error('This .app has no Info.plist.');
   const xml = new TextDecoder().decode(await zipEntryData(plist));
   const newPlist = await zipNewEntry(plistPath, setPlistIcon(xml, iconName));
+  // Rewritten, so recompressed; its mode and time are kept (as Go's MacZip).
+  for (const k of ['madeBy', 'extAttr', 'time', 'date']) newPlist[k] = plist[k];
   info.entries = info.entries.filter((e) => e.name !== plistPath && e.name !== icnsPath);
   info.entries.push(newPlist, await zipNewEntry(icnsPath, icnsBytes));
 }

@@ -2,7 +2,9 @@
 // build.Request, so the same body is accepted or refused (`bad_json`) the
 // same way: keys match case-insensitively (an exact match first), later
 // keys win, null leaves a field as it is (pointers become nil), a value of
-// the wrong type is an error, unknown keys are ignored.
+// the wrong type is an error, unknown keys are ignored. One difference: a
+// key repeated with the same spelling keeps only its last value (JSON.parse),
+// where Go applies each in turn; they differ only for `null` after a value.
 
 export class BadJSON extends Error {}
 

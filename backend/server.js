@@ -22,7 +22,7 @@ import { safeFetch } from './lib/netsafe.js';
 import { Limiter } from './lib/limiter.js';
 import { goJSON, sorted, goString } from './lib/gojson.js';
 import { decodeRequest, BadJSON } from './lib/request.js';
-import { serveFile, serveDir, notFound, httpError } from './lib/files.js';
+import { serveFile, serveDir, notFound, httpError, redirect } from './lib/files.js';
 
 export const VERSION = '0.1.0';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -266,12 +266,12 @@ export class Server {
   async route(req, res, rawPath, query) {
     const decoded = decodePath(rawPath);
     if (decoded === null) return httpError(res, 'Bad Request', 400);
-    // The mux cleans paths and redirects to the clean one.
-    const clean = cleanPath(decoded);
-    if (clean !== decoded) {
-      res.writeHead(301, { Location: clean + (query ? '?' + query : '') });
-      return res.end();
-    }
+    const q = query ? '?' + query : '';
+    // Go's mux: /src and /mirror go to their folders' paths...
+    if (rawPath === '/src' || rawPath === '/mirror') return redirect(req, res, cleanPath(decoded) + '/' + q);
+    // ...and a path that isn't clean (as sent, still escaped) to the clean one.
+    const clean = cleanPath(rawPath);
+    if (clean !== rawPath) return redirect(req, res, clean + q);
     const params = new URLSearchParams(query);
     const seg = rawPath.split('/').slice(1).map((s) => decodePath(s));
     const m = req.method === 'HEAD' ? 'GET' : req.method;

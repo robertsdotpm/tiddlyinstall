@@ -137,8 +137,9 @@ export async function serveDir(req, res, root, rel, { index = false, headers = {
     res.writeHead(301, { Location: './' });
     return res.end();
   }
+  // http.Dir: path.Clean("/" + name) under the root, so ".." can't leave it.
   const base = path.resolve(root);
-  let p = path.resolve(base, '.' + (rel.startsWith('/') ? rel : '/' + rel));
+  let p = path.join(base, path.posix.normalize('/' + rel));
   if (p !== base && !p.startsWith(base + path.sep)) return notFound(res);
   let st;
   try { st = fs.statSync(p); } catch (e) { return notFound(res); }
@@ -151,6 +152,17 @@ export async function serveDir(req, res, root, rel, { index = false, headers = {
     p = path.join(p, 'index.html');   // only the site's root gets here
   }
   return serveFile(req, res, p, headers);
+}
+
+// http.Redirect: the Location, and for GET a small HTML body.
+export function redirect(req, res, url, status = 301) {
+  const loc = url.replace(/[^\x00-\x7f]/g, (c) => encodeURIComponent(c));
+  const h = { Location: loc };
+  if (req.method === 'GET' || req.method === 'HEAD') h['Content-Type'] = 'text/html; charset=utf-8';
+  res.writeHead(status, h);
+  if (req.method !== 'GET') return res.end();
+  const esc = url.replace(/[&'<>"]/g, (c) => ({ '&': '&amp;', "'": '&#39;', '<': '&lt;', '>': '&gt;', '"': '&#34;' }[c]));
+  res.end('<a href="' + esc + '">' + (status === 301 ? 'Moved Permanently' : 'Found') + '</a>.\n\n');
 }
 
 /* ---------- writing ---------- */
