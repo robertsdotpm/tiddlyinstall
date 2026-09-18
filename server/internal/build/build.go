@@ -26,6 +26,7 @@ import (
 	"github.com/robertsdotpm/installer-builder/server/internal/catalog"
 	"github.com/robertsdotpm/installer-builder/server/internal/ibfile"
 	"github.com/robertsdotpm/installer-builder/server/internal/ibtext"
+	"github.com/robertsdotpm/installer-builder/server/internal/plansig"
 	"github.com/robertsdotpm/installer-builder/server/internal/queue"
 )
 
@@ -173,6 +174,8 @@ type Builder struct {
 	Backend string // written into records so online installers find us
 	// TakenDown reports whether a takedown list entry matches.
 	TakenDown func(entry string) bool
+	// Signer signs every plan that leaves the server (format.md 3.2).
+	Signer *plansig.Signer
 }
 
 // Result is what a finished job returns (docs/api.md).
@@ -359,6 +362,20 @@ func (b *Builder) Plan(hash string, platforms []string) (string, []catalog.FileR
 		}
 	}
 	return b.Cat.ResolveFiles(app)
+}
+
+// SignedPlan is Plan with the signature line appended: what GET
+// /api/plan/{hash} serves and what offline installers embed.
+func (b *Builder) SignedPlan(hash string, platforms []string) (string, []catalog.FileRef, error) {
+	plan, files, err := b.Plan(hash, platforms)
+	if err != nil {
+		return "", nil, err
+	}
+	if b.Signer == nil {
+		return "", nil, errors.New("no plan signing key")
+	}
+	signed, err := b.Signer.SignString(plan)
+	return signed, files, err
 }
 
 // Sources ----------------------------------------------------------------
@@ -653,7 +670,7 @@ func (b *Builder) output(ctx context.Context, r *Request, plat, stem, hash strin
 		if r.Mode != "A" {
 			extra["record.txt"] = record
 			if r.Offline {
-				plan, files, err := b.Plan(hash, []string{plat})
+				plan, files, err := b.SignedPlan(hash, []string{plat})
 				if err != nil {
 					return nil, err
 				}
@@ -679,7 +696,7 @@ func (b *Builder) output(ctx context.Context, r *Request, plat, stem, hash strin
 		var pack io.Reader
 		var packLen int64
 		if r.Offline {
-			p, files, err := b.Plan(hash, []string{plat})
+			p, files, err := b.SignedPlan(hash, []string{plat})
 			if err != nil {
 				return nil, err
 			}

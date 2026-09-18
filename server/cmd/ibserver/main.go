@@ -25,23 +25,25 @@ import (
 	"github.com/robertsdotpm/installer-builder/server/internal/catalog"
 	"github.com/robertsdotpm/installer-builder/server/internal/ibtext"
 	"github.com/robertsdotpm/installer-builder/server/internal/netsafe"
+	"github.com/robertsdotpm/installer-builder/server/internal/plansig"
 	"github.com/robertsdotpm/installer-builder/server/internal/queue"
 )
 
 const version = "0.1.0"
 
 type server struct {
-	q        *queue.Queue
-	b        *build.Builder
-	cat      *catalog.Catalog
-	data     string
-	local    string
-	site     string
-	bases    string
-	limiter  *limiter
+	q       *queue.Queue
+	b       *build.Builder
+	signer  *plansig.Signer
+	cat     *catalog.Catalog
+	data    string
+	local   string
+	site    string
+	bases   string
+	limiter *limiter
 	// relayLimiter caps /api/relay per address, so it can't burn bandwidth.
 	relayLimiter *limiter
-	runtimes struct {
+	runtimes     struct {
 		sync.Mutex
 		body []byte
 	}
@@ -76,11 +78,19 @@ func main() {
 	if *mirrorLast {
 		cat.Policy.MirrorFirst = false
 	}
+	signer, created, err := plansig.LoadOrCreate(*data)
+	if err != nil {
+		log.Fatalf("plan signing key: %v", err)
+	}
+	if created {
+		log.Printf("made a new plan signing key in %s; rebuild the bases with %s", *data, filepath.Join(*data, plansig.PubFile))
+	}
+	log.Printf("plan signing key %s (%s)", plansig.KeyID(signer.Pub), signer.PublicBase64())
 	q := queue.New(*redisAddr, *redisDB, *workers)
-	s := &server{q: q, cat: cat, data: *data, local: *local, site: *site, bases: *bases, limiter: newLimiter(20, time.Minute)}
+	s := &server{q: q, signer: signer, cat: cat, data: *data, local: *local, site: *site, bases: *bases, limiter: newLimiter(20, time.Minute)}
 	// Every outgoing fetch that a user can influence (sources, packs, the
 	// relay) goes through a client that only reaches public addresses.
-	s.b = &build.Builder{Cat: cat, Data: *data, Bases: *bases, Public: *public, Backend: *public,
+	s.b = &build.Builder{Cat: cat, Data: *data, Bases: *bases, Public: *public, Backend: *public, Signer: signer,
 		HTTP: netsafe.Client(10 * time.Minute), TakenDown: s.takenDown}
 	s.relayLimiter = newLimiter(30, time.Minute)
 	s.relayOK = map[string]bool{}
@@ -110,6 +120,7 @@ func main() {
 	mux.HandleFunc("GET /api/records/{hash}", s.record)
 	mux.HandleFunc("GET /api/plan/{hash}", s.plan)
 	mux.HandleFunc("GET /api/plan/name/{runtime}/{project}", s.planByName)
+	mux.HandleFunc("GET /api/pubkey", s.pubkey)
 	mux.HandleFunc("GET /api/catalog/runtimes", s.runtimesHandler)
 	mux.HandleFunc("GET /api/takedown", s.takedownHandler)
 	mux.HandleFunc("GET /api/relay", s.relay)
@@ -342,7 +353,7 @@ func (s *server) plan(w http.ResponseWriter, r *http.Request) {
 	if p := r.URL.Query().Get("os"); p != "" {
 		plats = []string{p}
 	}
-	plan, _, err := s.b.Plan(h, plats)
+	plan, _, err := s.b.SignedPlan(h, plats)
 	if err != nil {
 		if os.IsNotExist(err) {
 			apiError(w, 404, "not_found", "no such record")
@@ -354,6 +365,14 @@ func (s *server) plan(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.Header().Set("Cache-Control", "no-store")
 	io.WriteString(w, plan)
+}
+
+// pubkey publishes the plan signing key (docs/api.md). Bases carry their
+// own copy, baked in at build time; this is for people checking a plan.
+func (s *server) pubkey(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "public, max-age=3600")
+	writeJSON(w, 200, map[string]any{"alg": "ed25519", "key": s.signer.PublicBase64(),
+		"id": plansig.KeyID(s.signer.Pub), "pem": s.signer.PublicPEM()})
 }
 
 // runtimesJSON summarises, per runtime, the newest version for each OS
