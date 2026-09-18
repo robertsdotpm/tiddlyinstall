@@ -465,11 +465,27 @@ textarea.code.code-script { min-height: 110px; border-top-left-radius: 5px; }
 form:has(#runtime option[value="python"]:checked) .entry-python,
 form:has(#runtime option[value="node"]:checked) .entry-node,
 form:has(#runtime option[value="ruby"]:checked) .entry-ruby,
+form:has(#runtime option[value="php"]:checked) .entry-php,
+form:has(#runtime option[value="java"]:checked) .entry-java,
+form:has(#runtime option[value="dotnet"]:checked) .entry-dotnet,
+form:has(#runtime option[value="r"]:checked) .entry-r,
+form:has(#runtime option[value="go"]:checked) .entry-go,
+form:has(#runtime option[value="rust"]:checked) .entry-rust,
+form:has(#runtime option[value="zig"]:checked) .entry-zig,
+form:has(#runtime option[value="nim"]:checked) .entry-nim,
 form:has(#runtime option[value="none"]:checked) .entry-none { display: block; }
 .by-lang { display: none; }
 form:has(#runtime option[value="python"]:checked) .lang-python,
 form:has(#runtime option[value="node"]:checked) .lang-node,
 form:has(#runtime option[value="ruby"]:checked) .lang-ruby,
+form:has(#runtime option[value="php"]:checked) .lang-php,
+form:has(#runtime option[value="java"]:checked) .lang-java,
+form:has(#runtime option[value="dotnet"]:checked) .lang-dotnet,
+form:has(#runtime option[value="r"]:checked) .lang-r,
+form:has(#runtime option[value="go"]:checked) .lang-go,
+form:has(#runtime option[value="rust"]:checked) .lang-rust,
+form:has(#runtime option[value="zig"]:checked) .lang-zig,
+form:has(#runtime option[value="nim"]:checked) .lang-nim,
 form:has(#runtime option[value="none"]:checked) .lang-none { display: inline; }
 .by-mode { display: none; }
 form:has(#mode-ours:checked) .mode-ours-inline { display: inline; }
@@ -531,8 +547,8 @@ form:has(#offline-on:checked) .offline-off-inline { display: none; }
 form:has(#src-write:checked) .src-write-only { display: block; }
 form:has(#src-write:checked) .src-repo-only,
 form:has(#src-write:checked):has(#runtime option[value="none"]:checked) .lang-other-only { display: none; }
-form:has(#src-write:checked):has(#runtime option[value="none"]:checked) .write-needs-lang { display: block; }
-form:has(#src-write:checked):has(#runtime option[value="none"]:checked) .write-editor { display: none; }
+form:has(#src-write:checked):not(:has(#runtime option:is([value="python"], [value="node"], [value="ruby"]):checked)) .write-needs-lang { display: block; }
+form:has(#src-write:checked):not(:has(#runtime option:is([value="python"], [value="node"], [value="ruby"]):checked)) .write-editor { display: none; }
 
 /* Run output overlay, opened by the Run link via :target (no JS). */
 .run-overlay {
@@ -568,9 +584,9 @@ form:has(#pf-action option[value="run"]:checked) .pf-dest { display: none; }
 form:has(#runtime option[value="cc"]:checked) .lang-cc-only { display: block; }
 form:has(#runtime option[value="cc"]:checked) .entry-cc { display: block; }
 form:has(#runtime option[value="cc"]:checked) .lang-cc { display: inline; }
-form:has(#src-write:checked):has(#runtime option[value="cc"]:checked) .write-needs-lang { display: block; }
-form:has(#src-write:checked):has(#runtime option[value="cc"]:checked) .write-editor { display: none; }
 .lang-cc-only .win-settings .choice { margin-bottom: 8px; }
+.lang-compiled-only { display: none; }
+form:has(#runtime option:is([value="go"], [value="rust"], [value="zig"], [value="nim"]):checked) .lang-compiled-only { display: block; }
 
 /* Signed by Installer Builder: no packed files or offline copies (no JS). */
 .ours-only, .ours-only-inline { display: none; }

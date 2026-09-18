@@ -55,11 +55,25 @@
         <div class="field">
           <label for="runtime">Language</label>
           <select id="runtime" name="runtime">
-            <option value="python">Python</option>
-            <option value="node">Node.js</option>
-            <option value="ruby">Ruby</option>
-            <option value="cc">C / C++ (built on the user's computer)</option>
-            <option value="none">Other (use your own runtime)</option>
+            <optgroup label="Runs on a runtime the installer sets up">
+              <option value="python">Python</option>
+              <option value="node">Node.js</option>
+              <option value="ruby">Ruby</option>
+              <option value="php">PHP</option>
+              <option value="java">Java</option>
+              <option value="dotnet">.NET (C#, F#, VB)</option>
+              <option value="r">R</option>
+            </optgroup>
+            <optgroup label="Built on the user's computer">
+              <option value="cc">C / C++</option>
+              <option value="go">Go</option>
+              <option value="rust">Rust</option>
+              <option value="zig">Zig</option>
+              <option value="nim">Nim</option>
+            </optgroup>
+            <optgroup label="Anything else">
+              <option value="none">Other (use your own runtime)</option>
+            </optgroup>
           </select>
         </div>
 
@@ -228,6 +242,22 @@
           </div>
           <p class="small muted" style="margin-bottom:0"><span class="linux-settings">Linux: GCC or Clang from the catalogue. </span><span class="mac-settings">macOS: Clang from the catalogue, plus Apple's Xcode Command Line Tools. </span>
             People see the compiler, and that the project's build scripts will run, before anything is installed.</p>
+        </div>
+
+        <div class="custom-runtime lang-compiled-only">
+          <h3 class="section-title">Build</h3>
+          <p class="small muted" style="margin-top:0">The installer installs the
+            <span class="by-lang lang-go">Go toolchain</span><span class="by-lang lang-rust">Rust toolchain (on Windows the <code>-gnu</code> one, which brings its own linker)</span><span class="by-lang lang-zig">Zig compiler</span><span class="by-lang lang-nim">Nim compiler and a C compiler for it</span>
+            into the app's own folder and builds your project on the user's computer. Nothing is installed system-wide.</p>
+          <div class="field">
+            <label for="compiled-build">Build command</label>
+            <input type="text" class="entry entry-go" id="compiled-build" name="build_go" value="go build -o {app_dir}/{project} ." spellcheck="false">
+            <input type="text" class="entry entry-rust" name="build_rust" value="cargo build --release --locked" aria-label="Build command" spellcheck="false">
+            <input type="text" class="entry entry-zig" name="build_zig" value="zig build -Doptimize=ReleaseSafe --prefix {app_dir}" aria-label="Build command" spellcheck="false">
+            <input type="text" class="entry entry-nim" name="build_nim" value="nimble -y build" aria-label="Build command" spellcheck="false">
+            <span class="hint">Runs in the project's folder with the compiler set up. Downloaded dependencies stay in the app's folder too.</span>
+          </div>
+          <p class="small muted" style="margin-bottom:0">People see the compiler, and that the project's build scripts will run, before anything is installed.</p>
         </div>
 
         <!-- Code written on the site: templates, editor and preview -->
@@ -499,7 +529,7 @@ Press Enter to close</pre>
         </div>
 
         <p class="small muted" style="margin-bottom:0">
-          You'll get <code>install_<span class="by-lang lang-python">python</span><span class="by-lang lang-node">node</span><span class="by-lang lang-ruby">ruby</span><span class="by-lang lang-cc">cpp</span><span class="by-lang lang-none">app</span>_&lt;name&gt;<span class="by-mode mode-ours-inline">_&lt;hash&gt;</span>.exe</code>, <code>.run</code> and <code>.dmg</code><span class="offline-inline">, plus offline <code>…_offline.exe</code>, <code>.run</code> and <code>.zip</code></span>,
+          You'll get <code>install_<span class="by-lang lang-python">python</span><span class="by-lang lang-node">node</span><span class="by-lang lang-ruby">ruby</span><span class="by-lang lang-php">php</span><span class="by-lang lang-java">java</span><span class="by-lang lang-dotnet">dotnet</span><span class="by-lang lang-r">r</span><span class="by-lang lang-cc">cpp</span><span class="by-lang lang-go">go</span><span class="by-lang lang-rust">rust</span><span class="by-lang lang-zig">zig</span><span class="by-lang lang-nim">nim</span><span class="by-lang lang-none">app</span>_&lt;name&gt;<span class="by-mode mode-ours-inline">_&lt;hash&gt;</span>.exe</code>, <code>.run</code> and <code>.dmg</code><span class="offline-inline">, plus offline <code>…_offline.exe</code>, <code>.run</code> and <code>.zip</code></span>,
           <span class="by-mode mode-ours-inline">signed by Installer Builder (the hash points to your settings, so the signature stays valid)</span><span class="by-mode mode-yours-inline">signed by you</span><span class="by-mode mode-unsigned-inline">unsigned</span>. Everything below is optional and already has sensible defaults.
         </p>
       </section>
@@ -626,7 +656,7 @@ Press Enter to close</pre>
         </details>
 
         <details>
-          <summary><span>Base installer and metadata</span><span class="default">install_python_x</span></summary>
+          <summary><span>Base installer and metadata</span><span class="default"><span class="by-lang lang-python">install_python_x</span><span class="by-lang lang-node">install_node_x</span><span class="by-lang lang-ruby">install_ruby_x</span><span class="by-lang lang-php">install_php_x</span><span class="by-lang lang-java">install_java_x</span><span class="by-lang lang-dotnet">install_dotnet_x</span><span class="by-lang lang-r">install_r_x</span><span class="by-lang lang-cc">install_cpp_x</span><span class="by-lang lang-go">install_go_x</span><span class="by-lang lang-rust">install_rust_x</span><span class="by-lang lang-zig">install_zig_x</span><span class="by-lang lang-nim">install_nim_x</span><span class="by-lang lang-none">install_github_x</span></span></summary>
           <div class="field">
             <label for="base">Base installer</label>
             <select id="base" name="base">
@@ -635,6 +665,15 @@ Press Enter to close</pre>
               <option value="install_python_gui_x">install_python_gui_x</option>
               <option value="install_node_x">install_node_x</option>
               <option value="install_ruby_x">install_ruby_x</option>
+              <option value="install_php_x">install_php_x</option>
+              <option value="install_java_x">install_java_x</option>
+              <option value="install_dotnet_x">install_dotnet_x</option>
+              <option value="install_r_x">install_r_x</option>
+              <option value="install_cpp_x">install_cpp_x</option>
+              <option value="install_go_x">install_go_x</option>
+              <option value="install_rust_x">install_rust_x</option>
+              <option value="install_zig_x">install_zig_x</option>
+              <option value="install_nim_x">install_nim_x</option>
               <option value="install_github_x">install_github_x</option>
             </select>
             <span class="hint"><a href="bases.html">What are base installers?</a></span>
@@ -659,10 +698,18 @@ Press Enter to close</pre>
             <input type="text" class="entry entry-python" id="entry-python" name="entry_python" value="{runtime} -m {project}">
             <input type="text" class="entry entry-node" id="entry-node" name="entry_node" value="{runtime} {app_dir}" aria-label="Launch command">
             <input type="text" class="entry entry-ruby" id="entry-ruby" name="entry_ruby" value="{bin}/{project}" aria-label="Launch command">
+            <input type="text" class="entry entry-php" name="entry_php" value="{runtime} {app_dir}/index.php" aria-label="Launch command">
+            <input type="text" class="entry entry-java" name="entry_java" value="{runtime} -jar {app_dir}/{project}.jar" aria-label="Launch command">
+            <input type="text" class="entry entry-dotnet" name="entry_dotnet" value="{runtime} {app_dir}/{project}.dll" aria-label="Launch command">
+            <input type="text" class="entry entry-r" name="entry_r" value="{runtime} {app_dir}/main.R" aria-label="Launch command">
             <input type="text" class="entry entry-cc" id="entry-cc" name="entry_cc" value="{app_dir}/{project}" aria-label="Launch command">
+            <input type="text" class="entry entry-go" name="entry_go" value="{app_dir}/{project}" aria-label="Launch command">
+            <input type="text" class="entry entry-rust" name="entry_rust" value="{app_dir}/target/release/{project}" aria-label="Launch command">
+            <input type="text" class="entry entry-zig" name="entry_zig" value="{app_dir}/bin/{project}" aria-label="Launch command">
+            <input type="text" class="entry entry-nim" name="entry_nim" value="{app_dir}/{project}" aria-label="Launch command">
             <input type="text" class="entry entry-none" id="entry-none" name="entry_none" value="{app_dir}/{project}" aria-label="Launch command">
             <span class="hint">Filled in for the language you picked; change it if your app starts differently.
-              <code>{runtime}</code> the runtime (python, node, ruby) ·
+              <code>{runtime}</code> the runtime (python, node, ruby, php, java, dotnet, Rscript) ·
               <code>{project}</code> your package name ·
               <code>{app_dir}</code> the app's folder ·
               <code>{bin}</code> the runtime's scripts folder</span>
