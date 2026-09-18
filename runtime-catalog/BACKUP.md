@@ -20,3 +20,13 @@ rsync -a --delete \
   ~/projects/installer-builder-runtimes/catalog/ runtime-catalog/
 cp ~/projects/installer-builder-runtimes/{manifest.json,mirrors.json,README.md,TESTED-WINDOWS.md} runtime-catalog/store/
 ```
+
+Added 2026-09-18:
+
+- `store/sha256-local.json`: SHA-256 and size of our local copy of every
+  file the catalogue has no published checksum for (278 files, 58.6 GB
+  hashed). These are the only pins for those files; plans use them.
+- `store/mirror-manifest.json`: every file in the runtimes store with its
+  download URLs and SHA-256 (published, or `sha256_local` from above).
+  `tools/mirror_fetch.py` uses it to fill a mirror from vendor URLs (ovh1).
+- `store/mirror-nourl.json`: files with no public URL, copied by rsync.

@@ -50,7 +50,7 @@
     "notes": "The app is the program built by project_install and runs directly; it needs no runtime environment."
    },
    "project_install": {
-    "command": "\"{runtime_dir}/bin/go\" build -o \"{app_dir}/{project}\" .",
+    "command": "\"{runtime_dir}/bin/go\" build -o \"{app_dir}/{project}{exe}\" .",
     "env": {
      "GOROOT": "{runtime_dir}",
      "GOPATH": "{data_dir}/gopath",
@@ -110,7 +110,7 @@
     "notes": "The app is the program built by project_install and runs directly; it needs no runtime environment."
    },
    "project_install": {
-    "command": "\"{runtime_dir}/bin/go\" build -o \"{app_dir}/{project}\" .",
+    "command": "\"{runtime_dir}/bin/go\" build -o \"{app_dir}/{project}{exe}\" .",
     "env": {
      "GOROOT": "{runtime_dir}",
      "GOPATH": "{data_dir}/gopath",
@@ -173,7 +173,7 @@
     "notes": "The app is the program built by project_install and runs directly; it needs no runtime environment."
    },
    "project_install": {
-    "command": "\"{runtime_dir}/bin/go\" build -o \"{app_dir}/{project}\" .",
+    "command": "\"{runtime_dir}/bin/go\" build -o \"{app_dir}/{project}{exe}\" .",
     "env": {
      "GOROOT": "{runtime_dir}",
      "GOPATH": "{data_dir}/gopath",
@@ -229,7 +229,7 @@
     "notes": "The app is the program built by project_install and runs directly; it needs no runtime environment."
    },
    "project_install": {
-    "command": "\"{runtime_dir}/bin/go\" build -o \"{app_dir}/{project}\" .",
+    "command": "\"{runtime_dir}/bin/go\" build -o \"{app_dir}/{project}{exe}\" .",
     "env": {
      "GOROOT": "{runtime_dir}",
      "GOPATH": "{data_dir}/gopath",
@@ -286,7 +286,7 @@
     "notes": "The app is the program built by project_install and runs directly; it needs no runtime environment."
    },
    "project_install": {
-    "command": "\"{runtime_dir}\\bin\\go.exe\" build -o \"{app_dir}\\{project}\" .",
+    "command": "\"{runtime_dir}\\bin\\go.exe\" build -o \"{app_dir}\\{project}{exe}\" .",
     "env": {
      "GOROOT": "{runtime_dir}",
      "GOPATH": "{data_dir}\\gopath",
@@ -348,7 +348,7 @@
     "notes": "The app is the program built by project_install and runs directly; it needs no runtime environment."
    },
    "project_install": {
-    "command": "\"{runtime_dir}\\bin\\go.exe\" build -o \"{app_dir}\\{project}\" .",
+    "command": "\"{runtime_dir}\\bin\\go.exe\" build -o \"{app_dir}\\{project}{exe}\" .",
     "env": {
      "GOROOT": "{runtime_dir}",
      "GOPATH": "{data_dir}\\gopath",
@@ -407,7 +407,7 @@
     "notes": "The app is the program built by project_install and runs directly; it needs no runtime environment."
    },
    "project_install": {
-    "command": "\"{runtime_dir}/bin/go\" build -o \"{app_dir}/{project}\" .",
+    "command": "\"{runtime_dir}/bin/go\" build -o \"{app_dir}/{project}{exe}\" .",
     "env": {
      "GOROOT": "{runtime_dir}",
      "GOPATH": "{data_dir}/gopath",
@@ -467,7 +467,7 @@
     "notes": "The app is the program built by project_install and runs directly; it needs no runtime environment."
    },
    "project_install": {
-    "command": "\"{runtime_dir}/bin/go\" build -o \"{app_dir}/{project}\" .",
+    "command": "\"{runtime_dir}/bin/go\" build -o \"{app_dir}/{project}{exe}\" .",
     "env": {
      "GOROOT": "{runtime_dir}",
      "GOPATH": "{data_dir}/gopath",
@@ -527,7 +527,7 @@
     "notes": "The app is the program built by project_install and runs directly; it needs no runtime environment."
    },
    "project_install": {
-    "command": "\"{runtime_dir}\\bin\\go.exe\" build -o \"{app_dir}\\{project}\" .",
+    "command": "\"{runtime_dir}\\bin\\go.exe\" build -o \"{app_dir}\\{project}{exe}\" .",
     "env": {
      "GOROOT": "{runtime_dir}",
      "GOPATH": "{data_dir}\\gopath",

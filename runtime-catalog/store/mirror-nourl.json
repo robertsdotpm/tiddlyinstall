@@ -1,0 +1,18 @@
+[
+{
+"path": "python/windows/x86/3.3.5/python-3.3.5.msi.asc",
+"size": 203
+},
+{
+"path": "python/windows/x86/3.5-xp-backport/python_3_5_x86.zip",
+"size": 47145815
+},
+{
+"path": "python/windows/amd64/3.3.5/python-3.3.5.amd64.msi.asc",
+"size": 203
+},
+{
+"path": "deps/windows/any/vcredist-aio/0.35.0/VisualCppRedist_AIO_x86_x64.exe",
+"size": 30043398
+}
+]

@@ -48,7 +48,7 @@
     "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
    },
    "project_install": {
-    "command": "\"{runtime_dir}/dotnet\" build -c Release -o \"{app_dir}/bin\"",
+    "command": "\"{runtime_dir}/dotnet\" build -c Release -o \"{app_dir}/bin\" --disable-build-servers -nodeReuse:false",
     "env": {
      "DOTNET_CLI_HOME": "{data_dir}",
      "NUGET_PACKAGES": "{data_dir}/nuget-packages",
@@ -58,10 +58,13 @@
      "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
      "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
      "DOTNET_ROOT": "{runtime_dir}",
-     "HOME": "{data_dir}"
+     "HOME": "{data_dir}",
+     "MSBUILDDISABLENODEREUSE": "1",
+     "DOTNET_CLI_USE_MSBUILD_SERVER": "0",
+     "UseSharedCompilation": "false"
     },
     "cwd": "{app_dir}",
-    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check."
+    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check. Build servers (MSBuild nodes, VBCSCompiler) are turned off: left running, they hold the runtime folder open and the uninstaller can't delete it (found on every Windows VM)."
    }
   },
   {
@@ -111,7 +114,7 @@
     "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
    },
    "project_install": {
-    "command": "\"{runtime_dir}/dotnet\" build -c Release -o \"{app_dir}/bin\"",
+    "command": "\"{runtime_dir}/dotnet\" build -c Release -o \"{app_dir}/bin\" --disable-build-servers -nodeReuse:false",
     "env": {
      "DOTNET_CLI_HOME": "{data_dir}",
      "NUGET_PACKAGES": "{data_dir}/nuget-packages",
@@ -121,10 +124,13 @@
      "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
      "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
      "DOTNET_ROOT": "{runtime_dir}",
-     "HOME": "{data_dir}"
+     "HOME": "{data_dir}",
+     "MSBUILDDISABLENODEREUSE": "1",
+     "DOTNET_CLI_USE_MSBUILD_SERVER": "0",
+     "UseSharedCompilation": "false"
     },
     "cwd": "{app_dir}",
-    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check."
+    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check. Build servers (MSBuild nodes, VBCSCompiler) are turned off: left running, they hold the runtime folder open and the uninstaller can't delete it (found on every Windows VM)."
    }
   },
   {
@@ -174,7 +180,7 @@
     "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
    },
    "project_install": {
-    "command": "\"{runtime_dir}/dotnet\" build -c Release -o \"{app_dir}/bin\"",
+    "command": "\"{runtime_dir}/dotnet\" build -c Release -o \"{app_dir}/bin\" --disable-build-servers -nodeReuse:false",
     "env": {
      "DOTNET_CLI_HOME": "{data_dir}",
      "NUGET_PACKAGES": "{data_dir}/nuget-packages",
@@ -184,10 +190,13 @@
      "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
      "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
      "DOTNET_ROOT": "{runtime_dir}",
-     "HOME": "{data_dir}"
+     "HOME": "{data_dir}",
+     "MSBUILDDISABLENODEREUSE": "1",
+     "DOTNET_CLI_USE_MSBUILD_SERVER": "0",
+     "UseSharedCompilation": "false"
     },
     "cwd": "{app_dir}",
-    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check."
+    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check. Build servers (MSBuild nodes, VBCSCompiler) are turned off: left running, they hold the runtime folder open and the uninstaller can't delete it (found on every Windows VM)."
    }
   },
   {
@@ -241,7 +250,7 @@
     "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
    },
    "project_install": {
-    "command": "\"{runtime_dir}/dotnet\" build -c Release -o \"{app_dir}/bin\"",
+    "command": "\"{runtime_dir}/dotnet\" build -c Release -o \"{app_dir}/bin\" --disable-build-servers -nodeReuse:false",
     "env": {
      "DOTNET_CLI_HOME": "{data_dir}",
      "NUGET_PACKAGES": "{data_dir}/nuget-packages",
@@ -251,10 +260,13 @@
      "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
      "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
      "DOTNET_ROOT": "{runtime_dir}",
-     "HOME": "{data_dir}"
+     "HOME": "{data_dir}",
+     "MSBUILDDISABLENODEREUSE": "1",
+     "DOTNET_CLI_USE_MSBUILD_SERVER": "0",
+     "UseSharedCompilation": "false"
     },
     "cwd": "{app_dir}",
-    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check."
+    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check. Build servers (MSBuild nodes, VBCSCompiler) are turned off: left running, they hold the runtime folder open and the uninstaller can't delete it (found on every Windows VM)."
    }
   },
   {
@@ -306,7 +318,7 @@
     "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
    },
    "project_install": {
-    "command": "\"{runtime_dir}/dotnet\" build -c Release -o \"{app_dir}/bin\"",
+    "command": "\"{runtime_dir}/dotnet\" build -c Release -o \"{app_dir}/bin\" --disable-build-servers -nodeReuse:false",
     "env": {
      "DOTNET_CLI_HOME": "{data_dir}",
      "NUGET_PACKAGES": "{data_dir}/nuget-packages",
@@ -316,10 +328,13 @@
      "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
      "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
      "DOTNET_ROOT": "{runtime_dir}",
-     "HOME": "{data_dir}"
+     "HOME": "{data_dir}",
+     "MSBUILDDISABLENODEREUSE": "1",
+     "DOTNET_CLI_USE_MSBUILD_SERVER": "0",
+     "UseSharedCompilation": "false"
     },
     "cwd": "{app_dir}",
-    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check."
+    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check. Build servers (MSBuild nodes, VBCSCompiler) are turned off: left running, they hold the runtime folder open and the uninstaller can't delete it (found on every Windows VM)."
    }
   },
   {
@@ -371,7 +386,7 @@
     "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
    },
    "project_install": {
-    "command": "\"{runtime_dir}\\dotnet.exe\" build -c Release -o \"{app_dir}\\bin\"",
+    "command": "\"{runtime_dir}\\dotnet.exe\" build -c Release -o \"{app_dir}\\bin\" --disable-build-servers -nodeReuse:false",
     "env": {
      "DOTNET_CLI_HOME": "{data_dir}",
      "NUGET_PACKAGES": "{data_dir}\\nuget-packages",
@@ -383,10 +398,13 @@
      "DOTNET_ROOT": "{runtime_dir}",
      "USERPROFILE": "{data_dir}",
      "APPDATA": "{data_dir}\\appdata",
-     "LOCALAPPDATA": "{data_dir}\\localappdata"
+     "LOCALAPPDATA": "{data_dir}\\localappdata",
+     "MSBUILDDISABLENODEREUSE": "1",
+     "DOTNET_CLI_USE_MSBUILD_SERVER": "0",
+     "UseSharedCompilation": "false"
     },
     "cwd": "{app_dir}",
-    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check."
+    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check. Build servers (MSBuild nodes, VBCSCompiler) are turned off: left running, they hold the runtime folder open and the uninstaller can't delete it (found on every Windows VM)."
    }
   },
   {
@@ -439,7 +457,7 @@
     "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
    },
    "project_install": {
-    "command": "\"{runtime_dir}\\dotnet.exe\" build -c Release -o \"{app_dir}\\bin\"",
+    "command": "\"{runtime_dir}\\dotnet.exe\" build -c Release -o \"{app_dir}\\bin\" --disable-build-servers -nodeReuse:false",
     "env": {
      "DOTNET_CLI_HOME": "{data_dir}",
      "NUGET_PACKAGES": "{data_dir}\\nuget-packages",
@@ -451,10 +469,13 @@
      "DOTNET_ROOT": "{runtime_dir}",
      "USERPROFILE": "{data_dir}",
      "APPDATA": "{data_dir}\\appdata",
-     "LOCALAPPDATA": "{data_dir}\\localappdata"
+     "LOCALAPPDATA": "{data_dir}\\localappdata",
+     "MSBUILDDISABLENODEREUSE": "1",
+     "DOTNET_CLI_USE_MSBUILD_SERVER": "0",
+     "UseSharedCompilation": "false"
     },
     "cwd": "{app_dir}",
-    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check."
+    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check. Build servers (MSBuild nodes, VBCSCompiler) are turned off: left running, they hold the runtime folder open and the uninstaller can't delete it (found on every Windows VM)."
    }
   },
   {
@@ -503,7 +524,7 @@
     "notes": "Start the app as `dotnet <app>.dll` through this private dotnet, which only uses its own folder. DOTNET_ROOT is for an app's own .exe launcher; DOTNET_MULTILEVEL_LOOKUP=0 stops Windows 1.x-6.0 preferring a newer global install. 2.2/3.1 on new Linux distros may need CLR_ICU_VERSION_OVERRIDE (see recipe notes)."
    },
    "project_install": {
-    "command": "\"{runtime_dir}\\dotnet.exe\" build -c Release -o \"{app_dir}\\bin\"",
+    "command": "\"{runtime_dir}\\dotnet.exe\" build -c Release -o \"{app_dir}\\bin\" --disable-build-servers -nodeReuse:false",
     "env": {
      "DOTNET_CLI_HOME": "{data_dir}",
      "NUGET_PACKAGES": "{data_dir}\\nuget-packages",
@@ -515,10 +536,13 @@
      "DOTNET_ROOT": "{runtime_dir}",
      "USERPROFILE": "{data_dir}",
      "APPDATA": "{data_dir}\\appdata",
-     "LOCALAPPDATA": "{data_dir}\\localappdata"
+     "LOCALAPPDATA": "{data_dir}\\localappdata",
+     "MSBUILDDISABLENODEREUSE": "1",
+     "DOTNET_CLI_USE_MSBUILD_SERVER": "0",
+     "UseSharedCompilation": "false"
     },
     "cwd": "{app_dir}",
-    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check."
+    "notes": "Added 2026-09-18 by installer-builder: the SDK and NuGet write ~/.dotnet, ~/.nuget and ~/.local/share/NuGet (Windows: %USERPROFILE%\\.nuget, %APPDATA%\\NuGet) unless pointed at the app's data folder; found by the test matrix's leftover check. Build servers (MSBuild nodes, VBCSCompiler) are turned off: left running, they hold the runtime folder open and the uninstaller can't delete it (found on every Windows VM)."
    }
   },
   {

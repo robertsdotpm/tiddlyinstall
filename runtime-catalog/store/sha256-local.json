@@ -1,0 +1,1114 @@
+{
+"deps/windows/any/vcredist-aio/0.35.0/VisualCppRedist_AIO_x86_x64.exe": {
+"size": 30043398,
+"sha256": "04d6878f25e0bb6ce8fe2de7e0e7603edef7dbd6e9270789c819ed678211d2f6"
+},
+"dotnet-framework/windows/amd64/3.5/dotnetfx35.exe": {
+"size": 242885528,
+"sha256": "3887bb41eda48915268a9431041eb9f6dde06e52e411b49074b6ac60411b9ebe"
+},
+"dotnet-framework/windows/amd64/4.8.1/NDP481-x86-x64-AllOS-ENU.exe": {
+"size": 77688504,
+"sha256": "c0ca2e0c9cd18a24a0a77369a13fae2c2c4e8bc83355dd24e5ddc00f9d791fe3"
+},
+"dotnet/linux/amd64/1.1.13-runtime/dotnet-rhel-x64.1.1.13.tar.gz": {
+"size": 32447160,
+"sha256": "6d3309acb8fcbea329732a711c3f57d81596992101d4686b21af09ef7338b050"
+},
+"dotnet/linux/amd64/10.0.12-runtime/dotnet-runtime-10.0.12-linux-x64.tar.gz": {
+"size": 36638192,
+"sha256": "8458f4cef855fcebd139d9853e47fb0a5d86ab65d4aa101ea158a11e036c0fa4"
+},
+"dotnet/linux/amd64/10.0.12-sdk/dotnet-sdk-10.0.401-linux-x64.tar.gz": {
+"size": 240059572,
+"sha256": "137268c8ad939c064ff1ee2a6fdf0899d8725377114ea012fbd1ad5fa2550418"
+},
+"dotnet/linux/amd64/2.2.300-runtime/dotnet-runtime-2.2.5-linux-x64.tar.gz": {
+"size": 28757756,
+"sha256": "a49ebecf9b1a4cadd47e4db65ae63425b94be75628314107def3abf52d5d0221"
+},
+"dotnet/linux/amd64/3.1.32-runtime/dotnet-runtime-3.1.32-linux-x64.tar.gz": {
+"size": 30466403,
+"sha256": "da49faf88c31aced91e341e3049de67f96d61891c28841511e7a26332f0bec88"
+},
+"dotnet/linux/amd64/5.0.17-runtime/dotnet-runtime-5.0.17-linux-x64.tar.gz": {
+"size": 30877751,
+"sha256": "12b44025aabf3d28242c47f84dd14237ad7f496715be55a7c5afd0fb34f66c8b"
+},
+"dotnet/linux/amd64/6.0.36-runtime/dotnet-runtime-6.0.36-linux-x64.tar.gz": {
+"size": 30710677,
+"sha256": "18f90612188f34d95af8c87557554a156e24dbf83d2878320e3a217e02f5453d"
+},
+"dotnet/linux/amd64/7.0.20-runtime/dotnet-runtime-7.0.20-linux-x64.tar.gz": {
+"size": 31482932,
+"sha256": "95e65b97ca160cbc4ffa36c700e2108450b437db150d369fd90e68667bc79222"
+},
+"dotnet/linux/amd64/8.0.31-runtime/dotnet-runtime-8.0.31-linux-x64.tar.gz": {
+"size": 31298876,
+"sha256": "e2e392eedd49fd5a6eba078d508383fa9191059cb362c9d93cf533d5207b8db6"
+},
+"dotnet/linux/amd64/9.0.20-runtime/dotnet-runtime-9.0.20-linux-x64.tar.gz": {
+"size": 33522274,
+"sha256": "8aee9b39327d622a2becac4942af3fa601fff58f5f38207052a8fe8dc65a05ab"
+},
+"dotnet/linux/arm64/10.0.12-runtime/dotnet-runtime-10.0.12-linux-arm64.tar.gz": {
+"size": 34397485,
+"sha256": "faa0a5d136fd9d582db4e6b3b9faf81715dc1c879c9072efc08122fba1623727"
+},
+"dotnet/linux/arm64/2.2.300-runtime/dotnet-runtime-2.2.5-linux-arm64.tar.gz": {
+"size": 27303478,
+"sha256": "7b563a1a480feaad288b1ecf77c78f40537b5b688d8699a70272809e3a22ad9b"
+},
+"dotnet/linux/arm64/3.1.32-runtime/dotnet-runtime-3.1.32-linux-arm64.tar.gz": {
+"size": 30300088,
+"sha256": "768ef5f384eedd10ef899769abff2c60997ce2b17b8dca8fe87bb5452ab7ebc5"
+},
+"dotnet/linux/arm64/5.0.17-runtime/dotnet-runtime-5.0.17-linux-arm64.tar.gz": {
+"size": 28684340,
+"sha256": "1894cf47827a4be9cb10e4405c6f99f162258ab0fc3c1cb3286928f4bc66caae"
+},
+"dotnet/linux/arm64/6.0.36-runtime/dotnet-runtime-6.0.36-linux-arm64.tar.gz": {
+"size": 28419386,
+"sha256": "f018afed27c47a4e4a8bc38317b1bcd931cc38d3154cbd8ff89d243f05af614c"
+},
+"dotnet/linux/arm64/7.0.20-runtime/dotnet-runtime-7.0.20-linux-arm64.tar.gz": {
+"size": 29787354,
+"sha256": "e7d69edaa1ecd3d0c37823a0d8ea494bc10037cf1765df66338ebdff79007416"
+},
+"dotnet/linux/arm64/8.0.31-runtime/dotnet-runtime-8.0.31-linux-arm64.tar.gz": {
+"size": 29894960,
+"sha256": "6a7d97525fef5ad5b41520ec0e4a7a5be977ebeef38113c9f67f8026520f78e5"
+},
+"dotnet/linux/arm64/9.0.20-runtime/dotnet-runtime-9.0.20-linux-arm64.tar.gz": {
+"size": 31824525,
+"sha256": "4287e6023f8a9abe9654bc2a8420e500216dbdc68260dbe3c6df19de31732a1d"
+},
+"dotnet/linux/armv7/10.0.12-runtime/dotnet-runtime-10.0.12-linux-arm.tar.gz": {
+"size": 33852316,
+"sha256": "7576f56fdf0e07aafab0c7b76470cc1a5a6925999bc1ca08608406afbc88e2eb"
+},
+"dotnet/linux/armv7/2.2.300-runtime/dotnet-runtime-2.2.5-linux-arm.tar.gz": {
+"size": 28522665,
+"sha256": "28ec99093dc19bd97f63af149023a12ada891211c8ccb2fb8510a8c06127dde0"
+},
+"dotnet/linux/armv7/3.1.32-runtime/dotnet-runtime-3.1.32-linux-arm.tar.gz": {
+"size": 31846724,
+"sha256": "25165dc145ec0113420b5de2e5f4ce4b9cd09a3841edc2f1fd107586e647b930"
+},
+"dotnet/linux/armv7/5.0.17-runtime/dotnet-runtime-5.0.17-linux-arm.tar.gz": {
+"size": 28960852,
+"sha256": "ce1767be949f2126d0fa2bf2f5d28fdb7e3d130c2faa0881bc24a805e379ce76"
+},
+"dotnet/linux/armv7/6.0.36-runtime/dotnet-runtime-6.0.36-linux-arm.tar.gz": {
+"size": 28668069,
+"sha256": "29e1a36bccc06b7de6834037131592298431c23344ab0721702430291057778d"
+},
+"dotnet/linux/armv7/7.0.20-runtime/dotnet-runtime-7.0.20-linux-arm.tar.gz": {
+"size": 29665011,
+"sha256": "6329d431298e59c91917f8bc5c95d2cc9d2e64c0c43a54f576d453c6a2041e27"
+},
+"dotnet/linux/armv7/8.0.31-runtime/dotnet-runtime-8.0.31-linux-arm.tar.gz": {
+"size": 29516127,
+"sha256": "15bfd28c6fdc12ed5791de2478bb24e2cc8f435204a2576c139182e716d160e2"
+},
+"dotnet/linux/armv7/9.0.20-runtime/dotnet-runtime-9.0.20-linux-arm.tar.gz": {
+"size": 31247450,
+"sha256": "ba6ff96e9c4a2c9bea22e0a28d55f6cc2b0085e1475ed35abeb0351d90247a3d"
+},
+"dotnet/macos/amd64/1.1.13-runtime/dotnet-osx-x64.1.1.13.tar.gz": {
+"size": 31334204,
+"sha256": "79cda4316ef6a9e49dc916bb1e89713e022349b3ecbe93d306f9c4f847649139"
+},
+"dotnet/macos/amd64/10.0.12-runtime/dotnet-runtime-10.0.12-osx-x64.tar.gz": {
+"size": 35596837,
+"sha256": "6c92a95f32ac75139b16c1de0bbea7df776dd710360ee3980239d9026cd53e71"
+},
+"dotnet/macos/amd64/2.2.300-runtime/dotnet-runtime-2.2.5-osx-x64.tar.gz": {
+"size": 27665219,
+"sha256": "de1d2c4c4be8ce6ec7d94a862bbaa1eebe2eec2e126b3b70224ccb52fe6770db"
+},
+"dotnet/macos/amd64/3.1.32-runtime/dotnet-runtime-3.1.32-osx-x64.tar.gz": {
+"size": 29792260,
+"sha256": "2d577720fc956c34ebd4e2c5bd910c96333ae263865359e89c7fb50264205774"
+},
+"dotnet/macos/amd64/5.0.17-runtime/dotnet-runtime-5.0.17-osx-x64.tar.gz": {
+"size": 30609652,
+"sha256": "9661a59dee6452aa9c503a0973310b03e009ce779adf7b78e203a87364d57aea"
+},
+"dotnet/macos/amd64/6.0.36-runtime/dotnet-runtime-6.0.36-osx-x64.tar.gz": {
+"size": 30108326,
+"sha256": "4aa499f1e10e941bde250e1493bb4156791186790a34fb89c219e7765a9b97cd"
+},
+"dotnet/macos/amd64/8.0.31-runtime/dotnet-runtime-8.0.31-osx-x64.tar.gz": {
+"size": 30717675,
+"sha256": "bdb20a01a84b8b39da34ff8ade4f41c1667dfc5352f92c23e2962139bb44bc95"
+},
+"dotnet/macos/amd64/9.0.20-runtime/dotnet-runtime-9.0.20-osx-x64.tar.gz": {
+"size": 32738639,
+"sha256": "af87d23a78a33852ec652b9f19aa6c6ae5393c1bcdb1fcdf9e9c89bc744debbc"
+},
+"dotnet/macos/arm64/10.0.12-runtime/dotnet-runtime-10.0.12-osx-arm64.tar.gz": {
+"size": 33249724,
+"sha256": "5519e3889dd69674b7dce57930a46bb22789f180d95574562bab23f7638ccc53"
+},
+"dotnet/macos/arm64/10.0.12-sdk/dotnet-sdk-10.0.401-osx-arm64.tar.gz": {
+"size": 230753980,
+"sha256": "d143ccec4474dce17d7b778854598137a2599b81828bce51e809897fe8bdf035"
+},
+"dotnet/macos/arm64/6.0.36-runtime/dotnet-runtime-6.0.36-osx-arm64.tar.gz": {
+"size": 28255302,
+"sha256": "c4ea0b90326de8d90ee7d821f722add96a2f7c35f02c67f3ae0b697764290a4e"
+},
+"dotnet/macos/arm64/8.0.31-runtime/dotnet-runtime-8.0.31-osx-arm64.tar.gz": {
+"size": 29086664,
+"sha256": "278d93091093a5b9a8e5d8466bf31183fdc12a7af86c41afa2865f4e4c6c07eb"
+},
+"dotnet/macos/arm64/9.0.20-runtime/dotnet-runtime-9.0.20-osx-arm64.tar.gz": {
+"size": 30809560,
+"sha256": "452dc0b41e7918873b46b922187691581846a179579c0284d56a50bff5e6f1e6"
+},
+"dotnet/windows/amd64/1.1.13-runtime/dotnet-win-x64.1.1.13.zip": {
+"size": 33033707,
+"sha256": "09e465894a40679c00616204aa248cc9e5945d7ec2a21920552fe4a73bd935bd"
+},
+"dotnet/windows/amd64/10.0.12-runtime/dotnet-runtime-10.0.12-win-x64.zip": {
+"size": 36960258,
+"sha256": "da3947e6acbb5228e4e987c7585aa40ce2d7000856e3da0804e6ee3771e806dc"
+},
+"dotnet/windows/amd64/10.0.12-sdk/dotnet-sdk-10.0.401-win-x64.zip": {
+"size": 300608304,
+"sha256": "c1b96dea223e1ab2af8a51187e0cc96338d14c68834be1656136be18953cea09"
+},
+"dotnet/windows/amd64/2.2.300-runtime/dotnet-runtime-2.2.5-win-x64.zip": {
+"size": 29866845,
+"sha256": "558b8422a3dd104b28f6257be1e794158f9631197dedda89864b2ba68a2725c1"
+},
+"dotnet/windows/amd64/3.1.32-runtime/dotnet-runtime-3.1.32-win-x64.zip": {
+"size": 30979360,
+"sha256": "939b704db413973ab4acbebca7314dcb4a173fd12bfa428a8c92ca2009608670"
+},
+"dotnet/windows/amd64/5.0.17-runtime/dotnet-runtime-5.0.17-win-x64.zip": {
+"size": 30720719,
+"sha256": "885c935dc46c9b2dad4110fa49c7eda45397c43ee3ffd3418826711038312b4b"
+},
+"dotnet/windows/amd64/6.0.36-runtime/dotnet-runtime-6.0.36-win-x64.zip": {
+"size": 33057872,
+"sha256": "c077ccc342c5571ceb7a3c06d1dfbc99b989ed5a6e0f3a0b0b450531c1259615"
+},
+"dotnet/windows/amd64/7.0.20-runtime/dotnet-runtime-7.0.20-win-x64.zip": {
+"size": 33021410,
+"sha256": "8ad1ea6e0d6a3cc16ad80d4b1ecf931da4bfd094ba5e0dd6a5e700743af3407b"
+},
+"dotnet/windows/amd64/8.0.31-runtime/dotnet-runtime-8.0.31-win-x64.zip": {
+"size": 33322727,
+"sha256": "7deabbefdc83e378b343c551fe447b86002680eea91355b1f6f81d0c9ab0dcaa"
+},
+"dotnet/windows/amd64/9.0.20-runtime/dotnet-runtime-9.0.20-win-x64.zip": {
+"size": 35977436,
+"sha256": "1f645d05f046b5107dd57406f7ef994f76cfc35cc5ef0cd320c8120d49903503"
+},
+"dotnet/windows/arm64/10.0.12-runtime/dotnet-runtime-10.0.12-win-arm64.zip": {
+"size": 35304080,
+"sha256": "54039abe0d12e18fd746d441bbeeb2ba53e0df882a89cb8a9915472b8a5cb740"
+},
+"dotnet/windows/arm64/2.2.1-runtime/dotnet-runtime-2.2.1-win-arm64.zip": {
+"size": 18190936,
+"sha256": "4e6ddfa3385f4398b07d4e9002a0d9a36ca128d6095d37df21cc2c3de6083f8c"
+},
+"dotnet/windows/arm64/5.0.17-runtime/dotnet-runtime-5.0.17-win-arm64.zip": {
+"size": 28969316,
+"sha256": "a9ca9767dc64eb255dc91108ad4e26696d24e01f909150db9689a5d9841d0183"
+},
+"dotnet/windows/arm64/6.0.36-runtime/dotnet-runtime-6.0.36-win-arm64.zip": {
+"size": 31434802,
+"sha256": "e32eb276bd91810770947c328aa4f10ba5dbb0e635abe5d4b522c7176ca93284"
+},
+"dotnet/windows/arm64/7.0.20-runtime/dotnet-runtime-7.0.20-win-arm64.zip": {
+"size": 32655394,
+"sha256": "2600bf05b0fc062a91154d3cb5a5f2001da684283e4c4d2354c85417d748e30d"
+},
+"dotnet/windows/arm64/8.0.31-runtime/dotnet-runtime-8.0.31-win-arm64.zip": {
+"size": 33203130,
+"sha256": "af7b9515f3ce2b7c8a3093f9571bf3e26adc8f96a141e9c89b8251262cf47915"
+},
+"dotnet/windows/arm64/9.0.20-runtime/dotnet-runtime-9.0.20-win-arm64.zip": {
+"size": 35776051,
+"sha256": "3f8e7af1baa8ec3f1dea2963e90cd67fd73f69d817f70e058d25dda45315f21e"
+},
+"dotnet/windows/armv7/2.2.300-runtime/dotnet-runtime-2.2.5-win-arm.zip": {
+"size": 18510199,
+"sha256": "a227db8173365b6c2c567b5f2dae412e1371e1390a8be96f99897b079d6769d5"
+},
+"dotnet/windows/armv7/3.1.32-runtime/dotnet-runtime-3.1.32-win-arm.zip": {
+"size": 30490724,
+"sha256": "8fe082cb98b15e8af4a891c5c465075901529b387520b7567066898a5d859581"
+},
+"dotnet/windows/x86/1.1.13-runtime/dotnet-win-x86.1.1.13.zip": {
+"size": 29978659,
+"sha256": "6d9658fac696ded2d3dfc4e39fd8cfb87723f32e78d472f1d23d3fc2fd7c391f"
+},
+"dotnet/windows/x86/10.0.12-runtime/dotnet-runtime-10.0.12-win-x86.zip": {
+"size": 33958503,
+"sha256": "77b1395ee0d7e1f543444f6d0b8b8e753361fd6d8749be11877a5cd712008e45"
+},
+"dotnet/windows/x86/2.2.300-runtime/dotnet-runtime-2.2.5-win-x86.zip": {
+"size": 27062868,
+"sha256": "be66827f5d0fea8fa9ec582062662afdceda903187e67a0f5eba075d19879698"
+},
+"dotnet/windows/x86/3.1.32-runtime/dotnet-runtime-3.1.32-win-x86.zip": {
+"size": 27703307,
+"sha256": "8ba9f0186c8425ecf4b52af5e34171dcca983ddb59fb48895ef12482cf08efd8"
+},
+"dotnet/windows/x86/5.0.17-runtime/dotnet-runtime-5.0.17-win-x86.zip": {
+"size": 27486438,
+"sha256": "8c9187b42b1cc9101755c40fa5f29ab4838832b6151012c749b510e54636e068"
+},
+"dotnet/windows/x86/6.0.36-runtime/dotnet-runtime-6.0.36-win-x86.zip": {
+"size": 30051705,
+"sha256": "f137248b65b4c2bd1890822cbd10c9e439fad7f70ebcf7a660183f629373d40c"
+},
+"dotnet/windows/x86/7.0.20-runtime/dotnet-runtime-7.0.20-win-x86.zip": {
+"size": 30166639,
+"sha256": "a57ad2485fb6def8802d638fb2855b7313ba9052691401c18bfb87ff31945c37"
+},
+"dotnet/windows/x86/8.0.31-runtime/dotnet-runtime-8.0.31-win-x86.zip": {
+"size": 30566127,
+"sha256": "b8d850fbed83750f0247265a704d3275820ee393fce71139d7638b8dd513d019"
+},
+"dotnet/windows/x86/9.0.20-runtime/dotnet-runtime-9.0.20-win-x86.zip": {
+"size": 32625921,
+"sha256": "6699786fe0c276db788aa1e337067a97093a3215edf62c6e63cb16cd2385628c"
+},
+"gcc/linux/any/10.5.0/gcc-10.5.0.tar.xz": {
+"size": 77846412,
+"sha256": "25109543fdf46f397c347b5d8b7a2c7e5694a5a51cce4b9c6e1ea8a71ca307c1"
+},
+"gcc/linux/any/11.5.0/gcc-11.5.0.tar.xz": {
+"size": 82399864,
+"sha256": "a6e21868ead545cf87f0c01f84276e4b5281d672098591c1c896241f09363478"
+},
+"gcc/linux/any/12.5.0/gcc-12.5.0.tar.xz": {
+"size": 85897368,
+"sha256": "71cd373d0f04615e66c5b5b14d49c1a4c1a08efa7b30625cd240b11bab4062b3"
+},
+"gcc/linux/any/13.5.0/gcc-13.5.0.tar.xz": {
+"size": 90977816,
+"sha256": "ec3df0015ed01411f91f9a9cd5b4da3070eb1222b02fadf4133c30c090399855"
+},
+"gcc/linux/any/14.4.0/gcc-14.4.0.tar.xz": {
+"size": 91586872,
+"sha256": "752b6f567beac83159c77a7680b1316bdd784738bff9a9d070112c09da90f6d9"
+},
+"gcc/linux/any/15.3.0/gcc-15.3.0.tar.xz": {
+"size": 101253696,
+"sha256": "fa59c1beef8995f27c4d71c1df227587189315d3e6faff1bb4306e61b0c530eb"
+},
+"gcc/linux/any/16.2.0/gcc-16.2.0.tar.xz": {
+"size": 107200820,
+"sha256": "e6738e29597f733270731aa90600f37ffdc045079dfc27ec7e8192cc81085c3e"
+},
+"gcc/linux/any/4.9.4/gcc-4.9.4.tar.bz2": {
+"size": 90097606,
+"sha256": "6c11d292cd01b294f9f84c9a59c230d80e9e4a47e5c6355f046bb36d4f358092"
+},
+"gcc/linux/any/5.5.0/gcc-5.5.0.tar.xz": {
+"size": 71096120,
+"sha256": "530cea139d82fe542b358961130c69cfde8b3d14556370b65823d2f91f0ced87"
+},
+"gcc/linux/any/6.5.0/gcc-6.5.0.tar.xz": {
+"size": 74355588,
+"sha256": "7ef1796ce497e89479183702635b14bb7a46b53249209a5e0f999bebf4740945"
+},
+"gcc/linux/any/7.5.0/gcc-7.5.0.tar.xz": {
+"size": 62783088,
+"sha256": "b81946e7f01f90528a1f7352ab08cc602b9ccc05d4e44da4bd501c5a189ee661"
+},
+"gcc/linux/any/8.5.0/gcc-8.5.0.tar.xz": {
+"size": 63841008,
+"sha256": "d308841a511bb830a6100397b0042db24ce11f642dab6ea6ee44842e5325ed50"
+},
+"gcc/linux/any/9.5.0/gcc-9.5.0.tar.xz": {
+"size": 72462752,
+"sha256": "27769f64ef1d4cd5e2be8682c0c93f9887983e6cfd1a927ce5a0a2915a95cf8f"
+},
+"go/macos/x86/1.4.2-osx10.6/go1.4.2.darwin-386-osx10.6.tar.gz": {
+"size": 51284299,
+"sha256": "3221677248fa8d4a17f76aed777d83bca771e30808aa7bd994de048f6b018784"
+},
+"llvm/linux/amd64/10.0.1-ubuntu-16.04/clang%2Bllvm-10.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz": {
+"size": 380908816,
+"sha256": "7eeca49a41620f702ef7cbd28fe920fa2244c5aa65fc33655fa4ff377c4d0873"
+},
+"llvm/linux/amd64/11.1.0-ubuntu-20.10/clang%2Bllvm-11.1.0-x86_64-linux-gnu-ubuntu-20.10.tar.xz": {
+"size": 421216528,
+"sha256": "29b07422da4bcea271a88f302e5f84bd34380af137df18e33251b42dd20c26d7"
+},
+"llvm/linux/amd64/12.0.1-ubuntu-16.04/clang%2Bllvm-12.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz": {
+"size": 452975464,
+"sha256": "6b3cc55d3ef413be79785c4dc02828ab3bd6b887872b143e3091692fc6acefe7"
+},
+"llvm/linux/amd64/13.0.1-ubuntu-18.04/clang%2Bllvm-13.0.1-x86_64-linux-gnu-ubuntu-18.04.tar.xz": {
+"size": 506421856,
+"sha256": "84a54c69781ad90615d1b0276a83ff87daaeded99fbc64457c350679df7b4ff0"
+},
+"llvm/linux/amd64/14.0.6-rhel-8.4/clang%2Bllvm-14.0.6-x86_64-linux-gnu-rhel-8.4.tar.xz": {
+"size": 602076988,
+"sha256": "7412026be8bb8f6b4c25ef58c7a1f78ed5ea039d94f0fa633a386de9c60a6942"
+},
+"llvm/linux/amd64/15.0.6-ubuntu-18.04/clang%2Bllvm-15.0.6-x86_64-linux-gnu-ubuntu-18.04.tar.xz": {
+"size": 817102112,
+"sha256": "38bc7f5563642e73e69ac5626724e206d6d539fbef653541b34cae0ba9c3f036"
+},
+"llvm/linux/amd64/16.0.4-ubuntu-22.04/clang%2Bllvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz": {
+"size": 965756016,
+"sha256": "fd464333bd55b482eb7385f2f4e18248eb43129a3cda4c0920ad9ac3c12bdacf"
+},
+"llvm/linux/amd64/17.0.6-ubuntu-22.04/clang%2Bllvm-17.0.6-x86_64-linux-gnu-ubuntu-22.04.tar.xz": {
+"size": 997521960,
+"sha256": "884ee67d647d77e58740c1e645649e29ae9e8a6fe87c1376be0f3a30f3cc9ab3"
+},
+"llvm/linux/amd64/18.1.8-ubuntu-18.04/clang%2Bllvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04.tar.xz": {
+"size": 1044930068,
+"sha256": "54ec30358afcc9fb8aa74307db3046f5187f9fb89fb37064cdde906e062ebf36"
+},
+"llvm/linux/amd64/19.1.7/LLVM-19.1.7-Linux-X64.tar.xz": {
+"size": 1653440720,
+"sha256": "4a5ec53951a584ed36f80240f6fbf8fdd46b4cf6c7ee87cc2d5018dc37caf679"
+},
+"llvm/linux/amd64/3.9.1-ubuntu-16.04/clang+llvm-3.9.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz": {
+"size": 189312136,
+"sha256": "99d1ffd4be8fd3331b4d2478ada7ee6ed352729bfe4a1070450cdb9a3ce8ef9b"
+},
+"llvm/linux/amd64/4.0.1-Fedora-25/clang+llvm-4.0.1-x86_64-linux-gnu-Fedora-25.tar.xz": {
+"size": 222500504,
+"sha256": "709f9d34b8fcacaa5d69a6ccc9f7af2c52da1ff08e6a55e821504ae11a3ba04f"
+},
+"llvm/linux/amd64/5.0.2-ubuntu-16.04/clang+llvm-5.0.2-x86_64-linux-gnu-ubuntu-16.04.tar.xz": {
+"size": 258880356,
+"sha256": "15a97aa654b529793da7d115bcfdd8b93281d94f86ec98f0850aff7cf82cbb3f"
+},
+"llvm/linux/amd64/6.0.1-ubuntu-16.04/clang+llvm-6.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz": {
+"size": 292835604,
+"sha256": "7ea204ecd78c39154d72dfc0d4a79f7cce1b2264da2551bb2eef10e266d54d91"
+},
+"llvm/linux/amd64/7.1.0-ubuntu-14.04/clang%2Bllvm-7.1.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz": {
+"size": 375903264,
+"sha256": "66fba27749e0e02182d14c8b2364167fb90d19e0e01d558562b4598695ea0bfc"
+},
+"llvm/linux/amd64/8.0.1-ubuntu-14.04/clang%2Bllvm-8.0.1-x86_64-linux-gnu-ubuntu-14.04.tar.xz": {
+"size": 395667436,
+"sha256": "0eb70c888c5a67f61e62ae502f4c935e3116e79e5cb3371a3be260f345fe1f16"
+},
+"llvm/linux/amd64/9.0.1-ubuntu-16.04/clang%2Bllvm-9.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz": {
+"size": 398305228,
+"sha256": "1af280e96fec62acf5f3bb525e36baafe09f95f940dc9806e22809a83dfff4f8"
+},
+"llvm/linux/arm64/10.0.1/clang%2Bllvm-10.0.1-aarch64-linux-gnu.tar.xz": {
+"size": 390878232,
+"sha256": "d1d6151456b0a551ba13c10dc7ca87fe6fe5b6469400c142aaec069e9827fe4d"
+},
+"llvm/linux/arm64/11.1.0/clang%2Bllvm-11.1.0-aarch64-linux-gnu.tar.xz": {
+"size": 324110860,
+"sha256": "8af5a6233bf8f49874fe82be20bcaa8c32179299044bebf439de754640b01261"
+},
+"llvm/linux/arm64/12.0.1/clang%2Bllvm-12.0.1-aarch64-linux-gnu.tar.xz": {
+"size": 378155248,
+"sha256": "3d4ad804b7c85007686548cbc917ab067bf17eaedeab43d9eb83d3a683d8e9d4"
+},
+"llvm/linux/arm64/13.0.1/clang%2Bllvm-13.0.1-aarch64-linux-gnu.tar.xz": {
+"size": 513352520,
+"sha256": "15ff2db12683e69e552b6668f7ca49edaa01ce32cb1cbc8f8ed2e887ab291069"
+},
+"llvm/linux/arm64/14.0.6/clang%2Bllvm-14.0.6-aarch64-linux-gnu.tar.xz": {
+"size": 588290020,
+"sha256": "1a81fda984f5e607584916fdf69cf41e5385b219b983544d2c1a14950d5a65cf"
+},
+"llvm/linux/arm64/15.0.6/clang%2Bllvm-15.0.6-aarch64-linux-gnu.tar.xz": {
+"size": 749061716,
+"sha256": "8ca4d68cf103da8331ca3f35fe23d940c1b78fb7f0d4763c1c059e352f5d1bec"
+},
+"llvm/linux/arm64/16.0.6/clang%2Bllvm-16.0.6-aarch64-linux-gnu.tar.xz": {
+"size": 913706844,
+"sha256": "283e904048425f05798a98f1b288ae0d28ce75eb1049e0837f959e911369945b"
+},
+"llvm/linux/arm64/17.0.6/clang%2Bllvm-17.0.6-aarch64-linux-gnu.tar.xz": {
+"size": 962230808,
+"sha256": "6dd62762285326f223f40b8e4f2864b5c372de3f7de0731cb7cd55ca5287b75a"
+},
+"llvm/linux/arm64/18.1.8/clang%2Bllvm-18.1.8-aarch64-linux-gnu.tar.xz": {
+"size": 1051625508,
+"sha256": "dcaa1bebbfbb86953fdfbdc7f938800229f75ad26c5c9375ef242edad737d999"
+},
+"llvm/linux/arm64/19.1.7/clang%2Bllvm-19.1.7-aarch64-linux-gnu.tar.xz": {
+"size": 1131066132,
+"sha256": "a73d9326e5d756e3937df6a9f621664d76403b59119f741901106b387e53a6ae"
+},
+"llvm/linux/arm64/3.9.1/clang+llvm-3.9.1-aarch64-linux-gnu.tar.xz": {
+"size": 148057548,
+"sha256": "953c76b8a2b2162aef1aef09f4543999afdfca6fdd38353971b7084cff43c051"
+},
+"llvm/linux/arm64/4.0.1/clang+llvm-4.0.1-aarch64-linux-gnu.tar.xz": {
+"size": 192004092,
+"sha256": "603c0c2a507a97cf4f4e42082d90ee6ea4acd677b748e8541cf4806dcee182c3"
+},
+"llvm/linux/arm64/5.0.1/clang+llvm-5.0.1-aarch64-linux-gnu.tar.xz": {
+"size": 224589020,
+"sha256": "d2ad679b42b4b1eb0fc45d0a69d6a3cbd7dde5ca4c1e7d1d0f937a3177cb0817"
+},
+"llvm/linux/arm64/6.0.1/clang+llvm-6.0.1-aarch64-linux-gnu.tar.xz": {
+"size": 252969776,
+"sha256": "37b9303f540d5c346b7040e3b4f12ce60285a350f1935705b967dfd59eec7e95"
+},
+"llvm/linux/arm64/7.1.0/clang%2Bllvm-7.1.0-aarch64-linux-gnu.tar.xz": {
+"size": 274473812,
+"sha256": "b7369d91279cfc470f82528c23318b902adea8e345b7d64a59332c7f6900acfe"
+},
+"llvm/linux/arm64/8.0.1/clang%2Bllvm-8.0.1-aarch64-linux-gnu.tar.xz": {
+"size": 288677476,
+"sha256": "0672ccf5b2f16e31994e41094aad890851d45fb69b58c4429aa0a7fde50e9510"
+},
+"llvm/linux/arm64/9.0.1/clang%2Bllvm-9.0.1-aarch64-linux-gnu.tar.xz": {
+"size": 341990632,
+"sha256": "84023d5309646e1f56beed056ab7d7ecf92d03b26e87917deb8e7fc191805d15"
+},
+"llvm/linux/armv7/10.0.1/clang%2Bllvm-10.0.1-armv7a-linux-gnueabihf.tar.xz": {
+"size": 420166488,
+"sha256": "6d41476c05339c6700aa4bdf1055e402431288320db85471038cde6b05b6a381"
+},
+"llvm/linux/armv7/11.1.0/clang%2Bllvm-11.1.0-armv7a-linux-gnueabihf.tar.xz": {
+"size": 321820460,
+"sha256": "18a3c3aedf1181aa18da3f5d0a2c67366c6d5fb398ac00e461298d9584be5c68"
+},
+"llvm/linux/armv7/12.0.1/clang%2Bllvm-12.0.1-armv7a-linux-gnueabihf.tar.xz": {
+"size": 344388684,
+"sha256": "1ec685b5026f9cc5e7316a5ff2dffd8ff54ad9941e642df19062cc1359842c86"
+},
+"llvm/linux/armv7/13.0.1/clang%2Bllvm-13.0.1-armv7a-linux-gnueabihf.tar.xz": {
+"size": 470686828,
+"sha256": "1215720114538f57acbe2f3b0614c23f4fc551ba2976afa3779a3c01aaaf1221"
+},
+"llvm/linux/armv7/14.0.6/clang%2Bllvm-14.0.6-armv7a-linux-gnueabihf.tar.xz": {
+"size": 530914256,
+"sha256": "e50243c191334b80faa0bb18bbadb8afa35cd3d19cb521353c666c1a7ef20173"
+},
+"llvm/linux/armv7/15.0.6/clang%2Bllvm-15.0.6-armv7a-linux-gnueabihf.tar.xz": {
+"size": 571210760,
+"sha256": "c12e9298f9a9ed3a96342e9ffb2c02146a0cd7535231fef57c7217bd3a36f53b"
+},
+"llvm/linux/armv7/16.0.4/clang%2Bllvm-16.0.4-armv7a-linux-gnueabihf.tar.xz": {
+"size": 681073328,
+"sha256": "e3fafbb5813650cdbfb191005fa8a7b1f036fbadff171e05b32d06015e1feb46"
+},
+"llvm/linux/armv7/17.0.6/clang%2Bllvm-17.0.6-armv7a-linux-gnueabihf.tar.gz": {
+"size": 1332555760,
+"sha256": "7a51ea063f74fb1b7c0389455916cec52c98d1b51da44d6ebc8232014d7af3d1"
+},
+"llvm/linux/armv7/18.1.8/clang%2Bllvm-18.1.8-armv7a-linux-gnueabihf.tar.gz": {
+"size": 1413107159,
+"sha256": "a4fc669dd54030f27e422fa67751509fa14bb90fbef32c2bd24c7f395c93c47c"
+},
+"llvm/linux/armv7/19.1.7/clang%2Bllvm-19.1.7-armv7a-linux-gnueabihf.tar.gz": {
+"size": 1556120340,
+"sha256": "dedde2acbc164649b77d6f6635e8551218c9aed5a6df4c09b2614aaccc0c05b2"
+},
+"llvm/linux/armv7/3.9.1/clang+llvm-3.9.1-armv7a-linux-gnueabihf.tar.xz": {
+"size": 158690192,
+"sha256": "6229ab4763dbf58f7eefe9c70b40a653595f625dc8990162500c47d4da73c612"
+},
+"llvm/linux/armv7/4.0.1/clang+llvm-4.0.1-armv7a-linux-gnueabihf.tar.xz": {
+"size": 208740356,
+"sha256": "ee47d157524e4f2bb4ab02322071599a523d2df2386d70690943491af93a3d5a"
+},
+"llvm/linux/armv7/5.0.1/clang+llvm-5.0.1-armv7a-linux-gnueabihf.tar.xz": {
+"size": 239165220,
+"sha256": "9ef720ca1550edcede2e10214f4f46d7d1d40c5fb184027e82f449d8800dccc0"
+},
+"llvm/linux/armv7/6.0.1/clang+llvm-6.0.1-armv7a-linux-gnueabihf.tar.xz": {
+"size": 266975228,
+"sha256": "d05c8b1757505ca093c76a9363f066a1d5db0bf6358e65598020cc9fb6704138"
+},
+"llvm/linux/armv7/7.1.0/clang%2Bllvm-7.1.0-armv7a-linux-gnueabihf.tar.xz": {
+"size": 290788972,
+"sha256": "bac0c55c1943ee4e4eece850e18cc9cbd638e5c84f397b8897c0a8486f73431b"
+},
+"llvm/linux/armv7/8.0.1/clang%2Bllvm-8.0.1-armv7a-linux-gnueabihf.tar.xz": {
+"size": 306719536,
+"sha256": "c87b57496f8ec0f0fd74faa1c43b0ac12c156aae54d9be45169fd8f2b33b2181"
+},
+"llvm/linux/armv7/9.0.1/clang%2Bllvm-9.0.1-armv7a-linux-gnueabihf.tar.xz": {
+"size": 360946356,
+"sha256": "91638613913537f8c0c84a59f59f00fafeafb6b189164cae471d4e3bccaf1df3"
+},
+"llvm/linux/ppc64le/10.0.1-ubuntu-16.04/clang%2Bllvm-10.0.1-powerpc64le-linux-ubuntu-16.04.tar.xz": {
+"size": 442863192,
+"sha256": "e2215ef3ebd1c3bd524c0a9f15fe6b63a680ec996d39cbb8be7791bdcc2887f6"
+},
+"llvm/linux/ppc64le/11.1.0-ubuntu-18.04/clang%2Bllvm-11.1.0-powerpc64le-linux-ubuntu-18.04.tar.xz": {
+"size": 316562868,
+"sha256": "2741183e4ea5fccc86ec2d9ce226edcf00da90b07731b04540edb5025cc695c1"
+},
+"llvm/linux/ppc64le/12.0.1-ubuntu-18.04/clang%2Bllvm-12.0.1-powerpc64le-linux-ubuntu-18.04.tar.xz": {
+"size": 382545440,
+"sha256": "271b9605b74d904d3cc05dd6a61e927fd5a46d5f6b7541cdc67186eb02b22e4c"
+},
+"llvm/linux/ppc64le/13.0.1-ubuntu-18.04.5/clang%2Bllvm-13.0.1-powerpc64le-linux-ubuntu-18.04.5.tar.xz": {
+"size": 499268448,
+"sha256": "7a4be2508aa0b4ee3f72c312af4b62ea14581a5db61aa703ea0822f46e5598cb"
+},
+"llvm/linux/ppc64le/14.0.6-ubuntu-18.04.5/clang%2Bllvm-14.0.6-powerpc64le-linux-ubuntu-18.04.5.tar.xz": {
+"size": 586796516,
+"sha256": "5eaff8c40a94d36336221f31b413fba500ec240403fa12e99dd49b56b736eeb3"
+},
+"llvm/linux/ppc64le/15.0.7-ubuntu-18.04/clang%2Bllvm-15.0.7-powerpc64le-linux-ubuntu-18.04.tar.xz": {
+"size": 708861076,
+"sha256": "19a16d768e15966923b0cbf8fc7dc148c89e316857acd89ad3aff72dcfcd61f4"
+},
+"llvm/linux/ppc64le/16.0.6-rhel-8.7/clang%2Bllvm-16.0.6-powerpc64le-linux-rhel-8.7.tar.xz": {
+"size": 824145068,
+"sha256": "1f8d73c342efc82618bd8d58fa8855bc7e70bd2a6ed9646065aabfa4b468e82d"
+},
+"llvm/linux/ppc64le/17.0.6-rhel-8.8/clang%2Bllvm-17.0.6-powerpc64le-linux-rhel-8.8.tar.xz": {
+"size": 857075508,
+"sha256": "04e18072797920c2b5e9bdf0c3ee9e5a61adf76bd5ffeb438fafd9e32fc48b62"
+},
+"llvm/linux/ppc64le/18.1.8-rhel-8.8/clang%2Bllvm-18.1.8-powerpc64le-linux-rhel-8.8.tar.xz": {
+"size": 922334644,
+"sha256": "b3df0c1607bfb04fe268c2e80542aba6e63ef0766a0bc4100ccf6a1ea99a0a1b"
+},
+"llvm/linux/ppc64le/4.0.1-Fedora-25/clang+llvm-4.0.1-ppc64le-linux-gnu-Fedora-25.tar.xz": {
+"size": 217840220,
+"sha256": "1fd84bca3f1436867148a5a89cc4e162954ee3ce7f2b4a885079f892796d1b7f"
+},
+"llvm/linux/ppc64le/5.0.1-Fedora-27/clang+llvm-5.0.1-ppc64le-linux-gnu-Fedora-27.tar.xz": {
+"size": 252327668,
+"sha256": "da1edbe8ea7f90a405dfeb691919c0738633906291a150d235adf02253a362ad"
+},
+"llvm/linux/ppc64le/8.0.1-ubuntu-16.04/clang%2Bllvm-8.0.1-powerpc64le-linux-ubuntu-16.04.tar.xz": {
+"size": 342865040,
+"sha256": "7a8a422b360ad649f24e077eeee7098dd1496a82bee81792898f78ced2fe4a17"
+},
+"llvm/linux/ppc64le/9.0.1-ubuntu-16.04/clang%2Bllvm-9.0.1-powerpc64le-linux-ubuntu-16.04.tar.xz": {
+"size": 399247220,
+"sha256": "58651968999c1a8fbe16231c04908845cea77432b9fa66dae1443da0daf5d10f"
+},
+"llvm/linux/x86/5.0.1-Fedora-27/clang+llvm-5.0.1-i686-linux-gnu-Fedora-27.tar.xz": {
+"size": 261830940,
+"sha256": "57d7fc2dd624e66596ade4c64b17522a4798971f6baf26b32adafb71ee47649f"
+},
+"llvm/linux/x86/6.0.0-Fedora27/clang+llvm-6.0.0-i686-linux-gnu-Fedora27.tar.xz": {
+"size": 292730704,
+"sha256": "2619e0a2542eec997daed3c7e597d99d5800cc3a07500b359429541a260d0207"
+},
+"llvm/macos/amd64/10.0.1/clang%2Bllvm-10.0.1-x86_64-apple-darwin.tar.xz": {
+"size": 448541784,
+"sha256": "1154a24597ab77801980dfd5ae4a13c117d6b482bab015baa410aeba443ffd92"
+},
+"llvm/macos/amd64/11.0.0/clang%2Bllvm-11.0.0-x86_64-apple-darwin.tar.xz": {
+"size": 381800532,
+"sha256": "b93886ab0025cbbdbb08b46e5e403a462b0ce034811c929e96ed66c2b07fe63a"
+},
+"llvm/macos/amd64/12.0.0/clang%2Bllvm-12.0.0-x86_64-apple-darwin.tar.xz": {
+"size": 417112900,
+"sha256": "7bc2259bf75c003f644882460fc8e844ddb23b27236fe43a2787870a4cd8ab50"
+},
+"llvm/macos/amd64/13.0.1/clang%2Bllvm-13.0.1-x86_64-apple-darwin.tar.xz": {
+"size": 511364108,
+"sha256": "dec02d17698514d0fc7ace8869c38937851c542b02adf102c4e898f027145a4d"
+},
+"llvm/macos/amd64/14.0.6/clang%2Bllvm-14.0.6-x86_64-apple-darwin.tar.xz": {
+"size": 586024604,
+"sha256": "e6cc6b8279661fd4452c2847cb8e55ce1e54e1faf4ab497b37c85ffdb6685e7c"
+},
+"llvm/macos/amd64/15.0.7/clang%2Bllvm-15.0.7-x86_64-apple-darwin21.0.tar.xz": {
+"size": 728344840,
+"sha256": "d16b6d536364c5bec6583d12dd7e6cf841b9f508c4430d9ee886726bd9983f1c"
+},
+"llvm/macos/amd64/19.1.7/LLVM-19.1.7-macOS-X64.tar.xz": {
+"size": 1574721180,
+"sha256": "49405e75fbe7ad6f8139a33f59ec8c5112b75b3027405c7b92d19f4c6f02c78a"
+},
+"llvm/macos/amd64/3.9.0/clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz": {
+"size": 162736100,
+"sha256": "bd689aaeafa19832016d5a4917405a73b21bc5281846c0cb816e9545cf99e82b"
+},
+"llvm/macos/amd64/4.0.1/clang+llvm-4.0.1-x86_64-apple-darwin.tar.xz": {
+"size": 219650184,
+"sha256": "5f697801a46239c04251730b7ccccd3ebbacb9043ad381a061ae6812409e9eae"
+},
+"llvm/macos/amd64/5.0.2/clang+llvm-5.0.2-x86_64-apple-darwin.tar.xz": {
+"size": 254794392,
+"sha256": "aa535704246f1cc55ec67b2b0579112c4bb1049c991a4bb0e1da7009bb1b832e"
+},
+"llvm/macos/amd64/6.0.0/clang+llvm-6.0.0-x86_64-apple-darwin.tar.xz": {
+"size": 290272140,
+"sha256": "0ef8e99e9c9b262a53ab8f2821e2391d041615dd3f3ff36fdf5370916b0f4268"
+},
+"llvm/macos/amd64/9.0.1/clang%2Bllvm-9.0.1-x86_64-apple-darwin.tar.xz": {
+"size": 388360756,
+"sha256": "2fdb7c04fefa4cc651a8b96a5d72311efe6b4be845a08c921166dc9883b0c5b9"
+},
+"llvm/macos/arm64/14.0.6/clang%2Bllvm-14.0.6-arm64-apple-darwin22.3.0.tar.xz": {
+"size": 559171976,
+"sha256": "82f4f7607a16c9aaf7314b945bde6a4639836ec9d2b474ebb3a31dee33e3c15a"
+},
+"llvm/macos/arm64/15.0.7/clang%2Bllvm-15.0.7-arm64-apple-darwin22.0.tar.xz": {
+"size": 644285196,
+"sha256": "867c6afd41158c132ef05a8f1ddaecf476a26b91c85def8e124414f9a9ba188d"
+},
+"llvm/macos/arm64/16.0.5/clang%2Bllvm-16.0.5-arm64-apple-darwin22.0.tar.xz": {
+"size": 740414000,
+"sha256": "1aed0787417dd915f0101503ce1d2719c8820a2c92d4a517bfc4044f72035bcc"
+},
+"llvm/macos/arm64/17.0.6/clang%2Bllvm-17.0.6-arm64-apple-darwin22.0.tar.xz": {
+"size": 804335844,
+"sha256": "1264eb3c2a4a6d5e9354c3e5dc5cb6c6481e678f6456f36d2e0e566e9400fcad"
+},
+"llvm/macos/arm64/19.1.7/LLVM-19.1.7-macOS-ARM64.tar.xz": {
+"size": 1413914424,
+"sha256": "d93bf12952d89fe4ec7501c40475718b722407da6a8d651f05c995863468e570"
+},
+"llvm/windows/amd64/10.0.0/LLVM-10.0.0-win64.exe": {
+"size": 167786166,
+"sha256": "893f8a12506f8ad29ca464d868fb432fdadd782786a10655b86575fc7fc1a562"
+},
+"llvm/windows/amd64/11.1.0/LLVM-11.1.0-win64.exe": {
+"size": 181375405,
+"sha256": "b5770bbfac712d273938cd155e232afaa85c2e8d865c7ca504a104a838568516"
+},
+"llvm/windows/amd64/12.0.1/LLVM-12.0.1-win64.exe": {
+"size": 190997504,
+"sha256": "fcbabc9a170208bb344f7bba8366cca57ff103d72a316781bbb77d634b9e9433"
+},
+"llvm/windows/amd64/13.0.1/LLVM-13.0.1-win64.exe": {
+"size": 239478810,
+"sha256": "9d15be034d52ec57cfc97615634099604d88a54761649498daa7405983a7e12f"
+},
+"llvm/windows/amd64/14.0.6/LLVM-14.0.6-win64.exe": {
+"size": 276124398,
+"sha256": "e8dbb2f7de8e37915273d65c1c2f2d96844b96bb8e8035f62c5182475e80b9fc"
+},
+"llvm/windows/amd64/15.0.7/LLVM-15.0.7-win64.exe": {
+"size": 290857976,
+"sha256": "5428cb72acf63ce3bc4328e546a36674c9736ec040ecc176d362201c6548e6a8"
+},
+"llvm/windows/amd64/16.0.6/LLVM-16.0.6-win64.exe": {
+"size": 307648319,
+"sha256": "9a8cd30cc92fdf403d96217347861545a5bbff7a1a1a8527b5785ff0e9101111"
+},
+"llvm/windows/amd64/17.0.6/LLVM-17.0.6-win64.exe": {
+"size": 349078329,
+"sha256": "89dc351af8e8fa1cafc6b48411e608aa9457c930a10f984aad5d21ab020165b2"
+},
+"llvm/windows/amd64/18.1.8/LLVM-18.1.8-win64.exe": {
+"size": 374335885,
+"sha256": "94af030060d88cc17e9f00ef1663ebdc1126b35e16bebdfa1e807984b70abd8f"
+},
+"llvm/windows/amd64/19.1.7/LLVM-19.1.7-win64.exe": {
+"size": 352071563,
+"sha256": "f19ae5bc4823ac69ec01dc2ded503ec80a04ad2208dda1595d1f0413c148ef90"
+},
+"llvm/windows/amd64/3.9.1/LLVM-3.9.1-win64.exe": {
+"size": 56099038,
+"sha256": "7ea2b7bc0de6b96a6ce11e6cfece7b84a31fb0c86c977f42ee178cba41517606"
+},
+"llvm/windows/amd64/4.0.1/LLVM-4.0.1-win64.exe": {
+"size": 101018195,
+"sha256": "139ba95f9f88199cdc419a674f0a85df3568367623486336843207a4982e36e9"
+},
+"llvm/windows/amd64/5.0.2/LLVM-5.0.2-win64.exe": {
+"size": 95047637,
+"sha256": "fcd20f1745fcbb3589c058f908f3bb30c69f928d8577d532208e92bb09dad9b1"
+},
+"llvm/windows/amd64/6.0.1/LLVM-6.0.1-win64.exe": {
+"size": 122379266,
+"sha256": "780276221635aa08120187ffc2c72ff7873dee37f5609455ee7bba6fcdd91d79"
+},
+"llvm/windows/amd64/7.1.0/LLVM-7.1.0-win64.exe": {
+"size": 97314822,
+"sha256": "1406b3aa26f0e9a87c5e4daabb3e9bef4e115ff7685759e899a662dbbf75d6b0"
+},
+"llvm/windows/amd64/8.0.1/LLVM-8.0.1-win64.exe": {
+"size": 138268492,
+"sha256": "e3af139c2f93075c13dcbc4091c1311f66fc6e4e8705649fcaf9bef8b3368f41"
+},
+"llvm/windows/amd64/9.0.1/LLVM-9.0.1-win64.exe": {
+"size": 158118568,
+"sha256": "ea59a771d1f1a1948b7fabe74d6da87095296ebabb2ae78cb2075ec44eb57c80"
+},
+"llvm/windows/arm64/12.0.0/LLVM-12.0.0-woa64.exe": {
+"size": 169230610,
+"sha256": "2a0a05d3c9e07642a1bc017105120c833b6360f4db1edb77563c81199f267c3a"
+},
+"llvm/windows/arm64/15.0.6/LLVM-15.0.6-woa64.exe": {
+"size": 348707439,
+"sha256": "79d18b9498d7a6c36114f0277c83c91caf9258194c683a73e5886b68b4d304d1"
+},
+"llvm/windows/arm64/16.0.6/LLVM-16.0.6-woa64.exe": {
+"size": 290576091,
+"sha256": "74b37b2eaa0b3632c15ecbb5c1c1c5bc2d093a48cc872c4991a34a75ccda805f"
+},
+"llvm/windows/arm64/17.0.6/LLVM-17.0.6-woa64.exe": {
+"size": 314615395,
+"sha256": "1efda890c79d597fb9e9c1ae62ececf53e9b56b979b1e37234b5c8dac56461fe"
+},
+"llvm/windows/arm64/18.1.8/LLVM-18.1.8-woa64.exe": {
+"size": 345225147,
+"sha256": "e25bf44d67fe86708490cf08de085fe1d6e1e50f3249c212c9077a06247cdc9e"
+},
+"llvm/windows/arm64/19.1.7/LLVM-19.1.7-woa64.exe": {
+"size": 323088311,
+"sha256": "08d871c9a20caf0987ede1a4e44d489e28854c9f2fff3da98b486891f4856e05"
+},
+"llvm/windows/x86/10.0.0/LLVM-10.0.0-win32.exe": {
+"size": 155809563,
+"sha256": "a6e3a7afd1fb505149466e6fad35bf7b8b9b3218bd41025f21d2167be678c1dc"
+},
+"llvm/windows/x86/11.1.0/LLVM-11.1.0-win32.exe": {
+"size": 164098374,
+"sha256": "b92f7c74ccd132dba0089cdf4efe9096a3f6018f14290611a408aea329845727"
+},
+"llvm/windows/x86/12.0.1/LLVM-12.0.1-win32.exe": {
+"size": 171237066,
+"sha256": "62f8bc1328a8d9e3fcd4663139891aaeda2ea4fe83eb510cba1c9ca943c76d51"
+},
+"llvm/windows/x86/13.0.1/LLVM-13.0.1-win32.exe": {
+"size": 217075034,
+"sha256": "e3fe488076686de281a334ade7bb3cbc6080b009782d39d2ac024f8bd897be4b"
+},
+"llvm/windows/x86/14.0.6/LLVM-14.0.6-win32.exe": {
+"size": 270653942,
+"sha256": "76d0f6f37e22e0bd1f6a9e62e0c66edcd225b97cce1dbefb5d047a9dbfb9d4c8"
+},
+"llvm/windows/x86/15.0.7/LLVM-15.0.7-win32.exe": {
+"size": 285340840,
+"sha256": "2d1316258946e04d21ee6d14172f6e47ca205213da0980e583f518fbba045645"
+},
+"llvm/windows/x86/16.0.6/LLVM-16.0.6-win32.exe": {
+"size": 304032865,
+"sha256": "2b2ffd454e1d4eac6915c41e29de02d214c6cb33390098468bf088dbc7410629"
+},
+"llvm/windows/x86/17.0.6/LLVM-17.0.6-win32.exe": {
+"size": 327115082,
+"sha256": "766332eaedbc83a57ecd5b719912ed4bc0be1ef0df952581d2b3edb9135b7c2a"
+},
+"llvm/windows/x86/18.1.8/LLVM-18.1.8-win32.exe": {
+"size": 348379223,
+"sha256": "4ce39685d593a33cdbcdd10bec2288b65e020b38995d684c19cb56cad0fa43ac"
+},
+"llvm/windows/x86/19.1.7/LLVM-19.1.7-win32.exe": {
+"size": 326486668,
+"sha256": "3d7044fa307d3183e4ee2a98e12dd0523ced58f1d1c95c5e057694fb75beb51a"
+},
+"llvm/windows/x86/3.9.1/LLVM-3.9.1-win32.exe": {
+"size": 56276700,
+"sha256": "f5cdf134e27a215a18515e2dcd100902dcf539f487c2028a817ffe7d3091f32a"
+},
+"llvm/windows/x86/4.0.1/LLVM-4.0.1-win32.exe": {
+"size": 95696732,
+"sha256": "0071e699965d7a0f62f59536a1a16843d1f6919af4c596a82c2a03f05ea34ca6"
+},
+"llvm/windows/x86/5.0.2/LLVM-5.0.2-win32.exe": {
+"size": 97067564,
+"sha256": "57346831e4a214aecd11fa9109cf6a634dd5d4e93a9142906e31cb872a7f9113"
+},
+"llvm/windows/x86/6.0.1/LLVM-6.0.1-win32.exe": {
+"size": 123712610,
+"sha256": "534dbe5931f48979e793ef4ab245eb47fbc9c40e6a5b9f25fbc599c787834d35"
+},
+"llvm/windows/x86/7.1.0/LLVM-7.1.0-win32.exe": {
+"size": 97739365,
+"sha256": "a575a45b6f42563bdb7464bdc2618779d692283cc899cd21d63ae33f26d1209a"
+},
+"llvm/windows/x86/8.0.1/LLVM-8.0.1-win32.exe": {
+"size": 138191102,
+"sha256": "5d992a41f1ff6296659e66eabbcbaec34f5533fe9d1376fc94fba7450383fe69"
+},
+"llvm/windows/x86/9.0.1/LLVM-9.0.1-win32.exe": {
+"size": 145298189,
+"sha256": "f690e932fea125ce6c47bccad27b2cef055646732c510ce00ff9eee528c1e48b"
+},
+"msvc-redist/windows/amd64/latest-buildtools/vs_BuildTools.exe": {
+"size": 4478032,
+"sha256": "985969f472caad75d993a5cb4c35a6a4271460cc12b343e2433b994d173aa990"
+},
+"msvc-redist/windows/amd64/latest/vc_redist.x64.exe": {
+"size": 25635768,
+"sha256": "cc0ff0eb1dc3f5188ae6300faef32bf5beeba4bdd6e8e445a9184072096b713b"
+},
+"msvc-redist/windows/arm64/latest/vc_redist.arm64.exe": {
+"size": 11722336,
+"sha256": "5139e1440c3a20b92153a4db561c069a0175aaf76c276c3e5b6f56099edcf4b0"
+},
+"msvc-redist/windows/x86/latest/vc_redist.x86.exe": {
+"size": 13953392,
+"sha256": "0c09f2611660441084ce0df425c51c11e147e6447963c3690f97e0b25c55ed64"
+},
+"nim/linux/arm64/1.6.20-nightlies/nim-1.6.20-linux_arm64.tar.xz": {
+"size": 11128496,
+"sha256": "98ab46cb8d15206d07559a0a12d06d587f5851509f523b30593422408c13f5af"
+},
+"nim/linux/armv7/1.6.20-nightlies/nim-1.6.20-linux_armv7l.tar.xz": {
+"size": 11047168,
+"sha256": "83333ef01f8276f4f1d331e08498fc6ef30c4636ff95c5131c82503a6bfb55bd"
+},
+"nim/linux/armv7/2.2.12-nightlies/nim-2.2.12-linux_armv7l.tar.xz": {
+"size": 17973128,
+"sha256": "c4893f5c4b51064ae9a686a4aeb168d0ba1da97f4cbc7032b6c684e51d63e881"
+},
+"nim/macos/amd64/1.6.20-nightlies/nim-1.6.20-macosx_x64.tar.xz": {
+"size": 10176960,
+"sha256": "ac6dfd35cdf0f1df0a3dc39b7de120944a709f94a42e669b729bcd3c902996d3"
+},
+"php/linux/amd64/8.5.8-static-php-cli/php-8.5.8-cli-linux-x86_64.tar.gz": {
+"size": 12931817,
+"sha256": "517a18e0f0874de35669fe134eb3c52508e128a6d1da5bf890760cb800ada410"
+},
+"php/linux/arm64/8.5.8-static-php-cli/php-8.5.8-cli-linux-aarch64.tar.gz": {
+"size": 13570407,
+"sha256": "af995ef6b3187b39932a00714dfb97e44bfa40a9243c4c29f61f19d583950753"
+},
+"php/macos/amd64/8.5.8-static-php-cli/php-8.5.8-cli-macos-x86_64.tar.gz": {
+"size": 15606882,
+"sha256": "05751000c6643f82e8377ed19d55bc159f84bbed46ace1fcc6f62be9866c787c"
+},
+"php/macos/arm64/8.5.8-static-php-cli/php-8.5.8-cli-macos-aarch64.tar.gz": {
+"size": 15106458,
+"sha256": "cba9bd8b38b51ef2c7cebf02af689e4481bbd07f65edc0b63d3a43b04e0c9db7"
+},
+"php/windows/amd64/5.6.40-nts-vc11/php-5.6.40-nts-Win32-VC11-x64.zip": {
+"size": 23032238,
+"sha256": "3d7668280fa4b16f70705539ba1e4ea17eef344c81e82881cbeca26fb7f181f1"
+},
+"php/windows/x86/4.4.9/php-4.4.9-Win32.zip": {
+"size": 8366326,
+"sha256": "8504ea7385469939af9e511905f095b7b6612374e0d53279bc3b4dc9aeec8a91"
+},
+"php/windows/x86/5.6.40-nts-vc11/php-5.6.40-nts-Win32-VC11-x86.zip": {
+"size": 21374398,
+"sha256": "a7ad5a445d74da9c5b6e3e85d922a62cd808477a4a0b3bb24b8ee945ffc620a7"
+},
+"python/linux/any/2.7.18/Python-2.7.18.tar.xz": {
+"size": 12854736,
+"sha256": "b62c0e7937551d0cc02b8fd5cb0f544f9405bafc9a54d3808ed4594812edef43"
+},
+"python/macos/amd64/2.7.18-macosx10.9/python-2.7.18-macosx10.9.pkg": {
+"size": 24889285,
+"sha256": "c570f38b05dd8b112ad21b418cdf51a9816d62f9f44746452739d421be24d50c"
+},
+"python/macos/universal/2.7.17-macosx10.6/python-2.7.17-macosx10.6.pkg": {
+"size": 30434554,
+"sha256": "69c5bddef6e2f20a47be63410f890b728281449ed64ea450f89d0e81babc83b4"
+},
+"python/macos/universal/3.7.6-macosx10.6/python-3.7.6-macosx10.6.pkg": {
+"size": 35057307,
+"sha256": "1a595e7e6aca247b8229bd00a8e5fc8879fd85e18a2aa747ee7ecffb500cbfdd"
+},
+"python/windows/amd64/2.7.18/python-2.7.18.amd64.msi": {
+"size": 20598784,
+"sha256": "b74a3afa1e0bf2a6fc566a7b70d15c9bfabba3756fb077797d16fffa27800c05"
+},
+"python/windows/amd64/3.0.1/python-3.0.1.amd64.msi": {
+"size": 13702656,
+"sha256": "fa65ce8ae140e879c5885510725f81dbdebbd4764a0edf8feee5616573a8a993"
+},
+"python/windows/amd64/3.1.4/python-3.1.4.amd64.msi": {
+"size": 14557184,
+"sha256": "8399353e8f1a0d83b0b04553cfd47da02b7dc7a90d24b8abf63bd06dad572bc8"
+},
+"python/windows/amd64/3.10.11/python-3.10.11-amd64.exe": {
+"size": 29037240,
+"sha256": "d8dede5005564b408ba50317108b765ed9c3c510342a598f9fd42681cbe0648b"
+},
+"python/windows/amd64/3.11.9/python-3.11.9-amd64.exe": {
+"size": 26216840,
+"sha256": "5ee42c4eee1e6b4464bb23722f90b45303f79442df63083f05322f1785f5fdde"
+},
+"python/windows/amd64/3.12.10/python-3.12.10-amd64.exe": {
+"size": 26964224,
+"sha256": "67b5635e80ea51072b87941312d00ec8927c4db9ba18938f7ad2d27b328b95fb"
+},
+"python/windows/amd64/3.2.5/python-3.2.5.amd64.msi": {
+"size": 18812928,
+"sha256": "c75c2326a79edfa027fc22a9f28dcaac7f88e9969b91a391f4b211386fe6b8fc"
+},
+"python/windows/amd64/3.3.5/python-3.3.5.amd64.msi": {
+"size": 21221376,
+"sha256": "4be9dfe84fd5e0bc183fc24680a95a77a86aef21e9989d834084ee6dcc5b2cab"
+},
+"python/windows/amd64/3.3.5/python-3.3.5.amd64.msi.asc": {
+"size": 203,
+"sha256": "b82da358a00aee0e165005915e509398fc0fa32448f1f166ea84072b186cc563"
+},
+"python/windows/amd64/3.4.4/python-3.4.4.amd64.msi": {
+"size": 26054656,
+"sha256": "ace645d104bddd4f4ffbf453bedddaf2496e3609af3fa47173680d2f321d3709"
+},
+"python/windows/amd64/3.5.4/python-3.5.4-amd64.exe": {
+"size": 29849120,
+"sha256": "9b7741cc32357573a77d2ee64987717e527628c38fd7eaf3e2aaca853d45a1ee"
+},
+"python/windows/amd64/3.6.8/python-3.6.8-amd64.exe": {
+"size": 31830944,
+"sha256": "96088a58b7c43bc83b84e6b67f15e8706c614023dd64f9a5a14e81ff824adadc"
+},
+"python/windows/amd64/3.7.9-embed/python-3.7.9-embed-amd64.zip": {
+"size": 7502379,
+"sha256": "18627a097adf47829a847053febac5532376075243e233bd9ec61d6ea09dee1f"
+},
+"python/windows/amd64/3.7.9/python-3.7.9-amd64.exe": {
+"size": 26940592,
+"sha256": "e69ed52afb5a722e5c56f6c21d594e85c17cb29f12f18bb69751cf1714e0f987"
+},
+"python/windows/amd64/3.8.10-embed/python-3.8.10-embed-amd64.zip": {
+"size": 8211403,
+"sha256": "abbe314e9b41603dde0a823b76f5bbbe17b3de3e5ac4ef06b759da5466711271"
+},
+"python/windows/amd64/3.8.10/python-3.8.10-amd64.exe": {
+"size": 28296784,
+"sha256": "7628244cb53408b50639d2c1287c659f4e29d3dfdb9084b11aed5870c0c6a48a"
+},
+"python/windows/amd64/3.9.13/python-3.9.13-amd64.exe": {
+"size": 29235432,
+"sha256": "fb3d0466f3754752ca7fd839a09ffe53375ff2c981279fd4bc23a005458f7f5d"
+},
+"python/windows/arm64/3.11.9/python-3.11.9-arm64.exe": {
+"size": 25483288,
+"sha256": "58f3a4e91b63d5a680ecc77c1db4565a1e3966e8656d4c8b89200d58c1f5c4f3"
+},
+"python/windows/arm64/3.12.10/python-3.12.10-arm64.exe": {
+"size": 26202936,
+"sha256": "377ac8fd478987940088e879441e702a71b53164d2a1e6f1d51ff77a7e470258"
+},
+"python/windows/ia64/2.5.4/python-2.5.4.ia64.msi": {
+"size": 13567488,
+"sha256": "684d8657578e6bc2101f0b0608d53c49513a00fc661145d8f87dedb3afa98e15"
+},
+"python/windows/x86/2.7.18/python-2.7.18.msi": {
+"size": 19632128,
+"sha256": "d901802e90026e9bad76b8a81f8dd7e43c7d7e8269d9281c9e9df7a9c40480a9"
+},
+"python/windows/x86/3.0.1/python-3.0.1.msi": {
+"size": 13434880,
+"sha256": "d48afebf88b871ad6a1716a6a41a9070882aa8a4d87f118136c384e332c4aadc"
+},
+"python/windows/x86/3.1.4/python-3.1.4.msi": {
+"size": 14282752,
+"sha256": "72132b8641326be501bcb511eeb4db88858665dec9a10eeddf4ea733b8c97c4c"
+},
+"python/windows/x86/3.10.11/python-3.10.11.exe": {
+"size": 27865760,
+"sha256": "bd115a575e86e61cea9136c5a2c47e090ba484dc2dee8b51a34111bb094266d5"
+},
+"python/windows/x86/3.11.9/python-3.11.9.exe": {
+"size": 24933192,
+"sha256": "af19e5e2f03e715a822181f2cb7d4efef4eda13fa4a2db6da12e998e46f5cbf9"
+},
+"python/windows/x86/3.12.10/python-3.12.10.exe": {
+"size": 25648336,
+"sha256": "fdfe385b94f5b8785a0226a886979527fd26eb65defdbf29992fd22cc4b0e31e"
+},
+"python/windows/x86/3.13.0/python-3.13.0.exe": {
+"size": 26817888,
+"sha256": "a9be7082ccd3d0b947d14a87bceadb1a3551382a68fcb64d245a2ebcc779b272"
+},
+"python/windows/x86/3.2.5/python-3.2.5.msi": {
+"size": 18329600,
+"sha256": "0383b37f59c476efc02f608150618f3c3f9726a29f6790c5f4a5922fda04f3d4"
+},
+"python/windows/x86/3.3.5/python-3.3.5.msi": {
+"size": 20676608,
+"sha256": "e233762dfe98a9cdc13c50980c668698a497e8875a575b6bbdb22f5414212297"
+},
+"python/windows/x86/3.3.5/python-3.3.5.msi.asc": {
+"size": 203,
+"sha256": "f5d744e9d4953cba37e26079004c73579f9b3cf3d61f9b5332ed7a05d8a931b2"
+},
+"python/windows/x86/3.4.4/python-3.4.4.msi": {
+"size": 24932352,
+"sha256": "46c8f9f63cf02987e8bf23934b2f471e1868b24748c5bb551efcf4863b43ca6c"
+},
+"python/windows/x86/3.5-xp-backport/python_3_5_x86.zip": {
+"size": 47145815,
+"sha256": "95e2208f84f493382e7c6c3b776c1e942cdff45f22ff8168232910b7b47ed619"
+},
+"python/windows/x86/3.5.4/python-3.5.4.exe": {
+"size": 28932168,
+"sha256": "f27c2d67fd9688e4970f3bff799bb9d722a0d6c2c13b04848e1f7d620b524b0e"
+},
+"python/windows/x86/3.6.8/python-3.6.8.exe": {
+"size": 30807656,
+"sha256": "89871d432bc06e4630d7b64cb1a8451e53c80e68de29029976b12aad7dbfa5a0"
+},
+"python/windows/x86/3.7.0/python-3.7.0.exe": {
+"size": 25506832,
+"sha256": "559e56d293e05ff6159c3676da2b5a93081efad7a8acc74c12bb757e2b93daba"
+},
+"python/windows/x86/3.7.9-embed/python-3.7.9-embed-win32.zip": {
+"size": 6659999,
+"sha256": "010cef379e1096cebf667e8f2c92a72dc455c927c7f7b8ca8e029975d81946bf"
+},
+"python/windows/x86/3.7.9/python-3.7.9.exe": {
+"size": 25875560,
+"sha256": "769bb7c74ad1df6d7d74071cc16a984ff6182e4016e11b8949b93db487977220"
+},
+"python/windows/x86/3.8.0/python-3.8.0.exe": {
+"size": 26406312,
+"sha256": "b471908de5e10d8fb5c3351a5affb1172da7790c533e0c9ffbaeec9c11611b15"
+},
+"python/windows/x86/3.8.10-embed/python-3.8.10-embed-win32.zip": {
+"size": 7348969,
+"sha256": "760dc79bcb434ee80b1001a30bb6f798287881851bac6d8137867894d40ef1fc"
+},
+"python/windows/x86/3.8.10/python-3.8.10.exe": {
+"size": 27204536,
+"sha256": "ad07633a1f0cd795f3bf9da33729f662281df196b4567fa795829f3bb38a30ac"
+},
+"python/windows/x86/3.9.13/python-3.9.13.exe": {
+"size": 28096840,
+"sha256": "f363935897bf32adf6822ba15ed1bfed7ae2ae96477f0262650055b6e9637c35"
+},
+"r/linux/amd64/3.6.3-posit-ubuntu-2204/r-3.6.3_1_amd64.deb": {
+"size": 56436810,
+"sha256": "2e12ef14842bb26923acd60d9e831baed6ce7bee663fb6e88873c9f7d8f97e9b"
+},
+"r/linux/amd64/4.6.1-posit-ubuntu-2204/r-4.6.1_1_amd64.deb": {
+"size": 68465826,
+"sha256": "116d04ff6450dbf4191296183bba9c305722a711f3012b599bb93e0024be8d04"
+},
+"r/macos/amd64/2.15.3/R-2.15.3.pkg": {
+"size": 68783345,
+"sha256": "cdfe823b74da985181073015306f7deab589edc6665478e8bbadfab9fa937b05"
+},
+"r/macos/amd64/3.6.3/R-3.6.3.pkg": {
+"size": 81774375,
+"sha256": "80f12a85b63b6b45640d1165d06861a84fe11efe4a564e0a755cc313d84cdfb4"
+},
+"r/macos/amd64/4.6.1/R-4.6.1-x86_64.pkg": {
+"size": 108253722,
+"sha256": "612bb00cb4c627721d6d80b0f5224227c0fcdefb4a5b6c917511480361c16571"
+},
+"r/macos/arm64/4.6.1/R-4.6.1-arm64.pkg": {
+"size": 105066342,
+"sha256": "67f6eea4ced4ce48f0a0d4fa3a1cac43d1859a05a88993ee3dff7c52e7edbc4b"
+},
+"r/windows/amd64/2.15.3/R-2.15.3-win.exe": {
+"size": 50506712,
+"sha256": "5c84213136dd2df392b74f9ea1d160d797bd2019f108521fcfce672cc12cb6c5"
+},
+"r/windows/amd64/3.6.3/R-3.6.3-win.exe": {
+"size": 86429120,
+"sha256": "881ace1f1a7dd550845283a65f4597456877ef3c3e129e2c3cbb92a67be7892c"
+},
+"r/windows/amd64/4.6.1/R-4.6.1-win.exe": {
+"size": 91749976,
+"sha256": "c5424c40cd70ef85765a55d2ff96bb602b5f30ed536938ff004f14db5db3c2df"
+},
+"r/windows/x86/1.9.1/rw1091.exe": {
+"size": 21688072,
+"sha256": "553db9e4fc16195e4a00cff295379036ea9298b644a36550fc969c57388a74b2"
+},
+"r/windows/x86/2.11.1/R-2.11.1-win32.exe": {
+"size": 33658264,
+"sha256": "ac7c7d02e92656fb7a9ef15ce8835b2784d90416319461be8d1be78e30ad4292"
+}
+}
