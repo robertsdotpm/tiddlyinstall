@@ -170,12 +170,14 @@ export function osslVerify(file, ca, spawnSync) {
 }
 
 // gpg --verify of a detached signature with a fresh keyring holding `pub`.
+// The key was made on another machine whose clock may run ahead of this
+// one's; gpg would skip a key "created in the future".
 export function gpgVerify(pub, asc, file, home, spawnSync) {
   fs.mkdirSync(home, { mode: 0o700, recursive: true });
-  spawnSync('gpg', ['--homedir', home, '--batch', '--import', pub]);
-  const g = spawnSync('gpg', ['--homedir', home, '--batch', '--verify', asc, file], { encoding: 'utf8' });
+  const i = spawnSync('gpg', ['--homedir', home, '--batch', '--ignore-time-conflict', '--import', pub], { encoding: 'utf8' });
+  const g = spawnSync('gpg', ['--homedir', home, '--batch', '--ignore-time-conflict', '--ignore-valid-from', '--verify', asc, file], { encoding: 'utf8' });
   spawnSync('gpgconf', ['--homedir', home, '--kill', 'all']);
-  return { ok: g.status === 0 && /Good signature/.test(g.stderr), out: g.stderr };
+  return { ok: g.status === 0 && /Good signature/.test(g.stderr), out: 'import: ' + i.stderr + '\nverify: ' + g.stderr };
 }
 
 /* ---------- editor helpers (element ids from edit.html) ---------- */
