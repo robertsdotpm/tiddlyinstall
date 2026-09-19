@@ -1134,11 +1134,12 @@ ib_write_launcher() {
 	cat > "$IB_APP_DIR/launch.sh" <<'EOF'
 #!/bin/sh
 # TiddlyInstall launcher: runs the app described by launch.txt next
-# to this file (cwd, env, unset, path, exec). Identical for every app.
+# to this file (cwd, env, unset, path, console, exec). Identical for every app.
 d=$(dirname "$0")
+d=$(cd "$d" 2>/dev/null && pwd) || d=$(dirname "$0")
 f=$d/launch.txt
 [ -f "$f" ] || { echo "launch.sh: $f is missing" >&2; exit 1; }
-tab=$(printf '\t'); cr=$(printf '\r'); pre=; cmd=; cwd=$d
+tab=$(printf '\t'); cr=$(printf '\r'); pre=; cmd=; cwd=$d; con=1
 while IFS= read -r line || [ -n "$line" ]; do
 	line=${line%"$cr"}
 	case $line in '' | '#'*) continue ;; esac
@@ -1151,13 +1152,56 @@ while IFS= read -r line || [ -n "$line" ]; do
 	env) n=${rest%%"$tab"*}; v=${rest#*"$tab"}; [ "$v" = "$rest" ] && v=; export "$n=$v" ;;
 	unset) unset "$rest" ;;
 	path) pre=${pre:+$pre:}$rest ;;
+	console) con=$rest ;;
 	exec) cmd=$rest ;;
 	esac
 done < "$f"
 [ -n "$cmd" ] || { echo "launch.sh: no exec line in $f" >&2; exit 1; }
 [ -n "$pre" ] && PATH=$pre:$PATH && export PATH
 cd "$cwd" || exit 1
-eval "exec $cmd \"\$@\""
+# An app without a console (console 0) started from a desktop session, not
+# a terminal: its output goes to a log, and if it fails within 10 seconds a
+# dialog shows the end of it and where the log is (zenity, kdialog or
+# osascript; with none of them, only the log).
+gui=
+if [ "$con" != 1 ] && [ ! -t 2 ]; then
+	case $(uname -s 2>/dev/null) in
+	Darwin) [ -z "${SSH_CONNECTION:-}${SSH_TTY:-}" ] && gui=1 ;;
+	*) [ -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}" ] && gui=1 ;;
+	esac
+fi
+[ -n "$gui" ] || eval "exec $cmd \"\$@\""
+log=$d/data/launch.log
+{ mkdir -p "$d/data" && : > "$log"; } 2>/dev/null || { log=${TMPDIR:-/tmp}/ib-launch-$(basename "$d").log; : > "$log" 2>/dev/null || log=/dev/null; }
+t0=$(date +%s 2>/dev/null) || t0=0
+eval "$cmd \"\$@\"" > "$log" 2>&1
+rc=$?
+t1=$(date +%s 2>/dev/null) || t1=$t0
+[ "$rc" = 0 ] || [ $((t1 - t0)) -ge 10 ] || [ "$log" = /dev/null ] && exit "$rc"
+name=$(awk -F'\t' '$1 == "name" { print $2; exit }' "$d/manifest.txt" 2>/dev/null)
+[ -n "$name" ] || name="The app"
+out=$(tail -n 15 "$log" | cut -c1-200)
+if [ -n "$out" ]; then
+	msg="$name stopped with an error (exit code $rc):
+
+$out
+
+The full output is in:
+$log"
+else
+	msg="$name stopped with an error (exit code $rc) and wrote nothing.
+
+Its output would be in:
+$log"
+fi
+if command -v osascript >/dev/null 2>&1 && [ "$(uname -s)" = Darwin ]; then
+	osascript -e 'on run argv' -e 'display dialog (item 1 of argv) with title (item 2 of argv) buttons {"OK"} default button 1 with icon stop' -e 'end run' "$msg" "$name" >/dev/null 2>&1
+elif command -v zenity >/dev/null 2>&1; then
+	zenity --error --width=600 --title="$name" --text="$(printf '%s' "$msg" | sed -e 's/&/\&amp;/g' -e 's/</\&lt;/g' -e 's/>/\&gt;/g')" >/dev/null 2>&1
+elif command -v kdialog >/dev/null 2>&1; then
+	kdialog --title "$name" --error "$msg" >/dev/null 2>&1
+fi
+exit "$rc"
 EOF
 	chmod 755 "$IB_APP_DIR/launch.sh"
 }

@@ -215,6 +215,10 @@ export class Server {
       for (const e of rt.releases) {
         this.relayOK.add(e.url);
         for (const m of e.mirrors || []) this.relayOK.add(m);
+        for (const p of e.parts || []) {
+          this.relayOK.add(p.url);
+          for (const m of p.mirrors || []) this.relayOK.add(m);
+        }
       }
     }
   }

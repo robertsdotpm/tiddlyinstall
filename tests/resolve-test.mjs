@@ -12,6 +12,14 @@
 // oracle the JS port was checked against byte for byte. The test loads that
 // snapshot and requires identical results from js/resolve.js.
 //
+// Updated on purpose later (--update), each diff read before committing:
+//   2026-09-19  Windows Python's msi-layout releases (the full python.org build
+//               from its component MSIs, with release `parts`) and the recipes'
+//               launch.gui_program (pythonw, javaw, rubyw, php-win for console 0
+//               apps). 152 of the 3,095 answers changed, all Python 3 and 2,
+//               Java, PHP and Ruby plans; every other runtime's are the Go
+//               resolver's, byte for byte.
+//
 // --catalog FILE runs the cases against another snapshot instead (for
 // example one tools/snapshot.mjs wrote from the same catalogue folder: the
 // plans must be the same). Unless --no-roundtrip, the cases also run

@@ -142,6 +142,7 @@
    "notes": "Imports checked with pefile across every .exe/.dll in both zips: MSVCR110.dll (57 files) and MSVCP110.dll (9). App-local option: Microsoft supports deploying the VC11 CRT DLLs in the application folder (no side-by-side manifest since VC10); copying msvcr110.dll and msvcp110.dll next to php.exe makes this recipe 'full' isolation, at the cost of no Windows Update servicing. The DLLs would have to come from the VS2012 redist (VC\\redist\\<arch>\\Microsoft.VC110.CRT) or be extracted from vcredist_*.exe - installer-builder has no such artifact yet. php.ini search order (php.net 'The configuration file'): PHPRC env, then on Windows the registry keys HKLM\\SOFTWARE\\PHP\\x.y.z\\IniFilePath / ...\\PHP\\x.y\\IniFilePath / ...\\PHP\\x\\IniFilePath / ...\\PHP\\IniFilePath, then the php.exe folder (CLI), then %SystemRoot%. A registry IniFilePath left by another PHP install therefore outranks our php.ini, so every command passes -c \"{runtime_dir}\\php.ini\" explicitly. extension_dir: a relative 'ext' is resolved against the current directory, not php.exe's folder, so the recipe writes an absolute path. PHP 5.6 needs the php_ prefixed extension=php_x.dll syntax. Composer (not in the download plan; ship composer.phar as a separate pinned download into {runtime_dir}): run as \"{runtime_dir}\\composer.cmd\" (written by the recipe; the steps assume a cmd /c command line, where %* is written literally - if the runner puts them in a .bat, write %%* instead) which sets COMPOSER_HOME and COMPOSER_CACHE_DIR inside {runtime_dir}; without them Composer writes %APPDATA%\\Composer and %LOCALAPPDATA%\\Composer. It needs the openssl extension (enabled above); zip is built in to this build. Composer on PHP 5.6: only the 2.2 LTS line (supports 5.3.2+); 2.3+ needs 7.2.5+. Pin composer.phar 2.2.x. For reference, other PHP Windows compilers: VC6 (4.x-5.2) = msvcrt.dll, no redist; VC9 (5.3-5.4) = VC++ 2008 SP1 redist 9.0.30729.x (msvcr90.dll is a WinSxS assembly; app-local needs a private Microsoft.VC90.CRT folder with its manifest); VC11 (5.5-5.6) = VC++ 2012; VC14 (7.0-7.1) / VC15 (7.2-7.4) / VS16 (8.0-8.3) / VS17 (8.4+) = the single v14 '2015-2022' redistributable, at least as new as the compiler (VS17 needs >=14.30).",
    "launch": {
     "program": "{runtime_dir}\\php.exe",
+    "gui_program": "{runtime_dir}\\php-win.exe",
     "args": [
      "-c",
      "{runtime_dir}\\php.ini"
@@ -149,7 +150,7 @@
     "env": {
      "PHP_INI_SCAN_DIR": ""
     },
-    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read."
+    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": {
     "command": "\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" install --no-dev --no-interaction",
@@ -241,6 +242,7 @@
    "notes": "Imports: VCRUNTIME140.dll, MSVCP140.dll and api-ms-win-crt-* (UCRT). Microsoft: the redist from Visual Studio 2026 onwards only supports Windows 10/11 / Server 2016+, so a future refresh of msvc-redist 'latest' would break Windows 7/8.1 targets - pin a VS 2022 (14.3x/14.4x) build for them. App-local option: copy vcruntime140.dll and msvcp140.dll (and on Windows 7/8.1 also ucrtbase.dll plus the api-ms-win-*.dll forwarders from the Windows 10 SDK Redist\\ucrt\\DLLs\\<arch>) next to php.exe; Microsoft documents this as supported (on Windows 10+ the OS UCRT is always used regardless). Extension DLLs in ext\\ and their dependencies in the root (libcrypto-1_1.dll, libssh2.dll...) are found via php.exe's folder. php.ini search order (php.net 'The configuration file'): PHPRC env, then on Windows the registry keys HKLM\\SOFTWARE\\PHP\\x.y.z\\IniFilePath / ...\\PHP\\x.y\\IniFilePath / ...\\PHP\\x\\IniFilePath / ...\\PHP\\IniFilePath, then the php.exe folder (CLI), then %SystemRoot%. A registry IniFilePath left by another PHP install therefore outranks our php.ini, so every command passes -c \"{runtime_dir}\\php.ini\" explicitly. extension_dir: a relative 'ext' is resolved against the current directory, not php.exe's folder, so the recipe writes an absolute path. Composer (not in the download plan; ship composer.phar as a separate pinned download into {runtime_dir}): run as \"{runtime_dir}\\composer.cmd\" (written by the recipe; the steps assume a cmd /c command line, where %* is written literally - if the runner puts them in a .bat, write %%* instead) which sets COMPOSER_HOME and COMPOSER_CACHE_DIR inside {runtime_dir}; without them Composer writes %APPDATA%\\Composer and %LOCALAPPDATA%\\Composer. It needs the openssl extension (enabled above); zip is built in to this build. Current Composer 2.x supports 7.2.5+.",
    "launch": {
     "program": "{runtime_dir}\\php.exe",
+    "gui_program": "{runtime_dir}\\php-win.exe",
     "args": [
      "-c",
      "{runtime_dir}\\php.ini"
@@ -248,7 +250,7 @@
     "env": {
      "PHP_INI_SCAN_DIR": ""
     },
-    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read."
+    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": {
     "command": "\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" install --no-dev --no-interaction",
@@ -343,6 +345,7 @@
    "notes": "Imports: VCRUNTIME140.dll, MSVCP140.dll, VCRUNTIME140_1.dll (x64 only) and api-ms-win-crt-*. App-local: as for 7.4, plus vcruntime140_1.dll on x64. zip is a shared extension (ext\\php_zip.dll) in this build, unlike 5.6/7.4. php.ini search order (php.net 'The configuration file'): PHPRC env, then on Windows the registry keys HKLM\\SOFTWARE\\PHP\\x.y.z\\IniFilePath / ...\\PHP\\x.y\\IniFilePath / ...\\PHP\\x\\IniFilePath / ...\\PHP\\IniFilePath, then the php.exe folder (CLI), then %SystemRoot%. A registry IniFilePath left by another PHP install therefore outranks our php.ini, so every command passes -c \"{runtime_dir}\\php.ini\" explicitly. extension_dir: a relative 'ext' is resolved against the current directory, not php.exe's folder, so the recipe writes an absolute path. Composer (not in the download plan; ship composer.phar as a separate pinned download into {runtime_dir}): run as \"{runtime_dir}\\composer.cmd\" (written by the recipe; the steps assume a cmd /c command line, where %* is written literally - if the runner puts them in a .bat, write %%* instead) which sets COMPOSER_HOME and COMPOSER_CACHE_DIR inside {runtime_dir}; without them Composer writes %APPDATA%\\Composer and %LOCALAPPDATA%\\Composer. It needs the openssl extension (enabled above); zip is php_zip.dll, enabled above. ",
    "launch": {
     "program": "{runtime_dir}\\php.exe",
+    "gui_program": "{runtime_dir}\\php-win.exe",
     "args": [
      "-c",
      "{runtime_dir}\\php.ini"
@@ -350,7 +353,7 @@
     "env": {
      "PHP_INI_SCAN_DIR": ""
     },
-    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read."
+    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": {
     "command": "\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" install --no-dev --no-interaction",

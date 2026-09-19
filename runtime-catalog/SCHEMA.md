@@ -54,6 +54,7 @@ Each folder contains:
 - `checksum`: `null` if the vendor publishes none. `algo` is `sha256`, `sha512`, `sha1` or `md5`. Always record the vendor's value, never one computed locally.
 - `size`: bytes, from the vendor's index or a HEAD request; `null` if unknown.
 - `min_os`: the vendor's stated minimum OS for this build, verbatim, if stated.
+- `parts` (optional, added 2026-09-19 for python's `msi-layout`): the other files a release is made of, `[{"name", "url", "mirrors", "sha256", "size"}]`. `url` is the release file (the first part); the recipe's steps name each part as `{tmp}\<name>`. Installer Builder downloads them as extra files, checked by `sha256`. For `msi-layout` the vendor publishes no checksums, so `checksum` and each part's `sha256` were computed locally and the files' Authenticode signatures checked (`python/msi_layout.json`); `checksum.source` says so.
 
 ## Gap entry
 
@@ -250,6 +251,10 @@ projects without anything leaking out of `{runtime_dir}` (its
 - `launch.program` / `args`: what to start and the runtime's own flags
   (e.g. Python `-s`, PHP `-c {runtime_dir}/php.ini`). The app's own
   command (`-m myapp`) is appended by installer-builder.
+- `launch.gui_program` (optional, Windows, added 2026-09-19): the
+  runtime's windowed program (`pythonw.exe`, `javaw.exe`, `rubyw.exe`,
+  `php-win.exe`), used instead of `program` for apps without a console
+  (record `console 0`), so no console window opens.
 - `launch.env`: environment the runtime needs on every run. Tokens:
   `{runtime_dir}`, `{app_dir}` (the app's folder), `{data_dir}` (a
   writable folder inside the app's folder for caches).

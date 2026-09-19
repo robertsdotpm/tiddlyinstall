@@ -329,9 +329,11 @@
  "runtimes": {
   "python": {
    "label": "Python 3",
+   "_comment": "Windows: msi-layout (the full python.org build from its component MSIs: tkinter, pip, venv, IDLE) first; the embeddable zip only for a version whose MSIs aren't in the catalogue; the XP backport on XP.",
    "versions": ">=3",
    "variants": [
     "pbs_stripped",
+    "msi-layout",
     "embed",
     "xp-backport",
     ""

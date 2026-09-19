@@ -2,9 +2,86 @@
  "runtime": "python",
  "researched": "2026-09-18",
  "assumes": "root/administrator",
- "notes": "Extra fields beyond SCHEMA.md: match.variant (catalogue variant; null matches any) and preferred (true = recommended recipe when several share a match). No Windows/macOS recipe was run; only Linux.",
+ "notes": "Extra fields beyond SCHEMA.md: match.variant (catalogue variant; null matches any) and preferred (true = recommended recipe when several share a match). No Windows/macOS recipe was run; only Linux. launch.gui_program (Windows): the windowed interpreter (pythonw.exe) for apps with no console; the msi-layout recipe (2026-09-19) takes several files per release (releases.json `parts`).",
  "user_site_leak": "Every recipe except the embeddable zip (whose ._pth doesn't list the user site) leaves Python's per-user site-packages on sys.path: ~/.local/lib/pythonX.Y/site-packages on Linux, ~/Library/Python/X.Y/lib/python/site-packages for macOS framework builds, %APPDATA%\\Python\\PythonXY\\site-packages on Windows. It's shared by every copy of X.Y for that user, and `pip install --user` writes there. To keep app copies isolated, launch with `-s` (or `-I`), or set PYTHONNOUSERSITE=1. Source: https://docs.python.org/3/library/site.html",
  "recipes": [
+  {
+   "id": "msi-layout",
+   "match": {
+    "os": "windows",
+    "kind": "installer",
+    "format": "msi",
+    "versions": ">=3.5",
+    "arch": null,
+    "variant": "msi-layout"
+   },
+   "method": "extract",
+   "steps": [
+    {
+     "run": "msiexec /a \"{file}\" /qn TARGETDIR=\"{runtime_dir}\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "msiexec /a \"{tmp}\\exe.msi\" /qn TARGETDIR=\"{runtime_dir}\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "msiexec /a \"{tmp}\\lib.msi\" /qn TARGETDIR=\"{runtime_dir}\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "msiexec /a \"{tmp}\\tcltk.msi\" /qn TARGETDIR=\"{runtime_dir}\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "del /q \"{runtime_dir}\\*.msi\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "\"{runtime_dir}\\python.exe\" -E -s -m ensurepip --default-pip",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "UCRT (KB2999226 or VC++ 2015-2022 redistributable) on Windows < 10, as for the embeddable zip: ucrt.msi (3.7+) installs a system update and is not used; vcruntime140.dll is in core.msi"
+   ],
+   "executable": "python.exe",
+   "package_manager": "\"{runtime_dir}\\python.exe\" -m pip",
+   "verify": "\"{runtime_dir}\\python.exe\" -E -s -c \"import sys, ssl, sqlite3, asyncio, tkinter; print(sys.version, tkinter.Tcl().eval('info patchlevel'))\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "the same binaries as the embeddable zip of the same version (os_support.json rules for embed and msi-layout)",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://www.python.org/ftp/python/3.14.7/amd64/",
+    "https://github.com/python/cpython/blob/3.14/Tools/msi/README.txt",
+    "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/msiexec"
+   ],
+   "notes": "Added 2026-09-19 by installer-builder: the full python.org build, laid out from the component MSIs the .exe installer is made of (python.org/ftp/python/<version>/<amd64|win32|arm64>/). The release is core.msi; its parts (releases.json `parts`: exe.msi, lib.msi, tcltk.msi, each pinned by SHA-256) are downloaded as extra files and copied to {tmp}. `msiexec /a` (an administrative install) unpacks each into {runtime_dir} without registering anything: no PythonCore registry keys, no Programs and Features entry, no Windows Installer product; it leaves a copy of each .msi there, which the fifth step deletes. It needs no administrator rights (checked on Windows 10 at medium integrity). Result: python.exe, pythonw.exe, DLLs (with _tkinter.pyd and the Tcl/Tk DLLs), Lib (the whole standard library as .py files, with tkinter, idlelib, venv, ensurepip), tcl, libs; ensurepip then installs pip. Not included: dev.msi (headers and import libraries for building C extensions), doc, test, tools, launcher (py.exe), path/appendpath, pip.msi (only runs ensurepip as a custom action) and ucrt.msi (a system update). The standard library is not precompiled: Python writes __pycache__ on first import where the folder is writable. python.exe finds its home from the Lib\\os.py landmark beside it, so the folder can be anywhere. Registry leakage in: a registered Python of the same X.Y can add its PythonPath subkeys to sys.path (as for the .exe extract recipe).",
+   "preferred": true,
+   "launch": {
+    "program": "{runtime_dir}\\python.exe",
+    "gui_program": "{runtime_dir}\\pythonw.exe",
+    "args": [
+     "-E",
+     "-s"
+    ],
+    "env": {},
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\python.exe\" -E -s -m pip install --no-warn-script-location .",
+    "env": {
+     "PIP_CONFIG_FILE": "nul",
+     "PIP_CACHE_DIR": "{data_dir}\\pip-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "PIP_CONFIG_FILE=devnull stops pip reading the user's pip.conf. Python <2.7.9 and 3.0-3.3 have no bundled pip."
+   }
+  },
   {
    "match": {
     "os": "windows",
@@ -78,12 +155,13 @@
    "preferred": true,
    "launch": {
     "program": "{runtime_dir}\\python.exe",
+    "gui_program": "{runtime_dir}\\pythonw.exe",
     "args": [
      "-E",
      "-s"
     ],
     "env": {},
-    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": {
     "command": "\"{runtime_dir}\\python.exe\" -E -s -m pip install --no-warn-script-location .",
@@ -138,12 +216,13 @@
    "preferred": false,
    "launch": {
     "program": "{runtime_dir}\\python.exe",
+    "gui_program": "{runtime_dir}\\pythonw.exe",
     "args": [
      "-E",
      "-s"
     ],
     "env": {},
-    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": {
     "command": "\"{runtime_dir}\\python.exe\" -E -s -m pip install --no-warn-script-location .",
@@ -202,12 +281,13 @@
    "preferred": true,
    "launch": {
     "program": "{runtime_dir}\\python.exe",
+    "gui_program": "{runtime_dir}\\pythonw.exe",
     "args": [
      "-E",
      "-s"
     ],
     "env": {},
-    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": {
     "command": "\"{runtime_dir}\\python.exe\" -E -s -m pip install --no-warn-script-location .",
@@ -270,12 +350,13 @@
    "preferred": true,
    "launch": {
     "program": "{runtime_dir}\\python.exe",
+    "gui_program": "{runtime_dir}\\pythonw.exe",
     "args": [
      "-E",
      "-s"
     ],
     "env": {},
-    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": {
     "command": "\"{runtime_dir}\\python.exe\" -E -s -m pip install --no-warn-script-location .",
@@ -330,12 +411,13 @@
    "preferred": true,
    "launch": {
     "program": "{runtime_dir}\\python.exe",
+    "gui_program": "{runtime_dir}\\pythonw.exe",
     "args": [
      "-E",
      "-s"
     ],
     "env": {},
-    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": {
     "command": "\"{runtime_dir}\\python.exe\" -E -s -m pip install --no-warn-script-location .",
@@ -386,12 +468,13 @@
    "preferred": true,
    "launch": {
     "program": "{runtime_dir}\\python.exe",
+    "gui_program": "{runtime_dir}\\pythonw.exe",
     "args": [
      "-E",
      "-s"
     ],
     "env": {},
-    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": {
     "command": "\"{runtime_dir}\\python.exe\" -E -s -m pip install --no-warn-script-location .",

@@ -43,12 +43,21 @@ export class LocalIndex {
   }
 
   // The relative path of our copy of a file with this name and size (size
-  // 0 = any), or "".
-  find(name, size) {
+  // 0 = any), or "". When several copies share the name and the SHA-256 is
+  // known, only a copy with that SHA-256 (python's component MSIs are all
+  // core.msi, lib.msi..., and their sizes, multiples of 4 KiB, repeat).
+  find(name, size, sha256) {
     this.load();
-    for (const rel of this.byName.get(name) || []) {
-      if (!(size > 0)) return rel;
-      try { if (fs.statSync(path.join(this.root, rel)).size === size) return rel; } catch (e) { /* gone */ }
+    const all = this.byName.get(name) || [];
+    for (const rel of all) {
+      if (size > 0) {
+        try { if (fs.statSync(path.join(this.root, rel)).size !== size) continue; } catch (e) { continue; }
+      }
+      if (sha256 && all.length > 1) {
+        const h = this.sha256(rel);
+        if (!h || h.sha256 !== sha256) continue;
+      }
+      return rel;
     }
     return '';
   }
@@ -121,7 +130,7 @@ export function loadCatalog({ dir, policyPath, localRoot, cachePath }) {
   const opts = {};
   if (local) {
     opts.sha = (e, name) => {
-      const rel = local.find(name, e.size);
+      const rel = local.find(name, e.size, e.sha256);
       if (!rel) return null;
       if (e.sha256) return { local: rel };
       const h = local.sha256(rel);

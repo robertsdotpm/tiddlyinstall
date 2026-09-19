@@ -541,6 +541,16 @@ function release(raw, folder) {
   r.v = parseVersion(r.version);
   r.n = nRelease++;
   if (r.sha256 === '') r.sha256 = checksumSHA256(r.checksum);
+  // A release made of several files (python's msi-layout: core.msi, then
+  // exe.msi, lib.msi, tcltk.msi): the rest, each pinned like the release,
+  // named as the recipe's {tmp}\<name> steps name them.
+  if (Array.isArray(raw.parts)) {
+    r.parts = raw.parts.filter(isMap).map((p) => ({
+      name: str(p.name), url: str(p.url), mirrors: Array.isArray(p.mirrors) ? p.mirrors : null,
+      sha256: goLower(str(p.ib_sha256) || str(p.sha256)), size: typeof p.size === 'number' ? p.size : 0,
+      local: str(p.ib_local), looked: str(p.ib_local) !== '',
+    })).filter((p) => /^[A-Za-z0-9_.-]+$/.test(p.name) && p.sha256 !== '');
+  }
   return r;
 }
 
@@ -757,6 +767,14 @@ async function writeSnapshotFiles(cat) {
       };
       if (e.sha256) o.ib_sha256 = e.sha256;
       if (e.local) o.ib_local = e.local;
+      if (e.parts) {
+        o.parts = e.parts.map((p) => {
+          partLocal(cat, p);
+          const q = { name: p.name, url: p.url, mirrors: p.mirrors, size: p.size, ib_sha256: p.sha256 };
+          if (p.local) q.ib_local = p.local;
+          return q;
+        });
+      }
       kept.get(folder).push(o);
     }
   }
@@ -1050,6 +1068,13 @@ function supported(cat, rt, r, e, install) {
     for (const k of Object.keys(st)) if (!STEP_KEYS.has(k)) return no;
     const s = str(st.run);
     for (const m of s.matchAll(tmpRefRe())) {
+      // One of the release's own parts: an extra file pinned by the release.
+      const part = e.parts ? e.parts.find((p) => p.name === m[1]) : undefined;
+      if (part) {
+        deferred = true;
+        if (!seen.has(m[1])) { seen.add(m[1]); extras.push({ name: m[1], src: part, part: true }); }
+        continue;
+      }
       if (!contains(own(cat.policy, 'external_tmp_files'), m[1])) continue;
       const ef = pol ? own(pol.extra_files, m[1]) : undefined;
       if (!isMap(ef)) return no;
@@ -1065,6 +1090,30 @@ function supported(cat, rt, r, e, install) {
     if (deferred && (st.unpack != null || s.includes('{file}'))) return no;
   }
   return { ok: true, extras, prefer };
+}
+
+// Our copy of a release part (opts.sha, as for releases), looked for once.
+function partLocal(cat, p) {
+  if (!p.looked && cat.shaHook) {
+    p.looked = true;
+    const got = cat.shaHook({ size: p.size, sha256: p.sha256, url: p.url }, p.name);
+    if (got && str(got.local) !== '' && (str(got.sha256) === '' || got.sha256 === p.sha256)) p.local = got.local;
+  }
+  return p.local;
+}
+
+// An extra file's download locations: a release part's like a release's
+// (our mirror first or last, as the policy says); a policy file's as listed.
+function extraURLs(cat, x) {
+  if (!x.part) return list(x.src.urls).map(str);
+  const out = [], seen = new Set();
+  const add = (u) => { if (u !== '' && !seen.has(u)) { seen.add(u); out.push(u); } };
+  const mirror = mirrorURL(cat, partLocal(cat, x.src));
+  if (own(cat.policy, 'mirror_first') === true) add(mirror);
+  add(x.src.url);
+  for (const m of x.src.mirrors || []) add(str(m));
+  add(mirror);
+  return out;
 }
 
 // usesExtra
@@ -1331,7 +1380,7 @@ export function resolveFiles(cat, app) {
     for (const x of b.p.extras) {
       if (seen.has(str(x.src.sha256))) continue;
       seen.add(x.src.sha256);
-      files.push({ name: x.name, sha256: x.src.sha256, size: x.src.size || 0, urls: list(x.src.urls), local: '' });
+      files.push({ name: x.name, sha256: x.src.sha256, size: x.src.size || 0, urls: extraURLs(cat, x), local: x.part ? partLocal(cat, x.src) : '' });
     }
     for (const n of b.p.needs) add(n.p.rel);
     for (const u of allPrereqs(b.p)) {
@@ -1445,7 +1494,7 @@ function writeTarget(cat, w, app, pol, b) {
     for (const x of b.p.extras) {
       const dot = x.name.lastIndexOf('.');
       w.add('file', dot >= 0 ? x.name.slice(0, dot) : x.name, x.name, str(x.src.sha256), String(x.src.size || 0));
-      for (const u of list(x.src.urls)) w.add('url', str(u));
+      for (const u of extraURLs(cat, x)) w.add('url', u);
       w.add('step', 'run', win ? `copy /y "{file}" "{tmp}\\${x.name}" >nul` : `cp "{file}" "{tmp}/${x.name}"`);
     }
     const later = (s) => fix(splitJoin(s, '{dir}', '{runtime_dir}'));
@@ -1532,7 +1581,10 @@ function writeTarget(cat, w, app, pol, b) {
   // Launch: {runtime} is the runtime's program and its own flags.
   let launch = quoteAppPaths(app.launch);
   if (r.launch && typeof r.launch.program === 'string') {
-    let rc = '"' + fix(r.launch.program) + '"';
+    // An app without a console (record `console 0`) starts through the
+    // runtime's windowed program where the recipe names one (pythonw.exe).
+    const prog = !app.console && typeof r.launch.gui_program === 'string' && r.launch.gui_program !== '' ? r.launch.gui_program : r.launch.program;
+    let rc = '"' + fix(prog) + '"';
     for (let a of list(r.launch.args)) {
       a = str(a);
       if (/[ \\/]/.test(a)) a = '"' + a + '"';

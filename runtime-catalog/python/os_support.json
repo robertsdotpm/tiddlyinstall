@@ -259,13 +259,15 @@
     "vista/server2008: SP2",
     "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
    ],
-   "applies_to": "python.org embeddable zips",
+   "applies_to": "python.org embeddable zips; python.org component MSIs (msi-layout: core.msi and its parts, the same binaries as the embeddable zip)",
    "match": {
     "format": [
-     "zip"
+     "zip",
+     "msi"
     ],
     "variant": [
-     "embed"
+     "embed",
+     "msi-layout"
     ]
    },
    "evidence": [
@@ -285,7 +287,8 @@
    "confidence": "high",
    "notes": null,
    "format": [
-    "zip"
+    "zip",
+    "msi"
    ]
   },
   {
@@ -352,13 +355,15 @@
     "7/server2008r2: SP1 and KB2533623 (3.8 loads extension DLLs with LOAD_LIBRARY_SEARCH_* flags)",
     "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
    ],
-   "applies_to": "python.org embeddable zips",
+   "applies_to": "python.org embeddable zips; python.org component MSIs (msi-layout: core.msi and its parts, the same binaries as the embeddable zip)",
    "match": {
     "format": [
-     "zip"
+     "zip",
+     "msi"
     ],
     "variant": [
-     "embed"
+     "embed",
+     "msi-layout"
     ]
    },
    "evidence": [
@@ -378,7 +383,8 @@
    "confidence": "high",
    "notes": "Docs say Vista; binary and VM say 7.",
    "format": [
-    "zip"
+    "zip",
+    "msi"
    ]
   },
   {
@@ -394,13 +400,15 @@
    "extra": [
     "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
    ],
-   "applies_to": "python.org embeddable zips",
+   "applies_to": "python.org embeddable zips; python.org component MSIs (msi-layout: core.msi and its parts, the same binaries as the embeddable zip)",
    "match": {
     "format": [
-     "zip"
+     "zip",
+     "msi"
     ],
     "variant": [
-     "embed"
+     "embed",
+     "msi-layout"
     ]
    },
    "evidence": [
@@ -420,7 +428,8 @@
    "confidence": "medium",
    "notes": "Docs say 8.1; the binary needs only Windows 8 APIs. No Windows 8.0 VM was available, so 8.0 is inferred from import tables (confidence medium).",
    "format": [
-    "zip"
+    "zip",
+    "msi"
    ]
   },
   {
@@ -483,13 +492,15 @@
    "extra": [
     "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
    ],
-   "applies_to": "python.org embeddable zips",
+   "applies_to": "python.org embeddable zips; python.org component MSIs (msi-layout: core.msi and its parts, the same binaries as the embeddable zip)",
    "match": {
     "format": [
-     "zip"
+     "zip",
+     "msi"
     ],
     "variant": [
-     "embed"
+     "embed",
+     "msi-layout"
     ]
    },
    "evidence": [
@@ -509,7 +520,8 @@
    "confidence": "high",
    "notes": "Upstream support for 8.1 officially ends with 3.12 (3.13's own docs still say 8.1; 3.14's say 3.12). The 3.13 binaries nevertheless run on 8.1: binary and VM win. Not guaranteed for later 3.13 patches.",
    "format": [
-    "zip"
+    "zip",
+    "msi"
    ]
   },
   {
@@ -525,13 +537,15 @@
    "extra": [
     "UCRT on Vista SP2/7 SP1/8/8.1: KB2999226 (or any VC++ 2015+ redistributable; TESTED-WINDOWS.md uses VC++ AIO v0.35.0). Built into Windows 10+. The embeddable zip does not bundle it (none of the 210 x86/amd64 embed zips contains ucrtbase.dll); the .exe installer installs it itself"
    ],
-   "applies_to": "python.org embeddable zips",
+   "applies_to": "python.org embeddable zips; python.org component MSIs (msi-layout: core.msi and its parts, the same binaries as the embeddable zip)",
    "match": {
     "format": [
-     "zip"
+     "zip",
+     "msi"
     ],
     "variant": [
-     "embed"
+     "embed",
+     "msi-layout"
     ]
    },
    "evidence": [
@@ -551,7 +565,8 @@
    "confidence": "high",
    "notes": "Vendor docs say Windows 10+; the 3.14.0-3.14.7 binaries import nothing newer than 8.1 and ran on the 8.1 VM with asyncio. Unsupported upstream: a later 3.14 patch may add a Windows 10-only import, so re-check every new release (see the >3.14.7 rule).",
    "format": [
-    "zip"
+    "zip",
+    "msi"
    ]
   },
   {
@@ -565,13 +580,15 @@
    "min_build": null,
    "max_os": null,
    "extra": [],
-   "applies_to": "python.org embeddable zips released after this research",
+   "applies_to": "python.org embeddable zips released after this research; python.org component MSIs (msi-layout: core.msi and its parts, the same binaries as the embeddable zip)",
    "match": {
     "format": [
-     "zip"
+     "zip",
+     "msi"
     ],
     "variant": [
-     "embed"
+     "embed",
+     "msi-layout"
     ]
    },
    "evidence": [
@@ -583,7 +600,8 @@
    "confidence": "low",
    "notes": "Placeholder for releases newer than the catalogue: assume the vendor floor (Windows 10) until the binary is checked.",
    "format": [
-    "zip"
+    "zip",
+    "msi"
    ]
   },
   {
@@ -597,13 +615,15 @@
    "min_build": null,
    "max_os": null,
    "extra": [],
-   "applies_to": "python.org embeddable zips released after this research",
+   "applies_to": "python.org embeddable zips released after this research; python.org component MSIs (msi-layout: core.msi and its parts, the same binaries as the embeddable zip)",
    "match": {
     "format": [
-     "zip"
+     "zip",
+     "msi"
     ],
     "variant": [
-     "embed"
+     "embed",
+     "msi-layout"
     ]
    },
    "evidence": [
@@ -615,7 +635,8 @@
    "confidence": "low",
    "notes": "Placeholder for releases newer than the catalogue: assume the vendor floor (Windows 10) until the binary is checked.",
    "format": [
-    "zip"
+    "zip",
+    "msi"
    ]
   },
   {
@@ -712,13 +733,15 @@
    "min_build": 16299,
    "max_os": null,
    "extra": [],
-   "applies_to": "python.org arm64 embeddable zips",
+   "applies_to": "python.org arm64 embeddable zips; python.org component MSIs (msi-layout: core.msi and its parts, the same binaries as the embeddable zip)",
    "match": {
     "format": [
-     "zip"
+     "zip",
+     "msi"
     ],
     "variant": [
-     "embed"
+     "embed",
+     "msi-layout"
     ]
    },
    "evidence": [
@@ -734,7 +757,8 @@
    "confidence": "medium",
    "notes": "Windows on ARM64 exists only from Windows 10 1709 (build 16299); no ARM64 VM was available. Windows 11 on ARM also runs the x86 and amd64 builds under emulation; Windows 10 on ARM runs x86 only.",
    "format": [
-    "zip"
+    "zip",
+    "msi"
    ]
   },
   {

@@ -339,6 +339,7 @@
    "notes": "Listed the 3.4.10 x64 7z (in scratch, not the catalogue): one top folder rubyinstaller-3.4.10-1-x64\\ with bin (ruby.exe, x64-ucrt-ruby340.dll, ruby_builtin_dlls), lib, include, share, packages and ridk_use. So strip_components 1. The bin\\*.bat/*.cmd launchers call `\"%~dp0ruby.exe\"` and are relative. The RubyInstaller FAQ says both the exe and the 7z are suitable for portable use. The 7z writes nothing outside the folder: no PATH, no .rb association, no Start-menu entry, no registry. CA certificates: the installer adds a `ssl` junction, but the 7z doesn't need it, because OpenSSL finds the bundled cert.pem at lib\\ruby\\<ver>\\etc\\ssl (3.4+), bin\\etc\\ssl (3.2-3.3) or ssl (<=3.1) (README-SSL.md). Spaces: RubyInstaller advises against paths with spaces or non-ASCII, because some gems won't install, and on <=3.0 ridk won't run at all. So choose a space-free {runtime_dir} on Windows if gems are compiled. MSYS2 lookup (msys2_installation.rb) order: MSYS2_PATH env, {runtime_dir}\\msys64, {runtime_dir}\\msys32, <parent of runtime_dir>\\msys64, then C:\\msys64, C:\\msys32, the MSYS2 uninstall registry entries, PATH and scoop. So a private {runtime_dir}\\msys64 always wins, but without one a machine-wide C:\\msys64 is picked up (leak in).",
    "launch": {
     "program": "{runtime_dir}\\bin\\ruby.exe",
+    "gui_program": "{runtime_dir}\\bin\\rubyw.exe",
     "args": [],
     "env": {
      "RUBYOPT": null,
@@ -348,7 +349,7 @@
      "BUNDLE_USER_HOME": "{data_dir}\\bundle",
      "BUNDLE_APP_CONFIG": "{app_dir}\\.bundle"
     },
-    "notes": "Clearing GEM_HOME/GEM_PATH makes gems resolve to the runtime's own folder; RUBYOPT/RUBYLIB would inject a user's settings."
+    "notes": "Clearing GEM_HOME/GEM_PATH makes gems resolve to the runtime's own folder; RUBYOPT/RUBYLIB would inject a user's settings. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": {
     "command": "\"{runtime_dir}\\bin\\bundle.bat\" install",
@@ -402,6 +403,7 @@
    "notes": "Listed ruby-1.9.3-p551-i386-mingw32.7z: one top folder with bin\\ruby.exe, msvcrt-ruby191.dll and bundled OpenSSL/zlib/yaml/tcl DLLs, and lib\\ruby. bin\\gem.bat uses `\"%~dp0ruby.exe\"` (relative). Runs on XP, which none of the RubyInstaller2 builds do. dk.rb install writes a config.yml holding the absolute ruby path and adds devkit.rb into this ruby's site_ruby/operating_system.rb (private), so re-run it after a move. Its bundled OpenSSL 1.0.x has no current CA bundle, so rubygems.org over HTTPS fails: set SSL_CERT_FILE to a current cacert.pem, or install gems from local .gem files.",
    "launch": {
     "program": "{runtime_dir}\\bin\\ruby.exe",
+    "gui_program": "{runtime_dir}\\bin\\rubyw.exe",
     "args": [],
     "env": {
      "RUBYOPT": null,
@@ -411,7 +413,7 @@
      "BUNDLE_USER_HOME": "{data_dir}\\bundle",
      "BUNDLE_APP_CONFIG": "{app_dir}\\.bundle"
     },
-    "notes": "Clearing GEM_HOME/GEM_PATH makes gems resolve to the runtime's own folder; RUBYOPT/RUBYLIB would inject a user's settings."
+    "notes": "Clearing GEM_HOME/GEM_PATH makes gems resolve to the runtime's own folder; RUBYOPT/RUBYLIB would inject a user's settings. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": null
   },
@@ -466,6 +468,7 @@
    "notes": "The devkit .exe is the only catalogue file that ships MSYS2 (the compiler toolchain for native gems). It's Inno Setup: 'Inno Setup Setup Data (6.7.0)' in the 3.4.10-1 x64 installer. Its [Setup] has AppId=RubyInstaller-<X.Y>-<arch> (per major.minor, not per patch), PrivilegesRequired=lowest with a command-line override, ChangesEnvironment/ChangesAssociations, and tasks modpath/assocfiles/ridkinstall (all turned off above). [Run] only runs icacls on {app} and {app}\\msys64\\tmp and makes the `ssl` junction, all inside {runtime_dir}. Two copies of the same X.Y: files install fine to each /dir, but the uninstall key and Start-menu shortcut are shared. Step 2 removes the key only if it belongs to this copy (the cmd `for /f` is written for the command line; double the % signs in a .bat). The Start-menu shortcut is left behind: deleting it risks removing a user's own RubyInstaller shortcut. Safer alternative, pending the operator: take MSYS2 out of the exe without running it. innoextract 1.9 (2020) predates Inno 6.7 data, so it needs a newer innoextract (support unverified). Or use the 7z recipe plus an MSYS2 base archive (msys2.org) unpacked into {runtime_dir}\\msys64 and `ridk install 2 3` (network, pacman).",
    "launch": {
     "program": "{runtime_dir}\\bin\\ruby.exe",
+    "gui_program": "{runtime_dir}\\bin\\rubyw.exe",
     "args": [],
     "env": {
      "RUBYOPT": null,
@@ -475,7 +478,7 @@
      "BUNDLE_USER_HOME": "{data_dir}\\bundle",
      "BUNDLE_APP_CONFIG": "{app_dir}\\.bundle"
     },
-    "notes": "Clearing GEM_HOME/GEM_PATH makes gems resolve to the runtime's own folder; RUBYOPT/RUBYLIB would inject a user's settings."
+    "notes": "Clearing GEM_HOME/GEM_PATH makes gems resolve to the runtime's own folder; RUBYOPT/RUBYLIB would inject a user's settings. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": {
     "command": "\"{runtime_dir}\\bin\\bundle.bat\" install",

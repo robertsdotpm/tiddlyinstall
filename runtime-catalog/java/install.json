@@ -744,6 +744,7 @@
    "notes": "Zulu 6 JDK, x64. msvcr100.dll is bundled in bin/. The Fls* imports it uses exist on XP x64 and Server 2003 (NT 5.2). Use bin\\javaw.exe for GUI apps without a console. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir} only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} and the registry is not touched at install time (unlike the vendor .msi). At run time the JVM writes %TEMP%\\hsperfdata_<user> (suppress with -XX:-UsePerfData); the Preferences API, if used, writes HKCU\\Software\\JavaSoft\\Prefs, and system prefs try to create HKLM\\Software\\JavaSoft\\Prefs when run as administrator. No MSI, no registry keys, no PATH; the launcher does not consult HKLM\\Software\\JavaSoft when started from its own folder.",
    "launch": {
     "program": "{runtime_dir}\\bin\\java.exe",
+    "gui_program": "{runtime_dir}\\bin\\javaw.exe",
     "args": [],
     "env": {
      "JAVA_HOME": "{runtime_dir}",
@@ -752,7 +753,7 @@
      "JDK_JAVA_OPTIONS": null,
      "CLASSPATH": null
     },
-    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": null
   },
@@ -790,6 +791,7 @@
    "notes": "Zulu 7: x86 JRE and x64 JDK. msvcr100.dll is bundled. This is the ONLY Java in the catalogue whose binaries can load on 32-bit Windows XP: every 8+ build is marked subsystem 6.0 (Vista), which XP refuses. XP support is from static PE inspection only and has not been run on XP; Azul does not list XP. Use bin\\javaw.exe for GUI apps without a console. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir} only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} and the registry is not touched at install time (unlike the vendor .msi). At run time the JVM writes %TEMP%\\hsperfdata_<user> (suppress with -XX:-UsePerfData); the Preferences API, if used, writes HKCU\\Software\\JavaSoft\\Prefs, and system prefs try to create HKLM\\Software\\JavaSoft\\Prefs when run as administrator. No MSI, no registry keys, no PATH; the launcher does not consult HKLM\\Software\\JavaSoft when started from its own folder.",
    "launch": {
     "program": "{runtime_dir}\\bin\\java.exe",
+    "gui_program": "{runtime_dir}\\bin\\javaw.exe",
     "args": [],
     "env": {
      "JAVA_HOME": "{runtime_dir}",
@@ -798,7 +800,7 @@
      "JDK_JAVA_OPTIONS": null,
      "CLASSPATH": null
     },
-    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": null
   },
@@ -836,6 +838,7 @@
    "notes": "Temurin 8 JRE (x64) and Zulu 8 JRE (x86). Both bundle the Universal CRT app-locally (ucrtbase.dll, api-ms-win-crt-*.dll, vcruntime140.dll, msvcp140.dll), so no redistributable or KB2999226 is needed on Vista/7/8.1. On Windows 10+ the OS copy of the UCRT is used instead. Not usable on XP. Use bin\\javaw.exe for GUI apps without a console. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir} only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} and the registry is not touched at install time (unlike the vendor .msi). At run time the JVM writes %TEMP%\\hsperfdata_<user> (suppress with -XX:-UsePerfData); the Preferences API, if used, writes HKCU\\Software\\JavaSoft\\Prefs, and system prefs try to create HKLM\\Software\\JavaSoft\\Prefs when run as administrator. No MSI, no registry keys, no PATH; the launcher does not consult HKLM\\Software\\JavaSoft when started from its own folder.",
    "launch": {
     "program": "{runtime_dir}\\bin\\java.exe",
+    "gui_program": "{runtime_dir}\\bin\\javaw.exe",
     "args": [],
     "env": {
      "JAVA_HOME": "{runtime_dir}",
@@ -844,7 +847,7 @@
      "JDK_JAVA_OPTIONS": null,
      "CLASSPATH": null
     },
-    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": null
   },
@@ -882,6 +885,7 @@
    "notes": "Zulu 9 and 10 JDK (x86, x64): bundle msvcr120.dll/msvcp120.dll (VS2013), so no redistributable is needed. Use bin\\javaw.exe for GUI apps without a console. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir} only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} and the registry is not touched at install time (unlike the vendor .msi). At run time the JVM writes %TEMP%\\hsperfdata_<user> (suppress with -XX:-UsePerfData); the Preferences API, if used, writes HKCU\\Software\\JavaSoft\\Prefs, and system prefs try to create HKLM\\Software\\JavaSoft\\Prefs when run as administrator. No MSI, no registry keys, no PATH; the launcher does not consult HKLM\\Software\\JavaSoft when started from its own folder.",
    "launch": {
     "program": "{runtime_dir}\\bin\\java.exe",
+    "gui_program": "{runtime_dir}\\bin\\javaw.exe",
     "args": [],
     "env": {
      "JAVA_HOME": "{runtime_dir}",
@@ -890,7 +894,7 @@
      "JDK_JAVA_OPTIONS": null,
      "CLASSPATH": null
     },
-    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": null
   },
@@ -928,6 +932,7 @@
    "notes": "Temurin JRE (x64 11-26), Zulu JRE/JDK (x86 11-19, arm64). x86/x64 builds bundle the UCRT app-locally, so no prerequisite. Windows arm64 builds bundle only vcruntime140/msvcp140 and use the OS UCRT, which every Windows 10+ has. No 32-bit x86 build exists after 19 in this plan (the x86 port was removed in 24, JEP 479). Use bin\\javaw.exe for GUI apps without a console. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir} only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} and the registry is not touched at install time (unlike the vendor .msi). At run time the JVM writes %TEMP%\\hsperfdata_<user> (suppress with -XX:-UsePerfData); the Preferences API, if used, writes HKCU\\Software\\JavaSoft\\Prefs, and system prefs try to create HKLM\\Software\\JavaSoft\\Prefs when run as administrator. No MSI, no registry keys, no PATH; the launcher does not consult HKLM\\Software\\JavaSoft when started from its own folder.",
    "launch": {
     "program": "{runtime_dir}\\bin\\java.exe",
+    "gui_program": "{runtime_dir}\\bin\\javaw.exe",
     "args": [],
     "env": {
      "JAVA_HOME": "{runtime_dir}",
@@ -936,7 +941,7 @@
      "JDK_JAVA_OPTIONS": null,
      "CLASSPATH": null
     },
-    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": null
   },
@@ -974,6 +979,7 @@
    "notes": "Windows arm64 builds: Zulu 16 JRE, Zulu 17-19 JDK, Temurin 21/23 JRE, Zulu 25 JRE. The JDK variants are used where no arm64 JRE was published; they work identically and add javac/jlink. Use bin\\javaw.exe for GUI apps without a console. Launch the app with the absolute path to the executable; the java launcher finds its own runtime from its location (no registry, no JAVA_HOME needed). Set JAVA_HOME={runtime_dir} only in the app's own process environment (build tools and wrapper scripts read it) and clear JAVA_TOOL_OPTIONS, _JAVA_OPTIONS, JDK_JAVA_OPTIONS (9+) and CLASSPATH, which a user's global settings would otherwise inject into the private JVM (checked: JAVA_TOOL_OPTIONS from the environment is picked up). Always pass -jar or -cp explicitly. Nothing is written outside {runtime_dir} and the registry is not touched at install time (unlike the vendor .msi). At run time the JVM writes %TEMP%\\hsperfdata_<user> (suppress with -XX:-UsePerfData); the Preferences API, if used, writes HKCU\\Software\\JavaSoft\\Prefs, and system prefs try to create HKLM\\Software\\JavaSoft\\Prefs when run as administrator. No MSI, no registry keys, no PATH; the launcher does not consult HKLM\\Software\\JavaSoft when started from its own folder.",
    "launch": {
     "program": "{runtime_dir}\\bin\\java.exe",
+    "gui_program": "{runtime_dir}\\bin\\javaw.exe",
     "args": [],
     "env": {
      "JAVA_HOME": "{runtime_dir}",
@@ -982,7 +988,7 @@
      "JDK_JAVA_OPTIONS": null,
      "CLASSPATH": null
     },
-    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options."
+    "notes": "java finds its runtime from its own path; JAVA_HOME is for build tools and wrapper scripts. The cleared variables would inject a user's global JVM options. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": null
   }
