@@ -503,8 +503,10 @@ class WinVM:
     def busy(self):
         """Another harness's folder: tests/matrix (C:\\ibtest, whose cleanup
         removes every app under %LOCALAPPDATA%\\ib), behaviour.py (C:\\ibbtest),
+        another copy of this harness (our own folder, which fresh() deletes),
         or the same in the profile on a PROFILE machine."""
-        checks = ["if exist C:\\ibtest echo BUSY", "if exist C:\\ibbtest echo BUSY"]
+        checks = ["if exist C:\\ibtest echo BUSY", "if exist C:\\ibbtest echo BUSY",
+                  f"if exist {self.cmd_dir} echo BUSY"]
         if self.profile:
             checks += ['if exist "%USERPROFILE%\\ibtest" echo BUSY', 'if exist "%USERPROFILE%\\ibbtest" echo BUSY']
         code, out, _ = sh(["ssh", self.host, 'cmd /c "' + "& ".join(checks) + '"'], timeout=60)
