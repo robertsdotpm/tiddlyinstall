@@ -194,7 +194,7 @@ function paintCatalog() {
       const v = r.version ? esc(r.version) : '<span class="muted">Nothing in the catalogue runs here</span>';
       return '<tr><td>' + esc(r.covers || r.family || '') + arch + '</td><td>' + v + '</td></tr>';
     }).join('');
-    hint.textContent = (apiLocal() ? 'From this page\'s catalogue' + (catalog.changed ? ', with your changes from the Runtimes page' : '') : 'From the build server\'s catalogue') +
+    hint.textContent = (apiLocal() ? 'From this page\'s catalogue' + (catalog.changed ? ', with your changes from the Sources page' : '') : 'From the build server\'s catalogue') +
       ': one row per install plan it makes for ' + (entry.label || rt) + '.';
     panel.classList.remove('py-panel');   // show it for every language with data
   } else {
@@ -214,7 +214,7 @@ function fetchCatalog() {
 }
 fetchCatalog();
 // The table follows the catalogue: another server, or changes made on the
-// Runtimes page (used when the page builds installers itself).
+// Sources page (used when the page builds installers itself).
 window.addEventListener('ib-api-change', () => { fetchCatalog(); paintOverlayNote(); });
 window.addEventListener('ib-overlay-change', () => { if (apiLocal()) fetchCatalog(); paintOverlayNote(); });
 
@@ -234,7 +234,7 @@ function paintOverlayNote() {
   if (!n) return;
   const link = document.createElement('a');
   link.href = pageUrl('runtimes.html');
-  link.textContent = 'Runtimes page';
+  link.textContent = 'Sources page';
   const what = n + ' catalogue change' + (n === 1 ? '' : 's') + ' made in this browser (';
   if (apiLocal()) {
     overlayNote.replaceChildren('Builds use ' + what, link, '). The installers\' review screens show the plan they carry.');
