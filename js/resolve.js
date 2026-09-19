@@ -1005,6 +1005,20 @@ function allPrereqs(pk) {
   return out;
 }
 
+// The app's own prerequisites for one OS family: a record's `prerequisites`
+// (the site's written templates name what their code needs from the
+// system, js/templates.js), after the runtime's, without repeats.
+function targetPrereqs(cat, app, b) {
+  const out = allPrereqs(b.p), seen = new Set(out.map((u) => u.id));
+  for (const id of list(app.prerequisites)) {
+    const q = own(own(cat.policy, 'prerequisites'), str(id));
+    if (!isMap(q) || q.os !== b.family || seen.has(id)) continue;
+    seen.add(id);
+    out.push({ id, p: q, why: 'The app\'s own code needs it.' });
+  }
+  return out;
+}
+
 function samePrereqs(a, b) {
   const x = allPrereqs(a), y = allPrereqs(b);
   return x.length === y.length && x.every((u, i) => u.id === y[i].id && u.why === y[i].why);
@@ -1306,6 +1320,7 @@ function normApp(a) {
     platforms: list(a.platforms),
     source: s ? { name: str(s.name), sha256: str(s.sha256), size: s.size || 0, format: str(s.format), strip: s.strip || 0, urls: list(s.urls) } : null,
     package: str(a.package), packageVersion: str(a.packageVersion),
+    prerequisites: list(a.prerequisites).map(str),
   };
 }
 
@@ -1383,7 +1398,7 @@ export function resolveFiles(cat, app) {
       files.push({ name: x.name, sha256: x.src.sha256, size: x.src.size || 0, urls: extraURLs(cat, x), local: x.part ? partLocal(cat, x.src) : '' });
     }
     for (const n of b.p.needs) add(n.p.rel);
-    for (const u of allPrereqs(b.p)) {
+    for (const u of targetPrereqs(cat, app, b)) {
       const f = isMap(u.p.file) ? u.p.file : null;
       if (f && !seen.has(str(f.sha256))) {
         seen.add(str(f.sha256));
@@ -1470,7 +1485,7 @@ function writeTarget(cat, w, app, pol, b) {
   };
   w.add('runtime', app.runtime, e.version);
   if (!b.p.known) w.add('note', 'Not confirmed to run on every OS version in this range; chosen by the catalogue\'s default floor.');
-  writeNeeds(cat, w, allPrereqs(b.p));
+  writeNeeds(cat, w, targetPrereqs(cat, app, b));
   w.add('file', app.runtime, fileName(e), e.sha256, String(e.size));
   const seen = new Set();
   const addURL = (u) => { if (u !== '' && !seen.has(u)) { seen.add(u); w.add('url', u); } };

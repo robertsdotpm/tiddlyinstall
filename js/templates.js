@@ -13,6 +13,12 @@
 //   console   true: runs in a console window
 //   needs     packages the template's own files (requirements.txt,
 //             package.json, Gemfile) have the installer fetch
+//   prerequisites  system libraries the code needs, as ids from the
+//             policy's prerequisites table (backend/policy.json); each
+//             applies on its own OS (these are Linux desktop libraries,
+//             which servers and minimal installs leave out): the installer
+//             checks for them and offers to install them, as it does for a
+//             runtime's
 //   platforms where it can work: 'windows', 'linux', 'macos'
 //   note      one or two sentences on what it needs, shown under the editor
 //   title     the window title (window templates), which the tests look for
@@ -449,10 +455,11 @@ app.on("window-all-closed", () => {});
     versions: '>=23',
     console: false,
     needs: ['electron'],
+    prerequisites: ['gtk3', 'nss', 'alsa', 'libgbm'],
     platforms: ALL,
     note: 'Installs Electron (package.json, about 100 MB) with npm. Electron 44 needs Windows 10, macOS 12 or a current Linux ' +
-      'desktop: it uses the desktop\'s own libraries (GTK 3, NSS), which servers and minimal installs leave out, and the icon ' +
-      'needs a system tray (GNOME only with an AppIndicator extension).',
+      'desktop: it uses the desktop\'s own libraries (GTK 3, NSS, ALSA, GBM; the installer checks, and offers to install them), ' +
+      'and the icon needs a system tray (GNOME only with an AppIndicator extension).',
   },
 };
 
@@ -517,9 +524,11 @@ gem "glimmer-dsl-libui"
     },
     console: false,
     needs: ['glimmer-dsl-libui'],
+    prerequisites: ['gtk3'],
     platforms: ALL,
     title: 'My App',
-    note: 'Installs glimmer-dsl-libui (Gemfile) with Bundler; it brings its own libui. On Linux it needs GTK 3, which desktops have.',
+    note: 'Installs glimmer-dsl-libui (Gemfile) with Bundler; it brings its own libui. On Linux it needs GTK 3, which desktops have ' +
+      '(the installer checks, and offers to install it).',
   },
 };
 
@@ -748,9 +757,11 @@ public class Main {
     },
     launch: JAVA_LAUNCH,
     console: false,
+    prerequisites: ['fontconfig', 'libxtst'],
     platforms: ALL,
     title: 'My App',
-    note: 'Swing comes with Java. On Linux it needs a desktop (X11 or XWayland).',
+    note: 'Swing comes with Java. On Linux it needs a desktop (X11 or XWayland) with fonts, and the X11 libraries Java uses; ' +
+      'the installer checks for them and offers to install what\'s missing.',
   },
 };
 
@@ -914,9 +925,10 @@ tkwait.window(window)
     },
     console: false,
     platforms: ['windows', 'linux'],
+    prerequisites: ['libtk'],
     title: 'My App',
-    note: 'tcltk comes with R for Windows. On Linux, R\'s tcltk uses the system\'s Tk (the libtk8.6 package); ' +
-      'on macOS it needs XQuartz, so this template doesn\'t build for macOS.',
+    note: 'tcltk comes with R for Windows. On Linux, R\'s tcltk uses the system\'s Tk 8.6, which the installer checks for ' +
+      'and offers to install; on macOS it needs XQuartz, so this template doesn\'t build for macOS.',
   },
 };
 

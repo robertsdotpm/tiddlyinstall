@@ -204,6 +204,7 @@ test('js/form-job.js: written apps take their template\'s commands (js/templates
   assert.equal(job.console, false);
   assert.equal(job.launch, '{runtime} -cp {app_dir} Main');
   assert.equal(job.install, '');
+  assert.deepEqual(job.prerequisites, ['fontconfig', 'libxtst'], 'what Swing needs on Linux (policy prerequisites)');
   // Compiled: the build field as the form starts it isn't sent (the
   // policy's command for the template's files is used); an edited one is.
   ({ job } = write({ runtime: ['go'], build_go: [BUILD_DEFAULTS.go] }));

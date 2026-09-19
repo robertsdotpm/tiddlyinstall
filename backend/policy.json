@@ -324,6 +324,132 @@
     "apk": "icu-libs",
     "pacman": "icu"
    }
+  },
+  "fontconfig": {
+   "label": "Fontconfig and a font",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libfontconfig.so.1"
+    ]
+   ],
+   "packages": {
+    "apt-get": "fontconfig fonts-dejavu-core",
+    "dnf": "fontconfig dejavu-sans-fonts",
+    "yum": "fontconfig dejavu-sans-fonts",
+    "zypper": "fontconfig dejavu-fonts",
+    "apk": "fontconfig font-dejavu",
+    "pacman": "fontconfig ttf-dejavu"
+   }
+  },
+  "libxtst": {
+   "label": "The X11 libraries Java's windows use (libXtst, libXrender, libXi)",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libXtst.so.6"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libxtst6 libxrender1 libxi6",
+    "dnf": "libXtst libXrender libXi",
+    "yum": "libXtst libXrender libXi",
+    "zypper": "libXtst6 libXrender1 libXi6",
+    "apk": "libxtst libxrender libxi",
+    "pacman": "libxtst libxrender libxi"
+   }
+  },
+  "libtk": {
+   "label": "Tk 8.6 (the system's Tcl/Tk)",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libtk8.6.so"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libtk8.6",
+    "dnf": "tk",
+    "yum": "tk",
+    "zypper": "tk",
+    "apk": "tk",
+    "pacman": "tk"
+   }
+  },
+  "gtk3": {
+   "label": "GTK 3",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libgtk-3.so.0"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libgtk-3-0",
+    "dnf": "gtk3",
+    "yum": "gtk3",
+    "zypper": "libgtk-3-0",
+    "apk": "gtk+3.0",
+    "pacman": "gtk3"
+   }
+  },
+  "nss": {
+   "label": "NSS (Mozilla's security libraries)",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libnss3.so"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libnss3",
+    "dnf": "nss",
+    "yum": "nss",
+    "zypper": "mozilla-nss",
+    "apk": "nss",
+    "pacman": "nss"
+   }
+  },
+  "alsa": {
+   "label": "ALSA's sound library (libasound)",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libasound.so.2"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libasound2",
+    "dnf": "alsa-lib",
+    "yum": "alsa-lib",
+    "zypper": "libasound2",
+    "apk": "alsa-lib",
+    "pacman": "alsa-lib"
+   }
+  },
+  "libgbm": {
+   "label": "Mesa's GBM library (libgbm)",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libgbm.so.1"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libgbm1",
+    "dnf": "mesa-libgbm",
+    "yum": "mesa-libgbm",
+    "zypper": "libgbm1",
+    "apk": "mesa-gbm",
+    "pacman": "mesa"
+   }
   }
  },
  "runtimes": {

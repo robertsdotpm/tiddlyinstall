@@ -230,6 +230,7 @@ export function jobFromForm(f, { icon, local = null, problems = [] }) {
         job.select = 'range';
         job.range = t.versions;
       }
+      if (t.prerequisites && t.prerequisites.length) job.prerequisites = t.prerequisites.slice();
       const p = platformProblem(runtime, template, platforms);
       if (p) problems.push(p);
     }

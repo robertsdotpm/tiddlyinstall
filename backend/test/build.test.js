@@ -10,6 +10,7 @@ import zlib from 'node:zlib';
 import { Builder } from '../lib/jobs.js';
 import { loadOrCreate } from '../lib/plansig.js';
 import { validate, packageLaunch, projectInstall, inlineTar } from '../../js/builder.js';
+import { resolve } from '../../js/resolve.js';
 import { readInstaller, zipEntryData, peInfo, peChecksum, tarRead } from '../../js/ibfile.js';
 import { tarNamesUnderTop } from '../lib/files.js';
 import { catalog, haveCatalog, haveBases, BASES, tmpDir, localFetch, REPO } from './helpers.js';
@@ -133,6 +134,27 @@ test('request checks: versions and scoped names', { skip }, (t) => {
   assert.throws(() => validate(inline({ mode: 'A', offline: true }), env), /offline installers can't be signed by Installer Builder/);
   assert.throws(() => validate(inline({ mode: 'C', name: 'x\u202e' }), env), /control or text-direction/);
   assert.throws(() => validate(inline({ mode: 'C', runtime: 'constructor' }), env), /unknown runtime "constructor"/);
+  // A written template's system prerequisites: ids from the policy's table.
+  assert.equal(validate(inline({ mode: 'C', prerequisites: ['fontconfig', 'libxtst'] }), env), 'build');
+  assert.throws(() => validate(inline({ mode: 'C', prerequisites: ['nope'] }), env), /unknown prerequisite "nope"/);
+  assert.throws(() => validate(inline({ mode: 'C', prerequisites: ['constructor'] }), env), /unknown prerequisite/);
+  assert.throws(() => validate(inline({ mode: 'C', prerequisites: 'fontconfig' }), env), /a list/);
+});
+
+test('a written template\'s prerequisites: in the record, and in the plan for their OS', { skip }, async (t) => {
+  const b = builder(t, null);
+  const r = { name: 'Swing', runtime: 'java', mode: 'A', source: { kind: 'inline' }, files: { 'Main.java': 'class Main {}' },
+    launch: '{runtime} -cp {app_dir} Main', console: false, platforms: ['windows', 'linux'], prerequisites: ['fontconfig'] };
+  const out = await b.run(r, () => {});
+  const rec = fs.readFileSync(b.recordPath(out.record), 'utf8');
+  assert.match(rec, /^prerequisites\tfontconfig$/m);
+  const { app } = await b.loadApp(out.record);
+  assert.deepEqual(app.prerequisites, ['fontconfig']);
+  const plan = resolve(b.cat, app);
+  const linux = plan.split('\n[target]\n').filter((x) => /^when\tlinux\t/m.test(x) && /^runtime\tjava\t/m.test(x));
+  assert.ok(linux.length && linux.every((x) => /^need\tfontconfig\t/m.test(x) && /^nwhy\tThe app's own code needs it\.$/m.test(x)), plan);
+  const windows = plan.split('\n[target]\n').filter((x) => /^when\twindows\t/m.test(x));
+  assert.ok(windows.length && windows.every((x) => !/^need\tfontconfig/m.test(x)));
 });
 
 test('install rules from the files a source has', { skip }, (t) => {

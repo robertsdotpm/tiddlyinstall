@@ -118,6 +118,15 @@ export function validate(r, env) {
     if (hasControl(f)) throw bad('fields can\'t contain control or text-direction characters');
   }
   if (src.version && !versionRe.test(src.version)) throw bad('bad package version');
+  // System prerequisites the app's own code needs (a written template's):
+  // ids from the policy's prerequisites table.
+  if (r.prerequisites != null) {
+    const known = (env.catalog && env.catalog.policy && env.catalog.policy.prerequisites) || {};
+    if (!Array.isArray(r.prerequisites) || r.prerequisites.length > 8) throw bad('prerequisites must be a list of at most 8 names');
+    for (const id of r.prerequisites) {
+      if (typeof id !== 'string' || !Object.prototype.hasOwnProperty.call(known, id)) throw bad('unknown prerequisite ' + goQuote(String(id)));
+    }
+  }
   if (r.rootname && !projectRe.test(r.rootname)) throw bad('bad install folder name');
   switch (src.kind) {
     case 'inline': {
@@ -470,6 +479,7 @@ function writeRecord(r, fields, backend, now) {
   else add('source', 'inline', fields.src.sha256);
   add('launch', fields.launch);
   if (fields.install) add('install', fields.install);
+  if (r.prerequisites && r.prerequisites.length) add('prerequisites', r.prerequisites.join(' '));
   add('console', r.console === false ? '0' : '1');
   add('menu', r.menu === false ? '0' : '1');
   add('desktop', r.desktop ? '1' : '0');
@@ -554,6 +564,7 @@ export async function runJob(r, env, progress = () => {}) {
     desktop: !!r.desktop, root: r.root || 'user', rootName: r.rootname || 'ib', platforms: [],
     source: src ? { name: src.sha256 + '.tar.gz', sha256: src.sha256, size: src.size, format: 'tar.gz', strip: src.strip, urls: src.urls || [] } : null,
     package: pkg ? pkg.name : '', packageVersion: pkg ? pkg.version : '',
+    prerequisites: r.prerequisites || [],
   };
   let stem = 'install_' + r.runtime + '_' + project.toLowerCase().replace(safeName, '-');
   if (r.mode === 'A') stem += '_' + hash;

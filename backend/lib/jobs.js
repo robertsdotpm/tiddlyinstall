@@ -137,6 +137,7 @@ export class Builder {
       range: g('range'), launch: g('launch'), install: g('install'), console: g('console') === '1',
       menu: g('menu') === '1', desktop: g('desktop') === '1', root: g('root'), rootName: g('rootname'),
       platforms: g('platforms').trim().split(/\s+/).filter(Boolean), source: null, package: '', packageVersion: '',
+      prerequisites: g('prerequisites').trim().split(/\s+/).filter(Boolean),
     };
     for (const l of lines) {
       if (l.key !== 'source') continue;
