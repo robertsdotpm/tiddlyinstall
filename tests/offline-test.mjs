@@ -181,8 +181,13 @@ try {
   ok(rt.includes('python') && rt.includes('python2'), 'the runtimes summary is in the page', rt.join(','));
 
   // One build through the form, as a person would.
-  const ui = await buildHello({ runtime: 'python', mode: 'unsigned', name: 'Hello form', code: "print('hello')\n" });
-  await checkJob(ui, 'form', 'python');
+  // Its code is main.py, which the default launch command must run.
+  const ui = await buildHello({ runtime: 'python', mode: 'unsigned', name: 'Hello form', code: "print('hello from the form')\n" });
+  await checkJob(ui, 'form', 'python', OUT && 'form');
+  if (ui && ui.result) {
+    const rec = await js(`ibLocalApi.request('/api/records/${ui.result.record}')`);
+    ok(/^launch\t\{runtime\} \{app_dir\}\/main\.py$/m.test(rec), 'form: the launch command runs main.py', rec);
+  }
   // The test matrix's hello projects (tests/matrix/projects.json), through
   // the page's API, kept for running on the test machines.
   const builds = {};

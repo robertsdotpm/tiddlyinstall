@@ -170,6 +170,11 @@ async function buildJob() {
     job.source = { kind: 'inline', value: '' };
     job.files = files || {};
     job.console = template === 'script';
+    // The templates' code is main.py / main.js / main.rb, not a package, so
+    // unless the launch command was edited, run that file.
+    const entry = form.elements['entry_' + runtime];
+    const main = Object.keys(job.files).find((n) => /^main\.[a-z]+$/.test(n));
+    if (main && (!entry || entry.value === entry.defaultValue)) job.launch = '{runtime} {app_dir}/' + main;
   } else {
     const src = val('source');
     if (!src.trim()) problems.push('Say what to package: a GitHub repo URL or a package name.');
