@@ -10,6 +10,18 @@
 // hidden desktop: no screenshot is possible there.
 //
 //   node tests/browsers/safari5.mjs [--machine xp] [--page dist/index.html] [--seconds 35] [--no-record]
+//   node tests/browsers/safari5.mjs --classic http://10.0.1.76:8080 [--mode ours|yours|unsigned] [--seconds 150] [--out DIR]
+//
+// --classic: the build server's plain-HTML path instead (docs/api.md "Plain
+// form posts"). With no automation, Safari opens a copy of the server's own
+// /classic page from disk, with <base href> pointing at the server and a
+// small ES3 script added that fills the form, reports it (a beacon) and
+// presses the button; from there it is Safari alone: the multipart post over
+// plain HTTP, the 303, the status page reloading itself until the build is
+// done. The server's log (journald, user unit ib-server) shows the post and
+// the last, finished status page coming from the machine's address; this
+// side then checks the links on that page (tests/browsers/classic.mjs).
+// Results go to results/ only.
 //
 // Safari is installed from Apple's own SafariSetup.exe (docs/test-vms.md):
 // Safari.msi only, out of the installer's cabinet. On Windows 7 it crashes
@@ -21,6 +33,8 @@ import path from 'node:path';
 import { loadMachines, findMachine, Remote } from './remote.mjs';
 import { Checker } from './steps.mjs';
 import { writeCompat } from './compat.mjs';
+import { spawnSync } from 'node:child_process';
+import { classicFields, checkFinished, MODE_LETTER } from './classic.mjs';
 
 const HERE = path.dirname(new URL(import.meta.url).pathname);
 const ROOT = path.join(HERE, '..', '..');
@@ -60,8 +74,93 @@ function contrast(fg, bg) {
   return (a + 0.05) / (b + 0.05);
 }
 
+// The fill-and-submit script for the classic form's copy (ES3).
+function classicScript(f) {
+  const lit = (v) => JSON.stringify(String(v));
+  return `(function () {
+  var B = 'http://127.0.0.1:38517/r', seq = 0;
+  function send(k, v) { (new Image()).src = B + '?k=' + encodeURIComponent(k) + '&n=0&q=' + (seq++) + '&v=' + encodeURIComponent(String(v).slice(0, 1500)); }
+  send('start', navigator.userAgent);
+  window.onload = function () {
+    try {
+      var fm = document.forms[0], e = fm.elements, i;
+      e['app_name'].value = ${lit(f.app_name)}; e['source'].value = ${lit(f.source)}; e['launch'].value = ${lit(f.launch)};
+      var rt = e['runtime']; for (i = 0; i < rt.options.length; i++) if (rt.options[i].value === ${lit(f.runtime)}) rt.selectedIndex = i;
+      var m = e['mode']; for (i = 0; i < m.length; i++) m[i].checked = m[i].value === ${lit(f.mode)};
+      e['target_macos'].checked = false;
+      send('filled', fm.method + ' ' + fm.enctype + ' ' + fm.action + ' ' + rt.value);
+      window.setTimeout(function () {
+        var ins = document.getElementsByTagName('input');
+        for (var j = 0; j < ins.length; j++) if (ins[j].type === 'submit') { ins[j].click(); break; }
+      }, 1500);
+    } catch (x) { send('error', x.message); }
+  };
+})();`;
+}
+
+async function runClassic(m, base) {
+  const remote = new Remote(m);
+  const mode = arg('--mode', 'yours');
+  const seconds = Number(arg('--seconds', 150));
+  const t = new Checker({ prefix: `[${m.name}/safari classic] ` });
+  const rec = { time: new Date().toISOString(), machine: m.name, browser: 'safari', version: '5.1.7', result: '', protocol: 'beacon', classic: base, mode };
+  const started = Date.now();
+  const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+  const tmp = fs.mkdtempSync(path.join(HERE, '.safari5-'));
+  try {
+    const label = m.name + ' Safari5 ' + crypto.randomBytes(2).toString('hex');
+    const f = classicFields(label, mode);
+    const html = await (await fetch(base + '/classic')).text();
+    const copy = html.replace('<head>', () => '<head>\n<base href="' + base + '/">\n<script type="text/javascript">' + classicScript(f) + '</script>');
+    const local = path.join(tmp, 'ibclassic-' + crypto.randomBytes(4).toString('hex') + '.html');
+    fs.writeFileSync(local, copy);
+    const remotePage = remote.dir('work', path.basename(local));
+    remote.put(local, remotePage);
+    remote.put(path.join(HERE, 'safari5', 'drive.cmd'), DIR + '\\drive.cmd');
+    const log = remote.dir('work', 'safari5-beacons.txt');
+    const since = new Date(Date.now() - 2000);
+    const r = remote.sh(`cmd /c ${DIR}\\drive.cmd ${remote.fileUrl(remotePage)} ${seconds} ${log}`, { timeout: (seconds + 120) * 1000 });
+    remote.removeFile(remotePage);
+    remote.removeFile(log);
+    const b = parseBeacons(r.out.split('@BEACONS')[1] || '');
+    rec.beacons = b;
+    t.ok(/Version\/5\.1\.7 Safari/.test(b.start || ''), 'Safari 5.1.7 opens the form', b.start);
+    t.ok(/^post multipart\/form-data http:\/\/[^ ]+\/submit python$/.test(b.filled || ''), 'the form is filled (post, multipart, to the server\'s /submit)', b.filled || b.error);
+    // What the server saw from this machine.
+    const ip = m.ssh.split('@')[1];
+    const ago = Math.ceil((Date.now() - since.getTime()) / 1000);
+    const j = spawnSync('journalctl', ['--user', '-u', 'ib-server', '--since', '-' + ago + 's', '-o', 'cat', '--no-pager'], { encoding: 'utf8' });
+    const lines = j.stdout.split('\n').filter((l) => l.includes(' ' + ip + ' '));
+    rec.serverLog = lines;
+    t.ok(lines.some((l) => / POST \/submit /.test(l)), 'the server got the form from Safari\'s machine', lines.join(' | ') || j.stderr);
+    const done = lines.map((l) => / GET \/status\/(j_[0-9a-f]+) /.exec(l)).filter(Boolean).pop();
+    t.ok(!!done, 'Safari followed the status page to its finished form (the one with the links; it no longer reloads)', lines.join(' | '));
+    if (done) {
+      const st = await checkFinished(t, base + '/status/' + done[1], { name: f.app_name, modeLetter: MODE_LETTER[mode], out: arg('--out', null) });
+      rec.record = st.record;
+      rec.files = st.files.map((x) => x.name);
+    }
+    rec.result = t.failed ? 'fail: ' + t.checks.filter((c) => c.pass === false).map((c) => c.name).slice(0, 3).join('; ') : 'pass';
+  } catch (e) {
+    t.checks.push({ name: 'run', pass: false, detail: String(e.stack || e).slice(0, 1500) });
+    rec.result = 'error: ' + e.message.split('\n')[0].slice(0, 300);
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
+    rec.seconds = Math.round((Date.now() - started) / 1000);
+    fs.mkdirSync(path.join(HERE, 'results'), { recursive: true });
+    fs.writeFileSync(path.join(HERE, 'results', `${stamp}-${m.name}-safari5-classic.json`), JSON.stringify({ ...rec, checks: t.checks }, null, 1) + '\n');
+    console.log(`<-- ${m.name}/safari 5.1.7 classic: ${rec.result} (${rec.seconds}s)`);
+  }
+  return rec;
+}
+
 async function main() {
   const machines = loadMachines();
+  if (arg('--classic', '')) {
+    const m = findMachine(machines, arg('--machine', 'xp'));
+    const rec = await runClassic(m, arg('--classic').replace(/\/+$/, ''));
+    process.exit(rec.result === 'pass' ? 0 : 1);
+  }
   const m = findMachine(machines, arg('--machine', 'xp'));
   if (!m || m.os !== 'windows') { console.log('a Windows machine, please'); process.exit(2); }
   const remote = new Remote(m);

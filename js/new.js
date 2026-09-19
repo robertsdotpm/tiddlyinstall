@@ -1,14 +1,16 @@
 // new.html: turn the form into POST /api/jobs (docs/api.md), then open the
-// ticket page. Also fills the "Newest that runs on the user's system" table
-// from GET /api/catalog/runtimes. Without JS the form still works as the
-// no-JS prototype did.
+// ticket page. What each field means is js/form-job.js's, which the build
+// server uses too when the form is posted without JavaScript (its action,
+// POST /submit). Also fills the "Newest that runs on the user's system"
+// table from GET /api/catalog/runtimes.
 import { apiRequest, errorText, mountApiFooter, pageUrl, apiLocal, apiReady, setApiBase, LOCAL, localSubmit } from './api.js';
 import { tarWrite } from './ibfile.js';
 import { loadOverlay, overlayState, hasCatalog } from './overlay.js';
+import { jobFromForm } from './form-job.js';
 
 mountApiFooter();
 
-const form = document.querySelector('form[action="build.html"]');
+const form = document.getElementById('new-form');
 const val = (name) => {
   const el = form.elements[name];
   if (!el) return '';
@@ -16,27 +18,6 @@ const val = (name) => {
   return el.type === 'checkbox' ? el.checked : el.value;
 };
 const checked = (name) => !!(form.elements[name] && form.elements[name].checked);
-
-const MODES = { ours: 'A', yours: 'B', unsigned: 'C' };
-const COMPILED = ['cc', 'go', 'rust', 'zig', 'nim'];
-
-// A GitHub URL or owner/repo is a repo; another URL is a download; anything
-// else is a package name.
-export function parseSource(text, refType, ref) {
-  const v = text.trim();
-  const gh = /^(?:https?:\/\/)?(?:www\.)?github\.com\/([^/\s]+)\/([^/\s#?]+)/i.exec(v);
-  const pinned = refType && refType !== 'latest' && ref.trim() ? ref.trim() : '';
-  if (gh || /^[\w.-]+\/[\w.-]+$/.test(v)) {
-    const [owner, repo] = gh ? [gh[1], gh[2]] : v.split('/');
-    const s = { kind: 'github', value: owner + '/' + repo.replace(/\.git$/, '') };
-    if (pinned) s.ref = pinned;
-    return s;
-  }
-  if (/^https?:\/\//i.test(v)) return { kind: 'url', value: v };
-  const s = { kind: 'package', value: v };
-  if (pinned) s.version = pinned;
-  return s;
-}
 
 function radio(name, fallback) {
   const el = form.elements[name];
@@ -69,65 +50,16 @@ async function iconField(problems) {
   return icon;
 }
 
-// The Customise sections the server may act on (docs/api.md optional fields).
-function optionFields(runtime, mode) {
-  const fields = {
-    cleanup: {
-      tools: radio('cleanup_tools', 'remove'),
-      source: checked('cleanup_source'),
-      pkg_cache: checked('cleanup_pkg_cache'),
-      docs: checked('cleanup_docs'),
-      fail: radio('cleanup_fail', 'remove'),
-    },
-    uninstall: {
-      register: checked('uninstaller'),
-      data: radio('uninstall_data', 'ask'),
-      before_windows: (val('win_unpre_script') || '').trim(),
-      before_unix: (val('unix_unpre_script') || '').trim(),
-    },
-  };
-  if (runtime === 'cc') fields.tools = { cc_win: radio('cc_win', 'auto') };
-  if (mode === 'B') fields.sign = { win_method: radio('win_sign', 'service') };
-  return fields;
-}
-
-// Packed and offline files. Uploaded local files are NOT sent: for modes B/C
-// they are added to the built file in the browser afterwards (packed-files.md).
-function packField(mode) {
-  if (mode === 'A') return null;   // mode A never carries packed content
-  const pack = {};
-  if (checked('offline')) {
-    pack.offline_include = radio('offline_include', 'all');
-    const targets = ['win_1011', 'win_78', 'win_vista', 'win_xp', 'linux', 'mac']
-      .filter((t) => checked('offline_' + t));
-    pack.offline_targets = targets;
-  }
-  // One URL-sourced file from the "+ Add a file" form, if given. Uploads stay
-  // in the browser and are added after the build, so they aren't sent.
-  const url = (val('pf_url') || '').trim();
-  if (url) {
-    pack.files = [{
-      source: 'url', url,
-      action: radio('pf_action', 'copy'),
-      dest: (val('pf_dest') || '').trim(),
-      args: (val('pf_args') || '').trim(),
-      platforms: ['windows', 'linux', 'macos'].filter((p) => checked('pf_' + p)),
-      packed: radio('pf_how', 'packed') === 'packed',
-    }];
-  }
-  return Object.keys(pack).length ? pack : null;
-}
-
-// The files of the chosen template, from the visible editor.
-function inlineFiles(runtime, template) {
-  const combo = form.querySelector('.combo-' + runtime + '-' + template);
-  if (!combo) return null;
-  const files = {};
-  combo.querySelectorAll('textarea.code').forEach((ta) => {
-    files[ta.getAttribute('aria-label') || ta.name] = ta.value;
-  });
-  return files;
-}
+// The form, as js/form-job.js reads it (the server reads a plain post of
+// the same form the same way).
+const reader = {
+  val: (name) => String(val(name) || ''),
+  checked,
+  launchEdited: (runtime) => {
+    const entry = form.elements['entry_' + runtime];
+    return !!entry && entry.value !== entry.defaultValue;
+  },
+};
 
 /* ---------- "From my computer": an archive or a folder ---------- */
 
@@ -185,71 +117,10 @@ if (folderInput) {
 }
 
 async function buildJob() {
-  const runtime = val('runtime');
-  const write = val('source_kind') === 'write';
-  const local = val('source_kind') === 'local';
-  const rv = val('rv_mode');
-  const mode = MODES[val('mode')] || 'A';
-  const platforms = ['windows', 'linux', 'macos'].filter((p) => checked('target_' + p));
-
-  const job = {
-    name: val('app_name').trim(),
-    runtime,
-    select: rv,
-    range: rv === 'range' ? val('runtime_version').trim() : rv === 'exact' ? val('runtime_exact').trim() : '',
-    launch: (val('entry_' + runtime) || '').trim(),
-    install: val('install_cmd').trim(),
-    console: true,
-    menu: checked('shortcut_menu'),
-    desktop: checked('shortcut_desktop'),
-    root: val('root') || 'user',
-    rootname: (val('rootname') || '').trim() || 'ib',
-    platforms,
-    mode,
-    offline: mode !== 'A' && checked('offline'),
-  };
-  // Compiled languages: the build command is how the project gets installed.
-  if (!job.install && COMPILED.includes(runtime)) {
-    job.install = String(runtime === 'cc' ? val('cc_build') : val('build_' + runtime)).trim();
-  }
-
   const problems = [];
-  // Optional Customise fields the server may act on (docs/api.md).
-  Object.assign(job, optionFields(runtime, mode));
-  job.icon = await iconField(problems);
-  const pack = packField(mode);
-  if (pack) job.pack = pack;
-
-  if (!platforms.length) problems.push('Pick at least one platform under "Build for".');
-  if (write) {
-    const template = val('template');
-    const files = inlineFiles(runtime, template);
-    if (!files) problems.push('This template isn\'t available for this language yet. Pick another template.');
-    job.source = { kind: 'inline', value: '' };
-    job.files = files || {};
-    job.console = template === 'script';
-    // The templates' code is main.py / main.js / main.rb, not a package, so
-    // unless the launch command was edited, run that file.
-    const entry = form.elements['entry_' + runtime];
-    const main = Object.keys(job.files).find((n) => /^main\.[a-z]+$/.test(n));
-    if (main && (!entry || entry.value === entry.defaultValue)) job.launch = '{runtime} {app_dir}/' + main;
-  } else if (local) {
-    if (!localPick) problems.push('Pick an archive or a folder from your computer.');
-    else {
-      job.source = { kind: 'upload', value: localPick.name };
-      job.archive = bytesToBase64(localPick.bytes);
-    }
-    if (mode === 'A') problems.push('Installers signed by TiddlyInstall need the source on the build server. For files from your computer, choose "Signed by you" or "Unsigned" under Customise → Signing.');
-  } else {
-    const src = val('source');
-    if (!src.trim()) problems.push('Say what to package: a GitHub repo URL or a package name.');
-    job.source = parseSource(src, val('ref_type'), val('ref'));
-    const sub = val('subdir').trim();
-    if (sub) job.source.subdir = sub;
-  }
-  if (rv === 'range' && !job.range) problems.push('Enter the versions allowed, or pick another "Which version" option.');
-  if (rv === 'exact' && !job.range) problems.push('Enter the exact version, or pick another "Which version" option.');
-  return { job, problems };
+  const icon = await iconField(problems);
+  const local = localPick && val('source_kind') === 'local' ? { name: localPick.name, base64: bytesToBase64(localPick.bytes) } : null;
+  return jobFromForm(reader, { icon, local, problems });
 }
 
 /* ---------- submit ---------- */

@@ -54,7 +54,7 @@ SITE_FILES = ["index.html", "new.html", "build.html", "builds.html", "edit.html"
 # library modules; then the local API is installed, and then the page
 # modules run (they call the API as they start).
 EARLY_MODULES = ["js/polyfills.js", "js/has-shim.js"]
-LIB_MODULES = ["js/api.js", "js/sha.js", "js/hmac-pbkdf2.js", "js/aes.js", "js/bignum.js", "js/der.js",
+LIB_MODULES = ["js/api.js", "js/form-job.js", "js/sha.js", "js/hmac-pbkdf2.js", "js/aes.js", "js/bignum.js", "js/der.js",
                "js/rsa.js", "js/ec.js", "js/ed25519.js", "js/cryptox.js", "js/inflate.js", "js/deflate.js",
                "js/zlib.js", "js/ibfile.js", "js/icon.js", "js/x509.js", "js/legacy.js",
                "js/pkcs12.js", "js/authenticode.js", "js/pgp.js", "js/sign-ui.js", "js/resolve.js",
@@ -276,7 +276,8 @@ NOSCRIPT = ('  <noscript><div class="ib-compat-bar ib-too-old" role="alert" styl
             'border-bottom:2px solid #b3261e;background:#fdecea;color:#410e0b;font:14px/1.4 sans-serif">'
             "JavaScript is off in this browser, so TiddlyInstall can't build or sign installers here; the pages still read. "
             "Turn JavaScript on for this page, or open it in a current browser. (Internet Explorer on Windows Server "
-            "keeps JavaScript off while its Enhanced Security Configuration is on.)</div></noscript>\n")
+            "keeps JavaScript off while its Enhanced Security Configuration is on.) Without JavaScript, "
+            "<a href=\"{classic}\">the build server's simple form</a> builds installers.</div></noscript>\n")
 
 
 CSS_VAR_RE = re.compile(r"var\(\s*(--[\w-]+)\s*(?:,\s*([^()]*?))?\s*\)")
@@ -411,7 +412,8 @@ def offline_page(catalog_dir, backend):
            # Too-old browsers get a message naming what's missing (a classic
            # script, so it runs where the module can't).
            "  <script>\n" + no_close_script(read("js/browser-check.js")) + "\n  </script>\n"
-           "  <style>\n" + css + "\n  </style>\n</head>\n<body>\n  " + header + "\n" + NOSCRIPT
+           "  <style>\n" + css + "\n  </style>\n</head>\n<body>\n  " + header + "\n"
+           + NOSCRIPT.replace("{classic}", html.escape(backend.rstrip("/") + "/classic"))
            + "\n".join(sections) +
            "\n  <footer class=\"site-footer\">\n    Designed by <a href=\"https://robertsdotpm.github.io/\">Matthew Roberts</a> and implemented by Claude.\n  </footer>\n"
            + "\n".join(blocks + code_blocks) +

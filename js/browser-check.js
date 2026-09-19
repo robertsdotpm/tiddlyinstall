@@ -339,6 +339,16 @@
     return t.t;
   }
 
+  // The build server's simple form (GET /classic: plain HTML, no
+  // JavaScript), for browsers that can't run the page: this page's server
+  // when it came from one, else the build server this copy was made for.
+  function classicUrl() {
+    var proto = String(w.location && w.location.protocol);
+    if (proto === 'http:' || proto === 'https:') return 'classic';
+    var blk = doc.getElementById('ib-offline'), m = blk && /"backend"\s*:\s*"(https?:\/\/[^"\\]+)"/.exec(blk.text || blk.textContent || '');
+    return m ? m[1].replace(/\/+$/, '') + '/classic' : null;
+  }
+
   var bar = null;
   function addStyle(text) {
     var st = el('style', { type: 'text/css' });
@@ -383,6 +393,13 @@
         get.appendChild(el('a', { href: sum.links[i].url, rel: 'noopener noreferrer', target: '_blank' }, sum.links[i].name));
       }
       bar.appendChild(get);
+    }
+    var classic = miss.length ? classicUrl() : null;
+    if (classic) {
+      var simple = el('span', { 'class': 'ib-compat-classic' }, ' Or build installers with ');
+      simple.appendChild(el('a', { href: classic }, 'the build server\'s simple form'));
+      simple.appendChild(doc.createTextNode(', which works in this browser.'));
+      bar.appendChild(simple);
     }
     var more = el('button', { type: 'button', 'class': 'ib-compat-more', 'aria-expanded': 'false' }, 'Details');
     bar.appendChild(more);

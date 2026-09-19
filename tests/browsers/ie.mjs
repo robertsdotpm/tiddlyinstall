@@ -29,6 +29,16 @@
 // through Babel (tools/es5/node_modules) to ES5 before they run in IE 11.
 // Results go to usage.jsonl as browser "ie", like run.mjs's.
 //
+// --classic URL: the build server's plain-HTML path instead (docs/api.md
+// "Plain form posts"), for the IE that can't run the page: IE opens
+// URL/classic over plain HTTP, fills the form and submits it (a real
+// submit, multipart), follows the status page (it reloads itself with
+// <meta http-equiv="refresh">) to the download links, and this side
+// checks what the links give (tests/browsers/classic.mjs). --mode ours|
+// yours|unsigned (default ours), --out DIR keeps the installers with a
+// builds.json for tests/matrix/run.py. Results go to results/ only (not
+// usage.jsonl: that is about the page).
+//
 // --browser chromium49: the same steps in Chromium 49 on XP (the last
 // Chrome there; Google's snapshot build r369909, 49.0.2623.0, in
 // C:\ibbrowsers\chromium-49, docs/test-vms.md), over the DevTools protocol:
@@ -44,6 +54,7 @@ import { connectCdp } from './cdp.mjs';
 import { Checker, STARTED, checkSections, buildHello, checkJob, makeSignFixtures, osslVerify, gpgVerify, $text, setVal, checkBox, sleep } from './steps.mjs';
 import { readInstaller } from '../../js/ibfile.js';
 import { writeCompat } from './compat.mjs';
+import { classicFields, checkFinished, MODE_LETTER } from './classic.mjs';
 
 // The DevTools transport needs WebSocket (a flag on Node 20).
 if (typeof WebSocket === 'undefined' && process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname)) {
@@ -409,7 +420,7 @@ async function runIe(machine) {
     await checkSections(t, js);
     await js(`location.hash = '#new&write'`);
     await sleep(500);
-    const editor = await js(`(() => { const f = document.querySelector('form[action="build.html"]');
+    const editor = await js(`(() => { const f = document.getElementById('new-form');
       f.elements.runtime.value = 'python'; f.elements.runtime.dispatchEvent(new Event('change', { bubbles: true }));
       document.getElementById('src-write').checked = true; document.getElementById('tpl-script').checked = true;
       document.getElementById('tpl-script').dispatchEvent(new Event('change', { bubbles: true }));
@@ -528,8 +539,100 @@ async function runIe(machine) {
   }
 }
 
+/* ---------- --classic: the server's plain-HTML form ---------- */
+
+// A JavaScript string literal, ASCII (the agent sends ASCII only).
+const lit = (v) => JSON.stringify(String(v)).replace(/[^\x00-\x7e]/g, (c) => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'));
+
+async function runClassic(machine, base) {
+  const started = Date.now();
+  const remote = new Remote(machine);
+  const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+  const mode = arg('--mode', 'ours');
+  const t = new Checker({ prefix: `[${machine.name}/ie classic] ` });
+  const rec = { time: new Date().toISOString(), machine: machine.name, browser: 'ie', version: '', result: '', protocol: 'com', classic: base, mode };
+  const dir = remote.dir('ie');
+  let agent = null;
+  try {
+    remote.mkdir(dir);
+    remote.put(path.join(HERE, 'ie-agent.js'), remote.dir('ie', 'ie-agent.js'));
+    remote.sh('taskkill /F /IM iexplore.exe');
+    agent = new Agent(remote, remote.dir('ie', 'ie-agent.js'));
+    rec.version = (await agent.ok('VERSION', 60000)).version;
+    const nav = await agent.ok('NAV ' + base + '/classic');
+    rec.documentMode = nav.documentMode;
+    t.ok(nav.ready && /^New installer - TiddlyInstall$/.test(nav.title), 'IE opens the simple form over plain HTTP', JSON.stringify(nav));
+    const dom = await agent.ok('DOM');
+    t.ok(/Signed by TiddlyInstall/.test(dom.bodyText) && /Build for/.test(dom.bodyText), 'the form reads', dom.bodyText.slice(0, 300));
+    t.ok(darkOnLight(dom.colors && dom.colors.body), 'the text is dark on light', dom.colors && dom.colors.body);
+    t.ok(nav.documentMode >= 7, 'standards mode (not quirks)', nav.documentMode);
+    // Fill it as a person would (ES3: IE 8 runs this), then press the button.
+    const label = machine.name + ' IE' + String(rec.version).split('.')[0] + ' ' + crypto.randomBytes(2).toString('hex');
+    const f = classicFields(label, mode);
+    const filled = await agent.raw(`var f = document.forms[0], e = f.elements;
+      e['app_name'].value = ${lit(f.app_name)}; e['source'].value = ${lit(f.source)}; e['launch'].value = ${lit(f.launch)};
+      var rt = e['runtime']; for (var i = 0; i < rt.options.length; i++) if (rt.options[i].value === ${lit(f.runtime)}) rt.selectedIndex = i;
+      var m = e['mode']; for (i = 0; i < m.length; i++) m[i].checked = m[i].value === ${lit(f.mode)};
+      e['target_macos'].checked = false;
+      document.documentElement.setAttribute('data-ibt', f.method + ' ' + f.enctype + ' ' + f.action + ' ' + rt.value);`);
+    t.ok(/^post multipart\/form-data .*\/submit python$/.test(filled), 'the form is filled (post, multipart, to /submit)', filled);
+    await agent.raw(`var ins = document.getElementsByTagName('input');
+      for (var i = 0; i < ins.length; i++) if (ins[i].type === 'submit') { ins[i].click(); break; }
+      document.documentElement.setAttribute('data-ibt', 'clicked');`);
+    // Follow the status page: IE reloads it itself; read it now and then.
+    let status = null, seen = [], statusUrl = '', hrefs = null;
+    for (const end = Date.now() + 600000; Date.now() < end; await sleep(1500)) {
+      let r;
+      try {
+        r = await agent.raw(`var d = document, s = '';
+          var as = d.getElementsByTagName('a'), dl = [];
+          for (var i = 0; i < as.length; i++) if (as[i].href.indexOf('/dl/') >= 0) dl.push(as[i].href);
+          var st = d.getElementsByTagName('td');
+          d.documentElement.setAttribute('data-ibt', location.href + '\x02' + d.readyState + '\x02' + (st.length ? (st[0].innerText || '') : '') + '\x02' + dl.join(' ') + '\x02' + (d.getElementsByTagName('meta').length));`);
+      } catch (e) { continue; }   // between pages
+      const [href, ready, st, links] = r.split('\x02');
+      if (!/\/status\/j_/.test(href) || ready !== 'complete') continue;
+      statusUrl = href;
+      if (seen[seen.length - 1] !== st) seen.push(st);
+      if (/^(Done|Failed)$/.test(st)) { status = st; hrefs = links ? links.split(' ') : []; break; }
+    }
+    rec.statuses = seen;
+    t.ok(!!statusUrl, 'the submit lands on the status page', statusUrl);
+    t.ok(status === 'Done', 'IE follows the status page until the build is done', seen.join(' -> '));
+    if (status === 'Done') {
+      // IE's own view of the finished page: links, no errors.
+      const errs = (await agent.ok('DOM')).errors;
+      t.ok(!errs, 'no script errors', errs);
+      const st = await checkFinished(t, statusUrl, { hrefs, name: f.app_name, modeLetter: MODE_LETTER[mode], out: arg('--out', null) });
+      rec.record = st.record;
+      rec.files = st.files.map((x) => x.name);
+    }
+    rec.result = t.failed ? 'fail: ' + t.checks.filter((c) => c.pass === false).map((c) => c.name).slice(0, 3).join('; ') : 'pass';
+  } catch (e) {
+    t.checks.push({ name: 'run', pass: false, detail: String(e.stack || e).slice(0, 1500) });
+    console.log(`[${machine.name}/ie classic] ERROR ${e.stack || e}`);
+    rec.result = 'error: ' + e.message.split('\n')[0].slice(0, 300);
+  } finally {
+    if (agent) await agent.quit();
+    remote.sh('taskkill /F /IM iexplore.exe');
+    rec.seconds = Math.round((Date.now() - started) / 1000);
+    fs.mkdirSync(RESULTS, { recursive: true });
+    const file = path.join(RESULTS, `${stamp}-${machine.name}-ie-classic.json`);
+    fs.writeFileSync(file, JSON.stringify({ ...rec, checks: t.checks }, null, 1) + '\n');
+    rec.details = path.relative(HERE, file);
+  }
+  return rec;
+}
+
 async function main() {
   const machines = loadMachines();
+  if (arg('--classic', '')) {
+    const m = findMachine(machines, arg('--machine', ''));
+    if (!m || m.os !== 'windows') { console.log('usage: node tests/browsers/ie.mjs --machine xp|vista|... --classic http://10.0.1.76:8080 [--mode ours|yours|unsigned] [--out DIR]'); process.exit(2); }
+    const rec = await runClassic(m, arg('--classic').replace(/\/+$/, ''));
+    console.log(`<-- ${m.name}/ie ${rec.version} classic: ${rec.result} (${rec.seconds}s)`);
+    process.exit(rec.result === 'pass' ? 0 : 1);
+  }
   const m = findMachine(machines, arg('--machine', ''));
   if (!m || m.os !== 'windows' || !/^(ie|chromium49)$/.test(BROWSER)) { console.log('usage: node tests/browsers/ie.mjs --machine xp|vista|7|8.1|2022 [--docmode N] [--browser ie|chromium49]'); process.exit(2); }
   if (!fs.existsSync(PAGE)) { console.log('no page at ' + PAGE + '; build it: python3 tools/build_site.py'); process.exit(2); }

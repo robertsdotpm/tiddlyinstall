@@ -12,7 +12,6 @@
     <nav>
       <a href="index.html">Home</a>
       <a href="new.html" aria-current="page">New installer</a>
-      <a href="bases.html">Base installers</a>
       <a href="edit.html">Edit installer</a>
       <a href="runtimes.html">Runtimes</a>
     </nav>
@@ -21,10 +20,16 @@
   <main class="narrow">
     <h1>New installer</h1>
     <noscript><p class="prototype-note">
-      Building needs JavaScript. Without it, submitting this form opens a sample build page.
+      Without JavaScript this form is sent to the build server as it is, and the server builds the installers
+      (a page served by one). Editing, signing and files from your computer need JavaScript.
     </p></noscript>
 
-    <form action="build.html" method="get">
+    <!-- With JavaScript, js/new.js sends this as JSON (POST /api/jobs) and never
+         submits it. Without, the browser posts it to the build server that
+         served the page (POST /submit, docs/api.md "Plain form posts"). File
+         inputs without a name (certificates, keys, local files) and the access
+         token are never sent that way. -->
+    <form id="new-form" action="submit" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 
       <!-- ===== Simple view: the only things we need ===== -->
       <section class="panel">
@@ -575,7 +580,7 @@ Press Enter to close</pre>
           </div>
           <div class="field">
             <label for="token">Access token (private repos only)</label>
-            <input type="password" id="token" name="token" autocomplete="off">
+            <input type="password" id="token" autocomplete="off">
             <span class="hint">Only used to download the source. Never put in the installer.</span>
           </div>
         </details>
@@ -751,7 +756,7 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
             <div class="row">
               <div class="field">
                 <label for="pf-upload">Upload</label>
-                <input type="file" id="pf-upload" name="pf_upload">
+                <input type="file" id="pf-upload">
               </div>
               <div class="field">
                 <label for="pf-url">Or a URL</label>
@@ -1113,12 +1118,12 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
               <span class="small muted">Loaded into this page only, like a wallet file.</span></span></label>
             <div class="field" style="margin-top:6px">
               <label for="win-cert">Certificate file</label>
-              <input type="file" id="win-cert" name="win_cert" accept=".pfx,.p12">
+              <input type="file" id="win-cert" accept=".pfx,.p12">
             </div>
             <span class="label" style="margin-top:6px">macOS</span>
             <div class="field">
               <label for="mac-cert">Developer ID Application certificate (.p12)</label>
-              <input type="file" id="mac-cert" name="mac_cert" accept=".p12">
+              <input type="file" id="mac-cert" accept=".p12">
               <span class="hint">Loaded into this page only.</span>
             </div>
             <div class="row">
@@ -1128,7 +1133,7 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
               </div>
               <div class="field">
                 <label for="apple-key">App Store Connect API key (.p8)</label>
-                <input type="file" id="apple-key" name="apple_key" accept=".p8">
+                <input type="file" id="apple-key" accept=".p8">
                 <span class="hint">Used to send the macOS build to Apple for notarization, from your browser.</span>
               </div>
             </div>
@@ -1158,7 +1163,6 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
               <option value="install_nim_x">install_nim_x</option>
               <option value="install_github_x">install_github_x</option>
             </select>
-            <span class="hint"><a href="bases.html">What are base installers?</a></span>
           </div>
           <div class="field">
             <label for="filename">File name</label>

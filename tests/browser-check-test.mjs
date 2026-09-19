@@ -102,6 +102,10 @@ try {
   ok(/can't start/.test(await barText()) && /pages still read/.test(await barText()), 'the bar names the effect, and that the pages still read', await barText());
   ok(await js(`!window.IB_ES5 && !globalThis.ibLocalApi`), 'and no code of the page runs');
   ok(!await js(`!!document.querySelector('.ib-compat-dismiss')`), 'a "can\'t run" bar has no Dismiss');
+  // It links the build server's simple form: from disk, the server the page was built for.
+  const backend = await js(`JSON.parse(document.getElementById('ib-offline').textContent).backend`);
+  const classic = await js(`(document.querySelector('.ib-compat-classic a') || {}).href || ''`);
+  ok(classic === backend.replace(/\/+$/, '') + '/classic', 'a "can\'t run" bar links the build server\'s simple form', classic);
 
   // A visitor on Windows XP (Supermium's engine, no compression streams):
   // the XP row, and what works there.
@@ -129,6 +133,12 @@ try {
     await open(SITE.replace(/\/$/, '') + '/');
     const s = await barText();
     ok(/with limits/.test(s) && /own JavaScript/.test(s) && /https, localhost and pages opened from disk/.test(s), 'plain http on a LAN address: it runs, on its own cryptography, and the bar says why', s);
+    // Served by a build server, a browser that can't run the page is sent to that server's simple form.
+    await open(SITE.replace(/\/$/, '') + '/', NO_ASYNC + 'window.atob = undefined;');
+    const classic = await js(`(document.querySelector('.ib-compat-classic a') || {}).href || ''`);
+    ok(classic === SITE.replace(/\/$/, '') + '/classic', 'served: the "can\'t run" bar links this server\'s simple form', classic);
+    const r = await fetch(classic);
+    ok(r.status === 200 && /text\/html; charset=utf-8/.test(r.headers.get('content-type')) && /<form action="submit"/.test(await r.text()), 'and the server has it');
   }
 } catch (e) {
   ok(false, 'browser-check run', e.stack || e);

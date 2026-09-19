@@ -64,7 +64,7 @@ export async function buildHello(js, { runtime, mode, name, code, pkg, platforms
   await js(`location.hash = '#new${pkg ? '' : '&write'}'`);
   await sleep(200);
   return js(`(async () => {
-    const f = document.querySelector('form[action="build.html"]');
+    const f = document.getElementById('new-form');
     const set = (n, v) => { const e = f.elements[n]; if (e instanceof RadioNodeList) { for (const r of e) r.checked = r.value === v; } else if (e.type === 'checkbox') e.checked = v; else e.value = v; };
     set('runtime', ${JSON.stringify(runtime)});
     f.elements.runtime.dispatchEvent(new Event('change', { bubbles: true }));

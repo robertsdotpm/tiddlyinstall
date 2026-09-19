@@ -24,6 +24,9 @@ import { Limiter } from './lib/limiter.js';
 import { goJSON, sorted, goString } from './lib/gojson.js';
 import { decodeRequest, BadJSON } from './lib/request.js';
 import { serveFile, serveDir, notFound, httpError, redirect } from './lib/files.js';
+import { parseForm, BadForm } from './lib/form.js';
+import { PAGE_HEADERS, classicPage, refusedPage, statusPage, missingJobPage } from './lib/pages.js';
+import { jobFromForm, postedForm } from '../js/form-job.js';
 
 export const VERSION = '0.1.0';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -152,6 +155,16 @@ function decodePath(p) {
   try { return decodeURIComponent(p); } catch (e) { return null; }
 }
 
+const BODY_MAX = 4 << 20;
+const ICON_MAX = 1 << 20;
+const RATE_LIMITED = 'Too many builds from your address; try again in a minute.';
+
+// The body of a 303: a link, for anything that doesn't follow it.
+function page303(loc) {
+  const h = loc.replace(/[&'<>"]/g, (c) => ({ '&': '&amp;', "'": '&#39;', '<': '&lt;', '>': '&gt;', '"': '&#34;' }[c]));
+  return '<a href="' + h + '">See the build</a>.\n';
+}
+
 // tsaURLs are the only timestamp servers /api/tsa forwards to. None of them
 // sends CORS headers and most are plain HTTP, so a page can't call them.
 const TSA_URLS = {
@@ -255,7 +268,9 @@ export class Server {
       const rawPath = q >= 0 ? u.slice(0, q) : u;
       res.on('finish', () => {
         const p = decodePath(rawPath) ?? rawPath;
-        if (!p.startsWith('/api/jobs/') && p !== '/api/health') {
+        // Status polls stay out of the log (a status page reloads itself
+        // every 3 s); its last view, with the downloads, is logged.
+        if (!p.startsWith('/api/jobs/') && p !== '/api/health' && !res.ibQuiet) {
           this.log(`${clientIP(req)} ${req.method} ${p} ${fmtDur(Date.now() - start)}`);
         }
       });
@@ -299,6 +314,12 @@ export class Server {
     const routes = [
       ['GET', ['api', 'health'], () => this.health(req, res)],
       ['POST', ['api', 'jobs'], () => this.submit(req, res)],
+      // The same, for browsers that can't run the page (docs/api.md "Plain form posts").
+      ['POST', ['submit'], () => this.submitForm(req, res)],
+      // Its address opened directly (a bookmark, a reload of a refused post): the form.
+      ['GET', ['submit'], () => redirect(req, res, 'classic', 303)],
+      ['GET', ['status', '*'], () => this.status(req, res, seg[1])],
+      ['GET', ['classic'], () => this.classic(req, res)],
       ['GET', ['api', 'jobs', '*'], () => this.job(req, res, seg[2])],
       ['GET', ['api', 'records', '*'], () => this.record(req, res, seg[2])],
       ['GET', ['api', 'plan', 'name', '*', '*'], () => this.planByName(req, res, seg[3], seg[4], params)],
@@ -344,12 +365,12 @@ export class Server {
 
   async submit(req, res) {
     if (!this.limiter.allow(clientIP(req))) {
-      return apiError(res, 429, 'rate_limited', 'Too many builds from your address; try again in a minute.');
+      return apiError(res, 429, 'rate_limited', RATE_LIMITED);
     }
     // Up to 1 MB of inline source plus a 1 MB icon in base64.
     let body;
     try {
-      body = await readBody(req, res, 4 << 20);
+      body = await readBody(req, res, BODY_MAX);
     } catch (e) {
       return apiError(res, 400, 'bad_request', 'couldn\'t read the request');
     }
@@ -360,6 +381,15 @@ export class Server {
       if (e instanceof BadJSON) return apiError(res, 400, 'bad_json', 'the request isn\'t valid JSON');
       throw e;
     }
+    const a = await this.acceptJob(r);
+    if (a.error) return apiError(res, a.status, a.code, a.error);
+    writeJSON(res, 202, await this.jobView(a.job));
+  }
+
+  // A decoded request, checked and queued: {job}, or {status, code, error}.
+  // Both ways in (JSON and the plain form) end here, so they meet the same
+  // checks, in the same order, with the same answers.
+  async acceptJob(r) {
     let cls, png = null;
     try {
       cls = validate(r, this.b.env());
@@ -368,24 +398,97 @@ export class Server {
         await decodeIconPng(png);   // Go decodes every upload before it is queued
       }
     } catch (e) {
-      return apiError(res, 400, 'invalid', e.message);
+      return { status: 400, code: 'invalid', error: e.message };
     }
     if (this.takenDown(Server.sourceKey(r.source.kind, r.source.value))) {
-      return apiError(res, 451, 'taken_down', 'This source has been taken down.');
+      return { status: 451, code: 'taken_down', error: 'This source has been taken down.' };
     }
     // The icon is stored now and the job carries only its hash.
     try {
       await this.b.storeIcon(r, png);
     } catch (e) {
-      return apiError(res, 500, 'store_failed', 'couldn\'t store the icon');
+      return { status: 500, code: 'store_failed', error: 'couldn\'t store the icon' };
     }
-    let j;
     try {
-      j = await this.q.submit(cls, r);
+      return { job: await this.q.submit(cls, r) };
     } catch (e) {
-      return apiError(res, 503, 'queue_unavailable', 'The build queue is unavailable; try again shortly.');
+      return { status: 503, code: 'queue_unavailable', error: 'The build queue is unavailable; try again shortly.' };
     }
-    writeJSON(res, 202, await this.jobView(j));
+  }
+
+  /* ---------- plain HTML: the form post, the status page, /classic ---------- */
+
+  // POST /submit: new.html's form (or /classic's) as the browser sends it,
+  // urlencoded or multipart (for the icon). js/form-job.js turns the fields
+  // into the request js/new.js would post, which then goes through the JSON
+  // path's own decoder and acceptJob. The same rate limit, shared with
+  // POST /api/jobs. Answers 303 to the status page, or a page saying why not.
+  async submitForm(req, res) {
+    const refuse = (status, messages) => {
+      res.writeHead(status, PAGE_HEADERS);
+      res.end(refusedPage(messages));
+    };
+    if (!this.limiter.allow(clientIP(req))) return refuse(429, [RATE_LIMITED]);
+    let body;
+    try {
+      body = await readBody(req, res, BODY_MAX + 1);
+    } catch (e) {
+      return refuse(400, ['Couldn\'t read the form.']);
+    }
+    if (body.length > BODY_MAX) return refuse(413, ['The form is over ' + (BODY_MAX >> 20) + ' MB. The icon can be at most 1 MB.']);
+    let form;
+    try {
+      form = parseForm(req.headers['content-type'], body, { keepFiles: ['icon'] });
+    } catch (e) {
+      if (!(e instanceof BadForm)) throw e;
+      return refuse(e.unsupported ? 415 : 400, ['This isn\'t a form post the server can read (' + e.message + ').']);
+    }
+    const f = postedForm(form.fields);
+    if (f.val('source_kind') === 'local') {
+      return refuse(400, ['Files from your computer are packed by the builder page in a current browser; a plain form can\'t send them. ' +
+        'Give a GitHub repo, a package name or the address of an archive instead.']);
+    }
+    const problems = [];
+    const icon = { choice: f.val('icon_choice') || 'default' };
+    const up = form.files.icon;
+    if (up && up.data.length) {
+      if (up.data.length > ICON_MAX) problems.push('The icon is over 1 MB. Use a smaller PNG (a 512×512 or 1024×1024 PNG is plenty).');
+      else Object.assign(icon, { data: up.data.toString('base64'), filename: up.filename, type: up.type || 'image/png' });
+    }
+    const { job, problems: all } = jobFromForm(f, { icon, problems });
+    if (all.length) return refuse(400, all);
+    // Exactly as a JSON post of it would be read.
+    const r = decodeRequest(Buffer.from(JSON.stringify(job)));
+    const a = await this.acceptJob(r);
+    if (a.error) return refuse(a.status, [a.error]);
+    const loc = 'status/' + encodeURIComponent(a.job.id);
+    res.writeHead(303, { ...PAGE_HEADERS, Location: loc });
+    res.end(page303(loc));
+  }
+
+  // GET /status/<id>: the job as a page, reloading itself every 3 s until
+  // it is done or failed; then the links to the files and the record.
+  async status(req, res, id) {
+    let j = null;
+    if (/^[A-Za-z0-9_-]{1,64}$/.test(id)) {
+      try { j = await this.q.get(id); } catch (e) { /* as missing */ }
+    }
+    if (!j) {
+      res.writeHead(404, PAGE_HEADERS);
+      return res.end(missingJobPage());
+    }
+    const v = await this.jobView(j);
+    if (v.status === 'queued' || v.status === 'running') res.ibQuiet = true;
+    res.writeHead(200, PAGE_HEADERS);
+    res.end(statusPage(v, j.request || null));
+  }
+
+  // GET /classic: a lean form for browsers that can't run the page.
+  async classic(req, res) {
+    let list = [];
+    try { list = JSON.parse(this.runtimesJSON()).runtimes || []; } catch (e) { list = []; }
+    res.writeHead(200, PAGE_HEADERS);
+    res.end(classicPage(list));
   }
 
   async jobView(j) {

@@ -448,7 +448,7 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
     await checkSections(t, js);
     await js(`location.hash = '#new&write'`);
     await sleep(300);
-    const editor = await js(`(() => { const f = document.querySelector('form[action="build.html"]');
+    const editor = await js(`(() => { const f = document.getElementById('new-form');
       f.elements.runtime.value = 'python'; f.elements.runtime.dispatchEvent(new Event('change', { bubbles: true }));
       document.getElementById('src-write').checked = true; document.getElementById('tpl-script').checked = true;
       document.getElementById('tpl-script').dispatchEvent(new Event('change', { bubbles: true }));

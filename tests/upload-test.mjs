@@ -58,7 +58,7 @@ async function open(url) {
 async function buildUpload(input, files) {
   await js(`location.hash = '#new'`);
   await sleep(200);
-  await js(`(() => { const f = document.querySelector('form[action="build.html"]');
+  await js(`(() => { const f = document.getElementById('new-form');
     for (const r of f.elements.source_kind) r.checked = r.value === 'local';
     f.elements.runtime.value = 'python'; f.elements.runtime.dispatchEvent(new Event('change', { bubbles: true }));
     for (const r of f.elements.mode) r.checked = r.value === 'unsigned';
@@ -71,7 +71,7 @@ async function buildUpload(input, files) {
   await chrome.cdp('DOM.setFileInputFiles', { nodeId: q.nodeId, files });
   await waitFor(js, `/\\(\\d/.test(document.getElementById('local-picked').textContent)`, 'the pick to be read', 60000, errors);
   return js(`(async () => {
-    const f = document.querySelector('form[action="build.html"]');
+    const f = document.getElementById('new-form');
     f.querySelector('button[type="submit"]').click();
     for (let i = 0; i < 600 && !/^#build&job=/.test(location.hash); i++) {
       const err = f.querySelector('.form-error');
@@ -116,7 +116,7 @@ try {
     await check(await buildUpload('#local-archive', [ZIP]), 'served zip');
     ok(!await js(`document.documentElement.classList.contains('ib-local')`), 'served: still using the server for everything else');
     // "Signed by TiddlyInstall" can't take files from the computer.
-    const refused = await js(`(async () => { const f = document.querySelector('form[action="build.html"]');
+    const refused = await js(`(async () => { const f = document.getElementById('new-form');
       location.hash = '#new'; await new Promise((r) => setTimeout(r, 200));
       for (const r of f.elements.source_kind) r.checked = r.value === 'local';
       for (const r of f.elements.mode) r.checked = r.value === 'ours';
