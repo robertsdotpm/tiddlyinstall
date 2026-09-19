@@ -1,0 +1,86 @@
+{
+ "time": "2026-09-19T03:52:35.970Z",
+ "machine": "centos6",
+ "browser": "firefox",
+ "version": "78.5.0",
+ "result": "unsupported: Modern JavaScript syntax (?., ??, ||=); Object.hasOwn; CompressionStream (deflate-raw); DecompressionStream (deflate-raw); CSS :has()",
+ "seed": 20260920,
+ "checks": [
+  {
+   "name": "the page tells the person their browser is too old",
+   "pass": true
+  }
+ ],
+ "entry": {
+  "id": "firefox",
+  "name": "Mozilla Firefox (CentOS 6 package)",
+  "version": "78.5.0",
+  "binary": "/home/x/ibbrowsers/sysroot/usr/lib64/firefox/firefox",
+  "driverKind": "geckodriver",
+  "driver": "/home/x/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
+  "driverVersion": "0.37.1",
+  "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz",
+  "args": [
+   "-headless"
+  ],
+  "headless": true,
+  "source": "https://vault.centos.org/6.10/updates/x86_64/Packages/firefox-78.5.0-1.el6.centos.x86_64.rpm",
+  "verified": "CentOS 6 package: rpm -K OK (CentOS 6 key c105b9de in the system rpmdb) on firefox and its 50 dependency rpms from vault.centos.org/6.10/{os,updates}, dependency closure computed from the repo's primary.xml against the VM's installed provides; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256)",
+  "smoke": "pass",
+  "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it; env.sh also adds sysroot/usr/lib64/firefox/bundled/lib64 (the package's own bundled gtk3). Mozilla's official builds don't run here: every one checked (52.9.0esr ... 156.0) needs libstdc++ GLIBCXX_3.4.15/CXXABI_1.3.5 (CentOS 6 has gcc 4.4.7: 3.4.13); 78+ also need GLIBC_2.14-2.17. Tried 68.12.0esr: ldd 'version `CXXABI_1.3.5' not found', 'version `GLIBCXX_3.4.15' not found' (and libgtk-3.so.0 missing). geckodriver 0.37.1 officially targets Firefox >=128 but the smoke passed with 78.5.0. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+ },
+ "capabilities": {
+  "acceptInsecureCerts": false,
+  "browserName": "firefox",
+  "browserVersion": "78.5.0",
+  "moz:accessibilityChecks": false,
+  "moz:buildID": "20201201160833",
+  "moz:geckodriverVersion": "0.37.1",
+  "moz:headless": true,
+  "moz:processID": 27635,
+  "moz:profile": "/tmp/rust_mozprofilechK9LY",
+  "moz:shutdownTimeout": 60000,
+  "moz:useNonSpecCompliantPointerOrigin": false,
+  "moz:webdriverClick": true,
+  "pageLoadStrategy": "normal",
+  "platformName": "linux",
+  "platformVersion": "2.6.32-754.17.1.el6.x86_64",
+  "rotatable": false,
+  "setWindowRect": true,
+  "strictFileInteractability": false,
+  "timeouts": {
+   "implicit": 0,
+   "pageLoad": 300000,
+   "script": 30000
+  },
+  "unhandledPromptBehavior": "dismiss and notify"
+ },
+ "features": {
+  "?. ?? ||= syntax": false,
+  "BigInt": true,
+  "Blob.stream": true,
+  "CSS :has()": false,
+  "CSS color-mix()": false,
+  "CompressionStream deflate-raw": false,
+  "CompressionStream gzip": false,
+  "DecompressionStream deflate-raw": false,
+  "ES modules": true,
+  "Object.hasOwn": false,
+  "WebCrypto": true,
+  "secure context": true,
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0"
+ },
+ "webcrypto": {
+  "AES-CBC": true,
+  "ECDSA P-256": true,
+  "Ed25519": "NotSupportedError",
+  "HMAC": true,
+  "PBKDF2": true,
+  "RSASSA-PKCS1-v1_5": true,
+  "SHA-256": true
+ },
+ "missing": "Modern JavaScript syntax (?., ??, ||=); Object.hasOwn; CompressionStream (deflate-raw); DecompressionStream (deflate-raw); CSS :has()",
+ "driverLog": "1789829923489\tgeckodriver\tINFO\tListening on 127.0.0.1:42197\n1789829923960\tmozrunner::runner\tINFO\tRunning command: MOZ_CRASHREPORTER=\"1\" MOZ_CRASHREPORTER_NO_REPORT=\"1\" MOZ_CRASHREPORTER_SHUTDOWN=\"1\" \"/home/x/ibbrowsers/sysroot/usr/lib64/firefox/firefox\" \"--marionette\" \"-headless\" \"-no-remote\" \"-profile\" \"/tmp/rust_mozprofilechK9LY\"\n*** You are running in headless mode.\n\n(firefox:27635): GdkPixbuf-WARNING **: Cannot open pixbuf loader module file '/usr/lib64/firefox/bundled/lib64/gdk-pixbuf-2.0/2.10.0/loaders.cache': No such file or directory\n\nThis likely means that your installation is broken.\nTry running the command\n  gdk-pixbuf-query-loaders > /usr/lib64/firefox/bundled/lib64/gdk-pixbuf-2.0/2.10.0/loaders.cache\nto make things work again for the time being.\n\n(/home/x/ibbrowsers/sysroot/usr/lib64/firefox/firefox:27831): GdkPixbuf-WARNING **: Cannot open pixbuf loader module file '/usr/lib64/firefox/bundled/lib64/gdk-pixbuf-2.0/2.10.0/loaders.cache': No such file or directory\n\nThis likely means that your installation is broken.\nTry running the command\n  gdk-pixbuf-query-loaders > /usr/lib64/firefox/bundled/lib64/gdk-pixbuf-2.0/2.10.0/loaders.cache\nto make things work again for the time being.\n\n(/home/x/ibbrowsers/sysroot/usr/lib64/firefox/firefox:27841): GdkPixbuf-WARNING **: Cannot open pixbuf loader module file '/usr/lib64/firefox/bundled/lib64/gdk-pixbuf-2.0/2.10.0/loaders.cache': No such file or directory\n\nThis likely means that your installation is broken.\nTry running the command\n  gdk-pixbuf-query-loaders > /usr/lib64/firefox/bundled/lib64/gdk-pixbuf-2.0/2.10.0/loaders.cache\nto make things work again for the time being.\n\n(/home/x/ibbrowsers/sysroot/usr/lib64/firefox/firefox:27900): GdkPixbuf-WARNING **: Cannot open pixbuf loader module file '/usr/lib64/firefox/bundled/lib64/gdk-pixbuf-2.0/2.10.0/loaders.cache': No such file or directory\n\nThis likely means that your installation is broken.\nTry running the command\n  gdk-pixbuf-query-loaders > /usr/lib64/firefox/bundled/lib64/gdk-pixbuf-2.0/2.10.0/loaders.cache\nto make things work again for the time being.\n1789829926501\tMarionette\tINFO\tListening on port 35074\n\n(/home/x/ibbrowsers/sysroot/usr/lib64/firefox/firefox:27945): GdkPixbuf-WARNING **: Cannot open pixbuf loader module file '/usr/lib64/firefox/bundled/lib64/gdk-pixbuf-2.0/2.10.0/loaders.cache': No such file or directory\n\nThis likely means that your installation is broken.\nTry running the command\n  gdk-pixbuf-query-loaders > /usr/lib64/firefox/bundled/lib64/gdk-pixbuf-2.0/2.10.0/loaders.cache\nto make things work again for the time being.\nJavaScript error: file:///home/x/ibbrowsers/work/ibtest-0ee0acdbe920.html, line 48873: SyntaxError: expected expression, got '='\n",
+ "protocol": "webdriver",
+ "seconds": 30
+}

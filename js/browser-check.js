@@ -7,6 +7,10 @@
 // native (the browser has it), fallback (it doesn't, and the page carries a
 // slower stand-in: set `fallback` to what that means for the person) or
 // missing. A missing `required` feature means the page can't work here.
+// The stand-ins are js/zlib.js and js/cryptox.js (with the plain-JavaScript
+// modules under them), js/has-shim.js and js/polyfills.js (docs/plan.md
+// 1.11); what is left without one is ES2017 syntax, getRandomValues, and the
+// optional folder picking and SVG icons.
 //
 // Shows, when anything isn't native, a slim bar under the header naming
 // the practical effect, and the browsers our tests found work on this OS
@@ -24,35 +28,53 @@
   function syntax(src) { try { new Function(src); return true; } catch (e) { return false; } }
   function construct(C, arg) { try { new C(arg); return true; } catch (e) { return false; } }
   var subtle = w.crypto && w.crypto.subtle;
+  function hex(h) { var u = new Uint8Array(h.length / 2); for (var i = 0; i < u.length; i++) u[i] = parseInt(h.substr(i * 2, 2), 16); return u; }
+  // Importing a known-good public key tells whether an algorithm is there,
+  // without generating keys at startup (which crashed Alpine's Chromium 152
+  // renderer when done while the page was starting).
+  function canImport(key, alg) {
+    if (!subtle) return false;
+    return subtle.importKey('raw', key, alg, false, ['verify']).then(function () { return true; }, function () { return false; });
+  }
 
   // id, name, test (sync: true/false; async: returns a promise of
   // true/false), required, effect when missing, fallback (null, or what
   // the page's stand-in means for the person).
   var FEATURES = [
-    { id: 'modules', name: 'JavaScript modules', required: true, effect: 'the page can\'t start',
-      test: function () { return 'noModule' in doc.createElement('script'); } },
-    { id: 'syntax', name: 'Modern JavaScript syntax (?., ??, ||=)', required: true, effect: 'the page can\'t start',
-      test: function () { return syntax('var a, b = a?.b ?? 1; a ||= b; try {} catch {}'); } },
-    { id: 'bigint', name: 'BigInt', required: true, effect: 'the page can\'t start',
-      test: function () { return typeof w.BigInt === 'function'; } },
-    { id: 'hasown', name: 'Object.hasOwn', required: true, effect: 'the page can\'t start',
-      test: function () { return typeof Object.hasOwn === 'function'; } },
-    { id: 'compress', name: 'CompressionStream (deflate-raw)', required: true, effect: 'can\'t build installers', fallback: null,
-      test: function () { return typeof w.CompressionStream === 'function' && construct(w.CompressionStream, 'deflate-raw'); } },
-    { id: 'decompress', name: 'DecompressionStream (deflate-raw)', required: true, effect: 'can\'t open installers or the runtimes catalogue', fallback: null,
-      test: function () { return typeof w.DecompressionStream === 'function' && construct(w.DecompressionStream, 'deflate-raw'); } },
-    { id: 'blobstream', name: 'Blob.stream', required: true, effect: 'can\'t build or open installers', fallback: null,
-      test: function () { return !!(w.Blob && Blob.prototype.stream); } },
-    { id: 'webcrypto', name: 'WebCrypto (crypto.subtle)', required: true, effect: 'can\'t hash, build or sign installers', fallback: null,
+    { id: 'syntax', name: 'JavaScript of 2017 (async functions)', required: true, effect: 'the page can\'t start',
+      test: function () { return syntax('async function f(a, ...b) { for (const c of a) await c; return class {}; }'); } },
+    { id: 'random', name: 'crypto.getRandomValues', required: true, effect: 'can\'t sign installers or make keys',
+      test: function () { return !!(w.crypto && w.crypto.getRandomValues); } },
+    { id: 'compress', name: 'CompressionStream (deflate-raw)', required: true, effect: 'can\'t build installers',
+      fallback: 'compressing is done by the page\'s own JavaScript (slower)',
+      test: function () { return typeof w.CompressionStream === 'function' && construct(w.CompressionStream, 'deflate-raw') && !!(w.Blob && Blob.prototype.stream); } },
+    { id: 'decompress', name: 'DecompressionStream (deflate-raw)', required: true, effect: 'can\'t open installers or the runtimes catalogue',
+      fallback: 'unpacking is done by the page\'s own JavaScript (slower)',
+      test: function () { return typeof w.DecompressionStream === 'function' && construct(w.DecompressionStream, 'deflate-raw') && !!(w.Blob && Blob.prototype.stream); } },
+    { id: 'webcrypto', name: 'WebCrypto (crypto.subtle)', required: true, effect: 'can\'t hash, build or sign installers',
+      fallback: 'hashing and signing use the page\'s own JavaScript (slower: a large RSA key can take seconds)' +
+        (w.isSecureContext === false ? '; browsers keep WebCrypto to https, localhost and pages opened from disk' : ''),
       test: function () { return !!subtle; } },
-    { id: 'has', name: 'CSS :has()', required: true, effect: 'the forms can\'t show their parts (the code editor stays hidden)', fallback: null,
+    { id: 'has', name: 'CSS :has()', required: true, effect: 'the forms can\'t show their parts (the code editor stays hidden)',
+      fallback: 'a small script keeps the forms\' sections in step',
       test: function () { return !!(w.CSS && CSS.supports && CSS.supports('selector(:has(a))')); } },
-    { id: 'ed25519', name: 'WebCrypto Ed25519', required: false, effect: 'PGP keys are made as RSA instead of Ed25519', fallback: null,
+    { id: 'builtins', name: 'Newer built-ins (Object.hasOwn, Array.flat, replaceChildren)', required: true, effect: 'the page can\'t start',
+      fallback: 'the page adds its own',
+      test: function () { return typeof Object.hasOwn === 'function' && !![].flat && !!(w.Element && Element.prototype.replaceChildren); } },
+    { id: 'readfile', name: 'Reading files (Blob.arrayBuffer)', required: true, effect: 'can\'t read the files you pick',
+      fallback: 'files are read with FileReader',
+      test: function () { return !!(w.Blob && Blob.prototype.arrayBuffer); } },
+    { id: 'textcodec', name: 'TextEncoder and TextDecoder', required: true, effect: 'the page can\'t start',
+      fallback: 'the page carries its own UTF-8 encoder',
+      test: function () { return typeof w.TextEncoder === 'function' && typeof w.TextDecoder === 'function'; } },
+    { id: 'ed25519', name: 'WebCrypto Ed25519', required: false, effect: 'can\'t make or use Ed25519 PGP keys',
+      fallback: 'Ed25519 PGP keys use the page\'s own JavaScript',
       test: function () {
         if (!subtle) return false;
         return subtle.generateKey('Ed25519', false, ['sign', 'verify']).then(function () { return true; }, function () { return false; });
       } },
-    { id: 'ecdsa', name: 'WebCrypto ECDSA P-256', required: false, effect: 'can\'t sign with EC (P-256) certificates', fallback: null,
+    { id: 'ecdsa', name: 'WebCrypto ECDSA P-256', required: false, effect: 'can\'t sign with EC (P-256) certificates',
+      fallback: 'EC certificates sign with the page\'s own JavaScript',
       test: function () {
         if (!subtle) return false;
         return subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign']).then(function () { return true; }, function () { return false; });
@@ -118,7 +140,6 @@
   var h = hints();
   if (h) pending.push(h);
 
-  var insecure = !subtle && w.isSecureContext === false;
   function missing() { return FEATURES.filter(function (f) { return f.required && status[f.id] === 'missing'; }); }
   function degraded() { return FEATURES.filter(function (f) { return status[f.id] === 'missing' || status[f.id] === 'fallback'; }); }
   function names(list) { return list.map(function (f) { return f.name; }).join('; '); }
@@ -191,16 +212,11 @@
       var f = deg[i], e = status[f.id] === 'fallback' ? f.fallback : f.effect;
       if (!seen[e]) { seen[e] = 1; effects.push(e); }
     }
-    var head = insecure && miss.length === 1 && miss[0].id === 'webcrypto' ? 'TiddlyInstall can\'t run from this address: '
-      : miss.length ? 'This browser can\'t run TiddlyInstall: '
-        : 'This browser can run TiddlyInstall, with limits: ';
+    var head = miss.length ? 'This browser can\'t run TiddlyInstall: ' : 'This browser can run TiddlyInstall, with limits: ';
     var text = head + effects.join('; ') + '.';
-    if (insecure) text += ' Browsers only offer WebCrypto on https, on localhost, or in a page opened from disk; this page is at ' + location.protocol + '//' + location.host + '. Open it from one of those, or save it and open the file.';
     var c = loadCompat(), m = c && nearestMachine(c), ok = m ? passingOn(c, m) : [];
-    if (!(insecure && miss.length === 1)) {
-      if (ok.length) text += ' Tested on ' + m[1] + ' and working: ' + ok.join(', ') + '.';
-      else if (miss.length) text += ' Please use a current Chrome, Edge or Firefox, or Safari 16.4 or later; on Windows XP to 8.1, Supermium.';
-    }
+    if (ok.length) text += ' Tested on ' + m[1] + ' and working: ' + ok.join(', ') + '.';
+    else if (miss.length) text += ' Please use Firefox 52 or later, Chrome 55 or later, Safari 12 or later, or Edge; on Windows XP to 8.1, Firefox 52 ESR or Supermium.';
     return text;
   }
 

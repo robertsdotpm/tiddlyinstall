@@ -1,0 +1,313 @@
+{
+ "time": "2026-09-19T03:41:59.790Z",
+ "machine": "ubuntu1604",
+ "browser": "chrome",
+ "version": "125.0.6422.141",
+ "result": "pass",
+ "seed": 11,
+ "checks": [
+  {
+   "name": "the startup check finds nothing missing",
+   "pass": true
+  },
+  {
+   "name": "the compatibility bar shows only when a feature isn't native",
+   "pass": true
+  },
+  {
+   "name": "the page starts without errors",
+   "pass": true
+  },
+  {
+   "name": "from disk, the page builds installers itself",
+   "pass": true
+  },
+  {
+   "name": "WebCrypto Ed25519",
+   "note": "not supported: NotSupportedError (the editor offers RSA keys instead)"
+  },
+  {
+   "name": "the page has its sections",
+   "pass": true
+  },
+  {
+   "name": "#new shows its page",
+   "pass": true
+  },
+  {
+   "name": "#edit shows its page",
+   "pass": true
+  },
+  {
+   "name": "#bases shows its page",
+   "pass": true
+  },
+  {
+   "name": "#runtimes shows its page",
+   "pass": true
+  },
+  {
+   "name": "#home shows its page",
+   "pass": true
+  },
+  {
+   "name": "New installer: the code editor shows for Python + script (CSS :has())",
+   "pass": true
+  },
+  {
+   "name": "build: the build finishes",
+   "pass": true
+  },
+  {
+   "name": "build: windows download is 991490 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: windows is a .exe",
+   "pass": true
+  },
+  {
+   "name": "build: windows carries the record 3r7dao3xmtgshhz6air6te6tqk",
+   "pass": true
+  },
+  {
+   "name": "build: windows record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: windows carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: windows plan is for windows only",
+   "pass": true
+  },
+  {
+   "name": "build: windows packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "build: linux download is 141590 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: linux is a .run",
+   "pass": true
+  },
+  {
+   "name": "build: linux carries the record 3r7dao3xmtgshhz6air6te6tqk",
+   "pass": true
+  },
+  {
+   "name": "build: linux record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: linux carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: linux plan is for linux only",
+   "pass": true
+  },
+  {
+   "name": "build: linux packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "build: macos download is 41624 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: macos is a .zip",
+   "pass": true
+  },
+  {
+   "name": "build: macos carries the record 3r7dao3xmtgshhz6air6te6tqk",
+   "pass": true
+  },
+  {
+   "name": "build: macos record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: macos carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: macos plan is for macos only",
+   "pass": true
+  },
+  {
+   "name": "build: macos packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "Save this page makes the whole page",
+   "pass": true
+  },
+  {
+   "name": "the saved copy (from the browser's download folder) starts",
+   "pass": true
+  },
+  {
+   "name": "the saved copy starts without errors",
+   "pass": true
+  },
+  {
+   "name": "saved copy: the build finishes",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux download is 141564 bytes",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux is a .run",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux carries the record da4pyifaely2yio3qkkuu6cez6",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux plan is for linux only",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "PGP Ed25519 key",
+   "note": "This browser can't make Ed25519 keys; choose RSA."
+  },
+  {
+   "name": "PGP: the page makes a rsa3072 key",
+   "pass": true
+  },
+  {
+   "name": "PGP: signing says saved",
+   "pass": true
+  },
+  {
+   "name": "PGP (rsa3072): gpg --verify says Good signature for the saved .run.asc",
+   "pass": true
+  },
+  {
+   "name": "PGP: the signed .run keeps its record",
+   "pass": true
+  },
+  {
+   "name": ".pfx: the page opens the RSA .pfx",
+   "pass": true
+  },
+  {
+   "name": ".pfx: signing says done",
+   "pass": true
+  },
+  {
+   "name": ".pfx: the signed .exe passes osslsigncode verify",
+   "pass": true
+  },
+  {
+   "name": "no page errors while signing",
+   "pass": true
+  },
+  {
+   "name": "served (http://localhost through the tunnel): the page starts, WebCrypto and all",
+   "pass": true
+  },
+  {
+   "name": "served: the page uses the build server",
+   "pass": true
+  }
+ ],
+ "entry": {
+  "id": "chrome",
+  "name": "Chrome for Testing",
+  "version": "125.0.6422.141",
+  "binary": "/home/x/ibbrowsers/chrome-125.0.6422.141/chrome-linux64/chrome",
+  "driverKind": "chromedriver",
+  "driver": "/home/x/ibbrowsers/drivers/chromedriver-125.0.6422.141/chromedriver.sh",
+  "driverVersion": "125.0.6422.141",
+  "args": [
+   "--headless=new"
+  ],
+  "headless": true,
+  "source": "https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chrome-linux64.zip",
+  "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chromedriver-linux64.zip",
+  "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x; NSS/NSPR taken from the verified Firefox 156.0 tarball (distro libnss3 is 3.28.4, Chrome needs NSS_3.30)",
+  "smoke": "pass",
+  "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it; the chromedriver wrapper also prepends ~/ibbrowsers/firefox-156.0/firefox to LD_LIBRARY_PATH for NSS. newest Chrome for Testing whose binary runs on glibc 2.23: 126.0.6478.182 and later need GLIBC_2.25 (tested: \"/lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.25' not found\"). 115-125 need only GLIBC_2.17."
+ },
+ "capabilities": {
+  "acceptInsecureCerts": false,
+  "browserName": "chrome",
+  "browserVersion": "125.0.6422.141",
+  "chrome": {
+   "chromedriverVersion": "125.0.6422.141 (4b1e83937122185343ba92e909b021f307c719ca-refs/branch-heads/6422@{#1186})",
+   "userDataDir": "/tmp/.org.chromium.Chromium.NUqSde"
+  },
+  "fedcm:accounts": true,
+  "goog:chromeOptions": {
+   "debuggerAddress": "localhost:44305"
+  },
+  "networkConnectionEnabled": false,
+  "pageLoadStrategy": "normal",
+  "platformName": "linux",
+  "proxy": {},
+  "setWindowRect": true,
+  "strictFileInteractability": false,
+  "timeouts": {
+   "implicit": 0,
+   "pageLoad": 300000,
+   "script": 30000
+  },
+  "unhandledPromptBehavior": "dismiss and notify",
+  "webauthn:extension:credBlob": true,
+  "webauthn:extension:largeBlob": true,
+  "webauthn:extension:minPinLength": true,
+  "webauthn:extension:prf": true,
+  "webauthn:virtualAuthenticators": true
+ },
+ "features": {
+  "?. ?? ||= syntax": true,
+  "BigInt": true,
+  "Blob.stream": true,
+  "CSS :has()": true,
+  "CSS color-mix()": true,
+  "CompressionStream deflate-raw": true,
+  "CompressionStream gzip": true,
+  "DecompressionStream deflate-raw": true,
+  "ES modules": true,
+  "Object.hasOwn": true,
+  "WebCrypto": true,
+  "secure context": true,
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/125.0.0.0 Safari/537.36"
+ },
+ "webcrypto": {
+  "AES-CBC": true,
+  "ECDSA P-256": true,
+  "Ed25519": "NotSupportedError",
+  "HMAC": true,
+  "PBKDF2": true,
+  "RSASSA-PKCS1-v1_5": true,
+  "SHA-256": true
+ },
+ "degraded": "ed25519",
+ "saveToDisk": "saved",
+ "pgpKey": "rsa3072",
+ "pfx": "signed",
+ "driverLog": "Starting ChromeDriver 125.0.6422.141 (4b1e83937122185343ba92e909b021f307c719ca-refs/branch-heads/6422@{#1186}) on port 36129\nOnly local connections are allowed.\nPlease see https://chromedriver.chromium.org/security-considerations for suggestions on keeping ChromeDriver safe.\nChromeDriver was started successfully.\n",
+ "protocol": "webdriver",
+ "seconds": 17
+}
