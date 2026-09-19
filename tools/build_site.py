@@ -42,11 +42,11 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # (section name, page file). The first is the default section.
 PAGES = [("home", "index.html"), ("new", "new.html"), ("build", "build.html"),
-         ("edit", "edit.html"), ("bases", "bases.html"), ("runtimes", "runtimes.html")]
+         ("edit", "edit.html"), ("runtimes", "runtimes.html")]
 # Other pages' links in the offline copy.
-LINK_ALIASES = {"create.html": "#new&write", "builds.html": "#home"}
+LINK_ALIASES = {"create.html": "#new&write", "builds.html": "#home", "bases.html": "#new"}
 # Copied to the regular site as they are.
-SITE_FILES = ["index.html", "new.html", "build.html", "builds.html", "edit.html", "bases.html",
+SITE_FILES = ["index.html", "new.html", "build.html", "builds.html", "edit.html",
               "runtimes.html", "create.html", "css", "js", "vendor"]
 # Dependency order: each module comes after everything it imports. The
 # early modules run before anything else (built-ins for older browsers, and
