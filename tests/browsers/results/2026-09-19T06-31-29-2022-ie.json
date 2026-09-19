@@ -1,0 +1,64 @@
+{
+ "time": "2026-09-19T06:31:29.035Z",
+ "machine": "2022",
+ "browser": "ie",
+ "version": "11.1.20348.0",
+ "result": "unsupported: scripts are off (Enhanced Security Configuration)",
+ "protocol": "com",
+ "docmode": "edge",
+ "checks": [
+  {
+   "name": "the page loads from disk",
+   "pass": true
+  },
+  {
+   "name": "scripts don't run here, and the <noscript> bar says so and what to do",
+   "pass": true
+  },
+  {
+   "name": "the home page's text is there",
+   "pass": true
+  },
+  {
+   "name": "only the home section shows",
+   "pass": true
+  },
+  {
+   "name": "the text is dark on light",
+   "pass": true
+  }
+ ],
+ "loadSeconds": 5.8,
+ "documentMode": 11,
+ "dom": {
+  "title": "TiddlyInstall",
+  "documentMode": 11,
+  "missing": null,
+  "degraded": null,
+  "ready": null,
+  "htmlClass": "",
+  "bar": {
+   "text": "JavaScript is off in this browser, so TiddlyInstall can't build or sign installers here; the pages still read. Turn JavaScript on for this page, or open it in a current browser. (Internet Explorer on Windows Server keeps JavaScript off while its Enhanced Security Configuration is on.)",
+   "className": "ib-compat-bar ib-too-old",
+   "shown": true
+  },
+  "bodyText": "TiddlyInstall Home New installer Base installers Edit installer Runtimes   \r\nJavaScript is off in this browser, so TiddlyInstall can't build or sign installers here; the pages still read. Turn JavaScript on for this page, or open it in a current browser. (Internet Explorer on Windows Server keeps JavaScript off while its Enhanced Security Configuration is on.)\r\n \r\n\r\n\r\nReal installers for Windows, Linux and macOS, straight from a GitHub repo.\r\n\r\nNo freezing and no bundlers that break. We install your project's real runtime and dependencies into a folder of its own, clone your project, and install it against them. The result is an ordinary installer built with NSIS on Windows and the Qt Installer Framework on Linux and macOS. \r\n\r\nMake an installer Write an app Start from a base installer \r\n\r\nOne file, like TiddlyWiki\r\n\r\nTiddlyInstall is a single HTML file. This page carries the base installers, the runtime catalogue and all the code that makes, edits and signs installers. Save it (at the bottom of the page) and open it from your disk, and it keeps working with no server: it builds installers for code you write here or for packages, edits any unsigned installer, and signs with your own key. When a build server is there, it uses it for the rest: installers signed by us, GitHub repos, and installers with their runtimes packed inside.\r\n\r\nHow it works\r\n\r\n\r\n\r\n1. Point at a repo\r\n\r\nGive us a GitHub repository and a branch, tag or commit. We clone the actual source code.\r\n\r\n\r\n2. Depend",
+  "sections": [
+   "home:shown",
+   "new:hidden",
+   "build:hidden",
+   "edit:hidden",
+   "bases:hidden",
+   "runtimes:hidden"
+  ],
+  "colors": {
+   "body": "#1c1f24 on #f6f7f9"
+  },
+  "errors": null
+ },
+ "page": {
+  "rev": "9817089",
+  "hash": "3cddf2554050"
+ },
+ "seconds": 69
+}

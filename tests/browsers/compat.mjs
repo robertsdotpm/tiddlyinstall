@@ -24,7 +24,8 @@ export const MACHINES = [
 ];
 export const BROWSERS = [['chrome', 'Chrome'], ['chromium', 'Chromium'], ['edge', 'Edge'], ['opera', 'Opera'], ['brave', 'Brave'], ['vivaldi', 'Vivaldi'],
   ['supermium', 'Supermium'], ['supermium-installed', 'Supermium (older)'], ['firefox', 'Firefox'], ['safari', 'Safari'],
-  ['webkitgtk', "WebKitGTK (Safari's engine)"], ['epiphany', 'GNOME Web (Epiphany)'], ['playwright-webkit', "Playwright WebKit (Safari's engine)"]];
+  ['webkitgtk', "WebKitGTK (Safari's engine)"], ['epiphany', 'GNOME Web (Epiphany)'], ['playwright-webkit', "Playwright WebKit (Safari's engine)"],
+  ['ie', 'Internet Explorer']];
 
 // Stand-ins for a browser, tested for their engine: not browsers to
 // recommend to anyone.
