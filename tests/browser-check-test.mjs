@@ -2,8 +2,10 @@
 // no bar in a modern browser; with features taken away before the page
 // loads, a bar that names the effect and recommends the browsers tested on
 // this OS; its details (features, and the tested machine x browser matrix
-// with the visitor's nearest row marked); dismissing; and the message for
-// an address with no WebCrypto.
+// with the visitor's nearest row marked); dismissing; and plain http, where
+// the page runs on its own cryptography. Features with a stand-in in the
+// page (compression, WebCrypto, :has(), ...) show as "fallback"; only ES2017
+// syntax and getRandomValues can make it "can't run".
 //
 //   node --experimental-websocket tests/browser-check-test.mjs [--page dist/index.html]
 //        [--site http://10.0.1.76:8080] [--shot FILE.png]
@@ -55,18 +57,20 @@ try {
   ok(await js(`!!document.getElementById('ib-compat') && JSON.parse(document.getElementById('ib-compat').textContent).results.length > 0`),
     'the tested-browsers summary is in the page');
 
-  // Compression taken away: the page can't work; the bar says why.
-  await open(FILE, 'delete window.DecompressionStream; delete window.CompressionStream;');
-  const miss = await js(`document.documentElement.getAttribute('data-ib-missing')`);
-  ok(/CompressionStream/.test(miss) && /DecompressionStream/.test(miss), 'without (De)CompressionStream: both are missing', miss);
-  ok(await barShown() && await js(`document.querySelector('.ib-compat-bar').classList.contains('ib-too-old')`), 'without them: the bar shows, as "can\'t run"');
+  // Compression and WebCrypto taken away: the page works on its own
+  // JavaScript; a "with limits" bar says so.
+  await open(FILE, 'delete window.DecompressionStream; delete window.CompressionStream; Object.defineProperty(window.crypto, "subtle", { get: function () {} });');
+  ok(await js(`document.documentElement.getAttribute('data-ib-missing') === ''`), 'without (De)CompressionStream and WebCrypto: nothing is missing',
+    await js(`document.documentElement.getAttribute('data-ib-missing')`));
+  const degr = await js(`document.documentElement.getAttribute('data-ib-degraded')`);
+  ok(/compress/.test(degr) && /decompress/.test(degr) && /webcrypto/.test(degr), 'they are degraded (fallback)', degr);
+  ok(await barShown() && !await js(`document.querySelector('.ib-compat-bar').classList.contains('ib-too-old')`), 'without them: a "with limits" bar');
   const text = await barText();
-  ok(/can't build installers/.test(text) && /can't open installers/.test(text), 'the bar names the practical effects', text);
+  ok(/own JavaScript/.test(text), 'the bar says the page uses its own JavaScript', text);
   ok(/Tested on Debian 12 and working: \w/.test(text), 'the bar recommends the browsers tested on the nearest OS (Linux: Debian 12)', text);
-  ok(!await js(`!!document.querySelector('.ib-compat-dismiss')`), 'a "can\'t run" bar has no Dismiss');
   await js(`document.querySelector('.ib-compat-more').click()`);
   const rows = await js(`Array.prototype.map.call(document.querySelectorAll('.ib-compat-details table:first-of-type tr'), (r) => r.textContent)`);
-  ok(rows.some((r) => /CompressionStream.*✗ missing/.test(r)) && rows.some((r) => /BigInt.*✓ native/.test(r)), 'details: each feature, native or missing, and its effect', rows.join(' | '));
+  ok(rows.some((r) => /CompressionStream.*~ fallback/.test(r)) && rows.some((r) => /:has\(\).*✓ native/.test(r)), 'details: each feature, native or fallback, and what that means', rows.join(' | '));
   ok(await js(`document.querySelectorAll('.ib-compat-matrix tr[data-machine]').length >= 5`), 'details: the tested matrix renders');
   ok(await js(`(document.querySelector('.ib-compat-matrix tr.ib-you') || {}).dataset?.machine === 'debian12' && !!document.querySelector('.ib-compat-matrix tr.ib-you td.ib-you')`),
     'details: the nearest machine row and this browser\'s cell are marked');
@@ -78,6 +82,14 @@ try {
     fs.writeFileSync(SHOT.replace(/\.png$/, '') + '-matrix.png', Buffer.from(m.data, 'base64'));
     console.log('screenshots: ' + SHOT + ', ' + SHOT.replace(/\.png$/, '') + '-matrix.png');
   }
+
+  // Too old to run (a JavaScript without async functions): a "can't run" bar.
+  await open(FILE, 'window.Function = function () { throw new SyntaxError("old"); };');
+  const miss = await js(`document.documentElement.getAttribute('data-ib-missing')`);
+  ok(/2017/.test(miss), 'without ES2017 syntax: missing', miss);
+  ok(await barShown() && await js(`document.querySelector('.ib-compat-bar').classList.contains('ib-too-old')`), 'the bar shows, as "can\'t run"');
+  ok(/can't start/.test(await barText()), 'the bar names the effect', await barText());
+  ok(!await js(`!!document.querySelector('.ib-compat-dismiss')`), 'a "can\'t run" bar has no Dismiss');
 
   // A visitor on Windows XP (Supermium's engine, no compression streams):
   // the XP row, and what works there.
@@ -99,11 +111,11 @@ try {
   await open(FILE, 'delete window.OffscreenCanvas;');
   ok(!await barShown(), 'and it stays hidden after a reload, for this browser');
 
-  // No WebCrypto at a plain-http LAN address.
+  // No WebCrypto at a plain-http LAN address: the page runs on its own.
   if (SITE) {
     await open(SITE.replace(/\/$/, '') + '/');
     const s = await barText();
-    ok(/can't run from this address/.test(s) && /https, on localhost, or in a page opened from disk/.test(s), 'plain http on a LAN address: the bar says the address is the problem', s);
+    ok(/with limits/.test(s) && /own JavaScript/.test(s) && /https, localhost and pages opened from disk/.test(s), 'plain http on a LAN address: it runs, on its own cryptography, and the bar says why', s);
   }
 } catch (e) {
   ok(false, 'browser-check run', e.stack || e);

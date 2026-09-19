@@ -1,20 +1,21 @@
 // OpenPGP detached signatures for Linux installers (RFC 4880 v4 packets,
 // which GnuPG 2.2 and 2.4 read). Ed25519 (EdDSA, algorithm 22) or RSA keys,
 // generated in the page or imported from `gpg --export-secret-keys`.
-// WebCrypto does the signing, hashing and AES; the key never leaves the page.
+// js/cryptox.js does the signing, hashing and AES (WebCrypto, or plain
+// JavaScript without it); the key never leaves the page.
 import { concat, b64, unb64, eqBytes, hex } from './der.js';
+import * as X from './cryptox.js';
+import * as B from './bignum.js';
 
 const enc = new TextEncoder();
 const ED25519_OID = new Uint8Array([0x2b, 0x06, 0x01, 0x04, 0x01, 0xda, 0x47, 0x0f, 0x01]);
-const ED25519_PKCS8 = new Uint8Array([0x30, 0x2e, 0x02, 0x01, 0x00, 0x30, 0x05, 0x06, 0x03, 0x2b, 0x65, 0x70, 0x04, 0x22, 0x04, 0x20]);
 const ALG = { RSA: 1, RSA_S: 3, EDDSA: 22 };
 const HASH = { 2: 'SHA-1', 8: 'SHA-256', 9: 'SHA-384', 10: 'SHA-512', 11: 'SHA-224' };
 const AES_KEYLEN = { 7: 16, 8: 24, 9: 32 };
-const RSA_PARAMS = { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' };
 
 export class PgpError extends Error {}
 
-const digest = async (h, b) => new Uint8Array(await crypto.subtle.digest(h, b));
+const digest = (h, b) => X.digest(h, b);
 const u32 = (n) => new Uint8Array([n >>> 24, (n >>> 16) & 255, (n >>> 8) & 255, n & 255]);
 const u16 = (n) => new Uint8Array([(n >>> 8) & 255, n & 255]);
 
@@ -25,8 +26,8 @@ function packet(tag, body) {
   let len;
   if (n < 192) len = [n];
   else if (n < 8384) len = [((n - 192) >> 8) + 192, (n - 192) & 255];
-  else len = [255, ...u32(n)];
-  return concat([new Uint8Array([0xc0 | tag, ...len]), body]);
+  else len = [255].concat(Array.from(u32(n)));
+  return concat([new Uint8Array([0xc0 | tag].concat(len)), body]);
 }
 
 function mpi(bytes) {
@@ -147,10 +148,10 @@ async function makeSignature(key, sigType, prefix, created, extraHashed = []) {
   const h = await digest('SHA-256', toHash);
   let sigMpis;
   if (key.algo === ALG.EDDSA) {
-    const s = new Uint8Array(await crypto.subtle.sign('Ed25519', key.signKey, h));
+    const s = await X.sign(key.signKey, h);
     sigMpis = concat([mpi(s.subarray(0, 32)), mpi(s.subarray(32))]);
   } else {
-    sigMpis = mpi(new Uint8Array(await crypto.subtle.sign(RSA_PARAMS, key.signKey, toHash)));
+    sigMpis = mpi(await X.sign(key.signKey, toHash));
   }
   return concat([head, u16(unhashed.length), unhashed, h.subarray(0, 2), sigMpis]);
 }
@@ -166,13 +167,11 @@ export async function generateKey(type, userId, { bits = 3072 } = {}) {
   const created = Math.floor(Date.now() / 1000);
   let key;
   if (type === 'ed25519') {
-    const kp = await crypto.subtle.generateKey('Ed25519', true, ['sign', 'verify']);
-    const pub = new Uint8Array(await crypto.subtle.exportKey('raw', kp.publicKey));
-    const seed = new Uint8Array(await crypto.subtle.exportKey('pkcs8', kp.privateKey)).slice(-32);
-    key = await ed25519Key(created, pub, seed);
+    const kp = await X.generateEd25519();
+    key = await ed25519Key(created, kp.pub, kp.seed);
   } else if (type === 'rsa') {
-    const kp = await crypto.subtle.generateKey({ ...RSA_PARAMS, modulusLength: bits, publicExponent: new Uint8Array([1, 0, 1]) }, true, ['sign', 'verify']);
-    key = await rsaKeyFromJwk(created, await crypto.subtle.exportKey('jwk', kp.privateKey), kp.privateKey);
+    const g = await X.generateRsa(bits);
+    key = await rsaKeyFromParts(created, g.parts, g.key);
   } else throw new PgpError('Unknown key type ' + type);
   key.userId = userId.trim();
   const flags = [subpacket(27, new Uint8Array([0x03])), subpacket(11, new Uint8Array([9, 8, 7])), subpacket(21, new Uint8Array([8, 10, 9])), subpacket(30, new Uint8Array([1]))];
@@ -183,42 +182,19 @@ export async function generateKey(type, userId, { bits = 3072 } = {}) {
 async function ed25519Key(created, pub, seed) {
   const material = concat([new Uint8Array([ED25519_OID.length]), ED25519_OID, mpi(concat([new Uint8Array([0x40]), pub]))]);
   const pubBody = pubKeyBody(ALG.EDDSA, created, material);
-  const signKey = await crypto.subtle.importKey('pkcs8', concat([ED25519_PKCS8, seed]), 'Ed25519', false, ['sign']);
-  return { algo: ALG.EDDSA, type: 'ed25519', created, pubBody, signKey, secretMpis: mpi(seed), ...(await fingerprintOf(pubBody)) };
+  const signKey = await X.importEd25519(seed);
+  return Object.assign({ algo: ALG.EDDSA, type: 'ed25519', created, pubBody, signKey, secretMpis: mpi(seed) }, await fingerprintOf(pubBody));
 }
 
-const b64u = (u8) => b64(u8).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-const big = (u8) => { let x = 0n; for (const b of u8) x = (x << 8n) | BigInt(b); return x; };
-function bigBytes(x) {
-  const a = [];
-  while (x > 0n) { a.unshift(Number(x & 255n)); x >>= 8n; }
-  return new Uint8Array(a.length ? a : [0]);
-}
-function modInv(a, m) {
-  let [r0, r1, s0, s1] = [a % m, m, 1n, 0n];
-  while (r1 !== 0n) { const q = r0 / r1; [r0, r1] = [r1, r0 - q * r1]; [s0, s1] = [s1, s0 - q * s1]; }
-  if (r0 !== 1n) throw new PgpError('Bad RSA key (no inverse).');
-  return ((s0 % m) + m) % m;
-}
-
-async function rsaKeyFromJwk(created, jwk, signKey) {
-  const n = unb64(jwk.n), e = unb64(jwk.e), d = unb64(jwk.d);
-  let p = big(unb64(jwk.p)), q = big(unb64(jwk.q));
-  if (p > q) [p, q] = [q, p];                                  // OpenPGP wants p < q, u = p^-1 mod q
-  const u = modInv(p, q);
-  const pubBody = pubKeyBody(ALG.RSA, created, concat([mpi(n), mpi(e)]));
-  const secretMpis = concat([mpi(d), mpi(bigBytes(p)), mpi(bigBytes(q)), mpi(bigBytes(u))]);
-  return { algo: ALG.RSA, type: 'rsa', bits: n.length * 8, created, pubBody, signKey, secretMpis, ...(await fingerprintOf(pubBody)) };
-}
-
-async function rsaSignKey(n, e, d, p, q) {
-  const P = big(p), Q = big(q), D = big(d);
-  const jwk = {
-    kty: 'RSA', alg: 'RS256', ext: false, key_ops: ['sign'],
-    n: b64u(n), e: b64u(e), d: b64u(d), p: b64u(p), q: b64u(q),
-    dp: b64u(bigBytes(D % (P - 1n))), dq: b64u(bigBytes(D % (Q - 1n))), qi: b64u(bigBytes(modInv(Q, P))),
-  };
-  return crypto.subtle.importKey('jwk', jwk, RSA_PARAMS, false, ['sign']);
+// parts: big-endian bytes {n, e, d, p, q}.
+async function rsaKeyFromParts(created, parts, signKey) {
+  let p = B.fromBytes(parts.p), q = B.fromBytes(parts.q);
+  if (B.cmp(p, q) > 0) { const t = p; p = q; q = t; }         // OpenPGP wants p < q, u = p^-1 mod q
+  let u;
+  try { u = B.modInv(p, q); } catch (e) { throw new PgpError('Bad RSA key (no inverse).'); }
+  const pubBody = pubKeyBody(ALG.RSA, created, concat([mpi(parts.n), mpi(parts.e)]));
+  const secretMpis = concat([mpi(parts.d), mpi(B.toBytes(p)), mpi(B.toBytes(q)), mpi(B.toBytes(u))]);
+  return Object.assign({ algo: ALG.RSA, type: 'rsa', bits: parts.n.length * 8, created, pubBody, signKey, secretMpis }, await fingerprintOf(pubBody));
 }
 
 /* ---------- secret key protection (S2K + AES-CFB) ---------- */
@@ -248,25 +224,7 @@ async function s2kKey(spec, pass, keyLen) {
   return concat(out).subarray(0, keyLen);
 }
 
-async function aesBlock(key) {
-  const k = await crypto.subtle.importKey('raw', key, 'AES-CBC', false, ['encrypt']);
-  const zero = new Uint8Array(16);
-  return async (block) => new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-CBC', iv: zero }, k, block)).subarray(0, 16);
-}
-
-async function cfb(key, iv, data, decrypt) {
-  const E = await aesBlock(key);
-  const out = new Uint8Array(data.length);
-  let prev = iv;
-  for (let o = 0; o < data.length; o += 16) {
-    const ks = await E(prev);
-    const n = Math.min(16, data.length - o);
-    for (let i = 0; i < n; i++) out[o + i] = data[o + i] ^ ks[i];
-    prev = decrypt ? data.subarray(o, o + 16) : out.subarray(o, o + 16);
-    if (prev.length < 16) prev = concat([prev, new Uint8Array(16 - prev.length)]);
-  }
-  return out;
-}
+const cfb = (key, iv, data, decrypt) => X.aesCfb(key, iv, data, decrypt);
 
 function parseS2k(b, o) {
   const type = b[o++];
@@ -380,8 +338,9 @@ async function openSecretPacket(body, passphrase) {
     const [d, o1] = readMpi(secret, 0);
     const [p, o2] = readMpi(secret, o1);
     const [q] = readMpi(secret, o2);
-    const signKey = await rsaSignKey(pubParts.n, pubParts.e, d, p, q);
-    key = { algo, type: 'rsa', bits: pubParts.n.length * 8, created, pubBody: pubBody.slice(), signKey, ...(await fingerprintOf(pubBody)) };
+    let signKey;
+    try { signKey = await X.importRsaParts({ n: pubParts.n, e: pubParts.e, d, p, q }); } catch (e) { throw new PgpError('Bad RSA key (no inverse).'); }
+    key = Object.assign({ algo, type: 'rsa', bits: pubParts.n.length * 8, created, pubBody: pubBody.slice(), signKey }, await fingerprintOf(pubBody));
   }
   // A key made on this page could be written out again; an imported one isn't.
   delete key.secretMpis;
@@ -401,7 +360,7 @@ export async function importSecretKey(input, passphrase) {
     else if (p.tag === 6 || p.tag === 14) throw new PgpError('That is a public key. Export the secret key: gpg --export-secret-keys --armor <id>');
   }
   if (!keys.length) throw new PgpError('No secret key found.');
-  const order = [...keys.filter((k) => k.tag === 5 && (k.flags === null || k.flags & 2)), ...keys.filter((k) => k.tag === 7 && k.flags & 2)];
+  const order = keys.filter((k) => k.tag === 5 && (k.flags === null || k.flags & 2)).concat(keys.filter((k) => k.tag === 7 && k.flags & 2));
   if (!order.length) order.push(keys[0]);
   let lastErr = null;
   for (const k of order) {

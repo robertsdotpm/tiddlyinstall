@@ -6,8 +6,8 @@
 // many browsers with it lack Ed25519 (Chrome before 137, Firefox before 129,
 // Safari before 17) or PBKDF2 (EdgeHTML). So each operation tries the
 // native call first; if that throws, it runs the plain one, and if that
-// fails too the native error is what's reported. globalThis.IB_PURE_JS =
-// true skips the native calls (for tests).
+// fails too the native error is what's reported. USE_NATIVE below turns the
+// native calls off for good; globalThis.IB_PURE_JS = true does it for a test.
 //
 // Private keys stay in the page either way: a native key is a
 // non-extractable CryptoKey; a plain one is an object in this page's memory.
@@ -23,11 +23,15 @@ import * as RSA from './rsa.js';
 import * as EC from './ec.js';
 import * as ED from './ed25519.js';
 
+// The one switch: true uses the browser's (or Node's) WebCrypto wherever it
+// works, with our code as the fallback; false uses our code everywhere.
+const USE_NATIVE = true;
+
 const G = typeof globalThis !== 'undefined' ? globalThis : typeof self !== 'undefined' ? self : window;
 const ED25519_PKCS8 = new Uint8Array([0x30, 0x2e, 0x02, 0x01, 0x00, 0x30, 0x05, 0x06, 0x03, 0x2b, 0x65, 0x70, 0x04, 0x22, 0x04, 0x20]);
 
 export function subtle() {
-  if (G.IB_PURE_JS) return null;
+  if (!USE_NATIVE || G.IB_PURE_JS) return null;
   const c = G.crypto;
   return (c && c.subtle) || null;
 }

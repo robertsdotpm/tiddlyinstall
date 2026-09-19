@@ -67,7 +67,7 @@ export function bmpBytes(s) {
 }
 export const bmp = (s) => tlv(0x1e, bmpBytes(s));
 
-// INTEGER from a number, a BigInt, or unsigned big-endian bytes.
+// INTEGER from a non-negative number (up to 2^53) or unsigned big-endian bytes.
 export function int(v) {
   let b;
   if (v instanceof Uint8Array) {
@@ -77,28 +77,70 @@ export function int(v) {
     if (!b.length) b = new Uint8Array([0]);
     if (b[0] & 0x80) b = concat([new Uint8Array([0]), b]);
   } else {
-    let n = BigInt(v);
-    if (n < 0n) throw new RangeError('negative INTEGER not supported');
+    let n = Number(v);
+    if (n < 0 || n !== Math.floor(n) || n > Number.MAX_SAFE_INTEGER) throw new RangeError('INTEGER out of range: ' + v);
     const a = [];
-    do { a.unshift(Number(n & 0xffn)); n >>= 8n; } while (n > 0n);
+    do { a.unshift(n % 256); n = Math.floor(n / 256); } while (n > 0);
     if (a[0] & 0x80) a.unshift(0);
     b = new Uint8Array(a);
   }
   return tlv(0x02, b);
 }
 
-export function oidBytes(s) {
-  const p = s.split('.').map((x) => BigInt(x));
+// Base-128 digits of a decimal string (OID arcs can exceed 2^53).
+function arcDigits(dec) {
   const out = [];
-  const push = (n) => {
-    const a = [Number(n & 0x7fn)];
-    n >>= 7n;
-    while (n > 0n) { a.unshift(Number(n & 0x7fn) | 0x80); n >>= 7n; }
+  let d = dec.split('').map(Number);
+  do {
+    let rem = 0;
+    const q = [];
+    for (const x of d) {
+      const cur = rem * 10 + x;
+      const qd = Math.floor(cur / 128);
+      rem = cur % 128;
+      if (q.length || qd) q.push(qd);
+    }
+    out.unshift(rem);
+    d = q;
+  } while (d.length);
+  return out;
+}
+
+export function oidBytes(s) {
+  const p = s.split('.');
+  const out = [];
+  const push = (dec) => {
+    const a = arcDigits(dec);
+    for (let i = 0; i < a.length - 1; i++) a[i] |= 0x80;
     out.push(...a);
   };
-  push(p[0] * 40n + p[1]);
+  // The first two arcs share a subidentifier: 40 * first + second.
+  const second = p[1];
+  if (second.length < 15) push(String(Number(p[0]) * 40 + Number(second)));
+  else push(addDec(String(Number(p[0]) * 40), second));
   for (let i = 2; i < p.length; i++) push(p[i]);
   return new Uint8Array(out);
+}
+
+// Decimal string arithmetic for OID arcs past 2^53.
+function addDec(a, b) {
+  let out = '', c = 0;
+  for (let i = a.length - 1, j = b.length - 1; i >= 0 || j >= 0 || c; i--, j--) {
+    const x = (i >= 0 ? +a[i] : 0) + (j >= 0 ? +b[j] : 0) + c;
+    out = (x % 10) + out;
+    c = x >= 10 ? 1 : 0;
+  }
+  return out;
+}
+function mulDecSmall(a, m) {
+  let out = '', c = 0;
+  for (let i = a.length - 1; i >= 0; i--) {
+    const x = +a[i] * m + c;
+    out = (x % 10) + out;
+    c = Math.floor(x / 10);
+  }
+  while (c) { out = (c % 10) + out; c = Math.floor(c / 10); }
+  return out.replace(/^0+(?=\d)/, '');
 }
 export const oid = (s) => tlv(0x06, oidBytes(s));
 
@@ -194,25 +236,44 @@ export function readOid(n) {
   if (n.tag !== 0x06) throw new Error('ASN.1: expected an OBJECT IDENTIFIER');
   const v = n.value;
   const out = [];
-  let x = 0n;
+  let x = 0, big = null;           // big: the arc as a decimal string once past 2^46
   for (let i = 0; i < v.length; i++) {
-    x = (x << 7n) | BigInt(v[i] & 0x7f);
+    const d = v[i] & 0x7f;
+    if (big !== null) big = addDec(mulDecSmall(big, 128), String(d));
+    else if (x >= 0x400000000000) big = addDec(mulDecSmall(String(x), 128), String(d));
+    else x = x * 128 + d;
     if (!(v[i] & 0x80)) {
       if (!out.length) {
-        const first = x < 80n ? x / 40n : 2n;
-        out.push(first, x - first * 40n);
-      } else out.push(x);
-      x = 0n;
+        if (big !== null) out.push('2', subDec(big, '80'));
+        else {
+          const first = x < 80 ? Math.floor(x / 40) : 2;
+          out.push(String(first), String(x - first * 40));
+        }
+      } else out.push(big !== null ? big : String(x));
+      x = 0; big = null;
     }
   }
   return out.join('.');
 }
 
+function subDec(a, b) {                 // a - b, a >= b
+  let out = '', br = 0;
+  for (let i = a.length - 1, j = b.length - 1; i >= 0; i--, j--) {
+    let x = +a[i] - (j >= 0 ? +b[j] : 0) - br;
+    br = x < 0 ? 1 : 0;
+    if (x < 0) x += 10;
+    out = x + out;
+  }
+  return out.replace(/^0+(?=\d)/, '');
+}
+
+// A small INTEGER as a Number (versions, counts, iterations); exact up to
+// 2^53. Use readUint for big values such as serial numbers.
 export function readInt(n) {
   if (n.tag !== 0x02) throw new Error('ASN.1: expected an INTEGER');
-  let x = 0n;
-  for (const b of n.value) x = (x << 8n) | BigInt(b);
-  if (n.value.length && n.value[0] & 0x80) x -= 1n << BigInt(8 * n.value.length);
+  let x = 0;
+  for (const b of n.value) x = x * 256 + b;
+  if (n.value.length && n.value[0] & 0x80) x -= Math.pow(2, 8 * n.value.length);
   return x;
 }
 
@@ -284,8 +345,11 @@ export function unb64(s) {
   return out;
 }
 
+// Equal bytes? Examines every byte (no early exit), so comparing a MAC or a
+// check value takes the same time wherever they differ.
 export function eqBytes(a, b) {
   if (a.length !== b.length) return false;
-  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
-  return true;
+  let d = 0;
+  for (let i = 0; i < a.length; i++) d |= a[i] ^ b[i];
+  return d === 0;
 }

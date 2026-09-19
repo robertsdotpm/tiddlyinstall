@@ -1,10 +1,12 @@
-// PKCS#12 (.pfx / .p12) reading with WebCrypto (RFC 7292, RFC 8018).
+// PKCS#12 (.pfx / .p12) reading (RFC 7292, RFC 8018), with WebCrypto or,
+// without it, plain JavaScript (js/cryptox.js).
 // Supports what OpenSSL 3 and current Windows write: PBES2 with PBKDF2 and
 // AES-CBC, an HMAC (PKCS#12 KDF) or PBMAC1 integrity check, and unencrypted
 // bags. The older 3DES and RC2 encryptions go through legacy.js.
 import * as der from './der.js';
 import { parseCert, keyParams, verifyWith, orderChain, CURVES, OID_RSA, OID_EC } from './x509.js';
 import { des3CbcDecrypt, rc2CbcDecrypt } from './legacy.js';
+import * as X from './cryptox.js';
 
 const OID = {
   data: '1.2.840.113549.1.7.1',
@@ -69,7 +71,7 @@ async function p12kdf(hash, pwBytes, salt, id, iter, n) {
   const out = new Uint8Array(Math.ceil(n / u) * u);
   for (let c = 0; c * u < n; c++) {
     let A = der.concat([D, I]);
-    for (let r = 0; r < iter; r++) A = new Uint8Array(await crypto.subtle.digest(hash, A));
+    for (let r = 0; r < iter; r++) A = await X.digest(hash, A);
     out.set(A, c * u);
     const B = new Uint8Array(v);
     for (let i = 0; i < v; i++) B[i] = A[i % u];
@@ -99,16 +101,10 @@ async function pbkdf2(pw, params) {
     }
   }
   if (iter > 10000000) throw new Pkcs12Error('This file asks for an unreasonable number of iterations.', 'unsupported');
-  return async (n) => {
-    const base = await crypto.subtle.importKey('raw', utf8(pw || ''), 'PBKDF2', false, ['deriveBits']);
-    return new Uint8Array(await crypto.subtle.deriveBits({ name: 'PBKDF2', salt, iterations: iter, hash }, base, 8 * (keyLen || n)));
-  };
+  return (n) => X.pbkdf2(hash, utf8(pw || ''), salt, iter, keyLen || n);
 }
 
-async function aesCbcDecrypt(key, iv, data) {
-  const k = await crypto.subtle.importKey('raw', key, 'AES-CBC', false, ['decrypt']);
-  return new Uint8Array(await crypto.subtle.decrypt({ name: 'AES-CBC', iv }, k, data));
-}
+const aesCbcDecrypt = (key, iv, data) => X.aesCbcDecrypt(key, iv, data);
 
 function legacyError() {
   return new Pkcs12Error('This file uses an old encryption (RC2 or 3DES) that this page does not support.\n' + REWRITE_HELP, 'legacy');
@@ -160,8 +156,7 @@ async function checkMac(pfx, authSafeData, pw) {
     const derive = await pbkdf2(pw, params.kid(0));
     const hash = HMACS[der.readOid(params.kid(1).kid(0))];
     if (!hash) throw new Pkcs12Error('Unsupported PBMAC1 HMAC in this file.', 'unsupported');
-    const key = await crypto.subtle.importKey('raw', await derive(HLEN[hash]), { name: 'HMAC', hash }, false, ['sign']);
-    const got = new Uint8Array(await crypto.subtle.sign('HMAC', key, authSafeData));
+    const got = await X.hmac(hash, await derive(HLEN[hash]), authSafeData);
     return der.eqBytes(got, want);
   }
   const hash = HASHES[algOid];
@@ -170,8 +165,7 @@ async function checkMac(pfx, authSafeData, pw) {
   const iter = mac.kids[2] ? Number(der.readInt(mac.kid(2))) : 1;
   if (iter > 10000000) throw new Pkcs12Error('This file asks for an unreasonable number of iterations.', 'unsupported');
   const key = await p12kdf(hash, bmpPassword(pw), salt, 3, iter, HLEN[hash]);
-  const k = await crypto.subtle.importKey('raw', key, { name: 'HMAC', hash }, false, ['sign']);
-  const got = new Uint8Array(await crypto.subtle.sign('HMAC', k, authSafeData));
+  const got = await X.hmac(hash, key, authSafeData);
   return der.eqBytes(got, want);
 }
 
@@ -199,10 +193,10 @@ async function readBags(safeContents, pw, out) {
       const cert = parseCert(der.readOctets(val.kid(1).kid(0)));
       out.certs.push(Object.assign(cert, { localKeyId: attrs.localKeyId, friendlyName: attrs.friendlyName }));
     } else if (id === OID.keyBag) {
-      out.keys.push({ pkcs8: val.raw.slice(), ...attrs });
+      out.keys.push(Object.assign({ pkcs8: val.raw.slice() }, attrs));
     } else if (id === OID.shroudedKeyBag) {
       const pkcs8 = await decrypt(val.kid(0), der.readOctets(val.kid(1)), pw);
-      out.keys.push({ pkcs8, ...attrs });
+      out.keys.push(Object.assign({ pkcs8 }, attrs));
     } else if (id === OID.safeContentsBag) {
       await readBags(val.raw, pw, out);
     }
@@ -222,7 +216,8 @@ function keyAlgorithm(pkcs8) {
   throw new Pkcs12Error('This key type (' + o + ') is not supported for code signing.', 'unsupported');
 }
 
-// Opens a .pfx. Returns {key (non-extractable CryptoKey), cert (the leaf),
+// Opens a .pfx. Returns {key (a js/cryptox.js key: a non-extractable
+// CryptoKey, or the plain-JavaScript key where WebCrypto can't), cert (the leaf),
 // chain (leaf first), algorithm}. `password` is a string ('' for none).
 export async function openPfx(bytes, password) {
   let pfx;
@@ -268,7 +263,7 @@ export async function openPfx(bytes, password) {
   const algorithm = keyAlgorithm(k.pkcs8);
   let key;
   try {
-    key = await crypto.subtle.importKey('pkcs8', k.pkcs8, algorithm, false, ['sign']);
+    key = await X.importPkcs8(k.pkcs8, algorithm);
   } catch (e) {
     throw new Pkcs12Error('The browser could not use this private key: ' + (e && e.message || e), 'import');
   }
@@ -278,7 +273,7 @@ export async function openPfx(bytes, password) {
   // public key verifies a test signature.
   let leaf = k.localKeyId && out.certs.find((c) => c.localKeyId === k.localKeyId);
   const probe = crypto.getRandomValues(new Uint8Array(32));
-  let sig = new Uint8Array(await crypto.subtle.sign(algorithm, key, probe));
+  let sig = await X.sign(key, probe);
   if (leaf && !(await verifyWith(leaf, probe, sig))) leaf = null;
   if (!leaf) {
     for (const c of out.certs) {

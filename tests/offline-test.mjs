@@ -5,7 +5,10 @@
 // the same file served by a build server uses it, and can switch to "No
 // server".
 //
-//   node --experimental-websocket tests/offline-test.mjs [--page dist/index.html] [--site URL] [--out DIR]
+//   node --experimental-websocket tests/offline-test.mjs [--page dist/index.html] [--site URL] [--out DIR] [--no-native]
+//
+// --no-native: as a browser without DecompressionStream, crypto.subtle,
+// BigInt or :has() (tests/no-native-browser.mjs).
 //
 // --out keeps the built installers (with a builds.json like
 // tests/matrix/build.py writes), for running them on the test machines.
@@ -14,6 +17,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { launchChrome, sleep } from './browsers/cdp.mjs';
 import { Checker, STARTED, waitFor, checkSections, buildHello as buildHelloIn, checkJob as checkJobIn } from './browsers/steps.mjs';
+import { noNativeArg, disableNative, checkNativeState, checkHasRules } from './no-native-browser.mjs';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
 const HERE = path.dirname(new URL(import.meta.url).pathname);
@@ -46,8 +50,12 @@ const checkJob = (job, what, runtime, keepAs) => checkJobIn(t, js, job, what, ru
 try {
   chrome = await launchChrome({ profile: path.join(TMP, 'profile'), downloads: DL });
   ({ js, errors, requests } = chrome);
+  if (noNativeArg) await disableNative(chrome.cdp);
   await open(PAGE);
   ok(errors.length === 0, 'the page starts without errors', errors.join(' | '));
+  await checkNativeState(ok, js);
+  await checkHasRules(ok, js);
+  await open(PAGE);                    // the form as it was
   ok(await js(`document.documentElement.classList.contains('ib-local')`), 'from disk, the page builds installers itself');
   ok(/none, this page builds/.test(await js(`document.querySelector('.api-ctl-url').textContent`)), 'the footer says there is no build server');
   ok(await js(`getComputedStyle(document.getElementById('mode-ours').closest('label')).display === 'none' && document.getElementById('mode-unsigned').checked`),

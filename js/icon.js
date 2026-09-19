@@ -20,13 +20,16 @@
 // PNG encoding is done here in JS (a canvas encoder is skipped) so the output
 // is byte-for-byte deterministic and the tests are reliable.
 import { toBytes, peInfo, peChecksum, sha256Hex, kvSet, crc32, deflateRaw, zipEntryData, zipNewEntry } from './ibfile.js';
+import { inflate } from './zlib.js';
 
 const RESEDIT_URL = 'https://cdn.jsdelivr.net/npm/resedit@2.0.3/+esm';
 
 // resedit, from the inlined/vendored global or (fallback) the CDN.
 export async function loadResEdit() {
   if (globalThis.__IB_RESEDIT) return globalThis.__IB_RESEDIT;
-  const mod = await import(RESEDIT_URL);
+  // (Built by Function so that the one-file page, which has the global,
+  // parses in browsers without dynamic import.)
+  const mod = await new Function('u', 'return import(u)')(RESEDIT_URL);
   globalThis.__IB_RESEDIT = mod;
   return mod;
 }
@@ -44,7 +47,9 @@ export async function rasterSource(bytes) {
     const img = await pngDecode(u8);
     return { raster: (size) => resizeRGBA(img, size), close() {} };
   }
-  if (typeof createImageBitmap !== 'function') throw new Error('The icon must be a PNG.');
+  if (typeof createImageBitmap !== 'function' || typeof OffscreenCanvas !== 'function') {
+    throw new Error('The icon must be a PNG (this browser cannot draw SVG icons).');
+  }
   const bmp = await createImageBitmap(new Blob([u8]));
   return {
     raster(size) {
@@ -102,10 +107,7 @@ export async function decodeIconPng(bytes) {
   }
 }
 
-async function inflateZlib(u8) {
-  const s = new Blob([u8]).stream().pipeThrough(new DecompressionStream('deflate'));
-  return new Uint8Array(await new Response(s).arrayBuffer());
-}
+const inflateZlib = (u8) => inflate(u8, 'deflate');
 
 // PNG bytes -> {width, height, data} with 8-bit RGBA data (not
 // premultiplied). Every colour type and bit depth, and Adam7 interlacing.

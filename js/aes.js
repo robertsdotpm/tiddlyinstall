@@ -1,7 +1,9 @@
 // AES (FIPS 197) with CBC and CFB modes, for browsers without WebCrypto.
 // js/cryptox.js uses this only when the native AES-CBC is missing. Written
 // for this project from the standard; no dependencies. Tables are computed
-// at first use rather than stored.
+// at first use rather than stored. The round tables are indexed by secret
+// bytes, as in most software AES, so this is not constant-time against a
+// cache-timing attacker on the same machine.
 //
 //   aesCbcEncrypt(key, iv, data) -> Uint8Array   PKCS#7 padding added
 //   aesCbcDecrypt(key, iv, data) -> Uint8Array   PKCS#7 padding checked and
@@ -158,9 +160,10 @@ export function aesCbcDecrypt(key, iv, data) {
     store(s, out, o);
     prev.set(cur);
   }
+  // All 16 bytes are examined whatever they hold (no early exit).
   const n = out[out.length - 1];
-  let bad = n < 1 || n > 16;
-  for (let i = 0; i < 16 && !bad; i++) if (i < n && out[out.length - 1 - i] !== n) bad = true;
+  let bad = (n < 1 || n > 16) ? 1 : 0;
+  for (let i = 0; i < 16; i++) bad |= (i < n ? 1 : 0) & (out[out.length - 1 - i] !== n ? 1 : 0);
   if (bad) throw new Error('AES-CBC: bad padding');
   return out.subarray(0, out.length - n);
 }

@@ -17,6 +17,7 @@ mountApiFooter();
 const $ = (id) => document.getElementById(id);
 const ROW = 30;
 const isMap = (v) => v != null && typeof v === 'object' && !Array.isArray(v);
+const nz = (v, d) => (v != null ? v : d);        // v ?? d (d is evaluated either way)
 
 /* ---------- DOM helpers ---------- */
 
@@ -36,7 +37,7 @@ function el(tag, props = {}, ...kids) {
   for (const k of kids.flat()) if (k != null && k !== false) e.append(k instanceof Node ? k : String(k));
   return e;
 }
-const opt = (value, label, sel) => el('option', { value, text: label ?? value, selected: sel ? 'selected' : null });
+const opt = (value, label, sel) => el('option', { value, text: (label != null ? label : value), selected: sel ? 'selected' : null });
 const short = (s, n = 160) => (s.length > n ? s.slice(0, n - 1) + '…' : s);
 const show = (v) => (v === undefined ? '(not set)' : v === null ? '(nothing)' : typeof v === 'string' ? (v === '' ? '(empty)' : v) : JSON.stringify(v));
 
@@ -126,7 +127,7 @@ function itemRows(kind, id = S.rt) {
     if (c.op === 'add') added.push(c);
     else {
       const i = O.baseIndex(S.files, c.path);
-      if (i >= 0 && S.status.get(O.changeKey(c))?.ok !== false) byIdx.set(i, c);
+      if (i >= 0 && (S.status.get(O.changeKey(c)) || {}).ok !== false) byIdx.set(i, c);
       else if (i >= 0) byIdx.set(i, Object.assign({ stale: true }, c));
     }
   }
@@ -138,7 +139,7 @@ function itemRows(kind, id = S.rt) {
     rows.push({ i, id: '', v: c && c.op === 'replace' && !bad ? c.value : v, st: !c ? '' : bad ? 'stale' : c.op === 'remove' ? 'removed' : 'changed', c });
   });
   for (const c of added) {
-    const bad = !S.status.get(O.changeKey(c))?.ok;
+    const bad = !(S.status.get(O.changeKey(c)) || {}).ok;
     rows.push({ i: -1, id: c.id, v: c.value, st: bad ? 'stale' : 'added', c });
   }
   return rows;
@@ -231,7 +232,7 @@ function releaseRows() {
     const rows = itemRows('release');
     for (const r of rows) r.vp = vparts(r.v.version);
     rows.sort((a, b) => vcmp(b.vp, a.vp) || String(a.v.os).localeCompare(String(b.v.os)) || String(a.v.arch).localeCompare(String(b.v.arch)) ||
-      String(a.v.variant ?? '').localeCompare(String(b.v.variant ?? '')) || String(a.v.format).localeCompare(String(b.v.format)));
+      String((a.v.variant != null ? a.v.variant : '')).localeCompare(String((b.v.variant != null ? b.v.variant : ''))) || String(a.v.format).localeCompare(String(b.v.format)));
     S.rows = rows;
     S.rowsKey = key;
     paintFilterOptions();
@@ -242,7 +243,7 @@ function releaseRows() {
 function paintFilterOptions() {
   const count = (k) => {
     const m = new Map();
-    for (const r of S.rows) { const v = r.v[k] ?? ''; m.set(v, (m.get(v) || 0) + 1); }
+    for (const r of S.rows) { const v = (r.v[k] != null ? r.v[k] : ''); m.set(v, (m.get(v) || 0) + 1); }
     return [...m.entries()].sort((a, b) => String(a[0]).localeCompare(String(b[0])));
   };
   for (const k of ['os', 'arch', 'variant', 'format']) {
@@ -256,7 +257,7 @@ function paintReleases() {
   const rows = releaseRows();
   const f = F();
   const vf = versionFilter(f.version);
-  const want = (k, v) => !f[k] || (f[k] === ' none' ? (v ?? '') === '' : v === f[k]);
+  const want = (k, v) => !f[k] || (f[k] === ' none' ? ((v != null ? v : '')) === '' : v === f[k]);
   S.filtered = rows.filter((r) => want('os', r.v.os) && want('arch', r.v.arch) && want('variant', r.v.variant) && want('format', r.v.format) &&
     (!vf || vf(String(r.v.version))) && (!f.changed || r.st));
   const bad = f.version && /^[<>=!~]/.test(f.version.trim()) && O.specError(f.version.trim());
@@ -278,8 +279,8 @@ function paintWindow() {
     let file = '';
     try { file = fileName(r.v); } catch (e) { file = String(r.v.url || ''); }
     out.push(el('div', { class: 'rt-vrow' + (on ? ' selected' : '') + (r.st ? ' rt-row-' + r.st : ''), role: 'option', 'aria-selected': on ? 'true' : 'false', style: 'top:' + k * ROW + 'px', dataset: { k: String(k) } },
-      el('span', { text: String(r.v.version ?? '') }), el('span', { text: String(r.v.os ?? '') }), el('span', { text: String(r.v.arch ?? '') }),
-      el('span', { text: r.v.variant == null || r.v.variant === '' ? '—' : String(r.v.variant) }), el('span', { text: String(r.v.format ?? '') }),
+      el('span', { text: String((r.v.version != null ? r.v.version : '')) }), el('span', { text: String((r.v.os != null ? r.v.os : '')) }), el('span', { text: String((r.v.arch != null ? r.v.arch : '')) }),
+      el('span', { text: r.v.variant == null || r.v.variant === '' ? '—' : String(r.v.variant) }), el('span', { text: String((r.v.format != null ? r.v.format : '')) }),
       el('span', { class: 'rt-file', text: file, title: String(r.v.url || '') }), el('span', {}, badge(r.st))));
   }
   list.firstChild.replaceChildren(...out);
@@ -306,7 +307,7 @@ function tableRows(kind, table, cols, filter) {
     const on = S.sel && S.sel.kind === kind && ((r.i >= 0 && r.i === S.sel.i) || (r.id && r.id === S.sel.id));
     return el('tr', { class: 'rt-trow' + (on ? ' selected' : '') + (r.st ? ' rt-row-' + r.st : ''), tabindex: '0', onclick: () => openItem(kind, r.i, r.id),
       onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openItem(kind, r.i, r.id); } } },
-    el('td', { text: r.i >= 0 ? String(r.i + 1) : 'new' }), ...cols.map(([, f]) => el('td', { text: short(String(f(r.v) ?? ''), 60) })), el('td', {}, badge(r.st)));
+    el('td', { text: r.i >= 0 ? String(r.i + 1) : 'new' }), ...cols.map(([, f]) => el('td', { text: short(String(nz(f(r.v), '')), 60) })), el('td', {}, badge(r.st)));
   });
   table.replaceChildren(el('thead', {}, head), el('tbody', {}, ...body));
   return rows.length;
@@ -329,9 +330,9 @@ function paintRules() {
   s.replaceChildren(opt('', 'Any'), ...oses.map((o) => opt(o)));
   s.value = oses.includes(cur) ? cur : '';
   const n = tableRows('rule', $('rt-rule-table'), [
-    ['OS', (v) => v.os], ['Versions', (v) => v.versions || 'any'], ['Lowest OS', (v) => v.min_os ?? '—'], ['Highest', (v) => v.max_os ?? ''],
-    ['Arch', (v) => matchText(v.arch)], ['Format', (v) => matchText(v.format ?? (v.match && v.match.format))],
-    ['Variant', (v) => matchText(v.variant ?? (v.match && v.match.variant))],
+    ['OS', (v) => v.os], ['Versions', (v) => v.versions || 'any'], ['Lowest OS', (v) => (v.min_os != null ? v.min_os : '—')], ['Highest', (v) => (v.max_os != null ? v.max_os : '')],
+    ['Arch', (v) => matchText(v.arch)], ['Format', (v) => matchText((v.format != null ? v.format : v.match && v.match.format))],
+    ['Variant', (v) => matchText((v.variant != null ? v.variant : v.match && v.match.variant))],
   ], (r) => !s.value || r.v.os === s.value);
   $('rt-rule-count').textContent = n + ' of ' + all.length + ' rules';
 }
@@ -442,7 +443,7 @@ function edited() {
 }
 function textIn(get, set, attrs = {}) {
   const i = el('input', Object.assign({ type: 'text', spellcheck: 'false', autocomplete: 'off' }, attrs));
-  i.value = get() ?? '';
+  i.value = nz(get(), '');
   i.addEventListener('input', () => { set(i.value); edited(); });
   return i;
 }
@@ -471,14 +472,14 @@ function orderedList(get, set, { placeholder = '', errPrefix = '', add = '+ Add'
     const move = (i, d) => { const x = l.slice(); [x[i], x[i + d]] = [x[i + d], x[i]]; set(x); paint(); edited(); };
     wrap.replaceChildren(el('ol', {}, ...l.map((v, i) => {
       const inp = el('input', { type: 'text', spellcheck: 'false', autocomplete: 'off', placeholder, 'aria-label': (errPrefix || 'item') + ' ' + (i + 1) });
-      inp.value = v ?? '';
+      inp.value = (v != null ? v : '');
       inp.addEventListener('input', () => { const x = (get() || []).slice(); x[i] = inp.value; set(x); edited(); });
       return el('li', { dataset: { err: errPrefix + '.' + i } }, inp,
         el('button', { type: 'button', class: 'icon-button', title: 'Move up', 'aria-label': 'Move up', disabled: i === 0 ? 'disabled' : null, onclick: () => move(i, -1), text: '↑' }),
         el('button', { type: 'button', class: 'icon-button', title: 'Move down', 'aria-label': 'Move down', disabled: i === l.length - 1 ? 'disabled' : null, onclick: () => move(i, 1), text: '↓' }),
         el('button', { type: 'button', class: 'icon-button', title: 'Remove', 'aria-label': 'Remove', onclick: () => { const x = l.slice(); x.splice(i, 1); set(x); paint(); edited(); }, text: '✕' }),
         el('span', { class: 'rt-err' }));
-    })), el('button', { type: 'button', class: 'link-button', text: add, onclick: () => { set([...(get() || []), '']); paint(); edited(); wrap.querySelector('li:last-child input')?.focus(); } }));
+    })), el('button', { type: 'button', class: 'link-button', text: add, onclick: () => { set([...(get() || []), '']); paint(); edited(); const last = wrap.querySelector('li:last-child input'); if (last) last.focus(); } }));
   };
   paint();
   return wrap;
@@ -495,8 +496,8 @@ function releaseForm(form) {
       field('Arch', textIn(() => d().arch, (v) => { d().arch = v; }, { list: 'rt-archs' }), 'arch'),
       field('Kind', selectIn(['archive', 'installer', 'source'], () => d().kind, (v) => { d().kind = v; }), 'kind'),
       field('Format', textIn(() => d().format, (v) => { d().format = v; }, { list: 'rt-formats' }), 'format'),
-      field('Variant', textIn(() => d().variant ?? '', (v) => { d().variant = v === '' ? null : v; }, { placeholder: '(none)' }), 'variant'),
-      field('C library', selectIn([[null, '(not set)'], ['glibc', 'glibc'], ['musl', 'musl'], ['', '(empty)']], () => d().libc ?? null, (v) => { d().libc = v; }), 'libc')),
+      field('Variant', textIn(() => nz(d().variant, ''), (v) => { d().variant = v === '' ? null : v; }, { placeholder: '(none)' }), 'variant'),
+      field('C library', selectIn([[null, '(not set)'], ['glibc', 'glibc'], ['musl', 'musl'], ['', '(empty)']], () => nz(d().libc, null), (v) => { d().libc = v; }), 'libc')),
     el('datalist', { id: 'rt-archs' }, ...archs.map((a) => opt(a))),
     el('datalist', { id: 'rt-formats' }, ...formats.map((a) => opt(a))),
     field('Download URL', textIn(() => d().url, (v) => { d().url = v; }, { type: 'url', class: 'mono' }), 'url',
@@ -506,7 +507,7 @@ function releaseForm(form) {
     el('div', { class: 'row rt-row' },
       field('SHA-256', textIn(() => d().ib_sha256 || '', (v) => { d().ib_sha256 = v.trim().toLowerCase(); }, { class: 'mono', placeholder: '64 hex characters' }), 'ib_sha256',
         'The installer refuses the download if it doesn\'t match.'),
-      field('Size in bytes', textIn(() => String(d().size ?? 0), (v) => { d().size = /^\d+$/.test(v.trim()) ? Number(v.trim()) : v; }, { inputmode: 'numeric' }), 'size')));
+      field('Size in bytes', textIn(() => String(nz(d().size, 0)), (v) => { d().size = /^\d+$/.test(v.trim()) ? Number(v.trim()) : v; }, { inputmode: 'numeric' }), 'size')));
 }
 
 function stepEditor(get, set) {
@@ -540,7 +541,7 @@ function stepEditor(get, set) {
           el('button', { type: 'button', class: 'icon-button', title: 'Move down', 'aria-label': 'Move step down', disabled: i === steps.length - 1 ? 'disabled' : null, onclick: () => move(i, 1), text: '↓' }),
           el('button', { type: 'button', class: 'icon-button', title: 'Remove step', 'aria-label': 'Remove step', onclick: () => { const x = steps.slice(); x.splice(i, 1); set(x); paint(); edited(); }, text: '✕' })),
         ...body, el('span', { class: 'rt-err' }));
-    })), el('button', { type: 'button', class: 'link-button', id: 'rt-add-step', text: '+ Add a step', onclick: () => { set([...(get() || []), { run: '' }]); paint(); edited(); wrap.querySelector('li:last-child input')?.focus(); } }));
+    })), el('button', { type: 'button', class: 'link-button', id: 'rt-add-step', text: '+ Add a step', onclick: () => { set([...(get() || []), { run: '' }]); paint(); edited(); const last = wrap.querySelector('li:last-child input'); if (last) last.focus(); } }));
   };
   paint();
   return wrap;
@@ -562,7 +563,7 @@ function recipeForm(form) {
     el('h4', { class: 'rt-sub', text: 'How' }),
     el('div', { class: 'row rt-row' },
       field('Method', selectIn(methods, () => d().method, (v) => { d().method = v; }), 'method', 'Earlier in the policy\'s method order is preferred.'),
-      field('Isolation', selectIn([['', '(not set)'], 'full', 'leaks', 'impossible'], () => d().isolation ?? '', (v) => { d().isolation = v; }), 'isolation'),
+      field('Isolation', selectIn([['', '(not set)'], 'full', 'leaks', 'impossible'], () => nz(d().isolation, ''), (v) => { d().isolation = v; }), 'isolation'),
       field('Executable', textIn(() => d().executable || '', (v) => { d().executable = v; }, { class: 'mono' }), 'executable')),
     el('div', { class: 'field rt-field', dataset: { err: 'steps' } }, el('span', { class: 'label', text: 'Steps, run in order on the user\'s computer' }),
       el('span', { class: 'hint', text: 'Tokens: {file} the download, {dir} or {runtime_dir} the runtime\'s folder, {tmp}, {version}, {exe}.' }),
@@ -587,8 +588,8 @@ function osChoices(os) {
 function ruleForm(form) {
   const d = () => S.draft;
   const lf = (k, label) => field(label, textIn(() => listToText(d()[k]), (v) => { d()[k] = textToList(v); }, { placeholder: 'any' }), k);
-  const minSel = () => selectIn(osChoices(d().os), () => d().min_os ?? null, (v) => { d().min_os = v; });
-  const maxSel = () => selectIn(osChoices(d().os), () => d().max_os ?? null, (v) => { d().max_os = v; });
+  const minSel = () => selectIn(osChoices(d().os), () => nz(d().min_os, null), (v) => { d().min_os = v; });
+  const maxSel = () => selectIn(osChoices(d().os), () => nz(d().max_os, null), (v) => { d().max_os = v; });
   const minWrap = field('Lowest OS version', minSel(), 'min_os');
   const maxWrap = field('Highest OS version', maxSel(), 'max_os', 'Usually none.');
   form.append(
@@ -703,7 +704,7 @@ function flash(msg) {
 
 function policyValue(f) {
   const c = S.ov.changes.find((x) => x.path[0] === 'policy.json' && x.path[2] === S.rt && x.path[3] === f);
-  if (c && S.status.get(O.changeKey(c))?.ok) return O.clone(c.value);
+  if (c && (S.status.get(O.changeKey(c)) || {}).ok) return O.clone(c.value);
   return O.clone(pol()[f]);
 }
 
@@ -724,7 +725,7 @@ function paintPolicy() {
       d().formats[os] = l.length ? l : null;
     }, { placeholder: 'any format' }), 'formats')));
   const pedit = () => { S.policyDraft.dirty = true; checkPolicy(); schedulePreview(); };
-  const t = (f, attrs) => { const i = textIn(() => d()[f] ?? '', (v) => { d()[f] = v; }, attrs); i.addEventListener('input', pedit); return i; };
+  const t = (f, attrs) => { const i = textIn(() => nz(d()[f], ''), (v) => { d()[f] = v; }, attrs); i.addEventListener('input', pedit); return i; };
   const only = el('input', { type: 'checkbox', checked: d().only === true });
   only.addEventListener('change', () => { d().only = only.checked; pedit(); });
   const variants = orderedList(() => d().variants, (v) => { d().variants = v; }, { placeholder: '(no variant)', errPrefix: 'variants', add: '+ Add a variant' });

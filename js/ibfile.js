@@ -6,8 +6,10 @@
 //   macOS .zip    <X>.app/Contents/Resources/ib/{record.txt,plan.txt,pack/<sha256>}
 //
 // Pack: ustar tar whose members are named by the lowercase hex SHA-256 of
-// their content. No dependencies; zip (de)compression uses the browser's
-// CompressionStream('deflate-raw').
+// their content. Zip (de)compression and SHA-256 go through js/zlib.js and
+// js/cryptox.js: the browser's own where it has them, else plain JavaScript.
+import { inflate as zInflate, deflate as zDeflate } from './zlib.js';
+import { digest } from './cryptox.js';
 
 const ibEnc = new TextEncoder();
 const ibDec = new TextDecoder();
@@ -42,8 +44,8 @@ export function bytesToHex(u8) {
   return s;
 }
 
-export async function sha256(data) {
-  return new Uint8Array(await crypto.subtle.digest('SHA-256', toBytes(data)));
+export function sha256(data) {
+  return digest('SHA-256', toBytes(data));
 }
 export async function sha256Hex(data) {
   return bytesToHex(await sha256(data));
@@ -347,12 +349,8 @@ export function crc32(u8) {
   return (c ^ 0xffffffff) >>> 0;
 }
 
-async function streamThrough(u8, stream) {
-  const out = new Response(new Blob([u8]).stream().pipeThrough(stream));
-  return new Uint8Array(await out.arrayBuffer());
-}
-export function inflateRaw(u8) { return streamThrough(u8, new DecompressionStream('deflate-raw')); }
-export function deflateRaw(u8) { return streamThrough(u8, new CompressionStream('deflate-raw')); }
+export function inflateRaw(u8) { return zInflate(u8, 'deflate-raw'); }
+export function deflateRaw(u8) { return zDeflate(u8, 'deflate-raw'); }
 
 const S_IFMT = 0o170000, S_IFDIR = 0o040000, S_IFLNK = 0o120000, S_IFREG = 0o100000;
 
@@ -607,7 +605,7 @@ export async function writeInstaller(info, edits = {}) {
   let base = info.base;
   if (info.kind === 'exe' && info.signed && info.pe && info.pe.certDirOff != null) {
     base = base.slice();
-    new DataView(base.buffer).setBigUint64(info.pe.certDirOff, 0n, true);   // drop the certificate entry
+    base.fill(0, info.pe.certDirOff, info.pe.certDirOff + 8);   // drop the certificate entry
   }
   const packBytes = pack.length ? tarWrite(pack) : new Uint8Array(0);
   const out = concatBytes([base, record, plan, packBytes, makeFooter(record.length, plan.length, packBytes.length)]);

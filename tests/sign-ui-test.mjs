@@ -2,11 +2,13 @@
 // protocol and checks what it downloads with osslsigncode and gpg.
 //
 //   node --experimental-websocket tests/sign-ui-test.mjs --site http://127.0.0.1:8080
-//        [--page file:///path/dist/index.html] [--no-timestamp]
+//        [--page file:///path/dist/index.html] [--no-timestamp] [--no-native]
 //
 // --site is a running ibserver (it serves the site, and /api/tsa for the
 // timestamp); --page tests another copy of the editor against it. Keys are
-// made fresh in a temporary folder and deleted afterwards.
+// made fresh in a temporary folder and deleted afterwards. --no-native: as a
+// browser without DecompressionStream, crypto.subtle, BigInt or :has()
+// (tests/no-native-browser.mjs), so the page signs with its own JavaScript.
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -14,6 +16,7 @@ import path from 'node:path';
 import { readInstaller } from '../js/ibfile.js';
 import { launchChrome, sleep } from './browsers/cdp.mjs';
 import { Checker, makeSignFixtures, osslVerify, gpgVerify, $text, clickId, setVal as setValIn, checkBox } from './browsers/steps.mjs';
+import { noNativeArg, disableNative, checkNativeState } from './no-native-browser.mjs';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
 const SITE = (arg('--site') || '').replace(/\/$/, '');
@@ -51,8 +54,10 @@ const osslOk = (file, ca) => osslVerify(file, ca, spawnSync);
 try {
   chrome = await launchChrome({ profile: t('profile'), downloads: DL });
   ({ js, setFile, waitFor, errors: logs } = chrome);
+  if (noNativeArg) await disableNative(chrome.cdp);
   await chrome.cdp('Page.navigate', { url: PAGE + '?api=' + encodeURIComponent(SITE) });
   await waitFor(`document.readyState === 'complete' && !!document.getElementById('sign-go')`, 'the page');
+  await checkNativeState(ok, js);
 
   // Windows, .pfx
   await setFile('#installer', t('in.exe'));

@@ -69,15 +69,12 @@
       test: function () { return typeof w.TextEncoder === 'function' && typeof w.TextDecoder === 'function'; } },
     { id: 'ed25519', name: 'WebCrypto Ed25519', required: false, effect: 'can\'t make or use Ed25519 PGP keys',
       fallback: 'Ed25519 PGP keys use the page\'s own JavaScript',
-      test: function () {
-        if (!subtle) return false;
-        return subtle.generateKey('Ed25519', false, ['sign', 'verify']).then(function () { return true; }, function () { return false; });
-      } },
+      test: function () { return canImport(hex('d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a'), { name: 'Ed25519' }); } },
     { id: 'ecdsa', name: 'WebCrypto ECDSA P-256', required: false, effect: 'can\'t sign with EC (P-256) certificates',
       fallback: 'EC certificates sign with the page\'s own JavaScript',
       test: function () {
-        if (!subtle) return false;
-        return subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign']).then(function () { return true; }, function () { return false; });
+        return canImport(hex('04' + '6b17d1f2e12c4247f8bce6e563a440f277037d812deb33a0f4a13945d898c296' +
+          '4fe342e2fe1a7f9b8ee7eb4a7c0f9e162bce33576b315ececbb6406837bf51f5'), { name: 'ECDSA', namedCurve: 'P-256' });
       } },
     { id: 'folder', name: 'Folder picking (webkitdirectory)', required: false, effect: 'can\'t pick a folder of code; add the files one by one',
       test: function () { return 'webkitdirectory' in doc.createElement('input'); } },

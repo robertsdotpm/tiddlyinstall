@@ -5,7 +5,10 @@
 // names the upload and the install rules saw its files, and each installer
 // packs it.
 //
-//   node --experimental-websocket tests/upload-test.mjs [--page dist/index.html] [--site URL] [--out DIR]
+//   node --experimental-websocket tests/upload-test.mjs [--page dist/index.html] [--site URL] [--out DIR] [--no-native]
+//
+// --no-native: as a browser without DecompressionStream, crypto.subtle,
+// BigInt or :has() (tests/no-native-browser.mjs).
 //
 // --out keeps the built installers, to run by hand.
 import { spawnSync } from 'node:child_process';
@@ -14,6 +17,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { launchChrome, sleep } from './browsers/cdp.mjs';
 import { Checker, STARTED, waitFor, checkJob } from './browsers/steps.mjs';
+import { noNativeArg, disableNative, checkNativeState } from './no-native-browser.mjs';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
 const HERE = path.dirname(new URL(import.meta.url).pathname);
@@ -99,7 +103,9 @@ async function check(job, what) {
 try {
   chrome = await launchChrome({ profile: path.join(TMP, 'profile') });
   ({ js, errors } = chrome);
+  if (noNativeArg) await disableNative(chrome.cdp);
   await open(PAGE);
+  await checkNativeState(ok, js);
   ok(await js(`getComputedStyle(document.getElementById('src-local').closest('label')).display !== 'none'`), 'the page offers "From my computer"');
   await check(await buildUpload('#local-archive', [ZIP]), 'zip');
   await check(await buildUpload('#local-archive', [TGZ]), 'tar.gz');

@@ -41,6 +41,7 @@
 import { toBytes, sha256Hex, recordHash, readInstaller, writeInstaller, tarWrite, installerExt, zipWrite, peInfo, zipRead, zipEntryData, zipUnixMode, zipIsDir, zipIsSymlink } from './ibfile.js';
 import { resolve, validPackage, packagePolicyFor, packageProject, packageModule, pickBin, jsonField, goQuote, replacer } from './resolve.js';
 import { rasterSource, buildIco, buildIcns, setExeIcon, setMacIcon, checkIconPng } from './icon.js';
+import { inflate, deflate } from './zlib.js';
 
 const enc = new TextEncoder();
 
@@ -87,7 +88,7 @@ const blen = (x) => enc.encode(x || '').length;   // bytes, as Go counts
 export function validate(r, env) {
   const cat = env.catalog;
   const product = env.product || 'TiddlyInstall';
-  if (!cat.runtimes.get(r.runtime) || !own(cat.policy.runtimes, r.runtime)) throw bad('unknown runtime ' + goQuote(String(r.runtime ?? '')));
+  if (!cat.runtimes.get(r.runtime) || !own(cat.policy.runtimes, r.runtime)) throw bad('unknown runtime ' + goQuote(String((r.runtime != null ? r.runtime : ''))));
   if (!['A', 'B', 'C'].includes(r.mode)) throw bad('mode must be A, B or C');
   if (!(env.modes || ['B', 'C']).includes(r.mode)) {
     throw bad('Installers signed by ' + product + ' come from the build server. Without one, choose "Signed by you" or "Unsigned".');
@@ -99,7 +100,7 @@ export function validate(r, env) {
     throw bad('Packing the runtimes into the installer needs the build server. Without one, untick it: the installer downloads them when it runs.');
   }
   if (!Array.isArray(r.platforms) || !r.platforms.length) r.platforms = PLATFORMS.slice();
-  for (const p of r.platforms) if (!PLATFORMS.includes(p)) throw bad('unknown platform ' + goQuote(String(p ?? '')));
+  for (const p of r.platforms) if (!PLATFORMS.includes(p)) throw bad('unknown platform ' + goQuote(String((p != null ? p : ''))));
   const sel = r.select || '';
   if (sel === 'range' || sel === 'exact') {
     if (!String(r.range || '').trim()) throw bad('a version range is needed');
@@ -228,10 +229,7 @@ export function projectName(r) {
   return p.length > 40 ? p.slice(0, 40) : p;
 }
 
-async function gzip(u8) {
-  const s = new Blob([u8]).stream().pipeThrough(new CompressionStream('gzip'));
-  return new Uint8Array(await new Response(s).arrayBuffer());
-}
+const gzip = (u8) => deflate(u8, 'gzip');
 
 // build.inlineTarball: the files under project/, sorted, with folders. The
 // tar is byte for byte Go's; the gzip around it is not (Go's deflate).
@@ -254,10 +252,7 @@ export function inlineTar(project, files) {
 
 const UPLOAD_MAX = 200 * 1024 * 1024;   // as the server's source downloads
 
-async function gunzip(u8) {
-  const s = new Blob([u8]).stream().pipeThrough(new DecompressionStream('gzip'));
-  return new Uint8Array(await new Response(s).arrayBuffer());
-}
+const gunzip = (u8) => inflate(u8, 'gzip');
 
 function isUstar(u8) {
   return u8.length >= 512 && String.fromCharCode(...u8.subarray(257, 262)) === 'ustar';

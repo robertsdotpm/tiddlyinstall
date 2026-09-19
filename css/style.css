@@ -36,6 +36,7 @@
 
 body {
   margin: 0;
+  padding-left: 16px; padding-right: 16px;   /* before padding-inline: Firefox 52-65, Safari 12-14 */
   padding-inline: 16px;
   background: var(--bg);
   color: var(--text);
@@ -102,7 +103,7 @@ h1 { margin-top: 0; line-height: 1.2; }
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
+  grid-gap: 16px; gap: 16px;
 }
 
 .prototype-note {
@@ -146,6 +147,7 @@ fieldset {
 legend {
   font-weight: 700;
   font-size: 1.1em;
+  padding-left: 6px; padding-right: 6px;   /* before padding-inline: Firefox 52-65, Safari 12-14 */
   padding-inline: 6px;
 }
 .step {
@@ -177,7 +179,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); ou
 .row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 0 16px;
+  grid-gap: 0 16px; gap: 0 16px;
 }
 
 .choice { display: flex; gap: 8px; align-items: baseline; margin-bottom: 6px; font-weight: normal; }
@@ -273,7 +275,7 @@ form:has(#mode-yours:checked) .mode-yours-only { display: block; }
 .template-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 10px;
+  grid-gap: 10px; gap: 10px;
 }
 .template-card {
   display: block;
@@ -290,7 +292,7 @@ form:has(#mode-yours:checked) .mode-yours-only { display: block; }
 .editor-layout {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-  gap: 20px;
+  grid-gap: 20px; gap: 20px;
   align-items: start;
 }
 @media (max-width: 760px) {
@@ -426,7 +428,7 @@ textarea.code.code-script { min-height: 110px; border-top-left-radius: 5px; }
 .icon-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
-  gap: 8px;
+  grid-gap: 8px; gap: 8px;
 }
 .icon-tile {
   display: flex;
@@ -560,15 +562,18 @@ form:has(#src-write:checked):not(:has(#runtime option:is([value="python"], [valu
 .run-overlay {
   display: none;
   position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;   /* before inset: Firefox 52-65, Safari 12-14 */
   inset: 0;
   z-index: 10;
   align-items: center;
   justify-content: center;
   padding: 16px;
+  background: rgba(0, 0, 0, 0.55);   /* before the space syntax: Safari 12.0 */
   background: rgb(0 0 0 / 0.55);
 }
 .run-overlay:target { display: flex; }
 .run-dialog {
+  width: 100%; max-width: 560px;   /* before min(): Firefox 52-74 */
   width: min(560px, 100%);
   background: var(--panel);
   border: 1px solid var(--border);
@@ -731,7 +736,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .rt-change-head { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
 .rt-change-title { font-weight: 600; overflow-wrap: anywhere; }
 .rt-change-acts { gap: 16px; margin-top: 4px; }
-.rt-diffs { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 2px 12px; margin: 6px 0 0; font-size: 0.85em; }
+.rt-diffs { display: grid; grid-template-columns: max-content minmax(0, 1fr); grid-gap: 2px 12px; gap: 2px 12px; margin: 6px 0 0; font-size: 0.85em; }
 .rt-diffs dt { color: var(--muted); font-family: ui-monospace, Menlo, Consolas, monospace; }
 .rt-diffs dd { margin: 0; overflow-wrap: anywhere; font-family: ui-monospace, Menlo, Consolas, monospace; }
 .rt-diffs del { color: var(--fail); }
@@ -755,7 +760,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .rt-layout {
   display: grid;
   grid-template-columns: 200px minmax(0, 1fr);
-  gap: 20px;
+  grid-gap: 20px; gap: 20px;
   align-items: start;
 }
 @media (max-width: 800px) {
@@ -766,7 +771,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .rt-rt {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0 6px;
+  grid-gap: 0 6px; gap: 0 6px;
   text-align: left;
   background: var(--panel);
   color: var(--text);
@@ -797,7 +802,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .rt-vhead, .rt-vrow {
   display: grid;
   grid-template-columns: 90px 72px 76px minmax(60px, 120px) 64px minmax(0, 1fr) 84px;
-  gap: 8px;
+  grid-gap: 8px; gap: 8px;
   align-items: center;
   padding: 0 8px;
 }

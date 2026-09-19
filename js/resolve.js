@@ -2,11 +2,12 @@
 // a port of the Go server's catalog package (catalog.go, policy.go,
 // support.go, version.go, prereq.go, package.go, resolve.go, summary.go,
 // snapshot.go; retired 2026-09-19) and the parts of its ibtext it used.
-// Plain ES module, no dependencies; runs in browsers and in Node 20+.
+// Plain ES module; runs in browsers and in Node 20+. Gzip and SHA-256 go
+// through js/zlib.js and js/cryptox.js (native, else plain JavaScript).
 //
 // Plans are byte-identical to the Go resolver's (tests/resolve-test.mjs
 // checks the 3,095 cases it answered, saved in tests/golden/). Everything
-// is synchronous except what needs a stream or WebCrypto: loadSnapshot,
+// is synchronous except what needs (de)compression or a digest: loadSnapshot,
 // writeSnapshot, hash26 and hash12. resolve() needs Hash12 for the appid,
 // so it has its own small SHA-256 (sha256 below) and stays synchronous.
 //
@@ -14,6 +15,9 @@
 // (cmpStr), strings.TrimSpace's space set, strconv.Atoi's strictness,
 // fmt's %v and %q, strings.Replacer's argument-order matching, and RE2
 // patterns from the policy and catalogue translated by goRegExp.
+
+import { inflate, deflate } from './zlib.js';
+import { digest } from './cryptox.js';
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();
@@ -28,6 +32,7 @@ function own(o, k) {
 const isMap = (v) => v != null && typeof v === 'object' && !Array.isArray(v);
 const str = (v) => (typeof v === 'string' ? v : '');
 const list = (v) => (Array.isArray(v) ? v : []);
+const nz = (v, d) => (v != null ? v : d);        // v ?? d (d is evaluated either way)
 const contains = (l, s) => list(l).includes(s);
 const indexOf = (l, s) => list(l).indexOf(s);
 const splitJoin = (s, a, b) => s.split(a).join(b); // strings.ReplaceAll
@@ -90,6 +95,20 @@ function goSprint(v) {
   return 'map[' + Object.keys(v).sort(cmpStr).map((k) => k + ':' + goSprint(v[k])).join(' ') + ']';
 }
 
+
+// unicode.IsGraphic without the space: letters, marks, numbers, punctuation
+// and symbols. Engines without \p{...} in regular expressions (Firefox
+// before 78, EdgeHTML) get a close approximation: everything but controls,
+// format and separator characters, private use and noncharacters.
+let GRAPHIC_RE = null;
+try { GRAPHIC_RE = new RegExp('[\\p{L}\\p{M}\\p{N}\\p{P}\\p{S}]', 'u'); } catch (e) { /* approximated below */ }
+function isGraphic(ch, r) {
+  if (GRAPHIC_RE) return GRAPHIC_RE.test(ch);
+  return r > 0x20 && !(r >= 0x7f && r <= 0xa0) && r !== 0xad && !(r >= 0x2000 && r <= 0x200f) &&
+    !(r >= 0x2028 && r <= 0x202f) && !(r >= 0x205f && r <= 0x206f) && r !== 0x3000 && r !== 0xfeff &&
+    !(r >= 0xe000 && r <= 0xf8ff) && !(r >= 0xfff0 && r <= 0xffff) && r < 0xf0000 && (r & 0xfffe) !== 0xfffe;
+}
+
 // strconv.FormatFloat(f, 'g', -1, 64), which is what %v does.
 function goFloat(f) {
   if (Object.is(f, -0)) return '-0';
@@ -106,7 +125,7 @@ export function goQuote(s) {
     const r = ch.codePointAt(0);
     if (r >= 0xd800 && r <= 0xdfff) ch = '�';
     if (ch === '"' || ch === '\\') out += '\\' + ch;
-    else if (r === 0x20 || /[\p{L}\p{M}\p{N}\p{P}\p{S}]/u.test(ch)) out += ch;
+    else if (r === 0x20 || isGraphic(ch, r)) out += ch;
     else {
       const esc = { 7: '\\a', 8: '\\b', 12: '\\f', 10: '\\n', 13: '\\r', 9: '\\t', 11: '\\v' }[r];
       const hex = (n, w) => n.toString(16).padStart(w, '0');
@@ -241,7 +260,7 @@ function base32(bytes) {
 
 async function subtleSHA256(text) {
   const data = typeof text === 'string' ? enc.encode(text) : text;
-  return new Uint8Array(await crypto.subtle.digest('SHA-256', data));
+  return digest('SHA-256', data);
 }
 // Hash26 names a record: SHA-256 of its exact bytes (a string is UTF-8).
 export async function hash26(text) { return base32(await subtleSHA256(text)).slice(0, 26); }
@@ -309,7 +328,7 @@ function parseLines(doc) {
     if (raw.endsWith('\r')) raw = raw.slice(0, -1);
     if (raw === '' || raw.startsWith('#')) continue;
     const parts = raw.split('\t');
-    out.push({ key: parts[0], vals: parts.slice(1), val(i) { return this.vals[i] ?? ''; } });
+    out.push({ key: parts[0], vals: parts.slice(1), val(i) { return (this.vals[i] != null ? this.vals[i] : ''); } });
   }
   return out;
 }
@@ -343,7 +362,7 @@ function parseVersion(s) {
 function cmpVersion(a, b) {
   const n = Math.max(a.parts.length, b.parts.length);
   for (let i = 0; i < n; i++) {
-    const x = a.parts[i] ?? 0, y = b.parts[i] ?? 0;
+    const x = (a.parts[i] != null ? a.parts[i] : 0), y = (b.parts[i] != null ? b.parts[i] : 0);
     if (x !== y) return x < y ? -1 : 1;
   }
   if (a.pre !== b.pre) return a.pre ? -1 : 1;
@@ -356,7 +375,7 @@ function matches(v, spec) {
   let cs = specCache.get(spec);
   if (!cs) {
     if (specCache.size > 10000) specCache.clear();
-    specCache.set(spec, (cs = compileSpec(spec ?? '')));
+    specCache.set(spec, (cs = compileSpec((spec != null ? spec : ''))));
   }
   return cs.every(([op, t, prefix]) => matchOne(v, op, t, prefix));
 }
@@ -410,7 +429,7 @@ export function fileName(r) {
   const j = u.search(/[?#]/);
   return j >= 0 ? u.slice(0, j) : u;
 }
-const variantStr = (r) => r.variant ?? '';
+const variantStr = (r) => (r.variant != null ? r.variant : '');
 
 // strings.EqualFold(s, "sha256"): ſ folds to s.
 const isSHA256Name = (s) => typeof s === 'string' && s.replace(/ſ/g, 's').toLowerCase() === 'sha256';
@@ -452,9 +471,9 @@ const WIN_LABEL = {
 // loadOSScale
 function loadOSScale(raw) {
   const s = { byFamily: {}, byID: new Map() };
-  const push = (f, o) => (s.byFamily[f] ||= []).push(o);
+  const push = (f, o) => ((s.byFamily[f] || (s.byFamily[f] = []))).push(o);
   for (const w of list(raw.windows)) {
-    const id = str(w.id), label = own(WIN_LABEL, id) ?? '';
+    const id = str(w.id), label = nz(own(WIN_LABEL, id), '');
     const nt = str(w.nt).split('.');
     if (nt.length < 2) throw new Error('os_versions.json: windows ' + id + ': bad nt');
     const o = { family: 'windows', id, int: verInt(nt[0] + '.' + nt[1]), build: nt.length > 2 ? atoi(nt[2]) : 0, label };
@@ -514,7 +533,7 @@ function release(raw, folder) {
     version: str(raw.version), os: str(raw.os), arch: str(raw.arch), kind: str(raw.kind), format: str(raw.format),
     variant: typeof raw.variant === 'string' ? raw.variant : null, libc: typeof raw.libc === 'string' ? raw.libc : null,
     url: str(raw.url), mirrors: Array.isArray(raw.mirrors) ? raw.mirrors : null, checksum: raw.checksum,
-    size: typeof raw.size === 'number' ? raw.size : 0, min_os: raw.min_os ?? null,
+    size: typeof raw.size === 'number' ? raw.size : 0, min_os: (raw.min_os != null ? raw.min_os : null),
     sha256: str(raw.ib_sha256), local: str(raw.ib_local), folder,
   };
   r.v = parseVersion(r.version);
@@ -571,17 +590,12 @@ export function loadCatalogFiles(files, opts = {}) {
 // LoadSnapshot: what Snapshot (or writeSnapshot) wrote, gzipped or not.
 export async function loadSnapshot(bytes, opts = {}) {
   bytes = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
-  if (bytes[0] === 0x1f && bytes[1] === 0x8b) bytes = await streamBytes(bytes, new DecompressionStream('gzip'));
+  if (bytes[0] === 0x1f && bytes[1] === 0x8b) bytes = await inflate(bytes, 'gzip');
   let snap;
   try { snap = JSON.parse(dec.decode(bytes)); } catch (e) { throw new Error('catalogue snapshot: ' + e.message); }
   const ver = own(snap, 'ib-catalog-snapshot');
   if (ver !== 1) throw new Error('catalogue snapshot version ' + (typeof ver === 'number' ? ver : 0));
   return loadCatalogFiles(own(snap, 'files') || {}, opts);
-}
-
-async function streamBytes(bytes, transform) {
-  const s = new Blob([bytes]).stream().pipeThrough(transform);
-  return new Uint8Array(await new Response(s).arrayBuffer());
 }
 
 // Snapshot: the catalogue as one gzipped file, with only the releases the
@@ -616,7 +630,7 @@ export async function writeSnapshot(cat) {
   const sorted = {};
   for (const k of Object.keys(files).sort(cmpStr)) sorted[k] = files[k];
   const text = JSON.stringify({ 'ib-catalog-snapshot': 1, files: sorted }) + '\n';
-  return streamBytes(enc.encode(text), new CompressionStream('gzip'));
+  return deflate(enc.encode(text), 'gzip');
 }
 
 /* ---------- policy (policy.go) ---------- */
@@ -688,7 +702,7 @@ function ruleApplies(r, e) {
   if (formats && formats.length > 0 && !formats.includes(e.format)) return false;
   if (fileMatch !== '') {
     let re;
-    try { re = goRegExp(fileMatch); } catch { return false; }
+    try { re = goRegExp(fileMatch); } catch (e_) { return false; }
     if (!re.test(fileName(e))) return false;
   }
   if (kinds && kinds.length > 0 && !kinds.includes(e.kind)) return false;
@@ -887,7 +901,7 @@ function recipeForUncached(cat, rt, e, install) {
   const methods = list(own(cat.policy, 'method_order'));
   for (const r of rt.recipes) {
     let score = 0, ok = true;
-    for (const [k, val] of [['os', e.os], ['kind', e.kind], ['format', e.format], ['arch', e.arch], ['libc', e.libc ?? '']]) {
+    for (const [k, val] of [['os', e.os], ['kind', e.kind], ['format', e.format], ['arch', e.arch], ['libc', (e.libc != null ? e.libc : '')]]) {
       const f = matchField(r.match, k, val);
       if (!f.ok) { ok = false; break; }
       if (f.specific) score++;
@@ -970,7 +984,7 @@ function candidatesUncached(cat, rt, family, machine) {
     if (e.os !== family || !usable(pol, e)) continue;
     const a = archOK(family, machine, e.arch);
     if (!a.ok) continue;
-    let vi = list(pol?.variants).length, fi = 0;
+    let vi = list((pol == null ? undefined : pol.variants)).length, fi = 0;
     if (pol) {
       const i = indexOf(pol.variants, variantStr(e));
       if (i >= 0) vi = i;
@@ -1021,7 +1035,7 @@ function companions(cat, rt, arch, o) {
   const out = [];
   if (!pol) return out;
   for (const req of list(own(pol.requires, o.family))) {
-    const crt = cat.runtimes.get(str(req?.runtime));
+    const crt = cat.runtimes.get(str((req == null ? undefined : req.runtime)));
     if (!crt) return false;
     const native = candidates(cat, crt, o.family, arch).filter((e) => e.arch === arch || e.arch === 'any' || e.arch === 'universal');
     const { p } = best(cat, crt, native, o, normApp({ runtime: req.runtime }));
@@ -1290,7 +1304,7 @@ function writeTarget(cat, w, app, pol, b) {
   // {env:NAME} in the app's own commands takes the value the plan gives NAME.
   const envVals = new Map();
   for (const m of [launchEnv, installEnv]) for (const [k, v] of m) if (v !== null) envVals.set(k, fix(v));
-  const expandEnv = (s) => s.replace(envRefRe, (m) => envVals.get(m.slice(5, -1)) ?? '');
+  const expandEnv = (s) => s.replace(envRefRe, (m) => nz(envVals.get(m.slice(5, -1)), ''));
   // Project install.
   let install = '';
   const lbl = runtimeLabel(pol, app.runtime);
@@ -1344,10 +1358,10 @@ export function runtimesSummary(cat) {
   for (const id of runtimeIDs(cat.policy)) {
     const pol = runtimePolicy(cat, id);
     let plan;
-    try { plan = resolve(cat, { recordHash: 'preview', runtime: id, launch: str(pol.launch) }); } catch { continue; }
+    try { plan = resolve(cat, { recordHash: 'preview', runtime: id, launch: str(pol.launch) }); } catch (e_) { continue; }
     const e = { id, label: str(pol.label), compiled: pol.compiled === true, launch: str(pol.launch), newest: null };
     let cur = null;
-    const push = () => { if (cur) (e.newest ||= []).push(cur); };
+    const push = () => { if (cur) ((e.newest || (e.newest = []))).push(cur); };
     for (const l of parseLines(plan)) {
       switch (l.key) {
         case 'when':
@@ -1396,8 +1410,8 @@ export function validPackage(cat, runtime, name, version = '') {
 
 // PackageTokens: a function replacing {package}, {name} and {version}.
 export function packageTokens(p, name, version = '') {
-  let spec = str(p?.spec_any);
-  if (version !== '' && str(p?.spec) !== '') spec = p.spec;
+  let spec = str((p == null ? undefined : p.spec_any));
+  if (version !== '' && str((p == null ? undefined : p.spec)) !== '') spec = p.spec;
   if (spec === '') spec = '"{name}"';
   spec = replacer('{name}', name, '{version}', version)(spec);
   return replacer('{package}', spec, '{name}', name, '{version}', version);
@@ -1437,7 +1451,7 @@ export function pickBin(v, project) {
     if (bins[i].name === project) { bi = i; break; }
     if (bi < 0 || cmpStr(bins[i].name, bins[bi].name) < 0) bi = i;
   }
-  const b = { ...bins[bi] };
+  const b = Object.assign({}, bins[bi]);
   if (b.path.startsWith('./')) b.path = b.path.slice(2);
   if (!binNameRe.test(b.name) || !binPathRe.test(b.path) || b.path.includes('..')) {
     throw new Error("the registry's program name or path has characters Installer Builder won't put in a command");
@@ -1452,5 +1466,5 @@ export function jsonField(v, path) {
     if (!isMap(v)) return null;
     v = own(v, k);
   }
-  return v ?? null;
+  return (v != null ? v : null);
 }

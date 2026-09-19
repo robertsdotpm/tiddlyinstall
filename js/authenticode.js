@@ -11,6 +11,7 @@
 import * as der from './der.js';
 import { peInfo, peChecksum } from './ibfile.js';
 import { verifyWith, orderChain, ecdsaRawToDer, curveBytes, nameString } from './x509.js';
+import * as X from './cryptox.js';
 
 export const OID = {
   signedData: '1.2.840.113549.1.7.2',
@@ -29,7 +30,7 @@ export const OID = {
   tstInfo: '1.2.840.113549.1.9.16.1.4',
 };
 
-const sha256 = async (b) => new Uint8Array(await crypto.subtle.digest('SHA-256', b));
+const sha256 = (b) => X.digest('SHA-256', b);
 
 export class SignError extends Error {}
 
@@ -50,7 +51,7 @@ export function unsignedPE(u8) {
   const padded = (end + 7) & ~7;
   const out = new Uint8Array(padded);
   out.set(u8.subarray(0, end));
-  new DataView(out.buffer).setBigUint64(pe.certDirOff, 0n, true);
+  out.fill(0, pe.certDirOff, pe.certDirOff + 8);        // directory 4: offset and size
   return { bytes: out, pe, hadSignature };
 }
 
@@ -240,7 +241,7 @@ export function pfxSigner(p) {
   return {
     certs: p.chain,
     async sign({ data }) {
-      const s = new Uint8Array(await crypto.subtle.sign(p.algorithm, p.key, data));
+      const s = await X.sign(p.key, data);
       return p.algorithm.name === 'ECDSA' ? ecdsaRawToDer(s) : s;
     },
   };

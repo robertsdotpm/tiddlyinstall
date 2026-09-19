@@ -30,6 +30,7 @@
 // access is wrapped: with storage blocked the overlay lives in memory for
 // the tab, and the editor says so.
 import { loadCatalogFiles, runtimesSummary } from './resolve.js';
+import { inflate } from './zlib.js';
 
 export const FORMAT = 'ib-catalog-overlay';
 const KEY = 'ib.catalog.overlay';
@@ -99,7 +100,7 @@ export function pathRuntime(path) {
   return path[0] === 'policy.json' ? path[2] : path[0].split('/')[0];
 }
 
-const selMatch = (el, sel) => isMap(el) && Object.keys(sel).every((k) => (el[k] ?? null) === sel[k]);
+const selMatch = (el, sel) => isMap(el) && Object.keys(sel).every((k) => ((el[k] != null ? el[k] : null)) === sel[k]);
 
 export function releaseSelector(r) {
   const s = {};
@@ -524,8 +525,7 @@ export function baseFiles() {
       let bytes = new Uint8Array(s.length);
       for (let i = 0; i < s.length; i++) bytes[i] = s.charCodeAt(i);
       if (bytes[0] === 0x1f && bytes[1] === 0x8b) {
-        const st = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
-        bytes = new Uint8Array(await new Response(st).arrayBuffer());
+        bytes = await inflate(bytes, 'gzip');
       }
       const snap = JSON.parse(dec.decode(bytes));
       if (own(snap, 'ib-catalog-snapshot') !== 1) throw new Error('catalogue snapshot version ' + own(snap, 'ib-catalog-snapshot'));

@@ -4,7 +4,8 @@
     python3 tools/build_site.py [-o dist] [--catalog DIR] [--backend URL] [--multi]
 
 Writes dist/index.html: every page as a section (#new, #edit, ...), the JS
-modules joined into one inline module, the CSS inlined, and as data blocks the
+modules joined into one inline classic script (ES2017, so it runs in Firefox
+52 and Chrome 55 up; tests/es2017-test.mjs checks it), the CSS inlined, and as data blocks the
 three unsigned bases, the catalogue snapshot and the runtimes summary. The
 build server serves it at /, and it uses that server; saved and opened from
 disk ("Save this page" saves it exactly as loaded), or with "No server" chosen,
@@ -44,9 +45,14 @@ LINK_ALIASES = {"create.html": "#new&write", "builds.html": "#home"}
 SITE_FILES = ["index.html", "new.html", "build.html", "builds.html", "edit.html", "bases.html",
               "runtimes.html", "create.html", "css", "js", "vendor"]
 # Dependency order: each module comes after everything it imports. The
-# library modules run first; then the local API is installed, and then the
-# page modules run (they call the API as they start).
-LIB_MODULES = ["js/api.js", "js/ibfile.js", "js/icon.js", "js/der.js", "js/x509.js", "js/legacy.js",
+# early modules run before anything else (built-ins for older browsers, and
+# the :has() stand-in, installed right after the page is captured); then the
+# library modules; then the local API is installed, and then the page
+# modules run (they call the API as they start).
+EARLY_MODULES = ["js/polyfills.js", "js/has-shim.js"]
+LIB_MODULES = ["js/api.js", "js/sha.js", "js/hmac-pbkdf2.js", "js/aes.js", "js/bignum.js", "js/der.js",
+               "js/rsa.js", "js/ec.js", "js/ed25519.js", "js/cryptox.js", "js/inflate.js", "js/deflate.js",
+               "js/zlib.js", "js/ibfile.js", "js/icon.js", "js/x509.js", "js/legacy.js",
                "js/pkcs12.js", "js/authenticode.js", "js/pgp.js", "js/sign-ui.js", "js/resolve.js",
                "js/builder.js", "js/overlay.js", "js/local-api.js", "js/router.js"]
 PAGE_MODULES = ["js/new.js", "js/build.js", "js/edit.js", "js/catalog-editor.js"]
@@ -150,7 +156,8 @@ def import_to_const(m, rel, done):
 def join_modules(modules, done):
     """Each module in its own scope (a function returning its exports);
     imports become reads from those (`done`: modules already joined).
-    Top-level await is not supported."""
+    Top-level await is not supported. The result is plain script code (no
+    import/export), to go inside offline_page's function wrapper."""
     out = []
     for rel in modules:
         src = read(rel)
@@ -254,15 +261,20 @@ def offline_page(catalog_dir, backend):
 
     resedit = no_close_script(read(RESEDIT_BUNDLE))
     done = set()
-    js = ("// The page exactly as loaded, for \"Save this page\". Must run before\n"
+    # One classic script, not a module (Firefox 52 has no modules), its
+    # code in a strict function so that it behaves as the modules do.
+    js = ("(function () {\n'use strict';\n"
+          + join_modules(EARLY_MODULES, done)
+          + "\n// The page exactly as loaded, for \"Save this page\". Must run before\n"
           "// anything changes the DOM.\n"
           "globalThis.IB_PRISTINE = '<!DOCTYPE html>\\n' + document.documentElement.outerHTML;\n"
           "globalThis.IB_HAS_LOCAL = true;\n"
-          "globalThis.IB_ONE_FILE = true;\n\n"
+          "globalThis.IB_ONE_FILE = true;\n"
+          "__ib_has_shim.installHasShim();   // only where the browser has no :has()\n\n"
           + join_modules(LIB_MODULES, done)
           + "\n__ib_local_api.installLocalApi();\n"
           + join_modules(PAGE_MODULES, done)
-          + "\n__ib_router.startRouter();\n")
+          + "\n__ib_router.startRouter();\n})();\n")
 
     css = read("css/style.css")
     out = ("<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n"
@@ -278,7 +290,7 @@ def offline_page(catalog_dir, backend):
            "\n  <footer class=\"site-footer\">\n    Designed by <a href=\"https://robertsdotpm.github.io/\">Matthew Roberts</a> and implemented by Claude.\n  </footer>\n"
            + "\n".join(blocks) +
            "\n  <script>\n" + resedit + "\n  </script>\n"
-           "  <script type=\"module\">\n" + js + "\n  </script>\n</body>\n</html>\n")
+           "  <script>\n" + js + "\n  </script>\n</body>\n</html>\n")
     return out, report
 
 

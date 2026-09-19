@@ -24,6 +24,16 @@ PELIB = "vendor/pe-library-1.0.1.esm.js"
 RESEDIT = "vendor/resedit-2.0.3.esm.js"
 OUT = "vendor/resedit-bundle.js"
 
+# (old, new): optional chaining, ?? and a bare catch in the two builds.
+ES2017_FIXES = [
+    ("!e?.ignoreCert", "!(e==null?void 0:e.ignoreCert)"),
+    ("c?.last?++c.id:c=", "(c==null?void 0:c.last)?++c.id:c="),
+    ('"".concat(n??"")', '"".concat(n!=null?n:"")'),
+    ("(n=i?.get(a))", "(n=i==null?void 0:i.get(a))"),
+    ("catch{}", "catch(e_){}"),
+    ('.concat(f??"(unknown)")', '.concat(f!=null?f:"(unknown)")'),
+]
+
 EXPORT_RE = re.compile(r"export\{([^}]*)\}\s*;?")
 SOURCEMAP_RE = re.compile(r"^//# sourceMappingURL=.*$", re.M)
 # import{A as B,...}from"/npm/pe-library@1.0.1/+esm"
@@ -78,6 +88,17 @@ def main():
         if re.search(r"(^|[^.\w])(?:import|export)\s*[\{\*]", src) or re.search(r'\bfrom"', src):
             sys.exit(f"{name}: a leftover import/export this script can't flatten")
 
+    # The page's floor is ES2017 (docs/plan.md 1.11): rewrite the handful of
+    # newer constructs in these minified builds. Each must be found exactly
+    # once, so a new version fails here instead of in an old browser
+    # (tests/es2017-test.mjs checks the result).
+    for old, new in ES2017_FIXES:
+        both = pelib_body + resedit_body
+        if both.count(old) != 1:
+            sys.exit(f"ES2017 rewrite {old!r}: found {both.count(old)} times, expected once")
+        pelib_body = pelib_body.replace(old, new)
+        resedit_body = resedit_body.replace(old, new)
+
     header = (
         "// resedit-js 2.0.3 and pe-library 1.0.1, bundled for Installer Builder.\n"
         "// Both are MIT licensed, Copyright (c) 2018 jet. Full licence text is in\n"
@@ -88,6 +109,7 @@ def main():
     out = (
         header
         + '"use strict";\n'
+        + 'if (typeof globalThis === "undefined") self.globalThis = self;   // Chrome 70-, Firefox 64-, Safari 12.0\n'
         + "var __ib_pelib=(function(){\n" + pelib_body + "\nreturn " + pelib_obj + ";\n})();\n"
         + "globalThis.__IB_RESEDIT=(function(){\n" + resedit_body + "\nreturn " + resedit_obj + ";\n})();\n"
     )

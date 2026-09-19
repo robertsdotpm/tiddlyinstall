@@ -1,6 +1,7 @@
 // Just enough X.509 for signing: who a certificate names, its serial,
 // its public key, and whether a key and a signature belong to it.
 import * as der from './der.js';
+import { verifySpki } from './cryptox.js';
 
 const NAMES = {
   '2.5.4.3': 'CN', '2.5.4.10': 'O', '2.5.4.11': 'OU', '2.5.4.6': 'C', '2.5.4.7': 'L',
@@ -63,8 +64,10 @@ export function parseCert(bytes) {
 export function parseCertBundle(input) {
   let blobs = [];
   if (typeof input === 'string') {
-    const pem = [...input.matchAll(/-----BEGIN (?:CERTIFICATE|PKCS7)-----([\s\S]*?)-----END (?:CERTIFICATE|PKCS7)-----/g)];
-    if (pem.length) blobs = pem.map((m) => der.unb64(m[1]));
+    const re = /-----BEGIN (?:CERTIFICATE|PKCS7)-----([\s\S]*?)-----END (?:CERTIFICATE|PKCS7)-----/g;
+    const pem = [];
+    for (let m; (m = re.exec(input));) pem.push(m[1]);
+    if (pem.length) blobs = pem.map((b) => der.unb64(b));
     else if (input.trim()) blobs = [der.unb64(input.trim())];
   } else {
     const t = new TextDecoder().decode(input.subarray(0, 64));
@@ -113,16 +116,11 @@ export function ecdsaDerToRaw(sig, n) {
 // may be DER or r||s.
 export async function verifyWith(cert, data, sig) {
   const p = keyParams(cert);
-  const key = await crypto.subtle.importKey('spki', cert.spki, p, false, ['verify']);
   let s = sig;
   if (p.name === 'ECDSA' && sig.length !== 2 * curveBytes(cert.curve)) {
     try { s = ecdsaDerToRaw(sig, curveBytes(cert.curve)); } catch (e) { return false; }
   }
-  try {
-    return await crypto.subtle.verify(p, key, s, data);
-  } catch (e) {
-    return false;
-  }
+  return verifySpki(p, cert.spki, s, data);
 }
 
 // Leaf first, then each issuer in turn, then anything left over.

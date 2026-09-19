@@ -7,12 +7,16 @@
 // and that nothing breaks when storage throws. With --site, also checks the
 // editor says a build server's catalogue is used, and offers "No server".
 //
-//   node --experimental-websocket tests/catalog-editor-test.mjs [--page dist/index.html] [--site URL] [--shots DIR]
+//   node --experimental-websocket tests/catalog-editor-test.mjs [--page dist/index.html] [--site URL] [--shots DIR] [--no-native]
+//
+// --no-native: as a browser without DecompressionStream, crypto.subtle,
+// BigInt or :has() (tests/no-native-browser.mjs).
 import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { readInstaller } from '../js/ibfile.js';
+import { noNativeArg, disableNative, checkNativeState } from './no-native-browser.mjs';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
 const HERE = path.dirname(new URL(import.meta.url).pathname);
@@ -163,9 +167,11 @@ try {
   await cdp('Page.enable');
   await cdp('DOM.enable');
   await cdp('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: DL });
+  if (noNativeArg) await disableNative(cdp);
 
   /* ---- the editor starts, and nothing is changed ---- */
   await openEditor(PAGE);
+  await checkNativeState(ok, js);
   const before = await buildWindows('Hello before');
   TARGET = firstTarget(before.plan);
   ok(TARGET.file && TARGET.version && TARGET.steps > 0, 'a build with the built-in catalogue works', JSON.stringify(TARGET));

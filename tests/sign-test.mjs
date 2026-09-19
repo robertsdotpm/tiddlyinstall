@@ -3,6 +3,8 @@
 // deleted afterwards; none is ever committed.
 //
 //   node tests/sign-test.mjs [--no-network] [--relay http://127.0.0.1:8080]
+//   node --import ./tests/no-native.mjs tests/sign-test.mjs    (no WebCrypto:
+//        the plain-JavaScript crypto in js/cryptox.js does it all)
 //
 // Needs Node 20+, openssl and gpg; osslsigncode (on PATH or in
 // ~/.local/opt/ib-tools) is used when present. --no-network skips
@@ -19,6 +21,7 @@ import * as ac from '../js/authenticode.js';
 import { parseCertBundle } from '../js/x509.js';
 import { readInstaller, writeInstaller, newRecordText, recordHash } from '../js/ibfile.js';
 import * as pgp from '../js/pgp.js';
+import * as X from '../js/cryptox.js';
 import { FX } from './fixtures.js';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -251,19 +254,19 @@ await run('remote signing', async () => {
 
   // ECDSA as r||s (what WebCrypto and some KMS APIs return).
   const state = await ac.beginPE(await withRecord(b64(FX.peIcon)));
-  const raw = new Uint8Array(await crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, ec.key, state.toBeSigned));
+  const raw = await X.sign(ec.key, state.toBeSigned);
   const r = await ac.finishPE(state, raw, ec.chain);
   fs.writeFileSync(t('remote-raw.exe'), r.file);
   await checkFile('remote ECDSA r||s', t('remote-raw.exe'), t('ca.crt'), t('ec.crt'));
 
   // A signature for something else, or from another key, is refused.
   const state2 = await ac.beginPE(await withRecord(b64(FX.peIcon)));
-  const wrong = new Uint8Array(await crypto.subtle.sign(rsa.algorithm, rsa.key, new TextEncoder().encode('other')));
+  const wrong = await X.sign(rsa.key, new TextEncoder().encode('other'));
   let msg = '';
   try { await ac.finishPE(state2, wrong, rsa.chain); } catch (e) { msg = e.message; }
   ok(/does not verify/.test(msg), 'remote: a signature over the wrong data is refused before writing the file', msg);
   msg = '';
-  const good = new Uint8Array(await crypto.subtle.sign(rsa.algorithm, rsa.key, state2.toBeSigned));
+  const good = await X.sign(rsa.key, state2.toBeSigned);
   try { await ac.finishPE(state2, good, ec.chain); } catch (e) { msg = e.message; }
   ok(/does not verify/.test(msg), 'remote: a certificate that does not match the key is refused', msg);
 });
