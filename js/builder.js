@@ -427,9 +427,12 @@ export function packageLaunch(launch, p, name, info) {
 }
 
 // catalog.RuntimePolicy.MatchInstall and build.projectInstall
+// Install rules come before a compiled language's own build command: a
+// rule names the files it's for (nim's main.nim, C++'s main.cpp), and the
+// language's command is the fallback for everything else.
 export function projectInstall(pol, given, pkg, names) {
   if (given) return given;
-  if (pkg || pol.compiled === true) return 'default';
+  if (pkg) return 'default';
   const have = new Set(names);
   for (const rule of pol.install_rules || []) {
     if ((rule.files || []).some((f) => have.has(f))) {
@@ -437,6 +440,7 @@ export function projectInstall(pol, given, pkg, names) {
       return 'default:' + rule.id;
     }
   }
+  if (pol.compiled === true) return 'default';
   return (pol.install_files || []).some((f) => have.has(f)) ? 'default' : '';
 }
 

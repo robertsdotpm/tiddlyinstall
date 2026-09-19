@@ -153,6 +153,14 @@ test('install rules from the files a source has', { skip }, (t) => {
     ['php', 'php my-install.php', false, ['composer.json'], 'php my-install.php'],
     ['php', '', false, ['index.php'], ''],
     ['rust', '', false, null, 'default'],
+    // Rules for the written templates (js/templates.js), ahead of a
+    // compiled language's own command.
+    ['java', '', false, ['Main.java'], 'default:javac'],
+    ['nim', '', false, ['main.nim'], 'default:main'],
+    ['nim', '', false, ['hello.nim'], 'default'],
+    ['cc', '', false, ['main.cpp'], 'default:cpp'],
+    ['cc', '', false, ['main.c'], 'default'],
+    ['cc', '', true, ['main.cpp'], 'default'],
   ];
   for (const [rt, given, pkg, names, want] of cases) {
     if (want === null) assert.throws(() => projectInstall(pol(rt), given, pkg, names || []), `${rt} ${names}`);

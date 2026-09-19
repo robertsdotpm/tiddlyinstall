@@ -345,6 +345,7 @@ textarea.code.code-short { min-height: 220px; }
 /* Show only the chosen template's code and preview (no JS). */
 .tpl { display: none; }
 form:has(#tpl-script:checked) .tpl-script-only,
+form:has(#tpl-cpp:checked) .tpl-script-only,
 form:has(#tpl-window:checked) .tpl-window-only,
 form:has(#tpl-web:checked) .tpl-web-only,
 form:has(#tpl-tray:checked) .tpl-tray-only,
@@ -374,32 +375,13 @@ form:has(#tpl-tray:checked) .tpl-gui-only { display: block; }
   color: var(--muted);
 }
 
-/* Show only the code, hints and labels for the chosen language and template (no JS). */
-.combo, .rt-inline { display: none; }
-form:has(#runtime option[value="python"]:checked):has(#tpl-script:checked) .combo-python-script,
-form:has(#runtime option[value="python"]:checked):has(#tpl-window:checked) .combo-python-window,
-form:has(#runtime option[value="python"]:checked):has(#tpl-web:checked) .combo-python-web,
-form:has(#runtime option[value="python"]:checked):has(#tpl-tray:checked) .combo-python-tray,
-form:has(#runtime option[value="node"]:checked):has(#tpl-script:checked) .combo-node-script,
-form:has(#runtime option[value="node"]:checked):has(#tpl-web:checked) .combo-node-web,
-form:has(#runtime option[value="node"]:checked):has(#tpl-tray:checked) .combo-node-tray,
-form:has(#runtime option[value="ruby"]:checked):has(#tpl-script:checked) .combo-ruby-script,
-form:has(#runtime option[value="ruby"]:checked):has(#tpl-window:checked) .combo-ruby-window { display: block; }
-form:has(#runtime option[value="python"]:checked) .rt-python-only,
-form:has(#runtime option[value="node"]:checked) .rt-node-only,
-form:has(#runtime option[value="ruby"]:checked) .rt-ruby-only { display: inline; }
-form:has(#runtime option[value="node"]:checked) .card-window,
-form:has(#runtime option[value="ruby"]:checked) .card-web,
-form:has(#runtime option[value="ruby"]:checked) .card-tray { display: none; }
-form:has(#runtime option[value="node"]:checked):has(#tpl-window:checked) .combo-unavailable,
-form:has(#runtime option[value="ruby"]:checked):has(#tpl-web:checked) .combo-unavailable,
-form:has(#runtime option[value="ruby"]:checked):has(#tpl-tray:checked) .combo-unavailable { display: block; }
-form:has(#runtime option[value="node"]:checked):has(#tpl-window:checked) .run-link,
-form:has(#runtime option[value="node"]:checked):has(#tpl-window:checked) .editor-files,
-form:has(#runtime option[value="ruby"]:checked):has(#tpl-web:checked) .run-link,
-form:has(#runtime option[value="ruby"]:checked):has(#tpl-web:checked) .editor-files,
-form:has(#runtime option[value="ruby"]:checked):has(#tpl-tray:checked) .run-link,
-form:has(#runtime option[value="ruby"]:checked):has(#tpl-tray:checked) .editor-files { display: none; }
+/* The chosen language's template cards and editor: js/write-editor.js
+   shows and hides them from js/templates.js, so nothing here is per language. */
+.template-card[hidden], .combo[hidden], .write-editor[hidden], .unavailable[hidden],
+.template-note[hidden], .run-link[hidden], .editor-files[hidden] { display: none; }
+.template-card .template-tech { display: block; margin-top: 2px; }
+.template-card .template-tech:empty { display: none; }
+.template-note { margin: 8px 0 0; }
 
 /* Tabs (no JS): radio inputs styled as tabs, panels shown with :has. */
 .tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
@@ -545,7 +527,7 @@ form:has(#offline-on:checked) .offline-off-inline { display: none; }
 .offline-targets td input { min-width: 0; }
 
 /* Where's the code: a repo or package, or written on the site (no JS). */
-.src-write-only, .write-needs-lang { display: none; }
+.src-write-only { display: none; }
 .src-local-only, .has-local-only { display: none; }
 html.ib-has-local .has-local-only { display: inline-flex; }
 form:has(#src-local:checked) .src-local-only { display: block; }
@@ -554,8 +536,6 @@ form:has(#src-local:checked) .src-repo-only { display: none; }
 form:has(#src-write:checked) .src-write-only { display: block; }
 form:has(#src-write:checked) .src-repo-only,
 form:has(#src-write:checked):has(#runtime option[value="none"]:checked) .lang-other-only { display: none; }
-form:has(#src-write:checked):not(:has(#runtime option:is([value="python"], [value="node"], [value="ruby"]):checked)) .write-needs-lang { display: block; }
-form:has(#src-write:checked):not(:has(#runtime option:is([value="python"], [value="node"], [value="ruby"]):checked)) .write-editor { display: none; }
 
 /* Run output overlay, opened by the Run link via :target (no JS). */
 .run-overlay {

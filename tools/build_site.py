@@ -57,7 +57,7 @@ SITE_FILES = ["index.html", "new.html", "build.html", "builds.html", "edit.html"
 # library modules; then the local API is installed, and then the page
 # modules run (they call the API as they start).
 EARLY_MODULES = ["js/polyfills.js", "js/has-shim.js"]
-LIB_MODULES = ["js/api.js", "js/form-job.js", "js/sha.js", "js/hmac-pbkdf2.js", "js/aes.js", "js/bignum.js", "js/der.js",
+LIB_MODULES = ["js/api.js", "js/templates.js", "js/form-job.js", "js/write-editor.js", "js/sha.js", "js/hmac-pbkdf2.js", "js/aes.js", "js/bignum.js", "js/der.js",
                "js/rsa.js", "js/ec.js", "js/ed25519.js", "js/cryptox.js", "js/inflate.js", "js/deflate.js",
                "js/zlib.js", "js/ibfile.js", "js/icon.js", "js/x509.js", "js/legacy.js",
                "js/pkcs12.js", "js/authenticode.js", "js/pgp.js", "js/sign-ui.js", "js/resolve.js",
@@ -139,6 +139,11 @@ PLACEHOLDERS = {"windows": placeholder_windows, "linux": placeholder_linux, "mac
 IMPORT_RE = re.compile(r"^import\s+([\s\S]*?)\s+from\s+['\"](\./[^'\"]+)['\"];[ \t]*\n", re.M)
 EXPORT_DECL_RE = re.compile(r"^export\s+((?:async\s+)?(?:function\*?|const|let|var|class)\s+([A-Za-z_$][\w$]*))", re.M)
 EXPORT_LIST_RE = re.compile(r"^export\s*\{([^}]*)\};?[ \t]*\n", re.M)
+# A JavaScript import or export left over (a form not bundled). Only module
+# syntax: js/templates.js holds other languages' code, whose lines may
+# start with "import" (Python's `import os`, Java's, Go's, Nim's).
+LEFTOVER_RE = re.compile(r"""^\s*(?:import\s*(?:[\w$*{][^;\n]*?\sfrom\s*)?['"][^'"\n]+['"]"""
+                         r"""|export\s+(?:default\b|[{*]|(?:async\s+)?(?:function|const|let|var|class)\b))""", re.M)
 
 
 def ns_name(rel):
@@ -178,7 +183,7 @@ def join_modules(modules, done):
                     a, _, b = n.partition(" as ")
                     exports.append(f"{b.strip()}: {a.strip()}" if b else a)
         src = EXPORT_LIST_RE.sub("", src)
-        if re.search(r"^\s*(?:import|export)\b", src, re.M):
+        if LEFTOVER_RE.search(src):
             sys.exit(f"{rel}: an import/export form this script can't bundle")
         out.append(f"/* ---- {rel} ---- */\nconst {ns_name(rel)} = (() => {{\n{src}\nreturn {{ {', '.join(exports)} }};\n}})();")
         done.add(rel)

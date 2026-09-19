@@ -16,7 +16,8 @@ import { Server, parseFlags } from '../server.js';
 import { Limiter } from '../lib/limiter.js';
 import { parseForm, parseUrlencoded, parseMultipart, boundaryOf, BadForm } from '../lib/form.js';
 import { esc, statusPage, classicPage, refusedPage, page } from '../lib/pages.js';
-import { jobFromForm, postedForm, TEMPLATE_FILES, ENTRY_DEFAULTS, parseSource } from '../../js/form-job.js';
+import { jobFromForm, postedForm, TEMPLATE_FILES, ENTRY_DEFAULTS, BUILD_DEFAULTS, parseSource } from '../../js/form-job.js';
+import { TEMPLATES } from '../../js/templates.js';
 import { readInstaller, recordHash } from '../../js/ibfile.js';
 import { haveCatalog, haveBases, tmpDir, REPO } from './helpers.js';
 
@@ -108,14 +109,24 @@ test('new.html: the form posts to the server, and names what the mapping reads',
     const name = /\bname="([^"]*)"/.exec(m[0]);
     assert.ok(!name || name[1] === 'icon', 'a secret input with a name: ' + m[0]);
   }
-  // Every template's textareas, with their file names (aria-label).
-  const combos = {};
-  for (const m of NEW_HTML.matchAll(/<div class="combo combo-([a-z]+)-([a-z]+)">([\s\S]*?)(?=<div class="combo |<\/section>|<div class="combo-actions)/g)) {
-    const files = {};
-    for (const t of m[3].matchAll(/<textarea class="code[^"]*" name="([^"]+)"[^>]*aria-label="([^"]+)"/g)) files[t[1]] = t[2];
-    if (Object.keys(files).length) (combos[m[1]] = combos[m[1]] || {})[m[2]] = files;
+  // The templates' editors are rendered from js/templates.js (js/write-editor.js):
+  // new.html has their places and no code of its own.
+  assert.match(NEW_HTML, /<div class="template-cards"><\/div>/);
+  assert.match(NEW_HTML, /<div class="template-editor"><\/div>/);
+  assert.ok(!/name="code_/.test(NEW_HTML), 'new.html has no template code of its own');
+  // Every language in the form but Other has templates, and a script one.
+  const langs = [...NEW_HTML.matchAll(/<select id="runtime" name="runtime">([\s\S]*?)<\/select>/g)][0][1];
+  for (const m of langs.matchAll(/<option value="([a-z0-9]+)"/g)) {
+    if (m[1] === 'none') assert.ok(!TEMPLATES[m[1]]);
+    else assert.ok(TEMPLATE_FILES[m[1]] && TEMPLATE_FILES[m[1]].script, m[1] + ' has a script template');
   }
-  assert.deepEqual(combos, TEMPLATE_FILES);
+  // The build fields' starting values.
+  const builds = {};
+  for (const m of NEW_HTML.matchAll(/<input type="text" class="entry entry-([a-z]+)"[^>]*\bname="build_\1" value="([^"]*)"/g)) builds[m[1]] = m[2];
+  const go = /<input type="text" class="entry entry-go" id="compiled-build" name="build_go" value="([^"]*)"/.exec(NEW_HTML);
+  if (go) builds.go = go[1];
+  builds.cc = /<input type="text" id="cc-build" name="cc_build"[^>]*?(?:value="([^"]*)")?[^>]*>/.exec(NEW_HTML)[1] || '';
+  assert.deepEqual(builds, BUILD_DEFAULTS);
   // The launch fields' starting values.
   const entries = {};
   for (const m of NEW_HTML.matchAll(/<input type="text" class="entry entry-([a-z]+)"[^>]*\bname="entry_\1" value="([^"]*)"/g)) entries[m[1]] = m[2].replace(/&amp;/g, '&');
@@ -172,8 +183,48 @@ test('js/form-job.js: a plain post of the form reads as the page reads it', () =
   ({ problems } = jobFromForm(postedForm({ ...bare, rv_mode: ['range'] }), { icon }));
   assert.deepEqual(problems, ['Pick at least one platform under "Build for".', 'Say what to package: a GitHub repo URL or a package name.',
     'Enter the versions allowed, or pick another "Which version" option.']);
-  ({ problems } = jobFromForm(postedForm({ ...defaults(), source_kind: ['write'], runtime: ['php'] }), { icon }));
+  ({ problems } = jobFromForm(postedForm({ ...defaults(), source_kind: ['write'], runtime: ['none'] }), { icon }));
   assert.match(problems[0], /template isn't available/);
+  ({ problems } = jobFromForm(postedForm({ ...defaults(), source_kind: ['write'], runtime: ['ruby'], template: ['tray'] }), { icon }));
+  assert.match(problems[0], /template isn't available/);
+});
+
+test('js/form-job.js: written apps take their template\'s commands (js/templates.js)', () => {
+  const icon = { choice: 'default' };
+  const write = (extra) => jobFromForm(postedForm({ ...defaults(), source_kind: ['write'], mode: ['unsigned'], ...extra }), { icon });
+  // A plain post without the editor (a page with no JavaScript): the template's own files.
+  let { job, problems } = write({ runtime: ['node'], template: ['web'], code_python_script: [] });
+  delete job.icon;
+  assert.deepEqual(problems, []);
+  assert.deepEqual(job.files, TEMPLATES.node.web.files);
+  assert.equal(job.launch, '{runtime} {app_dir}/main.js');
+  assert.equal(job.console, true);
+  // A window app has no console; Java's classes run from the app's folder.
+  ({ job } = write({ runtime: ['java'], template: ['window'] }));
+  assert.equal(job.console, false);
+  assert.equal(job.launch, '{runtime} -cp {app_dir} Main');
+  assert.equal(job.install, '');
+  // Compiled: the build field as the form starts it isn't sent (the
+  // policy's command for the template's files is used); an edited one is.
+  ({ job } = write({ runtime: ['go'], build_go: [BUILD_DEFAULTS.go] }));
+  assert.equal(job.install, '');
+  assert.equal(job.launch, '{app_dir}/{project}{exe}');
+  ({ job } = write({ runtime: ['go'], build_go: ['go build -tags x -o {app_dir}/{project}{exe} .'] }));
+  assert.equal(job.install, 'go build -tags x -o {app_dir}/{project}{exe} .');
+  // A repo keeps the build field, as before.
+  ({ job } = jobFromForm(postedForm({ ...defaults(), runtime: ['go'], source: ['a/b'], build_go: [BUILD_DEFAULTS.go] }), { icon }));
+  assert.equal(job.install, BUILD_DEFAULTS.go);
+  // The versions a template needs, unless the form narrows them itself.
+  ({ job } = write({ runtime: ['zig'] }));
+  assert.equal(job.select, 'range');
+  assert.equal(job.range, TEMPLATES.zig.script.versions);
+  ({ job } = write({ runtime: ['zig'], rv_mode: ['exact'], runtime_exact: ['0.16.0'] }));
+  assert.equal(job.range, '0.16.0');
+  // A template for some platforms only says so.
+  ({ problems } = write({ runtime: ['dotnet'], template: ['window'] }));
+  assert.deepEqual(problems, ['This template doesn\'t work on Linux or macOS. Untick Linux and macOS under "Build for".']);
+  ({ problems } = write({ runtime: ['dotnet'], template: ['window'], target_linux: [], target_macos: [] }));
+  assert.deepEqual(problems, []);
 });
 
 /* ---------- the pages ---------- */

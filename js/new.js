@@ -6,11 +6,13 @@
 import { apiRequest, errorText, mountApiFooter, pageUrl, apiLocal, apiReady, setApiBase, LOCAL, localSubmit } from './api.js';
 import { tarWrite } from './ibfile.js';
 import { loadOverlay, overlayState, hasCatalog } from './overlay.js';
-import { jobFromForm } from './form-job.js';
+import { jobFromForm, BUILD_DEFAULTS } from './form-job.js';
+import { mountWriteEditor } from './write-editor.js';
 
 mountApiFooter();
 
 const form = document.getElementById('new-form');
+mountWriteEditor(form);
 const val = (name) => {
   const el = form.elements[name];
   if (!el) return '';
@@ -59,6 +61,11 @@ const reader = {
     const entry = form.elements['entry_' + runtime];
     return !!entry && entry.value !== entry.defaultValue;
   },
+  buildEdited: (runtime) => {
+    const build = form.elements[runtime === 'cc' ? 'cc_build' : 'build_' + runtime];
+    return !!build && build.value.trim() !== (Object.prototype.hasOwnProperty.call(BUILD_DEFAULTS, runtime) ? BUILD_DEFAULTS[runtime] : '');
+  },
+  has: (name) => !!form.elements[name],
 };
 
 /* ---------- "From my computer": an archive or a folder ---------- */

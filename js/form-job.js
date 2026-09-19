@@ -13,6 +13,11 @@
 //   checked(name)  whether a checkbox of that name is ticked
 //   launchEdited(runtime)  whether the launch command was changed from the
 //                  one the form started with
+//   buildEdited(runtime)   (optional) the same for a compiled language's
+//                  build command
+//   has(name)      (optional) whether the form has that field at all: a
+//                  template's file the form doesn't carry is the template's
+//                  own text (js/templates.js)
 //
 // and the icon ({choice, data?, filename?, type?}) and, for "From my
 // computer", the picked archive ({name, base64}) or null: those are read
@@ -20,30 +25,19 @@
 // No DOM here: the server runs it too. Plain ES2017 (the one-file page's
 // floor): no `?.` or `??`.
 
+import { TEMPLATES, templateFor, templateFields, templateLaunch, platformProblem } from './templates.js';
+
 export const MODES = { ours: 'A', yours: 'B', unsigned: 'C' };
 export const COMPILED = ['cc', 'go', 'rust', 'zig', 'nim'];
 
-// The code templates of "I'll write it here": runtime -> template -> the
-// form's <textarea> name -> the file it becomes. new.html's editors carry
-// the same names (each textarea's aria-label is its file name;
-// backend/test/form.test.js checks the two agree).
-export const TEMPLATE_FILES = {
-  python: {
-    script: { code_python_script: 'main.py' },
-    window: { code_python_window: 'main.py' },
-    web: { code_python_web: 'main.py', code_python_web_html: 'index.html' },
-    tray: { code_python_tray: 'main.py' },
-  },
-  node: {
-    script: { code_node_script: 'main.js' },
-    web: { code_node_web: 'main.js', code_node_web_preload: 'preload.js', code_node_web_html: 'index.html' },
-    tray: { code_node_tray: 'main.js' },
-  },
-  ruby: {
-    script: { code_ruby_script: 'main.rb' },
-    window: { code_ruby_window: 'main.rb' },
-  },
-};
+// The code templates of "I'll write it here" are js/templates.js's. This is
+// runtime -> template -> the form's <textarea> name -> the file it becomes;
+// new.html's editors are rendered from the same data (js/new.js).
+export const TEMPLATE_FILES = {};
+for (const rt of Object.keys(TEMPLATES)) {
+  TEMPLATE_FILES[rt] = {};
+  for (const id of Object.keys(TEMPLATES[rt])) TEMPLATE_FILES[rt][id] = templateFields(rt, id);
+}
 
 // The launch command each language's field starts with in new.html (its
 // entry_<runtime> inputs' values; the same test checks these). A plain form
@@ -56,6 +50,17 @@ export const ENTRY_DEFAULTS = {
   nim: '{app_dir}/{project}', none: '{app_dir}/{project}',
 };
 
+// The build command each compiled language's field starts with in new.html
+// (build_<runtime>, and cc_build for C/C++; the same test checks these). A
+// written app whose field is left as it was builds the way its template
+// says (templates.js), not with this.
+export const BUILD_DEFAULTS = {
+  go: 'go build -o {app_dir}/{project}{exe} .', rust: 'cargo build --release --locked',
+  zig: 'zig build -Doptimize=ReleaseSafe --prefix {app_dir}', nim: 'nimble -y build', cc: '',
+};
+
+const buildField = (runtime) => (runtime === 'cc' ? 'cc_build' : 'build_' + runtime);
+
 const own = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
 
 // A reader over a plain form post's fields (the server's side): `fields`
@@ -67,6 +72,9 @@ export function postedForm(fields) {
   return {
     val,
     checked: (name) => own(fields, name) && fields[name].length > 0,
+    has: (name) => own(fields, name),
+    buildEdited: (runtime) => own(fields, buildField(runtime)) &&
+      val(buildField(runtime)).trim() !== (own(BUILD_DEFAULTS, runtime) ? BUILD_DEFAULTS[runtime] : ''),
     // Edited: the language's field differs from new.html's default, or
     // /classic's single launch field was filled in.
     launchEdited: (runtime) => {
@@ -95,12 +103,17 @@ export function parseSource(text, refType, ref) {
 }
 
 // The files of a template, from the form: {file name: text}, or null when
-// this language has no such template.
+// this language has no such template. A file the form doesn't have (a plain
+// post from a page without the editor) is the template's own text.
 export function templateFiles(f, runtime, template) {
-  const t = own(TEMPLATE_FILES, runtime) && own(TEMPLATE_FILES[runtime], template) ? TEMPLATE_FILES[runtime][template] : null;
-  if (!t) return null;
+  const fields = templateFields(runtime, template);
+  if (!fields) return null;
+  const t = templateFor(runtime, template);
   const files = {};
-  for (const name of Object.keys(t)) files[t[name]] = f.val(name);
+  for (const name of Object.keys(fields)) {
+    const file = fields[name];
+    files[file] = !f.has || f.has(name) ? f.val(name) : t.files[file];
+  }
   return files;
 }
 
@@ -187,9 +200,7 @@ export function jobFromForm(f, { icon, local = null, problems = [] }) {
     offline: mode !== 'A' && f.checked('offline'),
   };
   // Compiled languages: the build command is how the project gets installed.
-  if (!job.install && COMPILED.indexOf(runtime) >= 0) {
-    job.install = (runtime === 'cc' ? f.val('cc_build') : f.val('build_' + runtime)).trim();
-  }
+  if (!job.install && COMPILED.indexOf(runtime) >= 0) job.install = f.val(buildField(runtime)).trim();
 
   // Optional Customise fields the server may act on (docs/api.md).
   Object.assign(job, optionFields(f, runtime, mode));
@@ -200,15 +211,28 @@ export function jobFromForm(f, { icon, local = null, problems = [] }) {
   if (!platforms.length) problems.push('Pick at least one platform under "Build for".');
   if (write) {
     const template = f.val('template');
+    const t = templateFor(runtime, template);
     const files = templateFiles(f, runtime, template);
     if (!files) problems.push('This template isn\'t available for this language yet. Pick another template.');
     job.source = { kind: 'inline', value: '' };
     job.files = files || {};
-    job.console = template === 'script';
-    // The templates' code is main.py / main.js / main.rb, not a package, so
-    // unless the launch command was edited, run that file.
-    const main = Object.keys(job.files).find((n) => /^main\.[a-z]+$/.test(n));
-    if (main && !f.launchEdited(runtime)) job.launch = '{runtime} {app_dir}/' + main;
+    job.console = t ? t.console !== false : true;
+    if (t) {
+      // The template's own launch and build commands, unless the form's
+      // were edited (a build command typed in Customise, or the install field).
+      if (!f.launchEdited(runtime)) job.launch = templateLaunch(runtime, template);
+      if (!f.val('install_cmd').trim()) {
+        const edited = COMPILED.indexOf(runtime) >= 0 && f.buildEdited && f.buildEdited(runtime);
+        job.install = edited ? f.val(buildField(runtime)).trim() : (t.install || '');
+      }
+      // The runtime versions the code needs, when the form leaves it to us.
+      if (t.versions && (rv === 'newest' || rv === '')) {
+        job.select = 'range';
+        job.range = t.versions;
+      }
+      const p = platformProblem(runtime, template, platforms);
+      if (p) problems.push(p);
+    }
   } else if (kind === 'local') {
     if (!local) problems.push('Pick an archive or a folder from your computer.');
     else {

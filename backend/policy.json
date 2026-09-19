@@ -751,6 +751,20 @@
    "kinds": [
     "archive"
    ],
+   "install_rules": [
+    {
+     "_comment": "Java source with a Main.java at the top (the site's written templates, js/templates.js): javac it into the app's folder, and launch {runtime} -cp {app_dir} Main. javac, not Java 11's single-file launch: Windows XP and Vista get Java 8 and 9, and a single-file launch compiles again at every start.",
+     "id": "javac",
+     "files": [
+      "Main.java"
+     ],
+     "command": {
+      "windows": "\"{env:JAVA_HOME}\\bin\\javac.exe\" -encoding UTF-8 -d \"{app_dir}\" Main.java",
+      "linux": "\"{env:JAVA_HOME}/bin/javac\" -encoding UTF-8 -d \"{app_dir}\" Main.java",
+      "macos": "\"{env:JAVA_HOME}/bin/javac\" -encoding UTF-8 -d \"{app_dir}\" Main.java"
+     }
+    }
+   ],
    "launch": "{runtime} -jar {app_dir}/{project}.jar"
   },
   "dotnet": {
@@ -981,6 +995,20 @@
     "archive"
    ],
    "compiled": true,
+   "install_rules": [
+    {
+     "_comment": "A main.nim (the site's written templates, js/templates.js) is the program, whatever the project is called.",
+     "id": "main",
+     "files": [
+      "main.nim"
+     ],
+     "command": {
+      "windows": "\"{runtime_dir}\\bin\\nim.exe\" c -d:release --nimcache:\"{data_dir}\\nimcache\" -o:\"{app_dir}\\{project}.exe\" main.nim",
+      "linux": "\"{runtime_dir}/bin/nim\" c -d:release --nimcache:\"{data_dir}/nimcache\" -o:\"{app_dir}/{project}\" main.nim",
+      "macos": "\"{runtime_dir}/bin/nim\" c -d:release --nimcache:\"{data_dir}/nimcache\" -o:\"{app_dir}/{project}\" main.nim"
+     }
+    }
+   ],
    "install_command": {
     "windows": "\"{runtime_dir}\\bin\\nim.exe\" c -d:release --nimcache:\"{data_dir}\\nimcache\" -o:\"{app_dir}\\{project}.exe\" {project}.nim",
     "linux": "\"{runtime_dir}/bin/nim\" c -d:release --nimcache:\"{data_dir}/nimcache\" -o:\"{app_dir}/{project}\" {project}.nim",
@@ -1039,6 +1067,20 @@
     "winlibs-posix-msvcrt": "gcc-winlibs-msvcrt",
     "": "llvm"
    },
+   "install_rules": [
+    {
+     "_comment": "C++: a main.cpp (the site's written templates, js/templates.js) builds every .cpp file with the C++ driver. -static on Windows: the program must not need GCC's DLLs, which leave with the compiler after the build.",
+     "id": "cpp",
+     "files": [
+      "main.cpp"
+     ],
+     "command": {
+      "windows": "\"{runtime_dir}\\bin\\g++.exe\" -O2 -static -o \"{app_dir}\\{project}.exe\" *.cpp",
+      "linux": "\"{runtime_dir}/zig\" c++ -O2 -o \"{app_dir}/{project}\" *.cpp",
+      "macos": "\"{runtime_dir}/zig\" c++ -O2 -o \"{app_dir}/{project}\" *.cpp"
+     }
+    }
+   ],
    "install_command": {
     "windows": "\"{runtime_dir}\\bin\\gcc.exe\" -O2 -o \"{app_dir}\\{project}.exe\" *.c",
     "linux": "\"{runtime_dir}/zig\" cc -O2 -o \"{app_dir}/{project}\" *.c",

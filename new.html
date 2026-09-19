@@ -267,7 +267,7 @@
             into the app's own folder and builds your project on the user's computer. Nothing is installed system-wide.</p>
           <div class="field">
             <label for="compiled-build">Build command</label>
-            <input type="text" class="entry entry-go" id="compiled-build" name="build_go" value="go build -o {app_dir}/{project} ." spellcheck="false">
+            <input type="text" class="entry entry-go" id="compiled-build" name="build_go" value="go build -o {app_dir}/{project}{exe} ." spellcheck="false">
             <input type="text" class="entry entry-rust" name="build_rust" value="cargo build --release --locked" aria-label="Build command" spellcheck="false">
             <input type="text" class="entry entry-zig" name="build_zig" value="zig build -Doptimize=ReleaseSafe --prefix {app_dir}" aria-label="Build command" spellcheck="false">
             <input type="text" class="entry entry-nim" name="build_nim" value="nimble -y build" aria-label="Build command" spellcheck="false">
@@ -278,228 +278,23 @@
 
         <!-- Code written on the site: templates, editor and preview -->
         <div class="write-block src-write-only">
-          <p class="unavailable write-needs-lang">Writing code here works with Python, Node.js or Ruby. Pick one of those as the language.</p>
+          <p class="unavailable write-needs-js">Writing code here needs JavaScript, which is off or missing in this browser. A GitHub repo or a package works without it.</p>
+          <p class="unavailable write-needs-lang" hidden>Writing code here needs a language. Pick one above (Other has no templates).</p>
 
-          <div class="write-editor">
+          <!-- Rendered by js/write-editor.js from js/templates.js: a card per
+               kind of template the language has, and its files' editors. -->
+          <div class="write-editor" hidden>
             <span class="label">Start from a template</span>
-            <div class="template-cards">
-              <label class="template-card card-script">
-                <input type="radio" name="template" value="script" id="tpl-script" checked>
-                <strong>Script</strong>
-                <span class="small muted">Runs in a console window. The simplest.</span>
-              </label>
-              <label class="template-card card-window">
-                <input type="radio" name="template" value="window" id="tpl-window">
-                <strong>Window app</strong>
-                <span class="small muted">A small desktop window with buttons and text.</span>
-              </label>
-              <label class="template-card card-web">
-                <input type="radio" name="template" value="web" id="tpl-web">
-                <strong>Web page in a window</strong>
-                <span class="small muted">Build the look in HTML, the logic in <span class="rt-inline rt-python-only">Python</span><span class="rt-inline rt-node-only">JavaScript</span>.</span>
-              </label>
-              <label class="template-card card-tray">
-                <input type="radio" name="template" value="tray" id="tpl-tray">
-                <strong>Tray app</strong>
-                <span class="small muted">Runs in the background with a menu icon.</span>
-              </label>
-            </div>
+            <div class="template-cards"></div>
 
             <div class="editor-toolbar" id="write-code" style="margin-top:18px">
               <span class="label" style="margin:0">Your code</span>
               <a class="button secondary run-link" href="#run-output">▶ Run</a>
             </div>
 
-          <!-- Python -->
-          <div class="combo combo-python-script">
-            <span class="file-tab">main.py</span>
-<textarea class="code" name="code_python_script" spellcheck="false" aria-label="main.py">name = input("What's your name? ")
-print(f"Hello, {name}!")
-
-input("Press Enter to close")
-</textarea>
-          </div>
-
-          <div class="combo combo-python-window">
-            <span class="file-tab">main.py</span>
-<textarea class="code" name="code_python_window" spellcheck="false" aria-label="main.py">import tkinter as tk
-
-window = tk.Tk()
-window.title("My App")
-
-label = tk.Label(window, text="Hello!", font=("", 18))
-label.pack(padx=40, pady=20)
-
-def clicked():
-    label.config(text="You clicked the button")
-
-tk.Button(window, text="Click me", command=clicked).pack(pady=(0, 20))
-
-window.mainloop()
-</textarea>
-          </div>
-
-          <div class="combo combo-python-web">
-            <span class="file-tab">main.py</span>
-<textarea class="code" name="code_python_web" spellcheck="false" aria-label="main.py">import webview
-
-class Api:
-    def greet(self, name):
-        return f"Hello, {name}!"
-
-webview.create_window("My App", "index.html", js_api=Api())
-webview.start()
-</textarea>
-            <span class="file-tab">index.html</span>
-<textarea class="code code-short" name="code_python_web_html" spellcheck="false" aria-label="index.html">&lt;input id="name" placeholder="Your name"&gt;
-&lt;button onclick="go()"&gt;Greet&lt;/button&gt;
-&lt;p id="out"&gt;&lt;/p&gt;
-&lt;script&gt;
-  async function go() {
-    const name = document.getElementById("name").value;
-    out.textContent = await pywebview.api.greet(name);
-  }
-&lt;/script&gt;
-</textarea>
-          </div>
-
-          <div class="combo combo-python-tray">
-            <span class="file-tab">main.py</span>
-<textarea class="code" name="code_python_tray" spellcheck="false" aria-label="main.py">import pystray
-from PIL import Image
-
-def say_hello(icon, item):
-    icon.notify("Hello from the tray!")
-
-icon = pystray.Icon(
-    "my-app",
-    Image.new("RGB", (64, 64), "royalblue"),
-    menu=pystray.Menu(
-        pystray.MenuItem("Say hello", say_hello),
-        pystray.MenuItem("Quit", lambda icon, item: icon.stop()),
-    ),
-)
-icon.run()
-</textarea>
-          </div>
-
-          <!-- Node.js -->
-          <div class="combo combo-node-script">
-            <span class="file-tab">main.js</span>
-<textarea class="code" name="code_node_script" spellcheck="false" aria-label="main.js">const readline = require("node:readline/promises");
-
-async function main() {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-
-  const name = await rl.question("What's your name? ");
-  console.log(`Hello, ${name}!`);
-
-  await rl.question("Press Enter to close");
-  rl.close();
-}
-
-main();
-</textarea>
-          </div>
-
-          <div class="combo combo-node-web">
-            <span class="file-tab">main.js</span>
-<textarea class="code" name="code_node_web" spellcheck="false" aria-label="main.js">const { app, BrowserWindow, ipcMain } = require("electron");
-const path = require("node:path");
-
-ipcMain.handle("greet", (event, name) => `Hello, ${name}!`);
-
-app.whenReady().then(() => {
-  const win = new BrowserWindow({
-    width: 400,
-    height: 300,
-    webPreferences: { preload: path.join(__dirname, "preload.js") },
-  });
-  win.loadFile("index.html");
-});
-
-app.on("window-all-closed", () => app.quit());
-</textarea>
-            <span class="file-tab">preload.js</span>
-<textarea class="code code-short" name="code_node_web_preload" spellcheck="false" aria-label="preload.js">const { contextBridge, ipcRenderer } = require("electron");
-
-contextBridge.exposeInMainWorld("api", {
-  greet: (name) => ipcRenderer.invoke("greet", name),
-});
-</textarea>
-            <span class="file-tab">index.html</span>
-<textarea class="code code-short" name="code_node_web_html" spellcheck="false" aria-label="index.html">&lt;input id="name" placeholder="Your name"&gt;
-&lt;button onclick="go()"&gt;Greet&lt;/button&gt;
-&lt;p id="out"&gt;&lt;/p&gt;
-&lt;script&gt;
-  async function go() {
-    const name = document.getElementById("name").value;
-    out.textContent = await window.api.greet(name);
-  }
-&lt;/script&gt;
-</textarea>
-          </div>
-
-          <div class="combo combo-node-tray">
-            <span class="file-tab">main.js</span>
-<textarea class="code" name="code_node_tray" spellcheck="false" aria-label="main.js">const { app, Tray, Menu, Notification } = require("electron");
-const path = require("node:path");
-
-let tray;
-
-app.whenReady().then(() => {
-  tray = new Tray(path.join(__dirname, "icon.png"));
-  tray.setToolTip("My App");
-  tray.setContextMenu(Menu.buildFromTemplate([
-    {
-      label: "Say hello",
-      click: () => new Notification({ title: "Hello from the tray!" }).show(),
-    },
-    { label: "Quit", click: () => app.quit() },
-  ]));
-});
-</textarea>
-          </div>
-
-          <!-- Ruby -->
-          <div class="combo combo-ruby-script">
-            <span class="file-tab">main.rb</span>
-<textarea class="code" name="code_ruby_script" spellcheck="false" aria-label="main.rb">print "What's your name? "
-name = gets.chomp
-puts "Hello, #{name}!"
-
-print "Press Enter to close"
-gets
-</textarea>
-          </div>
-
-          <div class="combo combo-ruby-window">
-            <span class="file-tab">main.rb</span>
-<textarea class="code" name="code_ruby_window" spellcheck="false" aria-label="main.rb">require "glimmer-dsl-libui"
-
-include Glimmer
-
-window("My App", 300, 120) {
-  margined true
-
-  vertical_box {
-    label("Hello!")
-
-    button("Click me") {
-      on_clicked { msg_box("My App", "You clicked the button") }
-    }
-  }
-}.show
-</textarea>
-          </div>
-
-          <!-- Language/template pairs without a template yet -->
-          <div class="combo combo-unavailable">
-            <p class="unavailable">This template isn't available for this language yet. Pick another template.</p>
-          </div>
+          <div class="template-editor"></div>
+          <p class="unavailable combo-unavailable" hidden>This template isn't available for this language yet. Pick another template.</p>
+          <p class="small muted template-note" hidden></p>
 
           <p class="small muted editor-files">
             <button type="button" class="link-button">+ Add file</button>
