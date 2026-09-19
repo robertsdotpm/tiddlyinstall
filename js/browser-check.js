@@ -111,8 +111,21 @@
         return canImport(hex('04' + '6b17d1f2e12c4247f8bce6e563a440f277037d812deb33a0f4a13945d898c296' +
           '4fe342e2fe1a7f9b8ee7eb4a7c0f9e162bce33576b315ececbb6406837bf51f5'), { name: 'ECDSA', namedCurve: 'P-256' });
       } },
-    { id: 'folder', name: 'Folder picking (webkitdirectory)', required: false, effect: 'can\'t pick a folder of code; add the files one by one',
-      test: function () { return 'webkitdirectory' in doc.createElement('input'); } },
+    // Phones and tablets have the property but, mostly, no folder picker:
+    // caniuse gives one on Safari from iOS/iPadOS 18.4 and Chrome on Android
+    // from 147; other phone browsers pick files, not a folder. Where it's
+    // missing the page hides "Pick a folder" (html.ib-no-folder).
+    { id: 'folder', name: 'Folder picking (webkitdirectory)', required: false, effect: 'can\'t pick a folder of code; pick a .zip or .tar of it instead',
+      test: function () {
+        if (!('webkitdirectory' in doc.createElement('input'))) return false;
+        if (!env.mobile) return true;
+        if (env.os === 'iOS' || env.os === 'iPadOS') return atLeast(env.osVersion, [18, 4]);
+        return env.os === 'Android' && env.browser === 'Chrome' && atLeast(env.version, [147]);
+      } },
+    // iOS before 13 has no <a download>: a blob link opens instead of saving.
+    { id: 'download', name: 'Saving files (<a download>)', required: false,
+      effect: 'can\'t save the installers it makes, or this page: on iPhone and iPad that needs iOS 13 or later; or use a computer',
+      test: function () { return 'download' in doc.createElement('a') || !!w.navigator.msSaveOrOpenBlob; } },
     { id: 'canvas', name: 'OffscreenCanvas and createImageBitmap', required: false, effect: 'icons must be PNG (SVG, JPEG and others need these)',
       test: function () { return typeof w.OffscreenCanvas === 'function' && typeof w.createImageBitmap === 'function'; } }
   ];
@@ -124,6 +137,7 @@
     if ((m = /Edg(?:e|A|iOS)?\/([\d.]+)/.exec(ua))) { env.browser = 'Edge'; env.version = m[1]; }
     else if ((m = /(?:Firefox|FxiOS)\/([\d.]+)/.exec(ua))) { env.browser = 'Firefox'; env.version = m[1]; }
     else if ((m = /(?:OPR|Opera)\/([\d.]+)/.exec(ua))) { env.browser = 'Opera'; env.version = m[1]; }
+    else if ((m = /SamsungBrowser\/([\d.]+)/.exec(ua))) { env.browser = 'Samsung Internet'; env.version = m[1]; }
     else if ((m = /(?:Chrome|CriOS)\/([\d.]+)/.exec(ua))) { env.browser = /Chromium\//.test(ua) ? 'Chromium' : 'Chrome'; env.version = m[1]; }
     // Safari's engine on Linux (WebKitGTK: MiniBrowser, GNOME Web) says Safari, with a made-up version.
     else if ((m = /Version\/([\d.]+).*Safari\//.exec(ua))) { env.browser = /X11|Linux/.test(ua) && !/Android/.test(ua) ? 'WebKitGTK' : 'Safari'; env.version = env.browser === 'Safari' ? m[1] : ''; }
@@ -134,10 +148,27 @@
     else if ((m = /Mac OS X ([\d_.]+)/.exec(ua))) { env.os = 'macOS'; env.osVersion = m[1].replace(/_/g, '.'); }
     else if (/CrOS/.test(ua)) env.os = 'ChromeOS';
     else if (/Linux|X11/.test(ua)) env.os = 'Linux';
+    // iPadOS 13 and later says it's a Mac; a Mac has no touch screen.
+    if (env.os === 'macOS' && navigator.maxTouchPoints > 1) {
+      env.os = 'iPadOS';
+      env.osVersion = (m = /Version\/([\d.]+)/.exec(ua)) ? m[1] : '';
+    }
+    // A phone or tablet: its user agent or client hints say so.
+    env.mobile = /Android|iPhone|iPad|iPod|Mobile/.test(ua) || env.os === 'iPadOS' ||
+      !!(navigator.userAgentData && navigator.userAgentData.mobile);
     env.cpu = /Win64|x64|WOW64|x86_64|amd64/i.test(ua) ? 'x86-64' : /aarch64|arm64/i.test(ua) ? 'ARM64' : /arm/i.test(ua) ? 'ARM' : /i[3-6]86|Win32/.test(ua) ? 'x86' : '';
     return env;
   }
 
+  // True when version string v ("18.4.1", "147.0.1") is at least [major, minor].
+  function atLeast(v, min) {
+    var p = String(v || '').split('.');
+    for (var i = 0; i < min.length; i++) {
+      var n = parseInt(p[i], 10) || 0;
+      if (n !== min[i]) return n > min[i];
+    }
+    return true;
+  }
   var env = parseUA(navigator.userAgent || '');
   if (navigator.brave && env.browser === 'Chrome') env.browser = 'Brave';   // its user agent is Chrome's
   // Client hints, where the browser has them: truer OS version (Windows 11
@@ -178,7 +209,17 @@
   function degraded() { return grep(FEATURES, function (f) { return status[f.id] === 'missing' || status[f.id] === 'fallback'; }); }
   function names(list) { return each(list, function (f) { return f.name; }).join('; '); }
   function ids(list) { return each(list, function (f) { return f.id; }).join(' '); }
+  // Classes on <html> for the stylesheet (css/style.css, "Phones and small
+  // screens"): ib-mobile, ib-no-folder, ib-no-download.
+  function htmlClass(name, on) {
+    var el = doc.documentElement, c = ' ' + el.className + ' ', has = c.indexOf(' ' + name + ' ') >= 0;
+    if (on && !has) el.className = (el.className ? el.className + ' ' : '') + name;
+    if (!on && has) el.className = c.replace(' ' + name + ' ', ' ').replace(/^\s+|\s+$/g, '');
+  }
   function mark() {
+    htmlClass('ib-mobile', !!env.mobile);
+    htmlClass('ib-no-folder', status.folder !== 'native');
+    htmlClass('ib-no-download', status.download === 'missing');
     doc.documentElement.setAttribute('data-ib-missing', names(missing()));
     doc.documentElement.setAttribute('data-ib-degraded', ids(degraded()));
     w.ibMissing = each(missing(), function (f) { return f.name; });
@@ -225,6 +266,10 @@
     if (id === 'brave' || id === 'vivaldi') return id === 'brave' ? 'https://brave.com/download/' : 'https://vivaldi.com/download/';
     return null;
   }
+  // Phones and tablets: none is in the matrix below.
+  var PHONES = 'No phone or tablet is in the table below. The page was checked at phone sizes (320 to 768 px) in Chrome\'s phone emulation, ' +
+    'in Chrome 113 on Android (an emulator) and in Safari\'s engine (WebKitGTK), not on real phones: it lays out, builds unsigned installers and signs. ' +
+    'The installers are for Windows, Linux and macOS, so they are saved to copy to a computer.';
   // Used when this copy of the page has no test results for the visitor's OS.
   var GENERAL = 'Firefox 52 or later, Chrome 58 or later, Safari 12 or later, or Edge; on Windows XP and Vista, Supermium or Firefox 52 ESR; ' +
     'on Windows 7 and 8.1, Chrome 109, Firefox 115 ESR or Supermium';
@@ -258,6 +303,7 @@
     '.ib-compat-bar table{border-collapse:collapse;font-size:13px;margin:4px 0 10px}' +
     '.ib-compat-bar th,.ib-compat-bar td{border:1px solid #ddd;padding:2px 6px;text-align:left;vertical-align:top}' +
     '.ib-compat-bar tr.ib-you td,.ib-compat-bar tr.ib-you th{background:#e3f2fd}.ib-compat-bar td.ib-you{outline:2px solid #1565c0}' +
+    '@media (max-width:768px),(pointer:coarse){.ib-compat-bar button{min-height:40px;margin:6px 8px 0 0;padding:4px 12px}}' +
     '.ib-c-native,.ib-c-pass{color:#1b5e20}.ib-c-fallback{color:#8a6d00}.ib-c-missing,.ib-c-fail{color:#b3261e}.ib-c-unsupported{color:#6d4c41}';
 
   function el(tag, attrs, text) {
@@ -419,7 +465,9 @@
       if (box) { box.parentNode.removeChild(box); box = null; more.setAttribute('aria-expanded', 'false'); return; }
       box = el('div', { 'class': 'ib-compat-details' });
       function words(a) { return grep(a, function (x) { return !!x; }).join(' '); }
-      box.appendChild(el('p', {}, 'This browser: ' + words([env.browser, env.version]) + ' on ' + (words([env.os, env.osVersion]) || 'an unknown OS') + (env.cpu ? ', ' + env.cpu : '') + '.'));
+      box.appendChild(el('p', {}, 'This browser: ' + words([env.browser, env.version]) + ' on ' + (words([env.os, env.osVersion]) || 'an unknown OS') + (env.cpu ? ', ' + env.cpu : '') +
+        (env.mobile ? ', a phone or tablet' : '') + '.'));
+      if (env.mobile) box.appendChild(el('p', {}, PHONES));
       box.appendChild(featureTable());
       var c = loadCompat();
       box.appendChild(el('p', {}, 'Where the page was tested (tests/browsers/' + (c && c.generated ? ', results up to ' + c.generated : '') + '); hover a result for its date and reason:'));

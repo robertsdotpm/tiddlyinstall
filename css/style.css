@@ -878,3 +878,104 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .rt-diff span { white-space: pre; }
 .rt-gap { color: var(--muted); }
 #rt-mode.feature-box { margin-bottom: 16px; }
+
+/* ---- Phones and small screens (plan.md 1.11, "Phones and small screens") ----
+   Desktop layouts are the rules above; these only add to them below 769 px or
+   on a touch screen. Every page keeps its 16 px side gutter (body). */
+
+/* The header's menu button (js/api.js mountMenu) shows only on narrow screens. */
+.ib-menu-btn { display: none; }
+.mobile-only, .no-download-only { display: none; }
+html.ib-mobile .mobile-only { display: block; }
+html.ib-mobile span.mobile-only { display: inline; }
+html.ib-no-download .no-download-only { display: block; }
+/* No folder picker on this device (js/browser-check.js sets the class). */
+html.ib-no-folder .needs-folder { display: none !important; }
+.table-wrap { -webkit-overflow-scrolling: touch; }
+
+@media (max-width: 599px) {
+  /* The nav folds into a menu: brand, settings and the menu button on one
+     row, the links under it when open, a full-width row each. */
+  .site-header.ib-menu {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-gap: 0 4px; gap: 0 4px;
+    padding-top: 8px; padding-bottom: 8px;   /* before padding-block: Firefox 52-65, Safari 12-14 */
+    padding-block: 8px;
+  }
+  .site-header.ib-menu nav { display: contents; }
+  .site-header.ib-menu .brand { grid-row: 1; grid-column: 1; }
+  .site-header.ib-menu .settings { grid-row: 1; grid-column: 2; }
+  .site-header.ib-menu .ib-menu-btn { display: inline-flex; grid-row: 1; grid-column: 3; }
+  .site-header.ib-menu nav > a { display: none; grid-column: 1 / -1; }
+  .site-header.ib-menu.menu-open nav > a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 4px;
+    border-top: 1px solid var(--border);
+  }
+  .site-header.ib-menu.menu-open nav > a:first-of-type { margin-top: 8px; }
+
+  h1 { font-size: 1.6em; }
+  .panel, fieldset { padding-left: 14px; padding-right: 14px; }
+  .customise > details { padding-left: 12px; padding-right: 12px; }
+  .rv-panel { margin-left: 0; }
+
+  /* The build page's downloads: one block per file, its name and SHA-256
+     wrapping, the platform, size and signer on a line under it. */
+  .files-table thead { display: none; }
+  .files-table tr { display: block; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .files-table tr:last-child { border-bottom: 0; }
+  .files-table td { display: inline-block; padding: 2px 12px 2px 0; border: 0; }
+  .files-table td:first-child { display: block; }
+  .files-table td:first-child code { word-break: break-all; }
+
+  /* Sources: the release list's rows take two lines (js/catalog-editor.js
+     measures the row height), with no column header. */
+  .rt-vhead { display: none; }
+  .rt-vlist .rt-vrow {
+    grid-template-columns: auto auto auto minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
+    grid-gap: 0 8px; gap: 0 8px;
+    align-content: center;
+    height: 52px;
+  }
+  .rt-vrow > .rt-file { grid-column: 1 / 5; grid-row: 2; }
+  .rt-vrow > span:last-child { grid-column: 5; grid-row: 2; }
+  .rt-vlist { height: 60vh; max-height: 420px; }
+  .rt-bar-actions { margin-left: 0; }
+  .rt-filters label { flex: 1 1 130px; }
+  .rt-filters select, .rt-filters input[type="text"] { width: 100%; }
+  .rt-diffs { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Touch: targets about 44 px high, and 16 px text in fields so that iOS
+   doesn't zoom in when one is focused. */
+@media (max-width: 768px), (pointer: coarse) {
+  input[type="text"], input[type="url"], input[type="email"], input[type="number"],
+  input[type="password"], input[type="search"], select, textarea { font-size: 16px !important; }
+  input[type="text"], input[type="url"], input[type="email"], input[type="number"],
+  input[type="password"], input[type="search"], select { min-height: 44px; }
+  button, .button { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; }
+  button[hidden], .button[hidden] { display: none; }
+  .link-button { min-height: 40px; }
+  .settings-btn, .ib-menu-btn { min-width: 44px; min-height: 44px; }
+  summary { min-height: 40px; padding-top: 8px; padding-bottom: 8px; }
+  .customise > details > summary { align-items: center; }
+  label.choice { min-height: 40px; margin-bottom: 2px; }
+  .lang-choice, .tab { min-height: 44px; }
+  .rt-rt { min-height: 44px; }
+  .site-header nav > a { min-height: 40px; display: inline-flex; align-items: center; }
+  .rt-vlist { -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+  .rt-vrow { height: 44px; }
+  input[type="file"] { min-height: 44px; }
+}
+/* Separate: a browser that doesn't know the pseudo-element drops the rule. */
+@media (max-width: 768px), (pointer: coarse) {
+  input[type="file"]::file-selector-button { min-height: 40px; padding: 0 12px; }
+}
+
+.ib-menu-btn { align-items: center; justify-content: center; padding: 4px 8px;
+  background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--accent); cursor: pointer; }
+.ib-menu-btn[aria-expanded="true"] { background: var(--panel); }

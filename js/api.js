@@ -392,6 +392,7 @@ export function mountApiFooter() {
     (HAS_LOCAL ? ' With no server, this page builds installers itself: modes B and C, code written here or package names.' : '') +
     '</p></form></div>';
   ((header && header.querySelector('nav')) || header || footer).appendChild(footerEl);
+  if (header && header.querySelector('nav')) mountMenu(header);
   const panel = footerEl.querySelector('.settings-panel');
   const form = footerEl.querySelector('form');
   const input = footerEl.querySelector('.api-ctl-input');
@@ -434,7 +435,8 @@ export function mountApiFooter() {
     const save = document.createElement('p');
     save.className = 'save-ctl';
     save.innerHTML = '<button type="button" class="link-button save-page">Save this page</button> ' +
-      '<span class="muted">One file with everything inside. Opened from your disk it works with no build server.</span>';
+      '<span class="muted">One file with everything inside. Opened from your disk it works with no build server.</span>' +
+      '<span class="muted mobile-only"> On a phone or tablet it goes to your downloads, to copy to a computer: phones may not open a saved page, or run it.</span>';
     footer.appendChild(save);
     save.querySelector('.save-page').addEventListener('click', savePage);
   }
@@ -454,6 +456,32 @@ export function mountApiFooter() {
   }
 }
 
+// Narrow screens fold the header's nav into a menu (css/style.css, "Phones
+// and small screens"): this button opens it; following a link, a click
+// elsewhere, Escape or a new section closes it. Wider screens don't show it.
+const MENU_ICON = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+  'stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"/></svg>';
+function mountMenu(header) {
+  const nav = header.querySelector('nav');
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'ib-menu-btn';
+  btn.setAttribute('aria-expanded', 'false');
+  btn.setAttribute('aria-label', 'Menu');
+  btn.innerHTML = MENU_ICON;
+  nav.appendChild(btn);
+  header.classList.add('ib-menu');
+  const set = (open) => {
+    header.classList.toggle('menu-open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  };
+  btn.addEventListener('click', () => set(!header.classList.contains('menu-open')));
+  nav.addEventListener('click', (e) => { if (e.target.parentNode === nav && e.target.tagName === 'A') set(false); });
+  document.addEventListener('click', (e) => { if (!header.contains(e.target)) set(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') set(false); });
+  window.addEventListener('hashchange', () => set(false));
+}
+
 // Saves the page exactly as it was loaded (IB_PRISTINE, captured before any
 // script changed it), so the saved copy is as good as the original. The
 // Runtimes page may put this browser's catalogue changes inside it, when
@@ -466,7 +494,9 @@ export function savePage() {
   a.download = SAVE_AS;
   document.body.appendChild(a);
   a.click();
-  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  // Safari cancels a download whose blob: URL is revoked too soon (iOS asks
+  // first, and fetches the blob only once the person says yes).
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 120000);
 }
 
 // A link to another page of the site that keeps ?api= (for navigation from JS).

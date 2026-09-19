@@ -15,7 +15,11 @@ import * as O from './overlay.js';
 mountApiFooter();
 
 const $ = (id) => document.getElementById(id);
-const ROW = 30;
+// A release row's height, from the stylesheet: 30 px, or two lines on narrow
+// screens (css/style.css); measured when the list is first drawn and again
+// when the window changes size.
+let ROW = 30;
+let rowSure = false;
 const isMap = (v) => v != null && typeof v === 'object' && !Array.isArray(v);
 const nz = (v, d) => (v != null ? v : d);        // v ?? d (d is evaluated either way)
 
@@ -301,8 +305,24 @@ function paintReleases() {
   paintWindow();
 }
 
+// 0 while the list isn't shown.
+function measureRow() {
+  const probe = el('div', { class: 'rt-vrow', style: 'visibility:hidden' });
+  $('rt-rel-list').firstChild.appendChild(probe);
+  const h = probe.offsetHeight;
+  probe.remove();
+  return h;
+}
+
 function paintWindow() {
   const list = $('rt-rel-list');
+  if (!rowSure) {
+    const h = measureRow();
+    if (h) {
+      rowSure = true;
+      if (h !== ROW) { ROW = h; list.firstChild.style.height = S.filtered.length * ROW + 'px'; }
+    }
+  }
   const top = list.scrollTop, h = list.clientHeight || 400;
   const a = Math.max(0, Math.floor(top / ROW) - 6), b = Math.min(S.filtered.length, Math.ceil((top + h) / ROW) + 6);
   const out = [];
@@ -1265,6 +1285,9 @@ async function start() {
   const list = $('rt-rel-list');
   let raf = 0;
   list.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; paintWindow(); }); });
+  const remeasure = () => { rowSure = false; if (S.filtered && !$('rt-app').hidden) paintWindow(); };
+  window.addEventListener('resize', remeasure);
+  window.addEventListener('hashchange', () => { if (onPage()) setTimeout(remeasure, 0); });
   list.addEventListener('click', (e) => { const r = e.target.closest('.rt-vrow'); if (r) selectRow(Number(r.dataset.k)); });
   list.addEventListener('keydown', (e) => {
     if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;

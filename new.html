@@ -54,10 +54,10 @@
         <div class="field src-local-only">
           <span class="label">Your project</span>
           <div class="actions" style="margin:4px 0 6px">
-            <label class="button secondary file-button">Pick an archive<input type="file" id="local-archive" accept=".zip,.tar.gz,.tgz,.tar,application/zip,application/gzip,application/x-tar" hidden></label>
-            <label class="button secondary file-button">Pick a folder<input type="file" id="local-folder" webkitdirectory multiple hidden></label>
+            <label class="button secondary file-button" id="local-archive-label">Pick an archive<input type="file" id="local-archive" accept=".zip,.tar.gz,.tgz,.tar,application/zip,application/gzip,application/x-tar" hidden></label>
+            <label class="button secondary file-button needs-folder" id="local-folder-label">Pick a folder<input type="file" id="local-folder" webkitdirectory multiple hidden></label>
           </div>
-          <span class="hint" id="local-picked">A <code>.zip</code>, <code>.tar.gz</code> or <code>.tar</code>, or a folder. It never leaves your browser: the page builds the installers itself and packs your project inside them, so they're signed by you or unsigned.</span>
+          <span class="hint" id="local-picked">A <code>.zip</code>, <code>.tar.gz</code> or <code>.tar</code><span class="needs-folder">, or a folder</span>. It never leaves your browser: the page builds the installers itself and packs your project inside them, so they're signed by you or unsigned.</span>
         </div>
 
         <div class="field src-repo-only">

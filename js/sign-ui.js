@@ -213,9 +213,26 @@ async function signClicked() {
       status('Building and signing…');
       const { out, name } = await opts.build();
       const sig = await pgp.signDetached(pgpKey, out);
+      const sigBytes = new TextEncoder().encode(sig);
+      // Files go as application/octet-stream: Chrome on Android adds an
+      // extension of its own to a type it knows (.asc.key, .asc.txt).
+      // Two downloads from one tap make Chrome ask "download multiple
+      // files?", and on a phone that stops the second until answered: there
+      // the signature is its own tap. Elsewhere both are saved, and the
+      // button is for a browser that kept the second.
+      const phone = document.documentElement.classList.contains('ib-mobile');
       opts.download(out, name);
-      opts.download(new TextEncoder().encode(sig), name + '.asc', 'application/pgp-signature');
-      status('Saved ' + name + ' and ' + name + '.asc, signed by ' + pgp.fingerprintHex(pgpKey) + '. Check with: gpg --verify ' + name + '.asc ' + name);
+      if (!phone) opts.download(sigBytes, name + '.asc');
+      const fp = pgp.fingerprintHex(pgpKey);
+      status(phone ? 'Saved ' + name + ', signed by ' + fp + '. Now save its signature: '
+        : 'Saved ' + name + ' and ' + name + '.asc, signed by ' + fp + '. Check with: gpg --verify ' + name + '.asc ' + name + '. Only got one file? ');
+      const again = document.createElement('button');
+      again.type = 'button';
+      again.className = phone ? 'secondary' : 'link-button';
+      again.id = 'sign-asc-again';
+      again.textContent = 'Save ' + name + '.asc' + (phone ? '' : ' again');
+      again.addEventListener('click', () => opts.download(sigBytes, name + '.asc'));
+      $('sign-status').append(again);
     }
   } catch (e) {
     status('Couldn\'t sign it: ' + errorText(e), true);
@@ -277,13 +294,13 @@ export function mountSign({ build, download, kind }) {
   $('pgp-make').addEventListener('click', makePgpKey);
   $('pgp-open').addEventListener('click', importPgpKey);
   $('pgp-pub-dl').addEventListener('click', () => {
-    if (pgpKey) download(new TextEncoder().encode(pgp.publicKeyArmored(pgpKey)), fileSafe(pgpKey.userId) + '.pub.asc', 'application/pgp-keys');
+    if (pgpKey) download(new TextEncoder().encode(pgp.publicKeyArmored(pgpKey)), fileSafe(pgpKey.userId) + '.pub.asc');
   });
   $('pgp-sec-dl').addEventListener('click', async () => {
     if (!pgpKey) return;
     const pass = $('pgp-sec-pass').value;
     try {
-      download(new TextEncoder().encode(await pgp.secretKeyArmored(pgpKey, pass)), fileSafe(pgpKey.userId) + '.secret.asc', 'application/pgp-keys');
+      download(new TextEncoder().encode(await pgp.secretKeyArmored(pgpKey, pass)), fileSafe(pgpKey.userId) + '.secret.asc');
       $('pgp-sec-pass').value = '';
       setText('pgp-status', $('pgp-status').textContent.split('\nSave')[0] + '\nSecret key saved' + (pass ? ', protected with your passphrase.' : ' WITHOUT a passphrase: keep that file safe.'));
     } catch (e) { setText('pgp-status', errorText(e), true); }
