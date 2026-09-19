@@ -428,9 +428,12 @@ export function mountApiFooter() {
 }
 
 // Saves the page exactly as it was loaded (IB_PRISTINE, captured before any
-// script changed it), so the saved copy is as good as the original.
+// script changed it), so the saved copy is as good as the original. The
+// Runtimes page may put this browser's catalogue changes inside it, when
+// asked (globalThis.ibPageForSave, js/catalog-editor.js).
 export function savePage() {
-  const html = typeof IB_PRISTINE !== 'undefined' ? IB_PRISTINE : '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  let html = typeof IB_PRISTINE !== 'undefined' ? IB_PRISTINE : '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  if (typeof globalThis.ibPageForSave === 'function') html = globalThis.ibPageForSave(html);
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
   a.download = SAVE_AS;

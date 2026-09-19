@@ -117,10 +117,24 @@ function paintBackend() {
   }
 }
 
+// Made with catalogue changes from this browser (js/local-api.js).
+function paintCatalog(job) {
+  const b = $('job-catalog');
+  if (!b) return;
+  const c = job.result && job.result.catalog;
+  if (c && c.changed) {
+    const n = Number(c.changes) || 0;
+    b.textContent = 'Made with a changed catalogue: ' + n + ' change' + (n === 1 ? '' : 's') + ' made in this browser on the Runtimes page. ' +
+      'What these installers download and run comes from the plan inside them, and their review screens show it in full before installing.';
+    b.hidden = false;
+  } else b.hidden = true;
+}
+
 function paint(job) {
   $('job-view').hidden = false;
   $('job-error').hidden = true;
   paintBackend();
+  paintCatalog(job);
   const title = job.ticket != null ? 'Build #' + job.ticket : 'Build';
   $('job-title').textContent = title;
   document.title = title + ' · TiddlyInstall';

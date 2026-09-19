@@ -2,7 +2,8 @@
 // ticket page. Also fills the "Newest that runs on the user's system" table
 // from GET /api/catalog/runtimes. Without JS the form still works as the
 // no-JS prototype did.
-import { apiRequest, errorText, mountApiFooter, pageUrl, apiLocal } from './api.js';
+import { apiRequest, errorText, mountApiFooter, pageUrl, apiLocal, apiReady, setApiBase, LOCAL } from './api.js';
+import { loadOverlay, overlayState, hasCatalog } from './overlay.js';
 
 mountApiFooter();
 
@@ -257,7 +258,8 @@ function paintCatalog() {
       const v = r.version ? esc(r.version) : '<span class="muted">Nothing in the catalogue runs here</span>';
       return '<tr><td>' + esc(r.covers || r.family || '') + arch + '</td><td>' + v + '</td></tr>';
     }).join('');
-    hint.textContent = 'From the build server\'s catalogue: one row per install plan it makes for ' + (entry.label || rt) + '.';
+    hint.textContent = (apiLocal() ? 'From this page\'s catalogue' + (catalog.changed ? ', with your changes from the Runtimes page' : '') : 'From the build server\'s catalogue') +
+      ': one row per install plan it makes for ' + (entry.label || rt) + '.';
     panel.classList.remove('py-panel');   // show it for every language with data
   } else {
     table.tHead.innerHTML = staticHead;
@@ -268,5 +270,45 @@ function paintCatalog() {
 }
 
 form.elements.runtime.addEventListener('change', paintCatalog);
-apiRequest('/api/catalog/runtimes').then((c) => { catalog = c; paintCatalog(); })
-  .catch(() => { /* a 4xx here just leaves the static table */ });
+let catalogSeq = 0;
+function fetchCatalog() {
+  const seq = ++catalogSeq;
+  apiRequest('/api/catalog/runtimes').then((c) => { if (seq === catalogSeq) { catalog = c; paintCatalog(); } })
+    .catch(() => { /* a 4xx here just leaves the static table */ });
+}
+fetchCatalog();
+// The table follows the catalogue: another server, or changes made on the
+// Runtimes page (used when the page builds installers itself).
+window.addEventListener('ib-api-change', () => { fetchCatalog(); paintOverlayNote(); });
+window.addEventListener('ib-overlay-change', () => { if (apiLocal()) fetchCatalog(); paintOverlayNote(); });
+
+/* ---------- catalogue changes made in this browser ---------- */
+
+// Builds from a changed catalogue are said so before building: the changes
+// decide what the installer downloads and runs.
+const overlayNote = document.createElement('p');
+overlayNote.className = 'warn-box small';
+overlayNote.id = 'new-overlay-note';
+overlayNote.hidden = true;
+lastActions.before(overlayNote);
+
+function paintOverlayNote() {
+  const n = overlayState().changes.length;
+  overlayNote.hidden = !n;
+  if (!n) return;
+  const link = document.createElement('a');
+  link.href = pageUrl('runtimes.html');
+  link.textContent = 'Runtimes page';
+  const what = n + ' catalogue change' + (n === 1 ? '' : 's') + ' made in this browser (';
+  if (apiLocal()) {
+    overlayNote.replaceChildren('Builds use ' + what, link, '). The installers\' review screens show the plan they carry.');
+  } else {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'link-button';
+    b.textContent = 'Build in this page instead';
+    b.addEventListener('click', () => setApiBase(LOCAL));
+    overlayNote.replaceChildren('The build server uses its own catalogue, so your ' + what, link, ') aren\'t used. ', b);
+  }
+}
+if (hasCatalog()) loadOverlay().then(() => apiReady()).then(paintOverlayNote).catch(() => {});

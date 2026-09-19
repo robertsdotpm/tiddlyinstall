@@ -15,10 +15,15 @@
 //   #ib-offline   JSON {built, rev, backend}
 //   #ib-catalog   the catalogue snapshot (catalog.Snapshot), gzipped, base64
 //   #ib-runtimes  GET /api/catalog/runtimes, JSON
+//   #ib-overlay   catalogue changes saved inside the page (js/overlay.js)
 //   #base-windows, #base-linux, #base-macos   the unsigned bases, base64
+//
+// The catalogue is the snapshot with this browser's changes from the
+// Runtimes page on top (js/overlay.js effectiveCatalog). A build made with
+// changes says so in its result (`catalog`), and the build page shows it.
 import { ApiError } from './api.js';
-import { loadSnapshot } from './resolve.js';
 import { validate, runJob } from './builder.js';
+import { effectiveCatalog, effectiveSummary } from './overlay.js';
 
 const enc = new TextEncoder();
 
@@ -40,13 +45,9 @@ export const offlineInfo = (() => {
   try { return JSON.parse(block('ib-offline') || '{}'); } catch (e) { return {}; }
 })();
 
-let catalogPromise = null;
+// {catalog, applied, id}: rebuilt by overlay.js whenever the changes do.
 function catalog() {
-  if (!catalogPromise) {
-    const b = blockBytes('ib-catalog');
-    catalogPromise = b ? loadSnapshot(b) : Promise.reject(new Error('This page has no catalogue inside it.'));
-  }
-  return catalogPromise;
+  return effectiveCatalog();
 }
 
 /* ---------- jobs: the queue's view, in memory ---------- */
@@ -63,29 +64,38 @@ function view(j) {
 }
 
 async function env() {
-  return { catalog: await catalog(), base: (plat) => blockBytes('base-' + plat), backend: offlineInfo.backend || '', embedPlan: true };
+  const eff = await catalog();
+  return { catalog: eff.catalog, overlay: eff, base: (plat) => blockBytes('base-' + plat), backend: offlineInfo.backend || '', embedPlan: true };
 }
 
-async function build(body, progress) {
-  const out = await runJob(body, await env(), progress);
+async function build(body, e, progress) {
+  if (e.overlay.applied) progress('Using ' + e.overlay.applied + ' catalogue change' + (e.overlay.applied === 1 ? '' : 's') + ' from this browser');
+  const out = await runJob(body, e, progress);
   records.set(out.hash, out.record);
-  return {
+  const res = {
     record: out.hash,
     files: out.files.map((f) => ({ platform: f.platform, name: f.name, size: f.size, sha256: f.sha256, signed: '', offline: false,
       url: URL.createObjectURL(new Blob([f.data], { type: 'application/octet-stream' })) })),
   };
+  // Made with a changed catalogue: the build page says so.
+  if (e.overlay.applied) res.catalog = { changed: true, changes: e.overlay.applied, id: e.overlay.id };
+  return res;
 }
 
 async function submit(body) {
   // Checked before queueing, as the server does, so the form shows the error.
+  // The job is built with the catalogue as it is now, even if the changes
+  // move on while it runs.
+  let e;
   try {
-    validate(JSON.parse(JSON.stringify(body)), await env());
-  } catch (e) {
-    throw new ApiError(e.status || 400, e.message, e.code || 'invalid');
+    e = await env();
+    validate(JSON.parse(JSON.stringify(body)), e);
+  } catch (x) {
+    throw new ApiError(x.status || 400, x.message, x.code || 'invalid');
   }
   const j = { id: 'local-' + nextTicket, ticket: nextTicket++, status: 'running', progress: 'Starting', error: '' };
   jobs.set(j.id, j);
-  build(body, (m) => { j.progress = m; })
+  build(body, e, (m) => { j.progress = m; })
     .then((res) => { j.result = res; j.status = 'done'; j.progress = 'Done'; })
     .catch((e) => { j.status = 'failed'; j.error = e && e.message ? e.message : String(e); });
   return view(j);
@@ -99,7 +109,7 @@ async function request(path, opts = {}) {
   let m;
   let out;
   if (method === 'GET' && p === '/api/health') out = { ok: true, offline: true };
-  else if (method === 'GET' && p === '/api/catalog/runtimes') out = JSON.parse(block('ib-runtimes') || '{"runtimes":[]}');
+  else if (method === 'GET' && p === '/api/catalog/runtimes') out = await effectiveSummary(JSON.parse(block('ib-runtimes') || '{"runtimes":[]}'));
   else if (method === 'POST' && p === '/api/jobs') out = await submit(opts.body || {});
   else if (method === 'GET' && (m = /^\/api\/jobs\/([^/]+)$/.exec(p))) {
     const j = jobs.get(decodeURIComponent(m[1]));

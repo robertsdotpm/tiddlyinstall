@@ -37,19 +37,19 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # (section name, page file). The first is the default section.
 PAGES = [("home", "index.html"), ("new", "new.html"), ("build", "build.html"),
-         ("edit", "edit.html"), ("bases", "bases.html")]
+         ("edit", "edit.html"), ("bases", "bases.html"), ("runtimes", "runtimes.html")]
 # Other pages' links in the offline copy.
 LINK_ALIASES = {"create.html": "#new&write", "builds.html": "#home"}
 # Copied to the regular site as they are.
 SITE_FILES = ["index.html", "new.html", "build.html", "builds.html", "edit.html", "bases.html",
-              "create.html", "css", "js", "vendor"]
+              "runtimes.html", "create.html", "css", "js", "vendor"]
 # Dependency order: each module comes after everything it imports. The
 # library modules run first; then the local API is installed, and then the
 # page modules run (they call the API as they start).
 LIB_MODULES = ["js/api.js", "js/ibfile.js", "js/icon.js", "js/der.js", "js/x509.js", "js/legacy.js",
                "js/pkcs12.js", "js/authenticode.js", "js/pgp.js", "js/sign-ui.js", "js/resolve.js",
-               "js/builder.js", "js/local-api.js", "js/router.js"]
-PAGE_MODULES = ["js/new.js", "js/build.js", "js/edit.js"]
+               "js/builder.js", "js/overlay.js", "js/local-api.js", "js/router.js"]
+PAGE_MODULES = ["js/new.js", "js/build.js", "js/edit.js", "js/catalog-editor.js"]
 # The resedit-js/pe-library bundle (icon editing) is a classic script.
 RESEDIT_BUNDLE = "vendor/resedit-bundle.js"
 # First existing path wins.
@@ -243,6 +243,9 @@ def offline_page(catalog_dir, backend):
     report.append(f"  catalogue snapshot ({len(snap):,} bytes)")
     runtimes = open(os.path.join(catalog_dir, "runtimes.json")).read()
     blocks.append(data_block("ib-runtimes", no_close_script(runtimes), "application/json"))
+    # Catalogue changes "Save this page" can put inside the page (js/overlay.js
+    # bakeOverlay); none in a freshly built page.
+    blocks.append(data_block("ib-overlay", "null", "application/json", ' data-placeholder="1"'))
     info = {"built": today, "rev": rev, "backend": backend}
     blocks.append(data_block("ib-offline", json.dumps(info), "application/json"))
 
