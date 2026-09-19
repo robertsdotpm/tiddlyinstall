@@ -30,8 +30,7 @@
   var subtle = w.crypto && w.crypto.subtle;
   function hex(h) { var u = new Uint8Array(h.length / 2); for (var i = 0; i < u.length; i++) u[i] = parseInt(h.substr(i * 2, 2), 16); return u; }
   // Importing a known-good public key tells whether an algorithm is there,
-  // without generating keys at startup (which crashed Alpine's Chromium 152
-  // renderer when done while the page was starting).
+  // without the cost of generating keys at startup.
   function canImport(key, alg) {
     if (!subtle) return false;
     return subtle.importKey('raw', key, alg, false, ['verify']).then(function () { return true; }, function () { return false; });
@@ -213,7 +212,7 @@
     var text = head + effects.join('; ') + '.';
     var c = loadCompat(), m = c && nearestMachine(c), ok = m ? passingOn(c, m) : [];
     if (ok.length) text += ' Tested on ' + m[1] + ' and working: ' + ok.join(', ') + '.';
-    else if (miss.length) text += ' Please use Firefox 52 or later, Chrome 55 or later, Safari 12 or later, or Edge; on Windows XP to 8.1, Firefox 52 ESR or Supermium.';
+    else if (miss.length) text += ' Please use Firefox 52 or later, Chrome 58 or later, Safari 12 or later, or Edge; on Windows XP to 8.1, Firefox 52 ESR or Supermium.';
     return text;
   }
 

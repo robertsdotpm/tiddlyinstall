@@ -1,0 +1,307 @@
+{
+ "time": "2026-09-19T04:15:13.999Z",
+ "machine": "10",
+ "browser": "chrome",
+ "version": "153.0.8010.53",
+ "result": "pass",
+ "seed": 4008070017,
+ "checks": [
+  {
+   "name": "the startup check finds nothing missing",
+   "pass": true
+  },
+  {
+   "name": "the compatibility bar shows only when a feature isn't native",
+   "pass": true
+  },
+  {
+   "name": "the page starts without errors",
+   "pass": true
+  },
+  {
+   "name": "from disk, the page builds installers itself",
+   "pass": true
+  },
+  {
+   "name": "the page has its sections",
+   "pass": true
+  },
+  {
+   "name": "#new shows its page",
+   "pass": true
+  },
+  {
+   "name": "#edit shows its page",
+   "pass": true
+  },
+  {
+   "name": "#bases shows its page",
+   "pass": true
+  },
+  {
+   "name": "#runtimes shows its page",
+   "pass": true
+  },
+  {
+   "name": "#home shows its page",
+   "pass": true
+  },
+  {
+   "name": "New installer: the code editor shows for Python + script (CSS :has())",
+   "pass": true
+  },
+  {
+   "name": "build: the build finishes",
+   "pass": true
+  },
+  {
+   "name": "build: windows download is 991490 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: windows is a .exe",
+   "pass": true
+  },
+  {
+   "name": "build: windows carries the record c4ipybpdh6hfzacvkek5xbqjwb",
+   "pass": true
+  },
+  {
+   "name": "build: windows record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: windows carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: windows plan is for windows only",
+   "pass": true
+  },
+  {
+   "name": "build: windows packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "build: linux download is 141590 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: linux is a .run",
+   "pass": true
+  },
+  {
+   "name": "build: linux carries the record c4ipybpdh6hfzacvkek5xbqjwb",
+   "pass": true
+  },
+  {
+   "name": "build: linux record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: linux carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: linux plan is for linux only",
+   "pass": true
+  },
+  {
+   "name": "build: linux packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "build: macos download is 41631 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: macos is a .zip",
+   "pass": true
+  },
+  {
+   "name": "build: macos carries the record c4ipybpdh6hfzacvkek5xbqjwb",
+   "pass": true
+  },
+  {
+   "name": "build: macos record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: macos carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: macos plan is for macos only",
+   "pass": true
+  },
+  {
+   "name": "build: macos packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "Save this page makes the whole page",
+   "pass": true
+  },
+  {
+   "name": "the saved copy (from the browser's download folder) starts",
+   "pass": true
+  },
+  {
+   "name": "the saved copy starts without errors",
+   "pass": true
+  },
+  {
+   "name": "saved copy: the build finishes",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux download is 141564 bytes",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux is a .run",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux carries the record zpb6fgavx4cud3vj5sbvq7caq3",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux plan is for linux only",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "PGP: the page makes a ed25519 key",
+   "pass": true
+  },
+  {
+   "name": "PGP: signing says saved",
+   "pass": true
+  },
+  {
+   "name": "PGP (ed25519): gpg --verify says Good signature for the saved .run.asc",
+   "pass": true
+  },
+  {
+   "name": "PGP: the signed .run keeps its record",
+   "pass": true
+  },
+  {
+   "name": ".pfx: the page opens the RSA .pfx",
+   "pass": true
+  },
+  {
+   "name": ".pfx: signing says done",
+   "pass": true
+  },
+  {
+   "name": ".pfx: the signed .exe passes osslsigncode verify",
+   "pass": true
+  },
+  {
+   "name": "no page errors while signing",
+   "pass": true
+  },
+  {
+   "name": "served (http://localhost through the tunnel): the page starts, WebCrypto and all",
+   "pass": true
+  },
+  {
+   "name": "served: the page uses the build server",
+   "pass": true
+  }
+ ],
+ "entry": {
+  "id": "chrome",
+  "name": "Google Chrome",
+  "version": "153.0.8010.53",
+  "binary": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+  "driverKind": "chromedriver",
+  "driver": "C:\\ibbrowsers\\drivers\\chromedriver-153.0.8010.53\\chromedriver.exe",
+  "driverVersion": "153.0.8010.53",
+  "args": [
+   "--headless=new"
+  ],
+  "headless": true,
+  "source": "https://dl.google.com/dl/chrome/install/googlechromestandaloneenterprise64.msi",
+  "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.53/win64/chromedriver-win64.zip",
+  "verified": "googlechromestandaloneenterprise64.msi: Authenticode Google LLC, chain ok (osslsigncode) and Valid on the VM; chromedriver: Chrome for Testing build, unsigned, no checksum published (HTTPS from storage.googleapis.com only)",
+  "smoke": "pass",
+  "notes": "installed 2026-09-19 by enterprise MSI; auto-updates; the driver must be refetched to match after an update. 153.0.8010.53 was not yet listed in the CfT JSON endpoints (they stopped at .52) but the direct URL existed."
+ },
+ "capabilities": {
+  "acceptInsecureCerts": false,
+  "browserName": "chrome",
+  "browserVersion": "153.0.8010.53",
+  "chrome": {
+   "chromedriverVersion": "153.0.8010.53 (792bf6722e73a45aa9e47c163b9901bdc17f3230-refs/branch-heads/8010@{#1444})",
+   "userDataDir": "C:\\Windows\\SystemTemp\\scoped_dir6880_107568100"
+  },
+  "fedcm:accounts": true,
+  "goog:chromeOptions": {
+   "debuggerAddress": "localhost:58601"
+  },
+  "goog:processID": 4312,
+  "networkConnectionEnabled": false,
+  "pageLoadStrategy": "normal",
+  "platformName": "windows",
+  "proxy": {},
+  "setWindowRect": true,
+  "strictFileInteractability": false,
+  "timeouts": {
+   "implicit": 0,
+   "pageLoad": 300000,
+   "script": 30000
+  },
+  "unhandledPromptBehavior": "dismiss and notify",
+  "webauthn:extension:cmtgKey": true,
+  "webauthn:extension:credBlob": true,
+  "webauthn:extension:largeBlob": true,
+  "webauthn:extension:minPinLength": true,
+  "webauthn:extension:prf": true,
+  "webauthn:virtualAuthenticators": true
+ },
+ "features": {
+  "?. ?? ||= syntax": true,
+  "BigInt": true,
+  "Blob.stream": true,
+  "CSS :has()": true,
+  "CSS color-mix()": true,
+  "CompressionStream deflate-raw": true,
+  "CompressionStream gzip": true,
+  "DecompressionStream deflate-raw": true,
+  "ES modules": true,
+  "Object.hasOwn": true,
+  "WebCrypto": true,
+  "secure context": true,
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36"
+ },
+ "webcrypto": {
+  "AES-CBC": true,
+  "ECDSA P-256": true,
+  "Ed25519": true,
+  "HMAC": true,
+  "PBKDF2": true,
+  "RSASSA-PKCS1-v1_5": true,
+  "SHA-256": true
+ },
+ "degraded": "",
+ "saveToDisk": "saved",
+ "pgpKey": "ed25519",
+ "pfx": "signed",
+ "driverLog": "Starting ChromeDriver 153.0.8010.53 (792bf6722e73a45aa9e47c163b9901bdc17f3230-refs/branch-heads/8010@{#1444}) on port 44861\r\nOnly local connections are allowed.\r\nPlease see https://chromedriver.chromium.org/security-considerations for suggestions on keeping ChromeDriver safe.\r\nChromeDriver was started successfully on port 44861.\r\n",
+ "protocol": "webdriver",
+ "seconds": 21
+}

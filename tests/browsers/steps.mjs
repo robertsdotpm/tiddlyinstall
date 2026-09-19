@@ -96,7 +96,7 @@ export async function buildHello(js, { runtime, mode, name, code, pkg, platforms
 export async function fetchBlob(js, url) {
   const b64 = await js(`fetch(${JSON.stringify(url)}).then(r => r.arrayBuffer()).then(b => {
     let s = ''; const u = new Uint8Array(b);
-    for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000));
+    for (let i = 0; i < u.length; i += 0x1000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x1000));
     return btoa(s); })`);
   return new Uint8Array(Buffer.from(b64, 'base64'));
 }

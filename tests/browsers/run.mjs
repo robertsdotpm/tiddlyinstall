@@ -199,7 +199,7 @@ async function captured(js, name, ms = 60000) {
     if (await js(`!!(window.__ibDl && window.__ibDl[${JSON.stringify(name)}])`)) {
       const b64 = await js(`window.__ibDl[${JSON.stringify(name)}].then((b) => {
         let s = ''; const u = new Uint8Array(b);
-        for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000));
+        for (let i = 0; i < u.length; i += 0x1000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x1000));
         return btoa(s); })`);
       return Buffer.from(b64, 'base64');
     }
@@ -272,6 +272,10 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
     // The page, and the signing fixtures, on the machine.
     const pageFile = testPage(tmpRoot);
     const pageName = path.basename(pageFile);
+    // Which page this was: its build (the generator line names the git
+    // revision it was built from) and a hash of the file.
+    const gen = /<meta name="generator" content="[^,"]*, ([^,"]+), ([^"]+)">/.exec(fs.readFileSync(PAGE, 'utf8').slice(0, 4000));
+    rec.page = { rev: gen ? gen[1] : '', hash: pageName.replace(/^ibtest-|\.html$/g, '') };
     const have = remote.list(work);
     if (!have.includes(pageName)) {
       for (const old of have.filter((f) => /^ibtest-.*\.html$/.test(f))) remote.removeFile(remote.dir('work', old));
