@@ -1,10 +1,10 @@
 {
- "updated": "2026-09-19T03:35:11.677Z",
+ "updated": "2026-09-19T03:43:34.792Z",
  "machines": {
   "7": {
    "os": "windows",
    "ssh": "x@10.0.1.231",
-   "read": "2026-09-19T03:34:59.623Z",
+   "read": "2026-09-19T03:43:34.789Z",
    "browsers": [
     {
      "id": "chrome",
@@ -43,7 +43,7 @@
      "notes": "Silent /S install, not default browser. distribution\\policies.json {DisableAppUpdate:true} added so the 115 ESR line (still updating) cannot move the version under the manifest/driver. geckodriver >=0.33 checks the Host header: forward with the same local port as the driver port (ssh -L P:127.0.0.1:P) or it answers 'Invalid Host header'. geckodriver 0.35.0 exits 0xC0000139 on Win7 and 0.36.0 crashes (0xC0000005), so 0.34.0 (min Firefox 115) is used here."
     },
     {
-     "id": "supermium",
+     "id": "supermium-installed",
      "name": "Supermium",
      "version": "126.0.6478.256",
      "binary": "C:\\Program Files\\Supermium\\chrome.exe",
@@ -58,14 +58,32 @@
      "driverSource": "https://chromedriver.storage.googleapis.com/109.0.5414.74/chromedriver_win32.zip",
      "verified": "Supermium (win32ss); binary unsigned, no published checksums checked (preinstalled); driver: zip MD5 matches storage.googleapis.com x-goog-hash (tEekyyOvUdqCcvbYZ7mxxw==); chromedriver.exe unsigned, no checksum file published",
      "smoke": "pass",
-     "notes": "driver is a 1-line .cmd wrapper running chromedriver.exe --disable-build-check %* (plain chromedriver 109 refuses: 'only supports Chrome version 109, current 126.0.6478.256'). Same-major chromedriver 126.0.6478.182 (CfT) never starts on Win7 (hangs silently, no output). Stop it with taskkill /F /IM chromedriver.exe as usual. UA reports HeadlessChrome/130 on Windows NT 10.0 (Supermium spoof)."
+     "notes": "driver is a 1-line .cmd wrapper running chromedriver.exe --disable-build-check %* (plain chromedriver 109 refuses: 'only supports Chrome version 109, current 126.0.6478.256'). Same-major chromedriver 126.0.6478.182 (CfT) never starts on Win7 (hangs silently, no output). Stop it with taskkill /F /IM chromedriver.exe as usual. UA reports HeadlessChrome/130 on Windows NT 10.0 (Supermium spoof). [2026-09-19: id renamed from 'supermium' to 'supermium-installed'; the id 'supermium' now denotes the portable Supermium 144 in C:\\ibbrowsers\\supermium-144. This install is unchanged.]"
+    },
+    {
+     "id": "supermium",
+     "name": "Supermium 144 (portable)",
+     "version": "144.0.7559.256",
+     "binary": "C:\\ibbrowsers\\supermium-144\\Supermium\\chrome.exe",
+     "driverKind": "chromedriver",
+     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-109.0.5414.74\\chromedriver-nobuildcheck.cmd",
+     "driverVersion": "109.0.5414.74",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://github.com/win32ss/supermium/releases/download/v144-r5/supermium_144_64_nonsetup.zip",
+     "driverSource": "https://chromedriver.storage.googleapis.com/109.0.5414.74/chromedriver_win32.zip",
+     "verified": "supermium_144_64_nonsetup.zip SHA-256 805232e5cde1bf6971748bc7fb6a2cb09fdfce9ceb91062a1814b228139956ca matches the digest GitHub publishes for the asset (api.github.com releases/tags/v144-r5); all 295/297 unpacked files copied, file count and byte total match on the VM; chrome.exe unsigned (osslsigncode: no signature), FileVersion 144.0.7559.256",
+     "smoke": "pass",
+     "notes": "Portable install (nonsetup zip, win64) unpacked to C:\\ibbrowsers\\supermium-144, alongside the installed Supermium 126 (id supermium-installed). Starts headless from the SSH session with only --headless=new (no --no-sandbox or --disable-gpu-rasterization needed): DevTools on 127.0.0.1 reports Chrome/144.0.7559.256, protocol 1.3; over CDP via ssh -L, file:///C:/ibbrowsers/smoke.html -> UA 'HeadlessChrome/144.0.0.0' (Windows NT 10.0; Win64; x64 spoof), isSecureContext true, crypto.subtle true. Driver: official CfT chromedriver 144.0.7559.133 (win64, storage.googleapis.com, zip MD5 matched x-goog-hash) does not load: its PE header requires OS/subsystem version 10.0, so CreateProcess fails with ERROR_BAD_EXE_FORMAT (Python WinError 193 '%1 is not a valid Win32 application') (from a plain cmd.exe over SSH it instead hangs silently with no output). Folder removed. The chromedriver 109 --disable-build-check wrapper works: W3C POST /session with goog:chromeOptions {binary, args:[--headless=new]} -> browserVersion 144.0.7559.256, file:// navigate + execute/sync ok (UA HeadlessChrome/144.0.0.0, isSecureContext true, crypto.subtle true), DELETE ok. CDP also works directly."
     }
    ]
   },
   "10": {
    "os": "windows",
    "ssh": "matth@10.0.1.199",
-   "read": "2026-09-19T03:35:00.522Z",
+   "read": "2026-09-19T03:42:42.621Z",
    "browsers": [
     {
      "id": "chrome",
@@ -144,7 +162,7 @@
   "11": {
    "os": "windows",
    "ssh": "matth@10.0.1.123",
-   "read": "2026-09-19T03:35:01.295Z",
+   "read": "2026-09-19T03:42:43.405Z",
    "browsers": [
     {
      "id": "chrome",
@@ -205,7 +223,7 @@
   "2022": {
    "os": "windows",
    "ssh": "administrator@10.0.1.248",
-   "read": "2026-09-19T03:35:01.573Z",
+   "read": "2026-09-19T03:42:43.658Z",
    "browsers": [
     {
      "id": "chrome",
@@ -284,7 +302,7 @@
   "xp": {
    "os": "windows",
    "ssh": "matthew@10.0.1.132",
-   "read": "2026-09-19T03:35:02.342Z",
+   "read": "2026-09-19T03:43:33.269Z",
    "browsers": [
     {
      "id": "firefox",
@@ -303,7 +321,7 @@
      "notes": "Installed silently (/S), not default. No working driver on XP: geckodriver 0.16.1/0.17.0/0.18.0/0.19.1 (win32) exit 0xC0000139 STATUS_ENTRYPOINT_NOT_FOUND at load; 0.20.1 and 0.21.0 start and listen but abort on the first HTTP request ('thread panicked while processing panic. aborting.'). Firefox 52 has no headless mode. No policies.json (FF52 predates enterprise policies; 52.9.0 is the final XP build so no update can arrive). On Vista the same FF52 build needs the content sandbox off to run from the SSH service session (see vista); not applied here since no driver can use it."
     },
     {
-     "id": "supermium",
+     "id": "supermium-installed",
      "name": "Supermium",
      "version": "122.0.6261.152",
      "binary": "C:\\Program Files\\Supermium\\chrome.exe",
@@ -318,14 +336,33 @@
      "driverSource": null,
      "verified": "Supermium (win32ss); binary unsigned, no published checksums checked (preinstalled)",
      "smoke": "fail: no chromedriver runs on XP and speaks Chromium 122's DevTools",
-     "notes": "win32ss/supermium publishes no chromedriver asset (checked all releases incl. v122-r5/r6, and the nonsetup zips). Official chromedriver 122.0.6261.128 (CfT win32) and 109.0.5414.74 exit 0xC0000139 on XP; chromedriver 2.22-2.46 same. chromedriver 2.21 (last that loads on XP) launches Supermium headless but session creation fails: 'Runtime.executionContextCreated has invalid context' (DevTools protocol too new for it), and it only reads the legacy 'chromeOptions' key."
+     "notes": "win32ss/supermium publishes no chromedriver asset (checked all releases incl. v122-r5/r6, and the nonsetup zips). Official chromedriver 122.0.6261.128 (CfT win32) and 109.0.5414.74 exit 0xC0000139 on XP; chromedriver 2.22-2.46 same. chromedriver 2.21 (last that loads on XP) launches Supermium headless but session creation fails: 'Runtime.executionContextCreated has invalid context' (DevTools protocol too new for it), and it only reads the legacy 'chromeOptions' key. [2026-09-19: id renamed from 'supermium' to 'supermium-installed'; the id 'supermium' now denotes the portable Supermium 144 in C:\\ibbrowsers\\supermium-144. This install is unchanged.]"
+    },
+    {
+     "id": "supermium",
+     "name": "Supermium 144 (portable)",
+     "version": "144.0.7559.256",
+     "binary": "C:\\ibbrowsers\\supermium-144\\Supermium\\chrome.exe",
+     "driverKind": "chromedriver",
+     "driver": null,
+     "driverVersion": null,
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://github.com/win32ss/supermium/releases/download/v144-r5/supermium_144_32_nonsetup.zip",
+     "driverSource": null,
+     "verified": "supermium_144_32_nonsetup.zip SHA-256 17acfcdf89ea651905053b50b0fce5a28db19cb2c69ed5579c7b177806ed6d31 matches the digest GitHub publishes for the asset (api.github.com releases/tags/v144-r5); all 295/297 unpacked files copied, file count and byte total match on the VM; chrome.exe unsigned (osslsigncode: no signature), FileVersion 144.0.7559.256",
+     "protocol": "cdp",
+     "smoke": "pass (cdp; no chromedriver)",
+     "notes": "Portable install (nonsetup zip, win32) unpacked to C:\\ibbrowsers\\supermium-144, alongside the installed Supermium 122 (id supermium-installed). Starts headless from the SSH session with only --headless=new (no --no-sandbox or --disable-gpu-rasterization needed): DevTools on 127.0.0.1 reports Chrome/144.0.7559.256, protocol 1.3; over CDP via ssh -L, file:///C:/ibbrowsers/smoke.html -> UA 'HeadlessChrome/144.0.0.0' (Windows NT 10.0; Win64; x64 spoof), isSecureContext true, crypto.subtle true. No driver: official CfT chromedriver 144.0.7559.133 (win32, storage.googleapis.com, zip MD5 matched x-goog-hash) does not load: its PE header requires OS/subsystem version 10.0, so CreateProcess fails with ERROR_BAD_EXE_FORMAT (0x800700C1 '... is not a valid Win32 application' from WScript.Shell.Exec) (from a plain cmd.exe over SSH it instead hangs silently with no output). Folder removed. Drive over the DevTools protocol through ssh -L (protocol: cdp), as for Supermium 122."
     }
    ]
   },
   "vista": {
    "os": "windows",
    "ssh": "x@10.0.1.167",
-   "read": "2026-09-19T03:35:02.756Z",
+   "read": "2026-09-19T03:43:34.060Z",
    "browsers": [
     {
      "id": "firefox",
@@ -344,7 +381,7 @@
      "notes": "Preinstalled, update channel esr. geckodriver 0.17.0 is the release matched to Firefox 52 (0.17-0.21 all start on Vista). Runs windowed in the SSH (service) session: works, headless not available in FF52. REQUIRED CHANGE: with the default content sandbox, e10s content processes die in that session (MessageChannel 'cannot send/recv', page loads hang), so C:\\Program Files\\Mozilla Firefox\\distribution\\distribution.ini sets security.sandbox.content.level=0 (test VM only; remove the file to revert)."
     },
     {
-     "id": "supermium",
+     "id": "supermium-installed",
      "name": "Supermium",
      "version": "122.0.6261.152",
      "binary": "C:\\Program Files\\Supermium\\chrome.exe",
@@ -359,15 +396,34 @@
      "driverSource": "https://chromedriver.storage.googleapis.com/2.29/chromedriver_win32.zip",
      "verified": "Supermium (win32ss); binary unsigned, no published checksums checked (preinstalled); driver: chromedriver_win32.zip 2.29 from chromedriver.storage.googleapis.com, unsigned, no checksum file",
      "smoke": "fail: with the contract's W3C request (goog:chromeOptions) chromedriver 2.29 ignores the binary ('cannot find Chrome binary'); passes with legacy JSON-wire: 'chromeOptions' key + POST /session/<id>/execute",
-     "notes": "No official driver newer than 2.29 runs on Vista (2.30+, 109, 122 exit 0xC0000139). 2.29 drives Supermium 122 headless fine over the legacy protocol: UA 'HeadlessChrome/122.0.0.0' (reports Windows NT 10.0), isSecureContext true, crypto.subtle true. Harness needs a legacy path (desiredCapabilities with 'chromeOptions', /execute instead of /execute/sync) to use it. Driven over the DevTools protocol by tests/browsers (protocol: cdp): chromedriver 2.29, the newest that starts on Vista, predates W3C WebDriver.",
+     "notes": "No official driver newer than 2.29 runs on Vista (2.30+, 109, 122 exit 0xC0000139). 2.29 drives Supermium 122 headless fine over the legacy protocol: UA 'HeadlessChrome/122.0.0.0' (reports Windows NT 10.0), isSecureContext true, crypto.subtle true. Harness needs a legacy path (desiredCapabilities with 'chromeOptions', /execute instead of /execute/sync) to use it. Driven over the DevTools protocol by tests/browsers (protocol: cdp): chromedriver 2.29, the newest that starts on Vista, predates W3C WebDriver. [2026-09-19: id renamed from 'supermium' to 'supermium-installed'; the id 'supermium' now denotes the portable Supermium 144 in C:\\ibbrowsers\\supermium-144. This install is unchanged.]",
      "protocol": "cdp"
+    },
+    {
+     "id": "supermium",
+     "name": "Supermium 144 (portable)",
+     "version": "144.0.7559.256",
+     "binary": "C:\\ibbrowsers\\supermium-144\\Supermium\\chrome.exe",
+     "driverKind": "chromedriver",
+     "driver": null,
+     "driverVersion": null,
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://github.com/win32ss/supermium/releases/download/v144-r5/supermium_144_32_nonsetup.zip",
+     "driverSource": null,
+     "verified": "supermium_144_32_nonsetup.zip SHA-256 17acfcdf89ea651905053b50b0fce5a28db19cb2c69ed5579c7b177806ed6d31 matches the digest GitHub publishes for the asset (api.github.com releases/tags/v144-r5); all 295/297 unpacked files copied, file count and byte total match on the VM; chrome.exe unsigned (osslsigncode: no signature), FileVersion 144.0.7559.256",
+     "protocol": "cdp",
+     "smoke": "pass (cdp; no chromedriver)",
+     "notes": "Portable install (nonsetup zip, win32) unpacked to C:\\ibbrowsers\\supermium-144, alongside the installed Supermium 122 (id supermium-installed). Starts headless from the SSH session with only --headless=new (no --no-sandbox or --disable-gpu-rasterization needed): DevTools on 127.0.0.1 reports Chrome/144.0.7559.256, protocol 1.3; over CDP via ssh -L, file:///C:/ibbrowsers/smoke.html -> UA 'HeadlessChrome/144.0.0.0' (Windows NT 10.0; Win64; x64 spoof), isSecureContext true, crypto.subtle true. No driver: official CfT chromedriver 144.0.7559.133 (win32, storage.googleapis.com, zip MD5 matched x-goog-hash) does not load: its PE header requires OS/subsystem version 10.0, so CreateProcess fails with ERROR_BAD_EXE_FORMAT (Python WinError 193 '%1 is not a valid Win32 application') (from a plain cmd.exe over SSH it instead hangs silently with no output). Folder removed. Drive over the DevTools protocol through ssh -L (protocol: cdp), as for Supermium 122."
     }
    ]
   },
   "8.1": {
    "os": "windows",
    "ssh": "x@10.0.1.165",
-   "read": "2026-09-19T03:35:03.004Z",
+   "read": "2026-09-19T03:42:45.032Z",
    "browsers": [
     {
      "id": "chrome",
@@ -446,7 +502,7 @@
   "centos6": {
    "os": "linux",
    "ssh": "x@10.0.1.183",
-   "read": "2026-09-19T03:35:03.387Z",
+   "read": "2026-09-19T03:42:45.423Z",
    "browsers": [
     {
      "id": "chrome",
@@ -487,7 +543,7 @@
   "centos7": {
    "os": "linux",
    "ssh": "x@10.0.1.221",
-   "read": "2026-09-19T03:35:03.960Z",
+   "read": "2026-09-19T03:42:46.025Z",
    "browsers": [
     {
      "id": "chrome",
@@ -531,7 +587,7 @@
   "ubuntu1404": {
    "os": "linux",
    "ssh": "x@10.0.1.117",
-   "read": "2026-09-19T03:35:04.379Z",
+   "read": "2026-09-19T03:42:46.476Z",
    "browsers": [
     {
      "id": "chrome",
@@ -572,7 +628,7 @@
   "ubuntu1604": {
    "os": "linux",
    "ssh": "x@10.0.1.112",
-   "read": "2026-09-19T03:35:04.612Z",
+   "read": "2026-09-19T03:42:46.751Z",
    "browsers": [
     {
      "id": "chrome",
@@ -615,7 +671,7 @@
   "ubuntu1804": {
    "os": "linux",
    "ssh": "x@10.0.1.144",
-   "read": "2026-09-19T03:35:05.466Z",
+   "read": "2026-09-19T03:42:47.612Z",
    "browsers": [
     {
      "id": "chrome",
@@ -658,7 +714,7 @@
   "rocky8": {
    "os": "linux",
    "ssh": "x@10.0.1.131",
-   "read": "2026-09-19T03:35:05.802Z",
+   "read": "2026-09-19T03:42:47.985Z",
    "browsers": [
     {
      "id": "chrome",
@@ -701,7 +757,7 @@
   "ubuntu2004": {
    "os": "linux",
    "ssh": "x@10.0.1.118",
-   "read": "2026-09-19T03:35:06.628Z",
+   "read": "2026-09-19T03:42:48.952Z",
    "browsers": [
     {
      "id": "chrome",
@@ -744,7 +800,7 @@
   "ubuntu2204": {
    "os": "linux",
    "ssh": "x@10.0.1.203",
-   "read": "2026-09-19T03:35:07.716Z",
+   "read": "2026-09-19T03:42:49.963Z",
    "browsers": [
     {
      "id": "chrome",
@@ -787,7 +843,7 @@
   "debian12": {
    "os": "linux",
    "ssh": "x@10.0.1.235",
-   "read": "2026-09-19T03:35:08.281Z",
+   "read": "2026-09-19T03:42:50.583Z",
    "browsers": [
     {
      "id": "chrome",
@@ -830,7 +886,7 @@
   "alpine": {
    "os": "linux",
    "ssh": "x@10.0.1.200",
-   "read": "2026-09-19T03:35:08.618Z",
+   "read": "2026-09-19T03:42:50.915Z",
    "browsers": [
     {
      "id": "chromium",
@@ -874,7 +930,7 @@
   "mac": {
    "os": "mac",
    "ssh": "Matthew@the-mac-test-host",
-   "read": "2026-09-19T03:35:11.677Z",
+   "read": "2026-09-19T03:42:53.955Z",
    "browsers": [
     {
      "id": "chrome",

@@ -91,7 +91,7 @@ function pairs(inv) {
 // WebDriver where there's a driver; the DevTools protocol for a Chromium
 // without a usable one (XP; Edge 109 on 8.1; Vista, whose last chromedriver
 // predates W3C: "protocol": "cdp" in its manifest).
-const CHROMIUM = new Set(['chrome', 'chromium', 'edge', 'supermium']);
+const CHROMIUM = new Set(['chrome', 'chromium', 'edge', 'supermium', 'supermium-installed']);
 function protocolOf(b) {
   if (b.protocol) return b.protocol;
   if (b.driver) return 'webdriver';
