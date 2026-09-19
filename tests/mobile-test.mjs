@@ -335,6 +335,12 @@ async function newInstaller(w, shots) {
 }
 
 async function build(w, shots) {
+  // Served by a build server, the build is the page's own ("No server" in
+  // the settings, as a person would choose it): the steps read its jobs.
+  if (!(await B.js(`document.documentElement.classList.contains('ib-local')`))) {
+    await B.js(`document.querySelector('.api-ctl-edit').click(); document.querySelector('.api-ctl-local').click()`);
+    await sleep(300);
+  }
   const job = await buildHello(B.js, { runtime: 'python', mode: 'unsigned', name: 'Hello phone ' + w + (ADB ? ' ' + Date.now().toString(36) : ''), code: "print('hello from a phone')\n", platforms: ['windows', 'linux', 'macos'] });
   ok(job && job.status === 'done' && job.result.files.length === 3, `${B.name} ${w}px build: an unsigned installer builds from the form`, JSON.stringify(job).slice(0, 300));
   await waitFor(`!document.getElementById('job-downloads').hidden && document.querySelectorAll('#job-files a[download]').length === 3`, 'the download links');
@@ -510,6 +516,7 @@ async function allSections(w, shots) {
   await header(w, shots);
   await newInstaller(w, shots);
   const job = await build(w, shots);
+  await B.js(`localStorage.removeItem('ib.api')`);   // the next start is as served again
   await editor(w, shots);
   if (ADB && job && job.status === 'done') await deviceDownloads(job);
   await sources(w, shots);
