@@ -198,6 +198,8 @@ MAC_SCRIPT = r'''
 set -u
 cd "$HOME/ibtpl" || exit 90
 rm -rf x && mkdir x && cd x && ditto -x -k ../in.zip . || exit 91
+# What was there before: only what this install adds counts as left behind.
+before=$(ls "$HOME/Applications" 2>/dev/null; [ -d "$HOME/Applications" ] && echo "(Applications)")
 app=$(ls -d *.app)
 IB_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --log="$HOME/ibtpl/i.log" </dev/null >/dev/null 2>&1
 echo "@install $?"
@@ -210,7 +212,9 @@ if [ -n "$d" ]; then
   echo "@file"; cat "$HOME/ibtpl/selftest.txt" 2>/dev/null
   sh "$d/uninstall.sh" --yes </dev/null >/dev/null 2>&1; echo "@uninstall $?"
 fi
-echo "@left"; ls "$HOME/Library/Application Support/ib" "$HOME/Applications" 2>/dev/null
+after=$(ls "$HOME/Applications" 2>/dev/null; [ -d "$HOME/Applications" ] && echo "(Applications)")
+echo "@left"; ls "$HOME/Library/Application Support/ib" 2>/dev/null
+[ "$before" = "$after" ] || echo "Applications: $after"
 echo "@log"; tail -12 "$HOME/ibtpl/i.log"
 '''
 
@@ -319,11 +323,21 @@ if exist "%A%\data\launch.log" (echo @applog& type "%A%\data\launch.log")
 echo @uninstall %ERRORLEVEL%
 set /a n=0
 :wait
-if not exist "%A%" goto left
+if not exist "%A%" goto gone
 set /a n+=1
 if %n% GEQ 90 goto left
 ping -n 2 127.0.0.1 >nul
 goto wait
+:gone
+rem The uninstaller finishes from %TEMP% (Un_A.exe) after the app's folder
+rem is gone: the runtime folders it shares with the next test go last.
+set /a n=0
+:unwait
+tasklist /fi "imagename eq Un_A.exe" 2>nul | find /i "Un_A.exe" >nul || goto left
+set /a n+=1
+if %n% GEQ 120 goto left
+ping -n 2 127.0.0.1 >nul
+goto unwait
 :left
 ping -n 3 127.0.0.1 >nul
 echo @left
@@ -345,8 +359,27 @@ def win_put(host, name, text):
     return code, err
 
 
+# Other harnesses' folders: tests/matrix (C:\ibtest, and its cleanup removes
+# every app under %LOCALAPPDATA%\ib), behaviour.py (C:\ibbtest).
+BUSY = "cmd /c if exist C:\\ibtest (echo BUSY) else if exist C:\\ibbtest (echo BUSY)"
+
+
+def wait_idle(host):
+    """Wait while another test harness is using the VM (up to an hour)."""
+    for i in range(360):
+        code, out, _ = sh(["ssh", host, BUSY], timeout=60)
+        if "BUSY" not in out:
+            return True
+        if i == 0:
+            print(f"  {host}: another test run is using it; waiting", flush=True)
+        time.sleep(10)
+    return False
+
+
 def run_windows(host, key, b, f, a):
     ident = appid(b["record"])
+    if not wait_idle(host):
+        return "fail", "the VM stayed busy with another test run for an hour"
     sh(["ssh", host, f'cmd /c "rd /s /q {WIN_DIR} & mkdir {WIN_DIR}"'], timeout=60)
     code, _, err = sh(["scp", "-q", f, f"{host}:C:/ibtpl/{Path(f).name}"], timeout=900)
     if code:

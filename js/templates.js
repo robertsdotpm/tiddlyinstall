@@ -1371,7 +1371,6 @@ proc selftest(url: string) {.async.} =
   let greeting = await client.getContent(url & "api/greet?name=test")
   if "Greet" in body and greeting == "Hello, test!":
     selftestOk()
-  quit(0)
 
 let port = freePort()
 let url = "http://127.0.0.1:" & $port & "/"
@@ -1379,7 +1378,7 @@ echo "My App is running at ", url
 echo "Close this window to stop it."
 asyncCheck newAsyncHttpServer().serve(port, answer, "127.0.0.1")
 if getEnv("IB_TEMPLATE_SELFTEST") == "1":
-  asyncCheck selftest(url)
+  selftest(url).addCallback(proc () = quit(0))
 else:
   openDefaultBrowser(url)
 runForever()
