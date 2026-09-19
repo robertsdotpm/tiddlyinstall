@@ -119,7 +119,8 @@
     else if ((m = /(?:Firefox|FxiOS)\/([\d.]+)/.exec(ua))) { env.browser = 'Firefox'; env.version = m[1]; }
     else if ((m = /(?:OPR|Opera)\/([\d.]+)/.exec(ua))) { env.browser = 'Opera'; env.version = m[1]; }
     else if ((m = /(?:Chrome|CriOS)\/([\d.]+)/.exec(ua))) { env.browser = /Chromium\//.test(ua) ? 'Chromium' : 'Chrome'; env.version = m[1]; }
-    else if ((m = /Version\/([\d.]+).*Safari\//.exec(ua))) { env.browser = 'Safari'; env.version = m[1]; }
+    // Safari's engine on Linux (WebKitGTK: MiniBrowser, GNOME Web) says Safari, with a made-up version.
+    else if ((m = /Version\/([\d.]+).*Safari\//.exec(ua))) { env.browser = /X11|Linux/.test(ua) && !/Android/.test(ua) ? 'WebKitGTK' : 'Safari'; env.version = env.browser === 'Safari' ? m[1] : ''; }
     else if ((m = /(?:MSIE |Trident\/.*rv:)([\d.]+)/.exec(ua))) { env.browser = 'Internet Explorer'; env.version = m[1]; }
     if ((m = /Windows NT ([\d.]+)/.exec(ua))) { env.os = 'Windows'; env.osVersion = m[1]; }
     else if ((m = /Android ([\d.]+)/.exec(ua))) { env.os = 'Android'; env.osVersion = m[1]; }
@@ -132,6 +133,7 @@
   }
 
   var env = parseUA(navigator.userAgent || '');
+  if (navigator.brave && env.browser === 'Chrome') env.browser = 'Brave';   // its user agent is Chrome's
   // Client hints, where the browser has them: truer OS version (Windows 11
   // says "Windows NT 10.0" in its user agent) and the CPU.
   function hints() {
@@ -199,7 +201,7 @@
   }
   function browserId(name) {
     var n = String(name).toLowerCase();
-    return /edge/.test(n) ? 'edge' : /firefox/.test(n) ? 'firefox' : /supermium/.test(n) ? 'supermium' : /opera|opr/.test(n) ? 'opera' : /safari/.test(n) ? 'safari' : /chromium/.test(n) ? 'chromium' : /chrome/.test(n) ? 'chrome' : /internet explorer/.test(n) ? 'ie' : n;
+    return /edge/.test(n) ? 'edge' : /firefox/.test(n) ? 'firefox' : /supermium/.test(n) ? 'supermium' : /opera|opr/.test(n) ? 'opera' : /brave/.test(n) ? 'brave' : /webkitgtk/.test(n) ? 'webkitgtk' : /safari/.test(n) ? 'safari' : /chromium/.test(n) ? 'chromium' : /chrome/.test(n) ? 'chrome' : /internet explorer/.test(n) ? 'ie' : n;
   }
   function label(list, id) { for (var i = 0; i < list.length; i++) if (list[i][0] === id) return list[i][1]; return id; }
 
@@ -214,6 +216,7 @@
     if (id === 'chrome') return 'https://www.google.com/chrome/';
     if (id === 'edge') return 'https://www.microsoft.com/edge';
     if (id === 'opera') return 'https://www.opera.com/';
+    if (id === 'brave' || id === 'vivaldi') return id === 'brave' ? 'https://brave.com/download/' : 'https://vivaldi.com/download/';
     return null;
   }
   // Used when this copy of the page has no test results for the visitor's OS.
@@ -222,13 +225,14 @@
 
   // The browsers that passed on machine m, the newest of each (Supermium
   // and its older install are one), with where to get each. Not Internet
-  // Explorer, nor any that passed only on the page's ES5 copy (Chrome 49):
+  // Explorer, nor any that passed only on the page's ES5 copy (Chrome 49),
+  // nor stand-ins tested for their engine (compat.json's proxies: WebKitGTK):
   // they work, but are no browser to move to.
   function suggestions(c, m) {
     var best = {}, order = [], i;
     for (i = 0; i < c.results.length; i++) {
       var r = c.results[i], fam = r[1].replace(/-installed$/, '');
-      if (r[0] !== m[0] || r[3] !== 'pass' || fam === 'ie' || /ES5/.test(r[4])) continue;
+      if (r[0] !== m[0] || r[3] !== 'pass' || fam === 'ie' || /ES5/.test(r[4]) || ('|' + (c.proxies || []).join('|') + '|').indexOf('|' + fam + '|') >= 0) continue;
       if (!best[fam]) order.push(fam);
       if (!best[fam] || parseInt(r[2], 10) > parseInt(best[fam][2], 10)) best[fam] = r;
     }

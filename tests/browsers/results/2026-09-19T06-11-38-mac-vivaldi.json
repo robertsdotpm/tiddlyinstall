@@ -1,0 +1,44 @@
+{
+ "time": "2026-09-19T06:11:38.999Z",
+ "machine": "mac",
+ "browser": "vivaldi",
+ "version": "8.2.4133.68",
+ "result": "error: unknown error: unknown error: unable to discover open window in chrome",
+ "seed": 7372753,
+ "checks": [
+  {
+   "name": "run",
+   "pass": false,
+   "detail": "Error: unknown error: unknown error: unable to discover open window in chrome\n    at wd (file:///home/x/projects/installer-builder/tests/browsers/webdriver.mjs:46:52)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async Session.create (file:///home/x/projects/installer-builder/tests/browsers/webdriver.mjs:70:15)\n    at async runPair (file:///home/x/projects/installer-builder/tests/browsers/run.mjs:332:19)\n    at async worker (file:///home/x/projects/installer-builder/tests/browsers/run.mjs:642:19)\n    at async Promise.all (index 0)\n    at async main (file:///home/x/projects/installer-builder/tests/browsers/run.mjs:650:3)\n    at async file:///home/x/projects/installer-builder/tests/browsers/run.mjs:655:1"
+  }
+ ],
+ "entry": {
+  "id": "vivaldi",
+  "name": "Vivaldi",
+  "version": "8.2.4133.68",
+  "chromiumVersion": "152.0.7977.137",
+  "binary": "/Users/Matthew/ibbrowsers/vivaldi-8.2.4133.68/Vivaldi.app/Contents/MacOS/Vivaldi",
+  "driverKind": "chromedriver",
+  "driver": "/Users/Matthew/ibbrowsers/drivers/chromedriver-152.0.7977.137/chromedriver",
+  "driverVersion": "152.0.7977.137",
+  "args": [
+   "--headless=new"
+  ],
+  "headless": true,
+  "source": "https://downloads.vivaldi.com/stable/Vivaldi.8.2.4133.68.universal.dmg (the version update.vivaldi.com's mac appcast names; sha256 66c114dd721496f2b057d8d6c15e38679630e05c7a24d4ecbc5f2051235b8c60)",
+  "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/152.0.7977.137/mac-arm64/chromedriver-mac-arm64.zip (MD5 matches x-goog-hash); Vivaldi 8.2 is Chromium 152.0.7977.137",
+  "verified": "codesign --verify --deep --strict ok, spctl accepted (Notarized Developer ID, Vivaldi Technologies AS 4XF3XNRN6Y); chromedriver ad-hoc signed only (codesign ok, spctl rejects), as Chrome for Testing's",
+  "smoke": "pending",
+  "notes": "Copied out of the dmg (hdiutil attach -nobrowse -readonly, detached). chromedriver reports its Chromium version; the harness records Vivaldi's own (version) and the Chromium (chromium). DevTools reports Vivaldi as Chrome/8.2.4133.68 (Vivaldi's own version), so chromedriver takes it for Chrome 8 and refuses; --disable-build-check (driverArgs) skips that check.",
+  "driverArgs": [
+   "--disable-build-check"
+  ]
+ },
+ "driverLog": "channel 3: open failed: connect failed: Connection refused\r\nStarting ChromeDriver 152.0.7977.137 (f8e8e2ac560f9a3b2a3a6d1074cfcfa63ac4bec9-refs/branch-heads/7977@{#2693}) on port 44125\nOnly local connections are allowed.\nPlease see https://chromedriver.chromium.org/security-considerations for suggestions on keeping ChromeDriver safe.\nChromeDriver was started successfully on port 44125.\n[1789798336.193][WARNING]: You are using an unsupported command-line switch: --disable-build-check. Please don't report bugs that cannot be reproduced with this switch removed.\n",
+ "page": {
+  "rev": "f902367",
+  "hash": "f1bb6bc22a94"
+ },
+ "protocol": "webdriver",
+ "seconds": 38
+}

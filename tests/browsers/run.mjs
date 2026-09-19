@@ -30,6 +30,7 @@ import path from 'node:path';
 import { Session, evalIn, waitForDriver, sleep } from './webdriver.mjs';
 import { connectCdp } from './cdp.mjs';
 import { MarionetteSession } from './marionette.mjs';
+import { connectPlaywright } from './playwright.mjs';
 import { loadMachines, findMachine, freePort, Remote } from './remote.mjs';
 import { Checker, STARTED, checkSections, buildHello, checkJob, makeSignFixtures, osslVerify, gpgVerify, $text, setVal, checkBox } from './steps.mjs';
 import { readInstaller } from '../../js/ibfile.js';
@@ -93,7 +94,8 @@ function pairs(inv) {
 // without a usable one (XP; Edge 109 on 8.1; Vista, whose last chromedriver
 // predates W3C: "protocol": "cdp" in its manifest); Firefox's own Marionette
 // for a Firefox no geckodriver runs beside (52 on XP: "protocol":
-// "marionette").
+// "marionette"); Playwright's own protocol for Playwright's WebKit
+// ("protocol": "playwright", tests/browsers/playwright.mjs).
 const CHROMIUM = new Set(['chrome', 'chromium', 'edge', 'supermium', 'supermium-installed', 'opera']);
 function protocolOf(b) {
   if (b.protocol) return b.protocol;
@@ -244,6 +246,12 @@ function capabilities(entry, dlDir) {
       'moz:firefoxOptions': { binary: entry.binary, args, prefs: firefoxPrefs(dlDir) },
     };
     case 'safaridriver': return { browserName: 'safari' };
+    // WebKitGTK's driver: MiniBrowser --automation, or Epiphany
+    // --automation-mode (entry.args), on the Xvfb its wrapper starts.
+    case 'webkitwebdriver': return {
+      browserName: entry.browserName || 'MiniBrowser',
+      'webkitgtk:browserOptions': { binary: entry.binary, args },
+    };
     default: throw new Error('unknown driverKind ' + entry.driverKind);
   }
 }
@@ -259,7 +267,7 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
   const rec = { time: new Date().toISOString(), machine: machine.name, browser: browserId, version: '', result: '', seed };
   const detail = { ...rec, checks: t.checks };
   const driverLog = [];
-  let cdpPort = 0, ssh = null, revProc = null, session = null, cdpConn = null, entry = null, b = null;
+  let cdpPort = 0, ssh = null, revProc = null, session = null, cdpConn = null, pwConn = null, entry = null, b = null;
   const tmp = fs.mkdtempSync(path.join(tmpRoot, 'run-'));
   const finish = (result, why) => {
     rec.result = why ? `${result}: ${why}` : result;
@@ -341,6 +349,11 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
       rec.version = session.browserVersion || entry.version;
       // Opera's driver reports the Chromium it's built on, not Opera's version.
       if (entry.id === 'opera') { rec.chromium = rec.version; rec.version = entry.version; }
+      // Brave and Vivaldi run with the chromedriver of their Chromium, which
+      // reports that Chromium: record the browser's own version.
+      if (entry.chromiumVersion) { rec.chromium = rec.version; rec.version = entry.version; }
+      // WebKitGTK: the engine's version, whatever the browser reports.
+      if (entry.webkitVersion) { rec.webkit = entry.webkitVersion; if (entry.id !== 'webkitgtk') rec.version = entry.version; }
       detail.capabilities = session.capabilities;
       // W3C timeouts; older Marionette (Firefox 52) takes one {type, ms} at a time.
       await session.setTimeouts({ script: 600000, pageLoad: 300000 }).catch(async (e) => {
@@ -381,6 +394,17 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
         },
         run, runAsync,
       };
+    } else if (rec.protocol === 'playwright') {
+      ssh = remote.startDriver(entry, { port, log: (d) => driverLog.push(String(d)) });
+      pwConn = await connectPlaywright(port, {
+        remote, dl, tmp, log: (d) => driverLog.push(String(d)),
+        // The fixtures run.mjs put on the machine are here too.
+        local: (p) => fx.t(p.split(/[\\/]/).pop()),
+      }).catch((e) => { throw new Error((/^driver/.test(e.message) ? '' : 'driver: ') + e.message + ' ' + driverLog.join('').slice(-400)); });
+      rec.version = pwConn.version || entry.version;
+      rec.webkit = entry.webkitRevision ? 'Playwright WebKit r' + entry.webkitRevision : '';
+      detail.capabilities = { browserVersion: pwConn.version, userAgent: await pwConn.userAgent() };
+      ({ js, setFile, b } = pwConn);
     } else {
       throw new Error('no driver for ' + browserId + ' on ' + machine.name + (entry.notes ? ': ' + entry.notes : ''));
     }
@@ -548,6 +572,7 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
     detail.driverLog = driverLog.join('').slice(-4000);
     if (session) await session.delete();
     if (cdpConn) await cdpConn.close();
+    if (pwConn) await pwConn.close();
     if (/^(cdp|marionette)$/.test(rec.protocol) && cdpPort) remote.stopCdpBrowser(cdpPort);
     if (ssh) { try { ssh.stdin.end(); } catch (e) { /* gone */ } ssh.kill(); }
     if (revProc) revProc.kill();

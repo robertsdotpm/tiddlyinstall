@@ -1,0 +1,39 @@
+{
+ "time": "2026-09-19T05:59:30.441Z",
+ "machine": "ubuntu2204",
+ "browser": "playwright-webkit",
+ "version": "26.6",
+ "result": "error: driver: Playwright: browserType.connect: WebSocket error: read ECONNRESET ed: connect failed: Connection refused\r",
+ "seed": 348207575,
+ "checks": [
+  {
+   "name": "run",
+   "pass": false,
+   "detail": "Error: driver: Playwright: browserType.connect: WebSocket error: read ECONNRESET ed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\n\n    at file:///home/x/projects/installer-builder/tests/browsers/run.mjs:403:31\n    at async runPair (file:///home/x/projects/installer-builder/tests/browsers/run.mjs:399:16)\n    at async worker (file:///home/x/projects/installer-builder/tests/browsers/run.mjs:642:19)\n    at async Promise.all (index 0)\n    at async main (file:///home/x/projects/installer-builder/tests/browsers/run.mjs:650:3)\n    at async file:///home/x/projects/installer-builder/tests/browsers/run.mjs:655:1"
+  }
+ ],
+ "entry": {
+  "id": "playwright-webkit",
+  "name": "Playwright's WebKit",
+  "version": "26.6",
+  "webkitRevision": "2359",
+  "binary": "/home/x/ibbrowsers/playwright-1.63.0/browsers/webkit-2359/minibrowser-wpe/MiniBrowser",
+  "protocol": "playwright",
+  "driverKind": "playwright",
+  "driver": "/home/x/ibbrowsers/playwright-1.63.0/server.sh",
+  "driverVersion": "playwright-core 1.63.0",
+  "args": [],
+  "headless": true,
+  "source": "playwright-core 1.63.0 from registry.npmjs.org (npm lockfile sha512 integrity); WebKit r2359 (ubuntu22.04-x64) downloaded by `playwright-core install webkit` from Playwright's CDN; Node v24.21.0 from nodejs.org",
+  "verified": "Node v24.21.0 linux-x64 tarball: SHA-256 matches SHASUMS256.txt, whose signature is good (gpg, Node release key 5BE8A3F6C8A5C01D106C0AD820B1A390B168D356 from github.com/nodejs/release-keys). playwright-core: npm sha512 integrity. WebKit build: Playwright publishes no checksums or signatures for its browser builds (HTTPS from its CDN only). System libraries: playwright install-deps webkit (sudo apt-get, Ubuntu signed repositories, 128 packages)",
+  "smoke": "pending",
+  "notes": "Test-only. Playwright's patched WebKit build, headless, launched by server.sh (webkit.launchServer on 127.0.0.1) and driven from the dev machine by tests/browsers/playwright.mjs over Playwright's protocol; the client there must be the same playwright-core version. Downloads go through Playwright (saved on the dev machine, copied back into the run's download folder), not the browser's own download handling."
+ },
+ "driverLog": "ed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\n",
+ "page": {
+  "rev": "f902367",
+  "hash": "f1bb6bc22a94"
+ },
+ "protocol": "playwright",
+ "seconds": 126
+}

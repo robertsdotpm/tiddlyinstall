@@ -1,0 +1,23 @@
+{
+ "time": "2026-09-19T06:44:32.274Z",
+ "machine": "7",
+ "browser": "safari",
+ "version": "5.1.7",
+ "result": "error: Safari crashed at start (0xc0000005, 0xc000041d; DEP is AlwaysOn here)",
+ "protocol": "beacon",
+ "checks": [
+  {
+   "name": "Safari starts and runs the page's scripts",
+   "pass": false,
+   "detail": "Safari exited (Application Error, 0xc0000005, 0xc000041d)"
+  }
+ ],
+ "beacons": {},
+ "userAgent": "",
+ "eventLog": "Event[0]:\n  Log Name: Application\n  Source: Application Error\n  Date: 2026-09-19T10:50:30.000\n  Event ID: 1000\n  Task: Application Crashing Events\n  Level: Error\n  Opcode: Info\n  Keyword: Classic\n  User: N/A\n  User Name: N/A\n  Computer: x-PC\n  Description: \nFaulting application name: Safari.exe, version: 5.34.57.2, time stamp: 0x4f982b5e\nFaulting module name: unknown, version: 0.0.0.0, time stamp: 0x00000000\nException code: 0xc000041d\nFault offset: 0x006f8490\nFaulting process id: 0xf24\nFaulting application start time: 0x01dd485f5c33d7b6\nFaulting application path: C:\\Program Files (x86)\\Safari\\Safari.exe\nFaulting module path: unknown\nReport Id: 9a4b8082-b452-11f1-a4b1-000c29c851a6\n\nEvent[1]:\n  Log Name: Application\n  Source: Application Error\n  Date: 2026-09-19T10:50:29.000\n  Event ID: 1000\n  Task: Application Crashing Events\n  Level: Error\n  Opcode: Info\n  Keyword: Classic\n  User: N/A\n  User Name: N/A\n  Computer: x-PC\n  Description: \nFaulting application name: Safari.exe, version: 5.34.57.2, time stamp: 0x4f982b5e\nFaulting module name: unknown, version: 0.0.0.0, time stamp: 0x00000000\nException code: 0xc0000005\nFault offset: 0x006f8490\nFaulting process id: 0xf24\nFaulting application start time: 0x01dd485f5c33d7b6\nFaulting application path: C:\\Program Files (x86)\\Safari\\Safari.exe\nFaulting module path: unknown\nReport Id: 99fcf319-b452-11f1-a4b1-000c29c851a6\n\n",
+ "page": {
+  "rev": "9817089",
+  "hash": "a0e9e7fba09c"
+ },
+ "seconds": 38
+}

@@ -8,7 +8,7 @@
 //   node tests/browsers/report.mjs --seeds 18,22               # one campaign's runs
 import fs from 'node:fs';
 import path from 'node:path';
-import { MACHINES, BROWSERS as BROWSERS_L } from './compat.mjs';
+import { MACHINES, BROWSERS as BROWSERS_L, majorOf } from './compat.mjs';
 
 const HERE = path.dirname(new URL(import.meta.url).pathname);
 const DOC = path.join(HERE, '..', '..', 'docs', 'test-results.md');
@@ -38,7 +38,6 @@ for (const u of usage) {
   if (!/^error/.test(u.result) || !latest.has(k) || /^error/.test(latest.get(k).result)) latest.set(k, u);
 }
 
-const major = (v) => String(v || '').split('.')[0];
 const cols = BROWSERS.filter((b) => Object.values(inv.machines).some((m) => (m.browsers || []).some((x) => x.id === b)));
 const lines = [];
 lines.push(`| Machine | ${cols.map((c) => BLABEL[c]).join(' | ')} |`, `| --- | ${cols.map(() => '---').join(' | ')} |`);
@@ -51,9 +50,12 @@ for (const name of ORDER.filter((n) => inv.machines[n])) {
     if (!e) return '';
     if (!e.binary) { counts.none++; notes.push(`${LABEL[name]} ${BLABEL[b]}: can't run here: ${e.notes || ''}`); return 'can\'t run'; }
     const u = latest.get(name + '/' + b);
-    const v = major(u && u.version || e.version);
+    const v = majorOf(b, u && u.version || e.version);
     const drivable = e.driver || e.protocol || ['chrome', 'chromium', 'edge', 'supermium', 'supermium-installed', 'opera'].includes(b);
-    if (!drivable) { counts['no driver'] = (counts['no driver'] || 0) + 1; notes.push(`${LABEL[name]} ${BLABEL[b]} ${e.version}: no WebDriver driver runs here: ${e.notes || ''}`); return 'no driver ' + v; }
+    // No driver, but a runner of its own recorded a result (Safari 5.1.7:
+    // tests/browsers/safari5.mjs): show that.
+    const own = latest.get(name + '/' + b);
+    if (!drivable && !(own && !/^error/.test(own.result))) { counts['no driver'] = (counts['no driver'] || 0) + 1; notes.push(`${LABEL[name]} ${BLABEL[b]} ${e.version}: no WebDriver driver runs here: ${e.notes || ''}`); return 'no driver ' + v; }
     // Installed, but the machine won't let it be driven (e.g. safaridriver
     // not enabled): its manifest's smoke test says why.
     if (/^fail/.test(e.smoke || '') && (!u || /^error/.test(u.result))) { counts.blocked = (counts.blocked || 0) + 1; notes.push(`${LABEL[name]} ${BLABEL[b]} ${e.version}: blocked: ${e.smoke.replace(/^fail:?\s*/, '')}`); return 'blocked ' + v; }

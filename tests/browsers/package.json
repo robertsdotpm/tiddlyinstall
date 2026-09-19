@@ -1,0 +1,8 @@
+{
+  "name": "tiddlyinstall-browser-tests",
+  "private": true,
+  "description": "Test-only tooling for tests/browsers/ (Playwright's WebKit, tests/browsers/playwright.mjs). Never part of the page.",
+  "devDependencies": {
+    "playwright-core": "1.63.0"
+  }
+}

@@ -22,8 +22,20 @@ export const MACHINES = [
   ['ubuntu2004', 'Ubuntu 20.04', 'linux', ''], ['ubuntu2204', 'Ubuntu 22.04', 'linux', ''], ['debian12', 'Debian 12', 'linux', '', 1],
   ['alpine', 'Alpine 3.24', 'linux', ''], ['mac', 'macOS 26', 'mac', '26'],
 ];
-export const BROWSERS = [['chrome', 'Chrome'], ['chromium', 'Chromium'], ['edge', 'Edge'], ['opera', 'Opera'], ['supermium', 'Supermium'],
-  ['supermium-installed', 'Supermium (older)'], ['firefox', 'Firefox'], ['safari', 'Safari']];
+export const BROWSERS = [['chrome', 'Chrome'], ['chromium', 'Chromium'], ['edge', 'Edge'], ['opera', 'Opera'], ['brave', 'Brave'], ['vivaldi', 'Vivaldi'],
+  ['supermium', 'Supermium'], ['supermium-installed', 'Supermium (older)'], ['firefox', 'Firefox'], ['safari', 'Safari'],
+  ['webkitgtk', "WebKitGTK (Safari's engine)"], ['epiphany', 'GNOME Web (Epiphany)'], ['playwright-webkit', "Playwright WebKit (Safari's engine)"]];
+
+// Stand-ins for a browser, tested for their engine: not browsers to
+// recommend to anyone.
+export const PROXIES = ['webkitgtk', 'playwright-webkit'];
+
+// The part of a version that names a release: the major version, but
+// major.minor for WebKitGTK, whose major is always 2.
+export function majorOf(browser, version) {
+  const p = String(version || '').split('.');
+  return browser === 'webkitgtk' ? p.slice(0, 2).join('.') : p[0];
+}
 
 export function readUsage() {
   const f = path.join(HERE, 'usage.jsonl');
@@ -38,7 +50,7 @@ export function summary(usage = readUsage()) {
   const latest = new Map();
   for (const u of usage) {
     if (!u.result || /^error/.test(u.result) || !u.version) continue;
-    const major = String(u.version).split('.')[0];
+    const major = majorOf(u.browser, u.version);
     latest.set(`${u.machine}/${u.browser}/${major}`, u);
   }
   const order = new Map(MACHINES.map((m, i) => [m[0], i]));
@@ -47,6 +59,7 @@ export function summary(usage = readUsage()) {
     generated: new Date().toISOString().slice(0, 10),
     machines: MACHINES,
     browsers: BROWSERS,
+    proxies: PROXIES,
     results: rows.map((u) => {
       const [kind, ...rest] = u.result.split(':');
       return [u.machine, u.browser, String(u.version), kind, rest.join(':').trim().slice(0, 160), String(u.time).slice(0, 10)];

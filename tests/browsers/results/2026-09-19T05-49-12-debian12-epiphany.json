@@ -1,0 +1,262 @@
+{
+ "time": "2026-09-19T05:49:12.510Z",
+ "machine": "debian12",
+ "browser": "epiphany",
+ "version": "43.1",
+ "result": "pass",
+ "seed": 1101225246,
+ "checks": [
+  {
+   "name": "the startup check finds nothing missing",
+   "pass": true
+  },
+  {
+   "name": "the compatibility bar shows only when a feature isn't native",
+   "pass": true
+  },
+  {
+   "name": "the page starts without errors",
+   "pass": true
+  },
+  {
+   "name": "from disk, the page builds installers itself",
+   "pass": true
+  },
+  {
+   "name": "the page has its sections",
+   "pass": true
+  },
+  {
+   "name": "#new shows its page",
+   "pass": true
+  },
+  {
+   "name": "#edit shows its page",
+   "pass": true
+  },
+  {
+   "name": "#bases shows its page",
+   "pass": true
+  },
+  {
+   "name": "#runtimes shows its page",
+   "pass": true
+  },
+  {
+   "name": "#home shows its page",
+   "pass": true
+  },
+  {
+   "name": "New installer: the code editor shows for Python + script (CSS :has())",
+   "pass": true
+  },
+  {
+   "name": "build: the build finishes",
+   "pass": true
+  },
+  {
+   "name": "build: windows download is 991490 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: windows is a .exe",
+   "pass": true
+  },
+  {
+   "name": "build: windows carries the record pkvv6uo3nhv4kila54xfnsiwak",
+   "pass": true
+  },
+  {
+   "name": "build: windows record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: windows carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: windows plan is for windows only",
+   "pass": true
+  },
+  {
+   "name": "build: windows packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "build: linux download is 141590 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: linux is a .run",
+   "pass": true
+  },
+  {
+   "name": "build: linux carries the record pkvv6uo3nhv4kila54xfnsiwak",
+   "pass": true
+  },
+  {
+   "name": "build: linux record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: linux carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: linux plan is for linux only",
+   "pass": true
+  },
+  {
+   "name": "build: linux packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "build: macos download is 41631 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: macos is a .zip",
+   "pass": true
+  },
+  {
+   "name": "build: macos carries the record pkvv6uo3nhv4kila54xfnsiwak",
+   "pass": true
+  },
+  {
+   "name": "build: macos record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: macos carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: macos plan is for macos only",
+   "pass": true
+  },
+  {
+   "name": "build: macos packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "Save this page makes the whole page",
+   "pass": true
+  },
+  {
+   "name": "Save this page",
+   "note": "the browser wrote no file to its download folder (in.exe in.run rsa.pfx)"
+  },
+  {
+   "name": "PGP: the page makes a ed25519 key",
+   "pass": true
+  },
+  {
+   "name": "PGP: signing says saved",
+   "pass": true
+  },
+  {
+   "name": "PGP (ed25519): gpg --verify says Good signature for the saved .run.asc",
+   "pass": true
+  },
+  {
+   "name": "PGP: the signed .run keeps its record",
+   "pass": true
+  },
+  {
+   "name": ".pfx: the page opens the RSA .pfx",
+   "pass": true
+  },
+  {
+   "name": ".pfx: signing says done",
+   "pass": true
+  },
+  {
+   "name": ".pfx: the signed .exe passes osslsigncode verify",
+   "pass": true
+  },
+  {
+   "name": "no page errors while signing",
+   "pass": true
+  },
+  {
+   "name": "served (http://localhost through the tunnel): the page starts, WebCrypto and all",
+   "pass": true
+  },
+  {
+   "name": "served: the page uses the build server",
+   "pass": true
+  }
+ ],
+ "entry": {
+  "driverKind": "webkitwebdriver",
+  "driver": "/home/x/ibbrowsers/drivers/webkitwebdriver/webkitwebdriver.sh",
+  "driverVersion": "2.50.6-1~deb12u2",
+  "driverSource": "Debian GNU/Linux 12 (bookworm) package webkit2gtk-driver 2.50.6-1~deb12u2 (apt, sudo)",
+  "webkitVersion": "2.50.6",
+  "headless": false,
+  "verified": "distro packages from Debian GNU/Linux 12 (bookworm)'s signed repositories (apt checks them against the signed InRelease); installed with sudo apt-get",
+  "id": "epiphany",
+  "name": "GNOME Web (Epiphany)",
+  "version": "43.1",
+  "binary": "/home/x/ibbrowsers/epiphany/epiphany",
+  "browserName": "Epiphany",
+  "args": [
+   "--automation-mode"
+  ],
+  "source": "Debian GNU/Linux 12 (bookworm) package epiphany-browser 43.1-1, on libwebkit2gtk-4.1-0 2.50.6-1~deb12u2",
+  "smoke": "pending",
+  "notes": "Epiphany in automation mode (its own ephemeral profile), driven by WebKitWebDriver under the same Xvfb wrapper. binary is a link to /usr/bin/epiphany. version is Epiphany's; webkitVersion is the engine."
+ },
+ "capabilities": {
+  "browserName": "Epiphany",
+  "browserVersion": "43.1",
+  "platformName": "linux",
+  "acceptInsecureCerts": false,
+  "strictFileInteractability": false,
+  "setWindowRect": true,
+  "unhandledPromptBehavior": "dismiss and notify",
+  "pageLoadStrategy": "normal",
+  "proxy": {},
+  "timeouts": {
+   "script": 30000,
+   "pageLoad": 300000,
+   "implicit": 0
+  }
+ },
+ "features": {
+  "CSS color-mix()": true,
+  "BigInt": true,
+  "DecompressionStream deflate-raw": true,
+  "CompressionStream gzip": true,
+  "Blob.stream": true,
+  "WebCrypto": true,
+  "ES modules": true,
+  "Object.hasOwn": true,
+  "CSS :has()": true,
+  "?. ?? ||= syntax": true,
+  "secure context": true,
+  "CompressionStream deflate-raw": true,
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/60.5 Safari/605.1.15"
+ },
+ "webcrypto": {
+  "AES-CBC": true,
+  "ECDSA P-256": true,
+  "HMAC": true,
+  "Ed25519": true,
+  "SHA-256": true,
+  "RSASSA-PKCS1-v1_5": true,
+  "PBKDF2": true
+ },
+ "degraded": "",
+ "saveToDisk": "no file",
+ "pgpKey": "ed25519",
+ "pfx": "signed",
+ "driverLog": "channel 3: open failed: connect failed: Connection refused\r\n\n(epiphany:100248): dbind-WARNING **: 05:49:17.679: AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files\nlibEGL warning: failed to open /dev/dri/renderD128: Permission denied\n\nlibEGL warning: failed to open /dev/dri/card0: Permission denied\n\n\n** (epiphany:100248): WARNING **: 05:49:17.888: webkit_settings_set_enable_dns_prefetching is deprecated and does nothing.\n\n(epiphany:100248): epiphany-WARNING **: 05:49:17.970: Failed to scan extensions directory: Error opening directory '/home/x/.local/share/epiphany/web_extensions': No such file or directory\n\n(epiphany:100248): epiphany-WARNING **: 05:49:17.971: Failed to search secrets in password schema: The name org.freedesktop.secrets was not provided by any .service files\n\n** (WebKitWebProcess:2): WARNING **: 05:49:18.134: Can't connect to a11y bus: Could not connect: No such file or directory\nlibEGL warning: failed to open /dev/dri/renderD128: Permission denied\n\nlibEGL warning: failed to open /dev/dri/card0: Permission denied\n\n\n** (WebKitWebProcess:2): WARNING **: 05:49:18.273: RemoteInspector failed to connect to inspector server at: 127.0.0.1:36327: Could not connect to 127.0.0.1: Connection refused\n\n(epiphany:100248): epiphany-WARNING **: 05:49:22.914: Failed to acquire session inhibitor for active download. Is gnome-session running?\n\n(epiphany:100248): epiphany-WARNING **: 05:49:54.339: Failed to acquire session inhibitor for active download. Is gnome-session running?\n\n(epiphany:100248): epiphany-WARNING **: 05:49:54.356: Failed to acquire session inhibitor for active download. Is gnome-session running?\n\n(epiphany:100248): epiphany-WARNING **: 05:49:55.340: Failed to acquire session inhibitor for active download. Is gnome-session running?\n",
+ "page": {
+  "rev": "f902367",
+  "hash": "f1bb6bc22a94"
+ },
+ "protocol": "webdriver",
+ "webkit": "2.50.6",
+ "seconds": 46
+}

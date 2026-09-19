@@ -1,0 +1,280 @@
+{
+ "time": "2026-09-19T06:16:02.493Z",
+ "machine": "mac",
+ "browser": "vivaldi",
+ "version": "8.2.4133.68",
+ "result": "pass",
+ "seed": 1305179816,
+ "checks": [
+  {
+   "name": "the startup check finds nothing missing",
+   "pass": true
+  },
+  {
+   "name": "the compatibility bar shows only when a feature isn't native",
+   "pass": true
+  },
+  {
+   "name": "the page starts without errors",
+   "pass": true
+  },
+  {
+   "name": "from disk, the page builds installers itself",
+   "pass": true
+  },
+  {
+   "name": "the page has its sections",
+   "pass": true
+  },
+  {
+   "name": "#new shows its page",
+   "pass": true
+  },
+  {
+   "name": "#edit shows its page",
+   "pass": true
+  },
+  {
+   "name": "#bases shows its page",
+   "pass": true
+  },
+  {
+   "name": "#runtimes shows its page",
+   "pass": true
+  },
+  {
+   "name": "#home shows its page",
+   "pass": true
+  },
+  {
+   "name": "New installer: the code editor shows for Python + script (CSS :has())",
+   "pass": true
+  },
+  {
+   "name": "build: the build finishes",
+   "pass": true
+  },
+  {
+   "name": "build: windows download is 991490 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: windows is a .exe",
+   "pass": true
+  },
+  {
+   "name": "build: windows carries the record vuvlxdcr4pzisfq2mdlebeqtok",
+   "pass": true
+  },
+  {
+   "name": "build: windows record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: windows carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: windows plan is for windows only",
+   "pass": true
+  },
+  {
+   "name": "build: windows packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "build: linux download is 141590 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: linux is a .run",
+   "pass": true
+  },
+  {
+   "name": "build: linux carries the record vuvlxdcr4pzisfq2mdlebeqtok",
+   "pass": true
+  },
+  {
+   "name": "build: linux record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: linux carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: linux plan is for linux only",
+   "pass": true
+  },
+  {
+   "name": "build: linux packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "build: macos download is 41630 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: macos is a .zip",
+   "pass": true
+  },
+  {
+   "name": "build: macos carries the record vuvlxdcr4pzisfq2mdlebeqtok",
+   "pass": true
+  },
+  {
+   "name": "build: macos record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: macos carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: macos plan is for macos only",
+   "pass": true
+  },
+  {
+   "name": "build: macos packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "Save this page makes the whole page",
+   "pass": true
+  },
+  {
+   "name": "Save this page",
+   "note": "the browser wrote no file to its download folder (in.exe in.run rsa.pfx)"
+  },
+  {
+   "name": "PGP: the page makes a ed25519 key",
+   "pass": true
+  },
+  {
+   "name": "PGP: signing says saved",
+   "pass": true
+  },
+  {
+   "name": "PGP (ed25519): gpg --verify says Good signature for the saved .run.asc",
+   "pass": true
+  },
+  {
+   "name": "PGP: the signed .run keeps its record",
+   "pass": true
+  },
+  {
+   "name": ".pfx: the page opens the RSA .pfx",
+   "pass": true
+  },
+  {
+   "name": ".pfx: signing says done",
+   "pass": true
+  },
+  {
+   "name": ".pfx: the signed .exe passes osslsigncode verify",
+   "pass": true
+  },
+  {
+   "name": "no page errors while signing",
+   "pass": true
+  },
+  {
+   "name": "served (http://localhost through the tunnel): the page starts, WebCrypto and all",
+   "pass": true
+  },
+  {
+   "name": "served: the page uses the build server",
+   "pass": true
+  }
+ ],
+ "entry": {
+  "id": "vivaldi",
+  "name": "Vivaldi",
+  "version": "8.2.4133.68",
+  "chromiumVersion": "152.0.7977.137",
+  "binary": "/Users/Matthew/ibbrowsers/vivaldi-8.2.4133.68/Vivaldi.app/Contents/MacOS/Vivaldi",
+  "driverKind": "chromedriver",
+  "driver": "/Users/Matthew/ibbrowsers/drivers/chromedriver-152.0.7977.137/chromedriver",
+  "driverVersion": "152.0.7977.137",
+  "args": [
+   "--headless=new",
+   "--disable-vivaldi"
+  ],
+  "headless": true,
+  "source": "https://downloads.vivaldi.com/stable/Vivaldi.8.2.4133.68.universal.dmg (the version update.vivaldi.com's mac appcast names; sha256 66c114dd721496f2b057d8d6c15e38679630e05c7a24d4ecbc5f2051235b8c60)",
+  "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/152.0.7977.137/mac-arm64/chromedriver-mac-arm64.zip (MD5 matches x-goog-hash); Vivaldi 8.2 is Chromium 152.0.7977.137",
+  "verified": "codesign --verify --deep --strict ok, spctl accepted (Notarized Developer ID, Vivaldi Technologies AS 4XF3XNRN6Y); chromedriver ad-hoc signed only (codesign ok, spctl rejects), as Chrome for Testing's",
+  "smoke": "pending",
+  "notes": "Copied out of the dmg (hdiutil attach -nobrowse -readonly, detached). chromedriver reports its Chromium version; the harness records Vivaldi's own (version) and the Chromium (chromium). DevTools reports Vivaldi as Chrome/8.2.4133.68 (Vivaldi's own version), so chromedriver takes it for Chrome 8 and refuses; --disable-build-check (driverArgs) skips that check. --disable-vivaldi: with Vivaldi's own UI (an extension) chromedriver finds no window (unable to discover open window: its first run opens a welcome page, and a profile seeded past that didn't help under chromedriver), so it runs with Chromium's plain UI: the pages still render in Vivaldi's own Chromium 152 build, without Vivaldi's UI layer.",
+  "driverArgs": [
+   "--disable-build-check"
+  ]
+ },
+ "capabilities": {
+  "acceptInsecureCerts": false,
+  "browserName": "chrome",
+  "browserVersion": "8.2.4133.68",
+  "chrome": {
+   "chromedriverVersion": "152.0.7977.137 (f8e8e2ac560f9a3b2a3a6d1074cfcfa63ac4bec9-refs/branch-heads/7977@{#2693})",
+   "userDataDir": "/var/folders/rp/2vlmpjgx1hjclr938h78d5d80000gp/T/org.chromium.Chromium.scoped_dir.qBUMQZ"
+  },
+  "fedcm:accounts": true,
+  "goog:chromeOptions": {
+   "debuggerAddress": "localhost:56210"
+  },
+  "goog:processID": 86695,
+  "networkConnectionEnabled": false,
+  "pageLoadStrategy": "normal",
+  "platformName": "mac",
+  "proxy": {},
+  "setWindowRect": true,
+  "strictFileInteractability": false,
+  "timeouts": {
+   "implicit": 0,
+   "pageLoad": 300000,
+   "script": 30000
+  },
+  "unhandledPromptBehavior": "dismiss and notify",
+  "webauthn:extension:credBlob": true,
+  "webauthn:extension:largeBlob": true,
+  "webauthn:extension:minPinLength": true,
+  "webauthn:extension:prf": true,
+  "webauthn:virtualAuthenticators": true
+ },
+ "features": {
+  "?. ?? ||= syntax": true,
+  "BigInt": true,
+  "Blob.stream": true,
+  "CSS :has()": true,
+  "CSS color-mix()": true,
+  "CompressionStream deflate-raw": true,
+  "CompressionStream gzip": true,
+  "DecompressionStream deflate-raw": true,
+  "ES modules": true,
+  "Object.hasOwn": true,
+  "WebCrypto": true,
+  "secure context": true,
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36"
+ },
+ "webcrypto": {
+  "AES-CBC": true,
+  "ECDSA P-256": true,
+  "Ed25519": true,
+  "HMAC": true,
+  "PBKDF2": true,
+  "RSASSA-PKCS1-v1_5": true,
+  "SHA-256": true
+ },
+ "degraded": "",
+ "saveToDisk": "no file",
+ "pgpKey": "ed25519",
+ "pfx": "signed",
+ "driverLog": "channel 3: open failed: connect failed: Connection refused\r\nStarting ChromeDriver 152.0.7977.137 (f8e8e2ac560f9a3b2a3a6d1074cfcfa63ac4bec9-refs/branch-heads/7977@{#2693}) on port 33121\nOnly local connections are allowed.\nPlease see https://chromedriver.chromium.org/security-considerations for suggestions on keeping ChromeDriver safe.\nChromeDriver was started successfully on port 33121.\n[1789798599.844][WARNING]: You are using an unsupported command-line switch: --disable-build-check. Please don't report bugs that cannot be reproduced with this switch removed.\n",
+ "page": {
+  "rev": "f902367",
+  "hash": "f1bb6bc22a94"
+ },
+ "protocol": "webdriver",
+ "chromium": "8.2.4133.68",
+ "seconds": 100
+}
