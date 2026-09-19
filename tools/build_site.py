@@ -5,7 +5,7 @@
 
 Writes dist/index.html: every page as a section (#new, #edit, ...), the JS
 modules joined into one inline classic script (ES2017, so it runs in Firefox
-52 and Chrome 55 up; tests/es2017-test.mjs checks it), the CSS inlined, and as data blocks the
+52 and Chrome 58 up; tests/es2017-test.mjs checks it), the CSS inlined, and as data blocks the
 three unsigned bases, the catalogue snapshot and the runtimes summary. The
 build server serves it at /, and it uses that server; saved and opened from
 disk ("Save this page" saves it exactly as loaded), or with "No server" chosen,

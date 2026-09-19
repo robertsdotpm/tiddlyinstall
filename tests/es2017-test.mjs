@@ -1,5 +1,5 @@
 // The one-file site's scripts must run in the page's oldest browsers
-// (docs/plan.md 1.11: Firefox 52 ESR, Chrome 55+, Safari 12, EdgeHTML 18).
+// (docs/plan.md 1.11: Firefox 52 ESR, Chrome 58+, Safari 12, EdgeHTML 18).
 // This parses every script in dist/index.html as an ES2017 classic script
 // (acorn, ecmaVersion 2017, which also rejects newer regular expression
 // syntax) and fails on anything newer. It also looks for built-ins newer
