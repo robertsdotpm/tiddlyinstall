@@ -75,6 +75,11 @@
     { id: 'random', name: 'crypto.getRandomValues', required: false, effect: 'can\'t sign installers or make keys (no secure random numbers); building and editing work',
       fallback: w.msCrypto && w.msCrypto.getRandomValues ? 'random numbers come from msCrypto (Internet Explorer\'s name for it)' : null,
       test: function () { return !!(w.crypto && w.crypto.getRandomValues); } },
+    // IE 10: without it core-js can't add methods to the browser's typed
+    // arrays, so the ES5 copy uses core-js's own, in plain JavaScript.
+    { id: 'protos', name: 'Object.setPrototypeOf', required: false, effect: 'the page\'s copy for older browsers would be very slow',
+      fallback: 'typed arrays run on the page\'s own JavaScript: a build takes minutes and a lot of memory, and a Node.js one may not finish',
+      test: function () { return typeof Object.setPrototypeOf === 'function' || '__proto__' in {}; } },
     { id: 'compress', name: 'CompressionStream (deflate-raw)', required: true, effect: 'can\'t build installers',
       fallback: 'compressing is done by the page\'s own JavaScript (slower)',
       test: function () { return typeof w.CompressionStream === 'function' && construct(w.CompressionStream, 'deflate-raw') && !!(w.Blob && Blob.prototype.stream); } },
