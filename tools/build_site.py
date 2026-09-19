@@ -266,7 +266,7 @@ def offline_page(catalog_dir, backend):
            f"  <meta name=\"generator\" content=\"tools/build_site.py, {rev}, {today}\">\n"
            "  <style>\n" + css + "\n  </style>\n</head>\n<body>\n  " + header + "\n"
            + "\n".join(sections) +
-           "\n  <footer class=\"site-footer\">\n    Designed by <a href="https://robertsdotpm.github.io/">Matthew Roberts</a> and implemented by Claude.\n  </footer>\n"
+           "\n  <footer class=\"site-footer\">\n    Designed by <a href=\"https://robertsdotpm.github.io/\">Matthew Roberts</a> and implemented by Claude.\n  </footer>\n"
            + "\n".join(blocks) +
            "\n  <script>\n" + resedit + "\n  </script>\n"
            "  <script type=\"module\">\n" + js + "\n  </script>\n</body>\n</html>\n")
