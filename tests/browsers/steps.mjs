@@ -103,7 +103,7 @@ export async function fetchBlob(js, url) {
 
 // Reads back every installer a finished job made, with js/ibfile.js, and
 // checks each carries the job's record and a plan bound to it. With
-// keepDir, writes the files to keepDir/keepAs/ and returns {platform: path}.
+// keepDir and keepAs, writes the files to keepDir/keepAs/ and returns {platform: path}.
 export async function checkJob(t, js, job, what, runtime, { keepDir, keepAs } = {}) {
   t.ok(job && job.status === 'done', what + ': the build finishes', JSON.stringify(job).slice(0, 400));
   if (!job || job.status !== 'done') return;
@@ -124,7 +124,7 @@ export async function checkJob(t, js, job, what, runtime, { keepDir, keepAs } = 
     t.ok(blocks.length && blocks.every((b) => b === f.platform), `${what}: ${f.platform} plan is for ${f.platform} only`, blocks.join(','));
     const src = /\nsource\t\S+\t([0-9a-f]{64})\t/.exec(info.plan || '');
     if (src) t.ok(info.pack.some((m) => m.name === src[1]), `${what}: ${f.platform} packs the app's source`);
-    if (keepDir) {
+    if (keepDir && keepAs) {
       fs.mkdirSync(path.join(keepDir, keepAs), { recursive: true });
       const p = path.join(keepDir, keepAs, f.name);
       fs.writeFileSync(p, data);

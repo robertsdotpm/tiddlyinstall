@@ -52,9 +52,9 @@ function readInventory() {
   try { return JSON.parse(fs.readFileSync(INVENTORY, 'utf8')); } catch (e) { return { machines: {} }; }
 }
 
-async function refreshInventory(machines) {
+async function refreshInventory(machines, only = machines) {
   const inv = readInventory();
-  await Promise.all(machines.map(async (m) => {
+  await Promise.all(only.map(async (m) => {
     const r = new Remote(m);
     try {
       const man = r.readManifest();
@@ -483,7 +483,7 @@ async function waitUntil(js, expr, what, ms = 90000) {
 
 async function main() {
   const machines = loadMachines();
-  if (flag('--inventory')) return refreshInventory(machines.filter((m) => !arg('--machine') || m === findMachine(machines, arg('--machine'))));
+  if (flag('--inventory')) return refreshInventory(machines, machines.filter((m) => !arg('--machine') || m === findMachine(machines, arg('--machine'))));
   const inv = readInventory();
   const all = pairs(inv);
   const usage = readUsage();
