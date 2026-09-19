@@ -865,7 +865,11 @@ function installRule(pol, id) {
 }
 
 // ExtraFile.source
-const extraSource = (ef, v) => list(ef.sources).find((s) => isMap(s) && matches(v, str(s.versions))) || null;
+// The first source for this runtime version and, when it says, this OS
+// version (min_os/max_os, the OS integers: MSYS2 for Ruby's DevKit needs
+// Windows 8.1).
+const extraSource = (ef, v, o) => list(ef.sources).find((s) => isMap(s) && matches(v, str(s.versions)) &&
+  !(o && ((s.min_os > 0 && o.int < s.min_os) || (s.max_os > 0 && o.int > s.max_os)))) || null;
 
 /* ---------- OS support (support.go) ---------- */
 
@@ -971,16 +975,21 @@ function runsOnUncached(cat, rt, e, o) {
 
 const PKG_MGRS = ['apt-get', 'dnf', 'yum', 'zypper', 'apk', 'pacman'];
 
+// A policy rule marked "for": "install" (extra_files, needs, requires)
+// applies only to apps that install something: a package, or a project
+// whose files an install rule names (docs/format.md "Prerequisites").
+const forApp = (x, install) => !(isMap(x) && x.for === 'install') || install;
+
 // Catalog.prereqsFor
-function prereqsFor(cat, rt, e, o) {
-  return memo(cat, `prereqs ${e.n} ${osKey(o)}`, () => prereqsForUncached(cat, rt, e, o));
+function prereqsFor(cat, rt, e, o, install) {
+  return memo(cat, `prereqs ${e.n} ${osKey(o)} ${!!install}`, () => prereqsForUncached(cat, rt, e, o, !!install));
 }
-function prereqsForUncached(cat, rt, e, o) {
+function prereqsForUncached(cat, rt, e, o, install) {
   const pol = runtimePolicy(cat, rt.id);
   if (!pol) return [];
   const out = [], seen = new Set();
   for (const n of list(pol.needs)) {
-    if (!isMap(n)) continue;
+    if (!isMap(n) || !forApp(n, install)) continue;
     if (list(n.variants).length > 0 && indexOf(n.variants, variantStr(e)) < 0) continue;
     if (str(n.versions) !== '' && !matches(e.v, n.versions)) continue;
     const lo = n.min_os || 0, hi = n.max_os || 0;
@@ -1071,7 +1080,7 @@ const tmpRefRe = () => /\{tmp\}[\\/]+([A-Za-z0-9_.-]+)/g;
 const STEP_KEYS = new Set(['unpack', 'to', 'strip_components', 'run', 'shell', 'write', 'text', 'mkdir']);
 
 // Catalog.supported: {ok, extras, prefer}
-function supported(cat, rt, r, e, install) {
+function supported(cat, rt, r, e, install, o) {
   const no = { ok: false, extras: [], prefer: false };
   const methods = list(own(cat.policy, 'method_order'));
   if (!methods.includes(r.method) || r.isolation === 'impossible') return no;
@@ -1092,7 +1101,7 @@ function supported(cat, rt, r, e, install) {
       if (!contains(own(cat.policy, 'external_tmp_files'), m[1])) continue;
       const ef = pol ? own(pol.extra_files, m[1]) : undefined;
       if (!isMap(ef)) return no;
-      const src = extraSource(ef, e.v);
+      const src = extraSource(ef, e.v, o);
       if (!src || str(src.sha256) === '' || list(src.urls).length === 0) return no;
       if (ef.for === 'install') {
         if (!install) return no;
@@ -1116,16 +1125,23 @@ function partLocal(cat, p) {
   return p.local;
 }
 
-// An extra file's download locations: a release part's like a release's
-// (our mirror first or last, as the policy says); a policy file's as listed.
+// Our mirror's copy of an extra file: a release part's is looked for
+// (opts.sha); a policy file's is its `local` path, as a prerequisite's is.
+const extraLocal = (cat, x) => (x.part ? partLocal(cat, x.src) : str(x.src.local));
+
+// An extra file's download locations: its own, with our mirror first or
+// last as the policy says (for a policy file, when it names a `local` copy).
 function extraURLs(cat, x) {
-  if (!x.part) return list(x.src.urls).map(str);
   const out = [], seen = new Set();
   const add = (u) => { if (u !== '' && !seen.has(u)) { seen.add(u); out.push(u); } };
-  const mirror = mirrorURL(cat, partLocal(cat, x.src));
+  const mirror = mirrorURL(cat, extraLocal(cat, x));
   if (own(cat.policy, 'mirror_first') === true) add(mirror);
-  add(x.src.url);
-  for (const m of x.src.mirrors || []) add(str(m));
+  if (x.part) {
+    add(x.src.url);
+    for (const m of x.src.mirrors || []) add(str(m));
+  } else {
+    for (const u of list(x.src.urls)) add(str(u));
+  }
   add(mirror);
   return out;
 }
@@ -1149,10 +1165,10 @@ function matchField(m, key, val) {
 }
 
 // Catalog.recipeFor: {recipe, extras}
-function recipeFor(cat, rt, e, install) {
-  return memo(cat, `recipe ${e.n} ${install}`, () => recipeForUncached(cat, rt, e, install));
+function recipeFor(cat, rt, e, install, o) {
+  return memo(cat, `recipe ${e.n} ${install} ${o ? o.int : ''}`, () => recipeForUncached(cat, rt, e, install, o));
 }
-function recipeForUncached(cat, rt, e, install) {
+function recipeForUncached(cat, rt, e, install, o) {
   let best = null, bestExtras = [], bestScore = -1;
   const methods = list(own(cat.policy, 'method_order'));
   for (const r of rt.recipes) {
@@ -1173,7 +1189,7 @@ function recipeForUncached(cat, rt, e, install) {
       if (!matches(e.v, vs)) continue;
       score++;
     }
-    const sup = supported(cat, rt, r, e, install);
+    const sup = supported(cat, rt, r, e, install, o);
     if (!sup.ok) continue;
     score = score * 100 + (10 - methods.indexOf(r.method)) * 5;
     if (r.isolation === 'full') score += 2;
@@ -1266,10 +1282,11 @@ function best(cat, rt, cands, o, app) {
     if (!matches(e.v, spec)) continue;
     const ro = runsOn(cat, rt, e, o);
     if (!ro.ok) continue;
-    const { recipe, extras } = recipeFor(cat, rt, e, app.package !== '' || app.install !== '');
+    const install = app.package !== '' || app.install !== '';
+    const { recipe, extras } = recipeFor(cat, rt, e, install, o);
     if (!recipe || sha(cat, e) === '') continue;
-    const pk = { rel: e, recipe, minBuild: ro.minBuild, known: ro.known, needs: [], extras, prereqs: prereqsFor(cat, rt, e, o) };
-    if (!attachNeeds(cat, rt, pk, o)) continue;
+    const pk = { rel: e, recipe, minBuild: ro.minBuild, known: ro.known, needs: [], extras, prereqs: prereqsFor(cat, rt, e, o, install) };
+    if (!attachNeeds(cat, rt, pk, o, install)) continue;
     if (ro.minBuild > o.build && ro.minBuild > 0) {
       if (!cond) cond = pk;
       continue;
@@ -1280,20 +1297,25 @@ function best(cat, rt, cands, o, app) {
 }
 
 // Catalog.attachNeeds
-function attachNeeds(cat, rt, pk, o) {
-  const needs = memo(cat, `needs ${rt.id} ${pk.rel.arch} ${osKey(o)}`, () => companions(cat, rt, pk.rel.arch, o));
+function attachNeeds(cat, rt, pk, o, install) {
+  const needs = memo(cat, `needs ${rt.id} ${pk.rel.arch} ${osKey(o)} ${!!install}`, () => companions(cat, rt, pk.rel.arch, o, !!install));
   if (!needs) return false;
   pk.needs.push(...needs);
   return true;
 }
-function companions(cat, rt, arch, o) {
+// A requires entry's optional "variants" limits the companion to those
+// builds (an ABI match: a UCRT runtime with a UCRT compiler).
+function companions(cat, rt, arch, o, install) {
   const pol = runtimePolicy(cat, rt.id);
   const out = [];
   if (!pol) return out;
   for (const req of list(own(pol.requires, o.family))) {
+    if (!forApp(req, install)) continue;
     const crt = runtimeOf(cat, str((req == null ? undefined : req.runtime)));
     if (!crt) return false;
-    const native = candidates(cat, crt, o.family, arch).filter((e) => e.arch === arch || e.arch === 'any' || e.arch === 'universal');
+    const vs = list(own(req, 'variants'));
+    const native = candidates(cat, crt, o.family, arch).filter((e) => (e.arch === arch || e.arch === 'any' || e.arch === 'universal') &&
+      (vs.length === 0 || indexOf(vs, variantStr(e)) >= 0));
     const { p } = best(cat, crt, native, o, normApp({ runtime: req.runtime }));
     if (!p) return false;
     out.push({ req: { runtime: str(req.runtime), bin: str(req.bin) }, p });
@@ -1395,7 +1417,7 @@ export function resolveFiles(cat, app) {
     for (const x of b.p.extras) {
       if (seen.has(str(x.src.sha256))) continue;
       seen.add(x.src.sha256);
-      files.push({ name: x.name, sha256: x.src.sha256, size: x.src.size || 0, urls: extraURLs(cat, x), local: x.part ? partLocal(cat, x.src) : '' });
+      files.push({ name: x.name, sha256: x.src.sha256, size: x.src.size || 0, urls: extraURLs(cat, x), local: extraLocal(cat, x) });
     }
     for (const n of b.p.needs) add(n.p.rel);
     for (const u of targetPrereqs(cat, app, b)) {
