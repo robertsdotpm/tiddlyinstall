@@ -17,6 +17,10 @@
 // it only for an intended change, with a snapshot of the catalogue that
 // server loads in tests/golden/catalog.gz (tools/snapshot.mjs), and read
 // the diff.
+//
+// Re-recorded 2026-09-19 from the Node server on :8080 for Windows Python's
+// msi-layout plans (the full python.org build); only Python's Windows plans
+// changed.
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';

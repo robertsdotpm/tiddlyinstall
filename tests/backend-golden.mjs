@@ -47,6 +47,11 @@
 // --record URL records the goldens again from a running server (use it
 // only for an intended change, and read the diff); --data is that
 // server's data folder.
+//
+// Re-recorded 2026-09-19 from the Node server on :8080 for Windows Python's
+// msi-layout plans (the full python.org build); only Python's Windows plans
+// changed (and the runtimes summary). The jobs rate-limit answer was kept
+// from the earlier recording: recording itself had used up the minute.
 import fs from 'node:fs';
 import path from 'node:path';
 import http from 'node:http';
