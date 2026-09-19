@@ -553,7 +553,16 @@ async function runClassic(machine, base) {
   const rec = { time: new Date().toISOString(), machine: machine.name, browser: 'ie', version: '', result: '', protocol: 'com', classic: base, mode };
   const dir = remote.dir('ie');
   let agent = null;
+  // IE asks before it sends a form unencrypted from the Internet zone when
+  // the zone's "Submit non-encrypted form data" (1601) is "Prompt" (1): a
+  // person answers Yes (and can tick "don't ask again"); hidden, over COM,
+  // nobody can, and IE drops the post. So for the run it is "Enable" (0),
+  // and put back afterwards.
+  const ZONE = 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Zones\\3';
+  const was = /1601\s+REG_DWORD\s+0x([0-9a-f]+)/i.exec(remote.sh(`reg query "${ZONE}" /v 1601`).out);
+  rec.zone1601 = was ? Number.parseInt(was[1], 16) : null;
   try {
+    if (rec.zone1601 !== 0) remote.sh(`reg add "${ZONE}" /v 1601 /t REG_DWORD /d 0 /f`);
     remote.mkdir(dir);
     remote.put(path.join(HERE, 'ie-agent.js'), remote.dir('ie', 'ie-agent.js'));
     remote.sh('taskkill /F /IM iexplore.exe');
@@ -591,7 +600,8 @@ async function runClassic(machine, base) {
           d.documentElement.setAttribute('data-ibt', location.href + '\x02' + d.readyState + '\x02' + (st.length ? (st[0].innerText || '') : '') + '\x02' + dl.join(' ') + '\x02' + (d.getElementsByTagName('meta').length));`);
       } catch (e) { continue; }   // between pages
       const [href, ready, st, links] = r.split('\x02');
-      if (!/\/status\/j_/.test(href) || ready !== 'complete') continue;
+      if (/\/classic$/.test(href) && Date.now() - started > 120000 && !statusUrl) { seen.push('still on the form: ' + st); break; }
+      if (!/\/status\/j_/.test(href) || ready !== 'complete') { if (href && seen[seen.length - 1] !== href) seen.push(href); continue; }
       statusUrl = href;
       if (seen[seen.length - 1] !== st) seen.push(st);
       if (/^(Done|Failed)$/.test(st)) { status = st; hrefs = links ? links.split(' ') : []; break; }
@@ -615,6 +625,10 @@ async function runClassic(machine, base) {
   } finally {
     if (agent) await agent.quit();
     remote.sh('taskkill /F /IM iexplore.exe');
+    if (rec.zone1601 === null) remote.sh(`reg delete "${ZONE}" /v 1601 /f`);
+    else if (rec.zone1601 !== 0) remote.sh(`reg add "${ZONE}" /v 1601 /t REG_DWORD /d ${rec.zone1601} /f`);
+    const now = /1601\s+REG_DWORD\s+0x([0-9a-f]+)/i.exec(remote.sh(`reg query "${ZONE}" /v 1601`).out);
+    t.ok((now ? Number.parseInt(now[1], 16) : null) === rec.zone1601, 'the zone setting is put back', now && now[0]);
     rec.seconds = Math.round((Date.now() - started) / 1000);
     fs.mkdirSync(RESULTS, { recursive: true });
     const file = path.join(RESULTS, `${stamp}-${machine.name}-ie-classic.json`);

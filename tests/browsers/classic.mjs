@@ -3,8 +3,9 @@
 // tests/browsers/safari5.mjs --classic. The browser fills and submits the
 // server's /classic form and follows the status page to its download
 // links; this side then checks what those links give, as a person's
-// download would be: each file read back with js/ibfile.js, carrying the
-// record the page links to, its SHA-256 as the page says. With `out`, the
+// download would be: its SHA-256 as the page says, read back with
+// js/ibfile.js (modes B and C carry the record the page links to; mode A is
+// our signed base named for it), and the record's signed plan served. With `out`, the
 // files are kept with a builds.json that tests/matrix/run.py reads.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -53,9 +54,19 @@ export async function checkFinished(t, statusUrl, { hrefs = null, name, modeLett
     t.ok(r.status === 200 && /attachment/.test(r.headers.get('content-disposition') || ''), `${f.name}: the link downloads it`, r.status);
     t.ok(crypto.createHash('sha256').update(data).digest('hex') === f.sha256, `${f.name}: its SHA-256 is the page's`);
     const info = await readInstaller(data, f.name);
-    t.ok(info.record === recText && await recordHash(info.record) === st.record, `${f.name}: js/ibfile.js reads it back, carrying the record`);
-    t.ok(info.plan && info.plan.includes('record\t' + st.record + '\n'), `${f.name}: it carries its plan, bound to the record`);
-    if (modeLetter === 'A') t.ok(/TiddlyInstall/.test(f.signed), `${f.name}: signed by TiddlyInstall (mode A)`, f.signed);
+    if (modeLetter === 'A') {
+      // Mode A: our signed base as it is, named for the record, which it
+      // fetches from the server when it runs (design.md 3).
+      t.ok(info.kind && info.record === null && !info.plan && f.name.includes(st.record), `${f.name}: js/ibfile.js reads it: our base, named for the record, nothing inside (mode A)`, info.kind + ' ' + f.name);
+      if (f.platform === 'Windows') t.ok(/TiddlyInstall/.test(f.signed), `${f.name}: signed by TiddlyInstall`, f.signed);
+    } else {
+      // Modes B and C carry the record; the plan comes from the server
+      // when they run (offline ones carry it too).
+      t.ok(info.record === recText && await recordHash(info.record) === st.record, `${f.name}: js/ibfile.js reads it back, carrying the record`);
+      if (info.plan) t.ok(info.plan.includes('record\t' + st.record + '\n'), `${f.name}: the plan it carries is bound to the record`);
+    }
+    const plan = await fetch(new URL('../api/plan/' + st.record, statusUrl));
+    t.ok(plan.status === 200 && /\nsig\ted25519\t/.test(await plan.text()), `${f.name}: the server has its signed plan`);
     if (out) {
       const dir = path.join(out, 'python', modeLetter);
       fs.mkdirSync(dir, { recursive: true });
