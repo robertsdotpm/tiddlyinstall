@@ -1,10 +1,10 @@
 {
- "updated": "2026-09-19T05:12:23.110Z",
+ "updated": "2026-09-19T05:35:45.418Z",
  "machines": {
   "7": {
    "os": "windows",
    "ssh": "x@10.0.1.231",
-   "read": "2026-09-19T05:12:12.103Z",
+   "read": "2026-09-19T05:35:32.958Z",
    "browsers": [
     {
      "id": "chrome",
@@ -101,7 +101,7 @@
   "10": {
    "os": "windows",
    "ssh": "matth@10.0.1.199",
-   "read": "2026-09-19T05:12:12.831Z",
+   "read": "2026-09-19T05:35:33.744Z",
    "browsers": [
     {
      "id": "chrome",
@@ -198,7 +198,7 @@
   "11": {
    "os": "windows",
    "ssh": "matth@10.0.1.123",
-   "read": "2026-09-19T05:12:13.610Z",
+   "read": "2026-09-19T05:35:34.715Z",
    "browsers": [
     {
      "id": "chrome",
@@ -277,7 +277,7 @@
   "2022": {
    "os": "windows",
    "ssh": "administrator@10.0.1.248",
-   "read": "2026-09-19T05:12:13.856Z",
+   "read": "2026-09-19T05:35:35.080Z",
    "browsers": [
     {
      "id": "chrome",
@@ -374,7 +374,7 @@
   "xp": {
    "os": "windows",
    "ssh": "matthew@10.0.1.132",
-   "read": "2026-09-19T05:12:14.463Z",
+   "read": "2026-09-19T05:35:35.850Z",
    "browsers": [
     {
      "id": "supermium-installed",
@@ -435,7 +435,7 @@
   "vista": {
    "os": "windows",
    "ssh": "x@10.0.1.167",
-   "read": "2026-09-19T05:12:14.921Z",
+   "read": "2026-09-19T05:35:36.240Z",
    "browsers": [
     {
      "id": "firefox",
@@ -496,7 +496,7 @@
   "8.1": {
    "os": "windows",
    "ssh": "x@10.0.1.165",
-   "read": "2026-09-19T05:12:15.153Z",
+   "read": "2026-09-19T05:35:36.501Z",
    "browsers": [
     {
      "id": "chrome",
@@ -593,7 +593,7 @@
   "centos6": {
    "os": "linux",
    "ssh": "x@10.0.1.183",
-   "read": "2026-09-19T05:12:15.567Z",
+   "read": "2026-09-19T05:35:36.948Z",
    "browsers": [
     {
      "id": "chrome",
@@ -634,27 +634,8 @@
   "centos7": {
    "os": "linux",
    "ssh": "x@10.0.1.221",
-   "read": "2026-09-19T05:12:16.241Z",
+   "read": "2026-09-19T05:35:37.594Z",
    "browsers": [
-    {
-     "id": "chrome",
-     "name": "Chrome for Testing",
-     "version": "125.0.6422.141",
-     "binary": "/home/x/ibbrowsers/chrome-125.0.6422.141/chrome-linux64/chrome",
-     "driverKind": "chromedriver",
-     "driver": "/home/x/ibbrowsers/drivers/chromedriver-125.0.6422.141/chromedriver.sh",
-     "driverVersion": "125.0.6422.141",
-     "args": [
-      "--headless=new",
-      "--no-sandbox"
-     ],
-     "headless": true,
-     "source": "https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chrome-linux64.zip",
-     "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chromedriver-linux64.zip",
-     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/ibbrowsers/sysroot: CentOS 7 vault (yumdownloader --resolve, i686 multilib deps dropped) .rpms fetched from the distro repos, rpm -K OK on every package (distro GPG key in the system rpmdb), unpacked with rpm2cpio|cpio",
-     "smoke": "pass",
-     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. --no-sandbox is required: user.max_user_namespaces=0 and no SUID sandbox without root ('No usable sandbox!'). newest Chrome for Testing whose binary runs on glibc 2.17: 126.0.6478.182 and later need GLIBC_2.25 (tested: \"/lib64/libc.so.6: version `GLIBC_2.25' not found\"). 115-125 need only GLIBC_2.17."
-    },
     {
      "id": "firefox",
      "name": "Mozilla Firefox",
@@ -672,13 +653,31 @@
      "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: CentOS 7 vault (yumdownloader --resolve) .rpms fetched from the distro repos, rpm -K OK on every package (distro GPG key in the system rpmdb), unpacked with rpm2cpio|cpio",
      "smoke": "pass",
      "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+    },
+    {
+     "id": "chrome",
+     "name": "Chrome for Testing",
+     "version": "125.0.6422.141",
+     "binary": "/home/x/ibbrowsers/chrome-125.0.6422.141/chrome-linux64/chrome",
+     "driverKind": "chromedriver",
+     "driver": "/home/x/ibbrowsers/drivers/chromedriver-125.0.6422.141/chromedriver.sh",
+     "driverVersion": "125.0.6422.141",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chrome-linux64.zip",
+     "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chromedriver-linux64.zip",
+     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/ibbrowsers/sysroot: CentOS 7 vault (yumdownloader --resolve, i686 multilib deps dropped) .rpms fetched from the distro repos, rpm -K OK on every package (distro GPG key in the system rpmdb), unpacked with rpm2cpio|cpio",
+     "smoke": "pass",
+     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. Sandboxed (2026-09-19): user.max_user_namespaces=0, so Chrome uses its SUID sandbox: chrome_sandbox from the same zip installed as chrome-sandbox next to chrome, root:root 4755 (sudo install); --no-sandbox dropped. The renderers run under it (ps: zygote child of chrome-sandbox). newest Chrome for Testing whose binary runs on glibc 2.17: 126.0.6478.182 and later need GLIBC_2.25 (tested: \"/lib64/libc.so.6: version `GLIBC_2.25' not found\"). 115-125 need only GLIBC_2.17."
     }
    ]
   },
   "ubuntu1404": {
    "os": "linux",
    "ssh": "x@10.0.1.117",
-   "read": "2026-09-19T05:12:16.628Z",
+   "read": "2026-09-19T05:35:38.036Z",
    "browsers": [
     {
      "id": "chrome",
@@ -719,7 +718,7 @@
   "ubuntu1604": {
    "os": "linux",
    "ssh": "x@10.0.1.112",
-   "read": "2026-09-19T05:12:16.901Z",
+   "read": "2026-09-19T05:35:38.328Z",
    "browsers": [
     {
      "id": "chrome",
@@ -762,7 +761,7 @@
   "ubuntu1804": {
    "os": "linux",
    "ssh": "x@10.0.1.144",
-   "read": "2026-09-19T05:12:17.695Z",
+   "read": "2026-09-19T05:35:39.090Z",
    "browsers": [
     {
      "id": "chrome",
@@ -823,7 +822,7 @@
   "rocky8": {
    "os": "linux",
    "ssh": "x@10.0.1.131",
-   "read": "2026-09-19T05:12:18.031Z",
+   "read": "2026-09-19T05:35:39.451Z",
    "browsers": [
     {
      "id": "chrome",
@@ -884,7 +883,7 @@
   "ubuntu2004": {
    "os": "linux",
    "ssh": "x@10.0.1.118",
-   "read": "2026-09-19T05:12:18.590Z",
+   "read": "2026-09-19T05:35:40.315Z",
    "browsers": [
     {
      "id": "chrome",
@@ -945,7 +944,7 @@
   "ubuntu2204": {
    "os": "linux",
    "ssh": "x@10.0.1.203",
-   "read": "2026-09-19T05:12:19.180Z",
+   "read": "2026-09-19T05:35:41.400Z",
    "browsers": [
     {
      "id": "chrome",
@@ -1006,7 +1005,7 @@
   "debian12": {
    "os": "linux",
    "ssh": "x@10.0.1.235",
-   "read": "2026-09-19T05:12:19.773Z",
+   "read": "2026-09-19T05:35:42.068Z",
    "browsers": [
     {
      "id": "chrome",
@@ -1067,7 +1066,7 @@
   "alpine": {
    "os": "linux",
    "ssh": "x@10.0.1.200",
-   "read": "2026-09-19T05:12:20.096Z",
+   "read": "2026-09-19T05:35:42.335Z",
    "browsers": [
     {
      "id": "chromium",
@@ -1111,7 +1110,7 @@
   "mac": {
    "os": "mac",
    "ssh": "Matthew@the-mac-test-host",
-   "read": "2026-09-19T05:12:23.109Z",
+   "read": "2026-09-19T05:35:45.417Z",
    "browsers": [
     {
      "id": "chrome",
@@ -1162,7 +1161,7 @@
      "source": "preinstalled",
      "driverSource": "preinstalled (/usr/bin/safaridriver -> /System/Cryptexes/App/usr/bin/safaridriver)",
      "verified": "system component, not checked",
-     "smoke": "fail: safaridriver -p <P> exits immediately with status 1 and no output; unified log: com.apple.WebDriver.HTTPService 'Attempted to manage driver interface for target CURRENTMACHINE without a connection' then 'Shutting down daemon because connection to webinspectord was closed' (no user logged in at the console: /dev/console owned by root, no gui/502 launchd domain)",
+     "smoke": "fail: safaridriver --enable done (2026-09-19), but safaridriver -p <P> still exits at once: it needs a logged-in GUI session, and this Mac has no display (system_profiler lists none; Screen Sharing's framebuffer is black and loginwindow can't be reached over VNC)",
      "notes": "Blocked: needs a GUI login session for this user, and likely 'safaridriver --enable' (admin password) / Allow Remote Automation (com.apple.Safari AllowRemoteAutomation not set). Not attempted. Safari has no headless mode."
     },
     {
