@@ -2,7 +2,7 @@
 //
 // Which server: `?api=` on the page URL, else the one saved in this browser,
 // else the default: this page's own origin when the build server is serving
-// it, otherwise DEFAULT_REMOTE. The footer control (mountApiFooter) shows it
+// it, otherwise DEFAULT_REMOTE. The settings panel (mountApiFooter) shows it
 // and lets people change it, like netstats on warpgate.io.
 //
 // Every call goes through apiRequest(). A network error or a 5xx marks the
@@ -356,20 +356,28 @@ function paintApiFooter() {
   }
   a.textContent = prettyApi(apiBaseUrl);
   a.title = apiBaseUrl === defaultApi ? apiBaseUrl + ' (default)' : apiBaseUrl + ' (chosen)';
+  footerEl.querySelector('.settings-btn').title = 'Settings. Build server: ' + prettyApi(apiBaseUrl);
 }
 
-// Adds "Build server: <url> [change]" to the page footer, and "Save this
-// page" when the page is the one-file site. Carries a ?api= from the URL
-// onto links to the site's other pages.
+// A settings button (a spanner) in the site header opens a small panel
+// with the build server choice; "Save this page" goes in the footer when
+// the page is the one-file site. Carries a ?api= from the URL onto links to
+// the site's other pages.
+const SPANNER = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">' +
+  '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.1L3.3 17.4a1.4 1.4 0 0 0 0 2l1.3 1.3a1.4 1.4 0 0 0 2 0l6-6a4 4 0 0 0 5.1-5.4l-2.6 2.6-2.3-.6-.6-2.3z" ' +
+  'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+
 export function mountApiFooter() {
-  if (footerEl) return;   // the one-file site's pages share one footer
+  if (footerEl) return;   // the one-file site's pages share one header
+  const header = document.querySelector('.site-header');
   const footer = document.querySelector('.site-footer') || document.body;
   footerEl = document.createElement('div');
-  footerEl.className = 'api-ctl';
+  footerEl.className = 'api-ctl settings';
   footerEl.innerHTML =
-    '<span>Build server:</span> <a class="api-ctl-url" target="_blank" rel="noopener noreferrer"></a> ' +
-    '<button type="button" class="link-button api-ctl-edit">change</button>' +
-    '<form class="api-ctl-form" hidden>' +
+    '<button type="button" class="settings-btn api-ctl-edit" aria-haspopup="true" aria-expanded="false" aria-label="Settings">' + SPANNER + '</button>' +
+    '<div class="settings-panel" hidden>' +
+    '<p class="settings-now"><span>Build server:</span> <a class="api-ctl-url" target="_blank" rel="noopener noreferrer"></a></p>' +
+    '<form class="api-ctl-form">' +
     '<label>Build server URL <input type="text" class="api-ctl-input" spellcheck="false" autocomplete="off" ' +
     'autocapitalize="off" placeholder="http://host:8080"></label>' +
     '<p class="api-ctl-err" hidden></p>' +
@@ -377,27 +385,32 @@ export function mountApiFooter() {
     '<button type="submit">Use</button>' +
     '<button type="button" class="secondary api-ctl-default">Default</button>' +
     (HAS_LOCAL ? '<button type="button" class="secondary api-ctl-local">No server</button>' : '') +
-    '<button type="button" class="secondary api-ctl-cancel">Cancel</button>' +
+    '<button type="button" class="secondary api-ctl-cancel">Close</button>' +
     '</div>' +
     '<p class="hint">Kept in this browser only, and shareable as <code>?api=</code> on the page URL. ' +
     'A page served over HTTPS can\'t use a plain http:// server.' +
     (HAS_LOCAL ? ' With no server, this page builds installers itself: modes B and C, code written here or package names.' : '') +
-    '</p></form>';
-  footer.appendChild(footerEl);
+    '</p></form></div>';
+  ((header && header.querySelector('nav')) || header || footer).appendChild(footerEl);
+  const panel = footerEl.querySelector('.settings-panel');
   const form = footerEl.querySelector('form');
   const input = footerEl.querySelector('.api-ctl-input');
   const err = footerEl.querySelector('.api-ctl-err');
   const edit = footerEl.querySelector('.api-ctl-edit');
   const showErr = (m) => { err.textContent = m || ''; err.hidden = !m; };
-  const close = () => { form.hidden = true; showErr(''); };
+  const close = () => { panel.hidden = true; edit.setAttribute('aria-expanded', 'false'); showErr(''); };
   edit.addEventListener('click', () => {
-    if (form.hidden) {
+    if (panel.hidden) {
       input.value = apiLocal() ? '' : apiBaseUrl;
-      form.hidden = false;
+      panel.hidden = false;
+      edit.setAttribute('aria-expanded', 'true');
       input.focus();
       input.select();
     } else close();
   });
+  // Closes on Escape or a click outside it.
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) close(); });
+  document.addEventListener('click', (e) => { if (!panel.hidden && !footerEl.contains(e.target)) close(); });
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     e.stopPropagation();

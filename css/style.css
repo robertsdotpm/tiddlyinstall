@@ -642,9 +642,19 @@ form:not(:has(#runtime option[value="python"]:checked)) .py-panel { display: non
 .api-banner[hidden] { display: none; }
 .api-banner button { padding: 4px 12px; }
 
-.api-ctl { margin-top: 8px; }
+.site-header { position: relative; }
+.settings { display: inline-flex; align-items: center; }
+.site-header nav { align-items: center; }
+.settings-btn { display: inline-flex; align-items: center; justify-content: center; padding: 4px 6px;
+  background: none; border: 1px solid transparent; border-radius: 6px; color: var(--accent); cursor: pointer; }
+.settings-btn:hover, .settings-btn[aria-expanded="true"] { border-color: var(--border); background: var(--panel); }
+.settings-panel { position: absolute; right: 0; top: 100%; z-index: 60; width: 380px; max-width: calc(100vw - 32px);
+  padding: 12px 14px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35); text-align: left; }
+.settings-panel[hidden] { display: none; }
+.settings-now { margin: 0 0 8px; }
 .api-ctl-url { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.9em; }
-.api-ctl-form { margin-top: 8px; max-width: 480px; }
+.api-ctl-form { margin-top: 8px; }
 .api-ctl-form label { display: block; font-weight: 600; margin-bottom: 6px; color: var(--text); }
 .api-ctl-form input { margin-top: 4px; }
 .api-ctl-form .actions { margin-top: 8px; gap: 8px; }
