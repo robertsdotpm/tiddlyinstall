@@ -19,6 +19,14 @@
 //               apps). 152 of the 3,095 answers changed, all Python 3 and 2,
 //               Java, PHP and Ruby plans; every other runtime's are the Go
 //               resolver's, byte for byte.
+//   2026-09-19  Runtime fidelity (tests/fidelity): Ruby's DevKit on Windows and
+//               relocatable macOS builds, PHP's extensions, CA bundle and
+//               Composer, R's fixed Windows executable and macOS Rscript
+//               wrapper, Rust's WinLibs companion on Windows, Nim's DLLs on
+//               Windows, and compiler needs for apps that install something.
+//               571 of the 3,096 answers changed: nim 105, php 117, r 118,
+//               ruby 109, rust 121, and the runtimes summary (Ruby now has
+//               macOS releases). Every other runtime's plans are unchanged.
 //
 // --catalog FILE runs the cases against another snapshot instead (for
 // example one tools/snapshot.mjs wrote from the same catalogue folder: the

@@ -21,6 +21,13 @@
 // Re-recorded 2026-09-19 from the Node server on :8080 for Windows Python's
 // msi-layout plans (the full python.org build); only Python's Windows plans
 // changed.
+//
+// Re-recorded 2026-09-19 from the Node server on :8080 for the runtime
+// fidelity data (tests/fidelity): Ruby's macOS releases (the hello world has
+// no Gemfile, so no DevKit or compiler needs), PHP's Windows extensions and
+// CA bundle, R's Windows executable and macOS Rscript wrapper, Rust's WinLibs
+// companion on Windows, Nim's DLLs and CA bundle on Windows. Only ruby, php,
+// r, rust and nim changed.
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';

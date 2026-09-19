@@ -52,6 +52,14 @@
 // msi-layout plans (the full python.org build); only Python's Windows plans
 // changed (and the runtimes summary). The jobs rate-limit answer was kept
 // from the earlier recording: recording itself had used up the minute.
+//
+// Re-recorded 2026-09-19 from the Node server on :8080 for the runtime
+// fidelity data (tests/fidelity): the runtimes summary (Ruby's macOS
+// releases) and the PHP job with a composer.json, which now builds (renamed
+// from "... unsupported" to "... Composer"; it was refused). The fixed
+// records' plans were recorded again with the new catalogue. The four
+// rate-limit answers were carried over from the previous recording
+// (recorded without --rate-limits: the recording's own jobs use the minute).
 import fs from 'node:fs';
 import path from 'node:path';
 import http from 'node:http';
@@ -541,7 +549,8 @@ async function moreJobs() {
   await job('settings', Object.assign({}, base, { mode: 'C', console: false, menu: false, desktop: true, root: 'all', rootname: 'myapps',
     platforms: ['macos', 'windows'], name: 'Settings test', install: 'pip install .', launch: '{runtime} -m hello --flag' }));
   await job('empty install: the policy picks', Object.assign({}, base, { mode: 'C', files: { 'hello/__main__.py': 'print(1)\n', 'requirements.txt': 'six\n' }, platforms: ['linux'] }));
-  await job('PHP composer.json: unsupported', Object.assign({}, base, { runtime: 'php', mode: 'C', files: { 'composer.json': '{}', 'index.php': '<?php echo 1;' }, platforms: ['linux'] }), { planOnly: true });
+  // Composer comes with PHP for projects with a composer.json since 2026-09-19 (it was refused).
+  await job('PHP composer.json: Composer', Object.assign({}, base, { runtime: 'php', mode: 'C', files: { 'composer.json': '{}', 'index.php': '<?php echo 1;' }, platforms: ['linux'] }), { planOnly: true });
   // Packages: at a given version the same answers; at the newest, only
   // how the job ends.
   await job('package, version given', Object.assign({}, base, { mode: 'C', source: { kind: 'package', value: 'requests', version: '2.32.3' }, files: null, platforms: ['linux'], launch: '' }));
