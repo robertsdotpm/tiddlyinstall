@@ -1,0 +1,5 @@
+source "https://rubygems.org"
+
+# Both compile a C extension when installed (json replaces the default gem).
+gem "bcrypt"
+gem "json"

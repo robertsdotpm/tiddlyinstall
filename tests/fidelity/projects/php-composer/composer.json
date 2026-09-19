@@ -1,0 +1,8 @@
+{
+    "name": "fidelity/composer-check",
+    "description": "Fidelity check: Composer installs a small package",
+    "require": {
+        "psr/log": "*",
+        "symfony/polyfill-ctype": "*"
+    }
+}

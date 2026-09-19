@@ -1,0 +1,102 @@
+{
+ "notes": "Fidelity projects (docs/test-results.md, section Real-app fidelity): one small app per runtime that uses what real apps rely on, installed through the normal build and install path. Files come from projects/<id>/. launch and install are the job's fields ({sep} is the OS path separator, {env:NAME} the plan's value of NAME); no install means the policy's install rule for the project's files. select/range limit the runtime version like the form's version choice; prerequisites are the system libraries the app's own code needs (the job field, as the written templates give it: R's tcltk needs Tk 8.6 on Linux).",
+ "projects": {
+  "python": {
+   "runtime": "python",
+   "project": "fidelity",
+   "launch": "{runtime} {app_dir}/main.py",
+   "checks": ["ssl-https", "sqlite3", "ctypes", "stdlib", "pip", "venv", "wheel-pyyaml", "wheel-cffi", "tkinter-tcl", "tkinter-tk", "multiprocessing"]
+  },
+  "ruby": {
+   "runtime": "ruby",
+   "project": "fidelity",
+   "launch": "{runtime} {app_dir}/main.rb",
+   "checks": ["gem-bcrypt", "gem-json-ext", "openssl-https", "readline", "stdlib", "fiddle", "gem-command"]
+  },
+  "php": {
+   "runtime": "php",
+   "project": "fidelity",
+   "launch": "{runtime} {app_dir}/index.php",
+   "checks": ["mbstring", "pdo_sqlite", "curl-https", "openssl-https", "gd", "intl", "zip", "xml", "json", "common"]
+  },
+  "php-composer": {
+   "runtime": "php",
+   "project": "fidelity",
+   "launch": "{runtime} {app_dir}/index.php",
+   "checks": ["composer-install"]
+  },
+  "node": {
+   "runtime": "node",
+   "project": "fidelity",
+   "launch": "{runtime} {app_dir}/main.js",
+   "checks": ["native-addon", "https", "crypto-zlib", "npm", "child-process", "intl"]
+  },
+  "go": {
+   "runtime": "go",
+   "project": "fidelity",
+   "launch": "{app_dir}/fidelity{exe}",
+   "checks": ["https", "module-dependency", "os-exec", "cgo"]
+  },
+  "go-cgo": {
+   "runtime": "go",
+   "project": "fidelity",
+   "launch": "{app_dir}/fidelity{exe}",
+   "checks": ["cgo"]
+  },
+  "rust": {
+   "runtime": "rust",
+   "project": "fidelity",
+   "launch": "{app_dir}/target/release/fidelity{exe}",
+   "checks": ["cc-build-step", "bundled-sqlite"]
+  },
+  "cc": {
+   "runtime": "cc",
+   "project": "fidelity",
+   "launch": "{app_dir}/fidelity{exe}",
+   "checks": ["zlib", "threads", "libm"]
+  },
+  "cpp": {
+   "runtime": "cc",
+   "project": "fidelity",
+   "launch": "{app_dir}/fidelity{exe}",
+   "checks": ["threads", "filesystem", "cxx17", "regex-iostream", "exceptions"]
+  },
+  "java": {
+   "runtime": "java",
+   "project": "fidelity",
+   "install": "\"{env:JAVA_HOME}{sep}bin{sep}javac\" -encoding UTF-8 -d \"{app_dir}{sep}classes\" Main.java && \"{env:JAVA_HOME}{sep}bin{sep}jar\" cfe \"{app_dir}{sep}fidelity.jar\" Main -C \"{app_dir}{sep}classes\" .",
+   "launch": "{runtime} -Djava.awt.headless=true -jar {app_dir}/fidelity.jar",
+   "select": "range",
+   "range": ">=11",
+   "checks": ["java.net.http", "swing-headless"]
+  },
+  "dotnet": {
+   "runtime": "dotnet",
+   "project": "fidelity",
+   "launch": "{runtime} {app_dir}/bin/fidelity.dll",
+   "checks": ["nuget-package", "https", "globalization"]
+  },
+  "r": {
+   "runtime": "r",
+   "project": "fidelity",
+   "install": "\"{runtime}\" -e \"install.packages(c('digest', 'jsonlite'), repos = 'https://cloud.r-project.org')\"",
+   "launch": "{runtime} {app_dir}/main.R",
+   "prerequisites": ["libtk"],
+   "checks": ["cran-digest", "cran-jsonlite", "https", "tcltk", "capabilities"]
+  },
+  "nim": {
+   "runtime": "nim",
+   "project": "fidelity",
+   "launch": "{app_dir}/fidelity{exe}",
+   "checks": ["https", "json", "threads"]
+  },
+  "zig": {
+   "runtime": "zig",
+   "project": "fidelity",
+   "launch": "{app_dir}/fidelity{exe}",
+   "select": "range",
+   "range": ">=0.16,<0.17",
+   "checks": ["https", "json"]
+  }
+ }
+}

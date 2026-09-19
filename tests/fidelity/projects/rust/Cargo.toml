@@ -1,0 +1,13 @@
+[package]
+name = "fidelity"
+version = "0.1.0"
+edition = "2021"
+# Windows 7 and 8.1 get Rust 1.77, so the lock file is resolved for it.
+rust-version = "1.77"
+
+[dependencies]
+# Builds SQLite's C source with the `cc` crate.
+rusqlite = { version = "0.31", features = ["bundled"] }
+
+[build-dependencies]
+cc = "1"

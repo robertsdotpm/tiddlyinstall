@@ -1,0 +1,10 @@
+{
+  "name": "fidelity-node",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Fidelity check: a native addon and npm itself",
+  "main": "main.js",
+  "dependencies": {
+    "better-sqlite3": "*"
+  }
+}
