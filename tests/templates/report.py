@@ -15,9 +15,17 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 DOC = HERE.parents[1] / "docs" / "test-results.md"
 START, END = "<!-- templates:start -->", "<!-- templates:end -->"
-COLUMNS = [("linux", "Ubuntu 24.04 (here)"), ("ubuntu2204", "Ubuntu 22.04"), ("debian12", "Debian 12"),
-           ("rocky8", "Rocky 8"), ("centos7", "CentOS 7"), ("10", "Win 10"), ("7", "Win 7"),
-           ("11de", "Win 11 (de)"), ("mac", "macOS 26")]
+# Two grids, Linux and the rest, each newest first.
+GROUPS = [
+    [("linux", "Ubuntu 24.04 (here)"), ("ubuntu2204", "Ubuntu 22.04"), ("debian12", "Debian 12"),
+     ("ubuntu2004", "Ubuntu 20.04"), ("rocky8", "Rocky 8"), ("ubuntu1804", "Ubuntu 18.04"),
+     ("ubuntu1604", "Ubuntu 16.04"), ("ubuntu1404", "Ubuntu 14.04"), ("centos7", "CentOS 7"),
+     ("centos6", "CentOS 6"), ("alpine", "Alpine 3.24")],
+    [("11", "Win 11"), ("11de", "Win 11 (de)"), ("2025core", "Server 2025 Core"), ("2022", "Server 2022"),
+     ("10", "Win 10"), ("ltsc2021", "Win 10 LTSC 2021"), ("10x86", "Win 10 x86"), ("8.1", "Win 8.1"),
+     ("7", "Win 7"), ("vista", "Vista"), ("xp", "XP"), ("mac", "macOS 26")],
+]
+COLUMNS = [c for g in GROUPS for c in g]
 MARK = {"pass": "✓", "fail": "✗", "n/a": "–"}
 
 
@@ -26,6 +34,8 @@ def cell(r):
         return " "
     if r["result"] == "n/a" and "no display" in r.get("detail", ""):
         return "GUI"
+    if r["result"] == "n/a" and "nobody logged on" in r.get("detail", ""):
+        return "ssh"
     if r["result"] == "n/a" and "isn't for" in r.get("detail", ""):
         return "·"
     return MARK[r["result"]]
@@ -45,11 +55,17 @@ def main():
             latest[(r["template"], r["target"])] = r
             if r["template"] not in order:
                 order.append(r["template"])
-    cols = [c for c in COLUMNS if any(t == c[0] for _, t in latest)]
-    out = ["| Template | " + " | ".join(label for _, label in cols) + " |",
-           "| --- |" + " --- |" * len(cols)]
-    for t in order:
-        out.append(f"| {t} | " + " | ".join(cell(latest.get((t, c))) for c, _ in cols) + " |")
+    out = []
+    for group in GROUPS:
+        cols = [c for c in group if any(t == c[0] for _, t in latest)]
+        if not cols:
+            continue
+        if out:
+            out.append("")
+        out += ["| Template | " + " | ".join(label for _, label in cols) + " |",
+                "| --- |" + " --- |" * len(cols)]
+        for t in order:
+            out.append(f"| {t} | " + " | ".join(cell(latest.get((t, c))) for c, _ in cols) + " |")
     counts = {}
     for r in latest.values():
         counts[r["result"]] = counts.get(r["result"], 0) + 1

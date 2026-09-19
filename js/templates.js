@@ -257,8 +257,8 @@ icon.run(setup)
     needs: ['pystray', 'Pillow'],
     platforms: ALL,
     note: 'Installs pystray and Pillow (requirements.txt) with pip. On Linux the icon needs a desktop with a system tray ' +
-      '(KDE, Xfce, Cinnamon or MATE; GNOME only with an AppIndicator extension), and glibc 2.28 or later ' +
-      '(RHEL 8, Ubuntu 20.04), where Pillow has ready-made builds.',
+      '(KDE, Xfce, Cinnamon or MATE; GNOME only with an AppIndicator extension), and glibc 2.27 or later ' +
+      '(Ubuntu 18.04, RHEL 8), where Pillow has ready-made builds. pystray needs Windows 7 or later.',
   },
 };
 
@@ -528,7 +528,7 @@ gem "glimmer-dsl-libui"
     platforms: ALL,
     title: 'My App',
     note: 'Installs glimmer-dsl-libui (Gemfile) with Bundler; it brings its own libui. On Linux it needs GTK 3, which desktops have ' +
-      '(the installer checks, and offers to install it).',
+      '(the installer checks, and offers to install it). libui has no build for 32-bit Windows.',
   },
 };
 
@@ -543,7 +543,9 @@ const php = {
 if (getenv("IB_TEMPLATE_SELFTEST") === "1") {
     echo "template ok: php/script\n";
     if (getenv("IB_TEMPLATE_SELFTEST_OUT")) {
-        file_put_contents(getenv("IB_TEMPLATE_SELFTEST_OUT"), "template ok: php/script\n");
+        $f = fopen(getenv("IB_TEMPLATE_SELFTEST_OUT"), "w");
+        fwrite($f, "template ok: php/script\n");
+        fclose($f);
     }
     exit(0);
 }
@@ -572,12 +574,15 @@ $address = stream_socket_get_name($probe, false);
 fclose($probe);
 $url = "http://$address/";
 
-// php -S, with this script's php.ini, its log to nowhere.
+// php -S, with this script's php.ini, its log to nowhere. It serves
+// public/ from this folder, named relatively: on Windows, proc_open passes
+// a path with letters like "ü" in it on wrongly.
+chdir(__DIR__);
 $command = array(PHP_BINARY);
 if (php_ini_loaded_file()) {
     array_push($command, "-c", php_ini_loaded_file());
 }
-array_push($command, "-S", $address, "-t", __DIR__ . DIRECTORY_SEPARATOR . "public");
+array_push($command, "-S", $address, "-t", "public");
 $nowhere = PHP_OS_FAMILY === "Windows" ? "NUL" : "/dev/null";
 $server = proc_open($command, array(1 => array("file", $nowhere, "w"), 2 => array("file", $nowhere, "w")), $pipes);
 for ($i = 0; $i < 50 && !@fsockopen("127.0.0.1", parse_url($url, PHP_URL_PORT)); $i++) {
@@ -622,8 +627,9 @@ proc_close($server);   // waits until the server stops
 `,
     },
     console: true,
+    versions: '>=7.4',
     platforms: ALL,
-    note: WEB_NOTE + ' PHP pages go in public/.',
+    note: WEB_NOTE + ' PHP pages go in public/. Needs PHP 7.4 or later.',
   },
 };
 

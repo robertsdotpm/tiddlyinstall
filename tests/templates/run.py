@@ -37,13 +37,27 @@ HERE = Path(__file__).resolve().parent
 MAC = "Matthew@the-mac-test-host"
 # Windows VMs: name -> ssh target (tests/matrix/run.py has the full list).
 WINDOWS = {
+    "xp": "matthew@10.0.1.132",
+    "vista": "x@10.0.1.167",
     "7": "x@10.0.1.231",
+    "8.1": "x@10.0.1.165",
     "10": "matth@10.0.1.199",
     "11": "matth@10.0.1.123",
-    "11de": None,   # the German Windows 11 VM, "Jörg Müller": set --host when it's ready
+    "2022": "administrator@10.0.1.248",
+    "10x86": "x@10.0.1.47",
+    "ltsc2021": "x@10.0.1.86",
+    "2025core": "x@10.0.1.124",
+    "11de": "Jörg Müller@10.0.1.83",
 }
+# Run from a folder in the user's profile, not C:\ibtpl, with every path
+# quoted: the German VM's profile is "C:\Users\jörg müller" (a space and
+# non-ASCII letters), where a downloaded installer would start from.
+PROFILE = {"11de"}
+# No desktop: window and tray templates have no display there.
+NO_DESKTOP = {"2025core": "Server Core has no desktop: no display for GUI templates"}
 LINUX_VMS = {
-    "centos7": "x@10.0.1.221", "ubuntu1804": "x@10.0.1.144", "rocky8": "x@10.0.1.131",
+    "centos6": "x@10.0.1.183", "centos7": "x@10.0.1.221", "ubuntu1404": "x@10.0.1.117",
+    "ubuntu1604": "x@10.0.1.112", "ubuntu1804": "x@10.0.1.144", "rocky8": "x@10.0.1.131",
     "ubuntu2004": "x@10.0.1.118", "ubuntu2204": "x@10.0.1.203", "debian12": "x@10.0.1.235",
     "alpine": "x@10.0.1.200",
 }
@@ -51,7 +65,8 @@ INSTALL_TIMEOUT = 2400
 RUN_TIMEOUT = 180
 
 
-def sh(cmd, timeout=INSTALL_TIMEOUT, **kw):
+def sh(cmd, timeout=None, **kw):
+    timeout = timeout or INSTALL_TIMEOUT
     try:
         p = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, errors="replace", **kw)
         return p.returncode, p.stdout, p.stderr
@@ -190,6 +205,12 @@ def run_linux_vm(host, key, b, f, a):
     head = (f"SRC=$HOME/ibtpl/{shlex.quote(name)} F={shlex.quote(name)} GUI={gui} TITLE={shlex.quote(b.get('title', ''))} "
             f"RUNT={RUN_TIMEOUT} XVFB=Xvfb KEEP={'1' if a.keep else ''}")
     code, out, err = sh(["ssh", host, f"{head} sh -s"], input=UNIX_SCRIPT)
+    if code == 124:
+        # An install that ran out of time keeps going on the VM: stop it
+        # (it removes what it installed), so the next test runs alone.
+        # "[x]yz" matches the installer, not this command line.
+        sh(["ssh", host, "pkill -f " + shlex.quote("[" + name[0] + "]" + name[1:])], timeout=60)
+        time.sleep(30)
     sh(["ssh", host, "rm -rf ibtpl"], timeout=60)
     return judge(key, b, parse_markers(out), err)
 
@@ -235,52 +256,75 @@ def run_mac(key, b, f, a):
 
 WIN_DIR = "C:\\ibtpl"
 
-# The app's folder, found as the installer makes it (a path with the user's
-# name in it is never written into these files: cmd reads them in the OEM
-# code page).
-FIND_APP = r'''set A=
-if exist "C:\ib\%ID%\launch.exe" set A=C:\ib\%ID%
-if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib\%ID%\launch.exe" set A=%LOCALAPPDATA%\ib\%ID%
-'''
+# The scripts run from %T%: C:\ibtpl, or %USERPROFILE%\ibtpl on a PROFILE
+# machine, where the paths the installer and launcher are given are quoted
+# ({LOG}, {OUT}). The app's folder is found as the installer makes it (a
+# path with the user's name in it is never written into these files: cmd
+# reads them in the OEM code page).
+FIND_APP = r"""set A=
+if exist "C:\ib\{ID}\launch.exe" set A=C:\ib\{ID}
+if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib\{ID}\launch.exe" set A=%LOCALAPPDATA%\ib\{ID}
+"""
 
-INSTALL_BAT = r'''@echo off
-setlocal
-set T=C:\ibtpl
-"%T%\%FILE%" /S /log=%T%\install.log
+INSTALL_BAT = r"""setlocal
+(dir /b "C:\ib" 2>nul& if defined LOCALAPPDATA dir /b "%LOCALAPPDATA%\ib" 2>nul) >"%T%\ib-before.txt"
+(dir /b /ad "%APPDATA%" 2>nul& if defined LOCALAPPDATA dir /b /ad "%LOCALAPPDATA%" 2>nul) >"%T%\profile-before.txt"
+"%T%\{FILE}" /S /log={LOG}
 echo @install %ERRORLEVEL%
-''' + FIND_APP + r'''echo @appdir
+""" + FIND_APP + r"""echo @appdir
 if defined A echo found
 echo @log
 if exist "%T%\install.log" type "%T%\install.log"
-'''
+"""
 
 # Console and web apps: through launch.exe /out= over SSH.
-CONSOLE_BAT = r'''@echo off
-''' + FIND_APP + r'''set IB_TEMPLATE_SELFTEST=1
-set IB_TEMPLATE_SELFTEST_OUT=C:\ibtpl\selftest.txt
-"%A%\launch.exe" /out=C:\ibtpl\out.txt
+CONSOLE_BAT = FIND_APP + r"""set IB_TEMPLATE_SELFTEST=1
+set IB_TEMPLATE_SELFTEST_OUT=%T%\selftest.txt
+"%A%\launch.exe" /out={OUT}
 echo @out
-type C:\ibtpl\out.txt
+type "%T%\out.txt"
 echo @file
-if exist C:\ibtpl\selftest.txt type C:\ibtpl\selftest.txt
-'''
+if exist "%T%\selftest.txt" type "%T%\selftest.txt"
+"""
 
 # GUI apps: installed and run in the logged-in user's session, from a
 # scheduled task, as someone double-clicking the installer would (not
 # elevated: an install over SSH runs with the administrator's full token).
-GUI_BAT = r'''@echo off
-"C:\ibtpl\%FILE%" /S /log=C:\ibtpl\install.log
->C:\ibtpl\install-rc.txt echo %ERRORLEVEL%
-''' + FIND_APP + r'''if not defined A goto done
+# When nobody is logged on at the console (a schtasks /it task wouldn't
+# start), the same script runs over SSH instead, and the window is looked
+# for on the SSH session's own desktop, hidden windows included (processes
+# there start with SW_HIDE, so a window is made but never visible); the
+# result says so.
+GUI_BAT = r"""(dir /b "C:\ib" 2>nul& if defined LOCALAPPDATA dir /b "%LOCALAPPDATA%\ib" 2>nul) >"%T%\ib-before.txt"
+(dir /b /ad "%APPDATA%" 2>nul& if defined LOCALAPPDATA dir /b /ad "%LOCALAPPDATA%" 2>nul) >"%T%\profile-before.txt"
+"%T%\{FILE}" /S /log={LOG}
+>"%T%\install-rc.txt" echo %ERRORLEVEL%
+""" + FIND_APP + r"""if not defined A goto done
 set IB_TEMPLATE_SELFTEST=1
-set IB_TEMPLATE_SELFTEST_OUT=C:\ibtpl\selftest.txt
-start "" "%A%\launch.exe"
-powershell -NoProfile -ExecutionPolicy Bypass -File C:\ibtpl\probe.ps1 -Title "%TITLE%" -Ok C:\ibtpl\selftest.txt > C:\ibtpl\probe.txt 2>&1
+set IB_TEMPLATE_SELFTEST_OUT=%T%\selftest.txt
+powershell -NoProfile -ExecutionPolicy Bypass -File "%T%\probe.ps1" -Title "{TITLE}" -Ok "%T%\selftest.txt" -Launch "%A%\launch.exe"{PROBEARGS} <nul >"%T%\probe.txt" 2>&1
 :done
->C:\ibtpl\task-done.txt echo done
-'''
+>"%T%\task-done.txt" echo done
+"""
 
-PROBE_PS1 = r'''param([string]$Title = "", [string]$Ok, [int]$Seconds = 150)
+TASK_BAT = r"""schtasks /create /tn ibtpl /tr {TR} /sc once /st 23:59 /it /f
+schtasks /run /tn ibtpl
+"""
+
+GUI_RESULTS_BAT = r"""echo @install
+type "%T%\install-rc.txt" 2>nul
+echo @log
+type "%T%\install.log" 2>nul
+echo @window
+type "%T%\probe.txt" 2>nul
+echo @file
+type "%T%\selftest.txt" 2>nul
+"""
+
+DONE_BAT = r"""if exist "%T%\task-done.txt" echo DONE
+"""
+
+PROBE_PS1 = r"""param([string]$Title = "", [string]$Ok, [string]$Launch, [int]$Seconds = 150, [switch]$Hidden)
 Add-Type @"
 using System;
 using System.Collections.Generic;
@@ -291,10 +335,10 @@ public class IbWindows {
   [DllImport("user32.dll")] public static extern bool EnumWindows(EnumProc f, IntPtr l);
   [DllImport("user32.dll", CharSet = CharSet.Unicode)] public static extern int GetWindowText(IntPtr h, StringBuilder s, int n);
   [DllImport("user32.dll")] public static extern bool IsWindowVisible(IntPtr h);
-  public static List<string> Titles() {
+  public static List<string> Titles(bool hidden) {
     List<string> found = new List<string>();
     EnumWindows(delegate(IntPtr h, IntPtr l) {
-      if (IsWindowVisible(h)) {
+      if (hidden || IsWindowVisible(h)) {
         StringBuilder s = new StringBuilder(512);
         GetWindowText(h, s, 512);
         if (s.Length > 0) found.Add(s.ToString());
@@ -305,19 +349,21 @@ public class IbWindows {
   }
 }
 "@
+# The app starts once the probe is ready (Add-Type compiling can take
+# seconds on a slow VM, longer than a self-test's window is up).
+Start-Process -FilePath $Launch
 $seen = $false
 $start = Get-Date
 while (((Get-Date) - $start).TotalSeconds -lt $Seconds) {
-  if ($Title -and -not $seen -and ([IbWindows]::Titles() -contains $Title)) { $seen = $true; "window: $Title" }
+  if ($Title -and -not $seen -and ([IbWindows]::Titles($Hidden) -contains $Title)) { $seen = $true; "window: $Title" }
   if ((Test-Path $Ok) -and ($seen -or -not $Title)) { break }
   Start-Sleep -Milliseconds 250
 }
-if ($Title -and -not $seen) { "no window titled $Title; visible: " + ([IbWindows]::Titles() -join " | ") }
-'''
+if ($Title -and -not $seen) { "no window titled $Title; visible: " + ([IbWindows]::Titles($Hidden) -join " | ") }
+"""
 
-AFTER_BAT = r'''@echo off
-''' + FIND_APP + r'''if not defined A goto left
-powershell -NoProfile -Command "Get-WmiObject Win32_Process | Where-Object { $_.CommandLine -like '*\ib\%ID%*' } | ForEach-Object { $_.Terminate() | Out-Null }"
+AFTER_BAT = FIND_APP + r"""if not defined A goto left
+powershell -NoProfile -Command "Get-WmiObject Win32_Process | Where-Object { $_.CommandLine -like '*\ib\{ID}*' } | ForEach-Object { $_.Terminate() | Out-Null }" <nul
 if exist "%A%\data\launch.log" (echo @applog& type "%A%\data\launch.log")
 "%A%\uninstall.exe" /S
 echo @uninstall %ERRORLEVEL%
@@ -341,9 +387,16 @@ goto unwait
 :left
 ping -n 3 127.0.0.1 >nul
 echo @left
-if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib\%ID%" echo app-folder-left
-reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\ib-%ID%" >nul 2>&1 && echo regkey-left
-'''
+rem Every folder under ib that wasn't there before the install: the app's,
+rem and the runtimes' (removed with their last app).
+if exist "C:\ib" for /f "delims=" %%d in ('dir /b "C:\ib"') do findstr /x /c:"%%d" "%T%\ib-before.txt" >nul 2>&1 || echo left: C:\ib\%%d
+if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib" for /f "delims=" %%d in ('dir /b "%LOCALAPPDATA%\ib"') do findstr /x /c:"%%d" "%T%\ib-before.txt" >nul 2>&1 || echo left: %%d
+rem And in the user's profile: a package's own cache (Electron's download
+rem cache is %LOCALAPPDATA%\electron) outlives the app otherwise.
+for /f "delims=" %%d in ('dir /b /ad "%APPDATA%"') do findstr /x /c:"%%d" "%T%\profile-before.txt" >nul 2>&1 || echo left: %%APPDATA%%\%%d
+if defined LOCALAPPDATA for /f "delims=" %%d in ('dir /b /ad "%LOCALAPPDATA%"') do findstr /x /c:"%%d" "%T%\profile-before.txt" >nul 2>&1 || echo left: %%LOCALAPPDATA%%\%%d
+reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\ib-{ID}" >nul 2>&1 && echo regkey-left
+"""
 
 
 def appid(record):
@@ -351,79 +404,154 @@ def appid(record):
     return base64.b32encode(h).decode().lower().rstrip("=")[:12]
 
 
-def win_put(host, name, text):
-    with tempfile.NamedTemporaryFile("w", suffix=Path(name).suffix, delete=False, newline="\r\n") as t:
-        t.write(text)
-    code, _, err = sh(["scp", "-q", t.name, f"{host}:C:/ibtpl/{name}"], timeout=120)
-    Path(t.name).unlink()
-    return code, err
+class WinVM:
+    """A Windows test machine: where the scripts go, and how they're run."""
+
+    def __init__(self, target, host):
+        self.target, self.host = target, host
+        self.profile = target in PROFILE
+        if self.profile:
+            # scp paths are relative to the user's home; ssh command lines
+            # quote the folder (cmd, the default shell there, expands it).
+            self.t, self.cmd_dir, self.scp_dir = "%USERPROFILE%\\ibtpl", '"%USERPROFILE%\\ibtpl"', "ibtpl"
+        else:
+            self.t, self.cmd_dir, self.scp_dir = WIN_DIR, WIN_DIR, "C:/ibtpl"
+
+    def script(self, body, **subst):
+        q = '"' if self.profile else ""
+        subst.setdefault("LOG", q + "%T%\\install.log" + q)
+        subst.setdefault("OUT", q + "%T%\\out.txt" + q)
+        subst.setdefault("TR", '"\\"%T%\\gui.bat\\""' if self.profile else '"%T%\\gui.bat"')
+        for k, v in subst.items():
+            body = body.replace("{" + k + "}", v)
+        return "@echo off\nset T=" + self.t + "\n" + body
+
+    def put(self, name, text):
+        with tempfile.NamedTemporaryFile("w", suffix=Path(name).suffix, delete=False, newline="\r\n") as t:
+            t.write(text)
+        code, _, err = sh(["scp", "-q", t.name, f"{self.host}:{self.scp_dir}/{name}"], timeout=120)
+        Path(t.name).unlink()
+        return code, err
+
+    def call(self, name, timeout=None):
+        if self.profile:
+            return sh(["ssh", self.host, f"cmd /c call {self.cmd_dir}\\{name}"], timeout=timeout)
+        return sh(["ssh", self.host, f"cmd /c {self.cmd_dir}\\{name}"], timeout=timeout)
+
+    def run_script(self, name, body, timeout=None, **subst):
+        self.put(name, self.script(body, **subst))
+        return self.call(name, timeout)
+
+    def stop(self, exe):
+        """An install that ran out of time keeps going on the VM: stop it,
+        so the next test runs alone (what it left is reported as left)."""
+        sh(["ssh", self.host, f"taskkill /f /t /im {exe}"], timeout=60)
+        time.sleep(10)
+
+    def fresh(self):
+        sh(["ssh", self.host, f'cmd /c "rd /s /q {self.cmd_dir} & mkdir {self.cmd_dir}"'], timeout=60)
+
+    def remove(self):
+        sh(["ssh", self.host, f'cmd /c "rd /s /q {self.cmd_dir}"'], timeout=60)
+
+    def busy(self):
+        """Another harness's folder: tests/matrix (C:\\ibtest, whose cleanup
+        removes every app under %LOCALAPPDATA%\\ib), behaviour.py (C:\\ibbtest),
+        or the same in the profile on a PROFILE machine."""
+        checks = ["if exist C:\\ibtest echo BUSY", "if exist C:\\ibbtest echo BUSY"]
+        if self.profile:
+            checks += ['if exist "%USERPROFILE%\\ibtest" echo BUSY', 'if exist "%USERPROFILE%\\ibbtest" echo BUSY']
+        code, out, _ = sh(["ssh", self.host, 'cmd /c "' + "& ".join(checks) + '"'], timeout=60)
+        return "BUSY" in out
+
+    def interactive(self):
+        """Is the SSH user logged on with a desktop (explorer.exe), so a
+        schtasks /it task starts in their session?"""
+        _, who, _ = sh(["ssh", self.host, "whoami"], timeout=60)
+        _, out, _ = sh(["ssh", self.host, 'tasklist /v /fo csv /nh /fi "imagename eq explorer.exe"'], timeout=60)
+        who = who.strip().lower()
+        rows = [r for r in out.splitlines() if r.lower().startswith('"explorer.exe"')]
+        return any(who and who in r.lower() for r in rows) if who else bool(rows)
 
 
-# Other harnesses' folders: tests/matrix (C:\ibtest, and its cleanup removes
-# every app under %LOCALAPPDATA%\ib), behaviour.py (C:\ibbtest).
-BUSY = "cmd /c if exist C:\\ibtest (echo BUSY) else if exist C:\\ibbtest (echo BUSY)"
-
-
-def wait_idle(host):
+def wait_idle(vm):
     """Wait while another test harness is using the VM (up to an hour)."""
     for i in range(360):
-        code, out, _ = sh(["ssh", host, BUSY], timeout=60)
-        if "BUSY" not in out:
+        if not vm.busy():
             return True
         if i == 0:
-            print(f"  {host}: another test run is using it; waiting", flush=True)
+            print(f"  {vm.host}: another test run is using it; waiting", flush=True)
         time.sleep(10)
     return False
 
 
-def run_windows(host, key, b, f, a):
+def run_windows(vm, key, b, f, a):
     ident = appid(b["record"])
-    if not wait_idle(host):
+    if not b.get("console") and vm.target in NO_DESKTOP:
+        return "n/a", NO_DESKTOP[vm.target]
+    if not wait_idle(vm):
         return "fail", "the VM stayed busy with another test run for an hour"
-    sh(["ssh", host, f'cmd /c "rd /s /q {WIN_DIR} & mkdir {WIN_DIR}"'], timeout=60)
-    code, _, err = sh(["scp", "-q", f, f"{host}:C:/ibtpl/{Path(f).name}"], timeout=900)
+    vm.fresh()
+    code, _, err = sh(["scp", "-q", f, f"{vm.host}:{vm.scp_dir}/{Path(f).name}"], timeout=900)
     if code:
         return "fail", "scp: " + err.strip()
-    parts = {}
+    parts, note = {}, ""
     if b.get("console"):
-        win_put(host, "install.bat", INSTALL_BAT.replace("%FILE%", Path(f).name).replace("%ID%", ident))
-        code, out, err = sh(["ssh", host, "cmd /c C:\\ibtpl\\install.bat"])
+        code, out, err = vm.run_script("install.bat", INSTALL_BAT, FILE=Path(f).name, ID=ident)
+        if code == 124:
+            vm.stop(Path(f).name)
         parts = parse_markers(out)
         if parts.get("install") != "0" or "found" not in parts.get("appdir_out", ""):
             parts.setdefault("install", "?")
+            if not a.keep:
+                vm.remove()
             return judge(key, b, parts, err)
-        win_put(host, "run.bat", CONSOLE_BAT.replace("%ID%", ident))
-        code, out, err = sh(["ssh", host, "cmd /c C:\\ibtpl\\run.bat"], timeout=RUN_TIMEOUT + 60)
+        code, out, err = vm.run_script("run.bat", CONSOLE_BAT, timeout=RUN_TIMEOUT + 60, ID=ident)
         parts.update(parse_markers(out))
     else:
-        win_put(host, "gui.bat", GUI_BAT.replace("%FILE%", Path(f).name).replace("%ID%", ident).replace("%TITLE%", b.get("title", "")))
-        win_put(host, "probe.ps1", PROBE_PS1)
-        sh(["ssh", host, 'schtasks /create /tn ibtpl /tr "C:\\ibtpl\\gui.bat" /sc once /st 23:59 /it /f'], timeout=60)
-        c2, o2, e2 = sh(["ssh", host, "schtasks /run /tn ibtpl"], timeout=60)
-        t0 = time.time()
-        while time.time() - t0 < INSTALL_TIMEOUT:
-            c3, o3, _ = sh(["ssh", host, "cmd /c if exist C:\\ibtpl\\task-done.txt echo DONE"], timeout=30)
-            if "DONE" in o3:
-                break
-            time.sleep(5)
-        sh(["ssh", host, "schtasks /delete /tn ibtpl /f"], timeout=60)
-        c4, o4, _ = sh(["ssh", host, "cmd /c echo @install& type C:\\ibtpl\\install-rc.txt& echo @log& type C:\\ibtpl\\install.log"
-                        "& echo @window& type C:\\ibtpl\\probe.txt& echo @file& type C:\\ibtpl\\selftest.txt"], timeout=60)
+        interactive = vm.interactive()
+        vm.put("gui.bat", vm.script(GUI_BAT, FILE=Path(f).name, ID=ident, TITLE=b.get("title", ""),
+                                    PROBEARGS="" if interactive else " -Hidden"))
+        vm.put("probe.ps1", PROBE_PS1)
+        c2 = 0
+        o2 = e2 = ""
+        if interactive:
+            c2, o2, e2 = vm.run_script("task.bat", TASK_BAT, timeout=60)
+            vm.put("done.bat", vm.script(DONE_BAT))
+            t0 = time.time()
+            while time.time() - t0 < INSTALL_TIMEOUT:
+                c3, o3, _ = vm.call("done.bat", timeout=30)
+                if "DONE" in o3:
+                    break
+                time.sleep(5)
+            else:
+                vm.stop(Path(f).name)
+            sh(["ssh", vm.host, "schtasks /delete /tn ibtpl /f"], timeout=60)
+        else:
+            note = " (nobody logged on at the console: run over SSH; the window was looked for, hidden ones included, on the SSH session's desktop)"
+            if vm.call("gui.bat")[0] == 124:
+                vm.stop(Path(f).name)
+        c4, o4, _ = vm.run_script("results.bat", GUI_RESULTS_BAT, timeout=60)
         parts = parse_markers(o4)
         parts["install"] = parts.get("install_out", "").strip() or "?"
-        if c2:
-            parts["window_out"] = parts.get("window_out", "") + " (schtasks /run: " + (o2 + e2).strip() + ")"
-    win_put(host, "after.bat", AFTER_BAT.replace("%ID%", ident))
-    code, out, err = sh(["ssh", host, "cmd /c C:\\ibtpl\\after.bat"], timeout=300)
+        if c2 or "ERROR" in o2 or "FEHLER" in o2:
+            parts["window_out"] = parts.get("window_out", "") + " (schtasks: " + (o2 + e2).strip() + ")"
+    code, out, err = vm.run_script("after.bat", AFTER_BAT, timeout=300, ID=ident)
     parts.update(parse_markers(out))
     if not a.keep:
-        sh(["ssh", host, f'cmd /c "rd /s /q {WIN_DIR}"'], timeout=60)
-    return judge(key, b, parts, err)
+        vm.remove()
+    r, d = judge(key, b, parts, err)
+    if r == "fail" and note and "does not have desktop access" in parts.get("applog_out", ""):
+        # Java won't open a window on the SSH session's window station
+        # (HeadlessException); only a logged-on user's session shows it.
+        return "n/a", "nobody logged on at the console, and Java won't open a window in the SSH session (HeadlessException)"
+    return r, d + (note if r != "n/a" else "")
 
 
 # ---------------------------------------------------------------- main
 
 def main():
+    global INSTALL_TIMEOUT
     ap = argparse.ArgumentParser()
     ap.add_argument("target")
     ap.add_argument("--only", default="")
@@ -433,7 +561,10 @@ def main():
     ap.add_argument("--xvfb-lib", default="", help="LD_LIBRARY_PATH for an unpacked Xvfb")
     ap.add_argument("--keep", action="store_true", help="keep the throwaway folders")
     ap.add_argument("--results", default=str(HERE / "results.jsonl"))
+    ap.add_argument("--install-timeout", type=int, default=2400,
+                    help="seconds an install may take (Rust's can take 20 minutes on a busy datastore)")
     a = ap.parse_args()
+    INSTALL_TIMEOUT = a.install_timeout
     builds = json.loads((Path(a.out) / "builds.json").read_text())
     only = [x for x in a.only.split(",") if x]
     plat = "linux" if a.target == "linux" or a.target in LINUX_VMS else "macos" if a.target == "mac" else "windows"
@@ -460,7 +591,7 @@ def main():
                 host = a.host or WINDOWS.get(a.target)
                 if not host:
                     raise SystemExit(f"no ssh target for {a.target}: give --host")
-                r, d = run_windows(host, key, b, f, a)
+                r, d = run_windows(WinVM(a.target, host), key, b, f, a)
             res.update(result=r, detail=d, record=b["record"])
         res["time"] = time.strftime("%Y-%m-%dT%H:%M:%S")
         with open(a.results, "a") as fh:
