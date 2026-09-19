@@ -1,6 +1,6 @@
 // The plain-JavaScript fallbacks (js/inflate.js, deflate.js, zlib.js, sha.js,
 // hmac-pbkdf2.js, aes.js, bignum.js, rsa.js, ec.js, ed25519.js, cryptox.js,
-// has-shim.js) against the native versions: Node's zlib and WebCrypto,
+// has-shim.js, polyfills.js's TextDecoder) against the native versions: Node's zlib and WebCrypto,
 // openssl and published test vectors.
 //
 //   node tests/fallback-test.mjs [--quick]
@@ -9,6 +9,7 @@
 import crypto from 'node:crypto';
 import zlib from 'node:zlib';
 import fs from 'node:fs';
+import vm from 'node:vm';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -462,6 +463,32 @@ await run('cryptox', async () => {
   const gs = await X.sign(gen.key, d);
   delete globalThis.IB_PURE_JS;
   ok(crypto.verify('sha256', d, genPub, gs), 'cryptox RSA generation on the plain path: Node verifies its signature');
+});
+
+/* ---------- polyfills: the UTF-8 TextDecoder ---------- */
+
+// js/polyfills.js in a context without TextDecoder, so it adds its own;
+// its answers must be Node's, on text, broken UTF-8 and the catalogue.
+await run('TextDecoder stand-in', async () => {
+  const ctx = { Object, Array, Uint8Array, ArrayBuffer, String, RangeError, TypeError, Error, Promise, Symbol, Number, Math, JSON, Map, Set };
+  ctx.globalThis = ctx;
+  vm.createContext(ctx);
+  vm.runInContext(fs.readFileSync(path.join(REPO, 'js/polyfills.js'), 'utf8'), ctx);
+  ok(typeof ctx.TextDecoder === 'function' && ctx.TextDecoder !== TextDecoder, 'TextDecoder stand-in: added where missing');
+  const mine = new ctx.TextDecoder(), node = new TextDecoder();
+  let bad = 0, n = 0;
+  const check = (u) => { n++; if (mine.decode(u) !== node.decode(u)) bad++; };
+  for (let t = 0; t < N * 50; t++) {
+    const len = crypto.randomInt(0, 400);
+    const u = new Uint8Array(len);
+    for (let i = 0; i < len; i++) u[i] = crypto.randomInt(0, 10) < 8 ? crypto.randomInt(0, 128) : crypto.randomInt(0, 256);
+    check(u);
+    check(new Uint8Array(Buffer.from('é漢😀'.repeat(t % 7) + 'a'.repeat(t % 200) + '€\uffff' + 'b'.repeat(t * 37 % 70000))));
+  }
+  check(new Uint8Array([0xef, 0xbb, 0xbf, 0x41, 0xc3]));
+  const cat = new Uint8Array(zlib.gunzipSync(fs.readFileSync(path.join(REPO, 'tests/golden/catalog.gz'))));
+  check(cat);
+  ok(bad === 0, `TextDecoder stand-in: the same text as Node's for ${n} inputs (random bytes, mixed text, a BOM, the ${(cat.length >> 20)} MB catalogue)`, bad + ' differ');
 });
 
 /* ---------- has-shim ---------- */

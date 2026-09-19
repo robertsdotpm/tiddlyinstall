@@ -1,6 +1,7 @@
 // Catalogue changes kept in this browser (plan.md section 1.11, "The runtime
 // catalogue editor"): an overlay of small changes on top of the catalogue
-// snapshot built into the page (#ib-catalog), never a copy of it.
+// catalogue built into the page (#ib-catalog and its folders), never a copy
+// of it.
 //
 // The overlay, as stored and as exported:
 //
@@ -29,8 +30,7 @@
 // Storage: localStorage while small, IndexedDB beyond STORE_LS_MAX. Every
 // access is wrapped: with storage blocked the overlay lives in memory for
 // the tab, and the editor says so.
-import { loadCatalogFiles, runtimesSummary } from './resolve.js';
-import { inflate } from './zlib.js';
+import { loadCatalogFiles, runtimesSummary, openCatalog, loadRuntimes, readChunk, SPLIT_FORMAT } from './resolve.js';
 
 export const FORMAT = 'ib-catalog-overlay';
 const KEY = 'ib.catalog.overlay';
@@ -40,7 +40,6 @@ export const IMPORT_MAX = 8 * 1024 * 1024;
 const VALUE_MAX = 256 * 1024;          // one change's value, as JSON
 export const MAX_CHANGES = 5000;
 
-const dec = new TextDecoder();
 const isMap = (v) => v != null && typeof v === 'object' && !Array.isArray(v);
 const own = (o, k) => (o != null && typeof o === 'object' && Object.hasOwn(o, k) ? o[k] : undefined);
 
@@ -508,34 +507,118 @@ export function applyOverlay(files, changes) {
 
 /* ---------- the page's catalogue ---------- */
 
+// The page carries its catalogue split by folder (tools/build_site.py;
+// docs/format.md section 6), so only what's used is unpacked:
+//   #ib-catalog      the index, JSON: the shared files (policy.json,
+//                    os_versions.json, compilers_min_os.json), the folders
+//                    with their release counts, and the runtimes summary
+//   #ib-cat-FOLDER   one folder's files, gzipped, base64
 function block(id) {
   const el = typeof document !== 'undefined' && document.getElementById(id);
   return el && !el.dataset.placeholder ? el.textContent : null;
 }
 
+function blockBytes(id) {
+  const t = block(id);
+  if (t == null) return null;
+  const s = atob(t.replace(/\s+/g, ''));
+  const u8 = new Uint8Array(s.length);
+  for (let i = 0; i < s.length; i++) u8[i] = s.charCodeAt(i);
+  return u8;
+}
+
+let index;
+// The catalogue's index (#ib-catalog), parsed once; null if the page has
+// none. Throws if it is there but unreadable.
+export function catalogIndex() {
+  if (index === undefined) {
+    const t = block('ib-catalog');
+    if (t == null) index = null;
+    else {
+      let ix;
+      try { ix = JSON.parse(t); } catch (e) { throw new Error('the catalogue in this page is damaged: ' + e.message); }
+      if (own(ix, SPLIT_FORMAT) !== 1) throw new Error('catalogue index version ' + own(ix, SPLIT_FORMAT));
+      if (!isMap(ix.files) || !isMap(ix.folders)) throw new Error('the catalogue in this page is damaged');
+      index = ix;
+    }
+  }
+  return index;
+}
+
+export function hasCatalog() { return block('ib-catalog') != null; }
+
+// The folders the page's catalogue has, and each one's release count.
+export function catalogFolders() {
+  const ix = catalogIndex();
+  const out = {};
+  if (ix) for (const f of Object.keys(ix.folders)) out[f] = { releases: Number(ix.folders[f].releases) || 0 };
+  return out;
+}
+
 let filesPromise = null;
-// The catalogue files built into the page, parsed once and shared (treat as
-// read-only).
+const loadedFolders = new Set();
+const pendingFolders = new Map();
+// The catalogue files built into the page, named as in a snapshot, shared
+// and treated as read-only: the shared files at first, and each folder's
+// files once ensureFolders has unpacked it.
 export function baseFiles() {
   if (!filesPromise) {
-    filesPromise = (async () => {
-      const t = block('ib-catalog');
-      if (t == null) throw new Error('This page has no catalogue inside it.');
-      const s = atob(t.replace(/\s+/g, ''));
-      let bytes = new Uint8Array(s.length);
-      for (let i = 0; i < s.length; i++) bytes[i] = s.charCodeAt(i);
-      if (bytes[0] === 0x1f && bytes[1] === 0x8b) {
-        bytes = await inflate(bytes, 'gzip');
-      }
-      const snap = JSON.parse(dec.decode(bytes));
-      if (own(snap, 'ib-catalog-snapshot') !== 1) throw new Error('catalogue snapshot version ' + own(snap, 'ib-catalog-snapshot'));
-      return own(snap, 'files') || {};
-    })();
+    filesPromise = Promise.resolve().then(() => {
+      const ix = catalogIndex();
+      if (!ix) throw new Error('This page has no catalogue inside it.');
+      return Object.assign({}, ix.files);
+    });
+    filesPromise.catch(() => { filesPromise = null; });
   }
   return filesPromise;
 }
 
-export function hasCatalog() { return block('ib-catalog') != null; }
+// Unpacks these folders' files into baseFiles() (once each). Names that
+// aren't folders of the page's catalogue are skipped. Resolves to the files.
+export async function ensureFolders(folders) {
+  const files = await baseFiles();
+  const ix = catalogIndex();
+  await Promise.all([...new Set(folders)].filter((f) => typeof f === 'string' && Object.hasOwn(ix.folders, f) && !loadedFolders.has(f)).map((f) => {
+    let p = pendingFolders.get(f);
+    if (!p) {
+      p = (async () => {
+        const bytes = blockBytes('ib-cat-' + f);
+        if (!bytes) throw new Error('the catalogue in this page has no ' + f + ' folder');
+        Object.assign(files, await readChunk(bytes, f));
+        loadedFolders.add(f);
+      })();
+      pendingFolders.set(f, p);
+      p.catch(() => pendingFolders.delete(f));
+    }
+    return p;
+  }));
+  return files;
+}
+
+export const folderLoaded = (f) => loadedFolders.has(f);
+// The folders unpacked so far (tests read it: ibLocalApi.unpacked()).
+export const unpackedFolders = () => [...loadedFolders].sort();
+
+// The folder a runtime's files are in (python2's are python's).
+export function runtimeFolder(policy, id) {
+  const p = own(own(policy, 'runtimes'), id);
+  return (isMap(p) && typeof p.folder === 'string' && p.folder) || id;
+}
+
+// The folders changes are about (a policy change needs none).
+export function changedFolders(changes) {
+  const out = new Set();
+  for (const c of changes) if (Array.isArray(c.path) && c.path[0] !== 'policy.json' && typeof c.path[0] === 'string') out.add(c.path[0].split('/')[0]);
+  return out;
+}
+
+// Unpacks what previews of these runtimes need (subsetCatalog below), and
+// the folders `changes` are about, so their status can be worked out.
+export async function ensureRuntimes(ids, changes = []) {
+  const files = await baseFiles();
+  const policy = files['policy.json'];
+  return ensureFolders([...relatedRuntimes(policy, ids).map((id) => runtimeFolder(policy, id)), ...changedFolders(changes)]);
+}
 
 // Runtime ids whose plans can depend on `ids` (and those they depend on):
 // "via" and "requires" in the policy.
@@ -564,6 +647,7 @@ export function relatedRuntimes(policy, ids) {
 }
 
 // A catalogue of just these runtimes (and what they need), for previews.
+// Their folders must be in `files` (ensureRuntimes).
 export function subsetCatalog(files, ids) {
   const policy = own(files, 'policy.json');
   const keep = relatedRuntimes(policy, ids);
@@ -776,16 +860,34 @@ if (typeof window !== 'undefined') {
 /* ---------- the catalogue with the changes, for building ---------- */
 
 let catalogCache = null;
-// {catalog, applied, version}: the page's catalogue with this browser's
-// changes. `applied` counts the changes that took effect.
+// {catalog, applied, changes, id, version, files}: the page's catalogue with
+// this browser's changes. `applied` counts the changes that took effect.
+// `catalog` loads each runtime's folder when asked (js/resolve.js
+// openCatalog: loadRuntimes before resolving); the folders the changes are
+// about are unpacked here, to apply them, and `files` has only those and the
+// shared files.
 export function effectiveCatalog() {
   if (!catalogCache) {
     catalogCache = (async () => {
-      const [files] = await Promise.all([baseFiles(), loadOverlay()]);
+      const [base] = await Promise.all([baseFiles(), loadOverlay()]);
       const version = state.version;
-      const { files: eff, status } = applyOverlay(files, state.changes);
-      const applied = state.changes.filter((c, i) => status[i].ok);
-      return { catalog: loadCatalogFiles(eff), applied: applied.length, changes: applied, id: applied.length ? hashValue(applied) : '', version, files: eff };
+      const changes = state.changes;
+      const touched = changedFolders(changes);
+      await ensureFolders([...touched]);
+      const { files: eff, status } = applyOverlay(base, changes);
+      const applied = changes.filter((c, i) => status[i].ok);
+      const shared = {};
+      for (const k of Object.keys(eff)) if (k.indexOf('/') < 0) shared[k] = eff[k];
+      const folderFiles = (from, folder) => {
+        const out = {};
+        for (const k of Object.keys(from)) if (k.startsWith(folder + '/')) out[k] = from[k];
+        return out;
+      };
+      const catalog = openCatalog(shared, async (folder) => {
+        if (touched.has(folder)) return folderFiles(eff, folder);
+        return folderFiles(await ensureFolders([folder]), folder);
+      });
+      return { catalog, applied: applied.length, changes: applied, id: applied.length ? hashValue(applied) : '', version, files: eff };
     })();
     catalogCache.catch(() => { catalogCache = null; });
   }
@@ -793,19 +895,22 @@ export function effectiveCatalog() {
 }
 
 // GET /api/catalog/runtimes for the changed catalogue: the page's summary
-// with the entries of the runtimes the changes can affect worked out again.
-export async function effectiveSummary(embedded) {
+// (built in, #ib-catalog) with the entries of the runtimes the changes can
+// affect worked out again.
+export async function effectiveSummary() {
+  const ix = catalogIndex();
+  const embedded = (ix && ix.summary) || { runtimes: null };
   const eff = await effectiveCatalog();
   if (!eff.applied) return embedded;
   const policy = eff.files['policy.json'];
   const folders = new Set(eff.changes.map((c) => pathRuntime(c.path)));
-  const ids = Object.keys(policy.runtimes || {}).filter((id) => folders.has(id) || folders.has((policy.runtimes[id] && policy.runtimes[id].folder) || id));
-  const cat = subsetCatalog(eff.files, ids);
-  const fresh = runtimesSummary(cat).runtimes || [];
-  const redo = new Set(relatedRuntimes(policy, ids));
+  const ids = Object.keys(policy.runtimes || {}).filter((id) => folders.has(id) || folders.has(runtimeFolder(policy, id)));
+  const redo = relatedRuntimes(policy, ids);
+  await loadRuntimes(eff.catalog, redo);
+  const fresh = runtimesSummary(eff.catalog, redo).runtimes || [];
   const out = [];
   for (const e of (embedded && embedded.runtimes) || []) {
-    if (!redo.has(e.id)) { out.push(e); continue; }
+    if (!redo.includes(e.id)) { out.push(e); continue; }
     const f = fresh.find((x) => x.id === e.id);
     if (f) out.push(f);
   }

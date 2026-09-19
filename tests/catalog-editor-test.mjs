@@ -172,6 +172,10 @@ try {
   /* ---- the editor starts, and nothing is changed ---- */
   await openEditor(PAGE);
   await checkNativeState(ok, js);
+  // The catalogue is unpacked a folder at a time: opening Python unpacks
+  // only python/ (python and python2), and the list still counts the rest.
+  ok(JSON.stringify(await js(`ibLocalApi.unpacked()`)) === '["python"]', 'opening the editor on Python unpacks only its folder', JSON.stringify(await js(`ibLocalApi.unpacked()`)));
+  ok(/13,452/.test(await js(`document.querySelector('.rt-rt[data-rt="node"] .rt-rt-meta').textContent`)), 'the runtimes list counts Node.js\'s releases before unpacking them');
   const before = await buildWindows('Hello before');
   TARGET = firstTarget(before.plan);
   ok(TARGET.file && TARGET.version && TARGET.steps > 0, 'a build with the built-in catalogue works', JSON.stringify(TARGET));
@@ -180,14 +184,17 @@ try {
   ok(/720 of 720/.test(await js(`document.getElementById('rt-rel-count').textContent`)), 'the Python releases are listed');
   ok(await js(`document.querySelectorAll('.rt-vrow').length < 60`), 'only the visible rows are drawn');
   await js(`document.querySelector('.rt-rt[data-rt="node"]').click()`);
-  await sleep(300);
+  await waitFor(`/13,452 of/.test(document.getElementById('rt-rel-count').textContent)`, 'Node.js to be unpacked and listed');
+  await sleep(100);
+  ok((await js(`ibLocalApi.unpacked()`)).includes('node'), 'opening Node.js unpacks its folder');
   const nodeRows = await js(`[document.getElementById('rt-rel-count').textContent, document.querySelectorAll('.rt-vrow').length]`);
   ok(/13,452 of 13,452/.test(nodeRows[0]) && nodeRows[1] < 60, 'Node.js: 13,452 releases, a few rows drawn', nodeRows.join(' '));
   await js(`const l = document.getElementById('rt-rel-list'); l.scrollTop = 200000; l.dispatchEvent(new Event('scroll'))`);
   await sleep(300);
   ok(await js(`document.querySelectorAll('.rt-vrow').length > 0 && document.querySelectorAll('.rt-vrow').length < 60`), 'scrolling far down draws rows there');
   await js(`document.querySelector('.rt-rt[data-rt="python"]').click()`);
-  await sleep(300);
+  await waitFor(`/720 of/.test(document.getElementById('rt-rel-count').textContent)`, 'Python to be listed again');
+  await sleep(100);
 
   /* ---- a release: invalid edits are refused ---- */
   const rel = await pickRelease();

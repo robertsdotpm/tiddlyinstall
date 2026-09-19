@@ -6,7 +6,7 @@
 // archive (the server stores it and names it in the plan; the page packs it
 // into the installer).
 //
-//   node tests/builder-golden.mjs [--runtimes a,b]
+//   node tests/builder-golden.mjs [--runtimes a,b] [--no-lazy]
 //   node tests/builder-golden.mjs --record URL [--runtimes a,b]
 //
 // tests/golden/builder.json.br was recorded on 2026-09-19 from the Go
@@ -21,7 +21,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import crypto from 'node:crypto';
-import { loadSnapshot, resolve } from '../js/resolve.js';
+import { loadSnapshot, resolve, splitSnapshot, openSplitSnapshot } from '../js/resolve.js';
 import { runJob } from '../js/builder.js';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
@@ -113,21 +113,31 @@ if (RECORD) {
 
 const golden = JSON.parse(zlib.brotliDecompressSync(fs.readFileSync(GOLDEN_FILE)));
 ok(golden.catalogSha256 === catSha, 'tests/golden/catalog.gz is the snapshot the goldens were made with', `golden ${golden.catalogSha256}, file ${catSha}`);
-const cat = await loadSnapshot(new Uint8Array(catBytes));
-for (const rt of only) {
-  const g = golden.runtimes[rt];
-  if (!g) { ok(false, rt + ': no golden for this runtime'); continue; }
-  const body = bodyFor(rt);
-  try {
-    const out = await runJob(JSON.parse(JSON.stringify(body)), { catalog: cat, backend: golden.backend, base, modes: ['B', 'C'] });
-    const b = maskRecord(out.record);
-    ok(g.record === b, rt + ': record', firstDiff(g.record, b));
-    // The server's plan names its copy of the source; the page's app packs it.
-    const app = Object.assign({}, out.app, { platforms: ['windows', 'linux', 'macos'] });
-    const pb = maskPlan(await resolve(cat, app));
-    ok(g.plan === pb, rt + ': plan', firstDiff(g.plan, pb));
-  } catch (e) {
-    ok(false, rt, e.stack || e);
+const whole = await loadSnapshot(new Uint8Array(catBytes));
+// As the server loads it (everything), and as the one-file site does: a
+// fresh catalogue per job over the split snapshot, loaded a folder at a
+// time by runJob itself (unless --no-lazy).
+const split = await splitSnapshot(new Uint8Array(catBytes));
+const chunks = new Map(split.chunks.map((c) => [c.folder, c.bytes]));
+const ways = [['', () => whole]];
+if (!process.argv.includes('--no-lazy')) ways.push([' (lazy catalogue)', () => openSplitSnapshot(split.index, (f) => chunks.get(f))]);
+for (const [how, catFor] of ways) {
+  for (const rt of only) {
+    const g = golden.runtimes[rt];
+    if (!g) { ok(false, rt + ': no golden for this runtime'); continue; }
+    const body = bodyFor(rt);
+    const cat = catFor();
+    try {
+      const out = await runJob(JSON.parse(JSON.stringify(body)), { catalog: cat, backend: golden.backend, base, modes: ['B', 'C'] });
+      const b = maskRecord(out.record);
+      ok(g.record === b, rt + ': record' + how, firstDiff(g.record, b));
+      // The server's plan names its copy of the source; the page's app packs it.
+      const app = Object.assign({}, out.app, { platforms: ['windows', 'linux', 'macos'] });
+      const pb = maskPlan(await resolve(cat, app));
+      ok(g.plan === pb, rt + ': plan' + how, firstDiff(g.plan, pb));
+    } catch (e) {
+      ok(false, rt + how, e.stack || e);
+    }
   }
 }
 console.log(`\n${passed} passed, ${failed} failed`);

@@ -13,8 +13,10 @@
 //
 // What the page carries (tools/build_site.py writes these blocks):
 //   #ib-offline   JSON {built, rev, backend}
-//   #ib-catalog   the catalogue snapshot (catalog.Snapshot), gzipped, base64
-//   #ib-runtimes  GET /api/catalog/runtimes, JSON
+//   #ib-catalog   the catalogue's index, JSON: its shared files, its folders,
+//                 and GET /api/catalog/runtimes's answer (docs/format.md 6)
+//   #ib-cat-NAME  each catalogue folder, gzipped, base64; unpacked when a
+//                 build first needs one of its runtimes (js/overlay.js)
 //   #ib-overlay   catalogue changes saved inside the page (js/overlay.js)
 //   #base-windows, #base-linux, #base-macos   the unsigned bases, base64
 //
@@ -23,7 +25,7 @@
 // changes says so in its result (`catalog`), and the build page shows it.
 import { ApiError } from './api.js';
 import { validate, runJob } from './builder.js';
-import { effectiveCatalog, effectiveSummary } from './overlay.js';
+import { effectiveCatalog, effectiveSummary, unpackedFolders } from './overlay.js';
 
 const enc = new TextEncoder();
 
@@ -109,7 +111,7 @@ async function request(path, opts = {}) {
   let m;
   let out;
   if (method === 'GET' && p === '/api/health') out = { ok: true, offline: true };
-  else if (method === 'GET' && p === '/api/catalog/runtimes') out = await effectiveSummary(JSON.parse(block('ib-runtimes') || '{"runtimes":[]}'));
+  else if (method === 'GET' && p === '/api/catalog/runtimes') out = await effectiveSummary();
   else if (method === 'POST' && p === '/api/jobs') out = await submit(opts.body || {});
   else if (method === 'GET' && (m = /^\/api\/jobs\/([^/]+)$/.exec(p))) {
     const j = jobs.get(decodeURIComponent(m[1]));
@@ -134,6 +136,6 @@ function url(path) {
 }
 
 export function installLocalApi() {
-  globalThis.ibLocalApi = { request, url, info: offlineInfo };
+  globalThis.ibLocalApi = { request, url, info: offlineInfo, unpacked: unpackedFolders };
   catalog().catch(() => { /* reported when a build needs it */ });
 }

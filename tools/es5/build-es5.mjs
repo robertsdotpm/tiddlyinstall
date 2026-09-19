@@ -1,5 +1,5 @@
 // The one-file site's ES5 copy, for browsers that can't parse its ES2017
-// script (Internet Explorer 11, Chrome 49 on Windows XP; docs/plan.md 1.11,
+// script (Internet Explorer 10 and 11, Chrome 49 on Windows XP; docs/plan.md 1.11,
 // "Older browsers"). Called by tools/build_site.py; build-time only: Babel and
 // core-js live in tools/es5/node_modules (npm install there) and only their
 // output goes into the page.
@@ -27,9 +27,11 @@ import builder from 'core-js-builder';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(HERE, '..', '..');
-// Not IE 10: in IE 11's IE 10 mode (no Map or Set, so core-js's) the copy
-// took 137 s to start and ran out of memory building (docs/plan.md 1.11).
-export const TARGETS = { ie: '11', chrome: '49' };
+// IE 10 too since the catalogue unpacks a folder at a time (2026-09-19):
+// core-js adds what it lacks (Map, Set, WeakMap, Uint8ClampedArray, ...) and
+// js/legacy-dom.js its dataset. Before that its IE 10 mode took 137 s to
+// start and ran out of memory building (docs/plan.md 1.11).
+export const TARGETS = { ie: '10', chrome: '49' };
 
 const argv = process.argv.slice(2);
 const opt = (k) => { const i = argv.indexOf(k); if (i < 0) return null; const v = argv[i + 1]; argv.splice(i, 2); return v; };

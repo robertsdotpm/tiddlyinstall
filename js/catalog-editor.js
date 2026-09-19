@@ -31,7 +31,8 @@ function el(tag, props = {}, ...kids) {
     else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
     else if (k === 'value') e.value = v;
     else if (k === 'checked') e.checked = !!v;
-    else if (k === 'dataset') Object.assign(e.dataset, v);
+    // (setAttribute, not dataset: IE 10's stand-in can't add keys.)
+    else if (k === 'dataset') for (const dk of Object.keys(v)) e.setAttribute('data-' + dk.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase()), v[dk]);
     else e.setAttribute(k, v === true ? '' : String(v));
   }
   for (const k of kids.flat()) if (k != null && k !== false) e.append(k instanceof Node ? k : String(k));
@@ -100,6 +101,34 @@ const fileFor = (kind, id = S.rt) => folderOf(id) + '/' + { release: 'releases.j
 // The runtime that owns a catalogue folder (python2's files are python's).
 const runtimeOfFolder = (f) => (runtimeIds().includes(f) ? f : runtimeIds().find((id) => folderOf(id) === f) || f);
 
+// The page's catalogue is unpacked a folder at a time (js/overlay.js): a
+// runtime's folder, and those its previews need, when it is opened, and the
+// folders the changes are about, to show them. Everything below reads
+// S.files synchronously once `need` has resolved.
+let busy = 0;
+async function need(ids, changes = S.ov.changes) {
+  const slow = ids.filter((id) => !O.folderLoaded(folderOf(id)));
+  if (slow.length) {
+    busy++;
+    $('rt-app').setAttribute('aria-busy', 'true');
+    $('rt-sub').textContent = 'Unpacking ' + slow.map(labelOf).join(', ') + ' from the page…';
+  }
+  try {
+    await O.ensureRuntimes(ids, changes);
+  } finally {
+    if (slow.length && --busy === 0) $('rt-app').removeAttribute('aria-busy');
+  }
+}
+// Release counts of folders not unpacked yet come from the page's index.
+function releaseCount(id) {
+  if (O.folderLoaded(folderOf(id))) return baseList('release', id).length;
+  const f = O.catalogFolders()[folderOf(id)];
+  return f ? f.releases : 0;
+}
+function failed(e) {
+  $('rt-sub').textContent = 'Couldn\'t unpack this runtime from the page: ' + (e && e.message ? e.message : e);
+}
+
 function refreshStatus() {
   S.status = new Map();
   for (const c of S.ov.changes) S.status.set(O.changeKey(c), O.changeStatus(S.files, c, S.ctx));
@@ -159,7 +188,7 @@ function paintRuntimes() {
   }
   nav.replaceChildren(...runtimeIds().map((id) => {
     const n = (perFolder.get(folderOf(id)) || 0) + (folderOf(id) !== id ? perFolder.get(id) || 0 : 0);
-    const count = baseList('release', id).length;
+    const count = releaseCount(id);
     return el('button', { type: 'button', class: 'rt-rt' + (id === S.rt ? ' active' : ''), 'aria-current': id === S.rt ? 'true' : null, dataset: { rt: id }, onclick: () => pickRuntime(id) },
       el('span', { class: 'rt-rt-name', text: labelOf(id) }),
       el('span', { class: 'rt-rt-meta', text: id + ' · ' + count.toLocaleString('en') }),
@@ -167,8 +196,12 @@ function paintRuntimes() {
   }));
 }
 
-function pickRuntime(id) {
+let pickSeq = 0;
+async function pickRuntime(id) {
   if (!policyAll()[id]) return;
+  const seq = ++pickSeq;
+  try { await need([id]); } catch (e) { failed(e); return; }
+  if (seq !== pickSeq) return;
   S.rt = id;
   S.sel = null;
   S.draft = undefined;
@@ -870,9 +903,12 @@ function changeItem(c, { status, actions = true } = {}) {
   return li;
 }
 
-function showChange(c) {
+async function showChange(c) {
   const d = describe(c);
   if (!policyAll()[d.rt]) return;
+  const seq = ++pickSeq;
+  try { await need([d.rt]); } catch (e) { failed(e); return; }
+  if (seq !== pickSeq) return;
   S.rt = d.rt;
   S.tab = { release: 'releases', recipe: 'recipes', rule: 'rules', policy: 'policy' }[d.kind];
   resetFilters();
@@ -932,7 +968,9 @@ function paintMode() {
 
 let pendingImport = null;
 
-function review(parsed, from) {
+async function review(parsed, from) {
+  // Their folders, to check them against.
+  try { await need([S.rt], [...S.ov.changes, ...parsed.changes]); } catch (e) { failed(e); return; }
   const ok = [], skipped = parsed.rejected.map((r) => 'change ' + (r.index + 1) + ': ' + r.why);
   const items = [];
   parsed.changes.forEach((c) => {
@@ -966,7 +1004,7 @@ async function importFile(file) {
   if (file.size > O.IMPORT_MAX) return fail('It is bigger than a catalogue overlay can be.');
   let parsed;
   try { parsed = O.parseOverlay(await file.text()); } catch (e) { return fail(e.message); }
-  review(parsed, '"' + short(file.name, 80) + '"');
+  await review(parsed, '"' + short(file.name, 80) + '"');
 }
 
 async function applyImport(replace) {
@@ -1166,7 +1204,7 @@ function runPreview() {
   $('rt-p-diff-sum').textContent = 'Plan lines that change (' + nd + ')';
   $('rt-p-plan').textContent = after;
   status.textContent = (changes.length ? nChanged + ' of ' + rows.length + ' systems get something different.' : 'No changes to compare yet: this is the built-in plan.') + note + ' (' + ms + ' ms)';
-  status.dataset.changed = String(nChanged);
+  status.setAttribute('data-changed', String(nChanged));
 }
 
 /* ---------- start ---------- */
@@ -1210,6 +1248,13 @@ async function start() {
   S.ctx = O.contextOf(S.files);
   S.rt = runtimeIds().includes('python') ? 'python' : runtimeIds()[0];
   readView();
+  S.ov = O.overlayState();
+  try {
+    await need([S.rt]);
+  } catch (e) {
+    $('rt-loading').textContent = 'Couldn\'t read the catalogue in this page: ' + (e && e.message ? e.message : e);
+    return;
+  }
   $('rt-loading').hidden = true;
   $('rt-app').hidden = false;
 
@@ -1242,7 +1287,10 @@ async function start() {
   $('rt-review-cancel').addEventListener('click', () => { pendingImport = null; $('rt-review').hidden = true; });
   for (const id of ['rt-p-family', 'rt-p-select', 'rt-p-diffonly']) $(id).addEventListener('change', () => { $('rt-p-range-label').hidden = !['range', 'exact'].includes($('rt-p-select').value); schedulePreview(); });
   $('rt-p-range').addEventListener('input', schedulePreview);
-  window.addEventListener('ib-overlay-change', () => {
+  window.addEventListener('ib-overlay-change', async () => {
+    const ov = O.overlayState();
+    // New changes may be about folders not unpacked yet.
+    try { await need([S.rt], ov.changes); } catch (e) { failed(e); }
     const keep = S.sel && S.dirty ? { sel: S.sel, draft: S.draft } : null;
     S.ov = O.overlayState();
     refreshStatus();

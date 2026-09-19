@@ -1,4 +1,4 @@
-// The DOM and platform pieces Internet Explorer 11 and Chrome 49 lack, for
+// The DOM and platform pieces Internet Explorer 10 and 11 and Chrome 49 lack, for
 // the one-file site's ES5 copy only (tools/es5/build-es5.mjs puts it after
 // core-js's language polyfills and before the page's code; the ES2017 page
 // never loads it). Plain ES5, each piece added only where missing or broken.
@@ -22,6 +22,61 @@
   if (!w.crypto && w.msCrypto && w.msCrypto.getRandomValues) {
     var ms = w.msCrypto;
     w.crypto = { getRandomValues: function (a) { return ms.getRandomValues(a); } };
+  }
+
+  /* ---------- dataset (IE 10) ---------- */
+  // Each read gives an object with a property per data-* attribute the
+  // element has, read and written through to the attribute. A new key set
+  // on it isn't kept (there is no Proxy), so the page adds data-* with
+  // setAttribute (js/catalog-editor.js el()).
+  var HP = w.HTMLElement && HTMLElement.prototype;
+  if (HP && !('dataset' in d.documentElement)) {
+    var camel = function (s) { return s.replace(/-([a-z])/g, function (m, c) { return c.toUpperCase(); }); };
+    Object.defineProperty(HP, 'dataset', {
+      configurable: true,
+      get: function () {
+        var el = this, o = {}, a = el.attributes;
+        var prop = function (attr) {
+          Object.defineProperty(o, camel(attr.slice(5)), {
+            enumerable: true, configurable: true,
+            get: function () { return el.getAttribute(attr); },
+            set: function (v) { el.setAttribute(attr, String(v)); },
+          });
+        };
+        for (var i = 0; i < a.length; i++) if (a[i].name.indexOf('data-') === 0) prop(a[i].name);
+        return o;
+      },
+    });
+  }
+
+  /* ---------- the hidden property (IE 10) ---------- */
+  // IE 10 knows no hidden attribute; the page's CSS hides [hidden]
+  // (tools/build_site.py legacy_css), so the property sets the attribute.
+  if (HP && !('hidden' in d.documentElement)) {
+    Object.defineProperty(HP, 'hidden', {
+      configurable: true,
+      get: function () { return this.hasAttribute('hidden'); },
+      set: function (v) { if (v) this.setAttribute('hidden', ''); else this.removeAttribute('hidden'); },
+    });
+  }
+
+  /* ---------- Blob parts that are typed arrays (IE 10) ---------- */
+  // IE 10's Blob takes ArrayBuffers but throws InvalidStateError for typed
+  // arrays; each such part becomes a copy of the bytes it views.
+  var NativeBlob = w.Blob, viewsOK = true;
+  try { new NativeBlob([new Uint8Array(1)]); } catch (e) { viewsOK = false; }
+  if (NativeBlob && !viewsOK) {
+    var BlobFix = function Blob(parts, opts) {
+      var p = [];
+      for (var i = 0; parts && i < parts.length; i++) {
+        var x = parts[i];
+        p.push(x && !(x instanceof ArrayBuffer) && x.buffer instanceof ArrayBuffer && typeof x.byteOffset === 'number'
+          ? x.buffer.slice(x.byteOffset, x.byteOffset + x.byteLength) : x);
+      }
+      return opts === undefined ? new NativeBlob(p) : new NativeBlob(p, opts);
+    };
+    BlobFix.prototype = NativeBlob.prototype;
+    w.Blob = BlobFix;
   }
 
   /* ---------- Event and CustomEvent constructors (IE 11) ---------- */

@@ -8,8 +8,10 @@
 // Plans are byte-identical to the Go resolver's (tests/resolve-test.mjs
 // checks the 3,095 cases it answered, saved in tests/golden/). Everything
 // is synchronous except what needs (de)compression or a digest: loadSnapshot,
-// writeSnapshot, hash26 and hash12. resolve() needs Hash12 for the appid,
-// so it has its own small SHA-256 (sha256 below) and stays synchronous.
+// writeSnapshot, splitSnapshot, loading a lazy catalogue's runtimes
+// (openCatalog, loadRuntimes), hash26 and hash12. resolve() needs Hash12 for
+// the appid, so it has its own small SHA-256 (sha256 below) and stays
+// synchronous; on a lazy catalogue, callers load what it needs first.
 //
 // Go semantics kept on purpose: map output sorted by UTF-8 byte order
 // (cmpStr), strings.TrimSpace's space set, strconv.Atoi's strictness,
@@ -549,24 +551,52 @@ function release(raw, folder) {
 // which is also its path on the mirror (policy mirror_base). It is asked
 // whenever a release without a local copy is considered, as Go asks its
 // index, so it should be cheap.
+//
+// This loads every runtime at once (the server, the tools and the tests);
+// openCatalog below loads them one catalogue folder at a time.
 export function loadCatalogFiles(files, opts = {}) {
+  const cat = newCatalog(files, opts);
+  for (const folder of cat.folders.keys()) addFolder(cat, folder, files);
+  return cat;
+}
+
+// The shared part: the policy, the OS versions and the compilers' floors.
+// cat.folders maps each catalogue folder to the runtimes whose files it
+// holds (python2's are in python/); cat.runtimes has the loaded runtimes.
+function newCatalog(files, opts) {
   const policy = parseFile(files, 'policy.json');
   if (!isMap(policy)) throw new Error('policy.json: not an object');
   const cat = {
     policy, os: loadOSScale(parseFile(files, 'os_versions.json')), runtimes: new Map(),
     shaHook: typeof opts.sha === 'function' ? opts.sha : null, raw: {}, memo: new Map(),
+    folders: new Map(), loaded: new Set(), lazy: null,
   };
   cat.raw['os_versions.json'] = parseFile(files, 'os_versions.json');
   cat.raw['compilers_min_os.json'] = parseFile(files, 'compilers_min_os.json', true);
   cat.compMin = loadCompilerMin(cat.raw['compilers_min_os.json']);
   for (const id of runtimeIDs(policy)) {
+    const folder = folderOf(cat, id);
+    if (!cat.folders.has(folder)) cat.folders.set(folder, []);
+    cat.folders.get(folder).push(id);
+  }
+  return cat;
+}
+
+// The folder a runtime's files are in (policy "folder", else its id).
+function folderOf(cat, id) {
+  const pol = runtimePolicy(cat, id);
+  return (pol && str(pol.folder)) || id;
+}
+
+// One folder's files: its runtimes join cat.runtimes.
+function addFolder(cat, folder, files) {
+  const rels = parseFile(files, folder + '/releases.json');
+  const inst = parseFile(files, folder + '/install.json');
+  const sup = parseFile(files, folder + '/os_support.json', true);
+  cat.raw[folder + '/install.json'] = inst;
+  if (sup !== undefined) cat.raw[folder + '/os_support.json'] = sup;
+  for (const id of cat.folders.get(folder) || []) {
     const pol = runtimePolicy(cat, id);
-    const folder = str(pol.folder) || id;
-    const rels = parseFile(files, folder + '/releases.json');
-    const inst = parseFile(files, folder + '/install.json');
-    const sup = parseFile(files, folder + '/os_support.json', true);
-    cat.raw[folder + '/install.json'] = inst;
-    if (sup !== undefined) cat.raw[folder + '/os_support.json'] = sup;
     const rt = {
       id,
       recipes: list(own(inst, 'recipes')).filter((r) => r !== null).map((r) => ({
@@ -584,29 +614,133 @@ export function loadCatalogFiles(files, opts = {}) {
     }
     cat.runtimes.set(id, rt);
   }
+  cat.loaded.add(folder);
+}
+
+/* ---------- a catalogue loaded one folder at a time ---------- */
+
+// openCatalog: a catalogue whose runtimes are loaded when asked for. `files`
+// holds the shared files (policy.json, os_versions.json and, if any,
+// compilers_min_os.json); load(folder) returns (or promises) that folder's
+// files, named as in a snapshot ("python/releases.json", ...).
+//
+// Everything that reads runtimes stays synchronous: callers first await
+// loadRuntimes(cat, ids), which loads the runtimes, everything their plans
+// can reach through the policy's "via" and "requires" (cc needs zig on
+// Linux and macOS; nim needs cc on Windows), and every runtime sharing their
+// folders. A runtime in the policy whose folder isn't loaded yet is an
+// error (runtimeOf), never taken as absent, so a missing loadRuntimes can't
+// quietly change a plan. On a catalogue from loadCatalogFiles (the server's)
+// everything is loaded and loadRuntimes does nothing.
+export function openCatalog(files, load, opts = {}) {
+  const cat = newCatalog(files, opts);
+  cat.lazy = { load, pending: new Map() };
   return cat;
 }
 
+// The runtime ids of the policy, in order.
+export function catalogRuntimeIDs(cat) {
+  return runtimeIDs(cat.policy);
+}
+
+// Whether the policy has this runtime (loaded or not).
+export function hasRuntime(cat, id) {
+  return runtimePolicy(cat, id) !== null;
+}
+
+// Whether a runtime's folder is loaded.
+export function runtimeLoaded(cat, id) {
+  return !hasRuntime(cat, id) || cat.loaded.has(folderOf(cat, id));
+}
+
+// The runtimes a plan for `ids` can reach: the ids, and through "via" and
+// "requires" (on every OS) whatever those reach. Unknown ids are left out.
+export function runtimeNeeds(cat, ids) {
+  const out = new Set();
+  const visit = (id) => {
+    if (out.has(id) || !hasRuntime(cat, id)) return;
+    out.add(id);
+    const pol = runtimePolicy(cat, id);
+    if (isMap(pol.via)) for (const f of Object.keys(pol.via)) visit(str(pol.via[f]));
+    if (isMap(pol.requires)) for (const f of Object.keys(pol.requires)) for (const req of list(pol.requires[f])) visit(str(own(req, 'runtime')));
+  };
+  for (const id of ids) visit(id);
+  return [...out].sort(cmpStr);
+}
+
+// The catalogue folders holding those runtimes' files.
+export function runtimeFolders(cat, ids) {
+  return [...new Set(runtimeNeeds(cat, ids).map((id) => folderOf(cat, id)))].sort(cmpStr);
+}
+
+// Loads what plans for `ids` need (runtimeNeeds). Resolves to cat.
+export async function loadRuntimes(cat, ids) {
+  if (cat.lazy) await Promise.all(runtimeFolders(cat, ids).map((f) => loadFolder(cat, f)));
+  return cat;
+}
+
+// Loads every runtime (a whole snapshot's worth).
+export function loadAllRuntimes(cat) {
+  return loadRuntimes(cat, runtimeIDs(cat.policy));
+}
+
+function loadFolder(cat, folder) {
+  if (cat.loaded.has(folder)) return Promise.resolve();
+  let p = cat.lazy.pending.get(folder);
+  if (!p) {
+    p = Promise.resolve().then(() => cat.lazy.load(folder)).then((files) => {
+      if (!cat.loaded.has(folder)) addFolder(cat, folder, files || {});
+    });
+    cat.lazy.pending.set(folder, p);
+    p.catch(() => cat.lazy.pending.delete(folder));
+  }
+  return p;
+}
+
+// A runtime by id: undefined if the policy doesn't have it; an error if it
+// does but its folder isn't loaded (see openCatalog).
+function runtimeOf(cat, id) {
+  const rt = cat.runtimes.get(id);
+  if (rt || !hasRuntime(cat, id)) return rt;
+  const e = new Error('catalogue: runtime ' + goQuote(id) + ' is not loaded yet (its folder ' + goQuote(folderOf(cat, id)) + '); loadRuntimes first');
+  e.notLoaded = true;
+  throw e;
+}
+
+/* ---------- snapshots ---------- */
+
 // LoadSnapshot: what Snapshot (or writeSnapshot) wrote, gzipped or not.
 export async function loadSnapshot(bytes, opts = {}) {
+  return loadCatalogFiles(await snapshotFiles(bytes), opts);
+}
+
+// A whole snapshot's files, from its bytes (gzipped or not).
+async function snapshotFiles(bytes) {
   bytes = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
   if (bytes[0] === 0x1f && bytes[1] === 0x8b) bytes = await inflate(bytes, 'gzip');
   let snap;
   try { snap = JSON.parse(dec.decode(bytes)); } catch (e) { throw new Error('catalogue snapshot: ' + e.message); }
   const ver = own(snap, 'ib-catalog-snapshot');
   if (ver !== 1) throw new Error('catalogue snapshot version ' + (typeof ver === 'number' ? ver : 0));
-  return loadCatalogFiles(own(snap, 'files') || {}, opts);
+  return own(snap, 'files') || {};
 }
 
 // Snapshot: the catalogue as one gzipped file, with only the releases the
 // resolver can pick, each with its SHA-256 and our copy's path.
 export async function writeSnapshot(cat) {
+  const text = JSON.stringify({ 'ib-catalog-snapshot': 1, files: await writeSnapshotFiles(cat) }) + '\n';
+  return deflate(enc.encode(text), 'gzip');
+}
+
+// The files writeSnapshot writes, sorted by name.
+async function writeSnapshotFiles(cat) {
+  await loadAllRuntimes(cat);
   const files = { 'policy.json': cat.policy, 'os_versions.json': cat.raw['os_versions.json'] };
   if (cat.raw['compilers_min_os.json'] !== undefined) files['compilers_min_os.json'] = cat.raw['compilers_min_os.json'];
   const kept = new Map(), seen = new Set();
   for (const id of runtimeIDs(cat.policy)) {
-    const rt = cat.runtimes.get(id), pol = runtimePolicy(cat, id);
-    const folder = str(pol.folder) || id;
+    const rt = runtimeOf(cat, id), pol = runtimePolicy(cat, id);
+    const folder = folderOf(cat, id);
     if (!kept.has(folder)) {
       files[folder + '/install.json'] = cat.raw[folder + '/install.json'];
       if (cat.raw[folder + '/os_support.json'] !== undefined) files[folder + '/os_support.json'] = cat.raw[folder + '/os_support.json'];
@@ -629,8 +763,67 @@ export async function writeSnapshot(cat) {
   for (const [folder, rels] of kept) files[folder + '/releases.json'] = rels;
   const sorted = {};
   for (const k of Object.keys(files).sort(cmpStr)) sorted[k] = files[k];
-  const text = JSON.stringify({ 'ib-catalog-snapshot': 1, files: sorted }) + '\n';
-  return deflate(enc.encode(text), 'gzip');
+  return sorted;
+}
+
+/* ---------- the split snapshot (docs/format.md section 6) ---------- */
+
+export const SPLIT_FORMAT = 'ib-catalog-split';
+export const CHUNK_FORMAT = 'ib-catalog-folder';
+const FOLDER_RE = /^[A-Za-z0-9_-]{1,64}$/;
+
+// splitSnapshot: a snapshot (its bytes, or a catalogue, written as
+// writeSnapshot writes it) as an index and one gzipped chunk per catalogue
+// folder. The index: {"ib-catalog-split": 1, "files": {the files outside
+// any folder}, "folders": {folder: {"releases": count, "size": the chunk's
+// bytes}}}. A chunk, gunzipped: {"ib-catalog-folder": 1, "folder": name,
+// "files": {"name/install.json": ..., "name/os_support.json": ...,
+// "name/releases.json": [...]}}. Resolves to {index, chunks: [{folder, bytes}]}.
+export async function splitSnapshot(src) {
+  const files = src instanceof Uint8Array || src instanceof ArrayBuffer ? await snapshotFiles(src) : await writeSnapshotFiles(src);
+  const shared = {}, byFolder = new Map();
+  for (const name of Object.keys(files).sort(cmpStr)) {
+    const i = name.indexOf('/');
+    if (i < 0) { shared[name] = files[name]; continue; }
+    const folder = name.slice(0, i);
+    if (!FOLDER_RE.test(folder) || name.indexOf('/', i + 1) >= 0) throw new Error('catalogue snapshot: a file name this format can\'t split: ' + goQuote(name));
+    if (!byFolder.has(folder)) byFolder.set(folder, {});
+    byFolder.get(folder)[name] = files[name];
+  }
+  const index = { [SPLIT_FORMAT]: 1, files: shared, folders: {} };
+  const chunks = [];
+  for (const [folder, f] of byFolder) {
+    const bytes = await deflate(enc.encode(JSON.stringify({ [CHUNK_FORMAT]: 1, folder, files: f }) + '\n'), 'gzip');
+    index.folders[folder] = { releases: list(own(f, folder + '/releases.json')).length, size: bytes.length };
+    chunks.push({ folder, bytes });
+  }
+  return { index, chunks };
+}
+
+// readChunk: one folder's files from its chunk (gzipped or not).
+export async function readChunk(bytes, folder) {
+  bytes = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
+  if (bytes[0] === 0x1f && bytes[1] === 0x8b) bytes = await inflate(bytes, 'gzip');
+  let c;
+  try { c = JSON.parse(dec.decode(bytes)); } catch (e) { throw new Error('catalogue folder ' + folder + ': ' + e.message); }
+  const ver = own(c, CHUNK_FORMAT);
+  if (ver !== 1) throw new Error('catalogue folder ' + folder + ': format version ' + (typeof ver === 'number' ? ver : 0));
+  if (own(c, 'folder') !== folder) throw new Error('catalogue folder ' + folder + ': the chunk is for ' + goQuote(str(own(c, 'folder'))));
+  const files = own(c, 'files');
+  if (!isMap(files) || Object.keys(files).some((k) => !k.startsWith(folder + '/'))) throw new Error('catalogue folder ' + folder + ': files outside the folder');
+  return files;
+}
+
+// openSplitSnapshot: a catalogue (openCatalog) over a split snapshot's
+// index; chunk(folder) returns (or promises) that folder's chunk bytes.
+export function openSplitSnapshot(index, chunk, opts = {}) {
+  const ver = own(index, SPLIT_FORMAT);
+  if (ver !== 1) throw new Error('catalogue index version ' + (typeof ver === 'number' ? ver : 0));
+  const folders = isMap(own(index, 'folders')) ? index.folders : {};
+  return openCatalog(own(index, 'files') || {}, async (folder) => {
+    if (!Object.hasOwn(folders, folder)) throw new Error('catalogue folder ' + goQuote(folder) + ' is not in this snapshot');
+    return readChunk(await chunk(folder), folder);
+  }, opts);
 }
 
 /* ---------- policy (policy.go) ---------- */
@@ -1035,7 +1228,7 @@ function companions(cat, rt, arch, o) {
   const out = [];
   if (!pol) return out;
   for (const req of list(own(pol.requires, o.family))) {
-    const crt = cat.runtimes.get(str((req == null ? undefined : req.runtime)));
+    const crt = runtimeOf(cat, str((req == null ? undefined : req.runtime)));
     if (!crt) return false;
     const native = candidates(cat, crt, o.family, arch).filter((e) => e.arch === arch || e.arch === 'any' || e.arch === 'universal');
     const { p } = best(cat, crt, native, o, normApp({ runtime: req.runtime }));
@@ -1077,7 +1270,7 @@ export function resolve(cat, app) {
 // Go's is absolute, and "" for a snapshot.
 export function resolveFiles(cat, app) {
   app = normApp(app);
-  const rt = cat.runtimes.get(app.runtime);
+  const rt = runtimeOf(cat, app.runtime);
   if (!rt) throw new Error('unknown runtime ' + goQuote(app.runtime));
   const pol = runtimePolicy(cat, app.runtime);
   const blocks = [];
@@ -1085,7 +1278,7 @@ export function resolveFiles(cat, app) {
     if (app.platforms.length > 0 && !app.platforms.includes(family)) continue;
     let frt = rt;
     const via = str(own(own(pol, 'via'), family));
-    if (via !== '' && cat.runtimes.get(via)) frt = cat.runtimes.get(via);
+    if (via !== '' && runtimeOf(cat, via)) frt = runtimeOf(cat, via);
     const scale = osFamily(cat, family);
     // A block reaches up to just below the next newer OS version.
     const top = (o) => {
@@ -1352,13 +1545,19 @@ function writeTarget(cat, w, app, pol, b) {
 
 /* ---------- runtimes summary (summary.go) ---------- */
 
-// RuntimesSummary, as the object GET /api/catalog/runtimes answers.
-export function runtimesSummary(cat) {
+// RuntimesSummary, as the object GET /api/catalog/runtimes answers; with
+// `ids`, only those runtimes' entries (all must be loaded: loadRuntimes).
+export function runtimesSummary(cat, ids) {
   const out = [];
+  const want = ids ? new Set(ids) : null;
   for (const id of runtimeIDs(cat.policy)) {
+    if (want && !want.has(id)) continue;
     const pol = runtimePolicy(cat, id);
     let plan;
-    try { plan = resolve(cat, { recordHash: 'preview', runtime: id, launch: str(pol.launch) }); } catch (e_) { continue; }
+    try { plan = resolve(cat, { recordHash: 'preview', runtime: id, launch: str(pol.launch) }); } catch (e_) {
+      if (e_ && e_.notLoaded) throw e_;
+      continue;
+    }
     const e = { id, label: str(pol.label), compiled: pol.compiled === true, launch: str(pol.launch), newest: null };
     let cur = null;
     const push = () => { if (cur) ((e.newest || (e.newest = []))).push(cur); };

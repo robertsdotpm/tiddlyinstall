@@ -9,8 +9,10 @@ Chrome 58 up; tests/es2017-test.mjs checks it), kept in a code block that
 js/page-loader.js runs, with an ES5 copy of it for IE 11 and Chrome 49
 (tools/es5/, when installed; tests/es5-test.mjs), the CSS inlined (with
 fallbacks for browsers without custom properties), and as data blocks the
-three unsigned bases, the catalogue snapshot and the runtimes summary. The
-build server serves it at /, and it uses that server; saved and opened from
+three unsigned bases and the catalogue, split by folder so the page unpacks
+only the runtimes it uses (docs/format.md section 6: an index with the shared
+files and the runtimes summary, and one gzipped chunk per catalogue folder).
+The build server serves it at /, and it uses that server; saved and opened from
 disk ("Save this page" saves it exactly as loaded), or with "No server" chosen,
 js/local-api.js answers its API calls inside the page instead.
 
@@ -19,7 +21,8 @@ sources. --multi also writes them as a site of separate files to dist/site/
 (not used for now; kept so it can be again).
 
 The catalogue snapshot comes from tools/snapshot.mjs (Node.js) unless
---catalog names a folder that already has catalog.gz and runtimes.json.
+--catalog names a folder that already has catalog.gz and runtimes.json;
+tools/snapshot.mjs -from catalog.gz -split splits it for the page.
 """
 import argparse
 import base64
@@ -365,11 +368,19 @@ def offline_page(catalog_dir, backend):
             data, extra = PLACEHOLDERS[os_name](), ' data-placeholder="1"'
             report.append(f"  base {os_name:8} PLACEHOLDER ({' or '.join(rels)} not found)")
         blocks.append(data_block(f"base-{os_name}", b64_block(data), extra=extra))
-    snap = open(os.path.join(catalog_dir, "catalog.gz"), "rb").read()
-    blocks.append(data_block("ib-catalog", b64_block(snap)))
-    report.append(f"  catalogue snapshot ({len(snap):,} bytes)")
-    runtimes = open(os.path.join(catalog_dir, "runtimes.json")).read()
-    blocks.append(data_block("ib-runtimes", no_close_script(runtimes), "application/json"))
+    # The catalogue, split (js/overlay.js reads it): #ib-catalog, the index
+    # with the runtimes summary; #ib-cat-FOLDER, each folder's chunk.
+    index, chunks = split_catalog(os.path.join(catalog_dir, "catalog.gz"))
+    with open(os.path.join(catalog_dir, "runtimes.json")) as f:
+        index["summary"] = json.load(f)
+    index_json = json_block(index)
+    blocks.append(data_block("ib-catalog", index_json, "application/json"))
+    for folder, data in chunks:
+        blocks.append(data_block("ib-cat-" + folder, b64_block(data), extra=f' data-folder="{folder}"'))
+    packed = sum(len(d) for _, d in chunks)
+    report.append(f"  catalogue: index {len(index_json.encode()):,} bytes (with the runtimes summary), "
+                  f"{len(chunks)} folders {packed:,} bytes gzipped (largest {max(chunks, key=lambda c: len(c[1]))[0]} "
+                  f"{max(len(d) for _, d in chunks):,})")
     # Catalogue changes "Save this page" can put inside the page (js/overlay.js
     # bakeOverlay); none in a freshly built page.
     blocks.append(data_block("ib-overlay", "null", "application/json", ' data-placeholder="1"'))
@@ -419,6 +430,29 @@ def offline_page(catalog_dir, backend):
            + "\n".join(blocks + code_blocks) +
            "\n  <script>\n" + no_close_script(read("js/page-loader.js")) + "\n  </script>\n</body>\n</html>\n")
     return out, report
+
+
+def json_block(v):
+    """JSON for a data block: compact, and no "<" (so no "</script" or "<!--")."""
+    return json.dumps(v, ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c")
+
+
+def split_catalog(snapshot):
+    """The snapshot split by folder (tools/snapshot.mjs -split; docs/format.md
+    section 7): (index, [(folder, gzipped chunk)]) in the index's order."""
+    node = shutil.which("node") or os.path.expanduser("~/.local/node/bin/node")
+    with tempfile.TemporaryDirectory() as tmp:
+        subprocess.run([node, os.path.join(ROOT, "tools", "snapshot.mjs"), "-from", snapshot, "-split", tmp],
+                       check=True, stdout=subprocess.DEVNULL)
+        with open(os.path.join(tmp, "index.json")) as f:
+            index = json.load(f)
+        chunks = []
+        for folder in index["folders"]:
+            if not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", folder):
+                sys.exit(f"catalogue folder name {folder!r} can't name a block")
+            with open(os.path.join(tmp, folder + ".gz"), "rb") as f:
+                chunks.append((folder, f.read()))
+    return index, chunks
 
 
 def make_snapshot(tmp):

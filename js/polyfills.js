@@ -101,9 +101,9 @@
     G.TextDecoder.prototype.decode = function (buf) {
       const b = buf === undefined ? new Uint8Array(0) : buf instanceof Uint8Array ? buf
         : ArrayBuffer.isView(buf) ? new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength) : new Uint8Array(buf);
-      let s = '', i = b[0] === 0xef && b[1] === 0xbb && b[2] === 0xbf ? 3 : 0;
-      const chunk = [];
-      const flush = () => { s += String.fromCharCode.apply(null, chunk); chunk.length = 0; };
+      let i = b[0] === 0xef && b[1] === 0xbb && b[2] === 0xbf ? 3 : 0;
+      const parts = [], chunk = [];
+      const flush = () => { if (chunk.length) { parts.push(String.fromCharCode.apply(null, chunk)); chunk.length = 0; } };
       // The WHATWG UTF-8 decoder, step for step.
       let need = 0, seen = 0, cp = 0, lo = 0x80, hi = 0xbf;
       const emit = (c) => {
@@ -113,8 +113,16 @@
       for (; i < b.length; i++) {
         const x = b[i];
         if (!need) {
-          if (x < 0x80) emit(x);
-          else if (x >= 0xc2 && x <= 0xdf) { need = 1; cp = x & 31; }
+          if (x < 0x80) {
+            // A run of ASCII in one go: byte for byte, 12 MB of catalogue
+            // took IE 11 30 s; this way, under a second.
+            let j = i + 1;
+            while (j < b.length && b[j] < 0x80 && j - i < 0x8000) j++;
+            if (j - i < 64) { for (; i < j; i++) emit(b[i]); i--; continue; }
+            flush();
+            parts.push(String.fromCharCode.apply(null, b.subarray(i, j)));
+            i = j - 1;
+          } else if (x >= 0xc2 && x <= 0xdf) { need = 1; cp = x & 31; }
           else if (x >= 0xe0 && x <= 0xef) { if (x === 0xe0) lo = 0xa0; if (x === 0xed) hi = 0x9f; need = 2; cp = x & 15; }
           else if (x >= 0xf0 && x <= 0xf4) { if (x === 0xf0) lo = 0x90; if (x === 0xf4) hi = 0x8f; need = 3; cp = x & 7; }
           else emit(0xfffd);
@@ -132,7 +140,7 @@
       }
       if (need) emit(0xfffd);
       flush();
-      return s;
+      return parts.join('');
     };
   }
 

@@ -56,6 +56,10 @@ try {
   await checkNativeState(ok, js);
   await checkHasRules(ok, js);
   await open(PAGE);                    // the form as it was
+  // The catalogue is unpacked a folder at a time, when something needs it:
+  // not to start, nor for the runtimes summary (it is precomputed).
+  await js(`ibLocalApi.request('/api/catalog/runtimes')`);
+  ok(JSON.stringify(await js(`ibLocalApi.unpacked()`)) === '[]', 'starting and the runtimes summary unpack no catalogue folder', JSON.stringify(await js(`ibLocalApi.unpacked()`)));
   ok(await js(`document.documentElement.classList.contains('ib-local')`), 'from disk, the page builds installers itself');
   ok(/none, this page builds/.test(await js(`document.querySelector('.api-ctl-url').textContent`)), 'the footer says there is no build server');
   ok(await js(`getComputedStyle(document.getElementById('mode-ours').closest('label')).display === 'none' && document.getElementById('mode-unsigned').checked`),
@@ -70,6 +74,7 @@ try {
   // Its code is main.py, which the default launch command must run.
   const ui = await buildHello({ runtime: 'python', mode: 'unsigned', name: 'Hello form', code: "print('hello from the form')\n" });
   await checkJob(ui, 'form', 'python', OUT && 'form');
+  ok(JSON.stringify(await js(`ibLocalApi.unpacked()`)) === '["python"]', 'a Python build unpacks only the python folder', JSON.stringify(await js(`ibLocalApi.unpacked()`)));
   if (ui && ui.result) {
     const rec = await js(`ibLocalApi.request('/api/records/${ui.result.record}')`);
     ok(/^launch\t\{runtime\} \{app_dir\}\/main\.py$/m.test(rec), 'form: the launch command runs main.py', rec);

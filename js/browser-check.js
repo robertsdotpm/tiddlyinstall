@@ -27,7 +27,7 @@
 // trailing commas, reserved words quoted as property names, no Array
 // filter/map, attachEvent where there's no addEventListener), since it is
 // what tells those browsers what to use instead. Browsers that can't parse
-// ES2017 but can run the page's ES5 copy (IE 11, Chrome 49) get it through
+// ES2017 but can run the page's ES5 copy (IE 10 and 11, Chrome 49) get it through
 // js/page-loader.js, which runs it when this sets window.IB_ES5_OK.
 (function () {
   var w = window, doc = document;
@@ -44,13 +44,14 @@
   function construct(C, arg) { try { new C(arg); return true; } catch (e) { return false; } }
   var subtle = w.crypto && w.crypto.subtle;
   // What the page's ES5 copy needs (keep in step with js/legacy-dom.js and
-  // tools/es5/build-es5.mjs's targets): IE 11, Chrome 49 and later. IE 10
-  // lacks dataset and Map (tried: too slow, and out of memory building);
-  // IE 9 typed arrays and Blob.
+  // tools/es5/build-es5.mjs's targets): IE 10 and 11, Chrome 49 and later.
+  // IE 10's missing Map comes from core-js and its dataset from
+  // js/legacy-dom.js (since the catalogue unpacks a folder at a time; before,
+  // IE 10 ran out of memory building); IE 9 lacks typed arrays and Blob.
   function es5Capable() {
     try {
       return !!(w.Uint8Array && w.Blob && w.FileReader && w.JSON && w.atob && doc.addEventListener && w.XMLHttpRequest &&
-        Object.defineProperty && doc.documentElement.dataset && w.Map && doc.documentElement.classList && w.getComputedStyle &&
+        Object.defineProperty && w.HTMLElement && doc.documentElement.classList && w.getComputedStyle &&
         ('download' in doc.createElement('a') || w.navigator.msSaveOrOpenBlob));
     } catch (e) { return false; }
   }

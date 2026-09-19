@@ -1,6 +1,6 @@
 // Regression test for js/resolve.js against saved ("golden") answers.
 //
-//   node tests/resolve-test.mjs [--catalog FILE] [--no-roundtrip] [--show N] [--update]
+//   node tests/resolve-test.mjs [--catalog FILE] [--no-roundtrip] [--no-lazy] [--show N] [--update]
 //
 // tests/golden/resolve-cases.json.br holds 3,095 cases: apps covering every
 // runtime, select mode, install kind, package source, platform subset and
@@ -16,6 +16,14 @@
 // example one tools/snapshot.mjs wrote from the same catalogue folder: the
 // plans must be the same). Unless --no-roundtrip, the cases also run
 // against the snapshot writeSnapshot writes back from the loaded one.
+//
+// The cases also run through the lazy catalogue the one-file site uses
+// (openSplitSnapshot over splitSnapshot's chunks, docs/format.md section 6),
+// unless --no-lazy: once on one catalogue that loads runtimes as the cases
+// ask for them (loadRuntimes before each resolve), and once with a fresh
+// catalogue per case, loaded with only what loadRuntimes picks for that
+// case's runtime, so a dependency it missed ("via", "requires") fails that
+// case instead of being there from an earlier one.
 //
 // --update rewrites the golden answers from the current js/resolve.js and
 // the snapshot in use (the inputs are kept); with --catalog FILE, that
@@ -121,17 +129,20 @@ async function check(cat, c) {
 }
 
 let failures = 0;
-async function run(title, cat, data) {
+// catFor(c): the catalogue for case c (a promise), ready for it; summary():
+// the runtimes summary. Both default to the one catalogue `cat`.
+async function run(title, cat, data, { catFor = async () => cat, summary = async () => R.runtimesSummary(cat) } = {}) {
   const t0 = performance.now();
   let bad = 0;
   const kinds = {};
   for (const c of data.cases) {
     kinds[c.kind] = (kinds[c.kind] || 0) + 1;
-    const d = await check(cat, c);
+    const d = await check(await catFor(c), c);
     if (d === null) continue;
     if (++bad <= SHOW) console.log(`MISMATCH ${c.kind} ${c.app ? c.app.runtime + ' / ' + c.note : JSON.stringify(c)}\n${d}\n`);
   }
-  const sum = R.runtimesSummary(cat);
+  let sum;
+  try { sum = await summary(); } catch (e) { sum = { error: e.message }; }
   if (!same(sum, data.summary)) {
     bad++;
     console.log('MISMATCH runtimes summary\n' + lineDiff(JSON.stringify(data.summary, null, 1), JSON.stringify(sum, null, 1)));
@@ -167,6 +178,75 @@ await run('golden cases', cat, data);
 if (!process.argv.includes('--no-roundtrip')) {
   // writeSnapshot, read back: the same answers.
   await run('snapshot written back by writeSnapshot', await R.loadSnapshot(await R.writeSnapshot(cat)), data);
+}
+if (!process.argv.includes('--no-lazy')) await lazyRuns();
+
+// The split snapshot and the lazy catalogue over it.
+async function lazyRuns() {
+  t0 = performance.now();
+  const { index, chunks } = await R.splitSnapshot(bytes);
+  const chunkOf = new Map(chunks.map((c) => [c.folder, c.bytes]));
+  const packed = chunks.reduce((n, c) => n + c.bytes.length, 0);
+  console.log(`split snapshot: index ${(JSON.stringify(index).length / 1024).toFixed(0)} KB, ${chunks.length} folder chunks ${(packed / 1024).toFixed(0)} KB (${((performance.now() - t0) / 1000).toFixed(1)} s)`);
+  let bad = 0;
+  const expect = (cond, what) => { if (!cond) { bad++; console.log('MISMATCH lazy: ' + what); } };
+  // The same split from the loaded catalogue as from the snapshot's bytes.
+  const again = await R.splitSnapshot(cat);
+  expect(same(again.index, index), 'splitSnapshot(catalogue) and splitSnapshot(bytes) give different indexes');
+  for (const c of again.chunks) {
+    expect(same(await R.readChunk(c.bytes, c.folder), await R.readChunk(chunkOf.get(c.folder), c.folder)), 'chunk ' + c.folder + ' differs between the two splits');
+  }
+  // Every folder of the policy has a chunk; every chunk is a folder.
+  const folders = R.runtimeFolders(cat, R.catalogRuntimeIDs(cat));
+  expect(same(folders, [...chunkOf.keys()].sort()), 'folders ' + folders.join(',') + ' vs chunks ' + [...chunkOf.keys()].join(','));
+  const loads = new Map();
+  const open = () => R.openSplitSnapshot(index, (f) => { loads.set(f, (loads.get(f) || 0) + 1); return chunkOf.get(f); });
+
+  // Nothing is unpacked until asked for, and asking for a runtime that isn't
+  // loaded is an error, not an unknown runtime.
+  const lazy = open();
+  expect(loads.size === 0 && lazy.runtimes.size === 0, 'opening the catalogue unpacked something');
+  let err = '';
+  try { R.resolve(lazy, { recordHash: 'x', runtime: 'python' }); } catch (e) { err = e.notLoaded ? 'notLoaded' : e.message; }
+  expect(err === 'notLoaded', 'resolving an unloaded runtime: ' + err);
+  try { R.runtimesSummary(lazy); err = ''; } catch (e) { err = e.notLoaded ? 'notLoaded' : e.message; }
+  expect(err === 'notLoaded', 'the summary of an unloaded catalogue: ' + err);
+  // What a runtime brings with it.
+  expect(same(R.runtimeNeeds(cat, ['cc']), ['cc', 'zig']), 'cc needs ' + R.runtimeNeeds(cat, ['cc']));
+  expect(same(R.runtimeNeeds(cat, ['nim']), ['cc', 'nim', 'zig']), 'nim needs ' + R.runtimeNeeds(cat, ['nim']));
+  expect(same(R.runtimeFolders(cat, ['python2']), ['python']), 'python2 is in ' + R.runtimeFolders(cat, ['python2']));
+  await R.loadRuntimes(lazy, ['python2']);
+  expect(same([...loads.keys()], ['python']) && lazy.runtimes.has('python') && lazy.runtimes.has('python2'), 'python2 loads the python folder (python and python2): ' + [...loads.keys()]);
+  failures += bad;
+
+  // One catalogue, loaded as the cases go.
+  const shared = open();
+  loads.clear();
+  const needs = async (c) => { if (c.kind === 'resolve') await R.loadRuntimes(shared, [String(c.app.runtime || '')]); return shared; };
+  await run('lazy catalogue, loaded as needed', shared, data, {
+    catFor: needs, summary: async () => R.runtimesSummary(await R.loadAllRuntimes(shared)),
+  });
+  const once = [...loads.values()].every((n) => n === 1);
+  if (!once) { failures++; console.log('MISMATCH lazy: a folder was unpacked twice ' + JSON.stringify([...loads])); }
+
+  // A fresh catalogue for every case, loaded with only what that case's
+  // runtime needs. The chunks are read once here (readChunk) and handed
+  // out parsed, so only the loading order is fresh.
+  const parsed = new Map();
+  for (const [f, b] of chunkOf) parsed.set(f, await R.readChunk(b, f));
+  const fresh = () => R.openCatalog(index.files, (f) => parsed.get(f));
+  await run('fresh lazy catalogue per case', null, data, {
+    catFor: async (c) => {
+      const f = fresh();
+      if (c.kind === 'resolve') await R.loadRuntimes(f, [String(c.app.runtime || '')]);
+      return f;
+    },
+    summary: async () => {
+      const out = [];
+      for (const id of R.catalogRuntimeIDs(cat)) out.push(...(R.runtimesSummary(await R.loadRuntimes(fresh(), [id]), [id]).runtimes || []));
+      return { runtimes: out.length ? out : null };
+    },
+  });
 }
 console.log(failures ? `FAIL: ${failures} mismatches` : 'PASS');
 process.exit(failures ? 1 : 0);

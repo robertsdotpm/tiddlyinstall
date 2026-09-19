@@ -34,7 +34,7 @@ page is lost.
 | `js/new.js`, `js/build.js`, `js/edit.js` | The three live pages |
 | `js/icon.js` | Icons in the browser: a `.ico` (BMP for XP + PNG) written into a `.exe` with resedit-js, an `.icns` for the `.app`, and the Linux launcher PNG packed with an `icon` record key. PNG is encoded in JS so it is deterministic |
 | `vendor/resedit-bundle.js` | resedit-js 2.0.3 + pe-library 1.0.1 (MIT, (c) 2018 jet; see `vendor/LICENSE.*`), bundled by `tools/build_resedit_bundle.py`. `edit.html` loads it; the one-file site inlines it |
-| `tools/build_site.py` | Builds the site: one HTML file, `dist/index.html` (gitignored), with every page, the CSS, the JS, the resedit bundle, the three unsigned bases and the catalogue snapshot inside. The build server serves it; saved and opened from disk it builds installers with no server (docs/plan.md section 1.11). `--multi` also writes separate pages |
+| `tools/build_site.py` | Builds the site: one HTML file, `dist/index.html` (gitignored), with every page, the CSS, the JS, the resedit bundle, the three unsigned bases and the catalogue inside, split by catalogue folder so the page unpacks only the runtimes it uses (docs/format.md section 6). The build server serves it; saved and opened from disk it builds installers with no server (docs/plan.md section 1.11). `--multi` also writes separate pages |
 | `js/resolve.js`, `js/builder.js`, `js/local-api.js`, `js/router.js` | The plan resolver and the job builder (both shared with the build server in `backend/`), the in-page API used when there is no build server, and the one-file site's page switching |
 | `js/overlay.js`, `js/catalog-editor.js` | The catalogue overlay (format, checks, applying it, storage, "Save this page" with it) and the Runtimes page |
 | `js/zlib.js`, `js/inflate.js`, `js/deflate.js` | Compression for the whole page: the browser's CompressionStream/DecompressionStream where it has them, else our own inflate and deflate (gzip, zlib, raw) |
@@ -90,8 +90,8 @@ Tests:
 
 ```
 cd backend && npm test                   # node --test: unit tests and the server end to end
-node tests/resolve-test.mjs              # the resolver against 3,095 saved plans and answers
-node tests/builder-golden.mjs            # js/builder.js: records and plans for every runtime
+node tests/resolve-test.mjs              # the resolver against 3,095 saved plans and answers, also lazily loaded
+node tests/builder-golden.mjs            # js/builder.js: records and plans for every runtime, also lazily loaded
 node tests/backend-golden.mjs            # a running server (default :8080, --data backend/data)
                                          # against saved answers: errors, jobs, plans, takedown
 ```
@@ -103,7 +103,9 @@ checked against byte for byte; each test's header says what is kept and
 how to record the goldens again after an intended change.
 
 Tools: `tools/snapshot.mjs` writes the catalogue snapshot and runtimes
-summary the one-file site carries; `tools/resolve.mjs` prints a plan, or
+summary the one-file site carries (and with `-split DIR`, the snapshot split
+by folder as the page carries it; `-from catalog.gz -split DIR` splits one
+already written); `tools/resolve.mjs` prints a plan, or
 the files with no copy on our mirror; `tools/plansig.mjs` signs and checks
 plans with a plan signing key.
 

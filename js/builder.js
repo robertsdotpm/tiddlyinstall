@@ -3,7 +3,9 @@
 // (docs/api.md) to its record, plans and installer files, following
 // docs/format.md. Everything that differs between the two lives in `env`:
 //
-//   env.catalog        a Catalog from js/resolve.js
+//   env.catalog        a Catalog from js/resolve.js: all loaded (loadCatalogFiles),
+//                      or loaded a folder at a time (openCatalog; runJob loads
+//                      what the job needs)
 //   env.base(plat)     the unsigned base for "windows" | "linux" | "macos" (bytes);
 //                      may throw its own "missing" error
 //   env.signedBase(plat)  mode A: {data, signedBy} for our signed base, or
@@ -39,7 +41,7 @@
 //   env.signPlan(plan) signs an embedded plan (optional)
 //   env.now()          the record's `created` time (default: now)
 import { toBytes, sha256Hex, recordHash, readInstaller, writeInstaller, tarWrite, installerExt, zipWrite, peInfo, zipRead, zipEntryData, zipUnixMode, zipIsDir, zipIsSymlink } from './ibfile.js';
-import { resolve, validPackage, packagePolicyFor, packageProject, packageModule, pickBin, jsonField, goQuote, replacer } from './resolve.js';
+import { resolve, loadRuntimes, hasRuntime, validPackage, packagePolicyFor, packageProject, packageModule, pickBin, jsonField, goQuote, replacer } from './resolve.js';
 import { rasterSource, buildIco, buildIcns, setExeIcon, setMacIcon, checkIconPng } from './icon.js';
 import { inflate, deflate } from './zlib.js';
 
@@ -88,7 +90,7 @@ const blen = (x) => enc.encode(x || '').length;   // bytes, as Go counts
 export function validate(r, env) {
   const cat = env.catalog;
   const product = env.product || 'TiddlyInstall';
-  if (!cat.runtimes.get(r.runtime) || !own(cat.policy.runtimes, r.runtime)) throw bad('unknown runtime ' + goQuote(String((r.runtime != null ? r.runtime : ''))));
+  if (!hasRuntime(cat, String(r.runtime)) || !own(cat.policy.runtimes, r.runtime)) throw bad('unknown runtime ' + goQuote(String((r.runtime != null ? r.runtime : ''))));
   if (!['A', 'B', 'C'].includes(r.mode)) throw bad('mode must be A, B or C');
   if (!(env.modes || ['B', 'C']).includes(r.mode)) {
     throw bad('Installers signed by ' + product + ' come from the build server. Without one, choose "Signed by you" or "Unsigned".');
@@ -498,6 +500,9 @@ const MB = (n) => Math.floor(n / (1024 * 1024));
 export async function runJob(r, env, progress = () => {}) {
   const cat = env.catalog;
   validate(r, env);
+  // A catalogue loaded a folder at a time (the one-file site's) unpacks
+  // this runtime and what its plans need; the server's has them all.
+  await loadRuntimes(cat, [r.runtime]);
   const pol = cat.policy.runtimes[r.runtime];
   const png = env.iconPng ? await env.iconPng(r.icon) : iconBytes(r.icon);
   progress('Resolving the source');
