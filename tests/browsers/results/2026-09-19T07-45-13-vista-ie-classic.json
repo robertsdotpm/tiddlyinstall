@@ -1,0 +1,109 @@
+{
+ "time": "2026-09-19T07:45:13.321Z",
+ "machine": "vista",
+ "browser": "ie",
+ "version": "9.0.8112.16421",
+ "result": "pass",
+ "protocol": "com",
+ "classic": "http://10.0.1.76:8080",
+ "mode": "unsigned",
+ "zone1601": 0,
+ "documentMode": 9,
+ "statuses": [
+  "http://10.0.1.76:8080/classic",
+  "Waiting in the queue",
+  "Done"
+ ],
+ "record": "deb6zouitr6q2pyqk7kqoo5poj",
+ "files": [
+  "install_python_hello-world.exe",
+  "install_python_hello-world.run"
+ ],
+ "seconds": 7,
+ "checks": [
+  {
+   "name": "IE opens the simple form over plain HTTP",
+   "pass": true
+  },
+  {
+   "name": "the form reads",
+   "pass": true
+  },
+  {
+   "name": "the text is dark on light",
+   "pass": true
+  },
+  {
+   "name": "standards mode (not quirks)",
+   "pass": true
+  },
+  {
+   "name": "the form is filled (post, multipart, to /submit)",
+   "pass": true
+  },
+  {
+   "name": "the submit lands on the status page",
+   "pass": true
+  },
+  {
+   "name": "IE follows the status page until the build is done",
+   "pass": true
+  },
+  {
+   "name": "no script errors",
+   "pass": true
+  },
+  {
+   "name": "the status page says done, and stops reloading",
+   "pass": true
+  },
+  {
+   "name": "the status page links the files and the record",
+   "pass": true
+  },
+  {
+   "name": "the browser has the same download links",
+   "pass": true
+  },
+  {
+   "name": "the record is the form's (its name)",
+   "pass": true
+  },
+  {
+   "name": "install_python_hello-world.exe: the link downloads it",
+   "pass": true
+  },
+  {
+   "name": "install_python_hello-world.exe: its SHA-256 is the page's",
+   "pass": true
+  },
+  {
+   "name": "install_python_hello-world.exe: js/ibfile.js reads it back, carrying the record",
+   "pass": true
+  },
+  {
+   "name": "install_python_hello-world.exe: the server has its signed plan",
+   "pass": true
+  },
+  {
+   "name": "install_python_hello-world.run: the link downloads it",
+   "pass": true
+  },
+  {
+   "name": "install_python_hello-world.run: its SHA-256 is the page's",
+   "pass": true
+  },
+  {
+   "name": "install_python_hello-world.run: js/ibfile.js reads it back, carrying the record",
+   "pass": true
+  },
+  {
+   "name": "install_python_hello-world.run: the server has its signed plan",
+   "pass": true
+  },
+  {
+   "name": "the zone setting is put back",
+   "pass": true
+  }
+ ]
+}

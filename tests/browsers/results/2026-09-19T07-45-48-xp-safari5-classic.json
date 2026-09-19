@@ -1,0 +1,87 @@
+{
+ "time": "2026-09-19T07:45:48.578Z",
+ "machine": "xp",
+ "browser": "safari",
+ "version": "5.1.7",
+ "result": "pass",
+ "protocol": "beacon",
+ "classic": "http://10.0.1.76:8080",
+ "mode": "yours",
+ "beacons": {
+  "start": "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/534.57.2 (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2",
+  "filled": "post multipart/form-data http://10.0.1.76:8080/submit python"
+ },
+ "serverLog": [
+  "2026/09/19 17:45:53 10.0.1.132 POST /submit 6ms",
+  "2026/09/19 17:45:53 10.0.1.132 GET /favicon.ico 1ms",
+  "2026/09/19 17:45:56 10.0.1.132 GET /status/j_c23405921f3c1578c5 3ms"
+ ],
+ "record": "lyhzh76fvadmi365gjerpiaox2",
+ "files": [
+  "install_python_hello-world.exe",
+  "install_python_hello-world.run"
+ ],
+ "seconds": 94,
+ "checks": [
+  {
+   "name": "Safari 5.1.7 opens the form",
+   "pass": true
+  },
+  {
+   "name": "the form is filled (post, multipart, to the server's /submit)",
+   "pass": true
+  },
+  {
+   "name": "the server got the form from Safari's machine",
+   "pass": true
+  },
+  {
+   "name": "Safari followed the status page to its finished form (the one with the links; it no longer reloads)",
+   "pass": true
+  },
+  {
+   "name": "the status page says done, and stops reloading",
+   "pass": true
+  },
+  {
+   "name": "the status page links the files and the record",
+   "pass": true
+  },
+  {
+   "name": "the record is the form's (its name)",
+   "pass": true
+  },
+  {
+   "name": "install_python_hello-world.exe: the link downloads it",
+   "pass": true
+  },
+  {
+   "name": "install_python_hello-world.exe: its SHA-256 is the page's",
+   "pass": true
+  },
+  {
+   "name": "install_python_hello-world.exe: js/ibfile.js reads it back, carrying the record",
+   "pass": true
+  },
+  {
+   "name": "install_python_hello-world.exe: the server has its signed plan",
+   "pass": true
+  },
+  {
+   "name": "install_python_hello-world.run: the link downloads it",
+   "pass": true
+  },
+  {
+   "name": "install_python_hello-world.run: its SHA-256 is the page's",
+   "pass": true
+  },
+  {
+   "name": "install_python_hello-world.run: js/ibfile.js reads it back, carrying the record",
+   "pass": true
+  },
+  {
+   "name": "install_python_hello-world.run: the server has its signed plan",
+   "pass": true
+  }
+ ]
+}
