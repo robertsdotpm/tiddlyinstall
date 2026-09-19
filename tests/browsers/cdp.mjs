@@ -29,7 +29,7 @@ export async function launchChrome({ profile, downloads, binary = 'google-chrome
 // Connects to the first page target of a Chrome at `base` (its
 // --remote-debugging-port, possibly through a tunnel).
 export async function connectCdp(base, { tries = 75 } = {}) {
-  let ws, seq = 0;
+  let ws, seq = 0, last = '';
   const pending = new Map(), errors = [], requests = [];
   for (let i = 0; i < tries && !ws; i++) {
     try {
@@ -39,10 +39,10 @@ export async function connectCdp(base, { tries = 75 } = {}) {
         await new Promise((r, j) => { sock.onopen = r; sock.onerror = j; });
         ws = sock;
       }
-    } catch (e) { /* starting */ }
+    } catch (e) { last = e.cause ? e.cause.code || e.cause.message : e.message || String(e && e.type); }
     if (!ws) await sleep(200);
   }
-  if (!ws) throw new Error('Chrome did not start');
+  if (!ws) throw new Error('Chrome did not start' + (last ? ' (' + last + ')' : ''));
   ws.onmessage = (m) => {
     const d = JSON.parse(m.data);
     if (d.id && pending.has(d.id)) { pending.get(d.id)(d); pending.delete(d.id); }

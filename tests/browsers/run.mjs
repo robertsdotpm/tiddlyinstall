@@ -34,6 +34,12 @@ import { Checker, STARTED, checkSections, buildHello, checkJob, makeSignFixtures
 import { readInstaller } from '../../js/ibfile.js';
 import { ensureDriver } from './drivers.mjs';
 
+// The DevTools fallback needs WebSocket (a flag on Node 20).
+if (typeof WebSocket === 'undefined') {
+  const r = spawnSync(process.execPath, ['--experimental-websocket', ...process.argv.slice(1)], { stdio: 'inherit' });
+  process.exit(r.status === null ? 1 : r.status);
+}
+
 const HERE = path.dirname(new URL(import.meta.url).pathname);
 const ROOT = path.join(HERE, '..', '..');
 const USAGE = path.join(HERE, 'usage.jsonl');
@@ -76,9 +82,19 @@ async function refreshInventory(machines, only = machines) {
 function pairs(inv) {
   const out = [];
   for (const [machine, m] of Object.entries(inv.machines)) {
-    for (const b of m.browsers || []) if (b.binary && (b.driver || b.cdp)) out.push({ machine, browser: b.id });
+    for (const b of m.browsers || []) if (b.binary && protocolOf(b)) out.push({ machine, browser: b.id });
   }
   return out;
+}
+
+// WebDriver where there's a driver; the DevTools protocol for a Chromium
+// without a usable one (XP; Edge 109 on 8.1; Vista, whose last chromedriver
+// predates W3C: "protocol": "cdp" in its manifest).
+const CHROMIUM = new Set(['chrome', 'chromium', 'edge', 'supermium']);
+function protocolOf(b) {
+  if (b.protocol) return b.protocol;
+  if (b.driver) return 'webdriver';
+  return CHROMIUM.has(b.id) ? 'cdp' : null;
 }
 
 function readUsage() {
@@ -233,7 +249,7 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
   const rec = { time: new Date().toISOString(), machine: machine.name, browser: browserId, version: '', result: '', seed };
   const detail = { ...rec, checks: t.checks };
   const driverLog = [];
-  let ssh = null, revProc = null, session = null, cdpConn = null, entry = null;
+  let cdpPort = 0, ssh = null, revProc = null, session = null, cdpConn = null, entry = null, b = null;
   const tmp = fs.mkdtempSync(path.join(tmpRoot, 'run-'));
   const finish = (result, why) => {
     rec.result = why ? `${result}: ${why}` : result;
@@ -274,7 +290,8 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
     }
     let js, setFile, pageErrors;
     remote.stopDrivers(entry);
-    if (entry.driver) {
+    rec.protocol = protocolOf(entry);
+    if (rec.protocol === 'webdriver') {
       ssh = remote.startDriver(entry, { port, log: (d) => driverLog.push(String(d)) });
       const base = `http://127.0.0.1:${port}`;
       await waitForDriver(base, 45000).catch((e) => { throw new Error('driver: ' + e.message + ' ' + driverLog.join('').slice(-400)); });
@@ -297,22 +314,51 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
       }
       rec.version = session.browserVersion || entry.version;
       detail.capabilities = session.capabilities;
-      await session.setTimeouts({ script: 600000, pageLoad: 300000 });
+      // W3C timeouts; older Marionette (Firefox 52) takes one {type, ms} at a time.
+      await session.setTimeouts({ script: 600000, pageLoad: 300000 }).catch(async (e) => {
+        for (const [type, ms] of [['script', 600000], ['page load', 300000]]) await session.setTimeouts({ type, ms }).catch(() => {});
+        t.note('timeouts', 'W3C form refused (' + e.message + '); set the legacy way');
+      });
       js = (expr) => evalIn(session, expr);
       setFile = async (css, p) => session.sendKeys(await session.find(css), p);
-      pageErrors = () => js('window.__ibErrors || []');
-      rec.protocol = 'webdriver';
+      b = { navigate: (u) => session.navigate(u), run: (x) => session.run(x), runAsync: (x) => session.runAsync(x) };
+    } else if (rec.protocol === 'cdp') {
+      cdpPort = port;
+      ssh = remote.startCdpBrowser(entry, { port, profile: 'ibprof-' + runId, log: (d) => driverLog.push(String(d)) });
+      cdpConn = await connectCdp(`http://127.0.0.1:${port}`, { tries: 200 }).catch((e) => { throw new Error('driver: DevTools: ' + e.message + ' ' + driverLog.join('').slice(-400)); });
+      await cdpConn.cdp('Runtime.enable');
+      await cdpConn.cdp('Page.enable');
+      await cdpConn.cdp('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: dl }).catch((e) => t.note('downloads', e.message));
+      const ver = await cdpConn.cdp('Browser.getVersion');
+      rec.version = (/[\d.]+$/.exec(ver.product) || [entry.version])[0];
+      detail.capabilities = ver;
+      ({ js, setFile } = cdpConn);
+      const run = async (body) => js(`(function () { ${body} })()`);
+      const runAsync = async (body) => js(`new Promise(function (done) { (function () { ${body} }).apply(null, [done]); })`);
+      b = {
+        navigate: async (u) => {
+          await cdpConn.cdp('Page.navigate', { url: u });
+          const want = u.split('#')[0];
+          for (const end = Date.now() + 300000; Date.now() < end; await sleep(300)) {
+            const st = await js(`[location.href.split('#')[0], document.readyState]`).catch(() => null);
+            if (st && st[0] === want && st[1] === 'complete') return;
+          }
+          throw new Error('timed out loading ' + u);
+        },
+        run, runAsync,
+      };
     } else {
       throw new Error('no driver for ' + browserId + ' on ' + machine.name + (entry.notes ? ': ' + entry.notes : ''));
     }
+    pageErrors = () => js('window.__ibErrors || []');
 
     // 1. The page starts, or says what this browser lacks.
-    await session.navigate(pageUrl);
-    detail.features = await session.run(FEATURES).catch((e) => ({ error: e.message }));
-    detail.webcrypto = await session.runAsync(ALGOS).catch((e) => ({ error: e.message }));
+    await b.navigate(pageUrl);
+    detail.features = await b.run(FEATURES).catch((e) => ({ error: e.message }));
+    detail.webcrypto = await b.runAsync(ALGOS).catch((e) => ({ error: e.message }));
     let state = null;
     for (const end = Date.now() + 120000; Date.now() < end && !state; await sleep(500)) {
-      state = await session.run(`var m = document.documentElement.getAttribute('data-ib-missing');
+      state = await b.run(`var m = document.documentElement.getAttribute('data-ib-missing');
         if (m) return { missing: m, banner: !!document.querySelector('.ib-too-old') };
         try { if (${STARTED}) return { started: true, missing: m }; } catch (e) {}
         return null;`).catch(() => null);
@@ -324,7 +370,7 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
     }
     if (!state) {
       const missingFeatures = Object.entries(detail.features || {}).filter(([k, v]) => v === false && k !== 'CSS color-mix()').map(([k]) => k);
-      const errs = await session.run('return window.__ibErrors || []').catch(() => []);
+      const errs = await b.run('return window.__ibErrors || []').catch(() => []);
       t.ok(false, 'the page starts', 'no start and no browser-check verdict; errors: ' + errs.join(' | '));
       if (missingFeatures.length) return finish('unsupported', 'page did not start; the browser lacks ' + missingFeatures.join(', '));
       return finish('fail', 'the page did not start');
@@ -364,8 +410,8 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
       detail.saveToDisk = 'no file';
     } else {
       detail.saveToDisk = 'saved';
-      await session.navigate(remote.fileUrl(remote.dir('work', 'dl-' + runId, savedName)));
-      const ok2 = await session.run(`try { return ${STARTED}; } catch (e) { return false; }`);
+      await b.navigate(remote.fileUrl(remote.dir('work', 'dl-' + runId, savedName)));
+      const ok2 = await b.run(`try { return ${STARTED}; } catch (e) { return false; }`);
       let startedSaved = ok2;
       for (const end = Date.now() + 90000; Date.now() < end && !startedSaved; await sleep(500)) startedSaved = await js(STARTED);
       t.ok(startedSaved, 'the saved copy (from the browser\'s download folder) starts');
@@ -375,7 +421,7 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
     }
 
     // 5. The editor's signing: PGP (.run) and a .pfx (.exe).
-    await session.navigate(pageUrl + '#edit');
+    await b.navigate(pageUrl + '#edit');
     for (const end = Date.now() + 90000; Date.now() < end && !(await js(STARTED)); await sleep(500));
     await js(`location.hash = '#edit'`);
     await js(CAPTURE);
@@ -438,30 +484,36 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
 
     // 6. Served by the build server, through the tunnel, as localhost.
     if (reverse) {
-      await session.navigate(`http://localhost:${reverse.remotePort}/`);
-      let s2 = null;
-      for (const end = Date.now() + 90000; Date.now() < end && !s2; await sleep(500)) {
-        s2 = await session.run(`var m = document.documentElement.getAttribute('data-ib-missing'); try { if (${STARTED}) return { m: m }; } catch (e) {} return m ? { m: m } : null;`).catch(() => null);
-      }
-      t.ok(s2 && s2.m === '', 'served (http://localhost through the tunnel): the page starts, WebCrypto and all', s2 && s2.m);
-      if (s2 && s2.m === '') {
-        await sleep(1500);
-        t.ok(!await js(`document.documentElement.classList.contains('ib-local')`), 'served: the page uses the build server');
+      try {
+        await b.navigate(`http://localhost:${reverse.remotePort}/`);
+        let s2 = null;
+        for (const end = Date.now() + 90000; Date.now() < end && !s2; await sleep(500)) {
+          s2 = await b.run(`var m = document.documentElement.getAttribute('data-ib-missing'); try { if (${STARTED}) return { m: m }; } catch (e) {} return m ? { m: m } : null;`).catch(() => null);
+        }
+        t.ok(s2 && s2.m === '', 'served (http://localhost through the tunnel): the page starts, WebCrypto and all', s2 && s2.m);
+        if (s2 && s2.m === '') {
+          await sleep(1500);
+          t.ok(!await js(`document.documentElement.classList.contains('ib-local')`), 'served: the page uses the build server');
+        }
+      } catch (e) {
+        t.ok(false, 'served (http://localhost through the tunnel): the page starts', e.message);
       }
     }
     return finish(t.failed ? 'fail' : 'pass', t.failed ? t.checks.filter((c) => c.pass === false).map((c) => c.name).slice(0, 3).join('; ') : '');
   } catch (e) {
     t.checks.push({ name: 'run', pass: false, detail: String(e.stack || e).slice(0, 1500) });
-    const infra = /^(driver|no driver|scp|.*no browsers\.json|session not created|no connection|timeout)/i.test(e.message) || !session;
+    const infra = /^(driver|no driver|scp|.*no browsers\.json|session not created|no connection|timeout)/i.test(e.message) || !b;
     return finish(infra ? 'error' : 'fail', e.message.split('\n')[0].slice(0, 300));
   } finally {
     detail.driverLog = driverLog.join('').slice(-4000);
     if (session) await session.delete();
     if (cdpConn) await cdpConn.close();
+    if (rec.protocol === 'cdp' && cdpPort) remote.stopCdpBrowser(cdpPort);
     if (ssh) { try { ssh.stdin.end(); } catch (e) { /* gone */ } ssh.kill(); }
     if (revProc) revProc.kill();
     if (entry) remote.stopDrivers(entry);
     remote.remove(remote.dir('work', 'dl-' + runId));
+    if (rec.protocol === 'cdp') remote.remove(remote.dir('work', 'ibprof-' + runId));
     if (flag('--keep')) console.log('kept ' + tmp); else fs.rmSync(tmp, { recursive: true, force: true });
     Object.assign(detail, rec, { checks: t.checks });
     fs.mkdirSync(RESULTS, { recursive: true });

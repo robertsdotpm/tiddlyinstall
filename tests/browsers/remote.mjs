@@ -46,7 +46,7 @@ export class Remote {
     this.home = null;          // Unix: $HOME, from readManifest()
   }
 
-  sh(cmd, { input, timeout = 120000 } = {}) {
+  sh(cmd, { input = '', timeout = 120000 } = {}) {
     const r = spawnSync('ssh', [...SSH_OPTS, this.ssh, cmd], { input, timeout, encoding: 'utf8', maxBuffer: 64 << 20 });
     return { code: r.status === null ? 124 : r.status, out: (r.stdout || '').replace(/\r/g, ''), err: (r.stderr || '').replace(/\r/g, '') + (r.error ? String(r.error) : '') };
   }
@@ -115,15 +115,49 @@ export class Remote {
     return p;
   }
 
+  // For a Chromium with no usable driver on this OS: starts the browser
+  // itself, headless, with its DevTools port on `port` there, forwarded to
+  // the same port here, and its profile in work/<profile>.
+  startCdpBrowser(entry, { port, profile, log }) {
+    const args = [...(entry.args || []), `--remote-debugging-port=${port}`, '--remote-allow-origins=*',
+      `--user-data-dir=${this.dir('work', profile)}`, '--no-first-run', '--no-default-browser-check', 'about:blank'].join(' ');
+    const cmd = this.win ? `"${entry.binary}" ${args}`
+      : `sh -c '"${entry.binary}" ${args} </dev/null & p=$!; read x; kill $p 2>/dev/null; sleep 1; kill -9 $p 2>/dev/null'`;
+    const p = spawn('ssh', [...SSH_OPTS, '-o', 'ExitOnForwardFailure=yes', '-L', `${port}:127.0.0.1:${port}`, this.ssh, cmd], { stdio: ['pipe', 'pipe', 'pipe'] });
+    if (log) { p.stdout.on('data', (d) => log(d)); p.stderr.on('data', (d) => log(d)); }
+    return p;
+  }
+
+  // Stops the browser startCdpBrowser() started: the process listening on
+  // its DevTools port, and its children.
+  stopCdpBrowser(port) {
+    if (this.win) {
+      const r = this.sh('netstat -ano');
+      const pids = new Set(r.out.split('\n').filter((l) => new RegExp(`127\\.0\\.0\\.1:${port}\\s.*LISTENING`).test(l)).map((l) => l.trim().split(/\s+/).pop()));
+      for (const pid of pids) if (/^\d+$/.test(pid)) this.sh(`taskkill /F /T /PID ${pid}`);
+    } else {
+      this.sh(`pkill -u "$(id -u)" -f '[r]emote-debugging-port=${port}' ; true`);
+    }
+  }
+
   // The machine's 127.0.0.1:remotePort reaches `to` (host:port) from here,
   // on a connection of its own. Resolves to the ssh process, or to null
   // with the reason when the SSH server refuses remote forwarding.
   async startReverse(remotePort, to) {
-    const p = spawn('ssh', [...SSH_OPTS, '-o', 'ExitOnForwardFailure=yes', '-N', '-R', `${remotePort}:${to}`, this.ssh], { stdio: ['ignore', 'ignore', 'pipe'] });
+    // -v: ssh says "remote forward success" or "...failed" once the server answers.
+    const p = spawn('ssh', [...SSH_OPTS, '-v', '-o', 'ExitOnForwardFailure=yes', '-N', '-R', `${remotePort}:${to}`, this.ssh], { stdio: ['ignore', 'ignore', 'pipe'] });
     let err = '';
-    p.stderr.on('data', (d) => { err += d; });
-    const exited = await new Promise((res) => { p.once('exit', () => res(true)); setTimeout(() => res(false), 6000); });
-    if (exited) return { proc: null, why: (err.trim() || 'ssh exited').split('\n').pop() };
+    const verdict = await new Promise((res) => {
+      const t = setTimeout(() => res('no answer from the SSH server in 45 s'), 45000);
+      p.stderr.on('data', (d) => {
+        err += d;
+        if (/remote forward success/i.test(err)) { clearTimeout(t); res(null); }
+        const m = /^.*(remote port forwarding failed|forwarding failed).*$/im.exec(err);
+        if (m) { clearTimeout(t); res(m[0].trim()); }
+      });
+      p.once('exit', () => { clearTimeout(t); res((err.trim().split('\n').filter((l) => !/^debug/.test(l)).pop()) || 'ssh exited'); });
+    });
+    if (verdict) { p.kill(); return { proc: null, why: verdict }; }
     return { proc: p };
   }
 
@@ -131,8 +165,8 @@ export class Remote {
   // the machine. Only the harness runs these drivers from these folders.
   stopDrivers(entry) {
     if (this.win) {
-      const exe = path.win32.basename(entry.driver || '');
-      if (exe) this.sh(`taskkill /F /T /IM ${exe}`);
+      // By the driver's own exe: a .cmd wrapper runs <driverKind>.exe.
+      if (entry.driver) this.sh(`taskkill /F /T /IM ${entry.driverKind}.exe`);
     } else {
       // [i] so the pattern doesn't match this shell's own command line.
       this.sh(`pkill -u "$(id -u)" -f '[i]bbrowsers/' ; true`);
