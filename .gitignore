@@ -1,3 +1,4 @@
 /dist/
 __pycache__/
 tests/node_modules/
+tools/es5/node_modules/

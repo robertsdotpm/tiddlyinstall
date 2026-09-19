@@ -4,8 +4,11 @@
     python3 tools/build_site.py [-o dist] [--catalog DIR] [--backend URL] [--multi]
 
 Writes dist/index.html: every page as a section (#new, #edit, ...), the JS
-modules joined into one inline classic script (ES2017, so it runs in Firefox
-52 and Chrome 58 up; tests/es2017-test.mjs checks it), the CSS inlined, and as data blocks the
+modules joined into one classic script (ES2017, so it runs in Firefox 52 and
+Chrome 58 up; tests/es2017-test.mjs checks it), kept in a code block that
+js/page-loader.js runs, with an ES5 copy of it for IE 11 and Chrome 49
+(tools/es5/, when installed; tests/es5-test.mjs), the CSS inlined (with
+fallbacks for browsers without custom properties), and as data blocks the
 three unsigned bases, the catalogue snapshot and the runtimes summary. The
 build server serves it at /, and it uses that server; saved and opened from
 disk ("Save this page" saves it exactly as loaded), or with "No server" chosen,
@@ -33,6 +36,7 @@ import subprocess
 import sys
 import tempfile
 import zipfile
+import zlib
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -192,6 +196,121 @@ def data_block(id_, data, typ="application/octet-stream", extra=""):
     return f'  <script type="{typ}" id="{id_}"{extra}>\n{data}\n  </script>'
 
 
+# ---------- older browsers: the ES5 copy and the CSS fallbacks ----------
+
+MOTW = "<!-- saved from url=(0014)about:internet -->\r\n"
+ES5_DIR = os.path.join(ROOT, "tools", "es5")
+# IE 11 has no typed-array fill() or copyWithin(), which js/inflate.js uses;
+# this runs before the ES5 inflate (core-js adds the rest later).
+TA_FILL = ("(function(){var T=[Int8Array,Uint8Array,Int16Array,Uint16Array,Int32Array,Uint32Array];"
+           "function ix(v,n,d){return v===undefined?d:v<0?Math.max(n+v,0):Math.min(v,n);}"
+           "function def(p,k,f){if(!p[k])Object.defineProperty(p,k,{configurable:true,writable:true,value:f});}"
+           "for(var i=0;i<T.length;i++){var p=T[i]&&T[i].prototype;if(!p)continue;"
+           "def(p,'fill',function(v,s,e){var n=this.length;s=ix(s,n,0);e=ix(e,n,n);for(var k=s;k<e;k++)this[k]=v;return this;});"
+           "def(p,'copyWithin',function(t,s,e){var n=this.length;t=ix(t,n,0);s=ix(s,n,0);e=ix(e,n,n);var c=Math.min(e-s,n-t),k;"
+           "if(s<t&&t<s+c)for(k=c-1;k>=0;k--)this[t+k]=this[s+k];else for(k=0;k<c;k++)this[t+k]=this[s+k];return this;});}})();\n")
+
+
+def ascii_js(code):
+    """Non-ASCII and control characters as \\uXXXX: valid in strings, regular expressions
+    and identifiers, and the loader can then read the bytes as text."""
+    def esc(m):
+        units = m.group(0).encode("utf-16-le")
+        return "".join("\\u%04x" % int.from_bytes(units[i:i + 2], "little") for i in range(0, len(units), 2))
+    # And control characters: Babel writes "\\0" as a raw NUL, which ends a
+    # string in IE's parser.
+    return re.sub(r"[^\x09\x0a\x0d\x20-\x7e]", esc, code)
+
+
+def build_es5(resedit, js):
+    """The ES5 copy (tools/es5/build-es5.mjs), or None when its build tools
+    aren't installed (the page then runs in ES2017 browsers only)."""
+    if not os.path.isdir(os.path.join(ES5_DIR, "node_modules", "@babel", "core")):
+        print("warning: no ES5 copy (IE 11, Chrome 49): run `npm install` in tools/es5", file=sys.stderr)
+        return None
+    node = shutil.which("node") or os.path.expanduser("~/.local/node/bin/node")
+    with tempfile.TemporaryDirectory() as tmp:
+        paths = {}
+        for name, code in [("resedit.js", resedit), ("page.js", js),
+                           ("inflate.js", join_modules(["js/inflate.js"], set()))]:
+            paths[name] = os.path.join(tmp, name)
+            with open(paths[name], "w") as f:
+                f.write(code)
+        out, inf = os.path.join(tmp, "es5.js"), os.path.join(tmp, "inflate-es5.js")
+        r = subprocess.run([node, os.path.join(ES5_DIR, "build-es5.mjs"), "--out", out,
+                            "--inflate", paths["inflate.js"], "--inflate-out", inf,
+                            paths["resedit.js"], paths["page.js"]], capture_output=True, text=True)
+        if r.returncode:
+            sys.exit("tools/es5/build-es5.mjs failed:\n" + r.stderr[:2000])
+        with open(out) as f:
+            code = ascii_js(f.read())
+        with open(inf) as f:
+            inflate = TA_FILL + f.read()
+    return code, inflate, r.stdout.strip()
+
+
+def code_blocks_for(resedit, js):
+    """The page's code as data blocks, for js/page-loader.js to run."""
+    blocks = [data_block("ib-js-resedit", resedit + "\n//# sourceURL=resedit.js", "text/x-ib-js"),
+              data_block("ib-js", js + "//# sourceURL=tiddlyinstall.js", "text/x-ib-js")]
+    report = []
+    es5 = build_es5(resedit, js)
+    if es5:
+        code, inflate, log = es5
+        raw = code.encode("ascii")
+        c = zlib.compressobj(9, zlib.DEFLATED, -15)
+        packed = c.compress(raw) + c.flush()
+        blocks.append(data_block("ib-js-es5-inflate", no_close_script(inflate), "text/x-ib-js"))
+        blocks.append(data_block("ib-js-es5", b64_block(packed), extra=' data-encoding="deflate-raw base64"'))
+        report.append(f"  ES5 copy ({log}): {len(raw):,} bytes, {len(packed):,} deflated, "
+                      f"inflate {len(inflate):,} bytes")
+    else:
+        report.append("  ES5 copy: none (tools/es5 not installed)")
+    return blocks, report
+
+
+# Where scripts don't run at all (turned off; Internet Explorer on Windows
+# Server, whose Enhanced Security Configuration turns them off for the
+# Internet zone), js/browser-check.js can't say anything: this does.
+NOSCRIPT = ('  <noscript><div class="ib-compat-bar ib-too-old" role="alert" style="margin:0;padding:8px 16px;'
+            'border-bottom:2px solid #b3261e;background:#fdecea;color:#410e0b;font:14px/1.4 sans-serif">'
+            "JavaScript is off in this browser, so TiddlyInstall can't build or sign installers here; the pages still read. "
+            "Turn JavaScript on for this page, or open it in a current browser. (Internet Explorer on Windows Server "
+            "keeps JavaScript off while its Enhanced Security Configuration is on.)</div></noscript>\n")
+
+
+CSS_VAR_RE = re.compile(r"var\(\s*(--[\w-]+)\s*(?:,\s*([^()]*?))?\s*\)")
+CSS_DECL_RE = re.compile(r"(?<=[{;\s])([a-z-]+)(\s*:\s*)([^;{}]*var\(--[^;{}]*?)(\s*(?:!important)?\s*)(?=[;}])")
+
+
+def legacy_css(css):
+    """For browsers without custom properties (IE): before each declaration
+    using var(), the same with the light theme's values, which browsers with
+    them then override; and the display of HTML5 elements and [hidden], which
+    IE 9-11 lack. The text stays readable dark-on-light without the rest."""
+    root = re.search(r":root\s*\{([^}]*)\}", css)
+    values = dict(re.findall(r"(--[\w-]+)\s*:\s*([^;]+);", root.group(1))) if root else {}
+
+    def resolve(v):
+        for _ in range(5):
+            n = CSS_VAR_RE.sub(lambda m: values.get(m.group(1), m.group(2) or m.group(0)).strip(), v)
+            if n == v:
+                break
+            v = n
+        return None if "var(" in v else v
+
+    def fix(m):
+        prop, colon, val, imp = m.groups()
+        plain = resolve(val)
+        if plain is None:
+            return m.group(0)
+        return f"{prop}{colon}{plain}{imp}; {m.group(0)}"
+    head = ("/* For browsers without custom properties or HTML5 elements (IE): tools/build_site.py legacy_css. */\n"
+            "main, header, footer, nav, section, article, aside { display: block; }\n"
+            "[hidden] { display: none; }\n")
+    return head + CSS_DECL_RE.sub(fix, css)
+
+
 # ---------- pages ----------
 
 PAGE_NAMES = {f: n for n, f in PAGES}
@@ -265,9 +384,9 @@ def offline_page(catalog_dir, backend):
     # code in a strict function so that it behaves as the modules do.
     js = ("(function () {\n'use strict';\n"
           + join_modules(EARLY_MODULES, done)
-          + "\n// The page exactly as loaded, for \"Save this page\". Must run before\n"
-          "// anything changes the DOM.\n"
-          "globalThis.IB_PRISTINE = '<!DOCTYPE html>\\n' + document.documentElement.outerHTML;\n"
+          + "\n// The page exactly as loaded, for \"Save this page\": js/page-loader.js\n"
+          "// takes it before it runs this; this is for a copy of the code run otherwise.\n"
+          "if (typeof IB_PRISTINE === 'undefined') globalThis.IB_PRISTINE = '<!DOCTYPE html>\\n' + document.documentElement.outerHTML;\n"
           "globalThis.IB_HAS_LOCAL = true;\n"
           "globalThis.IB_ONE_FILE = true;\n"
           "__ib_has_shim.installHasShim();   // only where the browser has no :has()\n\n"
@@ -275,22 +394,28 @@ def offline_page(catalog_dir, backend):
           + "\n__ib_local_api.installLocalApi();\n"
           + join_modules(PAGE_MODULES, done)
           + "\n__ib_router.startRouter();\n})();\n")
+    code_blocks, es5_report = code_blocks_for(resedit, js)
+    report += es5_report
 
-    css = read("css/style.css")
-    out = ("<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n"
+    css = legacy_css(read("css/style.css"))
+    # The Mark of the Web (with its CRLF) lets Internet Explorer run the page
+    # from disk: without it, IE's Local Machine Lockdown blocks its scripts.
+    # It puts the file in IE's Internet zone, the stricter one; other browsers
+    # ignore it. X-UA-Compatible keeps IE out of an older document mode.
+    out = ("<!DOCTYPE html>\n" + MOTW + "<html lang=\"en\">\n<head>\n"
            "  <meta charset=\"utf-8\">\n"
+           "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n"
            "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
            "  <title>TiddlyInstall</title>\n"
            f"  <meta name=\"generator\" content=\"tools/build_site.py, {rev}, {today}\">\n"
            # Too-old browsers get a message naming what's missing (a classic
            # script, so it runs where the module can't).
            "  <script>\n" + no_close_script(read("js/browser-check.js")) + "\n  </script>\n"
-           "  <style>\n" + css + "\n  </style>\n</head>\n<body>\n  " + header + "\n"
+           "  <style>\n" + css + "\n  </style>\n</head>\n<body>\n  " + header + "\n" + NOSCRIPT
            + "\n".join(sections) +
            "\n  <footer class=\"site-footer\">\n    Designed by <a href=\"https://robertsdotpm.github.io/\">Matthew Roberts</a> and implemented by Claude.\n  </footer>\n"
-           + "\n".join(blocks) +
-           "\n  <script>\n" + resedit + "\n  </script>\n"
-           "  <script>\n" + js + "\n  </script>\n</body>\n</html>\n")
+           + "\n".join(blocks + code_blocks) +
+           "\n  <script>\n" + no_close_script(read("js/page-loader.js")) + "\n  </script>\n</body>\n</html>\n")
     return out, report
 
 

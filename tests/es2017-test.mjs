@@ -23,14 +23,16 @@ function ok(cond, name, extra) {
   else { failed++; console.log('FAIL ' + name + (extra ? ' -- ' + extra : '')); }
 }
 
-// Executable scripts: no type, or a JavaScript type. Data blocks are skipped.
+// Executable scripts: no type, or a JavaScript type, and the page's code
+// blocks (type text/x-ib-js, run by js/page-loader.js). Data blocks are
+// skipped, and so is the ES5 copy (tests/es5-test.mjs checks it).
 const scripts = [];
 const re = /<script(\s[^>]*)?>([\s\S]*?)<\/script>/gi;
 for (let m; (m = re.exec(html));) {
   const attrs = m[1] || '';
   const type = (/\btype="([^"]*)"/.exec(attrs) || [])[1];
   if (type === 'module') { scripts.push({ attrs, src: m[2], module: true }); continue; }
-  if (type && !/javascript|ecmascript/i.test(type)) continue;
+  if (type && !/javascript|ecmascript|^text\/x-ib-js$/i.test(type)) continue;
   if (/\bsrc=/.test(attrs)) continue;
   scripts.push({ attrs, src: m[2], line: html.slice(0, m.index).split('\n').length });
 }

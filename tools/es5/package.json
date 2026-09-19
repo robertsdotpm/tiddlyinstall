@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "type": "module",
+  "description": "Build-time only: turns the one-file site's ES2017 bundle into the ES5 one for IE11 and Chrome 49 (tools/es5/build-es5.mjs). Nothing here is shipped but its output.",
+  "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
+    "core-js": "^3.50.0",
+    "core-js-builder": "^3.50.0"
+  }
+}

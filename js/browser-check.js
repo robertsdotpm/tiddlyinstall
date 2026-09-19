@@ -22,12 +22,40 @@
 // For the tests: <html data-ib-missing="..."> (required features missing;
 // empty when none), data-ib-degraded (every feature not native), and
 // globalThis.ibCompat {features, env, missing, degraded}.
+//
+// Written to parse and run in Internet Explorer 6 and later (ES3: no
+// trailing commas, reserved words quoted as property names, no Array
+// filter/map, attachEvent where there's no addEventListener), since it is
+// what tells those browsers what to use instead. Browsers that can't parse
+// ES2017 but can run the page's ES5 copy (IE 11, Chrome 49) get it through
+// js/page-loader.js, which runs it when this sets window.IB_ES5_OK.
 (function () {
   var w = window, doc = document;
+
+  // IE 6-8 style HTML5 elements only when each was created once before the
+  // body is parsed; then the static pages lay out as they should.
+  var H5 = ['header', 'nav', 'main', 'footer', 'section', 'article', 'aside'];
+  for (var h5 = 0; h5 < H5.length; h5++) doc.createElement(H5[h5]);
+
+  function grep(list, fn) { var out = []; for (var i = 0; i < list.length; i++) if (fn(list[i])) out.push(list[i]); return out; }
+  function each(list, fn) { var out = []; for (var i = 0; i < list.length; i++) out.push(fn(list[i])); return out; }
 
   function syntax(src) { try { new Function(src); return true; } catch (e) { return false; } }
   function construct(C, arg) { try { new C(arg); return true; } catch (e) { return false; } }
   var subtle = w.crypto && w.crypto.subtle;
+  // What the page's ES5 copy needs (keep in step with js/legacy-dom.js and
+  // tools/es5/build-es5.mjs's targets): IE 11, Chrome 49 and later. IE 10
+  // lacks dataset and Map (tried: too slow, and out of memory building);
+  // IE 9 typed arrays and Blob.
+  function es5Capable() {
+    try {
+      return !!(w.Uint8Array && w.Blob && w.FileReader && w.JSON && w.atob && doc.addEventListener && w.XMLHttpRequest &&
+        Object.defineProperty && doc.documentElement.dataset && w.Map && doc.documentElement.classList && w.getComputedStyle &&
+        ('download' in doc.createElement('a') || w.navigator.msSaveOrOpenBlob));
+    } catch (e) { return false; }
+  }
+  var ES5 = es5Capable();
+  w.IB_ES5_OK = ES5;
   function hex(h) { var u = new Uint8Array(h.length / 2); for (var i = 0; i < u.length; i++) u[i] = parseInt(h.substr(i * 2, 2), 16); return u; }
   // Importing a known-good public key tells whether an algorithm is there,
   // without the cost of generating keys at startup.
@@ -41,8 +69,10 @@
   // the page's stand-in means for the person).
   var FEATURES = [
     { id: 'syntax', name: 'JavaScript of 2017 (async functions)', required: true, effect: 'the page can\'t start',
+      fallback: ES5 ? 'the page runs its copy for older browsers (slower to start)' : null,
       test: function () { return syntax('async function f(a, ...b) { for (const c of a) await c; return class {}; }'); } },
-    { id: 'random', name: 'crypto.getRandomValues', required: true, effect: 'can\'t sign installers or make keys',
+    { id: 'random', name: 'crypto.getRandomValues', required: false, effect: 'can\'t sign installers or make keys (no secure random numbers); building and editing work',
+      fallback: w.msCrypto && w.msCrypto.getRandomValues ? 'random numbers come from msCrypto (Internet Explorer\'s name for it)' : null,
       test: function () { return !!(w.crypto && w.crypto.getRandomValues); } },
     { id: 'compress', name: 'CompressionStream (deflate-raw)', required: true, effect: 'can\'t build installers',
       fallback: 'compressing is done by the page\'s own JavaScript (slower)',
@@ -78,7 +108,7 @@
     { id: 'folder', name: 'Folder picking (webkitdirectory)', required: false, effect: 'can\'t pick a folder of code; add the files one by one',
       test: function () { return 'webkitdirectory' in doc.createElement('input'); } },
     { id: 'canvas', name: 'OffscreenCanvas and createImageBitmap', required: false, effect: 'icons must be PNG (SVG, JPEG and others need these)',
-      test: function () { return typeof w.OffscreenCanvas === 'function' && typeof w.createImageBitmap === 'function'; } },
+      test: function () { return typeof w.OffscreenCanvas === 'function' && typeof w.createImageBitmap === 'function'; } }
   ];
 
   /* ---------- this browser, OS and CPU ---------- */
@@ -108,7 +138,7 @@
     var ch = navigator.userAgentData;
     if (!ch || !ch.getHighEntropyValues) return null;
     return ch.getHighEntropyValues(['platformVersion', 'architecture', 'bitness', 'fullVersionList']).then(function (h) {
-      var brands = (h.fullVersionList || []).filter(function (b) { return !/Not.?A.?Brand|^Chromium$/i.test(b.brand); });
+      var brands = grep(h.fullVersionList || [], function (b) { return !/Not.?A.?Brand|^Chromium$/i.test(b.brand); });
       if (brands.length) { env.browser = brands[0].brand.replace(/^Google /, '').replace(/^Microsoft /, ''); env.version = brands[0].version; }
       if (h.platform || ch.platform) env.os = (h.platform || ch.platform).replace(/^Chrome OS$/, 'ChromeOS');
       if (h.platformVersion) {
@@ -136,14 +166,15 @@
   var h = hints();
   if (h) pending.push(h);
 
-  function missing() { return FEATURES.filter(function (f) { return f.required && status[f.id] === 'missing'; }); }
-  function degraded() { return FEATURES.filter(function (f) { return status[f.id] === 'missing' || status[f.id] === 'fallback'; }); }
-  function names(list) { return list.map(function (f) { return f.name; }).join('; '); }
+  function missing() { return grep(FEATURES, function (f) { return f.required && status[f.id] === 'missing'; }); }
+  function degraded() { return grep(FEATURES, function (f) { return status[f.id] === 'missing' || status[f.id] === 'fallback'; }); }
+  function names(list) { return each(list, function (f) { return f.name; }).join('; '); }
+  function ids(list) { return each(list, function (f) { return f.id; }).join(' '); }
   function mark() {
     doc.documentElement.setAttribute('data-ib-missing', names(missing()));
-    doc.documentElement.setAttribute('data-ib-degraded', degraded().map(function (f) { return f.id; }).join(' '));
-    w.ibMissing = missing().map(function (f) { return f.name; });
-    w.ibCompat = { features: FEATURES, status: status, env: env, missing: w.ibMissing, degraded: degraded().map(function (f) { return f.id; }) };
+    doc.documentElement.setAttribute('data-ib-degraded', ids(degraded()));
+    w.ibMissing = each(missing(), function (f) { return f.name; });
+    w.ibCompat = { features: FEATURES, status: status, env: env, missing: w.ibMissing, degraded: each(degraded(), function (f) { return f.id; }), es5: status.syntax === 'fallback' };
   }
   mark();   // the synchronous verdict at once; the tests wait for data-ib-ready
 
@@ -152,7 +183,7 @@
   var compat = null;
   function loadCompat() {
     if (compat) return compat;
-    try { var el = doc.getElementById('ib-compat'); if (el) compat = JSON.parse(el.textContent) || null; } catch (e) { compat = null; }
+    try { var el = doc.getElementById('ib-compat'); if (el && w.JSON) compat = JSON.parse(el.text || el.textContent) || null; } catch (e) { compat = null; }
     return compat;
   }
   // The tested machine nearest this visitor's OS.
@@ -168,16 +199,42 @@
   }
   function browserId(name) {
     var n = String(name).toLowerCase();
-    return /edge/.test(n) ? 'edge' : /firefox/.test(n) ? 'firefox' : /supermium/.test(n) ? 'supermium' : /opera|opr/.test(n) ? 'opera' : /safari/.test(n) ? 'safari' : /chromium/.test(n) ? 'chromium' : /chrome/.test(n) ? 'chrome' : n;
+    return /edge/.test(n) ? 'edge' : /firefox/.test(n) ? 'firefox' : /supermium/.test(n) ? 'supermium' : /opera|opr/.test(n) ? 'opera' : /safari/.test(n) ? 'safari' : /chromium/.test(n) ? 'chromium' : /chrome/.test(n) ? 'chrome' : /internet explorer/.test(n) ? 'ie' : n;
   }
   function label(list, id) { for (var i = 0; i < list.length; i++) if (list[i][0] === id) return list[i][1]; return id; }
-  function passingOn(c, m) {
-    var seen = {}, out = [];
-    for (var i = c.results.length - 1; i >= 0; i--) {
-      var r = c.results[i];
-      if (r[0] === m[0] && r[3] === 'pass' && !seen[r[1]]) { seen[r[1]] = 1; out.unshift(label(c.browsers, r[1]) + ' ' + r[2].split('.')[0]); }
+
+  /* ---------- what to use instead ---------- */
+
+  // Where to get each browser (compat.json's ids); Firefox's link depends
+  // on the version that still runs on that OS.
+  function getUrl(id, version) {
+    var major = parseInt(version, 10);
+    if (/^supermium/.test(id)) return 'https://github.com/win32ss/supermium/releases';
+    if (id === 'firefox') return major <= 52 ? 'https://ftp.mozilla.org/pub/firefox/releases/52.9.0esr/' : major <= 115 ? 'https://www.mozilla.org/firefox/all/#product-desktop-esr' : 'https://www.mozilla.org/firefox/';
+    if (id === 'chrome') return 'https://www.google.com/chrome/';
+    if (id === 'edge') return 'https://www.microsoft.com/edge';
+    if (id === 'opera') return 'https://www.opera.com/';
+    return null;
+  }
+  // Used when this copy of the page has no test results for the visitor's OS.
+  var GENERAL = 'Firefox 52 or later, Chrome 58 or later, Safari 12 or later, or Edge; on Windows XP and Vista, Supermium or Firefox 52 ESR; ' +
+    'on Windows 7 and 8.1, Chrome 109, Firefox 115 ESR or Supermium';
+
+  // The browsers that passed on machine m, the newest of each (Supermium
+  // and its older install are one), with where to get each. Not Internet
+  // Explorer, nor any that passed only on the page's ES5 copy (Chrome 49):
+  // they work, but are no browser to move to.
+  function suggestions(c, m) {
+    var best = {}, order = [], i;
+    for (i = 0; i < c.results.length; i++) {
+      var r = c.results[i], fam = r[1].replace(/-installed$/, '');
+      if (r[0] !== m[0] || r[3] !== 'pass' || fam === 'ie' || /ES5/.test(r[4])) continue;
+      if (!best[fam]) order.push(fam);
+      if (!best[fam] || parseInt(r[2], 10) > parseInt(best[fam][2], 10)) best[fam] = r;
     }
-    return out;
+    return each(order, function (fam) {
+      return { id: fam, name: label(c.browsers, fam) + ' ' + best[fam][2].split('.')[0], url: getUrl(fam, best[fam][2]) };
+    });
   }
 
   /* ---------- the bar and its details ---------- */
@@ -185,6 +242,7 @@
   var CSS_TEXT =
     '.ib-compat-bar{margin:0;padding:8px 16px;border-bottom:1px solid #d9b44a;background:#fff8e1;color:#3d2e00;font:14px/1.4 system-ui,sans-serif}' +
     '.ib-compat-bar.ib-too-old{border-bottom:2px solid #b3261e;background:#fdecea;color:#410e0b}' +
+    '.ib-compat-bar a{color:#0b4bb3}' +
     '.ib-compat-bar button{font:inherit;margin-left:8px;padding:1px 8px;cursor:pointer}' +
     '.ib-compat-bar .ib-compat-details{margin-top:8px;max-height:60vh;overflow:auto;background:#fff;color:#222;padding:8px;border:1px solid #ccc}' +
     '.ib-compat-bar table{border-collapse:collapse;font-size:13px;margin:4px 0 10px}' +
@@ -194,41 +252,51 @@
 
   function el(tag, attrs, text) {
     var e = doc.createElement(tag);
-    for (var k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
+    for (var k in attrs) {
+      if (!Object.prototype.hasOwnProperty.call(attrs, k)) continue;
+      if (k === 'class') e.className = attrs[k];      // IE 7 and before: className only
+      else e.setAttribute(k, attrs[k]);
+    }
     if (text !== undefined) e.appendChild(doc.createTextNode(text));
     return e;
   }
-  function dismissKey() { return 'ib-compat-dismissed:' + env.browser + ' ' + String(env.version).split('.')[0] + ':' + degraded().map(function (f) { return f.id + '=' + status[f.id]; }).join(','); }
+  function show(e, on) { e.style.display = on ? '' : 'none'; if ('hidden' in e) e.hidden = !on; }
+  // IE 8 and before keep table rows added outside a tbody out of sight.
+  function table(attrs) { var t = el('table', attrs || {}), b = el('tbody'); t.appendChild(b); return { t: t, add: function (r) { b.appendChild(r); } }; }
+  function dismissKey() { return 'ib-compat-dismissed:' + env.browser + ' ' + String(env.version).split('.')[0] + ':' + each(degraded(), function (f) { return f.id + '=' + status[f.id]; }).join(','); }
   function dismissed() { try { return w.localStorage.getItem(dismissKey()) === '1'; } catch (e) { return false; } }
 
-  function summaryText() {
+  // The bar's text, and the browsers to suggest ({name, url}).
+  function summary() {
     var miss = missing(), deg = degraded();
     var effects = [], seen = {};
     for (var i = 0; i < deg.length; i++) {
       var f = deg[i], e = status[f.id] === 'fallback' ? f.fallback : f.effect;
       if (!seen[e]) { seen[e] = 1; effects.push(e); }
     }
-    var head = miss.length ? 'This browser can\'t run TiddlyInstall: ' : 'This browser can run TiddlyInstall, with limits: ';
-    var text = head + effects.join('; ') + '.';
-    var c = loadCompat(), m = c && nearestMachine(c), ok = m ? passingOn(c, m) : [];
-    if (ok.length) text += ' Tested on ' + m[1] + ' and working: ' + ok.join(', ') + '.';
-    else if (miss.length) text += ' Please use Firefox 52 or later, Chrome or Edge 109 or later, Opera 95 or later, or Safari 12 or later (not yet tested); on Windows XP and Vista, Firefox 52 ESR or Supermium; on Windows 7 and 8.1, Chrome 109, Firefox 115 ESR, Opera 95 or Supermium (and Edge 109 on 8.1); on CentOS 6 and Ubuntu 14.04, their own Firefox.';
-    return text;
+    var text = miss.length
+      ? 'This browser can\'t run TiddlyInstall: it lacks ' + names(miss) + ', so the page can\'t start. The pages still read; to build or sign installers, use another browser.'
+      : 'This browser can run TiddlyInstall, with limits: ' + effects.join('; ') + '.';
+    var c = loadCompat(), m = c && c.results && nearestMachine(c), sug = m ? suggestions(c, m) : [];
+    if (sug.length) text += ' Tested on ' + m[1] + ' and working: ' + each(sug, function (s) { return s.name; }).join(', ') + '.';
+    else if (miss.length) text += ' Please use ' + GENERAL + '.';
+    return { text: text, links: grep(sug, function (s) { return !!s.url; }) };
   }
 
   function featureTable() {
-    var t = el('table'), tr = el('tr');
+    var t = table(), tr = el('tr');
     tr.appendChild(el('th', {}, 'Feature')); tr.appendChild(el('th', {}, 'Here')); tr.appendChild(el('th', {}, 'Without it'));
-    t.appendChild(tr);
+    t.add(tr);
+    var SYM = { 'native': '✓ native', 'fallback': '~ fallback', 'missing': '✗ missing', 'checking': '…' };
     for (var i = 0; i < FEATURES.length; i++) {
       var f = FEATURES[i], s = status[f.id];
       tr = el('tr');
       tr.appendChild(el('td', {}, f.name + (f.required ? '' : ' (optional)')));
-      tr.appendChild(el('td', { 'class': 'ib-c-' + s }, { native: '✓ native', fallback: '~ fallback', missing: '✗ missing', checking: '…' }[s] || s));
+      tr.appendChild(el('td', { 'class': 'ib-c-' + s }, SYM[s] || s));
       tr.appendChild(el('td', {}, s === 'fallback' ? f.fallback : f.effect));
-      t.appendChild(tr);
+      t.add(tr);
     }
-    return t;
+    return t.t;
   }
 
   function matrix() {
@@ -238,14 +306,15 @@
     for (var i = 0; i < c.results.length; i++) used[c.results[i][1]] = 1;
     for (i = 0; i < c.browsers.length; i++) if (used[c.browsers[i][0]]) cols.push(c.browsers[i]);
     var you = nearestMachine(c), youB = browserId(env.browser);
-    var t = el('table', { 'class': 'ib-compat-matrix' }), tr = el('tr');
+    var t = table({ 'class': 'ib-compat-matrix' }), tr = el('tr');
     tr.appendChild(el('th', {}, 'Tested on'));
     for (i = 0; i < cols.length; i++) tr.appendChild(el('th', {}, cols[i][1]));
-    t.appendChild(tr);
+    t.add(tr);
     for (var j = 0; j < c.machines.length; j++) {
       var m = c.machines[j], cells = [], any = false;
       for (i = 0; i < cols.length; i++) {
-        var rs = c.results.filter(function (r) { return r[0] === m[0] && r[1] === cols[i][0]; });
+        var rs = [];
+        for (var q = 0; q < c.results.length; q++) if (c.results[q][0] === m[0] && c.results[q][1] === cols[i][0]) rs.push(c.results[q]);
         cells.push(rs);
         if (rs.length) any = true;
       }
@@ -256,47 +325,73 @@
       for (i = 0; i < cols.length; i++) {
         var td = el('td', isYou && cols[i][0] === youB ? { 'class': 'ib-you' } : {});
         for (var k = 0; k < cells[i].length; k++) {
-          var r = cells[i][k], sym = { pass: '✓', fail: '✗', unsupported: 'too old' }[r[3]] || r[3];
-          var line = el('div', { 'class': 'ib-c-' + r[3], title: r[2] + ', ' + r[5] + (r[4] ? ': ' + r[4] : '') }, sym + ' ' + r[2].split('.')[0]);
-          td.appendChild(line);
+          var r = cells[i][k], sym = { pass: '✓', fail: '✗', unsupported: 'too old', partial: '~' }[r[3]] || r[3];
+          td.appendChild(el('div', { 'class': 'ib-c-' + r[3], title: r[2] + ', ' + r[5] + (r[4] ? ': ' + r[4] : '') }, sym + ' ' + r[2].split('.')[0]));
         }
         tr.appendChild(td);
       }
-      t.appendChild(tr);
+      t.add(tr);
     }
-    return t;
+    return t.t;
   }
 
   var bar = null;
+  function addStyle(text) {
+    var st = el('style', { type: 'text/css' });
+    (doc.getElementsByTagName('head')[0] || doc.documentElement).appendChild(st);
+    if (st.styleSheet) st.styleSheet.cssText = text;          // IE 8 and before
+    else st.appendChild(doc.createTextNode(text));
+  }
+  // Browsers without attribute selectors (IE 6, and any IE in quirks mode)
+  // show [hidden] elements: the other sections' forms would show under the
+  // home page. When the page can't start, nothing else will hide them.
+  function hideHidden() {
+    var all = doc.getElementsByTagName('*');
+    for (var i = 0; i < all.length; i++) {
+      var e = all[i], cs = e.currentStyle;
+      if (cs && cs.display !== 'none' && e.getAttribute('hidden') !== null) e.style.display = 'none';
+    }
+  }
   function render() {
+    // The ES5 copy is a stand-in only if this copy of the page has it.
+    if (status.syntax === 'fallback' && !doc.getElementById('ib-js-es5')) status.syntax = 'missing';
     mark();
+    if (missing().length) { try { hideHidden(); } catch (e) { /* cosmetic */ } }
     doc.documentElement.setAttribute('data-ib-ready', '1');
     var deg = degraded(), miss = missing();
-    if (!deg.length || (!miss.length && dismissed())) { if (bar) bar.hidden = true; return; }
+    if (!deg.length || (!miss.length && dismissed())) { if (bar) show(bar, false); return; }
     if (!bar) {
-      var st = el('style', {}, CSS_TEXT);
-      (doc.head || doc.documentElement).appendChild(st);
+      addStyle(CSS_TEXT);
       bar = el('div', { 'class': 'ib-compat-bar', role: miss.length ? 'alert' : 'status' });
-      var header = doc.querySelector('header.site-header');
+      var header = doc.getElementsByTagName('header')[0];
       if (header && header.parentNode) header.parentNode.insertBefore(bar, header.nextSibling);
       else doc.body.insertBefore(bar, doc.body.firstChild);
     }
     while (bar.firstChild) bar.removeChild(bar.firstChild);
-    bar.hidden = false;
+    show(bar, true);
     bar.className = 'ib-compat-bar' + (miss.length ? ' ib-too-old' : '');
-    bar.appendChild(el('span', { 'class': 'ib-compat-text' }, summaryText()));
+    var sum = summary();
+    bar.appendChild(el('span', { 'class': 'ib-compat-text' }, sum.text));
+    if (sum.links.length) {
+      var get = el('span', { 'class': 'ib-compat-get' }, ' Get: ');
+      for (var i = 0; i < sum.links.length; i++) {
+        if (i) get.appendChild(doc.createTextNode(', '));
+        get.appendChild(el('a', { href: sum.links[i].url, rel: 'noopener noreferrer', target: '_blank' }, sum.links[i].name));
+      }
+      bar.appendChild(get);
+    }
     var more = el('button', { type: 'button', 'class': 'ib-compat-more', 'aria-expanded': 'false' }, 'Details');
     bar.appendChild(more);
     if (!miss.length) {
       var close = el('button', { type: 'button', 'class': 'ib-compat-dismiss' }, 'Dismiss');
-      close.onclick = function () { try { w.localStorage.setItem(dismissKey(), '1'); } catch (e) { /* no storage: hide for now */ } bar.hidden = true; };
+      close.onclick = function () { try { w.localStorage.setItem(dismissKey(), '1'); } catch (e) { /* no storage: hide for now */ } show(bar, false); };
       bar.appendChild(close);
     }
     var box = null;
     more.onclick = function () {
       if (box) { box.parentNode.removeChild(box); box = null; more.setAttribute('aria-expanded', 'false'); return; }
       box = el('div', { 'class': 'ib-compat-details' });
-      function words(a) { return a.filter(function (x) { return !!x; }).join(' '); }
+      function words(a) { return grep(a, function (x) { return !!x; }).join(' '); }
       box.appendChild(el('p', {}, 'This browser: ' + words([env.browser, env.version]) + ' on ' + (words([env.os, env.osVersion]) || 'an unknown OS') + (env.cpu ? ', ' + env.cpu : '') + '.'));
       box.appendChild(featureTable());
       var c = loadCompat();
@@ -307,10 +402,15 @@
     };
   }
 
-  // After parsing: the data block is at the end of the body.
-  function whenReady() {
-    if (doc.readyState !== 'loading') render(); else doc.addEventListener('DOMContentLoaded', render);
+  // After parsing: the data blocks are at the end of the body. Called from
+  // <head> (later: when the async checks finish), where old IE may already
+  // say "interactive", so only a later call trusts readyState.
+  function whenReady(later) {
+    if (doc.readyState === 'complete' || (later === true && doc.readyState !== 'loading')) render();
+    else if (doc.addEventListener) doc.addEventListener('DOMContentLoaded', render, false);
+    else w.attachEvent('onload', render);                     // IE 8 and before
   }
-  if (pending.length && w.Promise) Promise.all(pending).then(whenReady, whenReady);
-  else whenReady();
+  function after() { whenReady(true); }
+  if (pending.length && w.Promise) Promise.all(pending).then(after, after);
+  else whenReady(false);
 })();

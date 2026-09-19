@@ -4,8 +4,9 @@
 // this OS; its details (features, and the tested machine x browser matrix
 // with the visitor's nearest row marked); dismissing; and plain http, where
 // the page runs on its own cryptography. Features with a stand-in in the
-// page (compression, WebCrypto, :has(), ...) show as "fallback"; only ES2017
-// syntax and getRandomValues can make it "can't run".
+// page (compression, WebCrypto, :has(), ...) show as "fallback"; ES2017
+// syntax too, where the page's ES5 copy can run instead (checked here by
+// running it); only a browser too old for that copy is told it "can't run".
 //
 //   node --experimental-websocket tests/browser-check-test.mjs [--page dist/index.html]
 //        [--site http://10.0.1.76:8080] [--shot FILE.png]
@@ -83,12 +84,23 @@ try {
     console.log('screenshots: ' + SHOT + ', ' + SHOT.replace(/\.png$/, '') + '-matrix.png');
   }
 
-  // Too old to run (a JavaScript without async functions): a "can't run" bar.
-  await open(FILE, 'window.Function = function () { throw new SyntaxError("old"); };');
+  // A JavaScript without async functions (IE 11, Chrome 49): the page runs
+  // its ES5 copy (js/page-loader.js), and the bar says so.
+  const NO_ASYNC = '(function () { var F = Function; window.Function = function () { if (/async/.test(String(arguments[arguments.length - 1]))) throw new SyntaxError("old"); return F.apply(this, arguments); }; window.Function.prototype = F.prototype; })();';
+  await open(FILE, NO_ASYNC);
+  ok(await js(`document.documentElement.getAttribute('data-ib-missing') === '' && ibCompat.status.syntax === 'fallback'`), 'without ES2017 syntax: the ES5 copy stands in (fallback, nothing missing)',
+    await js(`document.documentElement.getAttribute('data-ib-missing') + ' / ' + ibCompat.status.syntax`));
+  ok(/copy for older browsers/.test(await barText()) && !await js(`document.querySelector('.ib-compat-bar').classList.contains('ib-too-old')`), 'the bar says it runs the copy for older browsers', await barText());
+  await waitFor(js, `!!(globalThis.ibLocalApi && document.querySelector('.save-ctl'))`, 'the ES5 copy to start', 60000);
+  ok(await js(`window.IB_ES5 === true && document.documentElement.classList.contains('ib-local')`), 'the ES5 copy starts the page');
+
+  // Too old for that too (no typed arrays, Blob or atob: IE 9 and before): a "can't run" bar.
+  await open(FILE, NO_ASYNC + 'window.atob = undefined;');
   const miss = await js(`document.documentElement.getAttribute('data-ib-missing')`);
-  ok(/2017/.test(miss), 'without ES2017 syntax: missing', miss);
+  ok(/2017/.test(miss), 'without ES2017 syntax or what the ES5 copy needs: missing', miss);
   ok(await barShown() && await js(`document.querySelector('.ib-compat-bar').classList.contains('ib-too-old')`), 'the bar shows, as "can\'t run"');
-  ok(/can't start/.test(await barText()), 'the bar names the effect', await barText());
+  ok(/can't start/.test(await barText()) && /pages still read/.test(await barText()), 'the bar names the effect, and that the pages still read', await barText());
+  ok(await js(`!window.IB_ES5 && !globalThis.ibLocalApi`), 'and no code of the page runs');
   ok(!await js(`!!document.querySelector('.ib-compat-dismiss')`), 'a "can\'t run" bar has no Dismiss');
 
   // A visitor on Windows XP (Supermium's engine, no compression streams):
@@ -97,6 +109,7 @@ try {
   await open(FILE, 'delete window.DecompressionStream; delete window.CompressionStream; delete Navigator.prototype.userAgentData;');
   const xp = await barText();
   ok(/Tested on Windows XP and working: .*Supermium/.test(xp), 'an XP visitor is pointed at what works on XP (Supermium)', xp);
+  ok(await js(`!!document.querySelector('.ib-compat-get a[href="https://github.com/win32ss/supermium/releases"]')`), 'with a link to get it');
   await js(`document.querySelector('.ib-compat-more').click()`);
   ok(await js(`(document.querySelector('.ib-compat-matrix tr.ib-you') || {}).dataset?.machine === 'xp'`), 'an XP visitor: the XP row is marked');
   await chrome.cdp('Emulation.setUserAgentOverride', { userAgent: '' });
