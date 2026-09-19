@@ -7,12 +7,13 @@
 // --site is a running ibserver (it serves the site, and /api/tsa for the
 // timestamp); --page tests another copy of the editor against it. Keys are
 // made fresh in a temporary folder and deleted afterwards.
-import { spawn, execFileSync, spawnSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { readInstaller, writeInstaller, newRecordText } from '../js/ibfile.js';
-import { FX } from './fixtures.js';
+import { readInstaller } from '../js/ibfile.js';
+import { launchChrome, sleep } from './browsers/cdp.mjs';
+import { Checker, makeSignFixtures, osslVerify, gpgVerify, $text, clickId, setVal as setValIn, checkBox } from './browsers/steps.mjs';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
 const SITE = (arg('--site') || '').replace(/\/$/, '');
@@ -25,105 +26,32 @@ const TIMESTAMP = !process.argv.includes('--no-timestamp');
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'ib-sign-ui-'));
 const DL = path.join(TMP, 'dl');
 fs.mkdirSync(DL);
-const PW = 'test-' + Math.random().toString(36).slice(2);
-const t = (f) => path.join(TMP, f);
-const OSSL = [process.env.PATH.split(':'), path.join(os.homedir(), '.local/opt/ib-tools/root/usr/bin')].flat()
-  .map((d) => path.join(d, 'osslsigncode')).find((p) => fs.existsSync(p));
 
-let passed = 0, failed = 0;
-function ok(cond, name, extra) {
-  if (cond) { passed++; console.log('PASS ' + name); }
-  else { failed++; console.log('FAIL ' + name + (extra !== undefined ? ' -- ' + String(extra).slice(0, 500) : '')); }
-}
+const T = new Checker();
+const ok = T.ok.bind(T);
 
-/* ---------- fixtures ---------- */
+/* ---------- fixtures (tests/browsers/steps.mjs) ---------- */
 
-const o = (args) => execFileSync('openssl', args, { cwd: TMP, stdio: ['ignore', 'pipe', 'pipe'] });
-fs.writeFileSync(t('cs.cnf'), '[req]\ndistinguished_name=dn\nprompt=no\n[dn]\nCN=UI Test TEST\n[leaf]\nbasicConstraints=CA:FALSE\n' +
-  'keyUsage=critical,digitalSignature\nextendedKeyUsage=codeSigning\n[ca]\nbasicConstraints=critical,CA:TRUE\nkeyUsage=critical,keyCertSign\n');
-o(['req', '-x509', '-newkey', 'rsa:2048', '-nodes', '-keyout', 'rsa.key', '-out', 'rsa.crt', '-days', '2', '-config', 'cs.cnf', '-extensions', 'leaf']);
-o(['pkcs12', '-export', '-inkey', 'rsa.key', '-in', 'rsa.crt', '-out', 'rsa.pfx', '-passout', 'pass:' + PW]);
-o(['req', '-x509', '-newkey', 'ec', '-pkeyopt', 'ec_paramgen_curve:P-256', '-nodes', '-keyout', 'ca.key', '-out', 'ca.crt', '-days', '2', '-subj', '/CN=UI Test CA TEST', '-config', 'cs.cnf', '-extensions', 'ca']);
-o(['req', '-new', '-newkey', 'ec', '-pkeyopt', 'ec_paramgen_curve:P-256', '-nodes', '-keyout', 'ec.key', '-out', 'ec.csr', '-subj', '/CN=UI Test EC TEST']);
-o(['x509', '-req', '-in', 'ec.csr', '-CA', 'ca.crt', '-CAkey', 'ca.key', '-CAcreateserial', '-out', 'ec.crt', '-days', '2', '-extfile', 'cs.cnf', '-extensions', 'leaf']);
-const RECORD = newRecordText({ name: 'UI Test', project: 'uitest', runtime: 'python', launch: '{runtime} -m uitest' });
-const exe = await writeInstaller(await readInstaller(new Uint8Array(Buffer.from(FX.peIcon, 'base64')), 'x.exe'), { record: RECORD });
-fs.writeFileSync(t('in.exe'), exe);
-const run = await writeInstaller(await readInstaller(new TextEncoder().encode('#!/bin/sh\necho stand-in\nexit 0\n'), 'x.run'), { record: RECORD });
-fs.writeFileSync(t('in.run'), run);
+const { PW, RECORD, t, openssl: o } = await makeSignFixtures(TMP);
 
-/* ---------- Chrome over CDP ---------- */
+/* ---------- Chrome over CDP (tests/browsers/cdp.mjs) ---------- */
 
-const PORT = 9300 + Math.floor(Math.random() * 90);
-const chrome = spawn('google-chrome', ['--headless=new', '--no-first-run', '--no-default-browser-check',
-  '--remote-debugging-port=' + PORT, '--user-data-dir=' + t('profile'), 'about:blank'], { stdio: 'ignore' });
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-let ws, seq = 0;
-const pending = new Map(), logs = [];
-async function connect() {
-  for (let i = 0; i < 75; i++) {
-    try {
-      const page = (await (await fetch(`http://127.0.0.1:${PORT}/json/list`)).json()).find((x) => x.type === 'page');
-      if (page) {
-        ws = new WebSocket(page.webSocketDebuggerUrl);
-        await new Promise((r, j) => { ws.onopen = r; ws.onerror = j; });
-        ws.onmessage = (m) => {
-          const d = JSON.parse(m.data);
-          if (d.id && pending.has(d.id)) { pending.get(d.id)(d); pending.delete(d.id); }
-          if (d.method === 'Runtime.exceptionThrown') logs.push(JSON.stringify(d.params.exceptionDetails).slice(0, 300));
-        };
-        return;
-      }
-    } catch (e) { /* starting */ }
-    await sleep(200);
-  }
-  throw new Error('Chrome did not start');
-}
-const cdp = (method, params = {}) => new Promise((res, rej) => {
-  const n = ++seq;
-  pending.set(n, (d) => (d.error ? rej(new Error(method + ': ' + JSON.stringify(d.error))) : res(d.result)));
-  ws.send(JSON.stringify({ id: n, method, params }));
-});
-async function js(expr) {
-  const r = await cdp('Runtime.evaluate', { expression: expr, awaitPromise: true, returnByValue: true });
-  if (r.exceptionDetails) throw new Error('eval: ' + JSON.stringify(r.exceptionDetails).slice(0, 300));
-  return r.result.value;
-}
-async function setFile(sel, file) {
-  const doc = await cdp('DOM.getDocument', { depth: 1 });
-  const q = await cdp('DOM.querySelector', { nodeId: doc.root.nodeId, selector: sel });
-  await cdp('DOM.setFileInputFiles', { nodeId: q.nodeId, files: [file] });
-}
-async function waitFor(expr, what, ms = 90000) {
-  for (const end = Date.now() + ms; Date.now() < end; await sleep(250)) {
-    const v = await js(expr);
-    if (v) return v;
-  }
-  throw new Error('timed out waiting for ' + what + (logs.length ? '; page errors: ' + logs.join(' | ') : ''));
-}
+let chrome, js, setFile, waitFor, logs;
 async function download(name, ms = 60000) {
   for (const end = Date.now() + ms; Date.now() < end; await sleep(250)) {
     if (fs.existsSync(path.join(DL, name)) && !fs.readdirSync(DL).some((f) => f.endsWith('.crdownload'))) return path.join(DL, name);
   }
   throw new Error('no download ' + name + ' (have: ' + fs.readdirSync(DL).join(' ') + ')');
 }
-const $text = (id) => `document.getElementById('${id}').textContent`;
-const click = (id) => js(`document.getElementById('${id}').click()`);
-const setVal = (id, v) => js(`(e => { e.value = ${JSON.stringify(v)}; e.dispatchEvent(new Event('input', {bubbles: true})); e.dispatchEvent(new Event('change', {bubbles: true})); })(document.getElementById('${id}'))`);
-const check = (id, on) => js(`(e => { e.checked = ${on}; e.dispatchEvent(new Event('change', {bubbles: true})); })(document.getElementById('${id}'))`);
-
-function osslOk(file, ca) {
-  if (!OSSL) return { skip: true };
-  const r = spawnSync(OSSL, ['verify', '-in', file, '-CAfile', ca], { encoding: 'utf8' });
-  const out = r.stdout + r.stderr;
-  return { ok: r.status === 0 && /Signature verification: ok/.test(out), ts: /Timestamp Server Signature verification: ok/.test(out), out };
-}
+const click = (id) => clickId(js, id);
+const setVal = (id, v) => setValIn(js, id, v);
+const check = (id, on) => checkBox(js, id, on);
+const osslOk = (file, ca) => osslVerify(file, ca, spawnSync);
 
 try {
-  await connect();
-  await cdp('Runtime.enable');
-  await cdp('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: DL });
-  await cdp('Page.navigate', { url: PAGE + '?api=' + encodeURIComponent(SITE) });
+  chrome = await launchChrome({ profile: t('profile'), downloads: DL });
+  ({ js, setFile, waitFor, errors: logs } = chrome);
+  await chrome.cdp('Page.navigate', { url: PAGE + '?api=' + encodeURIComponent(SITE) });
   await waitFor(`document.readyState === 'complete' && !!document.getElementById('sign-go')`, 'the page');
 
   // Windows, .pfx
@@ -184,12 +112,8 @@ try {
   await waitFor(`/Saved|Couldn/.test(${$text('sign-status')})`, 'pgp signing');
   const runFile = await download('app.run');
   const asc = await download('app.run.asc');
-  const home = t('gnupg');
-  fs.mkdirSync(home, { mode: 0o700 });
-  spawnSync('gpg', ['--homedir', home, '--batch', '--import', pub]);
-  const g = spawnSync('gpg', ['--homedir', home, '--batch', '--verify', asc, runFile], { encoding: 'utf8' });
-  ok(g.status === 0 && /Good signature/.test(g.stderr), 'ui: gpg --verify says Good signature for the downloaded .run.asc', g.stderr);
-  spawnSync('gpgconf', ['--homedir', home, '--kill', 'all']);
+  const g = gpgVerify(pub, asc, runFile, t('gnupg'), spawnSync);
+  ok(g.ok, 'ui: gpg --verify says Good signature for the downloaded .run.asc', g.out);
 
   const stored = await js(`JSON.stringify([Object.keys(localStorage), Object.keys(sessionStorage)])`);
   ok(!/pfx|pgp|key|sign/i.test(stored), 'ui: nothing about keys in localStorage or sessionStorage', stored);
@@ -197,10 +121,8 @@ try {
 } catch (e) {
   ok(false, 'ui run', e.message);
 } finally {
-  try { ws && ws.close(); } catch (e) { /* closed */ }
-  chrome.kill('SIGKILL');
+  if (chrome) await chrome.close('SIGKILL');
 }
-console.log(`\n${passed} passed, ${failed} failed`);
-await sleep(300);
+console.log(`\n${T.passed} passed, ${T.failed} failed`);
 fs.rmSync(TMP, { recursive: true, force: true });
-process.exit(failed ? 1 : 0);
+process.exit(T.failed ? 1 : 0);

@@ -267,6 +267,9 @@ def offline_page(catalog_dir, backend):
            "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
            "  <title>TiddlyInstall</title>\n"
            f"  <meta name=\"generator\" content=\"tools/build_site.py, {rev}, {today}\">\n"
+           # Too-old browsers get a message naming what's missing (a classic
+           # script, so it runs where the module can't).
+           "  <script>\n" + no_close_script(read("js/browser-check.js")) + "\n  </script>\n"
            "  <style>\n" + css + "\n  </style>\n</head>\n<body>\n  " + header + "\n"
            + "\n".join(sections) +
            "\n  <footer class=\"site-footer\">\n    Designed by <a href=\"https://robertsdotpm.github.io/\">Matthew Roberts</a> and implemented by Claude.\n  </footer>\n"
