@@ -60,7 +60,9 @@ pre {
 /* ---- Layout ---- */
 
 .site-header, main, .site-footer {
-  max-width: 960px;
+  /* One width for every page, the header and the footer (the Runtimes
+     editor's), so the nav always spans the page. */
+  max-width: 1240px;
   margin-inline: auto;
 }
 
@@ -187,9 +189,6 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); ou
 
 .inline-choices { display: flex; flex-wrap: wrap; gap: 4px 20px; }
 
-main.narrow { max-width: 720px; }
-/* Wider when the editor is showing. */
-main.narrow:has(#src-write:checked) { max-width: 1040px; }
 
 details { margin-top: 10px; }
 summary { cursor: pointer; font-weight: 600; }
@@ -631,7 +630,7 @@ form:not(:has(#runtime option[value="python"]:checked)) .py-panel { display: non
   align-items: center;
   justify-content: space-between;
   gap: 8px 16px;
-  max-width: 960px;
+  max-width: 1240px;
   margin: 0 auto;
   padding: 10px 14px;
   background: var(--panel);
@@ -707,7 +706,6 @@ html.ib-local .online-only { display: none !important; }
 
 /* ---- Runtimes: the catalogue editor (runtimes.html, js/catalog-editor.js) ---- */
 
-main.wide { max-width: 1240px; }
 .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.9em; }
 button.small-button, .button.small-button { padding: 4px 12px; font-size: 0.9em; }
 button.danger { border-color: var(--fail); color: var(--fail); }
