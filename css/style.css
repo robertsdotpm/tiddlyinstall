@@ -854,8 +854,6 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .rt-step-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 6px; }
 .rt-step-head select { width: auto; padding: 3px 6px; }
 .rt-steps input, .rt-steps textarea { padding: 4px 6px; margin-bottom: 4px; }
-.rt-inline { display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; font-size: 0.9em; }
-.rt-inline input { width: auto; flex: 1 1 90px; }
 .rt-rawwrap textarea { min-height: 200px; }
 .rt-problems:empty { display: none; }
 .rt-problems ul { margin: 4px 0 10px; padding-left: 1.2em; color: var(--fail); font-size: 0.9em; }
