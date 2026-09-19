@@ -1,14 +1,14 @@
 // The plan resolver (docs/format.md section 3, design.md sections 1.2-1.7):
-// a port of server/internal/catalog (catalog.go, policy.go, support.go,
-// version.go, prereq.go, package.go, resolve.go, summary.go, snapshot.go)
-// and the parts of server/internal/ibtext it uses. Plain ES module, no
-// dependencies; runs in browsers and in Node 20+.
+// a port of the Go server's catalog package (catalog.go, policy.go,
+// support.go, version.go, prereq.go, package.go, resolve.go, summary.go,
+// snapshot.go; retired 2026-09-19) and the parts of its ibtext it used.
+// Plain ES module, no dependencies; runs in browsers and in Node 20+.
 //
 // Plans are byte-identical to the Go resolver's (tests/resolve-test.mjs
-// checks every case `ibsnapshot -cases` writes). Everything is synchronous
-// except what needs a stream or WebCrypto: loadSnapshot, writeSnapshot,
-// hash26 and hash12. resolve() needs Hash12 for the appid, so it has its
-// own small SHA-256 (sha256 below) and stays synchronous.
+// checks the 3,095 cases it answered, saved in tests/golden/). Everything
+// is synchronous except what needs a stream or WebCrypto: loadSnapshot,
+// writeSnapshot, hash26 and hash12. resolve() needs Hash12 for the appid,
+// so it has its own small SHA-256 (sha256 below) and stays synchronous.
 //
 // Go semantics kept on purpose: map output sorted by UTF-8 byte order
 // (cmpStr), strings.TrimSpace's space set, strconv.Atoi's strictness,

@@ -10,7 +10,7 @@
 //   node tests/builder-golden.mjs --record URL [--runtimes a,b]
 //
 // tests/golden/builder.json.br was recorded on 2026-09-19 from the Go
-// server (server/cmd/ibserver, retired; see git history) while it was the
+// server (server/cmd/ibserver, deleted after commit d67744a) while it was the
 // oracle, with -public http://10.0.1.76:8080 and the catalogue folder that
 // tests/golden/catalog.gz was made from, the snapshot the test loads here.
 // --record URL records the goldens again from a running build server; use

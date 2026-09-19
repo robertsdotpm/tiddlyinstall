@@ -6,7 +6,7 @@
 //   node tests/backend-golden.mjs --record URL --data DIR [--rate-limits]
 //
 // tests/golden/backend.json.br was recorded on 2026-09-19 from the Go server
-// (server/cmd/ibserver, retired; see git history) while it was the oracle
+// (server/cmd/ibserver, deleted after commit d67744a) while it was the oracle
 // the Node server was checked against (1,784 checks, two live servers).
 // What was meaningful with one server is kept:
 //

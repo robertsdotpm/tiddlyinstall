@@ -7,8 +7,8 @@
 // flag, each with its plan and files (or its error); the package helpers;
 // the hashes; and the runtimes summary. tests/golden/catalog.gz is the
 // catalogue snapshot they were resolved from. Both were written on
-// 2026-09-19 by the Go resolver (`ibsnapshot -cases`, server/cmd/ibsnapshot,
-// removed after this commit's parent; see git history), while it was the
+// 2026-09-19 by the Go resolver (`ibsnapshot -cases`: server/cmd/ibsnapshot,
+// deleted after commit d67744a; git history has it), while it was the
 // oracle the JS port was checked against byte for byte. The test loads that
 // snapshot and requires identical results from js/resolve.js.
 //

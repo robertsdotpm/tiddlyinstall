@@ -55,37 +55,47 @@ on Redis. It runs the same JavaScript as the page: `js/resolve.js` (plans),
 `js/builder.js` (jobs), `js/ibfile.js` (installer files) and `js/icon.js`
 (icons). It serves the API ([docs/api.md](docs/api.md)), the one-file site
 from `dist/` (`python3 tools/build_site.py` writes it), our copies of the
-runtime files at `/mirror/`, and the built installers. The Go server in
-`server/` is the same service and is kept, for now, as the reference the
-Node one is checked against.
+runtime files at `/mirror/`, and the built installers. (It replaced a Go
+server on 2026-09-19; docs/plan.md section 1.8.)
 
 ```
 cd backend && npm ci                     # BullMQ and ioredis
 node backend/server.js -addr :8080 -redis 127.0.0.1:6390 -public http://10.0.1.76:8080
 ```
 
-The flags are the Go server's (`node backend/server.js -h` lists them):
-`-addr`, `-redis`, `-redis-db`, `-data` (records, sources, icons, built
-files and the plan signing key; default `server/data`), `-catalog` and
-`-local` (the runtime catalogue and our copies of its files, default under
-`~/projects/installer-builder-runtimes`), `-policy`, `-site`, `-bases`,
-`-public` (this server's URL, written into records), `-workers`, `-mirror`
-and `-mirror-last` (where plans point for our mirror, and whether it comes
-last). A second instance needs its own `-redis-db` and `-data`.
+`node backend/server.js -h` lists the flags: `-addr`, `-redis`,
+`-redis-db`, `-data` (records, sources, icons, built files, the signing
+keys and the plan signing key; default `backend/data`, gitignored),
+`-catalog` and `-local` (the runtime catalogue and our copies of its files,
+default under `~/projects/installer-builder-runtimes`), `-policy` (default
+`backend/policy.json`), `-site`, `-bases`, `-public` (this server's URL,
+written into records), `-workers`, `-mirror` and `-mirror-last` (where
+plans point for our mirror, and whether it comes last). A second instance
+needs its own `-redis-db` and `-data` (the Mac test server's is
+`backend/data-mac`). On this machine they run as the systemd user units
+`ib-server` (:8080) and `ib-server-mac` (127.0.0.1:8081), on Redis from
+`ib-redis` (its files in `backend/data/redis`).
 
 Tests:
 
 ```
-cd backend && npm test                   # node --test: the Go unit tests, ported, and the server end to end
-node tests/backend-oracle.mjs --go http://127.0.0.1:8080 --node http://127.0.0.1:8090 \
-     --node-data server/data-node --go-data server/data
-                                         # the same requests to the Go and Node servers, answers compared
+cd backend && npm test                   # node --test: unit tests and the server end to end
+node tests/resolve-test.mjs              # the resolver against 3,095 saved plans and answers
+node tests/builder-golden.mjs            # js/builder.js: records and plans for every runtime
+node tests/backend-golden.mjs            # a running server (default :8080, --data backend/data)
+                                         # against saved answers: errors, jobs, plans, takedown
 ```
 
 The server test needs Redis and uses database 5 (`IB_TEST_REDIS`,
-`IB_TEST_REDIS_DB`). For the oracle, run the Node server with the same
-`-public` as the Go server, so plans, records and signatures can be
-compared byte for byte.
+`IB_TEST_REDIS_DB`). The three golden tests compare with answers saved in
+`tests/golden/` from the Go server while it was the reference the JS was
+checked against byte for byte; each test's header says what is kept and
+how to record the goldens again after an intended change.
+
+Tools: `tools/snapshot.mjs` writes the catalogue snapshot and runtimes
+summary the one-file site carries; `tools/resolve.mjs` prints a plan, or
+the files with no copy on our mirror; `tools/plansig.mjs` signs and checks
+plans with a plan signing key.
 
 ## Design notes
 
