@@ -325,7 +325,12 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
         t.note('timeouts', 'W3C form refused (' + e.message + '); set the legacy way');
       });
       js = (expr) => evalIn(session, expr);
-      setFile = async (css, p) => session.sendKeys(await session.find(css), p);
+      // Old drivers (Firefox 52's Marionette) add to a file input's list
+      // instead of replacing it, so empty it first.
+      setFile = async (css, p) => {
+        await js('(function () { var e = document.querySelector(' + JSON.stringify(css) + '); if (e) e.value = ""; return 1; })()');
+        return session.sendKeys(await session.find(css), p);
+      };
       b = { navigate: (u) => session.navigate(u), run: (x) => session.run(x), runAsync: (x) => session.runAsync(x) };
     } else if (rec.protocol === 'cdp') {
       cdpPort = port;
