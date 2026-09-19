@@ -8,10 +8,11 @@ rows = [json.loads(l) for l in open(sys.argv[1] if len(sys.argv) > 1 else HERE /
 last = {}
 for r in rows:
     last[(r["target"], r["runtime"], r["mode"])] = r
-ORDER = ["xp", "vista", "7", "8.1", "10", "11", "2022", "centos6", "centos7", "ubuntu1404", "ubuntu1604",
+ORDER = ["xp", "vista", "7", "8.1", "10", "11", "2022", "10x86", "ltsc2021", "11de", "2025core", "centos6", "centos7", "ubuntu1404", "ubuntu1604",
          "ubuntu1804", "rocky8", "ubuntu2004", "ubuntu2204", "debian12", "linux", "alpine", "mac"]
 NAMES = {"xp": "XP", "vista": "Vista", "7": "Win 7", "8.1": "Win 8.1", "10": "Win 10", "11": "Win 11",
-         "2022": "Srv 2022", "centos6": "CentOS 6", "centos7": "CentOS 7", "ubuntu1404": "Ubuntu 14.04",
+         "2022": "Srv 2022", "10x86": "Win 10 x86", "ltsc2021": "LTSC 2021", "11de": "Win 11 DE (Jörg)",
+         "2025core": "Srv 2025 Core", "centos6": "CentOS 6", "centos7": "CentOS 7", "ubuntu1404": "Ubuntu 14.04",
          "ubuntu1604": "Ubuntu 16.04", "ubuntu1804": "Ubuntu 18.04", "rocky8": "Rocky 8",
          "ubuntu2004": "Ubuntu 20.04", "ubuntu2204": "Ubuntu 22.04", "debian12": "Debian 12",
          "linux": "Ubuntu 24.04", "alpine": "Alpine", "mac": "macOS 26"}

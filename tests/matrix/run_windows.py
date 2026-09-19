@@ -5,6 +5,12 @@ The batch script works the same under cmd, PowerShell and Bitvise shells,
 and on XP (no timeout.exe, no %LOCALAPPDATA%). The base's options are in
 bases/windows/README.md: /S, /log=, exit 0/2/3; launch.exe /out=;
 uninstall.exe /S (which returns at once and finishes from %TEMP%).
+
+A WINDOWS entry with a third element "profile" (the German Windows 11 VM,
+whose user is "Jörg Müller") runs from %USERPROFILE%\\ibtest instead of
+C:\\ibtest, with the paths it passes quoted: the installer then starts
+from a folder whose path has a space and non-ASCII letters, as it would
+from that user's Downloads folder.
 """
 import base64
 import hashlib
@@ -57,20 +63,38 @@ def appid(record):
     return base64.b32encode(h).decode().lower().rstrip("=")[:12]
 
 
+def in_profile(bat):
+    """BAT, run from %USERPROFILE%\\ibtest, with the paths it passes quoted."""
+    return (bat.replace("set T=C:\\ibtest", "set T=%USERPROFILE%\\ibtest")
+            .replace("/log=%T%\\install.log", '/log="%T%\\install.log"')
+            .replace("/out=%T%\\out.txt", '/out="%T%\\out.txt"'))
+
+
+def test_dir(vm):
+    """(folder for cmd, folder for scp) for a WINDOWS entry."""
+    if "profile" in vm[2:]:
+        return '"%USERPROFILE%\\ibtest"', "ibtest"   # scp paths are relative to the user's home
+    return "C:\\ibtest", "C:/ibtest"
+
+
 def run_windows(vm, rt, mode, f, record):
     from run import sh, tail, plan_fails
-    host, _shell = vm
+    host = vm[0]
     name = f"Hello {rt}"
     bat = BAT.replace("%APPID%", appid(record)).replace("%FILE%", Path(f).name).replace("%NAME%", name)
+    if "profile" in vm[2:]:
+        bat = in_profile(bat)
+    win, scp = test_dir(vm)
     with tempfile.NamedTemporaryFile("w", suffix=".bat", delete=False, newline="\r\n") as t:
         t.write(bat)
-    sh(["ssh", host, 'cmd /c "rd /s /q C:\\ibtest & mkdir C:\\ibtest"'], timeout=60)
+    sh(["ssh", host, f'cmd /c "rd /s /q {win} & mkdir {win}"'], timeout=60)
     for src, dst in ((f, Path(f).name), (t.name, "t.bat")):
-        code, _, err = sh(["scp", "-q", src, f"{host}:C:/ibtest/{dst}"], timeout=600)
+        code, _, err = sh(["scp", "-q", src, f"{host}:{scp}/{dst}"], timeout=600)
         if code:
             return "fail", "scp: " + err.strip()
-    code, out, err = sh(["ssh", host, "cmd /c C:\\ibtest\\t.bat"])
-    sh(["ssh", host, 'cmd /c "rd /s /q C:\\ibtest"'], timeout=60)
+    run_bat = f"cmd /c call {win}\\t.bat" if "profile" in vm[2:] else "cmd /c C:\\ibtest\\t.bat"
+    code, out, err = sh(["ssh", host, run_bat])
+    sh(["ssh", host, f'cmd /c "rd /s /q {win}"'], timeout=60)
     Path(t.name).unlink()
     parts, cur = {}, None
     for line in out.splitlines():

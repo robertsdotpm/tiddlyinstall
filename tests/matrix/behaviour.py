@@ -30,6 +30,7 @@ results.jsonl with runtime "behaviour-<variant>".
 """
 import argparse
 import json
+import re
 import shlex
 import subprocess
 import tempfile
@@ -347,18 +348,24 @@ for /d %%d in ("%TEMP%\~nsu*.tmp") do rd /s /q "%%d" 2>nul
 
 
 def run_windows(vm, variant, mode, name, f, rec):
-    host, _shell = vm
+    host = vm[0]
     head = "@echo off\r\nset ID=%s\r\nset FILE=%s\r\nset NAME=%s\r\nset MODE=%s\r\n" % (appid(rec), Path(f).name, name, mode)
     bat = BAT.replace("@echo off\nsetlocal\n", "setlocal\n")
+    win, scp, run_bat = "C:\\ibbtest", "C:/ibbtest", "cmd /c C:\\ibbtest\\t.bat"
+    if "profile" in vm[2:]:
+        # As run_windows.py: from the user's own folder, paths quoted.
+        bat = re.sub(r"/log=(%T%\\i\d\.log)", r'/log="\1"', bat.replace("set T=C:\\ibbtest", "set T=%USERPROFILE%\\ibbtest"))
+        win, scp = '"%USERPROFILE%\\ibbtest"', "ibbtest"
+        run_bat = f"cmd /c call {win}\\t.bat"
     with tempfile.NamedTemporaryFile("w", suffix=".bat", delete=False, newline="\r\n") as t:
         t.write(head.replace("\r\n", "\n") + bat)
-    sh(["ssh", host, 'cmd /c "rd /s /q C:\\ibbtest & mkdir C:\\ibbtest"'], timeout=60)
+    sh(["ssh", host, f'cmd /c "rd /s /q {win} & mkdir {win}"'], timeout=60)
     for src, dst in ((f, Path(f).name), (t.name, "t.bat")):
-        code, _, err = sh(["scp", "-q", src, f"{host}:C:/ibbtest/{dst}"], timeout=600)
+        code, _, err = sh(["scp", "-q", src, f"{host}:{scp}/{dst}"], timeout=600)
         if code:
             return "fail", "scp: " + err.strip()
-    code, out, err = sh(["ssh", host, "cmd /c C:\\ibbtest\\t.bat"])
-    sh(["ssh", host, 'cmd /c "rd /s /q C:\\ibbtest"'], timeout=60)
+    code, out, err = sh(["ssh", host, run_bat])
+    sh(["ssh", host, f'cmd /c "rd /s /q {win}"'], timeout=60)
     Path(t.name).unlink()
     p = parse(out)
     # Windows writes the marker with the same bytes on every line; `type`

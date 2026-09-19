@@ -11,6 +11,7 @@ for /d %%d in ("%USERPROFILE%\Start Menu\Programs\Hello *") do rd /s /q "%%d"
 for /f "delims=" %%k in ('reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall" 2^>nul ^| find /i "\ib-"') do reg delete "%%k" /f >nul 2>&1
 for /d %%d in ("%TEMP%\~nsu*.tmp" "%TEMP%\ns*.tmp") do rd /s /q "%%d" 2>nul
 if exist "C:\ibtest" rd /s /q "C:\ibtest"
+if exist "%USERPROFILE%\ibtest" rd /s /q "%USERPROFILE%\ibtest"
 echo @check
 if exist "C:\ib" echo left: C:\ib
 if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib" echo left: %LOCALAPPDATA%\ib

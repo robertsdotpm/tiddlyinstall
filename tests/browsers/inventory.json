@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-19T06:46:18.716Z",
+ "updated": "2026-09-19T14:43:50.638Z",
  "machines": {
   "7": {
    "os": "windows",
@@ -613,6 +613,81 @@
      "verified": "Setup_x64.exe: SHA-256 matches Opera's .sha256sum; Authenticode Opera Norway AS, chain ok (osslsigncode). operadriver.exe: Authenticode Opera Norway AS, chain ok (the 2023 release has no GitHub digest)",
      "smoke": "pass (tests/browsers/run.mjs, 2026-09-19)",
      "notes": "Opera 95 is the last for Windows 7 and 8.1. Installed 2026-09-19 as a standalone copy (--copyonly=1 --singleprofile=1 --installfolder=C:\\ibbrowsers\\opera-95): no registry entries, shortcuts or tasks; autoupdate false. operadriver 109 is Opera's driver for Opera Stable 95."
+    }
+   ]
+  },
+  "10x86": {
+   "os": "windows",
+   "ssh": "x@10.0.1.47",
+   "read": "2026-09-19T12:29:17.354Z",
+   "browsers": [
+    {
+     "id": "edge",
+     "name": "Microsoft Edge",
+     "version": "153.0.4234.32",
+     "binary": "C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe",
+     "driverKind": "msedgedriver",
+     "driver": "C:\\ibbrowsers\\drivers\\msedgedriver-153.0.4234.32\\msedgedriver.exe",
+     "driverVersion": "153.0.4234.32",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "preinstalled",
+     "driverSource": "https://msedgedriver.microsoft.com/153.0.4234.32/edgedriver_win32.zip",
+     "verified": "msedgedriver: Authenticode Microsoft Corporation, digest ok (osslsigncode; the chain ends at Microsoft Root Certificate Authority 2010, not in the Linux CA bundle); Get-AuthenticodeSignature on the VM: Valid CN=Microsoft Corporation",
+     "smoke": "",
+     "notes": "Built into Windows; auto-updates; the harness refetches the matching driver after an update"
+    }
+   ]
+  },
+  "ltsc2021": {
+   "os": "windows",
+   "ssh": "x@10.0.1.86",
+   "read": "2026-09-19T10:26:32.847Z",
+   "browsers": [
+    {
+     "id": "edge",
+     "name": "Microsoft Edge",
+     "version": "153.0.4234.48",
+     "binary": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+     "driverKind": "msedgedriver",
+     "driver": "C:\\ibbrowsers\\drivers\\msedgedriver-153.0.4234.48\\msedgedriver.exe",
+     "driverVersion": "153.0.4234.48",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "preinstalled",
+     "driverSource": "https://msedgedriver.microsoft.com/153.0.4234.48/edgedriver_win64.zip",
+     "verified": "msedgedriver: Authenticode Microsoft Corporation, digest ok (osslsigncode; the chain ends at Microsoft Root Certificate Authority 2010, not in the Linux CA bundle); Get-AuthenticodeSignature on the VM: Valid CN=Microsoft Corporation",
+     "smoke": "",
+     "notes": "Built into Windows; auto-updates; the harness refetches the matching driver after an update"
+    }
+   ]
+  },
+  "11de": {
+   "os": "windows",
+   "ssh": "Jörg Müller@10.0.1.83",
+   "read": "2026-09-19T14:43:50.632Z",
+   "browsers": [
+    {
+     "id": "edge",
+     "name": "Microsoft Edge",
+     "version": "153.0.4234.32",
+     "binary": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+     "driverKind": "msedgedriver",
+     "driver": "C:\\ibbrowsers\\drivers\\msedgedriver-153.0.4234.32\\msedgedriver.exe",
+     "driverVersion": "153.0.4234.32",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "preinstalled",
+     "driverSource": "https://msedgedriver.microsoft.com/153.0.4234.32/edgedriver_win64.zip",
+     "verified": "msedgedriver: Authenticode Microsoft Corporation, digest ok (osslsigncode; the chain ends at Microsoft Root Certificate Authority 2010, not in the Linux CA bundle); Get-AuthenticodeSignature on the VM: Valid CN=Microsoft Corporation",
+     "smoke": "",
+     "notes": "Built into Windows; auto-updates; the harness refetches the matching driver after an update"
     }
    ]
   },

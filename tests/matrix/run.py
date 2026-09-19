@@ -22,7 +22,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 MAC = "Matthew@the-mac-test-host"
 WINDOWS = {
-    # name: (ssh target, default shell)
+    # name: (ssh target, default shell[, "profile"])
     "xp": ("matthew@10.0.1.132", "cmd"),
     "vista": ("x@10.0.1.167", "cmd"),
     "7": ("x@10.0.1.231", "cmd"),
@@ -30,6 +30,13 @@ WINDOWS = {
     "10": ("matth@10.0.1.199", "cmd"),
     "11": ("matth@10.0.1.123", "powershell"),
     "2022": ("administrator@10.0.1.248", "cmd"),
+    # ESXi installer-test VMs from tools/esxi_provision_windows.py (docs/test-vms.md).
+    "10x86": ("x@10.0.1.47", "cmd"),
+    "ltsc2021": ("x@10.0.1.86", "cmd"),
+    "2025core": ("x@10.0.1.124", "cmd"),
+    # German Windows 11: runs as the awkward-name user, from a folder in
+    # that user's profile ("profile": see run_windows.py).
+    "11de": ("Jörg Müller@10.0.1.83", "cmd", "profile"),
 }
 # Linux test VMs on the ESXi host (docs/test-vms.md): name -> ssh target.
 LINUX_VMS = {

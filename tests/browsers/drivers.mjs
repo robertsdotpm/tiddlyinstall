@@ -2,8 +2,9 @@
 // and then their driver no longer matches. When a session fails that way,
 // ensureDriver() fetches the matching driver from the vendor, checks its
 // Authenticode signature here, installs it on the machine next to the old
-// one, and updates the machine's browsers.json. Only for 64-bit Windows,
-// where the auto-updating browsers are.
+// one, and updates the machine's browsers.json. Only for Windows 10 and
+// later, where the auto-updating browsers are; a 32-bit machine's entry
+// (its driverSource names win32: Windows 10 x86) gets the win32 driver.
 //
 //   chromedriver   Chrome for Testing: the exact version, else the latest patch of its build
 //                  https://googlechromelabs.github.io/chrome-for-testing/
@@ -61,7 +62,8 @@ export async function ensureDriver(remote, entry, message, tmp) {
       if (!url) throw new Error(`no Chrome for Testing chromedriver for ${v}`);
     }
   } else {
-    url = `https://msedgedriver.microsoft.com/${v}/edgedriver_win64.zip`;
+    const plat = /win32/.test(entry.driverSource || '') ? 'win32' : 'win64';
+    url = `https://msedgedriver.microsoft.com/${v}/edgedriver_${plat}.zip`;
   }
   console.log(`[${remote.name}] ${entry.id} is now ${v}; fetching ${url}`);
   const zip = path.join(tmp, 'driver.zip');

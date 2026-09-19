@@ -17,6 +17,8 @@ export const MACHINES = [
   ['xp', 'Windows XP', 'windows', '5.1'], ['vista', 'Windows Vista', 'windows', '6.0'], ['7', 'Windows 7', 'windows', '6.1'],
   ['8.1', 'Windows 8.1', 'windows', '6.3'], ['10', 'Windows 10', 'windows', '10'], ['11', 'Windows 11', 'windows', '11'],
   ['2022', 'Windows Server 2022', 'windows', '10'],
+  ['10x86', 'Windows 10 (32-bit)', 'windows', '10'], ['ltsc2021', 'Windows 10 LTSC 2021', 'windows', '10'],
+  ['11de', 'Windows 11 (German, non-ASCII user)', 'windows', '11'], ['2025core', 'Windows Server 2025 Core', 'windows', '10'],
   ['centos6', 'CentOS 6', 'linux', ''], ['centos7', 'CentOS 7', 'linux', ''], ['ubuntu1404', 'Ubuntu 14.04', 'linux', ''],
   ['ubuntu1604', 'Ubuntu 16.04', 'linux', ''], ['ubuntu1804', 'Ubuntu 18.04', 'linux', ''], ['rocky8', 'Rocky Linux 8', 'linux', ''],
   ['ubuntu2004', 'Ubuntu 20.04', 'linux', ''], ['ubuntu2204', 'Ubuntu 22.04', 'linux', ''], ['debian12', 'Debian 12', 'linux', '', 1],
