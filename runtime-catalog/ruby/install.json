@@ -223,6 +223,81 @@
     "os": "macos",
     "kind": "archive",
     "format": "tar.gz",
+    "versions": ">=3.2",
+    "arch": null,
+    "variant": [
+     "rv-ruby",
+     "homebrew-portable"
+    ]
+   },
+   "method": "unpack",
+   "preferred": true,
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 2
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null || true",
+     "shell": "sh"
+    },
+    {
+     "run": "for f in \"{runtime_dir}\"/lib/ruby/*/*-darwin*/rbconfig.rb; do sed -i '' \"s|-bundle_loader '\\$(BUILTRUBY)'|-bundle_loader \\$(BUILTRUBY)|\" \"$f\"; done",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "Xcode Command Line Tools, only to compile gems with C extensions (policy needs, for apps that install gems)"
+   ],
+   "executable": "bin/ruby",
+   "package_manager": "\"{runtime_dir}/bin/ruby\" \"{runtime_dir}/bin/gem\"",
+   "verify": "\"{runtime_dir}/bin/ruby\" -ropenssl -rpsych -e 'puts RUBY_DESCRIPTION, Gem.dir'",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "The macOS of the GitHub runner that built it (macos-arm64: Apple Silicon; the exact minimum wasn't read from LC_BUILD_VERSION)",
+   "tested": true,
+   "confidence": "low",
+   "sources": [
+    "https://github.com/spinel-coop/rv-ruby",
+    "https://github.com/Homebrew/homebrew-portable-ruby",
+    "https://github.com/Homebrew/homebrew-core/blob/main/Formula/p/portable-ruby.rb"
+   ],
+   "notes": "Relocatable builds (catalogue variants rv-ruby and homebrew-portable, ruby/portable_ruby.py): they run from any folder, with OpenSSL, libyaml and libffi built in and their own CA bundle (libexec/cert.pem, used by a hook in openssl.rb unless SSL_CERT_FILE is set), and link nothing outside /usr/lib and /System. The archive is rv-ruby@X/X/... or portable-ruby/X/..., hence strip 2. Their bin/ scripts are /bin/sh trampolines to the ruby beside them, so gem and bundle work from any folder too. C extensions are compiled with clang (rbconfig CC), from the Xcode Command Line Tools. rbconfig.rb's EXTDLDFLAGS is \"-bundle_loader '$(BUILTRUBY)'\": make writes a path with a space as 'Application\\ Support', and inside those quotes the backslash stays, so linking every C extension fails (ld: library '.../Application\\ Support/.../bin/ruby' not found) in the default macOS install folder. The recipe drops the quotes; make's escaped space then reaches the linker as one argument (tested 2026-09-19 with bcrypt and json in a folder with a space).",
+   "launch": {
+    "program": "{runtime_dir}/bin/ruby",
+    "args": [],
+    "env": {
+     "RUBYOPT": null,
+     "RUBYLIB": null,
+     "GEM_HOME": null,
+     "GEM_PATH": null,
+     "BUNDLE_USER_HOME": "{data_dir}/bundle",
+     "BUNDLE_APP_CONFIG": "{app_dir}/.bundle"
+    },
+    "notes": "Clearing GEM_HOME/GEM_PATH makes gems resolve to the runtime's own folder; RUBYOPT/RUBYLIB would inject a user's settings."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/ruby\" \"{runtime_dir}/bin/bundle\" install",
+    "env": {
+     "RUBYOPT": null,
+     "RUBYLIB": null,
+     "GEM_HOME": null,
+     "GEM_PATH": null,
+     "BUNDLE_USER_HOME": "{data_dir}/bundle",
+     "BUNDLE_APP_CONFIG": "{app_dir}/.bundle"
+    },
+    "cwd": "{app_dir}",
+    "notes": "When the project has a Gemfile; otherwise `gem install` the app's gem."
+   }
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "tar.gz",
     "versions": ">=2.0",
     "arch": null,
     "variant": "macos-*"
@@ -292,6 +367,83 @@
      "GEM_PATH": null,
      "BUNDLE_USER_HOME": "{data_dir}/bundle",
      "BUNDLE_APP_CONFIG": "{app_dir}/.bundle"
+    },
+    "cwd": "{app_dir}",
+    "notes": "When the project has a Gemfile; otherwise `gem install` the app's gem."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "7z",
+    "versions": ">=2.4",
+    "arch": "amd64",
+    "variant": null
+   },
+   "method": "unpack",
+   "preferred": true,
+   "steps": [
+    {
+     "unpack": "7z",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "(\"{tmp}\\msys2-base.sfx.exe\" -y -o\"{runtime_dir}\" >nul && \"{runtime_dir}\\msys64\\usr\\bin\\bash.exe\" -lc true && \"{runtime_dir}\\msys64\\usr\\bin\\bash.exe\" -lc \"pacman -Sy --noconfirm\" && \"{runtime_dir}\\bin\\ridk.cmd\" install 3) || (rd /s /q \"{runtime_dir}\\msys64\" 2>nul & echo The DevKit ^(MSYS2^) could not be set up, so gems with C extensions won't build. & ver >nul)",
+     "shell": "cmd"
+    },
+    {
+     "run": "if exist \"{runtime_dir}\\msys64\\usr\\bin\\gpgconf.exe\" \"{runtime_dir}\\msys64\\usr\\bin\\gpgconf.exe\" --kill all",
+     "shell": "cmd"
+    },
+    {
+     "run": "if exist \"{runtime_dir}\\msys64\\var\\cache\\pacman\\pkg\" (rd /s /q \"{runtime_dir}\\msys64\\var\\cache\\pacman\\pkg\" & mkdir \"{runtime_dir}\\msys64\\var\\cache\\pacman\\pkg\")",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "Windows 8.1 or later for the DevKit (MSYS2); older Windows gets the plain recipe"
+   ],
+   "executable": "bin\\ruby.exe",
+   "package_manager": "\"{runtime_dir}\\bin\\gem.cmd\"   (bundler: \"{runtime_dir}\\bin\\bundle.bat\")",
+   "verify": "\"{runtime_dir}\\bin\\ruby.exe\" -ropenssl -e \"puts RUBY_DESCRIPTION, RbConfig::TOPDIR\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Windows 7 (x86/x64); Windows 11 ARM64 for -arm builds; Ruby 4.0 has no x86 build",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://github.com/oneclick/rubyinstaller2/blob/master/lib/ruby_installer/build/msys2_installation.rb",
+    "https://github.com/oneclick/rubyinstaller2/blob/master/lib/ruby_installer/build/components/03_dev_tools.rb",
+    "https://www.msys2.org/docs/windows_support/"
+   ],
+   "notes": "RubyInstaller with its DevKit, for apps that install gems (policy extra_files msys2-base.sfx.exe, \"for\": \"install\"): the MSYS2 base unpacked into {runtime_dir}\\msys64, where RubyInstaller looks first, its first start (pacman keyring), then `ridk install 3` (pacman: make, the MINGW gcc toolchain, autotools), as RubyInstaller-Devkit users do; the pacman download cache is emptied and gpg-agent stopped so the folder can be deleted. The toolchain comes from MSYS2's repositories at install time (pacman checks the packages' signatures), about 150 MB. MSYS2 needs Windows 8.1+, so the extra file's source says min_os 603 and older Windows gets the plain recipe. If setting it up fails anyway (no network to MSYS2's mirrors), the folder is removed and Ruby installs without it: pure-Ruby gems still install, gems with C extensions don't.",
+   "launch": {
+    "program": "{runtime_dir}\\bin\\ruby.exe",
+    "gui_program": "{runtime_dir}\\bin\\rubyw.exe",
+    "args": [],
+    "env": {
+     "RUBYOPT": null,
+     "RUBYLIB": null,
+     "GEM_HOME": null,
+     "GEM_PATH": null,
+     "BUNDLE_USER_HOME": "{data_dir}\\bundle",
+     "BUNDLE_APP_CONFIG": "{app_dir}\\.bundle"
+    },
+    "notes": "Clearing GEM_HOME/GEM_PATH makes gems resolve to the runtime's own folder; RUBYOPT/RUBYLIB would inject a user's settings. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\bin\\bundle.bat\" install",
+    "env": {
+     "RUBYOPT": null,
+     "RUBYLIB": null,
+     "GEM_HOME": null,
+     "GEM_PATH": null,
+     "BUNDLE_USER_HOME": "{data_dir}\\bundle",
+     "BUNDLE_APP_CONFIG": "{app_dir}\\.bundle"
     },
     "cwd": "{app_dir}",
     "notes": "When the project has a Gemfile; otherwise `gem install` the app's gem."

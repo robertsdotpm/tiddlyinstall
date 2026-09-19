@@ -218,7 +218,14 @@ outside `{runtime_dir}` is listed in `side_effects`.
   by the base installer itself (it bundles its own zip/7z/tar/xz code), so
   it names the format, not a tool. Tokens: `{file}` the downloaded file,
   `{runtime_dir}` the target folder (absolute, may contain spaces),
-  `{tmp}` a scratch folder deleted afterwards.
+  `{tmp}` a scratch folder deleted afterwards. A `run` step may name
+  `{tmp}\<file>` (or `{tmp}/<file>`) for a file installer-builder's
+  policy pins (`extra_files`: `get-pip.py`, `msys2-base.sfx.exe` for
+  Ruby's DevKit, `composer.phar`, `cacert.pem`, Nim's `dlls.zip`; added
+  2026-09-19 for the last four) or for one of the release's `parts`;
+  such a recipe is only used where that file is provided (for some, only
+  for apps that install something), so recipes often come in pairs: with
+  and without the file.
 - `executable`: the runtime's main program, relative to `{runtime_dir}`.
 - `package_manager`: how the app's dependencies get installed with this
   runtime, if it has one.

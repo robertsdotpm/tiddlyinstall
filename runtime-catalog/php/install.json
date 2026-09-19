@@ -90,15 +90,63 @@
      "shell": "cmd"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_openssl.dll",
-     "shell": "cmd"
-    },
-    {
      "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_mbstring.dll",
      "shell": "cmd"
     },
     {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_bz2.dll",
+     "shell": "cmd"
+    },
+    {
      "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_curl.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_exif.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_fileinfo.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_gd2.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_gettext.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_intl.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_mysqli.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_openssl.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_pdo_mysql.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_pdo_sqlite.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_sockets.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_sqlite3.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_xsl.dll",
      "shell": "cmd"
     },
     {
@@ -111,6 +159,14 @@
     },
     {
      "run": ">>\"{runtime_dir}\\composer.cmd\" echo @\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" %*",
+     "shell": "cmd"
+    },
+    {
+     "run": "copy /y \"{tmp}\\cacert.pem\" \"{runtime_dir}\\cacert.pem\" >nul",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo curl.cainfo=\"{runtime_dir}\\cacert.pem\"",
      "shell": "cmd"
     }
    ],
@@ -139,7 +195,330 @@
     "https://getcomposer.org/doc/03-cli.md#environment-variables",
     "https://getcomposer.org/doc/00-intro.md#installation-windows"
    ],
-   "notes": "Imports checked with pefile across every .exe/.dll in both zips: MSVCR110.dll (57 files) and MSVCP110.dll (9). App-local option: Microsoft supports deploying the VC11 CRT DLLs in the application folder (no side-by-side manifest since VC10); copying msvcr110.dll and msvcp110.dll next to php.exe makes this recipe 'full' isolation, at the cost of no Windows Update servicing. The DLLs would have to come from the VS2012 redist (VC\\redist\\<arch>\\Microsoft.VC110.CRT) or be extracted from vcredist_*.exe - installer-builder has no such artifact yet. php.ini search order (php.net 'The configuration file'): PHPRC env, then on Windows the registry keys HKLM\\SOFTWARE\\PHP\\x.y.z\\IniFilePath / ...\\PHP\\x.y\\IniFilePath / ...\\PHP\\x\\IniFilePath / ...\\PHP\\IniFilePath, then the php.exe folder (CLI), then %SystemRoot%. A registry IniFilePath left by another PHP install therefore outranks our php.ini, so every command passes -c \"{runtime_dir}\\php.ini\" explicitly. extension_dir: a relative 'ext' is resolved against the current directory, not php.exe's folder, so the recipe writes an absolute path. PHP 5.6 needs the php_ prefixed extension=php_x.dll syntax. Composer (not in the download plan; ship composer.phar as a separate pinned download into {runtime_dir}): run as \"{runtime_dir}\\composer.cmd\" (written by the recipe; the steps assume a cmd /c command line, where %* is written literally - if the runner puts them in a .bat, write %%* instead) which sets COMPOSER_HOME and COMPOSER_CACHE_DIR inside {runtime_dir}; without them Composer writes %APPDATA%\\Composer and %LOCALAPPDATA%\\Composer. It needs the openssl extension (enabled above); zip is built in to this build. Composer on PHP 5.6: only the 2.2 LTS line (supports 5.3.2+); 2.3+ needs 7.2.5+. Pin composer.phar 2.2.x. For reference, other PHP Windows compilers: VC6 (4.x-5.2) = msvcrt.dll, no redist; VC9 (5.3-5.4) = VC++ 2008 SP1 redist 9.0.30729.x (msvcr90.dll is a WinSxS assembly; app-local needs a private Microsoft.VC90.CRT folder with its manifest); VC11 (5.5-5.6) = VC++ 2012; VC14 (7.0-7.1) / VC15 (7.2-7.4) / VS16 (8.0-8.3) / VS17 (8.4+) = the single v14 '2015-2022' redistributable, at least as new as the compiler (VS17 needs >=14.30).",
+   "notes": "Imports checked with pefile across every .exe/.dll in both zips: MSVCR110.dll (57 files) and MSVCP110.dll (9). App-local option: Microsoft supports deploying the VC11 CRT DLLs in the application folder (no side-by-side manifest since VC10); copying msvcr110.dll and msvcp110.dll next to php.exe makes this recipe 'full' isolation, at the cost of no Windows Update servicing. The DLLs would have to come from the VS2012 redist (VC\\redist\\<arch>\\Microsoft.VC110.CRT) or be extracted from vcredist_*.exe - installer-builder has no such artifact yet. php.ini search order (php.net 'The configuration file'): PHPRC env, then on Windows the registry keys HKLM\\SOFTWARE\\PHP\\x.y.z\\IniFilePath / ...\\PHP\\x.y\\IniFilePath / ...\\PHP\\x\\IniFilePath / ...\\PHP\\IniFilePath, then the php.exe folder (CLI), then %SystemRoot%. A registry IniFilePath left by another PHP install therefore outranks our php.ini, so every command passes -c \"{runtime_dir}\\php.ini\" explicitly. extension_dir: a relative 'ext' is resolved against the current directory, not php.exe's folder, so the recipe writes an absolute path. PHP 5.6 needs the php_ prefixed extension=php_x.dll syntax. Composer (not in the download plan; ship composer.phar as a separate pinned download into {runtime_dir}): run as \"{runtime_dir}\\composer.cmd\" (written by the recipe; the steps assume a cmd /c command line, where %* is written literally - if the runner puts them in a .bat, write %%* instead) which sets COMPOSER_HOME and COMPOSER_CACHE_DIR inside {runtime_dir}; without them Composer writes %APPDATA%\\Composer and %LOCALAPPDATA%\\Composer. It needs the openssl extension (enabled above); zip is built in to this build. Composer on PHP 5.6: only the 2.2 LTS line (supports 5.3.2+); 2.3+ needs 7.2.5+. Pin composer.phar 2.2.x. For reference, other PHP Windows compilers: VC6 (4.x-5.2) = msvcrt.dll, no redist; VC9 (5.3-5.4) = VC++ 2008 SP1 redist 9.0.30729.x (msvcr90.dll is a WinSxS assembly; app-local needs a private Microsoft.VC90.CRT folder with its manifest); VC11 (5.5-5.6) = VC++ 2012; VC14 (7.0-7.1) / VC15 (7.2-7.4) / VS16 (8.0-8.3) / VS17 (8.4+) = the single v14 '2015-2022' redistributable, at least as new as the compiler (VS17 needs >=14.30). Extensions turned on (2026-09-19, for typical apps, as Linux distributions install them): php_mbstring.dll, php_bz2.dll, php_curl.dll, php_exif.dll, php_fileinfo.dll, php_gd2.dll, php_gettext.dll, php_intl.dll, php_mysqli.dll, php_openssl.dll, php_pdo_mysql.dll, php_pdo_sqlite.dll, php_sockets.dll, php_sqlite3.dll, php_xsl.dll. The curl extension gets a CA bundle (policy extra_files cacert.pem, curl.cainfo): PHP for Windows's libcurl has none, while its OpenSSL streams use the Windows certificate store.",
+   "launch": {
+    "program": "{runtime_dir}\\php.exe",
+    "gui_program": "{runtime_dir}\\php-win.exe",
+    "args": [
+     "-c",
+     "{runtime_dir}\\php.ini"
+    ],
+    "env": {
+     "PHP_INI_SCAN_DIR": ""
+    },
+    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" install --no-dev --no-interaction",
+    "env": {
+     "PHP_INI_SCAN_DIR": "",
+     "COMPOSER_HOME": "{data_dir}\\composer-home",
+     "COMPOSER_CACHE_DIR": "{data_dir}\\composer-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Composer is not in the download plan yet; composer.phar must be added to the runtime folder."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": ">=5.5,<7",
+    "arch": null,
+    "variant": "nts-vc11",
+    "libc": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 0
+    },
+    {
+     "run": "copy /y \"{runtime_dir}\\php.ini-production\" \"{runtime_dir}\\php.ini\"",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension_dir=\"{runtime_dir}\\ext\"",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_mbstring.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_bz2.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_curl.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_exif.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_fileinfo.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_gd2.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_gettext.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_intl.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_mysqli.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_openssl.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_pdo_mysql.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_pdo_sqlite.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_sockets.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_sqlite3.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_xsl.dll",
+     "shell": "cmd"
+    },
+    {
+     "run": ">\"{runtime_dir}\\composer.cmd\" echo @set \"COMPOSER_HOME={runtime_dir}\\composer-home\"",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\composer.cmd\" echo @set \"COMPOSER_CACHE_DIR={runtime_dir}\\composer-cache\"",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\composer.cmd\" echo @\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" %*",
+     "shell": "cmd"
+    },
+    {
+     "run": "copy /y \"{tmp}\\cacert.pem\" \"{runtime_dir}\\cacert.pem\" >nul",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo curl.cainfo=\"{runtime_dir}\\cacert.pem\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "copy /y \"{tmp}\\composer.phar\" \"{runtime_dir}\\composer.phar\" >nul",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "Visual C++ Redistributable for Visual Studio 2012 Update 4 (11.0.61030), same arch as PHP (x86 PHP needs the x86 one even on 64-bit Windows): vcredist_x86.exe / vcredist_x64.exe /install /quiet /norestart - NOT in the catalogue (msvc-redist only has the v14 'latest'); or app-local msvcr110.dll + msvcp110.dll next to php.exe (see notes)"
+   ],
+   "executable": "php.exe",
+   "package_manager": "\"{runtime_dir}\\composer.cmd\"",
+   "verify": "\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" -r \"echo PHP_VERSION, PHP_EOL, extension_loaded('openssl') ? 'openssl ok' : 'openssl MISSING';\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "system-wide VC++ 2012 runtime (msvcr110.dll/msvcp110.dll in System32/SysWOW64, an Add/Remove Programs entry, left behind on uninstall because other software may share it) - unless the app-local variant is used"
+   ],
+   "isolation": "leaks",
+   "relocatable": true,
+   "min_os": "Windows Vista / Server 2008 (VC11 without the _xp toolset; PE header 6.0). Not XP.",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://windows.php.net/",
+    "https://www.php.net/manual/en/install.windows.manual.php",
+    "https://www.php.net/manual/en/configuration.file.php",
+    "https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist",
+    "https://learn.microsoft.com/en-us/cpp/windows/redistributing-visual-cpp-files",
+    "https://learn.microsoft.com/en-us/cpp/windows/universal-crt-deployment",
+    "https://getcomposer.org/doc/03-cli.md#environment-variables",
+    "https://getcomposer.org/doc/00-intro.md#installation-windows"
+   ],
+   "notes": "With Composer (policy extra_files composer.phar, \"for\": \"install\"): for apps that install something, such as a project with a composer.json. Imports checked with pefile across every .exe/.dll in both zips: MSVCR110.dll (57 files) and MSVCP110.dll (9). App-local option: Microsoft supports deploying the VC11 CRT DLLs in the application folder (no side-by-side manifest since VC10); copying msvcr110.dll and msvcp110.dll next to php.exe makes this recipe 'full' isolation, at the cost of no Windows Update servicing. The DLLs would have to come from the VS2012 redist (VC\\redist\\<arch>\\Microsoft.VC110.CRT) or be extracted from vcredist_*.exe - installer-builder has no such artifact yet. php.ini search order (php.net 'The configuration file'): PHPRC env, then on Windows the registry keys HKLM\\SOFTWARE\\PHP\\x.y.z\\IniFilePath / ...\\PHP\\x.y\\IniFilePath / ...\\PHP\\x\\IniFilePath / ...\\PHP\\IniFilePath, then the php.exe folder (CLI), then %SystemRoot%. A registry IniFilePath left by another PHP install therefore outranks our php.ini, so every command passes -c \"{runtime_dir}\\php.ini\" explicitly. extension_dir: a relative 'ext' is resolved against the current directory, not php.exe's folder, so the recipe writes an absolute path. PHP 5.6 needs the php_ prefixed extension=php_x.dll syntax. Composer (not in the download plan; ship composer.phar as a separate pinned download into {runtime_dir}): run as \"{runtime_dir}\\composer.cmd\" (written by the recipe; the steps assume a cmd /c command line, where %* is written literally - if the runner puts them in a .bat, write %%* instead) which sets COMPOSER_HOME and COMPOSER_CACHE_DIR inside {runtime_dir}; without them Composer writes %APPDATA%\\Composer and %LOCALAPPDATA%\\Composer. It needs the openssl extension (enabled above); zip is built in to this build. Composer on PHP 5.6: only the 2.2 LTS line (supports 5.3.2+); 2.3+ needs 7.2.5+. Pin composer.phar 2.2.x. For reference, other PHP Windows compilers: VC6 (4.x-5.2) = msvcrt.dll, no redist; VC9 (5.3-5.4) = VC++ 2008 SP1 redist 9.0.30729.x (msvcr90.dll is a WinSxS assembly; app-local needs a private Microsoft.VC90.CRT folder with its manifest); VC11 (5.5-5.6) = VC++ 2012; VC14 (7.0-7.1) / VC15 (7.2-7.4) / VS16 (8.0-8.3) / VS17 (8.4+) = the single v14 '2015-2022' redistributable, at least as new as the compiler (VS17 needs >=14.30). Extensions turned on (2026-09-19, for typical apps, as Linux distributions install them): php_mbstring.dll, php_bz2.dll, php_curl.dll, php_exif.dll, php_fileinfo.dll, php_gd2.dll, php_gettext.dll, php_intl.dll, php_mysqli.dll, php_openssl.dll, php_pdo_mysql.dll, php_pdo_sqlite.dll, php_sockets.dll, php_sqlite3.dll, php_xsl.dll. The curl extension gets a CA bundle (policy extra_files cacert.pem, curl.cainfo): PHP for Windows's libcurl has none, while its OpenSSL streams use the Windows certificate store.",
+   "launch": {
+    "program": "{runtime_dir}\\php.exe",
+    "gui_program": "{runtime_dir}\\php-win.exe",
+    "args": [
+     "-c",
+     "{runtime_dir}\\php.ini"
+    ],
+    "env": {
+     "PHP_INI_SCAN_DIR": ""
+    },
+    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" install --no-dev --no-interaction",
+    "env": {
+     "PHP_INI_SCAN_DIR": "",
+     "COMPOSER_HOME": "{data_dir}\\composer-home",
+     "COMPOSER_CACHE_DIR": "{data_dir}\\composer-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "composer.phar is in the runtime folder (this recipe copies it there)."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": ">=7,<8",
+    "arch": null,
+    "variant": "nts-vc15",
+    "libc": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 0
+    },
+    {
+     "run": "copy /y \"{runtime_dir}\\php.ini-production\" \"{runtime_dir}\\php.ini\"",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension_dir=\"{runtime_dir}\\ext\"",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=mbstring",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=bz2",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=curl",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=exif",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=fileinfo",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=ftp",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=gd2",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=gettext",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=intl",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=mysqli",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=openssl",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=pdo_mysql",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=pdo_sqlite",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sockets",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sodium",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sqlite3",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=xsl",
+     "shell": "cmd"
+    },
+    {
+     "run": ">\"{runtime_dir}\\composer.cmd\" echo @set \"COMPOSER_HOME={runtime_dir}\\composer-home\"",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\composer.cmd\" echo @set \"COMPOSER_CACHE_DIR={runtime_dir}\\composer-cache\"",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\composer.cmd\" echo @\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" %*",
+     "shell": "cmd"
+    },
+    {
+     "run": "copy /y \"{tmp}\\cacert.pem\" \"{runtime_dir}\\cacert.pem\" >nul",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo curl.cainfo=\"{runtime_dir}\\cacert.pem\"",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "Visual C++ v14 Redistributable (2015-2022), any version >= 14.1x (VS 2017), same arch as PHP: catalogue msvc-redist/windows/<arch>/latest (14.44) with vc_redist.<arch>.exe /install /quiet /norestart",
+    "Windows 7 SP1 / 8.1: the Universal CRT (KB2999226/KB3118401), which the v14 redist installs itself; Windows 10+ has it built in"
+   ],
+   "executable": "php.exe",
+   "package_manager": "\"{runtime_dir}\\composer.cmd\"",
+   "verify": "\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" -r \"echo PHP_VERSION, PHP_EOL, extension_loaded('openssl') ? 'openssl ok' : 'openssl MISSING';\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "system-wide VC++ v14 runtime (vcruntime140.dll, msvcp140.dll, UCRT on 7/8.1) with an Add/Remove Programs entry, shared with other software and left on uninstall - unless the app-local variant is used"
+   ],
+   "isolation": "leaks",
+   "relocatable": true,
+   "min_os": "Windows 7 SP1 / Server 2008 R2 (PE header 6.0)",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://windows.php.net/",
+    "https://www.php.net/manual/en/install.windows.manual.php",
+    "https://www.php.net/manual/en/configuration.file.php",
+    "https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist",
+    "https://learn.microsoft.com/en-us/cpp/windows/redistributing-visual-cpp-files",
+    "https://learn.microsoft.com/en-us/cpp/windows/universal-crt-deployment",
+    "https://getcomposer.org/doc/03-cli.md#environment-variables",
+    "https://getcomposer.org/doc/00-intro.md#installation-windows"
+   ],
+   "notes": "Imports: VCRUNTIME140.dll, MSVCP140.dll and api-ms-win-crt-* (UCRT). Microsoft: the redist from Visual Studio 2026 onwards only supports Windows 10/11 / Server 2016+, so a future refresh of msvc-redist 'latest' would break Windows 7/8.1 targets - pin a VS 2022 (14.3x/14.4x) build for them. App-local option: copy vcruntime140.dll and msvcp140.dll (and on Windows 7/8.1 also ucrtbase.dll plus the api-ms-win-*.dll forwarders from the Windows 10 SDK Redist\\ucrt\\DLLs\\<arch>) next to php.exe; Microsoft documents this as supported (on Windows 10+ the OS UCRT is always used regardless). Extension DLLs in ext\\ and their dependencies in the root (libcrypto-1_1.dll, libssh2.dll...) are found via php.exe's folder. php.ini search order (php.net 'The configuration file'): PHPRC env, then on Windows the registry keys HKLM\\SOFTWARE\\PHP\\x.y.z\\IniFilePath / ...\\PHP\\x.y\\IniFilePath / ...\\PHP\\x\\IniFilePath / ...\\PHP\\IniFilePath, then the php.exe folder (CLI), then %SystemRoot%. A registry IniFilePath left by another PHP install therefore outranks our php.ini, so every command passes -c \"{runtime_dir}\\php.ini\" explicitly. extension_dir: a relative 'ext' is resolved against the current directory, not php.exe's folder, so the recipe writes an absolute path. Composer (not in the download plan; ship composer.phar as a separate pinned download into {runtime_dir}): run as \"{runtime_dir}\\composer.cmd\" (written by the recipe; the steps assume a cmd /c command line, where %* is written literally - if the runner puts them in a .bat, write %%* instead) which sets COMPOSER_HOME and COMPOSER_CACHE_DIR inside {runtime_dir}; without them Composer writes %APPDATA%\\Composer and %LOCALAPPDATA%\\Composer. It needs the openssl extension (enabled above); zip is built in to this build. Current Composer 2.x supports 7.2.5+. Extensions turned on (2026-09-19, for typical apps, as Linux distributions install them): mbstring, bz2, curl, exif, fileinfo, ftp, gd2, gettext, intl, mysqli, openssl, pdo_mysql, pdo_sqlite, sockets, sodium, sqlite3, xsl. The curl extension gets a CA bundle (policy extra_files cacert.pem, curl.cainfo): PHP for Windows's libcurl has none, while its OpenSSL streams use the Windows certificate store.",
    "launch": {
     "program": "{runtime_dir}\\php.exe",
     "gui_program": "{runtime_dir}\\php-win.exe",
@@ -189,15 +568,71 @@
      "shell": "cmd"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=openssl",
-     "shell": "cmd"
-    },
-    {
      "run": ">>\"{runtime_dir}\\php.ini\" echo extension=mbstring",
      "shell": "cmd"
     },
     {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=bz2",
+     "shell": "cmd"
+    },
+    {
      "run": ">>\"{runtime_dir}\\php.ini\" echo extension=curl",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=exif",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=fileinfo",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=ftp",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=gd2",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=gettext",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=intl",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=mysqli",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=openssl",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=pdo_mysql",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=pdo_sqlite",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sockets",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sodium",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sqlite3",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=xsl",
      "shell": "cmd"
     },
     {
@@ -210,6 +645,18 @@
     },
     {
      "run": ">>\"{runtime_dir}\\composer.cmd\" echo @\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" %*",
+     "shell": "cmd"
+    },
+    {
+     "run": "copy /y \"{tmp}\\cacert.pem\" \"{runtime_dir}\\cacert.pem\" >nul",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo curl.cainfo=\"{runtime_dir}\\cacert.pem\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "copy /y \"{tmp}\\composer.phar\" \"{runtime_dir}\\composer.phar\" >nul",
      "shell": "cmd"
     }
    ],
@@ -239,7 +686,174 @@
     "https://getcomposer.org/doc/03-cli.md#environment-variables",
     "https://getcomposer.org/doc/00-intro.md#installation-windows"
    ],
-   "notes": "Imports: VCRUNTIME140.dll, MSVCP140.dll and api-ms-win-crt-* (UCRT). Microsoft: the redist from Visual Studio 2026 onwards only supports Windows 10/11 / Server 2016+, so a future refresh of msvc-redist 'latest' would break Windows 7/8.1 targets - pin a VS 2022 (14.3x/14.4x) build for them. App-local option: copy vcruntime140.dll and msvcp140.dll (and on Windows 7/8.1 also ucrtbase.dll plus the api-ms-win-*.dll forwarders from the Windows 10 SDK Redist\\ucrt\\DLLs\\<arch>) next to php.exe; Microsoft documents this as supported (on Windows 10+ the OS UCRT is always used regardless). Extension DLLs in ext\\ and their dependencies in the root (libcrypto-1_1.dll, libssh2.dll...) are found via php.exe's folder. php.ini search order (php.net 'The configuration file'): PHPRC env, then on Windows the registry keys HKLM\\SOFTWARE\\PHP\\x.y.z\\IniFilePath / ...\\PHP\\x.y\\IniFilePath / ...\\PHP\\x\\IniFilePath / ...\\PHP\\IniFilePath, then the php.exe folder (CLI), then %SystemRoot%. A registry IniFilePath left by another PHP install therefore outranks our php.ini, so every command passes -c \"{runtime_dir}\\php.ini\" explicitly. extension_dir: a relative 'ext' is resolved against the current directory, not php.exe's folder, so the recipe writes an absolute path. Composer (not in the download plan; ship composer.phar as a separate pinned download into {runtime_dir}): run as \"{runtime_dir}\\composer.cmd\" (written by the recipe; the steps assume a cmd /c command line, where %* is written literally - if the runner puts them in a .bat, write %%* instead) which sets COMPOSER_HOME and COMPOSER_CACHE_DIR inside {runtime_dir}; without them Composer writes %APPDATA%\\Composer and %LOCALAPPDATA%\\Composer. It needs the openssl extension (enabled above); zip is built in to this build. Current Composer 2.x supports 7.2.5+.",
+   "notes": "With Composer (policy extra_files composer.phar, \"for\": \"install\"): for apps that install something, such as a project with a composer.json. Imports: VCRUNTIME140.dll, MSVCP140.dll and api-ms-win-crt-* (UCRT). Microsoft: the redist from Visual Studio 2026 onwards only supports Windows 10/11 / Server 2016+, so a future refresh of msvc-redist 'latest' would break Windows 7/8.1 targets - pin a VS 2022 (14.3x/14.4x) build for them. App-local option: copy vcruntime140.dll and msvcp140.dll (and on Windows 7/8.1 also ucrtbase.dll plus the api-ms-win-*.dll forwarders from the Windows 10 SDK Redist\\ucrt\\DLLs\\<arch>) next to php.exe; Microsoft documents this as supported (on Windows 10+ the OS UCRT is always used regardless). Extension DLLs in ext\\ and their dependencies in the root (libcrypto-1_1.dll, libssh2.dll...) are found via php.exe's folder. php.ini search order (php.net 'The configuration file'): PHPRC env, then on Windows the registry keys HKLM\\SOFTWARE\\PHP\\x.y.z\\IniFilePath / ...\\PHP\\x.y\\IniFilePath / ...\\PHP\\x\\IniFilePath / ...\\PHP\\IniFilePath, then the php.exe folder (CLI), then %SystemRoot%. A registry IniFilePath left by another PHP install therefore outranks our php.ini, so every command passes -c \"{runtime_dir}\\php.ini\" explicitly. extension_dir: a relative 'ext' is resolved against the current directory, not php.exe's folder, so the recipe writes an absolute path. Composer (not in the download plan; ship composer.phar as a separate pinned download into {runtime_dir}): run as \"{runtime_dir}\\composer.cmd\" (written by the recipe; the steps assume a cmd /c command line, where %* is written literally - if the runner puts them in a .bat, write %%* instead) which sets COMPOSER_HOME and COMPOSER_CACHE_DIR inside {runtime_dir}; without them Composer writes %APPDATA%\\Composer and %LOCALAPPDATA%\\Composer. It needs the openssl extension (enabled above); zip is built in to this build. Current Composer 2.x supports 7.2.5+. Extensions turned on (2026-09-19, for typical apps, as Linux distributions install them): mbstring, bz2, curl, exif, fileinfo, ftp, gd2, gettext, intl, mysqli, openssl, pdo_mysql, pdo_sqlite, sockets, sodium, sqlite3, xsl. The curl extension gets a CA bundle (policy extra_files cacert.pem, curl.cainfo): PHP for Windows's libcurl has none, while its OpenSSL streams use the Windows certificate store.",
+   "launch": {
+    "program": "{runtime_dir}\\php.exe",
+    "gui_program": "{runtime_dir}\\php-win.exe",
+    "args": [
+     "-c",
+     "{runtime_dir}\\php.ini"
+    ],
+    "env": {
+     "PHP_INI_SCAN_DIR": ""
+    },
+    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" install --no-dev --no-interaction",
+    "env": {
+     "PHP_INI_SCAN_DIR": "",
+     "COMPOSER_HOME": "{data_dir}\\composer-home",
+     "COMPOSER_CACHE_DIR": "{data_dir}\\composer-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "composer.phar is in the runtime folder (this recipe copies it there)."
+   }
+  },
+  {
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": ">=8",
+    "arch": null,
+    "variant": "nts-vs17",
+    "libc": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 0
+    },
+    {
+     "run": "copy /y \"{runtime_dir}\\php.ini-production\" \"{runtime_dir}\\php.ini\"",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension_dir=\"{runtime_dir}\\ext\"",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=mbstring",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=bz2",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=curl",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=exif",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=fileinfo",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=ftp",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=gd",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=gettext",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=intl",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=mysqli",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=openssl",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=pdo_mysql",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=pdo_sqlite",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sockets",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sodium",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sqlite3",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=xsl",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=zip",
+     "shell": "cmd"
+    },
+    {
+     "run": ">\"{runtime_dir}\\composer.cmd\" echo @set \"COMPOSER_HOME={runtime_dir}\\composer-home\"",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\composer.cmd\" echo @set \"COMPOSER_CACHE_DIR={runtime_dir}\\composer-cache\"",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\composer.cmd\" echo @\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" %*",
+     "shell": "cmd"
+    },
+    {
+     "run": "copy /y \"{tmp}\\cacert.pem\" \"{runtime_dir}\\cacert.pem\" >nul",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo curl.cainfo=\"{runtime_dir}\\cacert.pem\"",
+     "shell": "cmd"
+    }
+   ],
+   "prerequisites": [
+    "Visual C++ v14 Redistributable >= 14.30 (VS 2022), same arch as PHP: catalogue msvc-redist/windows/<arch>/latest (14.44) with vc_redist.<arch>.exe /install /quiet /norestart"
+   ],
+   "executable": "php.exe",
+   "package_manager": "\"{runtime_dir}\\composer.cmd\"",
+   "verify": "\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" -r \"echo PHP_VERSION, PHP_EOL, extension_loaded('openssl') ? 'openssl ok' : 'openssl MISSING';\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [
+    "system-wide VC++ v14 runtime with an Add/Remove Programs entry, shared and left on uninstall - unless the app-local variant is used"
+   ],
+   "isolation": "leaks",
+   "relocatable": true,
+   "min_os": "Windows 8 / Server 2012 per limitations.json (VS17 builds; PE header says 6.0); Windows 10+ in practice for a fully supported redist",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://windows.php.net/",
+    "https://www.php.net/manual/en/install.windows.manual.php",
+    "https://www.php.net/manual/en/configuration.file.php",
+    "https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist",
+    "https://learn.microsoft.com/en-us/cpp/windows/redistributing-visual-cpp-files",
+    "https://learn.microsoft.com/en-us/cpp/windows/universal-crt-deployment",
+    "https://getcomposer.org/doc/03-cli.md#environment-variables",
+    "https://getcomposer.org/doc/00-intro.md#installation-windows"
+   ],
+   "notes": "Imports: VCRUNTIME140.dll, MSVCP140.dll, VCRUNTIME140_1.dll (x64 only) and api-ms-win-crt-*. App-local: as for 7.4, plus vcruntime140_1.dll on x64. zip is a shared extension (ext\\php_zip.dll) in this build, unlike 5.6/7.4. php.ini search order (php.net 'The configuration file'): PHPRC env, then on Windows the registry keys HKLM\\SOFTWARE\\PHP\\x.y.z\\IniFilePath / ...\\PHP\\x.y\\IniFilePath / ...\\PHP\\x\\IniFilePath / ...\\PHP\\IniFilePath, then the php.exe folder (CLI), then %SystemRoot%. A registry IniFilePath left by another PHP install therefore outranks our php.ini, so every command passes -c \"{runtime_dir}\\php.ini\" explicitly. extension_dir: a relative 'ext' is resolved against the current directory, not php.exe's folder, so the recipe writes an absolute path. Composer (not in the download plan; ship composer.phar as a separate pinned download into {runtime_dir}): run as \"{runtime_dir}\\composer.cmd\" (written by the recipe; the steps assume a cmd /c command line, where %* is written literally - if the runner puts them in a .bat, write %%* instead) which sets COMPOSER_HOME and COMPOSER_CACHE_DIR inside {runtime_dir}; without them Composer writes %APPDATA%\\Composer and %LOCALAPPDATA%\\Composer. It needs the openssl extension (enabled above); zip is php_zip.dll, enabled above.  Extensions turned on (2026-09-19, for typical apps, as Linux distributions install them): mbstring, bz2, curl, exif, fileinfo, ftp, gd, gettext, intl, mysqli, openssl, pdo_mysql, pdo_sqlite, sockets, sodium, sqlite3, xsl, zip. The curl extension gets a CA bundle (policy extra_files cacert.pem, curl.cainfo): PHP for Windows's libcurl has none, while its OpenSSL streams use the Windows certificate store.",
    "launch": {
     "program": "{runtime_dir}\\php.exe",
     "gui_program": "{runtime_dir}\\php-win.exe",
@@ -289,15 +903,71 @@
      "shell": "cmd"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=openssl",
-     "shell": "cmd"
-    },
-    {
      "run": ">>\"{runtime_dir}\\php.ini\" echo extension=mbstring",
      "shell": "cmd"
     },
     {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=bz2",
+     "shell": "cmd"
+    },
+    {
      "run": ">>\"{runtime_dir}\\php.ini\" echo extension=curl",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=exif",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=fileinfo",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=ftp",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=gd",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=gettext",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=intl",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=mysqli",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=openssl",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=pdo_mysql",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=pdo_sqlite",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sockets",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sodium",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sqlite3",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=xsl",
      "shell": "cmd"
     },
     {
@@ -314,6 +984,18 @@
     },
     {
      "run": ">>\"{runtime_dir}\\composer.cmd\" echo @\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" %*",
+     "shell": "cmd"
+    },
+    {
+     "run": "copy /y \"{tmp}\\cacert.pem\" \"{runtime_dir}\\cacert.pem\" >nul",
+     "shell": "cmd"
+    },
+    {
+     "run": ">>\"{runtime_dir}\\php.ini\" echo curl.cainfo=\"{runtime_dir}\\cacert.pem\"",
+     "shell": "cmd"
+    },
+    {
+     "run": "copy /y \"{tmp}\\composer.phar\" \"{runtime_dir}\\composer.phar\" >nul",
      "shell": "cmd"
     }
    ],
@@ -342,7 +1024,7 @@
     "https://getcomposer.org/doc/03-cli.md#environment-variables",
     "https://getcomposer.org/doc/00-intro.md#installation-windows"
    ],
-   "notes": "Imports: VCRUNTIME140.dll, MSVCP140.dll, VCRUNTIME140_1.dll (x64 only) and api-ms-win-crt-*. App-local: as for 7.4, plus vcruntime140_1.dll on x64. zip is a shared extension (ext\\php_zip.dll) in this build, unlike 5.6/7.4. php.ini search order (php.net 'The configuration file'): PHPRC env, then on Windows the registry keys HKLM\\SOFTWARE\\PHP\\x.y.z\\IniFilePath / ...\\PHP\\x.y\\IniFilePath / ...\\PHP\\x\\IniFilePath / ...\\PHP\\IniFilePath, then the php.exe folder (CLI), then %SystemRoot%. A registry IniFilePath left by another PHP install therefore outranks our php.ini, so every command passes -c \"{runtime_dir}\\php.ini\" explicitly. extension_dir: a relative 'ext' is resolved against the current directory, not php.exe's folder, so the recipe writes an absolute path. Composer (not in the download plan; ship composer.phar as a separate pinned download into {runtime_dir}): run as \"{runtime_dir}\\composer.cmd\" (written by the recipe; the steps assume a cmd /c command line, where %* is written literally - if the runner puts them in a .bat, write %%* instead) which sets COMPOSER_HOME and COMPOSER_CACHE_DIR inside {runtime_dir}; without them Composer writes %APPDATA%\\Composer and %LOCALAPPDATA%\\Composer. It needs the openssl extension (enabled above); zip is php_zip.dll, enabled above. ",
+   "notes": "With Composer (policy extra_files composer.phar, \"for\": \"install\"): for apps that install something, such as a project with a composer.json. Imports: VCRUNTIME140.dll, MSVCP140.dll, VCRUNTIME140_1.dll (x64 only) and api-ms-win-crt-*. App-local: as for 7.4, plus vcruntime140_1.dll on x64. zip is a shared extension (ext\\php_zip.dll) in this build, unlike 5.6/7.4. php.ini search order (php.net 'The configuration file'): PHPRC env, then on Windows the registry keys HKLM\\SOFTWARE\\PHP\\x.y.z\\IniFilePath / ...\\PHP\\x.y\\IniFilePath / ...\\PHP\\x\\IniFilePath / ...\\PHP\\IniFilePath, then the php.exe folder (CLI), then %SystemRoot%. A registry IniFilePath left by another PHP install therefore outranks our php.ini, so every command passes -c \"{runtime_dir}\\php.ini\" explicitly. extension_dir: a relative 'ext' is resolved against the current directory, not php.exe's folder, so the recipe writes an absolute path. Composer (not in the download plan; ship composer.phar as a separate pinned download into {runtime_dir}): run as \"{runtime_dir}\\composer.cmd\" (written by the recipe; the steps assume a cmd /c command line, where %* is written literally - if the runner puts them in a .bat, write %%* instead) which sets COMPOSER_HOME and COMPOSER_CACHE_DIR inside {runtime_dir}; without them Composer writes %APPDATA%\\Composer and %LOCALAPPDATA%\\Composer. It needs the openssl extension (enabled above); zip is php_zip.dll, enabled above.  Extensions turned on (2026-09-19, for typical apps, as Linux distributions install them): mbstring, bz2, curl, exif, fileinfo, ftp, gd, gettext, intl, mysqli, openssl, pdo_mysql, pdo_sqlite, sockets, sodium, sqlite3, xsl, zip. The curl extension gets a CA bundle (policy extra_files cacert.pem, curl.cainfo): PHP for Windows's libcurl has none, while its OpenSSL streams use the Windows certificate store.",
    "launch": {
     "program": "{runtime_dir}\\php.exe",
     "gui_program": "{runtime_dir}\\php-win.exe",
@@ -363,7 +1045,7 @@
      "COMPOSER_CACHE_DIR": "{data_dir}\\composer-cache"
     },
     "cwd": "{app_dir}",
-    "notes": "Composer is not in the download plan yet; composer.phar must be added to the runtime folder."
+    "notes": "composer.phar is in the runtime folder (this recipe copies it there)."
    }
   },
   {
@@ -429,6 +1111,75 @@
     },
     "cwd": "{app_dir}",
     "notes": "Composer is not in the download plan yet; composer.phar must be added to the runtime folder."
+   }
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": ">=8",
+    "arch": null,
+    "variant": "static-php-cli",
+    "libc": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 0
+    },
+    {
+     "run": ": > \"{runtime_dir}/php.ini\"",
+     "shell": "sh"
+    },
+    {
+     "run": "cp \"{tmp}/composer.phar\" \"{runtime_dir}/composer.phar\"",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "any Linux kernel on the matching CPU; the binary is fully static (musl), no glibc/libstdc++ needed"
+   ],
+   "executable": "php",
+   "package_manager": "COMPOSER_HOME=\"{runtime_dir}/composer-home\" COMPOSER_CACHE_DIR=\"{runtime_dir}/composer-cache\" PHP_INI_SCAN_DIR= \"{runtime_dir}/php\" \"{runtime_dir}/composer.phar\"",
+   "verify": "PHP_INI_SCAN_DIR= \"{runtime_dir}/php\" -r 'echo PHP_VERSION, PHP_EOL;' && PHP_INI_SCAN_DIR= \"{runtime_dir}/php\" --ini",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": null,
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://static-php.dev/en/guide/",
+    "https://github.com/crazywhalecc/static-php-cli",
+    "https://www.php.net/manual/en/configuration.file.php",
+    "https://getcomposer.org/doc/03-cli.md#environment-variables",
+    "https://getcomposer.org/doc/00-intro.md#installation-windows"
+   ],
+   "notes": "With Composer (policy extra_files composer.phar, \"for\": \"install\"): for apps that install something, such as a project with a composer.json. The tarball is a single ./php (unofficial, community build, no vendor checksum). Tested 2026-09-18 with the amd64 8.5.8 build on Ubuntu 24.04 as a normal user, from a path with a space: php -v (static ELF, 'Built by static-php-cli 2.8.6'), ~60 compiled-in extensions (openssl, curl, zip, mbstring, pdo_*, Phar, OPcache...; there is no extension_dir to set and no shared extensions), a php.ini placed next to the binary was loaded (PHP searches the binary's folder before the compiled-in /usr/local/etc/php), and composer.phar (latest-stable, sha256 checked) installed psr/log into a project folder with a space. With COMPOSER_HOME/COMPOSER_CACHE_DIR set, an empty HOME stayed empty; without them Composer wrote ~/.config/composer, ~/.cache/composer and ~/.local/share/composer. Two copies side by side ran independently. The compiled-in scan dir /usr/local/etc/php/conf.d would be read if some other PHP created it: PHP_INI_SCAN_DIR= (empty) disables that, so set it in the app launcher too. arm64 not run (no hardware). composer.phar is a separate pinned download, not in the plan. Only PHP 8.0+ exists as static-php-cli builds.",
+   "launch": {
+    "program": "{runtime_dir}/php",
+    "args": [
+     "-c",
+     "{runtime_dir}/php.ini"
+    ],
+    "env": {
+     "PHP_INI_SCAN_DIR": ""
+    },
+    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/php\" -c \"{runtime_dir}/php.ini\" \"{runtime_dir}/composer.phar\" install --no-dev --no-interaction",
+    "env": {
+     "PHP_INI_SCAN_DIR": "",
+     "COMPOSER_HOME": "{data_dir}/composer-home",
+     "COMPOSER_CACHE_DIR": "{data_dir}/composer-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "composer.phar is in the runtime folder (this recipe copies it there)."
    }
   },
   {
@@ -501,6 +1252,82 @@
     },
     "cwd": "{app_dir}",
     "notes": "Composer is not in the download plan yet; composer.phar must be added to the runtime folder."
+   }
+  },
+  {
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": ">=8",
+    "arch": null,
+    "variant": "static-php-cli",
+    "libc": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 0
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null; true",
+     "shell": "sh"
+    },
+    {
+     "run": "codesign -s - -f \"{runtime_dir}/php\" 2>/dev/null || true",
+     "shell": "sh"
+    },
+    {
+     "run": ": > \"{runtime_dir}/php.ini\"",
+     "shell": "sh"
+    },
+    {
+     "run": "cp \"{tmp}/composer.phar\" \"{runtime_dir}/composer.phar\"",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "macOS 12.0+ (LC_BUILD_VERSION minos in both binaries)"
+   ],
+   "executable": "php",
+   "package_manager": "COMPOSER_HOME=\"{runtime_dir}/composer-home\" COMPOSER_CACHE_DIR=\"{runtime_dir}/composer-cache\" PHP_INI_SCAN_DIR= \"{runtime_dir}/php\" \"{runtime_dir}/composer.phar\"",
+   "verify": "PHP_INI_SCAN_DIR= \"{runtime_dir}/php\" -r 'echo PHP_VERSION, PHP_EOL;'",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "macOS 12.0",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://static-php.dev/en/guide/",
+    "https://github.com/crazywhalecc/static-php-cli",
+    "https://getcomposer.org/doc/03-cli.md#environment-variables",
+    "https://getcomposer.org/doc/00-intro.md#installation-windows"
+   ],
+   "notes": "With Composer (policy extra_files composer.phar, \"for\": \"install\"): for apps that install something, such as a project with a composer.json. Mach-O inspected: links only system libraries (libSystem, libresolv, libc++, CoreServices/CoreFoundation/Kerberos/SystemConfiguration frameworks), so it is self-contained; an LC_RPATH to the CI build folder is harmless. The arm64 binary carries an (ad-hoc/linker) signature; the x86_64 one has none. Neither is notarized, so a quarantined copy is blocked by Gatekeeper: clearing the quarantine attribute avoids that, and the ad-hoc codesign step is a no-op safety net (arm64 refuses to run unsigned code). Behaviour of php.ini/conf.d and Composer is as in the Linux recipe (same build system); the compiled-in /usr/local/etc/php path is the one Homebrew uses on Intel Macs, so PHP_INI_SCAN_DIR= matters more here.",
+   "launch": {
+    "program": "{runtime_dir}/php",
+    "args": [
+     "-c",
+     "{runtime_dir}/php.ini"
+    ],
+    "env": {
+     "PHP_INI_SCAN_DIR": ""
+    },
+    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/php\" -c \"{runtime_dir}/php.ini\" \"{runtime_dir}/composer.phar\" install --no-dev --no-interaction",
+    "env": {
+     "PHP_INI_SCAN_DIR": "",
+     "COMPOSER_HOME": "{data_dir}/composer-home",
+     "COMPOSER_CACHE_DIR": "{data_dir}/composer-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "composer.phar is in the runtime folder (this recipe copies it there)."
    }
   }
  ]

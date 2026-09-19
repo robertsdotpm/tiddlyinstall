@@ -261,3 +261,20 @@ Findings:
 - `-gnullvm` is not self-sufficient: no linker (default
   `x86_64-w64-mingw32-clang`, i.e. llvm-mingw), few import libs, a
   `libunwind.dll` dependency, and UCRT. Left out of the plans.
+
+## Real-app fidelity (installer-builder, 2026-09-19)
+
+A crate with a C build step (installer-builder's `tests/fidelity/rust`: a
+`build.rs` compiling C with the `cc` crate, and rusqlite with SQLite
+`bundled`) failed on Windows with the `-gnu` toolchain alone: `error
+occurred in cc-rs: failed to find tool "gcc.exe"`. The toolchain's
+self-contained MinGW is a linker and C runtime objects, not a compiler.
+The policy now `requires` WinLibs GCC on Windows, the MSVCRT build (the C
+runtime Rust's `x86_64-pc-windows-gnu` target links against; a UCRT gcc
+would mix two C runtimes), with its `bin` first on PATH, so rustc links with
+it too. It passed on Windows 10 (Rust 1.98.1 + WinLibs 16.2.0 MSVCRT) and
+adds 110 MB to Rust's 304 MB download (89 MB on Windows 7, WinLibs 10.5).
+`-msvc` with Visual Studio Build Tools already on the machine was
+considered: a plan block can't be chosen by a prerequisite check (blocks
+are chosen by OS version and architecture), so it would need a new kind of
+`when`; not done. Linux and macOS were already fine (system cc, Xcode CLT).

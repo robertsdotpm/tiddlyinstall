@@ -391,3 +391,46 @@ downloaded for mirror confirmation (none were confirmed); ~400MB of
 Chocolatey `.nupkg` files were fetched for checksum corroboration (10
 files, ~35-45MB each, all deleted after hashing) -- a different budget line
 item from mirror-confirmation samples, since no mirror was being confirmed.
+
+## Real-app fidelity (installer-builder, 2026-09-19)
+
+Checked with installer-builder's `tests/fidelity/ruby` (a Gemfile with bcrypt
+and json, which both compile a C extension, plus openssl over HTTPS,
+readline, fiddle, the standard library and the gem command).
+
+- **Windows: RubyInstaller's DevKit.** The plain RubyInstaller `.7z` has no
+  compiler, so `bundle install` failed for any gem with a C extension ("make
+  failed... No such file or directory - make"). The new recipe (`install.json`,
+  Windows x64 7z, `>=2.4`) is used for apps that install gems: the policy's
+  extra file `msys2-base.sfx.exe` (MSYS2's base system, 2026-06-11, 50.4 MB,
+  pinned by SHA-256, PGP signature checked) is unpacked into
+  `{runtime_dir}\msys64`, where RubyInstaller looks for MSYS2 first; bash's
+  first start sets up pacman's keyring; `pacman -Sy`; then `ridk install 3`
+  (autotools, make, the UCRT gcc toolchain: 89.8 MiB downloaded, 583 MiB
+  installed, packages signature-checked by pacman). pacman's download cache is
+  emptied and gpg-agent stopped so the folder can be removed. MSYS2 needs
+  Windows 8.1+; on 7 and Vista the step removes `msys64` and goes on, so
+  pure-Ruby gems still install. The `devkit` installer `.exe` variant stays
+  excluded: it only adds the MSYS2 base, needs its own uninstall entries
+  removed, and is 141 MB against 17.7 + 50.4 MB here.
+- **Linux (ruby-builder):** native gems need gcc (rbconfig's CC), the C
+  library's headers and make: policy `needs` gcc and make, for apps that
+  install something.
+- **macOS: relocatable builds** (`portable_ruby.py`, variants `rv-ruby` and
+  `homebrew-portable`, 86 releases; re-run it after `scrape.py`, which rewrites
+  releases.json). ruby-builder's macOS tarballs stay excluded (they load
+  Homebrew's OpenSSL, libyaml and gmp by absolute path). rv-ruby
+  (spinel-coop/rv-ruby, BSD-2-Clause scripts; Ruby under its own licence)
+  carries the whole standard library and bundled gems, OpenSSL/libyaml/libffi
+  built in, and its own CA bundle; arm64 builds need macOS 14, x86_64 builds
+  macOS 15 (read from the binaries; the asset is named "ventura"). Homebrew's
+  portable Ruby 3.4.5 (the archived tap's last release with GitHub digests;
+  newer ones are homebrew-core bottles on ghcr.io, which need a token) covers
+  older Macs: x86_64 10.11+, arm64 11.3+, but Homebrew strips most bundled
+  gems (csv, bigdecimal, minitest, rexml, net-smtp...), so apps list them in
+  their Gemfile. Both link nothing outside /usr/lib and /System.
+  Their rbconfig.rb has `EXTDLDFLAGS = -bundle_loader '$(BUILTRUBY)'`; in a
+  folder with a space (the default `~/Library/Application Support/ib`) make
+  writes `Application\ Support` and the quotes keep the backslash, so every C
+  extension failed to link. The recipe removes the quotes (tested with bcrypt
+  and json). Native gems need the Xcode Command Line Tools (policy `needs`).

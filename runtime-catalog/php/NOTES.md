@@ -244,3 +244,35 @@ after the next `scrape.py` regenerates them.
 Budget used this session: 3 of 4 web searches (static-php-cli alternate
 hosts, museum.php.net mirror status, io.js mirror hosts -- the last one
 is written up in `node/NOTES.md`).
+
+## Real-app fidelity (installer-builder, 2026-09-19)
+
+Checked with installer-builder's `tests/fidelity/php` (mbstring, pdo_sqlite,
+curl and openssl over HTTPS, gd, intl, zip, xml, json and a list of common
+extensions) and `tests/fidelity/php-composer` (Composer installing psr/log and
+symfony/polyfill-ctype).
+
+- **Windows:** the recipes turned on only openssl, mbstring, curl (and zip on
+  8.x). They now also turn on bz2, exif, fileinfo, ftp, gd (gd2 before 8.0),
+  gettext, intl, mysqli, pdo_mysql, pdo_sqlite, sockets, sodium (7.2+),
+  sqlite3 and xsl, the set a Linux distribution's PHP packages give (every
+  name checked against the ext/ folder of the 8.5, 7.4 and 5.6 zips). PHP's
+  OpenSSL streams on Windows check certificates against the Windows store,
+  but its libcurl has no CA bundle ("SSL certificate OpenSSL verify result:
+  self-signed certificate in certificate chain"): the recipes copy the
+  policy's `cacert.pem` (curl.se's dated Mozilla bundle) into the runtime and
+  set `curl.cainfo`.
+- **Composer** is now in the plans: the policy's extra file `composer.phar`
+  (2.10.3 for PHP 7.2.5+, 2.2.30 LTS before; SHA-256 as getcomposer.org
+  publishes it), for apps that install something, copied into the runtime
+  folder by a twin of each recipe; the `composer` install rule runs the
+  recipes' `project_install`.
+- **Linux and macOS (static-php-cli):** the catalogue keeps the `common`
+  builds. They lack intl, sodium, readline, xsl, opcache and apcu. The only
+  fuller prebuilt set, `bulk` (and glibc `gnu-bulk`, Linux only), has intl,
+  sodium, xsl, readline, opcache, apcu, imagick, swoole and more, but no
+  pdo_sqlite or pdo_pgsql, and is 2.5x the size (30 MB against 12 MB for
+  8.5.8 Linux x86_64). pdo_sqlite has no pure-PHP replacement, while intl and
+  sodium do (symfony/polyfill-intl-*, paragonie/sodium_compat), so `common`
+  is the better default. A static build with both would have to be built by
+  us with static-php-cli's `spc`.

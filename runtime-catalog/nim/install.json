@@ -730,6 +730,72 @@
    "package_manager": "\"{runtime_dir}\\bin\\nimble.exe\" --nimbleDir:\"{runtime_dir}\\nimble\" -y install <pkg>",
    "side_effects": [],
    "uninstall": "delete {runtime_dir}",
+   "notes": "Nim for Windows as its own installer (finish.exe) sets it up: the zip plus Nim's dlls.zip (OpenSSL 1.1, PCRE, SQLite, pdcurses DLLs; policy extra_files) in bin, unpacked with Windows's tar.exe (10 1803+) or the shell's zip folder support (7, 8.1), and a current cacert.pem there too (dlls.zip's is from 2021). Without the DLLs a program built with -d:ssl stops at start: could not load: (libcrypto-1_1-x64|libeay64).dll (tested 2026-09-19).",
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": "==1.6.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "(\"%SystemRoot%\\System32\\tar.exe\" -xf \"{tmp}\\dlls.zip\" -C \"{runtime_dir}\\bin\" 2>nul || powershell -NoProfile -NonInteractive -Command \"$s = New-Object -ComObject Shell.Application; $s.NameSpace('{runtime_dir}\\bin').CopyHere($s.NameSpace('{tmp}\\dlls.zip').Items(), 20)\") || (echo Nim's DLLs ^(OpenSSL, PCRE, SQLite^) could not be unpacked: programs using -d:ssl won't start. & ver >nul)",
+     "shell": "cmd"
+    },
+    {
+     "run": "copy /y \"{tmp}\\cacert.pem\" \"{runtime_dir}\\bin\\cacert.pem\" >nul",
+     "shell": "cmd"
+    }
+   ],
+   "executable": "bin\\nim.exe",
+   "verify": "\"{runtime_dir}\\bin\\nim.exe\" --version",
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Compiler (bin\\nim.exe) runs on Windows XP (PE subsystem 4.0 on x86, 5.2 on x64; imports only KERNEL32 and msvcrt with no post-XP functions, and inet_ntop is emulated below Vista). The bundled-by-download MinGW (GCC 11.1) needs Vista+: its libzstd-1.dll, loaded by cc1.exe, imports InitializeConditionVariable. nimble.exe 0.13.1 has no post-XP imports. So a working compile needs Vista or later unless an XP-capable MinGW is supplied.",
+   "tested": true,
+   "confidence": "medium",
+   "sources": [
+    "https://nim-lang.org/install_windows.html",
+    "https://nim-lang.org/download/mingw64.7z.sha256",
+    "https://nim-lang.org/download/mingw32.7z.sha256",
+    "tools/finish.nim and config/nim.cfg inside the zips (read locally)",
+    "https://nim-lang.org/install_windows.html",
+    "https://github.com/nim-lang/Nim/blob/devel/lib/pure/ssl_certs.nim"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly, with the runtime's bin folder on PATH: Nim programs load OpenSSL (-d:ssl), PCRE (std/re) and SQLite (db_sqlite) as DLLs at run time, and std/net looks for cacert.pem on PATH.",
+    "path_prepend": [
+     "{runtime_dir}\\bin"
+    ]
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\bin\\nimble.exe\" --nimbleDir:\"{data_dir}\\nimble\" -y build",
+    "env": {
+     "NIMBLE_DIR": "{data_dir}\\nimble"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround."
+   },
+   "id": "nim-cc-==1.6.*"
+  },
+  {
+   "prerequisites": [
+    "MinGW-w64 GCC, a SEPARATE download not in the zip: https://nim-lang.org/download/mingw64.7z (62,290,033 bytes, sha256 04a535d1e0880364ca9609713744f1a9a36835c4ced834cf435c4dc4eca2159a) or https://nim-lang.org/download/mingw32.7z (61,793,563 bytes, sha256 588794e11be36389501610cf78de777e52a920e03db256ee8bd1a7c2c45e39a4). Both are WinLibs GCC 11.1.0 / MinGW-w64 8.0.2 builds (2021-05). The 7z uses the BCJ2 filter, so the base installer's 7z decoder must support BCJ2.",
+    "git on PATH, only for nimble remote packages (not bundled)"
+   ],
+   "package_manager": "\"{runtime_dir}\\bin\\nimble.exe\" --nimbleDir:\"{runtime_dir}\\nimble\" -y install <pkg>",
+   "side_effects": [],
+   "uninstall": "delete {runtime_dir}",
    "notes": "Added 2026-09-18 by installer-builder: the Nim zip alone, for plans that install a C compiler as a separate file (installer-builder policy \"requires\": WinLibs GCC on PATH).",
    "match": {
     "os": "windows",
@@ -774,6 +840,72 @@
     "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround."
    },
    "id": "nim-cc-==1.6.*"
+  },
+  {
+   "prerequisites": [
+    "MinGW-w64 GCC, a SEPARATE download not in the zip: https://nim-lang.org/download/mingw64.7z (62,290,033 bytes, sha256 04a535d1e0880364ca9609713744f1a9a36835c4ced834cf435c4dc4eca2159a) or https://nim-lang.org/download/mingw32.7z (61,793,563 bytes, sha256 588794e11be36389501610cf78de777e52a920e03db256ee8bd1a7c2c45e39a4). Both are WinLibs GCC 11.1.0 / MinGW-w64 8.0.2 builds (2021-05). The 7z uses the BCJ2 filter, so the base installer's 7z decoder must support BCJ2.",
+    "git on PATH, only for nimble remote packages (not bundled)"
+   ],
+   "package_manager": "\"{runtime_dir}\\bin\\nimble.exe\" --nimbleDir:\"{runtime_dir}\\nimble\" -y install <pkg>",
+   "side_effects": [],
+   "uninstall": "delete {runtime_dir}",
+   "notes": "Nim for Windows as its own installer (finish.exe) sets it up: the zip plus Nim's dlls.zip (OpenSSL 1.1, PCRE, SQLite, pdcurses DLLs; policy extra_files) in bin, unpacked with Windows's tar.exe (10 1803+) or the shell's zip folder support (7, 8.1), and a current cacert.pem there too (dlls.zip's is from 2021). Without the DLLs a program built with -d:ssl stops at start: could not load: (libcrypto-1_1-x64|libeay64).dll (tested 2026-09-19).",
+   "match": {
+    "os": "windows",
+    "kind": "archive",
+    "format": "zip",
+    "versions": "==2.2.*",
+    "arch": null
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "zip",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "(\"%SystemRoot%\\System32\\tar.exe\" -xf \"{tmp}\\dlls.zip\" -C \"{runtime_dir}\\bin\" 2>nul || powershell -NoProfile -NonInteractive -Command \"$s = New-Object -ComObject Shell.Application; $s.NameSpace('{runtime_dir}\\bin').CopyHere($s.NameSpace('{tmp}\\dlls.zip').Items(), 20)\") || (echo Nim's DLLs ^(OpenSSL, PCRE, SQLite^) could not be unpacked: programs using -d:ssl won't start. & ver >nul)",
+     "shell": "cmd"
+    },
+    {
+     "run": "copy /y \"{tmp}\\cacert.pem\" \"{runtime_dir}\\bin\\cacert.pem\" >nul",
+     "shell": "cmd"
+    }
+   ],
+   "executable": "bin\\nim.exe",
+   "verify": "\"{runtime_dir}\\bin\\nim.exe\" --version",
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Compiler (bin\\nim.exe) runs on Windows XP (PE subsystem 4.0 on x86, 5.2 on x64; imports only KERNEL32 and msvcrt with no post-XP functions, and inet_ntop is emulated below Vista). The bundled-by-download MinGW (GCC 11.1) needs Vista+: its libzstd-1.dll, loaded by cc1.exe, imports InitializeConditionVariable. nimble.exe 0.24.1 needs Vista+ (it loads CreateSymbolicLinkW and GetQueuedCompletionStatusEx from kernel32 at startup through Nim's dynlib mechanism, which quits if a symbol is missing). So a working compile needs Vista or later unless an XP-capable MinGW is supplied.",
+   "tested": true,
+   "confidence": "medium",
+   "sources": [
+    "https://nim-lang.org/install_windows.html",
+    "https://nim-lang.org/download/mingw64.7z.sha256",
+    "https://nim-lang.org/download/mingw32.7z.sha256",
+    "tools/finish.nim and config/nim.cfg inside the zips (read locally)",
+    "https://nim-lang.org/install_windows.html",
+    "https://github.com/nim-lang/Nim/blob/devel/lib/pure/ssl_certs.nim"
+   ],
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly, with the runtime's bin folder on PATH: Nim programs load OpenSSL (-d:ssl), PCRE (std/re) and SQLite (db_sqlite) as DLLs at run time, and std/net looks for cacert.pem on PATH.",
+    "path_prepend": [
+     "{runtime_dir}\\bin"
+    ]
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}\\bin\\nimble.exe\" --nimbleDir:\"{data_dir}\\nimble\" -y build",
+    "env": {
+     "NIMBLE_DIR": "{data_dir}\\nimble"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround."
+   },
+   "id": "nim-cc-==2.2.*"
   },
   {
    "prerequisites": [

@@ -5,7 +5,11 @@
   "get-pip.py",
   "7z.exe",
   "7z.dll",
-  "choices.xml"
+  "choices.xml",
+  "msys2-base.sfx.exe",
+  "cacert.pem",
+  "composer.phar",
+  "dlls.zip"
  ],
  "method_order": [
   "unpack",
@@ -216,6 +220,46 @@
     "yum": "gcc glibc-devel",
     "zypper": "gcc glibc-devel",
     "apk": "gcc musl-dev",
+    "pacman": "gcc"
+   }
+  },
+  "make": {
+   "label": "make (GNU make)",
+   "os": "linux",
+   "checks": [
+    [
+     "cmd",
+     "make"
+    ]
+   ],
+   "packages": {
+    "apt-get": "make",
+    "dnf": "make",
+    "yum": "make",
+    "zypper": "make",
+    "apk": "make",
+    "pacman": "make"
+   }
+  },
+  "cxx": {
+   "label": "A C++ compiler (g++)",
+   "os": "linux",
+   "checks": [
+    [
+     "cmd",
+     "g++"
+    ],
+    [
+     "cmd",
+     "c++"
+    ]
+   ],
+   "packages": {
+    "apt-get": "g++",
+    "dnf": "gcc-c++",
+    "yum": "gcc-c++",
+    "zypper": "gcc-c++",
+    "apk": "g++",
     "pacman": "gcc"
    }
   },
@@ -732,6 +776,8 @@
     "",
     "ubuntu-22.04",
     "ubuntu-24.04",
+    "rv-ruby",
+    "homebrew-portable",
     "macos-arm64",
     "macos-x64"
    ],
@@ -761,6 +807,25 @@
      ]
     }
    ],
+   "extra_files": {
+    "msys2-base.sfx.exe": {
+     "_comment": "RubyInstaller's DevKit: the MSYS2 base system, unpacked into the Ruby folder's msys64 (where RubyInstaller looks first), then `ridk install 3` adds the MINGW toolchain with pacman, as RubyInstaller-Devkit users do. Only for apps that install something (a Gemfile, or a gem by name): gems with C extensions compile then. Pinned to the 2026-06-11 base: SHA-256 as published by GitHub for the release asset, the same bytes from repo.msys2.org, PGP signature by the MSYS2 key E0AA0F031DBD80FF (Christoph Reiter) checked 2026-09-19. MSYS2 runs on Windows 8.1 and later (min_os 603): older Windows gets the plain RubyInstaller recipe, where pure-Ruby gems install and gems with C extensions don't.",
+     "for": "install",
+     "sources": [
+      {
+       "versions": ">=2.4",
+       "sha256": "c105946e64e08f099ac0e4647461ce762b95333ad211777666476a9a41451d65",
+       "size": 52898952,
+       "local": "msys2/windows/amd64/20260611/msys2-base-x86_64-20260611.sfx.exe",
+       "urls": [
+        "https://github.com/msys2/msys2-installer/releases/download/2026-06-11/msys2-base-x86_64-20260611.sfx.exe",
+        "https://repo.msys2.org/distrib/x86_64/msys2-base-x86_64-20260611.sfx.exe"
+       ],
+       "min_os": 603
+      }
+     ]
+    }
+   },
    "launch": "{runtime} {app_dir}/{project}.rb",
    "package": {
     "_comment": "gem install into GEM_HOME={app_dir}/gems (the recipe clears GEM_HOME; this sets it, for install and launch). Launch runs the gem's program named like the gem through the private ruby. RubyGems' API doesn't list a gem's programs, so publishers override launch when it differs.",
@@ -796,7 +861,25 @@
      "macos-arm64",
      "macos-x64"
     ]
-   }
+   },
+   "needs": [
+    {
+     "prerequisites": [
+      "gcc",
+      "make"
+     ],
+     "for": "install",
+     "why": "Gems with C extensions (json, bcrypt, nio4r, puma…) are compiled when the app's gems are installed, with gcc (Ruby's configured compiler), the C library's development files and make, which minimal installs leave out."
+    },
+    {
+     "prerequisites": [
+      "xcode-clt"
+     ],
+     "for": "install",
+     "why": "Gems with C extensions are compiled when the app's gems are installed, with clang, make and the macOS SDK from the Xcode Command Line Tools."
+    }
+   ],
+   "_comment": "macOS: relocatable builds, rv-ruby (arm64 macOS 14+, x86_64 15+), then Homebrew's portable Ruby 3.4.5 for older Macs (x86_64 10.11+, arm64 11.3+; most bundled gems left out). ruby-builder's macOS tarballs stay excluded: they link Homebrew's libraries by absolute path."
   },
   "php": {
    "label": "PHP",
@@ -828,14 +911,53 @@
    ],
    "install_rules": [
     {
-     "_comment": "The catalogue's recipes name composer.phar, but it isn't in the download plan, so their project_install would fail. Refused until it is.",
+     "_comment": "composer install (the recipe's project_install): Composer comes with the runtime for apps that install something (extra_files composer.phar).",
      "id": "composer",
      "files": [
       "composer.json"
-     ],
-     "unsupported": "PHP projects with a composer.json can't be installed yet: Composer isn't in Installer Builder's runtime catalogue. Remove composer.json (or give your own install command) if the app doesn't need it."
+     ]
     }
    ],
+   "extra_files": {
+    "cacert.pem": {
+     "_comment": "PHP for Windows's curl extension has no CA bundle (its OpenSSL streams use the Windows certificate store): Mozilla's roots as curl.se publishes them, a dated file that never changes. SHA-256 from curl.se's .sha256 beside it.",
+     "sources": [
+      {
+       "versions": ">=5",
+       "sha256": "f66dff1bdf8f96060b8177976f8b7d9254bc89bc4db933d769f7384d28480bc9",
+       "size": 188900,
+       "local": "cacert/2026-08-13/cacert-2026-08-13.pem",
+       "urls": [
+        "https://curl.se/ca/cacert-2026-08-13.pem"
+       ]
+      }
+     ]
+    },
+    "composer.phar": {
+     "_comment": "Composer, for apps that install something (a composer.json). Composer 2.10 needs PHP 7.2.5+; 2.2 LTS is the one for older PHP. SHA-256 as getcomposer.org publishes it (composer.phar.sha256sum).",
+     "for": "install",
+     "sources": [
+      {
+       "versions": ">=7.2.5",
+       "sha256": "7a2d379d5b8ffdaa028580ef26494c36d2feef4b178d3dd1473a4dbc5e17c8d6",
+       "size": 3642137,
+       "local": "composer/2.10.3/composer.phar",
+       "urls": [
+        "https://getcomposer.org/download/2.10.3/composer.phar"
+       ]
+      },
+      {
+       "versions": ">=5.3.2,<7.2.5",
+       "sha256": "8c2b4478b64f8f7cdf1574838fdb0033b29049ca821dad452db7a3dcfcdbffc2",
+       "size": 2412510,
+       "local": "composer/2.2.30/composer.phar",
+       "urls": [
+        "https://getcomposer.org/download/2.2.30/composer.phar"
+       ]
+      }
+     ]
+    }
+   },
    "needs": [
     {
      "prerequisites": [
@@ -965,6 +1087,18 @@
       "posit-ubuntu-2204"
      ],
      "why": "R's Ubuntu build links shared libraries from the distribution (BLAS, OpenMP, libdeflate) that minimal installs leave out."
+    },
+    {
+     "prerequisites": [
+      "gcc",
+      "cxx",
+      "make"
+     ],
+     "variants": [
+      "posit-ubuntu-2204"
+     ],
+     "for": "install",
+     "why": "Installing CRAN packages on Linux compiles them from source (C and C++, with make), as R on Linux always does; minimal installs have no compiler or make."
     }
    ],
    "launch": "{runtime} {app_dir}/main.R"
@@ -1074,6 +1208,18 @@
      "macos": "\"{runtime_dir}/bin/cargo\" install --locked --root \"{app_dir}\" {package}"
     },
     "launch": "{app_dir}/bin/{bin}{exe}"
+   },
+   "requires": {
+    "windows": [
+     {
+      "runtime": "cc",
+      "bin": "bin",
+      "variants": [
+       "winlibs-posix-msvcrt"
+      ],
+      "_comment": "Crates with C build steps (cc-rs: ring, libsqlite3-sys, zstd-sys…) need a C compiler: the -gnu toolchain only carries a linker. WinLibs GCC from the catalogue, the MSVCRT build like Rust's -gnu target (a UCRT gcc would mix C runtimes); with gcc on PATH rustc links with it too. Tested 2026-09-19: without it cc-rs fails with 'failed to find tool gcc.exe'."
+     }
+    ]
    }
   },
   "zig": {
@@ -1162,6 +1308,36 @@
       "bin": "bin"
      }
     ]
+   },
+   "extra_files": {
+    "dlls.zip": {
+     "_comment": "Nim's DLLs for Windows (OpenSSL 1.1, PCRE, SQLite, pdcurses), as the Windows installer (finish.exe) downloads them: without them a program built with -d:ssl can't start. Pinned by SHA-256 (nim-lang.org publishes none; the file is dated 2021-03-30).",
+     "sources": [
+      {
+       "versions": ">=1.6",
+       "sha256": "4b20b0fc775d2cfece0c1a09d4ec0bdbcd01d257ce8d556d9a8a88e6c4cd6961",
+       "size": 5090573,
+       "local": "nim/windows/dlls/dlls.zip",
+       "urls": [
+        "https://nim-lang.org/download/dlls.zip"
+       ]
+      }
+     ]
+    },
+    "cacert.pem": {
+     "_comment": "std/net looks for cacert.pem beside the program or on PATH on Windows; dlls.zip's is from 2021. Mozilla's roots as curl.se publishes them, a dated file.",
+     "sources": [
+      {
+       "versions": ">=1.6",
+       "sha256": "f66dff1bdf8f96060b8177976f8b7d9254bc89bc4db933d769f7384d28480bc9",
+       "size": 188900,
+       "local": "cacert/2026-08-13/cacert-2026-08-13.pem",
+       "urls": [
+        "https://curl.se/ca/cacert-2026-08-13.pem"
+       ]
+      }
+     ]
+    }
    }
   },
   "cc": {

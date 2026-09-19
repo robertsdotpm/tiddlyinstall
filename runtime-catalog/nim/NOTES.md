@@ -249,3 +249,16 @@ the plan), 0.20.2, 2.0.16 now have a mirror; the plan's other source rows
 (0.10-0.16, 1.0-1.6 era's *newest* patch specifically) mostly land on
 patches this hunt didn't find a mirror for, since Nix's coverage is
 uneven across patches within a major.
+
+## Real-app fidelity (installer-builder, 2026-09-19)
+
+A Nim program built with `-d:ssl` (std/httpclient over HTTPS, as installer-
+builder's `tests/fidelity/nim` is) stopped at start on Windows: `could not
+load: (libcrypto-1_1-x64|libeay64).dll`. The Windows zip has no DLLs; Nim's
+installer (finish.exe) downloads `dlls.zip` (OpenSSL 1.1, PCRE, SQLite,
+pdcurses). The Windows recipe for 1.6 and 2.2 now unpacks the policy's pinned
+`dlls.zip` into `bin` (Windows's tar.exe on 10 1803+, the shell's zip folder
+support on 7 and 8.1), adds a current `cacert.pem` there (std/net looks for it
+beside the program or on PATH; dlls.zip's is from 2021), and puts `bin` on the
+app's PATH (`launch.path_prepend`). dlls.zip's OpenSSL is 1.1.1k (2021),
+what Nim still ships.

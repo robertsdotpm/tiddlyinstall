@@ -40,7 +40,7 @@
    "prerequisites": [
     "None for R itself. Rtools matching the R version, only if the app compiles packages from source (it installs to its own folder; not in the catalogue)"
    ],
-   "executable": "bin\\Rscript.exe  (R 2.12-4.1 also have bin\\x64\\Rscript.exe and bin\\i386\\Rscript.exe; bin\\Rscript.exe picks the arch)",
+   "executable": "bin\\Rscript.exe",
    "package_manager": "\"{runtime_dir}\\bin\\Rscript.exe\" -e \"install.packages('PKG', lib=file.path(R.home(), 'site-library'), repos='https://cloud.r-project.org')\"",
    "verify": "\"{runtime_dir}\\bin\\Rscript.exe\" --vanilla -e \"cat(R.version.string, R.home(), .libPaths(), sep='\\n')\"",
    "uninstall": "delete {runtime_dir}",
@@ -60,7 +60,7 @@
     "https://github.com/wch/r-source/blob/trunk/src/gnuwin32/installer/reg.iss",
     "https://jrsoftware.org/ishelp/index.php?topic=setupcmdline"
    ],
-   "notes": "Checked read-only: R-2.11.1 is Inno Setup 5.3.8, R-2.15.3 5.5.0, R-3.6.3 6.0.0 and R-4.6.1 6.1.0 (setup data). R's installer script (JRins.R + header1.iss + reg.iss) has no AppId, so AppId = AppName 'R for Windows <ver>' and the uninstall key is 'R for Windows <ver>_is1'. It sets AllowNoIcons=yes (so /NOICONS skips the Start-menu group) and UsePreviousAppDir=no, so /DIR always wins. Tasks desktopicon, quicklaunchicon, recordversion (HKLM\\Software\\R-core\\R 'Current Version'/InstallPath) and associate (.RData in HKCR) are all turned off with /MERGETASKS. The [Registry] section has nothing else, and the [Code] section only edits etc\\Rconsole and Rprofile.site when the user customises startup (a skipped page). So after steps 2-3 only the files remain. The rw-FAQ says 'A basic R installation is relocatable' (it can run from a USB drive), and R doesn't read the registry when running, so two copies of the same version work side by side. Components: R 2.12-4.1 installers hold both i386 and x64. Add /COMPONENTS=\"main,x64,translations\" (64-bit) or \"main,i386,translations\" (32-bit Windows) to install only one. Replace {version} in the registry step with the R version (e.g. 4.6.1). On 4.x, when started elevated with /ALLUSERS, Inno writes the key in the 64-bit HKLM view; `reg query` from a 32-bit cmd would see Wow6432Node instead, so run it from the native cmd.exe. Double the % signs if these lines go in a .bat. Isolation of packages: by default R also puts a per-user library (%LOCALAPPDATA%\\R\\win-library\\X.Y on 4.2+, Documents\\R\\win-library\\X.Y before) on .libPaths(), and it's shared by every copy of R X.Y for that user. Steps 3-4 point R_LIBS_USER at {runtime_dir}\\site-library through etc\\Renviron.site (the same fix was TESTED on Linux). The ~/.Renviron and ~/.Rprofile files of whoever runs R are still read unless the app runs R with --vanilla or --no-environ. Alternative with no registry writes at all: `innoextract -d \"{tmp}\\x\" \"{file}\"` and copy {tmp}\\x\\app to {runtime_dir}. It needs an innoextract build that supports the installer's Inno version (6.1.0 for 4.6.1), which has to be shipped as a helper, and it loses nothing that matters (no [Run] steps). Its support for 6.1 wasn't verified. Changed 2026-09-18 by installer-builder: /CURRENTUSER and the HKCU uninstall key, because installs are per-user by default and /ALLUSERS needs administrator rights (failed on every Windows VM in the test matrix). The uninstall-key cleanup checks HKCU and HKLM (R 2.x's older Inno Setup ignores /CURRENTUSER and writes HKLM) and always succeeds, since finding no key isn't an error (failed on XP and Vista in the test matrix).",
+   "notes": "Checked read-only: R-2.11.1 is Inno Setup 5.3.8, R-2.15.3 5.5.0, R-3.6.3 6.0.0 and R-4.6.1 6.1.0 (setup data). R's installer script (JRins.R + header1.iss + reg.iss) has no AppId, so AppId = AppName 'R for Windows <ver>' and the uninstall key is 'R for Windows <ver>_is1'. It sets AllowNoIcons=yes (so /NOICONS skips the Start-menu group) and UsePreviousAppDir=no, so /DIR always wins. Tasks desktopicon, quicklaunchicon, recordversion (HKLM\\Software\\R-core\\R 'Current Version'/InstallPath) and associate (.RData in HKCR) are all turned off with /MERGETASKS. The [Registry] section has nothing else, and the [Code] section only edits etc\\Rconsole and Rprofile.site when the user customises startup (a skipped page). So after steps 2-3 only the files remain. The rw-FAQ says 'A basic R installation is relocatable' (it can run from a USB drive), and R doesn't read the registry when running, so two copies of the same version work side by side. Components: R 2.12-4.1 installers hold both i386 and x64. Add /COMPONENTS=\"main,x64,translations\" (64-bit) or \"main,i386,translations\" (32-bit Windows) to install only one. Replace {version} in the registry step with the R version (e.g. 4.6.1). On 4.x, when started elevated with /ALLUSERS, Inno writes the key in the 64-bit HKLM view; `reg query` from a 32-bit cmd would see Wow6432Node instead, so run it from the native cmd.exe. Double the % signs if these lines go in a .bat. Isolation of packages: by default R also puts a per-user library (%LOCALAPPDATA%\\R\\win-library\\X.Y on 4.2+, Documents\\R\\win-library\\X.Y before) on .libPaths(), and it's shared by every copy of R X.Y for that user. Steps 3-4 point R_LIBS_USER at {runtime_dir}\\site-library through etc\\Renviron.site (the same fix was TESTED on Linux). The ~/.Renviron and ~/.Rprofile files of whoever runs R are still read unless the app runs R with --vanilla or --no-environ. Alternative with no registry writes at all: `innoextract -d \"{tmp}\\x\" \"{file}\"` and copy {tmp}\\x\\app to {runtime_dir}. It needs an innoextract build that supports the installer's Inno version (6.1.0 for 4.6.1), which has to be shipped as a helper, and it loses nothing that matters (no [Run] steps). Its support for 6.1 wasn't verified. Changed 2026-09-18 by installer-builder: /CURRENTUSER and the HKCU uninstall key, because installs are per-user by default and /ALLUSERS needs administrator rights (failed on every Windows VM in the test matrix). The uninstall-key cleanup checks HKCU and HKLM (R 2.x's older Inno Setup ignores /CURRENTUSER and writes HKLM) and always succeeds, since finding no key isn't an error (failed on XP and Vista in the test matrix). executable: R 2.12-4.1 also have bin\\x64\\Rscript.exe and bin\\i386\\Rscript.exe; bin\\Rscript.exe picks the arch. (Was written into this field, where it became part of {runtime}; moved here 2026-09-19.)",
    "launch": {
     "program": "{runtime_dir}\\bin\\Rscript.exe",
     "args": [],
@@ -110,7 +110,7 @@
     }
    ],
    "prerequisites": [],
-   "executable": "bin\\Rterm.exe  (R 1.9 has no Rscript; use `Rterm.exe --vanilla --slave -f script.R` or `Rcmd BATCH`)",
+   "executable": "bin\\Rterm.exe",
    "package_manager": "\"{runtime_dir}\\bin\\Rcmd.exe\" INSTALL <package.zip or dir>",
    "verify": "echo cat(R.version.string) | \"{runtime_dir}\\bin\\Rterm.exe\" --vanilla --slave",
    "uninstall": "delete {runtime_dir}",
@@ -128,7 +128,7 @@
     "https://jrsoftware.org/ishelp/index.php?topic=setupcmdline",
     "https://cran-archive.r-project.org/bin/windows/base/old/1.9.1/"
    ],
-   "notes": "rw1091.exe is Inno Setup 4.2.2 (setup data; messages 4.1.4). Inno 4 supports /VERYSILENT, /DIR and /NOICONS, but /MERGETASKS came later, and whether 4.2's /TASKS can clear R's registry task is unknown. Don't delete HKLM\\Software\\R-core\\R 'Current Version' blindly: another R on the machine may own it. Removing only the {version} subkey is safe. innoextract supports Inno 4.x, and that route writes nothing to the registry.",
+   "notes": "rw1091.exe is Inno Setup 4.2.2 (setup data; messages 4.1.4). Inno 4 supports /VERYSILENT, /DIR and /NOICONS, but /MERGETASKS came later, and whether 4.2's /TASKS can clear R's registry task is unknown. Don't delete HKLM\\Software\\R-core\\R 'Current Version' blindly: another R on the machine may own it. Removing only the {version} subkey is safe. innoextract supports Inno 4.x, and that route writes nothing to the registry. executable: R 1.9 has no Rscript; use `Rterm.exe --vanilla --slave -f script.R` or `Rcmd BATCH`. (Was written into this field, where it became part of {runtime}; moved here 2026-09-19.)",
    "launch": {
     "program": "{runtime_dir}\\bin\\Rterm.exe",
     "args": [],
@@ -315,6 +315,10 @@
      "shell": "sh"
     },
     {
+     "run": "B=\"{runtime_dir}/R.framework/Resources/bin\"; mv \"$B/Rscript\" \"$B/Rscript.bin\" && printf '%s\\n' '#!/bin/sh' 'd=$(cd -- \"$(dirname -- \"$0\")\" && pwd -P)' 'RHOME=$(dirname -- \"$d\"); export RHOME' 'exec \"$d/Rscript.bin\" \"$@\"' > \"$B/Rscript\" && chmod 755 \"$B/Rscript\"",
+     "shell": "sh"
+    },
+    {
      "run": "echo 'R_LIBS_USER=${R_HOME}/site-library' >> \"{runtime_dir}/R.framework/Resources/etc/Renviron.site\" && mkdir -p \"{runtime_dir}/R.framework/Resources/site-library\"",
      "shell": "sh"
     }
@@ -332,13 +336,13 @@
    "isolation": "full",
    "relocatable": false,
    "min_os": "as for the pkg",
-   "tested": false,
+   "tested": true,
    "confidence": "low",
    "sources": [
     "https://cran.r-project.org/doc/manuals/r-release/R-admin.html",
     "https://cran.r-project.org/bin/macosx/RMacOSX-FAQ.html"
    ],
-   "notes": "An untested sketch for true per-app R on macOS. Checked in the 4.6.1 arm64 pkg: bin/R hard-codes R_HOME_DIR=/Library/Frameworks/R.framework/Resources (plus R_SHARE_DIR, R_INCLUDE_DIR, R_DOC_DIR), and etc/Renviron and etc/Makeconf contain the path. exec/R, libR.dylib and every library/*/libs/*.so link /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/{libR,libRblas,libRlapack,libgfortran.5,libquadmath.0}.dylib by absolute path, and all are code-signed (hardened runtime, notarized pkg), so every rewritten file must be re-signed ad hoc. The rewrite uses absolute {runtime_dir} paths rather than @loader_path, which keeps bin/R simple but makes the result NOT relocatable (redo steps 2-3 after a move). Also: CRAN's macOS BINARY packages link /Library/Frameworks/R.framework/... too, so later installs must use type='source' (needs Xcode CLT + gfortran) or be rewritten the same way. The tcltk.pkg Tcl/Tk (/opt/R/arm64) would also need to be extracted and rewritten. 2.15.3's pkg uses the older r.pkg/r-1.pkg/r64.pkg split; step 1 picks r.pkg. It's listed so the operator can decide whether per-app R on macOS is worth this, compared with the shared-framework `run` recipe.",
+   "notes": "An untested sketch for true per-app R on macOS. Checked in the 4.6.1 arm64 pkg: bin/R hard-codes R_HOME_DIR=/Library/Frameworks/R.framework/Resources (plus R_SHARE_DIR, R_INCLUDE_DIR, R_DOC_DIR), and etc/Renviron and etc/Makeconf contain the path. exec/R, libR.dylib and every library/*/libs/*.so link /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/{libR,libRblas,libRlapack,libgfortran.5,libquadmath.0}.dylib by absolute path, and all are code-signed (hardened runtime, notarized pkg), so every rewritten file must be re-signed ad hoc. The rewrite uses absolute {runtime_dir} paths rather than @loader_path, which keeps bin/R simple but makes the result NOT relocatable (redo steps 2-3 after a move). Also: CRAN's macOS BINARY packages link /Library/Frameworks/R.framework/... too, so later installs must use type='source' (needs Xcode CLT + gfortran) or be rewritten the same way. The tcltk.pkg Tcl/Tk (/opt/R/arm64) would also need to be extracted and rewritten. 2.15.3's pkg uses the older r.pkg/r-1.pkg/r64.pkg split; step 1 picks r.pkg. It's listed so the operator can decide whether per-app R on macOS is worth this, compared with the shared-framework `run` recipe. Rscript is a program with R's install path built in (/Library/Frameworks/R.framework/...), so it can't find R anywhere else (\"Rscript execution error: No such file or directory\") unless RHOME says where R is: bin/Rscript becomes a small sh wrapper that sets RHOME from its own location and runs Rscript.bin, as the Linux recipe does (added 2026-09-19; this, not the space in \"Application Support\", was why R failed on macOS). R's own bin/R quotes its paths since R 4.x.",
    "launch": {
     "program": "{runtime_dir}/R.framework/Resources/bin/Rscript",
     "args": [],

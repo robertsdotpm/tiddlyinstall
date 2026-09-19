@@ -236,3 +236,23 @@ about a file that hasn't changed. R coverage stays at 579/584 (99.1%),
 which is "100% of what can be mirrored" per the round-2 brief's framing.
 No web search was spent on this (all candidate hostnames were already
 known CRAN mirror names; direct HEAD checks only).
+
+## Real-app fidelity (installer-builder, 2026-09-19)
+
+Checked with installer-builder's `tests/fidelity/r` (install.packages of
+digest and jsonlite, which compile C, then tcltk, HTTPS and capabilities()).
+
+- **Windows:** the recipes' `executable` held a note ("bin\Rscript.exe  (R
+  2.12-4.1 also have ...)"), which became part of `{runtime}`, so any install
+  command using `{runtime}` failed ("The system cannot find the path
+  specified"). The notes moved to `notes`.
+- **macOS:** Rscript has R's install path compiled in and exits with
+  "Rscript execution error: No such file or directory" anywhere else, which
+  is why R failed on the Mac (not the space in "Application Support": R 4.6's
+  bin/R quotes its paths). The extract recipe now wraps Rscript as the Linux
+  recipe does (RHOME from the wrapper's own folder).
+- **Linux (Posit r-builds):** installing CRAN packages compiles them (Makeconf:
+  gcc, g++ -std=gnu++20, gfortran); the policy now needs gcc, g++ and make for
+  apps that install something. tcltk needs the distribution's Tk 8.6
+  (libtk8.6, the `libtk` prerequisite apps can name); it isn't forced on every
+  R app.

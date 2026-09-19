@@ -8496,6 +8496,158 @@
      "installer"
     ]
    }
+  },
+  {
+   "versions": ">=3.2",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "14",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "rv-ruby relocatable builds, arm64_sonoma",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "4.0.7, 3.4.9, 3.3.10: every Mach-O's LC_BUILD_VERSION minos 14.0, arm64; no library outside /usr/lib and /System",
+     "file": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-4.0.7.arm64_sonoma.tar.gz"
+    },
+    {
+     "kind": "vm-test",
+     "source": "installed and run on the Mac test server (macOS 26, arm64), tests/fidelity 2026-09-19"
+    }
+   ],
+   "confidence": "high",
+   "notes": "3 archives read; the rest of the release is built the same way.",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "rv-ruby",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "rv-ruby"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": ">=3.2",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "15",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "rv-ruby relocatable builds, ventura (x86_64)",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "4.0.7, 3.4.9, 3.3.10: LC_BUILD_VERSION minos 15.0, x86_64 (the asset is named ventura, but its binaries need 15); no library outside /usr/lib and /System",
+     "file": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-4.0.7.ventura.tar.gz"
+    }
+   ],
+   "confidence": "high",
+   "notes": "3 archives read. The asset's name says Ventura (13); the binaries say 15.0, and the binary wins.",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "rv-ruby",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "rv-ruby"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": "==3.4.5",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "10.11",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "Homebrew portable Ruby 3.4.5, el_capitan bottle",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "3.4.5: LC_VERSION_MIN_MACOSX / LC_BUILD_VERSION 10.11, x86_64; no library outside /usr/lib and /System",
+     "file": "https://github.com/Homebrew/homebrew-portable-ruby/releases/download/3.4.5/portable-ruby-3.4.5.el_capitan.bottle.tar.gz"
+    }
+   ],
+   "confidence": "high",
+   "notes": null,
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "homebrew-portable",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "homebrew-portable"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
+  },
+  {
+   "versions": "==3.4.5",
+   "os": "macos",
+   "arch": [
+    "arm64"
+   ],
+   "min_os": "11",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "Homebrew portable Ruby 3.4.5, arm64_big_sur bottle",
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "3.4.5: LC_BUILD_VERSION minos 11.3, arm64; no library outside /usr/lib and /System",
+     "file": "https://github.com/Homebrew/homebrew-portable-ruby/releases/download/3.4.5/portable-ruby-3.4.5.arm64_big_sur.bottle.tar.gz"
+    }
+   ],
+   "confidence": "high",
+   "notes": "The binaries need 11.3; the OS table has one entry for Big Sur, so 11.0-11.2 on Apple silicon (rare) would fail at start.",
+   "format": [
+    "tar.gz"
+   ],
+   "variant": "homebrew-portable",
+   "kind": "archive",
+   "match": {
+    "format": [
+     "tar.gz"
+    ],
+    "variant": [
+     "homebrew-portable"
+    ],
+    "kind": [
+     "archive"
+    ]
+   }
   }
  ],
  "max_per_os": [

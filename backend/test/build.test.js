@@ -171,7 +171,8 @@ test('install rules from the files a source has', { skip }, (t) => {
     ['python', '', true, null, 'default'],
     ['node', '', false, ['package.json', 'index.js'], 'default:npm'],
     ['ruby', '', false, ['Gemfile'], 'default:bundler'],
-    ['php', '', false, ['composer.json', 'index.php'], null],
+    // Composer comes with PHP for apps that install something (2026-09-19).
+    ['php', '', false, ['composer.json', 'index.php'], 'default:composer'],
     ['php', 'php my-install.php', false, ['composer.json'], 'php my-install.php'],
     ['php', '', false, ['index.php'], ''],
     ['rust', '', false, null, 'default'],
