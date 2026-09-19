@@ -54,7 +54,22 @@ Values end at the next space, or at a closing `"` if they start with one
 | `/plan=<path>` | Use this plan. It must be signed by the built-in key (save it from `<backend>/api/plan/<record>`) |
 | `/unsigned-plan` | Accept an unsigned (or edited) `/plan=`, for plans you wrote yourself. The review page says so |
 | `/backend=<url>` | Backend for records and plans. Otherwise the record's `backend` line, otherwise the built-in `IB_BACKEND` (`http://10.0.1.76:8080`) |
+| `/reinstall` | Install again even when this app is already fully installed with the same record (below) |
+| `/?`, `/help` | Show these options and quit |
 | `/ib-elevated` | Internal: marks the copy started with `runas` |
+
+**Running it again.** If the app is already fully installed where this
+installer would put it, with the same `appid` and record hash (the same
+settings), the installer doesn't install again: in `.onInit`, before any
+page, it starts the app through `launch.exe`, as the shortcuts do, and
+quits with exit code 0. With `/S` it never starts the app: it logs that
+the app is installed and exits 0. "Fully installed" means
+`<app>\.ib-installed` (format.md section 5), the last file a successful
+install writes, names this appid and record, and the folder's
+`.ib-owner` names the app. A different record (new settings, a new
+version) has another appid, so it installs beside the old one as before.
+The plan is still fetched first (it names the appid). `/reinstall` goes
+on to install, removing the earlier install first as before.
 
 **Mode A (a signed base with no appended block)** accepts none of
 `/record=`, `/plan=`, `/unsigned-plan` and `/backend=` (it stops with
@@ -102,10 +117,19 @@ Every folder the installer makes holds a `.ib-owner` file naming the app
 
 Shortcuts: Start menu folder `<App>` holding `<App>.lnk` (to
 `launch.exe`) and `Uninstall <App>.lnk`, plus a desktop shortcut if
-`desktop 1`. Add/Remove Programs: `HKCU` (or `HKLM`)
+`desktop 1`. With `menu 0` nothing is written to the Start menu (no
+shortcut, no uninstaller shortcut, no folder); the app is started with
+`launch.exe`, the desktop shortcut or by running the installer again,
+and the review and finish pages say so. Add/Remove Programs (always):
+`HKCU` (or `HKLM`)
 `Software\Microsoft\Windows\CurrentVersion\Uninstall\ib-<appid>`.
+The last thing a successful install writes is `.ib-installed` (to a
+temporary name, then renamed); an earlier install of the same app is
+removed first (its `.ib-installed` before anything else).
 
-The uninstaller reads `manifest.txt` in its own folder and removes only
+The uninstaller deletes `.ib-installed` first (so a half-finished
+uninstall is never taken for an install), then reads `manifest.txt` in
+its own folder and removes only
 `dir` entries that are `<root>\<12 base32 chars>` and whose `.ib-owner`
 names this app, `.lnk` shortcuts in a Start menu or desktop folder (then
 the app's Start menu folder, if empty), and the app's own `ib-<appid>`

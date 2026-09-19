@@ -34,7 +34,23 @@ TiddlyInstall.app/Contents/MacOS/install          # macOS, from a terminal
 | `--plan=PATH` | Use this `ib-plan` (without it, the plan comes from the metadata or the backend). It must be signed by the built-in key: save it from `<backend>/api/plan/<record>` |
 | `--unsigned-plan` | Accept an unsigned or edited `--plan` (or `install.txt` plan), for plans you wrote yourself; the transparency screen says so |
 | `--backend=URL` | Where records and plans are fetched from. Otherwise the record's `backend` line, then `http://10.0.1.76:8080` |
+| `--reinstall` | Install again even when this app is already fully installed with the same record (below) |
 | `--uninstall` | Uninstall mode. `uninstall.sh` also switches to it by itself when `manifest.txt` is next to it |
+
+**Running it again.** If the app is already fully installed where this
+installer would put it, with the same `appid` and record hash (the same
+settings), the installer doesn't install again: it starts the app
+through `launch.sh`, as its shortcuts do, and exits (a console app
+started from a desktop gets a terminal window, as its menu entry would;
+`IB_NO_TERMINAL=1` keeps it in the installer's own process). With
+`--yes` it never starts the app: it says the app is installed and exits
+0. "Fully installed" means `<app>/.ib-installed` (format.md section 5),
+the last file a successful install writes, names this appid and record.
+A different record (new settings, a new version) has another appid, so
+it installs beside the old one as before. The plan is still fetched
+first (it names the appid), so this needs the backend for online
+installers. `--reinstall` removes the existing install, as its
+uninstaller would, and installs again.
 
 **How it asks.** In a terminal it prints the transparency text and asks
 `[y/N]`. Without a terminal on Linux it uses `zenity --text-info`, or
@@ -155,9 +171,12 @@ The pack is used whatever the metadata's source: before downloading a
    separator). The root is `~/.local/share/<rootname>` (honours
    `XDG_DATA_HOME`) or `~/Library/Application Support/<rootname>`;
    system-wide `/opt/<rootname>` or `/Library/Application
-   Support/<rootname>`. It refuses an app folder that already exists
-   (same app: "uninstall first"; another app's manifest: collision) and a
-   file folder whose `.ib-owner` names another app.
+   Support/<rootname>`. An app folder that already exists and whose
+   `.ib-owner` names this app (`--reinstall`, an interrupted install, or
+   an install by an engine older than `.ib-installed`) is removed first,
+   as its uninstaller would remove it; one that belongs to another app, or
+   to nobody, stops the install, as does a file folder whose `.ib-owner`
+   names another app.
 5. Per `file`: pack, else each `url` in turn (`curl -fL`, 20 s connect
    timeout, abort below 1 KB/s for 60 s, 2 retries; else `wget -T 60 -t
    2`), SHA-256 checked (`sha256sum`, `shasum -a 256` or `openssl`), a
@@ -168,7 +187,8 @@ The pack is used whatever the metadata's source: before downloading a
 6. Unpacks the source into the app folder, runs `install` in it with
    `env`, `unset`, `ienv`, `iunset` and `path` applied.
 7. Writes `launch.txt` (format.md 5), `launch.sh`, `uninstall.sh`, the
-   menu entries, and `manifest.txt` last. If the record has an `icon`
+   menu entries, `manifest.txt`, and last `.ib-installed` (written to a
+   temporary name and renamed, so it is never half written). If the record has an `icon`
    (format.md section 2) and the pack holds that PNG, it is copied to
    `<app>/icon.png` and the `.desktop` file's `Icon=` is its absolute
    path; otherwise `Icon=application-x-executable`.
@@ -263,7 +283,17 @@ generating a resolved script so the launcher is identical everywhere
 | App | `~/.local/share/applications/ib-<appid>.desktop` | `~/Applications/<App>/<App>.app` |
 | Uninstaller | `ib-<appid>-uninstall.desktop` → `sh <app>/uninstall.sh --uninstall` (in a terminal) | `~/Applications/<App>/Uninstall <App>.app` |
 | Menu folder | `~/.local/share/desktop-directories/ib-<appid>.directory` + `~/.config/menus/applications-merged/ib-<appid>.menu` | the `~/Applications/<App>/` folder |
-| Desktop (`desktop 1`) | a copy of the `.desktop` in the XDG desktop folder, if it exists | a symlink on `~/Desktop` |
+| Desktop (`desktop 1`) | `ib-<appid>.desktop` in the XDG desktop folder, if it exists | a symlink on `~/Desktop` |
+
+**`menu 0`** writes nothing to the app menu: no `.desktop` in
+`applications`, no uninstaller entry, no `.directory` or `.menu`, and on
+macOS nothing in `~/Applications`, except, when a desktop shortcut is
+asked for, a single `~/Applications/<App>.app` (no folder, no
+uninstaller app) for the desktop symlink to open. Desktop shortcuts are
+made for one-user installs only. The app is started with
+`<app>/launch.sh`, the desktop shortcut, or by running the installer
+again, and removed with `sh <app>/uninstall.sh`; the transparency
+screen and the final message say so.
 
 System installs use `/usr/local/share/applications`,
 `/usr/local/share/desktop-directories`, `/etc/xdg/menus/applications-merged`
@@ -278,6 +308,8 @@ reads `manifest.txt` next to it and removes exactly what it lists:
 - `dir` entries only if they are directly in the install root, 12
   base32 characters, not the app folder, and their `.ib-owner` names this
   app (a missing `.ib-owner` counts as someone else's);
+- `.ib-installed` first, so an uninstall that stops half way is never
+  taken for a finished install;
 - then the app folder, if its own `.ib-owner` names the app, then the
   root if empty;
 - `shortcut` entries that are folders (parents the installer created,
