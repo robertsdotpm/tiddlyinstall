@@ -14,7 +14,7 @@ The pages in the repo (index.html, new.html, ...) and js/, css/ are its
 sources. --multi also writes them as a site of separate files to dist/site/
 (not used for now; kept so it can be again).
 
-The catalogue snapshot comes from `go run ./cmd/ibsnapshot` in server/ unless
+The catalogue snapshot comes from tools/snapshot.mjs (Node.js) unless
 --catalog names a folder that already has catalog.gz and runtimes.json.
 """
 import argparse
@@ -280,8 +280,9 @@ def offline_page(catalog_dir, backend):
 
 
 def make_snapshot(tmp):
-    print("making the catalogue snapshot (about a minute)…", flush=True)
-    subprocess.run(["go", "run", "./cmd/ibsnapshot", "-o", tmp], cwd=os.path.join(ROOT, "server"), check=True)
+    print("making the catalogue snapshot…", flush=True)
+    node = shutil.which("node") or os.path.expanduser("~/.local/node/bin/node")
+    subprocess.run([node, os.path.join(ROOT, "tools", "snapshot.mjs"), "-o", tmp], check=True)
     return tmp
 
 
