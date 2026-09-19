@@ -15,6 +15,7 @@ CSS-only behaviours.
 | `new.html` | The installer form. Submitting sends `POST /api/jobs` and opens the build's page. The "Newest that runs on the user's system" table comes from `GET /api/catalog/runtimes` when the server is reachable |
 | `build.html#job=<id>` | One build, live: ticket number, place in the queue, estimated wait, progress, then downloads with sizes, SHA-256 and who signed them. Survives reloads |
 | `edit.html` | Editor for unsigned (mode C) installers: open a `.exe`, `.run` or macOS `.zip`, edit its settings record, plan, packed files and **icon**, download it. Or start from a base installer. Nothing is uploaded |
+| `runtimes.html` | The runtime catalogue editor: browse and change releases, recipes, support rules and policy, with a live plan preview. Changes are kept in this browser as an overlay and used when the page builds installers itself (docs/plan.md section 1.11) |
 | `create.html` | Redirects to `new.html#write` |
 | `bases.html`, `builds.html` | Sample data still |
 
@@ -34,6 +35,8 @@ page is lost.
 | `vendor/resedit-bundle.js` | resedit-js 2.0.3 + pe-library 1.0.1 (MIT, (c) 2018 jet; see `vendor/LICENSE.*`), bundled by `tools/build_resedit_bundle.py`. `edit.html` loads it; the one-file site inlines it |
 | `tools/build_site.py` | Builds the site: one HTML file, `dist/index.html` (gitignored), with every page, the CSS, the JS, the resedit bundle, the three unsigned bases and the catalogue snapshot inside. The build server serves it; saved and opened from disk it builds installers with no server (docs/plan.md section 1.11). `--multi` also writes separate pages |
 | `js/resolve.js`, `js/builder.js`, `js/local-api.js`, `js/router.js` | The plan resolver and the job builder (both shared with the build server in `backend/`), the in-page API used when there is no build server, and the one-file site's page switching |
+| `js/overlay.js`, `js/catalog-editor.js` | The catalogue overlay (format, checks, applying it, storage, "Save this page" with it) and the Runtimes page |
+| `tests/catalog-editor-test.mjs` | The Runtimes page in headless Chrome: edits, reload, preview, a built installer's plan, revert, export, import (a hostile file too), reset, blocked storage (`node --experimental-websocket tests/catalog-editor-test.mjs [--site URL]`) |
 | `tests/ibfile.html`, `tests/icon.html` | Unit tests for `js/ibfile.js` and `js/icon.js` in the browser. Print PASS/FAIL. Fixtures come from `tests/make_fixtures.py` (Python's tarfile and zipfile, plus a synthetic PE with an icon resource) |
 | `tests/mock_server.py` | A stand-in build server for trying the pages (`python3 tests/mock_server.py 8094`, then open `new.html?api=http://127.0.0.1:8094`) |
 
