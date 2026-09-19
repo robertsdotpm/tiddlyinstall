@@ -133,7 +133,7 @@ if [ -n "$d" ]; then
     for n in 90 91 92 93 94 95 96 97 98 99; do [ -e /tmp/.X11-unix/X$n ] || [ -e /tmp/.X$n-lock ] || break; done
     $XVFB :$n -screen 0 1280x800x24 -nolisten tcp >/dev/null 2>&1 &
     XPID=$!
-    sleep 2
+    i=0; while [ $i -lt 40 ] && ! DISPLAY=:$n xwininfo -root >/dev/null 2>&1; do sleep 0.5; i=$((i + 1)); done
     DISP="DISPLAY=:$n"
   else
     DISP=
