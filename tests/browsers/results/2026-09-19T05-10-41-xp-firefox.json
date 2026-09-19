@@ -1,0 +1,297 @@
+{
+ "time": "2026-09-19T05:10:41.346Z",
+ "machine": "xp",
+ "browser": "firefox",
+ "version": "52.9.0",
+ "result": "pass",
+ "seed": 1615005687,
+ "checks": [
+  {
+   "name": "served",
+   "note": "no reverse tunnel: Error: remote port forwarding failed for listen port 37273"
+  },
+  {
+   "name": "the startup check finds nothing missing",
+   "pass": true
+  },
+  {
+   "name": "the compatibility bar shows only when a feature isn't native",
+   "pass": true
+  },
+  {
+   "name": "the page starts without errors",
+   "pass": true
+  },
+  {
+   "name": "from disk, the page builds installers itself",
+   "pass": true
+  },
+  {
+   "name": "WebCrypto Ed25519",
+   "note": "not supported: SyntaxError (the editor offers RSA keys instead)"
+  },
+  {
+   "name": "the page has its sections",
+   "pass": true
+  },
+  {
+   "name": "#new shows its page",
+   "pass": true
+  },
+  {
+   "name": "#edit shows its page",
+   "pass": true
+  },
+  {
+   "name": "#bases shows its page",
+   "pass": true
+  },
+  {
+   "name": "#runtimes shows its page",
+   "pass": true
+  },
+  {
+   "name": "#home shows its page",
+   "pass": true
+  },
+  {
+   "name": "New installer: the code editor shows for Python + script (CSS :has())",
+   "pass": true
+  },
+  {
+   "name": "build: the build finishes",
+   "pass": true
+  },
+  {
+   "name": "build: windows download is 991490 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: windows is a .exe",
+   "pass": true
+  },
+  {
+   "name": "build: windows carries the record rnimttxnyct5rylhq3wivk3xoa",
+   "pass": true
+  },
+  {
+   "name": "build: windows record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: windows carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: windows plan is for windows only",
+   "pass": true
+  },
+  {
+   "name": "build: windows packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "build: linux download is 141590 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: linux is a .run",
+   "pass": true
+  },
+  {
+   "name": "build: linux carries the record rnimttxnyct5rylhq3wivk3xoa",
+   "pass": true
+  },
+  {
+   "name": "build: linux record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: linux carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: linux plan is for linux only",
+   "pass": true
+  },
+  {
+   "name": "build: linux packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "build: macos download is 41634 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: macos is a .zip",
+   "pass": true
+  },
+  {
+   "name": "build: macos carries the record rnimttxnyct5rylhq3wivk3xoa",
+   "pass": true
+  },
+  {
+   "name": "build: macos record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: macos carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: macos plan is for macos only",
+   "pass": true
+  },
+  {
+   "name": "build: macos packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "Save this page makes the whole page",
+   "pass": true
+  },
+  {
+   "name": "the saved copy (from the browser's download folder) starts",
+   "pass": true
+  },
+  {
+   "name": "the saved copy starts without errors",
+   "pass": true
+  },
+  {
+   "name": "saved copy: the build finishes",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux download is 141564 bytes",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux is a .run",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux carries the record wpb67hjahjvbq6p33ghbwn5sdj",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux plan is for linux only",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "PGP: the page makes a ed25519 key",
+   "pass": true
+  },
+  {
+   "name": "PGP: signing says saved",
+   "pass": true
+  },
+  {
+   "name": "PGP (ed25519): gpg --verify says Good signature for the saved .run.asc",
+   "pass": true
+  },
+  {
+   "name": "PGP: the signed .run keeps its record",
+   "pass": true
+  },
+  {
+   "name": ".pfx: the page opens the RSA .pfx",
+   "pass": true
+  },
+  {
+   "name": ".pfx: signing says done",
+   "pass": true
+  },
+  {
+   "name": ".pfx: the signed .exe passes osslsigncode verify",
+   "pass": true
+  },
+  {
+   "name": "no page errors while signing",
+   "pass": true
+  }
+ ],
+ "entry": {
+  "id": "firefox",
+  "name": "Mozilla Firefox ESR",
+  "version": "52.9.0esr",
+  "binary": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
+  "driverKind": "marionette",
+  "driver": null,
+  "driverVersion": null,
+  "args": [],
+  "headless": false,
+  "source": "https://archive.mozilla.org/pub/firefox/releases/52.9.0esr/win32/en-US/Firefox%20Setup%2052.9.0esr.exe",
+  "driverSource": null,
+  "verified": "SHA512SUMS gpg-verified (Mozilla release key 14F2 6682 D091 6CDD 81E3 7B6D 61B7 B526 D98F 0353, subkey BBBEBDBB24C6F355), installer SHA512 matches; Authenticode signer Mozilla Corporation, digest matches, chain not verifiable locally (SHA1 sig, Symantec timestamp root not in store)",
+  "smoke": "",
+  "notes": "Installed silently (/S), not default. Driven over Firefox's own Marionette protocol (tests/browsers/marionette.mjs: firefox.exe -marionette -no-remote -profile <fresh>, the port and download prefs in its user.js), because no geckodriver runs on XP: 0.11.1 and 0.13.0 exit 0xC0000135 and 0.14.0-0.19.1 0xC0000139 at load (they import ktmw32.dll and other Vista+ entry points); 0.20.0, 0.20.1 and 0.21.0 start and listen but abort on the first HTTP request ('thread panicked while processing panic. aborting.'). Firefox 52 has no headless mode: it runs in the SSH session's hidden desktop. No policies.json (FF52 predates enterprise policies; 52.9.0 is the final XP build so no update can arrive).",
+  "protocol": "marionette"
+ },
+ "served": "no tunnel: Error: remote port forwarding failed for listen port 37273",
+ "capabilities": {
+  "browserName": "firefox",
+  "browserVersion": "52.9.0",
+  "platformName": "windows_nt",
+  "platformVersion": "5.1",
+  "pageLoadStrategy": "normal",
+  "acceptInsecureCerts": false,
+  "timeouts": {
+   "implicit": 0,
+   "page load": 300000,
+   "script": 30000
+  },
+  "rotatable": false,
+  "specificationLevel": 0,
+  "moz:processID": 1260,
+  "moz:profile": "C:\\ibbrowsers\\work\\ibprof-2026-09-19T05-10-41-c46f89",
+  "moz:accessibilityChecks": false
+ },
+ "features": {
+  "ES modules": false,
+  "?. ?? ||= syntax": false,
+  "BigInt": false,
+  "Object.hasOwn": false,
+  "CompressionStream deflate-raw": false,
+  "DecompressionStream deflate-raw": false,
+  "CompressionStream gzip": false,
+  "Blob.stream": false,
+  "secure context": true,
+  "WebCrypto": true,
+  "CSS :has()": false,
+  "CSS color-mix()": false,
+  "userAgent": "Mozilla/5.0 (Windows NT 5.1; rv:52.0) Gecko/20100101 Firefox/52.0"
+ },
+ "webcrypto": {
+  "Ed25519": "SyntaxError",
+  "RSASSA-PKCS1-v1_5": true,
+  "ECDSA P-256": true,
+  "PBKDF2": true,
+  "AES-CBC": true,
+  "HMAC": true,
+  "SHA-256": true
+ },
+ "degraded": "compress decompress has builtins readfile ed25519 canvas",
+ "saveToDisk": "saved",
+ "pgpKey": "ed25519",
+ "pfx": "signed",
+ "driverLog": "channel 3: open failed: connect failed: Unable to connect to target host\r\n1789794652674\taddons.xpi\tWARN\tAdd-on {20a82645-c095-46ed-80e3-08825760534b} is not correctly signed.\r\n1789794652676\taddons.xpi\tWARN\tAdd-on {20a82645-c095-46ed-80e3-08825760534b} is not correctly signed.\r\n1789794652676\taddons.xpi-utils\tWARN\tDisabling foreign installed add-on {20a82645-c095-46ed-80e3-08825760534b} in winreg-app-global\r\n1789794653244\tMarionette\tINFO\tListening on port 44751\r\n",
+ "page": {
+  "rev": "df363ea",
+  "hash": "746f568402d6"
+ },
+ "protocol": "marionette",
+ "seconds": 29
+}

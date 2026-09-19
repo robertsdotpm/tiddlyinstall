@@ -1,0 +1,303 @@
+{
+ "time": "2026-09-19T05:13:11.872Z",
+ "machine": "11",
+ "browser": "firefox",
+ "version": "154.0.1",
+ "result": "pass",
+ "seed": 919,
+ "checks": [
+  {
+   "name": "served",
+   "note": "no reverse tunnel: Error: remote port forwarding failed for listen port 30203"
+  },
+  {
+   "name": "the startup check finds nothing missing",
+   "pass": true
+  },
+  {
+   "name": "the compatibility bar shows only when a feature isn't native",
+   "pass": true
+  },
+  {
+   "name": "the page starts without errors",
+   "pass": true
+  },
+  {
+   "name": "from disk, the page builds installers itself",
+   "pass": true
+  },
+  {
+   "name": "the page has its sections",
+   "pass": true
+  },
+  {
+   "name": "#new shows its page",
+   "pass": true
+  },
+  {
+   "name": "#edit shows its page",
+   "pass": true
+  },
+  {
+   "name": "#bases shows its page",
+   "pass": true
+  },
+  {
+   "name": "#runtimes shows its page",
+   "pass": true
+  },
+  {
+   "name": "#home shows its page",
+   "pass": true
+  },
+  {
+   "name": "New installer: the code editor shows for Python + script (CSS :has())",
+   "pass": true
+  },
+  {
+   "name": "build: the build finishes",
+   "pass": true
+  },
+  {
+   "name": "build: windows download is 991490 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: windows is a .exe",
+   "pass": true
+  },
+  {
+   "name": "build: windows carries the record s7fh5zasnjjtainuk4pbyeg6ts",
+   "pass": true
+  },
+  {
+   "name": "build: windows record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: windows carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: windows plan is for windows only",
+   "pass": true
+  },
+  {
+   "name": "build: windows packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "build: linux download is 141590 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: linux is a .run",
+   "pass": true
+  },
+  {
+   "name": "build: linux carries the record s7fh5zasnjjtainuk4pbyeg6ts",
+   "pass": true
+  },
+  {
+   "name": "build: linux record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: linux carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: linux plan is for linux only",
+   "pass": true
+  },
+  {
+   "name": "build: linux packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "build: macos download is 41630 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: macos is a .zip",
+   "pass": true
+  },
+  {
+   "name": "build: macos carries the record s7fh5zasnjjtainuk4pbyeg6ts",
+   "pass": true
+  },
+  {
+   "name": "build: macos record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: macos carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: macos plan is for macos only",
+   "pass": true
+  },
+  {
+   "name": "build: macos packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "Save this page makes the whole page",
+   "pass": true
+  },
+  {
+   "name": "the saved copy (from the browser's download folder) starts",
+   "pass": true
+  },
+  {
+   "name": "the saved copy starts without errors",
+   "pass": true
+  },
+  {
+   "name": "saved copy: the build finishes",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux download is 141564 bytes",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux is a .run",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux carries the record djvdouweprnnmukpqgikexkvxm",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux plan is for linux only",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "PGP: the page makes a ed25519 key",
+   "pass": true
+  },
+  {
+   "name": "PGP: signing says saved",
+   "pass": true
+  },
+  {
+   "name": "PGP (ed25519): gpg --verify says Good signature for the saved .run.asc",
+   "pass": true
+  },
+  {
+   "name": "PGP: the signed .run keeps its record",
+   "pass": true
+  },
+  {
+   "name": ".pfx: the page opens the RSA .pfx",
+   "pass": true
+  },
+  {
+   "name": ".pfx: signing says done",
+   "pass": true
+  },
+  {
+   "name": ".pfx: the signed .exe passes osslsigncode verify",
+   "pass": true
+  },
+  {
+   "name": "no page errors while signing",
+   "pass": true
+  }
+ ],
+ "entry": {
+  "id": "firefox",
+  "name": "Mozilla Firefox",
+  "version": "154.0.1",
+  "binary": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
+  "driverKind": "geckodriver",
+  "driver": "C:\\ibbrowsers\\drivers\\geckodriver-0.37.1\\geckodriver.exe",
+  "driverVersion": "0.37.1",
+  "args": [
+   "-headless"
+  ],
+  "headless": true,
+  "source": "preinstalled",
+  "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-win64.zip",
+  "verified": "browser preinstalled, not re-verified; geckodriver: Authenticode Mozilla Corporation, chain ok (osslsigncode) and Valid on the VM",
+  "smoke": "pass",
+  "notes": "preinstalled, left as is (current release is 156.0; Firefox updates itself). geckodriver rejects a Host header whose port differs from its --port, so forward with the same local and remote port."
+ },
+ "served": "no tunnel: Error: remote port forwarding failed for listen port 30203",
+ "capabilities": {
+  "acceptInsecureCerts": false,
+  "browserName": "firefox",
+  "browserVersion": "154.0.1",
+  "moz:accessibilityChecks": false,
+  "moz:buildID": "20260824154132",
+  "moz:geckodriverVersion": "0.37.1",
+  "moz:headless": true,
+  "moz:platformVersion": "10.0",
+  "moz:processID": 36892,
+  "moz:profile": "C:\\Users\\matth\\AppData\\Local\\Temp\\rust_mozprofileG3qB21",
+  "moz:shutdownTimeout": 60000,
+  "moz:webdriverClick": true,
+  "moz:windowless": false,
+  "pageLoadStrategy": "normal",
+  "platformName": "windows",
+  "proxy": {},
+  "setWindowRect": true,
+  "strictFileInteractability": false,
+  "timeouts": {
+   "implicit": 0,
+   "pageLoad": 300000,
+   "script": 30000
+  },
+  "unhandledPromptBehavior": "dismiss and notify",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0"
+ },
+ "features": {
+  "?. ?? ||= syntax": true,
+  "BigInt": true,
+  "Blob.stream": true,
+  "CSS :has()": true,
+  "CSS color-mix()": true,
+  "CompressionStream deflate-raw": true,
+  "CompressionStream gzip": true,
+  "DecompressionStream deflate-raw": true,
+  "ES modules": true,
+  "Object.hasOwn": true,
+  "WebCrypto": true,
+  "secure context": true,
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0"
+ },
+ "webcrypto": {
+  "AES-CBC": true,
+  "ECDSA P-256": true,
+  "Ed25519": true,
+  "HMAC": true,
+  "PBKDF2": true,
+  "RSASSA-PKCS1-v1_5": true,
+  "SHA-256": true
+ },
+ "degraded": "",
+ "saveToDisk": "saved",
+ "pgpKey": "ed25519",
+ "pfx": "signed",
+ "driverLog": "1789794796702\tgeckodriver\tINFO\tListening on 127.0.0.1:40703\n1789794796833\tmozrunner::runner\tINFO\tRunning command: \"C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe\" \"--marionette\" \"-headless\" \"-no-remote\" \"-profile\" \"C:\\\\Users\\\\matth\\\\AppData\\\\Local\\\\Temp\\\\rust_mozprofileG3qB21\"\n*** You are running in headless mode.\r\n1789794797359\tMarionette\tINFO\tMarionette enabled\r\nDynamically enable window occlusion 0\r\n1789794797456\tMarionette\tINFO\tListening on port 63541\r\nRead port: 63541\n[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt\r\n[ERROR shell_windows::limited_access_features] Error generating feature token: NS_ERROR_FAILURE\n[ERROR shell_windows::taskbar] Error pinning with WinRT API: GetAumid(Error { code: HRESULT(0x80004005), message: \"Unspecified error\" })\nconsole.warn: RSLoader: Recipe new-tab-157020260831183837-to-release-155-addondeployment not returned from collection nimbus-secure-experiments because it does not contain at least one required feature ID.\r\nconsole.warn: RSLoader: Recipe new-tab-158020260913220257-to-release-156 not returned from collection nimbus-secure-experiments because it does not contain at least one required feature ID.\r\nconsole.error: \"Experiment desktop-release-rollout-show-relay-to-all-browsers-next-sign-up-modal-cta has unknown featureId: email-autocomplete-relay\"\r\nconsole.error: \"Experiment visual-card-updates has unknown featureId: newtabRefinedCardsLayout\"\r\nconsole.error: \"Experiment enable-nimbus-unenrollment-synchronization has unknown featureId: nimbusStore\"\r\nconsole.error: \"Experiment private-window-visual-refresh-design-change-only has unknown featureId: feltPrivacy\"\r\nconsole.warn: LoginRecipes: \"Falling back to a synchronous message for: file://.\"\r\nconsole.warn: LoginRecipes: \"Falling back to a synchronous message for: file://.\"\r\nJavaScript error: resource://gre/actors/FormHandlerChild.sys.mjs, line 103: InvalidStateError: JSWindowActorChild.document getter: Cannot access property 'document' after actor 'FormHandler' has been destroyed\r\n",
+ "page": {
+  "rev": "df363ea",
+  "hash": "746f568402d6"
+ },
+ "protocol": "webdriver",
+ "seconds": 16
+}

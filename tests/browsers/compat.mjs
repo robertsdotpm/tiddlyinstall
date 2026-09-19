@@ -22,7 +22,7 @@ export const MACHINES = [
   ['ubuntu2004', 'Ubuntu 20.04', 'linux', ''], ['ubuntu2204', 'Ubuntu 22.04', 'linux', ''], ['debian12', 'Debian 12', 'linux', '', 1],
   ['alpine', 'Alpine 3.24', 'linux', ''], ['mac', 'macOS 26', 'mac', '26'],
 ];
-export const BROWSERS = [['chrome', 'Chrome'], ['chromium', 'Chromium'], ['edge', 'Edge'], ['supermium', 'Supermium'],
+export const BROWSERS = [['chrome', 'Chrome'], ['chromium', 'Chromium'], ['edge', 'Edge'], ['opera', 'Opera'], ['supermium', 'Supermium'],
   ['supermium-installed', 'Supermium (older)'], ['firefox', 'Firefox'], ['safari', 'Safari']];
 
 export function readUsage() {

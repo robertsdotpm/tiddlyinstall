@@ -7,6 +7,7 @@
 //   Windows      C:\ibbrowsers\browsers.json, drivers\, work\
 //   Linux, Mac   ~/ibbrowsers/browsers.json, drivers/, work/
 import { spawn, spawnSync, execFileSync } from 'node:child_process';
+import fs from 'node:fs';
 import net from 'node:net';
 import path from 'node:path';
 
@@ -151,8 +152,27 @@ export class Remote {
     return this.runForwarded(cmd, port, log);
   }
 
-  // Stops the browser startCdpBrowser() started: the process listening on
-  // its DevTools port, and its children.
+  // For a Firefox with no geckodriver that runs on this OS (52 on XP):
+  // starts it with Marionette on `port` there, forwarded to the same port
+  // here, and a fresh profile in work/<profile> whose user.js sets that port
+  // and `prefs`. `tmp` is a local folder for writing user.js.
+  startMarionetteBrowser(entry, { port, profile, prefs = {}, tmp, log }) {
+    const all = { 'marionette.defaultPrefs.port': port, 'marionette.port': port, ...prefs };
+    const userJs = Object.entries(all).map(([k, v]) => `user_pref(${JSON.stringify(k)}, ${JSON.stringify(v)});`).join('\r\n') + '\r\n';
+    const local = path.join(tmp, 'user.js');
+    fs.writeFileSync(local, userJs);
+    const dir = this.dir('work', profile);
+    this.mkdir(dir);
+    this.put(local, this.win ? dir + '\\user.js' : dir + '/user.js');
+    const args = [...(entry.args || []), '-marionette', '-no-remote', '-profile', dir, 'about:blank'].join(' ');
+    const cmd = this.win ? `"${entry.binary}" ${args}`
+      : `sh -c '"${entry.binary}" ${args} </dev/null & p=$!; read x; kill $p 2>/dev/null; sleep 1; kill -9 $p 2>/dev/null'`;
+    return this.runForwarded(cmd, port, log);
+  }
+
+  // Stops the browser startCdpBrowser() or startMarionetteBrowser()
+  // started: the process listening on its DevTools or Marionette port, and
+  // its children.
   stopCdpBrowser(port) {
     if (this.win) {
       const r = this.sh('netstat -ano');

@@ -1,0 +1,286 @@
+{
+ "time": "2026-09-19T04:39:13.379Z",
+ "machine": "7",
+ "browser": "opera",
+ "version": "95.0.4635.90",
+ "result": "pass",
+ "seed": 733827885,
+ "checks": [
+  {
+   "name": "served",
+   "note": "no reverse tunnel: Error: remote port forwarding failed for listen port 35673"
+  },
+  {
+   "name": "the startup check finds nothing missing",
+   "pass": true
+  },
+  {
+   "name": "the compatibility bar shows only when a feature isn't native",
+   "pass": true
+  },
+  {
+   "name": "the page starts without errors",
+   "pass": true
+  },
+  {
+   "name": "from disk, the page builds installers itself",
+   "pass": true
+  },
+  {
+   "name": "WebCrypto Ed25519",
+   "note": "not supported: NotSupportedError (the editor offers RSA keys instead)"
+  },
+  {
+   "name": "the page has its sections",
+   "pass": true
+  },
+  {
+   "name": "#new shows its page",
+   "pass": true
+  },
+  {
+   "name": "#edit shows its page",
+   "pass": true
+  },
+  {
+   "name": "#bases shows its page",
+   "pass": true
+  },
+  {
+   "name": "#runtimes shows its page",
+   "pass": true
+  },
+  {
+   "name": "#home shows its page",
+   "pass": true
+  },
+  {
+   "name": "New installer: the code editor shows for Python + script (CSS :has())",
+   "pass": true
+  },
+  {
+   "name": "build: the build finishes",
+   "pass": true
+  },
+  {
+   "name": "build: windows download is 991490 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: windows is a .exe",
+   "pass": true
+  },
+  {
+   "name": "build: windows carries the record g42fn7zi3ezjtpgeltm5hho36f",
+   "pass": true
+  },
+  {
+   "name": "build: windows record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: windows carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: windows plan is for windows only",
+   "pass": true
+  },
+  {
+   "name": "build: windows packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "build: linux download is 141590 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: linux is a .run",
+   "pass": true
+  },
+  {
+   "name": "build: linux carries the record g42fn7zi3ezjtpgeltm5hho36f",
+   "pass": true
+  },
+  {
+   "name": "build: linux record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: linux carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: linux plan is for linux only",
+   "pass": true
+  },
+  {
+   "name": "build: linux packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "build: macos download is 41626 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: macos is a .zip",
+   "pass": true
+  },
+  {
+   "name": "build: macos carries the record g42fn7zi3ezjtpgeltm5hho36f",
+   "pass": true
+  },
+  {
+   "name": "build: macos record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: macos carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: macos plan is for macos only",
+   "pass": true
+  },
+  {
+   "name": "build: macos packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "Save this page makes the whole page",
+   "pass": true
+  },
+  {
+   "name": "Save this page",
+   "note": "the browser wrote no file to its download folder (in.exe in.run rsa.pfx)"
+  },
+  {
+   "name": "PGP: the page makes a ed25519 key",
+   "pass": true
+  },
+  {
+   "name": "PGP: signing says saved",
+   "pass": true
+  },
+  {
+   "name": "PGP (ed25519): gpg --verify says Good signature for the saved .run.asc",
+   "pass": true
+  },
+  {
+   "name": "PGP: the signed .run keeps its record",
+   "pass": true
+  },
+  {
+   "name": ".pfx: the page opens the RSA .pfx",
+   "pass": true
+  },
+  {
+   "name": ".pfx: signing says done",
+   "pass": true
+  },
+  {
+   "name": ".pfx: the signed .exe passes osslsigncode verify",
+   "pass": true
+  },
+  {
+   "name": "no page errors while signing",
+   "pass": true
+  }
+ ],
+ "entry": {
+  "id": "opera",
+  "name": "Opera",
+  "version": "95.0.4635.90",
+  "binary": "C:\\ibbrowsers\\opera-95\\95.0.4635.90\\opera.exe",
+  "driverKind": "operadriver",
+  "driver": "C:\\ibbrowsers\\drivers\\operadriver-109.0.5414.120\\operadriver.exe",
+  "driverVersion": "109.0.5414.120",
+  "args": [
+   "--headless=new"
+  ],
+  "headless": true,
+  "source": "https://get.opera.com/ftp/pub/opera/desktop/95.0.4635.90/win/Opera_95.0.4635.90_Setup_x64.exe",
+  "driverSource": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.109.0.5414.120/operadriver_win64.zip",
+  "verified": "Setup_x64.exe: SHA-256 matches Opera's .sha256sum; Authenticode Opera Norway AS, chain ok (osslsigncode). operadriver.exe: Authenticode Opera Norway AS, chain ok (the 2023 release has no GitHub digest)",
+  "smoke": "",
+  "notes": "Opera 95 is the last for Windows 7 and 8.1. Installed 2026-09-19 as a standalone copy (--copyonly=1 --singleprofile=1 --installfolder=C:\\ibbrowsers\\opera-95): no registry entries, shortcuts or tasks; autoupdate false. operadriver 109 is Opera's driver for Opera Stable 95."
+ },
+ "served": "no tunnel: Error: remote port forwarding failed for listen port 35673",
+ "capabilities": {
+  "acceptInsecureCerts": false,
+  "acceptSslCerts": false,
+  "browserConnectionEnabled": false,
+  "browserName": "opera",
+  "cssSelectorsEnabled": true,
+  "databaseEnabled": false,
+  "goog:chromeOptions": {
+   "debuggerAddress": "localhost:50115"
+  },
+  "handlesAlerts": true,
+  "hasTouchScreen": false,
+  "javascriptEnabled": true,
+  "locationContextEnabled": true,
+  "mobileEmulationEnabled": false,
+  "nativeEvents": true,
+  "networkConnectionEnabled": false,
+  "opera": {
+   "operadriverVersion": "109.0.5414.120 (168eebf2055fd26ca8c71787b7b3f9fe7c90d13d-refs/branch-heads/5414@{#1459})",
+   "userDataDir": "C:\\Program Files\\scoped_dir4992_23375962"
+  },
+  "pageLoadStrategy": "normal",
+  "platform": "Windows",
+  "proxy": {},
+  "rotatable": false,
+  "setWindowRect": true,
+  "strictFileInteractability": false,
+  "takesHeapSnapshot": true,
+  "takesScreenshot": true,
+  "timeouts": {
+   "implicit": 0,
+   "pageLoad": 300000,
+   "script": 30000
+  },
+  "unexpectedAlertBehaviour": "ignore",
+  "version": "109.0.5414.149",
+  "webStorageEnabled": true,
+  "webauthn:extension:credBlob": true,
+  "webauthn:extension:largeBlob": true,
+  "webauthn:virtualAuthenticators": true
+ },
+ "features": {
+  "?. ?? ||= syntax": true,
+  "BigInt": true,
+  "Blob.stream": true,
+  "CSS :has()": true,
+  "CSS color-mix()": false,
+  "CompressionStream deflate-raw": true,
+  "CompressionStream gzip": true,
+  "DecompressionStream deflate-raw": true,
+  "ES modules": true,
+  "Object.hasOwn": true,
+  "WebCrypto": true,
+  "secure context": true,
+  "userAgent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 OPR/95.0.0.0"
+ },
+ "webcrypto": {
+  "AES-CBC": true,
+  "ECDSA P-256": true,
+  "Ed25519": "NotSupportedError",
+  "HMAC": true,
+  "PBKDF2": true,
+  "RSASSA-PKCS1-v1_5": true,
+  "SHA-256": true
+ },
+ "degraded": "ed25519",
+ "saveToDisk": "no file",
+ "pgpKey": "ed25519",
+ "pfx": "signed",
+ "driverLog": "Starting OperaDriver 109.0.5414.120 (168eebf2055fd26ca8c71787b7b3f9fe7c90d13d-refs/branch-heads/5414@{#1459}) on port 42489\r\nOnly local connections are allowed.\r\nPlease see https://chromedriver.chromium.org/security-considerations for suggestions on keeping OperaDriver safe.\r\nOperaDriver was started successfully.\r\n",
+ "page": {
+  "rev": "df363ea",
+  "hash": "fe6b5f1a8aa8"
+ },
+ "protocol": "webdriver",
+ "chromium": "109.0.5414.149",
+ "seconds": 44
+}

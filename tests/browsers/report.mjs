@@ -52,7 +52,7 @@ for (const name of ORDER.filter((n) => inv.machines[n])) {
     if (!e.binary) { counts.none++; notes.push(`${LABEL[name]} ${BLABEL[b]}: can't run here: ${e.notes || ''}`); return 'can\'t run'; }
     const u = latest.get(name + '/' + b);
     const v = major(u && u.version || e.version);
-    const drivable = e.driver || e.protocol || ['chrome', 'chromium', 'edge', 'supermium', 'supermium-installed'].includes(b);
+    const drivable = e.driver || e.protocol || ['chrome', 'chromium', 'edge', 'supermium', 'supermium-installed', 'opera'].includes(b);
     if (!drivable) { counts['no driver'] = (counts['no driver'] || 0) + 1; notes.push(`${LABEL[name]} ${BLABEL[b]} ${e.version}: no WebDriver driver runs here: ${e.notes || ''}`); return 'no driver ' + v; }
     // Installed, but the machine won't let it be driven (e.g. safaridriver
     // not enabled): its manifest's smoke test says why.

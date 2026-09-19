@@ -1,10 +1,10 @@
 {
- "updated": "2026-09-19T03:43:34.792Z",
+ "updated": "2026-09-19T05:12:23.110Z",
  "machines": {
   "7": {
    "os": "windows",
    "ssh": "x@10.0.1.231",
-   "read": "2026-09-19T03:43:34.789Z",
+   "read": "2026-09-19T05:12:12.103Z",
    "browsers": [
     {
      "id": "chrome",
@@ -77,13 +77,31 @@
      "verified": "supermium_144_64_nonsetup.zip SHA-256 805232e5cde1bf6971748bc7fb6a2cb09fdfce9ceb91062a1814b228139956ca matches the digest GitHub publishes for the asset (api.github.com releases/tags/v144-r5); all 295/297 unpacked files copied, file count and byte total match on the VM; chrome.exe unsigned (osslsigncode: no signature), FileVersion 144.0.7559.256",
      "smoke": "pass",
      "notes": "Portable install (nonsetup zip, win64) unpacked to C:\\ibbrowsers\\supermium-144, alongside the installed Supermium 126 (id supermium-installed). Starts headless from the SSH session with only --headless=new (no --no-sandbox or --disable-gpu-rasterization needed): DevTools on 127.0.0.1 reports Chrome/144.0.7559.256, protocol 1.3; over CDP via ssh -L, file:///C:/ibbrowsers/smoke.html -> UA 'HeadlessChrome/144.0.0.0' (Windows NT 10.0; Win64; x64 spoof), isSecureContext true, crypto.subtle true. Driver: official CfT chromedriver 144.0.7559.133 (win64, storage.googleapis.com, zip MD5 matched x-goog-hash) does not load: its PE header requires OS/subsystem version 10.0, so CreateProcess fails with ERROR_BAD_EXE_FORMAT (Python WinError 193 '%1 is not a valid Win32 application') (from a plain cmd.exe over SSH it instead hangs silently with no output). Folder removed. The chromedriver 109 --disable-build-check wrapper works: W3C POST /session with goog:chromeOptions {binary, args:[--headless=new]} -> browserVersion 144.0.7559.256, file:// navigate + execute/sync ok (UA HeadlessChrome/144.0.0.0, isSecureContext true, crypto.subtle true), DELETE ok. CDP also works directly."
+    },
+    {
+     "id": "opera",
+     "name": "Opera",
+     "version": "95.0.4635.90",
+     "binary": "C:\\ibbrowsers\\opera-95\\95.0.4635.90\\opera.exe",
+     "driverKind": "operadriver",
+     "driver": "C:\\ibbrowsers\\drivers\\operadriver-109.0.5414.120\\operadriver.exe",
+     "driverVersion": "109.0.5414.120",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://get.opera.com/ftp/pub/opera/desktop/95.0.4635.90/win/Opera_95.0.4635.90_Setup_x64.exe",
+     "driverSource": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.109.0.5414.120/operadriver_win64.zip",
+     "verified": "Setup_x64.exe: SHA-256 matches Opera's .sha256sum; Authenticode Opera Norway AS, chain ok (osslsigncode). operadriver.exe: Authenticode Opera Norway AS, chain ok (the 2023 release has no GitHub digest)",
+     "smoke": "pass (tests/browsers/run.mjs, 2026-09-19)",
+     "notes": "Opera 95 is the last for Windows 7 and 8.1. Installed 2026-09-19 as a standalone copy (--copyonly=1 --singleprofile=1 --installfolder=C:\\ibbrowsers\\opera-95): no registry entries, shortcuts or tasks; autoupdate false. operadriver 109 is Opera's driver for Opera Stable 95."
     }
    ]
   },
   "10": {
    "os": "windows",
    "ssh": "matth@10.0.1.199",
-   "read": "2026-09-19T03:42:42.621Z",
+   "read": "2026-09-19T05:12:12.831Z",
    "browsers": [
     {
      "id": "chrome",
@@ -156,13 +174,31 @@
      "verified": "chromedriver: Chrome for Testing build, unsigned, no checksum published (HTTPS from storage.googleapis.com only)",
      "smoke": "pass",
      "notes": "win32ss/supermium releases publish no chromedriver; the official Chrome for Testing chromedriver of the same build (126.0.6478, latest patch .182) works, no --disable-build-check needed. navigator.userAgent reports HeadlessChrome/130.0.0.0 (Supermium UA override)."
+    },
+    {
+     "id": "opera",
+     "name": "Opera",
+     "version": "135.0.5973.142",
+     "binary": "C:\\ibbrowsers\\opera-135\\135.0.5973.142\\opera.exe",
+     "driverKind": "operadriver",
+     "driver": "C:\\ibbrowsers\\drivers\\operadriver-151.0.7922.176\\operadriver.exe",
+     "driverVersion": "151.0.7922.176",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://get.opera.com/ftp/pub/opera/desktop/135.0.5973.142/win/Opera_135.0.5973.142_Setup_x64.exe",
+     "driverSource": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.151.0.7922.176/operadriver_win64.zip",
+     "verified": "Setup_x64.exe: SHA-256 matches Opera's .sha256sum; Authenticode Opera Norway AS, chain ok (osslsigncode). operadriver.exe: zip SHA-256 matches GitHub's asset digest; Authenticode Opera Norway AS, chain ok",
+     "smoke": "pass (tests/browsers/run.mjs, 2026-09-19)",
+     "notes": "Installed 2026-09-19 as a standalone copy (--copyonly=1 --singleprofile=1 --installfolder=C:\\ibbrowsers\\opera-135): no registry entries, shortcuts or tasks; installer_prefs.json has autoupdate false, so it stays on 135. operadriver 151 is Opera's driver for Opera Stable 135."
     }
    ]
   },
   "11": {
    "os": "windows",
    "ssh": "matth@10.0.1.123",
-   "read": "2026-09-19T03:42:43.405Z",
+   "read": "2026-09-19T05:12:13.610Z",
    "browsers": [
     {
      "id": "chrome",
@@ -217,13 +253,31 @@
      "verified": "browser preinstalled, not re-verified; geckodriver: Authenticode Mozilla Corporation, chain ok (osslsigncode) and Valid on the VM",
      "smoke": "pass",
      "notes": "preinstalled, left as is (current release is 156.0; Firefox updates itself). geckodriver rejects a Host header whose port differs from its --port, so forward with the same local and remote port."
+    },
+    {
+     "id": "opera",
+     "name": "Opera",
+     "version": "135.0.5973.142",
+     "binary": "C:\\ibbrowsers\\opera-135\\135.0.5973.142\\opera.exe",
+     "driverKind": "operadriver",
+     "driver": "C:\\ibbrowsers\\drivers\\operadriver-151.0.7922.176\\operadriver.exe",
+     "driverVersion": "151.0.7922.176",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://get.opera.com/ftp/pub/opera/desktop/135.0.5973.142/win/Opera_135.0.5973.142_Setup_x64.exe",
+     "driverSource": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.151.0.7922.176/operadriver_win64.zip",
+     "verified": "Setup_x64.exe: SHA-256 matches Opera's .sha256sum; Authenticode Opera Norway AS, chain ok (osslsigncode). operadriver.exe: zip SHA-256 matches GitHub's asset digest; Authenticode Opera Norway AS, chain ok",
+     "smoke": "pass (tests/browsers/run.mjs, 2026-09-19)",
+     "notes": "Installed 2026-09-19 as a standalone copy (--copyonly=1 --singleprofile=1 --installfolder=C:\\ibbrowsers\\opera-135): no registry entries, shortcuts or tasks; installer_prefs.json has autoupdate false, so it stays on 135. operadriver 151 is Opera's driver for Opera Stable 135."
     }
    ]
   },
   "2022": {
    "os": "windows",
    "ssh": "administrator@10.0.1.248",
-   "read": "2026-09-19T03:42:43.658Z",
+   "read": "2026-09-19T05:12:13.856Z",
    "browsers": [
     {
      "id": "chrome",
@@ -296,30 +350,32 @@
      "verified": "chromedriver: Chrome for Testing build, unsigned, no checksum published (HTTPS from storage.googleapis.com only)",
      "smoke": "pass",
      "notes": "win32ss/supermium releases publish no chromedriver; the official Chrome for Testing chromedriver of the same build (132.0.6834, latest patch .159) works, no --disable-build-check needed. navigator.userAgent reports HeadlessChrome/133.0.0.0 (Supermium UA override)."
+    },
+    {
+     "id": "opera",
+     "name": "Opera",
+     "version": "135.0.5973.142",
+     "binary": "C:\\ibbrowsers\\opera-135\\135.0.5973.142\\opera.exe",
+     "driverKind": "operadriver",
+     "driver": "C:\\ibbrowsers\\drivers\\operadriver-151.0.7922.176\\operadriver.exe",
+     "driverVersion": "151.0.7922.176",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://get.opera.com/ftp/pub/opera/desktop/135.0.5973.142/win/Opera_135.0.5973.142_Setup_x64.exe",
+     "driverSource": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.151.0.7922.176/operadriver_win64.zip",
+     "verified": "Setup_x64.exe: SHA-256 matches Opera's .sha256sum; Authenticode Opera Norway AS, chain ok (osslsigncode). operadriver.exe: zip SHA-256 matches GitHub's asset digest; Authenticode Opera Norway AS, chain ok",
+     "smoke": "pass (tests/browsers/run.mjs, 2026-09-19)",
+     "notes": "Installed 2026-09-19 as a standalone copy (--copyonly=1 --singleprofile=1 --installfolder=C:\\ibbrowsers\\opera-135): no registry entries, shortcuts or tasks; installer_prefs.json has autoupdate false, so it stays on 135. operadriver 151 is Opera's driver for Opera Stable 135."
     }
    ]
   },
   "xp": {
    "os": "windows",
    "ssh": "matthew@10.0.1.132",
-   "read": "2026-09-19T03:43:33.269Z",
+   "read": "2026-09-19T05:12:14.463Z",
    "browsers": [
-    {
-     "id": "firefox",
-     "name": "Mozilla Firefox ESR",
-     "version": "52.9.0esr",
-     "binary": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
-     "driverKind": "geckodriver",
-     "driver": null,
-     "driverVersion": null,
-     "args": [],
-     "headless": false,
-     "source": "https://archive.mozilla.org/pub/firefox/releases/52.9.0esr/win32/en-US/Firefox%20Setup%2052.9.0esr.exe",
-     "driverSource": null,
-     "verified": "SHA512SUMS gpg-verified (Mozilla release key 14F2 6682 D091 6CDD 81E3 7B6D 61B7 B526 D98F 0353, subkey BBBEBDBB24C6F355), installer SHA512 matches; Authenticode signer Mozilla Corporation, digest matches, chain not verifiable locally (SHA1 sig, Symantec timestamp root not in store)",
-     "smoke": "fail: no geckodriver runs on XP",
-     "notes": "Installed silently (/S), not default. No working driver on XP: geckodriver 0.16.1/0.17.0/0.18.0/0.19.1 (win32) exit 0xC0000139 STATUS_ENTRYPOINT_NOT_FOUND at load; 0.20.1 and 0.21.0 start and listen but abort on the first HTTP request ('thread panicked while processing panic. aborting.'). Firefox 52 has no headless mode. No policies.json (FF52 predates enterprise policies; 52.9.0 is the final XP build so no update can arrive). On Vista the same FF52 build needs the content sandbox off to run from the SSH service session (see vista); not applied here since no driver can use it."
-    },
     {
      "id": "supermium-installed",
      "name": "Supermium",
@@ -356,13 +412,30 @@
      "protocol": "cdp",
      "smoke": "pass (cdp; no chromedriver)",
      "notes": "Portable install (nonsetup zip, win32) unpacked to C:\\ibbrowsers\\supermium-144, alongside the installed Supermium 122 (id supermium-installed). Starts headless from the SSH session with only --headless=new (no --no-sandbox or --disable-gpu-rasterization needed): DevTools on 127.0.0.1 reports Chrome/144.0.7559.256, protocol 1.3; over CDP via ssh -L, file:///C:/ibbrowsers/smoke.html -> UA 'HeadlessChrome/144.0.0.0' (Windows NT 10.0; Win64; x64 spoof), isSecureContext true, crypto.subtle true. No driver: official CfT chromedriver 144.0.7559.133 (win32, storage.googleapis.com, zip MD5 matched x-goog-hash) does not load: its PE header requires OS/subsystem version 10.0, so CreateProcess fails with ERROR_BAD_EXE_FORMAT (0x800700C1 '... is not a valid Win32 application' from WScript.Shell.Exec) (from a plain cmd.exe over SSH it instead hangs silently with no output). Folder removed. Drive over the DevTools protocol through ssh -L (protocol: cdp), as for Supermium 122."
+    },
+    {
+     "id": "firefox",
+     "name": "Mozilla Firefox ESR",
+     "version": "52.9.0esr",
+     "binary": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
+     "driverKind": "marionette",
+     "driver": null,
+     "driverVersion": null,
+     "args": [],
+     "headless": false,
+     "source": "https://archive.mozilla.org/pub/firefox/releases/52.9.0esr/win32/en-US/Firefox%20Setup%2052.9.0esr.exe",
+     "driverSource": null,
+     "verified": "SHA512SUMS gpg-verified (Mozilla release key 14F2 6682 D091 6CDD 81E3 7B6D 61B7 B526 D98F 0353, subkey BBBEBDBB24C6F355), installer SHA512 matches; Authenticode signer Mozilla Corporation, digest matches, chain not verifiable locally (SHA1 sig, Symantec timestamp root not in store)",
+     "smoke": "pass (tests/browsers/run.mjs over Marionette, 2026-09-19)",
+     "notes": "Installed silently (/S), not default. Driven over Firefox's own Marionette protocol (tests/browsers/marionette.mjs: firefox.exe -marionette -no-remote -profile <fresh>, the port and download prefs in its user.js), because no geckodriver runs on XP: 0.11.1 and 0.13.0 exit 0xC0000135 and 0.14.0-0.19.1 0xC0000139 at load (they import ktmw32.dll and other Vista+ entry points); 0.20.0, 0.20.1 and 0.21.0 start and listen but abort on the first HTTP request ('thread panicked while processing panic. aborting.'). Firefox 52 has no headless mode: it runs in the SSH session's hidden desktop. No policies.json (FF52 predates enterprise policies; 52.9.0 is the final XP build so no update can arrive).",
+     "protocol": "marionette"
     }
    ]
   },
   "vista": {
    "os": "windows",
    "ssh": "x@10.0.1.167",
-   "read": "2026-09-19T03:43:34.060Z",
+   "read": "2026-09-19T05:12:14.921Z",
    "browsers": [
     {
      "id": "firefox",
@@ -423,7 +496,7 @@
   "8.1": {
    "os": "windows",
    "ssh": "x@10.0.1.165",
-   "read": "2026-09-19T03:42:45.032Z",
+   "read": "2026-09-19T05:12:15.153Z",
    "browsers": [
     {
      "id": "chrome",
@@ -496,13 +569,31 @@
      "verified": "Supermium (win32ss); binary unsigned, no published checksums checked (preinstalled); driver: zip MD5 matches storage.googleapis.com x-goog-hash (tEekyyOvUdqCcvbYZ7mxxw==); chromedriver.exe unsigned, no checksum file published",
      "smoke": "pass",
      "notes": "driver is a 1-line .cmd wrapper running chromedriver.exe --disable-build-check %* (chromedriver 109 is the newest that runs on 8.1; CfT 138.0.7204.183 and 126 hang silently at start). UA reports HeadlessChrome/142 on Windows NT 10.0 (Supermium spoof)."
+    },
+    {
+     "id": "opera",
+     "name": "Opera",
+     "version": "95.0.4635.90",
+     "binary": "C:\\ibbrowsers\\opera-95\\95.0.4635.90\\opera.exe",
+     "driverKind": "operadriver",
+     "driver": "C:\\ibbrowsers\\drivers\\operadriver-109.0.5414.120\\operadriver.exe",
+     "driverVersion": "109.0.5414.120",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://get.opera.com/ftp/pub/opera/desktop/95.0.4635.90/win/Opera_95.0.4635.90_Setup_x64.exe",
+     "driverSource": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.109.0.5414.120/operadriver_win64.zip",
+     "verified": "Setup_x64.exe: SHA-256 matches Opera's .sha256sum; Authenticode Opera Norway AS, chain ok (osslsigncode). operadriver.exe: Authenticode Opera Norway AS, chain ok (the 2023 release has no GitHub digest)",
+     "smoke": "pass (tests/browsers/run.mjs, 2026-09-19)",
+     "notes": "Opera 95 is the last for Windows 7 and 8.1. Installed 2026-09-19 as a standalone copy (--copyonly=1 --singleprofile=1 --installfolder=C:\\ibbrowsers\\opera-95): no registry entries, shortcuts or tasks; autoupdate false. operadriver 109 is Opera's driver for Opera Stable 95."
     }
    ]
   },
   "centos6": {
    "os": "linux",
    "ssh": "x@10.0.1.183",
-   "read": "2026-09-19T03:42:45.423Z",
+   "read": "2026-09-19T05:12:15.567Z",
    "browsers": [
     {
      "id": "chrome",
@@ -543,7 +634,7 @@
   "centos7": {
    "os": "linux",
    "ssh": "x@10.0.1.221",
-   "read": "2026-09-19T03:42:46.025Z",
+   "read": "2026-09-19T05:12:16.241Z",
    "browsers": [
     {
      "id": "chrome",
@@ -587,7 +678,7 @@
   "ubuntu1404": {
    "os": "linux",
    "ssh": "x@10.0.1.117",
-   "read": "2026-09-19T03:42:46.476Z",
+   "read": "2026-09-19T05:12:16.628Z",
    "browsers": [
     {
      "id": "chrome",
@@ -628,7 +719,7 @@
   "ubuntu1604": {
    "os": "linux",
    "ssh": "x@10.0.1.112",
-   "read": "2026-09-19T03:42:46.751Z",
+   "read": "2026-09-19T05:12:16.901Z",
    "browsers": [
     {
      "id": "chrome",
@@ -671,7 +762,7 @@
   "ubuntu1804": {
    "os": "linux",
    "ssh": "x@10.0.1.144",
-   "read": "2026-09-19T03:42:47.612Z",
+   "read": "2026-09-19T05:12:17.695Z",
    "browsers": [
     {
      "id": "chrome",
@@ -708,13 +799,31 @@
      "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
      "smoke": "pass",
      "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+    },
+    {
+     "id": "opera",
+     "name": "Opera",
+     "version": "135.0.5973.142",
+     "binary": "/home/x/ibbrowsers/opera-135/opera",
+     "driverKind": "operadriver",
+     "driver": "/home/x/ibbrowsers/drivers/operadriver-151.0.7922.176/operadriver.sh",
+     "driverVersion": "151.0.7922.176",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://get.opera.com/ftp/pub/opera/desktop/135.0.5973.142/linux/opera-stable_135.0.5973.142_amd64.deb",
+     "driverSource": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.151.0.7922.176/operadriver_linux64.zip",
+     "verified": ".deb: SHA-256 matches Opera's .sha256sum; the same version's .rpm has a good signature from Opera's archive key 6C86BE214648376680CA957B11EE8C00B693A745 (rpmkeys -K on Rocky 8) and an identical opera binary. operadriver zip: SHA-256 matches GitHub's asset digest",
+     "smoke": "pass (tests/browsers/run.mjs, 2026-09-19)",
+     "notes": "The .deb's /usr/lib/x86_64-linux-gnu/opera-stable unpacked to ~/ibbrowsers/opera-135 (no root); a plain copy, so it never updates. Needs glibc 2.25. The driver is a wrapper that sources ~/ibbrowsers/env.sh. operadriver 151 is Opera's driver for Opera Stable 135. Opera aborts without GSettings schemas (Chrome doesn't need them): gsettings-desktop-schemas fetched with apt-get download (checked by apt against the signed indexes), unpacked into ~/ibbrowsers/sysroot and compiled there with glib-compile-schemas; env.sh's XDG_DATA_DIRS finds them."
     }
    ]
   },
   "rocky8": {
    "os": "linux",
    "ssh": "x@10.0.1.131",
-   "read": "2026-09-19T03:42:47.985Z",
+   "read": "2026-09-19T05:12:18.031Z",
    "browsers": [
     {
      "id": "chrome",
@@ -751,13 +860,31 @@
      "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: Rocky 8 (dnf download --resolve) .rpms fetched from the distro repos, rpm -K OK on every package (distro GPG key in the system rpmdb), unpacked with rpm2cpio|cpio",
      "smoke": "pass",
      "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+    },
+    {
+     "id": "opera",
+     "name": "Opera",
+     "version": "135.0.5973.142",
+     "binary": "/home/x/ibbrowsers/opera-135/opera",
+     "driverKind": "operadriver",
+     "driver": "/home/x/ibbrowsers/drivers/operadriver-151.0.7922.176/operadriver.sh",
+     "driverVersion": "151.0.7922.176",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://get.opera.com/ftp/pub/opera/desktop/135.0.5973.142/linux/opera-stable_135.0.5973.142_amd64.deb",
+     "driverSource": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.151.0.7922.176/operadriver_linux64.zip",
+     "verified": ".deb: SHA-256 matches Opera's .sha256sum; the same version's .rpm has a good signature from Opera's archive key 6C86BE214648376680CA957B11EE8C00B693A745 (rpmkeys -K on Rocky 8) and an identical opera binary. operadriver zip: SHA-256 matches GitHub's asset digest",
+     "smoke": "pass (tests/browsers/run.mjs, 2026-09-19)",
+     "notes": "The .deb's /usr/lib/x86_64-linux-gnu/opera-stable unpacked to ~/ibbrowsers/opera-135 (no root); a plain copy, so it never updates. Needs glibc 2.25. The driver is a wrapper that sources ~/ibbrowsers/env.sh. operadriver 151 is Opera's driver for Opera Stable 135."
     }
    ]
   },
   "ubuntu2004": {
    "os": "linux",
    "ssh": "x@10.0.1.118",
-   "read": "2026-09-19T03:42:48.952Z",
+   "read": "2026-09-19T05:12:18.590Z",
    "browsers": [
     {
      "id": "chrome",
@@ -794,13 +921,31 @@
      "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
      "smoke": "pass",
      "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+    },
+    {
+     "id": "opera",
+     "name": "Opera",
+     "version": "135.0.5973.142",
+     "binary": "/home/x/ibbrowsers/opera-135/opera",
+     "driverKind": "operadriver",
+     "driver": "/home/x/ibbrowsers/drivers/operadriver-151.0.7922.176/operadriver.sh",
+     "driverVersion": "151.0.7922.176",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://get.opera.com/ftp/pub/opera/desktop/135.0.5973.142/linux/opera-stable_135.0.5973.142_amd64.deb",
+     "driverSource": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.151.0.7922.176/operadriver_linux64.zip",
+     "verified": ".deb: SHA-256 matches Opera's .sha256sum; the same version's .rpm has a good signature from Opera's archive key 6C86BE214648376680CA957B11EE8C00B693A745 (rpmkeys -K on Rocky 8) and an identical opera binary. operadriver zip: SHA-256 matches GitHub's asset digest",
+     "smoke": "pass (tests/browsers/run.mjs, 2026-09-19)",
+     "notes": "The .deb's /usr/lib/x86_64-linux-gnu/opera-stable unpacked to ~/ibbrowsers/opera-135 (no root); a plain copy, so it never updates. Needs glibc 2.25. The driver is a wrapper that sources ~/ibbrowsers/env.sh. operadriver 151 is Opera's driver for Opera Stable 135."
     }
    ]
   },
   "ubuntu2204": {
    "os": "linux",
    "ssh": "x@10.0.1.203",
-   "read": "2026-09-19T03:42:49.963Z",
+   "read": "2026-09-19T05:12:19.180Z",
    "browsers": [
     {
      "id": "chrome",
@@ -837,13 +982,31 @@
      "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
      "smoke": "pass",
      "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+    },
+    {
+     "id": "opera",
+     "name": "Opera",
+     "version": "135.0.5973.142",
+     "binary": "/home/x/ibbrowsers/opera-135/opera",
+     "driverKind": "operadriver",
+     "driver": "/home/x/ibbrowsers/drivers/operadriver-151.0.7922.176/operadriver.sh",
+     "driverVersion": "151.0.7922.176",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://get.opera.com/ftp/pub/opera/desktop/135.0.5973.142/linux/opera-stable_135.0.5973.142_amd64.deb",
+     "driverSource": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.151.0.7922.176/operadriver_linux64.zip",
+     "verified": ".deb: SHA-256 matches Opera's .sha256sum; the same version's .rpm has a good signature from Opera's archive key 6C86BE214648376680CA957B11EE8C00B693A745 (rpmkeys -K on Rocky 8) and an identical opera binary. operadriver zip: SHA-256 matches GitHub's asset digest",
+     "smoke": "pass (tests/browsers/run.mjs, 2026-09-19)",
+     "notes": "The .deb's /usr/lib/x86_64-linux-gnu/opera-stable unpacked to ~/ibbrowsers/opera-135 (no root); a plain copy, so it never updates. Needs glibc 2.25. The driver is a wrapper that sources ~/ibbrowsers/env.sh. operadriver 151 is Opera's driver for Opera Stable 135. Opera aborts without GSettings schemas (Chrome doesn't need them): gsettings-desktop-schemas fetched with apt-get download (checked by apt against the signed indexes), unpacked into ~/ibbrowsers/sysroot and compiled there with glib-compile-schemas; env.sh's XDG_DATA_DIRS finds them."
     }
    ]
   },
   "debian12": {
    "os": "linux",
    "ssh": "x@10.0.1.235",
-   "read": "2026-09-19T03:42:50.583Z",
+   "read": "2026-09-19T05:12:19.773Z",
    "browsers": [
     {
      "id": "chrome",
@@ -880,13 +1043,31 @@
      "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
      "smoke": "pass",
      "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+    },
+    {
+     "id": "opera",
+     "name": "Opera",
+     "version": "135.0.5973.142",
+     "binary": "/home/x/ibbrowsers/opera-135/opera",
+     "driverKind": "operadriver",
+     "driver": "/home/x/ibbrowsers/drivers/operadriver-151.0.7922.176/operadriver.sh",
+     "driverVersion": "151.0.7922.176",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://get.opera.com/ftp/pub/opera/desktop/135.0.5973.142/linux/opera-stable_135.0.5973.142_amd64.deb",
+     "driverSource": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.151.0.7922.176/operadriver_linux64.zip",
+     "verified": ".deb: SHA-256 matches Opera's .sha256sum; the same version's .rpm has a good signature from Opera's archive key 6C86BE214648376680CA957B11EE8C00B693A745 (rpmkeys -K on Rocky 8) and an identical opera binary. operadriver zip: SHA-256 matches GitHub's asset digest",
+     "smoke": "pass (tests/browsers/run.mjs, 2026-09-19)",
+     "notes": "The .deb's /usr/lib/x86_64-linux-gnu/opera-stable unpacked to ~/ibbrowsers/opera-135 (no root); a plain copy, so it never updates. Needs glibc 2.25. The driver is a wrapper that sources ~/ibbrowsers/env.sh. operadriver 151 is Opera's driver for Opera Stable 135. Opera aborts without GSettings schemas (Chrome doesn't need them): gsettings-desktop-schemas fetched with apt-get download (checked by apt against the signed indexes), unpacked into ~/ibbrowsers/sysroot and compiled there with glib-compile-schemas; env.sh's XDG_DATA_DIRS finds them."
     }
    ]
   },
   "alpine": {
    "os": "linux",
    "ssh": "x@10.0.1.200",
-   "read": "2026-09-19T03:42:50.915Z",
+   "read": "2026-09-19T05:12:20.096Z",
    "browsers": [
     {
      "id": "chromium",
@@ -930,7 +1111,7 @@
   "mac": {
    "os": "mac",
    "ssh": "Matthew@the-mac-test-host",
-   "read": "2026-09-19T03:42:53.955Z",
+   "read": "2026-09-19T05:12:23.109Z",
    "browsers": [
     {
      "id": "chrome",
@@ -983,6 +1164,21 @@
      "verified": "system component, not checked",
      "smoke": "fail: safaridriver -p <P> exits immediately with status 1 and no output; unified log: com.apple.WebDriver.HTTPService 'Attempted to manage driver interface for target CURRENTMACHINE without a connection' then 'Shutting down daemon because connection to webinspectord was closed' (no user logged in at the console: /dev/console owned by root, no gui/502 launchd domain)",
      "notes": "Blocked: needs a GUI login session for this user, and likely 'safaridriver --enable' (admin password) / Allow Remote Automation (com.apple.Safari AllowRemoteAutomation not set). Not attempted. Safari has no headless mode."
+    },
+    {
+     "id": "opera",
+     "name": "Opera",
+     "version": "135.0.5973.142",
+     "binary": "/Users/Matthew/ibbrowsers/opera-135/Opera.app/Contents/MacOS/Opera",
+     "protocol": "cdp",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://get.opera.com/ftp/pub/opera/desktop/135.0.5973.142/mac/Opera_135.0.5973.142_Autoupdate_arm64.tar.xz",
+     "verified": "tar.xz: SHA-256 matches Opera's .sha256sum; codesign --verify --deep --strict ok, Developer ID Application: Opera Software AS (A2P9LX4JPN), notarized (spctl)",
+     "smoke": "fail: Opera 135 crashes at startup here (segfault/bus error within seconds, 4 restarts, with --headless=new, --headless, --disable-gpu, --single-process alike) while Chrome's headless runs; most likely it needs a logged-in GUI session, which this Mac doesn't have (/dev/console owned by root)",
+     "notes": "Opera.app unpacked to ~/ibbrowsers/opera-135 (tar, no quarantine). Driven over the DevTools protocol: Opera's operadriver for macOS is x86-64 only and this Mac has no Rosetta. Opera's own updater may update it in place."
     }
    ]
   }

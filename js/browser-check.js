@@ -168,7 +168,7 @@
   }
   function browserId(name) {
     var n = String(name).toLowerCase();
-    return /edge/.test(n) ? 'edge' : /firefox/.test(n) ? 'firefox' : /supermium/.test(n) ? 'supermium' : /safari/.test(n) ? 'safari' : /chromium/.test(n) ? 'chromium' : /chrome/.test(n) ? 'chrome' : n;
+    return /edge/.test(n) ? 'edge' : /firefox/.test(n) ? 'firefox' : /supermium/.test(n) ? 'supermium' : /opera|opr/.test(n) ? 'opera' : /safari/.test(n) ? 'safari' : /chromium/.test(n) ? 'chromium' : /chrome/.test(n) ? 'chrome' : n;
   }
   function label(list, id) { for (var i = 0; i < list.length; i++) if (list[i][0] === id) return list[i][1]; return id; }
   function passingOn(c, m) {
@@ -212,7 +212,7 @@
     var text = head + effects.join('; ') + '.';
     var c = loadCompat(), m = c && nearestMachine(c), ok = m ? passingOn(c, m) : [];
     if (ok.length) text += ' Tested on ' + m[1] + ' and working: ' + ok.join(', ') + '.';
-    else if (miss.length) text += ' Please use Firefox 52 or later, Chrome 58 or later, Safari 12 or later, or Edge; on Windows XP to 8.1, Firefox 52 ESR or Supermium.';
+    else if (miss.length) text += ' Please use Firefox 52 or later, Chrome or Edge 109 or later, Opera 95 or later, or Safari 12 or later (not yet tested); on Windows XP and Vista, Firefox 52 ESR or Supermium; on Windows 7 and 8.1, Chrome 109, Firefox 115 ESR, Opera 95 or Supermium (and Edge 109 on 8.1); on CentOS 6 and Ubuntu 14.04, their own Firefox.';
     return text;
   }
 

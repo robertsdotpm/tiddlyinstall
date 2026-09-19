@@ -1,0 +1,37 @@
+{
+ "time": "2026-09-19T05:00:31.356Z",
+ "machine": "mac",
+ "browser": "opera",
+ "version": "135.0.5973.142",
+ "result": "error: driver: DevTools: Chrome did not start (ECONNRESET) ed: connect failed: Connection refused\r",
+ "seed": 506323647,
+ "checks": [
+  {
+   "name": "run",
+   "pass": false,
+   "detail": "Error: driver: DevTools: Chrome did not start (ECONNRESET) ed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\n\n    at file:///home/x/projects/installer-builder/tests/browsers/run.mjs:343:99\n    at async runPair (file:///home/x/projects/installer-builder/tests/browsers/run.mjs:343:17)\n    at async worker (file:///home/x/projects/installer-builder/tests/browsers/run.mjs:599:19)\n    at async Promise.all (index 0)\n    at async main (file:///home/x/projects/installer-builder/tests/browsers/run.mjs:607:3)\n    at async file:///home/x/projects/installer-builder/tests/browsers/run.mjs:612:1"
+  }
+ ],
+ "entry": {
+  "id": "opera",
+  "name": "Opera",
+  "version": "135.0.5973.142",
+  "binary": "/Users/Matthew/ibbrowsers/opera-135/Opera.app/Contents/MacOS/Opera",
+  "protocol": "cdp",
+  "args": [
+   "--headless=new"
+  ],
+  "headless": true,
+  "source": "https://get.opera.com/ftp/pub/opera/desktop/135.0.5973.142/mac/Opera_135.0.5973.142_Autoupdate_arm64.tar.xz",
+  "verified": "tar.xz: SHA-256 matches Opera's .sha256sum; codesign --verify --deep --strict ok, Developer ID Application: Opera Software AS (A2P9LX4JPN), notarized (spctl)",
+  "smoke": "",
+  "notes": "Opera.app unpacked to ~/ibbrowsers/opera-135 (tar, no quarantine). Driven over the DevTools protocol: Opera's operadriver for macOS is x86-64 only and this Mac has no Rosetta. Opera's own updater may update it in place."
+ },
+ "driverLog": "ed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\nchannel 3: open failed: connect failed: Connection refused\r\n",
+ "page": {
+  "rev": "df363ea",
+  "hash": "6536a15e3057"
+ },
+ "protocol": "cdp",
+ "seconds": 131
+}

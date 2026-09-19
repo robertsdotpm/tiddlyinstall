@@ -29,6 +29,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { Session, evalIn, waitForDriver, sleep } from './webdriver.mjs';
 import { connectCdp } from './cdp.mjs';
+import { MarionetteSession } from './marionette.mjs';
 import { loadMachines, findMachine, freePort, Remote } from './remote.mjs';
 import { Checker, STARTED, checkSections, buildHello, checkJob, makeSignFixtures, osslVerify, gpgVerify, $text, setVal, checkBox } from './steps.mjs';
 import { readInstaller } from '../../js/ibfile.js';
@@ -90,8 +91,10 @@ function pairs(inv) {
 
 // WebDriver where there's a driver; the DevTools protocol for a Chromium
 // without a usable one (XP; Edge 109 on 8.1; Vista, whose last chromedriver
-// predates W3C: "protocol": "cdp" in its manifest).
-const CHROMIUM = new Set(['chrome', 'chromium', 'edge', 'supermium', 'supermium-installed']);
+// predates W3C: "protocol": "cdp" in its manifest); Firefox's own Marionette
+// for a Firefox no geckodriver runs beside (52 on XP: "protocol":
+// "marionette").
+const CHROMIUM = new Set(['chrome', 'chromium', 'edge', 'supermium', 'supermium-installed', 'opera']);
 function protocolOf(b) {
   if (b.protocol) return b.protocol;
   if (b.driver) return 'webdriver';
@@ -209,6 +212,17 @@ async function captured(js, name, ms = 60000) {
 
 /* ---------- capabilities ---------- */
 
+// Firefox's download prefs: through geckodriver's capabilities, or a
+// profile's user.js where Firefox is driven over Marionette directly.
+function firefoxPrefs(dlDir) {
+  return {
+    'browser.download.folderList': 2, 'browser.download.dir': dlDir, 'browser.download.useDownloadDir': true,
+    'browser.download.manager.showWhenStarting': false, 'browser.download.always_ask_before_handling_new_types': false,
+    'browser.helperApps.neverAsk.saveToDisk': 'text/html,application/octet-stream,application/pgp-signature,text/plain',
+    'browser.download.start_downloads_in_tmp_dir': false, 'app.update.auto': false, 'app.update.enabled': false,
+  };
+}
+
 function capabilities(entry, dlDir) {
   const args = [...(entry.args || [])];
   const chromium = {
@@ -222,17 +236,12 @@ function capabilities(entry, dlDir) {
   switch (entry.driverKind) {
     case 'chromedriver': return { browserName: 'chrome', 'goog:chromeOptions': chromium };
     case 'msedgedriver': return { browserName: 'MicrosoftEdge', 'ms:edgeOptions': chromium };
+    // operadriver is chromedriver built for Opera: the same options, under
+    // Chrome's key, with Opera's binary.
+    case 'operadriver': return { browserName: 'opera', 'goog:chromeOptions': chromium };
     case 'geckodriver': return {
       browserName: 'firefox',
-      'moz:firefoxOptions': {
-        binary: entry.binary, args,
-        prefs: {
-          'browser.download.folderList': 2, 'browser.download.dir': dlDir, 'browser.download.useDownloadDir': true,
-          'browser.download.manager.showWhenStarting': false, 'browser.download.always_ask_before_handling_new_types': false,
-          'browser.helperApps.neverAsk.saveToDisk': 'text/html,application/octet-stream,application/pgp-signature,text/plain',
-          'browser.download.start_downloads_in_tmp_dir': false, 'app.update.auto': false, 'app.update.enabled': false,
-        },
-      },
+      'moz:firefoxOptions': { binary: entry.binary, args, prefs: firefoxPrefs(dlDir) },
     };
     case 'safaridriver': return { browserName: 'safari' };
     default: throw new Error('unknown driverKind ' + entry.driverKind);
@@ -296,6 +305,16 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
     let js, setFile, pageErrors;
     remote.stopDrivers(entry);
     rec.protocol = protocolOf(entry);
+    if (rec.protocol === 'marionette') {
+      cdpPort = port;
+      ssh = remote.startMarionetteBrowser(entry, {
+        port, profile: 'ibprof-' + runId, tmp, log: (d) => driverLog.push(String(d)),
+        prefs: { ...firefoxPrefs(dl), 'browser.shell.checkDefaultBrowser': false, 'browser.startup.homepage_override.mstone': 'ignore',
+          'datareporting.policy.dataSubmissionEnabled': false, 'toolkit.telemetry.reportingpolicy.firstRun': false },
+      });
+      session = await MarionetteSession.connect('127.0.0.1', port, { ms: 180000 })
+        .catch((e) => { throw new Error('driver: Marionette: ' + e.message + ' ' + driverLog.join('').slice(-400)); });
+    }
     if (rec.protocol === 'webdriver') {
       ssh = remote.startDriver(entry, { port, log: (d) => driverLog.push(String(d)) });
       const base = `http://127.0.0.1:${port}`;
@@ -317,7 +336,11 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
         caps = capabilities(entry, dl);
         session = await Session.create(base, caps);
       }
+    }
+    if (session) {
       rec.version = session.browserVersion || entry.version;
+      // Opera's driver reports the Chromium it's built on, not Opera's version.
+      if (entry.id === 'opera') { rec.chromium = rec.version; rec.version = entry.version; }
       detail.capabilities = session.capabilities;
       // W3C timeouts; older Marionette (Firefox 52) takes one {type, ms} at a time.
       await session.setTimeouts({ script: 600000, pageLoad: 300000 }).catch(async (e) => {
@@ -341,6 +364,7 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
       await cdpConn.cdp('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: dl }).catch((e) => t.note('downloads', e.message));
       const ver = await cdpConn.cdp('Browser.getVersion');
       rec.version = (/[\d.]+$/.exec(ver.product) || [entry.version])[0];
+      if (entry.id === 'opera') { rec.chromium = rec.version; rec.version = entry.version; }
       detail.capabilities = ver;
       ({ js, setFile } = cdpConn);
       const run = async (body) => js(`(function () { ${body} })()`);
@@ -524,12 +548,12 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
     detail.driverLog = driverLog.join('').slice(-4000);
     if (session) await session.delete();
     if (cdpConn) await cdpConn.close();
-    if (rec.protocol === 'cdp' && cdpPort) remote.stopCdpBrowser(cdpPort);
+    if (/^(cdp|marionette)$/.test(rec.protocol) && cdpPort) remote.stopCdpBrowser(cdpPort);
     if (ssh) { try { ssh.stdin.end(); } catch (e) { /* gone */ } ssh.kill(); }
     if (revProc) revProc.kill();
     if (entry) remote.stopDrivers(entry);
     remote.remove(remote.dir('work', 'dl-' + runId));
-    if (rec.protocol === 'cdp') remote.remove(remote.dir('work', 'ibprof-' + runId));
+    if (/^(cdp|marionette)$/.test(rec.protocol)) remote.remove(remote.dir('work', 'ibprof-' + runId));
     if (flag('--keep')) console.log('kept ' + tmp); else fs.rmSync(tmp, { recursive: true, force: true });
     Object.assign(detail, rec, { checks: t.checks });
     fs.mkdirSync(RESULTS, { recursive: true });
