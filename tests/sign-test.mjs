@@ -5,7 +5,7 @@
 //   node tests/sign-test.mjs [--no-network] [--relay http://127.0.0.1:8080]
 //
 // Needs Node 20+, openssl and gpg; osslsigncode (on PATH or in
-// ~/.local/opt/ib-tools) and go are used when present. --no-network skips
+// ~/.local/opt/ib-tools) is used when present. --no-network skips
 // the RFC 3161 timestamp tests, which call DigiCert's and Sectigo's TSAs;
 // --relay also sends one through a running server's POST /api/tsa.
 import { execFileSync, spawnSync } from 'node:child_process';
@@ -51,7 +51,6 @@ function which(name, extra = []) {
   return null;
 }
 const OSSL = which('osslsigncode', [path.join(os.homedir(), '.local/opt/ib-tools/root/usr/bin')]);
-const GO = which('go');
 
 /* ---------- keys ---------- */
 
@@ -127,12 +126,6 @@ function opensslCheck(file, certFile, name) {
   ok(md === der.hex(der.readOctets(mdAttr.kid(1).kid(0))), name + ': messageDigest attribute = openssl sha256 of the content', md);
 }
 
-function goMeta(file) {
-  if (!GO) return null;
-  const r = sh(GO, ['run', './cmd/ibmeta', file], { cwd: path.join(REPO, 'server') });
-  return r.code === 0 ? r.out.trim() : 'error: ' + r.out;
-}
-
 /* ---------- tests ---------- */
 
 const b64 = (s) => new Uint8Array(Buffer.from(s, 'base64'));
@@ -161,19 +154,14 @@ async function checkFile(name, file, caFile, certFile, { record = true } = {}) {
   opensslCheck(file, certFile, name);
   if (record) {
     const info = await readInstaller(read(file), 'x.exe');
+    // js/ibfile.js is also the build server's reader (backend/).
     ok(info.signed && info.record === RECORD, name + ': js/ibfile.js still reads the record');
-    const g = goMeta(file);
-    if (g === null) skip(name + ': Go reader', 'go not found');
-    else {
-      const h = Buffer.from(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(RECORD))).toString('hex');
-      ok(g.startsWith('record ' + h + ' '), name + ': Go ibfile.Read still reads the record', g);
-    }
   }
   return v;
 }
 
 makeKeys();
-console.log('keys in ' + TMP + (OSSL ? ', osslsigncode ' + OSSL : ', no osslsigncode') + (GO ? ', go' : ', no go'));
+console.log('keys in ' + TMP + (OSSL ? ', osslsigncode ' + OSSL : ', no osslsigncode'));
 
 let rsa, ec;
 await run('pkcs12', async () => {

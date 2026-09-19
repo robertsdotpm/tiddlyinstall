@@ -3,13 +3,16 @@
 # format.md "Plan signature"): a good plan (fetched over plain HTTP, and
 # given with --plan), a tampered one, one replayed for another record, and
 # an unsigned one. `openssl` is shadowed on PATH by a stub that fails, so
-# only the built-in verifier can pass. Needs go (to sign with a throwaway
-# key: server/cmd/ibplansig) and python3 (a local HTTP backend).
+# only the built-in verifier can pass. Needs Node.js (to sign with a
+# throwaway key: tools/plansig.mjs; $NODE, else node on PATH, else
+# ~/.local/node/bin/node) and python3 (a local HTTP backend).
 #
 #   sh test_verify.sh [SHELL]
 #   IB_TEST_KEEP=1 keeps the work folder.
 set -u
 here=$(cd "$(dirname "$0")" && pwd)
+node=${NODE:-$(command -v node || echo "$HOME/.local/node/bin/node")}
+plansig() { "$node" "$here/../../tools/plansig.mjs" "$@"; }
 fails=0
 ok() { printf 'ok   %s\n' "$1"; }
 bad() { printf 'FAIL %s\n' "$1"; fails=$((fails + 1)); }
@@ -46,7 +49,7 @@ cases() {
 prepare() {
 	D=$1
 	mkdir -p "$D/key" "$D/rt/pkg/bin" "$D/srv/api/plan" "$D/srv/api/records" "$D/srv/f"
-	(cd "$here/../../server" && go run ./cmd/ibplansig -data "$D/key" sign /dev/null > /dev/null 2>&1)
+	plansig -data "$D/key" sign /dev/null > /dev/null 2>&1
 	[ -f "$D/key/plan-signing-key.pub" ] || { echo "could not make a key"; exit 1; }
 	IB_PLAN_PUBKEY_FILE=$D/key/plan-signing-key.pub sh "$here/make_run.sh" "$D/base.run" > /dev/null || exit 1
 	printf '#!/bin/sh\necho hello\n' > "$D/rt/pkg/bin/hello"
@@ -66,7 +69,7 @@ prepare() {
 sign() { # DIR BACKEND: the plan with the backend's URL, signed, and its variants
 	D=$1
 	sed "s|@BACKEND@|$2|" "$D/unsigned.tmpl" > "$D/unsigned.txt"
-	(cd "$here/../../server" && go run ./cmd/ibplansig -data "$D/key" sign "$D/unsigned.txt") > "$D/plan.txt" || exit 1
+	plansig -data "$D/key" sign "$D/unsigned.txt" > "$D/plan.txt" || exit 1
 	sed 's/^name\tVerify one$/name\tVerify 0ne/' "$D/plan.txt" > "$D/tampered.txt"
 	cp "$D/record.txt" "$D/srv/api/records/$(cat "$D/hash")"
 	cp "$D/plan.txt" "$D/srv/api/plan/$(cat "$D/hash")"
