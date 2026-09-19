@@ -1,0 +1,934 @@
+{
+ "updated": "2026-09-19T03:35:11.677Z",
+ "machines": {
+  "7": {
+   "os": "windows",
+   "ssh": "x@10.0.1.231",
+   "read": "2026-09-19T03:34:59.623Z",
+   "browsers": [
+    {
+     "id": "chrome",
+     "name": "Google Chrome",
+     "version": "109.0.5414.120",
+     "binary": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+     "driverKind": "chromedriver",
+     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-109.0.5414.74\\chromedriver.exe",
+     "driverVersion": "109.0.5414.74",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "preinstalled",
+     "driverSource": "https://chromedriver.storage.googleapis.com/109.0.5414.74/chromedriver_win32.zip",
+     "verified": "browser: preinstalled chrome.exe Authenticode Google LLC, chain ok; driver: zip MD5 matches storage.googleapis.com x-goog-hash (tEekyyOvUdqCcvbYZ7mxxw==); chromedriver.exe unsigned, no checksum file published",
+     "smoke": "pass",
+     "notes": "Preinstalled 109.0.5414.120, left as is (Google's frozen Win7/8.1 build is 109.0.5414.168). 109.0.5414.74 is the last chromedriver 109 published."
+    },
+    {
+     "id": "firefox",
+     "name": "Mozilla Firefox ESR",
+     "version": "115.41.0esr",
+     "binary": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
+     "driverKind": "geckodriver",
+     "driver": "C:\\ibbrowsers\\drivers\\geckodriver-0.34.0\\geckodriver.exe",
+     "driverVersion": "0.34.0",
+     "args": [
+      "-headless"
+     ],
+     "headless": true,
+     "source": "https://archive.mozilla.org/pub/firefox/releases/115.41.0esr/win64/en-US/Firefox%20Setup%20115.41.0esr.exe",
+     "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.34.0/geckodriver-v0.34.0-win64.zip",
+     "verified": "SHA512SUMS gpg-verified (Mozilla release key 14F2 6682 D091 6CDD 81E3 7B6D 61B7 B526 D98F 0353), installer SHA512 matches; Authenticode: Mozilla Corporation, chain ok (osslsigncode); driver: Authenticode signer Mozilla Corporation, digest ok, chain ends at DigiCert Assured ID Root CA which the local store lacks",
+     "smoke": "pass",
+     "notes": "Silent /S install, not default browser. distribution\\policies.json {DisableAppUpdate:true} added so the 115 ESR line (still updating) cannot move the version under the manifest/driver. geckodriver >=0.33 checks the Host header: forward with the same local port as the driver port (ssh -L P:127.0.0.1:P) or it answers 'Invalid Host header'. geckodriver 0.35.0 exits 0xC0000139 on Win7 and 0.36.0 crashes (0xC0000005), so 0.34.0 (min Firefox 115) is used here."
+    },
+    {
+     "id": "supermium",
+     "name": "Supermium",
+     "version": "126.0.6478.256",
+     "binary": "C:\\Program Files\\Supermium\\chrome.exe",
+     "driverKind": "chromedriver",
+     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-109.0.5414.74\\chromedriver-nobuildcheck.cmd",
+     "driverVersion": "109.0.5414.74",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "preinstalled",
+     "driverSource": "https://chromedriver.storage.googleapis.com/109.0.5414.74/chromedriver_win32.zip",
+     "verified": "Supermium (win32ss); binary unsigned, no published checksums checked (preinstalled); driver: zip MD5 matches storage.googleapis.com x-goog-hash (tEekyyOvUdqCcvbYZ7mxxw==); chromedriver.exe unsigned, no checksum file published",
+     "smoke": "pass",
+     "notes": "driver is a 1-line .cmd wrapper running chromedriver.exe --disable-build-check %* (plain chromedriver 109 refuses: 'only supports Chrome version 109, current 126.0.6478.256'). Same-major chromedriver 126.0.6478.182 (CfT) never starts on Win7 (hangs silently, no output). Stop it with taskkill /F /IM chromedriver.exe as usual. UA reports HeadlessChrome/130 on Windows NT 10.0 (Supermium spoof)."
+    }
+   ]
+  },
+  "10": {
+   "os": "windows",
+   "ssh": "matth@10.0.1.199",
+   "read": "2026-09-19T03:35:00.522Z",
+   "browsers": [
+    {
+     "id": "chrome",
+     "name": "Google Chrome",
+     "version": "153.0.8010.53",
+     "binary": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+     "driverKind": "chromedriver",
+     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-153.0.8010.53\\chromedriver.exe",
+     "driverVersion": "153.0.8010.53",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://dl.google.com/dl/chrome/install/googlechromestandaloneenterprise64.msi",
+     "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.53/win64/chromedriver-win64.zip",
+     "verified": "googlechromestandaloneenterprise64.msi: Authenticode Google LLC, chain ok (osslsigncode) and Valid on the VM; chromedriver: Chrome for Testing build, unsigned, no checksum published (HTTPS from storage.googleapis.com only)",
+     "smoke": "pass",
+     "notes": "installed 2026-09-19 by enterprise MSI; auto-updates; the driver must be refetched to match after an update. 153.0.8010.53 was not yet listed in the CfT JSON endpoints (they stopped at .52) but the direct URL existed."
+    },
+    {
+     "id": "edge",
+     "name": "Microsoft Edge",
+     "version": "153.0.4234.32",
+     "binary": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+     "driverKind": "msedgedriver",
+     "driver": "C:\\ibbrowsers\\drivers\\msedgedriver-153.0.4234.32\\msedgedriver.exe",
+     "driverVersion": "153.0.4234.32",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "preinstalled",
+     "driverSource": "https://msedgedriver.microsoft.com/153.0.4234.32/edgedriver_win64.zip",
+     "verified": "msedgedriver: Authenticode Microsoft Corporation - Get-AuthenticodeSignature Valid on the VM; osslsigncode cannot build the chain (Microsoft Root Certificate Authority 2010 is not in the Linux CA bundle)",
+     "smoke": "pass",
+     "notes": "auto-updates; the driver must be refetched to match after an update"
+    },
+    {
+     "id": "firefox",
+     "name": "Mozilla Firefox",
+     "version": "156.0",
+     "binary": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
+     "driverKind": "geckodriver",
+     "driver": "C:\\ibbrowsers\\drivers\\geckodriver-0.37.1\\geckodriver.exe",
+     "driverVersion": "0.37.1",
+     "args": [
+      "-headless"
+     ],
+     "headless": true,
+     "source": "https://archive.mozilla.org/pub/firefox/releases/156.0/win64/en-US/Firefox%20Setup%20156.0.exe",
+     "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-win64.zip",
+     "verified": "Firefox Setup 156.0.exe: SHA512SUMS.asc Good signature, Mozilla release key 14F26682D0916CDD81E37B6D61B7B526D98F0353 (subkey 827E658608679618CD349F93678E455D76767AA3), sha512 matches; Authenticode Mozilla Corporation, chain ok (osslsigncode); geckodriver: Authenticode Mozilla Corporation, chain ok (osslsigncode) and Valid on the VM",
+     "smoke": "pass",
+     "notes": "installed 2026-09-19 (silent /S). geckodriver rejects a Host header whose port differs from its --port, so forward with the same local and remote port."
+    },
+    {
+     "id": "supermium",
+     "name": "Supermium",
+     "version": "126.0.6478.256",
+     "binary": "C:\\Program Files\\Supermium\\chrome.exe",
+     "driverKind": "chromedriver",
+     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-126.0.6478.182\\chromedriver.exe",
+     "driverVersion": "126.0.6478.182",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "preinstalled",
+     "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/126.0.6478.182/win64/chromedriver-win64.zip",
+     "verified": "chromedriver: Chrome for Testing build, unsigned, no checksum published (HTTPS from storage.googleapis.com only)",
+     "smoke": "pass",
+     "notes": "win32ss/supermium releases publish no chromedriver; the official Chrome for Testing chromedriver of the same build (126.0.6478, latest patch .182) works, no --disable-build-check needed. navigator.userAgent reports HeadlessChrome/130.0.0.0 (Supermium UA override)."
+    }
+   ]
+  },
+  "11": {
+   "os": "windows",
+   "ssh": "matth@10.0.1.123",
+   "read": "2026-09-19T03:35:01.295Z",
+   "browsers": [
+    {
+     "id": "chrome",
+     "name": "Google Chrome",
+     "version": "152.0.7977.83",
+     "binary": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+     "driverKind": "chromedriver",
+     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-152.0.7977.83\\chromedriver.exe",
+     "driverVersion": "152.0.7977.83",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "preinstalled",
+     "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/152.0.7977.83/win64/chromedriver-win64.zip",
+     "verified": "chromedriver: Chrome for Testing build, unsigned, no checksum published (HTTPS from storage.googleapis.com only)",
+     "smoke": "pass",
+     "notes": "preinstalled, left as is (operator's machine); current stable is 153.0.8010.53, so expect an update on the next Chrome restart. 152.0.7977.83 is not listed in the CfT JSON endpoints (latest listed .82) but the direct URL existed. auto-updates; the driver must be refetched to match after an update"
+    },
+    {
+     "id": "edge",
+     "name": "Microsoft Edge",
+     "version": "153.0.4234.32",
+     "binary": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+     "driverKind": "msedgedriver",
+     "driver": "C:\\ibbrowsers\\drivers\\msedgedriver-153.0.4234.32\\msedgedriver.exe",
+     "driverVersion": "153.0.4234.32",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "preinstalled",
+     "driverSource": "https://msedgedriver.microsoft.com/153.0.4234.32/edgedriver_win64.zip",
+     "verified": "msedgedriver: Authenticode Microsoft Corporation - Get-AuthenticodeSignature Valid on the VM; osslsigncode cannot build the chain (Microsoft Root Certificate Authority 2010 is not in the Linux CA bundle)",
+     "smoke": "pass",
+     "notes": "auto-updates; the driver must be refetched to match after an update"
+    },
+    {
+     "id": "firefox",
+     "name": "Mozilla Firefox",
+     "version": "154.0.1",
+     "binary": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
+     "driverKind": "geckodriver",
+     "driver": "C:\\ibbrowsers\\drivers\\geckodriver-0.37.1\\geckodriver.exe",
+     "driverVersion": "0.37.1",
+     "args": [
+      "-headless"
+     ],
+     "headless": true,
+     "source": "preinstalled",
+     "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-win64.zip",
+     "verified": "browser preinstalled, not re-verified; geckodriver: Authenticode Mozilla Corporation, chain ok (osslsigncode) and Valid on the VM",
+     "smoke": "pass",
+     "notes": "preinstalled, left as is (current release is 156.0; Firefox updates itself). geckodriver rejects a Host header whose port differs from its --port, so forward with the same local and remote port."
+    }
+   ]
+  },
+  "2022": {
+   "os": "windows",
+   "ssh": "administrator@10.0.1.248",
+   "read": "2026-09-19T03:35:01.573Z",
+   "browsers": [
+    {
+     "id": "chrome",
+     "name": "Google Chrome",
+     "version": "153.0.8010.53",
+     "binary": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+     "driverKind": "chromedriver",
+     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-153.0.8010.53\\chromedriver.exe",
+     "driverVersion": "153.0.8010.53",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://dl.google.com/dl/chrome/install/googlechromestandaloneenterprise64.msi (upgraded the preinstalled 153.0.8010.52)",
+     "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.53/win64/chromedriver-win64.zip",
+     "verified": "googlechromestandaloneenterprise64.msi: Authenticode Google LLC, chain ok (osslsigncode) and Valid on the VM; chromedriver: Chrome for Testing build, unsigned, no checksum published (HTTPS from storage.googleapis.com only)",
+     "smoke": "pass",
+     "notes": "preinstalled 153.0.8010.52 was upgraded in place to current stable with the enterprise MSI on 2026-09-19; auto-updates; the driver must be refetched to match after an update"
+    },
+    {
+     "id": "edge",
+     "name": "Microsoft Edge",
+     "version": "153.0.4234.48",
+     "binary": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+     "driverKind": "msedgedriver",
+     "driver": "C:\\ibbrowsers\\drivers\\msedgedriver-153.0.4234.48\\msedgedriver.exe",
+     "driverVersion": "153.0.4234.48",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "preinstalled",
+     "driverSource": "https://msedgedriver.microsoft.com/153.0.4234.48/edgedriver_win64.zip",
+     "verified": "msedgedriver: Authenticode Microsoft Corporation - Get-AuthenticodeSignature Valid on the VM; osslsigncode cannot build the chain (Microsoft Root Certificate Authority 2010 is not in the Linux CA bundle)",
+     "smoke": "pass",
+     "notes": "auto-updates; the driver must be refetched to match after an update"
+    },
+    {
+     "id": "firefox",
+     "name": "Mozilla Firefox",
+     "version": "156.0",
+     "binary": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
+     "driverKind": "geckodriver",
+     "driver": "C:\\ibbrowsers\\drivers\\geckodriver-0.37.1\\geckodriver.exe",
+     "driverVersion": "0.37.1",
+     "args": [
+      "-headless"
+     ],
+     "headless": true,
+     "source": "https://archive.mozilla.org/pub/firefox/releases/156.0/win64/en-US/Firefox%20Setup%20156.0.exe",
+     "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-win64.zip",
+     "verified": "Firefox Setup 156.0.exe: SHA512SUMS.asc Good signature, Mozilla release key 14F26682D0916CDD81E37B6D61B7B526D98F0353 (subkey 827E658608679618CD349F93678E455D76767AA3), sha512 matches; Authenticode Mozilla Corporation, chain ok (osslsigncode); geckodriver: Authenticode Mozilla Corporation, chain ok (osslsigncode) and Valid on the VM",
+     "smoke": "pass",
+     "notes": "installed 2026-09-19 (silent /S). geckodriver rejects a Host header whose port differs from its --port, so forward with the same local and remote port."
+    },
+    {
+     "id": "supermium",
+     "name": "Supermium",
+     "version": "132.0.6834.226",
+     "binary": "C:\\Program Files\\Supermium\\chrome.exe",
+     "driverKind": "chromedriver",
+     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-132.0.6834.159\\chromedriver.exe",
+     "driverVersion": "132.0.6834.159",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "preinstalled",
+     "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/132.0.6834.159/win64/chromedriver-win64.zip",
+     "verified": "chromedriver: Chrome for Testing build, unsigned, no checksum published (HTTPS from storage.googleapis.com only)",
+     "smoke": "pass",
+     "notes": "win32ss/supermium releases publish no chromedriver; the official Chrome for Testing chromedriver of the same build (132.0.6834, latest patch .159) works, no --disable-build-check needed. navigator.userAgent reports HeadlessChrome/133.0.0.0 (Supermium UA override)."
+    }
+   ]
+  },
+  "xp": {
+   "os": "windows",
+   "ssh": "matthew@10.0.1.132",
+   "read": "2026-09-19T03:35:02.342Z",
+   "browsers": [
+    {
+     "id": "firefox",
+     "name": "Mozilla Firefox ESR",
+     "version": "52.9.0esr",
+     "binary": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
+     "driverKind": "geckodriver",
+     "driver": null,
+     "driverVersion": null,
+     "args": [],
+     "headless": false,
+     "source": "https://archive.mozilla.org/pub/firefox/releases/52.9.0esr/win32/en-US/Firefox%20Setup%2052.9.0esr.exe",
+     "driverSource": null,
+     "verified": "SHA512SUMS gpg-verified (Mozilla release key 14F2 6682 D091 6CDD 81E3 7B6D 61B7 B526 D98F 0353, subkey BBBEBDBB24C6F355), installer SHA512 matches; Authenticode signer Mozilla Corporation, digest matches, chain not verifiable locally (SHA1 sig, Symantec timestamp root not in store)",
+     "smoke": "fail: no geckodriver runs on XP",
+     "notes": "Installed silently (/S), not default. No working driver on XP: geckodriver 0.16.1/0.17.0/0.18.0/0.19.1 (win32) exit 0xC0000139 STATUS_ENTRYPOINT_NOT_FOUND at load; 0.20.1 and 0.21.0 start and listen but abort on the first HTTP request ('thread panicked while processing panic. aborting.'). Firefox 52 has no headless mode. No policies.json (FF52 predates enterprise policies; 52.9.0 is the final XP build so no update can arrive). On Vista the same FF52 build needs the content sandbox off to run from the SSH service session (see vista); not applied here since no driver can use it."
+    },
+    {
+     "id": "supermium",
+     "name": "Supermium",
+     "version": "122.0.6261.152",
+     "binary": "C:\\Program Files\\Supermium\\chrome.exe",
+     "driverKind": "chromedriver",
+     "driver": null,
+     "driverVersion": null,
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "preinstalled",
+     "driverSource": null,
+     "verified": "Supermium (win32ss); binary unsigned, no published checksums checked (preinstalled)",
+     "smoke": "fail: no chromedriver runs on XP and speaks Chromium 122's DevTools",
+     "notes": "win32ss/supermium publishes no chromedriver asset (checked all releases incl. v122-r5/r6, and the nonsetup zips). Official chromedriver 122.0.6261.128 (CfT win32) and 109.0.5414.74 exit 0xC0000139 on XP; chromedriver 2.22-2.46 same. chromedriver 2.21 (last that loads on XP) launches Supermium headless but session creation fails: 'Runtime.executionContextCreated has invalid context' (DevTools protocol too new for it), and it only reads the legacy 'chromeOptions' key."
+    }
+   ]
+  },
+  "vista": {
+   "os": "windows",
+   "ssh": "x@10.0.1.167",
+   "read": "2026-09-19T03:35:02.756Z",
+   "browsers": [
+    {
+     "id": "firefox",
+     "name": "Mozilla Firefox ESR",
+     "version": "52.9.0esr",
+     "binary": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
+     "driverKind": "geckodriver",
+     "driver": "C:\\ibbrowsers\\drivers\\geckodriver-0.17.0\\geckodriver.exe",
+     "driverVersion": "0.17.0",
+     "args": [],
+     "headless": false,
+     "source": "preinstalled (firefox.exe and xul.dll byte-identical to the verified 52.9.0esr win32 installer, installed on xp)",
+     "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.17.0/geckodriver-v0.17.0-win32.zip",
+     "verified": "browser: binaries match verified 52.9.0esr build (SHA512SUMS gpg-verified (Mozilla release key 14F2 6682 D091 6CDD 81E3 7B6D 61B7 B526 D98F 0353, subkey BBBEBDBB24C6F355), installer SHA512 matches; Authenticode signer Mozilla Corporation, digest matches, chain not verifiable locally (SHA1 sig, Symantec timestamp root not in store)); driver: no signature or checksum published (unsigned exe from the GitHub release over HTTPS)",
+     "smoke": "pass",
+     "notes": "Preinstalled, update channel esr. geckodriver 0.17.0 is the release matched to Firefox 52 (0.17-0.21 all start on Vista). Runs windowed in the SSH (service) session: works, headless not available in FF52. REQUIRED CHANGE: with the default content sandbox, e10s content processes die in that session (MessageChannel 'cannot send/recv', page loads hang), so C:\\Program Files\\Mozilla Firefox\\distribution\\distribution.ini sets security.sandbox.content.level=0 (test VM only; remove the file to revert)."
+    },
+    {
+     "id": "supermium",
+     "name": "Supermium",
+     "version": "122.0.6261.152",
+     "binary": "C:\\Program Files\\Supermium\\chrome.exe",
+     "driverKind": "chromedriver",
+     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-2.29\\chromedriver.exe",
+     "driverVersion": "2.29.461591",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "preinstalled",
+     "driverSource": "https://chromedriver.storage.googleapis.com/2.29/chromedriver_win32.zip",
+     "verified": "Supermium (win32ss); binary unsigned, no published checksums checked (preinstalled); driver: chromedriver_win32.zip 2.29 from chromedriver.storage.googleapis.com, unsigned, no checksum file",
+     "smoke": "fail: with the contract's W3C request (goog:chromeOptions) chromedriver 2.29 ignores the binary ('cannot find Chrome binary'); passes with legacy JSON-wire: 'chromeOptions' key + POST /session/<id>/execute",
+     "notes": "No official driver newer than 2.29 runs on Vista (2.30+, 109, 122 exit 0xC0000139). 2.29 drives Supermium 122 headless fine over the legacy protocol: UA 'HeadlessChrome/122.0.0.0' (reports Windows NT 10.0), isSecureContext true, crypto.subtle true. Harness needs a legacy path (desiredCapabilities with 'chromeOptions', /execute instead of /execute/sync) to use it. Driven over the DevTools protocol by tests/browsers (protocol: cdp): chromedriver 2.29, the newest that starts on Vista, predates W3C WebDriver.",
+     "protocol": "cdp"
+    }
+   ]
+  },
+  "8.1": {
+   "os": "windows",
+   "ssh": "x@10.0.1.165",
+   "read": "2026-09-19T03:35:03.004Z",
+   "browsers": [
+    {
+     "id": "chrome",
+     "name": "Google Chrome",
+     "version": "109.0.5414.168",
+     "binary": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+     "driverKind": "chromedriver",
+     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-109.0.5414.74\\chromedriver.exe",
+     "driverVersion": "109.0.5414.74",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://dl.google.com/release2/chrome/nvwf3mhcdg76ot6qwp75ovmh2u_109.0.5414.168/109.0.5414.168_chrome_installer.exe (URL from Omaha tools.google.com/service/update2, os 6.3 x64, cohort 'Windows 8')",
+     "driverSource": "https://chromedriver.storage.googleapis.com/109.0.5414.74/chromedriver_win32.zip",
+     "verified": "browser: SHA256 matches Omaha manifest hash_sha256 5fccbc9f...1b091b; Authenticode Google LLC, chain ok (osslsigncode); driver: zip MD5 matches storage.googleapis.com x-goog-hash (tEekyyOvUdqCcvbYZ7mxxw==); chromedriver.exe unsigned, no checksum file published",
+     "smoke": "pass",
+     "notes": "Installed with --system-level --do-not-launch-chrome; not default browser; no Google Update installed with it, so it stays on 109."
+    },
+    {
+     "id": "firefox",
+     "name": "Mozilla Firefox ESR",
+     "version": "115.41.0esr",
+     "binary": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
+     "driverKind": "geckodriver",
+     "driver": "C:\\ibbrowsers\\drivers\\geckodriver-0.35.0\\geckodriver.exe",
+     "driverVersion": "0.35.0",
+     "args": [
+      "-headless"
+     ],
+     "headless": true,
+     "source": "https://archive.mozilla.org/pub/firefox/releases/115.41.0esr/win64/en-US/Firefox%20Setup%20115.41.0esr.exe",
+     "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-win64.zip",
+     "verified": "SHA512SUMS gpg-verified (Mozilla release key 14F2 6682 D091 6CDD 81E3 7B6D 61B7 B526 D98F 0353), installer SHA512 matches; Authenticode: Mozilla Corporation, chain ok (osslsigncode); driver: Authenticode Mozilla Corporation, chain ok",
+     "smoke": "pass",
+     "notes": "Silent /S install, not default browser. distribution\\policies.json {DisableAppUpdate:true} added so the 115 ESR line (still updating) cannot move the version under the manifest/driver. geckodriver >=0.33 checks the Host header: forward with the same local port as the driver port (ssh -L P:127.0.0.1:P) or it answers 'Invalid Host header'. geckodriver 0.33-0.36 all start on 8.1; 0.35.0 chosen (min Firefox 115, signature fully verifies)."
+    },
+    {
+     "id": "edge",
+     "name": "Microsoft Edge",
+     "version": "109.0.1518.140",
+     "binary": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+     "driverKind": "msedgedriver",
+     "driver": null,
+     "driverVersion": null,
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "preinstalled",
+     "driverSource": null,
+     "verified": "browser: preinstalled msedge.exe Authenticode signer Microsoft Corporation, digest ok, Microsoft root not in local store",
+     "smoke": "fail: no msedgedriver 109 obtainable from an official source",
+     "notes": "msedgedriver.microsoft.com returns 404 (BlobNotFound) for 109.0.1518.140 and every build tried below 120 (120.0.2210.61 exists); msedgedriver.azureedge.net no longer resolves/answers; msedgewebdriverstorage.blob.core.windows.net answers 409. Official chromedriver 109 cannot substitute: 'unrecognized Chrome version: Edg/109.0.1518.140' (and 'No matching capabilities' with browserName MicrosoftEdge)."
+    },
+    {
+     "id": "supermium",
+     "name": "Supermium",
+     "version": "138.0.7204.260",
+     "binary": "C:\\Program Files\\Supermium\\chrome.exe",
+     "driverKind": "chromedriver",
+     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-109.0.5414.74\\chromedriver-nobuildcheck.cmd",
+     "driverVersion": "109.0.5414.74",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "preinstalled",
+     "driverSource": "https://chromedriver.storage.googleapis.com/109.0.5414.74/chromedriver_win32.zip",
+     "verified": "Supermium (win32ss); binary unsigned, no published checksums checked (preinstalled); driver: zip MD5 matches storage.googleapis.com x-goog-hash (tEekyyOvUdqCcvbYZ7mxxw==); chromedriver.exe unsigned, no checksum file published",
+     "smoke": "pass",
+     "notes": "driver is a 1-line .cmd wrapper running chromedriver.exe --disable-build-check %* (chromedriver 109 is the newest that runs on 8.1; CfT 138.0.7204.183 and 126 hang silently at start). UA reports HeadlessChrome/142 on Windows NT 10.0 (Supermium spoof)."
+    }
+   ]
+  },
+  "centos6": {
+   "os": "linux",
+   "ssh": "x@10.0.1.183",
+   "read": "2026-09-19T03:35:03.387Z",
+   "browsers": [
+    {
+     "id": "chrome",
+     "name": "Chrome for Testing",
+     "version": null,
+     "binary": null,
+     "driverKind": "chromedriver",
+     "driver": null,
+     "driverVersion": null,
+     "args": [],
+     "headless": false,
+     "source": null,
+     "driverSource": null,
+     "verified": "n/a",
+     "smoke": "fail: no Chrome for Testing build runs on glibc 2.12: all CfT builds need GLIBC_2.17 or newer (115-125: 2.17, 126+: 2.25), and chromedriver too.",
+     "notes": "no Chrome for Testing build runs on glibc 2.12: all CfT builds need GLIBC_2.17 or newer (115-125: 2.17, 126+: 2.25), and chromedriver too."
+    },
+    {
+     "id": "firefox",
+     "name": "Mozilla Firefox (CentOS 6 package)",
+     "version": "78.5.0",
+     "binary": "/home/x/ibbrowsers/sysroot/usr/lib64/firefox/firefox",
+     "driverKind": "geckodriver",
+     "driver": "/home/x/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
+     "driverVersion": "0.37.1",
+     "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz",
+     "args": [
+      "-headless"
+     ],
+     "headless": true,
+     "source": "https://vault.centos.org/6.10/updates/x86_64/Packages/firefox-78.5.0-1.el6.centos.x86_64.rpm",
+     "verified": "CentOS 6 package: rpm -K OK (CentOS 6 key c105b9de in the system rpmdb) on firefox and its 50 dependency rpms from vault.centos.org/6.10/{os,updates}, dependency closure computed from the repo's primary.xml against the VM's installed provides; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256)",
+     "smoke": "pass",
+     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it; env.sh also adds sysroot/usr/lib64/firefox/bundled/lib64 (the package's own bundled gtk3). Mozilla's official builds don't run here: every one checked (52.9.0esr ... 156.0) needs libstdc++ GLIBCXX_3.4.15/CXXABI_1.3.5 (CentOS 6 has gcc 4.4.7: 3.4.13); 78+ also need GLIBC_2.14-2.17. Tried 68.12.0esr: ldd 'version `CXXABI_1.3.5' not found', 'version `GLIBCXX_3.4.15' not found' (and libgtk-3.so.0 missing). geckodriver 0.37.1 officially targets Firefox >=128 but the smoke passed with 78.5.0. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+    }
+   ]
+  },
+  "centos7": {
+   "os": "linux",
+   "ssh": "x@10.0.1.221",
+   "read": "2026-09-19T03:35:03.960Z",
+   "browsers": [
+    {
+     "id": "chrome",
+     "name": "Chrome for Testing",
+     "version": "125.0.6422.141",
+     "binary": "/home/x/ibbrowsers/chrome-125.0.6422.141/chrome-linux64/chrome",
+     "driverKind": "chromedriver",
+     "driver": "/home/x/ibbrowsers/drivers/chromedriver-125.0.6422.141/chromedriver.sh",
+     "driverVersion": "125.0.6422.141",
+     "args": [
+      "--headless=new",
+      "--no-sandbox"
+     ],
+     "headless": true,
+     "source": "https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chrome-linux64.zip",
+     "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chromedriver-linux64.zip",
+     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/ibbrowsers/sysroot: CentOS 7 vault (yumdownloader --resolve, i686 multilib deps dropped) .rpms fetched from the distro repos, rpm -K OK on every package (distro GPG key in the system rpmdb), unpacked with rpm2cpio|cpio",
+     "smoke": "pass",
+     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. --no-sandbox is required: user.max_user_namespaces=0 and no SUID sandbox without root ('No usable sandbox!'). newest Chrome for Testing whose binary runs on glibc 2.17: 126.0.6478.182 and later need GLIBC_2.25 (tested: \"/lib64/libc.so.6: version `GLIBC_2.25' not found\"). 115-125 need only GLIBC_2.17."
+    },
+    {
+     "id": "firefox",
+     "name": "Mozilla Firefox",
+     "version": "156.0",
+     "binary": "/home/x/ibbrowsers/firefox-156.0/firefox/firefox",
+     "driverKind": "geckodriver",
+     "driver": "/home/x/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
+     "driverVersion": "0.37.1",
+     "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz",
+     "args": [
+      "-headless"
+     ],
+     "headless": true,
+     "source": "https://archive.mozilla.org/pub/firefox/releases/156.0/linux-x86_64/en-US/firefox-156.0.tar.xz",
+     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: CentOS 7 vault (yumdownloader --resolve) .rpms fetched from the distro repos, rpm -K OK on every package (distro GPG key in the system rpmdb), unpacked with rpm2cpio|cpio",
+     "smoke": "pass",
+     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+    }
+   ]
+  },
+  "ubuntu1404": {
+   "os": "linux",
+   "ssh": "x@10.0.1.117",
+   "read": "2026-09-19T03:35:04.379Z",
+   "browsers": [
+    {
+     "id": "chrome",
+     "name": "Chrome for Testing",
+     "version": null,
+     "binary": null,
+     "driverKind": "chromedriver",
+     "driver": null,
+     "driverVersion": null,
+     "args": [],
+     "headless": false,
+     "source": null,
+     "driverSource": null,
+     "verified": "n/a",
+     "smoke": "fail: no Chrome for Testing build runs on Ubuntu 14.04: every CfT build (115-153 checked) imports gbm_bo_get_modifier (Mesa >= 17.1) and xkbcommon V_0.5.0; 14.04 has libgbm1 10.1.3 and libxkbcommon0 0.4.1. Tried 125.0.6422.141 (newest for this glibc): 'symbol lookup error: ... chrome: undefined symbol: gbm_bo_get_modifier', also with --disable-gpu --ozone-platform=headless and --headless=old. 126+ additionally need GLIBC_2.25 (have 2.19).",
+     "notes": "no Chrome for Testing build runs on Ubuntu 14.04: every CfT build (115-153 checked) imports gbm_bo_get_modifier (Mesa >= 17.1) and xkbcommon V_0.5.0; 14.04 has libgbm1 10.1.3 and libxkbcommon0 0.4.1. Tried 125.0.6422.141 (newest for this glibc): 'symbol lookup error: ... chrome: undefined symbol: gbm_bo_get_modifier', also with --disable-gpu --ozone-platform=headless and --headless=old. 126+ additionally need GLIBC_2.25 (have 2.19)."
+    },
+    {
+     "id": "firefox",
+     "name": "Mozilla Firefox",
+     "version": "100.0.2",
+     "binary": "/home/x/ibbrowsers/firefox-100.0.2/firefox/firefox",
+     "driverKind": "geckodriver",
+     "driver": "/home/x/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
+     "driverVersion": "0.37.1",
+     "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz",
+     "args": [
+      "-headless"
+     ],
+     "headless": true,
+     "source": "https://archive.mozilla.org/pub/firefox/releases/100.0.2/linux-x86_64/en-US/firefox-100.0.2.tar.bz2",
+     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
+     "smoke": "pass",
+     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. Newest Firefox that runs here: GTK 3.10 lacks gdk_window_show_window_menu (GTK 3.14), which Firefox 101.0.1+ import; 156.0 tried: 'XPCOMGlueLoad error ... libxul.so: undefined symbol: gdk_window_show_window_menu'. geckodriver 0.37.1 officially targets Firefox >=128 but the smoke passed with 100.0.2. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+    }
+   ]
+  },
+  "ubuntu1604": {
+   "os": "linux",
+   "ssh": "x@10.0.1.112",
+   "read": "2026-09-19T03:35:04.612Z",
+   "browsers": [
+    {
+     "id": "chrome",
+     "name": "Chrome for Testing",
+     "version": "125.0.6422.141",
+     "binary": "/home/x/ibbrowsers/chrome-125.0.6422.141/chrome-linux64/chrome",
+     "driverKind": "chromedriver",
+     "driver": "/home/x/ibbrowsers/drivers/chromedriver-125.0.6422.141/chromedriver.sh",
+     "driverVersion": "125.0.6422.141",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chrome-linux64.zip",
+     "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chromedriver-linux64.zip",
+     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x; NSS/NSPR taken from the verified Firefox 156.0 tarball (distro libnss3 is 3.28.4, Chrome needs NSS_3.30)",
+     "smoke": "pass",
+     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it; the chromedriver wrapper also prepends ~/ibbrowsers/firefox-156.0/firefox to LD_LIBRARY_PATH for NSS. newest Chrome for Testing whose binary runs on glibc 2.23: 126.0.6478.182 and later need GLIBC_2.25 (tested: \"/lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.25' not found\"). 115-125 need only GLIBC_2.17."
+    },
+    {
+     "id": "firefox",
+     "name": "Mozilla Firefox",
+     "version": "156.0",
+     "binary": "/home/x/ibbrowsers/firefox-156.0/firefox/firefox",
+     "driverKind": "geckodriver",
+     "driver": "/home/x/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
+     "driverVersion": "0.37.1",
+     "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz",
+     "args": [
+      "-headless"
+     ],
+     "headless": true,
+     "source": "https://archive.mozilla.org/pub/firefox/releases/156.0/linux-x86_64/en-US/firefox-156.0.tar.xz",
+     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
+     "smoke": "pass",
+     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+    }
+   ]
+  },
+  "ubuntu1804": {
+   "os": "linux",
+   "ssh": "x@10.0.1.144",
+   "read": "2026-09-19T03:35:05.466Z",
+   "browsers": [
+    {
+     "id": "chrome",
+     "name": "Chrome for Testing",
+     "version": "153.0.8010.52",
+     "binary": "/home/x/ibbrowsers/chrome-153.0.8010.52/chrome-linux64/chrome",
+     "driverKind": "chromedriver",
+     "driver": "/home/x/ibbrowsers/drivers/chromedriver-153.0.8010.52/chromedriver.sh",
+     "driverVersion": "153.0.8010.52",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.52/linux64/chrome-linux64.zip",
+     "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.52/linux64/chromedriver-linux64.zip",
+     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
+     "smoke": "pass",
+     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it"
+    },
+    {
+     "id": "firefox",
+     "name": "Mozilla Firefox",
+     "version": "156.0",
+     "binary": "/home/x/ibbrowsers/firefox-156.0/firefox/firefox",
+     "driverKind": "geckodriver",
+     "driver": "/home/x/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
+     "driverVersion": "0.37.1",
+     "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz",
+     "args": [
+      "-headless"
+     ],
+     "headless": true,
+     "source": "https://archive.mozilla.org/pub/firefox/releases/156.0/linux-x86_64/en-US/firefox-156.0.tar.xz",
+     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
+     "smoke": "pass",
+     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+    }
+   ]
+  },
+  "rocky8": {
+   "os": "linux",
+   "ssh": "x@10.0.1.131",
+   "read": "2026-09-19T03:35:05.802Z",
+   "browsers": [
+    {
+     "id": "chrome",
+     "name": "Chrome for Testing",
+     "version": "153.0.8010.52",
+     "binary": "/home/x/ibbrowsers/chrome-153.0.8010.52/chrome-linux64/chrome",
+     "driverKind": "chromedriver",
+     "driver": "/home/x/ibbrowsers/drivers/chromedriver-153.0.8010.52/chromedriver.sh",
+     "driverVersion": "153.0.8010.52",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.52/linux64/chrome-linux64.zip",
+     "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.52/linux64/chromedriver-linux64.zip",
+     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/ibbrowsers/sysroot: Rocky 8 (dnf download --resolve) .rpms fetched from the distro repos, rpm -K OK on every package (distro GPG key in the system rpmdb), unpacked with rpm2cpio|cpio",
+     "smoke": "pass",
+     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. SELinux enforcing: no issue seen."
+    },
+    {
+     "id": "firefox",
+     "name": "Mozilla Firefox",
+     "version": "156.0",
+     "binary": "/home/x/ibbrowsers/firefox-156.0/firefox/firefox",
+     "driverKind": "geckodriver",
+     "driver": "/home/x/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
+     "driverVersion": "0.37.1",
+     "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz",
+     "args": [
+      "-headless"
+     ],
+     "headless": true,
+     "source": "https://archive.mozilla.org/pub/firefox/releases/156.0/linux-x86_64/en-US/firefox-156.0.tar.xz",
+     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: Rocky 8 (dnf download --resolve) .rpms fetched from the distro repos, rpm -K OK on every package (distro GPG key in the system rpmdb), unpacked with rpm2cpio|cpio",
+     "smoke": "pass",
+     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+    }
+   ]
+  },
+  "ubuntu2004": {
+   "os": "linux",
+   "ssh": "x@10.0.1.118",
+   "read": "2026-09-19T03:35:06.628Z",
+   "browsers": [
+    {
+     "id": "chrome",
+     "name": "Chrome for Testing",
+     "version": "153.0.8010.52",
+     "binary": "/home/x/ibbrowsers/chrome-153.0.8010.52/chrome-linux64/chrome",
+     "driverKind": "chromedriver",
+     "driver": "/home/x/ibbrowsers/drivers/chromedriver-153.0.8010.52/chromedriver.sh",
+     "driverVersion": "153.0.8010.52",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.52/linux64/chrome-linux64.zip",
+     "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.52/linux64/chromedriver-linux64.zip",
+     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
+     "smoke": "pass",
+     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it"
+    },
+    {
+     "id": "firefox",
+     "name": "Mozilla Firefox",
+     "version": "156.0",
+     "binary": "/home/x/ibbrowsers/firefox-156.0/firefox/firefox",
+     "driverKind": "geckodriver",
+     "driver": "/home/x/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
+     "driverVersion": "0.37.1",
+     "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz",
+     "args": [
+      "-headless"
+     ],
+     "headless": true,
+     "source": "https://archive.mozilla.org/pub/firefox/releases/156.0/linux-x86_64/en-US/firefox-156.0.tar.xz",
+     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
+     "smoke": "pass",
+     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+    }
+   ]
+  },
+  "ubuntu2204": {
+   "os": "linux",
+   "ssh": "x@10.0.1.203",
+   "read": "2026-09-19T03:35:07.716Z",
+   "browsers": [
+    {
+     "id": "chrome",
+     "name": "Chrome for Testing",
+     "version": "153.0.8010.52",
+     "binary": "/home/x/ibbrowsers/chrome-153.0.8010.52/chrome-linux64/chrome",
+     "driverKind": "chromedriver",
+     "driver": "/home/x/ibbrowsers/drivers/chromedriver-153.0.8010.52/chromedriver.sh",
+     "driverVersion": "153.0.8010.52",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.52/linux64/chrome-linux64.zip",
+     "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.52/linux64/chromedriver-linux64.zip",
+     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
+     "smoke": "pass",
+     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it"
+    },
+    {
+     "id": "firefox",
+     "name": "Mozilla Firefox",
+     "version": "156.0",
+     "binary": "/home/x/ibbrowsers/firefox-156.0/firefox/firefox",
+     "driverKind": "geckodriver",
+     "driver": "/home/x/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
+     "driverVersion": "0.37.1",
+     "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz",
+     "args": [
+      "-headless"
+     ],
+     "headless": true,
+     "source": "https://archive.mozilla.org/pub/firefox/releases/156.0/linux-x86_64/en-US/firefox-156.0.tar.xz",
+     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
+     "smoke": "pass",
+     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+    }
+   ]
+  },
+  "debian12": {
+   "os": "linux",
+   "ssh": "x@10.0.1.235",
+   "read": "2026-09-19T03:35:08.281Z",
+   "browsers": [
+    {
+     "id": "chrome",
+     "name": "Chrome for Testing",
+     "version": "153.0.8010.52",
+     "binary": "/home/x/ibbrowsers/chrome-153.0.8010.52/chrome-linux64/chrome",
+     "driverKind": "chromedriver",
+     "driver": "/home/x/ibbrowsers/drivers/chromedriver-153.0.8010.52/chromedriver.sh",
+     "driverVersion": "153.0.8010.52",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.52/linux64/chrome-linux64.zip",
+     "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.52/linux64/chromedriver-linux64.zip",
+     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
+     "smoke": "pass",
+     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it"
+    },
+    {
+     "id": "firefox",
+     "name": "Mozilla Firefox",
+     "version": "156.0",
+     "binary": "/home/x/ibbrowsers/firefox-156.0/firefox/firefox",
+     "driverKind": "geckodriver",
+     "driver": "/home/x/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
+     "driverVersion": "0.37.1",
+     "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz",
+     "args": [
+      "-headless"
+     ],
+     "headless": true,
+     "source": "https://archive.mozilla.org/pub/firefox/releases/156.0/linux-x86_64/en-US/firefox-156.0.tar.xz",
+     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
+     "smoke": "pass",
+     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+    }
+   ]
+  },
+  "alpine": {
+   "os": "linux",
+   "ssh": "x@10.0.1.200",
+   "read": "2026-09-19T03:35:08.618Z",
+   "browsers": [
+    {
+     "id": "chromium",
+     "name": "Chromium (Alpine package)",
+     "version": "152.0.7977.82",
+     "binary": "/home/x/ibbrowsers/root/usr/lib/chromium/chromium",
+     "driverKind": "chromedriver",
+     "driver": "/home/x/ibbrowsers/drivers/chromedriver-152.0.7977.82/chromedriver.sh",
+     "driverVersion": "152.0.7977.82",
+     "args": [
+      "--headless=new",
+      "--disable-gpu-sandbox"
+     ],
+     "headless": true,
+     "source": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community chromium-152.0.7977.82-r0",
+     "driverSource": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community chromium-chromedriver-152.0.7977.82-r0",
+     "verified": "Alpine package installed with 'apk add --usermode --root ~/ibbrowsers/root --initdb' from the distro repos; apk verifies the RSA-signed APKINDEX and each package's hash against /etc/apk/keys",
+     "smoke": "pass",
+     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/root/usr/lib[,pulseaudio,firefox], FONTCONFIG_FILE, ICU_DATA) then execs the driver; binaries run on the system musl loader (same musl as the root). The VM's sshd has 'AllowTcpForwarding no', so ssh -L is refused ('administratively prohibited'); reach the driver with a stdio tunnel instead, e.g. one `ssh x@10.0.1.200 nc 127.0.0.1 <P>` per connection (busybox nc) -- that is how the smoke ran. --disable-gpu-sandbox is required: the GPU process is killed by seccomp-bpf on syscall 0x148 (pwritev2); renderer sandbox stays on. Vendor glibc builds (CfT, Mozilla tarball) don't run on musl."
+    },
+    {
+     "id": "firefox",
+     "name": "Mozilla Firefox (Alpine package)",
+     "version": "151.0.3",
+     "binary": "/home/x/ibbrowsers/root/usr/lib/firefox/firefox",
+     "driverKind": "geckodriver",
+     "driver": "/home/x/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
+     "driverVersion": "0.37.1",
+     "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz",
+     "args": [
+      "-headless"
+     ],
+     "headless": true,
+     "source": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community firefox-151.0.3-r0",
+     "verified": "Alpine package installed with 'apk add --usermode --root ~/ibbrowsers/root --initdb' from the distro repos; apk verifies the RSA-signed APKINDEX and each package's hash against /etc/apk/keys; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256) (Mozilla's geckodriver is static-pie and runs on musl)",
+     "smoke": "pass",
+     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/root/usr/lib[,pulseaudio,firefox], FONTCONFIG_FILE, ICU_DATA) then execs the driver; binaries run on the system musl loader (same musl as the root). The VM's sshd has 'AllowTcpForwarding no', so ssh -L is refused ('administratively prohibited'); reach the driver with a stdio tunnel instead, e.g. one `ssh x@10.0.1.200 nc 127.0.0.1 <P>` per connection (busybox nc) -- that is how the smoke ran. ICU_DATA is required: Alpine's firefox segfaults when ICU can't find /usr/share/icu/78.1. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+    }
+   ]
+  },
+  "mac": {
+   "os": "mac",
+   "ssh": "Matthew@the-mac-test-host",
+   "read": "2026-09-19T03:35:11.677Z",
+   "browsers": [
+    {
+     "id": "chrome",
+     "name": "Google Chrome for Testing",
+     "version": "153.0.8010.53",
+     "binary": "/Users/Matthew/ibbrowsers/chrome-153.0.8010.53/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+     "driverKind": "chromedriver",
+     "driver": "/Users/Matthew/ibbrowsers/drivers/chromedriver-153.0.8010.53/chromedriver",
+     "driverVersion": "153.0.8010.53",
+     "args": [
+      "--headless=new"
+     ],
+     "headless": true,
+     "source": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.53/mac-arm64/chrome-mac-arm64.zip",
+     "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.53/mac-arm64/chromedriver-mac-arm64.zip",
+     "verified": "no checksum published; codesign: app and chromedriver are only ad-hoc linker-signed (no Developer ID); codesign --verify --deep --strict on the .app FAILS: 'code has no resources but signature indicates they must be present' (Sealed Resources=none); chromedriver codesign --verify ok (ad-hoc), spctl rejected",
+     "smoke": "pass",
+     "notes": "Chrome for Testing, unpacked with ditto, no quarantine xattr. Fixed version, does not auto-update."
+    },
+    {
+     "id": "firefox",
+     "name": "Mozilla Firefox",
+     "version": "156.0",
+     "binary": "/Users/Matthew/ibbrowsers/firefox-156.0/Firefox.app/Contents/MacOS/firefox",
+     "driverKind": "geckodriver",
+     "driver": "/Users/Matthew/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver",
+     "driverVersion": "0.37.1",
+     "args": [
+      "-headless"
+     ],
+     "headless": true,
+     "source": "https://archive.mozilla.org/pub/firefox/releases/156.0/mac/en-US/Firefox%20156.0.dmg",
+     "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-macos-aarch64.tar.gz",
+     "verified": "Firefox 156.0.dmg: SHA512SUMS.asc Good signature, Mozilla release key 14F26682D0916CDD81E37B6D61B7B526D98F0353, sha512 matches (dev machine and Mac); codesign --verify --deep --strict ok, Developer ID Application: Mozilla Corporation (43AQ936H96), notarized; geckodriver codesign ok, Developer ID Mozilla Corporation (43AQ936H96); no checksum published for the geckodriver tarball",
+     "smoke": "pass",
+     "notes": "copied out of the dmg (hdiutil attach -nobrowse, detached). Its own updater may update it in place. geckodriver rejects a Host header whose port differs from its --port, so forward with the same local and remote port."
+    },
+    {
+     "id": "safari",
+     "name": "Safari",
+     "version": "26.2",
+     "binary": "/Applications/Safari.app/Contents/MacOS/Safari",
+     "driverKind": "safaridriver",
+     "driver": "/usr/bin/safaridriver",
+     "driverVersion": "26.2 (21623.1.14.11.9)",
+     "args": [],
+     "headless": false,
+     "source": "preinstalled",
+     "driverSource": "preinstalled (/usr/bin/safaridriver -> /System/Cryptexes/App/usr/bin/safaridriver)",
+     "verified": "system component, not checked",
+     "smoke": "fail: safaridriver -p <P> exits immediately with status 1 and no output; unified log: com.apple.WebDriver.HTTPService 'Attempted to manage driver interface for target CURRENTMACHINE without a connection' then 'Shutting down daemon because connection to webinspectord was closed' (no user logged in at the console: /dev/console owned by root, no gui/502 launchd domain)",
+     "notes": "Blocked: needs a GUI login session for this user, and likely 'safaridriver --enable' (admin password) / Allow Remote Automation (com.apple.Safari AllowRemoteAutomation not set). Not attempted. Safari has no headless mode."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,282 @@
+{
+ "time": "2026-09-19T03:27:59.011Z",
+ "machine": "xp",
+ "browser": "supermium",
+ "version": "122.0.6261.152",
+ "result": "pass",
+ "seed": 6,
+ "checks": [
+  {
+   "name": "served",
+   "note": "no reverse tunnel: Error: remote port forwarding failed for listen port 35736"
+  },
+  {
+   "name": "the startup check finds nothing missing",
+   "pass": true
+  },
+  {
+   "name": "the page starts without errors",
+   "pass": true
+  },
+  {
+   "name": "from disk, the page builds installers itself",
+   "pass": true
+  },
+  {
+   "name": "WebCrypto Ed25519",
+   "note": "not supported: NotSupportedError (the editor offers RSA keys instead)"
+  },
+  {
+   "name": "the page has its sections",
+   "pass": true
+  },
+  {
+   "name": "#new shows its page",
+   "pass": true
+  },
+  {
+   "name": "#edit shows its page",
+   "pass": true
+  },
+  {
+   "name": "#bases shows its page",
+   "pass": true
+  },
+  {
+   "name": "#runtimes shows its page",
+   "pass": true
+  },
+  {
+   "name": "#home shows its page",
+   "pass": true
+  },
+  {
+   "name": "New installer: the code editor shows for Python + script (CSS :has())",
+   "pass": true
+  },
+  {
+   "name": "build: the build finishes",
+   "pass": true
+  },
+  {
+   "name": "build: windows download is 991490 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: windows is a .exe",
+   "pass": true
+  },
+  {
+   "name": "build: windows carries the record zwwlr4pizxqcnfoy5yio34rlaf",
+   "pass": true
+  },
+  {
+   "name": "build: windows record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: windows carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: windows plan is for windows only",
+   "pass": true
+  },
+  {
+   "name": "build: windows packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "build: linux download is 141590 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: linux is a .run",
+   "pass": true
+  },
+  {
+   "name": "build: linux carries the record zwwlr4pizxqcnfoy5yio34rlaf",
+   "pass": true
+  },
+  {
+   "name": "build: linux record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: linux carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: linux plan is for linux only",
+   "pass": true
+  },
+  {
+   "name": "build: linux packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "build: macos download is 41634 bytes",
+   "pass": true
+  },
+  {
+   "name": "build: macos is a .zip",
+   "pass": true
+  },
+  {
+   "name": "build: macos carries the record zwwlr4pizxqcnfoy5yio34rlaf",
+   "pass": true
+  },
+  {
+   "name": "build: macos record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "build: macos carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "build: macos plan is for macos only",
+   "pass": true
+  },
+  {
+   "name": "build: macos packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "Save this page makes the whole page",
+   "pass": true
+  },
+  {
+   "name": "the saved copy (from the browser's download folder) starts",
+   "pass": true
+  },
+  {
+   "name": "the saved copy starts without errors",
+   "pass": true
+  },
+  {
+   "name": "saved copy: the build finishes",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux download is 141564 bytes",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux is a .run",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux carries the record mekqo7io7dxju6lsgg43uhifj2",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux record says runtime python",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux carries its plan, bound to the record",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux plan is for linux only",
+   "pass": true
+  },
+  {
+   "name": "saved copy: linux packs the app's source",
+   "pass": true
+  },
+  {
+   "name": "PGP Ed25519 key",
+   "note": "This browser can't make Ed25519 keys; choose RSA."
+  },
+  {
+   "name": "PGP: the page makes a rsa3072 key",
+   "pass": true
+  },
+  {
+   "name": "PGP: signing says saved",
+   "pass": true
+  },
+  {
+   "name": "PGP (rsa3072): gpg --verify says Good signature for the saved .run.asc",
+   "pass": true
+  },
+  {
+   "name": "PGP: the signed .run keeps its record",
+   "pass": true
+  },
+  {
+   "name": ".pfx: the page opens the RSA .pfx",
+   "pass": true
+  },
+  {
+   "name": ".pfx: signing says done",
+   "pass": true
+  },
+  {
+   "name": ".pfx: the signed .exe passes osslsigncode verify",
+   "pass": true
+  },
+  {
+   "name": "no page errors while signing",
+   "pass": true
+  }
+ ],
+ "entry": {
+  "id": "supermium",
+  "name": "Supermium",
+  "version": "122.0.6261.152",
+  "binary": "C:\\Program Files\\Supermium\\chrome.exe",
+  "driverKind": "chromedriver",
+  "driver": null,
+  "driverVersion": null,
+  "args": [
+   "--headless=new"
+  ],
+  "headless": true,
+  "source": "preinstalled",
+  "driverSource": null,
+  "verified": "Supermium (win32ss); binary unsigned, no published checksums checked (preinstalled)",
+  "smoke": "fail: no chromedriver runs on XP and speaks Chromium 122's DevTools",
+  "notes": "win32ss/supermium publishes no chromedriver asset (checked all releases incl. v122-r5/r6, and the nonsetup zips). Official chromedriver 122.0.6261.128 (CfT win32) and 109.0.5414.74 exit 0xC0000139 on XP; chromedriver 2.22-2.46 same. chromedriver 2.21 (last that loads on XP) launches Supermium headless but session creation fails: 'Runtime.executionContextCreated has invalid context' (DevTools protocol too new for it), and it only reads the legacy 'chromeOptions' key."
+ },
+ "served": "no tunnel: Error: remote port forwarding failed for listen port 35736",
+ "capabilities": {
+  "protocolVersion": "1.3",
+  "product": "Chrome/122.0.6261.152",
+  "revision": "@e684a8efef5ceec266190969f85f2ed6d91af953",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/122.0.0.0 Safari/537.36",
+  "jsVersion": "12.2.281.27"
+ },
+ "features": {
+  "ES modules": true,
+  "?. ?? ||= syntax": true,
+  "BigInt": true,
+  "Object.hasOwn": true,
+  "CompressionStream deflate-raw": true,
+  "DecompressionStream deflate-raw": true,
+  "CompressionStream gzip": true,
+  "Blob.stream": true,
+  "secure context": true,
+  "WebCrypto": true,
+  "CSS :has()": true,
+  "CSS color-mix()": true,
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/122.0.0.0 Safari/537.36"
+ },
+ "webcrypto": {
+  "Ed25519": "NotSupportedError",
+  "RSASSA-PKCS1-v1_5": true,
+  "ECDSA P-256": true,
+  "PBKDF2": true,
+  "AES-CBC": true,
+  "HMAC": true,
+  "SHA-256": true
+ },
+ "saveToDisk": "saved",
+ "pgpKey": "rsa3072",
+ "pfx": "signed",
+ "driverLog": "channel 3: open failed: connect failed: Unable to connect to target host\r\nchannel 3: open failed: connect failed: Unable to connect to target host\r\n[3300:572:0918/202809.279:ERROR:os_crypt_win.cc(73)] Failed to encrypt: Key not valid for use in specified state. (0x8009000B)\r\nchannel 3: open failed: connect failed: Unable to connect to target host\r\n[3300:572:0918/202809.717:ERROR:core_audio_util_win.cc(316)] Failed to create Core Audio device enumerator on thread with ID 572\r\n[3300:572:0918/202809.764:ERROR:policy_logger.cc(157)] :components\\enterprise\\browser\\controller\\chrome_browser_cloud_management_controller.cc(161) Cloud management controller initialization aborted as CBCM is not enabled. Please use the `--enable-chrome-browser-cloud-management` command line flag to enable it if you are not using the official Google Chrome build.\r\n\r\nDevTools listening on ws://127.0.0.1:34041/devtools/browser/a9e6cdd3-b2fa-4097-a767-e520975e61c5\r\n[3300:2004:0918/202810.779:ERROR:login_database_async_helper.cc(92)] Encryption is not available.\r\n[3300:2996:0918/202810.779:ERROR:login_database_async_helper.cc(92)] Encryption is not available.\r\n[3300:996:0918/202815.483:ERROR:mf_initializer.cc(31)] Failed to start Media Foundation, accelerated media functionality may be disabled. If you're using Windows N, see https://support.microsoft.com/en-us/topic/media-feature-pack-for-windows-10-n-may-2020-ebbdf559-b84c-0fc2-bd51-e23c9f6a4439 for information on how to install the Media Feature Pack. Error: Could not load mf.dll. The operation completed successfully. (0x0)\r\n[3300:572:0918/202815.498:ERROR:device_event_log_impl.cc(192)] [20:28:15.489] USB: usb_service_win.cc:73 SetupDiGetDeviceProperty({{A45C254E-DF1C-4EFD-8020-67D146A850E0}, 23}) failed: Error (0x13D) while retrieving error. (0xE0000209)\r\n[3300:3956:0918/202833.686:ERROR:cpu_probe_win.cc(112)] PdhAddEnglishCounter failed: Error (0x13D) while retrieving error. (0xC0000BB8)\r\n",
+ "protocol": "cdp",
+ "seconds": 36
+}

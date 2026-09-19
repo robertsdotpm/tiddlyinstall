@@ -62,12 +62,14 @@ export class Remote {
   readManifest() {
     const r = this.win
       ? this.sh('type C:\\ibbrowsers\\browsers.json')
-      : this.sh('echo "@HOME $HOME"; cat ~/ibbrowsers/browsers.json');
+      : this.sh('echo "@HOME $HOME"; echo "@FWD $(grep -i "^[[:space:]]*AllowTcpForwarding" /etc/ssh/sshd_config 2>/dev/null | tail -1)"; cat ~/ibbrowsers/browsers.json');
     let text = r.out;
     if (!this.win) {
       const m = /^@HOME (.*)$/m.exec(text);
       if (m) this.home = m[1].trim();
-      text = text.replace(/^@HOME .*\n/m, '');
+      // An SSH server that forbids forwarding (Alpine's): tunnel through nc.
+      this.ncForward = /^@FWD .*\bno\b/im.test(text);
+      text = text.replace(/^@HOME .*\n/m, '').replace(/^@FWD .*\n/m, '');
     }
     if (r.code !== 0 && !text.trim()) throw new Error(`${this.name}: no browsers.json (${(r.err || '').trim().slice(0, 200)})`);
     // Windows `type` may add a BOM.
@@ -98,6 +100,31 @@ export class Remote {
     if (r.status !== 0) throw new Error(`scp to ${this.name}: ${(r.stderr || String(r.error)).trim().slice(0, 300)}`);
   }
 
+  // Runs `cmd` on the machine with its 127.0.0.1:port reachable here on the
+  // same port: ssh -L, or where the server forbids forwarding, a local
+  // listener that pipes each connection through `ssh host nc 127.0.0.1 port`.
+  // Returns the ssh process running `cmd` (killing it closes the listener).
+  runForwarded(cmd, port, log) {
+    const fwd = this.ncForward ? [] : ['-o', 'ExitOnForwardFailure=yes', '-L', `${port}:127.0.0.1:${port}`];
+    const p = spawn('ssh', [...SSH_OPTS, ...fwd, this.ssh, cmd], { stdio: ['pipe', 'pipe', 'pipe'] });
+    if (log) { p.stdout.on('data', (d) => log(d)); p.stderr.on('data', (d) => log(d)); }
+    if (this.ncForward) {
+      const server = net.createServer((sock) => {
+        const c = spawn('ssh', [...SSH_OPTS, this.ssh, `nc 127.0.0.1 ${port}`], { stdio: ['pipe', 'pipe', 'ignore'] });
+        sock.pipe(c.stdin);
+        c.stdout.pipe(sock);
+        const end = () => { sock.destroy(); c.kill(); };
+        sock.on('close', end); sock.on('error', end); c.on('exit', end); c.stdin.on('error', end);
+      });
+      server.on('error', (e) => log && log('nc proxy: ' + e.message + '\n'));
+      server.listen(port, '127.0.0.1');
+      p.on('exit', () => server.close());
+      const kill = p.kill.bind(p);
+      p.kill = (sig) => { server.close(); return kill(sig); };
+    }
+    return p;
+  }
+
   // Starts the browser's driver on the machine on `port`, forwarded to the
   // same port here (geckodriver refuses a Host header naming another port).
   // Returns the ssh child process; its output goes to `log`.
@@ -110,9 +137,7 @@ export class Remote {
     // Unix: the driver dies when this connection closes (read sees EOF).
     const cmd = this.win ? `${entry.driver} ${args} ${extra}`
       : `sh -c '${entry.driver} ${args} ${extra} </dev/null & p=$!; read x; kill $p 2>/dev/null; sleep 1; kill -9 $p 2>/dev/null'`;
-    const p = spawn('ssh', [...SSH_OPTS, '-o', 'ExitOnForwardFailure=yes', '-L', `${port}:127.0.0.1:${port}`, this.ssh, cmd], { stdio: ['pipe', 'pipe', 'pipe'] });
-    if (log) { p.stdout.on('data', (d) => log(d)); p.stderr.on('data', (d) => log(d)); }
-    return p;
+    return this.runForwarded(cmd, port, log);
   }
 
   // For a Chromium with no usable driver on this OS: starts the browser
@@ -123,9 +148,7 @@ export class Remote {
       `--user-data-dir=${this.dir('work', profile)}`, '--no-first-run', '--no-default-browser-check', 'about:blank'].join(' ');
     const cmd = this.win ? `"${entry.binary}" ${args}`
       : `sh -c '"${entry.binary}" ${args} </dev/null & p=$!; read x; kill $p 2>/dev/null; sleep 1; kill -9 $p 2>/dev/null'`;
-    const p = spawn('ssh', [...SSH_OPTS, '-o', 'ExitOnForwardFailure=yes', '-L', `${port}:127.0.0.1:${port}`, this.ssh, cmd], { stdio: ['pipe', 'pipe', 'pipe'] });
-    if (log) { p.stdout.on('data', (d) => log(d)); p.stderr.on('data', (d) => log(d)); }
-    return p;
+    return this.runForwarded(cmd, port, log);
   }
 
   // Stops the browser startCdpBrowser() started: the process listening on

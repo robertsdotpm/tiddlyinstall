@@ -1,0 +1,92 @@
+{
+ "time": "2026-09-19T03:32:33.837Z",
+ "machine": "8.1",
+ "browser": "firefox",
+ "version": "115.41.0",
+ "result": "unsupported: CSS :has()",
+ "seed": 42,
+ "checks": [
+  {
+   "name": "served",
+   "note": "no reverse tunnel: Error: remote port forwarding failed for listen port 36575"
+  },
+  {
+   "name": "the page tells the person their browser is too old",
+   "pass": true
+  }
+ ],
+ "entry": {
+  "id": "firefox",
+  "name": "Mozilla Firefox ESR",
+  "version": "115.41.0esr",
+  "binary": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
+  "driverKind": "geckodriver",
+  "driver": "C:\\ibbrowsers\\drivers\\geckodriver-0.35.0\\geckodriver.exe",
+  "driverVersion": "0.35.0",
+  "args": [
+   "-headless"
+  ],
+  "headless": true,
+  "source": "https://archive.mozilla.org/pub/firefox/releases/115.41.0esr/win64/en-US/Firefox%20Setup%20115.41.0esr.exe",
+  "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-win64.zip",
+  "verified": "SHA512SUMS gpg-verified (Mozilla release key 14F2 6682 D091 6CDD 81E3 7B6D 61B7 B526 D98F 0353), installer SHA512 matches; Authenticode: Mozilla Corporation, chain ok (osslsigncode); driver: Authenticode Mozilla Corporation, chain ok",
+  "smoke": "pass",
+  "notes": "Silent /S install, not default browser. distribution\\policies.json {DisableAppUpdate:true} added so the 115 ESR line (still updating) cannot move the version under the manifest/driver. geckodriver >=0.33 checks the Host header: forward with the same local port as the driver port (ssh -L P:127.0.0.1:P) or it answers 'Invalid Host header'. geckodriver 0.33-0.36 all start on 8.1; 0.35.0 chosen (min Firefox 115, signature fully verifies)."
+ },
+ "served": "no tunnel: Error: remote port forwarding failed for listen port 36575",
+ "capabilities": {
+  "acceptInsecureCerts": false,
+  "browserName": "firefox",
+  "browserVersion": "115.41.0",
+  "moz:accessibilityChecks": false,
+  "moz:buildID": "20260908153225",
+  "moz:geckodriverVersion": "0.35.0",
+  "moz:headless": true,
+  "moz:platformVersion": "6.3",
+  "moz:processID": 3756,
+  "moz:profile": "C:\\Users\\x\\AppData\\Local\\Temp\\rust_mozprofilet8B810",
+  "moz:shutdownTimeout": 60000,
+  "moz:useNonSpecCompliantPointerOrigin": false,
+  "moz:webdriverClick": true,
+  "moz:windowless": false,
+  "pageLoadStrategy": "normal",
+  "platformName": "windows",
+  "proxy": {},
+  "setWindowRect": true,
+  "strictFileInteractability": false,
+  "timeouts": {
+   "implicit": 0,
+   "pageLoad": 300000,
+   "script": 30000
+  },
+  "unhandledPromptBehavior": "dismiss and notify"
+ },
+ "features": {
+  "?. ?? ||= syntax": true,
+  "BigInt": true,
+  "Blob.stream": true,
+  "CSS :has()": false,
+  "CSS color-mix()": true,
+  "CompressionStream deflate-raw": true,
+  "CompressionStream gzip": true,
+  "DecompressionStream deflate-raw": true,
+  "ES modules": true,
+  "Object.hasOwn": true,
+  "WebCrypto": true,
+  "secure context": true,
+  "userAgent": "Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0"
+ },
+ "webcrypto": {
+  "AES-CBC": true,
+  "ECDSA P-256": true,
+  "Ed25519": "NotSupportedError",
+  "HMAC": true,
+  "PBKDF2": true,
+  "RSASSA-PKCS1-v1_5": true,
+  "SHA-256": true
+ },
+ "missing": "CSS :has()",
+ "driverLog": "1789828712289\tgeckodriver\tINFO\tListening on 127.0.0.1:36377\n1789828718847\tmozrunner::runner\tINFO\tRunning command: \"C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe\" \"--marionette\" \"-headless\" \"-no-remote\" \"-profile\" \"C:\\\\Users\\\\x\\\\AppData\\\\Local\\\\Temp\\\\rust_mozprofilet8B810\"\n*** You are running in headless mode.\r\nconsole.warn: services.settings: Ignoring preference override of remote settings server\r\nconsole.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment\r\n1789828719337\tMarionette\tINFO\tMarionette enabled\r\n1789828719427\tMarionette\tINFO\tListening on port 51142\r\nRead port: 51142\nDynamically enable window occlusion 0\r\n[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt\r\n",
+ "protocol": "webdriver",
+ "seconds": 17
+}

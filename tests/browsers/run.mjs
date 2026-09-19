@@ -33,6 +33,7 @@ import { loadMachines, findMachine, freePort, Remote } from './remote.mjs';
 import { Checker, STARTED, checkSections, buildHello, checkJob, makeSignFixtures, osslVerify, gpgVerify, $text, setVal, checkBox } from './steps.mjs';
 import { readInstaller } from '../../js/ibfile.js';
 import { ensureDriver } from './drivers.mjs';
+import { writeCompat } from './compat.mjs';
 
 // The DevTools fallback needs WebSocket (a flag on Node 20).
 if (typeof WebSocket === 'undefined') {
@@ -359,7 +360,7 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
     let state = null;
     for (const end = Date.now() + 120000; Date.now() < end && !state; await sleep(500)) {
       state = await b.run(`var m = document.documentElement.getAttribute('data-ib-missing');
-        if (m) return { missing: m, banner: !!document.querySelector('.ib-too-old') };
+        if (m && document.documentElement.getAttribute('data-ib-ready')) return { missing: m, banner: !!document.querySelector('.ib-compat-bar.ib-too-old:not([hidden])') };
         try { if (${STARTED}) return { started: true, missing: m }; } catch (e) {}
         return null;`).catch(() => null);
     }
@@ -376,6 +377,12 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
       return finish('fail', 'the page did not start');
     }
     t.ok(state.missing === '', 'the startup check finds nothing missing', state.missing);
+    // The compatibility bar shows exactly when something isn't native.
+    const bar = await waitUntil(js, `document.documentElement.getAttribute('data-ib-ready') && [document.documentElement.getAttribute('data-ib-degraded'), !!document.querySelector('.ib-compat-bar:not([hidden])')]`, 'the browser check', 30000).catch(() => null);
+    if (bar) {
+      detail.degraded = bar[0];
+      t.ok(bar[1] === (bar[0] !== ''), 'the compatibility bar shows only when a feature isn\'t native', 'degraded: "' + bar[0] + '", bar shown: ' + bar[1]);
+    } else t.ok(false, 'the browser check finishes (data-ib-ready)');
     t.ok((await pageErrors()).length === 0, 'the page starts without errors', (await pageErrors()).join(' | '));
     t.ok(await js(`document.documentElement.classList.contains('ib-local')`), 'from disk, the page builds installers itself');
     if (detail.webcrypto && detail.webcrypto.Ed25519 !== true) t.note('WebCrypto Ed25519', 'not supported: ' + detail.webcrypto.Ed25519 + ' (the editor offers RSA keys instead)');
@@ -577,6 +584,7 @@ async function main() {
       const rec = await runPair(m, p.browser, { seed, served, tmpRoot });
       busy.delete(p.machine);
       fs.appendFileSync(USAGE, JSON.stringify(rec) + '\n');
+      writeCompat();
       if (!/^(pass|unsupported)/.test(rec.result)) failures++;
       console.log(`<-- ${p.machine}/${p.browser} ${rec.version}: ${rec.result} (${rec.seconds}s)`);
     }

@@ -6,19 +6,17 @@
 //   node tests/browsers/report.mjs --write    # replace the section in docs/test-results.md
 import fs from 'node:fs';
 import path from 'node:path';
+import { MACHINES, BROWSERS as BROWSERS_L } from './compat.mjs';
 
 const HERE = path.dirname(new URL(import.meta.url).pathname);
 const DOC = path.join(HERE, '..', '..', 'docs', 'test-results.md');
 const START = '<!-- browsers:start (tests/browsers/report.mjs) -->';
 const END = '<!-- browsers:end -->';
 
-const ORDER = ['xp', 'vista', '7', '8.1', '10', '11', '2022', 'centos6', 'centos7', 'ubuntu1404', 'ubuntu1604', 'ubuntu1804',
-  'rocky8', 'ubuntu2004', 'ubuntu2204', 'debian12', 'alpine', 'mac'];
-const LABEL = { xp: 'Windows XP', vista: 'Vista', 7: 'Windows 7', 8.1: 'Windows 8.1', 10: 'Windows 10', 11: 'Windows 11', 2022: 'Server 2022',
-  centos6: 'CentOS 6', centos7: 'CentOS 7', ubuntu1404: 'Ubuntu 14.04', ubuntu1604: 'Ubuntu 16.04', ubuntu1804: 'Ubuntu 18.04',
-  rocky8: 'Rocky 8', ubuntu2004: 'Ubuntu 20.04', ubuntu2204: 'Ubuntu 22.04', debian12: 'Debian 12', alpine: 'Alpine 3.24', mac: 'macOS 26' };
-const BROWSERS = ['chrome', 'chromium', 'edge', 'supermium', 'firefox', 'safari'];
-const BLABEL = { chrome: 'Chrome', chromium: 'Chromium', edge: 'Edge', supermium: 'Supermium', firefox: 'Firefox', safari: 'Safari' };
+const ORDER = MACHINES.map((m) => m[0]);
+const LABEL = Object.fromEntries(MACHINES.map((m) => [m[0], m[1]]));
+const BLABEL = Object.fromEntries(BROWSERS_L);
+const BROWSERS = BROWSERS_L.map((b) => b[0]);
 
 const inv = JSON.parse(fs.readFileSync(path.join(HERE, 'inventory.json'), 'utf8'));
 const usage = fs.existsSync(path.join(HERE, 'usage.jsonl'))

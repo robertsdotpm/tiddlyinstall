@@ -248,6 +248,9 @@ def offline_page(catalog_dir, backend):
     blocks.append(data_block("ib-overlay", "null", "application/json", ' data-placeholder="1"'))
     info = {"built": today, "rev": rev, "backend": backend}
     blocks.append(data_block("ib-offline", json.dumps(info), "application/json"))
+    # Where the page was tested, for js/browser-check.js (tests/browsers/compat.mjs).
+    compat = os.path.join(ROOT, "tests", "browsers", "compat.json")
+    blocks.append(data_block("ib-compat", no_close_script(read(compat).strip()) if os.path.isfile(compat) else "null", "application/json"))
 
     resedit = no_close_script(read(RESEDIT_BUNDLE))
     done = set()
