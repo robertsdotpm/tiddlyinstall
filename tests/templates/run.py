@@ -371,17 +371,20 @@ set /a n=0
 :wait
 if not exist "%A%" goto gone
 set /a n+=1
-if %n% GEQ 90 goto left
+if %n% GEQ 1200 goto left
 ping -n 2 127.0.0.1 >nul
 goto wait
 :gone
 rem The uninstaller finishes from %TEMP% (Un_A.exe) after the app's folder
 rem is gone: the runtime folders it shares with the next test go last.
+rem Both waits allow 20 minutes: Rust's 1.8 GB take that long on a busy
+rem datastore, and an Un_A.exe still deleting when this SSH session ends
+rem is killed with it (Bitvise ends the session's processes).
 set /a n=0
 :unwait
 tasklist /fi "imagename eq Un_A.exe" 2>nul | find /i "Un_A.exe" >nul || goto left
 set /a n+=1
-if %n% GEQ 120 goto left
+if %n% GEQ 1200 goto left
 ping -n 2 127.0.0.1 >nul
 goto unwait
 :left
@@ -536,7 +539,7 @@ def run_windows(vm, key, b, f, a):
         parts["install"] = parts.get("install_out", "").strip() or "?"
         if c2 or "ERROR" in o2 or "FEHLER" in o2:
             parts["window_out"] = parts.get("window_out", "") + " (schtasks: " + (o2 + e2).strip() + ")"
-    code, out, err = vm.run_script("after.bat", AFTER_BAT, timeout=300, ID=ident)
+    code, out, err = vm.run_script("after.bat", AFTER_BAT, timeout=3000, ID=ident)
     parts.update(parse_markers(out))
     if not a.keep:
         vm.remove()
