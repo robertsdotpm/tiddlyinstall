@@ -124,3 +124,16 @@ different, more useful fact than "not tried".
 ## Old .tgz checksums
 
 python.org's downloads API records the md5 and size of the *decompressed* tar for many old `.tgz` source files. `fix_tgz_checksums.py` (run after `scrape.py`) marks those checksums `applies_to: decompressed` and stores the served size; `tools/download.py` verifies such files by hashing the gunzipped contents.
+
+## python-build-standalone's standard library (installer-builder, 2026-09-19)
+
+Every module in `sys.stdlib_module_names` was imported from the
+`install_only_stripped` 3.14.7 builds (Linux x86_64 on Ubuntu 24.04, macOS
+arm64 on macOS 26): all import except `_gdbm` (`dbm.gnu`; GNU dbm is
+GPL-licensed and python-build-standalone leaves it out, so `dbm` uses
+`dbm.sqlite3` or `dbm.ndbm`) and the other platform's modules (`winreg`,
+`msvcrt`, `_scproxy`...). tkinter has Tcl/Tk 9.0 built in; a Tk window
+needs a display (X11 on Linux, a window server on macOS). installer-builder's
+`tests/fidelity/python` also checks ssl, sqlite3, ctypes, venv, pip with
+compiled wheels and multiprocessing: all pass there, on Ubuntu 22.04, and
+with python.org's builds on Windows 10 and 7.

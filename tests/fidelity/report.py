@@ -70,10 +70,10 @@ def main():
     for p in projects:
         for t, label in TARGETS:
             r = latest.get((p, t, "after"))
-            if not r or r["result"] == "pass":
+            if not r or r["result"] != "fail":
                 continue
             bad = [f"{c}: {d}" for c, (s, d) in r.get("checks", {}).items() if s == "fail"]
-            print(f"- {label}, {p}: " + ("; ".join(bad) if bad else r["detail"])[:400])
+            print(f"- {label}, {p}: " + ("; ".join(bad) if bad else r["detail"])[:240])
 
 
 if __name__ == "__main__":
