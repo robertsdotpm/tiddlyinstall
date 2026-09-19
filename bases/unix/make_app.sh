@@ -8,7 +8,7 @@
 #                                           plan.txt and pack/ here
 #
 # The plan signing key is baked in (plankey.sh): IB_PLAN_PUBKEY_FILE, or
-# ../../server/data/plan-signing-key.pub.
+# ../../backend/data/plan-signing-key.pub.
 #
 # On a Mac the bundle is ad-hoc signed (codesign -s -) and zipped with
 # ditto, which keeps permissions and the signature's extended attributes.

@@ -1,4 +1,4 @@
-// Ports server/internal/ibfile/ibfile_test.go (the metadata block and
+// Ports the Go server's ibfile_test.go (retired: the metadata block and
 // packs) for the server's streaming writer, and checks the tar reader
 // against the cases Go's archive/tar handles.
 import test from 'node:test';

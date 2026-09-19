@@ -96,7 +96,7 @@ The plan signing key ([format.md](../../docs/format.md), "Plan
 signature") is baked in at build time: `make_run.sh` and `make_app.sh`
 fill the engine's `IB_PLAN_PUBKEY=` and `IB_PLAN_KEYID=` lines
 (`plankey.sh`) from `IB_PLAN_PUBKEY_FILE`, by default
-`../../server/data/plan-signing-key.pub`, which the server writes on its
+`../../backend/data/plan-signing-key.pub`, which the server writes on its
 first start. They refuse to build without it.
 
 The engine checks the signature with its own verifier, `ibverify`

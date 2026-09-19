@@ -8,7 +8,7 @@
 #   IB_OUTFILE=out/other.exe ./build.sh
 #   IB_PLAN_PUBKEY_FILE=/path/plan-signing-key.pub ./build.sh
 #                                    -> the plan signing key to trust
-#                                       (default: ../../server/data/, which
+#                                       (default: ../../backend/data/, which
 #                                       the server writes on first start)
 set -eu
 cd "$(dirname "$0")"
@@ -18,7 +18,7 @@ command -v makensis >/dev/null || { echo "makensis not found (expected ~/.local/
 mkdir -p out
 
 # The plan signing key (docs/format.md "Plan signature"): one line, base64 of 32 bytes.
-keyfile=${IB_PLAN_PUBKEY_FILE:-../../server/data/plan-signing-key.pub}
+keyfile=${IB_PLAN_PUBKEY_FILE:-../../backend/data/plan-signing-key.pub}
 [ -f "$keyfile" ] || { echo "no plan signing key at $keyfile: start the server once (it makes one), or set IB_PLAN_PUBKEY_FILE" >&2; exit 1; }
 key=$(tr -d ' \r\n' < "$keyfile")
 case $key in *[!A-Za-z0-9+/=]*) echo "$keyfile: not base64" >&2; exit 1 ;; esac

@@ -36,7 +36,7 @@ python3 append_meta.py --show app.exe             # the footer an exe carries
 **The plan signing key** ([format.md](../../docs/format.md), "Plan
 signature") is built into the base: `build.sh` reads one line of base64
 (the raw 32-byte Ed25519 public key) from `IB_PLAN_PUBKEY_FILE`, by
-default `../../server/data/plan-signing-key.pub`, which the server writes
+default `../../backend/data/plan-signing-key.pub`, which the server writes
 on its first start. It refuses to build without one. A base only trusts
 plans from the server whose key it was built with, so production bases
 must be built with production's `plan-signing-key.pub`.

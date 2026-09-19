@@ -21,7 +21,7 @@ export function tmpDir(t) {
 
 // A fresh catalogue (tests may change its policy).
 export function catalog() {
-  return loadCatalog({ dir: path.join(RUNTIMES, 'catalog'), policyPath: path.join(REPO, 'server', 'policy.json'), localRoot: '', cachePath: '/dev/null' });
+  return loadCatalog({ dir: path.join(RUNTIMES, 'catalog'), policyPath: path.join(REPO, 'backend', 'policy.json'), localRoot: '', cachePath: '/dev/null' });
 }
 
 // The Builder's fetch, without the public-only check: for servers the test

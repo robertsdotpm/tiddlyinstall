@@ -1,4 +1,4 @@
-// Ports server/internal/plansig/plansig_test.go.
+// Ports the Go server's plansig tests (server/internal/plansig, retired).
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -41,15 +41,15 @@ test('a key readable by others is used, with a warning', (t) => {
   assert.match(logs.join('\n'), /readable by other users/);
 });
 
-test('the Go server\'s key signs as the Go server does', (t) => {
-  const key = path.join(REPO, 'server', 'data', KEY_FILE);
-  if (!fs.existsSync(key)) return t.skip('no server/data key');
+test('the server\'s key loads and signs deterministically', (t) => {
+  const key = path.join(REPO, 'backend', 'data', KEY_FILE);
+  if (!fs.existsSync(key)) return t.skip('no backend/data key');
   const dir = tmpDir(t);
   fs.copyFileSync(key, path.join(dir, KEY_FILE));
   fs.chmodSync(path.join(dir, KEY_FILE), 0o600);
   const { signer, created } = loadOrCreate(dir, () => {});
   assert.equal(created, false);
-  assert.equal(fs.readFileSync(path.join(dir, PUB_FILE), 'utf8'), fs.readFileSync(path.join(REPO, 'server', 'data', PUB_FILE), 'utf8'));
+  assert.equal(fs.readFileSync(path.join(dir, PUB_FILE), 'utf8'), fs.readFileSync(path.join(REPO, 'backend', 'data', PUB_FILE), 'utf8'));
   // Ed25519 is deterministic: signing twice gives the same bytes.
   assert.equal(signer.signString(PLAN), signer.signString(PLAN));
 });

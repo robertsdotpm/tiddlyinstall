@@ -2,7 +2,7 @@
 # Build the Linux base: out/ib-base.run.
 #
 # The plan signing key is baked in (plankey.sh): IB_PLAN_PUBKEY_FILE, or
-# ../../server/data/plan-signing-key.pub.
+# ../../backend/data/plan-signing-key.pub.
 #
 # The engine IS the .run. A metadata block (format.md section 4) may be
 # appended later, after the engine's final `exit $?` line: sh stops

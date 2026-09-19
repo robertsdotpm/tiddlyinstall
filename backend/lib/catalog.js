@@ -1,7 +1,7 @@
 // The runtime catalogue for the server: js/resolve.js loaded from the
 // catalogue folder and the policy file (Go's catalog.Load), with a
-// LocalIndex of our own copies of catalogue files standing in for Go's
-// (server/internal/catalog/local.go): it finds them by name and size, and
+// LocalIndex of our own copies of catalogue files, as the Go server's was
+// (server/internal/catalog/local.go, retired): it finds them by name and size, and
 // hashes the ones the catalogue has no checksum for, remembering hashes in
 // sha-cache.json across restarts (the same file and format as Go's).
 import fs from 'node:fs';

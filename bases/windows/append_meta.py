@@ -3,7 +3,7 @@
 
     [base][record][plan][pack][footer: 64 bytes]
 
-For testing the Windows base; the Go server has its own implementation.
+For testing the Windows base; the build server has its own implementation (js/ibfile.js).
 
     append_meta.py base.exe out.exe --record record.txt [--plan plan.txt]
                    [--pack FILE ...] [--pack-dir DIR]

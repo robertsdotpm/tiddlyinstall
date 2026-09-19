@@ -96,7 +96,7 @@ test('the server', { skip }, async (t) => {
   await t.test('no listings; the site only; clean paths', async () => {
     assert.equal((await get('/')).text, '<!doctype html><title>t</title>');
     assert.equal((await get('/css/a.css')).text, 'body{}');
-    for (const p of ['/css/', '/mirror/', '/src/', '/mirror/python/', '/README.md', '/server/policy.json']) assert.equal((await get(p)).status, 404, p);
+    for (const p of ['/css/', '/mirror/', '/src/', '/mirror/python/', '/README.md', '/backend/policy.json', '/backend/data/plan-signing-key.pem']) assert.equal((await get(p)).status, 404, p);
     const r1 = await get('/index.html');
     assert.deepEqual([r1.status, r1.headers.location], [301, './']);
     const r2 = await get('/mirror');

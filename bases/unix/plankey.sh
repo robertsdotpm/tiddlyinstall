@@ -1,11 +1,11 @@
 # Sourced by make_run.sh and make_app.sh: copy the engine ($1) to $2 with
 # the plan signing key (docs/format.md "Plan signature") filled in.
 #
-# The key comes from IB_PLAN_PUBKEY_FILE, default ../../server/data/
+# The key comes from IB_PLAN_PUBKEY_FILE, default ../../backend/data/
 # plan-signing-key.pub, which the server writes on first start: one line,
 # base64 of the raw 32-byte Ed25519 public key.
 bake_engine() {
-	keyfile=${IB_PLAN_PUBKEY_FILE:-$here/../../server/data/plan-signing-key.pub}
+	keyfile=${IB_PLAN_PUBKEY_FILE:-$here/../../backend/data/plan-signing-key.pub}
 	[ -f "$keyfile" ] || { echo "no plan signing key at $keyfile: start the server once (it makes one), or set IB_PLAN_PUBKEY_FILE" >&2; exit 1; }
 	key=$(tr -d ' \r\n' < "$keyfile")
 	case $key in *[!A-Za-z0-9+/=]*) echo "$keyfile: not base64" >&2; exit 1 ;; esac

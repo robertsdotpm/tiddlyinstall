@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 // The TiddlyInstall build server in Node.js (plan.md sections 1.8 and 1.11):
 // the HTTP API (docs/api.md), the BullMQ workers, and the one-file site.
-// A port of the Go server (server/cmd/ibserver) on the JavaScript core the
-// browser runs too: js/resolve.js, js/builder.js, js/ibfile.js, js/icon.js.
-// Same flags, URLs, JSON and data folder as the Go server.
+// It began as a port of the Go server (server/cmd/ibserver, retired
+// 2026-09-19) on the JavaScript core the browser runs too: js/resolve.js,
+// js/builder.js, js/ibfile.js, js/icon.js, and keeps that server's flags,
+// URLs, JSON, data folder layout and Redis keys.
 //
 //   node backend/server.js -addr :8080 -redis 127.0.0.1:6390 -public http://10.0.1.76:8080
 import http from 'node:http';
@@ -36,8 +37,8 @@ export function parseFlags(argv, home = os.homedir()) {
     redis: ['127.0.0.1:6390', 'Redis address'],
     catalog: [path.join(home, 'projects/installer-builder-runtimes/catalog'), 'runtime catalogue'],
     local: [path.join(home, 'projects/installer-builder-runtimes'), 'our copies of catalogue files (served at /mirror/)'],
-    policy: [path.join(REPO, 'server/policy.json'), 'resolver policy'],
-    data: [path.join(REPO, 'server/data'), 'data folder'],
+    policy: [path.join(REPO, 'backend/policy.json'), 'resolver policy'],
+    data: [path.join(REPO, 'backend/data'), 'data folder'],
     site: [path.join(REPO, 'dist'), 'static site to serve at / (tools/build_site.py writes it)'],
     bases: [path.join(REPO, 'bases'), 'base installers'],
     public: ['http://10.0.1.76:8080', "this server's public URL"],

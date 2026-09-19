@@ -1,1 +1,4 @@
 node_modules/
+# Data folders (records, sources, built files, signing keys, Redis): never committed
+data/
+data-mac/

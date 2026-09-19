@@ -1,4 +1,4 @@
-// Ports server/internal/netsafe/netsafe_test.go, and checks the client
+// Ports the Go server's netsafe_test.go (retired), and checks the client
 // refuses every way to reach a private address.
 import test from 'node:test';
 import assert from 'node:assert/strict';

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Add TiddlyInstall metadata to a Unix base, for testing.
 
-The Go server has its own implementation; this follows docs/format.md
+The build server has its own implementation (js/ibfile.js); this follows docs/format.md
 section 4 so the two can be checked against each other.
 
   append_meta.py run BASE.run -o OUT.run --record R [--plan P] [--pack DIR]

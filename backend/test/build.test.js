@@ -1,4 +1,4 @@
-// Ports server/internal/build's package_test.go and icon_test.go: registry
+// Ports the Go server's package_test.go and icon_test.go: registry
 // lookups, plain-name records, request checks, install rules, and icons in
 // each mode, through the server's Builder and js/builder.js.
 import test from 'node:test';
