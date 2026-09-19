@@ -543,6 +543,10 @@
      "unpack": "7z",
      "to": "{runtime_dir}",
      "strip_components": 1
+    },
+    {
+     "run": "(for /f \"tokens=2\" %A in (\"{runtime_dir}\") do @for /d %D in (\"{runtime_dir}\\*-w64-mingw32\") do @if exist \"%D\\lib\\default-manifest.o\" del /q \"%D\\lib\\default-manifest.o\") & ver >nul",
+     "shell": "cmd"
     }
    ],
    "prerequisites": [
@@ -564,7 +568,7 @@
     "https://github.com/brechtsanders/winlibs_mingw",
     "stored files gcc/windows/{x86,amd64}/*msvcrt*/winlibs-*.7z: single top folder mingw32/ (x86) or mingw64/ (x64), no symlinks, 6.7k-10.2k files; PE import tables of every .exe/.dll in the x86 builds scanned for post-XP kernel32 APIs"
    ],
-   "notes": "WinLibs: 'no installation or registry requirements and disk location independent', no PATH needed if called by full path (the tools find each other relative to gcc.exe). relocatable is false only because WinLibs' own instructions say the location must not contain spaces -- GCC's driver generally copes, but make/shell-based builds and some specs quoting do not. Choose a space-free {runtime_dir} (e.g. %SystemDrive%\\ib\\<app>\\gcc) for this toolchain. This is the only toolchain in the catalogue that can target and run on Windows XP (x86).",
+   "notes": "WinLibs: 'no installation or registry requirements and disk location independent', no PATH needed if called by full path (the tools find each other relative to gcc.exe). relocatable is false only because WinLibs' own instructions say the location must not contain spaces -- GCC's driver generally copes, but make/shell-based builds and some specs quoting do not. Choose a space-free {runtime_dir} (e.g. %SystemDrive%\\ib\\<app>\\gcc) for this toolchain. This is the only toolchain in the catalogue that can target and run on Windows XP (x86). SPACE IN THE PATH: mingw-w64's ENDFILE_SPEC has `%{!shared:%:if-exists(default-manifest.o%s)}`; the driver expands %s to the object's absolute path and then feeds the result back through the spec parser, which splits it on spaces, so ld is handed `C:/Users/jorg` and `muller/.../default-manifest.o` and the link fails ('cannot find ...default-manifest.o'). Rust's x86_64-pc-windows-gnu target and Nim link through this same gcc, so they fail with it. Calling gcc by its 8.3 short path does NOT help (the driver lrealpath()s its own program path back to the long one, measured on the German Windows 11 VM), and a specs file would have to restate the whole version-specific *endfile spec. So the recipe deletes default-manifest.o, but only when {runtime_dir} contains a space (the `for /f tokens=2` test): the object only adds a manifest with longPathAware and an explicit asInvoker, and WinLibs builds up to mingw-w64 11 (gcc 10.5.0, the XP/Vista ones) ship no such file at all and link fine.",
    "launch": {
     "program": null,
     "args": [],
@@ -605,6 +609,10 @@
      "unpack": "7z",
      "to": "{runtime_dir}",
      "strip_components": 1
+    },
+    {
+     "run": "(for /f \"tokens=2\" %A in (\"{runtime_dir}\") do @for /d %D in (\"{runtime_dir}\\*-w64-mingw32\") do @if exist \"%D\\lib\\default-manifest.o\" del /q \"%D\\lib\\default-manifest.o\") & ver >nul",
+     "shell": "cmd"
     }
    ],
    "prerequisites": [
@@ -626,7 +634,7 @@
     "https://learn.microsoft.com/en-us/cpp/windows/universal-crt-deployment",
     "stored files gcc/windows/*/*ucrt*/winlibs-*.7z: top folder mingw32/ or mingw64/"
    ],
-   "notes": "Same layout and space caveat as the MSVCRT builds. None of the planned WinLibs files bundle LLVM/Clang (file names lack '-llvm-').",
+   "notes": "Same layout and space caveat as the MSVCRT builds. None of the planned WinLibs files bundle LLVM/Clang (file names lack '-llvm-'). SPACE IN THE PATH: mingw-w64's ENDFILE_SPEC has `%{!shared:%:if-exists(default-manifest.o%s)}`; the driver expands %s to the object's absolute path and then feeds the result back through the spec parser, which splits it on spaces, so ld is handed `C:/Users/jorg` and `muller/.../default-manifest.o` and the link fails ('cannot find ...default-manifest.o'). Rust's x86_64-pc-windows-gnu target and Nim link through this same gcc, so they fail with it. Calling gcc by its 8.3 short path does NOT help (the driver lrealpath()s its own program path back to the long one, measured on the German Windows 11 VM), and a specs file would have to restate the whole version-specific *endfile spec. So the recipe deletes default-manifest.o, but only when {runtime_dir} contains a space (the `for /f tokens=2` test): the object only adds a manifest with longPathAware and an explicit asInvoker, and WinLibs builds up to mingw-w64 11 (gcc 10.5.0, the XP/Vista ones) ship no such file at all and link fine.",
    "launch": {
     "program": null,
     "args": [],
@@ -667,6 +675,10 @@
      "unpack": "zip (1.x releases) or 7z (2.x .7z.exe: a 7-Zip SFX stub followed by a normal 7z archive; the base installer must seek past the stub to the 7z signature)",
      "to": "{runtime_dir}",
      "strip_components": 1
+    },
+    {
+     "run": "(for /f \"tokens=2\" %A in (\"{runtime_dir}\") do @for /d %D in (\"{runtime_dir}\\*-w64-mingw32\") do @if exist \"%D\\lib\\default-manifest.o\" del /q \"%D\\lib\\default-manifest.o\") & ver >nul",
+     "shell": "cmd"
     }
    ],
    "prerequisites": [
@@ -685,7 +697,7 @@
    "sources": [
     "https://github.com/skeeto/w64devkit (README: Usage, Main features, Operating system support, Library installation)"
    ],
-   "notes": "NOT IN download_plan_majors.json and no file is stored, so the archive layout was not inspected; the top folder is expected to be w64devkit/. README: 'No installation required. Run it anywhere as any user. Simply delete when no longer needed'; w64devkit.exe opens a console with the environment set (W64DEVKIT_HOME), or put bin\\ on PATH for a process; its sysroot design is 'designed to work correctly even if w64devkit or the libraries have paths containing spaces'. Fallback for the .7z.exe: run \"{file}\" -o\"{runtime_dir}\" -y (7-Zip SFX switches) and drop strip_components -- untested.",
+   "notes": "NOT IN download_plan_majors.json and no file is stored, so the archive layout was not inspected; the top folder is expected to be w64devkit/. README: 'No installation required. Run it anywhere as any user. Simply delete when no longer needed'; w64devkit.exe opens a console with the environment set (W64DEVKIT_HOME), or put bin\\ on PATH for a process; its sysroot design is 'designed to work correctly even if w64devkit or the libraries have paths containing spaces'. Fallback for the .7z.exe: run \"{file}\" -o\"{runtime_dir}\" -y (7-Zip SFX switches) and drop strip_components -- untested. SPACE IN THE PATH: mingw-w64's ENDFILE_SPEC has `%{!shared:%:if-exists(default-manifest.o%s)}`; the driver expands %s to the object's absolute path and then feeds the result back through the spec parser, which splits it on spaces, so ld is handed `C:/Users/jorg` and `muller/.../default-manifest.o` and the link fails ('cannot find ...default-manifest.o'). Rust's x86_64-pc-windows-gnu target and Nim link through this same gcc, so they fail with it. Calling gcc by its 8.3 short path does NOT help (the driver lrealpath()s its own program path back to the long one, measured on the German Windows 11 VM), and a specs file would have to restate the whole version-specific *endfile spec. So the recipe deletes default-manifest.o, but only when {runtime_dir} contains a space (the `for /f tokens=2` test): the object only adds a manifest with longPathAware and an explicit asInvoker, and WinLibs builds up to mingw-w64 11 (gcc 10.5.0, the XP/Vista ones) ship no such file at all and link fine.",
    "launch": {
     "program": null,
     "args": [],

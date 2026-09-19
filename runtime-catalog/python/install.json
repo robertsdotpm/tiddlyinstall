@@ -69,8 +69,11 @@
      "-E",
      "-s"
     ],
-    "env": {},
-    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
+    "env": {
+     "TCL_LIBRARY": null,
+     "TK_LIBRARY": null
+    },
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0. TCL_LIBRARY and TK_LIBRARY are cleared: every build here carries its own Tcl/Tk, and a machine-wide TCL_LIBRARY left by another program (CSR BlueSuite sets one) sends Python 2's Tcl 8.5 to the wrong folder (\"Can't find a usable init.tcl\"). Python 3's Tk finds its own, but the variable is cleared for it too, so the app's environment doesn't depend on the machine's."
    },
    "project_install": {
     "command": "\"{runtime_dir}\\python.exe\" -E -s -m pip install --no-warn-script-location .",
@@ -160,8 +163,11 @@
      "-E",
      "-s"
     ],
-    "env": {},
-    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
+    "env": {
+     "TCL_LIBRARY": null,
+     "TK_LIBRARY": null
+    },
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0. TCL_LIBRARY and TK_LIBRARY are cleared: every build here carries its own Tcl/Tk, and a machine-wide TCL_LIBRARY left by another program (CSR BlueSuite sets one) sends Python 2's Tcl 8.5 to the wrong folder (\"Can't find a usable init.tcl\"). Python 3's Tk finds its own, but the variable is cleared for it too, so the app's environment doesn't depend on the machine's."
    },
    "project_install": {
     "command": "\"{runtime_dir}\\python.exe\" -E -s -m pip install --no-warn-script-location .",
@@ -221,8 +227,11 @@
      "-E",
      "-s"
     ],
-    "env": {},
-    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
+    "env": {
+     "TCL_LIBRARY": null,
+     "TK_LIBRARY": null
+    },
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0. TCL_LIBRARY and TK_LIBRARY are cleared: every build here carries its own Tcl/Tk, and a machine-wide TCL_LIBRARY left by another program (CSR BlueSuite sets one) sends Python 2's Tcl 8.5 to the wrong folder (\"Can't find a usable init.tcl\"). Python 3's Tk finds its own, but the variable is cleared for it too, so the app's environment doesn't depend on the machine's."
    },
    "project_install": {
     "command": "\"{runtime_dir}\\python.exe\" -E -s -m pip install --no-warn-script-location .",
@@ -286,8 +295,11 @@
      "-E",
      "-s"
     ],
-    "env": {},
-    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
+    "env": {
+     "TCL_LIBRARY": null,
+     "TK_LIBRARY": null
+    },
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0. TCL_LIBRARY and TK_LIBRARY are cleared: every build here carries its own Tcl/Tk, and a machine-wide TCL_LIBRARY left by another program (CSR BlueSuite sets one) sends Python 2's Tcl 8.5 to the wrong folder (\"Can't find a usable init.tcl\"). Python 3's Tk finds its own, but the variable is cleared for it too, so the app's environment doesn't depend on the machine's."
    },
    "project_install": {
     "command": "\"{runtime_dir}\\python.exe\" -E -s -m pip install --no-warn-script-location .",
@@ -355,8 +367,11 @@
      "-E",
      "-s"
     ],
-    "env": {},
-    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
+    "env": {
+     "TCL_LIBRARY": null,
+     "TK_LIBRARY": null
+    },
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0. TCL_LIBRARY and TK_LIBRARY are cleared: every build here carries its own Tcl/Tk, and a machine-wide TCL_LIBRARY left by another program (CSR BlueSuite sets one) sends Python 2's Tcl 8.5 to the wrong folder (\"Can't find a usable init.tcl\"). Python 3's Tk finds its own, but the variable is cleared for it too, so the app's environment doesn't depend on the machine's."
    },
    "project_install": {
     "command": "\"{runtime_dir}\\python.exe\" -E -s -m pip install --no-warn-script-location .",
@@ -416,8 +431,11 @@
      "-E",
      "-s"
     ],
-    "env": {},
-    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
+    "env": {
+     "TCL_LIBRARY": null,
+     "TK_LIBRARY": null
+    },
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0. TCL_LIBRARY and TK_LIBRARY are cleared: every build here carries its own Tcl/Tk, and a machine-wide TCL_LIBRARY left by another program (CSR BlueSuite sets one) sends Python 2's Tcl 8.5 to the wrong folder (\"Can't find a usable init.tcl\"). Python 3's Tk finds its own, but the variable is cleared for it too, so the app's environment doesn't depend on the machine's."
    },
    "project_install": {
     "command": "\"{runtime_dir}\\python.exe\" -E -s -m pip install --no-warn-script-location .",
@@ -473,8 +491,11 @@
      "-E",
      "-s"
     ],
-    "env": {},
-    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
+    "env": {
+     "TCL_LIBRARY": null,
+     "TK_LIBRARY": null
+    },
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0. TCL_LIBRARY and TK_LIBRARY are cleared: every build here carries its own Tcl/Tk, and a machine-wide TCL_LIBRARY left by another program (CSR BlueSuite sets one) sends Python 2's Tcl 8.5 to the wrong folder (\"Can't find a usable init.tcl\"). Python 3's Tk finds its own, but the variable is cleared for it too, so the app's environment doesn't depend on the machine's."
    },
    "project_install": {
     "command": "\"{runtime_dir}\\python.exe\" -E -s -m pip install --no-warn-script-location .",
@@ -530,8 +551,11 @@
      "-E",
      "-s"
     ],
-    "env": {},
-    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+    "env": {
+     "TCL_LIBRARY": null,
+     "TK_LIBRARY": null
+    },
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. TCL_LIBRARY and TK_LIBRARY are cleared: every build here carries its own Tcl/Tk, and a machine-wide TCL_LIBRARY left by another program (CSR BlueSuite sets one) sends Python 2's Tcl 8.5 to the wrong folder (\"Can't find a usable init.tcl\"). Python 3's Tk finds its own, but the variable is cleared for it too, so the app's environment doesn't depend on the machine's."
    },
    "project_install": {
     "command": "\"{runtime_dir}/bin/python3\" -E -s -m pip install --no-warn-script-location .",
@@ -596,8 +620,11 @@
      "-E",
      "-s"
     ],
-    "env": {},
-    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+    "env": {
+     "TCL_LIBRARY": null,
+     "TK_LIBRARY": null
+    },
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. TCL_LIBRARY and TK_LIBRARY are cleared: every build here carries its own Tcl/Tk, and a machine-wide TCL_LIBRARY left by another program (CSR BlueSuite sets one) sends Python 2's Tcl 8.5 to the wrong folder (\"Can't find a usable init.tcl\"). Python 3's Tk finds its own, but the variable is cleared for it too, so the app's environment doesn't depend on the machine's."
    },
    "project_install": {
     "command": "\"{runtime_dir}/bin/python2.7\" -E -s -m pip install --no-warn-script-location .",
@@ -653,8 +680,11 @@
      "-E",
      "-s"
     ],
-    "env": {},
-    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+    "env": {
+     "TCL_LIBRARY": null,
+     "TK_LIBRARY": null
+    },
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. TCL_LIBRARY and TK_LIBRARY are cleared: every build here carries its own Tcl/Tk, and a machine-wide TCL_LIBRARY left by another program (CSR BlueSuite sets one) sends Python 2's Tcl 8.5 to the wrong folder (\"Can't find a usable init.tcl\"). Python 3's Tk finds its own, but the variable is cleared for it too, so the app's environment doesn't depend on the machine's."
    },
    "project_install": {
     "command": "\"{runtime_dir}/bin/python3\" -E -s -m pip install --no-warn-script-location .",
@@ -721,8 +751,11 @@
      "-E",
      "-s"
     ],
-    "env": {},
-    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+    "env": {
+     "TCL_LIBRARY": null,
+     "TK_LIBRARY": null
+    },
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. TCL_LIBRARY and TK_LIBRARY are cleared: every build here carries its own Tcl/Tk, and a machine-wide TCL_LIBRARY left by another program (CSR BlueSuite sets one) sends Python 2's Tcl 8.5 to the wrong folder (\"Can't find a usable init.tcl\"). Python 3's Tk finds its own, but the variable is cleared for it too, so the app's environment doesn't depend on the machine's."
    },
    "project_install": {
     "command": "\"{runtime_dir}/Python.framework/Versions/X.Y/bin/pythonX.Y\" -E -s -m pip install --no-warn-script-location .",
@@ -778,8 +811,11 @@
      "-E",
      "-s"
     ],
-    "env": {},
-    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment."
+    "env": {
+     "TCL_LIBRARY": null,
+     "TK_LIBRARY": null
+    },
+    "notes": "-s drops the per-user site-packages every copy of X.Y shares (top-level user_site_leak); -E ignores PYTHON* variables from the user's environment. TCL_LIBRARY and TK_LIBRARY are cleared: every build here carries its own Tcl/Tk, and a machine-wide TCL_LIBRARY left by another program (CSR BlueSuite sets one) sends Python 2's Tcl 8.5 to the wrong folder (\"Can't find a usable init.tcl\"). Python 3's Tk finds its own, but the variable is cleared for it too, so the app's environment doesn't depend on the machine's."
    },
    "project_install": {
     "command": "\"/Library/Frameworks/Python.framework/Versions/X.Y/bin/pythonX.Y\" -E -s -m pip install --no-warn-script-location .",

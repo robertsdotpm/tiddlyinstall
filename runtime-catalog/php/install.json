@@ -29,8 +29,8 @@
      "shell": "cmd"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension_dir=\"{runtime_dir}\\extensions\"",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension_dir=\"..\\extensions\""
     }
    ],
    "prerequisites": [
@@ -86,68 +86,68 @@
      "shell": "cmd"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension_dir=\"{runtime_dir}\\ext\"",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension_dir=\"ext\""
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_mbstring.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_mbstring.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_bz2.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_bz2.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_curl.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_curl.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_exif.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_exif.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_fileinfo.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_fileinfo.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_gd2.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_gd2.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_gettext.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_gettext.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_intl.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_intl.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_mysqli.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_mysqli.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_openssl.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_openssl.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_pdo_mysql.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_pdo_mysql.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_pdo_sqlite.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_pdo_sqlite.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_sockets.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_sockets.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_sqlite3.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_sqlite3.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_xsl.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_xsl.dll"
     },
     {
      "run": ">\"{runtime_dir}\\composer.cmd\" echo @set \"COMPOSER_HOME={runtime_dir}\\composer-home\"",
@@ -158,15 +158,11 @@
      "shell": "cmd"
     },
     {
-     "run": ">>\"{runtime_dir}\\composer.cmd\" echo @\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" %*",
+     "run": ">>\"{runtime_dir}\\composer.cmd\" echo @\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" -d \"curl.cainfo={runtime_dir}\\cacert.pem\" \"{runtime_dir}\\composer.phar\" %*",
      "shell": "cmd"
     },
     {
      "run": "copy /y \"{tmp}\\cacert.pem\" \"{runtime_dir}\\cacert.pem\" >nul",
-     "shell": "cmd"
-    },
-    {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo curl.cainfo=\"{runtime_dir}\\cacert.pem\"",
      "shell": "cmd"
     }
    ],
@@ -201,15 +197,17 @@
     "gui_program": "{runtime_dir}\\php-win.exe",
     "args": [
      "-c",
-     "{runtime_dir}\\php.ini"
+     "{runtime_dir}\\php.ini",
+     "-d",
+     "curl.cainfo={runtime_dir}\\cacert.pem"
     ],
     "env": {
      "PHP_INI_SCAN_DIR": ""
     },
-    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
+    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read. -d carries the CA bundle's path instead of php.ini: PHP reads php.ini in the machine's ANSI code page, so a path with non-ASCII letters can't be written into it correctly (cmd's echo writes the OEM code page, the write step UTF-8, and neither is ANSI), while argv is converted by Windows itself. php.ini is therefore kept pure ASCII, extension_dir relative ('ext', which LoadLibrary resolves against php.exe's own folder). gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": {
-    "command": "\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" install --no-dev --no-interaction",
+    "command": "\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" -d \"curl.cainfo={runtime_dir}\\cacert.pem\" \"{runtime_dir}\\composer.phar\" install --no-dev --no-interaction",
     "env": {
      "PHP_INI_SCAN_DIR": "",
      "COMPOSER_HOME": "{data_dir}\\composer-home",
@@ -241,68 +239,68 @@
      "shell": "cmd"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension_dir=\"{runtime_dir}\\ext\"",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension_dir=\"ext\""
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_mbstring.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_mbstring.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_bz2.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_bz2.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_curl.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_curl.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_exif.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_exif.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_fileinfo.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_fileinfo.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_gd2.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_gd2.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_gettext.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_gettext.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_intl.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_intl.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_mysqli.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_mysqli.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_openssl.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_openssl.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_pdo_mysql.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_pdo_mysql.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_pdo_sqlite.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_pdo_sqlite.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_sockets.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_sockets.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_sqlite3.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_sqlite3.dll"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=php_xsl.dll",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=php_xsl.dll"
     },
     {
      "run": ">\"{runtime_dir}\\composer.cmd\" echo @set \"COMPOSER_HOME={runtime_dir}\\composer-home\"",
@@ -313,15 +311,11 @@
      "shell": "cmd"
     },
     {
-     "run": ">>\"{runtime_dir}\\composer.cmd\" echo @\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" %*",
+     "run": ">>\"{runtime_dir}\\composer.cmd\" echo @\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" -d \"curl.cainfo={runtime_dir}\\cacert.pem\" \"{runtime_dir}\\composer.phar\" %*",
      "shell": "cmd"
     },
     {
      "run": "copy /y \"{tmp}\\cacert.pem\" \"{runtime_dir}\\cacert.pem\" >nul",
-     "shell": "cmd"
-    },
-    {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo curl.cainfo=\"{runtime_dir}\\cacert.pem\"",
      "shell": "cmd"
     },
     {
@@ -360,15 +354,17 @@
     "gui_program": "{runtime_dir}\\php-win.exe",
     "args": [
      "-c",
-     "{runtime_dir}\\php.ini"
+     "{runtime_dir}\\php.ini",
+     "-d",
+     "curl.cainfo={runtime_dir}\\cacert.pem"
     ],
     "env": {
      "PHP_INI_SCAN_DIR": ""
     },
-    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
+    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read. -d carries the CA bundle's path instead of php.ini: PHP reads php.ini in the machine's ANSI code page, so a path with non-ASCII letters can't be written into it correctly (cmd's echo writes the OEM code page, the write step UTF-8, and neither is ANSI), while argv is converted by Windows itself. php.ini is therefore kept pure ASCII, extension_dir relative ('ext', which LoadLibrary resolves against php.exe's own folder). gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": {
-    "command": "\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" install --no-dev --no-interaction",
+    "command": "\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" -d \"curl.cainfo={runtime_dir}\\cacert.pem\" \"{runtime_dir}\\composer.phar\" install --no-dev --no-interaction",
     "env": {
      "PHP_INI_SCAN_DIR": "",
      "COMPOSER_HOME": "{data_dir}\\composer-home",
@@ -400,76 +396,76 @@
      "shell": "cmd"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension_dir=\"{runtime_dir}\\ext\"",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension_dir=\"ext\""
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=mbstring",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=mbstring"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=bz2",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=bz2"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=curl",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=curl"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=exif",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=exif"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=fileinfo",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=fileinfo"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=ftp",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=ftp"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=gd2",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=gd2"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=gettext",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=gettext"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=intl",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=intl"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=mysqli",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=mysqli"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=openssl",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=openssl"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=pdo_mysql",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=pdo_mysql"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=pdo_sqlite",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=pdo_sqlite"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sockets",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=sockets"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sodium",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=sodium"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sqlite3",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=sqlite3"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=xsl",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=xsl"
     },
     {
      "run": ">\"{runtime_dir}\\composer.cmd\" echo @set \"COMPOSER_HOME={runtime_dir}\\composer-home\"",
@@ -480,15 +476,11 @@
      "shell": "cmd"
     },
     {
-     "run": ">>\"{runtime_dir}\\composer.cmd\" echo @\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" %*",
+     "run": ">>\"{runtime_dir}\\composer.cmd\" echo @\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" -d \"curl.cainfo={runtime_dir}\\cacert.pem\" \"{runtime_dir}\\composer.phar\" %*",
      "shell": "cmd"
     },
     {
      "run": "copy /y \"{tmp}\\cacert.pem\" \"{runtime_dir}\\cacert.pem\" >nul",
-     "shell": "cmd"
-    },
-    {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo curl.cainfo=\"{runtime_dir}\\cacert.pem\"",
      "shell": "cmd"
     }
    ],
@@ -524,15 +516,17 @@
     "gui_program": "{runtime_dir}\\php-win.exe",
     "args": [
      "-c",
-     "{runtime_dir}\\php.ini"
+     "{runtime_dir}\\php.ini",
+     "-d",
+     "curl.cainfo={runtime_dir}\\cacert.pem"
     ],
     "env": {
      "PHP_INI_SCAN_DIR": ""
     },
-    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
+    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read. -d carries the CA bundle's path instead of php.ini: PHP reads php.ini in the machine's ANSI code page, so a path with non-ASCII letters can't be written into it correctly (cmd's echo writes the OEM code page, the write step UTF-8, and neither is ANSI), while argv is converted by Windows itself. php.ini is therefore kept pure ASCII, extension_dir relative ('ext', which LoadLibrary resolves against php.exe's own folder). gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": {
-    "command": "\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" install --no-dev --no-interaction",
+    "command": "\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" -d \"curl.cainfo={runtime_dir}\\cacert.pem\" \"{runtime_dir}\\composer.phar\" install --no-dev --no-interaction",
     "env": {
      "PHP_INI_SCAN_DIR": "",
      "COMPOSER_HOME": "{data_dir}\\composer-home",
@@ -564,76 +558,76 @@
      "shell": "cmd"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension_dir=\"{runtime_dir}\\ext\"",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension_dir=\"ext\""
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=mbstring",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=mbstring"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=bz2",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=bz2"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=curl",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=curl"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=exif",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=exif"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=fileinfo",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=fileinfo"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=ftp",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=ftp"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=gd2",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=gd2"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=gettext",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=gettext"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=intl",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=intl"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=mysqli",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=mysqli"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=openssl",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=openssl"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=pdo_mysql",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=pdo_mysql"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=pdo_sqlite",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=pdo_sqlite"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sockets",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=sockets"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sodium",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=sodium"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sqlite3",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=sqlite3"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=xsl",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=xsl"
     },
     {
      "run": ">\"{runtime_dir}\\composer.cmd\" echo @set \"COMPOSER_HOME={runtime_dir}\\composer-home\"",
@@ -644,15 +638,11 @@
      "shell": "cmd"
     },
     {
-     "run": ">>\"{runtime_dir}\\composer.cmd\" echo @\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" %*",
+     "run": ">>\"{runtime_dir}\\composer.cmd\" echo @\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" -d \"curl.cainfo={runtime_dir}\\cacert.pem\" \"{runtime_dir}\\composer.phar\" %*",
      "shell": "cmd"
     },
     {
      "run": "copy /y \"{tmp}\\cacert.pem\" \"{runtime_dir}\\cacert.pem\" >nul",
-     "shell": "cmd"
-    },
-    {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo curl.cainfo=\"{runtime_dir}\\cacert.pem\"",
      "shell": "cmd"
     },
     {
@@ -692,15 +682,17 @@
     "gui_program": "{runtime_dir}\\php-win.exe",
     "args": [
      "-c",
-     "{runtime_dir}\\php.ini"
+     "{runtime_dir}\\php.ini",
+     "-d",
+     "curl.cainfo={runtime_dir}\\cacert.pem"
     ],
     "env": {
      "PHP_INI_SCAN_DIR": ""
     },
-    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
+    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read. -d carries the CA bundle's path instead of php.ini: PHP reads php.ini in the machine's ANSI code page, so a path with non-ASCII letters can't be written into it correctly (cmd's echo writes the OEM code page, the write step UTF-8, and neither is ANSI), while argv is converted by Windows itself. php.ini is therefore kept pure ASCII, extension_dir relative ('ext', which LoadLibrary resolves against php.exe's own folder). gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": {
-    "command": "\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" install --no-dev --no-interaction",
+    "command": "\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" -d \"curl.cainfo={runtime_dir}\\cacert.pem\" \"{runtime_dir}\\composer.phar\" install --no-dev --no-interaction",
     "env": {
      "PHP_INI_SCAN_DIR": "",
      "COMPOSER_HOME": "{data_dir}\\composer-home",
@@ -732,80 +724,80 @@
      "shell": "cmd"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension_dir=\"{runtime_dir}\\ext\"",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension_dir=\"ext\""
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=mbstring",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=mbstring"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=bz2",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=bz2"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=curl",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=curl"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=exif",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=exif"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=fileinfo",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=fileinfo"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=ftp",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=ftp"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=gd",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=gd"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=gettext",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=gettext"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=intl",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=intl"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=mysqli",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=mysqli"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=openssl",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=openssl"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=pdo_mysql",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=pdo_mysql"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=pdo_sqlite",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=pdo_sqlite"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sockets",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=sockets"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sodium",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=sodium"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sqlite3",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=sqlite3"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=xsl",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=xsl"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=zip",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=zip"
     },
     {
      "run": ">\"{runtime_dir}\\composer.cmd\" echo @set \"COMPOSER_HOME={runtime_dir}\\composer-home\"",
@@ -816,15 +808,11 @@
      "shell": "cmd"
     },
     {
-     "run": ">>\"{runtime_dir}\\composer.cmd\" echo @\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" %*",
+     "run": ">>\"{runtime_dir}\\composer.cmd\" echo @\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" -d \"curl.cainfo={runtime_dir}\\cacert.pem\" \"{runtime_dir}\\composer.phar\" %*",
      "shell": "cmd"
     },
     {
      "run": "copy /y \"{tmp}\\cacert.pem\" \"{runtime_dir}\\cacert.pem\" >nul",
-     "shell": "cmd"
-    },
-    {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo curl.cainfo=\"{runtime_dir}\\cacert.pem\"",
      "shell": "cmd"
     }
    ],
@@ -859,15 +847,17 @@
     "gui_program": "{runtime_dir}\\php-win.exe",
     "args": [
      "-c",
-     "{runtime_dir}\\php.ini"
+     "{runtime_dir}\\php.ini",
+     "-d",
+     "curl.cainfo={runtime_dir}\\cacert.pem"
     ],
     "env": {
      "PHP_INI_SCAN_DIR": ""
     },
-    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
+    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read. -d carries the CA bundle's path instead of php.ini: PHP reads php.ini in the machine's ANSI code page, so a path with non-ASCII letters can't be written into it correctly (cmd's echo writes the OEM code page, the write step UTF-8, and neither is ANSI), while argv is converted by Windows itself. php.ini is therefore kept pure ASCII, extension_dir relative ('ext', which LoadLibrary resolves against php.exe's own folder). gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": {
-    "command": "\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" install --no-dev --no-interaction",
+    "command": "\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" -d \"curl.cainfo={runtime_dir}\\cacert.pem\" \"{runtime_dir}\\composer.phar\" install --no-dev --no-interaction",
     "env": {
      "PHP_INI_SCAN_DIR": "",
      "COMPOSER_HOME": "{data_dir}\\composer-home",
@@ -899,80 +889,80 @@
      "shell": "cmd"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension_dir=\"{runtime_dir}\\ext\"",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension_dir=\"ext\""
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=mbstring",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=mbstring"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=bz2",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=bz2"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=curl",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=curl"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=exif",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=exif"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=fileinfo",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=fileinfo"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=ftp",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=ftp"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=gd",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=gd"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=gettext",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=gettext"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=intl",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=intl"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=mysqli",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=mysqli"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=openssl",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=openssl"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=pdo_mysql",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=pdo_mysql"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=pdo_sqlite",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=pdo_sqlite"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sockets",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=sockets"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sodium",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=sodium"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=sqlite3",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=sqlite3"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=xsl",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=xsl"
     },
     {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo extension=zip",
-     "shell": "cmd"
+     "write": "{runtime_dir}\\php.ini",
+     "text": "extension=zip"
     },
     {
      "run": ">\"{runtime_dir}\\composer.cmd\" echo @set \"COMPOSER_HOME={runtime_dir}\\composer-home\"",
@@ -983,15 +973,11 @@
      "shell": "cmd"
     },
     {
-     "run": ">>\"{runtime_dir}\\composer.cmd\" echo @\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" %*",
+     "run": ">>\"{runtime_dir}\\composer.cmd\" echo @\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" -d \"curl.cainfo={runtime_dir}\\cacert.pem\" \"{runtime_dir}\\composer.phar\" %*",
      "shell": "cmd"
     },
     {
      "run": "copy /y \"{tmp}\\cacert.pem\" \"{runtime_dir}\\cacert.pem\" >nul",
-     "shell": "cmd"
-    },
-    {
-     "run": ">>\"{runtime_dir}\\php.ini\" echo curl.cainfo=\"{runtime_dir}\\cacert.pem\"",
      "shell": "cmd"
     },
     {
@@ -1030,15 +1016,17 @@
     "gui_program": "{runtime_dir}\\php-win.exe",
     "args": [
      "-c",
-     "{runtime_dir}\\php.ini"
+     "{runtime_dir}\\php.ini",
+     "-d",
+     "curl.cainfo={runtime_dir}\\cacert.pem"
     ],
     "env": {
      "PHP_INI_SCAN_DIR": ""
     },
-    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read. gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
+    "notes": "-c pins the app's php.ini (a PHPRC or registry path from another PHP install would otherwise win); an empty PHP_INI_SCAN_DIR stops extra .ini folders being read. -d carries the CA bundle's path instead of php.ini: PHP reads php.ini in the machine's ANSI code page, so a path with non-ASCII letters can't be written into it correctly (cmd's echo writes the OEM code page, the write step UTF-8, and neither is ANSI), while argv is converted by Windows itself. php.ini is therefore kept pure ASCII, extension_dir relative ('ext', which LoadLibrary resolves against php.exe's own folder). gui_program: the windowed program (no console window), used instead of program for apps whose record says console 0."
    },
    "project_install": {
-    "command": "\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" \"{runtime_dir}\\composer.phar\" install --no-dev --no-interaction",
+    "command": "\"{runtime_dir}\\php.exe\" -c \"{runtime_dir}\\php.ini\" -d \"curl.cainfo={runtime_dir}\\cacert.pem\" \"{runtime_dir}\\composer.phar\" install --no-dev --no-interaction",
     "env": {
      "PHP_INI_SCAN_DIR": "",
      "COMPOSER_HOME": "{data_dir}\\composer-home",

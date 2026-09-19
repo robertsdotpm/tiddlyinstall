@@ -539,11 +539,21 @@
      "files": [
       "requirements.txt"
      ],
-     "command": {
-      "windows": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt",
-      "linux": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt",
-      "macos": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt"
-     }
+     "command": [
+      {
+       "_comment": "Python 3.4 and older: the pip ensurepip gives them (1.5.6 with 3.4.4, the newest Python that runs on Windows XP) knows neither --no-warn-script-location (pip 8) nor --disable-pip-version-check (pip 6), and stops with \"no such option\", so every app with a requirements.txt failed there.",
+       "versions": "<3.5",
+       "windows": "\"{runtime}\" -E -s -m pip install -r requirements.txt",
+       "linux": "\"{runtime}\" -E -s -m pip install -r requirements.txt",
+       "macos": "\"{runtime}\" -E -s -m pip install -r requirements.txt"
+      },
+      {
+       "versions": "",
+       "windows": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt",
+       "linux": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt",
+       "macos": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt"
+      }
+     ]
     }
    ],
    "asyncio": {
@@ -628,11 +638,21 @@
     "lookup": "https://pypi.org/pypi/{name}/json",
     "lookup_version": "https://pypi.org/pypi/{name}/{version}/json",
     "version_field": "info.version",
-    "install": {
-     "windows": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check {package}",
-     "linux": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check {package}",
-     "macos": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check {package}"
-    },
+    "install": [
+     {
+      "_comment": "As the requirements rule above: pip 1.5.6 on Python 3.4 knows neither flag.",
+      "versions": "<3.5",
+      "windows": "\"{runtime}\" -E -s -m pip install {package}",
+      "linux": "\"{runtime}\" -E -s -m pip install {package}",
+      "macos": "\"{runtime}\" -E -s -m pip install {package}"
+     },
+     {
+      "versions": "",
+      "windows": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check {package}",
+      "linux": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check {package}",
+      "macos": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check {package}"
+     }
+    ],
     "launch": "{runtime} -m {module}"
    }
   },
@@ -722,11 +742,25 @@
    ],
    "install_rules": [
     {
-     "_comment": "npm install (the recipe's project_install).",
+     "_comment": "npm install (the recipe's project_install). env: Electron 44 no longer downloads its 158 MB zip from a postinstall script -- index.js fetches it the first time the app runs -- and @electron/get puts it in %LOCALAPPDATA%\\electron\\Cache on Windows, ~/.cache/electron elsewhere, outside everything the uninstaller knows about. electron_config_cache is what electron's install.js reads for the cache root (ELECTRON_CACHE is the older spelling, kept for older versions); both are in the launch environment as well as the install's, because that is when the download now happens.",
      "id": "npm",
      "files": [
       "package.json"
-     ]
+     ],
+     "env": {
+      "windows": {
+       "ELECTRON_CACHE": "{data_dir}\\electron-cache",
+       "electron_config_cache": "{data_dir}\\electron-cache"
+      },
+      "linux": {
+       "ELECTRON_CACHE": "{data_dir}/electron-cache",
+       "electron_config_cache": "{data_dir}/electron-cache"
+      },
+      "macos": {
+       "ELECTRON_CACHE": "{data_dir}/electron-cache",
+       "electron_config_cache": "{data_dir}/electron-cache"
+      }
+     }
     }
    ],
    "needs": [

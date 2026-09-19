@@ -14,7 +14,8 @@
  "fields": {
   "min": "Windows: NT version string (5.1 = XP, 6.0 = Vista, 6.1 = 7, 6.2 = 8, 6.3 = 8.1, 10.0 = 10/11). macOS: version string, or an object per arch. Linux: {kernel, glibc}, null = no requirement found.",
   "source": "vendor = release notes or docs; binary = read from the files (PE subsystem version and imported functions, Mach-O LC_BUILD_VERSION/LC_VERSION_MIN_MACOSX minos, highest GLIBC_ symbol version or static); binary(catalogue) = recorded by an earlier pass in <runtime>/install.json; vendor+binary = both agree or the stricter one is given",
-  "rule": "Where vendor and binary differ, `min` is the vendor floor (supported) unless the binary floor is stricter; the looser binary floor is in evidence/notes."
+  "rule": "Where vendor and binary differ, `min` is the vendor floor (supported) unless the binary floor is stricter; the looser binary floor is in evidence/notes.",
+  "static": "Linux only, on `min`: true when the toolchain's own programs are statically linked, so no glibc version can keep them from running (the resolver then uses no C library floor at all instead of the catalogue's default; a `min` that simply found nothing leaves this out)."
  },
  "sources": {
   "go_wiki": "https://go.dev/wiki/MinimumRequirements",
@@ -284,7 +285,8 @@
      ],
      "min": {
       "kernel": "2.6.23",
-      "glibc": null
+      "glibc": null,
+      "static": true
      },
      "label": "Linux 2.6.23",
      "source": "vendor",
@@ -300,7 +302,8 @@
      "arch": null,
      "min": {
       "kernel": "2.6.32",
-      "glibc": null
+      "glibc": null,
+      "static": true
      },
      "label": "Linux 2.6.32",
      "source": "vendor",
@@ -315,7 +318,8 @@
      "arch": null,
      "min": {
       "kernel": "3.2",
-      "glibc": null
+      "glibc": null,
+      "static": true
      },
      "label": "Linux 3.2",
      "source": "vendor+binary",

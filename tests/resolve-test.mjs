@@ -27,6 +27,21 @@
 //               571 of the 3,096 answers changed: nim 105, php 117, r 118,
 //               ruby 109, rust 121, and the runtimes summary (Ruby now has
 //               macOS releases). Every other runtime's plans are unchanged.
+//   2026-09-20  The fixes the template tests found on the German Windows 11
+//               VM and the older machines (docs/test-results.md): Python and
+//               Python 2 clear TCL_LIBRARY and TK_LIBRARY; Python's
+//               requirements rule and package install have a command without
+//               --no-warn-script-location for 3.4 and older; the Windows PHP
+//               recipes write php.ini with `write` steps, a relative
+//               extension_dir and the CA bundle on the command line; WinLibs
+//               GCC deletes default-manifest.o when its path has a space
+//               (C/C++ directly, Rust and Nim as a companion); R deletes its
+//               HKLM uninstall key in the 64-bit registry view; npm's install
+//               rule puts Electron's download cache in the app; and Go, whose
+//               toolchain is statically linked, is offered on Linux with any
+//               glibc. 942 of the 3,096 answers changed: python 154, go 134,
+//               rust 121, php 117, nim 116, r 99, python2 99, cc 95, node 6,
+//               and the runtimes summary (Go's Linux coverage).
 //
 // --catalog FILE runs the cases against another snapshot instead (for
 // example one tools/snapshot.mjs wrote from the same catalogue folder: the

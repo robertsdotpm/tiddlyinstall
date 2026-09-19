@@ -251,14 +251,24 @@ def setup(icon):
 
 icon.run(setup)
 `,
-      'requirements.txt': 'pystray\nPillow\n',
+      // Pillow 12.3 dropped its manylinux2014 (glibc 2.17) wheels, so pip
+      // falls back to building it from source on CentOS 7 and Ubuntu 14.04
+      // and 16.04, where there is no compiler. 12.2 still has them, for
+      // CPython 3.10 to 3.14. (--prefer-binary would do the same job, but
+      // the pip of Windows 7 and 8.1's Python 3.8.0, 19.2.3, refuses that
+      // line.) Windows XP is out of reach whatever
+      // is asked for: its newest Python is 3.4.4, whose pip (7.1.2) takes
+      // Pillow's source rather than the cp34 wheel, and there is no
+      // compiler.
+      'requirements.txt': 'pystray\nPillow<12.3\n',
     },
     console: false,
     needs: ['pystray', 'Pillow'],
     platforms: ALL,
     note: 'Installs pystray and Pillow (requirements.txt) with pip. On Linux the icon needs a desktop with a system tray ' +
-      '(KDE, Xfce, Cinnamon or MATE; GNOME only with an AppIndicator extension), and glibc 2.27 or later ' +
-      '(Ubuntu 18.04, RHEL 8), where Pillow has ready-made builds. pystray needs Windows 7 or later.',
+      '(KDE, Xfce, Cinnamon or MATE; GNOME only with an AppIndicator extension). Pillow is asked for below 12.3, the ' +
+      'last with ready-made builds for glibc 2.17 (CentOS 7, Ubuntu 14.04): newer ones would be compiled. pystray ' +
+      'needs Windows 7 or later.',
   },
 };
 
@@ -457,7 +467,8 @@ app.on("window-all-closed", () => {});
     needs: ['electron'],
     prerequisites: ['gtk3', 'nss', 'alsa', 'libgbm'],
     platforms: ALL,
-    note: 'Installs Electron (package.json, about 100 MB) with npm. Electron 44 needs Windows 10, macOS 12 or a current Linux ' +
+    note: 'Installs Electron (package.json) with npm; Electron 44 fetches its own 158 MB build the first time the app runs, ' +
+      'into the app\'s data folder, so that first start takes a while and needs the network. Electron 44 needs Windows 10, macOS 12 or a current Linux ' +
       'desktop: it uses the desktop\'s own libraries (GTK 3, NSS, ALSA, GBM; the installer checks, and offers to install them), ' +
       'and the icon needs a system tray (GNOME only with an AppIndicator extension).',
   },
@@ -528,7 +539,9 @@ gem "glimmer-dsl-libui"
     platforms: ALL,
     title: 'My App',
     note: 'Installs glimmer-dsl-libui (Gemfile) with Bundler; it brings its own libui. On Linux it needs GTK 3, which desktops have ' +
-      '(the installer checks, and offers to install it). libui has no build for 32-bit Windows.',
+      '(the installer checks, and offers to install it). libui has no build for 32-bit Windows, and on Windows it can\'t be ' +
+      'loaded at all when the user\'s account name has a non-ASCII letter (Ruby\'s Fiddle opens the DLL through the ANSI ' +
+      'API with a UTF-8 path, so "C:\\Users\\jörg müller\\..." is not found).',
   },
 };
 

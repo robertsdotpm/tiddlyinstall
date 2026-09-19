@@ -17,7 +17,8 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { TEMPLATES, templateFields } from '../../js/templates.js';
+import { TEMPLATES } from '../../js/templates.js';
+import { formFor as formFields } from './form.mjs';
 import { jobFromForm } from '../../js/form-job.js';
 import { runJob } from '../../js/builder.js';
 import { loadCatalog } from '../../backend/lib/catalog.js';
@@ -31,28 +32,6 @@ const MODE = arg('--mode', 'C');
 const PLATFORMS = arg('--platforms', 'windows,linux,macos').split(',');
 const ONLY = arg('--only', '').split(',').filter(Boolean);
 const want = (rt, id) => !ONLY.length || ONLY.includes(rt) || ONLY.includes(rt + '/' + id);
-
-// new.html's fields as the page starts them (the ones js/form-job.js reads),
-// with "I'll write it here" chosen. The launch and build fields are left as
-// they were, so the template's own commands are used.
-function formFor(rt, id, platforms) {
-  const t = TEMPLATES[rt][id];
-  const fields = {
-    app_name: 'Template ' + rt + ' ' + id, source_kind: 'write', runtime: rt, template: id, rv_mode: 'newest',
-    mode: { A: 'ours', B: 'yours', C: 'unsigned' }[MODE], root: 'user', rootname: 'ib', install_cmd: '',
-    cleanup_tools: 'remove', cleanup_fail: 'remove', uninstall_data: 'ask', icon_choice: 'default',
-  };
-  const ticked = new Set(['shortcut_menu', 'uninstaller', 'cleanup_pkg_cache'].concat(platforms.map((p) => 'target_' + p)));
-  const code = templateFields(rt, id);
-  for (const name of Object.keys(code)) fields[name] = t.files[code[name]];
-  return {
-    val: (name) => (Object.prototype.hasOwnProperty.call(fields, name) ? String(fields[name]) : ''),
-    checked: (name) => ticked.has(name),
-    has: (name) => Object.prototype.hasOwnProperty.call(fields, name),
-    launchEdited: () => false,
-    buildEdited: () => false,
-  };
-}
 
 let env = null;
 function localEnv() {
@@ -124,7 +103,7 @@ for (const rt of Object.keys(TEMPLATES)) {
       console.log(`skip ${key}: not for ${PLATFORMS.join(', ')}`);
       continue;
     }
-    const { job, problems } = jobFromForm(formFor(rt, id, platforms), { icon: { choice: 'default' } });
+    const { job, problems } = jobFromForm(formFields(rt, id, platforms, MODE), { icon: { choice: 'default' } });
     if (problems.length) {
       failed++;
       builds[key] = { status: 'failed', error: problems.join(' ') };

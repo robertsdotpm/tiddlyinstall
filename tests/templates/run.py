@@ -13,6 +13,15 @@ its output; every app: in that file); for window templates, check a window
 with the template's title was on screen while it ran; uninstall, and check
 nothing is left. Results go to results.jsonl, one JSON object per cell.
 
+A machine-wide TCL_LIBRARY and TK_LIBRARY pointing nowhere are put into the
+environment of the install and of the run for Python, Python 2 and R (the
+runtimes that carry their own Tcl/Tk), so a template that only works on a
+machine without them fails here; --no-stray leaves them out. An app that
+prints a startup warning (BAD_OUTPUT) fails even when its self-test passed.
+
+tests/templates/plan-test.mjs checks the same failures on the plans alone,
+without a machine.
+
 Window, tray and web apps need a desktop session:
   - Linux (here and the VMs): an Xvfb display, started for the run
     (--xvfb names an Xvfb binary; on the VMs it's installed with sudo if
@@ -64,6 +73,14 @@ LINUX_VMS = {
 INSTALL_TIMEOUT = 2400
 RUN_TIMEOUT = 180
 
+# Machine-wide variables another program may have set, put into the
+# environment of the install and of the run for the runtimes they would
+# reach: an app must not depend on the machine not having them. TCL_LIBRARY
+# is the real case (CSR BlueSuite sets it system-wide, and it sent Python 2's
+# Tcl 8.5 to the wrong folder: docs/test-results.md, 2026-09-20).
+STRAY_ENV = {"TCL_LIBRARY": "no-such-tcl", "TK_LIBRARY": "no-such-tk"}
+STRAY_FOR = ("python", "python2", "r")
+
 
 def sh(cmd, timeout=None, **kw):
     timeout = timeout or INSTALL_TIMEOUT
@@ -103,6 +120,12 @@ def parse_markers(out):
     return parts
 
 
+# Lines an app must not print even when its self-test passes: PHP's
+# extensions failed to load on the German VM for weeks because the warnings
+# went to the output and nothing looked at them.
+BAD_OUTPUT = ("Unable to load dynamic library", "PHP Startup:", "PHP Warning:")
+
+
 def judge(key, b, parts, err=""):
     """The cell's result from a run's markers: install, out (the app's
     output), file (the self-test file), window, uninstall, left, log."""
@@ -125,6 +148,11 @@ def judge(key, b, parts, err=""):
         if f"window: {b['title']}" not in parts.get("window_out", ""):
             return "fail", "self-test ok, but no window titled " + repr(b["title"]) + ": " + tail(parts.get("window_out", ""), 4)
         notes.append("window seen")
+    said = parts.get("out_out", "") + parts.get("applog_out", "")
+    for bad in BAD_OUTPUT:
+        if bad in said:
+            line = next(l for l in said.splitlines() if bad in l)
+            return "fail", "self-test ok, but the app warned: " + line.strip()[:200]
     left = parts.get("left_out", "").strip()
     if parts.get("uninstall", "0") != "0" or left:
         return "fail", f"self-test ok; uninstall exit {parts.get('uninstall')}, left: {left[:200]}"
@@ -137,7 +165,7 @@ UNIX_SCRIPT = r'''
 set -u
 H=$(mktemp -d /tmp/ibtpl-XXXXXX)
 cp "$SRC" "$H/$F"
-BASEENV="HOME=$H PATH=/usr/local/bin:/usr/bin:/bin LANG=C.UTF-8"
+BASEENV="HOME=$H PATH=/usr/local/bin:/usr/bin:/bin LANG=C.UTF-8 ${STRAY:-}"
 env -i $BASEENV sh "$H/$F" --yes --log="$H/i.log" </dev/null >/dev/null 2>&1
 echo "@install $?"
 d=$(ls -d "$H"/.local/share/ib/*/launch.txt 2>/dev/null | head -1)
@@ -187,7 +215,7 @@ def run_unix_local(key, b, f, a):
     env = dict(os.environ)
     gui = "0" if b.get("console") else "1"
     script_env = {"SRC": f, "F": Path(f).name, "GUI": gui, "TITLE": b.get("title", ""), "RUNT": str(RUN_TIMEOUT),
-                  "XVFB": a.xvfb, "KEEP": "1" if a.keep else ""}
+                  "XVFB": a.xvfb, "KEEP": "1" if a.keep else "", "STRAY": a.stray}
     env.update(script_env)
     if a.xvfb_lib:
         env["LD_LIBRARY_PATH"] = a.xvfb_lib
@@ -203,7 +231,7 @@ def run_linux_vm(host, key, b, f, a):
         return "fail", "scp: " + err.strip()
     gui = "0" if b.get("console") else "1"
     head = (f"SRC=$HOME/ibtpl/{shlex.quote(name)} F={shlex.quote(name)} GUI={gui} TITLE={shlex.quote(b.get('title', ''))} "
-            f"RUNT={RUN_TIMEOUT} XVFB=Xvfb KEEP={'1' if a.keep else ''}")
+            f"RUNT={RUN_TIMEOUT} XVFB=Xvfb KEEP={'1' if a.keep else ''} STRAY={shlex.quote(a.stray)}")
     code, out, err = sh(["ssh", host, f"{head} sh -s"], input=UNIX_SCRIPT)
     if code == 124:
         # An install that ran out of time keeps going on the VM: stop it
@@ -402,6 +430,20 @@ reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\ib-{ID}" >nu
 """
 
 
+def win_stray(runtime, a):
+    """set lines for STRAY_ENV, for a runtime that carries its own Tcl/Tk."""
+    if a.no_stray or runtime not in STRAY_FOR:
+        return ""
+    return "".join(f'set "{k}=%T%\\{v}"\n' for k, v in STRAY_ENV.items())
+
+
+def unix_stray(runtime, a):
+    """The same as space-separated NAME=VALUE, for `env -i`."""
+    if a.no_stray or runtime not in STRAY_FOR:
+        return ""
+    return " ".join(f"{k}=/nonexistent/{v}" for k, v in STRAY_ENV.items())
+
+
 def appid(record):
     h = hashlib.sha256((record + "/app").encode()).digest()
     return base64.b32encode(h).decode().lower().rstrip("=")[:12]
@@ -410,8 +452,9 @@ def appid(record):
 class WinVM:
     """A Windows test machine: where the scripts go, and how they're run."""
 
-    def __init__(self, target, host):
+    def __init__(self, target, host, stray=""):
         self.target, self.host = target, host
+        self.stray = stray      # "set VAR=..." lines, run before everything
         self.profile = target in PROFILE
         if self.profile:
             # scp paths are relative to the user's home; ssh command lines
@@ -427,7 +470,7 @@ class WinVM:
         subst.setdefault("TR", '"\\"%T%\\gui.bat\\""' if self.profile else '"%T%\\gui.bat"')
         for k, v in subst.items():
             body = body.replace("{" + k + "}", v)
-        return "@echo off\nset T=" + self.t + "\n" + body
+        return "@echo off\nset T=" + self.t + "\n" + self.stray + body
 
     def put(self, name, text):
         with tempfile.NamedTemporaryFile("w", suffix=Path(name).suffix, delete=False, newline="\r\n") as t:
@@ -563,6 +606,8 @@ def main():
     ap.add_argument("--xvfb", default="Xvfb")
     ap.add_argument("--xvfb-lib", default="", help="LD_LIBRARY_PATH for an unpacked Xvfb")
     ap.add_argument("--keep", action="store_true", help="keep the throwaway folders")
+    ap.add_argument("--no-stray", action="store_true",
+                    help="don't put STRAY_ENV (a machine-wide TCL_LIBRARY and TK_LIBRARY) in the environment")
     ap.add_argument("--results", default=str(HERE / "results.jsonl"))
     ap.add_argument("--install-timeout", type=int, default=2400,
                     help="seconds an install may take (Rust's can take 20 minutes on a busy datastore)")
@@ -575,6 +620,7 @@ def main():
         rt = key.split("/")[0]
         if only and key not in only and rt not in only:
             continue
+        a.stray = unix_stray(rt, a)
         res = {"target": a.target, "template": key}
         if b.get("platforms") and plat not in b["platforms"]:
             res.update(result="n/a", detail=f"the template isn't for {plat}")
@@ -594,7 +640,7 @@ def main():
                 host = a.host or WINDOWS.get(a.target)
                 if not host:
                     raise SystemExit(f"no ssh target for {a.target}: give --host")
-                r, d = run_windows(WinVM(a.target, host), key, b, f, a)
+                r, d = run_windows(WinVM(a.target, host, stray=win_stray(rt, a)), key, b, f, a)
             res.update(result=r, detail=d, record=b["record"])
         res["time"] = time.strftime("%Y-%m-%dT%H:%M:%S")
         with open(a.results, "a") as fh:

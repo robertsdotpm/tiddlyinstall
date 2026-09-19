@@ -25,6 +25,10 @@
      "shell": "cmd"
     },
     {
+     "run": "(for /f \"tokens=2,*\" %A in ('reg query \"HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\R for Windows {version}_is1\" /v InstallLocation /reg:64 2^>nul ^| find \"InstallLocation\"') do @if /i \"%B\"==\"{runtime_dir}\\\" reg delete \"HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\R for Windows {version}_is1\" /f /reg:64) & exit /b 0",
+     "shell": "cmd"
+    },
+    {
      "run": "del /q \"{runtime_dir}\\unins000.exe\" \"{runtime_dir}\\unins000.dat\" 2>nul",
      "shell": "cmd"
     },
@@ -45,7 +49,7 @@
    "verify": "\"{runtime_dir}\\bin\\Rscript.exe\" --vanilla -e \"cat(R.version.string, R.home(), .libPaths(), sep='\\n')\"",
    "uninstall": "delete {runtime_dir}",
    "side_effects": [
-    "During install, HKCU\\...\\Uninstall\\R for Windows <version>_is1 is written and then deleted by step 2 (only if its InstallLocation is this {runtime_dir}). If the user had installed the same R version normally, Inno writes its key over theirs, and step 2 then deletes it, so their Programs and Features entry is lost",
+    "During install, HKCU\\...\\Uninstall\\R for Windows <version>_is1 is written and then deleted by step 2 (only if its InstallLocation is this {runtime_dir}). If the user had installed the same R version normally, Inno writes its key over theirs, and step 2 then deletes it, so their Programs and Features entry is lost. The step before it looks in the registry view the installer itself runs in (32-bit), which on 64-bit Windows is WOW6432Node for HKLM, so R's own 64-bit HKLM entry survived it; step 3 repeats the query and the delete with /reg:64. Both end in `exit /b 0`: on a machine where the key can't be deleted the install still goes on",
     "Setup log in {tmp} (deleted with {tmp})"
    ],
    "isolation": "leaks",

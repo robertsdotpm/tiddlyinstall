@@ -864,6 +864,23 @@ function installRule(pol, id) {
   return list(pol.install_rules).find((r) => isMap(r) && r.id === id) || null;
 }
 
+// A policy command: a map of OS family -> command, or a list of such maps
+// each with a "versions" range, the first matching the chosen release's
+// version winning (docs/format.md section 2). Python 3.4's pip, the newest
+// on Windows XP, knows neither --no-warn-script-location nor
+// --disable-pip-version-check, so its install rule needs another command.
+function osCommand(raw, v, family) {
+  if (Array.isArray(raw)) {
+    for (const c of raw) {
+      if (!isMap(c) || !matches(v, str(c.versions))) continue;
+      const s = str(own(c, family));
+      if (s !== '') return s;
+    }
+    return '';
+  }
+  return str(own(raw, family));
+}
+
 // ExtraFile.source
 // The first source for this runtime version and, when it says, this OS
 // version (min_os/max_os, the OS integers: MSYS2 for Ruby's DevKit needs
@@ -872,6 +889,17 @@ const extraSource = (ef, v, o) => list(ef.sources).find((s) => isMap(s) && match
   !(o && ((s.min_os > 0 && o.int < s.min_os) || (s.max_os > 0 && o.int > s.max_os)))) || null;
 
 /* ---------- OS support (support.go) ---------- */
+
+// A compilers_min_os floor that says the toolchain is a static binary
+// ("static": true with no glibc version): no C library version keeps it
+// from running, so the catalogue's default floor (policy unknown_floor,
+// glibc 2.28) must not be used in its place. Go's toolchain is the case
+// ("statically linked (no NEEDED)" in its evidence), and without this no
+// Go release was offered on Ubuntu 18.04 and older or CentOS 7. A rule
+// that merely has nothing to say (both kernel and glibc null, as Nim's)
+// is still unknown, and keeps the default.
+const noLibcFloor = (family, raw) => family === 'linux' && isMap(raw) &&
+  raw.static === true && raw.glibc == null;
 
 // minInt
 function minInt(family, arch, raw) {
@@ -963,7 +991,7 @@ function runsOnUncached(cat, rt, e, o) {
     if (r.compiler !== name || r.os !== e.os || !matches(e.v, r.versions)) continue;
     if (r.arch && r.arch.length > 0 && !r.arch.includes(e.arch)) continue;
     const m = minInt(o.family, e.arch, r.min);
-    if (m === 0) break;
+    if (m === 0 && !noLibcFloor(o.family, r.min)) break;
     return { ok: o.int >= m, minBuild: 0, known: true };
   }
   if (o.id === 'musl') return { ok: false, minBuild: 0, known: false };
@@ -1560,9 +1588,18 @@ function writeTarget(cat, w, app, pol, b) {
   // Package sources: the package policy adds to the recipe's environment
   // and replaces its project install command.
   const pkg = app.package !== '' && pol && isMap(pol.package) ? pol.package : null;
+  // The install rule the record names, when it names one: it can carry both
+  // a command and an environment for the install (policy install_rules).
+  const ruleID = app.install.startsWith('default:') ? app.install.slice(8) : '';
+  const rule = ruleID !== '' ? installRule(pol, ruleID) : null;
   const launchEnv = new Map(), installEnv = new Map();
   if (r.launch) mergeEnv(launchEnv, r.launch.env);
   if (r.projectInstall) mergeEnv(installEnv, r.projectInstall.env);
+  if (rule) {
+    mergeEnv(launchEnv, own(rule.env, b.family));
+    mergeEnv(installEnv, own(rule.env, b.family));
+    mergeEnv(installEnv, own(rule.ienv, b.family));
+  }
   if (pkg) {
     mergeEnv(launchEnv, own(pkg.env, b.family));
     mergeEnv(installEnv, own(pkg.env, b.family));
@@ -1589,17 +1626,16 @@ function writeTarget(cat, w, app, pol, b) {
   const lbl = runtimeLabel(pol, app.runtime);
   const pi = r.projectInstall;
   if (pkg && (app.install === '' || app.install === 'default')) {
-    install = str(own(pkg.install, b.family));
+    install = osCommand(pkg.install, e.v, b.family);
     if (install === '') w.add('fail', `Installing ${lbl} packages isn't supported on ${b.family} yet.`);
   } else if (app.install.startsWith('default:')) {
-    const id = app.install.slice(8);
-    const rule = installRule(pol, id);
-    if (!rule) w.add('fail', `This installer asks for a ${lbl} project install (${goQuote(id)}) that Installer Builder doesn't know.`);
+    const cmd = rule ? osCommand(rule.command, e.v, b.family) : '';
+    if (!rule) w.add('fail', `This installer asks for a ${lbl} project install (${goQuote(ruleID)}) that Installer Builder doesn't know.`);
     else if (str(rule.unsupported) !== '') w.add('fail', rule.unsupported);
-    else if (str(own(rule.command, b.family)) !== '') install = rule.command[b.family];
+    else if (cmd !== '') install = cmd;
     else if (pi) install = str(pi.command);
-  } else if (pol && str(own(pol.install_command, b.family)) !== '' && (app.install === 'default' || pol.compiled === true)) {
-    install = pol.install_command[b.family];
+  } else if (pol && osCommand(pol.install_command, e.v, b.family) !== '' && (app.install === 'default' || pol.compiled === true)) {
+    install = osCommand(pol.install_command, e.v, b.family);
   } else if (app.install === 'default' || (pol && pol.compiled === true)) {
     if (pi) install = str(pi.command);
   } else if (app.install !== '') {
