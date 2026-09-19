@@ -3,3 +3,5 @@ out-mac/
 results.jsonl
 results-run1.jsonl
 out-linux/
+out-behaviour/
+out-behaviour-mac/

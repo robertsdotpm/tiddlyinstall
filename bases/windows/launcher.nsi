@@ -1,4 +1,4 @@
-; Installer Builder -- launcher (design.md 1.7).
+; TiddlyInstall -- launcher (design.md 1.7).
 ;
 ; Copied into every app folder as launch.exe. Reads launch.txt beside it
 ; (format.md section 5), sets the environment and working folder, and starts
@@ -25,17 +25,17 @@ SetCompressor /SOLID lzma
 !include "FileFunc.nsh"
 !include "ibutil.nsh"
 
-Name "Installer Builder launcher"
+Name "TiddlyInstall launcher"
 OutFile "out\launcher.exe"
 Icon "${NSISDIR}\Contrib\Graphics\Icons\modern-install.ico"
 
 VIProductVersion "${IB_VERSION}"
-VIAddVersionKey ProductName "Installer Builder"
-VIAddVersionKey CompanyName "Installer Builder"
-VIAddVersionKey FileDescription "Installer Builder app launcher"
+VIAddVersionKey ProductName "TiddlyInstall"
+VIAddVersionKey CompanyName "TiddlyInstall"
+VIAddVersionKey FileDescription "TiddlyInstall app launcher"
 VIAddVersionKey FileVersion "${IB_VERSION}"
 VIAddVersionKey ProductVersion "${IB_VERSION}"
-VIAddVersionKey LegalCopyright "Installer Builder"
+VIAddVersionKey LegalCopyright "TiddlyInstall"
 
 !insertmacro IB_UTIL ""
 

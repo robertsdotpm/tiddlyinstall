@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Add Installer Builder metadata to a Unix base, for testing.
+"""Add TiddlyInstall metadata to a Unix base, for testing.
 
 The Go server has its own implementation; this follows docs/format.md
 section 4 so the two can be checked against each other.
@@ -10,7 +10,7 @@ section 4 so the two can be checked against each other.
 
   append_meta.py app BASE.zip -o OUT.zip [--record R] [--plan P] [--pack DIR]
                      [--rename NAME] [--strip-signature]
-      Copies the zipped Install.app, writing record.txt, plan.txt and
+      Copies the zipped TiddlyInstall.app, writing record.txt, plan.txt and
       pack/<sha256> into <app>/Contents/Resources/ib/. --rename renames
       the .app inside the zip (mode A: install_node_hello_<hash>).
       --strip-signature drops _CodeSignature and AppleDouble entries,

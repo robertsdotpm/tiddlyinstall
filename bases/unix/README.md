@@ -11,7 +11,7 @@ version, dialogs, and menu entries.
 | --- | --- |
 | `ib-engine.sh` | The engine. Also copied into every installed app as `uninstall.sh` |
 | `make_run.sh` | Builds the Linux base `out/ib-base.run` (the engine, syntax-checked with dash, bash and busybox) |
-| `make_app.sh` | Builds the macOS base `out/Install.app` and `out/ib-base-macos.zip`. On a Mac it is ad-hoc signed and zipped with `ditto` |
+| `make_app.sh` | Builds the macOS base `out/TiddlyInstall.app` and `out/ib-base-macos.zip`. On a Mac it is ad-hoc signed and zipped with `ditto` |
 | `verify/` | `ibverify`, the Ed25519 verifier the bases carry: source, `build.sh` (Zig), the built binaries |
 | `test_verify.sh` | Plan signature cases (good over plain HTTP, `--plan`, tampered, replayed, unsigned) with openssl shadowed |
 | `test_prereqs.sh` | Prerequisites and the record icon |
@@ -23,7 +23,7 @@ Builds go to `out/` (ignored by git).
 
 ```
 sh install_node_hello_<hash>.run            # Linux (any file name works)
-Install.app/Contents/MacOS/install          # macOS, from a terminal
+TiddlyInstall.app/Contents/MacOS/install          # macOS, from a terminal
 ```
 
 | Option | Meaning |
@@ -300,7 +300,7 @@ reported. It asks first (terminal, zenity/kdialog, or `osascript`) unless
   Translocation preserves. (`install.txt` next to a translocated `.app`
   can't be found; use mode A, B or C on macOS.)
 - **Mode B:** the publisher adds the files to `Contents/Resources/ib/`
-  and re-signs (`codesign -s <identity> -f Install.app`); `codesign
+  and re-signs (`codesign -s <identity> -f TiddlyInstall.app`); `codesign
   --verify` then passes.
 - **Mode C:** adding files breaks the base's ad-hoc signature, and a
   broken signature is worse than none (Gatekeeper says "damaged"). So

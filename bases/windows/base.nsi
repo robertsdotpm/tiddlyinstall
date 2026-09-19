@@ -1,4 +1,4 @@
-; Installer Builder -- Windows base installer.
+; TiddlyInstall -- Windows base installer.
 ;
 ; One generic engine for every app and runtime: it finds a record and a plan
 ; (docs/format.md), picks the plan's first [target] matching this machine,
@@ -47,22 +47,22 @@ XPStyle on
 !include "WinMessages.nsh"
 !include "ibutil.nsh"
 
-Name "Installer Builder"
-Caption "Installer Builder: $AppName"
-UninstallCaption "Installer Builder: uninstall $AppName"
+Name "TiddlyInstall"
+Caption "TiddlyInstall: $AppName"
+UninstallCaption "TiddlyInstall: uninstall $AppName"
 OutFile "${IB_OUTFILE}"
-BrandingText "Installer Builder ${IB_VERSION}"
+BrandingText "TiddlyInstall ${IB_VERSION}"
 ShowInstDetails show
 ShowUninstDetails show
 InstallDir "$TEMP"        ; replaced once the plan is read
 
 VIProductVersion "${IB_VERSION}"
-VIAddVersionKey ProductName "Installer Builder"
-VIAddVersionKey CompanyName "Installer Builder"
-VIAddVersionKey FileDescription "Installer Builder base installer"
+VIAddVersionKey ProductName "TiddlyInstall"
+VIAddVersionKey CompanyName "TiddlyInstall"
+VIAddVersionKey FileDescription "TiddlyInstall base installer"
 VIAddVersionKey FileVersion "${IB_VERSION}"
 VIAddVersionKey ProductVersion "${IB_VERSION}"
-VIAddVersionKey LegalCopyright "Installer Builder"
+VIAddVersionKey LegalCopyright "TiddlyInstall"
 
 ; ---------------------------------------------------------------- state
 
@@ -71,6 +71,9 @@ Var Params
 Var LogPath
 Var L_msg
 Var Elevated         ; 1 when started by our own runas relaunch
+Var Reinstall        ; 1: /reinstall (install again even if already installed)
+Var InstTime         ; the install's UTC time, for manifest.txt and .ib-installed
+Var FinishText       ; the finish page's text: where to find the app
 ; metadata
 Var RecFile          ; record, UTF-8 ("" if none)
 Var PlanFile         ; plan, UTF-8
@@ -230,7 +233,7 @@ Page custom ReviewShow ReviewLeave
 !insertmacro MUI_PAGE_INSTFILES
 !define MUI_PAGE_CUSTOMFUNCTION_PRE FinishPre
 !define MUI_FINISHPAGE_TITLE "$AppName is installed"
-!define MUI_FINISHPAGE_TEXT "Find it in the Start menu under $AppName, which also holds its uninstaller."
+!define MUI_FINISHPAGE_TEXT "$FinishText"
 !define MUI_FINISHPAGE_RUN
 !define MUI_FINISHPAGE_RUN_TEXT "Run $AppName now"
 !define MUI_FINISHPAGE_RUN_FUNCTION RunApp
@@ -1375,11 +1378,11 @@ Function CheckPlan
   StrCpy $PlanWarn ""
   StrCpy $0 $PlanSig 2
   ${If} $0 == "ok"
-    StrCpy $PlanSrc "$PlanSrc; signed by the Installer Builder key ${IB_PLAN_KEYID}"
+    StrCpy $PlanSrc "$PlanSrc; signed by the TiddlyInstall key ${IB_PLAN_KEYID}"
     Return
   ${EndIf}
   ${If} $PlanKind == "embedded"
-    StrCpy $PlanWarn "The embedded plan isn't signed by the Installer Builder key ($PlanSig). It is only as trustworthy as this installer file."
+    StrCpy $PlanWarn "The embedded plan isn't signed by the TiddlyInstall key ($PlanSig). It is only as trustworthy as this installer file."
     Return
   ${EndIf}
   ${If} $PlanKind == "cmdline"
@@ -1388,9 +1391,9 @@ Function CheckPlan
     Return
   ${EndIf}
   ${If} $PlanKind == "cmdline"
-    ${FailWith} "The plan $PlanFile isn't signed by the Installer Builder key ${IB_PLAN_KEYID} ($PlanSig). Use a plan saved from <backend>/api/plan/<record>, or add /unsigned-plan if you wrote it yourself."
+    ${FailWith} "The plan $PlanFile isn't signed by the TiddlyInstall key ${IB_PLAN_KEYID} ($PlanSig). Use a plan saved from <backend>/api/plan/<record>, or add /unsigned-plan if you wrote it yourself."
   ${Else}
-    ${FailWith} "The install plan from $Backend isn't signed by the Installer Builder key ${IB_PLAN_KEYID} ($PlanSig). It may have been changed on the way; nothing was installed."
+    ${FailWith} "The install plan from $Backend isn't signed by the TiddlyInstall key ${IB_PLAN_KEYID} ($PlanSig). It may have been changed on the way; nothing was installed."
   ${EndIf}
 FunctionEnd
 
@@ -1711,6 +1714,76 @@ FunctionEnd
 
 ; ---------------------------------------------------------------- init
 
+; /? or /help: the command line, then quit.
+Function Usage
+  MessageBox MB_OK|MB_ICONINFORMATION "TiddlyInstall ${IB_VERSION}$\r$\n$\r$\n\
+/S$\tinstall without asking (exit code 0 installed, 2 couldn't start, 3 failed)$\r$\n\
+/log=PATH$\tappend a detailed log to PATH$\r$\n\
+/record=PATH$\tuse this ib-record file$\r$\n\
+/plan=PATH$\tuse this ib-plan file; it must be signed by the TiddlyInstall key$\r$\n\
+/unsigned-plan$\taccept an unsigned /plan= file$\r$\n\
+/backend=URL$\twhere to fetch records and plans$\r$\n\
+/reinstall$\tinstall again even if this app, with these same settings, is already installed. Otherwise running the installer again starts the app (with /S it only says it is installed)$\r$\n$\r$\n\
+A signed installer with no settings of its own takes none of /record=, /plan=, /unsigned-plan and /backend=." /SD IDOK
+  SetErrorLevel 0
+  Quit
+FunctionEnd
+
+; Is this app fully installed in $AppDir with this record? $U_out = 1 if
+; its .ib-installed marker (written last by a finished install, format.md
+; section 5) names this appid and record, and its .ib-owner this appid.
+Function IsInstalled
+  Push $0
+  Push $1
+  Push $2
+  StrCpy $2 0
+  ${If} $RecHash == ""
+    Goto ii_end
+  ${EndIf}
+  ${IfNot} ${FileExists} "$AppDir\.ib-installed"
+  ${OrIfNot} ${FileExists} "$AppDir\launch.exe"
+  ${OrIfNot} ${FileExists} "$AppDir\launch.txt"
+    Goto ii_end
+  ${EndIf}
+  StrCpy $U_a $AppDir
+  Call IbOwnerOf
+  ${If} $U_out S!= $AppId
+    Goto ii_end
+  ${EndIf}
+  ClearErrors
+  FileOpen $0 "$AppDir\.ib-installed" r
+  ${If} ${Errors}
+    Goto ii_end
+  ${EndIf}
+  FileRead $0 $1
+  ${IbTrimNL} $1
+  ${If} $1 S== "ib-installed$\t1"
+    ${Do}
+      ClearErrors
+      FileRead $0 $1
+      ${If} ${Errors}
+        ${Break}
+      ${EndIf}
+      ${IbTrimNL} $1
+      ${If} $1 S== "appid$\t$AppId"
+        IntOp $2 $2 | 1
+      ${ElseIf} $1 S== "record$\t$RecHash"
+        IntOp $2 $2 | 2
+      ${EndIf}
+    ${Loop}
+  ${EndIf}
+  FileClose $0
+  ii_end:
+  ${If} $2 = 3
+    StrCpy $U_out 1
+  ${Else}
+    StrCpy $U_out 0
+  ${EndIf}
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
 Function InitFail
   ${Log} "ERROR: $FailMsg"
   ibsig::cleanstr "$FailMsg"
@@ -1740,7 +1813,24 @@ Function .onInit
   ${Else}
     StrCpy $Elevated 1
   ${EndIf}
-  ${Log} "Installer Builder ${IB_VERSION}: $EXEPATH $Params"
+  ${Log} "TiddlyInstall ${IB_VERSION}: $EXEPATH $Params"
+  ClearErrors
+  ${IbGetOpt} "/?" $0
+  ${IfNot} ${Errors}
+    Call Usage
+  ${EndIf}
+  ClearErrors
+  ${IbGetOpt} "/help" $0
+  ${IfNot} ${Errors}
+    Call Usage
+  ${EndIf}
+  ClearErrors
+  ${IbGetOpt} "/reinstall" $0
+  ${If} ${Errors}
+    StrCpy $Reinstall 0
+  ${Else}
+    StrCpy $Reinstall 1
+  ${EndIf}
 
   ; the machine
   ${WinVerGetMajor} $0
@@ -1896,6 +1986,30 @@ Function .onInit
   StrCpy $DlDir "$PLUGINSDIR\dl"
   StrCpy $INSTDIR $AppDir
 
+  ; Already installed here, with this same record (the same settings)? Only
+  ; the marker a finished install writes last counts. Then start the app
+  ; through its launcher instead of installing again; a silent install
+  ; (/S) never starts it, it only says so and exits 0.
+  ${If} $Reinstall = 0
+    Call IsInstalled
+    ${If} $U_out = 1
+      ${If} ${Silent}
+        ${Log} "$AppName is already installed in $AppDir (record $RecHash); nothing was changed. Add /reinstall to install it again."
+        SetErrorLevel 0
+        Quit
+      ${EndIf}
+      ${Log} "$AppName is already installed in $AppDir (record $RecHash); starting it with $AppDir\launch.exe"
+      ClearErrors
+      Exec '"$AppDir\launch.exe"'
+      ${If} ${Errors}
+        ${FailWith} "$AppName is installed in $AppDir, but its launcher couldn't be started. Run this installer with /reinstall to install it again."
+        Call InitFail
+      ${EndIf}
+      SetErrorLevel 0
+      Quit
+    ${EndIf}
+  ${EndIf}
+
   Call ReadTarget
   ${If} $Failed = 1
     Call InitFail
@@ -2033,13 +2147,21 @@ Function WriteSummary
   StrCpy $U_a $TgtLaunch
   Call Subst
   ${Sum} "Launch command:  $U_out"
-  ${If} $RootMode == "system"
-    ${Sum} "Shortcuts:  Start menu folder '$SafeName' for all users, holding '$SafeName' and 'Uninstall $SafeName'"
+  ${If} $Menu == "0"
+    ${Sum} "Shortcuts:  none in the Start menu (this app asks for no menu entry)"
+    ${If} $WantDesktop == "1"
+      ${Sum} "            a desktop shortcut '$SafeName'"
+    ${EndIf}
+    ${Sum} "To start it:  $AppDir\launch.exe, or run this installer again"
   ${Else}
-    ${Sum} "Shortcuts:  Start menu folder '$SafeName', holding '$SafeName' and 'Uninstall $SafeName'"
-  ${EndIf}
-  ${If} $WantDesktop == "1"
-    ${Sum} "            and a desktop shortcut '$SafeName'"
+    ${If} $RootMode == "system"
+      ${Sum} "Shortcuts:  Start menu folder '$SafeName' for all users, holding '$SafeName' and 'Uninstall $SafeName'"
+    ${Else}
+      ${Sum} "Shortcuts:  Start menu folder '$SafeName', holding '$SafeName' and 'Uninstall $SafeName'"
+    ${EndIf}
+    ${If} $WantDesktop == "1"
+      ${Sum} "            and a desktop shortcut '$SafeName'"
+    ${EndIf}
   ${EndIf}
   ${If} $RootMode == "system"
     ${Sum} "Uninstaller:  $AppDir\uninstall.exe, listed in Add/Remove Programs (HKLM ...\Uninstall\ib-$AppId)"
@@ -2064,7 +2186,7 @@ Function WriteSummary
     ${Sum} "Signed by:  nobody (this installer is unsigned)"
   ${EndIf}
   ${If} $ModeA = 1
-    ${Sum} "Mode:  signed by Installer Builder (mode A): installs only what its file name names, from ${IB_BACKEND}"
+    ${Sum} "Mode:  signed by TiddlyInstall (mode A): installs only what its file name names, from ${IB_BACKEND}"
   ${EndIf}
   ${Sum} "Settings from:  $MetaSrc"
   ${Sum} "Record:  $RecHash"
@@ -2117,6 +2239,16 @@ FunctionEnd
 Function FinishPre
   ${If} $Failed = 1
     Abort
+  ${EndIf}
+  ${If} $Menu != "0"
+    StrCpy $FinishText "Find it in the Start menu under $SafeName, which also holds its uninstaller."
+  ${Else}
+    ${If} $LnkDesk != ""
+      StrCpy $FinishText "Start it from the '$SafeName' shortcut on the desktop, or run $AppDir\launch.exe."
+    ${Else}
+      StrCpy $FinishText "It has no Start menu entry. Start it by running $AppDir\launch.exe."
+    ${EndIf}
+    StrCpy $FinishText "$FinishText Running this installer again also starts it.$\r$\n$\r$\nTo uninstall it, use Add or Remove Programs, or run $AppDir\uninstall.exe."
   ${EndIf}
 FunctionEnd
 
@@ -2715,8 +2847,9 @@ Function WriteManifest
   IntFmt $5 "%02d" $5
   IntFmt $6 "%02d" $6
   IntFmt $8 "%02d" $8
+  StrCpy $InstTime "$2-$3-$4T$5:$6:$8Z"
   StrCpy $U_a $0
-  StrCpy $U_b "ib-manifest$\t1$\nname$\t$AppName$\nappid$\t$AppId$\nrecord$\t$RecHash$\ninstalled$\t$2-$3-$4T$5:$6:$8Z$\n"
+  StrCpy $U_b "ib-manifest$\t1$\nname$\t$AppName$\nappid$\t$AppId$\nrecord$\t$RecHash$\ninstalled$\t$InstTime$\n"
   Call IbAppendUtf8
   StrCpy $T_rest $FileMap
   Call IbSplitTab
@@ -2790,6 +2923,7 @@ Function ClearOldInstall
     Goto co_end
   ${EndIf}
   ${Log} "Removing the earlier install of this app in $AppDir"
+  Delete "$AppDir\.ib-installed"          ; first: a half-removed install is never "installed"
   FileOpen $0 "$PLUGINSDIR\oldman.u16" r
   ${Do}
     ${IbRead} $0
@@ -3034,7 +3168,7 @@ Function InstallMain
     WriteRegStr HKLM "$RegKey" "QuietUninstallString" '"$AppDir\uninstall.exe" /S'
     WriteRegStr HKLM "$RegKey" "InstallLocation" "$AppDir"
     WriteRegStr HKLM "$RegKey" "DisplayIcon" "$AppDir\launch.exe"
-    WriteRegStr HKLM "$RegKey" "Publisher" "Installer Builder"
+    WriteRegStr HKLM "$RegKey" "Publisher" "TiddlyInstall"
     WriteRegDWORD HKLM "$RegKey" "NoModify" 1
     WriteRegDWORD HKLM "$RegKey" "NoRepair" 1
   ${Else}
@@ -3043,7 +3177,7 @@ Function InstallMain
     WriteRegStr HKCU "$RegKey" "QuietUninstallString" '"$AppDir\uninstall.exe" /S'
     WriteRegStr HKCU "$RegKey" "InstallLocation" "$AppDir"
     WriteRegStr HKCU "$RegKey" "DisplayIcon" "$AppDir\launch.exe"
-    WriteRegStr HKCU "$RegKey" "Publisher" "Installer Builder"
+    WriteRegStr HKCU "$RegKey" "Publisher" "TiddlyInstall"
     WriteRegDWORD HKCU "$RegKey" "NoModify" 1
     WriteRegDWORD HKCU "$RegKey" "NoRepair" 1
   ${EndIf}
@@ -3051,6 +3185,23 @@ Function InstallMain
   StrCpy $U_c 1
   Call WriteManifest
   SetShellVarContext current
+
+  ; The "fully installed" marker (format.md section 5): the last thing a
+  ; successful install writes, renamed into place so it is never half
+  ; written. Running the installer again with this record then starts the
+  ; app instead of installing it again.
+  Delete "$AppDir\.ib-installed.tmp"
+  StrCpy $U_a "$AppDir\.ib-installed.tmp"
+  StrCpy $U_b "ib-installed$\t1$\nappid$\t$AppId$\nrecord$\t$RecHash$\ninstalled$\t$InstTime$\n"
+  Call IbAppendUtf8
+  ClearErrors
+  Rename "$AppDir\.ib-installed.tmp" "$AppDir\.ib-installed"
+  ${If} ${Errors}
+  ${OrIfNot} ${FileExists} "$AppDir\.ib-installed"
+    ${FailWith} "Couldn't write $AppDir\.ib-installed."
+    Return
+  ${EndIf}
+  ${Log} "Wrote $AppDir\.ib-installed (record $RecHash)"
 FunctionEnd
 
 Section "Install"
@@ -3222,6 +3373,9 @@ Section "Uninstall"
   StrCpy $UnDeskAll $DESKTOP
   SetShellVarContext current
   SetOutPath "$TEMP"
+  ; The "fully installed" marker goes first, so an uninstall that stops
+  ; half way is never taken for a finished install.
+  Delete "$INSTDIR\.ib-installed"
   FileOpen $0 "$PLUGINSDIR\manifest.u16" r
   ${Do}
     ${un.IbRead} $0

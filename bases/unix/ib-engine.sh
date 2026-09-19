@@ -1,9 +1,9 @@
 #!/bin/sh
-# Installer Builder base engine for Linux and macOS (POSIX sh + awk).
+# TiddlyInstall base engine for Linux and macOS (POSIX sh + awk).
 #
 # One file, identical in every installer. It is the whole Linux `.run`
 # (with a metadata block appended after the final `exit` line) and the
-# executable of the macOS `Install.app`. A copy of it is kept in each
+# executable of the macOS `TiddlyInstall.app`. A copy of it is kept in each
 # installed app's folder as `uninstall.sh`.
 #
 # Spec: docs/format.md (records, plans, metadata block, manifest, launch),
@@ -87,16 +87,16 @@ ib_fail() {
 			printf '%s\n' '--- last lines of the log ---' >&2
 			tail -n 15 "$IB_LOG" | ib_clean >&2
 		fi
-		printf 'Installer Builder: %s\n' "$(ib_cleans "$*")" >&2
+		printf 'TiddlyInstall: %s\n' "$(ib_cleans "$*")" >&2
 		[ -n "$IB_LOG" ] && printf 'Log: %s\n' "$IB_LOG" >&2
 		;;
 	zenity)
 		ib_clean < "$IB_LOG" > "$IB_LOG.screen" 2>/dev/null
-		[ "$opt_yes" = 1 ] || zenity --text-info --title="Installer Builder: failed - $(ib_cleans "$*")" --filename="$IB_LOG.screen" --width=780 --height=560 2>/dev/null
+		[ "$opt_yes" = 1 ] || zenity --text-info --title="TiddlyInstall: failed - $(ib_cleans "$*")" --filename="$IB_LOG.screen" --width=780 --height=560 2>/dev/null
 		rm -f "$IB_LOG.screen"
 		;;
 	*)
-		[ "$opt_yes" = 1 ] || ib_message error "Installer Builder" "$*$nl${nl}Log: $IB_LOG$nl$nl$(tail -n 8 "$IB_LOG" 2>/dev/null)"
+		[ "$opt_yes" = 1 ] || ib_message error "TiddlyInstall" "$*$nl${nl}Log: $IB_LOG$nl$nl$(tail -n 8 "$IB_LOG" 2>/dev/null)"
 		;;
 	esac
 	exit "$ib_rc"
@@ -272,7 +272,7 @@ EOF
 ib_progress_start() {
 	[ "$ib_ui" = zenity ] && [ "$opt_yes" != 1 ] || return 0
 	(while :; do printf '# %s\n' "$1"; sleep 2; done) |
-		zenity --progress --pulsate --no-cancel --title="Installer Builder" 2>/dev/null &
+		zenity --progress --pulsate --no-cancel --title="TiddlyInstall" 2>/dev/null &
 	ib_progress_pid=$!
 }
 
@@ -482,16 +482,16 @@ ib_check_plan() {
 	why=${sig#*:}
 	case $sig in
 	ok:*)
-		IB_PLAN_FROM="$IB_PLAN_FROM; signed by the Installer Builder key $IB_PLAN_KEYID (checked with ${sig#ok:})"
+		IB_PLAN_FROM="$IB_PLAN_FROM; signed by the TiddlyInstall key $IB_PLAN_KEYID (checked with ${sig#ok:})"
 		return 0
 		;;
 	esac
 	case $IB_PLAN_KIND in
 	embedded)
-		ib_plan_warn="The embedded plan is not signed by the Installer Builder key ($why). It is only as trustworthy as this installer file."
+		ib_plan_warn="The embedded plan is not signed by the TiddlyInstall key ($why). It is only as trustworthy as this installer file."
 		;;
 	cmdline)
-		[ "$opt_unsigned" = 1 ] || ib_fail "The plan $IB_PLAN is not signed by the Installer Builder key ${IB_PLAN_KEYID:-} ($why). Use a plan saved from <backend>/api/plan/<record>, or add --unsigned-plan if you wrote it yourself."
+		[ "$opt_unsigned" = 1 ] || ib_fail "The plan $IB_PLAN is not signed by the TiddlyInstall key ${IB_PLAN_KEYID:-} ($why). Use a plan saved from <backend>/api/plan/<record>, or add --unsigned-plan if you wrote it yourself."
 		ib_plan_warn="The plan is not signed ($why); --unsigned-plan was given."
 		;;
 	*)
@@ -506,7 +506,7 @@ ib_check_plan() {
 			ib_fail "The install plan came over plain HTTP and its signature can't be checked here: $why. Install OpenSSL 1.1.1 or later, or use an HTTPS backend (--backend=https://...)."
 			;;
 		esac
-		ib_fail "The install plan from ${IB_PLAN_URL%%/api/*} is not signed by the Installer Builder key ${IB_PLAN_KEYID:-} ($why). It may have been changed on the way; nothing was installed."
+		ib_fail "The install plan from ${IB_PLAN_URL%%/api/*} is not signed by the TiddlyInstall key ${IB_PLAN_KEYID:-} ($why). It may have been changed on the way; nothing was installed."
 		;;
 	esac
 }
@@ -1131,7 +1131,7 @@ ib_install_icon() {
 ib_write_launcher() {
 	cat > "$IB_APP_DIR/launch.sh" <<'EOF'
 #!/bin/sh
-# Installer Builder launcher: runs the app described by launch.txt next
+# TiddlyInstall launcher: runs the app described by launch.txt next
 # to this file (cwd, env, unset, path, exec). Identical for every app.
 d=$(dirname "$0")
 f=$d/launch.txt
@@ -1167,6 +1167,7 @@ ib_desktop_exec_arg() { # quote an argument for a .desktop Exec= line
 ib_add_shortcut() { printf 'shortcut\t%s\n' "$1" >> "$IB_WORK/shortcuts"; ib_created r "$1"; }
 
 ib_menus_linux() {
+	ib_desk_made=
 	if [ "$IB_SYSTEM" = 1 ]; then
 		apps=/usr/local/share/applications
 		dirs=/usr/local/share/desktop-directories
@@ -1181,20 +1182,24 @@ ib_menus_linux() {
 	term=false
 	[ "$IB_CONSOLE" = 1 ] && term=true
 	ename=$(printf '%s' "$IB_NAME_DISP" | sed 's/\\/\\\\/g')
-	if [ "$IB_MENU" != 0 ]; then
-		ib_mkdirs "$apps" && ib_mkdirs "$dirs" && ib_mkdirs "$menus" || ib_fail "Could not create the menu folders."
-		f=$apps/$id.desktop
-		cat > "$f" <<EOF
+	cat > "$IB_WORK/entry.desktop" <<EOF
 [Desktop Entry]
 Type=Application
 Name=$ename
-Comment=Installed by Installer Builder
+Comment=Installed by TiddlyInstall
 Exec=$(ib_desktop_exec_arg "$IB_APP_DIR/launch.sh")
 Path=$IB_APP_DIR
 Terminal=$term
 Icon=${ib_icon:-application-x-executable}
 Categories=Utility;
 EOF
+	# menu 0: nothing in the app menu at all (no entry, no uninstaller, no
+	# folder). The app starts from launch.sh, the desktop shortcut if asked
+	# for, or by running the installer again.
+	if [ "$IB_MENU" != 0 ]; then
+		ib_mkdirs "$apps" && ib_mkdirs "$dirs" && ib_mkdirs "$menus" || ib_fail "Could not create the menu folders."
+		f=$apps/$id.desktop
+		cp "$IB_WORK/entry.desktop" "$f" || ib_fail "Could not write $f"
 		ib_add_shortcut "$f"
 		f=$apps/$id-uninstall.desktop
 		cat > "$f" <<EOF
@@ -1235,12 +1240,12 @@ EOF
 EOF
 		ib_add_shortcut "$f"
 	fi
-	if [ "$IB_DESKTOP" = 1 ] && [ "$IB_SYSTEM" != 1 ]; then
+	if ib_want_desktop; then
 		desk=$(xdg-user-dir DESKTOP 2>/dev/null)
 		[ -n "$desk" ] || desk=$HOME/Desktop
-		if [ -d "$desk" ] && [ -f "$apps/$id.desktop" ]; then
+		if [ -d "$desk" ]; then
 			f=$desk/$id.desktop
-			cp "$apps/$id.desktop" "$f" && chmod 755 "$f" && ib_add_shortcut "$f"
+			cp "$IB_WORK/entry.desktop" "$f" && chmod 755 "$f" && ib_add_shortcut "$f" && ib_desk_made=$f
 			# GNOME asks before running an untrusted desktop file. Mark it, but
 			# only where the desktop's metadata store already exists.
 			[ -d "${XDG_DATA_HOME:-$HOME/.local/share}/gvfs-metadata" ] && ib_have gio &&
@@ -1268,7 +1273,7 @@ ib_mac_app() { # bundle-path display-name bundle-id exec-script-body
 	<key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
 	<key>CFBundleShortVersionString</key><string>1.0</string>
 	<key>CFBundleVersion</key><string>1</string>
-	<key>NSHumanReadableCopyright</key><string>Installed by Installer Builder</string>
+	<key>NSHumanReadableCopyright</key><string>Installed by TiddlyInstall</string>
 </dict>
 </plist>
 EOF
@@ -1277,14 +1282,18 @@ EOF
 	printf '%s\n' "$IB_APPID" > "$1/Contents/Resources/ib-appid"
 }
 
-ib_menus_macos() {
-	[ "$IB_MENU" = 0 ] && [ "$IB_DESKTOP" != 1 ] && return 0
-	if [ "$IB_SYSTEM" = 1 ]; then base=/Applications; else base=$HOME/Applications; fi
+# The desktop shortcut is made only for one-user installs, on both systems.
+ib_want_desktop() { [ "$IB_DESKTOP" = 1 ] && [ "$IB_SYSTEM" != 1 ]; }
+
+ib_mac_safe_name() {
 	safe=$(printf '%s' "$IB_NAME_DISP" | sed -e 's#[/:]#-#g' -e 's/^\.*//')
 	[ -n "$safe" ] || safe=$IB_APPID
-	folder=$base/$safe
-	[ -e "$folder" ] && ib_fail "$folder already exists; not overwriting it."
-	ib_mkdirs "$folder" || ib_fail "Could not create $folder"
+}
+
+ib_menus_macos() {
+	ib_desk_made=
+	if [ "$IB_SYSTEM" = 1 ]; then base=/Applications; else base=$HOME/Applications; fi
+	ib_mac_safe_name
 	q=$(ib_shq "$IB_APP_DIR/launch.sh")
 	if [ "$IB_CONSOLE" = 1 ]; then
 		body="if [ -t 1 ] || [ -n \"\$IB_NO_TERMINAL\" ]; then exec $q \"\$@\"; fi
@@ -1292,13 +1301,27 @@ exec open -a Terminal $q"
 	else
 		body="exec $q \"\$@\""
 	fi
+	if [ "$IB_MENU" = 0 ]; then
+		# No folder and no uninstaller app. A desktop shortcut still needs a
+		# launcher app to point at: just <App>.app in Applications.
+		ib_want_desktop && [ -d "$HOME/Desktop" ] && [ ! -e "$HOME/Desktop/$safe" ] || return 0
+		[ -e "$base/$safe.app" ] && ib_fail "$base/$safe.app already exists; not overwriting it."
+		ib_mkdirs "$base" || ib_fail "Could not create $base"
+		ib_mac_app "$base/$safe.app" "$IB_NAME_DISP" "pm.ib.app.$IB_APPID" "$body" || ib_fail "Could not create $base/$safe.app"
+		printf 'shortcut\t%s\n' "$base/$safe.app" >> "$IB_WORK/shortcuts"
+		ln -s "$base/$safe.app" "$HOME/Desktop/$safe" && ib_add_shortcut "$HOME/Desktop/$safe" && ib_desk_made=$HOME/Desktop/$safe
+		return 0
+	fi
+	folder=$base/$safe
+	[ -e "$folder" ] && ib_fail "$folder already exists; not overwriting it."
+	ib_mkdirs "$folder" || ib_fail "Could not create $folder"
 	ib_mac_app "$folder/$safe.app" "$IB_NAME_DISP" "pm.ib.app.$IB_APPID" "$body" || ib_fail "Could not create $folder/$safe.app"
 	printf 'shortcut\t%s\n' "$folder/$safe.app" >> "$IB_WORK/shortcuts"
 	ib_mac_app "$folder/Uninstall $safe.app" "Uninstall $IB_NAME_DISP" "pm.ib.uninstall.$IB_APPID" \
 		"exec /bin/sh $(ib_shq "$IB_APP_DIR/uninstall.sh") --uninstall \"\$@\"" || ib_fail "Could not create the uninstaller app"
 	printf 'shortcut\t%s\n' "$folder/Uninstall $safe.app" >> "$IB_WORK/shortcuts"
-	if [ "$IB_DESKTOP" = 1 ] && [ "$IB_SYSTEM" != 1 ] && [ -d "$HOME/Desktop" ] && [ ! -e "$HOME/Desktop/$safe" ]; then
-		ln -s "$folder/$safe.app" "$HOME/Desktop/$safe" && ib_add_shortcut "$HOME/Desktop/$safe"
+	if ib_want_desktop && [ -d "$HOME/Desktop" ] && [ ! -e "$HOME/Desktop/$safe" ]; then
+		ln -s "$folder/$safe.app" "$HOME/Desktop/$safe" && ib_add_shortcut "$HOME/Desktop/$safe" && ib_desk_made=$HOME/Desktop/$safe
 	fi
 	return 0
 }
@@ -1325,8 +1348,29 @@ ib_uninstall() {
 	cp "$IB_WORK/uninstall.txt" "$IB_WORK/short.txt"
 	ib_confirm "Uninstall $name" "$IB_WORK/uninstall.txt" "Remove $name?" || { ib_say "Nothing removed."; [ "$ib_log_is_temp" = 1 ] && rm -f "$IB_LOG"; exit 1; }
 	ib_log "Uninstalling $name ($appid) from $root"
+	ib_remove_app "$app" "$appid"
+	if [ $bad = 0 ]; then
+		[ "$opt_yes" = 1 ] || [ "$ib_ui" = tty ] || ib_message info "TiddlyInstall" "$name has been removed."
+		ib_say "$name has been removed."
+	else
+		ib_message error "TiddlyInstall" "$name was removed, but some listed items were refused (see above)."
+		exit 1
+	fi
+}
+
+# Remove app folder $1 (appid $2) and what its manifest lists: shortcuts,
+# then dependency folders, then the app's folder. Sets bad=1 if anything
+# listed was refused. Used by the uninstaller and by a reinstall.
+ib_remove_app() {
+	app=$1 appid=$2
+	man=$app/manifest.txt
+	root=$(dirname "$app")
 	bad=0
-	awk -F'\t' '{ sub(/\r$/, "") } $1 == "dir" || $1 == "shortcut" { print $1 "\t" $2 }' "$man" > "$IB_WORK/items"
+	# The "fully installed" marker goes first, so an uninstall that stops
+	# half way is never taken for a finished install.
+	rm -f "$app/.ib-installed"
+	: > "$IB_WORK/items"
+	[ -f "$man" ] && awk -F'\t' '{ sub(/\r$/, "") } $1 == "dir" || $1 == "shortcut" { print $1 "\t" $2 }' "$man" > "$IB_WORK/items"
 	# Shortcut files and launcher apps first.
 	while IFS="$tab" read -r kind p; do
 		[ "$kind" = shortcut ] || continue
@@ -1384,13 +1428,7 @@ ib_uninstall() {
 		case $p in *.app) continue ;; esac
 		rmdir "$p" 2>/dev/null && ib_say "removed $p"
 	done < "$IB_WORK/items"
-	if [ $bad = 0 ]; then
-		[ "$opt_yes" = 1 ] || [ "$ib_ui" = tty ] || ib_message info "Installer Builder" "$name has been removed."
-		ib_say "$name has been removed."
-	else
-		ib_message error "Installer Builder" "$name was removed, but some listed items were refused (see above)."
-		exit 1
-	fi
+	return 0
 }
 
 # ---------------------------------------------------------------- elevation
@@ -1406,6 +1444,7 @@ ib_elevate() { # extra args...
 	fi
 	[ -n "$IB_ORIGIN" ] && set -- "$@" --ib-origin="$IB_ORIGIN"
 	[ -n "$opt_backend" ] && set -- "$@" --backend="$opt_backend"
+	[ "$opt_reinstall" = 1 ] && set -- "$@" --reinstall
 	ib_log "Asking for administrator rights"
 	if [ "$opt_yes" = 1 ] && [ "$ib_ui" != tty ]; then
 		# --yes with no terminal: no password dialog either.
@@ -1430,6 +1469,67 @@ EOF
 	else
 		ib_fail "This install needs administrator rights. Run it in a terminal (it will use sudo)."
 	fi
+}
+
+# ---------------------------------------------------------------- installed already
+
+# Is this app fully installed where this installer would put it, with this
+# same record? Only the marker a finished install writes last counts
+# (.ib-installed, docs/format.md section 5), and it must name this appid
+# and record; the folder's .ib-owner must name the app too.
+ib_is_installed() {
+	m=$IB_APP_DIR/.ib-installed
+	[ -n "$IB_RECHASH" ] && [ -f "$m" ] && [ -f "$IB_APP_DIR/launch.sh" ] && [ -f "$IB_APP_DIR/launch.txt" ] || return 1
+	[ "$(sed -n 1p "$m" | tr -d '\r')" = "ib-installed${tab}1" ] || return 1
+	[ "$(ib_get "$m" appid)" = "$IB_APPID" ] && [ "$(ib_get "$m" record)" = "$IB_RECHASH" ] || return 1
+	[ "$(ib_get "$IB_APP_DIR/.ib-owner" appid 2>/dev/null)" = "$IB_APPID" ]
+}
+
+# Start the installed app the way its shortcuts do (launch.sh), and don't
+# come back. A console app started from a desktop (no terminal) gets a
+# terminal window, as its menu entry would (Terminal=true, or Terminal.app
+# on macOS; IB_NO_TERMINAL=1 keeps it in this process, as the launcher
+# app's does).
+ib_launch_installed() {
+	l=$IB_APP_DIR/launch.sh
+	ib_log "$IB_NAME_DISP is already installed in $IB_APP_DIR (record $IB_RECHASH); starting it with $l"
+	ib_say "$IB_NAME_DISP is already installed; starting it. (To install it again, run this installer with --reinstall.)"
+	ib_cleanup
+	trap - EXIT INT TERM HUP
+	[ "$ib_log_is_temp" = 1 ] && rm -f "$IB_LOG"
+	if [ "$IB_CONSOLE" = 1 ] && [ ! -t 1 ] && [ -z "${IB_NO_TERMINAL:-}" ]; then
+		case $ib_ui in
+		osascript) exec open -a Terminal "$l" ;;
+		zenity | kdialog)
+			if ib_have x-terminal-emulator; then exec x-terminal-emulator -e /bin/sh "$l"
+			elif ib_have gnome-terminal; then exec gnome-terminal -- /bin/sh "$l"
+			elif ib_have konsole; then exec konsole -e /bin/sh "$l"
+			elif ib_have xfce4-terminal; then exec xfce4-terminal -x /bin/sh "$l"
+			elif ib_have xterm; then exec xterm -e /bin/sh "$l"
+			fi
+			;;
+		esac
+	fi
+	exec /bin/sh "$l"
+}
+
+# How to start and uninstall the app, one line each, for the final message.
+ib_start_hint() {
+	if [ "$IB_MENU" != 0 ]; then
+		if [ "$IB_OS" = macos ]; then
+			printf 'Start it from Applications > %s, which also holds its uninstaller.' "$IB_NAME_DISP"
+		else
+			printf 'Start it from the app menu (the folder "%s"), which also holds its uninstaller.' "$IB_NAME_DISP"
+		fi
+		return 0
+	fi
+	if [ -n "$ib_desk_made" ]; then
+		printf 'Start it from its desktop shortcut, or run: %s\n' "$(ib_shq "$IB_APP_DIR/launch.sh")"
+	else
+		printf 'Start it by running: %s\n' "$(ib_shq "$IB_APP_DIR/launch.sh")"
+	fi
+	printf 'Running this installer again also starts it.\n'
+	printf 'To uninstall it, run: sh %s' "$(ib_shq "$IB_APP_DIR/uninstall.sh")"
 }
 
 # ---------------------------------------------------------------- main install
@@ -1548,6 +1648,19 @@ ib_install_main() {
 	export IB_TMP="$IB_WORK/tmp"
 	export IB_PROJECT
 	export IB_APP_NAME="$IB_NAME_DISP"
+
+	# ---- already installed? Only the marker a finished install writes
+	# last counts, for this appid and this exact record (the same settings).
+	if [ "$opt_reinstall" != 1 ] && ib_is_installed; then
+		if [ "$opt_yes" = 1 ]; then
+			# Unattended: never start the app (scripts, CI, the test matrix).
+			ib_log "$IB_NAME_DISP is already installed in $IB_APP_DIR (record $IB_RECHASH); nothing to do."
+			printf 'TiddlyInstall: %s is already installed in %s. Nothing was changed; add --reinstall to install it again.\n' "$(ib_cleans "$IB_NAME_DISP")" "$IB_APP_DIR" >&2
+			[ "$ib_log_is_temp" = 1 ] && rm -f "$IB_LOG"
+			exit 0
+		fi
+		ib_launch_installed
+	fi
 	nfiles=$(ib_sel file | wc -l | tr -d ' ')
 	IB_DIRMAP=
 	i=1
@@ -1571,7 +1684,7 @@ ib_install_main() {
 	sum=$IB_WORK/summary.txt
 	ib_signed_by=$(ib_signer)
 	{
-		printf 'Installer Builder will install: %s\n\n' "$IB_NAME_DISP"
+		printf 'TiddlyInstall will install: %s\n\n' "$IB_NAME_DISP"
 		printf 'WHAT\n'
 		printf '  Project:  %s\n' "$IB_PROJECT"
 		printf '  Source:   %s\n' "$(ib_describe_source)"
@@ -1618,12 +1731,19 @@ ib_install_main() {
 			else
 				printf '  App menu folder "%s" with "%s" and "Uninstall %s" (ib-%s.* in the XDG menu folders)\n' "$IB_NAME_DISP" "$IB_NAME_DISP" "$IB_NAME_DISP" "$IB_APPID"
 			fi
+		else
+			printf '  Nothing in the %s (this app asks for no menu entry)\n' "$([ "$IB_OS" = macos ] && echo "Applications folder" || echo "app menu")"
+			if [ "$IB_OS" = macos ] && ib_want_desktop; then
+				ib_mac_safe_name
+				printf '  %s/Applications/%s.app, for the desktop shortcut to open\n' "$HOME" "$safe"
+			fi
 		fi
-		[ "$IB_DESKTOP" = 1 ] && printf '  A desktop shortcut\n'
+		ib_want_desktop && printf '  A desktop shortcut\n'
 		ic=
 		[ -n "$IB_REC" ] && [ "$IB_OS" = linux ] && ic=$(ib_get "$IB_REC" icon)
 		[ -n "$ic" ] && printf '  Menu icon: the PNG packed in this installer (sha256 %s), copied to %s/icon.png\n' "$ic" "$IB_APP_DIR"
 		printf '  Uninstaller: %s/uninstall.sh\n' "$IB_APP_DIR"
+		[ "$IB_MENU" = 0 ] && printf '  To start it: %s/launch.sh, or run this installer again\n' "$IB_APP_DIR"
 		printf '  PATH: not changed\n'
 		ib_sel note | sed 's/^/\nNOTE: /'
 		ib_needs_summary
@@ -1651,12 +1771,13 @@ ib_install_main() {
 		[ -n "$ib_need_manual" ] && printf 'Something it needs is missing and must be installed first (see Details).\n'
 		printf '\nChoose Details for URLs, checksums and commands.'
 	} > "$IB_WORK/short.txt"
-	ib_confirm "Installer Builder" "$sum" "Install $IB_NAME_DISP?" || { ib_say "Cancelled; nothing was installed."; [ "$ib_log_is_temp" = 1 ] && rm -f "$IB_LOG"; exit 1; }
+	ib_confirm "TiddlyInstall" "$sum" "Install $IB_NAME_DISP?" || { ib_say "Cancelled; nothing was installed."; [ "$ib_log_is_temp" = 1 ] && rm -f "$IB_LOG"; exit 1; }
 
 	if [ $need_root = 1 ] && [ "$(id -u)" != 0 ]; then
 		ib_elevate
 		rc=$?
-		[ $rc = 0 ] && [ "$opt_yes" != 1 ] && [ "$ib_ui" != tty ] && ib_message info "Installer Builder" "$IB_NAME_DISP is installed."
+		ib_want_desktop && ib_desk_made=1
+		[ $rc = 0 ] && [ "$opt_yes" != 1 ] && [ "$ib_ui" != tty ] && ib_message info "TiddlyInstall" "$IB_NAME_DISP is installed.${nl}${nl}$(ib_start_hint)"
 		[ $rc = 0 ] || ib_fail "The administrator install did not finish."
 		exit $rc
 	fi
@@ -1664,20 +1785,25 @@ ib_install_main() {
 	# ---- install
 	ib_needs_install
 	ib_progress_start "Installing $IB_NAME_DISP…"
-	IB_CREATED=$IB_WORK/created
-	: > "$IB_CREATED"
 	: > "$IB_WORK/shortcuts"
+	# An earlier install of this app (--reinstall, an older engine's install
+	# with no marker, or one that was interrupted) is removed first, as its
+	# uninstaller would; anything else in the way stops the install.
 	if [ -e "$IB_APP_DIR" ]; then
-		o=$(ib_get "$IB_APP_DIR/manifest.txt" appid 2>/dev/null)
-		IB_CREATED=
-		if [ "$o" = "$IB_APPID" ]; then
-			ib_fail "$IB_NAME_DISP is already installed in $IB_APP_DIR. Run its uninstall.sh first."
-		elif [ -n "$o" ]; then
-			ib_fail "$IB_APP_DIR belongs to another app ($o). Not installing."
+		o=$(ib_get "$IB_APP_DIR/.ib-owner" appid 2>/dev/null)
+		m=$(ib_get "$IB_APP_DIR/manifest.txt" appid 2>/dev/null)
+		if [ "$o" = "$IB_APPID" ] && { [ -z "$m" ] || [ "$m" = "$IB_APPID" ]; }; then
+			ib_say "Removing the earlier install in $IB_APP_DIR"
+			ib_remove_app "$IB_APP_DIR" "$IB_APPID"
+			[ -e "$IB_APP_DIR" ] && ib_fail "Could not remove the earlier install in $IB_APP_DIR."
+		elif [ -n "$m" ] && [ "$m" != "$IB_APPID" ]; then
+			ib_fail "$IB_APP_DIR belongs to another app ($m). Not installing."
 		else
-			ib_fail "$IB_APP_DIR already exists (a leftover?). Remove it, then try again."
+			ib_fail "$IB_APP_DIR already exists and is not this app's (a leftover?). Remove it, then try again."
 		fi
 	fi
+	IB_CREATED=$IB_WORK/created
+	: > "$IB_CREATED"
 	ib_mkdirs "$IB_ROOT" || ib_fail "Could not create $IB_ROOT"
 	mkdir "$IB_APP_DIR" || ib_fail "Could not create $IB_APP_DIR"
 	ib_created r "$IB_APP_DIR"
@@ -1774,15 +1900,25 @@ ib_install_main() {
 		awk -F'\t' -v root="$IB_ROOT" '$1 == "e" && $2 != root && index($2, root "/") != 1 {
 				if (index(root "/", $2 "/") == 1) b[++m] = $2; else a[++n] = $2 }
 			END { for (i = n; i > 0; i--) print "shortcut\t" a[i]; for (i = m; i > 0; i--) print "shortcut\t" b[i] }' "$IB_CREATED"
-	} > "$IB_APP_DIR/manifest.txt"
+	} > "$IB_APP_DIR/manifest.txt" || ib_fail "Could not write the manifest."
+
+	# ---- the "fully installed" marker: the last thing a successful install
+	# writes (docs/format.md section 5), renamed into place so it is never
+	# half written. Running the installer again with the same record then
+	# starts the app instead of installing it again.
+	printf 'ib-installed\t1\nappid\t%s\nrecord\t%s\ninstalled\t%s\n' "$IB_APPID" "$IB_RECHASH" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+		> "$IB_APP_DIR/.ib-installed.tmp" && mv -f "$IB_APP_DIR/.ib-installed.tmp" "$IB_APP_DIR/.ib-installed" ||
+		ib_fail "Could not write $IB_APP_DIR/.ib-installed"
 
 	ib_progress_stop
 	IB_CREATED=
 	ib_say "Installed $IB_NAME_DISP in $IB_APP_DIR"
 	ib_log "Launcher: $IB_APP_DIR/launch.sh"
+	hint=$(ib_start_hint)
+	printf '%s\n' "$hint" | while IFS= read -r h; do ib_say "$h"; done
 	cp "$IB_LOG" "$IB_APP_DIR/install.log" 2>/dev/null
 	if [ "$opt_yes" != 1 ] && [ "$ib_ui" != tty ]; then
-		ib_message info "Installer Builder" "$IB_NAME_DISP is installed.${nl}${nl}Start it from $([ "$IB_OS" = macos ] && echo "Applications > $IB_NAME_DISP" || echo "the app menu").${nl}Log: $IB_APP_DIR/install.log"
+		ib_message info "TiddlyInstall" "$IB_NAME_DISP is installed.${nl}${nl}$hint${nl}${nl}Log: $IB_APP_DIR/install.log"
 	fi
 	[ "$ib_log_is_temp" = 1 ] && rm -f "$IB_LOG" && IB_LOG=
 	return 0
@@ -1790,14 +1926,18 @@ ib_install_main() {
 
 ib_usage() {
 	cat <<'EOF'
-Installer Builder (Linux and macOS)
+TiddlyInstall (Linux and macOS)
 
   --yes               install (or uninstall) without asking
   --log=PATH          write the log to PATH
   --record=PATH       use this ib-record file
   --plan=PATH         use this ib-plan file (else the plan is fetched); it
-                      must be signed by the Installer Builder key
+                      must be signed by the TiddlyInstall key
   --unsigned-plan     accept an unsigned --plan or install.txt plan
+  --reinstall         install again even if this app, with these same
+                      settings, is already installed (otherwise running the
+                      installer again starts the app, or with --yes just
+                      says it is installed)
   --backend=URL       where to fetch records and plans
   --uninstall         remove the app this uninstall.sh belongs to
 EOF
@@ -1812,6 +1952,7 @@ ib_main() {
 		--backend=*) opt_backend=${a#*=} ;;
 		--log=*) opt_log=$(ib_abs "${a#*=}") ;;
 		--yes | -y) opt_yes=1 ;;
+		--reinstall) opt_reinstall=1 ;;
 		--uninstall) opt_uninstall=1 ;;
 		--ib-origin=*) opt_origin=${a#*=} ;;
 		--help | -h) ib_usage; exit 0 ;;
@@ -1834,7 +1975,7 @@ ib_main() {
 		: > "$IB_LOG"
 		ib_log_is_temp=1
 	fi
-	ib_log "Installer Builder engine $IB_ENGINE_VERSION, $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+	ib_log "TiddlyInstall engine $IB_ENGINE_VERSION, $(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
 	s=$0
 	# `sh file.run` gives a bare name; a file here wins over a PATH lookup.
