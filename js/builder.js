@@ -38,7 +38,7 @@
 //                      app's source, so it needs no build server (offline page)
 //   env.signPlan(plan) signs an embedded plan (optional)
 //   env.now()          the record's `created` time (default: now)
-import { toBytes, sha256Hex, recordHash, readInstaller, writeInstaller, tarWrite, installerExt, zipWrite, peInfo } from './ibfile.js';
+import { toBytes, sha256Hex, recordHash, readInstaller, writeInstaller, tarWrite, installerExt, zipWrite, peInfo, zipRead, zipEntryData, zipUnixMode, zipIsDir, zipIsSymlink } from './ibfile.js';
 import { resolve, validPackage, packagePolicyFor, packageProject, packageModule, pickBin, jsonField, goQuote, replacer } from './resolve.js';
 import { rasterSource, buildIco, buildIcns, setExeIcon, setMacIcon, checkIconPng } from './icon.js';
 
@@ -138,6 +138,17 @@ export function validate(r, env) {
       if (!/^https?:\/\//.test(String(src.value || ''))) throw bad('source URL must be http(s)');
       if (!env.fetchSource) throw offlineSource(src);
       break;
+    case 'upload': {
+      // An archive or folder from the user's computer (the page packs a
+      // folder into a tar). Only the page's own builder takes these; the
+      // server has no upload yet.
+      if (!env.embedPlan) throw bad('Files from your computer are built in the page itself, not on the build server.');
+      if (r.mode === 'A') throw bad('Installers signed by TiddlyInstall need the source on the build server. For files from your computer, choose "Signed by you" or "Unsigned".');
+      const b64 = String(r.archive || '');
+      if (!b64) throw bad('Pick an archive or a folder from your computer.');
+      if (b64.length > Math.ceil(UPLOAD_MAX / 3) * 4) throw bad('The archive is over ' + MB(UPLOAD_MAX) + ' MB.');
+      break;
+    }
     case 'package':
       try {
         src.value = validPackage(cat, r.runtime, String(src.value || '').trim(), String(src.version || '').trim());
@@ -209,6 +220,10 @@ export function projectName(r) {
     const base = pathBase(String(r.source.value || '')).replace(/\.gz$/, '').replace(/\.tar$/, '');
     p = base.toLowerCase().replace(safeName, '_');
   }
+  if (r.source && r.source.kind === 'upload' && p === '') {
+    const base = pathBase(String(r.source.value || '')).replace(/\.(zip|tgz|tar\.gz|tar)$/i, '');
+    p = base.toLowerCase().replace(safeName, '_').replace(/^[_.-]+|[_.-]+$/g, '');
+  }
   if (!p) p = 'app';
   return p.length > 40 ? p.slice(0, 40) : p;
 }
@@ -233,6 +248,103 @@ export function inlineTar(project, files) {
     members.push({ name: project + '/' + n, data: enc.encode(files[n]), mode: files[n].startsWith('#!') ? 0o755 : 0o644 });
   }
   return { tar: tarWrite(members), names };
+}
+
+/* ---------- sources from the user's computer ---------- */
+
+const UPLOAD_MAX = 200 * 1024 * 1024;   // as the server's source downloads
+
+async function gunzip(u8) {
+  const s = new Blob([u8]).stream().pipeThrough(new DecompressionStream('gzip'));
+  return new Uint8Array(await new Response(s).arrayBuffer());
+}
+
+function isUstar(u8) {
+  return u8.length >= 512 && String.fromCharCode(...u8.subarray(257, 262)) === 'ustar';
+}
+
+// The member names of a tar (ustar, pax and GNU long names), folders
+// included, without the contents.
+function tarNamesOf(u8) {
+  const dec = new TextDecoder();
+  const str = (b) => { const i = b.indexOf(0); return dec.decode(i < 0 ? b : b.subarray(0, i)); };
+  const out = [];
+  let o = 0, longName = null, paxPath = null;
+  while (o + 512 <= u8.length) {
+    const h = u8.subarray(o, o + 512);
+    if (h.every((b) => b === 0)) break;
+    const size = parseInt(str(h.subarray(124, 136)).trim() || '0', 8) || 0;
+    const type = String.fromCharCode(h[156] || 0x30);
+    const body = u8.subarray(o + 512, o + 512 + size);
+    o += 512 + Math.ceil(size / 512) * 512;
+    if (type === 'L') { longName = str(body); continue; }
+    if (type === 'x') {
+      const m = /(?:^|\n)\d+ path=([^\n]*)\n/.exec(dec.decode(body));
+      if (m) paxPath = m[1];
+      continue;
+    }
+    if (type === 'g') continue;
+    let name = str(h.subarray(0, 100));
+    const prefix = str(h.subarray(345, 500));
+    if (prefix && str(h.subarray(257, 263)).startsWith('ustar')) name = prefix + '/' + name;
+    out.push(paxPath || longName || name);
+    longName = paxPath = null;
+  }
+  return out;
+}
+
+// build.topFolder: 1 when every entry is under one folder.
+function topFolderOfNames(names) {
+  let top = '';
+  for (const n of names) {
+    const t = n.replace(/^\.\//, '').split('/')[0];
+    if (!t) continue;
+    if (!top) top = t;
+    else if (t !== top) return 0;
+  }
+  return top ? 1 : 0;
+}
+
+function safeEntry(n) {
+  const parts = n.replace(/^\.\//, '').split('/');
+  return !n.startsWith('/') && !/[\\:\0]/.test(n) && !parts.includes('..') && !hasControl(n);
+}
+
+// An archive from the user's computer as the .tar.gz the engines unpack:
+// a .tar.gz is kept as it is, a .tar gzipped, a .zip rewritten as a tar
+// (keeping Unix permissions where the zip has them). Returns {data, strip,
+// names}: names are those at the top of the source, as for GitHub sources.
+export async function uploadTarball(u8) {
+  let data, tar;
+  if (u8[0] === 0x1f && u8[1] === 0x8b) {
+    tar = await gunzip(u8);
+    if (!isUstar(tar)) throw bad('That .gz file doesn\'t hold a tar archive.');
+    data = u8;
+  } else if (isUstar(u8)) {
+    tar = u8;
+    data = await gzip(u8);
+  } else if (u8[0] === 0x50 && u8[1] === 0x4b) {
+    let entries;
+    try { entries = zipRead(u8); } catch (e) { throw bad('That zip can\'t be read: ' + e.message); }
+    const members = [];
+    for (const e of entries) {
+      if (zipIsSymlink(e)) continue;
+      const mode = zipUnixMode(e) & 0o777;
+      if (zipIsDir(e)) members.push({ name: e.name.replace(/\/?$/, '/'), dir: true, mode: mode || 0o755 });
+      else members.push({ name: e.name, data: await zipEntryData(e), mode: mode || 0o644 });
+    }
+    tar = tarWrite(members);
+    data = await gzip(tar);
+  } else {
+    throw bad('That isn\'t a .zip, .tar.gz or .tar archive.');
+  }
+  const all = tarNamesOf(tar);
+  if (!all.length) throw bad('The archive is empty.');
+  const badName = all.find((n) => !safeEntry(n));
+  if (badName !== undefined) throw bad('The archive has an unsafe path: ' + goQuote(badName.slice(0, 120)));
+  const strip = topFolderOfNames(all);
+  const names = all.map((n) => n.replace(/^\.\//, '').split('/').slice(strip).join('/')).filter(Boolean);
+  return { data, strip, names };
 }
 
 async function inlineTarball(project, files) {
@@ -353,6 +465,7 @@ function writeRecord(r, fields, backend, now) {
   if (fields.pkg) add('source', 'package', fields.pkg.name, fields.pkg.version);
   else if (r.source.kind === 'github') add('source', 'github', fields.src.origin, fields.src.commit, fields.src.sha256);
   else if (r.source.kind === 'url') add('source', 'url', r.source.value, fields.src.sha256);
+  else if (r.source.kind === 'upload') add('source', 'upload', fields.src.sha256);
   else add('source', 'inline', fields.src.sha256);
   add('launch', fields.launch);
   if (fields.install) add('install', fields.install);
@@ -400,6 +513,14 @@ export async function runJob(r, env, progress = () => {}) {
     names = t.names;
     src = { data: t.data, sha256: await sha256Hex(t.data), size: t.data.length, strip: 1, urls: [] };
     if (env.storeSource) await env.storeSource(src.sha256, src.data);
+  } else if (r.source.kind === 'upload') {
+    const s = atob(String(r.archive).replace(/\s+/g, ''));
+    const u8 = new Uint8Array(s.length);
+    for (let i = 0; i < s.length; i++) u8[i] = s.charCodeAt(i);
+    const t = await uploadTarball(u8);
+    names = t.names;
+    project = projectName(r);
+    src = { data: t.data, sha256: await sha256Hex(t.data), size: t.data.length, strip: t.strip, urls: [] };
   } else if (r.source.kind === 'package') {
     // Pin the version now (design.md section 4: records name what they
     // install), while the registry can be asked.

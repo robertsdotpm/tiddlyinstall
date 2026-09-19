@@ -2,7 +2,8 @@
 // ticket page. Also fills the "Newest that runs on the user's system" table
 // from GET /api/catalog/runtimes. Without JS the form still works as the
 // no-JS prototype did.
-import { apiRequest, errorText, mountApiFooter, pageUrl, apiLocal, apiReady, setApiBase, LOCAL } from './api.js';
+import { apiRequest, errorText, mountApiFooter, pageUrl, apiLocal, apiReady, setApiBase, LOCAL, localSubmit } from './api.js';
+import { tarWrite } from './ibfile.js';
 import { loadOverlay, overlayState, hasCatalog } from './overlay.js';
 
 mountApiFooter();
@@ -128,9 +129,65 @@ function inlineFiles(runtime, template) {
   return files;
 }
 
+/* ---------- "From my computer": an archive or a folder ---------- */
+
+// What was picked: {name, bytes}. A folder becomes a tar here (paths as
+// the browser gives them, under the folder's name); the builder turns any
+// archive into the .tar.gz the installers unpack.
+let localPick = null;
+const pickedHint = document.getElementById('local-picked');
+const pickedHintText = pickedHint && pickedHint.innerHTML;
+
+function showPicked(text) {
+  if (!pickedHint) return;
+  if (text) pickedHint.textContent = text;
+  else pickedHint.innerHTML = pickedHintText;
+}
+
+function humanBytes(n) {
+  return n < 1024 * 1024 ? Math.ceil(n / 1024) + ' KB' : (n / 1024 / 1024).toFixed(1) + ' MB';
+}
+
+const archiveInput = document.getElementById('local-archive');
+if (archiveInput) {
+  archiveInput.addEventListener('change', async () => {
+    const f = archiveInput.files && archiveInput.files[0];
+    if (!f) return;
+    localPick = { name: f.name, bytes: new Uint8Array(await f.arrayBuffer()) };
+    showPicked(f.name + ' (' + humanBytes(f.size) + ')');
+  });
+}
+const folderInput = document.getElementById('local-folder');
+if (folderInput) {
+  folderInput.addEventListener('change', async () => {
+    const files = Array.from(folderInput.files || []);
+    if (!files.length) return;
+    const members = [];
+    const dirs = new Set();
+    let total = 0;
+    for (const f of files.sort((a, b) => (a.webkitRelativePath < b.webkitRelativePath ? -1 : 1))) {
+      const rel = f.webkitRelativePath || f.name;
+      const parts = rel.split('/');
+      for (let i = 1; i < parts.length; i++) {
+        const d = parts.slice(0, i).join('/') + '/';
+        if (!dirs.has(d)) { dirs.add(d); members.push({ name: d, dir: true, mode: 0o755 }); }
+      }
+      const data = new Uint8Array(await f.arrayBuffer());
+      total += data.length;
+      // Browsers don't say which files are executable; scripts with a #! are.
+      const exec = data[0] === 0x23 && data[1] === 0x21;
+      members.push({ name: rel, data, mode: exec ? 0o755 : 0o644 });
+    }
+    const top = (files[0].webkitRelativePath || '').split('/')[0] || 'project';
+    localPick = { name: top, bytes: tarWrite(members) };
+    showPicked(top + '/: ' + files.length + ' file' + (files.length === 1 ? '' : 's') + ' (' + humanBytes(total) + ')');
+  });
+}
+
 async function buildJob() {
   const runtime = val('runtime');
   const write = val('source_kind') === 'write';
+  const local = val('source_kind') === 'local';
   const rv = val('rv_mode');
   const mode = MODES[val('mode')] || 'A';
   const platforms = ['windows', 'linux', 'macos'].filter((p) => checked('target_' + p));
@@ -176,6 +233,13 @@ async function buildJob() {
     const entry = form.elements['entry_' + runtime];
     const main = Object.keys(job.files).find((n) => /^main\.[a-z]+$/.test(n));
     if (main && (!entry || entry.value === entry.defaultValue)) job.launch = '{runtime} {app_dir}/' + main;
+  } else if (local) {
+    if (!localPick) problems.push('Pick an archive or a folder from your computer.');
+    else {
+      job.source = { kind: 'upload', value: localPick.name };
+      job.archive = bytesToBase64(localPick.bytes);
+    }
+    if (mode === 'A') problems.push('Installers signed by TiddlyInstall need the source on the build server. For files from your computer, choose "Signed by you" or "Unsigned" under Customise → Signing.');
   } else {
     const src = val('source');
     if (!src.trim()) problems.push('Say what to package: a GitHub repo URL or a package name.');
@@ -215,7 +279,8 @@ form.addEventListener('submit', async (e) => {
     const { job, problems } = await buildJob();
     if (problems.length) { showError(problems.join(' ')); return; }
     showError('');
-    const r = await apiRequest('/api/jobs', { method: 'POST', body: job });
+    // Files from the user's computer are built by the page itself.
+    const r = job.source.kind === 'upload' ? await localSubmit(job) : await apiRequest('/api/jobs', { method: 'POST', body: job });
     location.href = pageUrl('build.html', 'job=' + encodeURIComponent(r.id));
   } catch (err) {
     showError((apiLocal() ? 'Couldn\'t build this: ' : 'The build server refused this: ') + errorText(err));

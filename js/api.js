@@ -66,6 +66,19 @@ let apiBaseUrl = explicitApi || defaultApi;
 
 // True when this page builds installers itself (no build server).
 export function apiLocal() { return apiBaseUrl === LOCAL; }
+
+// A job this page built itself (files from the user's computer are, even
+// with a build server) and its record are answered by the page.
+function localPath(path) {
+  if (!HAS_LOCAL || !globalThis.ibLocalApi) return false;
+  if (/^\/api\/jobs\/local-/.test(path)) return true;
+  return !!globalThis.ibLocalApi.url(path);
+}
+
+// Sends a job to this page's own builder, whatever the backend.
+export function localSubmit(body) {
+  return globalThis.ibLocalApi.request('/api/jobs', { method: 'POST', body });
+}
 let readyPromise = null;
 
 // Is this page served by a build server? Asked once per tab, and only when
@@ -115,7 +128,7 @@ export function apiDefault() { return defaultApi; }
 // link onto the page. Anything else, or a value that isn't a URL, returns ''.
 export function absUrl(path) {
   if (!path) return '';
-  if (apiLocal()) {
+  if (apiLocal() || (HAS_LOCAL && /^blob:/i.test(path)) || localPath(path)) {
     // Only what this page made: blob: URLs, and paths it can answer.
     if (/^blob:/i.test(path)) return path;
     return globalThis.ibLocalApi ? globalThis.ibLocalApi.url(path) : '';
@@ -264,7 +277,7 @@ async function timedFetch(url, opts) {
 // returns the body as a string or Uint8Array instead.
 export async function apiRequest(path, opts = {}) {
   await apiReady();
-  if (apiLocal()) return globalThis.ibLocalApi.request(path, opts);
+  if (apiLocal() || localPath(path)) return globalThis.ibLocalApi.request(path, opts);
   for (;;) {
     await whenUp();
     // Switched to this page's own builder while waiting for a server.
@@ -330,6 +343,7 @@ function prettyApi(u) {
 // A, packing runtimes, the timestamp relay; css/style.css .online-only).
 function paintMode() {
   document.documentElement.classList.toggle('ib-local', apiLocal());
+  document.documentElement.classList.toggle('ib-has-local', HAS_LOCAL);
 }
 
 function paintApiFooter() {

@@ -43,6 +43,16 @@
         <div class="lang-choices" style="margin-bottom:12px">
           <label class="lang-choice"><input type="radio" name="source_kind" value="repo" id="src-repo" checked> A GitHub repo or package</label>
           <label class="lang-choice"><input type="radio" name="source_kind" value="write" id="src-write"> I'll write it here</label>
+          <label class="lang-choice has-local-only"><input type="radio" name="source_kind" value="local" id="src-local"> From my computer</label>
+        </div>
+
+        <div class="field src-local-only">
+          <span class="label">Your project</span>
+          <div class="actions" style="margin:4px 0 6px">
+            <label class="button secondary file-button">Pick an archive<input type="file" id="local-archive" accept=".zip,.tar.gz,.tgz,.tar,application/zip,application/gzip,application/x-tar" hidden></label>
+            <label class="button secondary file-button">Pick a folder<input type="file" id="local-folder" webkitdirectory multiple hidden></label>
+          </div>
+          <span class="hint" id="local-picked">A <code>.zip</code>, <code>.tar.gz</code> or <code>.tar</code>, or a folder. It never leaves your browser: the page builds the installers itself and packs your project inside them, so they're signed by you or unsigned.</span>
         </div>
 
         <div class="field src-repo-only">

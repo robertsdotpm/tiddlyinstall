@@ -545,6 +545,11 @@ form:has(#offline-on:checked) .offline-off-inline { display: none; }
 
 /* Where's the code: a repo or package, or written on the site (no JS). */
 .src-write-only, .write-needs-lang { display: none; }
+.src-local-only, .has-local-only { display: none; }
+html.ib-has-local .has-local-only { display: inline-flex; }
+form:has(#src-local:checked) .src-local-only { display: block; }
+form:has(#src-local:checked) .src-repo-only { display: none; }
+.file-button { cursor: pointer; }
 form:has(#src-write:checked) .src-write-only { display: block; }
 form:has(#src-write:checked) .src-repo-only,
 form:has(#src-write:checked):has(#runtime option[value="none"]:checked) .lang-other-only { display: none; }
