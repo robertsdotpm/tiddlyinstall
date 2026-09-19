@@ -53,7 +53,7 @@ def job_view(j):
             body = ("fake %s installer\n" % p).encode()
             files.append({"platform": p, "name": name, "url": "/dl/" + name, "size": 812345,
                           "sha256": hashlib.sha256(body).hexdigest(),
-                          "signed": {"A": "Installer Builder TEST", "B": "", "C": ""}[j["mode"]]})
+                          "signed": {"A": "TiddlyInstall TEST", "B": "", "C": ""}[j["mode"]]})
         v.update(status="done", position=0, eta_seconds=0, progress="Done",
                  result={"record": "tjfq5rqwnnrxkamzq2x7v4paab", "files": files})
     return v

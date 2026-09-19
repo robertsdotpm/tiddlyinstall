@@ -47,9 +47,15 @@ started from a desktop gets a terminal window, as its menu entry would;
 0. "Fully installed" means `<app>/.ib-installed` (format.md section 5),
 the last file a successful install writes, names this appid and record.
 A different record (new settings, a new version) has another appid, so
-it installs beside the old one as before. The plan is still fetched
-first (it names the appid), so this needs the backend for online
-installers. `--reinstall` removes the existing install, as its
+it installs beside the old one as before. This works offline: the
+appid is derived from the record hash alone (`base32(sha256(<hash>
+"/app"))[:12]`), so when the record hash is known before anything is
+fetched (an embedded, `--record` or `install.txt` record, whose root
+and rootname say where to look; the hash in a mode A file name, looked
+for in the default folders for one user and for all users) the marker
+is checked first, and the app is started without any network access.
+Only plans by name, whose record hash only the server knows, are checked
+after the plan is fetched. `--reinstall` removes the existing install, as its
 uninstaller would, and installs again.
 
 **How it asks.** In a terminal it prints the transparency text and asks

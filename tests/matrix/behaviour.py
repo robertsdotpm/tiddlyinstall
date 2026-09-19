@@ -124,6 +124,16 @@ def judge(p, variant, desktop_seen):
         bad.append("the interactive rerun did not start the app: " + tail(o("interactive") + o("log3"), 4))
     if o("marker3") != m1:
         bad.append("the interactive rerun reinstalled")
+    # Offline (docs/format.md section 5): the appid comes from the record
+    # hash, so a rerun finds the install without fetching anything.
+    last = lambda k: (o(k).splitlines() or [""])[-1].strip()
+    if p.get("offline_y") != "0" or last("offline_y") != "1":
+        bad.append("offline rerun -y: exit %s, launched %s times" % (p.get("offline_y"), last("offline_y")))
+    if last("offline_run") != "2":
+        bad.append("offline rerun did not start the app (launched %s times)" % last("offline_run"))
+    ol = o("offline_log")
+    if ol.count("nothing fetched") != 2 or "GET " in ol or "Fetching" in ol:
+        bad.append("offline reruns fetched something: " + ol.replace("\n", " ")[:200])
     if p.get("reinstall") != "0":
         bad.append("reinstall exit %s: %s" % (p.get("reinstall"), tail(o("log4"), 4)))
     if "launched" in o("reinstall"):
@@ -137,7 +147,7 @@ def judge(p, variant, desktop_seen):
         bad.append("left after uninstall: " + o("left").replace("\n", " ")[:200])
     if bad:
         return "fail", "; ".join(bad)
-    return "pass", "no menu entries%s; rerun -y: exit 0, not started; rerun: started, not reinstalled; reinstall; clean uninstall" % (
+    return "pass", "no menu entries%s; rerun -y: exit 0, not started; rerun: started, not reinstalled; offline: both, nothing fetched; reinstall; clean uninstall" % (
         ", desktop shortcut" if variant == "desktop" else "")
 
 
@@ -162,6 +172,9 @@ run "$H/$F" --log="$H/i3.log" >"$H/o3" 2>&1; echo "@interactive $?"; tail -3 "$H
 echo "@launched"; cat "$A/launched.txt" 2>/dev/null
 echo "@marker3"; cat "$A/.ib-installed" 2>/dev/null
 echo "@log3"; tail -3 "$H/i3.log" 2>/dev/null
+run "$H/$F" --yes --backend=http://127.0.0.1:9 --log="$H/i5.log" >/dev/null 2>&1; echo "@offline_y $?"; wc -l < "$A/launched.txt" 2>/dev/null
+run "$H/$F" --backend=http://127.0.0.1:9 --log="$H/i6.log" >/dev/null 2>&1; echo "@offline_run $?"; wc -l < "$A/launched.txt" 2>/dev/null
+echo "@offline_log"; grep -h 'nothing fetched\|GET \|Fetching' "$H/i5.log" "$H/i6.log" 2>/dev/null
 sleep 2
 run "$H/$F" --yes --reinstall --log="$H/i4.log" >/dev/null 2>&1; echo "@reinstall $?"; [ -e "$A/launched.txt" ] && echo launched
 echo "@marker4"; cat "$A/.ib-installed" 2>/dev/null
@@ -211,6 +224,9 @@ IB_NO_TERMINAL=1 run --log="$HOME/ibbtest/i3.log" >"$HOME/ibbtest/o3" 2>&1; echo
 echo "@launched"; cat "$A/launched.txt" 2>/dev/null
 echo "@marker3"; cat "$A/.ib-installed" 2>/dev/null
 echo "@log3"; tail -3 "$HOME/ibbtest/i3.log" 2>/dev/null
+run --yes --backend=http://127.0.0.1:9 --log="$HOME/ibbtest/i5.log" >/dev/null 2>&1; echo "@offline_y $?"; wc -l < "$A/launched.txt" 2>/dev/null
+IB_NO_TERMINAL=1 run --backend=http://127.0.0.1:9 --log="$HOME/ibbtest/i6.log" >/dev/null 2>&1; echo "@offline_run $?"; wc -l < "$A/launched.txt" 2>/dev/null
+echo "@offline_log"; grep -h 'nothing fetched\|GET \|Fetching' "$HOME/ibbtest/i5.log" "$HOME/ibbtest/i6.log" 2>/dev/null
 sleep 2
 run --yes --reinstall --log="$HOME/ibbtest/i4.log" >/dev/null 2>&1; echo "@reinstall $?"; [ -e "$A/launched.txt" ] && echo launched
 echo "@marker4"; cat "$A/.ib-installed" 2>/dev/null
@@ -277,6 +293,31 @@ echo @marker3
 type "%A%\.ib-installed"
 echo @log3
 if exist "%T%\i3.log" type "%T%\i3.log"
+rem Offline: a backend nobody listens on (a signed mode A base refuses
+rem /backend=, so there the logs show that nothing was fetched).
+set OFF=/backend=http://127.0.0.1:9
+if "%MODE%"=="A" set OFF=
+"%T%\%FILE%" /S %OFF% /log=%T%\i5.log
+echo @offline_y %ERRORLEVEL%
+ping -n 5 127.0.0.1 >nul
+set C=0
+for /f %%c in ('find /c /v "" ^< "%A%\launched.txt"') do set C=%%c
+echo %C%
+"%T%\%FILE%" %OFF% /log=%T%\i6.log
+echo @offline_run %ERRORLEVEL%
+set /a n=0
+:waito
+set C=0
+for /f %%c in ('find /c /v "" ^< "%A%\launched.txt"') do set C=%%c
+if "%C%"=="2" goto offdone
+set /a n+=1
+if %n% GEQ 60 goto offdone
+ping -n 2 127.0.0.1 >nul
+goto waito
+:offdone
+echo %C%
+echo @offline_log
+findstr /c:"nothing fetched" /c:"Fetching" "%T%\i5.log" "%T%\i6.log"
 ping -n 3 127.0.0.1 >nul
 "%T%\%FILE%" /S /reinstall /log=%T%\i4.log
 echo @reinstall %ERRORLEVEL%
@@ -305,9 +346,9 @@ for /d %%d in ("%TEMP%\~nsu*.tmp") do rd /s /q "%%d" 2>nul
 '''
 
 
-def run_windows(vm, variant, name, f, rec):
+def run_windows(vm, variant, mode, name, f, rec):
     host, _shell = vm
-    head = "@echo off\r\nset ID=%s\r\nset FILE=%s\r\nset NAME=%s\r\n" % (appid(rec), Path(f).name, name)
+    head = "@echo off\r\nset ID=%s\r\nset FILE=%s\r\nset NAME=%s\r\nset MODE=%s\r\n" % (appid(rec), Path(f).name, name, mode)
     bat = BAT.replace("@echo off\nsetlocal\n", "setlocal\n")
     with tempfile.NamedTemporaryFile("w", suffix=".bat", delete=False, newline="\r\n") as t:
         t.write(head.replace("\r\n", "\n") + bat)
@@ -362,7 +403,7 @@ def main():
             elif mac:
                 r, d = run_mac(variant, b["name"], f)
             else:
-                r, d = run_windows(WINDOWS[a.target], variant, b["name"], f, b["record"])
+                r, d = run_windows(WINDOWS[a.target], variant, mode, b["name"], f, b["record"])
             record({"target": a.target, "runtime": "behaviour-" + variant, "mode": mode,
                     "result": r, "detail": d, "record": b["record"]})
 

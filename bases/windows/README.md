@@ -68,7 +68,13 @@ the app is installed and exits 0. "Fully installed" means
 install writes, names this appid and record, and the folder's
 `.ib-owner` names the app. A different record (new settings, a new
 version) has another appid, so it installs beside the old one as before.
-The plan is still fetched first (it names the appid). `/reinstall` goes
+This works offline: the appid is derived from the record hash alone
+(`base32(sha256(<hash> "/app"))[:12]`), so with an embedded, `/record=`
+or `install.txt` record (its `root` and `rootname` say where to look),
+or the hash in a mode A file name (looked for in the default folders for
+one user and for all users), the marker is checked before anything is
+fetched. Only plans by name, whose record hash only the server knows,
+are checked after the plan is fetched. `/reinstall` goes
 on to install, removing the earlier install first as before.
 
 **Mode A (a signed base with no appended block)** accepts none of

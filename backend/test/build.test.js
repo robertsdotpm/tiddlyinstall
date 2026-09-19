@@ -228,7 +228,7 @@ test('icons in mode A: in the record, the files untouched', { skip: skip || (!ha
       const signed = path.join(BASES, 'windows', 'out', 'base-signed.exe');
       const want = fs.readFileSync(fs.existsSync(signed) ? signed : path.join(BASES, 'windows', 'out', 'base.exe'));
       assert.ok(d.equals(want), 'mode A exe changed');
-      assert.equal(f.signed, fs.existsSync(signed) ? 'Installer Builder TEST' : '');
+      assert.equal(f.signed, fs.existsSync(signed) ? 'TiddlyInstall TEST' : '');
     } else if (f.platform === 'linux') {
       assert.ok(d.equals(fs.readFileSync(path.join(BASES, 'unix', 'out', 'ib-base.run'))), 'mode A .run changed');
     } else {

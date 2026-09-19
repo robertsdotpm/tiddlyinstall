@@ -863,7 +863,7 @@ func (b *Builder) output(ctx context.Context, r *Request, plat, stem, hash strin
 	case r.Mode == "A":
 		buf.Write(base)
 		if signed {
-			signedBy = "Installer Builder TEST"
+			signedBy = "TiddlyInstall TEST"
 		}
 	default:
 		// Modes B and C: the icon goes into the file before the metadata

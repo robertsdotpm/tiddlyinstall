@@ -620,6 +620,8 @@ ib_find_metadata() {
 	case $last in
 	*[!a-z2-7]*) ;;
 	??????????????????????????)
+		# Installed already? Checked before the record is fetched.
+		ib_installed_offline "$last"
 		backend=${opt_backend:-$IB_DEFAULT_BACKEND}
 		IB_REC=$IB_WORK/record.txt
 		ib_download "$backend/api/records/$last" "$IB_REC" ||
@@ -1477,12 +1479,69 @@ EOF
 # same record? Only the marker a finished install writes last counts
 # (.ib-installed, docs/format.md section 5), and it must name this appid
 # and record; the folder's .ib-owner must name the app too.
-ib_is_installed() {
-	m=$IB_APP_DIR/.ib-installed
-	[ -n "$IB_RECHASH" ] && [ -f "$m" ] && [ -f "$IB_APP_DIR/launch.sh" ] && [ -f "$IB_APP_DIR/launch.txt" ] || return 1
+ib_is_installed() { # [app dir, appid, record hash]; default: this install's
+	i_d=${1:-$IB_APP_DIR} i_id=${2:-$IB_APPID} i_h=${3:-$IB_RECHASH}
+	m=$i_d/.ib-installed
+	[ -n "$i_h" ] && [ -n "$i_id" ] && [ -f "$m" ] && [ -f "$i_d/launch.sh" ] && [ -f "$i_d/launch.txt" ] || return 1
 	[ "$(sed -n 1p "$m" | tr -d '\r')" = "ib-installed${tab}1" ] || return 1
-	[ "$(ib_get "$m" appid)" = "$IB_APPID" ] && [ "$(ib_get "$m" record)" = "$IB_RECHASH" ] || return 1
-	[ "$(ib_get "$IB_APP_DIR/.ib-owner" appid 2>/dev/null)" = "$IB_APPID" ]
+	[ "$(ib_get "$m" appid)" = "$i_id" ] && [ "$(ib_get "$m" record)" = "$i_h" ] || return 1
+	[ "$(ib_get "$i_d/.ib-owner" appid 2>/dev/null)" = "$i_id" ]
+}
+
+# The install root for root mode $1 (user, system) and folder name $2.
+ib_root_path() {
+	if [ "$IB_OS" = macos ]; then
+		if [ "$1" = system ]; then printf '%s' "/Library/Application Support/$2"; else printf '%s' "$HOME/Library/Application Support/$2"; fi
+	else
+		if [ "$1" = system ]; then printf '%s' "/opt/$2"; else printf '%s' "${XDG_DATA_HOME:-$HOME/.local/share}/$2"; fi
+	fi
+}
+
+# Already installed, found before any network access? The appid is
+# derived from the record hash alone (the resolver writes
+# appid = base32(sha256(<record hash> "/app"))[:12]), so when the record
+# hash is known before the plan is fetched (an embedded, given or
+# install.txt record; the hash in a mode A file name) the marker can be
+# checked offline. $1 the record hash, $2 the record file if there is one
+# (its root and rootname say where to look; without it, the default
+# folders for one user and for all users). Starts the app, or with --yes
+# says it is installed, and doesn't come back; returns if not installed.
+ib_installed_offline() {
+	[ "$opt_reinstall" = 1 ] && return 0
+	e_h=$1
+	case $e_h in *[!a-z2-7]* | '') return 0 ;; ??????????????????????????) ;; *) return 0 ;; esac
+	e_id=$(ib_b32 "$(printf '%s/app' "$e_h" | ib_sha256)" 12)
+	if [ -n "$2" ]; then
+		e_rm=$(ib_get "$2" root)
+		e_rn=$(ib_get "$2" rootname)
+		[ -n "$e_rn" ] || e_rn=ib
+		case $e_rn in . | .. | */* | *[!A-Za-z0-9._-]*) return 0 ;; esac
+		set -- "$(ib_root_path "${e_rm:-user}" "$e_rn")"
+	else
+		set -- "$(ib_root_path user ib)" "$(ib_root_path system ib)"
+	fi
+	for e_root in "$@"; do
+		ib_is_installed "$e_root/$e_id" "$e_id" "$e_h" || continue
+		IB_APP_DIR=$e_root/$e_id IB_APPID=$e_id IB_RECHASH=$e_h
+		IB_NAME_DISP=$(ib_get "$IB_APP_DIR/manifest.txt" name 2>/dev/null)
+		[ -n "$IB_NAME_DISP" ] || IB_NAME_DISP=$e_id
+		IB_CONSOLE=$(ib_get "$IB_APP_DIR/launch.txt" console 2>/dev/null)
+		ib_log "Found $IB_NAME_DISP fully installed in $IB_APP_DIR (record $e_h, appid from the record hash); nothing fetched."
+		ib_installed_now
+	done
+	return 0
+}
+
+# The app is fully installed: with --yes say so and exit 0, else start it.
+ib_installed_now() {
+	if [ "$opt_yes" = 1 ]; then
+		# Unattended: never start the app (scripts, CI, the test matrix).
+		ib_log "$IB_NAME_DISP is already installed in $IB_APP_DIR (record $IB_RECHASH); nothing to do."
+		printf 'TiddlyInstall: %s is already installed in %s. Nothing was changed; add --reinstall to install it again.\n' "$(ib_cleans "$IB_NAME_DISP")" "$IB_APP_DIR" >&2
+		[ "$ib_log_is_temp" = 1 ] && rm -f "$IB_LOG"
+		exit 0
+	fi
+	ib_launch_installed
 }
 
 # Start the installed app the way its shortcuts do (launch.sh), and don't
@@ -1575,6 +1634,8 @@ ib_install_main() {
 	[ -n "$IB_REC" ] && ib_check_header "$IB_REC" ib-record
 	IB_RECHASH=
 	[ -n "$IB_REC" ] && IB_RECHASH=$(ib_b32 "$(ib_sha256 "$IB_REC")" 26)
+	# Installed already? Checked here, before the plan is fetched.
+	[ -n "$IB_RECHASH" ] && ib_installed_offline "$IB_RECHASH" "$IB_REC"
 	backend=$opt_backend
 	[ -z "$backend" ] && [ -n "$IB_REC" ] && [ "$IB_MODE_A" != 1 ] && backend=$(ib_get "$IB_REC" backend)
 	[ -z "$backend" ] && backend=$IB_DEFAULT_BACKEND
@@ -1651,15 +1712,10 @@ ib_install_main() {
 
 	# ---- already installed? Only the marker a finished install writes
 	# last counts, for this appid and this exact record (the same settings).
+	# (The fallback for plans by name, whose record hash only the server
+	# knows; the others were checked before anything was fetched.)
 	if [ "$opt_reinstall" != 1 ] && ib_is_installed; then
-		if [ "$opt_yes" = 1 ]; then
-			# Unattended: never start the app (scripts, CI, the test matrix).
-			ib_log "$IB_NAME_DISP is already installed in $IB_APP_DIR (record $IB_RECHASH); nothing to do."
-			printf 'TiddlyInstall: %s is already installed in %s. Nothing was changed; add --reinstall to install it again.\n' "$(ib_cleans "$IB_NAME_DISP")" "$IB_APP_DIR" >&2
-			[ "$ib_log_is_temp" = 1 ] && rm -f "$IB_LOG"
-			exit 0
-		fi
-		ib_launch_installed
+		ib_installed_now
 	fi
 	nfiles=$(ib_sel file | wc -l | tr -d ' ')
 	IB_DIRMAP=

@@ -110,6 +110,8 @@ Var Menu
 Var WantDesktop
 Var RootMode
 Var RootName
+Var RecRoot          ; the record's root and rootname ("" if none), for the offline check
+Var RecRootName
 Var SrcLine          ; plan line number of `source` (0 = none)
 Var SrcName
 Var SrcSha
@@ -995,6 +997,10 @@ Function ReadRecord
       ${EndIf}
     ${ElseIf} $K S== "launch"
       StrCpy $RecLaunch $F1
+    ${ElseIf} $K S== "root"
+      StrCpy $RecRoot $F1
+    ${ElseIf} $K S== "rootname"
+      StrCpy $RecRootName $F1
     ${EndIf}
   ${Loop}
   FileClose $0
@@ -1312,6 +1318,7 @@ Function FindMetadata
   ; 4. record hash in the file name (mode A)
   Call ParseFileName
   ${If} $RecHash != ""
+    Call OfflineInstalled               ; installed already? checked before fetching
     StrCpy $U_a "$Backend/api/records/$RecHash"
     StrCpy $U_b "$PLUGINSDIR\record.txt"
     ${Log} "Fetching the record: $U_a"
@@ -1784,6 +1791,135 @@ Function IsInstalled
   Pop $0
 FunctionEnd
 
+; The app is fully installed in $AppDir: with /S say so and exit 0, else
+; start it through its launcher and quit.
+Function InstalledNow
+  ${If} ${Silent}
+    ${Log} "$AppName is already installed in $AppDir (record $RecHash); nothing was changed. Add /reinstall to install it again."
+    SetErrorLevel 0
+    Quit
+  ${EndIf}
+  ${Log} "$AppName is already installed in $AppDir (record $RecHash); starting it with $AppDir\launch.exe"
+  ClearErrors
+  Exec '"$AppDir\launch.exe"'
+  ${If} ${Errors}
+    ${FailWith} "$AppName is installed in $AppDir, but its launcher couldn't be started. Run this installer with /reinstall to install it again."
+    Call InitFail
+  ${EndIf}
+  SetErrorLevel 0
+  Quit
+FunctionEnd
+
+; The install root for root mode $U_a (user, system) and folder name $U_b
+; -> $U_out (plan.md 1.6).
+Function RootFor
+  ${If} $U_a == "system"
+  ${OrIf} $WinVer < 600
+    StrCpy $U_out "$SysDrv\$U_b"
+  ${Else}
+    StrCpy $U_out "$LOCALAPPDATA\$U_b"
+  ${EndIf}
+FunctionEnd
+
+; Is the app of record hash $RecHash fully installed, found before any
+; network access? The appid is derived from the record hash alone (the
+; resolver writes appid = base32(sha256(<record hash> "/app"))[:12]), so
+; with an embedded, given or install.txt record, or the hash in a mode A
+; file name, .ib-installed can be checked offline. Looks where the record's
+; root and rootname say ($RecRoot, $RecRootName), or with no record read
+; yet, in the default folders for one user and for all users. Starts the
+; app (or with /S reports it) and quits if so; otherwise returns.
+Function OfflineInstalled
+  Push $0
+  Push $1
+  ${If} $Reinstall = 1
+    Goto oi_end
+  ${EndIf}
+  StrCpy $U_a $RecHash
+  StrCpy $U_b 26
+  Call IbIsB32
+  ${If} $U_out = 0
+    Goto oi_end
+  ${EndIf}
+  Delete "$PLUGINSDIR\ah.txt"
+  StrCpy $U_a "$PLUGINSDIR\ah.txt"
+  StrCpy $U_b "$RecHash/app"
+  Call IbAppendUtf8
+  StrCpy $U_a "$PLUGINSDIR\ah.txt"
+  Call Sha256File
+  ${If} $U_out == ""
+    Goto oi_end
+  ${EndIf}
+  StrCpy $U_a $U_out
+  StrCpy $U_b 12
+  Call IbHexToB32
+  StrCpy $AppId $U_out
+  StrCpy $1 0                           ; which root is being tried
+  ${Do}
+    IntOp $1 $1 + 1
+    ${If} $RecFile != ""
+      ${If} $1 > 1
+        ${Break}
+      ${EndIf}
+      StrCpy $U_a $RecRoot
+      StrCpy $U_b $RecRootName
+      ${If} $U_b == ""
+        StrCpy $U_b "ib"
+      ${EndIf}
+      StrCpy $0 $U_b
+      StrCpy $U_a $0
+      Call IsPlainName                  ; (uses $U_a and $U_b)
+      ${If} $U_out = 0
+        ${Break}
+      ${EndIf}
+      StrCpy $U_a $RecRoot
+      StrCpy $U_b $0
+    ${ElseIf} $1 = 1
+      StrCpy $U_a "user"
+      StrCpy $U_b "ib"
+    ${ElseIf} $1 = 2
+      StrCpy $U_a "system"
+      StrCpy $U_b "ib"
+    ${Else}
+      ${Break}
+    ${EndIf}
+    Call RootFor
+    StrCpy $AppDir "$U_out\$AppId"
+    Call IsInstalled
+    ${If} $U_out = 1
+      StrCpy $AppName $AppId
+      ClearErrors
+      FileOpen $0 "$AppDir\manifest.txt" r
+      ${IfNot} ${Errors}
+        ${Do}
+          ClearErrors
+          FileRead $0 $U_b
+          ${If} ${Errors}
+            ${Break}
+          ${EndIf}
+          ${IbTrimNL} $U_b
+          StrCpy $U_a $U_b 5
+          ${If} $U_a S== "name$\t"
+            StrCpy $AppName $U_b "" 5
+            ${Break}
+          ${EndIf}
+        ${Loop}
+        FileClose $0
+      ${EndIf}
+      ibsig::cleanstr "$AppName"
+      Pop $AppName
+      ${Log} "Found $AppName fully installed in $AppDir (record $RecHash, appid from the record hash); nothing fetched."
+      Call InstalledNow
+    ${EndIf}
+  ${Loop}
+  StrCpy $AppId ""
+  StrCpy $AppDir ""
+  StrCpy $AppName ""
+  oi_end:
+  Pop $1
+  Pop $0
+FunctionEnd
+
 Function InitFail
   ${Log} "ERROR: $FailMsg"
   ibsig::cleanstr "$FailMsg"
@@ -1883,6 +2019,8 @@ Function .onInit
       Call RecordHashOf
       StrCpy $RecHash $U_out
     ${EndIf}
+    ; installed already? checked before the plan is fetched
+    Call OfflineInstalled
   ${EndIf}
   ${If} $PlanFile == ""
     StrCpy $U_a "$Backend/api/plan/$RecHash"
@@ -1990,23 +2128,12 @@ Function .onInit
   ; the marker a finished install writes last counts. Then start the app
   ; through its launcher instead of installing again; a silent install
   ; (/S) never starts it, it only says so and exits 0.
+  ; (The fallback for plans by name, whose record hash only the server
+  ; knows; the others were checked before anything was fetched.)
   ${If} $Reinstall = 0
     Call IsInstalled
     ${If} $U_out = 1
-      ${If} ${Silent}
-        ${Log} "$AppName is already installed in $AppDir (record $RecHash); nothing was changed. Add /reinstall to install it again."
-        SetErrorLevel 0
-        Quit
-      ${EndIf}
-      ${Log} "$AppName is already installed in $AppDir (record $RecHash); starting it with $AppDir\launch.exe"
-      ClearErrors
-      Exec '"$AppDir\launch.exe"'
-      ${If} ${Errors}
-        ${FailWith} "$AppName is installed in $AppDir, but its launcher couldn't be started. Run this installer with /reinstall to install it again."
-        Call InitFail
-      ${EndIf}
-      SetErrorLevel 0
-      Quit
+      Call InstalledNow
     ${EndIf}
   ${EndIf}
 

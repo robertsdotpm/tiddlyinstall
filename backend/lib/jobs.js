@@ -22,7 +22,7 @@ import { addRequestLine } from './plansig.js';
 import { localPath } from './catalog.js';
 import { writeAtomic, writeInstallerFile, sha256File, tarNamesUnderTop, topFolder } from './files.js';
 
-const SIGNED_BY = 'Installer Builder TEST';   // our test certificate (bases/windows)
+const SIGNED_BY = 'TiddlyInstall TEST';   // our test certificate (bases/windows)
 
 export const isSHA256 = (s) => /^[0-9a-f]{64}$/.test(s);
 export const isHash26 = (s) => /^[a-z2-7]{26}$/.test(s);
