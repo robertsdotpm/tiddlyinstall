@@ -312,6 +312,10 @@ def main():
                 record(res)
                 continue
             f = b["files"].get(plat)
+            if not f:
+                res.update(result="fail", detail=f"build: no {plat} installer in {out}")
+                record(res)
+                continue
             if a.target == "linux":
                 r, d, extra = run_linux(rt, mode, f)
             elif a.target == "mac":

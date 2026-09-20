@@ -211,12 +211,12 @@ if [ -n "$d" ]; then
   echo "@out"; cat "$H/out.txt" "$H/err.txt" 2>/dev/null | tail -15
   echo "@applog"; tail -15 "$d/data/launch.log" 2>/dev/null
   echo "@file"; cat "$H/selftest.txt" 2>/dev/null
+  echo "@elf"; ib_elf_probe "$H/.local/share/ib"
   env -i $BASEENV sh "$d/uninstall.sh" --yes </dev/null >/dev/null 2>&1; echo "@uninstall $?"
 fi
 # .dbus: GTK's D-Bus autolaunch, which a desktop session's own bus makes unneeded.
 echo "@left"; (cd "$H" && find . -mindepth 1 ! -name i.log ! -name "$F" ! -name selftest.txt ! -name out.txt ! -name err.txt ! -path './.cache*' ! -path './.dbus*' | head -5)
 echo "@osdesc"; sed -n 's/^Running as .* on //p' "$H/i.log" 2>/dev/null | head -1
-echo "@elf"; [ -n "${d:-}" ] && ib_elf_probe "$H/.local/share/ib"
 echo "@log"; tail -12 "$H/i.log" 2>/dev/null
 [ "${KEEP:-}" = 1 ] || rm -rf "$H"
 '''
