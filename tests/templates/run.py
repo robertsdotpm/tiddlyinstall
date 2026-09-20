@@ -77,7 +77,7 @@ LINUX_VMS = {
     # The 32-bit VM (docs/test-vms.md). Fill in its address once
     # tools/esxi_provision_debian_i386.py has made it and DHCP has given
     # it one; tests/arch/machines.py already knows what it is.
-    # "debian12x86": "x@10.0.1.??",
+    "debian12x86": "x@10.0.1.160",
 }
 # 32-bit Linux, in a container on this machine (tests/arch/sandbox.py). No
 # display and no D-Bus there, so window and tray templates can't run.

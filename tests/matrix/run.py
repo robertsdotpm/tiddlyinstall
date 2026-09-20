@@ -58,10 +58,10 @@ LINUX_VMS = {
     "ubuntu1604": "x@10.0.1.112", "ubuntu1804": "x@10.0.1.144", "rocky8": "x@10.0.1.131",
     "ubuntu2004": "x@10.0.1.118", "ubuntu2204": "x@10.0.1.203", "debian12": "x@10.0.1.235",
     "alpine": "x@10.0.1.200",
-    # The 32-bit VM (docs/test-vms.md). Fill in its address once
-    # tools/esxi_provision_debian_i386.py has made it and DHCP has given
-    # it one; tests/arch/machines.py already knows what it is.
-    # "debian12x86": "x@10.0.1.??",
+    # The 32-bit VM (docs/test-vms.md): a real 32-bit kernel, a desktop
+    # and sudo, which the containers below cannot show. Made by
+    # tools/esxi_provision_debian_i386.py; address from DHCP 2026-09-21.
+    "debian12x86": "x@10.0.1.160",
 }
 # 32-bit Linux, in a container on this machine (tests/arch/mkroot.py makes
 # the roots; sandbox.py says what a container can and cannot show).
