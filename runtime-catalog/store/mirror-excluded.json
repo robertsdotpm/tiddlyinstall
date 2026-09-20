@@ -1,0 +1,17 @@
+{
+ "notes": "Files we are not permitted to put on our mirror, by URL prefix. Until now this lived only as prose in runtime-catalog/python/limitations.json, which is the wrong place for a rule a tool can break: tools/mirror_scope.mjs enumerates every version a plan can name, and without this it happily wrote the Anaconda files into both the download plan and the mirror manifest. Anything matching a prefix here is left out of both, and out of the `-missing` lists, as deliberately absent rather than not yet fetched. This is a permission list, not a preference: adding to it is cheap, removing from it needs the vendor's word.",
+ "excluded": [
+  {
+   "prefixes": [
+    "https://repo.anaconda.com/",
+    "http://repo.anaconda.com/",
+    "https://conda.anaconda.org/",
+    "http://conda.anaconda.org/"
+   ],
+   "why": "Anaconda's terms of service for their platform say a user must not \"Frame or Mirror the Platform or any Offering, either directly or via a proxy, unless authorized by Anaconda\" (https://www.anaconda.com/legal/terms/terms-of-service), and repo.anaconda.com is that platform. Python 2 on Linux and macOS is Anaconda's relocatable CPython 2.7.18 conda package with eight dependency packages as release parts; the software itself is PSF-2.0 and freely redistributable, but the platform is not ours to mirror.",
+   "affects": "python2 on linux and macos: 17 files. Their plans point at repo.anaconda.com and conda.anaconda.org only.",
+   "consequence": "A machine that cannot reach Anaconda -- an old one on plain HTTP, or one behind our mirror with no other route out -- cannot install Python 2 on Linux or macOS at all, which is exactly the machine most likely to want it. Do not \"fix\" this by mirroring them. Changing it needs Anaconda's authorisation, our own relocatable CPython 2.7.18 build, or PyPy 2.7 (design.md 11.0 item 14, runtime-catalog/python/limitations.json).",
+   "recorded": "2026-09-20"
+  }
+ ]
+}

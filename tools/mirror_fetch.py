@@ -85,7 +85,12 @@ def fetch(e, dest, log):
 def main():
     manifest, dest = sys.argv[1], sys.argv[2]
     jobs = int(sys.argv[sys.argv.index("--jobs") + 1]) if "--jobs" in sys.argv else 4
-    entries = json.load(open(manifest))
+    # A list, or an object with the files under "files" and notes of its
+    # own -- the shape tools/mirror_check.py already accepts and the one
+    # tools/mirror_scope.mjs writes. Taking only one of the two meant a
+    # manifest that checks cleanly could not be fetched with.
+    doc = json.load(open(manifest))
+    entries = doc["files"] if isinstance(doc, dict) else doc
     # Smallest first, so most files land early and one huge file can't
     # hold everything up.
     entries.sort(key=lambda e: e["size"])

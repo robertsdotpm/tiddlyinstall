@@ -113,7 +113,15 @@ already written); `tools/resolve.mjs` prints a plan, or
 the files with no copy on our mirror; `tools/plansig.mjs` signs and checks
 plans with a plan signing key; `tools/mirror_fetch.py` fills the mirror
 host from the vendors and `tools/mirror_check.py` says whether the
-manifest, the local runtime store and the mirror host agree.
+manifest, the local runtime store and the mirror host agree;
+`tools/mirror_scope.mjs` says what mirroring **every version we offer**
+would cost (files and bytes, per runtime) and, with `-out DIR`, writes
+both halves of the fetch — a `download_plan_all.json` per folder for
+`runtime-catalog/tools/download.py --plan` (the local store) and a
+`mirror-manifest-all.json` for `mirror_fetch.py` (the mirror host) —
+from one enumeration, so the two cannot disagree about what is in scope.
+Files we have no permission to mirror are listed in
+`runtime-catalog/store/mirror-excluded.json` and left out of both.
 
 **Topping up the mirror is two halves: the mirror host *and* the local
 runtime store, or the pull achieves nothing.** A mirror URL only reaches

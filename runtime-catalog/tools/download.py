@@ -2,6 +2,16 @@
 """Download planned runtime files into the runtimes store and verify them.
 
 usage: download.py [--plan-name download_plan.json] [--jobs 4] [--min-free-gb 25] <runtime> [<runtime> ...]
+       download.py --plan PLAN.json [--root DIR] [--jobs 4] [--min-free-gb 25]
+
+With --plan, the plan is read from that path instead of from
+catalog/<runtime>/<plan-name>, and it may hold entries for several
+runtimes at once (each entry names its own). That is what
+tools/mirror_scope.mjs writes: "every version we offer" is not one
+runtime's newest patch but a set computed across the catalogue, and
+copying it into each folder first only makes it easier to fetch a
+half of it. --root says where the store is, for running this script
+from the git backup rather than from the working copy beside it.
 
 For each entry in catalog/<runtime>/<plan-name>:
   - target path: <root>/<runtime>/<os>/<arch>/<version>[-<variant>]/<file>
@@ -34,7 +44,24 @@ lock = threading.Lock()
 reserved = {"bytes": 0}
 
 
+def set_root(p):
+    """--root: the store to download into, and the catalog beside it."""
+    global ROOT, CATALOG, LOG, GAPS
+    ROOT = Path(p).expanduser().resolve()
+    CATALOG = ROOT / "catalog"
+    LOG = CATALOG / "download-log.jsonl"
+    GAPS = CATALOG / "download-gaps.json"
+
+
 def target_path(e):
+    # An entry may name the path itself. tools/mirror_scope.mjs does that
+    # for a file we already have, because the store's layout is not always
+    # this one -- ruby's newest Windows builds live under
+    # ruby/windows/fetched/ -- and writing a second copy at the path below
+    # does more than waste the bytes: LocalIndex walks lexically, so the
+    # new copy shadows the old one and every plan's mirror URL moves.
+    if e.get("path"):
+        return ROOT / e["path"]
     name = os.path.basename(urllib.parse.urlparse(e["url"]).path) or "download"
     version_dir = e["version"] + (f"-{e['variant']}" if e.get("variant") else "")
     return ROOT / e["runtime"] / e["os"] / e["arch"] / version_dir / name
@@ -110,16 +137,38 @@ def handle(e, min_free):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("runtimes", nargs="+")
+    ap.add_argument("runtimes", nargs="*")
     ap.add_argument("--plan-name", default="download_plan.json")
+    ap.add_argument("--plan", help="a plan file anywhere, possibly covering several runtimes")
+    ap.add_argument("--root", help="the runtimes store to download into (default: beside this script)")
     ap.add_argument("--jobs", type=int, default=4)
     ap.add_argument("--min-free-gb", type=float, default=25)
     a = ap.parse_args()
+    if a.root:
+        set_root(a.root)
+    if not a.plan and not a.runtimes:
+        ap.error("name at least one runtime, or give --plan")
     min_free = int(a.min_free_gb * 1e9)
 
+    # --plan: one file, grouped by the runtime each entry names, so the log
+    # and the gaps file stay per-runtime as they always were.
+    if a.plan:
+        entries = json.loads(Path(a.plan).expanduser().read_text())
+        if a.runtimes:
+            want = set(a.runtimes)
+            entries = [e for e in entries if e["runtime"] in want]
+        groups, order = {}, []
+        for e in entries:
+            if e["runtime"] not in groups:
+                groups[e["runtime"]] = []
+                order.append(e["runtime"])
+            groups[e["runtime"]].append(e)
+        plans = [(r, groups[r]) for r in order]
+    else:
+        plans = [(r, json.loads((CATALOG / r / a.plan_name).read_text())) for r in a.runtimes]
+
     gaps = json.loads(GAPS.read_text()) if GAPS.exists() else {}
-    for runtime in a.runtimes:
-        plan = json.loads((CATALOG / runtime / a.plan_name).read_text())
+    for runtime, plan in plans:
         print(f"{runtime}: {len(plan)} planned, {sum((p.get('size') or 0) for p in plan) / 1e9:.1f} GB", flush=True)
         results = []
         with cf.ThreadPoolExecutor(a.jobs) as ex:
