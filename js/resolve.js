@@ -1526,7 +1526,17 @@ function writePlan(cat, app, blocks) {
   w.add('rootname', orDefault(app.rootName, 'ib'));
   const s = app.source;
   if (s) {
-    w.add('source', s.name, s.sha256, String(s.size), s.format, String(s.strip));
+    // The 6 fields an engine reads are the file's: its name, the SHA-256
+    // of the bytes it downloads, and how to unpack them. The 7th, where
+    // there is one, is the SHA-256 of the *tar* inside -- what the record
+    // names for inline and upload sources (format.md, "Sources"). It is
+    // there to tie the plan to the record, not to be verified instead of
+    // the file: the file's hash pins the bytes, and the bytes pin the tar.
+    if (str(s.tarSha) !== '' && s.tarSha !== s.sha256) {
+      w.add('source', s.name, s.sha256, String(s.size), s.format, String(s.strip), s.tarSha);
+    } else {
+      w.add('source', s.name, s.sha256, String(s.size), s.format, String(s.strip));
+    }
     for (const u of s.urls) w.add('url', str(u));
   }
   const pol = runtimePolicy(cat, app.runtime);
@@ -1571,6 +1581,14 @@ const addUnpack = (w, st, dest) => {
   else w.add('step', 'unpack', unpackKind(st), dest, String(stripOf(st)), ex);
 };
 
+// The architecture of a build, for the plan's `runtime` 3rd value and
+// `file` 5th field (format.md, "Architecture"). Written only where the
+// catalogue records one: an absent field means "not recorded", which the
+// format keeps distinct from `any` ("architecture-independent").
+const archOf = (e) => str(e && e.arch);
+// w.add with a trailing field only when there is one to write.
+const addOpt = (w, key, vals, last) => (str(last) !== '' ? w.add(key, ...vals, last) : w.add(key, ...vals));
+
 // Catalog.writeTarget
 function writeTarget(cat, w, app, pol, b) {
   const e = b.p.rel, r = b.p.recipe;
@@ -1582,10 +1600,10 @@ function writeTarget(cat, w, app, pol, b) {
     if (win) s = s.replace(appDirRe, (p) => splitJoin(p, '/', '\\'));
     return s;
   };
-  w.add('runtime', app.runtime, e.version);
+  addOpt(w, 'runtime', [app.runtime, e.version], archOf(e));
   if (!b.p.known) w.add('note', 'Not confirmed to run on every OS version in this range; chosen by the catalogue\'s default floor.');
   writeNeeds(cat, w, targetPrereqs(cat, app, b));
-  w.add('file', app.runtime, fileName(e), e.sha256, String(e.size));
+  addOpt(w, 'file', [app.runtime, fileName(e), e.sha256, String(e.size)], archOf(e));
   const seen = new Set();
   const addURL = (u) => { if (u !== '' && !seen.has(u)) { seen.add(u); w.add('url', u); } };
   const mirror = mirrorURL(cat, e.local);
@@ -1607,7 +1625,11 @@ function writeTarget(cat, w, app, pol, b) {
   if (b.p.extras.length > 0) {
     for (const x of b.p.extras) {
       const dot = x.name.lastIndexOf('.');
-      w.add('file', dot >= 0 ? x.name.slice(0, dot) : x.name, x.name, str(x.src.sha256), String(x.src.size || 0));
+      // A release's own part is that release's architecture; a policy
+      // extra file (get-pip.py, composer.phar) records none, and none
+      // is written rather than guessing `any`.
+      addOpt(w, 'file', [dot >= 0 ? x.name.slice(0, dot) : x.name, x.name, str(x.src.sha256), String(x.src.size || 0)],
+        x.part ? archOf(e) : str(x.src.arch));
       for (const u of extraURLs(cat, x)) w.add('url', u);
       w.add('step', 'run', win ? `copy /y "{file}" "{tmp}\\${x.name}" >nul` : `cp "{file}" "{tmp}/${x.name}"`);
     }
@@ -1620,7 +1642,7 @@ function writeTarget(cat, w, app, pol, b) {
     const ce = n.p.rel;
     const cvt = versionTokens(ce.v);
     const cfix = (s) => fix(cvt(splitJoin(s, '{runtime_dir}', '{dir}')));
-    w.add('file', n.req.runtime, fileName(ce), ce.sha256, String(ce.size));
+    addOpt(w, 'file', [n.req.runtime, fileName(ce), ce.sha256, String(ce.size)], archOf(ce));
     const cm = mirrorURL(cat, ce.local);
     const cseen = new Set();
     for (const u of [cm, ce.url, ...(ce.mirrors || []).map(str), cm]) {

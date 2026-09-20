@@ -367,12 +367,12 @@ export async function uploadTarball(u8) {
   if (badName !== undefined) throw bad('The archive has an unsafe path: ' + goQuote(badName.slice(0, 120)));
   const strip = topFolderOfNames(all);
   const names = all.map((n) => n.replace(/^\.\//, '').split('/').slice(strip).join('/')).filter(Boolean);
-  return { data, strip, names };
+  return { data, tar, strip, names };
 }
 
 async function inlineTarball(project, files) {
   const t = inlineTar(project, files);
-  return { data: await gzip(t.tar), names: t.names };
+  return { data: await gzip(t.tar), tar: t.tar, names: t.names };
 }
 
 // build.LookupPackage: check a package in its registry, pin the newest
@@ -492,8 +492,11 @@ function writeRecord(r, fields, backend, now) {
   if (fields.pkg) add('source', 'package', fields.pkg.name, fields.pkg.version);
   else if (r.source.kind === 'github') add('source', 'github', fields.src.origin, fields.src.commit, fields.src.sha256);
   else if (r.source.kind === 'url') add('source', 'url', r.source.value, fields.src.sha256);
-  else if (r.source.kind === 'upload') add('source', 'upload', fields.src.sha256);
-  else add('source', 'inline', fields.src.sha256);
+  // inline and upload name the *tar*: we compress these ourselves, and the
+  // page's deflate and the server's differ, so hashing the gzip made one
+  // form give two record hashes and two install folders (design.md 11.2).
+  else if (r.source.kind === 'upload') add('source', 'upload', fields.src.tarSha || fields.src.sha256);
+  else add('source', 'inline', fields.src.tarSha || fields.src.sha256);
   add('launch', fields.launch);
   if (fields.install) add('install', fields.install);
   if (r.prerequisites && r.prerequisites.length) add('prerequisites', r.prerequisites.join(' '));
@@ -543,8 +546,11 @@ export async function runJob(r, env, progress = () => {}) {
     project = projectName(r);
     const t = await inlineTarball(project, r.files);
     names = t.names;
-    src = { data: t.data, sha256: await sha256Hex(t.data), size: t.data.length, strip: 1, urls: [] };
-    if (env.storeSource) await env.storeSource(src.sha256, src.data);
+    src = { data: t.data, sha256: await sha256Hex(t.data), tarSha: await sha256Hex(t.tar),
+            size: t.data.length, strip: 1, urls: [] };
+    // Stored under the tar's hash, because that is what the record names
+    // and what the backend has to look a record's source up by.
+    if (env.storeSource) await env.storeSource(src.tarSha, src.data);
   } else if (r.source.kind === 'upload') {
     const s = atob(String(r.archive).replace(/\s+/g, ''));
     const u8 = new Uint8Array(s.length);
@@ -552,7 +558,8 @@ export async function runJob(r, env, progress = () => {}) {
     const t = await uploadTarball(u8);
     names = t.names;
     project = projectName(r);
-    src = { data: t.data, sha256: await sha256Hex(t.data), size: t.data.length, strip: t.strip, urls: [] };
+    src = { data: t.data, sha256: await sha256Hex(t.data), tarSha: await sha256Hex(t.tar),
+            size: t.data.length, strip: t.strip, urls: [] };
   } else if (r.source.kind === 'package') {
     // Pin the version now (design.md section 4: records name what they
     // install), while the registry can be asked.
@@ -584,7 +591,8 @@ export async function runJob(r, env, progress = () => {}) {
     recordHash: hash, name, project, runtime: r.runtime, select: r.select || 'newest',
     range: r.range || '', launch, install, console: r.console !== false, menu: r.menu !== false,
     desktop: !!r.desktop, root: r.root || 'user', rootName: r.rootname || 'ib', platforms: [],
-    source: src ? { name: src.sha256 + '.tar.gz', sha256: src.sha256, size: src.size, format: 'tar.gz', strip: src.strip, urls: src.urls || [] } : null,
+    source: src ? { name: (src.tarSha || src.sha256) + '.tar.gz', sha256: src.sha256, tarSha: src.tarSha || '',
+                    size: src.size, format: 'tar.gz', strip: src.strip, urls: src.urls || [] } : null,
     package: pkg ? pkg.name : '', packageVersion: pkg ? pkg.version : '',
     prerequisites: r.prerequisites || [], tools,
   };

@@ -68,6 +68,7 @@ export class Builder {
     // Every fetch goes through the public-only client (tests pass their own).
     this.fetch = o.fetch || safeFetch;
     this.lookupCache = new Map();
+    this.srcShaCache = new Map();
   }
 
   recordPath(h) { return path.join(this.data, 'records', h + '.txt'); }
@@ -112,12 +113,28 @@ export class Builder {
   /* ---------- records and plans ---------- */
 
   // srcFile describes a stored source archive (strip -1: work it out).
+  //
+  // A record names its source by a SHA-256, and the file is stored under
+  // that name -- but since 2026-09-20 an `inline` or `upload` record names
+  // the SHA-256 of the *tar*, not of the `.tar.gz` we wrapped it in
+  // (design.md 11.2). Records written before that name the `.tar.gz`, and
+  // both must keep resolving, so rather than record which is which we just
+  // hash the file: if it hashes to the name it is stored under, the record
+  // named the file (the old way); if it does not, the name is the tar's
+  // hash and the file's own hash is what the plan must tell engines to
+  // check. Either way the plan names the bytes it downloads.
   srcFile(sha, strip) {
     const p = this.srcPath(sha);
     let st;
     try { st = fs.statSync(p); } catch (e) { return null; }
+    let fileSha = this.srcShaCache.get(sha);
+    if (fileSha === undefined) {
+      fileSha = crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+      this.srcShaCache.set(sha, fileSha);      // <sha>.tar.gz never changes
+    }
     if (strip < 0) strip = topFolder(fs.readFileSync(p));
-    return { name: sha + '.tar.gz', sha256: sha, size: st.size, format: 'tar.gz', strip,
+    return { name: sha + '.tar.gz', sha256: fileSha, tarSha: fileSha === sha ? '' : sha,
+      size: st.size, format: 'tar.gz', strip,
       urls: [this.public.replace(/\/+$/, '') + '/src/' + sha + '.tar.gz'] };
   }
 
@@ -188,7 +205,11 @@ export class Builder {
     const out = files.map((f) => Object.assign({}, f, { local: localPath(this.cat, f.local) }));
     if (app.source) {
       const s = app.source;
-      out.push({ name: s.name, sha256: s.sha256, size: s.size, local: this.srcPath(s.sha256), urls: s.urls });
+      // `name` is <stored sha>.tar.gz, which is what the file is on disk
+      // under -- the tar's hash for a new record, the file's for an old
+      // one -- while `sha256` is always the bytes an engine downloads.
+      out.push({ name: s.name, sha256: s.sha256, size: s.size,
+                 local: path.join(this.data, 'src', s.name), urls: s.urls });
     }
     return { plan, files: out };
   }
