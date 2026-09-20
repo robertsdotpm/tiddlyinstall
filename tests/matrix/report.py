@@ -48,6 +48,11 @@ def cell(t, rt):
         return "✓"
     if "fail" in res:
         return "✗"
+    # A failure we already know about and have written down (today: macOS
+    # installers killed by Gatekeeper, until there is a Developer ID). It
+    # is shown apart from ✗ so a new macOS failure is still visible.
+    if res <= {"known", "pass"}:
+        return "!"
     if res <= {"n/a", "no-plan"}:
         if any("needs root" in r["detail"] for r in rs):
             return "root"
@@ -63,7 +68,8 @@ out = ["# Test results", "",
        "Each column says the machine's architecture: **64** amd64 · **32** 32-bit x86 · **a64** arm64.",
        "Every cell also checks it: the architecture the installer's own engine detected, and the ELF",
        "class of the runtime it installed, must both be that machine's, or the cell fails.", "",
-       "✓ passes in all three modes · ✗ fails in at least one · – no release in the catalogue runs on",
+       "✓ passes in all three modes · ✗ fails in at least one · ! fails only in a way we already know",
+       "about and have written down (listed at the end, with what would clear it) · – no release in the catalogue runs on",
        "that OS and architecture (the installer says so) · ∅ the plan has no block for that machine at",
        "all, so the cell is **untested**, not n/a · root: needs a system package, and the unattended",
        "installer stops with the exact command to run · blank: not run", "",
@@ -75,21 +81,36 @@ for rt in RTS:
     out.append(f"| {rt} | " + " | ".join(cell(t, rt) for t in targets) + " |")
 tot = collections.Counter(r["result"] for r in last.values())
 out += ["", f"**{len(last)} cells: {tot['pass']} pass, {tot['n/a']} n/a, {tot['no-plan']} no plan block, "
-        f"{tot['fail']} fail.**", ""]
+        f"{tot['known']} known failure, {tot['fail']} fail.**", ""]
 
 by_arch = collections.Counter((r.get("arch") or machines.arch_of(r["target"]), r["result"]) for r in last.values())
 arches = sorted({a for a, _ in by_arch})
 out += ["By architecture:", "",
-        "| Architecture | cells | pass | n/a | no plan block | fail |", "| --- | --- | --- | --- | --- | --- |"]
+        "| Architecture | cells | pass | n/a | no plan block | known | fail |",
+        "| --- | --- | --- | --- | --- | --- | --- |"]
 for a in arches:
     n = sum(v for (aa, _), v in by_arch.items() if aa == a)
     out.append(f"| {a} | {n} | " + " | ".join(str(by_arch.get((a, k), 0))
-                                              for k in ("pass", "n/a", "no-plan", "fail")) + " |")
+                                              for k in ("pass", "n/a", "no-plan", "known", "fail")) + " |")
 
-out += ["", "## Every failure", "", "| OS | Arch | Runtime | Mode | Detail |", "| --- | --- | --- | --- | --- |"]
+out += ["", "## Every failure", "",
+        "Known failures (`!`) are listed after these: they are expected, written down, and say what",
+        "would clear them. Everything here is unexpected.", "",
+        "| OS | Arch | Runtime | Mode | Detail |", "| --- | --- | --- | --- | --- |"]
 order = {t: i for i, t in enumerate(targets)}
 for (t, rt, m), r in sorted(last.items(), key=lambda kv: (order.get(kv[0][0], 99), kv[0][1], kv[0][2])):
     if r["result"] == "fail":
         d = " ".join(r["detail"].split())[:160].replace("|", "/")
+        out.append(f"| {machines.label_of(t, False)} | {r.get('arch') or machines.arch_of(r['target'])} | {rt} | {m} | {d} |")
+
+known = [(k, r) for k, r in sorted(last.items(), key=lambda kv: (order.get(kv[0][0], 99), kv[0][1], kv[0][2]))
+         if r["result"] == "known"]
+if known:
+    out += ["", "## Known failures", "",
+            "Expected, and shown as `!` rather than `✗` so a new failure on the same platform is not",
+            "lost among them.", "",
+            "| OS | Arch | Runtime | Mode | Detail |", "| --- | --- | --- | --- | --- |"]
+    for (t, rt, m), r in known:
+        d = " ".join(r["detail"].split())[:200].replace("|", "/")
         out.append(f"| {machines.label_of(t, False)} | {r.get('arch') or machines.arch_of(r['target'])} | {rt} | {m} | {d} |")
 print("\n".join(out))

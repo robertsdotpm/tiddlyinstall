@@ -85,7 +85,8 @@ def record(res):
     res.setdefault("arch", machines.arch_of(res["target"]))
     with open(RESULTS_FILE, "a") as f:
         f.write(json.dumps(res) + "\n")
-    mark = {"pass": "PASS", "fail": "FAIL", "n/a": "n/a ", "no-plan": "NOPL"}[res["result"]]
+    mark = {"pass": "PASS", "fail": "FAIL", "n/a": "n/a ", "no-plan": "NOPL",
+            "known": "KNWN"}[res["result"]]
     print(f"{mark} {res['target']:14} {res['arch']:5} {res['runtime']:7} {res['mode']}  "
           f"{res.get('detail', '')[:150]}", flush=True)
 
@@ -142,6 +143,8 @@ cp "$SRC" "$H/$F"
 env -i HOME="$H" PATH=/usr/local/bin:/usr/bin:/bin LANG=C sh "$H/$F" --yes --log="$H/i.log" </dev/null >/dev/null 2>&1
 echo "@install $?"
 echo "@osdesc"; sed -n 's/^Running as .* on //p' "$H/i.log" 2>/dev/null | head -1
+echo "@planarch"; sed -n '/^ *Runtime:/{p;q;}' "$H/i.log" 2>/dev/null
+echo "@x"
 d=$(ls -d "$H"/.local/share/ib/*/launch.txt 2>/dev/null | head -1)
 if [ -n "$d" ]; then
   d=$(dirname "$d")
@@ -238,6 +241,8 @@ fi
 IB_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --backend=http://127.0.0.1:8080 --log="$HOME/ibtest/i.log" </dev/null >/dev/null 2>&1
 echo "@install $?"
 echo "@osdesc"; sed -n 's/^Running as .* on //p' "$HOME/ibtest/i.log" 2>/dev/null | head -1
+echo "@planarch"; sed -n '/^ *Runtime:/{p;q;}' "$HOME/ibtest/i.log" 2>/dev/null
+echo "@x"
 d=$(ls -d "$HOME/Library/ib/"*/launch.txt "$HOME/Library/Application Support/ib/"*/launch.txt 2>/dev/null | head -1)
 if [ -n "$d" ]; then
   d=$(dirname "$d")
@@ -261,13 +266,33 @@ def run_mac(rt, mode, f, quarantine=True):
     return mac_gatekeeper(out, r, d, extra)
 
 
-def mac_gatekeeper(out, r, d, extra):
-    """A Gatekeeper refusal fails the cell, whatever the engine then did.
+# Failures we already know about, with why and what would clear them.
+# A platform that is permanently red teaches everyone to ignore red, and
+# then a real regression arrives and nobody looks; these report as KNWN
+# so that anything *else* failing on that platform still stands out.
+KNOWN = {
+    "mac-gatekeeper":
+        "expected until there is a Developer ID: Gatekeeper kills any installer that "
+        "arrives with com.apple.quarantine, ad-hoc signed or not, because only a "
+        "notarization ticket satisfies it (docs/macos-packaging.md section 5)",
+}
 
-    The quarantined run is the one a real user gets; the unquarantined one
-    that follows only says whether the engine still works, so it goes in
-    the detail rather than deciding the result. Signed by a Developer ID
-    and notarized, the two runs would agree and this would go quiet.
+
+def mac_gatekeeper(out, r, d, extra):
+    """What the quarantined run means for the cell's result.
+
+    The quarantined run is the one a real user gets and the unquarantined
+    one only says whether the engine still works. Today the first always
+    fails, so a plain `fail` would make every macOS cell red for ever and
+    hide the next real regression. The two are therefore read together:
+
+      quarantined killed, engine fine   -> known   (the failure we expect)
+      quarantined killed, engine broken -> fail    (something else as well)
+      quarantined ran                   -> whatever the cell itself said,
+                                           and worth noticing, because it
+                                           means we got notarized
+
+    Signed by a Developer ID, the two runs agree and this goes quiet.
     """
     parts = {}
     for line in out.splitlines():
@@ -275,13 +300,14 @@ def mac_gatekeeper(out, r, d, extra):
             k, _, v = line[1:].partition(" ")
             parts[k] = v
     q = parts.get("qexit")
-    if q is None:
-        return r, d, extra                      # run with --no-quarantine
-    if q == "0":
-        return r, d, extra
+    if q is None or q == "0":
+        return r, d, extra                      # --no-quarantine, or it ran
     why = "killed by Gatekeeper" if q in ("137", "-9") else f"exit {q}"
-    then = "and with the flag cleared: " + d
-    return "fail", f"quarantined (as a browser download): {why}; {then}", extra
+    head = f"quarantined (as a browser download): {why}"
+    if r == "pass":
+        return "known", f"{head} -- {KNOWN['mac-gatekeeper']}; with the flag cleared: {d}", extra
+    # The engine is broken too, which is not the failure we expect.
+    return "fail", f"{head}, AND with the flag cleared it still fails: {d}", extra
 
 
 def main():
