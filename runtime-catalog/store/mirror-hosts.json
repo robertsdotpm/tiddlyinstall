@@ -14,7 +14,8 @@
     "runtime",
     "toolchain"
    ],
-   "notes": "Our own machine, and the only one that can serve a machine too old for modern TLS: plain http, no SNI needed (design.md 11.0 item 1). It also holds the build toolchain, which no installer downloads. Shared with soupchan, so nothing outside ~/installer-builder-mirror is ours to touch."
+   "notes": "Our own machine, and the only one that can serve a machine too old for modern TLS: plain http, no SNI needed (design.md 11.0 item 1). It also holds the build toolchain, which no installer downloads. Shared with soupchan, so nothing outside ~/installer-builder-mirror is ours to touch. CHECKED 2026-09-20: the files are all here and mirror_check.py is green, but NOTHING SERVES THEM. http://ovh1.p2pd.net/mirror/ is 404, :8000/mirror/ is 403, there is no TLS listener, and no Apache vhost or alias under /etc/apache2/sites-enabled/ mentions the tree. So `base` above is what it should be, not what it is, and the URL plans actually carry is the policy's mirror_base, http://10.0.1.76:8080/mirror -- the LAN build server. Adding the vhost is a change to the public surface of a machine that also runs the operator's imageboard, so it is the operator's call; `base_served` says whether it has been made.",
+   "base_served": false
   },
   {
    "id": "r2",
