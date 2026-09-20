@@ -10,7 +10,9 @@ run.LINUX_VMS, a Windows VM from run.WINDOWS, or `mac`. The app is a Python
 hello world that also appends a line to `launched.txt` in its working
 folder (the app's folder), so a launch shows without a window or a
 terminal. Variants: `nomenu` (menu 0, desktop 0), `desktop` (menu 0,
-desktop 1). Each cell:
+desktop 1), `icon` (menu 0, desktop 0, with an uploaded PNG icon; on
+Windows the uninstaller it wrote is fetched back and checked against the
+installer, see uninstaller_icon.py). Each cell:
 
   1. unattended install (--yes, /S): exit 0, nothing in the Start menu or
      the XDG menu folders (or ~/Applications, unless `desktop`), the
@@ -29,6 +31,7 @@ from the Mac backend, as run.py's are). Results are appended to
 results.jsonl with runtime "behaviour-<variant>".
 """
 import argparse
+import base64
 import json
 import re
 import shlex
@@ -41,12 +44,20 @@ from pathlib import Path
 
 from run import LINUX_VMS, MAC, WINDOWS, record, sh, tail
 from run_windows import appid
+import uninstaller_icon
 
 HERE = Path(__file__).resolve().parent
 HELLO = ("import os\n"
          "open(os.path.join(os.getcwd(), 'launched.txt'), 'a').write('launched\\n')\n"
          "print('hello from python')\n")
-VARIANTS = {"nomenu": {"menu": False, "desktop": False}, "desktop": {"menu": False, "desktop": True}}
+VARIANTS = {"nomenu": {"menu": False, "desktop": False}, "desktop": {"menu": False, "desktop": True},
+            # A custom icon. On Windows this is the uninstaller-icon
+            # regression (tests/uninstaller_icon.py, docs/design.md 5): NSIS
+            # patches the uninstaller's icon over the installer's at fixed
+            # file offsets, and an icon written the wrong way put that patch
+            # through RT_MANIFEST, so uninstall.exe would not start and the
+            # app could not be removed.
+            "icon": {"menu": False, "desktop": False}}
 
 
 def api(backend, path, body=None):
@@ -62,6 +73,9 @@ def build(backend, variant, mode, platforms, out):
             "files": {"hello/__init__.py": "", "hello/__main__.py": HELLO},
             "runtime": "python", "mode": mode, "platforms": platforms,
             "launch": "{runtime} -m hello", "console": False, **VARIANTS[variant]}
+    if variant == "icon":
+        body["icon"] = {"choice": "upload",
+                        "data": base64.b64encode(uninstaller_icon.icon_png()).decode()}
     while True:
         try:
             j = api(backend, "/api/jobs", body)
@@ -329,6 +343,7 @@ echo @reinstall %ERRORLEVEL%
 if exist "%A%\launched.txt" echo launched
 echo @marker4
 type "%A%\.ib-installed"
+copy /y "%A%\uninstall.exe" "%T%\uninstall.exe" >nul
 "%A%\uninstall.exe" /S
 echo @uninstall %ERRORLEVEL%
 set /a n=0
@@ -369,6 +384,13 @@ def run_windows(vm, variant, mode, name, f, rec):
         if code:
             return "fail", "scp: " + err.strip()
     code, out, err = sh(["ssh", host, run_bat])
+    # The uninstaller the install actually wrote, before the folder goes.
+    unexe = None
+    if variant == "icon":
+        with tempfile.NamedTemporaryFile(suffix=".exe", delete=False) as u:
+            unexe = u.name
+        if sh(["scp", "-q", f"{host}:{scp}/uninstall.exe", unexe], timeout=300)[0]:
+            unexe = None
     sh(["ssh", host, f'cmd /c "rd /s /q {win}"'], timeout=60)
     Path(t.name).unlink()
     p = parse(out)
@@ -378,6 +400,18 @@ def run_windows(vm, variant, mode, name, f, rec):
         if k + "_out" in p:
             p[k + "_out"] = "\n".join(l.rstrip() for l in p[k + "_out"].splitlines())
     r, d = judge(p, variant, lambda s: "desktop-lnk-ok" in s)
+    if variant == "icon":
+        # Every resource in uninstall.exe must still be the installer's:
+        # NSIS's icon patch has to land on the old, unreferenced images.
+        if unexe is None:
+            r, d = "fail", "could not fetch uninstall.exe; " + d
+        else:
+            bad = uninstaller_icon.check(Path(unexe).read_bytes(), Path(f).read_bytes())
+            Path(unexe).unlink()
+            if bad:
+                r, d = "fail", "; ".join(bad) + ("; " + d if r == "fail" else "")
+            elif r == "pass":
+                d += "; uninstall.exe keeps the custom icon and an intact manifest"
     if r == "fail" and p.get("left_out", "").strip():
         sh(["scp", "-q", str(HERE / "clean_windows.bat"), f"{host}:C:/ibclean.bat"], timeout=60)
         sh(["ssh", host, "cmd /c C:\\ibclean.bat & del C:\\ibclean.bat"], timeout=120)
