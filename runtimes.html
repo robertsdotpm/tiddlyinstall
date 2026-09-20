@@ -5,28 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sources · TiddlyInstall</title>
   <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme.js"></script>
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="index.html">TiddlyInstall</a>
+    <a class="brand" href="index.html">
+      <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="2.5" y="2.5" width="19" height="19"></rect>
+        <line x1="12" y1="6" x2="12" y2="13"></line>
+        <polyline points="8.5 9.8 12 13.3 15.5 9.8"></polyline>
+        <line class="tray" x1="7" y1="17.5" x2="17" y2="17.5"></line>
+      </svg>
+      TiddlyInstall</a>
     <nav>
       <a href="index.html">Home</a>
       <a href="new.html">New installer</a>
       <a href="edit.html">Edit installer</a>
       <a href="runtimes.html" aria-current="page">Sources</a>
+      <button type="button" class="theme-btn" id="theme-btn" aria-label="Switch theme">Dark</button>
     </nav>
   </header>
 
   <main class="wide" id="rt-editor">
-    <h1>Sources</h1>
-    <p class="lede">
-      The catalogue this page builds from: every runtime release it can
-      install, the steps that install it, and the systems each one runs on.
-      Change it here. Your changes stay in this browser, as a short list on
-      top of the catalogue built into the page.
-    </p>
+    <div class="page-head">
+      <span class="eyebrow"><span class="num">Catalogue</span> &nbsp;Sources</span>
+      <h1>Sources</h1>
+      <p class="lede">The catalogue this page builds from: every runtime release it can install, the steps
+        that install it, and the systems each one runs on. Change it here. Your changes stay in this
+        browser, as a short list on top of the catalogue built into the page.</p>
+    </div>
 
-    <p class="unavailable" id="rt-nocat" hidden>This copy of the page has no catalogue inside it. The runtime editor works in the one-file site (<code>dist/index.html</code>, or a copy saved with "Save this page").</p>
+    <p class="unavailable" id="rt-nocat" hidden>This copy of the page has no catalogue inside it. The runtime editor works in the one-file site (<code>dist/index.html</code>, or a copy saved with &ldquo;Save this page&rdquo;).</p>
     <p class="muted" id="rt-loading">Loading the catalogue…</p>
 
     <div id="rt-app" hidden>
@@ -56,7 +65,8 @@
       </section>
 
       <section class="panel rt-review" id="rt-review" hidden>
-        <h2 id="rt-review-title">Review the imported changes</h2>
+        <span class="eyebrow">Imported file</span>
+        <h2 class="section-title" id="rt-review-title">Review the imported changes</h2>
         <p class="small">Nothing from this file is used until you apply it. Recipes run commands on the computers your installers go to, and sources decide what they download: read each change first.</p>
         <ul class="rt-change-list" id="rt-review-list"></ul>
         <p class="small error-text" id="rt-review-skipped" hidden></p>
@@ -124,6 +134,7 @@
           <section class="panel rt-detail" id="rt-detail" hidden></section>
 
           <section class="panel rt-preview" id="rt-preview">
+            <span class="eyebrow">Check before you save</span>
             <h3 class="section-title">Preview: the plan the resolver makes</h3>
             <p class="small muted section-intro">Worked out in this page by the same resolver builds use, with your changes (and the edit you're making, once it's valid) against the catalogue built into the page.</p>
             <div class="rt-filters">
@@ -151,6 +162,7 @@
   <footer class="site-footer">
     Designed by <a href="https://robertsdotpm.github.io/">Matthew Roberts</a> and implemented by Claude.
   </footer>
+
   <script type="module" src="js/catalog-editor.js"></script>
 </body>
 </html>

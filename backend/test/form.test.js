@@ -298,9 +298,13 @@ test('new.html: the launch command is in the main form, not hidden under Customi
   const form = NEW_HTML.slice(NEW_HTML.indexOf('<form id="new-form"'));
   const at = form.indexOf('name="entry_python"');
   assert.ok(at > 0, 'the form has the Python launch field');
-  // Before the Customise heading, so it is on screen without opening anything.
-  const customise = form.indexOf('<h2>Customise');
+  // Before the Customise sections, so it is on screen without opening
+  // anything. Anchored on the container that holds them rather than on one
+  // spelling of the heading: the heading is an eyebrow plus an <h2> now.
+  const customise = form.indexOf('<div class="customise">');
   assert.ok(customise > 0 && at < customise, 'the launch field comes before Customise');
+  assert.match(form.slice(0, customise), /Customise<\/span>|<h2>Customise/,
+    'and the heading over those sections still calls them Customise');
   // And not inside any <details> at all: count the ones opened and closed
   // before it, which must balance.
   const before = form.slice(0, at);
@@ -309,7 +313,9 @@ test('new.html: the launch command is in the main form, not hidden under Customi
   assert.equal(opened, closed, 'the launch field is not inside a <details>');
   // Next to "Build for", in the same run of main-form questions.
   assert.ok(at < form.indexOf('<span class="label">Build for</span>'), 'it comes before "Build for"');
-  assert.match(form.slice(0, at), /<span class="label">How does it start\?<\/span>/);
+  // And it is asked by name, as the field's own label (it used to be a
+  // heading above a "Launch command" field; the question is the label now).
+  assert.match(form.slice(0, at), /<label for="entry-python">How does it start\?<\/label>/);
   // Every language still has its field, with the default the mapping knows
   // (the test above checks the values; this checks none was lost in the move).
   for (const rt of Object.keys(ENTRY_DEFAULTS)) {

@@ -176,7 +176,10 @@ const errBox = document.createElement('p');
 errBox.className = 'form-error';
 errBox.setAttribute('role', 'alert');
 errBox.hidden = true;
-const lastActions = form.querySelector(':scope > .actions');
+// The form's last block: the build bar (new.html, "You'll get ..." and the
+// button). Errors and the catalogue-overlay note go immediately above it, so
+// they are the last thing read before the button is pressed.
+const lastActions = form.querySelector(':scope > .build-bar, :scope > .actions');
 lastActions.before(errBox);
 const submitButtons = Array.from(form.querySelectorAll('button[type="submit"]'));
 

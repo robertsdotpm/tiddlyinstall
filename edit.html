@@ -5,24 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Edit installer · TiddlyInstall</title>
   <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme.js"></script>
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="index.html">TiddlyInstall</a>
+    <a class="brand" href="index.html">
+      <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="2.5" y="2.5" width="19" height="19"></rect>
+        <line x1="12" y1="6" x2="12" y2="13"></line>
+        <polyline points="8.5 9.8 12 13.3 15.5 9.8"></polyline>
+        <line class="tray" x1="7" y1="17.5" x2="17" y2="17.5"></line>
+      </svg>
+      TiddlyInstall</a>
     <nav>
       <a href="index.html">Home</a>
       <a href="new.html">New installer</a>
       <a href="edit.html" aria-current="page">Edit installer</a>
       <a href="runtimes.html">Sources</a>
+      <button type="button" class="theme-btn" id="theme-btn" aria-label="Switch theme">Dark</button>
     </nav>
   </header>
 
   <main class="narrow">
-    <h1>Edit an installer</h1>
-    <p class="lede">
-      Change what an unsigned installer installs, its name and its icon.
-      Editing happens in your browser. Your file is never uploaded.
-    </p>
+    <div class="page-head">
+      <span class="eyebrow"><span class="num">Edit</span> &nbsp;Installer</span>
+      <h1>Edit an installer</h1>
+      <p class="lede">Change what an unsigned installer installs, its name and its icon.
+        Editing happens in your browser. Your file is never uploaded.</p>
+    </div>
+
     <div class="prototype-note" id="standalone-note" hidden>
       <p style="margin-top:0">This is the self-contained editor: one file with the Windows, Linux and macOS base
         installers inside. It works offline, from a USB stick or any web host.</p>
@@ -30,15 +41,19 @@
     </div>
     <noscript><p class="prototype-note">The editor needs JavaScript. Your file still never leaves your computer.</p></noscript>
 
-    <section class="panel">
+    <section class="panel panel-accent">
+      <span class="eyebrow"><span class="num">01</span> &nbsp;Open</span>
       <h2 class="section-title">Open an installer</h2>
+      <p class="small muted section-intro">Made on this site as an unsigned installer.</p>
+
       <div class="drop-zone" id="drop">
         <input type="file" id="installer" accept=".exe,.run,.zip" aria-label="Installer">
-        <span class="hint">Or drop it here. <code>.exe</code> for Windows, <code>.run</code> for Linux, <code>.zip</code> for macOS,
-          made on this site as an unsigned installer.</span>
+        <span class="hint" style="margin-top:10px">Or drop it here. <code>.exe</code> for Windows, <code>.run</code> for Linux, <code>.zip</code> for macOS.</span>
       </div>
 
-      <span class="label" style="margin-top:14px">Or start a new one from a base installer</span>
+      <hr>
+
+      <span class="label">Or start a new one from a base installer</span>
       <div class="actions">
         <button type="button" class="secondary" data-base="windows">Windows <code>.exe</code></button>
         <button type="button" class="secondary" data-base="linux">Linux <code>.run</code></button>
@@ -59,6 +74,7 @@
 
     <form id="editor" hidden>
       <section class="panel">
+        <span class="eyebrow"><span class="num">02</span> &nbsp;Settings</span>
         <h2 class="section-title">App details</h2>
         <div class="row">
           <div class="field">
@@ -77,7 +93,7 @@
             <img id="icon-preview" alt="" width="48" height="48" hidden>
             <div style="flex:1">
               <input type="file" id="icon-file" accept=".png,.svg,image/png,image/svg+xml">
-              <span class="hint" id="icon-hint">A square PNG (or SVG), 256×256 or larger. Applied when you pick it.</span>
+              <span class="hint" id="icon-hint">A square PNG (or SVG), 256&times;256 or larger. Applied when you pick it.</span>
             </div>
             <button type="button" class="link-button" id="icon-clear" hidden>Undo</button>
           </div>
@@ -85,6 +101,7 @@
         </div>
 
         <hr>
+
         <h2 class="section-title">What it installs</h2>
         <div class="row">
           <div class="field">
@@ -109,20 +126,20 @@
           <div class="field">
             <label for="f-runtime">Language</label>
             <select id="f-runtime" data-key="runtime">
-                <option value="python">Python 3</option>
-                <option value="python2">Python 2</option>
-                <option value="node">Node.js</option>
-                <option value="ruby">Ruby</option>
-                <option value="php">PHP</option>
-                <option value="java">Java</option>
-                <option value="dotnet">.NET</option>
-                <option value="r">R</option>
-                <option value="cc">C / C++</option>
-                <option value="go">Go</option>
-                <option value="rust">Rust</option>
-                <option value="zig">Zig</option>
-                <option value="nim">Nim</option>
-                <option value="none">Other (own runtime)</option>
+              <option value="python">Python 3</option>
+              <option value="python2">Python 2</option>
+              <option value="node">Node.js</option>
+              <option value="ruby">Ruby</option>
+              <option value="php">PHP</option>
+              <option value="java">Java</option>
+              <option value="dotnet">.NET</option>
+              <option value="r">R</option>
+              <option value="cc">C / C++</option>
+              <option value="go">Go</option>
+              <option value="rust">Rust</option>
+              <option value="zig">Zig</option>
+              <option value="nim">Nim</option>
+              <option value="none">Other (own runtime)</option>
             </select>
           </div>
           <div class="field">
@@ -139,9 +156,17 @@
             <input type="text" id="f-range" data-key="range" placeholder="e.g. >=3.8" spellcheck="false">
           </div>
         </div>
-        <div class="field">
+
+        <div class="field launch-field">
+          <span class="eyebrow">The one thing we cannot work out</span>
           <label for="f-launch">Launch command</label>
           <input type="text" id="f-launch" data-key="launch" spellcheck="false">
+          <dl class="launch-tokens">
+            <dt>{runtime}</dt><dd>the runtime this installer sets up</dd>
+            <dt>{project}</dt><dd>your package name</dd>
+            <dt>{app_dir}</dt><dd>the app's own folder</dd>
+            <dt>{bin}</dt><dd>the runtime's scripts folder</dd>
+          </dl>
         </div>
         <div class="field">
           <label for="f-install">Install command</label>
@@ -149,11 +174,12 @@
         </div>
 
         <hr>
+
         <h2 class="section-title">Shortcuts and install behaviour</h2>
         <label class="choice"><input type="checkbox" data-key="console"> A console program (keep its window open)</label>
         <label class="choice"><input type="checkbox" data-key="menu"> Start menu / app launcher shortcut</label>
         <label class="choice"><input type="checkbox" data-key="desktop"> Desktop shortcut</label>
-        <div class="row" style="margin-top:10px">
+        <div class="row" style="margin-top:12px">
           <div class="field">
             <label for="f-root">Install for</label>
             <select id="f-root" data-key="root">
@@ -191,10 +217,11 @@
       </section>
 
       <section class="panel">
+        <span class="eyebrow"><span class="num">03</span> &nbsp;Contents</span>
         <h2 class="section-title">Packed files</h2>
         <p class="small muted" style="margin-top:0">Files carried inside the installer. The installer uses a packed copy of any download
           whose SHA-256 matches, instead of downloading it.</p>
-        <p class="small muted" style="margin-top:0">A pack is addressed by hash, so a member's name says nothing about it. What names each one
+        <p class="small muted">A pack is addressed by hash, so a member's name says nothing about it. What names each one
           &mdash; including <strong>which is the 32-bit runtime and which the 64-bit</strong>, when an offline installer carries both &mdash;
           is the <strong>Install plan</strong> above: its <code>file</code> lines give each download's SHA-256 and its architecture, per
           <code>[target]</code> block (<code>docs/format.md</code> section 4). An installer packing more than one
@@ -206,15 +233,16 @@
         </div>
       </section>
 
-      <section class="panel">
-        <h2 class="section-title">Save</h2>
+      <section class="panel panel-accent">
+        <span class="eyebrow"><span class="num">04</span> &nbsp;Save</span>
+        <h2 class="section-title">Download the edited installer</h2>
         <div class="field">
           <label for="out-name">File name</label>
           <input type="text" id="out-name" maxlength="255" spellcheck="false">
         </div>
         <label class="choice" id="ack-signed-row" hidden><input type="checkbox" id="ack-signed">
           <span>I understand the saved copy won't be signed.</span></label>
-        <div class="actions" style="margin-top:10px">
+        <div class="actions" style="margin-top:12px">
           <button type="submit">Download edited installer</button>
           <span class="small muted" id="save-status"></span>
         </div>
@@ -222,7 +250,8 @@
       </section>
 
       <section class="panel" id="sign-panel">
-        <h2 class="section-title">Sign it yourself (optional)</h2>
+        <span class="eyebrow"><span class="num">05</span> &nbsp;Optional</span>
+        <h2 class="section-title">Sign it yourself</h2>
         <p class="small muted" style="margin-top:0">Sign the installer with your own certificate or key, here in the page.
           Your key is never uploaded and never stored: it stays in this tab's memory until you close it.</p>
 
@@ -278,7 +307,7 @@
               </div>
             </div>
           </div>
-          <div class="row" style="margin-top:10px">
+          <div class="row" style="margin-top:12px">
             <div class="field">
               <label for="sign-name">Program name</label>
               <input type="text" id="sign-name" maxlength="128">
@@ -290,19 +319,19 @@
             </div>
           </div>
           <div class="online-only">
-          <label class="choice"><input type="checkbox" id="ts-on" checked> Timestamp the signature, so it stays valid after your certificate expires</label>
-          <div class="field">
-            <label for="ts-name">Timestamp server</label>
-            <select id="ts-name">
-              <option value="digicert">DigiCert</option>
-              <option value="sectigo">Sectigo</option>
-              <option value="globalsign">GlobalSign</option>
-              <option value="sslcom">SSL.com</option>
-              <option value="certum">Certum</option>
-            </select>
-            <span class="hint">Timestamp servers don't accept calls from web pages, so the request goes through the build server,
-              which forwards it. It carries only a hash of your signature.</span>
-          </div>
+            <label class="choice"><input type="checkbox" id="ts-on" checked> Timestamp the signature, so it stays valid after your certificate expires</label>
+            <div class="field">
+              <label for="ts-name">Timestamp server</label>
+              <select id="ts-name">
+                <option value="digicert">DigiCert</option>
+                <option value="sectigo">Sectigo</option>
+                <option value="globalsign">GlobalSign</option>
+                <option value="sslcom">SSL.com</option>
+                <option value="certum">Certum</option>
+              </select>
+              <span class="hint">Timestamp servers don't accept calls from web pages, so the request goes through the build server,
+                which forwards it. It carries only a hash of your signature.</span>
+            </div>
           </div>
         </div>
 
@@ -371,7 +400,7 @@ xcrun notarytool submit upload.zip --keychain-profile &lt;profile&gt; --wait
 xcrun stapler staple Install.app &amp;&amp; ditto -c -k --keepParent Install.app install-signed.zip</pre>
         </div>
 
-        <div class="actions" style="margin-top:10px">
+        <div class="actions" style="margin-top:12px">
           <button type="button" id="sign-go">Sign and download</button>
           <span class="small muted" id="sign-status" role="status"></span>
         </div>
@@ -379,6 +408,7 @@ xcrun stapler staple Install.app &amp;&amp; ditto -c -k --keepParent Install.app
     </form>
 
     <section class="panel" id="rename">
+      <span class="eyebrow">Signed installers</span>
       <h2 class="section-title">Retarget a signed installer by renaming it</h2>
       <p class="small">Installers signed by TiddlyInstall read their file name. Renaming keeps the signature.</p>
 <pre>
@@ -392,6 +422,7 @@ install_python_black.exe      installs black
   <footer class="site-footer">
     Designed by <a href="https://robertsdotpm.github.io/">Matthew Roberts</a> and implemented by Claude.
   </footer>
+
   <script src="vendor/resedit-bundle.js"></script>
   <script type="module" src="js/edit.js"></script>
 </body>

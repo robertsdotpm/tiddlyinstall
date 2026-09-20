@@ -429,6 +429,9 @@ def offline_page(catalog_dir, backend):
            # Too-old browsers get a message naming what's missing (a classic
            # script, so it runs where the module can't).
            "  <script>\n" + no_close_script(read("js/browser-check.js")) + "\n  </script>\n"
+           # Light or dark before the first paint, and the header's button
+           # (js/theme.js). ES3 too, so IE reads it.
+           "  <script>\n" + no_close_script(read("js/theme.js")) + "\n  </script>\n"
            "  <style>\n" + css + "\n  </style>\n</head>\n<body>\n  " + header + "\n"
            + NOSCRIPT.replace("{classic}", html.escape(backend.rstrip("/") + "/classic"))
            + "\n".join(sections) +

@@ -5,20 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>New installer · TiddlyInstall</title>
   <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme.js"></script>
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="index.html">TiddlyInstall</a>
+    <a class="brand" href="index.html">
+      <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="2.5" y="2.5" width="19" height="19"></rect>
+        <line x1="12" y1="6" x2="12" y2="13"></line>
+        <polyline points="8.5 9.8 12 13.3 15.5 9.8"></polyline>
+        <line class="tray" x1="7" y1="17.5" x2="17" y2="17.5"></line>
+      </svg>
+      TiddlyInstall</a>
     <nav>
       <a href="index.html">Home</a>
       <a href="new.html" aria-current="page">New installer</a>
       <a href="edit.html">Edit installer</a>
       <a href="runtimes.html">Sources</a>
+      <button type="button" class="theme-btn" id="theme-btn" aria-label="Switch theme">Dark</button>
     </nav>
   </header>
 
   <main class="narrow">
-    <h1>New installer</h1>
+    <div class="page-head">
+      <span class="eyebrow"><span class="num">New</span> &nbsp;Installer</span>
+      <h1>What should this installer install?</h1>
+      <p class="lede">Five answers are enough. Everything under <strong>Customise</strong>
+      already has a sensible default, and states it without being opened.</p>
+    </div>
+
     <noscript><p class="prototype-note">
       Without JavaScript this form is sent to the build server as it is, and the server builds the installers
       (a page served by one). Editing, signing and files from your computer need JavaScript.
@@ -31,11 +46,12 @@
          token are never sent that way. -->
     <form id="new-form" action="submit" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 
-      <!-- ===== Simple view: the only things we need ===== -->
-      <section class="panel">
-        <h2 class="section-title">App details</h2>
+      <!-- ================= Essentials ================= -->
+      <section class="panel panel-accent">
+        <span class="eyebrow"><span class="num">01</span> &nbsp;Essentials</span>
+        <h2 class="section-title">The things only you know</h2>
         <p class="small muted section-intro">Used for the installer and for the installed app's launcher.
-          Leave blank to use the project's name. Pick an icon under Customise.</p>
+          Leave the name blank to use the project's name. Pick an icon under Customise.</p>
 
         <div class="field">
           <label for="app-name">Name</label>
@@ -45,7 +61,7 @@
         <hr>
 
         <span class="label">Where's the code?</span>
-        <div class="lang-choices" style="margin-bottom:12px">
+        <div class="lang-choices" style="margin-bottom:14px">
           <label class="lang-choice"><input type="radio" name="source_kind" value="repo" id="src-repo" checked> A GitHub repo or package</label>
           <label class="lang-choice"><input type="radio" name="source_kind" value="write" id="src-write"> I'll write it here</label>
           <label class="lang-choice has-local-only"><input type="radio" name="source_kind" value="local" id="src-local"> From my computer</label>
@@ -53,7 +69,7 @@
 
         <div class="field src-local-only">
           <span class="label">Your project</span>
-          <div class="actions" style="margin:4px 0 6px">
+          <div class="actions" style="margin:4px 0 8px">
             <label class="button secondary file-button" id="local-archive-label">Pick an archive<input type="file" id="local-archive" accept=".zip,.tar.gz,.tgz,.tar,application/zip,application/gzip,application/x-tar" hidden></label>
             <label class="button secondary file-button needs-folder" id="local-folder-label">Pick a folder<input type="file" id="local-folder" webkitdirectory multiple hidden></label>
           </div>
@@ -62,8 +78,8 @@
 
         <div class="field src-repo-only">
           <label for="source">What do you want to package?</label>
-          <input type="text" id="source" name="source"
-                 placeholder="https://github.com/owner/project  or  requests">
+          <input type="text" id="source" name="source" spellcheck="false"
+                 placeholder="https://github.com/owner/project   or   requests">
           <span class="hint">A GitHub repo URL, or a package name. No project yet? Choose <strong>I'll write it here</strong>.</span>
         </div>
 
@@ -93,11 +109,12 @@
           </select>
         </div>
 
+        <!-- ---- Language: Other. Your own runtime download, per platform ---- -->
         <div class="custom-runtime lang-other-only">
+          <span class="eyebrow">Required for this language</span>
           <h3 class="section-title">Your runtime download</h3>
           <p class="small muted" style="margin-top:0">There's no built-in runtime for this language, so tell the installer where to get one.
             Fill in each platform you're building for.</p>
-
 
           <div class="tabs" role="tablist">
             <label class="tab crt-tab-win"><input type="radio" name="custom_rt_tab" id="crt-tab-win" checked> Windows</label>
@@ -142,6 +159,7 @@
               <span class="hint"><code>{runtime_dir}</code> is this app's runtime folder. Run silently, and don't add the runtime to PATH.</span>
             </div>
           </div>
+
           <div class="tab-panel custom-rt-panel-linux">
             <div class="field">
               <label for="crt-linux-urls">Download URLs <span class="req">required</span></label>
@@ -179,6 +197,7 @@
               <span class="hint"><code>{runtime_dir}</code> is this app's runtime folder. Run silently, and don't add the runtime to PATH.</span>
             </div>
           </div>
+
           <div class="tab-panel custom-rt-panel-mac">
             <div class="field">
               <label for="crt-mac-urls">Download URLs <span class="req">required</span></label>
@@ -217,41 +236,44 @@
             </div>
           </div>
 
-          <p class="small muted" style="margin-bottom:0">People see these URLs on the installer's "what this will do" screen before anything is downloaded.</p>
+          <p class="small muted" style="margin-bottom:0">People see these URLs on the installer's &ldquo;what this will do&rdquo; screen before anything is downloaded.</p>
         </div>
 
-
+        <!-- ---- Language: C / C++ ---- -->
         <div class="custom-runtime lang-cc-only">
+          <span class="eyebrow">Built on the user's computer</span>
           <h3 class="section-title">Build tools</h3>
           <p class="small muted" style="margin-top:0">The installer installs a compiler into the app's own folder and builds your project on the user's computer.</p>
 
           <div class="win-settings">
             <span class="label">Windows</span>
-            <label class="choice"><input type="radio" name="cc_win" value="auto" checked>
-              <span><strong>Automatic</strong> <span class="badge">default</span><br>
-              <span class="small muted">MinGW-w64 GCC, or Visual Studio Build Tools if the project only builds with Visual Studio (it has <code>.sln</code>/<code>.vcxproj</code> files and no other build files).</span></span></label>
-            <label class="choice"><input type="radio" name="cc_win" value="gcc-ucrt">
-              <span><strong>MinGW-w64 GCC</strong> <span class="small muted">(WinLibs, UCRT) · Windows 7 SP1+ · about 110 MB download</span><br>
-              <span class="small muted">GCC for Windows in the app's own folder. Nothing installed system-wide.</span></span></label>
-            <label class="choice"><input type="radio" name="cc_win" value="gcc-msvcrt">
-              <span><strong>MinGW-w64 GCC for old Windows</strong> <span class="small muted">(WinLibs, MSVCRT) · Windows XP+ · 32-bit · about 90 MB download</span><br>
-              <span class="small muted">The only choice that builds on XP and Vista.</span></span></label>
-            <label class="choice"><input type="radio" name="cc_win" value="w64devkit">
-              <span><strong>w64devkit</strong> <span class="small muted">· Windows 7+</span><br>
-              <span class="small muted">GCC plus <code>make</code> and a small Unix shell, for projects with Makefiles or shell build scripts.</span></span></label>
-            <label class="choice"><input type="radio" name="cc_win" value="llvm">
-              <span><strong>LLVM / Clang</strong> <span class="small muted">· Windows 7 SP1+ · about 400 MB download</span><br>
-              <span class="small muted">Clang in the app's own folder. Builds for the Visual Studio ABI, so it also needs Visual Studio Build Tools' headers and libraries.</span></span></label>
-            <label class="choice"><input type="radio" name="cc_win" value="zig">
-              <span><strong>Zig (<code>zig cc</code>)</strong> <span class="small muted">· Windows 10+ · about 95 MB download</span><br>
-              <span class="small muted">A small self-contained C/C++ compiler with its own headers and linker.</span></span></label>
-            <label class="choice"><input type="radio" name="cc_win" value="msvc">
-              <span><strong>Visual Studio Build Tools</strong> <span class="small muted">· Windows 10 1909+ · several GB, downloaded by Microsoft's installer</span><br>
-              <span class="small muted">Microsoft's compiler, for projects that only build with Visual Studio. Installed system-wide, not in the app's folder,
-              and Microsoft's licence requires every user to have a Visual Studio licence.</span></span></label>
+            <div class="choice-stack">
+              <label class="choice"><input type="radio" name="cc_win" value="auto" checked>
+                <span><strong>Automatic</strong> <span class="badge">default</span><br>
+                <span class="small muted">MinGW-w64 GCC, or Visual Studio Build Tools if the project only builds with Visual Studio (it has <code>.sln</code>/<code>.vcxproj</code> files and no other build files).</span></span></label>
+              <label class="choice"><input type="radio" name="cc_win" value="gcc-ucrt">
+                <span><strong>MinGW-w64 GCC</strong> <span class="small muted">(WinLibs, UCRT) &middot; Windows 7 SP1+ &middot; about 110 MB download</span><br>
+                <span class="small muted">GCC for Windows in the app's own folder. Nothing installed system-wide.</span></span></label>
+              <label class="choice"><input type="radio" name="cc_win" value="gcc-msvcrt">
+                <span><strong>MinGW-w64 GCC for old Windows</strong> <span class="small muted">(WinLibs, MSVCRT) &middot; Windows XP+ &middot; 32-bit &middot; about 90 MB download</span><br>
+                <span class="small muted">The only choice that builds on XP and Vista.</span></span></label>
+              <label class="choice"><input type="radio" name="cc_win" value="w64devkit">
+                <span><strong>w64devkit</strong> <span class="small muted">&middot; Windows 7+</span><br>
+                <span class="small muted">GCC plus <code>make</code> and a small Unix shell, for projects with Makefiles or shell build scripts.</span></span></label>
+              <label class="choice"><input type="radio" name="cc_win" value="llvm">
+                <span><strong>LLVM / Clang</strong> <span class="small muted">&middot; Windows 7 SP1+ &middot; about 400 MB download</span><br>
+                <span class="small muted">Clang in the app's own folder. Builds for the Visual Studio ABI, so it also needs Visual Studio Build Tools' headers and libraries.</span></span></label>
+              <label class="choice"><input type="radio" name="cc_win" value="zig">
+                <span><strong>Zig (<code>zig cc</code>)</strong> <span class="small muted">&middot; Windows 10+ &middot; about 95 MB download</span><br>
+                <span class="small muted">A small self-contained C/C++ compiler with its own headers and linker.</span></span></label>
+              <label class="choice"><input type="radio" name="cc_win" value="msvc">
+                <span><strong>Visual Studio Build Tools</strong> <span class="small muted">&middot; Windows 10 1909+ &middot; several GB, downloaded by Microsoft's installer</span><br>
+                <span class="small muted">Microsoft's compiler, for projects that only build with Visual Studio. Installed system-wide, not in the app's folder,
+                and Microsoft's licence requires every user to have a Visual Studio licence.</span></span></label>
+            </div>
           </div>
 
-          <div class="field" style="margin-top:10px">
+          <div class="field">
             <label for="cc-build">Build command</label>
             <input type="text" id="cc-build" name="cc_build" placeholder="Automatic: cmake, meson or make, from the project's files" spellcheck="false">
             <span class="hint">Runs in the project's folder with the compiler set up. The built program is what the app launches.</span>
@@ -260,7 +282,9 @@
             People see the compiler, and that the project's build scripts will run, before anything is installed.</p>
         </div>
 
+        <!-- ---- Languages built on the user's computer ---- -->
         <div class="custom-runtime lang-compiled-only">
+          <span class="eyebrow">Built on the user's computer</span>
           <h3 class="section-title">Build</h3>
           <p class="small muted" style="margin-top:0">The installer installs the
             <span class="by-lang lang-go">Go toolchain</span><span class="by-lang lang-rust">Rust toolchain (on Windows the <code>-gnu</code> one, which brings its own linker)</span><span class="by-lang lang-zig">Zig compiler</span><span class="by-lang lang-nim">Nim compiler and a C compiler for it</span>
@@ -276,7 +300,7 @@
           <p class="small muted" style="margin-bottom:0">People see the compiler, and that the project's build scripts will run, before anything is installed.</p>
         </div>
 
-        <!-- Code written on the site: templates, editor and preview -->
+        <!-- ---- Code written on the site ---- -->
         <div class="write-block src-write-only">
           <p class="unavailable write-needs-js">Writing code here needs JavaScript, which is off or missing in this browser. A GitHub repo or a package works without it.</p>
           <p class="unavailable write-needs-lang" hidden>Writing code here needs a language. Pick one above (Other has no templates).</p>
@@ -287,85 +311,89 @@
             <span class="label">Start from a template</span>
             <div class="template-cards"></div>
 
-            <div class="editor-toolbar" id="write-code" style="margin-top:18px">
+            <div class="editor-toolbar" id="write-code" style="margin-top:20px">
               <span class="label" style="margin:0">Your code</span>
-              <a class="button secondary run-link" href="#run-output">▶ Run</a>
+              <a class="button secondary run-link" href="#run-output">&#9654; Run</a>
             </div>
 
-          <div class="template-editor"></div>
-          <p class="unavailable combo-unavailable" hidden>This template isn't available for this language yet. Pick another template.</p>
-          <p class="small muted template-note" hidden></p>
+            <div class="template-editor"></div>
+            <p class="unavailable combo-unavailable" hidden>This template isn't available for this language yet. Pick another template.</p>
+            <p class="small muted template-note" hidden></p>
 
-          <p class="small muted editor-files">
-            <button type="button" class="link-button">+ Add file</button>
-          </p>
+            <p class="small muted editor-files">
+              <button type="button" class="link-button">+ Add file</button>
+            </p>
 
-          <!-- Run output: an overlay opened by the Run link (no JS, :target) -->
-          <div class="run-overlay" id="run-output" role="dialog" aria-label="Run output">
-            <div class="run-dialog">
-              <div class="run-head"><strong>Output</strong><a href="#write-code" aria-label="Close">✕</a></div>
-              <div class="tpl tpl-script-only">
+            <!-- Run output: an overlay opened by the Run link (no JS, :target) -->
+            <div class="run-overlay" id="run-output" role="dialog" aria-label="Run output">
+              <div class="run-dialog">
+                <div class="run-head"><strong>Output</strong><a href="#write-code" aria-label="Close">&#10005;</a></div>
+                <div class="tpl tpl-script-only">
 <pre class="output-log">What's your name? Sam
 Hello, Sam!
 Press Enter to close</pre>
-                <span class="hint">Runs in your browser. Nothing is sent to a server.</span>
-              </div>
-              <div class="tpl tpl-gui-only">
-                <p class="small" style="margin:0">App windows and tray icons can't be previewed in the browser.
-                  Download a test build to try it on your computer.</p>
-                <div class="actions" style="margin-top:8px">
-                  <button type="button" class="secondary">Download test build</button>
+                  <span class="hint">Runs in your browser. Nothing is sent to a server.</span>
+                </div>
+                <div class="tpl tpl-gui-only">
+                  <p class="small" style="margin:0">App windows and tray icons can't be previewed in the browser.
+                    Download a test build to try it on your computer.</p>
+                  <div class="actions" style="margin-top:10px">
+                    <button type="button" class="secondary">Download test build</button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           </div>
         </div>
 
         <hr>
 
-        <!-- How the app starts. Everything else about a project can be read
-             off its files -- a requirements.txt means pip, a package.json
-             means npm -- but nothing in a repo says whether main.py is a
-             library, a command, or something you start with -m. This is the
-             one field only the publisher can answer, which is why it is
-             here and not under Customise, and why how loudly it asks
-             depends on how much we actually know (js/new.js paintLaunch).
-             The per-language defaults are unchanged; this is about
-             visibility, not about making people type more. -->
-        <span class="label">How does it start?</span>
-        <p class="small launch-why src-repo-only" id="launch-why-repo">We can work out how to <em>install</em> your project by reading its files: a
-          <code>requirements.txt</code> means pip, a <code>package.json</code> means npm. <strong>Nothing in a repo says how to run it.</strong>
-          A <code>main.py</code> might be a library, a command, or something you start with <code>-m</code>. So this is the one thing only you
-          can tell us &mdash; and getting it wrong gives an installer that installs perfectly and then starts nothing.</p>
-        <p class="small launch-why src-local-only">Nothing in a folder of files says which one starts the app, so this is the one thing only you
-          can tell us. Change it to match however you run the project today.</p>
-        <p class="small launch-why muted src-write-only" id="launch-why-write">Set from the template you picked, which we wrote, so we know the file
-          it starts. Change it if you rename that file or start it another way.</p>
+        <!-- How the app starts. Everything else about a project can be read off
+             its files -- a requirements.txt means pip, a package.json means npm
+             -- but nothing in a repo says whether main.py is a library, a
+             command, or something you start with -m. This is the one field only
+             the publisher can answer, so it is here in the essentials with its
+             worked example on screen, not behind a hint in a collapsed section.
+             How loudly it asks depends on how much we know (js/new.js
+             paintLaunch adds .launch-quiet). -->
         <div class="field launch-field" id="launch-field">
-          <label for="entry-python">Launch command</label>
-          <input type="text" class="entry entry-python" id="entry-python" name="entry_python" value="{runtime} -m {project}">
-          <input type="text" class="entry entry-node" id="entry-node" name="entry_node" value="{runtime} {app_dir}" aria-label="Launch command">
-          <input type="text" class="entry entry-ruby" id="entry-ruby" name="entry_ruby" value="{bin}/{project}" aria-label="Launch command">
-          <input type="text" class="entry entry-php" name="entry_php" value="{runtime} {app_dir}/index.php" aria-label="Launch command">
-          <input type="text" class="entry entry-java" name="entry_java" value="{runtime} -jar {app_dir}/{project}.jar" aria-label="Launch command">
-          <input type="text" class="entry entry-dotnet" name="entry_dotnet" value="{runtime} {app_dir}/{project}.dll" aria-label="Launch command">
-          <input type="text" class="entry entry-r" name="entry_r" value="{runtime} {app_dir}/main.R" aria-label="Launch command">
-          <input type="text" class="entry entry-cc" id="entry-cc" name="entry_cc" value="{app_dir}/{project}" aria-label="Launch command">
-          <input type="text" class="entry entry-go" name="entry_go" value="{app_dir}/{project}" aria-label="Launch command">
-          <input type="text" class="entry entry-rust" name="entry_rust" value="{app_dir}/target/release/{project}" aria-label="Launch command">
-          <input type="text" class="entry entry-zig" name="entry_zig" value="{app_dir}/bin/{project}" aria-label="Launch command">
-          <input type="text" class="entry entry-nim" name="entry_nim" value="{app_dir}/{project}" aria-label="Launch command">
-          <input type="text" class="entry entry-none" id="entry-none" name="entry_none" value="{app_dir}/{project}" aria-label="Launch command">
-          <!-- Rewritten by js/new.js for the language, platform and name
-               chosen: the command with the folders filled in, then a gloss
-               of only the tokens it actually uses. This is the fallback
-               with no JavaScript, where none of that is known. -->
+          <span class="eyebrow">The one thing we cannot work out</span>
+          <label for="entry-python">How does it start?</label>
+          <p class="small launch-why src-repo-only" id="launch-why-repo">We can work out how to <em>install</em> your project by reading its files: a
+            <code>requirements.txt</code> means pip, a <code>package.json</code> means npm. <strong>Nothing in a repo says how to run it.</strong>
+            A <code>main.py</code> might be a library, a command, or something you start with <code>-m</code>. Getting this wrong gives an
+            installer that installs perfectly and then starts nothing.</p>
+          <p class="small launch-why src-local-only">Nothing in a folder of files says which one starts the app, so this is the one thing only you
+            can tell us. Change it to match however you run the project today.</p>
+          <p class="small launch-why muted src-write-only" id="launch-why-write">Set from the template you picked, which we wrote, so we know the file
+            it starts. Change it if you rename that file or start it another way.</p>
+
+          <input type="text" class="entry entry-python" id="entry-python" name="entry_python" value="{runtime} -m {project}" spellcheck="false">
+          <input type="text" class="entry entry-node" id="entry-node" name="entry_node" value="{runtime} {app_dir}" aria-label="Launch command" spellcheck="false">
+          <input type="text" class="entry entry-ruby" id="entry-ruby" name="entry_ruby" value="{bin}/{project}" aria-label="Launch command" spellcheck="false">
+          <input type="text" class="entry entry-php" name="entry_php" value="{runtime} {app_dir}/index.php" aria-label="Launch command" spellcheck="false">
+          <input type="text" class="entry entry-java" name="entry_java" value="{runtime} -jar {app_dir}/{project}.jar" aria-label="Launch command" spellcheck="false">
+          <input type="text" class="entry entry-dotnet" name="entry_dotnet" value="{runtime} {app_dir}/{project}.dll" aria-label="Launch command" spellcheck="false">
+          <input type="text" class="entry entry-r" name="entry_r" value="{runtime} {app_dir}/main.R" aria-label="Launch command" spellcheck="false">
+          <input type="text" class="entry entry-cc" id="entry-cc" name="entry_cc" value="{app_dir}/{project}" aria-label="Launch command" spellcheck="false">
+          <input type="text" class="entry entry-go" name="entry_go" value="{app_dir}/{project}" aria-label="Launch command" spellcheck="false">
+          <input type="text" class="entry entry-rust" name="entry_rust" value="{app_dir}/target/release/{project}" aria-label="Launch command" spellcheck="false">
+          <input type="text" class="entry entry-zig" name="entry_zig" value="{app_dir}/bin/{project}" aria-label="Launch command" spellcheck="false">
+          <input type="text" class="entry entry-nim" name="entry_nim" value="{app_dir}/{project}" aria-label="Launch command" spellcheck="false">
+          <input type="text" class="entry entry-none" id="entry-none" name="entry_none" value="{app_dir}/{project}" aria-label="Launch command" spellcheck="false">
+
+          <!-- Rewritten by js/new.js for the language, platform and name chosen:
+               the command with the folders filled in, then a gloss of only the
+               tokens it actually uses. This is the no-JavaScript fallback. -->
           <div class="launch-example" id="launch-example">
-            <span class="hint"><code>{runtime}</code> the runtime this installer sets up, never one already on the computer ·
-              <code>{project}</code> your package name ·
-              <code>{app_dir}</code> the app's own folder ·
-              <code>{bin}</code> the runtime's scripts folder</span>
+            <span class="eyebrow" style="margin-top:12px">On a Windows machine this becomes</span>
+            <code class="launch-eg">C:\ib\tjfq5rqwnnrx\python.exe -m requests</code>
+            <dl class="launch-tokens">
+              <dt>{runtime}</dt><dd>the runtime this installer sets up, never one already on the computer</dd>
+              <dt>{project}</dt><dd>your package name</dd>
+              <dt>{app_dir}</dt><dd>the app's own folder</dd>
+              <dt>{bin}</dt><dd>the runtime's scripts folder</dd>
+            </dl>
           </div>
         </div>
 
@@ -378,11 +406,10 @@ Press Enter to close</pre>
           <label class="choice"><input type="checkbox" name="target_macos" checked> macOS</label>
         </div>
 
-        <!-- 32-bit vs 64-bit, for ordinary (online) installers: not a choice,
-             a fact. One installer carries a plan block per architecture and
-             picks on the machine it runs on (docs/format.md section 3). The
-             text of each line is rewritten from the catalogue by js/new.js
-             for the language chosen; this is the fallback with no JS. -->
+        <!-- 32-bit vs 64-bit, for ordinary (online) installers: not a choice, a
+             fact. One installer carries a plan block per architecture and picks
+             on the machine it runs on (docs/format.md section 3). Each line is
+             rewritten from the catalogue by js/new.js; this is the fallback. -->
         <ul class="arch-cover small" id="arch-cover">
           <li class="win-settings" data-family="windows"><strong>Windows</strong>
             <ul class="arch-cover-arches"><li>64-bit (x64) and 32-bit (x86)</li></ul></li>
@@ -395,23 +422,29 @@ Press Enter to close</pre>
           and picks the right one on the computer it runs on, so there is nothing to choose here.
           Apple dropped 32-bit support in macOS 10.15, so no runtime has a 32-bit macOS build.</p>
 
-        <label class="choice not-ours online-only" style="margin-top:10px"><input type="checkbox" id="offline-on" name="offline">
+        <label class="choice not-ours online-only" style="margin-top:12px"><input type="checkbox" id="offline-on" name="offline">
           <span>Also make offline installers <span class="small muted">for computers without internet. Bigger files, packed in your browser.</span></span></label>
-        <p class="small muted ours-only online-only" style="margin:10px 0 0">Offline installers need the installer signed by you or left unsigned (Customise → Signing).</p>
+        <p class="small muted ours-only online-only" style="margin:10px 0 0">Offline installers need the installer signed by you or left unsigned (Customise &rarr; Signing).</p>
 
-        <p class="build-where new-where small">Built by the build server.</p>
-        <div class="actions" style="margin-top:16px">
-          <button type="submit">Build installers</button>
+        <!-- The essentials end with their own button on narrow screens,
+             where the build bar at the foot of the form takes a third of
+             the screen if it is pinned, so it isn't (css/style.css, "Phones
+             and small screens"). Without this, sending the form from a
+             phone would mean scrolling the whole of Customise first. Wider
+             screens have the pinned bar on screen already, so this is
+             hidden there. -->
+        <div class="build-early">
+          <p class="build-where new-where small">Built by the build server.</p>
+          <div class="actions"><button type="submit">Build installers</button></div>
         </div>
-
-        <p class="small muted" style="margin-bottom:0">
-          You'll get <code>install_<span class="by-lang lang-python">python</span><span class="by-lang lang-python2">python2</span><span class="by-lang lang-node">node</span><span class="by-lang lang-ruby">ruby</span><span class="by-lang lang-php">php</span><span class="by-lang lang-java">java</span><span class="by-lang lang-dotnet">dotnet</span><span class="by-lang lang-r">r</span><span class="by-lang lang-cc">cpp</span><span class="by-lang lang-go">go</span><span class="by-lang lang-rust">rust</span><span class="by-lang lang-zig">zig</span><span class="by-lang lang-nim">nim</span><span class="by-lang lang-none">app</span>_&lt;name&gt;<span class="by-mode mode-ours-inline">_&lt;hash&gt;</span>.exe</code>, <code>.run</code> and <code>.dmg</code><span class="offline-inline">, plus offline <code>…_offline.exe</code>, <code>.run</code> and <code>.zip</code></span>,
-          <span class="by-mode mode-ours-inline">signed by TiddlyInstall (the hash points to your settings, so the signature stays valid)</span><span class="by-mode mode-yours-inline">signed by you</span><span class="by-mode mode-unsigned-inline">unsigned</span>. Everything below is optional and already has sensible defaults.
-        </p>
       </section>
 
-      <!-- ===== Drill-down: every option, collapsed, showing its default ===== -->
-      <h2>Customise <span class="muted small">(optional)</span></h2>
+      <!-- ================= Customise ================= -->
+      <div class="else-head">
+        <span class="eyebrow"><span class="num">02</span> &nbsp;Customise</span>
+        <h2 class="section-title">Already decided, unless you say otherwise</h2>
+        <p class="small muted section-intro">Three groups. Each row states what it will do if you never open it.</p>
+      </div>
 
       <div class="customise">
         <h3 class="customise-group">What gets installed</h3>
@@ -431,11 +464,11 @@ Press Enter to close</pre>
             </div>
             <div class="field">
               <label for="ref">Tag, branch or commit</label>
-              <input type="text" id="ref" name="ref" placeholder="v1.4.0">
+              <input type="text" id="ref" name="ref" placeholder="v1.4.0" spellcheck="false">
             </div>
             <div class="field">
               <label for="subdir">Subfolder</label>
-              <input type="text" id="subdir" name="subdir" placeholder="Repo root">
+              <input type="text" id="subdir" name="subdir" placeholder="Repo root" spellcheck="false">
             </div>
           </div>
           <div class="field">
@@ -455,7 +488,7 @@ Press Enter to close</pre>
             <span class="small muted">Each computer gets the newest release that works on its Windows, macOS or Linux version.</span></span></label>
           <div class="rv-panel rv-newest-only py-panel">
             <div class="table-wrap">
-              <table class="small">
+              <table class="small versions">
                 <thead><tr><th>System</th><th>Python installed</th></tr></thead>
                 <tbody>
                   <tr><td>Windows XP</td><td>3.4.4</td></tr>
@@ -478,13 +511,13 @@ Press Enter to close</pre>
           </div>
 
           <div class="python-only">
-          <label class="choice"><input type="radio" name="rv_mode" value="asyncio" id="rv-asyncio">
-            <span><strong>Newest tested with asyncio</strong> <span class="badge">tested</span><br>
-            <span class="small muted">On each Windows version, the highest Python tested to install and run <code>asyncio</code> there, instead of the newest release.</span></span></label>
+            <label class="choice"><input type="radio" name="rv_mode" value="asyncio" id="rv-asyncio">
+              <span><strong>Newest tested with asyncio</strong> <span class="badge">tested</span><br>
+              <span class="small muted">On each Windows version, the highest Python tested to install and run <code>asyncio</code> there, instead of the newest release.</span></span></label>
           </div>
           <div class="rv-panel rv-asyncio-only py-panel">
             <div class="table-wrap">
-              <table class="small">
+              <table class="small versions">
                 <thead><tr><th>Windows</th><th>Python installed</th><th>Also installs</th></tr></thead>
                 <tbody>
                   <tr><td>XP</td><td>3.5, XP backport</td><td>Visual C++ runtimes</td></tr>
@@ -502,7 +535,7 @@ Press Enter to close</pre>
             <span class="small muted">For apps that need, or can't handle, certain versions.</span></span></label>
           <div class="field rv-panel rv-range-only">
             <label for="runtime-version">Versions allowed</label>
-            <input type="text" id="runtime-version" name="runtime_version" placeholder="e.g. >=3.8, <3.13">
+            <input type="text" id="runtime-version" name="runtime_version" placeholder="e.g. >=3.8, <3.13" spellcheck="false">
             <span class="hint">Operators: <code>==</code> <code>!=</code> <code>&gt;=</code> <code>&lt;=</code> <code>&gt;</code> <code>&lt;</code> <code>~=</code>, and wildcards like <code>==3.12.*</code>. Separate with commas.
               If no version in the range runs on a user's system, the installer stops and says which versions would.</span>
           </div>
@@ -512,7 +545,7 @@ Press Enter to close</pre>
             <span class="small muted">The same version everywhere. Systems it doesn't run on can't install the app.</span></span></label>
           <div class="field rv-panel rv-exact-only">
             <label for="runtime-exact">Version</label>
-            <input type="text" id="runtime-exact" name="runtime_exact" placeholder="e.g. 3.12.4">
+            <input type="text" id="runtime-exact" name="runtime_exact" placeholder="e.g. 3.12.4" spellcheck="false">
           </div>
 
           <hr>
@@ -537,7 +570,7 @@ Press Enter to close</pre>
 
           <div class="field">
             <label for="install-cmd">Install command</label>
-            <input type="text" id="install-cmd" name="install_cmd" placeholder="{python} -m pip install .">
+            <input type="text" id="install-cmd" name="install_cmd" placeholder="{python} -m pip install ." spellcheck="false">
           </div>
           <div class="field">
             <label for="extra-deps">Extra dependencies</label>
@@ -561,11 +594,11 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
           <summary><span>Platforms</span><span class="default">Every architecture the language has</span></summary>
 
           <!-- This section used to offer "x64" and "arm64" tick boxes, which
-               said the installers were 64-bit only. They weren't, nothing
-               read the boxes, and 32-bit Windows has always worked; 32-bit
-               Linux now does for some languages. What is covered follows
-               from the language and the catalogue, so it is stated (filled
-               in by js/new.js) rather than asked. -->
+               said the installers were 64-bit only. They weren't, nothing read
+               the boxes, and 32-bit Windows has always worked; 32-bit Linux now
+               does for some languages. What is covered follows from the language
+               and the catalogue, so it is stated
+               (filled in by js/new.js) rather than asked. -->
           <p class="small" style="margin-top:0">An installer is not built for one architecture. It carries an install plan for each
             and picks on the computer it runs on, so there is nothing to tick here. What is covered for
             <span class="by-lang lang-python">Python</span><span class="by-lang lang-python2">Python 2</span><span class="by-lang lang-node">Node.js</span><span class="by-lang lang-ruby">Ruby</span><span class="by-lang lang-php">PHP</span><span class="by-lang lang-java">Java</span><span class="by-lang lang-dotnet">.NET</span><span class="by-lang lang-r">R</span><span class="by-lang lang-cc">C/C++</span><span class="by-lang lang-go">Go</span><span class="by-lang lang-rust">Rust</span><span class="by-lang lang-zig">Zig</span><span class="by-lang lang-nim">Nim</span><span class="by-lang lang-none">your runtime</span>
@@ -609,171 +642,173 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
             To add files, choose <strong>Signed by you</strong> or <strong>Unsigned</strong> under Signing.</p>
           <div class="not-ours">
 
-          <p class="small" style="margin-top:0">Add files for the installer to put in your app's folder, or to run while installing:
-            data, a model, a manual, a driver. Packed files go into the installer in your browser. They're never uploaded to us, only their checksums.</p>
+            <p class="small" style="margin-top:0">Add files for the installer to put in your app's folder, or to run while installing:
+              data, a model, a manual, a driver. Packed files go into the installer in your browser. They're never uploaded to us, only their checksums.</p>
 
-          <h3 class="section-title">Your files</h3>
-          <div class="table-wrap">
-            <table class="small packed-files">
-              <thead><tr><th>File</th><th>Then</th><th>On</th><th>How</th><th></th></tr></thead>
-              <tbody>
-                <tr>
-                  <td><code>sample-data.zip</code><br><span class="muted">Uploaded · 12 MB</span></td>
-                  <td>Unpack into <code>data/</code></td>
-                  <td>All</td>
-                  <td>Packed</td>
-                  <td><button type="button" class="link-button">Remove</button></td>
-                </tr>
-                <tr>
-                  <td><code>vc_redist.x64.exe</code><br><span class="muted">From <code>https://aka.ms/vs/17/release/vc_redist.x64.exe</code> · 25 MB</span></td>
-                  <td>Run <code>/install /quiet /norestart</code></td>
-                  <td>Windows</td>
-                  <td>Downloaded when installing<br><span class="muted">Packed in offline copies</span></td>
-                  <td><button type="button" class="link-button">Remove</button></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <span class="hint">Sample files. Everyone sees this list, with checksums, on the installer's "what this will do" screen.</span>
-
-          <details class="add-file">
-            <summary>+ Add a file</summary>
-            <div class="row">
-              <div class="field">
-                <label for="pf-upload">Upload</label>
-                <input type="file" id="pf-upload">
-              </div>
-              <div class="field">
-                <label for="pf-url">Or a URL</label>
-                <input type="text" id="pf-url" name="pf_url" placeholder="https://example.com/model.onnx" spellcheck="false">
-              </div>
-            </div>
-            <div class="row">
-              <div class="field">
-                <label for="pf-action">Then</label>
-                <select id="pf-action" name="pf_action">
-                  <option value="copy">Copy into the app's folder</option>
-                  <option value="unpack">Unpack into the app's folder (.zip, .tar.gz)</option>
-                  <option value="run">Run it while installing</option>
-                </select>
-              </div>
-              <div class="field pf-dest">
-                <label for="pf-dest">Where</label>
-                <input type="text" id="pf-dest" name="pf_dest" placeholder="data/" spellcheck="false">
-                <span class="hint">A path inside the app's folder. Files can't go anywhere else.</span>
-              </div>
-              <div class="field pf-args">
-                <label for="pf-args">Arguments</label>
-                <input type="text" id="pf-args" name="pf_args" placeholder="/quiet" spellcheck="false">
-                <span class="hint">Runs after the user clicks Install, with the installer's permissions, like an install script.</span>
-              </div>
-            </div>
-            <span class="label">On</span>
-            <div class="inline-choices">
-              <label class="choice win-settings"><input type="checkbox" name="pf_windows" checked> Windows</label>
-              <label class="choice linux-settings"><input type="checkbox" name="pf_linux" checked> Linux</label>
-              <label class="choice mac-settings"><input type="checkbox" name="pf_macos" checked> macOS</label>
-            </div>
-            <span class="label" style="margin-top:8px">How</span>
-            <label class="choice"><input type="radio" name="pf_how" value="packed" checked>
-              <span><strong>Packed in the installer</strong><br><span class="small muted">Bigger installer; works without that site. Uploads are always packed.</span></span></label>
-            <label class="choice"><input type="radio" name="pf_how" value="download">
-              <span><strong>Downloaded when installing</strong> <span class="small muted">(URLs only)</span><br><span class="small muted">Smaller installer. We fetch it once now to record its checksum, so a changed file is refused.</span></span></label>
-            <div class="actions" style="margin-top:8px">
-              <button type="button" class="secondary">Add file</button>
-            </div>
-            <p class="small muted" style="margin:8px 0 0">Files given by <strong>URL</strong> are recorded with the build (only their checksum, fetched once).
-              A file you <strong>upload</strong> from this computer isn't sent to us: after the build you download the installer and add your file to it
-              in the browser on the <a href="edit.html">Edit installer</a> page, so a private file never leaves your machine.</p>
-          </details>
-
-          <hr>
-
-          <h3 class="section-title">Offline copies</h3>
-          <p class="small muted offline-off-only" style="margin:0">Packs everything the installer would download, for computers without internet. Tick <strong>Also make offline installers</strong> above to set this up.</p>
-
-          <div class="offline-only">
-            <!-- Says "this form has the packed-target picker" in a plain post,
-                 where unticked boxes are simply not sent (js/form-job.js). -->
-            <input type="hidden" name="offline_targets_form" value="1">
-            <p class="small" style="margin-top:0">Offline copies also carry everything the normal installers would download:
-              the runtime, packages and source, and any of your files set to download when installing. The normal installers are still made too.</p>
-
-            <span class="label">Include</span>
-            <label class="choice"><input type="radio" name="offline_include" value="all" checked>
-              <span><strong>Everything</strong><br><span class="small muted">Installs with no internet at all.</span></span></label>
-            <label class="choice"><input type="radio" name="offline_include" value="runtime">
-              <span><strong>The runtime only</strong><br><span class="small muted">Smaller. Your app's packages are still downloaded at install time.</span></span></label>
-
-            <hr>
-
-            <span class="label">Must work offline on</span>
-            <p class="small muted" style="margin-top:0">Online installers choose the right version <em>and the right architecture</em> on the user's computer.
-              Offline ones choose now, so every system <em>and architecture</em> ticked here adds its own runtime and packages to the file.
-              This is the one place architecture is a real choice, because each one is a whole extra runtime's worth of bytes.</p>
-
+            <h3 class="section-title">Your files</h3>
             <div class="table-wrap">
-              <table class="small offline-targets" id="offline-targets">
-                <thead><tr><th>System</th><th>Runtime included</th><th>Architectures to pack</th></tr></thead>
+              <table class="small packed-files">
+                <thead><tr><th>File</th><th>Then</th><th>On</th><th>How</th><th></th></tr></thead>
                 <tbody>
-                  <tr class="win-settings" data-target="win_1011"><th scope="row">Windows 10, 11</th><td>Newest in your range</td><td class="arch-cell">
-                    <label class="choice"><input type="checkbox" name="offline_win_1011_amd64" checked> 64-bit (x64) <span class="muted arch-mb">30 MB</span></label>
-                    <label class="choice"><input type="checkbox" name="offline_win_1011_x86"> 32-bit (x86) <span class="muted arch-mb">28 MB</span></label>
-                    <label class="choice"><input type="checkbox" name="offline_win_1011_arm64"> 64-bit ARM (ARM64) <span class="muted arch-mb">30 MB</span></label></td></tr>
-                  <tr class="win-settings" data-target="win_78"><th scope="row">Windows 7, 8, 8.1</th><td>Newest that runs there</td><td class="arch-cell">
-                    <label class="choice"><input type="checkbox" name="offline_win_78_amd64"> 64-bit (x64) <span class="muted arch-mb">28 MB</span></label>
-                    <label class="choice"><input type="checkbox" name="offline_win_78_x86"> 32-bit (x86) <span class="muted arch-mb">26 MB</span></label></td></tr>
-                  <tr class="win-settings" data-target="win_vista"><th scope="row">Windows Vista</th><td>Newest that runs there, plus Visual C++ runtimes</td><td class="arch-cell">
-                    <label class="choice"><input type="checkbox" name="offline_win_vista_x86"> 32-bit (x86) <span class="muted arch-mb">55 MB</span></label>
-                    <span class="small muted arch-none">64-bit: the builds tested on Vista are the 32-bit ones, which run on Vista x64 too.</span></td></tr>
-                  <tr class="win-settings" data-target="win_xp"><th scope="row">Windows XP</th><td>Newest that runs there, plus Visual C++ runtimes</td><td class="arch-cell">
-                    <label class="choice"><input type="checkbox" name="offline_win_xp_x86"> 32-bit (x86) <span class="muted arch-mb">50 MB</span></label>
-                    <span class="small muted arch-none">64-bit: the builds tested on XP are the 32-bit ones, which run on XP x64 too.</span></td></tr>
-                  <tr class="linux-settings" data-target="linux"><th scope="row">Linux</th><td>Newest in your range, for your glibc minimum</td><td class="arch-cell">
-                    <label class="choice"><input type="checkbox" name="offline_linux_amd64" checked> 64-bit (x64) <span class="muted arch-mb">35 MB</span></label>
-                    <label class="choice"><input type="checkbox" name="offline_linux_x86"> 32-bit (i386) <span class="muted arch-mb">33 MB</span></label>
-                    <label class="choice"><input type="checkbox" name="offline_linux_arm64"> 64-bit ARM (aarch64) <span class="muted arch-mb">35 MB</span></label></td></tr>
-                  <tr class="mac-settings" data-target="mac"><th scope="row">macOS</th><td>Newest in your range, for your macOS minimum</td><td class="arch-cell">
-                    <label class="choice"><input type="checkbox" name="offline_mac_amd64" checked> 64-bit Intel <span class="muted arch-mb">45 MB</span></label>
-                    <label class="choice"><input type="checkbox" name="offline_mac_arm64" checked> Apple Silicon <span class="muted arch-mb">45 MB</span></label>
-                    <span class="small muted arch-none">32-bit: none. Apple dropped 32-bit support in macOS 10.15 (2019).</span></td></tr>
+                  <tr>
+                    <td><code>sample-data.zip</code><br><span class="muted small">Uploaded &middot; 12 MB</span></td>
+                    <td>Unpack into <code>data/</code></td>
+                    <td>All</td>
+                    <td>Packed</td>
+                    <td><button type="button" class="link-button">Remove</button></td>
+                  </tr>
+                  <tr>
+                    <td><code>vc_redist.x64.exe</code><br><span class="muted small">From <code>https://aka.ms/vs/17/release/vc_redist.x64.exe</code> &middot; 25 MB</span></td>
+                    <td>Run <code>/install /quiet /norestart</code></td>
+                    <td>Windows</td>
+                    <td>Downloaded when installing<br><span class="muted">Packed in offline copies</span></td>
+                    <td><button type="button" class="link-button">Remove</button></td>
+                  </tr>
                 </tbody>
               </table>
             </div>
-            <p class="small offline-size" id="offline-size" role="status">About 155 MB of packed files, on top of the installer itself.</p>
-            <p class="warn-box small" id="offline-warn" hidden></p>
-            <span class="hint">Sizes are estimates, one runtime per architecture. An architecture with no build in the catalogue for this
-              language is shown greyed out with the reason, rather than left out. With <strong>Choose the highest version with asyncio
-              support</strong>, the older Windows rows use the tested builds.</span>
+            <span class="hint">Sample files. Everyone sees this list, with checksums, on the installer's &ldquo;what this will do&rdquo; screen.</span>
+
+            <details class="add-file">
+              <summary>+ Add a file</summary>
+              <div class="row">
+                <div class="field">
+                  <label for="pf-upload">Upload</label>
+                  <input type="file" id="pf-upload">
+                </div>
+                <div class="field">
+                  <label for="pf-url">Or a URL</label>
+                  <input type="text" id="pf-url" name="pf_url" placeholder="https://example.com/model.onnx" spellcheck="false">
+                </div>
+              </div>
+              <div class="row">
+                <div class="field">
+                  <label for="pf-action">Then</label>
+                  <select id="pf-action" name="pf_action">
+                    <option value="copy">Copy into the app's folder</option>
+                    <option value="unpack">Unpack into the app's folder (.zip, .tar.gz)</option>
+                    <option value="run">Run it while installing</option>
+                  </select>
+                </div>
+                <div class="field pf-dest">
+                  <label for="pf-dest">Where</label>
+                  <input type="text" id="pf-dest" name="pf_dest" placeholder="data/" spellcheck="false">
+                  <span class="hint">A path inside the app's folder. Files can't go anywhere else.</span>
+                </div>
+                <div class="field pf-args">
+                  <label for="pf-args">Arguments</label>
+                  <input type="text" id="pf-args" name="pf_args" placeholder="/quiet" spellcheck="false">
+                  <span class="hint">Runs after the user clicks Install, with the installer's permissions, like an install script.</span>
+                </div>
+              </div>
+              <span class="label">On</span>
+              <div class="inline-choices">
+                <label class="choice win-settings"><input type="checkbox" name="pf_windows" checked> Windows</label>
+                <label class="choice linux-settings"><input type="checkbox" name="pf_linux" checked> Linux</label>
+                <label class="choice mac-settings"><input type="checkbox" name="pf_macos" checked> macOS</label>
+              </div>
+              <span class="label" style="margin-top:10px">How</span>
+              <div class="choice-stack">
+                <label class="choice"><input type="radio" name="pf_how" value="packed" checked>
+                  <span><strong>Packed in the installer</strong><br><span class="small muted">Bigger installer; works without that site. Uploads are always packed.</span></span></label>
+                <label class="choice"><input type="radio" name="pf_how" value="download">
+                  <span><strong>Downloaded when installing</strong> <span class="small muted">(URLs only)</span><br><span class="small muted">Smaller installer. We fetch it once now to record its checksum, so a changed file is refused.</span></span></label>
+              </div>
+              <div class="actions" style="margin-top:10px">
+                <button type="button" class="secondary">Add file</button>
+              </div>
+              <p class="small muted" style="margin:10px 0 0">Files given by <strong>URL</strong> are recorded with the build (only their checksum, fetched once).
+                A file you <strong>upload</strong> from this computer isn't sent to us: after the build you download the installer and add your file to it
+                in the browser on the <a href="edit.html">Edit installer</a> page, so a private file never leaves your machine.</p>
+            </details>
 
             <hr>
 
-            <span class="label">Shape</span>
-            <label class="choice"><input type="radio" name="offline_shape" value="single" id="offline-shape-single" checked>
-              <span><strong>One file</strong><br><span class="small muted">The pack goes inside the installer. Simplest to hand over; limited to about 2 GB, because the installer's metadata block counts in 32 bits.</span></span></label>
-            <label class="choice"><input type="radio" name="offline_shape" value="zip" id="offline-shape-zip">
-              <span><strong>A zip: the installer and a <code>pack/</code> folder beside it</strong><br><span class="small muted">No size limit, and gentler on old Windows. The installer reads the folder and behaves the same. Keep the two together.</span></span></label>
+            <h3 class="section-title">Offline copies</h3>
+            <p class="small muted offline-off-only" style="margin:0">Packs everything the installer would download, for computers without internet. Tick <strong>Also make offline installers</strong> above to set this up.</p>
 
-            <hr>
+            <div class="offline-only">
+              <!-- Says "this form has the packed-target picker" in a plain post,
+                   where unticked boxes are simply not sent (js/form-job.js). -->
+              <input type="hidden" name="offline_targets_form" value="1">
+              <p class="small" style="margin-top:0">Offline copies also carry everything the normal installers would download:
+                the runtime, packages and source, and any of your files set to download when installing. The normal installers are still made too.</p>
 
-            <span class="label">What you'll get</span>
-            <div class="table-wrap">
-              <table class="small">
-                <tbody>
-                  <tr class="win-settings"><th scope="row">Windows</th><td>One <code>.exe</code>. The files sit inside its signature block, so the signature stays valid.</td></tr>
-                  <tr class="linux-settings"><th scope="row">Linux</th><td>One <code>.run</code>.</td></tr>
-                  <tr class="mac-settings"><th scope="row">macOS</th><td>A <code>.zip</code> with the app and a folder of files next to it. macOS apps can't carry extra files without breaking their signature.
-                    Users keep the two together.</td></tr>
-                </tbody>
-              </table>
+              <span class="label">Include</span>
+              <div class="choice-stack">
+                <label class="choice"><input type="radio" name="offline_include" value="all" checked>
+                  <span><strong>Everything</strong><br><span class="small muted">Installs with no internet at all.</span></span></label>
+                <label class="choice"><input type="radio" name="offline_include" value="runtime">
+                  <span><strong>The runtime only</strong><br><span class="small muted">Smaller. Your app's packages are still downloaded at install time.</span></span></label>
+              </div>
+
+              <span class="label">Must work offline on</span>
+              <p class="small muted" style="margin-top:0">Online installers choose the right version <em>and the right architecture</em> on the user's computer.
+                Offline ones choose now, so every system <em>and architecture</em> ticked here adds its own runtime and packages to the file.
+                This is the one place architecture is a real choice, because each one is a whole extra runtime's worth of bytes.</p>
+
+              <div class="table-wrap">
+                <table class="small offline-targets" id="offline-targets">
+                  <thead><tr><th>System</th><th>Runtime included</th><th>Architectures to pack</th></tr></thead>
+                  <tbody>
+                    <tr class="win-settings" data-target="win_1011"><th scope="row">Windows 10, 11</th><td>Newest in your range</td><td class="arch-cell">
+                      <label class="choice"><input type="checkbox" name="offline_win_1011_amd64" checked> 64-bit (x64) <span class="muted arch-mb">30 MB</span></label>
+                      <label class="choice"><input type="checkbox" name="offline_win_1011_x86"> 32-bit (x86) <span class="muted arch-mb">28 MB</span></label>
+                      <label class="choice"><input type="checkbox" name="offline_win_1011_arm64"> 64-bit ARM (ARM64) <span class="muted arch-mb">30 MB</span></label></td></tr>
+                    <tr class="win-settings" data-target="win_78"><th scope="row">Windows 7, 8, 8.1</th><td>Newest that runs there</td><td class="arch-cell">
+                      <label class="choice"><input type="checkbox" name="offline_win_78_amd64"> 64-bit (x64) <span class="muted arch-mb">28 MB</span></label>
+                      <label class="choice"><input type="checkbox" name="offline_win_78_x86"> 32-bit (x86) <span class="muted arch-mb">26 MB</span></label></td></tr>
+                    <tr class="win-settings" data-target="win_vista"><th scope="row">Windows Vista</th><td>Newest that runs there, plus Visual C++ runtimes</td><td class="arch-cell">
+                      <label class="choice"><input type="checkbox" name="offline_win_vista_x86"> 32-bit (x86) <span class="muted arch-mb">55 MB</span></label>
+                      <span class="small muted arch-none">64-bit: the builds tested on Vista are the 32-bit ones, which run on Vista x64 too.</span></td></tr>
+                    <tr class="win-settings" data-target="win_xp"><th scope="row">Windows XP</th><td>Newest that runs there, plus Visual C++ runtimes</td><td class="arch-cell">
+                      <label class="choice"><input type="checkbox" name="offline_win_xp_x86"> 32-bit (x86) <span class="muted arch-mb">50 MB</span></label>
+                      <span class="small muted arch-none">64-bit: the builds tested on XP are the 32-bit ones, which run on XP x64 too.</span></td></tr>
+                    <tr class="linux-settings" data-target="linux"><th scope="row">Linux</th><td>Newest in your range, for your glibc minimum</td><td class="arch-cell">
+                      <label class="choice"><input type="checkbox" name="offline_linux_amd64" checked> 64-bit (x64) <span class="muted arch-mb">35 MB</span></label>
+                      <label class="choice"><input type="checkbox" name="offline_linux_x86"> 32-bit (i386) <span class="muted arch-mb">33 MB</span></label>
+                      <label class="choice"><input type="checkbox" name="offline_linux_arm64"> 64-bit ARM (aarch64) <span class="muted arch-mb">35 MB</span></label></td></tr>
+                    <tr class="mac-settings" data-target="mac"><th scope="row">macOS</th><td>Newest in your range, for your macOS minimum</td><td class="arch-cell">
+                      <label class="choice"><input type="checkbox" name="offline_mac_amd64" checked> 64-bit Intel <span class="muted arch-mb">45 MB</span></label>
+                      <label class="choice"><input type="checkbox" name="offline_mac_arm64" checked> Apple Silicon <span class="muted arch-mb">45 MB</span></label>
+                      <span class="small muted arch-none">32-bit: none. Apple dropped 32-bit support in macOS 10.15 (2019).</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="small offline-size" id="offline-size" role="status">About 155 MB of packed files, on top of the installer itself.</p>
+              <p class="warn-box small" id="offline-warn" hidden></p>
+              <span class="hint">Sizes are estimates, one runtime per architecture. An architecture with no build in the catalogue for this
+                language is shown greyed out with the reason, rather than left out. With <strong>Newest tested with asyncio</strong>,
+                the older Windows rows use the tested builds.</span>
+
+              <hr>
+
+              <span class="label">Shape</span>
+              <div class="choice-stack">
+                <label class="choice"><input type="radio" name="offline_shape" value="single" id="offline-shape-single" checked>
+                  <span><strong>One file</strong><br><span class="small muted">The pack goes inside the installer. Simplest to hand over; limited to about 2 GB, because the installer's metadata block counts in 32 bits.</span></span></label>
+                <label class="choice"><input type="radio" name="offline_shape" value="zip" id="offline-shape-zip">
+                  <span><strong>A zip: the installer and a <code>pack/</code> folder beside it</strong><br><span class="small muted">No size limit, and gentler on old Windows. The installer reads the folder and behaves the same. Keep the two together.</span></span></label>
+              </div>
+
+              <span class="label">What you'll get</span>
+              <div class="table-wrap">
+                <table class="small">
+                  <tbody>
+                    <tr class="win-settings"><th scope="row">Windows</th><td>One <code>.exe</code>. The files sit inside its signature block, so the signature stays valid.</td></tr>
+                    <tr class="linux-settings"><th scope="row">Linux</th><td>One <code>.run</code>.</td></tr>
+                    <tr class="mac-settings"><th scope="row">macOS</th><td>A <code>.zip</code> with the app and a folder of files next to it. macOS apps can't carry extra files without breaking their signature.
+                      Users keep the two together.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <p class="small muted">Every included file is checked against a checksum in the installer's settings, so a changed file is refused.
+                Files from download sites that don't let browsers fetch from them come through our download relay instead.
+                Only your own runtime downloads (Language: Other) may need you to download them yourself and drop them in.</p>
+              <p class="small muted" style="margin-bottom:0">IT departments can also make an offline copy of any online installer, on a computer with internet:
+                <code>install_…exe --make-pack --targets win10-x64</code></p>
             </div>
-
-            <p class="small muted">Every included file is checked against a checksum in the installer's settings, so a changed file is refused.
-              Files from download sites that don't let browsers fetch from them come through our download relay instead.
-              Only your own runtime downloads (Language: Other) may need you to download them yourself and drop them in.</p>
-            <p class="small muted" style="margin-bottom:0">IT departments can also make an offline copy of any online installer, on a computer with internet:
-              <code>install_…exe --make-pack --targets win10-x64</code></p>
-          </div>
           </div>
         </details>
 
@@ -786,7 +821,7 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
           <div class="icon-grid" role="radiogroup" aria-label="Icon">
             <label class="icon-tile">
               <input type="radio" name="icon_choice" value="default" checked>
-              <span class="icon-art" style="background:#5b6472"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg></span>
+              <span class="icon-art" style="background:#4b5563"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg></span>
               <span class="icon-name">App</span>
             </label>
             <label class="icon-tile">
@@ -796,7 +831,7 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
             </label>
             <label class="icon-tile">
               <input type="radio" name="icon_choice" value="globe">
-              <span class="icon-art" style="background:#2563eb"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><line x1="3" y1="12" x2="21" y2="12"/></svg></span>
+              <span class="icon-art" style="background:#1d4ed8"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><line x1="3" y1="12" x2="21" y2="12"/></svg></span>
               <span class="icon-name">Web</span>
             </label>
             <label class="icon-tile">
@@ -806,54 +841,54 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
             </label>
             <label class="icon-tile">
               <input type="radio" name="icon_choice" value="chart">
-              <span class="icon-art" style="background:#0d9488"><svg viewBox="0 0 24 24" aria-hidden="true"><line x1="6" y1="20" x2="6" y2="12"/><line x1="12" y1="20" x2="12" y2="5"/><line x1="18" y1="20" x2="18" y2="14"/></svg></span>
+              <span class="icon-art" style="background:#0f766e"><svg viewBox="0 0 24 24" aria-hidden="true"><line x1="6" y1="20" x2="6" y2="12"/><line x1="12" y1="20" x2="12" y2="5"/><line x1="18" y1="20" x2="18" y2="14"/></svg></span>
               <span class="icon-name">Data</span>
             </label>
             <label class="icon-tile">
               <input type="radio" name="icon_choice" value="music">
-              <span class="icon-art" style="background:#db2777"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="16" r="2"/></svg></span>
+              <span class="icon-art" style="background:#be185d"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="16" r="2"/></svg></span>
               <span class="icon-name">Music</span>
             </label>
             <label class="icon-tile">
               <input type="radio" name="icon_choice" value="camera">
-              <span class="icon-art" style="background:#7c3aed"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.5"/><path d="M8 7l1.5-3h5L16 7"/></svg></span>
+              <span class="icon-art" style="background:#6d28d9"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.5"/><path d="M8 7l1.5-3h5L16 7"/></svg></span>
               <span class="icon-name">Photo</span>
             </label>
             <label class="icon-tile">
               <input type="radio" name="icon_choice" value="game">
-              <span class="icon-art" style="background:#16a34a"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="8" width="20" height="10" rx="5"/><line x1="7" y1="11" x2="7" y2="15"/><line x1="5" y1="13" x2="9" y2="13"/><circle cx="16" cy="12" r="1"/><circle cx="18" cy="14.5" r="1"/></svg></span>
+              <span class="icon-art" style="background:#15803d"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="8" width="20" height="10" rx="5"/><line x1="7" y1="11" x2="7" y2="15"/><line x1="5" y1="13" x2="9" y2="13"/><circle cx="16" cy="12" r="1"/><circle cx="18" cy="14.5" r="1"/></svg></span>
               <span class="icon-name">Game</span>
             </label>
             <label class="icon-tile">
               <input type="radio" name="icon_choice" value="book">
-              <span class="icon-art" style="background:#b45309"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/></svg></span>
+              <span class="icon-art" style="background:#a16207"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/></svg></span>
               <span class="icon-name">Notes</span>
             </label>
             <label class="icon-tile">
               <input type="radio" name="icon_choice" value="chat">
-              <span class="icon-art" style="background:#0284c7"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg></span>
+              <span class="icon-art" style="background:#0369a1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg></span>
               <span class="icon-name">Chat</span>
             </label>
             <label class="icon-tile">
               <input type="radio" name="icon_choice" value="folder">
-              <span class="icon-art" style="background:#ca8a04"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h6l2 2h10v11H3z"/></svg></span>
+              <span class="icon-art" style="background:#a16207"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h6l2 2h10v11H3z"/></svg></span>
               <span class="icon-name">Files</span>
             </label>
             <label class="icon-tile">
               <input type="radio" name="icon_choice" value="bolt">
-              <span class="icon-art" style="background:#ea580c"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="13 2 4 14 11 14 10 22 20 9 13 9"/></svg></span>
+              <span class="icon-art" style="background:#c2410c"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="13 2 4 14 11 14 10 22 20 9 13 9"/></svg></span>
               <span class="icon-name">Utility</span>
             </label>
             <label class="icon-tile">
               <input type="radio" name="icon_choice" value="heart">
-              <span class="icon-art" style="background:#dc2626"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg></span>
+              <span class="icon-art" style="background:#b91c1c"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg></span>
               <span class="icon-name">Health</span>
             </label>
           </div>
-          <div class="field" style="margin-top:14px">
+          <div class="field" style="margin-top:16px">
             <label for="icon">Or upload your own</label>
             <input type="file" id="icon" name="icon" accept=".png,.svg">
-            <span class="hint">A square PNG or SVG, 1024×1024 or larger. An uploaded icon replaces the one picked above.
+            <span class="hint">A square PNG or SVG, 1024&times;1024 or larger. An uploaded icon replaces the one picked above.
               We make the Windows, Linux and macOS icon files from it.</span>
           </div>
         </details>
@@ -865,16 +900,19 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
           <label class="choice"><input type="checkbox" name="cli_on_path"> Add to PATH</label>
           <label class="choice"><input type="checkbox" name="run_after"> Offer to launch after install</label>
 
-          <span class="label" style="margin-top:10px">Install for</span>
-          <label class="choice"><input type="radio" name="root" value="user" checked>
-            <span>The person installing it <span class="badge">default</span> <span class="small muted">(no administrator rights needed)</span></span></label>
-          <label class="choice"><input type="radio" name="root" value="system">
-            <span>Everyone on the computer <span class="small muted">(needs administrator or root)</span></span></label>
+          <span class="label" style="margin-top:12px">Install for</span>
+          <div class="choice-stack">
+            <label class="choice"><input type="radio" name="root" value="user" checked>
+              <span>The person installing it <span class="badge">default</span> <span class="small muted">(no administrator rights needed)</span></span></label>
+            <label class="choice"><input type="radio" name="root" value="system">
+              <span>Everyone on the computer <span class="small muted">(needs administrator or root)</span></span></label>
+          </div>
           <div class="field">
             <label for="rootname">Root folder name</label>
             <input type="text" id="rootname" name="rootname" value="ib" maxlength="32" pattern="[A-Za-z0-9._\-]+" spellcheck="false">
             <span class="hint">Every app installed this way goes under one folder with this name, each in its own subfolder.</span>
           </div>
+
           <details>
             <summary>Install scripts</summary>
             <p class="small muted" style="margin-top:0">Optional. Scripts run after the user has seen what the installer will do and clicked Install.
@@ -917,14 +955,16 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
           <label class="choice"><input type="checkbox" name="uninstaller" checked>
             <span>Register an uninstaller <span class="small muted">(Programs and Features on Windows, a menu entry and <code>--uninstall</code> elsewhere)</span></span></label>
 
-          <span class="label" style="margin-top:10px">The app's data</span>
+          <span class="label" style="margin-top:12px">The app's data</span>
           <p class="small muted" style="margin-top:0">Files the app saved in its data folder while it was used.</p>
-          <label class="choice"><input type="radio" name="uninstall_data" value="ask" checked>
-            <span><strong>Ask</strong> <span class="badge">default</span> <span class="small muted">(a "Also delete my data" box, not ticked)</span></span></label>
-          <label class="choice"><input type="radio" name="uninstall_data" value="keep">
-            <span><strong>Keep it</strong></span></label>
-          <label class="choice"><input type="radio" name="uninstall_data" value="remove">
-            <span><strong>Delete it</strong></span></label>
+          <div class="choice-stack">
+            <label class="choice"><input type="radio" name="uninstall_data" value="ask" checked>
+              <span><strong>Ask</strong> <span class="badge">default</span> <span class="small muted">(a &ldquo;Also delete my data&rdquo; box, not ticked)</span></span></label>
+            <label class="choice"><input type="radio" name="uninstall_data" value="keep">
+              <span><strong>Keep it</strong></span></label>
+            <label class="choice"><input type="radio" name="uninstall_data" value="remove">
+              <span><strong>Delete it</strong></span></label>
+          </div>
 
           <details>
             <summary>Before-removal script</summary>
@@ -951,17 +991,17 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
 
           <span class="label">Build tools</span>
           <p class="small muted" style="margin-top:0">The compiler and build caches, when the app is built on the user's computer (C/C++, Go, Rust, Zig, Nim). Often several hundred MB.</p>
-          <label class="choice"><input type="radio" name="cleanup_tools" value="remove" checked>
-            <span><strong>Remove automatically</strong> <span class="badge">default</span><br>
-            <span class="small muted">Smallest install. Updating or repairing the app downloads the build tools again.</span></span></label>
-          <label class="choice"><input type="radio" name="cleanup_tools" value="ask">
-            <span><strong>Let the user decide</strong><br>
-            <span class="small muted">The last screen of the installer has a ticked box: "Remove build tools (frees about 600 MB)". The uninstaller can remove them later too.</span></span></label>
-          <label class="choice"><input type="radio" name="cleanup_tools" value="keep">
-            <span><strong>Keep</strong><br>
-            <span class="small muted">Faster updates and repairs, and the user can rebuild the app themselves.</span></span></label>
-
-          <hr>
+          <div class="choice-stack">
+            <label class="choice"><input type="radio" name="cleanup_tools" value="remove" checked>
+              <span><strong>Remove automatically</strong> <span class="badge">default</span><br>
+              <span class="small muted">Smallest install. Updating or repairing the app downloads the build tools again.</span></span></label>
+            <label class="choice"><input type="radio" name="cleanup_tools" value="ask">
+              <span><strong>Let the user decide</strong><br>
+              <span class="small muted">The last screen of the installer has a ticked box: &ldquo;Remove build tools (frees about 600 MB)&rdquo;. The uninstaller can remove them later too.</span></span></label>
+            <label class="choice"><input type="radio" name="cleanup_tools" value="keep">
+              <span><strong>Keep</strong><br>
+              <span class="small muted">Faster updates and repairs, and the user can rebuild the app themselves.</span></span></label>
+          </div>
 
           <span class="label">Also remove</span>
           <label class="choice"><input type="checkbox" name="cleanup_source">
@@ -971,13 +1011,13 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
           <label class="choice"><input type="checkbox" name="cleanup_docs">
             <span>The runtime's documentation, tests and examples <span class="small muted">(where the runtime still works without them)</span></span></label>
 
-          <hr>
-
-          <span class="label">If the install fails</span>
-          <label class="choice"><input type="radio" name="cleanup_fail" value="remove" checked>
-            <span><strong>Remove everything it installed</strong> <span class="badge">default</span></span></label>
-          <label class="choice"><input type="radio" name="cleanup_fail" value="ask">
-            <span><strong>Ask</strong> <span class="small muted">(offer to keep the files and build log for troubleshooting)</span></span></label>
+          <span class="label" style="margin-top:14px">If the install fails</span>
+          <div class="choice-stack">
+            <label class="choice"><input type="radio" name="cleanup_fail" value="remove" checked>
+              <span><strong>Remove everything it installed</strong> <span class="badge">default</span></span></label>
+            <label class="choice"><input type="radio" name="cleanup_fail" value="ask">
+              <span><strong>Ask</strong> <span class="small muted">(offer to keep the files and build log for troubleshooting)</span></span></label>
+          </div>
 
           <p class="small muted" style="margin-bottom:0">The install log is always kept in the app's folder. Nothing outside the app's own folders is ever removed.</p>
         </details>
@@ -987,35 +1027,37 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
 
         <details>
           <summary><span>Signing</span><span class="default">Unsigned</span></summary>
+          <div class="choice-stack">
+            <label class="choice online-only choice-off"><input type="radio" name="mode" value="ours" id="mode-ours" disabled>
+              <span><strong>Signed by TiddlyInstall</strong> <span class="badge badge-off">not yet</span><br>
+              <span class="small muted">Not available in this prototype: it needs a code-signing certificate, which we don't have yet.
+              It would give the fewest security warnings: the installer file branded as TiddlyInstall, with your name and icon on the installed app.</span></span></label>
 
-          <label class="choice online-only choice-off"><input type="radio" name="mode" value="ours" id="mode-ours" disabled>
-            <span><strong>Signed by TiddlyInstall</strong> <span class="badge badge-off">not yet</span><br>
-            <span class="small muted">Not available in this prototype: it needs a code-signing certificate, which we don't have yet.
-            It would give the fewest security warnings: the installer file branded as TiddlyInstall, with your name and icon on the installed app.</span></span></label>
+            <label class="choice"><input type="radio" name="mode" value="yours" id="mode-yours">
+              <span><strong>Signed by you</strong><br>
+              <span class="small muted">Your name and icon on the installer itself. You provide the certificate, and the reputation is yours.</span></span></label>
 
-          <label class="choice"><input type="radio" name="mode" value="yours" id="mode-yours">
-            <span><strong>Signed by you</strong><br>
-            <span class="small muted">Your name and icon on the installer itself. You provide the certificate, and the reputation is yours.</span></span></label>
-
-          <label class="choice"><input type="radio" name="mode" value="unsigned" id="mode-unsigned" checked>
-            <span><strong>Unsigned</strong><br>
-            <span class="small muted">Anyone can edit the installer afterwards, including on the <a href="edit.html">Edit installer</a> page. Windows and macOS will show security warnings.</span></span></label>
+            <label class="choice"><input type="radio" name="mode" value="unsigned" id="mode-unsigned" checked>
+              <span><strong>Unsigned</strong><br>
+              <span class="small muted">Anyone can edit the installer afterwards, including on the <a href="edit.html">Edit installer</a> page. Windows and macOS will show security warnings.</span></span></label>
+          </div>
 
           <div class="mode-yours-only">
-            <hr>
-            <p class="small" style="margin-top:0">Signing happens in your browser. Your key is never uploaded to us.</p>
+            <p class="small note-box" style="margin-top:0">Signing happens in your browser. Your key is never uploaded to us.</p>
             <span class="label">Windows</span>
-            <label class="choice"><input type="radio" name="win_sign" value="service" checked>
-              <span><strong>A cloud signing service</strong> <span class="small muted">(Azure Trusted Signing, DigiCert KeyLocker, SSL.com eSigner…)</span><br>
-              <span class="small muted">Your browser works out the installer's fingerprint and your service signs it. Certificates issued since June 2023 keep their key on hardware or in such a service.</span></span></label>
-            <label class="choice"><input type="radio" name="win_sign" value="pfx">
-              <span><strong>A certificate file</strong> <span class="small muted">(.pfx / .p12, older certificates)</span><br>
-              <span class="small muted">Loaded into this page only, like a wallet file.</span></span></label>
-            <div class="field" style="margin-top:6px">
+            <div class="choice-stack">
+              <label class="choice"><input type="radio" name="win_sign" value="service" checked>
+                <span><strong>A cloud signing service</strong> <span class="small muted">(Azure Trusted Signing, DigiCert KeyLocker, SSL.com eSigner…)</span><br>
+                <span class="small muted">Your browser works out the installer's fingerprint and your service signs it. Certificates issued since June 2023 keep their key on hardware or in such a service.</span></span></label>
+              <label class="choice"><input type="radio" name="win_sign" value="pfx">
+                <span><strong>A certificate file</strong> <span class="small muted">(.pfx / .p12, older certificates)</span><br>
+                <span class="small muted">Loaded into this page only, like a wallet file.</span></span></label>
+            </div>
+            <div class="field">
               <label for="win-cert">Certificate file</label>
               <input type="file" id="win-cert" accept=".pfx,.p12">
             </div>
-            <span class="label" style="margin-top:6px">macOS</span>
+            <span class="label" style="margin-top:8px">macOS</span>
             <div class="field">
               <label for="mac-cert">Developer ID Application certificate (.p12)</label>
               <input type="file" id="mac-cert" accept=".p12">
@@ -1061,7 +1103,7 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
           </div>
           <div class="field">
             <label for="filename">File name</label>
-            <input type="text" id="filename" name="filename" maxlength="255" pattern="[A-Za-z0-9._\-{}]+" placeholder="install_{runtime}_{package}">
+            <input type="text" id="filename" name="filename" maxlength="255" pattern="[A-Za-z0-9._\-{}]+" placeholder="install_{runtime}_{package}" spellcheck="false">
             <span class="hint">Up to 255 characters including the extension. Letters, numbers, <code>_</code> <code>-</code> <code>.</code> only. Installers signed by TiddlyInstall get a hash of their settings added to the end, e.g. <code>install_python_requests_tjfq5rqw….exe</code>.</span>
           </div>
           <div class="field">
@@ -1071,12 +1113,20 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
           </div>
           <label class="choice"><input type="checkbox" name="publish_base"> Publish as a base installer others can reuse</label>
         </details>
-
       </div>
 
-      <p class="build-where new-where small">Built by the build server.</p>
-      <div class="actions" style="margin-top:20px">
-        <button type="submit">Build installers</button>
+      <!-- The build bar: what you will get, and the button, pinned. -->
+      <div class="build-bar">
+        <div class="build-bar-what">
+          <span class="eyebrow">You'll get</span>
+          <p class="small" style="margin:0">
+            <code>install_<span class="by-lang lang-python">python</span><span class="by-lang lang-python2">python2</span><span class="by-lang lang-node">node</span><span class="by-lang lang-ruby">ruby</span><span class="by-lang lang-php">php</span><span class="by-lang lang-java">java</span><span class="by-lang lang-dotnet">dotnet</span><span class="by-lang lang-r">r</span><span class="by-lang lang-cc">cpp</span><span class="by-lang lang-go">go</span><span class="by-lang lang-rust">rust</span><span class="by-lang lang-zig">zig</span><span class="by-lang lang-nim">nim</span><span class="by-lang lang-none">app</span>_&lt;name&gt;<span class="by-mode mode-ours-inline">_&lt;hash&gt;</span>.exe</code>,
+            <code>.run</code> and <code>.dmg</code><span class="offline-inline">, plus offline <code>…_offline.exe</code>, <code>.run</code> and <code>.zip</code></span>,
+            <span class="by-mode mode-ours-inline">signed by TiddlyInstall (the hash points to your settings, so the signature stays valid)</span><span class="by-mode mode-yours-inline">signed by you</span><span class="by-mode mode-unsigned-inline">unsigned</span>.
+          </p>
+          <p class="build-where new-where small">Built by the build server.</p>
+        </div>
+        <button type="submit" class="big">Build installers</button>
       </div>
     </form>
   </main>
@@ -1087,6 +1137,7 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
   <footer class="site-footer">
     Designed by <a href="https://robertsdotpm.github.io/">Matthew Roberts</a> and implemented by Claude.
   </footer>
+
   <script type="module" src="js/new.js"></script>
 </body>
 </html>
