@@ -38,6 +38,13 @@ Var F6
 
 !define B32ALPHA "abcdefghijklmnopqrstuvwxyz234567"
 
+; Every printable ASCII character, for the `ascii` prerequisite check
+; (a path with anything else in it): NSIS cannot turn a character into
+; a number, so "is this ASCII" is asked as "is it one of these 95".
+; $$ is a literal $ and $\" a literal quote.
+!define ASCII_PRINTABLE " !$\"#$$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
+!define ASCII_PRINTABLE_LEN 95
+
 ; Strip a trailing \n and \r from a variable.
 !macro IbTrimNL VAR
   Push $R9

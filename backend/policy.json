@@ -594,6 +594,18 @@
     "apk": "mesa-gbm",
     "pacman": "mesa"
    }
+  },
+  "ascii-temp": {
+   "_comment": "Not something to install: a property of the machine, expressed the way a prerequisite is, because that is what the engines already check before touching anything. Measured 2026-09-20 on Windows 10 (ASCII profile) and the German Windows 11 (profile C:\\Users\\jörg müller, console code page 850), with CPython 2.7.18 from the python.org MSI: it is %TEMP% alone. A non-ASCII Python folder, a non-ASCII pip cache (PIP_CACHE_DIR) and a non-ASCII install target all install fine; an ASCII %TEMP% works on the German machine and a non-ASCII %TEMP% fails on the English one. Both pips that run on 2.7 fail the same way (19.2.3, what ensurepip gives, and 20.3.4, the last release), and so does a wheel as well as an sdist, so neither the pip version nor the package shape is the variable.",
+   "label": "a temporary folder whose path is plain ASCII (%TEMP%)",
+   "os": "windows",
+   "checks": [
+    [
+     "ascii",
+     "%TEMP%"
+    ]
+   ],
+   "how": "Python 2's pip joins that folder's path as bytes and gives up on any letter outside plain ASCII, so it can install nothing while %TEMP% points inside a folder with an accented or non-English name. That is Python 2's own limitation -- it was retired in 2020 and its last pip was never fixed for this -- and not a fault on this computer or with your user name. Three ways round it: set TEMP and TMP to a folder whose whole path is plain ASCII, such as C:\\Temp (Settings, System, About, Advanced system settings, Environment Variables), and run this installer again; or install from a user account whose name is plain ASCII; or ask whoever published this app for a Python 3 build, which has no such limit."
   }
  },
  "tools": {
@@ -844,6 +856,13 @@
       "conda"
      ],
      "why": "Anaconda's CPython 2.7 packages are .tar.bz2, and GNU tar shells out to bzip2 to read them. Measured 2026-09-20: the Ubuntu 22.04 minimal cloud image and CentOS 7 have no bzip2 at all, and the install stopped with \"Could not unpack\"; Alpine, Debian 12 and macOS have one."
+    },
+    {
+     "prerequisites": [
+      "ascii-temp"
+     ],
+     "for": "install",
+     "why": "pip on Python 2 cannot use a temporary folder whose path has a letter outside plain ASCII, and every `pip install` needs one. Python 2 itself installs and runs there perfectly well, so only an app that installs packages is stopped."
     }
    ]
   },
@@ -1298,7 +1317,16 @@
      "why": "Installing CRAN packages on Linux compiles them from source (C and C++, with make), as R on Linux always does; minimal installs have no compiler or make."
     }
    ],
-   "launch": "{runtime} {app_dir}/main.R"
+   "launch": "{runtime} {app_dir}/main.R",
+   "unsupported": [
+    {
+     "_comment": "CRAN's Windows binary index for every R before 4.0 is gone. Measured 2026-09-20 over all 38 majors the catalogue holds: cloud.r-project.org and cran.r-project.org answer 404 for /bin/windows/contrib/<x.y>/PACKAGES for 1.0 through 3.6 and 200 for 4.0 through 4.6, and cran-archive.r-project.org is the mirror image (200 for 1.8-3.6, 404 for 4.0+). It is a server-side fact, so it is every Windows, not some; confirmed on Windows 7, 10 and the German 11 (r@2.15 and r@3.6 fail, r@4.6 passes). Not Linux: CRAN serves source packages for every version and R on Linux builds them. macOS is retired upstream in the same way (/bin/macosx/contrib/<x.y> 404s below 4.0) but is deliberately left out here, because R on macOS can fall back to a source build and our arm64 Mac cannot resolve an R that old to measure it.",
+     "os": "windows",
+     "versions": "<4.0",
+     "for": "install",
+     "reason": "R {vmajor}.{vminor} can no longer install packages on Windows. CRAN has retired the Windows package index for every R before 4.0, so https://cloud.r-project.org/bin/windows/contrib/{vmajor}.{vminor}/PACKAGES is gone and install.packages() prints a warning, installs nothing and still reports success -- this app would install and then fail at its first library() call. That is CRAN's change, not a fault in this installer or on this computer. Ways round it: ask whoever published this app for a build on R 4.0 or newer, which CRAN still serves; or, if this R version is essential, for one whose install command names the archive instead (repos = \"https://cran-archive.r-project.org/bin/windows/contrib/{vmajor}.{vminor}\"), or builds the packages from source with Rtools. R on Linux is unaffected: CRAN serves source packages for every version."
+    }
+   ]
   },
   "go": {
    "label": "Go",

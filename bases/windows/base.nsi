@@ -2098,6 +2098,9 @@ Function NeedCheckOne
   Push $R0
   Push $R1
   Push $R2
+  Push $R3
+  Push $R4
+  Push $R5
   StrCpy $U_out 0
   ${If} $F1 S== "reg"
     ; reg <32|64> <HKLM\key|HKCU\key> <DWORD value> [minimum]
@@ -2137,10 +2140,47 @@ Function NeedCheckOne
     ${EndIf}
     ${EnableX64FSRedirection}
     ${Log} "  check file $R0: $U_out"
+  ${ElseIf} $F1 S== "ascii"
+    ; ascii <path>, %VARIABLES% expanded: passes when every character of
+    ; the expanded path is a printable ASCII one. Not something to
+    ; install -- it is how a `need` says a property of this machine has
+    ; to hold (Python 2's pip and a non-ASCII %TEMP%, format.md
+    ; "Prerequisites"). The characters are compared against a literal
+    ; set because NSIS has no character-to-number conversion.
+    ExpandEnvStrings $R0 "$F2"
+    StrLen $R1 "$R0"
+    StrCpy $U_out 1
+    StrCpy $R2 0
+    ${Do}
+      ${If} $R2 >= $R1
+        ${Break}
+      ${EndIf}
+      StrCpy $R5 $R0 1 $R2
+      StrCpy $R4 0
+      ${Do}
+        ${If} $R4 >= ${ASCII_PRINTABLE_LEN}
+          StrCpy $U_out 0                  ; not in the set: not ASCII
+          ${Break}
+        ${EndIf}
+        StrCpy $R3 "${ASCII_PRINTABLE}" 1 $R4
+        ${If} $R5 S== $R3
+          ${Break}
+        ${EndIf}
+        IntOp $R4 $R4 + 1
+      ${Loop}
+      ${If} $U_out = 0
+        ${Break}
+      ${EndIf}
+      IntOp $R2 $R2 + 1
+    ${Loop}
+    ${Log} "  check ascii $F2 ($R1 characters): $U_out"
   ${Else}
     ${Log} "  check $F1: not a check this installer knows; counts as missing"
   ${EndIf}
   nc_end:
+  Pop $R5
+  Pop $R4
+  Pop $R3
   Pop $R2
   Pop $R1
   Pop $R0
@@ -2854,6 +2894,11 @@ Function .onInit
     Call InitFail
   ${EndIf}
   ${If} $TgtFail != ""
+    ; A combination the catalogue knows cannot work. Nothing of the app
+    ; has been touched, and the plan's own words say why; the marker is
+    ; what the test harnesses read to tell a refusal from a broken
+    ; install (tests/*/run.py, plan_fails).
+    ${Log} "Refused before installing: $TgtFail"
     ${FailWith} "$TgtFail"
     Call InitFail
   ${EndIf}
@@ -2865,6 +2910,7 @@ Function .onInit
   ; for files, so they run now; a missing one means administrator rights
   Call NeedChecks
   ${If} $NdManual > 0
+    ${Log} "Refused before installing: $NdManualMsg"
     ${FailWith} "$NdManualMsg"
     Call InitFail
   ${EndIf}
