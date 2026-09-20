@@ -1,8 +1,12 @@
 // The server end to end: routes, errors, CORS, a job through the queue,
 // plans, downloads and the takedown list. Needs Redis (127.0.0.1:6390, or
-// IB_TEST_REDIS) and uses its own database (IB_TEST_REDIS_DB, default 5),
-// whose ib:* and ib-bull:* keys it removes afterwards; skipped without
-// Redis or the runtime catalogue.
+// IB_TEST_REDIS) and takes a database of its own with
+// helpers.js claimRedisDb, which claims one that no other run holds and
+// removes its ib:* and ib-bull:* keys afterwards. It used to be a fixed
+// number, which kept this suite apart from form.test.js but not from a
+// second run of itself: two concurrent `npm test`s flushed each other's
+// keys and failed in whichever subtest was unlucky. IB_TEST_REDIS_DB
+// still pins one. Skipped without Redis or the runtime catalogue.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -14,10 +18,10 @@ import { Server, parseFlags } from '../server.js';
 import { verify, verifyFor } from '../lib/plansig.js';
 import { resolve, setRevoked } from '../../js/resolve.js';
 import { readInstaller } from '../../js/ibfile.js';
-import { haveCatalog, haveBases, tmpDir, REPO, RUNTIMES } from './helpers.js';
+import { haveCatalog, haveBases, tmpDir, claimRedisDb, REPO, RUNTIMES } from './helpers.js';
 
 const REDIS = process.env.IB_TEST_REDIS || '127.0.0.1:6390';
-const DB = Number(process.env.IB_TEST_REDIS_DB || 5);
+const PINNED = process.env.IB_TEST_REDIS_DB;
 
 function reachable(addr) {
   const i = addr.lastIndexOf(':');
@@ -47,6 +51,7 @@ test('the server', { skip }, async (t) => {
   fs.writeFileSync(path.join(site, 'index.html'), '<!doctype html><title>t</title>');
   fs.mkdirSync(path.join(site, 'css'));
   fs.writeFileSync(path.join(site, 'css', 'a.css'), 'body{}');
+  const DB = await claimRedisDb(t, IORedis, REDIS, PINNED);
   const o = parseFlags(['-redis', REDIS, '-redis-db', String(DB), '-data', data, '-site', site, '-public', 'http://127.0.0.1:1', '-workers', '1']);
   o.log = () => {};
   const s = new Server(o);
@@ -55,15 +60,10 @@ test('the server', { skip }, async (t) => {
   const srv = http.createServer(s.handler());
   await new Promise((r) => srv.listen(0, '127.0.0.1', r));
   const port = srv.address().port;
+  // The keys go with the claim: claimRedisDb registered the cleanup.
   t.after(async () => {
     srv.close();
     await s.q.close();
-    const r = new IORedis({ host: REDIS.split(':')[0], port: Number(REDIS.split(':')[1]), db: DB });
-    for (const pat of ['ib:*', 'ib-bull:*']) {
-      const keys = await r.keys(pat);
-      if (keys.length) await r.del(...keys);
-    }
-    r.disconnect();
   });
   const get = (p, opt) => req(port, p, opt);
   const json = async (p, opt) => { const r = await get(p, opt); return { status: r.status, j: JSON.parse(r.text), r }; };

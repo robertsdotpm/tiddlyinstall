@@ -2,8 +2,9 @@
 // (docs/api.md "Plain form posts"): the body parsers, js/form-job.js against
 // new.html, the pages' escaping and markup, and the server end to end
 // (POST /submit, GET /status/<id>, GET /classic). The server part needs
-// Redis like server.test.js, on its own database (IB_TEST_FORM_REDIS_DB,
-// default 6), whose ib:* and ib-bull:* keys it removes afterwards.
+// Redis like server.test.js, on a database of its own claimed with
+// helpers.js claimRedisDb (a fixed number could not keep two concurrent
+// runs apart); IB_TEST_FORM_REDIS_DB pins one.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -20,10 +21,10 @@ import { jobFromForm, postedForm, TEMPLATE_FILES, ENTRY_DEFAULTS, BUILD_DEFAULTS
   OFFLINE_TARGETS, OFFLINE_PICKER_FIELD, offlineField, offlineSizeMb, PACK_MAX_MB, PACK_WARN_MB } from '../../js/form-job.js';
 import { TEMPLATES, templateLaunch } from '../../js/templates.js';
 import { readInstaller, recordHash } from '../../js/ibfile.js';
-import { haveCatalog, haveBases, tmpDir, REPO } from './helpers.js';
+import { haveCatalog, haveBases, tmpDir, claimRedisDb, REPO } from './helpers.js';
 
 const REDIS = process.env.IB_TEST_REDIS || '127.0.0.1:6390';
-const DB = Number(process.env.IB_TEST_FORM_REDIS_DB || 6);
+const PINNED = process.env.IB_TEST_FORM_REDIS_DB;
 const NEW_HTML = fs.readFileSync(path.join(REPO, 'new.html'), 'utf8');
 const HOSTILE = '<script>alert(1)</script>"\'><img src=x onerror=alert(2)>&amp;';
 const BAD_FILE = '<img src=x onerror=alert(2)>"\'&.exe';
@@ -463,6 +464,7 @@ test('the server: plain form posts and status pages', { skip }, async (t) => {
   const data = tmpDir(t);
   const site = tmpDir(t);
   fs.writeFileSync(path.join(site, 'index.html'), '<!doctype html><title>t</title>');
+  const DB = await claimRedisDb(t, IORedis, REDIS, PINNED);
   const o = parseFlags(['-redis', REDIS, '-redis-db', String(DB), '-data', data, '-site', site, '-public', 'http://127.0.0.1:1', '-workers', '1']);
   o.log = () => {};
   const s = new Server(o);
@@ -471,15 +473,10 @@ test('the server: plain form posts and status pages', { skip }, async (t) => {
   const srv = http.createServer(s.handler());
   await new Promise((r) => srv.listen(0, '127.0.0.1', r));
   const port = srv.address().port;
+  // The keys go with the claim: claimRedisDb registered the cleanup.
   t.after(async () => {
     srv.close();
     await s.q.close();
-    const r = new IORedis({ host: REDIS.split(':')[0], port: Number(REDIS.split(':')[1]), db: DB });
-    for (const pat of ['ib:*', 'ib-bull:*']) {
-      const keys = await r.keys(pat);
-      if (keys.length) await r.del(...keys);
-    }
-    r.disconnect();
   });
   const get = (p, opt) => req(port, p, opt);
   const form = (fields) => get('/submit', { method: 'POST', body: new URLSearchParams(fields).toString(), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });

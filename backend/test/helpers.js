@@ -36,3 +36,76 @@ export async function localFetch(url, opts = {}) {
     discard() { body.resume(); },
   };
 }
+
+/* ---------- a Redis database no other test run is using ---------- */
+
+// Two suites (server.test.js, form.test.js) each want a Redis database
+// with nothing else in it, and each deletes every `ib:*` and `ib-bull:*`
+// key in it when it finishes. Fixed numbers -- 5 and 6 -- kept those two
+// apart, but not two *runs* of the same suite: with several agents on
+// this machine, a second `npm test` flushes the first one's keys
+// mid-flight and the first fails with things like "no such record". The
+// failures land in whichever subtest was unlucky, look like real bugs,
+// and cost an hour each time. Seen today in both suites.
+//
+// So the database is claimed rather than assumed. `SET <key> <token> NX
+// PX` in a candidate database is Redis's own atomic test-and-set: the
+// first run to get it owns that database, later runs move on to the
+// next. A heartbeat keeps the claim alive while the suite runs and the
+// TTL releases it if the run is killed, so nothing can be left locked.
+// Set IB_TEST_REDIS_DB (or IB_TEST_FORM_REDIS_DB) to pin one anyway.
+const CLAIM_KEY = 'ib-test-claim';
+const CLAIM_MS = 60000;
+
+// The databases a claim may use: Redis ships with 16 (0-15). 0 is the
+// dev server's, and 1-4 are left for anything else on this machine.
+export const TEST_DBS = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+
+// Claims a database, registers the release (its claim, and every ib: and
+// ib-bull: key it made) with the test, and returns the number. `pinned`
+// is an env var's value: given one, that database is used as it always
+// was, with no claim, so a caller who wants a fixed number still gets it.
+export async function claimRedisDb(t, IORedis, addr, pinned) {
+  const [host, port] = [addr.slice(0, addr.lastIndexOf(':')), Number(addr.slice(addr.lastIndexOf(':') + 1))];
+  const token = process.pid + '-' + Math.random().toString(36).slice(2);
+  const clean = async (db) => {
+    const r = new IORedis({ host, port, db });
+    try {
+      for (const pat of ['ib:*', 'ib-bull:*']) {
+        const keys = await r.keys(pat);
+        if (keys.length) await r.del(...keys);
+      }
+      // Only ever release our own claim: a claim that timed out and was
+      // taken by another run must not be deleted from under it.
+      if (await r.get(CLAIM_KEY) === token) await r.del(CLAIM_KEY);
+    } finally {
+      r.disconnect();
+    }
+  };
+  if (pinned !== undefined && pinned !== '') {
+    const db = Number(pinned);
+    t.after(() => clean(db));
+    return db;
+  }
+  const deadline = Date.now() + 120000;
+  for (;;) {
+    for (const db of TEST_DBS) {
+      const r = new IORedis({ host, port, db });
+      let got;
+      try { got = await r.set(CLAIM_KEY, token, 'PX', CLAIM_MS, 'NX'); } finally { r.disconnect(); }
+      if (got !== 'OK') continue;
+      const beat = setInterval(() => {
+        const h = new IORedis({ host, port, db });
+        h.set(CLAIM_KEY, token, 'PX', CLAIM_MS, 'XX').catch(() => {}).finally(() => h.disconnect());
+      }, CLAIM_MS / 3);
+      beat.unref();
+      t.after(async () => { clearInterval(beat); await clean(db); });
+      return db;
+    }
+    if (Date.now() > deadline) {
+      throw new Error('every Redis test database (' + TEST_DBS.join(', ') + ') is claimed by another test run; '
+        + 'set IB_TEST_REDIS_DB to pick one anyway, or wait for the other run to finish');
+    }
+    await new Promise((r) => setTimeout(r, 1000));
+  }
+}
