@@ -156,8 +156,13 @@ def run_windows(vm, rt, mode, f, record):
         # uninstaller's problem; anything else holding it is not.
         ours = any(" exe " in l or " dll " in l for l in held if l.startswith("holder "))
         if not still and not ours:
-            note = f"; it was held by {who[:300]}" if who else "; nothing was found holding it"
-            return "pass", "hello + clean uninstall, once the leftover folder was released" + note
+            # Gone on the second look. Either something was holding it and
+            # has been stopped, or the uninstaller was simply still at work:
+            # Un_A.exe finishes from %TEMP% after the app folder goes, and
+            # the runtime folders it shares with the next test go last.
+            if who:
+                return "pass", "hello + clean uninstall, once what held the folder was stopped: " + who[:300]
+            return "pass", "hello + clean uninstall (the uninstaller was still finishing at the first look)"
         # Clean up so one bad uninstall doesn't fail every later cell.
         here = Path(__file__).resolve().parent
         sh(["scp", "-q", str(here / "clean_windows.bat"), f"{host}:C:/ibclean.bat"], timeout=60)
