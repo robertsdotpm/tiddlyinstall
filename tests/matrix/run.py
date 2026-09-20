@@ -168,13 +168,13 @@ app=$(ls -d *.app)
 if [ "$MODE" = B ]; then codesign -f -s - "$app" >/dev/null 2>&1 || exit 92; fi
 IB_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --backend=http://127.0.0.1:8080 --log="$HOME/ibtest/i.log" </dev/null >/dev/null 2>&1
 echo "@install $?"
-d=$(ls -d "$HOME/Library/Application Support/ib/"*/launch.txt 2>/dev/null | head -1)
+d=$(ls -d "$HOME/Library/ib/"*/launch.txt "$HOME/Library/Application Support/ib/"*/launch.txt 2>/dev/null | head -1)
 if [ -n "$d" ]; then
   d=$(dirname "$d")
   echo "@launch"; IB_NO_TERMINAL=1 sh "$d/launch.sh" </dev/null 2>&1 | tail -5
   sh "$d/uninstall.sh" --yes </dev/null >/dev/null 2>&1; echo "@uninstall $?"
 fi
-echo "@left"; ls "$HOME/Library/Application Support/ib" "$HOME/Applications" 2>/dev/null
+echo "@left"; ls "$HOME/Library/ib" "$HOME/Library/Application Support/ib" "$HOME/Applications" 2>/dev/null
 echo "@log"; tail -8 "$HOME/ibtest/i.log"
 '''
 

@@ -147,13 +147,13 @@ rm -rf x && mkdir x && cd x && ditto -x -k ../in.zip . || exit 91
 app=$(ls -d *.app)
 IB_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --log="$HOME/ibfid/i.log" </dev/null >/dev/null 2>&1
 echo "@install $?"
-d=$(ls -d "$HOME/Library/Application Support/ib/"*/launch.txt 2>/dev/null | head -1)
+d=$(ls -d "$HOME/Library/ib/"*/launch.txt "$HOME/Library/Application Support/ib/"*/launch.txt 2>/dev/null | head -1)
 if [ -n "$d" ]; then
   d=$(dirname "$d")
   echo "@out"; IB_NO_TERMINAL=1 FID_NO_DISPLAY="no window server over SSH" perl -e 'alarm shift; exec @ARGV' 1200 sh "$d/launch.sh" </dev/null 2>&1 | tail -60
   sh "$d/uninstall.sh" --yes </dev/null >/dev/null 2>&1; echo "@uninstall $?"
 fi
-echo "@left"; ls "$HOME/Library/Application Support/ib" 2>/dev/null
+echo "@left"; ls "$HOME/Library/ib" "$HOME/Library/Application Support/ib" 2>/dev/null
 echo "@log"; cat "$HOME/ibfid/i.log"
 '''
 

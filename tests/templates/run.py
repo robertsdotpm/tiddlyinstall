@@ -252,7 +252,7 @@ before=$(ls "$HOME/Applications" 2>/dev/null; [ -d "$HOME/Applications" ] && ech
 app=$(ls -d *.app)
 IB_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --log="$HOME/ibtpl/i.log" </dev/null >/dev/null 2>&1
 echo "@install $?"
-d=$(ls -d "$HOME/Library/Application Support/ib/"*/launch.txt 2>/dev/null | head -1)
+d=$(ls -d "$HOME/Library/ib/"*/launch.txt "$HOME/Library/Application Support/ib/"*/launch.txt 2>/dev/null | head -1)
 if [ -n "$d" ]; then
   d=$(dirname "$d")
   IB_NO_TERMINAL=1 IB_TEMPLATE_SELFTEST=1 IB_TEMPLATE_SELFTEST_OUT="$HOME/ibtpl/selftest.txt" \
@@ -262,7 +262,7 @@ if [ -n "$d" ]; then
   sh "$d/uninstall.sh" --yes </dev/null >/dev/null 2>&1; echo "@uninstall $?"
 fi
 after=$(ls "$HOME/Applications" 2>/dev/null; [ -d "$HOME/Applications" ] && echo "(Applications)")
-echo "@left"; ls "$HOME/Library/Application Support/ib" 2>/dev/null
+echo "@left"; ls "$HOME/Library/ib" "$HOME/Library/Application Support/ib" 2>/dev/null
 [ "$before" = "$after" ] || echo "Applications: $after"
 echo "@log"; tail -12 "$HOME/ibtpl/i.log"
 '''

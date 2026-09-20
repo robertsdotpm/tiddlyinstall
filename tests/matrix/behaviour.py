@@ -208,7 +208,11 @@ set -u
 cd "$HOME/ibbtest" || exit 90
 rm -rf x && mkdir x && cd x && ditto -x -k ../in.zip . || exit 91
 app=$PWD/$(ls -d *.app)
-root="$HOME/Library/Application Support/ib"
+# New installs go to ~/Library/ib; anything installed before
+# 2026-09-20 is still under Application Support (design.md 11,
+# item 16), so look in whichever one has this app.
+root="$HOME/Library/ib"
+[ -d "$root" ] || root="$HOME/Library/Application Support/ib"
 run() { "$app/Contents/MacOS/install" --backend=http://127.0.0.1:8080 "$@" </dev/null; }
 run --yes --log="$HOME/ibbtest/i1.log" >/dev/null 2>&1; echo "@install $?"
 A=$(ls -d "$root"/*/.ib-installed 2>/dev/null | head -1); A=${A%/.ib-installed}
