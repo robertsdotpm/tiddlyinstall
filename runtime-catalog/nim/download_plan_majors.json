@@ -468,7 +468,20 @@
   "url": "https://nim-lang.org/download/nim-2.2.12.tar.xz",
   "mirrors": [
    "https://distfiles.gentoo.org/distfiles/f4/nim-2.2.12.tar.xz",
-   "http://distcache.freebsd.org/ports-distfiles/nim-2.2.12.tar.xz"
+   "http://distcache.freebsd.org/ports-distfiles/nim-2.2.12.tar.xz",
+   "https://snapshot.debian.org/file/a104e44168b53daa468e98e5d5ac335569999ee9",
+   "http://snapshot.debian.org/file/a104e44168b53daa468e98e5d5ac335569999ee9",
+   "http://deb.debian.org/debian/pool/main/n/nim/nim_2.2.12.orig.tar.xz",
+   "https://deb.debian.org/debian/pool/main/n/nim/nim_2.2.12.orig.tar.xz",
+   "http://mirror.ufs.ac.za/gentoo/distfiles/f4/nim-2.2.12.tar.xz",
+   "http://ftp.jaist.ac.jp/pub/Linux/Gentoo/distfiles/f4/nim-2.2.12.tar.xz",
+   "http://mirror.aarnet.edu.au/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz",
+   "http://gentoo.c3sl.ufpr.br/distfiles/f4/nim-2.2.12.tar.xz",
+   "http://mirrors.mit.edu/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz",
+   "http://mirror.csclub.uwaterloo.ca/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz",
+   "http://ftp.lysator.liu.se/gentoo/distfiles/f4/nim-2.2.12.tar.xz",
+   "http://www.mirrorservice.org/sites/distfiles.gentoo.org/distfiles/f4/nim-2.2.12.tar.xz",
+   "http://ftp.snt.utwente.nl/pub/os/linux/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",

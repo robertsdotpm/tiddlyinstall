@@ -434,3 +434,123 @@ readline, fiddle, the standard library and the gem command).
   writes `Application\ Support` and the quotes keep the backslash, so every C
   extension failed to link. The recipe removes the quotes (tested with bcrypt
   and json). Native gems need the Xcode Command Line Tools (policy `needs`).
+
+## Mirror hunt round 2b: search by hash (2026-09-20)
+
+Followed MIRROR-HUNT.md and MIRROR-HUNT-2.md, with the operator's specific
+brief: **search by hash**. Scripts and raw evidence are under
+`catalog/package-managers/round2/ruby-hash-hunt/` (see its README).
+
+### The finding that mattered most is not about hashes
+
+Three separate hosts that earlier rounds recorded as blocked, challenged or
+broken are, in fact, working mirrors. All three were being defeated by
+**MIRROR-HUNT.md's instruction to use a browser-like User-Agent**:
+
+- `mirror.sjtu.edu.cn` -- round 2 recorded it as unreachable behind SJTUG's
+  "Cerberus" WASM proof-of-work. With a plain `installer-builder-catalog/1.0`
+  UA the response header is `cerberus-sec: DISABLED` and there is no challenge
+  at all.
+- `mirrors.tuna.tsinghua.edu.cn` and `mirrors.bfsu.edu.cn` -- rounds 1 and 2
+  recorded an "access denied" / network-reputation block. With a browser UA,
+  HEAD succeeds but *every* GET (even a directory listing) returns their 403
+  "your subnet has sent abnormal requests" page. With a plain UA, GET works.
+- `mirrors.ustc.edu.cn` -- with a browser UA it answers 200 + an HTML SPA page
+  for every path including bogus ones (a soft-200 catch-all the bogus-path
+  control correctly rejects). With a plain UA it serves the real file and 404s
+  the bogus path.
+- Same pattern on `archive.softwareheritage.org`, which sits behind an Anubis
+  bot check that challenges "Mozilla/..." and waves plain clients through.
+
+Nothing was solved or circumvented: these gates are configured to let honest,
+self-identifying automated clients through and to challenge things pretending
+to be browsers. **Suggest amending MIRROR-HUNT.md**: try the honest
+`installer-builder-catalog` UA first and fall back to a browser UA only for
+hosts that 403 it, not the other way round.
+
+### The hash search itself: a clean negative for the binaries
+
+The catalogue's binary entries are all GitHub Releases assets. Probing them by
+hash gives an unambiguous answer:
+
+- `tarballs.nixos.org/sha256/<hex>`: all **580** offerable entries that carry a
+  sha256 probed -- 580/580 404. The 17 files we hold locally
+  (`installer-builder-runtimes/ruby/...`) were additionally hashed with sha1 and
+  md5 and probed at `/sha1/` and `/md5/` -- 34 more lookups, all 404.
+- Software Heritage by sha256: 28 stratified probes across rubyinstaller2 (old
+  and new, x86/x64/arm), rv-ruby, portable-ruby and ruby-builder (linux and
+  darwin) -- 0 hits.
+
+Neither cache ingests release binaries; nixpkgs builds Ruby from source and SWH
+archives source. That is now recorded rather than assumed.
+
+Where hash search *did* pay off is the **source tree**: `tarballs.nixos.org`
+holds 34 of the 237 source tarballs and Software Heritage holds the old ones
+(the whole 1.8 line, most of 1.9) that the frozen `ftp.fu-berlin.de` mirror is
+otherwise the only second copy of.
+
+### New confirmed mirrors
+
+| host | tree | http | entries |
+|---|---|---|---|
+| `mirror.sjtu.edu.cn` | RubyInstaller2 Windows assets | no (308 to https) | 213 |
+| `mirrors.ustc.edu.cn` | homebrew portable-ruby bottles | **yes** | 2 |
+| `mirrors.tuna.tsinghua.edu.cn` | homebrew portable-ruby bottles | **yes** | 2 |
+| `mirrors.bfsu.edu.cn` | homebrew portable-ruby bottles | **yes** | 2 |
+| `distcache.freebsd.org` | source tarballs | **yes** (https fails) | 63 |
+| `cdn.netbsd.org` | source tarballs | **yes** | 7 |
+| `tarballs.nixos.org` | source tarballs (by sha256) | no (301 to https) | 34 |
+| `distfiles.gentoo.org` | source tarballs (by blake2b path) | yes | 9 |
+| `archive.softwareheritage.org` | source tarballs (by sha256) | no (302 to https) | 40 |
+
+Per-host evidence, sample lists and hash-verified samples are in
+`mirrors.json`. Every host above passed: plain-UA request, redirects disabled
+(or followed with a final-host check, for SJTU), Content-Length == the
+catalogue's vendor size on every entry it was applied to, a bogus-path control
+that 404s, and at least one full download whose sha256 matched the vendor
+checksum. All samples were deleted.
+
+**SJTU is the first real mirror of RubyInstaller2 binaries in this catalogue.**
+It holds 213 of the 677 rubyinstaller2 entries on its own object storage
+(`s3.jcloud.sjtu.edu.cn`), covering 29 Ruby versions from RubyInstaller-3.1.7-1
+upward. The 128 rubyinstaller2 files it does *not* hold are proxied on demand to
+`release-assets.githubusercontent.com` -- GitHub's bytes behind SJTU's hostname,
+not a copy -- and were excluded; so were all 886 entries of
+`oneclick/rubyinstaller` (v1), `ruby/ruby-builder`, `spinel-coop/rv-ruby` and
+`Homebrew/homebrew-portable-ruby`, every one of which proxies through.
+
+### Still unmirrored, and now well evidenced
+
+`ruby/ruby-builder`'s Linux tarballs (446 offerable entries) and
+`spinel-coop/rv-ruby`'s macOS tarballs (84) have **no mirror anywhere** that
+this pass could find, by hash or by name: not Nix, not Software Heritage, not
+SJTU, not any of the ~20 other university/CDN github-release trees swept, not
+Gentoo/FreeBSD/NetBSD/Buildroot/Yocto/Arch/Void, not gitcode. Same for
+RubyInstaller 1 (1.8.7-2.3.3) and for every RubyInstaller2 release before
+3.1.7-1. GitHub Releases remains the only distribution point for those.
+
+### Not added, for the operator to decide
+
+`ghcr.io`'s hash-addressed blob store *does* serve Homebrew's portable-ruby
+bottles at `https://ghcr.io/v2/homebrew/portable-ruby/portable-ruby/blobs/sha256:<hex>`
+with the correct size, using Homebrew's own static anonymous token
+(`Authorization: Bearer QQ==`). It was not added because it needs a request
+header rather than being a plain URL, and because ghcr.io is GitHub's own
+infrastructure, so it adds no independence from the host the entry already
+points at. See `mirrors.json` -> `hash_hunt_not_added`.
+
+### Budget
+
+3 of 4 permitted web searches unused (1 search; two direct WebFetches of known
+URLs: rubyinstaller2 issue #209 and ruby-lang.org's mirror list). No bulk
+Wayback lookups -- none at all, the background `wayback_retry.py` job owns that.
+Downloads: 11 hash-verification samples between 4.3 MB and 17.7 MB (SJTU x1;
+TUNA x2, BFSU x2, USTC x2 -- one over https and one over plain http each, so the
+http claim is bytes, not an assumption; NetBSD x1 over http, FreeBSD x1 over
+http, Nix x1, SWH x1), 137 MB in total, every one sha256-matched and deleted
+after verification. Nothing over 60 MB; no runtime binaries downloaded for any
+other purpose.
+
+`extra_mirrors.py` still has to be re-run after every `scrape.py` run; these new
+mirrors were written through `tools/add_mirrors.py` into `releases.json` and the
+`download_plan*.json` files, which `scrape.py` rebuilds from scratch.

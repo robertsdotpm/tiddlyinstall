@@ -1,0 +1,446 @@
+{
+ "0.12.0": {
+  "debian_version": "0.12.0-2",
+  "our_url": "https://nim-lang.org/download/nim-0.12.0.tar.xz",
+  "our_size": 3091564,
+  "our_sha256": null,
+  "debian": {
+   "sha1": "e94ceb5db65d32a096a99d2e29aa9273c776ecb6",
+   "name": "nim_0.12.0.orig.tar.xz",
+   "size": 3091564
+  },
+  "size_match": true
+ },
+ "0.13.0": {
+  "debian_version": "0.13.0-1",
+  "our_url": "https://nim-lang.org/download/nim-0.13.0.tar.xz",
+  "our_size": 3145360,
+  "our_sha256": null,
+  "debian": {
+   "sha1": "88450e9ffcc65625450c25e1ef73ebfb3c348955",
+   "name": "nim_0.13.0.orig.tar.xz",
+   "size": 3145360
+  },
+  "size_match": true
+ },
+ "0.14.2": {
+  "debian_version": "0.14.2-1",
+  "our_url": "https://nim-lang.org/download/nim-0.14.2.tar.xz",
+  "our_size": 4778444,
+  "our_sha256": null,
+  "debian": {
+   "sha1": "2c7cc2c0b20fb7e63c0f81ed1abb20c85a0caded",
+   "name": "nim_0.14.2.orig.tar.xz",
+   "size": 4777744
+  },
+  "size_match": false
+ },
+ "0.15.0": {
+  "debian_version": "0.15.0-3",
+  "our_url": "https://nim-lang.org/download/nim-0.15.0.tar.xz",
+  "our_size": 3786260,
+  "our_sha256": null,
+  "debian": {
+   "sha1": "70c0aa2d82d0933ed5be675ee319e9f30f348628",
+   "name": "nim_0.15.0.orig.tar.xz",
+   "size": 3786260
+  },
+  "size_match": true
+ },
+ "0.15.2": {
+  "debian_version": "0.15.2-2",
+  "our_url": "https://nim-lang.org/download/nim-0.15.2.tar.xz",
+  "our_size": 3251764,
+  "our_sha256": null,
+  "debian": {
+   "sha1": "04c74f506b66f752fb67c863e55f7eb1bedb71f3",
+   "name": "nim_0.15.2.orig.tar.xz",
+   "size": 3251764
+  },
+  "size_match": true
+ },
+ "0.16.0": {
+  "debian_version": "0.16.0-1",
+  "our_url": "https://nim-lang.org/download/nim-0.16.0.tar.xz",
+  "our_size": 2907076,
+  "our_sha256": "9e199823be47cba55e62dd6982f02cf0aad732f369799fec42a4d8c2265c5167",
+  "debian": {
+   "sha1": "ef14fea436f9dc8155b0aeadbb332e3d53ea3df0",
+   "name": "nim_0.16.0.orig.tar.xz",
+   "size": 2907076
+  },
+  "size_match": true
+ },
+ "0.17.2": {
+  "debian_version": "0.17.2-1",
+  "our_url": "https://nim-lang.org/download/nim-0.17.2.tar.xz",
+  "our_size": 4083084,
+  "our_sha256": "aaff1b5023fc4a5708f1d7d9fd8e2a29f1a7f58bf496532ff1e9d7e7c7ec82bd",
+  "debian": {
+   "sha1": "6bd34ff512b58dfe4fc284a694874ae2779768cf",
+   "name": "nim_0.17.2.orig.tar.xz",
+   "size": 4083084
+  },
+  "size_match": true
+ },
+ "0.18.0": {
+  "debian_version": "0.18.0-2",
+  "our_url": "https://nim-lang.org/download/nim-0.18.0.tar.xz",
+  "our_size": 4415048,
+  "our_sha256": "45c74adb35f08dfa9add1112ae17330e5d902ebb4a36e7046caee8b79e6f3bd0",
+  "debian": {
+   "sha1": "93d938927bff7db2bc50a9300c4b0b92d9cd5894",
+   "name": "nim_0.18.0.orig.tar.xz",
+   "size": 30470668
+  },
+  "size_match": false
+ },
+ "0.19.0": {
+  "debian_version": "0.19.0-1",
+  "our_url": "https://nim-lang.org/download/nim-0.19.0.tar.xz",
+  "our_size": 3321644,
+  "our_sha256": "a1996347253c590de42f6e36e33bd1d5ec7479c0aa013769b92deef802df3c2e",
+  "debian": {
+   "sha1": "bc4d8d179bbc4eeba29b0170490af21d01a020f7",
+   "name": "nim_0.19.0.orig.tar.xz",
+   "size": 32955648
+  },
+  "size_match": false
+ },
+ "0.19.2": {
+  "debian_version": "0.19.2-2",
+  "our_url": "https://nim-lang.org/download/nim-0.19.2.tar.xz",
+  "our_size": 21176300,
+  "our_sha256": "44c3f579c75cc799fc0bff5163b3cc649a200758aa1d6485ab939fc28295238a",
+  "debian": {
+   "sha1": "a3f5823087084cce2118d16c1e105f5fc060f637",
+   "name": "nim_0.19.2.orig.tar.xz",
+   "size": 50219728
+  },
+  "size_match": false
+ },
+ "0.19.4": {
+  "debian_version": "0.19.4-1",
+  "our_url": "https://nim-lang.org/download/nim-0.19.4.tar.xz",
+  "our_size": 4284092,
+  "our_sha256": "f441135ee311099be81a46dba5bab3323579cd18aabc6e079b9697a71d6ca94c",
+  "debian": {
+   "sha1": "1e8ce7ec39f7afb16ead7c092aabac229265b351",
+   "name": "nim_0.19.4.orig.tar.xz",
+   "size": 33215376
+  },
+  "size_match": false
+ },
+ "0.19.6": {
+  "debian_version": "0.19.6-2",
+  "our_url": "https://nim-lang.org/download/nim-0.19.6.tar.xz",
+  "our_size": 4166952,
+  "our_sha256": "a09f0c58d29392434d4fd6d15d4059cf7e013ae948413cb9233b8233d67e3a29",
+  "debian": {
+   "sha1": "e253394f46b65b90a904d02ccd1af73ea86068ce",
+   "name": "nim_0.19.6.orig.tar.xz",
+   "size": 33235376
+  },
+  "size_match": false
+ },
+ "0.20.0": {
+  "debian_version": "0.20.0-2",
+  "our_url": "https://nim-lang.org/download/nim-0.20.0.tar.xz",
+  "our_size": 4997088,
+  "our_sha256": "51f479b831e87b9539f7264082bb6a64641802b54d2691b3c6e68ac7e2699a90",
+  "debian": {
+   "sha1": "4196c05ffd1a05ccb2a02572dc8bf94dd35f3796",
+   "name": "nim_0.20.0.orig.tar.xz",
+   "size": 48724776
+  },
+  "size_match": false
+ },
+ "0.20.2": {
+  "debian_version": "0.20.2-1",
+  "our_url": "https://nim-lang.org/download/nim-0.20.2.tar.xz",
+  "our_size": 5032768,
+  "our_sha256": "e1fa5c7e762a45535d82a961f88a6fc82e343985b780c3674081810e028d2b5e",
+  "debian": {
+   "sha1": "6a1c7f73a00d086fd467989265e8e4fc0ed9248d",
+   "name": "nim_0.20.2.orig.tar.xz",
+   "size": 48908068
+  },
+  "size_match": false
+ },
+ "1.0.0": {
+  "debian_version": "1.0.0-1",
+  "our_url": "https://nim-lang.org/download/nim-1.0.0.tar.xz",
+  "our_size": 5136624,
+  "our_sha256": "034817cc4dec86b7099bcf3e79e9e38842b50212b2fd96cd741fe90855a7e0dd",
+  "debian": {
+   "sha1": "06ce74c22cf0f5d07e277026a1d6d0547aefa563",
+   "name": "nim_1.0.0.orig.tar.xz",
+   "size": 52273184
+  },
+  "size_match": false
+ },
+ "1.0.2": {
+  "debian_version": "1.0.2-1",
+  "our_url": "https://nim-lang.org/download/nim-1.0.2.tar.xz",
+  "our_size": 5139712,
+  "our_sha256": "73a0ae099e1da39cc913c4a4054b5bf3d843ab93df95ffb98988a51074b651e6",
+  "debian": {
+   "sha1": "a372f7727557b41436fffe205a53d352170ccb18",
+   "name": "nim_1.0.2.orig.tar.xz",
+   "size": 52289624
+  },
+  "size_match": false
+ },
+ "1.0.4": {
+  "debian_version": "1.0.4-1",
+  "our_url": "https://nim-lang.org/download/nim-1.0.4.tar.xz",
+  "our_size": 5161396,
+  "our_sha256": "89841545a14475911bb84616bcd5a1b93a3268e1a6a0089f54642e405eeaaee0",
+  "debian": {
+   "sha1": "c00c1715deb90f5c8ed257b39f2e6740771204a2",
+   "name": "nim_1.0.4.orig.tar.xz",
+   "size": 52350024
+  },
+  "size_match": false
+ },
+ "1.0.6": {
+  "debian_version": "1.0.6-1",
+  "our_url": "https://nim-lang.org/download/nim-1.0.6.tar.xz",
+  "our_size": 5153708,
+  "our_sha256": "134e5751cf62fa189f76616a698ce0df4b4a0c1419ec0b582924087e585f66b3",
+  "debian": {
+   "sha1": "1879ad75556650b2963c78bbd40553085a14fb44",
+   "name": "nim_1.0.6.orig.tar.xz",
+   "size": 52402896
+  },
+  "size_match": false
+ },
+ "1.2.0": {
+  "debian_version": "1.2.0-1",
+  "our_url": "https://nim-lang.org/download/nim-1.2.0.tar.xz",
+  "our_size": 5869428,
+  "our_sha256": "4e94583a373965821805e665e0a05f52fb610916676edb09148941415637c575",
+  "debian": {
+   "sha1": "bd47ba9d226f82007cb3c48607f98359b0f4b487",
+   "name": "nim_1.2.0.orig.tar.xz",
+   "size": 59478144
+  },
+  "size_match": false
+ },
+ "1.2.2": {
+  "debian_version": "1.2.2-1",
+  "our_url": "https://nim-lang.org/download/nim-1.2.2.tar.xz",
+  "our_size": 5680316,
+  "our_sha256": "e92aaa73d4974571a4690ca7f34a21e20ff5ea8780d05e33167976c7def6728f",
+  "debian": {
+   "sha1": "3a05bbca6d524bbb5546f80865c09a3b15170170",
+   "name": "nim_1.2.2.orig.tar.xz",
+   "size": 59707700
+  },
+  "size_match": false
+ },
+ "1.2.4": {
+  "debian_version": "1.2.4-1",
+  "our_url": "https://nim-lang.org/download/nim-1.2.4.tar.xz",
+  "our_size": 5680128,
+  "our_sha256": "eef18f32fabe65f0d06a40f32e297d1f6daba66463c33f3ab57edc4d3530d636",
+  "debian": {
+   "sha1": "9abbe09b0a46faf2f3383ca37c0845040bcf876c",
+   "name": "nim_1.2.4.orig.tar.xz",
+   "size": 59710224
+  },
+  "size_match": false
+ },
+ "1.2.6": {
+  "debian_version": "1.2.6-1",
+  "our_url": "https://nim-lang.org/download/nim-1.2.6.tar.xz",
+  "our_size": 5688752,
+  "our_sha256": "df88ea712e96ea847b610d56ef69f46ba587002052a46bf03c5c62affac7657e",
+  "debian": {
+   "sha1": "d077bfb2569842e1a9b420886ab4653ffefc1c6c",
+   "name": "nim_1.2.6.orig.tar.xz",
+   "size": 59754952
+  },
+  "size_match": false
+ },
+ "1.4.0": {
+  "debian_version": "1.4.0-1",
+  "our_url": "https://nim-lang.org/download/nim-1.4.0.tar.xz",
+  "our_size": 4706936,
+  "our_sha256": "9dfba2bed31a21a5a34231016dd556b1b5e0db23c01357cfab26aa8f27a6c23d",
+  "debian": {
+   "sha1": "95b4d1d8252403ee55608ea07bc8c603144f04f5",
+   "name": "nim_1.4.0.orig.tar.xz",
+   "size": 65708736
+  },
+  "size_match": false
+ },
+ "1.4.2": {
+  "debian_version": "1.4.2-1",
+  "our_url": "https://nim-lang.org/download/nim-1.4.2.tar.xz",
+  "our_size": 4770616,
+  "our_sha256": "03a47583777dd81380a3407aa6a788c9aa8a67df4821025770c9ac4186291161",
+  "debian": {
+   "sha1": "53a2fc7e980b5f456180e4262aada1203ade994c",
+   "name": "nim_1.4.6+really1.4.2.orig.tar.xz",
+   "size": 65844764
+  },
+  "size_match": false
+ },
+ "1.4.6": {
+  "debian_version": "1.4.6-1",
+  "our_url": "https://nim-lang.org/download/nim-1.4.6.tar.xz",
+  "our_size": 4793544,
+  "our_sha256": "0fbc0f9282cffe85de99bc47bfa876525b9ddda2a2eae55c185a08804b98d3bd",
+  "debian": {
+   "sha1": "7caeccbfa135db2d3b3e28f56ac5d0e2d230a97a",
+   "name": "nim_1.4.6.orig.tar.xz",
+   "size": 68407516
+  },
+  "size_match": false
+ },
+ "1.4.8": {
+  "debian_version": "1.4.8-3",
+  "our_url": "https://nim-lang.org/download/nim-1.4.8.tar.xz",
+  "our_size": 4786360,
+  "our_sha256": "b798c577411d7d95b8631261dbb3676e9d1afd9e36740d044966a0555b41441a",
+  "debian": {
+   "sha1": "f2e26671f5981c3e8adce2e89cae2aa0f693f555",
+   "name": "nim_1.4.8.orig.tar.xz",
+   "size": 68367520
+  },
+  "size_match": false
+ },
+ "1.6.0": {
+  "debian_version": "1.6.0-1.1",
+  "our_url": "https://nim-lang.org/download/nim-1.6.0.tar.xz",
+  "our_size": 5272976,
+  "our_sha256": "52065d48d72a72702ec1afe5f7a9831e11673531e279cdff9caec01a07eec63d",
+  "debian": {
+   "sha1": "a6973e4267f1e4a2f7d524a2734b0019f09de6d7",
+   "name": "nim_1.6.0.orig.tar.xz",
+   "size": 78230740
+  },
+  "size_match": false
+ },
+ "1.6.10": {
+  "debian_version": "1.6.10-2",
+  "our_url": "https://nim-lang.org/download/nim-1.6.10.tar.xz",
+  "our_size": 5216284,
+  "our_sha256": "13d7702f8b57087babe8cd051c13bc56a3171418ba867b49c6bbd09b29d24fea",
+  "debian": {
+   "sha1": "103f12d64ae0bdf05909151786989e400eb5f248",
+   "name": "nim_1.6.10.orig.tar.xz",
+   "size": 78311324
+  },
+  "size_match": false
+ },
+ "1.6.14": {
+  "debian_version": "1.6.14-3",
+  "our_url": "https://nim-lang.org/download/nim-1.6.14.tar.xz",
+  "our_size": 5266632,
+  "our_sha256": "d070d2f28ae2400df7fe4a49eceb9f45cd539906b107481856a0af7a8fa82dc9",
+  "debian": {
+   "sha1": "cb7b6455b534f6c54c66b735167c1b3f79b4e9c3",
+   "name": "nim_1.6.14.orig.tar.xz",
+   "size": 79389660
+  },
+  "size_match": false
+ },
+ "1.6.2": {
+  "debian_version": "1.6.2-1",
+  "our_url": "https://nim-lang.org/download/nim-1.6.2.tar.xz",
+  "our_size": 5181616,
+  "our_sha256": "9ac4714fa6c315d691da7f5d8941c1b190d4d437397d9742e327c2d51893e373",
+  "debian": {
+   "sha1": "127b5156f479de8ca1db030945b6d7a9befa4e87",
+   "name": "nim_1.6.2.orig.tar.xz",
+   "size": 77632832
+  },
+  "size_match": false
+ },
+ "1.6.4": {
+  "debian_version": "1.6.4-1",
+  "our_url": "https://nim-lang.org/download/nim-1.6.4.tar.xz",
+  "our_size": 5130208,
+  "our_sha256": "7fc3092855b5c2200cd9feed133d04605823f250d73b4d4ac501300370e0a0c2",
+  "debian": {
+   "sha1": "ada2cc1122848a921a7647a8064b67cf983af751",
+   "name": "nim_1.6.4.orig.tar.xz",
+   "size": 77706812
+  },
+  "size_match": false
+ },
+ "1.6.6": {
+  "debian_version": "1.6.6-1",
+  "our_url": "https://nim-lang.org/download/nim-1.6.6.tar.xz",
+  "our_size": 5149956,
+  "our_sha256": "67b111ce6f3861503b9fcc1cae59fc34d0122566d3ecfef3a064a2174121a452",
+  "debian": {
+   "sha1": "0169183dfa361345cd28a8d4a8c1ebf4555affc2",
+   "name": "nim_1.6.6.orig.tar.xz",
+   "size": 77843480
+  },
+  "size_match": false
+ },
+ "1.6.8": {
+  "debian_version": "1.6.8-1",
+  "our_url": "https://nim-lang.org/download/nim-1.6.8.tar.xz",
+  "our_size": 5219880,
+  "our_sha256": "0f5b65cdb60f78af41cb075c238983689a1e1f7e25c819f179862c18a484cf57",
+  "debian": {
+   "sha1": "1379fd7944ab2a2f9d4676c2757ef0d9f235d572",
+   "name": "nim_1.6.8.orig.tar.xz",
+   "size": 78088632
+  },
+  "size_match": false
+ },
+ "2.2.0": {
+  "debian_version": "2.2.0-1",
+  "our_url": "https://nim-lang.org/download/nim-2.2.0.tar.xz",
+  "our_size": 7896912,
+  "our_sha256": "ce9842849c9760e487ecdd1cdadf7c0f2844cafae605401c7c72ae257644893c",
+  "debian": {
+   "sha1": "693be634d1edfe32acfd2462a5547f7c96ffadbb",
+   "name": "nim_2.2.0.orig.tar.xz",
+   "size": 119976728
+  },
+  "size_match": false
+ },
+ "2.2.10": {
+  "debian_version": "2.2.10-1",
+  "our_url": "https://nim-lang.org/download/nim-2.2.10.tar.xz",
+  "our_size": 8287652,
+  "our_sha256": "7957b7ed004206bcf10bcc4f3b4744153878e62f2431552a9a8e9d3f40e8d5d5",
+  "debian": {
+   "sha1": "705150c2c5859f0aa199fd679f0865d41ad89732",
+   "name": "nim_2.2.10.orig.tar.xz",
+   "size": 129636464
+  },
+  "size_match": false
+ },
+ "2.2.12": {
+  "debian_version": "2.2.12-1",
+  "our_url": "https://nim-lang.org/download/nim-2.2.12.tar.xz",
+  "our_size": 10259940,
+  "our_sha256": "2639a06a5ea7a7fcf57df1e7e1ef4d1b2bee58c7ac9bd00dbd2aa5bea1e5a56a",
+  "debian": {
+   "sha1": "a104e44168b53daa468e98e5d5ac335569999ee9",
+   "name": "nim_2.2.12.orig.tar.xz",
+   "size": 10259940
+  },
+  "size_match": true
+ },
+ "2.2.4": {
+  "debian_version": "2.2.4-2",
+  "our_url": "https://nim-lang.org/download/nim-2.2.4.tar.xz",
+  "our_size": 8168916,
+  "our_sha256": "f82b419750fcce561f3f897a0486b180186845d76fb5d99f248ce166108189c7",
+  "debian": {
+   "sha1": "aa59e0bf5362c3e46429220657c5f70d47f13ad5",
+   "name": "nim_2.2.4.orig.tar.xz",
+   "size": 125562048
+  },
+  "size_match": false
+ }
+}

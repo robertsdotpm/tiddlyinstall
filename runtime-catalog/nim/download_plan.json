@@ -1418,7 +1418,15 @@
   "libc": null,
   "url": "https://nim-lang.org/download/nim-0.17.2.tar.xz",
   "mirrors": [
-   "https://tarballs.nixos.org/sha256/aaff1b5023fc4a5708f1d7d9fd8e2a29f1a7f58bf496532ff1e9d7e7c7ec82bd"
+   "https://tarballs.nixos.org/sha256/aaff1b5023fc4a5708f1d7d9fd8e2a29f1a7f58bf496532ff1e9d7e7c7ec82bd",
+   "https://snapshot.debian.org/file/6bd34ff512b58dfe4fc284a694874ae2779768cf",
+   "http://snapshot.debian.org/file/6bd34ff512b58dfe4fc284a694874ae2779768cf",
+   "http://archive.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.17.2.orig.tar.xz",
+   "https://archive.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.17.2.orig.tar.xz",
+   "http://old-releases.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.17.2.orig.tar.xz",
+   "https://old-releases.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.17.2.orig.tar.xz",
+   "http://ports.ubuntu.com/ubuntu-ports/pool/universe/n/nim/nim_0.17.2.orig.tar.xz",
+   "https://ports.ubuntu.com/ubuntu-ports/pool/universe/n/nim/nim_0.17.2.orig.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1446,7 +1454,15 @@
   "libc": null,
   "url": "https://nim-lang.org/download/nim-0.17.2.tar.xz",
   "mirrors": [
-   "https://tarballs.nixos.org/sha256/aaff1b5023fc4a5708f1d7d9fd8e2a29f1a7f58bf496532ff1e9d7e7c7ec82bd"
+   "https://tarballs.nixos.org/sha256/aaff1b5023fc4a5708f1d7d9fd8e2a29f1a7f58bf496532ff1e9d7e7c7ec82bd",
+   "https://snapshot.debian.org/file/6bd34ff512b58dfe4fc284a694874ae2779768cf",
+   "http://snapshot.debian.org/file/6bd34ff512b58dfe4fc284a694874ae2779768cf",
+   "http://archive.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.17.2.orig.tar.xz",
+   "https://archive.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.17.2.orig.tar.xz",
+   "http://old-releases.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.17.2.orig.tar.xz",
+   "https://old-releases.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.17.2.orig.tar.xz",
+   "http://ports.ubuntu.com/ubuntu-ports/pool/universe/n/nim/nim_0.17.2.orig.tar.xz",
+   "https://ports.ubuntu.com/ubuntu-ports/pool/universe/n/nim/nim_0.17.2.orig.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1474,7 +1490,15 @@
   "libc": null,
   "url": "https://nim-lang.org/download/nim-0.17.2.tar.xz",
   "mirrors": [
-   "https://tarballs.nixos.org/sha256/aaff1b5023fc4a5708f1d7d9fd8e2a29f1a7f58bf496532ff1e9d7e7c7ec82bd"
+   "https://tarballs.nixos.org/sha256/aaff1b5023fc4a5708f1d7d9fd8e2a29f1a7f58bf496532ff1e9d7e7c7ec82bd",
+   "https://snapshot.debian.org/file/6bd34ff512b58dfe4fc284a694874ae2779768cf",
+   "http://snapshot.debian.org/file/6bd34ff512b58dfe4fc284a694874ae2779768cf",
+   "http://archive.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.17.2.orig.tar.xz",
+   "https://archive.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.17.2.orig.tar.xz",
+   "http://old-releases.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.17.2.orig.tar.xz",
+   "https://old-releases.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.17.2.orig.tar.xz",
+   "http://ports.ubuntu.com/ubuntu-ports/pool/universe/n/nim/nim_0.17.2.orig.tar.xz",
+   "https://ports.ubuntu.com/ubuntu-ports/pool/universe/n/nim/nim_0.17.2.orig.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1553,7 +1577,12 @@
   "variant": null,
   "libc": null,
   "url": "https://nim-lang.org/download/nim-0.16.0.tar.xz",
-  "mirrors": [],
+  "mirrors": [
+   "https://snapshot.debian.org/file/ef14fea436f9dc8155b0aeadbb332e3d53ea3df0",
+   "http://snapshot.debian.org/file/ef14fea436f9dc8155b0aeadbb332e3d53ea3df0",
+   "http://archive.debian.org/debian/pool/main/n/nim/nim_0.16.0.orig.tar.xz",
+   "https://archive.debian.org/debian/pool/main/n/nim/nim_0.16.0.orig.tar.xz"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "9e199823be47cba55e62dd6982f02cf0aad732f369799fec42a4d8c2265c5167",
@@ -1579,7 +1608,12 @@
   "variant": null,
   "libc": null,
   "url": "https://nim-lang.org/download/nim-0.16.0.tar.xz",
-  "mirrors": [],
+  "mirrors": [
+   "https://snapshot.debian.org/file/ef14fea436f9dc8155b0aeadbb332e3d53ea3df0",
+   "http://snapshot.debian.org/file/ef14fea436f9dc8155b0aeadbb332e3d53ea3df0",
+   "http://archive.debian.org/debian/pool/main/n/nim/nim_0.16.0.orig.tar.xz",
+   "https://archive.debian.org/debian/pool/main/n/nim/nim_0.16.0.orig.tar.xz"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "9e199823be47cba55e62dd6982f02cf0aad732f369799fec42a4d8c2265c5167",
@@ -1649,7 +1683,12 @@
   "variant": null,
   "libc": null,
   "url": "https://nim-lang.org/download/nim-0.15.2.tar.xz",
-  "mirrors": [],
+  "mirrors": [
+   "https://snapshot.debian.org/file/04c74f506b66f752fb67c863e55f7eb1bedb71f3",
+   "http://snapshot.debian.org/file/04c74f506b66f752fb67c863e55f7eb1bedb71f3",
+   "http://old-releases.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.15.2.orig.tar.xz",
+   "https://old-releases.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.15.2.orig.tar.xz"
+  ],
   "checksum": null,
   "size": 3251764,
   "released": "2016-10-23",
@@ -1671,7 +1710,12 @@
   "variant": null,
   "libc": null,
   "url": "https://nim-lang.org/download/nim-0.15.2.tar.xz",
-  "mirrors": [],
+  "mirrors": [
+   "https://snapshot.debian.org/file/04c74f506b66f752fb67c863e55f7eb1bedb71f3",
+   "http://snapshot.debian.org/file/04c74f506b66f752fb67c863e55f7eb1bedb71f3",
+   "http://old-releases.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.15.2.orig.tar.xz",
+   "https://old-releases.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.15.2.orig.tar.xz"
+  ],
   "checksum": null,
   "size": 3251764,
   "released": "2016-10-23",
@@ -1781,7 +1825,12 @@
   "variant": null,
   "libc": null,
   "url": "https://nim-lang.org/download/nim-0.13.0.tar.xz",
-  "mirrors": [],
+  "mirrors": [
+   "https://snapshot.debian.org/file/88450e9ffcc65625450c25e1ef73ebfb3c348955",
+   "http://snapshot.debian.org/file/88450e9ffcc65625450c25e1ef73ebfb3c348955",
+   "http://old-releases.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.13.0.orig.tar.xz",
+   "https://old-releases.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.13.0.orig.tar.xz"
+  ],
   "checksum": null,
   "size": 3145360,
   "released": "2016-01-18",
@@ -1803,7 +1852,12 @@
   "variant": null,
   "libc": null,
   "url": "https://nim-lang.org/download/nim-0.13.0.tar.xz",
-  "mirrors": [],
+  "mirrors": [
+   "https://snapshot.debian.org/file/88450e9ffcc65625450c25e1ef73ebfb3c348955",
+   "http://snapshot.debian.org/file/88450e9ffcc65625450c25e1ef73ebfb3c348955",
+   "http://old-releases.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.13.0.orig.tar.xz",
+   "https://old-releases.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.13.0.orig.tar.xz"
+  ],
   "checksum": null,
   "size": 3145360,
   "released": "2016-01-18",
@@ -1847,7 +1901,14 @@
   "variant": null,
   "libc": null,
   "url": "https://nim-lang.org/download/nim-0.12.0.tar.xz",
-  "mirrors": [],
+  "mirrors": [
+   "https://snapshot.debian.org/file/e94ceb5db65d32a096a99d2e29aa9273c776ecb6",
+   "http://snapshot.debian.org/file/e94ceb5db65d32a096a99d2e29aa9273c776ecb6",
+   "http://archive.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.12.0.orig.tar.xz",
+   "https://archive.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.12.0.orig.tar.xz",
+   "http://ports.ubuntu.com/ubuntu-ports/pool/universe/n/nim/nim_0.12.0.orig.tar.xz",
+   "https://ports.ubuntu.com/ubuntu-ports/pool/universe/n/nim/nim_0.12.0.orig.tar.xz"
+  ],
   "checksum": null,
   "size": 3091564,
   "released": "2015-10-27",
@@ -1869,7 +1930,14 @@
   "variant": null,
   "libc": null,
   "url": "https://nim-lang.org/download/nim-0.12.0.tar.xz",
-  "mirrors": [],
+  "mirrors": [
+   "https://snapshot.debian.org/file/e94ceb5db65d32a096a99d2e29aa9273c776ecb6",
+   "http://snapshot.debian.org/file/e94ceb5db65d32a096a99d2e29aa9273c776ecb6",
+   "http://archive.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.12.0.orig.tar.xz",
+   "https://archive.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.12.0.orig.tar.xz",
+   "http://ports.ubuntu.com/ubuntu-ports/pool/universe/n/nim/nim_0.12.0.orig.tar.xz",
+   "https://ports.ubuntu.com/ubuntu-ports/pool/universe/n/nim/nim_0.12.0.orig.tar.xz"
+  ],
   "checksum": null,
   "size": 3091564,
   "released": "2015-10-27",

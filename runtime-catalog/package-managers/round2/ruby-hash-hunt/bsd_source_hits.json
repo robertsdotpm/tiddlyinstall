@@ -1,0 +1,356 @@
+{
+ "cdn.netbsd.org": [
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.11.tar.xz",
+   "mirror": "http://cdn.netbsd.org/pub/pkgsrc/distfiles/ruby-3.2.11.tar.xz",
+   "size": 14695828
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.11.tar.xz",
+   "mirror": "http://cdn.netbsd.org/pub/pkgsrc/distfiles/ruby-3.3.11.tar.xz",
+   "size": 15879844
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.12.tar.xz",
+   "mirror": "http://cdn.netbsd.org/pub/pkgsrc/distfiles/ruby-3.3.12.tar.xz",
+   "size": 15891224
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.9.tar.xz",
+   "mirror": "http://cdn.netbsd.org/pub/pkgsrc/distfiles/ruby-3.4.9.tar.xz",
+   "size": 16682004
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.10.tar.xz",
+   "mirror": "http://cdn.netbsd.org/pub/pkgsrc/distfiles/ruby-3.4.10.tar.xz",
+   "size": 16709188
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.5.tar.xz",
+   "mirror": "http://cdn.netbsd.org/pub/pkgsrc/distfiles/ruby-4.0.5.tar.xz",
+   "size": 17893756
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.6.tar.xz",
+   "mirror": "http://cdn.netbsd.org/pub/pkgsrc/distfiles/ruby-4.0.6.tar.xz",
+   "size": 17968092
+  }
+ ],
+ "distcache.freebsd.org": [
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.9.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.4.9.tar.xz",
+   "size": 10078316
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/2.5/ruby-2.5.7.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.5.7.tar.xz",
+   "size": 11296440
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/2.5/ruby-2.5.8.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.5.8.tar.xz",
+   "size": 11298404
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.5.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.6.5.tar.xz",
+   "size": 11553580
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.6.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.6.6.tar.xz",
+   "size": 11567284
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.9.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.6.9.tar.xz",
+   "size": 11590064
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.0.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.7.0.tar.xz",
+   "size": 11990900
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.1.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.7.1.tar.xz",
+   "size": 12003684
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.2.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.7.2.tar.xz",
+   "size": 12037052
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.5.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.7.5.tar.xz",
+   "size": 12072980
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.6.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.7.6.tar.xz",
+   "size": 12084408
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.7.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.7.7.tar.xz",
+   "size": 12101804
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.0/ruby-3.0.3.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.0.3.tar.xz",
+   "size": 14991880
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.0/ruby-3.0.4.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.0.4.tar.xz",
+   "size": 15830368
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.0/ruby-3.0.5.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.0.5.tar.xz",
+   "size": 15880196
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.0/ruby-3.0.6.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.0.6.tar.xz",
+   "size": 15864560
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.0.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.1.0.tar.xz",
+   "size": 14709096
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.1.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.1.1.tar.xz",
+   "size": 15103808
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.2.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.1.2.tar.xz",
+   "size": 15101588
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.3.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.1.3.tar.xz",
+   "size": 15300224
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.4.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.1.4.tar.xz",
+   "size": 15316604
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.5.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.1.5.tar.xz",
+   "size": 15293020
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.6.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.1.6.tar.xz",
+   "size": 15273916
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.0.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.0.tar.xz",
+   "size": 15058364
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.1.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.1.tar.xz",
+   "size": 15094384
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.2.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.2.tar.xz",
+   "size": 15118856
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.3.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.3.tar.xz",
+   "size": 15163960
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.4.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.4.tar.xz",
+   "size": 15175656
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.5.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.5.tar.xz",
+   "size": 15189072
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.6.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.6.tar.xz",
+   "size": 15126888
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.7.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.7.tar.xz",
+   "size": 15128228
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.8.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.8.tar.xz",
+   "size": 15130380
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.9.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.9.tar.xz",
+   "size": 15141728
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.10.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.10.tar.xz",
+   "size": 14696548
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.11.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.11.tar.xz",
+   "size": 14695828
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.0.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.0.tar.xz",
+   "size": 16345456
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.1.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.1.tar.xz",
+   "size": 16350792
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.2.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.2.tar.xz",
+   "size": 16349500
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.3.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.3.tar.xz",
+   "size": 16361160
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.4.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.4.tar.xz",
+   "size": 16366580
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.5.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.5.tar.xz",
+   "size": 16403660
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.6.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.6.tar.xz",
+   "size": 16398228
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.7.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.7.tar.xz",
+   "size": 16379504
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.8.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.8.tar.xz",
+   "size": 16435924
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.9.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.9.tar.xz",
+   "size": 16436904
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.10.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.10.tar.xz",
+   "size": 16450140
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.11.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.11.tar.xz",
+   "size": 15879844
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.12.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.12.tar.xz",
+   "size": 15891224
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.3.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.4.3.tar.xz",
+   "size": 17230984
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.4.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.4.4.tar.xz",
+   "size": 17255388
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.5.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.4.5.tar.xz",
+   "size": 17265032
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.6.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.4.6.tar.xz",
+   "size": 17303436
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.7.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.4.7.tar.xz",
+   "size": 17312044
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.8.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.4.8.tar.xz",
+   "size": 17320860
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.9.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.4.9.tar.xz",
+   "size": 16682004
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.0.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-4.0.0.tar.xz",
+   "size": 18008368
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.1.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-4.0.1.tar.xz",
+   "size": 17892492
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.2.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-4.0.2.tar.xz",
+   "size": 17874724
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.3.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-4.0.3.tar.xz",
+   "size": 17878572
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.4.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-4.0.4.tar.xz",
+   "size": 17899740
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.5.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-4.0.5.tar.xz",
+   "size": 17893756
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.6.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-4.0.6.tar.xz",
+   "size": 17968092
+  },
+  {
+   "url": "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.7.tar.xz",
+   "mirror": "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-4.0.7.tar.xz",
+   "size": 17995980
+  }
+ ]
+}

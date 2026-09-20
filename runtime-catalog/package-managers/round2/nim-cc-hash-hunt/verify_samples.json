@@ -1,0 +1,65 @@
+{
+ "archive.ubuntu.com": {
+  "url": "http://archive.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.12.0.orig.tar.xz",
+  "bytes": 3091564,
+  "sha256": "0fb860137f0888f6b1a593d9b115fd7057983b7355f4f9922bb82a49ac875235",
+  "expected": "0fb860137f0888f6b1a593d9b115fd7057983b7355f4f9922bb82a49ac875235",
+  "match": true
+ },
+ "old-releases.ubuntu.com": {
+  "url": "http://old-releases.ubuntu.com/ubuntu/pool/universe/n/nim/nim_0.13.0.orig.tar.xz",
+  "bytes": 3145360,
+  "sha256": "cd61f5e5768d4063596d6df578ae9bb5f9d52430773542987e91050b848cb1a9",
+  "expected": "cd61f5e5768d4063596d6df578ae9bb5f9d52430773542987e91050b848cb1a9",
+  "match": true
+ },
+ "ports.ubuntu.com": {
+  "url": "http://ports.ubuntu.com/ubuntu-ports/pool/universe/n/nim/nim_0.17.2.orig.tar.xz",
+  "bytes": 4083084,
+  "sha256": "aaff1b5023fc4a5708f1d7d9fd8e2a29f1a7f58bf496532ff1e9d7e7c7ec82bd",
+  "expected": "aaff1b5023fc4a5708f1d7d9fd8e2a29f1a7f58bf496532ff1e9d7e7c7ec82bd",
+  "match": true
+ },
+ "archive.debian.org": {
+  "url": "http://archive.debian.org/debian/pool/main/n/nim/nim_0.16.0.orig.tar.xz",
+  "bytes": 2907076,
+  "sha256": "9e199823be47cba55e62dd6982f02cf0aad732f369799fec42a4d8c2265c5167",
+  "expected": "9e199823be47cba55e62dd6982f02cf0aad732f369799fec42a4d8c2265c5167",
+  "match": true
+ },
+ "deb.debian.org": {
+  "url": "http://deb.debian.org/debian/pool/main/n/nim/nim_2.2.12.orig.tar.xz",
+  "bytes": 10259940,
+  "sha256": "2639a06a5ea7a7fcf57df1e7e1ef4d1b2bee58c7ac9bd00dbd2aa5bea1e5a56a",
+  "expected": "2639a06a5ea7a7fcf57df1e7e1ef4d1b2bee58c7ac9bd00dbd2aa5bea1e5a56a",
+  "match": true
+ },
+ "ftp.netbsd.org": {
+  "url": "http://ftp.netbsd.org/pub/pkgsrc/distfiles/nim-2.0.4.tar.xz",
+  "bytes": 7620508,
+  "sha256": "71526bd07439dc8e378fa1a6eb407eda1298f1f3d4df4476dca0e3ca3cbe3f09",
+  "expected": "71526bd07439dc8e378fa1a6eb407eda1298f1f3d4df4476dca0e3ca3cbe3f09",
+  "match": true
+ },
+ "mirrors.nyist.edu.cn": {
+  "url": "https://mirrors.nyist.edu.cn/github-release/llvm/llvm-project/LatestRelease/llvm_man_pages-23.1.1.tar.xz",
+  "bytes": 508,
+  "sha256": "674cae5cd8479d745ba99dfb84e1dbfb06772559d8de972e8031d3913b9ff0b1",
+  "expected": null,
+  "match": true
+ },
+ "mirrors.bfsu.edu.cn": {
+  "url": "https://mirrors.bfsu.edu.cn/github-release/llvm/llvm-project/LatestRelease/llvm_man_pages-23.1.1.tar.xz",
+  "bytes": 357052,
+  "sha256": "66f368b2ee28e3540dcd6a9a1d115173c2708f37cd591508cc79b82708427349",
+  "expected": null,
+  "match": true
+ },
+ "tarballs.nixos.org": {
+  "url": "http://tarballs.nixos.org/sha256/b81946e7f01f90528a1f7352ab08cc602b9ccc05d4e44da4bd501c5a189ee661",
+  "bytes": 62783088,
+  "sha256": "b81946e7f01f90528a1f7352ab08cc602b9ccc05d4e44da4bd501c5a189ee661",
+  "expected": "b81946e7f01f90528a1f7352ab08cc602b9ccc05d4e44da4bd501c5a189ee661",
+  "match": true
+ }
+}

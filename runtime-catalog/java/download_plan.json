@@ -17,7 +17,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu6.22.0.3-ca-jdk6.0.119-win_x64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu6.22.0.3-ca-jdk6.0.119-win_x64.zip",
-   "https://web.archive.org/web/20210726161404id_/https://cdn.azul.com/zulu/bin/zulu6.22.0.3-ca-jdk6.0.119-win_x64.zip"
+   "https://web.archive.org/web/20210726161404id_/https://cdn.azul.com/zulu/bin/zulu6.22.0.3-ca-jdk6.0.119-win_x64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu6.22.0.3-ca-jdk6.0.119-win_x64.zip",
+   "http://static.azul.com/zulu/bin/zulu6.22.0.3-ca-jdk6.0.119-win_x64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -48,7 +50,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu6.22.0.3-ca-jdk6.0.119-linux_x64.tar.gz",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu6.22.0.3-ca-jdk6.0.119-linux_x64.tar.gz",
-   "https://web.archive.org/web/20210726151017id_/https://cdn.azul.com/zulu/bin/zulu6.22.0.3-ca-jdk6.0.119-linux_x64.tar.gz"
+   "https://web.archive.org/web/20210726151017id_/https://cdn.azul.com/zulu/bin/zulu6.22.0.3-ca-jdk6.0.119-linux_x64.tar.gz",
+   "http://cdn.azul.com/zulu/bin/zulu6.22.0.3-ca-jdk6.0.119-linux_x64.tar.gz",
+   "http://static.azul.com/zulu/bin/zulu6.22.0.3-ca-jdk6.0.119-linux_x64.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -79,7 +83,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu7.56.0.11-ca-jdk7.0.352-win_x64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu7.56.0.11-ca-jdk7.0.352-win_x64.zip",
-   "https://web.archive.org/web/20251129131002id_/https://cdn.azul.com/zulu/bin/zulu7.56.0.11-ca-jdk7.0.352-win_x64.zip"
+   "https://web.archive.org/web/20251129131002id_/https://cdn.azul.com/zulu/bin/zulu7.56.0.11-ca-jdk7.0.352-win_x64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu7.56.0.11-ca-jdk7.0.352-win_x64.zip",
+   "http://static.azul.com/zulu/bin/zulu7.56.0.11-ca-jdk7.0.352-win_x64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -110,7 +116,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu7.56.0.11-ca-jre7.0.352-win_i686.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu7.56.0.11-ca-jre7.0.352-win_i686.zip",
-   "https://web.archive.org/web/20260107193543id_/https://cdn.azul.com/zulu/bin/zulu7.56.0.11-ca-jre7.0.352-win_i686.zip"
+   "https://web.archive.org/web/20260107193543id_/https://cdn.azul.com/zulu/bin/zulu7.56.0.11-ca-jre7.0.352-win_i686.zip",
+   "http://cdn.azul.com/zulu/bin/zulu7.56.0.11-ca-jre7.0.352-win_i686.zip",
+   "http://static.azul.com/zulu/bin/zulu7.56.0.11-ca-jre7.0.352-win_i686.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -141,7 +149,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zre1.7.0_72-7.7.0.1-headless-x86lx64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zre1.7.0_72-7.7.0.1-headless-x86lx64.zip",
-   "https://web.archive.org/web/20260422170521id_/https://cdn.azul.com/zulu/bin/zre1.7.0_72-7.7.0.1-headless-x86lx64.zip"
+   "https://web.archive.org/web/20260422170521id_/https://cdn.azul.com/zulu/bin/zre1.7.0_72-7.7.0.1-headless-x86lx64.zip",
+   "http://cdn.azul.com/zulu/bin/zre1.7.0_72-7.7.0.1-headless-x86lx64.zip",
+   "http://static.azul.com/zulu/bin/zre1.7.0_72-7.7.0.1-headless-x86lx64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -172,7 +182,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu7.56.0.11-ca-jre7.0.352-macosx_x64.tar.gz",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu7.56.0.11-ca-jre7.0.352-macosx_x64.tar.gz",
-   "https://web.archive.org/web/20260107193131id_/https://cdn.azul.com/zulu/bin/zulu7.56.0.11-ca-jre7.0.352-macosx_x64.tar.gz"
+   "https://web.archive.org/web/20260107193131id_/https://cdn.azul.com/zulu/bin/zulu7.56.0.11-ca-jre7.0.352-macosx_x64.tar.gz",
+   "http://cdn.azul.com/zulu/bin/zulu7.56.0.11-ca-jre7.0.352-macosx_x64.tar.gz",
+   "http://static.azul.com/zulu/bin/zulu7.56.0.11-ca-jre7.0.352-macosx_x64.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -204,7 +216,8 @@
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/8/jre/x64/windows/OpenJDK8U-jre_x64_windows_hotspot_8u504b01.zip",
    "https://mirror.nju.edu.cn/adoptium/8/jre/x64/windows/OpenJDK8U-jre_x64_windows_hotspot_8u504b01.zip",
-   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin8-binaries/jdk8u504-b01/OpenJDK8U-jre_x64_windows_hotspot_8u504b01.zip"
+   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin8-binaries/jdk8u504-b01/OpenJDK8U-jre_x64_windows_hotspot_8u504b01.zip",
+   "http://mirror.nju.edu.cn/adoptium/8/jre/x64/windows/OpenJDK8U-jre_x64_windows_hotspot_8u504b01.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -235,7 +248,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu8.96.0.205-ca-jre8.0.504-win_i686.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu8.96.0.205-ca-jre8.0.504-win_i686.zip",
-   "https://web.archive.org/web/20260824132639id_/https://cdn.azul.com/zulu/bin/zulu8.96.0.205-ca-jre8.0.504-win_i686.zip"
+   "https://web.archive.org/web/20260824132639id_/https://cdn.azul.com/zulu/bin/zulu8.96.0.205-ca-jre8.0.504-win_i686.zip",
+   "http://cdn.azul.com/zulu/bin/zulu8.96.0.205-ca-jre8.0.504-win_i686.zip",
+   "http://static.azul.com/zulu/bin/zulu8.96.0.205-ca-jre8.0.504-win_i686.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -268,7 +283,9 @@
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/8/jre/x64/linux/OpenJDK8U-jre_x64_linux_hotspot_8u504b01.tar.gz",
    "https://mirror.nju.edu.cn/adoptium/8/jre/x64/linux/OpenJDK8U-jre_x64_linux_hotspot_8u504b01.tar.gz",
    "https://mirrors.ustc.edu.cn/adoptium/releases/temurin8-binaries/jdk8u504-b01/OpenJDK8U-jre_x64_linux_hotspot_8u504b01.tar.gz",
-   "https://distfiles.gentoo.org/distfiles/3a/OpenJDK8U-jre_x64_linux_hotspot_8u504b01.tar.gz"
+   "https://distfiles.gentoo.org/distfiles/3a/OpenJDK8U-jre_x64_linux_hotspot_8u504b01.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/8/jre/x64/linux/OpenJDK8U-jre_x64_linux_hotspot_8u504b01.tar.gz",
+   "http://distfiles.gentoo.org/distfiles/3a/OpenJDK8U-jre_x64_linux_hotspot_8u504b01.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -300,7 +317,8 @@
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/8/jre/aarch64/linux/OpenJDK8U-jre_aarch64_linux_hotspot_8u504b01.tar.gz",
    "https://mirror.nju.edu.cn/adoptium/8/jre/aarch64/linux/OpenJDK8U-jre_aarch64_linux_hotspot_8u504b01.tar.gz",
-   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin8-binaries/jdk8u504-b01/OpenJDK8U-jre_aarch64_linux_hotspot_8u504b01.tar.gz"
+   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin8-binaries/jdk8u504-b01/OpenJDK8U-jre_aarch64_linux_hotspot_8u504b01.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/8/jre/aarch64/linux/OpenJDK8U-jre_aarch64_linux_hotspot_8u504b01.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -332,7 +350,8 @@
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/8/jre/arm/linux/OpenJDK8U-jre_arm_linux_hotspot_8u504b01.tar.gz",
    "https://mirror.nju.edu.cn/adoptium/8/jre/arm/linux/OpenJDK8U-jre_arm_linux_hotspot_8u504b01.tar.gz",
-   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin8-binaries/jdk8u504-b01/OpenJDK8U-jre_arm_linux_hotspot_8u504b01.tar.gz"
+   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin8-binaries/jdk8u504-b01/OpenJDK8U-jre_arm_linux_hotspot_8u504b01.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/8/jre/arm/linux/OpenJDK8U-jre_arm_linux_hotspot_8u504b01.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -364,7 +383,8 @@
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/8/jre/x64/mac/OpenJDK8U-jre_x64_mac_hotspot_8u504b01.tar.gz",
    "https://mirror.nju.edu.cn/adoptium/8/jre/x64/mac/OpenJDK8U-jre_x64_mac_hotspot_8u504b01.tar.gz",
-   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin8-binaries/jdk8u504-b01/OpenJDK8U-jre_x64_mac_hotspot_8u504b01.tar.gz"
+   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin8-binaries/jdk8u504-b01/OpenJDK8U-jre_x64_mac_hotspot_8u504b01.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/8/jre/x64/mac/OpenJDK8U-jre_x64_mac_hotspot_8u504b01.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -395,7 +415,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu8.96.0.205-ca-jre8.0.504-macosx_aarch64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu8.96.0.205-ca-jre8.0.504-macosx_aarch64.zip",
-   "https://web.archive.org/web/20260822045942id_/https://cdn.azul.com/zulu/bin/zulu8.96.0.205-ca-jre8.0.504-macosx_aarch64.zip"
+   "https://web.archive.org/web/20260822045942id_/https://cdn.azul.com/zulu/bin/zulu8.96.0.205-ca-jre8.0.504-macosx_aarch64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu8.96.0.205-ca-jre8.0.504-macosx_aarch64.zip",
+   "http://static.azul.com/zulu/bin/zulu8.96.0.205-ca-jre8.0.504-macosx_aarch64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -426,7 +448,10 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu9.0.7.1-jdk9.0.7-win_x64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu9.0.7.1-jdk9.0.7-win_x64.zip",
-   "https://web.archive.org/web/20220214231638id_/https://cdn.azul.com/zulu/bin/zulu9.0.7.1-jdk9.0.7-win_x64.zip"
+   "https://web.archive.org/web/20220214231638id_/https://cdn.azul.com/zulu/bin/zulu9.0.7.1-jdk9.0.7-win_x64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu9.0.7.1-jdk9.0.7-win_x64.zip",
+   "http://static.azul.com/zulu/bin/zulu9.0.7.1-jdk9.0.7-win_x64.zip",
+   "https://mirror.bazel.build/openjdk/azul-zulu-9.0.7.1-jdk9.0.7/zulu9.0.7.1-jdk9.0.7-win_x64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -457,7 +482,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu9.0.7.1-ca-jdk9.0.7-win_i686.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu9.0.7.1-ca-jdk9.0.7-win_i686.zip",
-   "https://web.archive.org/web/20220215003629id_/https://cdn.azul.com/zulu/bin/zulu9.0.7.1-ca-jdk9.0.7-win_i686.zip"
+   "https://web.archive.org/web/20220215003629id_/https://cdn.azul.com/zulu/bin/zulu9.0.7.1-ca-jdk9.0.7-win_i686.zip",
+   "http://cdn.azul.com/zulu/bin/zulu9.0.7.1-ca-jdk9.0.7-win_i686.zip",
+   "http://static.azul.com/zulu/bin/zulu9.0.7.1-ca-jdk9.0.7-win_i686.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -488,7 +515,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu9.0.7.1-ca-jdk9.0.7-linux_x64.tar.gz",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu9.0.7.1-ca-jdk9.0.7-linux_x64.tar.gz",
-   "https://web.archive.org/web/20250730164559id_/https://cdn.azul.com/zulu/bin/zulu9.0.7.1-ca-jdk9.0.7-linux_x64.tar.gz"
+   "https://web.archive.org/web/20250730164559id_/https://cdn.azul.com/zulu/bin/zulu9.0.7.1-ca-jdk9.0.7-linux_x64.tar.gz",
+   "http://cdn.azul.com/zulu/bin/zulu9.0.7.1-ca-jdk9.0.7-linux_x64.tar.gz",
+   "http://static.azul.com/zulu/bin/zulu9.0.7.1-ca-jdk9.0.7-linux_x64.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -519,7 +548,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu9.0.0.15-ca-jre9.0.0-macosx_x64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu9.0.0.15-ca-jre9.0.0-macosx_x64.zip",
-   "https://web.archive.org/web/20260107184418id_/https://cdn.azul.com/zulu/bin/zulu9.0.0.15-ca-jre9.0.0-macosx_x64.zip"
+   "https://web.archive.org/web/20260107184418id_/https://cdn.azul.com/zulu/bin/zulu9.0.0.15-ca-jre9.0.0-macosx_x64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu9.0.0.15-ca-jre9.0.0-macosx_x64.zip",
+   "http://static.azul.com/zulu/bin/zulu9.0.0.15-ca-jre9.0.0-macosx_x64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -550,7 +581,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu10.3.5-ca-jdk10.0.2-win_x64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu10.3.5-ca-jdk10.0.2-win_x64.zip",
-   "https://web.archive.org/web/20210726143241id_/https://cdn.azul.com/zulu/bin/zulu10.3.5-ca-jdk10.0.2-win_x64.zip"
+   "https://web.archive.org/web/20210726143241id_/https://cdn.azul.com/zulu/bin/zulu10.3.5-ca-jdk10.0.2-win_x64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu10.3.5-ca-jdk10.0.2-win_x64.zip",
+   "http://static.azul.com/zulu/bin/zulu10.3.5-ca-jdk10.0.2-win_x64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -581,7 +614,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu10.3+5-jdk10.0.2-win_i686.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu10.3+5-jdk10.0.2-win_i686.zip",
-   "https://web.archive.org/web/20241104160908id_/https://cdn.azul.com/zulu/bin/zulu10.3+5-jdk10.0.2-win_i686.zip"
+   "https://web.archive.org/web/20241104160908id_/https://cdn.azul.com/zulu/bin/zulu10.3+5-jdk10.0.2-win_i686.zip",
+   "http://cdn.azul.com/zulu/bin/zulu10.3+5-jdk10.0.2-win_i686.zip",
+   "http://static.azul.com/zulu/bin/zulu10.3+5-jdk10.0.2-win_i686.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -612,7 +647,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu10.3.5-ca-jdk10.0.2-linux_x64.tar.gz",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu10.3.5-ca-jdk10.0.2-linux_x64.tar.gz",
-   "https://web.archive.org/web/20210726145751id_/https://cdn.azul.com/zulu/bin/zulu10.3.5-ca-jdk10.0.2-linux_x64.tar.gz"
+   "https://web.archive.org/web/20210726145751id_/https://cdn.azul.com/zulu/bin/zulu10.3.5-ca-jdk10.0.2-linux_x64.tar.gz",
+   "http://cdn.azul.com/zulu/bin/zulu10.3.5-ca-jdk10.0.2-linux_x64.tar.gz",
+   "http://static.azul.com/zulu/bin/zulu10.3.5-ca-jdk10.0.2-linux_x64.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -643,7 +680,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu10.3.5-ca-jdk10.0.2-macosx_x64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu10.3.5-ca-jdk10.0.2-macosx_x64.zip",
-   "https://web.archive.org/web/20210726155316id_/https://cdn.azul.com/zulu/bin/zulu10.3.5-ca-jdk10.0.2-macosx_x64.zip"
+   "https://web.archive.org/web/20210726155316id_/https://cdn.azul.com/zulu/bin/zulu10.3.5-ca-jdk10.0.2-macosx_x64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu10.3.5-ca-jdk10.0.2-macosx_x64.zip",
+   "http://static.azul.com/zulu/bin/zulu10.3.5-ca-jdk10.0.2-macosx_x64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -675,7 +714,8 @@
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/11/jre/x64/windows/OpenJDK11U-jre_x64_windows_hotspot_11.0.32.1_1.zip",
    "https://mirror.nju.edu.cn/adoptium/11/jre/x64/windows/OpenJDK11U-jre_x64_windows_hotspot_11.0.32.1_1.zip",
-   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin11-binaries/jdk-11.0.32.1%2B1/OpenJDK11U-jre_x64_windows_hotspot_11.0.32.1_1.zip"
+   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin11-binaries/jdk-11.0.32.1%2B1/OpenJDK11U-jre_x64_windows_hotspot_11.0.32.1_1.zip",
+   "http://mirror.nju.edu.cn/adoptium/11/jre/x64/windows/OpenJDK11U-jre_x64_windows_hotspot_11.0.32.1_1.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -706,7 +746,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu11.90.205-ca-jre11.0.32.1-win_i686.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu11.90.205-ca-jre11.0.32.1-win_i686.zip",
-   "https://web.archive.org/web/20260911231536id_/https://cdn.azul.com/zulu/bin/zulu11.90.205-ca-jre11.0.32.1-win_i686.zip"
+   "https://web.archive.org/web/20260911231536id_/https://cdn.azul.com/zulu/bin/zulu11.90.205-ca-jre11.0.32.1-win_i686.zip",
+   "http://cdn.azul.com/zulu/bin/zulu11.90.205-ca-jre11.0.32.1-win_i686.zip",
+   "http://static.azul.com/zulu/bin/zulu11.90.205-ca-jre11.0.32.1-win_i686.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -739,7 +781,9 @@
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/11/jre/x64/linux/OpenJDK11U-jre_x64_linux_hotspot_11.0.32.1_1.tar.gz",
    "https://mirror.nju.edu.cn/adoptium/11/jre/x64/linux/OpenJDK11U-jre_x64_linux_hotspot_11.0.32.1_1.tar.gz",
    "https://mirrors.ustc.edu.cn/adoptium/releases/temurin11-binaries/jdk-11.0.32.1%2B1/OpenJDK11U-jre_x64_linux_hotspot_11.0.32.1_1.tar.gz",
-   "https://distfiles.gentoo.org/distfiles/ba/OpenJDK11U-jre_x64_linux_hotspot_11.0.32.1_1.tar.gz"
+   "https://distfiles.gentoo.org/distfiles/ba/OpenJDK11U-jre_x64_linux_hotspot_11.0.32.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/11/jre/x64/linux/OpenJDK11U-jre_x64_linux_hotspot_11.0.32.1_1.tar.gz",
+   "http://distfiles.gentoo.org/distfiles/ba/OpenJDK11U-jre_x64_linux_hotspot_11.0.32.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -771,7 +815,8 @@
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/11/jre/aarch64/linux/OpenJDK11U-jre_aarch64_linux_hotspot_11.0.32.1_1.tar.gz",
    "https://mirror.nju.edu.cn/adoptium/11/jre/aarch64/linux/OpenJDK11U-jre_aarch64_linux_hotspot_11.0.32.1_1.tar.gz",
-   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin11-binaries/jdk-11.0.32.1%2B1/OpenJDK11U-jre_aarch64_linux_hotspot_11.0.32.1_1.tar.gz"
+   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin11-binaries/jdk-11.0.32.1%2B1/OpenJDK11U-jre_aarch64_linux_hotspot_11.0.32.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/11/jre/aarch64/linux/OpenJDK11U-jre_aarch64_linux_hotspot_11.0.32.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -803,7 +848,8 @@
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/11/jre/arm/linux/OpenJDK11U-jre_arm_linux_hotspot_11.0.32.1_1.tar.gz",
    "https://mirror.nju.edu.cn/adoptium/11/jre/arm/linux/OpenJDK11U-jre_arm_linux_hotspot_11.0.32.1_1.tar.gz",
-   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin11-binaries/jdk-11.0.32.1%2B1/OpenJDK11U-jre_arm_linux_hotspot_11.0.32.1_1.tar.gz"
+   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin11-binaries/jdk-11.0.32.1%2B1/OpenJDK11U-jre_arm_linux_hotspot_11.0.32.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/11/jre/arm/linux/OpenJDK11U-jre_arm_linux_hotspot_11.0.32.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -835,7 +881,8 @@
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/11/jre/x64/mac/OpenJDK11U-jre_x64_mac_hotspot_11.0.32.1_1.tar.gz",
    "https://mirror.nju.edu.cn/adoptium/11/jre/x64/mac/OpenJDK11U-jre_x64_mac_hotspot_11.0.32.1_1.tar.gz",
-   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin11-binaries/jdk-11.0.32.1%2B1/OpenJDK11U-jre_x64_mac_hotspot_11.0.32.1_1.tar.gz"
+   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin11-binaries/jdk-11.0.32.1%2B1/OpenJDK11U-jre_x64_mac_hotspot_11.0.32.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/11/jre/x64/mac/OpenJDK11U-jre_x64_mac_hotspot_11.0.32.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -867,7 +914,8 @@
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/11/jre/aarch64/mac/OpenJDK11U-jre_aarch64_mac_hotspot_11.0.32.1_1.tar.gz",
    "https://mirror.nju.edu.cn/adoptium/11/jre/aarch64/mac/OpenJDK11U-jre_aarch64_mac_hotspot_11.0.32.1_1.tar.gz",
-   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin11-binaries/jdk-11.0.32.1%2B1/OpenJDK11U-jre_aarch64_mac_hotspot_11.0.32.1_1.tar.gz"
+   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin11-binaries/jdk-11.0.32.1%2B1/OpenJDK11U-jre_aarch64_mac_hotspot_11.0.32.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/11/jre/aarch64/mac/OpenJDK11U-jre_aarch64_mac_hotspot_11.0.32.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -898,7 +946,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu12.1.3-ca-jre12.0.0-win_x64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu12.1.3-ca-jre12.0.0-win_x64.zip",
-   "https://web.archive.org/web/20251210092048id_/https://cdn.azul.com/zulu/bin/zulu12.1.3-ca-jre12.0.0-win_x64.zip"
+   "https://web.archive.org/web/20251210092048id_/https://cdn.azul.com/zulu/bin/zulu12.1.3-ca-jre12.0.0-win_x64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu12.1.3-ca-jre12.0.0-win_x64.zip",
+   "http://static.azul.com/zulu/bin/zulu12.1.3-ca-jre12.0.0-win_x64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -929,7 +979,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu12.3.11-ca-jdk12.0.2-win_i686.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu12.3.11-ca-jdk12.0.2-win_i686.zip",
-   "https://web.archive.org/web/20210725170416id_/https://cdn.azul.com/zulu/bin/zulu12.3.11-ca-jdk12.0.2-win_i686.zip"
+   "https://web.archive.org/web/20210725170416id_/https://cdn.azul.com/zulu/bin/zulu12.3.11-ca-jdk12.0.2-win_i686.zip",
+   "http://cdn.azul.com/zulu/bin/zulu12.3.11-ca-jdk12.0.2-win_i686.zip",
+   "http://static.azul.com/zulu/bin/zulu12.3.11-ca-jdk12.0.2-win_i686.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -960,7 +1012,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu12.3.11-ca-jdk12.0.2-linux_x64.tar.gz",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu12.3.11-ca-jdk12.0.2-linux_x64.tar.gz",
-   "https://web.archive.org/web/20251127201415id_/https://cdn.azul.com/zulu/bin/zulu12.3.11-ca-jdk12.0.2-linux_x64.tar.gz"
+   "https://web.archive.org/web/20251127201415id_/https://cdn.azul.com/zulu/bin/zulu12.3.11-ca-jdk12.0.2-linux_x64.tar.gz",
+   "http://cdn.azul.com/zulu/bin/zulu12.3.11-ca-jdk12.0.2-linux_x64.tar.gz",
+   "http://static.azul.com/zulu/bin/zulu12.3.11-ca-jdk12.0.2-linux_x64.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -991,7 +1045,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu12.3.11-ca-jdk12.0.2-macosx_x64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu12.3.11-ca-jdk12.0.2-macosx_x64.zip",
-   "https://web.archive.org/web/20210725174759id_/https://cdn.azul.com/zulu/bin/zulu12.3.11-ca-jdk12.0.2-macosx_x64.zip"
+   "https://web.archive.org/web/20210725174759id_/https://cdn.azul.com/zulu/bin/zulu12.3.11-ca-jdk12.0.2-macosx_x64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu12.3.11-ca-jdk12.0.2-macosx_x64.zip",
+   "http://static.azul.com/zulu/bin/zulu12.3.11-ca-jdk12.0.2-macosx_x64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1022,7 +1078,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-win_x64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-win_x64.zip",
-   "https://web.archive.org/web/20251129140618id_/https://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-win_x64.zip"
+   "https://web.archive.org/web/20251129140618id_/https://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-win_x64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-win_x64.zip",
+   "http://static.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-win_x64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1053,7 +1111,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-win_i686.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-win_i686.zip",
-   "https://web.archive.org/web/20251209125402id_/https://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-win_i686.zip"
+   "https://web.archive.org/web/20251209125402id_/https://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-win_i686.zip",
+   "http://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-win_i686.zip",
+   "http://static.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-win_i686.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1084,7 +1144,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-linux_x64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-linux_x64.zip",
-   "https://web.archive.org/web/20260107182819id_/https://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-linux_x64.zip"
+   "https://web.archive.org/web/20260107182819id_/https://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-linux_x64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-linux_x64.zip",
+   "http://static.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-linux_x64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1115,7 +1177,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-linux_aarch64.tar.gz",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-linux_aarch64.tar.gz",
-   "https://web.archive.org/web/20251129191522id_/https://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-linux_aarch64.tar.gz"
+   "https://web.archive.org/web/20251129191522id_/https://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-linux_aarch64.tar.gz",
+   "http://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-linux_aarch64.tar.gz",
+   "http://static.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-linux_aarch64.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1146,7 +1210,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu13.33.38-ca-jdk13.0.4-c2-linux_aarch32hf.tar.gz",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu13.33.38-ca-jdk13.0.4-c2-linux_aarch32hf.tar.gz",
-   "https://web.archive.org/web/20210726145403id_/https://cdn.azul.com/zulu/bin/zulu13.33.38-ca-jdk13.0.4-c2-linux_aarch32hf.tar.gz"
+   "https://web.archive.org/web/20210726145403id_/https://cdn.azul.com/zulu/bin/zulu13.33.38-ca-jdk13.0.4-c2-linux_aarch32hf.tar.gz",
+   "http://cdn.azul.com/zulu/bin/zulu13.33.38-ca-jdk13.0.4-c2-linux_aarch32hf.tar.gz",
+   "http://static.azul.com/zulu/bin/zulu13.33.38-ca-jdk13.0.4-c2-linux_aarch32hf.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1177,7 +1243,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-macosx_x64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-macosx_x64.zip",
-   "https://web.archive.org/web/20260107182722id_/https://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-macosx_x64.zip"
+   "https://web.archive.org/web/20260107182722id_/https://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-macosx_x64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-macosx_x64.zip",
+   "http://static.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-macosx_x64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1208,7 +1276,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-macosx_aarch64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-macosx_aarch64.zip",
-   "https://web.archive.org/web/20230927011113id_/https://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-macosx_aarch64.zip"
+   "https://web.archive.org/web/20230927011113id_/https://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-macosx_aarch64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-macosx_aarch64.zip",
+   "http://static.azul.com/zulu/bin/zulu13.54.17-ca-jre13.0.14-macosx_aarch64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1239,7 +1309,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-win_x64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-win_x64.zip",
-   "https://web.archive.org/web/20260107182426id_/https://cdn.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-win_x64.zip"
+   "https://web.archive.org/web/20260107182426id_/https://cdn.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-win_x64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-win_x64.zip",
+   "http://static.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-win_x64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1270,7 +1342,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-win_i686.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-win_i686.zip",
-   "https://web.archive.org/web/20251205214725id_/https://cdn.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-win_i686.zip"
+   "https://web.archive.org/web/20251205214725id_/https://cdn.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-win_i686.zip",
+   "http://cdn.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-win_i686.zip",
+   "http://static.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-win_i686.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1301,7 +1375,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-linux_x64.tar.gz",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-linux_x64.tar.gz",
-   "https://web.archive.org/web/20260107182441id_/https://cdn.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-linux_x64.tar.gz"
+   "https://web.archive.org/web/20260107182441id_/https://cdn.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-linux_x64.tar.gz",
+   "http://cdn.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-linux_x64.tar.gz",
+   "http://static.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-linux_x64.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1332,7 +1408,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-macosx_x64.tar.gz",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-macosx_x64.tar.gz",
-   "https://web.archive.org/web/20260107182432id_/https://cdn.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-macosx_x64.tar.gz"
+   "https://web.archive.org/web/20260107182432id_/https://cdn.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-macosx_x64.tar.gz",
+   "http://cdn.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-macosx_x64.tar.gz",
+   "http://static.azul.com/zulu/bin/zulu14.29.23-ca-jre14.0.2-macosx_x64.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1363,7 +1441,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-win_x64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-win_x64.zip",
-   "https://web.archive.org/web/20251208132500id_/https://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-win_x64.zip"
+   "https://web.archive.org/web/20251208132500id_/https://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-win_x64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-win_x64.zip",
+   "http://static.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-win_x64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1394,7 +1474,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-win_i686.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-win_i686.zip",
-   "https://web.archive.org/web/20251208132500id_/https://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-win_i686.zip"
+   "https://web.archive.org/web/20251208132500id_/https://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-win_i686.zip",
+   "http://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-win_i686.zip",
+   "http://static.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-win_i686.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1425,7 +1507,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-linux_x64.tar.gz",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-linux_x64.tar.gz",
-   "https://web.archive.org/web/20260107182149id_/https://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-linux_x64.tar.gz"
+   "https://web.archive.org/web/20260107182149id_/https://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-linux_x64.tar.gz",
+   "http://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-linux_x64.tar.gz",
+   "http://static.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-linux_x64.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1456,7 +1540,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-linux_aarch64.tar.gz",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-linux_aarch64.tar.gz",
-   "https://web.archive.org/web/20260107182202id_/https://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-linux_aarch64.tar.gz"
+   "https://web.archive.org/web/20260107182202id_/https://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-linux_aarch64.tar.gz",
+   "http://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-linux_aarch64.tar.gz",
+   "http://static.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-linux_aarch64.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1487,7 +1573,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-macosx_x64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-macosx_x64.zip",
-   "https://web.archive.org/web/20260107182022id_/https://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-macosx_x64.zip"
+   "https://web.archive.org/web/20260107182022id_/https://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-macosx_x64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-macosx_x64.zip",
+   "http://static.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-macosx_x64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1518,7 +1606,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-macosx_aarch64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-macosx_aarch64.zip",
-   "https://web.archive.org/web/20260107182051id_/https://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-macosx_aarch64.zip"
+   "https://web.archive.org/web/20260107182051id_/https://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-macosx_aarch64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-macosx_aarch64.zip",
+   "http://static.azul.com/zulu/bin/zulu15.46.17-ca-jre15.0.10-macosx_aarch64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1549,7 +1639,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-win_x64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-win_x64.zip",
-   "https://web.archive.org/web/20251210060641id_/https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-win_x64.zip"
+   "https://web.archive.org/web/20251210060641id_/https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-win_x64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-win_x64.zip",
+   "http://static.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-win_x64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1580,7 +1672,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-win_aarch64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-win_aarch64.zip",
-   "https://web.archive.org/web/20260107181315id_/https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-win_aarch64.zip"
+   "https://web.archive.org/web/20260107181315id_/https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-win_aarch64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-win_aarch64.zip",
+   "http://static.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-win_aarch64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1611,7 +1705,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-win_i686.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-win_i686.zip",
-   "https://web.archive.org/web/20251208162920id_/https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-win_i686.zip"
+   "https://web.archive.org/web/20251208162920id_/https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-win_i686.zip",
+   "http://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-win_i686.zip",
+   "http://static.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-win_i686.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1642,7 +1738,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-linux_x64.tar.gz",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-linux_x64.tar.gz",
-   "https://web.archive.org/web/20260107181510id_/https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-linux_x64.tar.gz"
+   "https://web.archive.org/web/20260107181510id_/https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-linux_x64.tar.gz",
+   "http://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-linux_x64.tar.gz",
+   "http://static.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-linux_x64.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1673,7 +1771,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-linux_aarch64.tar.gz",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-linux_aarch64.tar.gz",
-   "https://web.archive.org/web/20260107181542id_/https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-linux_aarch64.tar.gz"
+   "https://web.archive.org/web/20260107181542id_/https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-linux_aarch64.tar.gz",
+   "http://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-linux_aarch64.tar.gz",
+   "http://static.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-linux_aarch64.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1704,7 +1804,8 @@
   "url": "https://github.com/adoptium/temurin16-binaries/releases/download/jdk-16.0.2%2B7/OpenJDK16U-jdk_arm_linux_hotspot_16.0.2_7.tar.gz",
   "mirrors": [
    "https://mirror.nju.edu.cn/adoptium/16/jdk/arm/linux/OpenJDK16U-jdk_arm_linux_hotspot_16.0.2_7.tar.gz",
-   "https://web.archive.org/web/20211209225738id_/https://github.com/adoptium/temurin16-binaries/releases/download/jdk-16.0.2%2B7/OpenJDK16U-jdk_arm_linux_hotspot_16.0.2_7.tar.gz"
+   "https://web.archive.org/web/20211209225738id_/https://github.com/adoptium/temurin16-binaries/releases/download/jdk-16.0.2%2B7/OpenJDK16U-jdk_arm_linux_hotspot_16.0.2_7.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/16/jdk/arm/linux/OpenJDK16U-jdk_arm_linux_hotspot_16.0.2_7.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1735,7 +1836,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-macosx_x64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-macosx_x64.zip",
-   "https://web.archive.org/web/20241104155706id_/https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-macosx_x64.zip"
+   "https://web.archive.org/web/20241104155706id_/https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-macosx_x64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-macosx_x64.zip",
+   "http://static.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-macosx_x64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1766,7 +1869,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-macosx_aarch64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-macosx_aarch64.zip",
-   "https://web.archive.org/web/20210726185344id_/https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-macosx_aarch64.zip"
+   "https://web.archive.org/web/20210726185344id_/https://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-macosx_aarch64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-macosx_aarch64.zip",
+   "http://static.azul.com/zulu/bin/zulu16.32.15-ca-jre16.0.2-macosx_aarch64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1797,7 +1902,8 @@
   "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.20.1%2B1/OpenJDK17U-jre_x64_windows_hotspot_17.0.20.1_1.zip",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/17/jre/x64/windows/OpenJDK17U-jre_x64_windows_hotspot_17.0.20.1_1.zip",
-   "https://mirror.nju.edu.cn/adoptium/17/jre/x64/windows/OpenJDK17U-jre_x64_windows_hotspot_17.0.20.1_1.zip"
+   "https://mirror.nju.edu.cn/adoptium/17/jre/x64/windows/OpenJDK17U-jre_x64_windows_hotspot_17.0.20.1_1.zip",
+   "http://mirror.nju.edu.cn/adoptium/17/jre/x64/windows/OpenJDK17U-jre_x64_windows_hotspot_17.0.20.1_1.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1827,7 +1933,9 @@
   "libc": null,
   "url": "https://cdn.azul.com/zulu/bin/zulu17.68.203-ca-jdk17.0.20.1-win_aarch64.zip",
   "mirrors": [
-   "https://static.azul.com/zulu/bin/zulu17.68.203-ca-jdk17.0.20.1-win_aarch64.zip"
+   "https://static.azul.com/zulu/bin/zulu17.68.203-ca-jdk17.0.20.1-win_aarch64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu17.68.203-ca-jdk17.0.20.1-win_aarch64.zip",
+   "http://static.azul.com/zulu/bin/zulu17.68.203-ca-jdk17.0.20.1-win_aarch64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1858,7 +1966,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu17.68.203-ca-jre17.0.20.1-win_i686.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu17.68.203-ca-jre17.0.20.1-win_i686.zip",
-   "https://web.archive.org/web/20260911231546id_/https://cdn.azul.com/zulu/bin/zulu17.68.203-ca-jre17.0.20.1-win_i686.zip"
+   "https://web.archive.org/web/20260911231546id_/https://cdn.azul.com/zulu/bin/zulu17.68.203-ca-jre17.0.20.1-win_i686.zip",
+   "http://cdn.azul.com/zulu/bin/zulu17.68.203-ca-jre17.0.20.1-win_i686.zip",
+   "http://static.azul.com/zulu/bin/zulu17.68.203-ca-jre17.0.20.1-win_i686.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1890,7 +2000,9 @@
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/17/jre/x64/linux/OpenJDK17U-jre_x64_linux_hotspot_17.0.20.1_1.tar.gz",
    "https://mirror.nju.edu.cn/adoptium/17/jre/x64/linux/OpenJDK17U-jre_x64_linux_hotspot_17.0.20.1_1.tar.gz",
-   "https://distfiles.gentoo.org/distfiles/4a/OpenJDK17U-jre_x64_linux_hotspot_17.0.20.1_1.tar.gz"
+   "https://distfiles.gentoo.org/distfiles/4a/OpenJDK17U-jre_x64_linux_hotspot_17.0.20.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/17/jre/x64/linux/OpenJDK17U-jre_x64_linux_hotspot_17.0.20.1_1.tar.gz",
+   "http://distfiles.gentoo.org/distfiles/4a/OpenJDK17U-jre_x64_linux_hotspot_17.0.20.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1921,7 +2033,8 @@
   "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.20.1%2B1/OpenJDK17U-jre_aarch64_linux_hotspot_17.0.20.1_1.tar.gz",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/17/jre/aarch64/linux/OpenJDK17U-jre_aarch64_linux_hotspot_17.0.20.1_1.tar.gz",
-   "https://mirror.nju.edu.cn/adoptium/17/jre/aarch64/linux/OpenJDK17U-jre_aarch64_linux_hotspot_17.0.20.1_1.tar.gz"
+   "https://mirror.nju.edu.cn/adoptium/17/jre/aarch64/linux/OpenJDK17U-jre_aarch64_linux_hotspot_17.0.20.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/17/jre/aarch64/linux/OpenJDK17U-jre_aarch64_linux_hotspot_17.0.20.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1952,7 +2065,8 @@
   "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.20.1%2B1/OpenJDK17U-jre_arm_linux_hotspot_17.0.20.1_1.tar.gz",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/17/jre/arm/linux/OpenJDK17U-jre_arm_linux_hotspot_17.0.20.1_1.tar.gz",
-   "https://mirror.nju.edu.cn/adoptium/17/jre/arm/linux/OpenJDK17U-jre_arm_linux_hotspot_17.0.20.1_1.tar.gz"
+   "https://mirror.nju.edu.cn/adoptium/17/jre/arm/linux/OpenJDK17U-jre_arm_linux_hotspot_17.0.20.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/17/jre/arm/linux/OpenJDK17U-jre_arm_linux_hotspot_17.0.20.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1983,7 +2097,8 @@
   "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.20.1%2B1/OpenJDK17U-jre_x64_mac_hotspot_17.0.20.1_1.tar.gz",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/17/jre/x64/mac/OpenJDK17U-jre_x64_mac_hotspot_17.0.20.1_1.tar.gz",
-   "https://mirror.nju.edu.cn/adoptium/17/jre/x64/mac/OpenJDK17U-jre_x64_mac_hotspot_17.0.20.1_1.tar.gz"
+   "https://mirror.nju.edu.cn/adoptium/17/jre/x64/mac/OpenJDK17U-jre_x64_mac_hotspot_17.0.20.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/17/jre/x64/mac/OpenJDK17U-jre_x64_mac_hotspot_17.0.20.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2014,7 +2129,8 @@
   "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.20.1%2B1/OpenJDK17U-jre_aarch64_mac_hotspot_17.0.20.1_1.tar.gz",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/17/jre/aarch64/mac/OpenJDK17U-jre_aarch64_mac_hotspot_17.0.20.1_1.tar.gz",
-   "https://mirror.nju.edu.cn/adoptium/17/jre/aarch64/mac/OpenJDK17U-jre_aarch64_mac_hotspot_17.0.20.1_1.tar.gz"
+   "https://mirror.nju.edu.cn/adoptium/17/jre/aarch64/mac/OpenJDK17U-jre_aarch64_mac_hotspot_17.0.20.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/17/jre/aarch64/mac/OpenJDK17U-jre_aarch64_mac_hotspot_17.0.20.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2045,7 +2161,8 @@
   "url": "https://github.com/adoptium/temurin18-binaries/releases/download/jdk-18.0.2.1%2B1/OpenJDK18U-jre_x64_windows_hotspot_18.0.2.1_1.zip",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/18/jre/x64/windows/OpenJDK18U-jre_x64_windows_hotspot_18.0.2.1_1.zip",
-   "https://mirror.nju.edu.cn/adoptium/18/jre/x64/windows/OpenJDK18U-jre_x64_windows_hotspot_18.0.2.1_1.zip"
+   "https://mirror.nju.edu.cn/adoptium/18/jre/x64/windows/OpenJDK18U-jre_x64_windows_hotspot_18.0.2.1_1.zip",
+   "http://mirror.nju.edu.cn/adoptium/18/jre/x64/windows/OpenJDK18U-jre_x64_windows_hotspot_18.0.2.1_1.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2076,7 +2193,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu18.32.13-ca-jdk18.0.2.1-win_aarch64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu18.32.13-ca-jdk18.0.2.1-win_aarch64.zip",
-   "https://web.archive.org/web/20230927003152id_/https://cdn.azul.com/zulu/bin/zulu18.32.13-ca-jdk18.0.2.1-win_aarch64.zip"
+   "https://web.archive.org/web/20230927003152id_/https://cdn.azul.com/zulu/bin/zulu18.32.13-ca-jdk18.0.2.1-win_aarch64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu18.32.13-ca-jdk18.0.2.1-win_aarch64.zip",
+   "http://static.azul.com/zulu/bin/zulu18.32.13-ca-jdk18.0.2.1-win_aarch64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2107,7 +2226,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu18.32.13-ca-jre18.0.2.1-win_i686.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu18.32.13-ca-jre18.0.2.1-win_i686.zip",
-   "https://web.archive.org/web/20230927003350id_/https://cdn.azul.com/zulu/bin/zulu18.32.13-ca-jre18.0.2.1-win_i686.zip"
+   "https://web.archive.org/web/20230927003350id_/https://cdn.azul.com/zulu/bin/zulu18.32.13-ca-jre18.0.2.1-win_i686.zip",
+   "http://cdn.azul.com/zulu/bin/zulu18.32.13-ca-jre18.0.2.1-win_i686.zip",
+   "http://static.azul.com/zulu/bin/zulu18.32.13-ca-jre18.0.2.1-win_i686.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2138,7 +2259,8 @@
   "url": "https://github.com/adoptium/temurin18-binaries/releases/download/jdk-18.0.2.1%2B1/OpenJDK18U-jre_x64_linux_hotspot_18.0.2.1_1.tar.gz",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/18/jre/x64/linux/OpenJDK18U-jre_x64_linux_hotspot_18.0.2.1_1.tar.gz",
-   "https://mirror.nju.edu.cn/adoptium/18/jre/x64/linux/OpenJDK18U-jre_x64_linux_hotspot_18.0.2.1_1.tar.gz"
+   "https://mirror.nju.edu.cn/adoptium/18/jre/x64/linux/OpenJDK18U-jre_x64_linux_hotspot_18.0.2.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/18/jre/x64/linux/OpenJDK18U-jre_x64_linux_hotspot_18.0.2.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2169,7 +2291,8 @@
   "url": "https://github.com/adoptium/temurin18-binaries/releases/download/jdk-18.0.2.1%2B1/OpenJDK18U-jre_aarch64_linux_hotspot_18.0.2.1_1.tar.gz",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/18/jre/aarch64/linux/OpenJDK18U-jre_aarch64_linux_hotspot_18.0.2.1_1.tar.gz",
-   "https://mirror.nju.edu.cn/adoptium/18/jre/aarch64/linux/OpenJDK18U-jre_aarch64_linux_hotspot_18.0.2.1_1.tar.gz"
+   "https://mirror.nju.edu.cn/adoptium/18/jre/aarch64/linux/OpenJDK18U-jre_aarch64_linux_hotspot_18.0.2.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/18/jre/aarch64/linux/OpenJDK18U-jre_aarch64_linux_hotspot_18.0.2.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2200,7 +2323,8 @@
   "url": "https://github.com/adoptium/temurin18-binaries/releases/download/jdk-18.0.2.1%2B1/OpenJDK18U-jre_arm_linux_hotspot_18.0.2.1_1.tar.gz",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/18/jre/arm/linux/OpenJDK18U-jre_arm_linux_hotspot_18.0.2.1_1.tar.gz",
-   "https://mirror.nju.edu.cn/adoptium/18/jre/arm/linux/OpenJDK18U-jre_arm_linux_hotspot_18.0.2.1_1.tar.gz"
+   "https://mirror.nju.edu.cn/adoptium/18/jre/arm/linux/OpenJDK18U-jre_arm_linux_hotspot_18.0.2.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/18/jre/arm/linux/OpenJDK18U-jre_arm_linux_hotspot_18.0.2.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2231,7 +2355,8 @@
   "url": "https://github.com/adoptium/temurin18-binaries/releases/download/jdk-18.0.2.1%2B1/OpenJDK18U-jre_x64_mac_hotspot_18.0.2.1_1.tar.gz",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/18/jre/x64/mac/OpenJDK18U-jre_x64_mac_hotspot_18.0.2.1_1.tar.gz",
-   "https://mirror.nju.edu.cn/adoptium/18/jre/x64/mac/OpenJDK18U-jre_x64_mac_hotspot_18.0.2.1_1.tar.gz"
+   "https://mirror.nju.edu.cn/adoptium/18/jre/x64/mac/OpenJDK18U-jre_x64_mac_hotspot_18.0.2.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/18/jre/x64/mac/OpenJDK18U-jre_x64_mac_hotspot_18.0.2.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2262,7 +2387,8 @@
   "url": "https://github.com/adoptium/temurin18-binaries/releases/download/jdk-18.0.2.1%2B1/OpenJDK18U-jre_aarch64_mac_hotspot_18.0.2.1_1.tar.gz",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/18/jre/aarch64/mac/OpenJDK18U-jre_aarch64_mac_hotspot_18.0.2.1_1.tar.gz",
-   "https://mirror.nju.edu.cn/adoptium/18/jre/aarch64/mac/OpenJDK18U-jre_aarch64_mac_hotspot_18.0.2.1_1.tar.gz"
+   "https://mirror.nju.edu.cn/adoptium/18/jre/aarch64/mac/OpenJDK18U-jre_aarch64_mac_hotspot_18.0.2.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/18/jre/aarch64/mac/OpenJDK18U-jre_aarch64_mac_hotspot_18.0.2.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2293,7 +2419,8 @@
   "url": "https://github.com/adoptium/temurin19-binaries/releases/download/jdk-19.0.2%2B7/OpenJDK19U-jre_x64_windows_hotspot_19.0.2_7.zip",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/19/jre/x64/windows/OpenJDK19U-jre_x64_windows_hotspot_19.0.2_7.zip",
-   "https://mirror.nju.edu.cn/adoptium/19/jre/x64/windows/OpenJDK19U-jre_x64_windows_hotspot_19.0.2_7.zip"
+   "https://mirror.nju.edu.cn/adoptium/19/jre/x64/windows/OpenJDK19U-jre_x64_windows_hotspot_19.0.2_7.zip",
+   "http://mirror.nju.edu.cn/adoptium/19/jre/x64/windows/OpenJDK19U-jre_x64_windows_hotspot_19.0.2_7.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2324,7 +2451,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu19.28.81-ca-jdk19.0.0-win_aarch64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu19.28.81-ca-jdk19.0.0-win_aarch64.zip",
-   "https://web.archive.org/web/20241104201331id_/https://cdn.azul.com/zulu/bin/zulu19.28.81-ca-jdk19.0.0-win_aarch64.zip"
+   "https://web.archive.org/web/20241104201331id_/https://cdn.azul.com/zulu/bin/zulu19.28.81-ca-jdk19.0.0-win_aarch64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu19.28.81-ca-jdk19.0.0-win_aarch64.zip",
+   "http://static.azul.com/zulu/bin/zulu19.28.81-ca-jdk19.0.0-win_aarch64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2355,7 +2484,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu19.28.81-ca-jre19.0.0-win_i686.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu19.28.81-ca-jre19.0.0-win_i686.zip",
-   "https://web.archive.org/web/20260107174700id_/https://cdn.azul.com/zulu/bin/zulu19.28.81-ca-jre19.0.0-win_i686.zip"
+   "https://web.archive.org/web/20260107174700id_/https://cdn.azul.com/zulu/bin/zulu19.28.81-ca-jre19.0.0-win_i686.zip",
+   "http://cdn.azul.com/zulu/bin/zulu19.28.81-ca-jre19.0.0-win_i686.zip",
+   "http://static.azul.com/zulu/bin/zulu19.28.81-ca-jre19.0.0-win_i686.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2386,7 +2517,8 @@
   "url": "https://github.com/adoptium/temurin19-binaries/releases/download/jdk-19.0.2%2B7/OpenJDK19U-jre_x64_linux_hotspot_19.0.2_7.tar.gz",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/19/jre/x64/linux/OpenJDK19U-jre_x64_linux_hotspot_19.0.2_7.tar.gz",
-   "https://mirror.nju.edu.cn/adoptium/19/jre/x64/linux/OpenJDK19U-jre_x64_linux_hotspot_19.0.2_7.tar.gz"
+   "https://mirror.nju.edu.cn/adoptium/19/jre/x64/linux/OpenJDK19U-jre_x64_linux_hotspot_19.0.2_7.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/19/jre/x64/linux/OpenJDK19U-jre_x64_linux_hotspot_19.0.2_7.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2417,7 +2549,8 @@
   "url": "https://github.com/adoptium/temurin19-binaries/releases/download/jdk-19.0.2%2B7/OpenJDK19U-jre_aarch64_linux_hotspot_19.0.2_7.tar.gz",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/19/jre/aarch64/linux/OpenJDK19U-jre_aarch64_linux_hotspot_19.0.2_7.tar.gz",
-   "https://mirror.nju.edu.cn/adoptium/19/jre/aarch64/linux/OpenJDK19U-jre_aarch64_linux_hotspot_19.0.2_7.tar.gz"
+   "https://mirror.nju.edu.cn/adoptium/19/jre/aarch64/linux/OpenJDK19U-jre_aarch64_linux_hotspot_19.0.2_7.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/19/jre/aarch64/linux/OpenJDK19U-jre_aarch64_linux_hotspot_19.0.2_7.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2448,7 +2581,8 @@
   "url": "https://github.com/adoptium/temurin19-binaries/releases/download/jdk-19.0.2%2B7/OpenJDK19U-jre_arm_linux_hotspot_19.0.2_7.tar.gz",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/19/jre/arm/linux/OpenJDK19U-jre_arm_linux_hotspot_19.0.2_7.tar.gz",
-   "https://mirror.nju.edu.cn/adoptium/19/jre/arm/linux/OpenJDK19U-jre_arm_linux_hotspot_19.0.2_7.tar.gz"
+   "https://mirror.nju.edu.cn/adoptium/19/jre/arm/linux/OpenJDK19U-jre_arm_linux_hotspot_19.0.2_7.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/19/jre/arm/linux/OpenJDK19U-jre_arm_linux_hotspot_19.0.2_7.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2479,7 +2613,8 @@
   "url": "https://github.com/adoptium/temurin19-binaries/releases/download/jdk-19.0.2%2B7/OpenJDK19U-jre_x64_mac_hotspot_19.0.2_7.tar.gz",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/19/jre/x64/mac/OpenJDK19U-jre_x64_mac_hotspot_19.0.2_7.tar.gz",
-   "https://mirror.nju.edu.cn/adoptium/19/jre/x64/mac/OpenJDK19U-jre_x64_mac_hotspot_19.0.2_7.tar.gz"
+   "https://mirror.nju.edu.cn/adoptium/19/jre/x64/mac/OpenJDK19U-jre_x64_mac_hotspot_19.0.2_7.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/19/jre/x64/mac/OpenJDK19U-jre_x64_mac_hotspot_19.0.2_7.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2510,7 +2645,8 @@
   "url": "https://github.com/adoptium/temurin19-binaries/releases/download/jdk-19.0.2%2B7/OpenJDK19U-jre_aarch64_mac_hotspot_19.0.2_7.tar.gz",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/19/jre/aarch64/mac/OpenJDK19U-jre_aarch64_mac_hotspot_19.0.2_7.tar.gz",
-   "https://mirror.nju.edu.cn/adoptium/19/jre/aarch64/mac/OpenJDK19U-jre_aarch64_mac_hotspot_19.0.2_7.tar.gz"
+   "https://mirror.nju.edu.cn/adoptium/19/jre/aarch64/mac/OpenJDK19U-jre_aarch64_mac_hotspot_19.0.2_7.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/19/jre/aarch64/mac/OpenJDK19U-jre_aarch64_mac_hotspot_19.0.2_7.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2541,7 +2677,8 @@
   "url": "https://github.com/adoptium/temurin20-binaries/releases/download/jdk-20.0.2%2B9/OpenJDK20U-jre_x64_windows_hotspot_20.0.2_9.zip",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/20/jre/x64/windows/OpenJDK20U-jre_x64_windows_hotspot_20.0.2_9.zip",
-   "https://mirror.nju.edu.cn/adoptium/20/jre/x64/windows/OpenJDK20U-jre_x64_windows_hotspot_20.0.2_9.zip"
+   "https://mirror.nju.edu.cn/adoptium/20/jre/x64/windows/OpenJDK20U-jre_x64_windows_hotspot_20.0.2_9.zip",
+   "http://mirror.nju.edu.cn/adoptium/20/jre/x64/windows/OpenJDK20U-jre_x64_windows_hotspot_20.0.2_9.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2572,7 +2709,8 @@
   "url": "https://github.com/adoptium/temurin20-binaries/releases/download/jdk-20.0.2%2B9/OpenJDK20U-jre_x64_linux_hotspot_20.0.2_9.tar.gz",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/20/jre/x64/linux/OpenJDK20U-jre_x64_linux_hotspot_20.0.2_9.tar.gz",
-   "https://mirror.nju.edu.cn/adoptium/20/jre/x64/linux/OpenJDK20U-jre_x64_linux_hotspot_20.0.2_9.tar.gz"
+   "https://mirror.nju.edu.cn/adoptium/20/jre/x64/linux/OpenJDK20U-jre_x64_linux_hotspot_20.0.2_9.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/20/jre/x64/linux/OpenJDK20U-jre_x64_linux_hotspot_20.0.2_9.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2603,7 +2741,8 @@
   "url": "https://github.com/adoptium/temurin20-binaries/releases/download/jdk-20.0.2%2B9/OpenJDK20U-jre_aarch64_linux_hotspot_20.0.2_9.tar.gz",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/20/jre/aarch64/linux/OpenJDK20U-jre_aarch64_linux_hotspot_20.0.2_9.tar.gz",
-   "https://mirror.nju.edu.cn/adoptium/20/jre/aarch64/linux/OpenJDK20U-jre_aarch64_linux_hotspot_20.0.2_9.tar.gz"
+   "https://mirror.nju.edu.cn/adoptium/20/jre/aarch64/linux/OpenJDK20U-jre_aarch64_linux_hotspot_20.0.2_9.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/20/jre/aarch64/linux/OpenJDK20U-jre_aarch64_linux_hotspot_20.0.2_9.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2634,7 +2773,8 @@
   "url": "https://github.com/adoptium/temurin20-binaries/releases/download/jdk-20.0.2%2B9/OpenJDK20U-jre_x64_mac_hotspot_20.0.2_9.tar.gz",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/20/jre/x64/mac/OpenJDK20U-jre_x64_mac_hotspot_20.0.2_9.tar.gz",
-   "https://mirror.nju.edu.cn/adoptium/20/jre/x64/mac/OpenJDK20U-jre_x64_mac_hotspot_20.0.2_9.tar.gz"
+   "https://mirror.nju.edu.cn/adoptium/20/jre/x64/mac/OpenJDK20U-jre_x64_mac_hotspot_20.0.2_9.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/20/jre/x64/mac/OpenJDK20U-jre_x64_mac_hotspot_20.0.2_9.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2665,7 +2805,8 @@
   "url": "https://github.com/adoptium/temurin20-binaries/releases/download/jdk-20.0.2%2B9/OpenJDK20U-jre_aarch64_mac_hotspot_20.0.2_9.tar.gz",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/20/jre/aarch64/mac/OpenJDK20U-jre_aarch64_mac_hotspot_20.0.2_9.tar.gz",
-   "https://mirror.nju.edu.cn/adoptium/20/jre/aarch64/mac/OpenJDK20U-jre_aarch64_mac_hotspot_20.0.2_9.tar.gz"
+   "https://mirror.nju.edu.cn/adoptium/20/jre/aarch64/mac/OpenJDK20U-jre_aarch64_mac_hotspot_20.0.2_9.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/20/jre/aarch64/mac/OpenJDK20U-jre_aarch64_mac_hotspot_20.0.2_9.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2696,7 +2837,8 @@
   "url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.12.1%2B1/OpenJDK21U-jre_x64_windows_hotspot_21.0.12.1_1.zip",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/21/jre/x64/windows/OpenJDK21U-jre_x64_windows_hotspot_21.0.12.1_1.zip",
-   "https://mirror.nju.edu.cn/adoptium/21/jre/x64/windows/OpenJDK21U-jre_x64_windows_hotspot_21.0.12.1_1.zip"
+   "https://mirror.nju.edu.cn/adoptium/21/jre/x64/windows/OpenJDK21U-jre_x64_windows_hotspot_21.0.12.1_1.zip",
+   "http://mirror.nju.edu.cn/adoptium/21/jre/x64/windows/OpenJDK21U-jre_x64_windows_hotspot_21.0.12.1_1.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2727,7 +2869,8 @@
   "url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.12.1%2B1/OpenJDK21U-jre_aarch64_windows_hotspot_21.0.12.1_1.zip",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/21/jre/aarch64/windows/OpenJDK21U-jre_aarch64_windows_hotspot_21.0.12.1_1.zip",
-   "https://mirror.nju.edu.cn/adoptium/21/jre/aarch64/windows/OpenJDK21U-jre_aarch64_windows_hotspot_21.0.12.1_1.zip"
+   "https://mirror.nju.edu.cn/adoptium/21/jre/aarch64/windows/OpenJDK21U-jre_aarch64_windows_hotspot_21.0.12.1_1.zip",
+   "http://mirror.nju.edu.cn/adoptium/21/jre/aarch64/windows/OpenJDK21U-jre_aarch64_windows_hotspot_21.0.12.1_1.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2759,7 +2902,9 @@
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/21/jre/x64/linux/OpenJDK21U-jre_x64_linux_hotspot_21.0.12.1_1.tar.gz",
    "https://mirror.nju.edu.cn/adoptium/21/jre/x64/linux/OpenJDK21U-jre_x64_linux_hotspot_21.0.12.1_1.tar.gz",
-   "https://distfiles.gentoo.org/distfiles/26/OpenJDK21U-jre_x64_linux_hotspot_21.0.12.1_1.tar.gz"
+   "https://distfiles.gentoo.org/distfiles/26/OpenJDK21U-jre_x64_linux_hotspot_21.0.12.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/21/jre/x64/linux/OpenJDK21U-jre_x64_linux_hotspot_21.0.12.1_1.tar.gz",
+   "http://distfiles.gentoo.org/distfiles/26/OpenJDK21U-jre_x64_linux_hotspot_21.0.12.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2790,7 +2935,8 @@
   "url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.12.1%2B1/OpenJDK21U-jre_aarch64_linux_hotspot_21.0.12.1_1.tar.gz",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/21/jre/aarch64/linux/OpenJDK21U-jre_aarch64_linux_hotspot_21.0.12.1_1.tar.gz",
-   "https://mirror.nju.edu.cn/adoptium/21/jre/aarch64/linux/OpenJDK21U-jre_aarch64_linux_hotspot_21.0.12.1_1.tar.gz"
+   "https://mirror.nju.edu.cn/adoptium/21/jre/aarch64/linux/OpenJDK21U-jre_aarch64_linux_hotspot_21.0.12.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/21/jre/aarch64/linux/OpenJDK21U-jre_aarch64_linux_hotspot_21.0.12.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2821,7 +2967,8 @@
   "url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.12.1%2B1/OpenJDK21U-jre_x64_mac_hotspot_21.0.12.1_1.tar.gz",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/21/jre/x64/mac/OpenJDK21U-jre_x64_mac_hotspot_21.0.12.1_1.tar.gz",
-   "https://mirror.nju.edu.cn/adoptium/21/jre/x64/mac/OpenJDK21U-jre_x64_mac_hotspot_21.0.12.1_1.tar.gz"
+   "https://mirror.nju.edu.cn/adoptium/21/jre/x64/mac/OpenJDK21U-jre_x64_mac_hotspot_21.0.12.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/21/jre/x64/mac/OpenJDK21U-jre_x64_mac_hotspot_21.0.12.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2852,7 +2999,8 @@
   "url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.12.1%2B1/OpenJDK21U-jre_aarch64_mac_hotspot_21.0.12.1_1.tar.gz",
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/21/jre/aarch64/mac/OpenJDK21U-jre_aarch64_mac_hotspot_21.0.12.1_1.tar.gz",
-   "https://mirror.nju.edu.cn/adoptium/21/jre/aarch64/mac/OpenJDK21U-jre_aarch64_mac_hotspot_21.0.12.1_1.tar.gz"
+   "https://mirror.nju.edu.cn/adoptium/21/jre/aarch64/mac/OpenJDK21U-jre_aarch64_mac_hotspot_21.0.12.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/21/jre/aarch64/mac/OpenJDK21U-jre_aarch64_mac_hotspot_21.0.12.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3334,7 +3482,8 @@
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/25/jre/x64/windows/OpenJDK25U-jre_x64_windows_hotspot_25.0.4.1_1.zip",
    "https://mirror.nju.edu.cn/adoptium/25/jre/x64/windows/OpenJDK25U-jre_x64_windows_hotspot_25.0.4.1_1.zip",
-   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin25-binaries/jdk-25.0.4.1%2B1/OpenJDK25U-jre_x64_windows_hotspot_25.0.4.1_1.zip"
+   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin25-binaries/jdk-25.0.4.1%2B1/OpenJDK25U-jre_x64_windows_hotspot_25.0.4.1_1.zip",
+   "http://mirror.nju.edu.cn/adoptium/25/jre/x64/windows/OpenJDK25U-jre_x64_windows_hotspot_25.0.4.1_1.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3365,7 +3514,9 @@
   "url": "https://cdn.azul.com/zulu/bin/zulu25.36.205-ca-jre25.0.4.1-win_aarch64.zip",
   "mirrors": [
    "https://static.azul.com/zulu/bin/zulu25.36.205-ca-jre25.0.4.1-win_aarch64.zip",
-   "https://web.archive.org/web/20260822044656id_/https://cdn.azul.com/zulu/bin/zulu25.36.205-ca-jre25.0.4.1-win_aarch64.zip"
+   "https://web.archive.org/web/20260822044656id_/https://cdn.azul.com/zulu/bin/zulu25.36.205-ca-jre25.0.4.1-win_aarch64.zip",
+   "http://cdn.azul.com/zulu/bin/zulu25.36.205-ca-jre25.0.4.1-win_aarch64.zip",
+   "http://static.azul.com/zulu/bin/zulu25.36.205-ca-jre25.0.4.1-win_aarch64.zip"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3398,7 +3549,9 @@
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/25/jre/x64/linux/OpenJDK25U-jre_x64_linux_hotspot_25.0.4.1_1.tar.gz",
    "https://mirror.nju.edu.cn/adoptium/25/jre/x64/linux/OpenJDK25U-jre_x64_linux_hotspot_25.0.4.1_1.tar.gz",
    "https://mirrors.ustc.edu.cn/adoptium/releases/temurin25-binaries/jdk-25.0.4.1%2B1/OpenJDK25U-jre_x64_linux_hotspot_25.0.4.1_1.tar.gz",
-   "https://distfiles.gentoo.org/distfiles/7d/OpenJDK25U-jre_x64_linux_hotspot_25.0.4.1_1.tar.gz"
+   "https://distfiles.gentoo.org/distfiles/7d/OpenJDK25U-jre_x64_linux_hotspot_25.0.4.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/25/jre/x64/linux/OpenJDK25U-jre_x64_linux_hotspot_25.0.4.1_1.tar.gz",
+   "http://distfiles.gentoo.org/distfiles/7d/OpenJDK25U-jre_x64_linux_hotspot_25.0.4.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3430,7 +3583,8 @@
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/25/jre/aarch64/linux/OpenJDK25U-jre_aarch64_linux_hotspot_25.0.4.1_1.tar.gz",
    "https://mirror.nju.edu.cn/adoptium/25/jre/aarch64/linux/OpenJDK25U-jre_aarch64_linux_hotspot_25.0.4.1_1.tar.gz",
-   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin25-binaries/jdk-25.0.4.1%2B1/OpenJDK25U-jre_aarch64_linux_hotspot_25.0.4.1_1.tar.gz"
+   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin25-binaries/jdk-25.0.4.1%2B1/OpenJDK25U-jre_aarch64_linux_hotspot_25.0.4.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/25/jre/aarch64/linux/OpenJDK25U-jre_aarch64_linux_hotspot_25.0.4.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3462,7 +3616,8 @@
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/25/jre/x64/mac/OpenJDK25U-jre_x64_mac_hotspot_25.0.4.1_1.tar.gz",
    "https://mirror.nju.edu.cn/adoptium/25/jre/x64/mac/OpenJDK25U-jre_x64_mac_hotspot_25.0.4.1_1.tar.gz",
-   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin25-binaries/jdk-25.0.4.1%2B1/OpenJDK25U-jre_x64_mac_hotspot_25.0.4.1_1.tar.gz"
+   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin25-binaries/jdk-25.0.4.1%2B1/OpenJDK25U-jre_x64_mac_hotspot_25.0.4.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/25/jre/x64/mac/OpenJDK25U-jre_x64_mac_hotspot_25.0.4.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -3494,7 +3649,8 @@
   "mirrors": [
    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/25/jre/aarch64/mac/OpenJDK25U-jre_aarch64_mac_hotspot_25.0.4.1_1.tar.gz",
    "https://mirror.nju.edu.cn/adoptium/25/jre/aarch64/mac/OpenJDK25U-jre_aarch64_mac_hotspot_25.0.4.1_1.tar.gz",
-   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin25-binaries/jdk-25.0.4.1%2B1/OpenJDK25U-jre_aarch64_mac_hotspot_25.0.4.1_1.tar.gz"
+   "https://mirrors.ustc.edu.cn/adoptium/releases/temurin25-binaries/jdk-25.0.4.1%2B1/OpenJDK25U-jre_aarch64_mac_hotspot_25.0.4.1_1.tar.gz",
+   "http://mirror.nju.edu.cn/adoptium/25/jre/aarch64/mac/OpenJDK25U-jre_aarch64_mac_hotspot_25.0.4.1_1.tar.gz"
   ],
   "checksum": {
    "algo": "sha256",

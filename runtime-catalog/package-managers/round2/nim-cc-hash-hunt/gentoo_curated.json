@@ -1,0 +1,92 @@
+{
+ "mirror.ufs.ac.za": {
+  "url": "http://mirror.ufs.ac.za/gentoo/distfiles/7c/nim-2.2.10.tar.xz",
+  "bytes": 8287652,
+  "sha256": "7957b7ed004206bcf10bcc4f3b4744153878e62f2431552a9a8e9d3f40e8d5d5",
+  "match": true,
+  "region": "Africa",
+  "country": "South Africa",
+  "operator": "University of the Free State",
+  "base": "http://mirror.ufs.ac.za/gentoo/"
+ },
+ "ftp.jaist.ac.jp": {
+  "url": "http://ftp.jaist.ac.jp/pub/Linux/Gentoo/distfiles/7c/nim-2.2.10.tar.xz",
+  "bytes": 8287652,
+  "sha256": "7957b7ed004206bcf10bcc4f3b4744153878e62f2431552a9a8e9d3f40e8d5d5",
+  "match": true,
+  "region": "Asia",
+  "country": "Japan",
+  "operator": "JAIST (Japan Advanced Institute of Science and Technology)",
+  "base": "http://ftp.jaist.ac.jp/pub/Linux/Gentoo/"
+ },
+ "mirror.aarnet.edu.au": {
+  "url": "http://mirror.aarnet.edu.au/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz",
+  "bytes": 8287652,
+  "sha256": "7957b7ed004206bcf10bcc4f3b4744153878e62f2431552a9a8e9d3f40e8d5d5",
+  "match": true,
+  "region": "Australia and Oceania",
+  "country": "Australia",
+  "operator": "AARNet (Australian Academic and Research Network)",
+  "base": "http://mirror.aarnet.edu.au/pub/gentoo/"
+ },
+ "gentoo.c3sl.ufpr.br": {
+  "url": "http://gentoo.c3sl.ufpr.br/distfiles/7c/nim-2.2.10.tar.xz",
+  "bytes": 8287652,
+  "sha256": "7957b7ed004206bcf10bcc4f3b4744153878e62f2431552a9a8e9d3f40e8d5d5",
+  "match": true,
+  "region": "South America",
+  "country": "Brazil",
+  "operator": "C3SL, Federal University of Parana",
+  "base": "http://gentoo.c3sl.ufpr.br/"
+ },
+ "mirrors.mit.edu": {
+  "url": "http://mirrors.mit.edu/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz",
+  "bytes": 8287652,
+  "sha256": "7957b7ed004206bcf10bcc4f3b4744153878e62f2431552a9a8e9d3f40e8d5d5",
+  "match": true,
+  "region": "North America",
+  "country": "United States",
+  "operator": "Massachusetts Institute of Technology",
+  "base": "http://mirrors.mit.edu/gentoo-distfiles/"
+ },
+ "mirror.csclub.uwaterloo.ca": {
+  "url": "http://mirror.csclub.uwaterloo.ca/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz",
+  "bytes": 8287652,
+  "sha256": "7957b7ed004206bcf10bcc4f3b4744153878e62f2431552a9a8e9d3f40e8d5d5",
+  "match": true,
+  "region": "North America",
+  "country": "Canada",
+  "operator": "University of Waterloo Computer Science Club",
+  "base": "http://mirror.csclub.uwaterloo.ca/gentoo-distfiles/"
+ },
+ "ftp.lysator.liu.se": {
+  "url": "http://ftp.lysator.liu.se/gentoo/distfiles/7c/nim-2.2.10.tar.xz",
+  "bytes": 8287652,
+  "sha256": "7957b7ed004206bcf10bcc4f3b4744153878e62f2431552a9a8e9d3f40e8d5d5",
+  "match": true,
+  "region": "Europe",
+  "country": "Sweden",
+  "operator": "Lysator, Linkoping University",
+  "base": "http://ftp.lysator.liu.se/gentoo/"
+ },
+ "www.mirrorservice.org": {
+  "url": "http://www.mirrorservice.org/sites/distfiles.gentoo.org/distfiles/7c/nim-2.2.10.tar.xz",
+  "bytes": 8287652,
+  "sha256": "7957b7ed004206bcf10bcc4f3b4744153878e62f2431552a9a8e9d3f40e8d5d5",
+  "match": true,
+  "region": "Europe",
+  "country": "United Kingdom",
+  "operator": "The UK Mirror Service (University of Kent)",
+  "base": "http://www.mirrorservice.org/sites/distfiles.gentoo.org/"
+ },
+ "ftp.snt.utwente.nl": {
+  "url": "http://ftp.snt.utwente.nl/pub/os/linux/gentoo/distfiles/7c/nim-2.2.10.tar.xz",
+  "bytes": 8287652,
+  "sha256": "7957b7ed004206bcf10bcc4f3b4744153878e62f2431552a9a8e9d3f40e8d5d5",
+  "match": true,
+  "region": "Europe",
+  "country": "Netherlands",
+  "operator": "SNT, Universiteit Twente",
+  "base": "http://ftp.snt.utwente.nl/pub/os/linux/gentoo/"
+ }
+}

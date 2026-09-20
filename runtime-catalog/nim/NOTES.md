@@ -262,3 +262,119 @@ support on 7 and 8.1), adds a current `cacert.pem` there (std/net looks for it
 beside the program or on PATH; dlls.zip's is from 2021), and puts `bin` on the
 app's PATH (`launch.path_prepend`). dlls.zip's OpenSSL is 1.1.1k (2021),
 what Nim still ships.
+
+
+## Mirror hunt round 3 (2026-09-20, hash-addressed / distro-archive pass)
+
+Goal for this round: mirrors found by **content hash** rather than by file name,
+and mirrors reachable over **plain `http://`** (nim had exactly one such URL
+before: distcache.freebsd.org for 2.2.12). Work and evidence:
+`catalog/package-managers/round2/nim-cc-hash-hunt/`.
+
+### The finding: Debian's archive carries early nim tarballs unmodified
+
+`snapshot.debian.org` is a permanent, content-addressed archive
+(`/file/<sha1>`) of every source file Debian has ever shipped -- unlike Gentoo,
+FreeBSD, MacPorts or Alpine, it is never pruned to "whatever is packaged now".
+Its `/mr/package/nim/<version>/srcfiles?fileinfo=1` API was read for all 37
+upstream versions present in both Debian and this catalogue. Debian renames the
+file (`nim-0.12.0.tar.xz` -> `nim_0.12.0.orig.tar.xz`), and for most of nim's
+history it also **repacks** it -- a git export bundling csources/nimble, 30-130 MB
+against upstream's 3-10 MB. Those were rejected on size, not assumed equivalent.
+Seven versions matched our size exactly: **0.12.0, 0.13.0, 0.15.0, 0.15.2,
+0.16.0, 0.17.2, 2.2.12**. Per MIRROR-HUNT-2's renamed-file rule, all seven were
+then downloaded in full from Debian *and* from nim-lang.org in the same pass and
+compared: **7/7 byte-identical**, and for the three that carry a vendor checksum
+(0.16.0, 0.17.2, 2.2.12) the vendor download also matched `releases.json`
+exactly.
+
+Those same `.orig.tar.xz` files are then reachable over **plain http** from the
+ordinary Debian/Ubuntu pools, which is what an XP/Vista machine needs:
+
+- `deb.debian.org` -- 2.2.12 (the live pool, so current version only)
+- `archive.debian.org` -- 0.16.0 (end-of-life suites)
+- `archive.ubuntu.com` -- 0.12.0, 0.17.2
+- `old-releases.ubuntu.com` -- 0.13.0, 0.15.2, 0.17.2
+- `ports.ubuntu.com` -- 0.12.0, 0.17.2
+
+All five serve the identical bytes over both http and https, 404 a bogus pool
+filename, and one file per host was downloaded in full over **http** and
+sha256-verified. `snapshot.debian.org` itself also works over plain http
+(verified by a full download of nim_0.15.0.orig.tar.xz). **0.15.0 exists on no
+other mirror at all**, snapshot included -- it is the only source for it.
+
+### NetBSD pkgsrc distfiles
+
+`ftp.netbsd.org/pub/pkgsrc/distfiles/` is flat (lang/nim sets no `DIST_SUBDIR`)
+and plain-http-capable, but pruned to the currently-packaged version: all 112
+nim source filenames were probed and exactly one, **nim-2.0.4.tar.xz**, is
+present. HEAD size match over both protocols, real 404 on a bogus name
+(bozohttpd), full download over http, sha256 matched the vendor checksum.
+
+### Gentoo distfiles mirror network (plain http, nine institutions)
+
+Round 2 recorded only `distfiles.gentoo.org` itself. All 273 reachable
+http/https roots on `api.gentoo.org/mirrors/distfiles.xml` were probed for both
+nim tarballs plus a bogus filename-hash control: **194 serve both with an exact
+size match and a real 404**. Adding all of them would put ~200 URLs on two
+entries, so nine university / NREN hosts were selected, one or two per region --
+University of the Free State (ZA), JAIST (JP), AARNet (AU), C3SL/UFPR (BR), MIT
+(US), University of Waterloo CSC (CA), Lysator/Linkoping (SE), UK Mirror Service
+(GB), SNT/Universiteit Twente (NL). `nim-2.2.10.tar.xz` was downloaded in full
+over **plain http** from all nine and its sha256 matched the vendor checksum
+9/9. Only the http URLs were applied (https on these hosts adds nothing over
+distfiles.gentoo.org). This is the only plain-http source that exists for
+nim 2.2.10. The full 194-host result is kept in `gentoo_network.json`.
+
+### Rejected this round (detail in mirrors.json)
+
+- **Software Heritage** (`archive.softwareheritage.org/api/1/content/sha256:<hex>/`),
+  the most promising hash-indexed lead: unusable from here. Every request,
+  including a bogus all-zero-hash control, returns HTTP 200 with an "Anubis"
+  JavaScript bot challenge instead of JSON. Soft-200 catch-all; blocked, not
+  proven absent.
+- **Guix** (`ci.guix.gnu.org/file/<name>/sha256/<nix-base32>`): clean 404 for all
+  104 hashed nim source files. Guix's nim package builds from a git checkout,
+  so its content-addressed cache has nothing to hold.
+- **Alpine** `distfiles.alpinelinux.org/distfiles/edge/`: 112/112 clean 404.
+- **Void** `sources.voidlinux.org`: 112/112 404 -- Void fetches
+  `github.com/nim-lang/Nim/archive/v<ver>.tar.gz`, a GitHub-generated archive
+  with different bytes, not nim-lang.org's release tarball.
+- **nim-lang.org has no mirror or alternate-download list** (the task asked):
+  install.html, download.html, install_unix.html and install_windows.html were
+  all fetched; every link points at nim-lang.org or github.com and the word
+  "mirror" does not appear. The vendor offers no plain-http path either --
+  `http://nim-lang.org/download/...` 301s to https (Cloudflare).
+
+### Still true after three rounds
+
+**No mirror exists anywhere for nim's platform binaries.** Every host confirmed
+so far (Gentoo, FreeBSD, MacPorts, Nix, and now Debian/Ubuntu/NetBSD) is a
+*source* cache, because every one of them builds Nim from source. The 109
+Windows archives, 105 Linux archives, 6 macOS archives, 10 Windows installers
+and 118 `nightlies` assets remain vendor-only; the Wayback Machine (already
+being swept by `tools/wayback_retry.py`) is the only remaining avenue for them.
+
+### Coverage
+
+releases.json 21/460 (4.6%) -> **26/460 (5.7%)**; entries with at least one
+plain-`http://` URL 1/460 -> **9/460 (2.0%)**. download_plan.json 11/80 (13.8%)
+-> **19/80 (23.8%)**, plain-http 0/80 -> **11/80 (13.8%)**.
+download_plan_majors.json unchanged at 6/21 (the versions found are not the
+newest patch in their major). 52 mirror links applied via `tools/add_mirrors.py`
+(`updates.jsonl` and `gentoo_updates.jsonl` in this hunt's folder); as in round
+2 these were applied directly, independently of `nim/extra_mirrors.py`, which
+still needs re-running after any future `scrape.py`.
+
+Restricted to binaries the resolver can offer, nothing moved: Windows archives
+2/109, Linux archives 2/105, macOS archives 0/6, Windows installers 0/10,
+nightlies 0/118. Every gain is on `kind: source` entries (which
+`download_plan.json` relabels per OS as the build-from-source fallback, which is
+why the plan number moved more than releases.json did).
+
+### Budget
+
+0 of the 5 allotted web searches used -- every lead was reached by fetching a
+known URL or reading package metadata from GitHub. 24 files downloaded in full
+for hash verification (all 2.9-10.3 MB, well under the 60 MB cap), all deleted
+immediately afterwards.

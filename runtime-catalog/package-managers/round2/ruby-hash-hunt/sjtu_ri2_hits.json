@@ -1,0 +1,1280 @@
+[
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-3.1.7-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-3.1.7-1-x64.7z",
+  "size": 13208751,
+  "final_cl": "13208751"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-3.1.7-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-3.1.7-1-x64.exe",
+  "size": 15120176,
+  "final_cl": "15120176"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-devkit-3.1.7-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-devkit-3.1.7-1-x64.exe",
+  "size": 135542200,
+  "final_cl": "135542200"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-3.1.7-1-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-3.1.7-1-x86.7z",
+  "size": 13118160,
+  "final_cl": "13118160"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-3.1.7-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-3.1.7-1-x86.exe",
+  "size": 15056080,
+  "final_cl": "15056080"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-devkit-3.1.7-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-devkit-3.1.7-1-x86.exe",
+  "size": 131616280,
+  "final_cl": "131616280"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-3.2.7-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-3.2.7-1-x64.7z",
+  "size": 13680541,
+  "final_cl": "13680541"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-3.2.7-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-3.2.7-1-x64.exe",
+  "size": 15580448,
+  "final_cl": "15580448"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-devkit-3.2.7-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-devkit-3.2.7-1-x64.exe",
+  "size": 135426008,
+  "final_cl": "135426008"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-3.2.7-1-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-3.2.7-1-x86.7z",
+  "size": 13683885,
+  "final_cl": "13683885"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-3.2.7-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-3.2.7-1-x86.exe",
+  "size": 15614160,
+  "final_cl": "15614160"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-devkit-3.2.7-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-devkit-3.2.7-1-x86.exe",
+  "size": 149124304,
+  "final_cl": "149124304"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-3.2.8-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-3.2.8-1-x64.7z",
+  "size": 13679122,
+  "final_cl": "13679122"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-3.2.8-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-3.2.8-1-x64.exe",
+  "size": 15578856,
+  "final_cl": "15578856"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-devkit-3.2.8-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-devkit-3.2.8-1-x64.exe",
+  "size": 136442488,
+  "final_cl": "136442488"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-3.2.8-1-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-3.2.8-1-x86.7z",
+  "size": 13684201,
+  "final_cl": "13684201"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-3.2.8-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-3.2.8-1-x86.exe",
+  "size": 15615704,
+  "final_cl": "15615704"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-devkit-3.2.8-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-devkit-3.2.8-1-x86.exe",
+  "size": 132994664,
+  "final_cl": "132994664"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-3.2.9-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-3.2.9-1-x64.7z",
+  "size": 13849066,
+  "final_cl": "13849066"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-3.2.9-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-3.2.9-1-x64.exe",
+  "size": 15744832,
+  "final_cl": "15744832"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-devkit-3.2.9-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-devkit-3.2.9-1-x64.exe",
+  "size": 148056216,
+  "final_cl": "148056216"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-3.2.9-1-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-3.2.9-1-x86.7z",
+  "size": 13820380,
+  "final_cl": "13820380"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-3.2.9-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-3.2.9-1-x86.exe",
+  "size": 15751984,
+  "final_cl": "15751984"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-devkit-3.2.9-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-devkit-3.2.9-1-x86.exe",
+  "size": 137510296,
+  "final_cl": "137510296"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-3.2.10-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-3.2.10-1-x64.7z",
+  "size": 13854048,
+  "final_cl": "13854048"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-3.2.10-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-3.2.10-1-x64.exe",
+  "size": 15988776,
+  "final_cl": "15988776"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-devkit-3.2.10-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-devkit-3.2.10-1-x64.exe",
+  "size": 148665352,
+  "final_cl": "148665352"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-3.2.10-1-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-3.2.10-1-x86.7z",
+  "size": 13870309,
+  "final_cl": "13870309"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-3.2.10-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-3.2.10-1-x86.exe",
+  "size": 16044016,
+  "final_cl": "16044016"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-devkit-3.2.10-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-devkit-3.2.10-1-x86.exe",
+  "size": 142311592,
+  "final_cl": "142311592"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-3.2.11-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-3.2.11-1-x64.7z",
+  "size": 13834226,
+  "final_cl": "13834226"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-3.2.11-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-3.2.11-1-x64.exe",
+  "size": 15971312,
+  "final_cl": "15971312"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-devkit-3.2.11-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-devkit-3.2.11-1-x64.exe",
+  "size": 149145888,
+  "final_cl": "149145888"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-3.2.11-1-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-3.2.11-1-x86.7z",
+  "size": 13871379,
+  "final_cl": "13871379"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-3.2.11-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-3.2.11-1-x86.exe",
+  "size": 16048680,
+  "final_cl": "16048680"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-devkit-3.2.11-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-devkit-3.2.11-1-x86.exe",
+  "size": 142510424,
+  "final_cl": "142510424"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-3.3.8-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-3.3.8-1-x64.7z",
+  "size": 14929258,
+  "final_cl": "14929258"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-3.3.8-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-3.3.8-1-x64.exe",
+  "size": 16913872,
+  "final_cl": "16913872"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-devkit-3.3.8-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-devkit-3.3.8-1-x64.exe",
+  "size": 142464824,
+  "final_cl": "142464824"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-3.3.8-1-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-3.3.8-1-x86.7z",
+  "size": 14937973,
+  "final_cl": "14937973"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-3.3.8-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-3.3.8-1-x86.exe",
+  "size": 16915072,
+  "final_cl": "16915072"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-devkit-3.3.8-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-devkit-3.3.8-1-x86.exe",
+  "size": 136720792,
+  "final_cl": "136720792"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-3.3.9-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-3.3.9-1-x64.7z",
+  "size": 15005557,
+  "final_cl": "15005557"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-3.3.9-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-3.3.9-1-x64.exe",
+  "size": 16988088,
+  "final_cl": "16988088"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-devkit-3.3.9-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-devkit-3.3.9-1-x64.exe",
+  "size": 149161464,
+  "final_cl": "149161464"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-3.3.9-1-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-3.3.9-1-x86.7z",
+  "size": 14974445,
+  "final_cl": "14974445"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-3.3.9-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-3.3.9-1-x86.exe",
+  "size": 16952536,
+  "final_cl": "16952536"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-devkit-3.3.9-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-devkit-3.3.9-1-x86.exe",
+  "size": 138752520,
+  "final_cl": "138752520"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-3.3.10-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-3.3.10-1-x64.7z",
+  "size": 15049824,
+  "final_cl": "15049824"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-3.3.10-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-3.3.10-1-x64.exe",
+  "size": 17135192,
+  "final_cl": "17135192"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-devkit-3.3.10-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-devkit-3.3.10-1-x64.exe",
+  "size": 151108664,
+  "final_cl": "151108664"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-3.3.10-1-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-3.3.10-1-x86.7z",
+  "size": 15025911,
+  "final_cl": "15025911"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-3.3.10-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-3.3.10-1-x86.exe",
+  "size": 17104104,
+  "final_cl": "17104104"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-devkit-3.3.10-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-devkit-3.3.10-1-x86.exe",
+  "size": 139430944,
+  "final_cl": "139430944"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-3.3.11-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-3.3.11-1-x64.7z",
+  "size": 15012449,
+  "final_cl": "15012449"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-3.3.11-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-3.3.11-1-x64.exe",
+  "size": 17238680,
+  "final_cl": "17238680"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-devkit-3.3.11-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-devkit-3.3.11-1-x64.exe",
+  "size": 150393104,
+  "final_cl": "150393104"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-3.3.11-1-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-3.3.11-1-x86.7z",
+  "size": 15031812,
+  "final_cl": "15031812"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-3.3.11-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-3.3.11-1-x86.exe",
+  "size": 17248080,
+  "final_cl": "17248080"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-devkit-3.3.11-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-devkit-3.3.11-1-x86.exe",
+  "size": 143700104,
+  "final_cl": "143700104"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-3.3.12-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-3.3.12-1-x64.7z",
+  "size": 14911393,
+  "final_cl": "14911393"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-3.3.12-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-3.3.12-1-x64.exe",
+  "size": 17139328,
+  "final_cl": "17139328"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-devkit-3.3.12-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-devkit-3.3.12-1-x64.exe",
+  "size": 146192640,
+  "final_cl": "146192640"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-3.3.12-1-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-3.3.12-1-x86.7z",
+  "size": 15097846,
+  "final_cl": "15097846"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-3.3.12-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-3.3.12-1-x86.exe",
+  "size": 17336448,
+  "final_cl": "17336448"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-devkit-3.3.12-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-devkit-3.3.12-1-x86.exe",
+  "size": 148620408,
+  "final_cl": "148620408"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-x64.7z",
+  "size": 15842915,
+  "final_cl": "15842915"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-x64.exe",
+  "size": 19955664,
+  "final_cl": "19955664"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-devkit-3.4.1-2-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-devkit-3.4.1-2-x64.exe",
+  "size": 145836552,
+  "final_cl": "145836552"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-arm.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-arm.7z",
+  "size": 15324261,
+  "final_cl": "15324261"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-arm.exe",
+  "size": 19974464,
+  "final_cl": "19974464"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-devkit-3.4.1-2-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-devkit-3.4.1-2-arm.exe",
+  "size": 232642432,
+  "final_cl": "232642432"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-x86.7z",
+  "size": 15857146,
+  "final_cl": "15857146"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-x86.exe",
+  "size": 19926936,
+  "final_cl": "19926936"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-devkit-3.4.1-2-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-devkit-3.4.1-2-x86.exe",
+  "size": 155755448,
+  "final_cl": "155755448"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-x64.7z",
+  "size": 15854585,
+  "final_cl": "15854585"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-x64.exe",
+  "size": 19966184,
+  "final_cl": "19966184"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-devkit-3.4.2-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-devkit-3.4.2-1-x64.exe",
+  "size": 146439032,
+  "final_cl": "146439032"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-arm.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-arm.7z",
+  "size": 15341112,
+  "final_cl": "15341112"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-arm.exe",
+  "size": 19989472,
+  "final_cl": "19989472"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-devkit-3.4.2-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-devkit-3.4.2-1-arm.exe",
+  "size": 233311848,
+  "final_cl": "233311848"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-x86.7z",
+  "size": 15866615,
+  "final_cl": "15866615"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-x86.exe",
+  "size": 19932384,
+  "final_cl": "19932384"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-devkit-3.4.2-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-devkit-3.4.2-1-x86.exe",
+  "size": 139109336,
+  "final_cl": "139109336"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-x64.7z",
+  "size": 15957446,
+  "final_cl": "15957446"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-x64.exe",
+  "size": 20173888,
+  "final_cl": "20173888"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-devkit-3.4.3-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-devkit-3.4.3-1-x64.exe",
+  "size": 147514544,
+  "final_cl": "147514544"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-arm.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-arm.7z",
+  "size": 15434451,
+  "final_cl": "15434451"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-arm.exe",
+  "size": 20198280,
+  "final_cl": "20198280"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-devkit-3.4.3-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-devkit-3.4.3-1-arm.exe",
+  "size": 238870528,
+  "final_cl": "238870528"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-x86.7z",
+  "size": 15966933,
+  "final_cl": "15966933"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-x86.exe",
+  "size": 20127392,
+  "final_cl": "20127392"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-devkit-3.4.3-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-devkit-3.4.3-1-x86.exe",
+  "size": 139391416,
+  "final_cl": "139391416"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-x64.7z",
+  "size": 16010049,
+  "final_cl": "16010049"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-x64.exe",
+  "size": 20355768,
+  "final_cl": "20355768"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-x64.7z",
+  "size": 16014520,
+  "final_cl": "16014520"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-x64.exe",
+  "size": 20354696,
+  "final_cl": "20354696"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-devkit-3.4.4-2-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-devkit-3.4.4-2-x64.exe",
+  "size": 150468272,
+  "final_cl": "150468272"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-devkit-3.4.4-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-devkit-3.4.4-1-x64.exe",
+  "size": 150470984,
+  "final_cl": "150470984"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-arm.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-arm.7z",
+  "size": 15460473,
+  "final_cl": "15460473"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-arm.exe",
+  "size": 20294240,
+  "final_cl": "20294240"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-arm.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-arm.7z",
+  "size": 15461896,
+  "final_cl": "15461896"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-arm.exe",
+  "size": 20290008,
+  "final_cl": "20290008"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-devkit-3.4.4-2-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-devkit-3.4.4-2-arm.exe",
+  "size": 239015248,
+  "final_cl": "239015248"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-devkit-3.4.4-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-devkit-3.4.4-1-arm.exe",
+  "size": 238979488,
+  "final_cl": "238979488"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-x86.7z",
+  "size": 16006130,
+  "final_cl": "16006130"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-x86.exe",
+  "size": 20322400,
+  "final_cl": "20322400"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-x86.7z",
+  "size": 16007026,
+  "final_cl": "16007026"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-x86.exe",
+  "size": 20323568,
+  "final_cl": "20323568"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-devkit-3.4.4-2-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-devkit-3.4.4-2-x86.exe",
+  "size": 141686584,
+  "final_cl": "141686584"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-devkit-3.4.4-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-devkit-3.4.4-1-x86.exe",
+  "size": 141715552,
+  "final_cl": "141715552"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-x64.7z",
+  "size": 16080999,
+  "final_cl": "16080999"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-x64.exe",
+  "size": 20449184,
+  "final_cl": "20449184"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-devkit-3.4.5-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-devkit-3.4.5-1-x64.exe",
+  "size": 151542336,
+  "final_cl": "151542336"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-arm.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-arm.7z",
+  "size": 15500377,
+  "final_cl": "15500377"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-arm.exe",
+  "size": 20327128,
+  "final_cl": "20327128"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-devkit-3.4.5-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-devkit-3.4.5-1-arm.exe",
+  "size": 197007824,
+  "final_cl": "197007824"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-x86.7z",
+  "size": 16053876,
+  "final_cl": "16053876"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-x86.exe",
+  "size": 20376840,
+  "final_cl": "20376840"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-devkit-3.4.5-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-devkit-3.4.5-1-x86.exe",
+  "size": 142138816,
+  "final_cl": "142138816"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-x64.7z",
+  "size": 16157942,
+  "final_cl": "16157942"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-x64.exe",
+  "size": 20621560,
+  "final_cl": "20621560"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-devkit-3.4.6-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-devkit-3.4.6-1-x64.exe",
+  "size": 153593920,
+  "final_cl": "153593920"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-arm.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-arm.7z",
+  "size": 15576583,
+  "final_cl": "15576583"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-arm.exe",
+  "size": 20501840,
+  "final_cl": "20501840"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-devkit-3.4.6-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-devkit-3.4.6-1-arm.exe",
+  "size": 198003048,
+  "final_cl": "198003048"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-x86.7z",
+  "size": 16132092,
+  "final_cl": "16132092"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-x86.exe",
+  "size": 20545672,
+  "final_cl": "20545672"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-devkit-3.4.6-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-devkit-3.4.6-1-x86.exe",
+  "size": 142893352,
+  "final_cl": "142893352"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-x64.7z",
+  "size": 16190958,
+  "final_cl": "16190958"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-x64.exe",
+  "size": 20680944,
+  "final_cl": "20680944"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-devkit-3.4.7-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-devkit-3.4.7-1-x64.exe",
+  "size": 154028448,
+  "final_cl": "154028448"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-arm.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-arm.7z",
+  "size": 15603014,
+  "final_cl": "15603014"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-arm.exe",
+  "size": 20565552,
+  "final_cl": "20565552"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-devkit-3.4.7-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-devkit-3.4.7-1-arm.exe",
+  "size": 199454216,
+  "final_cl": "199454216"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-x86.7z",
+  "size": 16155788,
+  "final_cl": "16155788"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-x86.exe",
+  "size": 20590488,
+  "final_cl": "20590488"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-devkit-3.4.7-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-devkit-3.4.7-1-x86.exe",
+  "size": 142960464,
+  "final_cl": "142960464"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-x64.7z",
+  "size": 16190213,
+  "final_cl": "16190213"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-x64.exe",
+  "size": 20690000,
+  "final_cl": "20690000"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-devkit-3.4.8-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-devkit-3.4.8-1-x64.exe",
+  "size": 152522288,
+  "final_cl": "152522288"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-arm.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-arm.7z",
+  "size": 15599521,
+  "final_cl": "15599521"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-arm.exe",
+  "size": 20565888,
+  "final_cl": "20565888"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-devkit-3.4.8-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-devkit-3.4.8-1-arm.exe",
+  "size": 196722536,
+  "final_cl": "196722536"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-x86.7z",
+  "size": 16163852,
+  "final_cl": "16163852"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-x86.exe",
+  "size": 20606856,
+  "final_cl": "20606856"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-devkit-3.4.8-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-devkit-3.4.8-1-x86.exe",
+  "size": 143061288,
+  "final_cl": "143061288"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-x64.7z",
+  "size": 16143639,
+  "final_cl": "16143639"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-x64.exe",
+  "size": 20733904,
+  "final_cl": "20733904"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-devkit-3.4.9-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-devkit-3.4.9-1-x64.exe",
+  "size": 153267328,
+  "final_cl": "153267328"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-arm.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-arm.7z",
+  "size": 15593681,
+  "final_cl": "15593681"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-arm.exe",
+  "size": 20552568,
+  "final_cl": "20552568"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-devkit-3.4.9-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-devkit-3.4.9-1-arm.exe",
+  "size": 197208600,
+  "final_cl": "197208600"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-x86.7z",
+  "size": 16170350,
+  "final_cl": "16170350"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-x86.exe",
+  "size": 20751920,
+  "final_cl": "20751920"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-devkit-3.4.9-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-devkit-3.4.9-1-x86.exe",
+  "size": 147295216,
+  "final_cl": "147295216"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-x64.7z",
+  "size": 16030994,
+  "final_cl": "16030994"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-x64.exe",
+  "size": 20525048,
+  "final_cl": "20525048"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-devkit-3.4.10-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-devkit-3.4.10-1-x64.exe",
+  "size": 149579016,
+  "final_cl": "149579016"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-arm.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-arm.7z",
+  "size": 15571694,
+  "final_cl": "15571694"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-arm.exe",
+  "size": 20660336,
+  "final_cl": "20660336"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-devkit-3.4.10-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-devkit-3.4.10-1-arm.exe",
+  "size": 198519584,
+  "final_cl": "198519584"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-x86.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-x86.7z",
+  "size": 16227009,
+  "final_cl": "16227009"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-x86.exe",
+  "size": 20800256,
+  "final_cl": "20800256"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-devkit-3.4.10-1-x86.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-devkit-3.4.10-1-x86.exe",
+  "size": 154417648,
+  "final_cl": "154417648"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-4.0.0-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-4.0.0-1-x64.7z",
+  "size": 17868072,
+  "final_cl": "17868072"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-4.0.0-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-4.0.0-1-x64.exe",
+  "size": 21717040,
+  "final_cl": "21717040"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-devkit-4.0.0-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-devkit-4.0.0-1-x64.exe",
+  "size": 144244600,
+  "final_cl": "144244600"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-4.0.0-1-arm.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-4.0.0-1-arm.7z",
+  "size": 17234775,
+  "final_cl": "17234775"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-4.0.0-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-4.0.0-1-arm.exe",
+  "size": 21589376,
+  "final_cl": "21589376"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-devkit-4.0.0-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-devkit-4.0.0-1-arm.exe",
+  "size": 194157792,
+  "final_cl": "194157792"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-4.0.1-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-4.0.1-1-x64.7z",
+  "size": 17827471,
+  "final_cl": "17827471"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-4.0.1-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-4.0.1-1-x64.exe",
+  "size": 21758048,
+  "final_cl": "21758048"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-devkit-4.0.1-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-devkit-4.0.1-1-x64.exe",
+  "size": 144505648,
+  "final_cl": "144505648"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-4.0.1-1-arm.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-4.0.1-1-arm.7z",
+  "size": 17250237,
+  "final_cl": "17250237"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-4.0.1-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-4.0.1-1-arm.exe",
+  "size": 21603080,
+  "final_cl": "21603080"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-devkit-4.0.1-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-devkit-4.0.1-1-arm.exe",
+  "size": 194299432,
+  "final_cl": "194299432"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-4.0.2-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-4.0.2-1-x64.7z",
+  "size": 17837498,
+  "final_cl": "17837498"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-4.0.2-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-4.0.2-1-x64.exe",
+  "size": 21774080,
+  "final_cl": "21774080"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-devkit-4.0.2-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-devkit-4.0.2-1-x64.exe",
+  "size": 144980480,
+  "final_cl": "144980480"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-4.0.2-1-arm.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-4.0.2-1-arm.7z",
+  "size": 17239894,
+  "final_cl": "17239894"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-4.0.2-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-4.0.2-1-arm.exe",
+  "size": 21581904,
+  "final_cl": "21581904"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-devkit-4.0.2-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-devkit-4.0.2-1-arm.exe",
+  "size": 194597632,
+  "final_cl": "194597632"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-4.0.3-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-4.0.3-1-x64.7z",
+  "size": 17709313,
+  "final_cl": "17709313"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-4.0.3-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-4.0.3-1-x64.exe",
+  "size": 21539560,
+  "final_cl": "21539560"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-devkit-4.0.3-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-devkit-4.0.3-1-x64.exe",
+  "size": 145070328,
+  "final_cl": "145070328"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-4.0.3-1-arm.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-4.0.3-1-arm.7z",
+  "size": 17222826,
+  "final_cl": "17222826"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-4.0.3-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-4.0.3-1-arm.exe",
+  "size": 21555224,
+  "final_cl": "21555224"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-devkit-4.0.3-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-devkit-4.0.3-1-arm.exe",
+  "size": 195969576,
+  "final_cl": "195969576"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-4.0.4-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-4.0.4-1-x64.7z",
+  "size": 17718828,
+  "final_cl": "17718828"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-4.0.4-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-4.0.4-1-x64.exe",
+  "size": 21546112,
+  "final_cl": "21546112"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-devkit-4.0.4-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-devkit-4.0.4-1-x64.exe",
+  "size": 143908304,
+  "final_cl": "143908304"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-4.0.4-1-arm.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-4.0.4-1-arm.7z",
+  "size": 17221871,
+  "final_cl": "17221871"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-4.0.4-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-4.0.4-1-arm.exe",
+  "size": 21688704,
+  "final_cl": "21688704"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-devkit-4.0.4-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-devkit-4.0.4-1-arm.exe",
+  "size": 196053224,
+  "final_cl": "196053224"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-4.0.5-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-4.0.5-1-x64.7z",
+  "size": 17720095,
+  "final_cl": "17720095"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-4.0.5-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-4.0.5-1-x64.exe",
+  "size": 21547768,
+  "final_cl": "21547768"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-devkit-4.0.5-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-devkit-4.0.5-1-x64.exe",
+  "size": 143923464,
+  "final_cl": "143923464"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-4.0.5-1-arm.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-4.0.5-1-arm.7z",
+  "size": 17225611,
+  "final_cl": "17225611"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-4.0.5-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-4.0.5-1-arm.exe",
+  "size": 21688616,
+  "final_cl": "21688616"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-devkit-4.0.5-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-devkit-4.0.5-1-arm.exe",
+  "size": 196091784,
+  "final_cl": "196091784"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-4.0.6-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-4.0.6-1-x64.7z",
+  "size": 17761794,
+  "final_cl": "17761794"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-4.0.6-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-4.0.6-1-x64.exe",
+  "size": 21602336,
+  "final_cl": "21602336"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-devkit-4.0.6-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-devkit-4.0.6-1-x64.exe",
+  "size": 144147000,
+  "final_cl": "144147000"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-4.0.6-1-arm.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-4.0.6-1-arm.7z",
+  "size": 17249041,
+  "final_cl": "17249041"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-4.0.6-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-4.0.6-1-arm.exe",
+  "size": 21718568,
+  "final_cl": "21718568"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-devkit-4.0.6-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-devkit-4.0.6-1-arm.exe",
+  "size": 196224832,
+  "final_cl": "196224832"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-4.0.7-1-x64.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-4.0.7-1-x64.7z",
+  "size": 17742012,
+  "final_cl": "17742012"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-4.0.7-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-4.0.7-1-x64.exe",
+  "size": 21594872,
+  "final_cl": "21594872"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-devkit-4.0.7-1-x64.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-devkit-4.0.7-1-x64.exe",
+  "size": 141377256,
+  "final_cl": "141377256"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-4.0.7-1-arm.7z",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-4.0.7-1-arm.7z",
+  "size": 17235217,
+  "final_cl": "17235217"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-4.0.7-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-4.0.7-1-arm.exe",
+  "size": 21710984,
+  "final_cl": "21710984"
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-devkit-4.0.7-1-arm.exe",
+  "mirror": "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-devkit-4.0.7-1-arm.exe",
+  "size": 194256056,
+  "final_cl": "194256056"
+ }
+]

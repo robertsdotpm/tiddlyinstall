@@ -1,0 +1,308 @@
+[
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/1.8/ruby-1.8.4.tar.gz",
+  "sha256": "71432841b3965b7ab2d83f0dc7c3049195ea4e9267a8dc2d825a8a0466982930",
+  "size": 4312965,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/954f56941529a9a5846a6821cc3d61f19486b0ff9acf5292674edba6bb916746f4df559f64a92f0289e84089605275a29f8e545b74489a10ca240c4cdad83ec0",
+  "sha512_cl": "4312965"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/1.8/ruby-1.8.6.tar.gz",
+  "sha256": "3ef37fb961d04471a1aef2c8079d6fab09932e3281d79859d5cd5d426bde0868",
+  "size": 4589394,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/d0169733e832f3f7c4cf6f6af6810d2baeb22d22ffd22810aefe621798fdbb18e2da38081f9ced090c60808f03333437612af74d555066fd9699dc2cd903cc96",
+  "sha512_cl": "4589394"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/1.8/ruby-1.8.7-p72.tar.gz",
+  "sha256": "e15ca005076f5d6f91fc856fdfbd071698a4cadac3c6e25855899dba1f6fc5ef",
+  "size": 4805594,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/885254836765e0ed58088f739f4c8e827bb7612b50780fb4c76cc0cc5f1cf9254163b40be709d4ac5521d382c791231e12e79ad43b22089fbeeac10a6fef209f",
+  "sha512_cl": "4805594"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/1.8/ruby-1.8.7-p357.tar.gz",
+  "sha256": "2fdcac4eb37b2eba1a4eef392a2922e07a9222fc86d781d92154d716434b962c",
+  "size": 4895136,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/a1bd5f588018dff56585497310e26584d8b7bf71df9a8b2af03e64a521b4a24fe761ede86c681d24574ed5c8a0682ff37f046df4e77a30388e0183ea2db9c57c",
+  "sha512_cl": "4895136"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/1.8/ruby-1.8.7-p371.tar.gz",
+  "sha256": "e60a322f8f2a616eba01651f5ab620e7e48e4f8adfe711aec61cc74a91d54d3c",
+  "size": 4902800,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/1c8639b4257e7201e3fa7acb85419acfc7d77bd0f444a11b5660ca17e16ba798c38ba1175710a48bd4e1b7b11a1015ad7743ae905ea3b56f9e6aa9b6e3b44298",
+  "sha512_cl": "4902800"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p551.tar.gz",
+  "sha256": "bb5be55cd1f49c95bb05b6f587701376b53d310eb1bb7c76fbd445a1c75b51e8",
+  "size": 12605119,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/be12adf581ee76af70db117b44c6647c1df3d28fffa1b3379c6067e4aa1fb523dae7c9b130a51dcdcff268a8ee21a3d74f6f946135fb3ac6b90664f0a9df4a08",
+  "sha512_cl": "12605119"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p647.tar.gz",
+  "sha256": "c88aaf5b4ec72e2cb7d290ff854f04d135939f6134f517002a9d65d5fc5e5bec",
+  "size": 13621258,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/988b694dc05a9b94b3626587abdb5c7bb6bd64e20c9f0cae1cfdab40896358696077ef975fbdfc6bcd0c108a21b9529d8f384df49902d3bc3c5cd0d640c5ac99",
+  "sha512_cl": "13621258"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p648.tar.gz",
+  "sha256": "8690bd6b4949c333b3919755c4e48885dbfed6fd055fe9ef89930bde0d2376f8",
+  "size": 13622628,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/285745fa359be124a7ee5eea7ec8ae23a76ebd1f768c1214291ef5a65991c5c4a6ed73eb89e42d2673b16ed9a726bebe7e336ac73082c657f4e460014db30c94",
+  "sha512_cl": "13622628"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.0.tar.gz",
+  "sha256": "3538ec1f6af96ed9deb04e0965274528162726cc9ba3625dcf23648df872d09d",
+  "size": 15076389,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/5a1a0b2fc4742d4552e50c50f57b33428c7b85df6fd61f9c4ff12d819515ff609e8aa17d5b7b06e37508553a3bf76377e291741cbb7db6e77220c88b29b83db0",
+  "sha512_cl": "15076389"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.1.tar.gz",
+  "sha256": "c843df31ae88ed49f5393142b02b9a9f5a6557453805fd489a76fbafeae88941",
+  "size": 15092388,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/3ff86f97952c1d6af47dc5b8956346353fd97987e518185e6a3639da30d33241cfce9b71aebdd08df7ce4330cd4943d06a55b3592e99b7d4ddfa9f4dd094a3cf",
+  "sha512_cl": "15092388"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.2.tar.gz",
+  "sha256": "f22a6447811a81f3c808d1c2a5ce3b5f5f0955c68c9a749182feb425589e6635",
+  "size": 15096114,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/8cbff7fffe55bd2842e0d271de010e4e16b4424bc7602363a2b3d2e1d1ee49cf23ea815fae57e422371b6aea545e0a8c8aaa96917e85a8e30aabaeb11a186f4e",
+  "sha512_cl": "15096114"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.3.tar.gz",
+  "sha256": "0818beb7b10ce9a058cd21d85cfe1dcd233e98b7342d32e9a5d4bebe98347f01",
+  "size": 15129183,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/364c391f669a37917ab1ee0c01d8430763d0c958c6d06fe5c3632d6e81316cafcae8b392b680d64c1692744585ac9286cb6408d7514e8a1f4dbd88ee314be99e",
+  "sha512_cl": "15129183"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.6.tar.gz",
+  "sha256": "1e1362ae7427c91fa53dc9c05aee4ee200e2d7d8970a891c5bd76bee28d28be4",
+  "size": 15141710,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/6563d8f39623ed5ba227725c54e630886412938bdf7c4cf03337d6c245af58d92274a098ea0e03bfd0e94970f4ee82909c366ae81db4b9317c10b92167bfc46d",
+  "sha512_cl": "15141710"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.7.tar.gz",
+  "sha256": "f59c1596ac39cc7e60126e7d3698c19f482f04060674fdfe0124e1752ba6dd81",
+  "size": 15151458,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/0e2ee9ebf47f10c43bf5f29a03a3655f3507800b1e091e0c7b2ac335f36d2bf05621383e31fae2659b9cb9cb3e0f2452698a269249da12710443ffa62e4e0a8d",
+  "sha512_cl": "15151458"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.10.tar.gz",
+  "sha256": "fb2e454d7a5e5a39eb54db0ec666f53eeb6edc593d1d2b970ae4d150b831dd20",
+  "size": 15165837,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/5f9c0cc3d10b4e04c63f001b4add782c34b9f260368f48b443b397cea57680d328f7c28cbb2a9be4c2f5acd114bac07dacb100d57018fa4d2a1792fc03083418",
+  "sha512_cl": "15165837"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.0.tar.gz",
+  "sha256": "7671e394abfb5d262fbcd3b27a71bf78737c7e9347fa21c39e58b0bb9c4840fc",
+  "size": 16494584,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/1ba0c68e1c8d2b60bbd1e218cf36463edbe34cf9418d7593702b631e68d02297465f752e71395f6cfa4104f4cd70a1eb44381ffb74bc7801758b830931fdcfc6",
+  "sha512_cl": "16494584"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.2.tar.gz",
+  "sha256": "5ffc0f317e429e6b29d4a98ac521c3ce65481bfd22a8cf845fa02a7b113d9b44",
+  "size": 16613636,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/0603f962980e14d206f8f1b3d5bb1b19d65f369bde71a686f3b4cef1d1dd09ef39afac3170947324f29a4ac17b99f9d406e5ca33b4950ece2e5baca0a42c791c",
+  "sha512_cl": "16613636"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.3.tar.gz",
+  "sha256": "df795f2f99860745a416092a4004b016ccf77e8b82dec956b120f18bdc71edce",
+  "size": 16626772,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/360ce8a99284c77b5789d292ac1669c299a66264691af7c29cb93df9b9136adbfa9965f3259eba561b082650770e2f5552f273ab8178e9c81f93bf0091a7056b",
+  "sha512_cl": "16626772"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.8.tar.gz",
+  "sha256": "8f37b9d8538bf8e50ad098db2a716ea49585ad1601bbd347ef84ca0662d9268a",
+  "size": 16681654,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/b9d355232c1ca3e17b5d4dcb70f0720da75b82787e45eb4ede281290bf42643665385e55428495eb55c17f744395130b4d64ef78ca66c5a5ecb9f4c3b732fdea",
+  "sha512_cl": "16681654"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.9.tar.gz",
+  "sha256": "2f47c77054fc40ccfde22501425256d32c4fa0ccaf9554f0d699ed436beca1a6",
+  "size": 16681209,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/34e440d529b3bb6b2a7c0e68e64c66c903b96b736ca527398d4493e7451353c08f7cc68b83c55011b53d76411c118fcb3c9e70c1a08439a591eeee98c430c297",
+  "sha512_cl": "16681209"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.0.tar.gz",
+  "sha256": "ba5ba60e5f1aa21b4ef8e9bf35b9ddb57286cb546aac4b5a28c71f459467e507",
+  "size": 17648682,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/914d0201ecefaeb67aca0531146d2e89900833d8d2a597ec8a19be94529ab6b4be367f9b0cee2868b407288896cc14b64d96150223cac0aef8aafc46fc3dd7cc",
+  "sha512_cl": "17648682"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.1.tar.gz",
+  "sha256": "b87c738cb2032bf4920fef8e3864dc5cf8eae9d89d8d523ce0236945c5797dcd",
+  "size": 17797997,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/7399d59b54764e02760ed6cac525a43c5e7212aebbbff8a04234dc45adbc0cd9fe1ff9a9328eefd38f02d3b6c5b2e3ca843808784755ff4e66ded624f55c150a",
+  "sha512_cl": "17797997"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.5.tar.gz",
+  "sha256": "5462f7bbb28beff5da7441968471ed922f964db1abdce82b8860608acc23ddcc",
+  "size": 17836997,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/cd6bbba4fb5a0ab5ce7aa6f3b89d021ea742c5aa7934e24b87554d10e2a3233d416051c11aee90f3d8714d168db523a7bf56ef4dafdd256fc8595169c2db496a",
+  "sha512_cl": "17836997"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.6.tar.gz",
+  "sha256": "8322513279f9edfa612d445bc111a87894fac1128eaa539301cebfc0dd51571e",
+  "size": 17840901,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/104553d888f7d49d1b8df0cff0a3e8aee3086183d75e1a88289730e34c2da669874d7abe83e84bf1b3be9a3337a34f19ea9f9dcfbf1f7fc1136bb8f922776ea4",
+  "sha512_cl": "17840901"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.7.tar.gz",
+  "sha256": "35cd349cddf78e4a0640d28ec8c7e88a2ae0db51ebd8926cd232bb70db2c7d7f",
+  "size": 17859100,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/1ceccf00981d6d60e7587e89a04cc028f976950313ee445db5afd03e323472d3e69a35423733b24f9cbd9729f034cf80d2233b5c159764839f5bee4ca7052fe0",
+  "sha512_cl": "17859100"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.8.tar.gz",
+  "sha256": "b5016d61440e939045d4e22979e04708ed6c8e1c52e7edb2553cf40b73c59abf",
+  "size": 17858806,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/43b02f2f9de6baf281f09a49fd07367127b4de1fb14473380d06bfa7667990d8f722ae2d33cf7d15b02f7e799515f21aebd308897c4c2a5461ebab4049d6c7ef",
+  "sha512_cl": "17858806"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.2.tar.gz",
+  "sha256": "93b9e75e00b262bc4def6b26b7ae8717efc252c47154abb7392e54357e6c8c9c",
+  "size": 14187859,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/96c236bdcd09b2e7cf429da631a487fc00f1255443751c03c8abeb4c2ce57079ad60ef566fecc0bf2c7beb2f080e2b8c4d30f321664547b2dc7d2a62aa1075ef",
+  "sha512_cl": "14187859"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.3.tar.gz",
+  "sha256": "fd0375582c92045aa7d31854e724471fb469e11a4b08ff334d39052ccaaa3a98",
+  "size": 14178729,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/e6859cee49f74bbfbcfc9dd583aa0f1af007354f9b56ec09959d24764e69ed6ea3d1d59a229ad25b451161a1ea2ac60e0621dbbcc484ad219eed9e55f3825e05",
+  "sha512_cl": "14178729"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.4.tar.gz",
+  "sha256": "254f1c1a79e4cc814d1e7320bc5bdd995dc57e08727d30a767664619a9c8ae5a",
+  "size": 14225338,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/fa1f6d3a4856046d4f9c3e652be225ae67f3e9ff0d117b6ed327d58cfb717fb9b1ce81d06a3302e486e7da0b5f67b16341666ceb02a554a428d221d008263ed8",
+  "sha512_cl": "14225338"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.5.tar.gz",
+  "sha256": "6737741ae6ffa61174c8a3dcdd8ba92bc38827827ab1d7ea1ec78bc3cefc5198",
+  "size": 14232887,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/39863b404b02bb3d2430fd19fb057bdded5e816842a1a1f00092de69cc360db836225b2186e18b6ee099ec5e8c60f89178a4297b2d221234b4962c70594c2b8e",
+  "sha512_cl": "14232887"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.5/ruby-2.5.1.tar.gz",
+  "sha256": "dac81822325b79c3ba9532b048c2123357d3310b2b40024202f360251d9829b1",
+  "size": 15923244,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/67badcd96fd3808cafd6bc86c970cd83aee7e5ec682f34e7353663d96211a6af314a4c818e537ec8ca51fbc0737aac4e28e0ebacf1a4d1e13db558b623a0f6b1",
+  "sha512_cl": "15923244"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.5/ruby-2.5.3.tar.gz",
+  "sha256": "9828d03852c37c20fa333a0264f2490f07338576734d910ee3fd538c9520846c",
+  "size": 15972577,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/d13dc55655076f7d983481155cccc06eb51c51c8eabfc3edcc22e1dabad931eb28c0b2a23d9589b5132faf18c3c0077f8719cf33a91d71bb72213d306edde1a0",
+  "sha512_cl": "15972577"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.5/ruby-2.5.5.tar.gz",
+  "sha256": "28a945fdf340e6ba04fc890b98648342e3cccfd6d223a48f3810572f11b2514c",
+  "size": 15996436,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/82d0ae019c02822668f7e8c7ad7f62170b059ea70a95a7a7cb26f809e2f2f0f5d25b5bb0ca147413ae42cf0fc5bf60329b56609c266556b1e9f04813c33bb4c9",
+  "sha512_cl": "15996436"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.2.tar.gz",
+  "sha256": "a0405d2bf2c2d2f332033b70dff354d224a864ab0edd462b7a413420453b49ab",
+  "size": 16777765,
+  "status": 301,
+  "cl": "0",
+  "loc": "/sha512/bc96a6793a1e3111598b82b0aad98dc5b465e39cdb5b788c4259818752e028a44545c6489c02c323db0f43a362c26f0900acfba0277d6e2201587d7252f6125f",
+  "sha512_cl": "16777765"
+ }
+]

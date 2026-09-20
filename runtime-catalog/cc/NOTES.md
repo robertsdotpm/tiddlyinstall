@@ -373,3 +373,94 @@ Re-run `python3 catalog/cc/extra_mirrors.py` after any future `scrape.py`
 run as before; this round's one new mirror was applied directly via
 `tools/add_mirrors.py` (see `cc_round2_updates.jsonl` in this folder) and
 is independent of that script.
+
+
+## Mirror hunt round 3 (2026-09-20, hash-addressed / distro-archive pass)
+
+Scope: the WinLibs / w64devkit / LLVM-release groups that rounds 1 and 2 left
+unmirrored, approached by **content hash** this time. Work and evidence:
+`catalog/package-managers/round2/nim-cc-hash-hunt/`.
+
+### Hash-addressed lookup works for GCC once you supply the hash
+
+GCC publishes no checksum, so every `gcc/source` entry has `checksum: null` --
+which is why the round-2 Nix sweep, which only used entries that *had* a
+catalogue checksum, never looked at them. Using the runtimes store's own pins
+(`store/sha256-local.json`, 278 locally-hashed files) as the lookup key instead,
+all 84 cc/nim entries with such a pin were swept against
+`tarballs.nixos.org/sha256/<hex>`: **5 hits, all GCC source** -- 4.9.4, 5.5.0,
+6.5.0, 7.5.0 and 15.3.0. That is a useful set: the first four had been pruned
+from the Gentoo tree, so they were the only GCC entries in the catalogue with
+**no corroborating hash at all**. Nix's canonical `sha512/<hex>` redirect target
+for each is now recorded as `checksum_corroboration`. The cache works over plain
+http as well as https; `gcc-7.5.0.tar.xz` (59.9 MiB, just under the sample cap)
+was downloaded in full over **http** and its sha256 matched the store pin exactly.
+
+### One new github-release mirror, and one that looks real and is not
+
+Three CN university mirrors not previously tested turned out to carry
+`github-release/llvm/llvm-project/`: **mirrors.bfsu.edu.cn**,
+**mirrors.nyist.edu.cn** and **mirror.lzu.edu.cn** (lzu is the only host found
+anywhere that also carries `brechtsanders/winlibs_mingw`). All three hold the
+same rolling window as the already-confirmed NJU mirror -- the newest LLVM tag
+only -- so they add redundancy, not coverage.
+
+Only **mirrors.bfsu.edu.cn** is usable, and the reason is worth recording as a
+method note. On nyist and lzu a HEAD returns **200 with the exact vendor
+`Content-Length`**, over plain http too, and a bogus path in the same directory
+404s -- a HEAD-only check would have confirmed both. A real GET 302s to
+`/testpow/?url=...`, an nginx proof-of-work bot challenge no plain HTTP client
+passes. Both rejected. BFSU serves real bytes: the first 1 MiB of
+`LLVM-23.1.1-Linux-X64.tar.xz` fetched by `Range` is byte-identical to GitHub's
+asset, and the sibling `llvm_man_pages-23.1.1.tar.xz` (357 KB) downloaded in
+full matches GitHub's digest `66f368b2...708427349`. BFSU is https-only (http
+301s). Applied to its 4 matching entries, all of which NJU already covered.
+
+### Rejected / confirmed absent
+
+- **mirrors.huaweicloud.com/github-release/**: soft-200 catch-all -- a bogus
+  release directory and a bogus file name both 200, and a HEAD on a real
+  `.tar.xz` returns `Content-Type: text/html` (the Angular portal shell).
+- **No github-release tree at all**: mirrors.cloud.tencent.com, mirrors.aliyun.com,
+  mirrors.zju.edu.cn, mirrors.pku.edu.cn, mirrors.hit.edu.cn, mirrors.xjtu.edu.cn
+  (404); mirrors.jlu.edu.cn (302 loop); mirrors.sustech.edu.cn (302s to TUNA, no
+  independent copy); mirrors.cqupt.edu.cn (503) and mirror.redrock.team (301s to
+  it); mirror.sjtu.edu.cn ("No route for github-release" -- S3-like backend, not
+  browsable); mirrors.chzu.edu.cn does not resolve.
+- **Gentoo cannot help any cc binary entry**: `llvm-core/llvm`'s Manifest holds
+  only `llvm-project-<ver>.src.tar.xz` plus manpage/patchset archives. Gentoo
+  builds LLVM from source and carries none of the `clang+llvm-*` / `LLVM-*.exe`
+  release assets, so the 147-host Gentoo distfiles mirror network is not a lead
+  for this runtime.
+- **Buildroot / Yocto / OpenWrt flat source mirrors**: every unmirrored cc file
+  name (1184 of them) was HEAD-probed against `sources.buildroot.net`,
+  `downloads.yoctoproject.org/mirror/sources/` and `sources.openwrt.org` --
+  **3555/3555 clean 404**, controls included. These caches hold the *source*
+  tarballs those build systems fetch; they carry none of the catalogue's
+  prebuilt WinLibs / w64devkit / LLVM release assets.
+- **Software Heritage**: same Anubis soft-200 challenge as recorded under nim.
+- **w64devkit**: still nothing outside its canonical GitHub release. Absent
+  (404) from bfsu, nyist and iscas this round, on top of nju/tuna/ustc/hust in
+  rounds 1-2. Three rounds, no mirror.
+
+### Coverage
+
+No change in entry counts: releases.json stays at **232/1416 (16.4%)** and
+download_plan_majors.json at **88/186 (47.3%)**, because both new hosts cover
+files that were already mirrored. What did change is evidence quality: 5 GCC
+entries gained a hash-addressed mirror and 4 of them gained their first
+independent checksum. 18 mirror links and 5 `checksum_corroboration` entries
+applied via `tools/add_mirrors.py`
+(`package-managers/round2/nim-cc-hash-hunt/updates.jsonl`).
+
+Note for the record: cc was *not* starting from zero plain-http URLs -- the 13
+`gcc/source` entries already carry `http://mirror.lyrahosting.com/gnu/gcc/...`
+from the round-1 GNU-mirror pass (16 such URLs). The Nix http URLs added here
+land on 5 of those same entries, so the plain-http entry count is unchanged at
+13/1416.
+
+### Budget
+
+0 of the 4 allotted web searches used. One file downloaded in full
+(gcc-7.5.0.tar.xz, 59.9 MiB) plus one 357 KB and one 1 MiB range request; all
+deleted.

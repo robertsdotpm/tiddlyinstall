@@ -1,0 +1,4062 @@
+[
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.1.9/ruby-2.1.9-ubuntu-22.04-x64.tar.gz",
+  "sha256": "557cf1ab65d679ffe45234aeb5a7f1f0e4fa3a53e2e7cdc17c477dc793fc1c98",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.1.9/ruby-2.1.9-ubuntu-24.04-x64.tar.gz",
+  "sha256": "51b4be961ac0fdc850a2ed82af52fd05ef41d14c4b39aea5727ae60106e96f5a",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.2.10/ruby-2.2.10-ubuntu-22.04-x64.tar.gz",
+  "sha256": "71cf8c2d4b42a9fcddd1a09edff8f107dcb5772b4180c89fa04b63b8288b97a7",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.2.10/ruby-2.2.10-ubuntu-24.04-x64.tar.gz",
+  "sha256": "bf58fc65859f1af2b847af93c77d4b34c7483072437f004facba2261911c89b8",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.0/ruby-2.3.0-ubuntu-22.04-x64.tar.gz",
+  "sha256": "c5f6578d984012593c690e2bdd65473c6956f2c0fafa2a1b918c000b6454cf3d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.0/ruby-2.3.0-ubuntu-24.04-x64.tar.gz",
+  "sha256": "7253412b38c929dda53ff8b301d8ab306722c66894408179d048cea99e0d6c37",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.1/ruby-2.3.1-ubuntu-22.04-x64.tar.gz",
+  "sha256": "bbe0feaab509c98232977e4c208392761f4a388f08338bb397db8271cc8b9c2b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.1/ruby-2.3.1-ubuntu-24.04-x64.tar.gz",
+  "sha256": "125cc8616e48ea373cfdc99a4eb4c93a4738e62ea47c10acdd1fb3f21ea3c0c5",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.2/ruby-2.3.2-ubuntu-22.04-x64.tar.gz",
+  "sha256": "daf801436e00a34b465fbda1599d0d4fd6151dabe5b49e87c86b944a6cac0f0f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.2/ruby-2.3.2-ubuntu-24.04-x64.tar.gz",
+  "sha256": "605581ad85182304ec04e4e05f68e8745a72279d214719d132d9b31eca67891c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.3/ruby-2.3.3-ubuntu-22.04-x64.tar.gz",
+  "sha256": "0adbcadb060a1176d45b81913a2914fd17afb0055ff9c0432901fbcc5e2b92e3",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.3/ruby-2.3.3-ubuntu-24.04-x64.tar.gz",
+  "sha256": "a197c1ba13f63980c4fcb5df4512cbac8602aea4eb02001b739f8e9893b854f9",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.4/ruby-2.3.4-ubuntu-22.04-x64.tar.gz",
+  "sha256": "7d71ff6df7c7e4f376d65be71941b23c1e9f06ec6e45671b280c383ccd9ed37b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.4/ruby-2.3.4-ubuntu-24.04-x64.tar.gz",
+  "sha256": "6e55230a6697314edb43984a041d86e9a22f3970e9219a535198e84bfdb160bc",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.5/ruby-2.3.5-ubuntu-22.04-x64.tar.gz",
+  "sha256": "d8cc9920e1eeb53fcea7004de8af39ffe572adec9f3f5d65b726af1e8145bcd8",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.5/ruby-2.3.5-ubuntu-24.04-x64.tar.gz",
+  "sha256": "49bf262cc25fd48ed58116d5e93624799a558689c22d6182baedf7de7bb42d37",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.5/ruby-2.3.5-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "dc31f1e48b41d26cd82bb2147bb13b674b16ab65e50d0eb4e8eec1b4c004bc79",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.5/ruby-2.3.5-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "b8bf67a8810c8c08494c1e06dfc39a76e6978a8842399944b7f24f72cefd0551",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.6/ruby-2.3.6-ubuntu-22.04-x64.tar.gz",
+  "sha256": "ba9371336b96e0388154fbe34a058eb42b1e11d1cfb95739c9350eef921213f3",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.6/ruby-2.3.6-ubuntu-24.04-x64.tar.gz",
+  "sha256": "a8e23f16b15c0bfe316ba6fe323afec612e2456d3212337a2ec8be1353e2878c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.6/ruby-2.3.6-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "d8fc8a68455022137683bba56bf8515c3c9b7d324f62131f23418a4ef3144427",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.6/ruby-2.3.6-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "f668a50d304c14fb0b7da0a160645ef790365594a848d899cfbf8839d458948b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.7/ruby-2.3.7-ubuntu-22.04-x64.tar.gz",
+  "sha256": "51d18f80ed6ebb6c7c987dc55ce275ec4e80ae620511688957059d2b7c1c7e6c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.7/ruby-2.3.7-ubuntu-24.04-x64.tar.gz",
+  "sha256": "e6565237a1ee51c9c07f8274cc0e127d48112501efa39e4109193e0dc1a6c670",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.7/ruby-2.3.7-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "a6efa16d769eb987d5954b3fe18118023f7084bebc60a599983f40f78b0dce8e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.7/ruby-2.3.7-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "a7b9dd3737532ef7e092a65e7cedb4891a7e61e6d020500f4c7d1811f15f6af3",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.8/ruby-2.3.8-ubuntu-22.04-x64.tar.gz",
+  "sha256": "1ecd5413eff71f16ba6fd24a1db0a3139683bf163aab3a16cee2ce8e5d97ccc9",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.8/ruby-2.3.8-ubuntu-24.04-x64.tar.gz",
+  "sha256": "a9cb1f139e4a1b754f952c67a3fa6f341990c25deac61366b32d9278df3baa6e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.8/ruby-2.3.8-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "a515df02c81902e4a71f95f2fe4172c2e67ccdc5a55e4176a24459e0c9ef7b4b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.3.8/ruby-2.3.8-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "f74511d8b3baa0a062d8f95cdae82146f2e0a1298961d6cc120599757cf67c9d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.0/ruby-2.4.0-ubuntu-22.04-x64.tar.gz",
+  "sha256": "d86cb1211141a692b4df824151342a261dac91209f9d03297b96f87464031505",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.0/ruby-2.4.0-ubuntu-24.04-x64.tar.gz",
+  "sha256": "37f19699b1627abac358a5ef55eaf4e2cb7e23b600faa6e536f86ff694e20c8b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.0/ruby-2.4.0-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "53727d2d7e083ecd91d8300c1cb5acbb67364b5f5967a3bd9891451ffba94ae8",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.0/ruby-2.4.0-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "49e917aecc46412907743249e06d7f1c02b268c817774e95251f2059c963722c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.1/ruby-2.4.1-ubuntu-22.04-x64.tar.gz",
+  "sha256": "5c765c40e260f1624d070d2357f6589af1aa5a3042ad7e4c4d525b2cc989df6b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.1/ruby-2.4.1-ubuntu-24.04-x64.tar.gz",
+  "sha256": "f6680325760ce796df720dcaf6a6e3fb23419d5e0079df268681d4b141b4035f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.1/ruby-2.4.1-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "91a6779364d77063c3cf9a051bec58fdbd41042972a6c642fdfcc8d497dceef1",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.1/ruby-2.4.1-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "0d46830a99f22acd72dfce32abed55c1dc51d2963c4fb285c9b23444e32d6652",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.2/ruby-2.4.2-ubuntu-22.04-x64.tar.gz",
+  "sha256": "5efb6ebbc335b36d51fa4b05c94ab166f0f699db5649e2bdf94e24ad419e7bc3",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.2/ruby-2.4.2-ubuntu-24.04-x64.tar.gz",
+  "sha256": "527a6b6442d058a27b8e13566101f5af7bfad7dd4f9c2e6ae2112399cbe26f80",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.2/ruby-2.4.2-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "5b37bd80a2dc9e8b83c133e0c40a2e0bedca3426a690b8302a0fffe83b25ae9f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.2/ruby-2.4.2-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "90ad5974a93f1fe4f4eff25eb5807340a7d6c98ea2ada74e3f872c5521d1fc1f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.3/ruby-2.4.3-ubuntu-22.04-x64.tar.gz",
+  "sha256": "d6e87272746c32d49ede301fe8714537eebfb0e9725ff0305179f49a9ce12ca7",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.3/ruby-2.4.3-ubuntu-24.04-x64.tar.gz",
+  "sha256": "b68ab68a22b567f60e00b0a53ae20c993b8f45c21cda83109fb04cc86f362c9e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.3/ruby-2.4.3-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "468c9c1b20e799f0ed0568996ddd9f77246a9e4d8304ef6abe0aaea8ed39a54e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.3/ruby-2.4.3-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "3d43ec7622093d6439fc792720f3ab8b739a523786cd3fdfb616c47cbbafc673",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.4/ruby-2.4.4-ubuntu-22.04-x64.tar.gz",
+  "sha256": "96d09af0d9801f23e35ffc9720292c049d0628f82106b875fe448e4675d98753",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.4/ruby-2.4.4-ubuntu-24.04-x64.tar.gz",
+  "sha256": "b407853486018a03c9950095e264b8dec12087dcf444c840ca55c477116e3b93",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.4/ruby-2.4.4-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "53385a177a6b43fdd37af5d49ae7342a06a55e1e858d947bd3addb883010458a",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.4/ruby-2.4.4-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "48a20ec1cb0f440d93480d69c3c4ce11b3c7e9bf6cb30872e9b1b1f039d39b50",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.5/ruby-2.4.5-ubuntu-22.04-x64.tar.gz",
+  "sha256": "78ac5b52e4e10085c2e8dac48f4c528eb20a33fd337a1220845484104652edca",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.5/ruby-2.4.5-ubuntu-24.04-x64.tar.gz",
+  "sha256": "ffbb069eb3cf1e3be88c8685a1bf5cb678a62281346ffae408b7143c6f2584af",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.5/ruby-2.4.5-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "6ae3caf280380159c3cff38830660c13633c256c60e94a9c3f1942001dd8fd77",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.5/ruby-2.4.5-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "3ee463f33edb3b63b28097cc3dead663b324c7c1e7754336b131289ee8e48174",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.6/ruby-2.4.6-ubuntu-22.04-x64.tar.gz",
+  "sha256": "aecb8688bca2afb4e8231bbd48ddd6c0d87fc5439956dbee2dc06d6c11a2e7e1",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.6/ruby-2.4.6-ubuntu-24.04-x64.tar.gz",
+  "sha256": "847f3d23b3e4a6fc3b38ab9d641b2a29e34cb377dc36c6e095f3f5fbd67ec6fb",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.6/ruby-2.4.6-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "26606a4c196766d7fbc2df0dfd1a2af5f4dc9642c96e468f5029a30d8bd47eb6",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.6/ruby-2.4.6-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "a3399fe94da487321ac10a37543ed6dbe03168cb5dbe90957adf1d15d166a743",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.7/ruby-2.4.7-ubuntu-22.04-x64.tar.gz",
+  "sha256": "b99d6eb4748fbf3d6c9d8448462c793469c604dea609563fd2ecba4200585be5",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.7/ruby-2.4.7-ubuntu-24.04-x64.tar.gz",
+  "sha256": "e929f2cd3d1b9a8ab74605a8766361b5c485cb6b29fc73b97983235ac77cd24f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.7/ruby-2.4.7-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "80bd6546b8217c3e72b3384397dcb078c515de33cab172496bc685ff806a7dc1",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.7/ruby-2.4.7-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "3f179c802f42dd8bd8798c91f18c4652f9d63aa0275de38a84a6e33d05320a72",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.9/ruby-2.4.9-ubuntu-22.04-x64.tar.gz",
+  "sha256": "129c8426e6c6fd5731a7bde1c69f95e07134889d9937cb15bbbbe8023f49de16",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.9/ruby-2.4.9-ubuntu-24.04-x64.tar.gz",
+  "sha256": "6f5328c631988504e7fc386711f9459281cdcea42c5aad0bcc61ab0426b8113a",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.9/ruby-2.4.9-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "b7674a48301fc2ea9d2644b3f2e924179b24aedc484d380ccf505358ae57e482",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.9/ruby-2.4.9-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "d869c1f922497a8e485addb5ad011399d70d6dccb1a5e376547674daa08985ec",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.10/ruby-2.4.10-ubuntu-22.04-x64.tar.gz",
+  "sha256": "962d063af14348df6deda8de743bd71ad1e512a0bb599e4f36b9a1874c8b6f70",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.10/ruby-2.4.10-ubuntu-24.04-x64.tar.gz",
+  "sha256": "d2ed5b86b958b1b8998908758a36278cd3ec05afd3a58f4f845a31a1d5a163ff",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.10/ruby-2.4.10-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "a3d8caff587bc5b42655ff54fc2101fb1371e45d4db9925bbd2c28509b4b9a2e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.4.10/ruby-2.4.10-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "bbae05438d72aaef6e339cf72c1459efd551410188a59f6a7a8cb7f6e81c32d7",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.0/ruby-2.5.0-ubuntu-22.04-x64.tar.gz",
+  "sha256": "8fe3fb3757b7d1e3ef02658578e86ae9dead69187f605482e11c695d257a2cf7",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.0/ruby-2.5.0-ubuntu-24.04-x64.tar.gz",
+  "sha256": "5a4feb2194c3eede99a13e1882ba8a6eb4fb80bf3b009723277cf7347be74388",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.0/ruby-2.5.0-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "1cbad1ab51798dd39c38929925bb2692b221c52b413479d1f6227f418fb92216",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.0/ruby-2.5.0-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "204951e165a713ccbcc5270ef8190d8d31e8d1092e7858bb69461c68eb5d8dea",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.1/ruby-2.5.1-ubuntu-22.04-x64.tar.gz",
+  "sha256": "b09a3cdc5033c64bf353257ecdf80364d8d3671a573ca94a6e6412a79d4faa96",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.1/ruby-2.5.1-ubuntu-24.04-x64.tar.gz",
+  "sha256": "3a402de828c9e16cc07b3af9fceaef643e3d5bda0705c9e0e2e4a46fde6c76f8",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.1/ruby-2.5.1-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "be00693a8ce07de47a3ff0dda653062e91fea1a2c9beda28da9ebc9107067b73",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.1/ruby-2.5.1-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "5b140e5d88bfdfd1eb3423e75d4b84804c5648f3b167fd184777c4851cd1c36c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.2/ruby-2.5.2-ubuntu-22.04-x64.tar.gz",
+  "sha256": "d436c932c887e906c11911eff1aac960bfc40db2c6d67e15aafa126c773652b2",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.2/ruby-2.5.2-ubuntu-24.04-x64.tar.gz",
+  "sha256": "964469d5077f54ba7ef2105f7d8302f543fa10b4b2f87aca458af196417ade0a",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.2/ruby-2.5.2-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "f91935dc47f6a8c36a9cd62919fe2e0a4c88fdd9ababab74b94f6ecbce1027a2",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.2/ruby-2.5.2-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "b1e858c7a532b65bd4511a7cfd746905d742a00cf19a718f69837974c4609108",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.3/ruby-2.5.3-ubuntu-22.04-x64.tar.gz",
+  "sha256": "de2a1e9ca68df972b10269a81b40e86f7e035cb8dc5b1432d2f608484e9253eb",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.3/ruby-2.5.3-ubuntu-24.04-x64.tar.gz",
+  "sha256": "ae1ff3945f7075f4388140676a31f7e8302b7a4f131fdd6856b76248e56acc13",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.3/ruby-2.5.3-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "ef18be0181ebdaf0badd2041b0e46f4b1218a5beb1ad05e50098e4f64ec1ed11",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.3/ruby-2.5.3-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "5a8d03f2e9d0068db4906cd31248eb2eb441cb7a71e2d4edc0fdfcffae2043e9",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.4/ruby-2.5.4-ubuntu-22.04-x64.tar.gz",
+  "sha256": "6976a42b55ba383552aecdfaafa9dd7a785d510e5da081ea76020f1908e66caa",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.4/ruby-2.5.4-ubuntu-24.04-x64.tar.gz",
+  "sha256": "6804c161ccd25144b8aaa6e6b2d5111e7f89331389f3e3ee6344fa47a22a89c7",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.4/ruby-2.5.4-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "15474f417a5843b9c76382058cee18cea91629a9dec480c1c9fae6023b38c08c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.4/ruby-2.5.4-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "3fb106b1d3b1d102c86331ed3a7ffc3d17b82e8e0b5bd18cf596df44e3df9d6d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.5/ruby-2.5.5-ubuntu-22.04-x64.tar.gz",
+  "sha256": "9f0c1e89827c7f0a5136fb89d46f6a9073ebd8f5beb55112d3917d04e45d3270",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.5/ruby-2.5.5-ubuntu-24.04-x64.tar.gz",
+  "sha256": "110f8b0e649af65ba13765d59e14dad86f330af5341d47167a8a2613040b2dc4",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.5/ruby-2.5.5-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "9b211ee0a3978d3446bcb51b98849ac29c405fb18e8240bff8d8acfaee4365bc",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.5/ruby-2.5.5-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "2e81512a644c5c154c5b41e32b7d04a3d3e2accc2b4f27faf01098a0ec334c2d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.6/ruby-2.5.6-ubuntu-22.04-x64.tar.gz",
+  "sha256": "4b692556e428b103b4188fb795c666acc13c88948e98b350a1bc5831b1f4ab38",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.6/ruby-2.5.6-ubuntu-24.04-x64.tar.gz",
+  "sha256": "7ad746cdc4f6355859d77fcfde4827282efba00aae8dea84d2ca00e06d3d0627",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.6/ruby-2.5.6-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "86d4ff66214aa77acee666b5378ae45d0bd24a5167b50a74f72828d0b6ae08a8",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.6/ruby-2.5.6-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "3624aaf61408d4b5845419dec70a798f4ca426219dd2cee0e6fd9244dea24fb6",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.7/ruby-2.5.7-ubuntu-22.04-x64.tar.gz",
+  "sha256": "d11c214846557ddb2d30d0e611ed9620cbc1ace2c930dd19964b1e37873defad",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.7/ruby-2.5.7-ubuntu-24.04-x64.tar.gz",
+  "sha256": "b19f1cb53722f9841a9beabbb619b2f0d4ac1877be282e9c44adaaed2674cb38",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.7/ruby-2.5.7-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "70a3c6ed4c4c0932b8d4f6dd96631bf41738e6edf22524ad2000e1bbcdbe3142",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.7/ruby-2.5.7-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "e8989960b4477bf81f956d342ee363d7076456c7db8d7f2d4a09739df5578ad5",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.8/ruby-2.5.8-ubuntu-22.04-x64.tar.gz",
+  "sha256": "5cb320f0262bde9e63cdd0191ac1ef6e83b394d70342a70bc0eda81c19f7406b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.8/ruby-2.5.8-ubuntu-24.04-x64.tar.gz",
+  "sha256": "474be41a3d088fb58409b3bcc41321a81bc7f9ed2debb2137aaee7ff8e86ee75",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.8/ruby-2.5.8-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "cfc9c866dbbfae51592b41c022e413deeda5594ceabb3a0d2f95a30798d24a11",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.8/ruby-2.5.8-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "9493dd117c0d305eba347648ad78325dd0032704076f7b7e7c37487cad9e157d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.9/ruby-2.5.9-ubuntu-22.04-x64.tar.gz",
+  "sha256": "7c055c4a6960e7ae385c322862d365f0e200e523b2fd3b1c0603a230eb1b369b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.9/ruby-2.5.9-ubuntu-24.04-x64.tar.gz",
+  "sha256": "23e0a99eead9042ec4b1e04f68076cec51939f921e2ac63702758148c3b13362",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.9/ruby-2.5.9-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "6f4b4d87a8fe848db72528e06714f81df07dd2c5c6cac8f81d657b7480a86b1c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.5.9/ruby-2.5.9-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "9b3fead06c8f16e15d5794e4870d4f146e91d44b7e212e82bd0b4b4373530a69",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.0/ruby-2.6.0-ubuntu-22.04-x64.tar.gz",
+  "sha256": "ab46136ba393de413a4e58cb008a67029c8edd92612d5ffc5b231f545fb6edba",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.0/ruby-2.6.0-ubuntu-24.04-x64.tar.gz",
+  "sha256": "02fa8a6987461c8e6da3801de94cdd84b4ca5bd63998399fea7f4bb7b4c985ac",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.0/ruby-2.6.0-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "687318f8082db49fce72556b4311caefd59a659b4b36e95135658193327e2c5f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.0/ruby-2.6.0-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "95f9389acee4aaa45183d57561e7124e9b3b741048d647528d8895b8714032b0",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.1/ruby-2.6.1-ubuntu-22.04-x64.tar.gz",
+  "sha256": "58cf2ff9c63a7b7e3168b04053bea16cd37c8c433115fff820e681811af15e0b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.1/ruby-2.6.1-ubuntu-24.04-x64.tar.gz",
+  "sha256": "b8b30bf9a2bd3a3e7993ab31cb0b360f8b8acf2c1e6d59d891bca31bdbaba4b9",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.1/ruby-2.6.1-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "083cb6c06b8469f19ae46199877af74209f31a6cde18576c08c1af9e3ec117a7",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.1/ruby-2.6.1-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "4a6c52ffa4bc682c150cf379a86024e59b05847ffec8a8b802a1a08bd2891db4",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.2/ruby-2.6.2-ubuntu-22.04-x64.tar.gz",
+  "sha256": "e9c620feef104bb4f5675ff6ec1eda8adbf47b91660a59de66b83030f8645785",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.2/ruby-2.6.2-ubuntu-24.04-x64.tar.gz",
+  "sha256": "1ce40cdf68b9c6da2af2cfb757cc55130962afaf046f48f7580262358937a28e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.2/ruby-2.6.2-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "21f262e912d696e5352e3654526a0ebcc0a8d0e45da56c45bb856adc1b67e14a",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.2/ruby-2.6.2-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "be5db30dbb492c5eb675292b48ca34a36b04d246e071c912433085565b003187",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.3/ruby-2.6.3-ubuntu-22.04-x64.tar.gz",
+  "sha256": "ef9b3c791fed9af804bd50b6fac36ff4d2f3d8d263c66d4417795fb00d5c07ac",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.3/ruby-2.6.3-ubuntu-24.04-x64.tar.gz",
+  "sha256": "88a7254921c96feda654f38c964ad174d895df3f11cda9b1425351f8f7d39a77",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.3/ruby-2.6.3-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "7698d0b83bdef00af9227368289c44f09f778c5c1daa37e815cc843b17a47c60",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.3/ruby-2.6.3-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "eec160f03a4994fe671ee6d1aa4fd315cdd4bf4aaca4a4336518b5776d634791",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.4/ruby-2.6.4-ubuntu-22.04-x64.tar.gz",
+  "sha256": "44609a675f9f0e3adfcd4ad480988030b91e48c497737524b8a00b83ee5af57a",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.4/ruby-2.6.4-ubuntu-24.04-x64.tar.gz",
+  "sha256": "e30a6e584d492469eae40b1933b98a5f4d96ff6f863d37115e7fa8cba1cf7068",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.4/ruby-2.6.4-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "45e1a12c7665653b8c759a38c59b0da151c50eb90c65506a87e90cf966cce9e1",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.4/ruby-2.6.4-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "836263d71f59c8a47eecac84b3e48de04c5d61af8354f0baf1ea25063e493bee",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.5/ruby-2.6.5-ubuntu-22.04-x64.tar.gz",
+  "sha256": "7d04d2c475a9f1af78225e77f96a8b2f8731786bf986fdbf46c746107a373edd",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.5/ruby-2.6.5-ubuntu-24.04-x64.tar.gz",
+  "sha256": "eb35e6e1bdc971305cfd5a58922702f74804371c396b2c1f709f17fb8c45af45",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.5/ruby-2.6.5-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "ff8b1e3293968af145d34c90026395cc4b7fed57ca4bbaf0ca6c0487eaab6704",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.5/ruby-2.6.5-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "64731753bb8faf935fd40f6abb4281a2c9ae80c75ce1145723838b937d2af64e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.6/ruby-2.6.6-ubuntu-22.04-x64.tar.gz",
+  "sha256": "96cf5a053b683d452fc9d36b2de879f10dae35b876c96809e816a06ee8ce192c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.6/ruby-2.6.6-ubuntu-24.04-x64.tar.gz",
+  "sha256": "e48af01865072bb0f4e54a3ffaa7febdd209b1580741cb5095b7546086bd69f2",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.6/ruby-2.6.6-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "32797ce01a8fb2cea6110e75591894ec5b0ab0a4f63cc5b7beb823869e113576",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.6/ruby-2.6.6-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "56a7809c476434c5bf84f4de20153cff7e2ad0aaaae243026c6f7ede3f3440cf",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.7/ruby-2.6.7-ubuntu-22.04-x64.tar.gz",
+  "sha256": "1bd2578633b18da3d5385b8db2651f21f8e272c34e1c0216d339117c17139640",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.7/ruby-2.6.7-ubuntu-24.04-x64.tar.gz",
+  "sha256": "31f60ed0738176d9cc7e2eeea498bb6f09472f81fdf4b46550beb1a6348afd55",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.7/ruby-2.6.7-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "c467754d822dd581a686fa964ee2cc6ec93d7457390658ff1496510416d0349c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.7/ruby-2.6.7-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "9222d49a2ff66402b4bb473286c9fc1d533898ebfe113c56906e142b37b10b8c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.8/ruby-2.6.8-ubuntu-22.04-x64.tar.gz",
+  "sha256": "cf110a79a0132580edfb1e13af3441684619a7c01137dffa9dd5a8bf938bfdb1",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.8/ruby-2.6.8-ubuntu-24.04-x64.tar.gz",
+  "sha256": "d3f3979c6769469e74eb53d5723a39447bc1c600a48a3e347d2972475ebd9a06",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.8/ruby-2.6.8-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "8dcb22ad7e00d93322768f023dfb26f70c89f272eab7fbe775aa9f922fe5f384",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.8/ruby-2.6.8-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "85ddd482ecc03d1fc3cf151cba4791ae76ca4070d95e98a0703474f36a9a3fb6",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.9/ruby-2.6.9-ubuntu-22.04-x64.tar.gz",
+  "sha256": "5d74c9dacdb2a7ade1dbec3926ce4a1318ed64f74e12cb61cd935e5e3c9802b9",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.9/ruby-2.6.9-ubuntu-24.04-x64.tar.gz",
+  "sha256": "db023d4f04fe31f7f7cd1cb73c76ad5f4ac9ab3680e7855dde96568c7d9cd632",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.9/ruby-2.6.9-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "d8163233b581247c57b57e0378771c8148564229235eb61234e7b1080f44d5fa",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.9/ruby-2.6.9-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "0d3a3242866355841afb730762cc41734f69d678c7aca751a59899a4350a52ec",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.10/ruby-2.6.10-ubuntu-22.04-x64.tar.gz",
+  "sha256": "9dc17fa7a7ca33c685edf83d1dd2041114ea9eacf0d39f219c824dccb38b18a4",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.10/ruby-2.6.10-ubuntu-24.04-x64.tar.gz",
+  "sha256": "59e875257d301c41b31e032727ff4bb5ee62e13b68a34cd6e9056dba6499d4c9",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.10/ruby-2.6.10-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "e4714b19a67d5786c7c11487725c0112c6f7c741abae55a51cd6cfe547de7703",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.6.10/ruby-2.6.10-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "4effca9a31c3f22ec5416f97b63f8ad47a0d65a95e00a5f0c89b88b0daecd39c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.0/ruby-2.7.0-ubuntu-22.04-x64.tar.gz",
+  "sha256": "74a63b79cb0788e93d5ad8b72340c200bf0bd15ac8e49a6f38891d9ed6384039",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.0/ruby-2.7.0-ubuntu-24.04-x64.tar.gz",
+  "sha256": "c30f75956cfa45faebdafdf93f2075ee80cdf71a6978e1cb6e6d2174bda07c09",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.0/ruby-2.7.0-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "849d9896e36d56dff89bde734e6b0887ca534fd6ed4d83a995bf21e33f6a591b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.0/ruby-2.7.0-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "f3d6019e25b854ece15091b15f0b09aefdafed2f50ad2d2e4f265d067c63fc89",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.1/ruby-2.7.1-ubuntu-22.04-x64.tar.gz",
+  "sha256": "9e0cc7fca07b57baa9d4223a40b9ef6cd437f790d5b3c2549f668964f4c188e9",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.1/ruby-2.7.1-ubuntu-24.04-x64.tar.gz",
+  "sha256": "3fd769debbe5c6a6bdeba7a2fce4d569e8cef587da3fb7d2485187d34c10b91d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.1/ruby-2.7.1-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "4f75134d7887496e370ad02fc176505d53fd373af2ebf09195d853bf08f8aa2b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.1/ruby-2.7.1-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "468ddaba88f219e8b46bffcd6b0aead4ce32d4732faf173873f5885990f9dbaf",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.2/ruby-2.7.2-ubuntu-22.04-x64.tar.gz",
+  "sha256": "2b363e20023db5083b3dfa5abf1e760872a8aa023d32fa6779d17303a354755a",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.2/ruby-2.7.2-ubuntu-24.04-x64.tar.gz",
+  "sha256": "6b5c721b3a4e96d57060badf05eba86cd3a7330a71fb99419cb03b58b4649611",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.2/ruby-2.7.2-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "fe8da3525d9ec944e46db7d1871e4ccff04250468cd313eb2c5c47abe720b3d6",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.2/ruby-2.7.2-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "a74e30f7b8e5e14952c0d2fdb14cf0b1092ea0bd8f4834b4a331630361395392",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.3/ruby-2.7.3-ubuntu-22.04-x64.tar.gz",
+  "sha256": "51fd956a4fcb8723248222f31644f1d74a7dfc535106b53f819faaec424fd38a",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.3/ruby-2.7.3-ubuntu-24.04-x64.tar.gz",
+  "sha256": "a3167308e6d194f81d933561b88651b274b6523811a6d705aa78c514dea56f62",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.3/ruby-2.7.3-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "272b3389f72691838863897888ebb505a147c5dffd0759fae74c38e1250c3fb3",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.3/ruby-2.7.3-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "220dfb61ca392ad32f5ea843a35833c94cc4c05e231766a09875b4f9b8318ebf",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.4/ruby-2.7.4-ubuntu-22.04-x64.tar.gz",
+  "sha256": "fc8f9ea6cc4fe05d60ea35879bc22cd74215deb1ab73976efb635b746ce86dba",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.4/ruby-2.7.4-ubuntu-24.04-x64.tar.gz",
+  "sha256": "b6a491c4d1d521960e32da00ec74aafd2d5e7b07fb9e0ebaf2bd01c392fc6250",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.4/ruby-2.7.4-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "0e13ffec2b22493ae1567ecbbee4712133b72efed16ba0413437dc91b263fd9f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.4/ruby-2.7.4-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "8c361110b0637d7979956e8af98b047d4d6007ceeee5adcabb7f5769226c96aa",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.5/ruby-2.7.5-ubuntu-22.04-x64.tar.gz",
+  "sha256": "d3a8408665d775f417190c4db65a317f218ab7a1ea4d09b60909f7e174d14452",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.5/ruby-2.7.5-ubuntu-24.04-x64.tar.gz",
+  "sha256": "b242ffaf0f2842e050bcea1427668e0f650e903baec958e690325d4a1b7b39ae",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.5/ruby-2.7.5-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "02712839ef3fa6c902f67455a4f62c166d9e0d274b7cb053374fc0153ee847ee",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.5/ruby-2.7.5-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "e14a61b18c42b64210e48f8dc3632580a02e8ccaa5d4bfa9c08883ba608d56bc",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.6/ruby-2.7.6-ubuntu-22.04-x64.tar.gz",
+  "sha256": "ce31fdae545c02d9d3f0e8d5ea8d50da5a951f65b94304d5caad5b07aa3972e9",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.6/ruby-2.7.6-ubuntu-24.04-x64.tar.gz",
+  "sha256": "ce5ec7a77ad3efdd899bb07734ac565d560fc6d52ba6c3d736f3d5e2c8c66df7",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.6/ruby-2.7.6-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "98545bfaaff390b5fa78ac83bdff7f9bff47060bef6a44cdad7d01aeb43de58d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.6/ruby-2.7.6-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "e80cf48a841f454eaa7f7d7babb45dc08a02e58b586b6a3b5297a8d0448befc8",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.7/ruby-2.7.7-ubuntu-22.04-x64.tar.gz",
+  "sha256": "dacfaab65226fe569d8ad7ad3071a58c3dd82669bab51ff55eb08186c985921e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.7/ruby-2.7.7-ubuntu-24.04-x64.tar.gz",
+  "sha256": "65dcbfe0e58e03b62d0af0fae455224f1b63372067a930f1a432706b21cff37d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.7/ruby-2.7.7-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "f15628279617376875b956437f9eb420420d6797e4720cde84fde2f7979dc9df",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.7/ruby-2.7.7-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "fbe44cb3e5866658ea179654304be96fb4748240f5800ede9fd90b80d83a3278",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.8/ruby-2.7.8-ubuntu-22.04-x64.tar.gz",
+  "sha256": "0c4fb548bd3eec7e789e7efeea1f93effea4fad02f9aa35b3eab3c287333d8db",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.8/ruby-2.7.8-ubuntu-24.04-x64.tar.gz",
+  "sha256": "63db9dc0634646d587a0bbab0d30d5ecbf3beaa2e67a7de02b97180e361f1de5",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.8/ruby-2.7.8-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "7b08a69537b6752882b7a7ad9314197bb9f7793f69fa7405d9bc0d1f5e6f3553",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-2.7.8/ruby-2.7.8-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "2818981cda4dfed91863c9ffce8603a734b3fe9531e5a57367f0555ef38f704a",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.0/ruby-3.0.0-ubuntu-22.04-x64.tar.gz",
+  "sha256": "7c02b9b0caae1eebca78ea149200ddf5ef262300cd194f28e5fb1e01d4bf1a65",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.0/ruby-3.0.0-ubuntu-24.04-x64.tar.gz",
+  "sha256": "ae6dde5caca90bcbe5ede56a2b46f48050827f1ec5a1d0a4ef31e80eeaa156f4",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.0/ruby-3.0.0-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "5b43d7c5d1376d234f65622d1250f5bdd665905a4e79c0def8f450561641fa84",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.0/ruby-3.0.0-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "b0453515e5a34ba88ac8d7ea39d772e509c6fe8ff09f18dbee20a1f09fdbf044",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.1/ruby-3.0.1-ubuntu-22.04-x64.tar.gz",
+  "sha256": "aba8631249177226ae11fe49527eb5eabffe7942ae9571af1cefc85fa03c201d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.1/ruby-3.0.1-ubuntu-24.04-x64.tar.gz",
+  "sha256": "52ce2d83770e96060912a9c623705d72a5499e7677f10ba778119389a1ff1b50",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.1/ruby-3.0.1-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "070bef0c3450dee88e30dfaa6c1caa1626dfe193e2ba8e00378e2aef5dfbc840",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.1/ruby-3.0.1-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "e0b285d480537202b0a0d98e308c2aad9a718171eb1716c42a90d5ce7d657227",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.2/ruby-3.0.2-ubuntu-22.04-x64.tar.gz",
+  "sha256": "751c0a08d5800cd09f768442efbe923171ac8f10242ef8dcb6920c2293cb398d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.2/ruby-3.0.2-ubuntu-24.04-x64.tar.gz",
+  "sha256": "b32b9e273501c1acc7d93536b57deaf236ec501b818d6dd25dc9456b7966c56d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.2/ruby-3.0.2-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "8eefdba945cae7c8eddc1f78a4e5fad41bc12fade1aae4718acc4a6702193e1a",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.2/ruby-3.0.2-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "b9c9114849c5ae506091ab788e9a1aef3749373005415d24859dfee2cdc18751",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.3/ruby-3.0.3-ubuntu-22.04-x64.tar.gz",
+  "sha256": "9624f0f0a37f3f376313fc2a9649b18ff1f804d53899061fa581e465365ee4e4",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.3/ruby-3.0.3-ubuntu-24.04-x64.tar.gz",
+  "sha256": "09ee806a4cbab83f2011e5667f63a2cab0b6f1639fd2b8b95773512354ef04d5",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.3/ruby-3.0.3-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "88ca0d118de350bef51334e025f3da5177d78d65def4c13d8a2b3816675e3dd0",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.3/ruby-3.0.3-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "15e706e412836c3901b0b3a91f6e5d6e53a9e6d6d092ebcb72dd192858bb2e26",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.4/ruby-3.0.4-ubuntu-22.04-x64.tar.gz",
+  "sha256": "ca82fc4a7f5040068f13522604c09af53995be1491da22ceffb5e9635a338a63",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.4/ruby-3.0.4-ubuntu-24.04-x64.tar.gz",
+  "sha256": "8e95440b5876266a787c0b80ae691a7956bd6fd8f6a4f9d62132dbad82e107a7",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.4/ruby-3.0.4-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "6269b92e86975c1ad88094e61c788048920396c7bdabb9e9153963586f3e5333",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.4/ruby-3.0.4-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "a705bdf42d56c3fcd96e61103b706c4017fdd8c8ea93496abffec2f20a9a6294",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.5/ruby-3.0.5-ubuntu-22.04-x64.tar.gz",
+  "sha256": "b0b95ba2728de7cd5cc1605adc0b91df4c5dd90b035189e04eff4bd2d6ead8f1",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.5/ruby-3.0.5-ubuntu-24.04-x64.tar.gz",
+  "sha256": "953c727c0f4067e069548b18d0e4319b8c2cb9963fc1b8d72a32523585a64158",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.5/ruby-3.0.5-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "f994c39d5eb9860bd03e30910b3979ea4e5d3df6d2c0abbf7df41652d57adbd3",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.5/ruby-3.0.5-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "efb51463cfdc550e63e861a840a4eb63471862a4be368efc94b2f4c337618493",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.6/ruby-3.0.6-ubuntu-22.04-x64.tar.gz",
+  "sha256": "4868fb4aa20ee032018077bd7d31154d7c25b3b43a95615020f5acf51309401d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.6/ruby-3.0.6-ubuntu-24.04-x64.tar.gz",
+  "sha256": "4ac6ad195161bfb41b95eb496d28aaf28eb58e8e8eb4acc979049d5cb52399f9",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.6/ruby-3.0.6-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "cc4a19dfe96eb3b5b71a8590af493def5a5795b1f854f6aca875c989eeca18a8",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.6/ruby-3.0.6-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "d2c5e61fe77fb7e9aa19151a9d6e917e340a50a06b171cb25e4d35251fcdf0b3",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.7/ruby-3.0.7-ubuntu-22.04-x64.tar.gz",
+  "sha256": "7687e09bbf86233c3d2ca8f441d18497e9a2b7513840fb6b65b87fa11cd5e0bf",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.7/ruby-3.0.7-ubuntu-24.04-x64.tar.gz",
+  "sha256": "704d81d358dc6f0610d0a1a98b1a30fc73cefd114ddac9278f2cea16dc75d913",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.7/ruby-3.0.7-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "2ab5552dd55e8ebf00915d2c9a4b186234558ceadbe12d3b4bf0ea3593b9fce2",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.0.7/ruby-3.0.7-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "a4fc8a19fb06959c70edfb255e2410da7a85d2b4f1a153bfea1036b1a85aad52",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.0/ruby-3.1.0-ubuntu-22.04-x64.tar.gz",
+  "sha256": "64a104a04a039ba3ec9c0bdb93402658341b18924885e0374fa8a2f879c5fa56",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.0/ruby-3.1.0-ubuntu-24.04-x64.tar.gz",
+  "sha256": "a0e3541a345fd3909e20f30747b71e18d4bdca5ab59eb2207f9f0b5108693d96",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.0/ruby-3.1.0-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "1e657d7d414726060be0b6b625d8c3cd70fd2d2ac09f72112fc71fcc8eca770c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.0/ruby-3.1.0-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "711b4b4849d2e859843e584f8b9d37375b354bf407674f0cc126b23648be5dbe",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.1/ruby-3.1.1-ubuntu-22.04-x64.tar.gz",
+  "sha256": "05c5b4e457b7dfb6e568f25003b289bdf91f55805bedae88dbd6d107fb6cabc4",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.1/ruby-3.1.1-ubuntu-24.04-x64.tar.gz",
+  "sha256": "f18daa82e2d3b672048668a35a3fdfed8ba4a5118251ae4c35120a1b95fa58c0",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.1/ruby-3.1.1-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "a3487eca8ee2283995c53480d48ffc0e3b6143021210fc1a0a0eb87bd7f4fb0b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.1/ruby-3.1.1-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "90146a7a5800b542c10d47c628e762dd0681e4dcbf78d3fb92a6b8286fbd8680",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.2/ruby-3.1.2-ubuntu-22.04-x64.tar.gz",
+  "sha256": "84904bfd1adad25447dde7a795445880cc0789f0c5cf3b1c696f5534e5aefff1",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.2/ruby-3.1.2-ubuntu-24.04-x64.tar.gz",
+  "sha256": "65d1527349e91ed782c8dc2afa8b4d3c313fec3c4d639fb7f329726b07dce94d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.2/ruby-3.1.2-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "e4c72888e52c114ff95256420314e0314a132a6495e695fb858d3b3f9f2b7f70",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.2/ruby-3.1.2-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "042412f53d129540028f215e23fa0c8e6f89afbae003f1351536cca53505f36b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.3/ruby-3.1.3-ubuntu-22.04-x64.tar.gz",
+  "sha256": "4877c5eb5b45c45784dd6f1f488e584a9ce56af25a795122c0437c41d9ab6456",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.3/ruby-3.1.3-ubuntu-24.04-x64.tar.gz",
+  "sha256": "b7d724949650bbfad875059b8f1cf17103f4b721c11cc596019dedf94adfd2cf",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.3/ruby-3.1.3-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "16bb4e44f884d4c7a4561aa1f5e1576aa2d4eef7ae232678a01dd8c00fe726fe",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.3/ruby-3.1.3-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "0d14bdab54c7dafb835cfc44b251ec09ff2e2d6e3963a129ef88d9456cc1c7c3",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.4/ruby-3.1.4-ubuntu-22.04-x64.tar.gz",
+  "sha256": "11fd5810468d351d9062dc6983f5b53e694d2fca3d77a7d8a63d46d5b877b261",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.4/ruby-3.1.4-ubuntu-24.04-x64.tar.gz",
+  "sha256": "f229004d69cf1880d62e231efa16b9ced59323cd83a2ae340261c2809758581d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.4/ruby-3.1.4-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "3234a99ff3725a87ac234e63dd8632350b1a7610bb9d621af623ddf52316f281",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.4/ruby-3.1.4-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "57faa97b2123995ebf6b86f66485713975c51677bea7c94264957d973da17032",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.5/ruby-3.1.5-ubuntu-22.04-x64.tar.gz",
+  "sha256": "e870746889e3409aab27b00ee0fed34d3a6ec0d1686e371737f5c2466e9dd51d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.5/ruby-3.1.5-ubuntu-24.04-x64.tar.gz",
+  "sha256": "d348cac31d3315341ac609a00c59de542439559ec8eff43e62720b6f1e76c0af",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.5/ruby-3.1.5-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "d669ab90d23e9bd8bcee351e877866bb9f03cf485b134c43a06171e77e75ecd8",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.5/ruby-3.1.5-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "7a0ec328ecbc623fb637bea91813e5b60202aa6ffc1471a44a2e8f6bc2562cba",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.6/ruby-3.1.6-ubuntu-22.04-x64.tar.gz",
+  "sha256": "e81fdb65beeabb27c0caa970f982c58d00c3a7e6444612d0470214a38ff62f39",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.6/ruby-3.1.6-ubuntu-24.04-x64.tar.gz",
+  "sha256": "a95e8c7f0d42f1c6f56717bd29ce657b48c37ab15d8fb5ae62771829c4464707",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.6/ruby-3.1.6-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "ae67c43a7858a31b18941f030f46f26f023fa4f5a326a76293a46dfd4bad4490",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.6/ruby-3.1.6-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "6e05ba77dab0f039694a2f036b14f633c270e2b4c78230737c93b85b4f7312a8",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.7/ruby-3.1.7-ubuntu-22.04-x64.tar.gz",
+  "sha256": "5e8e41e43f360dd6a8ee126ff58c7ffe892009588146a392d88ad61ecacca53e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.7/ruby-3.1.7-ubuntu-24.04-x64.tar.gz",
+  "sha256": "ed6203fb7ed6fd67601df653b146cb2008ee1e51c3954636be397a12a28a1603",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.7/ruby-3.1.7-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "021bb89bf73ac228e5ba8e60d99911b936e91e77ffe451516a35885abc940999",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.1.7/ruby-3.1.7-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "0eee97e4233d4cdd20ee77f35b6074f239310fe8eaa42548e68be1ec2ce3aafa",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.0/ruby-3.2.0-ubuntu-22.04-x64.tar.gz",
+  "sha256": "f4d187eb5bd216919dea911d8411d0a9508f05f882691c9b10576d5972a0895e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.0/ruby-3.2.0-ubuntu-24.04-x64.tar.gz",
+  "sha256": "d7a6cd228158de362c1b41b2887f4f7de9d86672f4be9c220a1d96a3c56c5fac",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.0/ruby-3.2.0-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "0a72dcd09494b2f0c68cfc6f5ff795100f877938a06c02dc8e28ffec709a5787",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.0/ruby-3.2.0-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "82d283a84a5ad5a4305b5a64a2e884ac29987d2f692e31846ae2c861594dbca9",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.1/ruby-3.2.1-ubuntu-22.04-x64.tar.gz",
+  "sha256": "611b5f9dbe09d7a1c53e296a08bc1fc1e4493173c273debc4b0ba054d211faa3",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.1/ruby-3.2.1-ubuntu-24.04-x64.tar.gz",
+  "sha256": "582c105d45b8a5472e799758f7fdeed8917e888bee6e6859130e3407b4efa02c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.1/ruby-3.2.1-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "c0d3463785b9d8108cccb54ce4d97e92bff47bc79bc5ad3dacbcdab52786fa97",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.1/ruby-3.2.1-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "0aa69e948e59de4fd0bb707733648b63e50e00e61cd0db579afbeb21849bda97",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.2/ruby-3.2.2-ubuntu-22.04-x64.tar.gz",
+  "sha256": "99d88e4373b89c06678f4bc3ed84e0a573ab2287842d9a6f88c61d9aef0d1f27",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.2/ruby-3.2.2-ubuntu-24.04-x64.tar.gz",
+  "sha256": "c0aaf8e48763b411b5a9ee7cc0bee8cc33a63060506843364e2cceb1adce7a4a",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.2/ruby-3.2.2-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "bc30937570147ffcae4e479c037aad26df432c72d624d0a682cdb4616f8104bd",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.2/ruby-3.2.2-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "3881038aaa93c93652ee376ccd520a05117e6194a37b17d84d7e03620ce9b80a",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.3/ruby-3.2.3-ubuntu-22.04-x64.tar.gz",
+  "sha256": "6c80f15e94836600390edb4fdcc1c2055fb2babd12464ca5556a35f9912967c6",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.3/ruby-3.2.3-ubuntu-24.04-x64.tar.gz",
+  "sha256": "ee534495e5b056a57cf1015aaf17d813e8fc2da0cfcde169bd5154fa28083074",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.3/ruby-3.2.3-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "d77084a1cfb7b113478496407cde147c83922b8ec7f55a93e8f213de3d7eba54",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.3/ruby-3.2.3-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "2c2065c237796b525d849780e1b5f7b0cee25b0ebf727847172e734e07c9ae2a",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.4/ruby-3.2.4-ubuntu-22.04-x64.tar.gz",
+  "sha256": "daad0517bb6df1413b3690c9b2c19ef09b17645a1dccdcec3e332224cdc37ac5",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.4/ruby-3.2.4-ubuntu-24.04-x64.tar.gz",
+  "sha256": "30d3e707cc1a3d3b6d043c8bf2b99db597ec9c09daa6fa827c218573751e0f2e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.4/ruby-3.2.4-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "98157ef43b983265e639a11c63c468bf549efc0ee035e7f7b6a452b49af07867",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.4/ruby-3.2.4-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "baaf020a262d0af8ec8cc8aa5606818d65e28c34a1fddbbd5c04ec9e10642d3f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.5/ruby-3.2.5-ubuntu-22.04-x64.tar.gz",
+  "sha256": "41de63f607df06870677bc1eb3dc0fe4d6241406d17baaa38a94ebf555b4d0f0",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.5/ruby-3.2.5-ubuntu-24.04-x64.tar.gz",
+  "sha256": "133132683a12fe7d15d1a7fb5b303b1ece2ecce73bbaa8aa453101a2a043252d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.5/ruby-3.2.5-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "dbef59ad099208abb16dd3f630475398728b629a4869a38413cd60b4901c1785",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.5/ruby-3.2.5-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "7808c9f76d5e6407650584f39c18465eeeb7c84f77537f54390aa7b15fa9486d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.6/ruby-3.2.6-ubuntu-22.04-x64.tar.gz",
+  "sha256": "5db47d21a0be4bad9a160fcfbc000291901299f6b701debbed5ab8f45b4ea0e4",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.6/ruby-3.2.6-ubuntu-24.04-x64.tar.gz",
+  "sha256": "2fa950eb51927f68dec29eb9609b40b6abf39762d7e290e002315a46a13bfcba",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.6/ruby-3.2.6-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "706b2b5c67f736340656c3196b4087a665fd54a50c69e1f1b690d886620cafa5",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.6/ruby-3.2.6-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "10b256f915d943a01274bc02d55cb9cc7ced367e8ddc3fc9f2fadbf90aaed379",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.7/ruby-3.2.7-ubuntu-22.04-x64.tar.gz",
+  "sha256": "7809a4a911bdaff016a5d96f484694543b755c14b7649606ed666c58762a798c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.7/ruby-3.2.7-ubuntu-24.04-x64.tar.gz",
+  "sha256": "c795a62ef27cac5da403c6ba23485112e0cc4cfb2114e684cb7386964b2dcc43",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.7/ruby-3.2.7-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "1db1578d6709e17958c2dd35f217e2ce9105ac285bdd439f7b8325beb3f283bd",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.7/ruby-3.2.7-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "a519f961634c752df0d53e15d79bf98fa43721864561f0a5d643d80888ba1b9b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.8/ruby-3.2.8-ubuntu-22.04-x64.tar.gz",
+  "sha256": "60dd532821432b9a8c0c8ee04a63c318967cd9fb0b2741ec0420b7bdf1fe41be",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.8/ruby-3.2.8-ubuntu-24.04-x64.tar.gz",
+  "sha256": "b40f9319929d0d92d86102ee7faf1de6b06a725f90fdf77369628608a4c32fa8",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.8/ruby-3.2.8-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "962c755a75128bd584bd6360c285bb918fc502546d98fd449c7f7f92fbd73873",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.8/ruby-3.2.8-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "5d42f16821cf8371b22419179de77288aeefe97d3192df63aaa8b76e6b249079",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.9/ruby-3.2.9-ubuntu-22.04-x64.tar.gz",
+  "sha256": "b5f222583b30880ab7b53894cd238763b7294618c7d7eaa56b7b9bf917586eb2",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.9/ruby-3.2.9-ubuntu-24.04-x64.tar.gz",
+  "sha256": "a8e0f450084f4ae220a62739a65025187054931facdf1cb03089fb8a84e8b4ef",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.9/ruby-3.2.9-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "c1c51584d30f38ff69e4db1be9db7479a9bb76d4c6046a33dc71d5837bade051",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.9/ruby-3.2.9-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "05e7301de3754ea0bf7094f4c62f0e5f20ffb85adeb2d690e894e49e43109b4c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-3.2.9-1-x64.7z",
+  "sha256": "d732a4d02236b623a18dedcfacc00dc0e09cf3a10b172d58255887693791d300",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-3.2.9-1-x86.7z",
+  "sha256": "27137586abba72ee3721711fd5bbb284ba374298ab4219e5a2a10c5f5a8b44f9",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.10/ruby-3.2.10-ubuntu-22.04-x64.tar.gz",
+  "sha256": "2243fc672e29f0125a4b5d2a1b0f0ac0f7b0a6dc44997ab9f23bb7d10f38d673",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.10/ruby-3.2.10-ubuntu-24.04-x64.tar.gz",
+  "sha256": "6ca2c2a2ef0bfa497b78193f3955b69aa5e436c4bf6f57bbf8e48b808ebe8863",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.10/ruby-3.2.10-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "21ef0c8eb4278838b156b262e2b2684b124ff897d7c80e21cee8d25182014de6",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.10/ruby-3.2.10-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "94fac8ed639c1a0c0c06eb6a2899e43a37c0e49eaa13eec2071a56d66d2c99cf",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-3.2.10-1-x64.7z",
+  "sha256": "ea3e293100399dc56c8c18eebbd081d638857f1066a8951d97f0e00af4137d30",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-3.2.10-1-x86.7z",
+  "sha256": "0bcdf9da9913c0696db85bcd6c079eaf889e4c5e7140aca3970fd244bad4eaa4",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.11/ruby-3.2.11-ubuntu-22.04-x64.tar.gz",
+  "sha256": "cd4b099073da7aaed81fe01523741c172687864353e689439dd8b19ed7544d7f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.11/ruby-3.2.11-ubuntu-24.04-x64.tar.gz",
+  "sha256": "1b89cf6de50def9e15701f369e526c4fbfb79abf1f7576b01eec695291d46299",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.11/ruby-3.2.11-ubuntu-26.04-x64.tar.gz",
+  "sha256": "87794537cc9a6e0c548d214d505e6e8e046705856e1e5f2117b470206cb17d87",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.11/ruby-3.2.11-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "f0d1b5a002718df9de98d0ac82ed40118169e08a465c10b709f9edc2517b67c3",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.11/ruby-3.2.11-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "48e439786e46dced2e25426eab5744f172a1d3d48e2296da2e2d35d551639bd9",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.2.11/ruby-3.2.11-ubuntu-26.04-arm64.tar.gz",
+  "sha256": "e5ba6ce18cdbebc6be00d7f8179acf074b9f309d255f52320c83813be84ea1fe",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-3.2.11-1-x64.7z",
+  "sha256": "20e56be307ae5576c024c97a7d8784c2033e676ea8c67477dda602b8e97fe69c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-3.2.11-1-x86.7z",
+  "sha256": "db0f6fe16938497843959aa3267781462cafc0d1d3d9dc253179eba7ba10f836",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.0/ruby-3.3.0-ubuntu-22.04-x64.tar.gz",
+  "sha256": "16c7a476775aad2a8e6d339ae7bd300c36cd33733c2a9245bd1a5d7371c97a7c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.0/ruby-3.3.0-ubuntu-24.04-x64.tar.gz",
+  "sha256": "c224e2623950b8e5f753a90ee7f184e02627baac9f03c3b498565ef45dd40c86",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.0/ruby-3.3.0-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "4c9331ed2b78f58e625a71f2dc96bc70b79bd8247b9d1628926d8dc8864a0cfb",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.0/ruby-3.3.0-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "eafa3ec289314fb20485b713bc55d2eb7543a54b6e34d88e4b016a2ad011daa9",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.1/ruby-3.3.1-ubuntu-22.04-x64.tar.gz",
+  "sha256": "1f098e0dd887550f13f03f0301ca5e634dfb206124d11ec3a8b72d650f634d8d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.1/ruby-3.3.1-ubuntu-24.04-x64.tar.gz",
+  "sha256": "d64813eb410e94872cd5c7ff3ae15d2148e63e13ecbb279147fb43fd88e2cff6",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.1/ruby-3.3.1-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "018d36cbdb2617c799f7fbf815451c0c4fa7eaa7a7abc1c4f96b5c6f19e9b4d0",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.1/ruby-3.3.1-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "acc40d37b760265b91f8fc8c7e2c51b328e90a41dad667e84c0ce7d7436ed46d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.2/ruby-3.3.2-ubuntu-22.04-x64.tar.gz",
+  "sha256": "66b86d73c632176ad47d49a4c9f3f02b3d3b2aaff69f7bc0bc7669c20e076ae4",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.2/ruby-3.3.2-ubuntu-24.04-x64.tar.gz",
+  "sha256": "2908fdcd2354479f9ced84b01ff262816c891df89e3300301097ef7d18acc1ef",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.2/ruby-3.3.2-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "6a82258591761678c9c5072be91780d1095d7280841afc0424a87b2f449d1aa2",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.2/ruby-3.3.2-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "aaae0a6457cc91e7ebebb396a1928ed610ad99f3581af78ba8dd71daf80d548c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.3/ruby-3.3.3-ubuntu-22.04-x64.tar.gz",
+  "sha256": "b98ef1caf69c0649d1675f5b562cd7b928099eb1a6809670438b8fed58ad5290",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.3/ruby-3.3.3-ubuntu-24.04-x64.tar.gz",
+  "sha256": "659f94efeb211661e6b1963912800c32055dca53cbc15e1822551babe6794526",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.3/ruby-3.3.3-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "6e2a6db44c6837d83953312dc2a685bf67832138bc02cb12e71f9597cd109365",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.3/ruby-3.3.3-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "2a458eec8556ac7f903af8c58afc19ed0819807c4efefe9f9eed05a0df8837bf",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.4/ruby-3.3.4-ubuntu-22.04-x64.tar.gz",
+  "sha256": "9900eaa7fdcaa49ece62a0cbee5c81d27d014eb3486c25bd90c8ba55f475d4dd",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.4/ruby-3.3.4-ubuntu-24.04-x64.tar.gz",
+  "sha256": "366dbe82b45a92b34651d78f8c9ba6b264211685a5f0e8be0749b590705d83c5",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.4/ruby-3.3.4-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "af763be8245c142014c2ab262a6e41cb6d21b272a1eeb17998003e3b04220c4c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.4/ruby-3.3.4-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "45ec4430bf6706ae08c32275cd8536405e42a0c0426d14c070e1a516cb6d92da",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.5/ruby-3.3.5-ubuntu-22.04-x64.tar.gz",
+  "sha256": "b2247a4aae734ba50577f908d70339b10cba178c3db252bd8be921bbc69b99b0",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.5/ruby-3.3.5-ubuntu-24.04-x64.tar.gz",
+  "sha256": "b7374edd502e09f7e51be0f855124adbbf99df26df60f872f93f467cb00c38f9",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.5/ruby-3.3.5-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "8da1d49de88673954b3007c04e3cf995992f06f9c49d83c4e6c5a6ff10bdcf62",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.5/ruby-3.3.5-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "afe03d9c4b00d8c5759a4b0b3ce85513a73a3c346d89dfbe701d8eaac25d764e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.6/ruby-3.3.6-ubuntu-22.04-x64.tar.gz",
+  "sha256": "d8bafa50f7190148473ad0d4b14b4dc3da60be7a490887092257ab2dc9b8fe5b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.6/ruby-3.3.6-ubuntu-24.04-x64.tar.gz",
+  "sha256": "e7317b23328584cfa46c08c0860048e3198617a1c03f3a92783a2820738b7035",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.6/ruby-3.3.6-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "3888a23f2957e7291e1d2880ea6a825e4c66d4ed36f6058a881f4b97c9ddb14e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.6/ruby-3.3.6-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "8c59aa99c1d8e122ee36a16e383ba40af6baa1bf257fb44cd4fca0e2488ec628",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.7/ruby-3.3.7-ubuntu-22.04-x64.tar.gz",
+  "sha256": "a719e71a8935770180e4d088a60fc52dc56b4d6d03e82b25305a29b422a4cfc7",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.7/ruby-3.3.7-ubuntu-24.04-x64.tar.gz",
+  "sha256": "7c34a3818bfdcb0a9330b5e0e16772ab88259dd2d35a26a13a04e5f5c885a753",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.7/ruby-3.3.7-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "c5461980fda537986938390360e2a8ef49a7a697734f942b676e70e6fd44e2f0",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.7/ruby-3.3.7-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "80a941b4be81c834eff81eceb9e966179d9e927049f49719b0d1275b76ef20a8",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.8/ruby-3.3.8-ubuntu-22.04-x64.tar.gz",
+  "sha256": "167cdf79bd38f7adced64420bfbfe88628f6ec0979bcce538f1ac260444f0ba2",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.8/ruby-3.3.8-ubuntu-24.04-x64.tar.gz",
+  "sha256": "5778e3d0d5c4508cc5a625bb85838fb77ca240fb9c1261b60b3d897554a3ffb1",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.8/ruby-3.3.8-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "2ec7ca26c177fc050d66a87b2796e6822fcde45ad150d0710df250fea578207c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.8/ruby-3.3.8-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "1b25e7b896eb527c1e96cc698613f42614ea877f0dcfd00a0a44ae191c0e373c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.9/ruby-3.3.9-ubuntu-22.04-x64.tar.gz",
+  "sha256": "d7d919561852a7a2f9bd170dc8b0f2d06cc7363cf1d32d07c1f4a176d2665d78",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.9/ruby-3.3.9-ubuntu-24.04-x64.tar.gz",
+  "sha256": "9a22db8768575f123663de7f94e62407bf7929f53750215addecf09ecef13a7f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.9/ruby-3.3.9-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "27dc307980dc1ce747c000a318ec10e17893ee626b675abc8994ae4fe94c4158",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.9/ruby-3.3.9-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "ed1dbf9b7fdd2b577c9033bb7f4158fed3953cf6c566ade19fc95cce3a80f8c5",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-3.3.9-1-x64.7z",
+  "sha256": "514a8f00a50ae8d5fc137b540612b6a62fa7018e5da03354f4f60d720ebd2e01",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-3.3.9-1-x86.7z",
+  "sha256": "7febbe1fcfdf75b9cf0a31c6b49ab41e523a56f113fb60185547607d9af7382d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.10/ruby-3.3.10-ubuntu-22.04-x64.tar.gz",
+  "sha256": "aa6c8bdaca989be11f68fba5144f680c501b9286c46b6bfc8bfe5b690c36c724",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.10/ruby-3.3.10-ubuntu-24.04-x64.tar.gz",
+  "sha256": "61edb994ef5e9379b6946a25b830425a70cddedc2bbfea45929ea063d44299f3",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.10/ruby-3.3.10-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "9b4b81e99ad1972fe580616f663fbc43dfbec2832283f726b3f04db6008092f6",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.10/ruby-3.3.10-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "3c95c41edbcbada67fbdc818bb2427723ff6ee4b455894ec285a4689df47330d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-3.3.10-1-x64.7z",
+  "sha256": "80203102617b216dc0bcdcc8c21cc3889aa3fde7f15860e2e22ee5487480f694",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-3.3.10-1-x86.7z",
+  "sha256": "dee241415361c8ab7c4712f7ec0df39ba8b809793d4856a3857a49790338fae5",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.11/ruby-3.3.11-ubuntu-22.04-x64.tar.gz",
+  "sha256": "d8e6ff153aa8e438607350c89d2cdad743df478d7dba9e02b8096f2cce799396",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.11/ruby-3.3.11-ubuntu-24.04-x64.tar.gz",
+  "sha256": "b8a4aa67f34b7747674453fa7b67fd3181b47645af0a6a98743743fd6fa938ec",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.11/ruby-3.3.11-ubuntu-26.04-x64.tar.gz",
+  "sha256": "a488a893b9da930c27970b498ae80266abcbfa8e8c77247398a501dafc24562f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.11/ruby-3.3.11-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "011c8c9a941443c0cf7aa28b120f8a835306194d05c3f8c46ea7e3293e71f79c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.11/ruby-3.3.11-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "f11bfd45b2afa454c2e43715af299eec452ac7d0826f5f884e431a37082fe19c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.11/ruby-3.3.11-ubuntu-26.04-arm64.tar.gz",
+  "sha256": "fa54bdf6c2e4538c6bec5b9ccabe1ba6865136ace0247ca27f5ff2af6d5f16ed",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-3.3.11-1-x64.7z",
+  "sha256": "ee5e71a19bb676302d2d3fb725e2ad3adfee2fdc2f2d64a61830a2d4c0fa9a47",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-3.3.11-1-x86.7z",
+  "sha256": "6b8ecdd8fd593acb0676953e6e38cd702fcac058e42fd999cb4aab6b0d023394",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.12/ruby-3.3.12-ubuntu-22.04-x64.tar.gz",
+  "sha256": "ba263e019e6784e46f03355651188bde4893fa75be1f258dbda88c50c72f4d28",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.12/ruby-3.3.12-ubuntu-24.04-x64.tar.gz",
+  "sha256": "3fa2d6242e105a65f694fae86e9f68d9617c827fc14d1fcf611035b9ae2cbdb8",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.12/ruby-3.3.12-ubuntu-26.04-x64.tar.gz",
+  "sha256": "7cbd3a78e1442b20161597cc5a07417538745ee91dfd74c44410e7b2b73e599a",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.12/ruby-3.3.12-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "7c638668d01128462930eecdec40fb690ce2ec18d84208cfba0224ac527f315d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.12/ruby-3.3.12-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "72fbd769aca07528cbcfb093f4d00b63740096b5fbe51e6b324db0812fc11245",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.3.12/ruby-3.3.12-ubuntu-26.04-arm64.tar.gz",
+  "sha256": "25a83936d922e18b266238b18024cb332090cbc6634485be2c983854b1491c86",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-3.3.12-1-x64.7z",
+  "sha256": "f8d534a44e47e5b72abe557497763128b93e9356bd91397a3d7b9e0a11572943",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-3.3.12-1-x86.7z",
+  "sha256": "38fad8b2b77580291d52a473b5a7bfab37a35ba322e88fac5f5fec79912094b7",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.0/ruby-3.4.0-ubuntu-22.04-x64.tar.gz",
+  "sha256": "2c9ebf6e00d4d958239c5dfde10b87aebbe585cf45f4f7869c2d2003e2bbfa95",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.0/ruby-3.4.0-ubuntu-24.04-x64.tar.gz",
+  "sha256": "e8b4d88b278f979f657779c1882e7ad0bc0e5ced924d94be89ee88b85684e9bd",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.0/ruby-3.4.0-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "0c26b5fcd1bd2d6fd23bd002c5e35ffbed1a286d3a285d5dd907408821e766e1",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.0/ruby-3.4.0-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "d915174847781033650316b5ea47f64f2ffb0c861db3a5c7698ec883435ba665",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.1/ruby-3.4.1-ubuntu-22.04-x64.tar.gz",
+  "sha256": "7619cd0cd97facac3b0d39c15e8f3cb0a68c52334713b963f27008521347d095",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.1/ruby-3.4.1-ubuntu-24.04-x64.tar.gz",
+  "sha256": "e78cebfd284e409975c20ebc1c5552e31ecbeab6a6736a7f420abda5bc807425",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.1/ruby-3.4.1-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "6326dfb5bb991b53b1381d2fb82d8f07fa88ff820a025d315b8173ab7ca239d9",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.1/ruby-3.4.1-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "5aa0e4a8a98d876fe85ac2b405c2e236236de7d922dd58add6fcf0a07bd07c93",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.2/ruby-3.4.2-ubuntu-22.04-x64.tar.gz",
+  "sha256": "cb9596a838d574b2fbe3f74ffcca776a5d8c1569b0cd8f1c972cd46a403226c9",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.2/ruby-3.4.2-ubuntu-24.04-x64.tar.gz",
+  "sha256": "88fa5c857681b596e9827611c291737a4a9e926d80f57928133e5629043b5cc3",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.2/ruby-3.4.2-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "9db095fe8cdd5debb04d898cfd4d4039bda436683b57d0c6e9e78fd4b073f81d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.2/ruby-3.4.2-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "d3fdd526983153a1ef56c0f93115b528b01712818e78d85cac229387b908a4a2",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.3/ruby-3.4.3-ubuntu-22.04-x64.tar.gz",
+  "sha256": "2935e0df67411a3dbd6b0c8166a7804bac50937c430eecbe8d3433795872ab0a",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.3/ruby-3.4.3-ubuntu-24.04-x64.tar.gz",
+  "sha256": "23480c4c88c72b42b5a82b21ebbdefd928b58053546fc306bffaac4f3db602fa",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.3/ruby-3.4.3-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "b1aa6fbc8ccb0fd32b53ef0259c5a3a88d3bac69c6057e308d917da66bd3f066",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.3/ruby-3.4.3-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "992118b47cbcd82f9f1aebc5c9933ca44b16595c11556da55a1f78ead8504928",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.4/ruby-3.4.4-ubuntu-22.04-x64.tar.gz",
+  "sha256": "858d129d711e2ab716bd1e297951402d48a86e2a8d91654e5c83b16e7d045253",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.4/ruby-3.4.4-ubuntu-24.04-x64.tar.gz",
+  "sha256": "4fc6cb45a42c25dc4c6adb433f9eb3c56b1f05fd20845888f29397637a949537",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.4/ruby-3.4.4-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "51a4082b88c0ad0ef47f141ccf95280cc8ffbbc6ced0c8bb668c606453eddf15",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.4/ruby-3.4.4-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "49953dd7476bcbbaaa9bf72804361e1ba67843cf139d0fd8927028fe54ff089b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.5/ruby-3.4.5-ubuntu-22.04-x64.tar.gz",
+  "sha256": "97246f1170eac708172707f18a87df57746c9bf4b2bc620f5c305f5c53e52154",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.5/ruby-3.4.5-ubuntu-24.04-x64.tar.gz",
+  "sha256": "7a6802acde74d35faa98e3ed4c0f4c2c3a6b1a3df925f1f8c3bc6f2f2a378e22",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.5/ruby-3.4.5-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "617eaffdf3f3724e43c0f16393bdc9bef4696348e74f95c901747f48234976a8",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.5/ruby-3.4.5-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "a1675006f23bd511fbd434f180596efccf3c6aa7a49992c2480208e31e6229ef",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-x64.7z",
+  "sha256": "61634b204f808deec191a6819e4c25c7b3005d84537b24c4fbe7c604aeece89f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-arm.7z",
+  "sha256": "d41d154f9112323d6e2206280581bbe03c246fd618b65c330e10f74ea8afa855",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-x86.7z",
+  "sha256": "e505ee7e346ab62ae322768a384563b482dbca9034f746d381050dcb2f4f73ff",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.6/ruby-3.4.6-ubuntu-22.04-x64.tar.gz",
+  "sha256": "6fe5f3d274308e6d159bec44286aef46568ce3de82b9fec172eba6edb503bd52",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.6/ruby-3.4.6-ubuntu-24.04-x64.tar.gz",
+  "sha256": "18bd7bfa7841672e0cfe54cbf62a3414bf3ca4c5c0479f959b8c4ea01087630e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.6/ruby-3.4.6-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "c70344bfeb018b1d817a9fe12289cefa5f290a2b060fdfe73525f0a1cfafb082",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.6/ruby-3.4.6-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "4dc5642db82177a97b865ff4504ae0dd356e0ea7871e851f5edb395af941139e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-x64.7z",
+  "sha256": "27561f08b897e631d624f6e20ed0f96aaf8094256a233435d691fc26b9bf8f0e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-arm.7z",
+  "sha256": "a247460bc7675af433e43871ffb653596119ac0e53882c3ef0e98964fc573880",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-x86.7z",
+  "sha256": "1196e94f6d0d9d2d7fce4d41a683464c7b9d0302a475f3523057cf665820321f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.7/ruby-3.4.7-ubuntu-22.04-x64.tar.gz",
+  "sha256": "9a5de4498bdd76ccd0ee23d9281878d6990545507cf739ccbb8ee6374ab34cdc",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.7/ruby-3.4.7-ubuntu-24.04-x64.tar.gz",
+  "sha256": "a9ace625cd9ce94f793d2888599c4ae4344fcf5614becd00cd6c3519c5e9de54",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.7/ruby-3.4.7-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "06b27532e5ce0a6bd8e7e90d4292774decc2054e9c112d899f993405f92d69d9",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.7/ruby-3.4.7-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "b2dc9b98c679bddb51e60d3de289a184317681f9ec14a8c2b4d1fa627fee7f69",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-x64.7z",
+  "sha256": "955678a8373c23e53032ac10f730a06120c7d3b956074020e57ca8b99b8930d4",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-arm.7z",
+  "sha256": "9cd36d5ae080ffe7161d13e060d350e6fc2286e81fb42d16b79ea40d4f9e799d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-x86.7z",
+  "sha256": "2b311c46bbe81291cc2a75d9ca1d731f6fc9d85e70837797e66819ea1b316ac8",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.8/ruby-3.4.8-ubuntu-22.04-x64.tar.gz",
+  "sha256": "a7b68a8bdafebf4229b5ca7de2539adc0de0109b80a73a999edccbeac909cca9",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.8/ruby-3.4.8-ubuntu-24.04-x64.tar.gz",
+  "sha256": "d909c8e548f59281dfa01168e57c1a37b4adb9ac8b1c42d77b847c74fedef6c3",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.8/ruby-3.4.8-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "adb0c4e366b51038c5124707349bd075916014bb343048258119824987f4c4af",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.8/ruby-3.4.8-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "001efbada0387991ff4f52a2696f510341f2c8994e503d5430e8a1f2723efe95",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-x64.7z",
+  "sha256": "d1c3ba83ae748c08e35e0b1d9939d45dbca7925e0a8bf84a42860bf19847e0d6",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-arm.7z",
+  "sha256": "57a08041d5a974aa40732ef71c5b6da8873e32d4855b712faa2ed4c1d6c43317",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-x86.7z",
+  "sha256": "6635cd7a0a4be880ab781aef60dcbd8803e2d6e60455e62915f69f836b17f299",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.9/ruby-3.4.9-ubuntu-22.04-x64.tar.gz",
+  "sha256": "77024419e128b86e45c05c76ef5425e64f540c8cdf8a3e1ed4f3ebf8518a712c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.9/ruby-3.4.9-ubuntu-24.04-x64.tar.gz",
+  "sha256": "5d6d6e1d9aa3834492de19dc29ae2c872e28989906b9ecf301824cf1c6b2093f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.9/ruby-3.4.9-ubuntu-26.04-x64.tar.gz",
+  "sha256": "c31fc8844fd470ec63c211d3bf49d45b156e44418bf54c324cd5130bc47bb05e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.9/ruby-3.4.9-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "e91255c31af5732a8a38792498ce2b7d8ae16f07e032b5cd00dec22d3bbbb415",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.9/ruby-3.4.9-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "6503ddf6dd76361a02a95dfb60d0e2956a5253fe6696851b8d54f619136fb088",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.9/ruby-3.4.9-ubuntu-26.04-arm64.tar.gz",
+  "sha256": "9445e7e05d21b818aa7977bd0b5a27e289238ad683b00e5c19c6bfd4db1e82bd",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-x64.7z",
+  "sha256": "4375268618b61dadf53bf8e54beaca74ea30580c90d3c47ea9f2a134bd3e494e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-arm.7z",
+  "sha256": "ba73f9c75ad119413e444996db3b4865d55221673172dbb6329f250bd4ca6156",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-x86.7z",
+  "sha256": "8d72d35b61a3664861b2e727df6d6bc957c2e53ff323376b6cf00948d634060e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.10/ruby-3.4.10-ubuntu-22.04-x64.tar.gz",
+  "sha256": "961890115599735d600d94643f1f6daa3c5f17e77a8fb73440b747a655465cb7",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.10/ruby-3.4.10-ubuntu-24.04-x64.tar.gz",
+  "sha256": "2a16c29b57203754da3fcb0c25d9dd7f7340e858f46f835bef32feef348ebc93",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.10/ruby-3.4.10-ubuntu-26.04-x64.tar.gz",
+  "sha256": "2d44fc6b908781641d67573f90f1a650fc5ba9a806dc7498343728ef710b430c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.10/ruby-3.4.10-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "bcd8e399765c8960fb0bc78f55249104789047818e0e3c381803f80206399bbf",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.10/ruby-3.4.10-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "7fdefc1fccbfbef33709d4dccd98c27db13fd551b5646cfc95336b7f88c8f2f4",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-3.4.10/ruby-3.4.10-ubuntu-26.04-arm64.tar.gz",
+  "sha256": "2f2bbf25dc1e974090f40614eba53b65f6f0c92656d600461d2c1877338bbe2e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-x64.7z",
+  "sha256": "89e3c5e235ac88b9b7e8daaf639eaaab74d7c470667354f6bf0f7432f3191ebb",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-arm.7z",
+  "sha256": "472da9b8963ce4fca52baae753cafb7788a03fd73baaa1fc430ea7557445d331",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-x86.7z",
+  "sha256": "be323ac7b8342de16edcceb1ee04a90023c39aa7e7a544e628c6360fffb602da",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.0/ruby-4.0.0-ubuntu-22.04-x64.tar.gz",
+  "sha256": "0e49c3911076b9ad66a6b9b35efe2b14cf31615c9d1aa311f7311e04cfe88ca8",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.0/ruby-4.0.0-ubuntu-24.04-x64.tar.gz",
+  "sha256": "7366cf329623c6664627cc65037dae1a08a86ff8cbcee5b2469c84689ee8b523",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.0/ruby-4.0.0-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "cb87117220440f3f593b72305782c37eadf46897427babe4e50c9455b57946d3",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.0/ruby-4.0.0-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "92ec2cb7cff102068c348411f76441827b39e286c4fe211fcdf925b40e38776c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-4.0.0-1-x64.7z",
+  "sha256": "4ca3a8a725d204accc4919bf1103a10acee609b67bf2d6ec8ac692eb18dfb780",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-4.0.0-1-arm.7z",
+  "sha256": "32fd28e78174bcd3c66dbb843afa6ff295088bd4dbad3cdb4aa3bb1e5a2bd95f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.1/ruby-4.0.1-ubuntu-22.04-x64.tar.gz",
+  "sha256": "69c0a7adf5e6604c5d302b8d6b87cdd7eca88bb858fe8aaea41c75697cc83b79",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.1/ruby-4.0.1-ubuntu-24.04-x64.tar.gz",
+  "sha256": "d3193107484f9607a665f10fedcc9e0738046eb572a0aef2267c36719382fa16",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.1/ruby-4.0.1-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "8bb42a93cfa054cba2dd5355bb861a2a2afb7ee39f6208eaa5f4ce54bc39cefb",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.1/ruby-4.0.1-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "39d8ca3d2cc91f99460a0be27b5e5a4229d6914c5549feca39552e62b5c25584",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-4.0.1-1-x64.7z",
+  "sha256": "45cd5ac6aa0fdd976acbc0b0c768e38e8f5357b1b07d2c803cccafd7de758fb1",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-4.0.1-1-arm.7z",
+  "sha256": "479646ca0305dbd4db756b8061f2084b9328b195ddab88ad400e16e82345a1cf",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.2/ruby-4.0.2-ubuntu-22.04-x64.tar.gz",
+  "sha256": "17fd311b009367ed08aa141ab81bc85e7ab7703a152925e5182fa1eed5a9dfc6",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.2/ruby-4.0.2-ubuntu-24.04-x64.tar.gz",
+  "sha256": "8801e4baa03f8beb07d7e53b4f920c2cb965524a4765dd7ecd06ce4aeed86942",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.2/ruby-4.0.2-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "1f12d1cac5d8bfdadbc37f8d430ef2733c93fdb338d93fd41ce305514e07179f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.2/ruby-4.0.2-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "91194231b818b070e00ae46ad42d087c3bd13c8f5ae9d2f667dd5d125e2541b8",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-4.0.2-1-x64.7z",
+  "sha256": "f6c562d507b272b892055f35ece3cbc65de5f3f2f63d18b7345a602af8c1e655",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-4.0.2-1-arm.7z",
+  "sha256": "f7ceacfa7468da793d74fc60816fcb319b3249b444b0a0ad68fd33365f7f2b3f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.3/ruby-4.0.3-ubuntu-22.04-x64.tar.gz",
+  "sha256": "b7f39f6c0a419bdc0271bb28b0f743e1336523c2b7861315bf85352d6da17f7f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.3/ruby-4.0.3-ubuntu-24.04-x64.tar.gz",
+  "sha256": "b009b3594ba72d0896a24f7883156a66db81efd44064ed33ce538f043d263d8a",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.3/ruby-4.0.3-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "b5a245006cc43a1ebbb5d3e707f1c375e7ddd953d206fecd4c8f17ee0fbcbc97",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.3/ruby-4.0.3-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "8594d2b7c3d292dfee4feacf887ef1d9c804420c4e3bc28f1f3d9d3222a8e083",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-4.0.3-1-x64.7z",
+  "sha256": "a4094317397511e09242be1c95b32c8700fe91ebca713fb4e190de595eea5699",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-4.0.3-1-arm.7z",
+  "sha256": "0ac6b87598a8afab77111b643f765ecfe7c23212b3fe669438fa1268b13ab390",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.4/ruby-4.0.4-ubuntu-22.04-x64.tar.gz",
+  "sha256": "d60f4f056acc52ab2f8c292e6a4a4fab8ea7bac978aaccf7338354aeb2b87b3e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.4/ruby-4.0.4-ubuntu-24.04-x64.tar.gz",
+  "sha256": "f22268c643fb246f33881d97db4254c30ef748cb7920123b20be3a08e50e657d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.4/ruby-4.0.4-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "0e49184ef5f430aa2eebd1f264072bbbf11b999d1a309b32150dc97acb642243",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.4/ruby-4.0.4-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "9416680aa921cbc75b06e1bdef84f038a5ceb584ae6b58920ed453d02b1ee69c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-4.0.4-1-x64.7z",
+  "sha256": "4a0c2c615fca7805cebfcd0933dfb00034ddbb835fe08a96c74bd77b259f1915",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-4.0.4-1-arm.7z",
+  "sha256": "c21cf28d2a8e417c66a3f063785d43b6784d339a31d8a51f6ed329c30741066f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.5/ruby-4.0.5-ubuntu-22.04-x64.tar.gz",
+  "sha256": "a05f5622467b3aa0b653a90b29a9d1033aabf79aaf6d29c59b0e296570fa7f8f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.5/ruby-4.0.5-ubuntu-24.04-x64.tar.gz",
+  "sha256": "3c2fe55cfd5b95a87cc11e86f570c9259e254cf9f0d6d0b18bcd042f8d308ad0",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.5/ruby-4.0.5-ubuntu-26.04-x64.tar.gz",
+  "sha256": "6f1e502bb1cf696975638396ed57e685bc6a874c2e8c8f384d9a5e43549f3763",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.5/ruby-4.0.5-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "47a21b9e585b78bb9be4b4e32df14595cacc5407940bb21b3c803ef51a4bacfc",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.5/ruby-4.0.5-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "67221e984c64b993268a48e6dba3e7dac9a8c9e46b276b66bd9dba9a20eacee3",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.5/ruby-4.0.5-ubuntu-26.04-arm64.tar.gz",
+  "sha256": "97f02db3213f794c18133c758342758acd1f3159411bc2daba1dffcab438d952",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-4.0.5-1-x64.7z",
+  "sha256": "74e31613fc71e6e23431dfc4d8b6ec2818a4dc1fd16e0983b074144c16719c8b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-4.0.5-1-arm.7z",
+  "sha256": "c7c6bcd0b070bf7c2e0c03e70fb9754d022b8a216ebc4befab880874c6180b51",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.6/ruby-4.0.6-ubuntu-22.04-x64.tar.gz",
+  "sha256": "1acfb017c4be08c9aa90b8059bcf8ce678563f2491bc177a16d7004d80bb2cfd",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.6/ruby-4.0.6-ubuntu-24.04-x64.tar.gz",
+  "sha256": "a65a82adf40df54d9bfcab4c61055f01bccff14a52c5b7c0c2cfecc1e9895fae",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.6/ruby-4.0.6-ubuntu-26.04-x64.tar.gz",
+  "sha256": "c8cfc914bf52ae601f553cd055f22431f4449f65dcb179d62ae9b6a7050f3b33",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.6/ruby-4.0.6-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "d076455ddae42578f8e69de5b1e0de25bdb4779df1fdc3dd9c8375bef9b94d69",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.6/ruby-4.0.6-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "fcd4b93aabaa0b5eaf07f256283427c6d879a57a69c7a84344a669e8213b7fa3",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.6/ruby-4.0.6-ubuntu-26.04-arm64.tar.gz",
+  "sha256": "68467da77a117028a24b72946be68cbebf4881967ad18105064649c7a6d2ae12",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-4.0.6-1-x64.7z",
+  "sha256": "328d7a86bea2f4c432783025050c9ffa1c36fcfc54ebccc466b63450ec3af223",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-4.0.6-1-arm.7z",
+  "sha256": "7d4c80e2251190afb4708f2c840425f16b0c912669a7fc105f889fbe6565cd8c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.7/ruby-4.0.7-ubuntu-22.04-x64.tar.gz",
+  "sha256": "08560e4a6b205e84e15415b5d8099d83ce957a510a794962f3a4761be0648e96",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.7/ruby-4.0.7-ubuntu-24.04-x64.tar.gz",
+  "sha256": "a11b84469b76a38175bce72176f66389fc05b87a3e7545329e8685b01dcb2176",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.7/ruby-4.0.7-ubuntu-26.04-x64.tar.gz",
+  "sha256": "1b636abd67dc9afb1fe294f75ae3de45334a8fc49bb3ac0dbc2d0a66f3316c7b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.7/ruby-4.0.7-ubuntu-22.04-arm64.tar.gz",
+  "sha256": "36cbe5f87f93f1848378ec9eee512afe09e5a378a0d13150181bb8462704655a",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.7/ruby-4.0.7-ubuntu-24.04-arm64.tar.gz",
+  "sha256": "30c6da2834405ef77ec775b380b1636001c8a7c6bdc2af771e8e19cf2c9be1c6",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/ruby/ruby-builder/releases/download/ruby-4.0.7/ruby-4.0.7-ubuntu-26.04-arm64.tar.gz",
+  "sha256": "9551a506e72dd2aaf53420c47450f8c8a0d73a769fccd9127c71bd18e433ce2d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-4.0.7-1-x64.7z",
+  "sha256": "7a9be96d3448ecbd9a81eccae1f619131dfcc761f2c98dded03ece6c05d0474f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-4.0.7-1-arm.7z",
+  "sha256": "54f55648f2e700f497ba1057974824c829ec63336bf4802619837548af6bdcfb",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/Homebrew/homebrew-portable-ruby/releases/download/3.4.5/portable-ruby-3.4.5.el_capitan.bottle.tar.gz",
+  "sha256": "0c78b38f22fb9b42df6918db00e6f5a80d5b35164f910ffe4c89159326ae98cf",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/Homebrew/homebrew-portable-ruby/releases/download/3.4.5/portable-ruby-3.4.5.arm64_big_sur.bottle.tar.gz",
+  "sha256": "20fa657858e44a4b39171d6e4111f8a9716eb62a78ebbd1491d94f90bb7b830a",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.1.ventura.tar.gz",
+  "sha256": "7395d553274d8cc2bb1a8199662766f8ffaeab3b7fa45924a35b745b3cf7de93",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.1.arm64_sonoma.tar.gz",
+  "sha256": "29f4a2d189a67e0ce5a42865d1b89787c985686f9ae76bb535ba773fadfdf409",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.2.ventura.tar.gz",
+  "sha256": "1fc7bf018a2e988534ecf341990c6a8a7c0d5455877947386bfe1fa44c07c758",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.2.arm64_sonoma.tar.gz",
+  "sha256": "1007dd6f0eb333a605b53166808a4853f042911d0d929adbae240cd1098bed6d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.3.ventura.tar.gz",
+  "sha256": "48cf7d7a702bb6d32d7f47ef60c2578c588cc02c72479ab529a870465e84776f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.3.arm64_sonoma.tar.gz",
+  "sha256": "67f1fc440bb4a56c9451dd1497653aa5c37731f470ec0a67d033aa5a07025fd8",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.4.ventura.tar.gz",
+  "sha256": "fb5c6fd43f91af4edcfaa26dfb28552d42686c476f4e99fbae379a7b7e42b1a3",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.4.arm64_sonoma.tar.gz",
+  "sha256": "50f030596801bd02fa7e7b96f4171dfd96b182318e15fe54dbda3971915a0d89",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.5.ventura.tar.gz",
+  "sha256": "e85759cb7e81fda2226c87ca8b201edc5127f8dfd20ecda46424c439d94e983b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.5.arm64_sonoma.tar.gz",
+  "sha256": "21c8a4da05296fab85e5c4102a56cf2a6f41856c911c5cf446ca078cb0ff97db",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.6.ventura.tar.gz",
+  "sha256": "f208586e1bd3e97ecc8d0da6da21620647e24f88f05f22291b881d8f15d8e3db",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.6.arm64_sonoma.tar.gz",
+  "sha256": "1b36b823220681f92ce8bf51ac1355f4e8cbde4861b137d1ada7a6d35306de3d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.7.ventura.tar.gz",
+  "sha256": "7e2d587ec7b40d8a693c2e055797d778fad230e923b23914defb69d9a5cba6eb",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.7.arm64_sonoma.tar.gz",
+  "sha256": "67a4f3d0c9e8a2650f1158c280256b5e2a6e446218df0f29c6c592d3ef42a006",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.8.ventura.tar.gz",
+  "sha256": "55f7251d4f8c40971cecd7b2d94804c5a270e354484667b66b32c85aeb324c84",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.8.arm64_sonoma.tar.gz",
+  "sha256": "41756713ad5d137ffd653ca787999f4361fc1aa5d7bb5c45c668833ef443a2a6",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.9.ventura.tar.gz",
+  "sha256": "93bb34d2d8c2dfdeaec401ecf6218aa104f9e7d0dbcce3229951cd32b6e565e9",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.9.arm64_sonoma.tar.gz",
+  "sha256": "4a7affe1876e7962109f5820a8180bae454c2776c3f7ede46456d82924269add",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.10.ventura.tar.gz",
+  "sha256": "842eaa29aa578e69fbf77032dbd2416caf6527c82b2cad0e60b46880e35c1c44",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.10.arm64_sonoma.tar.gz",
+  "sha256": "05691f462121adeb950ca36acd03cf7035d63d7a36ccc1a933d8ca8fa10b8357",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.11.ventura.tar.gz",
+  "sha256": "608b6068d1597f87a1578f1e518129320eb2359fc785ba5b58f28629f5c152ef",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.2.11.arm64_sonoma.tar.gz",
+  "sha256": "596f7fb0998fbacc40a9c3a5d3ada1061072eaef732689587a034aecef352258",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.0.ventura.tar.gz",
+  "sha256": "d4c13710aedb979866619acd7f49b7f986646c8417d83782f613089b18a904bd",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.0.arm64_sonoma.tar.gz",
+  "sha256": "e4a748437917af6e65b13a480c522113c84921c4175ec15720992d71d529ae93",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.1.ventura.tar.gz",
+  "sha256": "e3f7b6e4257c67f1a15f46362c6c2cf869e9146c29c7d90d0496c5e11ea4d129",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.1.arm64_sonoma.tar.gz",
+  "sha256": "61248ec0f7de865f5dc4776f348a2b575ca1bb0f667a5521b61ba1388a5dee7d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.2.ventura.tar.gz",
+  "sha256": "04e1be90dac8dce6880124c2a4c37e156439b3f6643a277af8c64b35621dcc0d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.2.arm64_sonoma.tar.gz",
+  "sha256": "b7e090af6dd84c0b59c7c663dce4825a5d38ca0261a047b0ada406069d415c73",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.3.ventura.tar.gz",
+  "sha256": "c9d6c0bc02d0b34485f704ad2677fceef7cbaa60dc939ad88fd4c593d50e1a61",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.3.arm64_sonoma.tar.gz",
+  "sha256": "ae9aeefe4023e7f872767bc247225c6b9117ef18cefe5f02589bfd75ea983aae",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.4.ventura.tar.gz",
+  "sha256": "a5b8020c9f5dabdba0c06db219264051645637a1eb6cefa67bfe9d4fcc527543",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.4.arm64_sonoma.tar.gz",
+  "sha256": "fccc2911d1cf858ccc0521d89bfba051bdac11240f916498586e1e73e3820b26",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.5.ventura.tar.gz",
+  "sha256": "6fca9a5fe7f54a134b6035e86a9cbc7f14175d61560e8812c6e199c1b2580344",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.5.arm64_sonoma.tar.gz",
+  "sha256": "d2d2c15b57b08e7c4e60130a782e1484453404d382de30f75d8851cb408cb2be",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.6.ventura.tar.gz",
+  "sha256": "fee4668a5eab8e19dd3e600153d3c020dfde091e45b7474dee80e72c46a3002b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.6.arm64_sonoma.tar.gz",
+  "sha256": "5ca4fca1b29144db72ae6f29b45191397a24da049c30db39411ddaad5df8775a",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.7.ventura.tar.gz",
+  "sha256": "8d53765b38fb522ebe328c88b0d794e694b29665de2f5a312c01286660d0c74a",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.7.arm64_sonoma.tar.gz",
+  "sha256": "cf34269b8b6e957ce946551203544c929e075f57c3980a8e8dc40de7cf42279f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.8.ventura.tar.gz",
+  "sha256": "f158480c8d47a86d631f53c2c77ad77b93e81a10a8223597124d678fb39f5d72",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.8.arm64_sonoma.tar.gz",
+  "sha256": "25aff775793e745ad2d53310df711aeac65f6d69e4766f288a50d66853c5e1a4",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.9.ventura.tar.gz",
+  "sha256": "324f3935d0baa9f97bb4ccd415e570b7faa4e003190b097757c7ff1173e4d27e",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.9.arm64_sonoma.tar.gz",
+  "sha256": "3dc363ae7262d434876bca200bbf67c33737980f56713e65a73cc516826d8d5f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.10.ventura.tar.gz",
+  "sha256": "ffcb9acfe9755370a243fad4dd22a0d49ce52051165dd9501fad7bdd60c1a0b8",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.10.arm64_sonoma.tar.gz",
+  "sha256": "b8f0e74b927d3ccaaf72aa1899c16b7d884ad8ac5fc3a35ce74cb71a38deed2c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.11.ventura.tar.gz",
+  "sha256": "481c232c97d3af053bfc98a23b4fabcb958e2e9de405749dab6252305e7e6f3b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.11.arm64_sonoma.tar.gz",
+  "sha256": "abf3cafb59d3e3a48c1533f9be499a8f87ade0e368b61b5ba475cd1e696626da",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.12.ventura.tar.gz",
+  "sha256": "d8c8f96ff086de8a9476223a1b088c47cac392594d1041dbd7e9521f5c5e86f9",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.3.12.arm64_sonoma.tar.gz",
+  "sha256": "ddd1b3d2081f97faa30225a400d91911df7f1623b1d4836f40dcbc85f0f467e8",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.4.1.ventura.tar.gz",
+  "sha256": "85e45773af2cbaea33acfdfcd7faed3c4f6b22647367d7ca7037e81cb0324a18",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.4.1.arm64_sonoma.tar.gz",
+  "sha256": "39e5a55f6dd6b8ad29ba05bc715a0cfb422932f425f905e384786bd1b5de9ad8",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.4.2.ventura.tar.gz",
+  "sha256": "4c81febd19b784007e6763debeccf78f95628552d4b96eb1d78e8ab57531a408",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.4.2.arm64_sonoma.tar.gz",
+  "sha256": "ba1e35309348dcab1964d611b0a029d878fd80179facff854b5a71b938a5e41f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.4.3.ventura.tar.gz",
+  "sha256": "87136d2ed4bd634328f315d52007058c3bcf2fe12b6e5a7e2e9b66f212ce1061",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.4.3.arm64_sonoma.tar.gz",
+  "sha256": "ebba4cbcc3f046d9cb63d3b94aa72da78e59c7644e60c4bfcfc344b3e4f9c885",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.4.4.ventura.tar.gz",
+  "sha256": "cf250d534c751ec74308fa3f724186b18b6a3171c2c6e3ef7f23977501bcc1a2",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.4.4.arm64_sonoma.tar.gz",
+  "sha256": "f47efdc97723fc48e44d57acb4f4536713ef37fe959b2023f5020e58dc3b26f4",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.4.5.ventura.tar.gz",
+  "sha256": "1ade26eb3549d353cbb36d90ec89bef6a7bd7a4a7ebda638302a637e9ede0faf",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.4.5.arm64_sonoma.tar.gz",
+  "sha256": "96181062252033497304259532b905071f6c6d5e14a8cfa94b6732e10aa14f1c",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.4.6.ventura.tar.gz",
+  "sha256": "b2be6b3d7aacf56397022fd2cd3f0ce60de5ceadd3c859da855a998f28e058c4",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.4.6.arm64_sonoma.tar.gz",
+  "sha256": "0fc03ee344a1ebf520147a4141f34cfd63e403ac70f93710dcb844f3dbef9d95",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.4.7.ventura.tar.gz",
+  "sha256": "9c51dc017da3ca0afc8edfe624a46ca9aa2faf702cfbaf49ae303242c27eeadd",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.4.7.arm64_sonoma.tar.gz",
+  "sha256": "d580db42e7c3d48c7d16fb289f7348b1e1756045064b20b5eea93e665a4ec633",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.4.8.ventura.tar.gz",
+  "sha256": "624f712e6e8bb8c46423b4511d048df163544170dabea52f1e785f462ba748b8",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.4.8.arm64_sonoma.tar.gz",
+  "sha256": "f41e8dcf0a43b61e41f8d82d296277c25689ccd21ce8ce2054044e304f73d9ea",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.4.9.ventura.tar.gz",
+  "sha256": "43a4b8ea17e438038e37f17373fd7120338e40e85b8ff34c47907f8af27463dd",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.4.9.arm64_sonoma.tar.gz",
+  "sha256": "306ff1335bfc02f0d3c18fe0975d43d03caef1242e1c4cad172ad394ab787ea4",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.4.10.ventura.tar.gz",
+  "sha256": "f3cd29220c41bb00b475a01d59bd8090d4d1a4926adb19c4515630bffbbbee74",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-3.4.10.arm64_sonoma.tar.gz",
+  "sha256": "3068874b0f340566ff2f5cdcb5f4c3d22427c17e10809aa52b9dd5ba36bfc0b6",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-4.0.0.ventura.tar.gz",
+  "sha256": "9aeabf0f3694e9ea78dd65be280b2411fb00f72a24e93af0486fdf3798428c2d",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-4.0.0.arm64_sonoma.tar.gz",
+  "sha256": "3791853ca0ca886b327d39368d1acdac3d807cf539d046983ef0dd9a273277ab",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-4.0.1.ventura.tar.gz",
+  "sha256": "903d199b5d5fa09f5d0500fd772a513ab831dba531dc718562871ad77879fe3b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-4.0.1.arm64_sonoma.tar.gz",
+  "sha256": "f106fbc6a1717add44f34a6644bd30fd38634ae20eb9f801c7fcac9e5688ac0a",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-4.0.2.ventura.tar.gz",
+  "sha256": "4d846bd5a7a5a51b5e5b10cb32a6993169bbdcb51e7bf47ab76d760c574bd86b",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-4.0.2.arm64_sonoma.tar.gz",
+  "sha256": "b18d0bb1dbbff70caf54af9db8efc100d7b589e00b3804aed449179df2ce1841",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-4.0.3.ventura.tar.gz",
+  "sha256": "1d071d38e676f103d303b3bf2e3df8455d3ae3cd8a97a8f5c1071552334e76b7",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-4.0.3.arm64_sonoma.tar.gz",
+  "sha256": "11e8800c905ce9493bea684b0113cc2ee9697607fa74fe9afac7bac3a8091ada",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-4.0.4.ventura.tar.gz",
+  "sha256": "c17a5c19448536a41b9827e91fb8f7866dde1b934a60ff058e440a254c6b100f",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-4.0.4.arm64_sonoma.tar.gz",
+  "sha256": "3f6934d1240d02aa0f86888dd566d14142db9a2d014452e3ebbe74eb460cb5ee",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-4.0.5.ventura.tar.gz",
+  "sha256": "d5a9214dcb7d89b4f7179cc6efb1ba819915bac3d818893e0ccc6293df9caacb",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-4.0.5.arm64_sonoma.tar.gz",
+  "sha256": "91471b91e282b954352c888cea994c306fefeacd1e91173634b078deba87e925",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-4.0.6.ventura.tar.gz",
+  "sha256": "49cea3b887ad47e1ea0de9fb1efbeec4f534c3f42ff3ddf09da0731691280fcc",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-4.0.6.arm64_sonoma.tar.gz",
+  "sha256": "ce5ca6568b6c586b7af4c85205344be15ffc58e9b71a424506a7eea258e00fac",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-4.0.7.ventura.tar.gz",
+  "sha256": "3dbb432bda5993bad377222e17aa5417d9ebb72bf146afea72b5527e0b2d0fc9",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ },
+ {
+  "url": "https://github.com/spinel-coop/rv-ruby/releases/download/20260915/ruby-4.0.7.arm64_sonoma.tar.gz",
+  "sha256": "97971e922b4faff3c6c4236f5fd2942365b76c161aea6bbd9291b34fd04785bb",
+  "status": 404,
+  "cl": "3",
+  "loc": ""
+ }
+]

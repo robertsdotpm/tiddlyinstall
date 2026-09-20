@@ -1,0 +1,58 @@
+{
+ "0.12.0": {
+  "debian_sha256": "0fb860137f0888f6b1a593d9b115fd7057983b7355f4f9922bb82a49ac875235",
+  "vendor_sha256": "0fb860137f0888f6b1a593d9b115fd7057983b7355f4f9922bb82a49ac875235",
+  "identical": true,
+  "debian_sha1_confirmed": true,
+  "vendor_matches_catalog_checksum": true,
+  "size": 3091564
+ },
+ "0.13.0": {
+  "debian_sha256": "cd61f5e5768d4063596d6df578ae9bb5f9d52430773542987e91050b848cb1a9",
+  "vendor_sha256": "cd61f5e5768d4063596d6df578ae9bb5f9d52430773542987e91050b848cb1a9",
+  "identical": true,
+  "debian_sha1_confirmed": true,
+  "vendor_matches_catalog_checksum": true,
+  "size": 3145360
+ },
+ "0.15.0": {
+  "debian_sha256": "c514535050b2b2156147bbe6e23aafe07cd996b2afa2c81fa9a09e1cd8c669fb",
+  "vendor_sha256": "c514535050b2b2156147bbe6e23aafe07cd996b2afa2c81fa9a09e1cd8c669fb",
+  "identical": true,
+  "debian_sha1_confirmed": true,
+  "vendor_matches_catalog_checksum": true,
+  "size": 3786260
+ },
+ "0.15.2": {
+  "debian_sha256": "905df2316262aa2cbacae067acf45fc05c2a71c8c6fde1f2a70c927ebafcfe8a",
+  "vendor_sha256": "905df2316262aa2cbacae067acf45fc05c2a71c8c6fde1f2a70c927ebafcfe8a",
+  "identical": true,
+  "debian_sha1_confirmed": true,
+  "vendor_matches_catalog_checksum": true,
+  "size": 3251764
+ },
+ "0.16.0": {
+  "debian_sha256": "9e199823be47cba55e62dd6982f02cf0aad732f369799fec42a4d8c2265c5167",
+  "vendor_sha256": "9e199823be47cba55e62dd6982f02cf0aad732f369799fec42a4d8c2265c5167",
+  "identical": true,
+  "debian_sha1_confirmed": true,
+  "vendor_matches_catalog_checksum": true,
+  "size": 2907076
+ },
+ "0.17.2": {
+  "debian_sha256": "aaff1b5023fc4a5708f1d7d9fd8e2a29f1a7f58bf496532ff1e9d7e7c7ec82bd",
+  "vendor_sha256": "aaff1b5023fc4a5708f1d7d9fd8e2a29f1a7f58bf496532ff1e9d7e7c7ec82bd",
+  "identical": true,
+  "debian_sha1_confirmed": true,
+  "vendor_matches_catalog_checksum": true,
+  "size": 4083084
+ },
+ "2.2.12": {
+  "debian_sha256": "2639a06a5ea7a7fcf57df1e7e1ef4d1b2bee58c7ac9bd00dbd2aa5bea1e5a56a",
+  "vendor_sha256": "2639a06a5ea7a7fcf57df1e7e1ef4d1b2bee58c7ac9bd00dbd2aa5bea1e5a56a",
+  "identical": true,
+  "debian_sha1_confirmed": true,
+  "vendor_matches_catalog_checksum": true,
+  "size": 10259940
+ }
+}

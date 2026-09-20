@@ -15,7 +15,9 @@
   "libc": null,
   "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.1/clang%2Bllvm-23.1.1-x86_64-pc-windows-msvc.tar.xz",
   "mirrors": [
-   "https://mirror.nju.edu.cn/github-release/llvm/llvm-project/LLVM%2023.1.1/clang%2Bllvm-23.1.1-x86_64-pc-windows-msvc.tar.xz"
+   "https://mirror.nju.edu.cn/github-release/llvm/llvm-project/LLVM%2023.1.1/clang%2Bllvm-23.1.1-x86_64-pc-windows-msvc.tar.xz",
+   "https://mirrors.bfsu.edu.cn/github-release/llvm/llvm-project/LLVM%2023.1.1/clang%2Bllvm-23.1.1-x86_64-pc-windows-msvc.tar.xz",
+   "https://mirrors.bfsu.edu.cn/github-release/llvm/llvm-project/LatestRelease/clang%2Bllvm-23.1.1-x86_64-pc-windows-msvc.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -44,7 +46,9 @@
   "libc": "glibc",
   "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.1/LLVM-23.1.1-Linux-ARM64.tar.xz",
   "mirrors": [
-   "https://mirror.nju.edu.cn/github-release/llvm/llvm-project/LLVM%2023.1.1/LLVM-23.1.1-Linux-ARM64.tar.xz"
+   "https://mirror.nju.edu.cn/github-release/llvm/llvm-project/LLVM%2023.1.1/LLVM-23.1.1-Linux-ARM64.tar.xz",
+   "https://mirrors.bfsu.edu.cn/github-release/llvm/llvm-project/LLVM%2023.1.1/LLVM-23.1.1-Linux-ARM64.tar.xz",
+   "https://mirrors.bfsu.edu.cn/github-release/llvm/llvm-project/LatestRelease/LLVM-23.1.1-Linux-ARM64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -73,7 +77,9 @@
   "libc": "glibc",
   "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.1/LLVM-23.1.1-Linux-X64.tar.xz",
   "mirrors": [
-   "https://mirror.nju.edu.cn/github-release/llvm/llvm-project/LLVM%2023.1.1/LLVM-23.1.1-Linux-X64.tar.xz"
+   "https://mirror.nju.edu.cn/github-release/llvm/llvm-project/LLVM%2023.1.1/LLVM-23.1.1-Linux-X64.tar.xz",
+   "https://mirrors.bfsu.edu.cn/github-release/llvm/llvm-project/LLVM%2023.1.1/LLVM-23.1.1-Linux-X64.tar.xz",
+   "https://mirrors.bfsu.edu.cn/github-release/llvm/llvm-project/LatestRelease/LLVM-23.1.1-Linux-X64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -102,7 +108,9 @@
   "libc": null,
   "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.1/LLVM-23.1.1-macOS-ARM64.tar.xz",
   "mirrors": [
-   "https://mirror.nju.edu.cn/github-release/llvm/llvm-project/LLVM%2023.1.1/LLVM-23.1.1-macOS-ARM64.tar.xz"
+   "https://mirror.nju.edu.cn/github-release/llvm/llvm-project/LLVM%2023.1.1/LLVM-23.1.1-macOS-ARM64.tar.xz",
+   "https://mirrors.bfsu.edu.cn/github-release/llvm/llvm-project/LLVM%2023.1.1/LLVM-23.1.1-macOS-ARM64.tar.xz",
+   "https://mirrors.bfsu.edu.cn/github-release/llvm/llvm-project/LatestRelease/LLVM-23.1.1-macOS-ARM64.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2502,7 +2510,9 @@
    "https://mirrors.xmission.com/gnu/gcc/gcc-15.3.0/gcc-15.3.0.tar.xz",
    "https://us.mirrors.cicku.me/gnu/gcc/gcc-15.3.0/gcc-15.3.0.tar.xz",
    "https://distfiles.gentoo.org/distfiles/a0/gcc-15.3.0.tar.xz",
-   "https://web.archive.org/web/20260729182510id_/https://ftp.gnu.org/gnu/gcc/gcc-15.3.0/gcc-15.3.0.tar.xz"
+   "https://web.archive.org/web/20260729182510id_/https://ftp.gnu.org/gnu/gcc/gcc-15.3.0/gcc-15.3.0.tar.xz",
+   "https://tarballs.nixos.org/sha256/fa59c1beef8995f27c4d71c1df227587189315d3e6faff1bb4306e61b0c530eb",
+   "http://tarballs.nixos.org/sha256/fa59c1beef8995f27c4d71c1df227587189315d3e6faff1bb4306e61b0c530eb"
   ],
   "checksum": null,
   "size": 101253696,
@@ -2515,6 +2525,11 @@
     "algo": "sha512",
     "value": "0de9e296153b52c021b1c7e63c9c62151d7a0ac03f23ce6e9f772c1b0eb783f6acdd81cc4567bfe4128a6f64968c2cfc8eff40b36229cba7425349f7d637c654",
     "source": "Gentoo sys-devel/gcc Manifest (gentoo/gentoo GitHub), 2026-09-17"
+   },
+   {
+    "algo": "sha512",
+    "value": "0de9e296153b52c021b1c7e63c9c62151d7a0ac03f23ce6e9f772c1b0eb783f6acdd81cc4567bfe4128a6f64968c2cfc8eff40b36229cba7425349f7d637c654",
+    "source": "tarballs.nixos.org content-addressed cache (sha256/fa59c1beef8995f27c4d71c1df227587189315d3e6faff1bb4306e61b0c530eb -> sha512/0de9e296153b52c021b1c7e63c9c62151d7a0ac03f23ce6e9f772c1b0eb783f6acdd81cc4567bfe4128a6f64968c2cfc8eff40b36229cba7425349f7d637c654)"
    }
   ]
  },
@@ -2700,14 +2715,23 @@
    "https://mirrors.xjtu.edu.cn/gnu/gcc/gcc-4.9.4/gcc-4.9.4.tar.bz2",
    "https://mirrors.xmission.com/gnu/gcc/gcc-4.9.4/gcc-4.9.4.tar.bz2",
    "https://us.mirrors.cicku.me/gnu/gcc/gcc-4.9.4/gcc-4.9.4.tar.bz2",
-   "https://web.archive.org/web/20260826203118id_/https://ftp.gnu.org/gnu/gcc/gcc-4.9.4/gcc-4.9.4.tar.bz2"
+   "https://web.archive.org/web/20260826203118id_/https://ftp.gnu.org/gnu/gcc/gcc-4.9.4/gcc-4.9.4.tar.bz2",
+   "https://tarballs.nixos.org/sha256/6c11d292cd01b294f9f84c9a59c230d80e9e4a47e5c6355f046bb36d4f358092",
+   "http://tarballs.nixos.org/sha256/6c11d292cd01b294f9f84c9a59c230d80e9e4a47e5c6355f046bb36d4f358092"
   ],
   "checksum": null,
   "size": 90097606,
   "released": "2016-08-03",
   "min_os": null,
   "metadata_source": "https://ftp.gnu.org/gnu/gcc/",
-  "notes": "GNU ships no official GCC binaries for Linux or macOS; source must be built."
+  "notes": "GNU ships no official GCC binaries for Linux or macOS; source must be built.",
+  "checksum_corroboration": [
+   {
+    "algo": "sha512",
+    "value": "93abb78e16277454f41a8e9810f41f66c0fdffdc539a762ff6b67d3037f78db971378683fd2ebf707d1d51c059fad2161fe42d110c330027f40214b7db0f3efe",
+    "source": "tarballs.nixos.org content-addressed cache (sha256/6c11d292cd01b294f9f84c9a59c230d80e9e4a47e5c6355f046bb36d4f358092 -> sha512/93abb78e16277454f41a8e9810f41f66c0fdffdc539a762ff6b67d3037f78db971378683fd2ebf707d1d51c059fad2161fe42d110c330027f40214b7db0f3efe)"
+   }
+  ]
  },
  {
   "runtime": "gcc",
@@ -2792,14 +2816,23 @@
    "https://mirrors.xjtu.edu.cn/gnu/gcc/gcc-5.5.0/gcc-5.5.0.tar.xz",
    "https://mirrors.xmission.com/gnu/gcc/gcc-5.5.0/gcc-5.5.0.tar.xz",
    "https://us.mirrors.cicku.me/gnu/gcc/gcc-5.5.0/gcc-5.5.0.tar.xz",
-   "https://web.archive.org/web/20250119144551id_/https://ftp.gnu.org/gnu/gcc/gcc-5.5.0/gcc-5.5.0.tar.xz"
+   "https://web.archive.org/web/20250119144551id_/https://ftp.gnu.org/gnu/gcc/gcc-5.5.0/gcc-5.5.0.tar.xz",
+   "https://tarballs.nixos.org/sha256/530cea139d82fe542b358961130c69cfde8b3d14556370b65823d2f91f0ced87",
+   "http://tarballs.nixos.org/sha256/530cea139d82fe542b358961130c69cfde8b3d14556370b65823d2f91f0ced87"
   ],
   "checksum": null,
   "size": 71096120,
   "released": "2017-10-10",
   "min_os": null,
   "metadata_source": "https://ftp.gnu.org/gnu/gcc/",
-  "notes": "GNU ships no official GCC binaries for Linux or macOS; source must be built."
+  "notes": "GNU ships no official GCC binaries for Linux or macOS; source must be built.",
+  "checksum_corroboration": [
+   {
+    "algo": "sha512",
+    "value": "670ff52c2ae12c7852c12987e91798c5aa8bd6daf21f0d6e0cd57a4aa59cc4f06a837fe76426eaa1424cfddca937bed377680700eadc04d76b9180d462364fa1",
+    "source": "tarballs.nixos.org content-addressed cache (sha256/530cea139d82fe542b358961130c69cfde8b3d14556370b65823d2f91f0ced87 -> sha512/670ff52c2ae12c7852c12987e91798c5aa8bd6daf21f0d6e0cd57a4aa59cc4f06a837fe76426eaa1424cfddca937bed377680700eadc04d76b9180d462364fa1)"
+   }
+  ]
  },
  {
   "runtime": "gcc",
@@ -2883,14 +2916,23 @@
    "https://mirrors.xjtu.edu.cn/gnu/gcc/gcc-6.5.0/gcc-6.5.0.tar.xz",
    "https://mirrors.xmission.com/gnu/gcc/gcc-6.5.0/gcc-6.5.0.tar.xz",
    "https://us.mirrors.cicku.me/gnu/gcc/gcc-6.5.0/gcc-6.5.0.tar.xz",
-   "https://web.archive.org/web/20250824234549id_/https://ftp.gnu.org/gnu/gcc/gcc-6.5.0/gcc-6.5.0.tar.xz"
+   "https://web.archive.org/web/20250824234549id_/https://ftp.gnu.org/gnu/gcc/gcc-6.5.0/gcc-6.5.0.tar.xz",
+   "https://tarballs.nixos.org/sha256/7ef1796ce497e89479183702635b14bb7a46b53249209a5e0f999bebf4740945",
+   "http://tarballs.nixos.org/sha256/7ef1796ce497e89479183702635b14bb7a46b53249209a5e0f999bebf4740945"
   ],
   "checksum": null,
   "size": 74355588,
   "released": "2018-10-30",
   "min_os": null,
   "metadata_source": "https://ftp.gnu.org/gnu/gcc/",
-  "notes": "GNU ships no official GCC binaries for Linux or macOS; source must be built."
+  "notes": "GNU ships no official GCC binaries for Linux or macOS; source must be built.",
+  "checksum_corroboration": [
+   {
+    "algo": "sha512",
+    "value": "ce046f9a50050fd54b870aab764f7db187fe7ea92eb4aaffb7c3689ca623755604e231f2af97ef795f41c406bb80c797dd69957cfdd51dfa2ba60813f72b7eac",
+    "source": "tarballs.nixos.org content-addressed cache (sha256/7ef1796ce497e89479183702635b14bb7a46b53249209a5e0f999bebf4740945 -> sha512/ce046f9a50050fd54b870aab764f7db187fe7ea92eb4aaffb7c3689ca623755604e231f2af97ef795f41c406bb80c797dd69957cfdd51dfa2ba60813f72b7eac)"
+   }
+  ]
  },
  {
   "runtime": "gcc",
@@ -2974,14 +3016,23 @@
    "https://mirrors.xjtu.edu.cn/gnu/gcc/gcc-7.5.0/gcc-7.5.0.tar.xz",
    "https://mirrors.xmission.com/gnu/gcc/gcc-7.5.0/gcc-7.5.0.tar.xz",
    "https://us.mirrors.cicku.me/gnu/gcc/gcc-7.5.0/gcc-7.5.0.tar.xz",
-   "https://web.archive.org/web/20251117003400id_/https://ftp.gnu.org/gnu/gcc/gcc-7.5.0/gcc-7.5.0.tar.xz"
+   "https://web.archive.org/web/20251117003400id_/https://ftp.gnu.org/gnu/gcc/gcc-7.5.0/gcc-7.5.0.tar.xz",
+   "https://tarballs.nixos.org/sha256/b81946e7f01f90528a1f7352ab08cc602b9ccc05d4e44da4bd501c5a189ee661",
+   "http://tarballs.nixos.org/sha256/b81946e7f01f90528a1f7352ab08cc602b9ccc05d4e44da4bd501c5a189ee661"
   ],
   "checksum": null,
   "size": 62783088,
   "released": "2019-11-14",
   "min_os": null,
   "metadata_source": "https://ftp.gnu.org/gnu/gcc/",
-  "notes": "GNU ships no official GCC binaries for Linux or macOS; source must be built."
+  "notes": "GNU ships no official GCC binaries for Linux or macOS; source must be built.",
+  "checksum_corroboration": [
+   {
+    "algo": "sha512",
+    "value": "fe716cc19f2e3255d3a8b1b8290777bf769c6d98e6e0b07b81a3d6ad43f8af74cb170dfa18b1555dbfcd3f55ae582b91a286ccef496b9b65c1579902f96a1f60",
+    "source": "tarballs.nixos.org content-addressed cache (sha256/b81946e7f01f90528a1f7352ab08cc602b9ccc05d4e44da4bd501c5a189ee661 -> sha512/fe716cc19f2e3255d3a8b1b8290777bf769c6d98e6e0b07b81a3d6ad43f8af74cb170dfa18b1555dbfcd3f55ae582b91a286ccef496b9b65c1579902f96a1f60)"
+   }
+  ]
  },
  {
   "runtime": "gcc",

@@ -1,0 +1,6008 @@
+{
+ "http://gentoo.mirrors.tera-byte.com/": {
+  "region": "North America",
+  "country": "Canada",
+  "operator": "Tera-byte Dot Com Inc",
+  "proto": "http",
+  "base": "http://gentoo.mirrors.tera-byte.com/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://gentoo.mirrors.tera-byte.com/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://gentoo.mirrors.tera-byte.com/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.csclub.uwaterloo.ca/gentoo-distfiles/": {
+  "region": "North America",
+  "country": "Canada",
+  "operator": "University of Waterloo",
+  "proto": "https",
+  "base": "https://mirror.csclub.uwaterloo.ca/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.csclub.uwaterloo.ca/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.csclub.uwaterloo.ca/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.csclub.uwaterloo.ca/gentoo-distfiles/": {
+  "region": "North America",
+  "country": "Canada",
+  "operator": "University of Waterloo",
+  "proto": "http",
+  "base": "http://mirror.csclub.uwaterloo.ca/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.csclub.uwaterloo.ca/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.csclub.uwaterloo.ca/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.reenigne.net/gentoo/": {
+  "region": "North America",
+  "country": "Canada",
+  "operator": "Reenigne",
+  "proto": "https",
+  "base": "https://mirror.reenigne.net/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.reenigne.net/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.reenigne.net/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.reenigne.net/gentoo/": {
+  "region": "North America",
+  "country": "Canada",
+  "operator": "Reenigne",
+  "proto": "http",
+  "base": "http://mirror.reenigne.net/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.reenigne.net/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.reenigne.net/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://gentoo.mirrors.ovh.net/gentoo-distfiles/": {
+  "region": "North America",
+  "country": "Canada",
+  "operator": "OVHcloud (Anycast: Beauharnois, Toronto)",
+  "proto": "https",
+  "base": "https://gentoo.mirrors.ovh.net/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://gentoo.mirrors.ovh.net/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://gentoo.mirrors.ovh.net/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://gentoo.mirrors.ovh.net/gentoo-distfiles/": {
+  "region": "North America",
+  "country": "Canada",
+  "operator": "OVHcloud (Anycast: Beauharnois, Toronto)",
+  "proto": "http",
+  "base": "http://gentoo.mirrors.ovh.net/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://gentoo.mirrors.ovh.net/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://gentoo.mirrors.ovh.net/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://ca.mirrors.cicku.me/gentoo/": {
+  "region": "North America",
+  "country": "Canada",
+  "operator": "CICKU",
+  "proto": "https",
+  "base": "https://ca.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://ca.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://ca.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://ca.mirrors.cicku.me/gentoo/": {
+  "region": "North America",
+  "country": "Canada",
+  "operator": "CICKU",
+  "proto": "http",
+  "base": "http://ca.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://ca.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://ca.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "https://elara.ca.ext.planetunix.net/pub/gentoo/": {
+  "region": "North America",
+  "country": "Canada",
+  "operator": "PlanetUnix Networks",
+  "proto": "https",
+  "base": "https://elara.ca.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://elara.ca.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://elara.ca.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://elara.ca.ext.planetunix.net/pub/gentoo/": {
+  "region": "North America",
+  "country": "Canada",
+  "operator": "PlanetUnix Networks",
+  "proto": "http",
+  "base": "http://elara.ca.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://elara.ca.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://elara.ca.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://gentoo.iro.umontreal.ca/gentoo/": {
+  "region": "North America",
+  "country": "Canada",
+  "operator": "Diro",
+  "proto": "https",
+  "base": "https://gentoo.iro.umontreal.ca/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://gentoo.iro.umontreal.ca/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://gentoo.iro.umontreal.ca/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://gentoo.osuosl.org/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "OSU Open Source Lab (Corvallis; New York; Chicago)",
+  "proto": "https",
+  "base": "https://gentoo.osuosl.org/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://gentoo.osuosl.org/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://gentoo.osuosl.org/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://gentoo.osuosl.org/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "OSU Open Source Lab (Corvallis; New York; Chicago)",
+  "proto": "http",
+  "base": "http://gentoo.osuosl.org/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://gentoo.osuosl.org/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://gentoo.osuosl.org/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.leaseweb.com/gentoo/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "LeaseWeb (Anycast: San Francisco; Dallas; Washington, D.C.; Miami)",
+  "proto": "https",
+  "base": "https://mirror.leaseweb.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.leaseweb.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.leaseweb.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.leaseweb.com/gentoo/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "LeaseWeb (Anycast: San Francisco; Dallas; Washington, D.C.; Miami)",
+  "proto": "http",
+  "base": "http://mirror.leaseweb.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.leaseweb.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.leaseweb.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://www.gtlib.gatech.edu/pub/gentoo/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "Georgia Tech",
+  "proto": "http",
+  "base": "http://www.gtlib.gatech.edu/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://www.gtlib.gatech.edu/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://www.gtlib.gatech.edu/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://gentoo-mirror.flux.utah.edu/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "University of Utah (Flux Group)",
+  "proto": "http",
+  "base": "http://gentoo-mirror.flux.utah.edu/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://gentoo-mirror.flux.utah.edu/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://gentoo-mirror.flux.utah.edu/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirrors.mit.edu/gentoo-distfiles/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "Massachusetts Institute of Technology",
+  "proto": "https",
+  "base": "https://mirrors.mit.edu/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirrors.mit.edu/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirrors.mit.edu/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirrors.mit.edu/gentoo-distfiles/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "Massachusetts Institute of Technology",
+  "proto": "http",
+  "base": "http://mirrors.mit.edu/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirrors.mit.edu/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirrors.mit.edu/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirrors.rit.edu/gentoo/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "Rochester Institute of Technology",
+  "proto": "https",
+  "base": "https://mirrors.rit.edu/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirrors.rit.edu/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirrors.rit.edu/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirrors.rit.edu/gentoo/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "Rochester Institute of Technology",
+  "proto": "http",
+  "base": "http://mirrors.rit.edu/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirrors.rit.edu/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirrors.rit.edu/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.rackspace.com/gentoo/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "Rackspace Technology",
+  "proto": "https",
+  "base": "https://mirror.rackspace.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.rackspace.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.rackspace.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.rackspace.com/gentoo/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "Rackspace Technology",
+  "proto": "http",
+  "base": "http://mirror.rackspace.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.rackspace.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.rackspace.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.clarkson.edu/gentoo/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "Clarkson University",
+  "proto": "https",
+  "base": "https://mirror.clarkson.edu/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 404,
+    "length": "153",
+    "match": false,
+    "url": "https://mirror.clarkson.edu/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 404,
+    "length": "153",
+    "match": false,
+    "url": "https://mirror.clarkson.edu/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.clarkson.edu/gentoo/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "Clarkson University",
+  "proto": "http",
+  "base": "http://mirror.clarkson.edu/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 404,
+    "length": "153",
+    "match": false,
+    "url": "http://mirror.clarkson.edu/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 404,
+    "length": "153",
+    "match": false,
+    "url": "http://mirror.clarkson.edu/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.servaxnet.com/gentoo/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "ServaxNet, LLC",
+  "proto": "https",
+  "base": "https://mirror.servaxnet.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.servaxnet.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.servaxnet.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.servaxnet.com/gentoo/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "ServaxNet, LLC",
+  "proto": "http",
+  "base": "http://mirror.servaxnet.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.servaxnet.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.servaxnet.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.planetunix.net/pub/gentoo/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "PlanetUnix Networks (Anycast: Global)",
+  "proto": "https",
+  "base": "https://mirror.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.planetunix.net/pub/gentoo/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "PlanetUnix Networks (Anycast: Global)",
+  "proto": "http",
+  "base": "http://mirror.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.cs.odu.edu/gentoo-distfiles/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "Old Dominion University",
+  "proto": "https",
+  "base": "https://mirror.cs.odu.edu/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 404,
+    "length": "153",
+    "match": false,
+    "url": "https://mirror.cs.odu.edu/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 404,
+    "length": "153",
+    "match": false,
+    "url": "https://mirror.cs.odu.edu/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.cs.odu.edu/gentoo-distfiles/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "Old Dominion University",
+  "proto": "http",
+  "base": "http://mirror.cs.odu.edu/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 404,
+    "length": "153",
+    "match": false,
+    "url": "http://mirror.cs.odu.edu/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 404,
+    "length": "153",
+    "match": false,
+    "url": "http://mirror.cs.odu.edu/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://us.mirrors.cicku.me/gentoo/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "CICKU",
+  "proto": "https",
+  "base": "https://us.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://us.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://us.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://us.mirrors.cicku.me/gentoo/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "CICKU",
+  "proto": "http",
+  "base": "http://us.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://us.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://us.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "https://mirror.umd.edu/gentoo/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "University of Maryland",
+  "proto": "https",
+  "base": "https://mirror.umd.edu/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.umd.edu/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.umd.edu/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.umd.edu/gentoo/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "University of Maryland",
+  "proto": "http",
+  "base": "http://mirror.umd.edu/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.umd.edu/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.umd.edu/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirrors.kernel.org/gentoo/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "kernel.org",
+  "proto": "https",
+  "base": "https://mirrors.kernel.org/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirrors.kernel.org/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirrors.kernel.org/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirrors.kernel.org/gentoo/": {
+  "region": "North America",
+  "country": "United States (USA)",
+  "operator": "kernel.org",
+  "proto": "http",
+  "base": "http://mirrors.kernel.org/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirrors.kernel.org/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirrors.kernel.org/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://triton.mx.ext.planetunix.net/pub/gentoo/": {
+  "region": "North America",
+  "country": "Mexico",
+  "operator": "PlanetUnix Networks",
+  "proto": "https",
+  "base": "https://triton.mx.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://triton.mx.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://triton.mx.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://triton.mx.ext.planetunix.net/pub/gentoo/": {
+  "region": "North America",
+  "country": "Mexico",
+  "operator": "PlanetUnix Networks",
+  "proto": "http",
+  "base": "http://triton.mx.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://triton.mx.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://triton.mx.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://gentoo.zero.com.ar/gentoo/": {
+  "region": "South America",
+  "country": "Argentina",
+  "operator": "www.zero.com.ar",
+  "proto": "https",
+  "base": "https://gentoo.zero.com.ar/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": null,
+    "length": null,
+    "match": false,
+    "url": "https://gentoo.zero.com.ar/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": null,
+    "length": null,
+    "match": false,
+    "url": "https://gentoo.zero.com.ar/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": null
+ },
+ "https://gentoo.c3sl.ufpr.br/": {
+  "region": "South America",
+  "country": "Brazil",
+  "operator": "C3SL, Federal University of Paran\u00e1",
+  "proto": "https",
+  "base": "https://gentoo.c3sl.ufpr.br/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://gentoo.c3sl.ufpr.br/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://gentoo.c3sl.ufpr.br/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://gentoo.c3sl.ufpr.br/": {
+  "region": "South America",
+  "country": "Brazil",
+  "operator": "C3SL, Federal University of Paran\u00e1",
+  "proto": "http",
+  "base": "http://gentoo.c3sl.ufpr.br/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://gentoo.c3sl.ufpr.br/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://gentoo.c3sl.ufpr.br/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://br.mirrors.cicku.me/gentoo/": {
+  "region": "South America",
+  "country": "Brazil",
+  "operator": "CICKU",
+  "proto": "https",
+  "base": "https://br.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://br.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://br.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://br.mirrors.cicku.me/gentoo/": {
+  "region": "South America",
+  "country": "Brazil",
+  "operator": "CICKU",
+  "proto": "http",
+  "base": "http://br.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://br.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://br.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "https://umbriel.br.ext.planetunix.net/pub/gentoo/": {
+  "region": "South America",
+  "country": "Brazil",
+  "operator": "PlanetUnix Networks",
+  "proto": "https",
+  "base": "https://umbriel.br.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://umbriel.br.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://umbriel.br.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://umbriel.br.ext.planetunix.net/pub/gentoo/": {
+  "region": "South America",
+  "country": "Brazil",
+  "operator": "PlanetUnix Networks",
+  "proto": "http",
+  "base": "http://umbriel.br.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://umbriel.br.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://umbriel.br.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mimas.co.ext.planetunix.net/pub/gentoo/": {
+  "region": "South America",
+  "country": "Colombia",
+  "operator": "PlanetUnix Networks",
+  "proto": "https",
+  "base": "https://mimas.co.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mimas.co.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mimas.co.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mimas.co.ext.planetunix.net/pub/gentoo/": {
+  "region": "South America",
+  "country": "Colombia",
+  "operator": "PlanetUnix Networks",
+  "proto": "http",
+  "base": "http://mimas.co.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mimas.co.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mimas.co.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://elmirror.cl/gentoo/": {
+  "region": "South America",
+  "country": "Chile",
+  "operator": "ElMirror.cl Team",
+  "proto": "https",
+  "base": "https://elmirror.cl/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 404,
+    "length": "146",
+    "match": false,
+    "url": "https://elmirror.cl/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 404,
+    "length": "146",
+    "match": false,
+    "url": "https://elmirror.cl/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://elmirror.cl/gentoo/": {
+  "region": "South America",
+  "country": "Chile",
+  "operator": "ElMirror.cl Team",
+  "proto": "http",
+  "base": "http://elmirror.cl/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 404,
+    "length": "146",
+    "match": false,
+    "url": "http://elmirror.cl/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 404,
+    "length": "146",
+    "match": false,
+    "url": "http://elmirror.cl/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.kumi.systems/gentoo/": {
+  "region": "Europe",
+  "country": "Austria",
+  "operator": "Kumi Systems e.U.",
+  "proto": "https",
+  "base": "https://mirror.kumi.systems/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.kumi.systems/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.kumi.systems/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.kumi.systems/gentoo/": {
+  "region": "Europe",
+  "country": "Austria",
+  "operator": "Kumi Systems e.U.",
+  "proto": "http",
+  "base": "http://mirror.kumi.systems/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.kumi.systems/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.kumi.systems/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://at.mirrors.cicku.me/gentoo/": {
+  "region": "Europe",
+  "country": "Austria",
+  "operator": "CICKU",
+  "proto": "https",
+  "base": "https://at.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://at.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://at.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://at.mirrors.cicku.me/gentoo/": {
+  "region": "Europe",
+  "country": "Austria",
+  "operator": "CICKU",
+  "proto": "http",
+  "base": "http://at.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://at.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://at.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "https://ftp.belnet.be/pub/rsync.gentoo.org/gentoo/": {
+  "region": "Europe",
+  "country": "Belgium",
+  "operator": "Belnet",
+  "proto": "https",
+  "base": "https://ftp.belnet.be/pub/rsync.gentoo.org/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://ftp.belnet.be/pub/rsync.gentoo.org/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://ftp.belnet.be/pub/rsync.gentoo.org/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://gentoo.mirror-services.net/gentoo-distfiles/": {
+  "region": "Europe",
+  "country": "Belgium",
+  "operator": "BOINC Team Belgium (boinc.teambelgium.net)",
+  "proto": "https",
+  "base": "https://gentoo.mirror-services.net/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://gentoo.mirror-services.net/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://gentoo.mirror-services.net/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.telepoint.bg/gentoo/": {
+  "region": "Europe",
+  "country": "Bulgaria",
+  "operator": "Telepoint Ltd",
+  "proto": "https",
+  "base": "https://mirror.telepoint.bg/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.telepoint.bg/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.telepoint.bg/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.telepoint.bg/gentoo/": {
+  "region": "Europe",
+  "country": "Bulgaria",
+  "operator": "Telepoint Ltd",
+  "proto": "http",
+  "base": "http://mirror.telepoint.bg/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.telepoint.bg/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.telepoint.bg/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://phoebe.bg.ext.planetunix.net/pub/gentoo/": {
+  "region": "Europe",
+  "country": "Bulgaria",
+  "operator": "PlanetUnix Networks",
+  "proto": "https",
+  "base": "https://phoebe.bg.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://phoebe.bg.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://phoebe.bg.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://phoebe.bg.ext.planetunix.net/pub/gentoo/": {
+  "region": "Europe",
+  "country": "Bulgaria",
+  "operator": "PlanetUnix Networks",
+  "proto": "http",
+  "base": "http://phoebe.bg.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://phoebe.bg.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://phoebe.bg.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.init7.net/gentoo/": {
+  "region": "Europe",
+  "country": "Switzerland",
+  "operator": "Init7",
+  "proto": "https",
+  "base": "https://mirror.init7.net/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.init7.net/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.init7.net/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.init7.net/gentoo/": {
+  "region": "Europe",
+  "country": "Switzerland",
+  "operator": "Init7",
+  "proto": "http",
+  "base": "http://mirror.init7.net/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.init7.net/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.init7.net/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://pkg.adfinis-on-exoscale.ch/gentoo/": {
+  "region": "Europe",
+  "country": "Switzerland",
+  "operator": "Adfinis & Exoscale",
+  "proto": "https",
+  "base": "https://pkg.adfinis-on-exoscale.ch/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://pkg.adfinis-on-exoscale.ch/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://pkg.adfinis-on-exoscale.ch/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://pkg.adfinis-on-exoscale.ch/gentoo/": {
+  "region": "Europe",
+  "country": "Switzerland",
+  "operator": "Adfinis & Exoscale",
+  "proto": "http",
+  "base": "http://pkg.adfinis-on-exoscale.ch/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://pkg.adfinis-on-exoscale.ch/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://pkg.adfinis-on-exoscale.ch/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://ch.mirrors.cicku.me/gentoo/": {
+  "region": "Europe",
+  "country": "Switzerland",
+  "operator": "CICKU",
+  "proto": "https",
+  "base": "https://ch.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://ch.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://ch.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://ch.mirrors.cicku.me/gentoo/": {
+  "region": "Europe",
+  "country": "Switzerland",
+  "operator": "CICKU",
+  "proto": "http",
+  "base": "http://ch.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://ch.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://ch.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://ftp.fi.muni.cz/pub/linux/gentoo/": {
+  "region": "Europe",
+  "country": "Czech Republic",
+  "operator": "Masaryk University Brno",
+  "proto": "http",
+  "base": "http://ftp.fi.muni.cz/pub/linux/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp.fi.muni.cz/pub/linux/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ftp.fi.muni.cz/pub/linux/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://gentoo.mirror.web4u.cz/": {
+  "region": "Europe",
+  "country": "Czech Republic",
+  "operator": "Web4U Mirror",
+  "proto": "http",
+  "base": "http://gentoo.mirror.web4u.cz/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://gentoo.mirror.web4u.cz/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://gentoo.mirror.web4u.cz/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.dkm.cz/gentoo/": {
+  "region": "Europe",
+  "country": "Czech Republic",
+  "operator": "UPC \u010cesk\u00e1 republika, a.s.",
+  "proto": "https",
+  "base": "https://mirror.dkm.cz/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.dkm.cz/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.dkm.cz/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.it4i.cz/gentoo/": {
+  "region": "Europe",
+  "country": "Czech Republic",
+  "operator": "IT4Innovations / Technical University of Ostrava",
+  "proto": "https",
+  "base": "https://mirror.it4i.cz/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.it4i.cz/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.it4i.cz/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.it4i.cz/gentoo/": {
+  "region": "Europe",
+  "country": "Czech Republic",
+  "operator": "IT4Innovations / Technical University of Ostrava",
+  "proto": "http",
+  "base": "http://mirror.it4i.cz/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.it4i.cz/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.it4i.cz/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://gluttony.sin.cvut.cz/gentoo/": {
+  "region": "Europe",
+  "country": "Czech Republic",
+  "operator": "Sincoolka Mirror - Club Sincoolka, Czech Technical University in Prague",
+  "proto": "https",
+  "base": "https://gluttony.sin.cvut.cz/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://gluttony.sin.cvut.cz/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://gluttony.sin.cvut.cz/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://gluttony.sin.cvut.cz/gentoo/": {
+  "region": "Europe",
+  "country": "Czech Republic",
+  "operator": "Sincoolka Mirror - Club Sincoolka, Czech Technical University in Prague",
+  "proto": "http",
+  "base": "http://gluttony.sin.cvut.cz/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://gluttony.sin.cvut.cz/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://gluttony.sin.cvut.cz/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.vpsfree.cz/gentoo/": {
+  "region": "Europe",
+  "country": "Czech Republic",
+  "operator": "vpsFree.cz",
+  "proto": "https",
+  "base": "https://mirror.vpsfree.cz/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.vpsfree.cz/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.vpsfree.cz/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.vpsfree.cz/gentoo/": {
+  "region": "Europe",
+  "country": "Czech Republic",
+  "operator": "vpsFree.cz",
+  "proto": "http",
+  "base": "http://mirror.vpsfree.cz/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.vpsfree.cz/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.vpsfree.cz/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://gentoo.nic.cz/source/": {
+  "region": "Europe",
+  "country": "Czech Republic",
+  "operator": "CZ.NIC",
+  "proto": "https",
+  "base": "https://gentoo.nic.cz/source/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 404,
+    "length": "146",
+    "match": false,
+    "url": "https://gentoo.nic.cz/source/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 404,
+    "length": "146",
+    "match": false,
+    "url": "https://gentoo.nic.cz/source/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirrors.dotsrc.org/gentoo/": {
+  "region": "Europe",
+  "country": "Denmark",
+  "operator": "dotsrc.org",
+  "proto": "https",
+  "base": "https://mirrors.dotsrc.org/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirrors.dotsrc.org/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirrors.dotsrc.org/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirrors.dotsrc.org/gentoo/": {
+  "region": "Europe",
+  "country": "Denmark",
+  "operator": "dotsrc.org",
+  "proto": "http",
+  "base": "http://mirrors.dotsrc.org/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirrors.dotsrc.org/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirrors.dotsrc.org/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp.free.fr/mirrors/ftp.gentoo.org/": {
+  "region": "Europe",
+  "country": "France",
+  "operator": "Free",
+  "proto": "http",
+  "base": "http://ftp.free.fr/mirrors/ftp.gentoo.org/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp.free.fr/mirrors/ftp.gentoo.org/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ftp.free.fr/mirrors/ftp.gentoo.org/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirrors.ircam.fr/pub/gentoo-distfiles/": {
+  "region": "Europe",
+  "country": "France",
+  "operator": "Ircam",
+  "proto": "http",
+  "base": "http://mirrors.ircam.fr/pub/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirrors.ircam.fr/pub/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirrors.ircam.fr/pub/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirrors.ircam.fr/pub/gentoo-distfiles/": {
+  "region": "Europe",
+  "country": "France",
+  "operator": "Ircam",
+  "proto": "https",
+  "base": "https://mirrors.ircam.fr/pub/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirrors.ircam.fr/pub/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirrors.ircam.fr/pub/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirrors.soeasyto.com/distfiles.gentoo.org/": {
+  "region": "Europe",
+  "country": "France",
+  "operator": "soeasyto.com",
+  "proto": "https",
+  "base": "https://mirrors.soeasyto.com/distfiles.gentoo.org/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirrors.soeasyto.com/distfiles.gentoo.org/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirrors.soeasyto.com/distfiles.gentoo.org/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirrors.soeasyto.com/distfiles.gentoo.org/": {
+  "region": "Europe",
+  "country": "France",
+  "operator": "soeasyto.com",
+  "proto": "http",
+  "base": "http://mirrors.soeasyto.com/distfiles.gentoo.org/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirrors.soeasyto.com/distfiles.gentoo.org/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirrors.soeasyto.com/distfiles.gentoo.org/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://fr.mirrors.cicku.me/gentoo/": {
+  "region": "Europe",
+  "country": "France",
+  "operator": "CICKU",
+  "proto": "https",
+  "base": "https://fr.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://fr.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://fr.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://fr.mirrors.cicku.me/gentoo/": {
+  "region": "Europe",
+  "country": "France",
+  "operator": "CICKU",
+  "proto": "http",
+  "base": "http://fr.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://fr.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://fr.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "https://nereid.fr.ext.planetunix.net/pub/gentoo/": {
+  "region": "Europe",
+  "country": "France",
+  "operator": "PlanetUnix Networks",
+  "proto": "https",
+  "base": "https://nereid.fr.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://nereid.fr.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://nereid.fr.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://nereid.fr.ext.planetunix.net/pub/gentoo/": {
+  "region": "Europe",
+  "country": "France",
+  "operator": "PlanetUnix Networks",
+  "proto": "http",
+  "base": "http://nereid.fr.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://nereid.fr.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://nereid.fr.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.ibcp.fr/pub/gentoo/": {
+  "region": "Europe",
+  "country": "France",
+  "operator": "CNRS IBCP",
+  "proto": "https",
+  "base": "https://mirror.ibcp.fr/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.ibcp.fr/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.ibcp.fr/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://linux.rz.ruhr-uni-bochum.de/download/gentoo-mirror/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Ruhr-Universit\u00e4t Bochum",
+  "proto": "https",
+  "base": "https://linux.rz.ruhr-uni-bochum.de/download/gentoo-mirror/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://linux.rz.ruhr-uni-bochum.de/download/gentoo-mirror/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://linux.rz.ruhr-uni-bochum.de/download/gentoo-mirror/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://linux.rz.ruhr-uni-bochum.de/download/gentoo-mirror/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Ruhr-Universit\u00e4t Bochum",
+  "proto": "http",
+  "base": "http://linux.rz.ruhr-uni-bochum.de/download/gentoo-mirror/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://linux.rz.ruhr-uni-bochum.de/download/gentoo-mirror/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://linux.rz.ruhr-uni-bochum.de/download/gentoo-mirror/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://ftp.fau.de/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Uni Erlangen-N\u00fcrnberg",
+  "proto": "https",
+  "base": "https://ftp.fau.de/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://ftp.fau.de/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://ftp.fau.de/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp.fau.de/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Uni Erlangen-N\u00fcrnberg",
+  "proto": "http",
+  "base": "http://ftp.fau.de/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp.fau.de/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ftp.fau.de/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp.agdsn.de/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Dresden University of Technology/AG DSN",
+  "proto": "http",
+  "base": "http://ftp.agdsn.de/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp.agdsn.de/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ftp.agdsn.de/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://ftp.agdsn.de/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Dresden University of Technology/AG DSN",
+  "proto": "https",
+  "base": "https://ftp.agdsn.de/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://ftp.agdsn.de/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://ftp.agdsn.de/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://ftp-stud.hs-esslingen.de/pub/Mirrors/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "University of Applied Sciences, Esslingen",
+  "proto": "https",
+  "base": "https://ftp-stud.hs-esslingen.de/pub/Mirrors/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://ftp-stud.hs-esslingen.de/pub/Mirrors/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://ftp-stud.hs-esslingen.de/pub/Mirrors/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp-stud.hs-esslingen.de/pub/Mirrors/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "University of Applied Sciences, Esslingen",
+  "proto": "http",
+  "base": "http://ftp-stud.hs-esslingen.de/pub/Mirrors/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp-stud.hs-esslingen.de/pub/Mirrors/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ftp-stud.hs-esslingen.de/pub/Mirrors/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.eu.oneandone.net/linux/distributions/gentoo/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "1&1 Internet SE",
+  "proto": "https",
+  "base": "https://mirror.eu.oneandone.net/linux/distributions/gentoo/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 301,
+    "length": "162",
+    "match": false,
+    "url": "https://mirror.eu.oneandone.net/linux/distributions/gentoo/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 301,
+    "length": "162",
+    "match": false,
+    "url": "https://mirror.eu.oneandone.net/linux/distributions/gentoo/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 301
+ },
+ "http://mirror.eu.oneandone.net/linux/distributions/gentoo/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "1&1 Internet SE",
+  "proto": "http",
+  "base": "http://mirror.eu.oneandone.net/linux/distributions/gentoo/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 301,
+    "length": "162",
+    "match": false,
+    "url": "http://mirror.eu.oneandone.net/linux/distributions/gentoo/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 301,
+    "length": "162",
+    "match": false,
+    "url": "http://mirror.eu.oneandone.net/linux/distributions/gentoo/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 301
+ },
+ "https://mirror.netcologne.de/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Netcologne",
+  "proto": "https",
+  "base": "https://mirror.netcologne.de/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.netcologne.de/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.netcologne.de/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.netcologne.de/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Netcologne",
+  "proto": "http",
+  "base": "http://mirror.netcologne.de/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.netcologne.de/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.netcologne.de/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://ftp.halifax.rwth-aachen.de/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "RWTH Aachen University",
+  "proto": "https",
+  "base": "https://ftp.halifax.rwth-aachen.de/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://ftp.halifax.rwth-aachen.de/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://ftp.halifax.rwth-aachen.de/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp.halifax.rwth-aachen.de/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "RWTH Aachen University",
+  "proto": "http",
+  "base": "http://ftp.halifax.rwth-aachen.de/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp.halifax.rwth-aachen.de/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ftp.halifax.rwth-aachen.de/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://ftp.gwdg.de/pub/linux/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Gesellschaft f\u00fcr wissenschaftliche Datenverarbeitung G\u00f6ttingen",
+  "proto": "https",
+  "base": "https://ftp.gwdg.de/pub/linux/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://ftp.gwdg.de/pub/linux/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://ftp.gwdg.de/pub/linux/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp.gwdg.de/pub/linux/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Gesellschaft f\u00fcr wissenschaftliche Datenverarbeitung G\u00f6ttingen",
+  "proto": "http",
+  "base": "http://ftp.gwdg.de/pub/linux/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp.gwdg.de/pub/linux/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ftp.gwdg.de/pub/linux/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://ftp.tu-ilmenau.de/mirror/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "TU Ilmenau",
+  "proto": "https",
+  "base": "https://ftp.tu-ilmenau.de/mirror/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://ftp.tu-ilmenau.de/mirror/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://ftp.tu-ilmenau.de/mirror/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp.tu-ilmenau.de/mirror/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "TU Ilmenau",
+  "proto": "http",
+  "base": "http://ftp.tu-ilmenau.de/mirror/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp.tu-ilmenau.de/mirror/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ftp.tu-ilmenau.de/mirror/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://ftp.uni-hannover.de/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Leibniz Universit\u00e4t Hannover",
+  "proto": "https",
+  "base": "https://ftp.uni-hannover.de/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://ftp.uni-hannover.de/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://ftp.uni-hannover.de/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp.uni-hannover.de/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Leibniz Universit\u00e4t Hannover",
+  "proto": "http",
+  "base": "http://ftp.uni-hannover.de/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp.uni-hannover.de/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ftp.uni-hannover.de/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://ftp.uni-stuttgart.de/gentoo-distfiles/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Universit\u00e4t Stuttgart",
+  "proto": "https",
+  "base": "https://ftp.uni-stuttgart.de/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://ftp.uni-stuttgart.de/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://ftp.uni-stuttgart.de/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp.uni-stuttgart.de/gentoo-distfiles/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Universit\u00e4t Stuttgart",
+  "proto": "http",
+  "base": "http://ftp.uni-stuttgart.de/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp.uni-stuttgart.de/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ftp.uni-stuttgart.de/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://ftp.spline.inf.fu-berlin.de/mirrors/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Freie Universit\u00e4t Berlin - Spline",
+  "proto": "https",
+  "base": "https://ftp.spline.inf.fu-berlin.de/mirrors/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://ftp.spline.inf.fu-berlin.de/mirrors/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://ftp.spline.inf.fu-berlin.de/mirrors/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp.spline.inf.fu-berlin.de/mirrors/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Freie Universit\u00e4t Berlin - Spline",
+  "proto": "http",
+  "base": "http://ftp.spline.inf.fu-berlin.de/mirrors/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp.spline.inf.fu-berlin.de/mirrors/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ftp.spline.inf.fu-berlin.de/mirrors/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.netzwerge.de/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Netzwerge GmbH",
+  "proto": "https",
+  "base": "https://mirror.netzwerge.de/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.netzwerge.de/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.netzwerge.de/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.netzwerge.de/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Netzwerge GmbH",
+  "proto": "http",
+  "base": "http://mirror.netzwerge.de/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.netzwerge.de/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.netzwerge.de/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.dogado.de/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "dogado GmbH",
+  "proto": "https",
+  "base": "https://mirror.dogado.de/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.dogado.de/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.dogado.de/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://de.mirrors.cicku.me/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "CICKU",
+  "proto": "https",
+  "base": "https://de.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://de.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://de.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://de.mirrors.cicku.me/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "CICKU",
+  "proto": "http",
+  "base": "http://de.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://de.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://de.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "https://oberon.de.ext.planetunix.net/pub/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "PlanetUnix Networks",
+  "proto": "https",
+  "base": "https://oberon.de.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://oberon.de.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://oberon.de.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://oberon.de.ext.planetunix.net/pub/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "PlanetUnix Networks",
+  "proto": "http",
+  "base": "http://oberon.de.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://oberon.de.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://oberon.de.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.diyarciftci.xyz/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Diyar Ciftci",
+  "proto": "https",
+  "base": "https://mirror.diyarciftci.xyz/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.diyarciftci.xyz/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.diyarciftci.xyz/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.diyarciftci.xyz/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Diyar Ciftci",
+  "proto": "http",
+  "base": "http://mirror.diyarciftci.xyz/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.diyarciftci.xyz/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.diyarciftci.xyz/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.rabisu.com/mirrors/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Rabisu",
+  "proto": "https",
+  "base": "https://mirror.rabisu.com/mirrors/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 404,
+    "length": "153",
+    "match": false,
+    "url": "https://mirror.rabisu.com/mirrors/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 404,
+    "length": "153",
+    "match": false,
+    "url": "https://mirror.rabisu.com/mirrors/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.rabisu.com/mirrors/gentoo/": {
+  "region": "Europe",
+  "country": "Germany",
+  "operator": "Rabisu",
+  "proto": "http",
+  "base": "http://mirror.rabisu.com/mirrors/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 404,
+    "length": "153",
+    "match": false,
+    "url": "http://mirror.rabisu.com/mirrors/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 404,
+    "length": "153",
+    "match": false,
+    "url": "http://mirror.rabisu.com/mirrors/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp.ntua.gr/pub/linux/gentoo/": {
+  "region": "Europe",
+  "country": "Greece",
+  "operator": "National Technical University of Athens",
+  "proto": "http",
+  "base": "http://ftp.ntua.gr/pub/linux/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp.ntua.gr/pub/linux/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ftp.ntua.gr/pub/linux/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://gentoo.jss.hu/": {
+  "region": "Europe",
+  "country": "Hungary",
+  "operator": "JSS & Hayer",
+  "proto": "https",
+  "base": "https://gentoo.jss.hu/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://gentoo.jss.hu/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://gentoo.jss.hu/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://gentoo.jss.hu/": {
+  "region": "Europe",
+  "country": "Hungary",
+  "operator": "JSS & Hayer",
+  "proto": "http",
+  "base": "http://gentoo.jss.hu/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://gentoo.jss.hu/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://gentoo.jss.hu/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://gentoo.mirror.garr.it/": {
+  "region": "Europe",
+  "country": "Italy",
+  "operator": "GARR",
+  "proto": "https",
+  "base": "https://gentoo.mirror.garr.it/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://gentoo.mirror.garr.it/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://gentoo.mirror.garr.it/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://gentoo.mirror.garr.it/": {
+  "region": "Europe",
+  "country": "Italy",
+  "operator": "GARR",
+  "proto": "http",
+  "base": "http://gentoo.mirror.garr.it/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://gentoo.mirror.garr.it/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://gentoo.mirror.garr.it/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://it.mirrors.cicku.me/gentoo/": {
+  "region": "Europe",
+  "country": "Italy",
+  "operator": "CICKU",
+  "proto": "https",
+  "base": "https://it.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://it.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://it.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://it.mirrors.cicku.me/gentoo/": {
+  "region": "Europe",
+  "country": "Italy",
+  "operator": "CICKU",
+  "proto": "http",
+  "base": "http://it.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://it.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://it.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "https://belinda.it.ext.planetunix.net/pub/gentoo/": {
+  "region": "Europe",
+  "country": "Italy",
+  "operator": "PlanetUnix Networks",
+  "proto": "https",
+  "base": "https://belinda.it.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://belinda.it.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://belinda.it.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://belinda.it.ext.planetunix.net/pub/gentoo/": {
+  "region": "Europe",
+  "country": "Italy",
+  "operator": "PlanetUnix Networks",
+  "proto": "http",
+  "base": "http://belinda.it.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://belinda.it.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://belinda.it.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://gentoo.mirror.root.lu/": {
+  "region": "Europe",
+  "country": "Luxembourg",
+  "operator": "root S.A.",
+  "proto": "http",
+  "base": "http://gentoo.mirror.root.lu/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://gentoo.mirror.root.lu/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://gentoo.mirror.root.lu/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.as43289.net/gentoo/": {
+  "region": "Europe",
+  "country": "Moldova",
+  "operator": "Trabia Network",
+  "proto": "http",
+  "base": "http://mirror.as43289.net/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 404,
+    "length": "162",
+    "match": false,
+    "url": "http://mirror.as43289.net/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 404,
+    "length": "162",
+    "match": false,
+    "url": "http://mirror.as43289.net/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.hosthink.net/gentoo/": {
+  "region": "Europe",
+  "country": "Moldova",
+  "operator": "Hosthink Dedicated Servers",
+  "proto": "https",
+  "base": "https://mirror.hosthink.net/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.hosthink.net/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.hosthink.net/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.hosthink.net/gentoo/": {
+  "region": "Europe",
+  "country": "Moldova",
+  "operator": "Hosthink Dedicated Servers",
+  "proto": "http",
+  "base": "http://mirror.hosthink.net/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 301,
+    "length": "169",
+    "match": false,
+    "url": "http://mirror.hosthink.net/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 301,
+    "length": "169",
+    "match": false,
+    "url": "http://mirror.hosthink.net/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 301
+ },
+ "https://ftp.snt.utwente.nl/pub/os/linux/gentoo/": {
+  "region": "Europe",
+  "country": "Netherlands",
+  "operator": "Universiteit Twente",
+  "proto": "https",
+  "base": "https://ftp.snt.utwente.nl/pub/os/linux/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://ftp.snt.utwente.nl/pub/os/linux/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://ftp.snt.utwente.nl/pub/os/linux/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp.snt.utwente.nl/pub/os/linux/gentoo/": {
+  "region": "Europe",
+  "country": "Netherlands",
+  "operator": "Universiteit Twente",
+  "proto": "http",
+  "base": "http://ftp.snt.utwente.nl/pub/os/linux/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp.snt.utwente.nl/pub/os/linux/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ftp.snt.utwente.nl/pub/os/linux/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirrors.evoluso.com/gentoo/": {
+  "region": "Europe",
+  "country": "Netherlands",
+  "operator": "evoluso.com",
+  "proto": "https",
+  "base": "https://mirrors.evoluso.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirrors.evoluso.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirrors.evoluso.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirrors.evoluso.com/gentoo/": {
+  "region": "Europe",
+  "country": "Netherlands",
+  "operator": "evoluso.com",
+  "proto": "http",
+  "base": "http://mirrors.evoluso.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirrors.evoluso.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirrors.evoluso.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirrors.hostiserver.com/gentoo/": {
+  "region": "Europe",
+  "country": "Netherlands",
+  "operator": "IT Services Company s.r.o.",
+  "proto": "https",
+  "base": "https://mirrors.hostiserver.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirrors.hostiserver.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirrors.hostiserver.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirrors.hostiserver.com/gentoo/": {
+  "region": "Europe",
+  "country": "Netherlands",
+  "operator": "IT Services Company s.r.o.",
+  "proto": "http",
+  "base": "http://mirrors.hostiserver.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirrors.hostiserver.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirrors.hostiserver.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://nl.mirrors.cicku.me/gentoo/": {
+  "region": "Europe",
+  "country": "Netherlands",
+  "operator": "CICKU",
+  "proto": "https",
+  "base": "https://nl.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://nl.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://nl.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://nl.mirrors.cicku.me/gentoo/": {
+  "region": "Europe",
+  "country": "Netherlands",
+  "operator": "CICKU",
+  "proto": "http",
+  "base": "http://nl.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://nl.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://nl.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "https://mirror.vulnseeker.org/pub/gentoo/": {
+  "region": "Europe",
+  "country": "Netherlands",
+  "operator": "Vuln Seeker",
+  "proto": "https",
+  "base": "https://mirror.vulnseeker.org/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.vulnseeker.org/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.vulnseeker.org/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.vulnseeker.org/pub/gentoo/": {
+  "region": "Europe",
+  "country": "Netherlands",
+  "operator": "Vuln Seeker",
+  "proto": "http",
+  "base": "http://mirror.vulnseeker.org/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 301,
+    "length": "169",
+    "match": false,
+    "url": "http://mirror.vulnseeker.org/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 301,
+    "length": "169",
+    "match": false,
+    "url": "http://mirror.vulnseeker.org/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 301
+ },
+ "https://mirror.lyrahosting.com/gentoo/": {
+  "region": "Europe",
+  "country": "Netherlands",
+  "operator": "Lyrahosting.com",
+  "proto": "https",
+  "base": "https://mirror.lyrahosting.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": null,
+    "length": null,
+    "match": false,
+    "url": "https://mirror.lyrahosting.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": null,
+    "length": null,
+    "match": false,
+    "url": "https://mirror.lyrahosting.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.lyrahosting.com/gentoo/": {
+  "region": "Europe",
+  "country": "Netherlands",
+  "operator": "Lyrahosting.com",
+  "proto": "http",
+  "base": "http://mirror.lyrahosting.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.lyrahosting.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.lyrahosting.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.alldaydev.com/gentoo/": {
+  "region": "Europe",
+  "country": "Poland",
+  "operator": "All-Day Developer Marcin Wawrzk\u00f3w",
+  "proto": "https",
+  "base": "https://mirror.alldaydev.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.alldaydev.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.alldaydev.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://ftp.rnl.tecnico.ulisboa.pt/pub/gentoo/gentoo-distfiles/": {
+  "region": "Europe",
+  "country": "Portugal",
+  "operator": "RNL - T\u00e9cnico Lisboa",
+  "proto": "https",
+  "base": "https://ftp.rnl.tecnico.ulisboa.pt/pub/gentoo/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://ftp.rnl.tecnico.ulisboa.pt/pub/gentoo/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://ftp.rnl.tecnico.ulisboa.pt/pub/gentoo/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp.rnl.tecnico.ulisboa.pt/pub/gentoo/gentoo-distfiles/": {
+  "region": "Europe",
+  "country": "Portugal",
+  "operator": "RNL - T\u00e9cnico Lisboa",
+  "proto": "http",
+  "base": "http://ftp.rnl.tecnico.ulisboa.pt/pub/gentoo/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp.rnl.tecnico.ulisboa.pt/pub/gentoo/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ftp.rnl.tecnico.ulisboa.pt/pub/gentoo/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirrors.ptisp.pt/gentoo/": {
+  "region": "Europe",
+  "country": "Portugal",
+  "operator": "PTISP",
+  "proto": "https",
+  "base": "https://mirrors.ptisp.pt/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 404,
+    "length": null,
+    "match": false,
+    "url": "https://mirrors.ptisp.pt/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 404,
+    "length": null,
+    "match": false,
+    "url": "https://mirrors.ptisp.pt/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirrors.ptisp.pt/gentoo/": {
+  "region": "Europe",
+  "country": "Portugal",
+  "operator": "PTISP",
+  "proto": "http",
+  "base": "http://mirrors.ptisp.pt/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 404,
+    "length": null,
+    "match": false,
+    "url": "http://mirrors.ptisp.pt/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 404,
+    "length": null,
+    "match": false,
+    "url": "http://mirrors.ptisp.pt/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp.romnet.org/gentoo/": {
+  "region": "Europe",
+  "country": "Romania",
+  "operator": "Romanian Organization Network",
+  "proto": "http",
+  "base": "http://ftp.romnet.org/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp.romnet.org/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ftp.romnet.org/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror1.sox.rs/gentoo/": {
+  "region": "Europe",
+  "country": "Serbia",
+  "operator": "Serbian Open eXchange",
+  "proto": "http",
+  "base": "http://mirror1.sox.rs/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror1.sox.rs/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror1.sox.rs/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror1.sox.rs/gentoo/": {
+  "region": "Europe",
+  "country": "Serbia",
+  "operator": "Serbian Open eXchange",
+  "proto": "https",
+  "base": "https://mirror1.sox.rs/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror1.sox.rs/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror1.sox.rs/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.sbb.rs/gentoo/": {
+  "region": "Europe",
+  "country": "Serbia",
+  "operator": "sbb.rs",
+  "proto": "http",
+  "base": "http://mirror.sbb.rs/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 404,
+    "length": null,
+    "match": false,
+    "url": "http://mirror.sbb.rs/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 404,
+    "length": null,
+    "match": false,
+    "url": "http://mirror.sbb.rs/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://ftp.lysator.liu.se/gentoo/": {
+  "region": "Europe",
+  "country": "Sweden",
+  "operator": "Link\u00f6ping University - Lysator",
+  "proto": "https",
+  "base": "https://ftp.lysator.liu.se/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://ftp.lysator.liu.se/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://ftp.lysator.liu.se/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp.lysator.liu.se/gentoo/": {
+  "region": "Europe",
+  "country": "Sweden",
+  "operator": "Link\u00f6ping University - Lysator",
+  "proto": "http",
+  "base": "http://ftp.lysator.liu.se/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp.lysator.liu.se/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ftp.lysator.liu.se/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirrors.tnonline.net/gentoo/gentoo-distfiles/": {
+  "region": "Europe",
+  "country": "Sweden",
+  "operator": "tnonline.net",
+  "proto": "https",
+  "base": "https://mirrors.tnonline.net/gentoo/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirrors.tnonline.net/gentoo/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirrors.tnonline.net/gentoo/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.wheel.sk/gentoo/": {
+  "region": "Europe",
+  "country": "Slovakia",
+  "operator": "Wheel.sk",
+  "proto": "https",
+  "base": "https://mirror.wheel.sk/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.wheel.sk/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.wheel.sk/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.wheel.sk/gentoo/": {
+  "region": "Europe",
+  "country": "Slovakia",
+  "operator": "Wheel.sk",
+  "proto": "http",
+  "base": "http://mirror.wheel.sk/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.wheel.sk/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.wheel.sk/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://repo.ifca.es/gentoo-distfiles/": {
+  "region": "Europe",
+  "country": "Spain",
+  "operator": "Institute of Physics of Cantabria (CSIC-UC)",
+  "proto": "https",
+  "base": "https://repo.ifca.es/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://repo.ifca.es/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://repo.ifca.es/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.javier.eu.org/gentoo-distfiles/": {
+  "region": "Europe",
+  "country": "Spain",
+  "operator": "Javier Garc\u00eda",
+  "proto": "https",
+  "base": "https://mirror.javier.eu.org/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.javier.eu.org/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.javier.eu.org/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.javier.eu.org/gentoo-distfiles/": {
+  "region": "Europe",
+  "country": "Spain",
+  "operator": "Javier Garc\u00eda",
+  "proto": "http",
+  "base": "http://mirror.javier.eu.org/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.javier.eu.org/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.javier.eu.org/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://es.mirrors.cicku.me/gentoo/": {
+  "region": "Europe",
+  "country": "Spain",
+  "operator": "CICKU",
+  "proto": "https",
+  "base": "https://es.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://es.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://es.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://es.mirrors.cicku.me/gentoo/": {
+  "region": "Europe",
+  "country": "Spain",
+  "operator": "CICKU",
+  "proto": "http",
+  "base": "http://es.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://es.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://es.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "https://mirror.raiolanetworks.com/gentoo/": {
+  "region": "Europe",
+  "country": "Spain",
+  "operator": "Raiola Networks (raiolanetworks.com)",
+  "proto": "https",
+  "base": "https://mirror.raiolanetworks.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.raiolanetworks.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.raiolanetworks.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.raiolanetworks.com/gentoo/": {
+  "region": "Europe",
+  "country": "Spain",
+  "operator": "Raiola Networks (raiolanetworks.com)",
+  "proto": "http",
+  "base": "http://mirror.raiolanetworks.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.raiolanetworks.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.raiolanetworks.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://ftp.linux.org.tr/gentoo/": {
+  "region": "Europe",
+  "country": "Turkey",
+  "operator": "Turkish Linux Users Group - Linux Kullanicilari Dernegi (LKD)",
+  "proto": "https",
+  "base": "https://ftp.linux.org.tr/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://ftp.linux.org.tr/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://ftp.linux.org.tr/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://himalia.ua.ext.planetunix.net/pub/gentoo/": {
+  "region": "Europe",
+  "country": "Ukraine",
+  "operator": "PlanetUnix Networks",
+  "proto": "https",
+  "base": "https://himalia.ua.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://himalia.ua.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://himalia.ua.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://himalia.ua.ext.planetunix.net/pub/gentoo/": {
+  "region": "Europe",
+  "country": "Ukraine",
+  "operator": "PlanetUnix Networks",
+  "proto": "http",
+  "base": "http://himalia.ua.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://himalia.ua.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://himalia.ua.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirrors.gethosted.online/gentoo/": {
+  "region": "Europe",
+  "country": "United Kingdom",
+  "operator": "Get Hosted online",
+  "proto": "https",
+  "base": "https://mirrors.gethosted.online/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirrors.gethosted.online/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": null,
+    "match": false,
+    "url": "https://mirrors.gethosted.online/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirrors.gethosted.online/gentoo/": {
+  "region": "Europe",
+  "country": "United Kingdom",
+  "operator": "Get Hosted online",
+  "proto": "http",
+  "base": "http://mirrors.gethosted.online/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirrors.gethosted.online/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": null,
+    "match": false,
+    "url": "http://mirrors.gethosted.online/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://www.mirrorservice.org/sites/distfiles.gentoo.org/": {
+  "region": "Europe",
+  "country": "United Kingdom",
+  "operator": "The UK Mirror Service",
+  "proto": "https",
+  "base": "https://www.mirrorservice.org/sites/distfiles.gentoo.org/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://www.mirrorservice.org/sites/distfiles.gentoo.org/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://www.mirrorservice.org/sites/distfiles.gentoo.org/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://www.mirrorservice.org/sites/distfiles.gentoo.org/": {
+  "region": "Europe",
+  "country": "United Kingdom",
+  "operator": "The UK Mirror Service",
+  "proto": "http",
+  "base": "http://www.mirrorservice.org/sites/distfiles.gentoo.org/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://www.mirrorservice.org/sites/distfiles.gentoo.org/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://www.mirrorservice.org/sites/distfiles.gentoo.org/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://gb.mirrors.cicku.me/gentoo/": {
+  "region": "Europe",
+  "country": "United Kingdom",
+  "operator": "CICKU",
+  "proto": "https",
+  "base": "https://gb.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://gb.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://gb.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://gb.mirrors.cicku.me/gentoo/": {
+  "region": "Europe",
+  "country": "United Kingdom",
+  "operator": "CICKU",
+  "proto": "http",
+  "base": "http://gb.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://gb.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://gb.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "https://callisto.gb.ext.planetunix.net/pub/gentoo/": {
+  "region": "Europe",
+  "country": "United Kingdom",
+  "operator": "PlanetUnix Networks",
+  "proto": "https",
+  "base": "https://callisto.gb.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://callisto.gb.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://callisto.gb.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://callisto.gb.ext.planetunix.net/pub/gentoo/": {
+  "region": "Europe",
+  "country": "United Kingdom",
+  "operator": "PlanetUnix Networks",
+  "proto": "http",
+  "base": "http://callisto.gb.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://callisto.gb.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://callisto.gb.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.aarnet.edu.au/pub/gentoo/": {
+  "region": "Australia and Oceania",
+  "country": "Australia",
+  "operator": "AARnet",
+  "proto": "https",
+  "base": "https://mirror.aarnet.edu.au/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.aarnet.edu.au/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.aarnet.edu.au/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.aarnet.edu.au/pub/gentoo/": {
+  "region": "Australia and Oceania",
+  "country": "Australia",
+  "operator": "AARnet",
+  "proto": "http",
+  "base": "http://mirror.aarnet.edu.au/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.aarnet.edu.au/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.aarnet.edu.au/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp.swin.edu.au/gentoo/": {
+  "region": "Australia and Oceania",
+  "country": "Australia",
+  "operator": "Swinburne University of Technology",
+  "proto": "http",
+  "base": "http://ftp.swin.edu.au/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp.swin.edu.au/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ftp.swin.edu.au/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://au.mirrors.cicku.me/gentoo/": {
+  "region": "Australia and Oceania",
+  "country": "Australia",
+  "operator": "CICKU",
+  "proto": "https",
+  "base": "https://au.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://au.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://au.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://au.mirrors.cicku.me/gentoo/": {
+  "region": "Australia and Oceania",
+  "country": "Australia",
+  "operator": "CICKU",
+  "proto": "http",
+  "base": "http://au.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://au.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://au.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "https://metis.au.ext.planetunix.net/pub/gentoo/": {
+  "region": "Australia and Oceania",
+  "country": "Australia",
+  "operator": "PlanetUnix Networks",
+  "proto": "https",
+  "base": "https://metis.au.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://metis.au.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://metis.au.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://metis.au.ext.planetunix.net/pub/gentoo/": {
+  "region": "Australia and Oceania",
+  "country": "Australia",
+  "operator": "PlanetUnix Networks",
+  "proto": "http",
+  "base": "http://metis.au.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://metis.au.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://metis.au.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.lagoon.nc/gentoo/": {
+  "region": "Australia and Oceania",
+  "country": "New Caledonia",
+  "operator": "Lagoon",
+  "proto": "https",
+  "base": "https://mirror.lagoon.nc/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 404,
+    "length": null,
+    "match": false,
+    "url": "https://mirror.lagoon.nc/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 404,
+    "length": null,
+    "match": false,
+    "url": "https://mirror.lagoon.nc/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.lagoon.nc/gentoo/": {
+  "region": "Australia and Oceania",
+  "country": "New Caledonia",
+  "operator": "Lagoon",
+  "proto": "http",
+  "base": "http://mirror.lagoon.nc/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 404,
+    "length": null,
+    "match": false,
+    "url": "http://mirror.lagoon.nc/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 404,
+    "length": null,
+    "match": false,
+    "url": "http://mirror.lagoon.nc/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirrors.aliyun.com/gentoo/": {
+  "region": "Asia",
+  "country": "China",
+  "operator": "Alibaba Cloud Computing",
+  "proto": "https",
+  "base": "https://mirrors.aliyun.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirrors.aliyun.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirrors.aliyun.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirrors.aliyun.com/gentoo/": {
+  "region": "Asia",
+  "country": "China",
+  "operator": "Alibaba Cloud Computing",
+  "proto": "http",
+  "base": "http://mirrors.aliyun.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirrors.aliyun.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirrors.aliyun.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirrors.163.com/gentoo/": {
+  "region": "Asia",
+  "country": "China",
+  "operator": "Netease.com, Inc.",
+  "proto": "https",
+  "base": "https://mirrors.163.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirrors.163.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirrors.163.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirrors.163.com/gentoo/": {
+  "region": "Asia",
+  "country": "China",
+  "operator": "Netease.com, Inc.",
+  "proto": "http",
+  "base": "http://mirrors.163.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirrors.163.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirrors.163.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirrors.tuna.tsinghua.edu.cn/gentoo/": {
+  "region": "Asia",
+  "country": "China",
+  "operator": "Tsinghua University",
+  "proto": "https",
+  "base": "https://mirrors.tuna.tsinghua.edu.cn/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirrors.tuna.tsinghua.edu.cn/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirrors.tuna.tsinghua.edu.cn/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirrors.zju.edu.cn/gentoo/": {
+  "region": "Asia",
+  "country": "China",
+  "operator": "Zhejiang University",
+  "proto": "https",
+  "base": "https://mirrors.zju.edu.cn/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirrors.zju.edu.cn/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirrors.zju.edu.cn/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirrors.zju.edu.cn/gentoo/": {
+  "region": "Asia",
+  "country": "China",
+  "operator": "Zhejiang University",
+  "proto": "http",
+  "base": "http://mirrors.zju.edu.cn/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirrors.zju.edu.cn/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirrors.zju.edu.cn/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirrors.ustc.edu.cn/gentoo/": {
+  "region": "Asia",
+  "country": "China",
+  "operator": "University of Science and Technology of China",
+  "proto": "https",
+  "base": "https://mirrors.ustc.edu.cn/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": null,
+    "match": false,
+    "url": "https://mirrors.ustc.edu.cn/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": null,
+    "match": false,
+    "url": "https://mirrors.ustc.edu.cn/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 200
+ },
+ "https://mirrors.nju.edu.cn/gentoo/": {
+  "region": "Asia",
+  "country": "China",
+  "operator": "eScience Center, Nanjing University",
+  "proto": "https",
+  "base": "https://mirrors.nju.edu.cn/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 302,
+    "length": "138",
+    "match": false,
+    "url": "https://mirrors.nju.edu.cn/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 302,
+    "length": "138",
+    "match": false,
+    "url": "https://mirrors.nju.edu.cn/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 302
+ },
+ "http://mirrors.nju.edu.cn/gentoo/": {
+  "region": "Asia",
+  "country": "China",
+  "operator": "eScience Center, Nanjing University",
+  "proto": "http",
+  "base": "http://mirrors.nju.edu.cn/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 302,
+    "length": "138",
+    "match": false,
+    "url": "http://mirrors.nju.edu.cn/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 302,
+    "length": "138",
+    "match": false,
+    "url": "http://mirrors.nju.edu.cn/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 302
+ },
+ "https://mirror.lzu.edu.cn/gentoo/": {
+  "region": "Asia",
+  "country": "China",
+  "operator": "Lanzhou University Open Source Society",
+  "proto": "https",
+  "base": "https://mirror.lzu.edu.cn/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 302,
+    "length": "138",
+    "match": false,
+    "url": "https://mirror.lzu.edu.cn/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 302,
+    "length": "138",
+    "match": false,
+    "url": "https://mirror.lzu.edu.cn/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 302
+ },
+ "http://mirror.lzu.edu.cn/gentoo/": {
+  "region": "Asia",
+  "country": "China",
+  "operator": "Lanzhou University Open Source Society",
+  "proto": "http",
+  "base": "http://mirror.lzu.edu.cn/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 302,
+    "length": "138",
+    "match": false,
+    "url": "http://mirror.lzu.edu.cn/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 302,
+    "length": "138",
+    "match": false,
+    "url": "http://mirror.lzu.edu.cn/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 302
+ },
+ "http://gentoo.aditsu.net:8000/": {
+  "region": "Asia",
+  "country": "Hong Kong",
+  "operator": "aditsu.net",
+  "proto": "http",
+  "base": "http://gentoo.aditsu.net:8000/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://gentoo.aditsu.net:8000/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 404,
+    "length": "153",
+    "match": false,
+    "url": "http://gentoo.aditsu.net:8000/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://hk.mirrors.cicku.me/gentoo/": {
+  "region": "Asia",
+  "country": "Hong Kong",
+  "operator": "CICKU",
+  "proto": "https",
+  "base": "https://hk.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://hk.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://hk.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://hk.mirrors.cicku.me/gentoo/": {
+  "region": "Asia",
+  "country": "Hong Kong",
+  "operator": "CICKU",
+  "proto": "http",
+  "base": "http://hk.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://hk.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://hk.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "https://hippocamp.cn.ext.planetunix.net/pub/gentoo/": {
+  "region": "Asia",
+  "country": "Hong Kong",
+  "operator": "PlanetUnix Networks",
+  "proto": "https",
+  "base": "https://hippocamp.cn.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://hippocamp.cn.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://hippocamp.cn.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://hippocamp.cn.ext.planetunix.net/pub/gentoo/": {
+  "region": "Asia",
+  "country": "Hong Kong",
+  "operator": "PlanetUnix Networks",
+  "proto": "http",
+  "base": "http://hippocamp.cn.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://hippocamp.cn.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://hippocamp.cn.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirrors.nxtgen.com/gentoo-mirror/gentoo-source/": {
+  "region": "Asia",
+  "country": "India",
+  "operator": "NxtGen",
+  "proto": "https",
+  "base": "https://mirrors.nxtgen.com/gentoo-mirror/gentoo-source/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirrors.nxtgen.com/gentoo-mirror/gentoo-source/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirrors.nxtgen.com/gentoo-mirror/gentoo-source/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirrors.nxtgen.com/gentoo-mirror/gentoo-source/": {
+  "region": "Asia",
+  "country": "India",
+  "operator": "NxtGen",
+  "proto": "http",
+  "base": "http://mirrors.nxtgen.com/gentoo-mirror/gentoo-source/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirrors.nxtgen.com/gentoo-mirror/gentoo-source/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirrors.nxtgen.com/gentoo-mirror/gentoo-source/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://in.mirrors.cicku.me/gentoo/": {
+  "region": "Asia",
+  "country": "India",
+  "operator": "CICKU",
+  "proto": "https",
+  "base": "https://in.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://in.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://in.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://in.mirrors.cicku.me/gentoo/": {
+  "region": "Asia",
+  "country": "India",
+  "operator": "CICKU",
+  "proto": "http",
+  "base": "http://in.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://in.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://in.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "https://ariel.in.ext.planetunix.net/pub/gentoo/": {
+  "region": "Asia",
+  "country": "India",
+  "operator": "PlanetUnix Networks",
+  "proto": "https",
+  "base": "https://ariel.in.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://ariel.in.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://ariel.in.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ariel.in.ext.planetunix.net/pub/gentoo/": {
+  "region": "Asia",
+  "country": "India",
+  "operator": "PlanetUnix Networks",
+  "proto": "http",
+  "base": "http://ariel.in.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ariel.in.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ariel.in.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp.iij.ad.jp/pub/linux/gentoo/": {
+  "region": "Asia",
+  "country": "Japan",
+  "operator": "Internet Initiative Japan",
+  "proto": "http",
+  "base": "http://ftp.iij.ad.jp/pub/linux/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp.iij.ad.jp/pub/linux/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ftp.iij.ad.jp/pub/linux/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://ftp.iij.ad.jp/pub/linux/gentoo/": {
+  "region": "Asia",
+  "country": "Japan",
+  "operator": "Internet Initiative Japan",
+  "proto": "https",
+  "base": "https://ftp.iij.ad.jp/pub/linux/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://ftp.iij.ad.jp/pub/linux/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://ftp.iij.ad.jp/pub/linux/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://ftp.jaist.ac.jp/pub/Linux/Gentoo/": {
+  "region": "Asia",
+  "country": "Japan",
+  "operator": "JAIST",
+  "proto": "https",
+  "base": "https://ftp.jaist.ac.jp/pub/Linux/Gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://ftp.jaist.ac.jp/pub/Linux/Gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://ftp.jaist.ac.jp/pub/Linux/Gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp.jaist.ac.jp/pub/Linux/Gentoo/": {
+  "region": "Asia",
+  "country": "Japan",
+  "operator": "JAIST",
+  "proto": "http",
+  "base": "http://ftp.jaist.ac.jp/pub/Linux/Gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp.jaist.ac.jp/pub/Linux/Gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ftp.jaist.ac.jp/pub/Linux/Gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://ftp.riken.jp/Linux/gentoo/": {
+  "region": "Asia",
+  "country": "Japan",
+  "operator": "RIKEN",
+  "proto": "https",
+  "base": "https://ftp.riken.jp/Linux/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://ftp.riken.jp/Linux/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://ftp.riken.jp/Linux/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp.riken.jp/Linux/gentoo/": {
+  "region": "Asia",
+  "country": "Japan",
+  "operator": "RIKEN",
+  "proto": "http",
+  "base": "http://ftp.riken.jp/Linux/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp.riken.jp/Linux/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ftp.riken.jp/Linux/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://repo.jing.rocks/gentoo/": {
+  "region": "Asia",
+  "country": "Japan",
+  "operator": "Jing Luo",
+  "proto": "https",
+  "base": "https://repo.jing.rocks/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 503,
+    "length": "160",
+    "match": false,
+    "url": "https://repo.jing.rocks/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 503,
+    "length": "160",
+    "match": false,
+    "url": "https://repo.jing.rocks/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 503
+ },
+ "http://repo.jing.rocks/gentoo/": {
+  "region": "Asia",
+  "country": "Japan",
+  "operator": "Jing Luo",
+  "proto": "http",
+  "base": "http://repo.jing.rocks/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 503,
+    "length": "160",
+    "match": false,
+    "url": "http://repo.jing.rocks/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 503,
+    "length": "160",
+    "match": false,
+    "url": "http://repo.jing.rocks/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 503
+ },
+ "https://jp.mirrors.cicku.me/gentoo/": {
+  "region": "Asia",
+  "country": "Japan",
+  "operator": "CICKU",
+  "proto": "https",
+  "base": "https://jp.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://jp.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://jp.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://jp.mirrors.cicku.me/gentoo/": {
+  "region": "Asia",
+  "country": "Japan",
+  "operator": "CICKU",
+  "proto": "http",
+  "base": "http://jp.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://jp.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://jp.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "https://kale.jp.ext.planetunix.net/pub/gentoo/": {
+  "region": "Asia",
+  "country": "Japan",
+  "operator": "PlanetUnix Networks",
+  "proto": "https",
+  "base": "https://kale.jp.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://kale.jp.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://kale.jp.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://kale.jp.ext.planetunix.net/pub/gentoo/": {
+  "region": "Asia",
+  "country": "Japan",
+  "operator": "PlanetUnix Networks",
+  "proto": "http",
+  "base": "http://kale.jp.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://kale.jp.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://kale.jp.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.hashy0917.net/gentoo/": {
+  "region": "Asia",
+  "country": "Japan",
+  "operator": "hashy10G",
+  "proto": "https",
+  "base": "https://mirror.hashy0917.net/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 404,
+    "length": "146",
+    "match": false,
+    "url": "https://mirror.hashy0917.net/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 404,
+    "length": "146",
+    "match": false,
+    "url": "https://mirror.hashy0917.net/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.ps.kz/gentoo/pub/": {
+  "region": "Asia",
+  "country": "Kazakhstan",
+  "operator": "PS Internet Company LLC",
+  "proto": "https",
+  "base": "https://mirror.ps.kz/gentoo/pub/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.ps.kz/gentoo/pub/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.ps.kz/gentoo/pub/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.ps.kz/gentoo/pub/": {
+  "region": "Asia",
+  "country": "Kazakhstan",
+  "operator": "PS Internet Company LLC",
+  "proto": "http",
+  "base": "http://mirror.ps.kz/gentoo/pub/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.ps.kz/gentoo/pub/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.ps.kz/gentoo/pub/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://rhea.kz.ext.planetunix.net/pub/gentoo/": {
+  "region": "Asia",
+  "country": "Kazakhstan",
+  "operator": "PlanetUnix Networks",
+  "proto": "https",
+  "base": "https://rhea.kz.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://rhea.kz.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://rhea.kz.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://rhea.kz.ext.planetunix.net/pub/gentoo/": {
+  "region": "Asia",
+  "country": "Kazakhstan",
+  "operator": "PlanetUnix Networks",
+  "proto": "http",
+  "base": "http://rhea.kz.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://rhea.kz.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://rhea.kz.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.rise.ph/gentoo/": {
+  "region": "Asia",
+  "country": "Philippines",
+  "operator": "RISE",
+  "proto": "http",
+  "base": "http://mirror.rise.ph/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.rise.ph/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.rise.ph/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp.kaist.ac.kr/pub/gentoo/": {
+  "region": "Asia",
+  "country": "South Korea",
+  "operator": "KAIST",
+  "proto": "http",
+  "base": "http://ftp.kaist.ac.kr/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 404,
+    "length": "4196",
+    "match": false,
+    "url": "http://ftp.kaist.ac.kr/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 404,
+    "length": "4196",
+    "match": false,
+    "url": "http://ftp.kaist.ac.kr/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://ftp.kaist.ac.kr/pub/gentoo/": {
+  "region": "Asia",
+  "country": "South Korea",
+  "operator": "KAIST",
+  "proto": "https",
+  "base": "https://ftp.kaist.ac.kr/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 404,
+    "length": "4196",
+    "match": false,
+    "url": "https://ftp.kaist.ac.kr/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 404,
+    "length": "4196",
+    "match": false,
+    "url": "https://ftp.kaist.ac.kr/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://ftp.lanet.kr/pub/gentoo/": {
+  "region": "Asia",
+  "country": "South Korea",
+  "operator": "lanet.kr",
+  "proto": "https",
+  "base": "https://ftp.lanet.kr/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://ftp.lanet.kr/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://ftp.lanet.kr/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.keiminem.com/gentoo/": {
+  "region": "Asia",
+  "country": "South Korea",
+  "operator": "Keiverse",
+  "proto": "https",
+  "base": "https://mirror.keiminem.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.keiminem.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.keiminem.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.keiminem.com/gentoo/": {
+  "region": "Asia",
+  "country": "South Korea",
+  "operator": "Keiverse",
+  "proto": "http",
+  "base": "http://mirror.keiminem.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.keiminem.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.keiminem.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://kr.mirrors.cicku.me/gentoo/": {
+  "region": "Asia",
+  "country": "South Korea",
+  "operator": "CICKU",
+  "proto": "https",
+  "base": "https://kr.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://kr.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://kr.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://kr.mirrors.cicku.me/gentoo/": {
+  "region": "Asia",
+  "country": "South Korea",
+  "operator": "CICKU",
+  "proto": "http",
+  "base": "http://kr.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://kr.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://kr.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "https://mirror2.keiminem.com/gentoo/": {
+  "region": "Asia",
+  "country": "South Korea",
+  "operator": "Keiverse 2",
+  "proto": "https",
+  "base": "https://mirror2.keiminem.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror2.keiminem.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror2.keiminem.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror2.keiminem.com/gentoo/": {
+  "region": "Asia",
+  "country": "South Korea",
+  "operator": "Keiverse 2",
+  "proto": "http",
+  "base": "http://mirror2.keiminem.com/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror2.keiminem.com/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror2.keiminem.com/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp.byfly.by/pub/gentoo-distfiles/": {
+  "region": "Asia",
+  "country": "Belarus",
+  "operator": "ftp.byfly.by",
+  "proto": "http",
+  "base": "http://ftp.byfly.by/pub/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp.byfly.by/pub/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://ftp.byfly.by/pub/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.yandex.ru/gentoo-distfiles/": {
+  "region": "Asia",
+  "country": "Russia",
+  "operator": "Yandex.ru",
+  "proto": "https",
+  "base": "https://mirror.yandex.ru/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.yandex.ru/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.yandex.ru/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.yandex.ru/gentoo-distfiles/": {
+  "region": "Asia",
+  "country": "Russia",
+  "operator": "Yandex.ru",
+  "proto": "http",
+  "base": "http://mirror.yandex.ru/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.yandex.ru/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.yandex.ru/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://gentoo-mirror.alexxy.name/": {
+  "region": "Asia",
+  "country": "Russia",
+  "operator": "Alexxy.name",
+  "proto": "https",
+  "base": "https://gentoo-mirror.alexxy.name/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://gentoo-mirror.alexxy.name/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://gentoo-mirror.alexxy.name/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://gentoo-mirror.alexxy.name/": {
+  "region": "Asia",
+  "country": "Russia",
+  "operator": "Alexxy.name",
+  "proto": "http",
+  "base": "http://gentoo-mirror.alexxy.name/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://gentoo-mirror.alexxy.name/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://gentoo-mirror.alexxy.name/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.mephi.ru/gentoo-distfiles/": {
+  "region": "Asia",
+  "country": "Russia",
+  "operator": "National Research Nuclear University - MEPhI",
+  "proto": "http",
+  "base": "http://mirror.mephi.ru/gentoo-distfiles/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.mephi.ru/gentoo-distfiles/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.mephi.ru/gentoo-distfiles/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://ru.mirrors.cicku.me/gentoo/": {
+  "region": "Asia",
+  "country": "Russia",
+  "operator": "CICKU",
+  "proto": "https",
+  "base": "https://ru.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://ru.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://ru.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://ru.mirrors.cicku.me/gentoo/": {
+  "region": "Asia",
+  "country": "Russia",
+  "operator": "CICKU",
+  "proto": "http",
+  "base": "http://ru.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://ru.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://ru.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "https://mirror.freedif.org/gentoo/": {
+  "region": "Asia",
+  "country": "Singapore",
+  "operator": "Freedif",
+  "proto": "https",
+  "base": "https://mirror.freedif.org/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.freedif.org/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.freedif.org/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.freedif.org/gentoo/": {
+  "region": "Asia",
+  "country": "Singapore",
+  "operator": "Freedif",
+  "proto": "http",
+  "base": "http://mirror.freedif.org/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.freedif.org/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.freedif.org/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://sg.mirrors.cicku.me/gentoo/": {
+  "region": "Asia",
+  "country": "Singapore",
+  "operator": "CICKU",
+  "proto": "https",
+  "base": "https://sg.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://sg.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://sg.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://sg.mirrors.cicku.me/gentoo/": {
+  "region": "Asia",
+  "country": "Singapore",
+  "operator": "CICKU",
+  "proto": "http",
+  "base": "http://sg.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://sg.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://sg.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "https://enceladus.sg.ext.planetunix.net/pub/gentoo/": {
+  "region": "Asia",
+  "country": "Singapore",
+  "operator": "PlanetUnix Networks",
+  "proto": "https",
+  "base": "https://enceladus.sg.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://enceladus.sg.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://enceladus.sg.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://enceladus.sg.ext.planetunix.net/pub/gentoo/": {
+  "region": "Asia",
+  "country": "Singapore",
+  "operator": "PlanetUnix Networks",
+  "proto": "http",
+  "base": "http://enceladus.sg.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://enceladus.sg.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://enceladus.sg.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://ftp.twaren.net/Linux/Gentoo/": {
+  "region": "Asia",
+  "country": "Taiwan",
+  "operator": "National Center for High-Performance Computing",
+  "proto": "http",
+  "base": "http://ftp.twaren.net/Linux/Gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://ftp.twaren.net/Linux/Gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 404,
+    "length": null,
+    "match": false,
+    "url": "http://ftp.twaren.net/Linux/Gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://tw.mirrors.cicku.me/gentoo/": {
+  "region": "Asia",
+  "country": "Taiwan",
+  "operator": "CICKU",
+  "proto": "https",
+  "base": "https://tw.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://tw.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://tw.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://tw.mirrors.cicku.me/gentoo/": {
+  "region": "Asia",
+  "country": "Taiwan",
+  "operator": "CICKU",
+  "proto": "http",
+  "base": "http://tw.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://tw.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://tw.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "https://mirror.meowsmp.net/gentoo/": {
+  "region": "Asia",
+  "country": "Vietnam",
+  "operator": "MeowIce",
+  "proto": "http",
+  "base": "https://mirror.meowsmp.net/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 530,
+    "length": "7667",
+    "match": false,
+    "url": "https://mirror.meowsmp.net/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 530,
+    "length": "7667",
+    "match": false,
+    "url": "https://mirror.meowsmp.net/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 530
+ },
+ "https://mirror.isoc.org.il/pub/gentoo/": {
+  "region": "Middle East",
+  "country": "Israel",
+  "operator": "Hamakor FOSS Society",
+  "proto": "https",
+  "base": "https://mirror.isoc.org.il/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.isoc.org.il/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.isoc.org.il/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://tethys.il.ext.planetunix.net/pub/gentoo/": {
+  "region": "Middle East",
+  "country": "Israel",
+  "operator": "PlanetUnix Networks",
+  "proto": "https",
+  "base": "https://tethys.il.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://tethys.il.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://tethys.il.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://tethys.il.ext.planetunix.net/pub/gentoo/": {
+  "region": "Middle East",
+  "country": "Israel",
+  "operator": "PlanetUnix Networks",
+  "proto": "http",
+  "base": "http://tethys.il.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://tethys.il.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://tethys.il.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://prospero.qa.ext.planetunix.net/pub/gentoo/": {
+  "region": "Asia",
+  "country": "Qatar",
+  "operator": "PlanetUnix Networks",
+  "proto": "https",
+  "base": "https://prospero.qa.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://prospero.qa.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://prospero.qa.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://prospero.qa.ext.planetunix.net/pub/gentoo/": {
+  "region": "Asia",
+  "country": "Qatar",
+  "operator": "PlanetUnix Networks",
+  "proto": "http",
+  "base": "http://prospero.qa.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://prospero.qa.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://prospero.qa.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://sa.mirrors.cicku.me/gentoo/": {
+  "region": "Middle East",
+  "country": "Saudi Arabia",
+  "operator": "CICKU",
+  "proto": "https",
+  "base": "https://sa.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://sa.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://sa.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://sa.mirrors.cicku.me/gentoo/": {
+  "region": "Middle East",
+  "country": "Saudi Arabia",
+  "operator": "CICKU",
+  "proto": "http",
+  "base": "http://sa.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://sa.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://sa.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "https://gentoo.dimensiondata.com/": {
+  "region": "Africa",
+  "country": "South Africa",
+  "operator": "Dimension Data",
+  "proto": "https",
+  "base": "https://gentoo.dimensiondata.com/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 301,
+    "length": "162",
+    "match": false,
+    "url": "https://gentoo.dimensiondata.com/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 301,
+    "length": "162",
+    "match": false,
+    "url": "https://gentoo.dimensiondata.com/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 301
+ },
+ "https://gentoo.uls.co.za/": {
+  "region": "Africa",
+  "country": "South Africa",
+  "operator": "Ultimate Linux Solutions",
+  "proto": "https",
+  "base": "https://gentoo.uls.co.za/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://gentoo.uls.co.za/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://gentoo.uls.co.za/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://za.mirrors.cicku.me/gentoo/": {
+  "region": "Africa",
+  "country": "South Africa",
+  "operator": "CICKU",
+  "proto": "https",
+  "base": "https://za.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://za.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381600",
+    "match": false,
+    "url": "https://za.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "http://za.mirrors.cicku.me/gentoo/": {
+  "region": "Africa",
+  "country": "South Africa",
+  "operator": "CICKU",
+  "proto": "http",
+  "base": "http://za.mirrors.cicku.me/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://za.mirrors.cicku.me/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 403,
+    "length": "381557",
+    "match": false,
+    "url": "http://za.mirrors.cicku.me/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 403
+ },
+ "https://setebos.za.ext.planetunix.net/pub/gentoo/": {
+  "region": "Africa",
+  "country": "South Africa",
+  "operator": "PlanetUnix Networks",
+  "proto": "https",
+  "base": "https://setebos.za.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://setebos.za.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://setebos.za.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://setebos.za.ext.planetunix.net/pub/gentoo/": {
+  "region": "Africa",
+  "country": "South Africa",
+  "operator": "PlanetUnix Networks",
+  "proto": "http",
+  "base": "http://setebos.za.ext.planetunix.net/pub/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://setebos.za.ext.planetunix.net/pub/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://setebos.za.ext.planetunix.net/pub/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "https://mirror.ufs.ac.za/gentoo/": {
+  "region": "Africa",
+  "country": "South Africa",
+  "operator": "University of the Free State",
+  "proto": "https",
+  "base": "https://mirror.ufs.ac.za/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "https://mirror.ufs.ac.za/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "https://mirror.ufs.ac.za/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ },
+ "http://mirror.ufs.ac.za/gentoo/": {
+  "region": "Africa",
+  "country": "South Africa",
+  "operator": "University of the Free State",
+  "proto": "http",
+  "base": "http://mirror.ufs.ac.za/gentoo/",
+  "files": {
+   "nim-2.2.10.tar.xz": {
+    "status": 200,
+    "length": "8287652",
+    "match": true,
+    "url": "http://mirror.ufs.ac.za/gentoo/distfiles/7c/nim-2.2.10.tar.xz"
+   },
+   "nim-2.2.12.tar.xz": {
+    "status": 200,
+    "length": "10259940",
+    "match": true,
+    "url": "http://mirror.ufs.ac.za/gentoo/distfiles/f4/nim-2.2.12.tar.xz"
+   }
+  },
+  "control": 404
+ }
+}

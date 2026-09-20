@@ -1,0 +1,110 @@
+[
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu6.19.0.1-jdk6.0.103-linux_x64.tar.gz",
+  "query": "https://archive.softwareheritage.org/api/1/content/sha256:10a48a962b8605b2eb0af5fd7c41193bf086333aee51bc6d31d6bc26b1e0047f/",
+  "code": 404,
+  "body": "{\"exception\":\"NotFoundExc\",\"reason\":\"Content with sha256 checksum equals to 10a48a962b8605b2eb0af5fd7c41193bf086333aee51bc6d31d6bc26b1e0047f not found!\"}"
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu7.52.0.11-ca-jre7.0.332-win_x64.msi",
+  "query": "https://archive.softwareheritage.org/api/1/content/sha256:decbbd7dea5bed6cea0c146bd1c6d09eceeb0d773078c25dc391321ce992d1b9/",
+  "code": 404,
+  "body": "{\"exception\":\"NotFoundExc\",\"reason\":\"Content with sha256 checksum equals to decbbd7dea5bed6cea0c146bd1c6d09eceeb0d773078c25dc391321ce992d1b9 not found!\"}"
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu8.40.0.25-ca-jre8.0.222-win_x64.msi",
+  "query": "https://archive.softwareheritage.org/api/1/content/sha256:2efefaa719770ae658bc09a27ea1f0aa2733b8af93577c702779a8e358d5178b/",
+  "code": 404,
+  "body": "{\"exception\":\"NotFoundExc\",\"reason\":\"Content with sha256 checksum equals to 2efefaa719770ae658bc09a27ea1f0aa2733b8af93577c702779a8e358d5178b not found!\"}"
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu10.1.11-ca-jdk10.0.0-macosx_x64.tar.gz",
+  "query": "https://archive.softwareheritage.org/api/1/content/sha256:5995eb1b4810ca310adebf51c742aaa6ad2c0a66086d2fa8d3c6f0e0899fd28a/",
+  "code": 404,
+  "body": "{\"exception\":\"NotFoundExc\",\"reason\":\"Content with sha256 checksum equals to 5995eb1b4810ca310adebf51c742aaa6ad2c0a66086d2fa8d3c6f0e0899fd28a not found!\"}"
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu11.2.3-jdk11.0.1-win_x64.msi",
+  "query": "https://archive.softwareheritage.org/api/1/content/sha256:893b8b0b4b63be62296dfeaa7922a0127e533b8dde6533a67678fa9f2e88b1a1/",
+  "code": 404,
+  "body": "{\"exception\":\"NotFoundExc\",\"reason\":\"Content with sha256 checksum equals to 893b8b0b4b63be62296dfeaa7922a0127e533b8dde6533a67678fa9f2e88b1a1 not found!\"}"
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu13.28.11-ca-jre13.0.1-linux_x64.tar.gz",
+  "query": "https://archive.softwareheritage.org/api/1/content/sha256:bead38ddab1983068d401fd1802bf2ebac97ab9bba2b7872a2e6eb7d044b05ae/",
+  "code": 404,
+  "body": "{\"exception\":\"NotFoundExc\",\"reason\":\"Content with sha256 checksum equals to bead38ddab1983068d401fd1802bf2ebac97ab9bba2b7872a2e6eb7d044b05ae not found!\"}"
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu14.27.1-ca-jdk14.0.0-macosx_x64.tar.gz",
+  "query": "https://archive.softwareheritage.org/api/1/content/sha256:441a42f47e83a6b00b8084bc4bc57325926c5ee49d18c5d662c37cc93352149d/",
+  "code": 404,
+  "body": "{\"exception\":\"NotFoundExc\",\"reason\":\"Content with sha256 checksum equals to 441a42f47e83a6b00b8084bc4bc57325926c5ee49d18c5d662c37cc93352149d not found!\"}"
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu15.27.17-ca-jre15.0.0-macosx_x64.dmg",
+  "query": "https://archive.softwareheritage.org/api/1/content/sha256:7e70cb36935fe99221e737292e7b08ab92724bbc8a070498a20626999121e568/",
+  "code": 404,
+  "body": "{\"exception\":\"NotFoundExc\",\"reason\":\"Content with sha256 checksum equals to 7e70cb36935fe99221e737292e7b08ab92724bbc8a070498a20626999121e568 not found!\"}"
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu16.28.11-ca-jdk16.0.0-win_x64.zip",
+  "query": "https://archive.softwareheritage.org/api/1/content/sha256:6cbf98ada27476526a5f6dff79fd5f2c15e2f671818e503bdf741eb6c8fed3d4/",
+  "code": 404,
+  "body": "{\"exception\":\"NotFoundExc\",\"reason\":\"Content with sha256 checksum equals to 6cbf98ada27476526a5f6dff79fd5f2c15e2f671818e503bdf741eb6c8fed3d4 not found!\"}"
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu17.28.13-ca-jdk17.0.0-win_x64.msi",
+  "query": "https://archive.softwareheritage.org/api/1/content/sha256:b87a006f4eb3c8401436cf3169c9746b940570257cf68bae25e47440870cb910/",
+  "code": 404,
+  "body": "{\"exception\":\"NotFoundExc\",\"reason\":\"Content with sha256 checksum equals to b87a006f4eb3c8401436cf3169c9746b940570257cf68bae25e47440870cb910 not found!\"}"
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu18.28.13-ca-jre18.0.0-win_x64.zip",
+  "query": "https://archive.softwareheritage.org/api/1/content/sha256:ac1a2503959887a097bf1099bdab09c2feca6e63d6a091b6860ae6352b0bec78/",
+  "code": 404,
+  "body": "{\"exception\":\"NotFoundExc\",\"reason\":\"Content with sha256 checksum equals to ac1a2503959887a097bf1099bdab09c2feca6e63d6a091b6860ae6352b0bec78 not found!\"}"
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu19.28.81-ca-jre19.0.0-win_i686.msi",
+  "query": "https://archive.softwareheritage.org/api/1/content/sha256:9110fbe61d90325cd94ec186076b727075e870b4f6b9ce0c171dd1e218d3dbba/",
+  "code": 404,
+  "body": "{\"exception\":\"NotFoundExc\",\"reason\":\"Content with sha256 checksum equals to 9110fbe61d90325cd94ec186076b727075e870b4f6b9ce0c171dd1e218d3dbba not found!\"}"
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu21.28.85-ca-jdk21.0.0-linux_amd64.deb",
+  "query": "https://archive.softwareheritage.org/api/1/content/sha256:11c5a2f04040cebc1a662ea7a97c8c08e9cc54aa0afbd5e4f80b4e3d8d0efd26/",
+  "code": 404,
+  "body": "{\"exception\":\"NotFoundExc\",\"reason\":\"Content with sha256 checksum equals to 11c5a2f04040cebc1a662ea7a97c8c08e9cc54aa0afbd5e4f80b4e3d8d0efd26 not found!\"}"
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu22.28.91-ca-jre22.0.0-linux_musl_x64.tar.gz",
+  "query": "https://archive.softwareheritage.org/api/1/content/sha256:c8e16d6e2f4afebf23ed993607a53d6de23ca009924466ad88fd9b61019ed888/",
+  "code": 404,
+  "body": "{\"exception\":\"NotFoundExc\",\"reason\":\"Content with sha256 checksum equals to c8e16d6e2f4afebf23ed993607a53d6de23ca009924466ad88fd9b61019ed888 not found!\"}"
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu23.28.85-ca-jdk23.0.0-macosx_x64.tar.gz",
+  "query": "https://archive.softwareheritage.org/api/1/content/sha256:ac4afc337285f59f79815f2c1ea8b99500f64498edb2c671f10f20a32e9d6a7c/",
+  "code": 404,
+  "body": "{\"exception\":\"NotFoundExc\",\"reason\":\"Content with sha256 checksum equals to ac4afc337285f59f79815f2c1ea8b99500f64498edb2c671f10f20a32e9d6a7c not found!\"}"
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu24.28.83-ca-jre24.0.0-macosx_x64.tar.gz",
+  "query": "https://archive.softwareheritage.org/api/1/content/sha256:59675954827905c4fd5f8f8c7b6ff008e06509f2314b7b3317a6a50c3223a9ee/",
+  "code": 404,
+  "body": "{\"exception\":\"NotFoundExc\",\"reason\":\"Content with sha256 checksum equals to 59675954827905c4fd5f8f8c7b6ff008e06509f2314b7b3317a6a50c3223a9ee not found!\"}"
+ },
+ {
+  "url": "https://cdn.azul.com/zulu-embedded/bin/zre8.23.0.3-cp3-wr-jre8.0.144-linux_i686.tar.gz",
+  "query": "https://archive.softwareheritage.org/api/1/content/sha256:5157c204a26597473877656c5e2a8899f4497df01a5b0b9804f5ce2f8bf154bd/",
+  "code": 404,
+  "body": "{\"exception\":\"NotFoundExc\",\"reason\":\"Content with sha256 checksum equals to 5157c204a26597473877656c5e2a8899f4497df01a5b0b9804f5ce2f8bf154bd not found!\"}"
+ },
+ {
+  "url": "https://cdn.azul.com/zulu-embedded/bin/zulu13.31.25-ca-jdk13.0.3-linux_aarch64.tar.gz",
+  "query": "https://archive.softwareheritage.org/api/1/content/sha256:0e73c93b22e7d284fa80a5ce0ef3db2bbd9c80158aaab740ed1674795b83193e/",
+  "code": 404,
+  "body": "{\"exception\":\"NotFoundExc\",\"reason\":\"Content with sha256 checksum equals to 0e73c93b22e7d284fa80a5ce0ef3db2bbd9c80158aaab740ed1674795b83193e not found!\"}"
+ }
+]

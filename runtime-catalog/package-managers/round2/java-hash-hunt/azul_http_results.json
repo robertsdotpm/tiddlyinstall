@@ -1,0 +1,290 @@
+[
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu6.19.0.1-jdk6.0.103-linux_x64.tar.gz",
+  "mirror": "http://cdn.azul.com/zulu/bin/zulu6.19.0.1-jdk6.0.103-linux_x64.tar.gz",
+  "size": 64297024,
+  "code": 200,
+  "len": "64297024",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu6.19.0.1-jdk6.0.103-linux_x64.tar.gz",
+  "mirror": "http://static.azul.com/zulu/bin/zulu6.19.0.1-jdk6.0.103-linux_x64.tar.gz",
+  "size": 64297024,
+  "code": 200,
+  "len": "64297024",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu8.17.0.3-jdk8.0.102-linux_x64.tar.gz",
+  "mirror": "http://cdn.azul.com/zulu/bin/zulu8.17.0.3-jdk8.0.102-linux_x64.tar.gz",
+  "size": 77848888,
+  "code": 200,
+  "len": "77848888",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu8.17.0.3-jdk8.0.102-linux_x64.tar.gz",
+  "mirror": "http://static.azul.com/zulu/bin/zulu8.17.0.3-jdk8.0.102-linux_x64.tar.gz",
+  "size": 77848888,
+  "code": 200,
+  "len": "77848888",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu9.0.0.15-ca-jdk9.0.0-macosx_x64.tar.gz",
+  "mirror": "http://cdn.azul.com/zulu/bin/zulu9.0.0.15-ca-jdk9.0.0-macosx_x64.tar.gz",
+  "size": 189761349,
+  "code": 200,
+  "len": "189761349",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu9.0.0.15-ca-jdk9.0.0-macosx_x64.tar.gz",
+  "mirror": "http://static.azul.com/zulu/bin/zulu9.0.0.15-ca-jdk9.0.0-macosx_x64.tar.gz",
+  "size": 189761349,
+  "code": 200,
+  "len": "189761349",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu11.45.27-ca-jre11.0.10-linux_x64.tar.gz",
+  "mirror": "http://cdn.azul.com/zulu/bin/zulu11.45.27-ca-jre11.0.10-linux_x64.tar.gz",
+  "size": 43525041,
+  "code": 200,
+  "len": "43525041",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu11.45.27-ca-jre11.0.10-linux_x64.tar.gz",
+  "mirror": "http://static.azul.com/zulu/bin/zulu11.45.27-ca-jre11.0.10-linux_x64.tar.gz",
+  "size": 43525041,
+  "code": 200,
+  "len": "43525041",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu12.1.3-ca-jdk12.0.0-win_x64.msi",
+  "mirror": "http://cdn.azul.com/zulu/bin/zulu12.1.3-ca-jdk12.0.0-win_x64.msi",
+  "size": 200462336,
+  "code": 200,
+  "len": "200462336",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu12.1.3-ca-jdk12.0.0-win_x64.msi",
+  "mirror": "http://static.azul.com/zulu/bin/zulu12.1.3-ca-jdk12.0.0-win_x64.msi",
+  "size": 200462336,
+  "code": 200,
+  "len": "200462336",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu14.27.1-ca-jdk14.0.0-linux_x64.tar.gz",
+  "mirror": "http://cdn.azul.com/zulu/bin/zulu14.27.1-ca-jdk14.0.0-linux_x64.tar.gz",
+  "size": 210815463,
+  "code": 200,
+  "len": "210815463",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu14.27.1-ca-jdk14.0.0-linux_x64.tar.gz",
+  "mirror": "http://static.azul.com/zulu/bin/zulu14.27.1-ca-jdk14.0.0-linux_x64.tar.gz",
+  "size": 210815463,
+  "code": 200,
+  "len": "210815463",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu15.27.17-ca-jre15.0.0-macosx_x64.tar.gz",
+  "mirror": "http://cdn.azul.com/zulu/bin/zulu15.27.17-ca-jre15.0.0-macosx_x64.tar.gz",
+  "size": 44802385,
+  "code": 200,
+  "len": "44802385",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu15.27.17-ca-jre15.0.0-macosx_x64.tar.gz",
+  "mirror": "http://static.azul.com/zulu/bin/zulu15.27.17-ca-jre15.0.0-macosx_x64.tar.gz",
+  "size": 44802385,
+  "code": 200,
+  "len": "44802385",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu16.28.11-ca-jdk16.0.0-win_x64.msi",
+  "mirror": "http://cdn.azul.com/zulu/bin/zulu16.28.11-ca-jdk16.0.0-win_x64.msi",
+  "size": 185208832,
+  "code": 200,
+  "len": "185208832",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu16.28.11-ca-jdk16.0.0-win_x64.msi",
+  "mirror": "http://static.azul.com/zulu/bin/zulu16.28.11-ca-jdk16.0.0-win_x64.msi",
+  "size": 185208832,
+  "code": 200,
+  "len": "185208832",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu18.28.13-ca-jdk18.0.0-linux_musl_x64.tar.gz",
+  "mirror": "http://cdn.azul.com/zulu/bin/zulu18.28.13-ca-jdk18.0.0-linux_musl_x64.tar.gz",
+  "size": 199381430,
+  "code": 200,
+  "len": "199381430",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu18.28.13-ca-jdk18.0.0-linux_musl_x64.tar.gz",
+  "mirror": "http://static.azul.com/zulu/bin/zulu18.28.13-ca-jdk18.0.0-linux_musl_x64.tar.gz",
+  "size": 199381430,
+  "code": 200,
+  "len": "199381430",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu19.28.81-ca-jre19.0.0-linux_amd64.deb",
+  "mirror": "http://cdn.azul.com/zulu/bin/zulu19.28.81-ca-jre19.0.0-linux_amd64.deb",
+  "size": 30001906,
+  "code": 200,
+  "len": "30001906",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu19.28.81-ca-jre19.0.0-linux_amd64.deb",
+  "mirror": "http://static.azul.com/zulu/bin/zulu19.28.81-ca-jre19.0.0-linux_amd64.deb",
+  "size": 30001906,
+  "code": 200,
+  "len": "30001906",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu20.28.85-ca-jre20.0.0-macosx_x64.tar.gz",
+  "mirror": "http://cdn.azul.com/zulu/bin/zulu20.28.85-ca-jre20.0.0-macosx_x64.tar.gz",
+  "size": 46790630,
+  "code": 200,
+  "len": "46790630",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu20.28.85-ca-jre20.0.0-macosx_x64.tar.gz",
+  "mirror": "http://static.azul.com/zulu/bin/zulu20.28.85-ca-jre20.0.0-macosx_x64.tar.gz",
+  "size": 46790630,
+  "code": 200,
+  "len": "46790630",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu21.28.85-ca-jre21.0.0-win_x64.zip",
+  "mirror": "http://cdn.azul.com/zulu/bin/zulu21.28.85-ca-jre21.0.0-win_x64.zip",
+  "size": 48577805,
+  "code": 200,
+  "len": "48577805",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu21.28.85-ca-jre21.0.0-win_x64.zip",
+  "mirror": "http://static.azul.com/zulu/bin/zulu21.28.85-ca-jre21.0.0-win_x64.zip",
+  "size": 48577805,
+  "code": 200,
+  "len": "48577805",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu23.28.85-ca-jre23.0.0-linux_x64.tar.gz",
+  "mirror": "http://cdn.azul.com/zulu/bin/zulu23.28.85-ca-jre23.0.0-linux_x64.tar.gz",
+  "size": 52230222,
+  "code": 200,
+  "len": "52230222",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu23.28.85-ca-jre23.0.0-linux_x64.tar.gz",
+  "mirror": "http://static.azul.com/zulu/bin/zulu23.28.85-ca-jre23.0.0-linux_x64.tar.gz",
+  "size": 52230222,
+  "code": 200,
+  "len": "52230222",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu24.28.83-ca-jre24.0.0-macosx_x64.tar.gz",
+  "mirror": "http://cdn.azul.com/zulu/bin/zulu24.28.83-ca-jre24.0.0-macosx_x64.tar.gz",
+  "size": 57102510,
+  "code": 200,
+  "len": "57102510",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu/bin/zulu24.28.83-ca-jre24.0.0-macosx_x64.tar.gz",
+  "mirror": "http://static.azul.com/zulu/bin/zulu24.28.83-ca-jre24.0.0-macosx_x64.tar.gz",
+  "size": 57102510,
+  "code": 200,
+  "len": "57102510",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu-embedded/bin/zre8.23.0.3-cp3-wr-jre8.0.144-linux_i686.tar.gz",
+  "mirror": "http://cdn.azul.com/zulu-embedded/bin/zre8.23.0.3-cp3-wr-jre8.0.144-linux_i686.tar.gz",
+  "size": 21377456,
+  "code": 200,
+  "len": "21377456",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu-embedded/bin/zre8.23.0.3-cp3-wr-jre8.0.144-linux_i686.tar.gz",
+  "mirror": "http://static.azul.com/zulu-embedded/bin/zre8.23.0.3-cp3-wr-jre8.0.144-linux_i686.tar.gz",
+  "size": 21377456,
+  "code": 200,
+  "len": "21377456",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu-embedded/bin/zulu13.31.25-ca-jdk13.0.3-linux_aarch64.tar.gz",
+  "mirror": "http://cdn.azul.com/zulu-embedded/bin/zulu13.31.25-ca-jdk13.0.3-linux_aarch64.tar.gz",
+  "size": 471688807,
+  "code": 200,
+  "len": "471688807",
+  "loc": null,
+  "match": true
+ },
+ {
+  "url": "https://cdn.azul.com/zulu-embedded/bin/zulu13.31.25-ca-jdk13.0.3-linux_aarch64.tar.gz",
+  "mirror": "http://static.azul.com/zulu-embedded/bin/zulu13.31.25-ca-jdk13.0.3-linux_aarch64.tar.gz",
+  "size": 471688807,
+  "code": 200,
+  "len": "471688807",
+  "loc": null,
+  "match": true
+ }
+]

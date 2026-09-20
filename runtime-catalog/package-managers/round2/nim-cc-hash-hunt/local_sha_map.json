@@ -1,0 +1,674 @@
+{
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/LLVM-19.1.7-Linux-X64.tar.xz": {
+  "folder": "cc",
+  "sha256": "4a5ec53951a584ed36f80240f6fbf8fdd46b4cf6c7ee87cc2d5018dc37caf679",
+  "store_path": "llvm/linux/amd64/19.1.7/LLVM-19.1.7-Linux-X64.tar.xz",
+  "size": 1653440720,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/LLVM-19.1.7-macOS-ARM64.tar.xz": {
+  "folder": "cc",
+  "sha256": "d93bf12952d89fe4ec7501c40475718b722407da6a8d651f05c995863468e570",
+  "store_path": "llvm/macos/arm64/19.1.7/LLVM-19.1.7-macOS-ARM64.tar.xz",
+  "size": 1413914424,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/LLVM-19.1.7-macOS-X64.tar.xz": {
+  "folder": "cc",
+  "sha256": "49405e75fbe7ad6f8139a33f59ec8c5112b75b3027405c7b92d19f4c6f02c78a",
+  "store_path": "llvm/macos/amd64/19.1.7/LLVM-19.1.7-macOS-X64.tar.xz",
+  "size": 1574721180,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/LLVM-19.1.7-win32.exe": {
+  "folder": "cc",
+  "sha256": "3d7044fa307d3183e4ee2a98e12dd0523ced58f1d1c95c5e057694fb75beb51a",
+  "store_path": "llvm/windows/x86/19.1.7/LLVM-19.1.7-win32.exe",
+  "size": 326486668,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/LLVM-19.1.7-win64.exe": {
+  "folder": "cc",
+  "sha256": "f19ae5bc4823ac69ec01dc2ded503ec80a04ad2208dda1595d1f0413c148ef90",
+  "store_path": "llvm/windows/amd64/19.1.7/LLVM-19.1.7-win64.exe",
+  "size": 352071563,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/LLVM-19.1.7-woa64.exe": {
+  "folder": "cc",
+  "sha256": "08d871c9a20caf0987ede1a4e44d489e28854c9f2fff3da98b486891f4856e05",
+  "store_path": "llvm/windows/arm64/19.1.7/LLVM-19.1.7-woa64.exe",
+  "size": 323088311,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/LLVM-18.1.8-win32.exe": {
+  "folder": "cc",
+  "sha256": "4ce39685d593a33cdbcdd10bec2288b65e020b38995d684c19cb56cad0fa43ac",
+  "store_path": "llvm/windows/x86/18.1.8/LLVM-18.1.8-win32.exe",
+  "size": 348379223,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/LLVM-18.1.8-win64.exe": {
+  "folder": "cc",
+  "sha256": "94af030060d88cc17e9f00ef1663ebdc1126b35e16bebdfa1e807984b70abd8f",
+  "store_path": "llvm/windows/amd64/18.1.8/LLVM-18.1.8-win64.exe",
+  "size": 374335885,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/LLVM-18.1.8-woa64.exe": {
+  "folder": "cc",
+  "sha256": "e25bf44d67fe86708490cf08de085fe1d6e1e50f3249c212c9077a06247cdc9e",
+  "store_path": "llvm/windows/arm64/18.1.8/LLVM-18.1.8-woa64.exe",
+  "size": 345225147,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.6/LLVM-17.0.6-win32.exe": {
+  "folder": "cc",
+  "sha256": "766332eaedbc83a57ecd5b719912ed4bc0be1ef0df952581d2b3edb9135b7c2a",
+  "store_path": "llvm/windows/x86/17.0.6/LLVM-17.0.6-win32.exe",
+  "size": 327115082,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.6/LLVM-17.0.6-win64.exe": {
+  "folder": "cc",
+  "sha256": "89dc351af8e8fa1cafc6b48411e608aa9457c930a10f984aad5d21ab020165b2",
+  "store_path": "llvm/windows/amd64/17.0.6/LLVM-17.0.6-win64.exe",
+  "size": 349078329,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.6/LLVM-17.0.6-woa64.exe": {
+  "folder": "cc",
+  "sha256": "1efda890c79d597fb9e9c1ae62ececf53e9b56b979b1e37234b5c8dac56461fe",
+  "store_path": "llvm/windows/arm64/17.0.6/LLVM-17.0.6-woa64.exe",
+  "size": 314615395,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.6/LLVM-16.0.6-win32.exe": {
+  "folder": "cc",
+  "sha256": "2b2ffd454e1d4eac6915c41e29de02d214c6cb33390098468bf088dbc7410629",
+  "store_path": "llvm/windows/x86/16.0.6/LLVM-16.0.6-win32.exe",
+  "size": 304032865,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.6/LLVM-16.0.6-win64.exe": {
+  "folder": "cc",
+  "sha256": "9a8cd30cc92fdf403d96217347861545a5bbff7a1a1a8527b5785ff0e9101111",
+  "store_path": "llvm/windows/amd64/16.0.6/LLVM-16.0.6-win64.exe",
+  "size": 307648319,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.6/LLVM-16.0.6-woa64.exe": {
+  "folder": "cc",
+  "sha256": "74b37b2eaa0b3632c15ecbb5c1c1c5bc2d093a48cc872c4991a34a75ccda805f",
+  "store_path": "llvm/windows/arm64/16.0.6/LLVM-16.0.6-woa64.exe",
+  "size": 290576091,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.7/LLVM-15.0.7-win32.exe": {
+  "folder": "cc",
+  "sha256": "2d1316258946e04d21ee6d14172f6e47ca205213da0980e583f518fbba045645",
+  "store_path": "llvm/windows/x86/15.0.7/LLVM-15.0.7-win32.exe",
+  "size": 285340840,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.7/LLVM-15.0.7-win64.exe": {
+  "folder": "cc",
+  "sha256": "5428cb72acf63ce3bc4328e546a36674c9736ec040ecc176d362201c6548e6a8",
+  "store_path": "llvm/windows/amd64/15.0.7/LLVM-15.0.7-win64.exe",
+  "size": 290857976,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.6/LLVM-15.0.6-woa64.exe": {
+  "folder": "cc",
+  "sha256": "79d18b9498d7a6c36114f0277c83c91caf9258194c683a73e5886b68b4d304d1",
+  "store_path": "llvm/windows/arm64/15.0.6/LLVM-15.0.6-woa64.exe",
+  "size": 348707439,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-14.0.6/LLVM-14.0.6-win32.exe": {
+  "folder": "cc",
+  "sha256": "76d0f6f37e22e0bd1f6a9e62e0c66edcd225b97cce1dbefb5d047a9dbfb9d4c8",
+  "store_path": "llvm/windows/x86/14.0.6/LLVM-14.0.6-win32.exe",
+  "size": 270653942,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-14.0.6/LLVM-14.0.6-win64.exe": {
+  "folder": "cc",
+  "sha256": "e8dbb2f7de8e37915273d65c1c2f2d96844b96bb8e8035f62c5182475e80b9fc",
+  "store_path": "llvm/windows/amd64/14.0.6/LLVM-14.0.6-win64.exe",
+  "size": 276124398,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.1/LLVM-13.0.1-win32.exe": {
+  "folder": "cc",
+  "sha256": "e3fe488076686de281a334ade7bb3cbc6080b009782d39d2ac024f8bd897be4b",
+  "store_path": "llvm/windows/x86/13.0.1/LLVM-13.0.1-win32.exe",
+  "size": 217075034,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.1/LLVM-13.0.1-win64.exe": {
+  "folder": "cc",
+  "sha256": "9d15be034d52ec57cfc97615634099604d88a54761649498daa7405983a7e12f",
+  "store_path": "llvm/windows/amd64/13.0.1/LLVM-13.0.1-win64.exe",
+  "size": 239478810,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-12.0.1/LLVM-12.0.1-win64.exe": {
+  "folder": "cc",
+  "sha256": "fcbabc9a170208bb344f7bba8366cca57ff103d72a316781bbb77d634b9e9433",
+  "store_path": "llvm/windows/amd64/12.0.1/LLVM-12.0.1-win64.exe",
+  "size": 190997504,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-12.0.1/LLVM-12.0.1-win32.exe": {
+  "folder": "cc",
+  "sha256": "62f8bc1328a8d9e3fcd4663139891aaeda2ea4fe83eb510cba1c9ca943c76d51",
+  "store_path": "llvm/windows/x86/12.0.1/LLVM-12.0.1-win32.exe",
+  "size": 171237066,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-12.0.0/LLVM-12.0.0-woa64.exe": {
+  "folder": "cc",
+  "sha256": "2a0a05d3c9e07642a1bc017105120c833b6360f4db1edb77563c81199f267c3a",
+  "store_path": "llvm/windows/arm64/12.0.0/LLVM-12.0.0-woa64.exe",
+  "size": 169230610,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-11.1.0/LLVM-11.1.0-win32.exe": {
+  "folder": "cc",
+  "sha256": "b92f7c74ccd132dba0089cdf4efe9096a3f6018f14290611a408aea329845727",
+  "store_path": "llvm/windows/x86/11.1.0/LLVM-11.1.0-win32.exe",
+  "size": 164098374,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-11.1.0/LLVM-11.1.0-win64.exe": {
+  "folder": "cc",
+  "sha256": "b5770bbfac712d273938cd155e232afaa85c2e8d865c7ca504a104a838568516",
+  "store_path": "llvm/windows/amd64/11.1.0/LLVM-11.1.0-win64.exe",
+  "size": 181375405,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/LLVM-10.0.0-win64.exe": {
+  "folder": "cc",
+  "sha256": "893f8a12506f8ad29ca464d868fb432fdadd782786a10655b86575fc7fc1a562",
+  "store_path": "llvm/windows/amd64/10.0.0/LLVM-10.0.0-win64.exe",
+  "size": 167786166,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/LLVM-10.0.0-win32.exe": {
+  "folder": "cc",
+  "sha256": "a6e3a7afd1fb505149466e6fad35bf7b8b9b3218bd41025f21d2167be678c1dc",
+  "store_path": "llvm/windows/x86/10.0.0/LLVM-10.0.0-win32.exe",
+  "size": 155809563,
+  "has_vendor_checksum": false,
+  "mirrors": 1
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/LLVM-9.0.1-win32.exe": {
+  "folder": "cc",
+  "sha256": "f690e932fea125ce6c47bccad27b2cef055646732c510ce00ff9eee528c1e48b",
+  "store_path": "llvm/windows/x86/9.0.1/LLVM-9.0.1-win32.exe",
+  "size": 145298189,
+  "has_vendor_checksum": false,
+  "mirrors": 1
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-9.0.1/LLVM-9.0.1-win64.exe": {
+  "folder": "cc",
+  "sha256": "ea59a771d1f1a1948b7fabe74d6da87095296ebabb2ae78cb2075ec44eb57c80",
+  "store_path": "llvm/windows/amd64/9.0.1/LLVM-9.0.1-win64.exe",
+  "size": 158118568,
+  "has_vendor_checksum": false,
+  "mirrors": 1
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-8.0.1/LLVM-8.0.1-win32.exe": {
+  "folder": "cc",
+  "sha256": "5d992a41f1ff6296659e66eabbcbaec34f5533fe9d1376fc94fba7450383fe69",
+  "store_path": "llvm/windows/x86/8.0.1/LLVM-8.0.1-win32.exe",
+  "size": 138191102,
+  "has_vendor_checksum": false,
+  "mirrors": 1
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-8.0.1/LLVM-8.0.1-win64.exe": {
+  "folder": "cc",
+  "sha256": "e3af139c2f93075c13dcbc4091c1311f66fc6e4e8705649fcaf9bef8b3368f41",
+  "store_path": "llvm/windows/amd64/8.0.1/LLVM-8.0.1-win64.exe",
+  "size": 138268492,
+  "has_vendor_checksum": false,
+  "mirrors": 1
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-7.1.0/LLVM-7.1.0-win32.exe": {
+  "folder": "cc",
+  "sha256": "a575a45b6f42563bdb7464bdc2618779d692283cc899cd21d63ae33f26d1209a",
+  "store_path": "llvm/windows/x86/7.1.0/LLVM-7.1.0-win32.exe",
+  "size": 97739365,
+  "has_vendor_checksum": false,
+  "mirrors": 1
+ },
+ "https://github.com/llvm/llvm-project/releases/download/llvmorg-7.1.0/LLVM-7.1.0-win64.exe": {
+  "folder": "cc",
+  "sha256": "1406b3aa26f0e9a87c5e4daabb3e9bef4e115ff7685759e899a662dbbf75d6b0",
+  "store_path": "llvm/windows/amd64/7.1.0/LLVM-7.1.0-win64.exe",
+  "size": 97314822,
+  "has_vendor_checksum": false,
+  "mirrors": 1
+ },
+ "https://releases.llvm.org/6.0.1/clang+llvm-6.0.1-aarch64-linux-gnu.tar.xz": {
+  "folder": "cc",
+  "sha256": "37b9303f540d5c346b7040e3b4f12ce60285a350f1935705b967dfd59eec7e95",
+  "store_path": "llvm/linux/arm64/6.0.1/clang+llvm-6.0.1-aarch64-linux-gnu.tar.xz",
+  "size": 252969776,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/6.0.1/clang+llvm-6.0.1-armv7a-linux-gnueabihf.tar.xz": {
+  "folder": "cc",
+  "sha256": "d05c8b1757505ca093c76a9363f066a1d5db0bf6358e65598020cc9fb6704138",
+  "store_path": "llvm/linux/armv7/6.0.1/clang+llvm-6.0.1-armv7a-linux-gnueabihf.tar.xz",
+  "size": 266975228,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/6.0.1/clang+llvm-6.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz": {
+  "folder": "cc",
+  "sha256": "7ea204ecd78c39154d72dfc0d4a79f7cce1b2264da2551bb2eef10e266d54d91",
+  "store_path": "llvm/linux/amd64/6.0.1-ubuntu-16.04/clang+llvm-6.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz",
+  "size": 292835604,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/6.0.1/LLVM-6.0.1-win32.exe": {
+  "folder": "cc",
+  "sha256": "534dbe5931f48979e793ef4ab245eb47fbc9c40e6a5b9f25fbc599c787834d35",
+  "store_path": "llvm/windows/x86/6.0.1/LLVM-6.0.1-win32.exe",
+  "size": 123712610,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/6.0.1/LLVM-6.0.1-win64.exe": {
+  "folder": "cc",
+  "sha256": "780276221635aa08120187ffc2c72ff7873dee37f5609455ee7bba6fcdd91d79",
+  "store_path": "llvm/windows/amd64/6.0.1/LLVM-6.0.1-win64.exe",
+  "size": 122379266,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/6.0.0/clang+llvm-6.0.0-x86_64-apple-darwin.tar.xz": {
+  "folder": "cc",
+  "sha256": "0ef8e99e9c9b262a53ab8f2821e2391d041615dd3f3ff36fdf5370916b0f4268",
+  "store_path": "llvm/macos/amd64/6.0.0/clang+llvm-6.0.0-x86_64-apple-darwin.tar.xz",
+  "size": 290272140,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/6.0.0/clang+llvm-6.0.0-i686-linux-gnu-Fedora27.tar.xz": {
+  "folder": "cc",
+  "sha256": "2619e0a2542eec997daed3c7e597d99d5800cc3a07500b359429541a260d0207",
+  "store_path": "llvm/linux/x86/6.0.0-Fedora27/clang+llvm-6.0.0-i686-linux-gnu-Fedora27.tar.xz",
+  "size": 292730704,
+  "has_vendor_checksum": false,
+  "mirrors": 1
+ },
+ "https://releases.llvm.org/5.0.2/clang+llvm-5.0.2-x86_64-apple-darwin.tar.xz": {
+  "folder": "cc",
+  "sha256": "aa535704246f1cc55ec67b2b0579112c4bb1049c991a4bb0e1da7009bb1b832e",
+  "store_path": "llvm/macos/amd64/5.0.2/clang+llvm-5.0.2-x86_64-apple-darwin.tar.xz",
+  "size": 254794392,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/5.0.2/clang+llvm-5.0.2-x86_64-linux-gnu-ubuntu-16.04.tar.xz": {
+  "folder": "cc",
+  "sha256": "15a97aa654b529793da7d115bcfdd8b93281d94f86ec98f0850aff7cf82cbb3f",
+  "store_path": "llvm/linux/amd64/5.0.2-ubuntu-16.04/clang+llvm-5.0.2-x86_64-linux-gnu-ubuntu-16.04.tar.xz",
+  "size": 258880356,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/5.0.2/LLVM-5.0.2-win32.exe": {
+  "folder": "cc",
+  "sha256": "57346831e4a214aecd11fa9109cf6a634dd5d4e93a9142906e31cb872a7f9113",
+  "store_path": "llvm/windows/x86/5.0.2/LLVM-5.0.2-win32.exe",
+  "size": 97067564,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/5.0.2/LLVM-5.0.2-win64.exe": {
+  "folder": "cc",
+  "sha256": "fcd20f1745fcbb3589c058f908f3bb30c69f928d8577d532208e92bb09dad9b1",
+  "store_path": "llvm/windows/amd64/5.0.2/LLVM-5.0.2-win64.exe",
+  "size": 95047637,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/5.0.1/clang+llvm-5.0.1-aarch64-linux-gnu.tar.xz": {
+  "folder": "cc",
+  "sha256": "d2ad679b42b4b1eb0fc45d0a69d6a3cbd7dde5ca4c1e7d1d0f937a3177cb0817",
+  "store_path": "llvm/linux/arm64/5.0.1/clang+llvm-5.0.1-aarch64-linux-gnu.tar.xz",
+  "size": 224589020,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/5.0.1/clang+llvm-5.0.1-armv7a-linux-gnueabihf.tar.xz": {
+  "folder": "cc",
+  "sha256": "9ef720ca1550edcede2e10214f4f46d7d1d40c5fb184027e82f449d8800dccc0",
+  "store_path": "llvm/linux/armv7/5.0.1/clang+llvm-5.0.1-armv7a-linux-gnueabihf.tar.xz",
+  "size": 239165220,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/5.0.1/clang+llvm-5.0.1-i686-linux-gnu-Fedora-27.tar.xz": {
+  "folder": "cc",
+  "sha256": "57d7fc2dd624e66596ade4c64b17522a4798971f6baf26b32adafb71ee47649f",
+  "store_path": "llvm/linux/x86/5.0.1-Fedora-27/clang+llvm-5.0.1-i686-linux-gnu-Fedora-27.tar.xz",
+  "size": 261830940,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/5.0.1/clang+llvm-5.0.1-ppc64le-linux-gnu-Fedora-27.tar.xz": {
+  "folder": "cc",
+  "sha256": "da1edbe8ea7f90a405dfeb691919c0738633906291a150d235adf02253a362ad",
+  "store_path": "llvm/linux/ppc64le/5.0.1-Fedora-27/clang+llvm-5.0.1-ppc64le-linux-gnu-Fedora-27.tar.xz",
+  "size": 252327668,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/4.0.1/clang+llvm-4.0.1-x86_64-apple-darwin.tar.xz": {
+  "folder": "cc",
+  "sha256": "5f697801a46239c04251730b7ccccd3ebbacb9043ad381a061ae6812409e9eae",
+  "store_path": "llvm/macos/amd64/4.0.1/clang+llvm-4.0.1-x86_64-apple-darwin.tar.xz",
+  "size": 219650184,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/4.0.1/clang+llvm-4.0.1-aarch64-linux-gnu.tar.xz": {
+  "folder": "cc",
+  "sha256": "603c0c2a507a97cf4f4e42082d90ee6ea4acd677b748e8541cf4806dcee182c3",
+  "store_path": "llvm/linux/arm64/4.0.1/clang+llvm-4.0.1-aarch64-linux-gnu.tar.xz",
+  "size": 192004092,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/4.0.1/clang+llvm-4.0.1-armv7a-linux-gnueabihf.tar.xz": {
+  "folder": "cc",
+  "sha256": "ee47d157524e4f2bb4ab02322071599a523d2df2386d70690943491af93a3d5a",
+  "store_path": "llvm/linux/armv7/4.0.1/clang+llvm-4.0.1-armv7a-linux-gnueabihf.tar.xz",
+  "size": 208740356,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/4.0.1/clang+llvm-4.0.1-x86_64-linux-gnu-Fedora-25.tar.xz": {
+  "folder": "cc",
+  "sha256": "709f9d34b8fcacaa5d69a6ccc9f7af2c52da1ff08e6a55e821504ae11a3ba04f",
+  "store_path": "llvm/linux/amd64/4.0.1-Fedora-25/clang+llvm-4.0.1-x86_64-linux-gnu-Fedora-25.tar.xz",
+  "size": 222500504,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/4.0.1/clang+llvm-4.0.1-ppc64le-linux-gnu-Fedora-25.tar.xz": {
+  "folder": "cc",
+  "sha256": "1fd84bca3f1436867148a5a89cc4e162954ee3ce7f2b4a885079f892796d1b7f",
+  "store_path": "llvm/linux/ppc64le/4.0.1-Fedora-25/clang+llvm-4.0.1-ppc64le-linux-gnu-Fedora-25.tar.xz",
+  "size": 217840220,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/4.0.1/LLVM-4.0.1-win32.exe": {
+  "folder": "cc",
+  "sha256": "0071e699965d7a0f62f59536a1a16843d1f6919af4c596a82c2a03f05ea34ca6",
+  "store_path": "llvm/windows/x86/4.0.1/LLVM-4.0.1-win32.exe",
+  "size": 95696732,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/4.0.1/LLVM-4.0.1-win64.exe": {
+  "folder": "cc",
+  "sha256": "139ba95f9f88199cdc419a674f0a85df3568367623486336843207a4982e36e9",
+  "store_path": "llvm/windows/amd64/4.0.1/LLVM-4.0.1-win64.exe",
+  "size": 101018195,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/3.9.1/clang+llvm-3.9.1-aarch64-linux-gnu.tar.xz": {
+  "folder": "cc",
+  "sha256": "953c76b8a2b2162aef1aef09f4543999afdfca6fdd38353971b7084cff43c051",
+  "store_path": "llvm/linux/arm64/3.9.1/clang+llvm-3.9.1-aarch64-linux-gnu.tar.xz",
+  "size": 148057548,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/3.9.1/clang+llvm-3.9.1-armv7a-linux-gnueabihf.tar.xz": {
+  "folder": "cc",
+  "sha256": "6229ab4763dbf58f7eefe9c70b40a653595f625dc8990162500c47d4da73c612",
+  "store_path": "llvm/linux/armv7/3.9.1/clang+llvm-3.9.1-armv7a-linux-gnueabihf.tar.xz",
+  "size": 158690192,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/3.9.1/clang+llvm-3.9.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz": {
+  "folder": "cc",
+  "sha256": "99d1ffd4be8fd3331b4d2478ada7ee6ed352729bfe4a1070450cdb9a3ce8ef9b",
+  "store_path": "llvm/linux/amd64/3.9.1-ubuntu-16.04/clang+llvm-3.9.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz",
+  "size": 189312136,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/3.9.1/LLVM-3.9.1-win32.exe": {
+  "folder": "cc",
+  "sha256": "f5cdf134e27a215a18515e2dcd100902dcf539f487c2028a817ffe7d3091f32a",
+  "store_path": "llvm/windows/x86/3.9.1/LLVM-3.9.1-win32.exe",
+  "size": 56276700,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/3.9.1/LLVM-3.9.1-win64.exe": {
+  "folder": "cc",
+  "sha256": "7ea2b7bc0de6b96a6ce11e6cfece7b84a31fb0c86c977f42ee178cba41517606",
+  "store_path": "llvm/windows/amd64/3.9.1/LLVM-3.9.1-win64.exe",
+  "size": 56099038,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://releases.llvm.org/3.9.0/clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz": {
+  "folder": "cc",
+  "sha256": "bd689aaeafa19832016d5a4917405a73b21bc5281846c0cb816e9545cf99e82b",
+  "store_path": "llvm/macos/amd64/3.9.0/clang+llvm-3.9.0-x86_64-apple-darwin.tar.xz",
+  "size": 162736100,
+  "has_vendor_checksum": false,
+  "mirrors": 2
+ },
+ "https://ftp.gnu.org/gnu/gcc/gcc-10.5.0/gcc-10.5.0.tar.xz": {
+  "folder": "cc",
+  "sha256": "25109543fdf46f397c347b5d8b7a2c7e5694a5a51cce4b9c6e1ea8a71ca307c1",
+  "store_path": "gcc/linux/any/10.5.0/gcc-10.5.0.tar.xz",
+  "size": 77846412,
+  "has_vendor_checksum": false,
+  "mirrors": 69
+ },
+ "https://ftp.gnu.org/gnu/gcc/gcc-11.5.0/gcc-11.5.0.tar.xz": {
+  "folder": "cc",
+  "sha256": "a6e21868ead545cf87f0c01f84276e4b5281d672098591c1c896241f09363478",
+  "store_path": "gcc/linux/any/11.5.0/gcc-11.5.0.tar.xz",
+  "size": 82399864,
+  "has_vendor_checksum": false,
+  "mirrors": 69
+ },
+ "https://ftp.gnu.org/gnu/gcc/gcc-12.5.0/gcc-12.5.0.tar.xz": {
+  "folder": "cc",
+  "sha256": "71cd373d0f04615e66c5b5b14d49c1a4c1a08efa7b30625cd240b11bab4062b3",
+  "store_path": "gcc/linux/any/12.5.0/gcc-12.5.0.tar.xz",
+  "size": 85897368,
+  "has_vendor_checksum": false,
+  "mirrors": 68
+ },
+ "https://ftp.gnu.org/gnu/gcc/gcc-13.5.0/gcc-13.5.0.tar.xz": {
+  "folder": "cc",
+  "sha256": "ec3df0015ed01411f91f9a9cd5b4da3070eb1222b02fadf4133c30c090399855",
+  "store_path": "gcc/linux/any/13.5.0/gcc-13.5.0.tar.xz",
+  "size": 90977816,
+  "has_vendor_checksum": false,
+  "mirrors": 66
+ },
+ "https://ftp.gnu.org/gnu/gcc/gcc-14.4.0/gcc-14.4.0.tar.xz": {
+  "folder": "cc",
+  "sha256": "752b6f567beac83159c77a7680b1316bdd784738bff9a9d070112c09da90f6d9",
+  "store_path": "gcc/linux/any/14.4.0/gcc-14.4.0.tar.xz",
+  "size": 91586872,
+  "has_vendor_checksum": false,
+  "mirrors": 69
+ },
+ "https://ftp.gnu.org/gnu/gcc/gcc-15.3.0/gcc-15.3.0.tar.xz": {
+  "folder": "cc",
+  "sha256": "fa59c1beef8995f27c4d71c1df227587189315d3e6faff1bb4306e61b0c530eb",
+  "store_path": "gcc/linux/any/15.3.0/gcc-15.3.0.tar.xz",
+  "size": 101253696,
+  "has_vendor_checksum": false,
+  "mirrors": 68
+ },
+ "https://ftp.gnu.org/gnu/gcc/gcc-16.2.0/gcc-16.2.0.tar.xz": {
+  "folder": "cc",
+  "sha256": "e6738e29597f733270731aa90600f37ffdc045079dfc27ec7e8192cc81085c3e",
+  "store_path": "gcc/linux/any/16.2.0/gcc-16.2.0.tar.xz",
+  "size": 107200820,
+  "has_vendor_checksum": false,
+  "mirrors": 69
+ },
+ "https://ftp.gnu.org/gnu/gcc/gcc-4.9.4/gcc-4.9.4.tar.bz2": {
+  "folder": "cc",
+  "sha256": "6c11d292cd01b294f9f84c9a59c230d80e9e4a47e5c6355f046bb36d4f358092",
+  "store_path": "gcc/linux/any/4.9.4/gcc-4.9.4.tar.bz2",
+  "size": 90097606,
+  "has_vendor_checksum": false,
+  "mirrors": 67
+ },
+ "https://ftp.gnu.org/gnu/gcc/gcc-5.5.0/gcc-5.5.0.tar.xz": {
+  "folder": "cc",
+  "sha256": "530cea139d82fe542b358961130c69cfde8b3d14556370b65823d2f91f0ced87",
+  "store_path": "gcc/linux/any/5.5.0/gcc-5.5.0.tar.xz",
+  "size": 71096120,
+  "has_vendor_checksum": false,
+  "mirrors": 68
+ },
+ "https://ftp.gnu.org/gnu/gcc/gcc-6.5.0/gcc-6.5.0.tar.xz": {
+  "folder": "cc",
+  "sha256": "7ef1796ce497e89479183702635b14bb7a46b53249209a5e0f999bebf4740945",
+  "store_path": "gcc/linux/any/6.5.0/gcc-6.5.0.tar.xz",
+  "size": 74355588,
+  "has_vendor_checksum": false,
+  "mirrors": 67
+ },
+ "https://ftp.gnu.org/gnu/gcc/gcc-7.5.0/gcc-7.5.0.tar.xz": {
+  "folder": "cc",
+  "sha256": "b81946e7f01f90528a1f7352ab08cc602b9ccc05d4e44da4bd501c5a189ee661",
+  "store_path": "gcc/linux/any/7.5.0/gcc-7.5.0.tar.xz",
+  "size": 62783088,
+  "has_vendor_checksum": false,
+  "mirrors": 67
+ },
+ "https://ftp.gnu.org/gnu/gcc/gcc-8.5.0/gcc-8.5.0.tar.xz": {
+  "folder": "cc",
+  "sha256": "d308841a511bb830a6100397b0042db24ce11f642dab6ea6ee44842e5325ed50",
+  "store_path": "gcc/linux/any/8.5.0/gcc-8.5.0.tar.xz",
+  "size": 63841008,
+  "has_vendor_checksum": false,
+  "mirrors": 69
+ },
+ "https://ftp.gnu.org/gnu/gcc/gcc-9.5.0/gcc-9.5.0.tar.xz": {
+  "folder": "cc",
+  "sha256": "27769f64ef1d4cd5e2be8682c0c93f9887983e6cfd1a927ce5a0a2915a95cf8f",
+  "store_path": "gcc/linux/any/9.5.0/gcc-9.5.0.tar.xz",
+  "size": 72462752,
+  "has_vendor_checksum": false,
+  "mirrors": 69
+ },
+ "https://aka.ms/vs/17/release/vc_redist.x64.exe": {
+  "folder": "cc",
+  "sha256": "cc0ff0eb1dc3f5188ae6300faef32bf5beeba4bdd6e8e445a9184072096b713b",
+  "store_path": "msvc-redist/windows/amd64/latest/vc_redist.x64.exe",
+  "size": 25635768,
+  "has_vendor_checksum": false,
+  "mirrors": 1
+ },
+ "https://aka.ms/vs/17/release/vc_redist.x86.exe": {
+  "folder": "cc",
+  "sha256": "0c09f2611660441084ce0df425c51c11e147e6447963c3690f97e0b25c55ed64",
+  "store_path": "msvc-redist/windows/x86/latest/vc_redist.x86.exe",
+  "size": 13953392,
+  "has_vendor_checksum": false,
+  "mirrors": 1
+ },
+ "https://aka.ms/vs/17/release/vc_redist.arm64.exe": {
+  "folder": "cc",
+  "sha256": "5139e1440c3a20b92153a4db561c069a0175aaf76c276c3e5b6f56099edcf4b0",
+  "store_path": "msvc-redist/windows/arm64/latest/vc_redist.arm64.exe",
+  "size": 11722336,
+  "has_vendor_checksum": false,
+  "mirrors": 1
+ },
+ "https://aka.ms/vs/17/release/vs_BuildTools.exe": {
+  "folder": "cc",
+  "sha256": "985969f472caad75d993a5cb4c35a6a4271460cc12b343e2433b994d173aa990",
+  "store_path": "msvc-redist/windows/amd64/latest-buildtools/vs_BuildTools.exe",
+  "size": 4478032,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/nim-lang/nightlies/releases/download/2024-04-07-version-1-6-19fdbfc173bfccb64cb64e0a963e69f52f71fc73/nim-1.6.20-linux_arm64.tar.xz": {
+  "folder": "nim",
+  "sha256": "98ab46cb8d15206d07559a0a12d06d587f5851509f523b30593422408c13f5af",
+  "store_path": "nim/linux/arm64/1.6.20-nightlies/nim-1.6.20-linux_arm64.tar.xz",
+  "size": 11128496,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/nim-lang/nightlies/releases/download/2024-04-07-version-1-6-19fdbfc173bfccb64cb64e0a963e69f52f71fc73/nim-1.6.20-linux_armv7l.tar.xz": {
+  "folder": "nim",
+  "sha256": "83333ef01f8276f4f1d331e08498fc6ef30c4636ff95c5131c82503a6bfb55bd",
+  "store_path": "nim/linux/armv7/1.6.20-nightlies/nim-1.6.20-linux_armv7l.tar.xz",
+  "size": 11047168,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/nim-lang/nightlies/releases/download/2024-04-07-version-1-6-19fdbfc173bfccb64cb64e0a963e69f52f71fc73/nim-1.6.20-macosx_x64.tar.xz": {
+  "folder": "nim",
+  "sha256": "ac6dfd35cdf0f1df0a3dc39b7de120944a709f94a42e669b729bcd3c902996d3",
+  "store_path": "nim/macos/amd64/1.6.20-nightlies/nim-1.6.20-macosx_x64.tar.xz",
+  "size": 10176960,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ },
+ "https://github.com/nim-lang/nightlies/releases/download/2026-09-08-version-2-2-8e8fbf60693418dc95bb0d762fd660231d08a583/nim-2.2.12-linux_armv7l.tar.xz": {
+  "folder": "nim",
+  "sha256": "c4893f5c4b51064ae9a686a4aeb168d0ba1da97f4cbc7032b6c684e51d63e881",
+  "store_path": "nim/linux/armv7/2.2.12-nightlies/nim-2.2.12-linux_armv7l.tar.xz",
+  "size": 17973128,
+  "has_vendor_checksum": false,
+  "mirrors": 0
+ }
+}

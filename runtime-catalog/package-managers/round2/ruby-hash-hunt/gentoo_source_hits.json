@@ -1,0 +1,38 @@
+[
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.10.tar.xz",
+  "mirror": "https://distfiles.gentoo.org/distfiles/e8/ruby-3.2.10.tar.xz"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.11.tar.xz",
+  "mirror": "https://distfiles.gentoo.org/distfiles/c1/ruby-3.2.11.tar.xz"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.11.tar.xz",
+  "mirror": "https://distfiles.gentoo.org/distfiles/e8/ruby-3.3.11.tar.xz"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.12.tar.xz",
+  "mirror": "https://distfiles.gentoo.org/distfiles/79/ruby-3.3.12.tar.xz"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.9.tar.xz",
+  "mirror": "https://distfiles.gentoo.org/distfiles/f5/ruby-3.4.9.tar.xz"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.10.tar.xz",
+  "mirror": "https://distfiles.gentoo.org/distfiles/c3/ruby-3.4.10.tar.xz"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.3.tar.xz",
+  "mirror": "https://distfiles.gentoo.org/distfiles/be/ruby-4.0.3.tar.xz"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.4.tar.xz",
+  "mirror": "https://distfiles.gentoo.org/distfiles/17/ruby-4.0.4.tar.xz"
+ },
+ {
+  "url": "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.6.tar.xz",
+  "mirror": "https://distfiles.gentoo.org/distfiles/0d/ruby-4.0.6.tar.xz"
+ }
+]

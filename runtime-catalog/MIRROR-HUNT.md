@@ -20,9 +20,29 @@ priority order:
 
 ## Rules for confirming a mirror
 
-- Use a normal browser-like User-Agent (some mirrors 403 curl's default).
+- **Identify honestly: `installer-builder-catalog/1.0`, not a browser
+  string.** This reverses round 1's advice, and the old advice cost the
+  catalogue four real mirrors (2026-09-20). Several institutional
+  mirrors deliberately pass self-identifying automation and challenge
+  anything pretending to be a browser: with a browser UA,
+  `mirror.sjtu.edu.cn` answers a Cerberus proof-of-work page ("Cerberus
+  WASM, unconfirmable" in round 2), TUNA and BFSU answer HEAD but 403
+  every GET, USTC soft-200s an HTML app for every path *including bogus
+  ones*, and Software Heritage answers an Anubis bot check. With a plain
+  UA all five simply serve the file. Nothing is being circumvented --
+  the gates are built to let honest agents through. **A host rejected in
+  an earlier round is worth re-testing under a plain UA before it is
+  believed.**
+- Some mirrors do 403 an unidentified client (curl's default); that is
+  what the UA is for, not disguise.
 - A mirror that merely 30x-redirects to the vendor's own host is NOT a mirror;
   check the final host with redirects disabled or by inspecting Location.
+- **HEAD is not enough on its own: GET every host you confirm.**
+  `mirrors.nyist.edu.cn` answers HEAD with 200 and the exact vendor
+  Content-Length, and 404s bogus paths -- and then 302s a real GET into
+  an nginx proof-of-work challenge. A HEAD-only check would have
+  recorded it as a mirror. Earlier rounds' HEAD-only confirmations
+  deserve the same re-check.
 - Confirm by HEAD (Content-Length equal to the vendor size) on a sample of at
   least 6 files spanning old, middle and newest versions and different
   OS/arch. If the whole sample matches, apply the mirror to every entry whose

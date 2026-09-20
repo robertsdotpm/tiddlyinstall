@@ -49,5 +49,7 @@
  "cc": [],
  "ruby": [],
  "nim": [],
- "zig": []
+ "zig": [],
+ "gcc": [],
+ "msvc-redist": []
 }

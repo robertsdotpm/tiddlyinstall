@@ -1,0 +1,37 @@
+[
+ {
+  "name": "static.azul.com zulu-embedded bogus file",
+  "url": "https://static.azul.com/zulu-embedded/bin/zulu-no-such-file-9999.tar.gz",
+  "code": 404,
+  "len": "72",
+  "ctype": "text/html;charset=UTF-8"
+ },
+ {
+  "name": "static.azul.com bogus dir",
+  "url": "https://static.azul.com/no-such-dir-9999/bin/zulu8.31.1.122-jdk1.8.0_181-linux_aarch64.tar.gz",
+  "code": 404,
+  "len": "72",
+  "ctype": "text/html;charset=UTF-8"
+ },
+ {
+  "name": "http static.azul.com bogus file",
+  "url": "http://static.azul.com/zulu/bin/zulu-no-such-file-9999.tar.gz",
+  "code": 404,
+  "len": "72",
+  "ctype": "text/html;charset=UTF-8"
+ },
+ {
+  "name": "http cdn.azul.com bogus file",
+  "url": "http://cdn.azul.com/zulu/bin/zulu-no-such-file-9999.tar.gz",
+  "code": 404,
+  "len": "72",
+  "ctype": "text/html;charset=UTF-8"
+ },
+ {
+  "name": "tarballs.nixos.org bogus hash",
+  "url": "https://tarballs.nixos.org/sha256/0000000000000000000000000000000000000000000000000000000000000000",
+  "code": 404,
+  "len": "3",
+  "ctype": "text/html"
+ }
+]

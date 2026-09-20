@@ -1,0 +1,161 @@
+{
+ "hits": [
+  {
+   "url": "https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_aarch64_linux_hotspot_8u492b09.tar.gz",
+   "mirror": "https://distfiles.gentoo.org/distfiles/8e/OpenJDK8U-jdk_aarch64_linux_hotspot_8u492b09.tar.gz",
+   "http": "http://distfiles.gentoo.org/distfiles/8e/OpenJDK8U-jdk_aarch64_linux_hotspot_8u492b09.tar.gz",
+   "size": 102612987,
+   "http_ok": true,
+   "code": 200
+  },
+  {
+   "url": "https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_mac_hotspot_8u492b09.tar.gz",
+   "mirror": "https://distfiles.gentoo.org/distfiles/64/OpenJDK8U-jdk_x64_mac_hotspot_8u492b09.tar.gz",
+   "http": "http://distfiles.gentoo.org/distfiles/64/OpenJDK8U-jdk_x64_mac_hotspot_8u492b09.tar.gz",
+   "size": 108028575,
+   "http_ok": true,
+   "code": 200
+  },
+  {
+   "url": "https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u492-b09/OpenJDK8U-jdk_x64_alpine-linux_hotspot_8u492b09.tar.gz",
+   "mirror": "https://distfiles.gentoo.org/distfiles/9f/OpenJDK8U-jdk_x64_alpine-linux_hotspot_8u492b09.tar.gz",
+   "http": "http://distfiles.gentoo.org/distfiles/9f/OpenJDK8U-jdk_x64_alpine-linux_hotspot_8u492b09.tar.gz",
+   "size": 101410189,
+   "http_ok": true,
+   "code": 200
+  },
+  {
+   "url": "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.31%2B11/OpenJDK11U-jdk_x64_mac_hotspot_11.0.31_11.tar.gz",
+   "mirror": "https://distfiles.gentoo.org/distfiles/0c/OpenJDK11U-jdk_x64_mac_hotspot_11.0.31_11.tar.gz",
+   "http": "http://distfiles.gentoo.org/distfiles/0c/OpenJDK11U-jdk_x64_mac_hotspot_11.0.31_11.tar.gz",
+   "size": 187361454,
+   "http_ok": true,
+   "code": 200
+  },
+  {
+   "url": "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.31%2B11/OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.31_11.tar.gz",
+   "mirror": "https://distfiles.gentoo.org/distfiles/db/OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.31_11.tar.gz",
+   "http": "http://distfiles.gentoo.org/distfiles/db/OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.31_11.tar.gz",
+   "size": 192356810,
+   "http_ok": true,
+   "code": 200
+  },
+  {
+   "url": "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.31%2B11/OpenJDK11U-jdk_arm_linux_hotspot_11.0.31_11.tar.gz",
+   "mirror": "https://distfiles.gentoo.org/distfiles/2a/OpenJDK11U-jdk_arm_linux_hotspot_11.0.31_11.tar.gz",
+   "http": "http://distfiles.gentoo.org/distfiles/2a/OpenJDK11U-jdk_arm_linux_hotspot_11.0.31_11.tar.gz",
+   "size": 183209712,
+   "http_ok": true,
+   "code": 200
+  },
+  {
+   "url": "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.31%2B11/OpenJDK11U-jdk_x64_alpine-linux_hotspot_11.0.31_11.tar.gz",
+   "mirror": "https://distfiles.gentoo.org/distfiles/43/OpenJDK11U-jdk_x64_alpine-linux_hotspot_11.0.31_11.tar.gz",
+   "http": "http://distfiles.gentoo.org/distfiles/43/OpenJDK11U-jdk_x64_alpine-linux_hotspot_11.0.31_11.tar.gz",
+   "size": 194420975,
+   "http_ok": true,
+   "code": 200
+  },
+  {
+   "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.19%2B10/OpenJDK17U-jdk_x64_alpine-linux_hotspot_17.0.19_10.tar.gz",
+   "mirror": "https://distfiles.gentoo.org/distfiles/81/OpenJDK17U-jdk_x64_alpine-linux_hotspot_17.0.19_10.tar.gz",
+   "http": "http://distfiles.gentoo.org/distfiles/81/OpenJDK17U-jdk_x64_alpine-linux_hotspot_17.0.19_10.tar.gz",
+   "size": 192474282,
+   "http_ok": true,
+   "code": 200
+  },
+  {
+   "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.19%2B10/OpenJDK17U-jdk_x64_mac_hotspot_17.0.19_10.tar.gz",
+   "mirror": "https://distfiles.gentoo.org/distfiles/59/OpenJDK17U-jdk_x64_mac_hotspot_17.0.19_10.tar.gz",
+   "http": "http://distfiles.gentoo.org/distfiles/59/OpenJDK17U-jdk_x64_mac_hotspot_17.0.19_10.tar.gz",
+   "size": 180540440,
+   "http_ok": true,
+   "code": 200
+  },
+  {
+   "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.19%2B10/OpenJDK17U-jdk_aarch64_mac_hotspot_17.0.19_10.tar.gz",
+   "mirror": "https://distfiles.gentoo.org/distfiles/bb/OpenJDK17U-jdk_aarch64_mac_hotspot_17.0.19_10.tar.gz",
+   "http": "http://distfiles.gentoo.org/distfiles/bb/OpenJDK17U-jdk_aarch64_mac_hotspot_17.0.19_10.tar.gz",
+   "size": 185818964,
+   "http_ok": true,
+   "code": 200
+  },
+  {
+   "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.19%2B10/OpenJDK17U-jdk_aarch64_linux_hotspot_17.0.19_10.tar.gz",
+   "mirror": "https://distfiles.gentoo.org/distfiles/8a/OpenJDK17U-jdk_aarch64_linux_hotspot_17.0.19_10.tar.gz",
+   "http": "http://distfiles.gentoo.org/distfiles/8a/OpenJDK17U-jdk_aarch64_linux_hotspot_17.0.19_10.tar.gz",
+   "size": 192041703,
+   "http_ok": true,
+   "code": 200
+  },
+  {
+   "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.19%2B10/OpenJDK17U-jdk_arm_linux_hotspot_17.0.19_10.tar.gz",
+   "mirror": "https://distfiles.gentoo.org/distfiles/84/OpenJDK17U-jdk_arm_linux_hotspot_17.0.19_10.tar.gz",
+   "http": "http://distfiles.gentoo.org/distfiles/84/OpenJDK17U-jdk_arm_linux_hotspot_17.0.19_10.tar.gz",
+   "size": 190081346,
+   "http_ok": true,
+   "code": 200
+  },
+  {
+   "url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.11%2B10/OpenJDK21U-jdk_aarch64_alpine-linux_hotspot_21.0.11_10.tar.gz",
+   "mirror": "https://distfiles.gentoo.org/distfiles/d2/OpenJDK21U-jdk_aarch64_alpine-linux_hotspot_21.0.11_10.tar.gz",
+   "http": "http://distfiles.gentoo.org/distfiles/d2/OpenJDK21U-jdk_aarch64_alpine-linux_hotspot_21.0.11_10.tar.gz",
+   "size": 205612996,
+   "http_ok": true,
+   "code": 200
+  },
+  {
+   "url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.11%2B10/OpenJDK21U-jdk_x64_linux_hotspot_21.0.11_10.tar.gz",
+   "mirror": "https://distfiles.gentoo.org/distfiles/7c/OpenJDK21U-jdk_x64_linux_hotspot_21.0.11_10.tar.gz",
+   "http": "http://distfiles.gentoo.org/distfiles/7c/OpenJDK21U-jdk_x64_linux_hotspot_21.0.11_10.tar.gz",
+   "size": 207513939,
+   "http_ok": true,
+   "code": 200
+  },
+  {
+   "url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.11%2B10/OpenJDK21U-jdk_x64_alpine-linux_hotspot_21.0.11_10.tar.gz",
+   "mirror": "https://distfiles.gentoo.org/distfiles/d7/OpenJDK21U-jdk_x64_alpine-linux_hotspot_21.0.11_10.tar.gz",
+   "http": "http://distfiles.gentoo.org/distfiles/d7/OpenJDK21U-jdk_x64_alpine-linux_hotspot_21.0.11_10.tar.gz",
+   "size": 207723847,
+   "http_ok": true,
+   "code": 200
+  },
+  {
+   "url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.11%2B10/OpenJDK21U-jdk_aarch64_linux_hotspot_21.0.11_10.tar.gz",
+   "mirror": "https://distfiles.gentoo.org/distfiles/30/OpenJDK21U-jdk_aarch64_linux_hotspot_21.0.11_10.tar.gz",
+   "http": "http://distfiles.gentoo.org/distfiles/30/OpenJDK21U-jdk_aarch64_linux_hotspot_21.0.11_10.tar.gz",
+   "size": 205692516,
+   "http_ok": true,
+   "code": 200
+  },
+  {
+   "url": "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.3%2B9/OpenJDK25U-jdk_aarch64_alpine-linux_hotspot_25.0.3_9.tar.gz",
+   "mirror": "https://distfiles.gentoo.org/distfiles/81/OpenJDK25U-jdk_aarch64_alpine-linux_hotspot_25.0.3_9.tar.gz",
+   "http": "http://distfiles.gentoo.org/distfiles/81/OpenJDK25U-jdk_aarch64_alpine-linux_hotspot_25.0.3_9.tar.gz",
+   "size": 139141272,
+   "http_ok": true,
+   "code": 200
+  },
+  {
+   "url": "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.3%2B9/OpenJDK25U-jdk_x64_alpine-linux_hotspot_25.0.3_9.tar.gz",
+   "mirror": "https://distfiles.gentoo.org/distfiles/8e/OpenJDK25U-jdk_x64_alpine-linux_hotspot_25.0.3_9.tar.gz",
+   "http": "http://distfiles.gentoo.org/distfiles/8e/OpenJDK25U-jdk_x64_alpine-linux_hotspot_25.0.3_9.tar.gz",
+   "size": 140306399,
+   "http_ok": true,
+   "code": 200
+  },
+  {
+   "url": "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.3%2B9/OpenJDK25U-jdk_aarch64_linux_hotspot_25.0.3_9.tar.gz",
+   "mirror": "https://distfiles.gentoo.org/distfiles/a4/OpenJDK25U-jdk_aarch64_linux_hotspot_25.0.3_9.tar.gz",
+   "http": "http://distfiles.gentoo.org/distfiles/a4/OpenJDK25U-jdk_aarch64_linux_hotspot_25.0.3_9.tar.gz",
+   "size": 140130864,
+   "http_ok": true,
+   "code": 200
+  }
+ ],
+ "control": [
+  404,
+  null
+ ],
+ "probed": 1940
+}

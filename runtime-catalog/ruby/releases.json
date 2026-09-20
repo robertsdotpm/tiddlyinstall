@@ -17,7 +17,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.0.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.0.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.0.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.0.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.0.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:115c5fe0a15709abd1b64351aa1bed9c030d1f3d77cad3f2f2b50b3704c201f1/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -79,7 +80,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.2.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.2.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.2.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.2.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.2.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:34cf95791323c96dc92c672c16daaef69f00a0ba69e1c43bab893ae38b7eeb3e/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -110,7 +112,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.3.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.3.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.3.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.3.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.3.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:e0711c8aaf03c00810e84679a060a20d6e262e64fd87fe37d9b03a8b8a2b6e90/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -141,7 +144,9 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.4.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.4.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.4.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.4.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.4.tar.gz",
+   "https://tarballs.nixos.org/sha256/71432841b3965b7ab2d83f0dc7c3049195ea4e9267a8dc2d825a8a0466982930",
+   "https://archive.softwareheritage.org/api/1/content/sha256:71432841b3965b7ab2d83f0dc7c3049195ea4e9267a8dc2d825a8a0466982930/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -172,7 +177,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.5.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.5.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.5.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.5.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.5.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:19590e972b80333e26a6514c34d976c2037138361481a16f27b75e5d33f33a58/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -327,7 +333,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.5-p35.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.5-p35.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.5-p35.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.5-p35.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.5-p35.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:4d937d5c51e95b4f5c881e334c1c3f69c8e894deac1024ed7c9911c4f78548f0/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -451,7 +458,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.5-p115.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.5-p115.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.5-p115.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.5-p115.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.5-p115.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:bd7989c07230962e5f79e2556e0c1043483dc981b11467be3f4de4bf20f56e47/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -482,7 +490,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.5-p231.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.5-p231.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.5-p231.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.5-p231.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.5-p231.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:9091ee606c89ebd94b3ced9a6c1bba8e56a8e5807091c14e81798690cb7e76ca/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -513,7 +522,9 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.6.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.6.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.6.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.6.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.6.tar.gz",
+   "https://tarballs.nixos.org/sha256/3ef37fb961d04471a1aef2c8079d6fab09932e3281d79859d5cd5d426bde0868",
+   "https://archive.softwareheritage.org/api/1/content/sha256:3ef37fb961d04471a1aef2c8079d6fab09932e3281d79859d5cd5d426bde0868/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -544,7 +555,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.6-p36.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.6-p36.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.6-p36.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.6-p36.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.6-p36.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:1a9db5f4720a7023d9ecfaa6c4128ecb5f8cd59460744fb4b5f3b64ed3786935/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -575,7 +587,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.6-p110.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.6-p110.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.6-p110.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.6-p110.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.6-p110.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:d3f11ecaf2b0bd7bd3f0bc24007b1c7c12640c55cd40e8e4cc396ba835186fbe/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -606,7 +619,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.6-p111.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.6-p111.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.6-p111.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.6-p111.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.6-p111.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:5edafdce60b28aecff1a10c892192b27f42ebdf4871018e86fc473366cc7dea6/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -637,7 +651,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.6-p114.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.6-p114.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.6-p114.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.6-p114.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.6-p114.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:6cdf4dfa9266f85184d58a80007f0f8af1d933ed2820da448c1842690e55ef6a/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -730,7 +745,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.6-p287.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.6-p287.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.6-p287.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.6-p287.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.6-p287.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:6463d1932c34ff72b79174ac7d2c28940d29d147928250928a00a0dbee43db57/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -792,7 +808,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.6-p369.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.6-p369.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.6-p369.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.6-p369.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.6-p369.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:edd3707a24dcf53d36a8722fe5addeb0d9077481a272451a9e662374863ba42c/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -823,7 +840,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.6-p383.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.6-p383.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.6-p383.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.6-p383.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.6-p383.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:cea6c67f737727007ec89d1c93fd7d0dba035220f981706091b8642d7a43c03a/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -916,7 +934,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.6-p399.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.6-p399.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.6-p399.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.6-p399.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.6-p399.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:04efd2a260116c2f4efdb9f2408da086c33ac81146bb030c50a1378951a581e3/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -947,7 +966,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.6-p420.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.6-p420.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.6-p420.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.6-p420.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.6-p420.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:118e6f24afce8e8a10dced23635168e58da6c9121a21f120c82f425d40a1e321/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -978,7 +998,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.7.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.7.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.7.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:600dccf13bca3e4179fa6ff554220ce4ba67ffc72bce1ac3bf74c2599c03a0ca/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1040,7 +1061,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.7-p22.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.7-p22.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.7-p22.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p22.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p22.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:d2e4e6a9f170066846304797d39e8f388edb06206b40c9ef5ec2d657ff22c072/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1102,7 +1124,9 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.7-p72.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.7-p72.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.7-p72.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p72.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p72.tar.gz",
+   "https://tarballs.nixos.org/sha256/e15ca005076f5d6f91fc856fdfbd071698a4cadac3c6e25855899dba1f6fc5ef",
+   "https://archive.softwareheritage.org/api/1/content/sha256:e15ca005076f5d6f91fc856fdfbd071698a4cadac3c6e25855899dba1f6fc5ef/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1164,7 +1188,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.7-p173.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.7-p173.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.7-p173.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p173.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p173.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:89ad16522f0a2f91e83e418e63cd27ec0fa6e40b17118c29f48b24468490a662/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1195,7 +1220,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.7-p174.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.7-p174.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.7-p174.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p174.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p174.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:da65d7d7c09ffc018fe5788338dc91ced08e0fb009a90c4bdeececfbd8c0fcc1/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1226,7 +1252,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.7-p248.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.7-p248.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.7-p248.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p248.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p248.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:5c9cd617a2ec6b40abd7c7bdfce3256888134482b22f933a061ae18fb4b48755/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1257,7 +1284,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.7-p249.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.7-p249.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.7-p249.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p249.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p249.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:a969f5ec00f096f01650bfa594bc408f2e5cfc3de21b533ab62b4f29eb8ca653/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1288,7 +1316,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.7-p299.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.7-p299.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.7-p299.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p299.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p299.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:32c99c8e3d0a0190942055b8239f1573677a02de2645d81539617011f3a5427b/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1350,7 +1379,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.7-p302.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.7-p302.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.7-p302.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p302.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p302.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:5883df5204de70762602ce885b18c8bf6c856d33298c35df9151031b2ce044a1/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1575,7 +1605,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.7-p352.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.7-p352.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.7-p352.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p352.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p352.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:2325b9f9ab2af663469d057c6a1ef59d914a649808e9f6d1a4877c8973c2dad0/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1650,7 +1681,9 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.7-p357.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.7-p357.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.7-p357.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p357.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p357.tar.gz",
+   "https://tarballs.nixos.org/sha256/2fdcac4eb37b2eba1a4eef392a2922e07a9222fc86d781d92154d716434b962c",
+   "https://archive.softwareheritage.org/api/1/content/sha256:2fdcac4eb37b2eba1a4eef392a2922e07a9222fc86d781d92154d716434b962c/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1725,7 +1758,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.7-p358.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.7-p358.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.7-p358.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p358.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p358.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:9e0856d58830e08f1e38233947d859898ae09d4780cb1a502108e41308de33cb/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1875,7 +1909,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.7-p371.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.7-p371.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.7-p371.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p371.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p371.tar.gz",
+   "https://tarballs.nixos.org/sha256/e60a322f8f2a616eba01651f5ab620e7e48e4f8adfe711aec61cc74a91d54d3c"
   ],
   "checksum": {
    "algo": "sha256",
@@ -1981,7 +2016,8 @@
    "https://mirror.cyberbits.eu/ruby/1.8/ruby-1.8.7-p374.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.8/ruby-1.8.7-p374.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.8/ruby-1.8.7-p374.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p374.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.8/ruby-1.8.7-p374.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:876eeeaaeeab10cbf4767833547d66d86d6717ef48fd3d89e27db8926a65276c/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2056,7 +2092,8 @@
    "https://mirror.cyberbits.eu/ruby/1.9/ruby-1.9.0-0.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.9/ruby-1.9.0-0.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.9/ruby-1.9.0-0.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.9/ruby-1.9.0-0.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.9/ruby-1.9.0-0.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:37f3ccba1372a906973b125d47b227bc2401580f502fabc458e5c357dc27ce9e/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2242,7 +2279,8 @@
    "https://mirror.cyberbits.eu/ruby/1.9/ruby-1.9.1-p0.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.9/ruby-1.9.1-p0.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.9/ruby-1.9.1-p0.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.9/ruby-1.9.1-p0.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.9/ruby-1.9.1-p0.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:a5485951823c8c22ddf6100fc9e10c7bfc85fb5a4483844033cee0fad9e292cc/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2304,7 +2342,8 @@
    "https://mirror.cyberbits.eu/ruby/1.9/ruby-1.9.1-p243.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.9/ruby-1.9.1-p243.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.9/ruby-1.9.1-p243.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.9/ruby-1.9.1-p243.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.9/ruby-1.9.1-p243.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:31598e37b3962643bec722921644957be6f8fb9a26f6c91fa627bd668ea68be4/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2366,7 +2405,8 @@
    "https://mirror.cyberbits.eu/ruby/1.9/ruby-1.9.1-p378.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.9/ruby-1.9.1-p378.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.9/ruby-1.9.1-p378.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.9/ruby-1.9.1-p378.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.9/ruby-1.9.1-p378.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:b2960c330aa097c0cf90157a3133c6553ccdf8198e4c717c72cbe87c7f277547/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2397,7 +2437,8 @@
    "https://mirror.cyberbits.eu/ruby/1.9/ruby-1.9.1-p429.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.9/ruby-1.9.1-p429.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.9/ruby-1.9.1-p429.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.9/ruby-1.9.1-p429.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.9/ruby-1.9.1-p429.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:fdd97f52873b70f378ac73c76a1b2778e210582ce5fe1e1c241c37bd906b43b2/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2428,7 +2469,8 @@
    "https://mirror.cyberbits.eu/ruby/1.9/ruby-1.9.1-p430.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.9/ruby-1.9.1-p430.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.9/ruby-1.9.1-p430.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.9/ruby-1.9.1-p430.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.9/ruby-1.9.1-p430.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:6d28120e792a4a1cf32dd5f90c1643ecb48760157322a1bb267dd784d14fcb3a/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2490,7 +2532,8 @@
    "https://mirror.cyberbits.eu/ruby/1.9/ruby-1.9.2-p0.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.9/ruby-1.9.2-p0.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.9/ruby-1.9.2-p0.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.9/ruby-1.9.2-p0.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.9/ruby-1.9.2-p0.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:8c0c4e261a921b5c406bf9e76ac23bf3c915651534e9d1b9e8c5d0bee4a7285c/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2565,7 +2608,8 @@
    "https://mirror.cyberbits.eu/ruby/1.9/ruby-1.9.2-p136.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.9/ruby-1.9.2-p136.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.9/ruby-1.9.2-p136.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.9/ruby-1.9.2-p136.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.9/ruby-1.9.2-p136.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:c4314df44f3ab81230685fb51c296ce21034f4c719e2fcc0baba221d19f28746/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -2640,7 +2684,8 @@
    "https://mirror.cyberbits.eu/ruby/1.9/ruby-1.9.2-p180.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.9/ruby-1.9.2-p180.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.9/ruby-1.9.2-p180.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.9/ruby-1.9.2-p180.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.9/ruby-1.9.2-p180.tar.gz",
+   "https://archive.softwareheritage.org/api/1/content/sha256:9027a5abaaadc2af85005ed74aeb628ce2326441874bf3d4f1a842663cde04f4/raw/"
   ],
   "checksum": {
    "algo": "sha256",
@@ -4026,7 +4071,8 @@
    "https://mirror.cyberbits.eu/ruby/1.9/ruby-1.9.3-p551.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/1.9/ruby-1.9.3-p551.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/1.9/ruby-1.9.3-p551.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/1.9/ruby-1.9.3-p551.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/1.9/ruby-1.9.3-p551.tar.gz",
+   "https://tarballs.nixos.org/sha256/bb5be55cd1f49c95bb05b6f587701376b53d310eb1bb7c76fbd445a1c75b51e8"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5417,7 +5463,8 @@
    "https://mirror.cyberbits.eu/ruby/2.0/ruby-2.0.0-p647.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.0/ruby-2.0.0-p647.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.0/ruby-2.0.0-p647.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.0/ruby-2.0.0-p647.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.0/ruby-2.0.0-p647.tar.gz",
+   "https://tarballs.nixos.org/sha256/c88aaf5b4ec72e2cb7d290ff854f04d135939f6134f517002a9d65d5fc5e5bec"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5536,7 +5583,8 @@
    "https://mirror.cyberbits.eu/ruby/2.0/ruby-2.0.0-p648.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.0/ruby-2.0.0-p648.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.0/ruby-2.0.0-p648.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.0/ruby-2.0.0-p648.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.0/ruby-2.0.0-p648.tar.gz",
+   "https://tarballs.nixos.org/sha256/8690bd6b4949c333b3919755c4e48885dbfed6fd055fe9ef89930bde0d2376f8"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5655,7 +5703,8 @@
    "https://mirror.cyberbits.eu/ruby/2.1/ruby-2.1.0.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.1/ruby-2.1.0.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.1/ruby-2.1.0.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.1/ruby-2.1.0.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.1/ruby-2.1.0.tar.gz",
+   "https://tarballs.nixos.org/sha256/3538ec1f6af96ed9deb04e0965274528162726cc9ba3625dcf23648df872d09d"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5686,7 +5735,8 @@
    "https://mirror.cyberbits.eu/ruby/2.1/ruby-2.1.1.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.1/ruby-2.1.1.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.1/ruby-2.1.1.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.1/ruby-2.1.1.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.1/ruby-2.1.1.tar.gz",
+   "https://tarballs.nixos.org/sha256/c843df31ae88ed49f5393142b02b9a9f5a6557453805fd489a76fbafeae88941"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5717,7 +5767,8 @@
    "https://mirror.cyberbits.eu/ruby/2.1/ruby-2.1.2.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.1/ruby-2.1.2.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.1/ruby-2.1.2.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.1/ruby-2.1.2.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.1/ruby-2.1.2.tar.gz",
+   "https://tarballs.nixos.org/sha256/f22a6447811a81f3c808d1c2a5ce3b5f5f0955c68c9a749182feb425589e6635"
   ],
   "checksum": {
    "algo": "sha256",
@@ -5748,7 +5799,8 @@
    "https://mirror.cyberbits.eu/ruby/2.1/ruby-2.1.3.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.1/ruby-2.1.3.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.1/ruby-2.1.3.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.1/ruby-2.1.3.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.1/ruby-2.1.3.tar.gz",
+   "https://tarballs.nixos.org/sha256/0818beb7b10ce9a058cd21d85cfe1dcd233e98b7342d32e9a5d4bebe98347f01"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6105,7 +6157,8 @@
    "https://mirror.cyberbits.eu/ruby/2.1/ruby-2.1.6.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.1/ruby-2.1.6.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.1/ruby-2.1.6.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.1/ruby-2.1.6.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.1/ruby-2.1.6.tar.gz",
+   "https://tarballs.nixos.org/sha256/1e1362ae7427c91fa53dc9c05aee4ee200e2d7d8970a891c5bd76bee28d28be4"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6224,7 +6277,8 @@
    "https://mirror.cyberbits.eu/ruby/2.1/ruby-2.1.7.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.1/ruby-2.1.7.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.1/ruby-2.1.7.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.1/ruby-2.1.7.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.1/ruby-2.1.7.tar.gz",
+   "https://tarballs.nixos.org/sha256/f59c1596ac39cc7e60126e7d3698c19f482f04060674fdfe0124e1752ba6dd81"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6675,7 +6729,8 @@
    "https://mirror.cyberbits.eu/ruby/2.1/ruby-2.1.10.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.1/ruby-2.1.10.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.1/ruby-2.1.10.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.1/ruby-2.1.10.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.1/ruby-2.1.10.tar.gz",
+   "https://tarballs.nixos.org/sha256/fb2e454d7a5e5a39eb54db0ec666f53eeb6edc593d1d2b970ae4d150b831dd20"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6706,7 +6761,8 @@
    "https://mirror.cyberbits.eu/ruby/2.2/ruby-2.2.0.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.2/ruby-2.2.0.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.2/ruby-2.2.0.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.2/ruby-2.2.0.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.2/ruby-2.2.0.tar.gz",
+   "https://tarballs.nixos.org/sha256/7671e394abfb5d262fbcd3b27a71bf78737c7e9347fa21c39e58b0bb9c4840fc"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6856,7 +6912,8 @@
    "https://mirror.cyberbits.eu/ruby/2.2/ruby-2.2.2.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.2/ruby-2.2.2.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.2/ruby-2.2.2.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.2/ruby-2.2.2.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.2/ruby-2.2.2.tar.gz",
+   "https://tarballs.nixos.org/sha256/5ffc0f317e429e6b29d4a98ac521c3ce65481bfd22a8cf845fa02a7b113d9b44"
   ],
   "checksum": {
    "algo": "sha256",
@@ -6975,7 +7032,8 @@
    "https://mirror.cyberbits.eu/ruby/2.2/ruby-2.2.3.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.2/ruby-2.2.3.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.2/ruby-2.2.3.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.2/ruby-2.2.3.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.2/ruby-2.2.3.tar.gz",
+   "https://tarballs.nixos.org/sha256/df795f2f99860745a416092a4004b016ccf77e8b82dec956b120f18bdc71edce"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7512,7 +7570,8 @@
    "https://mirror.cyberbits.eu/ruby/2.2/ruby-2.2.8.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.2/ruby-2.2.8.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.2/ruby-2.2.8.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.2/ruby-2.2.8.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.2/ruby-2.2.8.tar.gz",
+   "https://tarballs.nixos.org/sha256/8f37b9d8538bf8e50ad098db2a716ea49585ad1601bbd347ef84ca0662d9268a"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7543,7 +7602,8 @@
    "https://mirror.cyberbits.eu/ruby/2.2/ruby-2.2.9.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.2/ruby-2.2.9.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.2/ruby-2.2.9.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.2/ruby-2.2.9.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.2/ruby-2.2.9.tar.gz",
+   "https://tarballs.nixos.org/sha256/2f47c77054fc40ccfde22501425256d32c4fa0ccaf9554f0d699ed436beca1a6"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7735,7 +7795,8 @@
    "https://mirror.cyberbits.eu/ruby/2.3/ruby-2.3.0.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.3/ruby-2.3.0.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.3/ruby-2.3.0.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.3/ruby-2.3.0.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.3/ruby-2.3.0.tar.gz",
+   "https://tarballs.nixos.org/sha256/ba5ba60e5f1aa21b4ef8e9bf35b9ddb57286cb546aac4b5a28c71f459467e507"
   ],
   "checksum": {
    "algo": "sha256",
@@ -7948,7 +8009,8 @@
    "https://mirror.cyberbits.eu/ruby/2.3/ruby-2.3.1.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.3/ruby-2.3.1.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.3/ruby-2.3.1.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.3/ruby-2.3.1.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.3/ruby-2.3.1.tar.gz",
+   "https://tarballs.nixos.org/sha256/b87c738cb2032bf4920fef8e3864dc5cf8eae9d89d8d523ce0236945c5797dcd"
   ],
   "checksum": {
    "algo": "sha256",
@@ -8592,7 +8654,8 @@
    "https://mirror.cyberbits.eu/ruby/2.3/ruby-2.3.5.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.3/ruby-2.3.5.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.3/ruby-2.3.5.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.3/ruby-2.3.5.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.3/ruby-2.3.5.tar.gz",
+   "https://tarballs.nixos.org/sha256/5462f7bbb28beff5da7441968471ed922f964db1abdce82b8860608acc23ddcc"
   ],
   "checksum": {
    "algo": "sha256",
@@ -8753,7 +8816,8 @@
    "https://mirror.cyberbits.eu/ruby/2.3/ruby-2.3.6.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.3/ruby-2.3.6.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.3/ruby-2.3.6.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.3/ruby-2.3.6.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.3/ruby-2.3.6.tar.gz",
+   "https://tarballs.nixos.org/sha256/8322513279f9edfa612d445bc111a87894fac1128eaa539301cebfc0dd51571e"
   ],
   "checksum": {
    "algo": "sha256",
@@ -8914,7 +8978,8 @@
    "https://mirror.cyberbits.eu/ruby/2.3/ruby-2.3.7.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.3/ruby-2.3.7.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.3/ruby-2.3.7.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.3/ruby-2.3.7.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.3/ruby-2.3.7.tar.gz",
+   "https://tarballs.nixos.org/sha256/35cd349cddf78e4a0640d28ec8c7e88a2ae0db51ebd8926cd232bb70db2c7d7f"
   ],
   "checksum": {
    "algo": "sha256",
@@ -9074,7 +9139,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/2.3/ruby-2.3.8.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.3/ruby-2.3.8.tar.gz",
-   "http://www.ring.gr.jp/pub/lang/ruby/2.3/ruby-2.3.8.tar.gz"
+   "http://www.ring.gr.jp/pub/lang/ruby/2.3/ruby-2.3.8.tar.gz",
+   "https://tarballs.nixos.org/sha256/b5016d61440e939045d4e22979e04708ed6c8e1c52e7edb2553cf40b73c59abf"
   ],
   "checksum": {
    "algo": "sha256",
@@ -10129,7 +10195,8 @@
    "https://mirror.cyberbits.eu/ruby/2.4/ruby-2.4.2.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.4/ruby-2.4.2.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.4/ruby-2.4.2.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.4/ruby-2.4.2.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.4/ruby-2.4.2.tar.gz",
+   "https://tarballs.nixos.org/sha256/93b9e75e00b262bc4def6b26b7ae8717efc252c47154abb7392e54357e6c8c9c"
   ],
   "checksum": {
    "algo": "sha256",
@@ -10466,7 +10533,8 @@
    "https://mirror.cyberbits.eu/ruby/2.4/ruby-2.4.3.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.4/ruby-2.4.3.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.4/ruby-2.4.3.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.4/ruby-2.4.3.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.4/ruby-2.4.3.tar.gz",
+   "https://tarballs.nixos.org/sha256/fd0375582c92045aa7d31854e724471fb469e11a4b08ff334d39052ccaaa3a98"
   ],
   "checksum": {
    "algo": "sha256",
@@ -10803,7 +10871,8 @@
    "https://mirror.cyberbits.eu/ruby/2.4/ruby-2.4.4.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.4/ruby-2.4.4.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.4/ruby-2.4.4.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.4/ruby-2.4.4.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.4/ruby-2.4.4.tar.gz",
+   "https://tarballs.nixos.org/sha256/254f1c1a79e4cc814d1e7320bc5bdd995dc57e08727d30a767664619a9c8ae5a"
   ],
   "checksum": {
    "algo": "sha256",
@@ -11227,7 +11296,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/2.4/ruby-2.4.5.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.4/ruby-2.4.5.tar.gz",
-   "http://www.ring.gr.jp/pub/lang/ruby/2.4/ruby-2.4.5.tar.gz"
+   "http://www.ring.gr.jp/pub/lang/ruby/2.4/ruby-2.4.5.tar.gz",
+   "https://tarballs.nixos.org/sha256/6737741ae6ffa61174c8a3dcdd8ba92bc38827827ab1d7ea1ec78bc3cefc5198"
   ],
   "checksum": {
    "algo": "sha256",
@@ -12133,7 +12203,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/2.4/ruby-2.4.9.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.4/ruby-2.4.9.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/2.4/ruby-2.4.9.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/2.4/ruby-2.4.9.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.4.9.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -13083,7 +13154,8 @@
    "https://mirror.cyberbits.eu/ruby/2.5/ruby-2.5.1.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.5/ruby-2.5.1.tar.gz",
    "http://www.ring.gr.jp/pub/lang/ruby/2.5/ruby-2.5.1.tar.gz",
-   "https://ftp.fu-berlin.de/unix/languages/ruby/2.5/ruby-2.5.1.tar.gz"
+   "https://ftp.fu-berlin.de/unix/languages/ruby/2.5/ruby-2.5.1.tar.gz",
+   "https://tarballs.nixos.org/sha256/dac81822325b79c3ba9532b048c2123357d3310b2b40024202f360251d9829b1"
   ],
   "checksum": {
    "algo": "sha256",
@@ -13667,7 +13739,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/2.5/ruby-2.5.3.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.5/ruby-2.5.3.tar.gz",
-   "http://www.ring.gr.jp/pub/lang/ruby/2.5/ruby-2.5.3.tar.gz"
+   "http://www.ring.gr.jp/pub/lang/ruby/2.5/ruby-2.5.3.tar.gz",
+   "https://tarballs.nixos.org/sha256/9828d03852c37c20fa333a0264f2490f07338576734d910ee3fd538c9520846c"
   ],
   "checksum": {
    "algo": "sha256",
@@ -14119,7 +14192,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/2.5/ruby-2.5.5.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.5/ruby-2.5.5.tar.gz",
-   "http://www.ring.gr.jp/pub/lang/ruby/2.5/ruby-2.5.5.tar.gz"
+   "http://www.ring.gr.jp/pub/lang/ruby/2.5/ruby-2.5.5.tar.gz",
+   "https://tarballs.nixos.org/sha256/28a945fdf340e6ba04fc890b98648342e3cccfd6d223a48f3810572f11b2514c"
   ],
   "checksum": {
    "algo": "sha256",
@@ -14703,7 +14777,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/2.5/ruby-2.5.7.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.5/ruby-2.5.7.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/2.5/ruby-2.5.7.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/2.5/ruby-2.5.7.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.5.7.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -14995,7 +15070,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/2.5/ruby-2.5.8.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.5/ruby-2.5.8.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/2.5/ruby-2.5.8.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/2.5/ruby-2.5.8.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.5.8.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -16351,7 +16427,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/2.6/ruby-2.6.2.tar.gz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.6/ruby-2.6.2.tar.gz",
-   "http://www.ring.gr.jp/pub/lang/ruby/2.6/ruby-2.6.2.tar.gz"
+   "http://www.ring.gr.jp/pub/lang/ruby/2.6/ruby-2.6.2.tar.gz",
+   "https://tarballs.nixos.org/sha256/a0405d2bf2c2d2f332033b70dff354d224a864ab0edd462b7a413420453b49ab"
   ],
   "checksum": {
    "algo": "sha256",
@@ -17297,7 +17374,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/2.6/ruby-2.6.5.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.6/ruby-2.6.5.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/2.6/ruby-2.6.5.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/2.6/ruby-2.6.5.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.6.5.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -17617,7 +17695,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/2.6/ruby-2.6.6.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.6/ruby-2.6.6.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/2.6/ruby-2.6.6.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/2.6/ruby-2.6.6.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.6.6.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -18733,7 +18812,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/2.6/ruby-2.6.9.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.6/ruby-2.6.9.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/2.6/ruby-2.6.9.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/2.6/ruby-2.6.9.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.6.9.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -19435,7 +19515,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/2.7/ruby-2.7.0.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.7/ruby-2.7.0.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/2.7/ruby-2.7.0.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/2.7/ruby-2.7.0.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.7.0.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -19769,7 +19850,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/2.7/ruby-2.7.1.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.7/ruby-2.7.1.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/2.7/ruby-2.7.1.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/2.7/ruby-2.7.1.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.7.1.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -20103,7 +20185,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/2.7/ruby-2.7.2.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.7/ruby-2.7.2.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/2.7/ruby-2.7.2.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/2.7/ruby-2.7.2.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.7.2.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -21155,7 +21238,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/2.7/ruby-2.7.5.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.7/ruby-2.7.5.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/2.7/ruby-2.7.5.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/2.7/ruby-2.7.5.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.7.5.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -21501,7 +21585,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/2.7/ruby-2.7.6.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.7/ruby-2.7.6.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/2.7/ruby-2.7.6.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/2.7/ruby-2.7.6.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.7.6.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -21847,7 +21932,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/2.7/ruby-2.7.7.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/2.7/ruby-2.7.7.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/2.7/ruby-2.7.7.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/2.7/ruby-2.7.7.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-2.7.7.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -23595,7 +23681,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.0/ruby-3.0.3.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.0/ruby-3.0.3.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.0/ruby-3.0.3.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.0/ruby-3.0.3.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.0.3.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -23955,7 +24042,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.0/ruby-3.0.4.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.0/ruby-3.0.4.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.0/ruby-3.0.4.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.0/ruby-3.0.4.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.0.4.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -24301,7 +24389,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.0/ruby-3.0.5.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.0/ruby-3.0.5.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.0/ruby-3.0.5.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.0/ruby-3.0.5.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.0.5.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -24619,7 +24708,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.0/ruby-3.0.6.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.0/ruby-3.0.6.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.0/ruby-3.0.6.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.0/ruby-3.0.6.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.0.6.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -25307,7 +25397,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.1/ruby-3.1.0.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.1/ruby-3.1.0.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.1/ruby-3.1.0.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.1/ruby-3.1.0.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.1.0.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -25667,7 +25758,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.1/ruby-3.1.1.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.1/ruby-3.1.1.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.1/ruby-3.1.1.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.1/ruby-3.1.1.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.1.1.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -26027,7 +26119,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.1/ruby-3.1.2.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.1/ruby-3.1.2.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.1/ruby-3.1.2.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.1/ruby-3.1.2.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.1.2.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -26387,7 +26480,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.1/ruby-3.1.3.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.1/ruby-3.1.3.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.1/ruby-3.1.3.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.1/ruby-3.1.3.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.1.3.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -26719,7 +26813,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.1/ruby-3.1.4.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.1/ruby-3.1.4.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.1/ruby-3.1.4.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.1/ruby-3.1.4.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.1.4.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -27037,7 +27132,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.1/ruby-3.1.5.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.1/ruby-3.1.5.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.1/ruby-3.1.5.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.1/ruby-3.1.5.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.1.5.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -27355,7 +27451,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.1/ruby-3.1.6.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.1/ruby-3.1.6.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.1/ruby-3.1.6.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.1/ruby-3.1.6.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.1.6.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -27804,7 +27901,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-3.1.7-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-3.1.7-1-x64.7z"
+  ],
   "checksum": null,
   "size": 13208751,
   "released": "2025-03-26",
@@ -27833,7 +27932,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-3.1.7-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-3.1.7-1-x64.exe"
+  ],
   "checksum": null,
   "size": 15120176,
   "released": "2025-03-26",
@@ -27867,7 +27968,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-devkit-3.1.7-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-devkit-3.1.7-1-x64.exe"
+  ],
   "checksum": null,
   "size": 135542200,
   "released": "2025-03-26",
@@ -27896,7 +27999,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-3.1.7-1-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-3.1.7-1-x86.7z"
+  ],
   "checksum": null,
   "size": 13118160,
   "released": "2025-03-26",
@@ -27925,7 +28030,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-3.1.7-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-3.1.7-1-x86.exe"
+  ],
   "checksum": null,
   "size": 15056080,
   "released": "2025-03-26",
@@ -27959,7 +28066,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-devkit-3.1.7-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.1.7-1/rubyinstaller-devkit-3.1.7-1-x86.exe"
+  ],
   "checksum": null,
   "size": 131616280,
   "released": "2025-03-26",
@@ -28043,7 +28152,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.2/ruby-3.2.0.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.2/ruby-3.2.0.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.0.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.0.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.0.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -28389,7 +28499,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.2/ruby-3.2.1.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.2/ruby-3.2.1.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.1.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.1.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.1.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -28749,7 +28860,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.2/ruby-3.2.2.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.2/ruby-3.2.2.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.2.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.2.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.2.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -29095,7 +29207,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.2/ruby-3.2.3.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.2/ruby-3.2.3.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.3.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.3.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.3.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -29427,7 +29540,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.2/ruby-3.2.4.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.2/ruby-3.2.4.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.4.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.4.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.4.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -29759,7 +29873,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.2/ruby-3.2.5.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.2/ruby-3.2.5.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.5.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.5.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.5.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -30077,7 +30192,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.2/ruby-3.2.6.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.2/ruby-3.2.6.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.6.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.6.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.6.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -30395,7 +30511,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.2/ruby-3.2.7.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.2/ruby-3.2.7.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.7.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.7.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.7.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -30526,7 +30643,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-3.2.7-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-3.2.7-1-x64.7z"
+  ],
   "checksum": null,
   "size": 13680541,
   "released": "2025-02-04",
@@ -30548,7 +30667,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-3.2.7-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-3.2.7-1-x64.exe"
+  ],
   "checksum": null,
   "size": 15580448,
   "released": "2025-02-04",
@@ -30570,7 +30691,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-devkit-3.2.7-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-devkit-3.2.7-1-x64.exe"
+  ],
   "checksum": null,
   "size": 135426008,
   "released": "2025-02-04",
@@ -30592,7 +30715,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-3.2.7-1-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-3.2.7-1-x86.7z"
+  ],
   "checksum": null,
   "size": 13683885,
   "released": "2025-02-04",
@@ -30614,7 +30739,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-3.2.7-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-3.2.7-1-x86.exe"
+  ],
   "checksum": null,
   "size": 15614160,
   "released": "2025-02-04",
@@ -30636,7 +30763,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-devkit-3.2.7-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.7-1/rubyinstaller-devkit-3.2.7-1-x86.exe"
+  ],
   "checksum": null,
   "size": 149124304,
   "released": "2025-02-04",
@@ -30713,7 +30842,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.2/ruby-3.2.8.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.2/ruby-3.2.8.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.8.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.8.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.8.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -30844,7 +30974,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-3.2.8-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-3.2.8-1-x64.7z"
+  ],
   "checksum": null,
   "size": 13679122,
   "released": "2025-03-26",
@@ -30866,7 +30998,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-3.2.8-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-3.2.8-1-x64.exe"
+  ],
   "checksum": null,
   "size": 15578856,
   "released": "2025-03-26",
@@ -30895,7 +31029,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-devkit-3.2.8-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-devkit-3.2.8-1-x64.exe"
+  ],
   "checksum": null,
   "size": 136442488,
   "released": "2025-03-26",
@@ -30924,7 +31060,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-3.2.8-1-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-3.2.8-1-x86.7z"
+  ],
   "checksum": null,
   "size": 13684201,
   "released": "2025-03-26",
@@ -30946,7 +31084,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-3.2.8-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-3.2.8-1-x86.exe"
+  ],
   "checksum": null,
   "size": 15615704,
   "released": "2025-03-26",
@@ -30975,7 +31115,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-devkit-3.2.8-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.8-1/rubyinstaller-devkit-3.2.8-1-x86.exe"
+  ],
   "checksum": null,
   "size": 132994664,
   "released": "2025-03-26",
@@ -31059,7 +31201,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.2/ruby-3.2.9.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.2/ruby-3.2.9.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.9.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.9.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.9.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -31190,7 +31333,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-3.2.9-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-3.2.9-1-x64.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "d732a4d02236b623a18dedcfacc00dc0e09cf3a10b172d58255887693791d300",
@@ -31216,7 +31361,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-3.2.9-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-3.2.9-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "d7b502ff1e73ae8976aca90d1ad1c00b03072294b339c933f2e35269c34ad034",
@@ -31242,7 +31389,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-devkit-3.2.9-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-devkit-3.2.9-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "3dd24397ae769b1952f4c0f4fa8bf5310b47c5a70648ab5ae916e58f11eb9bbf",
@@ -31268,7 +31417,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-3.2.9-1-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-3.2.9-1-x86.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "27137586abba72ee3721711fd5bbb284ba374298ab4219e5a2a10c5f5a8b44f9",
@@ -31294,7 +31445,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-3.2.9-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-3.2.9-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "da8d86d5c893f5160c181d715a0e68d9c27eac358e30d8afe7bcf36bddafd8ca",
@@ -31320,7 +31473,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-devkit-3.2.9-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.9-1/rubyinstaller-devkit-3.2.9-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "75368bc8eaf8854cd6b78dbbebc612306fb4f3339ac62640b3840fcc54eb0c9b",
@@ -31402,7 +31557,8 @@
    "https://mirror.cyberbits.eu/ruby/3.2/ruby-3.2.10.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.2/ruby-3.2.10.tar.xz",
    "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.10.tar.xz",
-   "https://distfiles.gentoo.org/distfiles/e8/ruby-3.2.10.tar.xz"
+   "https://distfiles.gentoo.org/distfiles/e8/ruby-3.2.10.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.10.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -31533,7 +31689,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-3.2.10-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-3.2.10-1-x64.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "ea3e293100399dc56c8c18eebbd081d638857f1066a8951d97f0e00af4137d30",
@@ -31559,7 +31717,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-3.2.10-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-3.2.10-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "1474b8c1bb78044a7ce8b30f15cf77478db83ba4fc42c9425b9d41a8d37bb544",
@@ -31585,7 +31745,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-devkit-3.2.10-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-devkit-3.2.10-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "ebcd237e06f22fc86b13e86a832c8c394ee1024f932458a82b2a5e9cacf9a7b8",
@@ -31611,7 +31773,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-3.2.10-1-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-3.2.10-1-x86.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "0bcdf9da9913c0696db85bcd6c079eaf889e4c5e7140aca3970fd244bad4eaa4",
@@ -31637,7 +31801,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-3.2.10-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-3.2.10-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "d4dc4e4bd32a65659a336caae76980f357e3caca7a704f3960363b4532c75a30",
@@ -31663,7 +31829,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-devkit-3.2.10-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.10-1/rubyinstaller-devkit-3.2.10-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "e680798b77256a919146ab1c6a53500314c5f9586b51a9d26a53f15bb1d9930d",
@@ -31771,7 +31939,9 @@
    "https://mirror.cyberbits.eu/ruby/3.2/ruby-3.2.11.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.2/ruby-3.2.11.tar.xz",
    "http://www.ring.gr.jp/pub/lang/ruby/3.2/ruby-3.2.11.tar.xz",
-   "https://distfiles.gentoo.org/distfiles/c1/ruby-3.2.11.tar.xz"
+   "https://distfiles.gentoo.org/distfiles/c1/ruby-3.2.11.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.2.11.tar.xz",
+   "http://cdn.netbsd.org/pub/pkgsrc/distfiles/ruby-3.2.11.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -31928,7 +32098,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-3.2.11-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-3.2.11-1-x64.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "20e56be307ae5576c024c97a7d8784c2033e676ea8c67477dda602b8e97fe69c",
@@ -31954,7 +32126,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-3.2.11-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-3.2.11-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "4fa87ec631885ff70aac503bff7bbcdd8bd08483a357ea4b0cee14644fe1a902",
@@ -31987,7 +32161,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-devkit-3.2.11-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-devkit-3.2.11-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "9894a006c288539e67d6d342342b17ee5eeb4d8576ae7530f871fbec46d37995",
@@ -32013,7 +32189,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-3.2.11-1-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-3.2.11-1-x86.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "db0f6fe16938497843959aa3267781462cafc0d1d3d9dc253179eba7ba10f836",
@@ -32039,7 +32217,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-3.2.11-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-3.2.11-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "e0713f410b875a113d45c979eb8cb9a4a8851091421f821e64c3fc65e03f025f",
@@ -32072,7 +32252,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-devkit-3.2.11-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.2.11-1/rubyinstaller-devkit-3.2.11-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "8763a0693c0dde13f5af0322f7131b6acaa361fa4763c95f4e45dd2a469b844d",
@@ -32153,7 +32335,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.3/ruby-3.3.0.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.3/ruby-3.3.0.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.0.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.0.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.0.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -32485,7 +32668,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.3/ruby-3.3.1.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.3/ruby-3.3.1.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.1.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.1.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.1.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -32817,7 +33001,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.3/ruby-3.3.2.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.3/ruby-3.3.2.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.2.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.2.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.2.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -33149,7 +33334,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.3/ruby-3.3.3.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.3/ruby-3.3.3.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.3.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.3.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.3.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -33481,7 +33667,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.3/ruby-3.3.4.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.3/ruby-3.3.4.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.4.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.4.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.4.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -33813,7 +34000,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.3/ruby-3.3.5.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.3/ruby-3.3.5.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.5.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.5.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.5.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -34145,7 +34333,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.3/ruby-3.3.6.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.3/ruby-3.3.6.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.6.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.6.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.6.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -34623,7 +34812,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.3/ruby-3.3.7.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.3/ruby-3.3.7.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.7.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.7.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.7.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -34955,7 +35145,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.3/ruby-3.3.8.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.3/ruby-3.3.8.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.8.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.8.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.8.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -35086,7 +35277,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-3.3.8-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-3.3.8-1-x64.7z"
+  ],
   "checksum": null,
   "size": 14929258,
   "released": "2025-04-09",
@@ -35108,7 +35301,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-3.3.8-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-3.3.8-1-x64.exe"
+  ],
   "checksum": null,
   "size": 16913872,
   "released": "2025-04-09",
@@ -35137,7 +35332,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-devkit-3.3.8-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-devkit-3.3.8-1-x64.exe"
+  ],
   "checksum": null,
   "size": 142464824,
   "released": "2025-04-09",
@@ -35166,7 +35363,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-3.3.8-1-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-3.3.8-1-x86.7z"
+  ],
   "checksum": null,
   "size": 14937973,
   "released": "2025-04-09",
@@ -35188,7 +35387,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-3.3.8-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-3.3.8-1-x86.exe"
+  ],
   "checksum": null,
   "size": 16915072,
   "released": "2025-04-09",
@@ -35217,7 +35418,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-devkit-3.3.8-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.8-1/rubyinstaller-devkit-3.3.8-1-x86.exe"
+  ],
   "checksum": null,
   "size": 136720792,
   "released": "2025-04-09",
@@ -35301,7 +35504,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.3/ruby-3.3.9.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.3/ruby-3.3.9.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.9.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.9.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.9.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -35432,7 +35636,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-3.3.9-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-3.3.9-1-x64.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "514a8f00a50ae8d5fc137b540612b6a62fa7018e5da03354f4f60d720ebd2e01",
@@ -35458,7 +35664,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-3.3.9-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-3.3.9-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "84b1ffdb88dd20286e389d49e3e7d41b9db4a6bd9a534573ce8c0e05b4bff807",
@@ -35484,7 +35692,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-devkit-3.3.9-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-devkit-3.3.9-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "35f1cb0c216d3a422c1a2d17005ed9e85d91ef75f718be99fb82fee27675f1c4",
@@ -35510,7 +35720,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-3.3.9-1-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-3.3.9-1-x86.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "7febbe1fcfdf75b9cf0a31c6b49ab41e523a56f113fb60185547607d9af7382d",
@@ -35536,7 +35748,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-3.3.9-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-3.3.9-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "84b8de36f088f987a6711807267c639477b45ae64b20df294cff0defeecf39a5",
@@ -35562,7 +35776,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-devkit-3.3.9-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.9-1/rubyinstaller-devkit-3.3.9-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "2ed873f39f828bda77d9a30f9f46910f63a31a07a30c745e2f60ae16398b17f9",
@@ -35643,7 +35859,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.3/ruby-3.3.10.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.3/ruby-3.3.10.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.10.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.10.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.10.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -35774,7 +35991,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-3.3.10-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-3.3.10-1-x64.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "80203102617b216dc0bcdcc8c21cc3889aa3fde7f15860e2e22ee5487480f694",
@@ -35800,7 +36019,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-3.3.10-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-3.3.10-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "fe69f17b975da7f03a5e56c4cf191a71bc35f2d82e8f41bca998943bac3df60f",
@@ -35826,7 +36047,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-devkit-3.3.10-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-devkit-3.3.10-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "e5702ee5fb3e3d6e4912f22005666563a997386ef6067308e1f3fadda0ada4a6",
@@ -35852,7 +36075,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-3.3.10-1-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-3.3.10-1-x86.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "dee241415361c8ab7c4712f7ec0df39ba8b809793d4856a3857a49790338fae5",
@@ -35878,7 +36103,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-3.3.10-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-3.3.10-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "05ce08601c55d855e6c6dfb346346ad9b0bfa31339914d572f0331dfe5fd6041",
@@ -35904,7 +36131,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-devkit-3.3.10-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.10-1/rubyinstaller-devkit-3.3.10-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "44fa4c2563631337c1deb61eee1e7d1069e6ec0d0b55215e9b92a3223cf33460",
@@ -36011,7 +36240,10 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.3/ruby-3.3.11.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.3/ruby-3.3.11.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.11.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.11.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.11.tar.xz",
+   "http://cdn.netbsd.org/pub/pkgsrc/distfiles/ruby-3.3.11.tar.xz",
+   "https://distfiles.gentoo.org/distfiles/e8/ruby-3.3.11.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -36168,7 +36400,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-3.3.11-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-3.3.11-1-x64.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "ee5e71a19bb676302d2d3fb725e2ad3adfee2fdc2f2d64a61830a2d4c0fa9a47",
@@ -36194,7 +36428,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-3.3.11-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-3.3.11-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "32ebbe3c1784652e5442bf360e1af4363236e51868cbbc3cafdfd8e375c549b3",
@@ -36220,7 +36456,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-devkit-3.3.11-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-devkit-3.3.11-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "950fd8414178c000229d65943f3383f389e1f4778110687992cc7a06c3382e93",
@@ -36246,7 +36484,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-3.3.11-1-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-3.3.11-1-x86.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "6b8ecdd8fd593acb0676953e6e38cd702fcac058e42fd999cb4aab6b0d023394",
@@ -36272,7 +36512,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-3.3.11-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-3.3.11-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "9f0a7b80fb197bbb5e03247088c533cbcaefa18654a218bbe1f205bffdc0d582",
@@ -36298,7 +36540,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-devkit-3.3.11-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.11-1/rubyinstaller-devkit-3.3.11-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "5f1b67d9ff86e5c178c9137c0d9926345126ae93243a666d43f5523f63863a94",
@@ -36407,7 +36651,8 @@
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.3/ruby-3.3.12.tar.xz",
    "http://www.ring.gr.jp/pub/lang/ruby/3.3/ruby-3.3.12.tar.xz",
    "https://distfiles.gentoo.org/distfiles/79/ruby-3.3.12.tar.xz",
-   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.12.tar.xz"
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.3.12.tar.xz",
+   "http://cdn.netbsd.org/pub/pkgsrc/distfiles/ruby-3.3.12.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -36564,7 +36809,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-3.3.12-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-3.3.12-1-x64.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "f8d534a44e47e5b72abe557497763128b93e9356bd91397a3d7b9e0a11572943",
@@ -36590,7 +36837,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-3.3.12-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-3.3.12-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "c6b505436853c36e3257e21b59752e032c17b6ae4d4f0240e1d47872d3cde756",
@@ -36623,7 +36872,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-devkit-3.3.12-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-devkit-3.3.12-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "e5d77c59b3388d0e7f803fd3caad910934ff78f5a55fc69dde40edcb042fe0d8",
@@ -36649,7 +36900,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-3.3.12-1-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-3.3.12-1-x86.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "38fad8b2b77580291d52a473b5a7bfab37a35ba322e88fac5f5fec79912094b7",
@@ -36675,7 +36928,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-3.3.12-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-3.3.12-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "688bccbdb2c9b1223edd1d55c7326e2ca93b2e3f856c1f87c6c1df6e94a4b3f6",
@@ -36708,7 +36963,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-devkit-3.3.12-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.3.12-1/rubyinstaller-devkit-3.3.12-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "8e4cc81a70cc33cbd1df44efa7d104b2ecdb98873b57fa1bad1e8f685e3110f9",
@@ -37106,7 +37363,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-x64.7z"
+  ],
   "checksum": null,
   "size": 15842915,
   "released": "2024-12-25",
@@ -37135,7 +37394,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-x64.exe"
+  ],
   "checksum": null,
   "size": 19955664,
   "released": "2024-12-25",
@@ -37208,7 +37469,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-devkit-3.4.1-2-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-devkit-3.4.1-2-x64.exe"
+  ],
   "checksum": null,
   "size": 145836552,
   "released": "2024-12-25",
@@ -37252,7 +37515,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-arm.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-arm.7z"
+  ],
   "checksum": null,
   "size": 15324261,
   "released": "2024-12-25",
@@ -37274,7 +37539,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-arm.exe"
+  ],
   "checksum": null,
   "size": 19974464,
   "released": "2024-12-25",
@@ -37296,7 +37563,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-devkit-3.4.1-2-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-devkit-3.4.1-2-arm.exe"
+  ],
   "checksum": null,
   "size": 232642432,
   "released": "2024-12-25",
@@ -37318,7 +37587,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-x86.7z"
+  ],
   "checksum": null,
   "size": 15857146,
   "released": "2024-12-25",
@@ -37347,7 +37618,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-3.4.1-2-x86.exe"
+  ],
   "checksum": null,
   "size": 19926936,
   "released": "2024-12-25",
@@ -37420,7 +37693,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-devkit-3.4.1-2-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.1-2/rubyinstaller-devkit-3.4.1-2-x86.exe"
+  ],
   "checksum": null,
   "size": 155755448,
   "released": "2024-12-25",
@@ -37650,7 +37925,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-x64.7z"
+  ],
   "checksum": null,
   "size": 15854585,
   "released": "2025-02-14",
@@ -37679,7 +37956,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-x64.exe"
+  ],
   "checksum": null,
   "size": 19966184,
   "released": "2025-02-14",
@@ -37701,7 +37980,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-devkit-3.4.2-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-devkit-3.4.2-1-x64.exe"
+  ],
   "checksum": null,
   "size": 146439032,
   "released": "2025-02-14",
@@ -37730,7 +38011,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-arm.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-arm.7z"
+  ],
   "checksum": null,
   "size": 15341112,
   "released": "2025-02-14",
@@ -37752,7 +38035,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-arm.exe"
+  ],
   "checksum": null,
   "size": 19989472,
   "released": "2025-02-14",
@@ -37774,7 +38059,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-devkit-3.4.2-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-devkit-3.4.2-1-arm.exe"
+  ],
   "checksum": null,
   "size": 233311848,
   "released": "2025-02-14",
@@ -37796,7 +38083,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-x86.7z"
+  ],
   "checksum": null,
   "size": 15866615,
   "released": "2025-02-14",
@@ -37825,7 +38114,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-3.4.2-1-x86.exe"
+  ],
   "checksum": null,
   "size": 19932384,
   "released": "2025-02-14",
@@ -37847,7 +38138,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-devkit-3.4.2-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.2-1/rubyinstaller-devkit-3.4.2-1-x86.exe"
+  ],
   "checksum": null,
   "size": 139109336,
   "released": "2025-02-14",
@@ -37931,7 +38224,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.4/ruby-3.4.3.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.4/ruby-3.4.3.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.4/ruby-3.4.3.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.4/ruby-3.4.3.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.4.3.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -38062,7 +38356,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-x64.7z"
+  ],
   "checksum": null,
   "size": 15957446,
   "released": "2025-04-14",
@@ -38091,7 +38387,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-x64.exe"
+  ],
   "checksum": null,
   "size": 20173888,
   "released": "2025-04-14",
@@ -38113,7 +38411,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-devkit-3.4.3-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-devkit-3.4.3-1-x64.exe"
+  ],
   "checksum": null,
   "size": 147514544,
   "released": "2025-04-14",
@@ -38135,7 +38435,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-arm.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-arm.7z"
+  ],
   "checksum": null,
   "size": 15434451,
   "released": "2025-04-14",
@@ -38157,7 +38459,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-arm.exe"
+  ],
   "checksum": null,
   "size": 20198280,
   "released": "2025-04-14",
@@ -38179,7 +38483,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-devkit-3.4.3-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-devkit-3.4.3-1-arm.exe"
+  ],
   "checksum": null,
   "size": 238870528,
   "released": "2025-04-14",
@@ -38201,7 +38507,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-x86.7z"
+  ],
   "checksum": null,
   "size": 15966933,
   "released": "2025-04-14",
@@ -38230,7 +38538,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-3.4.3-1-x86.exe"
+  ],
   "checksum": null,
   "size": 20127392,
   "released": "2025-04-14",
@@ -38252,7 +38562,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-devkit-3.4.3-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.3-1/rubyinstaller-devkit-3.4.3-1-x86.exe"
+  ],
   "checksum": null,
   "size": 139391416,
   "released": "2025-04-14",
@@ -38329,7 +38641,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.4/ruby-3.4.4.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.4/ruby-3.4.4.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.4/ruby-3.4.4.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.4/ruby-3.4.4.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.4.4.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -38460,7 +38773,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-x64.7z"
+  ],
   "checksum": null,
   "size": 16010049,
   "released": "2025-05-14",
@@ -38489,7 +38804,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-x64.exe"
+  ],
   "checksum": null,
   "size": 20355768,
   "released": "2025-05-14",
@@ -38518,7 +38835,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-x64.7z"
+  ],
   "checksum": null,
   "size": 16014520,
   "released": "2025-05-14",
@@ -38547,7 +38866,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-x64.exe"
+  ],
   "checksum": null,
   "size": 20354696,
   "released": "2025-05-14",
@@ -38576,7 +38897,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-devkit-3.4.4-2-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-devkit-3.4.4-2-x64.exe"
+  ],
   "checksum": null,
   "size": 150468272,
   "released": "2025-05-14",
@@ -38605,7 +38928,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-devkit-3.4.4-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-devkit-3.4.4-1-x64.exe"
+  ],
   "checksum": null,
   "size": 150470984,
   "released": "2025-05-14",
@@ -38627,7 +38952,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-arm.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-arm.7z"
+  ],
   "checksum": null,
   "size": 15460473,
   "released": "2025-05-14",
@@ -38649,7 +38976,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-arm.exe"
+  ],
   "checksum": null,
   "size": 20294240,
   "released": "2025-05-14",
@@ -38678,7 +39007,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-arm.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-arm.7z"
+  ],
   "checksum": null,
   "size": 15461896,
   "released": "2025-05-14",
@@ -38700,7 +39031,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-arm.exe"
+  ],
   "checksum": null,
   "size": 20290008,
   "released": "2025-05-14",
@@ -38722,7 +39055,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-devkit-3.4.4-2-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-devkit-3.4.4-2-arm.exe"
+  ],
   "checksum": null,
   "size": 239015248,
   "released": "2025-05-14",
@@ -38751,7 +39086,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-devkit-3.4.4-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-devkit-3.4.4-1-arm.exe"
+  ],
   "checksum": null,
   "size": 238979488,
   "released": "2025-05-14",
@@ -38773,7 +39110,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-x86.7z"
+  ],
   "checksum": null,
   "size": 16006130,
   "released": "2025-05-14",
@@ -38802,7 +39141,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-3.4.4-2-x86.exe"
+  ],
   "checksum": null,
   "size": 20322400,
   "released": "2025-05-14",
@@ -38831,7 +39172,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-x86.7z"
+  ],
   "checksum": null,
   "size": 16007026,
   "released": "2025-05-14",
@@ -38860,7 +39203,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-3.4.4-1-x86.exe"
+  ],
   "checksum": null,
   "size": 20323568,
   "released": "2025-05-14",
@@ -38889,7 +39234,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-devkit-3.4.4-2-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-2/rubyinstaller-devkit-3.4.4-2-x86.exe"
+  ],
   "checksum": null,
   "size": 141686584,
   "released": "2025-05-14",
@@ -38918,7 +39265,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-devkit-3.4.4-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.4-1/rubyinstaller-devkit-3.4.4-1-x86.exe"
+  ],
   "checksum": null,
   "size": 141715552,
   "released": "2025-05-14",
@@ -38995,7 +39344,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.4/ruby-3.4.5.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.4/ruby-3.4.5.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.4/ruby-3.4.5.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.4/ruby-3.4.5.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.4.5.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -39126,7 +39476,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-x64.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "61634b204f808deec191a6819e4c25c7b3005d84537b24c4fbe7c604aeece89f",
@@ -39152,7 +39504,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "c1cccb9cd121f19abf22ec73e2ac8f825a73765c4a63b4c0a044050e3d89a74d",
@@ -39178,7 +39532,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-devkit-3.4.5-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-devkit-3.4.5-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "2eddc7db506b41d4de7bff828c3a2be8798f91b4a24bf8b4c4b1f9c616231b33",
@@ -39204,7 +39560,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-arm.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-arm.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "d41d154f9112323d6e2206280581bbe03c246fd618b65c330e10f74ea8afa855",
@@ -39230,7 +39588,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "e2be55acacf064df78a8d7daf1135ded7d191a7484e46c46b600b333b4e4cf64",
@@ -39256,7 +39616,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-devkit-3.4.5-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-devkit-3.4.5-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "9b3ef4eca0ebcb84acee7122f53cd18f23d042b1545d1ecc1dc8da24b8004b76",
@@ -39282,7 +39644,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-x86.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "e505ee7e346ab62ae322768a384563b482dbca9034f746d381050dcb2f4f73ff",
@@ -39308,7 +39672,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-3.4.5-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "c86d58b0ac905161023816486aa27e46793dc8aaed2dfde28dcd408dc426a89e",
@@ -39334,7 +39700,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-devkit-3.4.5-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.5-1/rubyinstaller-devkit-3.4.5-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "9696ef22b367ac9a5525ba533fddba79480273fcb189e83afb10acf64faa563d",
@@ -39415,7 +39783,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.4/ruby-3.4.6.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.4/ruby-3.4.6.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.4/ruby-3.4.6.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.4/ruby-3.4.6.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.4.6.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -39546,7 +39915,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-x64.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "27561f08b897e631d624f6e20ed0f96aaf8094256a233435d691fc26b9bf8f0e",
@@ -39572,7 +39943,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "d9a3f920baa436946a2fc8d443e543cf719b9443422c13d4b2c38c964615e6da",
@@ -39598,7 +39971,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-devkit-3.4.6-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-devkit-3.4.6-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "6549403c1a0ee21d54ac7b9d696134d6a2f8e65235e3f959945197f37c127cfc",
@@ -39624,7 +39999,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-arm.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-arm.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "a247460bc7675af433e43871ffb653596119ac0e53882c3ef0e98964fc573880",
@@ -39650,7 +40027,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "3730cc31a56b6806e8d4a3fd819e399a152164abcdbe422d840b8a4f803011ac",
@@ -39676,7 +40055,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-devkit-3.4.6-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-devkit-3.4.6-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "b3fdb646c3aa979b30829f076d79dcd2639178ced6ab05dbf92b8a8404fe5197",
@@ -39702,7 +40083,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-x86.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "1196e94f6d0d9d2d7fce4d41a683464c7b9d0302a475f3523057cf665820321f",
@@ -39728,7 +40111,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-3.4.6-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "13ba53d1b0d935d8f0d8fc4cbc0fa1ce2e199b8897525b6250605b919eaf4fc0",
@@ -39754,7 +40139,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-devkit-3.4.6-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.6-1/rubyinstaller-devkit-3.4.6-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "b77f4a338e2a2eaf202b8ee5124243c9ddea2d1372dae55cbc52ac91d9f3424c",
@@ -39835,7 +40222,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.4/ruby-3.4.7.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.4/ruby-3.4.7.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.4/ruby-3.4.7.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.4/ruby-3.4.7.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.4.7.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -39966,7 +40354,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-x64.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "955678a8373c23e53032ac10f730a06120c7d3b956074020e57ca8b99b8930d4",
@@ -39992,7 +40382,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "fa0472115664c2317df217a6dd6ae7373a0e9e429173e330c77e1a87cd67f8f8",
@@ -40018,7 +40410,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-devkit-3.4.7-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-devkit-3.4.7-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "994bdb9acce25b1a9f5d9f30cde8bba60e28a239f252ac6f3a6c9510a43e13f6",
@@ -40044,7 +40438,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-arm.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-arm.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "9cd36d5ae080ffe7161d13e060d350e6fc2286e81fb42d16b79ea40d4f9e799d",
@@ -40070,7 +40466,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "ea2282d53824735cbc04c9f95b1c40ccc1cb9781e8d88acf9b2725ccb76ce56d",
@@ -40096,7 +40494,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-devkit-3.4.7-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-devkit-3.4.7-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "0b95955dad716a7fbfebc1d108890034c80dc24722fda86c0c2cc560ed91c1a6",
@@ -40122,7 +40522,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-x86.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "2b311c46bbe81291cc2a75d9ca1d731f6fc9d85e70837797e66819ea1b316ac8",
@@ -40148,7 +40550,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-3.4.7-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "a82eb0602a0b0e11be91f75873a58b26c90c8ce6597058b802abb09718141176",
@@ -40174,7 +40578,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-devkit-3.4.7-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.7-1/rubyinstaller-devkit-3.4.7-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "cf0766a532eb40e3aa824664512d2606bbc70f66e9ff9f3405c21bef5acf472a",
@@ -40255,7 +40661,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.4/ruby-3.4.8.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.4/ruby-3.4.8.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.4/ruby-3.4.8.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.4/ruby-3.4.8.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.4.8.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -40386,7 +40793,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-x64.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "d1c3ba83ae748c08e35e0b1d9939d45dbca7925e0a8bf84a42860bf19847e0d6",
@@ -40412,7 +40821,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "39747ceb8b2ea13fcb8682e3b8ae447a093ba141b818736292ea93eb52257623",
@@ -40438,7 +40849,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-devkit-3.4.8-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-devkit-3.4.8-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "f180056cceb8e1cef6e7f9f80e1cc97debc9a425fbbc00b102df88f00dec8f13",
@@ -40464,7 +40877,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-arm.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-arm.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "57a08041d5a974aa40732ef71c5b6da8873e32d4855b712faa2ed4c1d6c43317",
@@ -40490,7 +40905,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "37e14ef86e5b623af95fa751ce4cda7ebcc04a67ef4afc169922786e53418be8",
@@ -40516,7 +40933,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-devkit-3.4.8-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-devkit-3.4.8-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "3803dd333b102d6ef216edc28ef50b3e107c35fcce3cad0e81e72386da93d091",
@@ -40542,7 +40961,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-x86.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "6635cd7a0a4be880ab781aef60dcbd8803e2d6e60455e62915f69f836b17f299",
@@ -40568,7 +40989,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-3.4.8-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "881eaf9101b7ebea50b1a7526d14065767f433d7314ac06a1aadfd5ffc80e3d6",
@@ -40594,7 +41017,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-devkit-3.4.8-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.8-1/rubyinstaller-devkit-3.4.8-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "5d450ce99aebefc6ded38b1711ecb5fee305ae2c1e2b77add1e44b6b2efde219",
@@ -40701,7 +41126,10 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/3.4/ruby-3.4.9.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.4/ruby-3.4.9.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/3.4/ruby-3.4.9.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/3.4/ruby-3.4.9.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-3.4.9.tar.xz",
+   "http://cdn.netbsd.org/pub/pkgsrc/distfiles/ruby-3.4.9.tar.xz",
+   "https://distfiles.gentoo.org/distfiles/f5/ruby-3.4.9.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -40858,7 +41286,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-x64.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "4375268618b61dadf53bf8e54beaca74ea30580c90d3c47ea9f2a134bd3e494e",
@@ -40884,7 +41314,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "80b2f130d87d3f10f72783f0066cfb2a4236808dec186665a8a9dd6d0252a5b6",
@@ -40910,7 +41342,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-devkit-3.4.9-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-devkit-3.4.9-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "39632975220ff43133244d8b8b8774feb0d301b33d11394513df28cb1853c36d",
@@ -40936,7 +41370,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-arm.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-arm.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "ba73f9c75ad119413e444996db3b4865d55221673172dbb6329f250bd4ca6156",
@@ -40962,7 +41398,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "be45f59a981de64106d07b3aabf9c6a4ce44b23baeae14f880955f5e54110a54",
@@ -40988,7 +41426,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-devkit-3.4.9-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-devkit-3.4.9-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "4a1cd09407289ee75db5eb1e628d2d38ea0885dabc783de2d6eb31e7d353ff30",
@@ -41014,7 +41454,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-x86.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "8d72d35b61a3664861b2e727df6d6bc957c2e53ff323376b6cf00948d634060e",
@@ -41040,7 +41482,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-3.4.9-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "0ceaca8e8eb290edff871fe9257b8f49960c4dee2b62ea752018d5d72f572704",
@@ -41066,7 +41510,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-devkit-3.4.9-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.9-1/rubyinstaller-devkit-3.4.9-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "bab0096b343540666d2b74c14b93aa268c8ecb190455f1b14cbc70c67e5fbaaf",
@@ -41174,7 +41620,8 @@
    "https://mirror.cyberbits.eu/ruby/3.4/ruby-3.4.10.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/3.4/ruby-3.4.10.tar.xz",
    "http://www.ring.gr.jp/pub/lang/ruby/3.4/ruby-3.4.10.tar.xz",
-   "https://distfiles.gentoo.org/distfiles/c3/ruby-3.4.10.tar.xz"
+   "https://distfiles.gentoo.org/distfiles/c3/ruby-3.4.10.tar.xz",
+   "http://cdn.netbsd.org/pub/pkgsrc/distfiles/ruby-3.4.10.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -41331,7 +41778,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-x64.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "89e3c5e235ac88b9b7e8daaf639eaaab74d7c470667354f6bf0f7432f3191ebb",
@@ -41357,7 +41806,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "0e1210b0189e679563fe3f301f35b5640dc4c640bd21c96810d552611f5a6113",
@@ -41383,7 +41834,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-devkit-3.4.10-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-devkit-3.4.10-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "7d4cae0a9fb47d1e8c8d4198f9a3bfa6f49ec1b4f3d8d492e8cc8c88471b3f4c",
@@ -41409,7 +41862,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-arm.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-arm.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "472da9b8963ce4fca52baae753cafb7788a03fd73baaa1fc430ea7557445d331",
@@ -41435,7 +41890,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "991d1ebc00da3b46983b33d01cc00bc5963a2274c11e91130329a28344bd740f",
@@ -41461,7 +41918,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-devkit-3.4.10-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-devkit-3.4.10-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "95e2bff28565df0af5403df02969b4c4559a8af8166d9c12fded10cf388d39bd",
@@ -41487,7 +41946,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-x86.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-x86.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "be323ac7b8342de16edcceb1ee04a90023c39aa7e7a544e628c6360fffb602da",
@@ -41513,7 +41974,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-3.4.10-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "13a9df387c0e08a188e025e31cd0d2c3bd3265d6d4dfa3b875995bd1c2b4fcb1",
@@ -41539,7 +42002,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-devkit-3.4.10-1-x86.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.4.10-1/rubyinstaller-devkit-3.4.10-1-x86.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "f32d73f04b83136afbdf548e74495514e0d0ef1f402ba2956492403328f85a57",
@@ -41620,7 +42085,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/4.0/ruby-4.0.0.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/4.0/ruby-4.0.0.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/4.0/ruby-4.0.0.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/4.0/ruby-4.0.0.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-4.0.0.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -41751,7 +42217,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-4.0.0-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-4.0.0-1-x64.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "4ca3a8a725d204accc4919bf1103a10acee609b67bf2d6ec8ac692eb18dfb780",
@@ -41777,7 +42245,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-4.0.0-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-4.0.0-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "678f49900ab1d33339a0685148c541728c5645241ab020e77c024f25ccd1162c",
@@ -41803,7 +42273,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-devkit-4.0.0-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-devkit-4.0.0-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "819e2e0a7eddc6545f0d5392ce3625c1fc2dcf4bda87c6e00b062dc161d59bdd",
@@ -41829,7 +42301,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-4.0.0-1-arm.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-4.0.0-1-arm.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "32fd28e78174bcd3c66dbb843afa6ff295088bd4dbad3cdb4aa3bb1e5a2bd95f",
@@ -41855,7 +42329,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-4.0.0-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-4.0.0-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "5b720b78ca7fcb7999e6f3887ee344c35f155f09be6840105263283d758ebf77",
@@ -41881,7 +42357,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-devkit-4.0.0-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.0-1/rubyinstaller-devkit-4.0.0-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "a0a2d438a73c999df142fead97b545f37c6b07d305d8a774e66beb8f15160ab0",
@@ -41962,7 +42440,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/4.0/ruby-4.0.1.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/4.0/ruby-4.0.1.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/4.0/ruby-4.0.1.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/4.0/ruby-4.0.1.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-4.0.1.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -42093,7 +42572,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-4.0.1-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-4.0.1-1-x64.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "45cd5ac6aa0fdd976acbc0b0c768e38e8f5357b1b07d2c803cccafd7de758fb1",
@@ -42119,7 +42600,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-4.0.1-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-4.0.1-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "c39b524aefe783bd32b4c6036329ab581863e26cf349dfc93e8b0444a70425ed",
@@ -42145,7 +42628,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-devkit-4.0.1-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-devkit-4.0.1-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "6ffbe4ce60e5a14bc5c601f3bc1d2fe3d8345a89bd825b254f8c2e3f2c708128",
@@ -42171,7 +42656,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-4.0.1-1-arm.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-4.0.1-1-arm.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "479646ca0305dbd4db756b8061f2084b9328b195ddab88ad400e16e82345a1cf",
@@ -42197,7 +42684,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-4.0.1-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-4.0.1-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "30e03b77ed37ac6ba347bbc0be8b8d8f822fcd7556e3f0e546d0c218e4a72627",
@@ -42223,7 +42712,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-devkit-4.0.1-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.1-1/rubyinstaller-devkit-4.0.1-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "8eed26160fbce4000ef1518c0e8b3c523f47c087cb5f29bb0baa0603506e103d",
@@ -42304,7 +42795,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/4.0/ruby-4.0.2.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/4.0/ruby-4.0.2.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/4.0/ruby-4.0.2.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/4.0/ruby-4.0.2.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-4.0.2.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -42435,7 +42927,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-4.0.2-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-4.0.2-1-x64.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "f6c562d507b272b892055f35ece3cbc65de5f3f2f63d18b7345a602af8c1e655",
@@ -42461,7 +42955,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-4.0.2-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-4.0.2-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "ad406b12f4f8f95aeb4f3773bfc7fb808b957c35bf8c426963b7ad9e5e4f523f",
@@ -42487,7 +42983,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-devkit-4.0.2-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-devkit-4.0.2-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "cfb3d7f67259dd8f1ff79566ecbc87734dd6c4861111f038114e6e4ee2d95513",
@@ -42513,7 +43011,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-4.0.2-1-arm.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-4.0.2-1-arm.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "f7ceacfa7468da793d74fc60816fcb319b3249b444b0a0ad68fd33365f7f2b3f",
@@ -42539,7 +43039,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-4.0.2-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-4.0.2-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "6a2538503fa45a0356588c22a3adaa29af5149144297ffa47120991e2894f211",
@@ -42565,7 +43067,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-devkit-4.0.2-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.2-1/rubyinstaller-devkit-4.0.2-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "d2ca7bd3c311a27f48b6e11821f08ddd1cc54885a90dd2fe6dfc9e95f7797d1e",
@@ -42646,7 +43150,9 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/4.0/ruby-4.0.3.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/4.0/ruby-4.0.3.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/4.0/ruby-4.0.3.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/4.0/ruby-4.0.3.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-4.0.3.tar.xz",
+   "https://distfiles.gentoo.org/distfiles/be/ruby-4.0.3.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -42777,7 +43283,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-4.0.3-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-4.0.3-1-x64.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "a4094317397511e09242be1c95b32c8700fe91ebca713fb4e190de595eea5699",
@@ -42803,7 +43311,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-4.0.3-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-4.0.3-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "afecdf77ac6c07551ee26bc346df2c00c958644d28abbab224b64da79b79efc1",
@@ -42829,7 +43339,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-devkit-4.0.3-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-devkit-4.0.3-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "3937676d798ef52abcac5deda7638b70800d2534dcb5c63af113e78d6ef8f7be",
@@ -42855,7 +43367,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-4.0.3-1-arm.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-4.0.3-1-arm.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "0ac6b87598a8afab77111b643f765ecfe7c23212b3fe669438fa1268b13ab390",
@@ -42881,7 +43395,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-4.0.3-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-4.0.3-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "b5525b7130133f5742b6654a0380c9dff7e3981978efba80e3b908355a4b2b6a",
@@ -42907,7 +43423,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-devkit-4.0.3-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.3-1/rubyinstaller-devkit-4.0.3-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "0254fbfd8906602cd935430bb482f35e61cef255a80728ef61f33a8a465c90dc",
@@ -42988,7 +43506,9 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/4.0/ruby-4.0.4.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/4.0/ruby-4.0.4.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/4.0/ruby-4.0.4.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/4.0/ruby-4.0.4.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-4.0.4.tar.xz",
+   "https://distfiles.gentoo.org/distfiles/17/ruby-4.0.4.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -43119,7 +43639,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-4.0.4-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-4.0.4-1-x64.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "4a0c2c615fca7805cebfcd0933dfb00034ddbb835fe08a96c74bd77b259f1915",
@@ -43145,7 +43667,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-4.0.4-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-4.0.4-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "daf2697620027e60f93ed50d32a62e927ac9924b3b1f33ef8dd9ca913859d870",
@@ -43171,7 +43695,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-devkit-4.0.4-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-devkit-4.0.4-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "1556a876892d85f0896f0346350eb40d19b7db7fce664cf4723a077a4af9e892",
@@ -43197,7 +43723,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-4.0.4-1-arm.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-4.0.4-1-arm.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "c21cf28d2a8e417c66a3f063785d43b6784d339a31d8a51f6ed329c30741066f",
@@ -43223,7 +43751,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-4.0.4-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-4.0.4-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "969b79b242f87e54f10d959709215b06a16d3212d582b2f49b92d7f5b6b6744d",
@@ -43249,7 +43779,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-devkit-4.0.4-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.4-1/rubyinstaller-devkit-4.0.4-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "76ac80cdd18f53c493f446dd805934654569f67433991e77cdc72a0c6bee9dbd",
@@ -43356,7 +43888,9 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/4.0/ruby-4.0.5.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/4.0/ruby-4.0.5.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/4.0/ruby-4.0.5.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/4.0/ruby-4.0.5.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-4.0.5.tar.xz",
+   "http://cdn.netbsd.org/pub/pkgsrc/distfiles/ruby-4.0.5.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -43513,7 +44047,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-4.0.5-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-4.0.5-1-x64.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "74e31613fc71e6e23431dfc4d8b6ec2818a4dc1fd16e0983b074144c16719c8b",
@@ -43539,7 +44075,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-4.0.5-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-4.0.5-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "e33ebc4e92839e631ab8a0704b031ebfa67d2ec99e7dd88dbc41134cd908ce78",
@@ -43565,7 +44103,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-devkit-4.0.5-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-devkit-4.0.5-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "124696d6e49c575b47cee4edd3c44d3043e09d182c7fea93f470cd72e0ec5ed4",
@@ -43591,7 +44131,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-4.0.5-1-arm.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-4.0.5-1-arm.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "c7c6bcd0b070bf7c2e0c03e70fb9754d022b8a216ebc4befab880874c6180b51",
@@ -43617,7 +44159,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-4.0.5-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-4.0.5-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "97c42670fa3549ab84c4308d004c491c80c597a2c8a75e39753aae619865a45b",
@@ -43643,7 +44187,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-devkit-4.0.5-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.5-1/rubyinstaller-devkit-4.0.5-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "33fd2da83342161201f3e3a2aa4cbf0b74caec4d0d90475a11b37ddf810ca902",
@@ -43751,7 +44297,9 @@
    "https://mirror.cyberbits.eu/ruby/4.0/ruby-4.0.6.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/4.0/ruby-4.0.6.tar.xz",
    "http://www.ring.gr.jp/pub/lang/ruby/4.0/ruby-4.0.6.tar.xz",
-   "https://distfiles.gentoo.org/distfiles/0d/ruby-4.0.6.tar.xz"
+   "https://distfiles.gentoo.org/distfiles/0d/ruby-4.0.6.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-4.0.6.tar.xz",
+   "http://cdn.netbsd.org/pub/pkgsrc/distfiles/ruby-4.0.6.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -43908,7 +44456,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-4.0.6-1-x64.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-4.0.6-1-x64.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "328d7a86bea2f4c432783025050c9ffa1c36fcfc54ebccc466b63450ec3af223",
@@ -43934,7 +44484,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-4.0.6-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-4.0.6-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "eff475dddbf57b1e9914b952da6c3cc6ae12269eaf52f505561cb220e9636fd8",
@@ -43960,7 +44512,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-devkit-4.0.6-1-x64.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-devkit-4.0.6-1-x64.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "fd20063ac6c00c8f695d91e7db9f171461d95bf25fb8e2967e5aaed34a36703d",
@@ -43986,7 +44540,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-4.0.6-1-arm.7z",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-4.0.6-1-arm.7z"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "7d4c80e2251190afb4708f2c840425f16b0c912669a7fc105f889fbe6565cd8c",
@@ -44012,7 +44568,9 @@
   "variant": null,
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-4.0.6-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-4.0.6-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "6ea8cad0c39a33f990d14c9b669f8b15f5760bf8c1974517c922b7ec5491d5ec",
@@ -44038,7 +44596,9 @@
   "variant": "devkit",
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-devkit-4.0.6-1-arm.exe",
-  "mirrors": [],
+  "mirrors": [
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.6-1/rubyinstaller-devkit-4.0.6-1-arm.exe"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "ca359427f1de1c716e6ecc42157a82dcf3f774acd0bfef11f55196eaa17902e7",
@@ -44145,7 +44705,8 @@
   "mirrors": [
    "https://mirror.cyberbits.eu/ruby/4.0/ruby-4.0.7.tar.xz",
    "https://ftp.iij.ad.jp/pub/lang/ruby/4.0/ruby-4.0.7.tar.xz",
-   "http://www.ring.gr.jp/pub/lang/ruby/4.0/ruby-4.0.7.tar.xz"
+   "http://www.ring.gr.jp/pub/lang/ruby/4.0/ruby-4.0.7.tar.xz",
+   "http://distcache.freebsd.org/ports-distfiles/ruby/ruby-4.0.7.tar.xz"
   ],
   "checksum": {
    "algo": "sha256",
@@ -44303,7 +44864,8 @@
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-4.0.7-1-x64.7z",
   "mirrors": [
-   "https://mirrors.nju.edu.cn/github-release/oneclick/rubyinstaller2/RubyInstaller-4.0.7-1%20-%202026-09-15/rubyinstaller-4.0.7-1-x64.7z"
+   "https://mirrors.nju.edu.cn/github-release/oneclick/rubyinstaller2/RubyInstaller-4.0.7-1%20-%202026-09-15/rubyinstaller-4.0.7-1-x64.7z",
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-4.0.7-1-x64.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -44331,7 +44893,8 @@
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-4.0.7-1-x64.exe",
   "mirrors": [
-   "https://mirrors.nju.edu.cn/github-release/oneclick/rubyinstaller2/RubyInstaller-4.0.7-1%20-%202026-09-15/rubyinstaller-4.0.7-1-x64.exe"
+   "https://mirrors.nju.edu.cn/github-release/oneclick/rubyinstaller2/RubyInstaller-4.0.7-1%20-%202026-09-15/rubyinstaller-4.0.7-1-x64.exe",
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-4.0.7-1-x64.exe"
   ],
   "checksum": {
    "algo": "sha256",
@@ -44359,7 +44922,8 @@
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-devkit-4.0.7-1-x64.exe",
   "mirrors": [
-   "https://mirrors.nju.edu.cn/github-release/oneclick/rubyinstaller2/RubyInstaller-4.0.7-1%20-%202026-09-15/rubyinstaller-devkit-4.0.7-1-x64.exe"
+   "https://mirrors.nju.edu.cn/github-release/oneclick/rubyinstaller2/RubyInstaller-4.0.7-1%20-%202026-09-15/rubyinstaller-devkit-4.0.7-1-x64.exe",
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-devkit-4.0.7-1-x64.exe"
   ],
   "checksum": {
    "algo": "sha256",
@@ -44387,7 +44951,8 @@
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-4.0.7-1-arm.7z",
   "mirrors": [
-   "https://mirrors.nju.edu.cn/github-release/oneclick/rubyinstaller2/RubyInstaller-4.0.7-1%20-%202026-09-15/rubyinstaller-4.0.7-1-arm.7z"
+   "https://mirrors.nju.edu.cn/github-release/oneclick/rubyinstaller2/RubyInstaller-4.0.7-1%20-%202026-09-15/rubyinstaller-4.0.7-1-arm.7z",
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-4.0.7-1-arm.7z"
   ],
   "checksum": {
    "algo": "sha256",
@@ -44415,7 +44980,8 @@
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-4.0.7-1-arm.exe",
   "mirrors": [
-   "https://mirrors.nju.edu.cn/github-release/oneclick/rubyinstaller2/RubyInstaller-4.0.7-1%20-%202026-09-15/rubyinstaller-4.0.7-1-arm.exe"
+   "https://mirrors.nju.edu.cn/github-release/oneclick/rubyinstaller2/RubyInstaller-4.0.7-1%20-%202026-09-15/rubyinstaller-4.0.7-1-arm.exe",
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-4.0.7-1-arm.exe"
   ],
   "checksum": {
    "algo": "sha256",
@@ -44443,7 +45009,8 @@
   "libc": null,
   "url": "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-devkit-4.0.7-1-arm.exe",
   "mirrors": [
-   "https://mirrors.nju.edu.cn/github-release/oneclick/rubyinstaller2/RubyInstaller-4.0.7-1%20-%202026-09-15/rubyinstaller-devkit-4.0.7-1-arm.exe"
+   "https://mirrors.nju.edu.cn/github-release/oneclick/rubyinstaller2/RubyInstaller-4.0.7-1%20-%202026-09-15/rubyinstaller-devkit-4.0.7-1-arm.exe",
+   "https://mirror.sjtu.edu.cn/github-release/oneclick/rubyinstaller2/releases/download/RubyInstaller-4.0.7-1/rubyinstaller-devkit-4.0.7-1-arm.exe"
   ],
   "checksum": {
    "algo": "sha256",
@@ -44470,7 +45037,11 @@
   "variant": "homebrew-portable",
   "libc": null,
   "url": "https://github.com/Homebrew/homebrew-portable-ruby/releases/download/3.4.5/portable-ruby-3.4.5.el_capitan.bottle.tar.gz",
-  "mirrors": [],
+  "mirrors": [
+   "http://mirrors.ustc.edu.cn/homebrew-bottles/bottles-portable-ruby/portable-ruby-3.4.5.el_capitan.bottle.tar.gz",
+   "http://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles/bottles-portable-ruby/portable-ruby-3.4.5.el_capitan.bottle.tar.gz",
+   "http://mirrors.bfsu.edu.cn/homebrew-bottles/bottles-portable-ruby/portable-ruby-3.4.5.el_capitan.bottle.tar.gz"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "0c78b38f22fb9b42df6918db00e6f5a80d5b35164f910ffe4c89159326ae98cf",
@@ -44496,7 +45067,11 @@
   "variant": "homebrew-portable",
   "libc": null,
   "url": "https://github.com/Homebrew/homebrew-portable-ruby/releases/download/3.4.5/portable-ruby-3.4.5.arm64_big_sur.bottle.tar.gz",
-  "mirrors": [],
+  "mirrors": [
+   "http://mirrors.ustc.edu.cn/homebrew-bottles/bottles-portable-ruby/portable-ruby-3.4.5.arm64_big_sur.bottle.tar.gz",
+   "http://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles/bottles-portable-ruby/portable-ruby-3.4.5.arm64_big_sur.bottle.tar.gz",
+   "http://mirrors.bfsu.edu.cn/homebrew-bottles/bottles-portable-ruby/portable-ruby-3.4.5.arm64_big_sur.bottle.tar.gz"
+  ],
   "checksum": {
    "algo": "sha256",
    "value": "20fa657858e44a4b39171d6e4111f8a9716eb62a78ebbd1491d94f90bb7b830a",

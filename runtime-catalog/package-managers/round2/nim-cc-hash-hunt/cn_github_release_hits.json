@@ -1,0 +1,98 @@
+[
+ {
+  "folder": "cc",
+  "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.1/LLVM-23.1.1-Linux-ARM64.tar.xz",
+  "mirror": "https://mirrors.bfsu.edu.cn/github-release/llvm/llvm-project/LLVM%2023.1.1/LLVM-23.1.1-Linux-ARM64.tar.xz",
+  "host": "mirrors.bfsu.edu.cn"
+ },
+ {
+  "folder": "cc",
+  "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.1/LLVM-23.1.1-Linux-X64.tar.xz",
+  "mirror": "https://mirrors.bfsu.edu.cn/github-release/llvm/llvm-project/LLVM%2023.1.1/LLVM-23.1.1-Linux-X64.tar.xz",
+  "host": "mirrors.bfsu.edu.cn"
+ },
+ {
+  "folder": "cc",
+  "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.1/LLVM-23.1.1-macOS-ARM64.tar.xz",
+  "mirror": "https://mirrors.bfsu.edu.cn/github-release/llvm/llvm-project/LLVM%2023.1.1/LLVM-23.1.1-macOS-ARM64.tar.xz",
+  "host": "mirrors.bfsu.edu.cn"
+ },
+ {
+  "folder": "cc",
+  "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.1/clang%2Bllvm-23.1.1-x86_64-pc-windows-msvc.tar.xz",
+  "mirror": "https://mirrors.bfsu.edu.cn/github-release/llvm/llvm-project/LLVM%2023.1.1/clang%2Bllvm-23.1.1-x86_64-pc-windows-msvc.tar.xz",
+  "host": "mirrors.bfsu.edu.cn"
+ },
+ {
+  "folder": "cc",
+  "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.1/LLVM-23.1.1-Linux-ARM64.tar.xz",
+  "mirror": "https://mirrors.bfsu.edu.cn/github-release/llvm/llvm-project/LatestRelease/LLVM-23.1.1-Linux-ARM64.tar.xz",
+  "host": "mirrors.bfsu.edu.cn"
+ },
+ {
+  "folder": "cc",
+  "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.1/LLVM-23.1.1-Linux-X64.tar.xz",
+  "mirror": "https://mirrors.bfsu.edu.cn/github-release/llvm/llvm-project/LatestRelease/LLVM-23.1.1-Linux-X64.tar.xz",
+  "host": "mirrors.bfsu.edu.cn"
+ },
+ {
+  "folder": "cc",
+  "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.1/LLVM-23.1.1-macOS-ARM64.tar.xz",
+  "mirror": "https://mirrors.bfsu.edu.cn/github-release/llvm/llvm-project/LatestRelease/LLVM-23.1.1-macOS-ARM64.tar.xz",
+  "host": "mirrors.bfsu.edu.cn"
+ },
+ {
+  "folder": "cc",
+  "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.1/clang%2Bllvm-23.1.1-x86_64-pc-windows-msvc.tar.xz",
+  "mirror": "https://mirrors.bfsu.edu.cn/github-release/llvm/llvm-project/LatestRelease/clang%2Bllvm-23.1.1-x86_64-pc-windows-msvc.tar.xz",
+  "host": "mirrors.bfsu.edu.cn"
+ },
+ {
+  "folder": "cc",
+  "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.1/LLVM-23.1.1-Linux-ARM64.tar.xz",
+  "mirror": "https://mirrors.nyist.edu.cn/github-release/llvm/llvm-project/LLVM%2023.1.1/LLVM-23.1.1-Linux-ARM64.tar.xz",
+  "host": "mirrors.nyist.edu.cn"
+ },
+ {
+  "folder": "cc",
+  "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.1/LLVM-23.1.1-Linux-X64.tar.xz",
+  "mirror": "https://mirrors.nyist.edu.cn/github-release/llvm/llvm-project/LLVM%2023.1.1/LLVM-23.1.1-Linux-X64.tar.xz",
+  "host": "mirrors.nyist.edu.cn"
+ },
+ {
+  "folder": "cc",
+  "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.1/LLVM-23.1.1-macOS-ARM64.tar.xz",
+  "mirror": "https://mirrors.nyist.edu.cn/github-release/llvm/llvm-project/LLVM%2023.1.1/LLVM-23.1.1-macOS-ARM64.tar.xz",
+  "host": "mirrors.nyist.edu.cn"
+ },
+ {
+  "folder": "cc",
+  "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.1/clang%2Bllvm-23.1.1-x86_64-pc-windows-msvc.tar.xz",
+  "mirror": "https://mirrors.nyist.edu.cn/github-release/llvm/llvm-project/LLVM%2023.1.1/clang%2Bllvm-23.1.1-x86_64-pc-windows-msvc.tar.xz",
+  "host": "mirrors.nyist.edu.cn"
+ },
+ {
+  "folder": "cc",
+  "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.1/LLVM-23.1.1-Linux-ARM64.tar.xz",
+  "mirror": "https://mirrors.nyist.edu.cn/github-release/llvm/llvm-project/LatestRelease/LLVM-23.1.1-Linux-ARM64.tar.xz",
+  "host": "mirrors.nyist.edu.cn"
+ },
+ {
+  "folder": "cc",
+  "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.1/LLVM-23.1.1-Linux-X64.tar.xz",
+  "mirror": "https://mirrors.nyist.edu.cn/github-release/llvm/llvm-project/LatestRelease/LLVM-23.1.1-Linux-X64.tar.xz",
+  "host": "mirrors.nyist.edu.cn"
+ },
+ {
+  "folder": "cc",
+  "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.1/LLVM-23.1.1-macOS-ARM64.tar.xz",
+  "mirror": "https://mirrors.nyist.edu.cn/github-release/llvm/llvm-project/LatestRelease/LLVM-23.1.1-macOS-ARM64.tar.xz",
+  "host": "mirrors.nyist.edu.cn"
+ },
+ {
+  "folder": "cc",
+  "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-23.1.1/clang%2Bllvm-23.1.1-x86_64-pc-windows-msvc.tar.xz",
+  "mirror": "https://mirrors.nyist.edu.cn/github-release/llvm/llvm-project/LatestRelease/clang%2Bllvm-23.1.1-x86_64-pc-windows-msvc.tar.xz",
+  "host": "mirrors.nyist.edu.cn"
+ }
+]
