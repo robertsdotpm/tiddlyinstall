@@ -207,6 +207,24 @@ the shortcuts carry the app's name.
   `ibsig::cleanstr`), so a name can't reorder or hide what is shown.
 - An HTTP 451 from the backend is reported as a takedown (design.md 7).
 
+## Stale plans (2026-09-20)
+
+The engine sends `?nonce=` with every plan it fetches and refuses one
+that answers another request; for a plan it carries, it fetches the
+signed revocation list and judges the plan's age by `signed`/`maxage`,
+but only when this machine's clock is plausible against `IB_BUILD_DAYS`
+(design.md 7.1, format.md sections 3 and 7). Days, not seconds: NSIS
+arithmetic is 32-bit signed and epoch seconds overflow it in 2038.
+
+**Not yet run on a VM.** It compiles (`makensis -WX`, so warnings are
+errors) and the shared plan-signature code is covered by the plugin's
+host test, but nothing here has executed on Windows: the cases the
+Linux and macOS engine has in `bases/unix/test_freshness.sh` -- nonce
+echoed, another nonce refused, none noted, the list by record, source
+and file, the cached list offline, a plan past `maxage` and past the
+hard limit, and a clock that can't be believed refusing nothing -- want
+the same run on XP and 11.
+
 ## The `ibsig` plugin
 
 `plugins/x86-unicode/ibsig.dll` (ours, built from `plugin-src/`):

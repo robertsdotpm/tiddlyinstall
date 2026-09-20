@@ -38,6 +38,15 @@ TiddlyInstall.app/Contents/MacOS/install          # macOS, from a terminal
 | `--reinstall` | Install again even when this app is already fully installed with the same record (below) |
 | `--uninstall` | Uninstall mode. `uninstall.sh` also switches to it by itself when `manifest.txt` is next to it |
 
+**The macOS base must be built on a Mac.** `make_app.sh` ad-hoc signs
+the bundle (`codesign -s -`) and zips it with `ditto` only there;
+anywhere else it writes an unsigned zip, which is not what mode A
+installers ship and not what the golden suites were recorded with. The
+engine is this same file, so an engine change reaches macOS as soon as
+the base is built there -- but `out/ib-base-macos.zip` on this machine
+is whatever was last built, and after the stale-plan change
+(2026-09-20) it still carries the engine from before it.
+
 **Running it again.** If the app is already fully installed where this
 installer would put it, with the same `appid` and record hash (the same
 settings), the installer doesn't install again: it starts the app
