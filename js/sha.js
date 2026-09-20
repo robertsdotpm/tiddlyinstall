@@ -95,30 +95,93 @@ export function sha1(data) {
   return bytesOut([h0, h1, h2, h3, h4], 20);
 }
 
+const IV256 = [0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19];
+
+// One 64-byte block at `o`, folded into `h`. `w` is scratch, reused.
+function sha256Block(h, dv, o, w) {
+  for (let i = 0; i < 16; i++) w[i] = dv.getInt32(o + 4 * i);
+  for (let i = 16; i < 64; i++) {
+    const x = w[i - 15], y = w[i - 2];
+    const s0 = ((x >>> 7) | (x << 25)) ^ ((x >>> 18) | (x << 14)) ^ (x >>> 3);
+    const s1 = ((y >>> 17) | (y << 15)) ^ ((y >>> 19) | (y << 13)) ^ (y >>> 10);
+    w[i] = (w[i - 16] + s0 + w[i - 7] + s1) | 0;
+  }
+  let a = h[0], b = h[1], c = h[2], d = h[3], e = h[4], f = h[5], g = h[6], hh = h[7];
+  for (let i = 0; i < 64; i++) {
+    const S1 = ((e >>> 6) | (e << 26)) ^ ((e >>> 11) | (e << 21)) ^ ((e >>> 25) | (e << 7));
+    const t1 = (hh + S1 + ((e & f) ^ (~e & g)) + K256[i] + w[i]) | 0;
+    const S0 = ((a >>> 2) | (a << 30)) ^ ((a >>> 13) | (a << 19)) ^ ((a >>> 22) | (a << 10));
+    const t2 = (S0 + ((a & b) ^ (a & c) ^ (b & c))) | 0;
+    hh = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0;
+  }
+  h[0] += a; h[1] += b; h[2] += c; h[3] += d; h[4] += e; h[5] += f; h[6] += g; h[7] += hh;
+}
+
 export function sha256(data) {
   const m = pad(toBytes(data), 64, 8);
   const dv = new DataView(m.buffer);
   const w = new Int32Array(64);
-  const h = new Int32Array([0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19]);
-  for (let o = 0; o < m.length; o += 64) {
-    for (let i = 0; i < 16; i++) w[i] = dv.getInt32(o + 4 * i);
-    for (let i = 16; i < 64; i++) {
-      const x = w[i - 15], y = w[i - 2];
-      const s0 = ((x >>> 7) | (x << 25)) ^ ((x >>> 18) | (x << 14)) ^ (x >>> 3);
-      const s1 = ((y >>> 17) | (y << 15)) ^ ((y >>> 19) | (y << 13)) ^ (y >>> 10);
-      w[i] = (w[i - 16] + s0 + w[i - 7] + s1) | 0;
-    }
-    let a = h[0], b = h[1], c = h[2], d = h[3], e = h[4], f = h[5], g = h[6], hh = h[7];
-    for (let i = 0; i < 64; i++) {
-      const S1 = ((e >>> 6) | (e << 26)) ^ ((e >>> 11) | (e << 21)) ^ ((e >>> 25) | (e << 7));
-      const t1 = (hh + S1 + ((e & f) ^ (~e & g)) + K256[i] + w[i]) | 0;
-      const S0 = ((a >>> 2) | (a << 30)) ^ ((a >>> 13) | (a << 19)) ^ ((a >>> 22) | (a << 10));
-      const t2 = (S0 + ((a & b) ^ (a & c) ^ (b & c))) | 0;
-      hh = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0;
-    }
-    h[0] += a; h[1] += b; h[2] += c; h[3] += d; h[4] += e; h[5] += f; h[6] += g; h[7] += hh;
-  }
+  const h = new Int32Array(IV256);
+  for (let o = 0; o < m.length; o += 64) sha256Block(h, dv, o, w);
   return bytesOut(h, 32);
+}
+
+// SHA-256 a piece at a time, so a caller with several ranges of a large
+// file need not join them into one buffer first (WebCrypto's digest takes
+// only a whole buffer, which is a second copy of the file; js/authenticode.js
+// hashes a PE that way). Slower than the native digest, so it is for the
+// sizes where the copy is what hurts.
+//
+//   const h = sha256Stream(); h.update(a); h.update(b); h.digest() -> Uint8Array
+export function sha256Stream() {
+  const h = new Int32Array(IV256);
+  const w = new Int32Array(64);
+  const block = new Uint8Array(64);
+  const dv = new DataView(block.buffer);
+  let held = 0;            // bytes waiting in `block`
+  let total = 0;           // bytes fed in, for the length at the end
+  let done = false;
+  return {
+    update(data) {
+      if (done) throw new Error('sha256Stream: update after digest');
+      const u8 = toBytes(data);
+      total += u8.length;
+      let i = 0;
+      if (held) {          // fill the part-block first
+        const take = Math.min(64 - held, u8.length);
+        block.set(u8.subarray(0, take), held);
+        held += take;
+        i = take;
+        if (held < 64) return;
+        sha256Block(h, dv, 0, w);
+        held = 0;
+      }
+      // Whole blocks straight out of the caller's bytes. A DataView needs
+      // the byte offset within the underlying buffer, not within `u8`.
+      if (u8.length - i >= 64) {
+        const src = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+        for (; i + 64 <= u8.length; i += 64) sha256Block(h, src, i, w);
+      }
+      if (i < u8.length) {
+        block.set(u8.subarray(i), 0);
+        held = u8.length - i;
+      }
+    },
+    digest() {
+      if (done) throw new Error('sha256Stream: digest called twice');
+      done = true;
+      block.fill(0, held);
+      block[held] = 0x80;
+      if (held >= 56) {    // no room for the length: one more block
+        sha256Block(h, dv, 0, w);
+        block.fill(0);
+      }
+      dv.setUint32(56, Math.floor(total / 0x20000000));
+      dv.setUint32(60, (total * 8) >>> 0);
+      sha256Block(h, dv, 0, w);
+      return bytesOut(h, 32);
+    },
+  };
 }
 
 const IV512 = [0x6a09e667, 0xf3bcc908, 0xbb67ae85, 0x84caa73b, 0x3c6ef372, 0xfe94f82b, 0xa54ff53a, 0x5f1d36f1,

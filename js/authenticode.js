@@ -12,6 +12,7 @@ import * as der from './der.js';
 import { peInfo, peChecksum } from './ibfile.js';
 import { verifyWith, orderChain, ecdsaRawToDer, curveBytes, nameString } from './x509.js';
 import * as X from './cryptox.js';
+import { sha256Stream } from './sha.js';
 
 export const OID = {
   signedData: '1.2.840.113549.1.7.2',
@@ -57,9 +58,24 @@ export function unsignedPE(u8) {
 
 // The Authenticode hash: everything but the checksum, directory 4 and the
 // certificate table (the file here has none), in file order.
-export async function peHash(unsigned, pe) {
+// Joining the three ranges into one buffer is a second copy of the whole
+// file, which is what makes signing a large installer need several times
+// its size in page memory (design.md 11.1 item 22). Past STREAM_OVER that
+// copy costs more than the slower pure-JS digest, so the ranges are hashed
+// where they lie. Both paths are checked against each other in
+// tests/sign-test.mjs.
+const STREAM_OVER = 64 * 1024 * 1024;
+
+export async function peHash(unsigned, pe, { stream } = {}) {
   const c = pe.checksumOff, d = pe.certDirOff;
   const n = unsigned.length;
+  if (stream === undefined ? n > STREAM_OVER : stream) {
+    const h = sha256Stream();
+    h.update(unsigned.subarray(0, c));
+    h.update(unsigned.subarray(c + 4, d));
+    h.update(unsigned.subarray(d + 8));
+    return h.digest();
+  }
   const buf = new Uint8Array(n - 12);
   buf.set(unsigned.subarray(0, c), 0);
   buf.set(unsigned.subarray(c + 4, d), c);

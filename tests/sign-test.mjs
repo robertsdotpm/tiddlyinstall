@@ -209,6 +209,14 @@ for (const [label, pe] of inputs) {
       label + ': re-signing keeps the PE hash and replaces (not nests) the signature');
     await checkFile(label + ' re-signed', f3, t('rsa.crt'), t('rsa.crt'));
 
+    // The streaming PE hash (used above 64 MB, to save a copy of the whole
+    // file) must give exactly what the joined-buffer one gives.
+    {
+      const { bytes, pe } = ac.unsignedPE(unsigned);
+      const [joined, streamed] = await Promise.all([ac.peHash(bytes, pe, { stream: false }), ac.peHash(bytes, pe, { stream: true })]);
+      ok(der.hex(joined) === der.hex(streamed), label + ': the streaming PE hash equals the joined-buffer one', der.hex(joined) + ' vs ' + der.hex(streamed));
+    }
+
     if (OSSL) {
       const bad = r.file.slice();
       bad[Math.floor(bad.length / 3)] ^= 1;
