@@ -19,6 +19,7 @@ detected (`arch_seen`), and the ELF class of what it installed
 otherwise be green.
 """
 import argparse
+import atexit
 import json
 import os
 import shlex
@@ -31,6 +32,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "arch"))
 import machines                                            # noqa: E402
+import vmlock                                              # noqa: E402
 MAC = "Matthew@the-mac-test-host"
 WINDOWS = {
     # name: (ssh target, default shell[, "profile"])
@@ -297,6 +299,12 @@ def main():
     if a.target not in machines.MACHINES:
         raise SystemExit(f"{a.target}: no such machine in tests/arch/machines.py "
                          f"(add it, with its architecture, before running it)")
+    # One harness at a time per machine (tests/arch/vmlock.py): four of
+    # them install into the same folders on the same VMs, and one cleans
+    # up by deleting everything under them.
+    lh, lw = vmlock.target_host(a.target, WINDOWS, LINUX_VMS, MAC)
+    lock = vmlock.VMLock(lh, lw, f"matrix {a.target}").acquire()
+    atexit.register(lock.release)
     out = Path(a.out + ("-mac" if a.target == "mac" else ""))
     builds = json.loads((out / "builds.json").read_text())
     projects = json.loads((HERE / "projects.json").read_text())["projects"]

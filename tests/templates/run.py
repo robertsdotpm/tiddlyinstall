@@ -32,6 +32,7 @@ Window, tray and web apps need a desktop session:
   - The Mac has no display: only console and web templates run there.
 """
 import argparse
+import atexit
 import base64
 import hashlib
 import json
@@ -46,6 +47,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "arch"))
 import machines                                            # noqa: E402
+import vmlock                                              # noqa: E402
 MAC = "Matthew@the-mac-test-host"
 # Windows VMs: name -> ssh target (tests/matrix/run.py has the full list).
 WINDOWS = {
@@ -702,6 +704,10 @@ def main():
     ap.add_argument("--install-timeout", type=int, default=2400,
                     help="seconds an install may take (Rust's can take 20 minutes on a busy datastore)")
     a = ap.parse_args()
+    # One harness at a time per machine (tests/arch/vmlock.py).
+    _lh, _lw = vmlock.target_host(a.target, WINDOWS, LINUX_VMS, MAC)
+    _lock = vmlock.VMLock(_lh, _lw, f"templates {a.target}").acquire()
+    atexit.register(_lock.release)
     INSTALL_TIMEOUT = a.install_timeout
     builds = json.loads((Path(a.out) / "builds.json").read_text())
     only = [x for x in a.only.split(",") if x]

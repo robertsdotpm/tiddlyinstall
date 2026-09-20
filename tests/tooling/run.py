@@ -18,6 +18,11 @@ This is tests/fidelity/run.py's harness with the Windows VM list and the
 one cell per (runtime, major) instead of per runtime.
 """
 import argparse
+import atexit
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parent.parent / "arch"))
+import vmlock                                              # noqa: E402
 import base64
 import hashlib
 import json
@@ -309,6 +314,10 @@ def main():
     ap.add_argument("--label", default="")
     ap.add_argument("--timeout", type=int, default=0, help="seconds for one cell (default 3600)")
     a = ap.parse_args()
+    # One harness at a time per machine (tests/arch/vmlock.py).
+    _lh, _lw = vmlock.target_host(a.target, WINDOWS, LINUX_VMS, MAC)
+    _lock = vmlock.VMLock(_lh, _lw, f"tooling {a.target}").acquire()
+    atexit.register(_lock.release)
     if a.timeout:
         globals()["TIMEOUT"] = a.timeout
     out_dir = Path(a.out + ("-mac" if a.target == "mac" else ""))

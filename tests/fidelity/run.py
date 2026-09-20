@@ -13,6 +13,7 @@ nothing is left. One JSON object per cell is appended to --results
 DIR/logs/<target>/<id>.txt.
 """
 import argparse
+import atexit
 import base64
 import hashlib
 import json
@@ -27,6 +28,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "arch"))
 import machines                                            # noqa: E402
+import vmlock                                              # noqa: E402
 MAC = "Matthew@the-mac-test-host"
 WINDOWS = {"7": "x@10.0.1.231", "10": "matth@10.0.1.199", "8.1": "x@10.0.1.165", "11": "matth@10.0.1.123",
            "2022": "administrator@10.0.1.248"}
@@ -264,6 +266,10 @@ def main():
                     help="don't run: judge the saved logs of the last run again, not counting these "
                          "comma-separated folder names as left behind (folders another test left)")
     a = ap.parse_args()
+    # One harness at a time per machine (tests/arch/vmlock.py).
+    _lh, _lw = vmlock.target_host(a.target, WINDOWS, LINUX_VMS, MAC)
+    _lock = vmlock.VMLock(_lh, _lw, f"fidelity {a.target}").acquire()
+    atexit.register(_lock.release)
     out_dir = Path(a.out + ("-mac" if a.target == "mac" else ""))
     builds = json.loads((out_dir / "builds.json").read_text())
     only = [x for x in a.only.split(",") if x]
