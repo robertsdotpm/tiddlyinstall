@@ -20,7 +20,8 @@
 # setting is changed: it reads, and kills only when asked.
 #
 # The ways a process can hold a folder, and how each is found:
-#   exe      it is running from there          (Process.Path)
+#   exe      it is running from there          (Process.Path, and
+#            Win32_Process, which also sees another user's processes)
 #   dll      a library of its is loaded there  (Process.Modules)
 #   cwd      its current directory is there    (read out of its PEB)
 #   cmdline  the path is on its command line   (Win32_Process)
@@ -248,10 +249,14 @@ Get-Process -ErrorAction SilentlyContinue | ForEach-Object {
   try { $pr.Modules | ForEach-Object { if (Under $_.FileName) { Note $pr.Id 'dll' $_.FileName } } } catch { }
 }
 
-# Sitting in the folder, or with it on the command line.
+# Sitting in the folder, running from it, or with it on the command line.
+# Win32_Process is used for the executable path as well as Process.Path,
+# because Process.Path throws for a process belonging to another user and
+# the folder may well be held by one.
 foreach ($k in @($procs.Keys)) {
   $p = $procs[$k]
   if ($mine.ContainsKey([int]$k)) { continue }
+  if (Under $p.ExecutablePath) { Note $k 'exe' $p.ExecutablePath }
   if ($haveNative) {
     $cd = $null
     try { $cd = [IBHold]::CurrentDirectory([int]$k) } catch { }
