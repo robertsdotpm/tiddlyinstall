@@ -39,6 +39,7 @@ preseed can be read or booted by hand.
 has finished.
 """
 import argparse
+import json
 import hashlib
 import os
 import shutil
@@ -291,10 +292,19 @@ def main():
     run(["govc", "vm.change", "-vm", name, "-e", "tools.syncTime=FALSE"])
     run(["govc", "datastore.upload", "-ds", ds, iso, f"{name}/{HOST}.iso"],
         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    # `datastore.ls -l` prints a human size ("771.2MB"), never the byte
+    # count, so comparing bytes to it always failed. Ask for the bytes.
     want = iso.stat().st_size
-    got = [l for l in out(["govc", "datastore.ls", "-l", "-ds", ds, f"{name}/{HOST}.iso"]).splitlines() if l.strip()]
-    if not got or str(want) not in got[0]:
-        sys.exit(f"upload of {iso} looks wrong: {got}")
+    got = out(["govc", "datastore.ls", "-json", "-l", "-ds", ds, f"{name}/{HOST}.iso"])
+    try:
+        d = json.loads(got)
+        # `-json` gives a list of results, one per datastore path.
+        rows = (d[0] if isinstance(d, list) else d)["file"] or []
+        size = int(rows[0]["fileSize"])
+    except Exception:
+        sys.exit(f"cannot read the uploaded size of {iso}: {got[:400]}")
+    if size != want:
+        sys.exit(f"upload of {iso} is {size} bytes on the datastore, expected {want}")
     dev = run(["govc", "device.cdrom.add", "-vm", name], capture_output=True).stdout.strip()
     run(["govc", "device.cdrom.insert", "-vm", name, "-device", dev, "-ds", ds, f"{name}/{HOST}.iso"])
     run(["govc", "device.connect", "-vm", name, dev])
