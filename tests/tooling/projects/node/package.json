@@ -1,0 +1,9 @@
+{
+  "name": "tooling",
+  "version": "1.0.0",
+  "private": true,
+  "main": "main.js",
+  "dependencies": {
+    "is-number": "7.0.0"
+  }
+}

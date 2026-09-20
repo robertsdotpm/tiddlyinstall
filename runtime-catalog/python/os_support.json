@@ -1548,6 +1548,66 @@
    ],
    "confidence": "high",
    "notes": null
+  },
+  {
+   "versions": ">=2.7,<3",
+   "os": "linux",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "glibc-2.17",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "Anaconda's CPython 2.7.18 conda package with its dependency parts",
+   "match": {
+    "format": [
+     "tar.bz2"
+    ],
+    "variant": [
+     "conda"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "highest GLIBC symbol version over bin/, lib/*.so* and lib/python2.7/lib-dynload/*.so of the unpacked prefix: 2.17 (_ssl.so, _hashlib.so, libtinfow)"
+    },
+    {
+     "kind": "vm-test",
+     "source": "ran on this machine 2026-09-20 with an empty environment"
+    }
+   ],
+   "confidence": "high",
+   "notes": "The newest builds of sqlite (3.53) and libffi (3.4.8) would raise this to glibc 2.28; the parts are pinned to the lowest versions python-2.7.18 accepts."
+  },
+  {
+   "versions": ">=2.7,<3",
+   "os": "macos",
+   "arch": [
+    "amd64"
+   ],
+   "min_os": "10.9",
+   "min_build": null,
+   "max_os": null,
+   "extra": [],
+   "applies_to": "Anaconda's CPython 2.7.18 conda package with its dependency parts (osx-64; runs on Apple Silicon through Rosetta 2)",
+   "match": {
+    "format": [
+     "tar.bz2"
+    ],
+    "variant": [
+     "conda"
+    ]
+   },
+   "evidence": [
+    {
+     "kind": "binary",
+     "source": "LC_VERSION_MIN_MACOSX 10.9.0 in bin/python2.7, libpython2.7.dylib, _ssl.so, libsqlite3.dylib and libtk8.6.dylib"
+    }
+   ],
+   "confidence": "high",
+   "notes": "There is no osx-arm64 build of python 2.7: 2.7 predates Apple Silicon."
   }
  ],
  "max_per_os": [

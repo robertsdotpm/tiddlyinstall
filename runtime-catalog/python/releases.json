@@ -72354,5 +72354,200 @@
   "min_os": null,
   "metadata_source": "https://www.python.org/api/v2/downloads/release_file/",
   "notes": null
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "2.7",
+  "version": "2.7.18",
+  "os": "linux",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.bz2",
+  "variant": "conda",
+  "libc": "glibc",
+  "url": "https://repo.anaconda.com/pkgs/main/linux-64/python-2.7.18-h42bf7aa_3.tar.bz2",
+  "mirrors": [
+   "https://conda.anaconda.org/anaconda/linux-64/python-2.7.18-h42bf7aa_3.tar.bz2"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "9dd9ee7c5228b2e74ca7bd76d14a8b43d63b154c7218c038c05c033b28f508a3",
+   "source": "https://repo.anaconda.com/pkgs/main/linux-64/repodata.json.bz2"
+  },
+  "size": 13397291,
+  "released": "2022-11-25",
+  "min_os": "glibc 2.17",
+  "metadata_source": "https://repo.anaconda.com/pkgs/main/linux-64/repodata.json.bz2",
+  "notes": "Python 2 for Linux and macOS (design.md 11.0 item 14). python.org publishes no relocatable Python 2 build for either, so this is Anaconda's CPython 2.7.18 from the `anaconda` channel: real CPython, PSF-2.0, built as a conda package. A conda package is one prefix in a tarball, and python-2.7.18 alone resolves libsqlite3, libreadline, libncursesw, libtcl/libtk and libffi from the system, so the packages it depends on are the release's `parts` and unpack into the same {runtime_dir}: the lowest version of each that satisfies python-2.7.18's own constraints, which keeps the glibc floor at 2.17 (the newest builds of sqlite and libffi would raise it to 2.28). Every binary has RPATH $ORIGIN/../lib or $ORIGIN/../.. (Linux) and @loader_path (macOS), so the prefix is relocatable and needs no conda. OpenSSL 1.1.1s is linked into _ssl, but its compiled-in OPENSSLDIR is conda's unrewritten build placeholder, so the recipe sets SSL_CERT_FILE to the prefix's own ssl/cert.pem. Checksums are the SHA-256s anaconda.org publishes for each file, checked against the bytes downloaded from repo.anaconda.com. NOT MIRRORED: Anaconda's Terms of Service forbid framing or mirroring their platform or any offering without their authorisation, so these files have no copy on our mirror and no entry in the download plan; the plan points at Anaconda's own hosts only. The software is PSF-2.0 and freely redistributable; the restriction is Anaconda's terms for their repository, not the licence of the bits (design.md 11.0 item 14, and the report of 2026-09-20).",
+  "parts": [
+   {
+    "name": "ca-certificates-2026.8.13-h06a4308_0.tar.bz2",
+    "url": "https://repo.anaconda.com/pkgs/main/linux-64/ca-certificates-2026.8.13-h06a4308_0.tar.bz2",
+    "mirrors": [
+     "https://conda.anaconda.org/anaconda/linux-64/ca-certificates-2026.8.13-h06a4308_0.tar.bz2"
+    ],
+    "sha256": "fcc8471f7e6048dd38d1571643b3e883f24ee89fb386ae9464083217949e1080",
+    "size": 116140
+   },
+   {
+    "name": "libffi-3.4.2-h295c915_0.tar.bz2",
+    "url": "https://repo.anaconda.com/pkgs/main/linux-64/libffi-3.4.2-h295c915_0.tar.bz2",
+    "mirrors": [
+     "https://conda.anaconda.org/anaconda/linux-64/libffi-3.4.2-h295c915_0.tar.bz2"
+    ],
+    "sha256": "2995575e5ac85b3fc00b97df4549de12c804d6993e3df8931b20dae94c664747",
+    "size": 68360
+   },
+   {
+    "name": "libgcc-ng-11.2.0-h1234567_0.tar.bz2",
+    "url": "https://repo.anaconda.com/pkgs/main/linux-64/libgcc-ng-11.2.0-h1234567_0.tar.bz2",
+    "mirrors": [
+     "https://conda.anaconda.org/anaconda/linux-64/libgcc-ng-11.2.0-h1234567_0.tar.bz2"
+    ],
+    "sha256": "4531feda599f0722fee2029a90e29378883b8237dd324e9169fc2dd28f943d37",
+    "size": 8893334
+   },
+   {
+    "name": "ncurses-6.3-h7f8727e_0.tar.bz2",
+    "url": "https://repo.anaconda.com/pkgs/main/linux-64/ncurses-6.3-h7f8727e_0.tar.bz2",
+    "mirrors": [
+     "https://conda.anaconda.org/anaconda/linux-64/ncurses-6.3-h7f8727e_0.tar.bz2"
+    ],
+    "sha256": "f59ae540e6a26521ac7c072567f4e1e2dcdf1179f618c4453b44a4bf0b563136",
+    "size": 1106808
+   },
+   {
+    "name": "readline-8.0-h7b6447c_0.tar.bz2",
+    "url": "https://repo.anaconda.com/pkgs/main/linux-64/readline-8.0-h7b6447c_0.tar.bz2",
+    "mirrors": [
+     "https://conda.anaconda.org/anaconda/linux-64/readline-8.0-h7b6447c_0.tar.bz2"
+    ],
+    "sha256": "edd7a4575a9ed6d1a606821e3ca686edf9dd06c159e1f1d85131ebc4df66e1ed",
+    "size": 437901
+   },
+   {
+    "name": "sqlite-3.40.0-h5082296_0.tar.bz2",
+    "url": "https://repo.anaconda.com/pkgs/main/linux-64/sqlite-3.40.0-h5082296_0.tar.bz2",
+    "mirrors": [
+     "https://conda.anaconda.org/anaconda/linux-64/sqlite-3.40.0-h5082296_0.tar.bz2"
+    ],
+    "sha256": "2525eca3acf007cecda1758200c31a1ee33c47ece950229b9369cdb697801558",
+    "size": 1626448
+   },
+   {
+    "name": "tk-8.6.12-h1ccaba5_0.tar.bz2",
+    "url": "https://repo.anaconda.com/pkgs/main/linux-64/tk-8.6.12-h1ccaba5_0.tar.bz2",
+    "mirrors": [
+     "https://conda.anaconda.org/anaconda/linux-64/tk-8.6.12-h1ccaba5_0.tar.bz2"
+    ],
+    "sha256": "4a822e705b349b3ba698cc1845397977aa17a0b853e9ea63d1b228e3fc60ba9b",
+    "size": 3485432
+   },
+   {
+    "name": "zlib-1.2.13-h5eee18b_0.tar.bz2",
+    "url": "https://repo.anaconda.com/pkgs/main/linux-64/zlib-1.2.13-h5eee18b_0.tar.bz2",
+    "mirrors": [
+     "https://conda.anaconda.org/anaconda/linux-64/zlib-1.2.13-h5eee18b_0.tar.bz2"
+    ],
+    "sha256": "2dc9150a95704d83efd39bb9dfb44bdf8419022f4fb0fc416380a922a27c130d",
+    "size": 127528
+   }
+  ]
+ },
+ {
+  "runtime": "python",
+  "languages": [
+   "python"
+  ],
+  "major": "2.7",
+  "version": "2.7.18",
+  "os": "macos",
+  "arch": "amd64",
+  "kind": "archive",
+  "format": "tar.bz2",
+  "variant": "conda",
+  "libc": null,
+  "url": "https://repo.anaconda.com/pkgs/main/osx-64/python-2.7.18-h441ce09_3.tar.bz2",
+  "mirrors": [
+   "https://conda.anaconda.org/anaconda/osx-64/python-2.7.18-h441ce09_3.tar.bz2"
+  ],
+  "checksum": {
+   "algo": "sha256",
+   "value": "80bd9ec361864ba295333741c5718a87c88be0a431b137a78ee0fa5bf5295110",
+   "source": "https://repo.anaconda.com/pkgs/main/osx-64/repodata.json.bz2"
+  },
+  "size": 12834989,
+  "released": "2022-11-25",
+  "min_os": "macOS 10.9 (LC_VERSION_MIN_MACOSX of bin/python2.7)",
+  "metadata_source": "https://repo.anaconda.com/pkgs/main/osx-64/repodata.json.bz2",
+  "notes": "Python 2 for Linux and macOS (design.md 11.0 item 14). python.org publishes no relocatable Python 2 build for either, so this is Anaconda's CPython 2.7.18 from the `anaconda` channel: real CPython, PSF-2.0, built as a conda package. A conda package is one prefix in a tarball, and python-2.7.18 alone resolves libsqlite3, libreadline, libncursesw, libtcl/libtk and libffi from the system, so the packages it depends on are the release's `parts` and unpack into the same {runtime_dir}: the lowest version of each that satisfies python-2.7.18's own constraints, which keeps the glibc floor at 2.17 (the newest builds of sqlite and libffi would raise it to 2.28). Every binary has RPATH $ORIGIN/../lib or $ORIGIN/../.. (Linux) and @loader_path (macOS), so the prefix is relocatable and needs no conda. OpenSSL 1.1.1s is linked into _ssl, but its compiled-in OPENSSLDIR is conda's unrewritten build placeholder, so the recipe sets SSL_CERT_FILE to the prefix's own ssl/cert.pem. Checksums are the SHA-256s anaconda.org publishes for each file, checked against the bytes downloaded from repo.anaconda.com. NOT MIRRORED: Anaconda's Terms of Service forbid framing or mirroring their platform or any offering without their authorisation, so these files have no copy on our mirror and no entry in the download plan; the plan points at Anaconda's own hosts only. The software is PSF-2.0 and freely redistributable; the restriction is Anaconda's terms for their repository, not the licence of the bits (design.md 11.0 item 14, and the report of 2026-09-20).",
+  "parts": [
+   {
+    "name": "ca-certificates-2025.7.15-hecd8cb5_0.tar.bz2",
+    "url": "https://repo.anaconda.com/pkgs/main/osx-64/ca-certificates-2025.7.15-hecd8cb5_0.tar.bz2",
+    "mirrors": [
+     "https://conda.anaconda.org/anaconda/osx-64/ca-certificates-2025.7.15-hecd8cb5_0.tar.bz2"
+    ],
+    "sha256": "bc99be41a6fdebe3af9dbf3a36e6865ce978bc1d4d844c6de3fb3d8b0ca52b31",
+    "size": 137725
+   },
+   {
+    "name": "libffi-3.4.2-h23ab428_0.tar.bz2",
+    "url": "https://repo.anaconda.com/pkgs/main/osx-64/libffi-3.4.2-h23ab428_0.tar.bz2",
+    "mirrors": [
+     "https://conda.anaconda.org/anaconda/osx-64/libffi-3.4.2-h23ab428_0.tar.bz2"
+    ],
+    "sha256": "de0524eb4f69e7a151c3d3e3ee41a37c2d87ffdae6c10cd21a85c418a649fe12",
+    "size": 58392
+   },
+   {
+    "name": "ncurses-6.3-hca72f7f_0.tar.bz2",
+    "url": "https://repo.anaconda.com/pkgs/main/osx-64/ncurses-6.3-hca72f7f_0.tar.bz2",
+    "mirrors": [
+     "https://conda.anaconda.org/anaconda/osx-64/ncurses-6.3-hca72f7f_0.tar.bz2"
+    ],
+    "sha256": "1adbb5c3debdcad95a5bd5eb2bd4ce09e38990ea678017f1aa6d0be8ef93f920",
+    "size": 1191552
+   },
+   {
+    "name": "readline-8.0-h1de35cc_0.tar.bz2",
+    "url": "https://repo.anaconda.com/pkgs/main/osx-64/readline-8.0-h1de35cc_0.tar.bz2",
+    "mirrors": [
+     "https://conda.anaconda.org/anaconda/osx-64/readline-8.0-h1de35cc_0.tar.bz2"
+    ],
+    "sha256": "249029452491796a6bd1085103a5222431cd708df781da2c53372ef178acf10c",
+    "size": 406473
+   },
+   {
+    "name": "sqlite-3.40.0-h880c91c_0.tar.bz2",
+    "url": "https://repo.anaconda.com/pkgs/main/osx-64/sqlite-3.40.0-h880c91c_0.tar.bz2",
+    "mirrors": [
+     "https://conda.anaconda.org/anaconda/osx-64/sqlite-3.40.0-h880c91c_0.tar.bz2"
+    ],
+    "sha256": "56dd8f5469e9742c4d1e44070a39433ac7d4d57b34f7b74517b2088380f2d75c",
+    "size": 1788362
+   },
+   {
+    "name": "tk-8.6.12-h5d9f67b_0.tar.bz2",
+    "url": "https://repo.anaconda.com/pkgs/main/osx-64/tk-8.6.12-h5d9f67b_0.tar.bz2",
+    "mirrors": [
+     "https://conda.anaconda.org/anaconda/osx-64/tk-8.6.12-h5d9f67b_0.tar.bz2"
+    ],
+    "sha256": "b0c2866ed3b190b0d84024a08273846c335644bcbfe23a8521a418f2be98044c",
+    "size": 3536231
+   },
+   {
+    "name": "zlib-1.2.13-h4dc903c_0.tar.bz2",
+    "url": "https://repo.anaconda.com/pkgs/main/osx-64/zlib-1.2.13-h4dc903c_0.tar.bz2",
+    "mirrors": [
+     "https://conda.anaconda.org/anaconda/osx-64/zlib-1.2.13-h4dc903c_0.tar.bz2"
+    ],
+    "sha256": "656a87c551a958f974ee409319b30ca29a205957ece617dbb21405b59bd66604",
+    "size": 120272
+   }
+  ]
  }
 ]

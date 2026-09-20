@@ -838,6 +838,233 @@
     "cwd": "{app_dir}",
     "notes": "PIP_CONFIG_FILE=devnull stops pip reading the user's pip.conf. Python <2.7.9 and 3.0-3.3 have no bundled pip."
    }
+  },
+  {
+   "id": "conda-py2",
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.bz2",
+    "versions": ">=2.7,<3",
+    "arch": "amd64",
+    "variant": "conda"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.bz2",
+     "to": "{runtime_dir}",
+     "strip_components": 0
+    },
+    {
+     "run": "tar -xjf \"{tmp}/ca-certificates-2026.8.13-h06a4308_0.tar.bz2\" -C \"{runtime_dir}\"",
+     "shell": "sh"
+    },
+    {
+     "run": "tar -xjf \"{tmp}/libffi-3.4.2-h295c915_0.tar.bz2\" -C \"{runtime_dir}\"",
+     "shell": "sh"
+    },
+    {
+     "run": "tar -xjf \"{tmp}/libgcc-ng-11.2.0-h1234567_0.tar.bz2\" -C \"{runtime_dir}\"",
+     "shell": "sh"
+    },
+    {
+     "run": "tar -xjf \"{tmp}/ncurses-6.3-h7f8727e_0.tar.bz2\" -C \"{runtime_dir}\"",
+     "shell": "sh"
+    },
+    {
+     "run": "tar -xjf \"{tmp}/readline-8.0-h7b6447c_0.tar.bz2\" -C \"{runtime_dir}\"",
+     "shell": "sh"
+    },
+    {
+     "run": "tar -xjf \"{tmp}/sqlite-3.40.0-h5082296_0.tar.bz2\" -C \"{runtime_dir}\"",
+     "shell": "sh"
+    },
+    {
+     "run": "tar -xjf \"{tmp}/tk-8.6.12-h1ccaba5_0.tar.bz2\" -C \"{runtime_dir}\"",
+     "shell": "sh"
+    },
+    {
+     "run": "tar -xjf \"{tmp}/zlib-1.2.13-h5eee18b_0.tar.bz2\" -C \"{runtime_dir}\"",
+     "shell": "sh"
+    },
+    {
+     "run": "rm -rf \"{runtime_dir}/info\"",
+     "shell": "sh"
+    },
+    {
+     "run": "\"{runtime_dir}/bin/python2.7\" -E -s -m ensurepip --default-pip",
+     "shell": "sh"
+    },
+    {
+     "run": "\"{runtime_dir}/bin/python2.7\" -E -s -m compileall -q -x 'bad_coding|badsyntax|lib2to3' \"{runtime_dir}/lib\" || true",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "tar that reads bzip2 (-xjf), for the release's parts: GNU tar, bsdtar and busybox tar all do",
+    "glibc >= 2.17 (highest GLIBC symbol version in the whole prefix with these parts)"
+   ],
+   "executable": "bin/python2.7",
+   "package_manager": "\"{runtime_dir}/bin/python2.7\" -m pip",
+   "verify": "\"{runtime_dir}/bin/python2.7\" -E -s -c \"import sys, ssl, sqlite3, Tkinter; print(sys.version, ssl.OPENSSL_VERSION)\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "glibc 2.17",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://anaconda.org/anaconda/python/files?version=2.7.18",
+    "https://repo.anaconda.com/pkgs/main/",
+    "https://docs.python.org/3/license.html",
+    "https://www.anaconda.com/legal/terms/terms-of-service"
+   ],
+   "notes": "Anaconda's CPython 2.7.18 conda package and the packages it depends on, unpacked into one prefix. The first step unpacks the release; each part is copied to {tmp} by Installer Builder and unpacked with the system tar (-xjf; busybox, bsdtar and GNU tar all read bzip2). conda's info/ folder is then removed -- each package writes its own over the last, and nothing reads it at run time -- and ensurepip installs pip, as for Windows Python. The last step precompiles the standard library (design.md 11.0 item 11). TESTED on this machine 2026-09-20 with an empty environment and the prefix copied into a path with a space: python 2.7.18 started, ssl, sqlite3, zlib, ctypes, readline, curses, Tkinter, hashlib, bz2 and json all imported, `-m ensurepip` installed pip 19.2.3 and setuptools 41.2.0, `pip install six` fetched and installed six 1.17.0 from PyPI over HTTPS, and `import six` worked. Without SSL_CERT_FILE the same HTTPS request fails with CERTIFICATE_VERIFY_FAILED. 76 MB installed.",
+   "preferred": true,
+   "launch": {
+    "program": "{runtime_dir}/bin/python2.7",
+    "args": [
+     "-E",
+     "-s"
+    ],
+    "env": {
+     "SSL_CERT_FILE": "{runtime_dir}/ssl/cert.pem",
+     "SSL_CERT_DIR": "{runtime_dir}/ssl/certs",
+     "TCL_LIBRARY": null,
+     "TK_LIBRARY": null,
+     "PYTHONHOME": null
+    },
+    "notes": "-s drops the per-user site-packages; -E ignores PYTHON* from the user's environment. SSL_CERT_FILE and SSL_CERT_DIR point at the prefix's own CA bundle, because the OpenSSL linked into _ssl has conda's unrewritten build placeholder as its OPENSSLDIR. TCL_LIBRARY and TK_LIBRARY are cleared so a machine-wide one cannot send this Tcl 8.6 to the wrong folder."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/python2.7\" -E -s -m pip install --no-warn-script-location .",
+    "env": {
+     "SSL_CERT_FILE": "{runtime_dir}/ssl/cert.pem",
+     "SSL_CERT_DIR": "{runtime_dir}/ssl/certs",
+     "TCL_LIBRARY": null,
+     "TK_LIBRARY": null,
+     "PYTHONHOME": null,
+     "PIP_CONFIG_FILE": "/dev/null",
+     "PIP_CACHE_DIR": "{data_dir}/pip-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "pip 19.2.3, the last that runs on Python 2.7, from ensurepip."
+   }
+  },
+  {
+   "id": "conda-py2",
+   "match": {
+    "os": "macos",
+    "kind": "archive",
+    "format": "tar.bz2",
+    "versions": ">=2.7,<3",
+    "arch": "amd64",
+    "variant": "conda"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.bz2",
+     "to": "{runtime_dir}",
+     "strip_components": 0
+    },
+    {
+     "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null || true",
+     "shell": "sh"
+    },
+    {
+     "run": "tar -xjf \"{tmp}/ca-certificates-2025.7.15-hecd8cb5_0.tar.bz2\" -C \"{runtime_dir}\"",
+     "shell": "sh"
+    },
+    {
+     "run": "tar -xjf \"{tmp}/libffi-3.4.2-h23ab428_0.tar.bz2\" -C \"{runtime_dir}\"",
+     "shell": "sh"
+    },
+    {
+     "run": "tar -xjf \"{tmp}/ncurses-6.3-hca72f7f_0.tar.bz2\" -C \"{runtime_dir}\"",
+     "shell": "sh"
+    },
+    {
+     "run": "tar -xjf \"{tmp}/readline-8.0-h1de35cc_0.tar.bz2\" -C \"{runtime_dir}\"",
+     "shell": "sh"
+    },
+    {
+     "run": "tar -xjf \"{tmp}/sqlite-3.40.0-h880c91c_0.tar.bz2\" -C \"{runtime_dir}\"",
+     "shell": "sh"
+    },
+    {
+     "run": "tar -xjf \"{tmp}/tk-8.6.12-h5d9f67b_0.tar.bz2\" -C \"{runtime_dir}\"",
+     "shell": "sh"
+    },
+    {
+     "run": "tar -xjf \"{tmp}/zlib-1.2.13-h4dc903c_0.tar.bz2\" -C \"{runtime_dir}\"",
+     "shell": "sh"
+    },
+    {
+     "run": "rm -rf \"{runtime_dir}/info\"",
+     "shell": "sh"
+    },
+    {
+     "run": "\"{runtime_dir}/bin/python2.7\" -E -s -m ensurepip --default-pip",
+     "shell": "sh"
+    },
+    {
+     "run": "\"{runtime_dir}/bin/python2.7\" -E -s -m compileall -q -x 'bad_coding|badsyntax|lib2to3' \"{runtime_dir}/lib\" || true",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [
+    "tar that reads bzip2 (-xjf), for the release's parts: GNU tar, bsdtar and busybox tar all do"
+   ],
+   "executable": "bin/python2.7",
+   "package_manager": "\"{runtime_dir}/bin/python2.7\" -m pip",
+   "verify": "\"{runtime_dir}/bin/python2.7\" -E -s -c \"import sys, ssl, sqlite3, Tkinter; print(sys.version, ssl.OPENSSL_VERSION)\"",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "macOS 10.9",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://anaconda.org/anaconda/python/files?version=2.7.18",
+    "https://repo.anaconda.com/pkgs/main/",
+    "https://docs.python.org/3/license.html",
+    "https://www.anaconda.com/legal/terms/terms-of-service"
+   ],
+   "notes": "Anaconda's CPython 2.7.18 conda package and the packages it depends on, unpacked into one prefix. The first step unpacks the release; each part is copied to {tmp} by Installer Builder and unpacked with the system tar (-xjf; busybox, bsdtar and GNU tar all read bzip2). conda's info/ folder is then removed -- each package writes its own over the last, and nothing reads it at run time -- and ensurepip installs pip, as for Windows Python. The last step precompiles the standard library (design.md 11.0 item 11). TESTED on this machine 2026-09-20 with an empty environment and the prefix copied into a path with a space: python 2.7.18 started, ssl, sqlite3, zlib, ctypes, readline, curses, Tkinter, hashlib, bz2 and json all imported, `-m ensurepip` installed pip 19.2.3 and setuptools 41.2.0, `pip install six` fetched and installed six 1.17.0 from PyPI over HTTPS, and `import six` worked. Without SSL_CERT_FILE the same HTTPS request fails with CERTIFICATE_VERIFY_FAILED. 76 MB installed.",
+   "preferred": true,
+   "launch": {
+    "program": "{runtime_dir}/bin/python2.7",
+    "args": [
+     "-E",
+     "-s"
+    ],
+    "env": {
+     "SSL_CERT_FILE": "{runtime_dir}/ssl/cert.pem",
+     "SSL_CERT_DIR": "{runtime_dir}/ssl/certs",
+     "TCL_LIBRARY": null,
+     "TK_LIBRARY": null,
+     "PYTHONHOME": null
+    },
+    "notes": "-s drops the per-user site-packages; -E ignores PYTHON* from the user's environment. SSL_CERT_FILE and SSL_CERT_DIR point at the prefix's own CA bundle, because the OpenSSL linked into _ssl has conda's unrewritten build placeholder as its OPENSSLDIR. TCL_LIBRARY and TK_LIBRARY are cleared so a machine-wide one cannot send this Tcl 8.6 to the wrong folder."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/python2.7\" -E -s -m pip install --no-warn-script-location .",
+    "env": {
+     "SSL_CERT_FILE": "{runtime_dir}/ssl/cert.pem",
+     "SSL_CERT_DIR": "{runtime_dir}/ssl/certs",
+     "TCL_LIBRARY": null,
+     "TK_LIBRARY": null,
+     "PYTHONHOME": null,
+     "PIP_CONFIG_FILE": "/dev/null",
+     "PIP_CACHE_DIR": "{data_dir}/pip-cache"
+    },
+    "cwd": "{app_dir}",
+    "notes": "pip 19.2.3, the last that runs on Python 2.7, from ensurepip."
+   }
   }
  ]
 }

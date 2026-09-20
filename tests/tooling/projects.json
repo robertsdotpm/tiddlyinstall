@@ -1,0 +1,166 @@
+{
+ "notes": "The package-manager and tooling matrix (docs/test-results.md, section \"Package managers and tooling\"; design.md 11.0 item 11). One project per runtime, built for every major version the resolver says the catalogue can install and run on every machine in the test set, so that the runtime's OWN package manager and tools are exercised: pip and venv, npm/npx/corepack, gem and bundler, composer, cargo, go install and the module proxy, dotnet restore, nimble, R's install.packages, javac and jar, zig build-exe, and the C and C++ toolchains' compile and link. Each app prints `TOOL ok|fail|skip <check>: <detail>` lines and ends with `TOOL end`; tests/tooling/run.py judges those, exactly as tests/fidelity does with its FID lines. `{{MAJOR}}` in a file is replaced with the chosen release's major (net8.0 and so on). `launch_args` are appended to the launch command: a compiled program cannot find the toolchain that built it, so Go is passed \"{runtime_dir}\".",
+ "projects": {
+  "python": {
+   "runtime": "python",
+   "project": "tooling",
+   "launch": "{runtime} {app_dir}/main.py",
+   "checks": [
+    "pip-install",
+    "pip-module",
+    "ensurepip",
+    "venv",
+    "venv-pip",
+    "stdlib"
+   ]
+  },
+  "python2": {
+   "runtime": "python2",
+   "project": "tooling",
+   "launch": "{runtime} {app_dir}/main.py",
+   "checks": [
+    "pip-install",
+    "pip-module",
+    "ensurepip",
+    "venv",
+    "stdlib",
+    "https"
+   ]
+  },
+  "node": {
+   "runtime": "node",
+   "project": "tooling",
+   "launch": "{runtime} {app_dir}/main.js",
+   "checks": [
+    "npm-install",
+    "npm-version",
+    "npx",
+    "corepack",
+    "stdlib"
+   ]
+  },
+  "ruby": {
+   "runtime": "ruby",
+   "project": "tooling",
+   "launch": "{runtime} {app_dir}/main.rb",
+   "checks": [
+    "bundle-install",
+    "gem-command",
+    "bundler-command",
+    "stdlib"
+   ]
+  },
+  "php": {
+   "runtime": "php",
+   "project": "tooling",
+   "launch": "{runtime} {app_dir}/index.php",
+   "checks": [
+    "composer-install",
+    "composer-phar",
+    "stdlib"
+   ]
+  },
+  "java": {
+   "runtime": "java",
+   "project": "tooling",
+   "install": "\"{env:JAVA_HOME}{sep}bin{sep}javac\" -encoding UTF-8 -d \"{app_dir}{sep}classes\" Main.java && \"{env:JAVA_HOME}{sep}bin{sep}jar\" cfe \"{app_dir}{sep}tooling.jar\" Main -C \"{app_dir}{sep}classes\" .",
+   "launch": "{runtime} -Djava.awt.headless=true -jar {app_dir}/tooling.jar",
+   "checks": [
+    "javac-jar",
+    "javac",
+    "jar",
+    "jlink",
+    "jshell",
+    "stdlib"
+   ]
+  },
+  "dotnet": {
+   "runtime": "dotnet",
+   "project": "tooling",
+   "launch": "{runtime} {app_dir}/bin/tooling.dll",
+   "checks": [
+    "nuget-restore",
+    "sdk-build",
+    "stdlib"
+   ]
+  },
+  "r": {
+   "runtime": "r",
+   "project": "tooling",
+   "install": "\"{runtime}\" -e \"install.packages(c('digest', 'jsonlite'), repos = 'https://cloud.r-project.org')\"",
+   "launch": "{runtime} {app_dir}/main.R",
+   "checks": [
+    "install.packages",
+    "install.packages-2",
+    "library-path",
+    "stdlib"
+   ]
+  },
+  "go": {
+   "runtime": "go",
+   "project": "tooling",
+   "launch": "{app_dir}/tooling{exe}",
+   "launch_args": "\"{runtime_dir}\"",
+   "checks": [
+    "module-download",
+    "go-version",
+    "go-install",
+    "stdlib"
+   ]
+  },
+  "rust": {
+   "runtime": "rust",
+   "project": "tooling",
+   "launch": "{app_dir}/target/release/tooling{exe}",
+   "checks": [
+    "cargo-dependency",
+    "cc-build-step",
+    "stdlib"
+   ]
+  },
+  "nim": {
+   "runtime": "nim",
+   "project": "tooling",
+   "launch": "{app_dir}/tooling{exe}",
+   "checks": [
+    "nim-compile",
+    "json",
+    "stdlib"
+   ]
+  },
+  "zig": {
+   "runtime": "zig",
+   "project": "tooling",
+   "launch": "{app_dir}/tooling{exe}",
+   "select": "range",
+   "range": ">=0.16,<0.17",
+   "checks": [
+    "zig-build-exe",
+    "zig-fetch",
+    "stdlib"
+   ]
+  },
+  "cc": {
+   "runtime": "cc",
+   "project": "tooling",
+   "launch": "{app_dir}/tooling{exe}",
+   "checks": [
+    "compile-link",
+    "libm",
+    "helper"
+   ],
+   "samples": 8
+  },
+  "cpp": {
+   "runtime": "cc",
+   "project": "tooling",
+   "launch": "{app_dir}/tooling{exe}",
+   "checks": [
+    "compile-link",
+    "stdlib",
+    "exceptions"
+   ],
+   "samples": 8
+  }
+ }
+}

@@ -3079,5 +3079,129 @@
     "source": "winget Microsoft.DotNet.Framework.Runtime 4.8.1 (manifests/m/Microsoft/DotNet/Framework/Runtime/4.8.1/Microsoft.DotNet.Framework.Runtime.installer.yaml)"
    }
   ]
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "7.0",
+  "version": "7.0.20",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "sdk",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/7.0.410/dotnet-sdk-7.0.410-win-x86.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Sdk/7.0.410/dotnet-sdk-7.0.410-win-x86.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Sdk/7.0.410/dotnet-sdk-7.0.410-win-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "99649796ced7e9b6f202c41cf854034f92dd6af8df018c58efe1b44d34a4273e77153b00b32cc1073893b2064e8d4dd49679fe9f0709aac8d60588039a2fd4df",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json"
+  },
+  "size": null,
+  "released": "2024-05-28",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/7.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "8.0",
+  "version": "8.0.31",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "sdk",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.425/dotnet-sdk-8.0.425-win-x86.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Sdk/8.0.425/dotnet-sdk-8.0.425-win-x86.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Sdk/8.0.425/dotnet-sdk-8.0.425-win-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "aaddd12db00f02fdcec246e5d5a0f1fc7b0804867b0816d93040f244f361048e2240130dab6d5f471c5cd3d36ce68dfe5f3d8bcd556250b09880d94ee41cdbb5",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json"
+  },
+  "size": null,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "9.0",
+  "version": "9.0.20",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "sdk",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/9.0.318/dotnet-sdk-9.0.318-win-x86.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Sdk/9.0.318/dotnet-sdk-9.0.318-win-x86.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Sdk/9.0.318/dotnet-sdk-9.0.318-win-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "30b07bd519e9289bac03e0641a1595dd768a44fc328668ba746424f70974862758ed7c06e274127cb5c104e030c5149bdcb0292b54a84e778b20741ad4418f43",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json"
+  },
+  "size": null,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json",
+  "notes": null
+ },
+ {
+  "runtime": "dotnet",
+  "languages": [
+   "csharp",
+   "fsharp",
+   "visualbasic"
+  ],
+  "major": "10.0",
+  "version": "10.0.12",
+  "os": "windows",
+  "arch": "x86",
+  "kind": "archive",
+  "format": "zip",
+  "variant": "sdk",
+  "libc": null,
+  "url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.401/dotnet-sdk-10.0.401-win-x86.zip",
+  "mirrors": [
+   "https://dotnetcli.blob.core.windows.net/dotnet/Sdk/10.0.401/dotnet-sdk-10.0.401-win-x86.zip",
+   "https://dotnetcli.azureedge.net/dotnet/Sdk/10.0.401/dotnet-sdk-10.0.401-win-x86.zip"
+  ],
+  "checksum": {
+   "algo": "sha512",
+   "value": "cfb800a0631281546708fb12a00ece6a1657949c7f67d85bfe1ec1909e75c80618673bc4a843d94bab1b8e9bddfe3a971f53058db37a8bd2338b3fba038af7db",
+   "source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json"
+  },
+  "size": null,
+  "released": "2026-09-08",
+  "min_os": null,
+  "metadata_source": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json",
+  "notes": null
  }
 ]

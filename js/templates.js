@@ -453,6 +453,9 @@ app.on("window-all-closed", () => {});
   "version": "1.0.0",
   "private": true,
   "main": "main.js",
+  "scripts": {
+    "postinstall": "install-electron"
+  },
   "dependencies": {
     "electron": "^44.0.0"
   }
@@ -467,8 +470,10 @@ app.on("window-all-closed", () => {});
     needs: ['electron'],
     prerequisites: ['gtk3', 'nss', 'alsa', 'libgbm'],
     platforms: ALL,
-    note: 'Installs Electron (package.json) with npm; Electron 44 fetches its own 158 MB build the first time the app runs, ' +
-      'into the app\'s data folder, so that first start takes a while and needs the network. Electron 44 needs Windows 10, macOS 12 or a current Linux ' +
+    note: 'Installs Electron (package.json) with npm. Electron 44 no longer fetches its own 158 MB build from a postinstall script, ' +
+      'so the template\'s package.json asks for it (`postinstall: install-electron`): the installer downloads it into the app\'s data folder ' +
+      'while installing, shows the progress, and fails there with a message if the machine is offline, instead of leaving a broken app ' +
+      'that only fails on its first start. Electron 44 needs Windows 10, macOS 12 or a current Linux ' +
       'desktop: it uses the desktop\'s own libraries (GTK 3, NSS, ALSA, GBM; the installer checks, and offers to install them), ' +
       'and the icon needs a system tray (GNOME only with an AppIndicator extension).',
   },

@@ -673,11 +673,12 @@
    }
   },
   "python2": {
-   "_comment": "Python 2 from the Python catalogue folder. Windows: the 2.7 MSIs (down to XP); python.org has no relocatable Linux or macOS builds of 2.x, so those plans say so.",
+   "_comment": "Python 2 from the Python catalogue folder. Windows: the 2.7 MSIs (down to XP). Linux and macOS: Anaconda's relocatable CPython 2.7.18 conda package with its dependency packages as release parts (design.md 11.0 item 14); python.org has no relocatable Linux or macOS build of 2.x. Those files are not on our mirror -- Anaconda's terms forbid mirroring their repository -- so their plans point at repo.anaconda.com and conda.anaconda.org only.",
    "folder": "python",
    "label": "Python 2",
    "versions": ">=2,<3",
    "variants": [
+    "conda",
     ""
    ],
    "formats": {
@@ -686,9 +687,11 @@
      "exe"
     ],
     "linux": [
+     "tar.bz2",
      "tar.gz"
     ],
     "macos": [
+     "tar.bz2",
      "tar.gz"
     ]
    },

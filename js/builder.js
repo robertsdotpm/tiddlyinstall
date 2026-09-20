@@ -127,16 +127,18 @@ export function validate(r, env) {
       if (typeof id !== 'string' || !Object.prototype.hasOwnProperty.call(known, id)) throw bad('unknown prerequisite ' + goQuote(String(id)));
     }
   }
-  // Tool switches the publisher ticks (record `tools`, docs/format.md):
-  // ids from the policy's tools table, each only for the runtimes it lists.
+  // Tool switches the publisher ticks (record `tools`, docs/format.md): the
+  // ids in the policy's tools table, each only for the runtimes it lists.
+  // `tools` also carries older settings the record doesn't keep
+  // (`cc_win`), so an id the table doesn't know is left alone, as every
+  // other unknown field in an optional block is (docs/api.md).
   if (r.tools != null) {
     const known = (env.catalog && env.catalog.policy && env.catalog.policy.tools) || {};
     if (typeof r.tools !== 'object' || Array.isArray(r.tools)) throw bad('tools must be a set of switches');
-    for (const id of Object.keys(r.tools)) {
-      const t = Object.prototype.hasOwnProperty.call(known, id) ? known[id] : null;
-      if (!t) throw bad('unknown tool switch ' + goQuote(String(id)));
+    for (const id of Object.keys(known)) {
+      if (!Object.prototype.hasOwnProperty.call(r.tools, id) || r.tools[id] == null) continue;
       if (typeof r.tools[id] !== 'boolean') throw bad('tool switch ' + goQuote(String(id)) + ' must be true or false');
-      const rts = Array.isArray(t.runtimes) ? t.runtimes : [];
+      const rts = Array.isArray(known[id].runtimes) ? known[id].runtimes : [];
       if (r.tools[id] && rts.length && !rts.includes(r.runtime)) {
         throw bad('the ' + goQuote(String(id)) + ' switch is only for ' + rts.join(', ') + ' apps');
       }
