@@ -33,6 +33,21 @@
 // Re-recorded 2026-09-20: every plan now has `signed` and `maxage`
 // (design.md 7.1). Every runtime's plan gained those two lines and
 // nothing else.
+//
+// Re-recorded 2026-09-20 for the mirror-gap note (design.md 1.3). Only
+// python2 changed, and only by two `note` lines: Python 2 on Linux and
+// macOS is Anaconda's conda package, which their terms forbid us to
+// mirror, so it is the one hello world whose plan can never name our
+// mirror (runtime-catalog/store/mirror-excluded.json). Every other
+// runtime's record and plan are byte for byte what they were.
+//
+// A warning this recording earned the hard way: `--record URL` takes the
+// server's catalogue, not tests/golden/catalog.gz, so a server pointed at
+// a working catalogue someone else is editing will quietly bake their
+// half-finished work into the goldens. The first attempt picked up 35
+// Azul URLs another agent was adding. Record against a catalogue you
+// control -- `-catalog <a copy>` on the server -- and diff before
+// committing.
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';

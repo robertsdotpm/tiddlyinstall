@@ -99,6 +99,14 @@ test('release parts: extra files with their own mirrors; windowed program for co
     'covers\tWindows 10',
     'runtime\tpython\t3.14.7\tamd64',
     'note\tNot confirmed to run on every OS version in this range; chosen by the catalogue\'s default floor.',
+    // tcltk.msi is the one part this fixture has no local copy of, so it
+    // is the only file in the block with no mirror URL, and the block
+    // says so (design.md 1.3, js/mirror-words.js). Exactly the case the
+    // note exists for: a target that installs fine from the vendor and
+    // not at all from a machine that cannot reach one.
+    'note\tThis version is not on the TiddlyInstall mirror (tcltk.msi), so it can only be downloaded from the vendor. '
+      + 'A computer that cannot reach the vendor directly, such as an old system that cannot make a modern HTTPS '
+      + 'connection, may not be able to download it.',
     `file\tpython\tcore.msi\t${files[0].sha256}\t4096\tamd64`,
     'url\thttp://ib.example/mirror/python/windows/amd64/3.14.7-msi-layout/core.msi',
     'url\thttps://www.python.org/ftp/python/3.14.7/amd64/core.msi',

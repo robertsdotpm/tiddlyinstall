@@ -42,6 +42,17 @@
 //               glibc. 942 of the 3,096 answers changed: python 154, go 134,
 //               rust 121, php 117, nim 116, r 99, python2 99, cc 95, node 6,
 //               and the runtimes summary (Go's Linux coverage).
+//   2026-09-20  The mirror-gap note (design.md 1.3): a target block whose
+//               downloads our mirror has no copy of now carries a `note`
+//               saying so, which the engines print on the review screen.
+//               344 of the 3,095 answers changed — python2 109, java 50,
+//               ruby 36, python 32, rust 26, go 24, node 22, nim 18, zig
+//               13, cc 8, php 6 — and **every one of them differs only by
+//               added `note` lines**: nothing else in any plan moved, and
+//               no record, error or summary changed. Checked by diffing
+//               every case against the previous goldens with the note
+//               lines removed. The gaps are the golden snapshot's
+//               (tests/golden/catalog.gz, 2026-09-19), not today's mirror.
 //
 // --catalog FILE runs the cases against another snapshot instead (for
 // example one tools/snapshot.mjs wrote from the same catalogue folder: the

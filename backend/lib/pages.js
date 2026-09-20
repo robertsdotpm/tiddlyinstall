@@ -13,6 +13,7 @@
 // Everything that came from a person (the app name, its error messages,
 // file names) is untrusted: it goes through esc() and nothing else. Links
 // are relative, so the pages work behind a proxy under a sub-path too.
+import { mirrorGapBuildWarning } from '../../js/mirror-words.js';
 
 export function esc(s) {
   return String(s === null || s === undefined ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -213,6 +214,13 @@ export function statusPage(view, request, { refresh = 3 } = {}) {
         return '<tr><td>' + link + '</td><td>' + esc(PLATFORM[f.platform] || f.platform) + '</td><td>' + esc(size(f.size)) + '</td><td>' +
           esc(f.signed || 'Not signed') + '</td><td class="sha">' + esc(f.sha256) + '</td></tr>';
       }).join('\n') + '\n</table>\n';
+    // Downloads our mirror has no copy of (design.md 1.3), in the same
+    // words the page and the installer's review screen use. This page is
+    // for browsers too old to run the other one, so its reader is the most
+    // likely of all to be sending installers to machines that cannot reach
+    // a vendor over modern HTTPS.
+    const um = Array.isArray(r.unmirrored) ? r.unmirrored : [];
+    if (um.length) body += '<div class="error">' + esc(mirrorGapBuildWarning(um.map((f) => f.name))) + '</div>\n';
     if (r.record && /^[a-z0-9]+$/.test(r.record)) {
       body += '<p>Record <a href="../api/records/' + r.record + '"><code>' + r.record + '</code></a>: what the installers install, as the server stored it. ' +
         'Its current install plan, signed by the server: <a href="../api/plan/' + r.record + '">plan</a>.</p>\n';

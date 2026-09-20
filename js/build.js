@@ -5,6 +5,7 @@
 import { apiRequest, absUrl, ApiError, apiBase, apiDefault, apiLocal, errorText, mountApiFooter } from './api.js';
 import { ARCH_LABEL, MAC_ARCH, FAMILY_ARCHES, archCoverage } from './form-job.js';
 import { mountOverlayConsent } from './overlay-consent.js';
+import { mirrorGapBuildWarning } from './mirror-words.js';
 
 mountApiFooter();
 mountOverlayConsent();
@@ -224,12 +225,28 @@ function paintCatalog(job) {
   } else b.hidden = true;
 }
 
+// Downloads our mirror has no copy of (design.md 1.3, js/mirror-words.js).
+// The publisher is the one who can still choose another version, so they
+// are told here as well as on the installer's review screen, in the same
+// words. Nothing is said when the mirror has everything, which is the
+// normal case.
+function paintMirror(job) {
+  const b = $('job-mirror');
+  if (!b) return;
+  const u = job.result && Array.isArray(job.result.unmirrored) ? job.result.unmirrored : [];
+  if (u.length) {
+    b.textContent = mirrorGapBuildWarning(u.map((f) => f.name));
+    b.hidden = false;
+  } else b.hidden = true;
+}
+
 function paint(job) {
   $('job-view').hidden = false;
   $('job-error').hidden = true;
   paintBackend();
   paintWhere(job);
   paintCatalog(job);
+  paintMirror(job);
   const title = job.ticket != null ? 'Build #' + job.ticket : 'Build';
   $('job-title').textContent = title;
   document.title = title + ' · TiddlyInstall';

@@ -82,6 +82,9 @@ async function build(body, e, progress) {
     files: out.files.map((f) => ({ platform: f.platform, name: f.name, size: f.size, sha256: f.sha256, signed: '', offline: false,
       url: URL.createObjectURL(new Blob([f.data], { type: 'application/octet-stream' })) })),
   };
+  // Downloads our mirror has no copy of, as the build server reports them
+  // (backend/lib/jobs.js): the build page warns the same way either way.
+  if (out.unmirrored && out.unmirrored.length) res.unmirrored = out.unmirrored;
   // Made with a changed catalogue: the build page says so.
   if (e.overlay.applied) res.catalog = { changed: true, changes: e.overlay.applied, id: e.overlay.id };
   return res;

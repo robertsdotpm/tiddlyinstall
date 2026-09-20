@@ -20,6 +20,7 @@
 
 import { inflate, deflate } from './zlib.js';
 import { digest } from './cryptox.js';
+import { mirrorGapNote } from './mirror-words.js';
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();
@@ -1037,6 +1038,38 @@ const toolsOf = (app) => new Set(list(app && app.tools).map(str));
 // The same, for a memo key.
 const toolsKey = (tools) => [...tools].sort(cmpStr).join(' ');
 
+// Whether the app installs anything at all: a package, or a project whose
+// install command the record or an install rule gives. The same test `best`
+// makes, and what `for: "install"` in a policy rule asks about.
+const appInstalls = (app) => app.package !== '' || app.install !== '';
+
+// A runtime's `unsupported` rules (backend/policy.json): a combination the
+// catalogue has a working build for and that still cannot do what is asked
+// of it, because something outside this project decayed -- CRAN retiring
+// the Windows package index for every R before 4.0, so `install.packages`
+// warns, installs nothing and exits 0. The first rule matching this
+// target's OS family, the release the block installs and this app gives
+// its `reason`, which becomes the block's `fail` line; "" means nothing
+// matched. Scoped exactly as `needs` is (os, versions, variants, for),
+// because it answers the same kind of question, and `for: "install"` is
+// what keeps a rule about installing packages away from an app that
+// installs none. The reason takes the same version tokens a recipe does,
+// so one rule over a range can still name the version in front of the user.
+function unsupportedReason(pol, b, app) {
+  if (!pol || !b.p) return '';
+  const install = appInstalls(app), tools = toolsOf(app);
+  for (const u of list(pol.unsupported)) {
+    if (!isMap(u) || !forApp(u, install, tools)) continue;
+    if (str(u.os) !== '' && u.os !== b.family) continue;
+    if (str(u.arch) !== '' && u.arch !== b.p.rel.arch) continue;
+    if (list(u.variants).length > 0 && indexOf(u.variants, variantStr(b.p.rel)) < 0) continue;
+    if (str(u.versions) !== '' && !matches(b.p.rel.v, u.versions)) continue;
+    if (str(u.reason) === '') continue;
+    return versionTokens(b.p.rel.v)(str(u.reason));
+  }
+  return '';
+}
+
 // Catalog.prereqsFor
 function prereqsFor(cat, rt, e, o, install, tools) {
   return memo(cat, `prereqs ${e.n} ${osKey(o)} ${!!install} ${toolsKey(tools)}`,
@@ -1405,7 +1438,7 @@ function best(cat, rt, cands, o, app) {
     if (!matches(e.v, spec)) continue;
     const ro = runsOn(cat, rt, e, o);
     if (!ro.ok) continue;
-    const install = app.package !== '' || app.install !== '';
+    const install = appInstalls(app);
     const { recipe, extras } = recipeFor(cat, rt, e, install, o, tools);
     if (!recipe || sha(cat, e) === '') continue;
     // The extra files a recipe needs are downloads too (the parts of an
@@ -1697,6 +1730,15 @@ function writePlan(cat, app, blocks) {
       }
       continue;
     }
+    // A build that installs and runs, and still cannot do the job asked
+    // of it, because something it depends on outside this project is
+    // gone (policy `unsupported`). Refusing here, with the reason and
+    // what to do instead, beats installing and leaving a broken app.
+    const no = unsupportedReason(pol, b, app);
+    if (no !== '') {
+      w.add('fail', no);
+      continue;
+    }
     writeTarget(cat, w, app, pol, b);
   }
   return w.toString();
@@ -1736,6 +1778,31 @@ const archOf = (e) => str(e && e.arch);
 // w.add with a trailing field only when there is one to write.
 const addOpt = (w, key, vals, last) => (str(last) !== '' ? w.add(key, ...vals, last) : w.add(key, ...vals));
 
+/* ---------- downloads our mirror has no copy of (design.md 1.3) ---------- */
+
+// The note for one target block, or '' when our mirror has every file it
+// downloads. Everything the block downloads counts -- the build itself,
+// the release's own parts and policy extra files, companion runtimes and
+// prerequisites -- because any one of them missing is enough to stop the
+// install on a machine that cannot reach the vendor.
+function mirrorGap(cat, b, prereqs) {
+  if (str(own(cat.policy, 'mirror_base')) === '') return '';
+  const names = [], seen = new Set();
+  const gap = (name, local) => {
+    if (name === '' || seen.has(name) || mirrorURL(cat, str(local)) !== '') return;
+    seen.add(name);
+    names.push(name);
+  };
+  gap(fileName(b.p.rel), b.p.rel.local);
+  for (const x of b.p.extras) gap(x.name, extraLocal(cat, x));
+  for (const n of b.p.needs) gap(fileName(n.p.rel), n.p.rel.local);
+  for (const u of prereqs) {
+    const f = isMap(u.p.file) ? u.p.file : null;
+    if (f) gap(str(f.name), str(f.local));
+  }
+  return names.length === 0 ? '' : mirrorGapNote(names);
+}
+
 // Catalog.writeTarget
 function writeTarget(cat, w, app, pol, b) {
   const e = b.p.rel, r = b.p.recipe;
@@ -1749,7 +1816,10 @@ function writeTarget(cat, w, app, pol, b) {
   };
   addOpt(w, 'runtime', [app.runtime, e.version], archOf(e));
   if (!b.p.known) w.add('note', 'Not confirmed to run on every OS version in this range; chosen by the catalogue\'s default floor.');
-  writeNeeds(cat, w, targetPrereqs(cat, app, b));
+  const prereqs = targetPrereqs(cat, app, b);
+  const gap = mirrorGap(cat, b, prereqs);
+  if (gap !== '') w.add('note', gap);
+  writeNeeds(cat, w, prereqs);
   addOpt(w, 'file', [app.runtime, fileName(e), e.sha256, String(e.size)], archOf(e));
   const seen = new Set();
   const addURL = (u) => { if (u !== '' && !seen.has(u)) { seen.add(u); w.add('url', u); } };

@@ -496,10 +496,15 @@ export class Builder {
   async run(request, progress) {
     const r = JSON.parse(JSON.stringify(request));
     const out = await runJob(r, this.env(), progress);
-    return {
+    const res = {
       record: out.hash,
       files: out.files.map((f) => ({ platform: f.platform, name: f.name, url: '/dl/' + out.hash + '/' + f.name,
         size: f.size, sha256: f.sha256, signed: f.signed, offline: f.offline })),
     };
+    // Downloads our mirror has no copy of, for the build page to warn
+    // about (design.md 1.3). Left off entirely when there are none, so a
+    // job that is fine looks exactly as it did.
+    if (out.unmirrored && out.unmirrored.length) res.unmirrored = out.unmirrored;
+    return res;
   }
 }

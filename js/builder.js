@@ -47,7 +47,7 @@
 //   env.now()          the record's `created` time, and the plan's `signed`
 //                      (default: now)
 import { toBytes, sha256Hex, recordHash, readInstaller, writeInstaller, tarWrite, installerExt, zipWrite, peInfo, zipRead, zipEntryData, zipUnixMode, zipIsDir, zipIsSymlink } from './ibfile.js';
-import { resolve, loadRuntimes, hasRuntime, validPackage, packagePolicyFor, packageProject, packageModule, pickBin, jsonField, goQuote, replacer, setRevoked } from './resolve.js';
+import { resolve, resolveFiles, loadRuntimes, hasRuntime, validPackage, packagePolicyFor, packageProject, packageModule, pickBin, jsonField, goQuote, replacer, setRevoked } from './resolve.js';
 import { rasterSource, buildIco, buildIcns, setExeIcon, setMacIcon, checkIconPng } from './icon.js';
 import { inflate, deflate } from './zlib.js';
 
@@ -558,9 +558,35 @@ function dedupPack(files) {
 
 const MB = (n) => Math.floor(n / (1024 * 1024));
 
+// What these installers will download that our mirror has no copy of
+// (design.md 1.3; the words are js/resolve.js MIRROR_GAP_WHY). A file the
+// local store has never seen gets no mirror URL, so its plan names the
+// vendor alone -- which is exactly what an old machine often cannot
+// reach, the Ruby 3.2 on Windows 7 case in docs/test-results.md. The
+// installer's review screen says the same thing from the plan's `note`;
+// this is the build-time half, and it matters more, because the publisher
+// is the one who can still pick another version. Resolved per platform so
+// the page can say which one is short.
+function unmirrored(cat, app, platforms) {
+  if (!cat || !cat.policy || typeof cat.policy.mirror_base !== 'string' || cat.policy.mirror_base === '') return [];
+  const out = [], seen = new Set();
+  for (const plat of platforms) {
+    let files;
+    try { ({ files } = resolveFiles(cat, Object.assign({}, app, { platforms: [plat] }))); } catch (e) { continue; }
+    for (const f of files) {
+      const key = f.sha256 || f.name;
+      if (f.local !== '' || seen.has(key)) continue;
+      seen.add(key);
+      out.push({ name: f.name, sha256: f.sha256, size: f.size, platform: plat });
+    }
+  }
+  return out;
+}
+
 // runJob builds a request (validate()d here too). Returns {record, hash,
-// app, stem, src, files: [{platform, name, data?, size, sha256, signed,
-// offline}]}: without env.save each file's bytes are in `data`.
+// app, stem, src, unmirrored, files: [{platform, name, data?, size,
+// sha256, signed, offline}]}: without env.save each file's bytes are in
+// `data`.
 export async function runJob(r, env, progress = () => {}) {
   const cat = env.catalog;
   validate(r, env);
@@ -632,7 +658,7 @@ export async function runJob(r, env, progress = () => {}) {
   let stem = 'install_' + r.runtime + '_' + project.toLowerCase().replace(safeName, '-');
   if (r.mode === 'A') stem += '_' + hash;
   const job = { r, env, record, hash, app, stem, src, png, iconSha, progress, iconSrc: null };
-  const out = { record, hash, app, stem, src, png, iconSha, files: [] };
+  const out = { record, hash, app, stem, src, png, iconSha, files: [], unmirrored: unmirrored(cat, app, r.platforms) };
   try {
     if (png && r.mode !== 'A') job.iconSrc = await rasterSource(png);
     for (const plat of r.platforms) {
