@@ -6,14 +6,13 @@
  "recipes": [
   {
    "prerequisites": [
-    "A system C compiler: gcc (default, `cc = gcc` in config/nim.cfg) or clang via --cc:clang, plus libc headers (build-essential / gcc + glibc-devel). Not bundled.",
     "glibc 2.3+ for bin/nim, 2.7+ for bin/nimble (dynamically linked)",
     "git on PATH, only for nimble installs of remote packages"
    ],
    "package_manager": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>",
    "side_effects": [],
    "uninstall": "delete {runtime_dir}",
-   "notes": "Tested as a normal user: unpacked twice side by side under paths with spaces ('app one/rt/0.20.2', 'app two/rt/0.20.2'), compiled and ran hello world with system gcc 13.3 from both; nimble 0.10.2 installed a local package (with a `requires \"nim >= 0.19.0\"` line) into \"{runtime_dir}/nimble pkgs\" via --nimbleDir and the compiler found it via --nimblePath. Nothing was written to HOME. The archive also carries build.sh/c_code (not needed). Nim finds lib/ and config/ relative to bin/nim, so moving the folder works. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time.",
+   "notes": "Tested as a normal user: unpacked twice side by side under paths with spaces ('app one/rt/0.20.2', 'app two/rt/0.20.2'), compiled and ran hello world with system gcc 13.3 from both; nimble 0.10.2 installed a local package (with a `requires \"nim >= 0.19.0\"` line) into \"{runtime_dir}/nimble pkgs\" via --nimbleDir and the compiler found it via --nimblePath. Nothing was written to HOME. The archive also carries build.sh/c_code (not needed). Nim finds lib/ and config/ relative to bin/nim, so moving the folder works. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
    "match": {
     "os": "linux",
     "kind": "archive",
@@ -27,6 +26,81 @@
      "unpack": "tar.xz",
      "to": "{runtime_dir}",
      "strip_components": 1
+    },
+    {
+     "mkdir": "{runtime_dir}/ibcc"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#!/bin/sh"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# zig as this app's C toolchain, so an unattended install needs no root"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# and no system compiler (design.md 11.0 item 15). The name it is called"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# by picks the mode, and a Rust target triple is rewritten to zig's"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# (x86_64-unknown-linux-gnu -> x86_64-linux-gnu), which zig's target"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# parser rejects as written."
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "n=$#"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "i=0"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "while [ $i -lt $n ]; do"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "a=$1"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "shift"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $a in --target=*) a=--target=$(printf %s \"${a#--target=}\" | sed 's/-unknown-/-/') ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "set -- \"$@\" \"$a\""
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "i=$((i + 1))"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "done"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "exec \"{dir:zig}\"/zig $m \"$@\""
+    },
+    {
+     "run": "cd \"{runtime_dir}/ibcc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
+     "shell": "sh"
     }
    ],
    "executable": "bin/nim",
@@ -51,22 +125,26 @@
    "project_install": {
     "command": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{data_dir}/nimble\" -y build",
     "env": {
-     "NIMBLE_DIR": "{data_dir}/nimble"
+     "NIMBLE_DIR": "{data_dir}/nimble",
+     "ZIG_GLOBAL_CACHE_DIR": "{data_dir}/zig-cache",
+     "ZIG_LOCAL_CACHE_DIR": "{data_dir}/zig-cache"
     },
     "cwd": "{app_dir}",
-    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround."
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround.",
+    "path_prepend": [
+     "{runtime_dir}/ibcc"
+    ]
    }
   },
   {
    "prerequisites": [
-    "A system C compiler producing 32-bit x86 code (gcc/clang with 32-bit libc headers). Not bundled.",
     "glibc 2.3+ (bin/nim), 2.7+ (bin/nimble), i386",
     "git on PATH, only for nimble remote packages"
    ],
    "package_manager": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>",
    "side_effects": [],
    "uninstall": "delete {runtime_dir}",
-   "notes": "Same layout as the amd64 recipe. Only `bin/nim --version` was run (on an amd64 host); compiling was not tested because the host has no 32-bit libc development files. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time.",
+   "notes": "Same layout as the amd64 recipe. Only `bin/nim --version` was run (on an amd64 host); compiling was not tested because the host has no 32-bit libc development files. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
    "match": {
     "os": "linux",
     "kind": "archive",
@@ -80,6 +158,81 @@
      "unpack": "tar.xz",
      "to": "{runtime_dir}",
      "strip_components": 1
+    },
+    {
+     "mkdir": "{runtime_dir}/ibcc"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#!/bin/sh"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# zig as this app's C toolchain, so an unattended install needs no root"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# and no system compiler (design.md 11.0 item 15). The name it is called"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# by picks the mode, and a Rust target triple is rewritten to zig's"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# (x86_64-unknown-linux-gnu -> x86_64-linux-gnu), which zig's target"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# parser rejects as written."
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "n=$#"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "i=0"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "while [ $i -lt $n ]; do"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "a=$1"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "shift"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $a in --target=*) a=--target=$(printf %s \"${a#--target=}\" | sed 's/-unknown-/-/') ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "set -- \"$@\" \"$a\""
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "i=$((i + 1))"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "done"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "exec \"{dir:zig}\"/zig $m \"$@\""
+    },
+    {
+     "run": "cd \"{runtime_dir}/ibcc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
+     "shell": "sh"
     }
    ],
    "executable": "bin/nim",
@@ -104,21 +257,25 @@
    "project_install": {
     "command": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{data_dir}/nimble\" -y build",
     "env": {
-     "NIMBLE_DIR": "{data_dir}/nimble"
+     "NIMBLE_DIR": "{data_dir}/nimble",
+     "ZIG_GLOBAL_CACHE_DIR": "{data_dir}/zig-cache",
+     "ZIG_LOCAL_CACHE_DIR": "{data_dir}/zig-cache"
     },
     "cwd": "{app_dir}",
-    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround."
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround.",
+    "path_prepend": [
+     "{runtime_dir}/ibcc"
+    ]
    }
   },
   {
    "prerequisites": [
-    "A system C compiler: gcc (default) or clang via --cc:clang, plus libc headers. Not bundled.",
     "git on PATH, only for nimble installs of remote packages"
    ],
    "package_manager": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>",
    "side_effects": [],
    "uninstall": "delete {runtime_dir}",
-   "notes": "Tested as a normal user: unpacked twice side by side under paths with spaces, compiled and ran hello world with system gcc 13.3 from both copies; installed a local package and jsony (from GitHub via git) into {runtime_dir}/nimble and compiled a program importing both. Nothing was written to HOME when --nimbleDir, --nimcache and HOME/XDG_* pointed elsewhere. bin/nim and bin/nimble (0.13.1) are static binaries, so the only host dependency is the C compiler. nimble 0.13.1 (bundled with 1.6.20) breaks when {runtime_dir} contains a space: it runs `<path to nim> --version` unquoted when resolving a package's `requires \"nim >= x\"`, failing with \"'/path/app' not in PATH\" (tested; packages without a nim requirement install fine). Workaround, tested: during install create a space-free symlink in {tmp} to {runtime_dir} and run nimble through it, keeping --nimbleDir on the real path: `ln -s \"{runtime_dir}\" \"{tmp}/nimrt\" && \"{tmp}/nimrt/bin/nimble\" --nim:\"{tmp}/nimrt/bin/nim\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>`; nothing referencing the symlink path is stored in the nimble folder (checked), so it can be deleted afterwards. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time.",
+   "notes": "Tested as a normal user: unpacked twice side by side under paths with spaces, compiled and ran hello world with system gcc 13.3 from both copies; installed a local package and jsony (from GitHub via git) into {runtime_dir}/nimble and compiled a program importing both. Nothing was written to HOME when --nimbleDir, --nimcache and HOME/XDG_* pointed elsewhere. bin/nim and bin/nimble (0.13.1) are static binaries, so the only host dependency is the C compiler. nimble 0.13.1 (bundled with 1.6.20) breaks when {runtime_dir} contains a space: it runs `<path to nim> --version` unquoted when resolving a package's `requires \"nim >= x\"`, failing with \"'/path/app' not in PATH\" (tested; packages without a nim requirement install fine). Workaround, tested: during install create a space-free symlink in {tmp} to {runtime_dir} and run nimble through it, keeping --nimbleDir on the real path: `ln -s \"{runtime_dir}\" \"{tmp}/nimrt\" && \"{tmp}/nimrt/bin/nimble\" --nim:\"{tmp}/nimrt/bin/nim\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>`; nothing referencing the symlink path is stored in the nimble folder (checked), so it can be deleted afterwards. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
    "match": {
     "os": "linux",
     "kind": "archive",
@@ -132,6 +289,81 @@
      "unpack": "tar.xz",
      "to": "{runtime_dir}",
      "strip_components": 1
+    },
+    {
+     "mkdir": "{runtime_dir}/ibcc"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#!/bin/sh"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# zig as this app's C toolchain, so an unattended install needs no root"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# and no system compiler (design.md 11.0 item 15). The name it is called"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# by picks the mode, and a Rust target triple is rewritten to zig's"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# (x86_64-unknown-linux-gnu -> x86_64-linux-gnu), which zig's target"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# parser rejects as written."
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "n=$#"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "i=0"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "while [ $i -lt $n ]; do"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "a=$1"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "shift"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $a in --target=*) a=--target=$(printf %s \"${a#--target=}\" | sed 's/-unknown-/-/') ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "set -- \"$@\" \"$a\""
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "i=$((i + 1))"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "done"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "exec \"{dir:zig}\"/zig $m \"$@\""
+    },
+    {
+     "run": "cd \"{runtime_dir}/ibcc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
+     "shell": "sh"
     }
    ],
    "executable": "bin/nim",
@@ -156,21 +388,25 @@
    "project_install": {
     "command": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{data_dir}/nimble\" -y build",
     "env": {
-     "NIMBLE_DIR": "{data_dir}/nimble"
+     "NIMBLE_DIR": "{data_dir}/nimble",
+     "ZIG_GLOBAL_CACHE_DIR": "{data_dir}/zig-cache",
+     "ZIG_LOCAL_CACHE_DIR": "{data_dir}/zig-cache"
     },
     "cwd": "{app_dir}",
-    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround."
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround.",
+    "path_prepend": [
+     "{runtime_dir}/ibcc"
+    ]
    }
   },
   {
    "prerequisites": [
-    "A system C compiler for the same architecture (gcc or clang) plus libc headers. Not bundled.",
     "git on PATH, only for nimble remote packages"
    ],
    "package_manager": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>",
    "side_effects": [],
    "uninstall": "delete {runtime_dir}",
-   "notes": "Covers the x86, arm64 and armv7 archives (arm64 1.6.20 and armv7 builds come from nim-lang/nightlies). Same layout and behaviour as the amd64 recipe, which was tested; here only the x86 `bin/nim --version` was run on an amd64 host, and the arm binaries were only inspected (static ELF). nimble 0.13.1 (bundled with 1.6.20) breaks when {runtime_dir} contains a space: it runs `<path to nim> --version` unquoted when resolving a package's `requires \"nim >= x\"`, failing with \"'/path/app' not in PATH\" (tested; packages without a nim requirement install fine). Workaround, tested: during install create a space-free symlink in {tmp} to {runtime_dir} and run nimble through it, keeping --nimbleDir on the real path: `ln -s \"{runtime_dir}\" \"{tmp}/nimrt\" && \"{tmp}/nimrt/bin/nimble\" --nim:\"{tmp}/nimrt/bin/nim\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>`; nothing referencing the symlink path is stored in the nimble folder (checked), so it can be deleted afterwards. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time.",
+   "notes": "Covers the x86, arm64 and armv7 archives (arm64 1.6.20 and armv7 builds come from nim-lang/nightlies). Same layout and behaviour as the amd64 recipe, which was tested; here only the x86 `bin/nim --version` was run on an amd64 host, and the arm binaries were only inspected (static ELF). nimble 0.13.1 (bundled with 1.6.20) breaks when {runtime_dir} contains a space: it runs `<path to nim> --version` unquoted when resolving a package's `requires \"nim >= x\"`, failing with \"'/path/app' not in PATH\" (tested; packages without a nim requirement install fine). Workaround, tested: during install create a space-free symlink in {tmp} to {runtime_dir} and run nimble through it, keeping --nimbleDir on the real path: `ln -s \"{runtime_dir}\" \"{tmp}/nimrt\" && \"{tmp}/nimrt/bin/nimble\" --nim:\"{tmp}/nimrt/bin/nim\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>`; nothing referencing the symlink path is stored in the nimble folder (checked), so it can be deleted afterwards. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
    "match": {
     "os": "linux",
     "kind": "archive",
@@ -184,6 +420,81 @@
      "unpack": "tar.xz",
      "to": "{runtime_dir}",
      "strip_components": 1
+    },
+    {
+     "mkdir": "{runtime_dir}/ibcc"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#!/bin/sh"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# zig as this app's C toolchain, so an unattended install needs no root"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# and no system compiler (design.md 11.0 item 15). The name it is called"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# by picks the mode, and a Rust target triple is rewritten to zig's"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# (x86_64-unknown-linux-gnu -> x86_64-linux-gnu), which zig's target"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# parser rejects as written."
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "n=$#"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "i=0"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "while [ $i -lt $n ]; do"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "a=$1"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "shift"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $a in --target=*) a=--target=$(printf %s \"${a#--target=}\" | sed 's/-unknown-/-/') ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "set -- \"$@\" \"$a\""
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "i=$((i + 1))"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "done"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "exec \"{dir:zig}\"/zig $m \"$@\""
+    },
+    {
+     "run": "cd \"{runtime_dir}/ibcc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
+     "shell": "sh"
     }
    ],
    "executable": "bin/nim",
@@ -208,21 +519,25 @@
    "project_install": {
     "command": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{data_dir}/nimble\" -y build",
     "env": {
-     "NIMBLE_DIR": "{data_dir}/nimble"
+     "NIMBLE_DIR": "{data_dir}/nimble",
+     "ZIG_GLOBAL_CACHE_DIR": "{data_dir}/zig-cache",
+     "ZIG_LOCAL_CACHE_DIR": "{data_dir}/zig-cache"
     },
     "cwd": "{app_dir}",
-    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround."
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround.",
+    "path_prepend": [
+     "{runtime_dir}/ibcc"
+    ]
    }
   },
   {
    "prerequisites": [
-    "A system C compiler: gcc (default) or clang via --cc:clang, plus libc headers. Not bundled.",
     "git on PATH, only for nimble installs of remote packages"
    ],
    "package_manager": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>",
    "side_effects": [],
    "uninstall": "delete {runtime_dir}",
-   "notes": "Tested as a normal user: unpacked twice side by side under paths with spaces, compiled and ran hello world with system gcc 13.3 from both copies and with clang from a copied (relocated) folder; installed jsony and a local package into {runtime_dir}/nimble and compiled a program importing both. Nothing was written to HOME when --nimbleDir, --nimcache and HOME/XDG_* pointed elsewhere. bin/nim and bin/nimble (0.24.1) are static binaries, so the only host dependency is the C compiler. nimble 0.24.1 (bundled with 2.2.12) does not work at all when {runtime_dir} contains a space: it runs `<path to nim> --version` unquoted and stops with 'Unable to get version from `nim` binary' (tested; nimblepkg/options.nim getNimVersionFromBin). Workaround, tested: run it through a space-free symlink in {tmp}: `ln -s \"{runtime_dir}\" \"{tmp}/nimrt\" && \"{tmp}/nimrt/bin/nimble\" --nim:\"{tmp}/nimrt/bin/nim\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>` (jsony and a local package installed; the symlink path is not recorded). Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time.",
+   "notes": "Tested as a normal user: unpacked twice side by side under paths with spaces, compiled and ran hello world with system gcc 13.3 from both copies and with clang from a copied (relocated) folder; installed jsony and a local package into {runtime_dir}/nimble and compiled a program importing both. Nothing was written to HOME when --nimbleDir, --nimcache and HOME/XDG_* pointed elsewhere. bin/nim and bin/nimble (0.24.1) are static binaries, so the only host dependency is the C compiler. nimble 0.24.1 (bundled with 2.2.12) does not work at all when {runtime_dir} contains a space: it runs `<path to nim> --version` unquoted and stops with 'Unable to get version from `nim` binary' (tested; nimblepkg/options.nim getNimVersionFromBin). Workaround, tested: run it through a space-free symlink in {tmp}: `ln -s \"{runtime_dir}\" \"{tmp}/nimrt\" && \"{tmp}/nimrt/bin/nimble\" --nim:\"{tmp}/nimrt/bin/nim\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>` (jsony and a local package installed; the symlink path is not recorded). Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
    "match": {
     "os": "linux",
     "kind": "archive",
@@ -236,6 +551,81 @@
      "unpack": "tar.xz",
      "to": "{runtime_dir}",
      "strip_components": 1
+    },
+    {
+     "mkdir": "{runtime_dir}/ibcc"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#!/bin/sh"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# zig as this app's C toolchain, so an unattended install needs no root"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# and no system compiler (design.md 11.0 item 15). The name it is called"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# by picks the mode, and a Rust target triple is rewritten to zig's"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# (x86_64-unknown-linux-gnu -> x86_64-linux-gnu), which zig's target"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# parser rejects as written."
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "n=$#"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "i=0"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "while [ $i -lt $n ]; do"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "a=$1"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "shift"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $a in --target=*) a=--target=$(printf %s \"${a#--target=}\" | sed 's/-unknown-/-/') ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "set -- \"$@\" \"$a\""
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "i=$((i + 1))"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "done"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "exec \"{dir:zig}\"/zig $m \"$@\""
+    },
+    {
+     "run": "cd \"{runtime_dir}/ibcc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
+     "shell": "sh"
     }
    ],
    "executable": "bin/nim",
@@ -260,21 +650,25 @@
    "project_install": {
     "command": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{data_dir}/nimble\" -y build",
     "env": {
-     "NIMBLE_DIR": "{data_dir}/nimble"
+     "NIMBLE_DIR": "{data_dir}/nimble",
+     "ZIG_GLOBAL_CACHE_DIR": "{data_dir}/zig-cache",
+     "ZIG_LOCAL_CACHE_DIR": "{data_dir}/zig-cache"
     },
     "cwd": "{app_dir}",
-    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround."
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround.",
+    "path_prepend": [
+     "{runtime_dir}/ibcc"
+    ]
    }
   },
   {
    "prerequisites": [
-    "A system C compiler for the same architecture (gcc or clang) plus libc headers. Not bundled.",
     "git on PATH, only for nimble remote packages"
    ],
    "package_manager": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>",
    "side_effects": [],
    "uninstall": "delete {runtime_dir}",
-   "notes": "Covers the x86, arm64 and armv7 archives (arm64 1.6.20 and armv7 builds come from nim-lang/nightlies). Same layout and behaviour as the amd64 recipe, which was tested; here only the x86 `bin/nim --version` was run on an amd64 host, and the arm binaries were only inspected (static ELF). nimble 0.24.1 (bundled with 2.2.12) does not work at all when {runtime_dir} contains a space: it runs `<path to nim> --version` unquoted and stops with 'Unable to get version from `nim` binary' (tested; nimblepkg/options.nim getNimVersionFromBin). Workaround, tested: run it through a space-free symlink in {tmp}: `ln -s \"{runtime_dir}\" \"{tmp}/nimrt\" && \"{tmp}/nimrt/bin/nimble\" --nim:\"{tmp}/nimrt/bin/nim\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>` (jsony and a local package installed; the symlink path is not recorded). Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time.",
+   "notes": "Covers the x86, arm64 and armv7 archives (arm64 1.6.20 and armv7 builds come from nim-lang/nightlies). Same layout and behaviour as the amd64 recipe, which was tested; here only the x86 `bin/nim --version` was run on an amd64 host, and the arm binaries were only inspected (static ELF). nimble 0.24.1 (bundled with 2.2.12) does not work at all when {runtime_dir} contains a space: it runs `<path to nim> --version` unquoted and stops with 'Unable to get version from `nim` binary' (tested; nimblepkg/options.nim getNimVersionFromBin). Workaround, tested: run it through a space-free symlink in {tmp}: `ln -s \"{runtime_dir}\" \"{tmp}/nimrt\" && \"{tmp}/nimrt/bin/nimble\" --nim:\"{tmp}/nimrt/bin/nim\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>` (jsony and a local package installed; the symlink path is not recorded). Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
    "match": {
     "os": "linux",
     "kind": "archive",
@@ -288,6 +682,81 @@
      "unpack": "tar.xz",
      "to": "{runtime_dir}",
      "strip_components": 1
+    },
+    {
+     "mkdir": "{runtime_dir}/ibcc"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#!/bin/sh"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# zig as this app's C toolchain, so an unattended install needs no root"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# and no system compiler (design.md 11.0 item 15). The name it is called"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# by picks the mode, and a Rust target triple is rewritten to zig's"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# (x86_64-unknown-linux-gnu -> x86_64-linux-gnu), which zig's target"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# parser rejects as written."
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "n=$#"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "i=0"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "while [ $i -lt $n ]; do"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "a=$1"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "shift"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $a in --target=*) a=--target=$(printf %s \"${a#--target=}\" | sed 's/-unknown-/-/') ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "set -- \"$@\" \"$a\""
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "i=$((i + 1))"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "done"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "exec \"{dir:zig}\"/zig $m \"$@\""
+    },
+    {
+     "run": "cd \"{runtime_dir}/ibcc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
+     "shell": "sh"
     }
    ],
    "executable": "bin/nim",
@@ -312,10 +781,15 @@
    "project_install": {
     "command": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{data_dir}/nimble\" -y build",
     "env": {
-     "NIMBLE_DIR": "{data_dir}/nimble"
+     "NIMBLE_DIR": "{data_dir}/nimble",
+     "ZIG_GLOBAL_CACHE_DIR": "{data_dir}/zig-cache",
+     "ZIG_LOCAL_CACHE_DIR": "{data_dir}/zig-cache"
     },
     "cwd": "{app_dir}",
-    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround."
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround.",
+    "path_prepend": [
+     "{runtime_dir}/ibcc"
+    ]
    }
   },
   {

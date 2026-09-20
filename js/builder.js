@@ -127,6 +127,21 @@ export function validate(r, env) {
       if (typeof id !== 'string' || !Object.prototype.hasOwnProperty.call(known, id)) throw bad('unknown prerequisite ' + goQuote(String(id)));
     }
   }
+  // Tool switches the publisher ticks (record `tools`, docs/format.md):
+  // ids from the policy's tools table, each only for the runtimes it lists.
+  if (r.tools != null) {
+    const known = (env.catalog && env.catalog.policy && env.catalog.policy.tools) || {};
+    if (typeof r.tools !== 'object' || Array.isArray(r.tools)) throw bad('tools must be a set of switches');
+    for (const id of Object.keys(r.tools)) {
+      const t = Object.prototype.hasOwnProperty.call(known, id) ? known[id] : null;
+      if (!t) throw bad('unknown tool switch ' + goQuote(String(id)));
+      if (typeof r.tools[id] !== 'boolean') throw bad('tool switch ' + goQuote(String(id)) + ' must be true or false');
+      const rts = Array.isArray(t.runtimes) ? t.runtimes : [];
+      if (r.tools[id] && rts.length && !rts.includes(r.runtime)) {
+        throw bad('the ' + goQuote(String(id)) + ' switch is only for ' + rts.join(', ') + ' apps');
+      }
+    }
+  }
   if (r.rootname && !projectRe.test(r.rootname)) throw bad('bad install folder name');
   switch (src.kind) {
     case 'inline': {
@@ -480,6 +495,7 @@ function writeRecord(r, fields, backend, now) {
   add('launch', fields.launch);
   if (fields.install) add('install', fields.install);
   if (r.prerequisites && r.prerequisites.length) add('prerequisites', r.prerequisites.join(' '));
+  if (fields.tools.length) add('tools', fields.tools.join(' '));
   add('console', r.console === false ? '0' : '1');
   add('menu', r.menu === false ? '0' : '1');
   add('desktop', r.desktop ? '1' : '0');
@@ -552,8 +568,12 @@ export async function runJob(r, env, progress = () => {}) {
 
   progress('Writing the record');
   const iconSha = png ? await sha256Hex(png) : '';
+  // The tool switches that are on, in the order the policy lists them, so
+  // the same settings always give the same record bytes.
+  const tools = Object.keys((env.catalog && env.catalog.policy && env.catalog.policy.tools) || {})
+    .filter((id) => r.tools && r.tools[id] === true);
   const name = r.name || project;
-  const record = writeRecord(r, { name, project, src, pkg, launch, install, iconSha }, env.backend,
+  const record = writeRecord(r, { name, project, src, pkg, launch, install, iconSha, tools }, env.backend,
     env.now ? env.now() : new Date());
   const hash = await recordHash(record);
   if (env.storeRecord) await env.storeRecord(hash, record);
@@ -564,7 +584,7 @@ export async function runJob(r, env, progress = () => {}) {
     desktop: !!r.desktop, root: r.root || 'user', rootName: r.rootname || 'ib', platforms: [],
     source: src ? { name: src.sha256 + '.tar.gz', sha256: src.sha256, size: src.size, format: 'tar.gz', strip: src.strip, urls: src.urls || [] } : null,
     package: pkg ? pkg.name : '', packageVersion: pkg ? pkg.version : '',
-    prerequisites: r.prerequisites || [],
+    prerequisites: r.prerequisites || [], tools,
   };
   let stem = 'install_' + r.runtime + '_' + project.toLowerCase().replace(safeName, '-');
   if (r.mode === 'A') stem += '_' + hash;

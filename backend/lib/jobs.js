@@ -138,6 +138,7 @@ export class Builder {
       menu: g('menu') === '1', desktop: g('desktop') === '1', root: g('root'), rootName: g('rootname'),
       platforms: g('platforms').trim().split(/\s+/).filter(Boolean), source: null, package: '', packageVersion: '',
       prerequisites: g('prerequisites').trim().split(/\s+/).filter(Boolean),
+      tools: g('tools').trim().split(/\s+/).filter(Boolean),
     };
     for (const l of lines) {
       if (l.key !== 'source') continue;

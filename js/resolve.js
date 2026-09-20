@@ -1003,21 +1003,41 @@ function runsOnUncached(cat, rt, e, o) {
 
 const PKG_MGRS = ['apt-get', 'dnf', 'yum', 'zypper', 'apk', 'pacman'];
 
-// A policy rule marked "for": "install" (extra_files, needs, requires)
-// applies only to apps that install something: a package, or a project
-// whose files an install rule names (docs/format.md "Prerequisites").
-const forApp = (x, install) => !(isMap(x) && x.for === 'install') || install;
+// A policy rule's "for" (extra_files, needs, requires) says which apps it
+// applies to: `install` only to apps that install something (a package, or
+// a project whose files an install rule names), `tool:<id>` only to apps
+// whose record sets that tool switch (docs/format.md "Prerequisites" and
+// `tools`). Several conditions are separated by `|` and any one is enough:
+// Ruby's DevKit is `install|tool:ruby_devkit`. Anything else means
+// "always", as it always has.
+function forApp(x, install, tools) {
+  if (!isMap(x)) return true;
+  const f = str(x.for);
+  if (f === '') return true;
+  for (const part of f.split('|')) {
+    if (part === 'install') { if (install) return true; } else if (part.slice(0, 5) === 'tool:') {
+      if (tools && tools.has(part.slice(5))) return true;
+    } else return true;
+  }
+  return false;
+}
+
+// The record's tool switches as a Set, for forApp.
+const toolsOf = (app) => new Set(list(app && app.tools).map(str));
+// The same, for a memo key.
+const toolsKey = (tools) => [...tools].sort(cmpStr).join(' ');
 
 // Catalog.prereqsFor
-function prereqsFor(cat, rt, e, o, install) {
-  return memo(cat, `prereqs ${e.n} ${osKey(o)} ${!!install}`, () => prereqsForUncached(cat, rt, e, o, !!install));
+function prereqsFor(cat, rt, e, o, install, tools) {
+  return memo(cat, `prereqs ${e.n} ${osKey(o)} ${!!install} ${toolsKey(tools)}`,
+    () => prereqsForUncached(cat, rt, e, o, !!install, tools));
 }
-function prereqsForUncached(cat, rt, e, o, install) {
+function prereqsForUncached(cat, rt, e, o, install, tools) {
   const pol = runtimePolicy(cat, rt.id);
   if (!pol) return [];
   const out = [], seen = new Set();
   for (const n of list(pol.needs)) {
-    if (!isMap(n) || !forApp(n, install)) continue;
+    if (!isMap(n) || !forApp(n, install, tools)) continue;
     if (list(n.variants).length > 0 && indexOf(n.variants, variantStr(e)) < 0) continue;
     if (str(n.versions) !== '' && !matches(e.v, n.versions)) continue;
     const lo = n.min_os || 0, hi = n.max_os || 0;
@@ -1108,7 +1128,7 @@ const tmpRefRe = () => /\{tmp\}[\\/]+([A-Za-z0-9_.-]+)/g;
 const STEP_KEYS = new Set(['unpack', 'to', 'strip_components', 'run', 'shell', 'write', 'text', 'mkdir']);
 
 // Catalog.supported: {ok, extras, prefer}
-function supported(cat, rt, r, e, install, o) {
+function supported(cat, rt, r, e, install, o, tools) {
   const no = { ok: false, extras: [], prefer: false };
   const methods = list(own(cat.policy, 'method_order'));
   if (!methods.includes(r.method) || r.isolation === 'impossible') return no;
@@ -1131,8 +1151,8 @@ function supported(cat, rt, r, e, install, o) {
       if (!isMap(ef)) return no;
       const src = extraSource(ef, e.v, o);
       if (!src || str(src.sha256) === '' || list(src.urls).length === 0) return no;
-      if (ef.for === 'install') {
-        if (!install) return no;
+      if (str(ef.for) !== '') {
+        if (!forApp(ef, install, tools)) return no;
         prefer = true;
       }
       deferred = true;
@@ -1193,10 +1213,11 @@ function matchField(m, key, val) {
 }
 
 // Catalog.recipeFor: {recipe, extras}
-function recipeFor(cat, rt, e, install, o) {
-  return memo(cat, `recipe ${e.n} ${install} ${o ? o.int : ''}`, () => recipeForUncached(cat, rt, e, install, o));
+function recipeFor(cat, rt, e, install, o, tools) {
+  return memo(cat, `recipe ${e.n} ${install} ${o ? o.int : ''} ${toolsKey(tools)}`,
+    () => recipeForUncached(cat, rt, e, install, o, tools));
 }
-function recipeForUncached(cat, rt, e, install, o) {
+function recipeForUncached(cat, rt, e, install, o, tools) {
   let best = null, bestExtras = [], bestScore = -1;
   const methods = list(own(cat.policy, 'method_order'));
   for (const r of rt.recipes) {
@@ -1217,7 +1238,7 @@ function recipeForUncached(cat, rt, e, install, o) {
       if (!matches(e.v, vs)) continue;
       score++;
     }
-    const sup = supported(cat, rt, r, e, install, o);
+    const sup = supported(cat, rt, r, e, install, o, tools);
     if (!sup.ok) continue;
     score = score * 100 + (10 - methods.indexOf(r.method)) * 5;
     if (r.isolation === 'full') score += 2;
@@ -1305,16 +1326,17 @@ function candidatesUncached(cat, rt, family, machine) {
 // Catalog.best: {p, cond}
 function best(cat, rt, cands, o, app) {
   const spec = selectFor(cat, app, o.id);
+  const tools = toolsOf(app);
   let cond = null;
   for (const e of cands) {
     if (!matches(e.v, spec)) continue;
     const ro = runsOn(cat, rt, e, o);
     if (!ro.ok) continue;
     const install = app.package !== '' || app.install !== '';
-    const { recipe, extras } = recipeFor(cat, rt, e, install, o);
+    const { recipe, extras } = recipeFor(cat, rt, e, install, o, tools);
     if (!recipe || sha(cat, e) === '') continue;
-    const pk = { rel: e, recipe, minBuild: ro.minBuild, known: ro.known, needs: [], extras, prereqs: prereqsFor(cat, rt, e, o, install) };
-    if (!attachNeeds(cat, rt, pk, o, install)) continue;
+    const pk = { rel: e, recipe, minBuild: ro.minBuild, known: ro.known, needs: [], extras, prereqs: prereqsFor(cat, rt, e, o, install, tools) };
+    if (!attachNeeds(cat, rt, pk, o, install, tools)) continue;
     if (ro.minBuild > o.build && ro.minBuild > 0) {
       if (!cond) cond = pk;
       continue;
@@ -1325,20 +1347,21 @@ function best(cat, rt, cands, o, app) {
 }
 
 // Catalog.attachNeeds
-function attachNeeds(cat, rt, pk, o, install) {
-  const needs = memo(cat, `needs ${rt.id} ${pk.rel.arch} ${osKey(o)} ${!!install}`, () => companions(cat, rt, pk.rel.arch, o, !!install));
+function attachNeeds(cat, rt, pk, o, install, tools) {
+  const needs = memo(cat, `needs ${rt.id} ${pk.rel.arch} ${osKey(o)} ${!!install} ${toolsKey(tools)}`,
+    () => companions(cat, rt, pk.rel.arch, o, !!install, tools));
   if (!needs) return false;
   pk.needs.push(...needs);
   return true;
 }
 // A requires entry's optional "variants" limits the companion to those
 // builds (an ABI match: a UCRT runtime with a UCRT compiler).
-function companions(cat, rt, arch, o, install) {
+function companions(cat, rt, arch, o, install, tools) {
   const pol = runtimePolicy(cat, rt.id);
   const out = [];
   if (!pol) return out;
   for (const req of list(own(pol.requires, o.family))) {
-    if (!forApp(req, install)) continue;
+    if (!forApp(req, install, tools)) continue;
     const crt = runtimeOf(cat, str((req == null ? undefined : req.runtime)));
     if (!crt) return false;
     const vs = list(own(req, 'variants'));
@@ -1371,6 +1394,7 @@ function normApp(a) {
     source: s ? { name: str(s.name), sha256: str(s.sha256), size: s.size || 0, format: str(s.format), strip: s.strip || 0, urls: list(s.urls) } : null,
     package: str(a.package), packageVersion: str(a.packageVersion),
     prerequisites: list(a.prerequisites).map(str),
+    tools: list(a.tools).map(str),
   };
 }
 

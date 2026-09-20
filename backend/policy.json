@@ -496,6 +496,22 @@
    }
   }
  },
+ "tools": {
+  "cgo": {
+   "label": "This program uses cgo",
+   "runtimes": [
+    "go"
+   ],
+   "_comment": "design.md 11.0 item 27. Go builds pure-Go programs with no C compiler at all, so one is not installed unless the publisher says the program uses cgo (mattn/go-sqlite3 and friends). Then Windows gets WinLibs GCC from the catalogue as a companion runtime, and Linux and macOS ask for the system compiler as a prerequisite, as Rust and Nim do."
+  },
+  "ruby_devkit": {
+   "label": "Always install the DevKit (Windows)",
+   "runtimes": [
+    "ruby"
+   ],
+   "_comment": "design.md 11.0 item 13. The automatic rule stays: apps that install gems (a Gemfile, or a gem by name) get MSYS2 and the MINGW toolchain anyway. This switch forces it for an app that installs nothing at build time but shells out to `gem install` later, or builds C extensions itself. No effect before Windows 8.1, where MSYS2 does not run."
+  }
+ },
  "runtimes": {
   "python": {
    "label": "Python 3",
@@ -844,7 +860,7 @@
    "extra_files": {
     "msys2-base.sfx.exe": {
      "_comment": "RubyInstaller's DevKit: the MSYS2 base system, unpacked into the Ruby folder's msys64 (where RubyInstaller looks first), then `ridk install 3` adds the MINGW toolchain with pacman, as RubyInstaller-Devkit users do. Only for apps that install something (a Gemfile, or a gem by name): gems with C extensions compile then. Pinned to the 2026-06-11 base: SHA-256 as published by GitHub for the release asset, the same bytes from repo.msys2.org, PGP signature by the MSYS2 key E0AA0F031DBD80FF (Christoph Reiter) checked 2026-09-19. MSYS2 runs on Windows 8.1 and later (min_os 603): older Windows gets the plain RubyInstaller recipe, where pure-Ruby gems install and gems with C extensions don't.",
-     "for": "install",
+     "for": "install|tool:ruby_devkit",
      "sources": [
       {
        "versions": ">=2.4",
@@ -1183,6 +1199,32 @@
      }
     },
     "launch": "{app_dir}/{project}{exe}"
+   },
+   "needs": [
+    {
+     "prerequisites": [
+      "cc"
+     ],
+     "for": "tool:cgo",
+     "why": "This program uses cgo, so Go compiles and links C code with the system C compiler (cc) and the C library's development files, which minimal installs leave out."
+    },
+    {
+     "prerequisites": [
+      "xcode-clt"
+     ],
+     "for": "tool:cgo",
+     "why": "This program uses cgo, so Go compiles C code with clang and links against the macOS SDK from the Xcode Command Line Tools."
+    }
+   ],
+   "requires": {
+    "windows": [
+     {
+      "runtime": "cc",
+      "bin": "bin",
+      "for": "tool:cgo",
+      "_comment": "Windows never has a C compiler, so a cgo program cannot be built there at all without one; WinLibs GCC from the catalogue, the same companion Rust gets. No variant is pinned: the resolver takes the newest WinLibs build that runs on the user's Windows (the UCRT builds on 10 and later, MSVCRT on older), and Go's own runtime does not use the C runtime, so either matches."
+     }
+    ]
    }
   },
   "rust": {
@@ -1211,12 +1253,6 @@
    ],
    "compiled": true,
    "needs": [
-    {
-     "prerequisites": [
-      "cc"
-     ],
-     "why": "Rust links programs through the system C compiler (cc) and the C library's development files, which minimal installs leave out."
-    },
     {
      "prerequisites": [
       "xcode-clt"
@@ -1252,6 +1288,13 @@
        "winlibs-posix-msvcrt"
       ],
       "_comment": "Crates with C build steps (cc-rs: ring, libsqlite3-sys, zstd-sys…) need a C compiler: the -gnu toolchain only carries a linker. WinLibs GCC from the catalogue, the MSVCRT build like Rust's -gnu target (a UCRT gcc would mix C runtimes); with gcc on PATH rustc links with it too. Tested 2026-09-19: without it cc-rs fails with 'failed to find tool gcc.exe'."
+     }
+    ],
+    "linux": [
+     {
+      "runtime": "zig",
+      "bin": "",
+      "_comment": "design.md 11.0 item 15: the C toolchain on Linux is zig, not the system compiler, so an unattended install needs no root. zig's Linux builds are static, so they run on any kernel, glibc or musl. The recipe writes cc/gcc/c++/g++/ar shims into {runtime_dir}/ibcc that exec `zig cc`, and puts that folder first on PATH for the project install. macOS keeps the Xcode Command Line Tools: zig cc still needs Apple's SDK to link."
      }
     ]
    }
@@ -1323,12 +1366,6 @@
    "needs": [
     {
      "prerequisites": [
-      "gcc"
-     ],
-     "why": "Nim compiles to C and builds it with the system gcc and the C library's development files, which minimal installs leave out."
-    },
-    {
-     "prerequisites": [
       "xcode-clt"
      ],
      "why": "Nim compiles to C and builds it with clang and the macOS SDK from the Xcode Command Line Tools."
@@ -1340,6 +1377,13 @@
      {
       "runtime": "cc",
       "bin": "bin"
+     }
+    ],
+    "linux": [
+     {
+      "runtime": "zig",
+      "bin": "",
+      "_comment": "design.md 11.0 item 15: the C toolchain on Linux is zig, not the system compiler, so an unattended install needs no root. zig's Linux builds are static, so they run on any kernel, glibc or musl. The recipe writes cc/gcc/c++/g++/ar shims into {runtime_dir}/ibcc that exec `zig cc`, and puts that folder first on PATH for the project install. macOS keeps the Xcode Command Line Tools: zig cc still needs Apple's SDK to link."
      }
     ]
    },

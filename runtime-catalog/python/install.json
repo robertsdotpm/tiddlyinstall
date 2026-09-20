@@ -40,6 +40,10 @@
     {
      "run": "\"{runtime_dir}\\python.exe\" -E -s -m ensurepip --default-pip",
      "shell": "cmd"
+    },
+    {
+     "run": "\"{runtime_dir}\\python.exe\" -E -s -m compileall -q -x \"bad_coding|badsyntax|lib2to3\" \"{runtime_dir}\\Lib\" || exit /b 0",
+     "shell": "cmd"
     }
    ],
    "prerequisites": [
@@ -60,7 +64,7 @@
     "https://github.com/python/cpython/blob/3.14/Tools/msi/README.txt",
     "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/msiexec"
    ],
-   "notes": "Added 2026-09-19 by installer-builder: the full python.org build, laid out from the component MSIs the .exe installer is made of (python.org/ftp/python/<version>/<amd64|win32|arm64>/). The release is core.msi; its parts (releases.json `parts`: exe.msi, lib.msi, tcltk.msi, each pinned by SHA-256) are downloaded as extra files and copied to {tmp}. `msiexec /a` (an administrative install) unpacks each into {runtime_dir} without registering anything: no PythonCore registry keys, no Programs and Features entry, no Windows Installer product; it leaves a copy of each .msi there, which the fifth step deletes. It needs no administrator rights (checked on Windows 10 at medium integrity). Result: python.exe, pythonw.exe, DLLs (with _tkinter.pyd and the Tcl/Tk DLLs), Lib (the whole standard library as .py files, with tkinter, idlelib, venv, ensurepip), tcl, libs; ensurepip then installs pip. Not included: dev.msi (headers and import libraries for building C extensions), doc, test, tools, launcher (py.exe), path/appendpath, pip.msi (only runs ensurepip as a custom action) and ucrt.msi (a system update). The standard library is not precompiled: Python writes __pycache__ on first import where the folder is writable. python.exe finds its home from the Lib\\os.py landmark beside it, so the folder can be anywhere. Registry leakage in: a registered Python of the same X.Y can add its PythonPath subkeys to sys.path (as for the .exe extract recipe).",
+   "notes": "Added 2026-09-19 by installer-builder: the full python.org build, laid out from the component MSIs the .exe installer is made of (python.org/ftp/python/<version>/<amd64|win32|arm64>/). The release is core.msi; its parts (releases.json `parts`: exe.msi, lib.msi, tcltk.msi, each pinned by SHA-256) are downloaded as extra files and copied to {tmp}. `msiexec /a` (an administrative install) unpacks each into {runtime_dir} without registering anything: no PythonCore registry keys, no Programs and Features entry, no Windows Installer product; it leaves a copy of each .msi there, which the fifth step deletes. It needs no administrator rights (checked on Windows 10 at medium integrity). Result: python.exe, pythonw.exe, DLLs (with _tkinter.pyd and the Tcl/Tk DLLs), Lib (the whole standard library as .py files, with tkinter, idlelib, venv, ensurepip), tcl, libs; ensurepip then installs pip. Not included: dev.msi (headers and import libraries for building C extensions), doc, test, tools, launcher (py.exe), path/appendpath, pip.msi (only runs ensurepip as a custom action) and ucrt.msi (a system update). The standard library is not precompiled: Python writes __pycache__ on first import where the folder is writable. python.exe finds its home from the Lib\\os.py landmark beside it, so the folder can be anywhere. Registry leakage in: a registered Python of the same X.Y can add its PythonPath subkeys to sys.path (as for the .exe extract recipe). Added 2026-09-20 (design.md 11.0 item 11): the last step precompiles the standard library with compileall, so every start reads .pyc instead of parsing .py. Measured on this build (3.14.7 PBS, Linux amd64): compileall 3.4 s and +20 MB (107 -> 127 MB), and a start importing json, ssl, sqlite3, asyncio, email, logging and urllib.request drops from 0.62-0.68 s to 0.15 s. Without it only the first run in a writable folder pays that; an all-user install run by a normal user cannot write __pycache__ and pays it every time. lib2to3 and the bad-encoding and bad-syntax fixtures are excluded (they are meant not to compile), and a non-zero exit is ignored: precompiling is an optimisation, and no install should fail because one stdlib file would not compile.",
    "preferred": true,
    "launch": {
     "program": "{runtime_dir}\\python.exe",
@@ -522,6 +526,10 @@
      "unpack": "tar.gz",
      "to": "{runtime_dir}",
      "strip_components": 1
+    },
+    {
+     "run": "\"{runtime_dir}/bin/python3\" -E -s -m compileall -q -x 'bad_coding|badsyntax|lib2to3' \"{runtime_dir}/lib\" || true",
+     "shell": "sh"
     }
    ],
    "prerequisites": [
@@ -543,7 +551,7 @@
     "https://gregoryszorc.com/docs/python-build-standalone/main/quirks.html",
     "https://github.com/astral-sh/python-build-standalone/releases"
    ],
-   "notes": "TESTED on Ubuntu 24.04 amd64 with 3.14.7+20260901 install_only_stripped: unpacked twice side by side into '.../app one/rt' and '.../app two/rt' (paths with spaces). Both ran, with sys.prefix pointing at their own folder. ssl, sqlite3, ctypes, asyncio, tkinter (import), lzma, bz2 and readline all imported. `python -m pip install pyflakes` went into app one only. Moved 'app one' to 'app one moved': python3 and the shipped bin/pip3 still worked (PBS writes a relative `#!/bin/sh` + `exec \"$(dirname -- \"$(realpath -- \"$0\")\")/python3.14\"` shebang), but console scripts pip installed later (bin/pyflakes) hold the absolute old path and broke. So: relocatable as shipped; after moving, reinstall or rewrite shebangs of pip-installed scripts, or always call `python3 -m <module>`. Only other arches (arm64, armv7, ppc64le, riscv64, s390x) were not run. Known PBS quirk: `python3-config`/sysconfig report the build machine's compiler flags, so building C extensions may need CC overrides.",
+   "notes": "TESTED on Ubuntu 24.04 amd64 with 3.14.7+20260901 install_only_stripped: unpacked twice side by side into '.../app one/rt' and '.../app two/rt' (paths with spaces). Both ran, with sys.prefix pointing at their own folder. ssl, sqlite3, ctypes, asyncio, tkinter (import), lzma, bz2 and readline all imported. `python -m pip install pyflakes` went into app one only. Moved 'app one' to 'app one moved': python3 and the shipped bin/pip3 still worked (PBS writes a relative `#!/bin/sh` + `exec \"$(dirname -- \"$(realpath -- \"$0\")\")/python3.14\"` shebang), but console scripts pip installed later (bin/pyflakes) hold the absolute old path and broke. So: relocatable as shipped; after moving, reinstall or rewrite shebangs of pip-installed scripts, or always call `python3 -m <module>`. Only other arches (arm64, armv7, ppc64le, riscv64, s390x) were not run. Known PBS quirk: `python3-config`/sysconfig report the build machine's compiler flags, so building C extensions may need CC overrides. Added 2026-09-20 (design.md 11.0 item 11): the last step precompiles the standard library with compileall, so every start reads .pyc instead of parsing .py. Measured on this build (3.14.7 PBS, Linux amd64): compileall 3.4 s and +20 MB (107 -> 127 MB), and a start importing json, ssl, sqlite3, asyncio, email, logging and urllib.request drops from 0.62-0.68 s to 0.15 s. Without it only the first run in a writable folder pays that; an all-user install run by a normal user cannot write __pycache__ and pays it every time. lib2to3 and the bad-encoding and bad-syntax fixtures are excluded (they are meant not to compile), and a non-zero exit is ignored: precompiling is an optimisation, and no install should fail because one stdlib file would not compile.",
    "preferred": true,
    "launch": {
     "program": "{runtime_dir}/bin/python3",
@@ -655,6 +663,10 @@
     {
      "run": "xattr -dr com.apple.quarantine \"{runtime_dir}\" 2>/dev/null || true",
      "shell": "sh"
+    },
+    {
+     "run": "\"{runtime_dir}/bin/python3\" -E -s -m compileall -q -x 'bad_coding|badsyntax|lib2to3' \"{runtime_dir}/lib\" || true",
+     "shell": "sh"
     }
    ],
    "prerequisites": [],
@@ -672,7 +684,7 @@
     "https://gregoryszorc.com/docs/python-build-standalone/main/",
     "https://gregoryszorc.com/docs/python-build-standalone/main/quirks.html"
    ],
-   "notes": "Same install_only layout as Linux (python/ top folder), relocatable (checked arm64: bin/python3.14 links only /usr/lib and /System libraries; an LC_CODE_SIGNATURE is present) with a relative `#!/bin/sh` shebang in bin/pip*. The binaries carry a code signature (whether ad-hoc or Developer ID was not checked); a plain tarball cannot carry a notarization ticket. If the downloaded tarball carries com.apple.quarantine (a browser download, or an installer app with LSFileQuarantineEnabled), Gatekeeper blocks the unpacked binaries, so the xattr step clears it. It's a no-op when the attribute is absent. The same shebang caveat as Linux applies to scripts pip installs later if the folder is moved.",
+   "notes": "Same install_only layout as Linux (python/ top folder), relocatable (checked arm64: bin/python3.14 links only /usr/lib and /System libraries; an LC_CODE_SIGNATURE is present) with a relative `#!/bin/sh` shebang in bin/pip*. The binaries carry a code signature (whether ad-hoc or Developer ID was not checked); a plain tarball cannot carry a notarization ticket. If the downloaded tarball carries com.apple.quarantine (a browser download, or an installer app with LSFileQuarantineEnabled), Gatekeeper blocks the unpacked binaries, so the xattr step clears it. It's a no-op when the attribute is absent. The same shebang caveat as Linux applies to scripts pip installs later if the folder is moved. Added 2026-09-20 (design.md 11.0 item 11): the last step precompiles the standard library with compileall, so every start reads .pyc instead of parsing .py. Measured on this build (3.14.7 PBS, Linux amd64): compileall 3.4 s and +20 MB (107 -> 127 MB), and a start importing json, ssl, sqlite3, asyncio, email, logging and urllib.request drops from 0.62-0.68 s to 0.15 s. Without it only the first run in a writable folder pays that; an all-user install run by a normal user cannot write __pycache__ and pays it every time. lib2to3 and the bad-encoding and bad-syntax fixtures are excluded (they are meant not to compile), and a non-zero exit is ignored: precompiling is an optimisation, and no install should fail because one stdlib file would not compile.",
    "preferred": true,
    "launch": {
     "program": "{runtime_dir}/bin/python3",
