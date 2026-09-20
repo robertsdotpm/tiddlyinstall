@@ -27,7 +27,17 @@ case $key in *[!A-Za-z0-9+/=]*) echo "$keyfile: not base64" >&2; exit 1 ;; esac
 keyid=$(printf '%s' "$key" | base64 -d | sha256sum | cut -c1-16)
 echo "plan signing key $keyid ($keyfile)"
 
-defs="-DIB_PLAN_PUBKEY=$key -DIB_PLAN_KEYID=$keyid"
+# When this base was built. The engine uses it as the floor below which a
+# machine's clock cannot be believed (design.md 7.1, "Clocks"); days, not
+# seconds, because NSIS arithmetic is 32-bit signed and seconds overflow
+# it in 2038. SOURCE_DATE_EPOCH is honoured for reproducible builds.
+build_epoch=${SOURCE_DATE_EPOCH:-$(date -u +%s)}
+case $build_epoch in '' | *[!0-9]*) echo "bad SOURCE_DATE_EPOCH" >&2; exit 1 ;; esac
+build_days=$((build_epoch / 86400))
+build_time=$(date -u -d "@$build_epoch" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u +%Y-%m-%dT%H:%M:%SZ)
+echo "built $build_time (day $build_days)"
+
+defs="-DIB_PLAN_PUBKEY=$key -DIB_PLAN_KEYID=$keyid -DIB_BUILD_TIME=$build_time -DIB_BUILD_DAYS=$build_days"
 [ -n "${IB_BACKEND:-}" ] && defs="$defs -DIB_BACKEND=$IB_BACKEND"
 [ -n "${IB_OUTFILE:-}" ] && defs="$defs -DIB_OUTFILE=$IB_OUTFILE"
 

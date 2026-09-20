@@ -14,6 +14,17 @@ bake_engine() {
 	keyid=$(printf '%s' "$key" | openssl base64 -d -A | openssl dgst -sha256 | awk '{ print substr($NF, 1, 16) }')
 	[ "$(grep -c '^IB_PLAN_PUBKEY=$' "$1")" = 1 ] && [ "$(grep -c '^IB_PLAN_KEYID=$' "$1")" = 1 ] ||
 		{ echo "$1: no empty IB_PLAN_PUBKEY= / IB_PLAN_KEYID= lines to fill" >&2; exit 1; }
-	sed -e "s|^IB_PLAN_PUBKEY=\$|IB_PLAN_PUBKEY=$key|" -e "s|^IB_PLAN_KEYID=\$|IB_PLAN_KEYID=$keyid|" "$1" > "$2"
-	echo "plan signing key $keyid ($keyfile)"
+	# When this base was built. The engine uses it as the floor below which
+	# a machine's clock cannot be believed (design.md 7.1, "Clocks"): the
+	# real time is certainly not earlier than the build. SOURCE_DATE_EPOCH
+	# is honoured, so a reproducible build stays reproducible.
+	build_epoch=${SOURCE_DATE_EPOCH:-$(date -u +%s)}
+	case $build_epoch in '' | *[!0-9]*) echo "bad SOURCE_DATE_EPOCH" >&2; exit 1 ;; esac
+	build_time=$(date -u -d "@$build_epoch" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null ||
+		date -u -r "$build_epoch" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u +%Y-%m-%dT%H:%M:%SZ)
+	[ "$(grep -c '^IB_BUILD_TIME=$' "$1")" = 1 ] && [ "$(grep -c '^IB_BUILD_EPOCH=$' "$1")" = 1 ] ||
+		{ echo "$1: no empty IB_BUILD_TIME= / IB_BUILD_EPOCH= lines to fill" >&2; exit 1; }
+	sed -e "s|^IB_PLAN_PUBKEY=\$|IB_PLAN_PUBKEY=$key|" -e "s|^IB_PLAN_KEYID=\$|IB_PLAN_KEYID=$keyid|" \
+		-e "s|^IB_BUILD_TIME=\$|IB_BUILD_TIME=$build_time|" -e "s|^IB_BUILD_EPOCH=\$|IB_BUILD_EPOCH=$build_epoch|" "$1" > "$2"
+	echo "plan signing key $keyid ($keyfile); built $build_time"
 }

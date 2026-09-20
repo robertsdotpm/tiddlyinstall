@@ -6,7 +6,8 @@
  *     sig<TAB>ed25519<TAB><88 characters of base64>
  * optionally followed by "\n" or "\r\n", and nothing else. The signature
  * covers every byte before that line; those bytes must start with
- * "ib-plan<TAB>".
+ * "ib-plan<TAB>", or, for the revocation list (docs/format.md section 7),
+ * "ib-revocations<TAB>".
  */
 #include "plancheck.h"
 
@@ -62,7 +63,16 @@ static int starts(const u8 *p, unsigned long n, const char *s)
   return 1;
 }
 
+static const char not_the_doc[] = "the signed bytes are not the document this installer asked for";
+
 int ib_plan_check(u8 *buf, unsigned long len, const u8 pk[32], const char **why)
+{
+  int r = ib_doc_check(buf, len, pk, "ib-plan\t", why);
+  if (r == IB_PLAN_BAD && *why == not_the_doc) *why = "the signed bytes are not an ib-plan";
+  return r;
+}
+
+int ib_doc_check(u8 *buf, unsigned long len, const u8 pk[32], const char *head, const char **why)
 {
   u8 *doc = buf + 64;
   unsigned long end = len, nl, lastlen, i;
@@ -89,7 +99,7 @@ int ib_plan_check(u8 *buf, unsigned long len, const u8 pk[32], const char **why)
     *why = "malformed signature";
     return IB_PLAN_BAD;
   }
-  if (!starts(doc, nl, "ib-plan\t")) { *why = "the signed bytes are not an ib-plan"; return IB_PLAN_BAD; }
+  if (!starts(doc, nl, head)) { *why = not_the_doc; return IB_PLAN_BAD; }
   /* Lay out R || (room for A) || message: the message is already at buf+64. */
   for (i = 0; i < 32; ++i) buf[i] = sig[i];
   if (ed25519_verify(buf, (u64)nl + 64, sig + 32, pk)) {

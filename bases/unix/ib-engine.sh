@@ -21,6 +21,12 @@ IB_PLAN_KEYID=
 # Our Ed25519 verifiers appended after this script: <arch>:<offset>:<length>
 # (make_run.sh fills it; empty in the source and in the macOS .app).
 IB_VERIFY_BLOBS=
+# When this installer was built (plankey.sh fills both in): RFC 3339 for
+# messages, and seconds since the epoch for arithmetic. The real time is
+# certainly not earlier than this, which is the only clock floor a machine
+# with a wrong RTC gives us (design.md 7.1, "Clocks").
+IB_BUILD_TIME=
+IB_BUILD_EPOCH=
 
 tab=$(printf '\t')
 cr=$(printf '\r')
@@ -434,8 +440,19 @@ ib_ed25519_ready() {
 
 # The signature of plan $1 (format.md "Plan signature"): prints ok, unsigned,
 # bad:<why> or cannot:<why> (no way to check it here).
-ib_plan_sig() {
+ib_plan_sig() { ib_doc_sig "$1" ib-plan; }
+
+# The same for any document signed with the plan key: $2 is the header its
+# signed bytes must start with, so a plan's signature can't be read as a
+# revocation list or the other way round (format.md section 7).
+ib_doc_sig() { # file kind
 	f=$1
+	sig_kind=${2:-ib-plan}
+	sig_tmp=$IB_WORK/$sig_kind.check
+	case $sig_kind in
+	ib-revocations) sig_what="revocation list" ;;
+	*) sig_what=plan ;;
+	esac
 	last=$(tail -n 1 "$f" | tr -d '\r')
 	case $last in
 	sig"$tab"ed25519"$tab"*) ;;
@@ -448,24 +465,24 @@ ib_plan_sig() {
 	n=$(($(wc -c < "$f") - $(tail -n 1 "$f" | wc -c)))
 	[ "$n" -gt 0 ] || { echo unsigned; return 0; }
 	ib_ed25519_ready || { echo "cannot:$ib_ed_why"; return 0; }
-	head -c "$n" "$f" > "$IB_WORK/plan.signed"
-	[ "$(head -c 8 "$IB_WORK/plan.signed")" = "ib-plan$tab" ] || { echo "bad:the signed bytes are not an ib-plan"; return 0; }
+	head -c "$n" "$f" > "$sig_tmp.signed"
+	[ "$(head -c $((${#sig_kind} + 1)) "$sig_tmp.signed")" = "$sig_kind$tab" ] || { echo "bad:the signed bytes are not an $sig_kind"; return 0; }
 	if [ "$ib_ed_how" = ibverify ]; then
-		"$ib_ibv" "$IB_PLAN_PUBKEY" "$b64" < "$IB_WORK/plan.signed" > /dev/null 2>&1
+		"$ib_ibv" "$IB_PLAN_PUBKEY" "$b64" < "$sig_tmp.signed" > /dev/null 2>&1
 		case $? in
 		0) echo "ok:ibverify" ;;
-		1) echo "bad:the signature does not match this plan and this installer's key" ;;
+		1) echo "bad:the signature does not match this $sig_what and this installer's key" ;;
 		*) echo "bad:malformed signature" ;;
 		esac
 		return 0
 	fi
-	printf '%s\n' "$b64" | ib_nohome openssl base64 -d -A > "$IB_WORK/plan.sig" 2>/dev/null
-	[ "$(wc -c < "$IB_WORK/plan.sig" | tr -d ' ')" = 64 ] || { echo "bad:malformed signature"; return 0; }
-	if ib_nohome openssl pkeyutl -verify -pubin -inkey "$IB_WORK/plan-key.pem" -rawin -in "$IB_WORK/plan.signed" \
-		-sigfile "$IB_WORK/plan.sig" > /dev/null 2>&1; then
+	printf '%s\n' "$b64" | ib_nohome openssl base64 -d -A > "$sig_tmp.sig" 2>/dev/null
+	[ "$(wc -c < "$sig_tmp.sig" | tr -d ' ')" = 64 ] || { echo "bad:malformed signature"; return 0; }
+	if ib_nohome openssl pkeyutl -verify -pubin -inkey "$IB_WORK/plan-key.pem" -rawin -in "$sig_tmp.signed" \
+		-sigfile "$sig_tmp.sig" > /dev/null 2>&1; then
 		echo "ok:openssl"
 	else
-		echo "bad:the signature does not match this plan and this installer's key"
+		echo "bad:the signature does not match this $sig_what and this installer's key"
 	fi
 }
 
@@ -509,6 +526,299 @@ ib_check_plan() {
 		ib_fail "The install plan from ${IB_PLAN_URL%%/api/*} is not signed by the TiddlyInstall key ${IB_PLAN_KEYID:-} ($why). It may have been changed on the way; nothing was installed."
 		;;
 	esac
+}
+
+# ---------------------------------------------------------------- stale plans (design.md 7.1)
+#
+# A signed plan we really did sign, replayed later, is the one thing a
+# signature does not stop. Three answers, one per population:
+#
+#   fetched plan  a nonce, echoed into the signed bytes: a replay carries
+#                 someone else's nonce (ib_nonce, ib_check_nonce)
+#   carried plan, network      the signed revocation list (ib_revocations)
+#   carried plan, no network   `signed` and `maxage` (ib_check_age), and
+#                 only when this machine's clock is plausible against the
+#                 build time baked into this installer. A wrong clock
+#                 warns; it never stops an install.
+
+ib_is_nonce() { # value -> 0 if 32 lowercase hex characters
+	case $1 in
+	????????????????????????????????)
+		case $1 in *[!0-9a-f]*) return 1 ;; esac
+		return 0
+		;;
+	esac
+	return 1
+}
+
+# A nonce for a plan request: 16 random bytes as 32 hex characters.
+# /dev/urandom where there is one, else the clock, the pid, this file and
+# what is being installed, hashed -- an XP-era machine's entropy is poor,
+# and it does not matter much: the nonce only has to be unpredictable to
+# someone who prepared a replay in advance, and a repeated one costs
+# nothing. IB_NONCE is empty if even that fails; the plan is then asked
+# for without one, as an older engine would.
+ib_nonce() { # what is being asked for
+	IB_NONCE=
+	# A fixed nonce, so a test can pre-sign the answer (test_freshness.sh).
+	if ib_is_nonce "${IB_TEST_NONCE:-}"; then
+		IB_NONCE=$IB_TEST_NONCE
+		return 0
+	fi
+	if [ -r /dev/urandom ]; then
+		IB_NONCE=$(dd if=/dev/urandom bs=16 count=1 2>/dev/null | od -An -v -tx1 2>/dev/null | tr -d ' \t\n' | cut -c1-32)
+		ib_is_nonce "$IB_NONCE" || IB_NONCE=
+	fi
+	if [ -z "$IB_NONCE" ]; then
+		IB_NONCE=$(printf '%s\t%s\t%s\t%s\n' "$(date -u +%Y%m%d%H%M%S 2>/dev/null)" "$$" "$IB_SELF" "$1" | ib_sha256 | cut -c1-32)
+		ib_is_nonce "$IB_NONCE" || IB_NONCE=
+	fi
+	[ -n "$IB_NONCE" ] || ib_log "No nonce could be made here; asking for the plan without one."
+	return 0
+}
+
+# `?nonce=...` for a plan URL, or nothing.
+ib_nonce_query() {
+	[ -n "$IB_NONCE" ] && printf '?nonce=%s' "$IB_NONCE"
+	return 0
+}
+
+# The values of the first `request` line of kind $2 in a plan's header
+# (format.md section 1: a repeated key, first line wins).
+ib_plan_req() { # file kind
+	awk -F'\t' -v k="$2" '{ sub(/\r$/, "") } $0 == "[target]" { exit }
+		$1 == "request" && $2 == k { s = $3; for (i = 4; i <= NF; i++) s = s "\t" $i; print s; exit }' "$1"
+}
+
+# The plan must answer *this* request. A backend that echoes no nonce is
+# simply an older backend: the plan is used, and the transparency screen
+# says a replayed older plan could not be ruled out.
+ib_check_nonce() {
+	[ -n "$IB_NONCE" ] || return 0
+	case $IB_PLAN_KIND in fetched) ;; *) return 0 ;; esac
+	got=$(ib_plan_req "$IB_PLAN" nonce)
+	if [ -z "$got" ]; then
+		ib_log "Nonce $IB_NONCE sent; the plan carries none (an older backend)."
+		IB_PLAN_FROM="$IB_PLAN_FROM; no nonce in the answer (an older backend), so an older plan replayed on the way can't be ruled out"
+		return 0
+	fi
+	[ "$got" = "$IB_NONCE" ] ||
+		ib_fail "The install plan from ${IB_PLAN_URL%%/api/*} is the answer to another request (it carries nonce $got, not the $IB_NONCE this installer sent). It may be an older plan replayed on the way; nothing was installed."
+	ib_log "Nonce $IB_NONCE echoed in the plan."
+	IB_PLAN_FROM="$IB_PLAN_FROM; nonce checked"
+	return 0
+}
+
+# Seconds since the epoch, or '' when this machine won't say.
+ib_epoch_now() {
+	n=$(date -u +%s 2>/dev/null)
+	case $n in '' | *[!0-9]*) n=$(awk 'BEGIN { print systime() }' 2>/dev/null) ;; esac
+	case $n in '' | *[!0-9]*) n= ;; esac
+	printf '%s' "$n"
+}
+
+# An RFC 3339 UTC time (2026-09-20T11:02:07Z) as seconds since the epoch,
+# or '' if it isn't one. Days from the civil date in awk, so no date(1)
+# extension is needed: `date -d` is GNU and `date -j` is BSD.
+ib_epoch_of() { # time
+	awk -v s="$1" 'BEGIN {
+		if (s !~ /^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]T[0-9][0-9]:[0-9][0-9]:[0-9][0-9]Z$/) exit
+		y = substr(s, 1, 4) + 0; m = substr(s, 6, 2) + 0; d = substr(s, 9, 2) + 0
+		H = substr(s, 12, 2) + 0; M = substr(s, 15, 2) + 0; S = substr(s, 18, 2) + 0
+		if (m < 1 || m > 12 || d < 1 || d > 31 || H > 23 || M > 59 || S > 60) exit
+		yy = y - (m <= 2 ? 1 : 0)
+		era = int((yy >= 0 ? yy : yy - 399) / 400)
+		yoe = yy - era * 400
+		doy = int((153 * (m + (m > 2 ? -3 : 9)) + 2) / 5) + d - 1
+		doe = yoe * 365 + int(yoe / 4) - int(yoe / 100) + doy
+		printf "%d\n", (era * 146097 + doe - 719468) * 86400 + H * 3600 + M * 60 + S
+	}' 2>/dev/null
+}
+
+# This machine's clock as text, for messages.
+ib_clock_says() {
+	c=$(date -u +%Y-%m-%dT%H:%M:%SZ 2>/dev/null)
+	[ -n "$c" ] || c="(unreadable)"
+	printf '%s' "$c"
+}
+
+# How old a carried plan may be: the plan's `maxage`, never past the hard
+# limit of 365 days, and 90 days when it says nothing.
+IB_MAXAGE_DEFAULT=7776000
+IB_MAXAGE_LIMIT=31536000
+# Ten years: past this from the build time the clock is not believable.
+IB_CLOCK_SPAN=315576000
+
+# `signed` / `maxage` on a plan this installer carries (format.md section
+# 3). A fetched plan was made this minute, so this is for embedded and
+# --plan plans only. Sets ib_age_warn, or stops with a refusal.
+ib_check_age() { # backend
+	ib_age_warn=
+	IB_PLAN_SIGNED=$(ib_get "$IB_PLAN" signed)
+	IB_PLAN_MAXAGE=$(ib_get "$IB_PLAN" maxage)
+	case $IB_PLAN_KIND in fetched) return 0 ;; esac
+	[ -n "$IB_PLAN_SIGNED" ] || return 0
+	sec=$(ib_epoch_of "$IB_PLAN_SIGNED")
+	[ -n "$sec" ] || { ib_log "Plan signed \"$IB_PLAN_SIGNED\": not a time this engine reads; age not checked."; return 0; }
+	max=$IB_PLAN_MAXAGE
+	case $max in '' | *[!0-9]*) max=$IB_MAXAGE_DEFAULT ;; esac
+	[ "$max" -gt "$IB_MAXAGE_LIMIT" ] && max=$IB_MAXAGE_LIMIT
+	[ "$max" -lt 1 ] && max=1
+	bt=$IB_BUILD_EPOCH
+	case $bt in '' | *[!0-9]*) bt=0 ;; esac
+	now=$(ib_epoch_now)
+	# The real time is certainly not before this installer was built, and
+	# ten years after it is as far as a plausible clock goes. That floor
+	# owes nothing to the machine's battery-backed clock.
+	plausible=0
+	if [ -n "$now" ] && [ "$bt" -gt 0 ] && [ "$now" -ge "$bt" ] && [ "$now" -le $((bt + IB_CLOCK_SPAN)) ]; then
+		plausible=1
+		[ "$now" -lt "$sec" ] && plausible=0   # a plan from the future: don't believe the clock
+	fi
+	if [ "$plausible" != 1 ]; then
+		ib_age_warn="This installer's plan was signed on $IB_PLAN_SIGNED, and this machine's clock says $(ib_clock_says), which can't be right (this installer was built $IB_BUILD_TIME), so how old the plan is can't be told. Nothing is refused for age."
+		ib_log "Clock not plausible (now ${now:-unreadable}, built $bt); the plan's age is reported only."
+		return 0
+	fi
+	age=$((now - sec))
+	ib_log "Plan signed $IB_PLAN_SIGNED, $((age / 86400)) days ago; maxage $max s."
+	[ "$age" -le "$max" ] && return 0
+	where=$1
+	[ -n "$where" ] || where=$IB_DEFAULT_BACKEND
+	if [ "$age" -gt "$IB_MAXAGE_LIMIT" ]; then
+		ib_fail "This installer's plan was signed on $IB_PLAN_SIGNED, $((age / 86400)) days ago, past the $((IB_MAXAGE_LIMIT / 86400))-day limit. What it installs may since have been withdrawn or found unsafe. Get a current installer from $where and run that instead; nothing was installed."
+	fi
+	ib_age_warn="This installer's plan was signed on $IB_PLAN_SIGNED, $((age / 86400)) days ago (it is meant to be used within $((max / 86400)) days). What it installs may have moved on. A current installer is at $where."
+	return 0
+}
+
+# ---- the signed revocation list (format.md section 7)
+
+# Where the last good list is kept, so an installer that can't reach a
+# backend still has the newest one this machine has seen.
+ib_revoke_cache() {
+	d=
+	if [ "$IB_OS" = macos ] && [ -n "$HOME" ]; then
+		d=$HOME/Library/Caches/TiddlyInstall
+	elif [ -n "${XDG_CACHE_HOME:-}" ]; then
+		d=$XDG_CACHE_HOME/tiddlyinstall
+	elif [ -n "$HOME" ]; then
+		d=$HOME/.cache/tiddlyinstall
+	fi
+	[ -n "$d" ] && printf '%s/revocations.txt' "$d"
+	return 0
+}
+
+ib_revoke_serial() { # file
+	s=$(ib_get "$1" serial)
+	case $s in '' | *[!0-9]*) s=0 ;; esac
+	printf '%s' "$s"
+}
+
+# The keys this install matches, one per line, as `revoke` line values.
+ib_revoke_keys() {
+	[ -n "$IB_RECHASH" ] && printf 'record\t%s\n' "$IB_RECHASH"
+	[ -n "$IB_PLAN_REQUEST" ] && printf '%s\n' "$IB_PLAN_REQUEST"
+	if [ -n "$IB_REC" ]; then
+		src=$(ib_get "$IB_REC" source)
+		kind=${src%%"$tab"*}
+		val=${src#*"$tab"}
+		val=${val%%"$tab"*}
+		if [ -n "$kind" ] && [ "$kind" != "$src" ]; then
+			val=$(printf '%s' "$val" | tr 'A-Z' 'a-z')
+			if [ "$kind" = github ]; then
+				val=${val#http://}
+				val=${val#https://}
+				val=${val#github.com/}
+				val=${val%/}
+				val=${val%.git}
+			fi
+			printf 'source\t%s\t%s\n' "$kind" "$val"
+		fi
+	fi
+	# Every file this install would download, by its SHA-256: `sha` names
+	# one we store (a written source, an icon), `file` the bytes wherever
+	# they come from. In the selection (ib_select_target) a `source` line
+	# is `name sha size format strip` and a `file` line carries its index
+	# first: `n name filename sha size [arch]`.
+	awk -F'\t' '$1 == "source" { print $3 } $1 == "file" { print $5 } $1 == "nfile" { print $4 }' "$IB_SEL" |
+		while IFS= read -r h; do
+			case $h in '' | *[!0-9a-f]*) continue ;; esac
+			printf 'sha\t%s\nfile\t%s\n' "$h" "$h"
+		done
+	return 0
+}
+
+# The first entry in list $1 that this install matches, as text, or ''.
+ib_revoke_match() { # list keysfile
+	awk -F'\t' -v tab="$tab" '
+	NR == FNR { sub(/\r$/, ""); if ($0 != "") key[$0] = 1; next }
+	{ sub(/\r$/, "") }
+	$1 != "revoke" { next }
+	{
+		k = $2
+		for (i = 3; i <= NF; i++) {
+			if ((k) in key) break
+			k = k tab $i
+		}
+		if ((k) in key) { print k; exit }
+	}' "$2" "$1"
+}
+
+# Fetch, check and apply the revocation list for a plan this installer
+# carries (design.md 7.1). Mode A and fetched plans don't: their fetch is
+# already the check (the backend answers 451), and a request that can be
+# dropped is worse than one that can't.
+ib_revocations() { # backend
+	ib_revoke_note=
+	case $IB_PLAN_KIND in fetched) return 0 ;; esac
+	[ "$IB_MODE_A" = 1 ] && return 0
+	url=$1/api/revocations
+	f=$IB_WORK/revocations.txt
+	got=
+	ib_say "Checking the revocation list"
+	if ib_download "$url" "$f" && [ -s "$f" ]; then
+		sig=$(ib_doc_sig "$f" ib-revocations)
+		case $sig in
+		ok:*) got=$f ;;
+		*) ib_log "Revocation list from $url: $sig" ;;
+		esac
+	else
+		ib_log "Could not fetch $url.$(ib_http_why)"
+	fi
+	cache=$(ib_revoke_cache)
+	# The freshest list wins, and a list is honoured even when `expires`
+	# has passed: it can only ever deny an install, so trusting a stale
+	# one is the recoverable mistake (design.md 7.1).
+	if [ -n "$cache" ] && [ -f "$cache" ]; then
+		if [ -z "$got" ]; then
+			got=$cache
+			ib_revoke_note="the backend could not be reached; the last list this machine saw (issued $(ib_get "$cache" issued)) was used"
+		elif [ "$(ib_revoke_serial "$cache")" -gt "$(ib_revoke_serial "$got")" ]; then
+			got=$cache
+			ib_log "The cached revocation list is newer than the one fetched; using it."
+		fi
+	fi
+	if [ -z "$got" ]; then
+		ib_revoke_note="no revocation list could be fetched or found on this machine, so only the plan's own age was checked"
+		return 0
+	fi
+	if [ "$got" != "$cache" ] && [ -n "$cache" ]; then
+		if mkdir -p "$(dirname "$cache")" 2>/dev/null; then
+			if [ ! -f "$cache" ] || [ "$(ib_revoke_serial "$got")" -ge "$(ib_revoke_serial "$cache")" ]; then
+				cp "$got" "$cache.tmp.$$" 2>/dev/null && mv "$cache.tmp.$$" "$cache" 2>/dev/null
+				rm -f "$cache.tmp.$$" 2>/dev/null
+			fi
+		fi
+	fi
+	ib_revoke_keys > "$IB_WORK/revoke-keys"
+	hit=$(ib_revoke_match "$got" "$IB_WORK/revoke-keys")
+	if [ -n "$hit" ]; then
+		ib_fail "$(printf 'This install has been withdrawn: the revocation list at %s names %s. Nothing was installed.' "$1" "$(printf '%s' "$hit" | tr '\t' ' ')")"
+	fi
+	[ -z "$ib_revoke_note" ] && ib_revoke_note="checked against the list issued $(ib_get "$got" issued) (serial $(ib_revoke_serial "$got"))"
+	ib_log "Revocation list: $ib_revoke_note"
+	return 0
 }
 
 # Mode A on macOS: an app bundle signed with an identity (not ad-hoc)
@@ -643,7 +953,8 @@ ib_find_metadata() {
 		backend=${opt_backend:-$IB_DEFAULT_BACKEND}
 		IB_PLAN=$IB_WORK/plan.txt IB_PLAN_KIND=fetched IB_PLAN_URL=$backend/api/plan/name/$rt/$pk
 		IB_PLAN_REQUEST="name$tab$rt$tab$pk"
-		ib_download "$IB_PLAN_URL" "$IB_PLAN" ||
+		ib_nonce "$rt/$pk"
+		ib_download "$IB_PLAN_URL$(ib_nonce_query)" "$IB_PLAN" ||
 			ib_fail "This installer is named for $pk ($rt) but $backend has no plan for that name.$(ib_http_why)"
 		IB_ORIGIN="the file name (runtime $rt, package $pk); plan from $backend"
 		return 0
@@ -1941,7 +2252,8 @@ ib_install_main() {
 	if [ -z "$IB_PLAN" ]; then
 		IB_PLAN=$IB_WORK/plan.txt IB_PLAN_KIND=fetched IB_PLAN_URL=$backend/api/plan/$IB_RECHASH
 		ib_say "Fetching the install plan from $backend"
-		ib_download "$IB_PLAN_URL" "$IB_PLAN" ||
+		ib_nonce "$IB_RECHASH"
+		ib_download "$IB_PLAN_URL$(ib_nonce_query)" "$IB_PLAN" ||
 			ib_fail "Could not fetch the install plan from $IB_PLAN_URL.$(ib_http_why)"
 		IB_PLAN_FROM=$IB_PLAN_URL
 	fi
@@ -1959,11 +2271,20 @@ ib_install_main() {
 	if [ -n "$IB_PLAN_REQUEST" ] && [ "$(ib_get "$IB_PLAN" request)" != "$IB_PLAN_REQUEST" ]; then
 		ib_fail "The plan from $backend is not the answer for $(printf '%s' "$IB_PLAN_REQUEST" | tr '\t' ' '). Nothing was installed."
 	fi
+	# ...and, for a fetched plan, the answer to *this* request and not a
+	# replay of an older one (design.md 7.1).
+	ib_check_nonce
 
 	IB_SEL=$IB_WORK/selection.txt
 	ib_select_target "$IB_PLAN" > "$IB_SEL"
 	f=$(ib_sel1 fail)
 	[ -n "$f" ] && ib_fail "$f"
+	# A plan carried in this installer may be old, or name something since
+	# withdrawn: the revocation list answers that where there is a network,
+	# and the plan's own `signed`/`maxage` where there is not. Both run
+	# before anything on this machine is changed.
+	ib_revocations "$backend"
+	ib_check_age "$backend"
 
 	IB_NAME_DISP=$(ib_get "$IB_PLAN" name)
 	IB_PROJECT=$(ib_get "$IB_PLAN" project)
@@ -2128,7 +2449,11 @@ ib_install_main() {
 		printf 'WHERE ITS SETTINGS CAME FROM\n  %s\n' "$IB_ORIGIN"
 		[ "$IB_MODE_A" = 1 ] && printf '  mode A: a signed installer; only what its name names, from %s\n' "$IB_DEFAULT_BACKEND"
 		printf '  plan: %s\n' "$IB_PLAN_FROM"
+		[ -n "$IB_PLAN_SIGNED" ] && printf '  plan signed: %s%s\n' "$IB_PLAN_SIGNED" \
+			"$(case $IB_PLAN_KIND in fetched) printf ' (fetched now)' ;; *) printf ' (carried in this installer)' ;; esac)"
+		[ -n "$ib_revoke_note" ] && printf '  revocation list: %s\n' "$ib_revoke_note"
 		[ -n "$ib_plan_warn" ] && printf '  WARNING: %s\n' "$ib_plan_warn"
+		[ -n "$ib_age_warn" ] && printf '  WARNING: %s\n' "$ib_age_warn"
 		printf '\nLog: %s\n' "$IB_LOG"
 	} > "$sum"
 	cat "$sum" >> "$IB_LOG"

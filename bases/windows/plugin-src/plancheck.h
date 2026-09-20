@@ -13,6 +13,14 @@
  */
 int ib_plan_check(unsigned char *buf, unsigned long len, const unsigned char pk[32], const char **why);
 
+/*
+ * The same for another document signed with the plan key: `head` is what
+ * the signed bytes must start with, "ib-plan\t" for a plan and
+ * "ib-revocations\t" for a revocation list (docs/format.md section 7), so
+ * one kind's signature can never be read as the other's.
+ */
+int ib_doc_check(unsigned char *buf, unsigned long len, const unsigned char pk[32], const char *head, const char **why);
+
 /* Strict base64 of exactly outlen bytes. 0 on success. */
 int ib_b64decode(const unsigned char *in, unsigned long inlen, unsigned char *out, unsigned long outlen);
 

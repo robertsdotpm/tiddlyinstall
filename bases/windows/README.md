@@ -213,6 +213,7 @@ the shortcuts carry the app's name.
 
 ```nsis
 ibsig::check "<plan file>" "<base64 public key>"  ; Pop: ok | unsigned: … | bad: … | error: …
+ibsig::checkdoc "<file>" "<key>" "ib-revocations" ; the same for another document the plan key signs
 ibsig::cleanfile "<UTF-16LE file>"                ; rewrites it with unsafe characters as '?'
 ibsig::cleanstr "<text>"                          ; Pop: the cleaned text
 ```
@@ -221,13 +222,15 @@ Ed25519 verification is TweetNaCl 20140427 (public domain), cut down to
 what verifying needs (SHA-512, field and point arithmetic, reduction mod
 L, point decompression) plus the RFC 8032 check that S < L, which
 TweetNaCl leaves out. `plancheck.c` finds the `sig` line and checks the
-signed bytes start with `ib-plan<TAB>`. The DLL links no C runtime and
+signed bytes start with the header the caller asked for -- `ib-plan<TAB>`
+for a plan, `ib-revocations<TAB>` for the revocation list (format.md
+section 7) -- so one kind's signature can never be read as the other's. The DLL links no C runtime and
 imports only `CreateFileW`, `ReadFile`, `WriteFile`, `SetFilePointer`,
 `GetFileSize`, `CloseHandle`, `GlobalAlloc`, `GlobalFree` and
 `lstrcpynW` from kernel32; it is built for Pentium MMX (no SSE2) with
 subsystem and OS version 5.1, so XP's loader takes it. Tested on XP SP3
 and Windows 10. The committed DLL (llvm-mingw 20260908, no timestamp) has
-sha256 `ea410feaa925069054c30bd38266cde3ac095c36e8dc91892af8daca250ec1cd`.
+sha256 `9b473a027c8e1161c6be7db401de557c3bab16fc023c88a848b3084496686c0b`.
 
 ```sh
 LLVM_MINGW=~/.local/opt/llvm-mingw-20260908-msvcrt-ubuntu-22.04-x86_64 plugin-src/build.sh

@@ -4,6 +4,7 @@
  * uses only kernel32 functions XP has, and no C runtime.
  *
  *   ibsig::check "<plan file>" "<public key, base64 of 32 bytes>"
+ *   ibsig::checkdoc "<file>" "<public key>" "<kind>"   (kind: ib-revocations)
  *   Pop $0    ; "ok", "unsigned: <why>", "bad: <why>" or "error: <why>"
  *
  *   ibsig::cleanstr / ibsig::cleanfile: below (display hygiene)
@@ -68,23 +69,38 @@ static void result(stack_t **top, int size, const char *tag, const char *why)
   push(top, w, size);
 }
 
-void __declspec(dllexport) __cdecl check(HWND parent, int size, WCHAR *vars, stack_t **top, void *extra)
+/*
+ * check and checkdoc: the same, with the header the signed bytes must
+ * start with. `head` is ASCII and at most 30 characters plus the tab.
+ */
+static void docheck(int size, stack_t **top, const char *head, int have_kind)
 {
-  WCHAR *path, key[128];
+  WCHAR *path, key[128], kind[32];
   unsigned char pk[32], kb[44];
+  char headbuf[40];
   HANDLE h;
   DWORD n = 0, got = 0;
   unsigned char *buf;
   const char *why = "";
   int i, r;
-  (void)parent; (void)vars; (void)extra;
 
   path = (WCHAR *)GlobalAlloc(GPTR, (size_t)size * sizeof(WCHAR));
   if (!path) return;
-  if (pop(top, path, size) || pop(top, key, 128)) {
+  if (pop(top, path, size) || pop(top, key, 128) || (have_kind && pop(top, kind, 32))) {
     GlobalFree(path);
     result(top, size, "error", "ibsig::check needs a file and a key");
     return;
+  }
+  if (have_kind) {
+    for (i = 0; i < 30 && kind[i]; ++i) headbuf[i] = kind[i] < 128 ? (char)kind[i] : '?';
+    if (i == 0 || kind[i]) {
+      GlobalFree(path);
+      result(top, size, "error", "ibsig::checkdoc needs a document kind");
+      return;
+    }
+    headbuf[i++] = '\t';
+    headbuf[i] = 0;
+    head = headbuf;
   }
   for (i = 0; i < 44 && key[i]; ++i) kb[i] = key[i] < 128 ? (unsigned char)key[i] : '?';
   if (i != 44 || key[44] || ib_b64decode(kb, 44, pk, 32)) {
@@ -117,9 +133,24 @@ void __declspec(dllexport) __cdecl check(HWND parent, int size, WCHAR *vars, sta
     return;
   }
   CloseHandle(h);
-  r = ib_plan_check(buf, n, pk, &why);
+  r = ib_doc_check(buf, n, pk, head, &why);
   GlobalFree(buf);
   result(top, size, r == IB_PLAN_OK ? "ok" : r == IB_PLAN_UNSIGNED ? "unsigned" : "bad", r == IB_PLAN_OK ? "" : why);
+}
+
+void __declspec(dllexport) __cdecl check(HWND parent, int size, WCHAR *vars, stack_t **top, void *extra)
+{
+  (void)parent; (void)vars; (void)extra;
+  docheck(size, top, "ib-plan\t", 0);
+}
+
+/*
+ *   ibsig::checkdoc "<file>" "<public key>" "<kind>"   ("ib-revocations")
+ */
+void __declspec(dllexport) __cdecl checkdoc(HWND parent, int size, WCHAR *vars, stack_t **top, void *extra)
+{
+  (void)parent; (void)vars; (void)extra;
+  docheck(size, top, "", 1);
 }
 
 /*

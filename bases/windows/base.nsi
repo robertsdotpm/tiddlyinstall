@@ -34,6 +34,17 @@ XPStyle on
 !ifndef IB_PLAN_KEYID
   !define IB_PLAN_KEYID "?"
 !endif
+; When this base was built (build.sh passes both): RFC 3339 for messages,
+; and whole days since 1970 for arithmetic (seconds would overflow NSIS's
+; 32-bit integers in 2038). The real time is certainly not earlier than
+; this, which is the only floor a machine with a wrong clock gives us
+; (design.md 7.1, "Clocks").
+!ifndef IB_BUILD_TIME
+  !define IB_BUILD_TIME "1970-01-01T00:00:00Z"
+!endif
+!ifndef IB_BUILD_DAYS
+  !define IB_BUILD_DAYS 0
+!endif
 
 !addplugindir /x86-unicode "plugins\x86-unicode"
 !addincludedir "include"
@@ -88,8 +99,16 @@ Var PlanKind         ; fetched, cmdline or embedded
 Var PlanSig          ; ibsig::check's answer
 Var PlanWarn         ; a warning for the review page
 Var PlanRec          ; the plan header's `record`
-Var PlanReq          ; the plan header's `request` (plans by name), fields joined by |
+Var PlanReq          ; the plan header's first `request` (plans by name), fields joined by |
 Var PlanReqWant      ; what a plan by name must say there
+Var PlanNonce        ; the `request nonce` this installer sent (design.md 7.1)
+Var PlanNonceGot     ; the one the plan came back with
+Var PlanSigned       ; the plan header's `signed`
+Var PlanMaxAge       ; the plan header's `maxage`
+Var AgeWarn          ; a warning about a carried plan's age
+Var RevokeNote       ; what the revocation list said, for the review page
+Var ShaList          ; file of every SHA-256 this install would download
+Var RecSrcKey        ; the record's source as the takedown list spells it
 Var UnsignedOK       ; 1: /unsigned-plan
 Var HasBlock         ; 1: an appended metadata block
 Var ModeA            ; 1: signed base with no block (design.md 3): file name + built-in backend only
@@ -966,6 +985,42 @@ Function ParseFileName
   Pop $0
 FunctionEnd
 
+; The record's source as the takedown list and the revocation list spell
+; it, "<kind> <value>": lowercased, and a GitHub URL reduced to
+; owner/repo, exactly as the server's sourceKey does (backend/server.js).
+Function SourceKey            ; $U_a kind, $U_b value -> $RecSrcKey
+  Push $0
+  Push $1
+  StrCpy $0 $U_b
+  System::Call 'user32::CharLowerW(w r0 r0)'
+  ${If} $U_a S== "github"
+    StrCpy $1 $0 8
+    ${If} $1 == "https://"
+      StrCpy $0 $0 "" 8
+    ${Else}
+      StrCpy $1 $0 7
+      ${If} $1 == "http://"
+        StrCpy $0 $0 "" 7
+      ${EndIf}
+    ${EndIf}
+    StrCpy $1 $0 11
+    ${If} $1 == "github.com/"
+      StrCpy $0 $0 "" 11
+    ${EndIf}
+    StrCpy $1 $0 "" -1
+    ${If} $1 == "/"
+      StrCpy $0 $0 -1
+    ${EndIf}
+    StrCpy $1 $0 "" -4
+    ${If} $1 == ".git"
+      StrCpy $0 $0 -4
+    ${EndIf}
+  ${EndIf}
+  StrCpy $RecSrcKey "$U_a $0"
+  Pop $1
+  Pop $0
+FunctionEnd
+
 ; Read the record's display fields and its backend line.
 Function ReadRecord
   Push $0
@@ -1004,6 +1059,9 @@ Function ReadRecord
       ${If} $F3 != ""
         StrCpy $RecSource "$RecSource $F3"
       ${EndIf}
+      StrCpy $U_a $F1
+      StrCpy $U_b $F2
+      Call SourceKey
     ${ElseIf} $K S== "launch"
       StrCpy $RecLaunch $F1
     ${ElseIf} $K S== "root"
@@ -1084,7 +1142,19 @@ Function ReadPlan
           StrCpy $PlanRec $F1
         ${EndIf}
       ${ElseIf} $K S== "request"
-        StrCpy $PlanReq "$F1|$F2|$F3"
+        ; The first `request` line is the one that says what was asked for
+        ; (format.md section 1); a `nonce` line is read on its own.
+        ${If} $F1 S== "nonce"
+          ${If} $PlanNonceGot == ""
+            StrCpy $PlanNonceGot $F2
+          ${EndIf}
+        ${ElseIf} $PlanReq == ""
+          StrCpy $PlanReq "$F1|$F2|$F3"
+        ${EndIf}
+      ${ElseIf} $K S== "signed"
+        StrCpy $PlanSigned $F1
+      ${ElseIf} $K S== "maxage"
+        StrCpy $PlanMaxAge $F1
       ${ElseIf} $K S== "name"
         StrCpy $AppName $F1
       ${ElseIf} $K S== "project"
@@ -1165,12 +1235,33 @@ Function OpenBlock
   Pop $0
 FunctionEnd
 
+; Append one SHA-256 to $ShaList (the file is opened per line, so no
+; register has to survive the loop in ReadTarget).
+Function AppendSha            ; $U_a
+  Push $0
+  ${If} $U_a != ""
+    FileOpen $0 "$ShaList" a
+    ${If} $0 != ""
+      FileSeek $0 0 END
+      FileWrite $0 "$U_a$\r$\n"
+      FileClose $0
+    ${EndIf}
+  ${EndIf}
+  Pop $0
+FunctionEnd
+
 ; Read the chosen block's single-value keys and map each file to its folder.
 Function ReadTarget
   Push $0
   StrCpy $FileMap ""
   StrCpy $RuntimeDir ""
   StrCpy $TgtAdmin 0
+  ; Every SHA-256 this install would download, for the revocation list
+  ; (format.md section 7): the source in the header, and this block's
+  ; files and prerequisite installers.
+  Delete "$ShaList"
+  StrCpy $U_a $SrcSha
+  Call AppendSha
   Call OpenBlock
   ${Do}
     ${IbRead} $BH
@@ -1196,7 +1287,13 @@ Function ReadTarget
       StrCpy $TgtNote $F1
     ${ElseIf} $K S== "fail"
       StrCpy $TgtFail $F1
+    ${ElseIf} $K S== "nfile"
+      StrCpy $U_a $F2
+      Call AppendSha
     ${ElseIf} $K S== "file"
+      StrCpy $0 $F3
+      StrCpy $U_a $0
+      Call AppendSha
       StrCpy $0 $F1
       StrCpy $U_a $F2
       Call IsPlainName
@@ -1352,7 +1449,13 @@ Function FindMetadata
   ; 5. plain file-name tokens: the plan is fetched by name
   ${If} $TokRuntime != ""
   ${AndIf} $TokProject != ""
+    StrCpy $U_a "$TokRuntime/$TokProject"
+    Call MakeNonce
     StrCpy $U_a "$Backend/api/plan/name/$TokRuntime/$TokProject"
+    StrCpy $PlanSrc "fetched from $U_a"
+    ${If} $PlanNonce != ""
+      StrCpy $U_a "$U_a?nonce=$PlanNonce"
+    ${EndIf}
     StrCpy $U_b "$PLUGINSDIR\plan.txt"
     ${Log} "Fetching a plan by name: $U_a"
     Call DownloadQuiet
@@ -1364,7 +1467,6 @@ Function FindMetadata
     StrCpy $PlanKind "fetched"
     StrCpy $PlanReqWant "name|$TokRuntime|$TokProject"
     StrCpy $MetaSrc "the file name (runtime $TokRuntime, project $TokProject; no record hash)"
-    StrCpy $PlanSrc "fetched from $U_a"
     Return
   ${EndIf}
   ${FailWith} "This installer has no settings: no appended block, no install.txt and no record hash in its file name ($EXEFILE)."
@@ -1413,6 +1515,565 @@ Function CheckPlan
   ${Else}
     ${FailWith} "The install plan from $Backend isn't signed by the TiddlyInstall key ${IB_PLAN_KEYID} ($PlanSig). It may have been changed on the way; nothing was installed."
   ${EndIf}
+FunctionEnd
+
+; ---------------------------------------------------------------- stale plans (design.md 7.1)
+
+!define IB_MAXAGE_DEFAULT_DAYS 90     ; the plan's `maxage` when it says nothing
+!define IB_MAXAGE_LIMIT_DAYS 365      ; past this a carried plan is refused
+!define IB_CLOCK_SPAN_DAYS 3653       ; ten years: past this the clock isn't believable
+
+; A nonce for a plan request: 32 hex characters, echoed by the backend
+; into the signed plan so that a plan signed for an earlier request can
+; be told from the answer to this one. RtlGenRandom (advapi32, XP and
+; later) where it works, mixed with the tick count, this file, the
+; installer's own temporary folder and what is being asked for, and
+; hashed: an XP-era machine's entropy can be poor, and it does not matter
+; much, because the nonce only has to be unpredictable to someone who
+; prepared a replay in advance.
+Function MakeNonce            ; $U_a: what is being asked for -> $PlanNonce
+  Push $0
+  Push $1
+  Push $R0
+  Push $R1
+  Push $R2
+  Push $R3
+  Push $R4
+  StrCpy $PlanNonce ""
+  StrCpy $1 ""
+  System::Alloc 16
+  Pop $R0
+  ${If} $R0 <> 0
+    System::Call 'advapi32::SystemFunction036(p R0, i 16) i .r0'
+    ${If} $0 <> 0
+      System::Call '*$R0(i .R1, i .R2, i .R3, i .R4)'
+      IntFmt $R1 "%08x" $R1
+      IntFmt $R2 "%08x" $R2
+      IntFmt $R3 "%08x" $R3
+      IntFmt $R4 "%08x" $R4
+      StrCpy $1 "$R1$R2$R3$R4"
+    ${Else}
+      ${Log} "RtlGenRandom is not available here; the nonce comes from the clock and this process."
+    ${EndIf}
+    System::Free $R0
+  ${EndIf}
+  System::Call 'kernel32::GetTickCount() i .r0'
+  Delete "$PLUGINSDIR\nonce.txt"
+  StrCpy $U_b "$1|$0|$EXEPATH|$PLUGINSDIR|$U_a"
+  StrCpy $U_a "$PLUGINSDIR\nonce.txt"
+  Call IbAppendUtf8
+  StrCpy $U_a "$PLUGINSDIR\nonce.txt"
+  Call Sha256File
+  Delete "$PLUGINSDIR\nonce.txt"
+  ${If} $U_out != ""
+    StrCpy $PlanNonce $U_out 32
+  ${EndIf}
+  StrLen $0 $PlanNonce
+  ${If} $0 <> 32
+    StrCpy $PlanNonce ""
+    ${Log} "No nonce could be made here; asking for the plan without one."
+  ${EndIf}
+  Pop $R4
+  Pop $R3
+  Pop $R2
+  Pop $R1
+  Pop $R0
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; The plan must be the answer to this request. A backend that echoes no
+; nonce is simply an older backend: the plan is used, and the review page
+; says an older plan replayed on the way could not be ruled out.
+Function CheckNonce
+  ${If} $PlanNonce == ""
+  ${OrIf} $PlanKind != "fetched"
+    Return
+  ${EndIf}
+  ${If} $PlanNonceGot == ""
+    ${Log} "Nonce $PlanNonce sent; the plan carries none (an older backend)."
+    StrCpy $PlanSrc "$PlanSrc; no nonce in the answer (an older backend), so an older plan replayed on the way can't be ruled out"
+    Return
+  ${EndIf}
+  ${If} $PlanNonceGot S!= $PlanNonce
+    ${FailWith} "The install plan from $Backend is the answer to another request (it carries nonce $PlanNonceGot, not the $PlanNonce this installer sent). It may be an older plan replayed on the way; nothing was installed."
+    Return
+  ${EndIf}
+  ${Log} "Nonce $PlanNonce echoed in the plan."
+  StrCpy $PlanSrc "$PlanSrc; nonce checked"
+FunctionEnd
+
+; Days since 1970-01-01 for the civil date $R1-$R2-$R3 -> $U_out (Howard
+; Hinnant's days_from_civil). Whole days, so nothing here can overflow
+; NSIS's 32-bit arithmetic the way seconds would in 2038.
+Function CivilDays
+  Push $0
+  Push $1
+  Push $2
+  Push $3
+  StrCpy $U_out ""
+  ${If} $R1 < 1970
+  ${OrIf} $R1 > 2200
+  ${OrIf} $R2 < 1
+  ${OrIf} $R2 > 12
+  ${OrIf} $R3 < 1
+  ${OrIf} $R3 > 31
+    Goto cd_end
+  ${EndIf}
+  StrCpy $0 $R1                       ; yy
+  ${If} $R2 <= 2
+    IntOp $0 $0 - 1
+  ${EndIf}
+  IntOp $1 $0 / 400                   ; era
+  IntOp $2 $1 * 400
+  IntOp $2 $0 - $2                    ; yoe
+  ${If} $R2 > 2
+    IntOp $3 $R2 - 3
+  ${Else}
+    IntOp $3 $R2 + 9
+  ${EndIf}
+  IntOp $3 $3 * 153
+  IntOp $3 $3 + 2
+  IntOp $3 $3 / 5
+  IntOp $3 $3 + $R3
+  IntOp $3 $3 - 1                     ; doy
+  IntOp $0 $2 * 365
+  IntOp $3 $3 + $0
+  IntOp $0 $2 / 4
+  IntOp $3 $3 + $0
+  IntOp $0 $2 / 100
+  IntOp $3 $3 - $0                    ; doe
+  IntOp $0 $1 * 146097
+  IntOp $3 $3 + $0
+  IntOp $U_out $3 - 719468
+  cd_end:
+  Pop $3
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; This machine's clock, in days since 1970 -> $U_out ("" if unreadable).
+Function TodayDays
+  Push $0
+  Push $R1
+  Push $R2
+  Push $R3
+  System::Call '*(&i2, &i2, &i2, &i2, &i2, &i2, &i2, &i2) p .r0'
+  ${If} $0 = 0
+    StrCpy $U_out ""
+  ${Else}
+    System::Call 'kernel32::GetSystemTime(p r0)'
+    System::Call '*$0(&i2 .R1, &i2 .R2, &i2, &i2 .R3)'
+    System::Free $0
+    Call CivilDays
+  ${EndIf}
+  Pop $R3
+  Pop $R2
+  Pop $R1
+  Pop $0
+FunctionEnd
+
+; An RFC 3339 UTC time (2026-09-20T11:02:07Z) in $U_a, as days since 1970
+; -> $U_out ("" if it isn't one).
+Function Rfc3339Days
+  Push $0
+  Push $1
+  Push $R1
+  Push $R2
+  Push $R3
+  StrCpy $1 $U_a
+  StrCpy $U_out ""
+  StrLen $0 $1
+  ${If} $0 <> 20
+    Goto rd_end
+  ${EndIf}
+  StrCpy $0 $1 1 10
+  ${If} $0 S!= "T"
+    Goto rd_end
+  ${EndIf}
+  StrCpy $R1 $1 4
+  StrCpy $R2 $1 2 5
+  StrCpy $R3 $1 2 8
+  ; Digits only: IntOp would read "20x6" as 20.
+  StrCpy $U_a "$R1$R2$R3"
+  Call IbIsDigits
+  StrCpy $U_a $1
+  ${If} $U_out = 0
+    StrCpy $U_out ""
+    Goto rd_end
+  ${EndIf}
+  IntOp $R1 $R1 + 0
+  IntOp $R2 $R2 + 0
+  IntOp $R3 $R3 + 0
+  Call CivilDays
+  rd_end:
+  Pop $R3
+  Pop $R2
+  Pop $R1
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; $U_out = 1 if $U_a is one or more ASCII digits (IbIsB32's shape: a
+; comparison per character, because NSIS's < and > are numeric).
+Function IbIsDigits
+  Push $0
+  Push $1
+  Push $2
+  Push $3
+  Push $4
+  StrCpy $U_out 0
+  StrLen $4 $U_a
+  ${If} $4 > 0
+    StrCpy $U_out 1
+    StrCpy $0 0
+    ${Do}
+      ${If} $0 >= $4
+        ${Break}
+      ${EndIf}
+      StrCpy $1 $U_a 1 $0
+      StrCpy $3 0
+      ${Do}
+        ${If} $3 >= 10
+          StrCpy $U_out 0
+          ${Break}
+        ${EndIf}
+        StrCpy $2 "0123456789" 1 $3
+        ${If} $1 S== $2
+          ${Break}
+        ${EndIf}
+        IntOp $3 $3 + 1
+      ${Loop}
+      ${If} $U_out = 0
+        ${Break}
+      ${EndIf}
+      IntOp $0 $0 + 1
+    ${Loop}
+  ${EndIf}
+  Pop $4
+  Pop $3
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; `signed` / `maxage` on a plan this installer carries (format.md section
+; 3). A fetched plan was made this minute, so this is for embedded and
+; /plan= plans only.
+;
+; The rule: **a wrong clock must never stop an install.** The build time
+; baked into this base is a floor the machine's clock cannot move, and a
+; clock outside [build time, build time + 10 years] is not believed -- the
+; plan's age is then reported and nothing is refused.
+Function CheckAge
+  Push $0
+  Push $1
+  Push $2
+  Push $3
+  StrCpy $AgeWarn ""
+  ${If} $PlanSigned == ""
+  ${OrIf} $PlanKind == "fetched"
+    Goto ca_end
+  ${EndIf}
+  StrCpy $U_a $PlanSigned
+  Call Rfc3339Days
+  StrCpy $1 $U_out                    ; the day the plan was signed
+  ${If} $1 == ""
+    ${Log} "Plan signed '$PlanSigned': not a time this installer reads; age not checked."
+    Goto ca_end
+  ${EndIf}
+  Call TodayDays
+  StrCpy $2 $U_out                    ; today, by this machine
+  StrCpy $3 ${IB_MAXAGE_DEFAULT_DAYS}
+  ${If} $PlanMaxAge != ""
+    StrCpy $U_a $PlanMaxAge
+    Call IbIsDigits
+    ${If} $U_out = 1
+      IntOp $3 $PlanMaxAge / 86400
+    ${EndIf}
+  ${EndIf}
+  ${If} $3 > ${IB_MAXAGE_LIMIT_DAYS}
+    StrCpy $3 ${IB_MAXAGE_LIMIT_DAYS}
+  ${EndIf}
+  ; Is the clock believable at all?
+  StrCpy $0 0
+  ${If} $2 != ""
+  ${AndIf} ${IB_BUILD_DAYS} > 0
+  ${AndIf} $2 >= ${IB_BUILD_DAYS}
+    IntOp $0 $2 - ${IB_BUILD_DAYS}
+    ${If} $0 <= ${IB_CLOCK_SPAN_DAYS}
+    ${AndIf} $2 >= $1
+      StrCpy $0 1
+    ${Else}
+      StrCpy $0 0
+    ${EndIf}
+  ${EndIf}
+  ${If} $0 <> 1
+    Call NowText
+    StrCpy $AgeWarn "This installer's plan was signed on $PlanSigned, and this machine's clock says $U_out, which can't be right (this installer was built ${IB_BUILD_TIME}), so how old the plan is can't be told. Nothing is refused for age."
+    ${Log} "Clock not plausible; the plan's age is reported only."
+    Goto ca_end
+  ${EndIf}
+  IntOp $0 $2 - $1                    ; age in days
+  ${Log} "Plan signed $PlanSigned, $0 days ago; maxage $3 days."
+  ${If} $0 <= $3
+    Goto ca_end
+  ${EndIf}
+  ${If} $0 > ${IB_MAXAGE_LIMIT_DAYS}
+    ${FailWith} "This installer's plan was signed on $PlanSigned, $0 days ago, past the ${IB_MAXAGE_LIMIT_DAYS}-day limit. What it installs may since have been withdrawn or found unsafe. Get a current installer from $Backend and run that instead; nothing was installed."
+    Goto ca_end
+  ${EndIf}
+  StrCpy $AgeWarn "This installer's plan was signed on $PlanSigned, $0 days ago (it is meant to be used within $3 days). What it installs may have moved on. A current installer is at $Backend."
+  ca_end:
+  Pop $3
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; This machine's clock as text, for messages -> $U_out.
+Function NowText
+  Push $0
+  Push $R1
+  Push $R2
+  Push $R3
+  Push $R4
+  Push $R5
+  System::Call '*(&i2, &i2, &i2, &i2, &i2, &i2, &i2, &i2) p .r0'
+  ${If} $0 = 0
+    StrCpy $U_out "(unreadable)"
+  ${Else}
+    System::Call 'kernel32::GetSystemTime(p r0)'
+    System::Call '*$0(&i2 .R1, &i2 .R2, &i2, &i2 .R3, &i2 .R4, &i2 .R5)'
+    System::Free $0
+    StrCpy $U_out "$R1-$R2-$R3 $R4:$R5 UTC"
+  ${EndIf}
+  Pop $R5
+  Pop $R4
+  Pop $R3
+  Pop $R2
+  Pop $R1
+  Pop $0
+FunctionEnd
+
+; ---- the signed revocation list (format.md section 7)
+
+; Is $U_a one of the SHA-256s this install would download? -> $U_out
+Function ShaListed
+  Push $0
+  Push $1
+  StrCpy $U_out 0
+  ${IfNot} ${FileExists} "$ShaList"
+    Goto sl_end
+  ${EndIf}
+  FileOpen $0 "$ShaList" r
+  ${If} $0 == ""
+    Goto sl_end
+  ${EndIf}
+  ${Do}
+    FileRead $0 $1
+    ${If} ${Errors}
+      ${Break}
+    ${EndIf}
+    ${If} $1 != ""
+      StrCpy $1 $1 64
+      ${If} $1 S== $U_a
+        StrCpy $U_out 1
+        ${Break}
+      ${EndIf}
+    ${EndIf}
+  ${Loop}
+  FileClose $0
+  sl_end:
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; The value of header key $U_b in the UTF-16 document $U_a -> $U_out.
+Function DocValue
+  Push $0
+  StrCpy $U_out ""
+  FileOpen $0 $U_a r
+  ${If} $0 == ""
+    Pop $0
+    Return
+  ${EndIf}
+  ${Do}
+    ${IbRead} $0
+    ${If} ${Errors}
+      ${Break}
+    ${EndIf}
+    Call IbParseLine
+    ${If} $K S== $U_b
+      StrCpy $U_out $F1
+      ${Break}
+    ${EndIf}
+  ${Loop}
+  FileClose $0
+  Pop $0
+FunctionEnd
+
+; The `serial` of the UTF-16 revocation list $U_a -> $U_out (0 if none).
+Function DocSerial
+  Push $0
+  StrCpy $U_b "serial"
+  Call DocValue
+  StrCpy $0 $U_out
+  StrCpy $U_a $0
+  Call IbIsDigits
+  ${If} $U_out = 1
+    StrCpy $U_out $0
+  ${Else}
+    StrCpy $U_out 0
+  ${EndIf}
+  Pop $0
+FunctionEnd
+
+; Fetch, check and apply the revocation list for a plan this installer
+; carries. Mode A and fetched plans don't: their fetch is already the
+; check (the backend answers 451 for anything on the list), and a request
+; that can be dropped is worse than one that cannot (design.md 7).
+Function Revocations
+  Push $0
+  Push $1
+  Push $2
+  Push $3
+  StrCpy $RevokeNote ""
+  ${If} $PlanKind == "fetched"
+  ${OrIf} $ModeA = 1
+    Goto rv_end
+  ${EndIf}
+  StrCpy $2 ""                        ; the UTF-16 list to use
+  StrCpy $3 "$LOCALAPPDATA\TiddlyInstall\revocations.txt"
+  StrCpy $U_a "$Backend/api/revocations"
+  StrCpy $U_b "$PLUGINSDIR\revocations.txt"
+  ${Log} "Fetching the revocation list: $U_a"
+  Call DownloadQuiet
+  ${If} $U_out == "OK"
+    ibsig::checkdoc "$PLUGINSDIR\revocations.txt" "${IB_PLAN_PUBKEY}" "ib-revocations"
+    Pop $0
+    StrCpy $1 $0 2
+    ${If} $1 == "ok"
+      StrCpy $U_a "$PLUGINSDIR\revocations.txt"
+      StrCpy $U_b "$PLUGINSDIR\revocations.u16"
+      Call IbUtf8ToUtf16
+      StrCpy $2 "$PLUGINSDIR\revocations.u16"
+    ${Else}
+      ${Log} "Revocation list from $Backend: $0"
+    ${EndIf}
+  ${Else}
+    ${Log} "Couldn't fetch $Backend/api/revocations ($U_out)."
+  ${EndIf}
+  ; The last good list this machine saw. A list can only ever deny an
+  ; install, so the freshest one is used even when `expires` has passed:
+  ; refusing something later un-revoked is the recoverable mistake.
+  ${If} ${FileExists} "$3"
+    StrCpy $U_a "$3"
+    StrCpy $U_b "$PLUGINSDIR\revocations-cache.u16"
+    Call IbUtf8ToUtf16
+    ${If} $2 == ""
+      StrCpy $2 "$PLUGINSDIR\revocations-cache.u16"
+      StrCpy $U_a "$2"
+      StrCpy $U_b "issued"
+      Call DocValue
+      StrCpy $RevokeNote "the backend couldn't be reached; the last list this machine saw (issued $U_out) was used"
+    ${Else}
+      StrCpy $U_a "$PLUGINSDIR\revocations-cache.u16"
+      Call DocSerial
+      StrCpy $0 $U_out
+      StrCpy $U_a "$2"
+      Call DocSerial
+      ${If} $0 > $U_out
+        StrCpy $2 "$PLUGINSDIR\revocations-cache.u16"
+        ${Log} "The cached revocation list is newer than the one fetched; using it."
+      ${EndIf}
+    ${EndIf}
+  ${EndIf}
+  ${If} $2 == ""
+    StrCpy $RevokeNote "no revocation list could be fetched or found on this machine, so only the plan's own age was checked"
+    Goto rv_end
+  ${EndIf}
+  ${If} $2 == "$PLUGINSDIR\revocations.u16"
+    ; CopyFiles wants a folder as its destination, and makes the file
+    ; inside it: $3 is that folder's revocations.txt.
+    CreateDirectory "$LOCALAPPDATA\TiddlyInstall"
+    CopyFiles /SILENT "$PLUGINSDIR\revocations.txt" "$LOCALAPPDATA\TiddlyInstall"
+  ${EndIf}
+  StrCpy $U_a $2
+  Call RevokeScan
+  ${If} $Failed = 1
+    Goto rv_end
+  ${EndIf}
+  ${If} $RevokeNote == ""
+    StrCpy $U_a $2
+    StrCpy $U_b "issued"
+    Call DocValue
+    StrCpy $RevokeNote "checked against the list issued $U_out"
+  ${EndIf}
+  ${Log} "Revocation list: $RevokeNote"
+  rv_end:
+  Pop $3
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; Every `revoke` line of the UTF-16 list $U_a against this install. A kind
+; this engine doesn't know is ignored, like any unknown key.
+Function RevokeScan
+  Push $0
+  Push $1
+  FileOpen $0 $U_a r
+  ${If} $0 == ""
+    Pop $1
+    Pop $0
+    Return
+  ${EndIf}
+  ${Do}
+    ${IbRead} $0
+    ${If} ${Errors}
+      ${Break}
+    ${EndIf}
+    Call IbParseLine
+    ${If} $K S!= "revoke"
+      ${Continue}
+    ${EndIf}
+    StrCpy $1 ""
+    ${If} $F1 S== "record"
+      ${If} $RecHash != ""
+      ${AndIf} $F2 S== $RecHash
+        StrCpy $1 "record $F2"
+      ${EndIf}
+    ${ElseIf} $F1 S== "source"
+      ${If} $RecSrcKey != ""
+      ${AndIf} "$F2 $F3" S== $RecSrcKey
+        StrCpy $1 "source $F2 $F3"
+      ${EndIf}
+    ${ElseIf} $F1 S== "name"
+      ${If} $TokRuntime != ""
+      ${AndIf} "$F2 $F3" S== "$TokRuntime $TokProject"
+        StrCpy $1 "name $F2 $F3"
+      ${EndIf}
+    ${ElseIf} $F1 S== "sha"
+    ${OrIf} $F1 S== "file"
+      StrCpy $U_a $F2
+      Call ShaListed
+      ${If} $U_out = 1
+        StrCpy $1 "$F1 $F2"
+      ${EndIf}
+    ${EndIf}
+    ${If} $1 != ""
+      FileClose $0
+      ${FailWith} "This install has been withdrawn: the revocation list at $Backend names $1. Nothing was installed."
+      Pop $1
+      Pop $0
+      Return
+    ${EndIf}
+  ${Loop}
+  FileClose $0
+  Pop $1
+  Pop $0
 FunctionEnd
 
 ; ---------------------------------------------------------------- prerequisites
@@ -2005,6 +2666,13 @@ Function .onInit
   StrCpy $PlanRec ""
   StrCpy $PlanReq ""
   StrCpy $PlanReqWant ""
+  StrCpy $PlanNonce ""
+  StrCpy $PlanNonceGot ""
+  StrCpy $PlanSigned ""
+  StrCpy $PlanMaxAge ""
+  StrCpy $AgeWarn ""
+  StrCpy $RevokeNote ""
+  StrCpy $ShaList "$PLUGINSDIR\shas.txt"
 
   StrCpy $Backend "${IB_BACKEND}"
   ClearErrors
@@ -2034,7 +2702,12 @@ Function .onInit
     Call OfflineInstalled
   ${EndIf}
   ${If} $PlanFile == ""
+    StrCpy $U_a $RecHash
+    Call MakeNonce
     StrCpy $U_a "$Backend/api/plan/$RecHash"
+    ${If} $PlanNonce != ""
+      StrCpy $U_a "$U_a?nonce=$PlanNonce"
+    ${EndIf}
     StrCpy $U_b "$PLUGINSDIR\plan.txt"
     ${Log} "Fetching the plan: $U_a"
     Call DownloadQuiet
@@ -2081,6 +2754,12 @@ Function .onInit
   ${If} $PlanReqWant != ""
   ${AndIf} $PlanReq S!= $PlanReqWant
     ${FailWith} "The plan from $Backend is not the answer for $TokRuntime/$TokProject. Nothing was installed."
+    Call InitFail
+  ${EndIf}
+  ; ...and, for a fetched plan, the answer to *this* request rather than a
+  ; replay of an older one (design.md 7.1)
+  Call CheckNonce
+  ${If} $Failed = 1
     Call InitFail
   ${EndIf}
   ibsig::cleanstr "$AppName"
@@ -2153,6 +2832,18 @@ Function .onInit
     Call InitFail
   ${EndIf}
   ${Log} "Plan block $TgtNo matches."
+  ; A plan carried in this installer may name something since withdrawn,
+  ; or simply be old: the revocation list answers that where there is a
+  ; network, and the plan's own `signed`/`maxage` where there is not.
+  ; Both run before anything on this machine is changed.
+  Call Revocations
+  ${If} $Failed = 1
+    Call InitFail
+  ${EndIf}
+  Call CheckAge
+  ${If} $Failed = 1
+    Call InitFail
+  ${EndIf}
   ${If} $TgtFail != ""
     ${FailWith} "$TgtFail"
     Call InitFail
@@ -2340,8 +3031,21 @@ Function WriteSummary
   ${Sum} "Settings from:  $MetaSrc"
   ${Sum} "Record:  $RecHash"
   ${Sum} "Plan:  $PlanSrc"
+  ${If} $PlanSigned != ""
+    ${If} $PlanKind == "fetched"
+      ${Sum} "Plan signed:  $PlanSigned (fetched now)"
+    ${Else}
+      ${Sum} "Plan signed:  $PlanSigned (carried in this installer)"
+    ${EndIf}
+  ${EndIf}
+  ${If} $RevokeNote != ""
+    ${Sum} "Revocation list:  $RevokeNote"
+  ${EndIf}
   ${If} $PlanWarn != ""
     ${Sum} "WARNING:  $PlanWarn"
+  ${EndIf}
+  ${If} $AgeWarn != ""
+    ${Sum} "WARNING:  $AgeWarn"
   ${EndIf}
   FileClose $SumH
   ; no control or bidi characters on the review page (plan text is shown as is otherwise)

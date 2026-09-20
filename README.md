@@ -96,6 +96,7 @@ node tests/resolve-test.mjs              # the resolver against 3,095 saved plan
 node tests/linux-x86-test.mjs            # what 32-bit x86 Linux is offered, per runtime (design.md 1.11)
 node tests/builder-golden.mjs            # js/builder.js: records and plans for every runtime, also lazily loaded
 node tests/backend-golden.mjs            # a running server (default :8080, --data backend/data)
+sh bases/unix/test_freshness.sh          # the Linux engine on stale plans: nonce, revocation list, expiry
                                          # against saved answers: errors, jobs, plans, takedown
 ```
 

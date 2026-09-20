@@ -14,6 +14,7 @@ version, dialogs, and menu entries.
 | `make_app.sh` | Builds the macOS base `out/TiddlyInstall.app` and `out/ib-base-macos.zip`. On a Mac it is ad-hoc signed and zipped with `ditto` |
 | `verify/` | `ibverify`, the Ed25519 verifier the bases carry: source, `build.sh` (Zig), the built binaries |
 | `test_verify.sh` | Plan signature cases (good over plain HTTP, `--plan`, tampered, replayed, unsigned) with openssl shadowed |
+| `test_freshness.sh` | Stale plans (design.md 7.1): the nonce echoed, another nonce refused, none noted; the revocation list by record, source and file, cached and used offline, ignored when signed as the wrong kind; `signed`/`maxage` fresh, past `maxage`, past the hard limit, and **not refused when the clock can't be believed**; and a plan with the new fields on the engine from before them |
 | `test_prereqs.sh` | Prerequisites and the record icon |
 | `append_meta.py` | Test tool: adds a record, plan and pack to a `.run` (appended block) or a base zip (`Contents/Resources/ib/`). The Go server has its own implementation |
 
