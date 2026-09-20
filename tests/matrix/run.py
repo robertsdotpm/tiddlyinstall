@@ -210,9 +210,29 @@ def _judge_unix(rt, parts, err):
 MAC_SCRIPT = r'''
 set -u
 cd "$HOME/ibtest" || exit 90
+# A browser sets com.apple.quarantine on what it downloads; `scp` does not,
+# which is how the matrix missed for months that Gatekeeper kills our macOS
+# installers outright (docs/macos-packaging.md section 5: unsigned and
+# ad-hoc signed alike, exit 137, because only a notarization ticket
+# satisfies it). So the cell now runs the installer the way a downloader
+# would get it, and only then -- to keep the engine itself under test --
+# clears the flag and runs it again.
+Q=${QUARANTINE:-1}
+qval="0083;$(printf '%x' "$(date +%s)");Safari;$(uuidgen)"
+[ "$Q" = 1 ] && xattr -w com.apple.quarantine "$qval" in.zip 2>/dev/null
 rm -rf x && mkdir x && cd x && ditto -x -k ../in.zip . || exit 91
 app=$(ls -d *.app)
 if [ "$MODE" = B ]; then codesign -f -s - "$app" >/dev/null 2>&1 || exit 92; fi
+if [ "$Q" = 1 ]; then
+  # ditto carries the flag across; put it on by hand if it did not.
+  xattr -p com.apple.quarantine "$app" > /dev/null 2>&1 ||
+    xattr -w com.apple.quarantine "$qval" "$app" 2>/dev/null
+  echo "@quarantine $(xattr -p com.apple.quarantine "$app" 2>/dev/null || echo none)"
+  IB_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --backend=http://127.0.0.1:8080 --log="$HOME/ibtest/q.log" </dev/null > /dev/null 2>&1
+  echo "@qexit $?"
+  echo "@spctl"; spctl -a -vv "$app" 2>&1 | head -2
+  xattr -dr com.apple.quarantine "$app" 2>/dev/null
+fi
 IB_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --backend=http://127.0.0.1:8080 --log="$HOME/ibtest/i.log" </dev/null >/dev/null 2>&1
 echo "@install $?"
 echo "@osdesc"; sed -n 's/^Running as .* on //p' "$HOME/ibtest/i.log" 2>/dev/null | head -1
@@ -227,14 +247,39 @@ echo "@log"; tail -8 "$HOME/ibtest/i.log"
 '''
 
 
-def run_mac(rt, mode, f):
+def run_mac(rt, mode, f, quarantine=True):
     sh(["ssh", MAC, "rm -rf ~/ibtest; mkdir -p ~/ibtest"], timeout=60)
     code, _, err = sh(["scp", "-q", f, f"{MAC}:ibtest/in.zip"], timeout=300)
     if code:
         return "fail", "scp: " + err, {}
-    code, out, err = sh(["ssh", MAC, f"MODE={mode} sh -s"], input=MAC_SCRIPT)
+    code, out, err = sh(["ssh", MAC, f"MODE={mode} QUARANTINE={1 if quarantine else 0} sh -s"],
+                        input=MAC_SCRIPT)
     sh(["ssh", MAC, "rm -rf ~/ibtest"], timeout=60)
-    return parse_unix(rt, out, err, "mac")
+    r, d, extra = parse_unix(rt, out, err, "mac")
+    return mac_gatekeeper(out, r, d, extra)
+
+
+def mac_gatekeeper(out, r, d, extra):
+    """A Gatekeeper refusal fails the cell, whatever the engine then did.
+
+    The quarantined run is the one a real user gets; the unquarantined one
+    that follows only says whether the engine still works, so it goes in
+    the detail rather than deciding the result. Signed by a Developer ID
+    and notarized, the two runs would agree and this would go quiet.
+    """
+    parts = {}
+    for line in out.splitlines():
+        if line.startswith("@"):
+            k, _, v = line[1:].partition(" ")
+            parts[k] = v
+    q = parts.get("qexit")
+    if q is None:
+        return r, d, extra                      # run with --no-quarantine
+    if q == "0":
+        return r, d, extra
+    why = "killed by Gatekeeper" if q in ("137", "-9") else f"exit {q}"
+    then = "and with the flag cleared: " + d
+    return "fail", f"quarantined (as a browser download): {why}; {then}", extra
 
 
 def main():
@@ -245,6 +290,8 @@ def main():
     ap.add_argument("--modes", default="A,B,C")
     ap.add_argument("--out", default=str(HERE / "out"))
     ap.add_argument("--results", default=str(RESULTS_FILE))
+    ap.add_argument("--no-quarantine", action="store_true",
+                    help="macOS: skip the com.apple.quarantine run, to test the engine alone")
     a = ap.parse_args()
     RESULTS_FILE = Path(a.results)
     if a.target not in machines.MACHINES:
@@ -268,7 +315,7 @@ def main():
             if a.target == "linux":
                 r, d, extra = run_linux(rt, mode, f)
             elif a.target == "mac":
-                r, d, extra = run_mac(rt, mode, f)
+                r, d, extra = run_mac(rt, mode, f, quarantine=not a.no_quarantine)
             elif a.target in SANDBOXES:
                 r, d, extra = run_sandbox(a.target, rt, mode, f)
             elif a.target in LINUX_VMS:
