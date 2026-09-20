@@ -62,12 +62,20 @@ def main():
     ap.add_argument("--write", action="store_true")
     a = ap.parse_args()
     latest, order = {}, []
+    # The newest run of each cell wins, by the run's own `time` and not by
+    # the order the files happen to come in: a results file named with a
+    # suffix ("2026-09-20-fix.jsonl") sorts before the plain one for the
+    # same day, so a later run was being thrown away by the ordering alone.
     for f in a.results:
         for line in Path(f).read_text().splitlines():
             if not line.strip():
                 continue
             r = json.loads(line)
-            latest[(r["template"], r["target"])] = r
+            key = (r["template"], r["target"])
+            was = latest.get(key)
+            if was is not None and str(was.get("time", "")) > str(r.get("time", "")):
+                continue
+            latest[key] = r
             if r["template"] not in order:
                 order.append(r["template"])
     out = []

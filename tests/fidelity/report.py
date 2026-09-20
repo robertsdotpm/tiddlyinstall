@@ -59,10 +59,18 @@ def main():
     ap.add_argument("--results", default=str(HERE / "results"))
     a = ap.parse_args()
     latest = {}
+    # The newest run of each cell wins, by the run's own `time` and not by
+    # the order the files happen to come in: a results file named with a
+    # suffix ("2026-09-20-fix.jsonl") sorts before the plain one for the
+    # same day, so a later run was being thrown away by the ordering alone.
     for f in sorted(Path(a.results).glob("*.jsonl")):
         for line in f.read_text().splitlines():
             r = json.loads(line)
-            latest[(r["project"], r["target"], r.get("label") or "after")] = r
+            key = (r["project"], r["target"], r.get("label") or "after")
+            was = latest.get(key)
+            if was is not None and str(was.get("time", "")) > str(r.get("time", "")):
+                continue
+            latest[key] = r
     projects = []
     for (p, _, _) in latest:
         if p not in projects:

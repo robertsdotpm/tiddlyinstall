@@ -20,8 +20,16 @@ import machines                                            # noqa: E402
 files = sys.argv[1:] or [str(HERE / "results.jsonl")]
 rows = [json.loads(l) for f in files for l in open(f) if l.strip()]
 last = {}
+# The newest run of each cell wins, by the run's own `time` and not by the
+# order the files happen to be given in: a results file named with a suffix
+# ("2026-09-20-macos-base.jsonl") is easy to pass before the plain one for
+# the same day, and the later run would then be thrown away.
 for r in rows:
-    last[(r["target"], r["runtime"], r["mode"])] = r
+    key = (r["target"], r["runtime"], r["mode"])
+    was = last.get(key)
+    if was is not None and str(was.get("time", "")) > str(r.get("time", "")):
+        continue
+    last[key] = r
 ORDER = ["xp", "vista", "7", "8.1", "10", "11", "2022", "10x86", "ltsc2021", "ltsc2024", "11de", "2025core",
          "centos6", "centos7", "ubuntu1404", "ubuntu1604", "ubuntu1804", "rocky8", "ubuntu2004", "ubuntu2204",
          "debian12", "linux", "alpine", "debian12x86", "debian12-i386", "debian12-i386-libs", "alpine324-i386", "mac"]
