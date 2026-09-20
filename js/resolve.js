@@ -1254,6 +1254,16 @@ function recipeForUncached(cat, rt, e, install, o, tools) {
       if (!matches(e.v, vs)) continue;
       score++;
     }
+    // `match.tool`: a recipe only for apps whose record sets that switch
+    // (docs/format.md, record `tools`). Go's Linux recipe comes in a pair,
+    // one that installs a C toolchain and one that doesn't, and only the
+    // record can say which an app needs: nothing in the files shows that a
+    // module it pulls in imports "C".
+    const tool = str(own(r.match, 'tool'));
+    if (tool !== '') {
+      if (!tools || !tools.has(tool)) continue;
+      score++;
+    }
     const sup = supported(cat, rt, r, e, install, o, tools);
     if (!sup.ok) continue;
     score = score * 100 + (10 - methods.indexOf(r.method)) * 5;

@@ -602,7 +602,7 @@
    "runtimes": [
     "go"
    ],
-   "_comment": "design.md 11.0 item 27. Go builds pure-Go programs with no C compiler at all, so one is not installed unless the publisher says the program uses cgo (mattn/go-sqlite3 and friends). Then Windows gets WinLibs GCC from the catalogue as a companion runtime, and Linux and macOS ask for the system compiler as a prerequisite, as Rust and Nim do."
+   "_comment": "design.md 11.0 item 27, revised by the operator 2026-09-20. Go builds pure-Go programs with no C compiler at all, and nothing in a project's files shows that it -- or a module it pulls in -- imports \"C\", so the publisher says. When they do: Windows gets WinLibs GCC from the catalogue as a companion runtime, Linux gets zig and the ibcc shims (item 15's answer, applied here too, so an unattended install needs no root), and macOS asks for the Xcode Command Line Tools, which zig cc needs for Apple's SDK."
   },
   "ruby_devkit": {
    "label": "Always install the DevKit (Windows)",
@@ -1350,13 +1350,6 @@
    "needs": [
     {
      "prerequisites": [
-      "cc"
-     ],
-     "for": "tool:cgo",
-     "why": "This program uses cgo, so Go compiles and links C code with the system C compiler (cc) and the C library's development files, which minimal installs leave out."
-    },
-    {
-     "prerequisites": [
       "xcode-clt"
      ],
      "for": "tool:cgo",
@@ -1370,6 +1363,14 @@
       "bin": "bin",
       "for": "tool:cgo",
       "_comment": "Windows never has a C compiler, so a cgo program cannot be built there at all without one; WinLibs GCC from the catalogue, the same companion Rust gets. No variant is pinned: the resolver takes the newest WinLibs build that runs on the user's Windows (the UCRT builds on 10 and later, MSVCRT on older), and Go's own runtime does not use the C runtime, so either matches."
+     }
+    ],
+    "linux": [
+     {
+      "runtime": "zig",
+      "bin": "",
+      "for": "tool:cgo",
+      "_comment": "design.md 11.0, the operator's 2026-09-20 revision of item 27: a cgo program on Linux is given a C toolchain rather than asked for one, so an unattended install needs no root -- the same answer Rust and Nim got in item 15, and for the same reason. zig's Linux builds are static, so they run on any kernel, glibc or musl. The `cgo` recipe (install.json, match.tool) writes the ibcc shims and sets CC, CXX and CGO_ENABLED=1; without a compiler cmd/go quietly sets CGO_ENABLED=0 and the build dies with \"build constraints exclude all Go files\", which names nothing. macOS still asks for the Xcode Command Line Tools: zig cc links against Apple's SDK."
      }
     ]
    }

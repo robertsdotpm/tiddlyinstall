@@ -208,6 +208,13 @@ outside `{runtime_dir}` is listed in `side_effects`.
 - `match`: which catalogue files the recipe applies to. `versions` is a
   PEP 440-style range over the release `version`; null fields match
   anything. The most specific match wins.
+  `tool` (optional, added 2026-09-20) names a switch from installer-builder's
+  policy `tools` table that the app's record must set for this recipe to be
+  used, so one runtime can have two recipes for an OS and the publisher's
+  answer chooses between them (its `docs/format.md`, record `tools`). Go's
+  Linux recipes are the pair: the plain one, and a `cgo` one that adds the
+  C-toolchain shims and sets `CC`, `CXX` and `CGO_ENABLED=1`, because
+  nothing in a Go project's files shows that it imports `"C"`.
 - `method`: `unpack` (archive, just extract), `extract` (take the files out
   of an installer without running its setup logic, e.g. `msiexec /a`,
   `pkgutil --expand-full`, `dpkg-deb -x`, `innoextract`, `7z x`), `run`

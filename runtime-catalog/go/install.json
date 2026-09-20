@@ -543,6 +543,677 @@
     "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). The config-folder variable keeps Go telemetry (1.23+) out of the user's home. cgo projects also need a C compiler."
    },
    "id": "go-old-windows"
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": ">=1.27,<1.28",
+    "arch": null,
+    "tool": "cgo"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "mkdir -p \"{runtime_dir}/gopath\" \"{runtime_dir}/cache\" \"{runtime_dir}/config\" && env GOENV=off XDG_CONFIG_HOME=\"{runtime_dir}/config\" GOCACHE=\"{runtime_dir}/cache\" \"{runtime_dir}/bin/go\" telemetry off",
+     "shell": "sh"
+    },
+    {
+     "mkdir": "{runtime_dir}/ibcc"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#!/bin/sh"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# zig as this app's C toolchain, so an unattended install needs no root"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# and no system compiler (design.md 11.0 item 15). The name it is called"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# by picks the mode. Three things have to be corrected on the way:"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#  - a Rust target triple (x86_64-unknown-linux-gnu), which cc-rs passes"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#    as --target= and zig's parser rejects, becomes zig's;"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#  - the glibc version is pinned to this machine's, or zig links against"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#    the newest glibc it knows and the program will not start here"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#    (CentOS 7: \"/lib64/libc.so.6: version GLIBC_2.18 not found\")."
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#  - zig calls the 32-bit x86 architecture \"x86\"; uname says i686, which"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#    zig rejects outright (\"available architectures: ... x86 ...\")."
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "t="
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "if [ \"$m\" != ar ]; then"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "g=$(getconf GNU_LIBC_VERSION 2>/dev/null | awk '{print $2}')"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "[ -n \"$g\" ] || g=$(ldd --version 2>/dev/null | sed -n '1s/.* //p')"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "c=$(uname -m)"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $c in i[3-6]86) c=x86 ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $g in [0-9]*.[0-9]*) t=$c-linux-gnu.$g ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "fi"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "n=$#"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "i=0"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "seen="
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "while [ $i -lt $n ]; do"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "a=$1"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "shift"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $a in"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "--target=*)"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "seen=1"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed -e 's/-unknown-/-/' -e 's/^i[3-6]86-/x86-/'); fi"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": ";;"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "set -- \"$@\" \"$a\""
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "i=$((i + 1))"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "done"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "if [ -z \"$seen\" ] && [ -n \"$t\" ]; then set -- -target \"$t\" \"$@\"; fi"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "exec \"{dir:zig}\"/zig $m \"$@\""
+    },
+    {
+     "run": "cd \"{runtime_dir}/ibcc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin/go",
+   "package_manager": "\"{runtime_dir}/bin/go\" mod download (with the launch environment in notes)",
+   "verify": "\"{runtime_dir}/bin/go\" version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Linux kernel 3.2+ (1.24+); ppc64 (big-endian) 1.27 is ELFv2 (checked: `file` reports OpenPOWER ELF V2 ABI) so kernel 3.13+ per catalog limitations.json; no glibc requirement for the toolchain (every bin/go is statically linked, checked); CPU: amd64 v1, 386 with SSE2, armv6l = ARMv6 with VFP, ppc64/ppc64le POWER8+, s390x z13+, riscv64 RVA20U64, loong64 LA364+ (MinimumRequirements wiki)",
+   "tested": true,
+   "confidence": "high",
+   "sources": [
+    "https://go.dev/doc/go1.9",
+    "https://go.dev/doc/toolchain",
+    "https://go.dev/doc/telemetry",
+    "https://go.dev/wiki/MinimumRequirements",
+    "https://pkg.go.dev/cmd/go#hdr-Environment_variables",
+    "https://go.dev/doc/install"
+   ],
+   "notes": "When the toolchain is needed at all: Go apps are normally shipped as compiled, self-contained executables that need no Go runtime on the target, so a Go app usually needs NO recipe from this file. Install the toolchain only when the app ships as source and is built at install time (build as root during install, then the app runs the output binary), or when the app itself runs `go` (IDE, plugin compiler, `go run` scripts). When building at install time, pass -trimpath so the binary does not embed {runtime_dir} paths. The tarball has a single top-level go/ folder (hence strip_components 1), no symlinks; the unpacker must keep Unix modes (bin/*, pkg/tool/*/* are executable). 1.20+ ship no precompiled std library, so the first build compiles std into GOCACHE (~33 MB, tens of seconds); GOROOT itself stays read-only. Two copies of the same version side by side work: each go binary finds its own GOROOT and uses only the GOPATH/GOCACHE/config it is given. Launch environment for any `go` invocation (the compiled app itself needs none of this): GOROOT={runtime_dir} (not required since 1.9, which infers GOROOT from the go binary's own path, but set it so a stray GOROOT in the user's environment cannot point this copy at another toolchain -- tested: an inherited GOROOT wins), GOPATH={runtime_dir}/gopath, GOMODCACHE={runtime_dir}/gopath/pkg/mod, GOCACHE={runtime_dir}/cache, GOENV=off (ignore the user's `go env -w` file, which otherwise overrides $GOROOT/go.env; tested), GOTOOLCHAIN=local (never download another toolchain into the module cache because a go.mod says `go 1.NN`/`toolchain`; tested: fails with a clear error instead), GOFLAGS=-modcacherw (the module cache is otherwise written with read-only dirs, so a plain recursive delete of {runtime_dir} fails for a non-root user; tested, and `go clean -modcache` is the alternative). Unset GO111MODULE, GOBIN, GOOS, GOARCH, GOEXPERIMENT, CGO_ENABLED, CC, CGO_CFLAGS/CGO_LDFLAGS unless the app wants them; keep or deliberately set GOPROXY/GOPRIVATE/GONOSUMDB (corporate proxies). The caches must be writable by whichever user runs `go`; if that is not root, give that user the gopath/cache/config dirs. Telemetry (1.23+): by default the toolchain writes counter files to os.UserConfigDir()/go/telemetry = $XDG_CONFIG_HOME or ~/.config (tested: ~/.config/go/telemetry/local/*.count appeared after one build). GOTELEMETRY/GOTELEMETRYDIR are read-only reports, not settings (tested: setting them in the environment changes nothing). So set XDG_CONFIG_HOME={runtime_dir}/config for go invocations, and the install step runs `go telemetry off` there, which writes {runtime_dir}/config/go/telemetry/mode and stops local counters (tested: no counter files afterwards). Default GOPROXY=https://proxy.golang.org,direct and GOSUMDB=sum.golang.org come from {runtime_dir}/go.env and need network at build time unless the app vendors its dependencies (`go build -mod=vendor`). cgo needs a system C compiler (gcc/clang on PATH); without one set CGO_ENABLED=0. Tested 2026-09-18 as a normal user: unpacked go1.27.1.linux-amd64 twice into '.../app one/runtime dir' and '.../app two/runtime dir' (spaces), built hello world in both concurrently with GOROOT read-only, ran a cgo + net + os/user program from the spaced GOROOT, fetched a real module (golang.org/x/example/hello) into the private GOMODCACHE, deleted one copy and the other still built. The exact install step and launch environment above were run end to end with HOME pointing at an empty fake home: nothing was written there (and a separate build with HOME read-only still succeeded). strace of a full `go build -a` showed no writes outside the runtime/data dirs and the working directory. Other arches under qemu-user 8.2: 386 (native), arm64, armv6l, loong64, ppc64, riscv64, s390x and ppc64le all ran `go version`, built hello world and ran it (ppc64le hung in a parallel build under qemu and was built with GOMAXPROCS=1 -p 1; an emulator artifact). ~317 MB after install and one build. mips64le has its own recipe (not fully run). Added 2026-09-20 (design.md 11.0, the operator's revision of item 27): the `cgo` recipe is the same build with a C toolchain, chosen only for a record that sets `tools cgo` (`match.tool`). Nothing in a Go project's files shows that it, or a module it pulls in, imports \"C\", so only the publisher can say; and when they do say, the app gets zig rather than a demand for root, as Rust and Nim do. Without a compiler `go build` does not say what is missing -- it reports \"build constraints exclude all Go files\", because cmd/go quietly sets CGO_ENABLED=0 when it finds no C compiler. The steps write the same shim Rust and Nim write, under every name a build might call, and project_install sets CC, CXX and CGO_ENABLED=1 so the choice is explicit rather than inferred from what is on PATH.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly; it needs no runtime environment."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/go\" build -o \"{app_dir}/{project}{exe}\" .",
+    "env": {
+     "GOROOT": "{runtime_dir}",
+     "GOPATH": "{data_dir}/gopath",
+     "GOBIN": null,
+     "GOMODCACHE": "{data_dir}/gopath/pkg/mod",
+     "GOCACHE": "{data_dir}/go-cache",
+     "GOENV": "off",
+     "GOTOOLCHAIN": "local",
+     "GOFLAGS": "-modcacherw",
+     "XDG_CONFIG_HOME": "{data_dir}/config",
+     "CC": "{runtime_dir}/ibcc/cc",
+     "CXX": "{runtime_dir}/ibcc/c++",
+     "CGO_ENABLED": "1"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). The config-folder variable keeps Go telemetry (1.23+) out of the user's home. cgo projects also need a C compiler. With `tools cgo` the C compiler is zig, through the ibcc shim.",
+    "path_prepend": [
+     "{runtime_dir}/ibcc"
+    ]
+   },
+   "id": "cgo"
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": ">=1.27,<1.28",
+    "arch": "mips64le",
+    "tool": "cgo"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "run": "mkdir -p \"{runtime_dir}/gopath\" \"{runtime_dir}/cache\" \"{runtime_dir}/config\" && env GOENV=off XDG_CONFIG_HOME=\"{runtime_dir}/config\" GOCACHE=\"{runtime_dir}/cache\" \"{runtime_dir}/bin/go\" telemetry off",
+     "shell": "sh"
+    },
+    {
+     "mkdir": "{runtime_dir}/ibcc"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#!/bin/sh"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# zig as this app's C toolchain, so an unattended install needs no root"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# and no system compiler (design.md 11.0 item 15). The name it is called"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# by picks the mode. Three things have to be corrected on the way:"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#  - a Rust target triple (x86_64-unknown-linux-gnu), which cc-rs passes"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#    as --target= and zig's parser rejects, becomes zig's;"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#  - the glibc version is pinned to this machine's, or zig links against"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#    the newest glibc it knows and the program will not start here"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#    (CentOS 7: \"/lib64/libc.so.6: version GLIBC_2.18 not found\")."
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#  - zig calls the 32-bit x86 architecture \"x86\"; uname says i686, which"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#    zig rejects outright (\"available architectures: ... x86 ...\")."
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "t="
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "if [ \"$m\" != ar ]; then"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "g=$(getconf GNU_LIBC_VERSION 2>/dev/null | awk '{print $2}')"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "[ -n \"$g\" ] || g=$(ldd --version 2>/dev/null | sed -n '1s/.* //p')"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "c=$(uname -m)"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $c in i[3-6]86) c=x86 ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $g in [0-9]*.[0-9]*) t=$c-linux-gnu.$g ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "fi"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "n=$#"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "i=0"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "seen="
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "while [ $i -lt $n ]; do"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "a=$1"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "shift"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $a in"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "--target=*)"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "seen=1"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed -e 's/-unknown-/-/' -e 's/^i[3-6]86-/x86-/'); fi"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": ";;"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "set -- \"$@\" \"$a\""
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "i=$((i + 1))"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "done"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "if [ -z \"$seen\" ] && [ -n \"$t\" ]; then set -- -target \"$t\" \"$@\"; fi"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "exec \"{dir:zig}\"/zig $m \"$@\""
+    },
+    {
+     "run": "cd \"{runtime_dir}/ibcc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin/go",
+   "package_manager": "\"{runtime_dir}/bin/go\" mod download (with the launch environment in notes)",
+   "verify": "\"{runtime_dir}/bin/go\" version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Linux kernel 3.2+, MIPS III or later little-endian (MinimumRequirements wiki); toolchain statically linked",
+   "tested": false,
+   "confidence": "medium",
+   "sources": [
+    "https://go.dev/doc/go1.9",
+    "https://go.dev/doc/toolchain",
+    "https://go.dev/wiki/MinimumRequirements"
+   ],
+   "notes": "Same recipe as the generic Linux one (same layout, same launch environment). Under qemu-mips64el 8.2 user-mode, `go version` ran but `go build` of hello world crashed (runtime fault dump in a parallel build; SIGBUS with GOMAXPROCS=1 -p 1); that is most likely the emulator (user-mode MIPS emulation of Go's signal/thread handling) rather than the archive, but it has not been confirmed on real hardware, so tested=false. When the toolchain is needed at all: Go apps are normally shipped as compiled, self-contained executables that need no Go runtime on the target, so a Go app usually needs NO recipe from this file. Install the toolchain only when the app ships as source and is built at install time (build as root during install, then the app runs the output binary), or when the app itself runs `go` (IDE, plugin compiler, `go run` scripts). When building at install time, pass -trimpath so the binary does not embed {runtime_dir} paths.  Added 2026-09-20 (design.md 11.0, the operator's revision of item 27): the `cgo` recipe is the same build with a C toolchain, chosen only for a record that sets `tools cgo` (`match.tool`). Nothing in a Go project's files shows that it, or a module it pulls in, imports \"C\", so only the publisher can say; and when they do say, the app gets zig rather than a demand for root, as Rust and Nim do. Without a compiler `go build` does not say what is missing -- it reports \"build constraints exclude all Go files\", because cmd/go quietly sets CGO_ENABLED=0 when it finds no C compiler. The steps write the same shim Rust and Nim write, under every name a build might call, and project_install sets CC, CXX and CGO_ENABLED=1 so the choice is explicit rather than inferred from what is on PATH.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly; it needs no runtime environment."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/go\" build -o \"{app_dir}/{project}{exe}\" .",
+    "env": {
+     "GOROOT": "{runtime_dir}",
+     "GOPATH": "{data_dir}/gopath",
+     "GOBIN": null,
+     "GOMODCACHE": "{data_dir}/gopath/pkg/mod",
+     "GOCACHE": "{data_dir}/go-cache",
+     "GOENV": "off",
+     "GOTOOLCHAIN": "local",
+     "GOFLAGS": "-modcacherw",
+     "XDG_CONFIG_HOME": "{data_dir}/config",
+     "CC": "{runtime_dir}/ibcc/cc",
+     "CXX": "{runtime_dir}/ibcc/c++",
+     "CGO_ENABLED": "1"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). The config-folder variable keeps Go telemetry (1.23+) out of the user's home. cgo projects also need a C compiler. With `tools cgo` the C compiler is zig, through the ibcc shim.",
+    "path_prepend": [
+     "{runtime_dir}/ibcc"
+    ]
+   },
+   "id": "cgo-mips64le"
+  },
+  {
+   "match": {
+    "os": "linux",
+    "kind": "archive",
+    "format": "tar.gz",
+    "versions": "<1.27",
+    "arch": null,
+    "tool": "cgo"
+   },
+   "method": "unpack",
+   "steps": [
+    {
+     "unpack": "tar.gz",
+     "to": "{runtime_dir}",
+     "strip_components": 1
+    },
+    {
+     "mkdir": "{runtime_dir}/ibcc"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#!/bin/sh"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# zig as this app's C toolchain, so an unattended install needs no root"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# and no system compiler (design.md 11.0 item 15). The name it is called"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "# by picks the mode. Three things have to be corrected on the way:"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#  - a Rust target triple (x86_64-unknown-linux-gnu), which cc-rs passes"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#    as --target= and zig's parser rejects, becomes zig's;"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#  - the glibc version is pinned to this machine's, or zig links against"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#    the newest glibc it knows and the program will not start here"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#    (CentOS 7: \"/lib64/libc.so.6: version GLIBC_2.18 not found\")."
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#  - zig calls the 32-bit x86 architecture \"x86\"; uname says i686, which"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#    zig rejects outright (\"available architectures: ... x86 ...\")."
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "t="
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "if [ \"$m\" != ar ]; then"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "g=$(getconf GNU_LIBC_VERSION 2>/dev/null | awk '{print $2}')"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "[ -n \"$g\" ] || g=$(ldd --version 2>/dev/null | sed -n '1s/.* //p')"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "c=$(uname -m)"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $c in i[3-6]86) c=x86 ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $g in [0-9]*.[0-9]*) t=$c-linux-gnu.$g ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "fi"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "n=$#"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "i=0"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "seen="
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "while [ $i -lt $n ]; do"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "a=$1"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "shift"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $a in"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "--target=*)"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "seen=1"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed -e 's/-unknown-/-/' -e 's/^i[3-6]86-/x86-/'); fi"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": ";;"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "set -- \"$@\" \"$a\""
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "i=$((i + 1))"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "done"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "if [ -z \"$seen\" ] && [ -n \"$t\" ]; then set -- -target \"$t\" \"$@\"; fi"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "exec \"{dir:zig}\"/zig $m \"$@\""
+    },
+    {
+     "run": "cd \"{runtime_dir}/ibcc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
+     "shell": "sh"
+    }
+   ],
+   "prerequisites": [],
+   "executable": "bin/go",
+   "package_manager": "\"{runtime_dir}/bin/go\" mod download (with the launch environment in notes)",
+   "verify": "\"{runtime_dir}/bin/go\" version",
+   "uninstall": "delete {runtime_dir}",
+   "side_effects": [],
+   "isolation": "full",
+   "relocatable": true,
+   "min_os": "Linux kernel 3.2+ (1.24+); ppc64 (big-endian) 1.27 is ELFv2 (checked: `file` reports OpenPOWER ELF V2 ABI) so kernel 3.13+ per catalog limitations.json; no glibc requirement for the toolchain (every bin/go is statically linked, checked); CPU: amd64 v1, 386 with SSE2, armv6l = ARMv6 with VFP, ppc64/ppc64le POWER8+, s390x z13+, riscv64 RVA20U64, loong64 LA364+ (MinimumRequirements wiki)",
+   "tested": false,
+   "confidence": "high",
+   "sources": [
+    "https://go.dev/doc/go1.9",
+    "https://go.dev/doc/toolchain",
+    "https://go.dev/doc/telemetry",
+    "https://go.dev/wiki/MinimumRequirements",
+    "https://pkg.go.dev/cmd/go#hdr-Environment_variables",
+    "https://go.dev/doc/install"
+   ],
+   "notes": "Added 2026-09-18 by installer-builder: the 1.27 recipe without `go telemetry off`, which versions before 1.23 do not have. Not tested per version. Added 2026-09-20 (design.md 11.0, the operator's revision of item 27): the `cgo` recipe is the same build with a C toolchain, chosen only for a record that sets `tools cgo` (`match.tool`). Nothing in a Go project's files shows that it, or a module it pulls in, imports \"C\", so only the publisher can say; and when they do say, the app gets zig rather than a demand for root, as Rust and Nim do. Without a compiler `go build` does not say what is missing -- it reports \"build constraints exclude all Go files\", because cmd/go quietly sets CGO_ENABLED=0 when it finds no C compiler. The steps write the same shim Rust and Nim write, under every name a build might call, and project_install sets CC, CXX and CGO_ENABLED=1 so the choice is explicit rather than inferred from what is on PATH.",
+   "launch": {
+    "program": null,
+    "args": [],
+    "env": {},
+    "notes": "The app is the program built by project_install and runs directly; it needs no runtime environment."
+   },
+   "project_install": {
+    "command": "\"{runtime_dir}/bin/go\" build -o \"{app_dir}/{project}{exe}\" .",
+    "env": {
+     "GOROOT": "{runtime_dir}",
+     "GOPATH": "{data_dir}/gopath",
+     "GOBIN": null,
+     "GOMODCACHE": "{data_dir}/gopath/pkg/mod",
+     "GOCACHE": "{data_dir}/go-cache",
+     "GOENV": "off",
+     "GOTOOLCHAIN": "local",
+     "GOFLAGS": "-modcacherw",
+     "XDG_CONFIG_HOME": "{data_dir}/config",
+     "CC": "{runtime_dir}/ibcc/cc",
+     "CXX": "{runtime_dir}/ibcc/c++",
+     "CGO_ENABLED": "1"
+    },
+    "cwd": "{app_dir}",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). The config-folder variable keeps Go telemetry (1.23+) out of the user's home. cgo projects also need a C compiler. With `tools cgo` the C compiler is zig, through the ibcc shim.",
+    "path_prepend": [
+     "{runtime_dir}/ibcc"
+    ]
+   },
+   "id": "cgo"
   }
  ]
 }
