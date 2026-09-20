@@ -1,5 +1,5 @@
 #!/bin/sh
-# Build the ibsig NSIS plugin: ../plugins/x86-unicode/ibsig.dll.
+# Build the tisig NSIS plugin: ../plugins/x86-unicode/tisig.dll.
 #
 # Needs llvm-mingw (https://github.com/mstorsjo/llvm-mingw, any recent
 # release, msvcrt or ucrt: the DLL links no C runtime, only kernel32).
@@ -23,10 +23,10 @@ rm -f "$t"
 # XP's loader takes it. No CRT, no startup code: DllMain is the entry.
 "$cc_win" -O2 -Wall -Wno-sign-compare -march=pentium-mmx -ffreestanding -fno-builtin \
 	-fno-stack-protector -fno-asynchronous-unwind-tables \
-	-shared -nostdlib -o ../plugins/x86-unicode/ibsig.dll \
-	ibsig.c plancheck.c ed25519_verify.c \
+	-shared -nostdlib -o ../plugins/x86-unicode/tisig.dll \
+	tisig.c plancheck.c ed25519_verify.c \
 	-Wl,--entry,_DllMain@12 -Wl,--major-subsystem-version,5 -Wl,--minor-subsystem-version,1 \
 	-Wl,--major-os-version,5 -Wl,--minor-os-version,1 -Wl,--no-insert-timestamp -Wl,-s \
 	-lkernel32 -luser32 "$($cc_win -print-libgcc-file-name)"
-ls -l ../plugins/x86-unicode/ibsig.dll
-sha256sum ../plugins/x86-unicode/ibsig.dll
+ls -l ../plugins/x86-unicode/tisig.dll
+sha256sum ../plugins/x86-unicode/tisig.dll

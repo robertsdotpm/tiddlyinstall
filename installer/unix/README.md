@@ -1,6 +1,6 @@
 # Linux and macOS base installer
 
-One POSIX `sh` engine, [`ib-engine.sh`](ib-engine.sh), is the whole base
+One POSIX `sh` engine, [`ti-engine.sh`](ti-engine.sh), is the whole base
 installer on both systems (docs/plan.md 1.4). It reads the formats in
 [docs/format.md](../../docs/format.md) with `awk`. Nothing in it is
 per-runtime: runtimes and their quirks arrive as plan data. Only platform
@@ -9,14 +9,14 @@ version, dialogs, and menu entries.
 
 | File | What it is |
 | --- | --- |
-| `ib-engine.sh` | The engine. Also copied into every installed app as `uninstall.sh` |
-| `make_run.sh` | Builds the Linux base `out/ib-base.run` (the engine, syntax-checked with dash, bash and busybox) |
-| `make_app.sh` | Builds the macOS base `out/TiddlyInstall.app` and `out/ib-base-macos.zip`. On a Mac it is ad-hoc signed and zipped with `ditto` |
-| `verify/` | `ibverify`, the Ed25519 verifier the bases carry: source, `build.sh` (Zig), the built binaries |
+| `ti-engine.sh` | The engine. Also copied into every installed app as `uninstall.sh` |
+| `make_run.sh` | Builds the Linux base `out/ti-base.run` (the engine, syntax-checked with dash, bash and busybox) |
+| `make_app.sh` | Builds the macOS base `out/TiddlyInstall.app` and `out/ti-base-macos.zip`. On a Mac it is ad-hoc signed and zipped with `ditto` |
+| `verify/` | `tiverify`, the Ed25519 verifier the bases carry: source, `build.sh` (Zig), the built binaries |
 | `test_verify.sh` | Plan signature cases (good over plain HTTP, `--plan`, tampered, replayed, unsigned) with openssl shadowed |
-| `test_freshness.sh` | Stale plans (design.md 7.1): the nonce echoed, another nonce refused, none noted; the revocation list by record, source and file, cached and used offline, ignored when signed as the wrong kind; `signed`/`maxage` fresh, past `maxage`, past the hard limit, and **not refused when the clock can't be believed**; and a plan with the new fields on the engine from before them. Runs on Linux and on macOS (18/18 on both, 2026-09-20); on Darwin it builds and runs the `.app`, because a `.run` there has no verifier it can execute and LibreSSL cannot check Ed25519. `IB_OLD_ENGINE_FILE` stands in for the git checkout a Mac hasn't got |
+| `test_freshness.sh` | Stale plans (design.md 7.1): the nonce echoed, another nonce refused, none noted; the revocation list by record, source and file, cached and used offline, ignored when signed as the wrong kind; `signed`/`maxage` fresh, past `maxage`, past the hard limit, and **not refused when the clock can't be believed**; and a plan with the new fields on the engine from before them. Runs on Linux and on macOS (18/18 on both, 2026-09-20); on Darwin it builds and runs the `.app`, because a `.run` there has no verifier it can execute and LibreSSL cannot check Ed25519. `TI_OLD_ENGINE_FILE` stands in for the git checkout a Mac hasn't got |
 | `test_prereqs.sh` | Prerequisites and the record icon |
-| `append_meta.py` | Test tool: adds a record, plan and pack to a `.run` (appended block) or a base zip (`Contents/Resources/ib/`). The Go server has its own implementation |
+| `append_meta.py` | Test tool: adds a record, plan and pack to a `.run` (appended block) or a base zip (`Contents/Resources/ti/`). The Go server has its own implementation |
 
 Builds go to `out/` (ignored by git).
 
@@ -30,9 +30,9 @@ TiddlyInstall.app/Contents/MacOS/install          # macOS, from a terminal
 | Option | Meaning |
 | --- | --- |
 | `--yes` | Don't ask (install or uninstall unattended). No dialog of any kind is opened: messages go to stderr, and when administrator rights are needed without a terminal only `sudo -n` is tried |
-| `--log=PATH` | Write the log here. Otherwise it goes to `$TMPDIR/ib-<time>-<pid>.log`, is kept on failure, and is copied to `<app>/install.log` on success |
-| `--record=PATH` | Use this `ib-record` |
-| `--plan=PATH` | Use this `ib-plan` (without it, the plan comes from the metadata or the backend). It must be signed by the built-in key: save it from `<backend>/api/plan/<record>` |
+| `--log=PATH` | Write the log here. Otherwise it goes to `$TMPDIR/ti-<time>-<pid>.log`, is kept on failure, and is copied to `<app>/install.log` on success |
+| `--record=PATH` | Use this `ti-record` |
+| `--plan=PATH` | Use this `ti-plan` (without it, the plan comes from the metadata or the backend). It must be signed by the built-in key: save it from `<backend>/api/plan/<record>` |
 | `--unsigned-plan` | Accept an unsigned or edited `--plan` (or `install.txt` plan), for plans you wrote yourself; the transparency screen says so |
 | `--backend=URL` | Where records and plans are fetched from. Otherwise the record's `backend` line, then `http://10.0.1.76:8080` |
 | `--reinstall` | Install again even when this app is already fully installed with the same record (below) |
@@ -43,11 +43,11 @@ the bundle (`codesign -s -`) and zips it with `ditto` only there;
 anywhere else it writes an unsigned zip, which is not what mode A
 installers ship and not what the golden suites were recorded with. The
 engine is this same file, so an engine change reaches macOS as soon as
-the base is built there -- and `out/ib-base-macos.zip` on this machine
+the base is built there -- and `out/ti-base-macos.zip` on this machine
 is whatever was last built there, nothing more.
 
 **Last built 2026-09-20T11:10:56Z** on the Mac test server (macOS 26.2
-`25C56`, arm64, `Matthew@the-mac-test-host`), from `ib-engine.sh` with the
+`25C56`, arm64, `Matthew@the-mac-test-host`), from `ti-engine.sh` with the
 review screen's new shape (design.md section 3: BEFORE YOU SAY YES, IN
 SHORT, the evidence under it; colour on a terminal; a long command
 shortened on screen and kept whole in the log). The engine is one file,
@@ -55,10 +55,10 @@ so that change reached macOS only when this was rebuilt.
 
 | | |
 | --- | --- |
-| `out/ib-base-macos.zip` | `b430ccb1fd7e85f7dc5cfbe662dfedb7a830239d19b6653e70bcf37b474df8ce`, 54,896 bytes |
-| the engine inside it | `09dba13e163b660bf1c958a8572d994197091509102c10b5965709784bad767e` (`ib-engine.sh` with the baked lines filled, and nothing else -- checked by diffing the two with those lines blanked) |
+| `out/ti-base-macos.zip` | `b430ccb1fd7e85f7dc5cfbe662dfedb7a830239d19b6653e70bcf37b474df8ce`, 54,896 bytes |
+| the engine inside it | `09dba13e163b660bf1c958a8572d994197091509102c10b5965709784bad767e` (`ti-engine.sh` with the baked lines filled, and nothing else -- checked by diffing the two with those lines blanked) |
 | plan signing key | `97930ea1888d1a12` |
-| `IB_BUILD_TIME` / `IB_BUILD_EPOCH` | `2026-09-20T11:10:56Z` / `1789902656` |
+| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-20T11:10:56Z` / `1789902656` |
 | signature | ad-hoc; `codesign --verify --strict` is happy on the bundle **and** on the bundle re-extracted from the zip with `ditto` ("valid on disk", "satisfies its Designated Requirement") |
 
 The one before this was `24cfc47c6e2626a07ae48df274a7087398cf74310410f62a4db152ad6e769d6e`
@@ -69,8 +69,8 @@ notarization ticket (docs/macos-packaging.md section 5).
 
 How it was built, since there is no checkout on the Mac: copy this
 folder without `out/` and the plan **public** key to a fresh working
-directory there, run `IB_PLAN_PUBKEY_FILE=... sh make_app.sh`, copy
-`out/ib-base-macos.zip` back, and remove the working directory. Take
+directory there, run `TI_PLAN_PUBKEY_FILE=... sh make_app.sh`, copy
+`out/ti-base-macos.zip` back, and remove the working directory. Take
 `tests/arch/vmlock.py` around it, as the harnesses do.
 
 **Running it again.** If the app is already fully installed where this
@@ -78,9 +78,9 @@ installer would put it, with the same `appid` and record hash (the same
 settings), the installer doesn't install again: it starts the app
 through `launch.sh`, as its shortcuts do, and exits (a console app
 started from a desktop gets a terminal window, as its menu entry would;
-`IB_NO_TERMINAL=1` keeps it in the installer's own process). With
+`TI_NO_TERMINAL=1` keeps it in the installer's own process). With
 `--yes` it never starts the app: it says the app is installed and exits
-0. "Fully installed" means `<app>/.ib-installed` (format.md section 5),
+0. "Fully installed" means `<app>/.ti-installed` (format.md section 5),
 the last file a successful install writes, names this appid and record.
 A different record (new settings, a new version) has another appid, so
 it installs beside the old one as before. This works offline: the
@@ -106,10 +106,10 @@ no way to ask and no `--yes`, it stops.
 ## The review screen (2026-09-20)
 
 Everything the installer will do, before it does any of it (design.md
-section 3). One plain-text file, `$IB_WORK/summary.txt`, which is also
+section 3). One plain-text file, `$TI_WORK/summary.txt`, which is also
 what is appended to the log and what zenity, kdialog and the macOS
 dialog are given, so there is one text to get right and no way for the
-screen and the log to disagree. Its shape is set out in `ib-engine.sh`
+screen and the log to disagree. Its shape is set out in `ti-engine.sh`
 at "the review screen's shape"; in short:
 
 - a heading, then **BEFORE YOU SAY YES** (only when there is something:
@@ -120,15 +120,15 @@ at "the review screen's shape"; in short:
   how many commands it runs, admin rights, who signed it, the record --
   and the evidence under that.
 - nothing wraps past 78 columns except a URL, which is never broken.
-- `ib_hsize` turns bytes into "34.2 MB", `ib_hosts` turns a list of
-  URLs into the hosts behind them, `ib_wrap` wraps a `key: value` line
+- `ti_hsize` turns bytes into "34.2 MB", `ti_hosts` turns a list of
+  URLs into the hosts behind them, `ti_wrap` wraps a `key: value` line
   so the value keeps its column.
 
-**Colour** is added by `ib_paint`, and only ever on the way to a
+**Colour** is added by `ti_paint`, and only ever on the way to a
 terminal: the file stays plain, so nothing escapes into a log, a pipe or
-`--yes` output. `ib_want_colour` says no unless stderr is a terminal,
+`--yes` output. `ti_want_colour` says no unless stderr is a terminal,
 `TERM` is something that has colour, `NO_COLOR` is unset and this is not
-an unattended run; `IB_COLOR=0` or `1` overrides it either way. `tput` is
+an unattended run; `TI_COLOR=0` or `1` overrides it either way. `tput` is
 used when it is there and a `TERM` list when it is not, because plenty
 of minimal systems have no terminfo at all.
 
@@ -150,10 +150,10 @@ In order (plan.md 1.1):
 2. **The embedded metadata.** Linux: the block at the end of the `.run`
    (format.md section 4). The engine reads the 64-byte footer with
    `tail -c 64` and cuts out the parts with `tail -c +N | head -c LEN`.
-   macOS: `Contents/Resources/ib/record.txt`, `plan.txt`, and packed files
+   macOS: `Contents/Resources/ti/record.txt`, `plan.txt`, and packed files
    in `pack/<sha256>` (a `pack.tar` there works too).
 3. `install.txt` next to the installer (next to the `.app` on macOS),
-   either an `ib-record` or an `ib-plan`.
+   either an `ti-record` or an `ti-plan`.
 4. **Mode A:** a 26-character base32 hash as the last `_` token of the
    file name (`.run` stripped; on macOS the `.app` bundle's name; copy
    suffixes ` (1)`, `(1)` and ` - Copy` stripped; case ignored). The
@@ -169,23 +169,23 @@ With a record and no plan, the plan comes from `<backend>/api/plan/<hash>`.
 
 The plan signing key ([format.md](../../docs/format.md), "Plan
 signature") is baked in at build time: `make_run.sh` and `make_app.sh`
-fill the engine's `IB_PLAN_PUBKEY=` and `IB_PLAN_KEYID=` lines
-(`plankey.sh`) from `IB_PLAN_PUBKEY_FILE`, by default
+fill the engine's `TI_PLAN_PUBKEY=` and `TI_PLAN_KEYID=` lines
+(`plankey.sh`) from `TI_PLAN_PUBKEY_FILE`, by default
 `../../server/data/plan-signing-key.pub`, which the server writes on its
 first start. They refuse to build without it.
 
-The engine checks the signature with its own verifier, `ibverify`
+The engine checks the signature with its own verifier, `tiverify`
 ([verify/](verify/README.md)): a static binary per CPU, TweetNaCl like the
-Windows `ibsig` plugin. The `.run` carries the Linux ones after the
+Windows `tisig` plugin. The `.run` carries the Linux ones after the
 script's final `exit $?` line (before any metadata block), and the
-script's `IB_VERIFY_BLOBS` line, filled in by `make_run.sh`, gives each
+script's `TI_VERIFY_BLOBS` line, filled in by `make_run.sh`, gives each
 one's arch, byte offset and length in fixed-width numbers; the engine cuts
 out the one for `uname -m` with `tail -c +N | head -c LEN` into its temp
-folder. The `.app` has `Contents/Resources/ibverify-x86_64` and
+folder. The `.app` has `Contents/Resources/tiverify-x86_64` and
 `-arm64`. If that doesn't run here, it uses `openssl pkeyutl -verify
 -pubin -rawin`. Either is used only after it accepts RFC 8032 test vector
 2 and rejects it with a changed message; the log says which checked the
-plan (`Plan signature: ok:ibverify`). Then:
+plan (`Plan signature: ok:tiverify`). Then:
 
 | Plan from | Signed by the built-in key | Unsigned or wrong | No way to check (see below) |
 | --- | --- | --- | --- |
@@ -211,12 +211,12 @@ machines on plain HTTP it exists for. On such machines, install OpenSSL
 1.1.1+ (it only needs to be on `PATH`) or use an HTTPS backend.
 
 **Mode A on macOS.** An `.app` signed with an identity (not ad hoc) whose
-signature verifies and which has no files in `Contents/Resources/ib` is a
+signature verifies and which has no files in `Contents/Resources/ti` is a
 mode A base: it refuses `--record`, `--plan`, `--unsigned-plan` and
 `--backend`, ignores `install.txt` and the record's `backend` line, and
 only installs the record named in its bundle name from the built-in
 backend (design.md section 3). Linux `.run` files carry no signature, so
-nothing is locked there. `IB_TEST_MODE_A=1` turns the restriction on
+nothing is locked there. `TI_TEST_MODE_A=1` turns the restriction on
 anywhere, for tests.
 
 curl, wget and openssl run with `HOME` set to the engine's temp folder,
@@ -257,10 +257,10 @@ The pack is used whatever the metadata's source: before downloading a
    an app already installed in one of those keeps that folder when it
    is installed again, and the engine looks there too when deciding
    whether an app is already installed. An app folder that already exists and whose
-   `.ib-owner` names this app (`--reinstall`, an interrupted install, or
-   an install by an engine older than `.ib-installed`) is removed first,
+   `.ti-owner` names this app (`--reinstall`, an interrupted install, or
+   an install by an engine older than `.ti-installed`) is removed first,
    as its uninstaller would remove it; one that belongs to another app, or
-   to nobody, stops the install, as does a file folder whose `.ib-owner`
+   to nobody, stops the install, as does a file folder whose `.ti-owner`
    names another app.
 5. Per `file`: pack, else each `url` in turn (`curl -fL`, 20 s connect
    timeout, abort below 1 KB/s for 60 s, 2 retries; else `wget -T 60 -t
@@ -272,7 +272,7 @@ The pack is used whatever the metadata's source: before downloading a
 6. Unpacks the source into the app folder, runs `install` in it with
    `env`, `unset`, `ienv`, `iunset` and `path` applied.
 7. Writes `launch.txt` (format.md 5), `launch.sh`, `uninstall.sh`, the
-   menu entries, `manifest.txt`, and last `.ib-installed` (written to a
+   menu entries, `manifest.txt`, and last `.ti-installed` (written to a
    temporary name and renamed, so it is never half written). If the record has an `icon`
    (format.md section 2) and the pack holds that PNG, it is copied to
    `<app>/icon.png` and the `.desktop` file's `Icon=` is its absolute
@@ -327,12 +327,12 @@ path and last lines in an `osascript` dialog.
 | Step | Unix behaviour |
 | --- | --- |
 | `unpack` | `tar` (`-o` when root); `tar.gz` via `gzip -dc`; `tar.xz` via `xz -dc`, else `tar -xJf` (macOS has no `xz`, its libarchive `tar` reads it); `tar.bz2` via `bzip2 -dc`; `zip` via `unzip`, else `ditto -x -k`; `7z` via `7zz`/`7z`/`7za`/`7zr` if present, else it fails saying so. Extraction goes to a staging folder; `strip 1` then moves the contents of each top-level folder into `dest` (merging), and drops top-level plain files, like `tar --strip-components=1`. `strip` isn't passed to `tar` because busybox and old tars lack it. A leading `./` is not counted as a component |
-| `run` | `sh -c` in `{dir}`, stdin from `/dev/null`, output to the log. Non-zero fails. `IB_APP_DIR`, `IB_RUNTIME_DIR`, `IB_APP_NAME` are exported (design 1.5) |
+| `run` | `sh -c` in `{dir}`, stdin from `/dev/null`, output to the log. Non-zero fails. `TI_APP_DIR`, `TI_RUNTIME_DIR`, `TI_APP_NAME` are exported (design 1.5) |
 | `mkdir`, `write`, `delete` | Only inside the app's folders or `{tmp}` (no `..`); anything else fails the install. `write` appends a line ending in `\n` |
 | anything else | Fails the install (format.md: an unknown step is never skipped) |
 
 Everything shown on screen (the transparency text, dialogs, the log tail
-on failure) passes through `ib_clean`: control characters (C0 but tab
+on failure) passes through `ti_clean`: control characters (C0 but tab
 and newline, DEL, C1) and bidi controls (U+200E/F, U+202A-202E,
 U+2066-2069) become `?`, so plan text can't blank or reorder the
 terminal or a dialog.
@@ -353,22 +353,22 @@ is shell-quoted text and arguments pass through. I chose this over
 generating a resolved script so the launcher is identical everywhere
 (design 1.7) and `launch.txt` stays the single source of truth.
 
-- **Linux:** `~/.local/share/applications/ib-<appid>.desktop` runs
+- **Linux:** `~/.local/share/applications/ti-<appid>.desktop` runs
   `launch.sh` (`Terminal=true` when `console 1`).
 - **macOS:** `~/Applications/<App>/<App>.app` is a minimal bundle
   (Info.plist, `Contents/MacOS/run`, a shell script that runs
-  `launch.sh`, and `Contents/Resources/ib-appid`). With `console 1` it
+  `launch.sh`, and `Contents/Resources/ti-appid`). With `console 1` it
   runs `open -a Terminal launch.sh`, unless it already has a terminal
-  or `IB_NO_TERMINAL` is set.
+  or `TI_NO_TERMINAL` is set.
 
 ## Menus and uninstalling (plan.md 1.7)
 
 | | Linux | macOS |
 | --- | --- | --- |
-| App | `~/.local/share/applications/ib-<appid>.desktop` | `~/Applications/<App>/<App>.app` |
-| Uninstaller | `ib-<appid>-uninstall.desktop` → `sh <app>/uninstall.sh --uninstall` (in a terminal) | `~/Applications/<App>/Uninstall <App>.app` |
-| Menu folder | `~/.local/share/desktop-directories/ib-<appid>.directory` + `~/.config/menus/applications-merged/ib-<appid>.menu` | the `~/Applications/<App>/` folder |
-| Desktop (`desktop 1`) | `ib-<appid>.desktop` in the XDG desktop folder, if it exists | a symlink on `~/Desktop` |
+| App | `~/.local/share/applications/ti-<appid>.desktop` | `~/Applications/<App>/<App>.app` |
+| Uninstaller | `ti-<appid>-uninstall.desktop` → `sh <app>/uninstall.sh --uninstall` (in a terminal) | `~/Applications/<App>/Uninstall <App>.app` |
+| Menu folder | `~/.local/share/desktop-directories/ti-<appid>.directory` + `~/.config/menus/applications-merged/ti-<appid>.menu` | the `~/Applications/<App>/` folder |
+| Desktop (`desktop 1`) | `ti-<appid>.desktop` in the XDG desktop folder, if it exists | a symlink on `~/Desktop` |
 
 **`menu 0`** writes nothing to the app menu: no `.desktop` in
 `applications`, no uninstaller entry, no `.directory` or `.menu`, and on
@@ -388,14 +388,14 @@ menus, so there the two entries appear in the app grid without a folder.
 `uninstall.sh` is a copy of the engine (the `.run` minus its block). It
 reads `manifest.txt` next to it and removes exactly what it lists:
 
-- `shortcut` files only if named `ib-<appid>*`; symlinks; `.app` bundles
-  only if their `Contents/Resources/ib-appid` names this app;
+- `shortcut` files only if named `ti-<appid>*`; symlinks; `.app` bundles
+  only if their `Contents/Resources/ti-appid` names this app;
 - `dir` entries only if they are directly in the install root, 12
-  base32 characters, not the app folder, and their `.ib-owner` names this
-  app (a missing `.ib-owner` counts as someone else's);
-- `.ib-installed` first, so an uninstall that stops half way is never
+  base32 characters, not the app folder, and their `.ti-owner` names this
+  app (a missing `.ti-owner` counts as someone else's);
+- `.ti-installed` first, so an uninstall that stops half way is never
   taken for a finished install;
-- then the app folder, if its own `.ib-owner` names the app, then the
+- then the app folder, if its own `.ti-owner` names the app, then the
   root if empty;
 - `shortcut` entries that are folders (parents the installer created,
   such as `~/Applications/<App>` or `~/.config/menus`) only if empty.
@@ -416,7 +416,7 @@ reported. It asks first (terminal, zenity/kdialog, or `osascript`) unless
   The bundle name is read from the executable's path, which App
   Translocation preserves. (`install.txt` next to a translocated `.app`
   can't be found; use mode A, B or C on macOS.)
-- **Mode B:** the publisher adds the files to `Contents/Resources/ib/`
+- **Mode B:** the publisher adds the files to `Contents/Resources/ti/`
   and re-signs (`codesign -s <identity> -f TiddlyInstall.app`); `codesign
   --verify` then passes.
 - **Mode C:** adding files breaks the base's ad-hoc signature, and a

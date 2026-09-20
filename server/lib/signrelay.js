@@ -5,7 +5,7 @@
 // this one carries a credential and not just a hash.
 //
 // THE RULE. A credential that passes through here is forwarded and
-// forgotten. It arrives in a header of its own, X-IB-Sign-Auth, so that
+// forgotten. It arrives in a header of its own, X-TI-Sign-Auth, so that
 // there is exactly one line in this file that touches it and no chance of
 // it being confused with our own request handling. It is never written to
 // disk, never put in a log (server.js logs the address, method and path
@@ -123,7 +123,7 @@ export async function signRelay(req, res, provider, h) {
   const headers = pickHeaders(sent.headers);
   // The one line that touches the credential. It is read from the request,
   // put on the outgoing call, and goes out of scope with this function.
-  const auth = req.headers['x-ib-sign-auth'];
+  const auth = req.headers['x-ti-sign-auth'];
   if (typeof auth === 'string' && auth) headers.Authorization = auth;
 
   let body = null;

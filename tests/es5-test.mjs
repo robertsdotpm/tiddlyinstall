@@ -3,9 +3,9 @@
 //   - web/browser-check.js and web/page-loader.js parse as ES3, so IE 6-8
 //     read them (acorn, ecmaVersion 3: no trailing commas, no keywords as
 //     property names);
-//   - the ES5 copy (#ib-js-es5: raw deflate, base64) unpacks, is ASCII
+//   - the ES5 copy (#ti-js-es5: raw deflate, base64) unpacks, is ASCII
 //     with no control characters (IE ends a string at a raw NUL), and parses
-//     as ES5; so does its inflater (#ib-js-es5-inflate);
+//     as ES5; so does its inflater (#ti-js-es5-inflate);
 //   - the inflater, run as web/page-loader.js runs it with the typed-array
 //     methods IE 11 lacks removed, unpacks the copy byte for byte;
 //   - the ES2017 code blocks are still there for current browsers.
@@ -45,8 +45,8 @@ function block(id) {
 const classic = [];
 for (const m of html.matchAll(/<script>([\s\S]*?)<\/script>/g)) classic.push(m[1]);
 ok(classic.length >= 2, 'found the page\'s classic scripts (' + classic.length + ')');
-const check = classic.find((s) => /FEATURES/.test(s) && /data-ib-missing/.test(s));
-const loader = classic.find((s) => /ib-js-es5/.test(s) && /IB_PRISTINE/.test(s));
+const check = classic.find((s) => /FEATURES/.test(s) && /data-ti-missing/.test(s));
+const loader = classic.find((s) => /ti-js-es5/.test(s) && /TI_PRISTINE/.test(s));
 ok(check && !parses(check, 3), 'web/browser-check.js parses as ES3 (IE 6-8)', check ? parses(check, 3) : 'not found');
 ok(loader && !parses(loader, 3), 'web/page-loader.js parses as ES3', loader ? parses(loader, 3) : 'not found');
 ok(html.indexOf('<meta http-equiv="X-UA-Compatible" content="IE=edge">') > 0 && html.indexOf('X-UA-Compatible') < html.indexOf('<script'),
@@ -54,14 +54,14 @@ ok(html.indexOf('<meta http-equiv="X-UA-Compatible" content="IE=edge">') > 0 && 
 ok(/^<!DOCTYPE html>\n<!-- saved from url=\(0014\)about:internet -->\r\n/.test(html), 'the Mark of the Web (with CRLF) follows the doctype');
 
 // The ES2017 code, for current browsers.
-for (const id of ['ib-js-resedit', 'ib-js']) {
+for (const id of ['ti-js-resedit', 'ti-js']) {
   const b = block(id);
-  ok(b && /type="text\/x-ib-js"/.test(b.attrs) && b.text.length > 1000, `#${id} is a code block`);
+  ok(b && /type="text\/x-ti-js"/.test(b.attrs) && b.text.length > 1000, `#${id} is a code block`);
 }
 
 // The ES5 copy.
-const es5 = block('ib-js-es5');
-const inf = block('ib-js-es5-inflate');
+const es5 = block('ti-js-es5');
+const inf = block('ti-js-es5-inflate');
 ok(es5 && inf, 'the page carries the ES5 copy and its inflater');
 if (es5 && inf) {
   const packed = Buffer.from(es5.text.replace(/\s+/g, ''), 'base64');
@@ -72,7 +72,7 @@ if (es5 && inf) {
   const text = code.toString('latin1');
   const e1 = parses(text, 5);
   ok(!e1, 'the ES5 copy parses as ES5', e1);
-  ok(/legacy-dom|msSaveOrOpenBlob/.test(text) && /__ib_router/.test(text), 'it holds web/legacy-dom.js and the page');
+  ok(/legacy-dom|msSaveOrOpenBlob/.test(text) && /__ti_router/.test(text), 'it holds web/legacy-dom.js and the page');
   const e2 = parses(inf.text, 5);
   ok(!e2, 'its inflater parses as ES5', e2);
 
@@ -86,7 +86,7 @@ if (es5 && inf) {
   try {
     vm.createContext(ctx);
     vm.runInContext(inf.text, ctx);
-    out = ctx.__ib_inflate.inflate(new Uint8Array(packed), 'deflate-raw');
+    out = ctx.__ti_inflate.inflate(new Uint8Array(packed), 'deflate-raw');
   } catch (e) { err = e.stack || String(e); } finally {
     Object.defineProperty(P, 'fill', { value: saved.fill, configurable: true, writable: true });
     Object.defineProperty(P, 'copyWithin', { value: saved.copyWithin, configurable: true, writable: true });

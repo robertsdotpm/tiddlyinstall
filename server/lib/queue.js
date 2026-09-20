@@ -1,7 +1,7 @@
 // The job queue (plan.md 1.8): BullMQ on Redis runs the work; the ticket
 // numbers, queue positions and wait estimates the front end shows are kept
-// in Redis under the Go server's keys (ib:ticket, ib:job:<id>,
-// ib:queued:<class>, ib:running:<class>, ib:dur:<class>), so the job JSON
+// in Redis under the Go server's keys (ti:ticket, ti:job:<id>,
+// ti:queued:<class>, ti:running:<class>, ti:dur:<class>), so the job JSON
 // and the numbers mean the same.
 //
 // Classes, by what was asked for: `record` (mode A) before `build` (modes B
@@ -13,12 +13,12 @@ import { Queue, Worker } from 'bullmq';
 import IORedis from 'ioredis';
 
 export const CLASSES = { record: 1, build: 2, pack: 3 };   // BullMQ priority: 1 runs first
-const PREFIX = 'ib-bull';
-const JOBS = 'ib-jobs', PACKS = 'ib-pack';
+const PREFIX = 'ti-bull';
+const JOBS = 'ti-jobs', PACKS = 'ti-pack';
 const WEEK = 7 * 24 * 3600;
 const TIMEOUT = 2 * 3600 * 1000;   // Asynq's task timeout on the Go server
 
-const key = (...parts) => ['ib', ...parts].join(':');
+const key = (...parts) => ['ti', ...parts].join(':');
 
 function newID() {
   return 'j_' + crypto.randomBytes(9).toString('hex');
@@ -67,7 +67,7 @@ export class JobQueue {
     await this.save(j);
     await this.rdb.zadd(key('queued', cls), ticket, j.id);
     try {
-      await this.queues[cls === 'pack' ? PACKS : JOBS].add('ib:job', { id: j.id }, {
+      await this.queues[cls === 'pack' ? PACKS : JOBS].add('ti:job', { id: j.id }, {
         jobId: j.id, priority: CLASSES[cls], attempts: 1,
         removeOnComplete: { age: 24 * 3600 }, removeOnFail: { age: 24 * 3600 },
       });

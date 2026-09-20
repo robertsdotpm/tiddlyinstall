@@ -4,8 +4,8 @@
 // 127.0.0.1 there and reach it through `ssh -L`, clean up.
 //
 // On each machine (docs/test-vms.md, "Browsers"):
-//   Windows      C:\ibbrowsers\browsers.json, drivers\, work\
-//   Linux, Mac   ~/ibbrowsers/browsers.json, drivers/, work/
+//   Windows      C:\tibrowsers\browsers.json, drivers\, work\
+//   Linux, Mac   ~/tibrowsers/browsers.json, drivers/, work/
 import { spawn, spawnSync, execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import net from 'node:net';
@@ -54,7 +54,7 @@ export class Remote {
 
   // Folder under the harness root, as a path on the machine.
   dir(...parts) {
-    return this.win ? ['C:\\ibbrowsers', ...parts].join('\\') : [this.home + '/ibbrowsers', ...parts].join('/');
+    return this.win ? ['C:\\tibrowsers', ...parts].join('\\') : [this.home + '/tibrowsers', ...parts].join('/');
   }
 
   fileUrl(p) { return this.win ? 'file:///' + p.replace(/\\/g, '/') : 'file://' + p; }
@@ -62,8 +62,8 @@ export class Remote {
   // Reads browsers.json (and $HOME on Unix). Returns the parsed manifest.
   readManifest() {
     const r = this.win
-      ? this.sh('type C:\\ibbrowsers\\browsers.json')
-      : this.sh('echo "@HOME $HOME"; echo "@FWD $(grep -i "^[[:space:]]*AllowTcpForwarding" /etc/ssh/sshd_config 2>/dev/null | tail -1)"; cat ~/ibbrowsers/browsers.json');
+      ? this.sh('type C:\\tibrowsers\\browsers.json')
+      : this.sh('echo "@HOME $HOME"; echo "@FWD $(grep -i "^[[:space:]]*AllowTcpForwarding" /etc/ssh/sshd_config 2>/dev/null | tail -1)"; cat ~/tibrowsers/browsers.json');
     let text = r.out;
     if (!this.win) {
       const m = /^@HOME (.*)$/m.exec(text);

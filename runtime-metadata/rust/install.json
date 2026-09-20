@@ -23,158 +23,158 @@
      ]
     },
     {
-     "mkdir": "{runtime_dir}/ibcc"
+     "mkdir": "{runtime_dir}/ticc"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#!/bin/sh"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# zig as this app's C toolchain, so an unattended install needs no root"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# and no system compiler (design.md 11.0 item 15). The name it is called"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# by picks the mode. Three things have to be corrected on the way:"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - a Rust target triple (x86_64-unknown-linux-gnu), which cc-rs passes"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    as --target= and zig's parser rejects, becomes zig's;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - the glibc version is pinned to this machine's, or zig links against"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    the newest glibc it knows and the program will not start here"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    (CentOS 7: \"/lib64/libc.so.6: version GLIBC_2.18 not found\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - zig calls the 32-bit x86 architecture \"x86\"; uname says i686, which"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    zig rejects outright (\"available architectures: ... x86 ...\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "t="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ \"$m\" != ar ]; then"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "g=$(getconf GNU_LIBC_VERSION 2>/dev/null | awk '{print $2}')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "[ -n \"$g\" ] || g=$(ldd --version 2>/dev/null | sed -n '1s/.* //p')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "c=$(uname -m)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $c in i[3-6]86) c=x86 ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $g in [0-9]*.[0-9]*) t=$c-linux-gnu.$g ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "n=$#"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=0"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "while [ $i -lt $n ]; do"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "a=$1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "shift"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $a in"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "--target=*)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen=1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed -e 's/-unknown-/-/' -e 's/^i[3-6]86-/x86-/'); fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": ";;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "set -- \"$@\" \"$a\""
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=$((i + 1))"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "done"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -z \"$seen\" ] && [ -n \"$t\" ]; then set -- -target \"$t\" \"$@\"; fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "exec \"{dir:zig}\"/zig $m \"$@\""
     },
     {
-     "run": "cd \"{runtime_dir}/ibcc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
+     "run": "cd \"{runtime_dir}/ticc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
      "shell": "sh"
     }
    ],
@@ -194,7 +194,7 @@
     "https://doc.rust-lang.org/cargo/reference/environment-variables.html",
     "https://blog.rust-lang.org/2024/02/26/Windows-7/"
    ],
-   "notes": "x86_64-unknown-linux-gnu. Layout: the tarball is rust-installer format 3 (rust-installer-version = 3 in all 16 planned files): rust-<ver>-<triple>/{components,install.sh,manifest.in per component,...} with each component in rust-<ver>-<triple>/<component>/{bin,lib,libexec,etc,share}. install.sh only copies <component>/<path> to <prefix>/<path> for each file:/dir: line of manifest.in (bin 755, others 644), writes bookkeeping into lib/rustlib/ (components, manifest-*, install.log, uninstall.sh, rust-installer-version, none needed at run time) and on Linux runs ldconfig. The components never overlap (checked: 0 duplicate paths across components, no symlinks in the Linux, Windows or macOS tarballs), so unpacking with strip_components 2 merges every component straight into {runtime_dir}: entries with only 1-2 path parts (top-level install.sh, components, etc.) are dropped; each component's manifest.in lands on {runtime_dir}/manifest.in and overwrites the previous one (harmless, delete it if tidy). The unpacker must skip entries with fewer path parts than strip_components and keep Unix modes. TESTED on Linux amd64: the file tree and modes from this unpack are identical to install.sh's apart from the bookkeeping files. Run the toolchain with an explicit environment in the app's own process only (never PATH/registry/profile changes): CARGO_HOME={runtime_dir}/cargo-home (or an app-owned writable dir; cargo writes its registry index, crate cache and installed binaries there, default is ~/.cargo), RUSTC={runtime_dir}/bin/rustc and RUSTDOC={runtime_dir}/bin/rustdoc (TESTED: without RUSTC or {runtime_dir}/bin on PATH, cargo fails with 'could not execute process `rustc -vV`' - it does NOT look next to itself, and with a user's rustup on PATH it would silently use the user's rustc), and prepend {runtime_dir}/bin to PATH in that process so `cargo clippy`/`cargo fmt` find cargo-clippy/cargo-fmt (tested). RUSTUP_HOME is not used at all: this is a plain toolchain with no rustup proxies; set it to {runtime_dir}/rustup-home and unset RUSTUP_TOOLCHAIN only as belt-and-braces. Clear inherited RUSTFLAGS, RUSTDOCFLAGS, CARGO_BUILD_*, CARGO_TARGET_DIR, CARGO_ENCODED_RUSTFLAGS and RUSTC_WRAPPER, which a user's global environment would inject. Cargo also reads .cargo/config.toml from the project dir and EVERY parent directory (then $CARGO_HOME/config.toml), so a project under a user's home picks up ~/.cargo/config.toml; keep app projects outside home or accept that. rustc finds its sysroot from its own location (tested: `rustc --print sysroot` = the folder it was run from) and binaries use RUNPATH $ORIGIN/../lib on Linux, so no LD_LIBRARY_PATH is needed. Slim alternative (tested on Linux, 601 MB and 156 files instead of ~1.9 GB and ~66,000 files; rust-docs alone is 727 MB / 67,212 HTML files and is only present in some tarballs): unpack with strip_components 1 into {tmp}, then copy only rustc, rust-std-<triple>, cargo and optionally clippy-preview and rustfmt-preview, e.g. `cp -R \"{tmp}/rustc/.\" \"{runtime_dir}/\"` per component on POSIX or `xcopy \"{tmp}\\rustc\" \"{runtime_dir}\\\" /E /I /Y /Q` per component in cmd. rust-analyzer-preview, llvm-tools-preview, rust-analysis, rust-docs-json-preview and llvm-bitcode-linker-preview are not needed to build. TESTED (Linux amd64, Ubuntu 24.04, normal user): direct unpack to '<scratch>/a b/copy1', a second identical copy side by side in '<scratch>/a b/copy2', a slim copy, and an install.sh result moved to '<scratch>/a b/sh-moved': in every one `cargo new`, `cargo run` (Hello, world!), `cargo test`, `cargo build` with a crates.io dependency (itoa), `cargo clippy`, `cargo fmt --check` and `cargo doc` succeeded with HOME and TMPDIR pointed at empty sentinel folders, which stayed empty; all caches landed in the per-copy CARGO_HOME. install.sh alternative (also tested): `sh install.sh --prefix=<dir> --disable-ldconfig` works but CANNOT take a prefix containing a space (it word-splits its own arguments: `--prefix=/a b/x` fails with \"Option 'b/x' is not recognized\", quoting does not help), and without --disable-ldconfig it runs ldconfig as root, rebuilding the system /etc/ld.so.cache (and, only for prefix /usr/local, writes /etc/ld.so.conf.d/rust-installer-v1-rustlib.conf). An install.sh result moved afterwards into a path with a space still works (tested); only the uninstall bookkeeping holds absolute paths. The direct unpack avoids all of this. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects, and pins the target glibc to this machine's (getconf GNU_LIBC_VERSION), without which zig links against the newest glibc it knows and the program will not start on an older system (measured on CentOS 7: \"version GLIBC_2.18 not found\"). {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
+   "notes": "x86_64-unknown-linux-gnu. Layout: the tarball is rust-installer format 3 (rust-installer-version = 3 in all 16 planned files): rust-<ver>-<triple>/{components,install.sh,manifest.in per component,...} with each component in rust-<ver>-<triple>/<component>/{bin,lib,libexec,etc,share}. install.sh only copies <component>/<path> to <prefix>/<path> for each file:/dir: line of manifest.in (bin 755, others 644), writes bookkeeping into lib/rustlib/ (components, manifest-*, install.log, uninstall.sh, rust-installer-version, none needed at run time) and on Linux runs ldconfig. The components never overlap (checked: 0 duplicate paths across components, no symlinks in the Linux, Windows or macOS tarballs), so unpacking with strip_components 2 merges every component straight into {runtime_dir}: entries with only 1-2 path parts (top-level install.sh, components, etc.) are dropped; each component's manifest.in lands on {runtime_dir}/manifest.in and overwrites the previous one (harmless, delete it if tidy). The unpacker must skip entries with fewer path parts than strip_components and keep Unix modes. TESTED on Linux amd64: the file tree and modes from this unpack are identical to install.sh's apart from the bookkeeping files. Run the toolchain with an explicit environment in the app's own process only (never PATH/registry/profile changes): CARGO_HOME={runtime_dir}/cargo-home (or an app-owned writable dir; cargo writes its registry index, crate cache and installed binaries there, default is ~/.cargo), RUSTC={runtime_dir}/bin/rustc and RUSTDOC={runtime_dir}/bin/rustdoc (TESTED: without RUSTC or {runtime_dir}/bin on PATH, cargo fails with 'could not execute process `rustc -vV`' - it does NOT look next to itself, and with a user's rustup on PATH it would silently use the user's rustc), and prepend {runtime_dir}/bin to PATH in that process so `cargo clippy`/`cargo fmt` find cargo-clippy/cargo-fmt (tested). RUSTUP_HOME is not used at all: this is a plain toolchain with no rustup proxies; set it to {runtime_dir}/rustup-home and unset RUSTUP_TOOLCHAIN only as belt-and-braces. Clear inherited RUSTFLAGS, RUSTDOCFLAGS, CARGO_BUILD_*, CARGO_TARGET_DIR, CARGO_ENCODED_RUSTFLAGS and RUSTC_WRAPPER, which a user's global environment would inject. Cargo also reads .cargo/config.toml from the project dir and EVERY parent directory (then $CARGO_HOME/config.toml), so a project under a user's home picks up ~/.cargo/config.toml; keep app projects outside home or accept that. rustc finds its sysroot from its own location (tested: `rustc --print sysroot` = the folder it was run from) and binaries use RUNPATH $ORIGIN/../lib on Linux, so no LD_LIBRARY_PATH is needed. Slim alternative (tested on Linux, 601 MB and 156 files instead of ~1.9 GB and ~66,000 files; rust-docs alone is 727 MB / 67,212 HTML files and is only present in some tarballs): unpack with strip_components 1 into {tmp}, then copy only rustc, rust-std-<triple>, cargo and optionally clippy-preview and rustfmt-preview, e.g. `cp -R \"{tmp}/rustc/.\" \"{runtime_dir}/\"` per component on POSIX or `xcopy \"{tmp}\\rustc\" \"{runtime_dir}\\\" /E /I /Y /Q` per component in cmd. rust-analyzer-preview, llvm-tools-preview, rust-analysis, rust-docs-json-preview and llvm-bitcode-linker-preview are not needed to build. TESTED (Linux amd64, Ubuntu 24.04, normal user): direct unpack to '<scratch>/a b/copy1', a second identical copy side by side in '<scratch>/a b/copy2', a slim copy, and an install.sh result moved to '<scratch>/a b/sh-moved': in every one `cargo new`, `cargo run` (Hello, world!), `cargo test`, `cargo build` with a crates.io dependency (itoa), `cargo clippy`, `cargo fmt --check` and `cargo doc` succeeded with HOME and TMPDIR pointed at empty sentinel folders, which stayed empty; all caches landed in the per-copy CARGO_HOME. install.sh alternative (also tested): `sh install.sh --prefix=<dir> --disable-ldconfig` works but CANNOT take a prefix containing a space (it word-splits its own arguments: `--prefix=/a b/x` fails with \"Option 'b/x' is not recognized\", quoting does not help), and without --disable-ldconfig it runs ldconfig as root, rebuilding the system /etc/ld.so.cache (and, only for prefix /usr/local, writes /etc/ld.so.conf.d/rust-installer-v1-rustlib.conf). An install.sh result moved afterwards into a path with a space still works (tested); only the uninstall bookkeeping holds absolute paths. The direct unpack avoids all of this. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ticc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ticc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ticc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects, and pins the target glibc to this machine's (getconf GNU_LIBC_VERSION), without which zig links against the newest glibc it knows and the program will not start on an older system (measured on CentOS 7: \"version GLIBC_2.18 not found\"). {runtime_dir}/ticc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
    "launch": {
     "program": null,
     "args": [],
@@ -212,16 +212,16 @@
      "CARGO_ENCODED_RUSTFLAGS": null,
      "RUSTC_WRAPPER": null,
      "CARGO_TARGET_DIR": null,
-     "CC": "{runtime_dir}/ibcc/cc",
-     "CXX": "{runtime_dir}/ibcc/c++",
-     "AR": "{runtime_dir}/ibcc/ar",
+     "CC": "{runtime_dir}/ticc/cc",
+     "CXX": "{runtime_dir}/ticc/c++",
+     "AR": "{runtime_dir}/ticc/ar",
      "ZIG_GLOBAL_CACHE_DIR": "{data_dir}/zig-cache",
      "ZIG_LOCAL_CACHE_DIR": "{data_dir}/zig-cache"
     },
     "cwd": "{app_dir}",
     "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Without RUSTC cargo can't find rustc (tested). Needs the system linker (see prerequisites).",
     "path_prepend": [
-     "{runtime_dir}/ibcc"
+     "{runtime_dir}/ticc"
     ]
    }
   },
@@ -245,158 +245,158 @@
      ]
     },
     {
-     "mkdir": "{runtime_dir}/ibcc"
+     "mkdir": "{runtime_dir}/ticc"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#!/bin/sh"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# zig as this app's C toolchain, so an unattended install needs no root"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# and no system compiler (design.md 11.0 item 15). The name it is called"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# by picks the mode. Three things have to be corrected on the way:"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - a Rust target triple (x86_64-unknown-linux-gnu), which cc-rs passes"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    as --target= and zig's parser rejects, becomes zig's;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - the glibc version is pinned to this machine's, or zig links against"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    the newest glibc it knows and the program will not start here"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    (CentOS 7: \"/lib64/libc.so.6: version GLIBC_2.18 not found\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - zig calls the 32-bit x86 architecture \"x86\"; uname says i686, which"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    zig rejects outright (\"available architectures: ... x86 ...\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "t="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ \"$m\" != ar ]; then"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "g=$(getconf GNU_LIBC_VERSION 2>/dev/null | awk '{print $2}')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "[ -n \"$g\" ] || g=$(ldd --version 2>/dev/null | sed -n '1s/.* //p')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "c=$(uname -m)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $c in i[3-6]86) c=x86 ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $g in [0-9]*.[0-9]*) t=$c-linux-gnu.$g ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "n=$#"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=0"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "while [ $i -lt $n ]; do"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "a=$1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "shift"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $a in"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "--target=*)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen=1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed -e 's/-unknown-/-/' -e 's/^i[3-6]86-/x86-/'); fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": ";;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "set -- \"$@\" \"$a\""
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=$((i + 1))"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "done"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -z \"$seen\" ] && [ -n \"$t\" ]; then set -- -target \"$t\" \"$@\"; fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "exec \"{dir:zig}\"/zig $m \"$@\""
     },
     {
-     "run": "cd \"{runtime_dir}/ibcc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
+     "run": "cd \"{runtime_dir}/ticc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
      "shell": "sh"
     }
    ],
@@ -416,7 +416,7 @@
     "https://doc.rust-lang.org/cargo/reference/environment-variables.html",
     "https://blog.rust-lang.org/2024/02/26/Windows-7/"
    ],
-   "notes": "Other Linux triples in the plan: aarch64-, arm-(gnueabi, gnueabihf), armv7-(gnueabihf), loongarch64-, powerpc64-, powerpc64le-, riscv64gc-, s390x-, i686-unknown-linux-gnu. Same format-3 layout and component list as the tested amd64 file (components file checked in all 16 planned tarballs; rust-docs and rust-docs-json-preview are absent from the arm, armv7, loongarch64, powerpc64(le), riscv64 and s390x files as well as x86_64-apple-darwin and i686-pc-windows-msvc), so the same strip_components 2 unpack applies; not run because this host is amd64. Run the toolchain with an explicit environment in the app's own process only (never PATH/registry/profile changes): CARGO_HOME={runtime_dir}/cargo-home (or an app-owned writable dir; cargo writes its registry index, crate cache and installed binaries there, default is ~/.cargo), RUSTC={runtime_dir}/bin/rustc and RUSTDOC={runtime_dir}/bin/rustdoc (TESTED: without RUSTC or {runtime_dir}/bin on PATH, cargo fails with 'could not execute process `rustc -vV`' - it does NOT look next to itself, and with a user's rustup on PATH it would silently use the user's rustc), and prepend {runtime_dir}/bin to PATH in that process so `cargo clippy`/`cargo fmt` find cargo-clippy/cargo-fmt (tested). RUSTUP_HOME is not used at all: this is a plain toolchain with no rustup proxies; set it to {runtime_dir}/rustup-home and unset RUSTUP_TOOLCHAIN only as belt-and-braces. Clear inherited RUSTFLAGS, RUSTDOCFLAGS, CARGO_BUILD_*, CARGO_TARGET_DIR, CARGO_ENCODED_RUSTFLAGS and RUSTC_WRAPPER, which a user's global environment would inject. Cargo also reads .cargo/config.toml from the project dir and EVERY parent directory (then $CARGO_HOME/config.toml), so a project under a user's home picks up ~/.cargo/config.toml; keep app projects outside home or accept that. rustc finds its sysroot from its own location (tested: `rustc --print sysroot` = the folder it was run from) and binaries use RUNPATH $ORIGIN/../lib on Linux, so no LD_LIBRARY_PATH is needed. Slim alternative (tested on Linux, 601 MB and 156 files instead of ~1.9 GB and ~66,000 files; rust-docs alone is 727 MB / 67,212 HTML files and is only present in some tarballs): unpack with strip_components 1 into {tmp}, then copy only rustc, rust-std-<triple>, cargo and optionally clippy-preview and rustfmt-preview, e.g. `cp -R \"{tmp}/rustc/.\" \"{runtime_dir}/\"` per component on POSIX or `xcopy \"{tmp}\\rustc\" \"{runtime_dir}\\\" /E /I /Y /Q` per component in cmd. rust-analyzer-preview, llvm-tools-preview, rust-analysis, rust-docs-json-preview and llvm-bitcode-linker-preview are not needed to build. install.sh alternative (also tested): `sh install.sh --prefix=<dir> --disable-ldconfig` works but CANNOT take a prefix containing a space (it word-splits its own arguments: `--prefix=/a b/x` fails with \"Option 'b/x' is not recognized\", quoting does not help), and without --disable-ldconfig it runs ldconfig as root, rebuilding the system /etc/ld.so.cache (and, only for prefix /usr/local, writes /etc/ld.so.conf.d/rust-installer-v1-rustlib.conf). An install.sh result moved afterwards into a path with a space still works (tested); only the uninstall bookkeeping holds absolute paths. The direct unpack avoids all of this. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects, and pins the target glibc to this machine's (getconf GNU_LIBC_VERSION), without which zig links against the newest glibc it knows and the program will not start on an older system (measured on CentOS 7: \"version GLIBC_2.18 not found\"). {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
+   "notes": "Other Linux triples in the plan: aarch64-, arm-(gnueabi, gnueabihf), armv7-(gnueabihf), loongarch64-, powerpc64-, powerpc64le-, riscv64gc-, s390x-, i686-unknown-linux-gnu. Same format-3 layout and component list as the tested amd64 file (components file checked in all 16 planned tarballs; rust-docs and rust-docs-json-preview are absent from the arm, armv7, loongarch64, powerpc64(le), riscv64 and s390x files as well as x86_64-apple-darwin and i686-pc-windows-msvc), so the same strip_components 2 unpack applies; not run because this host is amd64. Run the toolchain with an explicit environment in the app's own process only (never PATH/registry/profile changes): CARGO_HOME={runtime_dir}/cargo-home (or an app-owned writable dir; cargo writes its registry index, crate cache and installed binaries there, default is ~/.cargo), RUSTC={runtime_dir}/bin/rustc and RUSTDOC={runtime_dir}/bin/rustdoc (TESTED: without RUSTC or {runtime_dir}/bin on PATH, cargo fails with 'could not execute process `rustc -vV`' - it does NOT look next to itself, and with a user's rustup on PATH it would silently use the user's rustc), and prepend {runtime_dir}/bin to PATH in that process so `cargo clippy`/`cargo fmt` find cargo-clippy/cargo-fmt (tested). RUSTUP_HOME is not used at all: this is a plain toolchain with no rustup proxies; set it to {runtime_dir}/rustup-home and unset RUSTUP_TOOLCHAIN only as belt-and-braces. Clear inherited RUSTFLAGS, RUSTDOCFLAGS, CARGO_BUILD_*, CARGO_TARGET_DIR, CARGO_ENCODED_RUSTFLAGS and RUSTC_WRAPPER, which a user's global environment would inject. Cargo also reads .cargo/config.toml from the project dir and EVERY parent directory (then $CARGO_HOME/config.toml), so a project under a user's home picks up ~/.cargo/config.toml; keep app projects outside home or accept that. rustc finds its sysroot from its own location (tested: `rustc --print sysroot` = the folder it was run from) and binaries use RUNPATH $ORIGIN/../lib on Linux, so no LD_LIBRARY_PATH is needed. Slim alternative (tested on Linux, 601 MB and 156 files instead of ~1.9 GB and ~66,000 files; rust-docs alone is 727 MB / 67,212 HTML files and is only present in some tarballs): unpack with strip_components 1 into {tmp}, then copy only rustc, rust-std-<triple>, cargo and optionally clippy-preview and rustfmt-preview, e.g. `cp -R \"{tmp}/rustc/.\" \"{runtime_dir}/\"` per component on POSIX or `xcopy \"{tmp}\\rustc\" \"{runtime_dir}\\\" /E /I /Y /Q` per component in cmd. rust-analyzer-preview, llvm-tools-preview, rust-analysis, rust-docs-json-preview and llvm-bitcode-linker-preview are not needed to build. install.sh alternative (also tested): `sh install.sh --prefix=<dir> --disable-ldconfig` works but CANNOT take a prefix containing a space (it word-splits its own arguments: `--prefix=/a b/x` fails with \"Option 'b/x' is not recognized\", quoting does not help), and without --disable-ldconfig it runs ldconfig as root, rebuilding the system /etc/ld.so.cache (and, only for prefix /usr/local, writes /etc/ld.so.conf.d/rust-installer-v1-rustlib.conf). An install.sh result moved afterwards into a path with a space still works (tested); only the uninstall bookkeeping holds absolute paths. The direct unpack avoids all of this. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ticc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ticc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ticc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects, and pins the target glibc to this machine's (getconf GNU_LIBC_VERSION), without which zig links against the newest glibc it knows and the program will not start on an older system (measured on CentOS 7: \"version GLIBC_2.18 not found\"). {runtime_dir}/ticc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
    "launch": {
     "program": null,
     "args": [],
@@ -434,16 +434,16 @@
      "CARGO_ENCODED_RUSTFLAGS": null,
      "RUSTC_WRAPPER": null,
      "CARGO_TARGET_DIR": null,
-     "CC": "{runtime_dir}/ibcc/cc",
-     "CXX": "{runtime_dir}/ibcc/c++",
-     "AR": "{runtime_dir}/ibcc/ar",
+     "CC": "{runtime_dir}/ticc/cc",
+     "CXX": "{runtime_dir}/ticc/c++",
+     "AR": "{runtime_dir}/ticc/ar",
      "ZIG_GLOBAL_CACHE_DIR": "{data_dir}/zig-cache",
      "ZIG_LOCAL_CACHE_DIR": "{data_dir}/zig-cache"
     },
     "cwd": "{app_dir}",
     "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Without RUSTC cargo can't find rustc (tested). Needs the system linker (see prerequisites).",
     "path_prepend": [
-     "{runtime_dir}/ibcc"
+     "{runtime_dir}/ticc"
     ]
    }
   },

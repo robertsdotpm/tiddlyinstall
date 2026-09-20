@@ -34,7 +34,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import { fileURLToPath } from 'node:url';
-import { readInstaller, writeInstaller, peInfo, peChecksum } from '../shared/ibfile.js';
+import { readInstaller, writeInstaller, peInfo, peChecksum } from '../shared/tifile.js';
 import { rasterSource, buildIco, setExeIcon } from '../shared/icon.js';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -202,7 +202,7 @@ ok(patchTargets.length > 0, 'the base has RT_ICON images for NSIS to patch (' + 
 ok(patchTargets.some((t) => t.off === 97064) || true,
   'patch targets: ' + patchTargets.map((t) => t.off + '/' + t.size).join(' '));
 
-const RECORD = 'ib-record\t1\nname\tIcon test\nproject\thello\nruntime\tpython\n';
+const RECORD = 'ti-record\t1\nname\tIcon test\nproject\thello\nruntime\tpython\n';
 
 async function variant(label, ico) {
   console.log('\n-- ' + label + ' icon (' + ico.length + ' bytes, ' +
@@ -273,7 +273,7 @@ async function variant(label, ico) {
       'no resource was overwritten by the patch');
   }
 
-  // The metadata block still appends and reads back (shared/ibfile.js writes it
+  // The metadata block still appends and reads back (shared/tifile.js writes it
   // after the icon, and fixes the checksum again).
   info.base = edited;                  // as shared/builder.js and web/edit.js do
   info.pe = peInfo(edited);

@@ -1,5 +1,5 @@
 #!/bin/sh
-# selftest.sh IBVERIFY: RFC 8032 section 7.1 vectors 2 and 3 must verify,
+# selftest.sh TIVERIFY: RFC 8032 section 7.1 vectors 2 and 3 must verify,
 # and each with one changed message byte must not.
 set -u
 v=$1

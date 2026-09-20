@@ -1,5 +1,5 @@
 // The build server's API, answered inside the page (plan.md section 1.11).
-// The one-file site sets globalThis.ibLocalApi from here, and api.js sends
+// The one-file site sets globalThis.tiLocalApi from here, and api.js sends
 // every call to it when there is no build server (opened from disk, or "No
 // server" chosen). Nothing leaves the browser except package registry
 // lookups, which only happen when a package's version isn't given.
@@ -12,12 +12,12 @@
 // download from their URLs when the installer runs.
 //
 // What the page carries (tools/build_site.py writes these blocks):
-//   #ib-offline   JSON {built, rev, backend}
-//   #ib-catalog   the catalogue's index, JSON: its shared files, its folders,
+//   #ti-offline   JSON {built, rev, backend}
+//   #ti-catalog   the catalogue's index, JSON: its shared files, its folders,
 //                 and GET /api/catalog/runtimes's answer (docs/format.md 6)
-//   #ib-cat-NAME  each catalogue folder, gzipped, base64; unpacked when a
+//   #ti-cat-NAME  each catalogue folder, gzipped, base64; unpacked when a
 //                 build first needs one of its runtimes (web/overlay.js)
-//   #ib-overlay   catalogue changes saved inside the page (web/overlay.js)
+//   #ti-overlay   catalogue changes saved inside the page (web/overlay.js)
 //   #base-windows, #base-linux, #base-macos   the unsigned bases, base64
 //
 // The catalogue is the snapshot with this browser's changes from the
@@ -44,7 +44,7 @@ function blockBytes(id) {
 }
 
 export const offlineInfo = (() => {
-  try { return JSON.parse(block('ib-offline') || '{}'); } catch (e) { return {}; }
+  try { return JSON.parse(block('ti-offline') || '{}'); } catch (e) { return {}; }
 })();
 
 // {catalog, applied, id}: rebuilt by overlay.js whenever the changes do.
@@ -142,6 +142,6 @@ function url(path) {
 }
 
 export function installLocalApi() {
-  globalThis.ibLocalApi = { request, url, info: offlineInfo, unpacked: unpackedFolders };
+  globalThis.tiLocalApi = { request, url, info: offlineInfo, unpacked: unpackedFolders };
   catalog().catch(() => { /* reported when a build needs it */ });
 }

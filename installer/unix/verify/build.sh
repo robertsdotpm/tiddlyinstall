@@ -1,6 +1,6 @@
 #!/bin/sh
-# Build the static ibverify binaries the Linux and macOS bases embed:
-# bin/ibverify-<linux-x86_64|linux-aarch64|linux-i386|macos-x86_64|macos-arm64>.
+# Build the static tiverify binaries the Linux and macOS bases embed:
+# bin/tiverify-<linux-x86_64|linux-aarch64|linux-i386|macos-x86_64|macos-arm64>.
 #
 # Needs Zig 0.11 or later (a tarball from the runtime store; unpack it
 # anywhere) as ZIG, e.g.
@@ -13,7 +13,7 @@
 set -eu
 cd "$(dirname "$0")"
 : "${ZIG:=zig}"
-src="ibverify.c ../../windows/plugin-src/plancheck.c ../../windows/plugin-src/ed25519_verify.c"
+src="tiverify.c ../../windows/plugin-src/plancheck.c ../../windows/plugin-src/ed25519_verify.c"
 mkdir -p bin
 for t in x86_64-linux-musl:linux-x86_64 aarch64-linux-musl:linux-aarch64 x86-linux-musl:linux-i386 \
 	x86_64-macos:macos-x86_64 aarch64-macos:macos-arm64; do
@@ -22,9 +22,9 @@ for t in x86_64-linux-musl:linux-x86_64 aarch64-linux-musl:linux-aarch64 x86-lin
 	case $target in *macos*) flags="" ;; esac
 	# shellcheck disable=SC2086
 	"$ZIG" cc -target "$target" -Os -s $flags -fno-sanitize=all -fno-stack-protector \
-		-Wall -Wno-sign-compare -o "bin/ibverify-$name" $src
+		-Wall -Wno-sign-compare -o "bin/tiverify-$name" $src
 done
 rm -f bin/*.o
-sh ./selftest.sh bin/ibverify-linux-x86_64
+sh ./selftest.sh bin/tiverify-linux-x86_64
 ls -l bin
-(cd bin && sha256sum ibverify-*)
+(cd bin && sha256sum tiverify-*)

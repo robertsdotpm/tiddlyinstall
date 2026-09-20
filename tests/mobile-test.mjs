@@ -36,13 +36,13 @@
 //                emulator, through `adb forward`): no emulation is applied,
 //                the device is what it is; the page is --site.
 // --adb PATH     with --cdp on Android: adb, to copy the test files to the
-//                device (/data/local/tmp/ib-mobile) for the file inputs.
+//                device (/data/local/tmp/ti-mobile) for the file inputs.
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { launchChrome, connectCdp, sleep } from './browsers/cdp.mjs';
 import { Checker, STARTED, waitFor as waitForIn, buildHello, makeSignFixtures, gpgVerify, setVal, $text } from './browsers/steps.mjs';
-import { readInstaller } from '../shared/ibfile.js';
+import { readInstaller } from '../shared/tifile.js';
 import { execFileSync, spawnSync } from 'node:child_process';
 
 if (typeof WebSocket === 'undefined') {
@@ -63,10 +63,10 @@ const DESKTOP = arg('--desktop');
 const WEBKIT = arg('--webkit');
 const CDP = arg('--cdp');
 const ADB = arg('--adb');
-const DEVICE_DIR = '/data/local/tmp/ib-mobile';
+const DEVICE_DIR = '/data/local/tmp/ti-mobile';
 const SHOT_WIDTH = 360;
 
-const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'ib-mobile-'));
+const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'ti-mobile-'));
 const t = new Checker();
 const ok = t.ok.bind(t);
 if (SHOTS) fs.mkdirSync(SHOTS, { recursive: true });
@@ -105,7 +105,7 @@ const AUDIT = `(() => {
   }
   // Touch targets: controls, and links that are buttons or nav.
   const small = [], tinyText = [];
-  const TARGETS = 'button, .button, select, textarea, summary, .site-header nav > a, .ib-menu-btn, .tab, .lang-choice, label.choice, .icon-tile, .rt-rt, .rt-vrow, ' +
+  const TARGETS = 'button, .button, select, textarea, summary, .site-header nav > a, .ti-menu-btn, .tab, .lang-choice, label.choice, .icon-tile, .rt-rt, .rt-vrow, ' +
     'input:not([type=hidden]):not([type=checkbox]):not([type=radio]):not([type=file])';
   // File inputs the page shows as they are (not those inside a button-styled label).
   for (const e of document.querySelectorAll('input[type=file]')) {
@@ -273,16 +273,16 @@ async function audit(w, what, { shots, targets = true } = {}) {
 const shotList = [];
 
 async function header(w, shots) {
-  const menu = await B.js(visible('.ib-menu-btn'));
+  const menu = await B.js(visible('.ti-menu-btn'));
   const narrow = w < 600;
   if (narrow) ok(menu, `${B.name} ${w}px header: the nav collapses into a menu button`);
   if (menu) {
-    ok(await B.js(`document.querySelector('.ib-menu-btn').getAttribute('aria-expanded') === 'false' && !(${visible('.site-header nav > a[href="#runtimes"]')})`),
+    ok(await B.js(`document.querySelector('.ti-menu-btn').getAttribute('aria-expanded') === 'false' && !(${visible('.site-header nav > a[href="#runtimes"]')})`),
       `${B.name} ${w}px header: the menu starts closed`);
-    await B.tap('.ib-menu-btn');
-    const opened = () => B.js(`document.querySelector('.ib-menu-btn').getAttribute('aria-expanded') === 'true'`);
+    await B.tap('.ti-menu-btn');
+    const opened = () => B.js(`document.querySelector('.ti-menu-btn').getAttribute('aria-expanded') === 'true'`);
     // A freshly started Chrome on Android can swallow the very first touch.
-    if (!(await opened()) && CDP) { t.note(`${B.name} ${w}px header`, 'the first tap did nothing; tapping again'); await sleep(500); await B.tap('.ib-menu-btn'); }
+    if (!(await opened()) && CDP) { t.note(`${B.name} ${w}px header`, 'the first tap did nothing; tapping again'); await sleep(500); await B.tap('.ti-menu-btn'); }
     ok(await opened(), `${B.name} ${w}px header: the menu button opens the menu`);
   }
   const links = await B.js(`Array.prototype.map.call(document.querySelectorAll('.site-header nav > a'), (a) => { const r = a.getBoundingClientRect(); return [a.textContent.trim(), Math.round(r.left), Math.round(r.right), Math.round(r.height), a.getClientRects().length > 0]; })`);
@@ -290,17 +290,17 @@ async function header(w, shots) {
   await audit(w, menu ? 'menu-open' : 'header', { shots });
   await B.tap('.site-header nav > a[href="#runtimes"]');
   ok(await B.js(`location.hash === '#runtimes'`), `${B.name} ${w}px header: a nav link goes to its section`);
-  if (menu) ok(await B.js(`document.querySelector('.ib-menu-btn').getAttribute('aria-expanded') === 'false'`), `${B.name} ${w}px header: following a link closes the menu`);
+  if (menu) ok(await B.js(`document.querySelector('.ti-menu-btn').getAttribute('aria-expanded') === 'false'`), `${B.name} ${w}px header: following a link closes the menu`);
   await go('#home');
   // The settings panel.
-  if (menu) await B.tap('.ib-menu-btn');
+  if (menu) await B.tap('.ti-menu-btn');
   await B.tap('.settings-btn');
   const p = await B.js(`(() => { const r = document.querySelector('.settings-panel').getBoundingClientRect(); return document.querySelector('.settings-panel').hidden ? null : [Math.round(r.left), Math.round(r.right), Math.round(r.width)]; })()`);
   ok(p && p[0] >= 0 && p[1] <= w, `${B.name} ${w}px header: the settings panel opens inside the viewport`, JSON.stringify(p));
   await audit(w, 'settings', { shots });
   await B.js(`document.querySelector('.api-ctl-cancel').click()`);
   await sleep(100);
-  if (menu && await B.js(`document.querySelector('.ib-menu-btn').getAttribute('aria-expanded') === 'true'`)) await B.tap('.ib-menu-btn');
+  if (menu && await B.js(`document.querySelector('.ti-menu-btn').getAttribute('aria-expanded') === 'true'`)) await B.tap('.ti-menu-btn');
 }
 
 async function newInstaller(w, shots) {
@@ -308,7 +308,7 @@ async function newInstaller(w, shots) {
   await audit(w, 'new', { shots });
   // Where the build will happen, in plain words (design.md 11.0 item 6):
   // short enough to read on a phone, and on no more than three lines.
-  const where = await B.js(`(() => { const e = document.querySelector('.ib-page[data-page="new"] .build-where');
+  const where = await B.js(`(() => { const e = document.querySelector('.ti-page[data-page="new"] .build-where');
     if (!e) return null; const r = e.getBoundingClientRect();
     return { text: e.textContent, left: Math.round(r.left), right: Math.round(r.right), height: Math.round(r.height),
       line: Math.round(parseFloat(getComputedStyle(e).lineHeight) || 20) }; })()`);
@@ -334,14 +334,14 @@ async function newInstaller(w, shots) {
   // Architecture, which the form states for an ordinary installer: three
   // short lines per platform, each inside the viewport.
   await go('#new');
-  const arch = await B.js(`[...document.querySelectorAll('.ib-page[data-page="new"] #arch-cover .arch-cover-arches > li')]
+  const arch = await B.js(`[...document.querySelectorAll('.ti-page[data-page="new"] #arch-cover .arch-cover-arches > li')]
     .map((li) => { const r = li.getBoundingClientRect(); return [Math.round(r.left), Math.round(r.right)]; })`);
   ok(arch.length >= 3 && arch.every(([l, r]) => l >= 0 && r <= w),
     `${B.name} ${w}px new: the architecture lines fit the width`, JSON.stringify(arch.slice(0, 4)));
   // Every Customise group open, and the tables in them -- with the packed
   // installer's target picker showing, since its boxes are new controls in
   // a table and it is off by default.
-  await B.js(`document.querySelectorAll('.ib-page[data-page="new"] details').forEach((d) => { d.open = true; });
+  await B.js(`document.querySelectorAll('.ti-page[data-page="new"] details').forEach((d) => { d.open = true; });
     const f = document.getElementById('new-form'); f.elements.offline.checked = true;
     f.dispatchEvent(new Event('change', { bubbles: true }));`);
   await sleep(300);
@@ -359,19 +359,19 @@ async function newInstaller(w, shots) {
   await B.js(`(() => { const f = document.getElementById('new-form'); f.elements.offline.checked = false;
     f.dispatchEvent(new Event('change', { bubbles: true })); })()`);
   // The compatibility bar and its matrix, where it shows.
-  if (await B.js(visible('.ib-compat-more'))) {
-    await B.js(`document.querySelector('.ib-compat-more').click()`);
+  if (await B.js(visible('.ti-compat-more'))) {
+    await B.js(`document.querySelector('.ti-compat-more').click()`);
     await sleep(200);
     await audit(w, 'compat-details', { shots });
-    await B.js(`document.querySelector('.ib-compat-more').click()`);
+    await B.js(`document.querySelector('.ti-compat-more').click()`);
   }
-  await B.js(`document.querySelectorAll('.ib-page[data-page="new"] details').forEach((d) => { d.open = false; })`);
+  await B.js(`document.querySelectorAll('.ti-page[data-page="new"] details').forEach((d) => { d.open = false; })`);
 }
 
 async function build(w, shots) {
   // Served by a build server, the build is the page's own ("No server" in
   // the settings, as a person would choose it): the steps read its jobs.
-  if (!(await B.js(`document.documentElement.classList.contains('ib-local')`))) {
+  if (!(await B.js(`document.documentElement.classList.contains('ti-local')`))) {
     await B.js(`document.querySelector('.api-ctl-edit').click(); document.querySelector('.api-ctl-local').click()`);
     await sleep(300);
   }
@@ -413,8 +413,8 @@ async function sources(w, shots) {
   ok(rowH >= 39.5, `${B.name} ${w}px sources: release rows are at least 40 px high`, rowH);
   await B.js(`document.getElementById('rt-rel-list').scrollIntoView({ block: 'nearest' })`);
   await sleep(400);
-  const k = await B.js(`(() => { const l = document.getElementById('rt-rel-list'); const r = Array.prototype.find.call(l.querySelectorAll('.rt-vrow'), (x) => x.getBoundingClientRect().top >= l.getBoundingClientRect().top); r.id = 'ib-test-row'; return r.dataset.k; })()`);
-  await B.tap('#ib-test-row');
+  const k = await B.js(`(() => { const l = document.getElementById('rt-rel-list'); const r = Array.prototype.find.call(l.querySelectorAll('.rt-vrow'), (x) => x.getBoundingClientRect().top >= l.getBoundingClientRect().top); r.id = 'ti-test-row'; return r.dataset.k; })()`);
+  await B.tap('#ti-test-row');
   await waitFor(`!document.getElementById('rt-detail').hidden`, 'the release form');
   ok(await B.js(`!!document.querySelector('#rt-detail input')`), `${B.name} ${w}px sources: tapping release ${k} opens its form`);
   await audit(w, 'sources-release', { shots });
@@ -436,7 +436,7 @@ async function banner(w, shots) {
   await audit(w, 'banner', { shots });
   await B.js(`window.scrollTo(0, document.body.scrollHeight)`);
   await audit(w, 'footer', { targets: true });
-  await B.js(`localStorage.removeItem('ib.api')`);
+  await B.js(`localStorage.removeItem('ti.api')`);
 }
 
 /* ---------- on a device: downloads land in its Download folder ---------- */
@@ -465,8 +465,8 @@ const deviceSize = (name) => {
 function answerDialog() {
   try {
     // uiautomator may say "could not get idle state" and still write the dump.
-    spawnSync(ADB, ['shell', 'rm -f /sdcard/ib-ui.xml; uiautomator dump /sdcard/ib-ui.xml'], { stdio: 'ignore' });
-    const xml = adb('shell', 'cat /sdcard/ib-ui.xml 2>/dev/null; true');
+    spawnSync(ADB, ['shell', 'rm -f /sdcard/ti-ui.xml; uiautomator dump /sdcard/ti-ui.xml'], { stdio: 'ignore' });
+    const xml = adb('shell', 'cat /sdcard/ti-ui.xml 2>/dev/null; true');
     const q = /Download file again/.test(xml) ? ['Download file again?', /text="Download again"/.test(xml) ? 'Download again' : 'Download']
       : /download multiple files/.test(xml) ? ['wants to download multiple files', 'Allow'] : null;
     if (!q) return false;
@@ -501,8 +501,8 @@ async function deviceDownloads(job) {
   await go('#build&job=' + job.id);
   await waitFor(`document.querySelectorAll('#job-files a[download]').length === 3`, 'the download links');
   const exe = job.result.files.find((f) => f.platform === 'windows');
-  await B.js(`document.querySelector('#job-files a[download="${exe.name}"]').id = 'ib-test-dl'`);
-  await B.tap('#ib-test-dl');
+  await B.js(`document.querySelector('#job-files a[download="${exe.name}"]').id = 'ti-test-dl'`);
+  await B.tap('#ti-test-dl');
   const got = await deviceFile(exe.name, exe.size);
   ok(got === exe.size, `${tag} tapping the .exe link saves it to ${DL_DIR} (${exe.size} bytes)`, got);
   if (got === exe.size) {
@@ -510,7 +510,7 @@ async function deviceDownloads(job) {
     ok(info.kind === 'exe' && !!info.record, `${tag} the saved .exe reads back with its record`);
   }
   // "Save this page".
-  const size = await B.js(`new Blob([IB_PRISTINE]).size`);
+  const size = await B.js(`new Blob([TI_PRISTINE]).size`);
   await B.tap('.save-page');
   const saved = await deviceFile('tiddlyinstall.html', size);
   ok(saved === size, `${tag} "Save this page" saves the page (${size} bytes)`, saved);
@@ -550,7 +550,7 @@ async function allSections(w, shots) {
   await header(w, shots);
   await newInstaller(w, shots);
   const job = await build(w, shots);
-  await B.js(`localStorage.removeItem('ib.api')`);   // the next start is as served again
+  await B.js(`localStorage.removeItem('ti.api')`);   // the next start is as served again
   await editor(w, shots);
   if (ADB && job && job.status === 'done') await deviceDownloads(job);
   await sources(w, shots);
@@ -593,12 +593,12 @@ async function userAgents() {
       await sleep(300);
       await open(URL0 + '#new');
     }
-    const got = await B.js(`(() => { const e = ibCompat.env, b = document.querySelector('.ib-compat-bar');
-      return { browser: e.browser, os: e.os, mobile: e.mobile, folder: ibCompat.status.folder, degraded: ibCompat.degraded,
+    const got = await B.js(`(() => { const e = tiCompat.env, b = document.querySelector('.ti-compat-bar');
+      return { browser: e.browser, os: e.os, mobile: e.mobile, folder: tiCompat.status.folder, degraded: tiCompat.degraded,
       bar: !!(b && !b.hidden && b.style.display !== 'none'), barText: b ? b.textContent.slice(0, 300) : '',
       cls: document.documentElement.className, picker: !!document.getElementById('local-folder-label').getClientRects().length || getComputedStyle(document.getElementById('local-folder-label')).display !== 'none' }; })()`);
     ok(got.browser === want.browser && got.os === want.os && got.mobile === want.mobile, `user agent ${what}: seen as ${want.browser} on ${want.os}, a phone or tablet`, JSON.stringify(got));
-    ok(got.folder === folder && /\bib-mobile\b/.test(got.cls) && /\bib-no-folder\b/.test(got.cls) === (folder !== 'native'),
+    ok(got.folder === folder && /\bti-mobile\b/.test(got.cls) && /\bti-no-folder\b/.test(got.cls) === (folder !== 'native'),
       `user agent ${what}: folder picking ${folder === 'native' ? 'offered' : 'hidden'}`, JSON.stringify(got));
     // A phone without a folder picker is how phones are, not a limit of the
     // browser: it is hidden quietly, with no bar (design.md 11.0 item 5).
@@ -612,8 +612,8 @@ async function userAgents() {
   await c.cdp('Page.navigate', { url: 'about:blank' });
   await sleep(300);
   await open(URL0 + '#new');
-  const d = await B.js(`[ibCompat.env.mobile, ibCompat.status.folder, document.documentElement.className]`);
-  ok(d[0] === false && d[1] === 'native' && !/ib-mobile|ib-no-folder/.test(d[2]), 'desktop Chrome: not a phone, folder picking offered', JSON.stringify(d));
+  const d = await B.js(`[tiCompat.env.mobile, tiCompat.status.folder, document.documentElement.className]`);
+  ok(d[0] === false && d[1] === 'native' && !/ti-mobile|ti-no-folder/.test(d[2]), 'desktop Chrome: not a phone, folder picking offered', JSON.stringify(d));
 }
 
 /* ---------- desktop screenshots ---------- */
@@ -626,9 +626,9 @@ async function desktop(dir) {
   await go('#new'); await snap('new');
   await go('#new&write'); await snap('new-write');
   await go('#new');
-  await B.js(`document.querySelectorAll('.ib-page[data-page="new"] details').forEach((d) => { d.open = true; })`);
+  await B.js(`document.querySelectorAll('.ti-page[data-page="new"] details').forEach((d) => { d.open = true; })`);
   await snap('new-customise');
-  await B.js(`document.querySelectorAll('.ib-page[data-page="new"] details').forEach((d) => { d.open = false; })`);
+  await B.js(`document.querySelectorAll('.ti-page[data-page="new"] details').forEach((d) => { d.open = false; })`);
   await go('#edit');
   await B.setFile('#installer', B.fx.t('in.exe'));
   await waitFor(`!document.getElementById('sign-exe').hidden`, 'the Windows sign panel');

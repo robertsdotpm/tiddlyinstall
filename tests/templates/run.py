@@ -7,7 +7,7 @@ Installers come from build.py's output (DIR/builds.json, default
 tests/templates/out; build.mjs writes it). TARGET is `linux` (this machine,
 in a throwaway home), a Linux VM from LINUX_VMS, a Windows VM from WINDOWS,
 or `mac`. Each cell: install unattended; run the app through its launcher
-with IB_TEMPLATE_SELFTEST=1, and IB_TEMPLATE_SELFTEST_OUT naming a file;
+with TI_TEMPLATE_SELFTEST=1, and TI_TEMPLATE_SELFTEST_OUT naming a file;
 check the app printed "template ok: <runtime>/<template>" (console apps: in
 its output; every app: in that file); for window templates, check a window
 with the template's title was on screen while it ran; uninstall, and check
@@ -63,7 +63,7 @@ WINDOWS = {
     "2025core": "x@10.0.1.124",
     "11de": "Jörg Müller@10.0.1.83",
 }
-# Run from a folder in the user's profile, not C:\ibtpl, with every path
+# Run from a folder in the user's profile, not C:\titpl, with every path
 # quoted: the German VM's profile is "C:\Users\jörg müller" (a space and
 # non-ASCII letters), where a downloaded installer would start from.
 PROFILE = {"11de"}
@@ -185,12 +185,12 @@ def judge(key, b, parts, err=""):
 
 UNIX_SCRIPT = machines.ELF_PROBE_SH + r'''
 set -u
-H=$(mktemp -d /tmp/ibtpl-XXXXXX)
+H=$(mktemp -d /tmp/titpl-XXXXXX)
 cp "$SRC" "$H/$F"
 BASEENV="HOME=$H PATH=/usr/local/bin:/usr/bin:/bin LANG=C.UTF-8 ${STRAY:-}"
 env -i $BASEENV sh "$H/$F" --yes --log="$H/i.log" </dev/null >/dev/null 2>&1
 echo "@install $?"
-d=$(ls -d "$H"/.local/share/ib/*/launch.txt 2>/dev/null | head -1)
+d=$(ls -d "$H"/.local/share/ti/*/launch.txt 2>/dev/null | head -1)
 if [ -n "$d" ]; then
   d=$(dirname "$d")
   XPID=
@@ -203,7 +203,7 @@ if [ -n "$d" ]; then
   else
     DISP=
   fi
-  env -i $BASEENV $DISP IB_TEMPLATE_SELFTEST=1 IB_TEMPLATE_SELFTEST_OUT="$H/selftest.txt" \
+  env -i $BASEENV $DISP TI_TEMPLATE_SELFTEST=1 TI_TEMPLATE_SELFTEST_OUT="$H/selftest.txt" \
     timeout $RUNT sh "$d/launch.sh" </dev/null >"$H/out.txt" 2>"$H/err.txt" &
   P=$!
   seen=
@@ -224,7 +224,7 @@ if [ -n "$d" ]; then
   echo "@out"; cat "$H/out.txt" "$H/err.txt" 2>/dev/null | tail -15
   echo "@applog"; tail -15 "$d/data/launch.log" 2>/dev/null
   echo "@file"; cat "$H/selftest.txt" 2>/dev/null
-  echo "@elf"; ib_elf_probe "$H/.local/share/ib"
+  echo "@elf"; ti_elf_probe "$H/.local/share/ti"
   env -i $BASEENV sh "$d/uninstall.sh" --yes </dev/null >/dev/null 2>&1; echo "@uninstall $?"
 fi
 # .dbus: GTK's D-Bus autolaunch, which a desktop session's own bus makes unneeded.
@@ -252,12 +252,12 @@ def run_unix_local(key, b, f, a):
 
 def run_linux_vm(host, key, b, f, a):
     name = Path(f).name
-    sh(["ssh", host, "rm -rf ibtpl; mkdir -p ibtpl"], timeout=60)
-    code, _, err = sh(["scp", "-q", f, f"{host}:ibtpl/{name}"], timeout=600)
+    sh(["ssh", host, "rm -rf titpl; mkdir -p titpl"], timeout=60)
+    code, _, err = sh(["scp", "-q", f, f"{host}:titpl/{name}"], timeout=600)
     if code:
         return "fail", "scp: " + err.strip(), {}
     gui = "0" if b.get("console") else "1"
-    head = (f"SRC=$HOME/ibtpl/{shlex.quote(name)} F={shlex.quote(name)} GUI={gui} TITLE={shlex.quote(b.get('title', ''))} "
+    head = (f"SRC=$HOME/titpl/{shlex.quote(name)} F={shlex.quote(name)} GUI={gui} TITLE={shlex.quote(b.get('title', ''))} "
             f"RUNT={RUN_TIMEOUT} XVFB=Xvfb KEEP={'1' if a.keep else ''} STRAY={shlex.quote(a.stray)}")
     code, out, err = sh(["ssh", host, f"{head} sh -s"], input=UNIX_SCRIPT)
     if code == 124:
@@ -266,7 +266,7 @@ def run_linux_vm(host, key, b, f, a):
         # "[x]yz" matches the installer, not this command line.
         sh(["ssh", host, "pkill -f " + shlex.quote("[" + name[0] + "]" + name[1:])], timeout=60)
         time.sleep(30)
-    sh(["ssh", host, "rm -rf ibtpl"], timeout=60)
+    sh(["ssh", host, "rm -rf titpl"], timeout=60)
     parts = parse_markers(out)
     return judge(key, b, parts, err) + (parts,)
 
@@ -279,10 +279,10 @@ def run_sandbox(target, key, b, f, a):
         return "n/a", f"{target} is a container with no display: GUI templates can't run there", {}
     src = Path(f).resolve().parent
     env = {"HOME": "/home/ti", "PATH": "/usr/local/bin:/usr/bin:/bin",
-           "SRC": "/ibsrc/" + Path(f).name, "F": Path(f).name, "GUI": "0",
+           "SRC": "/tisrc/" + Path(f).name, "F": Path(f).name, "GUI": "0",
            "TITLE": b.get("title", ""), "RUNT": str(RUN_TIMEOUT), "XVFB": "Xvfb",
            "KEEP": "", "STRAY": a.stray}
-    rc, out, err = sandbox.run_script(target, UNIX_SCRIPT, env=env, ro={src: "/ibsrc"},
+    rc, out, err = sandbox.run_script(target, UNIX_SCRIPT, env=env, ro={src: "/tisrc"},
                                       timeout=INSTALL_TIMEOUT)
     parts = parse_markers(out)
     return judge(key, b, parts, err) + (parts,)
@@ -290,61 +290,61 @@ def run_sandbox(target, key, b, f, a):
 
 MAC_SCRIPT = r'''
 set -u
-cd "$HOME/ibtpl" || exit 90
+cd "$HOME/titpl" || exit 90
 rm -rf x && mkdir x && cd x && ditto -x -k ../in.zip . || exit 91
 # What was there before: only what this install adds counts as left behind.
 before=$(ls "$HOME/Applications" 2>/dev/null; [ -d "$HOME/Applications" ] && echo "(Applications)")
 app=$(ls -d *.app)
-IB_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --log="$HOME/ibtpl/i.log" </dev/null >/dev/null 2>&1
+TI_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --log="$HOME/titpl/i.log" </dev/null >/dev/null 2>&1
 echo "@install $?"
-d=$(ls -d "$HOME/Library/ib/"*/launch.txt "$HOME/Library/Application Support/ib/"*/launch.txt 2>/dev/null | head -1)
+d=$(ls -d "$HOME/Library/ti/"*/launch.txt "$HOME/Library/Application Support/ti/"*/launch.txt 2>/dev/null | head -1)
 if [ -n "$d" ]; then
   d=$(dirname "$d")
-  IB_NO_TERMINAL=1 IB_TEMPLATE_SELFTEST=1 IB_TEMPLATE_SELFTEST_OUT="$HOME/ibtpl/selftest.txt" \
-    perl -e 'alarm shift; exec @ARGV' 180 sh "$d/launch.sh" </dev/null >"$HOME/ibtpl/out.txt" 2>&1
-  echo "@out"; tail -15 "$HOME/ibtpl/out.txt"
-  echo "@file"; cat "$HOME/ibtpl/selftest.txt" 2>/dev/null
+  TI_NO_TERMINAL=1 TI_TEMPLATE_SELFTEST=1 TI_TEMPLATE_SELFTEST_OUT="$HOME/titpl/selftest.txt" \
+    perl -e 'alarm shift; exec @ARGV' 180 sh "$d/launch.sh" </dev/null >"$HOME/titpl/out.txt" 2>&1
+  echo "@out"; tail -15 "$HOME/titpl/out.txt"
+  echo "@file"; cat "$HOME/titpl/selftest.txt" 2>/dev/null
   sh "$d/uninstall.sh" --yes </dev/null >/dev/null 2>&1; echo "@uninstall $?"
 fi
 after=$(ls "$HOME/Applications" 2>/dev/null; [ -d "$HOME/Applications" ] && echo "(Applications)")
-echo "@left"; ls "$HOME/Library/ib" "$HOME/Library/Application Support/ib" 2>/dev/null
+echo "@left"; ls "$HOME/Library/ti" "$HOME/Library/Application Support/ti" 2>/dev/null
 [ "$before" = "$after" ] || echo "Applications: $after"
-echo "@osdesc"; sed -n 's/^Running as .* on //p' "$HOME/ibtpl/i.log" 2>/dev/null | head -1
-echo "@planarch"; sed -n '/^ *Runtime:/{p;q;}' "$HOME/ibtpl/i.log" 2>/dev/null
+echo "@osdesc"; sed -n 's/^Running as .* on //p' "$HOME/titpl/i.log" 2>/dev/null | head -1
+echo "@planarch"; sed -n '/^ *Runtime:/{p;q;}' "$HOME/titpl/i.log" 2>/dev/null
 echo "@x"
-echo "@log"; tail -12 "$HOME/ibtpl/i.log"
+echo "@log"; tail -12 "$HOME/titpl/i.log"
 '''
 
 
 def run_mac(key, b, f, a):
     if not b.get("console"):
         return "n/a", "the Mac has no display: GUI templates can't run there", {}
-    sh(["ssh", MAC, "rm -rf ~/ibtpl; mkdir -p ~/ibtpl"], timeout=60)
-    code, _, err = sh(["scp", "-q", f, f"{MAC}:ibtpl/in.zip"], timeout=600)
+    sh(["ssh", MAC, "rm -rf ~/titpl; mkdir -p ~/titpl"], timeout=60)
+    code, _, err = sh(["scp", "-q", f, f"{MAC}:titpl/in.zip"], timeout=600)
     if code:
         return "fail", "scp: " + err, {}
     code, out, err = sh(["ssh", MAC, "sh -s"], input=MAC_SCRIPT)
-    sh(["ssh", MAC, "rm -rf ~/ibtpl"], timeout=60)
+    sh(["ssh", MAC, "rm -rf ~/titpl"], timeout=60)
     parts = parse_markers(out)
     return judge(key, b, parts, err) + (parts,)
 
 
 # ---------------------------------------------------------------- Windows
 
-WIN_DIR = "C:\\ibtpl"
+WIN_DIR = "C:\\titpl"
 
-# The scripts run from %T%: C:\ibtpl, or %USERPROFILE%\ibtpl on a PROFILE
+# The scripts run from %T%: C:\titpl, or %USERPROFILE%\titpl on a PROFILE
 # machine, where the paths the installer and launcher are given are quoted
 # ({LOG}, {OUT}). The app's folder is found as the installer makes it (a
 # path with the user's name in it is never written into these files: cmd
 # reads them in the OEM code page).
 FIND_APP = r"""set A=
-if exist "C:\ib\{ID}\launch.exe" set A=C:\ib\{ID}
-if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib\{ID}\launch.exe" set A=%LOCALAPPDATA%\ib\{ID}
+if exist "C:\ti\{ID}\launch.exe" set A=C:\ti\{ID}
+if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ti\{ID}\launch.exe" set A=%LOCALAPPDATA%\ti\{ID}
 """
 
 INSTALL_BAT = r"""setlocal
-(dir /b "C:\ib" 2>nul& if defined LOCALAPPDATA dir /b "%LOCALAPPDATA%\ib" 2>nul) >"%T%\ib-before.txt"
+(dir /b "C:\ti" 2>nul& if defined LOCALAPPDATA dir /b "%LOCALAPPDATA%\ti" 2>nul) >"%T%\ti-before.txt"
 (dir /b /ad "%APPDATA%" 2>nul& if defined LOCALAPPDATA dir /b /ad "%LOCALAPPDATA%" 2>nul) >"%T%\profile-before.txt"
 "%T%\{FILE}" /S /log={LOG}
 echo @install %ERRORLEVEL%
@@ -359,8 +359,8 @@ if exist "%T%\install.log" type "%T%\install.log"
 """
 
 # Console and web apps: through launch.exe /out= over SSH.
-CONSOLE_BAT = FIND_APP + r"""set IB_TEMPLATE_SELFTEST=1
-set IB_TEMPLATE_SELFTEST_OUT=%T%\selftest.txt
+CONSOLE_BAT = FIND_APP + r"""set TI_TEMPLATE_SELFTEST=1
+set TI_TEMPLATE_SELFTEST_OUT=%T%\selftest.txt
 "%A%\launch.exe" /out={OUT}
 echo @out
 type "%T%\out.txt"
@@ -376,20 +376,20 @@ if exist "%T%\selftest.txt" type "%T%\selftest.txt"
 # for on the SSH session's own desktop, hidden windows included (processes
 # there start with SW_HIDE, so a window is made but never visible); the
 # result says so.
-GUI_BAT = r"""(dir /b "C:\ib" 2>nul& if defined LOCALAPPDATA dir /b "%LOCALAPPDATA%\ib" 2>nul) >"%T%\ib-before.txt"
+GUI_BAT = r"""(dir /b "C:\ti" 2>nul& if defined LOCALAPPDATA dir /b "%LOCALAPPDATA%\ti" 2>nul) >"%T%\ti-before.txt"
 (dir /b /ad "%APPDATA%" 2>nul& if defined LOCALAPPDATA dir /b /ad "%LOCALAPPDATA%" 2>nul) >"%T%\profile-before.txt"
 "%T%\{FILE}" /S /log={LOG}
 >"%T%\install-rc.txt" echo %ERRORLEVEL%
 """ + FIND_APP + r"""if not defined A goto done
-set IB_TEMPLATE_SELFTEST=1
-set IB_TEMPLATE_SELFTEST_OUT=%T%\selftest.txt
+set TI_TEMPLATE_SELFTEST=1
+set TI_TEMPLATE_SELFTEST_OUT=%T%\selftest.txt
 powershell -NoProfile -ExecutionPolicy Bypass -File "%T%\probe.ps1" -Title "{TITLE}" -Ok "%T%\selftest.txt" -Launch "%A%\launch.exe"{PROBEARGS} <nul >"%T%\probe.txt" 2>&1
 :done
 >"%T%\task-done.txt" echo done
 """
 
-TASK_BAT = r"""schtasks /create /tn ibtpl /tr {TR} /sc once /st 23:59 /it /f
-schtasks /run /tn ibtpl
+TASK_BAT = r"""schtasks /create /tn titpl /tr {TR} /sc once /st 23:59 /it /f
+schtasks /run /tn titpl
 """
 
 GUI_RESULTS_BAT = r"""echo @install
@@ -415,7 +415,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
-public class IbWindows {
+public class TiWindows {
   public delegate bool EnumProc(IntPtr h, IntPtr l);
   [DllImport("user32.dll")] public static extern bool EnumWindows(EnumProc f, IntPtr l);
   [DllImport("user32.dll", CharSet = CharSet.Unicode)] public static extern int GetWindowText(IntPtr h, StringBuilder s, int n);
@@ -440,28 +440,28 @@ Start-Process -FilePath $Launch
 $seen = $false
 $start = Get-Date
 while (((Get-Date) - $start).TotalSeconds -lt $Seconds) {
-  if ($Title -and -not $seen -and ([IbWindows]::Titles($Hidden) -contains $Title)) { $seen = $true; "window: $Title" }
+  if ($Title -and -not $seen -and ([TiWindows]::Titles($Hidden) -contains $Title)) { $seen = $true; "window: $Title" }
   if ((Test-Path $Ok) -and ($seen -or -not $Title)) { break }
   Start-Sleep -Milliseconds 250
 }
-if ($Title -and -not $seen) { "no window titled $Title; visible: " + ([IbWindows]::Titles($Hidden) -join " | ") }
+if ($Title -and -not $seen) { "no window titled $Title; visible: " + ([TiWindows]::Titles($Hidden) -join " | ") }
 """
 
 # The leftover listing, shared by AFTER_BAT and LEFT_BAT.
 LEFT_LIST = r"""echo @left
-rem Every folder under ib that wasn't there before the install: the app's,
+rem Every folder under ti that wasn't there before the install: the app's,
 rem and the runtimes' (removed with their last app).
-if exist "C:\ib" for /f "delims=" %%d in ('dir /b "C:\ib"') do findstr /x /c:"%%d" "%T%\ib-before.txt" >nul 2>&1 || echo left: C:\ib\%%d
-if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib" for /f "delims=" %%d in ('dir /b "%LOCALAPPDATA%\ib"') do findstr /x /c:"%%d" "%T%\ib-before.txt" >nul 2>&1 || echo left: %%d
+if exist "C:\ti" for /f "delims=" %%d in ('dir /b "C:\ti"') do findstr /x /c:"%%d" "%T%\ti-before.txt" >nul 2>&1 || echo left: C:\ti\%%d
+if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ti" for /f "delims=" %%d in ('dir /b "%LOCALAPPDATA%\ti"') do findstr /x /c:"%%d" "%T%\ti-before.txt" >nul 2>&1 || echo left: %%d
 rem And in the user's profile: a package's own cache (Electron's download
 rem cache is %LOCALAPPDATA%\electron) outlives the app otherwise.
 for /f "delims=" %%d in ('dir /b /ad "%APPDATA%"') do findstr /x /c:"%%d" "%T%\profile-before.txt" >nul 2>&1 || echo left: %%APPDATA%%\%%d
 if defined LOCALAPPDATA for /f "delims=" %%d in ('dir /b /ad "%LOCALAPPDATA%"') do findstr /x /c:"%%d" "%T%\profile-before.txt" >nul 2>&1 || echo left: %%LOCALAPPDATA%%\%%d
-reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\ib-{ID}" >nul 2>&1 && echo regkey-left
+reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\ti-{ID}" >nul 2>&1 && echo regkey-left
 """
 
 AFTER_BAT = FIND_APP + r"""if not defined A goto left
-powershell -NoProfile -Command "Get-WmiObject Win32_Process | Where-Object { $_.CommandLine -like '*\ib\{ID}*' } | ForEach-Object { $_.Terminate() | Out-Null }" <nul
+powershell -NoProfile -Command "Get-WmiObject Win32_Process | Where-Object { $_.CommandLine -like '*\ti\{ID}*' } | ForEach-Object { $_.Terminate() | Out-Null }" <nul
 if exist "%A%\data\launch.log" (echo @applog& type "%A%\data\launch.log")
 "%A%\uninstall.exe" /S
 echo @uninstall %ERRORLEVEL%
@@ -495,7 +495,7 @@ LEFT_BAT = 'ping -n 3 127.0.0.1 >nul\n' + LEFT_LIST
 
 
 HOLDERS_PS1 = Path(__file__).resolve().parent.parent / "matrix" / "holders.ps1"
-HOLDER_ROOTS = "C:\\ib;%LOCALAPPDATA%\\ib;%APPDATA%"
+HOLDER_ROOTS = "C:\\ti;%LOCALAPPDATA%\\ti;%APPDATA%"
 
 
 def clear_holders(host):
@@ -507,12 +507,12 @@ def clear_holders(host):
     folder makes every later cell on the VM report a leftover. Returns
     (what it found and killed, whether it ran at all).
     """
-    code, _, err = sh(["scp", "-q", str(HOLDERS_PS1), f"{host}:C:/ibholders.ps1"], timeout=60)
+    code, _, err = sh(["scp", "-q", str(HOLDERS_PS1), f"{host}:C:/tiholders.ps1"], timeout=60)
     if code:
         return [f"(could not copy holders.ps1: {err.strip()[:120]})"], False
     code, out, err = sh(["ssh", host, "powershell -NoProfile -ExecutionPolicy Bypass "
-                         f'-File C:\\ibholders.ps1 -Path "{HOLDER_ROOTS}" -Kill'], timeout=300)
-    sh(["ssh", host, "cmd /c del C:\\ibholders.ps1"], timeout=60)
+                         f'-File C:\\tiholders.ps1 -Path "{HOLDER_ROOTS}" -Kill'], timeout=300)
+    sh(["ssh", host, "cmd /c del C:\\tiholders.ps1"], timeout=60)
     lines = [l.rstrip("\r") for l in out.splitlines() if l.strip()]
     if code or "END" not in lines:
         return lines + [f"(holders.ps1 exit {code}: {err.strip()[:120]})"], False
@@ -548,9 +548,9 @@ class WinVM:
         if self.profile:
             # scp paths are relative to the user's home; ssh command lines
             # quote the folder (cmd, the default shell there, expands it).
-            self.t, self.cmd_dir, self.scp_dir = "%USERPROFILE%\\ibtpl", '"%USERPROFILE%\\ibtpl"', "ibtpl"
+            self.t, self.cmd_dir, self.scp_dir = "%USERPROFILE%\\titpl", '"%USERPROFILE%\\titpl"', "titpl"
         else:
-            self.t, self.cmd_dir, self.scp_dir = WIN_DIR, WIN_DIR, "C:/ibtpl"
+            self.t, self.cmd_dir, self.scp_dir = WIN_DIR, WIN_DIR, "C:/titpl"
 
     def script(self, body, **subst):
         q = '"' if self.profile else ""
@@ -590,14 +590,14 @@ class WinVM:
         sh(["ssh", self.host, f'cmd /c "rd /s /q {self.cmd_dir}"'], timeout=60)
 
     def busy(self):
-        """Another harness's folder: tests/matrix (C:\\ibtest, whose cleanup
-        removes every app under %LOCALAPPDATA%\\ib), behaviour.py (C:\\ibbtest),
+        """Another harness's folder: tests/matrix (C:\\titest, whose cleanup
+        removes every app under %LOCALAPPDATA%\\ti), behaviour.py (C:\\tibtest),
         another copy of this harness (our own folder, which fresh() deletes),
         or the same in the profile on a PROFILE machine."""
-        checks = ["if exist C:\\ibtest echo BUSY", "if exist C:\\ibbtest echo BUSY",
+        checks = ["if exist C:\\titest echo BUSY", "if exist C:\\tibtest echo BUSY",
                   f"if exist {self.cmd_dir} echo BUSY"]
         if self.profile:
-            checks += ['if exist "%USERPROFILE%\\ibtest" echo BUSY', 'if exist "%USERPROFILE%\\ibbtest" echo BUSY']
+            checks += ['if exist "%USERPROFILE%\\titest" echo BUSY', 'if exist "%USERPROFILE%\\tibtest" echo BUSY']
         code, out, _ = sh(["ssh", self.host, 'cmd /c "' + "& ".join(checks) + '"'], timeout=60)
         return "BUSY" in out
 
@@ -663,7 +663,7 @@ def run_windows(vm, key, b, f, a):
                 time.sleep(5)
             else:
                 vm.stop(Path(f).name)
-            sh(["ssh", vm.host, "schtasks /delete /tn ibtpl /f"], timeout=60)
+            sh(["ssh", vm.host, "schtasks /delete /tn titpl /f"], timeout=60)
         else:
             note = " (nobody logged on at the console: run over SSH; the window was looked for, hidden ones included, on the SSH session's desktop)"
             if vm.call("gui.bat")[0] == 124:

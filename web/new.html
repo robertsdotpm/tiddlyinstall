@@ -387,7 +387,7 @@ Press Enter to close</pre>
                tokens it actually uses. This is the no-JavaScript fallback. -->
           <div class="launch-example" id="launch-example">
             <span class="eyebrow" style="margin-top:12px">On a Windows machine this becomes</span>
-            <code class="launch-eg">C:\ib\tjfq5rqwnnrx\python.exe -m requests</code>
+            <code class="launch-eg">C:\ti\tjfq5rqwnnrx\python.exe -m requests</code>
             <dl class="launch-tokens">
               <dt>{runtime}</dt><dd>the runtime this installer sets up, never one already on the computer</dd>
               <dt>{project}</dt><dd>your package name</dd>
@@ -579,10 +579,10 @@ Press Enter to close</pre>
             <summary>Install locations</summary>
             <p class="small">Every app gets its own copy of every dependency. Nothing is shared between apps, so one app can't break another, and uninstalling deletes the app's folders.</p>
 <pre class="small">
-Windows  C:\ib\k3m9q2x7v4p8\     app
-         C:\ib\tjfq5rqwnnrx\     its Python
-Linux    /opt/ib/tjfq5rqwnnrx/
-macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
+Windows  C:\ti\k3m9q2x7v4p8\     app
+         C:\ti\tjfq5rqwnnrx\     its Python
+Linux    /opt/ti/tjfq5rqwnnrx/
+macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
 </pre>
             <span class="hint">Folder names are short hashes, to keep paths short. Each folder has a manifest saying what it contains.</span>
           </details>
@@ -907,7 +907,7 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
           </div>
           <div class="field">
             <label for="rootname">Root folder name</label>
-            <input type="text" id="rootname" name="rootname" value="ib" maxlength="32" pattern="[A-Za-z0-9._\-]+" spellcheck="false">
+            <input type="text" id="rootname" name="rootname" value="ti" maxlength="32" pattern="[A-Za-z0-9._\-]+" spellcheck="false">
             <span class="hint">Every app installed this way goes under one folder with this name, each in its own subfolder.</span>
           </div>
 
@@ -928,9 +928,9 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
               </div>
               <div class="field">
                 <label for="win-post">After installing files</label>
-                <textarea class="code code-script" id="win-post" name="win_post_script" spellcheck="false" placeholder="@echo off&#10;&quot;%IB_RUNTIME_DIR%\python.exe&quot; -m myapp --init-config"></textarea>
+                <textarea class="code code-script" id="win-post" name="win_post_script" spellcheck="false" placeholder="@echo off&#10;&quot;%TI_RUNTIME_DIR%\python.exe&quot; -m myapp --init-config"></textarea>
               </div>
-              <span class="hint">Available: <code>%IB_APP_DIR%</code> <code>%IB_RUNTIME_DIR%</code> <code>%IB_APP_NAME%</code>. Runs with the installer's permissions (usually administrator).</span>
+              <span class="hint">Available: <code>%TI_APP_DIR%</code> <code>%TI_RUNTIME_DIR%</code> <code>%TI_APP_NAME%</code>. Runs with the installer's permissions (usually administrator).</span>
             </div>
 
             <div class="tab-panel script-panel-unix">
@@ -940,9 +940,9 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
               </div>
               <div class="field">
                 <label for="unix-post">After installing files</label>
-                <textarea class="code code-script" id="unix-post" name="unix_post_script" spellcheck="false" placeholder="#!/bin/sh&#10;&quot;$IB_RUNTIME_DIR/bin/python3&quot; -m myapp --init-config"></textarea>
+                <textarea class="code code-script" id="unix-post" name="unix_post_script" spellcheck="false" placeholder="#!/bin/sh&#10;&quot;$TI_RUNTIME_DIR/bin/python3&quot; -m myapp --init-config"></textarea>
               </div>
-              <span class="hint">Available: <code>$IB_APP_DIR</code> <code>$IB_RUNTIME_DIR</code> <code>$IB_APP_NAME</code>. Plain POSIX <code>sh</code>, which every Linux and macOS system has; bash isn't guaranteed.
+              <span class="hint">Available: <code>$TI_APP_DIR</code> <code>$TI_RUNTIME_DIR</code> <code>$TI_APP_NAME</code>. Plain POSIX <code>sh</code>, which every Linux and macOS system has; bash isn't guaranteed.
                 Runs with the installer's permissions (root for installs for all users).</span>
             </div>
           </details>
@@ -978,7 +978,7 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
             <div class="tab-panel unscript-panel-unix">
               <textarea class="code code-script" name="unix_unpre_script" spellcheck="false" aria-label="Linux and macOS before-removal script" placeholder="#!/bin/sh&#10;pkill -x myapp || true"></textarea>
             </div>
-            <span class="hint">Same variables as install scripts: <code>IB_APP_DIR</code>, <code>IB_RUNTIME_DIR</code>, <code>IB_APP_NAME</code>.</span>
+            <span class="hint">Same variables as install scripts: <code>TI_APP_DIR</code>, <code>TI_RUNTIME_DIR</code>, <code>TI_APP_NAME</code>.</span>
           </details>
           <p class="small muted" style="margin-bottom:0">Uninstalling deletes the app's own folders. Nothing shared with other apps is touched.</p>
         </details>

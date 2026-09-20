@@ -4,8 +4,8 @@
 // drop whole.
 //
 // Only when CSS.supports('selector(:has(*))') is false: each inline
-// <style> is rewritten so that every `X:has(S)` becomes `X.ibhasN`, and a
-// script keeps class ibhasN on every ancestor of each element matching S
+// <style> is rewritten so that every `X:has(S)` becomes `X.tihasN`, and a
+// script keeps class tihasN on every ancestor of each element matching S
 // (which is what :has means for a descendant S). The rewritten sheet
 // replaces the original in place, so the cascade order is unchanged, and
 // each replacement is padded to the specificity of the original. :is()
@@ -106,9 +106,9 @@ function maxSpec(a, b) {
 // Pieces that always match, adding the given specificity.
 function pad(sp) {
   let s = '';
-  for (let k = 0; k < sp[0]; k++) s += ':not(#ib-z)';
-  for (let k = 0; k < sp[1]; k++) s += ':not(.ib-z)';
-  for (let k = 0; k < sp[2]; k++) s += ':not(ib-z)';
+  for (let k = 0; k < sp[0]; k++) s += ':not(#ti-z)';
+  for (let k = 0; k < sp[1]; k++) s += ':not(.ti-z)';
+  for (let k = 0; k < sp[2]; k++) s += ':not(ti-z)';
   return s;
 }
 
@@ -128,7 +128,7 @@ Converter.prototype.probe = function (arg) {
     if (sels.some((x) => /^[>+~]/.test(x) || /:has\(/.test(x))) return null;   // relative :has(> x): not supported
     let sp = [0, 0, 0];
     for (const x of sels) sp = maxSpec(sp, specificity(x));
-    p = { cls: 'ibhas' + (this.first + this.probes.length), sels, sp };
+    p = { cls: 'tihas' + (this.first + this.probes.length), sels, sp };
     this.byArg[key] = p;
     this.probes.push(p);
   }
@@ -209,7 +209,7 @@ function matchBrace(s, open) {
   return -1;
 }
 
-// first: the number of the first probe class (ibhas<first>).
+// first: the number of the first probe class (tihas<first>).
 export function convertCss(text, first) {
   const c = new Converter(first);
   const css = c.rules(text.replace(/\/\*[\s\S]*?\*\//g, ''));
@@ -273,11 +273,11 @@ export function installHasShim(doc) {
   for (let i = 0; i < styles.length; i++) {
     const el = styles[i];
     const text = el.textContent;
-    if (el.hasAttribute('data-ib-has-shim') || text.indexOf(':has(') < 0) continue;
+    if (el.hasAttribute('data-ti-has-shim') || text.indexOf(':has(') < 0) continue;
     const conv = convertCss(text, probes.length);
     for (const p of conv.probes) probes.push(p);
     const s = doc.createElement('style');
-    s.setAttribute('data-ib-has-shim', '');
+    s.setAttribute('data-ti-has-shim', '');
     s.textContent = conv.css;
     el.parentNode.insertBefore(s, el.nextSibling);
     if (el.sheet) el.sheet.disabled = true;
@@ -297,6 +297,6 @@ export function installHasShim(doc) {
     });
   }
   m.update();
-  win.IB_HAS_SHIM = m;
+  win.TI_HAS_SHIM = m;
   return true;
 }

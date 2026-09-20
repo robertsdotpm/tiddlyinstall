@@ -145,7 +145,7 @@ def run_linux(rt, mode, f, target="linux"):
 
 
 # Linux VMs, this machine and the 32-bit containers all run these steps in
-# a throwaway home. ib_elf_probe (tests/arch/machines.py) says what
+# a throwaway home. ti_elf_probe (tests/arch/machines.py) says what
 # architecture the runtime that was installed really is.
 LINUX_BODY = machines.ELF_PROBE_SH + r'''
 set -u
@@ -156,27 +156,27 @@ echo "@install $?"
 echo "@osdesc"; sed -n 's/^Running as .* on //p' "$H/i.log" 2>/dev/null | head -1
 echo "@planarch"; sed -n '/^ *Runtime:/{p;q;}' "$H/i.log" 2>/dev/null
 echo "@x"
-d=$(ls -d "$H"/.local/share/ib/*/launch.txt 2>/dev/null | head -1)
+d=$(ls -d "$H"/.local/share/ti/*/launch.txt 2>/dev/null | head -1)
 if [ -n "$d" ]; then
   d=$(dirname "$d")
   echo "@launch"; env -i HOME="$H" PATH=/usr/local/bin:/usr/bin:/bin sh "$d/launch.sh" </dev/null 2>&1 | tail -5
-  echo "@elf"; ib_elf_probe "$H/.local/share/ib"
+  echo "@elf"; ti_elf_probe "$H/.local/share/ti"
   env -i HOME="$H" PATH=/usr/local/bin:/usr/bin:/bin sh "$d/uninstall.sh" --yes </dev/null >/dev/null 2>&1; echo "@uninstall $?"
 fi
 echo "@left"; (cd "$H" && find . -mindepth 1 ! -name i.log ! -name "$F" ! -path './.cache*' | head -5)
 echo "@log"; tail -8 "$H/i.log" 2>/dev/null
 rm -rf "$H"
 '''
-LINUX_SCRIPT = LINUX_BODY.replace('cp "$SRC"', 'SRC="$HOME/ibtest/$F"; cp "$SRC"') + '\nrm -rf "$HOME/ibtest"\n'
+LINUX_SCRIPT = LINUX_BODY.replace('cp "$SRC"', 'SRC="$HOME/titest/$F"; cp "$SRC"') + '\nrm -rf "$HOME/titest"\n'
 LOCAL_SCRIPT = 'TMPROOT=${TMPDIR:-/tmp}\n' + LINUX_BODY
-SANDBOX_SCRIPT = 'TMPROOT=/tmp\nSRC=/ibsrc/$F\n' + LINUX_BODY
+SANDBOX_SCRIPT = 'TMPROOT=/tmp\nSRC=/tisrc/$F\n' + LINUX_BODY
 
 
 def run_linux_vm(host, rt, mode, f, target):
     # Keep the file's own name: mode A reads the record hash from it.
     name = Path(f).name
-    sh(["ssh", host, "rm -rf ibtest; mkdir -p ibtest"], timeout=60)
-    code, _, err = sh(["scp", "-q", f, f"{host}:ibtest/{name}"], timeout=300)
+    sh(["ssh", host, "rm -rf titest; mkdir -p titest"], timeout=60)
+    code, _, err = sh(["scp", "-q", f, f"{host}:titest/{name}"], timeout=300)
     if code:
         return "fail", "scp: " + err.strip(), {}
     code, out, err = sh(["ssh", host, f"TMPROOT=/tmp F={shlex.quote(name)} sh -s"], input=LINUX_SCRIPT)
@@ -191,7 +191,7 @@ def run_sandbox(target, rt, mode, f):
     rc, out, err = sandbox.run_script(
         target, SANDBOX_SCRIPT, env={"HOME": "/home/ti", "F": Path(f).name,
                                      "PATH": "/usr/local/bin:/usr/bin:/bin"},
-        ro={src: "/ibsrc"}, timeout=INSTALL_TIMEOUT)
+        ro={src: "/tisrc"}, timeout=INSTALL_TIMEOUT)
     if rc == 124:
         return "fail", err, {}
     return parse_unix(rt, out, err, target)
@@ -225,7 +225,7 @@ def _judge_unix(rt, parts, err):
 
 MAC_SCRIPT = r'''
 set -u
-cd "$HOME/ibtest" || exit 90
+cd "$HOME/titest" || exit 90
 # A browser sets com.apple.quarantine on what it downloads; `scp` does not,
 # which is how the matrix missed for months that Gatekeeper kills our macOS
 # installers outright (docs/macos-packaging.md section 5: unsigned and
@@ -244,35 +244,35 @@ if [ "$Q" = 1 ]; then
   xattr -p com.apple.quarantine "$app" > /dev/null 2>&1 ||
     xattr -w com.apple.quarantine "$qval" "$app" 2>/dev/null
   echo "@quarantine $(xattr -p com.apple.quarantine "$app" 2>/dev/null || echo none)"
-  IB_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --backend=http://127.0.0.1:8080 --log="$HOME/ibtest/q.log" </dev/null > /dev/null 2>&1
+  TI_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --backend=http://127.0.0.1:8080 --log="$HOME/titest/q.log" </dev/null > /dev/null 2>&1
   echo "@qexit $?"
   echo "@spctl"; spctl -a -vv "$app" 2>&1 | head -2
   xattr -dr com.apple.quarantine "$app" 2>/dev/null
 fi
-IB_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --backend=http://127.0.0.1:8080 --log="$HOME/ibtest/i.log" </dev/null >/dev/null 2>&1
+TI_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --backend=http://127.0.0.1:8080 --log="$HOME/titest/i.log" </dev/null >/dev/null 2>&1
 echo "@install $?"
-echo "@osdesc"; sed -n 's/^Running as .* on //p' "$HOME/ibtest/i.log" 2>/dev/null | head -1
-echo "@planarch"; sed -n '/^ *Runtime:/{p;q;}' "$HOME/ibtest/i.log" 2>/dev/null
+echo "@osdesc"; sed -n 's/^Running as .* on //p' "$HOME/titest/i.log" 2>/dev/null | head -1
+echo "@planarch"; sed -n '/^ *Runtime:/{p;q;}' "$HOME/titest/i.log" 2>/dev/null
 echo "@x"
-d=$(ls -d "$HOME/Library/ib/"*/launch.txt "$HOME/Library/Application Support/ib/"*/launch.txt 2>/dev/null | head -1)
+d=$(ls -d "$HOME/Library/ti/"*/launch.txt "$HOME/Library/Application Support/ti/"*/launch.txt 2>/dev/null | head -1)
 if [ -n "$d" ]; then
   d=$(dirname "$d")
-  echo "@launch"; IB_NO_TERMINAL=1 sh "$d/launch.sh" </dev/null 2>&1 | tail -5
+  echo "@launch"; TI_NO_TERMINAL=1 sh "$d/launch.sh" </dev/null 2>&1 | tail -5
   sh "$d/uninstall.sh" --yes </dev/null >/dev/null 2>&1; echo "@uninstall $?"
 fi
-echo "@left"; ls "$HOME/Library/ib" "$HOME/Library/Application Support/ib" "$HOME/Applications" 2>/dev/null
-echo "@log"; tail -8 "$HOME/ibtest/i.log"
+echo "@left"; ls "$HOME/Library/ti" "$HOME/Library/Application Support/ti" "$HOME/Applications" 2>/dev/null
+echo "@log"; tail -8 "$HOME/titest/i.log"
 '''
 
 
 def run_mac(rt, mode, f, quarantine=True):
-    sh(["ssh", MAC, "rm -rf ~/ibtest; mkdir -p ~/ibtest"], timeout=60)
-    code, _, err = sh(["scp", "-q", f, f"{MAC}:ibtest/in.zip"], timeout=300)
+    sh(["ssh", MAC, "rm -rf ~/titest; mkdir -p ~/titest"], timeout=60)
+    code, _, err = sh(["scp", "-q", f, f"{MAC}:titest/in.zip"], timeout=300)
     if code:
         return "fail", "scp: " + err, {}
     code, out, err = sh(["ssh", MAC, f"MODE={mode} QUARANTINE={1 if quarantine else 0} sh -s"],
                         input=MAC_SCRIPT)
-    sh(["ssh", MAC, "rm -rf ~/ibtest"], timeout=60)
+    sh(["ssh", MAC, "rm -rf ~/titest"], timeout=60)
     r, d, extra = parse_unix(rt, out, err, "mac")
     return mac_gatekeeper(out, r, d, extra)
 

@@ -11,7 +11,7 @@
 ;
 ; Apps without a console (launch.txt `console 0`) are started directly, with
 ; no console window (CREATE_NO_WINDOW) and their stdout and stderr in
-; <app>\data\launch.log (%TEMP%\ib-launch-<appid>.log where that can't be
+; <app>\data\launch.log (%TEMP%\ti-launch-<appid>.log where that can't be
 ; written, as in all-user installs). If the app exits with a non-zero code
 ; within ${GUI_WAIT_MS} ms, a message box shows the end of that log and where
 ; it is; a normal exit, or an app still running then, shows nothing. The
@@ -24,14 +24,14 @@ SilentInstall silent
 CRCCheck off
 SetCompressor /SOLID lzma
 
-!ifndef IB_VERSION
-  !define IB_VERSION "0.1.0.0"
+!ifndef TI_VERSION
+  !define TI_VERSION "0.1.0.0"
 !endif
 
 !addincludedir "include"
 !include "LogicLib.nsh"
 !include "FileFunc.nsh"
-!include "ibutil.nsh"
+!include "tiutil.nsh"
 
 !define GUI_WAIT_MS 10000
 
@@ -39,15 +39,15 @@ Name "TiddlyInstall launcher"
 OutFile "out\launcher.exe"
 Icon "${NSISDIR}\Contrib\Graphics\Icons\modern-install.ico"
 
-VIProductVersion "${IB_VERSION}"
+VIProductVersion "${TI_VERSION}"
 VIAddVersionKey ProductName "TiddlyInstall"
 VIAddVersionKey CompanyName "TiddlyInstall"
 VIAddVersionKey FileDescription "TiddlyInstall app launcher"
-VIAddVersionKey FileVersion "${IB_VERSION}"
-VIAddVersionKey ProductVersion "${IB_VERSION}"
+VIAddVersionKey FileVersion "${TI_VERSION}"
+VIAddVersionKey ProductVersion "${TI_VERSION}"
 VIAddVersionKey LegalCopyright "TiddlyInstall"
 
-!insertmacro IB_UTIL ""
+!insertmacro TI_UTIL ""
 
 Var Cwd
 Var Exec
@@ -73,36 +73,36 @@ Section
   ${EndIf}
   StrCpy $U_a "$EXEDIR\launch.txt"
   StrCpy $U_b "$PLUGINSDIR\launch.u16"
-  Call IbUtf8ToUtf16
+  Call TiUtf8ToUtf16
 
   StrCpy $Cwd $EXEDIR
   StrCpy $Console 0
   StrCpy $PathAdd ""
   FileOpen $1 "$PLUGINSDIR\launch.u16" r
-  !insertmacro IbRead "" $1
+  !insertmacro TiRead "" $1
   StrCpy $T_rest $T_line
-  Call IbSplitTab
-  ${If} $T_field S!= "ib-launch"
+  Call TiSplitTab
+  ${If} $T_field S!= "ti-launch"
     FileClose $1
-    MessageBox MB_OK|MB_ICONSTOP "$EXEDIR\launch.txt isn't an ib-launch file."
+    MessageBox MB_OK|MB_ICONSTOP "$EXEDIR\launch.txt isn't a ti-launch file."
     SetErrorLevel 2
     Quit
   ${EndIf}
   ${Do}
-    !insertmacro IbRead "" $1
+    !insertmacro TiRead "" $1
     ${If} ${Errors}
       ${Break}
     ${EndIf}
-    Call IbParseLine
+    Call TiParseLine
     ${If} $K S== "cwd"
       StrCpy $Cwd $F1
     ${ElseIf} $K S== "env"
       StrCpy $U_a $F1
       StrCpy $U_b $F2
-      Call IbSetEnv
+      Call TiSetEnv
     ${ElseIf} $K S== "unset"
       StrCpy $U_a $F1
-      Call IbUnsetEnv
+      Call TiUnsetEnv
     ${ElseIf} $K S== "path"
       ${If} $PathAdd == ""
         StrCpy $PathAdd $F1
@@ -117,7 +117,7 @@ Section
   ${Loop}
   FileClose $1
   StrCpy $U_a $PathAdd
-  Call IbPrependPath
+  Call TiPrependPath
 
   ${If} $Exec == ""
     MessageBox MB_OK|MB_ICONSTOP "$EXEDIR\launch.txt has no exec line."
@@ -157,18 +157,18 @@ Function ReadAppName
   StrCpy $AppLabel "The app"
   StrCpy $U_a "$EXEDIR\manifest.txt"
   StrCpy $U_b "$PLUGINSDIR\manifest.u16"
-  Call IbUtf8ToUtf16
+  Call TiUtf8ToUtf16
   ${If} ${Errors}
     Pop $1
     Return
   ${EndIf}
   FileOpen $1 "$PLUGINSDIR\manifest.u16" r
   ${Do}
-    !insertmacro IbRead "" $1
+    !insertmacro TiRead "" $1
     ${If} ${Errors}
       ${Break}
     ${EndIf}
-    Call IbParseLine
+    Call TiParseLine
     ${If} $K S== "name"
     ${AndIf} $F1 != ""
       StrCpy $AppLabel $F1
@@ -214,7 +214,7 @@ Function LogTail
     ${If} ${Errors}
       ${Break}
     ${EndIf}
-    ${IbTrimNL} $2
+    ${TiTrimNL} $2
     ${If} $2 != ""
       StrCpy $U_out "$U_out$2$\r$\n"
     ${EndIf}
@@ -234,7 +234,7 @@ Function StartGui
   Call OpenLog
   ${If} $U_out = -1
     ${GetFileName} $EXEDIR $0
-    StrCpy $LogPath "$TEMP\ib-launch-$0.log"
+    StrCpy $LogPath "$TEMP\ti-launch-$0.log"
     Call OpenLog
   ${EndIf}
   StrCpy $1 $U_out                  ; the log (-1: none; the app gets no stdout/stderr)

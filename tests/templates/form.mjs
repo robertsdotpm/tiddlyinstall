@@ -10,7 +10,7 @@ export function formFor(rt, id, platforms, mode = 'C') {
   const t = TEMPLATES[rt][id];
   const fields = {
     app_name: 'Template ' + rt + ' ' + id, source_kind: 'write', runtime: rt, template: id, rv_mode: 'newest',
-    mode: { A: 'ours', B: 'yours', C: 'unsigned' }[mode], root: 'user', rootname: 'ib', install_cmd: '',
+    mode: { A: 'ours', B: 'yours', C: 'unsigned' }[mode], root: 'user', rootname: 'ti', install_cmd: '',
     cleanup_tools: 'remove', cleanup_fail: 'remove', uninstall_data: 'ask', icon_choice: 'default',
   };
   const ticked = new Set(['shortcut_menu', 'uninstaller', 'cleanup_pkg_cache'].concat(platforms.map((p) => 'target_' + p)));

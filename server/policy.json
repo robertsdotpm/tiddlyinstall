@@ -196,7 +196,7 @@
    }
   },
   "libatomic-x86": {
-   "_comment": "The same library, for a runtime that needs it only on 32-bit x86. A `needs` entry has no arch of its own, but a prerequisite does (as vcredist-x86/x64/arm64 do), so the arch lives here. 32-bit x86 has no 64-bit atomic instruction, so GCC calls into libatomic for anything that uses one: Rust's i686 cargo has libatomic.so.1 in its NEEDED list where the x86_64 cargo has nothing. The engine's library check reads ldconfig's arch column and falls back to i386-linux-gnu, so it answers for the right machine (installer/unix/ib-engine.sh).",
+   "_comment": "The same library, for a runtime that needs it only on 32-bit x86. A `needs` entry has no arch of its own, but a prerequisite does (as vcredist-x86/x64/arm64 do), so the arch lives here. 32-bit x86 has no 64-bit atomic instruction, so GCC calls into libatomic for anything that uses one: Rust's i686 cargo has libatomic.so.1 in its NEEDED list where the x86_64 cargo has nothing. The engine's library check reads ldconfig's arch column and falls back to i386-linux-gnu, so it answers for the right machine (installer/unix/ti-engine.sh).",
    "label": "libatomic.so.1 (GCC's atomics library)",
    "os": "linux",
    "arch": "x86",
@@ -614,7 +614,7 @@
    "runtimes": [
     "go"
    ],
-   "_comment": "design.md 11.0 item 27, revised by the operator 2026-09-20. Go builds pure-Go programs with no C compiler at all, and nothing in a project's files shows that it -- or a module it pulls in -- imports \"C\", so the publisher says. When they do: Windows gets WinLibs GCC from the catalogue as a companion runtime, Linux gets zig and the ibcc shims (item 15's answer, applied here too, so an unattended install needs no root), and macOS asks for the Xcode Command Line Tools, which zig cc needs for Apple's SDK."
+   "_comment": "design.md 11.0 item 27, revised by the operator 2026-09-20. Go builds pure-Go programs with no C compiler at all, and nothing in a project's files shows that it -- or a module it pulls in -- imports \"C\", so the publisher says. When they do: Windows gets WinLibs GCC from the catalogue as a companion runtime, Linux gets zig and the ticc shims (item 15's answer, applied here too, so an unattended install needs no root), and macOS asks for the Xcode Command Line Tools, which zig cc needs for Apple's SDK."
   },
   "ruby_devkit": {
    "label": "Always install the DevKit (Windows)",
@@ -1406,7 +1406,7 @@
       "runtime": "zig",
       "bin": "",
       "for": "tool:cgo",
-      "_comment": "design.md 11.0, the operator's 2026-09-20 revision of item 27: a cgo program on Linux is given a C toolchain rather than asked for one, so an unattended install needs no root -- the same answer Rust and Nim got in item 15, and for the same reason. zig's Linux builds are static, so they run on any kernel, glibc or musl. The `cgo` recipe (install.json, match.tool) writes the ibcc shims and sets CC, CXX and CGO_ENABLED=1; without a compiler cmd/go quietly sets CGO_ENABLED=0 and the build dies with \"build constraints exclude all Go files\", which names nothing. macOS still asks for the Xcode Command Line Tools: zig cc links against Apple's SDK."
+      "_comment": "design.md 11.0, the operator's 2026-09-20 revision of item 27: a cgo program on Linux is given a C toolchain rather than asked for one, so an unattended install needs no root -- the same answer Rust and Nim got in item 15, and for the same reason. zig's Linux builds are static, so they run on any kernel, glibc or musl. The `cgo` recipe (install.json, match.tool) writes the ticc shims and sets CC, CXX and CGO_ENABLED=1; without a compiler cmd/go quietly sets CGO_ENABLED=0 and the build dies with \"build constraints exclude all Go files\", which names nothing. macOS still asks for the Xcode Command Line Tools: zig cc links against Apple's SDK."
      }
     ]
    }
@@ -1485,7 +1485,7 @@
      {
       "runtime": "zig",
       "bin": "",
-      "_comment": "design.md 11.0 item 15: the C toolchain on Linux is zig, not the system compiler, so an unattended install needs no root. zig's Linux builds are static, so they run on any kernel, glibc or musl. The recipe writes cc/gcc/c++/g++/ar shims into {runtime_dir}/ibcc that exec `zig cc`, and puts that folder first on PATH for the project install. macOS keeps the Xcode Command Line Tools: zig cc still needs Apple's SDK to link."
+      "_comment": "design.md 11.0 item 15: the C toolchain on Linux is zig, not the system compiler, so an unattended install needs no root. zig's Linux builds are static, so they run on any kernel, glibc or musl. The recipe writes cc/gcc/c++/g++/ar shims into {runtime_dir}/ticc that exec `zig cc`, and puts that folder first on PATH for the project install. macOS keeps the Xcode Command Line Tools: zig cc still needs Apple's SDK to link."
      }
     ]
    }
@@ -1574,7 +1574,7 @@
      {
       "runtime": "zig",
       "bin": "",
-      "_comment": "design.md 11.0 item 15: the C toolchain on Linux is zig, not the system compiler, so an unattended install needs no root. zig's Linux builds are static, so they run on any kernel, glibc or musl. The recipe writes cc/gcc/c++/g++/ar shims into {runtime_dir}/ibcc that exec `zig cc`, and puts that folder first on PATH for the project install. macOS keeps the Xcode Command Line Tools: zig cc still needs Apple's SDK to link."
+      "_comment": "design.md 11.0 item 15: the C toolchain on Linux is zig, not the system compiler, so an unattended install needs no root. zig's Linux builds are static, so they run on any kernel, glibc or musl. The recipe writes cc/gcc/c++/g++/ar shims into {runtime_dir}/ticc that exec `zig cc`, and puts that folder first on PATH for the project install. macOS keeps the Xcode Command Line Tools: zig cc still needs Apple's SDK to link."
      }
     ]
    },

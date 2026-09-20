@@ -18,12 +18,12 @@ What this is honest about (see docs/test-results.md, "32-bit Linux"):
     install, so desktop entries, menu entries and root installs are
     untested here and say so;
   * nothing outside the root is visible except the build output (read-only
-    at /ibsrc) and the network, which is shared with the host so the build
+    at /tisrc) and the network, which is shared with the host so the build
     server and the LAN mirror are reachable at the same addresses.
 
 usage (as a module):
     from sandbox import SANDBOXES, run_script
-    rc, out, err = run_script("debian12-i386", script, env={...}, ro={src: "/ibsrc"})
+    rc, out, err = run_script("debian12-i386", script, env={...}, ro={src: "/tisrc"})
 
 usage (from the shell, for poking around):
     python3 sandbox.py debian12-i386 -- uname -m

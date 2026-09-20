@@ -49,7 +49,7 @@ import time
 from pathlib import Path
 
 NAME = "Linux Debian 12 i386 (32-bit) - installer tests"
-HOST = "ib-debian12-i386"
+HOST = "ti-debian12-i386"
 # Debian 12.15.0 i386 netinst, from cdimage.debian.org/cdimage/archive/12.15.0/
 # i386/iso-cd/. Its SHA256SUMS is signed by the Debian CD signing key
 # (DF9B 9C49 EAA9 2984 3258 9D76 DA87 E80D 6294 BE9B), checked 2026-09-20.
@@ -101,7 +101,7 @@ d-i partman/confirm_nooverwrite boolean true
 d-i base-installer/install-recommends boolean true
 tasksel tasksel/first multiselect standard, ssh-server, xfce-desktop
 # zenity and kdialog are what the .run engine asks a desktop user with
-# (installer/unix/ib-engine.sh, ib_ask); xdg-utils and desktop-file-utils are
+# (installer/unix/ti-engine.sh, ti_ask); xdg-utils and desktop-file-utils are
 # what its menu and desktop entries go through.
 d-i pkgsel/include string open-vm-tools open-vm-tools-desktop sudo curl wget \
  xz-utils bzip2 unzip p7zip-full file ca-certificates zenity kdialog xdg-utils \
@@ -118,12 +118,12 @@ d-i grub-installer/bootdev string /dev/sda
 d-i finish-install/reboot_in_progress note
 d-i preseed/late_command string \
  in-target sh -c 'mkdir -p /home/x/.ssh && chmod 700 /home/x/.ssh'; \
- cp /cdrom/ib-keys.txt /target/home/x/.ssh/authorized_keys; \
+ cp /cdrom/ti-keys.txt /target/home/x/.ssh/authorized_keys; \
  in-target sh -c 'chmod 600 /home/x/.ssh/authorized_keys && chown -R x:x /home/x/.ssh'; \
  in-target sh -c 'echo "x ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/90-x && chmod 440 /etc/sudoers.d/90-x'; \
- cp /cdrom/ib-settle.sh /target/root/ib-settle.sh; \
- in-target sh /root/ib-settle.sh; \
- in-target rm -f /root/ib-settle.sh
+ cp /cdrom/ti-settle.sh /target/root/ti-settle.sh; \
+ in-target sh /root/ti-settle.sh; \
+ in-target rm -f /root/ti-settle.sh
 """
 
 # Run inside the installed system at the end of the install. Everything
@@ -134,7 +134,7 @@ set -eu
 # Xfce, logged in as x, so the XDG menu, the desktop and the dialog tools
 # are really there for a test to look at.
 mkdir -p /etc/lightdm/lightdm.conf.d
-cat > /etc/lightdm/lightdm.conf.d/90-ib-autologin.conf <<'EOF'
+cat > /etc/lightdm/lightdm.conf.d/90-ti-autologin.conf <<'EOF'
 [Seat:*]
 autologin-user=x
 autologin-user-timeout=0
@@ -152,7 +152,7 @@ apt-get -qq clean
 
 # No screen blanking or session idle actions; a test run is not "idle".
 mkdir -p /etc/X11/xorg.conf.d
-cat > /etc/X11/xorg.conf.d/10-ib-noblank.conf <<'EOF'
+cat > /etc/X11/xorg.conf.d/10-ti-noblank.conf <<'EOF'
 Section "ServerFlags"
     Option "BlankTime"   "0"
     Option "StandbyTime" "0"
@@ -161,22 +161,22 @@ Section "ServerFlags"
 EndSection
 EOF
 mkdir -p /etc/xdg/autostart
-cat > /etc/xdg/autostart/ib-noblank.desktop <<'EOF'
+cat > /etc/xdg/autostart/ti-noblank.desktop <<'EOF'
 [Desktop Entry]
 Type=Application
-Name=ib no blanking
+Name=ti no blanking
 Exec=/bin/sh -c "xset s off -dpms"
 X-GNOME-Autostart-enabled=true
 EOF
 
 # A desktop session over SSH: the harness needs DISPLAY=:0 to reach the
 # session that lightdm started, so record where its Xauthority is.
-cat > /etc/profile.d/ib-display.sh <<'EOF'
+cat > /etc/profile.d/ti-display.sh <<'EOF'
 # The autologin Xfce session, for a test run arriving over SSH.
 [ -z "${DISPLAY:-}" ] && [ -e /tmp/.X11-unix/X0 ] && export DISPLAY=:0
 [ -z "${XAUTHORITY:-}" ] && [ -r /home/x/.Xauthority ] && export XAUTHORITY=/home/x/.Xauthority
 EOF
-echo "ib-settle done"
+echo "ti-settle done"
 """
 
 
@@ -212,11 +212,11 @@ def remaster(work, iso, password):
     pwhash = subprocess.run(["openssl", "passwd", "-6", "-stdin"], input=password,
                             capture_output=True, text=True, check=True).stdout.strip()
     (d / "preseed.cfg").write_text(PRESEED.format(host=HOST, pwhash=pwhash))
-    (d / "ib-settle.sh").write_text(SETTLE)
+    (d / "ti-settle.sh").write_text(SETTLE)
     keys = "".join(k.read_text().strip() + "\n" for k in sorted(Path.home().glob(".ssh/*.pub")))
     if not keys.strip():
         sys.exit("no ~/.ssh/*.pub to put on the VM")
-    (d / "ib-keys.txt").write_text(keys)
+    (d / "ti-keys.txt").write_text(keys)
 
     # Boot straight into the preseeded install. `auto=true priority=critical`
     # stops d-i asking anything the preseed already answers.
@@ -226,13 +226,13 @@ def remaster(work, iso, password):
     # One label and no `include menu.cfg`: Debian's menu declares labels of
     # its own, and two definitions of the same name make isolinux complain.
     (d / "isolinux" / "isolinux.cfg").write_text(
-        "path \ndefault ibauto\nprompt 0\ntimeout 1\n\n"
-        "label ibauto\n  kernel /install.386/vmlinuz\n"
+        "path \ndefault tiauto\nprompt 0\ntimeout 1\n\n"
+        "label tiauto\n  kernel /install.386/vmlinuz\n"
         f"  append vga=788 initrd=/install.386/initrd.gz {params}\n")
 
     (d / "md5sum.txt").write_text("")     # the checksums no longer match, and d-i need not check
     iso_out = work / f"{HOST}.iso"
-    run(["xorriso", "-as", "mkisofs", "-quiet", "-r", "-J", "-V", "IB_DEBIAN12_I386",
+    run(["xorriso", "-as", "mkisofs", "-quiet", "-r", "-J", "-V", "TI_DEBIAN12_I386",
          "-b", "isolinux/isolinux.bin", "-c", "isolinux/boot.cat",
          "-no-emul-boot", "-boot-load-size", "4", "-boot-info-table",
          "-o", iso_out, d])

@@ -6,16 +6,16 @@
 import {
   readInstaller, writeInstaller, parseKv, serializeKv, kvGet, kvSet, newRecordText,
   recordHash, packMember, installerExt, toBytes, peInfo, bindPlan,
-} from '../shared/ibfile.js';
+} from '../shared/tifile.js';
 import { apiRequest, errorText, mountApiFooter } from './api.js';
 import {
   rasterSource, buildIco, buildIcns, setExeIcon, setMacIcon, setLinuxIcon,
 } from '../shared/icon.js';
 import { mountSign, paintSign } from './sign-ui.js';
 
-// The standalone build defines IB_PRISTINE (the page as loaded) before any
+// The standalone build defines TI_PRISTINE (the page as loaded) before any
 // script touches the DOM, for "Save this page".
-const pagePristine = typeof IB_PRISTINE !== 'undefined' ? IB_PRISTINE : null;
+const pagePristine = typeof TI_PRISTINE !== 'undefined' ? TI_PRISTINE : null;
 
 mountApiFooter();
 
@@ -251,7 +251,7 @@ function load(info, displayName, note) {
   const text = info.record || newRecordText({
     name: 'My App', project: 'myapp', runtime: 'python', select: 'newest',
     launch: '{runtime} -m {project}', console: '1', menu: '1', desktop: '0',
-    root: 'user', rootname: 'ib', created: new Date().toISOString().replace(/\.\d+Z$/, 'Z'),
+    root: 'user', rootname: 'ti', created: new Date().toISOString().replace(/\.\d+Z$/, 'Z'),
   });
   recEntries = parseKv(text);
   planRaw.value = info.plan || '';
@@ -314,7 +314,7 @@ function b64ToBytes(s) {
   return out;
 }
 
-const BASE_FILE = { windows: 'base.exe', linux: 'ib.run', macos: 'Install.zip' };
+const BASE_FILE = { windows: 'base.exe', linux: 'ti.run', macos: 'Install.zip' };
 
 async function getBase(os) {
   const block = document.getElementById('base-' + os);
@@ -357,7 +357,7 @@ function download(bytes, name, type) {
 // for the person on bad settings.
 async function buildOutput() {
   const lines = recordRaw.value.split('\n');
-  if (!/^ib-record\t/.test(lines[0] || '')) throw new Error('The settings must start with the line "ib-record<TAB>1".');
+  if (!/^ti-record\t/.test(lines[0] || '')) throw new Error('The settings must start with the line "ti-record<TAB>1".');
   const record = recordRaw.value.replace(/\r\n/g, '\n').replace(/\n*$/, '\n');
   let plan = planRaw.value.trim() ? planRaw.value.replace(/\r\n/g, '\n').replace(/\n*$/, '\n') : '';
   // The installer refuses a plan made for another record, and an edited

@@ -1,5 +1,5 @@
 /*
- * Ed25519 signature verification (RFC 8032, pure Ed25519) for the ibsig
+ * Ed25519 signature verification (RFC 8032, pure Ed25519) for the tisig
  * NSIS plugin. Everything here except ed25519_verify() at the end is
  * copied from TweetNaCl 20140427 (https://tweetnacl.cr.yp.to/, tweetnacl.c
  * sha256 02e65bc3013ff2168983365e55906bc783c4c7e0a60d8100f17bb303a17175c4),

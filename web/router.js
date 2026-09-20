@@ -5,7 +5,7 @@
 import { apiLocal, apiReady } from './api.js';
 
 export function startRouter() {
-  const pages = Array.from(document.querySelectorAll('.ib-page'));
+  const pages = Array.from(document.querySelectorAll('.ti-page'));
   if (!pages.length) return;
   // Mode A needs a build server: with none, Unsigned is chosen instead.
   const modeFits = () => {
@@ -17,7 +17,7 @@ export function startRouter() {
     }
   };
   apiReady().then(modeFits);
-  window.addEventListener('ib-api-change', modeFits);
+  window.addEventListener('ti-api-change', modeFits);
 
   function show() {
     const h = location.hash.slice(1);

@@ -3,15 +3,15 @@
 
 Four harnesses (tests/matrix, tests/templates, tests/tooling,
 tests/fidelity) install and uninstall apps into the same folders on the
-same VMs -- `C:\\ib`, `%LOCALAPPDATA%\\ib`, `~/.local/share/ib`,
-`~/Library/ib` -- and one of them cleans up by deleting *everything*
+same VMs -- `C:\\ti`, `%LOCALAPPDATA%\\ti`, `~/.local/share/ti`,
+`~/Library/ti` -- and one of them cleans up by deleting *everything*
 under those roots. Two at once do not produce two sets of results; they
 produce two sets of wrong results, and on 2026-09-20 they cost four real
 cells (a Windows 7 scp refused mid-run, a session that died during an
 install, two macOS runs deleting each other's install root, and two
-behaviour.py runs racing on C:\\ibbtest).
+behaviour.py runs racing on C:\\tibtest).
 
-The interlock until now was `if exist C:\\ibtest echo BUSY`, which only
+The interlock until now was `if exist C:\\titest echo BUSY`, which only
 notices a harness that happens to be between cells with its folder
 present, says nothing about who holds it, and cannot tell a live run from
 one that was killed an hour ago.
@@ -35,7 +35,7 @@ usage:
         ...                       # the machine is ours for the duration
 
 `VMLock(..., wait=0)` raises `Busy` at once instead of waiting.
-`IB_NO_VMLOCK=1` in the environment skips locking entirely, for running
+`TI_NO_VMLOCK=1` in the environment skips locking entirely, for running
 two harnesses against one machine on purpose.
 """
 import os
@@ -46,8 +46,8 @@ import sys
 import threading
 import time
 
-LOCK_WIN = r"C:\iblock"
-LOCK_UNIX = "$HOME/.iblock"
+LOCK_WIN = r"C:\tilock"
+LOCK_UNIX = "$HOME/.tilock"
 STALE = 900          # 15 minutes without a heartbeat: the holder is gone
 BEAT = 120           # the holder refreshes this often
 WAIT = 3 * 3600      # how long a blocked harness waits by default
@@ -73,7 +73,7 @@ class VMLock:
         self.held = False
         self._stop = threading.Event()
         self._beat = None
-        self.skip = os.environ.get("IB_NO_VMLOCK") == "1" or not host
+        self.skip = os.environ.get("TI_NO_VMLOCK") == "1" or not host
 
     # ---- the three shell one-liners, in cmd and in sh ----------------
 

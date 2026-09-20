@@ -12,7 +12,7 @@
      "version": "109.0.5414.120",
      "binary": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
      "driverKind": "chromedriver",
-     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-109.0.5414.74\\chromedriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\chromedriver-109.0.5414.74\\chromedriver.exe",
      "driverVersion": "109.0.5414.74",
      "args": [
       "--headless=new"
@@ -30,7 +30,7 @@
      "version": "115.41.0esr",
      "binary": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
      "driverKind": "geckodriver",
-     "driver": "C:\\ibbrowsers\\drivers\\geckodriver-0.34.0\\geckodriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\geckodriver-0.34.0\\geckodriver.exe",
      "driverVersion": "0.34.0",
      "args": [
       "-headless"
@@ -48,7 +48,7 @@
      "version": "126.0.6478.256",
      "binary": "C:\\Program Files\\Supermium\\chrome.exe",
      "driverKind": "chromedriver",
-     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-109.0.5414.74\\chromedriver-nobuildcheck.cmd",
+     "driver": "C:\\tibrowsers\\drivers\\chromedriver-109.0.5414.74\\chromedriver-nobuildcheck.cmd",
      "driverVersion": "109.0.5414.74",
      "args": [
       "--headless=new"
@@ -58,15 +58,15 @@
      "driverSource": "https://chromedriver.storage.googleapis.com/109.0.5414.74/chromedriver_win32.zip",
      "verified": "Supermium (win32ss); binary unsigned, no published checksums checked (preinstalled); driver: zip MD5 matches storage.googleapis.com x-goog-hash (tEekyyOvUdqCcvbYZ7mxxw==); chromedriver.exe unsigned, no checksum file published",
      "smoke": "pass",
-     "notes": "driver is a 1-line .cmd wrapper running chromedriver.exe --disable-build-check %* (plain chromedriver 109 refuses: 'only supports Chrome version 109, current 126.0.6478.256'). Same-major chromedriver 126.0.6478.182 (CfT) never starts on Win7 (hangs silently, no output). Stop it with taskkill /F /IM chromedriver.exe as usual. UA reports HeadlessChrome/130 on Windows NT 10.0 (Supermium spoof). [2026-09-19: id renamed from 'supermium' to 'supermium-installed'; the id 'supermium' now denotes the portable Supermium 144 in C:\\ibbrowsers\\supermium-144. This install is unchanged.]"
+     "notes": "driver is a 1-line .cmd wrapper running chromedriver.exe --disable-build-check %* (plain chromedriver 109 refuses: 'only supports Chrome version 109, current 126.0.6478.256'). Same-major chromedriver 126.0.6478.182 (CfT) never starts on Win7 (hangs silently, no output). Stop it with taskkill /F /IM chromedriver.exe as usual. UA reports HeadlessChrome/130 on Windows NT 10.0 (Supermium spoof). [2026-09-19: id renamed from 'supermium' to 'supermium-installed'; the id 'supermium' now denotes the portable Supermium 144 in C:\\tibrowsers\\supermium-144. This install is unchanged.]"
     },
     {
      "id": "supermium",
      "name": "Supermium 144 (portable)",
      "version": "144.0.7559.256",
-     "binary": "C:\\ibbrowsers\\supermium-144\\Supermium\\chrome.exe",
+     "binary": "C:\\tibrowsers\\supermium-144\\Supermium\\chrome.exe",
      "driverKind": "chromedriver",
-     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-109.0.5414.74\\chromedriver-nobuildcheck.cmd",
+     "driver": "C:\\tibrowsers\\drivers\\chromedriver-109.0.5414.74\\chromedriver-nobuildcheck.cmd",
      "driverVersion": "109.0.5414.74",
      "args": [
       "--headless=new"
@@ -76,15 +76,15 @@
      "driverSource": "https://chromedriver.storage.googleapis.com/109.0.5414.74/chromedriver_win32.zip",
      "verified": "supermium_144_64_nonsetup.zip SHA-256 805232e5cde1bf6971748bc7fb6a2cb09fdfce9ceb91062a1814b228139956ca matches the digest GitHub publishes for the asset (api.github.com releases/tags/v144-r5); all 295/297 unpacked files copied, file count and byte total match on the VM; chrome.exe unsigned (osslsigncode: no signature), FileVersion 144.0.7559.256",
      "smoke": "pass",
-     "notes": "Portable install (nonsetup zip, win64) unpacked to C:\\ibbrowsers\\supermium-144, alongside the installed Supermium 126 (id supermium-installed). Starts headless from the SSH session with only --headless=new (no --no-sandbox or --disable-gpu-rasterization needed): DevTools on 127.0.0.1 reports Chrome/144.0.7559.256, protocol 1.3; over CDP via ssh -L, file:///C:/ibbrowsers/smoke.html -> UA 'HeadlessChrome/144.0.0.0' (Windows NT 10.0; Win64; x64 spoof), isSecureContext true, crypto.subtle true. Driver: official CfT chromedriver 144.0.7559.133 (win64, storage.googleapis.com, zip MD5 matched x-goog-hash) does not load: its PE header requires OS/subsystem version 10.0, so CreateProcess fails with ERROR_BAD_EXE_FORMAT (Python WinError 193 '%1 is not a valid Win32 application') (from a plain cmd.exe over SSH it instead hangs silently with no output). Folder removed. The chromedriver 109 --disable-build-check wrapper works: W3C POST /session with goog:chromeOptions {binary, args:[--headless=new]} -> browserVersion 144.0.7559.256, file:// navigate + execute/sync ok (UA HeadlessChrome/144.0.0.0, isSecureContext true, crypto.subtle true), DELETE ok. CDP also works directly."
+     "notes": "Portable install (nonsetup zip, win64) unpacked to C:\\tibrowsers\\supermium-144, alongside the installed Supermium 126 (id supermium-installed). Starts headless from the SSH session with only --headless=new (no --no-sandbox or --disable-gpu-rasterization needed): DevTools on 127.0.0.1 reports Chrome/144.0.7559.256, protocol 1.3; over CDP via ssh -L, file:///C:/tibrowsers/smoke.html -> UA 'HeadlessChrome/144.0.0.0' (Windows NT 10.0; Win64; x64 spoof), isSecureContext true, crypto.subtle true. Driver: official CfT chromedriver 144.0.7559.133 (win64, storage.googleapis.com, zip MD5 matched x-goog-hash) does not load: its PE header requires OS/subsystem version 10.0, so CreateProcess fails with ERROR_BAD_EXE_FORMAT (Python WinError 193 '%1 is not a valid Win32 application') (from a plain cmd.exe over SSH it instead hangs silently with no output). Folder removed. The chromedriver 109 --disable-build-check wrapper works: W3C POST /session with goog:chromeOptions {binary, args:[--headless=new]} -> browserVersion 144.0.7559.256, file:// navigate + execute/sync ok (UA HeadlessChrome/144.0.0.0, isSecureContext true, crypto.subtle true), DELETE ok. CDP also works directly."
     },
     {
      "id": "opera",
      "name": "Opera",
      "version": "95.0.4635.90",
-     "binary": "C:\\ibbrowsers\\opera-95\\95.0.4635.90\\opera.exe",
+     "binary": "C:\\tibrowsers\\opera-95\\95.0.4635.90\\opera.exe",
      "driverKind": "operadriver",
-     "driver": "C:\\ibbrowsers\\drivers\\operadriver-109.0.5414.120\\operadriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\operadriver-109.0.5414.120\\operadriver.exe",
      "driverVersion": "109.0.5414.120",
      "args": [
       "--headless=new"
@@ -94,7 +94,7 @@
      "driverSource": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.109.0.5414.120/operadriver_win64.zip",
      "verified": "Setup_x64.exe: SHA-256 matches Opera's .sha256sum; Authenticode Opera Norway AS, chain ok (osslsigncode). operadriver.exe: Authenticode Opera Norway AS, chain ok (the 2023 release has no GitHub digest)",
      "smoke": "pass (tests/browsers/run.mjs, 2026-09-19)",
-     "notes": "Opera 95 is the last for Windows 7 and 8.1. Installed 2026-09-19 as a standalone copy (--copyonly=1 --singleprofile=1 --installfolder=C:\\ibbrowsers\\opera-95): no registry entries, shortcuts or tasks; autoupdate false. operadriver 109 is Opera's driver for Opera Stable 95."
+     "notes": "Opera 95 is the last for Windows 7 and 8.1. Installed 2026-09-19 as a standalone copy (--copyonly=1 --singleprofile=1 --installfolder=C:\\tibrowsers\\opera-95): no registry entries, shortcuts or tasks; autoupdate false. operadriver 109 is Opera's driver for Opera Stable 95."
     },
     {
      "id": "safari",
@@ -122,7 +122,7 @@
      "version": "153.0.8010.53",
      "binary": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
      "driverKind": "chromedriver",
-     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-153.0.8010.53\\chromedriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\chromedriver-153.0.8010.53\\chromedriver.exe",
      "driverVersion": "153.0.8010.53",
      "args": [
       "--headless=new"
@@ -140,7 +140,7 @@
      "version": "153.0.4234.32",
      "binary": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
      "driverKind": "msedgedriver",
-     "driver": "C:\\ibbrowsers\\drivers\\msedgedriver-153.0.4234.32\\msedgedriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\msedgedriver-153.0.4234.32\\msedgedriver.exe",
      "driverVersion": "153.0.4234.32",
      "args": [
       "--headless=new"
@@ -158,7 +158,7 @@
      "version": "156.0",
      "binary": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
      "driverKind": "geckodriver",
-     "driver": "C:\\ibbrowsers\\drivers\\geckodriver-0.37.1\\geckodriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\geckodriver-0.37.1\\geckodriver.exe",
      "driverVersion": "0.37.1",
      "args": [
       "-headless"
@@ -176,7 +176,7 @@
      "version": "126.0.6478.256",
      "binary": "C:\\Program Files\\Supermium\\chrome.exe",
      "driverKind": "chromedriver",
-     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-126.0.6478.182\\chromedriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\chromedriver-126.0.6478.182\\chromedriver.exe",
      "driverVersion": "126.0.6478.182",
      "args": [
       "--headless=new"
@@ -192,9 +192,9 @@
      "id": "opera",
      "name": "Opera",
      "version": "135.0.5973.142",
-     "binary": "C:\\ibbrowsers\\opera-135\\135.0.5973.142\\opera.exe",
+     "binary": "C:\\tibrowsers\\opera-135\\135.0.5973.142\\opera.exe",
      "driverKind": "operadriver",
-     "driver": "C:\\ibbrowsers\\drivers\\operadriver-151.0.7922.176\\operadriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\operadriver-151.0.7922.176\\operadriver.exe",
      "driverVersion": "151.0.7922.176",
      "args": [
       "--headless=new"
@@ -204,7 +204,7 @@
      "driverSource": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.151.0.7922.176/operadriver_win64.zip",
      "verified": "Setup_x64.exe: SHA-256 matches Opera's .sha256sum; Authenticode Opera Norway AS, chain ok (osslsigncode). operadriver.exe: zip SHA-256 matches GitHub's asset digest; Authenticode Opera Norway AS, chain ok",
      "smoke": "pass (tests/browsers/run.mjs, 2026-09-19)",
-     "notes": "Installed 2026-09-19 as a standalone copy (--copyonly=1 --singleprofile=1 --installfolder=C:\\ibbrowsers\\opera-135): no registry entries, shortcuts or tasks; installer_prefs.json has autoupdate false, so it stays on 135. operadriver 151 is Opera's driver for Opera Stable 135."
+     "notes": "Installed 2026-09-19 as a standalone copy (--copyonly=1 --singleprofile=1 --installfolder=C:\\tibrowsers\\opera-135): no registry entries, shortcuts or tasks; installer_prefs.json has autoupdate false, so it stays on 135. operadriver 151 is Opera's driver for Opera Stable 135."
     }
    ]
   },
@@ -219,7 +219,7 @@
      "version": "152.0.7977.83",
      "binary": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
      "driverKind": "chromedriver",
-     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-152.0.7977.83\\chromedriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\chromedriver-152.0.7977.83\\chromedriver.exe",
      "driverVersion": "152.0.7977.83",
      "args": [
       "--headless=new"
@@ -237,7 +237,7 @@
      "version": "153.0.4234.32",
      "binary": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
      "driverKind": "msedgedriver",
-     "driver": "C:\\ibbrowsers\\drivers\\msedgedriver-153.0.4234.32\\msedgedriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\msedgedriver-153.0.4234.32\\msedgedriver.exe",
      "driverVersion": "153.0.4234.32",
      "args": [
       "--headless=new"
@@ -255,7 +255,7 @@
      "version": "154.0.1",
      "binary": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
      "driverKind": "geckodriver",
-     "driver": "C:\\ibbrowsers\\drivers\\geckodriver-0.37.1\\geckodriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\geckodriver-0.37.1\\geckodriver.exe",
      "driverVersion": "0.37.1",
      "args": [
       "-headless"
@@ -271,9 +271,9 @@
      "id": "opera",
      "name": "Opera",
      "version": "135.0.5973.142",
-     "binary": "C:\\ibbrowsers\\opera-135\\135.0.5973.142\\opera.exe",
+     "binary": "C:\\tibrowsers\\opera-135\\135.0.5973.142\\opera.exe",
      "driverKind": "operadriver",
-     "driver": "C:\\ibbrowsers\\drivers\\operadriver-151.0.7922.176\\operadriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\operadriver-151.0.7922.176\\operadriver.exe",
      "driverVersion": "151.0.7922.176",
      "args": [
       "--headless=new"
@@ -283,7 +283,7 @@
      "driverSource": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.151.0.7922.176/operadriver_win64.zip",
      "verified": "Setup_x64.exe: SHA-256 matches Opera's .sha256sum; Authenticode Opera Norway AS, chain ok (osslsigncode). operadriver.exe: zip SHA-256 matches GitHub's asset digest; Authenticode Opera Norway AS, chain ok",
      "smoke": "pass (tests/browsers/run.mjs, 2026-09-19)",
-     "notes": "Installed 2026-09-19 as a standalone copy (--copyonly=1 --singleprofile=1 --installfolder=C:\\ibbrowsers\\opera-135): no registry entries, shortcuts or tasks; installer_prefs.json has autoupdate false, so it stays on 135. operadriver 151 is Opera's driver for Opera Stable 135."
+     "notes": "Installed 2026-09-19 as a standalone copy (--copyonly=1 --singleprofile=1 --installfolder=C:\\tibrowsers\\opera-135): no registry entries, shortcuts or tasks; installer_prefs.json has autoupdate false, so it stays on 135. operadriver 151 is Opera's driver for Opera Stable 135."
     }
    ]
   },
@@ -298,7 +298,7 @@
      "version": "153.0.8010.53",
      "binary": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
      "driverKind": "chromedriver",
-     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-153.0.8010.53\\chromedriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\chromedriver-153.0.8010.53\\chromedriver.exe",
      "driverVersion": "153.0.8010.53",
      "args": [
       "--headless=new"
@@ -316,7 +316,7 @@
      "version": "153.0.4234.48",
      "binary": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
      "driverKind": "msedgedriver",
-     "driver": "C:\\ibbrowsers\\drivers\\msedgedriver-153.0.4234.48\\msedgedriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\msedgedriver-153.0.4234.48\\msedgedriver.exe",
      "driverVersion": "153.0.4234.48",
      "args": [
       "--headless=new"
@@ -334,7 +334,7 @@
      "version": "156.0",
      "binary": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
      "driverKind": "geckodriver",
-     "driver": "C:\\ibbrowsers\\drivers\\geckodriver-0.37.1\\geckodriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\geckodriver-0.37.1\\geckodriver.exe",
      "driverVersion": "0.37.1",
      "args": [
       "-headless"
@@ -352,7 +352,7 @@
      "version": "132.0.6834.226",
      "binary": "C:\\Program Files\\Supermium\\chrome.exe",
      "driverKind": "chromedriver",
-     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-132.0.6834.159\\chromedriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\chromedriver-132.0.6834.159\\chromedriver.exe",
      "driverVersion": "132.0.6834.159",
      "args": [
       "--headless=new"
@@ -368,9 +368,9 @@
      "id": "opera",
      "name": "Opera",
      "version": "135.0.5973.142",
-     "binary": "C:\\ibbrowsers\\opera-135\\135.0.5973.142\\opera.exe",
+     "binary": "C:\\tibrowsers\\opera-135\\135.0.5973.142\\opera.exe",
      "driverKind": "operadriver",
-     "driver": "C:\\ibbrowsers\\drivers\\operadriver-151.0.7922.176\\operadriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\operadriver-151.0.7922.176\\operadriver.exe",
      "driverVersion": "151.0.7922.176",
      "args": [
       "--headless=new"
@@ -380,7 +380,7 @@
      "driverSource": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.151.0.7922.176/operadriver_win64.zip",
      "verified": "Setup_x64.exe: SHA-256 matches Opera's .sha256sum; Authenticode Opera Norway AS, chain ok (osslsigncode). operadriver.exe: zip SHA-256 matches GitHub's asset digest; Authenticode Opera Norway AS, chain ok",
      "smoke": "pass (tests/browsers/run.mjs, 2026-09-19)",
-     "notes": "Installed 2026-09-19 as a standalone copy (--copyonly=1 --singleprofile=1 --installfolder=C:\\ibbrowsers\\opera-135): no registry entries, shortcuts or tasks; installer_prefs.json has autoupdate false, so it stays on 135. operadriver 151 is Opera's driver for Opera Stable 135."
+     "notes": "Installed 2026-09-19 as a standalone copy (--copyonly=1 --singleprofile=1 --installfolder=C:\\tibrowsers\\opera-135): no registry entries, shortcuts or tasks; installer_prefs.json has autoupdate false, so it stays on 135. operadriver 151 is Opera's driver for Opera Stable 135."
     }
    ]
   },
@@ -405,13 +405,13 @@
      "driverSource": null,
      "verified": "Supermium (win32ss); binary unsigned, no published checksums checked (preinstalled)",
      "smoke": "fail: no chromedriver runs on XP and speaks Chromium 122's DevTools",
-     "notes": "win32ss/supermium publishes no chromedriver asset (checked all releases incl. v122-r5/r6, and the nonsetup zips). Official chromedriver 122.0.6261.128 (CfT win32) and 109.0.5414.74 exit 0xC0000139 on XP; chromedriver 2.22-2.46 same. chromedriver 2.21 (last that loads on XP) launches Supermium headless but session creation fails: 'Runtime.executionContextCreated has invalid context' (DevTools protocol too new for it), and it only reads the legacy 'chromeOptions' key. [2026-09-19: id renamed from 'supermium' to 'supermium-installed'; the id 'supermium' now denotes the portable Supermium 144 in C:\\ibbrowsers\\supermium-144. This install is unchanged.]"
+     "notes": "win32ss/supermium publishes no chromedriver asset (checked all releases incl. v122-r5/r6, and the nonsetup zips). Official chromedriver 122.0.6261.128 (CfT win32) and 109.0.5414.74 exit 0xC0000139 on XP; chromedriver 2.22-2.46 same. chromedriver 2.21 (last that loads on XP) launches Supermium headless but session creation fails: 'Runtime.executionContextCreated has invalid context' (DevTools protocol too new for it), and it only reads the legacy 'chromeOptions' key. [2026-09-19: id renamed from 'supermium' to 'supermium-installed'; the id 'supermium' now denotes the portable Supermium 144 in C:\\tibrowsers\\supermium-144. This install is unchanged.]"
     },
     {
      "id": "supermium",
      "name": "Supermium 144 (portable)",
      "version": "144.0.7559.256",
-     "binary": "C:\\ibbrowsers\\supermium-144\\Supermium\\chrome.exe",
+     "binary": "C:\\tibrowsers\\supermium-144\\Supermium\\chrome.exe",
      "driverKind": "chromedriver",
      "driver": null,
      "driverVersion": null,
@@ -424,7 +424,7 @@
      "verified": "supermium_144_32_nonsetup.zip SHA-256 17acfcdf89ea651905053b50b0fce5a28db19cb2c69ed5579c7b177806ed6d31 matches the digest GitHub publishes for the asset (api.github.com releases/tags/v144-r5); all 295/297 unpacked files copied, file count and byte total match on the VM; chrome.exe unsigned (osslsigncode: no signature), FileVersion 144.0.7559.256",
      "protocol": "cdp",
      "smoke": "pass (cdp; no chromedriver)",
-     "notes": "Portable install (nonsetup zip, win32) unpacked to C:\\ibbrowsers\\supermium-144, alongside the installed Supermium 122 (id supermium-installed). Starts headless from the SSH session with only --headless=new (no --no-sandbox or --disable-gpu-rasterization needed): DevTools on 127.0.0.1 reports Chrome/144.0.7559.256, protocol 1.3; over CDP via ssh -L, file:///C:/ibbrowsers/smoke.html -> UA 'HeadlessChrome/144.0.0.0' (Windows NT 10.0; Win64; x64 spoof), isSecureContext true, crypto.subtle true. No driver: official CfT chromedriver 144.0.7559.133 (win32, storage.googleapis.com, zip MD5 matched x-goog-hash) does not load: its PE header requires OS/subsystem version 10.0, so CreateProcess fails with ERROR_BAD_EXE_FORMAT (0x800700C1 '... is not a valid Win32 application' from WScript.Shell.Exec) (from a plain cmd.exe over SSH it instead hangs silently with no output). Folder removed. Drive over the DevTools protocol through ssh -L (protocol: cdp), as for Supermium 122."
+     "notes": "Portable install (nonsetup zip, win32) unpacked to C:\\tibrowsers\\supermium-144, alongside the installed Supermium 122 (id supermium-installed). Starts headless from the SSH session with only --headless=new (no --no-sandbox or --disable-gpu-rasterization needed): DevTools on 127.0.0.1 reports Chrome/144.0.7559.256, protocol 1.3; over CDP via ssh -L, file:///C:/tibrowsers/smoke.html -> UA 'HeadlessChrome/144.0.0.0' (Windows NT 10.0; Win64; x64 spoof), isSecureContext true, crypto.subtle true. No driver: official CfT chromedriver 144.0.7559.133 (win32, storage.googleapis.com, zip MD5 matched x-goog-hash) does not load: its PE header requires OS/subsystem version 10.0, so CreateProcess fails with ERROR_BAD_EXE_FORMAT (0x800700C1 '... is not a valid Win32 application' from WScript.Shell.Exec) (from a plain cmd.exe over SSH it instead hangs silently with no output). Folder removed. Drive over the DevTools protocol through ssh -L (protocol: cdp), as for Supermium 122."
     },
     {
      "id": "firefox",
@@ -454,7 +454,7 @@
      "runner": "tests/browsers/safari5.mjs",
      "binary": "C:\\Program Files\\Safari\\Safari.exe",
      "smoke": "pass (tests/browsers/safari5.mjs, 2026-09-19): the page reads, its bar says too old and points to Firefox 52 and Supermium",
-     "notes": "Apple's last Windows build (2012). Only Safari.msi installed (msiexec /qn), taken out of the installer's cabinet: no Apple Software Update, no Bonjour. No driver or COM automation exists: tests/browsers/safari5.mjs loads a page copy with a reporter that sends its findings to ibcollect.exe (C:\\ibbrowsers\\safari-5.1.7). Runs in the SSH session's hidden desktop (no screenshot possible there). Not run by run.mjs (no driver)."
+     "notes": "Apple's last Windows build (2012). Only Safari.msi installed (msiexec /qn), taken out of the installer's cabinet: no Apple Software Update, no Bonjour. No driver or COM automation exists: tests/browsers/safari5.mjs loads a page copy with a reporter that sends its findings to ticollect.exe (C:\\tibrowsers\\safari-5.1.7). Runs in the SSH session's hidden desktop (no screenshot possible there). Not run by run.mjs (no driver)."
     }
    ]
   },
@@ -469,7 +469,7 @@
      "version": "52.9.0esr",
      "binary": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
      "driverKind": "geckodriver",
-     "driver": "C:\\ibbrowsers\\drivers\\geckodriver-0.17.0\\geckodriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\geckodriver-0.17.0\\geckodriver.exe",
      "driverVersion": "0.17.0",
      "args": [],
      "headless": false,
@@ -485,7 +485,7 @@
      "version": "122.0.6261.152",
      "binary": "C:\\Program Files\\Supermium\\chrome.exe",
      "driverKind": "chromedriver",
-     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-2.29\\chromedriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\chromedriver-2.29\\chromedriver.exe",
      "driverVersion": "2.29.461591",
      "args": [
       "--headless=new"
@@ -495,14 +495,14 @@
      "driverSource": "https://chromedriver.storage.googleapis.com/2.29/chromedriver_win32.zip",
      "verified": "Supermium (win32ss); binary unsigned, no published checksums checked (preinstalled); driver: chromedriver_win32.zip 2.29 from chromedriver.storage.googleapis.com, unsigned, no checksum file",
      "smoke": "fail: with the contract's W3C request (goog:chromeOptions) chromedriver 2.29 ignores the binary ('cannot find Chrome binary'); passes with legacy JSON-wire: 'chromeOptions' key + POST /session/<id>/execute",
-     "notes": "No official driver newer than 2.29 runs on Vista (2.30+, 109, 122 exit 0xC0000139). 2.29 drives Supermium 122 headless fine over the legacy protocol: UA 'HeadlessChrome/122.0.0.0' (reports Windows NT 10.0), isSecureContext true, crypto.subtle true. Harness needs a legacy path (desiredCapabilities with 'chromeOptions', /execute instead of /execute/sync) to use it. Driven over the DevTools protocol by tests/browsers (protocol: cdp): chromedriver 2.29, the newest that starts on Vista, predates W3C WebDriver. [2026-09-19: id renamed from 'supermium' to 'supermium-installed'; the id 'supermium' now denotes the portable Supermium 144 in C:\\ibbrowsers\\supermium-144. This install is unchanged.]",
+     "notes": "No official driver newer than 2.29 runs on Vista (2.30+, 109, 122 exit 0xC0000139). 2.29 drives Supermium 122 headless fine over the legacy protocol: UA 'HeadlessChrome/122.0.0.0' (reports Windows NT 10.0), isSecureContext true, crypto.subtle true. Harness needs a legacy path (desiredCapabilities with 'chromeOptions', /execute instead of /execute/sync) to use it. Driven over the DevTools protocol by tests/browsers (protocol: cdp): chromedriver 2.29, the newest that starts on Vista, predates W3C WebDriver. [2026-09-19: id renamed from 'supermium' to 'supermium-installed'; the id 'supermium' now denotes the portable Supermium 144 in C:\\tibrowsers\\supermium-144. This install is unchanged.]",
      "protocol": "cdp"
     },
     {
      "id": "supermium",
      "name": "Supermium 144 (portable)",
      "version": "144.0.7559.256",
-     "binary": "C:\\ibbrowsers\\supermium-144\\Supermium\\chrome.exe",
+     "binary": "C:\\tibrowsers\\supermium-144\\Supermium\\chrome.exe",
      "driverKind": "chromedriver",
      "driver": null,
      "driverVersion": null,
@@ -515,7 +515,7 @@
      "verified": "supermium_144_32_nonsetup.zip SHA-256 17acfcdf89ea651905053b50b0fce5a28db19cb2c69ed5579c7b177806ed6d31 matches the digest GitHub publishes for the asset (api.github.com releases/tags/v144-r5); all 295/297 unpacked files copied, file count and byte total match on the VM; chrome.exe unsigned (osslsigncode: no signature), FileVersion 144.0.7559.256",
      "protocol": "cdp",
      "smoke": "pass (cdp; no chromedriver)",
-     "notes": "Portable install (nonsetup zip, win32) unpacked to C:\\ibbrowsers\\supermium-144, alongside the installed Supermium 122 (id supermium-installed). Starts headless from the SSH session with only --headless=new (no --no-sandbox or --disable-gpu-rasterization needed): DevTools on 127.0.0.1 reports Chrome/144.0.7559.256, protocol 1.3; over CDP via ssh -L, file:///C:/ibbrowsers/smoke.html -> UA 'HeadlessChrome/144.0.0.0' (Windows NT 10.0; Win64; x64 spoof), isSecureContext true, crypto.subtle true. No driver: official CfT chromedriver 144.0.7559.133 (win32, storage.googleapis.com, zip MD5 matched x-goog-hash) does not load: its PE header requires OS/subsystem version 10.0, so CreateProcess fails with ERROR_BAD_EXE_FORMAT (Python WinError 193 '%1 is not a valid Win32 application') (from a plain cmd.exe over SSH it instead hangs silently with no output). Folder removed. Drive over the DevTools protocol through ssh -L (protocol: cdp), as for Supermium 122."
+     "notes": "Portable install (nonsetup zip, win32) unpacked to C:\\tibrowsers\\supermium-144, alongside the installed Supermium 122 (id supermium-installed). Starts headless from the SSH session with only --headless=new (no --no-sandbox or --disable-gpu-rasterization needed): DevTools on 127.0.0.1 reports Chrome/144.0.7559.256, protocol 1.3; over CDP via ssh -L, file:///C:/tibrowsers/smoke.html -> UA 'HeadlessChrome/144.0.0.0' (Windows NT 10.0; Win64; x64 spoof), isSecureContext true, crypto.subtle true. No driver: official CfT chromedriver 144.0.7559.133 (win32, storage.googleapis.com, zip MD5 matched x-goog-hash) does not load: its PE header requires OS/subsystem version 10.0, so CreateProcess fails with ERROR_BAD_EXE_FORMAT (Python WinError 193 '%1 is not a valid Win32 application') (from a plain cmd.exe over SSH it instead hangs silently with no output). Folder removed. Drive over the DevTools protocol through ssh -L (protocol: cdp), as for Supermium 122."
     }
    ]
   },
@@ -530,7 +530,7 @@
      "version": "109.0.5414.168",
      "binary": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
      "driverKind": "chromedriver",
-     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-109.0.5414.74\\chromedriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\chromedriver-109.0.5414.74\\chromedriver.exe",
      "driverVersion": "109.0.5414.74",
      "args": [
       "--headless=new"
@@ -548,7 +548,7 @@
      "version": "115.41.0esr",
      "binary": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",
      "driverKind": "geckodriver",
-     "driver": "C:\\ibbrowsers\\drivers\\geckodriver-0.35.0\\geckodriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\geckodriver-0.35.0\\geckodriver.exe",
      "driverVersion": "0.35.0",
      "args": [
       "-headless"
@@ -584,7 +584,7 @@
      "version": "138.0.7204.260",
      "binary": "C:\\Program Files\\Supermium\\chrome.exe",
      "driverKind": "chromedriver",
-     "driver": "C:\\ibbrowsers\\drivers\\chromedriver-109.0.5414.74\\chromedriver-nobuildcheck.cmd",
+     "driver": "C:\\tibrowsers\\drivers\\chromedriver-109.0.5414.74\\chromedriver-nobuildcheck.cmd",
      "driverVersion": "109.0.5414.74",
      "args": [
       "--headless=new"
@@ -600,9 +600,9 @@
      "id": "opera",
      "name": "Opera",
      "version": "95.0.4635.90",
-     "binary": "C:\\ibbrowsers\\opera-95\\95.0.4635.90\\opera.exe",
+     "binary": "C:\\tibrowsers\\opera-95\\95.0.4635.90\\opera.exe",
      "driverKind": "operadriver",
-     "driver": "C:\\ibbrowsers\\drivers\\operadriver-109.0.5414.120\\operadriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\operadriver-109.0.5414.120\\operadriver.exe",
      "driverVersion": "109.0.5414.120",
      "args": [
       "--headless=new"
@@ -612,7 +612,7 @@
      "driverSource": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.109.0.5414.120/operadriver_win64.zip",
      "verified": "Setup_x64.exe: SHA-256 matches Opera's .sha256sum; Authenticode Opera Norway AS, chain ok (osslsigncode). operadriver.exe: Authenticode Opera Norway AS, chain ok (the 2023 release has no GitHub digest)",
      "smoke": "pass (tests/browsers/run.mjs, 2026-09-19)",
-     "notes": "Opera 95 is the last for Windows 7 and 8.1. Installed 2026-09-19 as a standalone copy (--copyonly=1 --singleprofile=1 --installfolder=C:\\ibbrowsers\\opera-95): no registry entries, shortcuts or tasks; autoupdate false. operadriver 109 is Opera's driver for Opera Stable 95."
+     "notes": "Opera 95 is the last for Windows 7 and 8.1. Installed 2026-09-19 as a standalone copy (--copyonly=1 --singleprofile=1 --installfolder=C:\\tibrowsers\\opera-95): no registry entries, shortcuts or tasks; autoupdate false. operadriver 109 is Opera's driver for Opera Stable 95."
     }
    ]
   },
@@ -627,7 +627,7 @@
      "version": "153.0.4234.32",
      "binary": "C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe",
      "driverKind": "msedgedriver",
-     "driver": "C:\\ibbrowsers\\drivers\\msedgedriver-153.0.4234.32\\msedgedriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\msedgedriver-153.0.4234.32\\msedgedriver.exe",
      "driverVersion": "153.0.4234.32",
      "args": [
       "--headless=new"
@@ -652,7 +652,7 @@
      "version": "153.0.4234.48",
      "binary": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
      "driverKind": "msedgedriver",
-     "driver": "C:\\ibbrowsers\\drivers\\msedgedriver-153.0.4234.48\\msedgedriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\msedgedriver-153.0.4234.48\\msedgedriver.exe",
      "driverVersion": "153.0.4234.48",
      "args": [
       "--headless=new"
@@ -677,7 +677,7 @@
      "version": "153.0.4234.32",
      "binary": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
      "driverKind": "msedgedriver",
-     "driver": "C:\\ibbrowsers\\drivers\\msedgedriver-153.0.4234.32\\msedgedriver.exe",
+     "driver": "C:\\tibrowsers\\drivers\\msedgedriver-153.0.4234.32\\msedgedriver.exe",
      "driverVersion": "153.0.4234.32",
      "args": [
       "--headless=new"
@@ -716,9 +716,9 @@
      "id": "firefox",
      "name": "Mozilla Firefox (CentOS 6 package)",
      "version": "78.5.0",
-     "binary": "/home/x/ibbrowsers/sysroot/usr/lib64/firefox/firefox",
+     "binary": "/home/x/tibrowsers/sysroot/usr/lib64/firefox/firefox",
      "driverKind": "geckodriver",
-     "driver": "/home/x/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
      "driverVersion": "0.37.1",
      "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz",
      "args": [
@@ -728,7 +728,7 @@
      "source": "https://vault.centos.org/6.10/updates/x86_64/Packages/firefox-78.5.0-1.el6.centos.x86_64.rpm",
      "verified": "CentOS 6 package: rpm -K OK (CentOS 6 key c105b9de in the system rpmdb) on firefox and its 50 dependency rpms from vault.centos.org/6.10/{os,updates}, dependency closure computed from the repo's primary.xml against the VM's installed provides; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256)",
      "smoke": "pass",
-     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it; env.sh also adds sysroot/usr/lib64/firefox/bundled/lib64 (the package's own bundled gtk3). Mozilla's official builds don't run here: every one checked (52.9.0esr ... 156.0) needs libstdc++ GLIBCXX_3.4.15/CXXABI_1.3.5 (CentOS 6 has gcc 4.4.7: 3.4.13); 78+ also need GLIBC_2.14-2.17. Tried 68.12.0esr: ldd 'version `CXXABI_1.3.5' not found', 'version `GLIBCXX_3.4.15' not found' (and libgtk-3.so.0 missing). geckodriver 0.37.1 officially targets Firefox >=128 but the smoke passed with 78.5.0. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+     "notes": "driver is a wrapper that sources ~/tibrowsers/env.sh (LD_LIBRARY_PATH -> ~/tibrowsers/sysroot, FONTCONFIG_FILE -> ~/tibrowsers/fonts.conf) then execs the real driver next to it; env.sh also adds sysroot/usr/lib64/firefox/bundled/lib64 (the package's own bundled gtk3). Mozilla's official builds don't run here: every one checked (52.9.0esr ... 156.0) needs libstdc++ GLIBCXX_3.4.15/CXXABI_1.3.5 (CentOS 6 has gcc 4.4.7: 3.4.13); 78+ also need GLIBC_2.14-2.17. Tried 68.12.0esr: ldd 'version `CXXABI_1.3.5' not found', 'version `GLIBCXX_3.4.15' not found' (and libgtk-3.so.0 missing). geckodriver 0.37.1 officially targets Firefox >=128 but the smoke passed with 78.5.0. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
     }
    ]
   },
@@ -741,9 +741,9 @@
      "id": "firefox",
      "name": "Mozilla Firefox",
      "version": "156.0",
-     "binary": "/home/x/ibbrowsers/firefox-156.0/firefox/firefox",
+     "binary": "/home/x/tibrowsers/firefox-156.0/firefox/firefox",
      "driverKind": "geckodriver",
-     "driver": "/home/x/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
      "driverVersion": "0.37.1",
      "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz",
      "args": [
@@ -751,17 +751,17 @@
      ],
      "headless": true,
      "source": "https://archive.mozilla.org/pub/firefox/releases/156.0/linux-x86_64/en-US/firefox-156.0.tar.xz",
-     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: CentOS 7 vault (yumdownloader --resolve) .rpms fetched from the distro repos, rpm -K OK on every package (distro GPG key in the system rpmdb), unpacked with rpm2cpio|cpio",
+     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/tibrowsers/sysroot: CentOS 7 vault (yumdownloader --resolve) .rpms fetched from the distro repos, rpm -K OK on every package (distro GPG key in the system rpmdb), unpacked with rpm2cpio|cpio",
      "smoke": "pass",
-     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+     "notes": "driver is a wrapper that sources ~/tibrowsers/env.sh (LD_LIBRARY_PATH -> ~/tibrowsers/sysroot, FONTCONFIG_FILE -> ~/tibrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
     },
     {
      "id": "chrome",
      "name": "Chrome for Testing",
      "version": "125.0.6422.141",
-     "binary": "/home/x/ibbrowsers/chrome-125.0.6422.141/chrome-linux64/chrome",
+     "binary": "/home/x/tibrowsers/chrome-125.0.6422.141/chrome-linux64/chrome",
      "driverKind": "chromedriver",
-     "driver": "/home/x/ibbrowsers/drivers/chromedriver-125.0.6422.141/chromedriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/chromedriver-125.0.6422.141/chromedriver.sh",
      "driverVersion": "125.0.6422.141",
      "args": [
       "--headless=new"
@@ -769,9 +769,9 @@
      "headless": true,
      "source": "https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chrome-linux64.zip",
      "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chromedriver-linux64.zip",
-     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/ibbrowsers/sysroot: CentOS 7 vault (yumdownloader --resolve, i686 multilib deps dropped) .rpms fetched from the distro repos, rpm -K OK on every package (distro GPG key in the system rpmdb), unpacked with rpm2cpio|cpio",
+     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/tibrowsers/sysroot: CentOS 7 vault (yumdownloader --resolve, i686 multilib deps dropped) .rpms fetched from the distro repos, rpm -K OK on every package (distro GPG key in the system rpmdb), unpacked with rpm2cpio|cpio",
      "smoke": "pass",
-     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. Sandboxed (2026-09-19): user.max_user_namespaces=0, so Chrome uses its SUID sandbox: chrome_sandbox from the same zip installed as chrome-sandbox next to chrome, root:root 4755 (sudo install); --no-sandbox dropped. The renderers run under it (ps: zygote child of chrome-sandbox). newest Chrome for Testing whose binary runs on glibc 2.17: 126.0.6478.182 and later need GLIBC_2.25 (tested: \"/lib64/libc.so.6: version `GLIBC_2.25' not found\"). 115-125 need only GLIBC_2.17."
+     "notes": "driver is a wrapper that sources ~/tibrowsers/env.sh (LD_LIBRARY_PATH -> ~/tibrowsers/sysroot, FONTCONFIG_FILE -> ~/tibrowsers/fonts.conf) then execs the real driver next to it. Sandboxed (2026-09-19): user.max_user_namespaces=0, so Chrome uses its SUID sandbox: chrome_sandbox from the same zip installed as chrome-sandbox next to chrome, root:root 4755 (sudo install); --no-sandbox dropped. The renderers run under it (ps: zygote child of chrome-sandbox). newest Chrome for Testing whose binary runs on glibc 2.17: 126.0.6478.182 and later need GLIBC_2.25 (tested: \"/lib64/libc.so.6: version `GLIBC_2.25' not found\"). 115-125 need only GLIBC_2.17."
     }
    ]
   },
@@ -800,9 +800,9 @@
      "id": "firefox",
      "name": "Mozilla Firefox",
      "version": "100.0.2",
-     "binary": "/home/x/ibbrowsers/firefox-100.0.2/firefox/firefox",
+     "binary": "/home/x/tibrowsers/firefox-100.0.2/firefox/firefox",
      "driverKind": "geckodriver",
-     "driver": "/home/x/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
      "driverVersion": "0.37.1",
      "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz",
      "args": [
@@ -810,9 +810,9 @@
      ],
      "headless": true,
      "source": "https://archive.mozilla.org/pub/firefox/releases/100.0.2/linux-x86_64/en-US/firefox-100.0.2.tar.bz2",
-     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
+     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/tibrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
      "smoke": "pass",
-     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. Newest Firefox that runs here: GTK 3.10 lacks gdk_window_show_window_menu (GTK 3.14), which Firefox 101.0.1+ import; 156.0 tried: 'XPCOMGlueLoad error ... libxul.so: undefined symbol: gdk_window_show_window_menu'. geckodriver 0.37.1 officially targets Firefox >=128 but the smoke passed with 100.0.2. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+     "notes": "driver is a wrapper that sources ~/tibrowsers/env.sh (LD_LIBRARY_PATH -> ~/tibrowsers/sysroot, FONTCONFIG_FILE -> ~/tibrowsers/fonts.conf) then execs the real driver next to it. Newest Firefox that runs here: GTK 3.10 lacks gdk_window_show_window_menu (GTK 3.14), which Firefox 101.0.1+ import; 156.0 tried: 'XPCOMGlueLoad error ... libxul.so: undefined symbol: gdk_window_show_window_menu'. geckodriver 0.37.1 officially targets Firefox >=128 but the smoke passed with 100.0.2. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
     }
    ]
   },
@@ -825,9 +825,9 @@
      "id": "chrome",
      "name": "Chrome for Testing",
      "version": "125.0.6422.141",
-     "binary": "/home/x/ibbrowsers/chrome-125.0.6422.141/chrome-linux64/chrome",
+     "binary": "/home/x/tibrowsers/chrome-125.0.6422.141/chrome-linux64/chrome",
      "driverKind": "chromedriver",
-     "driver": "/home/x/ibbrowsers/drivers/chromedriver-125.0.6422.141/chromedriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/chromedriver-125.0.6422.141/chromedriver.sh",
      "driverVersion": "125.0.6422.141",
      "args": [
       "--headless=new"
@@ -835,17 +835,17 @@
      "headless": true,
      "source": "https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chrome-linux64.zip",
      "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chromedriver-linux64.zip",
-     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x; NSS/NSPR taken from the verified Firefox 156.0 tarball (distro libnss3 is 3.28.4, Chrome needs NSS_3.30)",
+     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/tibrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x; NSS/NSPR taken from the verified Firefox 156.0 tarball (distro libnss3 is 3.28.4, Chrome needs NSS_3.30)",
      "smoke": "pass",
-     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it; the chromedriver wrapper also prepends ~/ibbrowsers/firefox-156.0/firefox to LD_LIBRARY_PATH for NSS. newest Chrome for Testing whose binary runs on glibc 2.23: 126.0.6478.182 and later need GLIBC_2.25 (tested: \"/lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.25' not found\"). 115-125 need only GLIBC_2.17."
+     "notes": "driver is a wrapper that sources ~/tibrowsers/env.sh (LD_LIBRARY_PATH -> ~/tibrowsers/sysroot, FONTCONFIG_FILE -> ~/tibrowsers/fonts.conf) then execs the real driver next to it; the chromedriver wrapper also prepends ~/tibrowsers/firefox-156.0/firefox to LD_LIBRARY_PATH for NSS. newest Chrome for Testing whose binary runs on glibc 2.23: 126.0.6478.182 and later need GLIBC_2.25 (tested: \"/lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.25' not found\"). 115-125 need only GLIBC_2.17."
     },
     {
      "id": "firefox",
      "name": "Mozilla Firefox",
      "version": "156.0",
-     "binary": "/home/x/ibbrowsers/firefox-156.0/firefox/firefox",
+     "binary": "/home/x/tibrowsers/firefox-156.0/firefox/firefox",
      "driverKind": "geckodriver",
-     "driver": "/home/x/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
      "driverVersion": "0.37.1",
      "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz",
      "args": [
@@ -853,9 +853,9 @@
      ],
      "headless": true,
      "source": "https://archive.mozilla.org/pub/firefox/releases/156.0/linux-x86_64/en-US/firefox-156.0.tar.xz",
-     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
+     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/tibrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
      "smoke": "pass",
-     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+     "notes": "driver is a wrapper that sources ~/tibrowsers/env.sh (LD_LIBRARY_PATH -> ~/tibrowsers/sysroot, FONTCONFIG_FILE -> ~/tibrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
     }
    ]
   },
@@ -868,9 +868,9 @@
      "id": "chrome",
      "name": "Chrome for Testing",
      "version": "153.0.8010.52",
-     "binary": "/home/x/ibbrowsers/chrome-153.0.8010.52/chrome-linux64/chrome",
+     "binary": "/home/x/tibrowsers/chrome-153.0.8010.52/chrome-linux64/chrome",
      "driverKind": "chromedriver",
-     "driver": "/home/x/ibbrowsers/drivers/chromedriver-153.0.8010.52/chromedriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/chromedriver-153.0.8010.52/chromedriver.sh",
      "driverVersion": "153.0.8010.52",
      "args": [
       "--headless=new"
@@ -878,17 +878,17 @@
      "headless": true,
      "source": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.52/linux64/chrome-linux64.zip",
      "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.52/linux64/chromedriver-linux64.zip",
-     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
+     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/tibrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
      "smoke": "pass",
-     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it"
+     "notes": "driver is a wrapper that sources ~/tibrowsers/env.sh (LD_LIBRARY_PATH -> ~/tibrowsers/sysroot, FONTCONFIG_FILE -> ~/tibrowsers/fonts.conf) then execs the real driver next to it"
     },
     {
      "id": "firefox",
      "name": "Mozilla Firefox",
      "version": "156.0",
-     "binary": "/home/x/ibbrowsers/firefox-156.0/firefox/firefox",
+     "binary": "/home/x/tibrowsers/firefox-156.0/firefox/firefox",
      "driverKind": "geckodriver",
-     "driver": "/home/x/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
      "driverVersion": "0.37.1",
      "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz",
      "args": [
@@ -896,17 +896,17 @@
      ],
      "headless": true,
      "source": "https://archive.mozilla.org/pub/firefox/releases/156.0/linux-x86_64/en-US/firefox-156.0.tar.xz",
-     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
+     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/tibrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
      "smoke": "pass",
-     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+     "notes": "driver is a wrapper that sources ~/tibrowsers/env.sh (LD_LIBRARY_PATH -> ~/tibrowsers/sysroot, FONTCONFIG_FILE -> ~/tibrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
     },
     {
      "id": "opera",
      "name": "Opera",
      "version": "135.0.5973.142",
-     "binary": "/home/x/ibbrowsers/opera-135/opera",
+     "binary": "/home/x/tibrowsers/opera-135/opera",
      "driverKind": "operadriver",
-     "driver": "/home/x/ibbrowsers/drivers/operadriver-151.0.7922.176/operadriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/operadriver-151.0.7922.176/operadriver.sh",
      "driverVersion": "151.0.7922.176",
      "args": [
       "--headless=new"
@@ -916,7 +916,7 @@
      "driverSource": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.151.0.7922.176/operadriver_linux64.zip",
      "verified": ".deb: SHA-256 matches Opera's .sha256sum; the same version's .rpm has a good signature from Opera's archive key 6C86BE214648376680CA957B11EE8C00B693A745 (rpmkeys -K on Rocky 8) and an identical opera binary. operadriver zip: SHA-256 matches GitHub's asset digest",
      "smoke": "pass (tests/browsers/run.mjs, 2026-09-19)",
-     "notes": "The .deb's /usr/lib/x86_64-linux-gnu/opera-stable unpacked to ~/ibbrowsers/opera-135 (no root); a plain copy, so it never updates. Needs glibc 2.25. The driver is a wrapper that sources ~/ibbrowsers/env.sh. operadriver 151 is Opera's driver for Opera Stable 135. Opera aborts without GSettings schemas (Chrome doesn't need them): gsettings-desktop-schemas fetched with apt-get download (checked by apt against the signed indexes), unpacked into ~/ibbrowsers/sysroot and compiled there with glib-compile-schemas; env.sh's XDG_DATA_DIRS finds them."
+     "notes": "The .deb's /usr/lib/x86_64-linux-gnu/opera-stable unpacked to ~/tibrowsers/opera-135 (no root); a plain copy, so it never updates. Needs glibc 2.25. The driver is a wrapper that sources ~/tibrowsers/env.sh. operadriver 151 is Opera's driver for Opera Stable 135. Opera aborts without GSettings schemas (Chrome doesn't need them): gsettings-desktop-schemas fetched with apt-get download (checked by apt against the signed indexes), unpacked into ~/tibrowsers/sysroot and compiled there with glib-compile-schemas; env.sh's XDG_DATA_DIRS finds them."
     }
    ]
   },
@@ -929,9 +929,9 @@
      "id": "chrome",
      "name": "Chrome for Testing",
      "version": "153.0.8010.52",
-     "binary": "/home/x/ibbrowsers/chrome-153.0.8010.52/chrome-linux64/chrome",
+     "binary": "/home/x/tibrowsers/chrome-153.0.8010.52/chrome-linux64/chrome",
      "driverKind": "chromedriver",
-     "driver": "/home/x/ibbrowsers/drivers/chromedriver-153.0.8010.52/chromedriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/chromedriver-153.0.8010.52/chromedriver.sh",
      "driverVersion": "153.0.8010.52",
      "args": [
       "--headless=new"
@@ -939,17 +939,17 @@
      "headless": true,
      "source": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.52/linux64/chrome-linux64.zip",
      "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.52/linux64/chromedriver-linux64.zip",
-     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/ibbrowsers/sysroot: Rocky 8 (dnf download --resolve) .rpms fetched from the distro repos, rpm -K OK on every package (distro GPG key in the system rpmdb), unpacked with rpm2cpio|cpio",
+     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/tibrowsers/sysroot: Rocky 8 (dnf download --resolve) .rpms fetched from the distro repos, rpm -K OK on every package (distro GPG key in the system rpmdb), unpacked with rpm2cpio|cpio",
      "smoke": "pass",
-     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. SELinux enforcing: no issue seen."
+     "notes": "driver is a wrapper that sources ~/tibrowsers/env.sh (LD_LIBRARY_PATH -> ~/tibrowsers/sysroot, FONTCONFIG_FILE -> ~/tibrowsers/fonts.conf) then execs the real driver next to it. SELinux enforcing: no issue seen."
     },
     {
      "id": "firefox",
      "name": "Mozilla Firefox",
      "version": "156.0",
-     "binary": "/home/x/ibbrowsers/firefox-156.0/firefox/firefox",
+     "binary": "/home/x/tibrowsers/firefox-156.0/firefox/firefox",
      "driverKind": "geckodriver",
-     "driver": "/home/x/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
      "driverVersion": "0.37.1",
      "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz",
      "args": [
@@ -957,17 +957,17 @@
      ],
      "headless": true,
      "source": "https://archive.mozilla.org/pub/firefox/releases/156.0/linux-x86_64/en-US/firefox-156.0.tar.xz",
-     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: Rocky 8 (dnf download --resolve) .rpms fetched from the distro repos, rpm -K OK on every package (distro GPG key in the system rpmdb), unpacked with rpm2cpio|cpio",
+     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/tibrowsers/sysroot: Rocky 8 (dnf download --resolve) .rpms fetched from the distro repos, rpm -K OK on every package (distro GPG key in the system rpmdb), unpacked with rpm2cpio|cpio",
      "smoke": "pass",
-     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+     "notes": "driver is a wrapper that sources ~/tibrowsers/env.sh (LD_LIBRARY_PATH -> ~/tibrowsers/sysroot, FONTCONFIG_FILE -> ~/tibrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
     },
     {
      "id": "opera",
      "name": "Opera",
      "version": "135.0.5973.142",
-     "binary": "/home/x/ibbrowsers/opera-135/opera",
+     "binary": "/home/x/tibrowsers/opera-135/opera",
      "driverKind": "operadriver",
-     "driver": "/home/x/ibbrowsers/drivers/operadriver-151.0.7922.176/operadriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/operadriver-151.0.7922.176/operadriver.sh",
      "driverVersion": "151.0.7922.176",
      "args": [
       "--headless=new"
@@ -977,7 +977,7 @@
      "driverSource": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.151.0.7922.176/operadriver_linux64.zip",
      "verified": ".deb: SHA-256 matches Opera's .sha256sum; the same version's .rpm has a good signature from Opera's archive key 6C86BE214648376680CA957B11EE8C00B693A745 (rpmkeys -K on Rocky 8) and an identical opera binary. operadriver zip: SHA-256 matches GitHub's asset digest",
      "smoke": "pass (tests/browsers/run.mjs, 2026-09-19)",
-     "notes": "The .deb's /usr/lib/x86_64-linux-gnu/opera-stable unpacked to ~/ibbrowsers/opera-135 (no root); a plain copy, so it never updates. Needs glibc 2.25. The driver is a wrapper that sources ~/ibbrowsers/env.sh. operadriver 151 is Opera's driver for Opera Stable 135."
+     "notes": "The .deb's /usr/lib/x86_64-linux-gnu/opera-stable unpacked to ~/tibrowsers/opera-135 (no root); a plain copy, so it never updates. Needs glibc 2.25. The driver is a wrapper that sources ~/tibrowsers/env.sh. operadriver 151 is Opera's driver for Opera Stable 135."
     }
    ]
   },
@@ -990,9 +990,9 @@
      "id": "chrome",
      "name": "Chrome for Testing",
      "version": "153.0.8010.52",
-     "binary": "/home/x/ibbrowsers/chrome-153.0.8010.52/chrome-linux64/chrome",
+     "binary": "/home/x/tibrowsers/chrome-153.0.8010.52/chrome-linux64/chrome",
      "driverKind": "chromedriver",
-     "driver": "/home/x/ibbrowsers/drivers/chromedriver-153.0.8010.52/chromedriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/chromedriver-153.0.8010.52/chromedriver.sh",
      "driverVersion": "153.0.8010.52",
      "args": [
       "--headless=new"
@@ -1000,17 +1000,17 @@
      "headless": true,
      "source": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.52/linux64/chrome-linux64.zip",
      "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.52/linux64/chromedriver-linux64.zip",
-     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
+     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/tibrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
      "smoke": "pass",
-     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it"
+     "notes": "driver is a wrapper that sources ~/tibrowsers/env.sh (LD_LIBRARY_PATH -> ~/tibrowsers/sysroot, FONTCONFIG_FILE -> ~/tibrowsers/fonts.conf) then execs the real driver next to it"
     },
     {
      "id": "firefox",
      "name": "Mozilla Firefox",
      "version": "156.0",
-     "binary": "/home/x/ibbrowsers/firefox-156.0/firefox/firefox",
+     "binary": "/home/x/tibrowsers/firefox-156.0/firefox/firefox",
      "driverKind": "geckodriver",
-     "driver": "/home/x/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
      "driverVersion": "0.37.1",
      "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz",
      "args": [
@@ -1018,17 +1018,17 @@
      ],
      "headless": true,
      "source": "https://archive.mozilla.org/pub/firefox/releases/156.0/linux-x86_64/en-US/firefox-156.0.tar.xz",
-     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
+     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/tibrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
      "smoke": "pass",
-     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+     "notes": "driver is a wrapper that sources ~/tibrowsers/env.sh (LD_LIBRARY_PATH -> ~/tibrowsers/sysroot, FONTCONFIG_FILE -> ~/tibrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
     },
     {
      "id": "opera",
      "name": "Opera",
      "version": "135.0.5973.142",
-     "binary": "/home/x/ibbrowsers/opera-135/opera",
+     "binary": "/home/x/tibrowsers/opera-135/opera",
      "driverKind": "operadriver",
-     "driver": "/home/x/ibbrowsers/drivers/operadriver-151.0.7922.176/operadriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/operadriver-151.0.7922.176/operadriver.sh",
      "driverVersion": "151.0.7922.176",
      "args": [
       "--headless=new"
@@ -1038,7 +1038,7 @@
      "driverSource": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.151.0.7922.176/operadriver_linux64.zip",
      "verified": ".deb: SHA-256 matches Opera's .sha256sum; the same version's .rpm has a good signature from Opera's archive key 6C86BE214648376680CA957B11EE8C00B693A745 (rpmkeys -K on Rocky 8) and an identical opera binary. operadriver zip: SHA-256 matches GitHub's asset digest",
      "smoke": "pass (tests/browsers/run.mjs, 2026-09-19)",
-     "notes": "The .deb's /usr/lib/x86_64-linux-gnu/opera-stable unpacked to ~/ibbrowsers/opera-135 (no root); a plain copy, so it never updates. Needs glibc 2.25. The driver is a wrapper that sources ~/ibbrowsers/env.sh. operadriver 151 is Opera's driver for Opera Stable 135."
+     "notes": "The .deb's /usr/lib/x86_64-linux-gnu/opera-stable unpacked to ~/tibrowsers/opera-135 (no root); a plain copy, so it never updates. Needs glibc 2.25. The driver is a wrapper that sources ~/tibrowsers/env.sh. operadriver 151 is Opera's driver for Opera Stable 135."
     }
    ]
   },
@@ -1051,9 +1051,9 @@
      "id": "chrome",
      "name": "Chrome for Testing",
      "version": "153.0.8010.52",
-     "binary": "/home/x/ibbrowsers/chrome-153.0.8010.52/chrome-linux64/chrome",
+     "binary": "/home/x/tibrowsers/chrome-153.0.8010.52/chrome-linux64/chrome",
      "driverKind": "chromedriver",
-     "driver": "/home/x/ibbrowsers/drivers/chromedriver-153.0.8010.52/chromedriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/chromedriver-153.0.8010.52/chromedriver.sh",
      "driverVersion": "153.0.8010.52",
      "args": [
       "--headless=new"
@@ -1061,17 +1061,17 @@
      "headless": true,
      "source": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.52/linux64/chrome-linux64.zip",
      "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.52/linux64/chromedriver-linux64.zip",
-     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
+     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/tibrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
      "smoke": "pass",
-     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it"
+     "notes": "driver is a wrapper that sources ~/tibrowsers/env.sh (LD_LIBRARY_PATH -> ~/tibrowsers/sysroot, FONTCONFIG_FILE -> ~/tibrowsers/fonts.conf) then execs the real driver next to it"
     },
     {
      "id": "firefox",
      "name": "Mozilla Firefox",
      "version": "156.0",
-     "binary": "/home/x/ibbrowsers/firefox-156.0/firefox/firefox",
+     "binary": "/home/x/tibrowsers/firefox-156.0/firefox/firefox",
      "driverKind": "geckodriver",
-     "driver": "/home/x/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
      "driverVersion": "0.37.1",
      "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz",
      "args": [
@@ -1079,17 +1079,17 @@
      ],
      "headless": true,
      "source": "https://archive.mozilla.org/pub/firefox/releases/156.0/linux-x86_64/en-US/firefox-156.0.tar.xz",
-     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
+     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/tibrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
      "smoke": "pass",
-     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+     "notes": "driver is a wrapper that sources ~/tibrowsers/env.sh (LD_LIBRARY_PATH -> ~/tibrowsers/sysroot, FONTCONFIG_FILE -> ~/tibrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
     },
     {
      "id": "opera",
      "name": "Opera",
      "version": "135.0.5973.142",
-     "binary": "/home/x/ibbrowsers/opera-135/opera",
+     "binary": "/home/x/tibrowsers/opera-135/opera",
      "driverKind": "operadriver",
-     "driver": "/home/x/ibbrowsers/drivers/operadriver-151.0.7922.176/operadriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/operadriver-151.0.7922.176/operadriver.sh",
      "driverVersion": "151.0.7922.176",
      "args": [
       "--headless=new"
@@ -1099,11 +1099,11 @@
      "driverSource": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.151.0.7922.176/operadriver_linux64.zip",
      "verified": ".deb: SHA-256 matches Opera's .sha256sum; the same version's .rpm has a good signature from Opera's archive key 6C86BE214648376680CA957B11EE8C00B693A745 (rpmkeys -K on Rocky 8) and an identical opera binary. operadriver zip: SHA-256 matches GitHub's asset digest",
      "smoke": "pass (tests/browsers/run.mjs, 2026-09-19)",
-     "notes": "The .deb's /usr/lib/x86_64-linux-gnu/opera-stable unpacked to ~/ibbrowsers/opera-135 (no root); a plain copy, so it never updates. Needs glibc 2.25. The driver is a wrapper that sources ~/ibbrowsers/env.sh. operadriver 151 is Opera's driver for Opera Stable 135. Opera aborts without GSettings schemas (Chrome doesn't need them): gsettings-desktop-schemas fetched with apt-get download (checked by apt against the signed indexes), unpacked into ~/ibbrowsers/sysroot and compiled there with glib-compile-schemas; env.sh's XDG_DATA_DIRS finds them."
+     "notes": "The .deb's /usr/lib/x86_64-linux-gnu/opera-stable unpacked to ~/tibrowsers/opera-135 (no root); a plain copy, so it never updates. Needs glibc 2.25. The driver is a wrapper that sources ~/tibrowsers/env.sh. operadriver 151 is Opera's driver for Opera Stable 135. Opera aborts without GSettings schemas (Chrome doesn't need them): gsettings-desktop-schemas fetched with apt-get download (checked by apt against the signed indexes), unpacked into ~/tibrowsers/sysroot and compiled there with glib-compile-schemas; env.sh's XDG_DATA_DIRS finds them."
     },
     {
      "driverKind": "webkitwebdriver",
-     "driver": "/home/x/ibbrowsers/drivers/webkitwebdriver/webkitwebdriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/webkitwebdriver/webkitwebdriver.sh",
      "driverVersion": "2.50.4-0ubuntu0.22.04.1",
      "driverSource": "Ubuntu 22.04.5 LTS package webkit2gtk-driver 2.50.4-0ubuntu0.22.04.1 (apt, sudo)",
      "webkitVersion": "2.50.4",
@@ -1112,7 +1112,7 @@
      "id": "webkitgtk",
      "name": "WebKitGTK MiniBrowser (Safari's engine)",
      "version": "2.50.4",
-     "binary": "/home/x/ibbrowsers/webkitgtk/MiniBrowser",
+     "binary": "/home/x/tibrowsers/webkitgtk/MiniBrowser",
      "browserName": "MiniBrowser",
      "args": [
       "--automation"
@@ -1126,10 +1126,10 @@
      "name": "Playwright's WebKit",
      "version": "26.6",
      "webkitRevision": "2359",
-     "binary": "/home/x/ibbrowsers/playwright-1.63.0/browsers/webkit-2359/minibrowser-wpe/MiniBrowser",
+     "binary": "/home/x/tibrowsers/playwright-1.63.0/browsers/webkit-2359/minibrowser-wpe/MiniBrowser",
      "protocol": "playwright",
      "driverKind": "playwright",
-     "driver": "/home/x/ibbrowsers/playwright-1.63.0/server.sh",
+     "driver": "/home/x/tibrowsers/playwright-1.63.0/server.sh",
      "driverVersion": "playwright-core 1.63.0",
      "args": [],
      "headless": true,
@@ -1149,9 +1149,9 @@
      "id": "chrome",
      "name": "Chrome for Testing",
      "version": "153.0.8010.52",
-     "binary": "/home/x/ibbrowsers/chrome-153.0.8010.52/chrome-linux64/chrome",
+     "binary": "/home/x/tibrowsers/chrome-153.0.8010.52/chrome-linux64/chrome",
      "driverKind": "chromedriver",
-     "driver": "/home/x/ibbrowsers/drivers/chromedriver-153.0.8010.52/chromedriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/chromedriver-153.0.8010.52/chromedriver.sh",
      "driverVersion": "153.0.8010.52",
      "args": [
       "--headless=new"
@@ -1159,17 +1159,17 @@
      "headless": true,
      "source": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.52/linux64/chrome-linux64.zip",
      "driverSource": "https://storage.googleapis.com/chrome-for-testing-public/153.0.8010.52/linux64/chromedriver-linux64.zip",
-     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
+     "verified": "none published for Chrome for Testing (no checksums/signatures); fetched over HTTPS from storage.googleapis.com only; shared libs in ~/tibrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
      "smoke": "pass",
-     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it"
+     "notes": "driver is a wrapper that sources ~/tibrowsers/env.sh (LD_LIBRARY_PATH -> ~/tibrowsers/sysroot, FONTCONFIG_FILE -> ~/tibrowsers/fonts.conf) then execs the real driver next to it"
     },
     {
      "id": "firefox",
      "name": "Mozilla Firefox",
      "version": "156.0",
-     "binary": "/home/x/ibbrowsers/firefox-156.0/firefox/firefox",
+     "binary": "/home/x/tibrowsers/firefox-156.0/firefox/firefox",
      "driverKind": "geckodriver",
-     "driver": "/home/x/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
      "driverVersion": "0.37.1",
      "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz",
      "args": [
@@ -1177,17 +1177,17 @@
      ],
      "headless": true,
      "source": "https://archive.mozilla.org/pub/firefox/releases/156.0/linux-x86_64/en-US/firefox-156.0.tar.xz",
-     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/ibbrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
+     "verified": "SHA512SUMS.asc verified with gpg against the release's KEY (Mozilla Software Releases, primary fpr 14F26682D0916CDD81E37B6D61B7B526D98F0353); tarball SHA-512 matches SHA512SUMS; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256); shared libs in ~/tibrowsers/sysroot: distro .debs fetched with apt-get download (hashes checked by apt against the signed InRelease/Packages indexes), unpacked with dpkg -x",
      "smoke": "pass",
-     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/sysroot, FONTCONFIG_FILE -> ~/ibbrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+     "notes": "driver is a wrapper that sources ~/tibrowsers/env.sh (LD_LIBRARY_PATH -> ~/tibrowsers/sysroot, FONTCONFIG_FILE -> ~/tibrowsers/fonts.conf) then execs the real driver next to it. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
     },
     {
      "id": "opera",
      "name": "Opera",
      "version": "135.0.5973.142",
-     "binary": "/home/x/ibbrowsers/opera-135/opera",
+     "binary": "/home/x/tibrowsers/opera-135/opera",
      "driverKind": "operadriver",
-     "driver": "/home/x/ibbrowsers/drivers/operadriver-151.0.7922.176/operadriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/operadriver-151.0.7922.176/operadriver.sh",
      "driverVersion": "151.0.7922.176",
      "args": [
       "--headless=new"
@@ -1197,11 +1197,11 @@
      "driverSource": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.151.0.7922.176/operadriver_linux64.zip",
      "verified": ".deb: SHA-256 matches Opera's .sha256sum; the same version's .rpm has a good signature from Opera's archive key 6C86BE214648376680CA957B11EE8C00B693A745 (rpmkeys -K on Rocky 8) and an identical opera binary. operadriver zip: SHA-256 matches GitHub's asset digest",
      "smoke": "pass (tests/browsers/run.mjs, 2026-09-19)",
-     "notes": "The .deb's /usr/lib/x86_64-linux-gnu/opera-stable unpacked to ~/ibbrowsers/opera-135 (no root); a plain copy, so it never updates. Needs glibc 2.25. The driver is a wrapper that sources ~/ibbrowsers/env.sh. operadriver 151 is Opera's driver for Opera Stable 135. Opera aborts without GSettings schemas (Chrome doesn't need them): gsettings-desktop-schemas fetched with apt-get download (checked by apt against the signed indexes), unpacked into ~/ibbrowsers/sysroot and compiled there with glib-compile-schemas; env.sh's XDG_DATA_DIRS finds them."
+     "notes": "The .deb's /usr/lib/x86_64-linux-gnu/opera-stable unpacked to ~/tibrowsers/opera-135 (no root); a plain copy, so it never updates. Needs glibc 2.25. The driver is a wrapper that sources ~/tibrowsers/env.sh. operadriver 151 is Opera's driver for Opera Stable 135. Opera aborts without GSettings schemas (Chrome doesn't need them): gsettings-desktop-schemas fetched with apt-get download (checked by apt against the signed indexes), unpacked into ~/tibrowsers/sysroot and compiled there with glib-compile-schemas; env.sh's XDG_DATA_DIRS finds them."
     },
     {
      "driverKind": "webkitwebdriver",
-     "driver": "/home/x/ibbrowsers/drivers/webkitwebdriver/webkitwebdriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/webkitwebdriver/webkitwebdriver.sh",
      "driverVersion": "2.50.6-1~deb12u2",
      "driverSource": "Debian GNU/Linux 12 (bookworm) package webkit2gtk-driver 2.50.6-1~deb12u2 (apt, sudo)",
      "webkitVersion": "2.50.6",
@@ -1210,7 +1210,7 @@
      "id": "webkitgtk",
      "name": "WebKitGTK MiniBrowser (Safari's engine)",
      "version": "2.50.6",
-     "binary": "/home/x/ibbrowsers/webkitgtk/MiniBrowser",
+     "binary": "/home/x/tibrowsers/webkitgtk/MiniBrowser",
      "browserName": "MiniBrowser",
      "args": [
       "--automation"
@@ -1221,7 +1221,7 @@
     },
     {
      "driverKind": "webkitwebdriver",
-     "driver": "/home/x/ibbrowsers/drivers/webkitwebdriver/webkitwebdriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/webkitwebdriver/webkitwebdriver.sh",
      "driverVersion": "2.50.6-1~deb12u2",
      "driverSource": "Debian GNU/Linux 12 (bookworm) package webkit2gtk-driver 2.50.6-1~deb12u2 (apt, sudo)",
      "webkitVersion": "2.50.6",
@@ -1230,7 +1230,7 @@
      "id": "epiphany",
      "name": "GNOME Web (Epiphany)",
      "version": "43.1",
-     "binary": "/home/x/ibbrowsers/epiphany/epiphany",
+     "binary": "/home/x/tibrowsers/epiphany/epiphany",
      "browserName": "Epiphany",
      "args": [
       "--automation-mode"
@@ -1250,9 +1250,9 @@
      "id": "chromium",
      "name": "Chromium (Alpine package)",
      "version": "152.0.7977.82",
-     "binary": "/home/x/ibbrowsers/root/usr/lib/chromium/chromium",
+     "binary": "/home/x/tibrowsers/root/usr/lib/chromium/chromium",
      "driverKind": "chromedriver",
-     "driver": "/home/x/ibbrowsers/drivers/chromedriver-152.0.7977.82/chromedriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/chromedriver-152.0.7977.82/chromedriver.sh",
      "driverVersion": "152.0.7977.82",
      "args": [
       "--headless=new",
@@ -1261,17 +1261,17 @@
      "headless": true,
      "source": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community chromium-152.0.7977.82-r0",
      "driverSource": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community chromium-chromedriver-152.0.7977.82-r0",
-     "verified": "Alpine package installed with 'apk add --usermode --root ~/ibbrowsers/root --initdb' from the distro repos; apk verifies the RSA-signed APKINDEX and each package's hash against /etc/apk/keys",
+     "verified": "Alpine package installed with 'apk add --usermode --root ~/tibrowsers/root --initdb' from the distro repos; apk verifies the RSA-signed APKINDEX and each package's hash against /etc/apk/keys",
      "smoke": "pass",
-     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/root/usr/lib[,pulseaudio,firefox], FONTCONFIG_FILE, ICU_DATA) then execs the driver; binaries run on the system musl loader (same musl as the root). The VM's sshd has 'AllowTcpForwarding no', so ssh -L is refused ('administratively prohibited'); reach the driver with a stdio tunnel instead, e.g. one `ssh x@10.0.1.200 nc 127.0.0.1 <P>` per connection (busybox nc) -- that is how the smoke ran. --disable-gpu-sandbox is required: the GPU process is killed by seccomp-bpf on syscall 0x148 (pwritev2); renderer sandbox stays on. Vendor glibc builds (CfT, Mozilla tarball) don't run on musl."
+     "notes": "driver is a wrapper that sources ~/tibrowsers/env.sh (LD_LIBRARY_PATH -> ~/tibrowsers/root/usr/lib[,pulseaudio,firefox], FONTCONFIG_FILE, ICU_DATA) then execs the driver; binaries run on the system musl loader (same musl as the root). The VM's sshd has 'AllowTcpForwarding no', so ssh -L is refused ('administratively prohibited'); reach the driver with a stdio tunnel instead, e.g. one `ssh x@10.0.1.200 nc 127.0.0.1 <P>` per connection (busybox nc) -- that is how the smoke ran. --disable-gpu-sandbox is required: the GPU process is killed by seccomp-bpf on syscall 0x148 (pwritev2); renderer sandbox stays on. Vendor glibc builds (CfT, Mozilla tarball) don't run on musl."
     },
     {
      "id": "firefox",
      "name": "Mozilla Firefox (Alpine package)",
      "version": "151.0.3",
-     "binary": "/home/x/ibbrowsers/root/usr/lib/firefox/firefox",
+     "binary": "/home/x/tibrowsers/root/usr/lib/firefox/firefox",
      "driverKind": "geckodriver",
-     "driver": "/home/x/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
+     "driver": "/home/x/tibrowsers/drivers/geckodriver-0.37.1/geckodriver.sh",
      "driverVersion": "0.37.1",
      "driverSource": "https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-linux64.tar.gz",
      "args": [
@@ -1279,9 +1279,9 @@
      ],
      "headless": true,
      "source": "https://dl-cdn.alpinelinux.org/alpine/v3.24/community firefox-151.0.3-r0",
-     "verified": "Alpine package installed with 'apk add --usermode --root ~/ibbrowsers/root --initdb' from the distro repos; apk verifies the RSA-signed APKINDEX and each package's hash against /etc/apk/keys; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256) (Mozilla's geckodriver is static-pie and runs on musl)",
+     "verified": "Alpine package installed with 'apk add --usermode --root ~/tibrowsers/root --initdb' from the distro repos; apk verifies the RSA-signed APKINDEX and each package's hash against /etc/apk/keys; geckodriver .tar.gz.asc verified with the same Mozilla release key (subkey 09BEED63F3462A2DFFAB3B875ECB6497C1A20256) (Mozilla's geckodriver is static-pie and runs on musl)",
      "smoke": "pass",
-     "notes": "driver is a wrapper that sources ~/ibbrowsers/env.sh (LD_LIBRARY_PATH -> ~/ibbrowsers/root/usr/lib[,pulseaudio,firefox], FONTCONFIG_FILE, ICU_DATA) then execs the driver; binaries run on the system musl loader (same musl as the root). The VM's sshd has 'AllowTcpForwarding no', so ssh -L is refused ('administratively prohibited'); reach the driver with a stdio tunnel instead, e.g. one `ssh x@10.0.1.200 nc 127.0.0.1 <P>` per connection (busybox nc) -- that is how the smoke ran. ICU_DATA is required: Alpine's firefox segfaults when ICU can't find /usr/share/icu/78.1. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
+     "notes": "driver is a wrapper that sources ~/tibrowsers/env.sh (LD_LIBRARY_PATH -> ~/tibrowsers/root/usr/lib[,pulseaudio,firefox], FONTCONFIG_FILE, ICU_DATA) then execs the driver; binaries run on the system musl loader (same musl as the root). The VM's sshd has 'AllowTcpForwarding no', so ssh -L is refused ('administratively prohibited'); reach the driver with a stdio tunnel instead, e.g. one `ssh x@10.0.1.200 nc 127.0.0.1 <P>` per connection (busybox nc) -- that is how the smoke ran. ICU_DATA is required: Alpine's firefox segfaults when ICU can't find /usr/share/icu/78.1. geckodriver: forward with the SAME local port as the remote --port (geckodriver rejects a Host header whose port differs: 'Invalid Host header 127.0.0.1:<otherport>')."
     }
    ]
   },
@@ -1294,9 +1294,9 @@
      "id": "chrome",
      "name": "Google Chrome for Testing",
      "version": "153.0.8010.53",
-     "binary": "/Users/Matthew/ibbrowsers/chrome-153.0.8010.53/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+     "binary": "/Users/Matthew/tibrowsers/chrome-153.0.8010.53/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
      "driverKind": "chromedriver",
-     "driver": "/Users/Matthew/ibbrowsers/drivers/chromedriver-153.0.8010.53/chromedriver",
+     "driver": "/Users/Matthew/tibrowsers/drivers/chromedriver-153.0.8010.53/chromedriver",
      "driverVersion": "153.0.8010.53",
      "args": [
       "--headless=new"
@@ -1312,9 +1312,9 @@
      "id": "firefox",
      "name": "Mozilla Firefox",
      "version": "156.0",
-     "binary": "/Users/Matthew/ibbrowsers/firefox-156.0/Firefox.app/Contents/MacOS/firefox",
+     "binary": "/Users/Matthew/tibrowsers/firefox-156.0/Firefox.app/Contents/MacOS/firefox",
      "driverKind": "geckodriver",
-     "driver": "/Users/Matthew/ibbrowsers/drivers/geckodriver-0.37.1/geckodriver",
+     "driver": "/Users/Matthew/tibrowsers/drivers/geckodriver-0.37.1/geckodriver",
      "driverVersion": "0.37.1",
      "args": [
       "-headless"
@@ -1346,7 +1346,7 @@
      "id": "opera",
      "name": "Opera",
      "version": "135.0.5973.142",
-     "binary": "/Users/Matthew/ibbrowsers/opera-135/Opera.app/Contents/MacOS/Opera",
+     "binary": "/Users/Matthew/tibrowsers/opera-135/Opera.app/Contents/MacOS/Opera",
      "protocol": "cdp",
      "args": [
       "--headless=new"
@@ -1355,17 +1355,17 @@
      "source": "https://get.opera.com/ftp/pub/opera/desktop/135.0.5973.142/mac/Opera_135.0.5973.142_Autoupdate_arm64.tar.xz",
      "verified": "tar.xz: SHA-256 matches Opera's .sha256sum; codesign --verify --deep --strict ok, Developer ID Application: Opera Software AS (A2P9LX4JPN), notarized (spctl)",
      "smoke": "fail: crashes within seconds headless (SIGSEGV/SIGBUS) with every mode tried on 2026-09-19: --headless=new, --headless=old, --headless, and --headless=new with --disable-gpu, --no-sandbox, --use-mock-keychain, swiftshader/--in-process-gpu. Each start logs SkyLight: This user is not allowed access to the window system right now (unified log), which Chrome for Testing never does: Opera reaches for the window server in its own code, so it needs the GUI login session this Mac lacks, like Safari and Playwright's WebKit. No flag fixes it.",
-     "notes": "Opera.app unpacked to ~/ibbrowsers/opera-135 (tar, no quarantine). Driven over the DevTools protocol: Opera's operadriver for macOS is x86-64 only and this Mac has no Rosetta. Opera's own updater may update it in place."
+     "notes": "Opera.app unpacked to ~/tibrowsers/opera-135 (tar, no quarantine). Driven over the DevTools protocol: Opera's operadriver for macOS is x86-64 only and this Mac has no Rosetta. Opera's own updater may update it in place."
     },
     {
      "id": "playwright-webkit",
      "name": "Playwright's WebKit",
      "version": "26.6",
      "webkitRevision": "2359",
-     "binary": "/Users/Matthew/ibbrowsers/playwright-1.63.0/browsers/webkit-2359/Playwright.app/Contents/MacOS/Playwright",
+     "binary": "/Users/Matthew/tibrowsers/playwright-1.63.0/browsers/webkit-2359/Playwright.app/Contents/MacOS/Playwright",
      "protocol": "playwright",
      "driverKind": "playwright",
-     "driver": "/Users/Matthew/ibbrowsers/playwright-1.63.0/server.sh",
+     "driver": "/Users/Matthew/tibrowsers/playwright-1.63.0/server.sh",
      "driverVersion": "playwright-core 1.63.0",
      "args": [],
      "headless": true,
@@ -1378,9 +1378,9 @@
      "id": "edge",
      "name": "Microsoft Edge",
      "version": "153.0.4234.48",
-     "binary": "/Users/Matthew/ibbrowsers/edge-153.0.4234.48/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
+     "binary": "/Users/Matthew/tibrowsers/edge-153.0.4234.48/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
      "driverKind": "msedgedriver",
-     "driver": "/Users/Matthew/ibbrowsers/drivers/msedgedriver-153.0.4234.48/msedgedriver",
+     "driver": "/Users/Matthew/tibrowsers/drivers/msedgedriver-153.0.4234.48/msedgedriver",
      "driverVersion": "153.0.4234.48",
      "args": [
       "--headless=new"
@@ -1397,9 +1397,9 @@
      "name": "Brave",
      "version": "153.1.95.104",
      "chromiumVersion": "153.0.8010.53",
-     "binary": "/Users/Matthew/ibbrowsers/brave-153.1.95.104/Brave Browser.app/Contents/MacOS/Brave Browser",
+     "binary": "/Users/Matthew/tibrowsers/brave-153.1.95.104/Brave Browser.app/Contents/MacOS/Brave Browser",
      "driverKind": "chromedriver",
-     "driver": "/Users/Matthew/ibbrowsers/drivers/chromedriver-153.0.8010.53/chromedriver",
+     "driver": "/Users/Matthew/tibrowsers/drivers/chromedriver-153.0.8010.53/chromedriver",
      "driverVersion": "153.0.8010.53",
      "args": [
       "--headless=new"
@@ -1416,9 +1416,9 @@
      "name": "Vivaldi",
      "version": "8.2.4133.68",
      "chromiumVersion": "152.0.7977.137",
-     "binary": "/Users/Matthew/ibbrowsers/vivaldi-8.2.4133.68/Vivaldi.app/Contents/MacOS/Vivaldi",
+     "binary": "/Users/Matthew/tibrowsers/vivaldi-8.2.4133.68/Vivaldi.app/Contents/MacOS/Vivaldi",
      "driverKind": "chromedriver",
-     "driver": "/Users/Matthew/ibbrowsers/drivers/chromedriver-152.0.7977.137/chromedriver",
+     "driver": "/Users/Matthew/tibrowsers/drivers/chromedriver-152.0.7977.137/chromedriver",
      "driverVersion": "152.0.7977.137",
      "args": [
       "--headless=new",

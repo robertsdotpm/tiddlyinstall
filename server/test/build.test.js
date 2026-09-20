@@ -12,7 +12,7 @@ import { Builder } from '../lib/jobs.js';
 import { loadOrCreate } from '../lib/plansig.js';
 import { validate, packageLaunch, projectInstall, inlineTar } from '../../shared/builder.js';
 import { resolve } from '../../shared/resolve.js';
-import { readInstaller, zipEntryData, peInfo, peChecksum, tarRead } from '../../shared/ibfile.js';
+import { readInstaller, zipEntryData, peInfo, peChecksum, tarRead } from '../../shared/tifile.js';
 import { tarNamesUnderTop } from '../lib/files.js';
 import { catalog, haveCatalog, haveBases, BASES, tmpDir, localFetch, REPO } from './helpers.js';
 
@@ -262,7 +262,7 @@ test('icons in mode A: in the record, the files untouched', { skip: skip || (!ha
       assert.ok(d.equals(want), 'mode A exe changed');
       assert.equal(f.signed, fs.existsSync(signed) ? 'TiddlyInstall TEST' : '');
     } else if (f.platform === 'linux') {
-      assert.ok(d.equals(fs.readFileSync(path.join(BASES, 'unix', 'out', 'ib-base.run'))), 'mode A .run changed');
+      assert.ok(d.equals(fs.readFileSync(path.join(BASES, 'unix', 'out', 'ti-base.run'))), 'mode A .run changed');
     } else {
       assert.ok(!d.includes('AppIcon.icns') && d.includes('_CodeSignature'), 'mode A zip changed');
       assert.equal(f.signed, 'ad-hoc (test)');

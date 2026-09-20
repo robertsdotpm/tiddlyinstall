@@ -29,10 +29,10 @@
 // and tests/templates/ builds, installs and runs every one on the test
 // machines.
 //
-// Every template has a self-test: with IB_TEMPLATE_SELFTEST=1 in its
+// Every template has a self-test: with TI_TEMPLATE_SELFTEST=1 in its
 // environment it starts up as usual (the window shown, the server
 // answering, the tray icon set up), prints "template ok: <runtime>/<template>"
-// (also to the file IB_TEMPLATE_SELFTEST_OUT names, since GUI apps have no
+// (also to the file TI_TEMPLATE_SELFTEST_OUT names, since GUI apps have no
 // console) and exits 0 within a few seconds. It's marked in each file as used
 // by the site's tests and safe to delete.
 //
@@ -81,8 +81,8 @@ const WEB_NOTE = 'Starts a small web server on this computer only and opens the 
 const PY_SELFTEST_FN = (what) => code`# Used by the site's tests to check this template works; safe to delete.
 def selftest_ok():
     print("template ok: WHAT")
-    if os.environ.get("IB_TEMPLATE_SELFTEST_OUT"):
-        with open(os.environ["IB_TEMPLATE_SELFTEST_OUT"], "w") as f:
+    if os.environ.get("TI_TEMPLATE_SELFTEST_OUT"):
+        with open(os.environ["TI_TEMPLATE_SELFTEST_OUT"], "w") as f:
             f.write("template ok: WHAT\n")
 `.replace(/WHAT/g, what);
 
@@ -103,7 +103,7 @@ def clicked():
 tk.Button(window, text="Click me", command=clicked).pack(pady=(0, 20))
 
 SELFTEST
-if os.environ.get("IB_TEMPLATE_SELFTEST") == "1":
+if os.environ.get("TI_TEMPLATE_SELFTEST") == "1":
     window.after(1000, selftest_ok)       # once the window is up
     window.after(4000, window.destroy)
 
@@ -117,10 +117,10 @@ const python = {
       'main.py': code`import os
 
 # Used by the site's tests to check this template works; safe to delete.
-if os.environ.get("IB_TEMPLATE_SELFTEST") == "1":
+if os.environ.get("TI_TEMPLATE_SELFTEST") == "1":
     print("template ok: python/script")
-    if os.environ.get("IB_TEMPLATE_SELFTEST_OUT"):
-        with open(os.environ["IB_TEMPLATE_SELFTEST_OUT"], "w") as f:
+    if os.environ.get("TI_TEMPLATE_SELFTEST_OUT"):
+        with open(os.environ["TI_TEMPLATE_SELFTEST_OUT"], "w") as f:
             f.write("template ok: python/script\n")
     raise SystemExit(0)
 
@@ -184,7 +184,7 @@ print("Close this window to stop it.")
 sys.stdout.flush()
 
 # Used by the site's tests to check this template works; safe to delete.
-if os.environ.get("IB_TEMPLATE_SELFTEST") == "1":
+if os.environ.get("TI_TEMPLATE_SELFTEST") == "1":
     import threading
     import urllib.request
 
@@ -193,8 +193,8 @@ if os.environ.get("IB_TEMPLATE_SELFTEST") == "1":
         greeting = urllib.request.urlopen(url + "api/greet?name=test", timeout=10).read().decode("utf-8")
         if "Greet" in page and greeting == "Hello, test!":
             print("template ok: python/web")
-            if os.environ.get("IB_TEMPLATE_SELFTEST_OUT"):
-                with open(os.environ["IB_TEMPLATE_SELFTEST_OUT"], "w") as f:
+            if os.environ.get("TI_TEMPLATE_SELFTEST_OUT"):
+                with open(os.environ["TI_TEMPLATE_SELFTEST_OUT"], "w") as f:
                     f.write("template ok: python/web\n")
         sys.stdout.flush()
         os._exit(0)
@@ -240,10 +240,10 @@ icon = pystray.Icon("my-app", make_icon(), "My App", menu=pystray.Menu(
 def setup(icon):
     icon.visible = True
     # Used by the site's tests to check this template works; safe to delete.
-    if os.environ.get("IB_TEMPLATE_SELFTEST") == "1":
+    if os.environ.get("TI_TEMPLATE_SELFTEST") == "1":
         print("template ok: python/tray")
-        if os.environ.get("IB_TEMPLATE_SELFTEST_OUT"):
-            with open(os.environ["IB_TEMPLATE_SELFTEST_OUT"], "w") as f:
+        if os.environ.get("TI_TEMPLATE_SELFTEST_OUT"):
+            with open(os.environ["TI_TEMPLATE_SELFTEST_OUT"], "w") as f:
                 f.write("template ok: python/tray\n")
         time.sleep(3)
         icon.stop()
@@ -281,10 +281,10 @@ const python2 = {
       'main.py': code`import os
 
 # Used by the site's tests to check this template works; safe to delete.
-if os.environ.get("IB_TEMPLATE_SELFTEST") == "1":
+if os.environ.get("TI_TEMPLATE_SELFTEST") == "1":
     print "template ok: python2/script"
-    if os.environ.get("IB_TEMPLATE_SELFTEST_OUT"):
-        with open(os.environ["IB_TEMPLATE_SELFTEST_OUT"], "w") as f:
+    if os.environ.get("TI_TEMPLATE_SELFTEST_OUT"):
+        with open(os.environ["TI_TEMPLATE_SELFTEST_OUT"], "w") as f:
             f.write("template ok: python2/script\n")
     raise SystemExit(0)
 
@@ -317,8 +317,8 @@ raw_input("Press Enter to close")
 const JS_SELFTEST_FN = (what) => code`// Used by the site's tests to check this template works; safe to delete.
 function selftestOk() {
   console.log("template ok: WHAT");
-  if (process.env.IB_TEMPLATE_SELFTEST_OUT) {
-    require("fs").writeFileSync(process.env.IB_TEMPLATE_SELFTEST_OUT, "template ok: WHAT\n");
+  if (process.env.TI_TEMPLATE_SELFTEST_OUT) {
+    require("fs").writeFileSync(process.env.TI_TEMPLATE_SELFTEST_OUT, "template ok: WHAT\n");
   }
 }
 `.replace(/WHAT/g, what);
@@ -339,7 +339,7 @@ function main() {
 }
 
 ` + JS_SELFTEST_FN('node/script') + code`
-if (process.env.IB_TEMPLATE_SELFTEST === "1") selftestOk();
+if (process.env.TI_TEMPLATE_SELFTEST === "1") selftestOk();
 else main();
 `,
     },
@@ -399,7 +399,7 @@ server.listen(0, "127.0.0.1", () => {   // port 0: any free port
   const url = "http://127.0.0.1:" + server.address().port + "/";
   console.log("My App is running at " + url);
   console.log("Close this window to stop it.");
-  if (process.env.IB_TEMPLATE_SELFTEST === "1") selftest(url);
+  if (process.env.TI_TEMPLATE_SELFTEST === "1") selftest(url);
   else openBrowser(url);
 });
 `,
@@ -436,10 +436,10 @@ app.whenReady().then(() => {
   ]));
 
   // Used by the site's tests to check this template works; safe to delete.
-  if (process.env.IB_TEMPLATE_SELFTEST === "1") {
+  if (process.env.TI_TEMPLATE_SELFTEST === "1") {
     console.log("template ok: node/tray");
-    if (process.env.IB_TEMPLATE_SELFTEST_OUT) {
-      require("fs").writeFileSync(process.env.IB_TEMPLATE_SELFTEST_OUT, "template ok: node/tray\n");
+    if (process.env.TI_TEMPLATE_SELFTEST_OUT) {
+      require("fs").writeFileSync(process.env.TI_TEMPLATE_SELFTEST_OUT, "template ok: node/tray\n");
     }
     setTimeout(() => app.quit(), 3000);
   }
@@ -486,9 +486,9 @@ const ruby = {
     label: '',
     files: {
       'main.rb': code`# Used by the site's tests to check this template works; safe to delete.
-if ENV["IB_TEMPLATE_SELFTEST"] == "1"
+if ENV["TI_TEMPLATE_SELFTEST"] == "1"
   puts "template ok: ruby/script"
-  File.write(ENV["IB_TEMPLATE_SELFTEST_OUT"], "template ok: ruby/script\n") if ENV["IB_TEMPLATE_SELFTEST_OUT"]
+  File.write(ENV["TI_TEMPLATE_SELFTEST_OUT"], "template ok: ruby/script\n") if ENV["TI_TEMPLATE_SELFTEST_OUT"]
   exit 0
 end
 
@@ -523,10 +523,10 @@ app = window("My App", 300, 120) {
 }
 
 # Used by the site's tests to check this template works; safe to delete.
-if ENV["IB_TEMPLATE_SELFTEST"] == "1"
+if ENV["TI_TEMPLATE_SELFTEST"] == "1"
   Glimmer::LibUI.timer(1, repeat: false) do
     puts "template ok: ruby/window"
-    File.write(ENV["IB_TEMPLATE_SELFTEST_OUT"], "template ok: ruby/window\n") if ENV["IB_TEMPLATE_SELFTEST_OUT"]
+    File.write(ENV["TI_TEMPLATE_SELFTEST_OUT"], "template ok: ruby/window\n") if ENV["TI_TEMPLATE_SELFTEST_OUT"]
   end
   Glimmer::LibUI.timer(4, repeat: false) { ::LibUI.quit }
 end
@@ -558,10 +558,10 @@ const php = {
     files: {
       'main.php': code`<?php
 // Used by the site's tests to check this template works; safe to delete.
-if (getenv("IB_TEMPLATE_SELFTEST") === "1") {
+if (getenv("TI_TEMPLATE_SELFTEST") === "1") {
     echo "template ok: php/script\n";
-    if (getenv("IB_TEMPLATE_SELFTEST_OUT")) {
-        $f = fopen(getenv("IB_TEMPLATE_SELFTEST_OUT"), "w");
+    if (getenv("TI_TEMPLATE_SELFTEST_OUT")) {
+        $f = fopen(getenv("TI_TEMPLATE_SELFTEST_OUT"), "w");
         fwrite($f, "template ok: php/script\n");
         fclose($f);
     }
@@ -611,13 +611,13 @@ echo "My App is running at $url\n";
 echo "Close this window to stop it.\n";
 
 // Used by the site's tests to check this template works; safe to delete.
-if (getenv("IB_TEMPLATE_SELFTEST") === "1") {
+if (getenv("TI_TEMPLATE_SELFTEST") === "1") {
     $page = @file_get_contents($url . "?name=test");
     proc_terminate($server);
     if ($page !== false && strpos($page, "Hello, test!") !== false) {
         echo "template ok: php/web\n";
-        if (getenv("IB_TEMPLATE_SELFTEST_OUT")) {
-            file_put_contents(getenv("IB_TEMPLATE_SELFTEST_OUT"), "template ok: php/web\n");
+        if (getenv("TI_TEMPLATE_SELFTEST_OUT")) {
+            file_put_contents(getenv("TI_TEMPLATE_SELFTEST_OUT"), "template ok: php/web\n");
         }
     }
     exit(0);
@@ -657,7 +657,7 @@ const JAVA_SELFTEST_FN = (what) => code`
     // Used by the site's tests to check this template works; safe to delete.
     static void selftestOk() throws IOException {
         System.out.println("template ok: WHAT");
-        String file = System.getenv("IB_TEMPLATE_SELFTEST_OUT");
+        String file = System.getenv("TI_TEMPLATE_SELFTEST_OUT");
         if (file != null && file.length() > 0) {
             Writer out = new FileWriter(file);
             out.write("template ok: WHAT\n");
@@ -682,7 +682,7 @@ import java.io.Writer;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        if ("1".equals(System.getenv("IB_TEMPLATE_SELFTEST"))) {
+        if ("1".equals(System.getenv("TI_TEMPLATE_SELFTEST"))) {
             selftestOk();
             return;
         }
@@ -754,7 +754,7 @@ public class Main {
         window.setVisible(true);
 
         // Used by the site's tests to check this template works; safe to delete.
-        if ("1".equals(System.getenv("IB_TEMPLATE_SELFTEST"))) {
+        if ("1".equals(System.getenv("TI_TEMPLATE_SELFTEST"))) {
             after(1000, new ActionListener() {   // once the window is up
                 public void actionPerformed(ActionEvent e) {
                     try {
@@ -807,7 +807,7 @@ const CS_SELFTEST_FN = (what) => code`
     static void SelftestOk()
     {
         Console.WriteLine("template ok: WHAT");
-        string file = Environment.GetEnvironmentVariable("IB_TEMPLATE_SELFTEST_OUT");
+        string file = Environment.GetEnvironmentVariable("TI_TEMPLATE_SELFTEST_OUT");
         if (!string.IsNullOrEmpty(file)) File.WriteAllText(file, "template ok: WHAT\n");
     }
 `.replace(/WHAT/g, what);
@@ -823,7 +823,7 @@ class Program
 {
     static void Main()
     {
-        if (Environment.GetEnvironmentVariable("IB_TEMPLATE_SELFTEST") == "1")
+        if (Environment.GetEnvironmentVariable("TI_TEMPLATE_SELFTEST") == "1")
         {
             SelftestOk();
             return;
@@ -866,7 +866,7 @@ static class Program
         window.Controls.Add(button);
 
         // Used by the site's tests to check this template works; safe to delete.
-        if (Environment.GetEnvironmentVariable("IB_TEMPLATE_SELFTEST") == "1")
+        if (Environment.GetEnvironmentVariable("TI_TEMPLATE_SELFTEST") == "1")
         {
             window.Shown += (sender, e) =>
             {
@@ -895,7 +895,7 @@ static class Program
 const R_SELFTEST = (what, indent) => code`# Used by the site's tests to check this template works; safe to delete.
 selftest_ok <- function() {
   cat("template ok: WHAT\n")
-  out <- Sys.getenv("IB_TEMPLATE_SELFTEST_OUT")
+  out <- Sys.getenv("TI_TEMPLATE_SELFTEST_OUT")
   if (out != "") writeLines("template ok: WHAT", out)
 }
 `.replace(/WHAT/g, what);
@@ -904,7 +904,7 @@ const r = {
   script: {
     label: '',
     files: {
-      'main.R': R_SELFTEST('r/script') + code`if (Sys.getenv("IB_TEMPLATE_SELFTEST") == "1") {
+      'main.R': R_SELFTEST('r/script') + code`if (Sys.getenv("TI_TEMPLATE_SELFTEST") == "1") {
   selftest_ok()
   quit(status = 0)
 }
@@ -938,7 +938,7 @@ button <- tkbutton(window, text = "Click me",
                    command = function() tkconfigure(label, text = "You clicked the button"))
 tkpack(button, pady = c(0, 20))
 
-` + R_SELFTEST('r/window') + code`if (Sys.getenv("IB_TEMPLATE_SELFTEST") == "1") {
+` + R_SELFTEST('r/window') + code`if (Sys.getenv("TI_TEMPLATE_SELFTEST") == "1") {
   tcl("after", 1000, selftest_ok)                          # once the window is up
   tcl("after", 4000, function() tkdestroy(window))
 }
@@ -963,7 +963,7 @@ const GO_SELFTEST_FN = (what) => code`
 // Used by the site's tests to check this template works; safe to delete.
 func selftestOk() {
 	fmt.Println("template ok: WHAT")
-	if file := os.Getenv("IB_TEMPLATE_SELFTEST_OUT"); file != "" {
+	if file := os.Getenv("TI_TEMPLATE_SELFTEST_OUT"); file != "" {
 		ioutil.WriteFile(file, []byte("template ok: WHAT\n"), 0644)
 	}
 }
@@ -986,7 +986,7 @@ import (
 )
 
 func main() {
-	if os.Getenv("IB_TEMPLATE_SELFTEST") == "1" {
+	if os.Getenv("TI_TEMPLATE_SELFTEST") == "1" {
 		selftestOk()
 		return
 	}
@@ -1045,7 +1045,7 @@ func main() {
 	url := "http://" + listener.Addr().String() + "/"
 	fmt.Println("My App is running at " + url)
 	fmt.Println("Close this window to stop it.")
-	if os.Getenv("IB_TEMPLATE_SELFTEST") == "1" {
+	if os.Getenv("TI_TEMPLATE_SELFTEST") == "1" {
 		go selftest(url)
 	} else {
 		openBrowser(url)
@@ -1115,7 +1115,7 @@ const RUST_SELFTEST_FN = (what) => code`
 // Used by the site's tests to check this template works; safe to delete.
 fn selftest_ok() {
     println!("template ok: WHAT");
-    if let Ok(file) = std::env::var("IB_TEMPLATE_SELFTEST_OUT") {
+    if let Ok(file) = std::env::var("TI_TEMPLATE_SELFTEST_OUT") {
         std::fs::write(file, "template ok: WHAT\n").ok();
     }
 }
@@ -1128,7 +1128,7 @@ const rust = {
       'src/main.rs': code`use std::io::{self, BufRead, Write};
 
 fn main() {
-    if std::env::var("IB_TEMPLATE_SELFTEST").as_deref() == Ok("1") {
+    if std::env::var("TI_TEMPLATE_SELFTEST").as_deref() == Ok("1") {
         selftest_ok();
         return;
     }
@@ -1169,7 +1169,7 @@ fn main() {
     let url = format!("http://{}/", listener.local_addr().unwrap());
     println!("My App is running at {}", url);
     println!("Close this window to stop it.");
-    if std::env::var("IB_TEMPLATE_SELFTEST").as_deref() == Ok("1") {
+    if std::env::var("TI_TEMPLATE_SELFTEST").as_deref() == Ok("1") {
         let address = url.clone();
         thread::spawn(move || selftest(&address));
     } else {
@@ -1291,11 +1291,11 @@ pub fn main(init: std.process.Init) !void {
     const out = &stdout.interface;
 
     // Used by the site's tests to check this template works; safe to delete.
-    if (init.environ_map.get("IB_TEMPLATE_SELFTEST")) |value| {
+    if (init.environ_map.get("TI_TEMPLATE_SELFTEST")) |value| {
         if (std.mem.eql(u8, value, "1")) {
             try out.writeAll("template ok: zig/script\n");
             try out.flush();
-            if (init.environ_map.get("IB_TEMPLATE_SELFTEST_OUT")) |file| {
+            if (init.environ_map.get("TI_TEMPLATE_SELFTEST_OUT")) |file| {
                 try std.Io.Dir.cwd().writeFile(io, .{ .sub_path = file, .data = "template ok: zig/script\n" });
             }
             return;
@@ -1333,7 +1333,7 @@ const NIM_SELFTEST_FN = (what) => code`
 # Used by the site's tests to check this template works; safe to delete.
 proc selftestOk() =
   echo "template ok: WHAT"
-  let file = getEnv("IB_TEMPLATE_SELFTEST_OUT")
+  let file = getEnv("TI_TEMPLATE_SELFTEST_OUT")
   if file != "":
     writeFile(file, "template ok: WHAT\n")
 `.replace(/WHAT/g, what);
@@ -1344,7 +1344,7 @@ const nim = {
     files: {
       'main.nim': code`import os, strutils
 ` + NIM_SELFTEST_FN('nim/script') + code`
-if getEnv("IB_TEMPLATE_SELFTEST") == "1":
+if getEnv("TI_TEMPLATE_SELFTEST") == "1":
   selftestOk()
   quit(0)
 
@@ -1401,7 +1401,7 @@ let url = "http://127.0.0.1:" & $port & "/"
 echo "My App is running at ", url
 echo "Close this window to stop it."
 asyncCheck newAsyncHttpServer().serve(port, answer, "127.0.0.1")
-if getEnv("IB_TEMPLATE_SELFTEST") == "1":
+if getEnv("TI_TEMPLATE_SELFTEST") == "1":
   selftest(url).addCallback(proc () = quit(0))
 else:
   openDefaultBrowser(url)
@@ -1429,8 +1429,8 @@ const cc = {
 /* Used by the site's tests to check this template works; safe to delete. */
 static int selftest(void)
 {
-    const char *on = getenv("IB_TEMPLATE_SELFTEST");
-    const char *file = getenv("IB_TEMPLATE_SELFTEST_OUT");
+    const char *on = getenv("TI_TEMPLATE_SELFTEST");
+    const char *file = getenv("TI_TEMPLATE_SELFTEST_OUT");
     FILE *out;
     if (!on || strcmp(on, "1") != 0) return 0;
     puts("template ok: cc/script");
@@ -1475,8 +1475,8 @@ int main(void)
 // Used by the site's tests to check this template works; safe to delete.
 static bool selftest()
 {
-    const char *on = std::getenv("IB_TEMPLATE_SELFTEST");
-    const char *file = std::getenv("IB_TEMPLATE_SELFTEST_OUT");
+    const char *on = std::getenv("TI_TEMPLATE_SELFTEST");
+    const char *file = std::getenv("TI_TEMPLATE_SELFTEST_OUT");
     if (!on || std::string(on) != "1") return false;
     std::cout << "template ok: cc/cpp" << std::endl;
     if (file && *file) std::ofstream(file) << "template ok: cc/cpp\n";

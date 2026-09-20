@@ -36,7 +36,7 @@ export function revokeValues(entry) {
 export function revocationsText(entries, { now = Date.now(), serial = 0 } = {}) {
   const ms = now instanceof Date ? now.getTime() : Number(now);
   const issued = Math.floor(Math.floor(ms / 1000) / HOUR) * HOUR;
-  let out = 'ib-revocations\t' + REVOCATIONS_VERSION + '\n';
+  let out = 'ti-revocations\t' + REVOCATIONS_VERSION + '\n';
   out += 'issued\t' + rfc3339(issued) + '\n';
   out += 'expires\t' + rfc3339(issued + HOUR) + '\n';
   out += 'serial\t' + String(Math.max(0, Math.trunc(Number(serial) || 0))) + '\n';

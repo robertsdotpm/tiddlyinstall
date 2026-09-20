@@ -28,7 +28,7 @@ if (typeof WebSocket === 'undefined' || !fs.existsSync(PAGE)) {
   console.log('usage: node --experimental-websocket tests/upload-test.mjs [--page dist/index.html] [--site URL] [--out DIR]');
   process.exit(2);
 }
-const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'ib-upload-'));
+const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'ti-upload-'));
 const t = new Checker();
 const ok = t.ok.bind(t);
 
@@ -80,7 +80,7 @@ async function buildUpload(input, files) {
     }
     const id = new URLSearchParams(location.hash.slice(1)).get('job');
     for (let i = 0; i < 1200; i++) {
-      const j = await ibLocalApi.request('/api/jobs/' + id);
+      const j = await tiLocalApi.request('/api/jobs/' + id);
       if (j.status === 'done' || j.status === 'failed') {
         await new Promise((r) => setTimeout(r, 2500));   // the build page's next poll
         return Object.assign(j, { shown: document.getElementById('job-status').textContent });
@@ -94,7 +94,7 @@ async function buildUpload(input, files) {
 async function check(job, what) {
   await checkJob(t, js, job, what, 'python', OUT ? { keepDir: OUT, keepAs: what.replace(/\W+/g, '-') } : {});
   if (!job || !job.result) return;
-  const rec = await js(`ibLocalApi.request('/api/records/${job.result.record}')`);
+  const rec = await js(`tiLocalApi.request('/api/records/${job.result.record}')`);
   ok(/^source\tupload\t[0-9a-f]{64}$/m.test(rec), what + ': the record names the upload', rec);
   ok(/^install\tdefault:requirements$/m.test(rec), what + ': the install rules saw requirements.txt', rec);
   ok(/Ready/.test(job.shown || ''), what + ': the build page shows it ready', job.shown);
@@ -137,9 +137,9 @@ try {
   await check(await buildUpload('#local-folder', [APP]), 'folder');
   if (SITE) {
     await open(SITE.replace(/\/$/, '') + '/');
-    ok(!await js(`document.documentElement.classList.contains('ib-local')`), 'served: the page uses the build server');
+    ok(!await js(`document.documentElement.classList.contains('ti-local')`), 'served: the page uses the build server');
     await check(await buildUpload('#local-archive', [ZIP]), 'served zip');
-    ok(!await js(`document.documentElement.classList.contains('ib-local')`), 'served: still using the server for everything else');
+    ok(!await js(`document.documentElement.classList.contains('ti-local')`), 'served: still using the server for everything else');
     // "Signed by TiddlyInstall" can't take files from the computer.
     const refused = await js(`(async () => { const f = document.getElementById('new-form');
       location.hash = '#new'; await new Promise((r) => setTimeout(r, 200));

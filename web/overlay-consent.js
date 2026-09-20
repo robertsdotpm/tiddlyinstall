@@ -53,7 +53,7 @@ export function mountOverlayConsent() {
   box = el('div', { class: 'overlay-ask', role: 'region', 'aria-label': 'Catalogue changes found in this browser' });
   box.hidden = true;
   document.body.prepend(box);
-  window.addEventListener('ib-overlay-change', paint);
+  window.addEventListener('ti-overlay-change', paint);
   // Labels for the change list come from the catalogue's shared files, which
   // need no runtime folder unpacked.
   const ready = hasCatalog() ? baseFiles().then((f) => { files = f; }, () => {}) : Promise.resolve();

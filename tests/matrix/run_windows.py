@@ -7,8 +7,8 @@ installer/windows/README.md: /S, /log=, exit 0/2/3; launch.exe /out=;
 uninstall.exe /S (which returns at once and finishes from %TEMP%).
 
 A WINDOWS entry with a third element "profile" (the German Windows 11 VM,
-whose user is "Jörg Müller") runs from %USERPROFILE%\\ibtest instead of
-C:\\ibtest, with the paths it passes quoted: the installer then starts
+whose user is "Jörg Müller") runs from %USERPROFILE%\\titest instead of
+C:\\titest, with the paths it passes quoted: the installer then starts
 from a folder whose path has a space and non-ASCII letters, as it would
 from that user's Downloads folder.
 """
@@ -20,13 +20,13 @@ from pathlib import Path
 
 BAT = r'''@echo off
 setlocal
-set T=C:\ibtest
+set T=C:\titest
 set ID=%APPID%
 "%T%\%FILE%" /S /log=%T%\install.log
 echo @install %ERRORLEVEL%
 set A=
-if exist "C:\ib\%ID%\launch.exe" set A=C:\ib\%ID%
-if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib\%ID%\launch.exe" set A=%LOCALAPPDATA%\ib\%ID%
+if exist "C:\ti\%ID%\launch.exe" set A=C:\ti\%ID%
+if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ti\%ID%\launch.exe" set A=%LOCALAPPDATA%\ti\%ID%
 if not defined A goto left
 echo @launch
 "%A%\launch.exe" /out=%T%\out.txt
@@ -46,11 +46,11 @@ goto wait
 :left
 ping -n 3 127.0.0.1 >nul
 echo @left
-if exist "C:\ib" dir /b "C:\ib"
-if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib" dir /b "%LOCALAPPDATA%\ib"
+if exist "C:\ti" dir /b "C:\ti"
+if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ti" dir /b "%LOCALAPPDATA%\ti"
 if exist "%APPDATA%\Microsoft\Windows\Start Menu\Programs\%NAME%" echo startmenu-folder-left
 if exist "%USERPROFILE%\Start Menu\Programs\%NAME%" echo startmenu-folder-left
-reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\ib-%ID%" >nul 2>&1 && echo regkey-left
+reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\ti-%ID%" >nul 2>&1 && echo regkey-left
 echo @osdesc
 if exist "%T%\install.log" findstr /b /c:"Windows " "%T%\install.log"
 echo @planarch
@@ -62,7 +62,7 @@ for /d %%d in ("%TEMP%\~nsu*.tmp") do rd /s /q "%%d" 2>nul
 '''
 
 
-HOLDERS = "C:\\ib;%LOCALAPPDATA%\\ib"
+HOLDERS = "C:\\ti;%LOCALAPPDATA%\\ti"
 
 
 def clear_holders(host, roots=HOLDERS):
@@ -77,12 +77,12 @@ def clear_holders(host, roots=HOLDERS):
     """
     from run import sh
     here = Path(__file__).resolve().parent
-    code, _, err = sh(["scp", "-q", str(here / "holders.ps1"), f"{host}:C:/ibholders.ps1"], timeout=60)
+    code, _, err = sh(["scp", "-q", str(here / "holders.ps1"), f"{host}:C:/tiholders.ps1"], timeout=60)
     if code:
         return [f"(could not copy holders.ps1: {err.strip()[:120]})"], False
     code, out, err = sh(["ssh", host, "powershell -NoProfile -ExecutionPolicy Bypass "
-                         f'-File C:\\ibholders.ps1 -Path "{roots}" -Kill'], timeout=300)
-    sh(["ssh", host, "cmd /c del C:\\ibholders.ps1"], timeout=60)
+                         f'-File C:\\tiholders.ps1 -Path "{roots}" -Kill'], timeout=300)
+    sh(["ssh", host, "cmd /c del C:\\tiholders.ps1"], timeout=60)
     lines = [l.rstrip("\r") for l in out.splitlines() if l.strip()]
     if code or "END" not in lines:
         return lines + [f"(holders.ps1 exit {code}: {err.strip()[:120]})"], False
@@ -95,8 +95,8 @@ def appid(record):
 
 
 def in_profile(bat):
-    """BAT, run from %USERPROFILE%\\ibtest, with the paths it passes quoted."""
-    return (bat.replace("set T=C:\\ibtest", "set T=%USERPROFILE%\\ibtest")
+    """BAT, run from %USERPROFILE%\\titest, with the paths it passes quoted."""
+    return (bat.replace("set T=C:\\titest", "set T=%USERPROFILE%\\titest")
             .replace("/log=%T%\\install.log", '/log="%T%\\install.log"')
             .replace("/out=%T%\\out.txt", '/out="%T%\\out.txt"'))
 
@@ -104,8 +104,8 @@ def in_profile(bat):
 def test_dir(vm):
     """(folder for cmd, folder for scp) for a WINDOWS entry."""
     if "profile" in vm[2:]:
-        return '"%USERPROFILE%\\ibtest"', "ibtest"   # scp paths are relative to the user's home
-    return "C:\\ibtest", "C:/ibtest"
+        return '"%USERPROFILE%\\titest"', "titest"   # scp paths are relative to the user's home
+    return "C:\\titest", "C:/titest"
 
 
 def run_windows(vm, rt, mode, f, record, target):
@@ -123,7 +123,7 @@ def run_windows(vm, rt, mode, f, record, target):
         code, _, err = sh(["scp", "-q", src, f"{host}:{scp}/{dst}"], timeout=600)
         if code:
             return "fail", "scp: " + err.strip(), {}
-    run_bat = f"cmd /c call {win}\\t.bat" if "profile" in vm[2:] else "cmd /c C:\\ibtest\\t.bat"
+    run_bat = f"cmd /c call {win}\\t.bat" if "profile" in vm[2:] else "cmd /c C:\\titest\\t.bat"
     code, out, err = sh(["ssh", host, run_bat])
     sh(["ssh", host, f'cmd /c "rd /s /q {win}"'], timeout=60)
     Path(t.name).unlink()
@@ -152,8 +152,8 @@ def run_windows(vm, rt, mode, f, record, target):
         # folder keeps it undeletable for every later cell, and is not the
         # installer's doing. Kill the holders, then look again.
         held, ran = clear_holders(host)
-        code, again, _ = sh(["ssh", host, 'cmd /c "if exist C:\\ib dir /b C:\\ib & '
-                             'if defined LOCALAPPDATA if exist %LOCALAPPDATA%\\ib dir /b %LOCALAPPDATA%\\ib"'],
+        code, again, _ = sh(["ssh", host, 'cmd /c "if exist C:\\ti dir /b C:\\ti & '
+                             'if defined LOCALAPPDATA if exist %LOCALAPPDATA%\\ti dir /b %LOCALAPPDATA%\\ti"'],
                             timeout=120)
         still = again.strip()
         who = "; ".join(l for l in held if l.startswith(("holder ", "killed ", "kept ", "kill-failed ")))
@@ -170,8 +170,8 @@ def run_windows(vm, rt, mode, f, record, target):
             return judge("pass", "hello + clean uninstall (the uninstaller was still finishing at the first look)")
         # Clean up so one bad uninstall doesn't fail every later cell.
         here = Path(__file__).resolve().parent
-        sh(["scp", "-q", str(here / "clean_windows.bat"), f"{host}:C:/ibclean.bat"], timeout=60)
-        sh(["ssh", host, "cmd /c C:\\ibclean.bat"], timeout=120)
+        sh(["scp", "-q", str(here / "clean_windows.bat"), f"{host}:C:/ticlean.bat"], timeout=60)
+        sh(["ssh", host, "cmd /c C:\\ticlean.bat"], timeout=120)
         return judge("fail", (f"uninstall exit {parts.get('uninstall')}, left: {left[:200]}"
                         + (f"; held by: {who[:300]}" if who else "; nothing found holding it")
                         + ("" if ran else " (holders.ps1 did not run)")

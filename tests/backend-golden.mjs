@@ -74,7 +74,7 @@ import http from 'node:http';
 import os from 'node:os';
 import zlib from 'node:zlib';
 import crypto from 'node:crypto';
-import { readInstaller, zipEntryData, peInfo, peChecksum } from '../shared/ibfile.js';
+import { readInstaller, zipEntryData, peInfo, peChecksum } from '../shared/tifile.js';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
 const HERE = path.dirname(new URL(import.meta.url).pathname);
@@ -363,7 +363,7 @@ async function badRequests() {
     ['RLO in the name', w({ name: 'Hello \u202e txt.exe' })],
     ['C1 in the launch', w({ launch: 'run \u0085' })],
     ['LRI in the source ref', w({ source: { kind: 'github', value: 'a/b', ref: 'main\u2066' } })],
-    ['bidi in rootname', w({ rootname: 'ib\u200f' })],
+    ['bidi in rootname', w({ rootname: 'ti\u200f' })],
     ['bad rootname', w({ rootname: 'a b' })],
     ['bad package version', w({ source: { kind: 'package', value: 'requests', version: '1 0' } })],
     ['package name refused', w({ source: { kind: 'package', value: 'requests; rm -rf /' } })],
@@ -448,11 +448,11 @@ async function badRequests() {
   for (const [rt, name] of [['python', 'requests'], ['python', 'Requests'], ['node', 'cowsay'], ['rust', 'ripgrep'], ['ruby', 'rake'],
     ['go', 'golang.org%2Fx%2Fexample%2Fhello'], ['dotnet', 'dotnet-script'],
     ['zig', 'foo'], ['cobol', 'foo'], ['node', '%40types%2Fnode'], ['node', '@scope'], ['python', 'a%20b'], ['python', 'x'.repeat(101)],
-    ['python' + 'x'.repeat(20), 'a'], ['python', 'this-package-does-not-exist-ib-oracle-4711'], ['python', 'requests?os=linux']]) {
+    ['python' + 'x'.repeat(20), 'a'], ['python', 'this-package-does-not-exist-ti-oracle-4711'], ['python', 'requests?os=linux']]) {
     const r = await get(`/api/plan/name/${rt}/${name}`);
     // A plan's versions are the registry's newest: only that it is signed
     // and names a record.
-    if (r.status === 200) obs(`plan by name ${rt}/${name}`, { status: 200, signed: verifyPlan(r.text), record: /^[a-z2-7]{26}$/.test(r.headers['x-ib-record'] || '') });
+    if (r.status === 200) obs(`plan by name ${rt}/${name}`, { status: 200, signed: verifyPlan(r.text), record: /^[a-z2-7]{26}$/.test(r.headers['x-ti-record'] || '') });
     else obs(`plan by name ${rt}/${name}`, { status: r.status, body: r.text });
   }
 }
@@ -524,7 +524,7 @@ function zipView(info, hash, src) {
   // File entries by name (the record hash in a mode A .app's name masked,
   // and an inline source's archive hash in a pack's), with their Unix
   // modes. Directory entries are left out (Node's zips have them for
-  // Contents/Resources/ib/, Go's did not).
+  // Contents/Resources/ti/, Go's did not).
   const out = [];
   for (const e of info.entries) {
     let n = e.name.split(hash).join('<hash>');
@@ -672,7 +672,7 @@ async function moreJobs() {
   await job('npm scoped package', { name: '', source: { kind: 'package', value: '@angular/cli', version: '17.3.8' }, runtime: 'node', mode: 'C', platforms: ['windows'] });
   await job('crates.io package', { name: '', source: { kind: 'package', value: 'ripgrep' }, runtime: 'rust', mode: 'C', platforms: ['linux'] }, { volatile: true });
   await job('Go module', { name: '', source: { kind: 'package', value: 'golang.org/x/example/hello' }, runtime: 'go', mode: 'C', platforms: ['linux'] }, { volatile: true });
-  await job('package the registry doesn\'t know', { name: '', source: { kind: 'package', value: 'this-package-does-not-exist-ib-oracle-4711' }, runtime: 'python', mode: 'C', platforms: ['linux'] });
+  await job('package the registry doesn\'t know', { name: '', source: { kind: 'package', value: 'this-package-does-not-exist-ti-oracle-4711' }, runtime: 'python', mode: 'C', platforms: ['linux'] });
   await job('package version the registry doesn\'t know', { name: '', source: { kind: 'package', value: 'requests', version: '0.0.0.0.1' }, runtime: 'python', mode: 'C', platforms: ['linux'] });
   // GitHub and URL sources.
   await job('GitHub source', { name: 'GitHub test', source: { kind: 'github', value: 'https://github.com/octocat/Hello-World.git' }, runtime: 'python', mode: 'C', platforms: ['linux', 'macos'], launch: '{runtime} -c "print(1)"' });
@@ -699,7 +699,7 @@ async function takedown() {
   const saved = fs.existsSync(file) ? fs.readFileSync(file) : null;
   const before = (await get('/api/takedown')).text;
   // A record the server stores: a plan by name.
-  const rec = (await get('/api/plan/name/python/six')).headers['x-ib-record'];
+  const rec = (await get('/api/plan/name/python/six')).headers['x-ti-record'];
   const srcSha = /^source\tinline\t(\S+)/m.exec(sample.rec)[1];
   const ours = ['source github oracle-owner/oracle-repo', 'source package attrs', 'record ' + rec, 'sha ' + srcSha, 'sha ' + 'd'.repeat(64), 'file ' + 'e'.repeat(64)];
   const mask = (s) => s.split(rec).join('<record>').split(srcSha).join('<src>');
@@ -750,8 +750,8 @@ async function takedown() {
         issued: /^issued\t\d{4}-\d\d-\d\dT\d\d:00:00Z$/.test(head[1] || ''),
         expires: /^expires\t\d{4}-\d\d-\d\dT\d\d:00:00Z$/.test(head[2] || ''),
         serial: /^serial\t\d+$/.test(head[3] || ''),
-        signed: verifyDoc(doc, 'ib-revocations'),
-        notAPlan: !verifyDoc(doc, 'ib-plan'),
+        signed: verifyDoc(doc, 'ti-revocations'),
+        notAPlan: !verifyDoc(doc, 'ti-plan'),
       });
       const wanted = new Set(ours.map((e) => 'revoke\t' + e.split(' ').join('\t')).map(mask));
       obs('revocations: the entries added', doc.split('\n').filter((l) => l.startsWith('revoke\t')).map(mask).filter((l) => wanted.has(l)));
@@ -791,7 +791,7 @@ async function rateLimits() {
 takeLock();
 {
   const pn = await get('/api/plan/name/python/requests');
-  pub = /^backend\t(.*)$/m.exec((await get('/api/records/' + pn.headers['x-ib-record'])).text)[1];
+  pub = /^backend\t(.*)$/m.exec((await get('/api/records/' + pn.headers['x-ti-record'])).text)[1];
   if (RECORD) golden.public = pub;
   console.log(`${SERVER} (public ${pub}; data ${DATA})` + (RECORD ? ': recording' : pub === golden.public ? '' : `: not the golden public URL ${golden.public}, normalised to it`));
 }

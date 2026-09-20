@@ -22,7 +22,7 @@ export const NO_NATIVE_SOURCE = `(function () {
       return supports(a, b);
     };
   }
-  window.IB_TEST_NO_NATIVE = true;
+  window.TI_TEST_NO_NATIVE = true;
 })();`;
 
 // cdp: (method, params) => Promise, as tests/browsers/cdp.mjs gives.
@@ -33,11 +33,11 @@ export async function disableNative(cdp) {
 
 // An expression for js(): what the page sees and which paths it took.
 export const nativeState = `JSON.stringify({
-  noNative: !!window.IB_TEST_NO_NATIVE,
+  noNative: !!window.TI_TEST_NO_NATIVE,
   subtle: !!(window.crypto && crypto.subtle),
   decompress: typeof DecompressionStream !== 'undefined',
   bigint: typeof BigInt !== 'undefined',
-  hasShim: !!document.querySelector('style[data-ib-has-shim]'),
+  hasShim: !!document.querySelector('style[data-ti-has-shim]'),
 })`;
 
 // Checks with a test's ok(): in --no-native mode the natives are gone and the

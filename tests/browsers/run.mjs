@@ -13,7 +13,7 @@
 // 127.0.0.1, reaches it through `ssh -L`, and checks, from file:// (a secure
 // context, so WebCrypto is there): the page starts without errors; its
 // sections and :has()-driven form work; an installer built with no server
-// reads back with shared/ibfile.js (record and plan); "Save this page" saves a
+// reads back with shared/tifile.js (record and plan); "Save this page" saves a
 // copy that starts; the editor signs a .run with PGP (checked with gpg here)
 // and an .exe with a .pfx (checked with osslsigncode here). With a build
 // server on 127.0.0.1:8080 here, it also opens the page served through an
@@ -33,7 +33,7 @@ import { MarionetteSession } from './marionette.mjs';
 import { connectPlaywright } from './playwright.mjs';
 import { loadMachines, findMachine, freePort, Remote } from './remote.mjs';
 import { Checker, STARTED, checkSections, buildHello, checkJob, makeSignFixtures, osslVerify, gpgVerify, $text, setVal, checkBox } from './steps.mjs';
-import { readInstaller } from '../../shared/ibfile.js';
+import { readInstaller } from '../../shared/tifile.js';
 import { ensureDriver } from './drivers.mjs';
 import { writeCompat } from './compat.mjs';
 
@@ -139,15 +139,15 @@ function pick(all, usage, rand, busy = new Set()) {
 
 // dist/index.html with an error recorder first in <head> (plain ES5, so it
 // runs in any browser): WebDriver has no portable way to read page errors.
-const RECORDER = '<script>window.__ibErrors=[];window.addEventListener("error",function(e){__ibErrors.push(String(e.message||e.type)+" @"+(e.filename||"").slice(-40)+":"+(e.lineno||""))});' +
-  'window.addEventListener("unhandledrejection",function(e){var r=e.reason;__ibErrors.push("unhandled rejection: "+String(r&&(r.stack||r.message)||r).slice(0,300))});</script>';
+const RECORDER = '<script>window.__tiErrors=[];window.addEventListener("error",function(e){__tiErrors.push(String(e.message||e.type)+" @"+(e.filename||"").slice(-40)+":"+(e.lineno||""))});' +
+  'window.addEventListener("unhandledrejection",function(e){var r=e.reason;__tiErrors.push("unhandled rejection: "+String(r&&(r.stack||r.message)||r).slice(0,300))});</script>';
 
 function testPage(tmp) {
   const html = fs.readFileSync(PAGE, 'utf8');
-  if (!html.includes('data-ib-missing')) console.log('warning: the page has no startup browser check (web/browser-check.js); rebuild it with tools/build_site.py');
+  if (!html.includes('data-ti-missing')) console.log('warning: the page has no startup browser check (web/browser-check.js); rebuild it with tools/build_site.py');
   const out = html.replace(/<head>/i, '<head>\n' + RECORDER);
   const hash = crypto.createHash('sha256').update(out).digest('hex').slice(0, 12);
-  const file = path.join(tmp, `ibtest-${hash}.html`);
+  const file = path.join(tmp, `titest-${hash}.html`);
   fs.writeFileSync(file, out);
   return file;
 }
@@ -192,24 +192,24 @@ next();`;
 
 // Downloads the page starts (anchors with a blob: href and a download
 // name) are also kept in the page, so tests can read what it saved.
-const CAPTURE = `(() => { if (!window.__ibDl) { window.__ibDl = {};
+const CAPTURE = `(() => { if (!window.__tiDl) { window.__tiDl = {};
   const click = HTMLAnchorElement.prototype.click;
   HTMLAnchorElement.prototype.click = function () {
-    if (this.download && /^blob:/.test(this.href)) window.__ibDl[this.download] = fetch(this.href).then((r) => r.arrayBuffer());
+    if (this.download && /^blob:/.test(this.href)) window.__tiDl[this.download] = fetch(this.href).then((r) => r.arrayBuffer());
     return click.apply(this, arguments);
   }; } return true; })()`;
 
 async function captured(js, name, ms = 60000) {
   for (const end = Date.now() + ms; Date.now() < end; await sleep(300)) {
-    if (await js(`!!(window.__ibDl && window.__ibDl[${JSON.stringify(name)}])`)) {
-      const b64 = await js(`window.__ibDl[${JSON.stringify(name)}].then((b) => {
+    if (await js(`!!(window.__tiDl && window.__tiDl[${JSON.stringify(name)}])`)) {
+      const b64 = await js(`window.__tiDl[${JSON.stringify(name)}].then((b) => {
         let s = ''; const u = new Uint8Array(b);
         for (let i = 0; i < u.length; i += 0x1000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x1000));
         return btoa(s); })`);
       return Buffer.from(b64, 'base64');
     }
   }
-  throw new Error('the page saved no ' + name + ' (saved: ' + (await js(`Object.keys(window.__ibDl || {}).join(' ')`)) + ')');
+  throw new Error('the page saved no ' + name + ' (saved: ' + (await js(`Object.keys(window.__tiDl || {}).join(' ')`)) + ')');
 }
 
 /* ---------- capabilities ---------- */
@@ -292,10 +292,10 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
     // Which page this was: its build (the generator line names the git
     // revision it was built from) and a hash of the file.
     const gen = /<meta name="generator" content="[^,"]*, ([^,"]+), ([^"]+)">/.exec(fs.readFileSync(PAGE, 'utf8').slice(0, 4000));
-    rec.page = { rev: gen ? gen[1] : '', hash: pageName.replace(/^ibtest-|\.html$/g, '') };
+    rec.page = { rev: gen ? gen[1] : '', hash: pageName.replace(/^titest-|\.html$/g, '') };
     const have = remote.list(work);
     if (!have.includes(pageName)) {
-      for (const old of have.filter((f) => /^ibtest-.*\.html$/.test(f))) remote.removeFile(remote.dir('work', old));
+      for (const old of have.filter((f) => /^titest-.*\.html$/.test(f))) remote.removeFile(remote.dir('work', old));
       remote.put(pageFile, remote.dir('work', pageName));
     }
     const fx = await makeSignFixtures(tmp);
@@ -316,7 +316,7 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
     if (rec.protocol === 'marionette') {
       cdpPort = port;
       ssh = remote.startMarionetteBrowser(entry, {
-        port, profile: 'ibprof-' + runId, tmp, log: (d) => driverLog.push(String(d)),
+        port, profile: 'tiprof-' + runId, tmp, log: (d) => driverLog.push(String(d)),
         prefs: { ...firefoxPrefs(dl), 'browser.shell.checkDefaultBrowser': false, 'browser.startup.homepage_override.mstone': 'ignore',
           'datareporting.policy.dataSubmissionEnabled': false, 'toolkit.telemetry.reportingpolicy.firstRun': false },
       });
@@ -370,7 +370,7 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
       b = { navigate: (u) => session.navigate(u), run: (x) => session.run(x), runAsync: (x) => session.runAsync(x) };
     } else if (rec.protocol === 'cdp') {
       cdpPort = port;
-      ssh = remote.startCdpBrowser(entry, { port, profile: 'ibprof-' + runId, log: (d) => driverLog.push(String(d)) });
+      ssh = remote.startCdpBrowser(entry, { port, profile: 'tiprof-' + runId, log: (d) => driverLog.push(String(d)) });
       cdpConn = await connectCdp(`http://127.0.0.1:${port}`, { tries: 200 }).catch((e) => { throw new Error('driver: DevTools: ' + e.message + ' ' + driverLog.join('').slice(-400)); });
       await cdpConn.cdp('Runtime.enable');
       await cdpConn.cdp('Page.enable');
@@ -408,7 +408,7 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
     } else {
       throw new Error('no driver for ' + browserId + ' on ' + machine.name + (entry.notes ? ': ' + entry.notes : ''));
     }
-    pageErrors = () => js('window.__ibErrors || []');
+    pageErrors = () => js('window.__tiErrors || []');
 
     // 1. The page starts, or says what this browser lacks.
     await b.navigate(pageUrl);
@@ -416,8 +416,8 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
     detail.webcrypto = await b.runAsync(ALGOS).catch((e) => ({ error: e.message }));
     let state = null;
     for (const end = Date.now() + 120000; Date.now() < end && !state; await sleep(500)) {
-      state = await b.run(`var m = document.documentElement.getAttribute('data-ib-missing');
-        if (m && document.documentElement.getAttribute('data-ib-ready')) return { missing: m, banner: !!document.querySelector('.ib-compat-bar.ib-too-old:not([hidden])') };
+      state = await b.run(`var m = document.documentElement.getAttribute('data-ti-missing');
+        if (m && document.documentElement.getAttribute('data-ti-ready')) return { missing: m, banner: !!document.querySelector('.ti-compat-bar.ti-too-old:not([hidden])') };
         try { if (${STARTED}) return { started: true, missing: m }; } catch (e) {}
         return null;`).catch(() => null);
     }
@@ -428,20 +428,20 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
     }
     if (!state) {
       const missingFeatures = Object.entries(detail.features || {}).filter(([k, v]) => v === false && k !== 'CSS color-mix()').map(([k]) => k);
-      const errs = await b.run('return window.__ibErrors || []').catch(() => []);
+      const errs = await b.run('return window.__tiErrors || []').catch(() => []);
       t.ok(false, 'the page starts', 'no start and no browser-check verdict; errors: ' + errs.join(' | '));
       if (missingFeatures.length) return finish('unsupported', 'page did not start; the browser lacks ' + missingFeatures.join(', '));
       return finish('fail', 'the page did not start');
     }
     t.ok(state.missing === '', 'the startup check finds nothing missing', state.missing);
     // The compatibility bar shows exactly when something isn't native.
-    const bar = await waitUntil(js, `document.documentElement.getAttribute('data-ib-ready') && [document.documentElement.getAttribute('data-ib-degraded'), !!document.querySelector('.ib-compat-bar:not([hidden])')]`, 'the browser check', 30000).catch(() => null);
+    const bar = await waitUntil(js, `document.documentElement.getAttribute('data-ti-ready') && [document.documentElement.getAttribute('data-ti-degraded'), !!document.querySelector('.ti-compat-bar:not([hidden])')]`, 'the browser check', 30000).catch(() => null);
     if (bar) {
       detail.degraded = bar[0];
       t.ok(bar[1] === (bar[0] !== ''), 'the compatibility bar shows only when a feature isn\'t native', 'degraded: "' + bar[0] + '", bar shown: ' + bar[1]);
-    } else t.ok(false, 'the browser check finishes (data-ib-ready)');
+    } else t.ok(false, 'the browser check finishes (data-ti-ready)');
     t.ok((await pageErrors()).length === 0, 'the page starts without errors', (await pageErrors()).join(' | '));
-    t.ok(await js(`document.documentElement.classList.contains('ib-local')`), 'from disk, the page builds installers itself');
+    t.ok(await js(`document.documentElement.classList.contains('ti-local')`), 'from disk, the page builds installers itself');
     if (detail.webcrypto && detail.webcrypto.Ed25519 !== true) t.note('WebCrypto Ed25519', 'not supported: ' + detail.webcrypto.Ed25519 + ' (the editor offers RSA keys instead)');
 
     // 2. Navigation, and the :has()-driven form.
@@ -455,7 +455,7 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
       const ta = f.querySelector('.combo-python-script textarea.code'); return !!ta && ta.offsetParent !== null; })()`);
     t.ok(editor, 'New installer: the code editor shows for Python + script (CSS :has())');
 
-    // 3. An installer built with no server, read back with shared/ibfile.js.
+    // 3. An installer built with no server, read back with shared/tifile.js.
     const job = await buildHello(js, { runtime: 'python', mode: 'unsigned', name: 'Hello browsers', code: "print('hello from " + browserId + "')\n" });
     await checkJob(t, js, job, 'build', 'python');
 
@@ -513,7 +513,7 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
       await js(`document.getElementById('sign-go').click()`);
       const s = await waitUntil(js, `/Saved|Couldn/.test(${$text('sign-status')}) && ${$text('sign-status')}`, 'PGP signing', 180000);
       t.ok(/Saved/.test(s), 'PGP: signing says saved', s);
-      const pubName = await js(`Object.keys(window.__ibDl).find((n) => /\\.pub\\.asc$/.test(n)) || ''`);
+      const pubName = await js(`Object.keys(window.__tiDl).find((n) => /\\.pub\\.asc$/.test(n)) || ''`);
       const files = { pub: await captured(js, pubName), run: await captured(js, 'app.run'), asc: await captured(js, 'app.run.asc') };
       for (const [k, v] of Object.entries(files)) fs.writeFileSync(path.join(tmp, 'pgp.' + k), v);
       const g = gpgVerify(path.join(tmp, 'pgp.pub'), path.join(tmp, 'pgp.asc'), path.join(tmp, 'pgp.run'), path.join(tmp, 'gnupg'), spawnSync);
@@ -552,12 +552,12 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
         await b.navigate(`http://localhost:${reverse.remotePort}/`);
         let s2 = null;
         for (const end = Date.now() + 90000; Date.now() < end && !s2; await sleep(500)) {
-          s2 = await b.run(`var m = document.documentElement.getAttribute('data-ib-missing'); try { if (${STARTED}) return { m: m }; } catch (e) {} return m ? { m: m } : null;`).catch(() => null);
+          s2 = await b.run(`var m = document.documentElement.getAttribute('data-ti-missing'); try { if (${STARTED}) return { m: m }; } catch (e) {} return m ? { m: m } : null;`).catch(() => null);
         }
         t.ok(s2 && s2.m === '', 'served (http://localhost through the tunnel): the page starts, WebCrypto and all', s2 && s2.m);
         if (s2 && s2.m === '') {
           await sleep(1500);
-          t.ok(!await js(`document.documentElement.classList.contains('ib-local')`), 'served: the page uses the build server');
+          t.ok(!await js(`document.documentElement.classList.contains('ti-local')`), 'served: the page uses the build server');
         }
       } catch (e) {
         t.ok(false, 'served (http://localhost through the tunnel): the page starts', e.message);
@@ -578,7 +578,7 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
     if (revProc) revProc.kill();
     if (entry) remote.stopDrivers(entry);
     remote.remove(remote.dir('work', 'dl-' + runId));
-    if (/^(cdp|marionette)$/.test(rec.protocol)) remote.remove(remote.dir('work', 'ibprof-' + runId));
+    if (/^(cdp|marionette)$/.test(rec.protocol)) remote.remove(remote.dir('work', 'tiprof-' + runId));
     if (flag('--keep')) console.log('kept ' + tmp); else fs.rmSync(tmp, { recursive: true, force: true });
     Object.assign(detail, rec, { checks: t.checks });
     fs.mkdirSync(RESULTS, { recursive: true });
@@ -627,7 +627,7 @@ async function main() {
     forced = all.filter((p) => (!m || p.machine === m.name) && (!arg('--browser') || p.browser === arg('--browser')));
     if (!forced.length) { console.log('no such pair in tests/browsers/inventory.json (run --inventory?)'); process.exit(2); }
   }
-  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'ib-browsers-'));
+  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'ti-browsers-'));
   console.log(`seed ${seed}, ${count} run(s), ${jobs} at a time`);
   const busy = new Set();
   let started = 0, failures = 0;

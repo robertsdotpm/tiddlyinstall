@@ -49,7 +49,7 @@ function localEnv() {
     cachePath: cache,
   });
   if (arg('--mirror', '')) cat.policy.mirror_base = arg('--mirror', '');
-  const bases = { windows: 'installer/windows/out/base.exe', linux: 'installer/unix/out/ib-base.run', macos: 'installer/unix/out/ib-base-macos.zip' };
+  const bases = { windows: 'installer/windows/out/base.exe', linux: 'installer/unix/out/ti-base.run', macos: 'installer/unix/out/ti-base-macos.zip' };
   return { catalog: cat, backend: '', embedPlan: true, base: (plat) => new Uint8Array(fs.readFileSync(path.join(REPO, bases[plat]))) };
 }
 

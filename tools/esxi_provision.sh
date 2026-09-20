@@ -61,7 +61,7 @@ package_reboot_if_required: true
 packages: [$(echo $pkgs | sed 's/ /, /g')]
 runcmd:
   - [sh, -c, "command -v rc-update >/dev/null && rc-update add open-vm-tools default && rc-service open-vm-tools start; command -v systemctl >/dev/null && systemctl enable --now vmtoolsd; true"]
-final_message: "ib-test provisioned after \$UPTIME seconds"
+final_message: "ti-test provisioned after \$UPTIME seconds"
 EOF
 printf 'instance-id: %s\nlocal-hostname: %s\n' "$host-1" "$host" > "$d/meta-data"
 genisoimage -quiet -output "$d/seed.iso" -volid cidata -joliet -rock "$d/user-data" "$d/meta-data"

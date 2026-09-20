@@ -5,7 +5,7 @@
 # more use than "left: <folder>".
 #
 #   powershell -NoProfile -ExecutionPolicy Bypass -File holders.ps1 `
-#       -Path "C:\ib;%LOCALAPPDATA%\ib" [-Kill]
+#       -Path "C:\ti;%LOCALAPPDATA%\ti" [-Kill]
 #
 # One `-Path` string, folders separated by ";" and %VARIABLES% expanded
 # here, because PowerShell 2.0 (Windows XP, Vista) binds command-line
@@ -32,7 +32,7 @@
 # process's current directory, and a process sitting in a folder holds it
 # open even when the folder is empty. That was the Windows 10 leftover of
 # 2026-09-19 (design.md 11, item 19): a bare cmd.exe from an earlier SSH
-# session, still in %LOCALAPPDATA%\ib\zzot7274gpvh.
+# session, still in %LOCALAPPDATA%\ti\zzot7274gpvh.
 #
 # The Restart Manager is the authoritative source where it answers, but
 # unelevated it returns ERROR_ACCESS_DENIED for most resources, so it is
@@ -56,7 +56,7 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using System.Text;
 
-public static class IBHold {
+public static class TIHold {
   // ---- Restart Manager -------------------------------------------------
   [StructLayout(LayoutKind.Sequential)]
   public struct FILETIME { public uint dwLowDateTime; public uint dwHighDateTime; }
@@ -229,7 +229,7 @@ if ($haveNative) {
       ForEach-Object { [void]$files.Add($_.FullName) }
   }
   try {
-    $rm = [IBHold]::Who([string[]]$files.ToArray([string]))
+    $rm = [TIHold]::Who([string[]]$files.ToArray([string]))
     foreach ($k in $rm.Keys) {
       if ([int]$k -eq 0) {
         # "RmGetList 5" is ERROR_ACCESS_DENIED, which is what an unelevated
@@ -259,7 +259,7 @@ foreach ($k in @($procs.Keys)) {
   if (Under $p.ExecutablePath) { Note $k 'exe' $p.ExecutablePath }
   if ($haveNative) {
     $cd = $null
-    try { $cd = [IBHold]::CurrentDirectory([int]$k) } catch { }
+    try { $cd = [TIHold]::CurrentDirectory([int]$k) } catch { }
     if (Under $cd) { Note $k 'cwd' ($p.Name + ' in ' + $cd) }
   }
   if ($p.CommandLine) {

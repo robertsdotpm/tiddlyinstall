@@ -2,9 +2,9 @@
 # turn off what keeps a slow test VM busy. Only for the installer-test VMs
 # made by tools/esxi_provision_windows.py; the older Windows VMs keep
 # Defender and updates on, as real users have them (docs/test-vms.md).
-# Every step logs what it did and what Windows refused: C:\ibsetup\quiet.log.
+# Every step logs what it did and what Windows refused: C:\tisetup\quiet.log.
 $ErrorActionPreference = 'Continue'
-$here = 'C:\ibsetup'
+$here = 'C:\tisetup'
 Start-Transcript -Path "$here\quiet.log" -Append | Out-Null
 function Step($m) { Write-Output ("== {0:s} {1}" -f (Get-Date), $m) }
 function Reg($path, $name, $value) {
@@ -45,7 +45,7 @@ if ($server) {
 } else {
     $st = Get-MpComputerStatus
     Write-Output "  tamper protection before: $($st.IsTamperProtected)"
-    Add-MpPreference -ExclusionPath 'C:\Users', 'C:\ib', 'C:\ib*', 'C:\ibtest', 'C:\ibbtest', 'C:\ibbrowsers', 'C:\ibsetup'
+    Add-MpPreference -ExclusionPath 'C:\Users', 'C:\ti', 'C:\ti*', 'C:\titest', 'C:\tibtest', 'C:\tibrowsers', 'C:\tisetup'
     Set-MpPreference -DisableRealtimeMonitoring $true -DisableBehaviorMonitoring $true -DisableIOAVProtection $true `
         -DisableScriptScanning $true -ScanScheduleDay 8 -DisableCatchupFullScan $true -DisableCatchupQuickScan $true `
         -SignatureScheduleDay 8 -MAPSReporting 0 -SubmitSamplesConsent 2

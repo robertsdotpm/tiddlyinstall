@@ -54,7 +54,7 @@ int main(int argc, char **argv)
   int r;
   if (argc == 2 && !strcmp(argv[1], "rfc8032")) return rfc8032();
   if (argc != 3) { fprintf(stderr, "usage: test_host rfc8032 | test_host plan pubkey\n"); return 2; }
-  if (strlen(argv[2]) != 44 || ib_b64decode((unsigned char *)argv[2], 44, pk, 32)) { printf("error: bad key\n"); return 2; }
+  if (strlen(argv[2]) != 44 || ti_b64decode((unsigned char *)argv[2], 44, pk, 32)) { printf("error: bad key\n"); return 2; }
   f = fopen(argv[1], "rb");
   if (!f) { printf("error: can't open\n"); return 2; }
   fseek(f, 0, SEEK_END);
@@ -63,7 +63,7 @@ int main(int argc, char **argv)
   buf = malloc((size_t)n + 64);
   if (fread(buf + 64, 1, (size_t)n, f) != (size_t)n) return 2;
   fclose(f);
-  r = ib_plan_check(buf, (unsigned long)n, pk, &why);
-  printf("%s%s%s\n", r == IB_PLAN_OK ? "ok" : r == IB_PLAN_UNSIGNED ? "unsigned" : "bad", *why ? ": " : "", why);
+  r = ti_plan_check(buf, (unsigned long)n, pk, &why);
+  printf("%s%s%s\n", r == TI_PLAN_OK ? "ok" : r == TI_PLAN_UNSIGNED ? "unsigned" : "bad", *why ? ": " : "", why);
   return r;
 }

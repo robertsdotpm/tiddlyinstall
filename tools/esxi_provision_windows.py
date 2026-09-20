@@ -41,16 +41,16 @@ SCRIPTS = HERE / "windows-unattend"
 
 PROFILES = {
     "win10-x86": dict(
-        name="Windows 10 22H2 x86 (32-bit) - installer tests", host="ib-win10-x86",
+        name="Windows 10 22H2 x86 (32-bit) - installer tests", host="ti-win10-x86",
         arch="x86", firmware="bios", guest="windows9Guest", lang="en-US",
         admins=["x"], admin_group="Administrators", disk=64, rdp=True, image=None),
     "win10-ltsc2021": dict(
-        name="Windows 10 LTSC 2021 (64-bit) - installer tests", host="ib-win10-ltsc",
+        name="Windows 10 LTSC 2021 (64-bit) - installer tests", host="ti-win10-ltsc",
         arch="amd64", firmware="efi", guest="windows9_64Guest", lang="en-US",
         admins=["x"], admin_group="Administrators", disk=64, rdp=True,
         image="Windows 10 Enterprise LTSC 2021 Evaluation"),   # the ISO also has an N edition
     "win11-ltsc2024": dict(
-        name="Windows 11 IoT Enterprise LTSC 2024 (64-bit) - installer tests", host="ib-win11-ltsc",
+        name="Windows 11 IoT Enterprise LTSC 2024 (64-bit) - installer tests", host="ti-win11-ltsc",
         arch="amd64", firmware="efi", guest="windows11_64Guest", lang="en-US",
         admins=["x"], admin_group="Administrators", disk=64, rdp=True,
         # The evaluation ISO carries exactly one image, and this is its name
@@ -58,14 +58,14 @@ PROFILES = {
         # standalone host, so setup's hardware checks are bypassed.
         image="Windows 11 IoT Enterprise LTSC 2024 Evaluation", bypass=True),
     "win11-de": dict(
-        name="Windows 11 25H2 German (Jörg Müller) - installer tests", host="ib-win11-de",
+        name="Windows 11 25H2 German (Jörg Müller) - installer tests", host="ti-win11-de",
         arch="amd64", firmware="efi", guest="windows11_64Guest", lang="de-DE",
         # Setup's own account creation turns "ö" into "?" and fails (0x8007089A,
         # invalid user name), so setup.ps1 makes this one (later_admins).
         admins=["x"], later_admins=["Jörg Müller"], admin_group="Administratoren", disk=64, rdp=True,
         image=None, bypass=True),
     "server2025-core": dict(
-        name="Windows Server 2025 Core - installer tests", host="ib-srv2025core",
+        name="Windows Server 2025 Core - installer tests", host="ti-srv2025core",
         arch="amd64", firmware="efi", guest="windows2019srvNext_64Guest", lang="en-US",
         admins=["x"], admin_group="Administrators", disk=40, rdp=False,
         image="Windows Server 2025 SERVERSTANDARDCORE"),   # Standard, no Desktop Experience
@@ -165,8 +165,8 @@ def answer_file(p, password):
           </LocalAccount>
 """ for u in p["admins"])
     first = [
-        r"cmd.exe /c for %d in (D E F G H I J K) do @if exist %d:\ibsetup\setup.ps1 xcopy /e /i /y %d:\ibsetup C:\ibsetup",
-        r"powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\ibsetup\setup.ps1",
+        r"cmd.exe /c for %d in (D E F G H I J K) do @if exist %d:\tisetup\setup.ps1 xcopy /e /i /y %d:\tisetup C:\tisetup",
+        r"powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\tisetup\setup.ps1",
     ]
     oobe = comp("Microsoft-Windows-International-Core", a, intl)
     oobe += comp("Microsoft-Windows-Shell-Setup", a, f"""      <UserAccounts>
@@ -235,19 +235,19 @@ def upload(ds, local, remote):
 def build_seed(work, p, password):
     d = work / "seed"
     shutil.rmtree(d, ignore_errors=True)
-    (d / "ibsetup").mkdir(parents=True)
+    (d / "tisetup").mkdir(parents=True)
     for f in ("setup.ps1", "update.ps1", "quiet.ps1"):
-        (d / "ibsetup" / f).write_bytes((SCRIPTS / f).read_bytes().replace(b"\r\n", b"\n").replace(b"\n", b"\r\n"))
+        (d / "tisetup" / f).write_bytes((SCRIPTS / f).read_bytes().replace(b"\r\n", b"\n").replace(b"\n", b"\r\n"))
     keys = "".join(k.read_text().strip() + "\r\n" for k in sorted(Path.home().glob(".ssh/*.pub")))
-    (d / "ibsetup" / "keys.txt").write_text(keys, newline="")
+    (d / "tisetup" / "keys.txt").write_text(keys, newline="")
     cfg = {"host": p["host"], "rdp": p["rdp"], "users": p["admins"], "later_admins": p.get("later_admins", [])}
     if cfg["later_admins"]:
         # The same encoding as the answer file's; setup.ps1 deletes it once used.
         cfg["pw"] = pw(password, "")
-    (d / "ibsetup" / "config.json").write_text(json.dumps(cfg, ensure_ascii=False), encoding="utf-8")
+    (d / "tisetup" / "config.json").write_text(json.dumps(cfg, ensure_ascii=False), encoding="utf-8")
     (d / "autounattend.xml").write_text(answer_file(p, password), encoding="utf-8")
     iso = work / "unattend.iso"
-    run(["genisoimage", "-quiet", "-output", str(iso), "-volid", "IBSETUP", "-joliet", "-rock", str(d)])
+    run(["genisoimage", "-quiet", "-output", str(iso), "-volid", "TISETUP", "-joliet", "-rock", str(d)])
     shutil.rmtree(d)   # the answer file holds the password; only the ISO is kept, until it's uploaded
     return iso
 

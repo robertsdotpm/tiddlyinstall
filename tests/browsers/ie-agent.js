@@ -9,7 +9,7 @@
 //   NAV <url>        navigate, wait for readyState 4     -> OK <json info>
 //   EVAL <code>      run <code> (newlines sent as \x01, ASCII only) in the
 //                    page as a <script>; the code sets
-//                    <html data-ibt="...">, which is returned -> R <string>
+//                    <html data-ti-out="...">, which is returned -> R <string>
 //   DOM              what's on the page, read over COM (works when the
 //                    page's scripts don't run)         -> OK <json>
 //   SHOT <path>      (unused: no desktop in an SSH session)
@@ -75,15 +75,15 @@ function dom() {
   var d = ie.Document, r = {}, h = d.documentElement;
   r.title = String(d.title);
   r.documentMode = d.documentMode;
-  r.missing = h.getAttribute('data-ib-missing');
-  r.degraded = h.getAttribute('data-ib-degraded');
-  r.ready = h.getAttribute('data-ib-ready');
+  r.missing = h.getAttribute('data-ti-missing');
+  r.degraded = h.getAttribute('data-ti-degraded');
+  r.ready = h.getAttribute('data-ti-ready');
   r.htmlClass = String(h.className);
   var bar = null;
-  try { bar = d.querySelector ? d.querySelector('.ib-compat-bar') : null; } catch (e) { bar = null; }
+  try { bar = d.querySelector ? d.querySelector('.ti-compat-bar') : null; } catch (e) { bar = null; }
   if (!bar) {
     var divs = d.getElementsByTagName('div');
-    for (var i = 0; i < divs.length; i++) if (/\bib-compat-bar\b/.test(divs[i].className)) { bar = divs[i]; break; }
+    for (var i = 0; i < divs.length; i++) if (/\bti-compat-bar\b/.test(divs[i].className)) { bar = divs[i]; break; }
   }
   r.bar = bar ? { text: String(bar.innerText), className: String(bar.className), shown: bar.offsetHeight > 0 } : null;
   // What a person sees: the visible text, and which sections show.
@@ -97,19 +97,19 @@ function dom() {
   r.sections = shown;
   // Colours of the body text as IE computes them (currentStyle: IE6+).
   try { r.colors = { body: String(body.currentStyle.color) + ' on ' + String(body.currentStyle.backgroundColor) }; } catch (e) { r.colors = null; }
-  r.errors = h.getAttribute('data-ib-errors');
+  r.errors = h.getAttribute('data-ti-errors');
   return r;
 }
 
 function evalIn(code) {
   var d = ie.Document, h = d.documentElement;
-  h.removeAttribute('data-ibt');
+  h.removeAttribute('data-ti-out');
   var s = d.createElement('script');
   s.text = code;
   (d.body || h).appendChild(s);
-  var v = h.getAttribute('data-ibt');
+  var v = h.getAttribute('data-ti-out');
   try { s.parentNode.removeChild(s); } catch (e) { /* gone with a navigation */ }
-  h.removeAttribute('data-ibt');
+  h.removeAttribute('data-ti-out');
   return v === null || v === undefined ? 'null' : String(v);
 }
 

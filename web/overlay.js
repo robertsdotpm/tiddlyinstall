@@ -1,11 +1,11 @@
 // Catalogue changes kept in this browser (plan.md section 1.11, "The runtime
 // catalogue editor"): an overlay of small changes on top of the catalogue
-// catalogue built into the page (#ib-catalog and its folders), never a copy
+// catalogue built into the page (#ti-catalog and its folders), never a copy
 // of it.
 //
 // The overlay, as stored and as exported:
 //
-//   { "ib-catalog-overlay": 1,
+//   { "ti-catalog-overlay": 1,
 //     "changes": [
 //       { "op": "replace", "path": ["python/releases.json", {url, version, os, arch, variant, format, kind}],
 //         "value": {...the whole release...}, "was": "<hash of the built-in release>" },
@@ -37,15 +37,15 @@
 // saved TiddlyInstall would build with. Until answered they are `pending`,
 // out of `changes` and so out of every build and preview; the answer is kept
 // in sessionStorage (SESSION_KEY), so it lasts for the tab and no longer.
-// Changes made here, and changes baked into the page file itself (#ib-overlay,
+// Changes made here, and changes baked into the page file itself (#ti-overlay,
 // "Save this page"), are the person's own and need no answer.
 import { loadCatalogFiles, runtimesSummary, openCatalog, loadRuntimes, readChunk, SPLIT_FORMAT } from '../shared/resolve.js';
 
-export const FORMAT = 'ib-catalog-overlay';
-const KEY = 'ib.catalog.overlay';
-const SESSION_KEY = 'ib.catalog.overlay.session';
+export const FORMAT = 'ti-catalog-overlay';
+const KEY = 'ti.catalog.overlay';
+const SESSION_KEY = 'ti.catalog.overlay.session';
 const STORE_LS_MAX = 256 * 1024;       // characters kept in localStorage
-const IDB_NAME = 'ib-catalog-overlay';
+const IDB_NAME = 'ti-catalog-overlay';
 export const IMPORT_MAX = 8 * 1024 * 1024;
 const VALUE_MAX = 256 * 1024;          // one change's value, as JSON
 export const MAX_CHANGES = 5000;
@@ -229,10 +229,10 @@ const strOrList = (v) => v === null || v === undefined || typeof v === 'string' 
 const listOf = (v, pred) => Array.isArray(v) && v.every(pred);
 const planText = (p, field, s) => { if (typeof s === 'string' && badChar(s)) p.err(field, 'has control characters or a line break'); };
 
-const RELEASE_KEYS = new Set(['version', 'os', 'arch', 'kind', 'format', 'variant', 'libc', 'url', 'mirrors', 'size', 'min_os', 'ib_sha256', 'ib_local', 'checksum', 'parts']);
+const RELEASE_KEYS = new Set(['version', 'os', 'arch', 'kind', 'format', 'variant', 'libc', 'url', 'mirrors', 'size', 'min_os', 'ti_sha256', 'ti_local', 'checksum', 'parts']);
 // A release downloaded in several files (Windows Python's MSIs): each part
 // is a download of its own, checked like the release's own.
-const PART_KEYS = new Set(['name', 'url', 'mirrors', 'size', 'ib_sha256', 'ib_local', 'checksum']);
+const PART_KEYS = new Set(['name', 'url', 'mirrors', 'size', 'ti_sha256', 'ti_local', 'checksum']);
 export const OSES = ['windows', 'macos', 'linux', 'aix', 'dragonfly', 'freebsd', 'illumos', 'netbsd', 'openbsd', 'plan9', 'solaris'];
 
 function checkRelease(r, p) {
@@ -256,12 +256,12 @@ function checkRelease(r, p) {
       else if (m === r.url || r.mirrors.indexOf(m) < i) p.warn('mirrors.' + i, m === r.url ? 'the same as the download URL, so plans skip it here' : 'listed already, so plans skip it here');
     });
   }
-  if (r.ib_sha256 !== undefined && r.ib_sha256 !== '' && !(typeof r.ib_sha256 === 'string' && SHA_RE.test(r.ib_sha256))) {
-    p.err('ib_sha256', 'a SHA-256 is 64 hex characters (0-9, a-f)');
+  if (r.ti_sha256 !== undefined && r.ti_sha256 !== '' && !(typeof r.ti_sha256 === 'string' && SHA_RE.test(r.ti_sha256))) {
+    p.err('ti_sha256', 'a SHA-256 is 64 hex characters (0-9, a-f)');
   }
-  if (!r.ib_sha256) p.warn('ib_sha256', 'with no SHA-256 the resolver never picks this release');
+  if (!r.ti_sha256) p.warn('ti_sha256', 'with no SHA-256 the resolver never picks this release');
   if (r.size !== undefined && !(Number.isSafeInteger(r.size) && r.size >= 0)) p.err('size', 'a whole number of bytes');
-  if (r.ib_local !== undefined && (typeof r.ib_local !== 'string' || r.ib_local.includes('..') || badChar(r.ib_local))) p.err('ib_local', 'a relative path');
+  if (r.ti_local !== undefined && (typeof r.ti_local !== 'string' || r.ti_local.includes('..') || badChar(r.ti_local))) p.err('ti_local', 'a relative path');
   if (r.parts !== undefined) checkParts(r.parts, p);
   checkStrings(r, p, '');
 }
@@ -280,9 +280,9 @@ function checkParts(parts, p) {
       if (!Array.isArray(q.mirrors)) p.err(f + '.mirrors', 'a list of URLs');
       else q.mirrors.forEach((m, j) => { const e = urlError(m); if (e) p.err(f + '.mirrors.' + j, e); });
     }
-    if (q.ib_sha256 !== undefined && q.ib_sha256 !== '' && !(typeof q.ib_sha256 === 'string' && SHA_RE.test(q.ib_sha256))) p.err(f + '.ib_sha256', 'a SHA-256 is 64 hex characters (0-9, a-f)');
+    if (q.ti_sha256 !== undefined && q.ti_sha256 !== '' && !(typeof q.ti_sha256 === 'string' && SHA_RE.test(q.ti_sha256))) p.err(f + '.ti_sha256', 'a SHA-256 is 64 hex characters (0-9, a-f)');
     if (q.size !== undefined && !(Number.isSafeInteger(q.size) && q.size >= 0)) p.err(f + '.size', 'a whole number of bytes');
-    if (q.ib_local !== undefined && (typeof q.ib_local !== 'string' || q.ib_local.includes('..') || badChar(q.ib_local))) p.err(f + '.ib_local', 'a relative path');
+    if (q.ti_local !== undefined && (typeof q.ti_local !== 'string' || q.ti_local.includes('..') || badChar(q.ti_local))) p.err(f + '.ti_local', 'a relative path');
   });
 }
 
@@ -543,10 +543,10 @@ export function applyOverlay(files, changes) {
 
 // The page carries its catalogue split by folder (tools/build_site.py;
 // docs/format.md section 6), so only what's used is unpacked:
-//   #ib-catalog      the index, JSON: the shared files (policy.json,
+//   #ti-catalog      the index, JSON: the shared files (policy.json,
 //                    os_versions.json, compilers_min_os.json), the folders
 //                    with their release counts, and the runtimes summary
-//   #ib-cat-FOLDER   one folder's files, gzipped, base64
+//   #ti-cat-FOLDER   one folder's files, gzipped, base64
 function block(id) {
   const el = typeof document !== 'undefined' && document.getElementById(id);
   return el && !el.dataset.placeholder ? el.textContent : null;
@@ -562,11 +562,11 @@ function blockBytes(id) {
 }
 
 let index;
-// The catalogue's index (#ib-catalog), parsed once; null if the page has
+// The catalogue's index (#ti-catalog), parsed once; null if the page has
 // none. Throws if it is there but unreadable.
 export function catalogIndex() {
   if (index === undefined) {
-    const t = block('ib-catalog');
+    const t = block('ti-catalog');
     if (t == null) index = null;
     else {
       let ix;
@@ -579,7 +579,7 @@ export function catalogIndex() {
   return index;
 }
 
-export function hasCatalog() { return block('ib-catalog') != null; }
+export function hasCatalog() { return block('ti-catalog') != null; }
 
 // The folders the page's catalogue has, and each one's release count.
 export function catalogFolders() {
@@ -616,7 +616,7 @@ export async function ensureFolders(folders) {
     let p = pendingFolders.get(f);
     if (!p) {
       p = (async () => {
-        const bytes = blockBytes('ib-cat-' + f);
+        const bytes = blockBytes('ti-cat-' + f);
         if (!bytes) throw new Error('the catalogue in this page has no ' + f + ' folder');
         Object.assign(files, await readChunk(bytes, f));
         loadedFolders.add(f);
@@ -630,7 +630,7 @@ export async function ensureFolders(folders) {
 }
 
 export const folderLoaded = (f) => loadedFolders.has(f);
-// The folders unpacked so far (tests read it: ibLocalApi.unpacked()).
+// The folders unpacked so far (tests read it: tiLocalApi.unpacked()).
 export const unpackedFolders = () => [...loadedFolders].sort();
 
 // The folder a runtime's files are in (python2's are python's).
@@ -701,7 +701,7 @@ const state = {
   storage: 'ok',        // ok | memory (storage blocked) | error
   storageWhy: '',
   where: '',            // localStorage | indexeddb
-  from: '',             // '' | 'stored' | 'page' (adopted from the page's #ib-overlay)
+  from: '',             // '' | 'stored' | 'page' (adopted from the page's #ti-overlay)
   version: 0,
 };
 
@@ -827,12 +827,12 @@ async function writeStored(changes) {
 function emit() {
   state.version++;
   catalogCache = null;
-  try { window.dispatchEvent(new CustomEvent('ib-overlay-change', { detail: { count: state.changes.length } })); } catch (e) { /* not a browser */ }
+  try { window.dispatchEvent(new CustomEvent('ti-overlay-change', { detail: { count: state.changes.length } })); } catch (e) { /* not a browser */ }
 }
 
-// The overlay built into the page by "Save this page" (#ib-overlay), if any.
+// The overlay built into the page by "Save this page" (#ti-overlay), if any.
 export function pageOverlay() {
-  const t = block('ib-overlay');
+  const t = block('ti-overlay');
   if (!t || t.trim() === '' || t.trim() === 'null') return null;
   try { return parseOverlay(t); } catch (e) { return { changes: [], rejected: [{ index: -1, why: e.message }] }; }
 }
@@ -991,7 +991,7 @@ export function effectiveCatalog() {
 }
 
 // GET /api/catalog/runtimes for the changed catalogue: the page's summary
-// (built in, #ib-catalog) with the entries of the runtimes the changes can
+// (built in, #ti-catalog) with the entries of the runtimes the changes can
 // affect worked out again.
 export async function effectiveSummary() {
   const ix = catalogIndex();
@@ -1015,12 +1015,12 @@ export async function effectiveSummary() {
 
 /* ---------- "Save this page" with the changes inside ---------- */
 
-const OVERLAY_BLOCK = /(<script type="application\/json" id="ib-overlay"[^>]*>)[\s\S]*?(<\/script>)/;
+const OVERLAY_BLOCK = /(<script type="application\/json" id="ti-overlay"[^>]*>)[\s\S]*?(<\/script>)/;
 
-// The page's HTML with `changes` as its built-in overlay (#ib-overlay).
+// The page's HTML with `changes` as its built-in overlay (#ti-overlay).
 // The JSON can't end the script early: every < is written as \u003c.
 export function bakeOverlay(html, changes) {
   const json = JSON.stringify(overlayDoc(changes)).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
   if (OVERLAY_BLOCK.test(html)) return html.replace(OVERLAY_BLOCK, (m, a, b) => a.replace(/\sdata-placeholder="[^"]*"/, '') + '\n' + json + '\n' + b);
-  return html.replace(/<script type="module">/, '<script type="application/json" id="ib-overlay">\n' + json + '\n</script>\n  <script type="module">');
+  return html.replace(/<script type="module">/, '<script type="application/json" id="ti-overlay">\n' + json + '\n</script>\n  <script type="module">');
 }

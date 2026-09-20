@@ -7,7 +7,7 @@ const AT = Date.parse('2026-09-20T11:02:07Z');
 
 test('the header is the hour, not the minute', () => {
   const head = revocationsText(null, { now: AT, serial: 4711 }).split('\n').slice(0, 4);
-  assert.deepEqual(head, ['ib-revocations\t1', 'issued\t2026-09-20T11:00:00Z', 'expires\t2026-09-20T12:00:00Z', 'serial\t4711']);
+  assert.deepEqual(head, ['ti-revocations\t1', 'issued\t2026-09-20T11:00:00Z', 'expires\t2026-09-20T12:00:00Z', 'serial\t4711']);
   // Every moment in one hour gives the same bytes, so the signature is stable.
   assert.equal(revocationsText(null, { now: AT }), revocationsText(null, { now: AT + 55 * 60 * 1000 }));
   assert.notEqual(revocationsText(null, { now: AT }), revocationsText(null, { now: AT + HOUR * 1000 }));

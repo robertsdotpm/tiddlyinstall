@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Write tests/fixtures.js: small files made by Python's own tarfile and
 zipfile (and pefile for the PE checksum, if installed), so the browser code
-in shared/ibfile.js is checked against independent implementations.
+in shared/tifile.js is checked against independent implementations.
 
     python3 tests/make_fixtures.py
 """
@@ -163,7 +163,7 @@ def main():
     pe, off = make_pe()
     csum, how = pe_checksum(pe, off)
     pe_icon, grp_id, ov_len = make_pe_with_icon()
-    rec = "ib-record\t1\nname\tHello\n"
+    rec = "ti-record\t1\nname\tHello\n"
     fx = {
         "pe": b64(pe),
         "peChecksumOff": off,

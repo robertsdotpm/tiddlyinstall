@@ -6,8 +6,8 @@
 //   node --import ./tests/no-native.mjs tests/sign-test.mjs
 //
 // crypto.getRandomValues stays: every browser the page supports has it.
-globalThis.IB_PURE_JS = true;
-globalThis.IB_NO_NATIVE = true;
+globalThis.TI_PURE_JS = true;
+globalThis.TI_NO_NATIVE = true;
 delete globalThis.CompressionStream;
 delete globalThis.DecompressionStream;
 Object.defineProperty(globalThis.crypto, 'subtle', { get() { return undefined; }, configurable: true });

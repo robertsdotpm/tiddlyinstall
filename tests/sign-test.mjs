@@ -9,7 +9,7 @@
 //        SSL.com's sandbox; credentials from the environment, see below)
 //
 // Needs Node 20+, openssl and gpg; osslsigncode (on PATH or in
-// ~/.local/opt/ib-tools) is used when present. --no-network skips
+// ~/.local/opt/ti-tools) is used when present. --no-network skips
 // the RFC 3161 timestamp tests, which call DigiCert's and Sectigo's TSAs;
 // --relay also sends one through a running server's POST /api/tsa.
 import { execFileSync, spawnSync } from 'node:child_process';
@@ -23,7 +23,7 @@ import * as der from '../web/lib/der.js';
 import { openPfx } from '../web/lib/pkcs12.js';
 import * as ac from '../web/lib/authenticode.js';
 import { parseCertBundle } from '../web/lib/x509.js';
-import { readInstaller, writeInstaller, newRecordText, recordHash } from '../shared/ibfile.js';
+import { readInstaller, writeInstaller, newRecordText, recordHash } from '../shared/tifile.js';
 import * as pgp from '../web/lib/pgp.js';
 import * as X from '../web/lib/cryptox.js';
 import * as SS from '../web/sign-services.js';
@@ -37,7 +37,7 @@ const RELAY = process.argv.includes('--relay') ? process.argv[process.argv.index
 // Opt-in only: --sslcom-sandbox calls SSL.com's sandbox for real. Off by
 // default so a plain test run never touches somebody else's service.
 const SSLCOM_SANDBOX = process.argv.includes('--sslcom-sandbox');
-const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'ib-sign-test-'));
+const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'ti-sign-test-'));
 const PW = 'test-' + Math.random().toString(36).slice(2);   // throwaway, for throwaway keys
 
 let passed = 0, failed = 0, skipped = 0;
@@ -63,7 +63,7 @@ function which(name, extra = []) {
   }
   return null;
 }
-const OSSL = which('osslsigncode', [path.join(os.homedir(), '.local/opt/ib-tools/root/usr/bin')]);
+const OSSL = which('osslsigncode', [path.join(os.homedir(), '.local/opt/ti-tools/root/usr/bin')]);
 
 /* ---------- keys ---------- */
 
@@ -154,7 +154,7 @@ const hex = (u8) => Buffer.from(u8).toString('hex');
 
 // A Linux .run: the Linux base when built, else a stand-in script.
 async function withRunFile() {
-  const base = path.join(REPO, 'installer/unix/out/ib-base.run');
+  const base = path.join(REPO, 'installer/unix/out/ti-base.run');
   const bytes = fs.existsSync(base) ? read(base) : new TextEncoder().encode('#!/bin/sh\necho stand-in\nexit 0\n');
   const info = await readInstaller(bytes, 'x.run');
   return writeInstaller(info, { record: RECORD, plan: '', pack: [] });
@@ -167,8 +167,8 @@ async function checkFile(name, file, caFile, certFile, { record = true } = {}) {
   opensslCheck(file, certFile, name);
   if (record) {
     const info = await readInstaller(read(file), 'x.exe');
-    // shared/ibfile.js is also the build server's reader (server/).
-    ok(info.signed && info.record === RECORD, name + ': shared/ibfile.js still reads the record');
+    // shared/tifile.js is also the build server's reader (server/).
+    ok(info.signed && info.record === RECORD, name + ': shared/tifile.js still reads the record');
   }
   return v;
 }
@@ -628,7 +628,7 @@ await run('signing services', async () => {
       const before = relayed.length;
       const smuggle = await fetch(relayOrigin + '/api/sign/azurets', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-IB-Sign-Auth': 'Bearer ' + CREDS.azurets.accessToken },
+        headers: { 'Content-Type': 'application/json', 'X-TI-Sign-Auth': 'Bearer ' + CREDS.azurets.accessToken },
         body: JSON.stringify({ url: 'https://evil.example.com/steal', method: 'POST', body: {} }),
       });
       const why = await smuggle.json();

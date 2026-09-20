@@ -228,7 +228,7 @@ revocations();
 function revocations() {
   let bad = 0;
   const expect = (cond, what) => { if (!cond) { bad++; console.log('MISMATCH revocations: ' + what); } };
-  const app = { recordHash: 'y'.repeat(26), name: 'A', project: 'a', runtime: 'python', select: 'newest', platforms: ['windows'], root: 'user', rootName: 'ib' };
+  const app = { recordHash: 'y'.repeat(26), name: 'A', project: 'a', runtime: 'python', select: 'newest', platforms: ['windows'], root: 'user', rootName: 'ti' };
   const shasOf = (plan) => plan.split('\n').filter((l) => l.startsWith('file\t')).map((l) => l.split('\t')[3]);
   const versions = (plan) => plan.split('\n').filter((l) => l.startsWith('runtime\t')).map((l) => l.split('\t')[2]);
   const plain = R.resolve(cat, app);
@@ -288,7 +288,7 @@ function revocations() {
 function freshness() {
   let bad = 0;
   const expect = (cond, what) => { if (!cond) { bad++; console.log('MISMATCH freshness: ' + what); } };
-  const app = { recordHash: 'x'.repeat(26), name: 'A', project: 'a', runtime: 'python', select: 'newest', platforms: ['linux'], root: 'user', rootName: 'ib' };
+  const app = { recordHash: 'x'.repeat(26), name: 'A', project: 'a', runtime: 'python', select: 'newest', platforms: ['linux'], root: 'user', rootName: 'ti' };
   const plain = R.resolve(cat, app);
   expect(!/^(signed|maxage)\t/m.test(plain), 'a plan resolved with no moment has signed/maxage');
   const at = new Date(Date.UTC(2026, 8, 20, 11, 2, 7));
@@ -297,7 +297,7 @@ function freshness() {
   // the same bytes: the page and the server agree whichever they pass.
   for (const [what, v] of [['a Date', at], ['milliseconds', at.getTime()], ['the text', '2026-09-20T11:02:07Z']]) {
     const got = R.resolve(cat, Object.assign({}, app, { signedAt: v }));
-    expect(got === plain.replace('rootname\tib\n', 'rootname\tib\n' + two), 'signedAt as ' + what + ' gives other bytes');
+    expect(got === plain.replace('rootname\tti\n', 'rootname\tti\n' + two), 'signedAt as ' + what + ' gives other bytes');
   }
   // Nothing else is a moment, and the lines come as a pair.
   for (const v of ['', 'yesterday', 0 / 0, {}, '2026-09-20 11:02:07']) {

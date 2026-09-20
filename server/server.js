@@ -3,7 +3,7 @@
 // the HTTP API (docs/api.md), the BullMQ workers, and the one-file site.
 // It began as a port of the Go server (server/cmd/ibserver, retired
 // 2026-09-19) on the JavaScript core the browser runs too: shared/resolve.js,
-// shared/builder.js, shared/ibfile.js, shared/icon.js, and keeps that server's flags,
+// shared/builder.js, shared/tifile.js, shared/icon.js, and keeps that server's flags,
 // URLs, JSON, data folder layout and Redis keys.
 //
 //   node server/server.js -addr :8080 -redis 127.0.0.1:6390 -public http://10.0.1.76:8080
@@ -199,8 +199,8 @@ export class Server {
   async init() {
     const o = this.o;
     // resedit (vendor/, MIT) edits Windows icons in shared/icon.js; the page loads
-    // it as a classic script that sets globalThis.__IB_RESEDIT.
-    if (!globalThis.__IB_RESEDIT) await import(pathToFileURL(path.join(REPO, 'vendor', 'resedit-bundle.js')).href);
+    // it as a classic script that sets globalThis.__TI_RESEDIT.
+    if (!globalThis.__TI_RESEDIT) await import(pathToFileURL(path.join(REPO, 'vendor', 'resedit-bundle.js')).href);
     this.cat = loadCatalog({ dir: o.catalog, policyPath: o.policy, localRoot: o.local, cachePath: path.join(o.data, 'sha-cache.json') });
     if (o.mirror !== '') this.cat.policy.mirror_base = o.mirror;
     if (o['mirror-last']) this.cat.policy.mirror_first = false;
@@ -302,7 +302,7 @@ export class Server {
         const p = decodePath(rawPath) ?? rawPath;
         // Status polls stay out of the log (a status page reloads itself
         // every 3 s); its last view, with the downloads, is logged.
-        if (!p.startsWith('/api/jobs/') && p !== '/api/health' && !res.ibQuiet) {
+        if (!p.startsWith('/api/jobs/') && p !== '/api/health' && !res.tiQuiet) {
           this.log(`${clientIP(req)} ${req.method} ${p} ${fmtDur(Date.now() - start)}`);
         }
       });
@@ -512,7 +512,7 @@ export class Server {
       return res.end(missingJobPage());
     }
     const v = await this.jobView(j);
-    if (v.status === 'queued' || v.status === 'running') res.ibQuiet = true;
+    if (v.status === 'queued' || v.status === 'running') res.tiQuiet = true;
     res.writeHead(200, PAGE_HEADERS);
     res.end(statusPage(v, j.request || null));
   }
@@ -603,7 +603,7 @@ export class Server {
       if (e.noPackage) return apiError(res, 404, 'no_such_package', e.message);
       return apiError(res, 502, 'resolve_failed', e.message);
     }
-    res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store', 'X-IB-Record': hash });
+    res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store', 'X-TI-Record': hash });
     res.end(plan);
   }
 
@@ -724,7 +724,7 @@ export class Server {
   }
 
   async base(req, res, os_) {
-    const files = { windows: ['windows/out/base.exe', 'base.exe'], linux: ['unix/out/ib-base.run', 'ib-base.run'], macos: ['unix/out/ib-base-macos.zip', 'ib-base-macos.zip'] };
+    const files = { windows: ['windows/out/base.exe', 'base.exe'], linux: ['unix/out/ti-base.run', 'ti-base.run'], macos: ['unix/out/ti-base-macos.zip', 'ti-base-macos.zip'] };
     const f = Object.hasOwn(files, os_) ? files[os_] : null;
     if (!f) return notFound(res);
     return serveFile(req, res, path.join(this.bases, f[0]), { 'Content-Disposition': 'attachment; filename=' + goQuote(f[1]), 'Content-Type': 'application/octet-stream' });

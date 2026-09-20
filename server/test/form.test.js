@@ -4,7 +4,7 @@
 // (POST /submit, GET /status/<id>, GET /classic). The server part needs
 // Redis like server.test.js, on a database of its own claimed with
 // helpers.js claimRedisDb (a fixed number could not keep two concurrent
-// runs apart); IB_TEST_FORM_REDIS_DB pins one.
+// runs apart); TI_TEST_FORM_REDIS_DB pins one.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -20,11 +20,11 @@ import { esc, statusPage, classicPage, refusedPage, page } from '../lib/pages.js
 import { jobFromForm, postedForm, TEMPLATE_FILES, ENTRY_DEFAULTS, BUILD_DEFAULTS, parseSource,
   OFFLINE_TARGETS, OFFLINE_PICKER_FIELD, offlineField, offlineSizeMb, PACK_MAX_MB, PACK_WARN_MB } from '../../shared/form-job.js';
 import { TEMPLATES, templateLaunch } from '../../shared/templates.js';
-import { readInstaller, recordHash } from '../../shared/ibfile.js';
+import { readInstaller, recordHash } from '../../shared/tifile.js';
 import { haveCatalog, haveBases, tmpDir, claimRedisDb, REPO } from './helpers.js';
 
-const REDIS = process.env.IB_TEST_REDIS || '127.0.0.1:6390';
-const PINNED = process.env.IB_TEST_FORM_REDIS_DB;
+const REDIS = process.env.TI_TEST_REDIS || '127.0.0.1:6390';
+const PINNED = process.env.TI_TEST_FORM_REDIS_DB;
 const NEW_HTML = fs.readFileSync(path.join(REPO, 'web', 'new.html'), 'utf8');
 const HOSTILE = '<script>alert(1)</script>"\'><img src=x onerror=alert(2)>&amp;';
 const BAD_FILE = '<img src=x onerror=alert(2)>"\'&.exe';
@@ -140,7 +140,7 @@ function defaults() {
   return {
     app_name: [''], source_kind: ['repo'], source: [''], runtime: ['python'], template: ['script'], rv_mode: ['newest'],
     runtime_version: [''], runtime_exact: [''], install_cmd: [''], ref_type: ['latest'], ref: [''], subdir: [''],
-    target_windows: ['on'], target_linux: ['on'], target_macos: ['on'], mode: ['ours'], root: ['user'], rootname: ['ib'],
+    target_windows: ['on'], target_linux: ['on'], target_macos: ['on'], mode: ['ours'], root: ['user'], rootname: ['ti'],
     shortcut_menu: ['on'], uninstaller: ['on'], cleanup_pkg_cache: ['on'], cleanup_tools: ['remove'], cleanup_fail: ['remove'],
     uninstall_data: ['ask'], icon_choice: ['default'], entry_python: [ENTRY_DEFAULTS.python], entry_node: [ENTRY_DEFAULTS.node],
     code_python_script: ['print("hi")\r\n'], win_unpre_script: [''], unix_unpre_script: [''], pf_url: [''],
@@ -508,7 +508,7 @@ test('the server: plain form posts and status pages', { skip }, async (t) => {
   const links = (html) => [...html.matchAll(/<a href="\.\.\/dl\/([^"]+)">/g)].map((m) => '/dl/' + m[1].replace(/&amp;/g, '&'));
   const code = 'print("hello from a plain form")\r\n';
   const base = { source_kind: 'write', runtime: 'python', template: 'script', code_python_script: code, mode: 'unsigned', rv_mode: 'newest',
-    entry_python: ENTRY_DEFAULTS.python, target_linux: 'on', shortcut_menu: 'on', root: 'user', rootname: 'ib' };
+    entry_python: ENTRY_DEFAULTS.python, target_linux: 'on', shortcut_menu: 'on', root: 'user', rootname: 'ti' };
 
   await t.test('/classic: the form, from the catalogue', async () => {
     const r = await get('/classic');

@@ -128,16 +128,16 @@ def judge(b, parts, err=""):
 
 UNIX_SCRIPT = machines.ELF_PROBE_SH + r'''
 set -u
-H=$(mktemp -d /tmp/ibfid-XXXXXX)
+H=$(mktemp -d /tmp/tifid-XXXXXX)
 cp "$SRC" "$H/$F"
 BASEENV="HOME=$H PATH=/usr/local/bin:/usr/bin:/bin LANG=C.UTF-8"
 env -i $BASEENV sh "$H/$F" --yes --log="$H/i.log" </dev/null >"$H/i.out" 2>&1
 echo "@install $?"
-d=$(ls -d "$H"/.local/share/ib/*/launch.txt 2>/dev/null | head -1)
+d=$(ls -d "$H"/.local/share/ti/*/launch.txt 2>/dev/null | head -1)
 if [ -n "$d" ]; then
   d=$(dirname "$d")
   echo "@out"; env -i $BASEENV timeout 1200 sh "$d/launch.sh" </dev/null 2>&1 | tail -60
-  echo "@elf"; ib_elf_probe "$H/.local/share/ib"
+  echo "@elf"; ti_elf_probe "$H/.local/share/ti"
   env -i $BASEENV sh "$d/uninstall.sh" --yes </dev/null >/dev/null 2>&1; echo "@uninstall $?"
 fi
 echo "@left"; (cd "$H" && find . -mindepth 1 ! -name i.log ! -name i.out ! -name "$F" ! -path './.cache*' ! -path './.pki*' | head -5)
@@ -157,12 +157,12 @@ def run_local(b, f):
 
 def run_linux_vm(host, b, f):
     name = Path(f).name
-    sh(["ssh", host, "rm -rf ibfid; mkdir -p ibfid"], timeout=60)
-    code, _, err = sh(["scp", "-q", f, f"{host}:ibfid/{name}"], timeout=900)
+    sh(["ssh", host, "rm -rf tifid; mkdir -p tifid"], timeout=60)
+    code, _, err = sh(["scp", "-q", f, f"{host}:tifid/{name}"], timeout=900)
     if code:
         return "", "scp: " + err.strip()
-    code, out, err = sh(["ssh", host, f"SRC=$HOME/ibfid/{shlex.quote(name)} F={shlex.quote(name)} sh -s"], input=UNIX_SCRIPT)
-    sh(["ssh", host, "rm -rf ibfid"], timeout=60)
+    code, out, err = sh(["ssh", host, f"SRC=$HOME/tifid/{shlex.quote(name)} F={shlex.quote(name)} sh -s"], input=UNIX_SCRIPT)
+    sh(["ssh", host, "rm -rf tifid"], timeout=60)
     return out, err
 
 
@@ -171,40 +171,40 @@ def run_sandbox(target, b, f):
     import sandbox
     src = Path(f).resolve().parent
     rc, out, err = sandbox.run_script(
-        target, UNIX_SCRIPT, timeout=TIMEOUT, ro={src: "/ibsrc"},
+        target, UNIX_SCRIPT, timeout=TIMEOUT, ro={src: "/tisrc"},
         env={"HOME": "/home/ti", "PATH": "/usr/local/bin:/usr/bin:/bin",
-             "SRC": "/ibsrc/" + Path(f).name, "F": Path(f).name})
+             "SRC": "/tisrc/" + Path(f).name, "F": Path(f).name})
     return out, err
 
 
 MAC_SCRIPT = r'''
 set -u
-cd "$HOME/ibfid" || exit 90
+cd "$HOME/tifid" || exit 90
 rm -rf x && mkdir x && cd x && ditto -x -k ../in.zip . || exit 91
 app=$(ls -d *.app)
-IB_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --log="$HOME/ibfid/i.log" </dev/null >/dev/null 2>&1
+TI_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --log="$HOME/tifid/i.log" </dev/null >/dev/null 2>&1
 echo "@install $?"
-d=$(ls -d "$HOME/Library/ib/"*/launch.txt "$HOME/Library/Application Support/ib/"*/launch.txt 2>/dev/null | head -1)
+d=$(ls -d "$HOME/Library/ti/"*/launch.txt "$HOME/Library/Application Support/ti/"*/launch.txt 2>/dev/null | head -1)
 if [ -n "$d" ]; then
   d=$(dirname "$d")
-  echo "@out"; IB_NO_TERMINAL=1 FID_NO_DISPLAY="no window server over SSH" perl -e 'alarm shift; exec @ARGV' 1200 sh "$d/launch.sh" </dev/null 2>&1 | tail -60
+  echo "@out"; TI_NO_TERMINAL=1 FID_NO_DISPLAY="no window server over SSH" perl -e 'alarm shift; exec @ARGV' 1200 sh "$d/launch.sh" </dev/null 2>&1 | tail -60
   sh "$d/uninstall.sh" --yes </dev/null >/dev/null 2>&1; echo "@uninstall $?"
 fi
-echo "@left"; ls "$HOME/Library/ib" "$HOME/Library/Application Support/ib" 2>/dev/null
-echo "@osdesc"; sed -n 's/^Running as .* on //p' "$HOME/ibfid/i.log" 2>/dev/null | head -1
-echo "@planarch"; sed -n '/^ *Runtime:/{p;q;}' "$HOME/ibfid/i.log" 2>/dev/null
+echo "@left"; ls "$HOME/Library/ti" "$HOME/Library/Application Support/ti" 2>/dev/null
+echo "@osdesc"; sed -n 's/^Running as .* on //p' "$HOME/tifid/i.log" 2>/dev/null | head -1
+echo "@planarch"; sed -n '/^ *Runtime:/{p;q;}' "$HOME/tifid/i.log" 2>/dev/null
 echo "@x"
-echo "@log"; cat "$HOME/ibfid/i.log"
+echo "@log"; cat "$HOME/tifid/i.log"
 '''
 
 
 def run_mac(b, f):
-    sh(["ssh", MAC, "rm -rf ~/ibfid; mkdir -p ~/ibfid"], timeout=60)
-    code, _, err = sh(["scp", "-q", f, f"{MAC}:ibfid/in.zip"], timeout=900)
+    sh(["ssh", MAC, "rm -rf ~/tifid; mkdir -p ~/tifid"], timeout=60)
+    code, _, err = sh(["scp", "-q", f, f"{MAC}:tifid/in.zip"], timeout=900)
     if code:
         return "", "scp: " + err
     code, out, err = sh(["ssh", MAC, "sh -s"], input=MAC_SCRIPT)
-    sh(["ssh", MAC, "rm -rf ~/ibfid"], timeout=60)
+    sh(["ssh", MAC, "rm -rf ~/tifid"], timeout=60)
     return out, err
 
 
@@ -212,15 +212,15 @@ def run_mac(b, f):
 
 BAT = r'''@echo off
 setlocal
-set T=C:\ibfid
+set T=C:\tifid
 echo @before
-if exist "C:\ib" dir /b "C:\ib"
-if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib" dir /b "%LOCALAPPDATA%\ib"
+if exist "C:\ti" dir /b "C:\ti"
+if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ti" dir /b "%LOCALAPPDATA%\ti"
 "%T%\%FILE%" /S /log=%T%\install.log
 echo @install %ERRORLEVEL%
 set A=
-if exist "C:\ib\%ID%\launch.exe" set A=C:\ib\%ID%
-if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib\%ID%\launch.exe" set A=%LOCALAPPDATA%\ib\%ID%
+if exist "C:\ti\%ID%\launch.exe" set A=C:\ti\%ID%
+if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ti\%ID%\launch.exe" set A=%LOCALAPPDATA%\ti\%ID%
 if not defined A goto left
 "%A%\launch.exe" /out=%T%\out.txt
 echo @out
@@ -237,8 +237,8 @@ goto wait
 :left
 ping -n 3 127.0.0.1 >nul
 echo @left
-if exist "C:\ib" dir /b "C:\ib"
-if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib" dir /b "%LOCALAPPDATA%\ib"
+if exist "C:\ti" dir /b "C:\ti"
+if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ti" dir /b "%LOCALAPPDATA%\ti"
 echo @osdesc
 findstr /b /c:"Windows " "%T%\install.log" 2>nul
 echo @planarch
@@ -259,13 +259,13 @@ def run_windows(host, b, f):
     with tempfile.NamedTemporaryFile("w", suffix=".bat", delete=False, newline="\r\n") as t:
         t.write(bat)
     try:
-        sh(["ssh", host, 'cmd /c "rd /s /q C:\\ibfid & mkdir C:\\ibfid"'], timeout=60)
+        sh(["ssh", host, 'cmd /c "rd /s /q C:\\tifid & mkdir C:\\tifid"'], timeout=60)
         for src, dst in ((f, Path(f).name), (t.name, "t.bat")):
-            code, _, err = sh(["scp", "-q", src, f"{host}:C:/ibfid/{dst}"], timeout=900)
+            code, _, err = sh(["scp", "-q", src, f"{host}:C:/tifid/{dst}"], timeout=900)
             if code:
                 return "", "scp: " + err.strip()
-        code, out, err = sh(["ssh", host, "cmd /c C:\\ibfid\\t.bat"])
-        sh(["ssh", host, 'cmd /c "rd /s /q C:\\ibfid"'], timeout=60)
+        code, out, err = sh(["ssh", host, "cmd /c C:\\tifid\\t.bat"])
+        sh(["ssh", host, 'cmd /c "rd /s /q C:\\tifid"'], timeout=60)
         return out, err
     finally:
         Path(t.name).unlink()

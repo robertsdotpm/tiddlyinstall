@@ -3,7 +3,7 @@
 //   Windows .exe  [base][record][plan][pack][64-byte footer]  (ends before a
 //                 certificate table if the PE has one, after up to 7 NULs)
 //   Linux .run    the same block at the end of the file
-//   macOS .zip    <X>.app/Contents/Resources/ib/{record.txt,plan.txt,pack/<sha256>}
+//   macOS .zip    <X>.app/Contents/Resources/ti/{record.txt,plan.txt,pack/<sha256>}
 //
 // Pack: ustar tar whose members are named by the lowercase hex SHA-256 of
 // their content. Zip (de)compression and SHA-256 go through web/lib/zlib.js and
@@ -11,18 +11,18 @@
 import { inflate as zInflate, deflate as zDeflate } from '../web/lib/zlib.js';
 import { digest } from '../web/lib/cryptox.js';
 
-const ibEnc = new TextEncoder();
-const ibDec = new TextDecoder();
+const tiEnc = new TextEncoder();
+const tiDec = new TextDecoder();
 
 export const FOOTER_LEN = 64;
-const FOOTER_MAGIC = 'IBMETA1 ';
+const FOOTER_MAGIC = 'TIMETA1 ';
 const MAX12 = 999999999999;
 
 /* ---------- small helpers ---------- */
 
 export function toBytes(x) {
   if (x == null) return new Uint8Array(0);
-  if (typeof x === 'string') return ibEnc.encode(x);
+  if (typeof x === 'string') return tiEnc.encode(x);
   if (x instanceof Uint8Array) return x;
   if (x instanceof ArrayBuffer) return new Uint8Array(x);
   if (ArrayBuffer.isView(x)) return new Uint8Array(x.buffer, x.byteOffset, x.byteLength);
@@ -123,7 +123,7 @@ function pad12(n) {
 export function makeFooter(recordLen, planLen, packLen) {
   const s = (FOOTER_MAGIC + pad12(recordLen) + ' ' + pad12(planLen) + ' ' + pad12(packLen) + ' ')
     .padEnd(FOOTER_LEN - 1, ' ') + '\n';
-  return ibEnc.encode(s);
+  return tiEnc.encode(s);
 }
 
 // Looks for a footer ending at `end`. Returns {start, record, plan, pack}
@@ -209,17 +209,17 @@ export function tarWrite(members) {
   for (const m of members) {
     const data = m.dir ? new Uint8Array(0) : toBytes(m.data);
     if (data.length > 0o77777777777) throw new RangeError('tar member too large');
-    let nameBytes = ibEnc.encode(m.name);
+    let nameBytes = tiEnc.encode(m.name);
     let prefixBytes = null;
     if (nameBytes.length > 100) {
       const n = m.name;
       let cut = -1;
       for (let i = n.indexOf('/'); i >= 0; i = n.indexOf('/', i + 1)) {
-        if (ibEnc.encode(n.slice(0, i)).length <= 155 && ibEnc.encode(n.slice(i + 1)).length <= 100) { cut = i; break; }
+        if (tiEnc.encode(n.slice(0, i)).length <= 155 && tiEnc.encode(n.slice(i + 1)).length <= 100) { cut = i; break; }
       }
       if (cut < 0) throw new RangeError('tar name too long: ' + m.name);
-      prefixBytes = ibEnc.encode(n.slice(0, cut));
-      nameBytes = ibEnc.encode(n.slice(cut + 1));
+      prefixBytes = tiEnc.encode(n.slice(0, cut));
+      nameBytes = tiEnc.encode(n.slice(cut + 1));
     }
     const h = new Uint8Array(512);
     h.set(nameBytes, 0);
@@ -249,7 +249,7 @@ export function tarWrite(members) {
 function readStr(u8, off, len) {
   let end = off;
   while (end < off + len && u8[end] !== 0) end++;
-  return ibDec.decode(u8.subarray(off, end));
+  return tiDec.decode(u8.subarray(off, end));
 }
 
 // ustar bytes -> [{name, data}] (regular files only; data are views)
@@ -327,7 +327,7 @@ export function kvSet(entries, key, values) {
 }
 
 export function newRecordText(fields = {}) {
-  const e = [{ key: 'ib-record', values: ['1'] }];
+  const e = [{ key: 'ti-record', values: ['1'] }];
   for (const [k, v] of Object.entries(fields)) kvSet(e, k, Array.isArray(v) ? v : [v]);
   return serializeKv(e);
 }
@@ -387,7 +387,7 @@ export function zipRead(u8) {
     const nl = dv.getUint16(p + 28, true), xl = dv.getUint16(p + 30, true), cl = dv.getUint16(p + 32, true);
     const lho = dv.getUint32(p + 42, true);
     e.nameBytes = u8.slice(p + 46, p + 46 + nl);
-    e.name = ibDec.decode(e.nameBytes);
+    e.name = tiDec.decode(e.nameBytes);
     e.centralExtra = u8.slice(p + 46 + nl, p + 46 + nl + xl);
     e.comment = u8.slice(p + 46 + nl + xl, p + 46 + nl + xl + cl);
     if (dv.getUint32(lho, true) !== 0x04034b50) throw new Error('bad local header for ' + e.name);
@@ -437,7 +437,7 @@ export async function zipNewEntry(name, data, { mode, kind = 'file', compress = 
     const d = await deflateRaw(data);
     if (d.length < data.length) { raw = d; method = 8; }
   }
-  const nameBytes = ibEnc.encode(name);
+  const nameBytes = tiEnc.encode(name);
   const utf8 = /[^\x20-\x7e]/.test(name);
   return {
     madeBy: (3 << 8) | 20, needed: 20, flags: utf8 ? 0x800 : 0, method, time: t.time, date: t.date,
@@ -553,8 +553,8 @@ export async function readInstaller(input, name = '') {
     info.hadBlock = true;
     let o = f.start;
     info.base = u8.subarray(0, f.start);
-    info.record = ibDec.decode(u8.subarray(o, o += f.record));
-    info.plan = f.plan ? ibDec.decode(u8.subarray(o, o += f.plan)) : null;
+    info.record = tiDec.decode(u8.subarray(o, o += f.record));
+    info.plan = f.plan ? tiDec.decode(u8.subarray(o, o += f.plan)) : null;
     info.pack = f.pack ? tarRead(u8.subarray(o, o + f.pack)) : [];
   } else {
     info.base = u8.subarray(0, end);
@@ -575,17 +575,17 @@ async function readMacZip(u8, name) {
   const entries = zipRead(u8);
   const app = appPrefix(entries);
   if (!app) throw new Error('This zip has no .app inside, so it is not a macOS installer from this site.');
-  const ib = app + 'Contents/Resources/ib/';
+  const ti = app + 'Contents/Resources/ti/';
   const info = { kind: 'zip', name, entries, app, record: null, plan: null, pack: [], signed: false, signedWhy: '', hadBlock: false };
   if (entries.some((e) => e.name.startsWith(app + 'Contents/_CodeSignature/'))) {
     info.signed = true;
     info.signedWhy = 'The app in this zip is code-signed. Saving removes that signature (macOS treats a broken signature as damaged, which is worse than unsigned); sign it again if you publish it.';
   }
   for (const e of entries) {
-    if (!e.name.startsWith(ib) || zipIsDir(e)) continue;
-    const rel = e.name.slice(ib.length);
-    if (rel === 'record.txt') { info.record = ibDec.decode(await zipEntryData(e)); info.hadBlock = true; }
-    else if (rel === 'plan.txt') info.plan = ibDec.decode(await zipEntryData(e));
+    if (!e.name.startsWith(ti) || zipIsDir(e)) continue;
+    const rel = e.name.slice(ti.length);
+    if (rel === 'record.txt') { info.record = tiDec.decode(await zipEntryData(e)); info.hadBlock = true; }
+    else if (rel === 'plan.txt') info.plan = tiDec.decode(await zipEntryData(e));
     else if (/^pack\/[0-9a-f]{64}$/.test(rel)) info.pack.push({ name: rel.slice(5), data: await zipEntryData(e) });
   }
   return info;
@@ -620,18 +620,18 @@ export async function writeInstaller(info, edits = {}) {
 }
 
 async function writeMacZip(info, record, plan, pack) {
-  const ib = info.app + 'Contents/Resources/ib/';
+  const ti = info.app + 'Contents/Resources/ti/';
   // Changing the app breaks its signature, and macOS calls an app with a
   // broken signature "damaged" (worse than unsigned), so drop the old one.
   const sig = info.app + 'Contents/_CodeSignature/';
-  const kept = info.entries.filter((e) => !e.name.startsWith(ib) && !e.name.startsWith(sig));
+  const kept = info.entries.filter((e) => !e.name.startsWith(ti) && !e.name.startsWith(sig));
   const add = [];
-  add.push(await zipNewEntry(ib, null, { kind: 'dir' }));
-  add.push(await zipNewEntry(ib + 'record.txt', record));
-  if (plan.length) add.push(await zipNewEntry(ib + 'plan.txt', plan));
+  add.push(await zipNewEntry(ti, null, { kind: 'dir' }));
+  add.push(await zipNewEntry(ti + 'record.txt', record));
+  if (plan.length) add.push(await zipNewEntry(ti + 'plan.txt', plan));
   if (pack.length) {
-    add.push(await zipNewEntry(ib + 'pack/', null, { kind: 'dir' }));
-    for (const m of pack) add.push(await zipNewEntry(ib + 'pack/' + m.name, m.data));
+    add.push(await zipNewEntry(ti + 'pack/', null, { kind: 'dir' }));
+    for (const m of pack) add.push(await zipNewEntry(ti + 'pack/' + m.name, m.data));
   }
   return zipWrite(kept.concat(add));
 }

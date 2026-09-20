@@ -11,9 +11,9 @@
 // before the first paint so a chosen theme doesn't flash, and it must parse
 // in the browsers that can't read the page's modules, which still get the
 // header and the button. The attribute goes on before web/page-loader.js
-// takes IB_PRISTINE, so "Save this page" keeps the theme you were reading in.
+// takes TI_PRISTINE, so "Save this page" keeps the theme you were reading in.
 (function () {
-  var KEY = 'ib-theme';
+  var KEY = 'ti-theme';
   var h = document.documentElement;
 
   function sysDark() {

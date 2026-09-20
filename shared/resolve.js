@@ -547,7 +547,7 @@ function release(raw, folder) {
     variant: typeof raw.variant === 'string' ? raw.variant : null, libc: typeof raw.libc === 'string' ? raw.libc : null,
     url: str(raw.url), mirrors: Array.isArray(raw.mirrors) ? raw.mirrors : null, checksum: raw.checksum,
     size: typeof raw.size === 'number' ? raw.size : 0, min_os: (raw.min_os != null ? raw.min_os : null),
-    sha256: str(raw.ib_sha256), local: str(raw.ib_local), folder,
+    sha256: str(raw.ti_sha256), local: str(raw.ti_local), folder,
   };
   r.v = parseVersion(r.version);
   r.n = nRelease++;
@@ -558,8 +558,8 @@ function release(raw, folder) {
   if (Array.isArray(raw.parts)) {
     r.parts = raw.parts.filter(isMap).map((p) => ({
       name: str(p.name), url: str(p.url), mirrors: Array.isArray(p.mirrors) ? p.mirrors : null,
-      sha256: goLower(str(p.ib_sha256) || str(p.sha256)), size: typeof p.size === 'number' ? p.size : 0,
-      local: str(p.ib_local), looked: str(p.ib_local) !== '',
+      sha256: goLower(str(p.ti_sha256) || str(p.sha256)), size: typeof p.size === 'number' ? p.size : 0,
+      local: str(p.ti_local), looked: str(p.ti_local) !== '',
     })).filter((p) => /^[A-Za-z0-9_.-]+$/.test(p.name) && p.sha256 !== '');
   }
   return r;
@@ -741,7 +741,7 @@ async function snapshotFiles(bytes) {
   if (bytes[0] === 0x1f && bytes[1] === 0x8b) bytes = await inflate(bytes, 'gzip');
   let snap;
   try { snap = JSON.parse(dec.decode(bytes)); } catch (e) { throw new Error('catalogue snapshot: ' + e.message); }
-  const ver = own(snap, 'ib-catalog-snapshot');
+  const ver = own(snap, 'ti-catalog-snapshot');
   if (ver !== 1) throw new Error('catalogue snapshot version ' + (typeof ver === 'number' ? ver : 0));
   return own(snap, 'files') || {};
 }
@@ -749,7 +749,7 @@ async function snapshotFiles(bytes) {
 // Snapshot: the catalogue as one gzipped file, with only the releases the
 // resolver can pick, each with its SHA-256 and our copy's path.
 export async function writeSnapshot(cat) {
-  const text = JSON.stringify({ 'ib-catalog-snapshot': 1, files: await writeSnapshotFiles(cat) }) + '\n';
+  const text = JSON.stringify({ 'ti-catalog-snapshot': 1, files: await writeSnapshotFiles(cat) }) + '\n';
   return deflate(enc.encode(text), 'gzip');
 }
 
@@ -776,13 +776,13 @@ async function writeSnapshotFiles(cat) {
         version: e.version, os: e.os, arch: e.arch, kind: e.kind, format: e.format, variant: e.variant, libc: e.libc,
         url: e.url, mirrors: e.mirrors, size: e.size, min_os: e.min_os,
       };
-      if (e.sha256) o.ib_sha256 = e.sha256;
-      if (e.local) o.ib_local = e.local;
+      if (e.sha256) o.ti_sha256 = e.sha256;
+      if (e.local) o.ti_local = e.local;
       if (e.parts) {
         o.parts = e.parts.map((p) => {
           partLocal(cat, p);
-          const q = { name: p.name, url: p.url, mirrors: p.mirrors, size: p.size, ib_sha256: p.sha256 };
-          if (p.local) q.ib_local = p.local;
+          const q = { name: p.name, url: p.url, mirrors: p.mirrors, size: p.size, ti_sha256: p.sha256 };
+          if (p.local) q.ti_local = p.local;
           return q;
         });
       }
@@ -797,15 +797,15 @@ async function writeSnapshotFiles(cat) {
 
 /* ---------- the split snapshot (docs/format.md section 6) ---------- */
 
-export const SPLIT_FORMAT = 'ib-catalog-split';
-export const CHUNK_FORMAT = 'ib-catalog-folder';
+export const SPLIT_FORMAT = 'ti-catalog-split';
+export const CHUNK_FORMAT = 'ti-catalog-folder';
 const FOLDER_RE = /^[A-Za-z0-9_-]{1,64}$/;
 
 // splitSnapshot: a snapshot (its bytes, or a catalogue, written as
 // writeSnapshot writes it) as an index and one gzipped chunk per catalogue
-// folder. The index: {"ib-catalog-split": 1, "files": {the files outside
+// folder. The index: {"ti-catalog-split": 1, "files": {the files outside
 // any folder}, "folders": {folder: {"releases": count, "size": the chunk's
-// bytes}}}. A chunk, gunzipped: {"ib-catalog-folder": 1, "folder": name,
+// bytes}}}. A chunk, gunzipped: {"ti-catalog-folder": 1, "folder": name,
 // "files": {"name/install.json": ..., "name/os_support.json": ...,
 // "name/releases.json": [...]}}. Resolves to {index, chunks: [{folder, bytes}]}.
 export async function splitSnapshot(src) {
@@ -1675,7 +1675,7 @@ export function planMaxAge(v) {
 // Catalog.write
 function writePlan(cat, app, blocks) {
   const w = new Writer();
-  w.add('ib-plan', '1');
+  w.add('ti-plan', '1');
   w.add('record', app.recordHash);
   w.add('name', app.name);
   w.add('project', app.project);
@@ -1685,7 +1685,7 @@ function writePlan(cat, app, blocks) {
   w.add('menu', b01(app.menu));
   w.add('desktop', b01(app.desktop));
   w.add('root', orDefault(app.root, 'user'));
-  w.add('rootname', orDefault(app.rootName, 'ib'));
+  w.add('rootname', orDefault(app.rootName, 'ti'));
   // When this plan was made, and how long a carried copy of it may be used
   // (design.md 7.1). Written only when the caller says at what moment it is
   // being made, so the page and the build server, given the same moment,

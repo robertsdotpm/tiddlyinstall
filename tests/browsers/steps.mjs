@@ -7,7 +7,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { readInstaller, writeInstaller, newRecordText, parseKv, kvGet, recordHash } from '../../shared/ibfile.js';
+import { readInstaller, writeInstaller, newRecordText, parseKv, kvGet, recordHash } from '../../shared/tifile.js';
 import { FX } from '../fixtures.js';
 
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -33,7 +33,7 @@ export class Checker {
 
 // True once the page has started: its local API is installed and the
 // footer's controls are drawn.
-export const STARTED = `!!(globalThis.ibLocalApi && document.readyState === 'complete' && document.querySelector('.save-ctl'))`;
+export const STARTED = `!!(globalThis.tiLocalApi && document.readyState === 'complete' && document.querySelector('.save-ctl'))`;
 
 export async function waitFor(js, expr, what, ms = 120000, errors) {
   for (const end = Date.now() + ms; Date.now() < end; await sleep(250)) {
@@ -47,13 +47,13 @@ export async function waitFor(js, expr, what, ms = 120000, errors) {
 // Every section in the page (but #build, which needs a job), and a check
 // each shows its own page; home last.
 export async function checkSections(t, js) {
-  const found = await js(`Array.prototype.map.call(document.querySelectorAll('.ib-page'), (e) => e.dataset.page)`);
+  const found = await js(`Array.prototype.map.call(document.querySelectorAll('.ti-page'), (e) => e.dataset.page)`);
   t.ok(found.length >= 4, 'the page has its sections', found.join(','));
   const sections = found.filter((p) => p !== 'build' && p !== 'home').concat(['home']);
   for (const p of sections) {
     await js(`location.hash = '#${p}'`);
     await sleep(150);
-    t.ok(await js(`document.querySelector('.ib-page:not([hidden])').dataset.page === '${p}'`), `#${p} shows its page`);
+    t.ok(await js(`document.querySelector('.ti-page:not([hidden])').dataset.page === '${p}'`), `#${p} shows its page`);
   }
   return sections;
 }
@@ -84,7 +84,7 @@ export async function buildHello(js, { runtime, mode, name, code, pkg, platforms
     }
     const id = new URLSearchParams(location.hash.slice(1)).get('job');
     for (let i = 0; i < 1200; i++) {
-      const j = await ibLocalApi.request('/api/jobs/' + id);
+      const j = await tiLocalApi.request('/api/jobs/' + id);
       if (j.status === 'done' || j.status === 'failed') return j;
       await new Promise((r) => setTimeout(r, 100));
     }
@@ -101,7 +101,7 @@ export async function fetchBlob(js, url) {
   return new Uint8Array(Buffer.from(b64, 'base64'));
 }
 
-// Reads back every installer a finished job made, with shared/ibfile.js, and
+// Reads back every installer a finished job made, with shared/tifile.js, and
 // checks each carries the job's record and a plan bound to it. With
 // keepDir and keepAs, writes the files to keepDir/keepAs/ and returns {platform: path}.
 export async function checkJob(t, js, job, what, runtime, { keepDir, keepAs } = {}) {
@@ -118,7 +118,7 @@ export async function checkJob(t, js, job, what, runtime, { keepDir, keepAs } = 
     t.ok(info.record && await recordHash(info.record) === res.record, `${what}: ${f.platform} carries the record ${res.record}`);
     const rec = parseKv(info.record);
     t.ok((kvGet(rec, 'runtime') || [])[0] === runtime, `${what}: ${f.platform} record says runtime ${runtime}`, info.record);
-    t.ok(info.plan && info.plan.startsWith('ib-plan\t') && info.plan.includes('record\t' + res.record + '\n'),
+    t.ok(info.plan && info.plan.startsWith('ti-plan\t') && info.plan.includes('record\t' + res.record + '\n'),
       `${what}: ${f.platform} carries its plan, bound to the record`, (info.plan || '').slice(0, 200));
     const blocks = (info.plan || '').split('\n').filter((l) => l.startsWith('when\t')).map((l) => l.split('\t')[1]);
     t.ok(blocks.length && blocks.every((b) => b === f.platform), `${what}: ${f.platform} plan is for ${f.platform} only`, blocks.join(','));
@@ -158,7 +158,7 @@ export async function makeSignFixtures(dir) {
   return { PW, RECORD, t, openssl: o };
 }
 
-export const OSSL = [process.env.PATH.split(':'), path.join(process.env.HOME || '', '.local/opt/ib-tools/root/usr/bin')].flat()
+export const OSSL = [process.env.PATH.split(':'), path.join(process.env.HOME || '', '.local/opt/ti-tools/root/usr/bin')].flat()
   .map((d) => path.join(d, 'osslsigncode')).find((p) => fs.existsSync(p));
 
 // osslsigncode verify against a CA file: {ok, ts, out}, or {skip} without it.

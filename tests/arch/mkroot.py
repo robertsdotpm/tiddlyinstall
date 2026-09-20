@@ -153,7 +153,7 @@ def settle(d):
         if ":1000:" not in text:
             p.write_text(text + line)
     (d / "home/ti").mkdir(parents=True, exist_ok=True)
-    (d / "ibsrc").mkdir(exist_ok=True)
+    (d / "tisrc").mkdir(exist_ok=True)
 
 
 def provision(name, d):

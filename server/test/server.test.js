@@ -1,11 +1,11 @@
 // The server end to end: routes, errors, CORS, a job through the queue,
 // plans, downloads and the takedown list. Needs Redis (127.0.0.1:6390, or
-// IB_TEST_REDIS) and takes a database of its own with
+// TI_TEST_REDIS) and takes a database of its own with
 // helpers.js claimRedisDb, which claims one that no other run holds and
-// removes its ib:* and ib-bull:* keys afterwards. It used to be a fixed
+// removes its ti:* and ti-bull:* keys afterwards. It used to be a fixed
 // number, which kept this suite apart from form.test.js but not from a
 // second run of itself: two concurrent `npm test`s flushed each other's
-// keys and failed in whichever subtest was unlucky. IB_TEST_REDIS_DB
+// keys and failed in whichever subtest was unlucky. TI_TEST_REDIS_DB
 // still pins one. Skipped without Redis or the runtime catalogue.
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -17,11 +17,11 @@ import IORedis from 'ioredis';
 import { Server, parseFlags } from '../server.js';
 import { verify, verifyFor } from '../lib/plansig.js';
 import { resolve, setRevoked } from '../../shared/resolve.js';
-import { readInstaller } from '../../shared/ibfile.js';
+import { readInstaller } from '../../shared/tifile.js';
 import { haveCatalog, haveBases, tmpDir, claimRedisDb, REPO, RUNTIMES } from './helpers.js';
 
-const REDIS = process.env.IB_TEST_REDIS || '127.0.0.1:6390';
-const PINNED = process.env.IB_TEST_REDIS_DB;
+const REDIS = process.env.TI_TEST_REDIS || '127.0.0.1:6390';
+const PINNED = process.env.TI_TEST_REDIS_DB;
 
 function reachable(addr) {
   const i = addr.lastIndexOf(':');
@@ -144,7 +144,7 @@ test('the server', { skip }, async (t) => {
     assert.equal(j.status, 'done', j.error);
     const hash = j.result.record;
     const rec = (await get('/api/records/' + hash)).text;
-    assert.match(rec, /^ib-record\t1\nname\tHello\n/);
+    assert.match(rec, /^ti-record\t1\nname\tHello\n/);
     const plan = (await get('/api/plan/' + hash)).text;
     verifyFor(s.signer.pub, Buffer.from(plan), hash);
     // Every plan says when it was made and how long a carried copy may be
@@ -211,11 +211,11 @@ test('the server', { skip }, async (t) => {
     assert.equal(r.headers['content-type'], 'text/plain; charset=utf-8');
     assert.equal(r.headers['cache-control'], 'public, max-age=300');
     const doc = r.text;
-    // Signed with the plan key, as an ib-revocations and not as a plan.
-    const msg = verify(s.signer.pub, Buffer.from(doc), 'ib-revocations').toString('utf8');
-    assert.throws(() => verify(s.signer.pub, Buffer.from(doc)), /not an ib-plan/);
+    // Signed with the plan key, as a ti-revocations and not as a plan.
+    const msg = verify(s.signer.pub, Buffer.from(doc), 'ti-revocations').toString('utf8');
+    assert.throws(() => verify(s.signer.pub, Buffer.from(doc)), /not a ti-plan/);
     const lines = msg.split('\n');
-    assert.equal(lines[0], 'ib-revocations\t1');
+    assert.equal(lines[0], 'ti-revocations\t1');
     assert.match(lines[1], /^issued\t\d{4}-\d\d-\d\dT\d\d:00:00Z$/);
     assert.match(lines[2], /^expires\t\d{4}-\d\d-\d\dT\d\d:00:00Z$/);
     assert.match(lines[3], /^serial\t\d+$/);
@@ -227,7 +227,7 @@ test('the server', { skip }, async (t) => {
     fs.rmSync(path.join(data, 'takedown.txt'));
     // No list at all is still a signed document that says nothing.
     const empty = (await get('/api/revocations')).text;
-    verify(s.signer.pub, Buffer.from(empty), 'ib-revocations');
+    verify(s.signer.pub, Buffer.from(empty), 'ti-revocations');
     assert.ok(!empty.includes('revoke\t'), empty);
   });
 });

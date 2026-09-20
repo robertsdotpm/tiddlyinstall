@@ -4,13 +4,13 @@
 // server's /classic form and follows the status page to its download
 // links; this side then checks what those links give, as a person's
 // download would be: its SHA-256 as the page says, read back with
-// shared/ibfile.js (modes B and C carry the record the page links to; mode A is
+// shared/tifile.js (modes B and C carry the record the page links to; mode A is
 // our signed base named for it), and the record's signed plan served. With `out`, the
 // files are kept with a builds.json that tests/matrix/run.py reads.
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import { readInstaller, recordHash } from '../../shared/ibfile.js';
+import { readInstaller, recordHash } from '../../shared/tifile.js';
 
 export const MODE_LETTER = { ours: 'A', yours: 'B', unsigned: 'C' };
 
@@ -57,12 +57,12 @@ export async function checkFinished(t, statusUrl, { hrefs = null, name, modeLett
     if (modeLetter === 'A') {
       // Mode A: our signed base as it is, named for the record, which it
       // fetches from the server when it runs (design.md 3).
-      t.ok(info.kind && info.record === null && !info.plan && f.name.includes(st.record), `${f.name}: shared/ibfile.js reads it: our base, named for the record, nothing inside (mode A)`, info.kind + ' ' + f.name);
+      t.ok(info.kind && info.record === null && !info.plan && f.name.includes(st.record), `${f.name}: shared/tifile.js reads it: our base, named for the record, nothing inside (mode A)`, info.kind + ' ' + f.name);
       if (f.platform === 'Windows') t.ok(/TiddlyInstall/.test(f.signed), `${f.name}: signed by TiddlyInstall`, f.signed);
     } else {
       // Modes B and C carry the record; the plan comes from the server
       // when they run (offline ones carry it too).
-      t.ok(info.record === recText && await recordHash(info.record) === st.record, `${f.name}: shared/ibfile.js reads it back, carrying the record`);
+      t.ok(info.record === recText && await recordHash(info.record) === st.record, `${f.name}: shared/tifile.js reads it back, carrying the record`);
       if (info.plan) t.ok(info.plan.includes('record\t' + st.record + '\n'), `${f.name}: the plan it carries is bound to the record`);
     }
     const plan = await fetch(new URL('../api/plan/' + st.record, statusUrl));

@@ -12,7 +12,7 @@
 set -u
 here=$(cd "$(dirname "$0")" && pwd)
 shell=${1:-sh}
-T=$(mktemp -d "${TMPDIR:-/tmp}/ibprq.XXXXXX")
+T=$(mktemp -d "${TMPDIR:-/tmp}/tiprq.XXXXXX")
 trap '[ -n "${KEEP:-}" ] || rm -rf "$T"' EXIT
 tab=$(printf '\t')
 fails=0
@@ -20,7 +20,7 @@ ok() { printf 'ok   %s\n' "$1"; }
 bad() { printf 'FAIL %s\n' "$1"; fails=$((fails + 1)); }
 check() { if eval "$2"; then ok "$1"; else bad "$1"; [ -f "$T/out" ] && sed 's/^/     | /' "$T/out" | tail -n 12; fi; }
 
-IB_PLAN_PUBKEY_FILE=${IB_PLAN_PUBKEY_FILE:-$here/../../server/data/plan-signing-key.pub} \
+TI_PLAN_PUBKEY_FILE=${TI_PLAN_PUBKEY_FILE:-$here/../../server/data/plan-signing-key.pub} \
 	sh "$here/make_run.sh" "$T/base.run" > /dev/null || { echo "make_run failed"; exit 1; }
 
 # A tiny "runtime": bin/hello prints a line.
@@ -37,12 +37,12 @@ isha=$(sha256sum "$T/icon.png" | cut -d' ' -f1)
 # make NAME NEEDS-FILE [icon]: an installer whose block has the given need lines.
 make() {
 	{
-		printf 'ib-record\t1\nname\tPrereq %s\nproject\thello\nruntime\tnone\nselect\tnewest\nlaunch\t{runtime}\nconsole\t1\nmenu\t1\ndesktop\t0\nroot\tuser\nrootname\tib\n' "$1"
+		printf 'ti-record\t1\nname\tPrereq %s\nproject\thello\nruntime\tnone\nselect\tnewest\nlaunch\t{runtime}\nconsole\t1\nmenu\t1\ndesktop\t0\nroot\tuser\nrootname\tti\n' "$1"
 		[ "${3:-}" = icon ] && printf 'icon\t%s\n' "$isha"
 	} > "$T/$1.rec"
 	h=$(python3 "$here/append_meta.py" hash "$T/$1.rec")
 	{
-		printf 'ib-plan\t1\nrecord\t%s\nname\tPrereq %s\nproject\thello\nappid\t%s\nconsole\t1\nmenu\t1\ndesktop\t0\nroot\tuser\nrootname\tib\n\n[target]\nwhen\tlinux\t0\t9999\t*\nruntime\tnone\t1\n' \
+		printf 'ti-plan\t1\nrecord\t%s\nname\tPrereq %s\nproject\thello\nappid\t%s\nconsole\t1\nmenu\t1\ndesktop\t0\nroot\tuser\nrootname\tti\n\n[target]\nwhen\tlinux\t0\t9999\t*\nruntime\tnone\t1\n' \
 			"$h" "$1" "$(printf '%s' "$1" | sha256sum | python3 -c 'import sys,base64; print(base64.b32encode(bytes.fromhex(sys.stdin.read().split()[0])).decode().lower()[:12])')"
 		cat "$2"
 		printf 'file\trt\trt.tar.gz\t%s\t%s\nstep\tunpack\ttar.gz\t{dir}\t1\nexe\tbin/hello\nlaunch\t"{runtime}"\n' "$rsha" "$rsize"
@@ -66,7 +66,7 @@ run() {
 	cat "$T/$n.log" >> "$T/out" 2>/dev/null
 	return 0
 }
-appdir() { ls -d "$T/home/.local/share/ib/"* 2>/dev/null | while read -r d; do [ -f "$d/manifest.txt" ] && echo "$d"; done; }
+appdir() { ls -d "$T/home/.local/share/ti/"* 2>/dev/null | while read -r d; do [ -f "$d/manifest.txt" ] && echo "$d"; done; }
 
 # Fakes: sudo that allows -n (passwordless), a package manager that
 # "installs" by creating commands and libraries the fake ldconfig reports.
@@ -94,9 +94,9 @@ shift
 for p in "$@"; do
 	case $p in
 	-y) ;;
-	ib-fake-cc) printf '#!/bin/sh\nexit 0\n' > "$FAKE/bin/ibfakecc"; chmod 755 "$FAKE/bin/ibfakecc" ;;
-	libibfake1) echo "	libibfake.so.1 (libc6,x86-64) => /usr/lib/x86_64-linux-gnu/libibfake.so.1" >> "$FAKE/libs"
-		echo "	libibfake.so.1 (libc6,AArch64) => /usr/lib/aarch64-linux-gnu/libibfake.so.1" >> "$FAKE/libs" ;;
+	ti-fake-cc) printf '#!/bin/sh\nexit 0\n' > "$FAKE/bin/tifakecc"; chmod 755 "$FAKE/bin/tifakecc" ;;
+	libtifake1) echo "	libtifake.so.1 (libc6,x86-64) => /usr/lib/x86_64-linux-gnu/libtifake.so.1" >> "$FAKE/libs"
+		echo "	libtifake.so.1 (libc6,AArch64) => /usr/lib/aarch64-linux-gnu/libtifake.so.1" >> "$FAKE/libs" ;;
 	*) echo "E: Unable to locate package $p" >&2; exit 100 ;;
 	esac
 done
@@ -113,12 +113,12 @@ echo "sudo $*" >> "$FAKE/calls"
 exit 1
 EOF
 chmod 755 "$T/fake/bin/"* "$T/nosudo/bin/sudo"
-reset_fake() { rm -f "$T/fake/calls" "$T/fake/libs" "$T/fake/updated" "$T/fake/needs-update" "$T/fake/fail" "$T/fake/bin/ibfakecc" "$T/started"; }
+reset_fake() { rm -f "$T/fake/calls" "$T/fake/libs" "$T/fake/updated" "$T/fake/needs-update" "$T/fake/fail" "$T/fake/bin/tifakecc" "$T/started"; }
 
 printf 'need\tlibc\tThe C library\nnwhy\tEverything links it.\nncheck\tlib\tlibc.so.6\nnpkg\tapt-get\tlibc6\n' > "$T/present.need"
-printf 'need\tfakecc\tA fake C compiler\nnwhy\tTo link.\nncheck\tcmd\tibfakecc\nnpkg\tapt-get\tib-fake-cc\nnpkg\tdnf\tib-fake-cc\nneed\tfakelib\tlibibfake.so.1\nncheck\tlib\tlibibfake.so.1\nnpkg\tapt-get\tlibibfake1\n' > "$T/missing.need"
-printf 'need\tclt\tSome tools\nncheck\tfile\t/nonexistent/ib/tools\nnstart\ttouch %s/started\nnhow\tInstall the tools by hand, then run this installer again.\n' "$T" > "$T/manual.need"
-printf 'need\tbad\tBad\nncheck\tcmd\tibfakecc\nnpkg\tapt-get\tfoo;touch${IFS}%s/pwned\n' "$T" > "$T/badpkg.need"
+printf 'need\tfakecc\tA fake C compiler\nnwhy\tTo link.\nncheck\tcmd\ttifakecc\nnpkg\tapt-get\tti-fake-cc\nnpkg\tdnf\tti-fake-cc\nneed\tfakelib\tlibtifake.so.1\nncheck\tlib\tlibtifake.so.1\nnpkg\tapt-get\tlibtifake1\n' > "$T/missing.need"
+printf 'need\tclt\tSome tools\nncheck\tfile\t/nonexistent/ti/tools\nnstart\ttouch %s/started\nnhow\tInstall the tools by hand, then run this installer again.\n' "$T" > "$T/manual.need"
+printf 'need\tbad\tBad\nncheck\tcmd\ttifakecc\nnpkg\tapt-get\tfoo;touch${IFS}%s/pwned\n' "$T" > "$T/badpkg.need"
 
 base=/usr/bin:/bin
 reset_fake
@@ -137,8 +137,8 @@ make missing "$T/missing.need"
 # fake apt-get, and a sudo that refuses (ahead of fake/bin's)
 run missing "$T/nosudo/bin:$T/fake/bin:$base"
 check "no root: exit 2 (got $rc)" '[ $rc = 2 ]'
-check "no root: says the exact command" 'grep -q "sudo apt-get update && sudo apt-get install -y ib-fake-cc libibfake1" "$T/out"'
-check "no root: nothing installed" '[ -z "$(appdir)" ] && [ ! -d "$T/home/.local/share/ib" ]'
+check "no root: says the exact command" 'grep -q "sudo apt-get update && sudo apt-get install -y ti-fake-cc libtifake1" "$T/out"'
+check "no root: nothing installed" '[ -z "$(appdir)" ] && [ ! -d "$T/home/.local/share/ti" ]'
 check "no root: package manager not run" '! grep -q "^apt-get" "$T/fake/calls"'
 check "no root: only sudo -n tried" '! grep -v "^sudo -n" "$T/fake/calls" | grep -q .'
 check "no root: transparency lists both as missing" '[ "$(grep -c "MISSING, will be installed" "$T/out")" -ge 2 ]'
@@ -147,8 +147,8 @@ check "no root: transparency lists both as missing" '[ "$(grep -c "MISSING, will
 reset_fake
 run missing "$T/fake/bin:$base"
 check "install: exit 0 (got $rc)" '[ $rc = 0 ] && [ -n "$(appdir)" ]'
-check "install: one apt-get call with both packages" 'grep -q "^apt-get install -y ib-fake-cc libibfake1$" "$T/fake/calls"'
-check "install: through sudo -n sh -c" 'grep -q "^sudo -n sh -c .*apt-get install -y ib-fake-cc libibfake1" "$T/fake/calls"'
+check "install: one apt-get call with both packages" 'grep -q "^apt-get install -y ti-fake-cc libtifake1$" "$T/fake/calls"'
+check "install: through sudo -n sh -c" 'grep -q "^sudo -n sh -c .*apt-get install -y ti-fake-cc libtifake1" "$T/fake/calls"'
 check "install: app runs" '[ "$(sh "$(appdir)/launch.sh")" = "hello from the runtime" ]'
 
 # 4. apt lists empty: install fails, update, retry.
@@ -181,7 +181,7 @@ check "bad package name: refused (got $rc)" '[ $rc != 0 ] && [ ! -f "$T/pwned" ]
 # passwordless sudo that would really install packages).
 reset_fake
 run missing "$T/nosudo/bin:$base"
-check "real PATH, no root: exit 2 (got $rc)" '[ $rc = 2 ] && grep -q "sudo apt-get update && sudo apt-get install -y ib-fake-cc libibfake1" "$T/out"'
+check "real PATH, no root: exit 2 (got $rc)" '[ $rc = 2 ] && grep -q "sudo apt-get update && sudo apt-get install -y ti-fake-cc libtifake1" "$T/out"'
 run present "$T/nosudo/bin:$base"
 check "real PATH, present: exit 0 (got $rc)" '[ $rc = 0 ]'
 
@@ -190,7 +190,7 @@ reset_fake
 make icon "$T/present.need" icon
 run icon "$T/fake/bin:$base"
 d=$(appdir)
-desk=$T/home/.local/share/applications/ib-$(basename "$d").desktop
+desk=$T/home/.local/share/applications/ti-$(basename "$d").desktop
 check "icon: installed (got $rc)" '[ $rc = 0 ] && cmp -s "$d/icon.png" "$T/icon.png"'
 check "icon: Icon= is its absolute path" 'grep -qx "Icon=$d/icon.png" "$desk"'
 check "icon: uninstall removes it" 'env -i HOME="$T/home" PATH="$base" TMPDIR="$T" sh "$d/uninstall.sh" --yes > /dev/null 2>&1; [ ! -e "$d" ] && [ ! -e "$desk" ]'
@@ -199,7 +199,7 @@ check "icon: uninstall removes it" 'env -i HOME="$T/home" PATH="$base" TMPDIR="$
 make noicon "$T/present.need" noicon
 run noicon "$T/fake/bin:$base"
 d=$(appdir)
-check "icon not packed: generic (got $rc)" '[ $rc = 0 ] && grep -qx "Icon=application-x-executable" "$T/home/.local/share/applications/ib-$(basename "$d").desktop" && [ ! -e "$d/icon.png" ]'
+check "icon not packed: generic (got $rc)" '[ $rc = 0 ] && grep -qx "Icon=application-x-executable" "$T/home/.local/share/applications/ti-$(basename "$d").desktop" && [ ! -e "$d/icon.png" ]'
 
 echo
 [ $fails = 0 ] && echo "all passed ($shell)" || echo "$fails failed ($shell)"

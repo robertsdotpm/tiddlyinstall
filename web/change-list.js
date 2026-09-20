@@ -96,7 +96,7 @@ export function describeChange(c, files) {
     }
   } else if (c.op === 'add' || (c.op === 'replace' && base === undefined)) {
     // An addition, or a change whose folder isn't unpacked: what it puts there.
-    if (kind === 'release') fields.push({ name: 'url', from: '', to: show(v && v.url) }, { name: 'ib_sha256', from: '', to: show(v && v.ib_sha256) });
+    if (kind === 'release') fields.push({ name: 'url', from: '', to: show(v && v.url) }, { name: 'ti_sha256', from: '', to: show(v && v.ti_sha256) });
     if (kind === 'recipe' && isMap(v) && Array.isArray(v.steps)) v.steps.forEach((s, i) => fields.push({ name: 'step ' + (i + 1), from: '', to: show(s) }));
     if (kind === 'rule' || kind === 'policy') fields.push({ name: 'value', from: '', to: show(v) });
   }

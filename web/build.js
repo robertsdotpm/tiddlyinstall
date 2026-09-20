@@ -116,10 +116,10 @@ const CLASS = {
 /* Progress lines seen so far, kept per job for the length of the tab. */
 let steps = [];
 function loadSteps(id) {
-  try { steps = JSON.parse(sessionStorage.getItem('ib.steps.' + id) || '[]'); } catch (e) { steps = []; }
+  try { steps = JSON.parse(sessionStorage.getItem('ti.steps.' + id) || '[]'); } catch (e) { steps = []; }
 }
 function saveSteps(id) {
-  try { sessionStorage.setItem('ib.steps.' + id, JSON.stringify(steps)); } catch (e) { /* ignore */ }
+  try { sessionStorage.setItem('ti.steps.' + id, JSON.stringify(steps)); } catch (e) { /* ignore */ }
 }
 
 function paintSteps(job) {
@@ -346,6 +346,6 @@ document.addEventListener('visibilitychange', () => {
   if (!document.hidden && !finished && jobId()) poll();
 });
 window.addEventListener('hashchange', start);
-window.addEventListener('ib-api-change', () => { if (jobId()) start(); });
+window.addEventListener('ti-api-change', () => { if (jobId()) start(); });
 
 start();

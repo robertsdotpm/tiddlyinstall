@@ -9,7 +9,7 @@
 // -kind KIND signs or checks another document the plan key signs, today
 // only the revocation list (docs/format.md section 7):
 //
-//   node tools/plansig.mjs -data DIR -kind ib-revocations sign list.txt
+//   node tools/plansig.mjs -data DIR -kind ti-revocations sign list.txt
 import fs from 'node:fs';
 import { loadOrCreate, verify, verifyFor, keyID, recordOf } from '../server/lib/plansig.js';
 
@@ -18,7 +18,7 @@ function fail(msg) {
   process.exit(1);
 }
 
-const flags = { data: '', pub: '', kind: 'ib-plan' };
+const flags = { data: '', pub: '', kind: 'ti-plan' };
 const args = [];
 const argv = process.argv.slice(2);
 for (let i = 0; i < argv.length; i++) {
@@ -43,7 +43,7 @@ try {
       const pub = Buffer.from(fs.readFileSync(flags.pub, 'utf8').trim(), 'base64');
       if (pub.length !== 32) fail(`${flags.pub}: not a base64 Ed25519 public key`);
       if (args.length > 2) verifyFor(pub, doc, args[2]); else verify(pub, doc, flags.kind);
-      process.stdout.write(`ok (key ${keyID(pub)}${flags.kind === 'ib-plan' ? ', record ' + recordOf(doc) : ', ' + flags.kind})\n`);
+      process.stdout.write(`ok (key ${keyID(pub)}${flags.kind === 'ti-plan' ? ', record ' + recordOf(doc) : ', ' + flags.kind})\n`);
       break;
     }
     default:

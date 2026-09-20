@@ -15,7 +15,7 @@ import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { readInstaller } from '../shared/ibfile.js';
+import { readInstaller } from '../shared/tifile.js';
 import { noNativeArg, disableNative, checkNativeState } from './no-native-browser.mjs';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
@@ -27,7 +27,7 @@ if (typeof WebSocket === 'undefined' || !fs.existsSync(PAGE)) {
   console.log('usage: node --experimental-websocket tests/catalog-editor-test.mjs [--page dist/index.html] [--site URL] [--shots DIR]');
   process.exit(2);
 }
-const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'ib-cated-'));
+const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'ti-cated-'));
 const DL = path.join(TMP, 'dl');
 fs.mkdirSync(DL);
 if (SHOTS) fs.mkdirSync(SHOTS, { recursive: true });
@@ -93,7 +93,7 @@ async function shot(name) {
 async function openEditor(file, hash = '#runtimes&rt=python&tab=releases') {
   errors.length = 0;
   await cdp('Page.navigate', { url: (/^https?:/.test(file) ? file : 'file://' + file) + hash });
-  await waitFor(`document.readyState === 'complete' && !!globalThis.ibLocalApi && !document.getElementById('rt-app').hidden && document.querySelectorAll('.rt-vrow').length > 0`, 'the editor to start');
+  await waitFor(`document.readyState === 'complete' && !!globalThis.tiLocalApi && !document.getElementById('rt-app').hidden && document.querySelectorAll('.rt-vrow').length > 0`, 'the editor to start');
   await sleep(400);
 }
 // A real reload: Page.navigate to the same URL and hash would not be one.
@@ -103,7 +103,7 @@ async function reopen(file, hash) {
   await openEditor(file, hash);
 }
 const count = () => js(`document.getElementById('rt-count').textContent`);
-const stored = () => js(`(() => { try { const t = localStorage.getItem('ib.catalog.overlay'); return t == null ? null : JSON.parse(t).changes.length; } catch (e) { return 'throws'; } })()`);
+const stored = () => js(`(() => { try { const t = localStorage.getItem('ti.catalog.overlay'); return t == null ? null : JSON.parse(t).changes.length; } catch (e) { return 'throws'; } })()`);
 
 // Sets an input's value as typing would.
 const setIn = (sel, v) => js(`(() => { const e = document.querySelector(${JSON.stringify(sel)}); e.value = ${JSON.stringify(v)};
@@ -142,8 +142,8 @@ async function buildWindows(name) {
   const body = { name, source: { kind: 'inline' }, files: { 'main.py': "print('hi')\n" }, runtime: 'python', mode: 'C',
     platforms: ['windows'], launch: '{runtime} {app_dir}/main.py', console: true };
   const job = await js(`(async () => {
-    let j = await ibLocalApi.request('/api/jobs', { method: 'POST', body: ${JSON.stringify(body)} });
-    while (j.status !== 'done' && j.status !== 'failed') { await new Promise((r) => setTimeout(r, 100)); j = await ibLocalApi.request('/api/jobs/' + j.id); }
+    let j = await tiLocalApi.request('/api/jobs', { method: 'POST', body: ${JSON.stringify(body)} });
+    while (j.status !== 'done' && j.status !== 'failed') { await new Promise((r) => setTimeout(r, 100)); j = await tiLocalApi.request('/api/jobs/' + j.id); }
     return j;
   })()`);
   if (!job || job.status !== 'done') return { job, plan: '' };
@@ -184,7 +184,7 @@ try {
   await checkNativeState(ok, js);
   // The catalogue is unpacked a folder at a time: opening Python unpacks
   // only python/ (python and python2), and the list still counts the rest.
-  ok(JSON.stringify(await js(`ibLocalApi.unpacked()`)) === '["python"]', 'opening the editor on Python unpacks only its folder', JSON.stringify(await js(`ibLocalApi.unpacked()`)));
+  ok(JSON.stringify(await js(`tiLocalApi.unpacked()`)) === '["python"]', 'opening the editor on Python unpacks only its folder', JSON.stringify(await js(`tiLocalApi.unpacked()`)));
   ok(/13,452/.test(await js(`document.querySelector('.rt-rt[data-rt="node"] .rt-rt-meta').textContent`)), 'the runtimes list counts Node.js\'s releases before unpacking them');
   const before = await buildWindows('Hello before');
   TARGET = firstTarget(before.plan);
@@ -227,7 +227,7 @@ try {
   await js(`document.querySelector('.rt-rt[data-rt="node"]').click()`);
   await waitFor(`/13,452 of/.test(document.getElementById('rt-rel-count').textContent)`, 'Node.js to be unpacked and listed');
   await sleep(100);
-  ok((await js(`ibLocalApi.unpacked()`)).includes('node'), 'opening Node.js unpacks its folder');
+  ok((await js(`tiLocalApi.unpacked()`)).includes('node'), 'opening Node.js unpacks its folder');
   const nodeRows = await js(`[document.getElementById('rt-rel-count').textContent, document.querySelectorAll('.rt-vrow').length]`);
   ok(/13,452 of 13,452/.test(nodeRows[0]) && nodeRows[1] < 60, 'Node.js: 13,452 releases, a few rows drawn', nodeRows.join(' '));
   await js(`const l = document.getElementById('rt-rel-list'); l.scrollTop = 200000; l.dispatchEvent(new Event('scroll'))`);
@@ -242,9 +242,9 @@ try {
   // (mirrors[0] is the URL itself in the Python catalogue, which plans list
   // once; so the test swaps the second and third mirrors.)
   ok(rel.mirrors.length >= 3 && /^https:/.test(rel.url), 'a release opens in the form with its URL and mirrors', JSON.stringify(rel).slice(0, 300));
-  await setIn('[data-err="ib_sha256"] input', 'abc123');
+  await setIn('[data-err="ti_sha256"] input', 'abc123');
   await sleep(100);
-  ok(await js(`document.getElementById('rt-save').disabled && /64 hex/.test(document.querySelector('[data-err="ib_sha256"] .rt-err').textContent)`),
+  ok(await js(`document.getElementById('rt-save').disabled && /64 hex/.test(document.querySelector('[data-err="ti_sha256"] .rt-err').textContent)`),
     'a SHA-256 that isn\'t 64 hex characters is shown inline and can\'t be saved');
   await setIn('[data-err="url"] input', 'ftp://example.com/x.zip');
   await sleep(100);
@@ -327,7 +327,7 @@ try {
   await sleep(300);
   ok(await js(`!document.getElementById('new-overlay-note').hidden && /Builds use 2 catalogue changes/.test(document.getElementById('new-overlay-note').textContent)`),
     'the New installer page says builds use the changes');
-  const summary = await js(`ibLocalApi.request('/api/catalog/runtimes')`);
+  const summary = await js(`tiLocalApi.request('/api/catalog/runtimes')`);
   ok(summary && summary.changed === 2 && summary.runtimes.some((r) => r.id === 'python'), 'the "newest that runs" summary is worked out with the changes');
 
   /* ---- export ---- */
@@ -335,7 +335,7 @@ try {
   await js(`document.getElementById('rt-export').click()`);
   const exported = await waitDownload('tiddlyinstall-catalog-changes.json');
   const doc = exported && JSON.parse(fs.readFileSync(exported, 'utf8'));
-  ok(doc && doc['ib-catalog-overlay'] === 1 && doc.changes.length === 2, 'Export saves the overlay as a JSON file with both changes');
+  ok(doc && doc['ti-catalog-overlay'] === 1 && doc.changes.length === 2, 'Export saves the overlay as a JSON file with both changes');
 
   /* ---- revert one ---- */
   await js(`document.getElementById('rt-changes-details').open = true`);
@@ -357,7 +357,7 @@ try {
   // Pages opened from disk share one localStorage in Chrome, so changes can
   // appear that nobody here made (design.md 11.0 item 3). They are not used
   // until this session says so, and the question shows what they do.
-  await js(`localStorage.setItem('ib.catalog.overlay', ${JSON.stringify(JSON.stringify(doc))}); sessionStorage.clear()`);
+  await js(`localStorage.setItem('ti.catalog.overlay', ${JSON.stringify(JSON.stringify(doc))}); sessionStorage.clear()`);
   await reopen(PAGE);
   await waitFor(`!document.querySelector('.overlay-ask').hidden`, 'the question about changes found in storage');
   ok(await js(`document.querySelectorAll('.overlay-ask .rt-change-list > li').length === 2`), 'the question lists both changes',
@@ -398,7 +398,7 @@ try {
   await sleep(100);
   await js(`document.getElementById('rt-policy-save').click()`);
   await waitFor(`/^1 change/.test(document.getElementById('rt-count').textContent)`, 'the policy change');
-  const sum2 = await js(`ibLocalApi.request('/api/catalog/runtimes')`);
+  const sum2 = await js(`tiLocalApi.request('/api/catalog/runtimes')`);
   ok(await stored() === 1 && sum2.runtimes.find((r) => r.id === 'python').launch === '{runtime} -m changed', 'policy: the default launch command is changed, and the page\'s summary follows');
   await shot('editor-policy.png');
   await js(`document.getElementById('rt-reset').click(); document.getElementById('rt-reset-yes').click()`);
@@ -415,8 +415,8 @@ try {
   /* ---- a hostile import is data, not markup ---- */
   const hostile = path.join(TMP, 'hostile.json');
   const evil = '<img src=x onerror="window.pwned=1">';
-  fs.writeFileSync(hostile, JSON.stringify({ 'ib-catalog-overlay': 1, changes: [
-    { op: 'add', id: 'evil1', path: ['python/releases.json', '-'], value: { version: evil, os: 'windows', arch: 'amd64', kind: 'archive', format: 'zip', url: 'javascript:alert(1)', ib_sha256: 'x' } },
+  fs.writeFileSync(hostile, JSON.stringify({ 'ti-catalog-overlay': 1, changes: [
+    { op: 'add', id: 'evil1', path: ['python/releases.json', '-'], value: { version: evil, os: 'windows', arch: 'amd64', kind: 'archive', format: 'zip', url: 'javascript:alert(1)', ti_sha256: 'x' } },
     { op: 'add', id: 'evil2', path: ['python/install.json', 'recipes', '-'], value: { match: { os: 'windows' }, method: 'run', steps: [{ run: 'echo hi‮' }] } },
     { op: 'replace', path: ['policy.json', 'mirror_base'], value: 'http://evil.example/', was: '0000000000000000' },
     { op: 'add', id: 'evil3', path: ['__proto__/releases.json', '-'], value: {} },
@@ -438,8 +438,8 @@ try {
   await js(`document.getElementById('rt-save-with').checked = true; document.querySelector('.save-page').click()`);
   const saved = await waitDownload('tiddlyinstall.html');
   const savedText = saved ? fs.readFileSync(saved, 'utf8') : '';
-  ok(/<script type="application\/json" id="ib-overlay">\s*\{"ib-catalog-overlay":1,"changes":\[/.test(savedText), 'the saved page carries the changes');
-  await js(`localStorage.removeItem('ib.catalog.overlay')`);
+  ok(/<script type="application\/json" id="ti-overlay">\s*\{"ti-catalog-overlay":1,"changes":\[/.test(savedText), 'the saved page carries the changes');
+  await js(`localStorage.removeItem('ti.catalog.overlay')`);
   if (saved) {
     await openEditor(saved);
     ok(errors.length === 0, 'the saved copy starts without errors', errors.join(' | '));
@@ -478,7 +478,7 @@ try {
     await shot('editor-served.png');
     await js(`document.getElementById('rt-use-local').click()`);
     await sleep(200);
-    ok(await js(`document.documentElement.classList.contains('ib-local') && /builds use your changes/.test(document.getElementById('rt-mode').textContent)`),
+    ok(await js(`document.documentElement.classList.contains('ti-local') && /builds use your changes/.test(document.getElementById('rt-mode').textContent)`),
       'served: "Build in this page instead" switches to no server');
     await js(`localStorage.clear()`);
   }

@@ -4,3 +4,4 @@ tests/node_modules/
 tools/es5/node_modules/
 tests/browsers/node_modules/
 tests/browsers/.safari5-*/
+/prompts/

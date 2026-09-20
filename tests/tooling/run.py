@@ -48,7 +48,7 @@ WINDOWS = {
     "2025core": "x@10.0.1.124",
     "11de": "Jörg Müller@10.0.1.83",
 }
-# Run from a folder in the user's profile, not C:\ibtool: the German VM's
+# Run from a folder in the user's profile, not C:\titool: the German VM's
 # profile is "C:\Users\jörg müller" (a space and non-ASCII letters).
 PROFILE = {"11de"}
 LINUX_VMS = {
@@ -151,12 +151,12 @@ def appid(record):
 
 UNIX_SCRIPT = r'''
 set -u
-H=$(mktemp -d /tmp/ibtool-XXXXXX)
+H=$(mktemp -d /tmp/titool-XXXXXX)
 cp "$SRC" "$H/$F"
 BASEENV="HOME=$H PATH=/usr/local/bin:/usr/bin:/bin LANG=C.UTF-8"
 env -i $BASEENV sh "$H/$F" --yes --log="$H/i.log" </dev/null >"$H/i.out" 2>&1
 echo "@install $?"
-d=$(ls -d "$H"/.local/share/ib/*/launch.txt 2>/dev/null | head -1)
+d=$(ls -d "$H"/.local/share/ti/*/launch.txt 2>/dev/null | head -1)
 if [ -n "$d" ]; then
   d=$(dirname "$d")
   echo "@out"; env -i $BASEENV timeout 1800 sh "$d/launch.sh" </dev/null 2>&1 | tail -80
@@ -176,13 +176,13 @@ def run_local(b, f):
 
 def run_linux_vm(host, b, f):
     name = Path(f).name
-    sh(["ssh", host, "rm -rf ibtool; mkdir -p ibtool"], timeout=120)
-    code, _, err = sh(["scp", "-q", f, f"{host}:ibtool/{name}"], timeout=900)
+    sh(["ssh", host, "rm -rf titool; mkdir -p titool"], timeout=120)
+    code, _, err = sh(["scp", "-q", f, f"{host}:titool/{name}"], timeout=900)
     if code:
         return "", "scp: " + err.strip()
-    code, out, err = sh(["ssh", host, f"SRC=$HOME/ibtool/{shlex.quote(name)} F={shlex.quote(name)} sh -s"],
+    code, out, err = sh(["ssh", host, f"SRC=$HOME/titool/{shlex.quote(name)} F={shlex.quote(name)} sh -s"],
                         input=UNIX_SCRIPT)
-    sh(["ssh", host, "rm -rf ibtool"], timeout=120)
+    sh(["ssh", host, "rm -rf titool"], timeout=120)
     return out, err
 
 
@@ -192,34 +192,34 @@ def run_linux_vm(host, b, f):
 # install is listed so only what this cell left counts.
 MAC_SCRIPT = r'''
 set -u
-R="$HOME/Library/ib"
-[ -d "$R" ] || R="$HOME/Library/Application Support/ib"
-echo "@before"; ls "$HOME/Library/ib" "$HOME/Library/Application Support/ib" 2>/dev/null
-cd "$HOME/ibtool" || exit 90
+R="$HOME/Library/ti"
+[ -d "$R" ] || R="$HOME/Library/Application Support/ti"
+echo "@before"; ls "$HOME/Library/ti" "$HOME/Library/Application Support/ti" 2>/dev/null
+cd "$HOME/titool" || exit 90
 rm -rf x && mkdir x && cd x && ditto -x -k ../in.zip . || exit 91
 app=$(ls -d *.app)
-IB_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --log="$HOME/ibtool/i.log" </dev/null >/dev/null 2>&1
+TI_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --log="$HOME/titool/i.log" </dev/null >/dev/null 2>&1
 echo "@install $?"
 d=
-for r in "$HOME/Library/ib" "$HOME/Library/Application Support/ib"; do
+for r in "$HOME/Library/ti" "$HOME/Library/Application Support/ti"; do
   [ -f "$r/$ID/launch.txt" ] && d="$r/$ID"
 done
 if [ -n "$d" ]; then
-  echo "@out"; IB_NO_TERMINAL=1 perl -e 'alarm shift; exec @ARGV' 1800 sh "$d/launch.sh" </dev/null 2>&1 | tail -80
+  echo "@out"; TI_NO_TERMINAL=1 perl -e 'alarm shift; exec @ARGV' 1800 sh "$d/launch.sh" </dev/null 2>&1 | tail -80
   sh "$d/uninstall.sh" --yes </dev/null >/dev/null 2>&1; echo "@uninstall $?"
 fi
-echo "@left"; ls "$HOME/Library/ib" "$HOME/Library/Application Support/ib" 2>/dev/null
-echo "@log"; cat "$HOME/ibtool/i.log"
+echo "@left"; ls "$HOME/Library/ti" "$HOME/Library/Application Support/ti" 2>/dev/null
+echo "@log"; cat "$HOME/titool/i.log"
 '''
 
 
 def run_mac(b, f):
-    sh(["ssh", MAC, "rm -rf ~/ibtool; mkdir -p ~/ibtool"], timeout=120)
-    code, _, err = sh(["scp", "-q", f, f"{MAC}:ibtool/in.zip"], timeout=900)
+    sh(["ssh", MAC, "rm -rf ~/titool; mkdir -p ~/titool"], timeout=120)
+    code, _, err = sh(["scp", "-q", f, f"{MAC}:titool/in.zip"], timeout=900)
     if code:
         return "", "scp: " + err
     code, out, err = sh(["ssh", MAC, f"ID={shlex.quote(appid(b['record']))} sh -s"], input=MAC_SCRIPT)
-    sh(["ssh", MAC, "rm -rf ~/ibtool"], timeout=120)
+    sh(["ssh", MAC, "rm -rf ~/titool"], timeout=120)
     return out, err
 
 
@@ -229,13 +229,13 @@ BAT = r'''@echo off
 setlocal
 set T=%DIR%
 echo @before
-if exist "C:\ib" dir /b "C:\ib"
-if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib" dir /b "%LOCALAPPDATA%\ib"
+if exist "C:\ti" dir /b "C:\ti"
+if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ti" dir /b "%LOCALAPPDATA%\ti"
 "%T%\%FILE%" /S /log={LOG}
 echo @install %ERRORLEVEL%
 set A=
-if exist "C:\ib\%ID%\launch.exe" set A=C:\ib\%ID%
-if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib\%ID%\launch.exe" set A=%LOCALAPPDATA%\ib\%ID%
+if exist "C:\ti\%ID%\launch.exe" set A=C:\ti\%ID%
+if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ti\%ID%\launch.exe" set A=%LOCALAPPDATA%\ti\%ID%
 if not defined A goto left
 "%A%\launch.exe" /out={OUT}
 echo @out
@@ -252,8 +252,8 @@ goto wait
 :left
 ping -n 3 127.0.0.1 >nul
 echo @left
-if exist "C:\ib" dir /b "C:\ib"
-if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib" dir /b "%LOCALAPPDATA%\ib"
+if exist "C:\ti" dir /b "C:\ti"
+if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ti" dir /b "%LOCALAPPDATA%\ti"
 echo @log
 if exist "%T%\install.log" type "%T%\install.log"
 for /d %%d in ("%TEMP%\~nsu*.tmp") do rd /s /q "%%d" 2>nul
@@ -262,9 +262,9 @@ for /d %%d in ("%TEMP%\~nsu*.tmp") do rd /s /q "%%d" 2>nul
 
 def win_busy(host):
     """Another harness's folder on this VM (tests/templates/run.py)."""
-    checks = ["if exist C:\\ibtest echo BUSY", "if exist C:\\ibbtest echo BUSY",
-              "if exist C:\\ibtpl echo BUSY", "if exist C:\\ibfid echo BUSY",
-              'if exist "%USERPROFILE%\\ibtest" echo BUSY', 'if exist "%USERPROFILE%\\ibtpl" echo BUSY']
+    checks = ["if exist C:\\titest echo BUSY", "if exist C:\\tibtest echo BUSY",
+              "if exist C:\\titpl echo BUSY", "if exist C:\\tifid echo BUSY",
+              'if exist "%USERPROFILE%\\titest" echo BUSY', 'if exist "%USERPROFILE%\\titpl" echo BUSY']
     _, out, _ = sh(["ssh", host, 'cmd /c "' + "& ".join(checks) + '"'], timeout=120)
     return "BUSY" in out
 
@@ -286,13 +286,13 @@ def run_windows(target, b, f):
     `cmd /c call "..."\t.bat`."""
     host = WINDOWS[target]
     profile = target in PROFILE
-    cmd_dir = '"%USERPROFILE%\\ibtool"' if profile else "C:\\ibtool"
-    scp_dir = "ibtool" if profile else "C:/ibtool"
+    cmd_dir = '"%USERPROFILE%\\titool"' if profile else "C:\\titool"
+    scp_dir = "titool" if profile else "C:/titool"
     if not wait_idle(host):
         return "", "the VM stayed busy with another test run for an hour"
     q = '"' if profile else ""
     bat = (BAT.replace("%ID%", appid(b["record"])).replace("%FILE%", Path(f).name)
-           .replace("%DIR%", "%USERPROFILE%\\ibtool" if profile else "C:\\ibtool")
+           .replace("%DIR%", "%USERPROFILE%\\titool" if profile else "C:\\titool")
            .replace("{LOG}", q + "%T%\\install.log" + q)
            .replace("{OUT}", q + "%T%\\out.txt" + q))
     with tempfile.NamedTemporaryFile("w", suffix=".bat", delete=False, newline="\r\n") as t:

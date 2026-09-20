@@ -30,7 +30,7 @@ import { convertCss, specificity } from '../web/has-shim.js';
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const QUICK = process.argv.includes('--quick');
 const N = QUICK ? 3 : 20;
-const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'ib-fallback-'));
+const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'ti-fallback-'));
 
 let passed = 0, failed = 0;
 function ok(cond, name, extra) {
@@ -110,14 +110,14 @@ await run('zlib', async () => {
   ok(/inflate/.test(threw), 'random bytes are not inflated', threw);
 
   // The real catalogue snapshot, if a build folder is named.
-  const catDir = process.env.IB_CATALOG_DIR;
+  const catDir = process.env.TI_CATALOG_DIR;
   const snap = catDir && path.join(catDir, 'catalog.gz');
   if (snap && fs.existsSync(snap)) {
     const g = new Uint8Array(fs.readFileSync(snap));
     const t = Date.now();
     const mine = inflate(g, 'gzip');
     ok(eq(mine, zlib.gunzipSync(g)), 'catalog.gz inflates the same (' + g.length + ' -> ' + mine.length + ' bytes, ' + (Date.now() - t) + ' ms)');
-  } else console.log('SKIP catalog.gz (set IB_CATALOG_DIR to the folder with catalog.gz)');
+  } else console.log('SKIP catalog.gz (set TI_CATALOG_DIR to the folder with catalog.gz)');
 
   // A zip made by another tool: every entry inflates with the plain code.
   const zipPy = path.join(TMP, 'z.zip');
@@ -138,14 +138,14 @@ with zipfile.ZipFile(sys.argv[1],'w',zipfile.ZIP_DEFLATED) as z:
     ok(n > 5 && !badz, 'zip entries written by Python inflate (' + n + ' entries)');
   }
 
-  // web/lib/zlib.js: native in Node; with IB_PURE_JS the plain path, same bytes out.
+  // web/lib/zlib.js: native in Node; with TI_PURE_JS the plain path, same bytes out.
   const d = samples()[6];
   ok(Z.nativeFor('gzip').inflate && Z.nativeFor('deflate-raw').deflate, 'zlib.js takes the native streams in Node');
   const nat = await Z.deflate(d, 'gzip');
-  globalThis.IB_PURE_JS = true;
-  ok(!Z.nativeFor('gzip').inflate, 'IB_PURE_JS turns the native streams off');
+  globalThis.TI_PURE_JS = true;
+  ok(!Z.nativeFor('gzip').inflate, 'TI_PURE_JS turns the native streams off');
   const pureOut = await Z.inflate(nat, 'gzip'), pureComp = await Z.deflate(d, 'deflate-raw');
-  delete globalThis.IB_PURE_JS;
+  delete globalThis.TI_PURE_JS;
   ok(eq(pureOut, d) && eq(await Z.inflate(pureComp, 'deflate-raw'), d), 'zlib.js round trip across the native and plain paths');
 });
 
@@ -391,8 +391,8 @@ await run('ed25519', async () => {
 await run('cryptox', async () => {
   const both = async (f) => {
     const a = await f();
-    globalThis.IB_PURE_JS = true;
-    try { return [a, await f()]; } finally { delete globalThis.IB_PURE_JS; }
+    globalThis.TI_PURE_JS = true;
+    try { return [a, await f()]; } finally { delete globalThis.TI_PURE_JS; }
   };
   const d = rnd(1000), k = rnd(32), iv = rnd(16);
   let r = await both(() => X.digest('SHA-384', d));
@@ -409,9 +409,9 @@ await run('cryptox', async () => {
   ok(eq(r[0], r[1]), 'cryptox AES-CFB: native and plain agree');
   let e1 = null, e2 = null;
   try { await X.aesCbcDecrypt(rnd(32), iv, (await X.aesCbcEncrypt(k, iv, d))); } catch (e) { e1 = e; }
-  globalThis.IB_PURE_JS = true;
+  globalThis.TI_PURE_JS = true;
   try { await X.aesCbcDecrypt(rnd(32), iv, (await X.aesCbcEncrypt(k, iv, d))); } catch (e) { e2 = e; }
-  delete globalThis.IB_PURE_JS;
+  delete globalThis.TI_PURE_JS;
   ok(e1 && e2, 'cryptox AES-CBC: a wrong key throws on both paths');
 
   for (const [type, alg] of [['rsa', { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' }], ['ec', { name: 'ECDSA', namedCurve: 'P-256', hash: 'SHA-256' }],
@@ -421,26 +421,26 @@ await run('cryptox', async () => {
     const pkcs8 = new Uint8Array(privateKey.export({ type: 'pkcs8', format: 'der' }));
     const spki = new Uint8Array(publicKey.export({ type: 'spki', format: 'der' }));
     const nk = await X.importPkcs8(pkcs8, alg);
-    globalThis.IB_PURE_JS = true;
+    globalThis.TI_PURE_JS = true;
     const pk = await X.importPkcs8(pkcs8, alg);
     const ps = await X.sign(pk, d);
     const pv = await X.verifySpki(alg, spki, ps, d);
-    delete globalThis.IB_PURE_JS;
+    delete globalThis.TI_PURE_JS;
     const ns = await X.sign(nk, d);
     const label = alg.name + (alg.namedCurve ? ' ' + alg.namedCurve : '');
-    ok(!!nk.native && !!pk.pure, `cryptox ${label}: native key in Node, plain key with IB_PURE_JS`);
+    ok(!!nk.native && !!pk.pure, `cryptox ${label}: native key in Node, plain key with TI_PURE_JS`);
     ok(await X.verifySpki(alg, spki, ps, d), `cryptox ${label}: the native side verifies the plain signature`);
-    ok(pv && (await (async () => { globalThis.IB_PURE_JS = true; try { return X.verifySpki(alg, spki, ns, d); } finally { delete globalThis.IB_PURE_JS; } })()),
+    ok(pv && (await (async () => { globalThis.TI_PURE_JS = true; try { return X.verifySpki(alg, spki, ns, d); } finally { delete globalThis.TI_PURE_JS; } })()),
       `cryptox ${label}: the plain side verifies itself and the native signature`);
     if (type === 'rsa') ok(eq(ns, ps), 'cryptox RSA: native and plain signatures are identical');
   }
   // Ed25519 keys: generate and sign on each path, check against Node.
   for (const pure of [false, true]) {
-    if (pure) globalThis.IB_PURE_JS = true;
+    if (pure) globalThis.TI_PURE_JS = true;
     const kp = await X.generateEd25519();
     const key = await X.importEd25519(kp.seed);
     const s = await X.sign(key, d);
-    delete globalThis.IB_PURE_JS;
+    delete globalThis.TI_PURE_JS;
     const nodePub = crypto.createPublicKey({ key: Buffer.concat([Buffer.from('302a300506032b6570032100', 'hex'), Buffer.from(kp.pub)]), format: 'der', type: 'spki' });
     ok(crypto.verify(null, d, nodePub, s), 'cryptox Ed25519 (' + (pure ? 'plain' : 'native') + ' path): Node verifies the signature');
   }
@@ -450,18 +450,18 @@ await run('cryptox', async () => {
   const parts = {};
   for (const n of ['n', 'e', 'd', 'p', 'q']) parts[n] = new Uint8Array(Buffer.from(jwk[n], 'base64url'));
   const kn = await X.importRsaParts(parts);
-  globalThis.IB_PURE_JS = true;
+  globalThis.TI_PURE_JS = true;
   const kpu = await X.importRsaParts(parts);
   const sp = await X.sign(kpu, d);
-  delete globalThis.IB_PURE_JS;
+  delete globalThis.TI_PURE_JS;
   ok(kn.native && kpu.pure && eq(await X.sign(kn, d), sp), 'cryptox RSA from parts: native and plain signatures are identical');
-  globalThis.IB_PURE_JS = true;
+  globalThis.TI_PURE_JS = true;
   const gen = await X.generateRsa(1024);
-  delete globalThis.IB_PURE_JS;
+  delete globalThis.TI_PURE_JS;
   const genPub = crypto.createPublicKey({ key: { kty: 'RSA', n: Buffer.from(gen.parts.n).toString('base64url'), e: Buffer.from(gen.parts.e).toString('base64url') }, format: 'jwk' });
-  globalThis.IB_PURE_JS = true;
+  globalThis.TI_PURE_JS = true;
   const gs = await X.sign(gen.key, d);
-  delete globalThis.IB_PURE_JS;
+  delete globalThis.TI_PURE_JS;
   ok(crypto.verify('sha256', d, genPub, gs), 'cryptox RSA generation on the plain path: Node verifies its signature');
 });
 
@@ -499,9 +499,9 @@ await run('has-shim', async () => {
   const r = convertCss(css);
   ok(n > 0 && !/:has\(|:is\(|:focus-visible/.test(r.css), 'every :has() in web/css/style.css is rewritten (' + n + ' uses, ' + r.probes.length + ' probes)');
   const plain = (s) => s.replace(/\s+/g, ' ').replace(/\s*([{}])\s*/g, '$1').trim();
-  ok(plain(convertCss('form:has(#a:checked) .x { color: red }').css) === plain('form.ibhas0:not(#ib-z) .x { color: red }'), 'a :has(#id:checked) rule');
-  ok(plain(convertCss('form:not(:has(#r option[value="a"]:checked)) .x{a:b}').css) === plain('form:not(.ibhas0):not(#ib-z):not(.ib-z):not(ib-z) .x {a:b}'), 'a :not(:has(...)) rule, padded');
-  ok(plain(convertCss('@media (x) { .t:has(input:focus-visible) { o: 1 } } .keep { a: b }').css) === plain('@media (x) { .t.ibhas0:not(ib-z) { o: 1 } } .keep { a: b }'),
+  ok(plain(convertCss('form:has(#a:checked) .x { color: red }').css) === plain('form.tihas0:not(#ti-z) .x { color: red }'), 'a :has(#id:checked) rule');
+  ok(plain(convertCss('form:not(:has(#r option[value="a"]:checked)) .x{a:b}').css) === plain('form:not(.tihas0):not(#ti-z):not(.ti-z):not(ti-z) .x {a:b}'), 'a :not(:has(...)) rule, padded');
+  ok(plain(convertCss('@media (x) { .t:has(input:focus-visible) { o: 1 } } .keep { a: b }').css) === plain('@media (x) { .t.tihas0:not(ti-z) { o: 1 } } .keep { a: b }'),
     '@media blocks, :focus-visible and untouched rules');
   const c3 = convertCss('a:has(#r option:is([value="p"], [value="q"]):checked) b {}');
   ok(c3.probes[0].sels.length === 2 && c3.probes[0].sels[1] === '#r option[value="q"]:checked', ':is() inside :has() is expanded');

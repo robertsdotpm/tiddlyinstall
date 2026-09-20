@@ -16,25 +16,25 @@
 // pe-library (both MIT, (c) 2018 jet) are still vendored and still loaded by
 // the pages through loadResEdit(), because tests/icon-test.js reads the
 // result back with them -- an independent parser for what this file writes.
-// They are loaded from globalThis.__IB_RESEDIT (set by vendor/resedit-bundle.js
+// They are loaded from globalThis.__TI_RESEDIT (set by vendor/resedit-bundle.js
 // on the site pages, and inlined into the one-file site by
 // tools/build_site.py), falling back to cdn.jsdelivr.net/npm. So the
 // standalone page never reaches the network.
 //
 // PNG encoding is done here in JS (a canvas encoder is skipped) so the output
 // is byte-for-byte deterministic and the tests are reliable.
-import { toBytes, peInfo, peChecksum, sha256Hex, kvSet, crc32, deflateRaw, zipEntryData, zipNewEntry } from './ibfile.js';
+import { toBytes, peInfo, peChecksum, sha256Hex, kvSet, crc32, deflateRaw, zipEntryData, zipNewEntry } from './tifile.js';
 import { inflate } from '../web/lib/zlib.js';
 
 const RESEDIT_URL = 'https://cdn.jsdelivr.net/npm/resedit@2.0.3/+esm';
 
 // resedit, from the inlined/vendored global or (fallback) the CDN.
 export async function loadResEdit() {
-  if (globalThis.__IB_RESEDIT) return globalThis.__IB_RESEDIT;
+  if (globalThis.__TI_RESEDIT) return globalThis.__TI_RESEDIT;
   // (Built by Function so that the one-file page, which has the global,
   // parses in browsers without dynamic import.)
   const mod = await new Function('u', 'return import(u)')(RESEDIT_URL);
-  globalThis.__IB_RESEDIT = mod;
+  globalThis.__TI_RESEDIT = mod;
   return mod;
 }
 
@@ -440,7 +440,7 @@ export async function buildIcns(source) {
 // here until 2026-09-20, on every Windows installer with a custom icon
 // (docs/spikes/uninstaller-icon/RESULTS.md).
 //
-// So: `.rsrc` is left byte for byte where it is, and a new `.ibrsrc`
+// So: `.rsrc` is left byte for byte where it is, and a new `.tirsrc`
 // section is added after the last one holding a complete new resource
 // directory plus the new icon images; the resource data directory is
 // pointed at it. Resources we don't change keep their data entry's RVA into
@@ -460,9 +460,9 @@ const RT_ICON = 3;
 const RT_GROUP_ICON = 14;
 const PE_DIR_RESOURCE = 2;
 const PE_DIR_SECURITY = 4;
-const IB_SECTION = '.ibrsrc';
+const TI_SECTION = '.tirsrc';
 // IMAGE_SCN_CNT_INITIALIZED_DATA | IMAGE_SCN_MEM_READ
-const IB_SECTION_CHARS = 0x40000040;
+const TI_SECTION_CHARS = 0x40000040;
 
 function peAlign(v, a) { return Math.ceil(v / a) * a; }
 
@@ -709,7 +709,7 @@ export async function setExeIcon(peBytes, icoBytes) {
   // icon) is replaced rather than stacked on. It qualifies only if it is
   // last in the table, in the file and in the address space.
   let reuse = h.nsec ? h.sections[h.nsec - 1] : null;
-  if (!reuse || reuse.name !== IB_SECTION || !reuse.rawSize) reuse = null;
+  if (!reuse || reuse.name !== TI_SECTION || !reuse.rawSize) reuse = null;
   if (reuse) {
     for (let i = 0; i + 1 < h.nsec; i++) {
       const o = h.sections[i];
@@ -814,7 +814,7 @@ export async function setExeIcon(peBytes, icoBytes) {
   out.set(overlay, dataEnd + rawSize);      // the NSIS overlay, byte for byte
 
   const dv = new DataView(out.buffer);
-  for (let i = 0; i < 8; i++) out[newSecOff + i] = i < IB_SECTION.length ? IB_SECTION.charCodeAt(i) : 0;
+  for (let i = 0; i < 8; i++) out[newSecOff + i] = i < TI_SECTION.length ? TI_SECTION.charCodeAt(i) : 0;
   dv.setUint32(newSecOff + 8, rsrc.length, true);          // VirtualSize
   dv.setUint32(newSecOff + 12, newVA, true);               // VirtualAddress
   dv.setUint32(newSecOff + 16, rawSize, true);             // SizeOfRawData
@@ -822,7 +822,7 @@ export async function setExeIcon(peBytes, icoBytes) {
   dv.setUint32(newSecOff + 24, 0, true);
   dv.setUint32(newSecOff + 28, 0, true);
   dv.setUint32(newSecOff + 32, 0, true);
-  dv.setUint32(newSecOff + 36, IB_SECTION_CHARS, true);
+  dv.setUint32(newSecOff + 36, TI_SECTION_CHARS, true);
   if (!reuse) dv.setUint16(h.pe + 6, h.nsec + 1, true);    // NumberOfSections
   const grew = rawSize - (reuse ? reuse.rawSize : 0);
   dv.setUint32(h.opt + 8, (dv.getUint32(h.opt + 8, true) + grew) >>> 0, true);      // SizeOfInitializedData

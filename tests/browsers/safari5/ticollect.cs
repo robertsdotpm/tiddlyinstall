@@ -1,5 +1,5 @@
 // Beacon collector for the Safari 5.1.7 check: logs each request line to a
-// file and answers a 1x1 GIF. ibcollect PORT OUTFILE MINUTES
+// file and answers a 1x1 GIF. ticollect PORT OUTFILE MINUTES
 using System; using System.IO; using System.Net; using System.Net.Sockets; using System.Text; using System.Threading;
 class C {
   static void Main(string[] a) {

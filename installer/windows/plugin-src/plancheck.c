@@ -1,13 +1,13 @@
 /*
- * Checks a signed ib-plan (docs/format.md "Plan signature"). Portable C, no
- * libc: used by the ibsig NSIS plugin and by the host test.
+ * Checks a signed ti-plan (docs/format.md "Plan signature"). Portable C, no
+ * libc: used by the tisig NSIS plugin and by the host test.
  *
  * The last line of a signed plan is
  *     sig<TAB>ed25519<TAB><88 characters of base64>
  * optionally followed by "\n" or "\r\n", and nothing else. The signature
  * covers every byte before that line; those bytes must start with
- * "ib-plan<TAB>", or, for the revocation list (docs/format.md section 7),
- * "ib-revocations<TAB>".
+ * "ti-plan<TAB>", or, for the revocation list (docs/format.md section 7),
+ * "ti-revocations<TAB>".
  */
 #include "plancheck.h"
 
@@ -27,7 +27,7 @@ static int b64val(u8 c)
 }
 
 /* Strict standard base64 of exactly `outlen` bytes (with '=' padding). */
-int ib_b64decode(const u8 *in, unsigned long inlen, u8 *out, unsigned long outlen)
+int ti_b64decode(const u8 *in, unsigned long inlen, u8 *out, unsigned long outlen)
 {
   unsigned long i, o = 0, want = (outlen + 2) / 3 * 4;
   if (inlen != want) return -1;
@@ -65,14 +65,14 @@ static int starts(const u8 *p, unsigned long n, const char *s)
 
 static const char not_the_doc[] = "the signed bytes are not the document this installer asked for";
 
-int ib_plan_check(u8 *buf, unsigned long len, const u8 pk[32], const char **why)
+int ti_plan_check(u8 *buf, unsigned long len, const u8 pk[32], const char **why)
 {
-  int r = ib_doc_check(buf, len, pk, "ib-plan\t", why);
-  if (r == IB_PLAN_BAD && *why == not_the_doc) *why = "the signed bytes are not an ib-plan";
+  int r = ti_doc_check(buf, len, pk, "ti-plan\t", why);
+  if (r == TI_PLAN_BAD && *why == not_the_doc) *why = "the signed bytes are not a ti-plan";
   return r;
 }
 
-int ib_doc_check(u8 *buf, unsigned long len, const u8 pk[32], const char *head, const char **why)
+int ti_doc_check(u8 *buf, unsigned long len, const u8 pk[32], const char *head, const char **why)
 {
   u8 *doc = buf + 64;
   unsigned long end = len, nl, lastlen, i;
@@ -87,24 +87,24 @@ int ib_doc_check(u8 *buf, unsigned long len, const u8 pk[32], const char *head, 
   }
   nl = end;
   while (nl > 0 && doc[nl - 1] != '\n') --nl;
-  if (nl == 0) { *why = "no signature line"; return IB_PLAN_UNSIGNED; }
+  if (nl == 0) { *why = "no signature line"; return TI_PLAN_UNSIGNED; }
   last = doc + nl;
   lastlen = end - nl;
   if (!(lastlen == 3 && starts(last, 3, "sig")) && !starts(last, lastlen, "sig\t")) {
     *why = "no signature line";
-    return IB_PLAN_UNSIGNED;
+    return TI_PLAN_UNSIGNED;
   }
-  if (!starts(last, lastlen, prefix)) { *why = "unknown signature type"; return IB_PLAN_BAD; }
-  if (ib_b64decode(last + sizeof(prefix) - 1, lastlen - (sizeof(prefix) - 1), sig, 64)) {
+  if (!starts(last, lastlen, prefix)) { *why = "unknown signature type"; return TI_PLAN_BAD; }
+  if (ti_b64decode(last + sizeof(prefix) - 1, lastlen - (sizeof(prefix) - 1), sig, 64)) {
     *why = "malformed signature";
-    return IB_PLAN_BAD;
+    return TI_PLAN_BAD;
   }
-  if (!starts(doc, nl, head)) { *why = not_the_doc; return IB_PLAN_BAD; }
+  if (!starts(doc, nl, head)) { *why = not_the_doc; return TI_PLAN_BAD; }
   /* Lay out R || (room for A) || message: the message is already at buf+64. */
   for (i = 0; i < 32; ++i) buf[i] = sig[i];
   if (ed25519_verify(buf, (u64)nl + 64, sig + 32, pk)) {
     *why = "the signature does not match this plan and key";
-    return IB_PLAN_BAD;
+    return TI_PLAN_BAD;
   }
-  return IB_PLAN_OK;
+  return TI_PLAN_OK;
 }

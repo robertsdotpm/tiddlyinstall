@@ -1,5 +1,5 @@
 // The tested-browsers summary the page carries (tools/build_site.py embeds
-// it as <script id="ib-compat">; web/browser-check.js shows it): the latest
+// it as <script id="ti-compat">; web/browser-check.js shows it): the latest
 // result of each machine x browser x major version from usage.jsonl.
 // run.mjs rewrites it after every run.
 //

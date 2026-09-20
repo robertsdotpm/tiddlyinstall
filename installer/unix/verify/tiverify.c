@@ -1,11 +1,11 @@
 /*
- * ibverify: Ed25519 (RFC 8032, pure) signature check for the Linux and
+ * tiverify: Ed25519 (RFC 8032, pure) signature check for the Linux and
  * macOS engine, so plan signatures can be checked where openssl can't
  * (OpenSSL < 1.1.1 or builds whose `pkeyutl -rawin` fails, LibreSSL, no
- * openssl at all). The same TweetNaCl-based verifier as the Windows ibsig
+ * openssl at all). The same TweetNaCl-based verifier as the Windows tisig
  * plugin (../../windows/plugin-src/ed25519_verify.c, with the S < L check).
  *
- *   ibverify <public-key-base64> <signature-base64> < message
+ *   tiverify <public-key-base64> <signature-base64> < message
  *
  * The key is 32 bytes (44 base64 characters), the signature 64 (88).
  * Exit 0: valid. 1: not valid. 2: usage, bad base64, or a read error.
@@ -22,8 +22,8 @@ int main(int argc, char **argv)
   unsigned char pk[32], sig[64], *buf;
   size_t cap = 65536, n = 64;
   if (argc != 3) return 2;
-  if (strlen(argv[1]) != 44 || ib_b64decode((const unsigned char *)argv[1], 44, pk, 32)) return 2;
-  if (strlen(argv[2]) != 88 || ib_b64decode((const unsigned char *)argv[2], 88, sig, 64)) return 2;
+  if (strlen(argv[1]) != 44 || ti_b64decode((const unsigned char *)argv[1], 44, pk, 32)) return 2;
+  if (strlen(argv[2]) != 88 || ti_b64decode((const unsigned char *)argv[2], 88, sig, 64)) return 2;
   /* R || room for A || message, as ed25519_verify wants it. */
   buf = malloc(cap);
   if (!buf) return 2;

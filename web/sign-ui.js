@@ -423,7 +423,7 @@ async function signClicked() {
       // files?", and on a phone that stops the second until answered: there
       // the signature is its own tap. Elsewhere both are saved, and the
       // button is for a browser that kept the second.
-      const phone = document.documentElement.classList.contains('ib-mobile');
+      const phone = document.documentElement.classList.contains('ti-mobile');
       opts.download(out, name);
       if (!phone) opts.download(sigBytes, name + '.asc');
       const fp = pgp.fingerprintHex(pgpKey);
@@ -541,7 +541,7 @@ export function mountSign({ build, download, kind }) {
   $('svc-cancel').addEventListener('click', () => cancelServicePaste());
   // A relayed provider needs a build server, so the list changes with it.
   paintServiceList();
-  window.addEventListener('ib-api-change', paintServiceList);
+  window.addEventListener('ti-api-change', paintServiceList);
   $('ts-on').addEventListener('change', () => { $('ts-name').disabled = !$('ts-on').checked; });
   $('remote-finish').addEventListener('click', finishRemote);
   $('remote-cancel').addEventListener('click', () => cancelRemote());

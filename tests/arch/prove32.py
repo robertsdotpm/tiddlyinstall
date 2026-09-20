@@ -39,8 +39,8 @@ from vmlock import VMLock                                  # noqa: E402
 REPO = HERE.parents[1]
 # A statically linked amd64 ELF we already ship, for proof 1: the engine's
 # own Ed25519 verifier for 64-bit Linux. On a 32-bit kernel it cannot run.
-AMD64_ELF = REPO / "installer/unix/verify/bin/ibverify-linux-x86_64"
-X86_ELF = REPO / "installer/unix/verify/bin/ibverify-linux-i386"
+AMD64_ELF = REPO / "installer/unix/verify/bin/tiverify-linux-x86_64"
+X86_ELF = REPO / "installer/unix/verify/bin/tiverify-linux-i386"
 
 results = []
 
@@ -96,15 +96,15 @@ else
 	echo "mmap3g        no python3 here to try it with"
 fi
 echo "--- a 64-bit binary, on this machine ---"
-chmod +x /tmp/ib-amd64-probe /tmp/ib-x86-probe 2>/dev/null
-echo "amd64-run     $(/tmp/ib-amd64-probe 2>&1 | head -1 || true) (exit $?)"
-echo "x86-run       $(/tmp/ib-x86-probe 2>&1 | head -1 || true) (exit $?)"
-file /tmp/ib-amd64-probe /tmp/ib-x86-probe 2>/dev/null | sed 's/^/file         /'
+chmod +x /tmp/ti-amd64-probe /tmp/ti-x86-probe 2>/dev/null
+echo "amd64-run     $(/tmp/ti-amd64-probe 2>&1 | head -1 || true) (exit $?)"
+echo "x86-run       $(/tmp/ti-x86-probe 2>&1 | head -1 || true) (exit $?)"
+file /tmp/ti-amd64-probe /tmp/ti-x86-probe 2>/dev/null | sed 's/^/file         /'
 '''
 
 
 def proof_kernel(vm):
-    for src, dest in ((AMD64_ELF, "/tmp/ib-amd64-probe"), (X86_ELF, "/tmp/ib-x86-probe")):
+    for src, dest in ((AMD64_ELF, "/tmp/ti-amd64-probe"), (X86_ELF, "/tmp/ti-x86-probe")):
         if not src.exists():
             say(1, "a genuinely 32-bit kernel", False, f"{src} is missing; build the bases first")
             return
@@ -145,7 +145,7 @@ echo "session       $(ls /tmp/.X11-unix/ 2>/dev/null | tr '\n' ' ')"
 echo "wm            $(wmctrl -m 2>/dev/null | sed -n 1p)"
 echo "--- menu and desktop entries this install left ---"
 for d in "$HOME/.local/share/applications" "$HOME/Desktop" "$HOME/.config/autostart"; do
-  [ -d "$d" ] && find "$d" -name '*.desktop' -newer /tmp/ib-mark 2>/dev/null | while read -r f; do
+  [ -d "$d" ] && find "$d" -name '*.desktop' -newer /tmp/ti-mark 2>/dev/null | while read -r f; do
     echo "entry         $f"
     echo "validate      $(desktop-file-validate "$f" 2>&1 | head -2 | tr '\n' ' ' || echo ok)"
     sed -n 's/^\(Name\|Exec\|Type\|Categories\)=/  \1=/p' "$f"
@@ -162,37 +162,37 @@ export XAUTHORITY=${XAUTHORITY:-$HOME/.Xauthority}
 for tool in zenity kdialog; do
   command -v $tool >/dev/null 2>&1 || { echo "$tool         not installed"; continue; }
   case $tool in
-  zenity)   $tool --info --title=ibprobe --text="TiddlyInstall dialog probe" & ;;
-  kdialog)  $tool --title ibprobe --msgbox "TiddlyInstall dialog probe" & ;;
+  zenity)   $tool --info --title=tiprobe --text="TiddlyInstall dialog probe" & ;;
+  kdialog)  $tool --title tiprobe --msgbox "TiddlyInstall dialog probe" & ;;
   esac
   p=$!
   seen=
   i=0
   while [ $i -lt 40 ]; do
-    if xdotool search --name ibprobe >/dev/null 2>&1; then seen=1; break; fi
-    if wmctrl -l 2>/dev/null | grep -q ibprobe; then seen=1; break; fi
+    if xdotool search --name tiprobe >/dev/null 2>&1; then seen=1; break; fi
+    if wmctrl -l 2>/dev/null | grep -q tiprobe; then seen=1; break; fi
     sleep 0.5; i=$((i + 1))
   done
   echo "$tool         $([ -n "$seen" ] && echo "opened a window on $DISPLAY" || echo "no window appeared")"
-  xdotool search --name ibprobe windowkill 2>/dev/null || kill $p 2>/dev/null
+  xdotool search --name tiprobe windowkill 2>/dev/null || kill $p 2>/dev/null
   wait $p 2>/dev/null || true
 done
-# Which one the engine would choose, by its own rule (ib_ask): a tty
+# Which one the engine would choose, by its own rule (ti_ask): a tty
 # first, then macOS osascript, then zenity, then kdialog.
 echo "engine-would-use $([ -n "${DISPLAY:-}" ] && (command -v zenity >/dev/null && echo zenity || (command -v kdialog >/dev/null && echo kdialog || echo none)) || echo tty)"
 '''
 
 
 def proof_desktop(vm, installer, appname):
-    vm.run("touch /tmp/ib-mark")
+    vm.run("touch /tmp/ti-mark")
     name = Path(installer).name
-    vm.run("rm -rf ~/ibprove && mkdir -p ~/ibprove")
-    if vm.put(installer, f"ibprove/{name}"):
+    vm.run("rm -rf ~/tiprove && mkdir -p ~/tiprove")
+    if vm.put(installer, f"tiprove/{name}"):
         say(2, "XDG menu and desktop entries", False, "could not copy the installer")
         return
     code, out, err = vm.run(
-        f'set -u\ncd ~/ibprove\nsh ./{shlex.quote(name)} --yes --log=$HOME/ibprove/i.log '
-        f'>/dev/null 2>&1; echo "install $?"\ntail -3 $HOME/ibprove/i.log\n', timeout=1800)
+        f'set -u\ncd ~/tiprove\nsh ./{shlex.quote(name)} --yes --log=$HOME/tiprove/i.log '
+        f'>/dev/null 2>&1; echo "install $?"\ntail -3 $HOME/tiprove/i.log\n', timeout=1800)
     if "install 0" not in out:
         say(2, "XDG menu and desktop entries", False, "the install did not finish: " + out.strip()[-300:])
         return
@@ -239,16 +239,16 @@ def proof_ldconfig(vm, before=True):
 
 def proof_sudo_rust(vm, installer):
     name = Path(installer).name
-    vm.run("rm -rf ~/ibprove2 && mkdir -p ~/ibprove2")
-    if vm.put(installer, f"ibprove2/{name}"):
+    vm.run("rm -rf ~/tiprove2 && mkdir -p ~/tiprove2")
+    if vm.put(installer, f"tiprove2/{name}"):
         say(5, "sudo, and the libatomic1 prerequisite installed and retried", False,
             "could not copy the Rust installer")
         return
-    step = (f'set -u\nH=$(mktemp -d /tmp/ibp-XXXXXX)\ncp ~/ibprove2/{shlex.quote(name)} $H/\n'
+    step = (f'set -u\nH=$(mktemp -d /tmp/tip-XXXXXX)\ncp ~/tiprove2/{shlex.quote(name)} $H/\n'
             f'env -i HOME=$H PATH=/usr/local/bin:/usr/bin:/bin sh $H/{shlex.quote(name)} --yes '
             f'--log=$H/i.log </dev/null >/dev/null 2>&1; echo "exit $?"\n'
             f'grep -E "needs system packages|Run this" $H/i.log | head -2\n'
-            f'ls -d $H/.local/share/ib/*/launch.txt 2>/dev/null | head -1\n'
+            f'ls -d $H/.local/share/ti/*/launch.txt 2>/dev/null | head -1\n'
             f'rm -rf $H\n')
     code, first, _ = vm.run(step, timeout=3600)
     asked = "needs system packages" in first
@@ -319,7 +319,7 @@ def main():
     if not host:
         sys.exit(f"no ssh target for {a.target}: add it to tests/matrix/run.py's LINUX_VMS, or give --host")
     only = {int(x) for x in a.only.split(",") if x.strip()}
-    out = Path(a.out) if a.out else Path("/tmp/ibprove32")
+    out = Path(a.out) if a.out else Path("/tmp/tiprove32")
 
     node = rust = None
     if not only or only & {2}:
@@ -339,7 +339,7 @@ def main():
             proof_ldconfig(vm)
         if not only or 5 in only:
             proof_sudo_rust(vm, rust)
-        vm.run("rm -rf ~/ibprove ~/ibprove2 /tmp/ib-amd64-probe /tmp/ib-x86-probe /tmp/ib-mark")
+        vm.run("rm -rf ~/tiprove ~/tiprove2 /tmp/ti-amd64-probe /tmp/ti-x86-probe /tmp/ti-mark")
     bad = [r for r in results if not r[2]]
     print(f"\n{len(results)} proofs: {len(results) - len(bad)} pass, {len(bad)} fail.")
     return 1 if bad else 0

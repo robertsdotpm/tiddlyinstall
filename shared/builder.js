@@ -46,7 +46,7 @@
 //   env.signPlan(plan) signs an embedded plan (optional)
 //   env.now()          the record's `created` time, and the plan's `signed`
 //                      (default: now)
-import { toBytes, sha256Hex, recordHash, readInstaller, writeInstaller, tarWrite, installerExt, zipWrite, peInfo, zipRead, zipEntryData, zipUnixMode, zipIsDir, zipIsSymlink } from './ibfile.js';
+import { toBytes, sha256Hex, recordHash, readInstaller, writeInstaller, tarWrite, installerExt, zipWrite, peInfo, zipRead, zipEntryData, zipUnixMode, zipIsDir, zipIsSymlink } from './tifile.js';
 import { resolve, resolveFiles, loadRuntimes, hasRuntime, validPackage, packagePolicyFor, packageProject, packageModule, pickBin, jsonField, goQuote, replacer, setRevoked } from './resolve.js';
 import { rasterSource, buildIco, buildIcns, setExeIcon, setMacIcon, checkIconPng } from './icon.js';
 import { inflate, deflate } from '../web/lib/zlib.js';
@@ -489,7 +489,7 @@ function rfc3339(d) {
 function writeRecord(r, fields, backend, now) {
   let out = '';
   const add = (k, ...v) => { out += kvLine(k, ...v); };
-  add('ib-record', '1');
+  add('ti-record', '1');
   add('name', fields.name);
   add('project', fields.project);
   add('runtime', r.runtime);
@@ -514,14 +514,14 @@ function writeRecord(r, fields, backend, now) {
   // at /icons/<sha256>.png (format.md section 2).
   if (fields.iconSha) add('icon', fields.iconSha);
   add('root', r.root || 'user');
-  add('rootname', r.rootname || 'ib');
+  add('rootname', r.rootname || 'ti');
   add('platforms', r.platforms.join(' '));
   add('backend', backend || '');
   add('created', rfc3339(now));
   return out;
 }
 
-// ibfile.PackSize: the exact length of a pack's tar.
+// tifile.PackSize: the exact length of a pack's tar.
 export function packSize(files) {
   let n = 1024;
   for (const f of files) n += 512 + Math.ceil(f.size / 512) * 512;
@@ -645,7 +645,7 @@ export async function runJob(r, env, progress = () => {}) {
   const app = {
     recordHash: hash, name, project, runtime: r.runtime, select: r.select || 'newest',
     range: r.range || '', launch, install, console: r.console !== false, menu: r.menu !== false,
-    desktop: !!r.desktop, root: r.root || 'user', rootName: r.rootname || 'ib', platforms: [],
+    desktop: !!r.desktop, root: r.root || 'user', rootName: r.rootname || 'ti', platforms: [],
     source: src ? { name: (src.tarSha || src.sha256) + '.tar.gz', sha256: src.sha256, tarSha: src.tarSha || '',
                     size: src.size, format: 'tar.gz', strip: src.strip, urls: src.urls || [] } : null,
     package: pkg ? pkg.name : '', packageVersion: pkg ? pkg.version : '',
@@ -697,7 +697,7 @@ async function modeAFile(job, plat) {
   if (!data) data = await baseFor(env, plat);
   if (plat === 'macos') {
     // The .app is renamed after the file; its entries are copied as they
-    // are, so its signature stays (ibfile.MacZip with nothing added).
+    // are, so its signature stays (tifile.MacZip with nothing added).
     const info = await readInstaller(data, 'base.zip');
     renameApp(info, stem + '.app');
     data = zipWrite(info.entries);
@@ -775,7 +775,7 @@ async function emit(job, plat, name, spec, signed) {
   return f;
 }
 
-// The server names the .app after the installer (ibfile.MacZip).
+// The server names the .app after the installer (tifile.MacZip).
 function renameApp(info, app) {
   const from = info.app;
   const to = app + '/';

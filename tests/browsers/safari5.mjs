@@ -4,8 +4,8 @@
 // that works (web/browser-check.js). No driver exists for it, and it has no
 // COM automation, so the page copy carries a small ES3 reporter
 // (safari5/reporter.js) that sends what it finds, 5 and 20 seconds after
-// loading, as image requests to 127.0.0.1:38517, where ibcollect.exe
-// (safari5/ibcollect.cs, compiled on the machine with the .NET Framework's
+// loading, as image requests to 127.0.0.1:38517, where ticollect.exe
+// (safari5/ticollect.cs, compiled on the machine with the .NET Framework's
 // csc) logs them. Safari runs in the SSH session (safari5/drive.cmd), on its
 // hidden desktop: no screenshot is possible there.
 //
@@ -18,7 +18,7 @@
 // small ES3 script added that fills the form, reports it (a beacon) and
 // presses the button; from there it is Safari alone: the multipart post over
 // plain HTTP, the 303, the status page reloading itself until the build is
-// done. The server's log (journald, user unit ib-server) shows the post and
+// done. The server's log (journald, user unit ti-server) shows the post and
 // the last, finished status page coming from the machine's address; this
 // side then checks the links on that page (tests/browsers/classic.mjs).
 // Results go to results/ only.
@@ -43,7 +43,7 @@ const arg = (k, d) => (argv.includes(k) ? argv[argv.indexOf(k) + 1] : d);
 const flag = (k) => argv.includes(k);
 const PAGE = path.resolve(arg('--page', path.join(ROOT, 'dist', 'index.html')));
 const SECONDS = Number(arg('--seconds', 35));
-const DIR = 'C:\\ibbrowsers\\safari-5.1.7';
+const DIR = 'C:\\tibrowsers\\safari-5.1.7';
 
 // The beacons: "GET /r?k=<key>&n=<chunk>&q=<seq>&v=<value> HTTP/1.1" lines.
 function parseBeacons(text) {
@@ -112,7 +112,7 @@ async function runClassic(m, base) {
     const f = classicFields(label, mode);
     const html = await (await fetch(base + '/classic')).text();
     const copy = html.replace('<head>', () => '<head>\n<base href="' + base + '/">\n<script type="text/javascript">' + classicScript(f) + '</script>');
-    const local = path.join(tmp, 'ibclassic-' + crypto.randomBytes(4).toString('hex') + '.html');
+    const local = path.join(tmp, 'ticlassic-' + crypto.randomBytes(4).toString('hex') + '.html');
     fs.writeFileSync(local, copy);
     const remotePage = remote.dir('work', path.basename(local));
     remote.put(local, remotePage);
@@ -129,7 +129,7 @@ async function runClassic(m, base) {
     // What the server saw from this machine.
     const ip = m.ssh.split('@')[1];
     const ago = Math.ceil((Date.now() - since.getTime()) / 1000);
-    const j = spawnSync('journalctl', ['--user', '-u', 'ib-server', '--since', '-' + ago + 's', '-o', 'cat', '--no-pager'], { encoding: 'utf8' });
+    const j = spawnSync('journalctl', ['--user', '-u', 'ti-server', '--since', '-' + ago + 's', '-o', 'cat', '--no-pager'], { encoding: 'utf8' });
     const lines = j.stdout.split('\n').filter((l) => l.includes(' ' + ip + ' '));
     rec.serverLog = lines;
     t.ok(lines.some((l) => / POST \/submit /.test(l)), 'the server got the form from Safari\'s machine', lines.join(' | ') || j.stderr);
@@ -179,16 +179,16 @@ async function main() {
   rec.page = { rev: gen ? gen[1] : '', hash };
   const tmp = fs.mkdtempSync(path.join(HERE, '.safari5-'));
   try {
-    const local = path.join(tmp, `ibsafari5-${hash}.html`);
+    const local = path.join(tmp, `tisafari5-${hash}.html`);
     fs.writeFileSync(local, copy);
     const remotePage = remote.dir('work', path.basename(local));
     remote.put(local, remotePage);
     // The helpers, compiled there if they aren't yet.
     remote.put(path.join(HERE, 'safari5', 'drive.cmd'), DIR + '\\drive.cmd');
-    if (!remote.list(DIR).includes('ibcollect.exe')) {
-      remote.put(path.join(HERE, 'safari5', 'ibcollect.cs'), DIR + '\\ibcollect.cs');
-      const c = remote.sh(`cmd /c "cd /d ${DIR} & %SystemRoot%\\Microsoft.NET\\Framework\\v2.0.50727\\csc.exe /nologo /out:ibcollect.exe ibcollect.cs"`);
-      if (!remote.list(DIR).includes('ibcollect.exe')) throw new Error('driver: could not compile ibcollect.exe: ' + (c.out + c.err).slice(0, 300));
+    if (!remote.list(DIR).includes('ticollect.exe')) {
+      remote.put(path.join(HERE, 'safari5', 'ticollect.cs'), DIR + '\\ticollect.cs');
+      const c = remote.sh(`cmd /c "cd /d ${DIR} & %SystemRoot%\\Microsoft.NET\\Framework\\v2.0.50727\\csc.exe /nologo /out:ticollect.exe ticollect.cs"`);
+      if (!remote.list(DIR).includes('ticollect.exe')) throw new Error('driver: could not compile ticollect.exe: ' + (c.out + c.err).slice(0, 300));
     }
     const log = remote.dir('work', 'safari5-beacons.txt');
     const r = remote.sh(`cmd /c ${DIR}\\drive.cmd ${remote.fileUrl(remotePage)} ${SECONDS} ${log}`, { timeout: (SECONDS + 120) * 1000 });
@@ -215,9 +215,9 @@ async function main() {
     t.ok(true, 'Safari starts and runs the page\'s scripts');
     const s = fields(b['state-20s'] || b['state-5s']);
     detail.state = s;
-    t.ok(s.ready === '1', 'the startup check finishes (data-ib-ready)', s.ready);
+    t.ok(s.ready === '1', 'the startup check finishes (data-ti-ready)', s.ready);
     t.ok(!!s.missing && s.missing !== 'null', 'the startup check finds what this browser lacks', s.missing);
-    t.ok(/\bib-too-old\b/.test(s.bar) && /^[1-9]\d*x[1-9]/.test(s.barbox || ''), 'the compatibility bar shows, marked too old', s.bar + ' ' + s.barbox);
+    t.ok(/\bti-too-old\b/.test(s.bar) && /^[1-9]\d*x[1-9]/.test(s.barbox || ''), 'the compatibility bar shows, marked too old', s.bar + ' ' + s.barbox);
     t.ok(/can't run TiddlyInstall/.test(s.bartext || ''), 'the bar says this browser can\'t run the builder', s.bartext);
     t.ok(/ -> https:\/\//.test(s.barlinks || ''), 'the bar links a browser to use instead', s.barlinks);
     t.ok(/home:shown/.test(s.pages || '') && !/(new|edit|bases|runtimes):shown/.test(s.pages || ''), 'one section shows: home', s.pages);

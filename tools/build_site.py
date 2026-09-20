@@ -82,7 +82,7 @@ CORE_MODULES = [
     "web/lib/bignum.js", "web/lib/der.js", "web/lib/rsa.js", "web/lib/ec.js",
     "web/lib/ed25519.js", "web/lib/cryptox.js",
     "web/lib/inflate.js", "web/lib/deflate.js", "web/lib/zlib.js",
-    "shared/ibfile.js", "shared/icon.js",
+    "shared/tifile.js", "shared/icon.js",
     "web/lib/x509.js", "web/lib/legacy.js", "web/lib/pkcs12.js",
     "web/lib/authenticode.js", "web/lib/pgp.js",
     "web/sign-services.js", "web/sign-ui.js",
@@ -128,8 +128,8 @@ RESEDIT_BUNDLE = "vendor/resedit-bundle.js"
 # First existing path wins.
 BASES = [
     ("windows", ["installer/windows/out/base.exe"]),
-    ("linux", ["installer/unix/out/ib-base.run", "installer/unix/out/ib.run"]),
-    ("macos", ["installer/unix/out/ib-base-macos.zip"]),
+    ("linux", ["installer/unix/out/ti-base.run", "installer/unix/out/ti.run"]),
+    ("macos", ["installer/unix/out/ti-base-macos.zip"]),
 ]
 
 
@@ -164,7 +164,7 @@ def placeholder_windows():
 
 def placeholder_linux():
     return (b"#!/bin/sh\n"
-            b"echo 'installer-builder placeholder base: the real ib-base.run was not built "
+            b"echo 'installer-builder placeholder base: the real ti-base.run was not built "
             b"when this page was made.' >&2\nexit 1\n")
 
 
@@ -210,7 +210,7 @@ LEFTOVER_RE = re.compile(r"""^\s*(?:import\s*(?:[\w$*{][^;\n]*?\sfrom\s*)?['"][^
 
 
 def ns_name(rel):
-    return "__ib_" + re.sub(r"\W", "_", os.path.splitext(os.path.basename(rel))[0])
+    return "__ti_" + re.sub(r"\W", "_", os.path.splitext(os.path.basename(rel))[0])
 
 
 def import_to_const(m, rel, done):
@@ -322,8 +322,8 @@ def build_es5(resedit, js):
 
 def code_blocks_for(resedit, js):
     """The page's code as data blocks, for web/page-loader.js to run."""
-    blocks = [data_block("ib-js-resedit", resedit + "\n//# sourceURL=resedit.js", "text/x-ib-js"),
-              data_block("ib-js", js + "//# sourceURL=tiddlyinstall.js", "text/x-ib-js")]
+    blocks = [data_block("ti-js-resedit", resedit + "\n//# sourceURL=resedit.js", "text/x-ti-js"),
+              data_block("ti-js", js + "//# sourceURL=tiddlyinstall.js", "text/x-ti-js")]
     report = []
     es5 = build_es5(resedit, js)
     if es5:
@@ -331,8 +331,8 @@ def code_blocks_for(resedit, js):
         raw = code.encode("ascii")
         c = zlib.compressobj(9, zlib.DEFLATED, -15)
         packed = c.compress(raw) + c.flush()
-        blocks.append(data_block("ib-js-es5-inflate", no_close_script(inflate), "text/x-ib-js"))
-        blocks.append(data_block("ib-js-es5", b64_block(packed), extra=' data-encoding="deflate-raw base64"'))
+        blocks.append(data_block("ti-js-es5-inflate", no_close_script(inflate), "text/x-ti-js"))
+        blocks.append(data_block("ti-js-es5", b64_block(packed), extra=' data-encoding="deflate-raw base64"'))
         report.append(f"  ES5 copy ({log}): {len(raw):,} bytes, {len(packed):,} deflated, "
                       f"inflate {len(inflate):,} bytes")
     else:
@@ -343,7 +343,7 @@ def code_blocks_for(resedit, js):
 # Where scripts don't run at all (turned off; Internet Explorer on Windows
 # Server, whose Enhanced Security Configuration turns them off for the
 # Internet zone), web/browser-check.js can't say anything: this does.
-NOSCRIPT = ('  <noscript><div class="ib-compat-bar ib-too-old" role="alert" style="margin:0;padding:8px 16px;'
+NOSCRIPT = ('  <noscript><div class="ti-compat-bar ti-too-old" role="alert" style="margin:0;padding:8px 16px;'
             'border-bottom:2px solid #b3261e;background:#fdecea;color:#410e0b;font:14px/1.4 sans-serif">'
             "JavaScript is off in this browser, so TiddlyInstall can't build or sign installers here; the pages still read. "
             "Turn JavaScript on for this page, or open it in a current browser. (Internet Explorer on Windows Server "
@@ -425,7 +425,7 @@ def offline_page(catalog_dir, backend):
                 sys.exit(f'id "{i}" is in both {ids[i]} and {rel}; the offline copy needs unique ids')
             ids[i] = rel
         hidden = "" if name == PAGES[0][0] else " hidden"
-        sections.append(f'  <div class="ib-page" data-page="{name}" data-title="{html.escape(title)}"{hidden}>'
+        sections.append(f'  <div class="ti-page" data-page="{name}" data-title="{html.escape(title)}"{hidden}>'
                         f"{rewrite_links(body)}</div>")
 
     rev, today = git_rev(), datetime.date.today().isoformat()
@@ -439,27 +439,27 @@ def offline_page(catalog_dir, backend):
             data, extra = PLACEHOLDERS[os_name](), ' data-placeholder="1"'
             report.append(f"  base {os_name:8} PLACEHOLDER ({' or '.join(rels)} not found)")
         blocks.append(data_block(f"base-{os_name}", b64_block(data), extra=extra))
-    # The catalogue, split (web/overlay.js reads it): #ib-catalog, the index
-    # with the runtimes summary; #ib-cat-FOLDER, each folder's chunk.
+    # The catalogue, split (web/overlay.js reads it): #ti-catalog, the index
+    # with the runtimes summary; #ti-cat-FOLDER, each folder's chunk.
     index, chunks = split_catalog(os.path.join(catalog_dir, "catalog.gz"))
     with open(os.path.join(catalog_dir, "runtimes.json")) as f:
         index["summary"] = json.load(f)
     index_json = json_block(index)
-    blocks.append(data_block("ib-catalog", index_json, "application/json"))
+    blocks.append(data_block("ti-catalog", index_json, "application/json"))
     for folder, data in chunks:
-        blocks.append(data_block("ib-cat-" + folder, b64_block(data), extra=f' data-folder="{folder}"'))
+        blocks.append(data_block("ti-cat-" + folder, b64_block(data), extra=f' data-folder="{folder}"'))
     packed = sum(len(d) for _, d in chunks)
     report.append(f"  catalogue: index {len(index_json.encode()):,} bytes (with the runtimes summary), "
                   f"{len(chunks)} folders {packed:,} bytes gzipped (largest {max(chunks, key=lambda c: len(c[1]))[0]} "
                   f"{max(len(d) for _, d in chunks):,})")
     # Catalogue changes "Save this page" can put inside the page (web/overlay.js
     # bakeOverlay); none in a freshly built page.
-    blocks.append(data_block("ib-overlay", "null", "application/json", ' data-placeholder="1"'))
+    blocks.append(data_block("ti-overlay", "null", "application/json", ' data-placeholder="1"'))
     info = {"built": today, "rev": rev, "backend": backend}
-    blocks.append(data_block("ib-offline", json.dumps(info), "application/json"))
+    blocks.append(data_block("ti-offline", json.dumps(info), "application/json"))
     # Where the page was tested, for web/browser-check.js (tests/browsers/compat.mjs).
     compat = os.path.join(ROOT, "tests", "browsers", "compat.json")
-    blocks.append(data_block("ib-compat", no_close_script(read(compat).strip()) if os.path.isfile(compat) else "null", "application/json"))
+    blocks.append(data_block("ti-compat", no_close_script(read(compat).strip()) if os.path.isfile(compat) else "null", "application/json"))
 
     resedit = no_close_script(read(RESEDIT_BUNDLE))
     done = set()
@@ -469,14 +469,14 @@ def offline_page(catalog_dir, backend):
           + join_modules(EARLY_MODULES, done)
           + "\n// The page exactly as loaded, for \"Save this page\": web/page-loader.js\n"
           "// takes it before it runs this; this is for a copy of the code run otherwise.\n"
-          "if (typeof IB_PRISTINE === 'undefined') globalThis.IB_PRISTINE = '<!DOCTYPE html>\\n' + document.documentElement.outerHTML;\n"
-          "globalThis.IB_HAS_LOCAL = true;\n"
-          "globalThis.IB_ONE_FILE = true;\n"
-          "__ib_has_shim.installHasShim();   // only where the browser has no :has()\n\n"
+          "if (typeof TI_PRISTINE === 'undefined') globalThis.TI_PRISTINE = '<!DOCTYPE html>\\n' + document.documentElement.outerHTML;\n"
+          "globalThis.TI_HAS_LOCAL = true;\n"
+          "globalThis.TI_ONE_FILE = true;\n"
+          "__ti_has_shim.installHasShim();   // only where the browser has no :has()\n\n"
           + join_modules(CORE_MODULES, done)
-          + "\n__ib_local_api.installLocalApi();\n"
+          + "\n__ti_local_api.installLocalApi();\n"
           + join_modules(PAGE_MODULES, done)
-          + "\n__ib_router.startRouter();\n})();\n")
+          + "\n__ti_router.startRouter();\n})();\n")
     code_blocks, es5_report = code_blocks_for(resedit, js)
     report += es5_report
 

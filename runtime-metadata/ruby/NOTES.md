@@ -430,7 +430,7 @@ readline, fiddle, the standard library and the gem command).
   gems (csv, bigdecimal, minitest, rexml, net-smtp...), so apps list them in
   their Gemfile. Both link nothing outside /usr/lib and /System.
   Their rbconfig.rb has `EXTDLDFLAGS = -bundle_loader '$(BUILTRUBY)'`; in a
-  folder with a space (the default `~/Library/Application Support/ib`) make
+  folder with a space (the default `~/Library/Application Support/ti`) make
   writes `Application\ Support` and the quotes keep the backslash, so every C
   extension failed to link. The recipe removes the quotes (tested with bcrypt
   and json). Native gems need the Xcode Command Line Tools (policy `needs`).

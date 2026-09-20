@@ -12,7 +12,7 @@
    "package_manager": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>",
    "side_effects": [],
    "uninstall": "delete {runtime_dir}",
-   "notes": "Tested as a normal user: unpacked twice side by side under paths with spaces ('app one/rt/0.20.2', 'app two/rt/0.20.2'), compiled and ran hello world with system gcc 13.3 from both; nimble 0.10.2 installed a local package (with a `requires \"nim >= 0.19.0\"` line) into \"{runtime_dir}/nimble pkgs\" via --nimbleDir and the compiler found it via --nimblePath. Nothing was written to HOME. The archive also carries build.sh/c_code (not needed). Nim finds lib/ and config/ relative to bin/nim, so moving the folder works. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects, and pins the target glibc to this machine's (getconf GNU_LIBC_VERSION), without which zig links against the newest glibc it knows and the program will not start on an older system (measured on CentOS 7: \"version GLIBC_2.18 not found\"). {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
+   "notes": "Tested as a normal user: unpacked twice side by side under paths with spaces ('app one/rt/0.20.2', 'app two/rt/0.20.2'), compiled and ran hello world with system gcc 13.3 from both; nimble 0.10.2 installed a local package (with a `requires \"nim >= 0.19.0\"` line) into \"{runtime_dir}/nimble pkgs\" via --nimbleDir and the compiler found it via --nimblePath. Nothing was written to HOME. The archive also carries build.sh/c_code (not needed). Nim finds lib/ and config/ relative to bin/nim, so moving the folder works. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ticc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ticc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ticc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects, and pins the target glibc to this machine's (getconf GNU_LIBC_VERSION), without which zig links against the newest glibc it knows and the program will not start on an older system (measured on CentOS 7: \"version GLIBC_2.18 not found\"). {runtime_dir}/ticc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
    "match": {
     "os": "linux",
     "kind": "archive",
@@ -28,158 +28,158 @@
      "strip_components": 1
     },
     {
-     "mkdir": "{runtime_dir}/ibcc"
+     "mkdir": "{runtime_dir}/ticc"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#!/bin/sh"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# zig as this app's C toolchain, so an unattended install needs no root"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# and no system compiler (design.md 11.0 item 15). The name it is called"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# by picks the mode. Three things have to be corrected on the way:"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - a Rust target triple (x86_64-unknown-linux-gnu), which cc-rs passes"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    as --target= and zig's parser rejects, becomes zig's;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - the glibc version is pinned to this machine's, or zig links against"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    the newest glibc it knows and the program will not start here"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    (CentOS 7: \"/lib64/libc.so.6: version GLIBC_2.18 not found\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - zig calls the 32-bit x86 architecture \"x86\"; uname says i686, which"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    zig rejects outright (\"available architectures: ... x86 ...\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "t="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ \"$m\" != ar ]; then"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "g=$(getconf GNU_LIBC_VERSION 2>/dev/null | awk '{print $2}')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "[ -n \"$g\" ] || g=$(ldd --version 2>/dev/null | sed -n '1s/.* //p')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "c=$(uname -m)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $c in i[3-6]86) c=x86 ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $g in [0-9]*.[0-9]*) t=$c-linux-gnu.$g ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "n=$#"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=0"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "while [ $i -lt $n ]; do"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "a=$1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "shift"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $a in"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "--target=*)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen=1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed -e 's/-unknown-/-/' -e 's/^i[3-6]86-/x86-/'); fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": ";;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "set -- \"$@\" \"$a\""
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=$((i + 1))"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "done"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -z \"$seen\" ] && [ -n \"$t\" ]; then set -- -target \"$t\" \"$@\"; fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "exec \"{dir:zig}\"/zig $m \"$@\""
     },
     {
-     "run": "cd \"{runtime_dir}/ibcc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
+     "run": "cd \"{runtime_dir}/ticc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
      "shell": "sh"
     }
    ],
@@ -212,7 +212,7 @@
     "cwd": "{app_dir}",
     "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround.",
     "path_prepend": [
-     "{runtime_dir}/ibcc"
+     "{runtime_dir}/ticc"
     ]
    }
   },
@@ -224,7 +224,7 @@
    "package_manager": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>",
    "side_effects": [],
    "uninstall": "delete {runtime_dir}",
-   "notes": "Same layout as the amd64 recipe. Only `bin/nim --version` was run (on an amd64 host); compiling was not tested because the host has no 32-bit libc development files. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects, and pins the target glibc to this machine's (getconf GNU_LIBC_VERSION), without which zig links against the newest glibc it knows and the program will not start on an older system (measured on CentOS 7: \"version GLIBC_2.18 not found\"). {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
+   "notes": "Same layout as the amd64 recipe. Only `bin/nim --version` was run (on an amd64 host); compiling was not tested because the host has no 32-bit libc development files. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ticc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ticc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ticc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects, and pins the target glibc to this machine's (getconf GNU_LIBC_VERSION), without which zig links against the newest glibc it knows and the program will not start on an older system (measured on CentOS 7: \"version GLIBC_2.18 not found\"). {runtime_dir}/ticc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
    "match": {
     "os": "linux",
     "kind": "archive",
@@ -240,158 +240,158 @@
      "strip_components": 1
     },
     {
-     "mkdir": "{runtime_dir}/ibcc"
+     "mkdir": "{runtime_dir}/ticc"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#!/bin/sh"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# zig as this app's C toolchain, so an unattended install needs no root"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# and no system compiler (design.md 11.0 item 15). The name it is called"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# by picks the mode. Three things have to be corrected on the way:"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - a Rust target triple (x86_64-unknown-linux-gnu), which cc-rs passes"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    as --target= and zig's parser rejects, becomes zig's;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - the glibc version is pinned to this machine's, or zig links against"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    the newest glibc it knows and the program will not start here"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    (CentOS 7: \"/lib64/libc.so.6: version GLIBC_2.18 not found\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - zig calls the 32-bit x86 architecture \"x86\"; uname says i686, which"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    zig rejects outright (\"available architectures: ... x86 ...\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "t="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ \"$m\" != ar ]; then"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "g=$(getconf GNU_LIBC_VERSION 2>/dev/null | awk '{print $2}')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "[ -n \"$g\" ] || g=$(ldd --version 2>/dev/null | sed -n '1s/.* //p')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "c=$(uname -m)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $c in i[3-6]86) c=x86 ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $g in [0-9]*.[0-9]*) t=$c-linux-gnu.$g ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "n=$#"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=0"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "while [ $i -lt $n ]; do"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "a=$1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "shift"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $a in"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "--target=*)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen=1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed -e 's/-unknown-/-/' -e 's/^i[3-6]86-/x86-/'); fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": ";;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "set -- \"$@\" \"$a\""
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=$((i + 1))"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "done"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -z \"$seen\" ] && [ -n \"$t\" ]; then set -- -target \"$t\" \"$@\"; fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "exec \"{dir:zig}\"/zig $m \"$@\""
     },
     {
-     "run": "cd \"{runtime_dir}/ibcc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
+     "run": "cd \"{runtime_dir}/ticc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
      "shell": "sh"
     }
    ],
@@ -424,7 +424,7 @@
     "cwd": "{app_dir}",
     "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround.",
     "path_prepend": [
-     "{runtime_dir}/ibcc"
+     "{runtime_dir}/ticc"
     ]
    }
   },
@@ -435,7 +435,7 @@
    "package_manager": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>",
    "side_effects": [],
    "uninstall": "delete {runtime_dir}",
-   "notes": "Tested as a normal user: unpacked twice side by side under paths with spaces, compiled and ran hello world with system gcc 13.3 from both copies; installed a local package and jsony (from GitHub via git) into {runtime_dir}/nimble and compiled a program importing both. Nothing was written to HOME when --nimbleDir, --nimcache and HOME/XDG_* pointed elsewhere. bin/nim and bin/nimble (0.13.1) are static binaries, so the only host dependency is the C compiler. nimble 0.13.1 (bundled with 1.6.20) breaks when {runtime_dir} contains a space: it runs `<path to nim> --version` unquoted when resolving a package's `requires \"nim >= x\"`, failing with \"'/path/app' not in PATH\" (tested; packages without a nim requirement install fine). Workaround, tested: during install create a space-free symlink in {tmp} to {runtime_dir} and run nimble through it, keeping --nimbleDir on the real path: `ln -s \"{runtime_dir}\" \"{tmp}/nimrt\" && \"{tmp}/nimrt/bin/nimble\" --nim:\"{tmp}/nimrt/bin/nim\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>`; nothing referencing the symlink path is stored in the nimble folder (checked), so it can be deleted afterwards. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects, and pins the target glibc to this machine's (getconf GNU_LIBC_VERSION), without which zig links against the newest glibc it knows and the program will not start on an older system (measured on CentOS 7: \"version GLIBC_2.18 not found\"). {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
+   "notes": "Tested as a normal user: unpacked twice side by side under paths with spaces, compiled and ran hello world with system gcc 13.3 from both copies; installed a local package and jsony (from GitHub via git) into {runtime_dir}/nimble and compiled a program importing both. Nothing was written to HOME when --nimbleDir, --nimcache and HOME/XDG_* pointed elsewhere. bin/nim and bin/nimble (0.13.1) are static binaries, so the only host dependency is the C compiler. nimble 0.13.1 (bundled with 1.6.20) breaks when {runtime_dir} contains a space: it runs `<path to nim> --version` unquoted when resolving a package's `requires \"nim >= x\"`, failing with \"'/path/app' not in PATH\" (tested; packages without a nim requirement install fine). Workaround, tested: during install create a space-free symlink in {tmp} to {runtime_dir} and run nimble through it, keeping --nimbleDir on the real path: `ln -s \"{runtime_dir}\" \"{tmp}/nimrt\" && \"{tmp}/nimrt/bin/nimble\" --nim:\"{tmp}/nimrt/bin/nim\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>`; nothing referencing the symlink path is stored in the nimble folder (checked), so it can be deleted afterwards. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ticc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ticc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ticc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects, and pins the target glibc to this machine's (getconf GNU_LIBC_VERSION), without which zig links against the newest glibc it knows and the program will not start on an older system (measured on CentOS 7: \"version GLIBC_2.18 not found\"). {runtime_dir}/ticc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
    "match": {
     "os": "linux",
     "kind": "archive",
@@ -451,158 +451,158 @@
      "strip_components": 1
     },
     {
-     "mkdir": "{runtime_dir}/ibcc"
+     "mkdir": "{runtime_dir}/ticc"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#!/bin/sh"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# zig as this app's C toolchain, so an unattended install needs no root"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# and no system compiler (design.md 11.0 item 15). The name it is called"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# by picks the mode. Three things have to be corrected on the way:"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - a Rust target triple (x86_64-unknown-linux-gnu), which cc-rs passes"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    as --target= and zig's parser rejects, becomes zig's;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - the glibc version is pinned to this machine's, or zig links against"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    the newest glibc it knows and the program will not start here"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    (CentOS 7: \"/lib64/libc.so.6: version GLIBC_2.18 not found\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - zig calls the 32-bit x86 architecture \"x86\"; uname says i686, which"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    zig rejects outright (\"available architectures: ... x86 ...\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "t="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ \"$m\" != ar ]; then"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "g=$(getconf GNU_LIBC_VERSION 2>/dev/null | awk '{print $2}')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "[ -n \"$g\" ] || g=$(ldd --version 2>/dev/null | sed -n '1s/.* //p')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "c=$(uname -m)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $c in i[3-6]86) c=x86 ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $g in [0-9]*.[0-9]*) t=$c-linux-gnu.$g ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "n=$#"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=0"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "while [ $i -lt $n ]; do"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "a=$1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "shift"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $a in"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "--target=*)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen=1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed -e 's/-unknown-/-/' -e 's/^i[3-6]86-/x86-/'); fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": ";;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "set -- \"$@\" \"$a\""
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=$((i + 1))"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "done"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -z \"$seen\" ] && [ -n \"$t\" ]; then set -- -target \"$t\" \"$@\"; fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "exec \"{dir:zig}\"/zig $m \"$@\""
     },
     {
-     "run": "cd \"{runtime_dir}/ibcc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
+     "run": "cd \"{runtime_dir}/ticc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
      "shell": "sh"
     }
    ],
@@ -635,7 +635,7 @@
     "cwd": "{app_dir}",
     "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround.",
     "path_prepend": [
-     "{runtime_dir}/ibcc"
+     "{runtime_dir}/ticc"
     ]
    }
   },
@@ -646,7 +646,7 @@
    "package_manager": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>",
    "side_effects": [],
    "uninstall": "delete {runtime_dir}",
-   "notes": "Covers the x86, arm64 and armv7 archives (arm64 1.6.20 and armv7 builds come from nim-lang/nightlies). Same layout and behaviour as the amd64 recipe, which was tested; here only the x86 `bin/nim --version` was run on an amd64 host, and the arm binaries were only inspected (static ELF). nimble 0.13.1 (bundled with 1.6.20) breaks when {runtime_dir} contains a space: it runs `<path to nim> --version` unquoted when resolving a package's `requires \"nim >= x\"`, failing with \"'/path/app' not in PATH\" (tested; packages without a nim requirement install fine). Workaround, tested: during install create a space-free symlink in {tmp} to {runtime_dir} and run nimble through it, keeping --nimbleDir on the real path: `ln -s \"{runtime_dir}\" \"{tmp}/nimrt\" && \"{tmp}/nimrt/bin/nimble\" --nim:\"{tmp}/nimrt/bin/nim\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>`; nothing referencing the symlink path is stored in the nimble folder (checked), so it can be deleted afterwards. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects, and pins the target glibc to this machine's (getconf GNU_LIBC_VERSION), without which zig links against the newest glibc it knows and the program will not start on an older system (measured on CentOS 7: \"version GLIBC_2.18 not found\"). {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
+   "notes": "Covers the x86, arm64 and armv7 archives (arm64 1.6.20 and armv7 builds come from nim-lang/nightlies). Same layout and behaviour as the amd64 recipe, which was tested; here only the x86 `bin/nim --version` was run on an amd64 host, and the arm binaries were only inspected (static ELF). nimble 0.13.1 (bundled with 1.6.20) breaks when {runtime_dir} contains a space: it runs `<path to nim> --version` unquoted when resolving a package's `requires \"nim >= x\"`, failing with \"'/path/app' not in PATH\" (tested; packages without a nim requirement install fine). Workaround, tested: during install create a space-free symlink in {tmp} to {runtime_dir} and run nimble through it, keeping --nimbleDir on the real path: `ln -s \"{runtime_dir}\" \"{tmp}/nimrt\" && \"{tmp}/nimrt/bin/nimble\" --nim:\"{tmp}/nimrt/bin/nim\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>`; nothing referencing the symlink path is stored in the nimble folder (checked), so it can be deleted afterwards. Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ticc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ticc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ticc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects, and pins the target glibc to this machine's (getconf GNU_LIBC_VERSION), without which zig links against the newest glibc it knows and the program will not start on an older system (measured on CentOS 7: \"version GLIBC_2.18 not found\"). {runtime_dir}/ticc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
    "match": {
     "os": "linux",
     "kind": "archive",
@@ -662,158 +662,158 @@
      "strip_components": 1
     },
     {
-     "mkdir": "{runtime_dir}/ibcc"
+     "mkdir": "{runtime_dir}/ticc"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#!/bin/sh"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# zig as this app's C toolchain, so an unattended install needs no root"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# and no system compiler (design.md 11.0 item 15). The name it is called"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# by picks the mode. Three things have to be corrected on the way:"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - a Rust target triple (x86_64-unknown-linux-gnu), which cc-rs passes"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    as --target= and zig's parser rejects, becomes zig's;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - the glibc version is pinned to this machine's, or zig links against"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    the newest glibc it knows and the program will not start here"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    (CentOS 7: \"/lib64/libc.so.6: version GLIBC_2.18 not found\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - zig calls the 32-bit x86 architecture \"x86\"; uname says i686, which"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    zig rejects outright (\"available architectures: ... x86 ...\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "t="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ \"$m\" != ar ]; then"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "g=$(getconf GNU_LIBC_VERSION 2>/dev/null | awk '{print $2}')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "[ -n \"$g\" ] || g=$(ldd --version 2>/dev/null | sed -n '1s/.* //p')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "c=$(uname -m)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $c in i[3-6]86) c=x86 ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $g in [0-9]*.[0-9]*) t=$c-linux-gnu.$g ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "n=$#"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=0"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "while [ $i -lt $n ]; do"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "a=$1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "shift"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $a in"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "--target=*)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen=1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed -e 's/-unknown-/-/' -e 's/^i[3-6]86-/x86-/'); fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": ";;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "set -- \"$@\" \"$a\""
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=$((i + 1))"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "done"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -z \"$seen\" ] && [ -n \"$t\" ]; then set -- -target \"$t\" \"$@\"; fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "exec \"{dir:zig}\"/zig $m \"$@\""
     },
     {
-     "run": "cd \"{runtime_dir}/ibcc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
+     "run": "cd \"{runtime_dir}/ticc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
      "shell": "sh"
     }
    ],
@@ -846,7 +846,7 @@
     "cwd": "{app_dir}",
     "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround.",
     "path_prepend": [
-     "{runtime_dir}/ibcc"
+     "{runtime_dir}/ticc"
     ]
    }
   },
@@ -857,7 +857,7 @@
    "package_manager": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>",
    "side_effects": [],
    "uninstall": "delete {runtime_dir}",
-   "notes": "Tested as a normal user: unpacked twice side by side under paths with spaces, compiled and ran hello world with system gcc 13.3 from both copies and with clang from a copied (relocated) folder; installed jsony and a local package into {runtime_dir}/nimble and compiled a program importing both. Nothing was written to HOME when --nimbleDir, --nimcache and HOME/XDG_* pointed elsewhere. bin/nim and bin/nimble (0.24.1) are static binaries, so the only host dependency is the C compiler. nimble 0.24.1 (bundled with 2.2.12) does not work at all when {runtime_dir} contains a space: it runs `<path to nim> --version` unquoted and stops with 'Unable to get version from `nim` binary' (tested; nimblepkg/options.nim getNimVersionFromBin). Workaround, tested: run it through a space-free symlink in {tmp}: `ln -s \"{runtime_dir}\" \"{tmp}/nimrt\" && \"{tmp}/nimrt/bin/nimble\" --nim:\"{tmp}/nimrt/bin/nim\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>` (jsony and a local package installed; the symlink path is not recorded). Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects, and pins the target glibc to this machine's (getconf GNU_LIBC_VERSION), without which zig links against the newest glibc it knows and the program will not start on an older system (measured on CentOS 7: \"version GLIBC_2.18 not found\"). {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
+   "notes": "Tested as a normal user: unpacked twice side by side under paths with spaces, compiled and ran hello world with system gcc 13.3 from both copies and with clang from a copied (relocated) folder; installed jsony and a local package into {runtime_dir}/nimble and compiled a program importing both. Nothing was written to HOME when --nimbleDir, --nimcache and HOME/XDG_* pointed elsewhere. bin/nim and bin/nimble (0.24.1) are static binaries, so the only host dependency is the C compiler. nimble 0.24.1 (bundled with 2.2.12) does not work at all when {runtime_dir} contains a space: it runs `<path to nim> --version` unquoted and stops with 'Unable to get version from `nim` binary' (tested; nimblepkg/options.nim getNimVersionFromBin). Workaround, tested: run it through a space-free symlink in {tmp}: `ln -s \"{runtime_dir}\" \"{tmp}/nimrt\" && \"{tmp}/nimrt/bin/nimble\" --nim:\"{tmp}/nimrt/bin/nim\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>` (jsony and a local package installed; the symlink path is not recorded). Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ticc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ticc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ticc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects, and pins the target glibc to this machine's (getconf GNU_LIBC_VERSION), without which zig links against the newest glibc it knows and the program will not start on an older system (measured on CentOS 7: \"version GLIBC_2.18 not found\"). {runtime_dir}/ticc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
    "match": {
     "os": "linux",
     "kind": "archive",
@@ -873,158 +873,158 @@
      "strip_components": 1
     },
     {
-     "mkdir": "{runtime_dir}/ibcc"
+     "mkdir": "{runtime_dir}/ticc"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#!/bin/sh"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# zig as this app's C toolchain, so an unattended install needs no root"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# and no system compiler (design.md 11.0 item 15). The name it is called"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# by picks the mode. Three things have to be corrected on the way:"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - a Rust target triple (x86_64-unknown-linux-gnu), which cc-rs passes"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    as --target= and zig's parser rejects, becomes zig's;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - the glibc version is pinned to this machine's, or zig links against"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    the newest glibc it knows and the program will not start here"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    (CentOS 7: \"/lib64/libc.so.6: version GLIBC_2.18 not found\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - zig calls the 32-bit x86 architecture \"x86\"; uname says i686, which"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    zig rejects outright (\"available architectures: ... x86 ...\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "t="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ \"$m\" != ar ]; then"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "g=$(getconf GNU_LIBC_VERSION 2>/dev/null | awk '{print $2}')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "[ -n \"$g\" ] || g=$(ldd --version 2>/dev/null | sed -n '1s/.* //p')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "c=$(uname -m)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $c in i[3-6]86) c=x86 ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $g in [0-9]*.[0-9]*) t=$c-linux-gnu.$g ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "n=$#"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=0"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "while [ $i -lt $n ]; do"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "a=$1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "shift"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $a in"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "--target=*)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen=1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed -e 's/-unknown-/-/' -e 's/^i[3-6]86-/x86-/'); fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": ";;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "set -- \"$@\" \"$a\""
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=$((i + 1))"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "done"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -z \"$seen\" ] && [ -n \"$t\" ]; then set -- -target \"$t\" \"$@\"; fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "exec \"{dir:zig}\"/zig $m \"$@\""
     },
     {
-     "run": "cd \"{runtime_dir}/ibcc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
+     "run": "cd \"{runtime_dir}/ticc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
      "shell": "sh"
     }
    ],
@@ -1057,7 +1057,7 @@
     "cwd": "{app_dir}",
     "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround.",
     "path_prepend": [
-     "{runtime_dir}/ibcc"
+     "{runtime_dir}/ticc"
     ]
    }
   },
@@ -1068,7 +1068,7 @@
    "package_manager": "\"{runtime_dir}/bin/nimble\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>",
    "side_effects": [],
    "uninstall": "delete {runtime_dir}",
-   "notes": "Covers the x86, arm64 and armv7 archives (arm64 1.6.20 and armv7 builds come from nim-lang/nightlies). Same layout and behaviour as the amd64 recipe, which was tested; here only the x86 `bin/nim --version` was run on an amd64 host, and the arm binaries were only inspected (static ELF). nimble 0.24.1 (bundled with 2.2.12) does not work at all when {runtime_dir} contains a space: it runs `<path to nim> --version` unquoted and stops with 'Unable to get version from `nim` binary' (tested; nimblepkg/options.nim getNimVersionFromBin). Workaround, tested: run it through a space-free symlink in {tmp}: `ln -s \"{runtime_dir}\" \"{tmp}/nimrt\" && \"{tmp}/nimrt/bin/nimble\" --nim:\"{tmp}/nimrt/bin/nim\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>` (jsony and a local package installed; the symlink path is not recorded). Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ibcc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects, and pins the target glibc to this machine's (getconf GNU_LIBC_VERSION), without which zig links against the newest glibc it knows and the program will not start on an older system (measured on CentOS 7: \"version GLIBC_2.18 not found\"). {runtime_dir}/ibcc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
+   "notes": "Covers the x86, arm64 and armv7 archives (arm64 1.6.20 and armv7 builds come from nim-lang/nightlies). Same layout and behaviour as the amd64 recipe, which was tested; here only the x86 `bin/nim --version` was run on an amd64 host, and the arm binaries were only inspected (static ELF). nimble 0.24.1 (bundled with 2.2.12) does not work at all when {runtime_dir} contains a space: it runs `<path to nim> --version` unquoted and stops with 'Unable to get version from `nim` binary' (tested; nimblepkg/options.nim getNimVersionFromBin). Workaround, tested: run it through a space-free symlink in {tmp}: `ln -s \"{runtime_dir}\" \"{tmp}/nimrt\" && \"{tmp}/nimrt/bin/nimble\" --nim:\"{tmp}/nimrt/bin/nim\" --nimbleDir:\"{runtime_dir}/nimble\" -y install <pkg>` (jsony and a local package installed; the symlink path is not recorded). Isolation at run time: pass --skipUserCfg (otherwise ~/.config/nim/nim.cfg and config.nims are read into the private compiler; tested, a define placed there was picked up) and --nimcache:<app dir> (default is $XDG_CACHE_HOME/nim or ~/.cache/nim/<project>_d). Find packages with NIMBLE_DIR={runtime_dir}/nimble in the compiler's environment (the compiler then replaces every nimblepath from nim.cfg with $NIMBLE_DIR/pkgs2 and /pkgs, so ~/.nimble is not searched) or with --nimblePath:\"{runtime_dir}/nimble/pkgs2\" --nimblePath:\"{runtime_dir}/nimble/pkgs\". Always use nimble --nimbleDir:<dir> rather than the NIMBLE_DIR variable for nimble itself: with NIMBLE_DIR nimble 0.24 (Nim 2.2) still puts its download cache in ~/.nimble/pkgcache, and with neither it writes ~/.nimble even for `nimble --version`. nimble reads ~/.config/nimble/nimble.ini (%APPDATA%\\nimble\\nimble.ini on Windows) if present; run it with HOME/XDG_CONFIG_HOME pointing at {tmp} during install to be safe. nimble needs git on PATH for remote packages (not bundled). Compiled programs are ordinary native executables; they need the C compiler only at build time. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ticc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects. {runtime_dir}/ticc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient. Added 2026-09-20 (design.md 11.0 item 15): on Linux the C toolchain is zig, a companion runtime (policy `requires`), not the system compiler, so an unattended install needs no root and works on a machine with no gcc at all. The steps write a small POSIX shim into {runtime_dir}/ticc under every name a build might call (cc, gcc, clang, c++, g++, clang++, ar); it execs `zig cc`/`zig c++`/`zig ar` and rewrites a Rust target triple (x86_64-unknown-linux-gnu) to zig's (x86_64-linux-gnu), which cc-rs passes as --target= and zig's parser rejects, and pins the target glibc to this machine's (getconf GNU_LIBC_VERSION), without which zig links against the newest glibc it knows and the program will not start on an older system (measured on CentOS 7: \"version GLIBC_2.18 not found\"). {runtime_dir}/ticc goes first on PATH for the project install only. Tested on this machine with only the shim on PATH: cargo built a crate with a cc-rs build step and ran it, and nim compiled and linked a program using std/httpclient.",
    "match": {
     "os": "linux",
     "kind": "archive",
@@ -1084,158 +1084,158 @@
      "strip_components": 1
     },
     {
-     "mkdir": "{runtime_dir}/ibcc"
+     "mkdir": "{runtime_dir}/ticc"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#!/bin/sh"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# zig as this app's C toolchain, so an unattended install needs no root"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# and no system compiler (design.md 11.0 item 15). The name it is called"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# by picks the mode. Three things have to be corrected on the way:"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - a Rust target triple (x86_64-unknown-linux-gnu), which cc-rs passes"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    as --target= and zig's parser rejects, becomes zig's;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - the glibc version is pinned to this machine's, or zig links against"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    the newest glibc it knows and the program will not start here"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    (CentOS 7: \"/lib64/libc.so.6: version GLIBC_2.18 not found\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - zig calls the 32-bit x86 architecture \"x86\"; uname says i686, which"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    zig rejects outright (\"available architectures: ... x86 ...\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "t="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ \"$m\" != ar ]; then"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "g=$(getconf GNU_LIBC_VERSION 2>/dev/null | awk '{print $2}')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "[ -n \"$g\" ] || g=$(ldd --version 2>/dev/null | sed -n '1s/.* //p')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "c=$(uname -m)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $c in i[3-6]86) c=x86 ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $g in [0-9]*.[0-9]*) t=$c-linux-gnu.$g ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "n=$#"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=0"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "while [ $i -lt $n ]; do"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "a=$1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "shift"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $a in"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "--target=*)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen=1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed -e 's/-unknown-/-/' -e 's/^i[3-6]86-/x86-/'); fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": ";;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "set -- \"$@\" \"$a\""
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=$((i + 1))"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "done"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -z \"$seen\" ] && [ -n \"$t\" ]; then set -- -target \"$t\" \"$@\"; fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "exec \"{dir:zig}\"/zig $m \"$@\""
     },
     {
-     "run": "cd \"{runtime_dir}/ibcc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
+     "run": "cd \"{runtime_dir}/ticc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
      "shell": "sh"
     }
    ],
@@ -1268,7 +1268,7 @@
     "cwd": "{app_dir}",
     "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). Needs a C compiler. nimble 2.2 fails in paths with spaces; see the recipe notes for the symlink workaround.",
     "path_prepend": [
-     "{runtime_dir}/ibcc"
+     "{runtime_dir}/ticc"
     ]
    }
   },

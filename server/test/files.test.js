@@ -8,7 +8,7 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 import crypto from 'node:crypto';
 import { writeInstallerFile, ustarHeader, gzTarNames, tarNamesUnderTop, topFolder } from '../lib/files.js';
-import { readInstaller, tarWrite, peChecksum, makeFooter } from '../../shared/ibfile.js';
+import { readInstaller, tarWrite, peChecksum, makeFooter } from '../../shared/tifile.js';
 import { tmpDir } from './helpers.js';
 
 const sha = (b) => crypto.createHash('sha256').update(b).digest('hex');
@@ -19,14 +19,14 @@ test('block: base, record, plan, pack, footer; read back', async (t) => {
   const a = Buffer.from('packed file one\n'), b = crypto.randomBytes(1500);
   fs.writeFileSync(path.join(d, 'b'), b);
   const out = path.join(d, 'x.run');
-  const s = await writeInstallerFile(out, { base, record: Buffer.from('ib-record\t1\n'), plan: Buffer.from('ib-plan\t1\n'),
+  const s = await writeInstallerFile(out, { base, record: Buffer.from('ti-record\t1\n'), plan: Buffer.from('ti-plan\t1\n'),
     pack: [{ name: sha(a), size: a.length, data: a }, { name: sha(b), size: b.length, path: path.join(d, 'b') }] });
   const f = fs.readFileSync(out);
   assert.equal(s.size, f.length);
   assert.equal(s.sha256, sha(f));
   const info = await readInstaller(new Uint8Array(f), 'x.run');
-  assert.equal(info.record, 'ib-record\t1\n');
-  assert.equal(info.plan, 'ib-plan\t1\n');
+  assert.equal(info.record, 'ti-record\t1\n');
+  assert.equal(info.plan, 'ti-plan\t1\n');
   assert.deepEqual(info.pack.map((m) => m.name), [sha(a), sha(b)]);
   assert.ok(Buffer.from(info.pack[1].data).equals(b));
   // The pack is the browser's tar, byte for byte (and so Go's).

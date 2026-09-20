@@ -3,8 +3,8 @@
 // Test-only: playwright-core is in tests/browsers/node_modules (npm install
 // in tests/browsers; package.json pins the version), never in the page.
 //
-// On the machine, ~/ibbrowsers/playwright-<v>/server.sh --port=P runs
-// server.mjs there: webkit.launchServer() on ws://127.0.0.1:P/ib, headless.
+// On the machine, ~/tibrowsers/playwright-<v>/server.sh --port=P runs
+// server.mjs there: webkit.launchServer() on ws://127.0.0.1:P/ti, headless.
 // run.mjs starts it like a WebDriver driver (Remote.startDriver, so ssh -L
 // reaches it on the same port here), and connectPlaywright() connects to it
 // and gives back the step interface run.mjs uses for every protocol:
@@ -33,7 +33,7 @@ export async function connectPlaywright(port, { remote, dl, local, tmp, log = ()
   }
   let browser, last;
   for (const end = Date.now() + ms; Date.now() < end && !browser;) {
-    try { browser = await pw.webkit.connect(`ws://127.0.0.1:${port}/ib`, { timeout: 15000 }); } catch (e) { last = e; await new Promise((r) => setTimeout(r, 1000)); }
+    try { browser = await pw.webkit.connect(`ws://127.0.0.1:${port}/ti`, { timeout: 15000 }); } catch (e) { last = e; await new Promise((r) => setTimeout(r, 1000)); }
   }
   if (!browser) throw new Error('driver: Playwright: ' + String(last && last.message || last).split('\n')[0]);
   const context = await browser.newContext({ acceptDownloads: true });

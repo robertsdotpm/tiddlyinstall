@@ -21,7 +21,7 @@ if (file_exists($auto)) {
     say("fail", "composer-install", "no vendor/autoload.php: composer install did not run");
 }
 
-$phar = getenv("IB_COMPOSER_PHAR");
+$phar = getenv("TI_COMPOSER_PHAR");
 if ($phar && file_exists($phar)) {
     say("ok", "composer-phar", "composer.phar is beside the runtime");
 } else {

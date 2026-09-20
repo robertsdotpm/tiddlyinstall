@@ -3,7 +3,7 @@
 # ASCII only: Windows PowerShell 5.1 reads a BOM-less script as ANSI.
 # Settings come from config.json (UTF-8) beside this script.
 $ErrorActionPreference = 'Continue'
-$here = 'C:\ibsetup'
+$here = 'C:\tisetup'
 Start-Transcript -Path "$here\setup.log" -Append | Out-Null
 $cfg = Get-Content -Raw -Encoding UTF8 "$here\config.json" | ConvertFrom-Json
 
@@ -39,8 +39,8 @@ for ($i = 1; $i -le 10; $i++) {
 Set-Service sshd -StartupType Automatic
 Start-Service sshd
 # The capability adds OpenSSH-Server-In-TCP; this one is ours: port 22, from the LAN.
-Remove-NetFirewallRule -Name ib-sshd -ErrorAction SilentlyContinue
-New-NetFirewallRule -Name ib-sshd -DisplayName 'OpenSSH Server (installer tests, LAN)' -Direction Inbound `
+Remove-NetFirewallRule -Name ti-sshd -ErrorAction SilentlyContinue
+New-NetFirewallRule -Name ti-sshd -DisplayName 'OpenSSH Server (installer tests, LAN)' -Direction Inbound `
     -Protocol TCP -LocalPort 22 -RemoteAddress LocalSubnet -Profile Any -Action Allow | Out-Null
 
 Step 'SSH keys'
@@ -78,7 +78,7 @@ Step 'Windows Update, in the background (update.ps1, as SYSTEM, at every start u
 $a = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument "-NoProfile -ExecutionPolicy Bypass -File $here\update.ps1"
 $t = New-ScheduledTaskTrigger -AtStartup
 $s = New-ScheduledTaskSettingsSet -ExecutionTimeLimit (New-TimeSpan -Hours 12) -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
-Register-ScheduledTask -TaskName ib-update -Action $a -Trigger $t -Settings $s -User SYSTEM -RunLevel Highest -Force | Out-Null
-Start-ScheduledTask -TaskName ib-update
+Register-ScheduledTask -TaskName ti-update -Action $a -Trigger $t -Settings $s -User SYSTEM -RunLevel Highest -Force | Out-Null
+Start-ScheduledTask -TaskName ti-update
 Step 'setup done'
 Stop-Transcript | Out-Null

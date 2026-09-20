@@ -24,7 +24,7 @@ function ok(cond, name, extra) {
 }
 
 // Executable scripts: no type, or a JavaScript type, and the page's code
-// blocks (type text/x-ib-js, run by web/page-loader.js). Data blocks are
+// blocks (type text/x-ti-js, run by web/page-loader.js). Data blocks are
 // skipped, and so is the ES5 copy (tests/es5-test.mjs checks it).
 const scripts = [];
 const re = /<script(\s[^>]*)?>([\s\S]*?)<\/script>/gi;
@@ -32,7 +32,7 @@ for (let m; (m = re.exec(html));) {
   const attrs = m[1] || '';
   const type = (/\btype="([^"]*)"/.exec(attrs) || [])[1];
   if (type === 'module') { scripts.push({ attrs, src: m[2], module: true }); continue; }
-  if (type && !/javascript|ecmascript|^text\/x-ib-js$/i.test(type)) continue;
+  if (type && !/javascript|ecmascript|^text\/x-ti-js$/i.test(type)) continue;
   if (/\bsrc=/.test(attrs)) continue;
   scripts.push({ attrs, src: m[2], line: html.slice(0, m.index).split('\n').length });
 }
@@ -62,7 +62,7 @@ const ALLOWED = [
   ['BigUint64Array', 'resedit'],
 ];
 const main = scripts.reduce((a, b) => (b.src.length > a.src.length ? b : a));
-const vendor = scripts.find((s) => /__IB_RESEDIT/.test(s.src) && s !== main);
+const vendor = scripts.find((s) => /__TI_RESEDIT/.test(s.src) && s !== main);
 const found = [];
 for (const [name, s] of [['main', main], ['resedit', vendor]]) {
   if (!s) continue;

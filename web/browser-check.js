@@ -14,21 +14,21 @@
 //
 // Shows, when anything isn't native, a slim bar under the header naming
 // the practical effect, and the browsers our tests found work on this OS
-// (tests/browsers/, embedded at build time as <script id="ib-compat">).
+// (tests/browsers/, embedded at build time as <script id="ti-compat">).
 // "Details" lists every feature and the tested machine x browser matrix,
 // with the visitor's nearest row marked. The bar can be dismissed, per
 // browser version, unless the page can't work at all.
 //
-// For the tests: <html data-ib-missing="..."> (required features missing;
-// empty when none), data-ib-degraded (every feature not native), and
-// globalThis.ibCompat {features, env, missing, degraded}.
+// For the tests: <html data-ti-missing="..."> (required features missing;
+// empty when none), data-ti-degraded (every feature not native), and
+// globalThis.tiCompat {features, env, missing, degraded}.
 //
 // Written to parse and run in Internet Explorer 6 and later (ES3: no
 // trailing commas, reserved words quoted as property names, no Array
 // filter/map, attachEvent where there's no addEventListener), since it is
 // what tells those browsers what to use instead. Browsers that can't parse
 // ES2017 but can run the page's ES5 copy (IE 10 and 11, Chrome 49) get it through
-// web/page-loader.js, which runs it when this sets window.IB_ES5_OK.
+// web/page-loader.js, which runs it when this sets window.TI_ES5_OK.
 (function () {
   var w = window, doc = document;
 
@@ -56,7 +56,7 @@
     } catch (e) { return false; }
   }
   var ES5 = es5Capable();
-  w.IB_ES5_OK = ES5;
+  w.TI_ES5_OK = ES5;
   function hex(h) { var u = new Uint8Array(h.length / 2); for (var i = 0; i < u.length; i++) u[i] = parseInt(h.substr(i * 2, 2), 16); return u; }
   // Importing a known-good public key tells whether an algorithm is there,
   // without the cost of generating keys at startup.
@@ -114,7 +114,7 @@
     // Phones and tablets have the property but, mostly, no folder picker:
     // caniuse gives one on Safari from iOS/iPadOS 18.4 and Chrome on Android
     // from 147; other phone browsers pick files, not a folder. Where it's
-    // missing the page hides "Pick a folder" (html.ib-no-folder).
+    // missing the page hides "Pick a folder" (html.ti-no-folder).
     // On a phone that is how phones are, not a limit of the browser, so it
     // counts as "not used here" ('na') and raises no bar (design.md 11.0
     // item 5): the page quietly offers the archive picker instead. On a
@@ -217,29 +217,29 @@
   function names(list) { return each(list, function (f) { return f.name; }).join('; '); }
   function ids(list) { return each(list, function (f) { return f.id; }).join(' '); }
   // Classes on <html> for the stylesheet (web/css/style.css, "Phones and small
-  // screens"): ib-mobile, ib-no-folder, ib-no-download.
+  // screens"): ti-mobile, ti-no-folder, ti-no-download.
   function htmlClass(name, on) {
     var el = doc.documentElement, c = ' ' + el.className + ' ', has = c.indexOf(' ' + name + ' ') >= 0;
     if (on && !has) el.className = (el.className ? el.className + ' ' : '') + name;
     if (!on && has) el.className = c.replace(' ' + name + ' ', ' ').replace(/^\s+|\s+$/g, '');
   }
   function mark() {
-    htmlClass('ib-mobile', !!env.mobile);
-    htmlClass('ib-no-folder', status.folder !== 'native');
-    htmlClass('ib-no-download', status.download === 'missing');
-    doc.documentElement.setAttribute('data-ib-missing', names(missing()));
-    doc.documentElement.setAttribute('data-ib-degraded', ids(degraded()));
+    htmlClass('ti-mobile', !!env.mobile);
+    htmlClass('ti-no-folder', status.folder !== 'native');
+    htmlClass('ti-no-download', status.download === 'missing');
+    doc.documentElement.setAttribute('data-ti-missing', names(missing()));
+    doc.documentElement.setAttribute('data-ti-degraded', ids(degraded()));
     w.ibMissing = each(missing(), function (f) { return f.name; });
-    w.ibCompat = { features: FEATURES, status: status, env: env, missing: w.ibMissing, degraded: each(degraded(), function (f) { return f.id; }), es5: status.syntax === 'fallback' };
+    w.tiCompat = { features: FEATURES, status: status, env: env, missing: w.ibMissing, degraded: each(degraded(), function (f) { return f.id; }), es5: status.syntax === 'fallback' };
   }
-  mark();   // the synchronous verdict at once; the tests wait for data-ib-ready
+  mark();   // the synchronous verdict at once; the tests wait for data-ti-ready
 
   /* ---------- tested browsers (tests/browsers/, embedded at build) ---------- */
 
   var compat = null;
   function loadCompat() {
     if (compat) return compat;
-    try { var el = doc.getElementById('ib-compat'); if (el && w.JSON) compat = JSON.parse(el.text || el.textContent) || null; } catch (e) { compat = null; }
+    try { var el = doc.getElementById('ti-compat'); if (el && w.JSON) compat = JSON.parse(el.text || el.textContent) || null; } catch (e) { compat = null; }
     return compat;
   }
   // The tested machine nearest this visitor's OS.
@@ -302,16 +302,16 @@
   /* ---------- the bar and its details ---------- */
 
   var CSS_TEXT =
-    '.ib-compat-bar{margin:0;padding:8px 16px;border-bottom:1px solid #d9b44a;background:#fff8e1;color:#3d2e00;font:14px/1.4 system-ui,sans-serif}' +
-    '.ib-compat-bar.ib-too-old{border-bottom:2px solid #b3261e;background:#fdecea;color:#410e0b}' +
-    '.ib-compat-bar a{color:#0b4bb3}' +
-    '.ib-compat-bar button{font:inherit;margin-left:8px;padding:1px 8px;cursor:pointer}' +
-    '.ib-compat-bar .ib-compat-details{margin-top:8px;max-height:60vh;overflow:auto;background:#fff;color:#222;padding:8px;border:1px solid #ccc}' +
-    '.ib-compat-bar table{border-collapse:collapse;font-size:13px;margin:4px 0 10px}' +
-    '.ib-compat-bar th,.ib-compat-bar td{border:1px solid #ddd;padding:2px 6px;text-align:left;vertical-align:top}' +
-    '.ib-compat-bar tr.ib-you td,.ib-compat-bar tr.ib-you th{background:#e3f2fd}.ib-compat-bar td.ib-you{outline:2px solid #1565c0}' +
-    '@media (max-width:768px),(pointer:coarse){.ib-compat-bar button{min-height:40px;margin:6px 8px 0 0;padding:4px 12px}}' +
-    '.ib-c-native,.ib-c-pass{color:#1b5e20}.ib-c-fallback{color:#8a6d00}.ib-c-missing,.ib-c-fail{color:#b3261e}.ib-c-unsupported{color:#6d4c41}';
+    '.ti-compat-bar{margin:0;padding:8px 16px;border-bottom:1px solid #d9b44a;background:#fff8e1;color:#3d2e00;font:14px/1.4 system-ui,sans-serif}' +
+    '.ti-compat-bar.ti-too-old{border-bottom:2px solid #b3261e;background:#fdecea;color:#410e0b}' +
+    '.ti-compat-bar a{color:#0b4bb3}' +
+    '.ti-compat-bar button{font:inherit;margin-left:8px;padding:1px 8px;cursor:pointer}' +
+    '.ti-compat-bar .ti-compat-details{margin-top:8px;max-height:60vh;overflow:auto;background:#fff;color:#222;padding:8px;border:1px solid #ccc}' +
+    '.ti-compat-bar table{border-collapse:collapse;font-size:13px;margin:4px 0 10px}' +
+    '.ti-compat-bar th,.ti-compat-bar td{border:1px solid #ddd;padding:2px 6px;text-align:left;vertical-align:top}' +
+    '.ti-compat-bar tr.ti-you td,.ti-compat-bar tr.ti-you th{background:#e3f2fd}.ti-compat-bar td.ti-you{outline:2px solid #1565c0}' +
+    '@media (max-width:768px),(pointer:coarse){.ti-compat-bar button{min-height:40px;margin:6px 8px 0 0;padding:4px 12px}}' +
+    '.ti-c-native,.ti-c-pass{color:#1b5e20}.ti-c-fallback{color:#8a6d00}.ti-c-missing,.ti-c-fail{color:#b3261e}.ti-c-unsupported{color:#6d4c41}';
 
   function el(tag, attrs, text) {
     var e = doc.createElement(tag);
@@ -326,7 +326,7 @@
   function show(e, on) { e.style.display = on ? '' : 'none'; if ('hidden' in e) e.hidden = !on; }
   // IE 8 and before keep table rows added outside a tbody out of sight.
   function table(attrs) { var t = el('table', attrs || {}), b = el('tbody'); t.appendChild(b); return { t: t, add: function (r) { b.appendChild(r); } }; }
-  function dismissKey() { return 'ib-compat-dismissed:' + env.browser + ' ' + String(env.version).split('.')[0] + ':' + each(degraded(), function (f) { return f.id + '=' + status[f.id]; }).join(','); }
+  function dismissKey() { return 'ti-compat-dismissed:' + env.browser + ' ' + String(env.version).split('.')[0] + ':' + each(degraded(), function (f) { return f.id + '=' + status[f.id]; }).join(','); }
   function dismissed() { try { return w.localStorage.getItem(dismissKey()) === '1'; } catch (e) { return false; } }
 
   // The bar's text, and the browsers to suggest ({name, url}).
@@ -355,7 +355,7 @@
       var f = FEATURES[i], s = status[f.id];
       tr = el('tr');
       tr.appendChild(el('td', {}, f.name + (f.required ? '' : ' (optional)')));
-      tr.appendChild(el('td', { 'class': 'ib-c-' + s }, SYM[s] || s));
+      tr.appendChild(el('td', { 'class': 'ti-c-' + s }, SYM[s] || s));
       tr.appendChild(el('td', {}, s === 'fallback' ? f.fallback : s === 'na' ? f.na : f.effect));
       t.add(tr);
     }
@@ -369,7 +369,7 @@
     for (var i = 0; i < c.results.length; i++) used[c.results[i][1]] = 1;
     for (i = 0; i < c.browsers.length; i++) if (used[c.browsers[i][0]]) cols.push(c.browsers[i]);
     var you = nearestMachine(c), youB = browserId(env.browser);
-    var t = table({ 'class': 'ib-compat-matrix' }), tr = el('tr');
+    var t = table({ 'class': 'ti-compat-matrix' }), tr = el('tr');
     tr.appendChild(el('th', {}, 'Tested on'));
     for (i = 0; i < cols.length; i++) tr.appendChild(el('th', {}, cols[i][1]));
     t.add(tr);
@@ -383,13 +383,13 @@
       }
       if (!any) continue;
       var isYou = you && you[0] === m[0];
-      tr = el('tr', isYou ? { 'class': 'ib-you', 'data-machine': m[0] } : { 'data-machine': m[0] });
+      tr = el('tr', isYou ? { 'class': 'ti-you', 'data-machine': m[0] } : { 'data-machine': m[0] });
       tr.appendChild(el('th', {}, m[1] + (isYou ? ' (nearest to you)' : '')));
       for (i = 0; i < cols.length; i++) {
-        var td = el('td', isYou && cols[i][0] === youB ? { 'class': 'ib-you' } : {});
+        var td = el('td', isYou && cols[i][0] === youB ? { 'class': 'ti-you' } : {});
         for (var k = 0; k < cells[i].length; k++) {
           var r = cells[i][k], sym = { pass: '✓', fail: '✗', unsupported: 'too old', partial: '~' }[r[3]] || r[3];
-          td.appendChild(el('div', { 'class': 'ib-c-' + r[3], title: r[2] + ', ' + r[5] + (r[4] ? ': ' + r[4] : '') }, sym + ' ' + r[2].split('.')[0]));
+          td.appendChild(el('div', { 'class': 'ti-c-' + r[3], title: r[2] + ', ' + r[5] + (r[4] ? ': ' + r[4] : '') }, sym + ' ' + r[2].split('.')[0]));
         }
         tr.appendChild(td);
       }
@@ -404,7 +404,7 @@
   function classicUrl() {
     var proto = String(w.location && w.location.protocol);
     if (proto === 'http:' || proto === 'https:') return 'classic';
-    var blk = doc.getElementById('ib-offline'), m = blk && /"backend"\s*:\s*"(https?:\/\/[^"\\]+)"/.exec(blk.text || blk.textContent || '');
+    var blk = doc.getElementById('ti-offline'), m = blk && /"backend"\s*:\s*"(https?:\/\/[^"\\]+)"/.exec(blk.text || blk.textContent || '');
     return m ? m[1].replace(/\/+$/, '') + '/classic' : null;
   }
 
@@ -427,26 +427,26 @@
   }
   function render() {
     // The ES5 copy is a stand-in only if this copy of the page has it.
-    if (status.syntax === 'fallback' && !doc.getElementById('ib-js-es5')) status.syntax = 'missing';
+    if (status.syntax === 'fallback' && !doc.getElementById('ti-js-es5')) status.syntax = 'missing';
     mark();
     if (missing().length) { try { hideHidden(); } catch (e) { /* cosmetic */ } }
-    doc.documentElement.setAttribute('data-ib-ready', '1');
+    doc.documentElement.setAttribute('data-ti-ready', '1');
     var deg = degraded(), miss = missing();
     if (!deg.length || (!miss.length && dismissed())) { if (bar) show(bar, false); return; }
     if (!bar) {
       addStyle(CSS_TEXT);
-      bar = el('div', { 'class': 'ib-compat-bar', role: miss.length ? 'alert' : 'status' });
+      bar = el('div', { 'class': 'ti-compat-bar', role: miss.length ? 'alert' : 'status' });
       var header = doc.getElementsByTagName('header')[0];
       if (header && header.parentNode) header.parentNode.insertBefore(bar, header.nextSibling);
       else doc.body.insertBefore(bar, doc.body.firstChild);
     }
     while (bar.firstChild) bar.removeChild(bar.firstChild);
     show(bar, true);
-    bar.className = 'ib-compat-bar' + (miss.length ? ' ib-too-old' : '');
+    bar.className = 'ti-compat-bar' + (miss.length ? ' ti-too-old' : '');
     var sum = summary();
-    bar.appendChild(el('span', { 'class': 'ib-compat-text' }, sum.text));
+    bar.appendChild(el('span', { 'class': 'ti-compat-text' }, sum.text));
     if (sum.links.length) {
-      var get = el('span', { 'class': 'ib-compat-get' }, ' Get: ');
+      var get = el('span', { 'class': 'ti-compat-get' }, ' Get: ');
       for (var i = 0; i < sum.links.length; i++) {
         if (i) get.appendChild(doc.createTextNode(', '));
         get.appendChild(el('a', { href: sum.links[i].url, rel: 'noopener noreferrer', target: '_blank' }, sum.links[i].name));
@@ -455,22 +455,22 @@
     }
     var classic = miss.length ? classicUrl() : null;
     if (classic) {
-      var simple = el('span', { 'class': 'ib-compat-classic' }, ' Or build installers with ');
+      var simple = el('span', { 'class': 'ti-compat-classic' }, ' Or build installers with ');
       simple.appendChild(el('a', { href: classic }, 'the build server\'s simple form'));
       simple.appendChild(doc.createTextNode(', which works in this browser.'));
       bar.appendChild(simple);
     }
-    var more = el('button', { type: 'button', 'class': 'ib-compat-more', 'aria-expanded': 'false' }, 'Details');
+    var more = el('button', { type: 'button', 'class': 'ti-compat-more', 'aria-expanded': 'false' }, 'Details');
     bar.appendChild(more);
     if (!miss.length) {
-      var close = el('button', { type: 'button', 'class': 'ib-compat-dismiss' }, 'Dismiss');
+      var close = el('button', { type: 'button', 'class': 'ti-compat-dismiss' }, 'Dismiss');
       close.onclick = function () { try { w.localStorage.setItem(dismissKey(), '1'); } catch (e) { /* no storage: hide for now */ } show(bar, false); };
       bar.appendChild(close);
     }
     var box = null;
     more.onclick = function () {
       if (box) { box.parentNode.removeChild(box); box = null; more.setAttribute('aria-expanded', 'false'); return; }
-      box = el('div', { 'class': 'ib-compat-details' });
+      box = el('div', { 'class': 'ti-compat-details' });
       function words(a) { return grep(a, function (x) { return !!x; }).join(' '); }
       box.appendChild(el('p', {}, 'This browser: ' + words([env.browser, env.version]) + ' on ' + (words([env.os, env.osVersion]) || 'an unknown OS') + (env.cpu ? ', ' + env.cpu : '') +
         (env.mobile ? ', a phone or tablet' : '') + '.'));

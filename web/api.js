@@ -14,17 +14,17 @@
 
 export const DEFAULT_REMOTE = 'http://10.0.1.76:8080';
 // The site is one file (tools/build_site.py, plan.md section 1.11) that
-// also carries its own builder, web/local-api.js, as globalThis.ibLocalApi.
+// also carries its own builder, web/local-api.js, as globalThis.tiLocalApi.
 // LOCAL as the backend means "no build server: this page answers every
 // call itself". Opened from disk, the page starts that way.
 export const LOCAL = 'local';
-const HAS_LOCAL = !!globalThis.IB_HAS_LOCAL;
+const HAS_LOCAL = !!globalThis.TI_HAS_LOCAL;
 // The page's pages are sections of one file (#new, #build&job=...).
-const ONE_FILE = !!globalThis.IB_ONE_FILE;
+const ONE_FILE = !!globalThis.TI_ONE_FILE;
 // The name "Save this page" suggests.
 export const SAVE_AS = 'tiddlyinstall.html';
-const API_KEY = 'ib.api';
-const SAME_ORIGIN_KEY = 'ib.api.sameorigin';
+const API_KEY = 'ti.api';
+const SAME_ORIGIN_KEY = 'ti.api.sameorigin';
 const REQUEST_TIMEOUT_MS = 20000;
 
 export class ApiError extends Error {
@@ -70,14 +70,14 @@ export function apiLocal() { return apiBaseUrl === LOCAL; }
 // A job this page built itself (files from the user's computer are, even
 // with a build server) and its record are answered by the page.
 function localPath(path) {
-  if (!HAS_LOCAL || !globalThis.ibLocalApi) return false;
+  if (!HAS_LOCAL || !globalThis.tiLocalApi) return false;
   if (/^\/api\/jobs\/local-/.test(path)) return true;
-  return !!globalThis.ibLocalApi.url(path);
+  return !!globalThis.tiLocalApi.url(path);
 }
 
 // Sends a job to this page's own builder, whatever the backend.
 export function localSubmit(body) {
-  return globalThis.ibLocalApi.request('/api/jobs', { method: 'POST', body });
+  return globalThis.tiLocalApi.request('/api/jobs', { method: 'POST', body });
 }
 let readyPromise = null;
 
@@ -131,7 +131,7 @@ export function absUrl(path) {
   if (apiLocal() || (HAS_LOCAL && /^blob:/i.test(path)) || localPath(path)) {
     // Only what this page made: blob: URLs, and paths it can answer.
     if (/^blob:/i.test(path)) return path;
-    return globalThis.ibLocalApi ? globalThis.ibLocalApi.url(path) : '';
+    return globalThis.tiLocalApi ? globalThis.tiLocalApi.url(path) : '';
   }
   if (/^[a-z][a-z0-9+.-]*:/i.test(path)) {
     return /^https?:\/\//i.test(path) ? path : '';
@@ -148,7 +148,7 @@ export function setApiBase(url) {
   } catch (e) { /* private browsing: the choice won't outlive the tab */ }
   paintApiFooter();
   if (banner) banner.querySelector('.api-url').textContent = apiBaseUrl;
-  window.dispatchEvent(new CustomEvent('ib-api-change', { detail: { url } }));
+  window.dispatchEvent(new CustomEvent('ti-api-change', { detail: { url } }));
   // A new server deserves an immediate try rather than the old backoff;
   // this page's own builder is never down.
   if (isDown) {
@@ -224,7 +224,7 @@ function markUp() {
   const w = upWaiters;
   upWaiters = [];
   w.forEach((f) => f());
-  window.dispatchEvent(new CustomEvent('ib-api-up'));
+  window.dispatchEvent(new CustomEvent('ti-api-up'));
 }
 
 function scheduleHealth() {
@@ -277,11 +277,11 @@ async function timedFetch(url, opts) {
 // returns the body as a string or Uint8Array instead.
 export async function apiRequest(path, opts = {}) {
   await apiReady();
-  if (apiLocal() || localPath(path)) return globalThis.ibLocalApi.request(path, opts);
+  if (apiLocal() || localPath(path)) return globalThis.tiLocalApi.request(path, opts);
   for (;;) {
     await whenUp();
     // Switched to this page's own builder while waiting for a server.
-    if (apiLocal()) return globalThis.ibLocalApi.request(path, opts);
+    if (apiLocal()) return globalThis.tiLocalApi.request(path, opts);
     const init = { method: opts.method || 'GET', cache: 'no-store', headers: {} };
     if (opts.body !== undefined) {
       init.body = JSON.stringify(opts.body);
@@ -339,11 +339,11 @@ function prettyApi(u) {
   return u === LOCAL ? 'none, this page builds installers itself' : String(u).replace(/^https?:\/\//, '');
 }
 
-// Which features show: html.ib-local hides what needs a build server (mode
+// Which features show: html.ti-local hides what needs a build server (mode
 // A, packing runtimes, the timestamp relay; web/css/style.css .online-only).
 function paintMode() {
-  document.documentElement.classList.toggle('ib-local', apiLocal());
-  document.documentElement.classList.toggle('ib-has-local', HAS_LOCAL);
+  document.documentElement.classList.toggle('ti-local', apiLocal());
+  document.documentElement.classList.toggle('ti-has-local', HAS_LOCAL);
 }
 
 function paintApiFooter() {
@@ -431,7 +431,7 @@ export function mountApiFooter() {
     });
   }
   footerEl.querySelector('.api-ctl-cancel').addEventListener('click', close);
-  if (typeof IB_PRISTINE !== 'undefined') {
+  if (typeof TI_PRISTINE !== 'undefined') {
     const save = document.createElement('p');
     save.className = 'save-ctl';
     save.innerHTML = '<button type="button" class="link-button save-page">Save this page</button> ' +
@@ -465,12 +465,12 @@ function mountMenu(header) {
   const nav = header.querySelector('nav');
   const btn = document.createElement('button');
   btn.type = 'button';
-  btn.className = 'ib-menu-btn';
+  btn.className = 'ti-menu-btn';
   btn.setAttribute('aria-expanded', 'false');
   btn.setAttribute('aria-label', 'Menu');
   btn.innerHTML = MENU_ICON;
   nav.appendChild(btn);
-  header.classList.add('ib-menu');
+  header.classList.add('ti-menu');
   const set = (open) => {
     header.classList.toggle('menu-open', open);
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
@@ -482,13 +482,13 @@ function mountMenu(header) {
   window.addEventListener('hashchange', () => set(false));
 }
 
-// Saves the page exactly as it was loaded (IB_PRISTINE, captured before any
+// Saves the page exactly as it was loaded (TI_PRISTINE, captured before any
 // script changed it), so the saved copy is as good as the original. The
 // Runtimes page may put this browser's catalogue changes inside it, when
-// asked (globalThis.ibPageForSave, web/catalog-editor.js).
+// asked (globalThis.tiPageForSave, web/catalog-editor.js).
 export function savePage() {
-  let html = typeof IB_PRISTINE !== 'undefined' ? IB_PRISTINE : '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-  if (typeof globalThis.ibPageForSave === 'function') html = globalThis.ibPageForSave(html);
+  let html = typeof TI_PRISTINE !== 'undefined' ? TI_PRISTINE : '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  if (typeof globalThis.tiPageForSave === 'function') html = globalThis.tiPageForSave(html);
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
   a.download = SAVE_AS;

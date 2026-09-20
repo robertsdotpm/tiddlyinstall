@@ -3,7 +3,7 @@
 
     [base][record][plan][pack][footer: 64 bytes]
 
-For testing the Windows base; the build server has its own implementation (shared/ibfile.js).
+For testing the Windows base; the build server has its own implementation (shared/tifile.js).
 
     append_meta.py base.exe out.exe --record record.txt [--plan plan.txt]
                    [--pack FILE ...] [--pack-dir DIR]
@@ -49,7 +49,7 @@ def make_pack(paths):
 
 
 def footer(rlen, plen, klen):
-    f = "IBMETA1 %012d %012d %012d " % (rlen, plen, klen)
+    f = "TIMETA1 %012d %012d %012d " % (rlen, plen, klen)
     f = f.ljust(63) + "\n"
     assert len(f) == 64
     return f.encode("ascii")

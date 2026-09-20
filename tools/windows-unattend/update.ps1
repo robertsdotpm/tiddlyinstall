@@ -1,10 +1,10 @@
 # Windows Update until nothing is left, through the Windows Update Agent's
 # own COM API (no modules from outside Windows). Runs as SYSTEM from the
-# ib-update task at every start; reboots when an update asks to; when a
+# ti-update task at every start; reboots when an update asks to; when a
 # search finds nothing new it runs quiet.ps1 once and disables the task.
-# Progress: C:\ibsetup\wu.log; state: C:\ibsetup\wu-status.txt.
+# Progress: C:\tisetup\wu.log; state: C:\tisetup\wu-status.txt.
 $ErrorActionPreference = 'Continue'
-$here = 'C:\ibsetup'
+$here = 'C:\tisetup'
 Start-Transcript -Path "$here\wu.log" -Append | Out-Null
 function Status($m) { $l = "{0:s} {1}" -f (Get-Date), $m; Write-Output $l; Set-Content "$here\wu-status.txt" $l }
 $failFile = "$here\wu-failed.txt"
@@ -13,7 +13,7 @@ if (Test-Path $failFile) { Get-Content $failFile | ForEach-Object { $failed[$_] 
 
 Start-Sleep 60   # let the network and the update services come up
 $session = New-Object -ComObject Microsoft.Update.Session
-$session.ClientApplicationID = 'ib-update'
+$session.ClientApplicationID = 'ti-update'
 for ($round = 1; $round -le 20; $round++) {
     Status "round $round`: searching"
     try { $res = $session.CreateUpdateSearcher().Search("IsInstalled=0 and IsHidden=0 and Type='Software'") }
@@ -28,7 +28,7 @@ for ($round = 1; $round -le 20; $round++) {
     if ($todo.Count -eq 0) {
         $left = ($res.Updates | ForEach-Object { $_.Title }) -join '; '
         Status ("done: nothing left to install" + $(if ($left) { " (gave up on: $left)" } else { '' }))
-        Disable-ScheduledTask -TaskName ib-update | Out-Null
+        Disable-ScheduledTask -TaskName ti-update | Out-Null
         Stop-Transcript | Out-Null
         # quiet.ps1 restarts the machine when it's done.
         if (-not (Test-Path "$here\quiet.done")) {

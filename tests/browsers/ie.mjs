@@ -15,7 +15,7 @@
 // reads, dark on light; and the page throws no errors. IE 11 runs the
 // page's ES5 copy (web/page-loader.js), so there the same steps as run.mjs
 // follow: sections and the :has()-driven form, an installer built with no
-// server and read back with shared/ibfile.js, "Save this page" and the saved
+// server and read back with shared/tifile.js, "Save this page" and the saved
 // copy starting, and PGP and .pfx signing checked here with gpg and
 // osslsigncode. IE saves through navigator.msSaveOrOpenBlob, which the test
 // replaces to keep what is saved; files are given to the page's file inputs
@@ -41,7 +41,7 @@
 //
 // --browser chromium49: the same steps in Chromium 49 on XP (the last
 // Chrome there; Google's snapshot build r369909, 49.0.2623.0, in
-// C:\ibbrowsers\chromium-49, docs/test-vms.md), over the DevTools protocol:
+// C:\tibrowsers\chromium-49, docs/test-vms.md), over the DevTools protocol:
 // it has no async functions either, so it runs the ES5 copy too. Recorded
 // as browser "chromium".
 import { spawn, spawnSync } from 'node:child_process';
@@ -52,7 +52,7 @@ import path from 'node:path';
 import { loadMachines, findMachine, freePort, Remote } from './remote.mjs';
 import { connectCdp } from './cdp.mjs';
 import { Checker, STARTED, checkSections, buildHello, checkJob, makeSignFixtures, osslVerify, gpgVerify, $text, setVal, checkBox, sleep } from './steps.mjs';
-import { readInstaller } from '../../shared/ibfile.js';
+import { readInstaller } from '../../shared/tifile.js';
 import { writeCompat } from './compat.mjs';
 import { classicFields, checkFinished, MODE_LETTER } from './classic.mjs';
 
@@ -74,17 +74,17 @@ const flag = (k) => argv.includes(k);
 const PAGE = path.resolve(arg('--page', path.join(ROOT, 'dist', 'index.html')));
 const DOCMODE = arg('--docmode', '');
 const BROWSER = arg('--browser', 'ie');
-const C49 = 'C:\\ibbrowsers\\chromium-49\\chrome.exe';
+const C49 = 'C:\\tibrowsers\\chromium-49\\chrome.exe';
 
 /* ---------- the page copy ---------- */
 
 // An error recorder in plain ES3 (window.onerror is the one IE 6 has),
-// mirrored to <html data-ib-errors> so the agent can read it over COM even
+// mirrored to <html data-ti-errors> so the agent can read it over COM even
 // where no script of ours can run.
-const RECORDER = '<script>window.__ibErrors=[];window.onerror=function(m,u,l,c){var a=window.__ibErrors;a.push(String(m)+" @"+String(u||"").slice(-40)+":"+l+(c?":"+c:""));' +
-  'try{document.documentElement.setAttribute("data-ib-errors",a.join(" | "))}catch(e){}};' +
-  'if(window.addEventListener)window.addEventListener("unhandledrejection",function(e){var r=e.reason;window.__ibErrors.push("unhandled rejection: "+String(r&&(r.stack||r.message)||r).slice(0,300));' +
-  'try{document.documentElement.setAttribute("data-ib-errors",window.__ibErrors.join(" | "))}catch(x){}});</script>';
+const RECORDER = '<script>window.__tiErrors=[];window.onerror=function(m,u,l,c){var a=window.__tiErrors;a.push(String(m)+" @"+String(u||"").slice(-40)+":"+l+(c?":"+c:""));' +
+  'try{document.documentElement.setAttribute("data-ti-errors",a.join(" | "))}catch(e){}};' +
+  'if(window.addEventListener)window.addEventListener("unhandledrejection",function(e){var r=e.reason;window.__tiErrors.push("unhandled rejection: "+String(r&&(r.stack||r.message)||r).slice(0,300));' +
+  'try{document.documentElement.setAttribute("data-ti-errors",window.__tiErrors.join(" | "))}catch(x){}});</script>';
 
 export function testPage(tmp) {
   let html = fs.readFileSync(PAGE, 'utf8');
@@ -93,7 +93,7 @@ export function testPage(tmp) {
   if (!xua.test(html)) throw new Error('the page has no X-UA-Compatible meta; rebuild it (tools/build_site.py)');
   html = html.replace(xua, (m) => (DOCMODE ? m.replace('IE=edge', 'IE=' + DOCMODE) : m) + RECORDER + '\n');
   const hash = crypto.createHash('sha256').update(html).digest('hex').slice(0, 12);
-  const file = path.join(tmp, `ibtest-${hash}.html`);
+  const file = path.join(tmp, `titest-${hash}.html`);
   fs.writeFileSync(file, html);
   return file;
 }
@@ -129,7 +129,7 @@ export class Agent {
     if (!r.startsWith('OK ')) throw new Error('agent: ' + line.slice(0, 40) + ': ' + r.slice(0, 300));
     return JSON.parse(r.slice(3));
   }
-  // Raw code in the page (ES3/ES5, ASCII); returns what it put in data-ibt.
+  // Raw code in the page (ES3/ES5, ASCII); returns what it put in data-ti-out.
   async raw(code) {
     const esc = code.replace(/[^\x00-\x7e]/g, (c) => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0')).replace(/\r?\n/g, '\x01');
     const r = await this.send('EVAL ' + esc);
@@ -147,15 +147,15 @@ export class Agent {
 const DOM_JS = `(function () {
   var d = document, h = d.documentElement, r = {}, body = d.body;
   r.title = d.title; r.documentMode = null;
-  r.missing = h.getAttribute('data-ib-missing'); r.degraded = h.getAttribute('data-ib-degraded');
-  r.ready = h.getAttribute('data-ib-ready'); r.htmlClass = h.className;
-  var bar = d.querySelector('.ib-compat-bar');
+  r.missing = h.getAttribute('data-ti-missing'); r.degraded = h.getAttribute('data-ti-degraded');
+  r.ready = h.getAttribute('data-ti-ready'); r.htmlClass = h.className;
+  var bar = d.querySelector('.ti-compat-bar');
   r.bar = bar ? { text: bar.innerText, className: bar.className, shown: bar.offsetHeight > 0 } : null;
   r.bodyText = body ? body.innerText.substring(0, 4000) : '';
   r.sections = Array.prototype.map.call(d.querySelectorAll('[data-page]'), function (e) { return e.getAttribute('data-page') + (e.offsetHeight > 0 ? ':shown' : ':hidden'); });
   var cs = getComputedStyle(body);
   r.colors = { body: cs.color + ' on ' + cs.backgroundColor };
-  r.errors = h.getAttribute('data-ib-errors');
+  r.errors = h.getAttribute('data-ti-errors');
   return r;
 })()`;
 
@@ -191,7 +191,7 @@ class CdpAgent {
     throw new Error('agent: unknown command ' + cmd);
   }
   async raw(code) {
-    const r = await this.evaluate(`document.documentElement.removeAttribute('data-ibt');\n${code}\n;(function () { var h = document.documentElement, v = h.getAttribute('data-ibt'); h.removeAttribute('data-ibt'); return v; })()`);
+    const r = await this.evaluate(`document.documentElement.removeAttribute('data-ti-out');\n${code}\n;(function () { var h = document.documentElement, v = h.getAttribute('data-ti-out'); h.removeAttribute('data-ti-out'); return v; })()`);
     return r.value === null || r.value === undefined ? 'null' : String(r.value);
   }
   async quit() {
@@ -223,16 +223,16 @@ let evalId = 0;
 export function makeJs(agent) {
   return async (expr, ms = 600000) => {
     const id = ++evalId;
-    const start = await toEs5(`window.__ibtR = window.__ibtR || {};
+    const start = await toEs5(`window.__tiR = window.__tiR || {};
       Promise.resolve().then(() => (${expr})).then(
-        (v) => { window.__ibtR[${id}] = { v: JSON.stringify(v === undefined ? null : v) }; },
-        (e) => { window.__ibtR[${id}] = { e: JSON.stringify(String(e && (e.stack || e.message) || e)) }; });
-      document.documentElement.setAttribute('data-ibt', '1');`);
+        (v) => { window.__tiR[${id}] = { v: JSON.stringify(v === undefined ? null : v) }; },
+        (e) => { window.__tiR[${id}] = { e: JSON.stringify(String(e && (e.stack || e.message) || e)) }; });
+      document.documentElement.setAttribute('data-ti-out', '1');`);
     await agent.raw(start);
-    const poll = `(function () { var R = window.__ibtR, r = R && R[${id}], out = '';
+    const poll = `(function () { var R = window.__tiR, r = R && R[${id}], out = '';
       if (r) { out = r.e !== undefined ? 'E' + r.e : 'V' + r.v; delete R[${id}]; }
       out = out.replace(/[\\u007f-\\uffff]/g, function (c) { return '\\\\u' + ('000' + c.charCodeAt(0).toString(16)).slice(-4); });
-      document.documentElement.setAttribute('data-ibt', out); })();`;
+      document.documentElement.setAttribute('data-ti-out', out); })();`;
     for (const end = Date.now() + ms; Date.now() < end;) {
       const r = await agent.raw(poll);
       if (r && r !== 'null') {
@@ -256,13 +256,13 @@ async function waitUntil(js, expr, what, ms = 90000) {
 // Downloads, kept in the page by name instead of saved: IE saves Blobs
 // through navigator.msSaveOrOpenBlob (web/legacy-dom.js); Chromium clicks
 // an <a download> with a blob: URL.
-const CAPTURE = `(() => { if (!window.__ibDl) { window.__ibDl = {};
-  const keep = (b, n) => { window.__ibDl[n] = b; return true; };
+const CAPTURE = `(() => { if (!window.__tiDl) { window.__tiDl = {};
+  const keep = (b, n) => { window.__tiDl[n] = b; return true; };
   navigator.msSaveOrOpenBlob = keep; navigator.msSaveBlob = keep;
   const click = HTMLAnchorElement.prototype.click;
   HTMLAnchorElement.prototype.click = function () {
     if (!document.documentMode && this.getAttribute('download') && /^blob:/.test(this.href)) {
-      window.__ibDl[this.getAttribute('download')] = fetch(this.href).then((r) => r.blob());
+      window.__tiDl[this.getAttribute('download')] = fetch(this.href).then((r) => r.blob());
       return undefined;
     }
     return click.apply(this, arguments);
@@ -270,25 +270,25 @@ const CAPTURE = `(() => { if (!window.__ibDl) { window.__ibDl = {};
 
 async function captured(js, name, ms = 60000) {
   for (const end = Date.now() + ms; Date.now() < end; await sleep(300)) {
-    if (await js(`!!(window.__ibDl && window.__ibDl[${JSON.stringify(name)}])`)) {
+    if (await js(`!!(window.__tiDl && window.__tiDl[${JSON.stringify(name)}])`)) {
       const b64 = await js(`new Promise((res, rej) => { const fr = new FileReader();
         fr.onload = () => { const u = new Uint8Array(fr.result); let s = '';
           for (let i = 0; i < u.length; i += 0x1000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x1000));
           res(btoa(s)); };
-        fr.onerror = () => rej(fr.error); Promise.resolve(window.__ibDl[${JSON.stringify(name)}]).then((b) => fr.readAsArrayBuffer(b), rej); })`);
+        fr.onerror = () => rej(fr.error); Promise.resolve(window.__tiDl[${JSON.stringify(name)}]).then((b) => fr.readAsArrayBuffer(b), rej); })`);
       return Buffer.from(b64, 'base64');
     }
   }
-  throw new Error('the page saved no ' + name + ' (saved: ' + (await js(`Object.keys(window.__ibDl || {}).join(' ')`)) + ')');
+  throw new Error('the page saved no ' + name + ' (saved: ' + (await js(`Object.keys(window.__tiDl || {}).join(' ')`)) + ')');
 }
 
 // Gives a local file to the page's <input type=file> matching css, as a
 // Blob named like the file, and fires change (the page reads input.files).
 async function setFile(agent, js, css, local) {
   const b64 = fs.readFileSync(local).toString('base64');
-  await agent.raw(`window.__ibtUp = ''; document.documentElement.setAttribute('data-ibt', '1');`);
-  for (let i = 0; i < b64.length; i += 60000) await agent.raw(`window.__ibtUp += '${b64.slice(i, i + 60000)}'; document.documentElement.setAttribute('data-ibt', '1');`);
-  return js(`(() => { const s = atob(window.__ibtUp); window.__ibtUp = '';
+  await agent.raw(`window.__tiUp = ''; document.documentElement.setAttribute('data-ti-out', '1');`);
+  for (let i = 0; i < b64.length; i += 60000) await agent.raw(`window.__tiUp += '${b64.slice(i, i + 60000)}'; document.documentElement.setAttribute('data-ti-out', '1');`);
+  return js(`(() => { const s = atob(window.__tiUp); window.__tiUp = '';
     const u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i);
     const b = new Blob([u]); b.name = ${JSON.stringify(path.basename(local))};
     const input = document.querySelector(${JSON.stringify(css)});
@@ -323,7 +323,7 @@ async function runIe(machine) {
   const t = new Checker({ prefix: `[${machine.name}/${bid}${DOCMODE ? ' docmode ' + DOCMODE : ''}] ` });
   const rec = { time: new Date().toISOString(), machine: machine.name, browser: bid, version: '', result: '', protocol: IE ? 'com' : 'cdp' };
   const detail = { ...rec, docmode: DOCMODE || 'edge', checks: t.checks };
-  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'ib-ie-'));
+  const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'ti-ie-'));
   const dir = remote.dir('ie');
   const runDir = remote.dir('ie', 'run-' + crypto.randomBytes(3).toString('hex'));
   let agent = null;
@@ -338,10 +338,10 @@ async function runIe(machine) {
     const pageFile = testPage(tmpRoot);
     const pageName = path.basename(pageFile);
     const gen = /<meta name="generator" content="[^,"]*, ([^,"]+), ([^"]+)">/.exec(fs.readFileSync(PAGE, 'utf8').slice(0, 4000));
-    rec.page = { rev: gen ? gen[1] : '', hash: pageName.replace(/^ibtest-|\.html$/g, '') };
+    rec.page = { rev: gen ? gen[1] : '', hash: pageName.replace(/^titest-|\.html$/g, '') };
     const have = remote.list(dir);
     if (!have.includes(pageName)) {
-      for (const old of have.filter((f) => /^ibtest-.*\.html$/.test(f))) remote.removeFile(remote.dir('ie', old));
+      for (const old of have.filter((f) => /^titest-.*\.html$/.test(f))) remote.removeFile(remote.dir('ie', old));
       remote.put(pageFile, remote.dir('ie', pageName));
     }
     if (IE) {
@@ -377,12 +377,12 @@ async function runIe(machine) {
       t.ok(darkOnLight(dom.colors && dom.colors.body), 'the text is dark on light', dom.colors && dom.colors.body);
       return finish(t.failed ? 'fail' : 'unsupported', 'scripts are off (Enhanced Security Configuration)');
     }
-    t.ok(dom.ready === '1', 'the browser check runs (data-ib-ready)', JSON.stringify(dom).slice(0, 300));
+    t.ok(dom.ready === '1', 'the browser check runs (data-ti-ready)', JSON.stringify(dom).slice(0, 300));
     t.ok(dom.bar && dom.bar.shown, 'the compatibility bar shows', JSON.stringify(dom.bar));
     const barText = (dom.bar && dom.bar.text) || '';
     const canRun = dom.missing === '';
     if (!canRun) {
-      t.ok(/can't run TiddlyInstall/.test(barText) && /ib-too-old/.test(dom.bar.className), 'the bar says this browser can\'t run the builder', barText);
+      t.ok(/can't run TiddlyInstall/.test(barText) && /ti-too-old/.test(dom.bar.className), 'the bar says this browser can\'t run the builder', barText);
       t.ok(/Tested on .* and working: |Please use /.test(barText), 'the bar names browsers to use instead', barText);
       t.ok(/pages still read/.test(barText), 'the bar says the pages still read', barText);
     } else {
@@ -403,11 +403,11 @@ async function runIe(machine) {
     const js = makeJs(agent);
     let up = false;
     for (const end = Date.now() + 180000; Date.now() < end && !up; await sleep(1000)) {
-      const r = await agent.raw(`document.documentElement.setAttribute('data-ibt', String(!!(window.ibLocalApi && document.readyState === 'complete' && document.querySelector('.save-ctl'))) + ' ' + String(window.IB_ES5));`);
+      const r = await agent.raw(`document.documentElement.setAttribute('data-ti-out', String(!!(window.tiLocalApi && document.readyState === 'complete' && document.querySelector('.save-ctl'))) + ' ' + String(window.TI_ES5));`);
       up = /^true /.test(r);
       detail.es5 = /true$/.test(r);
     }
-    const errs = async () => { try { return await js('window.__ibErrors || []'); } catch (e) { return ['(could not read errors: ' + e.message + ')']; } };
+    const errs = async () => { try { return await js('window.__tiErrors || []'); } catch (e) { return ['(could not read errors: ' + e.message + ')']; } };
     if (!up) {
       t.ok(false, 'the page starts (its ES5 copy)', (dom.errors || '') + ' ' + (await agent.ok('DOM')).errors);
       return finish('fail', 'the page did not start');
@@ -415,7 +415,7 @@ async function runIe(machine) {
     t.ok(detail.es5, 'the page runs its ES5 copy');
     detail.startSeconds = Math.round((Date.now() - navAt) / 100) / 10;   // loading, unpacking and starting the ES5 copy
     t.ok((await errs()).length === 0, 'the page starts without errors', (await errs()).join(' | '));
-    t.ok(await js(`document.documentElement.classList.contains('ib-local')`), 'from disk, the page builds installers itself');
+    t.ok(await js(`document.documentElement.classList.contains('ti-local')`), 'from disk, the page builds installers itself');
 
     await checkSections(t, js);
     await js(`location.hash = '#new&write'`);
@@ -445,7 +445,7 @@ async function runIe(machine) {
       await agent.ok('NAV ' + remote.fileUrl(runDir + '\\saved.html'));
       let ok2 = false;
       for (const end = Date.now() + 180000; Date.now() < end && !ok2; await sleep(1000)) {
-        ok2 = /^true/.test(await agent.raw(`document.documentElement.setAttribute('data-ibt', String(!!(window.ibLocalApi && document.querySelector('.save-ctl'))));`));
+        ok2 = /^true/.test(await agent.raw(`document.documentElement.setAttribute('data-ti-out', String(!!(window.tiLocalApi && document.querySelector('.save-ctl'))));`));
       }
       t.ok(ok2, 'the saved copy starts');
       if (ok2) {
@@ -463,7 +463,7 @@ async function runIe(machine) {
     await waitUntil(js, STARTED, 'the page', 180000);
     await js(`location.hash = '#edit'`);
     await js(CAPTURE);
-    if (await js(`ibCompat.status.random === 'missing'`)) {
+    if (await js(`tiCompat.status.random === 'missing'`)) {
       await setFile(agent, js, '#installer', fx.t('in.run'));
       const why = await waitUntil(js, `/getRandomValues/.test(${$text('sign-status')}) && ${$text('sign-status')}`, 'the editor to refuse signing', 60000).catch(() => '');
       t.ok(/getRandomValues/.test(why) && await js(`document.getElementById('sign-run').hidden && document.getElementById('sign-go').hidden`),
@@ -491,7 +491,7 @@ async function runIe(machine) {
       await js(`document.getElementById('sign-go').click()`);
       const s = await waitUntil(js, `/Saved|Couldn/.test(${$text('sign-status')}) && ${$text('sign-status')}`, 'PGP signing', 600000);
       t.ok(/Saved/.test(s), 'PGP: signing says saved', s);
-      const pubName = await js(`Object.keys(window.__ibDl).filter((n) => /\\.pub\\.asc$/.test(n))[0] || ''`);
+      const pubName = await js(`Object.keys(window.__tiDl).filter((n) => /\\.pub\\.asc$/.test(n))[0] || ''`);
       const files = { pub: await captured(js, pubName), run: await captured(js, 'app.run'), asc: await captured(js, 'app.run.asc') };
       for (const [k, v] of Object.entries(files)) fs.writeFileSync(path.join(tmpRoot, 'pgp.' + k), v);
       const g = gpgVerify(path.join(tmpRoot, 'pgp.pub'), path.join(tmpRoot, 'pgp.asc'), path.join(tmpRoot, 'pgp.run'), path.join(tmpRoot, 'gnupg'), spawnSync);
@@ -583,11 +583,11 @@ async function runClassic(machine, base) {
       var rt = e['runtime']; for (var i = 0; i < rt.options.length; i++) if (rt.options[i].value === ${lit(f.runtime)}) rt.selectedIndex = i;
       var m = e['mode']; for (i = 0; i < m.length; i++) m[i].checked = m[i].value === ${lit(f.mode)};
       e['target_macos'].checked = false;
-      document.documentElement.setAttribute('data-ibt', f.method + ' ' + f.enctype + ' ' + f.action + ' ' + rt.value);`);
+      document.documentElement.setAttribute('data-ti-out', f.method + ' ' + f.enctype + ' ' + f.action + ' ' + rt.value);`);
     t.ok(/^post multipart\/form-data .*\/submit python$/.test(filled), 'the form is filled (post, multipart, to /submit)', filled);
     await agent.raw(`var ins = document.getElementsByTagName('input');
       for (var i = 0; i < ins.length; i++) if (ins[i].type === 'submit') { ins[i].click(); break; }
-      document.documentElement.setAttribute('data-ibt', 'clicked');`);
+      document.documentElement.setAttribute('data-ti-out', 'clicked');`);
     // Follow the status page: IE reloads it itself; read it now and then.
     let status = null, seen = [], statusUrl = '', hrefs = null;
     for (const end = Date.now() + 600000; Date.now() < end; await sleep(1500)) {
@@ -597,7 +597,7 @@ async function runClassic(machine, base) {
           var as = d.getElementsByTagName('a'), dl = [];
           for (var i = 0; i < as.length; i++) if (as[i].href.indexOf('/dl/') >= 0) dl.push(as[i].href);
           var st = d.getElementsByTagName('td');
-          d.documentElement.setAttribute('data-ibt', location.href + '\x02' + d.readyState + '\x02' + (st.length ? (st[0].innerText || '') : '') + '\x02' + dl.join(' ') + '\x02' + (d.getElementsByTagName('meta').length));`);
+          d.documentElement.setAttribute('data-ti-out', location.href + '\x02' + d.readyState + '\x02' + (st.length ? (st[0].innerText || '') : '') + '\x02' + dl.join(' ') + '\x02' + (d.getElementsByTagName('meta').length));`);
       } catch (e) { continue; }   // between pages
       const [href, ready, st, links] = r.split('\x02');
       if (/\/classic$/.test(href) && Date.now() - started > 120000 && !statusUrl) { seen.push('still on the form: ' + st); break; }

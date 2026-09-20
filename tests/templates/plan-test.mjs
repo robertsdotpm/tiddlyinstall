@@ -161,7 +161,7 @@ for (const rt of Object.keys(TEMPLATES)) {
     const app = {
       recordHash: 'plan-test', name: job.name, project: 'app', runtime: job.runtime,
       select: job.select, range: job.range || '', launch: job.launch, install,
-      console: job.console !== false, menu: true, desktop: false, root: 'user', rootName: 'ib',
+      console: job.console !== false, menu: true, desktop: false, root: 'user', rootName: 'ti',
       platforms, source: { name: 'src.tar.gz', sha256: '0'.repeat(64), size: 1, format: 'tar.gz', strip: 1, urls: ['https://example/src.tar.gz'] },
       package: '', packageVersion: '', prerequisites: job.prerequisites || [],
     };

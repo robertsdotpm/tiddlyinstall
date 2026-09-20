@@ -1,13 +1,13 @@
 /*
- * ibsig: an NSIS plugin (x86-unicode) that checks a plan's Ed25519
+ * tisig: an NSIS plugin (x86-unicode) that checks a plan's Ed25519
  * signature (docs/format.md "Plan signature"). Windows XP SP3 and later: it
  * uses only kernel32 functions XP has, and no C runtime.
  *
- *   ibsig::check "<plan file>" "<public key, base64 of 32 bytes>"
- *   ibsig::checkdoc "<file>" "<public key>" "<kind>"   (kind: ib-revocations)
+ *   tisig::check "<plan file>" "<public key, base64 of 32 bytes>"
+ *   tisig::checkdoc "<file>" "<public key>" "<kind>"   (kind: ti-revocations)
  *   Pop $0    ; "ok", "unsigned: <why>", "bad: <why>" or "error: <why>"
  *
- *   ibsig::cleanstr / ibsig::cleanfile: below (display hygiene)
+ *   tisig::cleanstr / tisig::cleanfile: below (display hygiene)
  */
 #include <windows.h>
 #include "plancheck.h"
@@ -88,14 +88,14 @@ static void docheck(int size, stack_t **top, const char *head, int have_kind)
   if (!path) return;
   if (pop(top, path, size) || pop(top, key, 128) || (have_kind && pop(top, kind, 32))) {
     GlobalFree(path);
-    result(top, size, "error", "ibsig::check needs a file and a key");
+    result(top, size, "error", "tisig::check needs a file and a key");
     return;
   }
   if (have_kind) {
     for (i = 0; i < 30 && kind[i]; ++i) headbuf[i] = kind[i] < 128 ? (char)kind[i] : '?';
     if (i == 0 || kind[i]) {
       GlobalFree(path);
-      result(top, size, "error", "ibsig::checkdoc needs a document kind");
+      result(top, size, "error", "tisig::checkdoc needs a document kind");
       return;
     }
     headbuf[i++] = '\t';
@@ -103,7 +103,7 @@ static void docheck(int size, stack_t **top, const char *head, int have_kind)
     head = headbuf;
   }
   for (i = 0; i < 44 && key[i]; ++i) kb[i] = key[i] < 128 ? (unsigned char)key[i] : '?';
-  if (i != 44 || key[44] || ib_b64decode(kb, 44, pk, 32)) {
+  if (i != 44 || key[44] || ti_b64decode(kb, 44, pk, 32)) {
     GlobalFree(path);
     result(top, size, "error", "the installer's public key is malformed");
     return;
@@ -133,19 +133,19 @@ static void docheck(int size, stack_t **top, const char *head, int have_kind)
     return;
   }
   CloseHandle(h);
-  r = ib_doc_check(buf, n, pk, head, &why);
+  r = ti_doc_check(buf, n, pk, head, &why);
   GlobalFree(buf);
-  result(top, size, r == IB_PLAN_OK ? "ok" : r == IB_PLAN_UNSIGNED ? "unsigned" : "bad", r == IB_PLAN_OK ? "" : why);
+  result(top, size, r == TI_PLAN_OK ? "ok" : r == TI_PLAN_UNSIGNED ? "unsigned" : "bad", r == TI_PLAN_OK ? "" : why);
 }
 
 void __declspec(dllexport) __cdecl check(HWND parent, int size, WCHAR *vars, stack_t **top, void *extra)
 {
   (void)parent; (void)vars; (void)extra;
-  docheck(size, top, "ib-plan\t", 0);
+  docheck(size, top, "ti-plan\t", 0);
 }
 
 /*
- *   ibsig::checkdoc "<file>" "<public key>" "<kind>"   ("ib-revocations")
+ *   tisig::checkdoc "<file>" "<public key>" "<kind>"   ("ti-revocations")
  */
 void __declspec(dllexport) __cdecl checkdoc(HWND parent, int size, WCHAR *vars, stack_t **top, void *extra)
 {
@@ -169,7 +169,7 @@ static int unsafe(WCHAR c)
 }
 
 /*
- *   ibsig::cleanstr "<text>"   Pop $0: the text with unsafe characters as '?'
+ *   tisig::cleanstr "<text>"   Pop $0: the text with unsafe characters as '?'
  *   (tab, CR and LF become spaces too: the result is one line)
  */
 void __declspec(dllexport) __cdecl cleanstr(HWND parent, int size, WCHAR *vars, stack_t **top, void *extra)
@@ -189,7 +189,7 @@ void __declspec(dllexport) __cdecl cleanstr(HWND parent, int size, WCHAR *vars, 
 }
 
 /*
- *   ibsig::cleanfile "<UTF-16LE file>"   rewrites it in place, unsafe
+ *   tisig::cleanfile "<UTF-16LE file>"   rewrites it in place, unsafe
  *   characters as '?'. Pop $0: "ok" or "error: <why>".
  */
 void __declspec(dllexport) __cdecl cleanfile(HWND parent, int size, WCHAR *vars, stack_t **top, void *extra)
@@ -203,7 +203,7 @@ void __declspec(dllexport) __cdecl cleanfile(HWND parent, int size, WCHAR *vars,
   if (!path) return;
   if (pop(top, path, size)) {
     GlobalFree(path);
-    result(top, size, "error", "ibsig::cleanfile needs a file");
+    result(top, size, "error", "tisig::cleanfile needs a file");
     return;
   }
   h = CreateFileW(path, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -247,7 +247,7 @@ void __declspec(dllexport) __cdecl cleanfile(HWND parent, int size, WCHAR *vars,
 /*
  * ---------------------------------------------------------------- richtext
  *
- *   ibsig::richtext "<hwnd, decimal>" "<UTF-16LE text file>"
+ *   tisig::richtext "<hwnd, decimal>" "<UTF-16LE text file>"
  *   Pop $0    ; "ok" or "error: <why>"
  *
  * The review page's text (design.md section 3) is the same on every
@@ -257,7 +257,7 @@ void __declspec(dllexport) __cdecl cleanfile(HWND parent, int size, WCHAR *vars,
  * Rather than have NSIS build RTF -- which would mean escaping every
  * backslash and brace in a record someone else wrote -- the plain text
  * is marked up here, by the same rules the Linux and macOS engine paints
- * a terminal with (ib_paint in installer/unix/ib-engine.sh):
+ * a terminal with (ti_paint in installer/unix/ti-engine.sh):
  *
  *   `!! ...`               bold red      something you would want to know
  *   `!  ...`               amber         worth noticing
@@ -275,25 +275,25 @@ void __declspec(dllexport) __cdecl cleanfile(HWND parent, int size, WCHAR *vars,
 typedef struct {
   DWORD flags;
   UINT codepage;
-} ib_settextex;
+} ti_settextex;
 
 typedef struct {
   char *p;
   DWORD n;
   DWORD cap;
-} ib_buf;
+} ti_buf;
 
-static void bput(ib_buf *b, char c)
+static void bput(ti_buf *b, char c)
 {
   if (b->n < b->cap) b->p[b->n++] = c;
 }
 
-static void bstr(ib_buf *b, const char *s)
+static void bstr(ti_buf *b, const char *s)
 {
   while (*s) bput(b, *s++);
 }
 
-static void bnum(ib_buf *b, unsigned v)
+static void bnum(ti_buf *b, unsigned v)
 {
   char t[12];
   int i = 0;
@@ -303,7 +303,7 @@ static void bnum(ib_buf *b, unsigned v)
 }
 
 /* One character of the text, escaped for RTF. */
-static void brtf(ib_buf *b, WCHAR c)
+static void brtf(ti_buf *b, WCHAR c)
 {
   if (c == '\\' || c == '{' || c == '}') { bput(b, '\\'); bput(b, (char)c); }
   else if (c == '\t') bstr(b, "\\tab ");
@@ -372,8 +372,8 @@ void __declspec(dllexport) __cdecl richtext(HWND parent, int size, WCHAR *vars, 
   HWND ctl;
   DWORD n, got = 0, i, start;
   unsigned char *raw;
-  ib_buf b;
-  ib_settextex st;
+  ti_buf b;
+  ti_settextex st;
   LRESULT r;
   int mono_section = 0, short_section = 0;
   (void)parent; (void)vars; (void)extra;
@@ -387,7 +387,7 @@ void __declspec(dllexport) __cdecl richtext(HWND parent, int size, WCHAR *vars, 
   }
   if (pop(top, arg, size) || pop(top, path, size)) {
     GlobalFree(arg); GlobalFree(path);
-    result(top, size, "error", "ibsig::richtext needs a window and a file");
+    result(top, size, "error", "tisig::richtext needs a window and a file");
     return;
   }
   {

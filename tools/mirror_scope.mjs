@@ -237,12 +237,12 @@ if (o.out) {
       // has no SHA-256 to match on -- the resolver got the file's SHA-256
       // from our own copy. Hash first anyway, because a part and its
       // release share neither url nor name in every runtime.
-      const sha = String(e.ib_sha256 || (e.checksum && e.checksum.algo === 'sha256' ? e.checksum.value : '') || '').toLowerCase();
+      const sha = String(e.ti_sha256 || (e.checksum && e.checksum.algo === 'sha256' ? e.checksum.value : '') || '').toLowerCase();
       if (sha && !byHash.has(sha)) byHash.set(sha, hit);
       if (e.url && !byURL.has(e.url)) byURL.set(e.url, hit);
       for (const p of list(e.parts)) {
         const ph = { folder, e, part: p };
-        const ps = String(p.ib_sha256 || p.sha256 || '').toLowerCase();
+        const ps = String(p.ti_sha256 || p.sha256 || '').toLowerCase();
         if (ps && !byHash.has(ps)) byHash.set(ps, ph);
         if (p.url && !byURL.has(p.url)) byURL.set(p.url, ph);
       }
@@ -274,7 +274,7 @@ if (o.out) {
     const url = part ? part.url : e.url;
     const entry = part
       ? { ...e, url: part.url, mirrors: part.mirrors || [], size: part.size || 0,
-          checksum: { algo: 'sha256', value: part.ib_sha256 || part.sha256, source: 'catalogue release part' },
+          checksum: { algo: 'sha256', value: part.ti_sha256 || part.sha256, source: 'catalogue release part' },
           parts: undefined, notes: 'part of ' + e.version + ' (' + (e.variant || 'default') + ')' }
       : { ...e, parts: undefined };
     // One path for both halves. Where we already have the file, that is

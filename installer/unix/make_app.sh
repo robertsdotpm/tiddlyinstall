@@ -1,13 +1,13 @@
 #!/bin/sh
-# Build the macOS base: out/TiddlyInstall.app and out/ib-base-macos.zip.
+# Build the macOS base: out/TiddlyInstall.app and out/ti-base-macos.zip.
 #
 #   TiddlyInstall.app/Contents/Info.plist
-#   TiddlyInstall.app/Contents/MacOS/install      = ib-engine.sh
-#   TiddlyInstall.app/Contents/Resources/ibverify-{x86_64,arm64}   Ed25519 verifiers
-#   TiddlyInstall.app/Contents/Resources/ib/      empty; modes B/C put record.txt,
+#   TiddlyInstall.app/Contents/MacOS/install      = ti-engine.sh
+#   TiddlyInstall.app/Contents/Resources/tiverify-{x86_64,arm64}   Ed25519 verifiers
+#   TiddlyInstall.app/Contents/Resources/ti/      empty; modes B/C put record.txt,
 #                                           plan.txt and pack/ here
 #
-# The plan signing key is baked in (plankey.sh): IB_PLAN_PUBKEY_FILE, or
+# The plan signing key is baked in (plankey.sh): TI_PLAN_PUBKEY_FILE, or
 # ../../server/data/plan-signing-key.pub.
 #
 # On a Mac the bundle is ad-hoc signed (codesign -s -) and zipped with
@@ -17,16 +17,16 @@ set -eu
 here=$(cd "$(dirname "$0")" && pwd)
 outdir=${1:-$here/out}
 app=$outdir/TiddlyInstall.app
-zipf=$outdir/ib-base-macos.zip
+zipf=$outdir/ti-base-macos.zip
 rm -rf "$app" "$zipf"
-mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources/ib"
+mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources/ti"
 . "$here/plankey.sh"
-bake_engine "$here/ib-engine.sh" "$app/Contents/MacOS/install"
+bake_engine "$here/ti-engine.sh" "$app/Contents/MacOS/install"
 chmod 755 "$app/Contents/MacOS/install"
 # Our Ed25519 verifiers (verify/), picked by `uname -m`.
 for a in x86_64 arm64; do
-	cp "$here/verify/bin/ibverify-macos-$a" "$app/Contents/Resources/ibverify-$a"
-	chmod 755 "$app/Contents/Resources/ibverify-$a"
+	cp "$here/verify/bin/tiverify-macos-$a" "$app/Contents/Resources/tiverify-$a"
+	chmod 755 "$app/Contents/Resources/tiverify-$a"
 done
 cat > "$app/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -34,7 +34,7 @@ cat > "$app/Contents/Info.plist" <<'PLIST'
 <plist version="1.0">
 <dict>
 	<key>CFBundleExecutable</key><string>install</string>
-	<key>CFBundleIdentifier</key><string>pm.ib.installer</string>
+	<key>CFBundleIdentifier</key><string>pm.ti.installer</string>
 	<key>CFBundleName</key><string>TiddlyInstall</string>
 	<key>CFBundleDisplayName</key><string>TiddlyInstall</string>
 	<key>CFBundlePackageType</key><string>APPL</string>

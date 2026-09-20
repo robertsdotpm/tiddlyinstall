@@ -3,9 +3,9 @@
 # own: starts Xvfb on a free display (-displayfd), runs the driver there
 # with the harness's arguments, and stops both when the driver exits or
 # this script is killed. Xvfb, the driver and MiniBrowser are run through
-# links in this folder so the harness's `pkill -f ibbrowsers/` finds them.
+# links in this folder so the harness's `pkill -f tibrowsers/` finds them.
 D=$(cd "$(dirname "$0")" && pwd)
-f=$(mktemp "${TMPDIR:-/tmp}/ib-xvfb.XXXXXX")
+f=$(mktemp "${TMPDIR:-/tmp}/ti-xvfb.XXXXXX")
 "$D/Xvfb" -displayfd 3 -screen 0 1280x1024x24 -nolisten tcp 3>"$f" 2>/dev/null &
 xp=$!
 wp=

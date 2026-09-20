@@ -7,7 +7,7 @@ import crypto from 'node:crypto';
 import { loadOrCreate, keyID, split, verify, verifyFor, recordOf, addRequestLine, publicKeyFromRaw, KEY_FILE, PUB_FILE, VerifyError } from '../lib/plansig.js';
 import { tmpDir, REPO } from './helpers.js';
 
-const PLAN = 'ib-plan\t1\nrecord\ttjfq5rqwnnrxk3m9q2x7v4p8ab\nname\tHello\n\n[target]\nwhen\tlinux\t0\t9999\t*\nlaunch\techo hi\n';
+const PLAN = 'ti-plan\t1\nrecord\ttjfq5rqwnnrxk3m9q2x7v4p8ab\nname\tHello\n\n[target]\nwhen\tlinux\t0\t9999\t*\nlaunch\techo hi\n';
 
 function newSigner(t) {
   const dir = tmpDir(t);
@@ -69,7 +69,7 @@ test('sign and verify', (t) => {
   verify(s.pub, Buffer.concat([signed.subarray(0, -1), Buffer.from('\r\n')]));
   verify(s.pub, signed.subarray(0, -1));
   assert.throws(() => s.sign(signed), /already signed/);
-  assert.throws(() => s.sign(Buffer.from('ib-record\t1\n')), /not an ib-plan/);
+  assert.throws(() => s.sign(Buffer.from('ti-record\t1\n')), /not a ti-plan/);
 });
 
 test('no final newline: it is added, and signed', (t) => {
@@ -110,18 +110,18 @@ test('rejects', (t) => {
 
 test('recordOf and split', () => {
   assert.equal(recordOf(PLAN), 'tjfq5rqwnnrxk3m9q2x7v4p8ab');
-  assert.equal(recordOf('ib-plan\t1\n\n[target]\nrecord\tx\n'), '', 'a record line inside a target block is not the header\'s');
+  assert.equal(recordOf('ti-plan\t1\n\n[target]\nrecord\tx\n'), '', 'a record line inside a target block is not the header\'s');
   assert.equal(split(Buffer.from(PLAN)).ok, false);
 });
 
 // build/sign_test.go
 test('addRequestLine', (t) => {
-  const plan = 'ib-plan\t1\nrecord\tabc\n\n[target]\nwhen\tlinux\t0\t9999\t*\n';
-  assert.equal(addRequestLine(plan, 'name', 'python', 'Some.Pkg'), 'ib-plan\t1\nrequest\tname\tpython\tSome.Pkg\nrecord\tabc\n\n[target]\nwhen\tlinux\t0\t9999\t*\n');
+  const plan = 'ti-plan\t1\nrecord\tabc\n\n[target]\nwhen\tlinux\t0\t9999\t*\n';
+  assert.equal(addRequestLine(plan, 'name', 'python', 'Some.Pkg'), 'ti-plan\t1\nrequest\tname\tpython\tSome.Pkg\nrecord\tabc\n\n[target]\nwhen\tlinux\t0\t9999\t*\n');
   // Tabs and newlines in a value can't add lines or fields.
   const got = addRequestLine(plan, 'name', 'python', 'a\tb\nlaunch\tevil');
   assert.equal(got.split('\n').length, plan.split('\n').length + 1);
-  assert.throws(() => addRequestLine('ib-record\t1\n', 'name'));
+  assert.throws(() => addRequestLine('ti-record\t1\n', 'name'));
   // The line is inside the signature.
   const { s } = newSigner(t);
   const signed = s.signString(addRequestLine(plan, 'name', 'python', 'requests'));
@@ -131,11 +131,11 @@ test('addRequestLine', (t) => {
 // A second request line goes after the first, so `name` stays the first
 // `request` line an engine reads (docs/format.md section 1).
 test('addRequestLine keeps the order: name, then nonce', () => {
-  const plan = 'ib-plan\t1\nrecord\tabc\n\n[target]\nwhen\tlinux\t0\t9999\t*\n';
+  const plan = 'ti-plan\t1\nrecord\tabc\n\n[target]\nwhen\tlinux\t0\t9999\t*\n';
   const hex = 'a'.repeat(32);
   const both = addRequestLine(addRequestLine(plan, 'name', 'python', 'requests'), 'nonce', hex);
   assert.equal(both.split('\n').slice(0, 4).join('\n'),
-    'ib-plan\t1\nrequest\tname\tpython\trequests\nrequest\tnonce\t' + hex + '\nrecord\tabc');
+    'ti-plan\t1\nrequest\tname\tpython\trequests\nrequest\tnonce\t' + hex + '\nrecord\tabc');
   // A nonce alone is the second line, as `name` would have been.
   assert.equal(addRequestLine(plan, 'nonce', hex).split('\n')[1], 'request\tnonce\t' + hex);
 });
@@ -144,13 +144,13 @@ test('addRequestLine keeps the order: name, then nonce', () => {
 // its header keeps the two kinds of document apart (docs/format.md 7).
 test('signing another kind of document', (t) => {
   const { s } = newSigner(t);
-  const doc = 'ib-revocations\t1\nissued\t2026-09-20T11:00:00Z\nrevoke\trecord\tabc\n';
-  const signed = s.signStringAs('ib-revocations', doc);
-  assert.equal(verify(s.pub, Buffer.from(signed), 'ib-revocations').toString('utf8'), doc);
+  const doc = 'ti-revocations\t1\nissued\t2026-09-20T11:00:00Z\nrevoke\trecord\tabc\n';
+  const signed = s.signStringAs('ti-revocations', doc);
+  assert.equal(verify(s.pub, Buffer.from(signed), 'ti-revocations').toString('utf8'), doc);
   // Not as a plan, and a plan is not one of these.
   assert.throws(() => verify(s.pub, Buffer.from(signed)), VerifyError);
-  assert.throws(() => verify(s.pub, Buffer.from(s.signString(PLAN)), 'ib-revocations'), VerifyError);
-  assert.throws(() => s.signStringAs('ib-revocations', PLAN));
+  assert.throws(() => verify(s.pub, Buffer.from(s.signString(PLAN)), 'ti-revocations'), VerifyError);
+  assert.throws(() => s.signStringAs('ti-revocations', PLAN));
   // A changed entry does not verify.
-  assert.throws(() => verify(s.pub, Buffer.from(signed.replace('abc', 'xyz')), 'ib-revocations'), VerifyError);
+  assert.throws(() => verify(s.pub, Buffer.from(signed.replace('abc', 'xyz')), 'ti-revocations'), VerifyError);
 });

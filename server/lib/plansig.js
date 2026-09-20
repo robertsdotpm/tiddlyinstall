@@ -15,12 +15,12 @@ export const KEY_FILE = 'plan-signing-key.pem'; // PKCS#8 private key, mode 0600
 export const PUB_FILE = 'plan-signing-key.pub'; // base64 of the raw 32-byte public key; bases are built with it
 
 const SIG_PREFIX = 'sig\ted25519\t';
-const PLAN_HEAD = Buffer.from('ib-plan\t');
+const PLAN_HEAD = Buffer.from('ti-plan\t');
 // The other document signed with the plan key: the revocation list
 // (design.md 7.1). Its signed bytes must start with its own header, so a
 // plan signature can never be read as one, or the other way round.
-export const PLAN_KIND = 'ib-plan';
-export const REVOCATIONS_KIND = 'ib-revocations';
+export const PLAN_KIND = 'ti-plan';
+export const REVOCATIONS_KIND = 'ti-revocations';
 const headOf = (kind) => Buffer.from(kind + '\t');
 
 function rawPublic(keyObject) {
@@ -50,7 +50,7 @@ export class Signer {
   publicPEM() { return this.pubKey.export({ type: 'spki', format: 'pem' }); }
 
   // plan (bytes or text) with its signature line appended. It must be an
-  // ib-plan and not already signed; a missing final newline is added first.
+  // ti-plan and not already signed; a missing final newline is added first.
   sign(plan) { return this.signAs(PLAN_KIND, plan); }
 
   // The same for another document signed with this key: its bytes must
@@ -58,7 +58,7 @@ export class Signer {
   signAs(kind, doc) {
     let b = Buffer.from(doc);
     const head = headOf(kind);
-    if (!b.subarray(0, head.length).equals(head)) throw new Error('plansig: not an ' + kind);
+    if (!b.subarray(0, head.length).equals(head)) throw new Error('plansig: not a ' + kind);
     if (split(b).ok) throw new Error('plansig: already signed');
     if (b.length && b[b.length - 1] !== 0x0a) b = Buffer.concat([b, Buffer.from('\n')]);
     const sig = crypto.sign(null, b, this.priv);
@@ -130,7 +130,7 @@ export class VerifyError extends Error {}
 
 // verify checks a signed plan against the raw public key and returns the
 // signed bytes (the plan without its signature line). `kind` is the header
-// the signed bytes must start with: an ib-plan unless another is named.
+// the signed bytes must start with: a ti-plan unless another is named.
 export function verify(pubRaw, doc, kind = PLAN_KIND) {
   const { msg, line, ok } = split(doc);
   if (!ok) throw new VerifyError('the plan is not signed');
@@ -139,7 +139,7 @@ export function verify(pubRaw, doc, kind = PLAN_KIND) {
   const sig = Buffer.from(b64, 'base64');
   if (b64.length !== 88 || !/^[A-Za-z0-9+/]{86}==$/.test(b64) || sig.length !== 64) throw new VerifyError('the plan\'s signature does not verify: malformed signature');
   const head = headOf(kind);
-  if (!msg.subarray(0, head.length).equals(head)) throw new VerifyError('the plan\'s signature does not verify: signed bytes are not an ' + kind);
+  if (!msg.subarray(0, head.length).equals(head)) throw new VerifyError('the plan\'s signature does not verify: signed bytes are not a ' + kind);
   if (!crypto.verify(null, msg, publicKeyFromRaw(pubRaw), sig)) throw new VerifyError('the plan\'s signature does not verify');
   return msg;
 }
@@ -171,7 +171,7 @@ export function recordOf(plan) {
 // is the one saying what was asked for.
 export function addRequestLine(plan, ...vals) {
   let i = plan.indexOf('\n');
-  if (i < 0 || !plan.startsWith('ib-plan\t')) throw new Error('not an ib-plan');
+  if (i < 0 || !plan.startsWith('ti-plan\t')) throw new Error('not a ti-plan');
   for (;;) {
     if (!plan.startsWith('request\t', i + 1)) break;
     const n = plan.indexOf('\n', i + 1);

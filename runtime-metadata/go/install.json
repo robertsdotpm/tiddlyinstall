@@ -565,158 +565,158 @@
      "shell": "sh"
     },
     {
-     "mkdir": "{runtime_dir}/ibcc"
+     "mkdir": "{runtime_dir}/ticc"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#!/bin/sh"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# zig as this app's C toolchain, so an unattended install needs no root"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# and no system compiler (design.md 11.0 item 15). The name it is called"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# by picks the mode. Three things have to be corrected on the way:"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - a Rust target triple (x86_64-unknown-linux-gnu), which cc-rs passes"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    as --target= and zig's parser rejects, becomes zig's;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - the glibc version is pinned to this machine's, or zig links against"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    the newest glibc it knows and the program will not start here"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    (CentOS 7: \"/lib64/libc.so.6: version GLIBC_2.18 not found\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - zig calls the 32-bit x86 architecture \"x86\"; uname says i686, which"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    zig rejects outright (\"available architectures: ... x86 ...\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "t="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ \"$m\" != ar ]; then"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "g=$(getconf GNU_LIBC_VERSION 2>/dev/null | awk '{print $2}')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "[ -n \"$g\" ] || g=$(ldd --version 2>/dev/null | sed -n '1s/.* //p')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "c=$(uname -m)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $c in i[3-6]86) c=x86 ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $g in [0-9]*.[0-9]*) t=$c-linux-gnu.$g ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "n=$#"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=0"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "while [ $i -lt $n ]; do"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "a=$1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "shift"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $a in"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "--target=*)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen=1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed -e 's/-unknown-/-/' -e 's/^i[3-6]86-/x86-/'); fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": ";;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "set -- \"$@\" \"$a\""
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=$((i + 1))"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "done"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -z \"$seen\" ] && [ -n \"$t\" ]; then set -- -target \"$t\" \"$@\"; fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "exec \"{dir:zig}\"/zig $m \"$@\""
     },
     {
-     "run": "cd \"{runtime_dir}/ibcc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
+     "run": "cd \"{runtime_dir}/ticc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
      "shell": "sh"
     }
    ],
@@ -758,14 +758,14 @@
      "GOTOOLCHAIN": "local",
      "GOFLAGS": "-modcacherw",
      "XDG_CONFIG_HOME": "{data_dir}/config",
-     "CC": "{runtime_dir}/ibcc/cc",
-     "CXX": "{runtime_dir}/ibcc/c++",
+     "CC": "{runtime_dir}/ticc/cc",
+     "CXX": "{runtime_dir}/ticc/c++",
      "CGO_ENABLED": "1"
     },
     "cwd": "{app_dir}",
-    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). The config-folder variable keeps Go telemetry (1.23+) out of the user's home. cgo projects also need a C compiler. With `tools cgo` the C compiler is zig, through the ibcc shim.",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). The config-folder variable keeps Go telemetry (1.23+) out of the user's home. cgo projects also need a C compiler. With `tools cgo` the C compiler is zig, through the ticc shim.",
     "path_prepend": [
-     "{runtime_dir}/ibcc"
+     "{runtime_dir}/ticc"
     ]
    },
    "id": "cgo"
@@ -791,158 +791,158 @@
      "shell": "sh"
     },
     {
-     "mkdir": "{runtime_dir}/ibcc"
+     "mkdir": "{runtime_dir}/ticc"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#!/bin/sh"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# zig as this app's C toolchain, so an unattended install needs no root"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# and no system compiler (design.md 11.0 item 15). The name it is called"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# by picks the mode. Three things have to be corrected on the way:"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - a Rust target triple (x86_64-unknown-linux-gnu), which cc-rs passes"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    as --target= and zig's parser rejects, becomes zig's;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - the glibc version is pinned to this machine's, or zig links against"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    the newest glibc it knows and the program will not start here"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    (CentOS 7: \"/lib64/libc.so.6: version GLIBC_2.18 not found\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - zig calls the 32-bit x86 architecture \"x86\"; uname says i686, which"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    zig rejects outright (\"available architectures: ... x86 ...\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "t="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ \"$m\" != ar ]; then"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "g=$(getconf GNU_LIBC_VERSION 2>/dev/null | awk '{print $2}')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "[ -n \"$g\" ] || g=$(ldd --version 2>/dev/null | sed -n '1s/.* //p')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "c=$(uname -m)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $c in i[3-6]86) c=x86 ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $g in [0-9]*.[0-9]*) t=$c-linux-gnu.$g ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "n=$#"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=0"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "while [ $i -lt $n ]; do"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "a=$1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "shift"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $a in"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "--target=*)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen=1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed -e 's/-unknown-/-/' -e 's/^i[3-6]86-/x86-/'); fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": ";;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "set -- \"$@\" \"$a\""
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=$((i + 1))"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "done"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -z \"$seen\" ] && [ -n \"$t\" ]; then set -- -target \"$t\" \"$@\"; fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "exec \"{dir:zig}\"/zig $m \"$@\""
     },
     {
-     "run": "cd \"{runtime_dir}/ibcc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
+     "run": "cd \"{runtime_dir}/ticc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
      "shell": "sh"
     }
    ],
@@ -981,14 +981,14 @@
      "GOTOOLCHAIN": "local",
      "GOFLAGS": "-modcacherw",
      "XDG_CONFIG_HOME": "{data_dir}/config",
-     "CC": "{runtime_dir}/ibcc/cc",
-     "CXX": "{runtime_dir}/ibcc/c++",
+     "CC": "{runtime_dir}/ticc/cc",
+     "CXX": "{runtime_dir}/ticc/c++",
      "CGO_ENABLED": "1"
     },
     "cwd": "{app_dir}",
-    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). The config-folder variable keeps Go telemetry (1.23+) out of the user's home. cgo projects also need a C compiler. With `tools cgo` the C compiler is zig, through the ibcc shim.",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). The config-folder variable keeps Go telemetry (1.23+) out of the user's home. cgo projects also need a C compiler. With `tools cgo` the C compiler is zig, through the ticc shim.",
     "path_prepend": [
-     "{runtime_dir}/ibcc"
+     "{runtime_dir}/ticc"
     ]
    },
    "id": "cgo-mips64le"
@@ -1010,158 +1010,158 @@
      "strip_components": 1
     },
     {
-     "mkdir": "{runtime_dir}/ibcc"
+     "mkdir": "{runtime_dir}/ticc"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#!/bin/sh"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# zig as this app's C toolchain, so an unattended install needs no root"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# and no system compiler (design.md 11.0 item 15). The name it is called"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "# by picks the mode. Three things have to be corrected on the way:"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - a Rust target triple (x86_64-unknown-linux-gnu), which cc-rs passes"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    as --target= and zig's parser rejects, becomes zig's;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - the glibc version is pinned to this machine's, or zig links against"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    the newest glibc it knows and the program will not start here"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    (CentOS 7: \"/lib64/libc.so.6: version GLIBC_2.18 not found\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#  - zig calls the 32-bit x86 architecture \"x86\"; uname says i686, which"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "#    zig rejects outright (\"available architectures: ... x86 ...\")."
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "t="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ \"$m\" != ar ]; then"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "g=$(getconf GNU_LIBC_VERSION 2>/dev/null | awk '{print $2}')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "[ -n \"$g\" ] || g=$(ldd --version 2>/dev/null | sed -n '1s/.* //p')"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "c=$(uname -m)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $c in i[3-6]86) c=x86 ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $g in [0-9]*.[0-9]*) t=$c-linux-gnu.$g ;; esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "n=$#"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=0"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen="
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "while [ $i -lt $n ]; do"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "a=$1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "shift"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "case $a in"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "--target=*)"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "seen=1"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed -e 's/-unknown-/-/' -e 's/^i[3-6]86-/x86-/'); fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": ";;"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "esac"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "set -- \"$@\" \"$a\""
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "i=$((i + 1))"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "done"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "if [ -z \"$seen\" ] && [ -n \"$t\" ]; then set -- -target \"$t\" \"$@\"; fi"
     },
     {
-     "write": "{runtime_dir}/ibcc/cc",
+     "write": "{runtime_dir}/ticc/cc",
      "text": "exec \"{dir:zig}\"/zig $m \"$@\""
     },
     {
-     "run": "cd \"{runtime_dir}/ibcc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
+     "run": "cd \"{runtime_dir}/ticc\" && chmod 755 cc && for t in gcc clang c++ g++ clang++ ar; do cp cc \"$t\"; done",
      "shell": "sh"
     }
    ],
@@ -1203,14 +1203,14 @@
      "GOTOOLCHAIN": "local",
      "GOFLAGS": "-modcacherw",
      "XDG_CONFIG_HOME": "{data_dir}/config",
-     "CC": "{runtime_dir}/ibcc/cc",
-     "CXX": "{runtime_dir}/ibcc/c++",
+     "CC": "{runtime_dir}/ticc/cc",
+     "CXX": "{runtime_dir}/ticc/c++",
      "CGO_ENABLED": "1"
     },
     "cwd": "{app_dir}",
-    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). The config-folder variable keeps Go telemetry (1.23+) out of the user's home. cgo projects also need a C compiler. With `tools cgo` the C compiler is zig, through the ibcc shim.",
+    "notes": "Builds the app on the user's machine at install time (installer-builder design.md 1.8). The config-folder variable keeps Go telemetry (1.23+) out of the user's home. cgo projects also need a C compiler. With `tools cgo` the C compiler is zig, through the ticc shim.",
     "path_prepend": [
-     "{runtime_dir}/ibcc"
+     "{runtime_dir}/ticc"
     ]
    },
    "id": "cgo"

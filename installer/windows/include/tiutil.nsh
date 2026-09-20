@@ -1,18 +1,18 @@
-; ibutil.nsh -- helpers shared by base.nsi (installer and uninstaller) and
+; tiutil.nsh -- helpers shared by base.nsi (installer and uninstaller) and
 ; launcher.nsi. Unicode NSIS 3, XP SP3 and later.
 ;
 ; NSIS has no arrays and a 1024-character string limit, so:
-; - UTF-8 text files are converted to UTF-16LE once (IbUtf8ToUtf16) and then
+; - UTF-8 text files are converted to UTF-16LE once (TiUtf8ToUtf16) and then
 ;   read line by line with FileReadUTF16LE;
-; - UTF-8 output is written with WideCharToMultiByte + WriteFile (IbAppendUtf8);
+; - UTF-8 output is written with WideCharToMultiByte + WriteFile (TiAppendUtf8);
 ; - functions take their inputs in the global $U_* / $T_* variables below and
 ;   preserve $0-$9 and $R0-$R9.
 ;
-; Functions are instantiated per prefix: !insertmacro IB_UTIL "" and
-; !insertmacro IB_UTIL "un." (NSIS requires un. functions in the uninstaller).
+; Functions are instantiated per prefix: !insertmacro TI_UTIL "" and
+; !insertmacro TI_UTIL "un." (NSIS requires un. functions in the uninstaller).
 
-!ifndef IBUTIL_NSH
-!define IBUTIL_NSH
+!ifndef TIUTIL_NSH
+!define TIUTIL_NSH
 
 ; Not every script uses every helper.
 !pragma warning disable 6010
@@ -46,7 +46,7 @@ Var F6
 !define ASCII_PRINTABLE_LEN 95
 
 ; Strip a trailing \n and \r from a variable.
-!macro IbTrimNL VAR
+!macro TiTrimNL VAR
   Push $R9
   StrCpy $R9 ${VAR} 1 -1
   StrCmp $R9 "$\n" 0 +2
@@ -56,20 +56,20 @@ Var F6
     StrCpy ${VAR} ${VAR} -1
   Pop $R9
 !macroend
-!define IbTrimNL "!insertmacro IbTrimNL"
+!define TiTrimNL "!insertmacro TiTrimNL"
 
 ; Read the next non-blank, non-comment line of HANDLE into $T_line.
-!macro IbRead PFX HANDLE
+!macro TiRead PFX HANDLE
   StrCpy $U_a ${HANDLE}
-  Call ${PFX}IbReadLine
+  Call ${PFX}TiReadLine
 !macroend
-!define IbRead '!insertmacro IbRead ""'
-!define un.IbRead '!insertmacro IbRead "un."'
+!define TiRead '!insertmacro TiRead ""'
+!define un.TiRead '!insertmacro TiRead "un."'
 
-!macro IB_UTIL P
+!macro TI_UTIL P
 
 ; UTF-8 file $U_a -> UTF-16LE file (with BOM) $U_b. Error flag on failure.
-Function ${P}IbUtf8ToUtf16
+Function ${P}TiUtf8ToUtf16
   Push $0
   Push $1
   Push $2
@@ -80,14 +80,14 @@ Function ${P}IbUtf8ToUtf16
   ClearErrors
   FileOpen $0 "$U_a" r
   ${If} ${Errors}
-    Goto ibu_end
+    Goto tiu_end
   ${EndIf}
   FileSeek $0 0 END $1
   FileSeek $0 0 SET
   FileOpen $2 "$U_b" w
   ${If} ${Errors}
     FileClose $0
-    Goto ibu_end
+    Goto tiu_end
   ${EndIf}
   FileWriteWord $2 0xFEFF
   ${If} $1 > 0
@@ -121,7 +121,7 @@ Function ${P}IbUtf8ToUtf16
   FileClose $2
   FileClose $0
   ClearErrors
-  ibu_end:
+  tiu_end:
   Pop $6
   Pop $5
   Pop $4
@@ -132,7 +132,7 @@ Function ${P}IbUtf8ToUtf16
 FunctionEnd
 
 ; Append text $U_b (include your own newline) to file $U_a as UTF-8.
-Function ${P}IbAppendUtf8
+Function ${P}TiAppendUtf8
   Push $0
   Push $1
   Push $2
@@ -161,10 +161,10 @@ Function ${P}IbAppendUtf8
   Pop $0
 FunctionEnd
 
-; The app that owns folder $U_a: the `appid` line of its .ib-owner file
+; The app that owns folder $U_a: the `appid` line of its .ti-owner file
 ; (format.md section 5) -> $U_out, or "" if there is none. Uses $PLUGINSDIR.
 ; Keeps the caller's parsed line ($K, $F1-$F6, $T_*).
-Function ${P}IbOwnerOf
+Function ${P}TiOwnerOf
   Push $0
   Push $1
   Push $K
@@ -179,20 +179,20 @@ Function ${P}IbOwnerOf
   Push $T_field
   Push $T_more
   StrCpy $1 ""
-  ${If} ${FileExists} "$U_a\.ib-owner"
-    StrCpy $U_a "$U_a\.ib-owner"
+  ${If} ${FileExists} "$U_a\.ti-owner"
+    StrCpy $U_a "$U_a\.ti-owner"
     StrCpy $U_b "$PLUGINSDIR\owner.u16"
-    Call ${P}IbUtf8ToUtf16
+    Call ${P}TiUtf8ToUtf16
     ClearErrors
     FileOpen $0 "$PLUGINSDIR\owner.u16" r
     ${IfNot} ${Errors}
       ${Do}
         StrCpy $U_a $0
-        Call ${P}IbReadLine
+        Call ${P}TiReadLine
         ${If} ${Errors}
           ${Break}
         ${EndIf}
-        Call ${P}IbParseLine
+        Call ${P}TiParseLine
         ${If} $K S== "appid"
           StrCpy $1 $F1
           ${Break}
@@ -219,7 +219,7 @@ FunctionEnd
 
 ; Take the text up to the first tab of $T_rest into $T_field; $T_rest keeps
 ; what follows the tab. $T_more = 1 if there was a tab.
-Function ${P}IbSplitTab
+Function ${P}TiSplitTab
   Push $0
   Push $1
   Push $2
@@ -248,27 +248,27 @@ Function ${P}IbSplitTab
 FunctionEnd
 
 ; Split $T_line into $K and $F1..$F6 (missing fields are empty).
-Function ${P}IbParseLine
+Function ${P}TiParseLine
   StrCpy $T_rest $T_line
-  Call ${P}IbSplitTab
+  Call ${P}TiSplitTab
   StrCpy $K $T_field
-  Call ${P}IbSplitTab
+  Call ${P}TiSplitTab
   StrCpy $F1 $T_field
-  Call ${P}IbSplitTab
+  Call ${P}TiSplitTab
   StrCpy $F2 $T_field
-  Call ${P}IbSplitTab
+  Call ${P}TiSplitTab
   StrCpy $F3 $T_field
-  Call ${P}IbSplitTab
+  Call ${P}TiSplitTab
   StrCpy $F4 $T_field
-  Call ${P}IbSplitTab
+  Call ${P}TiSplitTab
   StrCpy $F5 $T_field
-  Call ${P}IbSplitTab
+  Call ${P}TiSplitTab
   StrCpy $F6 $T_field
 FunctionEnd
 
 ; Read one line from handle $U_a into $T_line (trimmed). Error flag at EOF.
 ; Blank lines and # comments are skipped.
-Function ${P}IbReadLine
+Function ${P}TiReadLine
   ${Do}
     ClearErrors
     FileReadUTF16LE $U_a $T_line
@@ -276,7 +276,7 @@ Function ${P}IbReadLine
       SetErrors                  ; IfErrors cleared it; callers test it again
       Return
     ${EndIf}
-    ${IbTrimNL} $T_line
+    ${TiTrimNL} $T_line
     ${If} $T_line == ""
       ${Continue}
     ${EndIf}
@@ -291,7 +291,7 @@ FunctionEnd
 
 ; Hex digest $U_a -> first $U_b characters of its base32 (RFC 4648,
 ; lowercase, no padding) encoding, in $U_out. 5 hex digits = 4 base32 chars.
-Function ${P}IbHexToB32
+Function ${P}TiHexToB32
   Push $0
   Push $1
   Push $2
@@ -334,7 +334,7 @@ Function ${P}IbHexToB32
 FunctionEnd
 
 ; $U_out = 1 if $U_a is exactly $U_b characters of [a-z2-7] (case-sensitive).
-Function ${P}IbIsB32
+Function ${P}TiIsB32
   Push $0
   Push $1
   Push $2
@@ -374,7 +374,7 @@ Function ${P}IbIsB32
 FunctionEnd
 
 ; $U_out = 1 if $U_a contains $U_b (case-insensitive).
-Function ${P}IbContains
+Function ${P}TiContains
   Push $0
   Push $1
   Push $2
@@ -402,7 +402,7 @@ Function ${P}IbContains
 FunctionEnd
 
 ; $U_out = 1 if $U_a starts with $U_b (case-insensitive, as Windows paths are).
-Function ${P}IbStartsWith
+Function ${P}TiStartsWith
   Push $0
   StrLen $0 $U_b
   StrCpy $0 $U_a $0
@@ -415,7 +415,7 @@ FunctionEnd
 
 ; Environment of this process (inherited by what it starts).
 ; $U_a name, $U_b value.
-Function ${P}IbSetEnv
+Function ${P}TiSetEnv
   Push $0
   Push $1
   StrCpy $0 $U_a
@@ -424,7 +424,7 @@ Function ${P}IbSetEnv
   Pop $1
   Pop $0
 FunctionEnd
-Function ${P}IbUnsetEnv
+Function ${P}TiUnsetEnv
   Push $0
   StrCpy $0 $U_a
   System::Call 'kernel32::SetEnvironmentVariableW(w r0, p 0) i'
@@ -432,7 +432,7 @@ Function ${P}IbUnsetEnv
 FunctionEnd
 ; Prepend $U_a (one or more ;-separated folders) to PATH. Works on PATHs
 ; longer than the NSIS string limit by doing it in a System buffer.
-Function ${P}IbPrependPath
+Function ${P}TiPrependPath
   Push $0
   Push $1
   Push $2
@@ -454,7 +454,7 @@ Function ${P}IbPrependPath
 FunctionEnd
 
 ; $U_out = 1 if this process runs with administrator rights.
-Function ${P}IbIsAdmin
+Function ${P}TiIsAdmin
   Push $0
   UserInfo::GetAccountType
   Pop $0
@@ -467,7 +467,7 @@ FunctionEnd
 
 ; Run $EXEPATH again, elevated (verb runas), with parameters $U_a; wait
 ; for it and return its exit code in $U_out, or "error" if it didn't start.
-Function ${P}IbRunElevated
+Function ${P}TiRunElevated
   Push $0
   Push $1
   Push $2

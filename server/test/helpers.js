@@ -14,7 +14,7 @@ export const haveCatalog = fs.existsSync(path.join(RUNTIMES, 'catalog', 'os_vers
 export const haveBases = fs.existsSync(path.join(BASES, 'windows', 'out', 'base.exe'));
 
 export function tmpDir(t) {
-  const d = fs.mkdtempSync(path.join(os.tmpdir(), 'ib-test-'));
+  const d = fs.mkdtempSync(path.join(os.tmpdir(), 'ti-test-'));
   t.after(() => fs.rmSync(d, { recursive: true, force: true }));
   return d;
 }
@@ -40,7 +40,7 @@ export async function localFetch(url, opts = {}) {
 /* ---------- a Redis database no other test run is using ---------- */
 
 // Two suites (server.test.js, form.test.js) each want a Redis database
-// with nothing else in it, and each deletes every `ib:*` and `ib-bull:*`
+// with nothing else in it, and each deletes every `ti:*` and `ti-bull:*`
 // key in it when it finishes. Fixed numbers -- 5 and 6 -- kept those two
 // apart, but not two *runs* of the same suite: with several agents on
 // this machine, a second `npm test` flushes the first one's keys
@@ -53,8 +53,8 @@ export async function localFetch(url, opts = {}) {
 // first run to get it owns that database, later runs move on to the
 // next. A heartbeat keeps the claim alive while the suite runs and the
 // TTL releases it if the run is killed, so nothing can be left locked.
-// Set IB_TEST_REDIS_DB (or IB_TEST_FORM_REDIS_DB) to pin one anyway.
-const CLAIM_KEY = 'ib-test-claim';
+// Set TI_TEST_REDIS_DB (or TI_TEST_FORM_REDIS_DB) to pin one anyway.
+const CLAIM_KEY = 'ti-test-claim';
 const CLAIM_MS = 60000;
 
 // The databases a claim may use: Redis ships with 16 (0-15). 0 is the
@@ -70,8 +70,8 @@ const CLAIM_MS = 60000;
 // the job reported done and returned an installer.
 export const TEST_DBS = [7, 8, 9, 10, 11, 12, 13, 14, 15];
 
-// Claims a database, registers the release (its claim, and every ib: and
-// ib-bull: key it made) with the test, and returns the number. `pinned`
+// Claims a database, registers the release (its claim, and every ti: and
+// ti-bull: key it made) with the test, and returns the number. `pinned`
 // is an env var's value: given one, that database is used as it always
 // was, with no claim, so a caller who wants a fixed number still gets it.
 export async function claimRedisDb(t, IORedis, addr, pinned) {
@@ -80,7 +80,7 @@ export async function claimRedisDb(t, IORedis, addr, pinned) {
   const clean = async (db) => {
     const r = new IORedis({ host, port, db });
     try {
-      for (const pat of ['ib:*', 'ib-bull:*']) {
+      for (const pat of ['ti:*', 'ti-bull:*']) {
         const keys = await r.keys(pat);
         if (keys.length) await r.del(...keys);
       }
@@ -113,7 +113,7 @@ export async function claimRedisDb(t, IORedis, addr, pinned) {
     }
     if (Date.now() > deadline) {
       throw new Error('every Redis test database (' + TEST_DBS.join(', ') + ') is claimed by another test run; '
-        + 'set IB_TEST_REDIS_DB to pick one anyway, or wait for the other run to finish');
+        + 'set TI_TEST_REDIS_DB to pick one anyway, or wait for the other run to finish');
     }
     await new Promise((r) => setTimeout(r, 1000));
   }

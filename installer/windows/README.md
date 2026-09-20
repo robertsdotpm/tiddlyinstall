@@ -14,28 +14,28 @@ code in it. Unicode NSIS 3.09; runs on Windows XP SP3 to 11 and Server
 | --- | --- |
 | `base.nsi` | The installer and its uninstaller (`WriteUninstaller`) |
 | `launcher.nsi` | `launch.exe`, copied into every app folder |
-| `include/ibutil.nsh` | Helpers shared by both: UTF-8 in and out, tab-separated fields, base32, environment, elevation |
+| `include/tiutil.nsh` | Helpers shared by both: UTF-8 in and out, tab-separated fields, base32, environment, elevation |
 | `build.sh` | Builds `out/launcher.exe`, then `out/base.exe`, which embeds it and the plan signing key |
 | `append_meta.py` | Appends a metadata block (format.md section 4) to a base, for testing |
 | `plugins/x86-unicode/` | NSIS plugins (below) |
-| `plugin-src/` | Source of our `ibsig` plugin and its `build.sh` |
+| `plugin-src/` | Source of our `tisig` plugin and its `build.sh` |
 | `tools/7za.exe` | 7-Zip 9.20 command line, for `7z` and `tar.*` |
 
 ```sh
 ./build.sh                                        # out/launcher.exe, out/base.exe
-IB_BACKEND=http://127.0.0.1:8091 IB_OUTFILE=out/base-test.exe ./build.sh
-IB_PLAN_PUBKEY_FILE=/srv/ib/data/plan-signing-key.pub ./build.sh
+TI_BACKEND=http://127.0.0.1:8091 TI_OUTFILE=out/base-test.exe ./build.sh
+TI_PLAN_PUBKEY_FILE=/srv/ti/data/plan-signing-key.pub ./build.sh
 python3 append_meta.py out/base.exe app.exe --record record.txt --plan plan.txt [--pack FILE...]
 python3 append_meta.py --hash record.txt          # the record's 26-character hash
 python3 append_meta.py --show app.exe             # the footer an exe carries
 ```
 
 `makensis` is `~/.local/bin/makensis` (NSIS 3.09 with its stubs under
-`~/.local/opt/ib-tools`). `out/` is not committed.
+`~/.local/opt/ti-tools`). `out/` is not committed.
 
 **The plan signing key** ([format.md](../../docs/format.md), "Plan
 signature") is built into the base: `build.sh` reads one line of base64
-(the raw 32-byte Ed25519 public key) from `IB_PLAN_PUBKEY_FILE`, by
+(the raw 32-byte Ed25519 public key) from `TI_PLAN_PUBKEY_FILE`, by
 default `../../server/data/plan-signing-key.pub`, which the server writes
 on its first start. It refuses to build without one. A base only trusts
 plans from the server whose key it was built with, so production bases
@@ -53,10 +53,10 @@ Values end at the next space, or at a closing `"` if they start with one
 | `/record=<path>` | Use this record; the plan comes from `/plan=` or the backend |
 | `/plan=<path>` | Use this plan. It must be signed by the built-in key (save it from `<backend>/api/plan/<record>`) |
 | `/unsigned-plan` | Accept an unsigned (or edited) `/plan=`, for plans you wrote yourself. The review page says so |
-| `/backend=<url>` | Backend for records and plans. Otherwise the record's `backend` line, otherwise the built-in `IB_BACKEND` (`http://10.0.1.76:8080`) |
+| `/backend=<url>` | Backend for records and plans. Otherwise the record's `backend` line, otherwise the built-in `TI_BACKEND` (`http://10.0.1.76:8080`) |
 | `/reinstall` | Install again even when this app is already fully installed with the same record (below) |
 | `/?`, `/help` | Show these options and quit |
-| `/ib-elevated` | Internal: marks the copy started with `runas` |
+| `/ti-elevated` | Internal: marks the copy started with `runas` |
 
 **Running it again.** If the app is already fully installed where this
 installer would put it, with the same `appid` and record hash (the same
@@ -64,9 +64,9 @@ settings), the installer doesn't install again: in `.onInit`, before any
 page, it starts the app through `launch.exe`, as the shortcuts do, and
 quits with exit code 0. With `/S` it never starts the app: it logs that
 the app is installed and exits 0. "Fully installed" means
-`<app>\.ib-installed` (format.md section 5), the last file a successful
+`<app>\.ti-installed` (format.md section 5), the last file a successful
 install writes, names this appid and record, and the folder's
-`.ib-owner` names the app. A different record (new settings, a new
+`.ti-owner` names the app. A different record (new settings, a new
 version) has another appid, so it installs beside the old one as before.
 This works offline: the appid is derived from the record hash alone
 (`base32(sha256(<hash> "/app"))[:12]`), so with an embedded, `/record=`
@@ -85,7 +85,7 @@ from the built-in backend (design.md section 3). Use an unsigned base
 (mode C) or your own signed build (mode B) for custom settings.
 
 **Plans must be signed.** A plan fetched from a backend, and a
-`/plan=` file without `/unsigned-plan`, is refused unless the `ibsig`
+`/plan=` file without `/unsigned-plan`, is refused unless the `tisig`
 plugin finds a valid signature by the built-in key; a plan embedded in
 the installer may be unsigned (the review page warns). Every plan must
 name the record being installed, and a plan by name must say, in its
@@ -118,7 +118,7 @@ system`, `C:\<rootname>` gets a protected ACL (owner Administrators;
 Administrators and SYSTEM full control, Users read and execute, nothing
 inherited from `C:\`), set with `SetNamedSecurityInfoW` from SDDL so it
 works the same from XP on and doesn't depend on localised group names.
-Every folder the installer makes holds a `.ib-owner` file naming the app
+Every folder the installer makes holds a `.ti-owner` file naming the app
 (format.md section 5).
 
 Shortcuts: Start menu folder `<App>` holding `<App>.lnk` (to
@@ -128,20 +128,20 @@ shortcut, no uninstaller shortcut, no folder); the app is started with
 `launch.exe`, the desktop shortcut or by running the installer again,
 and the review and finish pages say so. Add/Remove Programs (always):
 `HKCU` (or `HKLM`)
-`Software\Microsoft\Windows\CurrentVersion\Uninstall\ib-<appid>`.
-The last thing a successful install writes is `.ib-installed` (to a
+`Software\Microsoft\Windows\CurrentVersion\Uninstall\ti-<appid>`.
+The last thing a successful install writes is `.ti-installed` (to a
 temporary name, then renamed); an earlier install of the same app is
-removed first (its `.ib-installed` before anything else).
+removed first (its `.ti-installed` before anything else).
 
-The uninstaller deletes `.ib-installed` first (so a half-finished
+The uninstaller deletes `.ti-installed` first (so a half-finished
 uninstall is never taken for an install), then reads `manifest.txt` in
 its own folder and removes only
-`dir` entries that are `<root>\<12 base32 chars>` and whose `.ib-owner`
+`dir` entries that are `<root>\<12 base32 chars>` and whose `.ti-owner`
 names this app, `.lnk` shortcuts in a Start menu or desktop folder (then
-the app's Start menu folder, if empty), and the app's own `ib-<appid>`
-uninstall key; then its own folder, if its `.ib-owner` names the app, and
+the app's Start menu folder, if empty), and the app's own `ti-<appid>`
+uninstall key; then its own folder, if its `.ti-owner` names the app, and
 the root if that is now empty. A folder with a missing or different
-`.ib-owner` is kept and reported. Like every NSIS uninstaller it runs
+`.ti-owner` is kept and reported. Like every NSIS uninstaller it runs
 from a copy in `%TEMP%\~nsuN.tmp`, which Windows deletes at the next
 reboot; the `uninstall.exe` it was started as may still be running for a
 moment, so removing the app folder is retried for up to 15 s, then left
@@ -192,9 +192,9 @@ bar to show a URL. Three things changed, none of which alter what is
 shown -- only whether it can be read:
 
 - **The window.** MUI's is 300x140 dialog units and there is no wider
-  resource to switch to, so `IbGuiInit` (MUI's GUI-init hook, before any
+  resource to switch to, so `TiGuiInit` (MUI's GUI-init hook, before any
   page is built) resizes the window and the controls MUI put in it to
-  `IB_WANT_W` x `IB_WANT_H` (780x600 at 96 dpi), scaled by the screen's
+  `TI_WANT_W` x `TI_WANT_H` (780x600 at 96 dpi), scaled by the screen's
   DPI and **clamped to the work area** so an 800x600 machine still gets
   a window that fits. nsDialogs takes the child rectangle's size when a
   page is created, so the page follows with no work of its own. The
@@ -212,7 +212,7 @@ The text itself is grouped so that the answer to "should I run this?"
 is at the top: a heading, then anything unusual (BEFORE YOU SAY YES),
 then IN SHORT -- what, from where, how big, from which hosts, where it
 goes, what it runs, who signed it -- and the evidence below that. It is
-the same shape as the other engine's, described in `ib-engine.sh` at
+the same shape as the other engine's, described in `ti-engine.sh` at
 "the review screen's shape".
 
 ## Engine notes
@@ -223,8 +223,8 @@ the same shape as the other engine's, described in `ib-engine.sh` at
   tar, member named by the lowercase hex sha256) is used first.
 - `run` steps and `install` go through `cmd /s /c "(<command>) >log 2>&1"`;
   the output goes into the detail log, and a non-zero exit fails the
-  install. `install` also gets `IB_APP_DIR`, `IB_RUNTIME_DIR`,
-  `IB_APP_NAME`.
+  install. `install` also gets `TI_APP_DIR`, `TI_RUNTIME_DIR`,
+  `TI_APP_NAME`.
 - `unpack`, `mkdir`, `write` and `delete` refuse paths outside the app's
   folders and `{tmp}`. `zip` uses nsisunz; `7z`, `tar` and `tar.gz/.xz/.bz2`
   use 7za (a `.tar.*` is decompressed to `{tmp}` first). `strip 1` unpacks
@@ -235,8 +235,8 @@ the same shape as the other engine's, described in `ib-engine.sh` at
   than that (a longer line would be split).
 - The review page and error dialogs show control characters (C0 but tab
   and newlines, DEL, C1) and bidi controls (U+200E/F, U+202A-202E,
-  U+2066-2069) from the record and plan as `?` (`ibsig::cleanfile`,
-  `ibsig::cleanstr`), so a name can't reorder or hide what is shown.
+  U+2066-2069) from the record and plan as `?` (`tisig::cleanfile`,
+  `tisig::cleanstr`), so a name can't reorder or hide what is shown.
 - An HTTP 451 from the backend is reported as a takedown (design.md 7).
 
 ## Stale plans (2026-09-20)
@@ -244,7 +244,7 @@ the same shape as the other engine's, described in `ib-engine.sh` at
 The engine sends `?nonce=` with every plan it fetches and refuses one
 that answers another request; for a plan it carries, it fetches the
 signed revocation list and judges the plan's age by `signed`/`maxage`,
-but only when this machine's clock is plausible against `IB_BUILD_DAYS`
+but only when this machine's clock is plausible against `TI_BUILD_DAYS`
 (design.md 7.1, format.md sections 3 and 7). Days, not seconds: NSIS
 arithmetic is 32-bit signed and epoch seconds overflow it in 2038.
 
@@ -257,14 +257,14 @@ and **Windows 11** (the newest):
 
 1. Build a base against a throwaway key and a local backend, as
    `installer/unix/test_freshness.sh` does for the other engine:
-   `IB_PLAN_PUBKEY_FILE=... IB_BACKEND=http://<host>:<port> ./build.sh`.
+   `TI_PLAN_PUBKEY_FILE=... TI_BACKEND=http://<host>:<port> ./build.sh`.
    Serve that port with `python3 -m http.server` over a folder holding
    `api/records/<hash>`, `api/plan/<hash>` and `api/revocations` --
    it ignores the query string, which is what lets a pre-signed answer
    stand in for one made for this nonce.
 2. **Nonce.** Name the .exe `install_..._<hash>.exe` and run it against
    a plan that echoes the nonce, one that echoes another, and one that
-   echoes none. There is no `IB_TEST_NONCE` here, so read the nonce the
+   echoes none. There is no `TI_TEST_NONCE` here, so read the nonce the
    engine sent out of its log (`Fetching the plan: ...?nonce=...`) and
    sign the answer for it, or point the port at a two-line CGI that
    signs on the fly. Expect: installs; **refuses** with "the answer to
@@ -274,7 +274,7 @@ and **Windows 11** (the newest):
    revocation list naming the record, then `source github <owner/repo>`,
    then `file <sha256>` of a file the plan downloads. Each must refuse
    with "has been withdrawn". Then serve one naming something else, and
-   one signed as an `ib-plan`: both must install, the second logging
+   one signed as an `ti-plan`: both must install, the second logging
    "not the document this installer asked for". Then kill the server and
    run again: `%LOCALAPPDATA%\TiddlyInstall\revocations.txt` must still
    refuse it.
@@ -290,24 +290,24 @@ and **Windows 11** (the newest):
    before this change (`git show <rev>:installer/windows/base.nsi`), must
    still install when it is a plan by record.
 
-## The `ibsig` plugin
+## The `tisig` plugin
 
-`plugins/x86-unicode/ibsig.dll` (ours, built from `plugin-src/`):
+`plugins/x86-unicode/tisig.dll` (ours, built from `plugin-src/`):
 
 ```nsis
-ibsig::check "<plan file>" "<base64 public key>"  ; Pop: ok | unsigned: … | bad: … | error: …
-ibsig::checkdoc "<file>" "<key>" "ib-revocations" ; the same for another document the plan key signs
-ibsig::cleanfile "<UTF-16LE file>"                ; rewrites it with unsafe characters as '?'
-ibsig::cleanstr "<text>"                          ; Pop: the cleaned text
-ibsig::richtext "<hwnd>" "<UTF-16LE file>"        ; the review text as RTF in a rich edit; Pop: ok | error: …
+tisig::check "<plan file>" "<base64 public key>"  ; Pop: ok | unsigned: … | bad: … | error: …
+tisig::checkdoc "<file>" "<key>" "ti-revocations" ; the same for another document the plan key signs
+tisig::cleanfile "<UTF-16LE file>"                ; rewrites it with unsafe characters as '?'
+tisig::cleanstr "<text>"                          ; Pop: the cleaned text
+tisig::richtext "<hwnd>" "<UTF-16LE file>"        ; the review text as RTF in a rich edit; Pop: ok | error: …
 ```
 
 `richtext` is why the review page can have headings, a colour for a
 warning and a monospace column for hashes with **one** control and no
 per-platform markup. The engine writes one plain-text summary (the same
 bytes that go in the log), and the plugin turns it into RTF by the same
-rules the Linux and macOS engine paints a terminal with (`ib_paint` in
-`installer/unix/ib-engine.sh`): `!!` red, `!` amber, A HEADING IN CAPITALS
+rules the Linux and macOS engine paints a terminal with (`ti_paint` in
+`installer/unix/ti-engine.sh`): `!!` red, `!` amber, A HEADING IN CAPITALS
 bold, `  Key: value` with a bold key at a tab stop, anything indented
 four spaces or more in Courier New and grey. Escaping `{`, `}`, `\` and
 non-ASCII happens there rather than in NSIS, so a record someone else
@@ -320,8 +320,8 @@ Ed25519 verification is TweetNaCl 20140427 (public domain), cut down to
 what verifying needs (SHA-512, field and point arithmetic, reduction mod
 L, point decompression) plus the RFC 8032 check that S < L, which
 TweetNaCl leaves out. `plancheck.c` finds the `sig` line and checks the
-signed bytes start with the header the caller asked for -- `ib-plan<TAB>`
-for a plan, `ib-revocations<TAB>` for the revocation list (format.md
+signed bytes start with the header the caller asked for -- `ti-plan<TAB>`
+for a plan, `ti-revocations<TAB>` for the revocation list (format.md
 section 7) -- so one kind's signature can never be read as the other's. The DLL links no C runtime and
 imports only `CreateFileW`, `ReadFile`, `WriteFile`, `SetFilePointer`,
 `GetFileSize`, `CloseHandle`, `GlobalAlloc`, `GlobalFree` and

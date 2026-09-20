@@ -8,7 +8,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import zlib from 'node:zlib';
 import { pipeline } from 'node:stream/promises';
-import { makeFooter, parseFooter } from '../../shared/ibfile.js';
+import { makeFooter, parseFooter } from '../../shared/tifile.js';
 
 /* ---------- answers ---------- */
 
@@ -188,7 +188,7 @@ function octal(n, width) {
   return n.toString(8).padStart(width - 1, '0') + '\0';
 }
 
-// One ustar header as Go's archive/tar writes it (shared/ibfile.js tarWrite).
+// One ustar header as Go's archive/tar writes it (shared/tifile.js tarWrite).
 export function ustarHeader(name, size, mode = 0o644) {
   const h = Buffer.alloc(512);
   h.write(name, 0, 100, 'utf8');
@@ -210,7 +210,7 @@ export function ustarHeader(name, size, mode = 0o644) {
 }
 
 // The PE optional header checksum over a whole file (imagehlp's
-// CheckSumMappedFile, as shared/ibfile.js peChecksum), streamed.
+// CheckSumMappedFile, as shared/tifile.js peChecksum), streamed.
 async function peChecksumFile(p, checksumOff) {
   let sum = 0, pos = 0, carry = null;
   const add = (w, at) => {

@@ -193,7 +193,7 @@
           </div>
           <div class="field">
             <label for="f-backend">Plans fetched from</label>
-            <input type="text" id="f-backend" data-key="backend" placeholder="https://ib.example" spellcheck="false">
+            <input type="text" id="f-backend" data-key="backend" placeholder="https://ti.example" spellcheck="false">
           </div>
         </div>
 
@@ -393,7 +393,7 @@
             that Apple has notarized, and notarizing means uploading the whole app to Apple with your developer account.
             Download the installer above, then on a Mac with your Developer ID certificate:</p>
 <pre class="small">ditto -x -k install.zip . &amp;&amp; cd Install.app/Contents/Resources
-codesign -f -o runtime --timestamp -s "Developer ID Application: …" ibverify-arm64 ibverify-x86_64
+codesign -f -o runtime --timestamp -s "Developer ID Application: …" tiverify-arm64 tiverify-x86_64
 cd ../../.. &amp;&amp; codesign -f -o runtime --timestamp -s "Developer ID Application: …" Install.app
 ditto -c -k --keepParent Install.app upload.zip
 xcrun notarytool submit upload.zip --keychain-profile &lt;profile&gt; --wait

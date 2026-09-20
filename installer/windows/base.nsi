@@ -17,33 +17,33 @@ CRCCheck off              ; the browser editor may change resources (icon)
 SetCompressor /SOLID lzma
 XPStyle on
 
-!ifndef IB_BACKEND
-  !define IB_BACKEND "http://10.0.1.76:8080"
+!ifndef TI_BACKEND
+  !define TI_BACKEND "http://10.0.1.76:8080"
 !endif
-!ifndef IB_VERSION
-  !define IB_VERSION "0.1.0.0"
+!ifndef TI_VERSION
+  !define TI_VERSION "0.1.0.0"
 !endif
-!ifndef IB_OUTFILE
-  !define IB_OUTFILE "out\base.exe"
+!ifndef TI_OUTFILE
+  !define TI_OUTFILE "out\base.exe"
 !endif
 ; The plan signing key (docs/format.md "Plan signature"), base64 of the raw 32-byte
 ; Ed25519 public key, and its short id. build.sh reads them from a file.
-!ifndef IB_PLAN_PUBKEY
-  !error "IB_PLAN_PUBKEY is not defined: build with build.sh"
+!ifndef TI_PLAN_PUBKEY
+  !error "TI_PLAN_PUBKEY is not defined: build with build.sh"
 !endif
-!ifndef IB_PLAN_KEYID
-  !define IB_PLAN_KEYID "?"
+!ifndef TI_PLAN_KEYID
+  !define TI_PLAN_KEYID "?"
 !endif
 ; When this base was built (build.sh passes both): RFC 3339 for messages,
 ; and whole days since 1970 for arithmetic (seconds would overflow NSIS's
 ; 32-bit integers in 2038). The real time is certainly not earlier than
 ; this, which is the only floor a machine with a wrong clock gives us
 ; (design.md 7.1, "Clocks").
-!ifndef IB_BUILD_TIME
-  !define IB_BUILD_TIME "1970-01-01T00:00:00Z"
+!ifndef TI_BUILD_TIME
+  !define TI_BUILD_TIME "1970-01-01T00:00:00Z"
 !endif
-!ifndef IB_BUILD_DAYS
-  !define IB_BUILD_DAYS 0
+!ifndef TI_BUILD_DAYS
+  !define TI_BUILD_DAYS 0
 !endif
 
 !addplugindir /x86-unicode "plugins\x86-unicode"
@@ -56,23 +56,23 @@ XPStyle on
 !include "x64.nsh"
 !include "nsDialogs.nsh"
 !include "WinMessages.nsh"
-!include "ibutil.nsh"
+!include "tiutil.nsh"
 
 Name "TiddlyInstall"
 Caption "TiddlyInstall: $AppName"
 UninstallCaption "TiddlyInstall: uninstall $AppName"
-OutFile "${IB_OUTFILE}"
-BrandingText "TiddlyInstall ${IB_VERSION}"
+OutFile "${TI_OUTFILE}"
+BrandingText "TiddlyInstall ${TI_VERSION}"
 ShowInstDetails show
 ShowUninstDetails show
 InstallDir "$TEMP"        ; replaced once the plan is read
 
-VIProductVersion "${IB_VERSION}"
+VIProductVersion "${TI_VERSION}"
 VIAddVersionKey ProductName "TiddlyInstall"
 VIAddVersionKey CompanyName "TiddlyInstall"
 VIAddVersionKey FileDescription "TiddlyInstall base installer"
-VIAddVersionKey FileVersion "${IB_VERSION}"
-VIAddVersionKey ProductVersion "${IB_VERSION}"
+VIAddVersionKey FileVersion "${TI_VERSION}"
+VIAddVersionKey ProductVersion "${TI_VERSION}"
 VIAddVersionKey LegalCopyright "TiddlyInstall"
 
 ; ---------------------------------------------------------------- state
@@ -83,7 +83,7 @@ Var LogPath
 Var L_msg
 Var Elevated         ; 1 when started by our own runas relaunch
 Var Reinstall        ; 1: /reinstall (install again even if already installed)
-Var InstTime         ; the install's UTC time, for manifest.txt and .ib-installed
+Var InstTime         ; the install's UTC time, for manifest.txt and .ti-installed
 Var FinishText       ; the finish page's text: where to find the app
 ; metadata
 Var RecFile          ; record, UTF-8 ("" if none)
@@ -96,7 +96,7 @@ Var OptBackend
 Var MetaSrc          ; where the record came from, for the transparency page
 Var PlanSrc
 Var PlanKind         ; fetched, cmdline or embedded
-Var PlanSig          ; ibsig::check's answer
+Var PlanSig          ; tisig::check's answer
 Var PlanWarn         ; a warning for the review page
 Var PlanRec          ; the plan header's `record`
 Var PlanReq          ; the plan header's first `request` (plans by name), fields joined by |
@@ -240,8 +240,8 @@ Var UnSmAll
 Var UnDeskCur
 Var UnDeskAll
 
-!insertmacro IB_UTIL ""
-!insertmacro IB_UTIL "un."
+!insertmacro TI_UTIL ""
+!insertmacro TI_UTIL "un."
 
 !macro Log MSG
   StrCpy $L_msg "${MSG}"
@@ -267,7 +267,7 @@ Var UnDeskAll
 
 ; ---------------------------------------------------------------- pages
 
-!define MUI_CUSTOMFUNCTION_GUIINIT IbGuiInit
+!define MUI_CUSTOMFUNCTION_GUIINIT TiGuiInit
 !include "MUI2.nsh"
 !define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\modern-install.ico"
 !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall.ico"
@@ -299,7 +299,7 @@ Function LogLine
     Push $U_b
     StrCpy $U_a $LogPath
     StrCpy $U_b "$L_msg$\r$\n"
-    Call IbAppendUtf8
+    Call TiAppendUtf8
     Pop $U_b
     Pop $U_a
   ${EndIf}
@@ -318,7 +318,7 @@ Function LogFile
       ${If} ${Errors}
         ${Break}
       ${EndIf}
-      ${IbTrimNL} $1
+      ${TiTrimNL} $1
       ${Log} "  | $1"
     ${Loop}
     FileClose $0
@@ -350,7 +350,7 @@ Function RecordHashOf
   ${If} $U_out != ""
     StrCpy $U_a $U_out
     StrCpy $U_b 26
-    Call IbHexToB32
+    Call TiHexToB32
   ${EndIf}
 FunctionEnd
 
@@ -361,12 +361,12 @@ Function FolderHash
   Delete "$PLUGINSDIR\fh.txt"
   StrCpy $U_a "$PLUGINSDIR\fh.txt"
   StrCpy $U_b "$AppId$0"
-  Call IbAppendUtf8
+  Call TiAppendUtf8
   StrCpy $U_a "$PLUGINSDIR\fh.txt"
   Call Sha256File
   StrCpy $U_a $U_out
   StrCpy $U_b 12
-  Call IbHexToB32
+  Call TiHexToB32
   Pop $0
 FunctionEnd
 
@@ -511,15 +511,15 @@ Function IsPlainName
   ${Else}
     StrCpy $0 $U_a
     StrCpy $U_b "\"
-    Call IbContains
+    Call TiContains
     ${If} $U_out = 0
       StrCpy $U_a $0
       StrCpy $U_b "/"
-      Call IbContains
+      Call TiContains
       ${If} $U_out = 0
         StrCpy $U_a $0
         StrCpy $U_b ":"
-        Call IbContains
+        Call TiContains
       ${EndIf}
     ${EndIf}
     ${If} $U_out = 1
@@ -539,14 +539,14 @@ Function Subst
   StrCpy $0 $U_a
   ; {dir:<name>} first
   StrCpy $T_rest $FileMap
-  Call IbSplitTab                        ; leading empty field
+  Call TiSplitTab                        ; leading empty field
   ${Do}
     ${If} $T_more = 0
       ${Break}
     ${EndIf}
-    Call IbSplitTab
+    Call TiSplitTab
     StrCpy $1 $T_field
-    Call IbSplitTab
+    Call TiSplitTab
     StrCpy $2 $T_field
     ${WordReplace} "$0" "{dir:$1}" "$Root\$2" "+" $0
   ${Loop}
@@ -569,7 +569,7 @@ FunctionEnd
 ; set if it isn't there. Unlike GetOptions, which ends a value at the next
 ; "/" (so /backend=http://host lost everything after "http:"), a value
 ; ends at the next space, or at the closing quote if it starts with one.
-Function IbGetOpt
+Function TiGetOpt
   Push $0
   Push $1
   Push $2
@@ -638,12 +638,12 @@ Function IbGetOpt
   Pop $1
   Pop $0
 FunctionEnd
-!macro IbGetOpt OPT OUT
+!macro TiGetOpt OPT OUT
   StrCpy $U_a "${OPT}"
-  Call IbGetOpt
+  Call TiGetOpt
   StrCpy ${OUT} $U_out
 !macroend
-!define IbGetOpt "!insertmacro IbGetOpt"
+!define TiGetOpt "!insertmacro TiGetOpt"
 
 ; Download $U_a to file $U_b with INetC. $U_out = "OK" or an error.
 Function Download
@@ -679,36 +679,36 @@ Function InAppFolders
   Push $1
   StrCpy $0 $U_a
   StrCpy $U_b ".."
-  Call IbContains
+  Call TiContains
   ${If} $U_out = 1
     StrCpy $U_out 0
     Goto iaf_end
   ${EndIf}
   StrCpy $U_a $0
   StrCpy $U_b "$AppDir\"
-  Call IbStartsWith
+  Call TiStartsWith
   ${If} $U_out = 1
     Goto iaf_end
   ${EndIf}
   StrCpy $U_a $0
   StrCpy $U_b "$TmpDir\"
-  Call IbStartsWith
+  Call TiStartsWith
   ${If} $U_out = 1
     Goto iaf_end
   ${EndIf}
   StrCpy $T_rest $FileMap
-  Call IbSplitTab
+  Call TiSplitTab
   ${Do}
     ${If} $T_more = 0
       StrCpy $U_out 0
       ${Break}
     ${EndIf}
-    Call IbSplitTab
-    Call IbSplitTab
+    Call TiSplitTab
+    Call TiSplitTab
     StrCpy $1 $T_field
     StrCpy $U_a $0
     StrCpy $U_b "$Root\$1\"
-    Call IbStartsWith
+    Call TiStartsWith
     ${If} $U_out = 1
       ${Break}
     ${EndIf}
@@ -798,7 +798,7 @@ Function FindBlock
   FileRead $0 $4 64
   StrCpy $5 $4 8
   StrLen $2 $4
-  ${If} $5 S!= "IBMETA1 "
+  ${If} $5 S!= "TIMETA1 "
   ${OrIf} $2 <> 64
     FileClose $0
     Goto fb_end
@@ -976,7 +976,7 @@ Function ParseFileName
     IntOp $2 $3 + 1
     StrCpy $U_a $0 "" $2
     StrCpy $U_b 26
-    Call IbIsB32
+    Call TiIsB32
     ${If} $U_out = 1
       StrCpy $RecHash $U_a
       StrCpy $0 $0 $3                  ; drop the hash token
@@ -1052,17 +1052,17 @@ Function ReadRecord
   StrCpy $RecU16 "$PLUGINSDIR\record.u16"
   StrCpy $U_a $RecFile
   StrCpy $U_b $RecU16
-  Call IbUtf8ToUtf16
+  Call TiUtf8ToUtf16
   FileOpen $0 $RecU16 r
-  ${IbRead} $0
+  ${TiRead} $0
   StrCpy $T_rest $T_line
-  Call IbSplitTab
-  ${If} $T_field S!= "ib-record"
+  Call TiSplitTab
+  ${If} $T_field S!= "ti-record"
     FileClose $0
-    ${FailWith} "The record is not an ib-record file."
+    ${FailWith} "The record is not a ti-record file."
     Goto rr_end
   ${EndIf}
-  Call IbSplitTab
+  Call TiSplitTab
   IntOp $T_field $T_field + 0
   ${If} $T_field > 1
     FileClose $0
@@ -1070,11 +1070,11 @@ Function ReadRecord
     Goto rr_end
   ${EndIf}
   ${Do}
-    ${IbRead} $0
+    ${TiRead} $0
     ${If} ${Errors}
       ${Break}
     ${EndIf}
-    Call IbParseLine
+    Call TiParseLine
     ${If} $K S== "backend"
     ${AndIf} $OptBackend == ""
     ${AndIf} $ModeA = 0
@@ -1110,17 +1110,17 @@ Function ReadPlan
   StrCpy $PlanU16 "$PLUGINSDIR\plan.u16"
   StrCpy $U_a $PlanFile
   StrCpy $U_b $PlanU16
-  Call IbUtf8ToUtf16
+  Call TiUtf8ToUtf16
   FileOpen $0 $PlanU16 r
-  ${IbRead} $0
+  ${TiRead} $0
   StrCpy $T_rest $T_line
-  Call IbSplitTab
-  ${If} $T_field S!= "ib-plan"
+  Call TiSplitTab
+  ${If} $T_field S!= "ti-plan"
     FileClose $0
-    ${FailWith} "The plan is not an ib-plan file."
+    ${FailWith} "The plan is not a ti-plan file."
     Goto rp_end
   ${EndIf}
-  Call IbSplitTab
+  Call TiSplitTab
   IntOp $T_field $T_field + 0
   ${If} $T_field > 1
     FileClose $0
@@ -1138,14 +1138,14 @@ Function ReadPlan
   StrCpy $Menu 1
   StrCpy $WantDesktop 0
   StrCpy $RootMode "user"
-  StrCpy $RootName "ib"
+  StrCpy $RootName "ti"
   ${Do}
-    ${IbRead} $0
+    ${TiRead} $0
     ${If} ${Errors}
       ${Break}
     ${EndIf}
     IntOp $LineNo $LineNo + 1
-    Call IbParseLine
+    Call TiParseLine
     ${If} $K S== "[target]"
       ${If} $1 = 1
       ${AndIf} $2 = 1
@@ -1220,7 +1220,7 @@ Function ReadPlan
         ${Else}
           StrCpy $U_a " $F4 "
           StrCpy $U_b " $Arch "
-          Call IbContains
+          Call TiContains
           StrCpy $2 $U_out
         ${EndIf}
       ${EndIf}
@@ -1253,7 +1253,7 @@ Function OpenBlock
     ${If} $0 >= $TgtLine
       ${Break}
     ${EndIf}
-    ${IbRead} $BH
+    ${TiRead} $BH
     IntOp $0 $0 + 1
   ${Loop}
   StrCpy $LineNo $TgtLine
@@ -1289,11 +1289,11 @@ Function ReadTarget
   Call AppendSha
   Call OpenBlock
   ${Do}
-    ${IbRead} $BH
+    ${TiRead} $BH
     ${If} ${Errors}
       ${Break}
     ${EndIf}
-    Call IbParseLine
+    Call TiParseLine
     ${If} $K S== "[target]"
       ${Break}
     ${ElseIf} $K S== "runtime"
@@ -1374,12 +1374,12 @@ Function FindMetadata
   ; 1. command line (not in mode A)
   StrCpy $1 ""
   ClearErrors
-  ${IbGetOpt} "/record=" $0
+  ${TiGetOpt} "/record=" $0
   ${IfNot} ${Errors}
     StrCpy $1 "/record="
   ${EndIf}
   ClearErrors
-  ${IbGetOpt} "/plan=" $2
+  ${TiGetOpt} "/plan=" $2
   ${IfNot} ${Errors}
     StrCpy $1 "$1 /plan="
   ${EndIf}
@@ -1392,7 +1392,7 @@ Function FindMetadata
   ${EndIf}
   ${If} $1 != ""
   ${AndIf} $ModeA = 1
-    ${FailWith} "This installer is signed by $SignedBy and only installs the app its file name names, from ${IB_BACKEND}. It doesn't accept $1. For your own settings use an unsigned base or one you sign yourself (modes B and C)."
+    ${FailWith} "This installer is signed by $SignedBy and only installs the app its file name names, from ${TI_BACKEND}. It doesn't accept $1. For your own settings use an unsigned base or one you sign yourself (modes B and C)."
     Return
   ${EndIf}
   ${If} $1 == ""
@@ -1405,7 +1405,7 @@ Function FindMetadata
   StrCpy $PackOff 0
   StrCpy $PackLen 0
   ClearErrors
-  ${IbGetOpt} "/record=" $0
+  ${TiGetOpt} "/record=" $0
   ${IfNot} ${Errors}
     StrCpy $RecFile $0
     StrCpy $MetaSrc "the command line (/record=$0)"
@@ -1414,7 +1414,7 @@ Function FindMetadata
     ${EndIf}
   ${EndIf}
   ClearErrors
-  ${IbGetOpt} "/plan=" $0
+  ${TiGetOpt} "/plan=" $0
   ${IfNot} ${Errors}
     StrCpy $PlanFile $0
     StrCpy $PlanKind "cmdline"
@@ -1504,7 +1504,7 @@ Function TakenDownHint
   Push $U_out
   StrCpy $U_a $U_out
   StrCpy $U_b "451"
-  Call IbContains
+  Call TiContains
   ${If} $U_out = 1
     StrCpy $U_c " The backend says this installer has been taken down (HTTP 451)."
   ${EndIf}
@@ -1517,13 +1517,13 @@ FunctionEnd
 ; Embedded plans are as trustworthy as the file carrying them, so an
 ; unsigned one is used with a warning on the review page.
 Function CheckPlan
-  ibsig::check "$PlanFile" "${IB_PLAN_PUBKEY}"
+  tisig::check "$PlanFile" "${TI_PLAN_PUBKEY}"
   Pop $PlanSig
-  ${Log} "Plan signature: $PlanSig (key ${IB_PLAN_KEYID})"
+  ${Log} "Plan signature: $PlanSig (key ${TI_PLAN_KEYID})"
   StrCpy $PlanWarn ""
   StrCpy $0 $PlanSig 2
   ${If} $0 == "ok"
-    StrCpy $PlanSrc "$PlanSrc; signed by the TiddlyInstall key ${IB_PLAN_KEYID}"
+    StrCpy $PlanSrc "$PlanSrc; signed by the TiddlyInstall key ${TI_PLAN_KEYID}"
     Return
   ${EndIf}
   ${If} $PlanKind == "embedded"
@@ -1536,17 +1536,17 @@ Function CheckPlan
     Return
   ${EndIf}
   ${If} $PlanKind == "cmdline"
-    ${FailWith} "The plan $PlanFile isn't signed by the TiddlyInstall key ${IB_PLAN_KEYID} ($PlanSig). Use a plan saved from <backend>/api/plan/<record>, or add /unsigned-plan if you wrote it yourself."
+    ${FailWith} "The plan $PlanFile isn't signed by the TiddlyInstall key ${TI_PLAN_KEYID} ($PlanSig). Use a plan saved from <backend>/api/plan/<record>, or add /unsigned-plan if you wrote it yourself."
   ${Else}
-    ${FailWith} "The install plan from $Backend isn't signed by the TiddlyInstall key ${IB_PLAN_KEYID} ($PlanSig). It may have been changed on the way; nothing was installed."
+    ${FailWith} "The install plan from $Backend isn't signed by the TiddlyInstall key ${TI_PLAN_KEYID} ($PlanSig). It may have been changed on the way; nothing was installed."
   ${EndIf}
 FunctionEnd
 
 ; ---------------------------------------------------------------- stale plans (design.md 7.1)
 
-!define IB_MAXAGE_DEFAULT_DAYS 90     ; the plan's `maxage` when it says nothing
-!define IB_MAXAGE_LIMIT_DAYS 365      ; past this a carried plan is refused
-!define IB_CLOCK_SPAN_DAYS 3653       ; ten years: past this the clock isn't believable
+!define TI_MAXAGE_DEFAULT_DAYS 90     ; the plan's `maxage` when it says nothing
+!define TI_MAXAGE_LIMIT_DAYS 365      ; past this a carried plan is refused
+!define TI_CLOCK_SPAN_DAYS 3653       ; ten years: past this the clock isn't believable
 
 ; A nonce for a plan request: 32 hex characters, echoed by the backend
 ; into the signed plan so that a plan signed for an earlier request can
@@ -1586,7 +1586,7 @@ Function MakeNonce            ; $U_a: what is being asked for -> $PlanNonce
   Delete "$PLUGINSDIR\nonce.txt"
   StrCpy $U_b "$1|$0|$EXEPATH|$PLUGINSDIR|$U_a"
   StrCpy $U_a "$PLUGINSDIR\nonce.txt"
-  Call IbAppendUtf8
+  Call TiAppendUtf8
   StrCpy $U_a "$PLUGINSDIR\nonce.txt"
   Call Sha256File
   Delete "$PLUGINSDIR\nonce.txt"
@@ -1722,7 +1722,7 @@ Function Rfc3339Days
   StrCpy $R3 $1 2 8
   ; Digits only: IntOp would read "20x6" as 20.
   StrCpy $U_a "$R1$R2$R3"
-  Call IbIsDigits
+  Call TiIsDigits
   StrCpy $U_a $1
   ${If} $U_out = 0
     StrCpy $U_out ""
@@ -1740,9 +1740,9 @@ Function Rfc3339Days
   Pop $0
 FunctionEnd
 
-; $U_out = 1 if $U_a is one or more ASCII digits (IbIsB32's shape: a
+; $U_out = 1 if $U_a is one or more ASCII digits (TiIsB32's shape: a
 ; comparison per character, because NSIS's < and > are numeric).
-Function IbIsDigits
+Function TiIsDigits
   Push $0
   Push $1
   Push $2
@@ -1810,24 +1810,24 @@ Function CheckAge
   ${EndIf}
   Call TodayDays
   StrCpy $2 $U_out                    ; today, by this machine
-  StrCpy $3 ${IB_MAXAGE_DEFAULT_DAYS}
+  StrCpy $3 ${TI_MAXAGE_DEFAULT_DAYS}
   ${If} $PlanMaxAge != ""
     StrCpy $U_a $PlanMaxAge
-    Call IbIsDigits
+    Call TiIsDigits
     ${If} $U_out = 1
       IntOp $3 $PlanMaxAge / 86400
     ${EndIf}
   ${EndIf}
-  ${If} $3 > ${IB_MAXAGE_LIMIT_DAYS}
-    StrCpy $3 ${IB_MAXAGE_LIMIT_DAYS}
+  ${If} $3 > ${TI_MAXAGE_LIMIT_DAYS}
+    StrCpy $3 ${TI_MAXAGE_LIMIT_DAYS}
   ${EndIf}
   ; Is the clock believable at all?
   StrCpy $0 0
   ${If} $2 != ""
-  ${AndIf} ${IB_BUILD_DAYS} > 0
-  ${AndIf} $2 >= ${IB_BUILD_DAYS}
-    IntOp $0 $2 - ${IB_BUILD_DAYS}
-    ${If} $0 <= ${IB_CLOCK_SPAN_DAYS}
+  ${AndIf} ${TI_BUILD_DAYS} > 0
+  ${AndIf} $2 >= ${TI_BUILD_DAYS}
+    IntOp $0 $2 - ${TI_BUILD_DAYS}
+    ${If} $0 <= ${TI_CLOCK_SPAN_DAYS}
     ${AndIf} $2 >= $1
       StrCpy $0 1
     ${Else}
@@ -1836,7 +1836,7 @@ Function CheckAge
   ${EndIf}
   ${If} $0 <> 1
     Call NowText
-    StrCpy $AgeWarn "This installer's plan was signed on $PlanSigned, and this machine's clock says $U_out, which can't be right (this installer was built ${IB_BUILD_TIME}), so how old the plan is can't be told. Nothing is refused for age."
+    StrCpy $AgeWarn "This installer's plan was signed on $PlanSigned, and this machine's clock says $U_out, which can't be right (this installer was built ${TI_BUILD_TIME}), so how old the plan is can't be told. Nothing is refused for age."
     ${Log} "Clock not plausible; the plan's age is reported only."
     Goto ca_end
   ${EndIf}
@@ -1845,8 +1845,8 @@ Function CheckAge
   ${If} $0 <= $3
     Goto ca_end
   ${EndIf}
-  ${If} $0 > ${IB_MAXAGE_LIMIT_DAYS}
-    ${FailWith} "This installer's plan was signed on $PlanSigned, $0 days ago, past the ${IB_MAXAGE_LIMIT_DAYS}-day limit. What it installs may since have been withdrawn or found unsafe. Get a current installer from $Backend and run that instead; nothing was installed."
+  ${If} $0 > ${TI_MAXAGE_LIMIT_DAYS}
+    ${FailWith} "This installer's plan was signed on $PlanSigned, $0 days ago, past the ${TI_MAXAGE_LIMIT_DAYS}-day limit. What it installs may since have been withdrawn or found unsafe. Get a current installer from $Backend and run that instead; nothing was installed."
     Goto ca_end
   ${EndIf}
   StrCpy $AgeWarn "This installer's plan was signed on $PlanSigned, $0 days ago (it is meant to be used within $3 days). What it installs may have moved on. A current installer is at $Backend."
@@ -1925,11 +1925,11 @@ Function DocValue
     Return
   ${EndIf}
   ${Do}
-    ${IbRead} $0
+    ${TiRead} $0
     ${If} ${Errors}
       ${Break}
     ${EndIf}
-    Call IbParseLine
+    Call TiParseLine
     ${If} $K S== $U_b
       StrCpy $U_out $F1
       ${Break}
@@ -1946,7 +1946,7 @@ Function DocSerial
   Call DocValue
   StrCpy $0 $U_out
   StrCpy $U_a $0
-  Call IbIsDigits
+  Call TiIsDigits
   ${If} $U_out = 1
     StrCpy $U_out $0
   ${Else}
@@ -1976,13 +1976,13 @@ Function Revocations
   ${Log} "Fetching the revocation list: $U_a"
   Call DownloadOptional
   ${If} $U_out == "OK"
-    ibsig::checkdoc "$PLUGINSDIR\revocations.txt" "${IB_PLAN_PUBKEY}" "ib-revocations"
+    tisig::checkdoc "$PLUGINSDIR\revocations.txt" "${TI_PLAN_PUBKEY}" "ti-revocations"
     Pop $0
     StrCpy $1 $0 2
     ${If} $1 == "ok"
       StrCpy $U_a "$PLUGINSDIR\revocations.txt"
       StrCpy $U_b "$PLUGINSDIR\revocations.u16"
-      Call IbUtf8ToUtf16
+      Call TiUtf8ToUtf16
       StrCpy $2 "$PLUGINSDIR\revocations.u16"
     ${Else}
       ${Log} "Revocation list from $Backend: $0"
@@ -1996,7 +1996,7 @@ Function Revocations
   ${If} ${FileExists} "$3"
     StrCpy $U_a "$3"
     StrCpy $U_b "$PLUGINSDIR\revocations-cache.u16"
-    Call IbUtf8ToUtf16
+    Call TiUtf8ToUtf16
     ${If} $2 == ""
       StrCpy $2 "$PLUGINSDIR\revocations-cache.u16"
       StrCpy $U_a "$2"
@@ -2056,11 +2056,11 @@ Function RevokeScan
     Return
   ${EndIf}
   ${Do}
-    ${IbRead} $0
+    ${TiRead} $0
     ${If} ${Errors}
       ${Break}
     ${EndIf}
-    Call IbParseLine
+    Call TiParseLine
     ${If} $K S!= "revoke"
       ${Continue}
     ${EndIf}
@@ -2323,11 +2323,11 @@ Function NeedChecks
   StrCpy $0 ""
   Call OpenBlock
   ${Do}
-    ${IbRead} $BH
+    ${TiRead} $BH
     ${If} ${Errors}
       ${Break}
     ${EndIf}
-    Call IbParseLine
+    Call TiParseLine
     ${If} $K S== "[target]"
       ${Break}
     ${ElseIf} $K S== "need"
@@ -2377,11 +2377,11 @@ Function NeedSummary
   StrCpy $1 ""         ; this need's state
   Call OpenBlock
   ${Do}
-    ${IbRead} $BH
+    ${TiRead} $BH
     ${If} ${Errors}
       ${Break}
     ${EndIf}
-    Call IbParseLine
+    Call TiParseLine
     ${If} $K S== "[target]"
     ${OrIf} $K S== "file"
       ${Break}
@@ -2442,12 +2442,12 @@ Function NeedInstall
   StrCpy $6 $TgtLine   ; line number, for FetchFile
   ; each need is acted on when the next entry (or the end) is reached
   ${Do}
-    ${IbRead} $BH
+    ${TiRead} $BH
     ${If} ${Errors}
       StrCpy $K "[end]"
     ${Else}
       IntOp $6 $6 + 1
-      Call IbParseLine
+      Call TiParseLine
     ${EndIf}
     ${If} $K S== "need"
     ${OrIf} $K S== "file"
@@ -2481,7 +2481,7 @@ Function NeedInstall
         StrCpy $CurFile ""
         StrCpy $U_a " $4 "
         StrCpy $U_b " $RC_code "
-        Call IbContains
+        Call TiContains
         ${If} $U_out = 0
           ${FailWith} "Installing $5 failed (exit code $RC_code). $NdHow"
           ${Break}
@@ -2541,11 +2541,11 @@ FunctionEnd
 
 ; /? or /help: the command line, then quit.
 Function Usage
-  MessageBox MB_OK|MB_ICONINFORMATION "TiddlyInstall ${IB_VERSION}$\r$\n$\r$\n\
+  MessageBox MB_OK|MB_ICONINFORMATION "TiddlyInstall ${TI_VERSION}$\r$\n$\r$\n\
 /S$\tinstall without asking (exit code 0 installed, 2 couldn't start, 3 failed)$\r$\n\
 /log=PATH$\tappend a detailed log to PATH$\r$\n\
-/record=PATH$\tuse this ib-record file$\r$\n\
-/plan=PATH$\tuse this ib-plan file; it must be signed by the TiddlyInstall key$\r$\n\
+/record=PATH$\tuse this ti-record file$\r$\n\
+/plan=PATH$\tuse this ti-plan file; it must be signed by the TiddlyInstall key$\r$\n\
 /unsigned-plan$\taccept an unsigned /plan= file$\r$\n\
 /backend=URL$\twhere to fetch records and plans$\r$\n\
 /reinstall$\tinstall again even if this app, with these same settings, is already installed. Otherwise running the installer again starts the app (with /S it only says it is installed)$\r$\n$\r$\n\
@@ -2555,8 +2555,8 @@ A signed installer with no settings of its own takes none of /record=, /plan=, /
 FunctionEnd
 
 ; Is this app fully installed in $AppDir with this record? $U_out = 1 if
-; its .ib-installed marker (written last by a finished install, format.md
-; section 5) names this appid and record, and its .ib-owner this appid.
+; its .ti-installed marker (written last by a finished install, format.md
+; section 5) names this appid and record, and its .ti-owner this appid.
 Function IsInstalled
   Push $0
   Push $1
@@ -2565,31 +2565,31 @@ Function IsInstalled
   ${If} $RecHash == ""
     Goto ii_end
   ${EndIf}
-  ${IfNot} ${FileExists} "$AppDir\.ib-installed"
+  ${IfNot} ${FileExists} "$AppDir\.ti-installed"
   ${OrIfNot} ${FileExists} "$AppDir\launch.exe"
   ${OrIfNot} ${FileExists} "$AppDir\launch.txt"
     Goto ii_end
   ${EndIf}
   StrCpy $U_a $AppDir
-  Call IbOwnerOf
+  Call TiOwnerOf
   ${If} $U_out S!= $AppId
     Goto ii_end
   ${EndIf}
   ClearErrors
-  FileOpen $0 "$AppDir\.ib-installed" r
+  FileOpen $0 "$AppDir\.ti-installed" r
   ${If} ${Errors}
     Goto ii_end
   ${EndIf}
   FileRead $0 $1
-  ${IbTrimNL} $1
-  ${If} $1 S== "ib-installed$\t1"
+  ${TiTrimNL} $1
+  ${If} $1 S== "ti-installed$\t1"
     ${Do}
       ClearErrors
       FileRead $0 $1
       ${If} ${Errors}
         ${Break}
       ${EndIf}
-      ${IbTrimNL} $1
+      ${TiTrimNL} $1
       ${If} $1 S== "appid$\t$AppId"
         IntOp $2 $2 | 1
       ${ElseIf} $1 S== "record$\t$RecHash"
@@ -2643,7 +2643,7 @@ FunctionEnd
 ; network access? The appid is derived from the record hash alone (the
 ; resolver writes appid = base32(sha256(<record hash> "/app"))[:12]), so
 ; with an embedded, given or install.txt record, or the hash in a mode A
-; file name, .ib-installed can be checked offline. Looks where the record's
+; file name, .ti-installed can be checked offline. Looks where the record's
 ; root and rootname say ($RecRoot, $RecRootName), or with no record read
 ; yet, in the default folders for one user and for all users. Starts the
 ; app (or with /S reports it) and quits if so; otherwise returns.
@@ -2655,14 +2655,14 @@ Function OfflineInstalled
   ${EndIf}
   StrCpy $U_a $RecHash
   StrCpy $U_b 26
-  Call IbIsB32
+  Call TiIsB32
   ${If} $U_out = 0
     Goto oi_end
   ${EndIf}
   Delete "$PLUGINSDIR\ah.txt"
   StrCpy $U_a "$PLUGINSDIR\ah.txt"
   StrCpy $U_b "$RecHash/app"
-  Call IbAppendUtf8
+  Call TiAppendUtf8
   StrCpy $U_a "$PLUGINSDIR\ah.txt"
   Call Sha256File
   ${If} $U_out == ""
@@ -2670,7 +2670,7 @@ Function OfflineInstalled
   ${EndIf}
   StrCpy $U_a $U_out
   StrCpy $U_b 12
-  Call IbHexToB32
+  Call TiHexToB32
   StrCpy $AppId $U_out
   StrCpy $1 0                           ; which root is being tried
   ${Do}
@@ -2682,7 +2682,7 @@ Function OfflineInstalled
       StrCpy $U_a $RecRoot
       StrCpy $U_b $RecRootName
       ${If} $U_b == ""
-        StrCpy $U_b "ib"
+        StrCpy $U_b "ti"
       ${EndIf}
       StrCpy $0 $U_b
       StrCpy $U_a $0
@@ -2694,10 +2694,10 @@ Function OfflineInstalled
       StrCpy $U_b $0
     ${ElseIf} $1 = 1
       StrCpy $U_a "user"
-      StrCpy $U_b "ib"
+      StrCpy $U_b "ti"
     ${ElseIf} $1 = 2
       StrCpy $U_a "system"
-      StrCpy $U_b "ib"
+      StrCpy $U_b "ti"
     ${Else}
       ${Break}
     ${EndIf}
@@ -2715,7 +2715,7 @@ Function OfflineInstalled
           ${If} ${Errors}
             ${Break}
           ${EndIf}
-          ${IbTrimNL} $U_b
+          ${TiTrimNL} $U_b
           StrCpy $U_a $U_b 5
           ${If} $U_a S== "name$\t"
             StrCpy $AppName $U_b "" 5
@@ -2724,7 +2724,7 @@ Function OfflineInstalled
         ${Loop}
         FileClose $0
       ${EndIf}
-      ibsig::cleanstr "$AppName"
+      tisig::cleanstr "$AppName"
       Pop $AppName
       ${Log} "Found $AppName fully installed in $AppDir (record $RecHash, appid from the record hash); nothing fetched."
       Call InstalledNow
@@ -2740,7 +2740,7 @@ FunctionEnd
 
 Function InitFail
   ${Log} "ERROR: $FailMsg"
-  ibsig::cleanstr "$FailMsg"
+  tisig::cleanstr "$FailMsg"
   Pop $FailMsg
   ${IfNot} ${Silent}
     MessageBox MB_OK|MB_ICONSTOP "$FailMsg"
@@ -2756,30 +2756,30 @@ Function .onInit
   StrCpy $FF_ukey "url"
   ${GetParameters} $Params
   ClearErrors
-  ${IbGetOpt} "/log=" $LogPath
+  ${TiGetOpt} "/log=" $LogPath
   ${If} ${Errors}
     StrCpy $LogPath ""
   ${EndIf}
   ClearErrors
-  ${IbGetOpt} "/ib-elevated" $0
+  ${TiGetOpt} "/ti-elevated" $0
   ${If} ${Errors}
     StrCpy $Elevated 0
   ${Else}
     StrCpy $Elevated 1
   ${EndIf}
-  ${Log} "TiddlyInstall ${IB_VERSION}: $EXEPATH $Params"
+  ${Log} "TiddlyInstall ${TI_VERSION}: $EXEPATH $Params"
   ClearErrors
-  ${IbGetOpt} "/?" $0
+  ${TiGetOpt} "/?" $0
   ${IfNot} ${Errors}
     Call Usage
   ${EndIf}
   ClearErrors
-  ${IbGetOpt} "/help" $0
+  ${TiGetOpt} "/help" $0
   ${IfNot} ${Errors}
     Call Usage
   ${EndIf}
   ClearErrors
-  ${IbGetOpt} "/reinstall" $0
+  ${TiGetOpt} "/reinstall" $0
   ${If} ${Errors}
     StrCpy $Reinstall 0
   ${Else}
@@ -2803,7 +2803,7 @@ Function .onInit
   ${Log} "Windows $WinVer build $WinBuild, $Arch"
 
   ClearErrors
-  ${IbGetOpt} "/unsigned-plan" $0
+  ${TiGetOpt} "/unsigned-plan" $0
   ${If} ${Errors}
     StrCpy $UnsignedOK 0
   ${Else}
@@ -2820,9 +2820,9 @@ Function .onInit
   StrCpy $RevokeNote ""
   StrCpy $ShaList "$PLUGINSDIR\shas.txt"
 
-  StrCpy $Backend "${IB_BACKEND}"
+  StrCpy $Backend "${TI_BACKEND}"
   ClearErrors
-  ${IbGetOpt} "/backend=" $OptBackend
+  ${TiGetOpt} "/backend=" $OptBackend
   ${If} ${Errors}
     StrCpy $OptBackend ""
   ${Else}
@@ -2908,13 +2908,13 @@ Function .onInit
   ${If} $Failed = 1
     Call InitFail
   ${EndIf}
-  ibsig::cleanstr "$AppName"
+  tisig::cleanstr "$AppName"
   Pop $AppName
 
   ; validate the header
   StrCpy $U_a $AppId
   StrCpy $U_b 12
-  Call IbIsB32
+  Call TiIsB32
   ${If} $U_out = 0
     ${FailWith} "The plan's appid '$AppId' isn't 12 base32 characters."
     Call InitFail
@@ -3016,7 +3016,7 @@ Function .onInit
   ${EndIf}
 
   ; administrator rights, if the plan needs them
-  Call IbIsAdmin
+  Call TiIsAdmin
   ${If} $NeedAdmin = 1
   ${AndIf} $U_out = 0
   ${AndIf} $NdMissing > 0
@@ -3033,8 +3033,8 @@ Function .onInit
       Call InitFail
     ${EndIf}
     ${Log} "Administrator rights needed; starting again elevated."
-    StrCpy $U_a "$Params /ib-elevated"
-    Call IbRunElevated
+    StrCpy $U_a "$Params /ti-elevated"
+    Call TiRunElevated
     ${If} $U_out == "error"
       ${FailWith} "This install needs administrator rights, and Windows didn't grant them."
       Call InitFail
@@ -3234,9 +3234,9 @@ Function HostList
 FunctionEnd
 
 ; The transparency text (design.md section 3). Same shape as the other
-; engine's (installer/unix/ib-engine.sh, "the review screen's shape"): what
+; engine's (installer/unix/ti-engine.sh, "the review screen's shape"): what
 ; someone needs to decide with at the top, the evidence below it. The
-; file is plain text -- it is what goes in the log -- and ibsig::richtext
+; file is plain text -- it is what goes in the log -- and tisig::richtext
 ; marks it up for the rich edit on the review page.
 Function WriteSummary
   Push $0
@@ -3251,11 +3251,11 @@ Function WriteSummary
   StrCpy $SumRuns 0
   Call OpenBlock
   ${Do}
-    ${IbRead} $BH
+    ${TiRead} $BH
     ${If} ${Errors}
       ${Break}
     ${EndIf}
-    Call IbParseLine
+    Call TiParseLine
     ${If} $K S== "[target]"
       ${Break}
     ${ElseIf} $K S== "file"
@@ -3424,11 +3424,11 @@ Function WriteSummary
   StrCpy $2 0
   Call OpenBlock
   ${Do}
-    ${IbRead} $BH
+    ${TiRead} $BH
     ${If} ${Errors}
       ${Break}
     ${EndIf}
-    Call IbParseLine
+    Call TiParseLine
     ${If} $K S== "[target]"
       ${Break}
     ${ElseIf} $K S== "file"
@@ -3541,9 +3541,9 @@ Function WriteSummary
     ${EndIf}
   ${EndIf}
   ${If} $RootMode == "system"
-    ${Sum} "  Uninstaller:  $AppDir\uninstall.exe, listed in Add/Remove Programs (HKLM ...\Uninstall\ib-$AppId)"
+    ${Sum} "  Uninstaller:  $AppDir\uninstall.exe, listed in Add/Remove Programs (HKLM ...\Uninstall\ti-$AppId)"
   ${Else}
-    ${Sum} "  Uninstaller:  $AppDir\uninstall.exe, listed in Add/Remove Programs (HKCU ...\Uninstall\ib-$AppId)"
+    ${Sum} "  Uninstaller:  $AppDir\uninstall.exe, listed in Add/Remove Programs (HKCU ...\Uninstall\ti-$AppId)"
   ${EndIf}
   ${Sum} "  PATH:  not changed"
   ${If} $TgtNote != ""
@@ -3560,7 +3560,7 @@ Function WriteSummary
     ${Sum} "  Signed by:  nobody (this installer is unsigned)"
   ${EndIf}
   ${If} $ModeA = 1
-    ${Sum} "  Mode:       signed by TiddlyInstall (mode A): installs only what its file name names, from ${IB_BACKEND}"
+    ${Sum} "  Mode:       signed by TiddlyInstall (mode A): installs only what its file name names, from ${TI_BACKEND}"
   ${EndIf}
   ${Sum} "  Settings:   $MetaSrc"
   ${Sum} "  Record:     $RecHash"
@@ -3587,8 +3587,8 @@ Function WriteSummary
   FileClose $SumH
   FileClose $CmdH
   ; no control or bidi characters on the review page (plan text is shown as is otherwise)
-  ibsig::cleanfile "$PLUGINSDIR\summary.txt"
-  ibsig::cleanfile "$PLUGINSDIR\commands.txt"
+  tisig::cleanfile "$PLUGINSDIR\summary.txt"
+  tisig::cleanfile "$PLUGINSDIR\commands.txt"
   Pop $0
   Pop $2
   Pop $1
@@ -3609,8 +3609,8 @@ FunctionEnd
 ; The size asked for is scaled by the screen's DPI and then clamped to the
 ; work area, so an 800x600 XP machine keeps a window that fits on it.
 
-!define IB_WANT_W 780         ; at 96 dpi; scaled below, and clamped to the screen
-!define IB_WANT_H 600
+!define TI_WANT_W 780         ; at 96 dpi; scaled below, and clamped to the screen
+!define TI_WANT_H 600
 
 Var MvId
 Var MvDX
@@ -3619,7 +3619,7 @@ Var MvDW
 Var MvDH
 
 ; Move and/or resize one control of $HWNDPARENT by the deltas in $Mv*.
-Function IbMoveCtl
+Function TiMoveCtl
   Push $0
   Push $1
   Push $2
@@ -3650,17 +3650,17 @@ Function IbMoveCtl
   Pop $0
 FunctionEnd
 
-!macro IbMove ID DX DY DW DH
+!macro TiMove ID DX DY DW DH
   StrCpy $MvId ${ID}
   IntOp $MvDX ${DX} + 0
   IntOp $MvDY ${DY} + 0
   IntOp $MvDW ${DW} + 0
   IntOp $MvDH ${DH} + 0
-  Call IbMoveCtl
+  Call TiMoveCtl
 !macroend
-!define IbMove "!insertmacro IbMove"
+!define TiMove "!insertmacro TiMove"
 
-Function IbGuiInit
+Function TiGuiInit
   Push $0
   Push $1
   Push $2
@@ -3677,9 +3677,9 @@ Function IbGuiInit
   ${If} $1 < 96
     StrCpy $1 96
   ${EndIf}
-  IntOp $2 ${IB_WANT_W} * $1
+  IntOp $2 ${TI_WANT_W} * $1
   IntOp $2 $2 / 96
-  IntOp $3 ${IB_WANT_H} * $1
+  IntOp $3 ${TI_WANT_H} * $1
   IntOp $3 $3 / 96
 
   ; never bigger than the work area, less a margin
@@ -3740,20 +3740,20 @@ Function IbGuiInit
   ; header's background, title, subtitle and icon, 1036 and 1035 the
   ; rules under the header and above the buttons, 1028/1256 the branding
   ; text, and 1044/1045 the panel behind the page.
-  ${IbMove} 1018 0 0 $WinDX $WinDY        ; where the page is built
-  ${IbMove} 1044 0 0 $WinDX $WinDY        ; the panel behind it
-  ${IbMove} 1034 0 0 $WinDX 0             ; header background
-  ${IbMove} 1037 0 0 $WinDX 0             ; header title
-  ${IbMove} 1038 0 0 $WinDX 0             ; header subtitle
-  ${IbMove} 1039 $WinDX 0 0 0             ; header icon
-  ${IbMove} 1036 0 0 $WinDX 0             ; the rule under the header
-  ${IbMove} 1035 0 $WinDY $WinDX 0        ; the rule above the buttons
-  ${IbMove} 1045 0 $WinDY $WinDX 0
-  ${IbMove} 1256 0 $WinDY $WinDX 0        ; branding text
-  ${IbMove} 1028 0 $WinDY $WinDX 0
-  ${IbMove} 1 $WinDX $WinDY 0 0           ; Install
-  ${IbMove} 2 $WinDX $WinDY 0 0           ; Cancel
-  ${IbMove} 3 $WinDX $WinDY 0 0           ; Back
+  ${TiMove} 1018 0 0 $WinDX $WinDY        ; where the page is built
+  ${TiMove} 1044 0 0 $WinDX $WinDY        ; the panel behind it
+  ${TiMove} 1034 0 0 $WinDX 0             ; header background
+  ${TiMove} 1037 0 0 $WinDX 0             ; header title
+  ${TiMove} 1038 0 0 $WinDX 0             ; header subtitle
+  ${TiMove} 1039 $WinDX 0 0 0             ; header icon
+  ${TiMove} 1036 0 0 $WinDX 0             ; the rule under the header
+  ${TiMove} 1035 0 $WinDY $WinDX 0        ; the rule above the buttons
+  ${TiMove} 1045 0 $WinDY $WinDX 0
+  ${TiMove} 1256 0 $WinDY $WinDX 0        ; branding text
+  ${TiMove} 1028 0 $WinDY $WinDX 0
+  ${TiMove} 1 $WinDX $WinDY 0 0           ; Install
+  ${TiMove} 2 $WinDX $WinDY 0 0           ; Cancel
+  ${TiMove} 3 $WinDX $WinDY 0 0           ; Back
   System::Call 'user32::InvalidateRect(p $HWNDPARENT, p 0, i 1)i'
 
 gui_done:
@@ -3772,15 +3772,15 @@ FunctionEnd
 Var ReviewEdit
 Var ReviewRich
 
-!define IB_EM_EXLIMITTEXT 0x435
-!define IB_EM_AUTOURLDETECT 0x45B
+!define TI_EM_EXLIMITTEXT 0x435
+!define TI_EM_AUTOURLDETECT 0x45B
 
 ; The review page: one control filling the (now much larger) window.
 ;
 ; A rich edit, when there is one -- every Windows from XP SP1 has
 ; msftedit.dll, and every Windows has riched20.dll -- so the headings,
 ; the warnings and the quiet detail can be told apart without reading
-; every line. ibsig::richtext turns the plain summary into RTF by the
+; every line. tisig::richtext turns the plain summary into RTF by the
 ; same rules the other engine paints a terminal with; if anything about
 ; that fails, the plain EDIT below does the job as it always did.
 ;
@@ -3809,11 +3809,11 @@ Function ReviewShow
     nsDialogs::CreateControl $ReviewRich "${DEFAULT_STYLES}|${WS_TABSTOP}|${WS_VSCROLL}|${ES_MULTILINE}|${ES_READONLY}|${ES_AUTOVSCROLL}" "${WS_EX_CLIENTEDGE}" 0 0 100% 100% ""
     Pop $ReviewEdit
     ${If} $ReviewEdit <> 0
-      SendMessage $ReviewEdit ${IB_EM_EXLIMITTEXT} 0 4194304
+      SendMessage $ReviewEdit ${TI_EM_EXLIMITTEXT} 0 4194304
       ; no automatic links: a URL that looks clickable and is not is worse
       ; than one that does not, and the colour is not ours to give away
-      SendMessage $ReviewEdit ${IB_EM_AUTOURLDETECT} 0 0
-      ibsig::richtext "$ReviewEdit" "$PLUGINSDIR\summary.txt"
+      SendMessage $ReviewEdit ${TI_EM_AUTOURLDETECT} 0 0
+      tisig::richtext "$ReviewEdit" "$PLUGINSDIR\summary.txt"
       Pop $1
       ${If} $1 != "ok"
         ${Log} "The review page's rich text did not load ($1); showing it as plain text."
@@ -4443,16 +4443,16 @@ Function FetchFile
     ${If} $0 >= $FF_line
       ${Break}
     ${EndIf}
-    ${IbRead} $FF_h
+    ${TiRead} $FF_h
     IntOp $0 $0 + 1
   ${Loop}
   StrCpy $1 0
   ${Do}
-    ${IbRead} $FF_h
+    ${TiRead} $FF_h
     ${If} ${Errors}
       ${Break}
     ${EndIf}
-    Call IbParseLine
+    Call TiParseLine
     ${If} $FF_ukey S== "nurl"
       ; a need's lines: nurl among nwhy, ncheck, nrun...; stop at the next entry
       ${If} $K S== "need"
@@ -4583,7 +4583,7 @@ Function RunStep
         ${If} $U_out <> 10
           StrCpy $U_a $0
           StrCpy $U_b "$\r$\n"
-          Call IbAppendUtf8
+          Call TiAppendUtf8
         ${EndIf}
       ${Else}
         FileClose $2
@@ -4591,7 +4591,7 @@ Function RunStep
     ${EndIf}
     StrCpy $U_a $0
     StrCpy $U_b "$1$\r$\n"
-    Call IbAppendUtf8
+    Call TiAppendUtf8
   ${ElseIf} $F1 S== "delete"
     StrCpy $U_a $0
     Call InAppFolders
@@ -4619,12 +4619,12 @@ Function DoFiles
   Call OpenBlock
   StrCpy $CurName ""
   ${Do}
-    ${IbRead} $BH
+    ${TiRead} $BH
     ${If} ${Errors}
       ${Break}
     ${EndIf}
     IntOp $LineNo $LineNo + 1
-    Call IbParseLine
+    Call TiParseLine
     ${If} $K S== "[target]"
       ${Break}
     ${ElseIf} $K S== "file"
@@ -4640,9 +4640,9 @@ Function DoFiles
         ${Break}
       ${EndIf}
       CreateDirectory "$CurDir"
-      StrCpy $U_a "$CurDir\.ib-owner"
-      StrCpy $U_b "ib-folder$\t1$\nappid$\t$AppId$\nname$\t$CurName$\nfile$\t$CurFname$\n"
-      Call IbAppendUtf8
+      StrCpy $U_a "$CurDir\.ti-owner"
+      StrCpy $U_b "ti-folder$\t1$\nappid$\t$AppId$\nname$\t$CurName$\nfile$\t$CurFname$\n"
+      Call TiAppendUtf8
       StrCpy $FF_line $LineNo
       StrCpy $FF_sha $CurSha
       StrCpy $FF_name $CurFname
@@ -4673,11 +4673,11 @@ Function InstallEnv
   StrCpy $0 ""
   Call OpenBlock
   ${Do}
-    ${IbRead} $BH
+    ${TiRead} $BH
     ${If} ${Errors}
       ${Break}
     ${EndIf}
-    Call IbParseLine
+    Call TiParseLine
     ${If} $K S== "[target]"
       ${Break}
     ${ElseIf} $K S== "env"
@@ -4686,11 +4686,11 @@ Function InstallEnv
       Call Subst
       StrCpy $U_a $F1
       StrCpy $U_b $U_out
-      Call IbSetEnv
+      Call TiSetEnv
     ${ElseIf} $K S== "unset"
     ${OrIf} $K S== "iunset"
       StrCpy $U_a $F1
-      Call IbUnsetEnv
+      Call TiUnsetEnv
     ${ElseIf} $K S== "path"
       StrCpy $U_a $F1
       Call Subst
@@ -4703,16 +4703,16 @@ Function InstallEnv
   ${Loop}
   FileClose $BH
   StrCpy $U_a $0
-  Call IbPrependPath
-  StrCpy $U_a "IB_APP_DIR"
+  Call TiPrependPath
+  StrCpy $U_a "TI_APP_DIR"
   StrCpy $U_b $AppDir
-  Call IbSetEnv
-  StrCpy $U_a "IB_RUNTIME_DIR"
+  Call TiSetEnv
+  StrCpy $U_a "TI_RUNTIME_DIR"
   StrCpy $U_b $RuntimeDir
-  Call IbSetEnv
-  StrCpy $U_a "IB_APP_NAME"
+  Call TiSetEnv
+  StrCpy $U_a "TI_APP_NAME"
   StrCpy $U_b $AppName
-  Call IbSetEnv
+  Call TiSetEnv
   Pop $0
 FunctionEnd
 
@@ -4722,15 +4722,15 @@ Function WriteLaunch
   StrCpy $0 "$AppDir\launch.txt"
   Delete $0
   StrCpy $U_a $0
-  StrCpy $U_b "ib-launch$\t1$\ncwd$\t$AppDir$\n"
-  Call IbAppendUtf8
+  StrCpy $U_b "ti-launch$\t1$\ncwd$\t$AppDir$\n"
+  Call TiAppendUtf8
   Call OpenBlock
   ${Do}
-    ${IbRead} $BH
+    ${TiRead} $BH
     ${If} ${Errors}
       ${Break}
     ${EndIf}
-    Call IbParseLine
+    Call TiParseLine
     ${If} $K S== "[target]"
       ${Break}
     ${ElseIf} $K S== "env"
@@ -4738,17 +4738,17 @@ Function WriteLaunch
       Call Subst
       StrCpy $U_b "env$\t$F1$\t$U_out$\n"
       StrCpy $U_a $0
-      Call IbAppendUtf8
+      Call TiAppendUtf8
     ${ElseIf} $K S== "unset"
       StrCpy $U_b "unset$\t$F1$\n"
       StrCpy $U_a $0
-      Call IbAppendUtf8
+      Call TiAppendUtf8
     ${ElseIf} $K S== "path"
       StrCpy $U_a $F1
       Call Subst
       StrCpy $U_b "path$\t$U_out$\n"
       StrCpy $U_a $0
-      Call IbAppendUtf8
+      Call TiAppendUtf8
     ${EndIf}
   ${Loop}
   FileClose $BH
@@ -4756,7 +4756,7 @@ Function WriteLaunch
   Call Subst
   StrCpy $U_b "console$\t$Console$\nexec$\t$U_out$\n"
   StrCpy $U_a $0
-  Call IbAppendUtf8
+  Call TiAppendUtf8
   Pop $0
 FunctionEnd
 
@@ -4786,21 +4786,21 @@ Function WriteManifest
   IntFmt $8 "%02d" $8
   StrCpy $InstTime "$2-$3-$4T$5:$6:$8Z"
   StrCpy $U_a $0
-  StrCpy $U_b "ib-manifest$\t1$\nname$\t$AppName$\nappid$\t$AppId$\nrecord$\t$RecHash$\ninstalled$\t$InstTime$\n"
-  Call IbAppendUtf8
+  StrCpy $U_b "ti-manifest$\t1$\nname$\t$AppName$\nappid$\t$AppId$\nrecord$\t$RecHash$\ninstalled$\t$InstTime$\n"
+  Call TiAppendUtf8
   StrCpy $T_rest $FileMap
-  Call IbSplitTab
+  Call TiSplitTab
   ${Do}
     ${If} $T_more = 0
       ${Break}
     ${EndIf}
-    Call IbSplitTab
-    Call IbSplitTab
+    Call TiSplitTab
+    Call TiSplitTab
     StrCpy $U_a $0
     StrCpy $U_b "dir$\t$Root\$T_field$\n"
     Push $T_rest
     Push $T_more
-    Call IbAppendUtf8
+    Call TiAppendUtf8
     Pop $T_more
     Pop $T_rest
   ${Loop}
@@ -4808,14 +4808,14 @@ Function WriteManifest
     StrCpy $U_a $0
     ${If} $LnkApp != ""
       StrCpy $U_b "shortcut$\t$LnkApp$\nshortcut$\t$LnkUn$\n"
-      Call IbAppendUtf8
+      Call TiAppendUtf8
     ${EndIf}
     ${If} $LnkDesk != ""
       StrCpy $U_b "shortcut$\t$LnkDesk$\n"
-      Call IbAppendUtf8
+      Call TiAppendUtf8
     ${EndIf}
     StrCpy $U_b "regkey$\t$RegRootName\$RegKey$\n"
-    Call IbAppendUtf8
+    Call TiAppendUtf8
   ${EndIf}
   Pop $8
   Pop $7
@@ -4841,15 +4841,15 @@ Function ClearOldInstall
   ${EndIf}
   StrCpy $U_a "$AppDir\manifest.txt"
   StrCpy $U_b "$PLUGINSDIR\oldman.u16"
-  Call IbUtf8ToUtf16
+  Call TiUtf8ToUtf16
   StrCpy $1 ""
   FileOpen $0 "$PLUGINSDIR\oldman.u16" r
   ${Do}
-    ${IbRead} $0
+    ${TiRead} $0
     ${If} ${Errors}
       ${Break}
     ${EndIf}
-    Call IbParseLine
+    Call TiParseLine
     ${If} $K S== "appid"
       StrCpy $1 $F1
     ${EndIf}
@@ -4860,28 +4860,28 @@ Function ClearOldInstall
     Goto co_end
   ${EndIf}
   ${Log} "Removing the earlier install of this app in $AppDir"
-  Delete "$AppDir\.ib-installed"          ; first: a half-removed install is never "installed"
+  Delete "$AppDir\.ti-installed"          ; first: a half-removed install is never "installed"
   FileOpen $0 "$PLUGINSDIR\oldman.u16" r
   ${Do}
-    ${IbRead} $0
+    ${TiRead} $0
     ${If} ${Errors}
       ${Break}
     ${EndIf}
-    Call IbParseLine
+    Call TiParseLine
     ${If} $K S== "dir"
       StrCpy $U_a $F1 "" -12
       StrCpy $U_b 12
-      Call IbIsB32
+      Call TiIsB32
       StrCpy $1 $F1 -13
       ${If} $U_out = 1
       ${AndIf} $1 == $Root
         StrCpy $U_a $F1
-        Call IbOwnerOf
+        Call TiOwnerOf
         ${If} $U_out S== $AppId
           ${Log} "  remove $F1"
           RMDir /r "$F1"
         ${Else}
-          ${Log} "  kept $F1: its .ib-owner doesn't name this app"
+          ${Log} "  kept $F1: its .ti-owner doesn't name this app"
         ${EndIf}
       ${EndIf}
     ${EndIf}
@@ -4899,13 +4899,13 @@ FunctionEnd
 Function Cleanup
   ${Log} "Removing partly installed folders"
   StrCpy $T_rest $FileMap
-  Call IbSplitTab
+  Call TiSplitTab
   ${Do}
     ${If} $T_more = 0
       ${Break}
     ${EndIf}
-    Call IbSplitTab
-    Call IbSplitTab
+    Call TiSplitTab
+    Call TiSplitTab
     ${If} ${FileExists} "$Root\$T_field\*.*"
       RMDir /r "$Root\$T_field"
     ${EndIf}
@@ -4980,7 +4980,7 @@ Function InstallMain
     ${If} ${Errors}
       ${Break}
     ${EndIf}
-    ${IbTrimNL} $1
+    ${TiTrimNL} $1
     ${Log} "$1"
   ${Loop}
   FileClose $0
@@ -4993,7 +4993,7 @@ Function InstallMain
       ${If} ${Errors}
         ${Break}
       ${EndIf}
-      ${IbTrimNL} $1
+      ${TiTrimNL} $1
       ${Log} "$1"
     ${Loop}
     FileClose $0
@@ -5027,9 +5027,9 @@ Function InstallMain
     Return
   ${EndIf}
   StrCpy $Created 1
-  StrCpy $U_a "$AppDir\.ib-owner"
-  StrCpy $U_b "ib-folder$\t1$\nappid$\t$AppId$\nname$\t(app)$\n"
-  Call IbAppendUtf8
+  StrCpy $U_a "$AppDir\.ti-owner"
+  StrCpy $U_b "ti-folder$\t1$\nappid$\t$AppId$\nname$\t(app)$\n"
+  Call TiAppendUtf8
   CreateDirectory "$DataDir"
   StrCpy $U_c 0
   Call WriteManifest
@@ -5080,10 +5080,10 @@ Function InstallMain
       ${Log} "Install: TMP and TEMP -> $AsciiTmp (the same folder as $TempSaved, spelt in ASCII)"
       StrCpy $U_a "TMP"
       StrCpy $U_b $AsciiTmp
-      Call IbSetEnv
+      Call TiSetEnv
       StrCpy $U_a "TEMP"
       StrCpy $U_b $AsciiTmp
-      Call IbSetEnv
+      Call TiSetEnv
     ${EndIf}
     StrCpy $U_a $TgtInstall
     Call Subst
@@ -5095,16 +5095,16 @@ Function InstallMain
       StrCpy $U_a "TMP"
       StrCpy $U_b $TmpSaved
       ${If} $TmpSaved == ""
-        Call IbUnsetEnv                    ; it had none; leave it with none
+        Call TiUnsetEnv                    ; it had none; leave it with none
       ${Else}
-        Call IbSetEnv
+        Call TiSetEnv
       ${EndIf}
       StrCpy $U_a "TEMP"
       StrCpy $U_b $TempSaved
       ${If} $TempSaved == ""
-        Call IbUnsetEnv
+        Call TiUnsetEnv
       ${Else}
-        Call IbSetEnv
+        Call TiSetEnv
       ${EndIf}
       StrCpy $AsciiTmp ""
     ${EndIf}
@@ -5132,7 +5132,7 @@ Function InstallMain
     SetShellVarContext current
     StrCpy $RegRootName "HKCU"
   ${EndIf}
-  StrCpy $RegKey "Software\Microsoft\Windows\CurrentVersion\Uninstall\ib-$AppId"
+  StrCpy $RegKey "Software\Microsoft\Windows\CurrentVersion\Uninstall\ti-$AppId"
   ${If} $Menu != "0"
     StrCpy $LnkDir "$SMPROGRAMS\$SafeName"
     StrCpy $LnkApp "$LnkDir\$SafeName.lnk"
@@ -5180,18 +5180,18 @@ Function InstallMain
   ; successful install writes, renamed into place so it is never half
   ; written. Running the installer again with this record then starts the
   ; app instead of installing it again.
-  Delete "$AppDir\.ib-installed.tmp"
-  StrCpy $U_a "$AppDir\.ib-installed.tmp"
-  StrCpy $U_b "ib-installed$\t1$\nappid$\t$AppId$\nrecord$\t$RecHash$\ninstalled$\t$InstTime$\n"
-  Call IbAppendUtf8
+  Delete "$AppDir\.ti-installed.tmp"
+  StrCpy $U_a "$AppDir\.ti-installed.tmp"
+  StrCpy $U_b "ti-installed$\t1$\nappid$\t$AppId$\nrecord$\t$RecHash$\ninstalled$\t$InstTime$\n"
+  Call TiAppendUtf8
   ClearErrors
-  Rename "$AppDir\.ib-installed.tmp" "$AppDir\.ib-installed"
+  Rename "$AppDir\.ti-installed.tmp" "$AppDir\.ti-installed"
   ${If} ${Errors}
-  ${OrIfNot} ${FileExists} "$AppDir\.ib-installed"
-    ${FailWith} "Couldn't write $AppDir\.ib-installed."
+  ${OrIfNot} ${FileExists} "$AppDir\.ti-installed"
+    ${FailWith} "Couldn't write $AppDir\.ti-installed."
     Return
   ${EndIf}
-  ${Log} "Wrote $AppDir\.ib-installed (record $RecHash)"
+  ${Log} "Wrote $AppDir\.ti-installed (record $RecHash)"
 FunctionEnd
 
 Section "Install"
@@ -5222,7 +5222,7 @@ Function un.onInit
   StrCpy $Failed 0
   ${un.GetParameters} $Params
   ClearErrors
-  ${un.GetOptions} $Params "/ib-elevated" $0
+  ${un.GetOptions} $Params "/ti-elevated" $0
   ${If} ${Errors}
     StrCpy $Elevated 0
   ${Else}
@@ -5239,26 +5239,26 @@ Function un.onInit
   StrCpy $U_b "$PLUGINSDIR\manifest.u16"
   InitPluginsDir
   StrCpy $U_b "$PLUGINSDIR\manifest.u16"
-  Call un.IbUtf8ToUtf16
+  Call un.TiUtf8ToUtf16
   StrCpy $AppName ""
   StrCpy $AppId ""
   StrCpy $RegRootName ""
   FileOpen $0 "$PLUGINSDIR\manifest.u16" r
-  ${un.IbRead} $0
+  ${un.TiRead} $0
   StrCpy $T_rest $T_line
-  Call un.IbSplitTab
-  ${If} $T_field S!= "ib-manifest"
+  Call un.TiSplitTab
+  ${If} $T_field S!= "ti-manifest"
     FileClose $0
-    MessageBox MB_OK|MB_ICONSTOP "$INSTDIR\manifest.txt isn't an ib-manifest file." /SD IDOK
+    MessageBox MB_OK|MB_ICONSTOP "$INSTDIR\manifest.txt isn't a ti-manifest file." /SD IDOK
     SetErrorLevel 2
     Quit
   ${EndIf}
   ${Do}
-    ${un.IbRead} $0
+    ${un.TiRead} $0
     ${If} ${Errors}
       ${Break}
     ${EndIf}
-    Call un.IbParseLine
+    Call un.TiParseLine
     ${If} $K S== "name"
       StrCpy $AppName $F1
     ${ElseIf} $K S== "appid"
@@ -5271,7 +5271,7 @@ Function un.onInit
   ; the uninstaller must sit in <root>\<appid>
   StrCpy $U_a $AppId
   StrCpy $U_b 12
-  Call un.IbIsB32
+  Call un.TiIsB32
   ${If} $U_out = 0
   ${OrIf} $1 S!= $AppId
     MessageBox MB_OK|MB_ICONSTOP "This uninstaller isn't in its app's folder ($INSTDIR); refusing to remove anything." /SD IDOK
@@ -5279,7 +5279,7 @@ Function un.onInit
     Quit
   ${EndIf}
   ${If} $RegRootName == "HKLM"
-    Call un.IbIsAdmin
+    Call un.TiIsAdmin
     ${If} $U_out = 0
       ${WinVerGetMajor} $2
       ${If} $2 < 6
@@ -5303,8 +5303,8 @@ Function un.onInit
         ${EndIf}
         IntOp $4 $4 + 1
       ${Loop}
-      StrCpy $U_a "$2 /ib-elevated _?=$INSTDIR"
-      Call un.IbRunElevated
+      StrCpy $U_a "$2 /ti-elevated _?=$INSTDIR"
+      Call un.TiRunElevated
       ${If} $U_out == "error"
         MessageBox MB_OK|MB_ICONSTOP "Uninstalling $AppName needs administrator rights, and Windows didn't grant them." /SD IDOK
         SetErrorLevel 2
@@ -5326,28 +5326,28 @@ Function un.ShortcutOK
     Goto so_end
   ${EndIf}
   StrCpy $U_b ".."
-  Call un.IbContains
+  Call un.TiContains
   ${If} $U_out = 1
     StrCpy $U_out 0
     Goto so_end
   ${EndIf}
   StrCpy $U_a $0
   StrCpy $U_b "$UnSmCur\"
-  Call un.IbStartsWith
+  Call un.TiStartsWith
   ${If} $U_out = 0
     StrCpy $U_a $0
     StrCpy $U_b "$UnSmAll\"
-    Call un.IbStartsWith
+    Call un.TiStartsWith
   ${EndIf}
   ${If} $U_out = 0
     StrCpy $U_a $0
     StrCpy $U_b "$UnDeskCur\"
-    Call un.IbStartsWith
+    Call un.TiStartsWith
   ${EndIf}
   ${If} $U_out = 0
     StrCpy $U_a $0
     StrCpy $U_b "$UnDeskAll\"
-    Call un.IbStartsWith
+    Call un.TiStartsWith
   ${EndIf}
   so_end:
   Pop $0
@@ -5365,31 +5365,31 @@ Section "Uninstall"
   SetOutPath "$TEMP"
   ; The "fully installed" marker goes first, so an uninstall that stops
   ; half way is never taken for a finished install.
-  Delete "$INSTDIR\.ib-installed"
+  Delete "$INSTDIR\.ti-installed"
   FileOpen $0 "$PLUGINSDIR\manifest.u16" r
   ${Do}
-    ${un.IbRead} $0
+    ${un.TiRead} $0
     ${If} ${Errors}
       ${Break}
     ${EndIf}
-    Call un.IbParseLine
+    Call un.TiParseLine
     ${If} $K S== "dir"
       ; only <root>\<12 base32 chars>, beside this app's folder
       StrCpy $U_a $F1 "" -12
       StrCpy $U_b 12
-      Call un.IbIsB32
+      Call un.TiIsB32
       StrCpy $1 $F1 -13
       StrCpy $2 $F1 1 -13
       ${If} $U_out = 1
       ${AndIf} $1 == $UnRoot
       ${AndIf} $2 == "\"
         StrCpy $U_a $F1
-        Call un.IbOwnerOf
+        Call un.TiOwnerOf
         ${If} $U_out S== $AppId
           DetailPrint "Remove folder $F1"
           RMDir /r "$F1"
         ${Else}
-          DetailPrint "Skipped (its .ib-owner doesn't name this app): $F1"
+          DetailPrint "Skipped (its .ti-owner doesn't name this app): $F1"
         ${EndIf}
       ${Else}
         DetailPrint "Skipped (not under $UnRoot): $F1"
@@ -5411,7 +5411,7 @@ Section "Uninstall"
         DetailPrint "Skipped (not a shortcut in the Start menu or on the desktop): $F1"
       ${EndIf}
     ${ElseIf} $K S== "regkey"
-      StrCpy $1 "Software\Microsoft\Windows\CurrentVersion\Uninstall\ib-$AppId"
+      StrCpy $1 "Software\Microsoft\Windows\CurrentVersion\Uninstall\ti-$AppId"
       ${If} $F1 S== "HKCU\$1"
         DetailPrint "Remove $F1"
         DeleteRegKey HKCU "$1"
@@ -5426,7 +5426,7 @@ Section "Uninstall"
   ${Loop}
   FileClose $0
   StrCpy $U_a $INSTDIR
-  Call un.IbOwnerOf
+  Call un.TiOwnerOf
   ${If} $U_out S== $AppId
     DetailPrint "Remove folder $INSTDIR"
     SetOutPath "$TEMP"
@@ -5448,7 +5448,7 @@ Section "Uninstall"
       Sleep 500
     ${Loop}
   ${Else}
-    DetailPrint "Kept $INSTDIR: its .ib-owner doesn't name this app"
+    DetailPrint "Kept $INSTDIR: its .ti-owner doesn't name this app"
   ${EndIf}
   RMDir "$UnRoot"                 ; the install root, if nothing else is in it
   SetErrorLevel 0

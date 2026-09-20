@@ -15,7 +15,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { runJob, lookupPackage as lookupPackageJS, packageLaunch, githubRe, projectName, kvLine } from '../../shared/builder.js';
 import { resolveFiles, validPackage, packagePolicyFor, packageProject, replacer, setRevoked } from '../../shared/resolve.js';
-import { recordHash } from '../../shared/ibfile.js';
+import { recordHash } from '../../shared/tifile.js';
 import { decodeIconPng } from '../../shared/icon.js';
 import { safeFetch } from './netsafe.js';
 import { addRequestLine } from './plansig.js';
@@ -307,9 +307,9 @@ export class Builder {
     const p = packagePolicyFor(this.cat, runtime);
     const project = packageProject(p, name);
     const launch = packageLaunch(typeof p.launch === 'string' ? p.launch : '', p, name, null);
-    const rec = kvLine('ib-record', '1') + kvLine('name', project) + kvLine('project', project) + kvLine('runtime', runtime) +
+    const rec = kvLine('ti-record', '1') + kvLine('name', project) + kvLine('project', project) + kvLine('runtime', runtime) +
       kvLine('select', 'newest') + kvLine('source', 'package', name) + kvLine('launch', launch) + kvLine('install', 'default') +
-      kvLine('console', '1') + kvLine('menu', '1') + kvLine('desktop', '0') + kvLine('root', 'user') + kvLine('rootname', 'ib') +
+      kvLine('console', '1') + kvLine('menu', '1') + kvLine('desktop', '0') + kvLine('root', 'user') + kvLine('rootname', 'ti') +
       kvLine('platforms', 'windows linux macos') + kvLine('backend', this.backend) + kvLine('origin', 'name');
     const hash = await recordHash(rec);
     await this.storeRecord(hash, rec);
@@ -373,13 +373,13 @@ export class Builder {
       case 'windows':
         return path.join(this.bases, 'windows', 'out', signed ? 'base-signed.exe' : 'base.exe');
       case 'linux':
-        for (const n of ['ib-base.run', 'ib.run']) {
+        for (const n of ['ti-base.run', 'ti.run']) {
           const p = path.join(this.bases, 'unix', 'out', n);
           if (exists(p)) return p;
         }
-        return path.join(this.bases, 'unix', 'out', 'ib-base.run');
+        return path.join(this.bases, 'unix', 'out', 'ti-base.run');
       default:
-        return path.join(this.bases, 'unix', 'out', 'ib-base-macos.zip');
+        return path.join(this.bases, 'unix', 'out', 'ti-base-macos.zip');
     }
   }
 

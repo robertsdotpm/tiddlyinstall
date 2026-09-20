@@ -80,7 +80,7 @@ function miniCatalogue(d) {
   }] }));
   const policy = path.join(d, 'policy.json');
   fs.writeFileSync(policy, JSON.stringify({
-    mirror_base: 'http://ib.example/mirror', mirror_first: true, method_order: ['unpack', 'extract', 'run'],
+    mirror_base: 'http://ti.example/mirror', mirror_first: true, method_order: ['unpack', 'extract', 'run'],
     unknown_floor: { windows: 1000 }, runtimes: { python: { label: 'Python 3', versions: '>=3', variants: ['msi-layout'], launch: '{runtime} -m {project}' } },
   }));
   return loadCatalog({ dir: cat, policyPath: policy, localRoot: local, cachePath: path.join(d, 'cache.json') });
@@ -108,11 +108,11 @@ test('release parts: extra files with their own mirrors; windowed program for co
       + 'A computer that cannot reach the vendor directly, such as an old system that cannot make a modern HTTPS '
       + 'connection, may not be able to download it.',
     `file\tpython\tcore.msi\t${files[0].sha256}\t4096\tamd64`,
-    'url\thttp://ib.example/mirror/python/windows/amd64/3.14.7-msi-layout/core.msi',
+    'url\thttp://ti.example/mirror/python/windows/amd64/3.14.7-msi-layout/core.msi',
     'url\thttps://www.python.org/ftp/python/3.14.7/amd64/core.msi',
     'step\trun\tmsiexec /a "{file}" /qn TARGETDIR="{runtime_dir}"',
     `file\tlib\tlib.msi\t${files[1].sha256}\t8192\tamd64`,
-    'url\thttp://ib.example/mirror/python/windows/amd64/3.14.7-msi-layout/lib.msi',
+    'url\thttp://ti.example/mirror/python/windows/amd64/3.14.7-msi-layout/lib.msi',
     'url\thttps://www.python.org/ftp/python/3.14.7/amd64/lib.msi',
     'url\thttps://mirror.example/lib.msi',
     'step\trun\tcopy /y "{file}" "{tmp}\\lib.msi" >nul',

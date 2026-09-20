@@ -64,7 +64,7 @@ const projects = JSON.parse(fs.readFileSync(path.join(HERE, 'matrix', 'projects.
 const only = arg('--runtimes') ? arg('--runtimes').split(',') : Object.keys(projects);
 const catBytes = fs.readFileSync(CAT_FILE);
 const catSha = crypto.createHash('sha256').update(catBytes).digest('hex');
-const BASES = { windows: 'installer/windows/out/base.exe', linux: 'installer/unix/out/ib-base.run', macos: 'installer/unix/out/ib-base-macos.zip' };
+const BASES = { windows: 'installer/windows/out/base.exe', linux: 'installer/unix/out/ti-base.run', macos: 'installer/unix/out/ti-base-macos.zip' };
 const base = (plat) => new Uint8Array(fs.readFileSync(path.join(HERE, '..', BASES[plat])));
 
 let passed = 0, failed = 0;

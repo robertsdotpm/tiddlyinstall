@@ -4,7 +4,7 @@
 // POST /submit). Also fills the "Newest that runs on the user's system"
 // table from GET /api/catalog/runtimes.
 import { apiRequest, errorText, mountApiFooter, pageUrl, apiLocal, apiBase, apiReady, setApiBase, LOCAL, localSubmit } from './api.js';
-import { tarWrite } from '../shared/ibfile.js';
+import { tarWrite } from '../shared/tifile.js';
 import { loadOverlay, overlayState, hasCatalog } from './overlay.js';
 import { jobFromForm, BUILD_DEFAULTS, ENTRY_DEFAULTS, TEMPLATE_FILES, OFFLINE_TARGETS, ARCH_LABEL, MAC_ARCH, FAMILY_ARCHES, FAMILY_LABEL, NO_32_BIT,
   PACK_WARN_MB, PACK_MAX_MB, offlineField, offlineSizeMb, offlineTargets, archCoverage, vcmp, parseSource } from '../shared/form-job.js';
@@ -159,7 +159,7 @@ function paintWhere() {
   }
 }
 paintWhere();
-window.addEventListener('ib-api-change', paintWhere);
+window.addEventListener('ti-api-change', paintWhere);
 form.addEventListener('change', paintWhere);      // "Where's the code?"
 apiReady().then(paintWhere).catch(() => {});
 
@@ -445,7 +445,7 @@ function paintLaunchExample() {
   if (!cmd) { launchExample.innerHTML = launchExampleHtml; return; }
   const plat = examplePlatform();
   const r = ROOTS[plat];
-  const root = r[val('root') === 'system' ? 'system' : 'user'] + (val('rootname').trim() || 'ib') + r.sep;
+  const root = r[val('root') === 'system' ? 'system' : 'user'] + (val('rootname').trim() || 'ti') + r.sep;
   const project = exampleProject();
   const appDir = root + EG_APP;
   // Separators are converted the way the resolver does it: inside a
@@ -674,8 +674,8 @@ function fetchCatalog() {
 fetchCatalog();
 // The table follows the catalogue: another server, or changes made on the
 // Sources page (used when the page builds installers itself).
-window.addEventListener('ib-api-change', () => { fetchCatalog(); paintOverlayNote(); });
-window.addEventListener('ib-overlay-change', () => { if (apiLocal()) fetchCatalog(); paintOverlayNote(); });
+window.addEventListener('ti-api-change', () => { fetchCatalog(); paintOverlayNote(); });
+window.addEventListener('ti-overlay-change', () => { if (apiLocal()) fetchCatalog(); paintOverlayNote(); });
 
 /* ---------- catalogue changes made in this browser ---------- */
 

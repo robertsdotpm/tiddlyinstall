@@ -18,8 +18,8 @@
 #                   without them, and a plan without them installs here
 #
 #   sh test_freshness.sh [SHELL]
-#   IB_TEST_KEEP=1 keeps the work folder.
-#   IB_OLD_ENGINE_FILE=PATH uses that copy of the old engine instead of
+#   TI_TEST_KEEP=1 keeps the work folder.
+#   TI_OLD_ENGINE_FILE=PATH uses that copy of the old engine instead of
 #   reading it out of git, for a machine with no checkout.
 #
 # Needs Node.js (tools/plansig.mjs; $NODE, else node on PATH, else
@@ -38,9 +38,9 @@ ok() { printf 'ok   %s\n' "$1"; }
 bad() { printf 'FAIL %s\n' "$1"; fails=$((fails + 1)); }
 
 # The engine as it was before stale-plan handling (design.md 7.1). It
-# comes from git; IB_OLD_ENGINE_FILE names a copy of it instead, for a
+# comes from git; TI_OLD_ENGINE_FILE names a copy of it instead, for a
 # machine with no checkout (the Mac).
-OLD_REV=${IB_OLD_ENGINE_REV:-0bc46a6}
+OLD_REV=${TI_OLD_ENGINE_REV:-0bc46a6}
 NONCE=0123456789abcdef0123456789abcdef
 OTHER=fedcba9876543210fedcba9876543210
 DAY=86400
@@ -58,8 +58,8 @@ sha256_of() {
 
 # On macOS the cases run the **.app**, not the .run, and that is not a
 # convenience: the engine finds its Ed25519 verifier either after the
-# .run's script (IB_VERIFY_BLOBS, Linux binaries only) or in
-# `<app>/Contents/Resources/ibverify-<arch>`. A .run on a Mac therefore
+# .run's script (TI_VERIFY_BLOBS, Linux binaries only) or in
+# `<app>/Contents/Resources/tiverify-<arch>`. A .run on a Mac therefore
 # has no verifier that runs, falls back to `openssl pkeyutl`, and macOS
 # ships LibreSSL 3.3.6, which cannot check Ed25519 -- so every plan is
 # refused before any of this is reached. The .app is also what macOS
@@ -73,8 +73,8 @@ MACOS=0
 build_base() { # name [SOURCE_DATE_EPOCH]
 	(
 		[ -n "${2:-}" ] && { SOURCE_DATE_EPOCH=$2; export SOURCE_DATE_EPOCH; }
-		IB_PLAN_PUBKEY_FILE=$D/key/plan-signing-key.pub
-		export IB_PLAN_PUBKEY_FILE
+		TI_PLAN_PUBKEY_FILE=$D/key/plan-signing-key.pub
+		export TI_PLAN_PUBKEY_FILE
 		if [ "$MACOS" = 1 ]; then
 			rm -rf "$D/mk-$1" "$D/$1.app"
 			mkdir -p "$D/mk-$1"
@@ -118,21 +118,21 @@ prepare() {
 	# HEAD is the new engine and the case would test nothing.
 	old_engine=""
 	got_old=""
-	if [ -n "${IB_OLD_ENGINE_FILE:-}" ]; then
-		cp "$IB_OLD_ENGINE_FILE" "$D/old-engine.raw" && got_old=1
-	elif git -C "$here/../.." show "$OLD_REV:installer/unix/ib-engine.sh" > "$D/old-engine.raw" 2>/dev/null; then
+	if [ -n "${TI_OLD_ENGINE_FILE:-}" ]; then
+		cp "$TI_OLD_ENGINE_FILE" "$D/old-engine.raw" && got_old=1
+	elif git -C "$here/../.." show "$OLD_REV:installer/unix/ti-engine.sh" > "$D/old-engine.raw" 2>/dev/null; then
 		got_old=1
 	# Before the 2026-09-20 reorganisation the engine was bases/unix/, and
 	# $OLD_REV is deliberately a commit from before it, so the old path is
 	# the one that answers today. Both are tried so that neither moving the
 	# pin forward nor leaving it where it is silently skips these cases.
-	elif git -C "$here/../.." show "$OLD_REV:bases/unix/ib-engine.sh" > "$D/old-engine.raw" 2>/dev/null; then
+	elif git -C "$here/../.." show "$OLD_REV:bases/unix/ti-engine.sh" > "$D/old-engine.raw" 2>/dev/null; then
 		got_old=1
 	fi
 	if [ -n "$got_old" ]; then
 		key=$(tr -d ' \r\n' < "$D/key/plan-signing-key.pub")
 		keyid=$(printf '%s' "$key" | openssl base64 -d -A | openssl dgst -sha256 | awk '{ print substr($NF, 1, 16) }')
-		sed -e "s|^IB_PLAN_PUBKEY=\$|IB_PLAN_PUBKEY=$key|" -e "s|^IB_PLAN_KEYID=\$|IB_PLAN_KEYID=$keyid|" \
+		sed -e "s|^TI_PLAN_PUBKEY=\$|TI_PLAN_PUBKEY=$key|" -e "s|^TI_PLAN_KEYID=\$|TI_PLAN_KEYID=$keyid|" \
 			"$D/old-engine.raw" > "$D/old-engine.sh"
 		chmod 755 "$D/old-engine.sh"
 		old_engine=$D/old-engine.sh
@@ -145,7 +145,7 @@ prepare() {
 			old_engine=$D/old.app/Contents/MacOS/install
 		fi
 	else
-		printf 'note: no %s in git and no IB_OLD_ENGINE_FILE; the old-engine cases are skipped\n' "$OLD_REV"
+		printf 'note: no %s in git and no TI_OLD_ENGINE_FILE; the old-engine cases are skipped\n' "$OLD_REV"
 	fi
 	printf '#!/bin/sh\necho hello\n' > "$D/rt/pkg/bin/hello"
 	chmod 755 "$D/rt/pkg/bin/hello"
@@ -153,7 +153,7 @@ prepare() {
 	sha=$(sha256_of "$D/srv/f/rt.tar.gz")
 	echo "$sha" > "$D/rtsha"
 	size=$(wc -c < "$D/srv/f/rt.tar.gz" | tr -d ' ')
-	printf 'ib-record\t1\nname\tFresh\nproject\thello\nruntime\tnone\nselect\tnewest\nsource\tgithub\tOwner/Repo\tabc\nlaunch\t{runtime}\nconsole\t1\nmenu\t0\ndesktop\t0\nroot\tuser\nrootname\tib\n' > "$D/record.txt"
+	printf 'ti-record\t1\nname\tFresh\nproject\thello\nruntime\tnone\nselect\tnewest\nsource\tgithub\tOwner/Repo\tabc\nlaunch\t{runtime}\nconsole\t1\nmenu\t0\ndesktop\t0\nroot\tuser\nrootname\tti\n' > "$D/record.txt"
 	h=$(python3 "$here/append_meta.py" hash "$D/record.txt")
 	echo "$h" > "$D/hash"
 	cp "$D/record.txt" "$D/srv/api/records/$h"
@@ -164,7 +164,7 @@ prepare() {
 	[ "$MACOS" = 1 ] && when_os=macos
 	# $1 the header lines to add, $2 the request lines to add.
 	plan() {
-		printf 'ib-plan\t1\n%srecord\t%s\nname\tFresh\nproject\thello\nappid\tfreshtestaaa\nconsole\t1\nmenu\t0\ndesktop\t0\nroot\tuser\nrootname\tib\n%s\n[target]\nwhen\t%s\t0\t9999\t*\nruntime\tnone\t1\nfile\trt\trt.tar.gz\t%s\t%s\nurl\t@BACKEND@/f/rt.tar.gz\nstep\tunpack\ttar.gz\t{dir}\t1\nexe\tbin/hello\nlaunch\t"{runtime}"\n' \
+		printf 'ti-plan\t1\n%srecord\t%s\nname\tFresh\nproject\thello\nappid\tfreshtestaaa\nconsole\t1\nmenu\t0\ndesktop\t0\nroot\tuser\nrootname\tti\n%s\n[target]\nwhen\t%s\t0\t9999\t*\nruntime\tnone\t1\nfile\trt\trt.tar.gz\t%s\t%s\nurl\t@BACKEND@/f/rt.tar.gz\nstep\tunpack\ttar.gz\t{dir}\t1\nexe\tbin/hello\nlaunch\t"{runtime}"\n' \
 			"$2" "$h" "$1" "$when_os" "$sha" "$size"
 	}
 }
@@ -195,10 +195,10 @@ maxage$(printf '\t')7776000
 	rl() { # name serial entries...
 		n=$1 ser=$2
 		shift 2
-		{ printf 'ib-revocations\t1\nissued\t%s\nexpires\t%s\nserial\t%s\n' "$iss" "$iss" "$ser"
+		{ printf 'ti-revocations\t1\nissued\t%s\nexpires\t%s\nserial\t%s\n' "$iss" "$iss" "$ser"
 		  for e in "$@"; do printf 'revoke\t%s\n' "$e"; done
 		} > "$D/rev-$n.unsigned"
-		plansig -data "$D/key" -kind ib-revocations sign "$D/rev-$n.unsigned" > "$D/rev-$n.txt" || exit 1
+		plansig -data "$D/key" -kind ti-revocations sign "$D/rev-$n.unsigned" > "$D/rev-$n.txt" || exit 1
 	}
 	rl none 10
 	rl record 11 "record$(printf '\t')$(cat "$D/hash")"
@@ -206,7 +206,7 @@ maxage$(printf '\t')7776000
 	rl file 13 "file$(printf '\t')$(cat "$D/rtsha")"
 	rl other 14 "record$(printf '\t')aaaaaaaaaaaaaaaaaaaaaaaaaa" "sometingnew$(printf '\t')x"
 	# A list signed as a plan must not be taken for a revocation list.
-	sed '1s/^ib-revocations/ib-plan/' "$D/rev-record.unsigned" > "$D/rev-asplan.unsigned"
+	sed '1s/^ti-revocations/ti-plan/' "$D/rev-record.unsigned" > "$D/rev-asplan.unsigned"
 	plansig -data "$D/key" sign "$D/rev-asplan.unsigned" > "$D/rev-asplan.txt" 2>/dev/null ||
 		cp "$D/rev-record.unsigned" "$D/rev-asplan.txt"
 	name_as base "app_$(cat "$D/hash")"
@@ -221,7 +221,7 @@ cases() {
 		shift 3
 		rm -rf "$D/home" "$D/tmp"
 		mkdir -p "$D/home" "$D/tmp"
-		env -i HOME="$D/home" PATH="$P" TMPDIR="$D/tmp" LANG=C IB_TEST_NONCE="$NONCE" \
+		env -i HOME="$D/home" PATH="$P" TMPDIR="$D/tmp" LANG=C TI_TEST_NONCE="$NONCE" \
 			$SH "$@" --yes --log="$D/$n.log" > "$D/$n.out" 2>&1
 		rc=$?
 		if [ "$rc" = "$want" ] && grep -q "$grepfor" "$D/$n.log" "$D/$n.out"; then ok "$n (exit $rc)"
@@ -249,7 +249,7 @@ cases() {
 	one rev-other 0 "checked against the list" "$(eng base)" --record="$D/record.txt" --plan="$D/fresh.txt" --backend="$B"
 	# Signed as a plan, not as a revocation list: ignored, not obeyed.
 	cp "$D/rev-asplan.txt" "$D/srv/api/revocations"
-	one rev-wrong-kind 0 "not an ib-revocations" "$(eng base)" --record="$D/record.txt" --plan="$D/fresh.txt" --backend="$B"
+	one rev-wrong-kind 0 "not a ti-revocations" "$(eng base)" --record="$D/record.txt" --plan="$D/fresh.txt" --backend="$B"
 	# The list is kept, and used when the backend can't be reached: this
 	# run gets it from the backend and refuses, and the next has nowhere
 	# to fetch from and must refuse all the same. The same HOME, so the
@@ -291,8 +291,8 @@ cases() {
 }
 
 shell=${1:-sh}
-T=$(mktemp -d "${TMPDIR:-/tmp}/ibfresh.XXXXXX")
-trap '[ -n "${IB_TEST_KEEP:-}" ] || { kill $srv 2>/dev/null; rm -rf "$T"; }' EXIT
+T=$(mktemp -d "${TMPDIR:-/tmp}/tifresh.XXXXXX")
+trap '[ -n "${TI_TEST_KEEP:-}" ] || { kill $srv 2>/dev/null; rm -rf "$T"; }' EXIT
 prepare "$T"
 port=$(python3 -c 'import socket; s=socket.socket(); s.bind(("127.0.0.1",0)); print(s.getsockname()[1])')
 (cd "$T/srv" && exec python3 -m http.server "$port" --bind 127.0.0.1 > /dev/null 2>&1) &

@@ -9,7 +9,7 @@
 //
 // signPE() does all three with a signer {sign({data, digest}) -> bytes, certs}.
 import * as der from './der.js';
-import { peInfo, peChecksum } from '../../shared/ibfile.js';
+import { peInfo, peChecksum } from '../../shared/tifile.js';
 import { verifyWith, orderChain, ecdsaRawToDer, curveBytes, nameString } from './x509.js';
 import * as X from './cryptox.js';
 import { sha256Stream } from './sha.js';

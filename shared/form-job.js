@@ -390,7 +390,7 @@ export function jobFromForm(f, { icon, local = null, problems = [] }) {
     menu: f.checked('shortcut_menu'),
     desktop: f.checked('shortcut_desktop'),
     root: f.val('root') || 'user',
-    rootname: f.val('rootname').trim() || 'ib',
+    rootname: f.val('rootname').trim() || 'ti',
     platforms,
     mode,
     offline: mode !== 'A' && f.checked('offline'),

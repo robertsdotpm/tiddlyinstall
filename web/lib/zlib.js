@@ -9,7 +9,7 @@
 // The native path is used when the stream classes exist, accept the format
 // (Chrome 80-102 lack 'deflate-raw') and Blob streams work. If it throws,
 // the plain one is tried, and the native error is reported if both fail.
-// globalThis.IB_PURE_JS = true forces the plain path (for tests).
+// globalThis.TI_PURE_JS = true forces the plain path (for tests).
 import { inflate as pureInflate, crc32, adler32 } from './inflate.js';
 import { deflate as pureDeflate } from './deflate.js';
 
@@ -18,7 +18,7 @@ export { crc32, adler32 };
 const G = typeof globalThis !== 'undefined' ? globalThis : typeof self !== 'undefined' ? self : window;
 
 function nativeStream(Cls, format) {
-  if (G.IB_PURE_JS || typeof G[Cls] !== 'function' || typeof Blob === 'undefined' ||
+  if (G.TI_PURE_JS || typeof G[Cls] !== 'function' || typeof Blob === 'undefined' ||
       typeof Blob.prototype.stream !== 'function' || typeof Response === 'undefined') return null;
   try { return new G[Cls](format); } catch (e) { return null; }       // format not supported
 }

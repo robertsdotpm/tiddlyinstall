@@ -127,7 +127,7 @@
     var scoped = function (native) {
       return function (sel) {
         if (!/:scope\b/.test(sel)) return native.call(this, sel);
-        var mark = 'data-ib-scope-' + (++seq);
+        var mark = 'data-ti-scope-' + (++seq);
         this.setAttribute(mark, '');
         try { return native.call(this, sel.replace(/:scope\b/g, '[' + mark + ']')); } finally { this.removeAttribute(mark); }
       };

@@ -361,7 +361,7 @@ export function makeSend(opts) {
       const auth = headers.Authorization;
       delete headers.Authorization;
       const r = await rawSend(fetchImpl, o.relayBase + '/api/sign/' + req.relay, 'POST',
-        auth ? { 'Content-Type': 'application/json', 'X-IB-Sign-Auth': auth } : { 'Content-Type': 'application/json' },
+        auth ? { 'Content-Type': 'application/json', 'X-TI-Sign-Auth': auth } : { 'Content-Type': 'application/json' },
         JSON.stringify({ url: url, method: method, headers: headers, body: body === undefined ? null : body }));
       if (r.status !== 200) {
         const why = r.json && r.json.error ? r.json.error : 'HTTP ' + r.status;

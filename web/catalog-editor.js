@@ -436,7 +436,7 @@ function newId() {
 }
 
 const TEMPLATES = {
-  release: () => ({ version: '', os: 'windows', arch: 'amd64', kind: 'archive', format: 'zip', variant: null, libc: null, url: 'https://', mirrors: [], size: 0, min_os: null, ib_sha256: '' }),
+  release: () => ({ version: '', os: 'windows', arch: 'amd64', kind: 'archive', format: 'zip', variant: null, libc: null, url: 'https://', mirrors: [], size: 0, min_os: null, ti_sha256: '' }),
   recipe: () => ({ match: { os: 'windows', kind: 'archive', format: 'zip', arch: null, variant: null, versions: '' }, method: 'unpack', isolation: 'full', executable: '', steps: [{ unpack: 'zip', to: '{runtime_dir}', strip_components: 0 }] }),
   rule: () => ({ os: 'windows', versions: '', min_os: null, max_os: null, min_build: null, arch: null, format: null, variant: null }),
 };
@@ -457,7 +457,7 @@ function addItem(kind) {
   let v = TEMPLATES[kind]();
   // A new release starts as a copy of the one selected, which is usually
   // what is wanted (a new version of the same file).
-  if (kind === 'release' && S.sel && S.sel.kind === 'release' && S.draft) v = Object.assign(O.clone(S.draft), { version: '', ib_sha256: '', size: 0 });
+  if (kind === 'release' && S.sel && S.sel.kind === 'release' && S.draft) v = Object.assign(O.clone(S.draft), { version: '', ti_sha256: '', size: 0 });
   openItem(kind, -1, newId(), v);
 }
 
@@ -499,7 +499,7 @@ function paintDetail() {
     el('button', { type: 'button', class: 'secondary', text: S.sel.isNew ? 'Discard' : 'Undo edits', onclick: () => (S.sel.isNew ? closeDetail() : openItem(kind, S.sel.i, S.sel.id)) }));
   if (row && (row.st === 'changed' || row.st === 'stale') && row.i >= 0) acts.append(el('button', { type: 'button', class: 'secondary', id: 'rt-revert', text: 'Revert to built-in', onclick: () => revert(row) }));
   if (row && !S.sel.isNew) acts.append(el('button', { type: 'button', class: 'secondary danger', id: 'rt-remove', text: row.i >= 0 ? 'Remove' : 'Remove (drop this added item)', onclick: () => removeItem(row) }));
-  if (kind !== 'rule' && row) acts.append(el('button', { type: 'button', class: 'secondary', text: 'Duplicate as new', onclick: () => openItem(kind, -1, newId(), Object.assign(O.clone(S.draft), kind === 'release' ? { version: '', ib_sha256: '', size: 0 } : {})) }));
+  if (kind !== 'rule' && row) acts.append(el('button', { type: 'button', class: 'secondary', text: 'Duplicate as new', onclick: () => openItem(kind, -1, newId(), Object.assign(O.clone(S.draft), kind === 'release' ? { version: '', ti_sha256: '', size: 0 } : {})) }));
   acts.append(el('span', { class: 'small muted', id: 'rt-dirty', text: '' }));
   form.append(acts);
   children.push(form);
@@ -595,7 +595,7 @@ function releaseForm(form) {
     el('div', { class: 'field rt-field', dataset: { err: 'mirrors' } }, el('span', { class: 'label', text: 'Mirrors, in the order tried' }),
       orderedList(() => d().mirrors, (v) => { d().mirrors = v; }, { placeholder: 'https://', errPrefix: 'mirrors', add: '+ Add a mirror' }), el('span', { class: 'rt-err' })),
     el('div', { class: 'row rt-row' },
-      field('SHA-256', textIn(() => d().ib_sha256 || '', (v) => { d().ib_sha256 = v.trim().toLowerCase(); }, { class: 'mono', placeholder: '64 hex characters' }), 'ib_sha256',
+      field('SHA-256', textIn(() => d().ti_sha256 || '', (v) => { d().ti_sha256 = v.trim().toLowerCase(); }, { class: 'mono', placeholder: '64 hex characters' }), 'ti_sha256',
         'The installer refuses the download if it doesn\'t match.'),
       field('Size in bytes', textIn(() => String(nz(d().size, 0)), (v) => { d().size = /^\d+$/.test(v.trim()) ? Number(v.trim()) : v; }, { inputmode: 'numeric' }), 'size')));
   // Releases downloaded in several files (Windows Python's MSIs): kept as
@@ -1071,7 +1071,7 @@ function paintSaveOption() {
   if (!saveBox) {
     saveBox = el('label', { class: 'choice rt-save-with' }, el('input', { type: 'checkbox', id: 'rt-save-with' }), el('span'));
     ctl.append(saveBox);
-    globalThis.ibPageForSave = (html) => {
+    globalThis.tiPageForSave = (html) => {
       const cb = document.getElementById('rt-save-with');
       return cb && cb.checked && !saveBox.hidden ? O.bakeOverlay(html, S.ov.changes) : html;
     };
@@ -1323,7 +1323,7 @@ async function start() {
   $('rt-review-cancel').addEventListener('click', () => { pendingImport = null; $('rt-review').hidden = true; });
   for (const id of ['rt-p-family', 'rt-p-select', 'rt-p-diffonly']) $(id).addEventListener('change', () => { $('rt-p-range-label').hidden = !['range', 'exact'].includes($('rt-p-select').value); schedulePreview(); });
   $('rt-p-range').addEventListener('input', schedulePreview);
-  window.addEventListener('ib-overlay-change', async () => {
+  window.addEventListener('ti-overlay-change', async () => {
     const ov = O.overlayState();
     // New changes may be about folders not unpacked yet.
     try { await need([S.rt], ov.changes); } catch (e) { failed(e); }
@@ -1338,13 +1338,13 @@ async function start() {
     if (keep) { S.sel = keep.sel; S.draft = keep.draft; }
     schedulePreview();
   });
-  window.addEventListener('ib-api-change', paintMode);
+  window.addEventListener('ti-api-change', paintMode);
   await apiReady();
   paintMode();
   paintAll();
 }
 
-const onPage = () => /^#runtimes(&|$)/.test(location.hash) || !globalThis.IB_ONE_FILE;
+const onPage = () => /^#runtimes(&|$)/.test(location.hash) || !globalThis.TI_ONE_FILE;
 function maybeStart() {
   if (!$('rt-editor')) return;
   // The footer's "Save this page" option needs the overlay even before the
@@ -1357,6 +1357,6 @@ function paintSaveLater() {
   S.ov = O.overlayState();
   paintSaveOption();
 }
-window.addEventListener('ib-overlay-change', () => { if (!S.started) paintSaveLater(); });
+window.addEventListener('ti-overlay-change', () => { if (!S.started) paintSaveLater(); });
 window.addEventListener('hashchange', () => { if (onPage()) start(); });
 maybeStart();

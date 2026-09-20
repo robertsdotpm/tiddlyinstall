@@ -1214,7 +1214,7 @@ form:has(#offline-on:checked) .offline-off-inline { display: none; }
 /* Where's the code (no JS). */
 .src-write-only { display: none; }
 .src-local-only, .has-local-only { display: none; }
-html.ib-has-local .has-local-only { display: inline-flex; }
+html.ti-has-local .has-local-only { display: inline-flex; }
 form:has(#src-local:checked) .src-local-only { display: block; }
 form:has(#src-local:checked) .src-repo-only { display: none; }
 .file-button { cursor: pointer; }
@@ -1365,9 +1365,9 @@ form:has(#unscript-tab-unix:checked) .unscript-panel-unix { display: block; }
 
 /* The one-file site: with no build server, what needs one is hidden. */
 .local-only { display: none; }
-html.ib-local .local-only { display: inline; }
-html.ib-local .online-only { display: none !important; }
-.ib-page[hidden] { display: none; }
+html.ti-local .local-only { display: inline; }
+html.ti-local .online-only { display: none !important; }
+.ti-page[hidden] { display: none; }
 .save-ctl { margin-top: 10px; }
 
 /* Catalogue changes found in this browser's storage. */
@@ -1589,36 +1589,36 @@ html.ib-local .online-only { display: none !important; }
    17. Phones and small screens
    ========================================================================== */
 
-.ib-menu-btn { display: none; }
+.ti-menu-btn { display: none; }
 .mobile-only, .no-download-only { display: none; }
-html.ib-mobile .mobile-only { display: block; }
-html.ib-mobile span.mobile-only { display: inline; }
-html.ib-no-download .no-download-only { display: block; }
-html.ib-no-folder .needs-folder { display: none !important; }
+html.ti-mobile .mobile-only { display: block; }
+html.ti-mobile span.mobile-only { display: inline; }
+html.ti-no-download .no-download-only { display: block; }
+html.ti-no-folder .needs-folder { display: none !important; }
 
-.ib-menu-btn {
+.ti-menu-btn {
   align-items: center; justify-content: center;
   padding: 5px 9px;
   background: none; border: 1px solid var(--rule-strong); border-radius: var(--radius);
   color: var(--text); cursor: pointer;
 }
-.ib-menu-btn[aria-expanded="true"] { background: var(--panel-2); }
+.ti-menu-btn[aria-expanded="true"] { background: var(--panel-2); }
 
 @media (max-width: 599px) {
-  .site-header.ib-menu {
+  .site-header.ti-menu {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto auto auto;
     grid-gap: 0 4px; gap: 0 4px;
     padding-top: 10px; padding-bottom: 10px;
     padding-block: 10px;
   }
-  .site-header.ib-menu nav { display: contents; }
-  .site-header.ib-menu .brand { grid-row: 1; grid-column: 1; }
-  .site-header.ib-menu .theme-btn { grid-row: 1; grid-column: 2; }
-  .site-header.ib-menu .settings { grid-row: 1; grid-column: 3; }
-  .site-header.ib-menu .ib-menu-btn { display: inline-flex; grid-row: 1; grid-column: 4; }
-  .site-header.ib-menu nav > a { display: none; grid-column: 1 / -1; }
-  .site-header.ib-menu.menu-open nav > a {
+  .site-header.ti-menu nav { display: contents; }
+  .site-header.ti-menu .brand { grid-row: 1; grid-column: 1; }
+  .site-header.ti-menu .theme-btn { grid-row: 1; grid-column: 2; }
+  .site-header.ti-menu .settings { grid-row: 1; grid-column: 3; }
+  .site-header.ti-menu .ti-menu-btn { display: inline-flex; grid-row: 1; grid-column: 4; }
+  .site-header.ti-menu nav > a { display: none; grid-column: 1 / -1; }
+  .site-header.ti-menu.menu-open nav > a {
     display: flex;
     align-items: center;
     min-height: 44px;
@@ -1626,7 +1626,7 @@ html.ib-no-folder .needs-folder { display: none !important; }
     border-top: 1px solid var(--rule);
     border-bottom: 0;
   }
-  .site-header.ib-menu.menu-open nav > a:first-of-type { margin-top: 10px; }
+  .site-header.ti-menu.menu-open nav > a:first-of-type { margin-top: 10px; }
 
   h1 { font-size: 1.62em; }
   .panel, fieldset { padding-left: 15px; padding-right: 15px; }
@@ -1679,7 +1679,7 @@ html.ib-no-folder .needs-folder { display: none !important; }
   button, .button { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; }
   button[hidden], .button[hidden] { display: none; }
   .link-button { min-height: 40px; }
-  .settings-btn, .ib-menu-btn, .theme-btn { min-width: 44px; min-height: 44px; }
+  .settings-btn, .ti-menu-btn, .theme-btn { min-width: 44px; min-height: 44px; }
   summary { min-height: 40px; padding-top: 8px; padding-bottom: 8px; }
   .customise > details > summary { align-items: center; }
   label.choice { min-height: 40px; margin-bottom: 2px; }
