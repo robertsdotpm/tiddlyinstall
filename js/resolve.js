@@ -1401,7 +1401,7 @@ function normApp(a) {
     select: str(a.select), range: str(a.range), launch: str(a.launch), install: str(a.install),
     console: !!a.console, menu: !!a.menu, desktop: !!a.desktop, root: str(a.root), rootName: str(a.rootName),
     platforms: list(a.platforms),
-    source: s ? { name: str(s.name), sha256: str(s.sha256), size: s.size || 0, format: str(s.format), strip: s.strip || 0, urls: list(s.urls) } : null,
+    source: s ? { name: str(s.name), sha256: str(s.sha256), tarSha: str(s.tarSha), size: s.size || 0, format: str(s.format), strip: s.strip || 0, urls: list(s.urls) } : null,
     package: str(a.package), packageVersion: str(a.packageVersion),
     prerequisites: list(a.prerequisites).map(str),
     tools: list(a.tools).map(str),
