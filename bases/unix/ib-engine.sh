@@ -1990,7 +1990,12 @@ ib_install_main() {
 		printf 'WHAT\n'
 		printf '  Project:  %s\n' "$IB_PROJECT"
 		printf '  Source:   %s\n' "$(ib_describe_source)"
-		rt=$(ib_sel1 runtime)
+		# The *last* runtime line, not the first: the selection carries the
+		# plan's header (`runtime <id>` alone) before the chosen block's
+		# (`runtime <id> <version> <arch>`), so ib_sel1 was showing the bare
+		# id and never the version -- which is also why format.md's claim
+		# that this engine already showed the architecture was wrong.
+		rt=$(ib_sel runtime | sed -n '$p')
 		if [ -n "$rt" ]; then
 			IFS=$tab
 			set -- $rt
