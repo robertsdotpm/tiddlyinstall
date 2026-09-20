@@ -28,7 +28,8 @@ function paint() {
     return;
   }
   const link = el('a', { href: pageUrl('runtimes.html'), text: 'Sources page' });
-  box.replaceChildren(
+  // (replaceChildren would write a "null" of its own, so they are filtered.)
+  const kids = [
     el('p', { class: 'overlay-ask-head' },
       el('strong', { text: n + ' catalogue change' + (n === 1 ? '' : 's') + ' found in this browser' }),
       ' — not used yet.'),
@@ -40,7 +41,8 @@ function paint() {
     el('div', { class: 'actions' },
       el('button', { type: 'button', class: 'overlay-ask-yes', text: 'Use these changes', onclick: () => answerStored(true) }),
       el('button', { type: 'button', class: 'secondary overlay-ask-no', text: 'Not now', onclick: () => answerStored(false) })),
-    el('p', { class: 'small muted', text: 'Either way the answer lasts for this tab only. "Not now" leaves them in this browser, unused; changing the catalogue here replaces them.' }));
+    el('p', { class: 'small muted', text: 'Either way the answer lasts for this tab only. "Not now" leaves them in this browser, unused; changing the catalogue here replaces them.' })];
+  box.replaceChildren(...kids.filter((k) => k));
   box.hidden = false;
 }
 

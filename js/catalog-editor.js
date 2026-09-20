@@ -470,6 +470,10 @@ function field(label, input, errKey, hint) {
     el('label', {}, label, input), hint ? el('span', { class: 'hint', text: hint }) : null, el('span', { class: 'rt-err' }));
 }
 function edited() {
+  // The policy form is built from the same inputs but has no selected item
+  // (its draft is S.policyDraft, checked by pedit/checkPolicy): there is
+  // nothing here to validate, and validateDraft would throw on S.sel.
+  if (!S.sel || S.draft === undefined) return;
   S.dirty = true;
   validateDraft();
   schedulePreview();
