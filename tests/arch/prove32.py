@@ -78,20 +78,23 @@ echo "uname-r       $(uname -r)"
 echo "long-bit      $(getconf LONG_BIT)"
 echo "kernel-elf    $(head -c5 /boot/vmlinuz-$(uname -r) >/dev/null 2>&1 && echo readable || echo -)"
 echo "cpu-lm        $(grep -qw lm /proc/cpuinfo && echo "the CPU is 64-bit capable" || echo "no lm flag")"
+echo "kernel-ver    $(head -c 110 /proc/version 2>/dev/null)"
 echo "loader        $(ls /lib/ld-linux.so.2 2>/dev/null || echo none)"
 echo "loader64      $(ls /lib64/ld-linux-x86-64.so.2 2>/dev/null || echo none)"
-# The 4 GB ceiling: a 32-bit process cannot map 3 GB in one go, and a
-# 64-bit one can (Linux overcommits, so this is about address space, not
-# about how much memory the machine has).
-python3 - <<'PY' 2>&1 | sed 's/^/mmap3g       /'
-import mmap
+# The 4 GB ceiling. Be clear what this shows: it is a property of a
+# 32-bit *process*, so a 32-bit userland over a 64-bit kernel refuses it
+# too. It is recorded because it is what a person on this machine hits,
+# not because it tells a real 32-bit machine from a container.
+if command -v python3 > /dev/null 2>&1; then
+	python3 -c 'import mmap
 try:
-    m = mmap.mmap(-1, 3 * 1024**3)
-    m.close()
+    m = mmap.mmap(-1, 3 * 1024**3); m.close()
     print("mapped 3 GB in one block -- this address space is not 32-bit")
 except Exception as e:
-    print(f"refused: {type(e).__name__}: {e}")
-PY
+    print("refused: %s: %s" % (type(e).__name__, e))' 2>&1 | sed 's/^/mmap3g        /'
+else
+	echo "mmap3g        no python3 here to try it with"
+fi
 echo "--- a 64-bit binary, on this machine ---"
 chmod +x /tmp/ib-amd64-probe /tmp/ib-x86-probe 2>/dev/null
 echo "amd64-run     $(/tmp/ib-amd64-probe 2>&1 | head -1 || true) (exit $?)"
@@ -107,13 +110,28 @@ def proof_kernel(vm):
             return
         vm.put(src, dest)
     code, out, err = vm.run(KERNEL)
-    d = dict(l.split(None, 1) for l in out.splitlines() if l and not l.startswith(("-", "file")))
+    d = dict(l.split(None, 1) for l in out.splitlines()
+             if l and " " in l and not l.startswith(("-", "file", "mmap3g")))
     notes = [l for l in out.splitlines() if l.startswith(("file", "amd64-run", "x86-run", "mmap3g"))]
-    ok = (d.get("uname-m", "").strip().startswith("i") and d.get("long-bit", "").strip() == "32"
-          and "refused" in out and "Exec format error" in out)
+    rel = d.get("uname-r", "").strip()
+    # The decisive one, and the only part a container cannot fake: on a
+    # 32-bit kernel an amd64 ELF will not exec. Under `linux32` in a
+    # container the same binary runs happily while `uname -m` still says
+    # i686 and LONG_BIT still says 32 -- measured, 2026-09-20 -- which is
+    # why this proof exists and why machines.py checks the ELF class of
+    # everything an install puts on disk.
+    refused = "Exec format error" in out
+    ok = (d.get("uname-m", "").strip().startswith("i")
+          and d.get("long-bit", "").strip() == "32"
+          and ("686" in rel or "586" in rel)          # a 32-bit Debian kernel flavour
+          and d.get("loader64", "").strip() == "none"
+          and refused)
     say(1, "a genuinely 32-bit kernel", ok,
-        f"uname -m {d.get('uname-m','?').strip()}, LONG_BIT {d.get('long-bit','?').strip()}, "
-        f"{d.get('cpu-lm','?').strip()}; no /lib64 loader ({d.get('loader64','?').strip()}). "
+        f"uname -m {d.get('uname-m','?').strip()}, uname -r {rel}, "
+        f"LONG_BIT {d.get('long-bit','?').strip()}, {d.get('cpu-lm','?').strip()}; "
+        f"/lib64 loader {d.get('loader64','?').strip()}; "
+        + ("a 64-bit binary is refused" if refused
+           else "A 64-BIT BINARY RAN -- this is not a 32-bit kernel") + ". "
         + " | ".join(n.strip() for n in notes))
 
 
