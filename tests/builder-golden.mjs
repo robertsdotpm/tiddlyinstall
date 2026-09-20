@@ -63,16 +63,27 @@ function bodyFor(rt) {
   return body;
 }
 
-// Mask what may differ (see the header).
+// Mask what may differ (see the header) -- and, since 2026-09-20, no more
+// than that.
+//
+// These masks used to hide the record's `source inline <sha>` line, the
+// plan's `record` line and its `appid`, because all three moved with the
+// gzip we happened to make and the page's deflate and the server's do not
+// agree. That is precisely the bug design.md 11.2 records: one form gave
+// two record hashes and two install folders depending on where it was
+// built, and these goldens could not see it because they masked it.
+//
+// The record now names the uncompressed tar, so the record hash and the
+// appid are deterministic and are pinned here. What genuinely still
+// differs between builders is the `.tar.gz`'s own hash and size in the
+// plan's source line, and only those are masked.
 function maskRecord(t) {
-  return t.replace(/^created\t.*\n/m, '').replace(/^(source\tinline\t)[0-9a-f]{64}$/m, '$1<src>');
+  return t.replace(/^created\t.*\n/m, '');
 }
 function maskPlan(t) {
   return t.replace(/\nsig\ted25519\t\S+\n?$/, '\n')
-    .replace(/^(source\t)[0-9a-f]{64}\.tar\.gz\t[0-9a-f]{64}\t\d+/m, '$1<src>')
-    .replace(/^url\t\S+\/src\/[0-9a-f]{64}\.tar\.gz\n/m, '')
-    .replace(/^record\t\S+$/m, 'record\t<hash>')
-    .replace(/^appid\t\S+$/m, 'appid\t<appid>');
+    .replace(/^(source\t[0-9a-f]{64}\.tar\.gz\t)[0-9a-f]{64}\t\d+/m, '$1<gzip>\t<size>')
+    .replace(/^url\t\S+\/src\/[0-9a-f]{64}\.tar\.gz\n/m, '');
 }
 function firstDiff(a, b) {
   const x = a.split('\n'), y = b.split('\n');
