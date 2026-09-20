@@ -189,6 +189,23 @@ ib_download() { # url out
 	fi
 }
 
+# A small document the install can do without (the revocation list): a
+# short timeout and no retries, so an offline installer -- which carries
+# everything it needs -- isn't held up for a minute by a network that
+# isn't there.
+ib_download_quick() { # url out
+	ib_log "  GET $1 (optional)"
+	ib_http=
+	if ib_have curl; then
+		ib_http=$(ib_nohome curl -fL -sS --connect-timeout 5 --max-time 20 \
+			-w '%{http_code}' -o "$2" "$1" 2>> "$IB_LOG")
+	elif ib_have wget; then
+		ib_nohome wget -q -T 10 -t 1 -O "$2" "$1" >> "$IB_LOG" 2>&1
+	else
+		return 1
+	fi
+}
+
 # How the UI talks to the user: tty, zenity, kdialog, osascript, or none.
 ib_pick_ui() {
 	if [ -t 0 ] && [ -t 2 ]; then
@@ -777,7 +794,7 @@ ib_revocations() { # backend
 	f=$IB_WORK/revocations.txt
 	got=
 	ib_say "Checking the revocation list"
-	if ib_download "$url" "$f" && [ -s "$f" ]; then
+	if ib_download_quick "$url" "$f" && [ -s "$f" ]; then
 		sig=$(ib_doc_sig "$f" ib-revocations)
 		case $sig in
 		ok:*) got=$f ;;

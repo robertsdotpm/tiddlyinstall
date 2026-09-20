@@ -647,6 +647,15 @@ Function DownloadQuiet
   Pop $U_out
 FunctionEnd
 
+; A small document the install can do without (the revocation list): a
+; short timeout, so an offline installer -- which carries everything it
+; needs -- isn't held up by a network that isn't there.
+Function DownloadOptional
+  Delete "$U_b"
+  inetc::get /SILENT /CONNECTTIMEOUT 5 /RECEIVETIMEOUT 15 "$U_a" "$U_b" /END
+  Pop $U_out
+FunctionEnd
+
 ; Is this path inside one of this app's folders (app, runtime folders, tmp)?
 ; $U_a path -> $U_out 1/0
 Function InAppFolders
@@ -1949,7 +1958,7 @@ Function Revocations
   StrCpy $U_a "$Backend/api/revocations"
   StrCpy $U_b "$PLUGINSDIR\revocations.txt"
   ${Log} "Fetching the revocation list: $U_a"
-  Call DownloadQuiet
+  Call DownloadOptional
   ${If} $U_out == "OK"
     ibsig::checkdoc "$PLUGINSDIR\revocations.txt" "${IB_PLAN_PUBKEY}" "ib-revocations"
     Pop $0
