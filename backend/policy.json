@@ -133,6 +133,26 @@
     "pacman": "gcc-libs"
    }
   },
+  "libatomic-x86": {
+   "_comment": "The same library, for a runtime that needs it only on 32-bit x86. A `needs` entry has no arch of its own, but a prerequisite does (as vcredist-x86/x64/arm64 do), so the arch lives here. 32-bit x86 has no 64-bit atomic instruction, so GCC calls into libatomic for anything that uses one: Rust's i686 cargo has libatomic.so.1 in its NEEDED list where the x86_64 cargo has nothing. The engine's library check reads ldconfig's arch column and falls back to i386-linux-gnu, so it answers for the right machine (bases/unix/ib-engine.sh).",
+   "label": "libatomic.so.1 (GCC's atomics library)",
+   "os": "linux",
+   "arch": "x86",
+   "checks": [
+    [
+     "lib",
+     "libatomic.so.1"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libatomic1",
+    "dnf": "libatomic",
+    "yum": "libatomic",
+    "zypper": "libatomic1",
+    "apk": "libatomic",
+    "pacman": "gcc-libs"
+   }
+  },
   "libblas": {
    "label": "libblas.so.3 (BLAS linear algebra library)",
    "os": "linux",
@@ -1309,6 +1329,13 @@
       "xcode-clt"
      ],
      "why": "Rust links programs with Apple's linker and the macOS SDK, which come with the Xcode Command Line Tools."
+    },
+    {
+     "_comment": "32-bit Linux only; the prerequisite carries the arch (libatomic-x86). Read from the release itself: rust-1.98.1-i686-unknown-linux-gnu's cargo/bin/cargo lists libatomic.so.1 in DT_NEEDED, the x86_64 cargo of the same release does not. rustc itself does not need it, so the app would install and then fail at the first cargo run.",
+     "prerequisites": [
+      "libatomic-x86"
+     ],
+     "why": "Cargo's 32-bit x86 build is linked against libatomic.so.1 (GCC's atomics library), because 32-bit x86 has no 64-bit atomic instruction of its own; minimal systems leave it out."
     }
    ],
    "launch": "{app_dir}/target/release/{project}{exe}",

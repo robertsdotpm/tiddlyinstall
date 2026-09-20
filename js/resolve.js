@@ -489,15 +489,25 @@ function loadOSScale(raw) {
     s.byID.set('macos/' + id, o);
     if (int >= 1006) push('macos', o);
   }
+  // arm64 only from glibc 2.17, the first glibc with an aarch64 port, so
+  // there is no such machine below it. 32-bit x86 has no such cut-off: it
+  // is glibc's oldest port, and an i686 userland still exists at the top of
+  // the scale (Debian 12 i386, Alpine x86, Arch Linux 32, the i386/* Docker
+  // images), so it is offered over the whole range, as amd64 is. Whether a
+  // given runtime has a 32-bit build, and from which glibc, is the
+  // catalogue's business (os_support.json, compilers_min_os.json): a
+  // machine with nothing for it gets a `fail` target, as arm64 already
+  // does on the older glibcs. docs/design.md 1.11.
   for (const l of list(raw.linux_glibc)) {
     const id = str(l.id), int = verInt(id.startsWith('glibc-') ? id.slice(6) : id);
-    const o = { family: 'linux', id, int, build: 0, label: 'Linux, ' + id + ' (' + list(l.distros).join(', ') + ')', arches: int >= 217 ? ['amd64', 'arm64'] : ['amd64'] };
+    const o = { family: 'linux', id, int, build: 0, label: 'Linux, ' + id + ' (' + list(l.distros).join(', ') + ')', arches: int >= 217 ? ['amd64', 'arm64', 'x86'] : ['amd64', 'x86'] };
     s.byID.set('linux/' + id, o);
     push('linux', o);
   }
-  // musl systems report glibc 0, below every glibc version.
+  // musl systems report glibc 0, below every glibc version. Alpine still
+  // builds and releases x86 alongside x86_64 and aarch64.
   for (const m of list(raw.linux_musl)) {
-    const o = { family: 'linux', id: str(m.id), int: 0, build: 0, label: 'Linux, musl (' + list(m.distros).join(', ') + ')', arches: ['amd64', 'arm64'] };
+    const o = { family: 'linux', id: str(m.id), int: 0, build: 0, label: 'Linux, musl (' + list(m.distros).join(', ') + ')', arches: ['amd64', 'arm64', 'x86'] };
     s.byID.set('linux/' + o.id, o);
     push('linux', o);
   }

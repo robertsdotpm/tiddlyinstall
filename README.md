@@ -93,6 +93,7 @@ Tests:
 ```
 cd backend && npm test                   # node --test: unit tests and the server end to end
 node tests/resolve-test.mjs              # the resolver against 3,095 saved plans and answers, also lazily loaded
+node tests/linux-x86-test.mjs            # what 32-bit x86 Linux is offered, per runtime (design.md 1.11)
 node tests/builder-golden.mjs            # js/builder.js: records and plans for every runtime, also lazily loaded
 node tests/backend-golden.mjs            # a running server (default :8080, --data backend/data)
                                          # against saved answers: errors, jobs, plans, takedown
