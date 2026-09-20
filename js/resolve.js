@@ -1125,7 +1125,7 @@ function writeNeeds(cat, w, uses) {
 /* ---------- recipes and candidates (resolve.go) ---------- */
 
 const tmpRefRe = () => /\{tmp\}[\\/]+([A-Za-z0-9_.-]+)/g;
-const STEP_KEYS = new Set(['unpack', 'to', 'strip_components', 'run', 'shell', 'write', 'text', 'mkdir']);
+const STEP_KEYS = new Set(['unpack', 'to', 'strip_components', 'exclude', 'run', 'shell', 'write', 'text', 'mkdir']);
 
 // Catalog.supported: {ok, extras, prefer}
 function supported(cat, rt, r, e, install, o, tools) {
@@ -1545,6 +1545,21 @@ const unpackKind = (st) => {
   return f === '7z-sfx' ? '7z' : f;
 };
 const stripOf = (st) => (typeof st.strip_components === 'number' ? Math.trunc(st.strip_components) : 0);
+// unpack's 4th field (format.md, "Steps"): paths inside the archive not
+// to unpack, joined with "|". A pattern that could break the plan's own
+// framing -- a tab, a newline, a "|" of its own -- is dropped, and an
+// empty list leaves the field off, so every other plan is unchanged.
+const excludeOf = (st) =>
+  list(st.exclude)
+    .map(str)
+    .filter((p) => p !== '' && !/[\t\r\n|]/.test(p))
+    .join('|');
+// Write an `unpack` step, with the 4th field only where there is one.
+const addUnpack = (w, st, dest) => {
+  const ex = excludeOf(st);
+  if (ex === '') w.add('step', 'unpack', unpackKind(st), dest, String(stripOf(st)));
+  else w.add('step', 'unpack', unpackKind(st), dest, String(stripOf(st)), ex);
+};
 
 // Catalog.writeTarget
 function writeTarget(cat, w, app, pol, b) {
@@ -1571,7 +1586,7 @@ function writeTarget(cat, w, app, pol, b) {
   // Recipe steps; from the first that needs an extra file on, they wait
   // for the extra files (Go's comment in writeTarget says why).
   const step = (st, fix) => {
-    if (st.unpack != null) w.add('step', 'unpack', unpackKind(st), fix(orDefault(str(st.to), '{dir}')), String(stripOf(st)));
+    if (st.unpack != null) addUnpack(w, st, fix(orDefault(str(st.to), '{dir}')));
     else if (st.run != null) w.add('step', 'run', fix(goSprint(st.run)));
     else if (st.write != null) w.add('step', 'write', fix(goSprint(st.write)), fix(goSprint(st.text)));
     else if (st.mkdir != null) w.add('step', 'mkdir', fix(goSprint(st.mkdir)));
@@ -1602,7 +1617,7 @@ function writeTarget(cat, w, app, pol, b) {
       if (u !== '' && !cseen.has(u)) { cseen.add(u); w.add('url', u); }
     }
     for (const st of n.p.recipe.steps) {
-      if (st.unpack != null) w.add('step', 'unpack', unpackKind(st), cfix(orDefault(str(st.to), '{dir}')), String(stripOf(st)));
+      if (st.unpack != null) addUnpack(w, st, cfix(orDefault(str(st.to), '{dir}')));
       else if (st.run != null) w.add('step', 'run', cfix(goSprint(st.run)));
     }
     compPath.push('{dir:' + n.req.runtime + '}' + (n.req.bin !== '' ? (win ? '\\' : '/') + n.req.bin : ''));
