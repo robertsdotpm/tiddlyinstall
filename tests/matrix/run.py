@@ -303,6 +303,13 @@ def mac_gatekeeper(out, r, d, extra):
                                            and worth noticing, because it
                                            means we got notarized
 
+    A cell that is `n/a` or `no-plan` keeps its own verdict: the catalogue
+    has no release for this machine, or the plan has no block for it, and
+    the installer said so and stopped. Nothing was installed either way,
+    so there is no engine to call broken, and calling it `fail` (which is
+    what this did until 2026-09-20) turned python2's three honest
+    n/a cells red.
+
     Signed by a Developer ID, the two runs agree and this goes quiet.
     """
     parts = {}
@@ -317,6 +324,8 @@ def mac_gatekeeper(out, r, d, extra):
     head = f"quarantined (as a browser download): {why}"
     if r == "pass":
         return "known", f"{head} -- {KNOWN['mac-gatekeeper']}; with the flag cleared: {d}", extra
+    if r != "fail":
+        return r, f"{d} ({head})", extra
     # The engine is broken too, which is not the failure we expect.
     return "fail", f"{head}, AND with the flag cleared it still fails: {d}", extra
 
