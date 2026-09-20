@@ -426,13 +426,11 @@ Press Enter to close</pre>
           <span>Also make offline installers <span class="small muted">for computers without internet. Bigger files, packed in your browser.</span></span></label>
         <p class="small muted ours-only online-only" style="margin:10px 0 0">Offline installers need the installer signed by you or left unsigned (Customise &rarr; Signing).</p>
 
-        <!-- The essentials end with their own button on narrow screens,
-             where the build bar at the foot of the form takes a third of
-             the screen if it is pinned, so it isn't (css/style.css, "Phones
-             and small screens"). Without this, sending the form from a
-             phone would mean scrolling the whole of Customise first. Wider
-             screens have the pinned bar on screen already, so this is
-             hidden there. -->
+        <!-- The essentials end with their own button. Nothing here
+             follows the viewport (css/style.css, .build-bar), so the only
+             other button is at the foot of the form, past the whole of
+             Customise; someone who is happy with the defaults should not
+             have to scroll through them to send the form. -->
         <div class="build-early">
           <p class="build-where new-where small">Built by the build server.</p>
           <div class="actions"><button type="submit">Build installers</button></div>

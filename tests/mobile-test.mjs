@@ -581,6 +581,18 @@ async function userAgents() {
     await c.cdp('Page.navigate', { url: 'about:blank' });   // a new document, not a new hash
     await sleep(300);
     await open(URL0 + '#new');
+    // Each of these navigations gets a new renderer, and the touch override
+    // is pushed to it by the browser process: now and then the page's first
+    // script runs before it lands, and navigator.maxTouchPoints is 0. That
+    // is the rig failing to set up the test, not the page failing it -- the
+    // iPadOS row is the only one that reads maxTouchPoints -- so put the
+    // override back and load it again rather than assert on it.
+    for (let tries = 0; tries < 3 && await B.js('navigator.maxTouchPoints') <= 1; tries++) {
+      await c.cdp('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 5 });
+      await c.cdp('Page.navigate', { url: 'about:blank' });
+      await sleep(300);
+      await open(URL0 + '#new');
+    }
     const got = await B.js(`(() => { const e = ibCompat.env, b = document.querySelector('.ib-compat-bar');
       return { browser: e.browser, os: e.os, mobile: e.mobile, folder: ibCompat.status.folder, degraded: ibCompat.degraded,
       bar: !!(b && !b.hidden && b.style.display !== 'none'), barText: b ? b.textContent.slice(0, 300) : '',

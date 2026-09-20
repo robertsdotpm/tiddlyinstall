@@ -1265,6 +1265,11 @@ form:has(#unscript-tab-unix:checked) .unscript-panel-unix { display: block; }
    14. Live client: banner, settings, build location
    ========================================================================== */
 
+/* One of the two things that may follow the viewport (the other is the
+   runtime column below). It exists only while the build server can't be
+   reached, it carries the two buttons that answer that ("Try now", "Build
+   in this page instead"), and it goes away when the server comes back. An
+   alert you can act on from wherever you are is the strong reason. */
 .api-banner {
   position: -webkit-sticky;   /* Safari 12 */
   position: sticky;
@@ -1437,6 +1442,10 @@ html.ib-local .online-only { display: none !important; }
   .rt-layout { grid-template-columns: minmax(0, 1fr); }
   .rt-runtimes { flex-direction: row !important; flex-wrap: wrap; position: static !important; }
 }
+/* The language switcher stays put while its own column scrolls: the detail
+   beside it is thousands of pixels of releases, and without this, changing
+   language means scrolling all the way back. It stays inside the layout
+   grid, ends with it, and is static below 800 px (above). */
 .rt-runtimes { display: flex; flex-direction: column; gap: 0; position: -webkit-sticky; position: sticky; top: 8px; border: 1px solid var(--rule); }
 .rt-rt {
   display: grid;
@@ -1740,10 +1749,13 @@ main.wide { max-width: 1240px; }
 .else-head { margin: 34px 0 14px; }
 .else-head .section-title { font-size: 1.25em; }
 
+/* The bar sits at the end of the form and scrolls away with it. The design
+   pass had it pinned to the bottom of the window; the operator's call is
+   that nothing in this interface follows the viewport without a strong
+   reason, and "You'll get ... unsigned. Built by the build server." in
+   front of you for the whole scroll is not one. What it says is kept -- it
+   is the last thing read before the button. */
 .build-bar {
-  position: -webkit-sticky;   /* Safari 12 */
-  position: sticky;
-  bottom: 0;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -1758,16 +1770,13 @@ main.wide { max-width: 1240px; }
 .build-bar-what { min-width: 0; flex: 1 1 320px; }
 .build-bar .build-where { margin: 4px 0 0; }
 
-/* Narrow screens: pinned, the bar is 200 px of a 640 px phone -- a third of
-   the screen, for the whole scroll of the form. So it sits where it falls,
-   and the essentials carry their own button instead (new.html, .build-early),
-   which is where the button was before the bar existed. */
-.build-early { display: none; }
-@media (max-width: 699px) {
-  .build-bar { position: static; }
-  .build-early { display: block; margin-top: 18px; }
-  .build-early .build-where { margin: 0 0 10px; }
-}
+/* With the bar where it falls, the form ends a long way below the five
+   questions that matter, so the essentials carry their own button as well
+   (new.html, .build-early) -- which is what the form had before the design
+   pass, and why the README says "above each Build installers button it says
+   where the build will happen". */
+.build-early { margin-top: 18px; }
+.build-early .build-where { margin: 0 0 10px; }
 
 /* ---- Build progress ---- */
 
