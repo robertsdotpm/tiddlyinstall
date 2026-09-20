@@ -49,6 +49,7 @@ page is lost.
 | `tests/no-native.mjs`, `tests/no-native-browser.mjs` | Run a test as an old browser: `node --import ./tests/no-native.mjs tests/sign-test.mjs` (no streams, `crypto.subtle` or BigInt in Node), and `--no-native` on `offline-test.mjs`, `upload-test.mjs`, `catalog-editor-test.mjs` and `sign-ui-test.mjs` (the same in Chrome, and no `:has()`) |
 | `tests/catalog-editor-test.mjs` | The Runtimes page in headless Chrome: edits, reload, preview, a built installer's plan, revert, export, import (a hostile file too), reset, the once-a-session question about changes found in storage, blocked storage (`node --experimental-websocket tests/catalog-editor-test.mjs [--site URL]`) |
 | `tests/ibfile.html`, `tests/icon.html` | Unit tests for `js/ibfile.js` and `js/icon.js` in the browser. Print PASS/FAIL. Fixtures come from `tests/make_fixtures.py` (Python's tarfile and zipfile, plus a synthetic PE with an icon resource) |
+| `tests/uninstaller-icon-test.mjs` | The NSIS uninstaller survives a custom icon: re-icons the real `bases/windows/out/base.exe`, checks the bytes NSIS's patch table names are untouched and that no live resource sits on them, then performs the patch itself and checks the manifest, dialogs and icons survive (`node tests/uninstaller-icon-test.mjs`). The VM half is `behaviour.py --variants icon` |
 | `tests/mock_server.py` | A stand-in build server for trying the pages (`python3 tests/mock_server.py 8094`, then open `new.html?api=http://127.0.0.1:8094`) |
 
 Headless test run:
