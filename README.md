@@ -110,7 +110,17 @@ summary the one-file site carries (and with `-split DIR`, the snapshot split
 by folder as the page carries it; `-from catalog.gz -split DIR` splits one
 already written); `tools/resolve.mjs` prints a plan, or
 the files with no copy on our mirror; `tools/plansig.mjs` signs and checks
-plans with a plan signing key.
+plans with a plan signing key; `tools/mirror_fetch.py` fills the mirror
+host from the vendors and `tools/mirror_check.py` says whether the
+manifest, the local runtime store and the mirror host agree.
+
+**Topping up the mirror is two halves: the mirror host *and* the local
+runtime store, or the pull achieves nothing.** A mirror URL only reaches
+a plan through `LocalIndex` (`backend/lib/catalog.js`), which walks this
+machine's copies under `~/projects/installer-builder-runtimes`; a file
+that is on the mirror host but that this machine has never seen has no
+`local` path, so its plans still name the vendor alone.
+`tools/mirror_check.py` exits non-zero on exactly that state.
 
 ## Design notes
 

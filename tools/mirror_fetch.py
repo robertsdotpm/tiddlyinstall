@@ -10,6 +10,20 @@ Each file goes to DEST/<path>. Files already there with the right size
 counts only if its SHA-256 matches, or, when none is known, its size.
 Progress goes to DEST/.fetch-log.jsonl; files that couldn't be fetched are
 listed in DEST/.fetch-failed.json, for copying by rsync instead.
+
+**Fetch into both the mirror host and the local runtime store, or the
+pull achieves nothing.** A mirror URL only reaches a plan through
+`LocalIndex` (backend/lib/catalog.js), which walks *this machine's*
+copies under ~/projects/installer-builder-runtimes and fills in the
+release's `local` path; the resolver then turns that path into the
+mirror URL. A file that exists on ovh1 but that this machine has never
+seen has no `local`, so its plans still name the vendor alone and the
+copy is never used. Topping up the mirror is two halves: this script on
+the mirror host, and the same files in the local store.
+
+`tools/mirror_check.py` compares the three (manifest, local store,
+mirror host) and names any file that is in one and not the others; run
+it after a top-up rather than assuming.
 """
 import concurrent.futures as cf
 import hashlib
