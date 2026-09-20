@@ -1721,6 +1721,15 @@ function writeTarget(cat, w, app, pol, b) {
 
 // RuntimesSummary, as the object GET /api/catalog/runtimes answers; with
 // `ids`, only those runtimes' entries (all must be loaded: loadRuntimes).
+//
+// A row's `behind` is the newest version this runtime reaches on any
+// machine, set only when this machine gets an older one. It exists so a
+// publisher is told the ceiling *before* building rather than after: Node
+// on 32-bit Linux tops out at 9.11.2 because nodejs.org stopped building
+// linux-x86 after 9.x, and Java there at 19 because OpenJDK removed the
+// 32-bit x86 port (docs/design.md 1.11), and neither is visible from the
+// version alone. It answers the same question for old glibcs and old
+// Windows, where it has always been true and never been shown.
 export function runtimesSummary(cat, ids) {
   const out = [];
   const want = ids ? new Set(ids) : null;
@@ -1747,6 +1756,20 @@ export function runtimesSummary(cat, ids) {
       }
     }
     push();
+    // The ceiling, per OS family, and which machines fall short of it.
+    // Per family, not across all three, because a runtime may be a
+    // different program on each: `cc` is WinLibs GCC on Windows and zig
+    // elsewhere (policy "via"), and their version numbers do not compare.
+    const top = new Map();
+    for (const r of e.newest || []) {
+      if (r.version === null) continue;
+      const v = parseVersion(r.version), had = top.get(r.family);
+      if (had === undefined || cmpVersion(v, had) > 0) top.set(r.family, v);
+    }
+    for (const r of e.newest || []) {
+      const hi = top.get(r.family);
+      if (r.version !== null && hi !== undefined && cmpVersion(parseVersion(r.version), hi) < 0) r.behind = hi.raw;
+    }
     out.push(e);
   }
   return { runtimes: out.length ? out : null };

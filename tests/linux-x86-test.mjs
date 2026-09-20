@@ -98,5 +98,25 @@ const musl = cat.os.byFamily.linux.filter((o) => o.int === 0);
 if (musl.length === 1 && musl[0].arches.includes('x86')) passed++;
 else { failed++; console.log(`FAIL musl entry: ${JSON.stringify(musl.map((o) => [o.id, o.arches]))}`); }
 
+// The ceiling the front end shows. Node stops at 9.11.2 on 32-bit Linux
+// and Java at 19, where amd64 gets 26 of each; a publisher has to be told
+// that before building, so runtimesSummary marks the row `behind` with the
+// newest that family reaches. `cc` is the case that must NOT be marked: it
+// is WinLibs GCC on Windows and zig elsewhere, whose versions would
+// compare as nonsense across families.
+const summary = R.runtimesSummary(cat);
+const row = (id, family, arch) => (summary.runtimes.find((r) => r.id === id).newest || [])
+  .find((r) => r.family === family && r.arch === arch);
+for (const [id, want] of [['node', '26.9.0'], ['java', '26.0.2.1']]) {
+  const r = row(id, 'linux', 'x86');
+  if (r && r.behind === want) passed++;
+  else { failed++; console.log(`FAIL ${id} linux/x86 behind: want ${want}, got ${r && r.behind}`); }
+}
+for (const [id, family, arch] of [['go', 'linux', 'x86'], ['rust', 'linux', 'x86'], ['cc', 'linux', 'x86'], ['cc', 'linux', 'amd64']]) {
+  const r = row(id, family, arch);
+  if (r && r.behind === undefined) passed++;
+  else { failed++; console.log(`FAIL ${id} ${family}/${arch}: should not be behind, got ${r && r.behind}`); }
+}
+
 console.log(`${path.relative(REPO, snapFile)}: ${passed} passed, ${failed} failed`);
 process.exit(failed ? 1 : 0);

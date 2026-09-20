@@ -44,7 +44,7 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
-     "text": "# by picks the mode. Two things have to be corrected on the way:"
+     "text": "# by picks the mode. Three things have to be corrected on the way:"
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
@@ -68,6 +68,14 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
+     "text": "#  - zig calls the 32-bit x86 architecture \"x86\"; uname says i686, which"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#    zig rejects outright (\"available architectures: ... x86 ...\")."
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
      "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
     },
     {
@@ -88,7 +96,15 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
-     "text": "case $g in [0-9]*.[0-9]*) t=$(uname -m)-linux-gnu.$g ;; esac"
+     "text": "c=$(uname -m)"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $c in i[3-6]86) c=x86 ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $g in [0-9]*.[0-9]*) t=$c-linux-gnu.$g ;; esac"
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
@@ -132,7 +148,7 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
-     "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed 's/-unknown-/-/'); fi"
+     "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed -e 's/-unknown-/-/' -e 's/^i[3-6]86-/x86-/'); fi"
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
@@ -240,7 +256,7 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
-     "text": "# by picks the mode. Two things have to be corrected on the way:"
+     "text": "# by picks the mode. Three things have to be corrected on the way:"
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
@@ -264,6 +280,14 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
+     "text": "#  - zig calls the 32-bit x86 architecture \"x86\"; uname says i686, which"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#    zig rejects outright (\"available architectures: ... x86 ...\")."
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
      "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
     },
     {
@@ -284,7 +308,15 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
-     "text": "case $g in [0-9]*.[0-9]*) t=$(uname -m)-linux-gnu.$g ;; esac"
+     "text": "c=$(uname -m)"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $c in i[3-6]86) c=x86 ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $g in [0-9]*.[0-9]*) t=$c-linux-gnu.$g ;; esac"
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
@@ -328,7 +360,7 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
-     "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed 's/-unknown-/-/'); fi"
+     "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed -e 's/-unknown-/-/' -e 's/^i[3-6]86-/x86-/'); fi"
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
@@ -435,7 +467,7 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
-     "text": "# by picks the mode. Two things have to be corrected on the way:"
+     "text": "# by picks the mode. Three things have to be corrected on the way:"
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
@@ -459,6 +491,14 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
+     "text": "#  - zig calls the 32-bit x86 architecture \"x86\"; uname says i686, which"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#    zig rejects outright (\"available architectures: ... x86 ...\")."
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
      "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
     },
     {
@@ -479,7 +519,15 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
-     "text": "case $g in [0-9]*.[0-9]*) t=$(uname -m)-linux-gnu.$g ;; esac"
+     "text": "c=$(uname -m)"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $c in i[3-6]86) c=x86 ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $g in [0-9]*.[0-9]*) t=$c-linux-gnu.$g ;; esac"
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
@@ -523,7 +571,7 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
-     "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed 's/-unknown-/-/'); fi"
+     "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed -e 's/-unknown-/-/' -e 's/^i[3-6]86-/x86-/'); fi"
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
@@ -630,7 +678,7 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
-     "text": "# by picks the mode. Two things have to be corrected on the way:"
+     "text": "# by picks the mode. Three things have to be corrected on the way:"
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
@@ -654,6 +702,14 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
+     "text": "#  - zig calls the 32-bit x86 architecture \"x86\"; uname says i686, which"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#    zig rejects outright (\"available architectures: ... x86 ...\")."
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
      "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
     },
     {
@@ -674,7 +730,15 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
-     "text": "case $g in [0-9]*.[0-9]*) t=$(uname -m)-linux-gnu.$g ;; esac"
+     "text": "c=$(uname -m)"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $c in i[3-6]86) c=x86 ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $g in [0-9]*.[0-9]*) t=$c-linux-gnu.$g ;; esac"
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
@@ -718,7 +782,7 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
-     "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed 's/-unknown-/-/'); fi"
+     "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed -e 's/-unknown-/-/' -e 's/^i[3-6]86-/x86-/'); fi"
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
@@ -825,7 +889,7 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
-     "text": "# by picks the mode. Two things have to be corrected on the way:"
+     "text": "# by picks the mode. Three things have to be corrected on the way:"
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
@@ -849,6 +913,14 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
+     "text": "#  - zig calls the 32-bit x86 architecture \"x86\"; uname says i686, which"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#    zig rejects outright (\"available architectures: ... x86 ...\")."
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
      "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
     },
     {
@@ -869,7 +941,15 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
-     "text": "case $g in [0-9]*.[0-9]*) t=$(uname -m)-linux-gnu.$g ;; esac"
+     "text": "c=$(uname -m)"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $c in i[3-6]86) c=x86 ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $g in [0-9]*.[0-9]*) t=$c-linux-gnu.$g ;; esac"
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
@@ -913,7 +993,7 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
-     "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed 's/-unknown-/-/'); fi"
+     "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed -e 's/-unknown-/-/' -e 's/^i[3-6]86-/x86-/'); fi"
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
@@ -1020,7 +1100,7 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
-     "text": "# by picks the mode. Two things have to be corrected on the way:"
+     "text": "# by picks the mode. Three things have to be corrected on the way:"
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
@@ -1044,6 +1124,14 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
+     "text": "#  - zig calls the 32-bit x86 architecture \"x86\"; uname says i686, which"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "#    zig rejects outright (\"available architectures: ... x86 ...\")."
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
      "text": "case ${0##*/} in *++) m=c++ ;; ar) m=ar ;; *) m=cc ;; esac"
     },
     {
@@ -1064,7 +1152,15 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
-     "text": "case $g in [0-9]*.[0-9]*) t=$(uname -m)-linux-gnu.$g ;; esac"
+     "text": "c=$(uname -m)"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $c in i[3-6]86) c=x86 ;; esac"
+    },
+    {
+     "write": "{runtime_dir}/ibcc/cc",
+     "text": "case $g in [0-9]*.[0-9]*) t=$c-linux-gnu.$g ;; esac"
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
@@ -1108,7 +1204,7 @@
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
-     "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed 's/-unknown-/-/'); fi"
+     "text": "if [ -n \"$t\" ]; then a=--target=$t; else a=--target=$(printf %s \"${a#--target=}\" | sed -e 's/-unknown-/-/' -e 's/^i[3-6]86-/x86-/'); fi"
     },
     {
      "write": "{runtime_dir}/ibcc/cc",
