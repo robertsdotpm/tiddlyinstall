@@ -1,5 +1,5 @@
 // Builds the fidelity projects' installers (docs/test-results.md, "Real-app fidelity") the way
-// the site does without a build server: js/builder.js in this process, mode C,
+// the site does without a build server: shared/builder.js in this process, mode C,
 // the plan inside the installer, from the working tree's policy and the
 // runtime catalogue (~/projects/installer-builder-runtimes/catalog).
 //
@@ -13,9 +13,9 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { runJob } from '../../js/builder.js';
-import { resolve } from '../../js/resolve.js';
-import { loadCatalog } from '../../backend/lib/catalog.js';
+import { runJob } from '../../shared/builder.js';
+import { resolve } from '../../shared/resolve.js';
+import { loadCatalog } from '../../server/lib/catalog.js';
 
 const HERE = path.dirname(new URL(import.meta.url).pathname);
 const REPO = path.join(HERE, '..', '..');
@@ -39,17 +39,17 @@ function readTree(dir, pre = '') {
 function localEnv() {
   const home = os.homedir();
   const cache = path.join(OUT, 'sha-cache.json');
-  const serverCache = path.join(REPO, 'backend/data/sha-cache.json');
+  const serverCache = path.join(REPO, 'server/data/sha-cache.json');
   fs.mkdirSync(OUT, { recursive: true });
   if (!fs.existsSync(cache) && fs.existsSync(serverCache)) fs.copyFileSync(serverCache, cache);
   const cat = loadCatalog({
     dir: path.resolve(arg('--catalog', path.join(home, 'projects/installer-builder-runtimes/catalog'))),
-    policyPath: path.resolve(arg('--policy', path.join(REPO, 'backend/policy.json'))),
+    policyPath: path.resolve(arg('--policy', path.join(REPO, 'server/policy.json'))),
     localRoot: path.join(home, 'projects/installer-builder-runtimes'),
     cachePath: cache,
   });
   if (arg('--mirror', '')) cat.policy.mirror_base = arg('--mirror', '');
-  const bases = { windows: 'bases/windows/out/base.exe', linux: 'bases/unix/out/ib-base.run', macos: 'bases/unix/out/ib-base-macos.zip' };
+  const bases = { windows: 'installer/windows/out/base.exe', linux: 'installer/unix/out/ib-base.run', macos: 'installer/unix/out/ib-base-macos.zip' };
   return { catalog: cat, backend: '', embedPlan: true, base: (plat) => new Uint8Array(fs.readFileSync(path.join(REPO, bases[plat]))) };
 }
 

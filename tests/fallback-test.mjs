@@ -1,4 +1,4 @@
-// The plain-JavaScript fallbacks (js/inflate.js, deflate.js, zlib.js, sha.js,
+// The plain-JavaScript fallbacks (web/lib/inflate.js, deflate.js, zlib.js, sha.js,
 // hmac-pbkdf2.js, aes.js, bignum.js, rsa.js, ec.js, ed25519.js, cryptox.js,
 // has-shim.js, polyfills.js's TextDecoder) against the native versions: Node's zlib and WebCrypto,
 // openssl and published test vectors.
@@ -14,18 +14,18 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { inflate } from '../js/inflate.js';
-import { deflate } from '../js/deflate.js';
-import * as Z from '../js/zlib.js';
-import { sha } from '../js/sha.js';
-import { hmac, pbkdf2 } from '../js/hmac-pbkdf2.js';
-import * as AES from '../js/aes.js';
-import * as B from '../js/bignum.js';
-import * as RSA from '../js/rsa.js';
-import * as EC from '../js/ec.js';
-import * as ED from '../js/ed25519.js';
-import * as X from '../js/cryptox.js';
-import { convertCss, specificity } from '../js/has-shim.js';
+import { inflate } from '../web/lib/inflate.js';
+import { deflate } from '../web/lib/deflate.js';
+import * as Z from '../web/lib/zlib.js';
+import { sha } from '../web/lib/sha.js';
+import { hmac, pbkdf2 } from '../web/lib/hmac-pbkdf2.js';
+import * as AES from '../web/lib/aes.js';
+import * as B from '../web/lib/bignum.js';
+import * as RSA from '../web/lib/rsa.js';
+import * as EC from '../web/lib/ec.js';
+import * as ED from '../web/lib/ed25519.js';
+import * as X from '../web/lib/cryptox.js';
+import { convertCss, specificity } from '../web/has-shim.js';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const QUICK = process.argv.includes('--quick');
@@ -51,7 +51,7 @@ const nodeHash = (h) => h.replace('-', '').toLowerCase();
 // Inputs of various shapes: empty, tiny, random, runs, text, code, binary.
 function samples() {
   const out = [new Uint8Array(0), new Uint8Array([0]), rnd(1), rnd(70000), new Uint8Array(300000).fill(97),
-    te.encode('hello hello hello world '.repeat(4000)), new Uint8Array(fs.readFileSync(path.join(REPO, 'js/resolve.js'))),
+    te.encode('hello hello hello world '.repeat(4000)), new Uint8Array(fs.readFileSync(path.join(REPO, 'shared/resolve.js'))),
     new Uint8Array(fs.readFileSync(process.execPath).subarray(0, 2e6))];
   for (let i = 0; i < N; i++) {
     const n = (i * 7919) % 90000;
@@ -123,7 +123,7 @@ await run('zlib', async () => {
   const zipPy = path.join(TMP, 'z.zip');
   const py = spawnSync('python3', ['-c', `import zipfile,sys,os
 with zipfile.ZipFile(sys.argv[1],'w',zipfile.ZIP_DEFLATED) as z:
-  for f in sorted(os.listdir(sys.argv[2]))[:25]: z.write(os.path.join(sys.argv[2],f), f)`, zipPy, path.join(REPO, 'js')]);
+  for f in sorted(os.listdir(sys.argv[2]))[:25]: z.write(os.path.join(sys.argv[2],f), f)`, zipPy, path.join(REPO, 'web', 'lib')]);
   if (py.status === 0) {
     const zb = new Uint8Array(fs.readFileSync(zipPy)), dv = new DataView(zb.buffer, zb.byteOffset);
     let o = 0, n = 0, badz = 0;
@@ -132,13 +132,13 @@ with zipfile.ZipFile(sys.argv[1],'w',zipfile.ZIP_DEFLATED) as z:
       const name = new TextDecoder().decode(zb.subarray(o + 30, o + 30 + nl));
       const data = zb.subarray(o + 30 + nl + xl, o + 30 + nl + xl + csize);
       const got = method === 8 ? inflate(data, 'deflate-raw') : data;
-      if (!eq(got, new Uint8Array(fs.readFileSync(path.join(REPO, 'js', name))))) badz++;
+      if (!eq(got, new Uint8Array(fs.readFileSync(path.join(REPO, 'web', 'lib', name))))) badz++;
       n++; o += 30 + nl + xl + csize;
     }
     ok(n > 5 && !badz, 'zip entries written by Python inflate (' + n + ' entries)');
   }
 
-  // js/zlib.js: native in Node; with IB_PURE_JS the plain path, same bytes out.
+  // web/lib/zlib.js: native in Node; with IB_PURE_JS the plain path, same bytes out.
   const d = samples()[6];
   ok(Z.nativeFor('gzip').inflate && Z.nativeFor('deflate-raw').deflate, 'zlib.js takes the native streams in Node');
   const nat = await Z.deflate(d, 'gzip');
@@ -467,13 +467,13 @@ await run('cryptox', async () => {
 
 /* ---------- polyfills: the UTF-8 TextDecoder ---------- */
 
-// js/polyfills.js in a context without TextDecoder, so it adds its own;
+// web/polyfills.js in a context without TextDecoder, so it adds its own;
 // its answers must be Node's, on text, broken UTF-8 and the catalogue.
 await run('TextDecoder stand-in', async () => {
   const ctx = { Object, Array, Uint8Array, ArrayBuffer, String, RangeError, TypeError, Error, Promise, Symbol, Number, Math, JSON, Map, Set };
   ctx.globalThis = ctx;
   vm.createContext(ctx);
-  vm.runInContext(fs.readFileSync(path.join(REPO, 'js/polyfills.js'), 'utf8'), ctx);
+  vm.runInContext(fs.readFileSync(path.join(REPO, 'web/polyfills.js'), 'utf8'), ctx);
   ok(typeof ctx.TextDecoder === 'function' && ctx.TextDecoder !== TextDecoder, 'TextDecoder stand-in: added where missing');
   const mine = new ctx.TextDecoder(), node = new TextDecoder();
   let bad = 0, n = 0;
@@ -494,10 +494,10 @@ await run('TextDecoder stand-in', async () => {
 /* ---------- has-shim ---------- */
 
 await run('has-shim', async () => {
-  const css = fs.readFileSync(path.join(REPO, 'css/style.css'), 'utf8');
+  const css = fs.readFileSync(path.join(REPO, 'web/css/style.css'), 'utf8');
   const n = (css.match(/:has\(/g) || []).length;
   const r = convertCss(css);
-  ok(n > 0 && !/:has\(|:is\(|:focus-visible/.test(r.css), 'every :has() in css/style.css is rewritten (' + n + ' uses, ' + r.probes.length + ' probes)');
+  ok(n > 0 && !/:has\(|:is\(|:focus-visible/.test(r.css), 'every :has() in web/css/style.css is rewritten (' + n + ' uses, ' + r.probes.length + ' probes)');
   const plain = (s) => s.replace(/\s+/g, ' ').replace(/\s*([{}])\s*/g, '$1').trim();
   ok(plain(convertCss('form:has(#a:checked) .x { color: red }').css) === plain('form.ibhas0:not(#ib-z) .x { color: red }'), 'a :has(#id:checked) rule');
   ok(plain(convertCss('form:not(:has(#r option[value="a"]:checked)) .x{a:b}').css) === plain('form:not(.ibhas0):not(#ib-z):not(.ib-z):not(ib-z) .x {a:b}'), 'a :not(:has(...)) rule, padded');

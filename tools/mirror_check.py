@@ -11,10 +11,10 @@ may name the hosts it belongs on (`"hosts": ["ovh1"]`); without one it
 belongs on every host whose `holds` covers this manifest. Two manifests
 exist today, and they are deliberately separate:
 
-  runtime-catalog/store/mirror-manifest.json     what installers download
-  runtime-catalog/store/toolchain-manifest.json  what we build them with
+  runtime-metadata/store/mirror-manifest.json     what installers download
+  runtime-metadata/store/toolchain-manifest.json  what we build them with
 
-The hosts come from runtime-catalog/store/mirror-hosts.json, not from
+The hosts come from runtime-metadata/store/mirror-hosts.json, not from
 this file, so a second mirror is a config line rather than a patch. A
 host is `ssh` (one walk of the tree answers everything) or `http` (ask
 for each file's headers under its `base`).
@@ -26,7 +26,7 @@ them is obvious:
     and with more than one host, a file on one and not the other means
     the plans that name the second fall back to the vendor;
   * the local runtime store, because a mirror URL only reaches a plan
-    through LocalIndex (backend/lib/catalog.js), which walks *this
+    through LocalIndex (server/lib/catalog.js), which walks *this
     machine's* copies and fills in the release's `local` path. A file
     that is on a mirror host but that this machine has never seen has no
     `local`, so its plans name the vendor alone and the copy is never
@@ -64,15 +64,15 @@ import urllib.error
 import urllib.request
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DEFAULT_MANIFEST = os.path.join(HERE, "runtime-catalog/store/mirror-manifest.json")
-DEFAULT_HOSTS = os.path.join(HERE, "runtime-catalog/store/mirror-hosts.json")
+DEFAULT_MANIFEST = os.path.join(HERE, "runtime-metadata/store/mirror-manifest.json")
+DEFAULT_HOSTS = os.path.join(HERE, "runtime-metadata/store/mirror-hosts.json")
 DEFAULT_LOCAL = os.path.expanduser("~/projects/installer-builder-runtimes")
 # The build toolchain is nothing a plan downloads, so its local copies sit
 # in a dot folder the resolver's LocalIndex does not walk: it must never be
 # able to mistake a .deb for a runtime download.
 TOOLCHAIN_LOCAL = os.path.join(DEFAULT_LOCAL, ".mirror")
-MANIFESTS = {"runtime": os.path.join(HERE, "runtime-catalog/store/mirror-manifest.json"),
-             "toolchain": os.path.join(HERE, "runtime-catalog/store/toolchain-manifest.json")}
+MANIFESTS = {"runtime": os.path.join(HERE, "runtime-metadata/store/mirror-manifest.json"),
+             "toolchain": os.path.join(HERE, "runtime-metadata/store/toolchain-manifest.json")}
 UA = {"User-Agent": "installer-builder-mirror-check/1"}
 
 # Asking an ssh host once, rather than once per file: the program goes
@@ -152,7 +152,7 @@ def load_hosts(path, only, remote, kind):
 
 # The mirror serves a file at its path under the base, and a server
 # un-escapes a request path once, so a `%` in a file's own name has to be
-# written `%25` (the same rule as js/resolve.js mirrorURL).
+# written `%25` (the same rule as shared/resolve.js mirrorURL).
 def url_for(base, path):
     return base.rstrip("/") + "/" + path.replace("%", "%25")
 

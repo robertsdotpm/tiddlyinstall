@@ -6,7 +6,7 @@
 Writes dist/index.html: every page as a section (#new, #edit, ...), the JS
 modules joined into one classic script (ES2017, so it runs in Firefox 52 and
 Chrome 58 up; tests/es2017-test.mjs checks it), kept in a code block that
-js/page-loader.js runs, with an ES5 copy of it for IE 11 and Chrome 49
+web/page-loader.js runs, with an ES5 copy of it for IE 11 and Chrome 49
 (tools/es5/, when installed; tests/es5-test.mjs), the CSS inlined (with
 fallbacks for browsers without custom properties), and as data blocks the
 three unsigned bases and the catalogue, split by folder so the page unpacks
@@ -14,11 +14,14 @@ only the runtimes it uses (docs/format.md section 6: an index with the shared
 files and the runtimes summary, and one gzipped chunk per catalogue folder).
 The build server serves it at /, and it uses that server; saved and opened from
 disk ("Save this page" saves it exactly as loaded), or with "No server" chosen,
-js/local-api.js answers its API calls inside the page instead.
+web/local-api.js answers its API calls inside the page instead.
 
-The pages in the repo (index.html, new.html, ...) and js/, css/ are its
-sources. --multi also writes them as a site of separate files to dist/site/
-(not used for now; kept so it can be again).
+Its sources are the pages in web/ (web/index.html, web/new.html, ...),
+web/css/, and the JavaScript in web/, web/lib/ and shared/. --multi also
+writes those folders as a site of separate files under dist/site/, keeping
+the repository's own folder names so the pages' relative paths still work
+(the entry page is then dist/site/web/index.html). Not used for now; kept
+so it can be again.
 
 The catalogue snapshot comes from tools/snapshot.mjs (Node.js) unless
 --catalog names a folder that already has catalog.gz and runtimes.json;
@@ -44,33 +47,89 @@ import zlib
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # (section name, page file). The first is the default section.
-PAGES = [("home", "index.html"), ("new", "new.html"), ("build", "build.html"),
-         ("edit", "edit.html"), ("runtimes", "runtimes.html")]
-# Other pages' links in the offline copy.
+PAGES = [("home", "web/index.html"), ("new", "web/new.html"), ("build", "web/build.html"),
+         ("edit", "web/edit.html"), ("runtimes", "web/runtimes.html")]
+# Other pages' links in the offline copy, by the file name a page links to.
 LINK_ALIASES = {"create.html": "#new&write", "builds.html": "#home", "bases.html": "#new"}
-# Copied to the regular site as they are.
-SITE_FILES = ["index.html", "new.html", "build.html", "builds.html", "edit.html",
-              "runtimes.html", "create.html", "css", "js", "vendor"]
-# Dependency order: each module comes after everything it imports. The
-# early modules run before anything else (built-ins for older browsers, and
-# the :has() stand-in, installed right after the page is captured); then the
-# library modules; then the local API is installed, and then the page
-# modules run (they call the API as they start).
-EARLY_MODULES = ["js/polyfills.js", "js/has-shim.js"]
-LIB_MODULES = ["js/api.js", "js/mirror-words.js", "js/templates.js", "js/form-job.js", "js/write-editor.js", "js/sha.js", "js/hmac-pbkdf2.js", "js/aes.js", "js/bignum.js", "js/der.js",
-               "js/rsa.js", "js/ec.js", "js/ed25519.js", "js/cryptox.js", "js/inflate.js", "js/deflate.js",
-               "js/zlib.js", "js/ibfile.js", "js/icon.js", "js/x509.js", "js/legacy.js",
-               "js/pkcs12.js", "js/authenticode.js", "js/pgp.js", "js/sign-services.js", "js/sign-ui.js", "js/resolve.js",
-               "js/builder.js", "js/overlay.js", "js/change-list.js", "js/overlay-consent.js",
-               "js/local-api.js", "js/router.js"]
-PAGE_MODULES = ["js/new.js", "js/build.js", "js/edit.js", "js/catalog-editor.js"]
+# Copied to the regular site (--multi) as they are, keeping these names, so
+# that the pages' relative paths (./x.js, ./lib/x.js, ../shared/x.js,
+# ../vendor/x.js) resolve there exactly as they do in the repository.
+SITE_FILES = ["web", "shared", "vendor"]
+
+# ---------- the module load order ----------
+#
+# These three lists are a **load order**, not a picture of the folders.
+# join_modules concatenates each module into one classic script in the
+# order given, turning its imports into reads of the modules already
+# joined, so the only rule is: every module comes after everything it
+# imports. That is why one list mixes web/, web/lib/ and shared/ -- a
+# crypto primitive and the API client sit side by side because of when
+# they are needed, not because they belong together.
+#
+# The three lists are three phases, with page code in between:
+#   EARLY   before anything else: the built-ins older browsers lack and
+#           the :has() stand-in, installed right after the page is
+#           captured for "Save this page".
+#   CORE    everything the pages call, ending with the in-page API and
+#           the router, which the pages expect to exist when they start.
+#   PAGES   the four page modules, which run on load.
+EARLY_MODULES = ["web/polyfills.js", "web/has-shim.js"]
+CORE_MODULES = [
+    "web/api.js",
+    "shared/mirror-words.js", "shared/templates.js", "shared/form-job.js",
+    "web/write-editor.js",
+    "web/lib/sha.js", "web/lib/hmac-pbkdf2.js", "web/lib/aes.js",
+    "web/lib/bignum.js", "web/lib/der.js", "web/lib/rsa.js", "web/lib/ec.js",
+    "web/lib/ed25519.js", "web/lib/cryptox.js",
+    "web/lib/inflate.js", "web/lib/deflate.js", "web/lib/zlib.js",
+    "shared/ibfile.js", "shared/icon.js",
+    "web/lib/x509.js", "web/lib/legacy.js", "web/lib/pkcs12.js",
+    "web/lib/authenticode.js", "web/lib/pgp.js",
+    "web/sign-services.js", "web/sign-ui.js",
+    "shared/resolve.js", "shared/builder.js",
+    "web/overlay.js", "web/change-list.js", "web/overlay-consent.js",
+    "web/local-api.js", "web/router.js",
+]
+PAGE_MODULES = ["web/new.js", "web/build.js", "web/edit.js", "web/catalog-editor.js"]
+# Read on their own, not joined: three classic scripts the page carries
+# inline (they must run before the modules, or without them), and the DOM
+# shims only the ES5 copy uses (tools/es5/build-es5.mjs).
+STANDALONE_SCRIPTS = ["web/browser-check.js", "web/theme.js", "web/page-loader.js",
+                      "web/legacy-dom.js"]
+
+
+def check_modules_accounted_for():
+    """Every .js in web/, web/lib/ and shared/ is in exactly one list.
+
+    The lists are hand-ordered (dependency order cannot be guessed from
+    the folder), so a new module is easy to add and easy to forget --
+    and a module left out of them is simply missing from the built page,
+    which shows up as a runtime error in a browser rather than here.
+    """
+    listed = EARLY_MODULES + CORE_MODULES + PAGE_MODULES + STANDALONE_SCRIPTS
+    twice = sorted(n for n in set(listed) if listed.count(n) > 1)
+    if twice:
+        sys.exit("build_site.py: listed more than once: " + ", ".join(twice))
+    on_disk = set()
+    for d in ("web", "web/lib", "shared"):
+        for f in os.listdir(os.path.join(ROOT, d)):
+            if f.endswith(".js"):
+                on_disk.add(d + "/" + f)
+    missing = sorted(on_disk - set(listed))
+    gone = sorted(set(listed) - on_disk)
+    if missing or gone:
+        sys.exit("build_site.py: the module lists no longer match the tree"
+                 + ("\n  not in any list: " + ", ".join(missing) if missing else "")
+                 + ("\n  listed but not on disk: " + ", ".join(gone) if gone else ""))
+
+
 # The resedit-js/pe-library bundle (icon editing) is a classic script.
 RESEDIT_BUNDLE = "vendor/resedit-bundle.js"
 # First existing path wins.
 BASES = [
-    ("windows", ["bases/windows/out/base.exe"]),
-    ("linux", ["bases/unix/out/ib-base.run", "bases/unix/out/ib.run"]),
-    ("macos", ["bases/unix/out/ib-base-macos.zip"]),
+    ("windows", ["installer/windows/out/base.exe"]),
+    ("linux", ["installer/unix/out/ib-base.run", "installer/unix/out/ib.run"]),
+    ("macos", ["installer/unix/out/ib-base-macos.zip"]),
 ]
 
 
@@ -137,11 +196,14 @@ PLACEHOLDERS = {"windows": placeholder_windows, "linux": placeholder_linux, "mac
 
 # ---------- JS: the modules as one inline module ----------
 
-IMPORT_RE = re.compile(r"^import\s+([\s\S]*?)\s+from\s+['\"](\./[^'\"]+)['\"];[ \t]*\n", re.M)
+# A relative specifier: "./x.js" within a folder, "../shared/x.js" or
+# "../web/lib/x.js" across them. import_to_const resolves it against the
+# importing module's folder, so the three folders can import each other.
+IMPORT_RE = re.compile(r"^import\s+([\s\S]*?)\s+from\s+['\"](\.\.?/[^'\"]+)['\"];[ \t]*\n", re.M)
 EXPORT_DECL_RE = re.compile(r"^export\s+((?:async\s+)?(?:function\*?|const|let|var|class)\s+([A-Za-z_$][\w$]*))", re.M)
 EXPORT_LIST_RE = re.compile(r"^export\s*\{([^}]*)\};?[ \t]*\n", re.M)
 # A JavaScript import or export left over (a form not bundled). Only module
-# syntax: js/templates.js holds other languages' code, whose lines may
+# syntax: shared/templates.js holds other languages' code, whose lines may
 # start with "import" (Python's `import os`, Java's, Go's, Nim's).
 LEFTOVER_RE = re.compile(r"""^\s*(?:import\s*(?:[\w$*{][^;\n]*?\sfrom\s*)?['"][^'"\n]+['"]"""
                          r"""|export\s+(?:default\b|[{*]|(?:async\s+)?(?:function|const|let|var|class)\b))""", re.M)
@@ -155,7 +217,7 @@ def import_to_const(m, rel, done):
     what, src = m.group(1).strip(), m.group(2)
     dep = os.path.normpath(os.path.join(os.path.dirname(rel), src))
     if dep not in done:
-        sys.exit(f"{rel} imports {src}, which is not earlier in MODULES")
+        sys.exit(f"{rel} imports {src}, which is not earlier in the module lists")
     ns = ns_name(dep)
     if what.startswith("* as "):
         return f"const {what[5:].strip()} = {ns};\n"
@@ -209,7 +271,7 @@ def data_block(id_, data, typ="application/octet-stream", extra=""):
 
 MOTW = "<!-- saved from url=(0014)about:internet -->\r\n"
 ES5_DIR = os.path.join(ROOT, "tools", "es5")
-# IE 11 has no typed-array fill() or copyWithin(), which js/inflate.js uses;
+# IE 11 has no typed-array fill() or copyWithin(), which web/lib/inflate.js uses;
 # this runs before the ES5 inflate (core-js adds the rest later).
 TA_FILL = ("(function(){var T=[Int8Array,Uint8Array,Int16Array,Uint16Array,Int32Array,Uint32Array];"
            "function ix(v,n,d){return v===undefined?d:v<0?Math.max(n+v,0):Math.min(v,n);}"
@@ -241,7 +303,7 @@ def build_es5(resedit, js):
     with tempfile.TemporaryDirectory() as tmp:
         paths = {}
         for name, code in [("resedit.js", resedit), ("page.js", js),
-                           ("inflate.js", join_modules(["js/inflate.js"], set()))]:
+                           ("inflate.js", join_modules(["web/lib/inflate.js"], set()))]:
             paths[name] = os.path.join(tmp, name)
             with open(paths[name], "w") as f:
                 f.write(code)
@@ -259,7 +321,7 @@ def build_es5(resedit, js):
 
 
 def code_blocks_for(resedit, js):
-    """The page's code as data blocks, for js/page-loader.js to run."""
+    """The page's code as data blocks, for web/page-loader.js to run."""
     blocks = [data_block("ib-js-resedit", resedit + "\n//# sourceURL=resedit.js", "text/x-ib-js"),
               data_block("ib-js", js + "//# sourceURL=tiddlyinstall.js", "text/x-ib-js")]
     report = []
@@ -280,7 +342,7 @@ def code_blocks_for(resedit, js):
 
 # Where scripts don't run at all (turned off; Internet Explorer on Windows
 # Server, whose Enhanced Security Configuration turns them off for the
-# Internet zone), js/browser-check.js can't say anything: this does.
+# Internet zone), web/browser-check.js can't say anything: this does.
 NOSCRIPT = ('  <noscript><div class="ib-compat-bar ib-too-old" role="alert" style="margin:0;padding:8px 16px;'
             'border-bottom:2px solid #b3261e;background:#fdecea;color:#410e0b;font:14px/1.4 sans-serif">'
             "JavaScript is off in this browser, so TiddlyInstall can't build or sign installers here; the pages still read. "
@@ -323,7 +385,9 @@ def legacy_css(css):
 
 # ---------- pages ----------
 
-PAGE_NAMES = {f: n for n, f in PAGES}
+# By the file name the pages link to each other with: they are siblings in
+# web/, so a link says "new.html", not "web/new.html".
+PAGE_NAMES = {os.path.basename(f): n for n, f in PAGES}
 
 
 def rewrite_links(fragment):
@@ -349,7 +413,8 @@ def page_parts(rel):
 
 
 def offline_page(catalog_dir, backend):
-    index = read("index.html")
+    check_modules_accounted_for()
+    index = read("web/index.html")
     header = re.search(r'<header class="site-header">.*?</header>', index, re.S).group(0)
     header = re.sub(r'\s*aria-current="page"', "", rewrite_links(header))
     sections, ids = [], {}
@@ -374,7 +439,7 @@ def offline_page(catalog_dir, backend):
             data, extra = PLACEHOLDERS[os_name](), ' data-placeholder="1"'
             report.append(f"  base {os_name:8} PLACEHOLDER ({' or '.join(rels)} not found)")
         blocks.append(data_block(f"base-{os_name}", b64_block(data), extra=extra))
-    # The catalogue, split (js/overlay.js reads it): #ib-catalog, the index
+    # The catalogue, split (web/overlay.js reads it): #ib-catalog, the index
     # with the runtimes summary; #ib-cat-FOLDER, each folder's chunk.
     index, chunks = split_catalog(os.path.join(catalog_dir, "catalog.gz"))
     with open(os.path.join(catalog_dir, "runtimes.json")) as f:
@@ -387,12 +452,12 @@ def offline_page(catalog_dir, backend):
     report.append(f"  catalogue: index {len(index_json.encode()):,} bytes (with the runtimes summary), "
                   f"{len(chunks)} folders {packed:,} bytes gzipped (largest {max(chunks, key=lambda c: len(c[1]))[0]} "
                   f"{max(len(d) for _, d in chunks):,})")
-    # Catalogue changes "Save this page" can put inside the page (js/overlay.js
+    # Catalogue changes "Save this page" can put inside the page (web/overlay.js
     # bakeOverlay); none in a freshly built page.
     blocks.append(data_block("ib-overlay", "null", "application/json", ' data-placeholder="1"'))
     info = {"built": today, "rev": rev, "backend": backend}
     blocks.append(data_block("ib-offline", json.dumps(info), "application/json"))
-    # Where the page was tested, for js/browser-check.js (tests/browsers/compat.mjs).
+    # Where the page was tested, for web/browser-check.js (tests/browsers/compat.mjs).
     compat = os.path.join(ROOT, "tests", "browsers", "compat.json")
     blocks.append(data_block("ib-compat", no_close_script(read(compat).strip()) if os.path.isfile(compat) else "null", "application/json"))
 
@@ -402,20 +467,20 @@ def offline_page(catalog_dir, backend):
     # code in a strict function so that it behaves as the modules do.
     js = ("(function () {\n'use strict';\n"
           + join_modules(EARLY_MODULES, done)
-          + "\n// The page exactly as loaded, for \"Save this page\": js/page-loader.js\n"
+          + "\n// The page exactly as loaded, for \"Save this page\": web/page-loader.js\n"
           "// takes it before it runs this; this is for a copy of the code run otherwise.\n"
           "if (typeof IB_PRISTINE === 'undefined') globalThis.IB_PRISTINE = '<!DOCTYPE html>\\n' + document.documentElement.outerHTML;\n"
           "globalThis.IB_HAS_LOCAL = true;\n"
           "globalThis.IB_ONE_FILE = true;\n"
           "__ib_has_shim.installHasShim();   // only where the browser has no :has()\n\n"
-          + join_modules(LIB_MODULES, done)
+          + join_modules(CORE_MODULES, done)
           + "\n__ib_local_api.installLocalApi();\n"
           + join_modules(PAGE_MODULES, done)
           + "\n__ib_router.startRouter();\n})();\n")
     code_blocks, es5_report = code_blocks_for(resedit, js)
     report += es5_report
 
-    css = legacy_css(read("css/style.css"))
+    css = legacy_css(read("web/css/style.css"))
     # The Mark of the Web (with its CRLF) lets Internet Explorer run the page
     # from disk: without it, IE's Local Machine Lockdown blocks its scripts.
     # It puts the file in IE's Internet zone, the stricter one; other browsers
@@ -445,16 +510,16 @@ def offline_page(catalog_dir, backend):
            f"  <meta name=\"generator\" content=\"tools/build_site.py, {rev}, {today}\">\n"
            # Too-old browsers get a message naming what's missing (a classic
            # script, so it runs where the module can't).
-           "  <script>\n" + no_close_script(read("js/browser-check.js")) + "\n  </script>\n"
+           "  <script>\n" + no_close_script(read("web/browser-check.js")) + "\n  </script>\n"
            # Light or dark before the first paint, and the header's button
-           # (js/theme.js). ES3 too, so IE reads it.
-           "  <script>\n" + no_close_script(read("js/theme.js")) + "\n  </script>\n"
+           # (web/theme.js). ES3 too, so IE reads it.
+           "  <script>\n" + no_close_script(read("web/theme.js")) + "\n  </script>\n"
            "  <style>\n" + css + "\n  </style>\n</head>\n<body>\n  " + header + "\n"
            + NOSCRIPT.replace("{classic}", html.escape(backend.rstrip("/") + "/classic"))
            + "\n".join(sections) +
            "\n  <footer class=\"site-footer\">\n    Designed by <a href=\"https://robertsdotpm.github.io/\">Matthew Roberts</a> and implemented by Claude.\n  </footer>\n"
            + "\n".join(blocks + code_blocks) +
-           "\n  <script>\n" + no_close_script(read("js/page-loader.js")) + "\n  </script>\n</body>\n</html>\n")
+           "\n  <script>\n" + no_close_script(read("web/page-loader.js")) + "\n  </script>\n</body>\n</html>\n")
     return out, report
 
 

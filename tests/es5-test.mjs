@@ -1,12 +1,12 @@
 // The one-file site's copy for older browsers (docs/plan.md 1.11, "Older
 // browsers"), checked without a browser:
-//   - js/browser-check.js and js/page-loader.js parse as ES3, so IE 6-8
+//   - web/browser-check.js and web/page-loader.js parse as ES3, so IE 6-8
 //     read them (acorn, ecmaVersion 3: no trailing commas, no keywords as
 //     property names);
 //   - the ES5 copy (#ib-js-es5: raw deflate, base64) unpacks, is ASCII
 //     with no control characters (IE ends a string at a raw NUL), and parses
 //     as ES5; so does its inflater (#ib-js-es5-inflate);
-//   - the inflater, run as js/page-loader.js runs it with the typed-array
+//   - the inflater, run as web/page-loader.js runs it with the typed-array
 //     methods IE 11 lacks removed, unpacks the copy byte for byte;
 //   - the ES2017 code blocks are still there for current browsers.
 //
@@ -47,8 +47,8 @@ for (const m of html.matchAll(/<script>([\s\S]*?)<\/script>/g)) classic.push(m[1
 ok(classic.length >= 2, 'found the page\'s classic scripts (' + classic.length + ')');
 const check = classic.find((s) => /FEATURES/.test(s) && /data-ib-missing/.test(s));
 const loader = classic.find((s) => /ib-js-es5/.test(s) && /IB_PRISTINE/.test(s));
-ok(check && !parses(check, 3), 'js/browser-check.js parses as ES3 (IE 6-8)', check ? parses(check, 3) : 'not found');
-ok(loader && !parses(loader, 3), 'js/page-loader.js parses as ES3', loader ? parses(loader, 3) : 'not found');
+ok(check && !parses(check, 3), 'web/browser-check.js parses as ES3 (IE 6-8)', check ? parses(check, 3) : 'not found');
+ok(loader && !parses(loader, 3), 'web/page-loader.js parses as ES3', loader ? parses(loader, 3) : 'not found');
 ok(html.indexOf('<meta http-equiv="X-UA-Compatible" content="IE=edge">') > 0 && html.indexOf('X-UA-Compatible') < html.indexOf('<script'),
   'X-UA-Compatible IE=edge comes before any script');
 ok(/^<!DOCTYPE html>\n<!-- saved from url=\(0014\)about:internet -->\r\n/.test(html), 'the Mark of the Web (with CRLF) follows the doctype');
@@ -72,7 +72,7 @@ if (es5 && inf) {
   const text = code.toString('latin1');
   const e1 = parses(text, 5);
   ok(!e1, 'the ES5 copy parses as ES5', e1);
-  ok(/legacy-dom|msSaveOrOpenBlob/.test(text) && /__ib_router/.test(text), 'it holds js/legacy-dom.js and the page');
+  ok(/legacy-dom|msSaveOrOpenBlob/.test(text) && /__ib_router/.test(text), 'it holds web/legacy-dom.js and the page');
   const e2 = parses(inf.text, 5);
   ok(!e2, 'its inflater parses as ES5', e2);
 

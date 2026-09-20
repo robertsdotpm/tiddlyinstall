@@ -1,7 +1,7 @@
 // Safari 5.1.7 for Windows (Apple's last Windows build, 2012) and the
 // page's graceful failure: it can't run the builder, so what matters is that
 // the page reads and its compatibility bar says so and recommends a browser
-// that works (js/browser-check.js). No driver exists for it, and it has no
+// that works (web/browser-check.js). No driver exists for it, and it has no
 // COM automation, so the page copy carries a small ES3 reporter
 // (safari5/reporter.js) that sends what it finds, 5 and 20 seconds after
 // loading, as image requests to 127.0.0.1:38517, where ibcollect.exe

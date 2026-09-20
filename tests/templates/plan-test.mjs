@@ -10,17 +10,17 @@
 // cause", 2026-09-20), so a plan that breaks one again fails here first.
 //
 // The plans are resolved from the templates the way the New installer page
-// makes them (js/templates.js -> form.mjs -> js/form-job.js), against the
-// catalogue in ~/projects/installer-builder-runtimes and backend/policy.json.
+// makes them (shared/templates.js -> form.mjs -> shared/form-job.js), against the
+// catalogue in ~/projects/installer-builder-runtimes and server/policy.json.
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { TEMPLATES } from '../../js/templates.js';
+import { TEMPLATES } from '../../shared/templates.js';
 import { formFor } from './form.mjs';
-import { jobFromForm } from '../../js/form-job.js';
-import { projectInstall } from '../../js/builder.js';
-import { loadCatalog } from '../../backend/lib/catalog.js';
-import { resolve } from '../../js/resolve.js';
+import { jobFromForm } from '../../shared/form-job.js';
+import { projectInstall } from '../../shared/builder.js';
+import { loadCatalog } from '../../server/lib/catalog.js';
+import { resolve } from '../../shared/resolve.js';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const arg = (k, d) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : d);
@@ -30,11 +30,11 @@ const PLATFORMS = ['windows', 'linux', 'macos'];
 const home = os.homedir();
 const cat = loadCatalog({
   dir: path.join(home, 'projects/installer-builder-runtimes/catalog'),
-  policyPath: path.join(REPO, 'backend/policy.json'),
+  policyPath: path.join(REPO, 'server/policy.json'),
   localRoot: path.join(home, 'projects/installer-builder-runtimes'),
-  cachePath: path.join(REPO, 'backend/data/sha-cache.json'),
+  cachePath: path.join(REPO, 'server/data/sha-cache.json'),
 });
-const policy = JSON.parse(await (await import('node:fs/promises')).readFile(path.join(REPO, 'backend/policy.json'), 'utf8'));
+const policy = JSON.parse(await (await import('node:fs/promises')).readFile(path.join(REPO, 'server/policy.json'), 'utf8'));
 
 // One [target] block of a plan, as lines by key.
 function blocks(plan) {

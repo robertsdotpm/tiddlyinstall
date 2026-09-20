@@ -34,7 +34,7 @@
 // file must reach the mirror host *and* this machine's local store or the
 // pull achieves nothing (tools/mirror_check.py says why):
 //
-//   <DIR>/<folder>/download_plan_all.json   for runtime-catalog/tools/download.py
+//   <DIR>/<folder>/download_plan_all.json   for runtime-metadata/tools/download.py
 //                                           (--plan-name download_plan_all.json),
 //                                           which fills the local store
 //   <DIR>/mirror-manifest-all.json          for tools/mirror_fetch.py, run on
@@ -54,16 +54,16 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadCatalog } from '../backend/lib/catalog.js';
-import { resolveFiles } from '../js/resolve.js';
+import { loadCatalog } from '../server/lib/catalog.js';
+import { resolveFiles } from '../shared/resolve.js';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const RUNTIMES = path.join(os.homedir(), 'projects/installer-builder-runtimes');
 const o = {
-  catalog: path.join(RUNTIMES, 'catalog'), local: RUNTIMES, policy: path.join(REPO, 'backend/policy.json'),
-  cache: path.join(REPO, 'backend/data/sha-cache.json'), scope: 'every', runtime: '',
+  catalog: path.join(RUNTIMES, 'catalog'), local: RUNTIMES, policy: path.join(REPO, 'server/policy.json'),
+  cache: path.join(REPO, 'server/data/sha-cache.json'), scope: 'every', runtime: '',
   platforms: 'windows,macos,linux', out: '', sizes: '',
-  excluded: path.join(REPO, 'runtime-catalog/store/mirror-excluded.json'),
+  excluded: path.join(REPO, 'runtime-metadata/store/mirror-excluded.json'),
 };
 const argv = process.argv.slice(2);
 for (let i = 0; i < argv.length; i++) {
@@ -82,7 +82,7 @@ const platforms = o.platforms.split(',').filter(Boolean);
 const only = o.runtime ? new Set(o.runtime.split(',').filter(Boolean)) : null;
 const extraSizes = o.sizes ? JSON.parse(fs.readFileSync(o.sizes, 'utf8')) : {};
 
-// Files we are not permitted to mirror at all (runtime-catalog/store/
+// Files we are not permitted to mirror at all (runtime-metadata/store/
 // mirror-excluded.json: Anaconda's terms, today). They are counted and
 // named, and left out of the plan and the manifest, because "not fetched
 // yet" and "may never be fetched" are different states and only one of
@@ -100,7 +100,7 @@ const POL = cat.policy.runtimes || {};
 
 /* ---------- which releases a version choice can reach ---------- */
 
-// js/resolve.js `usable`, which is not exported: a release the policy
+// shared/resolve.js `usable`, which is not exported: a release the policy
 // lets a plan name at all. Kept in step with it by the plan check at the
 // bottom, which re-resolves and compares.
 const own = (x, k) => (x != null && typeof x === 'object' && Object.hasOwn(x, k) ? x[k] : undefined);
@@ -117,7 +117,7 @@ function usable(pol, e) {
   const f = own(pol.formats, e.os);
   return f == null || idx(f, e.format) >= 0;
 }
-// The architectures a plan can ever name (js/resolve.js resolveFiles).
+// The architectures a plan can ever name (shared/resolve.js resolveFiles).
 const ARCHES = new Set(['amd64', 'arm64', 'x86', 'any', 'universal']);
 const cmpV = (a, b) => {
   for (let i = 0; i < Math.max(a.parts.length, b.parts.length); i++) {
@@ -214,7 +214,7 @@ console.log(`union: ${all.length} files, ${human(all.reduce((a, f) => a + sizeOf
   + (unknown ? `  (${unknown} of unrecorded size, counted as 0)` : ''));
 console.log(`to fetch: ${miss.length} files, ${human(miss.reduce((a, f) => a + sizeOf(f), 0))}`
   + `  -- into the mirror host AND this machine's local store, or the pull changes no plan`);
-if (banned) console.log(`left out: ${banned} file(s) we are not permitted to mirror (runtime-catalog/store/mirror-excluded.json)`);
+if (banned) console.log(`left out: ${banned} file(s) we are not permitted to mirror (runtime-metadata/store/mirror-excluded.json)`);
 
 /* ---------- what a fetch needs ---------- */
 
@@ -249,7 +249,7 @@ if (o.out) {
     }
   }
   const find = (f) => byHash.get(String(f.sha256).toLowerCase()) || list(f.urls).map((u) => byURL.get(u)).find(Boolean) || null;
-  // runtime-catalog/tools/download.py target_path: the store path a file
+  // runtime-metadata/tools/download.py target_path: the store path a file
   // gets. Repeated here so the manifest and the plan name the same path.
   const storePath = (e, url) => {
     const name = decodeURI(new URL(url).pathname).split('/').filter(Boolean).pop() || 'download';

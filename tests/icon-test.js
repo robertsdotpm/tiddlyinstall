@@ -1,13 +1,13 @@
-// Unit tests for js/icon.js. Open tests/icon.html over http, or headless:
+// Unit tests for shared/icon.js. Open tests/icon.html over http, or headless:
 //   google-chrome --headless=new --virtual-time-budget=30000 --dump-dom \
 //     http://127.0.0.1:8097/tests/icon.html
 //
 // The tests avoid createImageBitmap and the canvas PNG encoder (both flaky
 // under Chrome's virtual time): a synthetic source produces rasters directly,
-// and js/icon.js encodes PNG itself. resedit-js is loaded from the vendored
+// and shared/icon.js encodes PNG itself. resedit-js is loaded from the vendored
 // bundle (vendor/resedit-bundle.js) the page includes, so no network is used.
-import * as ib from '../js/ibfile.js';
-import * as icon from '../js/icon.js';
+import * as ib from '../shared/ibfile.js';
+import * as icon from '../shared/icon.js';
 import { FX } from './fixtures.js';
 
 const out = document.getElementById('out');

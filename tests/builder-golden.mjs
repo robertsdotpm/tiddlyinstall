@@ -1,4 +1,4 @@
-// Regression test for js/builder.js against saved ("golden") answers: for
+// Regression test for shared/builder.js against saved ("golden") answers: for
 // each runtime's hello world (tests/matrix/projects.json), the record and
 // plan a build server made for the same POST /api/jobs body (mode C, every
 // platform), compared with what runJob makes in the page. Three differences
@@ -38,7 +38,7 @@
 // python2 changed, and only by two `note` lines: Python 2 on Linux and
 // macOS is Anaconda's conda package, which their terms forbid us to
 // mirror, so it is the one hello world whose plan can never name our
-// mirror (runtime-catalog/store/mirror-excluded.json). Every other
+// mirror (runtime-metadata/store/mirror-excluded.json). Every other
 // runtime's record and plan are byte for byte what they were.
 //
 // A warning this recording earned the hard way: `--record URL` takes the
@@ -52,8 +52,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import crypto from 'node:crypto';
-import { loadSnapshot, resolve, splitSnapshot, openSplitSnapshot } from '../js/resolve.js';
-import { runJob } from '../js/builder.js';
+import { loadSnapshot, resolve, splitSnapshot, openSplitSnapshot } from '../shared/resolve.js';
+import { runJob } from '../shared/builder.js';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
 const RECORD = arg('--record');
@@ -64,7 +64,7 @@ const projects = JSON.parse(fs.readFileSync(path.join(HERE, 'matrix', 'projects.
 const only = arg('--runtimes') ? arg('--runtimes').split(',') : Object.keys(projects);
 const catBytes = fs.readFileSync(CAT_FILE);
 const catSha = crypto.createHash('sha256').update(catBytes).digest('hex');
-const BASES = { windows: 'bases/windows/out/base.exe', linux: 'bases/unix/out/ib-base.run', macos: 'bases/unix/out/ib-base-macos.zip' };
+const BASES = { windows: 'installer/windows/out/base.exe', linux: 'installer/unix/out/ib-base.run', macos: 'installer/unix/out/ib-base-macos.zip' };
 const base = (plat) => new Uint8Array(fs.readFileSync(path.join(HERE, '..', BASES[plat])));
 
 let passed = 0, failed = 0;

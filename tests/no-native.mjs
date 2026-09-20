@@ -1,7 +1,7 @@
 // Runs a Node test as a browser without the modern features would: no
 // CompressionStream/DecompressionStream, no crypto.subtle, no BigInt. The
-// page's code must then take its plain-JavaScript paths (js/zlib.js,
-// js/cryptox.js), and anything still calling the native API fails loudly.
+// page's code must then take its plain-JavaScript paths (web/lib/zlib.js,
+// web/lib/cryptox.js), and anything still calling the native API fails loudly.
 //
 //   node --import ./tests/no-native.mjs tests/sign-test.mjs
 //

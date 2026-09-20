@@ -21,7 +21,7 @@ import urllib.request
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-KEYS = HERE.parents[1] / "backend" / "data" / "keys"
+KEYS = HERE.parents[1] / "server" / "data" / "keys"
 
 
 def api(backend, path, body=None):

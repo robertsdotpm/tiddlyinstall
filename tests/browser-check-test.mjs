@@ -1,4 +1,4 @@
-// Checks the page's browser check (js/browser-check.js) in headless Chrome:
+// Checks the page's browser check (web/browser-check.js) in headless Chrome:
 // no bar in a modern browser; with features taken away before the page
 // loads, a bar that names the effect and recommends the browsers tested on
 // this OS; its details (features, and the tested machine x browser matrix
@@ -85,7 +85,7 @@ try {
   }
 
   // A JavaScript without async functions (IE 11, Chrome 49): the page runs
-  // its ES5 copy (js/page-loader.js), and the bar says so.
+  // its ES5 copy (web/page-loader.js), and the bar says so.
   const NO_ASYNC = '(function () { var F = Function; window.Function = function () { if (/async/.test(String(arguments[arguments.length - 1]))) throw new SyntaxError("old"); return F.apply(this, arguments); }; window.Function.prototype = F.prototype; })();';
   await open(FILE, NO_ASYNC);
   ok(await js(`document.documentElement.getAttribute('data-ib-missing') === '' && ibCompat.status.syntax === 'fallback'`), 'without ES2017 syntax: the ES5 copy stands in (fallback, nothing missing)',

@@ -10,14 +10,14 @@
 // the thing to re-read when a 32-bit answer changes, and the thing the
 // 32-bit VM run is checked against (docs/design.md 1.11, "32-bit Linux").
 //
-// Musl is the `0 204` range: musl systems report glibc 0 (js/resolve.js
+// Musl is the `0 204` range: musl systems report glibc 0 (shared/resolve.js
 // loadOSScale), so a block whose `when` starts at 0 covers Alpine x86.
 //
 // --show prints every runtime's x86 blocks instead of only the failures.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import * as R from '../js/resolve.js';
+import * as R from '../shared/resolve.js';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const arg = (k, d) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : d);

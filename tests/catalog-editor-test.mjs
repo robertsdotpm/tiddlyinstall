@@ -1,5 +1,5 @@
 // Drives the runtime catalogue editor (#runtimes in the one-file site,
-// js/catalog-editor.js and js/overlay.js) in headless Chrome from file://:
+// web/catalog-editor.js and web/overlay.js) in headless Chrome from file://:
 // edits a Python release's mirror order and a recipe's steps, checks the
 // edits are kept across a reload, that the preview and a built installer's
 // plan follow them, that invalid edits are refused, revert, export, import
@@ -15,7 +15,7 @@ import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { readInstaller } from '../js/ibfile.js';
+import { readInstaller } from '../shared/ibfile.js';
 import { noNativeArg, disableNative, checkNativeState } from './no-native-browser.mjs';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);

@@ -1,0 +1,1668 @@
+{
+ "mirror_base": "http://10.0.1.76:8080/mirror",
+ "mirror_first": true,
+ "external_tmp_files": [
+  "get-pip.py",
+  "7z.exe",
+  "7z.dll",
+  "choices.xml",
+  "msys2-base.sfx.exe",
+  "cacert.pem",
+  "composer.phar",
+  "dlls.zip"
+ ],
+ "method_order": [
+  "unpack",
+  "extract",
+  "run"
+ ],
+ "unknown_floor": {
+  "windows": 1000,
+  "macos": 1100,
+  "linux": 228
+ },
+ "prerequisites": {
+  "vcredist-x64": {
+   "_comment": "Minor >= 44, the version stored in msvc-redist: PHP builds refuse an older vcruntime140.dll (on Windows 8.1 with 14.32: \"VCRUNTIME140.dll 14.31 is not compatible with this PHP build linked with 14.44\"). Raise it with the stored redistributable.",
+   "label": "Microsoft Visual C++ 2015-2022 Redistributable (x64)",
+   "os": "windows",
+   "arch": "amd64",
+   "checks": [
+    [
+     "reg",
+     "64",
+     "HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\x64",
+     "Minor",
+     "44"
+    ]
+   ],
+   "file": {
+    "name": "vc_redist.x64.exe",
+    "sha256": "cc0ff0eb1dc3f5188ae6300faef32bf5beeba4bdd6e8e445a9184072096b713b",
+    "size": 25635768,
+    "local": "msvc-redist/windows/amd64/latest/vc_redist.x64.exe",
+    "urls": [
+     "https://aka.ms/vs/17/release/vc_redist.x64.exe"
+    ]
+   },
+   "run": "\"{file}\" /install /quiet /norestart",
+   "ok_codes": [
+    0,
+    1638,
+    3010
+   ],
+   "how": "Install the Microsoft Visual C++ 2015-2022 Redistributable (x64) from https://aka.ms/vs/17/release/vc_redist.x64.exe, then run this installer again."
+  },
+  "vcredist-x86": {
+   "_comment": "Minor >= 44, the version stored in msvc-redist: PHP builds refuse an older vcruntime140.dll (on Windows 8.1 with 14.32: \"VCRUNTIME140.dll 14.31 is not compatible with this PHP build linked with 14.44\"). Raise it with the stored redistributable.",
+   "label": "Microsoft Visual C++ 2015-2022 Redistributable (x86)",
+   "os": "windows",
+   "arch": "x86",
+   "checks": [
+    [
+     "reg",
+     "32",
+     "HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\x86",
+     "Minor",
+     "44"
+    ]
+   ],
+   "file": {
+    "name": "vc_redist.x86.exe",
+    "sha256": "0c09f2611660441084ce0df425c51c11e147e6447963c3690f97e0b25c55ed64",
+    "size": 13953392,
+    "local": "msvc-redist/windows/x86/latest/vc_redist.x86.exe",
+    "urls": [
+     "https://aka.ms/vs/17/release/vc_redist.x86.exe"
+    ]
+   },
+   "run": "\"{file}\" /install /quiet /norestart",
+   "ok_codes": [
+    0,
+    1638,
+    3010
+   ],
+   "how": "Install the Microsoft Visual C++ 2015-2022 Redistributable (x86) from https://aka.ms/vs/17/release/vc_redist.x86.exe, then run this installer again."
+  },
+  "vcredist-arm64": {
+   "_comment": "Minor >= 44, the version stored in msvc-redist: PHP builds refuse an older vcruntime140.dll (on Windows 8.1 with 14.32: \"VCRUNTIME140.dll 14.31 is not compatible with this PHP build linked with 14.44\"). Raise it with the stored redistributable.",
+   "label": "Microsoft Visual C++ 2015-2022 Redistributable (arm64)",
+   "os": "windows",
+   "arch": "arm64",
+   "checks": [
+    [
+     "reg",
+     "64",
+     "HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\arm64",
+     "Minor",
+     "44"
+    ]
+   ],
+   "file": {
+    "name": "vc_redist.arm64.exe",
+    "sha256": "5139e1440c3a20b92153a4db561c069a0175aaf76c276c3e5b6f56099edcf4b0",
+    "size": 11722336,
+    "local": "msvc-redist/windows/arm64/latest/vc_redist.arm64.exe",
+    "urls": [
+     "https://aka.ms/vs/17/release/vc_redist.arm64.exe"
+    ]
+   },
+   "run": "\"{file}\" /install /quiet /norestart",
+   "ok_codes": [
+    0,
+    1638,
+    3010
+   ],
+   "how": "Install the Microsoft Visual C++ 2015-2022 Redistributable (arm64) from https://aka.ms/vs/17/release/vc_redist.arm64.exe, then run this installer again."
+  },
+  "vcredist2012-x64": {
+   "_comment": "PHP 5.5 and 5.6 for Windows are the VC11 builds (Visual Studio 2012) and need msvcr110.dll, which no Windows ships -- not even 11. Without it php.exe dies with 0xC0000135 (STATUS_DLL_NOT_FOUND) and exit code -1073741515, which nothing in the log explains (measured 2026-09-20 on Windows 10, 10 x86, 7 and the German 11: composer.phar install failed on all four). Update 4, the last 2012 redistributable.",
+   "label": "Microsoft Visual C++ 2012 Redistributable (x64)",
+   "os": "windows",
+   "arch": "amd64",
+   "checks": [
+    [
+     "reg",
+     "64",
+     "HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\11.0\\VC\\Runtimes\\x64",
+     "Installed",
+     "1"
+    ]
+   ],
+   "file": {
+    "name": "vcredist_x64.exe",
+    "sha256": "681be3e5ba9fd3da02c09d7e565adfa078640ed66a0d58583efad2c1e3cc4064",
+    "size": 7186992,
+    "local": "msvc-redist/windows/amd64/2012u4/vcredist_x64.exe",
+    "urls": [
+     "https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x64.exe"
+    ]
+   },
+   "run": "\"{file}\" /install /quiet /norestart",
+   "ok_codes": [
+    0,
+    1638,
+    3010
+   ],
+   "how": "Install the Microsoft Visual C++ 2012 Redistributable (x64) from https://www.microsoft.com/download/details.aspx?id=30679, then run this installer again."
+  },
+  "vcredist2012-x86": {
+   "_comment": "PHP 5.5 and 5.6 for Windows are the VC11 builds (Visual Studio 2012) and need msvcr110.dll, which no Windows ships -- not even 11. Without it php.exe dies with 0xC0000135 (STATUS_DLL_NOT_FOUND) and exit code -1073741515, which nothing in the log explains (measured 2026-09-20 on Windows 10, 10 x86, 7 and the German 11: composer.phar install failed on all four). Update 4, the last 2012 redistributable.",
+   "label": "Microsoft Visual C++ 2012 Redistributable (x86)",
+   "os": "windows",
+   "arch": "x86",
+   "checks": [
+    [
+     "reg",
+     "32",
+     "HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\11.0\\VC\\Runtimes\\x86",
+     "Installed",
+     "1"
+    ]
+   ],
+   "file": {
+    "name": "vcredist_x86.exe",
+    "sha256": "b924ad8062eaf4e70437c8be50fa612162795ff0839479546ce907ffa8d6e386",
+    "size": 6554576,
+    "local": "msvc-redist/windows/x86/2012u4/vcredist_x86.exe",
+    "urls": [
+     "https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x86.exe"
+    ]
+   },
+   "run": "\"{file}\" /install /quiet /norestart",
+   "ok_codes": [
+    0,
+    1638,
+    3010
+   ],
+   "how": "Install the Microsoft Visual C++ 2012 Redistributable (x86) from https://www.microsoft.com/download/details.aspx?id=30679, then run this installer again."
+  },
+  "libatomic": {
+   "label": "libatomic.so.1 (GCC's atomics library)",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libatomic.so.1"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libatomic1",
+    "dnf": "libatomic",
+    "yum": "libatomic",
+    "zypper": "libatomic1",
+    "apk": "libatomic",
+    "pacman": "gcc-libs"
+   }
+  },
+  "libatomic-x86": {
+   "_comment": "The same library, for a runtime that needs it only on 32-bit x86. A `needs` entry has no arch of its own, but a prerequisite does (as vcredist-x86/x64/arm64 do), so the arch lives here. 32-bit x86 has no 64-bit atomic instruction, so GCC calls into libatomic for anything that uses one: Rust's i686 cargo has libatomic.so.1 in its NEEDED list where the x86_64 cargo has nothing. The engine's library check reads ldconfig's arch column and falls back to i386-linux-gnu, so it answers for the right machine (installer/unix/ib-engine.sh).",
+   "label": "libatomic.so.1 (GCC's atomics library)",
+   "os": "linux",
+   "arch": "x86",
+   "checks": [
+    [
+     "lib",
+     "libatomic.so.1"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libatomic1",
+    "dnf": "libatomic",
+    "yum": "libatomic",
+    "zypper": "libatomic1",
+    "apk": "libatomic",
+    "pacman": "gcc-libs"
+   }
+  },
+  "libblas": {
+   "label": "libblas.so.3 (BLAS linear algebra library)",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libblas.so.3"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libblas3",
+    "dnf": "blas",
+    "yum": "blas",
+    "zypper": "libblas3",
+    "apk": "blas",
+    "pacman": "blas"
+   }
+  },
+  "libgomp": {
+   "label": "libgomp.so.1 (GCC's OpenMP library)",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libgomp.so.1"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libgomp1",
+    "dnf": "libgomp",
+    "yum": "libgomp",
+    "zypper": "libgomp1",
+    "apk": "libgomp",
+    "pacman": "gcc-libs"
+   }
+  },
+  "libdeflate": {
+   "label": "libdeflate.so.0 (compression library)",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libdeflate.so.0"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libdeflate0",
+    "dnf": "libdeflate",
+    "yum": "libdeflate",
+    "zypper": "libdeflate0",
+    "apk": "libdeflate",
+    "pacman": "libdeflate"
+   }
+  },
+  "cc": {
+   "label": "A system C compiler (cc) and the C library's development files",
+   "os": "linux",
+   "checks": [
+    [
+     "cmd",
+     "cc"
+    ]
+   ],
+   "packages": {
+    "apt-get": "gcc libc6-dev",
+    "dnf": "gcc glibc-devel",
+    "yum": "gcc glibc-devel",
+    "zypper": "gcc glibc-devel",
+    "apk": "gcc musl-dev",
+    "pacman": "gcc"
+   }
+  },
+  "gcc": {
+   "label": "GCC (gcc) and the C library's development files",
+   "os": "linux",
+   "checks": [
+    [
+     "cmd",
+     "gcc"
+    ]
+   ],
+   "packages": {
+    "apt-get": "gcc libc6-dev",
+    "dnf": "gcc glibc-devel",
+    "yum": "gcc glibc-devel",
+    "zypper": "gcc glibc-devel",
+    "apk": "gcc musl-dev",
+    "pacman": "gcc"
+   }
+  },
+  "make": {
+   "label": "make (GNU make)",
+   "os": "linux",
+   "checks": [
+    [
+     "cmd",
+     "make"
+    ]
+   ],
+   "packages": {
+    "apt-get": "make",
+    "dnf": "make",
+    "yum": "make",
+    "zypper": "make",
+    "apk": "make",
+    "pacman": "make"
+   }
+  },
+  "bzip2": {
+   "label": "bzip2 (to unpack a .tar.bz2)",
+   "os": "linux",
+   "checks": [
+    [
+     "cmd",
+     "bzip2"
+    ]
+   ],
+   "packages": {
+    "apt-get": "bzip2",
+    "dnf": "bzip2",
+    "yum": "bzip2",
+    "zypper": "bzip2",
+    "apk": "bzip2",
+    "pacman": "bzip2"
+   }
+  },
+  "cxx": {
+   "label": "A C++ compiler (g++)",
+   "os": "linux",
+   "checks": [
+    [
+     "cmd",
+     "g++"
+    ],
+    [
+     "cmd",
+     "c++"
+    ]
+   ],
+   "packages": {
+    "apt-get": "g++",
+    "dnf": "gcc-c++",
+    "yum": "gcc-c++",
+    "zypper": "gcc-c++",
+    "apk": "g++",
+    "pacman": "gcc"
+   }
+  },
+  "xcode-clt": {
+   "label": "Xcode Command Line Tools",
+   "os": "macos",
+   "checks": [
+    [
+     "file",
+     "/Library/Developer/CommandLineTools/usr/bin/clang"
+    ],
+    [
+     "file",
+     "/Applications/Xcode.app/Contents/Developer/usr/bin/clang"
+    ]
+   ],
+   "start": "xcode-select --install",
+   "how": "Install Apple's Command Line Tools: run xcode-select --install in Terminal and click Install in the dialog that opens (it can take a while), then run this installer again."
+  },
+  "libicu": {
+   "label": "ICU (libicuuc), the Unicode and time-zone library .NET uses",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libicuuc.so.50"
+    ],
+    [
+     "lib",
+     "libicuuc.so.52"
+    ],
+    [
+     "lib",
+     "libicuuc.so.55"
+    ],
+    [
+     "lib",
+     "libicuuc.so.56"
+    ],
+    [
+     "lib",
+     "libicuuc.so.57"
+    ],
+    [
+     "lib",
+     "libicuuc.so.60"
+    ],
+    [
+     "lib",
+     "libicuuc.so.63"
+    ],
+    [
+     "lib",
+     "libicuuc.so.65"
+    ],
+    [
+     "lib",
+     "libicuuc.so.66"
+    ],
+    [
+     "lib",
+     "libicuuc.so.67"
+    ],
+    [
+     "lib",
+     "libicuuc.so.69"
+    ],
+    [
+     "lib",
+     "libicuuc.so.70"
+    ],
+    [
+     "lib",
+     "libicuuc.so.71"
+    ],
+    [
+     "lib",
+     "libicuuc.so.72"
+    ],
+    [
+     "lib",
+     "libicuuc.so.73"
+    ],
+    [
+     "lib",
+     "libicuuc.so.74"
+    ],
+    [
+     "lib",
+     "libicuuc.so.75"
+    ],
+    [
+     "lib",
+     "libicuuc.so.76"
+    ],
+    [
+     "lib",
+     "libicuuc.so.77"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libicu-dev",
+    "dnf": "libicu",
+    "yum": "libicu",
+    "zypper": "libicu",
+    "apk": "icu-libs",
+    "pacman": "icu"
+   }
+  },
+  "fontconfig": {
+   "label": "Fontconfig and a font",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libfontconfig.so.1"
+    ]
+   ],
+   "packages": {
+    "apt-get": "fontconfig fonts-dejavu-core",
+    "dnf": "fontconfig dejavu-sans-fonts",
+    "yum": "fontconfig dejavu-sans-fonts",
+    "zypper": "fontconfig dejavu-fonts",
+    "apk": "fontconfig font-dejavu",
+    "pacman": "fontconfig ttf-dejavu"
+   }
+  },
+  "libxtst": {
+   "label": "The X11 libraries Java's windows use (libXtst, libXrender, libXi)",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libXtst.so.6"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libxtst6 libxrender1 libxi6",
+    "dnf": "libXtst libXrender libXi",
+    "yum": "libXtst libXrender libXi",
+    "zypper": "libXtst6 libXrender1 libXi6",
+    "apk": "libxtst libxrender libxi",
+    "pacman": "libxtst libxrender libxi"
+   }
+  },
+  "libtk": {
+   "label": "Tk 8.6 (the system's Tcl/Tk)",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libtk8.6.so"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libtk8.6",
+    "dnf": "tk",
+    "yum": "tk",
+    "zypper": "tk",
+    "apk": "tk",
+    "pacman": "tk"
+   }
+  },
+  "gtk3": {
+   "label": "GTK 3",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libgtk-3.so.0"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libgtk-3-0",
+    "dnf": "gtk3",
+    "yum": "gtk3",
+    "zypper": "libgtk-3-0",
+    "apk": "gtk+3.0",
+    "pacman": "gtk3"
+   }
+  },
+  "nss": {
+   "label": "NSS (Mozilla's security libraries)",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libnss3.so"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libnss3",
+    "dnf": "nss",
+    "yum": "nss",
+    "zypper": "mozilla-nss",
+    "apk": "nss",
+    "pacman": "nss"
+   }
+  },
+  "alsa": {
+   "label": "ALSA's sound library (libasound)",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libasound.so.2"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libasound2",
+    "dnf": "alsa-lib",
+    "yum": "alsa-lib",
+    "zypper": "libasound2",
+    "apk": "alsa-lib",
+    "pacman": "alsa-lib"
+   }
+  },
+  "libgbm": {
+   "label": "Mesa's GBM library (libgbm)",
+   "os": "linux",
+   "checks": [
+    [
+     "lib",
+     "libgbm.so.1"
+    ]
+   ],
+   "packages": {
+    "apt-get": "libgbm1",
+    "dnf": "mesa-libgbm",
+    "yum": "mesa-libgbm",
+    "zypper": "libgbm1",
+    "apk": "mesa-gbm",
+    "pacman": "mesa"
+   }
+  },
+  "ascii-temp": {
+   "_comment": "Not something to install: a property of the machine, expressed the way a prerequisite is, because that is what the engines already check before touching anything. Measured 2026-09-20 on Windows 10 (ASCII profile) and the German Windows 11 (profile C:\\Users\\jörg müller, console code page 850), with CPython 2.7.18 from the python.org MSI: it is %TEMP% alone. A non-ASCII Python folder, a non-ASCII pip cache (PIP_CACHE_DIR) and a non-ASCII install target all install fine; an ASCII %TEMP% works on the German machine and a non-ASCII %TEMP% fails on the English one. Both pips that run on 2.7 fail the same way (19.2.3, what ensurepip gives, and 20.3.4, the last release), and so does a wheel as well as an sdist, so neither the pip version nor the package shape is the variable. Since 2026-09-20 the Windows engine repairs this where it can: it runs the project's install command with TMP and TEMP pointing at the 8.3 short name of that same folder (C:\\Users\\JRGMLL~1\\AppData\\Local\\Temp), which is ASCII, is the same directory, and is put back straight afterwards. Measured on the German VM: pip fails with the long name and installs with the short one. So the `ascii` check passes when either spelling is ASCII, and this need is now missing only on a volume with 8.3 name creation switched off -- where there is no ASCII spelling to use at all.",
+   "label": "a temporary folder whose path is plain ASCII (%TEMP%)",
+   "os": "windows",
+   "checks": [
+    [
+     "ascii",
+     "%TEMP%"
+    ]
+   ],
+   "how": "Python 2's pip joins that folder's path as bytes and gives up on any letter outside plain ASCII. On this computer %TEMP% is inside a folder with an accented or non-English name, and short (8.3) file names are switched off for that drive, so there is no plain-ASCII spelling of it for the installer to use instead. That is Python 2's own limitation -- it was retired in 2020 and its last pip was never fixed for this -- and not a fault on this computer or with your user name. Three ways round it: set TEMP and TMP to a folder whose whole path is plain ASCII, such as C:\\Temp (Settings, System, About, Advanced system settings, Environment Variables), and run this installer again; or install from a user account whose name is plain ASCII; or ask whoever published this app for a Python 3 build, which has no such limit."
+  }
+ },
+ "tools": {
+  "cgo": {
+   "label": "This program uses cgo",
+   "runtimes": [
+    "go"
+   ],
+   "_comment": "design.md 11.0 item 27, revised by the operator 2026-09-20. Go builds pure-Go programs with no C compiler at all, and nothing in a project's files shows that it -- or a module it pulls in -- imports \"C\", so the publisher says. When they do: Windows gets WinLibs GCC from the catalogue as a companion runtime, Linux gets zig and the ibcc shims (item 15's answer, applied here too, so an unattended install needs no root), and macOS asks for the Xcode Command Line Tools, which zig cc needs for Apple's SDK."
+  },
+  "ruby_devkit": {
+   "label": "Always install the DevKit (Windows)",
+   "runtimes": [
+    "ruby"
+   ],
+   "_comment": "design.md 11.0 item 13. The automatic rule stays: apps that install gems (a Gemfile, or a gem by name) get MSYS2 and the MINGW toolchain anyway. This switch forces it for an app that installs nothing at build time but shells out to `gem install` later, or builds C extensions itself. No effect before Windows 8.1, where MSYS2 does not run."
+  }
+ },
+ "runtimes": {
+  "python": {
+   "label": "Python 3",
+   "_comment": "Windows: msi-layout (the full python.org build from its component MSIs: tkinter, pip, venv, IDLE) first; the embeddable zip only for a version whose MSIs aren't in the catalogue; the XP backport on XP.",
+   "versions": ">=3",
+   "variants": [
+    "pbs_stripped",
+    "msi-layout",
+    "embed",
+    "xp-backport",
+    ""
+   ],
+   "exclude_variants": [
+    "pbs"
+   ],
+   "formats": {
+    "windows": [
+     "zip",
+     "msi",
+     "exe"
+    ],
+    "linux": [
+     "tar.gz"
+    ],
+    "macos": [
+     "tar.gz"
+    ]
+   },
+   "install_rules": [
+    {
+     "_comment": "A package project: pip install . (the recipe's project_install), which also installs its dependencies. Takes precedence over a requirements.txt next to it.",
+     "id": "project",
+     "files": [
+      "pyproject.toml",
+      "setup.py"
+     ]
+    },
+    {
+     "_comment": "Only a requirements.txt: install the dependencies; the app itself runs from {app_dir} as its launch command says.",
+     "id": "requirements",
+     "files": [
+      "requirements.txt"
+     ],
+     "command": [
+      {
+       "_comment": "Python 3.4 and older: the pip ensurepip gives them (1.5.6 with 3.4.4, the newest Python that runs on Windows XP) knows neither --no-warn-script-location (pip 8) nor --disable-pip-version-check (pip 6), and stops with \"no such option\", so every app with a requirements.txt failed there.",
+       "versions": "<3.5",
+       "windows": "\"{runtime}\" -E -s -m pip install -r requirements.txt",
+       "linux": "\"{runtime}\" -E -s -m pip install -r requirements.txt",
+       "macos": "\"{runtime}\" -E -s -m pip install -r requirements.txt"
+      },
+      {
+       "versions": "",
+       "windows": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt",
+       "linux": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt",
+       "macos": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt"
+      }
+     ]
+    }
+   ],
+   "asyncio": {
+    "xp": "==3.5.*",
+    "vista": "==3.7.0",
+    "7": "==3.8.0",
+    "8": "==3.8.0",
+    "8.1": "==3.8.0",
+    "10": "==3.13.0",
+    "11": "==3.13.0"
+   },
+   "launch": "{runtime} -m {project}",
+   "extra_files": {
+    "get-pip.py": {
+     "_comment": "The embeddable Windows zip has no pip; its catalogue recipe runs {tmp}\\get-pip.py. Pinned to pypa/get-pip commit f6f64415 (pip 26.2.1, 2026-08-04); bootstrap.pypa.io serves the same bytes today and is the fallback. Main get-pip.py needs 3.10+; older minors have their own.",
+     "for": "install",
+     "sources": [
+      {
+       "versions": "==3.5.*",
+       "sha256": "311afebb7cdd310eb3a3a6bb6fffef53d84493db98c7cebf4008a18d3418c8be",
+       "size": 1908223,
+       "urls": [
+        "https://raw.githubusercontent.com/pypa/get-pip/f6f644156f23dfe9acc06e7b9ca75eee311f2e37/public/3.5/get-pip.py",
+        "https://bootstrap.pypa.io/pip/3.5/get-pip.py"
+       ]
+      },
+      {
+       "versions": "==3.6.*",
+       "sha256": "7e2d052458c1802dc0a9a97b98ffcc33c5e89cc203247f8e2d5451998f012092",
+       "size": 2159254,
+       "urls": [
+        "https://raw.githubusercontent.com/pypa/get-pip/f6f644156f23dfe9acc06e7b9ca75eee311f2e37/public/3.6/get-pip.py",
+        "https://bootstrap.pypa.io/pip/3.6/get-pip.py"
+       ]
+      },
+      {
+       "versions": "==3.7.*",
+       "sha256": "5b9e2f9bb476ce76f84942bb7247dec8d6c0bb9dbc8c62ba2543b81fd7a4243c",
+       "size": 2636033,
+       "urls": [
+        "https://raw.githubusercontent.com/pypa/get-pip/f6f644156f23dfe9acc06e7b9ca75eee311f2e37/public/3.7/get-pip.py",
+        "https://bootstrap.pypa.io/pip/3.7/get-pip.py"
+       ]
+      },
+      {
+       "versions": "==3.8.*",
+       "sha256": "6ed6e98282a504ee0a6632856e16c39f222d313fc38be33de216d4afb6ac12f7",
+       "size": 2300180,
+       "urls": [
+        "https://raw.githubusercontent.com/pypa/get-pip/f6f644156f23dfe9acc06e7b9ca75eee311f2e37/public/3.8/get-pip.py",
+        "https://bootstrap.pypa.io/pip/3.8/get-pip.py"
+       ]
+      },
+      {
+       "versions": "==3.9.*",
+       "sha256": "95c0ae79ccf9ac1e47e4187f49081d6ae1f45997afd4549e14f37337cbcfd766",
+       "size": 2193444,
+       "urls": [
+        "https://raw.githubusercontent.com/pypa/get-pip/f6f644156f23dfe9acc06e7b9ca75eee311f2e37/public/3.9/get-pip.py",
+        "https://bootstrap.pypa.io/pip/3.9/get-pip.py"
+       ]
+      },
+      {
+       "versions": ">=3.10",
+       "sha256": "fb24e693bab954209a063d90953621412ccad4a500905a726286e038f508ddf6",
+       "size": 2230488,
+       "urls": [
+        "https://raw.githubusercontent.com/pypa/get-pip/f6f644156f23dfe9acc06e7b9ca75eee311f2e37/public/get-pip.py",
+        "https://bootstrap.pypa.io/get-pip.py"
+       ]
+      }
+     ]
+    }
+   },
+   "package": {
+    "_comment": "pip into the app's own runtime folder. Launch runs the module named like the package; publishers override it for packages whose command differs.",
+    "registry": "PyPI",
+    "name": "^[A-Za-z0-9]([A-Za-z0-9._-]{0,98}[A-Za-z0-9])?$",
+    "lower": true,
+    "spec": "\"{name}=={version}\"",
+    "spec_any": "\"{name}\"",
+    "lookup": "https://pypi.org/pypi/{name}/json",
+    "lookup_version": "https://pypi.org/pypi/{name}/{version}/json",
+    "version_field": "info.version",
+    "install": [
+     {
+      "_comment": "As the requirements rule above: pip 1.5.6 on Python 3.4 knows neither flag.",
+      "versions": "<3.5",
+      "windows": "\"{runtime}\" -E -s -m pip install {package}",
+      "linux": "\"{runtime}\" -E -s -m pip install {package}",
+      "macos": "\"{runtime}\" -E -s -m pip install {package}"
+     },
+     {
+      "versions": "",
+      "windows": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check {package}",
+      "linux": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check {package}",
+      "macos": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check {package}"
+     }
+    ],
+    "launch": "{runtime} -m {module}"
+   }
+  },
+  "python2": {
+   "_comment": "Python 2 from the Python catalogue folder. Windows: the 2.7 MSIs (down to XP). Linux and macOS: Anaconda's relocatable CPython 2.7.18 conda package with its dependency packages as release parts (design.md 11.0 item 14); python.org has no relocatable Linux or macOS build of 2.x. Those files are not on our mirror -- Anaconda's terms forbid mirroring their repository -- so their plans point at repo.anaconda.com and conda.anaconda.org only.",
+   "folder": "python",
+   "label": "Python 2",
+   "versions": ">=2,<3",
+   "variants": [
+    "conda",
+    ""
+   ],
+   "formats": {
+    "windows": [
+     "msi",
+     "exe"
+    ],
+    "linux": [
+     "tar.bz2",
+     "tar.gz"
+    ],
+    "macos": [
+     "tar.bz2",
+     "tar.gz"
+    ]
+   },
+   "install_rules": [
+    {
+     "_comment": "A package project: pip install . (the recipe's project_install), which also installs its dependencies. Takes precedence over a requirements.txt next to it.",
+     "id": "project",
+     "files": [
+      "pyproject.toml",
+      "setup.py"
+     ]
+    },
+    {
+     "_comment": "Only a requirements.txt: install the dependencies; the app itself runs from {app_dir} as its launch command says.",
+     "id": "requirements",
+     "files": [
+      "requirements.txt"
+     ],
+     "command": {
+      "windows": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt",
+      "linux": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt",
+      "macos": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check -r requirements.txt"
+     }
+    }
+   ],
+   "launch": "{runtime} -m {project}",
+   "package": {
+    "_comment": "pip into the app's own runtime folder. Launch runs the module named like the package; publishers override it for packages whose command differs.",
+    "registry": "PyPI",
+    "name": "^[A-Za-z0-9]([A-Za-z0-9._-]{0,98}[A-Za-z0-9])?$",
+    "lower": true,
+    "spec": "\"{name}=={version}\"",
+    "spec_any": "\"{name}\"",
+    "lookup": "https://pypi.org/pypi/{name}/json",
+    "lookup_version": "https://pypi.org/pypi/{name}/{version}/json",
+    "version_field": "info.version",
+    "install": {
+     "windows": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check {package}",
+     "linux": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check {package}",
+     "macos": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check {package}"
+    },
+    "launch": "{runtime} -m {module}"
+   },
+   "needs": [
+    {
+     "prerequisites": [
+      "bzip2"
+     ],
+     "variants": [
+      "conda"
+     ],
+     "why": "Anaconda's CPython 2.7 packages are .tar.bz2, and GNU tar shells out to bzip2 to read them. Measured 2026-09-20: the Ubuntu 22.04 minimal cloud image and CentOS 7 have no bzip2 at all, and the install stopped with \"Could not unpack\"; Alpine, Debian 12 and macOS have one."
+    },
+    {
+     "prerequisites": [
+      "ascii-temp"
+     ],
+     "for": "install",
+     "why": "pip on Python 2 cannot use a temporary folder whose path has a letter outside plain ASCII, and every `pip install` needs one. The installer uses the folder's 8.3 short name where the drive makes one, which is the same folder spelt in ASCII; this stops the install only where there is no such name. Python 2 itself installs and runs either way, so only an app that installs packages is affected."
+    }
+   ]
+  },
+  "node": {
+   "label": "Node.js",
+   "variants": [
+    ""
+   ],
+   "only": true,
+   "formats": {
+    "windows": [
+     "7z",
+     "zip"
+    ],
+    "linux": [
+     "tar.gz",
+     "tar.xz"
+    ],
+    "macos": [
+     "tar.gz",
+     "tar.xz"
+    ]
+   },
+   "kinds": [
+    "archive"
+   ],
+   "install_rules": [
+    {
+     "_comment": "npm install (the recipe's project_install). env: Electron 44 no longer downloads its 158 MB zip from a postinstall script -- index.js fetches it the first time the app runs -- and @electron/get puts it in %LOCALAPPDATA%\\electron\\Cache on Windows, ~/.cache/electron elsewhere, outside everything the uninstaller knows about. electron_config_cache is what electron's install.js reads for the cache root (ELECTRON_CACHE is the older spelling, kept for older versions); both are in the launch environment as well as the install's, because that is when the download now happens. XDG_CONFIG_HOME keeps npm's update notifier in the app's data folder: npm 5 writes ~/.config/configstore/update-notifier-npm.json, which the uninstaller never sees (measured 2026-09-20 on the Node 9.11.2 that 32-bit Linux gets).",
+     "id": "npm",
+     "files": [
+      "package.json"
+     ],
+     "env": {
+      "windows": {
+       "ELECTRON_CACHE": "{data_dir}\\electron-cache",
+       "electron_config_cache": "{data_dir}\\electron-cache",
+       "XDG_CONFIG_HOME": "{data_dir}\\config"
+      },
+      "linux": {
+       "ELECTRON_CACHE": "{data_dir}/electron-cache",
+       "electron_config_cache": "{data_dir}/electron-cache",
+       "XDG_CONFIG_HOME": "{data_dir}/config"
+      },
+      "macos": {
+       "ELECTRON_CACHE": "{data_dir}/electron-cache",
+       "electron_config_cache": "{data_dir}/electron-cache",
+       "XDG_CONFIG_HOME": "{data_dir}/config"
+      }
+     }
+    }
+   ],
+   "needs": [
+    {
+     "prerequisites": [
+      "libatomic"
+     ],
+     "versions": ">=25",
+     "why": "Node.js 25 and later are linked against libatomic.so.1 (GCC's atomics library), which minimal systems such as cloud images and containers leave out."
+    }
+   ],
+   "launch": "{runtime} {app_dir}",
+   "package": {
+    "_comment": "npm install into the app's folder (--prefix, so a package.json in a parent folder is never used). Launch runs the package's own program file from its package.json bin, with the private node, so no .cmd shims are needed on Windows. npm's cache (and its _logs) would go to ~/.npm, so ienv keeps it in the app's data folder. Scoped names (@scope/name) are accepted in jobs; the project (and the bin looked for) is the part after the slash. Plain file names can't carry them (api.md, Plans by name).",
+    "registry": "npm",
+    "name": "^(@[a-z0-9][a-z0-9._-]{0,100}/)?[a-z0-9][a-z0-9._-]{0,100}$",
+    "lower": true,
+    "project_from": "unscoped",
+    "spec": "\"{name}@{version}\"",
+    "spec_any": "\"{name}\"",
+    "lookup": "https://registry.npmjs.org/{name}/latest",
+    "lookup_version": "https://registry.npmjs.org/{name}/{version}",
+    "version_field": "version",
+    "bin_field": "bin",
+    "install": {
+     "windows": "\"{runtime}\" \"{runtime_dir}\\node_modules\\npm\\bin\\npm-cli.js\" install --prefix \"{app_dir}\" --no-audit --no-fund --no-update-notifier {package}",
+     "linux": "\"{runtime}\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" install --prefix \"{app_dir}\" --no-audit --no-fund --no-update-notifier {package}",
+     "macos": "\"{runtime}\" \"{runtime_dir}/lib/node_modules/npm/bin/npm-cli.js\" install --prefix \"{app_dir}\" --no-audit --no-fund --no-update-notifier {package}"
+    },
+    "ienv": {
+     "windows": {
+      "npm_config_cache": "{data_dir}\\npm-cache"
+     },
+     "linux": {
+      "npm_config_cache": "{data_dir}/npm-cache"
+     },
+     "macos": {
+      "npm_config_cache": "{data_dir}/npm-cache"
+     }
+    },
+    "launch": "{runtime} {app_dir}/node_modules/{name}/{bin_path}"
+   }
+  },
+  "ruby": {
+   "label": "Ruby",
+   "variants": [
+    "",
+    "ubuntu-22.04",
+    "ubuntu-24.04",
+    "rv-ruby",
+    "homebrew-portable",
+    "macos-arm64",
+    "macos-x64"
+   ],
+   "exclude_variants": [
+    "devkit"
+   ],
+   "formats": {
+    "windows": [
+     "7z"
+    ],
+    "linux": [
+     "tar.gz"
+    ],
+    "macos": [
+     "tar.gz"
+    ]
+   },
+   "kinds": [
+    "archive"
+   ],
+   "install_rules": [
+    {
+     "_comment": "bundle install (the recipe's project_install). Ruby only ships bundler as a default gem from 2.6, so older Rubies have no {runtime_dir}/bin/bundle and every app with a Gemfile failed there with \"No such file or directory -- bin/bundle (LoadError)\" (measured 2026-09-20 on Ruby 2.1 and 2.4, Linux). Below 2.6 the rule installs bundler first, pinned to the 1.17 line, which is the last that runs on Ruby 1.8.7 and later; with GEM_HOME unset it lands in the app's own runtime folder, so the second half is the ordinary command. GEM_SPEC_CACHE keeps RubyGems' index cache in the app's data folder: without it `gem install` writes ~/.gem/specs/api.rubygems.org%443, which the uninstaller never sees.",
+     "id": "bundler",
+     "files": [
+      "Gemfile"
+     ],
+     "command": [
+      {
+       "versions": "<2.6",
+       "windows": "\"{runtime}\" \"{runtime_dir}\\bin\\gem\" install --no-document bundler --version \"~> 1.17\" && \"{runtime}\" \"{runtime_dir}\\bin\\bundle\" install",
+       "linux": "\"{runtime}\" \"{runtime_dir}/bin/gem\" install --no-document bundler --version \"~> 1.17\" && \"{runtime}\" \"{runtime_dir}/bin/bundle\" install",
+       "macos": "\"{runtime}\" \"{runtime_dir}/bin/gem\" install --no-document bundler --version \"~> 1.17\" && \"{runtime}\" \"{runtime_dir}/bin/bundle\" install"
+      }
+     ],
+     "ienv": {
+      "windows": {
+       "GEM_SPEC_CACHE": "{data_dir}\\gem-spec-cache"
+      },
+      "linux": {
+       "GEM_SPEC_CACHE": "{data_dir}/gem-spec-cache"
+      },
+      "macos": {
+       "GEM_SPEC_CACHE": "{data_dir}/gem-spec-cache"
+      }
+     }
+    }
+   ],
+   "extra_files": {
+    "msys2-base.sfx.exe": {
+     "_comment": "RubyInstaller's DevKit: the MSYS2 base system, unpacked into the Ruby folder's msys64 (where RubyInstaller looks first), then `ridk install 3` adds the MINGW toolchain with pacman, as RubyInstaller-Devkit users do. Only for apps that install something (a Gemfile, or a gem by name): gems with C extensions compile then. Pinned to the 2026-06-11 base: SHA-256 as published by GitHub for the release asset, the same bytes from repo.msys2.org, PGP signature by the MSYS2 key E0AA0F031DBD80FF (Christoph Reiter) checked 2026-09-19. MSYS2 runs on Windows 8.1 and later (min_os 603): older Windows gets the plain RubyInstaller recipe, where pure-Ruby gems install and gems with C extensions don't.",
+     "for": "install|tool:ruby_devkit",
+     "sources": [
+      {
+       "versions": ">=2.4",
+       "sha256": "c105946e64e08f099ac0e4647461ce762b95333ad211777666476a9a41451d65",
+       "size": 52898952,
+       "local": "msys2/windows/amd64/20260611/msys2-base-x86_64-20260611.sfx.exe",
+       "urls": [
+        "https://github.com/msys2/msys2-installer/releases/download/2026-06-11/msys2-base-x86_64-20260611.sfx.exe",
+        "https://repo.msys2.org/distrib/x86_64/msys2-base-x86_64-20260611.sfx.exe"
+       ],
+       "min_os": 603
+      }
+     ]
+    }
+   },
+   "launch": "{runtime} {app_dir}/{project}.rb",
+   "package": {
+    "_comment": "gem install into GEM_HOME={app_dir}/gems (the recipe clears GEM_HOME; this sets it, for install and launch). Launch runs the gem's program named like the gem through the private ruby. RubyGems' API doesn't list a gem's programs, so publishers override launch when it differs.",
+    "registry": "RubyGems",
+    "name": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$",
+    "spec": "\"{name}\" --version \"{version}\"",
+    "spec_any": "\"{name}\"",
+    "lookup": "https://rubygems.org/api/v1/gems/{name}.json",
+    "version_field": "version",
+    "install": {
+     "windows": "\"{runtime}\" \"{runtime_dir}\\bin\\gem\" install --no-document --install-dir \"{app_dir}\\gems\" --bindir \"{app_dir}\\gems\\bin\" {package}",
+     "linux": "\"{runtime}\" \"{runtime_dir}/bin/gem\" install --no-document --install-dir \"{app_dir}/gems\" --bindir \"{app_dir}/gems/bin\" {package}",
+     "macos": "\"{runtime}\" \"{runtime_dir}/bin/gem\" install --no-document --install-dir \"{app_dir}/gems\" --bindir \"{app_dir}/gems/bin\" {package}"
+    },
+    "env": {
+     "windows": {
+      "GEM_HOME": "{app_dir}\\gems",
+      "GEM_PATH": "{app_dir}\\gems"
+     },
+     "linux": {
+      "GEM_HOME": "{app_dir}/gems",
+      "GEM_PATH": "{app_dir}/gems"
+     },
+     "macos": {
+      "GEM_HOME": "{app_dir}/gems",
+      "GEM_PATH": "{app_dir}/gems"
+     }
+    },
+    "launch": "{runtime} {app_dir}/gems/bin/{bin}"
+   },
+   "exclude_variants_on": {
+    "macos": [
+     "macos-arm64",
+     "macos-x64"
+    ]
+   },
+   "needs": [
+    {
+     "prerequisites": [
+      "gcc",
+      "make"
+     ],
+     "for": "install",
+     "why": "Gems with C extensions (json, bcrypt, nio4r, puma…) are compiled when the app's gems are installed, with gcc (Ruby's configured compiler), the C library's development files and make, which minimal installs leave out."
+    },
+    {
+     "prerequisites": [
+      "xcode-clt"
+     ],
+     "for": "install",
+     "why": "Gems with C extensions are compiled when the app's gems are installed, with clang, make and the macOS SDK from the Xcode Command Line Tools."
+    }
+   ],
+   "_comment": "macOS: relocatable builds, rv-ruby (arm64 macOS 14+, x86_64 15+), then Homebrew's portable Ruby 3.4.5 for older Macs (x86_64 10.11+, arm64 11.3+; most bundled gems left out). ruby-builder's macOS tarballs stay excluded: they link Homebrew's libraries by absolute path."
+  },
+  "php": {
+   "label": "PHP",
+   "variants": [
+    "nts-vs17",
+    "nts-vs16",
+    "nts-vc15",
+    "nts-vc14",
+    "nts-vc11",
+    "nts-vc9",
+    "nts-vc6",
+    "",
+    "static-php-cli"
+   ],
+   "only": true,
+   "formats": {
+    "windows": [
+     "zip"
+    ],
+    "linux": [
+     "tar.gz"
+    ],
+    "macos": [
+     "tar.gz"
+    ]
+   },
+   "kinds": [
+    "archive"
+   ],
+   "install_rules": [
+    {
+     "_comment": "composer install (the recipe's project_install): Composer comes with the runtime for apps that install something (extra_files composer.phar).",
+     "id": "composer",
+     "files": [
+      "composer.json"
+     ]
+    }
+   ],
+   "extra_files": {
+    "cacert.pem": {
+     "_comment": "PHP for Windows's curl extension has no CA bundle (its OpenSSL streams use the Windows certificate store): Mozilla's roots as curl.se publishes them, a dated file that never changes. SHA-256 from curl.se's .sha256 beside it.",
+     "sources": [
+      {
+       "versions": ">=5",
+       "sha256": "f66dff1bdf8f96060b8177976f8b7d9254bc89bc4db933d769f7384d28480bc9",
+       "size": 188900,
+       "local": "cacert/2026-08-13/cacert-2026-08-13.pem",
+       "urls": [
+        "https://curl.se/ca/cacert-2026-08-13.pem"
+       ]
+      }
+     ]
+    },
+    "composer.phar": {
+     "_comment": "Composer, for apps that install something (a composer.json). Composer 2.10 needs PHP 7.2.5+; 2.2 LTS is the one for older PHP. SHA-256 as getcomposer.org publishes it (composer.phar.sha256sum).",
+     "for": "install",
+     "sources": [
+      {
+       "versions": ">=7.2.5",
+       "sha256": "7a2d379d5b8ffdaa028580ef26494c36d2feef4b178d3dd1473a4dbc5e17c8d6",
+       "size": 3642137,
+       "local": "composer/2.10.3/composer.phar",
+       "urls": [
+        "https://getcomposer.org/download/2.10.3/composer.phar"
+       ]
+      },
+      {
+       "versions": ">=5.3.2,<7.2.5",
+       "sha256": "8c2b4478b64f8f7cdf1574838fdb0033b29049ca821dad452db7a3dcfcdbffc2",
+       "size": 2412510,
+       "local": "composer/2.2.30/composer.phar",
+       "urls": [
+        "https://getcomposer.org/download/2.2.30/composer.phar"
+       ]
+      }
+     ]
+    }
+   },
+   "needs": [
+    {
+     "prerequisites": [
+      "vcredist-x64",
+      "vcredist-x86",
+      "vcredist-arm64"
+     ],
+     "variants": [
+      "nts-vs17",
+      "nts-vs16",
+      "nts-vc15",
+      "nts-vc14"
+     ],
+     "min_os": 601,
+     "why": "PHP for Windows is built with Visual Studio and needs its C/C++ runtime DLLs (vcruntime140.dll and friends). Windows 10 and 11 usually have them already; Windows 7, 8 and 8.1 usually don't."
+    },
+    {
+     "prerequisites": [
+      "vcredist2012-x64",
+      "vcredist2012-x86"
+     ],
+     "variants": [
+      "nts-vc11",
+      "ts-vc11"
+     ],
+     "why": "PHP 5.5 and 5.6 for Windows are built with Visual Studio 2012 and need its C runtime (msvcr110.dll), which no Windows ships. Without it php.exe cannot start at all."
+    }
+   ],
+   "launch": "{runtime} {app_dir}/index.php"
+  },
+  "java": {
+   "label": "Java",
+   "variants": [
+    "zulu-jdk",
+    "temurin-jdk"
+   ],
+   "only": true,
+   "formats": {
+    "windows": [
+     "zip"
+    ],
+    "linux": [
+     "tar.gz"
+    ],
+    "macos": [
+     "tar.gz",
+     "zip"
+    ]
+   },
+   "kinds": [
+    "archive"
+   ],
+   "install_rules": [
+    {
+     "_comment": "Java source with a Main.java at the top (the site's written templates, shared/templates.js): javac it into the app's folder, and launch {runtime} -cp {app_dir} Main. javac, not Java 11's single-file launch: Windows XP and Vista get Java 8 and 9, and a single-file launch compiles again at every start.",
+     "id": "javac",
+     "files": [
+      "Main.java"
+     ],
+     "command": {
+      "windows": "\"{env:JAVA_HOME}\\bin\\javac.exe\" -encoding UTF-8 -d \"{app_dir}\" Main.java",
+      "linux": "\"{env:JAVA_HOME}/bin/javac\" -encoding UTF-8 -d \"{app_dir}\" Main.java",
+      "macos": "\"{env:JAVA_HOME}/bin/javac\" -encoding UTF-8 -d \"{app_dir}\" Main.java"
+     }
+    }
+   ],
+   "launch": "{runtime} -jar {app_dir}/{project}.jar"
+  },
+  "dotnet": {
+   "label": ".NET",
+   "variants": [
+    "sdk"
+   ],
+   "only": true,
+   "formats": {
+    "windows": [
+     "zip"
+    ],
+    "linux": [
+     "tar.gz"
+    ],
+    "macos": [
+     "tar.gz"
+    ]
+   },
+   "kinds": [
+    "archive"
+   ],
+   "compiled": true,
+   "launch": "{runtime} {app_dir}/bin/{project}.dll",
+   "package": {
+    "_comment": "A .NET tool from NuGet, installed with --tool-path into the app's folder; its launcher finds the private runtime through DOTNET_ROOT (recipe launch env). No lookup: NuGet's API doesn't name a tool's command, so launch assumes the package id and the version isn't pinned unless the publisher gives one.",
+    "registry": "NuGet",
+    "name": "^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$",
+    "spec": "\"{name}\" --version \"{version}\"",
+    "spec_any": "\"{name}\"",
+    "install": {
+     "windows": "\"{runtime}\" tool install --tool-path \"{app_dir}\\bin\" {package}",
+     "linux": "\"{runtime}\" tool install --tool-path \"{app_dir}/bin\" {package}",
+     "macos": "\"{runtime}\" tool install --tool-path \"{app_dir}/bin\" {package}"
+    },
+    "launch": "{app_dir}/bin/{bin}{exe}"
+   },
+   "needs": [
+    {
+     "prerequisites": [
+      "libicu"
+     ],
+     "why": ".NET uses ICU for time zones and cultures and aborts without it (minimal systems such as Rocky's cloud image leave it out)."
+    }
+   ]
+  },
+  "r": {
+   "label": "R",
+   "variants": [
+    "",
+    "posit-ubuntu-2204"
+   ],
+   "formats": {
+    "windows": [
+     "exe"
+    ],
+    "linux": [
+     "deb"
+    ],
+    "macos": [
+     "pkg"
+    ]
+   },
+   "needs": [
+    {
+     "prerequisites": [
+      "libblas",
+      "libgomp",
+      "libdeflate"
+     ],
+     "variants": [
+      "posit-ubuntu-2204"
+     ],
+     "why": "R's Ubuntu build links shared libraries from the distribution (BLAS, OpenMP, libdeflate) that minimal installs leave out."
+    },
+    {
+     "prerequisites": [
+      "gcc",
+      "cxx",
+      "make"
+     ],
+     "variants": [
+      "posit-ubuntu-2204"
+     ],
+     "for": "install",
+     "why": "Installing CRAN packages on Linux compiles them from source (C and C++, with make), as R on Linux always does; minimal installs have no compiler or make."
+    },
+    {
+     "_comment": "macOS only (the prerequisite carries os: macos). Added 2026-09-20 after measuring what R on macOS does when CRAN has no binary for it: it falls back to a source build, which is the only reason the retired pre-4.0 indexes do not break macOS the way they break Windows (design.md 11, test-results.md \"macOS: the same decay\"). That fallback needs a compiler, and a source build that fails still leaves install.packages() exiting 0 -- the same silent success by another road. We had simply been lucky that the test Mac has the tools. Deliberately wider than strictly necessary, as Ruby's Linux gcc/make rule is: an app whose packages all have CRAN binaries for this R would have installed without a compiler, and cannot be told apart at build time.",
+     "prerequisites": [
+      "xcode-clt"
+     ],
+     "for": "install",
+     "why": "Installing CRAN packages on macOS falls back to building them from source whenever CRAN has no binary for this R -- always for R before 4.0, whose macOS binary indexes CRAN has retired, and for any package it has not built for this platform. That build needs clang, make and the macOS SDK from the Xcode Command Line Tools. Without them the build fails, install.packages() still exits 0, and the app would install and then stop at its first library() call."
+    }
+   ],
+   "launch": "{runtime} {app_dir}/main.R",
+   "unsupported": [
+    {
+     "_comment": "CRAN's Windows binary index for every R before 4.0 is gone. Measured 2026-09-20 over all 38 majors the catalogue holds: cloud.r-project.org and cran.r-project.org answer 404 for /bin/windows/contrib/<x.y>/PACKAGES for 1.0 through 3.6 and 200 for 4.0 through 4.6, and cran-archive.r-project.org is the mirror image (200 for 1.8-3.6, 404 for 4.0+). It is a server-side fact, so it is every Windows, not some; confirmed on Windows 7, 10 and the German 11 (r@2.15 and r@3.6 fail, r@4.6 passes). Not Linux: CRAN serves source packages for every version and R on Linux builds them. macOS is retired upstream in the same way (/bin/macosx/contrib/<x.y> 404s below 4.0) but is deliberately left out here, because R on macOS can fall back to a source build and our arm64 Mac cannot resolve an R that old to measure it.",
+     "os": "windows",
+     "versions": "<4.0",
+     "for": "install",
+     "reason": "R {vmajor}.{vminor} can no longer install packages on Windows. CRAN has retired the Windows package index for every R before 4.0, so https://cloud.r-project.org/bin/windows/contrib/{vmajor}.{vminor}/PACKAGES is gone and install.packages() prints a warning, installs nothing and still reports success -- this app would install and then fail at its first library() call. That is CRAN's change, not a fault in this installer or on this computer. Ways round it: ask whoever published this app for a build on R 4.0 or newer, which CRAN still serves; or, if this R version is essential, for one whose install command names the archive instead (repos = \"https://cran-archive.r-project.org/bin/windows/contrib/{vmajor}.{vminor}\"), or builds the packages from source with Rtools. R on Linux is unaffected: CRAN serves source packages for every version."
+    }
+   ]
+  },
+  "go": {
+   "label": "Go",
+   "variants": [
+    ""
+   ],
+   "only": true,
+   "formats": {
+    "windows": [
+     "zip"
+    ],
+    "linux": [
+     "tar.gz"
+    ],
+    "macos": [
+     "tar.gz"
+    ]
+   },
+   "kinds": [
+    "archive"
+   ],
+   "compiled": true,
+   "launch": "{app_dir}/{project}{exe}",
+   "package": {
+    "_comment": "go install <module path>@<version> with GOBIN in the app's folder; the program is named after the path's last element. No lookup: the module proxy only knows module roots, not package paths inside them, so an unpinned record installs @latest at install time.",
+    "registry": "the Go module proxy",
+    "name": "^[a-z0-9][a-z0-9.-]*\\.[a-z]{2,}(/[A-Za-z0-9._~-]+)+$",
+    "spec": "\"{name}@{version}\"",
+    "spec_any": "\"{name}@latest\"",
+    "project_from": "last",
+    "install": {
+     "windows": "\"{runtime_dir}\\bin\\go.exe\" install {package}",
+     "linux": "\"{runtime_dir}/bin/go\" install {package}",
+     "macos": "\"{runtime_dir}/bin/go\" install {package}"
+    },
+    "ienv": {
+     "windows": {
+      "GOBIN": "{app_dir}"
+     },
+     "linux": {
+      "GOBIN": "{app_dir}"
+     },
+     "macos": {
+      "GOBIN": "{app_dir}"
+     }
+    },
+    "launch": "{app_dir}/{project}{exe}"
+   },
+   "needs": [
+    {
+     "prerequisites": [
+      "xcode-clt"
+     ],
+     "for": "tool:cgo",
+     "why": "This program uses cgo, so Go compiles C code with clang and links against the macOS SDK from the Xcode Command Line Tools."
+    }
+   ],
+   "requires": {
+    "windows": [
+     {
+      "runtime": "cc",
+      "bin": "bin",
+      "for": "tool:cgo",
+      "_comment": "Windows never has a C compiler, so a cgo program cannot be built there at all without one; WinLibs GCC from the catalogue, the same companion Rust gets. No variant is pinned: the resolver takes the newest WinLibs build that runs on the user's Windows (the UCRT builds on 10 and later, MSVCRT on older), and Go's own runtime does not use the C runtime, so either matches."
+     }
+    ],
+    "linux": [
+     {
+      "runtime": "zig",
+      "bin": "",
+      "for": "tool:cgo",
+      "_comment": "design.md 11.0, the operator's 2026-09-20 revision of item 27: a cgo program on Linux is given a C toolchain rather than asked for one, so an unattended install needs no root -- the same answer Rust and Nim got in item 15, and for the same reason. zig's Linux builds are static, so they run on any kernel, glibc or musl. The `cgo` recipe (install.json, match.tool) writes the ibcc shims and sets CC, CXX and CGO_ENABLED=1; without a compiler cmd/go quietly sets CGO_ENABLED=0 and the build dies with \"build constraints exclude all Go files\", which names nothing. macOS still asks for the Xcode Command Line Tools: zig cc links against Apple's SDK."
+     }
+    ]
+   }
+  },
+  "rust": {
+   "label": "Rust",
+   "variants": [
+    "gnu",
+    ""
+   ],
+   "only": true,
+   "formats": {
+    "windows": [
+     "tar.xz",
+     "tar.gz"
+    ],
+    "linux": [
+     "tar.xz",
+     "tar.gz"
+    ],
+    "macos": [
+     "tar.xz",
+     "tar.gz"
+    ]
+   },
+   "kinds": [
+    "archive"
+   ],
+   "compiled": true,
+   "needs": [
+    {
+     "prerequisites": [
+      "xcode-clt"
+     ],
+     "why": "Rust links programs with Apple's linker and the macOS SDK, which come with the Xcode Command Line Tools."
+    },
+    {
+     "_comment": "32-bit Linux only; the prerequisite carries the arch (libatomic-x86). Read from the release itself: rust-1.98.1-i686-unknown-linux-gnu's cargo/bin/cargo lists libatomic.so.1 in DT_NEEDED, the x86_64 cargo of the same release does not. rustc itself does not need it, so the app would install and then fail at the first cargo run.",
+     "prerequisites": [
+      "libatomic-x86"
+     ],
+     "why": "Cargo's 32-bit x86 build is linked against libatomic.so.1 (GCC's atomics library), because 32-bit x86 has no 64-bit atomic instruction of its own; minimal systems leave it out."
+    }
+   ],
+   "launch": "{app_dir}/target/release/{project}{exe}",
+   "package": {
+    "_comment": "cargo install --root into the app's folder (builds on the user's machine, design.md 1.8). crates.io names the crate's programs (bin_names), so launch runs the right one.",
+    "registry": "crates.io",
+    "name": "^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$",
+    "lower": true,
+    "spec": "\"{name}@{version}\"",
+    "spec_any": "\"{name}\"",
+    "lookup": "https://crates.io/api/v1/crates/{name}",
+    "lookup_version": "https://crates.io/api/v1/crates/{name}/{version}",
+    "version_field": "crate.max_stable_version",
+    "bin_field": "version.bin_names",
+    "install": {
+     "windows": "\"{runtime_dir}\\bin\\cargo.exe\" install --locked --root \"{app_dir}\" {package}",
+     "linux": "\"{runtime_dir}/bin/cargo\" install --locked --root \"{app_dir}\" {package}",
+     "macos": "\"{runtime_dir}/bin/cargo\" install --locked --root \"{app_dir}\" {package}"
+    },
+    "launch": "{app_dir}/bin/{bin}{exe}"
+   },
+   "requires": {
+    "windows": [
+     {
+      "runtime": "cc",
+      "bin": "bin",
+      "variants": [
+       "winlibs-posix-msvcrt"
+      ],
+      "_comment": "Crates with C build steps (cc-rs: ring, libsqlite3-sys, zstd-sys…) need a C compiler: the -gnu toolchain only carries a linker. WinLibs GCC from the catalogue, the MSVCRT build like Rust's -gnu target (a UCRT gcc would mix C runtimes); with gcc on PATH rustc links with it too. Tested 2026-09-19: without it cc-rs fails with 'failed to find tool gcc.exe'."
+     }
+    ],
+    "linux": [
+     {
+      "runtime": "zig",
+      "bin": "",
+      "_comment": "design.md 11.0 item 15: the C toolchain on Linux is zig, not the system compiler, so an unattended install needs no root. zig's Linux builds are static, so they run on any kernel, glibc or musl. The recipe writes cc/gcc/c++/g++/ar shims into {runtime_dir}/ibcc that exec `zig cc`, and puts that folder first on PATH for the project install. macOS keeps the Xcode Command Line Tools: zig cc still needs Apple's SDK to link."
+     }
+    ]
+   }
+  },
+  "zig": {
+   "label": "Zig",
+   "variants": [
+    ""
+   ],
+   "formats": {
+    "windows": [
+     "zip"
+    ],
+    "linux": [
+     "tar.xz"
+    ],
+    "macos": [
+     "tar.xz"
+    ]
+   },
+   "compiled": true,
+   "install_command": {
+    "windows": "\"{runtime_dir}\\zig.exe\" build-exe --name {project} main.zig",
+    "linux": "\"{runtime_dir}/zig\" build-exe --name {project} main.zig",
+    "macos": "\"{runtime_dir}/zig\" build-exe --name {project} main.zig"
+   },
+   "launch": "{app_dir}/{project}{exe}"
+  },
+  "nim": {
+   "label": "Nim",
+   "variants": [
+    ""
+   ],
+   "only": true,
+   "formats": {
+    "windows": [
+     "zip"
+    ],
+    "linux": [
+     "tar.xz"
+    ],
+    "macos": [
+     "tar.xz"
+    ]
+   },
+   "kinds": [
+    "archive"
+   ],
+   "compiled": true,
+   "install_rules": [
+    {
+     "_comment": "A main.nim (the site's written templates, shared/templates.js) is the program, whatever the project is called.",
+     "id": "main",
+     "files": [
+      "main.nim"
+     ],
+     "command": {
+      "windows": "\"{runtime_dir}\\bin\\nim.exe\" c -d:release --nimcache:\"{data_dir}\\nimcache\" -o:\"{app_dir}\\{project}.exe\" main.nim",
+      "linux": "\"{runtime_dir}/bin/nim\" c -d:release --nimcache:\"{data_dir}/nimcache\" -o:\"{app_dir}/{project}\" main.nim",
+      "macos": "\"{runtime_dir}/bin/nim\" c -d:release --nimcache:\"{data_dir}/nimcache\" -o:\"{app_dir}/{project}\" main.nim"
+     }
+    }
+   ],
+   "install_command": {
+    "windows": "\"{runtime_dir}\\bin\\nim.exe\" c -d:release --nimcache:\"{data_dir}\\nimcache\" -o:\"{app_dir}\\{project}.exe\" {project}.nim",
+    "linux": "\"{runtime_dir}/bin/nim\" c -d:release --nimcache:\"{data_dir}/nimcache\" -o:\"{app_dir}/{project}\" {project}.nim",
+    "macos": "\"{runtime_dir}/bin/nim\" c -d:release --nimcache:\"{data_dir}/nimcache\" -o:\"{app_dir}/{project}\" {project}.nim"
+   },
+   "needs": [
+    {
+     "prerequisites": [
+      "xcode-clt"
+     ],
+     "why": "Nim compiles to C and builds it with clang and the macOS SDK from the Xcode Command Line Tools."
+    }
+   ],
+   "launch": "{app_dir}/{project}{exe}",
+   "requires": {
+    "windows": [
+     {
+      "runtime": "cc",
+      "bin": "bin"
+     }
+    ],
+    "linux": [
+     {
+      "runtime": "zig",
+      "bin": "",
+      "_comment": "design.md 11.0 item 15: the C toolchain on Linux is zig, not the system compiler, so an unattended install needs no root. zig's Linux builds are static, so they run on any kernel, glibc or musl. The recipe writes cc/gcc/c++/g++/ar shims into {runtime_dir}/ibcc that exec `zig cc`, and puts that folder first on PATH for the project install. macOS keeps the Xcode Command Line Tools: zig cc still needs Apple's SDK to link."
+     }
+    ]
+   },
+   "extra_files": {
+    "dlls.zip": {
+     "_comment": "Nim's DLLs for Windows (OpenSSL 1.1, PCRE, SQLite, pdcurses), as the Windows installer (finish.exe) downloads them: without them a program built with -d:ssl can't start. Pinned by SHA-256 (nim-lang.org publishes none; the file is dated 2021-03-30).",
+     "sources": [
+      {
+       "versions": ">=1.6",
+       "sha256": "4b20b0fc775d2cfece0c1a09d4ec0bdbcd01d257ce8d556d9a8a88e6c4cd6961",
+       "size": 5090573,
+       "local": "nim/windows/dlls/dlls.zip",
+       "urls": [
+        "https://nim-lang.org/download/dlls.zip"
+       ]
+      }
+     ]
+    },
+    "cacert.pem": {
+     "_comment": "std/net looks for cacert.pem beside the program or on PATH on Windows; dlls.zip's is from 2021. Mozilla's roots as curl.se publishes them, a dated file.",
+     "sources": [
+      {
+       "versions": ">=1.6",
+       "sha256": "f66dff1bdf8f96060b8177976f8b7d9254bc89bc4db933d769f7384d28480bc9",
+       "size": 188900,
+       "local": "cacert/2026-08-13/cacert-2026-08-13.pem",
+       "urls": [
+        "https://curl.se/ca/cacert-2026-08-13.pem"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "cc": {
+   "label": "C/C++",
+   "variants": [
+    "winlibs-posix-ucrt",
+    "winlibs-posix-msvcrt",
+    ""
+   ],
+   "only": true,
+   "formats": {
+    "windows": [
+     "zip",
+     "7z"
+    ],
+    "linux": [
+     "tar.xz"
+    ],
+    "macos": [
+     "tar.xz"
+    ]
+   },
+   "kinds": [
+    "archive"
+   ],
+   "compiled": true,
+   "toolchains": {
+    "winlibs-posix-ucrt": "gcc-winlibs-ucrt",
+    "winlibs-posix-msvcrt": "gcc-winlibs-msvcrt",
+    "": "llvm"
+   },
+   "install_rules": [
+    {
+     "_comment": "C++: a main.cpp (the site's written templates, shared/templates.js) builds every .cpp file with the C++ driver. -static on Windows: the program must not need GCC's DLLs, which leave with the compiler after the build.",
+     "id": "cpp",
+     "files": [
+      "main.cpp"
+     ],
+     "command": {
+      "windows": "\"{runtime_dir}\\bin\\g++.exe\" -O2 -static -o \"{app_dir}\\{project}.exe\" *.cpp",
+      "linux": "\"{runtime_dir}/zig\" c++ -O2 -o \"{app_dir}/{project}\" *.cpp",
+      "macos": "\"{runtime_dir}/zig\" c++ -O2 -o \"{app_dir}/{project}\" *.cpp"
+     }
+    }
+   ],
+   "install_command": {
+    "windows": "\"{runtime_dir}\\bin\\gcc.exe\" -O2 -o \"{app_dir}\\{project}.exe\" *.c",
+    "linux": "\"{runtime_dir}/zig\" cc -O2 -o \"{app_dir}/{project}\" *.c",
+    "macos": "\"{runtime_dir}/zig\" cc -O2 -o \"{app_dir}/{project}\" *.c"
+   },
+   "needs": [],
+   "launch": "{app_dir}/{project}{exe}",
+   "via": {
+    "linux": "zig",
+    "macos": "zig"
+   }
+  }
+ }
+}

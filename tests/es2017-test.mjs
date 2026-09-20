@@ -3,7 +3,7 @@
 // This parses every script in dist/index.html as an ES2017 classic script
 // (acorn, ecmaVersion 2017, which also rejects newer regular expression
 // syntax) and fails on anything newer. It also looks for built-ins newer
-// than that floor which js/polyfills.js does not add.
+// than that floor which web/polyfills.js does not add.
 //
 //   node tests/es2017-test.mjs [dist/index.html]
 //
@@ -24,7 +24,7 @@ function ok(cond, name, extra) {
 }
 
 // Executable scripts: no type, or a JavaScript type, and the page's code
-// blocks (type text/x-ib-js, run by js/page-loader.js). Data blocks are
+// blocks (type text/x-ib-js, run by web/page-loader.js). Data blocks are
 // skipped, and so is the ES5 copy (tests/es5-test.mjs checks it).
 const scripts = [];
 const re = /<script(\s[^>]*)?>([\s\S]*?)<\/script>/gi;
@@ -51,7 +51,7 @@ for (const s of scripts) {
   }
 }
 
-// Built-ins newer than the floor. Polyfilled ones (js/polyfills.js) are
+// Built-ins newer than the floor. Polyfilled ones (web/polyfills.js) are
 // fine; so is anything behind a feature test, listed in ALLOWED.
 const NEW_METHODS = ['replaceAll', 'findLast', 'findLastIndex', 'allSettled', 'structuredClone', 'randomUUID', 'showPicker',
   'toSorted', 'toReversed', 'toSpliced', 'groupBy', 'trimStart', 'trimEnd', 'at', 'hasIndices', 'withResolvers', 'transferToImageBitmap'];
@@ -85,7 +85,7 @@ for (const [name, s] of [['main', main], ['resedit', vendor]]) {
   })(ast, null);
 }
 const bad = found.filter(([what, where]) => !ALLOWED.some(([w, s]) => w === what && s === where));
-ok(!bad.length, 'no built-ins newer than the floor outside feature tests and js/polyfills.js',
+ok(!bad.length, 'no built-ins newer than the floor outside feature tests and web/polyfills.js',
   bad.slice(0, 20).map(([w, s, l]) => w + ' (' + s + ' line ' + l + ')').join(', '));
 
 console.log(`\n${passed} passed, ${failed} failed`);

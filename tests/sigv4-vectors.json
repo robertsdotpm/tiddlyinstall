@@ -1,5 +1,5 @@
 {
- "note": "Amazon's published Signature Version 4 test suite (the 'basic' cases), as republished by github.com/saibotsivad/aws-sig-v4-test-suite. Used by tests/sign-test.mjs to check js/sign-services.js's SigV4 exactly, which is the one part of any provider there that can be verified without an account.",
+ "note": "Amazon's published Signature Version 4 test suite (the 'basic' cases), as republished by github.com/saibotsivad/aws-sig-v4-test-suite. Used by tests/sign-test.mjs to check web/sign-services.js's SigV4 exactly, which is the one part of any provider there that can be verified without an account.",
  "config": {
   "service": "service",
   "region": "us-east-1",

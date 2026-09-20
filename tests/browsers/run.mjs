@@ -13,13 +13,13 @@
 // 127.0.0.1, reaches it through `ssh -L`, and checks, from file:// (a secure
 // context, so WebCrypto is there): the page starts without errors; its
 // sections and :has()-driven form work; an installer built with no server
-// reads back with js/ibfile.js (record and plan); "Save this page" saves a
+// reads back with shared/ibfile.js (record and plan); "Save this page" saves a
 // copy that starts; the editor signs a .run with PGP (checked with gpg here)
 // and an .exe with a .pfx (checked with osslsigncode here). With a build
 // server on 127.0.0.1:8080 here, it also opens the page served through an
 // SSH reverse tunnel, as http://localhost:PORT on the machine.
 //
-// A browser the page's startup check (js/browser-check.js) finds too old
+// A browser the page's startup check (web/browser-check.js) finds too old
 // is recorded as "unsupported: <what's missing>", not as a failure.
 // Results: one line per run in usage.jsonl, the details in results/.
 import { spawnSync } from 'node:child_process';
@@ -33,7 +33,7 @@ import { MarionetteSession } from './marionette.mjs';
 import { connectPlaywright } from './playwright.mjs';
 import { loadMachines, findMachine, freePort, Remote } from './remote.mjs';
 import { Checker, STARTED, checkSections, buildHello, checkJob, makeSignFixtures, osslVerify, gpgVerify, $text, setVal, checkBox } from './steps.mjs';
-import { readInstaller } from '../../js/ibfile.js';
+import { readInstaller } from '../../shared/ibfile.js';
 import { ensureDriver } from './drivers.mjs';
 import { writeCompat } from './compat.mjs';
 
@@ -144,7 +144,7 @@ const RECORDER = '<script>window.__ibErrors=[];window.addEventListener("error",f
 
 function testPage(tmp) {
   const html = fs.readFileSync(PAGE, 'utf8');
-  if (!html.includes('data-ib-missing')) console.log('warning: the page has no startup browser check (js/browser-check.js); rebuild it with tools/build_site.py');
+  if (!html.includes('data-ib-missing')) console.log('warning: the page has no startup browser check (web/browser-check.js); rebuild it with tools/build_site.py');
   const out = html.replace(/<head>/i, '<head>\n' + RECORDER);
   const hash = crypto.createHash('sha256').update(out).digest('hex').slice(0, 12);
   const file = path.join(tmp, `ibtest-${hash}.html`);
@@ -153,7 +153,7 @@ function testPage(tmp) {
 }
 
 // What the browser has of what the page needs (ES5, so it runs anywhere);
-// the same list as js/browser-check.js, and a few more for the record.
+// the same list as web/browser-check.js, and a few more for the record.
 const FEATURES = `var r = {}; function t(n, f) { try { r[n] = !!f(); } catch (e) { r[n] = false; } }
 t('ES modules', function () { return 'noModule' in document.createElement('script'); });
 t('?. ?? ||= syntax', function () { new Function('var a, b = a?.b ?? 1; a ||= b; try {} catch {}'); return true; });
@@ -455,7 +455,7 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
       const ta = f.querySelector('.combo-python-script textarea.code'); return !!ta && ta.offsetParent !== null; })()`);
     t.ok(editor, 'New installer: the code editor shows for Python + script (CSS :has())');
 
-    // 3. An installer built with no server, read back with js/ibfile.js.
+    // 3. An installer built with no server, read back with shared/ibfile.js.
     const job = await buildHello(js, { runtime: 'python', mode: 'unsigned', name: 'Hello browsers', code: "print('hello from " + browserId + "')\n" });
     await checkJob(t, js, job, 'build', 'python');
 

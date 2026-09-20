@@ -1,6 +1,6 @@
 // Signs and checks plan files with the server's plan signing key
 // (docs/format.md "Plan signature"), with the build server's own code
-// (backend/lib/plansig.js). For tests and for operators; the server signs
+// (server/lib/plansig.js). For tests and for operators; the server signs
 // plans itself.
 //
 //   node tools/plansig.mjs -data DIR sign plan.txt > signed.txt   (makes the key if DIR has none)
@@ -11,7 +11,7 @@
 //
 //   node tools/plansig.mjs -data DIR -kind ib-revocations sign list.txt
 import fs from 'node:fs';
-import { loadOrCreate, verify, verifyFor, keyID, recordOf } from '../backend/lib/plansig.js';
+import { loadOrCreate, verify, verifyFor, keyID, recordOf } from '../server/lib/plansig.js';
 
 function fail(msg) {
   process.stderr.write('plansig: ' + msg + '\n');

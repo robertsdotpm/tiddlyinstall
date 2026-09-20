@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TiddlyInstall</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="theme.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">
+      <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="2.5" y="2.5" width="19" height="19"></rect>
+        <line x1="12" y1="6" x2="12" y2="13"></line>
+        <polyline points="8.5 9.8 12 13.3 15.5 9.8"></polyline>
+        <line class="tray" x1="7" y1="17.5" x2="17" y2="17.5"></line>
+      </svg>
+      TiddlyInstall</a>
+    <nav>
+      <a href="index.html" aria-current="page">Home</a>
+      <a href="new.html">New installer</a>
+      <a href="edit.html">Edit installer</a>
+      <a href="runtimes.html">Sources</a>
+      <button type="button" class="theme-btn" id="theme-btn" aria-label="Switch theme">Dark</button>
+    </nav>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow"><span class="num">01</span> &nbsp;What it is</span>
+        <h1>Real installers for Windows, Linux and macOS, straight from a GitHub repo.</h1>
+        <p class="lede">
+          No freezing and no bundlers that break. We install your project's real
+          runtime and dependencies into a folder of its own, clone your project,
+          and install it against them. The result is an ordinary installer built
+          with NSIS on Windows and the Qt Installer Framework on Linux and macOS.
+        </p>
+        <div class="actions" style="margin-top:22px">
+          <a class="button big" href="new.html">Make an installer</a>
+          <a class="button secondary big" href="new.html#write">Write an app</a>
+        </div>
+        <dl class="spec-list">
+          <dt>Output</dt><dd><code>.exe</code> &middot; <code>.run</code> &middot; <code>.dmg</code></dd>
+          <dt>Languages</dt><dd>13, plus your own runtime</dd>
+          <dt>Oldest target</dt><dd>Windows XP &middot; glibc 2.17 Linux &middot; macOS 12</dd>
+          <dt>This page</dt><dd>One HTML file, no server, no network</dd>
+        </dl>
+      </div>
+
+      <!-- The installer's own screen, quoted. The product's promise is that
+           nothing is hidden, so the thing we promise is the hero image. -->
+      <aside class="manifest" aria-label="What an installer shows before it installs">
+        <div class="manifest-head">
+          <div>
+            <span class="eyebrow">Before it changes anything</span>
+            <p class="manifest-title">install_python_requests.exe</p>
+          </div>
+          <span class="status ok">Ready</span>
+        </div>
+        <div class="manifest-body">
+          <dl>
+            <dt>Installs</dt><dd>requests 2.32.3 &mdash; from <code>github.com/psf/requests</code>, tag <code>v2.32.3</code></dd>
+            <dt>Runtime</dt><dd>Python 3.14.7 &mdash; newest that runs on this computer</dd>
+            <dt>Into</dt><dd><code>C:\ib\k3m9q2x7v4p8\</code></dd>
+            <dt>Signed by</dt><dd><span class="verified">Matthew Roberts</span> &middot; certificate valid</dd>
+          </dl>
+          <hr class="manifest-sep">
+          <span class="eyebrow">Will download</span>
+          <div class="manifest-line"><span>python-3.14.7-amd64.exe <code>python.org</code></span><span class="m-size">28.1 MB</span></div>
+          <div class="manifest-line"><span>requests + 4 dependencies <code>pypi.org</code></span><span class="m-size">1.4 MB</span></div>
+          <div class="manifest-line"><span>Source archive <code>github.com</code></span><span class="m-size">0.2 MB</span></div>
+          <p class="manifest-note">Every file is checked against a checksum carried in the installer. A changed file is refused.</p>
+        </div>
+        <div class="manifest-foot">Then the shortcut, uninstaller and PATH changes &mdash; listed the same way</div>
+      </aside>
+    </div>
+
+    <section class="section">
+      <span class="eyebrow"><span class="num">02</span> &nbsp;The unusual part</span>
+      <h2>One file, like TiddlyWiki</h2>
+      <p class="measure">TiddlyInstall is a single HTML file. This page carries the base installers,
+      the runtime catalogue and all the code that makes, edits and signs installers. Save it (at the
+      bottom of the page) and open it from your disk, and it keeps working with no server: it builds
+      installers for code you write here or for packages, edits any unsigned installer, and signs
+      with your own key. When a build server is there, it uses it for the rest: installers signed by
+      us, GitHub repos, and installers with their runtimes packed inside.</p>
+    </section>
+
+    <section class="section">
+      <span class="eyebrow"><span class="num">03</span> &nbsp;How it works</span>
+      <h2>Three steps, no surprises</h2>
+      <div class="grid">
+        <section class="panel">
+          <span class="eyebrow">Step one</span>
+          <h3>Point at a repo</h3>
+          <p>Give us a GitHub repository and a branch, tag or commit. We clone the actual source code.</p>
+        </section>
+        <section class="panel">
+          <span class="eyebrow">Step two</span>
+          <h3>Dependencies are handled for you</h3>
+          <p>At install time, the installer picks the newest runtime that matches your version range
+          and runs on the computer, and installs it in the app's own folder.</p>
+        </section>
+        <section class="panel">
+          <span class="eyebrow">Step three</span>
+          <h3>Build for every platform</h3>
+          <p>We package the result as a Windows <code>.exe</code> (NSIS) and a Linux <code>.run</code>
+          and macOS <code>.dmg</code> (Qt Installer Framework).</p>
+        </section>
+      </div>
+    </section>
+
+    <section class="section">
+      <span class="eyebrow"><span class="num">04</span> &nbsp;Isolation</span>
+      <h2>Every app gets its own folder</h2>
+      <p class="measure">Each app is installed with its own copy of every dependency, in folders with
+      short hashed names. Nothing is shared, so one app can never break another, and uninstalling
+      just deletes the app's folders. Disk space is cheap; broken installs aren't.</p>
+<pre>
+Windows   C:\ib\k3m9q2x7v4p8\     the app
+          C:\ib\tjfq5rqwnnrx\     its Python 3.12.4
+          C:\ib\a7d2hx9q4mbe\     its git 2.46.0
+Linux     /opt/ib/tjfq5rqwnnrx/
+macOS     /Library/Application Support/ib/tjfq5rqwnnrx/
+</pre>
+    </section>
+
+    <section class="section">
+      <span class="eyebrow"><span class="num">05</span> &nbsp;No repo yet</span>
+      <h2>Write the app here</h2>
+      <p class="measure">Pick Python, JavaScript (Node.js) or Ruby and a template (a script, a window
+      app, a web page in a window or a tray app), write your code in the browser, run it, and make an
+      installer from it with the same pipeline. It's one of the choices on the New installer page.</p>
+      <p><a class="button secondary" href="new.html#write">Write an app</a></p>
+    </section>
+
+    <section class="section">
+      <span class="eyebrow"><span class="num">06</span> &nbsp;Reuse</span>
+      <h2>Base installers are reusable</h2>
+      <p class="measure">Every installer is a base installer plus settings. For example,
+      <code>install_python_x.exe</code> installs the Python package <code>x</code>. The base's code
+      stays the same; only the settings change.</p>
+<pre>
+install_python_requests.exe   -&gt; installs the "requests" package
+install_python_black.exe      -&gt; installs the "black" package
+install_node_prettier.exe     -&gt; installs the "prettier" package
+</pre>
+    </section>
+
+    <section class="section">
+      <span class="eyebrow"><span class="num">07</span> &nbsp;Signing</span>
+      <h2>Three ways to ship</h2>
+      <div class="grid">
+        <section class="panel">
+          <span class="eyebrow">Mode A</span>
+          <h3>Signed by us</h3>
+          <p>The fewest security warnings. Settings live in the file name, so renaming the file
+          retargets it and keeps the signature.</p>
+        </section>
+        <section class="panel">
+          <span class="eyebrow">Mode B</span>
+          <h3>Signed by you</h3>
+          <p>Your name and icon on the installer itself, with your own certificate and your own
+          reputation.</p>
+        </section>
+        <section class="panel">
+          <span class="eyebrow">Mode C</span>
+          <h3>Unsigned</h3>
+          <p>Fully editable. Change what it installs, its name and its icon in your browser, without
+          uploading the file.</p>
+        </section>
+      </div>
+    </section>
+
+    <section class="section">
+      <span class="eyebrow"><span class="num">08</span> &nbsp;The promise</span>
+      <h2>Nothing hidden</h2>
+      <p class="measure">Every installer, whoever signed it, shows what it will install, where it
+      comes from, what it downloads, where files go and who signed it, before it changes anything.
+      That screen &mdash; the one at the top of this page &mdash; is not a summary we write afterwards.
+      It is read from the installer's own settings block, so it cannot disagree with what happens next.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    Designed by <a href="https://robertsdotpm.github.io/">Matthew Roberts</a> and implemented by Claude.
+  </footer>
+
+  <script type="module">import { mountApiFooter } from './api.js'; mountApiFooter();</script>
+</body>
+</html>

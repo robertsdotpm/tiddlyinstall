@@ -10,12 +10,12 @@
 //   node tests/browsers/ie.mjs --machine xp --browser chromium49
 //
 // Every IE: the page loads from disk (a file:// copy, as a person would open
-// a saved page); js/browser-check.js runs and its bar says whether this
+// a saved page); web/browser-check.js runs and its bar says whether this
 // browser can run the builder and what to use instead; the static text
 // reads, dark on light; and the page throws no errors. IE 11 runs the
-// page's ES5 copy (js/page-loader.js), so there the same steps as run.mjs
+// page's ES5 copy (web/page-loader.js), so there the same steps as run.mjs
 // follow: sections and the :has()-driven form, an installer built with no
-// server and read back with js/ibfile.js, "Save this page" and the saved
+// server and read back with shared/ibfile.js, "Save this page" and the saved
 // copy starting, and PGP and .pfx signing checked here with gpg and
 // osslsigncode. IE saves through navigator.msSaveOrOpenBlob, which the test
 // replaces to keep what is saved; files are given to the page's file inputs
@@ -52,7 +52,7 @@ import path from 'node:path';
 import { loadMachines, findMachine, freePort, Remote } from './remote.mjs';
 import { connectCdp } from './cdp.mjs';
 import { Checker, STARTED, checkSections, buildHello, checkJob, makeSignFixtures, osslVerify, gpgVerify, $text, setVal, checkBox, sleep } from './steps.mjs';
-import { readInstaller } from '../../js/ibfile.js';
+import { readInstaller } from '../../shared/ibfile.js';
 import { writeCompat } from './compat.mjs';
 import { classicFields, checkFinished, MODE_LETTER } from './classic.mjs';
 
@@ -254,7 +254,7 @@ async function waitUntil(js, expr, what, ms = 90000) {
 }
 
 // Downloads, kept in the page by name instead of saved: IE saves Blobs
-// through navigator.msSaveOrOpenBlob (js/legacy-dom.js); Chromium clicks
+// through navigator.msSaveOrOpenBlob (web/legacy-dom.js); Chromium clicks
 // an <a download> with a blob: URL.
 const CAPTURE = `(() => { if (!window.__ibDl) { window.__ibDl = {};
   const keep = (b, n) => { window.__ibDl[n] = b; return true; };
@@ -519,7 +519,7 @@ async function runIe(machine) {
       else t.ok(v.ok, '.pfx: the signed .exe passes osslsigncode verify', v.out);
     }
     t.ok((await errs()).length === 0, 'no page errors while signing', (await errs()).join(' | '));
-    // "ES5 copy" in the result: js/browser-check.js suggests only browsers
+    // "ES5 copy" in the result: web/browser-check.js suggests only browsers
     // that pass on the page's own ES2017 code.
     return finish(t.failed ? 'fail' : 'pass', t.failed ? t.checks.filter((c) => c.pass === false).map((c) => c.name).slice(0, 3).join('; ') : detail.es5 ? 'ES5 copy' : '');
   } catch (e) {

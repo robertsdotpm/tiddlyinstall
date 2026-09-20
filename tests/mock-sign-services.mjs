@@ -1,4 +1,4 @@
-// Mock cloud signing services: one per API shape in js/sign-services.js.
+// Mock cloud signing services: one per API shape in web/sign-services.js.
 //
 // None of the real services can be opened without paying and passing an
 // identity check, so none of them can be called from a test. What can be
@@ -34,7 +34,7 @@ function readBody(req) {
   });
 }
 
-// RFC 6238, independently of js/sign-services.js, so the two are not the
+// RFC 6238, independently of web/sign-services.js, so the two are not the
 // same code checking itself.
 function totpNow(secretBase32, atMs) {
   const A = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
@@ -261,7 +261,7 @@ export async function startMockServices(opts) {
 
   // Production URLs to this mock. Descriptors always build the real URL, so
   // the set of addresses a credential can be sent to stays visible in
-  // js/sign-services.js and nowhere else; this is the only place it is bent.
+  // web/sign-services.js and nowhere else; this is the only place it is bent.
   const MAP = [
     [/^https:\/\/login\.ssl\.com/, origin + '/sslcom/login'],
     [/^https:\/\/oauth-sandbox\.ssl\.com/, origin + '/sslcom/login'],

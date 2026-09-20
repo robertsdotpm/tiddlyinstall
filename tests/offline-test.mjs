@@ -18,8 +18,8 @@ import path from 'node:path';
 import { launchChrome, sleep } from './browsers/cdp.mjs';
 import { Checker, STARTED, waitFor, checkSections, buildHello as buildHelloIn, checkJob as checkJobIn } from './browsers/steps.mjs';
 import { noNativeArg, disableNative, checkNativeState, checkHasRules } from './no-native-browser.mjs';
-import { OFFLINE_TARGETS, offlineField, ARCH_LABEL, ENTRY_DEFAULTS } from '../js/form-job.js';
-import { templateLaunch } from '../js/templates.js';
+import { OFFLINE_TARGETS, offlineField, ARCH_LABEL, ENTRY_DEFAULTS } from '../shared/form-job.js';
+import { templateLaunch } from '../shared/templates.js';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
 const HERE = path.dirname(new URL(import.meta.url).pathname);
@@ -185,7 +185,7 @@ process.exit(t.failed ? 1 : 0);
 // the main form now, and the form says how much we actually know. The
 // edited-versus-default distinction is what the GUI Python bug turned on,
 // so it is checked through the real form rather than through the mapping
-// alone (backend/test/form.test.js covers that side).
+// alone (server/test/form.test.js covers that side).
 async function checkLaunchField() {
   await js(`location.hash = '#new'`);
   await sleep(300);
@@ -347,7 +347,7 @@ async function checkArchitecture() {
     /nothing to choose here/.test(await js(`document.getElementById('arch-cover-note').textContent`)),
     'the form says an online installer covers them all and picks on the machine');
 
-  // Every target and architecture in js/form-job.js has a box, and the box
+  // Every target and architecture in shared/form-job.js has a box, and the box
   // is greyed out with a reason exactly when the form says there is no
   // build. The two must not be able to disagree.
   for (const rt of ['python', 'node', 'go']) {

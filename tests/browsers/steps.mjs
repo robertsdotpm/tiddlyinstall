@@ -7,7 +7,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { readInstaller, writeInstaller, newRecordText, parseKv, kvGet, recordHash } from '../../js/ibfile.js';
+import { readInstaller, writeInstaller, newRecordText, parseKv, kvGet, recordHash } from '../../shared/ibfile.js';
 import { FX } from '../fixtures.js';
 
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -101,7 +101,7 @@ export async function fetchBlob(js, url) {
   return new Uint8Array(Buffer.from(b64, 'base64'));
 }
 
-// Reads back every installer a finished job made, with js/ibfile.js, and
+// Reads back every installer a finished job made, with shared/ibfile.js, and
 // checks each carries the job's record and a plan bound to it. With
 // keepDir and keepAs, writes the files to keepDir/keepAs/ and returns {platform: path}.
 export async function checkJob(t, js, job, what, runtime, { keepDir, keepAs } = {}) {

@@ -1,7 +1,7 @@
-// Regression test for the build server (backend/) against saved ("golden")
+// Regression test for the build server (server/) against saved ("golden")
 // answers.
 //
-//   node tests/backend-golden.mjs [--server http://127.0.0.1:8080] [--data backend/data]
+//   node tests/backend-golden.mjs [--server http://127.0.0.1:8080] [--data server/data]
 //        [--runtimes a,b] [--quick] [--rate-limits]
 //   node tests/backend-golden.mjs --record URL --data DIR [--rate-limits]
 //
@@ -74,14 +74,14 @@ import http from 'node:http';
 import os from 'node:os';
 import zlib from 'node:zlib';
 import crypto from 'node:crypto';
-import { readInstaller, zipEntryData, peInfo, peChecksum } from '../js/ibfile.js';
+import { readInstaller, zipEntryData, peInfo, peChecksum } from '../shared/ibfile.js';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
 const HERE = path.dirname(new URL(import.meta.url).pathname);
 const REPO = path.join(HERE, '..');
 const RECORD = arg('--record');
 const SERVER = RECORD || arg('--server') || 'http://127.0.0.1:8080';
-const DATA = path.resolve(arg('--data') || path.join(REPO, 'backend/data'));
+const DATA = path.resolve(arg('--data') || path.join(REPO, 'server/data'));
 const QUICK = process.argv.includes('--quick');
 const RATE = process.argv.includes('--rate-limits');
 const GOLDEN_FILE = path.join(HERE, 'golden', 'backend.json.br');
@@ -319,8 +319,8 @@ async function fixed() {
   // Paths: no listings, the site only, cleaned paths, 405s, redirects.
   const paths = [
     ['GET', '/index.html'], ['GET', '/css/'], ['GET', '/js/'], ['GET', '/mirror/'], ['GET', '/mirror'], ['GET', '/src/'], ['GET', '/src/nothing.tar.gz'],
-    ['GET', '/mirror/python'], ['GET', '/mirror/python/'], ['GET', '/mirror/../backend/data/plan-signing-key.pem'],
-    ['GET', '/mirror/%2e%2e/backend/policy.json'], ['GET', '//api//health'], ['GET', '/backend/policy.json'], ['GET', '/.git/config'],
+    ['GET', '/mirror/python'], ['GET', '/mirror/python/'], ['GET', '/mirror/../server/data/plan-signing-key.pem'],
+    ['GET', '/mirror/%2e%2e/server/policy.json'], ['GET', '//api//health'], ['GET', '/server/policy.json'], ['GET', '/.git/config'],
     ['GET', '/README.md'], ['GET', '/api/nope'], ['GET', '/api/jobs'], ['GET', '/api/jobs/'], ['GET', '/api/jobs/j_nope'],
     ['POST', '/api/health'], ['PUT', '/api/jobs'], ['DELETE', '/'], ['GET', '/api/tsa'], ['POST', '/api/relay'],
     ['GET', '/api/records/short'], ['GET', '/api/records/aaaaaaaaaaaaaaaaaaaaaaaaaa'], ['GET', '/api/records/AAAAAAAAAAAAAAAAAAAAAAAAAA'],

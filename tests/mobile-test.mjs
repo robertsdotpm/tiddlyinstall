@@ -42,7 +42,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { launchChrome, connectCdp, sleep } from './browsers/cdp.mjs';
 import { Checker, STARTED, waitFor as waitForIn, buildHello, makeSignFixtures, gpgVerify, setVal, $text } from './browsers/steps.mjs';
-import { readInstaller } from '../js/ibfile.js';
+import { readInstaller } from '../shared/ibfile.js';
 import { execFileSync, spawnSync } from 'node:child_process';
 
 if (typeof WebSocket === 'undefined') {
@@ -528,8 +528,8 @@ async function deviceDownloads(job) {
   await B.tap('#sign-go');
   const st = await waitFor(`/Saved|Couldn/.test(${$text('sign-status')}) && ${$text('sign-status')}`, 'pgp signing');
   ok(/Saved/.test(st), `${tag} signs the .run`, st);
-  const pubName = `Phone ${run} TEST <phone@example.invalid>`.replace(/[^A-Za-z0-9._-]+/g, '_').slice(0, 40) + '.pub.asc';   // js/sign-ui.js fileSafe
-  // On a phone the signature is a tap of its own (js/sign-ui.js).
+  const pubName = `Phone ${run} TEST <phone@example.invalid>`.replace(/[^A-Za-z0-9._-]+/g, '_').slice(0, 40) + '.pub.asc';   // web/sign-ui.js fileSafe
+  // On a phone the signature is a tap of its own (web/sign-ui.js).
   ok(/Now save its signature/.test(st) && await B.js(visible('#sign-asc-again')), `${tag} after signing, the signature is offered as its own tap`, st);
   await B.tap('#sign-asc-again');
   const present = [];
@@ -557,7 +557,7 @@ async function allSections(w, shots) {
   await banner(w, shots);
 }
 
-/* ---------- js/browser-check.js: phones recognised ---------- */
+/* ---------- web/browser-check.js: phones recognised ---------- */
 
 // What the page makes of phone and tablet user agents: the OS, "a phone or
 // tablet", and whether it offers the folder picker (caniuse: Safari from

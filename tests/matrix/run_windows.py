@@ -3,7 +3,7 @@ run it, and read the markers it prints.
 
 The batch script works the same under cmd, PowerShell and Bitvise shells,
 and on XP (no timeout.exe, no %LOCALAPPDATA%). The base's options are in
-bases/windows/README.md: /S, /log=, exit 0/2/3; launch.exe /out=;
+installer/windows/README.md: /S, /log=, exit 0/2/3; launch.exe /out=;
 uninstall.exe /S (which returns at once and finishes from %TEMP%).
 
 A WINDOWS entry with a third element "profile" (the German Windows 11 VM,

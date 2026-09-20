@@ -85,7 +85,7 @@ RUNS_ON = {"amd64": ("amd64", "x86"), "x86": ("x86",), "arm64": ("arm64", "amd64
 SHORT = {"amd64": "64", "x86": "32", "arm64": "a64"}
 
 # What both engines' transparency screens call each architecture on their
-# `Runtime:` line (bases/unix/ib-engine.sh's ib_arch_words and the NSIS
+# `Runtime:` line (installer/unix/ib-engine.sh's ib_arch_words and the NSIS
 # base's copy). Since 2026-09-20 the plan's `runtime` line carries the
 # architecture as a third value and each `file` line as a fifth, and both
 # engines print it, so a harness can read *what the plan chose* instead of
@@ -114,7 +114,7 @@ def from_osdesc(desc):
     """The arch the engine detected, out of its own IB_OSDESC line.
 
     The engine writes "Linux, 2.36 (236), x86", "Linux, musl libc (i386)
-    (0), x86" or "macOS 26.2 arm64" (bases/unix/ib-engine.sh,
+    (0), x86" or "macOS 26.2 arm64" (installer/unix/ib-engine.sh,
     ib_detect_os), so the arch is the last comma-or-space separated word.
     """
     if not desc:

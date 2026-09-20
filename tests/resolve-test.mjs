@@ -1,4 +1,4 @@
-// Regression test for js/resolve.js against saved ("golden") answers.
+// Regression test for shared/resolve.js against saved ("golden") answers.
 //
 //   node tests/resolve-test.mjs [--catalog FILE] [--no-roundtrip] [--no-lazy] [--show N] [--update]
 //
@@ -10,7 +10,7 @@
 // 2026-09-19 by the Go resolver (`ibsnapshot -cases`: server/cmd/ibsnapshot,
 // deleted after commit d67744a; git history has it), while it was the
 // oracle the JS port was checked against byte for byte. The test loads that
-// snapshot and requires identical results from js/resolve.js.
+// snapshot and requires identical results from shared/resolve.js.
 //
 // Updated on purpose later (--update), each diff read before committing:
 //   2026-09-19  Windows Python's msi-layout releases (the full python.org build
@@ -67,7 +67,7 @@
 // case's runtime, so a dependency it missed ("via", "requires") fails that
 // case instead of being there from an earlier one.
 //
-// --update rewrites the golden answers from the current js/resolve.js and
+// --update rewrites the golden answers from the current shared/resolve.js and
 // the snapshot in use (the inputs are kept); with --catalog FILE, that
 // snapshot is copied to tests/golden/catalog.gz too. Use it only for an
 // intended change, and read the diff.
@@ -75,7 +75,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import { fileURLToPath } from 'node:url';
-import * as R from '../js/resolve.js';
+import * as R from '../shared/resolve.js';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const GOLDEN = path.join(REPO, 'tests/golden');
@@ -97,7 +97,7 @@ const attempt = (f) => { try { return { v: f() }; } catch (e) { return { err: e.
 // Go wrote map keys sorted.
 const canon = (x) => JSON.stringify(x, (k, y) => (y && typeof y === 'object' && !Array.isArray(y) ? Object.fromEntries(Object.entries(y).sort()) : y));
 
-// What js/resolve.js answers for a case's inputs, in the golden file's shape.
+// What shared/resolve.js answers for a case's inputs, in the golden file's shape.
 async function answer(cat, c) {
   const out = {};
   const put = (r, f) => { if (r.err !== undefined) out.error = r.err; else f(r.v); };

@@ -13,7 +13,7 @@ import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { readInstaller } from '../js/ibfile.js';
+import { readInstaller } from '../shared/ibfile.js';
 import { launchChrome, sleep } from './browsers/cdp.mjs';
 import { Checker, makeSignFixtures, osslVerify, gpgVerify, $text, clickId, setVal as setValIn, checkBox } from './browsers/steps.mjs';
 import { noNativeArg, disableNative, checkNativeState } from './no-native-browser.mjs';
@@ -121,7 +121,7 @@ try {
   v = osslOk(await download('remote.exe'), t('ca.crt'));
   if (!v.skip) ok(v.ok && (!TIMESTAMP || v.ts), 'ui: the remote-signed download passes osslsigncode verify', v.out);
 
-  // Windows, a cloud signing service (js/sign-services.js). No real
+  // Windows, a cloud signing service (web/sign-services.js). No real
   // provider can be called from a test, so the generic option -- the one
   // whose address the user gives -- is pointed at a mock, which exercises
   // the whole panel for real. The named providers are checked for what they

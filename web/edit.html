@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Edit installer · TiddlyInstall</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="theme.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">
+      <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="2.5" y="2.5" width="19" height="19"></rect>
+        <line x1="12" y1="6" x2="12" y2="13"></line>
+        <polyline points="8.5 9.8 12 13.3 15.5 9.8"></polyline>
+        <line class="tray" x1="7" y1="17.5" x2="17" y2="17.5"></line>
+      </svg>
+      TiddlyInstall</a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="new.html">New installer</a>
+      <a href="edit.html" aria-current="page">Edit installer</a>
+      <a href="runtimes.html">Sources</a>
+      <button type="button" class="theme-btn" id="theme-btn" aria-label="Switch theme">Dark</button>
+    </nav>
+  </header>
+
+  <main class="narrow">
+    <div class="page-head">
+      <span class="eyebrow"><span class="num">Edit</span> &nbsp;Installer</span>
+      <h1>Edit an installer</h1>
+      <p class="lede">Change what an unsigned installer installs, its name and its icon.
+        Editing happens in your browser. Your file is never uploaded.</p>
+    </div>
+
+    <div class="prototype-note" id="standalone-note" hidden>
+      <p style="margin-top:0">This is the self-contained editor: one file with the Windows, Linux and macOS base
+        installers inside. It works offline, from a USB stick or any web host.</p>
+      <div class="actions"><button type="button" id="save-page" class="secondary">Save this page</button></div>
+    </div>
+    <noscript><p class="prototype-note">The editor needs JavaScript. Your file still never leaves your computer.</p></noscript>
+
+    <section class="panel panel-accent">
+      <span class="eyebrow"><span class="num">01</span> &nbsp;Open</span>
+      <h2 class="section-title">Open an installer</h2>
+      <p class="small muted section-intro">Made on this site as an unsigned installer.</p>
+
+      <div class="drop-zone" id="drop">
+        <input type="file" id="installer" accept=".exe,.run,.zip" aria-label="Installer">
+        <span class="hint" style="margin-top:10px">Or drop it here. <code>.exe</code> for Windows, <code>.run</code> for Linux, <code>.zip</code> for macOS.</span>
+      </div>
+
+      <hr>
+
+      <span class="label">Or start a new one from a base installer</span>
+      <div class="actions">
+        <button type="button" class="secondary" data-base="windows">Windows <code>.exe</code></button>
+        <button type="button" class="secondary" data-base="linux">Linux <code>.run</code></button>
+        <button type="button" class="secondary" data-base="macos">macOS <code>.zip</code></button>
+      </div>
+      <span class="hint" id="base-hint">Base installers come from the build server, or from inside this page when it is the self-contained editor.</span>
+
+      <p class="file-summary" id="file-summary" hidden></p>
+      <div class="warn-box small" id="signed-warning" hidden></div>
+      <div class="error-box" id="edit-error" role="alert" hidden></div>
+
+      <div class="notice-list small">
+        <p><strong>Signed installers can't be edited without losing their signature.</strong>
+          If you open one, it will be saved unsigned and Windows and macOS will warn people who run it.
+          To retarget an installer signed by TiddlyInstall, <a href="#rename">rename it</a> instead.</p>
+      </div>
+    </section>
+
+    <form id="editor" hidden>
+      <section class="panel">
+        <span class="eyebrow"><span class="num">02</span> &nbsp;Settings</span>
+        <h2 class="section-title">App details</h2>
+        <div class="row">
+          <div class="field">
+            <label for="f-name">Name</label>
+            <input type="text" id="f-name" data-key="name" maxlength="64">
+          </div>
+          <div class="field">
+            <label for="f-project">Project or package</label>
+            <input type="text" id="f-project" data-key="project" spellcheck="false">
+            <span class="hint">Fills <code>{project}</code> in commands.</span>
+          </div>
+        </div>
+        <div class="field">
+          <span class="label">Icon</span>
+          <div class="icon-edit">
+            <img id="icon-preview" alt="" width="48" height="48" hidden>
+            <div style="flex:1">
+              <input type="file" id="icon-file" accept=".png,.svg,image/png,image/svg+xml">
+              <span class="hint" id="icon-hint">A square PNG (or SVG), 256&times;256 or larger. Applied when you pick it.</span>
+            </div>
+            <button type="button" class="link-button" id="icon-clear" hidden>Undo</button>
+          </div>
+          <span class="small" id="icon-status"></span>
+        </div>
+
+        <hr>
+
+        <h2 class="section-title">What it installs</h2>
+        <div class="row">
+          <div class="field">
+            <label for="f-src-kind">Source</label>
+            <select id="f-src-kind">
+              <option value="github">GitHub repo</option>
+              <option value="package">Package</option>
+              <option value="url">Download URL</option>
+              <option value="inline">Written on the site</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-src-a" id="f-src-a-label">Repo</label>
+            <input type="text" id="f-src-a" spellcheck="false">
+          </div>
+          <div class="field">
+            <label for="f-src-b" id="f-src-b-label">Commit</label>
+            <input type="text" id="f-src-b" spellcheck="false">
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="f-runtime">Language</label>
+            <select id="f-runtime" data-key="runtime">
+              <option value="python">Python 3</option>
+              <option value="python2">Python 2</option>
+              <option value="node">Node.js</option>
+              <option value="ruby">Ruby</option>
+              <option value="php">PHP</option>
+              <option value="java">Java</option>
+              <option value="dotnet">.NET</option>
+              <option value="r">R</option>
+              <option value="cc">C / C++</option>
+              <option value="go">Go</option>
+              <option value="rust">Rust</option>
+              <option value="zig">Zig</option>
+              <option value="nim">Nim</option>
+              <option value="none">Other (own runtime)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-select">Which version</label>
+            <select id="f-select" data-key="select">
+              <option value="newest">Newest that runs on the user's system</option>
+              <option value="asyncio">Newest tested with asyncio</option>
+              <option value="range">Newest within a range</option>
+              <option value="exact">One exact version</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-range">Range or version</label>
+            <input type="text" id="f-range" data-key="range" placeholder="e.g. >=3.8" spellcheck="false">
+          </div>
+        </div>
+
+        <div class="field launch-field">
+          <span class="eyebrow">The one thing we cannot work out</span>
+          <label for="f-launch">Launch command</label>
+          <input type="text" id="f-launch" data-key="launch" spellcheck="false">
+          <dl class="launch-tokens">
+            <dt>{runtime}</dt><dd>the runtime this installer sets up</dd>
+            <dt>{project}</dt><dd>your package name</dd>
+            <dt>{app_dir}</dt><dd>the app's own folder</dd>
+            <dt>{bin}</dt><dd>the runtime's scripts folder</dd>
+          </dl>
+        </div>
+        <div class="field">
+          <label for="f-install">Install command</label>
+          <input type="text" id="f-install" data-key="install" placeholder="The project's usual install command" spellcheck="false">
+        </div>
+
+        <hr>
+
+        <h2 class="section-title">Shortcuts and install behaviour</h2>
+        <label class="choice"><input type="checkbox" data-key="console"> A console program (keep its window open)</label>
+        <label class="choice"><input type="checkbox" data-key="menu"> Start menu / app launcher shortcut</label>
+        <label class="choice"><input type="checkbox" data-key="desktop"> Desktop shortcut</label>
+        <div class="row" style="margin-top:12px">
+          <div class="field">
+            <label for="f-root">Install for</label>
+            <select id="f-root" data-key="root">
+              <option value="user">The person installing it</option>
+              <option value="system">Everyone on the computer</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-rootname">Root folder name</label>
+            <input type="text" id="f-rootname" data-key="rootname" spellcheck="false">
+          </div>
+          <div class="field">
+            <label for="f-backend">Plans fetched from</label>
+            <input type="text" id="f-backend" data-key="backend" placeholder="https://ib.example" spellcheck="false">
+          </div>
+        </div>
+
+        <details>
+          <summary>Everything in the installer's settings</summary>
+          <div class="field">
+            <label for="record-raw">Settings record</label>
+            <textarea id="record-raw" rows="12" spellcheck="false"></textarea>
+            <span class="hint">One <code>key&lt;TAB&gt;value</code> per line, as in <code>docs/format.md</code>.
+              Its hash: <code id="record-hash">…</code></span>
+          </div>
+        </details>
+        <details>
+          <summary>Install plan</summary>
+          <div class="field">
+            <label for="plan-raw">Plan</label>
+            <textarea id="plan-raw" rows="8" spellcheck="false" placeholder="Empty: the installer fetches the current plan online when it runs."></textarea>
+            <span class="hint">Leave empty for an installer that always gets the current plan. A plan here makes it work without our server.</span>
+          </div>
+        </details>
+      </section>
+
+      <section class="panel">
+        <span class="eyebrow"><span class="num">03</span> &nbsp;Contents</span>
+        <h2 class="section-title">Packed files</h2>
+        <p class="small muted" style="margin-top:0">Files carried inside the installer. The installer uses a packed copy of any download
+          whose SHA-256 matches, instead of downloading it.</p>
+        <p class="small muted">A pack is addressed by hash, so a member's name says nothing about it. What names each one
+          &mdash; including <strong>which is the 32-bit runtime and which the 64-bit</strong>, when an offline installer carries both &mdash;
+          is the <strong>Install plan</strong> above: its <code>file</code> lines give each download's SHA-256 and its architecture, per
+          <code>[target]</code> block (<code>docs/format.md</code> section 4). An installer packing more than one
+          architecture of a runtime must carry its plan rather than fetch it, or nothing can tell them apart.</p>
+        <ul class="pack-list" id="pack-list"></ul>
+        <div class="field">
+          <label for="pack-add">Add files</label>
+          <input type="file" id="pack-add" multiple>
+        </div>
+      </section>
+
+      <section class="panel panel-accent">
+        <span class="eyebrow"><span class="num">04</span> &nbsp;Save</span>
+        <h2 class="section-title">Download the edited installer</h2>
+        <div class="field">
+          <label for="out-name">File name</label>
+          <input type="text" id="out-name" maxlength="255" spellcheck="false">
+        </div>
+        <label class="choice" id="ack-signed-row" hidden><input type="checkbox" id="ack-signed">
+          <span>I understand the saved copy won't be signed.</span></label>
+        <div class="actions" style="margin-top:12px">
+          <button type="submit">Download edited installer</button>
+          <span class="small muted" id="save-status"></span>
+        </div>
+        <span class="hint">Made in your browser. Nothing is uploaded.</span>
+      </section>
+
+      <section class="panel" id="sign-panel">
+        <span class="eyebrow"><span class="num">05</span> &nbsp;Optional</span>
+        <h2 class="section-title">Sign it yourself</h2>
+        <p class="small muted" style="margin-top:0">Sign the installer with your own certificate or key, here in the page.
+          Your key is never uploaded and never stored: it stays in this tab's memory until you close it.</p>
+
+        <div id="sign-exe" hidden>
+          <span class="label">Your key</span>
+          <div class="inline-choices">
+            <label class="choice"><input type="radio" name="sign-src" id="sign-src-pfx" value="pfx" checked> A <code>.pfx</code> or <code>.p12</code> file</label>
+            <label class="choice"><input type="radio" name="sign-src" id="sign-src-remote" value="remote"> A signing service, cloud KMS or HSM</label>
+          </div>
+          <div id="sign-pfx">
+            <div class="row">
+              <div class="field">
+                <label for="pfx-file">Certificate and private key</label>
+                <input type="file" id="pfx-file" accept=".pfx,.p12,application/x-pkcs12">
+              </div>
+              <div class="field">
+                <label for="pfx-pass">Its password</label>
+                <input type="password" id="pfx-pass" autocomplete="off">
+              </div>
+            </div>
+            <div class="actions">
+              <button type="button" class="secondary" id="pfx-open">Open key</button>
+              <button type="button" class="link-button" id="pfx-forget" hidden>Forget key</button>
+            </div>
+            <pre class="small" id="pfx-status" hidden></pre>
+            <span class="hint">Certificates issued since June 2023 keep their key on a token or in a cloud service,
+              so they can't be exported as a <code>.pfx</code>; use the signing-service option for those.</span>
+          </div>
+          <div id="sign-remote" hidden>
+            <div class="field">
+              <label for="remote-certs">Your certificate and its chain</label>
+              <input type="file" id="remote-certs-file" accept=".pem,.cer,.crt,.der,.p7b">
+              <textarea id="remote-certs" rows="4" spellcheck="false" placeholder="Or paste PEM: -----BEGIN CERTIFICATE----- …"></textarea>
+              <span class="hint">From your signing service or certificate authority (PEM, <code>.cer</code>, <code>.crt</code> or <code>.p7b</code>).</span>
+            </div>
+            <div id="remote-step" hidden>
+              <span class="label">Have your service sign this SHA-256 digest</span>
+              <p class="small" style="margin:4px 0">Base64 <code class="sha" id="remote-digest-b64"></code>
+                <button type="button" class="link-button" id="remote-copy">Copy</button><br>
+                Hex <code class="sha" id="remote-digest-hex"></code></p>
+              <details>
+                <summary>Example commands</summary>
+                <pre class="small" id="remote-example"></pre>
+              </details>
+              <div class="field">
+                <label for="remote-sig">The signature it returns (base64)</label>
+                <textarea id="remote-sig" rows="3" spellcheck="false"></textarea>
+                <span class="hint">RSA PKCS#1 v1.5 or ECDSA (DER or raw). The page checks it against your certificate before writing the file.</span>
+              </div>
+              <div class="actions">
+                <button type="button" id="remote-finish">Finish and download</button>
+                <button type="button" class="link-button" id="remote-cancel">Cancel</button>
+              </div>
+            </div>
+          </div>
+          <div class="row" style="margin-top:12px">
+            <div class="field">
+              <label for="sign-name">Program name</label>
+              <input type="text" id="sign-name" maxlength="128">
+              <span class="hint">Windows shows it when asking for administrator rights.</span>
+            </div>
+            <div class="field">
+              <label for="sign-url">More-information URL</label>
+              <input type="url" id="sign-url" placeholder="Optional" spellcheck="false">
+            </div>
+          </div>
+          <div class="online-only">
+            <label class="choice"><input type="checkbox" id="ts-on" checked> Timestamp the signature, so it stays valid after your certificate expires</label>
+            <div class="field">
+              <label for="ts-name">Timestamp server</label>
+              <select id="ts-name">
+                <option value="digicert">DigiCert</option>
+                <option value="sectigo">Sectigo</option>
+                <option value="globalsign">GlobalSign</option>
+                <option value="sslcom">SSL.com</option>
+                <option value="certum">Certum</option>
+              </select>
+              <span class="hint">Timestamp servers don't accept calls from web pages, so the request goes through the build server,
+                which forwards it. It carries only a hash of your signature.</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="sign-run" hidden>
+          <p class="small" style="margin-top:0">Linux doesn't check signatures itself. This makes a detached OpenPGP signature
+            (<code>.run.asc</code>) that people can check with <code>gpg --verify</code> against your public key.</p>
+          <span class="label">Your key</span>
+          <div class="inline-choices">
+            <label class="choice"><input type="radio" name="pgp-src" id="pgp-src-new" value="new" checked> Make a new key</label>
+            <label class="choice"><input type="radio" name="pgp-src" id="pgp-src-import" value="import"> Use my GnuPG key</label>
+          </div>
+          <div id="pgp-new">
+            <div class="row">
+              <div class="field">
+                <label for="pgp-uid">Name and email</label>
+                <input type="text" id="pgp-uid" placeholder="Your Name &lt;you@example.com&gt;" spellcheck="false">
+              </div>
+              <div class="field">
+                <label for="pgp-type">Key type</label>
+                <select id="pgp-type">
+                  <option value="ed25519">Ed25519</option>
+                  <option value="rsa3072">RSA 3072</option>
+                  <option value="rsa4096">RSA 4096</option>
+                </select>
+              </div>
+            </div>
+            <div class="actions"><button type="button" class="secondary" id="pgp-make">Make key</button></div>
+          </div>
+          <div id="pgp-import" hidden>
+            <div class="field">
+              <label for="pgp-file">Secret key from <code>gpg --export-secret-keys --armor &lt;id&gt;</code></label>
+              <input type="file" id="pgp-file" accept=".asc,.gpg,.key,.pgp">
+              <textarea id="pgp-paste" rows="3" spellcheck="false" placeholder="Or paste it: -----BEGIN PGP PRIVATE KEY BLOCK----- …"></textarea>
+            </div>
+            <div class="field">
+              <label for="pgp-pass">Its passphrase</label>
+              <input type="password" id="pgp-pass" autocomplete="off">
+            </div>
+            <div class="actions"><button type="button" class="secondary" id="pgp-open">Open key</button></div>
+          </div>
+          <pre class="small" id="pgp-status" hidden></pre>
+          <div id="pgp-downloads" hidden>
+            <div class="row">
+              <div class="field">
+                <label for="pgp-sec-pass">Passphrase for the saved secret key</label>
+                <input type="password" id="pgp-sec-pass" autocomplete="new-password">
+              </div>
+            </div>
+            <div class="actions">
+              <button type="button" class="secondary" id="pgp-pub-dl">Download public key</button>
+              <button type="button" class="secondary" id="pgp-sec-dl">Download secret key</button>
+            </div>
+            <span class="hint">Publish the public key where your users can find it. Keep the secret key to sign later versions.</span>
+          </div>
+        </div>
+
+        <div id="sign-zip" hidden>
+          <p class="small" style="margin-top:0">macOS apps can't be signed in the browser: macOS only opens a downloaded app
+            that Apple has notarized, and notarizing means uploading the whole app to Apple with your developer account.
+            Download the installer above, then on a Mac with your Developer ID certificate:</p>
+<pre class="small">ditto -x -k install.zip . &amp;&amp; cd Install.app/Contents/Resources
+codesign -f -o runtime --timestamp -s "Developer ID Application: …" ibverify-arm64 ibverify-x86_64
+cd ../../.. &amp;&amp; codesign -f -o runtime --timestamp -s "Developer ID Application: …" Install.app
+ditto -c -k --keepParent Install.app upload.zip
+xcrun notarytool submit upload.zip --keychain-profile &lt;profile&gt; --wait
+xcrun stapler staple Install.app &amp;&amp; ditto -c -k --keepParent Install.app install-signed.zip</pre>
+        </div>
+
+        <div class="actions" style="margin-top:12px">
+          <button type="button" id="sign-go">Sign and download</button>
+          <span class="small muted" id="sign-status" role="status"></span>
+        </div>
+      </section>
+    </form>
+
+    <section class="panel" id="rename">
+      <span class="eyebrow">Signed installers</span>
+      <h2 class="section-title">Retarget a signed installer by renaming it</h2>
+      <p class="small">Installers signed by TiddlyInstall read their file name. Renaming keeps the signature.</p>
+<pre>
+install_python_requests.exe   installs requests
+install_python_black.exe      installs black
+</pre>
+      <p class="small muted" style="margin-bottom:0">Names are limited to 255 characters. Letters, numbers, <code>_</code> <code>-</code> <code>.</code> only.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    Designed by <a href="https://robertsdotpm.github.io/">Matthew Roberts</a> and implemented by Claude.
+  </footer>
+
+  <script src="../vendor/resedit-bundle.js"></script>
+  <script type="module" src="edit.js"></script>
+</body>
+</html>

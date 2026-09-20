@@ -4,7 +4,7 @@ check of the `uninstall.exe` a real install left behind.
 Why it exists: NSIS's WriteUninstaller copies the installer's own PE header
 out to uninstall.exe and patches the uninstaller's icon images over the
 installer's, at absolute file offsets makensis fixed at build time. From
-2026-09-18 to 2026-09-20 js/icon.js rebuilt and reordered `.rsrc`, so the
+2026-09-18 to 2026-09-20 shared/icon.js rebuilt and reordered `.rsrc`, so the
 patch landed on the dialogs, the group icon and RT_MANIFEST instead, and
 Windows refused to start uninstall.exe at all ("side-by-side configuration
 is incorrect"): every installer with a custom icon installed an app that

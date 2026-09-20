@@ -12,10 +12,10 @@
 // built-ins the code uses (Babel's "usage" analysis: Promise, Map, Symbol,
 // iterators, typed-array methods, ...) come from core-js, built by
 // core-js-builder for the same targets with only those modules. Then
-// js/legacy-dom.js, the DOM and platform pieces core-js doesn't cover.
+// web/legacy-dom.js, the DOM and platform pieces core-js doesn't cover.
 // Output: core-js polyfills, legacy-dom.js, the scripts.
 //
-// --inflate: js/inflate.js already joined as a classic script by
+// --inflate: web/lib/inflate.js already joined as a classic script by
 // build_site.py; written out as ES5 on its own, so the loader can unpack the
 // compressed ES5 copy with it before anything else of that copy runs.
 import fs from 'node:fs';
@@ -29,7 +29,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(HERE, '..', '..');
 // IE 10 too since the catalogue unpacks a folder at a time (2026-09-19):
 // core-js adds what it lacks (Map, Set, WeakMap, Uint8ClampedArray, ...) and
-// js/legacy-dom.js its dataset. Before that its IE 10 mode took 137 s to
+// web/legacy-dom.js its dataset. Before that its IE 10 mode took 137 s to
 // start and ran out of memory building (docs/plan.md 1.11).
 export const TARGETS = { ie: '10', chrome: '49' };
 
@@ -64,7 +64,7 @@ for (const f of argv) {
   parts.push(code.replace(REQ, (_, m) => { modules.add(m); return ''; }));
 }
 // The legacy DOM pieces use some built-ins themselves.
-const legacyDom = fs.readFileSync(path.join(REPO, 'js', 'legacy-dom.js'), 'utf8');
+const legacyDom = fs.readFileSync(path.join(REPO, 'web', 'legacy-dom.js'), 'utf8');
 const legacyEs5 = transform(legacyDom, true).replace(REQ, (_, m) => { modules.add(m); return ''; });
 
 // Every module the code uses, for the targets (the builder drops those the

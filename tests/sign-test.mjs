@@ -1,10 +1,10 @@
-// Signing tests for js/pkcs12.js, js/authenticode.js and js/pgp.js, checked
+// Signing tests for web/lib/pkcs12.js, web/lib/authenticode.js and web/lib/pgp.js, checked
 // with the real tools. Test keys are made fresh in a temporary folder and
 // deleted afterwards; none is ever committed.
 //
 //   node tests/sign-test.mjs [--no-network] [--relay http://127.0.0.1:8080]
 //   node --import ./tests/no-native.mjs tests/sign-test.mjs    (no WebCrypto:
-//        the plain-JavaScript crypto in js/cryptox.js does it all)
+//        the plain-JavaScript crypto in web/lib/cryptox.js does it all)
 //   node tests/sign-test.mjs --sslcom-sandbox   (opt-in: really calls
 //        SSL.com's sandbox; credentials from the environment, see below)
 //
@@ -19,15 +19,15 @@ import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import * as der from '../js/der.js';
-import { openPfx } from '../js/pkcs12.js';
-import * as ac from '../js/authenticode.js';
-import { parseCertBundle } from '../js/x509.js';
-import { readInstaller, writeInstaller, newRecordText, recordHash } from '../js/ibfile.js';
-import * as pgp from '../js/pgp.js';
-import * as X from '../js/cryptox.js';
-import * as SS from '../js/sign-services.js';
-import { checkRelay, signRelay } from '../backend/lib/signrelay.js';
+import * as der from '../web/lib/der.js';
+import { openPfx } from '../web/lib/pkcs12.js';
+import * as ac from '../web/lib/authenticode.js';
+import { parseCertBundle } from '../web/lib/x509.js';
+import { readInstaller, writeInstaller, newRecordText, recordHash } from '../shared/ibfile.js';
+import * as pgp from '../web/lib/pgp.js';
+import * as X from '../web/lib/cryptox.js';
+import * as SS from '../web/sign-services.js';
+import { checkRelay, signRelay } from '../server/lib/signrelay.js';
 import { startMockServices } from './mock-sign-services.mjs';
 import { FX } from './fixtures.js';
 
@@ -154,7 +154,7 @@ const hex = (u8) => Buffer.from(u8).toString('hex');
 
 // A Linux .run: the Linux base when built, else a stand-in script.
 async function withRunFile() {
-  const base = path.join(REPO, 'bases/unix/out/ib-base.run');
+  const base = path.join(REPO, 'installer/unix/out/ib-base.run');
   const bytes = fs.existsSync(base) ? read(base) : new TextEncoder().encode('#!/bin/sh\necho stand-in\nexit 0\n');
   const info = await readInstaller(bytes, 'x.run');
   return writeInstaller(info, { record: RECORD, plan: '', pack: [] });
@@ -167,8 +167,8 @@ async function checkFile(name, file, caFile, certFile, { record = true } = {}) {
   opensslCheck(file, certFile, name);
   if (record) {
     const info = await readInstaller(read(file), 'x.exe');
-    // js/ibfile.js is also the build server's reader (backend/).
-    ok(info.signed && info.record === RECORD, name + ': js/ibfile.js still reads the record');
+    // shared/ibfile.js is also the build server's reader (server/).
+    ok(info.signed && info.record === RECORD, name + ': shared/ibfile.js still reads the record');
   }
   return v;
 }
@@ -192,10 +192,10 @@ await run('pkcs12', async () => {
   ok(code === 'format', 'pkcs12: garbage is reported as not a .pfx', code);
 });
 
-const bases = path.join(REPO, 'bases/windows/out');
+const bases = path.join(REPO, 'installer/windows/out');
 const inputs = [['fixture', b64(FX.peIcon)]];
 if (fs.existsSync(path.join(bases, 'base.exe'))) inputs.push(['base.exe', read(path.join(bases, 'base.exe'))]);
-else skip('base.exe', 'bases/windows/out/base.exe not built');
+else skip('base.exe', 'installer/windows/out/base.exe not built');
 
 for (const [label, pe] of inputs) {
   await run('authenticode ' + label, async () => {
@@ -289,7 +289,7 @@ await run('remote signing', async () => {
   ok(/does not verify/.test(msg), 'remote: a certificate that does not match the key is refused', msg);
 });
 
-/* ---------- cloud signing services (js/sign-services.js) ---------- */
+/* ---------- cloud signing services (web/sign-services.js) ---------- */
 //
 // None of these providers can be opened without paying and an identity
 // check, so not one of them has been called for real. What is checked here
@@ -341,7 +341,7 @@ await run('signing services', async () => {
   const mock = await startMockServices({ sign: signWith, certsB64: serviceChain, creds: CREDS });
 
   // Azure is relayed in production, so it is relayed here too: the real
-  // backend/lib/signrelay.js handler, over a real socket, in front of the
+  // server/lib/signrelay.js handler, over a real socket, in front of the
   // mock. `relayed` records what the relay actually dialled and with which
   // headers, for the credential checks below.
   const relayed = [];
@@ -582,7 +582,7 @@ await run('signing services', async () => {
       ok(/does not verify/.test(why), 'a service answer is still checked against the certificate before anything is written', why);
     }
 
-    /* --- the relay's allow-list (backend/lib/signrelay.js) --- */
+    /* --- the relay's allow-list (server/lib/signrelay.js) --- */
     {
       const good = 'https://eus.codesigning.azure.net/codeSigningAccounts/acct/certificateProfiles/prof:sign?api-version=2023-06-15-preview';
       ok(checkRelay('azurets', good, 'POST').url === good, 'relay: the documented Azure sign URL is allowed');

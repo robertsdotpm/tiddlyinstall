@@ -1,7 +1,7 @@
-// Unit tests for js/ibfile.js. Open tests/ibfile.html over http (ES modules
+// Unit tests for shared/ibfile.js. Open tests/ibfile.html over http (ES modules
 // don't load from file://), or headless:
 //   google-chrome --headless=new --virtual-time-budget=20000 --dump-dom http://127.0.0.1:8093/tests/ibfile.html
-import * as ib from '../js/ibfile.js';
+import * as ib from '../shared/ibfile.js';
 import { FX } from './fixtures.js';
 
 const out = document.getElementById('out');
