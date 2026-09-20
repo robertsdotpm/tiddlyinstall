@@ -443,6 +443,31 @@ textarea.code.code-script { min-height: 110px; border-top-left-radius: 5px; }
 }
 .icon-name { font-size: 0.8em; color: var(--muted); }
 
+/* How the app starts. The launch command is the one thing about a project
+   that can't be inferred, so it sits in the main form with a mark on it --
+   quietly where the default comes from a registry's metadata or a template
+   we wrote, which is the .launch-quiet case (js/new.js paintLaunch) and,
+   with no JavaScript, the written-here case. */
+.launch-why { max-width: 70ch; margin: 2px 0 8px; }
+.launch-field {
+  border-left: 3px solid var(--accent);
+  padding-left: 12px;
+}
+.launch-field.launch-quiet,
+form:has(#src-write:checked) .launch-field { border-left-color: var(--border); }
+.launch-example { margin-top: 4px; }
+.launch-example .hint { margin-top: 4px; }
+/* The worked example: one line, scrolling in its own box on a phone rather
+   than pushing the page sideways. */
+.launch-eg {
+  display: block;
+  margin: 4px 0 0;
+  padding: 6px 8px;
+  overflow-x: auto;
+  white-space: pre;
+  max-width: 100%;
+}
+
 /* Launch command follows the Language choice (no JS). */
 .entry { display: none; }
 form:has(#runtime option:is([value="python"], [value="python2"]):checked) .entry-python,

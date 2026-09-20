@@ -6,8 +6,9 @@
 import { apiRequest, errorText, mountApiFooter, pageUrl, apiLocal, apiBase, apiReady, setApiBase, LOCAL, localSubmit } from './api.js';
 import { tarWrite } from './ibfile.js';
 import { loadOverlay, overlayState, hasCatalog } from './overlay.js';
-import { jobFromForm, BUILD_DEFAULTS, OFFLINE_TARGETS, ARCH_LABEL, MAC_ARCH, FAMILY_ARCHES, FAMILY_LABEL, NO_32_BIT,
-  PACK_WARN_MB, PACK_MAX_MB, offlineField, offlineSizeMb, offlineTargets, archCoverage, vcmp } from './form-job.js';
+import { jobFromForm, BUILD_DEFAULTS, ENTRY_DEFAULTS, TEMPLATE_FILES, OFFLINE_TARGETS, ARCH_LABEL, MAC_ARCH, FAMILY_ARCHES, FAMILY_LABEL, NO_32_BIT,
+  PACK_WARN_MB, PACK_MAX_MB, offlineField, offlineSizeMb, offlineTargets, archCoverage, vcmp, parseSource } from './form-job.js';
+import { templateLaunch } from './templates.js';
 import { mountWriteEditor } from './write-editor.js';
 import { mountOverlayConsent } from './overlay-consent.js';
 
@@ -279,6 +280,204 @@ function paintCatalog() {
   }
 }
 
+/* ---------- how the app starts ---------- */
+
+// The launch command is the one thing about a project that cannot be
+// inferred. Which packages to install can be read off the files -- a
+// requirements.txt means pip, a package.json means npm -- but nothing in a
+// repo says whether main.py is a library, a command, or something started
+// with -m. So it lives in the main form (new.html, "How does it start?"),
+// not under Customise, and the form says how much we actually know:
+//
+//   a GitHub repo, a URL, an upload -> we don't know at all: prominent,
+//     with why it matters;
+//   a package from a registry -> the registry names the program it
+//     installs and {bin} comes from that: present, quieter;
+//   written here -> we wrote the template, so we know the file it starts:
+//     present, quieter, and the field shows the template's own command.
+//
+// The defaults themselves are unchanged (js/form-job.js ENTRY_DEFAULTS).
+
+const launchField = document.getElementById('launch-field');
+const launchExample = document.getElementById('launch-example');
+const launchWhyRepo = document.getElementById('launch-why-repo');
+const launchWhyWrite = document.getElementById('launch-why-write');
+const launchWhyRepoHtml = launchWhyRepo && launchWhyRepo.innerHTML;
+const launchExampleHtml = launchExample && launchExample.innerHTML;
+
+// <root> per platform and "Install for" (design.md 1.1), and the
+// illustrative folder names that section and this form's own "Install
+// locations" preview already use, so the two never disagree.
+const ROOTS = {
+  windows: { user: '%LOCALAPPDATA%\\', system: 'C:\\', sep: '\\' },
+  linux: { user: '~/.local/share/', system: '/opt/', sep: '/' },
+  macos: { user: '~/Library/', system: '/Library/', sep: '/' },
+};
+const EG_APP = 'k3m9q2x7v4p8';      // the app's folder
+const EG_RT = 'tjfq5rqwnnrx';       // its runtime's folder
+
+// Only the tokens a command actually uses are explained, in the order they
+// appear. {runtime} and {bin} are left as tokens in the example rather than
+// given a path: where a runtime keeps its program differs by runtime and
+// platform (python.exe at the top of the embed zip, bin/java on a JDK), and
+// a made-up path would be worse than none.
+// Only what the example could not show for itself: {app_dir} and the rest
+// come out as real folders above, and a path explains itself better than a
+// gloss does. These three don't -- two are left as tokens because where a
+// runtime keeps its program differs by runtime and platform, and {exe}
+// expands to nothing outside Windows, which would otherwise just look like
+// a typo. Matched against the command as written, not as expanded.
+const TOKEN_WHY = [
+  ['{runtime}', (l, root) => 'the ' + l + ' this installer sets up, inside its own folder under ' + root +
+    ' — never one already on the computer'],
+  ['{bin}', (l) => 'that ' + l + '’s scripts folder'],
+  ['{exe}', () => '“.exe” on Windows and nothing on Linux or macOS'],
+];
+
+// The platform the example is drawn for: the first one ticked.
+function examplePlatform() {
+  for (const p of ['windows', 'linux', 'macos']) if (checked('target_' + p)) return p;
+  return 'windows';
+}
+
+// The name {project} stands for: the package or repo being packaged, else
+// the app's name, else something obviously stood in for.
+function exampleProject() {
+  if (val('source_kind') === 'repo') {
+    const src = val('source').trim();
+    const parsed = src ? parseSource(src, 'latest', '') : null;
+    // A URL's last segment is an archive's file name, not a project name,
+    // so only a repo or a package can say what {project} will be.
+    if (parsed && (parsed.kind === 'github' || parsed.kind === 'package')) {
+      const last = String(parsed.value || '').split('/').pop();
+      if (last) return last.replace(/\.git$/, '');
+    }
+  }
+  const name = val('app_name').trim().toLowerCase().replace(/[^a-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '');
+  return name || 'myapp';
+}
+
+function runtimeLabel() {
+  const e = catalogEntry(val('runtime'));
+  const sel = form.elements.runtime;
+  const opt = sel && sel.selectedOptions && sel.selectedOptions[0];
+  return (e && e.label) || (opt && opt.textContent) || val('runtime') || 'the runtime';
+}
+
+// What is in the field now, whichever language is showing.
+const launchInput = () => form.elements['entry_' + val('runtime')];
+
+// Which of the four we are in: 'github', 'url', 'package', 'write', 'local'.
+// The first three all come from the one "A GitHub repo or package" choice,
+// and js/form-job.js's own parser decides which, so the form and the job
+// can't read the same text differently.
+function sourceKindNow() {
+  const k = val('source_kind');
+  if (k !== 'repo') return k;
+  const src = val('source').trim();
+  return src ? parseSource(src, 'latest', '').kind : 'github';
+}
+
+// A written app's field follows its template, so what it shows is what will
+// run. The "was it edited?" test is value !== defaultValue (the `reader`
+// above, and js/form-job.js for a plain post), so both move together while
+// the field is untouched and only `defaultValue` moves once it has been
+// edited: an edit is never silently thrown away, and an untouched field is
+// never mistaken for one.
+function syncLaunchDefault() {
+  const rt = val('runtime');
+  const el = form.elements['entry_' + rt];
+  if (!el) return;
+  const want = val('source_kind') === 'write'
+    ? (templateLaunch(rt, val('template')) || ENTRY_DEFAULTS[rt] || el.defaultValue)
+    : (Object.prototype.hasOwnProperty.call(ENTRY_DEFAULTS, rt) ? ENTRY_DEFAULTS[rt] : el.defaultValue);
+  if (!want) return;
+  const untouched = el.value === el.defaultValue;
+  el.defaultValue = want;
+  if (untouched) el.value = want;
+}
+
+function paintLaunch() {
+  syncLaunchDefault();
+  if (!launchField) return;
+  const kind = sourceKindNow();
+  // Quiet where the default comes from something we can see: a registry's
+  // metadata, or a template we wrote.
+  const known = kind === 'package' || kind === 'write';
+  launchField.classList.toggle('launch-quiet', known);
+  if (launchWhyRepo) {
+    if (kind === 'package') {
+      launchWhyRepo.textContent = 'For a package from a registry the default is usually right: the registry says which program the package ' +
+        'installs, and that is what this runs. Change it only if your package starts some other way.';
+      launchWhyRepo.classList.add('muted');
+    } else {
+      launchWhyRepo.innerHTML = launchWhyRepoHtml;
+      launchWhyRepo.classList.remove('muted');
+    }
+  }
+  if (launchWhyWrite && kind === 'write') {
+    const fields = templateFilesOf() || {};
+    const files = Object.keys(fields).map((k) => fields[k]);
+    launchWhyWrite.textContent = files.length
+      ? 'Set from the template you picked, which we wrote, so we know it starts ' + files[0] +
+        '. Change it if you rename that file or start it another way.'
+      : 'Set from the template you picked, which we wrote, so we know the file it starts. Change it if you start it another way.';
+  }
+  paintLaunchExample();
+}
+
+// The template's files, for naming the one that starts (js/templates.js).
+function templateFilesOf() {
+  const t = TEMPLATE_FILES[val('runtime')];
+  return t ? t[val('template')] : null;
+}
+
+// The command with the folders filled in, then a line for each token it
+// actually uses. An example beats a list: someone meeting {app_dir} for the
+// first time learns more from one expanded path than from four glosses.
+function paintLaunchExample() {
+  if (!launchExample) return;
+  const el = launchInput();
+  const cmd = el ? el.value.trim() : '';
+  if (!cmd) { launchExample.innerHTML = launchExampleHtml; return; }
+  const plat = examplePlatform();
+  const r = ROOTS[plat];
+  const root = r[val('root') === 'system' ? 'system' : 'user'] + (val('rootname').trim() || 'ib') + r.sep;
+  const project = exampleProject();
+  const appDir = root + EG_APP;
+  // Separators are converted the way the resolver does it: inside a
+  // {app_dir}/{data_dir}/{runtime_dir} path run only, up to a space or a
+  // quote, so an argument that happens to contain a slash is left alone.
+  const cmdSep = plat === 'windows'
+    ? cmd.replace(/\{(?:app_dir|data_dir|runtime_dir)\}[^ "]*/g, (m) => m.split('/').join('\\'))
+    : cmd;
+  const shown = cmdSep
+    .split('{app_dir}').join(appDir)
+    .split('{data_dir}').join(appDir + r.sep + 'data')
+    .split('{runtime_dir}').join(root + EG_RT)
+    .split('{project}').join(project)
+    .split('{exe}').join(plat === 'windows' ? '.exe' : '')
+    .split('{sep}').join(r.sep);
+  const label = runtimeLabel();
+  const kids = [];
+  const lead = document.createElement('span');
+  lead.className = 'hint';
+  lead.textContent = 'On ' + FAMILY_LABEL[plat] + ', for a project called \u201c' + project + '\u201d, that runs:';
+  kids.push(lead);
+  const code = document.createElement('code');
+  code.className = 'launch-eg';
+  code.textContent = shown;
+  kids.push(code);
+  const used = TOKEN_WHY.filter(([tok]) => cmd.indexOf(tok) >= 0);
+  if (used.length) {
+    const why = document.createElement('span');
+    why.className = 'hint';
+    why.textContent = used.map(([tok, f]) => tok + ' is ' + f(label, root)).join('. ') + '.';
+    kids.push(why);
+  }
+  launchExample.replaceChildren(...kids);
+}
+
 /* ---------- 32-bit and 64-bit: what an installer covers ---------- */
 
 // What is covered, and the version ceilings that come with it, are worked
@@ -451,6 +650,18 @@ paintOfflineSize();
 
 form.elements.runtime.addEventListener('change', () => { paintCatalog(); paintArchCover(); });
 paintArchCover();
+
+// The launch field follows the language, the source, the platforms, the
+// install root and the name, and is repainted as they are typed -- but
+// only for the fields it reads, so typing in the code editor doesn't
+// rebuild it on every keystroke.
+const LAUNCH_INPUTS = ['source', 'app_name', 'rootname'];
+form.addEventListener('change', paintLaunch);
+form.addEventListener('input', (e) => {
+  const n = e.target && e.target.name;
+  if (n && (LAUNCH_INPUTS.indexOf(n) >= 0 || n.indexOf('entry_') === 0)) paintLaunch();
+});
+paintLaunch();
 let catalogSeq = 0;
 function fetchCatalog() {
   const seq = ++catalogSeq;

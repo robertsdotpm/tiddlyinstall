@@ -18,7 +18,7 @@ import { parseForm, parseUrlencoded, parseMultipart, boundaryOf, BadForm } from 
 import { esc, statusPage, classicPage, refusedPage, page } from '../lib/pages.js';
 import { jobFromForm, postedForm, TEMPLATE_FILES, ENTRY_DEFAULTS, BUILD_DEFAULTS, parseSource,
   OFFLINE_TARGETS, OFFLINE_PICKER_FIELD, offlineField, offlineSizeMb, PACK_MAX_MB, PACK_WARN_MB } from '../../js/form-job.js';
-import { TEMPLATES } from '../../js/templates.js';
+import { TEMPLATES, templateLaunch } from '../../js/templates.js';
 import { readInstaller, recordHash } from '../../js/ibfile.js';
 import { haveCatalog, haveBases, tmpDir, REPO } from './helpers.js';
 
@@ -287,6 +287,75 @@ test('js/form-job.js: an offline pack names its architectures, and is refused wh
   ({ job } = jobFromForm(postedForm({ ...defaults(), source_kind: ['write'], offline: ['on'], ...picker, offline_win_1011_x86: ['on'] }), { icon }));
   assert.equal(job.pack, undefined);
   assert.equal(job.offline, false);
+});
+
+// The launch command is the one thing about a project that can't be
+// inferred -- the files say how to install it, nothing says how to run it --
+// so it belongs in the main form, not behind a <details> under Customise.
+// This test is here to fail if it is ever filed away again.
+test('new.html: the launch command is in the main form, not hidden under Customise', () => {
+  const form = NEW_HTML.slice(NEW_HTML.indexOf('<form id="new-form"'));
+  const at = form.indexOf('name="entry_python"');
+  assert.ok(at > 0, 'the form has the Python launch field');
+  // Before the Customise heading, so it is on screen without opening anything.
+  const customise = form.indexOf('<h2>Customise');
+  assert.ok(customise > 0 && at < customise, 'the launch field comes before Customise');
+  // And not inside any <details> at all: count the ones opened and closed
+  // before it, which must balance.
+  const before = form.slice(0, at);
+  const opened = (before.match(/<details\b/g) || []).length;
+  const closed = (before.match(/<\/details>/g) || []).length;
+  assert.equal(opened, closed, 'the launch field is not inside a <details>');
+  // Next to "Build for", in the same run of main-form questions.
+  assert.ok(at < form.indexOf('<span class="label">Build for</span>'), 'it comes before "Build for"');
+  assert.match(form.slice(0, at), /<span class="label">How does it start\?<\/span>/);
+  // Every language still has its field, with the default the mapping knows
+  // (the test above checks the values; this checks none was lost in the move).
+  for (const rt of Object.keys(ENTRY_DEFAULTS)) {
+    assert.ok(form.indexOf('name="entry_' + rt + '"') > 0, 'no launch field for ' + rt);
+  }
+  // How loudly it asks depends on the source: js/new.js swaps the repo text
+  // for a quieter one when the source is a package, and the written-here
+  // case is quiet with no JavaScript at all.
+  assert.match(form, /id="launch-why-repo"/);
+  assert.match(form, /class="small launch-why src-local-only"/);
+  assert.match(form, /id="launch-why-write"/);
+});
+
+test('js/form-job.js: a template\'s launch is used until the field is edited', () => {
+  const icon = { choice: 'default' };
+  const write = (extra) => jobFromForm(postedForm({ ...defaults(), source_kind: ['write'], mode: ['unsigned'], ...extra }), { icon });
+  // Electron's launch is nothing like the language default, so it is the
+  // case that shows whether the distinction is being made at all.
+  const tray = templateLaunch('node', 'tray');
+  assert.notEqual(tray, ENTRY_DEFAULTS.node);
+  // Untouched: the field still holds the language default, and the
+  // template's command wins.
+  let { job } = write({ runtime: ['node'], template: ['tray'], entry_node: [ENTRY_DEFAULTS.node] });
+  assert.equal(job.launch, tray);
+  // A page that put the template's own command in the field (js/new.js
+  // syncLaunchDefault does) posts that, and it must not read as an edit.
+  ({ job } = write({ runtime: ['node'], template: ['tray'], entry_node: [tray] }));
+  assert.equal(job.launch, tray);
+  // Edited: the publisher's command wins over the template's.
+  ({ job } = write({ runtime: ['node'], template: ['tray'], entry_node: ['{runtime} {app_dir}/other.js'] }));
+  assert.equal(job.launch, '{runtime} {app_dir}/other.js');
+  // A repo is not a template: the field is used as it stands, edited or not.
+  ({ job } = jobFromForm(postedForm({ ...defaults(), source: ['owner/thing'], runtime: ['node'],
+    entry_node: [ENTRY_DEFAULTS.node] }), { icon }));
+  assert.equal(job.launch, ENTRY_DEFAULTS.node);
+  ({ job } = jobFromForm(postedForm({ ...defaults(), source: ['owner/thing'], runtime: ['node'],
+    entry_node: ['{runtime} {app_dir}/server.js'] }), { icon }));
+  assert.equal(job.launch, '{runtime} {app_dir}/server.js');
+  // /classic has one launch field for every language, empty for the
+  // default; it must still reach the same answers.
+  const classic = { ...defaults() };
+  delete classic.entry_python;
+  delete classic.entry_node;
+  ({ job } = jobFromForm(postedForm({ ...classic, source_kind: ['write'], runtime: ['node'], template: ['tray'], launch: [''] }), { icon }));
+  assert.equal(job.launch, tray, '/classic, nothing typed: the template\'s command');
+  ({ job } = jobFromForm(postedForm({ ...classic, source_kind: ['write'], runtime: ['node'], template: ['tray'], launch: ['  {app_dir}/run.sh  '] }), { icon }));
+  assert.equal(job.launch, '{app_dir}/run.sh', '/classic, typed: the publisher\'s command');
 });
 
 test('js/form-job.js: written apps take their template\'s commands (js/templates.js)', () => {

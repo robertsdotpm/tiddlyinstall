@@ -324,6 +324,53 @@ Press Enter to close</pre>
 
         <hr>
 
+        <!-- How the app starts. Everything else about a project can be read
+             off its files -- a requirements.txt means pip, a package.json
+             means npm -- but nothing in a repo says whether main.py is a
+             library, a command, or something you start with -m. This is the
+             one field only the publisher can answer, which is why it is
+             here and not under Customise, and why how loudly it asks
+             depends on how much we actually know (js/new.js paintLaunch).
+             The per-language defaults are unchanged; this is about
+             visibility, not about making people type more. -->
+        <span class="label">How does it start?</span>
+        <p class="small launch-why src-repo-only" id="launch-why-repo">We can work out how to <em>install</em> your project by reading its files: a
+          <code>requirements.txt</code> means pip, a <code>package.json</code> means npm. <strong>Nothing in a repo says how to run it.</strong>
+          A <code>main.py</code> might be a library, a command, or something you start with <code>-m</code>. So this is the one thing only you
+          can tell us &mdash; and getting it wrong gives an installer that installs perfectly and then starts nothing.</p>
+        <p class="small launch-why src-local-only">Nothing in a folder of files says which one starts the app, so this is the one thing only you
+          can tell us. Change it to match however you run the project today.</p>
+        <p class="small launch-why muted src-write-only" id="launch-why-write">Set from the template you picked, which we wrote, so we know the file
+          it starts. Change it if you rename that file or start it another way.</p>
+        <div class="field launch-field" id="launch-field">
+          <label for="entry-python">Launch command</label>
+          <input type="text" class="entry entry-python" id="entry-python" name="entry_python" value="{runtime} -m {project}">
+          <input type="text" class="entry entry-node" id="entry-node" name="entry_node" value="{runtime} {app_dir}" aria-label="Launch command">
+          <input type="text" class="entry entry-ruby" id="entry-ruby" name="entry_ruby" value="{bin}/{project}" aria-label="Launch command">
+          <input type="text" class="entry entry-php" name="entry_php" value="{runtime} {app_dir}/index.php" aria-label="Launch command">
+          <input type="text" class="entry entry-java" name="entry_java" value="{runtime} -jar {app_dir}/{project}.jar" aria-label="Launch command">
+          <input type="text" class="entry entry-dotnet" name="entry_dotnet" value="{runtime} {app_dir}/{project}.dll" aria-label="Launch command">
+          <input type="text" class="entry entry-r" name="entry_r" value="{runtime} {app_dir}/main.R" aria-label="Launch command">
+          <input type="text" class="entry entry-cc" id="entry-cc" name="entry_cc" value="{app_dir}/{project}" aria-label="Launch command">
+          <input type="text" class="entry entry-go" name="entry_go" value="{app_dir}/{project}" aria-label="Launch command">
+          <input type="text" class="entry entry-rust" name="entry_rust" value="{app_dir}/target/release/{project}" aria-label="Launch command">
+          <input type="text" class="entry entry-zig" name="entry_zig" value="{app_dir}/bin/{project}" aria-label="Launch command">
+          <input type="text" class="entry entry-nim" name="entry_nim" value="{app_dir}/{project}" aria-label="Launch command">
+          <input type="text" class="entry entry-none" id="entry-none" name="entry_none" value="{app_dir}/{project}" aria-label="Launch command">
+          <!-- Rewritten by js/new.js for the language, platform and name
+               chosen: the command with the folders filled in, then a gloss
+               of only the tokens it actually uses. This is the fallback
+               with no JavaScript, where none of that is known. -->
+          <div class="launch-example" id="launch-example">
+            <span class="hint"><code>{runtime}</code> the runtime this installer sets up, never one already on the computer ·
+              <code>{project}</code> your package name ·
+              <code>{app_dir}</code> the app's own folder ·
+              <code>{bin}</code> the runtime's scripts folder</span>
+          </div>
+        </div>
+
+        <hr>
+
         <span class="label">Build for</span>
         <div class="inline-choices">
           <label class="choice"><input type="checkbox" name="target_windows" checked> Windows</label>
@@ -813,27 +860,6 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
 
         <details>
           <summary><span>Shortcuts and install behaviour</span><span class="default">Start menu shortcut, uninstaller</span></summary>
-          <div class="field">
-            <label for="entry-python">Launch command</label>
-            <input type="text" class="entry entry-python" id="entry-python" name="entry_python" value="{runtime} -m {project}">
-            <input type="text" class="entry entry-node" id="entry-node" name="entry_node" value="{runtime} {app_dir}" aria-label="Launch command">
-            <input type="text" class="entry entry-ruby" id="entry-ruby" name="entry_ruby" value="{bin}/{project}" aria-label="Launch command">
-            <input type="text" class="entry entry-php" name="entry_php" value="{runtime} {app_dir}/index.php" aria-label="Launch command">
-            <input type="text" class="entry entry-java" name="entry_java" value="{runtime} -jar {app_dir}/{project}.jar" aria-label="Launch command">
-            <input type="text" class="entry entry-dotnet" name="entry_dotnet" value="{runtime} {app_dir}/{project}.dll" aria-label="Launch command">
-            <input type="text" class="entry entry-r" name="entry_r" value="{runtime} {app_dir}/main.R" aria-label="Launch command">
-            <input type="text" class="entry entry-cc" id="entry-cc" name="entry_cc" value="{app_dir}/{project}" aria-label="Launch command">
-            <input type="text" class="entry entry-go" name="entry_go" value="{app_dir}/{project}" aria-label="Launch command">
-            <input type="text" class="entry entry-rust" name="entry_rust" value="{app_dir}/target/release/{project}" aria-label="Launch command">
-            <input type="text" class="entry entry-zig" name="entry_zig" value="{app_dir}/bin/{project}" aria-label="Launch command">
-            <input type="text" class="entry entry-nim" name="entry_nim" value="{app_dir}/{project}" aria-label="Launch command">
-            <input type="text" class="entry entry-none" id="entry-none" name="entry_none" value="{app_dir}/{project}" aria-label="Launch command">
-            <span class="hint">Filled in for the language you picked; change it if your app starts differently.
-              <code>{runtime}</code> the runtime (python, node, ruby, php, java, dotnet, Rscript) ·
-              <code>{project}</code> your package name ·
-              <code>{app_dir}</code> the app's folder ·
-              <code>{bin}</code> the runtime's scripts folder</span>
-          </div>
           <label class="choice"><input type="checkbox" name="shortcut_menu" checked> <span>Start menu / app launcher entries <span class="small muted">(a folder with the app and its uninstaller). Untick to write nothing there: the app starts from its folder or a desktop shortcut, and is removed from Apps &amp; features (Windows) or with the uninstall script in its folder.</span></span></label>
           <label class="choice"><input type="checkbox" name="shortcut_desktop"> Desktop shortcut</label>
           <label class="choice"><input type="checkbox" name="cli_on_path"> Add to PATH</label>

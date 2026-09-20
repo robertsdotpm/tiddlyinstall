@@ -18,7 +18,8 @@ import path from 'node:path';
 import { launchChrome, sleep } from './browsers/cdp.mjs';
 import { Checker, STARTED, waitFor, checkSections, buildHello as buildHelloIn, checkJob as checkJobIn } from './browsers/steps.mjs';
 import { noNativeArg, disableNative, checkNativeState, checkHasRules } from './no-native-browser.mjs';
-import { OFFLINE_TARGETS, offlineField, ARCH_LABEL } from '../js/form-job.js';
+import { OFFLINE_TARGETS, offlineField, ARCH_LABEL, ENTRY_DEFAULTS } from '../js/form-job.js';
+import { templateLaunch } from '../js/templates.js';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
 const HERE = path.dirname(new URL(import.meta.url).pathname);
@@ -76,6 +77,7 @@ try {
   ok(await js(`(() => { const s = document.getElementById('svc-name');
     return !!s && s.options.length >= 4 && ![].some.call(s.options, (o) => o.value === 'azurets'); })()`),
     'the relayed signing services are not offered', await js(`[].map.call(document.getElementById('svc-name').options, (o) => o.value).join(',')`));
+  await checkLaunchField();
   await checkArchitecture();
   await checkSections(t, js);
   const rt = await ibRuntimes();
@@ -177,6 +179,132 @@ try {
 }
 console.log(`\n${t.passed} passed, ${t.failed} failed`);
 process.exit(t.failed ? 1 : 0);
+
+// How the app starts: the one field a publisher must get right, because
+// it is the one thing about a project that cannot be inferred. It is in
+// the main form now, and the form says how much we actually know. The
+// edited-versus-default distinction is what the GUI Python bug turned on,
+// so it is checked through the real form rather than through the mapping
+// alone (backend/test/form.test.js covers that side).
+async function checkLaunchField() {
+  await js(`location.hash = '#new'`);
+  await sleep(300);
+  // Visible without opening anything, and not inside a collapsed section.
+  const where = await js(`(() => { const e = document.querySelector('.ib-page[data-page="new"] #launch-field');
+    if (!e) return null;
+    let d = e.closest('details');
+    return { shown: !!e.getClientRects().length, inDetails: !!d,
+      label: (e.parentNode.querySelector('.label') || {}).textContent || '' }; })()`);
+  ok(where && where.shown && !where.inDetails, 'the launch command is in the main form, on screen, not behind a details',
+    JSON.stringify(where));
+
+  // Set the form up and read back what the launch field is showing.
+  const at = (o) => js(`(async () => {
+    const f = document.getElementById('new-form');
+    const s = ${JSON.stringify(o)};
+    if (s.kind) for (const r of f.elements.source_kind) r.checked = r.value === s.kind;
+    if (s.runtime) f.elements.runtime.value = s.runtime;
+    if (s.source !== undefined) f.elements.source.value = s.source;
+    if (s.tpl) { const b = document.getElementById('tpl-' + s.tpl); if (b) b.checked = true; }
+    if (s.type !== undefined) { const e = f.elements['entry_' + f.elements.runtime.value]; e.value = s.type; }
+    f.elements.runtime.dispatchEvent(new Event('change', { bubbles: true }));
+    f.dispatchEvent(new Event('change', { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 250));
+    const e = f.elements['entry_' + f.elements.runtime.value];
+    const why = [...document.querySelectorAll('.ib-page[data-page="new"] .launch-why')]
+      .filter((p) => p.getClientRects().length).map((p) => p.textContent.replace(/\\s+/g, ' ').trim());
+    return { value: e.value, def: e.defaultValue, edited: e.value !== e.defaultValue,
+      quiet: document.getElementById('launch-field').classList.contains('launch-quiet'),
+      why: why.join(' '),
+      eg: document.getElementById('launch-example').textContent.replace(/\\s+/g, ' ').trim() };
+  })()`);
+
+  // A GitHub repo: we cannot know, so it asks loudly and says why.
+  let g = await at({ kind: 'repo', runtime: 'python', source: 'https://github.com/psf/requests' });
+  ok(!g.quiet, 'a GitHub repo gets the prominent launch field', JSON.stringify(g));
+  ok(/Nothing in a repo says how to run it/.test(g.why), 'and says why it cannot be worked out', g.why);
+  ok(g.value === ENTRY_DEFAULTS.python && !g.edited, 'with the language default, unedited', JSON.stringify(g));
+  // The example expands the tokens for the chosen name and platform.
+  ok(/for a project called .requests./.test(g.eg) && /-m requests/.test(g.eg),
+    'the example expands {project} to the repo being packaged', g.eg);
+  ok(/\{runtime\} is the Python 3 this installer sets up/.test(g.eg),
+    'and explains only the tokens the command actually uses', g.eg);
+
+  // A package from a registry: the default comes from the registry, so the
+  // same field is present but quieter.
+  const pk = await at({ kind: 'repo', runtime: 'python', source: 'requests' });
+  ok(pk.quiet, 'a package from a registry gets the quiet launch field', JSON.stringify(pk));
+  ok(/the registry says which program the package installs/.test(pk.why), 'and says why the default is usually right', pk.why);
+
+  // An upload: we have the files but nothing says which one starts it.
+  const up = await at({ kind: 'local', runtime: 'rust' });
+  ok(!up.quiet, 'an upload gets the prominent launch field', JSON.stringify(up));
+  ok(/Nothing in a folder of files says which one starts the app/.test(up.why), 'and says why', up.why);
+  ok(/target\/release\/myapp|target\\release\\myapp/.test(up.eg), 'the example expands {app_dir} for a compiled language', up.eg);
+
+  // Written here: we wrote the template, so the field shows the command
+  // that template really starts with -- not the language default, which is
+  // what used to be shown while something else ran.
+  const tray = templateLaunch('node', 'tray');
+  const w = await at({ kind: 'write', runtime: 'node', tpl: 'tray' });
+  ok(w.quiet, 'a written app gets the quiet launch field', JSON.stringify(w));
+  ok(w.value === tray, 'and the field shows the template\'s own launch command', JSON.stringify([w.value, tray]));
+  ok(!w.edited, 'which still counts as untouched, so the template stays in charge', JSON.stringify(w));
+  ok(/it starts main\.js/.test(w.why), 'and it names the file that starts', w.why);
+
+  // Typing makes it an edit, and an edit survives changing the template.
+  const typed = '{runtime} {app_dir}/other.js --flag';
+  let e = await at({ type: typed });
+  ok(e.value === typed && e.edited, 'typing in it counts as an edit', JSON.stringify(e));
+  e = await at({ tpl: 'script' });
+  ok(e.value === typed && e.edited, 'and the edit survives switching template', JSON.stringify(e));
+  // Going back to a repo restores that language's default, not the last
+  // template's -- but only because the field was put back first.
+  await at({ type: templateLaunch('node', 'script') });
+  const back = await at({ kind: 'repo', runtime: 'node', source: 'owner/thing' });
+  ok(back.value === ENTRY_DEFAULTS.node && !back.edited, 'an untouched field returns to the language default', JSON.stringify(back));
+
+  // End to end: an edited command is what the installer is built with.
+  const edited = "{runtime} {app_dir}/main.py --started-by-the-form";
+  const job = await js(`(async () => {
+    const f = document.getElementById('new-form');
+    location.hash = '#new&write';
+    await new Promise((r) => setTimeout(r, 250));
+    for (const r of f.elements.source_kind) r.checked = r.value === 'write';
+    f.elements.runtime.value = 'python';
+    f.elements.runtime.dispatchEvent(new Event('change', { bubbles: true }));
+    document.getElementById('tpl-script').checked = true;
+    for (const r of f.elements.mode) r.checked = r.value === 'unsigned';
+    f.elements.app_name.value = 'Hello launch';
+    f.dispatchEvent(new Event('change', { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 250));
+    f.elements.entry_python.value = ${JSON.stringify(edited)};
+    f.elements.entry_python.dispatchEvent(new Event('input', { bubbles: true }));
+    f.querySelector('button[type="submit"]').click();
+    for (let i = 0; i < 600 && !/^#build&job=/.test(location.hash); i++) {
+      const err = f.querySelector('.form-error');
+      if (err && !err.hidden && err.textContent) return { error: err.textContent };
+      await new Promise((r) => setTimeout(r, 100));
+    }
+    const id = new URLSearchParams(location.hash.slice(1)).get('job');
+    for (let i = 0; i < 1200; i++) {
+      const j = await ibLocalApi.request('/api/jobs/' + id);
+      if (j.status === 'done' || j.status === 'failed') return j;
+      await new Promise((r) => setTimeout(r, 100));
+    }
+    return { error: 'timed out' };
+  })()`);
+  ok(job && job.status === 'done', 'an installer builds with an edited launch command', JSON.stringify(job).slice(0, 300));
+  if (job && job.result) {
+    const rec = await js(`ibLocalApi.request('/api/records/${job.result && job.result.record}')`);
+    ok(rec.indexOf('\nlaunch\t' + edited + '\n') >= 0,
+      'and the record carries exactly what was typed, not the template\'s', String(rec).slice(0, 400));
+  }
+  // Put the form back for the checks after this one.
+  await js(`(() => { const f = document.getElementById('new-form'); f.reset();
+    f.dispatchEvent(new Event('change', { bubbles: true })); return true; })()`);
+  await sleep(250);
+}
 
 // 32-bit and 64-bit, made explicit (docs/format.md section 3, "32-bit and
 // 64-bit, said plainly"). An ordinary installer is not built for one
