@@ -33,6 +33,7 @@ WINDOWS = {
     # ESXi installer-test VMs from tools/esxi_provision_windows.py (docs/test-vms.md).
     "10x86": ("x@10.0.1.47", "cmd"),
     "ltsc2021": ("x@10.0.1.86", "cmd"),
+    "ltsc2024": ("x@10.0.1.209", "cmd"),
     "2025core": ("x@10.0.1.124", "cmd"),
     # German Windows 11: runs as the awkward-name user, from a folder in
     # that user's profile ("profile": see run_windows.py).
