@@ -39,7 +39,8 @@
 //   env.embedPlan      true: each installer carries its plan and packs the
 //                      app's source, so it needs no build server (offline page)
 //   env.signPlan(plan) signs an embedded plan (optional)
-//   env.now()          the record's `created` time (default: now)
+//   env.now()          the record's `created` time, and the plan's `signed`
+//                      (default: now)
 import { toBytes, sha256Hex, recordHash, readInstaller, writeInstaller, tarWrite, installerExt, zipWrite, peInfo, zipRead, zipEntryData, zipUnixMode, zipIsDir, zipIsSymlink } from './ibfile.js';
 import { resolve, loadRuntimes, hasRuntime, validPackage, packagePolicyFor, packageProject, packageModule, pickBin, jsonField, goQuote, replacer } from './resolve.js';
 import { rasterSource, buildIco, buildIcns, setExeIcon, setMacIcon, checkIconPng } from './icon.js';
@@ -605,8 +606,8 @@ export async function runJob(r, env, progress = () => {}) {
   const tools = Object.keys((env.catalog && env.catalog.policy && env.catalog.policy.tools) || {})
     .filter((id) => r.tools && r.tools[id] === true);
   const name = r.name || project;
-  const record = writeRecord(r, { name, project, src, pkg, launch, install, iconSha, tools }, env.backend,
-    env.now ? env.now() : new Date());
+  const now = env.now ? env.now() : new Date();
+  const record = writeRecord(r, { name, project, src, pkg, launch, install, iconSha, tools }, env.backend, now);
   const hash = await recordHash(record);
   if (env.storeRecord) await env.storeRecord(hash, record);
 
@@ -618,6 +619,10 @@ export async function runJob(r, env, progress = () => {}) {
                     size: src.size, format: 'tar.gz', strip: src.strip, urls: src.urls || [] } : null,
     package: pkg ? pkg.name : '', packageVersion: pkg ? pkg.version : '',
     prerequisites: r.prerequisites || [], tools,
+    // A plan this page writes is made now, and says so (design.md 7.1);
+    // the build server passes the moment it serves a plan at. The record's
+    // `created` is the same instant, so one build gives one time.
+    signedAt: now,
   };
   let stem = 'install_' + r.runtime + '_' + project.toLowerCase().replace(safeName, '-');
   if (r.mode === 'A') stem += '_' + hash;

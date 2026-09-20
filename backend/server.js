@@ -16,9 +16,10 @@ import { runtimesSummary, packagePolicyFor, validPackage, goQuote } from '../js/
 import { validate, iconBytes } from '../js/builder.js';
 import { decodeIconPng } from '../js/icon.js';
 import { loadCatalog } from './lib/catalog.js';
-import { Builder, isHash26, isSHA256 } from './lib/jobs.js';
+import { Builder, isHash26, isSHA256, isNonce } from './lib/jobs.js';
 import { JobQueue } from './lib/queue.js';
-import { loadOrCreate, keyID, PUB_FILE } from './lib/plansig.js';
+import { loadOrCreate, keyID, PUB_FILE, REVOCATIONS_KIND } from './lib/plansig.js';
+import { revocationsText } from './lib/revocations.js';
 import { safeFetch } from './lib/netsafe.js';
 import { Limiter } from './lib/limiter.js';
 import { signRelay } from './lib/signrelay.js';
@@ -236,9 +237,11 @@ export class Server {
 
   /* ---------- takedown ---------- */
 
+  takedownPath() { return path.join(this.data, 'takedown.txt'); }
+
   takedownList() {
     let text;
-    try { text = fs.readFileSync(path.join(this.data, 'takedown.txt'), 'utf8'); } catch (e) { return null; }
+    try { text = fs.readFileSync(this.takedownPath(), 'utf8'); } catch (e) { return null; }
     const out = [];
     for (const raw of text.split('\n')) {
       const l = raw.replace(/^[\s\u0085\u00a0]+|[\s\u0085\u00a0]+$/g, '');
@@ -249,6 +252,16 @@ export class Server {
 
   takenDown(entry) {
     return (this.takedownList() || []).includes(entry);
+  }
+
+  // A download by its SHA-256. `sha <hash>` names one of our stored files
+  // (a source, an icon); `file <hash>` (2026-09-20, design.md 7.1) revokes
+  // the bytes themselves wherever they come from, which is how a bad
+  // runtime build named by many records at once is reached. A file we do
+  // store is refused by either.
+  takenDownSha(sha) {
+    const list = this.takedownList() || [];
+    return list.includes('sha ' + sha) || list.includes('file ' + sha);
   }
 
   // sourceKey normalises a source for the takedown list, so owner/repo,
@@ -332,6 +345,7 @@ export class Server {
       ['GET', ['api', 'pubkey'], () => this.pubkey(req, res)],
       ['GET', ['api', 'catalog', 'runtimes'], () => this.runtimes(req, res)],
       ['GET', ['api', 'takedown'], () => this.takedown(req, res)],
+      ['GET', ['api', 'revocations'], () => this.revocations(req, res)],
       ['GET', ['api', 'relay'], () => this.relay(req, res, params)],
       ['POST', ['api', 'tsa'], () => this.tsa(req, res, params)],
       ['POST', ['api', 'sign', '*'], () => this.sign(req, res, seg[2])],
@@ -525,9 +539,11 @@ export class Server {
     if (!isHash26(h)) return apiError(res, 400, 'bad_hash', 'not a record hash');
     if (this.takenDown('record ' + h)) return apiError(res, 451, 'taken_down', 'This installer has been taken down.');
     const p = params.get('os');
+    const nonce = params.get('nonce') ?? '';
+    if (nonce !== '' && !isNonce(nonce)) return apiError(res, 400, 'invalid', 'nonce must be 32 hexadecimal characters');
     let plan;
     try {
-      ({ plan } = await this.b.signedPlan(h, p ? [p] : null));
+      ({ plan } = await this.b.signedPlan(h, p ? [p] : null, nonce));
     } catch (e) {
       if (e.code === 'ENOENT') return apiError(res, 404, 'not_found', 'no such record');
       return apiError(res, 500, 'resolve_failed', e.message);
@@ -545,6 +561,8 @@ export class Server {
       return apiError(res, 429, 'rate_limited', 'Too many plans by name from your address; try again in a minute.');
     }
     if (Buffer.byteLength(rt) > 20 || Buffer.byteLength(name) > 100) return apiError(res, 400, 'invalid', 'name too long');
+    const nonce = params.get('nonce') ?? '';
+    if (nonce !== '' && !isNonce(nonce)) return apiError(res, 400, 'invalid', 'nonce must be 32 hexadecimal characters');
     try { packagePolicyFor(this.cat, rt); } catch (e) { return apiError(res, 404, 'no_registry', e.message); }
     if (name.startsWith('@')) {
       return apiError(res, 400, 'invalid', `scoped package names (${name}) can't be used in a plain file name; make an installer for it with the form instead`);
@@ -566,7 +584,7 @@ export class Server {
     const p = params.get('os');
     let plan;
     try {
-      ({ plan } = await this.b.signedNamePlan(hash, p ? [p] : null, rt, name));
+      ({ plan } = await this.b.signedNamePlan(hash, p ? [p] : null, rt, name, nonce));
     } catch (e) {
       if (e.noPackage) return apiError(res, 404, 'no_such_package', e.message);
       return apiError(res, 502, 'resolve_failed', e.message);
@@ -589,6 +607,20 @@ export class Server {
 
   async takedown(req, res) {
     writeJSON(res, 200, { entries: this.takedownList() });
+  }
+
+  // GET /api/revocations (design.md 7.1): the takedown list, time-stamped
+  // and signed with the plan key, for an installer that carries its own
+  // plan and can reach us. It is the same file /api/takedown serves, so
+  // there is nothing extra to maintain; `serial` is takedown.txt's
+  // modification time, which changes when the list does.
+  async revocations(req, res) {
+    let serial = 0;
+    try { serial = Math.floor(fs.statSync(this.takedownPath()).mtimeMs / 1000); } catch (e) { /* no list yet */ }
+    const doc = revocationsText(this.takedownList(), { now: Date.now(), serial });
+    const body = this.signer.signStringAs(REVOCATIONS_KIND, doc);
+    res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=300', 'Content-Length': Buffer.byteLength(body) });
+    res.end(body);
   }
 
   // relay fetches catalogue files for pages on hosts without CORS
@@ -673,7 +705,7 @@ export class Server {
   async icon(req, res, file) {
     const sha = file.endsWith('.png') ? file.slice(0, -4) : null;
     if (sha === null || !isSHA256(sha)) return notFound(res);
-    if (this.takenDown('sha ' + sha)) return apiError(res, 451, 'taken_down', 'This icon has been taken down.');
+    if (this.takenDownSha(sha)) return apiError(res, 451, 'taken_down', 'This icon has been taken down.');
     return serveFile(req, res, this.b.iconPath(sha), { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=31536000, immutable', 'X-Content-Type-Options': 'nosniff' });
   }
 
@@ -687,7 +719,7 @@ export class Server {
   // Stored sources: refused when their hash is on the takedown list.
   async src(req, res, rel) {
     const sha = rel.endsWith('.tar.gz') ? rel.slice(0, -7) : rel;
-    if (this.takenDown('sha ' + sha)) return httpError(res, 'taken down', 451);
+    if (this.takenDownSha(sha)) return httpError(res, 'taken down', 451);
     return serveDir(req, res, path.join(this.data, 'src'), rel);
   }
 

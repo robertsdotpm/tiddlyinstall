@@ -18,16 +18,15 @@
 //     relay's refusals, plans by name that are refused
 //   - jobs (every runtime in modes A, B and C, icons, versions, settings,
 //     packages, GitHub and URL sources, offline packs): status, error, class
-//     and fields; the record (`created` and an inline archive's hash
-//     masked); the inline source's tar; each file's name, flags, and what
-//     is inside (the record, the signed plan with record, appid and source
-//     masked, the packed files, a macOS .app's entry names, Info.plist and
-//     icon types)
+//     and fields; the record (`created` masked); the inline source's tar;
+//     each file's name, flags, and what is inside (the record, the signed
+//     plan with record, appid, source and `signed` masked, the packed
+//     files, a macOS .app's entry names, Info.plist and icon types)
 //   - plans for fixed record bytes: the golden server's records (and their
 //     sources and icons) are put in this server's data folder (--data) and
-//     their plans asked for, which must be the same bytes, signature
-//     included, when the server has the golden public URL and key
-//     (http://10.0.1.76:8080 and the key in backend/data, as ib-server has)
+//     their plans asked for, which must be the same bytes but `signed`
+//     (the moment the plan was made), with the signature checked against
+//     this server's key; and the `?nonce=` echo (design.md 7.1)
 //   - takedown by source, package, record and sha, with a few made-up
 //     entries added to --data's takedown.txt and removed afterwards
 //   - with --rate-limits (it uses up this address's minute first): which
@@ -60,9 +59,19 @@
 // records' plans were recorded again with the new catalogue. The four
 // rate-limit answers were carried over from the previous recording
 // (recorded without --rate-limits: the recording's own jobs use the minute).
+//
+// Re-recorded 2026-09-20 for stale plans (design.md 7.1): every plan has
+// `signed` and `maxage`, /api/revocations is new, and the inline source's
+// hash in a record is no longer masked (it is deterministic now, and
+// hiding it is what let an earlier bug through). The four rate-limit
+// answers were carried over again.
+//
+// One run at a time: the lock below refuses a second run against the same
+// server and data folder, which used to interleave silently.
 import fs from 'node:fs';
 import path from 'node:path';
 import http from 'node:http';
+import os from 'node:os';
 import zlib from 'node:zlib';
 import crypto from 'node:crypto';
 import { readInstaller, zipEntryData, peInfo, peChecksum } from '../js/ibfile.js';
@@ -81,6 +90,56 @@ const RUNTIMES = arg('--runtimes') ? arg('--runtimes').split(',') : Object.keys(
 
 const golden = RECORD ? { made: new Date().toISOString().slice(0, 10), server: SERVER, public: null, pubkey: null, obs: {}, fixed: {} }
   : JSON.parse(zlib.brotliDecompressSync(fs.readFileSync(GOLDEN_FILE)));
+
+/* ---------- one run at a time, and no wait without an end ---------- */
+
+// Two runs against one server and one data folder get in each other's way:
+// they build the same records, add and remove each other's files, and
+// write and restore each other's takedown.txt. It used to show as a run
+// that simply stopped, so the second one refuses instead. --force takes a
+// lock whose process is gone.
+const LOCK = path.join(DATA, '.backend-golden.lock');
+let holdingLock = false;
+function takeLock() {
+  const mine = JSON.stringify({ pid: process.pid, host: os.hostname(), started: new Date().toISOString(), mode: RECORD ? 'record' : 'check' });
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      fs.writeFileSync(LOCK, mine + '\n', { flag: 'wx' });
+      holdingLock = true;
+      return;
+    } catch (e) {
+      if (e.code !== 'EEXIST') throw e;
+    }
+    let held = {};
+    try { held = JSON.parse(fs.readFileSync(LOCK, 'utf8')); } catch (e) { /* unreadable: treat as stale */ }
+    const alive = held.pid && held.host === os.hostname() && (() => { try { process.kill(held.pid, 0); return true; } catch (e) { return e.code === 'EPERM'; } })();
+    if (alive && !process.argv.includes('--force')) {
+      console.log(`Another backend-golden run (${held.mode || '?'}, pid ${held.pid} on ${held.host}, started ${held.started}) holds ${LOCK}.`);
+      console.log('Two runs against one server and one data folder interfere: wait for it, or pass --force if it is really gone.');
+      process.exit(2);
+    }
+    console.log(`Taking over a stale lock from pid ${held.pid || '?'} (${LOCK}).`);
+    fs.rmSync(LOCK, { force: true });
+  }
+  throw new Error('could not take ' + LOCK);
+}
+function dropLock() {
+  if (!holdingLock) return;
+  holdingLock = false;
+  try {
+    if (JSON.parse(fs.readFileSync(LOCK, 'utf8')).pid === process.pid) fs.rmSync(LOCK, { force: true });
+  } catch (e) { /* someone else's or already gone */ }
+}
+process.on('exit', dropLock);
+for (const sig of ['SIGINT', 'SIGTERM']) process.on(sig, () => { dropLock(); process.exit(130); });
+
+// Nothing here waits for ever. A wait that ends says what it was waiting
+// for, which is the whole point: a tool run this rarely must never just
+// stop with no output.
+const REQ_TIMEOUT = Number(arg('--request-timeout') || 180) * 1000;   // no bytes for this long
+const RETRY_LIMIT = Number(arg('--retry-limit') || 600) * 1000;       // rate-limited for this long
+const JOB_LIMIT = Number(arg('--job-limit') || 1800) * 1000;          // one job, queue included
+class Stuck extends Error {}
 
 let passed = 0, failed = 0, skipped = 0;
 const failures = [];
@@ -132,6 +191,10 @@ function raw(p, { method = 'GET', body = null, headers = {} } = {}) {
         resolve({ status: res.statusCode, headers: res.headers, body: b, text: b.toString('utf8') });
       });
     });
+    // An idle socket: the server took the connection and then said nothing.
+    req.setTimeout(REQ_TIMEOUT, () => {
+      req.destroy(new Stuck(`${method} ${p}: nothing from ${SERVER} for ${REQ_TIMEOUT / 1000} s`));
+    });
     req.on('error', reject);
     if (body) req.end(body); else req.end();
   });
@@ -140,25 +203,37 @@ function raw(p, { method = 'GET', body = null, headers = {} } = {}) {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // POST and GET with the server's rate limits waited out.
-async function post(p, body, headers = { 'Content-Type': 'application/json' }) {
+async function unRateLimited(what, fn) {
+  const until = Date.now() + RETRY_LIMIT;
+  let said = false;
   for (;;) {
-    const r = await raw(p, { method: 'POST', body, headers });
+    const r = await fn();
     if (r.status !== 429) return r;
+    if (Date.now() > until) throw new Stuck(`${what}: rate-limited by ${SERVER} for ${RETRY_LIMIT / 1000} s. Another run against this server?`);
+    if (!said) { console.log(`  (rate-limited on ${what}; waiting)`); said = true; }
     await sleep(5000);
   }
 }
-async function get(p) {
-  for (;;) {
-    const r = await raw(p);
-    if (r.status !== 429) return r;
-    await sleep(5000);
-  }
-}
+const post = (p, body, headers = { 'Content-Type': 'application/json' }) =>
+  unRateLimited('POST ' + p, () => raw(p, { method: 'POST', body, headers }));
+const get = (p) => unRateLimited('GET ' + p, () => raw(p));
 
+// A job to its end. An answer that is not a job (the server forgot it, or
+// Redis lost it) is an error, not something to poll for ever, and a job
+// that never runs -- another run's pack ahead of it on the one pack
+// worker, say -- gives up with what it was waiting for.
 async function waitJob(id) {
+  const until = Date.now() + JOB_LIMIT;
+  let said = 0;
   for (;;) {
-    const j = JSON.parse((await get('/api/jobs/' + id)).text);
+    const r = await get('/api/jobs/' + id);
+    let j;
+    try { j = JSON.parse(r.text); } catch (e) { throw new Stuck(`job ${id}: ${r.status} ${r.text.slice(0, 200)}`); }
     if (j.status === 'done' || j.status === 'failed') return j;
+    if (!j.status) throw new Stuck(`job ${id}: the server doesn't know it any more (${r.status} ${r.text.slice(0, 200)})`);
+    if (Date.now() > until) throw new Stuck(`job ${id}: still "${j.status}" (position ${j.position}) after ${JOB_LIMIT / 1000} s`);
+    const waited = Math.floor((Date.now() - (until - JOB_LIMIT)) / 30000);
+    if (waited > said) { said = waited; console.log(`  (job ${id}: ${j.status}, position ${j.position}, ${waited * 30} s)`); }
     await sleep(400);
   }
 }
@@ -172,10 +247,17 @@ let pub = null, pubRaw = null;
 const norm = (s) => (RECORD || !pub || pub === golden.public ? String(s) : String(s).split(pub).join(golden.public));
 const sameSigner = () => RECORD || (pub === golden.public && pubRaw && pubRaw.toString('base64') === golden.pubkey);
 
-function maskRecord(t, { inline = true } = {}) {
-  let s = norm(t).replace(/^created\t.*\n/m, 'created\t<time>\n');
-  if (inline) s = s.replace(/^(source\tinline\t)[0-9a-f]{64}$/m, '$1<src>');
-  return s;
+// `created` is a timestamp and is the only thing masked in a record.
+//
+// The inline source's hash used to be masked too, because it moved with
+// whichever deflate made the gzip. That is exactly the bug design.md 11.2
+// records -- one form giving two record hashes and two install folders
+// depending on where it was built -- and this suite could not see it,
+// because it hid it. The record now names the uncompressed tar, so the
+// line is deterministic and is compared (2026-09-20, as builder-golden
+// already did).
+function maskRecord(t) {
+  return norm(t).replace(/^created\t.*\n/m, 'created\t<time>\n');
 }
 
 function verifyPlan(plan) {
@@ -186,13 +268,30 @@ function verifyPlan(plan) {
   return crypto.verify(null, msg, key, Buffer.from(m[1], 'base64'));
 }
 const stripSig = (p) => p.replace(/sig\ted25519\t\S+\n$/, '');
+// `signed` is the moment the plan was made (design.md 7.1), so it differs
+// between the recording and every later run, exactly as a record's
+// `created` does. It is the only line masked in a plan for that reason,
+// and its shape is checked where it is masked.
+const maskSigned = (p) => p.replace(/^signed\t.*$/m, 'signed\t<time>');
 
-// A plan against a golden one: bytes when this server signs as the golden
-// one did, else normalised, unsigned, with this server's signature checked.
+// The same for another document signed with the plan key: the signature
+// covers the bytes before the `sig` line, and those bytes must start with
+// the document's own header (docs/format.md section 7), which is what
+// keeps a plan's signature from being read as a revocation list.
+function verifyDoc(doc, kind) {
+  return doc.startsWith(kind + '\t') && verifyPlan(doc);
+}
+
+// A plan against a golden one: every byte but the `signed` line and the
+// signature, which cannot be the recording's (the plan is made when it is
+// asked for). The signature is checked against this server's own key
+// instead, over the bytes it actually served.
 function samePlan(name, want, got) {
-  if (sameSigner()) return ok(want === got, name + ' (byte for byte, signature included)', firstDiff(want, got));
-  note('This server\'s public URL or plan key is not the golden one, so plans are compared unsigned (its URL written as the golden one) and its signatures checked with its own key.');
-  return ok(verifyPlan(got) && stripSig(want) === stripSig(norm(got)), name + ' (normalised; its signature checked)', firstDiff(stripSig(want), stripSig(norm(got))));
+  const shape = /^signed\t\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$/m.test(got);
+  if (!sameSigner()) note('This server\'s public URL or plan key is not the golden one, so plans are compared with its URL written as the golden one, and its signatures checked with its own key.');
+  const a = maskSigned(stripSig(want)), b = maskSigned(stripSig(norm(got)));
+  return ok(verifyPlan(got) && shape && a === b, name + ' (every byte but `signed`; its signature checked)',
+    a === b ? (shape ? 'the signature does not verify' : 'no `signed` line') : firstDiff(a, b));
 }
 
 /* ---------- 1. fixed answers ---------- */
@@ -206,7 +305,7 @@ async function fixed() {
   else note('/api/pubkey: this server\'s key is not the golden one; its answer is not compared.');
   const rt = await get('/api/catalog/runtimes');
   obs('/api/catalog/runtimes', { status: rt.status, body: rt.text });
-  for (const p of ['/api/pubkey', '/api/catalog/runtimes', '/api/takedown', '/bases/windows', '/bases/linux', '/bases/macos', '/']) {
+  for (const p of ['/api/pubkey', '/api/catalog/runtimes', '/api/takedown', '/api/revocations', '/bases/windows', '/bases/linux', '/bases/macos', '/']) {
     const r = await get(p);
     obs(`${p}: status and headers`, { status: r.status, type: r.headers['content-type'], cache: r.headers['cache-control'], disposition: r.headers['content-disposition'] });
   }
@@ -226,6 +325,8 @@ async function fixed() {
     ['POST', '/api/health'], ['PUT', '/api/jobs'], ['DELETE', '/'], ['GET', '/api/tsa'], ['POST', '/api/relay'],
     ['GET', '/api/records/short'], ['GET', '/api/records/aaaaaaaaaaaaaaaaaaaaaaaaaa'], ['GET', '/api/records/AAAAAAAAAAAAAAAAAAAAAAAAAA'],
     ['GET', '/api/plan/short'], ['GET', '/api/plan/aaaaaaaaaaaaaaaaaaaaaaaaaa'], ['GET', '/api/plan/name'],
+    ['GET', '/api/plan/aaaaaaaaaaaaaaaaaaaaaaaaaa?nonce=abc'], ['GET', '/api/plan/aaaaaaaaaaaaaaaaaaaaaaaaaa?nonce=' + 'g'.repeat(32)],
+    ['GET', '/api/plan/name/python/requests?nonce=abc'], ['GET', '/api/revocations?nonce=abc'],
     ['GET', '/dl/x/y'], ['GET', '/dl/aaaaaaaaaaaaaaaaaaaaaaaaaa/nothing.exe'], ['GET', '/dl/aaaaaaaaaaaaaaaaaaaaaaaaaa/.hidden'],
     ['GET', '/dl/aaaaaaaaaaaaaaaaaaaaaaaaaa/a%2Fb'], ['GET', '/icons/abc.png'], ['GET', '/icons/' + 'a'.repeat(64) + '.png'],
     ['GET', '/icons/' + 'a'.repeat(64)], ['GET', '/bases/nope'], ['HEAD', '/bases/linux'], ['HEAD', '/api/pubkey'],
@@ -404,6 +505,19 @@ async function fixedRecordPlans(label, hash, rec, oses) {
     if (want.status === 200 && r.status === 200) samePlan(name, want.text, r.text);
     else ok(want.status === r.status && want.text === r.text, `${name}: ${want.status}`, `golden ${want.status} ${want.text}\nserver ${r.status} ${r.text}`);
   }
+  // The nonce (design.md 7.1) is the plan with one line more, inside the
+  // signature: what the engine sent, echoed. Checked against this run's
+  // own plan rather than the golden, since it is this run's nonce.
+  const plain = await get('/api/plan/' + f.hash);
+  if (plain.status === 200) {
+    const n = crypto.randomBytes(16).toString('hex');
+    const withNonce = await get('/api/plan/' + f.hash + '?nonce=' + n);
+    const line = 'request\tnonce\t' + n + '\n';
+    ok(withNonce.status === 200 && withNonce.text.includes(line) && verifyPlan(withNonce.text),
+      `${label}: ?nonce= is echoed into the signed plan`, withNonce.text.slice(0, 200));
+    const a = maskSigned(stripSig(plain.text)), b = maskSigned(stripSig(withNonce.text)).replace(line, '');
+    ok(withNonce.status === 200 && a === b, `${label}: the nonce is the only difference`, firstDiff(a, b));
+  }
 }
 
 function zipView(info, hash, src) {
@@ -454,7 +568,7 @@ async function fileObs(label, mode, job, rec) {
     }
     obs(`${L}: the record inside is the server's`, (info.record || '') === rec);
     const plan = info.plan || '';
-    const m = norm(plan).replace(/^record\t\S+$/m, 'record\t<hash>').replace(/^appid\t\S+$/mg, 'appid\t<appid>')
+    const m = maskSigned(norm(plan)).replace(/^record\t\S+$/m, 'record\t<hash>').replace(/^appid\t\S+$/mg, 'appid\t<appid>')
       .replace(/^(source\t)[0-9a-f]{64}(\.tar\.gz\t)[0-9a-f]{64}\t\d+/m, '$1<src>$2<src>').replace(/\/src\/[0-9a-f]{64}\.tar\.gz/g, '/src/<src>.tar.gz');
     obs(`${L}: the embedded plan (record, appid and source masked)`, { signed: plan ? verifyPlan(plan) : null, plan: stripSig(m) });
     obs(`${L}: the packed files, each named by its SHA-256`, info.pack.map((x) => (src ? x.name.split(src[1]).join('<src>') : x.name) + ' ' + (x.name === sha(Buffer.from(x.data)) ? 'ok' : 'BAD')));
@@ -473,8 +587,7 @@ async function job(label, body, opts = {}) {
   if (j.status !== 'done' || opts.volatile) return null;
   obs(`${label}: the job's fields`, { job: Object.keys(j).sort(), result: Object.keys(j.result).sort() });
   const rec = (await get('/api/records/' + j.result.record)).text;
-  const inline = body.source.kind === 'inline';
-  obs(`${label}: the record (created${inline ? ' and the inline archive\'s hash' : ''} masked)`, maskRecord(rec, { inline }));
+  obs(`${label}: the record (created masked)`, maskRecord(rec));
   const s = /^source\tinline\t(\S+)/m.exec(rec);
   if (s) {
     const t = await tarOf(s[1]);
@@ -588,7 +701,7 @@ async function takedown() {
   // A record the server stores: a plan by name.
   const rec = (await get('/api/plan/name/python/six')).headers['x-ib-record'];
   const srcSha = /^source\tinline\t(\S+)/m.exec(sample.rec)[1];
-  const ours = ['source github oracle-owner/oracle-repo', 'source package attrs', 'record ' + rec, 'sha ' + srcSha, 'sha ' + 'd'.repeat(64)];
+  const ours = ['source github oracle-owner/oracle-repo', 'source package attrs', 'record ' + rec, 'sha ' + srcSha, 'sha ' + 'd'.repeat(64), 'file ' + 'e'.repeat(64)];
   const mask = (s) => s.split(rec).join('<record>').split(srcSha).join('<src>');
   try {
     fs.writeFileSync(file, (saved ? saved.toString('utf8') : '') + ['# golden test entries', ...ours].join('\n') + '\n');
@@ -624,6 +737,31 @@ async function takedown() {
       const j = r.status === 202 ? await waitJob(JSON.parse(r.text).id) : null;
       obs('takedown: a job whose source hash is listed', { status: r.status, job: j && j.status, error: j && j.error });
     }
+    {
+      // The signed revocation list (design.md 7.1): the same entries, one
+      // `revoke` line each, signed with the plan key. `issued`, `expires`
+      // and `serial` are times, so only their shape is observed.
+      const r = await get('/api/revocations');
+      const doc = r.text;
+      const head = doc.split('\n').slice(0, 4);
+      obs('revocations: the header', {
+        status: r.status, cache: r.headers['cache-control'], type: r.headers['content-type'],
+        kind: head[0],
+        issued: /^issued\t\d{4}-\d\d-\d\dT\d\d:00:00Z$/.test(head[1] || ''),
+        expires: /^expires\t\d{4}-\d\d-\d\dT\d\d:00:00Z$/.test(head[2] || ''),
+        serial: /^serial\t\d+$/.test(head[3] || ''),
+        signed: verifyDoc(doc, 'ib-revocations'),
+        notAPlan: !verifyDoc(doc, 'ib-plan'),
+      });
+      const wanted = new Set(ours.map((e) => 'revoke\t' + e.split(' ').join('\t')).map(mask));
+      obs('revocations: the entries added', doc.split('\n').filter((l) => l.startsWith('revoke\t')).map(mask).filter((l) => wanted.has(l)));
+      // Stable for the hour, so it can be cached and signed once.
+      const again = await get('/api/revocations');
+      ok(again.text === doc, 'revocations: two requests in one hour are the same bytes');
+      // The `file <sha256>` kind (new here) refuses a stored file too.
+      const y = await get('/src/' + 'e'.repeat(64) + '.tar.gz');
+      obs('takedown: file <sha256> refuses a stored file', { status: y.status, body: y.text });
+    }
   } finally {
     if (saved === null) fs.rmSync(file, { force: true }); else fs.writeFileSync(file, saved);
   }
@@ -650,6 +788,7 @@ async function rateLimits() {
 
 /* ---------- run ---------- */
 
+takeLock();
 {
   const pn = await get('/api/plan/name/python/requests');
   pub = /^backend\t(.*)$/m.exec((await get('/api/records/' + pn.headers['x-ib-record'])).text)[1];

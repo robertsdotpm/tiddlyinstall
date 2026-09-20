@@ -16,6 +16,12 @@ export const PUB_FILE = 'plan-signing-key.pub'; // base64 of the raw 32-byte pub
 
 const SIG_PREFIX = 'sig\ted25519\t';
 const PLAN_HEAD = Buffer.from('ib-plan\t');
+// The other document signed with the plan key: the revocation list
+// (design.md 7.1). Its signed bytes must start with its own header, so a
+// plan signature can never be read as one, or the other way round.
+export const PLAN_KIND = 'ib-plan';
+export const REVOCATIONS_KIND = 'ib-revocations';
+const headOf = (kind) => Buffer.from(kind + '\t');
 
 function rawPublic(keyObject) {
   return Buffer.from(keyObject.export({ format: 'jwk' }).x, 'base64url');
@@ -45,9 +51,14 @@ export class Signer {
 
   // plan (bytes or text) with its signature line appended. It must be an
   // ib-plan and not already signed; a missing final newline is added first.
-  sign(plan) {
-    let b = Buffer.from(plan);
-    if (!b.subarray(0, PLAN_HEAD.length).equals(PLAN_HEAD)) throw new Error('plansig: not an ib-plan');
+  sign(plan) { return this.signAs(PLAN_KIND, plan); }
+
+  // The same for another document signed with this key: its bytes must
+  // start with `<kind><TAB>`.
+  signAs(kind, doc) {
+    let b = Buffer.from(doc);
+    const head = headOf(kind);
+    if (!b.subarray(0, head.length).equals(head)) throw new Error('plansig: not an ' + kind);
     if (split(b).ok) throw new Error('plansig: already signed');
     if (b.length && b[b.length - 1] !== 0x0a) b = Buffer.concat([b, Buffer.from('\n')]);
     const sig = crypto.sign(null, b, this.priv);
@@ -55,6 +66,7 @@ export class Signer {
   }
 
   signString(plan) { return this.sign(Buffer.from(plan, 'utf8')).toString('utf8'); }
+  signStringAs(kind, doc) { return this.signAs(kind, Buffer.from(doc, 'utf8')).toString('utf8'); }
 }
 
 // loadOrCreate reads the key from dir, or makes one if there is none. The
@@ -117,15 +129,17 @@ export function split(doc) {
 export class VerifyError extends Error {}
 
 // verify checks a signed plan against the raw public key and returns the
-// signed bytes (the plan without its signature line).
-export function verify(pubRaw, doc) {
+// signed bytes (the plan without its signature line). `kind` is the header
+// the signed bytes must start with: an ib-plan unless another is named.
+export function verify(pubRaw, doc, kind = PLAN_KIND) {
   const { msg, line, ok } = split(doc);
   if (!ok) throw new VerifyError('the plan is not signed');
   if (!line.startsWith(SIG_PREFIX)) throw new VerifyError('the plan\'s signature does not verify: unknown signature type ' + JSON.stringify(line));
   const b64 = line.slice(SIG_PREFIX.length);
   const sig = Buffer.from(b64, 'base64');
   if (b64.length !== 88 || !/^[A-Za-z0-9+/]{86}==$/.test(b64) || sig.length !== 64) throw new VerifyError('the plan\'s signature does not verify: malformed signature');
-  if (!msg.subarray(0, PLAN_HEAD.length).equals(PLAN_HEAD)) throw new VerifyError('the plan\'s signature does not verify: signed bytes are not an ib-plan');
+  const head = headOf(kind);
+  if (!msg.subarray(0, head.length).equals(head)) throw new VerifyError('the plan\'s signature does not verify: signed bytes are not an ' + kind);
   if (!crypto.verify(null, msg, publicKeyFromRaw(pubRaw), sig)) throw new VerifyError('the plan\'s signature does not verify');
   return msg;
 }
@@ -149,10 +163,21 @@ export function recordOf(plan) {
   return '';
 }
 
-// AddRequestLine puts `request<TAB>vals...` right after the plan's header line.
+// AddRequestLine puts `request<TAB>vals...` after the plan's header line and
+// after any `request` lines already there, so the lines keep the order they
+// were added in: `request<TAB>name<TAB>…` (a plan by name, format.md section
+// 2) before `request<TAB>nonce<TAB>…` (design.md 7.1). The order is part of
+// the format: an engine that reads one `request` line reads the first, which
+// is the one saying what was asked for.
 export function addRequestLine(plan, ...vals) {
-  const i = plan.indexOf('\n');
+  let i = plan.indexOf('\n');
   if (i < 0 || !plan.startsWith('ib-plan\t')) throw new Error('not an ib-plan');
+  for (;;) {
+    if (!plan.startsWith('request\t', i + 1)) break;
+    const n = plan.indexOf('\n', i + 1);
+    if (n < 0) break;
+    i = n;
+  }
   const line = ['request', ...vals.map((v) => String(v).replace(/[\t\r\n]/g, ' '))].join('\t') + '\n';
   return plan.slice(0, i + 1) + line + plan.slice(i + 1);
 }

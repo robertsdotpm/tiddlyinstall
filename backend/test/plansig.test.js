@@ -127,3 +127,30 @@ test('addRequestLine', (t) => {
   const signed = s.signString(addRequestLine(plan, 'name', 'python', 'requests'));
   assert.throws(() => verify(s.pub, Buffer.from(signed.replace('requests', 'evil'))));
 });
+
+// A second request line goes after the first, so `name` stays the first
+// `request` line an engine reads (docs/format.md section 1).
+test('addRequestLine keeps the order: name, then nonce', () => {
+  const plan = 'ib-plan\t1\nrecord\tabc\n\n[target]\nwhen\tlinux\t0\t9999\t*\n';
+  const hex = 'a'.repeat(32);
+  const both = addRequestLine(addRequestLine(plan, 'name', 'python', 'requests'), 'nonce', hex);
+  assert.equal(both.split('\n').slice(0, 4).join('\n'),
+    'ib-plan\t1\nrequest\tname\tpython\trequests\nrequest\tnonce\t' + hex + '\nrecord\tabc');
+  // A nonce alone is the second line, as `name` would have been.
+  assert.equal(addRequestLine(plan, 'nonce', hex).split('\n')[1], 'request\tnonce\t' + hex);
+});
+
+// The revocation list is signed with the same key by the same rules, and
+// its header keeps the two kinds of document apart (docs/format.md 7).
+test('signing another kind of document', (t) => {
+  const { s } = newSigner(t);
+  const doc = 'ib-revocations\t1\nissued\t2026-09-20T11:00:00Z\nrevoke\trecord\tabc\n';
+  const signed = s.signStringAs('ib-revocations', doc);
+  assert.equal(verify(s.pub, Buffer.from(signed), 'ib-revocations').toString('utf8'), doc);
+  // Not as a plan, and a plan is not one of these.
+  assert.throws(() => verify(s.pub, Buffer.from(signed)), VerifyError);
+  assert.throws(() => verify(s.pub, Buffer.from(s.signString(PLAN)), 'ib-revocations'), VerifyError);
+  assert.throws(() => s.signStringAs('ib-revocations', PLAN));
+  // A changed entry does not verify.
+  assert.throws(() => verify(s.pub, Buffer.from(signed.replace('abc', 'xyz')), 'ib-revocations'), VerifyError);
+});

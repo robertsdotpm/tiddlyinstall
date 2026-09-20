@@ -26,6 +26,11 @@ const SIGNED_BY = 'TiddlyInstall TEST';   // our test certificate (bases/windows
 
 export const isSHA256 = (s) => /^[0-9a-f]{64}$/.test(s);
 export const isHash26 = (s) => /^[a-z2-7]{26}$/.test(s);
+// The `?nonce=` an online installer sends with a plan request (design.md
+// 7.1): 16 random bytes as hex, in either case. It is echoed exactly as it
+// arrived, because the engine compares it with what it sent.
+export const isNonce = (s) => /^[0-9a-fA-F]{32}$/.test(s);
+const withNonce = (plan, nonce) => (isNonce(nonce) ? addRequestLine(plan, 'nonce', nonce) : plan);
 const sha256hex = (b) => crypto.createHash('sha256').update(b).digest('hex');
 const exists = (p) => { try { fs.statSync(p); return true; } catch (e) { return false; } };
 
@@ -65,6 +70,9 @@ export class Builder {
     this.backend = o.backend ?? o.public;
     this.signer = o.signer;
     this.takenDown = o.takenDown || (() => false);
+    // The moment a plan is made, written into it as `signed` (design.md
+    // 7.1). A test can pin it.
+    this.now = o.now || (() => new Date());
     // Every fetch goes through the public-only client (tests pass their own).
     this.fetch = o.fetch || safeFetch;
     this.lookupCache = new Map();
@@ -200,6 +208,7 @@ export class Builder {
   async plan(hash, platforms) {
     const { app } = await this.loadApp(hash);
     if (platforms) app.platforms = platforms;
+    app.signedAt = this.now();
     if (app.package) await this.preparePackage(app);
     const { plan, files } = resolveFiles(this.cat, app);
     const out = files.map((f) => Object.assign({}, f, { local: localPath(this.cat, f.local) }));
@@ -214,19 +223,22 @@ export class Builder {
     return { plan, files: out };
   }
 
-  // What GET /api/plan/{hash} serves and offline installers embed.
-  async signedPlan(hash, platforms) {
+  // What GET /api/plan/{hash} serves and offline installers embed. `nonce`
+  // (32 hex characters, or '') is the one the engine sent, echoed inside the
+  // signature so a replayed older plan can be told apart (design.md 7.1).
+  async signedPlan(hash, platforms, nonce = '') {
     const { plan, files } = await this.plan(hash, platforms);
     if (!this.signer) throw new Error('no plan signing key');
-    return { plan: this.signer.signString(plan), files };
+    return { plan: this.signer.signString(withNonce(plan, nonce)), files };
   }
 
   // GET /api/plan/name/{runtime}/{name}: the plan also says, inside the
-  // signature, which name it answers (format.md "Plan signature").
-  async signedNamePlan(hash, platforms, runtime, name) {
+  // signature, which name it answers (format.md "Plan signature"). That
+  // line comes first, before the nonce.
+  async signedNamePlan(hash, platforms, runtime, name, nonce = '') {
     const { plan, files } = await this.plan(hash, platforms);
     if (!this.signer) throw new Error('no plan signing key');
-    return { plan: this.signer.signString(addRequestLine(plan, 'name', runtime, name)), files };
+    return { plan: this.signer.signString(withNonce(addRequestLine(plan, 'name', runtime, name), nonce)), files };
   }
 
   /* ---------- packages ---------- */

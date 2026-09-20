@@ -11,7 +11,7 @@ import http from 'node:http';
 import net from 'node:net';
 import IORedis from 'ioredis';
 import { Server, parseFlags } from '../server.js';
-import { verifyFor } from '../lib/plansig.js';
+import { verify, verifyFor } from '../lib/plansig.js';
 import { readInstaller } from '../../js/ibfile.js';
 import { haveCatalog, haveBases, tmpDir, REPO, RUNTIMES } from './helpers.js';
 
@@ -146,6 +146,20 @@ test('the server', { skip }, async (t) => {
     assert.match(rec, /^ib-record\t1\nname\tHello\n/);
     const plan = (await get('/api/plan/' + hash)).text;
     verifyFor(s.signer.pub, Buffer.from(plan), hash);
+    // Every plan says when it was made and how long a carried copy may be
+    // used (design.md 7.1), inside the signature.
+    assert.match(plan, /^signed\t\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$/m);
+    assert.match(plan, /^maxage\t7776000$/m);
+    // A nonce is echoed into the signed bytes, and is the only change.
+    const nonce = 'a1b2c3d4e5f60718293a4b5c6d7e8f90';
+    const np = (await get('/api/plan/' + hash + '?nonce=' + nonce)).text;
+    verifyFor(s.signer.pub, Buffer.from(np), hash);
+    assert.equal(np.split('\n')[1], 'request\tnonce\t' + nonce);
+    const line = 'request\tnonce\t' + nonce + '\n';
+    const bare = (x) => x.replace(/^signed\t.*\n/m, '').replace(/sig\ted25519\t\S+\n$/, '');
+    assert.equal(bare(np.replace(line, '')), bare(plan));
+    assert.equal((await json('/api/plan/' + hash + '?nonce=abc')).j.code, 'invalid');
+    assert.equal((await json('/api/plan/' + hash + '?nonce=' + 'g'.repeat(32))).status, 400);
     const f = j.result.files[0];
     assert.equal(f.url, '/dl/' + hash + '/install_python_hello.run');
     const d = await get(f.url);
@@ -163,5 +177,33 @@ test('the server', { skip }, async (t) => {
     const td = await json('/api/jobs', { method: 'POST', body: JSON.stringify({ runtime: 'python', mode: 'C', source: { kind: 'github', value: 'https://github.com/A/B.git' } }) });
     assert.deepEqual([td.status, td.j.code], [451, 'taken_down']);
     assert.deepEqual((await json('/api/takedown')).j.entries, ['record ' + hash, 'sha ' + src, 'source github a/b']);
+  });
+
+  await t.test('the signed revocation list', async () => {
+    const entries = ['record tjfq5rqwnnrxk3m9q2x7v4p8ab', 'source github a/b', 'file ' + 'c'.repeat(64)];
+    fs.writeFileSync(path.join(data, 'takedown.txt'), '# a comment\n\n' + entries.join('\n') + '\n');
+    const r = await get('/api/revocations');
+    assert.equal(r.status, 200);
+    assert.equal(r.headers['content-type'], 'text/plain; charset=utf-8');
+    assert.equal(r.headers['cache-control'], 'public, max-age=300');
+    const doc = r.text;
+    // Signed with the plan key, as an ib-revocations and not as a plan.
+    const msg = verify(s.signer.pub, Buffer.from(doc), 'ib-revocations').toString('utf8');
+    assert.throws(() => verify(s.signer.pub, Buffer.from(doc)), /not an ib-plan/);
+    const lines = msg.split('\n');
+    assert.equal(lines[0], 'ib-revocations\t1');
+    assert.match(lines[1], /^issued\t\d{4}-\d\d-\d\dT\d\d:00:00Z$/);
+    assert.match(lines[2], /^expires\t\d{4}-\d\d-\d\dT\d\d:00:00Z$/);
+    assert.match(lines[3], /^serial\t\d+$/);
+    assert.deepEqual(lines.slice(4).filter(Boolean), entries.map((e) => 'revoke\t' + e.split(' ').join('\t')));
+    // The same bytes for the same list within the hour.
+    assert.equal((await get('/api/revocations')).text, doc);
+    // `file <sha256>` reaches a stored file, as `sha` does.
+    assert.equal((await get('/src/' + 'c'.repeat(64) + '.tar.gz')).status, 451);
+    fs.rmSync(path.join(data, 'takedown.txt'));
+    // No list at all is still a signed document that says nothing.
+    const empty = (await get('/api/revocations')).text;
+    verify(s.signer.pub, Buffer.from(empty), 'ib-revocations');
+    assert.ok(!empty.includes('revoke\t'), empty);
   });
 });

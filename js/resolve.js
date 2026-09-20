@@ -1421,6 +1421,13 @@ function normApp(a) {
     package: str(a.package), packageVersion: str(a.packageVersion),
     prerequisites: list(a.prerequisites).map(str),
     tools: list(a.tools).map(str),
+    // When this plan is being made, and how long a carried copy may be
+    // used (design.md 7.1): normalised here, so the page and the server
+    // write the same bytes whether the caller passed a Date, a number of
+    // milliseconds or the text. Anything else is no time at all, and the
+    // plan then has neither line, as every plan did before 2026-09-20.
+    signedAt: planTime(a.signedAt),
+    maxage: typeof a.maxage === 'number' && isFinite(a.maxage) ? Math.trunc(a.maxage) : undefined,
   };
 }
 
@@ -1526,6 +1533,31 @@ function quoteAppPaths(s) {
 const b01 = (b) => (b ? '1' : '0');
 const orDefault = (s, d) => (s === '' ? d : s);
 
+// How long a carried plan may be used before an engine warns about it, and
+// the longest an engine will accept (design.md 7.1, "Carried plans with no
+// network"). Seconds: 90 days, and a hard limit of 365 days.
+export const PLAN_MAXAGE = 7776000;
+export const PLAN_MAXAGE_LIMIT = 31536000;
+
+// The plan header's `signed` value: RFC 3339, UTC, whole seconds, the same
+// spelling as a record's `created`. Takes a Date, a number of milliseconds
+// or a string already in that shape; '' (no `signed` line) for anything
+// else, so a caller that gives no time gets the plan it always got.
+export function planTime(at) {
+  if (at === undefined || at === null || at === '') return '';
+  if (typeof at === 'string') return /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$/.test(at) ? at : '';
+  const d = typeof at === 'number' ? new Date(at) : at;
+  if (!(d instanceof Date) || isNaN(d.getTime())) return '';
+  return d.toISOString().replace(/\.\d+Z$/, 'Z');
+}
+
+// The plan header's `maxage`, in seconds: the default unless the caller
+// asks for another, and never past the hard limit.
+export function planMaxAge(v) {
+  const n = typeof v === 'number' && isFinite(v) ? Math.trunc(v) : PLAN_MAXAGE;
+  return String(Math.max(1, Math.min(n, PLAN_MAXAGE_LIMIT)));
+}
+
 // Catalog.write
 function writePlan(cat, app, blocks) {
   const w = new Writer();
@@ -1540,6 +1572,16 @@ function writePlan(cat, app, blocks) {
   w.add('desktop', b01(app.desktop));
   w.add('root', orDefault(app.root, 'user'));
   w.add('rootname', orDefault(app.rootName, 'ib'));
+  // When this plan was made, and how long a carried copy of it may be used
+  // (design.md 7.1). Written only when the caller says at what moment it is
+  // being made, so the page and the build server, given the same moment,
+  // write the same bytes -- and so a plan resolved with no time at all (an
+  // old case, tools/resolve.mjs) is the plan it always was.
+  const at = planTime(app.signedAt);
+  if (at !== '') {
+    w.add('signed', at);
+    w.add('maxage', planMaxAge(app.maxage));
+  }
   const s = app.source;
   if (s) {
     // The 6 fields an engine reads are the file's: its name, the SHA-256

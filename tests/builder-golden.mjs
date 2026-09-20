@@ -1,10 +1,11 @@
 // Regression test for js/builder.js against saved ("golden") answers: for
 // each runtime's hello world (tests/matrix/projects.json), the record and
 // plan a build server made for the same POST /api/jobs body (mode C, every
-// platform), compared with what runJob makes in the page. Two differences
-// are expected and masked: `created` (a timestamp), and the inline source's
-// archive (the server stores it and names it in the plan; the page packs it
-// into the installer).
+// platform), compared with what runJob makes in the page. Three differences
+// are expected and masked: `created` and the plan's `signed` (timestamps,
+// tied to each other by planTies below), and the inline source's archive
+// (the server stores it and names it in the plan; the page packs it into
+// the installer).
 //
 //   node tests/builder-golden.mjs [--runtimes a,b] [--no-lazy]
 //   node tests/builder-golden.mjs --record URL [--runtimes a,b]
@@ -28,6 +29,10 @@
 // CA bundle, R's Windows executable and macOS Rscript wrapper, Rust's WinLibs
 // companion on Windows, Nim's DLLs and CA bundle on Windows. Only ruby, php,
 // r, rust and nim changed.
+//
+// Re-recorded 2026-09-20: every plan now has `signed` and `maxage`
+// (design.md 7.1). Every runtime's plan gained those two lines and
+// nothing else.
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
@@ -85,7 +90,8 @@ function maskRecord(t) {
   return t.replace(/^created\t.*\n/m, '');
 }
 function maskPlan(t) {
-  return t.replace(/\nsig\ted25519\t\S+\n?$/, '\n')
+  return t.replace(/^signed\t.*$/m, 'signed\t<time>')
+    .replace(/\nsig\ted25519\t\S+\n?$/, '\n')
     .replace(/^(source\t[0-9a-f]{64}\.tar\.gz\t)[0-9a-f]{64}\t\d+/m, '$1<gzip>\t<size>')
     .replace(/^url\t\S+\/src\/[0-9a-f]{64}\.tar\.gz\n/m, '')
     .replace(/^record\t\S+$/m, 'record\t<hash>')
@@ -95,7 +101,18 @@ function maskPlan(t) {
 // The plan's `record` and `appid` must be this record's, derived the way
 // docs/format.md section 5 says: appid = the first 12 characters of the
 // lowercase base32 SHA-256 of "<record hash>/app".
+//
+// `signed` is masked for the same reason `created` is -- the golden was
+// recorded at another moment -- so it is checked here instead: one build
+// has one moment, and the plan's `signed` is the record's `created`
+// (design.md 7.1). `maxage` is a constant and is compared in the plan.
 function planTies(rt, record, hash, plan) {
+  const c = /^created\t(\S+)$/m.exec(record);
+  const sg = /^signed\t(\S+)$/m.exec(plan);
+  ok(!!c && !!sg && c[1] === sg[1], rt + ": the plan was signed when the record was created",
+     `record says ${c && c[1]}, plan says ${sg && sg[1]}`);
+  const ma = /^maxage\t(\S+)$/m.exec(plan);
+  ok(!!ma && ma[1] === '7776000', rt + ': the plan says how long a carried copy may be used', ma ? ma[1] : 'no maxage line');
   const m = /^record\t(\S+)$/m.exec(plan);
   ok(!!m && m[1] === hash, rt + ": the plan names this record",
      m ? `plan says ${m[1]}, the record hashes to ${hash}` : 'no record line');

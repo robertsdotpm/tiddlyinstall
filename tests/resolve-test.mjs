@@ -206,6 +206,39 @@ if (process.argv.includes('--update')) {
 }
 
 await run('golden cases', cat, data);
+freshness();
+
+// `signed` and `maxage` (design.md 7.1, format.md section 3). The saved
+// cases pass no moment and so have neither line, which is the point: a
+// plan resolved without one is the plan it always was. Here is what the
+// two lines are when a caller does pass one.
+function freshness() {
+  let bad = 0;
+  const expect = (cond, what) => { if (!cond) { bad++; console.log('MISMATCH freshness: ' + what); } };
+  const app = { recordHash: 'x'.repeat(26), name: 'A', project: 'a', runtime: 'python', select: 'newest', platforms: ['linux'], root: 'user', rootName: 'ib' };
+  const plain = R.resolve(cat, app);
+  expect(!/^(signed|maxage)\t/m.test(plain), 'a plan resolved with no moment has signed/maxage');
+  const at = new Date(Date.UTC(2026, 8, 20, 11, 2, 7));
+  const two = 'signed\t2026-09-20T11:02:07Z\nmaxage\t7776000\n';
+  // A Date, the same moment in milliseconds and the same text all give
+  // the same bytes: the page and the server agree whichever they pass.
+  for (const [what, v] of [['a Date', at], ['milliseconds', at.getTime()], ['the text', '2026-09-20T11:02:07Z']]) {
+    const got = R.resolve(cat, Object.assign({}, app, { signedAt: v }));
+    expect(got === plain.replace('rootname\tib\n', 'rootname\tib\n' + two), 'signedAt as ' + what + ' gives other bytes');
+  }
+  // Nothing else is a moment, and the lines come as a pair.
+  for (const v of ['', 'yesterday', 0 / 0, {}, '2026-09-20 11:02:07']) {
+    expect(R.resolve(cat, Object.assign({}, app, { signedAt: v })) === plain, 'signedAt ' + JSON.stringify(String(v)) + ' wrote a time');
+  }
+  // maxage: the default, and never past the hard limit of 365 days.
+  const age = (v) => (/^maxage\t(\S+)$/m.exec(R.resolve(cat, Object.assign({}, app, { signedAt: at, maxage: v }))) || [])[1];
+  expect(age(undefined) === String(R.PLAN_MAXAGE), 'the default maxage is ' + age(undefined));
+  expect(age(3600) === '3600', 'maxage 3600 came out ' + age(3600));
+  expect(age(99 * 365 * 86400) === String(R.PLAN_MAXAGE_LIMIT), 'maxage past the limit came out ' + age(99 * 365 * 86400));
+  expect(age(-5) === '1' && age(0) === '1', 'a maxage of nothing came out ' + age(0));
+  failures += bad;
+  console.log(`signed/maxage: ${bad} mismatches`);
+}
 if (!process.argv.includes('--no-roundtrip')) {
   // writeSnapshot, read back: the same answers.
   await run('snapshot written back by writeSnapshot', await R.loadSnapshot(await R.writeSnapshot(cat)), data);

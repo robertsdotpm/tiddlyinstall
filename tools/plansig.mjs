@@ -5,6 +5,11 @@
 //
 //   node tools/plansig.mjs -data DIR sign plan.txt > signed.txt   (makes the key if DIR has none)
 //   node tools/plansig.mjs -pub FILE verify signed.txt [record]   (FILE: plan-signing-key.pub)
+//
+// -kind KIND signs or checks another document the plan key signs, today
+// only the revocation list (docs/format.md section 7):
+//
+//   node tools/plansig.mjs -data DIR -kind ib-revocations sign list.txt
 import fs from 'node:fs';
 import { loadOrCreate, verify, verifyFor, keyID, recordOf } from '../backend/lib/plansig.js';
 
@@ -13,11 +18,11 @@ function fail(msg) {
   process.exit(1);
 }
 
-const flags = { data: '', pub: '' };
+const flags = { data: '', pub: '', kind: 'ib-plan' };
 const args = [];
 const argv = process.argv.slice(2);
 for (let i = 0; i < argv.length; i++) {
-  const m = /^--?(data|pub)(?:=(.*))?$/.exec(argv[i]);
+  const m = /^--?(data|pub|kind)(?:=(.*))?$/.exec(argv[i]);
   if (m) flags[m[1]] = m[2] !== undefined ? m[2] : argv[++i] ?? '';
   else args.push(argv[i]);
 }
@@ -31,14 +36,14 @@ try {
   switch (args[0]) {
     case 'sign': {
       const { signer } = loadOrCreate(flags.data, (s) => process.stderr.write(s + '\n'));
-      process.stdout.write(signer.sign(doc));
+      process.stdout.write(signer.signAs(flags.kind, doc));
       break;
     }
     case 'verify': {
       const pub = Buffer.from(fs.readFileSync(flags.pub, 'utf8').trim(), 'base64');
       if (pub.length !== 32) fail(`${flags.pub}: not a base64 Ed25519 public key`);
-      if (args.length > 2) verifyFor(pub, doc, args[2]); else verify(pub, doc);
-      process.stdout.write(`ok (key ${keyID(pub)}, record ${recordOf(doc)})\n`);
+      if (args.length > 2) verifyFor(pub, doc, args[2]); else verify(pub, doc, flags.kind);
+      process.stdout.write(`ok (key ${keyID(pub)}${flags.kind === 'ib-plan' ? ', record ' + recordOf(doc) : ', ' + flags.kind})\n`);
       break;
     }
     default:
