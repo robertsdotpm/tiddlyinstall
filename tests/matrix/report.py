@@ -24,7 +24,7 @@ for r in rows:
     last[(r["target"], r["runtime"], r["mode"])] = r
 ORDER = ["xp", "vista", "7", "8.1", "10", "11", "2022", "10x86", "ltsc2021", "ltsc2024", "11de", "2025core",
          "centos6", "centos7", "ubuntu1404", "ubuntu1604", "ubuntu1804", "rocky8", "ubuntu2004", "ubuntu2204",
-         "debian12", "linux", "alpine", "debian12-i386", "debian12-i386-libs", "alpine324-i386", "mac"]
+         "debian12", "linux", "alpine", "debian12x86", "debian12-i386", "debian12-i386-libs", "alpine324-i386", "mac"]
 RTS = ["python", "python2", "node", "ruby", "php", "java", "dotnet", "r", "go", "rust", "zig", "nim", "cc"]
 targets = [t for t in ORDER if any(k[0] == t for k in last)]
 targets += [t for t in sorted({k[0] for k in last}) if t not in ORDER]

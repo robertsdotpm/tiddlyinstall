@@ -20,7 +20,7 @@ sys.path.insert(0, str(HERE.parent / "arch"))
 import machines                                            # noqa: E402
 
 TARGETS = [("linux", "Ubuntu 24.04"), ("ubuntu2204", "Ubuntu 22.04"),
-           ("debian12-i386", "Debian 12 i386"), ("debian12-i386-libs", "Debian 12 i386 +libs"),
+           ("debian12x86", "Debian 12 i386 VM"), ("debian12-i386", "Debian 12 i386"), ("debian12-i386-libs", "Debian 12 i386 +libs"),
            ("alpine324-i386", "Alpine 3.24 x86"),
            ("10", "Win 10"), ("7", "Win 7"), ("mac", "macOS 26")]
 

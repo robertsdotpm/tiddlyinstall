@@ -24,7 +24,7 @@ GROUPS = [
      ("ubuntu2004", "Ubuntu 20.04"), ("rocky8", "Rocky 8"), ("ubuntu1804", "Ubuntu 18.04"),
      ("ubuntu1604", "Ubuntu 16.04"), ("ubuntu1404", "Ubuntu 14.04"), ("centos7", "CentOS 7"),
      ("centos6", "CentOS 6"), ("alpine", "Alpine 3.24")],
-    [("debian12-i386", "Debian 12 i386"), ("debian12-i386-libs", "Debian 12 i386 +libs"),
+    [("debian12x86", "Debian 12 i386 VM"), ("debian12-i386", "Debian 12 i386"), ("debian12-i386-libs", "Debian 12 i386 +libs"),
      ("alpine324-i386", "Alpine 3.24 x86")],
     [("11", "Win 11"), ("11de", "Win 11 (de)"), ("2025core", "Server 2025 Core"), ("2022", "Server 2022"),
      ("10", "Win 10"), ("ltsc2021", "Win 10 LTSC 2021"), ("10x86", "Win 10 x86"), ("8.1", "Win 8.1"),

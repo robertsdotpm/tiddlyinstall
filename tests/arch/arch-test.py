@@ -59,6 +59,20 @@ check("engine, Windows", machines.from_osdesc("Windows 10.0 build 19045, amd64")
 check("engine, from a whole log",
       machines.from_log("TiddlyInstall engine 1\nRunning as /tmp/x.run on Linux, 2.36 (236), x86\n"), "x86")
 
+# What the plan chose, off the transparency screen (both engines print it
+# since 2026-09-20; the `runtime` line's third value).
+check("plan arch, 32-bit", machines.plan_arch("  Runtime:  node 9.11.2, 32-bit (x86)"), "x86")
+check("plan arch, 64-bit", machines.plan_arch("  Runtime:  node 26.9.0, 64-bit (amd64)"), "amd64")
+check("plan arch, arm64", machines.plan_arch("  Runtime:  java 21, 64-bit ARM (arm64)"), "arm64")
+check("plan arch, universal",
+      machines.plan_arch("  Runtime:  python 3.13, universal (several architectures in one build)"), "universal")
+check("plan arch, with the engine's note",
+      machines.plan_arch("  Runtime:  ruby 3.4, 32-bit (x86) -- this machine is 64-bit, but the plan "
+                         "has no 64-bit build of ruby for this system"), "x86")
+check("plan arch, an older plan with none", machines.plan_arch("  Runtime:  node"), "")
+check("plan arch, from a whole log", machines.plan_arch_from_log(
+      "WHAT\n  Project:  hello\n  Runtime:  go 1.27.1, 32-bit (x86)\n  Machine:  Linux, 2.36 (236), x86\n"), "x86")
+
 # The guard itself.
 check("a 32-bit machine running 32-bit code is fine",
       machines.check("debian12-i386", "x86", ["x86"]), [])
@@ -74,6 +88,17 @@ check("an unknown machine is an error, not a pass",
       len(machines.check("no-such-machine", "x86", ["x86"])), 1)
 check("no evidence at all is not a failure",
       machines.check("linux", "", []), [])
+check("a 32-bit plan on a 64-bit machine is allowed: the catalogue may have nothing else",
+      machines.check("linux", "amd64", ["x86"], "x86"), [])
+check("but an x86 runtime with no plan saying so is still caught",
+      len(machines.check("linux", "amd64", ["x86"])), 1)
+check("a 64-bit plan on a 32-bit machine fails before anything is installed",
+      machines.check("debian12-i386", "x86", [], "amd64"),
+      ["arch mismatch: debian12-i386 is x86 and cannot run the amd64 build the plan chose"])
+check("a universal build is not a mismatch",
+      machines.check("mac", "arm64", [], "universal"), [])
+check("plan and engine disagreeing on a third architecture fails",
+      len(machines.check("debian12-i386", "x86", [], "arm64")), 1)
 
 # Every machine a harness can be pointed at must say what it is.
 for t, m in machines.MACHINES.items():

@@ -74,6 +74,10 @@ LINUX_VMS = {
     "ubuntu1604": "x@10.0.1.112", "ubuntu1804": "x@10.0.1.144", "rocky8": "x@10.0.1.131",
     "ubuntu2004": "x@10.0.1.118", "ubuntu2204": "x@10.0.1.203", "debian12": "x@10.0.1.235",
     "alpine": "x@10.0.1.200",
+    # The 32-bit VM (docs/test-vms.md). Fill in its address once
+    # tools/esxi_provision_debian_i386.py has made it and DHCP has given
+    # it one; tests/arch/machines.py already knows what it is.
+    # "debian12x86": "x@10.0.1.??",
 }
 # 32-bit Linux, in a container on this machine (tests/arch/sandbox.py). No
 # display and no D-Bus there, so window and tray templates can't run.
@@ -219,6 +223,8 @@ fi
 # .dbus: GTK's D-Bus autolaunch, which a desktop session's own bus makes unneeded.
 echo "@left"; (cd "$H" && find . -mindepth 1 ! -name i.log ! -name "$F" ! -name selftest.txt ! -name out.txt ! -name err.txt ! -path './.cache*' ! -path './.dbus*' | head -5)
 echo "@osdesc"; sed -n 's/^Running as .* on //p' "$H/i.log" 2>/dev/null | head -1
+echo "@planarch"; sed -n '/^ *Runtime:/{p;q;}' "$H/i.log" 2>/dev/null
+echo "@x"
 echo "@log"; tail -12 "$H/i.log" 2>/dev/null
 [ "${KEEP:-}" = 1 ] || rm -rf "$H"
 '''
@@ -297,6 +303,8 @@ after=$(ls "$HOME/Applications" 2>/dev/null; [ -d "$HOME/Applications" ] && echo
 echo "@left"; ls "$HOME/Library/ib" "$HOME/Library/Application Support/ib" 2>/dev/null
 [ "$before" = "$after" ] || echo "Applications: $after"
 echo "@osdesc"; sed -n 's/^Running as .* on //p' "$HOME/ibtpl/i.log" 2>/dev/null | head -1
+echo "@planarch"; sed -n '/^ *Runtime:/{p;q;}' "$HOME/ibtpl/i.log" 2>/dev/null
+echo "@x"
 echo "@log"; tail -12 "$HOME/ibtpl/i.log"
 '''
 
@@ -337,6 +345,8 @@ echo @install %ERRORLEVEL%
 if defined A echo found
 echo @osdesc
 if exist "%T%\install.log" findstr /b /c:"Windows " "%T%\install.log"
+echo @planarch
+findstr /b /c:"  Runtime:" "%T%\install.log" 2>nul
 echo @log
 if exist "%T%\install.log" type "%T%\install.log"
 """
@@ -379,6 +389,8 @@ GUI_RESULTS_BAT = r"""echo @install
 type "%T%\install-rc.txt" 2>nul
 echo @osdesc
 findstr /b /c:"Windows " "%T%\install.log" 2>nul
+echo @planarch
+findstr /b /c:"  Runtime:" "%T%\install.log" 2>nul
 echo @log
 type "%T%\install.log" 2>nul
 echo @window

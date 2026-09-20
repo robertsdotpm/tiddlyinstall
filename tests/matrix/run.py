@@ -58,6 +58,10 @@ LINUX_VMS = {
     "ubuntu1604": "x@10.0.1.112", "ubuntu1804": "x@10.0.1.144", "rocky8": "x@10.0.1.131",
     "ubuntu2004": "x@10.0.1.118", "ubuntu2204": "x@10.0.1.203", "debian12": "x@10.0.1.235",
     "alpine": "x@10.0.1.200",
+    # The 32-bit VM (docs/test-vms.md). Fill in its address once
+    # tools/esxi_provision_debian_i386.py has made it and DHCP has given
+    # it one; tests/arch/machines.py already knows what it is.
+    # "debian12x86": "x@10.0.1.??",
 }
 # 32-bit Linux, in a container on this machine (tests/arch/mkroot.py makes
 # the roots; sandbox.py says what a container can and cannot show).
@@ -335,6 +339,10 @@ def main():
     builds = json.loads((out / "builds.json").read_text())
     projects = json.loads((HERE / "projects.json").read_text())["projects"]
     runtimes = a.runtimes.split(",") if a.runtimes else list(projects)
+    known = set(LINUX_VMS) | set(SANDBOXES) | set(WINDOWS) | {"linux", "mac"}
+    if a.target not in known:
+        raise SystemExit(f"{a.target} is in tests/arch/machines.py but this harness has no address "
+                         f"for it: add it to LINUX_VMS or WINDOWS once the machine exists")
     plat = "linux" if a.target in LINUX_VMS or a.target in SANDBOXES \
         else {"linux": "linux", "mac": "macos"}.get(a.target, "windows")
     for rt in runtimes:

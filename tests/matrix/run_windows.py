@@ -53,6 +53,8 @@ if exist "%USERPROFILE%\Start Menu\Programs\%NAME%" echo startmenu-folder-left
 reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\ib-%ID%" >nul 2>&1 && echo regkey-left
 echo @osdesc
 if exist "%T%\install.log" findstr /b /c:"Windows " "%T%\install.log"
+echo @planarch
+findstr /b /c:"  Runtime:" "%T%\install.log" 2>nul
 echo @log
 if exist "%T%\install.log" type "%T%\install.log" | find /v "" | more +0 > "%T%\log8.txt"
 if exist "%T%\log8.txt" type "%T%\log8.txt"

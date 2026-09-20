@@ -36,6 +36,10 @@ LINUX_VMS = {
     "centos7": "x@10.0.1.221", "ubuntu1804": "x@10.0.1.144", "rocky8": "x@10.0.1.131",
     "ubuntu2004": "x@10.0.1.118", "ubuntu2204": "x@10.0.1.203", "debian12": "x@10.0.1.235",
     "alpine": "x@10.0.1.200",
+    # The 32-bit VM (docs/test-vms.md). Fill in its address once
+    # tools/esxi_provision_debian_i386.py has made it and DHCP has given
+    # it one; tests/arch/machines.py already knows what it is.
+    # "debian12x86": "x@10.0.1.??",
 }
 # 32-bit Linux, in a container on this machine (tests/arch/sandbox.py).
 SANDBOXES = ("debian12-i386", "debian12-i386-libs", "alpine324-i386")
@@ -132,6 +136,8 @@ if [ -n "$d" ]; then
 fi
 echo "@left"; (cd "$H" && find . -mindepth 1 ! -name i.log ! -name i.out ! -name "$F" ! -path './.cache*' ! -path './.pki*' | head -5)
 echo "@osdesc"; sed -n 's/^Running as .* on //p' "$H/i.log" 2>/dev/null | head -1
+echo "@planarch"; sed -n '/^ *Runtime:/{p;q;}' "$H/i.log" 2>/dev/null
+echo "@x"
 echo "@log"; cat "$H/i.log" 2>/dev/null
 rm -rf "$H"
 '''
@@ -180,6 +186,8 @@ if [ -n "$d" ]; then
 fi
 echo "@left"; ls "$HOME/Library/ib" "$HOME/Library/Application Support/ib" 2>/dev/null
 echo "@osdesc"; sed -n 's/^Running as .* on //p' "$HOME/ibfid/i.log" 2>/dev/null | head -1
+echo "@planarch"; sed -n '/^ *Runtime:/{p;q;}' "$HOME/ibfid/i.log" 2>/dev/null
+echo "@x"
 echo "@log"; cat "$HOME/ibfid/i.log"
 '''
 
@@ -227,6 +235,8 @@ if exist "C:\ib" dir /b "C:\ib"
 if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib" dir /b "%LOCALAPPDATA%\ib"
 echo @osdesc
 findstr /b /c:"Windows " "%T%\install.log" 2>nul
+echo @planarch
+findstr /b /c:"  Runtime:" "%T%\install.log" 2>nul
 echo @log
 if exist "%T%\install.log" type "%T%\install.log"
 for /d %%d in ("%TEMP%\~nsu*.tmp") do rd /s /q "%%d" 2>nul

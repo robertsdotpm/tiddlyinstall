@@ -48,15 +48,20 @@ MACHINES = {
     "ubuntu2204": dict(label="Ubuntu 22.04",   family="linux", arch="amd64", libc="glibc", kind="vm", why="measured"),
     "debian12":  dict(label="Debian 12",       family="linux", arch="amd64", libc="glibc", kind="vm", why="measured"),
     "alpine":    dict(label="Alpine 3.24",     family="linux", arch="amd64", libc="musl",  kind="vm", why="measured"),
+    # The 32-bit Linux VM on ESXi (docs/test-vms.md, "The 32-bit Linux VM"):
+    # a real 32-bit kernel, a desktop, and sudo, which the containers below
+    # cannot show. tests/arch/prove32.py is what proves each of those.
+    "debian12x86": dict(label="Debian 12 i386 VM", family="linux", arch="x86", libc="glibc",
+                        kind="vm", why="docs", note="1 vCPU, 768 MB, Xfce, autologin as x"),
     # This machine
     "linux":     dict(label="Ubuntu 24.04 (here)", family="linux", arch="amd64", libc="glibc", kind="host", why="measured"),
     # 32-bit Linux, in a container on this machine (tests/arch/sandbox.py)
-    "debian12-i386": dict(label="Debian 12 i386", family="linux", arch="x86", libc="glibc", kind="container",
+    "debian12-i386": dict(label="Debian 12 i386 (container)", family="linux", arch="x86", libc="glibc", kind="container",
                           why="measured", note="32-bit userland on this machine's 64-bit kernel"),
-    "debian12-i386-libs": dict(label="Debian 12 i386 +libs", family="linux", arch="x86", libc="glibc",
+    "debian12-i386-libs": dict(label="Debian 12 i386 +libs (container)", family="linux", arch="x86", libc="glibc",
                                kind="container", why="measured",
                                note="the same root with libatomic1: the satisfied half of a `need` check"),
-    "alpine324-i386": dict(label="Alpine 3.24 x86", family="linux", arch="x86", libc="musl", kind="container",
+    "alpine324-i386": dict(label="Alpine 3.24 x86 (container)", family="linux", arch="x86", libc="musl", kind="container",
                            why="measured", note="32-bit userland on this machine's 64-bit kernel"),
     # macOS
     "mac":       dict(label="macOS 26",        family="macos", arch="arm64", kind="mac", why="docs"),
@@ -69,8 +74,29 @@ WINENV = {"AMD64": "amd64", "x86": "x86", "ARM64": "arm64", "IA64": "ia64"}
 # ELF: e_machine (bytes 18-19, little endian) -> our name, and the class byte.
 ELF_MACHINE = {0x03: "x86", 0x3E: "amd64", 0xB7: "arm64", 0x28: "arm"}
 ELF_BITS = {"x86": 32, "amd64": 64, "arm64": 64}
+# Which builds a machine of each architecture can actually execute. A
+# 64-bit x86 machine runs 32-bit x86 builds, and a plan may deliberately
+# pick one when the catalogue has no 64-bit build for that system -- the
+# engine says so on its transparency screen. A 32-bit machine runs only
+# 32-bit ones, which a 32-bit userland over a 64-bit kernel does NOT
+# enforce: that is the rule only a real 32-bit machine can check.
+RUNS_ON = {"amd64": ("amd64", "x86"), "x86": ("x86",), "arm64": ("arm64", "amd64")}
 
 SHORT = {"amd64": "64", "x86": "32", "arm64": "a64"}
+
+# What both engines' transparency screens call each architecture on their
+# `Runtime:` line (bases/unix/ib-engine.sh's ib_arch_words and the NSIS
+# base's copy). Since 2026-09-20 the plan's `runtime` line carries the
+# architecture as a third value and each `file` line as a fifth, and both
+# engines print it, so a harness can read *what the plan chose* instead of
+# inferring it from what came out.
+ARCH_WORDS = {
+    "32-bit (x86)": "x86",
+    "64-bit (amd64)": "amd64",
+    "64-bit ARM (arm64)": "arm64",
+    "universal (several architectures in one build)": "universal",
+    "any architecture": "any",
+}
 
 
 def arch_of(target):
@@ -103,6 +129,33 @@ def from_log(log):
         i = line.find(" on ")
         if line.lstrip().startswith("Running as ") and i > 0:
             return from_osdesc(line[i + 4:].strip())
+    return ""
+
+
+def plan_arch(line):
+    """The architecture the plan chose, from a transparency-screen
+    `Runtime:` line such as `  Runtime:  node 9.11.2, 32-bit (x86)`.
+
+    The line may carry the engine's note about why that is not this
+    machine's architecture ("-- this machine is 64-bit, but ..."), which
+    has commas of its own, so it is cut off first. A plan from before
+    2026-09-20 names no architecture and this returns "".
+    """
+    if not line or ":" not in line:
+        return ""
+    rest = line.split(":", 1)[1].split(" -- ")[0].strip()
+    if "," not in rest:
+        return ""
+    return ARCH_WORDS.get(rest.rsplit(",", 1)[1].strip(), "")
+
+
+def plan_arch_from_log(log):
+    """The plan's chosen architecture, from a whole install log."""
+    for line in (log or "").splitlines():
+        if line.strip().startswith("Runtime:"):
+            a = plan_arch(line)
+            if a:
+                return a
     return ""
 
 
@@ -144,24 +197,41 @@ def elf_seen(text):
     return arches, lines
 
 
-def check(target, arch_seen="", elf_arches=()):
+def check(target, arch_seen="", elf_arches=(), arch_plan=""):
     """Every way this cell's architecture could be a lie, as a list of
-    messages. Empty means the cell really ran where it says it did."""
+    messages. Empty means the cell really ran where it says it did.
+
+    Three witnesses have to agree: what we claim the machine is, what the
+    engine detected at install time, and what the plan chose (from the
+    transparency screen's `Runtime:` line) -- plus, where we can read it,
+    the ELF class of what was actually installed.
+
+    A plan picking a *narrower* build than the machine is legitimate and
+    deliberate: where the catalogue has no 64-bit build the plan takes the
+    32-bit one and the engine says so on screen. What is never right is a
+    build this machine could not execute.
+    """
     want = arch_of(target)
-    bad = []
     if want == "?":
         return [f"no architecture recorded for {target}: add it to tests/arch/machines.py"]
+    runs = RUNS_ON.get(want, (want,))
+    bad = []
     if arch_seen and arch_seen != want:
         bad.append(f"arch mismatch: {target} is {want}, but the installer's engine detected {arch_seen}")
+    if arch_plan and arch_plan not in ("any", "universal") and arch_plan not in runs:
+        bad.append(f"arch mismatch: {target} is {want} and cannot run the {arch_plan} build the plan chose")
+    # What the installed binaries should be: the plan's choice where it
+    # made one, otherwise the machine's own architecture.
+    expect = arch_plan if arch_plan in ELF_BITS else want
     elf_arches = list(elf_arches)
     if elf_arches:
-        if want not in elf_arches:
-            bad.append(f"arch mismatch: {target} is {want}, but it installed {'/'.join(elf_arches)} binaries")
-        # On a 32-bit machine a 64-bit binary is always wrong, even beside
-        # right ones: a real i386 machine could not have run it.
-        wrong = [a for a in elf_arches if ELF_BITS.get(a, 64) > ELF_BITS.get(want, 64)]
+        if expect not in elf_arches:
+            bad.append(f"arch mismatch: {target} expected {expect} binaries, but it installed "
+                       f"{'/'.join(elf_arches)}")
+        wrong = [a for a in elf_arches if a in ELF_BITS and a not in runs]
         if wrong:
-            bad.append(f"arch mismatch: {target} is {want}, but it installed {'/'.join(wrong)} binaries too")
+            bad.append(f"arch mismatch: {target} is {want} and cannot run the {'/'.join(wrong)} "
+                       f"binaries it installed")
     return bad
 
 
@@ -176,10 +246,11 @@ def judge(target, parts, result, detail):
     first = (parts.get("osdesc_out", "") or "").strip().splitlines()
     seen = from_osdesc(first[0]) if first else from_log(parts.get("log_out", ""))
     elf, elf_lines = elf_seen(parts.get("elf_out", ""))
-    extras = {"arch": arch_of(target), "arch_seen": seen, "arch_elf": elf}
+    chose = plan_arch(parts.get("planarch_out", "").strip()) or plan_arch_from_log(parts.get("log_out", ""))
+    extras = {"arch": arch_of(target), "arch_seen": seen, "arch_elf": elf, "arch_plan": chose}
     if elf_lines:
         extras["arch_elf_files"] = elf_lines
-    bad = check(target, seen, elf if result == "pass" else ())
+    bad = check(target, seen, elf if result == "pass" else (), chose)
     if bad:
         return "fail", "; ".join(bad) + (f" ({detail})" if detail else ""), extras
     return result, detail, extras
