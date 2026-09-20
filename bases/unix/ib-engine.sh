@@ -1678,6 +1678,42 @@ ib_is_installed() { # [app dir, appid, record hash]; default: this install's
 }
 
 # The install root for root mode $1 (user, system) and folder name $2.
+# ---- the architecture of what is being installed
+#
+# The plan's `runtime` line carries it as a 3rd value and each `file`
+# line as a 5th field (format.md, "Architecture"). Both are appended, so
+# an older plan simply has neither and nothing below prints.
+#
+# The transparency screen has always shown the *machine's* architecture;
+# from 2026-09-20 it also shows the build's, and says when they differ.
+# That is the case a person can otherwise only discover after installing:
+# a 64-bit machine being given a 32-bit runtime because no 64-bit build
+# runs on this system.
+ib_arch_words() { # arch
+	case $1 in
+	x86) printf '32-bit (x86)' ;;
+	amd64) printf '64-bit (amd64)' ;;
+	arm64) printf '64-bit ARM (arm64)' ;;
+	universal) printf 'universal (several architectures in one build)' ;;
+	any) printf 'any architecture' ;;
+	*) printf '%s' "$1" ;;
+	esac
+}
+
+# Why the build's architecture is not this machine's, when it is not.
+ib_arch_note() { # build-arch runtime-name
+	[ -n "$1" ] || return 0
+	case $1 in any | universal | "$IB_ARCH") return 0 ;; esac
+	case $IB_ARCH:$1 in
+	amd64:x86 | arm64:x86)
+		printf ' -- this machine is 64-bit, but the plan has no 64-bit build of %s for this system' "$2" ;;
+	arm64:amd64)
+		printf ' -- this machine is ARM; this is an Intel/AMD build' ;;
+	*)
+		printf ' -- this machine is %s' "$IB_ARCH" ;;
+	esac
+}
+
 ib_root_path() {
 	if [ "$IB_OS" = macos ]; then
 		if [ "$1" = system ]; then printf '%s' "/Library/$2"; else printf '%s' "$HOME/Library/$2"; fi
@@ -1955,7 +1991,18 @@ ib_install_main() {
 		printf '  Project:  %s\n' "$IB_PROJECT"
 		printf '  Source:   %s\n' "$(ib_describe_source)"
 		rt=$(ib_sel1 runtime)
-		[ -n "$rt" ] && printf '  Runtime:  %s\n' "$(printf '%s' "$rt" | tr '\t' ' ')"
+		if [ -n "$rt" ]; then
+			IFS=$tab
+			set -- $rt
+			IFS=$ifs0
+			a_name=$1 a_ver=${2:-} a_arch=${3:-}
+			if [ -n "$a_arch" ]; then
+				printf '  Runtime:  %s %s, %s%s\n' "$a_name" "$a_ver" \
+					"$(ib_arch_words "$a_arch")" "$(ib_arch_note "$a_arch" "$a_name")"
+			else
+				printf '  Runtime:  %s\n' "$(printf '%s' "$rt" | tr '\t' ' ')"
+			fi
+		fi
 		printf '  Record:   %s\n' "${IB_RECHASH:-none}"
 		printf '  Machine:  %s\n' "$IB_OSDESC"
 		printf '\nDOWNLOADS (each is checked against its SHA-256 before use)\n'

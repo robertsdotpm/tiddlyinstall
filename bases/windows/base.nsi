@@ -127,6 +127,8 @@ Var Arch
 Var TgtLine          ; plan line number of the chosen [target]
 Var TgtNo
 Var TgtRuntime
+Var TgtRtName        ; the runtime's id, for the architecture note
+Var TgtRtArch        ; the architecture of the build this block installs
 Var TgtExe
 Var TgtInstall
 Var TgtLaunch
@@ -1179,6 +1181,8 @@ Function ReadTarget
       ${Break}
     ${ElseIf} $K S== "runtime"
       StrCpy $TgtRuntime "$F1 $F2"
+      StrCpy $TgtRtName $F1
+      StrCpy $TgtRtArch $F3          ; 3rd value, empty in plans made before 2026-09-20
     ${ElseIf} $K S== "exe"
       StrCpy $TgtExe $F1
     ${ElseIf} $K S== "install"
@@ -2212,7 +2216,14 @@ Function WriteSummary
     ${Sum} "Project / package:  $Project"
   ${EndIf}
   ${If} $TgtRuntime != ""
-    ${Sum} "Runtime:  $TgtRuntime"
+    ${If} $TgtRtArch == ""
+      ${Sum} "Runtime:  $TgtRuntime"
+    ${Else}
+      Call ArchWords
+      StrCpy $0 $U_out
+      Call ArchNote
+      ${Sum} "Runtime:  $TgtRuntime, $0$U_out"
+    ${EndIf}
   ${EndIf}
   ${Sum} "This machine:  Windows $WinVer build $WinBuild, $Arch (plan block $TgtNo)"
   ${Sum} ""
@@ -2824,6 +2835,55 @@ Function Unpack
   Pop $2
   Pop $1
   Pop $0
+FunctionEnd
+
+; ---- the architecture of what is being installed
+;
+; The plan's `runtime` line carries it as a 3rd value and each `file`
+; line as a 5th field (format.md, "Architecture"), both appended, so a
+; plan made before 2026-09-20 has neither and none of this prints.
+;
+; The transparency screen has always shown the machine's architecture; it
+; now shows the build's too, and says when they differ -- a 64-bit machine
+; being given a 32-bit runtime because no 64-bit build runs on this
+; version of Windows is otherwise only discoverable afterwards.
+
+; $TgtRtArch in words, into $U_out.
+Function ArchWords
+  ${If} $TgtRtArch == "x86"
+    StrCpy $U_out "32-bit (x86)"
+  ${ElseIf} $TgtRtArch == "amd64"
+    StrCpy $U_out "64-bit (amd64)"
+  ${ElseIf} $TgtRtArch == "arm64"
+    StrCpy $U_out "64-bit ARM (arm64)"
+  ${ElseIf} $TgtRtArch == "universal"
+    StrCpy $U_out "universal (several architectures in one build)"
+  ${ElseIf} $TgtRtArch == "any"
+    StrCpy $U_out "any architecture"
+  ${Else}
+    StrCpy $U_out $TgtRtArch
+  ${EndIf}
+FunctionEnd
+
+; Why the build's architecture is not this machine's, into $U_out ("" when
+; it is, or when the build fits any machine).
+Function ArchNote
+  StrCpy $U_out ""
+  ${If} $TgtRtArch == ""
+  ${OrIf} $TgtRtArch == "any"
+  ${OrIf} $TgtRtArch == "universal"
+  ${OrIf} $TgtRtArch == $Arch
+    Return
+  ${EndIf}
+  ${If} $TgtRtArch == "x86"
+  ${AndIf} $Arch != "x86"
+    StrCpy $U_out " -- this machine is 64-bit, but the plan has no 64-bit build of $TgtRtName for this version of Windows"
+  ${ElseIf} $Arch == "arm64"
+  ${AndIf} $TgtRtArch == "amd64"
+    StrCpy $U_out " -- this machine is ARM; this is an Intel/AMD build, which Windows runs under emulation"
+  ${Else}
+    StrCpy $U_out " -- this machine is $Arch"
+  ${EndIf}
 FunctionEnd
 
 ; Look for $FF_sha in the pack; copy it to $FF_path. $U_out = 1 if found.

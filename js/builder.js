@@ -522,6 +522,29 @@ export function packSize(files) {
   return n;
 }
 
+// A pack is content-addressed: its members are named by their SHA-256, and
+// the embedded plan is the only index that can say which member is which
+// file. Two architectures of one runtime often share a file name -- every
+// Windows Python build calls its parts core.msi, exe.msi, lib.msi -- so a
+// pack carrying more than one of them with no plan cannot be read back.
+// Refuse to write one rather than produce that (format.md section 4).
+function checkPackIndex(files, plan) {
+  if (plan) return;
+  const byName = new Map();
+  for (const f of files) {
+    const k = String(f.name);
+    if (!byName.has(k)) byName.set(k, new Set());
+    byName.get(k).add(String(f.sha256));
+  }
+  for (const [k, shas] of byName) {
+    if (shas.size > 1) {
+      throw new Error('this offline installer packs ' + shas.size + ' different files called ' + goQuote(k) +
+        ' (the same runtime built for more than one architecture) and carries no plan to tell them apart; ' +
+        'a pack with more than one architecture of a runtime must embed its plan');
+    }
+  }
+}
+
 function dedupPack(files) {
   const seen = new Set();
   return files.filter((f) => (seen.has(f.name) ? false : (seen.add(f.name), true)));
@@ -659,6 +682,7 @@ async function buildFile(job, plat) {
   if (r.offline) {
     const p = await env.packPlan(hash, plat, progress);
     plan = p.plan;
+    checkPackIndex(p.files, plan);
     pack = dedupPack(p.files);
     if (info.kind === 'zip' && packSize(pack) > MAX_MAC_PACK) {
       throw new Error('the packed files come to ' + MB(packSize(pack)) + ' MB; macOS offline installers are limited to ' + MB(MAX_MAC_PACK) + ' MB for now');

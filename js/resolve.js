@@ -1471,7 +1471,7 @@ export function resolveFiles(cat, app) {
   const add = (e) => {
     if (seen.has(e.sha256)) return;
     seen.add(e.sha256);
-    files.push({ name: fileName(e), sha256: e.sha256, size: e.size, urls: [e.url, ...(e.mirrors || [])], local: e.local });
+    files.push({ name: fileName(e), sha256: e.sha256, size: e.size, arch: archOf(e), urls: [e.url, ...(e.mirrors || [])], local: e.local });
   };
   for (const b of blocks) {
     if (!b.p) continue;
@@ -1479,7 +1479,7 @@ export function resolveFiles(cat, app) {
     for (const x of b.p.extras) {
       if (seen.has(str(x.src.sha256))) continue;
       seen.add(x.src.sha256);
-      files.push({ name: x.name, sha256: x.src.sha256, size: x.src.size || 0, urls: extraURLs(cat, x), local: extraLocal(cat, x) });
+      files.push({ name: x.name, sha256: x.src.sha256, size: x.src.size || 0, arch: str(x.src.arch), urls: extraURLs(cat, x), local: extraLocal(cat, x) });
     }
     for (const n of b.p.needs) add(n.p.rel);
     for (const u of targetPrereqs(cat, app, b)) {
