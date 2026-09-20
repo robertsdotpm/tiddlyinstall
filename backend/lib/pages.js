@@ -71,9 +71,10 @@ export function page({ title, body, refresh = 0, home = '' }) {
 
 /* ---------- GET /classic: the form ---------- */
 
-function radio(name, value, label, checked, hint) {
+function radio(name, value, label, checked, hint, off) {
   const id = 'f-' + name + '-' + value;
-  return '<div class="opt"><input type="radio" name="' + name + '" value="' + esc(value) + '" id="' + id + '"' + (checked ? ' checked' : '') + '> ' +
+  return '<div class="opt"><input type="radio" name="' + name + '" value="' + esc(value) + '" id="' + id + '"' +
+    (checked ? ' checked' : '') + (off ? ' disabled' : '') + '> ' +
     '<label for="' + id + '">' + label + '</label>' + (hint ? '<br><span class="hint">' + hint + '</span>' : '') + '</div>\n';
 }
 
@@ -113,9 +114,10 @@ export function classicPage(runtimes) {
     box('target_windows', 'Windows', true) + box('target_linux', 'Linux', true) + box('target_macos', 'macOS', true) +
     '</fieldset>\n' +
     '<fieldset><legend>Signing</legend>\n' +
-    radio('mode', 'ours', 'Signed by TiddlyInstall', true, 'The build server signs the installers. They download what they install when they run, and show what and from where first.') +
+    radio('mode', 'ours', 'Signed by TiddlyInstall (not yet)', false,
+      'Not available in this prototype: it needs a code-signing certificate, which we don\'t have yet.', true) +
     radio('mode', 'yours', 'Signed by you', false, 'Unsigned files for you to sign with your own certificate (signtool, osslsigncode or a current browser\'s Edit page).') +
-    radio('mode', 'unsigned', 'Unsigned', false, 'For testing, or where signatures don\'t matter.') +
+    radio('mode', 'unsigned', 'Unsigned', true, 'For testing, or where signatures don\'t matter.') +
     box('offline', 'Pack the downloads into the installer (works offline)', false, '"Signed by you" and "Unsigned" only; larger files, and slower to build.') +
     '</fieldset>\n' +
     '<fieldset><legend>Options</legend>\n' +
@@ -127,6 +129,8 @@ export function classicPage(runtimes) {
     '<div class="opt"><input type="text" name="runtime_exact" id="f-runtime_exact" size="24" title="The exact version, e.g. 3.12.4"> <span class="hint">e.g. <code>3.12.4</code></span></div></div>\n' +
     text('install_cmd', 'Install command', 'Leave blank to choose from the project\'s files (or the package\'s defaults).') +
     text('launch', 'Launch command', 'Leave blank for the language\'s default: ' + launches + '.') +
+    box('go_cgo', 'Go: this project uses cgo', false, 'Only read for Go. Adds a C compiler (Windows: MinGW-w64 GCC, about 110 MB more).') +
+    box('ruby_devkit', 'Ruby: install the DevKit', false, 'Only read for Ruby. MSYS2\'s toolchain, for gems with native code: about 50 MB more, Windows 8.1 and later.') +
     box('shortcut_menu', 'Start menu / app launcher entries', true) +
     box('shortcut_desktop', 'Desktop shortcut', false) +
     '<div class="field"><label>Install for</label>\n' +

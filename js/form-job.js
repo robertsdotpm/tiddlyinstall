@@ -138,7 +138,12 @@ function optionFields(f, runtime, mode) {
       before_unix: f.val('unix_unpre_script').trim(),
     },
   };
+  // Tools the project needs on top of the runtime (design.md 11.0 items 13
+  // and 27; docs/api.md "tools"). Each is only read for the language it
+  // belongs to, so a box left ticked while the language changes does nothing.
   if (runtime === 'cc') fields.tools = { cc_win: radio(f, 'cc_win', 'auto') };
+  if (runtime === 'go' && f.checked('go_cgo')) fields.tools = { cgo: true };
+  if (runtime === 'ruby' && f.checked('ruby_devkit')) fields.tools = { ruby_devkit: true };
   if (mode === 'B') fields.sign = { win_method: radio(f, 'win_sign', 'service') };
   return fields;
 }

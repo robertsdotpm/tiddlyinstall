@@ -30,10 +30,20 @@
 // Storage: localStorage while small, IndexedDB beyond STORE_LS_MAX. Every
 // access is wrapped: with storage blocked the overlay lives in memory for
 // the tab, and the editor says so.
+//
+// Changes *found* in storage are not used until the person says so, once per
+// session (design.md 11.0 item 3): pages opened from disk share one
+// localStorage in Chrome, so another local HTML file could plant changes a
+// saved TiddlyInstall would build with. Until answered they are `pending`,
+// out of `changes` and so out of every build and preview; the answer is kept
+// in sessionStorage (SESSION_KEY), so it lasts for the tab and no longer.
+// Changes made here, and changes baked into the page file itself (#ib-overlay,
+// "Save this page"), are the person's own and need no answer.
 import { loadCatalogFiles, runtimesSummary, openCatalog, loadRuntimes, readChunk, SPLIT_FORMAT } from './resolve.js';
 
 export const FORMAT = 'ib-catalog-overlay';
 const KEY = 'ib.catalog.overlay';
+const SESSION_KEY = 'ib.catalog.overlay.session';
 const STORE_LS_MAX = 256 * 1024;       // characters kept in localStorage
 const IDB_NAME = 'ib-catalog-overlay';
 export const IMPORT_MAX = 8 * 1024 * 1024;
@@ -219,7 +229,10 @@ const strOrList = (v) => v === null || v === undefined || typeof v === 'string' 
 const listOf = (v, pred) => Array.isArray(v) && v.every(pred);
 const planText = (p, field, s) => { if (typeof s === 'string' && badChar(s)) p.err(field, 'has control characters or a line break'); };
 
-const RELEASE_KEYS = new Set(['version', 'os', 'arch', 'kind', 'format', 'variant', 'libc', 'url', 'mirrors', 'size', 'min_os', 'ib_sha256', 'ib_local', 'checksum']);
+const RELEASE_KEYS = new Set(['version', 'os', 'arch', 'kind', 'format', 'variant', 'libc', 'url', 'mirrors', 'size', 'min_os', 'ib_sha256', 'ib_local', 'checksum', 'parts']);
+// A release downloaded in several files (Windows Python's MSIs): each part
+// is a download of its own, checked like the release's own.
+const PART_KEYS = new Set(['name', 'url', 'mirrors', 'size', 'ib_sha256', 'ib_local', 'checksum']);
 export const OSES = ['windows', 'macos', 'linux', 'aix', 'dragonfly', 'freebsd', 'illumos', 'netbsd', 'openbsd', 'plan9', 'solaris'];
 
 function checkRelease(r, p) {
@@ -249,7 +262,28 @@ function checkRelease(r, p) {
   if (!r.ib_sha256) p.warn('ib_sha256', 'with no SHA-256 the resolver never picks this release');
   if (r.size !== undefined && !(Number.isSafeInteger(r.size) && r.size >= 0)) p.err('size', 'a whole number of bytes');
   if (r.ib_local !== undefined && (typeof r.ib_local !== 'string' || r.ib_local.includes('..') || badChar(r.ib_local))) p.err('ib_local', 'a relative path');
+  if (r.parts !== undefined) checkParts(r.parts, p);
   checkStrings(r, p, '');
+}
+
+function checkParts(parts, p) {
+  if (!Array.isArray(parts)) { p.err('parts', 'a list of files'); return; }
+  if (parts.length > 200) { p.err('parts', 'too many'); return; }
+  parts.forEach((q, i) => {
+    const f = 'parts.' + i;
+    if (!isMap(q)) { p.err(f, 'a part is a JSON object'); return; }
+    for (const k of Object.keys(q)) if (!PART_KEYS.has(k)) p.err(f + '.' + k, 'isn\'t a part field');
+    if (typeof q.name !== 'string' || q.name === '' || q.name.includes('..') || badChar(q.name)) p.err(f + '.name', 'a file name is needed');
+    const ue = urlError(q.url);
+    if (ue) p.err(f + '.url', ue);
+    if (q.mirrors != null) {
+      if (!Array.isArray(q.mirrors)) p.err(f + '.mirrors', 'a list of URLs');
+      else q.mirrors.forEach((m, j) => { const e = urlError(m); if (e) p.err(f + '.mirrors.' + j, e); });
+    }
+    if (q.ib_sha256 !== undefined && q.ib_sha256 !== '' && !(typeof q.ib_sha256 === 'string' && SHA_RE.test(q.ib_sha256))) p.err(f + '.ib_sha256', 'a SHA-256 is 64 hex characters (0-9, a-f)');
+    if (q.size !== undefined && !(Number.isSafeInteger(q.size) && q.size >= 0)) p.err(f + '.size', 'a whole number of bytes');
+    if (q.ib_local !== undefined && (typeof q.ib_local !== 'string' || q.ib_local.includes('..') || badChar(q.ib_local))) p.err(f + '.ib_local', 'a relative path');
+  });
 }
 
 const STEP_TYPES = ['run', 'unpack', 'write', 'mkdir'];
@@ -660,7 +694,9 @@ export function subsetCatalog(files, ids) {
 /* ---------- the overlay in this browser ---------- */
 
 const state = {
-  changes: [],          // checked changes, in order
+  changes: [],          // checked changes in use, in order
+  pending: [],          // found in storage, not answered for this session yet
+  consent: 'yes',       // yes | ask (pending, unanswered) | no (set aside)
   loaded: false,
   storage: 'ok',        // ok | memory (storage blocked) | error
   storageWhy: '',
@@ -670,7 +706,49 @@ const state = {
 };
 
 export function overlayState() {
-  return { changes: state.changes.slice(), storage: state.storage, storageWhy: state.storageWhy, where: state.where, from: state.from, version: state.version };
+  return { changes: state.changes.slice(), pending: state.pending.slice(), consent: state.consent,
+    storage: state.storage, storageWhy: state.storageWhy, where: state.where, from: state.from, version: state.version };
+}
+
+/* ---------- the once-a-session answer about changes found in storage ---------- */
+
+// The answer is remembered with a hash of exactly what was answered about,
+// so a *different* set of changes appearing later in the session (another
+// page writing to the shared storage) is asked about again.
+//   'yes' | 'no' for these very changes, else null (ask).
+function sessionAnswer(changes) {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    const v = JSON.parse(raw);
+    if (!v || (v.a !== 'yes' && v.a !== 'no') || v.h !== hashValue(changes)) return null;
+    return v.a;
+  } catch (e) { return null; }     // blocked or damaged: ask, never assume yes
+}
+
+function rememberAnswer(a, changes) {
+  try { sessionStorage.setItem(SESSION_KEY, JSON.stringify({ a, h: hashValue(changes) })); } catch (e) { /* lasts for this page only */ }
+}
+
+// Answers the prompt: `use` takes the pending changes into use; otherwise
+// they are set aside for the rest of the session (and stay in storage).
+export async function answerStored(use) {
+  await loadOverlay();
+  if (state.consent === 'yes') return overlayState();
+  rememberAnswer(use ? 'yes' : 'no', state.pending);
+  state.consent = use ? 'yes' : 'no';
+  if (use) {
+    state.changes = state.pending;
+    state.pending = [];
+  }
+  emit();
+  return overlayState();
+}
+
+// The person is editing the catalogue here, so what they make is theirs:
+// anything still unanswered is set aside, and saving replaces it.
+function ownChangeNow() {
+  if (state.consent === 'ask') state.consent = 'no';
 }
 
 // Parses an overlay document (stored, imported or built into the page):
@@ -765,6 +843,9 @@ export function loadOverlay() {
   if (!loadPromise) {
     loadPromise = (async () => {
       let stored = null;
+      state.changes = [];
+      state.pending = [];
+      state.consent = 'yes';
       try {
         stored = await readStored();
       } catch (e) {
@@ -773,9 +854,15 @@ export function loadOverlay() {
       }
       if (stored) {
         try {
-          state.changes = parseOverlay(stored.doc).changes;
+          const found = parseOverlay(stored.doc).changes;
           state.where = stored.where;
           state.from = 'stored';
+          // Found in this browser's storage: used only once this session has
+          // said so (above). An empty list needs no answer.
+          const answer = found.length ? sessionAnswer(found) : 'yes';
+          state.consent = answer || 'ask';
+          if (state.consent === 'yes') state.changes = found;
+          else state.pending = found;
         } catch (e) {
           state.storageWhy = 'The changes kept in this browser couldn\'t be read (' + e.message + '). Making a change here replaces them.';
           state.storage = 'error';
@@ -799,6 +886,11 @@ async function persist() {
     state.storage = 'ok';
     state.storageWhy = '';
     state.from = 'stored';
+    // Made here, so they need no answer when this page is loaded again in
+    // this session (a reload, or another page of the site).
+    state.consent = 'yes';
+    state.pending = [];
+    rememberAnswer('yes', state.changes);
   } catch (e) {
     state.storage = 'memory';
     state.storageWhy = 'Couldn\'t keep the changes in this browser (' + (e && e.message ? e.message : e) + '). They last until the tab is closed; export them to keep them.';
@@ -809,6 +901,7 @@ async function persist() {
 // Replaces the whole list (import "replace", reset all).
 export async function setChanges(changes) {
   await loadOverlay();
+  ownChangeNow();
   state.changes = changes.map(checkChange);
   await persist();
 }
@@ -816,6 +909,7 @@ export async function setChanges(changes) {
 // Adds or replaces the change for one item (null value with key: revert).
 export async function putChange(c) {
   await loadOverlay();
+  ownChangeNow();
   const x = checkChange(c);
   const k = changeKey(x);
   const i = state.changes.findIndex((y) => changeKey(y) === k);
@@ -828,6 +922,7 @@ export async function putChange(c) {
 // `reverts` keys of changes to drop.
 export async function editChanges(puts, reverts = []) {
   await loadOverlay();
+  ownChangeNow();
   const drop = new Set(reverts);
   let list = state.changes.filter((c) => !drop.has(changeKey(c)));
   for (const c of puts) {
@@ -843,6 +938,7 @@ export async function editChanges(puts, reverts = []) {
 
 export async function revertChange(key) {
   await loadOverlay();
+  ownChangeNow();
   state.changes = state.changes.filter((c) => changeKey(c) !== key);
   await persist();
 }

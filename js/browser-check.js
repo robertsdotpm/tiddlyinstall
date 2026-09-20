@@ -115,12 +115,17 @@
     // caniuse gives one on Safari from iOS/iPadOS 18.4 and Chrome on Android
     // from 147; other phone browsers pick files, not a folder. Where it's
     // missing the page hides "Pick a folder" (html.ib-no-folder).
+    // On a phone that is how phones are, not a limit of the browser, so it
+    // counts as "not used here" ('na') and raises no bar (design.md 11.0
+    // item 5): the page quietly offers the archive picker instead. On a
+    // desktop browser without it, it is still a missing feature.
     { id: 'folder', name: 'Folder picking (webkitdirectory)', required: false, effect: 'can\'t pick a folder of code; pick a .zip or .tar of it instead',
+      na: 'phones and tablets pick files, not folders; the page doesn\'t offer it here',
       test: function () {
-        if (!('webkitdirectory' in doc.createElement('input'))) return false;
+        if (!('webkitdirectory' in doc.createElement('input'))) return env.mobile ? 'na' : false;
         if (!env.mobile) return true;
-        if (env.os === 'iOS' || env.os === 'iPadOS') return atLeast(env.osVersion, [18, 4]);
-        return env.os === 'Android' && env.browser === 'Chrome' && atLeast(env.version, [147]);
+        if (env.os === 'iOS' || env.os === 'iPadOS') return atLeast(env.osVersion, [18, 4]) || 'na';
+        return (env.os === 'Android' && env.browser === 'Chrome' && atLeast(env.version, [147])) || 'na';
       } },
     // iOS before 13 has no <a download>: a blob link opens instead of saving.
     { id: 'download', name: 'Saving files (<a download>)', required: false,
@@ -191,7 +196,9 @@
   /* ---------- running the checks ---------- */
 
   var status = {}, pending = [];
-  function set(f, ok) { status[f.id] = ok ? 'native' : f.fallback ? 'fallback' : 'missing'; }
+  // A test answers true (native), false (missing, or the page's stand-in),
+  // or 'na': the feature doesn't apply on this device, so it is not a limit.
+  function set(f, ok) { status[f.id] = ok === 'na' && f.na ? 'na' : ok ? 'native' : f.fallback ? 'fallback' : 'missing'; }
   for (var i = 0; i < FEATURES.length; i++) {
     (function (f) {
       var r;
@@ -343,13 +350,13 @@
     var t = table(), tr = el('tr');
     tr.appendChild(el('th', {}, 'Feature')); tr.appendChild(el('th', {}, 'Here')); tr.appendChild(el('th', {}, 'Without it'));
     t.add(tr);
-    var SYM = { 'native': '✓ native', 'fallback': '~ fallback', 'missing': '✗ missing', 'checking': '…' };
+    var SYM = { 'native': '✓ native', 'fallback': '~ fallback', 'missing': '✗ missing', 'na': '– not used here', 'checking': '…' };
     for (var i = 0; i < FEATURES.length; i++) {
       var f = FEATURES[i], s = status[f.id];
       tr = el('tr');
       tr.appendChild(el('td', {}, f.name + (f.required ? '' : ' (optional)')));
       tr.appendChild(el('td', { 'class': 'ib-c-' + s }, SYM[s] || s));
-      tr.appendChild(el('td', {}, s === 'fallback' ? f.fallback : f.effect));
+      tr.appendChild(el('td', {}, s === 'fallback' ? f.fallback : s === 'na' ? f.na : f.effect));
       t.add(tr);
     }
     return t.t;

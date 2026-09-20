@@ -96,6 +96,12 @@ async function openEditor(file, hash = '#runtimes&rt=python&tab=releases') {
   await waitFor(`document.readyState === 'complete' && !!globalThis.ibLocalApi && !document.getElementById('rt-app').hidden && document.querySelectorAll('.rt-vrow').length > 0`, 'the editor to start');
   await sleep(400);
 }
+// A real reload: Page.navigate to the same URL and hash would not be one.
+async function reopen(file, hash) {
+  await cdp('Page.navigate', { url: 'about:blank' });
+  await sleep(200);
+  await openEditor(file, hash);
+}
 const count = () => js(`document.getElementById('rt-count').textContent`);
 const stored = () => js(`(() => { try { const t = localStorage.getItem('ib.catalog.overlay'); return t == null ? null : JSON.parse(t).changes.length; } catch (e) { return 'throws'; } })()`);
 
@@ -104,12 +110,16 @@ const setIn = (sel, v) => js(`(() => { const e = document.querySelector(${JSON.s
   e.dispatchEvent(new Event('input', { bubbles: true })); e.dispatchEvent(new Event('change', { bubbles: true })); return true; })()`);
 const click = (sel) => js(`(() => { const e = document.querySelector(${JSON.stringify(sel)}); if (!e) return false; e.click(); return true; })()`);
 
-// What a Windows plan picks for Windows 10/11 amd64: {version, file, steps}.
+// What a Windows plan picks for Windows 10/11 amd64: the file and version,
+// how many steps the block has, and its first step (which names the recipe
+// the plan used, whatever the catalogue offers today).
 function firstTarget(plan) {
   const block = plan.split('[target]').find((b) => /\nwhen\twindows\t\d+\t9999\tamd64/.test(b)) || '';
   const file = /\nfile\tpython\t(\S+)\t/.exec(block);
   const ver = /\nruntime\tpython\t(\S+)/.exec(block);
-  return { file: file && file[1], version: ver && ver[1], steps: (block.match(/\nstep\t/g) || []).length };
+  const st = /\nstep\t(\w+)\t([^\n]*)/.exec(block);
+  return { file: file && file[1], version: ver && ver[1], steps: (block.match(/\nstep\t/g) || []).length,
+    stepType: st && st[1], stepText: st && st[2] };
 }
 let TARGET = null;
 
@@ -181,7 +191,9 @@ try {
   ok(TARGET.file && TARGET.version && TARGET.steps > 0, 'a build with the built-in catalogue works', JSON.stringify(TARGET));
   ok(errors.length === 0, 'the editor starts without errors', errors.join(' | '));
   ok(/^No changes/.test(await count()), 'no changes to begin with', await count());
-  ok(/720 of 720/.test(await js(`document.getElementById('rt-rel-count').textContent`)), 'the Python releases are listed');
+  // (the count itself moves with the catalogue, so only its shape is checked)
+  const pyCount = await js(`document.getElementById('rt-rel-count').textContent`);
+  ok(/^([\d,]+) of \1 releases$/.test(pyCount) && parseInt(pyCount, 10) > 100, 'the Python releases are listed', pyCount);
   ok(await js(`document.querySelectorAll('.rt-vrow').length < 60`), 'only the visible rows are drawn');
   await js(`document.querySelector('.rt-rt[data-rt="node"]').click()`);
   await waitFor(`/13,452 of/.test(document.getElementById('rt-rel-count').textContent)`, 'Node.js to be unpacked and listed');
@@ -193,7 +205,7 @@ try {
   await sleep(300);
   ok(await js(`document.querySelectorAll('.rt-vrow').length > 0 && document.querySelectorAll('.rt-vrow').length < 60`), 'scrolling far down draws rows there');
   await js(`document.querySelector('.rt-rt[data-rt="python"]').click()`);
-  await waitFor(`/720 of/.test(document.getElementById('rt-rel-count').textContent)`, 'Python to be listed again');
+  await waitFor(`document.getElementById('rt-rel-count').textContent === ` + JSON.stringify(pyCount), 'Python to be listed again');
   await sleep(100);
 
   /* ---- a release: invalid edits are refused ---- */
@@ -229,12 +241,22 @@ try {
   /* ---- a recipe: add a step ---- */
   await js(`document.querySelector('#rt-tabs [data-tab="recipes"]').click()`);
   await sleep(200);
-  // The recipe the plan uses for Windows embeddable zips (the one whose
-  // step count matches; the other needs get-pip.py, used only with an install).
-  const recipeRow = await js(`(() => { const rows = [...document.querySelectorAll('#rt-rec-table tbody tr')];
-    const r = rows.find((tr) => { const t = [...tr.cells].map((c) => c.textContent); return t[1] === 'windows' && t[3] === 'zip' && /embed/.test(t[5]) && t[8] === '${TARGET.steps}'; });
-    if (!r) return null; r.click(); return [...r.cells].map((c) => c.textContent).join(' '); })()`);
-  ok(!!recipeRow, 'the Windows embeddable-zip recipe is listed', recipeRow);
+  // The recipe the Windows plan used: the Windows one for that download's
+  // format whose first step is the plan's first step. (Which format Windows
+  // gets, and how many steps end up in the plan, are the catalogue's to
+  // decide -- a release downloaded in parts adds steps of its own.)
+  const targetFormat = (/\.(tar\.gz|tar\.xz|zip|msi|exe|7z)$/.exec(TARGET.file || '') || [, ''])[1];
+  const recipeRow = await js(`(() => {
+    const cells = (tr) => [...tr.cells].map((c) => c.textContent);
+    const rows = [...document.querySelectorAll('#rt-rec-table tbody tr')]
+      .filter((tr) => cells(tr)[1] === 'windows' && cells(tr)[3].split(' | ').includes(${JSON.stringify(targetFormat)}));
+    for (const tr of rows) {
+      tr.click();
+      const first = document.querySelector('.rt-steps li:first-child input');
+      if (first && first.value === ${JSON.stringify(TARGET.stepText || '')}) return cells(tr).join(' ');
+    }
+    return null; })()`);
+  ok(!!recipeRow, 'the recipe the Windows plan uses is listed', recipeRow);
   await js(`document.getElementById('rt-add-step').click()`);
   await sleep(150);
   ok(await js(`document.getElementById('rt-save').disabled && /no command/.test(document.getElementById('rt-problems').textContent)`),
@@ -300,6 +322,40 @@ try {
   ok(await stored() === 0, 'Reset all leaves no changes');
   const plain = await buildWindows('Hello plain');
   ok(plain.job && plain.job.status === 'done' && !plain.job.result.catalog && !plain.plan.includes(STEP), 'a build after the reset uses the built-in catalogue');
+
+  /* ---- changes found in this browser's storage are asked about once ---- */
+
+  // Pages opened from disk share one localStorage in Chrome, so changes can
+  // appear that nobody here made (design.md 11.0 item 3). They are not used
+  // until this session says so, and the question shows what they do.
+  await js(`localStorage.setItem('ib.catalog.overlay', ${JSON.stringify(JSON.stringify(doc))}); sessionStorage.clear()`);
+  await reopen(PAGE);
+  await waitFor(`!document.querySelector('.overlay-ask').hidden`, 'the question about changes found in storage');
+  ok(await js(`document.querySelectorAll('.overlay-ask .rt-change-list > li').length === 2`), 'the question lists both changes',
+    await js(`document.querySelector('.overlay-ask').textContent.slice(0, 300)`));
+  ok(await js(`[...document.querySelectorAll('.overlay-ask .rt-change-title')].every((e) => /^Python[\\d ]*: (Changed|Added) /.test(e.textContent))`),
+    'each one says what it changes', await js(`[...document.querySelectorAll('.overlay-ask .rt-change-title')].map((e) => e.textContent).join(' | ')`));
+  ok(/^No changes/.test(await count()), 'until answered they are not in use', await count());
+  const unasked = await buildWindows('Hello unanswered');
+  ok(unasked.job && unasked.job.status === 'done' && !unasked.job.result.catalog && !unasked.plan.includes(STEP),
+    'a build before the answer uses the catalogue built into the page');
+  await shot('overlay-consent.png');
+  await click('.overlay-ask-no');
+  await sleep(300);
+  ok(await js(`document.querySelector('.overlay-ask').hidden`) && /set aside for this session/.test(await js(`document.getElementById('rt-page-note').textContent`)),
+    '"Not now" sets them aside, and the Sources page says so', await js(`document.getElementById('rt-page-note').textContent`));
+  await reopen(PAGE);
+  ok(await js(`document.querySelector('.overlay-ask').hidden`) && /^No changes/.test(await count()),
+    'the answer is remembered for the session: no second question', await count());
+  await click('#rt-use-stored');
+  await waitFor(`/2 changes/.test(document.getElementById('rt-count').textContent)`, 'the changes to be taken into use');
+  const agreed = await buildWindows('Hello agreed');
+  ok(agreed.plan.includes('step\trun\t' + STEP), 'once they are agreed to, builds use them');
+  await reopen(PAGE);
+  ok(await js(`document.querySelector('.overlay-ask').hidden`) && /2 changes/.test(await count()),
+    'and they stay in use for the rest of the session', await count());
+  await js(`localStorage.clear(); sessionStorage.clear()`);
+  await reopen(PAGE);
 
   /* ---- policy ---- */
   await js(`document.querySelector('#rt-tabs [data-tab="policy"]').click()`);

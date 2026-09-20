@@ -75,6 +75,9 @@ async function build(body, e, progress) {
   const out = await runJob(body, e, progress);
   records.set(out.hash, out.record);
   const res = {
+    // Where it was built, for the build page to say so (design.md 11.0
+    // item 6): this job never went near a build server.
+    built: { where: 'page' },
     record: out.hash,
     files: out.files.map((f) => ({ platform: f.platform, name: f.name, size: f.size, sha256: f.sha256, signed: '', offline: false,
       url: URL.createObjectURL(new Blob([f.data], { type: 'application/octet-stream' })) })),

@@ -18,7 +18,9 @@
 //   - the Sources editor stacks its runtimes above the content, its release
 //     list scrolls by touch and draws the rows it scrolls to, and a release
 //     opens in a form;
-//   - the folder picker is hidden where phones have none;
+//   - the folder picker is hidden where phones have none, quietly: it raises
+//     no "can run, with limits" bar (design.md 11.0 item 5);
+//   - the New installer form says where a build will happen;
 //   - the outage banner and footer fit.
 //
 //   node --experimental-websocket tests/mobile-test.mjs [--page dist/index.html | --site URL]
@@ -304,6 +306,16 @@ async function header(w, shots) {
 async function newInstaller(w, shots) {
   await go('#new');
   await audit(w, 'new', { shots });
+  // Where the build will happen, in plain words (design.md 11.0 item 6):
+  // short enough to read on a phone, and on no more than three lines.
+  const where = await B.js(`(() => { const e = document.querySelector('.ib-page[data-page="new"] .build-where');
+    if (!e) return null; const r = e.getBoundingClientRect();
+    return { text: e.textContent, left: Math.round(r.left), right: Math.round(r.right), height: Math.round(r.height),
+      line: Math.round(parseFloat(getComputedStyle(e).lineHeight) || 20) }; })()`);
+  ok(where && /^Built (in this page|by the build server at )/.test(where.text),
+    `${B.name} ${w}px new: it says where the build happens`, JSON.stringify(where));
+  ok(where && where.left >= 0 && where.right <= w && where.height <= where.line * 3 + 4,
+    `${B.name} ${w}px new: that line fits the width, in three lines or fewer`, JSON.stringify(where));
   // Phones have no folder picker: "Pick a folder" is hidden, the archive stays.
   await B.js(`document.getElementById('src-local').click()`);
   await sleep(200);
@@ -529,14 +541,14 @@ async function allSections(w, shots) {
 // tablet", and whether it offers the folder picker (caniuse: Safari from
 // iOS/iPadOS 18.4, Chrome on Android from 147).
 const UAS = [
-  ['Safari, iOS 17.5', 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1', 'iPhone', { browser: 'Safari', os: 'iOS', mobile: true }, 'missing'],
+  ['Safari, iOS 17.5', 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1', 'iPhone', { browser: 'Safari', os: 'iOS', mobile: true }, 'na'],
   ['Safari, iOS 18.4', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.4 Mobile/15E148 Safari/604.1', 'iPhone', { browser: 'Safari', os: 'iOS', mobile: true }, 'native'],
-  ['Chrome, iOS 17', 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/140.0.0.0 Mobile/15E148 Safari/604.1', 'iPhone', { browser: 'Chrome', os: 'iOS', mobile: true }, 'missing'],
-  ['Safari, iPadOS 17 (a Mac user agent, with touch)', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15', 'MacIntel', { browser: 'Safari', os: 'iPadOS', mobile: true }, 'missing'],
-  ['Chrome 146, Android', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Mobile Safari/537.36', 'Linux armv8l', { browser: 'Chrome', os: 'Android', mobile: true }, 'missing'],
+  ['Chrome, iOS 17', 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/140.0.0.0 Mobile/15E148 Safari/604.1', 'iPhone', { browser: 'Chrome', os: 'iOS', mobile: true }, 'na'],
+  ['Safari, iPadOS 17 (a Mac user agent, with touch)', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15', 'MacIntel', { browser: 'Safari', os: 'iPadOS', mobile: true }, 'na'],
+  ['Chrome 146, Android', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Mobile Safari/537.36', 'Linux armv8l', { browser: 'Chrome', os: 'Android', mobile: true }, 'na'],
   ['Chrome 147, Android', 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Mobile Safari/537.36', 'Linux armv8l', { browser: 'Chrome', os: 'Android', mobile: true }, 'native'],
-  ['Samsung Internet', 'Mozilla/5.0 (Linux; Android 14; SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/29.0 Chrome/150.0.0.0 Mobile Safari/537.36', 'Linux armv8l', { browser: 'Samsung Internet', os: 'Android', mobile: true }, 'missing'],
-  ['Firefox, Android', 'Mozilla/5.0 (Android 14; Mobile; rv:150.0) Gecko/150.0 Firefox/150.0', 'Linux armv8l', { browser: 'Firefox', os: 'Android', mobile: true }, 'missing'],
+  ['Samsung Internet', 'Mozilla/5.0 (Linux; Android 14; SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/29.0 Chrome/150.0.0.0 Mobile Safari/537.36', 'Linux armv8l', { browser: 'Samsung Internet', os: 'Android', mobile: true }, 'na'],
+  ['Firefox, Android', 'Mozilla/5.0 (Android 14; Mobile; rv:150.0) Gecko/150.0 Firefox/150.0', 'Linux armv8l', { browser: 'Firefox', os: 'Android', mobile: true }, 'na'],
 ];
 async function userAgents() {
   const c = B.c;
@@ -547,11 +559,18 @@ async function userAgents() {
     await c.cdp('Page.navigate', { url: 'about:blank' });   // a new document, not a new hash
     await sleep(300);
     await open(URL0 + '#new');
-    const got = await B.js(`(() => { const e = ibCompat.env; return { browser: e.browser, os: e.os, mobile: e.mobile, folder: ibCompat.status.folder,
+    const got = await B.js(`(() => { const e = ibCompat.env, b = document.querySelector('.ib-compat-bar');
+      return { browser: e.browser, os: e.os, mobile: e.mobile, folder: ibCompat.status.folder, degraded: ibCompat.degraded,
+      bar: !!(b && !b.hidden && b.style.display !== 'none'), barText: b ? b.textContent.slice(0, 300) : '',
       cls: document.documentElement.className, picker: !!document.getElementById('local-folder-label').getClientRects().length || getComputedStyle(document.getElementById('local-folder-label')).display !== 'none' }; })()`);
     ok(got.browser === want.browser && got.os === want.os && got.mobile === want.mobile, `user agent ${what}: seen as ${want.browser} on ${want.os}, a phone or tablet`, JSON.stringify(got));
     ok(got.folder === folder && /\bib-mobile\b/.test(got.cls) && /\bib-no-folder\b/.test(got.cls) === (folder !== 'native'),
       `user agent ${what}: folder picking ${folder === 'native' ? 'offered' : 'hidden'}`, JSON.stringify(got));
+    // A phone without a folder picker is how phones are, not a limit of the
+    // browser: it is hidden quietly, with no bar (design.md 11.0 item 5).
+    ok(!got.degraded.includes('folder') && !(got.bar && /folder/i.test(got.barText)),
+      `user agent ${what}: no compatibility bar for the missing folder picker`, JSON.stringify({ degraded: got.degraded, bar: got.bar, barText: got.barText }));
+    if (folder !== 'native') ok(!got.bar, `user agent ${what}: no compatibility bar at all`, got.barText);
   }
   await c.cdp('Emulation.setUserAgentOverride', { userAgent: '' });
   await c.cdp('Emulation.setTouchEmulationEnabled', { enabled: false });

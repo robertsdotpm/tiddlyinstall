@@ -3,13 +3,15 @@
 // server uses too when the form is posted without JavaScript (its action,
 // POST /submit). Also fills the "Newest that runs on the user's system"
 // table from GET /api/catalog/runtimes.
-import { apiRequest, errorText, mountApiFooter, pageUrl, apiLocal, apiReady, setApiBase, LOCAL, localSubmit } from './api.js';
+import { apiRequest, errorText, mountApiFooter, pageUrl, apiLocal, apiBase, apiReady, setApiBase, LOCAL, localSubmit } from './api.js';
 import { tarWrite } from './ibfile.js';
 import { loadOverlay, overlayState, hasCatalog } from './overlay.js';
 import { jobFromForm, BUILD_DEFAULTS } from './form-job.js';
 import { mountWriteEditor } from './write-editor.js';
+import { mountOverlayConsent } from './overlay-consent.js';
 
 mountApiFooter();
+mountOverlayConsent();
 
 const form = document.getElementById('new-form');
 mountWriteEditor(form);
@@ -122,6 +124,42 @@ if (folderInput) {
     showPicked(top + '/: ' + files.length + ' file' + (files.length === 1 ? '' : 's') + ' (' + humanBytes(total) + ')');
   });
 }
+
+/* ---------- where this build will happen ---------- */
+
+// The page can build installers itself or send the job to a build server,
+// and which one it is changes what leaves this computer, so the form says
+// so plainly before the build (design.md 11.0 item 6). The build page says
+// the same for the finished job. Written as text into the page, so a saved
+// copy still reads right; short, so it fits a phone.
+const whereBoxes = Array.from(document.querySelectorAll('.build-where'));
+
+// Files from the user's computer are built here whatever the backend
+// (js/new.js submit, below), so the wording follows the form too.
+function paintWhere() {
+  if (!whereBoxes.length) return;
+  const host = String(apiBase()).replace(/^https?:\/\//, '');
+  const uploaded = val('source_kind') === 'local';
+  let main, rest;
+  if (apiLocal()) {
+    main = 'Built in this page';
+    rest = ': your browser makes the installers, and nothing is sent to a build server.';
+  } else if (uploaded) {
+    main = 'Built in this page';
+    rest = ': files from your computer are packed here, not sent to the build server at ' + host + '.';
+  } else {
+    main = 'Built by the build server at ' + host;
+    rest = ': your settings go there, and the installers come back.';
+  }
+  for (const box of whereBoxes) {
+    box.replaceChildren(document.createElement('strong'), rest);
+    box.firstChild.textContent = main;
+  }
+}
+paintWhere();
+window.addEventListener('ib-api-change', paintWhere);
+form.addEventListener('change', paintWhere);      // "Where's the code?"
+apiReady().then(paintWhere).catch(() => {});
 
 async function buildJob() {
   const problems = [];

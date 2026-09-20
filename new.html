@@ -335,6 +335,7 @@ Press Enter to close</pre>
           <span>Also make offline installers <span class="small muted">for computers without internet. Bigger files, packed in your browser.</span></span></label>
         <p class="small muted ours-only online-only" style="margin:10px 0 0">Offline installers need the installer signed by you or left unsigned (Customise → Signing).</p>
 
+        <p class="build-where new-where small">Built by the build server.</p>
         <div class="actions" style="margin-top:16px">
           <button type="submit">Build installers</button>
         </div>
@@ -451,6 +452,24 @@ Press Enter to close</pre>
           </div>
 
           <hr>
+
+          <!-- Tools some projects need on top of the runtime (design.md 11.0
+               items 13 and 27). Shown for the language they belong to; sent as
+               job "tools" fields (docs/api.md). -->
+          <div class="lang-go-only">
+            <span class="label">Build tools</span>
+            <label class="choice"><input type="checkbox" name="go_cgo" id="go-cgo">
+              <span><strong>This project uses cgo</strong><br>
+              <span class="small muted">Go code that imports <code>"C"</code> needs a C compiler on the user's computer. Ticked, the installer brings one
+              (Windows: MinGW-w64 GCC, about 110 MB more to download). Pure Go needs nothing extra.</span></span></label>
+          </div>
+          <div class="lang-ruby-only">
+            <span class="label">Build tools</span>
+            <label class="choice"><input type="checkbox" name="ruby_devkit" id="ruby-devkit">
+              <span><strong>Install Ruby's DevKit (for gems with native code)</strong><br>
+              <span class="small muted">On Windows, gems with C code are built with MSYS2's toolchain: about 50 MB more to download and a few minutes
+              while installing. Apps that install gems already get it; tick this to have it either way. Windows 8.1 and later.</span></span></label>
+          </div>
 
           <div class="field">
             <label for="install-cmd">Install command</label>
@@ -887,17 +906,18 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
         <p class="customise-group-hint small muted">Who signs the installer, and the file it is built from.</p>
 
         <details>
-          <summary><span>Signing</span><span class="default"><span class="online-only">Signed by TiddlyInstall</span><span class="local-only">Unsigned</span></span></summary>
+          <summary><span>Signing</span><span class="default">Unsigned</span></summary>
 
-          <label class="choice online-only"><input type="radio" name="mode" value="ours" id="mode-ours" checked>
-            <span><strong>Signed by TiddlyInstall</strong><br>
-            <span class="small muted">Fewest security warnings. The installer file is branded as TiddlyInstall and uses our icon; your name and icon go on the installed app. The file can only be changed by renaming it.</span></span></label>
+          <label class="choice online-only choice-off"><input type="radio" name="mode" value="ours" id="mode-ours" disabled>
+            <span><strong>Signed by TiddlyInstall</strong> <span class="badge badge-off">not yet</span><br>
+            <span class="small muted">Not available in this prototype: it needs a code-signing certificate, which we don't have yet.
+            It would give the fewest security warnings: the installer file branded as TiddlyInstall, with your name and icon on the installed app.</span></span></label>
 
           <label class="choice"><input type="radio" name="mode" value="yours" id="mode-yours">
             <span><strong>Signed by you</strong><br>
             <span class="small muted">Your name and icon on the installer itself. You provide the certificate, and the reputation is yours.</span></span></label>
 
-          <label class="choice"><input type="radio" name="mode" value="unsigned" id="mode-unsigned">
+          <label class="choice"><input type="radio" name="mode" value="unsigned" id="mode-unsigned" checked>
             <span><strong>Unsigned</strong><br>
             <span class="small muted">Anyone can edit the installer afterwards, including on the <a href="edit.html">Edit installer</a> page. Windows and macOS will show security warnings.</span></span></label>
 
@@ -974,6 +994,7 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
 
       </div>
 
+      <p class="build-where new-where small">Built by the build server.</p>
       <div class="actions" style="margin-top:20px">
         <button type="submit">Build installers</button>
       </div>

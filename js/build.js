@@ -3,8 +3,10 @@
 // queued or running, less often while the tab is hidden, and rides out
 // outages through api.js.
 import { apiRequest, absUrl, ApiError, apiBase, apiDefault, apiLocal, errorText, mountApiFooter } from './api.js';
+import { mountOverlayConsent } from './overlay-consent.js';
 
 mountApiFooter();
+mountOverlayConsent();
 
 const $ = (id) => document.getElementById(id);
 const POLL_MS = 2000;
@@ -117,6 +119,27 @@ function paintBackend() {
   }
 }
 
+// Where this build happened: in the page, or on a build server (design.md
+// 11.0 item 6). It comes from the job, not from what the page is pointed at
+// now: a job the page built itself says so in its result (js/local-api.js
+// `built`), and its id begins with "local-". Plain text, so a saved copy of
+// this page still says the same thing, and short enough for a phone.
+function paintWhere(job) {
+  const built = job.result && job.result.built;
+  const inPage = (built && built.where === 'page') || /^local-/.test(String(job.id || '')) || apiLocal();
+  const host = String(apiBase()).replace(/^https?:\/\//, '');
+  const done = job.status === 'done' || job.status === 'failed';
+  const where = inPage ? 'in this page' : 'by the build server at ' + host;
+  const w = $('job-where');
+  if (w) w.textContent = (done ? 'Built ' : 'Being built ') + where + '.';
+  const b = $('job-built');
+  if (b) {
+    b.textContent = inPage
+      ? 'These installers were built in this page, by your browser. They were never on a build server.'
+      : 'These installers were built by the build server at ' + host + ', and downloaded from it.';
+  }
+}
+
 // Made with catalogue changes from this browser (js/local-api.js).
 function paintCatalog(job) {
   const b = $('job-catalog');
@@ -134,6 +157,7 @@ function paint(job) {
   $('job-view').hidden = false;
   $('job-error').hidden = true;
   paintBackend();
+  paintWhere(job);
   paintCatalog(job);
   const title = job.ticket != null ? 'Build #' + job.ticket : 'Build';
   $('job-title').textContent = title;

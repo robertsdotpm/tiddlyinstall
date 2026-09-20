@@ -13,8 +13,8 @@ CSS-only behaviours.
 | Page | What it is |
 | --- | --- |
 | `index.html` | What the service does |
-| `new.html` | The installer form. Submitting sends `POST /api/jobs` and opens the build's page. The "Newest that runs on the user's system" table comes from `GET /api/catalog/runtimes` when the server is reachable |
-| `build.html#job=<id>` | One build, live: ticket number, place in the queue, estimated wait, progress, then downloads with sizes, SHA-256 and who signed them. Survives reloads |
+| `new.html` | The installer form. Submitting sends `POST /api/jobs` and opens the build's page. The "Newest that runs on the user's system" table comes from `GET /api/catalog/runtimes` when the server is reachable. Above each "Build installers" button it says where the build will happen: in this page, or on the build server (docs/plan.md section 1.11). "Signed by TiddlyInstall" is shown but off in this prototype (no code-signing certificate yet); Unsigned is the default |
+| `build.html#job=<id>` | One build, live: ticket number, place in the queue, estimated wait, progress, then downloads with sizes, SHA-256 and who signed them, and where the job was built. Survives reloads |
 | `edit.html` | Editor for unsigned (mode C) installers: open a `.exe`, `.run` or macOS `.zip`, edit its settings record, plan, packed files and **icon**, download it. Or start from a base installer. Nothing is uploaded |
 | `runtimes.html` | The runtime catalogue editor: browse and change releases, recipes, support rules and policy, with a live plan preview. Changes are kept in this browser as an overlay and used when the page builds installers itself (docs/plan.md section 1.11) |
 | `create.html` | Redirects to `new.html#write` |
@@ -37,6 +37,7 @@ page is lost.
 | `tools/build_site.py` | Builds the site: one HTML file, `dist/index.html` (gitignored), with every page, the CSS, the JS, the resedit bundle, the three unsigned bases and the catalogue inside, split by catalogue folder so the page unpacks only the runtimes it uses (docs/format.md section 6). The build server serves it; saved and opened from disk it builds installers with no server (docs/plan.md section 1.11). `--multi` also writes separate pages |
 | `js/resolve.js`, `js/builder.js`, `js/local-api.js`, `js/router.js` | The plan resolver and the job builder (both shared with the build server in `backend/`), the in-page API used when there is no build server, and the one-file site's page switching |
 | `js/overlay.js`, `js/catalog-editor.js` | The catalogue overlay (format, checks, applying it, storage, "Save this page" with it) and the Runtimes page |
+| `js/change-list.js`, `js/overlay-consent.js` | One rendering of a list of catalogue changes (what each one does, field by field), and the panel that asks once a session before changes **found** in this browser's storage are used: until answered nothing builds with them (docs/plan.md section 1.11) |
 | `js/zlib.js`, `js/inflate.js`, `js/deflate.js` | Compression for the whole page: the browser's CompressionStream/DecompressionStream where it has them, else our own inflate and deflate (gzip, zlib, raw) |
 | `js/cryptox.js` | Cryptography for the whole page: WebCrypto per operation where it works, else our own code below. `USE_NATIVE` in it switches to our code everywhere |
 | `js/sha.js`, `js/hmac-pbkdf2.js`, `js/aes.js` | SHA-1/256/384/512, HMAC, PBKDF2, AES-CBC and CFB, from FIPS 180-4, RFC 2104, RFC 8018 and FIPS 197 (ours) |
@@ -46,7 +47,7 @@ page is lost.
 | `tests/fallback-test.mjs` | The plain-JavaScript compression and crypto against Node's zlib and WebCrypto, openssl, and the FIPS/RFC test vectors; the `:has()` rewrite (`IB_CATALOG_DIR=<folder with catalog.gz> node tests/fallback-test.mjs [--quick]`) |
 | `tests/es2017-test.mjs` | Parses the built `dist/index.html` as ES2017 (acorn, `cd tests && npm install` once) and fails on newer syntax or built-ins |
 | `tests/no-native.mjs`, `tests/no-native-browser.mjs` | Run a test as an old browser: `node --import ./tests/no-native.mjs tests/sign-test.mjs` (no streams, `crypto.subtle` or BigInt in Node), and `--no-native` on `offline-test.mjs`, `upload-test.mjs`, `catalog-editor-test.mjs` and `sign-ui-test.mjs` (the same in Chrome, and no `:has()`) |
-| `tests/catalog-editor-test.mjs` | The Runtimes page in headless Chrome: edits, reload, preview, a built installer's plan, revert, export, import (a hostile file too), reset, blocked storage (`node --experimental-websocket tests/catalog-editor-test.mjs [--site URL]`) |
+| `tests/catalog-editor-test.mjs` | The Runtimes page in headless Chrome: edits, reload, preview, a built installer's plan, revert, export, import (a hostile file too), reset, the once-a-session question about changes found in storage, blocked storage (`node --experimental-websocket tests/catalog-editor-test.mjs [--site URL]`) |
 | `tests/ibfile.html`, `tests/icon.html` | Unit tests for `js/ibfile.js` and `js/icon.js` in the browser. Print PASS/FAIL. Fixtures come from `tests/make_fixtures.py` (Python's tarfile and zipfile, plus a synthetic PE with an icon resource) |
 | `tests/mock_server.py` | A stand-in build server for trying the pages (`python3 tests/mock_server.py 8094`, then open `new.html?api=http://127.0.0.1:8094`) |
 

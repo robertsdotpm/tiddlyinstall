@@ -570,6 +570,11 @@ form:has(#pf-action option[value="run"]:checked) .pf-dest { display: none; }
 .add-file > summary { color: var(--accent); }
 
 /* C / C++: build tools panel, and the same "write it here" limits as Other (no JS). */
+/* Build tools some languages need (new.html: cgo for Go, Ruby's DevKit). */
+.lang-go-only, .lang-ruby-only { display: none; }
+form:has(#runtime option[value="go"]:checked) .lang-go-only,
+form:has(#runtime option[value="ruby"]:checked) .lang-ruby-only { display: block; }
+
 .lang-cc-only { display: none; }
 form:has(#runtime option[value="cc"]:checked) .lang-cc-only { display: block; }
 form:has(#runtime option[value="cc"]:checked) .entry-cc { display: block; }
@@ -693,6 +698,29 @@ html.ib-local .online-only { display: none !important; }
 .customise > .customise-group { margin: 28px 0 2px; font-size: 1.05em; }
 .customise > .customise-group:first-child { margin-top: 4px; }
 .customise > .customise-group-hint { margin: 0 0 10px; }
+
+/* Where a build happens (js/new.js, js/build.js): plain text, one line on a
+   phone or two, never a warning. */
+.build-where { margin: 12px 0 0; color: var(--muted); }
+.build-where strong { color: var(--text); }
+#job-where { margin: 0 0 12px; }
+#job-built:empty { display: none; }
+
+/* A choice that exists but can't be used (mode A without a certificate). */
+.choice-off { opacity: 0.6; }
+.badge-off { border-color: var(--muted); color: var(--muted); }
+
+/* The prompt for catalogue changes found in this browser's storage
+   (js/overlay-consent.js): above everything, like the outage banner. */
+.overlay-ask {
+  border-bottom: 1px solid var(--warn);
+  background: var(--code-bg);
+  padding: 10px 16px;
+}
+.overlay-ask[hidden] { display: none; }
+.overlay-ask > p { margin: 0 0 6px; }
+.overlay-ask .rt-change-list { margin: 6px 0; max-height: 40vh; overflow: auto; }
+.overlay-ask .actions { margin-top: 8px; }
 
 /* ---- Runtimes: the catalogue editor (runtimes.html, js/catalog-editor.js) ---- */
 

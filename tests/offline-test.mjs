@@ -64,6 +64,10 @@ try {
   ok(/none, this page builds/.test(await js(`document.querySelector('.api-ctl-url').textContent`)), 'the footer says there is no build server');
   ok(await js(`getComputedStyle(document.getElementById('mode-ours').closest('label')).display === 'none' && document.getElementById('mode-unsigned').checked`),
     '"Signed by Installer Builder" is hidden and Unsigned is chosen');
+  // Where a build happens, in plain words, before building (design.md 11.0 item 6).
+  ok(await js(`[...document.querySelectorAll('.ib-page[data-page="new"] .build-where')].length >= 1 &&
+    [...document.querySelectorAll('.ib-page[data-page="new"] .build-where')].every((p) => /^Built in this page:/.test(p.textContent))`),
+    'the New installer form says "Built in this page"', await js(`(document.querySelector('.build-where') || {}).textContent`));
   ok(await js(`getComputedStyle(document.getElementById('offline-on').closest('label')).display === 'none'`), 'packing runtimes is hidden');
   ok(await js(`getComputedStyle(document.getElementById('ts-on').closest('.online-only')).display === 'none'`), 'the timestamp relay is hidden');
   await checkSections(t, js);
@@ -74,6 +78,14 @@ try {
   // Its code is main.py, which the default launch command must run.
   const ui = await buildHello({ runtime: 'python', mode: 'unsigned', name: 'Hello form', code: "print('hello from the form')\n" });
   await checkJob(ui, 'form', 'python', OUT && 'form');
+  // The build page says where that job was built, in its heading and with
+  // its downloads; the job carries it, so the page's own setting isn't asked.
+  await waitFor(js, `document.getElementById('job-where').textContent === 'Built in this page.'`, 'the build page to say where it was built', 15000, errors);
+  ok(true, 'the build page says the job was built in this page');
+  ok(/built in this page/.test(await js(`document.getElementById('job-built').textContent`)),
+    'the downloads say the installers were built in this page', await js(`document.getElementById('job-built').textContent`));
+  ok(await js(`ibLocalApi.request('/api/jobs/' + ${JSON.stringify(ui.id)}).then((j) => j.result.built.where)`) === 'page',
+    'the job result records where it was built');
   ok(JSON.stringify(await js(`ibLocalApi.unpacked()`)) === '["python"]', 'a Python build unpacks only the python folder', JSON.stringify(await js(`ibLocalApi.unpacked()`)));
   if (ui && ui.result) {
     const rec = await js(`ibLocalApi.request('/api/records/${ui.result.record}')`);
@@ -120,8 +132,12 @@ try {
   if (saved) {
     await open(saved);
     ok(errors.length === 0, 'the saved copy starts without errors', errors.join(' | '));
+    ok(/^Built in this page:/.test(await js(`document.querySelector('.ib-page[data-page="new"] .build-where').textContent`)),
+      'the saved copy still says "Built in this page"', await js(`document.querySelector('.build-where').textContent`));
     const job = await buildHello({ runtime: 'python', mode: 'unsigned', name: 'Hello again', code: "print('hello')\n", platforms: ['linux'] });
     await checkJob(job, 'saved copy', 'python');
+    await waitFor(js, `document.getElementById('job-where').textContent === 'Built in this page.'`, 'the saved copy\'s build page to say the same', 15000, errors);
+    ok(true, 'the saved copy\'s build page says the same');
   }
   if (OUT) fs.writeFileSync(path.join(OUT, 'builds.json'), JSON.stringify(builds, null, 1));
 
@@ -130,12 +146,18 @@ try {
     await open(SITE.replace(/\/$/, '') + '/');
     ok(errors.length === 0, 'served: the page starts without errors', errors.join(' | '));
     ok(!await js(`document.documentElement.classList.contains('ib-local')`), 'served: the page uses the build server');
-    ok(await js(`getComputedStyle(document.getElementById('mode-ours').closest('label')).display !== 'none'`), 'served: "Signed by Installer Builder" is offered');
+    ok(await js(`getComputedStyle(document.getElementById('mode-ours').closest('label')).display !== 'none' &&
+      document.getElementById('mode-ours').disabled && document.getElementById('mode-unsigned').checked`),
+      'served: "Signed by TiddlyInstall" is shown but off, and Unsigned is chosen');
+    ok(await js(`/^Built by the build server at /.test(document.querySelector('.ib-page[data-page="new"] .build-where').textContent)`),
+      'served: the form says the build server builds it', await js(`document.querySelector('.build-where').textContent`));
     const rts = await js(`fetch('/api/catalog/runtimes').then(r => r.ok)`);
     ok(rts, 'served: the server answers the page');
     await js(`document.querySelector('.api-ctl-edit').click(); document.querySelector('.api-ctl-local').click()`);
     ok(await js(`document.documentElement.classList.contains('ib-local') && document.getElementById('mode-unsigned').checked`),
       'served: "No server" switches to building in the page, on Unsigned');
+    ok(await js(`/^Built in this page:/.test(document.querySelector('.ib-page[data-page="new"] .build-where').textContent)`),
+      'served: the wording follows the change to "No server"', await js(`document.querySelector('.build-where').textContent`));
     const job = await buildHello({ runtime: 'python', mode: 'unsigned', name: 'Hello no server', code: "print('hello')\n", platforms: ['linux'] });
     await checkJob(job, 'served, no server', 'python');
     await js(`localStorage.clear()`);

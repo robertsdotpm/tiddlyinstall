@@ -11,8 +11,13 @@
 import { apiLocal, apiReady, apiBase, setApiBase, LOCAL, mountApiFooter } from './api.js';
 import { resolve, fileName } from './resolve.js';
 import * as O from './overlay.js';
+// The change list, and the DOM helpers it shares with this page. The same
+// list is shown by the prompt for changes found in storage.
+import { el, short, show, matchText, describeChange, changeItem as changeListItem } from './change-list.js';
+import { mountOverlayConsent } from './overlay-consent.js';
 
 mountApiFooter();
+mountOverlayConsent();
 
 const $ = (id) => document.getElementById(id);
 // A release row's height, from the stylesheet: 30 px, or two lines on narrow
@@ -23,28 +28,9 @@ let rowSure = false;
 const isMap = (v) => v != null && typeof v === 'object' && !Array.isArray(v);
 const nz = (v, d) => (v != null ? v : d);        // v ?? d (d is evaluated either way)
 
-/* ---------- DOM helpers ---------- */
+/* ---------- DOM helpers (js/change-list.js: el, short, show) ---------- */
 
-// el('div', {class: 'x', text: 'y', onclick: f, 'aria-label': 'z'}, child, ...)
-function el(tag, props = {}, ...kids) {
-  const e = document.createElement(tag);
-  for (const [k, v] of Object.entries(props || {})) {
-    if (v == null || v === false) continue;
-    if (k === 'class') e.className = v;
-    else if (k === 'text') e.textContent = v;
-    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
-    else if (k === 'value') e.value = v;
-    else if (k === 'checked') e.checked = !!v;
-    // (setAttribute, not dataset: IE 10's stand-in can't add keys.)
-    else if (k === 'dataset') for (const dk of Object.keys(v)) e.setAttribute('data-' + dk.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase()), v[dk]);
-    else e.setAttribute(k, v === true ? '' : String(v));
-  }
-  for (const k of kids.flat()) if (k != null && k !== false) e.append(k instanceof Node ? k : String(k));
-  return e;
-}
 const opt = (value, label, sel) => el('option', { value, text: (label != null ? label : value), selected: sel ? 'selected' : null });
-const short = (s, n = 160) => (s.length > n ? s.slice(0, n - 1) + '…' : s);
-const show = (v) => (v === undefined ? '(not set)' : v === null ? '(nothing)' : typeof v === 'string' ? (v === '' ? '(empty)' : v) : JSON.stringify(v));
 
 /* ---------- versions, for sorting and the version filter ---------- */
 
@@ -102,8 +88,6 @@ const folderOf = (id = S.rt) => pol(id).folder || id;
 const labelOf = (id) => pol(id).label || id;
 const runtimeIds = () => Object.keys(policyAll()).filter((k) => isMap(policyAll()[k])).sort();
 const fileFor = (kind, id = S.rt) => folderOf(id) + '/' + { release: 'releases.json', recipe: 'install.json', rule: 'os_support.json' }[kind];
-// The runtime that owns a catalogue folder (python2's files are python's).
-const runtimeOfFolder = (f) => (runtimeIds().includes(f) ? f : runtimeIds().find((id) => folderOf(id) === f) || f);
 
 // The page's catalogue is unpacked a folder at a time (js/overlay.js): a
 // runtime's folder, and those its previews need, when it is opened, and the
@@ -351,8 +335,6 @@ function selectRow(k) {
 
 /* ---------- recipes and rules: tables ---------- */
 
-const matchText = (v) => (v == null ? 'any' : Array.isArray(v) ? v.map((x) => (x === null ? '(none)' : x)).join(' | ') : String(v));
-
 function tableRows(kind, table, cols, filter) {
   const rows = itemRows(kind).filter(filter || (() => true));
   const head = el('tr', {}, el('th', { text: '#' }), ...cols.map(([t]) => el('th', { text: t })), el('th', {}));
@@ -561,6 +543,14 @@ function releaseForm(form) {
       field('SHA-256', textIn(() => d().ib_sha256 || '', (v) => { d().ib_sha256 = v.trim().toLowerCase(); }, { class: 'mono', placeholder: '64 hex characters' }), 'ib_sha256',
         'The installer refuses the download if it doesn\'t match.'),
       field('Size in bytes', textIn(() => String(nz(d().size, 0)), (v) => { d().size = /^\d+$/.test(v.trim()) ? Number(v.trim()) : v; }, { inputmode: 'numeric' }), 'size')));
+  // Releases downloaded in several files (Windows Python's MSIs): kept as
+  // they are, since this form edits one download.
+  if (Array.isArray(d().parts) && d().parts.length) {
+    form.append(el('p', { class: 'small muted', dataset: { err: 'parts' } },
+      'This release downloads ' + d().parts.length + ' more file' + (d().parts.length === 1 ? '' : 's') + ' with it (' +
+      d().parts.slice(0, 6).map((q) => q && q.name).filter(Boolean).join(', ') + (d().parts.length > 6 ? ', …' : '') +
+      '). They are kept as they are; this form edits the main download.', el('span', { class: 'rt-err' })));
+  }
 }
 
 function stepEditor(get, set) {
@@ -866,61 +856,18 @@ async function savePolicy() {
 
 /* ---------- describing changes (the list, and imports) ---------- */
 
-function describe(c) {
-  let kind = '';
-  try { kind = O.pathKind(c.path); } catch (e) { return { title: 'Unknown change', fields: [] }; }
-  const folder = O.pathRuntime(c.path);
-  const rt = kind === 'policy' ? c.path[2] : runtimeOfFolder(folder);
-  const label = policyAll()[rt] ? labelOf(rt) : rt;
-  const base = c.op === 'add' ? undefined : O.baseValue(S.files, c.path);
-  const v = c.op === 'remove' ? base : c.value;
-  const verb = { add: 'Added', replace: 'Changed', remove: 'Removed' }[c.op];
-  let what = '';
-  const iv = isMap(v) ? v : isMap(base) ? base : {};
-  if (kind === 'release') what = 'release ' + [iv.version, iv.os, iv.arch, iv.variant, iv.format].filter((x) => x).join(' ');
-  else if (kind === 'recipe') what = 'recipe ' + (c.path[2] === '-' ? '(new)' : c.path[2] + 1) + ' (' + matchText(iv.match && iv.match.os) + ', ' + matchText(iv.match && iv.match.format) + ', ' + (iv.method || '?') + ')';
-  else if (kind === 'rule') what = 'support rule ' + (c.path[2] === '-' ? '(new)' : c.path[2] + 1) + ' (' + (iv.os || '?') + ' ' + (iv.versions || 'any version') + (iv.min_os ? ', from ' + iv.min_os : '') + ')';
-  else what = 'policy: ' + c.path[3];
-  const fields = [];
-  if (c.op === 'replace') {
-    if (kind === 'policy') fields.push({ name: c.path[3], from: show(base), to: show(c.value) });
-    else if (isMap(base) && isMap(c.value)) {
-      for (const k of new Set([...Object.keys(base), ...Object.keys(c.value)])) {
-        if (O.deepEqual(base[k], c.value[k])) continue;
-        const a = base[k], b = c.value[k];
-        // Lists of text (mirrors): only the positions that differ.
-        if (Array.isArray(a) && Array.isArray(b) && [...a, ...b].every((x) => typeof x === 'string') && Math.max(a.length, b.length) <= 60) {
-          for (let i = 0; i < Math.max(a.length, b.length); i++) {
-            if (a[i] !== b[i]) fields.push({ name: k + ' ' + (i + 1), from: a[i] === undefined ? '' : a[i], to: b[i] === undefined ? '(gone)' : b[i] });
-          }
-          continue;
-        }
-        fields.push({ name: k, from: show(a), to: show(b) });
-      }
-    }
-  } else if (c.op === 'add') {
-    if (kind === 'release') fields.push({ name: 'url', from: '', to: show(v && v.url) }, { name: 'ib_sha256', from: '', to: show(v && v.ib_sha256) });
-    if (kind === 'recipe' && isMap(v) && Array.isArray(v.steps)) v.steps.forEach((s, i) => fields.push({ name: 'step ' + (i + 1), from: '', to: show(s) }));
-    if (kind === 'rule' || kind === 'policy') fields.push({ name: 'value', from: '', to: show(v) });
-  }
-  return { title: label + ': ' + verb + ' ' + what, fields, rt, kind };
-}
+// js/change-list.js, against the catalogue as far as it is unpacked.
+const describe = (c) => describeChange(c, S.files);
 
 function changeItem(c, { status, actions = true } = {}) {
-  const d = describe(c);
-  const st = status || S.status.get(O.changeKey(c)) || { ok: true };
-  const li = el('li', { class: st.ok ? '' : 'rt-change-bad' },
-    el('div', { class: 'rt-change-head' }, el('span', { class: 'rt-change-title', text: d.title }),
-      st.ok ? el('span', { class: 'rt-badge rt-changed', text: status ? 'will apply' : 'in use' }) : el('span', { class: 'rt-badge rt-stale', text: (st.invalid ? 'invalid: ' : 'not applied: ') + st.why })),
-    d.fields.length ? el('dl', { class: 'rt-diffs' }, ...d.fields.slice(0, 12).flatMap((f) => [
-      el('dt', { text: f.name }),
-      el('dd', {}, f.from !== '' ? el('del', { text: short(f.from, 300) }) : null, f.from !== '' ? ' → ' : '', el('ins', { text: short(f.to, 300) }))])) : null);
-  if (actions) {
-    li.append(el('div', { class: 'actions rt-change-acts' },
-      el('button', { type: 'button', class: 'link-button', text: 'Show', onclick: () => showChange(c) }),
-      el('button', { type: 'button', class: 'link-button', text: 'Revert', dataset: { revert: O.changeKey(c) }, onclick: async () => { await O.revertChange(O.changeKey(c)); if (S.sel) { S.sel = null; S.draft = undefined; } paintAll(); } })));
-  }
-  return li;
+  const acts = actions ? [
+    { text: 'Show', onclick: () => showChange(c) },
+    { text: 'Revert',
+      dataset: { revert: O.changeKey(c) },
+      onclick: async () => { await O.revertChange(O.changeKey(c)); if (S.sel) { S.sel = null; S.draft = undefined; } paintAll(); } },
+  ] : [];
+  return changeListItem(c, { files: S.files, status: status || S.status.get(O.changeKey(c)) || { ok: true },
+    badge: status ? 'will apply' : 'in use', actions: acts });
 }
 
 async function showChange(c) {
@@ -960,7 +907,18 @@ function paintChanges() {
   const note = $('rt-page-note');
   const po = O.pageOverlay();
   note.replaceChildren();
-  if (S.ov.from === 'page') note.append('These changes came inside this page file (it was saved with them).');
+  // Found in this browser's storage and not in use: waiting for the answer
+  // at the top of the page, or set aside for this session (js/overlay.js).
+  if (S.ov.pending.length) {
+    const p = S.ov.pending.length + ' catalogue change' + (S.ov.pending.length === 1 ? '' : 's') + ' found in this browser ';
+    if (S.ov.consent === 'ask') note.append(p + 'are not in use: the question is at the top of the page.');
+    else {
+      note.append(p + (S.ov.pending.length === 1 ? 'is' : 'are') + ' set aside for this session. ',
+        el('button', { type: 'button', class: 'link-button', id: 'rt-use-stored', text: 'Use them after all',
+          onclick: async () => { await O.answerStored(true); S.sel = null; S.draft = undefined; paintAll(); } }),
+        ' Saving a change here replaces them.');
+    }
+  } else if (S.ov.from === 'page') note.append('These changes came inside this page file (it was saved with them).');
   else if (po && po.changes.length && !O.deepEqual(po.changes, S.ov.changes)) {
     note.append('This page file also carries ' + po.changes.length + ' catalogue change' + (po.changes.length === 1 ? '' : 's') + ' of its own, not in use. ',
       el('button', { type: 'button', class: 'link-button', text: 'Review them', onclick: () => review(po, 'this page file') }));
