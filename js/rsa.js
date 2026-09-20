@@ -90,21 +90,67 @@ function encode(hash, data, len) {
   return em;
 }
 
-// m^d mod n by the Chinese remainder theorem, checked with the public
-// exponent (a wrong result would leak the key).
+// Blinding (Kocher 1996; RFC 8017 section 10 note). The private
+// exponentiation below runs in software we wrote, with a running time
+// and a memory access pattern that depend on the value being signed.
+// Blinding makes that value a random one the caller never chose: pick r
+// coprime to n, exponentiate r^e * m instead of m, and divide the answer
+// by r afterwards. Because (r^e * m)^d = r * m^d (mod n), the signature
+// is exactly the one the unblinded operation would have produced -- the
+// arithmetic is exact, so only the timing changes, never the output.
+//
+// It costs one small exponentiation (e is 65537: 17 squarings and a
+// multiply), one inversion and two multiplications per signature.
+//
+// A browser with no crypto.getRandomValues cannot sign at all
+// (js/browser-check.js says so, and key generation needs it too), but
+// this module is also used on its own, so with no random source it signs
+// unblinded rather than refusing.
+const canRandom = () => {
+  try {
+    const g = typeof globalThis !== 'undefined' ? globalThis : self;
+    return !!(g.crypto && g.crypto.getRandomValues);
+  } catch (e) { return false; }
+};
+
+// {m: the value to exponentiate, ri: what to multiply the result by},
+// or null to sign m as it is.
+function blind(k, m) {
+  if (!k.n || !k.e || !canRandom()) return null;
+  // n - 2 is the largest r worth trying; randomBelow gives [1, max).
+  const max = B.sub(k.n, B.ONE);
+  for (let tries = 0; tries < 8; tries++) {
+    const r = B.randomBelow(max);
+    if (B.cmp(r, B.ONE) <= 0) continue;
+    let ri;
+    // Not invertible means gcd(r, n) > 1, which would have factored the
+    // key; with a real modulus it never happens, so just draw again.
+    try { ri = B.modInv(r, k.n); } catch (e) { continue; }
+    return { m: B.mod(B.mul(m, B.modPow(r, k.e, k.n)), k.n), ri };
+  }
+  return null;
+}
+
+// m^d mod n by the Chinese remainder theorem, blinded, and checked with
+// the public exponent (a wrong result would leak the key).
 function privateOp(k, m) {
   let s;
+  const b = blind(k, m);
+  const x = b ? b.m : m;
   if (k.p && k.q) {
     const mp = new B.Mont(k.p), mq = new B.Mont(k.q);
-    const s1 = mp.from(mp.pow(mp.to(m), k.dp));
-    const s2 = mq.from(mq.pow(mq.to(m), k.dq));
+    const s1 = mp.from(mp.pow(mp.to(x), k.dp));
+    const s2 = mq.from(mq.pow(mq.to(x), k.dq));
     // h = qi * (s1 - s2) mod p
     const diff = B.cmp(s1, B.mod(s2, k.p)) >= 0 ? B.sub(s1, B.mod(s2, k.p)) : B.sub(B.add(s1, k.p), B.mod(s2, k.p));
     const h = B.mod(B.mul(k.qi, diff), k.p);
     s = B.add(s2, B.mul(h, k.q));
   } else {
-    s = B.modPow(m, k.d, k.n);
+    s = B.modPow(x, k.d, k.n);
   }
+  if (b) s = B.mod(B.mul(s, b.ri), k.n);
+  // Against the message as it was given, not the blinded one: this is the
+  // fault check, and it has to cover the unblinding too.
   if (B.cmp(B.modPow(s, k.e, k.n), m) !== 0) throw new Error('RSA: the private key is inconsistent');
   return s;
 }

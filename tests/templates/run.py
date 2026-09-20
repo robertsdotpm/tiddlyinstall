@@ -390,6 +390,19 @@ while (((Get-Date) - $start).TotalSeconds -lt $Seconds) {
 if ($Title -and -not $seen) { "no window titled $Title; visible: " + ([IbWindows]::Titles($Hidden) -join " | ") }
 """
 
+# The leftover listing, shared by AFTER_BAT and LEFT_BAT.
+LEFT_LIST = r"""echo @left
+rem Every folder under ib that wasn't there before the install: the app's,
+rem and the runtimes' (removed with their last app).
+if exist "C:\ib" for /f "delims=" %%d in ('dir /b "C:\ib"') do findstr /x /c:"%%d" "%T%\ib-before.txt" >nul 2>&1 || echo left: C:\ib\%%d
+if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib" for /f "delims=" %%d in ('dir /b "%LOCALAPPDATA%\ib"') do findstr /x /c:"%%d" "%T%\ib-before.txt" >nul 2>&1 || echo left: %%d
+rem And in the user's profile: a package's own cache (Electron's download
+rem cache is %LOCALAPPDATA%\electron) outlives the app otherwise.
+for /f "delims=" %%d in ('dir /b /ad "%APPDATA%"') do findstr /x /c:"%%d" "%T%\profile-before.txt" >nul 2>&1 || echo left: %%APPDATA%%\%%d
+if defined LOCALAPPDATA for /f "delims=" %%d in ('dir /b /ad "%LOCALAPPDATA%"') do findstr /x /c:"%%d" "%T%\profile-before.txt" >nul 2>&1 || echo left: %%LOCALAPPDATA%%\%%d
+reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\ib-{ID}" >nul 2>&1 && echo regkey-left
+"""
+
 AFTER_BAT = FIND_APP + r"""if not defined A goto left
 powershell -NoProfile -Command "Get-WmiObject Win32_Process | Where-Object { $_.CommandLine -like '*\ib\{ID}*' } | ForEach-Object { $_.Terminate() | Out-Null }" <nul
 if exist "%A%\data\launch.log" (echo @applog& type "%A%\data\launch.log")
@@ -417,17 +430,36 @@ ping -n 2 127.0.0.1 >nul
 goto unwait
 :left
 ping -n 3 127.0.0.1 >nul
-echo @left
-rem Every folder under ib that wasn't there before the install: the app's,
-rem and the runtimes' (removed with their last app).
-if exist "C:\ib" for /f "delims=" %%d in ('dir /b "C:\ib"') do findstr /x /c:"%%d" "%T%\ib-before.txt" >nul 2>&1 || echo left: C:\ib\%%d
-if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib" for /f "delims=" %%d in ('dir /b "%LOCALAPPDATA%\ib"') do findstr /x /c:"%%d" "%T%\ib-before.txt" >nul 2>&1 || echo left: %%d
-rem And in the user's profile: a package's own cache (Electron's download
-rem cache is %LOCALAPPDATA%\electron) outlives the app otherwise.
-for /f "delims=" %%d in ('dir /b /ad "%APPDATA%"') do findstr /x /c:"%%d" "%T%\profile-before.txt" >nul 2>&1 || echo left: %%APPDATA%%\%%d
-if defined LOCALAPPDATA for /f "delims=" %%d in ('dir /b /ad "%LOCALAPPDATA%"') do findstr /x /c:"%%d" "%T%\profile-before.txt" >nul 2>&1 || echo left: %%LOCALAPPDATA%%\%%d
-reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\ib-{ID}" >nul 2>&1 && echo regkey-left
-"""
+""" + LEFT_LIST
+
+# The same listing on its own, to look again once whatever was holding a
+# folder open has been stopped (holders.ps1).
+LEFT_BAT = 'ping -n 3 127.0.0.1 >nul\n' + LEFT_LIST
+
+
+HOLDERS_PS1 = Path(__file__).resolve().parent.parent / "matrix" / "holders.ps1"
+HOLDER_ROOTS = "C:\\ib;%LOCALAPPDATA%\\ib;%APPDATA%"
+
+
+def clear_holders(host):
+    """Stop whatever is holding files under the app roots, and say what.
+
+    A folder that will not delete is nearly always something still
+    running -- most often a shell sitting in it, which holds it open even
+    when it is empty (design.md 11, item 19). Without this, one such
+    folder makes every later cell on the VM report a leftover. Returns
+    (what it found and killed, whether it ran at all).
+    """
+    code, _, err = sh(["scp", "-q", str(HOLDERS_PS1), f"{host}:C:/ibholders.ps1"], timeout=60)
+    if code:
+        return [f"(could not copy holders.ps1: {err.strip()[:120]})"], False
+    code, out, err = sh(["ssh", host, "powershell -NoProfile -ExecutionPolicy Bypass "
+                         f'-File C:\\ibholders.ps1 -Path "{HOLDER_ROOTS}" -Kill'], timeout=300)
+    sh(["ssh", host, "cmd /c del C:\\ibholders.ps1"], timeout=60)
+    lines = [l.rstrip("\r") for l in out.splitlines() if l.strip()]
+    if code or "END" not in lines:
+        return lines + [f"(holders.ps1 exit {code}: {err.strip()[:120]})"], False
+    return [l for l in lines if l.startswith(("holder ", "killed ", "kept ", "kill-failed "))], True
 
 
 def win_stray(runtime, a):
@@ -586,9 +618,29 @@ def run_windows(vm, key, b, f, a):
             parts["window_out"] = parts.get("window_out", "") + " (schtasks: " + (o2 + e2).strip() + ")"
     code, out, err = vm.run_script("after.bat", AFTER_BAT, timeout=3000, ID=ident)
     parts.update(parse_markers(out))
+    held = ""
+    if parts.get("left_out", "").strip():
+        # Before calling it the uninstaller's fault, stop whatever is
+        # holding the folder and look again: a stray shell sitting in it
+        # is not the installer's doing, and it would fail every later
+        # cell on this VM too.
+        lines, ran = clear_holders(vm.host)
+        held = "; ".join(lines)
+        c2, o2, _ = vm.run_script("left.bat", LEFT_BAT, timeout=300, ID=ident)
+        again = parse_markers(o2)
+        gone = not again.get("left_out", "").strip()
+        parts["left_out"] = again.get("left_out", "")
+        if held:
+            held = ("what held it: " if gone else "held by: ") + held
+        elif not ran:
+            held = "holders.ps1 did not run"
+        else:
+            held = "nothing was found holding it"
     if not a.keep:
         vm.remove()
     r, d = judge(key, b, parts, err)
+    if held:
+        d += " (" + held[:300] + ")"
     if r == "fail" and note and "does not have desktop access" in parts.get("applog_out", ""):
         # Java won't open a window on the SSH session's window station
         # (HeadlessException); only a logged-on user's session shows it.

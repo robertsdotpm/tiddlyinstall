@@ -49,6 +49,14 @@ PROFILES = {
         arch="amd64", firmware="efi", guest="windows9_64Guest", lang="en-US",
         admins=["x"], admin_group="Administrators", disk=64, rdp=True,
         image="Windows 10 Enterprise LTSC 2021 Evaluation"),   # the ISO also has an N edition
+    "win11-ltsc2024": dict(
+        name="Windows 11 IoT Enterprise LTSC 2024 (64-bit) - installer tests", host="ib-win11-ltsc",
+        arch="amd64", firmware="efi", guest="windows11_64Guest", lang="en-US",
+        admins=["x"], admin_group="Administrators", disk=64, rdp=True,
+        # The evaluation ISO carries exactly one image, and this is its name
+        # (read out of sources/install.wim's XML resource). No vTPM on a
+        # standalone host, so setup's hardware checks are bypassed.
+        image="Windows 11 IoT Enterprise LTSC 2024 Evaluation", bypass=True),
     "win11-de": dict(
         name="Windows 11 25H2 German (Jörg Müller) - installer tests", host="ib-win11-de",
         arch="amd64", firmware="efi", guest="windows11_64Guest", lang="de-DE",
