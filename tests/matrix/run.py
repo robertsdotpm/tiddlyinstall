@@ -286,7 +286,41 @@ KNOWN = {
         "expected until there is a Developer ID: Gatekeeper kills any installer that "
         "arrives with com.apple.quarantine, ad-hoc signed or not, because only a "
         "notarization ticket satisfies it (docs/macos-packaging.md section 5)",
+    "zig-win7-too-old":
+        "the fixture is too modern for the only Zig that runs here, not an installer "
+        "fault: Zig dropped Windows 7, so the newest build the catalogue can offer "
+        "Windows 7 and 8 is 0.5.0, whose parser predates the `.{}` anonymous struct "
+        "literal that tests/matrix/projects.json's hello uses at line 4. The install "
+        "reaches the project's own build command and that command rejects the source. "
+        "**This is a stopgap and costs real coverage on the oldest Windows we support**: "
+        "the fix is a version-appropriate hello, which the catalogue's version-ranged "
+        "`install_rules` already has the machinery for (docs/test-results.md)",
 }
+
+# (target, runtime) pairs whose failure is the KNOWN entry named, when the
+# failure really is that one -- checked against the detail, so a *different*
+# failure on the same cell still reports as a failure.
+KNOWN_CELLS = {
+    ("7", "zig"): ("zig-win7-too-old", "expected token 'Symbol', found '{'"),
+    ("8.1", "zig"): ("zig-win7-too-old", "expected token 'Symbol', found '{'"),
+}
+
+
+def apply_known(target, rt, r, d):
+    """Re-read a failure that we have already explained as `known`.
+
+    Only when the detail matches the signature: a cell that starts
+    failing for a new reason must not be swallowed by the old excuse.
+    """
+    if r != "fail":
+        return r, d
+    hit = KNOWN_CELLS.get((target, rt))
+    if not hit:
+        return r, d
+    key, signature = hit
+    if signature not in (d or ""):
+        return r, d
+    return "known", f"{d} -- {KNOWN[key]}"
 
 
 def mac_gatekeeper(out, r, d, extra):
@@ -385,6 +419,7 @@ def main():
             else:
                 from run_windows import run_windows
                 r, d, extra = run_windows(WINDOWS[a.target], rt, mode, f, b["record"], a.target)
+            r, d = apply_known(a.target, rt, r, d)
             res.update(result=r, detail=d, record=b["record"], **extra)
             record(res)
 
