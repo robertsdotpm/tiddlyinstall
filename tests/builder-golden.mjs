@@ -63,27 +63,57 @@ function bodyFor(rt) {
   return body;
 }
 
-// Mask what may differ (see the header) -- and, since 2026-09-20, no more
-// than that.
+// Mask what may differ (see the header) -- and, since 2026-09-20, check
+// the rest rather than hiding it.
 //
-// These masks used to hide the record's `source inline <sha>` line, the
-// plan's `record` line and its `appid`, because all three moved with the
-// gzip we happened to make and the page's deflate and the server's do not
-// agree. That is precisely the bug design.md 11.2 records: one form gave
-// two record hashes and two install folders depending on where it was
-// built, and these goldens could not see it because they masked it.
+// The record's `source inline <sha>` line used to be masked, because it
+// moved with whichever deflate made the gzip. That is exactly the bug
+// design.md 11.2 records -- one form giving two record hashes and two
+// install folders depending on where it was built -- and these goldens
+// could not see it, because they masked it. The record now names the
+// uncompressed tar, so that line is deterministic and is compared.
+// `created` is a timestamp and is the only thing left masked in a record.
 //
-// The record now names the uncompressed tar, so the record hash and the
-// appid are deterministic and are pinned here. What genuinely still
-// differs between builders is the `.tar.gz`'s own hash and size in the
-// plan's source line, and only those are masked.
+// The plan's `record` and `appid` lines cannot be compared literally,
+// and not for that reason: they are the hash of the record *including*
+// its `created`, and the golden was recorded from a server at a
+// different moment than the test builds at. Masking them and stopping
+// there is what let the old bug through, so instead planTies() below
+// checks them against the record the test just built. A hash that moved
+// with the compression would still fail, in the record comparison.
 function maskRecord(t) {
   return t.replace(/^created\t.*\n/m, '');
 }
 function maskPlan(t) {
   return t.replace(/\nsig\ted25519\t\S+\n?$/, '\n')
     .replace(/^(source\t[0-9a-f]{64}\.tar\.gz\t)[0-9a-f]{64}\t\d+/m, '$1<gzip>\t<size>')
-    .replace(/^url\t\S+\/src\/[0-9a-f]{64}\.tar\.gz\n/m, '');
+    .replace(/^url\t\S+\/src\/[0-9a-f]{64}\.tar\.gz\n/m, '')
+    .replace(/^record\t\S+$/m, 'record\t<hash>')
+    .replace(/^appid\t\S+$/m, 'appid\t<appid>');
+}
+
+// The plan's `record` and `appid` must be this record's, derived the way
+// docs/format.md section 5 says: appid = the first 12 characters of the
+// lowercase base32 SHA-256 of "<record hash>/app".
+function planTies(rt, record, hash, plan) {
+  const m = /^record\t(\S+)$/m.exec(plan);
+  ok(!!m && m[1] === hash, rt + ": the plan names this record",
+     m ? `plan says ${m[1]}, the record hashes to ${hash}` : 'no record line');
+  const want = base32(crypto.createHash('sha256').update(hash + '/app').digest()).slice(0, 12);
+  const a = /^appid\t(\S+)$/m.exec(plan);
+  ok(!!a && a[1] === want, rt + ": the plan's appid comes from that hash",
+     a ? `plan says ${a[1]}, the record hash gives ${want}` : 'no appid line');
+}
+
+const B32 = 'abcdefghijklmnopqrstuvwxyz234567';
+function base32(buf) {
+  let bits = 0, acc = 0, out = '';
+  for (const b of buf) {
+    acc = (acc << 8) | b; bits += 8;
+    while (bits >= 5) { out += B32[(acc >> (bits - 5)) & 31]; bits -= 5; }
+  }
+  if (bits) out += B32[(acc << (5 - bits)) & 31];
+  return out;
 }
 function firstDiff(a, b) {
   const x = a.split('\n'), y = b.split('\n');
@@ -155,8 +185,10 @@ for (const [how, catFor] of ways) {
       ok(g.record === b, rt + ': record' + how, firstDiff(g.record, b));
       // The server's plan names its copy of the source; the page's app packs it.
       const app = Object.assign({}, out.app, { platforms: ['windows', 'linux', 'macos'] });
-      const pb = maskPlan(await resolve(cat, app));
+      const raw = await resolve(cat, app);
+      const pb = maskPlan(raw);
       ok(g.plan === pb, rt + ': plan' + how, firstDiff(g.plan, pb));
+      planTies(rt + how, out.record, out.hash, raw);
     } catch (e) {
       ok(false, rt + how, e.stack || e);
     }
