@@ -7,6 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import http from 'node:http';
 import zlib from 'node:zlib';
+import { createHash } from 'node:crypto';
 import { Builder } from '../lib/jobs.js';
 import { loadOrCreate } from '../lib/plansig.js';
 import { validate, packageLaunch, projectInstall, inlineTar } from '../../js/builder.js';
@@ -300,7 +301,20 @@ test('offline: the signed plan and the source packed, streamed to disk', { skip:
   const info = await readInstaller(new Uint8Array(d), f.name);
   const { verifyFor } = await import('../lib/plansig.js');
   verifyFor(b.signer.pub, Buffer.from(info.plan), res.record);
+  // The record names the *tar* (design.md 11.2), the stored file and the
+  // pack member are the `.tar.gz` around it, and a pack member is named by
+  // its own content. So there are two hashes here and they must not be the
+  // same one: check each against what it is supposed to name.
   const src = /^source\tinline\t(\S+)$/m.exec(info.record)[1];
-  assert.deepEqual(info.pack.map((m) => m.name), [src]);
-  assert.ok(Buffer.from(info.pack[0].data).equals(fs.readFileSync(b.srcPath(src))));
+  const stored = fs.readFileSync(b.srcPath(src));          // stored under the tar's hash
+  const sha = (u8) => createHash('sha256').update(u8).digest('hex');
+  assert.equal(sha(zlib.gunzipSync(stored)), src, 'the record names the tar inside the stored .tar.gz');
+  assert.deepEqual(info.pack.map((m) => m.name), [sha(stored)], 'the pack member is named by its own bytes');
+  assert.ok(Buffer.from(info.pack[0].data).equals(stored));
+  // And the plan ties the two together: it names the bytes to download,
+  // with the tar's hash as the 7th field.
+  const sl = /^source\t(\S+)\t(\S+)\t(\d+)\t(\S+)\t(\d+)\t(\S+)$/m.exec(info.plan);
+  assert.ok(sl, 'the plan\'s source line carries the tar hash');
+  assert.equal(sl[2], sha(stored), 'the plan names the bytes an engine downloads');
+  assert.equal(sl[6], src, 'and the tar hash the record names');
 });
