@@ -2,16 +2,20 @@
 //
 // From one square PNG (or SVG) the editor makes the per-platform icon:
 //   Windows .exe   a .ico (16/24/32/48 BMP for XP + 64/128/256 PNG) written into
-//                  the file's icon group resource with resedit-js, keeping the
-//                  NSIS overlay and any appended metadata block, and fixing the
-//                  PE checksum.
+//                  the file's icon group resource by appending a section (see
+//                  "Windows PE icon" below), keeping the NSIS overlay and any
+//                  appended metadata block, and fixing the PE checksum.
 //   macOS .zip     an .icns (ic07-ic10 PNG) put in the .app's Resources, with
 //                  CFBundleIconFile set in Info.plist.
 //   Linux .run     the PNG is kept in the pack; the record gets an `icon` key
 //                  naming its SHA-256, for the engine's .desktop Icon= (an
 //                  engine TODO, docs/format.md section 2).
 //
-// resedit-js and pe-library (both MIT, (c) 2018 jet) do the PE resource edit.
+// The PE resource edit is done here, by hand: resedit-js rebuilt `.rsrc` and
+// broke every NSIS uninstaller (see "Windows PE icon" below). resedit-js and
+// pe-library (both MIT, (c) 2018 jet) are still vendored and still loaded by
+// the pages through loadResEdit(), because tests/icon-test.js reads the
+// result back with them -- an independent parser for what this file writes.
 // They are loaded from globalThis.__IB_RESEDIT (set by vendor/resedit-bundle.js
 // on the site pages, and inlined into the one-file site by
 // tools/build_site.py), falling back to cdn.jsdelivr.net/npm. So the
@@ -421,32 +425,419 @@ export async function buildIcns(source) {
 }
 
 /* ---------- Windows PE icon ---------- */
+//
+// The icon is written by *appending* a section, never by rebuilding `.rsrc`.
+//
+// Why: NSIS's `WriteUninstaller` copies the installer's own PE header (the
+// bytes before its overlay) out to `uninstall.exe`, then patches the
+// uninstaller's icon images over the installer's, at **absolute file
+// offsets fixed when makensis ran** and stored in a patch table inside the
+// compressed NSIS header. A resource editor that rewrites `.rsrc` in place
+// moves everything after the first changed byte, so those offsets land on
+// whatever is there now -- the dialogs, the group icon, `RT_MANIFEST`. The
+// clobbered manifest makes Windows refuse to start the uninstaller at all
+// ("side-by-side configuration is incorrect"). That is what resedit-js did
+// here until 2026-09-20, on every Windows installer with a custom icon
+// (docs/spikes/uninstaller-icon/RESULTS.md).
+//
+// So: `.rsrc` is left byte for byte where it is, and a new `.ibrsrc`
+// section is added after the last one holding a complete new resource
+// directory plus the new icon images; the resource data directory is
+// pointed at it. Resources we don't change keep their data entry's RVA into
+// the old section. The original icon images stay at their original offsets,
+// unreferenced, and NSIS's patch lands on those dead bytes.
+//
+// This is what the retired Go server did (server/internal/icon/pe.go, now
+// only in git history), ported here so the page and the Node server -- which
+// both call setExeIcon -- are fixed together.
+//
+// The NSIS overlay moves later by the new section's raw size, a multiple of
+// FileAlignment (512 for NSIS); NSIS finds its data by scanning 512-byte
+// aligned offsets, as it already had to after the old resedit edits
+// (design.md section 5), and the base is built with `CRCCheck off`.
+
+const RT_ICON = 3;
+const RT_GROUP_ICON = 14;
+const PE_DIR_RESOURCE = 2;
+const PE_DIR_SECURITY = 4;
+const IB_SECTION = '.ibrsrc';
+// IMAGE_SCN_CNT_INITIALIZED_DATA | IMAGE_SCN_MEM_READ
+const IB_SECTION_CHARS = 0x40000040;
+
+function peAlign(v, a) { return Math.ceil(v / a) * a; }
+
+function peBad(what) {
+  return new Error('This installer\'s icon can\'t be set: ' + what + '.');
+}
+
+// The PE headers and section table setExeIcon needs.
+function peParse(b) {
+  if (b.length < 0x40 || b[0] !== 0x4d || b[1] !== 0x5a) throw peBad('it is not a Windows program');
+  const dv = new DataView(b.buffer, b.byteOffset, b.byteLength);
+  const u16 = (o) => dv.getUint16(o, true);
+  const u32 = (o) => dv.getUint32(o, true);
+  const pe = u32(0x3c);
+  if (pe < 0x40 || pe + 24 > b.length || u32(pe) !== 0x00004550) throw peBad('it is not a Windows program');
+  const nsec = u16(pe + 6);
+  const optSize = u16(pe + 20);
+  const opt = pe + 24;
+  if (optSize < 96 || opt + optSize > b.length) throw peBad('its PE header is truncated');
+  const magic = u16(opt);
+  let dirs, ndirs;
+  if (magic === 0x10b) { dirs = opt + 96; ndirs = u32(opt + 92); }
+  else if (magic === 0x20b) { dirs = opt + 112; ndirs = u32(opt + 108); }
+  else throw peBad('its PE optional header is not one this editor knows');
+  if (ndirs <= PE_DIR_SECURITY || dirs + 8 * ndirs > opt + optSize) throw peBad('it has too few PE data directories');
+  const h = {
+    dv: dv, pe: pe, opt: opt, dirs: dirs, ndirs: ndirs, nsec: nsec,
+    secAlign: u32(opt + 32), fileAlign: u32(opt + 36), sizeOfHeaders: u32(opt + 60),
+    secs: opt + optSize, sections: [],
+  };
+  if (!h.secAlign || !h.fileAlign) throw peBad('its PE alignment values are zero');
+  if (h.secs + 40 * nsec > b.length) throw peBad('its PE section table is truncated');
+  for (let i = 0; i < nsec; i++) {
+    const o = h.secs + 40 * i;
+    let name = '';
+    for (let k = 0; k < 8 && b[o + k]; k++) name += String.fromCharCode(b[o + k]);
+    h.sections.push({ off: o, name: name, vsize: u32(o + 8), va: u32(o + 12), rawSize: u32(o + 16), raw: u32(o + 20) });
+  }
+  return h;
+}
+
+// The file bytes a section holds, as [start, end) file offsets: the raw
+// data, cut short if the section's virtual size is smaller.
+function peSecRange(b, s) {
+  let n = s.rawSize;
+  if (s.vsize && s.vsize < n) n = s.vsize;
+  if (!n || s.raw + n > b.length) return null;
+  return { off: s.raw, end: s.raw + n };
+}
+
+// The file bytes from `rva` to the end of the section holding it.
+function peRvaRange(h, b, rva) {
+  for (let i = 0; i < h.sections.length; i++) {
+    const s = h.sections[i];
+    const r = peSecRange(b, s);
+    if (!r) continue;
+    const n = r.end - r.off;
+    if (rva >= s.va && rva < s.va + n) return { off: r.off + (rva - s.va), end: r.end };
+  }
+  return null;
+}
+
+/* resource tree: {name: [code units] | null, id, children: [] | null,
+   leaf: {rva, size, codepage, data} | null} */
+
+// Read the resource directory whose root is at `rootRVA`.
+function resParse(h, b, rootRVA) {
+  const r = peRvaRange(h, b, rootRVA);
+  if (!r) throw peBad('its resource directory is outside the file');
+  const area = b.subarray(r.off, r.end);
+  const dv = new DataView(area.buffer, area.byteOffset, area.byteLength);
+  let count = 0;
+
+  function walk(off, depth) {
+    if (depth > 3 || off + 16 > area.length) throw peBad('its resource directory is damaged');
+    const n = dv.getUint16(off + 12, true) + dv.getUint16(off + 14, true);
+    count += n;
+    if (count > 100000 || off + 16 + 8 * n > area.length) throw peBad('its resource directory is damaged');
+    const node = { name: null, id: 0, children: [], leaf: null };
+    for (let i = 0; i < n; i++) {
+      const e = off + 16 + 8 * i;
+      const nameF = dv.getUint32(e, true), dataF = dv.getUint32(e + 4, true);
+      const c = { name: null, id: 0, children: null, leaf: null };
+      if (nameF & 0x80000000) {
+        const so = nameF & 0x7fffffff;
+        if (so + 2 > area.length) throw peBad('a resource name is damaged');
+        const l = dv.getUint16(so, true);
+        if (so + 2 + 2 * l > area.length) throw peBad('a resource name is damaged');
+        c.name = [];
+        for (let j = 0; j < l; j++) c.name.push(dv.getUint16(so + 2 + 2 * j, true));
+      } else {
+        c.id = nameF >>> 0;
+      }
+      if (dataF & 0x80000000) {
+        c.children = walk(dataF & 0x7fffffff, depth + 1).children;
+      } else {
+        if (dataF + 16 > area.length) throw peBad('a resource data entry is damaged');
+        c.leaf = {
+          rva: dv.getUint32(dataF, true), size: dv.getUint32(dataF + 4, true),
+          codepage: dv.getUint32(dataF + 8, true), data: null,
+        };
+      }
+      node.children.push(c);
+    }
+    return node;
+  }
+  return walk(0, 1);
+}
+
+function resFind(node, id) {
+  for (let i = 0; i < node.children.length; i++) {
+    const c = node.children[i];
+    if (c.name === null && c.id === id) return c;
+  }
+  return null;
+}
+
+// Named entries first (in the order the file's author sorted them), then
+// IDs ascending, as the PE format requires.
+function resSortChildren(node) {
+  const named = [], ids = [];
+  for (let i = 0; i < node.children.length; i++) {
+    (node.children[i].name !== null ? named : ids).push(node.children[i]);
+  }
+  ids.sort((a, b) => a.id - b.id);
+  node.children = named.concat(ids);
+}
+
+// Every leaf in the tree, in walk order.
+function resLeaves(root) {
+  const out = [];
+  const stack = [root];
+  while (stack.length) {
+    const n = stack.pop();
+    if (!n.children) continue;
+    for (let i = n.children.length - 1; i >= 0; i--) {
+      const c = n.children[i];
+      if (c.leaf) out.push(c); else stack.push(c);
+    }
+  }
+  return out;
+}
+
+// Lay the tree out as a section placed at `rva`: directory tables, then
+// data entries, then names, then the new data.
+function resSerialize(root, rva) {
+  const tables = [], leaves = [], named = [];
+  let queue = [root], off = 0;
+  while (queue.length) {
+    const n = queue.shift();
+    tables.push(n);
+    n._off = off;
+    off += 16 + 8 * n.children.length;
+    for (let i = 0; i < n.children.length; i++) {
+      const c = n.children[i];
+      if (c.name !== null) named.push(c);
+      if (c.leaf) leaves.push(c); else queue.push(c);
+    }
+  }
+  for (let i = 0; i < leaves.length; i++) { leaves[i]._leafOff = off; off += 16; }
+  for (let i = 0; i < named.length; i++) { named[i]._nameOff = off; off += 2 + 2 * named[i].name.length; }
+  for (let i = 0; i < leaves.length; i++) {
+    const l = leaves[i];
+    if (l.leaf.data) { off = peAlign(off, 8); l._dataOff = off; off += l.leaf.data.length; }
+  }
+  const out = new Uint8Array(off);
+  const dv = new DataView(out.buffer);
+  for (let t = 0; t < tables.length; t++) {
+    const node = tables[t], o = node._off;
+    let nNamed = 0;
+    for (let i = 0; i < node.children.length; i++) if (node.children[i].name !== null) nNamed++;
+    dv.setUint16(o + 12, nNamed, true);
+    dv.setUint16(o + 14, node.children.length - nNamed, true);
+    for (let i = 0; i < node.children.length; i++) {
+      const c = node.children[i], e = o + 16 + 8 * i;
+      dv.setUint32(e, c.name !== null ? (0x80000000 | c._nameOff) >>> 0 : c.id, true);
+      dv.setUint32(e + 4, c.leaf ? c._leafOff : (0x80000000 | c._off) >>> 0, true);
+    }
+  }
+  for (let i = 0; i < leaves.length; i++) {
+    const l = leaves[i], d = l._leafOff;
+    if (l.leaf.data) {
+      dv.setUint32(d, rva + l._dataOff, true);
+      dv.setUint32(d + 4, l.leaf.data.length, true);
+      out.set(l.leaf.data, l._dataOff);
+    } else {
+      dv.setUint32(d, l.leaf.rva, true);
+      dv.setUint32(d + 4, l.leaf.size, true);
+    }
+    dv.setUint32(d + 8, l.leaf.codepage, true);
+  }
+  for (let i = 0; i < named.length; i++) {
+    const n = named[i], o = n._nameOff;
+    dv.setUint16(o, n.name.length, true);
+    for (let j = 0; j < n.name.length; j++) dv.setUint16(o + 2 + 2 * j, n.name[j], true);
+  }
+  return out;
+}
+
+// An .ico's images: the 12 bytes an RT_GROUP_ICON entry copies (width,
+// height, colours, reserved, planes, bit count, byte count) and the image.
+export function icoImages(icoBytes) {
+  const u8 = toBytes(icoBytes);
+  const bad = new Error('That icon file can\'t be read.');
+  if (u8.length < 6) throw bad;
+  const dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+  if (dv.getUint16(0, true) !== 0 || dv.getUint16(2, true) !== 1) throw bad;
+  const n = dv.getUint16(4, true);
+  if (!n || 6 + n * 16 > u8.length) throw bad;
+  const out = [];
+  for (let i = 0; i < n; i++) {
+    const d = 6 + i * 16;
+    const size = dv.getUint32(d + 8, true), off = dv.getUint32(d + 12, true);
+    if (!size || off + size > u8.length) throw bad;
+    out.push({ entry: u8.subarray(d, d + 12), data: u8.subarray(off, off + size) });
+  }
+  return out;
+}
+
+// The RT_GROUP_ICON resource naming images ids[i].
+function groupData(images, ids) {
+  const out = new Uint8Array(6 + 14 * images.length);
+  const dv = new DataView(out.buffer);
+  dv.setUint16(2, 1, true);                 // type: icon
+  dv.setUint16(4, images.length, true);
+  for (let i = 0; i < images.length; i++) {
+    const e = 6 + 14 * i;
+    out.set(images[i].entry, e);            // 12 bytes, ending in dwBytesInRes
+    dv.setUint16(e + 12, ids[i], true);
+  }
+  return out;
+}
 
 // Replace the icon group resource of an unsigned PE with `icoBytes`, keeping
 // the NSIS overlay (the installer's own data) and fixing the PE checksum.
 // `peBytes` is the base only, with no appended metadata block.
 export async function setExeIcon(peBytes, icoBytes) {
-  const ResEdit = await loadResEdit();
-  const src = toBytes(peBytes);
-  const exe = ResEdit.NtExecutable.from(src, { ignoreCert: true });
-  const res = ResEdit.NtExecutableResource.from(exe);
-  const iconFile = ResEdit.Data.IconFile.from(icoBytes.buffer ? icoBytes.slice().buffer : icoBytes);
-  const icons = iconFile.icons.map((it) => it.data);
+  const b = toBytes(peBytes);
+  const images = icoImages(icoBytes);
+  const h = peParse(b);
+  const dvIn = h.dv;
 
-  const groups = ResEdit.Resource.IconGroupEntry.fromEntries(res.entries);
-  if (!groups.length) throw new Error('This installer has no icon to replace.');
+  // A section we appended ourselves last time (the user picked a second
+  // icon) is replaced rather than stacked on. It qualifies only if it is
+  // last in the table, in the file and in the address space.
+  let reuse = h.nsec ? h.sections[h.nsec - 1] : null;
+  if (!reuse || reuse.name !== IB_SECTION || !reuse.rawSize) reuse = null;
+  if (reuse) {
+    for (let i = 0; i + 1 < h.nsec; i++) {
+      const o = h.sections[i];
+      if (o.va >= reuse.va || (o.rawSize && o.raw + o.rawSize > reuse.raw)) { reuse = null; break; }
+    }
+  }
+
+  // Where the section data ends: the overlay starts there.
+  const kept = reuse ? h.sections.slice(0, h.nsec - 1) : h.sections;
+  let dataEnd = 0, virtEnd = 0, firstRaw = b.length;
+  for (let i = 0; i < kept.length; i++) {
+    const s = kept[i];
+    const e = s.va + peAlign(s.vsize || s.rawSize, h.secAlign);
+    if (e > virtEnd) virtEnd = e;
+    if (!s.rawSize) continue;
+    if (s.raw + s.rawSize > dataEnd) dataEnd = s.raw + s.rawSize;
+    if (s.raw < firstRaw) firstRaw = s.raw;
+  }
+  if (reuse && reuse.raw !== dataEnd) throw peBad('its sections leave a gap before the overlay');
+  if (dataEnd > b.length) throw peBad('its sections run past the end of the file');
+  if (dataEnd % h.fileAlign !== 0) throw peBad('its section data doesn\'t end on a file-alignment boundary');
+
+  // Room for one more section header, unless we are reusing ours.
+  const hdrEnd = h.secs + 40 * h.nsec;
+  const newSecOff = reuse ? reuse.off : hdrEnd;
+  if (!reuse) {
+    if (hdrEnd + 40 > h.sizeOfHeaders || hdrEnd + 40 > firstRaw) throw peBad('there is no room in it for another section');
+    for (let i = hdrEnd; i < hdrEnd + 40; i++) {
+      if (b[i]) throw peBad('there is no room in it for another section');
+    }
+  }
+
+  // The new resource tree: the old one, with every icon group replaced.
+  let root;
+  const resRva = dvIn.getUint32(h.dirs + 8 * PE_DIR_RESOURCE, true);
+  const resSize = dvIn.getUint32(h.dirs + 8 * PE_DIR_RESOURCE + 4, true);
+  if (resRva && resSize) root = resParse(h, b, resRva);
+  else root = { name: null, id: 0, children: [], leaf: null };
+
+  // Every resource's bytes are copied into the new section, so it is
+  // self-contained and nothing points back into `.rsrc` (a cross-section
+  // resource RVA is legal, and the Windows loader resolves it, but some
+  // resource readers -- pe-library among them -- refuse to follow it). The
+  // old section's bytes stay exactly where they were all the same: that is
+  // what keeps NSIS's patch offsets harmless. The old icon images are the
+  // bulk of it and are dropped below, so this costs very little.
+  const leaves = resLeaves(root);
+  for (let i = 0; i < leaves.length; i++) {
+    const l = leaves[i].leaf;
+    const r = peRvaRange(h, b, l.rva);
+    if (r && l.size <= r.end - r.off) l.data = b.slice(r.off, r.off + l.size);
+  }
+
+  let groups = resFind(root, RT_GROUP_ICON);
+  if (!groups || !groups.children.length) {
+    groups = { name: null, id: RT_GROUP_ICON, children: [{ name: null, id: 1, children: [], leaf: null }], leaf: null };
+    root.children.push(groups);
+  }
+  const ids = [];
+  for (let i = 0; i < images.length; i++) ids.push(i + 1);
+  const group = groupData(images, ids);
   // NSIS keeps the app icon in one group; replace every group so the icon is
   // consistent wherever Windows shows it.
-  for (const g of groups) {
-    ResEdit.Resource.IconGroupEntry.replaceIconsForResource(res.entries, g.id, g.lang, icons);
+  let lang = 0, haveLang = false;
+  for (let i = 0; i < groups.children.length; i++) {
+    const g = groups.children[i];
+    if (g.leaf) { g.leaf = null; g.children = []; }        // malformed: no language level
+    if (!g.children.length) g.children = [{ name: null, id: 0, children: null, leaf: null }];
+    for (let j = 0; j < g.children.length; j++) {
+      const l = g.children[j];
+      if (!haveLang && l.name === null) { lang = l.id; haveLang = true; }
+      l.children = null;
+      l.leaf = { rva: 0, size: 0, codepage: 0, data: group };
+    }
   }
-  res.outputResource(exe);
-  const out = new Uint8Array(exe.generate());
+  // Every group now names images 1..n, so the old ones are dropped from the
+  // directory. Their bytes stay in `.rsrc`, which is the whole point.
+  let icons = resFind(root, RT_ICON);
+  if (!icons) {
+    icons = { name: null, id: RT_ICON, children: [], leaf: null };
+    root.children.push(icons);
+  }
+  icons.children = [];
+  for (let i = 0; i < images.length; i++) {
+    icons.children.push({
+      name: null, id: ids[i], leaf: null,
+      children: [{ name: null, id: lang, children: null, leaf: { rva: 0, size: 0, codepage: 0, data: images[i].data } }],
+    });
+  }
+  resSortChildren(root);
+
+  // Lay the new section out after the last one, and move the overlay down.
+  const newVA = peAlign(virtEnd, h.secAlign);
+  const rsrc = resSerialize(root, newVA);
+  const rawSize = peAlign(rsrc.length, h.fileAlign);
+  const overlay = b.subarray(reuse ? reuse.raw + reuse.rawSize : dataEnd);
+  if (dataEnd + rawSize + overlay.length > 0x7fffffff) throw peBad('it would be too large');
+
+  const out = new Uint8Array(dataEnd + rawSize + overlay.length);
+  out.set(b.subarray(0, dataEnd), 0);
+  out.set(rsrc, dataEnd);
+  out.set(overlay, dataEnd + rawSize);      // the NSIS overlay, byte for byte
+
+  const dv = new DataView(out.buffer);
+  for (let i = 0; i < 8; i++) out[newSecOff + i] = i < IB_SECTION.length ? IB_SECTION.charCodeAt(i) : 0;
+  dv.setUint32(newSecOff + 8, rsrc.length, true);          // VirtualSize
+  dv.setUint32(newSecOff + 12, newVA, true);               // VirtualAddress
+  dv.setUint32(newSecOff + 16, rawSize, true);             // SizeOfRawData
+  dv.setUint32(newSecOff + 20, dataEnd, true);             // PointerToRawData
+  dv.setUint32(newSecOff + 24, 0, true);
+  dv.setUint32(newSecOff + 28, 0, true);
+  dv.setUint32(newSecOff + 32, 0, true);
+  dv.setUint32(newSecOff + 36, IB_SECTION_CHARS, true);
+  if (!reuse) dv.setUint16(h.pe + 6, h.nsec + 1, true);    // NumberOfSections
+  const grew = rawSize - (reuse ? reuse.rawSize : 0);
+  dv.setUint32(h.opt + 8, (dv.getUint32(h.opt + 8, true) + grew) >>> 0, true);      // SizeOfInitializedData
+  dv.setUint32(h.opt + 56, newVA + peAlign(rsrc.length, h.secAlign), true);         // SizeOfImage
+  dv.setUint32(h.dirs + 8 * PE_DIR_RESOURCE, newVA, true);
+  dv.setUint32(h.dirs + 8 * PE_DIR_RESOURCE + 4, rsrc.length, true);
+  // The result carries no certificate (an Authenticode signature is applied
+  // after the icon, and `peBytes` never includes one).
+  dv.setUint32(h.dirs + 8 * PE_DIR_SECURITY, 0, true);
+  dv.setUint32(h.dirs + 8 * PE_DIR_SECURITY + 4, 0, true);
 
   // Set a correct optional-header checksum (a wrong value raises antivirus
   // heuristic scores, design.md section 5).
   const pe = peInfo(out);
-  if (pe) new DataView(out.buffer).setUint32(pe.checksumOff, peChecksum(out, pe.checksumOff), true);
+  if (pe) dv.setUint32(pe.checksumOff, peChecksum(out, pe.checksumOff), true);
   return out;
 }
 
