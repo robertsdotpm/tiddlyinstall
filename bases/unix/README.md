@@ -14,7 +14,7 @@ version, dialogs, and menu entries.
 | `make_app.sh` | Builds the macOS base `out/TiddlyInstall.app` and `out/ib-base-macos.zip`. On a Mac it is ad-hoc signed and zipped with `ditto` |
 | `verify/` | `ibverify`, the Ed25519 verifier the bases carry: source, `build.sh` (Zig), the built binaries |
 | `test_verify.sh` | Plan signature cases (good over plain HTTP, `--plan`, tampered, replayed, unsigned) with openssl shadowed |
-| `test_freshness.sh` | Stale plans (design.md 7.1): the nonce echoed, another nonce refused, none noted; the revocation list by record, source and file, cached and used offline, ignored when signed as the wrong kind; `signed`/`maxage` fresh, past `maxage`, past the hard limit, and **not refused when the clock can't be believed**; and a plan with the new fields on the engine from before them |
+| `test_freshness.sh` | Stale plans (design.md 7.1): the nonce echoed, another nonce refused, none noted; the revocation list by record, source and file, cached and used offline, ignored when signed as the wrong kind; `signed`/`maxage` fresh, past `maxage`, past the hard limit, and **not refused when the clock can't be believed**; and a plan with the new fields on the engine from before them. Runs on Linux and on macOS (18/18 on both, 2026-09-20); on Darwin it builds and runs the `.app`, because a `.run` there has no verifier it can execute and LibreSSL cannot check Ed25519. `IB_OLD_ENGINE_FILE` stands in for the git checkout a Mac hasn't got |
 | `test_prereqs.sh` | Prerequisites and the record icon |
 | `append_meta.py` | Test tool: adds a record, plan and pack to a `.run` (appended block) or a base zip (`Contents/Resources/ib/`). The Go server has its own implementation |
 
@@ -43,9 +43,30 @@ the bundle (`codesign -s -`) and zips it with `ditto` only there;
 anywhere else it writes an unsigned zip, which is not what mode A
 installers ship and not what the golden suites were recorded with. The
 engine is this same file, so an engine change reaches macOS as soon as
-the base is built there -- but `out/ib-base-macos.zip` on this machine
-is whatever was last built, and after the stale-plan change
-(2026-09-20) it still carries the engine from before it.
+the base is built there -- and `out/ib-base-macos.zip` on this machine
+is whatever was last built there, nothing more.
+
+**Last built 2026-09-20T09:16:00Z** on the Mac test server (macOS 26.2
+`25C56`, arm64, `Matthew@the-mac-test-host`), from `ib-engine.sh` at commit
+`638c323` -- the first macOS base to carry the stale-plan engine
+(design.md 7.1: the nonce, the revocation list, `signed`/`maxage`).
+
+| | |
+| --- | --- |
+| `out/ib-base-macos.zip` | `24cfc47c6e2626a07ae48df274a7087398cf74310410f62a4db152ad6e769d6e`, 50,357 bytes |
+| the engine inside it | `1c752b6e7d3c764e841e608c00f2d058396d817c9cd37d8cc59f63415425984c` (`ib-engine.sh` with the four baked lines filled, and nothing else) |
+| plan signing key | `97930ea1888d1a12` |
+| `IB_BUILD_TIME` / `IB_BUILD_EPOCH` | `2026-09-20T09:16:00Z` / `1789895760` |
+| signature | ad-hoc, `CDHash sha256=a872cf8261321936ca070324e33a2cf3239de888`; `codesign --verify --strict` is happy before and after the `ditto` round trip |
+
+`spctl -a` still rejects it, as it must: an ad-hoc signature is not a
+notarization ticket (docs/macos-packaging.md section 5).
+
+How it was built, since there is no checkout on the Mac: copy this
+folder without `out/` and the plan **public** key to a fresh working
+directory there, run `IB_PLAN_PUBKEY_FILE=... sh make_app.sh`, copy
+`out/ib-base-macos.zip` back, and remove the working directory. Take
+`tests/arch/vmlock.py` around it, as the harnesses do.
 
 **Running it again.** If the app is already fully installed where this
 installer would put it, with the same `appid` and record hash (the same
