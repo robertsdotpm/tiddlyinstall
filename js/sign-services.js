@@ -44,17 +44,19 @@ import * as X from './cryptox.js';
 // Where someone writes when their provider stops working. Every provider is
 // written from documentation, so this is the only way we hear that an API
 // changed. Either a mailto: or an https: URL; contactLink() renders both.
-// TODO(operator): replace the placeholder. One line, one place.
-export const CONTACT = 'CONTACT_PLACEHOLDER';
+export const CONTACT = 'mailto:matthew@roberts.pm';
 
-// {href, text} for the panel, or null while the placeholder stands.
+// {href, text} for the panel, or null if CONTACT is ever left unset.
 export function contactLink() {
   const c = String(CONTACT);
-  if (c === 'CONTACT_PLACEHOLDER' || !/^(mailto:|https:\/\/)/.test(c)) return null;
+  if (!/^(mailto:|https:\/\/)/.test(c)) return null;
   return { href: c, text: c.indexOf('mailto:') === 0 ? c.slice(7) : c.replace(/^https:\/\//, '') };
 }
 
-// The one sentence every provider carries.
+// The one sentence a provider carries unless it has been checked against
+// something real. A provider that has may set `verified` instead -- but the
+// two claims are different and must not be blurred: "checked against a
+// vendor sandbox" is not "checked against a live paid account".
 export const UNTESTED = 'Not yet tested against a live account: this is written from ' +
   'the provider\'s documentation and checked against a mock of it.';
 
@@ -123,7 +125,16 @@ export function readPath(obj, path) {
 // eSigner's authorize call takes a six-digit code. The portal gives people a
 // TOTP secret, and a code typed by hand can expire between authorize and
 // signHash, so a secret is accepted too and the code is computed here.
-// RFC 4648 base32, no padding needed.
+//
+// The encoding is not what you would guess. Authenticator apps hand out
+// **base32**; SSL.com hands out **base64** -- 44 characters decoding to 32
+// bytes, with `+`, `/` and digits that base32 has no room for, so base32
+// cannot even hold it. Assuming base32 was a real bug, found by running
+// against SSL.com's sandbox on 2026-09-20 (browser-signing.md 3.3).
+//
+// Most secrets say which they are by their alphabet, and totpKeys() puts
+// the likelier one first; where a string could be either, the caller tries
+// both rather than making the user care.
 export function base32Decode(s) {
   const A = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
   const t = String(s).toUpperCase().replace(/[\s=-]+/g, '');
@@ -139,10 +150,30 @@ export function base32Decode(s) {
   return new Uint8Array(out);
 }
 
+// The key bytes a TOTP secret might mean, likeliest first. One entry when
+// the alphabet settles it, two when the string is valid as both.
+export function totpKeys(secret) {
+  const t = String(secret || '').replace(/[\s-]+/g, '');
+  if (!t) throw new ServiceError('eSigner needs your one-time code or your TOTP secret.');
+  const isB32 = /^[A-Za-z2-7]+=*$/.test(t);
+  const isB64 = /^[A-Za-z0-9+/]+=*$/.test(t) && (t.replace(/=+$/, '').length % 4) !== 1;
+  const keys = [];
+  // A base64 secret is 44 characters for the 32 bytes SSL.com uses, and
+  // usually carries + / or a digit base32 has no room for.
+  if (isB64 && (!isB32 || t.length % 8 !== 0)) { try { keys.push(unb64(t)); } catch (e) { /* not base64 after all */ } }
+  if (isB32) { try { keys.push(base32Decode(t)); } catch (e) { /* not base32 after all */ } }
+  if (isB64 && !keys.length) { try { keys.push(unb64(t)); } catch (e) { /* nor base64 */ } }
+  if (!keys.length) {
+    throw new ServiceError('That is neither a one-time code nor a TOTP secret the page can read ' +
+      '(base32, as authenticator apps show it, or base64, as SSL.com gives it).');
+  }
+  return keys;
+}
+
 // RFC 6238, SHA-1, 30-second step, six digits. Checked against the RFC's
 // own test vectors in tests/sign-test.mjs.
 export async function totp(secret, atMs, digits = 6, step = 30) {
-  const key = secret instanceof Uint8Array ? secret : base32Decode(secret);
+  const key = secret instanceof Uint8Array ? secret : totpKeys(secret)[0];
   let counter = Math.floor((atMs === undefined ? Date.now() : atMs) / 1000 / step);
   const msg = new Uint8Array(8);
   for (let i = 7; i >= 0; i--) { msg[i] = counter & 255; counter = Math.floor(counter / 256); }
@@ -154,12 +185,15 @@ export async function totp(secret, atMs, digits = 6, step = 30) {
   return s;
 }
 
-// A six-digit code as typed, or a code computed from a secret.
-async function otpFrom(value) {
+// The codes to try: the one typed, or one per possible reading of a secret.
+async function otpCandidates(value) {
   const v = String(value || '').replace(/\s+/g, '');
   if (!v) throw new ServiceError('eSigner needs your one-time code or your TOTP secret.');
-  if (/^\d{6,8}$/.test(v)) return v;
-  return totp(v);
+  if (/^\d{6,8}$/.test(v)) return [v];
+  const keys = totpKeys(v);
+  const out = [];
+  for (let i = 0; i < keys.length; i++) out.push(await totp(keys[i]));
+  return out;
 }
 
 /* ---------- AWS Signature Version 4 ---------- */
@@ -391,44 +425,67 @@ const SSLCOM = {
     'Access-Control-Allow-Origin: * and a fixed Access-Control-Allow-Headers list that includes Authorization ' +
     'and Content-Type; login.ssl.com/oauth2/token answers the same (checked 2026-09-18 and again 2026-09-20).',
   docs: 'https://www.ssl.com/guide/remote-document-signing-with-esigner-csc-api/',
+  verified: 'Checked against SSL.com\'s own sandbox on 2026-09-20 -- the whole flow, ending in a real ' +
+    'signature from their HSM over a real Authenticode digest. Not yet used with a paid production ' +
+    'account, which is a different thing: the sandbox may not have every option a real one does, and ' +
+    'certificates with the malware-scan option may behave differently.',
   certs: 'service',
   fields: [
     F('env', 'Which eSigner', { type: 'select', options: [['production', 'Production (cs.ssl.com)'], ['sandbox', 'Sandbox (cs-try.ssl.com)']], hint: 'The sandbox has published demo credentials and issues test certificates.' }),
     F('clientId', 'API client ID', { hint: 'From "Register an application for the CSC API" in your SSL.com account.' }),
-    SECRET('clientSecret', 'API client secret'),
+    SECRET('clientSecret', 'API client secret', {
+      optional: true,
+      hint: 'Leave it empty if your application is registered as a public client. SSL.com\'s guide uses a ' +
+        'secret, but their sandbox issues a token from the client id alone (checked 2026-09-20).',
+    }),
     F('username', 'eSigner username'),
     SECRET('password', 'eSigner password'),
     SECRET('totp', 'One-time code, or your TOTP secret', {
-      hint: 'Six digits as shown by your authenticator, or the base32 secret behind it. ' +
-        'A secret is safer here: the code is computed the moment it is needed, so it cannot expire mid-signing. Either way it stays in this tab.',
+      hint: 'Six digits as shown by your authenticator, or the secret behind it -- base32 as an authenticator ' +
+        'app shows it, or base64 as SSL.com gives it; the page works out which. A secret is safer here: the code ' +
+        'is computed the moment it is needed, so it cannot expire mid-signing. Either way it stays in this tab.',
     }),
     F('credentialId', 'Credential ID', { optional: true, hint: 'Optional. Left blank, the page asks eSigner which credentials the account has and uses the only one.' }),
     F('keyType', 'Key type', { type: 'select', options: [['rsa', 'RSA'], ['ec', 'ECDSA (P-256)']] }),
   ],
   explain: (status, body) => commonExplain('SSL.com eSigner', status, body),
   async sign(creds, digest, ctx) {
-    need(creds, ['clientId', 'clientSecret', 'username', 'password', 'totp'], 'eSigner');
+    need(creds, ['clientId', 'username', 'password', 'totp'], 'eSigner');
     const host = SSLCOM_HOSTS[trimmed(creds, 'env')] || SSLCOM_HOSTS.production;
     const fail = (r) => { throw new ServiceError(SSLCOM.explain(r.status, r.json || r.text)); };
 
-    const tok = await ctx.send({
-      url: host.login + '/oauth2/token',
-      body: {
-        client_id: trimmed(creds, 'clientId'),
-        client_secret: String(creds.clientSecret || ''),
-        grant_type: 'password',
-        username: trimmed(creds, 'username'),
-        password: String(creds.password || ''),
-      },
-    });
+    // The client secret is optional: the sandbox issues a token from the
+    // client id alone, so sending an empty one would be worse than sending
+    // none (checked 2026-09-20).
+    const grant = {
+      client_id: trimmed(creds, 'clientId'),
+      grant_type: 'password',
+      username: trimmed(creds, 'username'),
+      password: String(creds.password || ''),
+    };
+    if (String(creds.clientSecret || '').trim()) grant.client_secret = String(creds.clientSecret).trim();
+    const tok = await ctx.send({ url: host.login + '/oauth2/token', body: grant });
     if (tok.status !== 200 || !tok.json || !tok.json.access_token) fail(tok);
     const bearer = { Authorization: 'Bearer ' + tok.json.access_token, 'Content-Type': 'application/json' };
 
     let credentialID = trimmed(creds, 'credentialId');
     if (!credentialID) {
-      const list = await ctx.send({ url: host.api + '/csc/v0/credentials/list', headers: bearer, body: { clientData: 'DS' } });
-      if (list.status !== 200 || !list.json) fail(list);
-      const ids = list.json.credentialIDs || [];
+      // clientData picks which kind of credential is listed, and getting it
+      // wrong returns an empty list rather than an error. Code signing is
+      // EVCS; asking for DS (the obvious default, and what this code used
+      // to send) lists nothing at all on a code-signing account. Found on
+      // the sandbox, 2026-09-20. So ask for each in turn.
+      let ids = [];
+      for (const clientData of ['EVCS', 'DS', null]) {
+        const list = await ctx.send({
+          url: host.api + '/csc/v0/credentials/list',
+          headers: bearer,
+          body: clientData ? { clientData: clientData } : {},
+        });
+        if (list.status !== 200 || !list.json) fail(list);
+        ids = list.json.credentialIDs || [];
+        if (ids.length) break;
+      }
       if (!ids.length) throw new ServiceError('That eSigner account has no signing credentials. Check it has a code-signing certificate issued.');
       if (ids.length > 1) throw new ServiceError('That account has several credentials (' + ids.join(', ') + '). Put the one you want in the Credential ID field.');
       credentialID = ids[0];
@@ -444,14 +501,23 @@ const SSLCOM = {
     if (!chain.length) throw new ServiceError('eSigner did not send a certificate for that credential.');
 
     const digestB64 = b64(digest);
-    const auth = await ctx.send({
-      url: host.api + '/csc/v0/credentials/authorize',
-      headers: bearer,
-      body: { credentialID: credentialID, numSignatures: 1, hash: [digestB64], OTP: await otpFrom(creds.totp) },
-    });
+    // A TOTP secret that could be read as either base32 or base64 gives two
+    // codes; try each rather than making the user work out which SSL.com
+    // gave them. A code typed by hand gives one.
+    const codes = await otpCandidates(creds.totp);
+    let auth = null;
+    for (let i = 0; i < codes.length; i++) {
+      auth = await ctx.send({
+        url: host.api + '/csc/v0/credentials/authorize',
+        headers: bearer,
+        body: { credentialID: credentialID, numSignatures: 1, hash: [digestB64], OTP: codes[i] },
+      });
+      if (auth.status === 200 && auth.json && auth.json.SAD) break;
+    }
     if (auth.status !== 200 || !auth.json || !auth.json.SAD) {
       if (auth.status === 400 || auth.status === 401) {
         throw new ServiceError('eSigner would not authorise the signature; the one-time code is the usual reason. ' +
+          'If you gave a secret rather than a code, check you copied all of it, and that this computer\'s clock is right. ' +
           providerMessage(auth.json || auth.text));
       }
       fail(auth);
@@ -892,7 +958,7 @@ export function describe(svc) {
     credentials: credentialPath(svc),
     warning: svc.credsWarning || '',
     evidence: svc.evidence,
-    untested: UNTESTED,
+    untested: svc.verified || UNTESTED,
     docs: svc.docs,
   };
 }

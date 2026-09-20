@@ -5,6 +5,8 @@
 //   node tests/sign-test.mjs [--no-network] [--relay http://127.0.0.1:8080]
 //   node --import ./tests/no-native.mjs tests/sign-test.mjs    (no WebCrypto:
 //        the plain-JavaScript crypto in js/cryptox.js does it all)
+//   node tests/sign-test.mjs --sslcom-sandbox   (opt-in: really calls
+//        SSL.com's sandbox; credentials from the environment, see below)
 //
 // Needs Node 20+, openssl and gpg; osslsigncode (on PATH or in
 // ~/.local/opt/ib-tools) is used when present. --no-network skips
@@ -32,6 +34,9 @@ import { FX } from './fixtures.js';
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const NETWORK = !process.argv.includes('--no-network');
 const RELAY = process.argv.includes('--relay') ? process.argv[process.argv.indexOf('--relay') + 1] : null;
+// Opt-in only: --sslcom-sandbox calls SSL.com's sandbox for real. Off by
+// default so a plain test run never touches somebody else's service.
+const SSLCOM_SANDBOX = process.argv.includes('--sslcom-sandbox');
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'ib-sign-test-'));
 const PW = 'test-' + Math.random().toString(36).slice(2);   // throwaway, for throwaway keys
 
@@ -644,13 +649,20 @@ await run('signing services', async () => {
       let said = 0;
       for (const s of SS.SERVICES) {
         const d = SS.describe(s);
-        if (!d.credentials || !d.evidence || d.untested !== SS.UNTESTED) continue;
+        if (!d.credentials || !d.evidence || !d.untested) continue;
         if (s.where === 'browser' && !/stay in this browser/.test(d.credentials)) continue;
         if (s.where === 'server' && !/pass through the build server/.test(d.credentials)) continue;
         if (s.where === 'paste' && !/Nothing secret is typed/.test(d.credentials)) continue;
         said++;
       }
-      ok(said === SS.SERVICES.length, 'every provider says where its credentials go, how it was checked, and that it is untested', said + '/' + SS.SERVICES.length);
+      ok(said === SS.SERVICES.length, 'every provider says where its credentials go, how it was checked, and how far it has been tested', said + '/' + SS.SERVICES.length);
+      // Sandbox-verified and live-account-verified are different claims.
+      const sandboxed = SS.SERVICES.filter((x) => x.verified).map((x) => x.id);
+      ok(sandboxed.join(',') === 'sslcom', 'exactly one provider claims more than "written from documentation"', sandboxed.join(','));
+      ok(/sandbox/i.test(SS.service('sslcom').verified) && /not yet used with a paid production account/i.test(SS.service('sslcom').verified),
+        'eSigner claims the sandbox specifically, and says a paid account is still untried', SS.service('sslcom').verified);
+      ok(SS.SERVICES.filter((x) => !x.verified).every((x) => SS.describe(x).untested === SS.UNTESTED),
+        'every other provider still says it is untested against a live account');
       ok(SS.SERVICES.every((s) => s.where !== 'browser' || /Access-Control|CORS/.test(s.evidence)),
         'every provider called directly cites the CORS evidence for it');
       const dc = SS.service('digicert');
@@ -659,12 +671,103 @@ await run('signing services', async () => {
       const cmd = dc.command({ keypairId: 'kp-1', sigAlg: 'SHA256WithRSA', host: 'clientauth.one.digicert.com' }, 'QUJD');
       ok(/smctl sign/.test(cmd) && /QUJD/.test(cmd) && /keypairs\/kp-1\/sign/.test(cmd),
         'DigiCert\'s commands carry the digest and the keypair, both ways round', cmd.slice(0, 80));
-      ok(SS.contactLink() === null, 'the contact address is still the placeholder (nothing is shown as if it worked)');
+      const cl = SS.contactLink();
+      ok(cl !== null && /^(mailto:|https:\/\/)/.test(cl.href) && cl.text && cl.text.indexOf(':') < 0,
+        'the panel has a working contact address to show', cl && cl.href);
     }
   } finally {
     await new Promise((r) => relaySrv.close(r));
     await mock.close();
   }
+});
+
+/* ---------- SSL.com eSigner, against their sandbox (opt-in) ---------- */
+//
+// The one provider on the list that can be checked against the real thing
+// without spending anything: SSL.com publish sandbox demo credentials. This
+// is off unless --sslcom-sandbox is given, because it calls someone else's
+// service; and the credentials come from the environment, never from this
+// file. They are public, but a test that carries credentials in its source
+// teaches the wrong habit.
+//
+//   SSLCOM_SANDBOX_CLIENT_ID=… SSLCOM_SANDBOX_USER=… SSLCOM_SANDBOX_PASS=… \
+//   SSLCOM_SANDBOX_TOTP=… node tests/sign-test.mjs --sslcom-sandbox
+//
+// The values are on SSL.com's "eSigner demo credentials and certificates"
+// page. Sandbox only: the test fails if a production URL is even built.
+if (!SSLCOM_SANDBOX) skip('SSL.com eSigner sandbox', 'needs --sslcom-sandbox; it calls SSL.com');
+else if (!NETWORK) skip('SSL.com eSigner sandbox', '--no-network');
+else await run('sslcom sandbox', async () => {
+  const env = process.env;
+  const creds = {
+    env: 'sandbox',
+    clientId: env.SSLCOM_SANDBOX_CLIENT_ID || '',
+    clientSecret: env.SSLCOM_SANDBOX_CLIENT_SECRET || '',   // the sandbox has none published
+    username: env.SSLCOM_SANDBOX_USER || '',
+    password: env.SSLCOM_SANDBOX_PASS || '',
+    totp: env.SSLCOM_SANDBOX_TOTP || '',
+    credentialId: env.SSLCOM_SANDBOX_CREDENTIAL_ID || '',
+    keyType: 'rsa',
+  };
+  if (!creds.clientId || !creds.username || !creds.password || !creds.totp) {
+    skip('SSL.com eSigner sandbox', 'set SSLCOM_SANDBOX_CLIENT_ID, _USER, _PASS and _TOTP from SSL.com\'s published demo page');
+    return;
+  }
+
+  // Every URL the descriptor builds, so the test can prove it never went
+  // near production.
+  const urls = [];
+  const send = SS.makeSend({ fetch: (u, o) => fetch(u, o), rewrite: (u) => { urls.push(u); return u; } });
+
+  const unsigned = await withRecord(b64(FX.peIcon));   // the synthetic fixture, not a real installer
+  const state = await ac.beginPE(unsigned, { programName: 'Sign Test TEST', url: 'https://example.invalid/' });
+  let answer;
+  try {
+    answer = await SS.service('sslcom').sign(creds, state.digest, { send });
+  } catch (e) {
+    if (/Couldn't reach|fetch failed|ENOTFOUND|EAI_AGAIN/.test(String(e && e.message))) {
+      skip('SSL.com eSigner sandbox', 'sandbox unreachable: ' + e.message);
+      return;
+    }
+    throw e;
+  }
+  ok(urls.length > 0 && urls.every((u) => /^https:\/\/(cs-try|oauth-sandbox)\.ssl\.com\//.test(u)),
+    'sslcom sandbox: every call went to the sandbox, none to production', urls.join(' '));
+
+  const chain = parseCertBundle(answer.certs);
+  ok(chain.length >= 2, 'sslcom sandbox: credentials/info returned a chain', chain.length + ' certificates');
+  ok(!chain[0].selfIssued && chain[1] && der.eqBytes(chain[0].issuerRaw, chain[1].subjectRaw),
+    'sslcom sandbox: the chain really is leaf first, then its issuer',
+    chain.map((c) => c.commonName).join(' -> '));
+
+  // finishPE only accepts a signature that verifies against one of the
+  // certificates, so this passing IS the end-to-end check: a real signature
+  // from a real HSM over our Authenticode digest, checked by our own code.
+  const r = await ac.finishPE(state, answer.signature, chain);
+  const f = t('sslcom-sandbox.exe');
+  fs.writeFileSync(f, r.file);
+  ok(r.signer && /Esigner|SSL/i.test(r.signer.commonName + r.signer.subject),
+    'sslcom sandbox: the signature verifies against the certificate eSigner sent', r.signer && r.signer.subject);
+
+  // openssl's own check of the signature over the signed attributes, and of
+  // the messageDigest attribute, against the leaf eSigner sent.
+  fs.writeFileSync(t('sslcom-leaf.pem'), '-----BEGIN CERTIFICATE-----\n' +
+    der.b64(chain[0].der).replace(/(.{64})/g, '$1\n').replace(/\n?$/, '\n') + '-----END CERTIFICATE-----\n');
+  opensslCheck(f, t('sslcom-leaf.pem'), 'sslcom sandbox');
+  const info = await readInstaller(read(f), 'x.exe');
+  ok(info.signed && info.record === RECORD, 'sslcom sandbox: the signed file still reads as an installer with its record');
+
+  // osslsigncode can check the digest without trusting the chain: the
+  // sandbox chains to an SSL.com *development* root we do not have and
+  // should not ship. What must match is the message digest.
+  if (OSSL) {
+    const v = sh(OSSL, ['verify', '-in', f]);
+    const cur = /Current message digest\s*:\s*([0-9A-F]+)/.exec(v.out);
+    const calc = /Calculated message digest\s*:\s*([0-9A-F]+)/.exec(v.out);
+    ok(!!cur && !!calc && cur[1] === calc[1],
+      'sslcom sandbox: osslsigncode recomputes the same PE digest (the chain is an untrusted development root, as expected)',
+      v.out.split('\n').filter((l) => /digest|Signature|Error|error|CA/.test(l)).slice(0, 6).join(' | '));
+  } else skip('sslcom sandbox: osslsigncode', 'osslsigncode not found');
 });
 
 const tsaFetch = (url) => async (req) => {
