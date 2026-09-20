@@ -28,6 +28,11 @@
 //   env.storeRecord(hash, record)  publishes the record (the server refuses
 //                      a truncated-hash collision)
 //   env.takenDown(entry)  true if the takedown list has this entry
+//   env.revoked()      the SHA-256s the revocation list names (design.md
+//                      7.1): the resolver skips those builds, here as on
+//                      the build server. A page with no backend has no
+//                      list and doesn't call it; the installer's own
+//                      check is the backstop there
 //   env.iconPng(icon)  the icon's PNG bytes, or null (the server loads its
 //                      stored upload by icon.sha256); default: icon.data
 //   env.packPlan(hash, plat, progress)  offline: {plan (signed), files:
@@ -42,7 +47,7 @@
 //   env.now()          the record's `created` time, and the plan's `signed`
 //                      (default: now)
 import { toBytes, sha256Hex, recordHash, readInstaller, writeInstaller, tarWrite, installerExt, zipWrite, peInfo, zipRead, zipEntryData, zipUnixMode, zipIsDir, zipIsSymlink } from './ibfile.js';
-import { resolve, loadRuntimes, hasRuntime, validPackage, packagePolicyFor, packageProject, packageModule, pickBin, jsonField, goQuote, replacer } from './resolve.js';
+import { resolve, loadRuntimes, hasRuntime, validPackage, packagePolicyFor, packageProject, packageModule, pickBin, jsonField, goQuote, replacer, setRevoked } from './resolve.js';
 import { rasterSource, buildIco, buildIcns, setExeIcon, setMacIcon, checkIconPng } from './icon.js';
 import { inflate, deflate } from './zlib.js';
 
@@ -693,6 +698,9 @@ async function buildFile(job, plat) {
       throw new Error('the packed files come to ' + MB(packSize(pack)) + ' MB; macOS offline installers are limited to ' + MB(MAX_MAC_PACK) + ' MB for now');
     }
   } else if (env.embedPlan) {
+    // The same rule as the build server's, from the same list where the
+    // page has one (design.md 7.1).
+    if (env.revoked) setRevoked(env.catalog, await env.revoked());
     plan = resolve(env.catalog, Object.assign({}, app, { platforms: [plat] }));
     if (env.signPlan) plan = await env.signPlan(plan);
     if (src) pack.push({ name: src.sha256, size: src.data.length, data: src.data });

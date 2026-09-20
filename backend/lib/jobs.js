@@ -14,7 +14,7 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { runJob, lookupPackage as lookupPackageJS, packageLaunch, githubRe, projectName, kvLine } from '../../js/builder.js';
-import { resolveFiles, validPackage, packagePolicyFor, packageProject, replacer } from '../../js/resolve.js';
+import { resolveFiles, validPackage, packagePolicyFor, packageProject, replacer, setRevoked } from '../../js/resolve.js';
 import { recordHash } from '../../js/ibfile.js';
 import { decodeIconPng } from '../../js/icon.js';
 import { safeFetch } from './netsafe.js';
@@ -70,6 +70,11 @@ export class Builder {
     this.backend = o.backend ?? o.public;
     this.signer = o.signer;
     this.takenDown = o.takenDown || (() => false);
+    // The SHA-256s the revocation list names (design.md 7.1): the
+    // resolver treats those builds as builds that do not exist, so a
+    // publisher gets a working installer instead of one that stops in
+    // front of their user. Read for each plan, like the takedown list.
+    this.revokedFiles = o.revokedFiles || (() => []);
     // The moment a plan is made, written into it as `signed` (design.md
     // 7.1). A test can pin it.
     this.now = o.now || (() => new Date());
@@ -210,6 +215,9 @@ export class Builder {
     if (platforms) app.platforms = platforms;
     app.signedAt = this.now();
     if (app.package) await this.preparePackage(app);
+    // Right before resolving, not before the await: the list is read per
+    // request and the resolve itself doesn't yield.
+    setRevoked(this.cat, this.revokedFiles());
     const { plan, files } = resolveFiles(this.cat, app);
     const out = files.map((f) => Object.assign({}, f, { local: localPath(this.cat, f.local) }));
     if (app.source) {
@@ -474,6 +482,7 @@ export class Builder {
       storeSource: (sha, data) => writeAtomic(this.srcPath(sha), data),
       storeRecord: (hash, rec) => this.storeRecord(hash, rec),
       takenDown: (entry) => this.takenDown(entry),
+      revoked: () => this.revokedFiles(),
       iconPng: (icon) => this.iconPng(icon),
       packPlan: async (hash, plat, progress) => {
         const { plan, files } = await this.signedPlan(hash, [plat]);

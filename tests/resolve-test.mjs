@@ -207,6 +207,68 @@ if (process.argv.includes('--update')) {
 
 await run('golden cases', cat, data);
 freshness();
+revocations();
+
+// A withdrawn download is a build that does not exist (design.md 7.1):
+// the resolver picks the next one, and only when there is nothing left
+// does the target fail -- saying that it was withdrawn, not that the
+// catalogue never had it. The rule lives here so the page and the build
+// server make the same choice from the same list.
+function revocations() {
+  let bad = 0;
+  const expect = (cond, what) => { if (!cond) { bad++; console.log('MISMATCH revocations: ' + what); } };
+  const app = { recordHash: 'y'.repeat(26), name: 'A', project: 'a', runtime: 'python', select: 'newest', platforms: ['windows'], root: 'user', rootName: 'ib' };
+  const shasOf = (plan) => plan.split('\n').filter((l) => l.startsWith('file\t')).map((l) => l.split('\t')[3]);
+  const versions = (plan) => plan.split('\n').filter((l) => l.startsWith('runtime\t')).map((l) => l.split('\t')[2]);
+  const plain = R.resolve(cat, app);
+  expect(shasOf(plain).length > 0, 'the python plan downloads nothing to revoke');
+  // A plan can already have targets nothing runs on (Windows on ARM64);
+  // only fails this test causes count.
+  const failsOf = (plan) => plan.split('\n').filter((l) => l.startsWith('fail\t'));
+  const before = new Set(failsOf(plain));
+  const newFails = (plan) => failsOf(plan).filter((l) => !before.has(l));
+
+  // One build withdrawn: another is chosen, and nothing new fails.
+  const first = shasOf(plain)[0];
+  R.setRevoked(cat, [first]);
+  const next = R.resolve(cat, app);
+  expect(!shasOf(next).includes(first), 'the withdrawn build is still in the plan');
+  expect(newFails(next).length === 0, 'one withdrawn build made a target fail:\n  ' + newFails(next).join('\n  '));
+  expect(next !== plain, 'the plan did not move to another build');
+  expect(versions(next).join(',') !== versions(plain).join(',') || shasOf(next).join(',') !== shasOf(plain).join(','),
+    'the plan changed but not the builds it installs');
+
+  // Keep withdrawing everything the plan downloads: it steps down until
+  // there is nothing left, and then says so.
+  const all = new Set([first]);
+  let plan = next, rounds = 0;
+  while (newFails(plan).length === 0 && rounds < 40) {
+    for (const h of shasOf(plan)) all.add(h);
+    R.setRevoked(cat, all);
+    plan = R.resolve(cat, app);
+    rounds++;
+  }
+  const fails = newFails(plan);
+  expect(fails.length > 0, `nothing failed after ${rounds} rounds and ${all.size} withdrawn builds`);
+  for (const l of fails) {
+    expect(l.includes('has been withdrawn'), 'the message does not say why: ' + l);
+    expect(/file\t?[0-9a-f]{64}|file [0-9a-f]{64}/.test(l), 'the message names no file: ' + l);
+    expect(/The Python [^ ]+ [0-9][^ ]* build for /.test(l), 'the message names no version: ' + l);
+  }
+
+  // And nothing sticks: with the list cleared, the bytes are the ones
+  // from before, memo keys and all.
+  R.setRevoked(cat, []);
+  expect(R.resolve(cat, app) === plain, 'clearing the list did not give the original plan back');
+  // An entry that is not a SHA-256 is not a revocation.
+  R.setRevoked(cat, ['', 'nonsense', first.toUpperCase()]);
+  expect(!shasOf(R.resolve(cat, app)).includes(first), 'an upper-case hash was not matched');
+  R.setRevoked(cat, ['nonsense']);
+  expect(R.resolve(cat, app) === plain, 'junk in the list changed the plan');
+  R.setRevoked(cat, []);
+  failures += bad;
+  console.log(`revoked builds: ${bad} mismatches`);
+}
 
 // `signed` and `maxage` (design.md 7.1, format.md section 3). The saved
 // cases pass no moment and so have neither line, which is the point: a

@@ -216,14 +216,47 @@ but only when this machine's clock is plausible against `IB_BUILD_DAYS`
 (design.md 7.1, format.md sections 3 and 7). Days, not seconds: NSIS
 arithmetic is 32-bit signed and epoch seconds overflow it in 2038.
 
-**Not yet run on a VM.** It compiles (`makensis -WX`, so warnings are
-errors) and the shared plan-signature code is covered by the plugin's
-host test, but nothing here has executed on Windows: the cases the
-Linux and macOS engine has in `bases/unix/test_freshness.sh` -- nonce
-echoed, another nonce refused, none noted, the list by record, source
-and file, the cached list offline, a plan past `maxage` and past the
-hard limit, and a clock that can't be believed refusing nothing -- want
-the same run on XP and 11.
+**Not yet run on a VM** (2026-09-20; the ESXi machines are waiting on
+credentials). It compiles (`makensis -WX`, so warnings are errors) and
+the shared plan-signature code is covered by the plugin's host test, but
+nothing here has executed on Windows. What to run when the VMs are
+available, on **XP SP3** (the oldest engine path, and the worst clock)
+and **Windows 11** (the newest):
+
+1. Build a base against a throwaway key and a local backend, as
+   `bases/unix/test_freshness.sh` does for the other engine:
+   `IB_PLAN_PUBKEY_FILE=... IB_BACKEND=http://<host>:<port> ./build.sh`.
+   Serve that port with `python3 -m http.server` over a folder holding
+   `api/records/<hash>`, `api/plan/<hash>` and `api/revocations` --
+   it ignores the query string, which is what lets a pre-signed answer
+   stand in for one made for this nonce.
+2. **Nonce.** Name the .exe `install_..._<hash>.exe` and run it against
+   a plan that echoes the nonce, one that echoes another, and one that
+   echoes none. There is no `IB_TEST_NONCE` here, so read the nonce the
+   engine sent out of its log (`Fetching the plan: ...?nonce=...`) and
+   sign the answer for it, or point the port at a two-line CGI that
+   signs on the fly. Expect: installs; **refuses** with "the answer to
+   another request"; installs with "no nonce in the answer" on the
+   review page.
+3. **The list.** With `/plan=` and `/record=` (a carried plan), serve a
+   revocation list naming the record, then `source github <owner/repo>`,
+   then `file <sha256>` of a file the plan downloads. Each must refuse
+   with "has been withdrawn". Then serve one naming something else, and
+   one signed as an `ib-plan`: both must install, the second logging
+   "not the document this installer asked for". Then kill the server and
+   run again: `%LOCALAPPDATA%\TiddlyInstall\revocations.txt` must still
+   refuse it.
+4. **Age.** A carried plan with `signed` 120 days back (warn and
+   install), 400 days back (**refuse**, naming the 365-day limit), and
+   the same 400-day plan against a base built with
+   `SOURCE_DATE_EPOCH=$(date -d "+10 years" +%s)` -- the wrong-clock
+   case, which **must install** with "which can't be right". On XP, set
+   the machine's clock back to 2001 and check the 400-day plan still
+   installs: that is the case the whole design exists to protect.
+5. **Old and new.** A plan carrying `signed`, `maxage` and a
+   `request<TAB>nonce` line, given to a base built from the engine
+   before this change (`git show <rev>:bases/windows/base.nsi`), must
+   still install when it is a plan by record.
 
 ## The `ibsig` plugin
 

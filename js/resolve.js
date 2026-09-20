@@ -1321,14 +1321,61 @@ function usable(pol, e) {
 }
 
 // Catalog.candidates
+/* ---------- revoked downloads (design.md 7.1) ---------- */
+
+// A build whose file is on the revocation list is treated as a build that
+// does not exist, so the resolver picks another one rather than writing a
+// plan that dies in front of the publisher's user. The engines still
+// refuse a revoked download if one reaches them -- that is the backstop,
+// and nothing here weakens it.
+//
+// The set lives on the catalogue, not on the request: it decides which
+// builds exist, and the page and the build server must make the same
+// choice from the same list. The memo keys carry `revokedKey`, so
+// changing the list can't serve a pick made under the old one.
+export function setRevoked(cat, hashes) {
+  const out = [];
+  for (const h of hashes || []) {
+    const v = String(h).toLowerCase();
+    if (/^[0-9a-f]{64}$/.test(v) && !out.includes(v)) out.push(v);
+  }
+  out.sort();
+  cat.revoked = new Set(out);
+  cat.revokedKey = out.length === 0 ? '' : out.length + '-' + hash12Sync(out.join('\n'));
+  return cat;
+}
+
+export function isRevoked(cat, sha256) {
+  return !!cat.revoked && cat.revoked.size > 0 && cat.revoked.has(String(sha256).toLowerCase());
+}
+
+const revokedKey = (cat) => str(cat.revokedKey);
+
+// Run f with nothing revoked: what the resolver would have chosen. Used
+// only to say *why* a target has nothing left, so the message can name
+// the build that was withdrawn instead of claiming none was ever there.
+function withoutRevoked(cat, f) {
+  const set = cat.revoked, key = cat.revokedKey;
+  cat.revoked = null;
+  cat.revokedKey = '';
+  try {
+    return f();
+  } finally {
+    cat.revoked = set;
+    cat.revokedKey = key;
+  }
+}
+
 function candidates(cat, rt, family, machine) {
-  return memo(cat, `cands ${rt.id} ${family} ${machine}`, () => candidatesUncached(cat, rt, family, machine));
+  return memo(cat, `cands ${rt.id} ${family} ${machine} ${revokedKey(cat)}`, () => candidatesUncached(cat, rt, family, machine));
 }
 function candidatesUncached(cat, rt, family, machine) {
   const pol = runtimePolicy(cat, rt.id);
   const ranked = [];
   for (const e of rt.releases) {
     if (e.os !== family || !usable(pol, e)) continue;
+    // A withdrawn build is no build (design.md 7.1).
+    if (isRevoked(cat, sha(cat, e))) continue;
     const a = archOK(family, machine, e.arch);
     if (!a.ok) continue;
     let vi = list((pol == null ? undefined : pol.variants)).length, fi = 0;
@@ -1361,6 +1408,10 @@ function best(cat, rt, cands, o, app) {
     const install = app.package !== '' || app.install !== '';
     const { recipe, extras } = recipeFor(cat, rt, e, install, o, tools);
     if (!recipe || sha(cat, e) === '') continue;
+    // The extra files a recipe needs are downloads too (the parts of an
+    // msi-layout release among them), so a withdrawn one takes the
+    // release with it and the next one is tried.
+    if (extras.some((x) => isRevoked(cat, str(x.src && x.src.sha256)))) continue;
     const pk = { rel: e, recipe, minBuild: ro.minBuild, known: ro.known, needs: [], extras, prereqs: prereqsFor(cat, rt, e, o, install, tools) };
     if (!attachNeeds(cat, rt, pk, o, install, tools)) continue;
     if (ro.minBuild > o.build && ro.minBuild > 0) {
@@ -1374,7 +1425,7 @@ function best(cat, rt, cands, o, app) {
 
 // Catalog.attachNeeds
 function attachNeeds(cat, rt, pk, o, install, tools) {
-  const needs = memo(cat, `needs ${rt.id} ${pk.rel.arch} ${osKey(o)} ${!!install} ${toolsKey(tools)}`,
+  const needs = memo(cat, `needs ${rt.id} ${pk.rel.arch} ${osKey(o)} ${!!install} ${toolsKey(tools)} ${revokedKey(cat)}`,
     () => companions(cat, rt, pk.rel.arch, o, !!install, tools));
   if (!needs) return false;
   pk.needs.push(...needs);
@@ -1399,6 +1450,32 @@ function companions(cat, rt, arch, o, install, tools) {
   }
   return out;
 }
+
+// What this target would have installed if nothing were revoked:
+// {version, sha256}, or null (the catalogue simply has nothing here).
+function goneTo(cat, rt, family, machine, o, app) {
+  // Only ever reached where a target has nothing, and only when
+  // something is revoked, so it is not worth a memo of its own: the
+  // candidates and companions it goes through have theirs.
+  if (!cat.revoked || cat.revoked.size === 0) return null;
+  const pick = withoutRevoked(cat, () => {
+    const { p, cond } = best(cat, rt, candidates(cat, rt, family, machine), o, app);
+    return p || cond;
+  });
+  if (!pick) return null;
+  // Which of its downloads is the withdrawn one -- the build itself, or a
+  // file its recipe needs. Asked with the list back in place.
+  const self = sha(cat, pick.rel);
+  let bad = isRevoked(cat, self) ? self : '';
+  if (bad === '') {
+    for (const x of pick.extras) {
+      const h = str(x.src && x.src.sha256);
+      if (isRevoked(cat, h)) { bad = h; break; }
+    }
+  }
+  return { version: pick.rel.version, sha256: bad };
+}
+const sameGone = (a, b) => (!a || !b ? !a && !b : a.version === b.version && a.sha256 === b.sha256);
 
 function samePick(a, b) {
   if (!a || !b) return !a && !b;
@@ -1464,6 +1541,10 @@ export function resolveFiles(cat, app) {
       for (const o of scale) {
         if (!o.arches.includes(machine)) { flush(); continue; }
         const { p, cond } = best(cat, frt, cands, o, app);
+        // Nothing left here: was there something before the revocation
+        // list took it? Then the target says so, instead of claiming the
+        // catalogue never had a build (design.md 7.1).
+        const gone = !p && !cond ? goneTo(cat, frt, family, machine, o, app) : null;
         if (cond && (!p || cond.rel !== p.rel)) {
           // Needs a newer build than this OS version starts at: a block of
           // its own, checked before the fallback.
@@ -1478,14 +1559,14 @@ export function resolveFiles(cat, app) {
           }
           flush();
         }
-        if (cur && samePick(cur.p, p)) {
+        if (cur && samePick(cur.p, p) && sameGone(cur.gone, gone)) {
           cur.min = o.int;
           cur.labels.push(o.label);
           if (o.id === '10' && cur.minBuild >= 22000) cur.minBuild = 0;
           continue;
         }
         flush();
-        cur = { family, min: o.int, max: top(o), minBuild: o.id === '11' ? o.build : 0, arches: [machine], p, labels: [o.label] };
+        cur = { family, min: o.int, max: top(o), minBuild: o.id === '11' ? o.build : 0, arches: [machine], p, labels: [o.label], gone };
       }
       flush();
     }
@@ -1605,7 +1686,15 @@ function writePlan(cat, app, blocks) {
     if (b.minBuild > 0) w.add('minbuild', String(b.minBuild));
     w.add('covers', b.labels.join(', '));
     if (!b.p) {
-      w.add('fail', `No ${label} release in the catalogue runs on ${b.labels.join(', ')} (${b.arches[0]}).`);
+      // Say which of the two it is. "No release runs here" is a lie when
+      // there was one and it was withdrawn, and it sends the publisher
+      // looking in the wrong place (design.md 7.1).
+      if (b.gone) {
+        const which = b.gone.sha256 === '' ? '' : ` (file ${b.gone.sha256})`;
+        w.add('fail', `The ${label} ${b.gone.version} build for ${b.labels.join(', ')} (${b.arches[0]}) has been withdrawn${which}, and the catalogue has no other build for this system. Ask whoever published this installer for a new one.`);
+      } else {
+        w.add('fail', `No ${label} release in the catalogue runs on ${b.labels.join(', ')} (${b.arches[0]}).`);
+      }
       continue;
     }
     writeTarget(cat, w, app, pol, b);

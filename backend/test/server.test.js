@@ -12,6 +12,7 @@ import net from 'node:net';
 import IORedis from 'ioredis';
 import { Server, parseFlags } from '../server.js';
 import { verify, verifyFor } from '../lib/plansig.js';
+import { resolve, setRevoked } from '../../js/resolve.js';
 import { readInstaller } from '../../js/ibfile.js';
 import { haveCatalog, haveBases, tmpDir, REPO, RUNTIMES } from './helpers.js';
 
@@ -170,6 +171,29 @@ test('the server', { skip }, async (t) => {
     // The ETA has history now.
     const again = await json('/api/jobs', { method: 'POST', body: JSON.stringify(body) });
     assert.equal(typeof again.j.eta_seconds, 'number');
+    // A withdrawn build is a build that does not exist (design.md 7.1):
+    // the plan names another one rather than one the installer would
+    // refuse. And the bytes it serves are exactly what the shared
+    // resolver writes from the same list -- the page's rule, the page's
+    // data, no server-only step in between.
+    {
+      const was = /^file\t\S+\t\S+\t([0-9a-f]{64})\t/m.exec(plan)[1];
+      fs.writeFileSync(path.join(data, 'takedown.txt'), 'file ' + was + '\n');
+      assert.deepEqual(s.revokedFiles(), [was]);
+      const p2 = (await get('/api/plan/' + hash)).text;
+      verifyFor(s.signer.pub, Buffer.from(p2), hash);
+      assert.ok(!p2.includes(was), 'the withdrawn build is still in the plan');
+      // A plan can already have targets nothing runs on (old glibc, ARM64
+      // Windows); only a fail this withdrawal caused counts.
+      const fails = (t) => t.split('\n').filter((l) => l.startsWith('fail\t'));
+      assert.deepEqual(fails(p2).filter((l) => !fails(plan).includes(l)), []);
+      const { app } = await s.b.loadApp(hash);
+      setRevoked(s.cat, s.revokedFiles());
+      const mine = resolve(s.cat, Object.assign({}, app, { signedAt: /^signed\t(\S+)$/m.exec(p2)[1] }));
+      assert.equal(mine, p2.replace(/sig\ted25519\t\S+\n$/, ''));
+      setRevoked(s.cat, []);
+      fs.rmSync(path.join(data, 'takedown.txt'));
+    }
     // The takedown list, read on every request.
     const src = /^source\tinline\t(\S+)$/m.exec(rec)[1];
     fs.writeFileSync(path.join(data, 'takedown.txt'), '# test\nrecord ' + hash + '\nsha ' + src + '\nsource github a/b\n');

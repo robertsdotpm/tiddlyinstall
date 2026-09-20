@@ -211,7 +211,8 @@ export class Server {
     this.q = new JobQueue(o.redis, o['redis-db'], o.workers);
     // Every outgoing fetch a user can influence (sources, packs, registries,
     // the relay) goes through lib/netsafe.js, which only reaches public addresses.
-    this.b = new Builder({ cat: this.cat, data: o.data, bases: o.bases, public: o.public, signer, takenDown: (e) => this.takenDown(e) });
+    this.b = new Builder({ cat: this.cat, data: o.data, bases: o.bases, public: o.public, signer,
+      takenDown: (e) => this.takenDown(e), revokedFiles: () => this.revokedFiles() });
     this.relayOK = new Set();
     for (const rt of this.cat.runtimes.values()) {
       for (const e of rt.releases) {
@@ -262,6 +263,19 @@ export class Server {
   takenDownSha(sha) {
     const list = this.takedownList() || [];
     return list.includes('sha ' + sha) || list.includes('file ' + sha);
+  }
+
+  // The SHA-256s the list names, for the resolver: a withdrawn build is
+  // treated as a build that does not exist, so a plan is written for the
+  // next one rather than for a download the installer will refuse
+  // (design.md 7.1). `sha` and `file` both name bytes, so both count.
+  revokedFiles() {
+    const out = [];
+    for (const e of this.takedownList() || []) {
+      const m = /^(?:sha|file)[ \t]+([0-9a-fA-F]{64})$/.exec(e);
+      if (m) out.push(m[1].toLowerCase());
+    }
+    return out;
   }
 
   // sourceKey normalises a source for the takedown list, so owner/repo,
