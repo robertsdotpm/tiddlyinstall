@@ -30,7 +30,7 @@ page is lost.
 | Script | What it is |
 | --- | --- |
 | `web/api.js` | The one client for the server: backend choice, the outage banner and retries, errors |
-| `shared/ibfile.js` | Installer metadata (docs/format.md section 4): the appended block for `.exe` (it stops before a certificate table) and `.run`, the files in the `.app` of a macOS `.zip`, tar packs, record hashes, and a small zip reader and writer that keeps permissions and symlinks |
+| `shared/tifile.js` | Installer metadata (docs/format.md section 4): the appended block for `.exe` (it stops before a certificate table) and `.run`, the files in the `.app` of a macOS `.zip`, tar packs, record hashes, and a small zip reader and writer that keeps permissions and symlinks |
 | `web/new.js`, `web/build.js`, `web/edit.js` | The three live pages |
 | `shared/icon.js` | Icons in the browser: a `.ico` (BMP for XP + PNG) written into a `.exe` with resedit-js, an `.icns` for the `.app`, and the Linux launcher PNG packed with an `icon` record key. PNG is encoded in JS so it is deterministic |
 | `vendor/resedit-bundle.js` | resedit-js 2.0.3 + pe-library 1.0.1 (MIT, (c) 2018 jet; see `vendor/LICENSE.*`), bundled by `tools/build_resedit_bundle.py`. `web/edit.html` loads it; the one-file site inlines it |
@@ -45,11 +45,11 @@ page is lost.
 | `web/lib/ed25519.js` | Ed25519, ported from [TweetNaCl-js](https://github.com/dchest/tweetnacl-js) (public domain) |
 | `web/theme.js` | Light or dark, and the button in the header that switches it. With nothing chosen the page follows the system; the button writes `<html data-theme="light">` or `"dark"` and remembers it in this browser, and `?theme=dark` on the URL sets it for one visit. A classic ES3 script in `<head>` (the one-file site inlines it), so it runs before the first paint and in browsers with no modules |
 | `web/has-shim.js`, `web/polyfills.js` | CSS `:has()` for browsers without it (classes kept on ancestors, the stylesheet rewritten in place), and the few newer built-ins the page uses. Both do nothing in current browsers |
-| `tests/fallback-test.mjs` | The plain-JavaScript compression and crypto against Node's zlib and WebCrypto, openssl, and the FIPS/RFC test vectors; the `:has()` rewrite (`IB_CATALOG_DIR=<folder with catalog.gz> node tests/fallback-test.mjs [--quick]`) |
+| `tests/fallback-test.mjs` | The plain-JavaScript compression and crypto against Node's zlib and WebCrypto, openssl, and the FIPS/RFC test vectors; the `:has()` rewrite (`TI_CATALOG_DIR=<folder with catalog.gz> node tests/fallback-test.mjs [--quick]`) |
 | `tests/es2017-test.mjs` | Parses the built `dist/index.html` as ES2017 (acorn, `cd tests && npm install` once) and fails on newer syntax or built-ins |
 | `tests/no-native.mjs`, `tests/no-native-browser.mjs` | Run a test as an old browser: `node --import ./tests/no-native.mjs tests/sign-test.mjs` (no streams, `crypto.subtle` or BigInt in Node), and `--no-native` on `offline-test.mjs`, `upload-test.mjs`, `catalog-editor-test.mjs` and `sign-ui-test.mjs` (the same in Chrome, and no `:has()`) |
 | `tests/catalog-editor-test.mjs` | The Runtimes page in headless Chrome: edits, reload, preview, a built installer's plan, revert, export, import (a hostile file too), reset, the once-a-session question about changes found in storage, blocked storage (`node --experimental-websocket tests/catalog-editor-test.mjs [--site URL]`) |
-| `tests/ibfile.html`, `tests/icon.html` | Unit tests for `shared/ibfile.js` and `shared/icon.js` in the browser. Print PASS/FAIL. Fixtures come from `tests/make_fixtures.py` (Python's tarfile and zipfile, plus a synthetic PE with an icon resource) |
+| `tests/tifile.html`, `tests/icon.html` | Unit tests for `shared/tifile.js` and `shared/icon.js` in the browser. Print PASS/FAIL. Fixtures come from `tests/make_fixtures.py` (Python's tarfile and zipfile, plus a synthetic PE with an icon resource) |
 | `tests/uninstaller-icon-test.mjs` | The NSIS uninstaller survives a custom icon: re-icons the real `installer/windows/out/base.exe`, checks the bytes NSIS's patch table names are untouched and that no live resource sits on them, then performs the patch itself and checks the manifest, dialogs and icons survive (`node tests/uninstaller-icon-test.mjs`). The VM half is `behaviour.py --variants icon` |
 | `tests/mock_server.py` | A stand-in build server for trying the pages (`python3 tests/mock_server.py 8094`, then open `web/new.html?api=http://127.0.0.1:8094`) |
 
@@ -57,7 +57,7 @@ Headless test run:
 
 ```
 python3 -m http.server 8093 &
-google-chrome --headless=new --virtual-time-budget=20000 --dump-dom http://127.0.0.1:8093/tests/ibfile.html | grep -o 'PASS all [0-9]*\|FAIL [^<]*'
+google-chrome --headless=new --virtual-time-budget=20000 --dump-dom http://127.0.0.1:8093/tests/tifile.html | grep -o 'PASS all [0-9]*\|FAIL [^<]*'
 ```
 
 ## Build server
@@ -65,7 +65,7 @@ google-chrome --headless=new --virtual-time-budget=20000 --dump-dom http://127.0
 `server/` is the build server: plain ES modules on Node.js 20 or later
 (`node:http`, no web framework), with BullMQ and ioredis for the job queue
 on Redis. It runs the same JavaScript as the page: `shared/resolve.js` (plans),
-`shared/builder.js` (jobs), `shared/ibfile.js` (installer files) and `shared/icon.js`
+`shared/builder.js` (jobs), `shared/tifile.js` (installer files) and `shared/icon.js`
 (icons). It serves the API ([docs/api.md](docs/api.md)), the one-file site
 from `dist/` (`python3 tools/build_site.py` writes it), our copies of the
 runtime files at `/mirror/`, and the built installers. (It replaced a Go
@@ -86,8 +86,8 @@ written into records), `-workers`, `-mirror` and `-mirror-last` (where
 plans point for our mirror, and whether it comes last). A second instance
 needs its own `-redis-db` and `-data` (the Mac test server's is
 `server/data-mac`). On this machine they run as the systemd user units
-`ib-server` (:8080) and `ib-server-mac` (127.0.0.1:8081), on Redis from
-`ib-redis` (its files in `server/data/redis`).
+`ti-server` (:8080) and `ti-server-mac` (127.0.0.1:8081), on Redis from
+`ti-redis` (its files in `server/data/redis`).
 
 Tests:
 
@@ -102,8 +102,8 @@ sh installer/unix/test_freshness.sh          # the Linux engine on stale plans: 
                                          # against saved answers: errors, jobs, plans, takedown
 ```
 
-The server test needs Redis and uses database 5 (`IB_TEST_REDIS`,
-`IB_TEST_REDIS_DB`). The three golden tests compare with answers saved in
+The server test needs Redis and uses database 5 (`TI_TEST_REDIS`,
+`TI_TEST_REDIS_DB`). The three golden tests compare with answers saved in
 `tests/golden/` from the Go server while it was the reference the JS was
 checked against byte for byte; each test's header says what is kept and
 how to record the goldens again after an intended change.
