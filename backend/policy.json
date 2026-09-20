@@ -1315,6 +1315,14 @@
      ],
      "for": "install",
      "why": "Installing CRAN packages on Linux compiles them from source (C and C++, with make), as R on Linux always does; minimal installs have no compiler or make."
+    },
+    {
+     "_comment": "macOS only (the prerequisite carries os: macos). Added 2026-09-20 after measuring what R on macOS does when CRAN has no binary for it: it falls back to a source build, which is the only reason the retired pre-4.0 indexes do not break macOS the way they break Windows (design.md 11, test-results.md \"macOS: the same decay\"). That fallback needs a compiler, and a source build that fails still leaves install.packages() exiting 0 -- the same silent success by another road. We had simply been lucky that the test Mac has the tools. Deliberately wider than strictly necessary, as Ruby's Linux gcc/make rule is: an app whose packages all have CRAN binaries for this R would have installed without a compiler, and cannot be told apart at build time.",
+     "prerequisites": [
+      "xcode-clt"
+     ],
+     "for": "install",
+     "why": "Installing CRAN packages on macOS falls back to building them from source whenever CRAN has no binary for this R -- always for R before 4.0, whose macOS binary indexes CRAN has retired, and for any package it has not built for this platform. That build needs clang, make and the macOS SDK from the Xcode Command Line Tools. Without them the build fails, install.packages() still exits 0, and the app would install and then stop at its first library() call."
     }
    ],
    "launch": "{runtime} {app_dir}/main.R",
