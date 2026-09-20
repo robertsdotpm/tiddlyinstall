@@ -40,6 +40,12 @@ def cell(r):
     if r["result"] == "no-plan":
         return "∅"
     if r["result"] == "n/a":
+        # "refused" is the installer stopping up front and saying why: a
+        # combination the catalogue knows cannot work (docs/format.md,
+        # "Combinations that cannot work"). It is not "the catalogue has
+        # nothing here", and it is not a broken install.
+        if r["detail"].startswith("refused"):
+            return "refused"
         return "root" if r["detail"].startswith("needs root") else "–"
     if r["result"] == "pass":
         return f"✓ {ok}/{n}"
@@ -83,7 +89,8 @@ def main():
     print()
     print("✓ every check passed · ✗ a check or the install failed · – no release for that machine's "
           "OS and architecture · ∅ the plan has no block for that machine at all (untested) · "
-          "root: a system package an unattended install can't add. Each column says the "
+          "root: a system package an unattended install can't add · refused: a combination "
+          "the catalogue knows cannot work, refused up front with its reason. Each column says the "
           "architecture: 64 amd64, 32 x86, a64 arm64.")
     print()
     print("Not passing after the changes:")

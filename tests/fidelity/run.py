@@ -74,6 +74,12 @@ def markers(out):
 
 def plan_fails(log):
     for line in log.splitlines():
+        # A refusal: the plan, or a prerequisite nothing here can add, said
+        # this combination cannot work, and the installer stopped before
+        # touching anything (docs/format.md, "Combinations that cannot
+        # work"). That is a result of its own, not a broken install.
+        if "Refused before installing:" in line:
+            return "refused: " + line.split("Refused before installing:", 1)[1].strip()
         if "needs system packages" in line or "needs administrator rights" in line:
             return "needs root: " + line.strip()
         if "nothing for this machine" in line or ("No " in line and "release in the catalogue runs" in line):

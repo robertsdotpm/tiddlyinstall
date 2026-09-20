@@ -104,9 +104,16 @@ NO_BLOCK = "nothing for this machine"
 
 
 def plan_fails(log):
-    """The engine's message when no plan block matches, or a block says `fail`,
-    or a prerequisite needs root that an unattended install can't get."""
+    """The engine's message when it refused this combination up front, when no
+    plan block matches or a block says `fail`, or when a prerequisite needs
+    root that an unattended install can't get."""
     for line in log.splitlines():
+        # A refusal: the plan, or a prerequisite nothing here can add, said
+        # this combination cannot work, and the installer stopped before
+        # touching anything (docs/format.md, "Combinations that cannot
+        # work"). That is a result of its own, not a broken install.
+        if "Refused before installing:" in line:
+            return "refused: " + line.split("Refused before installing:", 1)[1].strip()
         if "needs system packages" in line or "needs administrator rights" in line:
             return "needs root: " + line.strip()
         if NO_BLOCK in line or "no install plan for this version of Windows" in line:

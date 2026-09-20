@@ -7,7 +7,9 @@ One row per (runtime, major) and one column per machine, showing
 "✓ ok/checks" when every check passed and the uninstall was clean,
 "✗ ok/checks" when one didn't, "–" when the catalogue has nothing for
 that machine, "root" when an unattended install would need a system
-package, and "✗ install" when the install itself failed. Then the
+package, "refused" when the catalogue knows the combination cannot work
+and the installer stops up front with the reason, and "✗ install" when
+the install itself failed. Then the
 failures, with the check's own message, and a per-check summary so a tool
 that is broken on every old version shows up as one line.
 """
@@ -33,6 +35,12 @@ def cell(r):
     ok = sum(1 for s, _ in checks.values() if s == "ok")
     n = len([c for c in checks.values() if c[0] != "skip"])
     if r["result"] == "n/a":
+        # "refused" is the installer stopping up front and saying why: a
+        # combination the catalogue knows cannot work (docs/format.md,
+        # "Combinations that cannot work"). It is not "the catalogue has
+        # nothing here", and it is not a broken install.
+        if r["detail"].startswith("refused"):
+            return "refused"
         return "root" if r["detail"].startswith("needs root") else "–"
     if r["result"] == "pass":
         return f"✓ {ok}/{n}"
@@ -55,9 +63,16 @@ def main():
     ap.add_argument("--full", action="store_true", help="also print every skipped check")
     a = ap.parse_args()
     latest, targets, cells = {}, [], []
+    # The newest run of each cell wins, by the run's own `time` and not by
+    # the file's name: "2026-09-20-refusals.jsonl" sorts *before*
+    # "2026-09-20.jsonl", so a later run in a suffixed file was being
+    # thrown away by the file order alone.
     for f in sorted(Path(a.results).glob("*.jsonl")):
         for line in f.read_text().splitlines():
             r = json.loads(line)
+            was = latest.get((r["cell"], r["target"]))
+            if was is not None and str(was.get("time", "")) > str(r.get("time", "")):
+                continue
             latest[(r["cell"], r["target"])] = r
             if r["target"] not in targets:
                 targets.append(r["target"])

@@ -49,6 +49,8 @@ def cell(r):
         return "ssh"
     if r["result"] == "n/a" and "isn't for" in r.get("detail", ""):
         return "·"
+    if r["result"] == "n/a" and r.get("detail", "").startswith("refused"):
+        return "refused"
     if r["result"] == "n/a" and r.get("detail", "").startswith("needs root"):
         return "root"
     return MARK[r["result"]]

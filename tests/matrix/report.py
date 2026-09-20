@@ -54,6 +54,8 @@ def cell(t, rt):
     if res <= {"known", "pass"}:
         return "!"
     if res <= {"n/a", "no-plan"}:
+        if any(r["detail"].startswith("refused") for r in rs):
+            return "refused"
         if any("needs root" in r["detail"] for r in rs):
             return "root"
         return "∅" if "no-plan" in res else "–"
@@ -72,7 +74,8 @@ out = ["# Test results", "",
        "about and have written down (listed at the end, with what would clear it) · – no release in the catalogue runs on",
        "that OS and architecture (the installer says so) · ∅ the plan has no block for that machine at",
        "all, so the cell is **untested**, not n/a · root: needs a system package, and the unattended",
-       "installer stops with the exact command to run · blank: not run", "",
+       "installer stops with the exact command to run · refused: a combination the catalogue knows",
+       "cannot work, so the installer stops up front and says why · blank: not run", "",
        "| Runtime | " + " | ".join(head(t) for t in targets) + " |",
        "| --- | " + " | ".join("---" for _ in targets) + " |"]
 for rt in RTS:
