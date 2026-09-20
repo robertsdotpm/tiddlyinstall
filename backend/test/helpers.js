@@ -58,8 +58,17 @@ const CLAIM_KEY = 'ib-test-claim';
 const CLAIM_MS = 60000;
 
 // The databases a claim may use: Redis ships with 16 (0-15). 0 is the
-// dev server's, and 1-4 are left for anything else on this machine.
-export const TEST_DBS = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+// dev server's and 1-4 are left for anything else on this machine, and
+// **5 and 6 are deliberately left out**: they are the numbers the old
+// code hardcoded, so a checkout from before this change -- another
+// agent's worktree, a stale shell -- will still take them, and a claim
+// cannot stop it. Claiming only 7 and up means a run of this code is
+// safe from a run of that one, which is the case that was actually
+// biting. That is also how the bug was finally pinned down: with the
+// claim taking 5 first, a test job vanished into another process's
+// worker and the data folder had no `records` directory at all, though
+// the job reported done and returned an installer.
+export const TEST_DBS = [7, 8, 9, 10, 11, 12, 13, 14, 15];
 
 // Claims a database, registers the release (its claim, and every ib: and
 // ib-bull: key it made) with the test, and returns the number. `pinned`
