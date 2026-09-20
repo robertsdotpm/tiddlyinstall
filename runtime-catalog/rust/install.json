@@ -16,7 +16,11 @@
     {
      "unpack": "tar.xz",
      "to": "{runtime_dir}",
-     "strip_components": 2
+     "strip_components": 2,
+     "exclude": [
+      "*/rust-docs",
+      "*/share/man"
+     ]
     },
     {
      "mkdir": "{runtime_dir}/ibcc"
@@ -154,7 +158,11 @@
     {
      "unpack": "tar.xz",
      "to": "{runtime_dir}",
-     "strip_components": 2
+     "strip_components": 2,
+     "exclude": [
+      "*/rust-docs",
+      "*/share/man"
+     ]
     },
     {
      "mkdir": "{runtime_dir}/ibcc"
@@ -292,7 +300,11 @@
     {
      "unpack": "tar.xz",
      "to": "{runtime_dir}",
-     "strip_components": 2
+     "strip_components": 2,
+     "exclude": [
+      "*/rust-docs",
+      "*/share/man"
+     ]
     }
    ],
    "prerequisites": [
@@ -349,7 +361,11 @@
     {
      "unpack": "tar.xz",
      "to": "{runtime_dir}",
-     "strip_components": 2
+     "strip_components": 2,
+     "exclude": [
+      "*/rust-docs",
+      "*/share/man"
+     ]
     }
    ],
    "prerequisites": [
@@ -408,7 +424,11 @@
     {
      "unpack": "tar.xz",
      "to": "{runtime_dir}",
-     "strip_components": 2
+     "strip_components": 2,
+     "exclude": [
+      "*/rust-docs",
+      "*/share/man"
+     ]
     }
    ],
    "prerequisites": [
@@ -472,7 +492,11 @@
     {
      "unpack": "tar.xz",
      "to": "{runtime_dir}",
-     "strip_components": 2
+     "strip_components": 2,
+     "exclude": [
+      "*/rust-docs",
+      "*/share/man"
+     ]
     }
    ],
    "prerequisites": [
@@ -536,7 +560,11 @@
     {
      "unpack": "tar.xz",
      "to": "{runtime_dir}",
-     "strip_components": 2
+     "strip_components": 2,
+     "exclude": [
+      "*/rust-docs",
+      "*/share/man"
+     ]
     }
    ],
    "prerequisites": [
@@ -600,7 +628,11 @@
     {
      "unpack": "tar.xz",
      "to": "{runtime_dir}",
-     "strip_components": 2
+     "strip_components": 2,
+     "exclude": [
+      "*/rust-docs",
+      "*/share/man"
+     ]
     }
    ],
    "prerequisites": [

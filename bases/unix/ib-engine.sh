@@ -740,45 +740,180 @@ ib_move_into() { # entry dest: move, merging folders that already exist
 	fi
 }
 
-ib_unpack() { # format archive dest strip
-	ib_mkdirs "$3" || return 1
-	st=$3/.ib-unpack.$$
+# ---- unpack excludes (docs/format.md, the `unpack` step's 4th field)
+#
+# A "|"-separated list of glob patterns, matched against each entry's
+# path inside the archive with any leading "./" removed. "*" matches any
+# run of characters, "/" included; "?" matches one character. An entry is
+# left out when its own path or any parent's matches.
+#
+# Best effort by design: where the unpacker can skip the entries it is
+# told to (tar --exclude, unzip -x, 7z -x!) nothing is written at all,
+# and whatever it still wrote is deleted before the strip/move. An engine
+# that does not know the field unpacks everything, so what a recipe
+# excludes must be something the app never needs.
+
+# These three expand patterns unquoted, so they insist on the engine's
+# `set -f`: with globbing on, a pattern such as */*/share/man would be
+# replaced by whatever matches it in the current directory.
+
+# $u_exl: one pattern per line ("" for none).
+ib_ex_split() { # "a|b|c"
+	set -f
+	u_exl=
+	[ -n "$1" ] || return 0
+	u_ifs=$IFS
+	IFS='|'
+	for u_p in $1; do
+		[ -n "$u_p" ] || continue
+		u_exl="$u_exl$u_p$nl"
+	done
+	IFS=$u_ifs
+}
+
+# Does an archive-relative path match one of $u_exl?
+ib_ex_match() { # path
+	set -f
+	[ -n "$u_exl" ] || return 1
+	u_ifs=$IFS
+	IFS=$nl
+	for u_p in $u_exl; do
+		IFS=$u_ifs
+		# `case` globs the pattern; set -f does not apply to it.
+		case $1 in
+		$u_p) return 0 ;;
+		esac
+		IFS=$nl
+	done
+	IFS=$u_ifs
+	return 1
+}
+
+# Does this tar take --exclude? (GNU, bsdtar and busybox do; answered once.)
+ib_tar_exclude_ok() {
+	if [ -z "$ib_tar_ex" ]; then
+		ib_tar_ex=no
+		rm -rf "$IB_WORK/exprobe"
+		if mkdir -p "$IB_WORK/exprobe" 2> /dev/null && : > "$IB_WORK/exprobe/keep"; then
+			if (cd "$IB_WORK/exprobe" && tar --exclude=drop -cf probe.tar keep) > /dev/null 2>&1; then
+				ib_tar_ex=yes
+			fi
+		fi
+		rm -rf "$IB_WORK/exprobe"
+		ib_log "tar --exclude: $ib_tar_ex"
+	fi
+	[ "$ib_tar_ex" = yes ]
+}
+
+# The unpacker's own exclude switches, one per line, in $u_args. The
+# caller turns them into arguments with IFS=$nl and `set -- $u_args`,
+# which is safe because the engine runs with `set -f` (no globbing) and a
+# plan line can hold no newline. Patterns naming a folder are given twice
+# (`p` and `p/*`): GNU tar and bsdtar drop a matched folder's contents
+# themselves, busybox tar and unzip do not.
+ib_ex_args() { # style (tar|unzip|7z)
+	set -f
+	u_style=$1
+	u_args=
+	[ -n "$u_exl" ] || return 0
+	u_ifs=$IFS
+	IFS=$nl
+	for u_p in $u_exl; do
+		IFS=$u_ifs
+		case $u_style in
+		tar) u_args="$u_args--exclude=$u_p$nl--exclude=$u_p/*$nl" ;;
+		# unzip's -x takes a list of patterns, not one switch each.
+		unzip) u_args="$u_args$u_p$nl$u_p/*$nl" ;;
+		7z) u_args="$u_args-x!$u_p$nl-x!$u_p/*$nl" ;;
+		esac
+		IFS=$nl
+	done
+	IFS=$u_ifs
+}
+
+# Delete anything left under $1 that an exclude names. $2 is the path of
+# $1 inside the archive, "" at the top, otherwise ending in "/".
+ib_ex_prune() { # dir relprefix
+	# Globbing goes on only long enough to list the folder: the list is
+	# expanded once, before the body runs, so turning it off again in the
+	# body is safe and keeps ib_ex_match's patterns literal.
+	set +f
+	for u_e in "$1"/* "$1"/.[!.]* "$1"/..?*; do
+		set -f
+		[ -e "$u_e" ] || [ -h "$u_e" ] || continue
+		u_rel=$2${u_e##*/}
+		if ib_ex_match "$u_rel"; then
+			ib_log "  leaving out $u_rel"
+			rm -rf "$u_e"
+		elif [ -d "$u_e" ] && [ ! -h "$u_e" ]; then
+			ib_ex_prune "$u_e" "$u_rel/"
+		fi
+	done
+	set -f
+}
+
+ib_unpack() { # format archive dest strip exclude
+	u_fmt=$1
+	u_arc=$2
+	u_dst=$3
+	u_str=${4:-0}
+	ib_ex_split "${5:-}"
+	ib_mkdirs "$u_dst" || return 1
+	st=$u_dst/.ib-unpack.$$
 	rm -rf "$st"
 	mkdir "$st" || return 1
 	to=
 	[ "$(id -u)" = 0 ] && to=o
 	rc=0
-	case $1 in
-	tar) (cd "$st" && tar -x${to}f "$2") >> "$IB_LOG" 2>&1 || rc=1 ;;
+	# What the unpacker itself can be told to leave out. Whatever it
+	# still writes, ib_ex_prune deletes below.
+	u_args=
+	case $u_fmt in
+	tar | tar.gz | tgz | tar.bz2 | tbz2 | tar.xz | txz)
+		if [ -n "$u_exl" ] && ib_tar_exclude_ok; then ib_ex_args tar; fi
+		;;
+	zip) ib_ex_args unzip ;;
+	7z) ib_ex_args 7z ;;
+	esac
+	u_ifs=$IFS
+	IFS=$nl
+	set -- $u_args
+	IFS=$u_ifs
+	case $u_fmt in
+	tar) (cd "$st" && tar -x${to}f "$u_arc" "$@") >> "$IB_LOG" 2>&1 || rc=1 ;;
 	tar.gz | tgz)
 		rm -f "$IB_WORK/pipe.err"
-		{ gzip -dc "$2" || : > "$IB_WORK/pipe.err"; } | (cd "$st" && tar -x${to}f -) >> "$IB_LOG" 2>&1 || rc=1
+		{ gzip -dc "$u_arc" || : > "$IB_WORK/pipe.err"; } | (cd "$st" && tar -x${to}f - "$@") >> "$IB_LOG" 2>&1 || rc=1
 		[ -f "$IB_WORK/pipe.err" ] && rc=1
 		;;
 	tar.bz2 | tbz2)
 		if ib_have bzip2; then
 			rm -f "$IB_WORK/pipe.err"
-			{ bzip2 -dc "$2" || : > "$IB_WORK/pipe.err"; } | (cd "$st" && tar -x${to}f -) >> "$IB_LOG" 2>&1 || rc=1
+			{ bzip2 -dc "$u_arc" || : > "$IB_WORK/pipe.err"; } | (cd "$st" && tar -x${to}f - "$@") >> "$IB_LOG" 2>&1 || rc=1
 			[ -f "$IB_WORK/pipe.err" ] && rc=1
 		else
-			(cd "$st" && tar -xj${to}f "$2") >> "$IB_LOG" 2>&1 || rc=1
+			(cd "$st" && tar -xj${to}f "$u_arc" "$@") >> "$IB_LOG" 2>&1 || rc=1
 		fi
 		;;
 	tar.xz | txz)
 		if ib_have xz; then
 			rm -f "$IB_WORK/pipe.err"
-			{ xz -dc "$2" || : > "$IB_WORK/pipe.err"; } | (cd "$st" && tar -x${to}f -) >> "$IB_LOG" 2>&1 || rc=1
+			{ xz -dc "$u_arc" || : > "$IB_WORK/pipe.err"; } | (cd "$st" && tar -x${to}f - "$@") >> "$IB_LOG" 2>&1 || rc=1
 			[ -f "$IB_WORK/pipe.err" ] && rc=1
 		else
 			# macOS has no xz, but its tar (libarchive) reads .xz itself.
-			(cd "$st" && tar -xJ${to}f "$2") >> "$IB_LOG" 2>&1 || rc=1
+			(cd "$st" && tar -xJ${to}f "$u_arc" "$@") >> "$IB_LOG" 2>&1 || rc=1
 		fi
 		;;
 	zip)
 		if ib_have unzip; then
-			unzip -q -o "$2" -d "$st" >> "$IB_LOG" 2>&1 || rc=1
+			if [ $# -gt 0 ]; then
+				unzip -q -o "$u_arc" -d "$st" -x "$@" >> "$IB_LOG" 2>&1 || rc=1
+			else
+				unzip -q -o "$u_arc" -d "$st" >> "$IB_LOG" 2>&1 || rc=1
+			fi
 		elif ib_have ditto; then
-			ditto -x -k "$2" "$st" >> "$IB_LOG" 2>&1 || rc=1
+			ditto -x -k "$u_arc" "$st" >> "$IB_LOG" 2>&1 || rc=1
 		else
 			ib_log "no unzip on this machine"
 			rc=1
@@ -791,14 +926,20 @@ ib_unpack() { # format archive dest strip
 			ib_log "This machine has no 7-Zip (7z, 7za, 7zz), which this .7z file needs."
 			rc=1
 		else
-			(cd "$st" && $z x -y "$2") >> "$IB_LOG" 2>&1 || rc=1
+			(cd "$st" && $z x -y "$@" "$u_arc") >> "$IB_LOG" 2>&1 || rc=1
 		fi
 		;;
 	*)
-		ib_log "unknown archive format: $1"
+		ib_log "unknown archive format: $u_fmt"
 		rc=1
 		;;
 	esac
+	# Whatever the unpacker still wrote, and every format it could not be
+	# told about (ditto, an old tar), is dropped here before the move.
+	if [ $rc = 0 ] && [ -n "$u_exl" ]; then
+		ib_ex_prune "$st" ""
+	fi
+	set -- "$u_fmt" "$u_arc" "$u_dst" "$u_str"
 	if [ $rc = 0 ]; then
 		set +f
 		# Drop "strip" folder levels. Folders at the last level are merged
@@ -850,11 +991,15 @@ ib_step() { # type fields...
 	unpack)
 		d=$(ib_subst "$2")
 		ib_inside "$d" || ib_fail "Step unpack: $d is outside the app's folders."
-		ib_say "  unpack $1 into $d"
+		if [ -n "${4:-}" ]; then
+			ib_say "  unpack $1 into $d (leaving out $4)"
+		else
+			ib_say "  unpack $1 into $d"
+		fi
 		if [ "$1" = 7z ] && ! ib_have 7zz && ! ib_have 7z && ! ib_have 7za && ! ib_have 7zr; then
 			ib_fail "$(basename "$IB_CUR_FILE") is a .7z archive, and this machine has no 7-Zip (7z, 7za or 7zz) to unpack it."
 		fi
-		ib_unpack "$1" "$IB_CUR_FILE" "$d" "${3:-0}" || ib_fail "Could not unpack $(basename "$IB_CUR_FILE") ($1)."
+		ib_unpack "$1" "$IB_CUR_FILE" "$d" "${3:-0}" "${4:-}" || ib_fail "Could not unpack $(basename "$IB_CUR_FILE") ($1)."
 		;;
 	run)
 		c=$(ib_subst "$1")
@@ -1535,10 +1680,22 @@ ib_is_installed() { # [app dir, appid, record hash]; default: this install's
 # The install root for root mode $1 (user, system) and folder name $2.
 ib_root_path() {
 	if [ "$IB_OS" = macos ]; then
-		if [ "$1" = system ]; then printf '%s' "/Library/Application Support/$2"; else printf '%s' "$HOME/Library/Application Support/$2"; fi
+		if [ "$1" = system ]; then printf '%s' "/Library/$2"; else printf '%s' "$HOME/Library/$2"; fi
 	else
 		if [ "$1" = system ]; then printf '%s' "/opt/$2"; else printf '%s' "${XDG_DATA_HOME:-$HOME/.local/share}/$2"; fi
 	fi
+}
+
+# A root this engine no longer installs into but must still find apps in.
+# Up to 2026-09-20 macOS installs went to ~/Library/Application Support/
+# <rootname> (and /Library/Application Support/<rootname> for all users);
+# the space in the path broke build systems that don't quote (design.md
+# 11, item 16). Apps already there keep working: their own uninstall.sh
+# and manifest hold absolute paths, and this engine looks there too.
+# Empty when there is no earlier root for this OS.
+ib_root_legacy() { # rootmode rootname
+	[ "$IB_OS" = macos ] || return 0
+	if [ "$1" = system ]; then printf '%s' "/Library/Application Support/$2"; else printf '%s' "$HOME/Library/Application Support/$2"; fi
 }
 
 # Already installed, found before any network access? The appid is
@@ -1560,11 +1717,13 @@ ib_installed_offline() {
 		e_rn=$(ib_get "$2" rootname)
 		[ -n "$e_rn" ] || e_rn=ib
 		case $e_rn in . | .. | */* | *[!A-Za-z0-9._-]*) return 0 ;; esac
-		set -- "$(ib_root_path "${e_rm:-user}" "$e_rn")"
+		set -- "$(ib_root_path "${e_rm:-user}" "$e_rn")" "$(ib_root_legacy "${e_rm:-user}" "$e_rn")"
 	else
-		set -- "$(ib_root_path user ib)" "$(ib_root_path system ib)"
+		set -- "$(ib_root_path user ib)" "$(ib_root_path system ib)" \
+			"$(ib_root_legacy user ib)" "$(ib_root_legacy system ib)"
 	fi
 	for e_root in "$@"; do
+		[ -n "$e_root" ] || continue
 		ib_is_installed "$e_root/$e_id" "$e_id" "$e_h" || continue
 		IB_APP_DIR=$e_root/$e_id IB_APPID=$e_id IB_RECHASH=$e_h
 		IB_NAME_DISP=$(ib_get "$IB_APP_DIR/manifest.txt" name 2>/dev/null)
@@ -1735,10 +1894,17 @@ ib_install_main() {
 
 	IB_SYSTEM=0
 	[ "$rootmode" = system ] && IB_SYSTEM=1
-	if [ "$IB_OS" = macos ]; then
-		if [ $IB_SYSTEM = 1 ]; then IB_ROOT="/Library/Application Support/$rootname"; else IB_ROOT="$HOME/Library/Application Support/$rootname"; fi
-	else
-		if [ $IB_SYSTEM = 1 ]; then IB_ROOT=/opt/$rootname; else IB_ROOT=${XDG_DATA_HOME:-$HOME/.local/share}/$rootname; fi
+	rmode=user
+	[ $IB_SYSTEM = 1 ] && rmode=system
+	IB_ROOT=$(ib_root_path "$rmode" "$rootname")
+	# An app an older base put under the root of the day stays where it
+	# is: installing it again replaces that copy instead of orphaning it
+	# in the old folder, and the runtimes it shares with its neighbours
+	# are found beside it. Only this app's own folder is looked for.
+	oldroot=$(ib_root_legacy "$rmode" "$rootname")
+	if [ -n "$oldroot" ] && [ ! -e "$IB_ROOT/$IB_APPID" ] && [ -e "$oldroot/$IB_APPID" ]; then
+		ib_log "Keeping this app in the folder an earlier installer made: $oldroot/$IB_APPID"
+		IB_ROOT=$oldroot
 	fi
 	case $IB_ROOT in
 	*[\"\$\`\\]* | *"$nl"*) ib_fail "The install folder $IB_ROOT contains characters (\" \$ \` \\) that commands can't quote." ;;

@@ -175,9 +175,13 @@ The pack is used whatever the metadata's source: before downloading a
 4. Installs into `<root>/<appid>/` and one `<root>/<hash12>/` per `file`
    (`hash12` = base32 of SHA-256 of `appid` + the file's `name`, with no
    separator). The root is `~/.local/share/<rootname>` (honours
-   `XDG_DATA_HOME`) or `~/Library/Application Support/<rootname>`;
-   system-wide `/opt/<rootname>` or `/Library/Application
-   Support/<rootname>`. An app folder that already exists and whose
+   `XDG_DATA_HOME`) or `~/Library/<rootname>`; system-wide
+   `/opt/<rootname>` or `/Library/<rootname>`. Before 2026-09-20 the
+   macOS roots were `~/Library/Application Support/<rootname>` and
+   `/Library/Application Support/<rootname>` (design.md 11, item 16);
+   an app already installed in one of those keeps that folder when it
+   is installed again, and the engine looks there too when deciding
+   whether an app is already installed. An app folder that already exists and whose
    `.ib-owner` names this app (`--reinstall`, an interrupted install, or
    an install by an engine older than `.ib-installed`) is removed first,
    as its uninstaller would remove it; one that belongs to another app, or

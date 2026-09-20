@@ -186,6 +186,12 @@ Var UP_file
 Var UP_fmt
 Var UP_dest
 Var UP_strip
+Var UP_excl          ; unpack's 4th field: "|"-separated exclude globs
+Var UP_zargs         ; $UP_excl as 7za switches
+Var EX_pat
+Var EX_str
+Var EX_dir
+Var EX_rel
 Var SI_src
 Var SI_level
 Var SI_dest
@@ -2424,6 +2430,233 @@ Function SevenZip
   ${EndIf}
 FunctionEnd
 
+; ---- unpack excludes (docs/format.md, the `unpack` step's 4th field)
+;
+; A "|"-separated list of glob patterns, matched against each entry's
+; path inside the archive with "/" separators. "*" matches any run of
+; characters, "/" included; "?" matches one. An entry is left out when
+; its own path or any parent's matches. Matching is case-insensitive
+; here, as Windows paths are.
+;
+; Best effort by design: 7za is told what to skip so it never writes it,
+; and ExPrune deletes whatever still landed (nsisunz cannot be told).
+; A base that predates the field unpacks everything, so what a recipe
+; excludes must be something the app never needs.
+
+; Does $EX_str match the glob $EX_pat? $U_out = 1 if it does.
+Function GlobMatch
+  Push $0   ; index into $EX_str
+  Push $1   ; index into $EX_pat
+  Push $2   ; $EX_pat index of the last "*", -1 for none
+  Push $3   ; where in $EX_str that "*" started matching
+  Push $4   ; pattern character
+  Push $5   ; string character
+  Push $6   ; length of $EX_str
+  StrCpy $0 0
+  StrCpy $1 0
+  StrCpy $2 -1
+  StrCpy $3 0
+  StrLen $6 $EX_str
+  gm_loop:
+    ${If} $0 >= $6
+      Goto gm_tail
+    ${EndIf}
+    StrCpy $4 $EX_pat 1 $1
+    StrCpy $5 $EX_str 1 $0
+    ${If} $4 == "?"
+      IntOp $0 $0 + 1
+      IntOp $1 $1 + 1
+      Goto gm_loop
+    ${EndIf}
+    ${If} $4 == "*"
+      StrCpy $2 $1
+      StrCpy $3 $0
+      IntOp $1 $1 + 1
+      Goto gm_loop
+    ${EndIf}
+    ${If} $4 != ""
+    ${AndIf} $4 == $5
+      IntOp $0 $0 + 1
+      IntOp $1 $1 + 1
+      Goto gm_loop
+    ${EndIf}
+    ; No match here: let the last "*" swallow one more character.
+    ${If} $2 >= 0
+      IntOp $1 $2 + 1
+      IntOp $3 $3 + 1
+      StrCpy $0 $3
+      Goto gm_loop
+    ${EndIf}
+    StrCpy $U_out 0
+    Goto gm_end
+  gm_tail:
+  ; The string is used up; the pattern matches if only "*" is left.
+  ${Do}
+    StrCpy $4 $EX_pat 1 $1
+    ${If} $4 != "*"
+      ${Break}
+    ${EndIf}
+    IntOp $1 $1 + 1
+  ${Loop}
+  StrCpy $4 $EX_pat "" $1
+  ${If} $4 == ""
+    StrCpy $U_out 1
+  ${Else}
+    StrCpy $U_out 0
+  ${EndIf}
+  gm_end:
+  Pop $6
+  Pop $5
+  Pop $4
+  Pop $3
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; Is $EX_str named by one of $UP_excl's patterns? $U_out = 1 if it is.
+Function ExMatch
+  Push $0   ; what is left of the list
+  Push $1   ; one pattern
+  Push $2   ; scan position
+  Push $3   ; length of $0
+  Push $4   ; character
+  Push $EX_pat
+  StrCpy $U_out 0
+  StrCpy $0 $UP_excl
+  ${Do}
+    ${If} $0 == ""
+      ${Break}
+    ${EndIf}
+    StrLen $3 $0
+    StrCpy $2 0
+    ${Do}
+      ${If} $2 >= $3
+        ${Break}
+      ${EndIf}
+      StrCpy $4 $0 1 $2
+      ${If} $4 == "|"
+        ${Break}
+      ${EndIf}
+      IntOp $2 $2 + 1
+    ${Loop}
+    StrCpy $1 $0 $2
+    ${If} $2 >= $3
+      StrCpy $0 ""
+    ${Else}
+      IntOp $2 $2 + 1
+      StrCpy $0 $0 "" $2
+    ${EndIf}
+    ${If} $1 != ""
+      StrCpy $EX_pat $1
+      Call GlobMatch
+      ${If} $U_out = 1
+        ${Break}
+      ${EndIf}
+    ${EndIf}
+  ${Loop}
+  Pop $EX_pat
+  Pop $4
+  Pop $3
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; Delete anything under $EX_dir that $UP_excl names. $EX_rel is that
+; folder's own path inside the archive: "" at the top, otherwise ending
+; in "/". Recursive.
+Function ExPrune
+  Push $0   ; find handle
+  Push $1   ; entry name
+  Push $2   ; this folder (saved $EX_dir)
+  Push $3   ; saved $EX_rel
+  Push $4   ; the entry's path inside the archive
+  StrCpy $2 $EX_dir
+  StrCpy $3 $EX_rel
+  FindFirst $0 $1 "$2\*"
+  ep_loop:
+    StrCmp $1 "" ep_done
+    StrCmp $1 "." ep_next
+    StrCmp $1 ".." ep_next
+    StrCpy $4 "$3$1"
+    StrCpy $EX_str $4
+    Call ExMatch
+    ${If} $U_out = 1
+      ${Log} "  leaving out $4"
+      ${If} ${FileExists} "$2\$1\*.*"
+        RMDir /r "$2\$1"
+      ${Else}
+        Delete "$2\$1"
+      ${EndIf}
+    ${ElseIf} ${FileExists} "$2\$1\*.*"
+      StrCpy $EX_dir "$2\$1"
+      StrCpy $EX_rel "$4/"
+      Call ExPrune
+      StrCpy $EX_dir $2
+      StrCpy $EX_rel $3
+    ${EndIf}
+  ep_next:
+    FindNext $0 $1
+    Goto ep_loop
+  ep_done:
+  FindClose $0
+  Pop $4
+  Pop $3
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; 7-Zip's own exclusion switches for $UP_excl, into $U_out (7-Zip wants
+; "\" and does not drop an excluded folder's contents by itself, so each
+; pattern goes in twice). Empty when there is nothing to exclude.
+Function ExSevenZipArgs
+  Push $0   ; result
+  Push $1   ; what is left of the list
+  Push $2   ; scan position
+  Push $3   ; length of $1
+  Push $4   ; character
+  Push $5   ; one pattern
+  StrCpy $0 ""
+  StrCpy $1 $UP_excl
+  ${Do}
+    ${If} $1 == ""
+      ${Break}
+    ${EndIf}
+    StrLen $3 $1
+    StrCpy $2 0
+    ${Do}
+      ${If} $2 >= $3
+        ${Break}
+      ${EndIf}
+      StrCpy $4 $1 1 $2
+      ${If} $4 == "|"
+        ${Break}
+      ${EndIf}
+      IntOp $2 $2 + 1
+    ${Loop}
+    StrCpy $5 $1 $2
+    ${If} $2 >= $3
+      StrCpy $1 ""
+    ${Else}
+      IntOp $2 $2 + 1
+      StrCpy $1 $1 "" $2
+    ${EndIf}
+    ${If} $5 != ""
+      ${WordReplace} "$5" "/" "\" "+" $5
+      StrCpy $0 '$0 "-x!$5" "-x!$5\*"'
+    ${EndIf}
+  ${Loop}
+  StrCpy $U_out $0
+  Pop $5
+  Pop $4
+  Pop $3
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
 ; Move what is $SI_level folder levels below $SI_src into $SI_dest,
 ; merging folders that already exist (format.md: strip 2 turns Rust's
 ; one-folder-per-component tarball into one tree). Recursive.
@@ -2488,15 +2721,30 @@ Function Unpack
   Push $3
   Push $4
   CreateDirectory "$UP_dest"
+  ; $4 = 1 when we unpack into a staging folder first. Excludes need one
+  ; too, so that pruning can never touch anything already in $UP_dest.
+  StrCpy $4 0
   ${If} $UP_strip != "0"
   ${AndIf} $UP_strip != ""
+    StrCpy $4 1
+  ${EndIf}
+  ${If} $UP_excl != ""
+    StrCpy $4 1
+  ${EndIf}
+  ${If} $4 = 1
     StrCpy $0 "$TmpDir\ux"
     RMDir /r "$0"
   ${Else}
     StrCpy $0 $UP_dest
   ${EndIf}
   CreateDirectory "$0"
-  ${Log} "Unpacking $UP_fmt into $UP_dest (strip $UP_strip)"
+  ${If} $UP_excl != ""
+    ${Log} "Unpacking $UP_fmt into $UP_dest (strip $UP_strip, leaving out $UP_excl)"
+  ${Else}
+    ${Log} "Unpacking $UP_fmt into $UP_dest (strip $UP_strip)"
+  ${EndIf}
+  Call ExSevenZipArgs
+  StrCpy $UP_zargs $U_out
   ${If} $UP_fmt == "zip"
     nsisunz::Unzip "$UP_file" "$0"
     Pop $1
@@ -2506,7 +2754,7 @@ Function Unpack
     ${EndIf}
   ${ElseIf} $UP_fmt == "7z"
   ${OrIf} $UP_fmt == "tar"
-    StrCpy $U_a 'x -y -bd "-o$0" "$UP_file"'
+    StrCpy $U_a 'x -y -bd$UP_zargs "-o$0" "$UP_file"'
     Call SevenZip
     ${If} $U_out = 0
       ${FailWith} "Couldn't unpack $UP_file."
@@ -2541,7 +2789,7 @@ Function Unpack
       ${FailWith} "Decompressing $UP_file gave no tar file."
       Goto up_end
     ${EndIf}
-    StrCpy $U_a 'x -y -bd "-o$0" "$1\$3"'
+    StrCpy $U_a 'x -y -bd$UP_zargs "-o$0" "$1\$3"'
     Call SevenZip
     RMDir /r "$1"
     ${If} $U_out = 0
@@ -2552,10 +2800,20 @@ Function Unpack
     ${FailWith} "Unknown archive format '$UP_fmt'."
     Goto up_end
   ${EndIf}
-  ${If} $UP_strip != "0"
-  ${AndIf} $UP_strip != ""
+  ; Anything the unpacker still wrote, and everything nsisunz wrote,
+  ; goes now -- before the move, so $UP_dest never sees it.
+  ${If} $UP_excl != ""
+    StrCpy $EX_dir $0
+    StrCpy $EX_rel ""
+    Call ExPrune
+  ${EndIf}
+  ${If} $4 = 1
     StrCpy $SI_src $0
-    StrCpy $SI_level $UP_strip
+    ${If} $UP_strip == ""
+      StrCpy $SI_level 0
+    ${Else}
+      StrCpy $SI_level $UP_strip
+    ${EndIf}
     StrCpy $SI_dest $UP_dest
     Call StripInto
     RMDir /r "$0"
@@ -2723,11 +2981,12 @@ Function RunStep
   StrCpy $1 $U_out
   StrCpy $2 $F4
   ${If} $F1 S== "unpack"
-    ; unpack <format> <dest> <strip>
+    ; unpack <format> <dest> <strip> [<exclude>]
     StrCpy $UP_file $CurFile
     StrCpy $UP_fmt $F2
     StrCpy $UP_dest $1
     StrCpy $UP_strip $2
+    StrCpy $UP_excl $F5
     StrCpy $U_a "$1\"
     Call InAppFolders
     ${If} $U_out = 0
@@ -3230,6 +3489,7 @@ Function InstallMain
     StrCpy $UP_fmt $SrcFmt
     StrCpy $UP_dest $AppDir
     StrCpy $UP_strip $SrcStrip
+    StrCpy $UP_excl ""
     Call Unpack
     ${If} $Failed = 1
       Return
