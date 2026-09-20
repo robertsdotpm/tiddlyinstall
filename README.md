@@ -114,6 +114,7 @@ plans with a plan signing key.
 
 - [Design](docs/design.md): the whole design, decisions and open questions
 - [Packed files](docs/packed-files.md): files carried inside an installer (your own files, extra installers to run, offline copies of downloads), and how the installer stays signed
+- [macOS packaging](docs/macos-packaging.md): a self-contained `.app` in a `.dmg`, with measured sizes, and what Gatekeeper does to an app that isn't notarized
 - [Tested Python on old Windows](docs/windows-python-compat.md): known-good builds with working asyncio, per Windows version
 - [Test machines](docs/test-vms.md): VMs for testing installers
 - [Runtime catalog](runtime-catalog/README.md): where to download 13 languages' runtimes per OS, architecture and major version, mirrors, checksums, and per-version limitations (metadata backup; binaries live outside git)
