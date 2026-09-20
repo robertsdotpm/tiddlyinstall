@@ -1,5 +1,5 @@
 {
- "notes": "The mirror hosts, for tools/mirror_check.py and whatever fills them. A host is `ssh` (we have a shell there, so one walk of the tree answers everything) or `http` (we only have URLs, so the check asks for each file's headers). `holds` names the manifests that host is meant to carry, so a host can be for runtime downloads only. `base` is where a plan's URL for that host starts; a `%` in a file's own name has to be written `%25` there, because the server un-escapes a request path once (js/resolve.js mirrorURL). Nothing here uploads: it says what should be true, and the check says whether it is.",
+ "notes": "The mirror hosts, for tools/mirror_check.py and whatever fills them. `plain_http` says whether a host serves plain http -- which is what decides the URL order for machines too old for modern TLS (design.md, \"Which mirror a plan should name first\") -- and is null where nobody has checked yet, never guessed. A host is `ssh` (we have a shell there, so one walk of the tree answers everything) or `http` (we only have URLs, so the check asks for each file's headers). `holds` names the manifests that host is meant to carry, so a host can be for runtime downloads only. `base` is where a plan's URL for that host starts; a `%` in a file's own name has to be written `%25` there, because the server un-escapes a request path once (js/resolve.js mirrorURL). Nothing here uploads: it says what should be true, and the check says whether it is.",
  "hosts": [
   {
    "id": "ovh1",
@@ -10,7 +10,10 @@
    "root": "installer-builder-mirror",
    "base": "http://ovh1.p2pd.net/mirror",
    "plain_http": true,
-   "holds": ["runtime", "toolchain"],
+   "holds": [
+    "runtime",
+    "toolchain"
+   ],
    "notes": "Our own machine, and the only one that can serve a machine too old for modern TLS: plain http, no SNI needed (design.md 11.0 item 1). It also holds the build toolchain, which no installer downloads. Shared with soupchan, so nothing outside ~/installer-builder-mirror is ours to touch."
   },
   {
@@ -19,9 +22,11 @@
    "kind": "http",
    "enabled": false,
    "base": "",
-   "plain_http": false,
-   "holds": ["runtime"],
-   "notes": "Planned second live mirror (2026-09-20): zero egress, about $20 a year for 120 GB, and Cloudflare's network is nearer to most users than one box in France. Not set up -- there is no bucket and the account is the operator's -- so `enabled` is false and `base` is empty; fill both in and the check covers it with no other change. Not a replacement for ovh1: Cloudflare's TLS needs SNI and a modern cipher suite, which Windows XP and Vista cannot do, and it does not serve plain http, so the oldest machines still need ovh1 (design.md, \"Which mirror a plan should name first\")."
+   "plain_http": null,
+   "holds": [
+    "runtime"
+   ],
+   "notes": "Planned second live mirror (2026-09-20): zero egress, about $20 a year for 120 GB, and Cloudflare's network is nearer to most users than one box in France. Not set up -- there is no bucket and the account is the operator's -- so `enabled` is false and `base` is empty; fill both in and tools/mirror_check.py covers it with no other change. `plain_http` is null, not false, because NOBODY HAS TESTED IT: R2's own pub-<hash>.r2.dev URL is HTTPS-only, but on a custom domain \"Always Use HTTPS\" is a zone toggle that can be off and the minimum TLS version goes down to 1.0, and plain HTTP needs no SNI at all. So whether Windows XP and Vista can fetch from it is an empirical question, not a known limitation. design.md, \"Which mirror a plan should name first\", has the exact test and the zone settings it needs; set this to true or false once it has been run, and not before -- the URL order for old machines depends on it."
   }
  ]
 }
