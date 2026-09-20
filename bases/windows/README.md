@@ -183,6 +183,38 @@ the working folder and starts `exec`. With `console 1` it starts
 with the app's exit code. It is named `launch.exe` in every app folder;
 the shortcuts carry the app's name.
 
+## The review page (2026-09-20)
+
+The review page is the whole point of the installer being trusted
+(design.md section 3), and until this date it was a 503x390 window with
+a plain `EDIT` in it that needed a horizontal **and** a vertical scroll
+bar to show a URL. Three things changed, none of which alter what is
+shown -- only whether it can be read:
+
+- **The window.** MUI's is 300x140 dialog units and there is no wider
+  resource to switch to, so `IbGuiInit` (MUI's GUI-init hook, before any
+  page is built) resizes the window and the controls MUI put in it to
+  `IB_WANT_W` x `IB_WANT_H` (780x600 at 96 dpi), scaled by the screen's
+  DPI and **clamped to the work area** so an 800x600 machine still gets
+  a window that fits. nsDialogs takes the child rectangle's size when a
+  page is created, so the page follows with no work of its own. The
+  control ids it moves are modern.exe's, read off a running installer
+  rather than guessed (1018 page area, 1034/1037/1038/1039 header
+  background, title, subtitle and icon, 1036 and 1035 the rules,
+  1028/1256 branding, 1/2/3 the buttons).
+- **A rich edit.** `RICHEDIT50W` from msftedit.dll, or `RichEdit20W`
+  from riched20.dll, or the plain `EDIT` if neither loads. Automatic URL
+  detection is turned off: a link that looks clickable and is not is
+  worse than no link.
+- **No horizontal scroll bar,** on either control. A long URL wraps.
+
+The text itself is grouped so that the answer to "should I run this?"
+is at the top: a heading, then anything unusual (BEFORE YOU SAY YES),
+then IN SHORT -- what, from where, how big, from which hosts, where it
+goes, what it runs, who signed it -- and the evidence below that. It is
+the same shape as the other engine's, described in `ib-engine.sh` at
+"the review screen's shape".
+
 ## Engine notes
 
 - Downloads use INetC (`/CONNECTTIMEOUT 10 /RECEIVETIMEOUT 60`) and try
@@ -267,7 +299,22 @@ ibsig::check "<plan file>" "<base64 public key>"  ; Pop: ok | unsigned: … | ba
 ibsig::checkdoc "<file>" "<key>" "ib-revocations" ; the same for another document the plan key signs
 ibsig::cleanfile "<UTF-16LE file>"                ; rewrites it with unsafe characters as '?'
 ibsig::cleanstr "<text>"                          ; Pop: the cleaned text
+ibsig::richtext "<hwnd>" "<UTF-16LE file>"        ; the review text as RTF in a rich edit; Pop: ok | error: …
 ```
+
+`richtext` is why the review page can have headings, a colour for a
+warning and a monospace column for hashes with **one** control and no
+per-platform markup. The engine writes one plain-text summary (the same
+bytes that go in the log), and the plugin turns it into RTF by the same
+rules the Linux and macOS engine paints a terminal with (`ib_paint` in
+`bases/unix/ib-engine.sh`): `!!` red, `!` amber, A HEADING IN CAPITALS
+bold, `  Key: value` with a bold key at a tab stop, anything indented
+four spaces or more in Courier New and grey. Escaping `{`, `}`, `\` and
+non-ASCII happens there rather than in NSIS, so a record someone else
+wrote cannot break out of the markup. It sends `EM_SETTEXTEX` with a
+code page other than 1200, which is what makes a rich edit read a buffer
+starting `{\rtf` as RTF. If any of it fails the page falls back to the
+plain `EDIT` it used before, and says so in the log.
 
 Ed25519 verification is TweetNaCl 20140427 (public domain), cut down to
 what verifying needs (SHA-512, field and point arithmetic, reduction mod
@@ -278,10 +325,12 @@ for a plan, `ib-revocations<TAB>` for the revocation list (format.md
 section 7) -- so one kind's signature can never be read as the other's. The DLL links no C runtime and
 imports only `CreateFileW`, `ReadFile`, `WriteFile`, `SetFilePointer`,
 `GetFileSize`, `CloseHandle`, `GlobalAlloc`, `GlobalFree` and
-`lstrcpynW` from kernel32; it is built for Pentium MMX (no SSE2) with
-subsystem and OS version 5.1, so XP's loader takes it. Tested on XP SP3
-and Windows 10. The committed DLL (llvm-mingw 20260908, no timestamp) has
-sha256 `9b473a027c8e1161c6be7db401de557c3bab16fc023c88a848b3084496686c0b`.
+`lstrcpynW` from kernel32, and `SendMessageA` and `IsWindow` from user32
+(`richtext`, 2026-09-20); it is built for Pentium MMX (no SSE2) with
+subsystem and OS version 5.1, so XP's loader takes it. Tested on XP SP3,
+Windows 7 and Windows 11. The committed DLL (llvm-mingw 20260908, no
+timestamp) has sha256
+`249e9826ca62456778d05c0bf8de7e170b34e3c00c2b09dde9351ec2895dcdde`.
 
 ```sh
 LLVM_MINGW=~/.local/opt/llvm-mingw-20260908-msvcrt-ubuntu-22.04-x86_64 plugin-src/build.sh

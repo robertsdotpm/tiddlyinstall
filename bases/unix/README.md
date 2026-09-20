@@ -46,18 +46,23 @@ engine is this same file, so an engine change reaches macOS as soon as
 the base is built there -- and `out/ib-base-macos.zip` on this machine
 is whatever was last built there, nothing more.
 
-**Last built 2026-09-20T09:16:00Z** on the Mac test server (macOS 26.2
-`25C56`, arm64, `Matthew@the-mac-test-host`), from `ib-engine.sh` at commit
-`638c323` -- the first macOS base to carry the stale-plan engine
-(design.md 7.1: the nonce, the revocation list, `signed`/`maxage`).
+**Last built 2026-09-20T11:10:56Z** on the Mac test server (macOS 26.2
+`25C56`, arm64, `Matthew@the-mac-test-host`), from `ib-engine.sh` with the
+review screen's new shape (design.md section 3: BEFORE YOU SAY YES, IN
+SHORT, the evidence under it; colour on a terminal; a long command
+shortened on screen and kept whole in the log). The engine is one file,
+so that change reached macOS only when this was rebuilt.
 
 | | |
 | --- | --- |
-| `out/ib-base-macos.zip` | `24cfc47c6e2626a07ae48df274a7087398cf74310410f62a4db152ad6e769d6e`, 50,357 bytes |
-| the engine inside it | `1c752b6e7d3c764e841e608c00f2d058396d817c9cd37d8cc59f63415425984c` (`ib-engine.sh` with the four baked lines filled, and nothing else) |
+| `out/ib-base-macos.zip` | `b430ccb1fd7e85f7dc5cfbe662dfedb7a830239d19b6653e70bcf37b474df8ce`, 54,896 bytes |
+| the engine inside it | `09dba13e163b660bf1c958a8572d994197091509102c10b5965709784bad767e` (`ib-engine.sh` with the baked lines filled, and nothing else -- checked by diffing the two with those lines blanked) |
 | plan signing key | `97930ea1888d1a12` |
-| `IB_BUILD_TIME` / `IB_BUILD_EPOCH` | `2026-09-20T09:16:00Z` / `1789895760` |
-| signature | ad-hoc, `CDHash sha256=a872cf8261321936ca070324e33a2cf3239de888`; `codesign --verify --strict` is happy before and after the `ditto` round trip |
+| `IB_BUILD_TIME` / `IB_BUILD_EPOCH` | `2026-09-20T11:10:56Z` / `1789902656` |
+| signature | ad-hoc; `codesign --verify --strict` is happy on the bundle **and** on the bundle re-extracted from the zip with `ditto` ("valid on disk", "satisfies its Designated Requirement") |
+
+The one before this was `24cfc47c6e2626a07ae48df274a7087398cf74310410f62a4db152ad6e769d6e`
+(50,357 bytes), built 2026-09-20T09:16:00Z from the engine at `638c323`.
 
 `spctl -a` still rejects it, as it must: an ad-hoc signature is not a
 notarization ticket (docs/macos-packaging.md section 5).
@@ -97,6 +102,45 @@ terminal) it uses `osascript` dialogs: a short summary with **Details...**
 or "failed" dialog with the log path. Plan text is passed to
 `osascript` as arguments, never pasted into the AppleScript. If there is
 no way to ask and no `--yes`, it stops.
+
+## The review screen (2026-09-20)
+
+Everything the installer will do, before it does any of it (design.md
+section 3). One plain-text file, `$IB_WORK/summary.txt`, which is also
+what is appended to the log and what zenity, kdialog and the macOS
+dialog are given, so there is one text to get right and no way for the
+screen and the log to disagree. Its shape is set out in `ib-engine.sh`
+at "the review screen's shape"; in short:
+
+- a heading, then **BEFORE YOU SAY YES** (only when there is something:
+  an unsigned or stale plan, root, a prerequisite that cannot be
+  installed here, a runtime built for another architecture, a project
+  with no stored hash), then **IN SHORT** -- installs, from, runtime,
+  machine, download size, the *hosts* it downloads from, where it goes,
+  how many commands it runs, admin rights, who signed it, the record --
+  and the evidence under that.
+- nothing wraps past 78 columns except a URL, which is never broken.
+- `ib_hsize` turns bytes into "34.2 MB", `ib_hosts` turns a list of
+  URLs into the hosts behind them, `ib_wrap` wraps a `key: value` line
+  so the value keeps its column.
+
+**Colour** is added by `ib_paint`, and only ever on the way to a
+terminal: the file stays plain, so nothing escapes into a log, a pipe or
+`--yes` output. `ib_want_colour` says no unless stderr is a terminal,
+`TERM` is something that has colour, `NO_COLOR` is unset and this is not
+an unattended run; `IB_COLOR=0` or `1` overrides it either way. `tput` is
+used when it is there and a `TERM` list when it is not, because plenty
+of minimal systems have no terminfo at all.
+
+**In a terminal the text is longer than the screen**, so by the time the
+question appears the top of it has scrolled away. The short form is
+printed again immediately above the prompt -- the same text the macOS
+dialog shows with the full text behind "Details...".
+
+**zenity** gets `--font="Monospace 10"` (columns and hashes do not line
+up in a proportional font), a bigger window and `--ok-label=Install`. A
+zenity too old for those options exits 255, which a cancel never is, and
+the call is retried without them.
 
 ## Where the metadata comes from
 

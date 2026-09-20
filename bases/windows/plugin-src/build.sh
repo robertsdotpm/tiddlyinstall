@@ -27,6 +27,6 @@ rm -f "$t"
 	ibsig.c plancheck.c ed25519_verify.c \
 	-Wl,--entry,_DllMain@12 -Wl,--major-subsystem-version,5 -Wl,--minor-subsystem-version,1 \
 	-Wl,--major-os-version,5 -Wl,--minor-os-version,1 -Wl,--no-insert-timestamp -Wl,-s \
-	-lkernel32 "$($cc_win -print-libgcc-file-name)"
+	-lkernel32 -luser32 "$($cc_win -print-libgcc-file-name)"
 ls -l ../plugins/x86-unicode/ibsig.dll
 sha256sum ../plugins/x86-unicode/ibsig.dll

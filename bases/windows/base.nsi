@@ -113,6 +113,13 @@ Var UnsignedOK       ; 1: /unsigned-plan
 Var HasBlock         ; 1: an appended metadata block
 Var ModeA            ; 1: signed base with no block (design.md 3): file name + built-in backend only
 Var SignedBy
+Var CmdH             ; every command in full, for the log
+Var SumHosts         ; the hosts the review page says files come from
+Var SumBytes         ; how many bytes it would download
+Var SumFiles         ; how many files
+Var SumRuns          ; how many commands it would run
+Var WinDX            ; how much wider the window was made at GUI init
+Var WinDY
 Var PackOff          ; offset of the pack in $EXEPATH (0 = none)
 Var PackLen
 Var TokRuntime       ; plain file-name tokens
@@ -154,6 +161,9 @@ Var TgtLaunch
 Var TgtAdmin
 Var TgtNote
 Var TgtFail
+Var AsciiTmp          ; an ASCII temp folder for the install command, "" to change nothing
+Var TmpSaved          ; TMP and TEMP as this machine had them, put back after
+Var TempSaved
 ; system-wide prerequisites (format.md "Prerequisites"): the block's `need` entries
 Var NdCount          ; how many
 Var NdSat            ; one character per need, in order: 1 present, 0 missing
@@ -250,8 +260,14 @@ Var UnDeskAll
 !macroend
 !define Sum "!insertmacro Sum"
 
+!macro SumCmd MSG
+  FileWriteUTF16LE $CmdH "${MSG}$\r$\n"
+!macroend
+!define SumCmd "!insertmacro SumCmd"
+
 ; ---------------------------------------------------------------- pages
 
+!define MUI_CUSTOMFUNCTION_GUIINIT IbGuiInit
 !include "MUI2.nsh"
 !define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\modern-install.ico"
 !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall.ico"
@@ -2092,6 +2108,91 @@ FunctionEnd
 ; to install it, nfile/nurl (an installer, checked by SHA-256) and nrun
 ; (run with administrator rights; exit codes in nok mean success).
 
+; Is $U_a made only of printable ASCII? -> $U_out 1 or 0. The characters
+; are compared against a literal set because NSIS cannot turn a character
+; into a number.
+Function IsAsciiStr
+  Push $0
+  Push $1
+  Push $2
+  Push $3
+  StrLen $0 "$U_a"
+  StrCpy $U_out 1
+  StrCpy $1 0
+  ${Do}
+    ${If} $1 >= $0
+      ${Break}
+    ${EndIf}
+    StrCpy $3 $U_a 1 $1
+    StrCpy $2 0
+    ${Do}
+      ${If} $2 >= ${ASCII_PRINTABLE_LEN}
+        StrCpy $U_out 0                    ; not in the set: not ASCII
+        ${Break}
+      ${EndIf}
+      StrCpy $U_b "${ASCII_PRINTABLE}" 1 $2
+      ${If} $3 S== $U_b
+        ${Break}
+      ${EndIf}
+      IntOp $2 $2 + 1
+    ${Loop}
+    ${If} $U_out = 0
+      ${Break}
+    ${EndIf}
+    IntOp $1 $1 + 1
+  ${Loop}
+  Pop $3
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; A temporary folder the project's install command can read, or "" to
+; leave TMP and TEMP alone -> $U_out.
+;
+; Python 2's pip joins %TEMP% as a byte string with file names as text and
+; dies on any byte over 0x7f, so on an account whose name is not ASCII it
+; can install nothing (docs/test-results.md, "Where the two refusals
+; fire"). The 8.3 short name of that same folder is ASCII where the volume
+; makes one -- C:\Users\JRGMLL~1\AppData\Local\Temp -- and is the same
+; folder, so nothing moves and nothing is created.
+;
+; "" means "change nothing", for both reasons it can happen: %TEMP% is
+; already ASCII (the usual case, and no machine should have its
+; environment altered for nothing), or this volume has 8.3 names switched
+; off and there is no ASCII spelling to use, which the `ascii` prerequisite
+; has already refused before anything was installed.
+Function AsciiTemp
+  Push $0
+  Push $1
+  ReadEnvStr $0 "TEMP"
+  StrCpy $U_a $0
+  Call IsAsciiStr
+  ${If} $U_out = 1
+    StrCpy $U_out ""
+    Goto at_done
+  ${EndIf}
+  ClearErrors
+  GetFullPathName /SHORT $1 "$0"
+  ${If} ${Errors}
+  ${OrIf} $1 == ""
+  ${OrIf} $1 S== $0
+  ${OrIfNot} ${FileExists} "$1\*.*"
+    StrCpy $U_out ""                       ; no other spelling of this folder
+    Goto at_done
+  ${EndIf}
+  StrCpy $U_a $1
+  Call IsAsciiStr
+  ${If} $U_out = 1
+    StrCpy $U_out $1
+  ${Else}
+    StrCpy $U_out ""
+  ${EndIf}
+  at_done:
+  Pop $1
+  Pop $0
+FunctionEnd
+
 ; One check, $F1 kind and $F2.. its fields -> $U_out 1 if it passes.
 ; Unknown kinds never pass.
 Function NeedCheckOne
@@ -2141,39 +2242,35 @@ Function NeedCheckOne
     ${EnableX64FSRedirection}
     ${Log} "  check file $R0: $U_out"
   ${ElseIf} $F1 S== "ascii"
-    ; ascii <path>, %VARIABLES% expanded: passes when every character of
-    ; the expanded path is a printable ASCII one. Not something to
-    ; install -- it is how a `need` says a property of this machine has
-    ; to hold (Python 2's pip and a non-ASCII %TEMP%, format.md
-    ; "Prerequisites"). The characters are compared against a literal
-    ; set because NSIS has no character-to-number conversion.
+    ; ascii <path>, %VARIABLES% expanded: passes when the path can be
+    ; handed to a program as plain ASCII. Not something to install -- it
+    ; is how a `need` says a property of this machine has to hold
+    ; (Python 2's pip and a non-ASCII %TEMP%, format.md "Prerequisites").
+    ; The 8.3 short name counts, because where the volume makes one the
+    ; engine hands *that* to the install command instead (AsciiTemp): the
+    ; same folder, spelt in ASCII. A volume with 8.3 names switched off
+    ; has no such spelling, and then the need really is missing.
     ExpandEnvStrings $R0 "$F2"
-    StrLen $R1 "$R0"
-    StrCpy $U_out 1
-    StrCpy $R2 0
-    ${Do}
-      ${If} $R2 >= $R1
-        ${Break}
+    StrCpy $U_a $R0
+    Call IsAsciiStr
+    StrCpy $R2 "as it is"
+    ${If} $U_out = 0
+      ClearErrors
+      GetFullPathName /SHORT $R1 "$R0"
+      ; It must be a real folder, spelt differently. GetShortPathName
+      ; fails on a path that does not exist (measured: it returns nothing
+      ; and ERROR_FILE_NOT_FOUND), and a caller must not be told a folder
+      ; has an ASCII name because the lookup fell back to the long one.
+      ${IfNot} ${Errors}
+      ${AndIf} $R1 != ""
+      ${AndIf} $R1 S!= $R0
+      ${AndIf} ${FileExists} "$R1\*.*"
+        StrCpy $U_a $R1
+        Call IsAsciiStr
+        StrCpy $R2 "as its 8.3 short name, $R1"
       ${EndIf}
-      StrCpy $R5 $R0 1 $R2
-      StrCpy $R4 0
-      ${Do}
-        ${If} $R4 >= ${ASCII_PRINTABLE_LEN}
-          StrCpy $U_out 0                  ; not in the set: not ASCII
-          ${Break}
-        ${EndIf}
-        StrCpy $R3 "${ASCII_PRINTABLE}" 1 $R4
-        ${If} $R5 S== $R3
-          ${Break}
-        ${EndIf}
-        IntOp $R4 $R4 + 1
-      ${Loop}
-      ${If} $U_out = 0
-        ${Break}
-      ${EndIf}
-      IntOp $R2 $R2 + 1
-    ${Loop}
-    ${Log} "  check ascii $F2 ($R1 characters): $U_out"
+    ${EndIf}
+    ${Log} "  check ascii $F2 ($R2): $U_out"
   ${Else}
     ${Log} "  check $F1: not a check this installer knows; counts as missing"
   ${EndIf}
@@ -2949,37 +3046,382 @@ Function .onInit
   Call WriteSummary
 FunctionEnd
 
-; The transparency text (design.md section 3), one line per row.
+; "1 file" / "2 files": no "(s)" on a screen someone is asked to consent to.
+; $U_a is the count, $U_b the singular noun; $U_out is the noun.
+Function Plural
+  ${If} $U_a = 1
+    StrCpy $U_out $U_b
+  ${Else}
+    Push $0
+    StrCpy $0 "s"
+    StrCpy $U_out "$U_b$0"
+    Pop $0
+  ${EndIf}
+FunctionEnd
+
+; One command in $U_a, written to the summary as a line that cannot run
+; off the screen. The worst case in the catalogue is Ruby's relocation
+; step: 831 characters of shell on one line. Wrapped into the body that
+; is a dozen lines nobody can review, and a screen nobody reviews is
+; what teaches people to click through. So a long one is shortened here
+; and kept in full in the log.
+Function CmdLine
+  Push $0
+  Push $1
+  ${SumCmd} "  $U_a"
+  StrLen $0 $U_a
+  ${If} $0 <= 96
+    ${Sum} "     $U_a"
+  ${Else}
+    StrCpy $1 $U_a 93
+    ${Sum} "     $1..."
+    ${Sum} "     ($0 characters in all; the whole command is at the end of the log)"
+  ${EndIf}
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; 35945651 -> "34.2 MB". Integer arithmetic, like everything else here.
+Function HumanSize
+  Push $0
+  Push $1
+  Call DecNum
+  StrCpy $0 $U_out
+  ${If} $0 < 1024
+    StrCpy $U_out "$0 bytes"
+  ${ElseIf} $0 < 1048576
+    IntOp $1 $0 % 1024
+    IntOp $1 $1 * 10
+    IntOp $1 $1 / 1024
+    IntOp $0 $0 / 1024
+    StrCpy $U_out "$0.$1 kB"
+  ${ElseIf} $0 < 1073741824
+    IntOp $1 $0 % 1048576
+    IntOp $1 $1 * 10
+    IntOp $1 $1 / 1048576
+    IntOp $0 $0 / 1048576
+    StrCpy $U_out "$0.$1 MB"
+  ${Else}
+    IntOp $1 $0 % 1073741824
+    IntOp $1 $1 * 10
+    IntOp $1 $1 / 1073741824
+    IntOp $0 $0 / 1073741824
+    StrCpy $U_out "$0.$1 GB"
+  ${EndIf}
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; The host part of the URL in $U_a -> $U_out ("" if it has none). What a
+; person wants near the top of the review page is who they are about to
+; download from, not four 200-character URLs.
+Function HostOf
+  Push $0
+  Push $1
+  Push $2
+  StrCpy $U_out ""
+  StrCpy $0 0
+  StrLen $2 $U_a
+  ${Do}
+    ${If} $0 >= $2
+      Goto host_done
+    ${EndIf}
+    StrCpy $1 $U_a 3 $0
+    ${If} $1 == "://"
+      IntOp $0 $0 + 3
+      ${Break}
+    ${EndIf}
+    IntOp $0 $0 + 1
+  ${Loop}
+  StrCpy $U_out $U_a "" $0
+  StrCpy $0 0
+  StrLen $2 $U_out
+  ${Do}
+    ${If} $0 >= $2
+      ${Break}
+    ${EndIf}
+    StrCpy $1 $U_out 1 $0
+    ${If} $1 == "/"
+    ${OrIf} $1 == "?"
+    ${OrIf} $1 == "#"
+      StrCpy $U_out $U_out $0
+      ${Break}
+    ${EndIf}
+    IntOp $0 $0 + 1
+  ${Loop}
+  ; user@host
+  StrCpy $0 0
+  StrLen $2 $U_out
+  ${Do}
+    ${If} $0 >= $2
+      ${Break}
+    ${EndIf}
+    StrCpy $1 $U_out 1 $0
+    ${If} $1 == "@"
+      IntOp $0 $0 + 1
+      StrCpy $U_out $U_out "" $0
+      ${Break}
+    ${EndIf}
+    IntOp $0 $0 + 1
+  ${Loop}
+host_done:
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; Is $U_b somewhere in $U_a? $U_out = 1 or 0.
+Function StrHas
+  Push $0
+  Push $1
+  Push $2
+  Push $3
+  StrCpy $U_out 0
+  StrLen $2 $U_a
+  StrLen $3 $U_b
+  StrCpy $0 0
+  ${Do}
+    IntOp $1 $0 + $3
+    ${If} $1 > $2
+      ${Break}
+    ${EndIf}
+    StrCpy $1 $U_a $3 $0
+    ${If} $1 S== $U_b
+      StrCpy $U_out 1
+      ${Break}
+    ${EndIf}
+    IntOp $0 $0 + 1
+  ${Loop}
+  Pop $3
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; Add the host of the URL in $U_a to $SumHosts, once. $SumHosts is kept
+; as ", a, b, " so a membership test is a plain substring search.
+Function AddHost
+  Push $0
+  Push $1
+  Call HostOf
+  StrCpy $0 $U_out
+  ${If} $0 != ""
+    ${If} $SumHosts == ""
+      StrCpy $SumHosts ", "
+    ${EndIf}
+    StrCpy $1 $U_a
+    StrCpy $U_a $SumHosts
+    StrCpy $U_b ", $0, "
+    Call StrHas
+    StrCpy $U_a $1
+    ${If} $U_out == 0
+      StrCpy $SumHosts "$SumHosts$0, "
+    ${EndIf}
+  ${EndIf}
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; ", a, b, " -> "a, b"
+Function HostList
+  StrLen $U_out $SumHosts
+  ${If} $U_out < 4
+    StrCpy $U_out ""
+  ${Else}
+    IntOp $U_out $U_out - 4
+    StrCpy $U_out $SumHosts $U_out 2
+  ${EndIf}
+FunctionEnd
+
+; The transparency text (design.md section 3). Same shape as the other
+; engine's (bases/unix/ib-engine.sh, "the review screen's shape"): what
+; someone needs to decide with at the top, the evidence below it. The
+; file is plain text -- it is what goes in the log -- and ibsig::richtext
+; marks it up for the rich edit on the review page.
 Function WriteSummary
   Push $0
   Push $1
+  Push $2
+
+  ; First pass: how much would be downloaded, from where, and how many
+  ; commands would run. None of it is printed until it can be summed up.
+  StrCpy $SumHosts ""
+  StrCpy $SumBytes 0
+  StrCpy $SumFiles 0
+  StrCpy $SumRuns 0
+  Call OpenBlock
+  ${Do}
+    ${IbRead} $BH
+    ${If} ${Errors}
+      ${Break}
+    ${EndIf}
+    Call IbParseLine
+    ${If} $K S== "[target]"
+      ${Break}
+    ${ElseIf} $K S== "file"
+      IntOp $SumFiles $SumFiles + 1
+      StrCpy $U_a $F4
+      Call DecNum
+      IntOp $SumBytes $SumBytes + $U_out
+      StrCpy $2 "first"
+    ${ElseIf} $K S== "url"
+    ${AndIf} $2 == "first"
+      StrCpy $U_a $F1
+      Call AddHost
+    ${ElseIf} $K S== "step"
+      ${If} $F1 S== "run"
+        IntOp $SumRuns $SumRuns + 1
+      ${EndIf}
+    ${EndIf}
+  ${Loop}
+  FileClose $BH
+  ${If} $SrcLine > 0
+    IntOp $SumFiles $SumFiles + 1
+    StrCpy $U_a $SrcSize
+    Call DecNum
+    IntOp $SumBytes $SumBytes + $U_out
+    ${If} $SrcUrl1 != ""
+      StrCpy $U_a $SrcUrl1
+      Call AddHost
+    ${EndIf}
+  ${EndIf}
+
   FileOpen $SumH "$PLUGINSDIR\summary.txt" w
   FileWriteWord $SumH 0xFEFF
-  ${Sum} "App:  $AppName   (install id $AppId)"
-  ${If} $RecSource != ""
-    ${Sum} "Source:  $RecSource"
+  FileOpen $CmdH "$PLUGINSDIR\commands.txt" w
+  FileWriteWord $CmdH 0xFEFF
+  ${SumCmd} "Every command in full:"
+  ${Sum} "======================================================================"
+  ${Sum} "  TiddlyInstall will install:  $AppName"
+  ${Sum} "  Nothing has been changed yet."
+  ${Sum} "======================================================================"
+
+  ; Anything unusual, first, where the decision is made. Every one of
+  ; these is also said again, in full, in its own section below.
+  StrCpy $0 0
+  ${If} $PlanWarn != ""
+    ${Sum} ""
+    ${Sum} "BEFORE YOU SAY YES"
+    StrCpy $0 1
+    ${Sum} "!! $PlanWarn"
   ${EndIf}
+  ${If} $AgeWarn != ""
+    ${If} $0 = 0
+      ${Sum} ""
+      ${Sum} "BEFORE YOU SAY YES"
+      StrCpy $0 1
+    ${EndIf}
+    ${Sum} "!! $AgeWarn"
+  ${EndIf}
+  ${If} $NdMissing > 0
+  ${OrIf} $NeedAdmin = 1
+  ${OrIf} $SignedBy == ""
+  ${OrIf} $SrcSha == "-"
+  ${OrIf} $TgtRtArch != ""
+    ${If} $0 = 0
+      ${Sum} ""
+      ${Sum} "BEFORE YOU SAY YES"
+      StrCpy $0 1
+    ${EndIf}
+  ${EndIf}
+  ${If} $NdMissing > 0
+    ${Sum} "!  $NdLabels must be installed for the whole computer first, which needs administrator rights."
+  ${ElseIf} $NeedAdmin = 1
+    ${Sum} "!  This install needs administrator rights."
+  ${EndIf}
+  ${If} $SignedBy == ""
+    ${Sum} "!  This installer is not signed, so Windows cannot tell you who made it."
+  ${EndIf}
+  ${If} $SrcSha == "-"
+    ${Sum} "!  The project is not pinned by a checksum: it is identified by its commit and fetched over HTTPS."
+  ${EndIf}
+  ${If} $TgtRtArch != ""
+    Call ArchNote
+    ${If} $U_out != ""
+      ${Sum} "!  The runtime being installed is not this machine's architecture$U_out"
+    ${EndIf}
+  ${EndIf}
+
+  ${Sum} ""
+  ${Sum} "IN SHORT"
+  ${Sum} "  Installs:     $AppName   (install id $AppId)"
   ${If} $Project != ""
-    ${Sum} "Project / package:  $Project"
+    ${Sum} "  Project:      $Project"
+  ${EndIf}
+  ${If} $RecSource != ""
+    ${Sum} "  From:         $RecSource"
   ${EndIf}
   ${If} $TgtRuntime != ""
     ${If} $TgtRtArch == ""
-      ${Sum} "Runtime:  $TgtRuntime"
+      ${Sum} "  Runtime:      $TgtRuntime"
     ${Else}
       Call ArchWords
       StrCpy $0 $U_out
       Call ArchNote
-      ${Sum} "Runtime:  $TgtRuntime, $0$U_out"
+      ${Sum} "  Runtime:      $TgtRuntime, $0$U_out"
     ${EndIf}
   ${EndIf}
-  ${Sum} "This machine:  Windows $WinVer build $WinBuild, $Arch (plan block $TgtNo)"
-  ${Sum} ""
-  ${If} $NdCount > 0
-    Call NeedSummary
-    ${Sum} ""
+  ${Sum} "  Machine:      Windows $WinVer build $WinBuild, $Arch (plan block $TgtNo)"
+  ${If} $SumFiles > 0
+    StrCpy $U_a $SumBytes
+    Call HumanSize
+    StrCpy $0 $U_out
+    StrCpy $U_a $SumFiles
+    StrCpy $U_b "file"
+    Call Plural
+    ${If} $PackLen > 0
+      ${Sum} "  Download:     up to $SumFiles $U_out, $0; files packed inside this installer are used instead of downloading them"
+    ${Else}
+      ${Sum} "  Download:     $SumFiles $U_out, $0 in total, each checked against its SHA-256"
+    ${EndIf}
+    Call HostList
+    ${If} $U_out != ""
+      ${Sum} "  Sources:      $U_out"
+    ${EndIf}
   ${EndIf}
-  ${Sum} "Files to download (each is checked by SHA-256 before use):"
+  ${Sum} "  Into:         $AppDir"
+  ${Sum} "                (plus one folder per dependency beside it; nothing else on this machine is changed)"
+  ${If} $SumRuns > 0
+    StrCpy $U_a $SumRuns
+    StrCpy $U_b "command"
+    Call Plural
+    ${Sum} "  Then runs:    $SumRuns $U_out on this machine (listed below)"
+  ${EndIf}
+  ${If} $NdMissing > 0
+    ${Sum} "  Admin rights: yes, to install $NdLabels for the whole computer"
+  ${ElseIf} $NeedAdmin = 1
+    ${Sum} "  Admin rights: yes"
+  ${Else}
+    ${Sum} "  Admin rights: not needed"
+  ${EndIf}
+  ${If} $SignedBy != ""
+    ${Sum} "  Signed by:    $SignedBy (as the certificate names it; Windows checks the signature)"
+  ${Else}
+    ${Sum} "  Signed by:    nobody (this installer is unsigned)"
+  ${EndIf}
+  ${Sum} "  Record:       $RecHash"
+
+  ${If} $NdCount > 0
+    ${Sum} ""
+    Call NeedSummary
+  ${EndIf}
+
+  ${Sum} ""
+  ${Sum} "WHAT IT DOWNLOADS"
+  ${If} $SumFiles = 0
+    ${Sum} "  Nothing."
+  ${Else}
+    StrCpy $U_a $SumBytes
+    Call HumanSize
+    StrCpy $0 $U_out
+    StrCpy $U_a $SumFiles
+    StrCpy $U_b "file"
+    Call Plural
+    ${Sum} "  $SumFiles $U_out, $0 in total. Each one is checked against the SHA-256"
+    ${Sum} "  below before it is used; a file that does not match is not installed."
+  ${EndIf}
   StrCpy $1 ""
+  StrCpy $2 0
   Call OpenBlock
   ${Do}
     ${IbRead} $BH
@@ -2995,117 +3437,332 @@ Function WriteSummary
       Call FolderHash
       StrCpy $CurDir "$Root\$U_out"
       StrCpy $CurFile "$DlDir\$F2"
-      ${Sum} "  $F2   ($F4 bytes)"
-      ${Sum} "      sha256 $F3"
+      IntOp $2 $2 + 1
+      StrCpy $U_a $F4
+      Call HumanSize
+      ${Sum} ""
+      ${Sum} "  $2. $F2"
+      ${Sum} "     $U_out ($F4 bytes)"
+      ${Sum} "     sha256 $F3"
       StrCpy $1 "first"
-      ${Sum} "      into $CurDir"
+      ${Sum} "     into   $CurDir"
     ${ElseIf} $K S== "url"
-    ${AndIf} $1 == "first"
-      ${Sum} "      from $F1"
-      StrCpy $1 ""
+      ${If} $1 == "first"
+        ${Sum} "     from   $F1"
+        StrCpy $1 "more"
+      ${ElseIf} $1 == "more"
+        ${Sum} "     or     $F1"
+      ${EndIf}
     ${ElseIf} $K S== "step"
-      StrCpy $U_a "$F2"
-      ${If} $F3 != ""
-        StrCpy $U_a "$F2  $F3"
+      ${If} $F1 S== "run"
+        ; a `run` step may carry its own description as a second value
+        ; (format.md "Steps"); it is what a person can actually judge
+        ${If} $F3 != ""
+          ${Sum} "     then runs a command: $F3"
+        ${Else}
+          ${Sum} "     then runs a command:"
+        ${EndIf}
+        StrCpy $U_a "$F2"
+        Call Subst
+        StrCpy $U_a $U_out
+        Call CmdLine
+      ${Else}
+        StrCpy $U_a "$F2"
+        ${If} $F3 != ""
+          StrCpy $U_a "$F2  $F3"
+        ${EndIf}
+        ${If} $F4 != ""
+          StrCpy $U_a "$U_a  $F4"
+        ${EndIf}
+        Call Subst
+        ${Sum} "     then $F1: $U_out"
       ${EndIf}
-      ${If} $F4 != ""
-        StrCpy $U_a "$U_a  $F4"
-      ${EndIf}
-      Call Subst
-      ${Sum} "      then $F1: $U_out"
     ${EndIf}
   ${Loop}
   FileClose $BH
   ${If} $SrcLine > 0
-    ${Sum} "  $SrcName   ($SrcSize bytes, the app's source)"
+    IntOp $2 $2 + 1
+    StrCpy $U_a $SrcSize
+    Call HumanSize
+    ${Sum} ""
+    ${Sum} "  $2. $SrcName  (the project itself)"
+    ${Sum} "     $U_out ($SrcSize bytes)"
     ${If} $SrcSha == "-"
-      ${Sum} "      no stored SHA-256: identified by its commit, fetched over HTTPS"
+      ${Sum} "     no stored SHA-256: identified by its commit, fetched over HTTPS"
     ${Else}
-      ${Sum} "      sha256 $SrcSha"
+      ${Sum} "     sha256 $SrcSha"
     ${EndIf}
     ${If} $SrcUrl1 != ""
-      ${Sum} "      from $SrcUrl1"
+      ${Sum} "     from   $SrcUrl1"
     ${EndIf}
   ${EndIf}
   ${If} $PackLen > 0
+    ${Sum} ""
     ${Sum} "  Files packed inside this installer are used instead of downloading them."
   ${EndIf}
+
   ${Sum} ""
-  ${Sum} "Install folder:  $AppDir"
+  ${Sum} "WHAT IT RUNS ON THIS MACHINE"
   StrCpy $CurDir ""
   StrCpy $CurFile ""
   ${If} $TgtInstall != ""
+    ${Sum} "  Installs the project with:"
     StrCpy $U_a $TgtInstall
     Call Subst
-    ${Sum} "Then runs:  $U_out"
+    StrCpy $U_a $U_out
+    Call CmdLine
   ${EndIf}
+  ${Sum} "  Starts the app with (this is what the shortcuts and launch.exe run):"
   StrCpy $U_a $TgtLaunch
   Call Subst
-  ${Sum} "Launch command:  $U_out"
+  StrCpy $U_a $U_out
+  Call CmdLine
+
+  ${Sum} ""
+  ${Sum} "WHERE FILES GO"
+  ${Sum} "  App:  $AppDir"
+
+  ${Sum} ""
+  ${Sum} "SHORTCUTS AND UNINSTALLER"
   ${If} $Menu == "0"
-    ${Sum} "Shortcuts:  none in the Start menu (this app asks for no menu entry)"
+    ${Sum} "  Shortcuts:  none in the Start menu (this app asks for no menu entry)"
     ${If} $WantDesktop == "1"
-      ${Sum} "            a desktop shortcut '$SafeName'"
+      ${Sum} "              a desktop shortcut '$SafeName'"
     ${EndIf}
-    ${Sum} "To start it:  $AppDir\launch.exe, or run this installer again"
+    ${Sum} "  To start it:  $AppDir\launch.exe, or run this installer again"
   ${Else}
     ${If} $RootMode == "system"
-      ${Sum} "Shortcuts:  Start menu folder '$SafeName' for all users, holding '$SafeName' and 'Uninstall $SafeName'"
+      ${Sum} "  Shortcuts:  Start menu folder '$SafeName' for all users, holding '$SafeName' and 'Uninstall $SafeName'"
     ${Else}
-      ${Sum} "Shortcuts:  Start menu folder '$SafeName', holding '$SafeName' and 'Uninstall $SafeName'"
+      ${Sum} "  Shortcuts:  Start menu folder '$SafeName', holding '$SafeName' and 'Uninstall $SafeName'"
     ${EndIf}
     ${If} $WantDesktop == "1"
-      ${Sum} "            and a desktop shortcut '$SafeName'"
+      ${Sum} "              and a desktop shortcut '$SafeName'"
     ${EndIf}
   ${EndIf}
   ${If} $RootMode == "system"
-    ${Sum} "Uninstaller:  $AppDir\uninstall.exe, listed in Add/Remove Programs (HKLM ...\Uninstall\ib-$AppId)"
+    ${Sum} "  Uninstaller:  $AppDir\uninstall.exe, listed in Add/Remove Programs (HKLM ...\Uninstall\ib-$AppId)"
   ${Else}
-    ${Sum} "Uninstaller:  $AppDir\uninstall.exe, listed in Add/Remove Programs (HKCU ...\Uninstall\ib-$AppId)"
+    ${Sum} "  Uninstaller:  $AppDir\uninstall.exe, listed in Add/Remove Programs (HKCU ...\Uninstall\ib-$AppId)"
   ${EndIf}
-  ${Sum} "PATH:  not changed"
-  ${If} $NdMissing > 0
-    ${Sum} "Administrator rights:  yes, to install $NdLabels for the whole computer"
-  ${ElseIf} $NeedAdmin = 1
-    ${Sum} "Administrator rights:  yes"
-  ${Else}
-    ${Sum} "Administrator rights:  not needed"
-  ${EndIf}
+  ${Sum} "  PATH:  not changed"
   ${If} $TgtNote != ""
-    ${Sum} "Note:  $TgtNote"
+    ${Sum} ""
+    ${Sum} "NOTE"
+    ${Sum} "  $TgtNote"
   ${EndIf}
+
   ${Sum} ""
+  ${Sum} "WHERE THIS INSTALLER AND ITS SETTINGS CAME FROM"
   ${If} $SignedBy != ""
-    ${Sum} "Signed by:  $SignedBy (as the certificate names it; Windows checks the signature)"
+    ${Sum} "  Signed by:  $SignedBy (as the certificate names it; Windows checks the signature)"
   ${Else}
-    ${Sum} "Signed by:  nobody (this installer is unsigned)"
+    ${Sum} "  Signed by:  nobody (this installer is unsigned)"
   ${EndIf}
   ${If} $ModeA = 1
-    ${Sum} "Mode:  signed by TiddlyInstall (mode A): installs only what its file name names, from ${IB_BACKEND}"
+    ${Sum} "  Mode:       signed by TiddlyInstall (mode A): installs only what its file name names, from ${IB_BACKEND}"
   ${EndIf}
-  ${Sum} "Settings from:  $MetaSrc"
-  ${Sum} "Record:  $RecHash"
-  ${Sum} "Plan:  $PlanSrc"
+  ${Sum} "  Settings:   $MetaSrc"
+  ${Sum} "  Record:     $RecHash"
+  ${Sum} "  Plan:       $PlanSrc"
   ${If} $PlanSigned != ""
     ${If} $PlanKind == "fetched"
-      ${Sum} "Plan signed:  $PlanSigned (fetched now)"
+      ${Sum} "  Plan signed: $PlanSigned (fetched now)"
     ${Else}
-      ${Sum} "Plan signed:  $PlanSigned (carried in this installer)"
+      ${Sum} "  Plan signed: $PlanSigned (carried in this installer)"
     ${EndIf}
   ${EndIf}
   ${If} $RevokeNote != ""
-    ${Sum} "Revocation list:  $RevokeNote"
+    ${Sum} "  Revocations: $RevokeNote"
   ${EndIf}
   ${If} $PlanWarn != ""
-    ${Sum} "WARNING:  $PlanWarn"
+    ${Sum} "  WARNING:  $PlanWarn"
   ${EndIf}
   ${If} $AgeWarn != ""
-    ${Sum} "WARNING:  $AgeWarn"
+    ${Sum} "  WARNING:  $AgeWarn"
+  ${EndIf}
+  ${If} $LogPath != ""
+    ${Sum} "  Log:        $LogPath"
   ${EndIf}
   FileClose $SumH
+  FileClose $CmdH
   ; no control or bidi characters on the review page (plan text is shown as is otherwise)
   ibsig::cleanfile "$PLUGINSDIR\summary.txt"
+  ibsig::cleanfile "$PLUGINSDIR\commands.txt"
   Pop $0
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; ---------------------------------------------------------------- a window you can read
+;
+; MUI's window is 300x140 dialog units, about 500x360 pixels, and the
+; review page (design.md section 3) has to fit everything an install will
+; do into it. It cannot: on Windows 11 it was a 503-pixel box with a
+; horizontal *and* a vertical scroll bar, and on XP the same. There is no
+; wider MUI resource to switch to, so the window and the controls MUI put
+; in it are resized once, in MUI's GUI-init hook, before any page is
+; built -- nsDialogs takes the child rectangle's size when the page is
+; created, so the review page gets the new size with no work of its own.
+;
+; The size asked for is scaled by the screen's DPI and then clamped to the
+; work area, so an 800x600 XP machine keeps a window that fits on it.
+
+!define IB_WANT_W 780         ; at 96 dpi; scaled below, and clamped to the screen
+!define IB_WANT_H 600
+
+Var MvId
+Var MvDX
+Var MvDY
+Var MvDW
+Var MvDH
+
+; Move and/or resize one control of $HWNDPARENT by the deltas in $Mv*.
+Function IbMoveCtl
+  Push $0
+  Push $1
+  Push $2
+  Push $3
+  Push $4
+  Push $5
+  GetDlgItem $0 $HWNDPARENT $MvId
+  ${If} $0 <> 0
+    System::Call '*(i,i,i,i)p.r1'
+    System::Call 'user32::GetWindowRect(p r0, p r1)i'
+    System::Call 'user32::MapWindowPoints(p 0, p $HWNDPARENT, p r1, i 2)i'
+    System::Call '*$1(i.r2, i.r3, i.r4, i.r5)'
+    System::Free $1
+    IntOp $4 $4 - $2          ; width
+    IntOp $5 $5 - $3          ; height
+    IntOp $2 $2 + $MvDX
+    IntOp $3 $3 + $MvDY
+    IntOp $4 $4 + $MvDW
+    IntOp $5 $5 + $MvDH
+    ; SWP_NOZORDER|SWP_NOACTIVATE
+    System::Call 'user32::SetWindowPos(p r0, p 0, i r2, i r3, i r4, i r5, i 0x14)i'
+  ${EndIf}
+  Pop $5
+  Pop $4
+  Pop $3
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
+!macro IbMove ID DX DY DW DH
+  StrCpy $MvId ${ID}
+  IntOp $MvDX ${DX} + 0
+  IntOp $MvDY ${DY} + 0
+  IntOp $MvDW ${DW} + 0
+  IntOp $MvDH ${DH} + 0
+  Call IbMoveCtl
+!macroend
+!define IbMove "!insertmacro IbMove"
+
+Function IbGuiInit
+  Push $0
+  Push $1
+  Push $2
+  Push $3
+  Push $4
+  Push $5
+  Push $6
+  Push $7
+
+  ; how big we would like to be, at this screen's DPI
+  System::Call 'user32::GetDC(p 0)p.r0'
+  System::Call 'gdi32::GetDeviceCaps(p r0, i 88)i.r1'    ; LOGPIXELSX
+  System::Call 'user32::ReleaseDC(p 0, p r0)i'
+  ${If} $1 < 96
+    StrCpy $1 96
+  ${EndIf}
+  IntOp $2 ${IB_WANT_W} * $1
+  IntOp $2 $2 / 96
+  IntOp $3 ${IB_WANT_H} * $1
+  IntOp $3 $3 / 96
+
+  ; never bigger than the work area, less a margin
+  System::Call '*(i,i,i,i)p.r4'
+  System::Call 'user32::SystemParametersInfoW(i 0x30, i 0, p r4, i 0)i.r0'   ; SPI_GETWORKAREA
+  ${If} $0 <> 0
+    System::Call '*$4(i.r5, i.r6, i.r7, i.r0)'
+    IntOp $7 $7 - $5
+    IntOp $0 $0 - $6
+    IntOp $7 $7 - 40
+    IntOp $0 $0 - 40
+    ${If} $2 > $7
+      StrCpy $2 $7
+    ${EndIf}
+    ${If} $3 > $0
+      StrCpy $3 $0
+    ${EndIf}
+  ${EndIf}
+  System::Free $4
+
+  ; what we have now, and the difference
+  System::Call '*(i,i,i,i)p.r4'
+  System::Call 'user32::GetWindowRect(p $HWNDPARENT, p r4)i'
+  System::Call '*$4(i.r5, i.r6, i.r7, i.r0)'
+  System::Free $4
+  IntOp $7 $7 - $5            ; current width
+  IntOp $0 $0 - $6            ; current height
+  IntOp $WinDX $2 - $7
+  IntOp $WinDY $3 - $0
+  ${If} $WinDX < 0
+    StrCpy $WinDX 0
+  ${EndIf}
+  ${If} $WinDY < 0
+    StrCpy $WinDY 0
+  ${EndIf}
+  ${If} $WinDX = 0
+  ${AndIf} $WinDY = 0
+    Goto gui_done
+  ${EndIf}
+
+  ; the window itself, still centred on the work area
+  IntOp $7 $7 + $WinDX
+  IntOp $0 $0 + $WinDY
+  IntOp $5 $5 - $WinDX
+  IntOp $5 $5 / 2
+  IntOp $6 $6 - $WinDY
+  IntOp $6 $6 / 2
+  ${If} $5 < 0
+    StrCpy $5 0
+  ${EndIf}
+  ${If} $6 < 0
+    StrCpy $6 0
+  ${EndIf}
+  System::Call 'user32::SetWindowPos(p $HWNDPARENT, p 0, i r5, i r6, i r7, i r0, i 0x14)i'
+
+  ; The ids are modern.exe's, read off a running installer rather than
+  ; guessed: 1018 is where the page goes, 1034/1037/1038/1039 are the
+  ; header's background, title, subtitle and icon, 1036 and 1035 the
+  ; rules under the header and above the buttons, 1028/1256 the branding
+  ; text, and 1044/1045 the panel behind the page.
+  ${IbMove} 1018 0 0 $WinDX $WinDY        ; where the page is built
+  ${IbMove} 1044 0 0 $WinDX $WinDY        ; the panel behind it
+  ${IbMove} 1034 0 0 $WinDX 0             ; header background
+  ${IbMove} 1037 0 0 $WinDX 0             ; header title
+  ${IbMove} 1038 0 0 $WinDX 0             ; header subtitle
+  ${IbMove} 1039 $WinDX 0 0 0             ; header icon
+  ${IbMove} 1036 0 0 $WinDX 0             ; the rule under the header
+  ${IbMove} 1035 0 $WinDY $WinDX 0        ; the rule above the buttons
+  ${IbMove} 1045 0 $WinDY $WinDX 0
+  ${IbMove} 1256 0 $WinDY $WinDX 0        ; branding text
+  ${IbMove} 1028 0 $WinDY $WinDX 0
+  ${IbMove} 1 $WinDX $WinDY 0 0           ; Install
+  ${IbMove} 2 $WinDX $WinDY 0 0           ; Cancel
+  ${IbMove} 3 $WinDX $WinDY 0 0           ; Back
+  System::Call 'user32::InvalidateRect(p $HWNDPARENT, p 0, i 1)i'
+
+gui_done:
+  Pop $7
+  Pop $6
+  Pop $5
+  Pop $4
+  Pop $3
+  Pop $2
   Pop $1
   Pop $0
 FunctionEnd
@@ -3113,7 +3770,23 @@ FunctionEnd
 ; ---------------------------------------------------------------- review page
 
 Var ReviewEdit
+Var ReviewRich
 
+!define IB_EM_EXLIMITTEXT 0x435
+!define IB_EM_AUTOURLDETECT 0x45B
+
+; The review page: one control filling the (now much larger) window.
+;
+; A rich edit, when there is one -- every Windows from XP SP1 has
+; msftedit.dll, and every Windows has riched20.dll -- so the headings,
+; the warnings and the quiet detail can be told apart without reading
+; every line. ibsig::richtext turns the plain summary into RTF by the
+; same rules the other engine paints a terminal with; if anything about
+; that fails, the plain EDIT below does the job as it always did.
+;
+; Neither control gets WS_HSCROLL or ES_AUTOHSCROLL any more: a long URL
+; now wraps onto the next line instead of running off the right-hand
+; edge behind a horizontal scroll bar nobody notices.
 Function ReviewShow
   !insertmacro MUI_HEADER_TEXT "Review what will be installed" "Nothing has been changed yet. Click Install to go ahead."
   nsDialogs::Create 1018
@@ -3121,20 +3794,50 @@ Function ReviewShow
   ${If} $0 == error
     Abort
   ${EndIf}
-  nsDialogs::CreateControl EDIT "${DEFAULT_STYLES}|${WS_TABSTOP}|${WS_VSCROLL}|${WS_HSCROLL}|${ES_MULTILINE}|${ES_READONLY}|${ES_AUTOHSCROLL}|${ES_AUTOVSCROLL}" "${WS_EX_CLIENTEDGE}" 0 0 100% 100% ""
-  Pop $ReviewEdit
-  SendMessage $ReviewEdit ${EM_SETLIMITTEXT} 1000000 0
-  FileOpen $0 "$PLUGINSDIR\summary.txt" r
-  ${Do}
-    ClearErrors
-    FileReadUTF16LE $0 $1
-    ${If} ${Errors}
-      ${Break}
+  StrCpy $ReviewRich ""
+  System::Call 'kernel32::LoadLibraryW(w "msftedit.dll")p.r0'
+  ${If} $0 P<> 0
+    StrCpy $ReviewRich "RICHEDIT50W"
+  ${Else}
+    System::Call 'kernel32::LoadLibraryW(w "riched20.dll")p.r0'
+    ${If} $0 P<> 0
+      StrCpy $ReviewRich "RichEdit20W"
     ${EndIf}
-    SendMessage $ReviewEdit ${EM_SETSEL} -1 -1
-    SendMessage $ReviewEdit ${EM_REPLACESEL} 0 "STR:$1"
-  ${Loop}
-  FileClose $0
+  ${EndIf}
+  StrCpy $ReviewEdit 0
+  ${If} $ReviewRich != ""
+    nsDialogs::CreateControl $ReviewRich "${DEFAULT_STYLES}|${WS_TABSTOP}|${WS_VSCROLL}|${ES_MULTILINE}|${ES_READONLY}|${ES_AUTOVSCROLL}" "${WS_EX_CLIENTEDGE}" 0 0 100% 100% ""
+    Pop $ReviewEdit
+    ${If} $ReviewEdit <> 0
+      SendMessage $ReviewEdit ${IB_EM_EXLIMITTEXT} 0 4194304
+      ; no automatic links: a URL that looks clickable and is not is worse
+      ; than one that does not, and the colour is not ours to give away
+      SendMessage $ReviewEdit ${IB_EM_AUTOURLDETECT} 0 0
+      ibsig::richtext "$ReviewEdit" "$PLUGINSDIR\summary.txt"
+      Pop $1
+      ${If} $1 != "ok"
+        ${Log} "The review page's rich text did not load ($1); showing it as plain text."
+        System::Call 'user32::DestroyWindow(p $ReviewEdit)i'
+        StrCpy $ReviewEdit 0
+      ${EndIf}
+    ${EndIf}
+  ${EndIf}
+  ${If} $ReviewEdit = 0
+    nsDialogs::CreateControl EDIT "${DEFAULT_STYLES}|${WS_TABSTOP}|${WS_VSCROLL}|${ES_MULTILINE}|${ES_READONLY}|${ES_AUTOVSCROLL}" "${WS_EX_CLIENTEDGE}" 0 0 100% 100% ""
+    Pop $ReviewEdit
+    SendMessage $ReviewEdit ${EM_SETLIMITTEXT} 1000000 0
+    FileOpen $0 "$PLUGINSDIR\summary.txt" r
+    ${Do}
+      ClearErrors
+      FileReadUTF16LE $0 $1
+      ${If} ${Errors}
+        ${Break}
+      ${EndIf}
+      SendMessage $ReviewEdit ${EM_SETSEL} -1 -1
+      SendMessage $ReviewEdit ${EM_REPLACESEL} 0 "STR:$1"
+    ${Loop}
+    FileClose $0
+  ${EndIf}
   SendMessage $ReviewEdit ${EM_SETSEL} 0 0
   GetDlgItem $0 $HWNDPARENT 1
   SendMessage $0 ${WM_SETTEXT} 0 "STR:&Install"
@@ -4281,6 +4984,20 @@ Function InstallMain
     ${Log} "$1"
   ${Loop}
   FileClose $0
+  ClearErrors
+  FileOpen $0 "$PLUGINSDIR\commands.txt" r
+  ${IfNot} ${Errors}
+    ${Do}
+      ClearErrors
+      FileReadUTF16LE $0 $1
+      ${If} ${Errors}
+        ${Break}
+      ${EndIf}
+      ${IbTrimNL} $1
+      ${Log} "$1"
+    ${Loop}
+    FileClose $0
+  ${EndIf}
   ${Log} ""
   CreateDirectory "$TmpDir"
   CreateDirectory "$DlDir"
@@ -4349,12 +5066,48 @@ Function InstallMain
   ; the project's install command
   ${If} $TgtInstall != ""
     Call InstallEnv
+    ; Hand it a temporary folder it can read. On an account whose name is
+    ; not ASCII this is the 8.3 short name of the very same %TEMP%, which
+    ; is what lets Python 2's pip work there at all (AsciiTemp). Set for
+    ; this one command and put back straight after, so the app's first
+    ; run -- which this installer starts -- inherits the machine's own
+    ; TMP and TEMP and not ours.
+    Call AsciiTemp
+    StrCpy $AsciiTmp $U_out
+    ${If} $AsciiTmp != ""
+      ReadEnvStr $TmpSaved "TMP"
+      ReadEnvStr $TempSaved "TEMP"
+      ${Log} "Install: TMP and TEMP -> $AsciiTmp (the same folder as $TempSaved, spelt in ASCII)"
+      StrCpy $U_a "TMP"
+      StrCpy $U_b $AsciiTmp
+      Call IbSetEnv
+      StrCpy $U_a "TEMP"
+      StrCpy $U_b $AsciiTmp
+      Call IbSetEnv
+    ${EndIf}
     StrCpy $U_a $TgtInstall
     Call Subst
     StrCpy $RC_cmd $U_out
     StrCpy $RC_cwd $AppDir
     StrCpy $RC_quiet 0
     Call RunCmd
+    ${If} $AsciiTmp != ""
+      StrCpy $U_a "TMP"
+      StrCpy $U_b $TmpSaved
+      ${If} $TmpSaved == ""
+        Call IbUnsetEnv                    ; it had none; leave it with none
+      ${Else}
+        Call IbSetEnv
+      ${EndIf}
+      StrCpy $U_a "TEMP"
+      StrCpy $U_b $TempSaved
+      ${If} $TempSaved == ""
+        Call IbUnsetEnv
+      ${Else}
+        Call IbSetEnv
+      ${EndIf}
+      StrCpy $AsciiTmp ""
+    ${EndIf}
     ${If} $RC_code != 0
       ${FailWith} "The project's install command failed (exit code $RC_code)."
       Return

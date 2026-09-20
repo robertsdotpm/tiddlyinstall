@@ -257,17 +257,39 @@ ib_confirm() {
 	set -- "$(ib_cleans "$1")" "$IB_WORK/confirm.txt" "$(ib_cleans "$3")"
 	case $ib_ui in
 	tty)
-		cat "$2" >&2
+		# In a terminal the text is longer than the screen, so by the time
+		# the question appears the top of it -- what is being installed,
+		# and by whom -- has scrolled away. Repeat the short form just
+		# above the prompt, where the decision is actually made.
+		if ib_want_colour; then ib_paint < "$2" >&2; else cat "$2" >&2; fi
+		if [ -f "$IB_WORK/short.txt" ]; then
+			printf '\n' >&2
+			printf -- '----------------------------------------------------------------------\n' >&2
+			if ib_want_colour; then ib_paint < "$IB_WORK/short.txt" >&2; else cat "$IB_WORK/short.txt" >&2; fi
+			printf '\n' >&2
+		fi
 		printf '\n%s [y/N] ' "$3" >&2
 		read -r ans || return 1
 		case $ans in y | Y | yes | YES | Yes) return 0 ;; esac
 		return 1
 		;;
 	zenity)
-		zenity --text-info --title="$1 - $3" --filename="$2" --width=780 --height=560 2>/dev/null
+		# Monospace, or the columns and the hashes do not line up; a
+		# button that says what it does, not "OK". A zenity too old for
+		# either answers 255 (a bad option), which a cancel never is.
+		ib_dialog_size
+		zenity --text-info --title="$1 - $3" --filename="$2" --font="Monospace 10" \
+			--width=$ib_dlg_w --height=$ib_dlg_h \
+			--ok-label="Install" --cancel-label="Cancel" 2>/dev/null
+		rc=$?
+		[ $rc = 255 ] && { zenity --text-info --title="$1 - $3" --filename="$2" \
+			--width=$ib_dlg_w --height=$ib_dlg_h 2>/dev/null; rc=$?; }
+		return $rc
 		;;
 	kdialog)
-		kdialog --title "$1" --textbox "$2" 780 560 && kdialog --title "$1" --yesno "$3"
+		ib_dialog_size
+		kdialog --title "$1 - $3" --textbox "$2" $ib_dlg_w $ib_dlg_h &&
+			kdialog --title "$1" --yesno "$3"
 		;;
 	osascript)
 		while :; do
@@ -303,6 +325,172 @@ ib_progress_stop() {
 	[ -n "$ib_progress_pid" ] && kill "$ib_progress_pid" 2>/dev/null
 	ib_progress_pid=
 	return 0
+}
+
+# ---------------------------------------------------------------- the review screen's shape
+#
+# The transparency screen (design.md section 3) has a lot to say, and a
+# wall of it is not consent. Three rules hold it together:
+#
+#   * the answer to "should I run this?" is at the top (IN SHORT), the
+#     evidence below it;
+#   * a line is never longer than 78 characters unless it is a URL,
+#     which is never broken -- half a URL is worse than a long one;
+#   * the file itself is always plain text. The log, zenity, kdialog and
+#     the macOS dialog all get exactly these bytes; only the terminal
+#     path paints them, and only when a terminal is really there.
+
+# 35945651 -> "34.3 MB". Integer arithmetic: there is no bc on a busybox.
+ib_hsize() {
+	n=${1:-}
+	case $n in '' | *[!0-9]*) printf '%s' "$n"; return ;; esac
+	if [ "$n" -lt 1024 ]; then printf '%s bytes' "$n"
+	elif [ "$n" -lt 1048576 ]; then printf '%s.%s kB' "$((n / 1024))" "$(((n % 1024) * 10 / 1024))"
+	elif [ "$n" -lt 1073741824 ]; then printf '%s.%s MB' "$((n / 1048576))" "$(((n % 1048576) * 10 / 1048576))"
+	else printf '%s.%s GB' "$((n / 1073741824))" "$(((n % 1073741824) * 10 / 1073741824))"
+	fi
+}
+
+# "1 file" / "2 files", without a "(s)" anywhere on a consent screen.
+ib_plural() { # n singular plural
+	[ "$1" = 1 ] && printf '%s' "$2" || printf '%s' "$3"
+}
+
+# One command, as one line that cannot run off the screen.
+#
+# The worst case in the catalogue today is Ruby's relocation step: 831
+# characters of shell on one line, then another of 351. Wrapped into the
+# body that is eleven lines of `ls | grep | head -1` that nobody can
+# review -- and a screen that cannot be reviewed teaches people to click
+# through, which is the opposite of what it is for. So a long command is
+# shown as its first line's worth, monospaced, with its length and a
+# pointer to the log, which always carries every command in full.
+ib_cmd_line() { # command
+	ib_c=$1
+	ib_cn=${#ib_c}
+	if [ "$ib_cn" -le 96 ]; then
+		printf '     %s\n' "$ib_c"
+	else
+		printf '     %s...\n' "$(printf '%s' "$ib_c" | cut -c1-93)"
+		printf '     (%s characters in all; the whole command is at the end of the log)\n' "$ib_cn"
+	fi
+}
+
+# A file's size, with the exact byte count only when it adds anything.
+ib_size_line() {
+	if [ "${1:-0}" -ge 1024 ] 2>/dev/null; then
+		printf '     %s (%s bytes)\n' "$(ib_hsize "$1")" "$1"
+	else
+		printf '     %s\n' "$(ib_hsize "$1")"
+	fi
+}
+
+# The hosts a list of URLs (stdin) points at, in order, once each. What a
+# person wants near the top is "who am I downloading from", not four
+# 200-character URLs; the URLs themselves are still in the detail.
+ib_hosts() {
+	awk '{ u = $0
+	       sub(/^[A-Za-z][A-Za-z0-9+.-]*:\/\//, "", u)
+	       sub(/[\/?#].*$/, "", u)
+	       sub(/^[^@]*@/, "", u)
+	       if (u != "" && !(u in seen)) { seen[u] = 1; out = out (out == "" ? "" : ", ") u } }
+	     END { if (out != "") print out }'
+}
+
+# Wrap a "key:<padding>value" line (stdin) so the value keeps its column.
+# $1 is the width to wrap at, $2 the column the value starts in: the first
+# $2 characters are left exactly as they are and every following line is
+# indented to match. A token longer than the width is never broken -- half
+# a URL is worse than a long one.
+ib_wrap() {
+	awk -v w="$1" -v ind="$2" '
+	{ head = substr($0, 1, ind)
+	  if (length($0) <= ind) { print $0; next }
+	  pre = ""
+	  for (k = 0; k < ind; k++) pre = pre " "        # busybox awk has no %*s
+	  rest = substr($0, ind + 1)
+	  line = ""; out = 0; n = split(rest, t, " ")
+	  for (i = 1; i <= n; i++) {
+		if (t[i] == "") continue
+		if (line == "") line = t[i]
+		else if (ind + length(line) + 1 + length(t[i]) <= w) line = line " " t[i]
+		else { print (out++ ? pre : head) line; line = t[i] }
+	  }
+	  if (line != "") print (out++ ? pre : head) line
+	  if (out == 0) print $0 }'
+}
+
+# How big the screen is ("W H"), from whatever tool this desktop has.
+# Nothing here is required: with no answer the dialog falls back to a
+# size that fits 1024x768, which is what the oldest desktops we test on
+# actually are.
+ib_screen_size() {
+	if ib_have xdotool; then
+		xdotool getdisplaygeometry 2>/dev/null && return 0
+	fi
+	if ib_have xdpyinfo; then
+		xdpyinfo 2>/dev/null | sed -n 's/^  dimensions: *\([0-9][0-9]*\)x\([0-9][0-9]*\).*/\1 \2/p' | sed -n 1p
+		return 0
+	fi
+	if ib_have xrandr; then
+		xrandr 2>/dev/null | sed -n 's/^.* connected[^0-9]*\([0-9][0-9]*\)x\([0-9][0-9]*\)+.*/\1 \2/p' | sed -n 1p
+		return 0
+	fi
+	return 0
+}
+
+# The dialog size to ask for: as much as the text wants, less than the
+# screen has. A review dialog taller than the screen hides its own
+# buttons, which is how the old one lost its bottom on a 1024x768 Xfce.
+ib_dialog_size() {
+	ib_dlg_w=800
+	ib_dlg_h=560
+	set -- $(ib_screen_size)
+	if [ $# -ge 2 ] && [ "$1" -gt 200 ] 2>/dev/null && [ "$2" -gt 200 ] 2>/dev/null; then
+		ib_dlg_w=$(($1 - 80))
+		ib_dlg_h=$(($2 - 150))
+		[ "$ib_dlg_w" -gt 980 ] && ib_dlg_w=980
+		[ "$ib_dlg_h" -gt 820 ] && ib_dlg_h=820
+		[ "$ib_dlg_w" -lt 640 ] && ib_dlg_w=640
+		[ "$ib_dlg_h" -lt 400 ] && ib_dlg_h=400
+	fi
+}
+
+# Does the terminal we are talking to take ANSI colour? Never into a log,
+# a pipe, an unattended run or a terminal that says it is dumb.
+ib_want_colour() {
+	[ "$opt_yes" = 1 ] && return 1
+	[ -n "${NO_COLOR-}" ] && return 1
+	[ "${IB_COLOR-}" = 0 ] && return 1
+	[ "${IB_COLOR-}" = 1 ] && return 0
+	[ -t 2 ] || return 1
+	case ${TERM-} in '' | dumb | unknown | emacs) return 1 ;; esac
+	if ib_have tput; then
+		c=$(tput colors 2>/dev/null)
+		case $c in '' | *[!0-9]*) c=0 ;; esac
+		[ "$c" -ge 8 ]
+		return
+	fi
+	case $TERM in
+	*color* | *-256* | xterm* | screen* | tmux* | rxvt* | linux | ansi | vt100 | \
+		cygwin | putty* | alacritty | foot* | kitty | konsole* | st-* | wezterm) return 0 ;;
+	esac
+	return 1
+}
+
+# Paint the review text for a terminal. The text has already been through
+# ib_clean, so nothing in it can carry an escape of its own.
+ib_paint() {
+	awk '
+	BEGIN { b = "\033[1m"; o = "\033[0m"; red = "\033[1;31m"
+		yel = "\033[33m"; dim = "\033[2m" }
+	/^!! /                        { print red $0 o; next }
+	/^!  /                        { print yel $0 o; next }
+	/^[-=]+$/                     { print dim $0 o; next }
+	/^[A-Z][A-Z0-9 ,.:()\/+-]*$/  { print b $0 o; next }
+	/^ +(sha256|from|or) /        { print dim $0 o; next }
+	/^  [A-Za-z][A-Za-z ]*: /     { k = index($0, ":"); print b substr($0, 1, k) o substr($0, k + 1); next }
+	                              { print }'
 }
 
 # ---------------------------------------------------------------- text formats
@@ -2374,66 +2562,204 @@ ib_install_main() {
 	export IB_RUNTIME
 	ib_needs_eval
 
-	# ---- transparency
+	# ---- transparency (design.md section 3; the shape is set out at
+	# "the review screen's shape", above)
 	sum=$IB_WORK/summary.txt
 	ib_signed_by=$(ib_signer)
+	# The .run's own sha256 belongs on a line of its own, not glued to the
+	# end of "Signed by:" where it pushes the answer off the screen.
+	ib_signed_short=$(printf '%s' "$ib_signed_by" | sed 's/; this file has sha256 .*//')
+
+	# What the totals are, before anything is printed: a person deciding
+	# wants "2 files, 34.3 MB, from these three hosts" before they want
+	# four 200-character URLs.
+	ib_tot=0
+	ib_urls=$IB_WORK/urls.txt
+	: > "$ib_urls"
+	ib_packed_all=1
+	i=1
+	while [ "$i" -le "$nfiles" ]; do
+		IFS=$tab
+		set -- $(ib_sel file "$i")
+		IFS=$ifs0
+		case ${4:-} in '' | *[!0-9]*) ;; *) ib_tot=$((ib_tot + $4)) ;; esac
+		if { [ -n "$IB_PACK_DIR" ] && [ -f "$IB_PACK_DIR/$3" ]; } ||
+			{ [ -n "$IB_PACK_TAR" ] && grep -qx "$3" "$IB_WORK/pack.list"; }; then :; else
+			ib_packed_all=0
+			ib_sel url "$i" >> "$ib_urls"
+		fi
+		i=$((i + 1))
+	done
+	src=$(ib_sel1 source)
+	if [ -n "$src" ]; then
+		IFS=$tab
+		set -- $src
+		IFS=$ifs0
+		case ${3:-} in '' | *[!0-9]*) ;; *) ib_tot=$((ib_tot + $3)) ;; esac
+		if { [ -n "$IB_PACK_DIR" ] && [ -f "$IB_PACK_DIR/$2" ]; } ||
+			{ [ -n "$IB_PACK_TAR" ] && grep -qx "$2" "$IB_WORK/pack.list"; }; then :; else
+			ib_packed_all=0
+			ib_sel srcurl >> "$ib_urls"
+		fi
+	fi
+	ib_nall=$nfiles
+	[ -n "$src" ] && ib_nall=$((ib_nall + 1))
+	ib_hostlist=$(ib_hosts < "$ib_urls")
+	ib_nrun=$(ib_sel step | awk -F"$tab" '$2 == "run"' | wc -l | tr -d ' ')
+
+	# The runtime, from the *last* runtime line: the selection carries the
+	# plan's header (`runtime <id>` alone) before the chosen block's
+	# (`runtime <id> <version> <arch>`), so ib_sel1 was showing the bare
+	# id and never the version -- which is also why format.md's claim
+	# that this engine already showed the architecture was wrong.
+	ib_rt_line=
+	ib_rt_note=
+	rt=$(ib_sel runtime | sed -n '$p')
+	if [ -n "$rt" ]; then
+		IFS=$tab
+		set -- $rt
+		IFS=$ifs0
+		a_name=$1 a_ver=${2:-} a_arch=${3:-}
+		if [ -n "$a_arch" ]; then
+			ib_rt_note=$(ib_arch_note "$a_arch" "$a_name")
+			ib_rt_line="$a_name $a_ver, $(ib_arch_words "$a_arch")$ib_rt_note"
+		else
+			ib_rt_line=$(printf '%s' "$rt" | tr '\t' ' ')
+		fi
+	fi
+
+	# Anything unusual, at the top, where a decision is made. `!!` is
+	# "you would want to know this before saying yes"; `!` is "worth
+	# noticing". Everything here is also stated again in its own section.
+	ib_warn=$IB_WORK/warnings.txt
+	: > "$ib_warn"
+	[ -n "$ib_plan_warn" ] && printf '!! %s\n' "$ib_plan_warn" >> "$ib_warn"
+	[ -n "$ib_age_warn" ] && printf '!! %s\n' "$ib_age_warn" >> "$ib_warn"
+	[ -n "$ib_need_manual" ] &&
+		printf '!! Something this app needs is missing and this installer cannot install it here; see SYSTEM-WIDE PREREQUISITES below.\n' >> "$ib_warn"
+	case $ib_signed_by in
+	*'does NOT verify'*) printf '!! The signature on this installer does not verify: it was changed after it was signed.\n' >> "$ib_warn" ;;
+	esac
+	if [ $need_root = 1 ]; then
+		if [ -n "$ib_need_pkgs" ]; then
+			printf '!  Part of this install runs as root: %s installs the system packages %s. The app itself installs for you.\n' \
+				"$ib_pm" "$ib_need_pkgs" >> "$ib_warn"
+		elif [ "$IB_SYSTEM" = 1 ]; then
+			printf '!  This installs for every user on the machine, so it needs administrator rights.\n' >> "$ib_warn"
+		else
+			printf '!  This install needs administrator rights.\n' >> "$ib_warn"
+		fi
+	fi
+	[ -n "$ib_rt_note" ] &&
+		printf '!  The runtime being installed is not this machine%s architecture%s.\n' "'s" "$ib_rt_note" >> "$ib_warn"
+	case $(ib_describe_source) in
+	*'no stored hash'*) printf '!  The project is not pinned by a checksum: it is identified by its commit and fetched over HTTPS.\n' >> "$ib_warn" ;;
+	esac
+
 	{
-		printf 'TiddlyInstall will install: %s\n\n' "$IB_NAME_DISP"
-		printf 'WHAT\n'
-		printf '  Project:  %s\n' "$IB_PROJECT"
-		printf '  Source:   %s\n' "$(ib_describe_source)"
-		# The *last* runtime line, not the first: the selection carries the
-		# plan's header (`runtime <id>` alone) before the chosen block's
-		# (`runtime <id> <version> <arch>`), so ib_sel1 was showing the bare
-		# id and never the version -- which is also why format.md's claim
-		# that this engine already showed the architecture was wrong.
-		rt=$(ib_sel runtime | sed -n '$p')
-		if [ -n "$rt" ]; then
-			IFS=$tab
-			set -- $rt
-			IFS=$ifs0
-			a_name=$1 a_ver=${2:-} a_arch=${3:-}
-			if [ -n "$a_arch" ]; then
-				printf '  Runtime:  %s %s, %s%s\n' "$a_name" "$a_ver" \
-					"$(ib_arch_words "$a_arch")" "$(ib_arch_note "$a_arch" "$a_name")"
+		printf '======================================================================\n'
+		printf '  TiddlyInstall will install:  %s\n' "$IB_NAME_DISP"
+		printf '  Nothing has been changed yet.\n'
+		printf '======================================================================\n'
+		if [ -s "$ib_warn" ]; then
+			printf '\nBEFORE YOU SAY YES\n'
+			while IFS= read -r w; do
+				printf '%s\n' "$w" | ib_wrap 74 5
+			done < "$ib_warn"
+		fi
+		printf '\nIN SHORT\n'
+		printf '  %-14s%s\n' 'Installs:' "$IB_NAME_DISP"
+		printf '  %-14s%s\n' 'Project:' "$IB_PROJECT"
+		printf '  %-14s%s\n' 'From:' "$(ib_describe_source)" | ib_wrap 74 16
+		[ -n "$ib_rt_line" ] && printf '  Runtime:      %s\n' "$ib_rt_line" | ib_wrap 74 16
+		printf '  %-14s%s\n' 'Machine:' "$IB_OSDESC"
+		if [ "$ib_nall" -gt 0 ]; then
+			if [ "$ib_packed_all" = 1 ]; then
+				printf '  %-14snothing: all %s %s packed inside this installer\n' \
+					'Download:' "$ib_nall" "$(ib_plural "$ib_nall" 'file is' 'files are')"
 			else
-				printf '  Runtime:  %s\n' "$(printf '%s' "$rt" | tr '\t' ' ')"
+				printf '  %-14s%s %s, %s in total, each checked against its SHA-256\n' \
+					'Download:' "$ib_nall" "$(ib_plural "$ib_nall" file files)" "$(ib_hsize $ib_tot)" | ib_wrap 74 16
+				[ -n "$ib_hostlist" ] && printf '  %-14s%s\n' 'Sources:' "$ib_hostlist" | ib_wrap 74 16
 			fi
 		fi
-		printf '  Record:   %s\n' "${IB_RECHASH:-none}"
-		printf '  Machine:  %s\n' "$IB_OSDESC"
-		printf '\nDOWNLOADS (each is checked against its SHA-256 before use)\n'
+		printf '  %-14s%s\n' 'Into:' "$IB_APP_DIR"
+		printf '  %-14s(plus one folder per dependency beside it; nothing else on this machine is changed)\n' '' | ib_wrap 74 16
+		[ "$ib_nrun" -gt 0 ] && printf '  %-14s%s %s on this machine (listed below)\n' \
+			'Then runs:' "$ib_nrun" "$(ib_plural "$ib_nrun" command commands)"
+		if [ $need_root = 1 ]; then
+			printf '  %-14syes%s\n' 'Admin rights:' "$([ -n "$ib_need_pkgs" ] && printf ', for the system packages only' || printf '')"
+		else
+			printf '  %-14snot needed\n' 'Admin rights:'
+		fi
+		printf '  %-14s%s\n' 'Signed by:' "$ib_signed_short" | ib_wrap 74 16
+		[ -n "$ib_self_sha" ] && printf '  %-14sthis file has sha256 %s\n' '' "$ib_self_sha"
+		printf '  %-14s%s\n' 'Record:' "${IB_RECHASH:-none}"
+
+		printf '\nWHAT IT DOWNLOADS\n'
+		if [ "$ib_nall" = 0 ]; then
+			printf '  Nothing.\n'
+		else
+			printf '  %s %s, %s in total. Each one is checked against the SHA-256\n' \
+				"$ib_nall" "$(ib_plural "$ib_nall" file files)" "$(ib_hsize $ib_tot)"
+			printf '  below before it is used; a file that does not match is not installed.\n'
+		fi
 		i=1
 		while [ "$i" -le "$nfiles" ]; do
 			IFS=$tab
 			set -- $(ib_sel file "$i")
 			IFS=$ifs0
-			printf '  %s  (%s bytes)\n    sha256 %s\n' "$2" "$4" "$3"
+			printf '\n  %s. %s\n' "$i" "$2"
+			ib_size_line "$4"
+			printf '     sha256 %s\n' "$3"
 			if { [ -n "$IB_PACK_DIR" ] && [ -f "$IB_PACK_DIR/$3" ]; } || { [ -n "$IB_PACK_TAR" ] && grep -qx "$3" "$IB_WORK/pack.list"; }; then
-				printf '    from: the copy packed in this installer\n'
+				printf '     from   the copy packed inside this installer\n'
 			fi
-			ib_sel url "$i" | sed 's/^/    from: /'
+			ib_sel url "$i" | awk 'NR == 1 { print "     from   " $0; next } { print "     or     " $0 }'
 			i=$((i + 1))
 		done
-		src=$(ib_sel1 source)
 		if [ -n "$src" ]; then
 			IFS=$tab
 			set -- $src
 			IFS=$ifs0
-			printf '  %s (the project, %s bytes)\n    sha256 %s\n' "$1" "$3" "$2"
+			printf '\n  %s. %s  (the project itself)\n' "$ib_nall" "$1"
+			ib_size_line "$3"
+			printf '     sha256 %s\n' "$2"
 			if { [ -n "$IB_PACK_DIR" ] && [ -f "$IB_PACK_DIR/$2" ]; } || { [ -n "$IB_PACK_TAR" ] && grep -qx "$2" "$IB_WORK/pack.list"; }; then
-				printf '    from: the copy packed in this installer\n'
+				printf '     from   the copy packed inside this installer\n'
 			fi
-			ib_sel srcurl | sed 's/^/    from: /'
+			ib_sel srcurl | awk 'NR == 1 { print "     from   " $0; next } { print "     or     " $0 }'
 		fi
-		printf '\nCOMMANDS IT WILL RUN\n'
-		ib_sel step | awk -F'\t' '$2 == "run" { print $3 }' | while IFS= read -r c; do printf '  %s\n' "$(ib_subst "$c")"; done
+
+		printf '\nWHAT IT RUNS ON THIS MACHINE\n'
+		# A step's own description, when the plan carries one (format.md
+		# "Steps": an optional value appended to a `run` step), is what a
+		# person can actually judge -- "make Ruby work from the folder it
+		# is installed in" rather than 831 characters of shell. The
+		# command is still shown, and always in full in the log.
+		ib_stepn=0
+		ib_sel step | awk -F"$tab" '$2 == "run" { print $3 "\t" $4 }' |
+			while IFS="$tab" read -r c d; do
+				ib_stepn=$((ib_stepn + 1))
+				if [ -n "$d" ]; then
+					printf '  %s. %s\n' "$ib_stepn" "$d" | ib_wrap 74 5
+				else
+					printf '  %s. a shell command:\n' "$ib_stepn"
+				fi
+				ib_cmd_line "$(ib_subst "$c")"
+			done
 		ins=$(ib_sel1 install)
-		[ -n "$ins" ] && printf '  install: %s\n' "$(ib_subst "$ins")"
-		printf '  launch:  %s\n' "$(ib_subst "$(ib_sel1 launch)")"
+		if [ -n "$ins" ]; then
+			printf '  Then installs the project with:\n'
+			ib_cmd_line "$(ib_subst "$ins")"
+		fi
+		printf '  Starts the app with (this is what the menu entry and launch.sh run):\n'
+		ib_cmd_line "$(ib_subst "$(ib_sel1 launch)")"
+
 		printf '\nWHERE FILES GO\n'
 		printf '  App:      %s\n' "$IB_APP_DIR"
 		printf '%s' "$IB_DIRMAP" | while IFS="$tab" read -r n d; do [ -n "$n" ] && printf '  %-9s %s\n' "$n:" "$d"; done
+
 		printf '\nSHORTCUTS AND UNINSTALLER\n'
 		if [ "$IB_MENU" != 0 ]; then
 			if [ "$IB_OS" = macos ]; then
@@ -2457,33 +2783,50 @@ ib_install_main() {
 		printf '  PATH: not changed\n'
 		ib_sel note | sed 's/^/\nNOTE: /'
 		ib_needs_summary
-		if [ $need_root = 1 ]; then
-			printf '\nNEEDS ADMINISTRATOR RIGHTS'
-			[ $IB_SYSTEM = 1 ] && printf ' (installing for all users)'
-			printf '\n'
-		fi
-		printf '\nWHO SIGNED THIS INSTALLER\n  %s\n' "$ib_signed_by"
-		printf 'WHERE ITS SETTINGS CAME FROM\n  %s\n' "$IB_ORIGIN"
-		[ "$IB_MODE_A" = 1 ] && printf '  mode A: a signed installer; only what its name names, from %s\n' "$IB_DEFAULT_BACKEND"
-		printf '  plan: %s\n' "$IB_PLAN_FROM"
-		[ -n "$IB_PLAN_SIGNED" ] && printf '  plan signed: %s%s\n' "$IB_PLAN_SIGNED" \
+
+		printf '\nWHERE THIS INSTALLER AND ITS SETTINGS CAME FROM\n'
+		printf '  Signed by:  %s\n' "$ib_signed_short"
+		[ -n "$ib_self_sha" ] && printf '              this file has sha256 %s\n' "$ib_self_sha"
+		printf '  Settings:   %s\n' "$IB_ORIGIN"
+		[ "$IB_MODE_A" = 1 ] && printf '              mode A: a signed installer; only what its name names, from %s\n' "$IB_DEFAULT_BACKEND"
+		printf '  Plan:       %s\n' "$IB_PLAN_FROM"
+		[ -n "$IB_PLAN_SIGNED" ] && printf '  Plan signed: %s%s\n' "$IB_PLAN_SIGNED" \
 			"$(case $IB_PLAN_KIND in fetched) printf ' (fetched now)' ;; *) printf ' (carried in this installer)' ;; esac)"
-		[ -n "$ib_revoke_note" ] && printf '  revocation list: %s\n' "$ib_revoke_note"
+		[ -n "$ib_revoke_note" ] && printf '  Revocations: %s\n' "$ib_revoke_note"
 		[ -n "$ib_plan_warn" ] && printf '  WARNING: %s\n' "$ib_plan_warn"
 		[ -n "$ib_age_warn" ] && printf '  WARNING: %s\n' "$ib_age_warn"
-		printf '\nLog: %s\n' "$IB_LOG"
+		printf '  Log:        %s\n' "$IB_LOG"
 	} > "$sum"
 	cat "$sum" >> "$IB_LOG"
+	# The screen shortens a long command; the log never does.
+	if [ "$ib_nrun" -gt 0 ]; then
+		{
+			printf '\nEvery command in full:\n'
+			ib_sel step | awk -F"$tab" '$2 == "run" { print $3 }' |
+				while IFS= read -r c; do printf '  %s\n' "$(ib_subst "$c")"; done
+			ins=$(ib_sel1 install)
+			[ -n "$ins" ] && printf '  install: %s\n' "$(ib_subst "$ins")"
+			printf '  launch:  %s\n' "$(ib_subst "$(ib_sel1 launch)")"
+		} >> "$IB_LOG"
+	fi
+
+	# The short form: the macOS dialog shows this and keeps the full text
+	# behind "Details...", and the terminal repeats it just above the
+	# question, where the full text has long since scrolled away.
 	{
-		printf 'Install %s (%s)\n' "$IB_NAME_DISP" "$(ib_describe_source)"
-		printf 'Into: %s\n' "$IB_APP_DIR"
-		printf 'Downloads: %s file(s), each checked against its SHA-256\n' "$((nfiles + $([ -n "$src" ] && echo 1 || echo 0)))"
-		printf 'Signed by: %s\n' "$ib_signed_by"
-		printf 'Settings from: %s\n' "$IB_ORIGIN"
-		[ $need_root = 1 ] && printf 'Needs administrator rights.\n'
-		[ -n "$ib_need_pkgs" ] && printf 'Installs system packages as root first: %s\n' "$ib_need_pkgs"
-		[ -n "$ib_need_manual" ] && printf 'Something it needs is missing and must be installed first (see Details).\n'
-		printf '\nChoose Details for URLs, checksums and commands.'
+		printf 'Install %s?\n\n' "$IB_NAME_DISP"
+		printf '  From:      %s\n' "$(ib_describe_source)"
+		[ -n "$ib_rt_line" ] && printf '  Runtime:   %s\n' "$ib_rt_line"
+		if [ "$ib_nall" -gt 0 ] && [ "$ib_packed_all" != 1 ]; then
+			printf '  Download:  %s %s, %s, each checked against its SHA-256\n' \
+				"$ib_nall" "$(ib_plural "$ib_nall" file files)" "$(ib_hsize $ib_tot)"
+			[ -n "$ib_hostlist" ] && printf '  Sources:   %s\n' "$ib_hostlist" | ib_wrap 68 13
+		fi
+		printf '  Into:      %s\n' "$IB_APP_DIR"
+		printf '  Signed by: %s\n' "$ib_signed_short" | ib_wrap 68 13
+		[ $need_root = 1 ] && printf '  Admin:     yes%s\n' "$([ -n "$ib_need_pkgs" ] && printf ', for system packages only' || printf '')"
+		[ -s "$ib_warn" ] && sed 's/^!! /  ! /; s/^!  /  ! /' "$ib_warn" | ib_wrap 68 6
+		printf '\nNothing has been changed yet.'
 	} > "$IB_WORK/short.txt"
 	ib_confirm "TiddlyInstall" "$sum" "Install $IB_NAME_DISP?" || { ib_say "Cancelled; nothing was installed."; [ "$ib_log_is_temp" = 1 ] && rm -f "$IB_LOG"; exit 1; }
 
