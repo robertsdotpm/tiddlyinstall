@@ -128,6 +128,13 @@ def judge(b, parts, err=""):
     return ("fail" if notes else "pass"), "; ".join(notes) or ok, checks, runtime
 
 
+# The name the engines give an app's folder, from the record hash
+# (docs/format.md section 5).
+def appid(record):
+    h = hashlib.sha256((record + "/app").encode()).digest()
+    return base64.b32encode(h).decode().lower().rstrip("=")[:12]
+
+
 # ---------------------------------------------------------------- Linux and macOS
 
 UNIX_SCRIPT = r'''
@@ -167,16 +174,25 @@ def run_linux_vm(host, b, f):
     return out, err
 
 
+# The Mac is a real machine, not a throwaway home: another cell's app may
+# still be there, so this cell's own folder is named by its appid, never
+# "the first one under the install root", and what was there before the
+# install is listed so only what this cell left counts.
 MAC_SCRIPT = r'''
 set -u
+R="$HOME/Library/ib"
+[ -d "$R" ] || R="$HOME/Library/Application Support/ib"
+echo "@before"; ls "$HOME/Library/ib" "$HOME/Library/Application Support/ib" 2>/dev/null
 cd "$HOME/ibtool" || exit 90
 rm -rf x && mkdir x && cd x && ditto -x -k ../in.zip . || exit 91
 app=$(ls -d *.app)
 IB_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --log="$HOME/ibtool/i.log" </dev/null >/dev/null 2>&1
 echo "@install $?"
-d=$(ls -d "$HOME/Library/ib/"*/launch.txt "$HOME/Library/Application Support/ib/"*/launch.txt 2>/dev/null | head -1)
+d=
+for r in "$HOME/Library/ib" "$HOME/Library/Application Support/ib"; do
+  [ -f "$r/$ID/launch.txt" ] && d="$r/$ID"
+done
 if [ -n "$d" ]; then
-  d=$(dirname "$d")
   echo "@out"; IB_NO_TERMINAL=1 perl -e 'alarm shift; exec @ARGV' 1800 sh "$d/launch.sh" </dev/null 2>&1 | tail -80
   sh "$d/uninstall.sh" --yes </dev/null >/dev/null 2>&1; echo "@uninstall $?"
 fi
@@ -190,7 +206,7 @@ def run_mac(b, f):
     code, _, err = sh(["scp", "-q", f, f"{MAC}:ibtool/in.zip"], timeout=900)
     if code:
         return "", "scp: " + err
-    code, out, err = sh(["ssh", MAC, "sh -s"], input=MAC_SCRIPT)
+    code, out, err = sh(["ssh", MAC, f"ID={shlex.quote(appid(b['record']))} sh -s"], input=MAC_SCRIPT)
     sh(["ssh", MAC, "rm -rf ~/ibtool"], timeout=120)
     return out, err
 
@@ -203,13 +219,13 @@ set T=%DIR%
 echo @before
 if exist "C:\ib" dir /b "C:\ib"
 if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib" dir /b "%LOCALAPPDATA%\ib"
-"%T%\%FILE%" /S /log=%T%\install.log
+"%T%\%FILE%" /S /log={LOG}
 echo @install %ERRORLEVEL%
 set A=
 if exist "C:\ib\%ID%\launch.exe" set A=C:\ib\%ID%
 if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib\%ID%\launch.exe" set A=%LOCALAPPDATA%\ib\%ID%
 if not defined A goto left
-"%A%\launch.exe" /out=%T%\out.txt
+"%A%\launch.exe" /out={OUT}
 echo @out
 type "%T%\out.txt"
 "%A%\uninstall.exe" /S
@@ -232,11 +248,6 @@ for /d %%d in ("%TEMP%\~nsu*.tmp") do rd /s /q "%%d" 2>nul
 '''
 
 
-def appid(record):
-    h = hashlib.sha256((record + "/app").encode()).digest()
-    return base64.b32encode(h).decode().lower().rstrip("=")[:12]
-
-
 def win_busy(host):
     """Another harness's folder on this VM (tests/templates/run.py)."""
     checks = ["if exist C:\\ibtest echo BUSY", "if exist C:\\ibbtest echo BUSY",
@@ -257,14 +268,21 @@ def wait_idle(host):
 
 
 def run_windows(target, b, f):
+    """As tests/templates/run.py does it: on a machine whose profile has a
+    space and non-ASCII letters (the German VM) the folder is in the
+    profile, every %T% path is quoted, and the batch file is reached with
+    `cmd /c call "..."\t.bat`."""
     host = WINDOWS[target]
     profile = target in PROFILE
     cmd_dir = '"%USERPROFILE%\\ibtool"' if profile else "C:\\ibtool"
-    scp_dir = "~/ibtool" if profile else "C:/ibtool"
+    scp_dir = "ibtool" if profile else "C:/ibtool"
     if not wait_idle(host):
         return "", "the VM stayed busy with another test run for an hour"
+    q = '"' if profile else ""
     bat = (BAT.replace("%ID%", appid(b["record"])).replace("%FILE%", Path(f).name)
-           .replace("%DIR%", "%USERPROFILE%\\ibtool" if profile else "C:\\ibtool"))
+           .replace("%DIR%", "%USERPROFILE%\\ibtool" if profile else "C:\\ibtool")
+           .replace("{LOG}", q + "%T%\\install.log" + q)
+           .replace("{OUT}", q + "%T%\\out.txt" + q))
     with tempfile.NamedTemporaryFile("w", suffix=".bat", delete=False, newline="\r\n") as t:
         t.write(bat)
     try:
@@ -273,7 +291,8 @@ def run_windows(target, b, f):
             code, _, err = sh(["scp", "-q", src, f"{host}:{scp_dir}/{dst}"], timeout=900)
             if code:
                 return "", "scp: " + err.strip()
-        code, out, err = sh(["ssh", host, f'cmd /c {cmd_dir}\\t.bat'])
+        call = "call " if profile else ""
+        code, out, err = sh(["ssh", host, f'cmd /c {call}{cmd_dir}\\t.bat'])
         sh(["ssh", host, f'cmd /c "rd /s /q {cmd_dir}"'], timeout=120)
         return out, err
     finally:

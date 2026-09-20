@@ -241,6 +241,24 @@
     "pacman": "make"
    }
   },
+  "bzip2": {
+   "label": "bzip2 (to unpack a .tar.bz2)",
+   "os": "linux",
+   "checks": [
+    [
+     "cmd",
+     "bzip2"
+    ]
+   ],
+   "packages": {
+    "apt-get": "bzip2",
+    "dnf": "bzip2",
+    "yum": "bzip2",
+    "zypper": "bzip2",
+    "apk": "bzip2",
+    "pacman": "bzip2"
+   }
+  },
   "cxx": {
    "label": "A C++ compiler (g++)",
    "os": "linux",
@@ -734,7 +752,18 @@
      "macos": "\"{runtime}\" -E -s -m pip install --no-warn-script-location --disable-pip-version-check {package}"
     },
     "launch": "{runtime} -m {module}"
-   }
+   },
+   "needs": [
+    {
+     "prerequisites": [
+      "bzip2"
+     ],
+     "variants": [
+      "conda"
+     ],
+     "why": "Anaconda's CPython 2.7 packages are .tar.bz2, and GNU tar shells out to bzip2 to read them. Measured 2026-09-20: the Ubuntu 22.04 minimal cloud image and CentOS 7 have no bzip2 at all, and the install stopped with \"Could not unpack\"; Alpine, Debian 12 and macOS have one."
+    }
+   ]
   },
   "node": {
    "label": "Node.js",
@@ -853,11 +882,30 @@
    ],
    "install_rules": [
     {
-     "_comment": "bundle install (the recipe's project_install).",
+     "_comment": "bundle install (the recipe's project_install). Ruby only ships bundler as a default gem from 2.6, so older Rubies have no {runtime_dir}/bin/bundle and every app with a Gemfile failed there with \"No such file or directory -- bin/bundle (LoadError)\" (measured 2026-09-20 on Ruby 2.1 and 2.4, Linux). Below 2.6 the rule installs bundler first, pinned to the 1.17 line, which is the last that runs on Ruby 1.8.7 and later; with GEM_HOME unset it lands in the app's own runtime folder, so the second half is the ordinary command. GEM_SPEC_CACHE keeps RubyGems' index cache in the app's data folder: without it `gem install` writes ~/.gem/specs/api.rubygems.org%443, which the uninstaller never sees.",
      "id": "bundler",
      "files": [
       "Gemfile"
-     ]
+     ],
+     "command": [
+      {
+       "versions": "<2.6",
+       "windows": "\"{runtime}\" \"{runtime_dir}\\bin\\gem\" install --no-document bundler --version \"~> 1.17\" && \"{runtime}\" \"{runtime_dir}\\bin\\bundle\" install",
+       "linux": "\"{runtime}\" \"{runtime_dir}/bin/gem\" install --no-document bundler --version \"~> 1.17\" && \"{runtime}\" \"{runtime_dir}/bin/bundle\" install",
+       "macos": "\"{runtime}\" \"{runtime_dir}/bin/gem\" install --no-document bundler --version \"~> 1.17\" && \"{runtime}\" \"{runtime_dir}/bin/bundle\" install"
+      }
+     ],
+     "ienv": {
+      "windows": {
+       "GEM_SPEC_CACHE": "{data_dir}\\gem-spec-cache"
+      },
+      "linux": {
+       "GEM_SPEC_CACHE": "{data_dir}/gem-spec-cache"
+      },
+      "macos": {
+       "GEM_SPEC_CACHE": "{data_dir}/gem-spec-cache"
+      }
+     }
     }
    ],
    "extra_files": {

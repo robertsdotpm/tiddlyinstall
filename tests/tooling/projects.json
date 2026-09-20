@@ -63,7 +63,7 @@
   "java": {
    "runtime": "java",
    "project": "tooling",
-   "install": "\"{env:JAVA_HOME}{sep}bin{sep}javac\" -encoding UTF-8 -d \"{app_dir}{sep}classes\" Main.java && \"{env:JAVA_HOME}{sep}bin{sep}jar\" cfe \"{app_dir}{sep}tooling.jar\" Main -C \"{app_dir}{sep}classes\" .",
+   "install": "\"{env:JAVA_HOME}{sep}bin{sep}javac\" -encoding UTF-8 -d \"{app_dir}\" Main.java && \"{env:JAVA_HOME}{sep}bin{sep}jar\" cfe \"{app_dir}{sep}tooling.jar\" Main -C \"{app_dir}\" Main.class",
    "launch": "{runtime} -Djava.awt.headless=true -jar {app_dir}/tooling.jar",
    "checks": [
     "javac-jar",
@@ -72,7 +72,8 @@
     "jlink",
     "jshell",
     "stdlib"
-   ]
+   ],
+   "_comment": "JDK 6's javac does not create the -d folder (later ones do), so the classes go straight into {app_dir} rather than a classes/ subfolder."
   },
   "dotnet": {
    "runtime": "dotnet",
