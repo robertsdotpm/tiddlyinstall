@@ -120,7 +120,17 @@ a plan through `LocalIndex` (`backend/lib/catalog.js`), which walks this
 machine's copies under `~/projects/installer-builder-runtimes`; a file
 that is on the mirror host but that this machine has never seen has no
 `local` path, so its plans still name the vendor alone.
-`tools/mirror_check.py` exits non-zero on exactly that state.
+`tools/mirror_check.py` exits non-zero on exactly that state, for the
+manifest and every mirror host in
+`runtime-catalog/store/mirror-hosts.json`.
+
+Two manifests, deliberately separate:
+`runtime-catalog/store/mirror-manifest.json` is what installers
+download, and `runtime-catalog/store/toolchain-manifest.json` is what we
+build them with (NSIS, osslsigncode, llvm-mingw, Redis) — no plan ever
+names those, and keeping them out is what lets the runtime check stay a
+clean pass or fail. Check the second with
+`tools/mirror_check.py runtime-catalog/store/toolchain-manifest.json`.
 
 ## Design notes
 

@@ -1,0 +1,109 @@
+{
+ "notes": "What our installers are BUILT WITH, as opposed to what they download. No plan ever names these, so they are deliberately not in mirror-manifest.json -- keeping them out is what lets the runtime check stay a clean pass or fail. They are here because losing them is worse than losing a runtime download: a runtime can be refetched from its vendor, whereas \"whichever NSIS we happened to have\" is not reproducible, and the bases we sign are the output. Same shape as the runtime manifest, so tools/mirror_check.py and tools/mirror_fetch.py read it unchanged; `hosts` says which mirror hosts need it (mirror-hosts.json), and `what` and `from` say why we have it and where it came from. Each sha256 was checked twice on 2026-09-20: it is what ovh1 holds, and it is also what the URL below still serves -- so the provenance is confirmed rather than inferred. CAUTION: Ubuntu's archive keeps only the current version of a package in `pool`, so these URLs will 404 when any of them is superseded. That is the reason for the manifest and for the second copy under ~/projects/installer-builder-runtimes/.toolchain (a dot folder, so the resolver's LocalIndex does not walk it and cannot mistake a .deb for a runtime download). When a URL dies, the copies are the source of record; re-pin to the new version deliberately rather than drifting onto it.",
+ "files": [
+  {
+   "path": "toolchain/nsis_3.09-4ubuntu1_amd64.deb",
+   "size": 319510,
+   "sha256": "9e061bef1a8b611aeb2ea76d9a3bd7722b960ca1a9dff8e38d2ab51e5a8f5e5b",
+   "urls": [
+    "http://archive.ubuntu.com/ubuntu/pool/universe/n/nsis/nsis_3.09-4ubuntu1_amd64.deb"
+   ],
+   "what": "NSIS 3.09, which compiles bases/windows into base.exe",
+   "from": "Ubuntu 24.04 (noble) universe, source package nsis",
+   "hosts": [
+    "ovh1"
+   ]
+  },
+  {
+   "path": "toolchain/nsis-common_3.09-4ubuntu1_all.deb",
+   "size": 968106,
+   "sha256": "49471b9debdee4751ebb4caf6b705cc4c678eebfaecefbe56362258893f85859",
+   "urls": [
+    "http://archive.ubuntu.com/ubuntu/pool/universe/n/nsis/nsis-common_3.09-4ubuntu1_all.deb"
+   ],
+   "what": "NSIS's own data files (headers, plugins, stubs)",
+   "from": "Ubuntu 24.04 (noble) universe, source package nsis",
+   "hosts": [
+    "ovh1"
+   ]
+  },
+  {
+   "path": "toolchain/redis-server_5%3a7.0.15-1ubuntu0.24.04.4_amd64.deb",
+   "size": 51676,
+   "sha256": "ac40bf48eefdbe285e62e3f183f95af5c3145bf141a545cb6de291dc51f5f0c0",
+   "urls": [
+    "http://archive.ubuntu.com/ubuntu/pool/universe/r/redis/redis-server_7.0.15-1ubuntu0.24.04.4_amd64.deb"
+   ],
+   "what": "Redis 7.0.15, the build queue's server",
+   "from": "Ubuntu 24.04 (noble) universe, source package redis",
+   "hosts": [
+    "ovh1"
+   ]
+  },
+  {
+   "path": "toolchain/libjemalloc2_5.3.0-2build1_amd64.deb",
+   "size": 256148,
+   "sha256": "0cccf7701765b5a633b964ed551c2bd1c074cad17daea8fa20a4e9cad0adb5a8",
+   "urls": [
+    "http://archive.ubuntu.com/ubuntu/pool/universe/j/jemalloc/libjemalloc2_5.3.0-2build1_amd64.deb"
+   ],
+   "what": "jemalloc, which redis-server links against",
+   "from": "Ubuntu 24.04 (noble) universe, source package jemalloc",
+   "hosts": [
+    "ovh1"
+   ]
+  },
+  {
+   "path": "toolchain/liblzf1_3.6-4_amd64.deb",
+   "size": 7624,
+   "sha256": "253182d4718271565d6c24125f27dd93da56fce34b34d8226615cb3553bbe73f",
+   "urls": [
+    "http://archive.ubuntu.com/ubuntu/pool/universe/libl/liblzf/liblzf1_3.6-4_amd64.deb"
+   ],
+   "what": "liblzf, which redis-server links against",
+   "from": "Ubuntu 24.04 (noble) universe, source package liblzf",
+   "hosts": [
+    "ovh1"
+   ]
+  },
+  {
+   "path": "toolchain/llvm-mingw-20260908-msvcrt-ubuntu-22.04-x86_64.tar.xz",
+   "size": 83112984,
+   "sha256": "4d905bae713182f1a2b4d33875fe5aa544ce9fc04cc153acb47755a90ca62f16",
+   "urls": [
+    "https://github.com/mstorsjo/llvm-mingw/releases/download/20260908/llvm-mingw-20260908-msvcrt-ubuntu-22.04-x86_64.tar.xz"
+   ],
+   "what": "llvm-mingw 20260908 (MSVCRT), the cross toolchain that builds the Windows launcher and NSIS plugins",
+   "from": "GitHub release, mstorsjo/llvm-mingw tag 20260908",
+   "hosts": [
+    "ovh1"
+   ]
+  },
+  {
+   "path": "toolchain/osslsigncode_2.8-2_amd64.deb",
+   "size": 79478,
+   "sha256": "1aee7be603102633e80b4c67cd939bba2e16a62813e4a3035696727783f632b0",
+   "urls": [
+    "http://archive.ubuntu.com/ubuntu/pool/universe/o/osslsigncode/osslsigncode_2.8-2_amd64.deb"
+   ],
+   "what": "osslsigncode 2.8, which Authenticode-signs the Windows base",
+   "from": "Ubuntu 24.04 (noble) universe, source package osslsigncode",
+   "hosts": [
+    "ovh1"
+   ]
+  },
+  {
+   "path": "toolchain/redis-tools_5%3a7.0.15-1ubuntu0.24.04.4_amd64.deb",
+   "size": 1166336,
+   "sha256": "4e5afacdbaccf14d875ed61194a411d57c679744afd9be1946b481c2dbb2b425",
+   "urls": [
+    "http://archive.ubuntu.com/ubuntu/pool/universe/r/redis/redis-tools_7.0.15-1ubuntu0.24.04.4_amd64.deb"
+   ],
+   "what": "redis-cli and friends",
+   "from": "Ubuntu 24.04 (noble) universe, source package redis",
+   "hosts": [
+    "ovh1"
+   ]
+  }
+ ]
+}
