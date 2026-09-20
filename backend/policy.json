@@ -810,7 +810,7 @@
    ],
    "install_rules": [
     {
-     "_comment": "npm install (the recipe's project_install). env: Electron 44 no longer downloads its 158 MB zip from a postinstall script -- index.js fetches it the first time the app runs -- and @electron/get puts it in %LOCALAPPDATA%\\electron\\Cache on Windows, ~/.cache/electron elsewhere, outside everything the uninstaller knows about. electron_config_cache is what electron's install.js reads for the cache root (ELECTRON_CACHE is the older spelling, kept for older versions); both are in the launch environment as well as the install's, because that is when the download now happens.",
+     "_comment": "npm install (the recipe's project_install). env: Electron 44 no longer downloads its 158 MB zip from a postinstall script -- index.js fetches it the first time the app runs -- and @electron/get puts it in %LOCALAPPDATA%\\electron\\Cache on Windows, ~/.cache/electron elsewhere, outside everything the uninstaller knows about. electron_config_cache is what electron's install.js reads for the cache root (ELECTRON_CACHE is the older spelling, kept for older versions); both are in the launch environment as well as the install's, because that is when the download now happens. XDG_CONFIG_HOME keeps npm's update notifier in the app's data folder: npm 5 writes ~/.config/configstore/update-notifier-npm.json, which the uninstaller never sees (measured 2026-09-20 on the Node 9.11.2 that 32-bit Linux gets).",
      "id": "npm",
      "files": [
       "package.json"
@@ -818,15 +818,18 @@
      "env": {
       "windows": {
        "ELECTRON_CACHE": "{data_dir}\\electron-cache",
-       "electron_config_cache": "{data_dir}\\electron-cache"
+       "electron_config_cache": "{data_dir}\\electron-cache",
+       "XDG_CONFIG_HOME": "{data_dir}\\config"
       },
       "linux": {
        "ELECTRON_CACHE": "{data_dir}/electron-cache",
-       "electron_config_cache": "{data_dir}/electron-cache"
+       "electron_config_cache": "{data_dir}/electron-cache",
+       "XDG_CONFIG_HOME": "{data_dir}/config"
       },
       "macos": {
        "ELECTRON_CACHE": "{data_dir}/electron-cache",
-       "electron_config_cache": "{data_dir}/electron-cache"
+       "electron_config_cache": "{data_dir}/electron-cache",
+       "XDG_CONFIG_HOME": "{data_dir}/config"
       }
      }
     }

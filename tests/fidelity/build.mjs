@@ -66,6 +66,7 @@ for (const [id, p] of Object.entries(projects)) {
   };
   if (p.install) job.install = p.install;
   if (p.prerequisites) job.prerequisites = p.prerequisites;
+  if (p.tools) job.tools = p.tools;
   const dir = path.join(OUT, id);
   fs.rmSync(dir, { recursive: true, force: true });
   fs.mkdirSync(dir, { recursive: true });

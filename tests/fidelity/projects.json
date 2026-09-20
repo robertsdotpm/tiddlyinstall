@@ -1,5 +1,5 @@
 {
- "notes": "Fidelity projects (docs/test-results.md, section Real-app fidelity): one small app per runtime that uses what real apps rely on, installed through the normal build and install path. Files come from projects/<id>/. launch and install are the job's fields ({sep} is the OS path separator, {env:NAME} the plan's value of NAME); no install means the policy's install rule for the project's files. select/range limit the runtime version like the form's version choice; prerequisites are the system libraries the app's own code needs (the job field, as the written templates give it: R's tcltk needs Tk 8.6 on Linux).",
+ "notes": "Fidelity projects (docs/test-results.md, section Real-app fidelity): one small app per runtime that uses what real apps rely on, installed through the normal build and install path. Files come from projects/<id>/. launch and install are the job's fields ({sep} is the OS path separator, {env:NAME} the plan's value of NAME); no install means the policy's install rule for the project's files. select/range limit the runtime version like the form's version choice; prerequisites are the system libraries the app's own code needs (the job field, as the written templates give it: R's tcltk needs Tk 8.6 on Linux); tools is the job's tool-switch object, recorded as the record's `tools` key.",
  "projects": {
   "python": {
    "runtime": "python",
@@ -38,8 +38,10 @@
    "checks": ["https", "module-dependency", "os-exec", "cgo"]
   },
   "go-cgo": {
+   "_comment": "The publisher's cgo switch (design.md 11.0 item 27, record `tools`). Without it the plan installs no C compiler, and a machine that has none fails in the middle of the build with Go's own \"build constraints exclude all Go files\", which says nothing about what is missing; with it, Windows gets WinLibs GCC and Linux and macOS ask for cc / the Xcode Command Line Tools before anything is downloaded.",
    "runtime": "go",
    "project": "fidelity",
+   "tools": {"cgo": true},
    "launch": "{app_dir}/fidelity{exe}",
    "checks": ["cgo"]
   },
