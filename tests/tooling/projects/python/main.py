@@ -8,7 +8,12 @@ import tempfile
 
 
 def say(state, name, detail):
-    print("TOOL " + state + " " + name + ": " + detail)
+    # Keep every line ASCII. On a non-English Windows the console code page
+    # is not the one Python encodes stdout with, so a path echoed back by a
+    # program we ran ("C:\\Users\\jorg muller\\...") arrives with characters
+    # this stdout cannot encode, and the print itself raises.
+    line = "TOOL " + state + " " + name + ": " + detail
+    print(line.encode("ascii", "replace").decode("ascii"))
 
 
 def check(name, fn):
@@ -72,7 +77,10 @@ def venv_works():
     if not os.path.exists(py):
         py = os.path.join(d, "bin", "python")
     out = run([py, "-c", "import sys; print(sys.prefix)"])
-    if os.path.normcase(d) not in os.path.normcase(out):
+    # Only the folder's own name: on a non-English Windows the rest of the
+    # path comes back through a code page this process can't decode, and
+    # the name is ASCII anyway.
+    if os.path.basename(d) not in out:
         raise Exception("venv prefix is " + out)
     return "venv at " + os.path.basename(d)
 

@@ -13,6 +13,10 @@ if (file_exists($auto)) {
     } else {
         say("fail", "composer-install", "vendor/autoload.php has no psr/log");
     }
+} else if (version_compare(phpversion(), "5.3.0", "<")) {
+    // Composer itself needs PHP 5.3, so the policy ships no composer.phar
+    // for older PHP and the install rule never runs.
+    say("skip", "composer-install", "Composer needs PHP 5.3; this is " . phpversion());
 } else {
     say("fail", "composer-install", "no vendor/autoload.php: composer install did not run");
 }

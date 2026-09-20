@@ -12,7 +12,11 @@ class SkipIt(Exception):
 
 
 def say(state, name, detail):
-    print("TOOL " + state + " " + name + ": " + detail)
+    # Keep every line ASCII: see the Python 3 project for why.
+    line = "TOOL " + state + " " + name + ": " + detail
+    if isinstance(line, bytes):
+        line = line.decode("utf-8", "replace")
+    print(line.encode("ascii", "replace").decode("ascii"))
 
 
 def check(name, fn):

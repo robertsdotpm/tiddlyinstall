@@ -115,6 +115,68 @@
    ],
    "how": "Install the Microsoft Visual C++ 2015-2022 Redistributable (arm64) from https://aka.ms/vs/17/release/vc_redist.arm64.exe, then run this installer again."
   },
+  "vcredist2012-x64": {
+   "_comment": "PHP 5.5 and 5.6 for Windows are the VC11 builds (Visual Studio 2012) and need msvcr110.dll, which no Windows ships -- not even 11. Without it php.exe dies with 0xC0000135 (STATUS_DLL_NOT_FOUND) and exit code -1073741515, which nothing in the log explains (measured 2026-09-20 on Windows 10, 10 x86, 7 and the German 11: composer.phar install failed on all four). Update 4, the last 2012 redistributable.",
+   "label": "Microsoft Visual C++ 2012 Redistributable (x64)",
+   "os": "windows",
+   "arch": "amd64",
+   "checks": [
+    [
+     "reg",
+     "64",
+     "HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\11.0\\VC\\Runtimes\\x64",
+     "Installed",
+     "1"
+    ]
+   ],
+   "file": {
+    "name": "vcredist_x64.exe",
+    "sha256": "681be3e5ba9fd3da02c09d7e565adfa078640ed66a0d58583efad2c1e3cc4064",
+    "size": 7186992,
+    "local": "msvc-redist/windows/amd64/2012u4/vcredist_x64.exe",
+    "urls": [
+     "https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x64.exe"
+    ]
+   },
+   "run": "\"{file}\" /install /quiet /norestart",
+   "ok_codes": [
+    0,
+    1638,
+    3010
+   ],
+   "how": "Install the Microsoft Visual C++ 2012 Redistributable (x64) from https://www.microsoft.com/download/details.aspx?id=30679, then run this installer again."
+  },
+  "vcredist2012-x86": {
+   "_comment": "PHP 5.5 and 5.6 for Windows are the VC11 builds (Visual Studio 2012) and need msvcr110.dll, which no Windows ships -- not even 11. Without it php.exe dies with 0xC0000135 (STATUS_DLL_NOT_FOUND) and exit code -1073741515, which nothing in the log explains (measured 2026-09-20 on Windows 10, 10 x86, 7 and the German 11: composer.phar install failed on all four). Update 4, the last 2012 redistributable.",
+   "label": "Microsoft Visual C++ 2012 Redistributable (x86)",
+   "os": "windows",
+   "arch": "x86",
+   "checks": [
+    [
+     "reg",
+     "32",
+     "HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\11.0\\VC\\Runtimes\\x86",
+     "Installed",
+     "1"
+    ]
+   ],
+   "file": {
+    "name": "vcredist_x86.exe",
+    "sha256": "b924ad8062eaf4e70437c8be50fa612162795ff0839479546ce907ffa8d6e386",
+    "size": 6554576,
+    "local": "msvc-redist/windows/x86/2012u4/vcredist_x86.exe",
+    "urls": [
+     "https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x86.exe"
+    ]
+   },
+   "run": "\"{file}\" /install /quiet /norestart",
+   "ok_codes": [
+    0,
+    1638,
+    3010
+   ],
+   "how": "Install the Microsoft Visual C++ 2012 Redistributable (x86) from https://www.microsoft.com/download/details.aspx?id=30679, then run this installer again."
+  },
   "libatomic": {
    "label": "libatomic.so.1 (GCC's atomics library)",
    "os": "linux",
@@ -1097,6 +1159,17 @@
      ],
      "min_os": 601,
      "why": "PHP for Windows is built with Visual Studio and needs its C/C++ runtime DLLs (vcruntime140.dll and friends). Windows 10 and 11 usually have them already; Windows 7, 8 and 8.1 usually don't."
+    },
+    {
+     "prerequisites": [
+      "vcredist2012-x64",
+      "vcredist2012-x86"
+     ],
+     "variants": [
+      "nts-vc11",
+      "ts-vc11"
+     ],
+     "why": "PHP 5.5 and 5.6 for Windows are built with Visual Studio 2012 and need its C runtime (msvcr110.dll), which no Windows ships. Without it php.exe cannot start at all."
     }
    ],
    "launch": "{runtime} {app_dir}/index.php"
