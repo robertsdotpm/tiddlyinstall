@@ -51,6 +51,8 @@ if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib" dir /b "%LOCALAPPDATA%\ib"
 if exist "%APPDATA%\Microsoft\Windows\Start Menu\Programs\%NAME%" echo startmenu-folder-left
 if exist "%USERPROFILE%\Start Menu\Programs\%NAME%" echo startmenu-folder-left
 reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\ib-%ID%" >nul 2>&1 && echo regkey-left
+echo @osdesc
+if exist "%T%\install.log" findstr /b /c:"Windows " "%T%\install.log"
 echo @log
 if exist "%T%\install.log" type "%T%\install.log" | find /v "" | more +0 > "%T%\log8.txt"
 if exist "%T%\log8.txt" type "%T%\log8.txt"
@@ -104,8 +106,8 @@ def test_dir(vm):
     return "C:\\ibtest", "C:/ibtest"
 
 
-def run_windows(vm, rt, mode, f, record):
-    from run import sh, tail, plan_fails
+def run_windows(vm, rt, mode, f, record, target):
+    from run import sh, tail, plan_fails, verdict, arch_judge
     host = vm[0]
     name = f"Hello {rt}"
     bat = BAT.replace("%APPID%", appid(record)).replace("%FILE%", Path(f).name).replace("%NAME%", name)
@@ -118,7 +120,7 @@ def run_windows(vm, rt, mode, f, record):
     for src, dst in ((f, Path(f).name), (t.name, "t.bat")):
         code, _, err = sh(["scp", "-q", src, f"{host}:{scp}/{dst}"], timeout=600)
         if code:
-            return "fail", "scp: " + err.strip()
+            return "fail", "scp: " + err.strip(), {}
     run_bat = f"cmd /c call {win}\\t.bat" if "profile" in vm[2:] else "cmd /c C:\\ibtest\\t.bat"
     code, out, err = sh(["ssh", host, run_bat])
     sh(["ssh", host, f'cmd /c "rd /s /q {win}"'], timeout=60)
@@ -132,14 +134,15 @@ def run_windows(vm, rt, mode, f, record):
         elif cur:
             parts[cur + "_out"] = parts.get(cur + "_out", "") + line + "\n"
     log = parts.get("log_out", "")
+    judge = lambda r, d: arch_judge(target, parts, r, d)   # noqa: E731
     ic = parts.get("install")
     if ic != "0":
         reason = plan_fails(log)
         if ic == "2" and reason:
-            return "n/a", reason
-        return "fail", f"install exit {ic}: " + tail(log, 6)
+            return judge(*verdict(reason))
+        return judge("fail", f"install exit {ic}: " + tail(log, 6))
     if f"hello from {rt}" not in parts.get("launch_out", ""):
-        return "fail", "launch: " + tail(parts.get("launch_out", "") + log, 6)
+        return judge("fail", "launch: " + tail(parts.get("launch_out", "") + log, 6))
     left = parts.get("left_out", "").strip()
     if left:
         # Something is left behind. Before calling that the uninstaller's
@@ -161,15 +164,15 @@ def run_windows(vm, rt, mode, f, record):
             # Un_A.exe finishes from %TEMP% after the app folder goes, and
             # the runtime folders it shares with the next test go last.
             if who:
-                return "pass", "hello + clean uninstall, once what held the folder was stopped: " + who[:300]
-            return "pass", "hello + clean uninstall (the uninstaller was still finishing at the first look)"
+                return judge("pass", "hello + clean uninstall, once what held the folder was stopped: " + who[:300])
+            return judge("pass", "hello + clean uninstall (the uninstaller was still finishing at the first look)")
         # Clean up so one bad uninstall doesn't fail every later cell.
         here = Path(__file__).resolve().parent
         sh(["scp", "-q", str(here / "clean_windows.bat"), f"{host}:C:/ibclean.bat"], timeout=60)
         sh(["ssh", host, "cmd /c C:\\ibclean.bat"], timeout=120)
-        return "fail", (f"uninstall exit {parts.get('uninstall')}, left: {left[:200]}"
+        return judge("fail", (f"uninstall exit {parts.get('uninstall')}, left: {left[:200]}"
                         + (f"; held by: {who[:300]}" if who else "; nothing found holding it")
                         + ("" if ran else " (holders.ps1 did not run)")
-                        + (f"; still there: {still[:120]}" if still else "; gone once they were killed"))
+                        + (f"; still there: {still[:120]}" if still else "; gone once they were killed")))
     menu = "startmenu-ok" in parts.get("menu_out", "")
-    return "pass", "hello + clean uninstall" + ("" if menu else " (no Start menu shortcut seen)")
+    return judge("pass", "hello + clean uninstall" + ("" if menu else " (no Start menu shortcut seen)"))

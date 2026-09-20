@@ -5,8 +5,8 @@ usage: run.py TARGET [--only python,ruby] [--out DIR] [--results FILE] [--label 
 
 Installers come from build.mjs's output (DIR/builds.json, default
 tests/fidelity/out; the Mac's from DIR-mac). TARGET is `linux` (this
-machine, in a throwaway home), a Linux VM from LINUX_VMS, a Windows VM from
-WINDOWS, or `mac`. Each cell: install unattended, run the app through its
+machine, in a throwaway home), a Linux VM from LINUX_VMS, a 32-bit Linux
+container from tests/arch/sandbox.py, a Windows VM from WINDOWS, or `mac`. Each cell: install unattended, run the app through its
 launcher, read its "FID ok|fail|skip <check>" lines, uninstall, and check
 nothing is left. One JSON object per cell is appended to --results
 (default results/<date>.jsonl); the install log and the app's output go to
@@ -19,11 +19,14 @@ import json
 import os
 import shlex
 import subprocess
+import sys
 import tempfile
 import time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parent / "arch"))
+import machines                                            # noqa: E402
 MAC = "Matthew@the-mac-test-host"
 WINDOWS = {"7": "x@10.0.1.231", "10": "matth@10.0.1.199", "8.1": "x@10.0.1.165", "11": "matth@10.0.1.123",
            "2022": "administrator@10.0.1.248"}
@@ -32,6 +35,8 @@ LINUX_VMS = {
     "ubuntu2004": "x@10.0.1.118", "ubuntu2204": "x@10.0.1.203", "debian12": "x@10.0.1.235",
     "alpine": "x@10.0.1.200",
 }
+# 32-bit Linux, in a container on this machine (tests/arch/sandbox.py).
+SANDBOXES = ("debian12-i386", "debian12-i386-libs", "alpine324-i386")
 TIMEOUT = 3600
 
 
@@ -67,6 +72,8 @@ def plan_fails(log):
             return "needs root: " + line.strip()
         if "nothing for this machine" in line or ("No " in line and "release in the catalogue runs" in line):
             return line.strip()
+        if "no install plan for this version of Windows" in line:
+            return line.strip()
     return None
 
 
@@ -82,7 +89,10 @@ def judge(b, parts, err=""):
     if parts.get("install") != "0":
         reason = plan_fails(log)
         if reason:
-            return "n/a", reason, checks
+            # The plan having no block for this machine at all is untested,
+            # not n/a: the catalogue's own verdict is a `fail` block.
+            no_block = "nothing for this machine" in reason or "no install plan for" in reason
+            return ("no-plan" if no_block else "n/a"), reason, checks
         return "fail", f"install exit {parts.get('install')}: " + tail(log + err, 8), checks
     ended = "FID end" in parts.get("out_out", "")
     missing = [c for c in b.get("checks", []) if c not in checks]
@@ -104,7 +114,7 @@ def judge(b, parts, err=""):
 
 # ---------------------------------------------------------------- Linux and macOS
 
-UNIX_SCRIPT = r'''
+UNIX_SCRIPT = machines.ELF_PROBE_SH + r'''
 set -u
 H=$(mktemp -d /tmp/ibfid-XXXXXX)
 cp "$SRC" "$H/$F"
@@ -115,9 +125,11 @@ d=$(ls -d "$H"/.local/share/ib/*/launch.txt 2>/dev/null | head -1)
 if [ -n "$d" ]; then
   d=$(dirname "$d")
   echo "@out"; env -i $BASEENV timeout 1200 sh "$d/launch.sh" </dev/null 2>&1 | tail -60
+  echo "@elf"; ib_elf_probe "$H/.local/share/ib"
   env -i $BASEENV sh "$d/uninstall.sh" --yes </dev/null >/dev/null 2>&1; echo "@uninstall $?"
 fi
 echo "@left"; (cd "$H" && find . -mindepth 1 ! -name i.log ! -name i.out ! -name "$F" ! -path './.cache*' ! -path './.pki*' | head -5)
+echo "@osdesc"; sed -n 's/^Running as .* on //p' "$H/i.log" 2>/dev/null | head -1
 echo "@log"; cat "$H/i.log" 2>/dev/null
 rm -rf "$H"
 '''
@@ -140,6 +152,17 @@ def run_linux_vm(host, b, f):
     return out, err
 
 
+def run_sandbox(target, b, f):
+    """A cell in a 32-bit Linux container on this machine."""
+    import sandbox
+    src = Path(f).resolve().parent
+    rc, out, err = sandbox.run_script(
+        target, UNIX_SCRIPT, timeout=TIMEOUT, ro={src: "/ibsrc"},
+        env={"HOME": "/home/ti", "PATH": "/usr/local/bin:/usr/bin:/bin",
+             "SRC": "/ibsrc/" + Path(f).name, "F": Path(f).name})
+    return out, err
+
+
 MAC_SCRIPT = r'''
 set -u
 cd "$HOME/ibfid" || exit 90
@@ -154,6 +177,7 @@ if [ -n "$d" ]; then
   sh "$d/uninstall.sh" --yes </dev/null >/dev/null 2>&1; echo "@uninstall $?"
 fi
 echo "@left"; ls "$HOME/Library/ib" "$HOME/Library/Application Support/ib" 2>/dev/null
+echo "@osdesc"; sed -n 's/^Running as .* on //p' "$HOME/ibfid/i.log" 2>/dev/null | head -1
 echo "@log"; cat "$HOME/ibfid/i.log"
 '''
 
@@ -199,6 +223,8 @@ ping -n 3 127.0.0.1 >nul
 echo @left
 if exist "C:\ib" dir /b "C:\ib"
 if defined LOCALAPPDATA if exist "%LOCALAPPDATA%\ib" dir /b "%LOCALAPPDATA%\ib"
+echo @osdesc
+findstr /b /c:"Windows " "%T%\install.log" 2>nul
 echo @log
 if exist "%T%\install.log" type "%T%\install.log"
 for /d %%d in ("%TEMP%\~nsu*.tmp") do rd /s /q "%%d" 2>nul
@@ -241,14 +267,18 @@ def main():
     out_dir = Path(a.out + ("-mac" if a.target == "mac" else ""))
     builds = json.loads((out_dir / "builds.json").read_text())
     only = [x for x in a.only.split(",") if x]
-    plat = "linux" if a.target == "linux" or a.target in LINUX_VMS else "macos" if a.target == "mac" else "windows"
+    if a.target not in machines.MACHINES:
+        raise SystemExit(f"{a.target}: no such machine in tests/arch/machines.py "
+                         f"(add it, with its architecture, before running it)")
+    plat = ("linux" if a.target == "linux" or a.target in LINUX_VMS or a.target in SANDBOXES
+            else "macos" if a.target == "mac" else "windows")
     logs = out_dir / "logs" / a.target
     logs.mkdir(parents=True, exist_ok=True)
     Path(a.results).parent.mkdir(parents=True, exist_ok=True)
     for pid, b in builds.items():
         if only and pid not in only:
             continue
-        res = {"target": a.target, "project": pid, "label": a.label, "time": time.strftime("%Y-%m-%dT%H:%M:%S")}
+        res = {"target": a.target, "arch": machines.arch_of(a.target), "project": pid, "label": a.label, "time": time.strftime("%Y-%m-%dT%H:%M:%S")}
         f = (b.get("files") or {}).get(plat)
         if b.get("status") != "done" or not f:
             res.update(result="fail" if b.get("status") != "done" else "n/a",
@@ -268,17 +298,22 @@ def main():
                 out, err = run_local(b, f)
             elif a.target == "mac":
                 out, err = run_mac(b, f)
+            elif a.target in SANDBOXES:
+                out, err = run_sandbox(a.target, b, f)
             elif a.target in LINUX_VMS:
                 out, err = run_linux_vm(LINUX_VMS[a.target], b, f)
             else:
                 out, err = run_windows(WINDOWS[a.target], b, f)
             (logs / f"{pid}.txt").write_text(out + "\n--- stderr\n" + err)
-            r, d, checks = judge(b, markers(out), err)
-            res.update(result=r, detail=d, checks=checks, record=b["record"], seconds=round(time.time() - start))
+            parts = markers(out)
+            r, d, checks = judge(b, parts, err)
+            r, d, arch = machines.judge(a.target, parts, r, d)
+            res.update(result=r, detail=d, checks=checks, record=b["record"],
+                       seconds=round(time.time() - start), **arch)
         with open(a.results, "a") as fh:
             fh.write(json.dumps(res) + "\n")
-        mark = {"pass": "PASS", "fail": "FAIL", "n/a": "n/a "}[res["result"]]
-        print(f"{mark} {a.target:8} {pid:13} {res['detail'][:160]}", flush=True)
+        mark = {"pass": "PASS", "fail": "FAIL", "n/a": "n/a ", "no-plan": "NOPL"}[res["result"]]
+        print(f"{mark} {a.target:14} {res['arch']:5} {pid:13} {res['detail'][:150]}", flush=True)
         for c, (s, d) in res.get("checks", {}).items():
             if s != "ok":
                 print(f"       {s:4} {c}: {d[:150]}", flush=True)

@@ -1,36 +1,57 @@
 #!/usr/bin/env python3
-"""Write docs/test-results.md from results.jsonl (latest result per cell)."""
-import collections, json, sys
+"""Write docs/test-results.md's main grid from results.jsonl (latest per cell).
+
+usage: report.py [RESULTS ...]
+
+Every column says which architecture that machine is (tests/arch/machines.py),
+so a green row can no longer mean "on amd64 only", and a cell that the
+resolver makes no plan block for reads differently from one the catalogue
+says has no release.
+"""
+import collections
+import json
+import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-rows = [json.loads(l) for l in open(sys.argv[1] if len(sys.argv) > 1 else HERE / "results.jsonl")]
+sys.path.insert(0, str(HERE.parent / "arch"))
+import machines                                            # noqa: E402
+
+files = sys.argv[1:] or [str(HERE / "results.jsonl")]
+rows = [json.loads(l) for f in files for l in open(f) if l.strip()]
 last = {}
 for r in rows:
     last[(r["target"], r["runtime"], r["mode"])] = r
-ORDER = ["xp", "vista", "7", "8.1", "10", "11", "2022", "10x86", "ltsc2021", "11de", "2025core", "centos6", "centos7", "ubuntu1404", "ubuntu1604",
-         "ubuntu1804", "rocky8", "ubuntu2004", "ubuntu2204", "debian12", "linux", "alpine", "mac"]
-NAMES = {"xp": "XP", "vista": "Vista", "7": "Win 7", "8.1": "Win 8.1", "10": "Win 10", "11": "Win 11",
-         "2022": "Srv 2022", "10x86": "Win 10 x86", "ltsc2021": "LTSC 2021", "11de": "Win 11 DE (Jörg)",
-         "2025core": "Srv 2025 Core", "centos6": "CentOS 6", "centos7": "CentOS 7", "ubuntu1404": "Ubuntu 14.04",
-         "ubuntu1604": "Ubuntu 16.04", "ubuntu1804": "Ubuntu 18.04", "rocky8": "Rocky 8",
-         "ubuntu2004": "Ubuntu 20.04", "ubuntu2204": "Ubuntu 22.04", "debian12": "Debian 12",
-         "linux": "Ubuntu 24.04", "alpine": "Alpine", "mac": "macOS 26"}
-RTS = ["python", "node", "ruby", "php", "java", "dotnet", "r", "go", "rust", "zig", "nim", "cc"]
+ORDER = ["xp", "vista", "7", "8.1", "10", "11", "2022", "10x86", "ltsc2021", "ltsc2024", "11de", "2025core",
+         "centos6", "centos7", "ubuntu1404", "ubuntu1604", "ubuntu1804", "rocky8", "ubuntu2004", "ubuntu2204",
+         "debian12", "linux", "alpine", "debian12-i386", "debian12-i386-libs", "alpine324-i386", "mac"]
+RTS = ["python", "python2", "node", "ruby", "php", "java", "dotnet", "r", "go", "rust", "zig", "nim", "cc"]
 targets = [t for t in ORDER if any(k[0] == t for k in last)]
+targets += [t for t in sorted({k[0] for k in last}) if t not in ORDER]
+
+
+def head(t):
+    m = machines.MACHINES.get(t)
+    if not m:
+        return t + " (?)"
+    bits = machines.SHORT.get(m["arch"], m["arch"])
+    return f"{m['label']} · {bits}"
 
 
 def cell(t, rt):
-    rs = [last.get((t, rt, m)) for m in "ABC"]
-    if not any(rs):
+    """One machine x runtime cell, over the modes that were run."""
+    rs = [r for r in (last.get((t, rt, m)) for m in "ABC") if r]
+    if not rs:
         return " "
-    res = {r["result"] for r in rs if r}
+    res = {r["result"] for r in rs}
     if res == {"pass"}:
         return "✓"
     if "fail" in res:
         return "✗"
-    if all(r and r["result"] == "n/a" for r in rs):
-        return "root" if any("needs root" in r["detail"] for r in rs) else "–"
+    if res <= {"n/a", "no-plan"}:
+        if any("needs root" in r["detail"] for r in rs):
+            return "root"
+        return "∅" if "no-plan" in res else "–"
     return "part"
 
 
@@ -39,18 +60,36 @@ out = ["# Test results", "",
        "cell). Each cell is one runtime's hello world, built through the live API in modes A, B and C,",
        "installed unattended, run through its launcher (it must print `hello from <runtime>`), then",
        "uninstalled with a check that nothing is left (docs/plan.md section 3).", "",
+       "Each column says the machine's architecture: **64** amd64 · **32** 32-bit x86 · **a64** arm64.",
+       "Every cell also checks it: the architecture the installer's own engine detected, and the ELF",
+       "class of the runtime it installed, must both be that machine's, or the cell fails.", "",
        "✓ passes in all three modes · ✗ fails in at least one · – no release in the catalogue runs on",
-       "that OS (the installer says so) · root: needs a system package, and the unattended installer",
-       "stops with the exact command to run", "",
-       "| Runtime | " + " | ".join(NAMES[t] for t in targets) + " |",
+       "that OS and architecture (the installer says so) · ∅ the plan has no block for that machine at",
+       "all, so the cell is **untested**, not n/a · root: needs a system package, and the unattended",
+       "installer stops with the exact command to run · blank: not run", "",
+       "| Runtime | " + " | ".join(head(t) for t in targets) + " |",
        "| --- | " + " | ".join("---" for _ in targets) + " |"]
 for rt in RTS:
+    if not any(k[1] == rt for k in last):
+        continue
     out.append(f"| {rt} | " + " | ".join(cell(t, rt) for t in targets) + " |")
 tot = collections.Counter(r["result"] for r in last.values())
-out += ["", f"**{len(last)} cells: {tot['pass']} pass, {tot['n/a']} n/a, {tot['fail']} fail.**", "",
-        "## Every failure", "", "| OS | Runtime | Mode | Detail |", "| --- | --- | --- | --- |"]
-for (t, rt, m), r in sorted(last.items(), key=lambda kv: (ORDER.index(kv[0][0]), kv[0][1], kv[0][2])):
+out += ["", f"**{len(last)} cells: {tot['pass']} pass, {tot['n/a']} n/a, {tot['no-plan']} no plan block, "
+        f"{tot['fail']} fail.**", ""]
+
+by_arch = collections.Counter((r.get("arch") or machines.arch_of(r["target"]), r["result"]) for r in last.values())
+arches = sorted({a for a, _ in by_arch})
+out += ["By architecture:", "",
+        "| Architecture | cells | pass | n/a | no plan block | fail |", "| --- | --- | --- | --- | --- | --- |"]
+for a in arches:
+    n = sum(v for (aa, _), v in by_arch.items() if aa == a)
+    out.append(f"| {a} | {n} | " + " | ".join(str(by_arch.get((a, k), 0))
+                                              for k in ("pass", "n/a", "no-plan", "fail")) + " |")
+
+out += ["", "## Every failure", "", "| OS | Arch | Runtime | Mode | Detail |", "| --- | --- | --- | --- | --- |"]
+order = {t: i for i, t in enumerate(targets)}
+for (t, rt, m), r in sorted(last.items(), key=lambda kv: (order.get(kv[0][0], 99), kv[0][1], kv[0][2])):
     if r["result"] == "fail":
         d = " ".join(r["detail"].split())[:160].replace("|", "/")
-        out.append(f"| {NAMES[t]} | {rt} | {m} | {d} |")
+        out.append(f"| {machines.label_of(t, False)} | {r.get('arch') or machines.arch_of(r['target'])} | {rt} | {m} | {d} |")
 print("\n".join(out))

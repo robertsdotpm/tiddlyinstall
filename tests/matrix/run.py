@@ -4,22 +4,33 @@
 usage: run.py TARGET [--runtimes a,b] [--modes A,B,C] [--out DIR]
 
 TARGET is `linux` (this machine, in a throwaway home), `mac` (the Mac test
-server), or a Windows VM name from WINDOWS below. Installers come from
-build.py's output (<out>/builds.json; the Mac uses <out>-mac/). Each cell:
-install unattended, run the app through its launcher and look for
-"hello from <runtime>", uninstall, and check nothing is left. Results are
-appended to results.jsonl as one JSON object per cell.
+server), a Linux VM from LINUX_VMS, a 32-bit Linux container from
+tests/arch/sandbox.py, or a Windows VM name from WINDOWS below. Installers
+come from build.py's output (<out>/builds.json; the Mac uses <out>-mac/).
+Each cell: install unattended, run the app through its launcher and look
+for "hello from <runtime>", uninstall, and check nothing is left. Results
+are appended to results.jsonl as one JSON object per cell.
+
+Every cell also records the architecture it ran on: what
+tests/arch/machines.py says the machine is, what the installer's own engine
+detected (`arch_seen`), and the ELF class of what it installed
+(`arch_elf`). A disagreement fails the cell -- on a 32-bit userland over a
+64-bit kernel an amd64 runtime would run perfectly well and the cell would
+otherwise be green.
 """
 import argparse
 import json
 import os
 import shlex
 import subprocess
+import sys
 import tempfile
 import time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parent / "arch"))
+import machines                                            # noqa: E402
 MAC = "Matthew@the-mac-test-host"
 WINDOWS = {
     # name: (ssh target, default shell[, "profile"])
@@ -46,6 +57,9 @@ LINUX_VMS = {
     "ubuntu2004": "x@10.0.1.118", "ubuntu2204": "x@10.0.1.203", "debian12": "x@10.0.1.235",
     "alpine": "x@10.0.1.200",
 }
+# 32-bit Linux, in a container on this machine (tests/arch/mkroot.py makes
+# the roots; sandbox.py says what a container can and cannot show).
+SANDBOXES = ("debian12-i386", "debian12-i386-libs", "alpine324-i386")
 INSTALL_TIMEOUT = 1800
 
 
@@ -61,12 +75,25 @@ def tail(s, n=15):
     return "\n".join(s.strip().splitlines()[-n:])
 
 
+RESULTS_FILE = HERE / "results.jsonl"
+
+
 def record(res):
     res["time"] = time.strftime("%Y-%m-%dT%H:%M:%S")
-    with open(HERE / "results.jsonl", "a") as f:
+    res.setdefault("arch", machines.arch_of(res["target"]))
+    with open(RESULTS_FILE, "a") as f:
         f.write(json.dumps(res) + "\n")
-    mark = {"pass": "PASS", "fail": "FAIL", "n/a": "n/a "}[res["result"]]
-    print(f"{mark} {res['target']:6} {res['runtime']:7} {res['mode']}  {res.get('detail', '')[:150]}", flush=True)
+    mark = {"pass": "PASS", "fail": "FAIL", "n/a": "n/a ", "no-plan": "NOPL"}[res["result"]]
+    print(f"{mark} {res['target']:14} {res['arch']:5} {res['runtime']:7} {res['mode']}  "
+          f"{res.get('detail', '')[:150]}", flush=True)
+
+
+# The engine's own words when the plan has no block for this machine at
+# all. That is not the catalogue saying "no release runs here" (which is a
+# `fail` block, with the runtime and the OS named): it means the resolver
+# made no block for this OS and architecture, so the cell is untested
+# rather than not applicable. docs/test-results.md keeps them apart.
+NO_BLOCK = "nothing for this machine"
 
 
 def plan_fails(log):
@@ -75,72 +102,86 @@ def plan_fails(log):
     for line in log.splitlines():
         if "needs system packages" in line or "needs administrator rights" in line:
             return "needs root: " + line.strip()
-        if "nothing for this machine" in line or "No " in line and "release in the catalogue runs" in line:
+        if NO_BLOCK in line or "no install plan for this version of Windows" in line:
+            return line.strip()
+        if "No " in line and "release in the catalogue runs" in line:
             return line.strip()
     return None
 
 
+def verdict(reason):
+    """"n/a" (the catalogue has no release) or "no-plan" (the plan has no
+    block for this machine), for a reason plan_fails found."""
+    return ("no-plan" if (NO_BLOCK in reason or "no install plan for" in reason) else "n/a"), reason
+
+
+arch_judge = machines.judge
+
+
 # Linux: this machine, a throwaway home, no desktop session -------------
 
-def run_linux(rt, mode, f):
-    home = tempfile.mkdtemp(prefix="ibm-", dir=os.environ.get("TMPDIR"))
-    env = {"HOME": home, "PATH": "/usr/local/bin:/usr/bin:/bin", "LANG": "C.UTF-8"}
-    log = Path(home) / "install.log"
-    try:
-        code, out, err = sh(["sh", f, "--yes", f"--log={log}"], env=env)
-        text = log.read_text(errors="replace") if log.exists() else out + err
-        if code != 0:
-            reason = plan_fails(text)
-            return ("n/a", reason) if reason else ("fail", "install: " + tail(text, 6))
-        root = Path(home, ".local/share/ib")
-        apps = [p.parent for p in root.glob("*/launch.txt")]
-        if not apps:
-            return "fail", "no app folder after install"
-        code, out, err = sh(["sh", str(apps[0] / "launch.sh")], timeout=120, env=env)
-        ok = f"hello from {rt}" in out + err
-        ucode, uout, uerr = sh(["sh", str(apps[0] / "uninstall.sh"), "--yes"], timeout=300, env=env)
-        left = [str(p.relative_to(home)) for p in Path(home).rglob("*") if p != log and ".cache" not in p.parts]
-        if not ok:
-            return "fail", "launch: " + tail(out + err, 6)
-        if ucode != 0 or left:
-            return "fail", f"uninstall exit {ucode}, left: {left[:5]}"
-        return "pass", "hello + clean uninstall"
-    finally:
-        subprocess.run(["rm", "-rf", home])
+def run_linux(rt, mode, f, target="linux"):
+    # The script makes its own throwaway home under $TMPROOT and removes it.
+    env = {"HOME": os.path.expanduser("~"), "PATH": "/usr/local/bin:/usr/bin:/bin",
+           "LANG": "C.UTF-8", "SRC": str(Path(f).resolve()), "F": Path(f).name}
+    if os.environ.get("TMPDIR"):
+        env["TMPDIR"] = os.environ["TMPDIR"]
+    code, out, err = sh(["sh", "-c", LOCAL_SCRIPT], env=env)
+    return parse_unix(rt, out, err, target)
 
 
-# Linux VMs: the same steps over SSH, in a throwaway home ------------------
-
-LINUX_SCRIPT = r'''
+# Linux VMs, this machine and the 32-bit containers all run these steps in
+# a throwaway home. ib_elf_probe (tests/arch/machines.py) says what
+# architecture the runtime that was installed really is.
+LINUX_BODY = machines.ELF_PROBE_SH + r'''
 set -u
-H=$(mktemp -d /tmp/ibm-XXXXXX)
-cp "$HOME/ibtest/$F" "$H/$F"
+H=$(mktemp -d "$TMPROOT/ibm-XXXXXX")
+cp "$SRC" "$H/$F"
 env -i HOME="$H" PATH=/usr/local/bin:/usr/bin:/bin LANG=C sh "$H/$F" --yes --log="$H/i.log" </dev/null >/dev/null 2>&1
 echo "@install $?"
+echo "@osdesc"; sed -n 's/^Running as .* on //p' "$H/i.log" 2>/dev/null | head -1
 d=$(ls -d "$H"/.local/share/ib/*/launch.txt 2>/dev/null | head -1)
 if [ -n "$d" ]; then
   d=$(dirname "$d")
   echo "@launch"; env -i HOME="$H" PATH=/usr/local/bin:/usr/bin:/bin sh "$d/launch.sh" </dev/null 2>&1 | tail -5
+  echo "@elf"; ib_elf_probe "$H/.local/share/ib"
   env -i HOME="$H" PATH=/usr/local/bin:/usr/bin:/bin sh "$d/uninstall.sh" --yes </dev/null >/dev/null 2>&1; echo "@uninstall $?"
 fi
 echo "@left"; (cd "$H" && find . -mindepth 1 ! -name i.log ! -name "$F" ! -path './.cache*' | head -5)
 echo "@log"; tail -8 "$H/i.log" 2>/dev/null
-rm -rf "$H" "$HOME/ibtest"
+rm -rf "$H"
 '''
+LINUX_SCRIPT = LINUX_BODY.replace('cp "$SRC"', 'SRC="$HOME/ibtest/$F"; cp "$SRC"') + '\nrm -rf "$HOME/ibtest"\n'
+LOCAL_SCRIPT = 'TMPROOT=${TMPDIR:-/tmp}\n' + LINUX_BODY
+SANDBOX_SCRIPT = 'TMPROOT=/tmp\nSRC=/ibsrc/$F\n' + LINUX_BODY
 
 
-def run_linux_vm(host, rt, mode, f):
+def run_linux_vm(host, rt, mode, f, target):
     # Keep the file's own name: mode A reads the record hash from it.
     name = Path(f).name
     sh(["ssh", host, "rm -rf ibtest; mkdir -p ibtest"], timeout=60)
     code, _, err = sh(["scp", "-q", f, f"{host}:ibtest/{name}"], timeout=300)
     if code:
-        return "fail", "scp: " + err.strip()
-    code, out, err = sh(["ssh", host, f"F={shlex.quote(name)} sh -s"], input=LINUX_SCRIPT)
-    return parse_unix(rt, out, err)
+        return "fail", "scp: " + err.strip(), {}
+    code, out, err = sh(["ssh", host, f"TMPROOT=/tmp F={shlex.quote(name)} sh -s"], input=LINUX_SCRIPT)
+    return parse_unix(rt, out, err, target)
 
 
-def parse_unix(rt, out, err):
+# 32-bit Linux: the same steps, in a container on this machine ------------
+
+def run_sandbox(target, rt, mode, f):
+    import sandbox
+    src = Path(f).resolve().parent
+    rc, out, err = sandbox.run_script(
+        target, SANDBOX_SCRIPT, env={"HOME": "/home/ti", "F": Path(f).name,
+                                     "PATH": "/usr/local/bin:/usr/bin:/bin"},
+        ro={src: "/ibsrc"}, timeout=INSTALL_TIMEOUT)
+    if rc == 124:
+        return "fail", err, {}
+    return parse_unix(rt, out, err, target)
+
+
+def parse_unix(rt, out, err, target):
     parts, cur = {}, None
     for line in out.splitlines():
         if line.startswith("@"):
@@ -148,9 +189,14 @@ def parse_unix(rt, out, err):
             parts[k], cur = v, k
         elif cur:
             parts[cur + "_out"] = parts.get(cur + "_out", "") + line + "\n"
+    r, d = _judge_unix(rt, parts, err)
+    return arch_judge(target, parts, r, d)
+
+
+def _judge_unix(rt, parts, err):
     if parts.get("install") != "0":
         reason = plan_fails(parts.get("log_out", ""))
-        return ("n/a", reason) if reason else ("fail", "install: " + tail(parts.get("log_out", "") + err, 6))
+        return verdict(reason) if reason else ("fail", "install: " + tail(parts.get("log_out", "") + err, 6))
     if f"hello from {rt}" not in parts.get("launch_out", ""):
         return "fail", "launch: " + tail(parts.get("launch_out", ""), 6)
     left = parts.get("left_out", "").strip()
@@ -169,6 +215,7 @@ app=$(ls -d *.app)
 if [ "$MODE" = B ]; then codesign -f -s - "$app" >/dev/null 2>&1 || exit 92; fi
 IB_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --backend=http://127.0.0.1:8080 --log="$HOME/ibtest/i.log" </dev/null >/dev/null 2>&1
 echo "@install $?"
+echo "@osdesc"; sed -n 's/^Running as .* on //p' "$HOME/ibtest/i.log" 2>/dev/null | head -1
 d=$(ls -d "$HOME/Library/ib/"*/launch.txt "$HOME/Library/Application Support/ib/"*/launch.txt 2>/dev/null | head -1)
 if [ -n "$d" ]; then
   d=$(dirname "$d")
@@ -184,61 +231,52 @@ def run_mac(rt, mode, f):
     sh(["ssh", MAC, "rm -rf ~/ibtest; mkdir -p ~/ibtest"], timeout=60)
     code, _, err = sh(["scp", "-q", f, f"{MAC}:ibtest/in.zip"], timeout=300)
     if code:
-        return "fail", "scp: " + err
+        return "fail", "scp: " + err, {}
     code, out, err = sh(["ssh", MAC, f"MODE={mode} sh -s"], input=MAC_SCRIPT)
     sh(["ssh", MAC, "rm -rf ~/ibtest"], timeout=60)
-    parts = {}
-    cur = None
-    for line in out.splitlines():
-        if line.startswith("@"):
-            k, _, v = line[1:].partition(" ")
-            parts[k] = v
-            cur = k
-        elif cur:
-            parts[cur + "_out"] = parts.get(cur + "_out", "") + line + "\n"
-    if parts.get("install") != "0":
-        reason = plan_fails(parts.get("log_out", ""))
-        return ("n/a", reason) if reason else ("fail", "install: " + tail(parts.get("log_out", "") + err, 6))
-    ok = f"hello from {rt}" in parts.get("launch_out", "")
-    left = parts.get("left_out", "").strip()
-    if not ok:
-        return "fail", "launch: " + tail(parts.get("launch_out", ""), 6)
-    if parts.get("uninstall") != "0" or left:
-        return "fail", f"uninstall exit {parts.get('uninstall')}, left: {left[:200]}"
-    return "pass", "hello + clean uninstall"
+    return parse_unix(rt, out, err, "mac")
 
 
 def main():
+    global RESULTS_FILE
     ap = argparse.ArgumentParser()
     ap.add_argument("target")
     ap.add_argument("--runtimes", default="")
     ap.add_argument("--modes", default="A,B,C")
     ap.add_argument("--out", default=str(HERE / "out"))
+    ap.add_argument("--results", default=str(RESULTS_FILE))
     a = ap.parse_args()
+    RESULTS_FILE = Path(a.results)
+    if a.target not in machines.MACHINES:
+        raise SystemExit(f"{a.target}: no such machine in tests/arch/machines.py "
+                         f"(add it, with its architecture, before running it)")
     out = Path(a.out + ("-mac" if a.target == "mac" else ""))
     builds = json.loads((out / "builds.json").read_text())
     projects = json.loads((HERE / "projects.json").read_text())["projects"]
     runtimes = a.runtimes.split(",") if a.runtimes else list(projects)
-    plat = "linux" if a.target in LINUX_VMS else {"linux": "linux", "mac": "macos"}.get(a.target, "windows")
+    plat = "linux" if a.target in LINUX_VMS or a.target in SANDBOXES \
+        else {"linux": "linux", "mac": "macos"}.get(a.target, "windows")
     for rt in runtimes:
         for mode in a.modes.split(","):
             b = builds.get(f"{rt}/{mode}")
-            res = {"target": a.target, "runtime": rt, "mode": mode}
+            res = {"target": a.target, "arch": machines.arch_of(a.target), "runtime": rt, "mode": mode}
             if not b or b.get("status") != "done":
                 res.update(result="fail", detail="build: " + str((b or {}).get("error", "not built")))
                 record(res)
                 continue
             f = b["files"].get(plat)
             if a.target == "linux":
-                r, d = run_linux(rt, mode, f)
+                r, d, extra = run_linux(rt, mode, f)
             elif a.target == "mac":
-                r, d = run_mac(rt, mode, f)
+                r, d, extra = run_mac(rt, mode, f)
+            elif a.target in SANDBOXES:
+                r, d, extra = run_sandbox(a.target, rt, mode, f)
             elif a.target in LINUX_VMS:
-                r, d = run_linux_vm(LINUX_VMS[a.target], rt, mode, f)
+                r, d, extra = run_linux_vm(LINUX_VMS[a.target], rt, mode, f, a.target)
             else:
                 from run_windows import run_windows
-                r, d = run_windows(WINDOWS[a.target], rt, mode, f, b["record"])
-            res.update(result=r, detail=d, record=b["record"])
+                r, d, extra = run_windows(WINDOWS[a.target], rt, mode, f, b["record"], a.target)
+            res.update(result=r, detail=d, record=b["record"], **extra)
             record(res)
 
 

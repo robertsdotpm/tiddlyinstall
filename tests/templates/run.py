@@ -38,11 +38,14 @@ import json
 import os
 import shlex
 import subprocess
+import sys
 import tempfile
 import time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parent / "arch"))
+import machines                                            # noqa: E402
 MAC = "Matthew@the-mac-test-host"
 # Windows VMs: name -> ssh target (tests/matrix/run.py has the full list).
 WINDOWS = {
@@ -70,6 +73,9 @@ LINUX_VMS = {
     "ubuntu2004": "x@10.0.1.118", "ubuntu2204": "x@10.0.1.203", "debian12": "x@10.0.1.235",
     "alpine": "x@10.0.1.200",
 }
+# 32-bit Linux, in a container on this machine (tests/arch/sandbox.py). No
+# display and no D-Bus there, so window and tray templates can't run.
+SANDBOXES = ("debian12-i386", "debian12-i386-libs", "alpine324-i386")
 INSTALL_TIMEOUT = 2400
 RUN_TIMEOUT = 180
 
@@ -135,7 +141,10 @@ def judge(key, b, parts, err=""):
         log = parts.get("log_out", "")
         reason = plan_fails(log)
         if reason:
-            return "n/a", reason
+            # "nothing for this machine" is the plan having no block for
+            # this OS and architecture at all -- untested, not n/a. The
+            # catalogue's own "no release runs here" is a `fail` block.
+            return ("no-plan" if "nothing for this machine" in reason else "n/a"), reason
         return "fail", f"install exit {parts.get('install')}: " + tail(log + err, 6)
     notes = []
     in_file = want in parts.get("file_out", "")
@@ -161,7 +170,7 @@ def judge(key, b, parts, err=""):
 
 # ---------------------------------------------------------------- Linux and macOS
 
-UNIX_SCRIPT = r'''
+UNIX_SCRIPT = machines.ELF_PROBE_SH + r'''
 set -u
 H=$(mktemp -d /tmp/ibtpl-XXXXXX)
 cp "$SRC" "$H/$F"
@@ -206,6 +215,8 @@ if [ -n "$d" ]; then
 fi
 # .dbus: GTK's D-Bus autolaunch, which a desktop session's own bus makes unneeded.
 echo "@left"; (cd "$H" && find . -mindepth 1 ! -name i.log ! -name "$F" ! -name selftest.txt ! -name out.txt ! -name err.txt ! -path './.cache*' ! -path './.dbus*' | head -5)
+echo "@osdesc"; sed -n 's/^Running as .* on //p' "$H/i.log" 2>/dev/null | head -1
+echo "@elf"; [ -n "${d:-}" ] && ib_elf_probe "$H/.local/share/ib"
 echo "@log"; tail -12 "$H/i.log" 2>/dev/null
 [ "${KEEP:-}" = 1 ] || rm -rf "$H"
 '''
@@ -220,7 +231,8 @@ def run_unix_local(key, b, f, a):
     if a.xvfb_lib:
         env["LD_LIBRARY_PATH"] = a.xvfb_lib
     code, out, err = sh(["sh", "-c", UNIX_SCRIPT], env=env)
-    return judge(key, b, parse_markers(out), err)
+    parts = parse_markers(out)
+    return judge(key, b, parts, err) + (parts,)
 
 
 def run_linux_vm(host, key, b, f, a):
@@ -228,7 +240,7 @@ def run_linux_vm(host, key, b, f, a):
     sh(["ssh", host, "rm -rf ibtpl; mkdir -p ibtpl"], timeout=60)
     code, _, err = sh(["scp", "-q", f, f"{host}:ibtpl/{name}"], timeout=600)
     if code:
-        return "fail", "scp: " + err.strip()
+        return "fail", "scp: " + err.strip(), {}
     gui = "0" if b.get("console") else "1"
     head = (f"SRC=$HOME/ibtpl/{shlex.quote(name)} F={shlex.quote(name)} GUI={gui} TITLE={shlex.quote(b.get('title', ''))} "
             f"RUNT={RUN_TIMEOUT} XVFB=Xvfb KEEP={'1' if a.keep else ''} STRAY={shlex.quote(a.stray)}")
@@ -240,7 +252,25 @@ def run_linux_vm(host, key, b, f, a):
         sh(["ssh", host, "pkill -f " + shlex.quote("[" + name[0] + "]" + name[1:])], timeout=60)
         time.sleep(30)
     sh(["ssh", host, "rm -rf ibtpl"], timeout=60)
-    return judge(key, b, parse_markers(out), err)
+    parts = parse_markers(out)
+    return judge(key, b, parts, err) + (parts,)
+
+
+# 32-bit Linux: the same steps, in a container on this machine. There is no
+# display there, so window and tray templates say so rather than failing.
+def run_sandbox(target, key, b, f, a):
+    import sandbox
+    if not b.get("console"):
+        return "n/a", f"{target} is a container with no display: GUI templates can't run there", {}
+    src = Path(f).resolve().parent
+    env = {"HOME": "/home/ti", "PATH": "/usr/local/bin:/usr/bin:/bin",
+           "SRC": "/ibsrc/" + Path(f).name, "F": Path(f).name, "GUI": "0",
+           "TITLE": b.get("title", ""), "RUNT": str(RUN_TIMEOUT), "XVFB": "Xvfb",
+           "KEEP": "", "STRAY": a.stray}
+    rc, out, err = sandbox.run_script(target, UNIX_SCRIPT, env=env, ro={src: "/ibsrc"},
+                                      timeout=INSTALL_TIMEOUT)
+    parts = parse_markers(out)
+    return judge(key, b, parts, err) + (parts,)
 
 
 MAC_SCRIPT = r'''
@@ -264,20 +294,22 @@ fi
 after=$(ls "$HOME/Applications" 2>/dev/null; [ -d "$HOME/Applications" ] && echo "(Applications)")
 echo "@left"; ls "$HOME/Library/ib" "$HOME/Library/Application Support/ib" 2>/dev/null
 [ "$before" = "$after" ] || echo "Applications: $after"
+echo "@osdesc"; sed -n 's/^Running as .* on //p' "$HOME/ibtpl/i.log" 2>/dev/null | head -1
 echo "@log"; tail -12 "$HOME/ibtpl/i.log"
 '''
 
 
 def run_mac(key, b, f, a):
     if not b.get("console"):
-        return "n/a", "the Mac has no display: GUI templates can't run there"
+        return "n/a", "the Mac has no display: GUI templates can't run there", {}
     sh(["ssh", MAC, "rm -rf ~/ibtpl; mkdir -p ~/ibtpl"], timeout=60)
     code, _, err = sh(["scp", "-q", f, f"{MAC}:ibtpl/in.zip"], timeout=600)
     if code:
-        return "fail", "scp: " + err
+        return "fail", "scp: " + err, {}
     code, out, err = sh(["ssh", MAC, "sh -s"], input=MAC_SCRIPT)
     sh(["ssh", MAC, "rm -rf ~/ibtpl"], timeout=60)
-    return judge(key, b, parse_markers(out), err)
+    parts = parse_markers(out)
+    return judge(key, b, parts, err) + (parts,)
 
 
 # ---------------------------------------------------------------- Windows
@@ -301,6 +333,8 @@ INSTALL_BAT = r"""setlocal
 echo @install %ERRORLEVEL%
 """ + FIND_APP + r"""echo @appdir
 if defined A echo found
+echo @osdesc
+if exist "%T%\install.log" findstr /b /c:"Windows " "%T%\install.log"
 echo @log
 if exist "%T%\install.log" type "%T%\install.log"
 """
@@ -341,6 +375,8 @@ schtasks /run /tn ibtpl
 
 GUI_RESULTS_BAT = r"""echo @install
 type "%T%\install-rc.txt" 2>nul
+echo @osdesc
+findstr /b /c:"Windows " "%T%\install.log" 2>nul
 echo @log
 type "%T%\install.log" 2>nul
 echo @window
@@ -568,13 +604,13 @@ def wait_idle(vm):
 def run_windows(vm, key, b, f, a):
     ident = appid(b["record"])
     if not b.get("console") and vm.target in NO_DESKTOP:
-        return "n/a", NO_DESKTOP[vm.target]
+        return "n/a", NO_DESKTOP[vm.target], {}
     if not wait_idle(vm):
-        return "fail", "the VM stayed busy with another test run for an hour"
+        return "fail", "the VM stayed busy with another test run for an hour", {}
     vm.fresh()
     code, _, err = sh(["scp", "-q", f, f"{vm.host}:{vm.scp_dir}/{Path(f).name}"], timeout=900)
     if code:
-        return "fail", "scp: " + err.strip()
+        return "fail", "scp: " + err.strip(), {}
     parts, note = {}, ""
     if b.get("console"):
         code, out, err = vm.run_script("install.bat", INSTALL_BAT, FILE=Path(f).name, ID=ident)
@@ -585,7 +621,7 @@ def run_windows(vm, key, b, f, a):
             parts.setdefault("install", "?")
             if not a.keep:
                 vm.remove()
-            return judge(key, b, parts, err)
+            return judge(key, b, parts, err) + (parts,)
         code, out, err = vm.run_script("run.bat", CONSOLE_BAT, timeout=RUN_TIMEOUT + 60, ID=ident)
         parts.update(parse_markers(out))
     else:
@@ -644,8 +680,8 @@ def run_windows(vm, key, b, f, a):
     if r == "fail" and note and "does not have desktop access" in parts.get("applog_out", ""):
         # Java won't open a window on the SSH session's window station
         # (HeadlessException); only a logged-on user's session shows it.
-        return "n/a", "nobody logged on at the console, and Java won't open a window in the SSH session (HeadlessException)"
-    return r, d + (note if r != "n/a" else "")
+        return "n/a", "nobody logged on at the console, and Java won't open a window in the SSH session (HeadlessException)", parts
+    return r, d + (note if r != "n/a" else ""), parts
 
 
 # ---------------------------------------------------------------- main
@@ -669,13 +705,17 @@ def main():
     INSTALL_TIMEOUT = a.install_timeout
     builds = json.loads((Path(a.out) / "builds.json").read_text())
     only = [x for x in a.only.split(",") if x]
-    plat = "linux" if a.target == "linux" or a.target in LINUX_VMS else "macos" if a.target == "mac" else "windows"
+    if a.target not in machines.MACHINES:
+        raise SystemExit(f"{a.target}: no such machine in tests/arch/machines.py "
+                         f"(add it, with its architecture, before running it)")
+    plat = ("linux" if a.target == "linux" or a.target in LINUX_VMS or a.target in SANDBOXES
+            else "macos" if a.target == "mac" else "windows")
     for key, b in builds.items():
         rt = key.split("/")[0]
         if only and key not in only and rt not in only:
             continue
         a.stray = unix_stray(rt, a)
-        res = {"target": a.target, "template": key}
+        res = {"target": a.target, "arch": machines.arch_of(a.target), "template": key}
         if b.get("platforms") and plat not in b["platforms"]:
             res.update(result="n/a", detail=f"the template isn't for {plat}")
         elif b.get("status") != "done":
@@ -685,21 +725,25 @@ def main():
         else:
             f = b["files"][plat]
             if a.target == "linux":
-                r, d = run_unix_local(key, b, f, a)
+                r, d, parts = run_unix_local(key, b, f, a)
+            elif a.target in SANDBOXES:
+                r, d, parts = run_sandbox(a.target, key, b, f, a)
             elif a.target in LINUX_VMS:
-                r, d = run_linux_vm(a.host or LINUX_VMS[a.target], key, b, f, a)
+                r, d, parts = run_linux_vm(a.host or LINUX_VMS[a.target], key, b, f, a)
             elif a.target == "mac":
-                r, d = run_mac(key, b, f, a)
+                r, d, parts = run_mac(key, b, f, a)
             else:
                 host = a.host or WINDOWS.get(a.target)
                 if not host:
                     raise SystemExit(f"no ssh target for {a.target}: give --host")
-                r, d = run_windows(WinVM(a.target, host, stray=win_stray(rt, a)), key, b, f, a)
-            res.update(result=r, detail=d, record=b["record"])
+                r, d, parts = run_windows(WinVM(a.target, host, stray=win_stray(rt, a)), key, b, f, a)
+            r, d, arch = machines.judge(a.target, parts, r, d)
+            res.update(result=r, detail=d, record=b["record"], **arch)
         res["time"] = time.strftime("%Y-%m-%dT%H:%M:%S")
         with open(a.results, "a") as fh:
             fh.write(json.dumps(res) + "\n")
-        print(f"{res['result']:4} {a.target:10} {key:15} {res.get('detail', '')[:220]}", flush=True)
+        print(f"{res['result']:4} {a.target:14} {res['arch']:5} {key:15} "
+              f"{res.get('detail', '')[:200]}", flush=True)
 
 
 if __name__ == "__main__":
