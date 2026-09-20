@@ -700,7 +700,27 @@ ib_inside() {
 }
 
 # Get a verified file: from the pack, else from each URL in turn.
-ib_obtain() { # sha256 out urls-file label
+#
+# $5 = "unpinned" allows $1 to be "-", meaning this file has no stored
+# SHA-256 and is identified some other way. Only the app's own source may
+# ask for that, and only for a GitHub commit over HTTPS (format.md,
+# "Sources without a stored hash"): the commit id names the snapshot and
+# TLS vouches for the repo, and GitHub's generated archives are not
+# byte-stable, so a stored hash goes stale.
+#
+# "-" and not an empty field: a tab is IFS white space, so `set -- $line`
+# collapses a run of tabs and an empty field in the middle of a line
+# would shift every field after it left (format.md section 1).
+#
+# It is an explicit argument rather than "no hash means don't check", so
+# a `file` line that somehow arrives without one still fails closed
+# instead of being installed unchecked.
+ib_obtain() { # sha256 out urls-file label [unpinned]
+	if [ -z "$1" ] || [ "$1" = - ]; then
+		[ "${5:-}" = unpinned ] || { ib_log "refusing a file with no SHA-256"; return 1; }
+		ib_obtain_unpinned "$2" "$3" "$4"
+		return $?
+	fi
 	if [ -n "$IB_PACK_DIR" ] && [ -f "$IB_PACK_DIR/$1" ]; then
 		cp "$IB_PACK_DIR/$1" "$2"
 		ib_log "  from the pack"
@@ -982,6 +1002,30 @@ ib_unpack() { # format archive dest strip exclude
 	fi
 	rm -rf "$st"
 	return $rc
+}
+
+# A source with no stored hash: HTTPS only, because nothing else
+# identifies the bytes. There is no pack to look in -- an offline
+# installer always carries a hash, since its pack is addressed by one.
+ib_obtain_unpinned() { # out urls-file label
+	while IFS= read -r u <&4; do
+		[ -n "$u" ] || continue
+		case $u in
+		https://*) ;;
+		*)
+			ib_say "  skipping $u: a source with no SHA-256 must come over HTTPS"
+			continue
+			;;
+		esac
+		ib_say "  downloading $u (no stored SHA-256; identified by its commit over HTTPS)"
+		if ib_download "$u" "$1.part"; then
+			mv "$1.part" "$1"
+			return 0
+		fi
+		ib_say "  download failed: $u"
+		rm -f "$1.part"
+	done 4< "$2"
+	return 1
 }
 
 ib_step() { # type fields...
@@ -1840,7 +1884,17 @@ ib_describe_source() {
 	set -- $s
 	IFS=$ifs0
 	case $1 in
-	github) printf 'GitHub %s, commit %s' "$2" "$3" ;;
+	github)
+		# Since 2026-09-20 a GitHub source carries no stored hash: the
+		# commit id names the snapshot and HTTPS vouches for the repo
+		# (design.md 11.2). Say which it is, rather than leaving someone
+		# to assume a hash was checked.
+		if [ -n "${4:-}" ]; then
+			printf 'GitHub %s, commit %s (sha256 %s)' "$2" "$3" "$4"
+		else
+			printf 'GitHub %s, commit %s (no stored hash: identified by the commit, fetched over HTTPS)' "$2" "$3"
+		fi
+		;;
 	package) printf 'package %s, version %s' "$2" "$3" ;;
 	url) printf '%s (sha256 %s)' "$2" "$3" ;;
 	inline) printf 'code written on the site (sha256 %s)' "$2" ;;
@@ -2172,8 +2226,14 @@ ib_install_main() {
 		ib_say "Getting the project ($s_file)"
 		ib_sel srcurl > "$IB_WORK/urls"
 		mkdir -p "$IB_TMP/dl/src"
-		ib_obtain "$s_sha" "$IB_TMP/dl/src/$s_file" "$IB_WORK/urls" "$s_file" ||
-			ib_fail "Could not get the project ($s_file) with the expected SHA-256 from any source."
+		# The app's own source is the one file allowed to have no stored
+		# hash (format.md, "Sources without a stored hash").
+		ib_obtain "$s_sha" "$IB_TMP/dl/src/$s_file" "$IB_WORK/urls" "$s_file" unpinned ||
+			if [ -z "$s_sha" ] || [ "$s_sha" = - ]; then
+				ib_fail "Could not download the project ($s_file) over HTTPS from any source."
+			else
+				ib_fail "Could not get the project ($s_file) with the expected SHA-256 from any source."
+			fi
 		ib_unpack "$s_fmt" "$IB_TMP/dl/src/$s_file" "$IB_APP_DIR" "$s_strip" ||
 			ib_fail "Could not unpack the project ($s_file)."
 	fi

@@ -176,6 +176,7 @@ Var SumH
 ; function parameters
 Var FF_line
 Var FF_sha
+Var FF_unpinned      ; this one file may have no SHA-256 (the app's source)
 Var FF_name
 Var FF_path
 Var FF_h
@@ -2271,7 +2272,11 @@ Function WriteSummary
   FileClose $BH
   ${If} $SrcLine > 0
     ${Sum} "  $SrcName   ($SrcSize bytes, the app's source)"
-    ${Sum} "      sha256 $SrcSha"
+    ${If} $SrcSha == "-"
+      ${Sum} "      no stored SHA-256: identified by its commit, fetched over HTTPS"
+    ${Else}
+      ${Sum} "      sha256 $SrcSha"
+    ${EndIf}
     ${If} $SrcUrl1 != ""
       ${Sum} "      from $SrcUrl1"
     ${EndIf}
@@ -2945,6 +2950,18 @@ Function FetchFile
   CreateDirectory "$DlDir"
   StrCpy $FF_path "$DlDir\$FF_name"
   Delete "$FF_path"
+  ; $FF_unpinned = 1 allows an empty $FF_sha: the file has no stored
+  ; SHA-256 and is identified some other way (format.md, "Sources without
+  ; a stored hash" -- a GitHub commit over HTTPS). Only the app's own
+  ; source sets it. Anything else with no hash fails closed here rather
+  ; than being installed unchecked.
+  ${If} $FF_unpinned != 1
+    ${If} $FF_sha == ""
+    ${OrIf} $FF_sha == "-"
+      ${FailWith} "$FF_name has no SHA-256 in the plan; refusing to install it."
+      Goto ff_end
+    ${EndIf}
+  ${EndIf}
   ${If} $PackOff > 0
     Call FromPack
     ${If} $U_out = 1
@@ -2992,6 +3009,13 @@ Function FetchFile
         ${Break}
       ${EndIf}
     ${EndIf}
+    ${If} $FF_sha == "-"
+      StrCpy $0 $F1 8
+      ${If} $0 != "https://"
+        ${Log} "  skipping $F1: a file with no SHA-256 must come over HTTPS"
+        ${Continue}
+      ${EndIf}
+    ${EndIf}
     StrCpy $1 1
     ${Log} "Downloading $F1"
     StrCpy $U_a $F1
@@ -3007,6 +3031,11 @@ Function FetchFile
       ${Continue}
     ${EndIf}
     ${Log} "  downloaded in $0 s"
+    ${If} $FF_sha == "-"
+      ${Log} "  no stored SHA-256; identified by its commit over HTTPS"
+      FileClose $FF_h
+      Goto ff_end
+    ${EndIf}
     StrCpy $U_a $FF_path
     Call Sha256File
     ${If} $U_out == $FF_sha
@@ -3541,7 +3570,9 @@ Function InstallMain
     StrCpy $FF_line $SrcLine
     StrCpy $FF_sha $SrcSha
     StrCpy $FF_name $SrcName
+    StrCpy $FF_unpinned 1
     Call FetchFile
+    StrCpy $FF_unpinned 0
     ${If} $Failed = 1
       Return
     ${EndIf}
