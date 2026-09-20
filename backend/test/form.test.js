@@ -16,7 +16,8 @@ import { Server, parseFlags } from '../server.js';
 import { Limiter } from '../lib/limiter.js';
 import { parseForm, parseUrlencoded, parseMultipart, boundaryOf, BadForm } from '../lib/form.js';
 import { esc, statusPage, classicPage, refusedPage, page } from '../lib/pages.js';
-import { jobFromForm, postedForm, TEMPLATE_FILES, ENTRY_DEFAULTS, BUILD_DEFAULTS, parseSource } from '../../js/form-job.js';
+import { jobFromForm, postedForm, TEMPLATE_FILES, ENTRY_DEFAULTS, BUILD_DEFAULTS, parseSource,
+  OFFLINE_TARGETS, OFFLINE_PICKER_FIELD, offlineField, offlineSizeMb, PACK_MAX_MB, PACK_WARN_MB } from '../../js/form-job.js';
 import { TEMPLATES } from '../../js/templates.js';
 import { readInstaller, recordHash } from '../../js/ibfile.js';
 import { haveCatalog, haveBases, tmpDir, REPO } from './helpers.js';
@@ -163,7 +164,10 @@ test('js/form-job.js: a plain post of the form reads as the page reads it', () =
   assert.equal(job.launch, '{runtime} {app_dir}/main.py');
   assert.equal(job.mode, 'C');
   assert.equal(job.offline, true);
-  assert.deepEqual(job.pack, { offline_include: 'all', offline_targets: [] });
+  // /classic has no packed-target picker, so ticking "offline" there takes
+  // the defaults rather than asking for nothing (js/form-job.js).
+  assert.deepEqual(job.pack, { offline_include: 'all', shape: 'single',
+    offline_targets: ['win_1011_amd64', 'linux_amd64', 'mac_amd64', 'mac_arm64'] });
   // An edited launch command is kept.
   ({ job } = jobFromForm(postedForm({ ...defaults(), source_kind: ['write'], entry_python: ['{runtime} other.py'] }), { icon }));
   assert.equal(job.launch, '{runtime} other.py');
@@ -187,6 +191,102 @@ test('js/form-job.js: a plain post of the form reads as the page reads it', () =
   assert.match(problems[0], /template isn't available/);
   ({ problems } = jobFromForm(postedForm({ ...defaults(), source_kind: ['write'], runtime: ['ruby'], template: ['tray'] }), { icon }));
   assert.match(problems[0], /template isn't available/);
+});
+
+// The packed-target picker, which is the one place architecture is a choice
+// (docs/format.md section 3; an online installer covers every architecture
+// from one file and picks on the machine, so there is nothing to ask there).
+test('new.html: the packed-target picker offers every architecture, with its size', () => {
+  const offline = /<table class="small offline-targets"[\s\S]*?<\/table>/.exec(NEW_HTML);
+  assert.ok(offline, 'new.html has the packed-target table');
+  const html = offline[0];
+  // The hidden marker that tells a plain post the picker was there at all.
+  assert.match(NEW_HTML, new RegExp('<input type="hidden" name="' + OFFLINE_PICKER_FIELD + '"'));
+  const seen = new Set();
+  for (const m of html.matchAll(/<input type="checkbox" name="(offline_[a-z0-9_]+)"([^>]*)>\s*([^<]*)<span class="muted arch-mb">(\d+) MB<\/span>/g)) {
+    seen.add(m[1]);
+    const t = OFFLINE_TARGETS.find((x) => x.arches.some((a) => offlineField(x.id, a.arch) === m[1]));
+    assert.ok(t, 'a box for an unknown target: ' + m[1]);
+    const a = t.arches.find((y) => offlineField(t.id, y.arch) === m[1]);
+    // The size in the page (what a browser with no JavaScript sees) and the
+    // size the request is checked against must be the same number.
+    assert.equal(Number(m[4]), a.mb, m[1] + ': new.html says ' + m[4] + ' MB, form-job.js says ' + a.mb);
+    assert.equal(/\bchecked\b/.test(m[2]), !!a.on, m[1] + ": ticked by default?");
+    // 32-bit and 64-bit are spelled out, never left as "x86" alone.
+    assert.match(m[3], a.arch === 'x86' ? /32-bit/ : /64-bit|Apple Silicon/, m[1] + ' label: ' + m[3]);
+  }
+  for (const t of OFFLINE_TARGETS) {
+    for (const a of t.arches) assert.ok(seen.has(offlineField(t.id, a.arch)), 'no box for ' + t.id + ' ' + a.arch);
+  }
+  // Where a platform has no 32-bit at all, the reason is in the page rather
+  // than the row simply being short.
+  assert.match(html, /32-bit: none\. Apple dropped 32-bit support in macOS 10\.15/);
+  // And the ordinary (online) case says what is covered, and that it is not
+  // a choice.
+  assert.match(NEW_HTML, /<ul class="arch-cover small" id="arch-cover">/);
+  assert.match(NEW_HTML, /picks the right one on the computer it runs on, so there is nothing to choose here/);
+});
+
+test('js/form-job.js: an offline pack names its architectures, and is refused when too big', () => {
+  const icon = { choice: 'default' };
+  const picker = { [OFFLINE_PICKER_FIELD]: ['1'] };
+  const post = (extra) => jobFromForm(postedForm({ ...defaults(), source_kind: ['write'], mode: ['unsigned'], offline: ['on'], ...picker, ...extra }), { icon });
+
+  // A 32-bit and a 64-bit box ticked for the same system are two targets.
+  let { job, problems } = post({ offline_win_1011_amd64: ['on'], offline_win_1011_x86: ['on'] });
+  assert.deepEqual(problems, []);
+  assert.deepEqual(job.pack.offline_targets, ['win_1011_amd64', 'win_1011_x86']);
+  assert.equal(job.pack.shape, 'single');
+  assert.equal(offlineSizeMb(job.pack.offline_targets, job.platforms), 58);
+
+  // The picker there and nothing ticked is an error; without the picker
+  // (that is, /classic) the same post takes the defaults.
+  ({ problems } = post({}));
+  assert.deepEqual(problems, ['Tick at least one system and architecture under "Must work offline on", or turn off "Also make offline installers".']);
+
+  // A form from before architectures were a choice: the bare box still
+  // means that system, with the architectures it started with.
+  ({ job, problems } = jobFromForm(postedForm({ ...defaults(), source_kind: ['write'], mode: ['unsigned'], offline: ['on'], offline_mac: ['on'] }), { icon }));
+  assert.deepEqual(problems, []);
+  assert.deepEqual(job.pack.offline_targets, ['mac_amd64', 'mac_arm64']);
+
+  // Architectures only count for a platform being built for.
+  ({ job, problems } = post({ offline_linux_x86: ['on'], target_linux: [] }));
+  assert.deepEqual(problems, ['Tick at least one system and architecture under "Must work offline on", or turn off "Also make offline installers".']);
+
+  // Too big for one file: refused, with the zip named. The same one
+  // mechanism counts OS rows and architectures together, and an uploaded
+  // source counts with them, since it is packed too.
+  const every = {};
+  for (const t of OFFLINE_TARGETS) for (const a of t.arches) every[offlineField(t.id, a.arch)] = ['on'];
+  const all = Object.keys(every).map((k) => k.replace(/^offline_/, ''));
+  assert.ok(PACK_WARN_MB < PACK_MAX_MB);
+  assert.ok(offlineSizeMb(all, ['windows', 'linux', 'macos']) < PACK_WARN_MB,
+    'every architecture ticked is still under the warning line on its own');
+  ({ job, problems } = post({ ...every }));
+  assert.deepEqual(problems, []);
+  assert.equal(job.pack.offline_targets.length, all.length);
+  // With a big upload on top it crosses the line, and the message names the
+  // two ways out.
+  const big = { name: 'app.zip', size: PACK_MAX_MB * 1048576 };
+  ({ problems } = jobFromForm(postedForm({ ...defaults(), source_kind: ['local'], mode: ['unsigned'], offline: ['on'],
+    ...picker, offline_win_1011_amd64: ['on'] }), { icon, local: big }));
+  assert.equal(problems.length, 1);
+  assert.match(problems[0], /past the 1900 MB an installer can hold in one file/);
+  assert.match(problems[0], /Untick some architectures, or choose the zip/);
+  // The zip is the way out, and it is the same picker's radio.
+  ({ problems } = jobFromForm(postedForm({ ...defaults(), source_kind: ['local'], mode: ['unsigned'], offline: ['on'],
+    ...picker, offline_win_1011_amd64: ['on'], offline_shape: ['zip'] }), { icon, local: big }));
+  assert.deepEqual(problems, []);
+
+  // The zip is a radio on the same form, not a second mechanism.
+  ({ job } = post({ offline_win_1011_amd64: ['on'], offline_shape: ['zip'] }));
+  assert.equal(job.pack.shape, 'zip');
+
+  // Mode A never carries a pack, architectures or not.
+  ({ job } = jobFromForm(postedForm({ ...defaults(), source_kind: ['write'], offline: ['on'], ...picker, offline_win_1011_x86: ['on'] }), { icon }));
+  assert.equal(job.pack, undefined);
+  assert.equal(job.offline, false);
 });
 
 test('js/form-job.js: written apps take their template\'s commands (js/templates.js)', () => {

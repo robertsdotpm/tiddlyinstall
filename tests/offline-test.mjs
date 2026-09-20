@@ -18,6 +18,7 @@ import path from 'node:path';
 import { launchChrome, sleep } from './browsers/cdp.mjs';
 import { Checker, STARTED, waitFor, checkSections, buildHello as buildHelloIn, checkJob as checkJobIn } from './browsers/steps.mjs';
 import { noNativeArg, disableNative, checkNativeState, checkHasRules } from './no-native-browser.mjs';
+import { OFFLINE_TARGETS, offlineField, ARCH_LABEL } from '../js/form-job.js';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
 const HERE = path.dirname(new URL(import.meta.url).pathname);
@@ -75,6 +76,7 @@ try {
   ok(await js(`(() => { const s = document.getElementById('svc-name');
     return !!s && s.options.length >= 4 && ![].some.call(s.options, (o) => o.value === 'azurets'); })()`),
     'the relayed signing services are not offered', await js(`[].map.call(document.getElementById('svc-name').options, (o) => o.value).join(',')`));
+  await checkArchitecture();
   await checkSections(t, js);
   const rt = await ibRuntimes();
   ok(rt.includes('python') && rt.includes('python2'), 'the runtimes summary is in the page', rt.join(','));
@@ -175,6 +177,99 @@ try {
 }
 console.log(`\n${t.passed} passed, ${t.failed} failed`);
 process.exit(t.failed ? 1 : 0);
+
+// 32-bit and 64-bit, made explicit (docs/format.md section 3, "32-bit and
+// 64-bit, said plainly"). An ordinary installer is not built for one
+// architecture, so the form states what is covered; only a pack has to
+// choose, so only there is it a tick with a size. Nothing here asserts a
+// fixed answer for 32-bit Linux -- which runtimes have one is the
+// resolver's to say, and it changes -- only that every screen agrees with
+// the resolver and with itself.
+async function checkArchitecture() {
+  await js(`location.hash = '#new'`);
+  await sleep(300);
+  const cover = (rt) => js(`(async () => {
+    const f = document.getElementById('new-form');
+    f.elements.runtime.value = ${JSON.stringify(rt)};
+    f.elements.runtime.dispatchEvent(new Event('change', { bubbles: true }));
+    f.elements.offline.checked = true;
+    f.dispatchEvent(new Event('change', { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 200));
+    const per = {};
+    for (const li of document.querySelectorAll('#arch-cover li[data-family]')) {
+      per[li.dataset.family] = [...li.querySelectorAll('.arch-cover-arches > li')].map((x) => x.textContent.trim());
+    }
+    const boxes = {};
+    for (const b of document.querySelectorAll('#offline-targets input[type=checkbox]')) {
+      const lab = b.closest('label');
+      boxes[b.name] = { disabled: b.disabled, checked: b.checked, text: lab.textContent.replace(/\\s+/g, ' ').trim() };
+    }
+    return { per, boxes, size: document.getElementById('offline-size').textContent,
+      warn: document.getElementById('offline-warn').hidden ? '' : document.getElementById('offline-warn').textContent };
+  })()`);
+
+  const py = await cover('python');
+  ok(py.per.windows && py.per.windows.length >= 3, 'the form lists what each platform covers, per architecture', JSON.stringify(py.per));
+  ok(py.per.windows.some((l) => /^32-bit \(x86\): Python/.test(l)), 'Windows 32-bit is covered, and named', JSON.stringify(py.per.windows));
+  ok(py.per.macos.some((l) => /^32-bit: Apple dropped 32-bit support in macOS 10\.15/.test(l)),
+    'macOS 32-bit is a stated fact with its reason, not an empty list', JSON.stringify(py.per.macos));
+  ok(py.per.linux.some((l) => /^musl \(Alpine\):/.test(l)),
+    'musl is answered separately from glibc, because it is a separate answer', JSON.stringify(py.per.linux));
+  ok(!/^Nothing/.test(await js(`document.getElementById('arch-cover-note').textContent`)) &&
+    /nothing to choose here/.test(await js(`document.getElementById('arch-cover-note').textContent`)),
+    'the form says an online installer covers them all and picks on the machine');
+
+  // Every target and architecture in js/form-job.js has a box, and the box
+  // is greyed out with a reason exactly when the form says there is no
+  // build. The two must not be able to disagree.
+  for (const rt of ['python', 'node', 'go']) {
+    const c = rt === 'python' ? py : await cover(rt);
+    for (const tgt of OFFLINE_TARGETS) {
+      for (const a of tgt.arches) {
+        const b = c.boxes[offlineField(tgt.id, a.arch)];
+        if (!b) { ok(false, `${rt}: a box for ${tgt.id} ${a.arch}`); continue; }
+        const line = (c.per[tgt.platform] || []).find((l) => l.indexOf(ARCH_LABEL[a.arch] + ':') === 0 ||
+          (tgt.platform === 'macos' && l.indexOf((a.arch === 'amd64' ? '64-bit Intel' : 'Apple Silicon') + ':') === 0));
+        const noBuild = !!line && /no build of/.test(line);
+        ok(b.disabled === noBuild, `${rt} ${tgt.id} ${a.arch}: the packed box agrees with what the form says is covered`,
+          JSON.stringify([line, b]));
+        ok(b.disabled ? /no build of/.test(b.text) : /\d+ MB/.test(b.text),
+          `${rt} ${tgt.id} ${a.arch}: the box shows its size, or why there is none`, b.text);
+      }
+    }
+  }
+  // A 32-bit build years behind the 64-bit one has to be visible at the
+  // tick, not discovered after building (Node's newest 32-bit Linux is
+  // 9.11.2, from 2018).
+  const node = await cover('node');
+  const nl = (node.per.linux || []).find((l) => /^32-bit \(x86\):/.test(l)) || '';
+  if (/no build of/.test(nl)) {
+    ok(true, 'Node.js has no 32-bit Linux build in this catalogue, and the form says so', nl);
+  } else {
+    ok(/the newest 32-bit build there is\. Node\.js reaches [\d.]+ on Linux otherwise\./.test(nl),
+      'a 32-bit build behind the rest says so where it is chosen', nl);
+    ok(/Packs Node\.js [\d.]+ .* the newest 32-bit build there is/.test(node.boxes[offlineField('linux', 'x86')].text),
+      'and the packed box names the version it would pack', node.boxes[offlineField('linux', 'x86')].text);
+  }
+  // One running total over systems and architectures, and it moves when an
+  // architecture is ticked (the same mechanism the warning and the zip use).
+  ok(/^About \d+ MB of packed files, over \d+ systems? and architectures?/.test(node.size), 'the picker adds up what is ticked', node.size);
+  const mb = (s0) => Number(/About (\d+) MB/.exec(s0)[1]);
+  const after = await js(`(async () => { const f = document.getElementById('new-form');
+    f.elements[${JSON.stringify(offlineField('win_1011', 'x86'))}].checked = true;
+    f.dispatchEvent(new Event('change', { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 150));
+    return document.getElementById('offline-size').textContent; })()`);
+  const want = OFFLINE_TARGETS[0].arches.find((a) => a.arch === 'x86').mb;
+  ok(mb(after) === mb(node.size) + want, 'ticking 32-bit Windows adds its own runtime to the total', node.size + ' -> ' + after);
+  // The zip is the same picker's escape hatch, not a second one.
+  ok(await js(`!!document.getElementById('offline-shape-zip') && document.getElementById('offline-shape-single').checked`),
+    'the packed picker offers the zip, with one file as the default');
+  // Put the form back.
+  await js(`(() => { const f = document.getElementById('new-form'); f.reset();
+    f.dispatchEvent(new Event('change', { bubbles: true })); return true; })()`);
+  await sleep(200);
+}
 
 async function ibRuntimes() {
   const r = await js(`ibLocalApi.request('/api/catalog/runtimes')`);

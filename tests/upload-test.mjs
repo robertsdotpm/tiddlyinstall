@@ -98,6 +98,31 @@ async function check(job, what) {
   ok(/^source\tupload\t[0-9a-f]{64}$/m.test(rec), what + ': the record names the upload', rec);
   ok(/^install\tdefault:requirements$/m.test(rec), what + ': the install rules saw requirements.txt', rec);
   ok(/Ready/.test(job.shown || ''), what + ': the build page shows it ready', job.shown);
+  await checkDownloadArch(what);
+}
+
+// The build page's downloads say which architectures each installer covers.
+// One online installer covers them all and picks on the computer, so the
+// honest column is the set plus when the choice is made -- not a single
+// architecture, which would be a lie (docs/format.md section 3).
+async function checkDownloadArch(what) {
+  const rows = await js(`[...document.querySelectorAll('#job-files tr')].map((tr) => ({
+    platform: tr.cells[1].textContent.trim(),
+    arch: tr.cells[2].textContent.replace(/\\s+/g, ' ').trim(),
+  }))`);
+  ok(rows.length === 3, what + ': three installers are listed', JSON.stringify(rows));
+  const head = await js(`[...document.querySelectorAll('#job-downloads thead th')].map((th) => th.textContent)`);
+  ok(head.indexOf('Architectures') === 2, what + ': the downloads have an Architectures column', JSON.stringify(head));
+  for (const r of rows) {
+    ok(/32-bit|Apple Silicon/.test(r.arch) && /64-bit/.test(r.arch),
+      what + ' ' + r.platform + ': the download names its architectures in words', JSON.stringify(r));
+    ok(/Chosen on the computer/.test(r.arch), what + ' ' + r.platform + ': and says the choice is made on the machine', r.arch);
+  }
+  ok(/Windows/.test(rows[0].platform) ? /32-bit \(x86\)/.test(rows[0].arch) : true, what + ': Windows covers 32-bit', rows[0].arch);
+  const mac = rows.find((r) => r.platform === 'macOS');
+  ok(mac && !/32-bit/.test(mac.arch), what + ': macOS claims no 32-bit, because there is none', mac && mac.arch);
+  ok(/covers every architecture listed beside it/.test(await js(`document.getElementById('job-arch').textContent`)),
+    what + ': the downloads explain that one file covers them all');
 }
 
 try {

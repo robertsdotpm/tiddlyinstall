@@ -195,6 +195,35 @@ try {
   const pyCount = await js(`document.getElementById('rt-rel-count').textContent`);
   ok(/^([\d,]+) of \1 releases$/.test(pyCount) && parseInt(pyCount, 10) > 100, 'the Python releases are listed', pyCount);
   ok(await js(`document.querySelectorAll('.rt-vrow').length < 60`), 'only the visible rows are drawn');
+
+  /* ---- 32-bit availability, beside the other support facts ---- */
+  // Whether a runtime has a 32-bit build is a support fact like the OS
+  // versions it runs on, and it decides whether a 32-bit machine can be
+  // installed on at all. It is stated per OS, and 64-bit with it, so
+  // neither is read off an empty filter.
+  const pyArch = await js(`document.getElementById('rt-arch').textContent`);
+  ok(/^32-bit builds: /.test(pyArch), 'the Sources page states 32-bit availability for the open runtime', pyArch);
+  ok(/Windows: yes/.test(pyArch), 'Python has 32-bit Windows builds, and the page says so', pyArch);
+  ok(/macOS: no \(Apple dropped 32-bit support in macOS 10\.15 \(2019\)\)/.test(pyArch),
+    'macOS 32-bit is absent with its reason, not simply missing', pyArch);
+  ok(/Linux: no/.test(pyArch), 'Python has no 32-bit Linux build, and the page says so rather than showing nothing', pyArch);
+  ok(/64-bit builds: Windows, Linux, macOS/.test(pyArch), 'and the same question is answered for 64-bit', pyArch);
+  // The releases filter spells out what an arch id means: "x86" is read as
+  // either width by people who don't already know.
+  const archOpts = await js(`[...document.getElementById('rt-f-arch').options].map((o) => o.textContent).join(' | ')`);
+  ok(/x86 — 32-bit \(/.test(archOpts) && /amd64 — 64-bit \(/.test(archOpts),
+    'the releases filter spells out 32-bit and 64-bit', archOpts);
+  // A runtime that does have 32-bit Linux says a different thing, from the
+  // same catalogue: the page holds no opinion of its own.
+  await js(`document.querySelector('.rt-rt[data-rt="go"]').click()`);
+  await waitFor(`/^go ·/.test(document.getElementById('rt-sub').textContent)`, 'Go to open');
+  await sleep(150);
+  const goArch = await js(`document.getElementById('rt-arch').textContent`);
+  ok(/Linux: yes/.test(goArch), 'Go has 32-bit Linux builds, and the page says so', goArch);
+  ok(goArch !== pyArch, 'the answer is per runtime, not one claim for the site', goArch);
+  await js(`document.querySelector('.rt-rt[data-rt="python"]').click()`);
+  await waitFor(`/^python ·/.test(document.getElementById('rt-sub').textContent)`, 'Python to open again');
+  await sleep(150);
   await js(`document.querySelector('.rt-rt[data-rt="node"]').click()`);
   await waitFor(`/13,452 of/.test(document.getElementById('rt-rel-count').textContent)`, 'Node.js to be unpacked and listed');
   await sleep(100);

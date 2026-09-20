@@ -3,6 +3,7 @@
 // queued or running, less often while the tab is hidden, and rides out
 // outages through api.js.
 import { apiRequest, absUrl, ApiError, apiBase, apiDefault, apiLocal, errorText, mountApiFooter } from './api.js';
+import { ARCH_LABEL, MAC_ARCH, FAMILY_ARCHES, archCoverage } from './form-job.js';
 import { mountOverlayConsent } from './overlay-consent.js';
 
 mountApiFooter();
@@ -39,6 +40,66 @@ function humanEta(s) {
 }
 
 const PLATFORM = { windows: 'Windows', linux: 'Linux', macos: 'macOS' };
+
+// 32-bit and 64-bit on the downloads (docs/format.md section 3, "32-bit and
+// 64-bit, said plainly"). An ordinary online installer is not built for one
+// architecture: it carries a plan block per architecture and picks on the
+// computer it runs on, so the honest thing to show is the set it covers and
+// when the choice is made. What that set is depends on the runtime -- Go
+// has a 32-bit Linux build, Python doesn't -- so it is read from the
+// catalogue for this job's runtime, never assumed. Until it has been read,
+// the column says the choice is made on the machine and nothing more,
+// rather than naming architectures that may not exist.
+//
+// An offline installer had to choose at build time, so it says which ones
+// it packed, from `arches` on the file where the backend gives it.
+
+// The runtime of this job's record, and the catalogue's answer for it.
+// Both are fetched once and reused; a failure leaves the honest fallback.
+let archCov = null;          // {windows: {...}, ...} from js/form-job.js
+let archLabel = '';          // the runtime's display name
+let archFor = '';            // the record it was worked out for
+
+async function loadArch(record) {
+  if (!record || archFor === record) return;
+  archFor = record;
+  const rec = await apiRequest('/api/records/' + encodeURIComponent(record), { as: 'text' });
+  const m = /^runtime\t(\S+)$/m.exec(String(rec));
+  if (!m) return;
+  const cat = await apiRequest('/api/catalog/runtimes');
+  const entry = (cat && Array.isArray(cat.runtimes) ? cat.runtimes : []).find((r) => r && r.id === m[1]);
+  if (!entry) return;
+  archCov = archCoverage(entry);
+  archLabel = entry.label || m[1];
+}
+
+function archCell(f) {
+  const list = Array.isArray(f.arches) ? f.arches.filter((a) => typeof a === 'string') : null;
+  if (list && list.length) {
+    return '<span>' + esc(list.map((a) => ARCH_LABEL[a] || a).join(', ')) + '</span>' +
+      (f.offline ? '<br><span class="muted">Packed in this file</span>' : '');
+  }
+  if (f.offline) return '<span class="muted">The packed ones; the installer\'s review screen lists them before it installs</span>';
+  const cov = archCov && archCov[f.platform];
+  if (!cov) return '<span class="muted">Chosen on the computer it runs on</span>';
+  const have = FAMILY_ARCHES[f.platform].filter((a) => cov[a].ok);
+  if (!have.length) return '<span class="muted">Chosen on the computer it runs on</span>';
+  const names = have.map((a) => (f.platform === 'macos' ? MAC_ARCH[a] || ARCH_LABEL[a] : ARCH_LABEL[a]));
+  // A build that is behind what the family reaches is worth saying here
+  // too: it is the last screen before someone hands the file over.
+  const behind = have.filter((a) => cov[a].behind);
+  let out = esc(names.join(', ')) + '<br><span class="muted">Chosen on the computer</span>';
+  if (behind.length) {
+    out += '<br><span class="arch-ceiling">' + esc(behind.map((a) => ARCH_LABEL[a] + ' gets ' + archLabel + ' ' +
+      cov[a].newest + ', not ' + cov[a].behind).join('; ')) + '</span>';
+  }
+  const missing = FAMILY_ARCHES[f.platform].filter((a) => !cov[a].ok);
+  if (missing.length) {
+    out += '<br><span class="muted">No build for ' + esc(missing.map((a) =>
+      (f.platform === 'macos' ? MAC_ARCH[a] || ARCH_LABEL[a] : ARCH_LABEL[a])).join(', ')) + '</span>';
+  }
+  return out;
+}
 const STATUS = {
   queued: ['Queued', 'pending'],
   running: ['Building', 'running'],
@@ -93,9 +154,19 @@ function paintFiles(job) {
     return '<tr><td>' + link +
       (f.sha256 ? '<br><span class="muted sha">SHA-256 <code>' + esc(f.sha256) + '</code></span>' : '') + '</td>' +
       '<td>' + esc(PLATFORM[f.platform] || f.platform) + '</td>' +
+      '<td class="arch-col">' + archCell(f) + '</td>' +
       '<td>' + esc(humanSize(f.size)) + '</td>' +
       '<td>' + esc(signed) + '</td></tr>';
   }).join('');
+  const note = $('job-arch');
+  if (note) {
+    const off = files.some((f) => f.offline);
+    note.textContent = files.length
+      ? 'Each of these installers covers every architecture listed beside it, from the one file: it carries an install plan per ' +
+        'architecture and picks on the computer it runs on, and its review screen says which one it chose and why before it installs.' +
+        (off ? ' An offline installer had to choose when it was built, so it only carries the architectures that were packed into it.' : '')
+      : '';
+  }
   const rec = $('job-record');
   if (res && res.record) {
     rec.hidden = false;
@@ -180,6 +251,14 @@ function paint(job) {
 
   paintSteps(job);
   paintFiles(job);
+  // What the installers cover comes from the job's runtime, so it needs the
+  // record and the catalogue: fetched once, then the downloads are drawn
+  // again with it. Until then they say the choice is made on the machine,
+  // which is true whatever the answer turns out to be.
+  const rec0 = job.result && job.result.record;
+  if (rec0 && archFor !== rec0) {
+    loadArch(rec0).then(() => { if (archCov) paintFiles(job); }).catch(() => { /* the fallback wording stands */ });
+  }
 
   if (job.status === 'failed') {
     showError('The build failed: ' + (job.error || 'no reason given') + '. Change the settings and try again.');

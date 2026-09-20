@@ -233,6 +233,56 @@ function paintHead() {
   $('rt-sub').textContent = S.rt + ' · ' + baseList('release').length.toLocaleString('en') + ' releases, ' +
     baseList('recipe').length + ' recipes, ' + baseList('rule').length + ' support rules' +
     (folderOf(S.rt) !== S.rt || shared.length ? ' · files in ' + folderOf(S.rt) + '/, shared with ' + [folderOf(S.rt), ...shared].filter((x) => x !== S.rt).join(', ') : '');
+  paintArchFacts();
+}
+
+/* ---------- 32-bit and 64-bit, per runtime ---------- */
+
+// Which architectures this runtime has releases for, per OS the site builds
+// for, with this browser's changes applied. 32-bit is spelled out rather
+// than left to be read off an `x86` filter that happens to come back empty:
+// whether a runtime has a 32-bit build is a support fact, like the OS
+// versions it runs on, and it decides whether a 32-bit machine can be
+// installed on at all (docs/format.md section 3).
+const OS_LABEL = { windows: 'Windows', linux: 'Linux', macos: 'macOS' };
+// What a release's `arch` means, for the releases filter: the catalogue's
+// own ids are short and "x86" in particular is read as either width.
+const ARCH_NOTE = {
+  x86: '32-bit', amd64: '64-bit', arm64: '64-bit ARM', armv7: '32-bit ARM', armv6: '32-bit ARM',
+  universal: '64-bit, several in one file', any: 'architecture-independent',
+};
+// macOS has no 32-bit entry on purpose; the reason is shown instead.
+const NO_32 = { macos: 'Apple dropped 32-bit support in macOS 10.15 (2019)' };
+
+function archFacts() {
+  const per = { windows: new Set(), linux: new Set(), macos: new Set() };
+  for (const r of itemRows('release')) {
+    if (r.st === 'removed' || r.st === 'stale') continue;
+    const os = String(nz(r.v && r.v.os, ''));
+    if (per[os]) per[os].add(String(nz(r.v.arch, '')));
+  }
+  return per;
+}
+
+function paintArchFacts() {
+  const box = $('rt-arch');
+  if (!box) return;
+  const per = archFacts();
+  const kids = [el('span', { class: 'muted', text: '32-bit builds: ' })];
+  let first = true;
+  for (const os of ['windows', 'linux', 'macos']) {
+    if (!per[os].size) continue;                        // this runtime isn't built for that OS at all
+    if (!first) kids.push(el('span', { class: 'muted', text: ' · ' }));
+    first = false;
+    const has = per[os].has('x86');
+    kids.push(el('span', { class: 'rt-arch-' + (has ? 'yes' : 'no'), text: OS_LABEL[os] + (has ? ': yes' : ': no') }));
+    if (!has && NO_32[os]) kids.push(el('span', { class: 'muted', text: ' (' + NO_32[os] + ')' }));
+  }
+  if (first) kids.push(el('span', { class: 'muted', text: 'none: this runtime has no releases for Windows, Linux or macOS' }));
+  // 64-bit, for completeness: the same question the other way round.
+  const wide = ['windows', 'linux', 'macos'].filter((os) => per[os].has('amd64') || per[os].has('arm64') || per[os].has('universal'));
+  kids.push(el('span', { class: 'muted', text: ' — 64-bit builds: ' + (wide.length ? wide.map((os) => OS_LABEL[os]).join(', ') : 'none') }));
+  box.replaceChildren(...kids);
 }
 
 /* ---------- releases: filters and the virtual list ---------- */
@@ -269,7 +319,8 @@ function paintFilterOptions() {
   };
   for (const k of ['os', 'arch', 'variant', 'format']) {
     const s = $('rt-f-' + k), cur = s.value;
-    s.replaceChildren(opt('', 'Any'), ...count(k).map(([v, n]) => opt(v === '' ? ' none' : v, (v === '' ? '(none)' : v) + ' (' + n.toLocaleString('en') + ')')));
+    s.replaceChildren(opt('', 'Any'), ...count(k).map(([v, n]) =>
+      opt(v === '' ? ' none' : v, (v === '' ? '(none)' : v + (k === 'arch' && ARCH_NOTE[v] ? ' — ' + ARCH_NOTE[v] : '')) + ' (' + n.toLocaleString('en') + ')')));
     s.value = [...s.options].some((o) => o.value === cur) ? cur : '';
   }
 }

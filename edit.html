@@ -194,6 +194,11 @@
         <h2 class="section-title">Packed files</h2>
         <p class="small muted" style="margin-top:0">Files carried inside the installer. The installer uses a packed copy of any download
           whose SHA-256 matches, instead of downloading it.</p>
+        <p class="small muted" style="margin-top:0">A pack is addressed by hash, so a member's name says nothing about it. What names each one
+          &mdash; including <strong>which is the 32-bit runtime and which the 64-bit</strong>, when an offline installer carries both &mdash;
+          is the <strong>Install plan</strong> above: its <code>file</code> lines give each download's SHA-256 and its architecture, per
+          <code>[target]</code> block (<code>docs/format.md</code> section 4). An installer packing more than one
+          architecture of a runtime must carry its plan rather than fetch it, or nothing can tell them apart.</p>
         <ul class="pack-list" id="pack-list"></ul>
         <div class="field">
           <label for="pack-add">Add files</label>

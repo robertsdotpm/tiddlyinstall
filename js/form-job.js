@@ -59,6 +59,176 @@ export const BUILD_DEFAULTS = {
   zig: 'zig build -Doptimize=ReleaseSafe --prefix {app_dir}', nim: 'nimble -y build', cc: '',
 };
 
+// Offline installers: the systems and architectures a pack can cover, and
+// roughly what each one adds. An online installer needs none of this -- it
+// carries a plan block per architecture and picks on the machine it runs on
+// (docs/format.md section 3, "32-bit and 64-bit, said plainly"). A pack has
+// to carry the bytes, so here each architecture is a real choice with a real
+// cost, and is ticked one at a time.
+//
+// `arch` values are the plan's own (`x86` is 32-bit, `amd64` is 64-bit
+// Intel/AMD), so a target id reads the same as the `when` line it will make.
+// `mb` is an estimate, shown in new.html next to each box; the same numbers
+// are written there so the form still says something with no JavaScript, and
+// tests/offline-test.mjs checks the two agree.
+export const OFFLINE_TARGETS = [
+  { id: 'win_1011', platform: 'windows', label: 'Windows 10, 11', latest: true,
+    arches: [{ arch: 'amd64', mb: 30, on: true }, { arch: 'x86', mb: 28 }, { arch: 'arm64', mb: 30 }] },
+  { id: 'win_78', platform: 'windows', label: 'Windows 7, 8, 8.1',
+    arches: [{ arch: 'amd64', mb: 28 }, { arch: 'x86', mb: 26 }] },
+  { id: 'win_vista', platform: 'windows', label: 'Windows Vista',
+    arches: [{ arch: 'x86', mb: 55 }] },
+  { id: 'win_xp', platform: 'windows', label: 'Windows XP',
+    arches: [{ arch: 'x86', mb: 50 }] },
+  { id: 'linux', platform: 'linux', label: 'Linux', latest: true,
+    arches: [{ arch: 'amd64', mb: 35, on: true }, { arch: 'x86', mb: 33 }, { arch: 'arm64', mb: 35 }] },
+  { id: 'mac', platform: 'macos', label: 'macOS', latest: true,
+    arches: [{ arch: 'amd64', mb: 45, on: true }, { arch: 'arm64', mb: 45, on: true }] },
+];
+
+// How each architecture is named to people, everywhere in the page.
+export const ARCH_LABEL = {
+  amd64: '64-bit (x64)', x86: '32-bit (x86)', arm64: '64-bit ARM',
+  universal: 'Universal (Intel and Apple Silicon)', any: 'Any architecture',
+};
+
+// macOS names its two by chip, not by width.
+export const MAC_ARCH = { amd64: '64-bit Intel', arm64: 'Apple Silicon' };
+
+// Which architectures each platform can have at all. macOS has no 32-bit
+// entry on purpose.
+export const FAMILY_ARCHES = { windows: ['amd64', 'x86', 'arm64'], linux: ['amd64', 'x86', 'arm64'], macos: ['amd64', 'arm64'] };
+export const FAMILY_LABEL = { windows: 'Windows', linux: 'Linux', macos: 'macOS' };
+
+// Where a platform has no 32-bit builds at all, and why. A fact, not an
+// empty list: the form says it rather than silently showing nothing.
+export const NO_32_BIT = {
+  macos: 'Apple dropped 32-bit support in macOS 10.15 Catalina (2019), so nothing has a 32-bit macOS build.',
+};
+
+/* ---------- what a runtime covers, per platform and architecture ---------- */
+
+// "Is 32-bit Linux supported?" has no one answer, so nothing here gives
+// one. It depends on the runtime (Go yes, Python no), on the C library
+// (musl is a separate answer from glibc, and only Go and Zig have it), and
+// it comes with a version ceiling that can be years behind 64-bit: the
+// newest 32-bit Linux Node.js is 9.11.2, from 2018, where 64-bit gets 26.
+//
+// The answer is read off the resolver's own (`GET /api/catalog/runtimes`:
+// one `newest` row per plan block, with the block's `covers` text, the
+// version it picked, and `behind` where that isn't the newest the family
+// reaches). No page holds a second opinion about what is supported, and a
+// runtime gaining or losing a 32-bit build needs no change to this file.
+// Lives here because both the New installer form and the build page need
+// it, and because it is plain data, with no DOM.
+
+function vparts(v) {
+  return String(v == null ? '' : v).split(/[^0-9]+/).filter((x) => x !== '').map(Number);
+}
+export function vcmp(a, b) {
+  const x = vparts(a), y = vparts(b);
+  for (let i = 0; i < Math.max(x.length, y.length); i++) {
+    if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) - (y[i] || 0);
+  }
+  return 0;
+}
+
+// {ok, newest, behind, musl} per family and architecture. A row with a null
+// version is a block that fails: not covered. `universal` and `any` builds
+// run on every architecture of their family. `musl` is null where no block
+// mentions it, false where one does and fails, true where one works.
+export function archCoverage(entry) {
+  const out = {};
+  for (const fam of Object.keys(FAMILY_ARCHES)) {
+    out[fam] = {};
+    for (const a of FAMILY_ARCHES[fam]) out[fam][a] = { ok: false, newest: '', behind: '', musl: null };
+  }
+  const rows = entry && Array.isArray(entry.newest) ? entry.newest : [];
+  for (const r of rows) {
+    const fam = out[r && r.family];
+    if (!fam) continue;
+    const arches = r.arch === 'universal' || r.arch === 'any' ? Object.keys(fam) : [r.arch];
+    const isMusl = /musl/i.test(String(r.covers || ''));
+    for (const a of arches) {
+      const cell = fam[a];
+      if (!cell) continue;
+      if (isMusl && (cell.musl === null || r.version)) cell.musl = !!r.version;
+      if (!r.version) continue;
+      cell.ok = true;
+      if (!cell.newest || vcmp(r.version, cell.newest) > 0) {
+        cell.newest = r.version;
+        cell.behind = r.behind ? String(r.behind) : '';
+      }
+    }
+  }
+  // An architecture whose best block already reaches the family's newest
+  // has no ceiling to report, whatever the older blocks under it said.
+  for (const fam of Object.keys(out)) {
+    for (const a of Object.keys(out[fam])) {
+      const c = out[fam][a];
+      if (c.behind && vcmp(c.newest, c.behind) >= 0) c.behind = '';
+    }
+  }
+  return out;
+}
+
+
+// Packed-size limits, shared by the form's live total and its refusal
+// (packed-files.md section 9, design.md 11.0). One mechanism: the OS rows
+// and the architecture boxes feed the same number.
+export const PACK_WARN_MB = 500;
+export const PACK_MAX_MB = 1900;   // the metadata block's 32-bit offsets stop near 2 GiB
+
+export const offlineField = (id, arch) => 'offline_' + id + '_' + arch;
+
+// new.html carries this hidden field beside the picker. A form post only
+// sends the boxes that are ticked, so without it "the form has no picker"
+// and "the picker is there and nothing is ticked" look the same, and the
+// two need opposite answers: the defaults, or an error.
+export const OFFLINE_PICKER_FIELD = 'offline_targets_form';
+
+const hasField = (f, name) => !!(f.has && f.has(name));
+
+// Whether this form has a packed-target picker at all. /classic's lean form
+// (backend/lib/pages.js) has the offline tick and nothing else.
+export function hasOfflinePicker(f) {
+  if (hasField(f, OFFLINE_PICKER_FIELD)) return true;
+  return OFFLINE_TARGETS.some((t) => hasField(f, 'offline_' + t.id) ||
+    t.arches.some((a) => hasField(f, offlineField(t.id, a.arch))));
+}
+
+// The packed targets a form asks for: `<id>_<arch>` strings, in table order.
+// Three shapes are read, because three exist:
+//   - new.html today: a box per system and architecture;
+//   - a form written before architectures were a choice (a cached page, a
+//     hand-written post): a bare `offline_<id>` box, meaning that system
+//     with the architectures it started with;
+//   - a form with no picker at all (/classic): the defaults, so ticking
+//     "make offline installers" there still means something.
+export function offlineTargets(f) {
+  const picker = hasOfflinePicker(f);
+  const out = [];
+  for (const t of OFFLINE_TARGETS) {
+    const perArch = t.arches.some((a) => hasField(f, offlineField(t.id, a.arch)));
+    for (const a of t.arches) {
+      if (!picker) { if (a.on) out.push(t.id + '_' + a.arch); }
+      else if (perArch) { if (f.checked(offlineField(t.id, a.arch))) out.push(t.id + '_' + a.arch); }
+      else if (a.on && f.checked('offline_' + t.id)) out.push(t.id + '_' + a.arch);
+    }
+  }
+  return out;
+}
+
+// What those targets add, in MB (the same estimate the form shows).
+export function offlineSizeMb(targets, platforms) {
+  let mb = 0;
+  for (const t of OFFLINE_TARGETS) {
+    if (platforms && platforms.indexOf(t.platform) < 0) continue;
+    for (const a of t.arches) if (targets.indexOf(t.id + '_' + a.arch) >= 0) mb += a.mb;
+  }
+  return mb;
+}
+
 const buildField = (runtime) => (runtime === 'cc' ? 'cc_build' : 'build_' + runtime);
 
 const own = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
@@ -150,13 +320,34 @@ function optionFields(f, runtime, mode) {
 
 // Packed and offline files. Uploaded local files are NOT sent: for modes B/C
 // they are added to the built file in the browser afterwards (packed-files.md).
-function packField(f, mode) {
+function packField(f, mode, platforms, problems, localMb) {
   if (mode === 'A') return null;   // mode A never carries packed content
   const pack = {};
   if (f.checked('offline')) {
     pack.offline_include = radio(f, 'offline_include', 'all');
-    pack.offline_targets = ['win_1011', 'win_78', 'win_vista', 'win_xp', 'linux', 'mac']
-      .filter((t) => f.checked('offline_' + t));
+    // Each entry is `<system>_<arch>` (form-job.js OFFLINE_TARGETS), so the
+    // request says 32-bit and 64-bit apart rather than naming a system and
+    // leaving the architecture to be guessed.
+    pack.offline_targets = offlineTargets(f);
+    pack.shape = radio(f, 'offline_shape', 'single');
+    const wanted = pack.offline_targets.filter((t) => {
+      const sys = OFFLINE_TARGETS.find((x) => t.indexOf(x.id + '_') === 0);
+      return sys && platforms.indexOf(sys.platform) >= 0;
+    });
+    if (!wanted.length) {
+      // With no platform ticked at all the form already says so; don't say
+      // it twice. A form with no picker took the defaults and can't be at
+      // fault either, so only a picker left empty is an error.
+      if (platforms.length && hasOfflinePicker(f)) {
+        problems.push('Tick at least one system and architecture under "Must work offline on", or turn off "Also make offline installers".');
+      }
+    } else {
+      const mb = offlineSizeMb(pack.offline_targets, platforms) + localMb;
+      if (mb >= PACK_MAX_MB && pack.shape !== 'zip') {
+        problems.push('Those offline targets come to about ' + mb + ' MB, past the ' + PACK_MAX_MB +
+          ' MB an installer can hold in one file. Untick some architectures, or choose the zip under "Shape".');
+      }
+    }
   }
   // One URL-sourced file from the "+ Add a file" form, if given. Uploads stay
   // in the browser and are added after the build, so they aren't sent.
@@ -210,7 +401,11 @@ export function jobFromForm(f, { icon, local = null, problems = [] }) {
   // Optional Customise fields the server may act on (docs/api.md).
   Object.assign(job, optionFields(f, runtime, mode));
   job.icon = icon;
-  const pack = packField(f, mode);
+  // An uploaded source is packed too, so it counts towards the one-file
+  // limit alongside the runtimes. `size` when the caller knows it (the page
+  // has the File); otherwise from the base64 it sent.
+  const localMb = local ? Math.round((local.size != null ? local.size : local.base64.length * 3 / 4) / 1048576) : 0;
+  const pack = packField(f, mode, platforms, problems, localMb);
   if (pack) job.pack = pack;
 
   if (!platforms.length) problems.push('Pick at least one platform under "Build for".');

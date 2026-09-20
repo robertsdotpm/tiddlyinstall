@@ -526,6 +526,43 @@ form:has(#offline-on:checked) .offline-off-inline { display: none; }
 .offline-targets .choice { margin: 0; }
 .offline-targets td input { min-width: 0; }
 
+/* 32-bit and 64-bit. For an ordinary installer this is a statement of what
+   is covered (.arch-cover); only for a pack is it a choice (.arch-cell). */
+.arch-cover { list-style: none; margin: 10px 0 4px; padding: 0; }
+.arch-cover > li { margin-bottom: 6px; }
+.arch-cover-arches { list-style: none; margin: 0; padding: 0 0 0 14px; color: var(--muted); }
+.arch-cover-arches > li { margin: 1px 0; }
+.arch-name { color: var(--text); font-weight: 600; }
+/* A 32-bit build years behind the 64-bit one, or missing: both are facts
+   someone has to see before building, not after. */
+.arch-ceiling { color: var(--warn); font-weight: 600; }
+.arch-no .arch-name { font-weight: 600; }
+.arch-no { color: var(--muted); }
+.arch-cover-note { margin: 0; max-width: 70ch; }
+/* One architecture per line, so a phone never has to scroll sideways to
+   read which box is which. */
+.offline-targets .arch-cell { min-width: 12em; }
+.offline-targets .arch-cell .choice { margin-bottom: 4px; flex-wrap: wrap; }
+.offline-targets .arch-cell .arch-mb { white-space: nowrap; }
+/* The version this box would pack, under it: an offline installer chooses
+   now, so a 2018 runtime has to be visible at the tick, not afterwards. */
+.arch-why { flex-basis: 100%; margin-left: 22px; }
+.arch-why:empty { display: none; }
+.offline-targets .arch-none { display: block; margin-top: 2px; }
+.offline-targets th[scope="row"] { font-size: 1em; color: inherit; font-weight: 600; white-space: nowrap; }
+/* An architecture the catalogue has no build for: shown, with the reason,
+   not left out of the list. */
+.choice.arch-off { opacity: 0.55; }
+.offline-size { margin: 8px 0 0; font-weight: 600; }
+
+/* The build page's downloads: what each installer covers. */
+.files-table .arch-col { min-width: 9em; }
+
+/* Sources: whether a runtime has 32-bit builds, beside its other facts. */
+.rt-arch { flex-basis: 100%; }
+.rt-arch-yes { color: var(--ok); font-weight: 600; }
+.rt-arch-no { color: var(--warn); font-weight: 600; }
+
 /* Where's the code: a repo or package, or written on the site (no JS). */
 .src-write-only { display: none; }
 .src-local-only, .has-local-only { display: none; }

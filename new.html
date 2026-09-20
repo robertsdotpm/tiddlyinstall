@@ -331,6 +331,23 @@ Press Enter to close</pre>
           <label class="choice"><input type="checkbox" name="target_macos" checked> macOS</label>
         </div>
 
+        <!-- 32-bit vs 64-bit, for ordinary (online) installers: not a choice,
+             a fact. One installer carries a plan block per architecture and
+             picks on the machine it runs on (docs/format.md section 3). The
+             text of each line is rewritten from the catalogue by js/new.js
+             for the language chosen; this is the fallback with no JS. -->
+        <ul class="arch-cover small" id="arch-cover">
+          <li class="win-settings" data-family="windows"><strong>Windows</strong>
+            <ul class="arch-cover-arches"><li>64-bit (x64) and 32-bit (x86)</li></ul></li>
+          <li class="linux-settings" data-family="linux"><strong>Linux</strong>
+            <ul class="arch-cover-arches"><li>64-bit (x64), 64-bit ARM, and 32-bit (x86) for some languages</li></ul></li>
+          <li class="mac-settings" data-family="macos"><strong>macOS</strong>
+            <ul class="arch-cover-arches"><li>64-bit Intel and Apple Silicon</li></ul></li>
+        </ul>
+        <p class="small muted arch-cover-note" id="arch-cover-note">One installer covers all of these: it carries a plan for each
+          and picks the right one on the computer it runs on, so there is nothing to choose here.
+          Apple dropped 32-bit support in macOS 10.15, so no runtime has a 32-bit macOS build.</p>
+
         <label class="choice not-ours online-only" style="margin-top:10px"><input type="checkbox" id="offline-on" name="offline">
           <span>Also make offline installers <span class="small muted">for computers without internet. Bigger files, packed in your browser.</span></span></label>
         <p class="small muted ours-only online-only" style="margin:10px 0 0">Offline installers need the installer signed by you or left unsigned (Customise → Signing).</p>
@@ -494,19 +511,27 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
         </details>
 
         <details>
-          <summary><span>Platforms</span><span class="default">64-bit Intel + ARM</span></summary>
+          <summary><span>Platforms</span><span class="default">Every architecture the language has</span></summary>
+
+          <!-- This section used to offer "x64" and "arm64" tick boxes, which
+               said the installers were 64-bit only. They weren't, nothing
+               read the boxes, and 32-bit Windows has always worked; 32-bit
+               Linux now does for some languages. What is covered follows
+               from the language and the catalogue, so it is stated (filled
+               in by js/new.js) rather than asked. -->
+          <p class="small" style="margin-top:0">An installer is not built for one architecture. It carries an install plan for each
+            and picks on the computer it runs on, so there is nothing to tick here. What is covered for
+            <span class="by-lang lang-python">Python</span><span class="by-lang lang-python2">Python 2</span><span class="by-lang lang-node">Node.js</span><span class="by-lang lang-ruby">Ruby</span><span class="by-lang lang-php">PHP</span><span class="by-lang lang-java">Java</span><span class="by-lang lang-dotnet">.NET</span><span class="by-lang lang-r">R</span><span class="by-lang lang-cc">C/C++</span><span class="by-lang lang-go">Go</span><span class="by-lang lang-rust">Rust</span><span class="by-lang lang-zig">Zig</span><span class="by-lang lang-nim">Nim</span><span class="by-lang lang-none">your runtime</span>
+            is listed under <strong>Build for</strong> at the top of this page. To choose architectures for an
+            <em>offline</em> installer, where each one is packed into the file, see <strong>Offline copies</strong> below.</p>
 
           <div class="platform-block win-settings">
             <span class="label">Windows</span>
-            <label class="choice"><input type="checkbox" name="win_x64" checked> x64</label>
-            <label class="choice"><input type="checkbox" name="win_arm64" checked> arm64</label>
             <label class="choice"><input type="checkbox" name="win_admin" checked> Require administrator rights</label>
           </div>
 
           <div class="platform-block linux-settings">
             <span class="label">Linux</span>
-            <label class="choice"><input type="checkbox" name="linux_x64" checked> x86_64</label>
-            <label class="choice"><input type="checkbox" name="linux_arm64" checked> aarch64</label>
             <div class="field">
               <label for="linux-min">Oldest supported glibc</label>
               <select id="linux-min" name="linux_glibc">
@@ -519,7 +544,6 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
 
           <div class="platform-block mac-settings">
             <span class="label">macOS</span>
-            <label class="choice"><input type="checkbox" name="mac_universal" checked> Universal (Apple silicon + Intel)</label>
             <div class="field">
               <label for="mac-min">Minimum macOS</label>
               <select id="mac-min" name="mac_min">
@@ -622,6 +646,9 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
           <p class="small muted offline-off-only" style="margin:0">Packs everything the installer would download, for computers without internet. Tick <strong>Also make offline installers</strong> above to set this up.</p>
 
           <div class="offline-only">
+            <!-- Says "this form has the packed-target picker" in a plain post,
+                 where unticked boxes are simply not sent (js/form-job.js). -->
+            <input type="hidden" name="offline_targets_form" value="1">
             <p class="small" style="margin-top:0">Offline copies also carry everything the normal installers would download:
               the runtime, packages and source, and any of your files set to download when installing. The normal installers are still made too.</p>
 
@@ -634,24 +661,51 @@ macOS    /Library/Application Support/ib/tjfq5rqwnnrx/
             <hr>
 
             <span class="label">Must work offline on</span>
-            <p class="small muted" style="margin-top:0">Online installers choose the right versions on the user's computer. Offline ones choose now,
-              so each system ticked here adds its own runtime and packages to the file.</p>
+            <p class="small muted" style="margin-top:0">Online installers choose the right version <em>and the right architecture</em> on the user's computer.
+              Offline ones choose now, so every system <em>and architecture</em> ticked here adds its own runtime and packages to the file.
+              This is the one place architecture is a real choice, because each one is a whole extra runtime's worth of bytes.</p>
 
             <div class="table-wrap">
-              <table class="small offline-targets">
-                <thead><tr><th>System</th><th>Runtime included</th><th>Adds about</th></tr></thead>
+              <table class="small offline-targets" id="offline-targets">
+                <thead><tr><th>System</th><th>Runtime included</th><th>Architectures to pack</th></tr></thead>
                 <tbody>
-                  <tr class="win-settings"><td><label class="choice"><input type="checkbox" name="offline_win_1011" checked> Windows 10, 11</label></td><td>Newest in your range</td><td>30 MB</td></tr>
-                  <tr class="win-settings"><td><label class="choice"><input type="checkbox" name="offline_win_78"> Windows 7, 8, 8.1</label></td><td>Newest that runs there</td><td>28 MB</td></tr>
-                  <tr class="win-settings"><td><label class="choice"><input type="checkbox" name="offline_win_vista"> Windows Vista (32-bit)</label></td><td>Newest that runs there, plus Visual C++ runtimes</td><td>55 MB</td></tr>
-                  <tr class="win-settings"><td><label class="choice"><input type="checkbox" name="offline_win_xp"> Windows XP (32-bit)</label></td><td>Newest that runs there, plus Visual C++ runtimes</td><td>50 MB</td></tr>
-                  <tr class="linux-settings"><td><label class="choice"><input type="checkbox" name="offline_linux" checked> Linux</label></td><td>Newest in your range, for your glibc minimum</td><td>35 MB</td></tr>
-                  <tr class="mac-settings"><td><label class="choice"><input type="checkbox" name="offline_mac" checked> macOS</label></td><td>Newest in your range, for your macOS minimum</td><td>45 MB</td></tr>
+                  <tr class="win-settings" data-target="win_1011"><th scope="row">Windows 10, 11</th><td>Newest in your range</td><td class="arch-cell">
+                    <label class="choice"><input type="checkbox" name="offline_win_1011_amd64" checked> 64-bit (x64) <span class="muted arch-mb">30 MB</span></label>
+                    <label class="choice"><input type="checkbox" name="offline_win_1011_x86"> 32-bit (x86) <span class="muted arch-mb">28 MB</span></label>
+                    <label class="choice"><input type="checkbox" name="offline_win_1011_arm64"> 64-bit ARM (ARM64) <span class="muted arch-mb">30 MB</span></label></td></tr>
+                  <tr class="win-settings" data-target="win_78"><th scope="row">Windows 7, 8, 8.1</th><td>Newest that runs there</td><td class="arch-cell">
+                    <label class="choice"><input type="checkbox" name="offline_win_78_amd64"> 64-bit (x64) <span class="muted arch-mb">28 MB</span></label>
+                    <label class="choice"><input type="checkbox" name="offline_win_78_x86"> 32-bit (x86) <span class="muted arch-mb">26 MB</span></label></td></tr>
+                  <tr class="win-settings" data-target="win_vista"><th scope="row">Windows Vista</th><td>Newest that runs there, plus Visual C++ runtimes</td><td class="arch-cell">
+                    <label class="choice"><input type="checkbox" name="offline_win_vista_x86"> 32-bit (x86) <span class="muted arch-mb">55 MB</span></label>
+                    <span class="small muted arch-none">64-bit: the builds tested on Vista are the 32-bit ones, which run on Vista x64 too.</span></td></tr>
+                  <tr class="win-settings" data-target="win_xp"><th scope="row">Windows XP</th><td>Newest that runs there, plus Visual C++ runtimes</td><td class="arch-cell">
+                    <label class="choice"><input type="checkbox" name="offline_win_xp_x86"> 32-bit (x86) <span class="muted arch-mb">50 MB</span></label>
+                    <span class="small muted arch-none">64-bit: the builds tested on XP are the 32-bit ones, which run on XP x64 too.</span></td></tr>
+                  <tr class="linux-settings" data-target="linux"><th scope="row">Linux</th><td>Newest in your range, for your glibc minimum</td><td class="arch-cell">
+                    <label class="choice"><input type="checkbox" name="offline_linux_amd64" checked> 64-bit (x64) <span class="muted arch-mb">35 MB</span></label>
+                    <label class="choice"><input type="checkbox" name="offline_linux_x86"> 32-bit (i386) <span class="muted arch-mb">33 MB</span></label>
+                    <label class="choice"><input type="checkbox" name="offline_linux_arm64"> 64-bit ARM (aarch64) <span class="muted arch-mb">35 MB</span></label></td></tr>
+                  <tr class="mac-settings" data-target="mac"><th scope="row">macOS</th><td>Newest in your range, for your macOS minimum</td><td class="arch-cell">
+                    <label class="choice"><input type="checkbox" name="offline_mac_amd64" checked> 64-bit Intel <span class="muted arch-mb">45 MB</span></label>
+                    <label class="choice"><input type="checkbox" name="offline_mac_arm64" checked> Apple Silicon <span class="muted arch-mb">45 MB</span></label>
+                    <span class="small muted arch-none">32-bit: none. Apple dropped 32-bit support in macOS 10.15 (2019).</span></td></tr>
                 </tbody>
               </table>
             </div>
-            <span class="hint">Sizes are per architecture ticked under Platforms. With <strong>Choose the highest version with asyncio support</strong>,
-              the older Windows rows use the tested builds.</span>
+            <p class="small offline-size" id="offline-size" role="status">About 155 MB of packed files, on top of the installer itself.</p>
+            <p class="warn-box small" id="offline-warn" hidden></p>
+            <span class="hint">Sizes are estimates, one runtime per architecture. An architecture with no build in the catalogue for this
+              language is shown greyed out with the reason, rather than left out. With <strong>Choose the highest version with asyncio
+              support</strong>, the older Windows rows use the tested builds.</span>
+
+            <hr>
+
+            <span class="label">Shape</span>
+            <label class="choice"><input type="radio" name="offline_shape" value="single" id="offline-shape-single" checked>
+              <span><strong>One file</strong><br><span class="small muted">The pack goes inside the installer. Simplest to hand over; limited to about 2 GB, because the installer's metadata block counts in 32 bits.</span></span></label>
+            <label class="choice"><input type="radio" name="offline_shape" value="zip" id="offline-shape-zip">
+              <span><strong>A zip: the installer and a <code>pack/</code> folder beside it</strong><br><span class="small muted">No size limit, and gentler on old Windows. The installer reads the folder and behaves the same. Keep the two together.</span></span></label>
 
             <hr>
 

@@ -331,11 +331,33 @@ async function newInstaller(w, shots) {
   const ed = await B.js(`(() => { const e = Array.prototype.find.call(document.querySelectorAll('.write-editor textarea.code'), (x) => x.getClientRects().length); const r = e.getBoundingClientRect(); return [Math.round(r.left), Math.round(r.right)]; })()`);
   ok(ed[0] >= 0 && ed[1] <= w, `${B.name} ${w}px new: the code editor fits the width`, JSON.stringify(ed));
   await audit(w, 'new-write', { shots });
-  // Every Customise group open, and the tables in them.
+  // Architecture, which the form states for an ordinary installer: three
+  // short lines per platform, each inside the viewport.
   await go('#new');
-  await B.js(`document.querySelectorAll('.ib-page[data-page="new"] details').forEach((d) => { d.open = true; })`);
+  const arch = await B.js(`[...document.querySelectorAll('.ib-page[data-page="new"] #arch-cover .arch-cover-arches > li')]
+    .map((li) => { const r = li.getBoundingClientRect(); return [Math.round(r.left), Math.round(r.right)]; })`);
+  ok(arch.length >= 3 && arch.every(([l, r]) => l >= 0 && r <= w),
+    `${B.name} ${w}px new: the architecture lines fit the width`, JSON.stringify(arch.slice(0, 4)));
+  // Every Customise group open, and the tables in them -- with the packed
+  // installer's target picker showing, since its boxes are new controls in
+  // a table and it is off by default.
+  await B.js(`document.querySelectorAll('.ib-page[data-page="new"] details').forEach((d) => { d.open = true; });
+    const f = document.getElementById('new-form'); f.elements.offline.checked = true;
+    f.dispatchEvent(new Event('change', { bubbles: true }));`);
   await sleep(300);
+  const packed = await B.js(`(() => { const t = document.getElementById('offline-targets');
+    if (!t || !t.getClientRects().length) return null;
+    const wrap = t.closest('.table-wrap').getBoundingClientRect();
+    return { boxes: t.querySelectorAll('input[type=checkbox]').length,
+      low: Math.min(...[...t.querySelectorAll('label.choice')].map((l) => Math.round(l.getBoundingClientRect().height))),
+      wrapRight: Math.round(wrap.right), wrapLeft: Math.round(wrap.left) }; })()`);
+  ok(packed && packed.boxes >= 12, `${B.name} ${w}px new: the packed picker shows a box per system and architecture`, JSON.stringify(packed));
+  ok(packed && packed.low >= 40, `${B.name} ${w}px new: each architecture box is a 40 px touch target`, JSON.stringify(packed));
+  ok(packed && packed.wrapLeft >= 0 && packed.wrapRight <= w + 1,
+    `${B.name} ${w}px new: the packed picker's table scrolls in its own box, not the page`, JSON.stringify(packed));
   await audit(w, 'new-customise', { shots });
+  await B.js(`(() => { const f = document.getElementById('new-form'); f.elements.offline.checked = false;
+    f.dispatchEvent(new Event('change', { bubbles: true })); })()`);
   // The compatibility bar and its matrix, where it shows.
   if (await B.js(visible('.ib-compat-more'))) {
     await B.js(`document.querySelector('.ib-compat-more').click()`);

@@ -6,7 +6,8 @@
 import { apiRequest, errorText, mountApiFooter, pageUrl, apiLocal, apiBase, apiReady, setApiBase, LOCAL, localSubmit } from './api.js';
 import { tarWrite } from './ibfile.js';
 import { loadOverlay, overlayState, hasCatalog } from './overlay.js';
-import { jobFromForm, BUILD_DEFAULTS } from './form-job.js';
+import { jobFromForm, BUILD_DEFAULTS, OFFLINE_TARGETS, ARCH_LABEL, MAC_ARCH, FAMILY_ARCHES, FAMILY_LABEL, NO_32_BIT,
+  PACK_WARN_MB, PACK_MAX_MB, offlineField, offlineSizeMb, offlineTargets, archCoverage, vcmp } from './form-job.js';
 import { mountWriteEditor } from './write-editor.js';
 import { mountOverlayConsent } from './overlay-consent.js';
 
@@ -164,7 +165,7 @@ apiReady().then(paintWhere).catch(() => {});
 async function buildJob() {
   const problems = [];
   const icon = await iconField(problems);
-  const local = localPick && val('source_kind') === 'local' ? { name: localPick.name, base64: bytesToBase64(localPick.bytes) } : null;
+  const local = localPick && val('source_kind') === 'local' ? { name: localPick.name, size: localPick.bytes.length, base64: bytesToBase64(localPick.bytes) } : null;
   return jobFromForm(reader, { icon, local, problems });
 }
 
@@ -220,7 +221,10 @@ function esc(s) {
   return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 }
 
-const ARCH = { amd64: 'x64', x86: '32-bit', arm64: 'ARM64', universal: 'Universal' };
+// Architecture names, everywhere in this page (js/form-job.js). 32-bit and
+// 64-bit are always spelled out: "x64" and "amd64" mean nothing to most
+// people, and "x86" is read as either.
+const ARCH = ARCH_LABEL;
 
 // The catalogue's entry for a runtime id. `runtimes` is a list (api.md).
 function catalogEntry(id) {
@@ -234,13 +238,38 @@ function paintCatalog() {
   const entry = catalogEntry(rt);
   if (entry && Array.isArray(entry.newest) && entry.newest.length) {
     table.tHead.innerHTML = '<tr><th>System</th><th>' + esc(entry.label || rt) + ' installed</th></tr>';
-    table.tBodies[0].innerHTML = entry.newest.map((r) => {
-      const arch = r.arch ? ' <span class="muted">(' + esc(ARCH[r.arch] || r.arch) + ')</span>' : '';
-      const v = r.version ? esc(r.version) : '<span class="muted">Nothing in the catalogue runs here</span>';
+    const rows = entry.newest.map((r) => {
+      const arch = r.arch ? ' <span class="muted">, ' + esc(ARCH[r.arch] || r.arch) + '</span>' : '';
+      let v = r.version ? esc(r.version) : '<span class="muted">Nothing in the catalogue runs here</span>';
+      // `behind` (api.md) is the resolver saying this row doesn't get the
+      // newest. It isn't only a 32-bit thing -- Go 1.10.8 on Vista, Java 8
+      // on XP -- and it was never shown before.
+      if (r.version && r.behind) {
+        v += ' <span class="arch-ceiling">— not the newest; ' + esc(entry.label || rt) + ' reaches ' +
+          esc(r.behind) + ' on ' + esc(FAMILY_LABEL[r.family] || r.family) + '</span>';
+      }
       return '<tr><td>' + esc(r.covers || r.family || '') + arch + '</td><td>' + v + '</td></tr>';
-    }).join('');
+    });
+    // An architecture the resolver makes no block for at all would
+    // otherwise just be missing from the table, and a missing row reads as
+    // "supported, not shown". Say it instead. A block that exists and
+    // fails already says it in its own row, so it isn't repeated here.
+    for (const fam of Object.keys(FAMILY_ARCHES)) {
+      if (!entry.newest.some((r) => r && r.family === fam)) continue;
+      for (const a of FAMILY_ARCHES[fam]) {
+        if (entry.newest.some((r) => r && r.family === fam && (r.arch === a || r.arch === 'universal' || r.arch === 'any'))) continue;
+        rows.push('<tr><td>' + esc(FAMILY_LABEL[fam]) + ' <span class="muted">, ' + esc(ARCH[a]) +
+          '</span></td><td><span class="muted">No build in the catalogue</span></td></tr>');
+      }
+      if (fam === 'macos') {
+        rows.push('<tr><td>macOS <span class="muted">, 32-bit</span></td><td><span class="muted">' +
+          esc(NO_32_BIT.macos) + '</span></td></tr>');
+      }
+    }
+    table.tBodies[0].innerHTML = rows.join('');
     hint.textContent = (apiLocal() ? 'From this page\'s catalogue' + (catalog.changed ? ', with your changes from the Sources page' : '') : 'From the build server\'s catalogue') +
-      ': one row per install plan it makes for ' + (entry.label || rt) + '.';
+      ': one row per install plan it makes for ' + (entry.label || rt) + ', by OS version and architecture. ' +
+      'The installer carries them all and picks on the machine.';
     panel.classList.remove('py-panel');   // show it for every language with data
   } else {
     table.tHead.innerHTML = staticHead;
@@ -250,11 +279,182 @@ function paintCatalog() {
   }
 }
 
-form.elements.runtime.addEventListener('change', paintCatalog);
+/* ---------- 32-bit and 64-bit: what an installer covers ---------- */
+
+// What is covered, and the version ceilings that come with it, are worked
+// out in js/form-job.js (archCoverage) from the resolver's own answer, and
+// shared with the build page so the two can't disagree.
+
+// The "Build for" lines: what each platform's installer covers. Not a
+// choice -- one online installer carries a block per architecture and picks
+// on the machine (docs/format.md section 3) -- so this says what is covered
+// and, where 32-bit isn't, why not.
+const archCoverList = document.getElementById('arch-cover');
+const archCoverNote = document.getElementById('arch-cover-note');
+
+// How a ceiling is said: 32-bit is the case people most need warning about
+// (Node's 32-bit Linux stops at 9.11.2, from 2018, because nodejs.org
+// stopped building it), but the same sentence serves an old OS version.
+function ceilingText(fam, a, cell, label) {
+  return a === 'x86'
+    ? ' — the newest 32-bit build there is. ' + label + ' reaches ' + cell.behind + ' on ' + FAMILY_LABEL[fam] + ' otherwise.'
+    : ' — not the newest. ' + label + ' reaches ' + cell.behind + ' on ' + FAMILY_LABEL[fam] + ' elsewhere.';
+}
+
+// A list item for one architecture: whether there is a build at all, the
+// version it tops out at, and -- the thing that must not be buried -- when
+// that is behind what the rest of the family gets.
+function archLine(fam, a, cell, label) {
+  const li = document.createElement('li');
+  const name = document.createElement('span');
+  name.className = 'arch-name';
+  name.textContent = (fam === 'macos' ? MAC_ARCH[a] || ARCH[a] : ARCH[a]) + ': ';
+  li.append(name);
+  if (!cell.ok) {
+    li.append('no build of ' + label + ' in the catalogue');
+    li.className = 'arch-no';
+    return li;
+  }
+  li.append(label + ' ' + cell.newest);
+  if (cell.behind) {
+    const w = document.createElement('strong');
+    w.className = 'arch-ceiling';
+    w.textContent = ceilingText(fam, a, cell, label);
+    li.append(w);
+  }
+  return li;
+}
+
+function paintArchCover() {
+  if (!archCoverList) return;
+  const rt = val('runtime');
+  const entry = catalogEntry(rt);
+  const label = (entry && entry.label) || rt || 'this language';
+  const cov = catalog ? archCoverage(entry) : null;
+  for (const li of archCoverList.children) {
+    const fam = li.dataset.family;
+    const out = li.querySelector('.arch-cover-arches');
+    if (!out || !fam || !cov) continue;       // no catalogue: leave the built-in text
+    const kids = FAMILY_ARCHES[fam].map((a) => archLine(fam, a, cov[fam][a], label));
+    // 32-bit macOS isn't a gap in the catalogue, it's a thing that stopped
+    // existing; say which.
+    if (fam === 'macos') {
+      const li32 = document.createElement('li');
+      li32.className = 'arch-no';
+      li32.append(Object.assign(document.createElement('span'), { className: 'arch-name', textContent: '32-bit: ' }), NO_32_BIT.macos);
+      kids.push(li32);
+    }
+    // musl (Alpine) is a separate answer from glibc, per architecture.
+    const musl = FAMILY_ARCHES[fam].filter((a) => cov[fam][a].musl === true);
+    const anyMusl = FAMILY_ARCHES[fam].some((a) => cov[fam][a].musl !== null);
+    if (anyMusl) {
+      const m = document.createElement('li');
+      m.className = musl.length ? '' : 'arch-no';
+      m.append(Object.assign(document.createElement('span'), { className: 'arch-name', textContent: 'musl (Alpine): ' }),
+        musl.length ? musl.map((a) => ARCH[a]).join(', ') : 'nothing for any architecture');
+      kids.push(m);
+    }
+    out.replaceChildren(...kids);
+  }
+  if (archCoverNote) {
+    archCoverNote.textContent = 'One installer covers all of these: it carries a plan for each and picks the right one on the ' +
+      'computer it runs on, so there is nothing to choose here. ' + NO_32_BIT.macos +
+      ' A 32-bit machine can also need something a 64-bit one doesn\'t: the installer\'s review screen lists what it will install first.';
+  }
+  paintOfflineArches(cov, label);
+}
+
+/* ---------- offline installers: the packed-target picker ---------- */
+
+// The same warn/refuse/zip rule for every box in the table, architectures
+// included: one running total, one warning, one refusal, one zip
+// (packed-files.md section 9).
+const offlineTable = document.getElementById('offline-targets');
+const offlineSizeBox = document.getElementById('offline-size');
+const offlineWarnBox = document.getElementById('offline-warn');
+const offlineShapeZip = document.getElementById('offline-shape-zip');
+
+const offlineBox = (id, arch) => form.elements[offlineField(id, arch)];
+
+// Grey out an architecture the catalogue has no build for, with the reason
+// in place of the size, so an empty list is never passed off as a choice.
+// Where a build exists but is older than the 64-bit one, the version it
+// would pack is on the box itself: an offline installer picks now, so this
+// is the moment to see that 32-bit Linux means Node.js 9.11.2.
+function paintOfflineArches(cov, label) {
+  if (!offlineTable) return;
+  for (const t of OFFLINE_TARGETS) {
+    for (const a of t.arches) {
+      const box = offlineBox(t.id, a.arch);
+      if (!box) continue;
+      const cell = cov && cov[t.platform][a.arch];
+      const have = !cov || cell.ok;
+      const lab = box.closest('label');
+      box.disabled = !have;
+      if (!have) box.checked = false;
+      if (lab) lab.classList.toggle('arch-off', !have);
+      const mb = lab && lab.querySelector('.arch-mb');
+      if (mb) mb.textContent = have ? a.mb + ' MB' : 'no build of ' + label + ' for this';
+      // A second line under the box, only where there is something to say.
+      let why = lab && lab.querySelector('.arch-why');
+      if (lab && !why) {
+        why = document.createElement('span');
+        why.className = 'small arch-why';
+        lab.append(why);
+      }
+      if (!why) continue;
+      // Only the rows that mean "the newest that runs there" can name a
+      // version: an older Windows row picks its own, by OS range.
+      if (!have || !t.latest) why.textContent = '';
+      else if (cell && cell.behind) {
+        why.textContent = 'Packs ' + label + ' ' + cell.newest + ceilingText(t.platform, a.arch, cell, label);
+        why.className = 'small arch-why arch-ceiling';
+      } else if (cell && cell.newest) {
+        why.textContent = 'Packs ' + label + ' ' + cell.newest + '.';
+        why.className = 'small arch-why muted';
+      } else why.textContent = '';
+    }
+  }
+  paintOfflineSize();
+}
+
+function paintOfflineSize() {
+  if (!offlineSizeBox) return;
+  const platforms = ['windows', 'linux', 'macos'].filter((p) => checked('target_' + p));
+  const targets = offlineTargets(reader);
+  // The runtimes, plus an uploaded source, which is packed with them.
+  const uploadMb = localPick && val('source_kind') === 'local' ? Math.round(localPick.bytes.length / 1048576) : 0;
+  const mb = offlineSizeMb(targets, platforms) + uploadMb;
+  const n = targets.filter((t) => {
+    const sys = OFFLINE_TARGETS.find((x) => t.indexOf(x.id + '_') === 0);
+    return sys && platforms.indexOf(sys.platform) >= 0;
+  }).length;
+  offlineSizeBox.textContent = n
+    ? 'About ' + mb + ' MB of packed files, over ' + n + ' system' + (n === 1 ? '' : 's') + ' and architecture' + (n === 1 ? '' : 's') + ', on top of the installer itself.'
+    : 'Nothing ticked yet: an offline installer needs at least one system and architecture.';
+  if (!offlineWarnBox) return;
+  if (mb >= PACK_MAX_MB) {
+    if (offlineShapeZip && !offlineShapeZip.checked) offlineShapeZip.checked = true;
+    offlineWarnBox.textContent = 'About ' + mb + ' MB is past the ' + PACK_MAX_MB +
+      ' MB one file can hold (the installer\'s metadata block counts in 32 bits), so Shape has been set to the zip. ' +
+      'Untick some architectures to go back to a single file.';
+    offlineWarnBox.hidden = false;
+  } else if (mb >= PACK_WARN_MB) {
+    offlineWarnBox.textContent = 'About ' + mb + ' MB is a large download for one installer. Each architecture ticked is a whole ' +
+      'extra runtime; untick the ones your users don\'t have, or choose the zip under Shape.';
+    offlineWarnBox.hidden = false;
+  } else offlineWarnBox.hidden = true;
+}
+
+form.addEventListener('change', paintOfflineSize);
+paintOfflineSize();
+
+form.elements.runtime.addEventListener('change', () => { paintCatalog(); paintArchCover(); });
+paintArchCover();
 let catalogSeq = 0;
 function fetchCatalog() {
   const seq = ++catalogSeq;
-  apiRequest('/api/catalog/runtimes').then((c) => { if (seq === catalogSeq) { catalog = c; paintCatalog(); } })
+  apiRequest('/api/catalog/runtimes').then((c) => { if (seq === catalogSeq) { catalog = c; paintCatalog(); paintArchCover(); } })
     .catch(() => { /* a 4xx here just leaves the static table */ });
 }
 fetchCatalog();
