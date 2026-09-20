@@ -21,6 +21,7 @@ import { JobQueue } from './lib/queue.js';
 import { loadOrCreate, keyID, PUB_FILE } from './lib/plansig.js';
 import { safeFetch } from './lib/netsafe.js';
 import { Limiter } from './lib/limiter.js';
+import { signRelay } from './lib/signrelay.js';
 import { goJSON, sorted, goString } from './lib/gojson.js';
 import { decodeRequest, BadJSON } from './lib/request.js';
 import { serveFile, serveDir, notFound, httpError, redirect } from './lib/files.js';
@@ -333,6 +334,7 @@ export class Server {
       ['GET', ['api', 'takedown'], () => this.takedown(req, res)],
       ['GET', ['api', 'relay'], () => this.relay(req, res, params)],
       ['POST', ['api', 'tsa'], () => this.tsa(req, res, params)],
+      ['POST', ['api', 'sign', '*'], () => this.sign(req, res, seg[2])],
       ['GET', ['dl', '*', '*'], () => this.dl(req, res, seg[1], seg[2])],
       ['GET', ['bases', '*'], () => this.base(req, res, seg[1])],
       ['GET', ['icons', '*'], () => this.icon(req, res, seg[1])],
@@ -647,6 +649,17 @@ export class Server {
     }
     res.writeHead(200, { 'Content-Type': 'application/timestamp-reply', 'Cache-Control': 'no-store', 'Content-Length': out.length });
     res.end(out);
+  }
+
+  // sign relays one call to a cloud signing service whose API a browser
+  // can't reach (lib/signrelay.js, docs/browser-signing.md 3). The rules
+  // that matter -- the per-provider URL allow-list, and that the credential
+  // is forwarded and forgotten -- are all in that file.
+  async sign(req, res, provider) {
+    if (!this.relayLimiter.allow(clientIP(req))) {
+      return apiError(res, 429, 'rate_limited', 'Too many relay requests; try again in a minute.');
+    }
+    return signRelay(req, res, provider, { readBody, apiError, writeJSON });
   }
 
   async dl(req, res, hash, name) {

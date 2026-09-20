@@ -17,6 +17,7 @@ import { readInstaller } from '../js/ibfile.js';
 import { launchChrome, sleep } from './browsers/cdp.mjs';
 import { Checker, makeSignFixtures, osslVerify, gpgVerify, $text, clickId, setVal as setValIn, checkBox } from './browsers/steps.mjs';
 import { noNativeArg, disableNative, checkNativeState } from './no-native-browser.mjs';
+import { startMockServices } from './mock-sign-services.mjs';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
 const SITE = (arg('--site') || '').replace(/\/$/, '');
@@ -36,6 +37,22 @@ const ok = T.ok.bind(T);
 /* ---------- fixtures (tests/browsers/steps.mjs) ---------- */
 
 const { PW, RECORD, t, openssl: o } = await makeSignFixtures(TMP);
+
+// A stand-in signing service on loopback, for the "any service that signs a
+// digest" option -- the one whose address the user gives, so the panel can
+// be driven end to end without a real provider. Its key is the fixture RSA
+// key; its API key is made fresh here and is not a real credential.
+const MOCK_KEY = 'mock-' + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+const mock = await startMockServices({
+  creds: { generic: { apiKey: MOCK_KEY }, sslcom: {}, gcpkms: {}, awskms: {}, azurets: {} },
+  certsB64: [],
+  sign: async (digest) => {
+    fs.writeFileSync(t('ui-digest.bin'), digest);
+    o(['pkeyutl', '-sign', '-inkey', 'rsa.key', '-pkeyopt', 'digest:sha256', '-in', 'ui-digest.bin', '-out', 'ui.sig']);
+    return fs.readFileSync(t('ui.sig'));
+  },
+});
+const MOCK = { origin: mock.origin, apiKey: MOCK_KEY };
 
 /* ---------- Chrome over CDP (tests/browsers/cdp.mjs) ---------- */
 
@@ -104,6 +121,71 @@ try {
   v = osslOk(await download('remote.exe'), t('ca.crt'));
   if (!v.skip) ok(v.ok && (!TIMESTAMP || v.ts), 'ui: the remote-signed download passes osslsigncode verify', v.out);
 
+  // Windows, a cloud signing service (js/sign-services.js). No real
+  // provider can be called from a test, so the generic option -- the one
+  // whose address the user gives -- is pointed at a mock, which exercises
+  // the whole panel for real. The named providers are checked for what they
+  // say and for what happens to a credential, which is the part that would
+  // hurt if it were wrong.
+  await check('sign-src-service', true);
+  await waitFor(`!document.getElementById('sign-service').hidden && document.getElementById('svc-name').options.length > 3`, 'the service panel');
+  const ids = await js(`[].map.call(document.getElementById('svc-name').options, (o) => o.value).join(',')`);
+  ok(ids === 'sslcom,gcpkms,awskms,azurets,digicert,generic', 'ui: served, every provider is offered including the relayed one', ids);
+
+  // Each provider says where the credentials go, before any field exists.
+  let allSaid = true, saidWhat = '';
+  for (const id of ids.split(',')) {
+    await js(`(() => { const s = document.getElementById('svc-name'); s.value = ${JSON.stringify(id)};
+      s.dispatchEvent(new Event('change', { bubbles: true })); })()`);
+    const t2 = await js(`document.getElementById('svc-about').textContent`);
+    const wants = id === 'azurets' ? /pass through the build server/
+      : id === 'digicert' ? /Nothing secret is typed/ : /stay in this browser/;
+    if (!wants.test(t2) || !/Not yet tested against a live account/.test(t2) || !/contact address not yet set|tell us/.test(t2)) {
+      allSaid = false;
+      saidWhat = id + ': ' + t2.slice(0, 160);
+    }
+  }
+  ok(allSaid, 'ui: every provider says where credentials go and that it is untested, before any field is filled', saidWhat);
+
+  // The generic option, end to end, against a mock on loopback.
+  await js(`(() => { const s = document.getElementById('svc-name'); s.value = 'generic';
+    s.dispatchEvent(new Event('change', { bubbles: true })); })()`);
+  await waitFor(`!!document.getElementById('svcf-url')`, 'the generic fields');
+  await setVal('svcf-url', MOCK.origin + '/generic/json-base64');
+  await setVal('svcf-headers', 'X-API-Key: ' + MOCK.apiKey);
+  await setVal('svcf-bodyTemplate', '{"hash":"{{digest}}"}');
+  await setVal('svcf-signaturePath', 'result.sig');
+  await setVal('svc-certs', fs.readFileSync(t('rsa.crt'), 'utf8'));
+  await setVal('out-name', 'service.exe');
+  await click('sign-go');
+  const s3 = await waitFor(`/Signed and saved|Couldn|refused|did not accept/.test(${$text('sign-status')}) && ${$text('sign-status')}`, 'service signing');
+  ok(/Signed and saved/.test(s3), 'ui: signing through a cloud service says done', s3);
+  v = osslOk(await download('service.exe'), t('rsa.crt'));
+  if (!v.skip) ok(v.ok, 'ui: the service-signed download passes osslsigncode verify', v.out);
+  ok(await js(`document.getElementById('svcf-headers').value === ''`),
+    'ui: the credential field is cleared once the signing finishes');
+
+  // A wrong credential: the panel says so in plain words, and still clears.
+  await setVal('svcf-headers', 'X-API-Key: wrong-' + MOCK.apiKey);
+  await setVal('out-name', 'service2.exe');
+  await click('sign-go');
+  const s4 = await waitFor(`/did not accept|Couldn|Signed and saved/.test(${$text('sign-status')}) && ${$text('sign-status')}`, 'a refused credential');
+  ok(/did not accept those credentials/.test(s4), 'ui: a service that refuses the credential is reported in plain words', s4);
+  ok(await js(`document.getElementById('svcf-headers').value === ''`),
+    'ui: the credential field is cleared after a failure too');
+
+  // Nothing about any of it reached storage -- checked while the panel is
+  // still filled in, and again at the end with everything else.
+  const stored1 = await js(`JSON.stringify([Object.keys(localStorage), Object.keys(sessionStorage)]) +
+    ' ' + [...Object.keys(localStorage)].map((k) => localStorage.getItem(k)).join(' ')`);
+  ok(stored1.indexOf(MOCK.apiKey) < 0 && !/svcf|credential|apikey|token|secret/i.test(stored1),
+    'ui: no signing-service credential in localStorage or sessionStorage', stored1.slice(0, 200));
+
+  // pagehide must drop them, as it does the .pfx key.
+  await setVal('svcf-headers', 'X-API-Key: ' + MOCK.apiKey);
+  await js(`window.dispatchEvent(new PageTransitionEvent('pagehide', { persisted: false }))`);
+  ok(await js(`document.getElementById('svcf-headers').value === ''`), 'ui: pagehide drops the service credentials');
+
   // Linux, a new Ed25519 key
   await setFile('#installer', t('in.run'));
   await waitFor(`!document.getElementById('sign-run').hidden`, 'the Linux sign panel');
@@ -127,6 +209,7 @@ try {
   ok(false, 'ui run', e.message);
 } finally {
   if (chrome) await chrome.close('SIGKILL');
+  await mock.close();
 }
 console.log(`\n${T.passed} passed, ${T.failed} failed`);
 fs.rmSync(TMP, { recursive: true, force: true });

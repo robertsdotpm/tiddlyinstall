@@ -70,6 +70,11 @@ try {
     'the New installer form says "Built in this page"', await js(`(document.querySelector('.build-where') || {}).textContent`));
   ok(await js(`getComputedStyle(document.getElementById('offline-on').closest('label')).display === 'none'`), 'packing runtimes is hidden');
   ok(await js(`getComputedStyle(document.getElementById('ts-on').closest('.online-only')).display === 'none'`), 'the timestamp relay is hidden');
+  // Signing services whose API a browser can't call go through the build
+  // server's relay, so offline they don't exist (docs/browser-signing.md 3).
+  ok(await js(`(() => { const s = document.getElementById('svc-name');
+    return !!s && s.options.length >= 4 && ![].some.call(s.options, (o) => o.value === 'azurets'); })()`),
+    'the relayed signing services are not offered', await js(`[].map.call(document.getElementById('svc-name').options, (o) => o.value).join(',')`));
   await checkSections(t, js);
   const rt = await ibRuntimes();
   ok(rt.includes('python') && rt.includes('python2'), 'the runtimes summary is in the page', rt.join(','));

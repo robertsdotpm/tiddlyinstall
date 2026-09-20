@@ -60,7 +60,7 @@ EARLY_MODULES = ["js/polyfills.js", "js/has-shim.js"]
 LIB_MODULES = ["js/api.js", "js/templates.js", "js/form-job.js", "js/write-editor.js", "js/sha.js", "js/hmac-pbkdf2.js", "js/aes.js", "js/bignum.js", "js/der.js",
                "js/rsa.js", "js/ec.js", "js/ed25519.js", "js/cryptox.js", "js/inflate.js", "js/deflate.js",
                "js/zlib.js", "js/ibfile.js", "js/icon.js", "js/x509.js", "js/legacy.js",
-               "js/pkcs12.js", "js/authenticode.js", "js/pgp.js", "js/sign-ui.js", "js/resolve.js",
+               "js/pkcs12.js", "js/authenticode.js", "js/pgp.js", "js/sign-services.js", "js/sign-ui.js", "js/resolve.js",
                "js/builder.js", "js/overlay.js", "js/change-list.js", "js/overlay-consent.js",
                "js/local-api.js", "js/router.js"]
 PAGE_MODULES = ["js/new.js", "js/build.js", "js/edit.js", "js/catalog-editor.js"]
