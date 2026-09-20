@@ -1091,9 +1091,15 @@ function samePrereqs(a, b) {
   return x.length === y.length && x.every((u, i) => u.id === y[i].id && u.why === y[i].why);
 }
 
+// Our mirror serves a file at its path under the local root, and the
+// server un-escapes the request path once, so a `%` in a file's own name
+// has to be written `%25` or it never reaches the file. Our copies keep
+// the name the vendor's URL has, so python-build-standalone's and LLVM's
+// files really are called `cpython-3.14.7%2B20260901-…` on disk.
 const mirrorURL = (cat, local) => {
   const base = str(own(cat.policy, 'mirror_base'));
-  return local !== '' && base !== '' ? base.replace(/\/+$/, '') + '/' + splitJoin(local, '\\', '/') : '';
+  if (local === '' || base === '') return '';
+  return base.replace(/\/+$/, '') + '/' + splitJoin(splitJoin(local, '\\', '/'), '%', '%25');
 };
 
 // Catalog.prereqURLs

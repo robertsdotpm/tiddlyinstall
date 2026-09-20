@@ -34,12 +34,26 @@ export class LocalIndex {
           if (d.name === 'catalog' || d.name === 'reference' || d.name.startsWith('.')) continue;
           walk(path.join(dir, d.name), r);
         } else {
-          if (!this.byName.has(d.name)) this.byName.set(d.name, []);
-          this.byName.get(d.name).push(r);
+          this.add(d.name, r);
+          // Our copies keep the name the vendor's URL has, escapes and
+          // all (tools/download.py takes the URL's last segment), but the
+          // catalogue's own name for a file un-escapes `%2B` (resolve.js
+          // fileName), so python-build-standalone's
+          // cpython-3.14.7%2B20260901-… is stored under one name and
+          // looked for under the other. 73 files were invisible to this
+          // index because of it, and their plans had no mirror URL at
+          // all. Index both spellings.
+          const plus = d.name.split('%2B').join('+');
+          if (plus !== d.name) this.add(plus, r);
         }
       }
     };
     walk(this.root, '');
+  }
+
+  add(name, rel) {
+    if (!this.byName.has(name)) this.byName.set(name, []);
+    this.byName.get(name).push(rel);
   }
 
   // The relative path of our copy of a file with this name and size (size

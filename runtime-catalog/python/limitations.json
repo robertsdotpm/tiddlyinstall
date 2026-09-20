@@ -259,8 +259,8 @@
       "end_of_life": "2020-01-01",
       "os_support": {
         "windows": "2000/XP/Vista/7 across its lifetime; x86 and amd64 installers",
-        "macos": "installers spanning Mac OS X 10.3, 10.5, 10.6 and (from 2.7.9-era builds) 10.9 minimums over its lifetime; no build ever supported Apple Silicon",
-        "linux": "any Unix (source tarball only)"
+        "macos": "Anaconda's relocatable conda package (CPython 2.7.18, macOS 10.9+, Intel only -- there is no osx-arm64 build of 2.7, so Apple Silicon is not offered it) since 2026-09-20. NOT ON OUR MIRROR, AND CANNOT BE (2026-09-20). Python 2 on Linux and macOS is Anaconda's CPython 2.7.18 conda package with its dependency packages as release parts. The software is PSF-2.0 and freely redistributable, but Anaconda's terms of service for their platform say a user must not \"Frame or Mirror the Platform or any Offering, either directly or via a proxy, unless authorized by Anaconda\" (https://www.anaconda.com/legal/terms/terms-of-service), and repo.anaconda.com is that platform. So these files are deliberately absent from runtime-catalog/store/mirror-manifest.json and from the download plan, and their plans point at repo.anaconda.com and conda.anaconda.org only. The consequence to keep in mind: a machine that cannot reach Anaconda -- an old one on plain HTTP, or one offline behind our mirror -- cannot install Python 2 on Linux or macOS at all, which is exactly the machine most likely to want it. Do not \"fix\" this by adding them to the manifest. Changing it needs either Anaconda's authorisation, or our own relocatable CPython 2.7.18 build, or PyPy 2.7 (design.md 11.0 item 14).",
+        "linux": "Anaconda's relocatable conda package (CPython 2.7.18, glibc 2.17+, amd64) since 2026-09-20; python.org ships source only. NOT ON OUR MIRROR, AND CANNOT BE (2026-09-20). Python 2 on Linux and macOS is Anaconda's CPython 2.7.18 conda package with its dependency packages as release parts. The software is PSF-2.0 and freely redistributable, but Anaconda's terms of service for their platform say a user must not \"Frame or Mirror the Platform or any Offering, either directly or via a proxy, unless authorized by Anaconda\" (https://www.anaconda.com/legal/terms/terms-of-service), and repo.anaconda.com is that platform. So these files are deliberately absent from runtime-catalog/store/mirror-manifest.json and from the download plan, and their plans point at repo.anaconda.com and conda.anaconda.org only. The consequence to keep in mind: a machine that cannot reach Anaconda -- an old one on plain HTTP, or one offline behind our mirror -- cannot install Python 2 on Linux or macOS at all, which is exactly the machine most likely to want it. Do not \"fix\" this by adding them to the manifest. Changing it needs either Anaconda's authorisation, or our own relocatable CPython 2.7.18 build, or PyPy 2.7 (design.md 11.0 item 14)."
       },
       "added": [
         "dict and set comprehensions",
@@ -275,7 +275,8 @@
         "no async/await; only generator-based coroutine patterns (send/throw from 2.5)",
         "str is 8-bit bytes and unicode is a separate type -- the classic Python 2 encode/decode footguns",
         "official end-of-life 2020-01-01; code still targeting 2.7 today runs on an unsupported, unpatched interpreter",
-        "no venv/pip bundled (bundled pip is a 3.4-only feature); packaging relies on separately-installed setuptools/pip"
+        "no venv/pip bundled (bundled pip is a 3.4-only feature); packaging relies on separately-installed setuptools/pip",
+        "Python 2 on Linux and macOS comes from Anaconda's repository, which their terms forbid us to mirror, so those plans have no copy on our mirror (see os_support)."
       ],
       "confidence": "high"
     },

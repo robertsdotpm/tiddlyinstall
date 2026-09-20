@@ -29,6 +29,24 @@ test('LocalIndex: of several copies with one name and size, the one with the SHA
   assert.equal(ix.find('only.zip', 4096, sha(b)), 'u/only.zip');  // one copy: not hashed, as before
 });
 
+test('LocalIndex: a copy stored under the URL\'s escaped name is found by the catalogue\'s', (t) => {
+  // tools/download.py names our copy after the URL's last segment, escapes
+  // and all, while the catalogue's own name for the file un-escapes %2B
+  // (resolve.js fileName). 73 files -- every python-build-standalone and
+  // LLVM release -- were stored as cpython-3.14.7%2B2026… and looked for
+  // as cpython-3.14.7+2026…, so they were invisible here and their plans
+  // carried no mirror URL at all.
+  const d = tmpDir(t);
+  const data = Buffer.alloc(4096, 3);
+  fs.mkdirSync(path.join(d, 'python'));
+  fs.writeFileSync(path.join(d, 'python', 'cpython-3.14.7%2B20260901-x86_64-linux.tar.gz'), data);
+  const ix = new LocalIndex(d, path.join(d, 'cache.json'));
+  const stored = 'python/cpython-3.14.7%2B20260901-x86_64-linux.tar.gz';
+  assert.equal(ix.find('cpython-3.14.7+20260901-x86_64-linux.tar.gz', 4096, sha(data)), stored);
+  assert.equal(ix.find('cpython-3.14.7%2B20260901-x86_64-linux.tar.gz', 4096, sha(data)), stored);
+  assert.equal(ix.find('cpython-3.14.7+20260901-x86_64-linux.tar.gz', 99, sha(data)), '');
+});
+
 function miniCatalogue(d) {
   const cat = path.join(d, 'catalog'), local = path.join(d, 'local');
   fs.mkdirSync(path.join(cat, 'python'), { recursive: true });
