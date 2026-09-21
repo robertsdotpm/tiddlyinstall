@@ -559,11 +559,12 @@ async function checkLaunchField() {
   ok(/\{runtime\} is the Python 3 this installer sets up/.test(g.eg),
     'and explains only the tokens the command actually uses', g.eg);
 
-  // A package from a registry: the default comes from the registry, so the
-  // same field is present but quieter.
+  // A package from a package registry (npm, PyPI, ...): the default comes
+  // from that registry, so the same field is present but quieter. "Package
+  // registry" in full throughout, since `registry/` is ours.
   const pk = await at({ kind: 'repo', runtime: 'python', source: 'requests' });
-  ok(pk.quiet, 'a package from a registry gets the quiet launch field', JSON.stringify(pk));
-  ok(/the registry says which program the package installs/.test(pk.why), 'and says why the default is usually right', pk.why);
+  ok(pk.quiet, 'a package from a package registry gets the quiet launch field', JSON.stringify(pk));
+  ok(/the package registry says which program the package installs/.test(pk.why), 'and says why the default is usually right', pk.why);
 
   // An upload: we have the files but nothing says which one starts it.
   const up = await at({ kind: 'local', runtime: 'rust' });
