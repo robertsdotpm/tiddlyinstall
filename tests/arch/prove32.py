@@ -97,8 +97,9 @@ else
 fi
 echo "--- a 64-bit binary, on this machine ---"
 chmod +x /tmp/ti-amd64-probe /tmp/ti-x86-probe 2>/dev/null
-echo "amd64-run     $(/tmp/ti-amd64-probe 2>&1 | head -1 || true) (exit $?)"
-echo "x86-run       $(/tmp/ti-x86-probe 2>&1 | head -1 || true) (exit $?)"
+/tmp/ti-amd64-probe > /tmp/ti-a.out 2>&1; echo "amd64-run     exit $? $(head -1 /tmp/ti-a.out)"
+/tmp/ti-x86-probe   > /tmp/ti-x.out 2>&1; echo "x86-run       exit $? $(head -1 /tmp/ti-x.out)"
+rm -f /tmp/ti-a.out /tmp/ti-x.out
 file /tmp/ti-amd64-probe /tmp/ti-x86-probe 2>/dev/null | sed 's/^/file         /'
 '''
 
@@ -198,8 +199,8 @@ def proof_desktop(vm, installer, appname):
         return
     code, out, err = vm.run(DESKTOP, env=f"APPNAME={shlex.quote(appname)}")
     entries = [l for l in out.splitlines() if l.startswith("entry")]
-    bad = [l for l in out.splitlines() if l.startswith("validate") and l.split(None, 1)[1].strip()
-           not in ("", "ok")]
+    bad = [l for l in out.splitlines() if l.startswith("validate")
+           and l.partition(" ")[2].strip() not in ("", "ok")]
     say(2, "XDG menu and desktop entries", bool(entries) and not bad,
         (f"{len(entries)} entry file(s) written, all valid: " if not bad else "invalid entries: ")
         + " | ".join(l.strip() for l in out.splitlines()
@@ -216,11 +217,21 @@ def proof_dialogs(vm):
 # ---------------------------------------------------------------- 4. ldconfig
 
 LDCACHE = r'''
+# ldconfig lives in /sbin, which is not on a normal user's PATH over SSH.
+# The engine looks for it in all three places (ti_have_lib); a probe that
+# did not was reporting an empty cache on a machine that has one.
+LD=
+for c in ldconfig /sbin/ldconfig /usr/sbin/ldconfig; do
+  command -v "$c" > /dev/null 2>&1 && { LD=$c; break; }
+done
+echo "ldconfig      ${LD:-not found}"
 echo "cache-file    $(ls -l /etc/ld.so.cache 2>/dev/null | awk '{print $5" bytes"}' || echo missing)"
-echo "cache-entries $(ldconfig -p 2>/dev/null | sed -n 1p)"
-echo "libatomic     $(ldconfig -p 2>/dev/null | grep -c libatomic.so.1) in the cache"
-ldconfig -p 2>/dev/null | grep libatomic | sed 's/^/  /'
-echo "libc-line     $(ldconfig -p 2>/dev/null | grep -m1 'libc\.so\.6')"
+[ -n "$LD" ] || exit 0
+echo "cache-entries $("$LD" -p 2>/dev/null | sed -n 1p)"
+echo "libatomic     $("$LD" -p 2>/dev/null | grep -c 'libatomic\.so\.1') in the cache"
+"$LD" -p 2>/dev/null | grep libatomic | sed 's/^/  /'
+echo "libc-line     $("$LD" -p 2>/dev/null | grep -m1 'libc\.so\.6')"
+echo "conf-dirs     $(ls /etc/ld.so.conf.d/ 2>/dev/null | tr '\n' ' ')"
 '''
 
 
@@ -230,12 +241,52 @@ def proof_ldconfig(vm, before=True):
     # A real cache: /etc/ld.so.cache exists, has entries, and the libc line
     # is not marked x86-64 (which is how the engine's `lib` check filters).
     libc = next((l for l in lines if l.startswith("libc-line")), "")
-    ok = ("missing" not in lines[0] and "libs found" in out and "x86-64" not in libc)
+    cache = next((l for l in lines if l.startswith("cache-file")), "")
+    # A real cache: /etc/ld.so.cache is there, ldconfig reads entries out
+    # of it, and the libc it lists is not the x86-64 one -- which is the
+    # very field the engine's `lib` prerequisite check filters on.
+    ok = ("missing" not in cache and "libs found" in out
+          and "libc.so.6" in libc and "x86-64" not in libc)
     say(4, "a real system-wide ldconfig cache", ok, " | ".join(lines))
     return out
 
 
 # ---------------------------------------------------------------- 5. sudo + rust
+
+# Staging the missing prerequisite on a machine that is not minimal.
+#
+# This VM has libatomic1 (the Xfce task pulls it in through webkit), and
+# `apt-get remove libatomic1` would take atril, quodlibet, gstreamer and
+# webkit with it -- checked with `apt-get -s`. Moving the .so aside was
+# tried first and is *not* good enough: apt then says "already the newest
+# version" and does nothing, and the engine -- correctly -- re-checks
+# after installing and stops with "still missing after installing
+# libatomic1". So the package itself is removed, with --force-depends so
+# the removal does not cascade, and put back afterwards with the same
+# apt-get command a person would run. `apt-get check` confirms dpkg is
+# consistent again.
+#
+# The other half of this check -- no sudo at all, so the engine stops and
+# prints the command for the user to run -- is what the containers show
+# (tests/arch/sandbox.py has no sudo and no libatomic1). This machine is
+# here for the half they cannot: sudo working, and the install finishing
+# on a real 32-bit kernel afterwards.
+
+HIDE = r'''set -u
+sudo -n dpkg --remove --force-depends libatomic1 > /dev/null 2>&1
+sudo -n ldconfig
+echo "pkg-state     $(dpkg-query -W -f='${Status}' libatomic1 2>/dev/null || echo "not installed")"
+echo "in-cache      $(/sbin/ldconfig -p | grep -c 'libatomic\.so\.1')"
+'''
+
+RESTORE = r'''set -u
+sudo -n DEBIAN_FRONTEND=noninteractive apt-get -qq install -y libatomic1 2>&1 | tail -2
+sudo -n ldconfig
+echo "back-in-cache $(/sbin/ldconfig -p | grep -c 'libatomic\.so\.1')"
+echo "dpkg-check    $(sudo -n apt-get check 2>&1 | tail -1)"
+echo "dpkg-verify   $(sudo -n dpkg -V libatomic1 2>&1 | head -2)(nothing above means unchanged)"
+'''
+
 
 def proof_sudo_rust(vm, installer):
     name = Path(installer).name
@@ -247,29 +298,36 @@ def proof_sudo_rust(vm, installer):
     step = (f'set -u\nH=$(mktemp -d /tmp/tip-XXXXXX)\ncp ~/tiprove2/{shlex.quote(name)} $H/\n'
             f'env -i HOME=$H PATH=/usr/local/bin:/usr/bin:/bin sh $H/{shlex.quote(name)} --yes '
             f'--log=$H/i.log </dev/null >/dev/null 2>&1; echo "exit $?"\n'
-            f'grep -E "needs system packages|Run this" $H/i.log | head -2\n'
+            f'grep -E "Installing system packages|as root:|still missing|needs system packages" '
+            f'$H/i.log | head -3\n'
             f'ls -d $H/.local/share/ti/*/launch.txt 2>/dev/null | head -1\n'
+            f'sh $H/.local/share/ti/*/uninstall.sh --yes > /dev/null 2>&1\n'
             f'rm -rf $H\n')
-    code, first, _ = vm.run(step, timeout=3600)
-    asked = "needs system packages" in first
-    if not asked:
-        say(5, "sudo, and the libatomic1 prerequisite installed and retried", False,
-            "the first run did not ask for libatomic1: " + " ".join(first.split())[:300])
-        return
-    code, inst, err = vm.run(
-        "sudo -n apt-get -qq update >/dev/null 2>&1; "
-        "sudo -n DEBIAN_FRONTEND=noninteractive apt-get -qq install -y libatomic1 2>&1 | tail -2; "
-        "echo \"apt $?\"; sudo -n ldconfig; ldconfig -p | grep libatomic | head -2", timeout=900)
-    if "apt 0" not in inst:
-        say(5, "sudo, and the libatomic1 prerequisite installed and retried", False,
-            "installing libatomic1 with sudo failed: " + " ".join((inst + err).split())[:300])
-        return
-    code, second, _ = vm.run(step, timeout=7200)
-    ok = "exit 0" in second and "launch.txt" in second
-    say(5, "sudo, and the libatomic1 prerequisite installed and retried", ok,
-        "first run: stopped with " + " ".join(first.split())[:160]
-        + " || sudo apt-get install libatomic1: " + " ".join(inst.split())[:120]
-        + " || second run: " + " ".join(second.split())[:160])
+    staged = False
+    try:
+        code, hid, _ = vm.run(HIDE, timeout=600)
+        staged = "in-cache      0" in hid
+        if not staged:
+            say(5, "sudo, and the libatomic1 prerequisite installed and retried", False,
+                "could not stage a machine without libatomic1: " + " ".join(hid.split())[:250])
+            return
+        code, run, _ = vm.run(step, timeout=14400)
+        staged = False                      # the engine has put it back itself, if it worked
+        code, back, err = vm.run(RESTORE, timeout=900)
+        if "back-in-cache 1" not in back:
+            say(5, "sudo, and the libatomic1 prerequisite installed and retried", False,
+                "libatomic1 was not restored -- CHECK THE VM: " + " ".join((back + err).split())[:250])
+            return
+        ok = ("exit 0" in run and "launch.txt" in run
+              and "Installing system packages" in run and "still missing" not in run)
+        say(5, "sudo, and the libatomic1 prerequisite installed with it", ok,
+            "staged: " + " ".join(hid.split())[:120]
+            + " || the install: " + " ".join(run.split())[:280]
+            + " || afterwards: " + " ".join(back.split())[:160])
+    finally:
+        if staged:
+            print("putting libatomic1 back after a failure", flush=True)
+            print(vm.run(RESTORE, timeout=900)[1], flush=True)
 
 
 # ---------------------------------------------------------------- building
@@ -313,6 +371,15 @@ def main():
         sys.exit(f"{a.target}: not in tests/arch/machines.py")
     if machines.arch_of(a.target) != "x86":
         sys.exit(f"{a.target} is {machines.arch_of(a.target)}; these proofs are about a 32-bit machine")
+    # Proofs 2 and 3 open real windows on the target's DISPLAY=:0. That is
+    # the whole point on a test VM with an autologin session and nobody
+    # at it, and it is forbidden anywhere else (CLAUDE.md: never put
+    # anything on the operator's screen). So this refuses to run against
+    # anything but a VM, before it can reach an ssh target at all.
+    kind = machines.MACHINES[a.target].get("kind")
+    if kind != "vm":
+        sys.exit(f"{a.target} is a {kind}, not a VM: these proofs open windows on :0 and must only "
+                 f"run on a test machine with no one at it")
     sys.path.insert(0, str(REPO / "tests/matrix"))
     import run as matrix                                   # noqa: E402
     host = a.host or matrix.LINUX_VMS.get(a.target, "")
