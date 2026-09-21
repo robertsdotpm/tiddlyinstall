@@ -100,9 +100,27 @@ engine is this same file, so an engine change reaches macOS as soon as
 the base is built there -- and `out/ti-base-macos.zip` on this machine
 is whatever was last built there, nothing more.
 
-**Last built 2026-09-21T06:54:39Z** on the Mac test server (macOS 26.2
-`25C56`, arm64, `Matthew@the-mac-test-host`), from `ti-engine.sh` with the
-SHA-256 promise said once, a label on every file in the download list,
+**Last built 2026-09-21T10:39:05Z** on the Mac test server (macOS 26.2
+`25C56`, arm64, `Matthew@the-mac-test-host`), from `ti-engine.sh` at `af77744`:
+mode A now says whose signature it is and what it is not. The review
+screen gained a `Mode:` row before `Settings:` -- "signed by
+TiddlyInstall (mode A): installs only what its file name names, from
+`<backend>`" and "That signature is ours; the program it installs is
+not." -- in the same place and the same words as the Windows engine, and
+the mode A refusal, the `install.txt` log line and `--help` now say *why*
+mode A takes no settings rather than saying the signature is about the
+app. Text only; nothing it does changed.
+
+| | |
+| --- | --- |
+| `out/ti-base-macos.zip` | `3c552f115cf303f44c56d4a57ecd823a93263721b8c3c620459c4e83052a312b`, 68,623 bytes |
+| the engine inside it | `2eefef9ee145449cd8cef34eae9926ce9632897c3d299001b5c2e11aa2ae4a86` (`ti-engine.sh` at `af77744` with the baked lines filled, and **only** those four lines: checked by diffing it against `git show af77744:installer/unix/ti-engine.sh`) |
+| plan signing key | `97930ea1888d1a12` (unchanged) |
+| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T10:39:05Z` / `1789987145` |
+| signature | ad-hoc; `codesign --verify --strict` is happy on the bundle **and** on the bundle re-extracted from the zip with `ditto` ("valid on disk", "satisfies its Designated Requirement"); `spctl -a` rejects it, as it must |
+
+The build before this one was **2026-09-21T06:54:39Z**, from `ti-engine.sh`
+with the SHA-256 promise said once, a label on every file in the download list,
 the review shown in a window on a desktop, and the
 **capability statement** on the review screen (design.md 11.3 and
 docs/format.md section 3, "What engines must show: what this install can
@@ -122,15 +140,12 @@ engine is one file, so that change reached macOS only when this was
 rebuilt. The macOS dialog's short form carries the same two claims, in
 the same order, because it is the whole of what that dialog says.
 
-| | |
-| --- | --- |
-| `out/ti-base-macos.zip` | `07b3366106a8dfa5ac2758952edfdc8dd76f9b7be28ffa43fd0f240cfcf401ec`, 68,441 bytes |
-| the engine inside it | `cf895577e3a68cbd2601f4c4ba65f2dec3490ae899a6b83526112802c9cb8bb9` (`ti-engine.sh` with the baked lines filled) |
-| plan signing key | `97930ea1888d1a12` |
-| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T06:54:39Z` / `1789973679` |
-| signature | ad-hoc; `codesign --verify --strict` is happy on the bundle **and** on the bundle re-extracted from the zip with `ditto` ("valid on disk", "satisfies its Designated Requirement") |
+Its zip was `07b3366106a8dfa5ac2758952edfdc8dd76f9b7be28ffa43fd0f240cfcf401ec`
+(68,441 bytes), its engine
+`cf895577e3a68cbd2601f4c4ba65f2dec3490ae899a6b83526112802c9cb8bb9`, built
+at `TI_BUILD_TIME` `2026-09-21T06:54:39Z` / `1789973679`.
 
-**One bug this build fixes is macOS-only**, and it took running the
+**One bug that build fixed is macOS-only**, and it took running the
 engine on the Mac to see: `$(case $x in y) … esac)` is closed at the
 first `)` by the bash 3.2 that macOS ships as `/bin/sh`, so the review
 screen printed `Plan signed: <date> printf ' (fetched now)' ;; *) …` —
