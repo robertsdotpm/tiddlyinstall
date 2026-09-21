@@ -3106,10 +3106,19 @@ ti_install_main() {
 	# and "Signed by: TiddlyInstall" invites exactly that reading -- most
 	# of all in mode A, where the name on the certificate is ours. So
 	# where there is a signer, the line says what the signature covers.
+	#
+	# On its own line, not glued to the end of the signer's name: the two
+	# together run past 74 and leave "installs)" alone on the next line on
+	# every surface at once, and only ever on a signed installer, which is
+	# the one a person downloads. Same treatment as the sha256 line
+	# directly below, and the same shape the Windows engine already prints
+	# (base.nsi, "It covers this installer file, not the program it
+	# installs."). The words are not the ones to change: they were settled
+	# on 2026-09-21, and any shorter way of saying it says less.
 	ti_signed_scope=
 	case $ti_signed_short in
 	nobody* | unknown*) ;;
-	*) ti_signed_scope=' (this installer file; not the program it installs)' ;;
+	*) ti_signed_scope='(this installer file; not the program it installs)' ;;
 	esac
 
 	# What the totals are, before anything is printed: a person deciding
@@ -3346,7 +3355,8 @@ ti_install_main() {
 		else
 			printf '  %-14snot needed\n' 'Admin rights:'
 		fi
-		printf '  %-14s%s%s\n' 'Signed by:' "$ti_signed_short" "$ti_signed_scope" | ti_wrap 74 16
+		printf '  %-14s%s\n' 'Signed by:' "$ti_signed_short" | ti_wrap 74 16
+		[ -n "$ti_signed_scope" ] && printf '  %-14s%s\n' '' "$ti_signed_scope" | ti_wrap 74 16
 		[ -n "$ti_self_sha" ] && printf '  %-14sthis file has sha256 %s\n' '' "$ti_self_sha"
 		printf '  %-14s%s\n' 'Record:' "${TI_RECHASH:-none}"
 
@@ -3502,7 +3512,8 @@ ti_install_main() {
 		ti_needs_summary
 
 		printf '\nWHERE THIS INSTALLER AND ITS SETTINGS CAME FROM\n'
-		printf '  Signed by:  %s%s\n' "$ti_signed_short" "$ti_signed_scope" | ti_wrap 74 14
+		printf '  Signed by:  %s\n' "$ti_signed_short" | ti_wrap 74 14
+		[ -n "$ti_signed_scope" ] && printf '              %s\n' "$ti_signed_scope" | ti_wrap 74 14
 		[ -n "$ti_self_sha" ] && printf '              this file has sha256 %s\n' "$ti_self_sha"
 		# Mode A reads as "a signed thing that can be pointed anywhere"
 		# unless it says that this copy carries no settings of its own
@@ -3617,7 +3628,8 @@ ti_install_main() {
 			fi
 		fi
 		printf '  Into:      %s\n' "$TI_APP_DIR"
-		printf '  Signed by: %s%s\n' "$ti_signed_short" "$ti_signed_scope" | ti_wrap 68 13
+		printf '  Signed by: %s\n' "$ti_signed_short" | ti_wrap 68 13
+		[ -n "$ti_signed_scope" ] && printf '             %s\n' "$ti_signed_scope" | ti_wrap 68 13
 		[ $need_root = 1 ] && printf '  Admin:     yes%s\n' "$([ -n "$ti_need_pkgs" ] && printf ', for system packages only' || printf '')"
 		[ -s "$ti_warn" ] && sed 's/^!! /  ! /; s/^!  /  ! /' "$ti_warn" | ti_wrap 68 6
 		printf '\nNothing has been changed yet.'
