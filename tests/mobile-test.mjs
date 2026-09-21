@@ -345,14 +345,21 @@ async function newInstaller(w, shots) {
     const f = document.getElementById('new-form'); f.elements.offline.checked = true;
     f.dispatchEvent(new Event('change', { bubbles: true }));`);
   await sleep(300);
+  // Only the boxes that are on screen: the picker has a row per system and
+  // hides the rows for systems "Build for" is not building (the form opens
+  // on this computer's system alone), and a row that is display:none is not
+  // a touch target -- measuring it reported a height of 0 and failed for
+  // something nobody can tap. `shown` is checked too, so this cannot pass by
+  // measuring nothing.
   const packed = await B.js(`(() => { const t = document.getElementById('offline-targets');
     if (!t || !t.getClientRects().length) return null;
     const wrap = t.closest('.table-wrap').getBoundingClientRect();
-    return { boxes: t.querySelectorAll('input[type=checkbox]').length,
-      low: Math.min(...[...t.querySelectorAll('label.choice')].map((l) => Math.round(l.getBoundingClientRect().height))),
+    const on = [...t.querySelectorAll('label.choice')].filter((l) => l.getClientRects().length);
+    return { boxes: t.querySelectorAll('input[type=checkbox]').length, shown: on.length,
+      low: on.length ? Math.min(...on.map((l) => Math.round(l.getBoundingClientRect().height))) : 0,
       wrapRight: Math.round(wrap.right), wrapLeft: Math.round(wrap.left) }; })()`);
   ok(packed && packed.boxes >= 12, `${B.name} ${w}px new: the packed picker shows a box per system and architecture`, JSON.stringify(packed));
-  ok(packed && packed.low >= 40, `${B.name} ${w}px new: each architecture box is a 40 px touch target`, JSON.stringify(packed));
+  ok(packed && packed.shown >= 2 && packed.low >= 40, `${B.name} ${w}px new: each architecture box on screen is a 40 px touch target`, JSON.stringify(packed));
   ok(packed && packed.wrapLeft >= 0 && packed.wrapRight <= w + 1,
     `${B.name} ${w}px new: the packed picker's table scrolls in its own box, not the page`, JSON.stringify(packed));
   await audit(w, 'new-customise', { shots });
