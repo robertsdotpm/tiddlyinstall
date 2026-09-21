@@ -161,19 +161,26 @@ engine is this same file, so an engine change reaches macOS as soon as
 the base is built there -- and `out/ti-base-macos.zip` on this machine
 is whatever was last built there, nothing more.
 
-**Last built 2026-09-22T08:48:37+10:00** (`TI_BUILD_TIME`
-`2026-09-21T22:48:37Z`) on the Mac test server (macOS 26.2 `25C56`,
-arm64, `Matthew@the-mac-test-host`), for `Read Me First.txt`: the zip now
-holds the readme beside the app, and the engine inside it is unchanged
-from the build before.
+**Last built 2026-09-22T09:13:40+10:00** (`TI_BUILD_TIME`
+`2026-09-21T23:13:40Z`) on the Mac test server (macOS 26.2 `25C56`,
+arm64, `Matthew@the-mac-test-host`), from `src/installers/unix/`: the folder
+move put `src/` into the engine's own comments, so the engine's bytes
+changed and all three bases were rebuilt. Nothing it *does* changed.
+
+The build before it, 2026-09-21T22:48:37Z, was the first to carry
+`Read Me First.txt`, with the engine of the build before that: zip
+`7f2fb049c6b7f18f70d91b01c39158e25c801dc3cc39a3c7320e1e10fe90afe7`,
+71,376 bytes, engine
+`8a476ef672a6993a905c8695b3ed534157e5b9f5727cce7598e9009ac3d2e77f`,
+`TI_BUILD_EPOCH` `1790030917`.
 
 | | |
 | --- | --- |
-| `out/ti-base-macos.zip` | `7f2fb049c6b7f18f70d91b01c39158e25c801dc3cc39a3c7320e1e10fe90afe7`, 71,376 bytes |
-| the engine inside it | `ti-engine.sh` with the baked lines filled, and **only** those four lines: diffed against the committed source, four lines differ. `8a476ef672a6993a905c8695b3ed534157e5b9f5727cce7598e9009ac3d2e77f` |
+| `out/ti-base-macos.zip` | `ab859c084fd9dd3584b3c97aad8d8acc95e66256ec603dbfd64cbe5c560d18ef`, 71,388 bytes |
+| the engine inside it | `ti-engine.sh` with the baked lines filled, and **only** those four lines: diffed against the committed source, four lines differ. `6d442bf7f8a8725410a0b256e1367bee2c55c6123e73653bdeee0ea8687ff8d0` |
 | `Read Me First.txt` | 1,961 bytes, mode 644, a top-level entry beside `TiddlyInstall.app/` |
 | plan signing key | `97930ea1888d1a12` (unchanged) |
-| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T22:48:37Z` / `1790030917` |
+| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T23:13:40Z` / `1790032420` |
 | signature | ad-hoc; `codesign --verify --strict` is happy on the bundle **and** on the bundle re-extracted from the zip with `ditto` ("valid on disk", "satisfies its Designated Requirement", `Signature=adhoc`); `spctl -a` rejects it, as it must. The readme is appended with `zip` after `ditto` has written the archive, which copies the app's entries through unchanged — that re-extract check is what proves it |
 
 The build before this one was rebuilt on 2026-09-21 at about 23:44
