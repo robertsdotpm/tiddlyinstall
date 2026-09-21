@@ -62,7 +62,8 @@
             <dt>Installs</dt><dd>requests 2.32.3 &mdash; from <code>github.com/psf/requests</code>, tag <code>v2.32.3</code></dd>
             <dt>Runtime</dt><dd>Python 3.14.7 &mdash; newest that runs on this computer</dd>
             <dt>Into</dt><dd><code>C:\ti\k3m9q2x7v4p8\</code></dd>
-            <dt>Signed by</dt><dd><span class="verified">Matthew Roberts</span> &middot; certificate valid</dd>
+            <dt>Signed by</dt><dd><span class="verified">Matthew Roberts</span> &middot; certificate valid &mdash;
+              it covers this installer file, not the program it installs</dd>
           </dl>
           <hr class="manifest-sep">
           <span class="eyebrow">Will download</span>
@@ -78,12 +79,13 @@
     <section class="section">
       <span class="eyebrow"><span class="num">02</span> &nbsp;The unusual part</span>
       <h2>One file, like TiddlyWiki</h2>
-      <p class="measure">TiddlyInstall is a single HTML file. This page carries the base installers,
-      the runtime catalogue and all the code that makes, edits and signs installers. Save it (at the
-      bottom of the page) and open it from your disk, and it keeps working with no server: it builds
-      installers for code you write here or for packages, edits any unsigned installer, and signs
-      with your own key. When a build server is there, it uses it for the rest: installers signed by
-      us, GitHub repos, and installers with their runtimes packed inside.</p>
+      <p class="measure">TiddlyInstall is a single HTML file. This page carries the installer
+      programs, the runtime catalogue and all the code that makes, edits and signs
+      installers. Save it (at the bottom of the page) and open it from your disk, and it keeps
+      working with no server: it builds installers for code you write here or for packages, edits
+      any installer nobody has signed, and signs with your own key. When a build server is there,
+      it uses it for the rest: installers we sign, GitHub repos, and installers with their runtimes
+      packed inside.</p>
     </section>
 
     <section class="section">
@@ -136,10 +138,12 @@ macOS     /Library/Application Support/ti/tjfq5rqwnnrx/
 
     <section class="section">
       <span class="eyebrow"><span class="num">06</span> &nbsp;Reuse</span>
-      <h2>Base installers are reusable</h2>
-      <p class="measure">Every installer is a base installer plus settings. For example,
-      <code>install_python_x.exe</code> installs the Python package <code>x</code>. The base's code
-      stays the same; only the settings change.</p>
+      <h2>One installer program, pointed at your app</h2>
+      <p class="measure">We wrote one installer program &mdash; the <em>base installer</em> &mdash; and
+      every installer built here is that same program plus your settings. For example,
+      <code>install_python_x.exe</code> is that program, with settings that say "install the Python
+      package <code>x</code>". The code is identical in every copy; only the settings change. That is
+      why it only has to be tested, hardened and signed once.</p>
 <pre>
 install_python_requests.exe   -&gt; installs the "requests" package
 install_python_black.exe      -&gt; installs the "black" package
@@ -150,22 +154,29 @@ install_node_prettier.exe     -&gt; installs the "prettier" package
     <section class="section">
       <span class="eyebrow"><span class="num">07</span> &nbsp;Signing</span>
       <h2>Three ways to ship</h2>
+      <p class="measure">A signature here is on <strong>the installer program</strong> &mdash; the one
+      we wrote, identical in every copy &mdash; and never on the software it installs. It works like
+      the signature on a web browser: it says who wrote the browser and that this copy is
+      unmodified, and nothing whatever about the sites you visit. What it does say is worth having.
+      The program that asks for your trust at install time is ours and unaltered, so the screen it
+      shows you can be believed.</p>
       <div class="grid">
         <section class="panel">
           <span class="eyebrow">Mode A</span>
-          <h3>Signed by us</h3>
+          <h3>We sign the installer</h3>
           <p>The fewest security warnings. Settings live in the file name, so renaming the file
-          retargets it and keeps the signature.</p>
+          points it at a different package &mdash; and the signature stays valid, because it was
+          never a claim about what gets installed.</p>
         </section>
         <section class="panel">
           <span class="eyebrow">Mode B</span>
-          <h3>Signed by you</h3>
+          <h3>You sign the installer</h3>
           <p>Your name and icon on the installer itself, with your own certificate and your own
           reputation.</p>
         </section>
         <section class="panel">
           <span class="eyebrow">Mode C</span>
-          <h3>Unsigned</h3>
+          <h3>Nobody signs it</h3>
           <p>Fully editable. Change what it installs, its name and its icon in your browser, without
           uploading the file.</p>
         </section>
@@ -176,7 +187,8 @@ install_node_prettier.exe     -&gt; installs the "prettier" package
       <span class="eyebrow"><span class="num">08</span> &nbsp;The promise</span>
       <h2>Nothing hidden</h2>
       <p class="measure">Every installer, whoever signed it, shows what it will install, where it
-      comes from, what it downloads, where files go and who signed it, before it changes anything.
+      comes from, what it downloads, where files go and who signed the installer file, before it
+      changes anything.
       That screen &mdash; the one at the top of this page &mdash; is not a summary we write afterwards.
       It is read from the installer's own settings block, so it cannot disagree with what happens next.</p>
     </section>

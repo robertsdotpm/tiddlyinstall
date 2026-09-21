@@ -182,7 +182,7 @@ export function validate(r, env) {
       // folder into a tar). Only the page's own builder takes these; the
       // server has no upload yet.
       if (!env.embedPlan) throw bad('Files from your computer are built in the page itself, not on the build server.');
-      if (r.mode === 'A') throw bad('Installers signed by TiddlyInstall need the source on the build server. For files from your computer, choose "Signed by you" or "Unsigned".');
+      if (r.mode === 'A') throw bad('Installers we sign need the source on the build server: their settings are published by us and fetched by name, never carried in the file. For files from your computer, choose "Signed by you" or "Unsigned".');
       const b64 = String(r.archive || '');
       if (!b64) throw bad('Pick an archive or a folder from your computer.');
       if (b64.length > Math.ceil(UPLOAD_MAX / 3) * 4) throw bad('The archive is over ' + MB(UPLOAD_MAX) + ' MB.');

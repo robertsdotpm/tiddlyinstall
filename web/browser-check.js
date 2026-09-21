@@ -304,7 +304,7 @@
   }
   // Phones and tablets: none is in the matrix below.
   var PHONES = 'No phone or tablet is in the table below. The page was checked at phone sizes (320 to 768 px) in Chrome\'s phone emulation, ' +
-    'in Chrome 113 on Android (an emulator) and in Safari\'s engine (WebKitGTK), not on real phones: it lays out, builds unsigned installers and signs. ' +
+    'in Chrome 113 on Android (an emulator) and in Safari\'s engine (WebKitGTK), not on real phones: it lays out, builds installers with no signature on them, and signs. ' +
     'The installers are for Windows, Linux and macOS, so they are saved to copy to a computer.';
   // Used when this copy of the page has no test results for the visitor's OS.
   var GENERAL = 'Firefox 52 or later, Chrome 58 or later, Safari 12 or later, or Edge; on Windows XP and Vista, Supermium or Firefox 52 ESR; ' +

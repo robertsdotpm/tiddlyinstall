@@ -1,5 +1,6 @@
 // edit.html (the Edit section of the one-file site, dist/index.html): open an
-// unsigned installer, edit its record, plan and packed files, download it.
+// installer file that carries no signature (one covers every byte, so editing
+// would break it), edit its record, plan and packed files, download it.
 // Nothing leaves the browser. Base installers for "start a new one" come
 // from <script type="application/octet-stream" id="base-*"> blocks when the
 // page has them (the standalone page), else from the build server.

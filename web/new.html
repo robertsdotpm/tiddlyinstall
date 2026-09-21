@@ -640,7 +640,7 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
         <details>
           <summary><span>Files in the installer</span><span class="default"><span class="ours-only-inline">Not with our signature</span><span class="not-ours-inline"><span class="offline-off-inline">2 of your files</span><span class="offline-inline">2 of your files, plus offline copies</span></span></span></summary>
 
-          <p class="small ours-only" style="margin:0">Installers signed by TiddlyInstall can't carry packed files or offline copies, because our signature would then cover files we've never seen.
+          <p class="small ours-only" style="margin:0">An installer we sign can't carry packed files or offline copies. Our signature covers every byte of the installer file, and we won't put it over files we've never seen.
             To add files, choose <strong>Signed by you</strong> or <strong>Unsigned</strong> under Signing.</p>
           <div class="not-ours">
 
@@ -1025,15 +1025,19 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
         </details>
 
         <h3 class="customise-group">Signing and the installer file</h3>
-        <p class="customise-group-hint small muted">Who signs the installer, and the file it is built from.</p>
+        <p class="customise-group-hint small muted">Who signs the installer program, and the file it is built from.</p>
 
         <details>
           <summary><span>Signing</span><span class="default">Unsigned</span></summary>
+          <p class="small muted">A signature here goes on <strong>the installer program</strong> &mdash; the
+            one we wrote, the same in every installer built here &mdash; and never on the software it installs. It says the program
+            that asks for someone's trust at install time is the one it claims to be, unaltered; it is not a word about your app,
+            which whoever signs cannot have checked.</p>
           <div class="choice-stack">
             <label class="choice online-only choice-off"><input type="radio" name="mode" value="ours" id="mode-ours" disabled>
               <span><strong>Signed by TiddlyInstall</strong> <span class="badge badge-off">not yet</span><br>
               <span class="small muted">Not available in this prototype: it needs a code-signing certificate, which we don't have yet.
-              It would give the fewest security warnings: the installer file branded as TiddlyInstall, with your name and icon on the installed app.</span></span></label>
+              It would give the fewest security warnings: our certificate on the installer program, with your name and icon on the installed app.</span></span></label>
 
             <label class="choice"><input type="radio" name="mode" value="yours" id="mode-yours">
               <span><strong>Signed by you</strong><br>
@@ -1041,7 +1045,7 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
 
             <label class="choice"><input type="radio" name="mode" value="unsigned" id="mode-unsigned" checked>
               <span><strong>Unsigned</strong><br>
-              <span class="small muted">Anyone can edit the installer afterwards, including on the <a href="edit.html">Edit installer</a> page. Windows and macOS will show security warnings.</span></span></label>
+              <span class="small muted">Nobody's certificate on the file, so anyone can edit the installer afterwards, including on the <a href="edit.html">Edit installer</a> page. Windows and macOS will show security warnings.</span></span></label>
           </div>
 
           <div class="mode-yours-only">
@@ -1087,11 +1091,14 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
             <ul id="open-notice-list"></ul>
           </div>
 
-          <p class="small muted" style="margin-bottom:0">Whichever you pick, the installer shows people what it will install, where it comes from, and who signed it before it changes anything.</p>
+          <p class="small muted" style="margin-bottom:0">Whichever you pick, the installer shows people what it will install, where it comes from, and who signed the installer file, before it changes anything.</p>
         </details>
 
         <details>
           <summary><span>Base installer and metadata</span><span class="default"><span class="by-lang lang-python">install_python_x</span><span class="by-lang lang-python2">install_python2_x</span><span class="by-lang lang-node">install_node_x</span><span class="by-lang lang-ruby">install_ruby_x</span><span class="by-lang lang-php">install_php_x</span><span class="by-lang lang-java">install_java_x</span><span class="by-lang lang-dotnet">install_dotnet_x</span><span class="by-lang lang-r">install_r_x</span><span class="by-lang lang-cc">install_cpp_x</span><span class="by-lang lang-go">install_go_x</span><span class="by-lang lang-rust">install_rust_x</span><span class="by-lang lang-zig">install_zig_x</span><span class="by-lang lang-nim">install_nim_x</span><span class="by-lang lang-none">install_github_x</span></span></summary>
+          <p class="small muted">The <strong>base installer</strong> is the reusable program your installer is built from:
+            the part we wrote and maintain, which reads the settings below and installs what they name. It is the same in
+            every installer built here, which is why it only has to be tested and signed once.</p>
           <div class="field">
             <label for="base">Base installer</label>
             <select id="base" name="base">
@@ -1115,7 +1122,7 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
           <div class="field">
             <label for="filename">File name</label>
             <input type="text" id="filename" name="filename" maxlength="255" pattern="[A-Za-z0-9._\-{}]+" placeholder="install_{runtime}_{package}" spellcheck="false">
-            <span class="hint">Up to 255 characters including the extension. Letters, numbers, <code>_</code> <code>-</code> <code>.</code> only. Installers signed by TiddlyInstall get a hash of their settings added to the end, e.g. <code>install_python_requests_tjfq5rqw….exe</code>.</span>
+            <span class="hint">Up to 255 characters including the extension. Letters, numbers, <code>_</code> <code>-</code> <code>.</code> only. An installer we sign gets a hash of its settings added to the end, e.g. <code>install_python_requests_tjfq5rqw….exe</code>: the settings are in the name, because our signature is over the program and cannot cover them.</span>
           </div>
           <div class="field">
             <label for="meta">Extra metadata</label>
@@ -1133,7 +1140,7 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
           <p class="small" style="margin:0">
             <code>install_<span class="by-lang lang-python">python</span><span class="by-lang lang-python2">python2</span><span class="by-lang lang-node">node</span><span class="by-lang lang-ruby">ruby</span><span class="by-lang lang-php">php</span><span class="by-lang lang-java">java</span><span class="by-lang lang-dotnet">dotnet</span><span class="by-lang lang-r">r</span><span class="by-lang lang-cc">cpp</span><span class="by-lang lang-go">go</span><span class="by-lang lang-rust">rust</span><span class="by-lang lang-zig">zig</span><span class="by-lang lang-nim">nim</span><span class="by-lang lang-none">app</span>_&lt;name&gt;<span class="by-mode mode-ours-inline">_&lt;hash&gt;</span>.exe</code>,
             <code>.run</code> and <code>.dmg</code><span class="offline-inline">, plus offline <code>…_offline.exe</code>, <code>.run</code> and <code>.zip</code></span>,
-            <span class="by-mode mode-ours-inline">signed by TiddlyInstall (the hash points to your settings, so the signature stays valid)</span><span class="by-mode mode-yours-inline">signed by you</span><span class="by-mode mode-unsigned-inline">unsigned</span>.
+            <span class="by-mode mode-ours-inline">the installer program signed by TiddlyInstall (your settings are in the name, which no signature covers, so it stays valid)</span><span class="by-mode mode-yours-inline">signed by you</span><span class="by-mode mode-unsigned-inline">unsigned</span>.
           </p>
           <p class="build-where new-where small">Built by the build server.</p>
         </div>

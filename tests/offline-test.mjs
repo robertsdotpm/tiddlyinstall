@@ -86,7 +86,7 @@ try {
   ok(await js(`document.querySelectorAll('.where-chip').length === 1 && document.querySelectorAll('.api-ctl-input').length === 1`),
     'and there is still only one of it, and one build-server control');
   ok(await js(`getComputedStyle(document.getElementById('mode-ours').closest('label')).display === 'none' && document.getElementById('mode-unsigned').checked`),
-    '"Signed by Installer Builder" is hidden and Unsigned is chosen');
+    '"Signed by TiddlyInstall" is hidden and Unsigned is chosen');
   // Where a build happens, in plain words, before building (design.md 11.0 item 6).
   ok(await js(`[...document.querySelectorAll('.ti-page[data-page="new"] .build-where')].length >= 1 &&
     [...document.querySelectorAll('.ti-page[data-page="new"] .build-where')].every((p) => /^Built in this page:/.test(p.textContent))`),

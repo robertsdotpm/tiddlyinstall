@@ -109,7 +109,7 @@ const STATUS = {
   failed: ['Failed', 'fail'],
 };
 const CLASS = {
-  record: 'Settings and signed installers: usually seconds',
+  record: 'Settings, and pointing our signed installer program at them: usually seconds',
   build: 'Installers with your settings inside: usually seconds',
   pack: 'Packing downloads into installers: usually minutes',
 };
@@ -204,7 +204,8 @@ function paintFiles(job) {
   if (res && res.record) {
     rec.hidden = false;
     rec.innerHTML = 'Settings record <a href="' + esc(absUrl('/api/records/' + encodeURIComponent(res.record))) +
-      '"><code>' + esc(res.record) + '</code></a>. Installers signed by TiddlyInstall fetch it at install time and check it against the hash in their name.';
+      '"><code>' + esc(res.record) + '</code></a>. An installer we signed carries no settings of its own: our signature is over the ' +
+      'installer program, never over anyone\'s settings. It fetches this record at install time and checks it against the hash in its name.';
   } else rec.hidden = true;
 }
 

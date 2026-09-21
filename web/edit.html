@@ -28,8 +28,9 @@
     <div class="page-head">
       <span class="eyebrow"><span class="num">Edit</span> &nbsp;Installer</span>
       <h1>Edit an installer</h1>
-      <p class="lede">Change what an unsigned installer installs, its name and its icon.
-        Editing happens in your browser. Your file is never uploaded.</p>
+      <p class="lede">Change what an installer installs, its name and its icon. Any installer file that
+        carries no signature can be edited here &mdash; a signature covers the whole file, so editing one would
+        break it. Editing happens in your browser. Your file is never uploaded.</p>
     </div>
 
     <div class="prototype-note" id="standalone-note" hidden>
@@ -42,7 +43,7 @@
     <section class="panel panel-accent">
       <span class="eyebrow"><span class="num">01</span> &nbsp;Open</span>
       <h2 class="section-title">Open an installer</h2>
-      <p class="small muted section-intro">Made on this site as an unsigned installer.</p>
+      <p class="small muted section-intro">One made on this site with no signature on it.</p>
 
       <div class="drop-zone" id="drop">
         <input type="file" id="installer" accept=".exe,.run,.zip" aria-label="Installer">
@@ -57,16 +58,16 @@
         <button type="button" class="secondary" data-base="linux">Linux <code>.run</code></button>
         <button type="button" class="secondary" data-base="macos">macOS <code>.zip</code></button>
       </div>
-      <span class="hint" id="base-hint">Base installers come from the build server, or from inside this page when it is the self-contained editor.</span>
+      <span class="hint" id="base-hint">A base installer is the reusable program with no settings in it yet: the part we wrote, which installs whatever its settings name. They come from the build server, or from inside this page when it is the self-contained editor.</span>
 
       <p class="file-summary" id="file-summary" hidden></p>
       <div class="warn-box small" id="signed-warning" hidden></div>
       <div class="error-box" id="edit-error" role="alert" hidden></div>
 
       <div class="notice-list small">
-        <p><strong>Signed installers can't be edited without losing their signature.</strong>
-          If you open one, it will be saved unsigned and Windows and macOS will warn people who run it.
-          To retarget an installer signed by TiddlyInstall, <a href="#rename">rename it</a> instead.</p>
+        <p><strong>A signature covers every byte of the installer file, so editing breaks it.</strong>
+          If you open a signed installer, it will be saved with no signature, and Windows and macOS will warn people who run it.
+          An installer we signed needs no editing to point it elsewhere: <a href="#rename">rename it</a> instead.</p>
       </div>
     </section>
 
@@ -406,9 +407,11 @@ xcrun stapler staple Install.app &amp;&amp; ditto -c -k --keepParent Install.app
     </form>
 
     <section class="panel" id="rename">
-      <span class="eyebrow">Signed installers</span>
-      <h2 class="section-title">Retarget a signed installer by renaming it</h2>
-      <p class="small">Installers signed by TiddlyInstall read their file name. Renaming keeps the signature.</p>
+      <span class="eyebrow">Installers we signed</span>
+      <h2 class="section-title">Point one at another package by renaming it</h2>
+      <p class="small">An installer we signed takes its settings from its file name. Our signature is over the installer
+        program, and never covered the name, so renaming leaves it as valid as it was: it still says the program is ours
+        and unaltered, which is all it ever said.</p>
 <pre>
 install_python_requests.exe   installs requests
 install_python_black.exe      installs black

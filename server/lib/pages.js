@@ -115,6 +115,8 @@ export function classicPage(runtimes) {
     box('target_windows', 'Windows', true) + box('target_linux', 'Linux', true) + box('target_macos', 'macOS', true) +
     '</fieldset>\n' +
     '<fieldset><legend>Signing</legend>\n' +
+    '<p class="hint">A signature here goes on the installer program &mdash; the one we wrote, the same in every installer built here &mdash; ' +
+    'and never on the software it installs. It says that program is what it claims to be and unaltered; it says nothing about your app.</p>\n' +
     radio('mode', 'ours', 'Signed by TiddlyInstall (not yet)', false,
       'Not available in this prototype: it needs a code-signing certificate, which we don\'t have yet.', true) +
     radio('mode', 'yours', 'Signed by you', false, 'Unsigned files for you to sign with your own certificate (signtool, osslsigncode or a current browser\'s Edit page).') +
@@ -157,7 +159,7 @@ export function refusedPage(messages, { home = '' } = {}) {
 /* ---------- GET /status/<id> ---------- */
 
 const STATUS = { queued: 'Waiting in the queue', running: 'Building', done: 'Done', failed: 'Failed' };
-const CLASS = { record: 'records (signed by TiddlyInstall)', build: 'builds', pack: 'offline builds' };
+const CLASS = { record: 'settings records (for the installer program we sign)', build: 'builds', pack: 'offline builds' };
 const PLATFORM = { windows: 'Windows', linux: 'Linux', macos: 'macOS' };
 
 function size(n) {
@@ -225,7 +227,7 @@ export function statusPage(view, request, { refresh = 3 } = {}) {
       body += '<p>Record <a href="../api/records/' + r.record + '"><code>' + r.record + '</code></a>: what the installers install, as the server stored it. ' +
         'Its current install plan, signed by the server: <a href="../api/plan/' + r.record + '">plan</a>.</p>\n';
     }
-    body += '<div class="box">Each installer shows what it will install, where from, and who signed it, before it changes anything. ' +
+    body += '<div class="box">Each installer shows what it will install, where from, and who signed the installer file, before it changes anything. ' +
       'Install plans are checked against the server\'s signature and every download against its SHA-256, so these files don\'t depend on the ' +
       'connection they came over.' + (mode === 'B' ? ' <strong>Signed by you:</strong> sign these files with your own certificate before you publish them.' : '') + '</div>\n';
   }
