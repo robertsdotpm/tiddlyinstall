@@ -134,6 +134,8 @@ Var TokProject
 ; record fields shown on the transparency page
 Var RecSource
 Var RecLaunch
+Var RecInstall       ; the record's `install`: "" / default / default:<rule> = ours, anything else the publisher's
+Var HasRecord        ; 1: a record was read, so RecInstall means something
 ; plan header
 Var AppName
 Var Project
@@ -181,6 +183,18 @@ Var NdHow            ; the first missing one's nhow
 Var NdManualMsg      ; the message for the first missing one that can't be installed
 Var NdFail           ; 1: installing a prerequisite failed (nothing of the app was touched)
 Var FF_ukey          ; FetchFile: the url key after the file line (url, or nurl for a need)
+; what this install can do that an ordinary one cannot (CapScan, below)
+Var CapN             ; how many findings
+Var Cap1
+Var Cap2
+Var Cap3
+Var Cap4
+Var Cap5
+Var Cap6
+Var Cap7
+Var CapUnknown       ; plan keys and step kinds this engine does not know, ", " joined
+Var CapInd1          ; SumPara: the first line's indent
+Var CapInd2          ; and every following line's
 ; paths
 Var SysDrv
 Var Root
@@ -1104,6 +1118,14 @@ Function ReadRecord
       Call SourceKey
     ${ElseIf} $K S== "launch"
       StrCpy $RecLaunch $F1
+    ${ElseIf} $K S== "install"
+      ; Who wrote the command that installs the project (format.md
+      ; section 2): absent, `default` or `default:<rule>` is the
+      ; catalogue's, anything else is the publisher's own. The plan
+      ; carries only the resolved string, but the plan's `record` line
+      ; is checked against this file's hash, so the record is exactly
+      ; as trustworthy as the plan and answers it without a new key.
+      StrCpy $RecInstall $F1
     ${ElseIf} $K S== "root"
       StrCpy $RecRoot $F1
     ${ElseIf} $K S== "rootname"
@@ -1111,6 +1133,7 @@ Function ReadRecord
     ${EndIf}
   ${Loop}
   FileClose $0
+  StrCpy $HasRecord 1
   rr_end:
   Pop $0
 FunctionEnd
@@ -1219,9 +1242,21 @@ Function ReadPlan
         StrCpy $SrcFmt $F4
         StrCpy $SrcStrip $F5
       ${ElseIf} $K S== "url"
-      ${AndIf} $SrcLine > 0
-      ${AndIf} $SrcUrl1 == ""
-        StrCpy $SrcUrl1 $F1
+        ${If} $SrcLine > 0
+        ${AndIf} $SrcUrl1 == ""
+          StrCpy $SrcUrl1 $F1
+        ${EndIf}
+      ${ElseIf} $K S== "sig"
+      ${ElseIf} $K S== "runtime"
+        ; the header's bare `runtime <id>`; the chosen block's line has
+        ; the version and the architecture, and ReadTarget reads it
+      ${Else}
+        ; A key this engine does not know is not passed over quietly:
+        ; the review page says so, because a summary that silently
+        ; describes part of a plan as though it were the whole of it is
+        ; worse than no summary (CapScan, below).
+        StrCpy $U_a $K
+        Call CapUnknownAdd
       ${EndIf}
       ${Continue}
     ${EndIf}
@@ -1330,6 +1365,35 @@ Function ReadTarget
     ${ElseIf} $K S== "nfile"
       StrCpy $U_a $F2
       Call AppendSha
+    ${ElseIf} $K S== "step"
+      StrCpy $U_a " unpack run mkdir write delete "
+      StrCpy $U_b " $F1 "
+      Call StrHas
+      ${If} $U_out = 0
+        StrCpy $U_a "step $F1"
+        Call CapUnknownAdd
+      ${EndIf}
+    ${ElseIf} $K S== "when"
+    ${ElseIf} $K S== "minbuild"
+    ${ElseIf} $K S== "covers"
+    ${ElseIf} $K S== "url"
+    ${ElseIf} $K S== "env"
+    ${ElseIf} $K S== "unset"
+    ${ElseIf} $K S== "path"
+    ${ElseIf} $K S== "ienv"
+    ${ElseIf} $K S== "iunset"
+    ${ElseIf} $K S== "need"
+    ${ElseIf} $K S== "nwhy"
+    ${ElseIf} $K S== "ncheck"
+    ${ElseIf} $K S== "nurl"
+    ${ElseIf} $K S== "nrun"
+    ${ElseIf} $K S== "nok"
+    ${ElseIf} $K S== "npkg"
+    ${ElseIf} $K S== "nstart"
+    ${ElseIf} $K S== "nhow"
+    ${ElseIf} $K S== "sig"
+      ; the plan's signature line sits after the last block, so it is
+      ; read here when the last block is the chosen one
     ${ElseIf} $K S== "file"
       StrCpy $0 $F3
       StrCpy $U_a $0
@@ -1347,6 +1411,9 @@ Function ReadTarget
       ${If} $RuntimeDir == ""
         StrCpy $RuntimeDir "$Root\$U_out"
       ${EndIf}
+    ${Else}
+      StrCpy $U_a $K
+      Call CapUnknownAdd
     ${EndIf}
   ${Loop}
   FileClose $BH
@@ -3063,6 +3130,7 @@ Function .onInit
     Quit
   ${EndIf}
 
+  Call CapScan
   Call WriteSummary
 FunctionEnd
 
@@ -3439,6 +3507,354 @@ Function CountUrl   ; $U_a = the URL
   Pop $0
 FunctionEnd
 
+; ---------------------------------------------------------------- what this install can do
+;
+; design.md 11.3 ("classify by capability, not by form"),
+; docs/launch-shapes.md section 8, and the same code in the other engine
+; (installer/unix/ti-engine.sh, "what this install can do"), where the
+; reasoning is written out in full. In short: not "is this a standard
+; installer?" -- any classification creates pressure to be classified as
+; safe -- but "what can this installation do that an ordinary one
+; cannot?". Every finding is read off the plan, or off the record the
+; plan's `record` line is bound to by hash; anything this engine does
+; not recognise is itself a finding; and no absence is ever claimed for
+; a plan nothing vouches for.
+
+; Add one word to $CapUnknown, once. $U_a is the word.
+Function CapUnknownAdd
+  Push $0
+  ${If} $U_a != ""
+    StrCpy $0 $U_a
+    StrCpy $U_a ", $CapUnknown, "
+    StrCpy $U_b ", $0, "
+    Call StrHas
+    ${If} $U_out = 0
+      ${If} $CapUnknown == ""
+        StrCpy $CapUnknown "$0"
+      ${Else}
+        StrCpy $CapUnknown "$CapUnknown, $0"
+      ${EndIf}
+    ${EndIf}
+  ${EndIf}
+  Pop $0
+FunctionEnd
+
+; Add one finding. $U_a is the sentence.
+Function CapAdd
+  ${If} $CapN = 0
+    StrCpy $Cap1 $U_a
+  ${ElseIf} $CapN = 1
+    StrCpy $Cap2 $U_a
+  ${ElseIf} $CapN = 2
+    StrCpy $Cap3 $U_a
+  ${ElseIf} $CapN = 3
+    StrCpy $Cap4 $U_a
+  ${ElseIf} $CapN = 4
+    StrCpy $Cap5 $U_a
+  ${ElseIf} $CapN = 5
+    StrCpy $Cap6 $U_a
+  ${ElseIf} $CapN = 6
+    StrCpy $Cap7 $U_a
+  ${Else}
+    Return                     ; more than seven: the count still counts them
+  ${EndIf}
+  IntOp $CapN $CapN + 1
+FunctionEnd
+
+; Wrap prose onto the review page. $U_a is the text, $CapInd1 the first
+; line's indent and $CapInd2 every following line's. A word longer than
+; the line is left long rather than broken, as ti_wrap does.
+!define TI_SUM_W 74
+Function SumPara
+  Push $0
+  Push $1
+  Push $2
+  Push $3
+  Push $4
+  Push $5
+  Push $6
+  StrCpy $5 $U_a
+  StrCpy $6 $CapInd1
+  ${Do}
+    StrLen $0 $6
+    IntOp $1 ${TI_SUM_W} - $0     ; room on this line
+    StrLen $2 $5
+    ${If} $2 <= $1
+      ${Sum} "$6$5"
+      ${Break}
+    ${EndIf}
+    StrCpy $3 0                   ; where to break
+    StrCpy $4 0
+    ${Do}
+      ${If} $4 >= $2
+        ${Break}
+      ${EndIf}
+      StrCpy $0 $5 1 $4
+      ${If} $0 S== " "
+        ${If} $4 <= $1
+          StrCpy $3 $4
+        ${ElseIf} $3 = 0
+          StrCpy $3 $4            ; one word longer than the line
+          ${Break}
+        ${Else}
+          ${Break}
+        ${EndIf}
+      ${EndIf}
+      IntOp $4 $4 + 1
+    ${Loop}
+    ${If} $3 = 0
+      ${Sum} "$6$5"
+      ${Break}
+    ${EndIf}
+    StrCpy $0 $5 $3
+    ${Sum} "$6$0"
+    IntOp $3 $3 + 1
+    StrCpy $5 $5 "" $3
+    StrCpy $6 $CapInd2
+  ${Loop}
+  Pop $6
+  Pop $5
+  Pop $4
+  Pop $3
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; Everything the findings are read from is in hand by the time this
+; runs: the chosen block, the prerequisites this computer actually
+; needs, the source line, and the record.
+Function CapScan
+  Push $0
+  Push $1
+  Push $2
+  StrCpy $CapN 0
+  ${If} $CapUnknown != ""
+    StrCpy $U_a "it asks for things this installer does not recognise ($CapUnknown). We cannot tell you what they do, and a plan we cannot read all of is not one we can describe."
+    Call CapAdd
+  ${EndIf}
+  StrCpy $0 0                     ; has administrator rights been accounted for?
+  ${If} $RootMode == "system"
+    StrCpy $U_a "it installs for every user on this computer, into $Root, and needs administrator rights to do it."
+    Call CapAdd
+    StrCpy $0 1
+  ${EndIf}
+  ${If} $NdMissing > 0
+    StrCpy $U_a "it installs $NdLabels for the whole computer, as administrator. That stays behind when this app is uninstalled."
+    Call CapAdd
+    StrCpy $0 1
+  ${EndIf}
+  ${If} $NeedAdmin = 1
+  ${AndIf} $0 = 0
+    StrCpy $U_a "it needs administrator rights: this plan's block asks for them."
+    Call CapAdd
+  ${EndIf}
+  ; The app's own source is the one download allowed to go unpinned
+  ; (format.md, "Sources without a stored hash").
+  ${If} $SrcLine > 0
+  ${AndIf} $SrcSha == "-"
+    StrCpy $U_a "the project's own files carry no checksum in this plan: they are named by a commit id and fetched over HTTPS, and that is the whole of the check on them."
+    Call CapAdd
+  ${EndIf}
+  ${If} $TgtInstall != ""
+    ; Whose command it is. The record says: absent, `default` or
+    ; `default:<rule>` is the catalogue's, anything else the
+    ; publisher's; with no record at all we cannot say, and say that.
+    StrCpy $1 0                   ; 1: the command is ours
+    ${If} $HasRecord = 1
+      ${If} $RecInstall == ""
+      ${OrIf} $RecInstall == "default"
+        StrCpy $1 1
+      ${Else}
+        StrCpy $U_a $RecInstall
+        StrCpy $U_b "default:"
+        Call TiStartsWith
+        ${If} $U_out = 1
+          StrCpy $1 1
+        ${EndIf}
+      ${EndIf}
+      ${If} $1 = 0
+        StrCpy $U_a "one of the commands that runs while installing was written by whoever published this app, not by us. What it does is not something we can tell you; the command itself is in the log, in full, before anything is fetched."
+        Call CapAdd
+      ${EndIf}
+    ${Else}
+      StrCpy $U_a "nothing here says who wrote the command that installs the project, so we cannot tell you whether it is ours or the publisher's. Treat it as the publisher's and read it."
+      Call CapAdd
+    ${EndIf}
+    ; launch-shapes.md recommendation 7: an `install` line hands a
+    ; package manager the job of choosing what else to download and
+    ; run, a few lines under "each one is checked against the SHA-256
+    ; below". It is the largest unpinned thing we do, and until
+    ; 2026-09-21 the page said nothing about it. Naming the manager is
+    ; not an analysis of shell: the record has already said the command
+    ; is ours. Anything unrecognised gets the wording that admits we do
+    ; not know, never the wording that says there is nothing to know.
+    StrCpy $2 ""
+    ${If} $1 = 1
+      StrCpy $U_a $TgtInstall
+      StrCpy $U_b "-m pip "
+      Call StrHas
+      ${If} $U_out = 1
+        StrCpy $2 "pip"
+      ${EndIf}
+      ${If} $2 == ""
+        StrCpy $U_a $TgtInstall
+        StrCpy $U_b "npm"
+        Call StrHas
+        ${If} $U_out = 1
+          StrCpy $2 "npm"
+        ${EndIf}
+      ${EndIf}
+      ${If} $2 == ""
+        StrCpy $U_a $TgtInstall
+        StrCpy $U_b "bundle"
+        Call StrHas
+        ${If} $U_out = 1
+          StrCpy $2 "bundler"
+        ${EndIf}
+      ${EndIf}
+      ${If} $2 == ""
+        StrCpy $U_a $TgtInstall
+        StrCpy $U_b "gem"
+        Call StrHas
+        ${If} $U_out = 1
+          StrCpy $2 "RubyGems"
+        ${EndIf}
+      ${EndIf}
+      ${If} $2 == ""
+        StrCpy $U_a $TgtInstall
+        StrCpy $U_b "composer"
+        Call StrHas
+        ${If} $U_out = 1
+          StrCpy $2 "Composer"
+        ${EndIf}
+      ${EndIf}
+      ${If} $2 == ""
+        StrCpy $U_a $TgtInstall
+        StrCpy $U_b "cargo"
+        Call StrHas
+        ${If} $U_out = 1
+          StrCpy $2 "cargo"
+        ${EndIf}
+      ${EndIf}
+      ${If} $2 == ""
+        StrCpy $U_a $TgtInstall
+        StrCpy $U_b "\go.exe"
+        Call StrHas
+        ${If} $U_out = 1
+          StrCpy $2 "Go's module fetcher"
+        ${EndIf}
+      ${EndIf}
+      ${If} $2 == ""
+        StrCpy $U_a $TgtInstall
+        StrCpy $U_b "dotnet"
+        Call StrHas
+        ${If} $U_out = 1
+          StrCpy $2 "the .NET SDK, which restores NuGet packages"
+        ${EndIf}
+      ${EndIf}
+    ${EndIf}
+    ${If} $2 != ""
+      StrCpy $U_a "installing the project runs $2, which works out what the project depends on, downloads it and runs its code. This plan names none of that, and no SHA-256 in it covers any of it."
+    ${Else}
+      StrCpy $U_a "what the command that installs the project reaches for, we cannot say. Anything it downloads is decided while you install: this plan does not name it and no SHA-256 here covers it."
+    ${EndIf}
+    Call CapAdd
+  ${EndIf}
+  ${Log} "What this install can do that an ordinary one cannot: $CapN found."
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; The section, both claims, one code path. The capability sentence and
+; the provenance sentence are different claims -- one about the
+; installation, one about the program -- and they are written together
+; so that no later change can render one without the other
+; (launch-shapes.md section 8, "Placement").
+Function CapSection
+  Push $0
+  StrCpy $CapInd1 "  "
+  StrCpy $CapInd2 "  "
+  ${If} $PlanWarn != ""
+    ; With nothing behind the catalogue's steps, "nothing unusual"
+    ; would be a statement about a document anybody could have written.
+    ; So the absence is never claimed here; the findings still are,
+    ; because a finding is only ever something extra.
+    StrCpy $U_a "Nothing vouches for this plan, so what follows is only what the plan itself says, and anybody can write a plan. Read the commands rather than this summary; the reason is under BEFORE YOU SAY YES."
+    Call SumPara
+    ${If} $CapN > 0
+      ${Sum} "  What it says it does:"
+    ${EndIf}
+  ${ElseIf} $CapN = 0
+    StrCpy $U_a "Nothing here goes beyond what an ordinary install does: no administrator rights, nothing installed for anyone but you, every file it downloads checked against a SHA-256 this plan names, and every command that runs while installing is our own recipe. What it writes is listed below, and that is all of it."
+    Call SumPara
+  ${Else}
+    StrCpy $U_a $CapN
+    Call CapNumber
+    ${If} $CapN = 1
+      ${Sum} "  $U_out thing here goes beyond what an ordinary install does:"
+    ${Else}
+      ${Sum} "  $U_out things here go beyond what an ordinary install does:"
+    ${EndIf}
+  ${EndIf}
+  StrCpy $CapInd1 "    - "
+  StrCpy $CapInd2 "      "
+  StrCpy $0 0
+  ${Do}
+    ${If} $0 >= $CapN
+      ${Break}
+    ${EndIf}
+    ${If} $0 = 0
+      StrCpy $U_a $Cap1
+    ${ElseIf} $0 = 1
+      StrCpy $U_a $Cap2
+    ${ElseIf} $0 = 2
+      StrCpy $U_a $Cap3
+    ${ElseIf} $0 = 3
+      StrCpy $U_a $Cap4
+    ${ElseIf} $0 = 4
+      StrCpy $U_a $Cap5
+    ${ElseIf} $0 = 5
+      StrCpy $U_a $Cap6
+    ${Else}
+      StrCpy $U_a $Cap7
+    ${EndIf}
+    Call SumPara
+    IntOp $0 $0 + 1
+  ${Loop}
+  ; What this page is *not* saying (design.md section 3, "What we do not
+  ; vouch for"). Everything else here is about our side of it, and
+  ; someone who reads all that care can reasonably come away thinking
+  ; the program has been vetted. It has not: we have never looked at it.
+  StrCpy $CapInd1 "  "
+  StrCpy $CapInd2 "  "
+  StrCpy $U_a "That is about the install. The program itself is another matter: we did not write $AppName and have not checked what its code does. Install it only if you trust whoever publishes it."
+  Call SumPara
+  Pop $0
+FunctionEnd
+
+; "One", "Two", ... for a count a sentence begins with.
+Function CapNumber
+  ${If} $U_a = 1
+    StrCpy $U_out "One"
+  ${ElseIf} $U_a = 2
+    StrCpy $U_out "Two"
+  ${ElseIf} $U_a = 3
+    StrCpy $U_out "Three"
+  ${ElseIf} $U_a = 4
+    StrCpy $U_out "Four"
+  ${ElseIf} $U_a = 5
+    StrCpy $U_out "Five"
+  ${ElseIf} $U_a = 6
+    StrCpy $U_out "Six"
+  ${ElseIf} $U_a = 7
+    StrCpy $U_out "Seven"
+  ${Else}
+    StrCpy $U_out $U_a
+  ${EndIf}
+FunctionEnd
+
 ; The transparency text (design.md section 3). Same shape as the other
 ; engine's (installer/unix/ti-engine.sh, "the review screen's shape"): what
 ; someone needs to decide with at the top, the evidence below it. The
@@ -3520,18 +3936,14 @@ Function WriteSummary
   ${Sum} "======================================================================"
   ${Sum} "  TiddlyInstall will install:  $AppName"
   ${Sum} "  Nothing has been changed yet."
-  ; What this page is *not* saying (design.md section 3, "What we do not
-  ; vouch for"). Everything else here is about our side of it -- every
-  ; file checked against its SHA-256, where things go, who signed the
-  ; installer -- and someone who reads all that care can reasonably come
-  ; away thinking the program has been vetted. It has not: we have never
-  ; looked at it. So the scope is stated in the heading, where it is
-  ; read, and stated plainly: it belongs with "what is being installed",
-  ; not among the warnings, because it is true of every install and an
-  ; alarm that is always on is an alarm nobody hears.
-  ${Sum} "  We package $AppName; we did not write it and have not checked what its code does."
-  ${Sum} "  Install it only if you trust whoever publishes it."
   ${Sum} "======================================================================"
+  ; What this install can do that an ordinary one cannot, and -- as a
+  ; separate claim, from the same code path -- whose program it is
+  ; (CapSection, above). It is first because it is the answer to the
+  ; question the page exists to ask.
+  ${Sum} ""
+  ${Sum} "WHAT THIS INSTALL CAN DO"
+  Call CapSection
 
   ; Anything unusual, first, where the decision is made. Every one of
   ; these is also said again, in full, in its own section below.
@@ -3550,10 +3962,14 @@ Function WriteSummary
     ${EndIf}
     ${Sum} "!! $AgeWarn"
   ${EndIf}
-  ${If} $NdMissing > 0
-  ${OrIf} $NeedAdmin = 1
-  ${OrIf} $SignedBy == ""
-  ${OrIf} $SrcSha == "-"
+  ; Administrator rights and an unpinned source left this block on
+  ; 2026-09-21: they are capabilities, not alarms, and WHAT THIS INSTALL
+  ; CAN DO now carries them with their consequence attached. Saying them
+  ; twice would be the page repeating itself, which is the one thing its
+  ; shape rules forbid. What is left is what a capability statement
+  ; cannot hold: nobody can be named for this file, or the build is not
+  ; this computer's architecture.
+  ${If} $SignedBy == ""
   ${OrIf} $TgtRtArch != ""
     ${If} $0 = 0
       ${Sum} ""
@@ -3561,16 +3977,8 @@ Function WriteSummary
       StrCpy $0 1
     ${EndIf}
   ${EndIf}
-  ${If} $NdMissing > 0
-    ${Sum} "!  $NdLabels must be installed for the whole computer first, which needs administrator rights."
-  ${ElseIf} $NeedAdmin = 1
-    ${Sum} "!  This install needs administrator rights."
-  ${EndIf}
   ${If} $SignedBy == ""
     ${Sum} "!  This installer is not signed, so Windows cannot tell you who made it."
-  ${EndIf}
-  ${If} $SrcSha == "-"
-    ${Sum} "!  The project is not pinned by a checksum: it is identified by its commit and fetched over HTTPS."
   ${EndIf}
   ${If} $TgtRtArch != ""
     Call ArchNote
@@ -3638,9 +4046,9 @@ Function WriteSummary
         ${Else}
           StrCpy $1 "them"
         ${EndIf}
-        ${Sum} "  Sources:      $U_out, or a mirror of $1; every file is checked against its SHA-256"
+        ${Sum} "  Sources:      $U_out, or a mirror of $1; each of those files is checked against its SHA-256"
       ${Else}
-        ${Sum} "  Sources:      $U_out; every file is checked against its SHA-256"
+        ${Sum} "  Sources:      $U_out; each of those files is checked against its SHA-256"
       ${EndIf}
     ${EndIf}
   ${EndIf}
@@ -3691,6 +4099,18 @@ Function WriteSummary
     ${Sum} "  below before it is used; a file that does not match is not installed."
     ${Sum} "  The commands under a file are our recipe for setting up that runtime,"
     ${Sum} "  not the project's own code."
+    ; What that check does *not* reach (launch-shapes.md recommendation
+    ; 7). "Each one is checked against the SHA-256 below" is true of the
+    ; files listed here and of nothing else, and an `install` line a few
+    ; lines further down hands a package manager the job of choosing and
+    ; running more code. Both sentences were true and together they
+    ; misled.
+    ${If} $TgtInstall != ""
+      StrCpy $CapInd1 "  "
+      StrCpy $CapInd2 "  "
+      StrCpy $U_a "That covers these files and nothing else: installing the project downloads more, and no SHA-256 here reaches those. See WHAT THIS INSTALL CAN DO, at the top."
+      Call SumPara
+    ${EndIf}
   ${EndIf}
   StrCpy $1 ""
   StrCpy $2 0

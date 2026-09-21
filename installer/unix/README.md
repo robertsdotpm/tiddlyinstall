@@ -57,27 +57,34 @@ engine is this same file, so an engine change reaches macOS as soon as
 the base is built there -- and `out/ti-base-macos.zip` on this machine
 is whatever was last built there, nothing more.
 
-**Last built 2026-09-21T02:55:39Z** on the Mac test server (macOS 26.2
+**Last built 2026-09-21T04:03:22Z** on the Mac test server (macOS 26.2
 `25C56`, arm64, `Matthew@the-mac-test-host`), from `ti-engine.sh` with the
-review screen trimmed (design.md section 3, "Nothing is said twice": no
-machine line, no repeated project name, the origin of each download
-named and its mirrors counted, commands wrapped rather than cut and
-never broken inside a quoted path, the heading saying we did not write
-the program, one root in WHERE FILES GO, and the box at the top of the
-file for whoever opened it in a text editor). The engine is one file, so that change reached
-macOS only when this was rebuilt. The macOS dialog's short form is
-unchanged in shape: it is the whole of what that dialog says, so it
-repeats nothing.
+**capability statement** on the review screen (design.md 11.3 and
+docs/format.md section 3, "What engines must show: what this install can
+do"): WHAT THIS INSTALL CAN DO, above the warnings, saying what this
+installation can do that an ordinary one cannot -- administrator rights,
+a machine-wide install, a system package, an unpinned project, a command
+the publisher wrote, an instruction the engine does not know, and the
+dependencies an `install` line fetches -- with the "we did not write
+this program" sentence written by the same code path. Administrator
+rights and an unpinned source left BEFORE YOU SAY YES with it, and the
+download section's SHA-256 claim is scoped to the files it lists. The
+engine is one file, so that change reached macOS only when this was
+rebuilt. The macOS dialog's short form carries the same two claims, in
+the same order, because it is the whole of what that dialog says.
 
 | | |
 | --- | --- |
-| `out/ti-base-macos.zip` | `d6c3fd38dbaaba722ada38168f952d0adeb30bac4b5051b97c77d6cbd2c03ecf`, 60,778 bytes |
-| the engine inside it | `9af5cd3462d83a3001d21af58457ae5cd27fa652116dc5d6aab6d99e8a1c0c2a` (`ti-engine.sh` with the baked lines filled, and nothing else -- checked by diffing the two with those lines blanked) |
+| `out/ti-base-macos.zip` | `0040ee9d8e0d6fab107d11abb933fd393e875aa6d60da6135f53429b2692d7e7`, 64,477 bytes |
+| the engine inside it | `a7e1d9c13267ca883384a8ec56eaf348930752c0ac38bbfdb3f8048273e548a6` (`ti-engine.sh` with the baked lines filled) |
 | plan signing key | `97930ea1888d1a12` |
-| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T02:55:39Z` / `1789959339` |
+| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T04:03:22Z` / `1789963402` |
 | signature | ad-hoc; `codesign --verify --strict` is happy on the bundle **and** on the bundle re-extracted from the zip with `ditto` ("valid on disk", "satisfies its Designated Requirement") |
 
-The one before this was `b430ccb1fd7e85f7dc5cfbe662dfedb7a830239d19b6653e70bcf37b474df8ce`
+The one before this was `d6c3fd38dbaaba722ada38168f952d0adeb30bac4b5051b97c77d6cbd2c03ecf`
+(60,778 bytes), built 2026-09-21T02:55:39Z from the engine with the
+review screen trimmed, and before that
+`b430ccb1fd7e85f7dc5cfbe662dfedb7a830239d19b6653e70bcf37b474df8ce`
 (54,896 bytes), built 2026-09-20T11:10:56Z from the engine at `566d31c`.
 
 `spctl -a` still rejects it, as it must: an ad-hoc signature is not a

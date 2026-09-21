@@ -2623,6 +2623,150 @@ ti_signer() {
 	fi
 }
 
+# ---------------------------------------------------------------- what this install can do
+#
+# design.md 11.3 ("classify by capability, not by form"),
+# docs/launch-shapes.md section 8. Not "is this a standard installer?":
+# any classification creates pressure to be classified as safe, and
+# `binary run.sh` satisfies every form rule there is. The question a
+# person can act on is the shorter one -- **what can this installation
+# do that an ordinary one cannot?** An ordinary one unpacks pinned files
+# into folders under one root, runs our recipe there, installs the
+# project, and leaves a menu entry and an uninstaller.
+#
+# Four rules, and the statement is theatre without any of them:
+#
+#   * **Derived.** Every finding is read off the plan, or off the record
+#     the plan's `record` line is bound to by hash. Nothing a publisher
+#     asserts is believed, because an unsigned installer can assert
+#     whatever it likes.
+#   * **Fail closed.** It is a list of things *found*, so the failure
+#     mode of a bug is a missing line rather than an invented one -- and
+#     anything this engine does not recognise is itself a finding. A
+#     plan we cannot read in full is not a plan we can describe.
+#   * **No claim at all on a plan nothing vouches for.** "Nothing
+#     unusual" about a document anybody could have written says nothing.
+#   * **It never describes what a command does.** We know our own recipe
+#     steps because we wrote them; what a publisher's command touches is
+#     not decidable from its text. So the honest sentence about one is
+#     that we do not know what it does -- which is also the more useful
+#     sentence than the command.
+#
+# It applies to ordinary installs too, and that is the point: a
+# completely standard Python install that wants administrator rights is
+# exactly what a form-based badge would wave through.
+
+# The plan keys and step kinds this engine knows (docs/format.md 3). A
+# key that is not here is not ignored quietly: it is reported, because
+# the alternative is a summary that describes part of a plan as though
+# it were the whole of it. `srcurl` and `target` are ti_select_target's
+# own; `sig` survives into the selection when the chosen block is the
+# last one in the plan.
+TI_KNOWN_KEYS='target|record|name|project|appid|console|menu|desktop|root|rootname|signed|maxage|source|srcurl|request|sig|when|minbuild|covers|runtime|file|url|step|exe|env|unset|path|ienv|iunset|install|launch|admin|note|fail|need|nwhy|ncheck|nfile|nurl|nrun|nok|npkg|nstart|nhow'
+TI_KNOWN_STEPS='unpack|run|mkdir|write|delete'
+
+ti_unknown_bits() { # -> "key, step foo" for everything in the selection we do not know
+	awk -F'\t' -v keys="^($TI_KNOWN_KEYS)\$" -v steps="^($TI_KNOWN_STEPS)\$" '
+	function note(w) { if (!(w in seen)) { seen[w] = 1; out = out (out == "" ? "" : ", ") w } }
+	$1 == "step" && $3 !~ steps { note("step " $3); next }
+	$1 !~ keys { note($1) }
+	END { if (out != "") print out }' "$TI_SEL"
+}
+
+# The package manager an install command we wrote runs, named only when
+# the text says so plainly. This is not an analysis of shell: the record
+# has already said the command is ours, so recognising it is recognising
+# our own catalogue's work. Anything unrecognised gets the wording that
+# admits we do not know, never the wording that says there is nothing to
+# know.
+ti_fetcher_of() { # command
+	case " $1 " in
+	*' -m pip '* | *'pip install'*) printf 'pip' ;;
+	*'npm-cli.js'* | *'npm install'* | *'npm ci'*) printf 'npm' ;;
+	*'bundle" install'* | *'bundle install'*) printf 'bundler' ;;
+	*'gem" install'* | *'gem install'*) printf 'RubyGems' ;;
+	*composer*) printf 'Composer' ;;
+	*cargo*) printf 'cargo' ;;
+	*'/go" '*) printf "Go's module fetcher" ;;
+	*dotnet*) printf 'the .NET SDK, which restores NuGet packages' ;;
+	esac
+}
+
+ti_cap_number() { # n -> "One", "Two", ...
+	case $1 in
+	1) printf 'One' ;; 2) printf 'Two' ;; 3) printf 'Three' ;; 4) printf 'Four' ;;
+	5) printf 'Five' ;; 6) printf 'Six' ;; 7) printf 'Seven' ;; *) printf '%s' "$1" ;;
+	esac
+}
+
+# One finding per line, in the order a person would want them. Called
+# from ti_install_main, where everything it reads has been computed.
+ti_capabilities() {
+	u=$(ti_unknown_bits)
+	[ -n "$u" ] &&
+		printf '%s\n' "it asks for things this installer does not recognise ($u). We cannot tell you what they do, and a plan we cannot read all of is not one we can describe."
+	said_admin=0
+	if [ "$TI_SYSTEM" = 1 ]; then
+		printf '%s\n' "it installs for every user on this machine, into $TI_ROOT, and needs administrator rights to do it."
+		said_admin=1
+	fi
+	if [ -n "$ti_need_pkgs" ]; then
+		printf '%s\n' "it installs the system packages $ti_need_pkgs for every user on this machine, as root, with $ti_pm. They stay behind when this app is uninstalled."
+		said_admin=1
+	fi
+	[ "$need_root" = 1 ] && [ "$said_admin" = 0 ] &&
+		printf '%s\n' "it needs administrator rights: this plan's block asks for them."
+	# The app's own source is the one download allowed to go unpinned
+	# (format.md, "Sources without a stored hash").
+	case ${ti_src_sha:-} in
+	'' | -) [ -n "$ti_src_name" ] &&
+		printf '%s\n' "the project's own files carry no checksum in this plan: they are named by a commit id and fetched over HTTPS, and that is the whole of the check on them." ;;
+	esac
+	if [ -n "$ti_ins_cmd" ]; then
+		case $ti_ins_who in
+		publisher) printf '%s\n' "one of the commands that runs while installing was written by whoever published this app, not by us. What it does is not something we can tell you; the command itself is in the log, in full, before anything is fetched." ;;
+		unknown) printf '%s\n' "nothing here says who wrote the command that installs the project, so we cannot tell you whether it is ours or the publisher's. Treat it as the publisher's and read it." ;;
+		esac
+		# design.md 11.3 / launch-shapes.md recommendation 7: every
+		# `install` line hands a package manager the job of deciding
+		# what else to download, a few lines under "each one is checked
+		# against its SHA-256". It is the largest unpinned thing we do
+		# and until now the screen said nothing about it.
+		f=
+		[ "$ti_ins_who" = ours ] && f=$(ti_fetcher_of "$ti_ins_cmd")
+		if [ -n "$f" ]; then
+			printf '%s\n' "installing the project runs $f, which works out what the project depends on, downloads it and runs its code. This plan names none of that, and no SHA-256 in it covers any of it."
+		else
+			printf '%s\n' "what the command that installs the project reaches for, we cannot say. Anything it downloads is decided while you install: this plan does not name it and no SHA-256 here covers it."
+		fi
+	fi
+	return 0
+}
+
+# The section, both claims, one code path. The capability sentence and
+# the provenance sentence are different claims -- one about the
+# installation, one about the program -- and they are emitted together
+# so that no later change can render one without the other.
+ti_cap_section() {
+	if [ -n "$ti_plan_warn" ]; then
+		# launch-shapes.md section 8, "What must never happen": with
+		# nothing behind the catalogue's steps, "nothing unusual" would
+		# be a statement about a document anybody could have written.
+		# So the absence claim is never made here; the findings are,
+		# because a finding is only ever something extra.
+		printf '  %s\n' "Nothing vouches for this plan, so what follows is only what the plan itself says, and anybody can write a plan. Read the commands rather than this summary; the reason is under BEFORE YOU SAY YES." | ti_wrap 74 2
+		[ "$ti_cap_n" -gt 0 ] && printf '  %s\n' "What it says it does:" | ti_wrap 74 2
+	elif [ "$ti_cap_n" = 0 ]; then
+		printf '  %s\n' "Nothing here goes beyond what an ordinary install does: no administrator rights, nothing installed for anyone but you, every file it downloads checked against a SHA-256 this plan names, and every command that runs while installing is our own recipe. What it writes is listed below, and that is all of it." | ti_wrap 74 2
+	else
+		printf '  %s\n' "$(ti_cap_number "$ti_cap_n") thing$([ "$ti_cap_n" = 1 ] || printf 's') here go$([ "$ti_cap_n" = 1 ] && printf 'es') beyond what an ordinary install does:" | ti_wrap 74 2
+	fi
+	while IFS= read -r c; do
+		printf '    - %s\n' "$c" | ti_wrap 74 6
+	done < "$ti_caps"
+	printf '  %s\n' "$ti_vouch" | ti_wrap 74 2
+}
+
 ti_install_main() {
 	ti_find_metadata
 	[ -n "$TI_REC" ] && ti_check_header "$TI_REC" ti-record
@@ -2858,6 +3002,16 @@ ti_install_main() {
 	# Anything unusual, at the top, where a decision is made. `!!` is
 	# "you would want to know this before saying yes"; `!` is "worth
 	# noticing". Everything here is also stated again in its own section.
+	#
+	# Two of the `!` lines left on 2026-09-21: administrator rights and
+	# an unpinned source are capabilities, not alarms, and WHAT THIS
+	# INSTALL CAN DO now carries them with their consequence attached.
+	# Saying them in both places would be the screen repeating itself,
+	# which is the one thing its shape rules forbid. What is left here
+	# is what a capability statement cannot hold: the plan cannot be
+	# trusted, the install is going to stop, or the build is not this
+	# machine's architecture -- none of which is a thing the install
+	# *can do*.
 	ti_warn=$TI_WORK/warnings.txt
 	: > "$ti_warn"
 	[ -n "$ti_plan_warn" ] && printf '!! %s\n' "$ti_plan_warn" >> "$ti_warn"
@@ -2867,39 +3021,64 @@ ti_install_main() {
 	case $ti_signed_by in
 	*'does NOT verify'*) printf '!! The signature on this installer does not verify: it was changed after it was signed.\n' >> "$ti_warn" ;;
 	esac
-	if [ $need_root = 1 ]; then
-		if [ -n "$ti_need_pkgs" ]; then
-			printf '!  Part of this install runs as root: %s installs the system packages %s. The app itself installs for you.\n' \
-				"$ti_pm" "$ti_need_pkgs" >> "$ti_warn"
-		elif [ "$TI_SYSTEM" = 1 ]; then
-			printf '!  This installs for every user on the machine, so it needs administrator rights.\n' >> "$ti_warn"
-		else
-			printf '!  This install needs administrator rights.\n' >> "$ti_warn"
-		fi
-	fi
 	[ -n "$ti_rt_note" ] &&
 		printf '!  The runtime being installed is not this machine%s architecture%s.\n' "'s" "$ti_rt_note" >> "$ti_warn"
-	case $ti_from_txt in
-	*'no stored hash'*) printf '!  The project is not pinned by a checksum: it is identified by its commit and fetched over HTTPS.\n' >> "$ti_warn" ;;
-	esac
+
+	# ---- what this installation can do that an ordinary one cannot
+	# (the block comment above ti_capabilities). Everything it reads is
+	# in hand by now: the chosen block, the prerequisites this machine
+	# actually needs, the source line, and the record -- whose `install`
+	# field is what says whose command installs the project. The plan's
+	# `record` line has been checked against that record's hash, so the
+	# record is exactly as trustworthy as the plan and no new plan key
+	# is needed to carry the answer.
+	ti_src_name= ti_src_sha=
+	if [ -n "$src" ]; then
+		IFS=$tab
+		set -- $src
+		IFS=$ifs0
+		ti_src_name=$1 ti_src_sha=${2:-}
+	fi
+	ti_ins_cmd=$(ti_sel1 install)
+	ti_ins_who=unknown
+	if [ -n "$TI_REC" ]; then
+		case $(ti_get "$TI_REC" install) in
+		'' | default | default:*) ti_ins_who=ours ;;
+		*) ti_ins_who=publisher ;;
+		esac
+	fi
+	ti_caps=$TI_WORK/capabilities.txt
+	ti_capabilities > "$ti_caps"
+	ti_cap_n=$(wc -l < "$ti_caps" | tr -d ' ')
+	{
+		printf 'What this install can do that an ordinary one cannot: %s found' "$ti_cap_n"
+		[ -n "$ti_plan_warn" ] && printf ', and nothing vouches for the plan they were read from'
+		printf '.\n'
+		sed 's/^/  - /' "$ti_caps"
+	} >> "$TI_LOG"
 
 	# What this screen is *not* saying (design.md section 3, "What we do
 	# not vouch for"). Everything else here is about our side of it --
 	# every file checked against its SHA-256, where things go, who signed
 	# the installer -- and someone who reads all that care can reasonably
 	# come away thinking the program has been vetted. It has not: we have
-	# never looked at it. So the scope is stated in the heading, where it
-	# is read, and stated plainly: it belongs with "what is being
-	# installed", not among the warnings, because it is true of every
-	# install and an alarm that is always on is an alarm nobody hears.
-	ti_vouch="We package $TI_NAME_DISP; we did not write it and have not checked what its code does. Install it only if you trust whoever publishes it."
+	# never looked at it.
+	#
+	# It sits with the capability statement and not in the heading from
+	# 2026-09-21, and the two are written by one code path on purpose
+	# (launch-shapes.md section 8, "Placement"): they are two different
+	# claims -- one about the installation, one about the program -- and
+	# a conditional that can render one without the other is a
+	# conditional that will eventually do it.
+	ti_vouch="That is about the install. The program itself is another matter: we did not write $TI_NAME_DISP and have not checked what its code does. Install it only if you trust whoever publishes it."
 
 	{
 		printf '======================================================================\n'
 		printf '  TiddlyInstall will install:  %s\n' "$TI_NAME_DISP"
 		printf '  Nothing has been changed yet.\n'
-		printf '  %s\n' "$ti_vouch" | ti_wrap 74 2
 		printf '======================================================================\n'
+		printf '\nWHAT THIS INSTALL CAN DO\n'
+		ti_cap_section
 		if [ -s "$ti_warn" ]; then
 			printf '\nBEFORE YOU SAY YES\n'
 			while IFS= read -r w; do
@@ -2925,10 +3104,10 @@ ti_install_main() {
 				# serves it") is a qualifier on a qualifier and went on
 				# 2026-09-21.
 				if [ -n "$ti_hostlist" ] && [ "$ti_nmirror" -gt 0 ]; then
-					printf '  %-14s%s, or a mirror of %s; every file is checked against its SHA-256\n' \
+					printf '  %-14s%s, or a mirror of %s; each of those files is checked against its SHA-256\n' \
 						'Sources:' "$ti_hostlist" "$(ti_itthem "$ti_nhost")" | ti_wrap 74 16
 				elif [ -n "$ti_hostlist" ]; then
-					printf '  %-14s%s; every file is checked against its SHA-256\n' \
+					printf '  %-14s%s; each of those files is checked against its SHA-256\n' \
 						'Sources:' "$ti_hostlist" | ti_wrap 74 16
 				fi
 			fi
@@ -2957,6 +3136,15 @@ ti_install_main() {
 			printf '  %s %s, %s in total. Each one is checked against the SHA-256\n' \
 				"$ti_nall" "$(ti_plural "$ti_nall" file files)" "$(ti_hsize $ti_tot)"
 			printf '  below before it is used; a file that does not match is not installed.\n'
+			# What that check does *not* reach (launch-shapes.md,
+			# recommendation 7). "Each one is checked against the
+			# SHA-256 below" is true of the files listed here and of
+			# nothing else, and a few lines further down the screen an
+			# `install` line hands a package manager the job of
+			# choosing and running more code. Both sentences were true
+			# and together they misled.
+			[ -n "$ti_ins_cmd" ] &&
+				printf '  %s\n' "That covers these files and nothing else: installing the project downloads more, and no SHA-256 here reaches those. See WHAT THIS INSTALL CAN DO, at the top." | ti_wrap 74 2
 		fi
 		i=1
 		while [ "$i" -le "$nfiles" ]; do
@@ -3119,8 +3307,24 @@ ti_install_main() {
 	# terminal any more: see "decide.txt" below.
 	{
 		printf 'Install %s?\n\n' "$TI_NAME_DISP"
-		# This dialog is the whole of what macOS shows, so the scope
-		# statement has to be in it and not only behind "Details...".
+		# This dialog is the whole of what macOS shows, so the two
+		# claims that decide the question have to be in it and not only
+		# behind "Details...": what this install can do that an
+		# ordinary one cannot, and that the program is not ours. Same
+		# order as the screen, and the same strings.
+		if [ "$ti_cap_n" = 0 ] && [ -z "$ti_plan_warn" ]; then
+			printf '%s\n\n' "Nothing here goes beyond what an ordinary install does: no administrator rights, nothing installed for anyone but you, and every file it downloads is checked against a SHA-256 this plan names." | ti_wrap 68 0
+		else
+			[ -n "$ti_plan_warn" ] &&
+				printf '%s\n\n' "Nothing vouches for this plan, so what follows is only what the plan itself says." | ti_wrap 68 0
+			if [ "$ti_cap_n" -gt 0 ]; then
+				printf '%s\n' "$(ti_cap_number "$ti_cap_n") thing$([ "$ti_cap_n" = 1 ] || printf 's') here go$([ "$ti_cap_n" = 1 ] && printf 'es') beyond what an ordinary install does:" | ti_wrap 68 0
+				while IFS= read -r c; do
+					printf '  - %s\n' "$c" | ti_wrap 68 4
+				done < "$ti_caps"
+				printf '\n'
+			fi
+		fi
 		printf '%s\n\n' "$ti_vouch" | ti_wrap 68 0
 		printf '  From:      %s\n' "$ti_from_txt"
 		[ -n "$ti_rt_line" ] && printf '  Runtime:   %s\n' "$ti_rt_line"
@@ -3128,10 +3332,10 @@ ti_install_main() {
 			printf '  Download:  %s %s, %s\n' \
 				"$ti_nall" "$(ti_plural "$ti_nall" file files)" "$(ti_hsize $ti_tot)"
 			if [ -n "$ti_hostlist" ] && [ "$ti_nmirror" -gt 0 ]; then
-				printf '  Sources:   %s, or a mirror of %s; every file is checked against its SHA-256\n' \
+				printf '  Sources:   %s, or a mirror of %s; each of those files is checked against its SHA-256\n' \
 					"$ti_hostlist" "$(ti_itthem "$ti_nhost")" | ti_wrap 68 13
 			elif [ -n "$ti_hostlist" ]; then
-				printf '  Sources:   %s; every file is checked against its SHA-256\n' "$ti_hostlist" | ti_wrap 68 13
+				printf '  Sources:   %s; each of those files is checked against its SHA-256\n' "$ti_hostlist" | ti_wrap 68 13
 			fi
 		fi
 		printf '  Into:      %s\n' "$TI_APP_DIR"
