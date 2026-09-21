@@ -405,7 +405,7 @@ mountSign({
 
 if (pagePristine) {
   el('standalone-note').hidden = false;
-  el('base-hint').textContent = 'The bases are inside this page, so this works offline.';
+  el('base-hint').textContent = 'The bases are inside this page, so this works\u00a0offline.';
   el('save-page').addEventListener('click', () => {
     download(new TextEncoder().encode(pagePristine), 'installer-editor.html', 'text/html');
   });

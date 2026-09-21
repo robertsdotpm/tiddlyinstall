@@ -771,7 +771,7 @@ function defaultTargetsToThisComputer() {
   note.className = 'small muted';
   note.id = 'target-default-note';
   note.textContent = 'Set to ' + ({ windows: 'Windows', linux: 'Linux', macos: 'macOS' })[hit[1]] +
-    ', the computer you are on. Tick the others to build for them too - one installer per system, all from the same settings.';
+    ', the computer you are on. Tick the others to build for them too - one installer per system, all from the same\u00a0settings.';
   const choices = form.querySelector('.inline-choices');
   if (choices) choices.after(note);
   // Drop the note once they choose for themselves; it has said its piece.

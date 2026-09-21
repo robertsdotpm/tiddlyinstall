@@ -355,7 +355,7 @@ Press Enter to close</pre>
              How loudly it asks depends on how much we know (web/new.js
              paintLaunch adds .launch-quiet). -->
         <div class="field launch-field" id="launch-field">
-          <span class="eyebrow">The one thing we cannot work out</span>
+          <span class="eyebrow">The one thing we cannot work&nbsp;out</span>
           <label for="entry-python">How does it start?</label>
           <p class="small launch-why src-repo-only" id="launch-why-repo">We can work out how to <em>install</em> your project by reading its files: a
             <code>requirements.txt</code> means pip, a <code>package.json</code> means npm. <strong>Nothing in a repo says how to run it.</strong>
@@ -444,13 +444,13 @@ Press Enter to close</pre>
       <!-- ================= Customise ================= -->
       <div class="else-head">
         <span class="eyebrow"><span class="num">02</span> &nbsp;Customise</span>
-        <h2 class="section-title">Already decided, unless you say otherwise</h2>
+        <h2 class="section-title">Already decided, unless you say&nbsp;otherwise</h2>
         <p class="small muted section-intro">Three groups. Each row states what it will do if you never open it.</p>
       </div>
 
       <div class="customise">
         <h3 class="customise-group">What gets installed</h3>
-        <p class="customise-group-hint small muted">Where the code comes from, the runtime it runs on, and what goes on each computer.</p>
+        <p class="customise-group-hint small muted">Where the code comes from, the runtime it runs on, and what goes on&nbsp;each&nbsp;computer.</p>
 
         <details class="src-repo-only">
           <summary><span>Source version</span><span class="default">Latest release</span></summary>
@@ -476,12 +476,12 @@ Press Enter to close</pre>
           <div class="field">
             <label for="token">Access token (private repos only)</label>
             <input type="password" id="token" autocomplete="off">
-            <span class="hint">Only used to download the source. Never put in the installer.</span>
+            <span class="hint">Only used to download the source. Never put in the&nbsp;installer.</span>
           </div>
         </details>
 
         <details>
-          <summary><span>Runtime and dependencies</span><span class="default">Newest that runs on the user's system</span></summary>
+          <summary><span>Runtime and dependencies</span><span class="default">Newest that runs on the&nbsp;user's&nbsp;system</span></summary>
           <span class="label">Which version</span>
           <p class="small muted" style="margin-top:0">Chosen by the installer on each user's computer, from the catalogue's record of which versions run on which systems.</p>
 
@@ -577,7 +577,7 @@ Press Enter to close</pre>
           <div class="field">
             <label for="extra-deps">Extra dependencies</label>
             <textarea id="extra-deps" name="extra_deps" placeholder="git >=2.40&#10;ffmpeg ==7.0.*"></textarea>
-            <span class="hint">One per line: a name and a version range. Project dependencies (requirements.txt, pyproject.toml, package.json…) are found automatically.</span>
+            <span class="hint">One per line: a name and a version range. Project dependencies (requirements.txt, pyproject.toml, package.json…) are found&nbsp;automatically.</span>
           </div>
           <details>
             <summary>Install locations</summary>
@@ -593,7 +593,7 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
         </details>
 
         <details>
-          <summary><span>Platforms</span><span class="default">Every architecture the language has</span></summary>
+          <summary><span>Platforms</span><span class="default">Every architecture the&nbsp;language&nbsp;has</span></summary>
 
           <!-- This section used to offer "x64" and "arm64" tick boxes, which
                said the installers were 64-bit only. They weren't, nothing read
@@ -669,7 +669,7 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
                 </tbody>
               </table>
             </div>
-            <span class="hint">Sample files. Everyone sees this list, with checksums, on the installer's &ldquo;what this will do&rdquo; screen.</span>
+            <span class="hint">Sample files. Everyone sees this list, with checksums, on the installer's &ldquo;what&nbsp;this&nbsp;will&nbsp;do&rdquo;&nbsp;screen.</span>
 
             <details class="add-file">
               <summary>+ Add a file</summary>
@@ -695,7 +695,7 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
                 <div class="field pf-dest">
                   <label for="pf-dest">Where</label>
                   <input type="text" id="pf-dest" name="pf_dest" placeholder="data/" spellcheck="false">
-                  <span class="hint">A path inside the app's folder. Files can't go anywhere else.</span>
+                  <span class="hint">A path inside the app's folder. Files can't go anywhere&nbsp;else.</span>
                 </div>
                 <div class="field pf-args">
                   <label for="pf-args">Arguments</label>
@@ -912,7 +912,7 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
           <div class="field">
             <label for="rootname">Root folder name</label>
             <input type="text" id="rootname" name="rootname" value="ti" maxlength="32" pattern="[A-Za-z0-9._\-]+" spellcheck="false">
-            <span class="hint">Every app installed this way goes under one folder with this name, each in its own subfolder.</span>
+            <span class="hint">Every app installed this way goes under one folder with this name, each in its&nbsp;own&nbsp;subfolder.</span>
           </div>
 
           <details>
@@ -1087,7 +1087,7 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
                words come from web/open-notice.js, which web/build.js reads
                too, so the form and the downloads cannot drift apart. -->
           <div class="note-box open-notice" id="open-notice" hidden>
-            <span class="eyebrow">What the people you send it to will see</span>
+            <span class="eyebrow">What the people you send&nbsp;it&nbsp;to&nbsp;see</span>
             <ul id="open-notice-list"></ul>
           </div>
 
@@ -1127,7 +1127,7 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
           <div class="field">
             <label for="meta">Extra metadata</label>
             <textarea id="meta" name="meta" placeholder="channel = stable&#10;homepage = https://example.com"></textarea>
-            <span class="hint">One <code>key = value</code> per line. Stored with the installer's settings. Package, versions and app ID are added automatically.</span>
+            <span class="hint">One <code>key = value</code> per line. Stored with the installer's settings. Package, versions and app ID are added&nbsp;automatically.</span>
           </div>
           <label class="choice"><input type="checkbox" name="publish_base"> Publish as a base installer others can reuse</label>
         </details>
