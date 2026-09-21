@@ -15,11 +15,17 @@ This has happened four times. Each time the agent had been told not to,
 and each time it happened by accident rather than by intent, so treat the
 rules below as the actual protection:
 
-- **The engine falls back to a GUI when it has no tty.** Piping an
-  installer's output, or running it under `script`, makes it think it was
-  double-clicked — so it looks for a display, finds the operator's, and
-  opens a window there. For any local terminal capture, run it as
-  `env -u DISPLAY -u WAYLAND_DISPLAY ./installer.run`.
+- **The engine opens a GUI whenever it has a display and no arguments**
+  (changed 2026-09-21; it used to need a missing tty as well, and that
+  is what the first four accidents were). `sh installer.run` with a
+  display in the environment now goes straight to a window, tty or no
+  tty — that is what a person at a desktop should get, and it is why
+  this is the easiest rule in the file to trip. Piping the output or
+  running it under `script` still does it too. **For any local run of
+  the engine, use `env -u DISPLAY -u WAYLAND_DISPLAY ./installer.run`**,
+  and pass `TI_NO_GUI=1` as a belt if the environment is not yours to
+  control. A run with any argument at all (`--yes`, `--log=`, …) prints
+  text and opens nothing, so the unattended harness paths are safe.
 - **Check the environment the installer will inherit**, not your own
   shell's, and check it before every GUI run rather than once at the
   start.
