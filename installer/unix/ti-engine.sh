@@ -282,6 +282,74 @@ EOF
 }
 
 # Ask to go ahead. $1 title, $2 full text file, $3 short question.
+# The review text is about seventy-five lines and a terminal is
+# twenty-four, so the top of it -- what is being installed, and what
+# this install can do -- has scrolled past before the question is
+# asked. Page it where there is something to page with (2026-09-21;
+# the operator's "it dumps all its text at once then you have to
+# scroll back up").
+#
+#   -F  quit at once if it all fits, so a short review behaves exactly
+#       as it did before there was a pager;
+#   -X  stay off the alternate screen, so the text is still in the
+#       scrollback after quitting -- somebody who has just read it and
+#       is deciding will want to look again;
+#   -R  keep the colour.
+#
+# $PAGER first, because whoever set it meant it; then `less`; then
+# busybox's `more`, which is what the i386 and Alpine machines have.
+# With none of them the text is printed as it always was: an installer
+# does not get to invent a pager.
+#
+# Three things this must not do. The question is never inside it -- the
+# one-line summary and `Install X? [y/N]` are printed after it exits,
+# on the terminal. The text is handed over as a **file name** and never
+# on stdin, because stdin is where the answer comes from and a pager
+# reading it would swallow the answer. And it is only ever reached from
+# the `tty` branch below, so the unattended path, a redirected stdout
+# and the log are byte for byte what they were.
+ti_pager() { # file -> 0 if it was paged
+	[ "${TI_NO_PAGER-}" = 1 ] && return 1
+	# Keep the file before anything touches $1: splitting $PAGER needs
+	# `set --`, which throws the positional parameters away, and losing
+	# the review file here means being asked to consent to a screen
+	# nobody showed you.
+	ti_pg_file=$1
+	ti_pg= ti_pg_colour=0
+	if [ -n "${PAGER-}" ]; then
+		# shellcheck disable=SC2086
+		set -- $PAGER
+		[ -n "${1:-}" ] && ti_have "$1" && { ti_pg=$PAGER; ti_pg_colour=1; }
+	fi
+	if [ -z "$ti_pg" ]; then
+		if ti_have less; then ti_pg="less -FRX" ti_pg_colour=1
+		elif ti_have more; then ti_pg=more ti_pg_colour=0
+		else return 1
+		fi
+	fi
+	if [ "$ti_pg_colour" = 1 ] && ti_want_colour; then
+		ti_paint < "$ti_pg_file" > "$TI_WORK/paged.txt"
+	else
+		cat "$ti_pg_file" > "$TI_WORK/paged.txt"
+	fi
+	[ -s "$TI_WORK/paged.txt" ] || return 1
+	# The text arrives on the pager's stdin, so its status line says `:`
+	# rather than a temporary path nobody needs to read; both `less` and
+	# busybox's `more` take their keys from /dev/tty in that case, which
+	# is why the answer to the question below -- read from this script's
+	# own stdin, further down -- is not swallowed. stdout goes to
+	# stderr, where this text has always gone.
+	# shellcheck disable=SC2086
+	$ti_pg < "$TI_WORK/paged.txt" >&2
+	# 126 and 127 are the shell saying it could not run the thing at
+	# all -- a $PAGER that is there but not executable, or a wrapper
+	# that is not really a pager. Then the text has not been shown and
+	# the caller prints it, because being asked to consent to a screen
+	# nobody showed you is the one outcome worse than scrolling.
+	case $? in 126 | 127) return 1 ;; esac
+	return 0
+}
+
 ti_confirm() {
 	[ "$opt_yes" = 1 ] && return 0
 	ti_clean < "$2" > "$TI_WORK/confirm.txt"
@@ -296,7 +364,9 @@ ti_confirm() {
 		# and by whom -- has scrolled away. One line of it stands above
 		# the prompt: the decision, not a second copy of the screen
 		# (see "decide.txt" where it is written).
-		if ti_want_colour; then ti_paint < "$2" >&2; else cat "$2" >&2; fi
+		if ! ti_pager "$2"; then
+			if ti_want_colour; then ti_paint < "$2" >&2; else cat "$2" >&2; fi
+		fi
 		if [ -s "$TI_WORK/decide.txt" ]; then
 			printf '\n' >&2
 			printf -- '----------------------------------------------------------------------\n' >&2
@@ -480,13 +550,45 @@ ti_cmd_line() { # command
 	fi
 }
 
-# A file's size, with the exact byte count only when it adds anything.
-ti_size_line() {
+# A file's size, with the exact byte count only when it adds anything,
+# and the file's role when the name line was too long to carry it.
+ti_size_line() { # size [role]
+	r=
+	[ -n "${2:-}" ] && r="  ($2)"
 	if [ "${1:-0}" -ge 1024 ] 2>/dev/null; then
-		printf '     %s (%s bytes)\n' "$(ti_hsize "$1")" "$1"
+		printf '     %s (%s bytes)%s\n' "$(ti_hsize "$1")" "$1" "$r"
 	else
-		printf '     %s\n' "$(ti_hsize "$1")"
+		printf '     %s%s\n' "$(ti_hsize "$1")" "$r"
 	fi
+}
+
+# What a file in the download list *is*, from where it sits in the plan
+# and never from its name (2026-09-21). WHAT IT RUNS says whose commands
+# are whose; a list of four MSIs called core, exe, lib and tcltk is the
+# same puzzle one section up, and the plan can answer it:
+#
+#   * the `file` whose name is the `runtime` line's id is the runtime;
+#   * a file whose folder is put on PATH as `{dir:<name>}` is a
+#     companion runtime the recipe requires (git, WinLibs GCC, zig) --
+#     a tool the install uses, not the thing being installed. Nothing
+#     else in a plan writes that form of `path`;
+#   * every other `file` is part of the runtime's own setup: a release
+#     part (Windows Python is four MSIs) or an extra file the recipe
+#     needs (Composer, get-pip, a CA bundle).
+#
+# The last one is by elimination, and is sound only because docs/format.md
+# section 3 closes the list of what a block's `file` lines may be. It
+# says so there as a rule an engine depends on, so that a fifth kind
+# cannot be added without this being looked at. A `need`'s `nfile` is
+# not in this list at all: it has its own section, whose heading already
+# says it is installed for the whole machine and survives the uninstall.
+ti_file_role() { # name -> what it is, or nothing
+	[ -n "$1" ] || return 0
+	if [ -n "$ti_rt_id" ] && [ "$1" = "$ti_rt_id" ]; then printf 'the runtime'; return 0; fi
+	case " $ti_comp_names " in
+	*" $1 "*) printf 'a tool the install needs' ;;
+	*) printf 'part of the runtime' ;;
+	esac
 }
 
 # The hosts a list of URLs (stdin) points at, in order, once each. What a
@@ -2747,6 +2849,16 @@ ti_capabilities() {
 # the provenance sentence are different claims -- one about the
 # installation, one about the program -- and they are emitted together
 # so that no later change can render one without the other.
+#
+# It opens by saying what an ordinary install *is*, and that sentence is
+# the only place on the screen the SHA-256 promise is made (2026-09-21):
+# WHAT IT DOWNLOADS used to make it again and the `Sources:` line a
+# third time, which is how a screen teaches people to skim. Saying it
+# here rather than in either branch matters, because the findings branch
+# is the common one -- an ordinary Python app trips one finding -- and a
+# promise that only appears when nothing is found is a promise most
+# people never see. Every file still prints its own `sha256` below.
+TI_CAP_ORDINARY="An ordinary install unpacks the files this plan names, each one checked against a SHA-256 in it, into folders of its own, for you alone, and runs nothing but our recipe for the runtime."
 ti_cap_section() {
 	if [ -n "$ti_plan_warn" ]; then
 		# launch-shapes.md section 8, "What must never happen": with
@@ -2754,12 +2866,19 @@ ti_cap_section() {
 		# be a statement about a document anybody could have written.
 		# So the absence claim is never made here; the findings are,
 		# because a finding is only ever something extra.
-		printf '  %s\n' "Nothing vouches for this plan, so what follows is only what the plan itself says, and anybody can write a plan. Read the commands rather than this summary; the reason is under BEFORE YOU SAY YES." | ti_wrap 74 2
+		#
+		# And the SHA-256 promise weakens rather than disappearing. Each
+		# file is still checked, so saying nothing would leave a `sha256`
+		# under every file for a reader to draw their own conclusion
+		# from; but the hashes are the plan's own, and on a plan nobody
+		# vouches for they show only that the download arrived as the
+		# plan said it would.
+		printf '  %s\n' "Nothing vouches for this plan, so what follows is only what the plan itself says, and anybody can write a plan. Each file is still checked against the SHA-256 beside it, but those hashes are the plan's own: they show a download arrived unchanged, and say nothing about what it is. Read the commands rather than this summary; the reason is under BEFORE YOU SAY YES." | ti_wrap 74 2
 		[ "$ti_cap_n" -gt 0 ] && printf '  %s\n' "What it says it does:" | ti_wrap 74 2
 	elif [ "$ti_cap_n" = 0 ]; then
-		printf '  %s\n' "Nothing here goes beyond what an ordinary install does: no administrator rights, nothing installed for anyone but you, every file it downloads checked against a SHA-256 this plan names, and every command that runs while installing is our own recipe. What it writes is listed below, and that is all of it." | ti_wrap 74 2
+		printf '  %s\n' "$TI_CAP_ORDINARY Nothing here goes beyond that. What it writes is listed below, and that is all of it." | ti_wrap 74 2
 	else
-		printf '  %s\n' "$(ti_cap_number "$ti_cap_n") thing$([ "$ti_cap_n" = 1 ] || printf 's') here go$([ "$ti_cap_n" = 1 ] && printf 'es') beyond what an ordinary install does:" | ti_wrap 74 2
+		printf '  %s\n' "$TI_CAP_ORDINARY $(ti_cap_number "$ti_cap_n") thing$([ "$ti_cap_n" = 1 ] || printf 's') here go$([ "$ti_cap_n" = 1 ] && printf 'es') beyond that:" | ti_wrap 74 2
 	fi
 	while IFS= read -r c; do
 		printf '    - %s\n' "$c" | ti_wrap 74 6
@@ -2970,12 +3089,18 @@ ti_install_main() {
 	# that this engine already showed the architecture was wrong.
 	ti_rt_line=
 	ti_rt_note=
+	ti_rt_id=
+	# Which folders the plan puts on PATH as `{dir:<name>}`: the
+	# companion runtimes a recipe requires, and nothing else
+	# (ti_file_role, above).
+	ti_comp_names=$(ti_sel path | sed -n 's/^{dir:\([^}]*\)}.*$/\1/p' | sort -u | tr '\n' ' ')
 	rt=$(ti_sel runtime | sed -n '$p')
 	if [ -n "$rt" ]; then
 		IFS=$tab
 		set -- $rt
 		IFS=$ifs0
 		a_name=$1 a_ver=${2:-} a_arch=${3:-}
+		ti_rt_id=$1
 		if [ -n "$a_arch" ]; then
 			ti_rt_note=$(ti_arch_note "$a_arch" "$a_name")
 			ti_rt_line="$a_name $a_ver, $(ti_arch_words "$a_arch")$ti_rt_note"
@@ -3104,11 +3229,10 @@ ti_install_main() {
 				# serves it") is a qualifier on a qualifier and went on
 				# 2026-09-21.
 				if [ -n "$ti_hostlist" ] && [ "$ti_nmirror" -gt 0 ]; then
-					printf '  %-14s%s, or a mirror of %s; each of those files is checked against its SHA-256\n' \
+					printf '  %-14s%s, or a mirror of %s\n' \
 						'Sources:' "$ti_hostlist" "$(ti_itthem "$ti_nhost")" | ti_wrap 74 16
 				elif [ -n "$ti_hostlist" ]; then
-					printf '  %-14s%s; each of those files is checked against its SHA-256\n' \
-						'Sources:' "$ti_hostlist" | ti_wrap 74 16
+					printf '  %-14s%s\n' 'Sources:' "$ti_hostlist" | ti_wrap 74 16
 				fi
 			fi
 		fi
@@ -3133,9 +3257,8 @@ ti_install_main() {
 		if [ "$ti_nall" = 0 ]; then
 			printf '  Nothing.\n'
 		else
-			printf '  %s %s, %s in total. Each one is checked against the SHA-256\n' \
+			printf '  %s %s, %s in total.\n' \
 				"$ti_nall" "$(ti_plural "$ti_nall" file files)" "$(ti_hsize $ti_tot)"
-			printf '  below before it is used; a file that does not match is not installed.\n'
 			# What that check does *not* reach (launch-shapes.md,
 			# recommendation 7). "Each one is checked against the
 			# SHA-256 below" is true of the files listed here and of
@@ -3144,17 +3267,28 @@ ti_install_main() {
 			# choosing and running more code. Both sentences were true
 			# and together they misled.
 			[ -n "$ti_ins_cmd" ] &&
-				printf '  %s\n' "That covers these files and nothing else: installing the project downloads more, and no SHA-256 here reaches those. See WHAT THIS INSTALL CAN DO, at the top." | ti_wrap 74 2
+				printf '  %s\n' "Installing the project downloads more than these, and nothing in this list covers those: see WHAT THIS INSTALL CAN DO, at the top." | ti_wrap 74 2
 		fi
 		i=1
 		while [ "$i" -le "$nfiles" ]; do
 			IFS=$tab
 			set -- $(ti_sel file "$i")
 			IFS=$ifs0
-			printf '\n  %s. %s\n' "$i" "$2"
-			ti_size_line "$4"
-			printf '     sha256 %s\n' "$3"
-			if { [ -n "$TI_PACK_DIR" ] && [ -f "$TI_PACK_DIR/$3" ]; } || { [ -n "$TI_PACK_TAR" ] && grep -qx "$3" "$TI_WORK/pack.list"; }; then
+			d_name=$1 d_file=$2 d_sha=$3 d_size=${4:-}
+			# The role rides on the name line where it fits, and drops
+			# to the size line where it would wrap: these are the
+			# longest lines on the screen already, and a label that
+			# wrapped would undo the trimming rather than add to it.
+			d_role=$(ti_file_role "$d_name")
+			if [ -n "$d_role" ] && [ $((9 + ${#d_file} + ${#d_role})) -le 74 ]; then
+				printf '\n  %s. %s  (%s)\n' "$i" "$d_file" "$d_role"
+				ti_size_line "$d_size"
+			else
+				printf '\n  %s. %s\n' "$i" "$d_file"
+				ti_size_line "$d_size" "$d_role"
+			fi
+			printf '     sha256 %s\n' "$d_sha"
+			if { [ -n "$TI_PACK_DIR" ] && [ -f "$TI_PACK_DIR/$d_sha" ]; } || { [ -n "$TI_PACK_TAR" ] && grep -qx "$d_sha" "$TI_WORK/pack.list"; }; then
 				printf '     from   the copy packed inside this installer\n'
 			fi
 			ti_sel url "$i" | ti_from_lines "$ti_ourhost" | ti_wrap 74 12
@@ -3257,8 +3391,17 @@ ti_install_main() {
 		printf '  Settings:   %s\n' "$TI_ORIGIN"
 		[ "$TI_MODE_A" = 1 ] && printf '              mode A: a signed installer; only what its name names, from %s\n' "$TI_DEFAULT_BACKEND"
 		printf '  Plan:       %s\n' "$TI_PLAN_FROM"
-		[ -n "$TI_PLAN_SIGNED" ] && printf '  Plan signed: %s%s\n' "$TI_PLAN_SIGNED" \
-			"$(case $TI_PLAN_KIND in fetched) printf ' (fetched now)' ;; *) printf ' (carried in this installer)' ;; esac)"
+		# Not `$(case ... in x) ... esac)`: the older bash that macOS
+		# ships as /bin/sh closes the command substitution at the first
+		# `)`, which is the one ending the case pattern, and prints the
+		# rest of the line as text. It did exactly that on the review
+		# screen -- "Plan signed: <date> printf \' (fetched now)\' ;; *)
+		# ..." -- on macOS 26.2, and nowhere else (2026-09-21).
+		if [ -n "$TI_PLAN_SIGNED" ]; then
+			ti_pk=' (carried in this installer)'
+			[ "$TI_PLAN_KIND" = fetched ] && ti_pk=' (fetched now)'
+			printf '  Plan signed: %s%s\n' "$TI_PLAN_SIGNED" "$ti_pk"
+		fi
 		[ -n "$ti_revoke_note" ] && printf '  Revocations: %s\n' "$ti_revoke_note"
 		[ -n "$ti_plan_warn" ] && printf '  WARNING: %s\n' "$ti_plan_warn"
 		[ -n "$ti_age_warn" ] && printf '  WARNING: %s\n' "$ti_age_warn"
@@ -3312,13 +3455,21 @@ ti_install_main() {
 		# behind "Details...": what this install can do that an
 		# ordinary one cannot, and that the program is not ours. Same
 		# order as the screen, and the same strings.
+		if [ -n "$ti_plan_warn" ]; then
+			printf '%s\n\n' "Nothing vouches for this plan, so what follows is only what the plan itself says. Each file is still checked against the SHA-256 beside it, but those hashes are the plan's own." | ti_wrap 68 0
+		fi
 		if [ "$ti_cap_n" = 0 ] && [ -z "$ti_plan_warn" ]; then
-			printf '%s\n\n' "Nothing here goes beyond what an ordinary install does: no administrator rights, nothing installed for anyone but you, and every file it downloads is checked against a SHA-256 this plan names." | ti_wrap 68 0
+			printf '%s\n\n' "$TI_CAP_ORDINARY Nothing here goes beyond that." | ti_wrap 68 0
 		else
-			[ -n "$ti_plan_warn" ] &&
-				printf '%s\n\n' "Nothing vouches for this plan, so what follows is only what the plan itself says." | ti_wrap 68 0
 			if [ "$ti_cap_n" -gt 0 ]; then
-				printf '%s\n' "$(ti_cap_number "$ti_cap_n") thing$([ "$ti_cap_n" = 1 ] || printf 's') here go$([ "$ti_cap_n" = 1 ] && printf 'es') beyond what an ordinary install does:" | ti_wrap 68 0
+				# With no baseline sentence above it (an unsigned plan),
+				# "goes beyond that" has nothing to point at, so the
+				# lead is the screen's own wording for that case.
+				if [ -n "$ti_plan_warn" ]; then
+					printf '%s\n' "What it says it does:" | ti_wrap 68 0
+				else
+					printf '%s\n' "$TI_CAP_ORDINARY $(ti_cap_number "$ti_cap_n") thing$([ "$ti_cap_n" = 1 ] || printf 's') here go$([ "$ti_cap_n" = 1 ] && printf 'es') beyond that:" | ti_wrap 68 0
+				fi
 				while IFS= read -r c; do
 					printf '  - %s\n' "$c" | ti_wrap 68 4
 				done < "$ti_caps"
@@ -3332,10 +3483,10 @@ ti_install_main() {
 			printf '  Download:  %s %s, %s\n' \
 				"$ti_nall" "$(ti_plural "$ti_nall" file files)" "$(ti_hsize $ti_tot)"
 			if [ -n "$ti_hostlist" ] && [ "$ti_nmirror" -gt 0 ]; then
-				printf '  Sources:   %s, or a mirror of %s; each of those files is checked against its SHA-256\n' \
+				printf '  Sources:   %s, or a mirror of %s\n' \
 					"$ti_hostlist" "$(ti_itthem "$ti_nhost")" | ti_wrap 68 13
 			elif [ -n "$ti_hostlist" ]; then
-				printf '  Sources:   %s; each of those files is checked against its SHA-256\n' "$ti_hostlist" | ti_wrap 68 13
+				printf '  Sources:   %s\n' "$ti_hostlist" | ti_wrap 68 13
 			fi
 		fi
 		printf '  Into:      %s\n' "$TI_APP_DIR"

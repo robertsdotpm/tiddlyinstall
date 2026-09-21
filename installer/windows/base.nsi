@@ -195,6 +195,8 @@ Var Cap7
 Var CapUnknown       ; plan keys and step kinds this engine does not know, ", " joined
 Var CapInd1          ; SumPara: the first line's indent
 Var CapInd2          ; and every following line's
+Var CompDirs         ; ", name, " for each `path {dir:<name>}`: the companion runtimes
+Var FileRole         ; what the file being printed is
 ; paths
 Var SysDrv
 Var Root
@@ -1328,6 +1330,11 @@ FunctionEnd
 ; Read the chosen block's single-value keys and map each file to its folder.
 Function ReadTarget
   Push $0
+  Push $1
+  Push $2
+  Push $3
+  Push $4
+  StrCpy $CompDirs ""
   StrCpy $FileMap ""
   StrCpy $RuntimeDir ""
   StrCpy $TgtAdmin 0
@@ -1380,6 +1387,33 @@ Function ReadTarget
     ${ElseIf} $K S== "env"
     ${ElseIf} $K S== "unset"
     ${ElseIf} $K S== "path"
+      ; A companion runtime the recipe requires is put on PATH as
+      ; `{dir:<id>}...`, and nothing else in a plan is. That is what
+      ; tells a tool the install needs from the runtime being installed
+      ; (WriteSummary's file list, and ti_file_role in the other engine).
+      StrCpy $0 $F1 5
+      ${If} $0 S== "{dir:"
+        StrCpy $1 $F1 "" 5
+        StrLen $3 $1
+        StrCpy $2 0
+        ${Do}
+          ${If} $2 >= $3
+            ${Break}
+          ${EndIf}
+          StrCpy $4 $1 1 $2
+          ${If} $4 S== "}"
+            ${Break}
+          ${EndIf}
+          IntOp $2 $2 + 1
+        ${Loop}
+        StrCpy $1 $1 $2
+        ${If} $1 != ""
+          ${If} $CompDirs == ""
+            StrCpy $CompDirs ", "
+          ${EndIf}
+          StrCpy $CompDirs "$CompDirs$1, "
+        ${EndIf}
+      ${EndIf}
     ${ElseIf} $K S== "ienv"
     ${ElseIf} $K S== "iunset"
     ${ElseIf} $K S== "need"
@@ -1424,6 +1458,10 @@ Function ReadTarget
   ${If} $TgtExe != ""
     StrCpy $Runtime "$RuntimeDir\$TgtExe"
   ${EndIf}
+  Pop $4
+  Pop $3
+  Pop $2
+  Pop $1
   Pop $0
 FunctionEnd
 
@@ -3539,6 +3577,16 @@ Function CapUnknownAdd
   Pop $0
 FunctionEnd
 
+; What an ordinary install *is*. This is the only place on the page the
+; SHA-256 promise is made (2026-09-21): WHAT IT DOWNLOADS used to make
+; it again and the `Sources:` line a third time, which is how a page
+; teaches people to skim. It opens both branches rather than living in
+; the "nothing found" one, because the findings branch is the common
+; one -- an ordinary Python app trips one finding -- and a promise that
+; only appears when nothing is found is one most people never see.
+; Every file still prints its own `sha256` below.
+!define TI_CAP_ORDINARY "An ordinary install unpacks the files this plan names, each one checked against a SHA-256 in it, into folders of its own, for you alone, and runs nothing but our recipe for the runtime."
+
 ; Add one finding. $U_a is the sentence.
 Function CapAdd
   ${If} $CapN = 0
@@ -3781,22 +3829,29 @@ Function CapSection
     ; would be a statement about a document anybody could have written.
     ; So the absence is never claimed here; the findings still are,
     ; because a finding is only ever something extra.
-    StrCpy $U_a "Nothing vouches for this plan, so what follows is only what the plan itself says, and anybody can write a plan. Read the commands rather than this summary; the reason is under BEFORE YOU SAY YES."
+    ;
+    ; And the SHA-256 promise weakens rather than disappearing. Each
+    ; file is still checked, so saying nothing would leave a `sha256`
+    ; under every file for a reader to draw their own conclusion from;
+    ; but the hashes are the plan's own, and on a plan nobody vouches
+    ; for they show only that the download arrived as the plan said.
+    StrCpy $U_a "Nothing vouches for this plan, so what follows is only what the plan itself says, and anybody can write a plan. Each file is still checked against the SHA-256 beside it, but those hashes are the plan's own: they show a download arrived unchanged, and say nothing about what it is. Read the commands rather than this summary; the reason is under BEFORE YOU SAY YES."
     Call SumPara
     ${If} $CapN > 0
       ${Sum} "  What it says it does:"
     ${EndIf}
   ${ElseIf} $CapN = 0
-    StrCpy $U_a "Nothing here goes beyond what an ordinary install does: no administrator rights, nothing installed for anyone but you, every file it downloads checked against a SHA-256 this plan names, and every command that runs while installing is our own recipe. What it writes is listed below, and that is all of it."
+    StrCpy $U_a "${TI_CAP_ORDINARY} Nothing here goes beyond that. What it writes is listed below, and that is all of it."
     Call SumPara
   ${Else}
     StrCpy $U_a $CapN
     Call CapNumber
     ${If} $CapN = 1
-      ${Sum} "  $U_out thing here goes beyond what an ordinary install does:"
+      StrCpy $U_a "${TI_CAP_ORDINARY} $U_out thing here goes beyond that:"
     ${Else}
-      ${Sum} "  $U_out things here go beyond what an ordinary install does:"
+      StrCpy $U_a "${TI_CAP_ORDINARY} $U_out things here go beyond that:"
     ${EndIf}
+    Call SumPara
   ${EndIf}
   StrCpy $CapInd1 "    - "
   StrCpy $CapInd2 "      "
@@ -4046,9 +4101,9 @@ Function WriteSummary
         ${Else}
           StrCpy $1 "them"
         ${EndIf}
-        ${Sum} "  Sources:      $U_out, or a mirror of $1; each of those files is checked against its SHA-256"
+        ${Sum} "  Sources:      $U_out, or a mirror of $1"
       ${Else}
-        ${Sum} "  Sources:      $U_out; each of those files is checked against its SHA-256"
+        ${Sum} "  Sources:      $U_out"
       ${EndIf}
     ${EndIf}
   ${EndIf}
@@ -4095,10 +4150,8 @@ Function WriteSummary
     StrCpy $U_a $SumFiles
     StrCpy $U_b "file"
     Call Plural
-    ${Sum} "  $SumFiles $U_out, $0 in total. Each one is checked against the SHA-256"
-    ${Sum} "  below before it is used; a file that does not match is not installed."
-    ${Sum} "  The commands under a file are our recipe for setting up that runtime,"
-    ${Sum} "  not the project's own code."
+    ${Sum} "  $SumFiles $U_out, $0 in total. The commands under a file are our"
+    ${Sum} "  recipe for setting up that runtime, not the project's own code."
     ; What that check does *not* reach (launch-shapes.md recommendation
     ; 7). "Each one is checked against the SHA-256 below" is true of the
     ; files listed here and of nothing else, and an `install` line a few
@@ -4108,7 +4161,7 @@ Function WriteSummary
     ${If} $TgtInstall != ""
       StrCpy $CapInd1 "  "
       StrCpy $CapInd2 "  "
-      StrCpy $U_a "That covers these files and nothing else: installing the project downloads more, and no SHA-256 here reaches those. See WHAT THIS INSTALL CAN DO, at the top."
+      StrCpy $U_a "Installing the project downloads more than these, and nothing in this list covers those: see WHAT THIS INSTALL CAN DO, at the top."
       Call SumPara
     ${EndIf}
   ${EndIf}
@@ -4131,11 +4184,44 @@ Function WriteSummary
       StrCpy $CurDir "$Root\$U_out"
       StrCpy $CurFile "$DlDir\$F2"
       IntOp $2 $2 + 1
+      ; What this file *is*, from where it sits in the plan and never
+      ; from its name (2026-09-21): the `file` whose name is the
+      ; runtime's id is the runtime; one whose folder goes on PATH is a
+      ; companion the recipe requires; every other one is part of the
+      ; runtime's own setup -- a release part (Windows Python is four
+      ; MSIs, which is the puzzle this removes) or an extra file the
+      ; recipe needs. The last is by elimination, and is sound only
+      ; because docs/format.md section 3 closes the list of what a
+      ; block's `file` lines may be.
+      ${If} $F1 S== $TgtRtName
+        StrCpy $FileRole "the runtime"
+      ${Else}
+        StrCpy $U_a $CompDirs
+        StrCpy $U_b ", $F1, "
+        Call StrHas
+        ${If} $U_out = 1
+          StrCpy $FileRole "a tool the install needs"
+        ${Else}
+          StrCpy $FileRole "part of the runtime"
+        ${EndIf}
+      ${EndIf}
+      ; The role rides on the name line where it fits and drops to the
+      ; size line where it would wrap: these are the longest lines here
+      ; already, and a label that wrapped would undo the trimming.
+      StrLen $0 $F2
+      StrLen $U_out $FileRole
+      IntOp $0 $0 + $U_out
+      IntOp $0 $0 + 11
       StrCpy $U_a $F4
       Call HumanSize
       ${Sum} ""
-      ${Sum} "  $2. $F2"
-      ${Sum} "     $U_out ($F4 bytes)"
+      ${If} $0 <= 74
+        ${Sum} "  $2. $F2  ($FileRole)"
+        ${Sum} "     $U_out ($F4 bytes)"
+      ${Else}
+        ${Sum} "  $2. $F2"
+        ${Sum} "     $U_out ($F4 bytes)  ($FileRole)"
+      ${EndIf}
       ${Sum} "     sha256 $F3"
       ${SumUrl} "  $F2"
       ${Sum} "     into   $CurDir"

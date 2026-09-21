@@ -38,6 +38,23 @@ sh install_node_hello_<hash>.run            # Linux (any file name works)
 TiddlyInstall.app/Contents/MacOS/install          # macOS, from a terminal
 ```
 
+**In a terminal the review is paged** (2026-09-21). It is about
+seventy-five lines and a terminal is twenty-four, so the top of it --
+what is being installed, and WHAT THIS INSTALL CAN DO -- used to scroll
+past before the question was asked. `$PAGER` if it is set, else
+`less -FRX`, else busybox's `more`; with none of them the text is
+printed as it always was. `-F` quits at once if it all fits, so a short
+review is unchanged; `-X` keeps it out of the alternate screen, so the
+text is still in the scrollback while you decide; `-R` keeps the colour.
+The question is **not** inside the pager: the one-line summary and
+`Install X? [y/N]` are printed after it exits. Only the `tty` path pages
+-- never `--yes`, never a redirected stdout, never the log -- and
+`TI_NO_PAGER=1` turns it off. Tested on this machine, on Debian 12 i386
+(dash, mawk, real `less`) and on Alpine (busybox `sh`, busybox `less`
+and `more`), with `y`, with `n`, with `$PAGER` set, and with Ctrl-C
+inside the pager (nothing is installed and the terminal is left as it
+was).
+
 | Option | Meaning |
 | --- | --- |
 | `--yes` | Don't ask (install or uninstall unattended). No dialog of any kind is opened: messages go to stderr, and when administrator rights are needed without a terminal only `sudo -n` is tried |
@@ -57,8 +74,10 @@ engine is this same file, so an engine change reaches macOS as soon as
 the base is built there -- and `out/ti-base-macos.zip` on this machine
 is whatever was last built there, nothing more.
 
-**Last built 2026-09-21T04:15:43Z** on the Mac test server (macOS 26.2
+**Last built 2026-09-21T05:08:22Z** on the Mac test server (macOS 26.2
 `25C56`, arm64, `Matthew@the-mac-test-host`), from `ti-engine.sh` with the
+SHA-256 promise said once, a label on every file in the download list,
+the review paged in a terminal, and the
 **capability statement** on the review screen (design.md 11.3 and
 docs/format.md section 3, "What engines must show: what this install can
 do"): WHAT THIS INSTALL CAN DO, above the warnings, saying what this
@@ -75,11 +94,19 @@ the same order, because it is the whole of what that dialog says.
 
 | | |
 | --- | --- |
-| `out/ti-base-macos.zip` | `c7379e24ac188587084326893a3e261a1ba6fe4204b99a3a77c81f6f95bade73`, 64,482 bytes |
-| the engine inside it | `9e505a71f9b7134c13f64f773f14a21cea64c01e9d41c3fed273ac700c282a6d` (`ti-engine.sh` with the baked lines filled) |
+| `out/ti-base-macos.zip` | `2b9de6c000fd7168ba52e1279253aa5f3f13b91f9a14abec07f31ea4b96f92d5`, 67,171 bytes |
+| the engine inside it | `ebf2699a2a864272644fc378a20487bc12b1dd437a2f4eaa1d3ea80fbd825b24` (`ti-engine.sh` with the baked lines filled) |
 | plan signing key | `97930ea1888d1a12` |
-| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T04:15:43Z` / `1789964143` |
+| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T05:08:22Z` / `1789967302` |
 | signature | ad-hoc; `codesign --verify --strict` is happy on the bundle **and** on the bundle re-extracted from the zip with `ditto` ("valid on disk", "satisfies its Designated Requirement") |
+
+**One bug this build fixes is macOS-only**, and it took running the
+engine on the Mac to see: `$(case $x in y) … esac)` is closed at the
+first `)` by the bash 3.2 that macOS ships as `/bin/sh`, so the review
+screen printed `Plan signed: <date> printf ' (fetched now)' ;; *) …` —
+shell source, at the reader, on the one screen that exists to be
+trusted. Every other shell parsed it correctly, which is why it lasted.
+There is one such substitution in the engine and it is now an `if`.
 
 The one before this was `d6c3fd38dbaaba722ada38168f952d0adeb30bac4b5051b97c77d6cbd2c03ecf`
 (60,778 bytes), built 2026-09-21T02:55:39Z from the engine with the
