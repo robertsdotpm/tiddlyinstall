@@ -1,11 +1,11 @@
-// Drives the one-file site (dist/index.html, plan.md section 1.11) in
+// Drives the one-file site (out/index.html, plan.md section 1.11) in
 // headless Chrome from file://, where it has no build server: builds
 // installers from the New installer form, checks what comes out, and checks
 // "Save this page" gives a copy that works too. With --site, also checks
 // the same file served by a build server uses it, and can switch to "No
 // server".
 //
-//   node --experimental-websocket tests/offline-test.mjs [--page dist/index.html] [--site URL] [--out DIR] [--no-native]
+//   node --experimental-websocket tests/offline-test.mjs [--page out/index.html] [--site URL] [--out DIR] [--no-native]
 //
 // --no-native: as a browser without DecompressionStream, crypto.subtle,
 // BigInt or :has() (tests/no-native-browser.mjs).
@@ -19,18 +19,18 @@ import path from 'node:path';
 import { launchChrome, sleep } from './browsers/cdp.mjs';
 import { Checker, STARTED, waitFor, checkSections, fetchBlob, buildHello as buildHelloIn, checkJob as checkJobIn } from './browsers/steps.mjs';
 import { noNativeArg, disableNative, checkNativeState, checkHasRules } from './no-native-browser.mjs';
-import { OFFLINE_TARGETS, OFFLINE_TARGET_OS, offlineField, ARCH_LABEL, ENTRY_DEFAULTS, packBudget, PACK_FLOOR_MB } from '../shared/form-job.js';
-import { planPackFiles } from '../shared/builder.js';
-import { parseFooterTail, readInstaller } from '../shared/tifile.js';
-import { templateLaunch } from '../shared/templates.js';
+import { OFFLINE_TARGETS, OFFLINE_TARGET_OS, offlineField, ARCH_LABEL, ENTRY_DEFAULTS, packBudget, PACK_FLOOR_MB } from '../src/shared/form-job.js';
+import { planPackFiles } from '../src/shared/builder.js';
+import { parseFooterTail, readInstaller } from '../src/shared/tifile.js';
+import { templateLaunch } from '../src/shared/templates.js';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
 const HERE = path.dirname(new URL(import.meta.url).pathname);
-const PAGE = path.resolve(arg('--page') || path.join(HERE, '..', 'dist', 'index.html'));
+const PAGE = path.resolve(arg('--page') || path.join(HERE, '..', 'out', 'index.html'));
 const SITE = arg('--site');
 const OUT = arg('--out');
 if (typeof WebSocket === 'undefined' || !fs.existsSync(PAGE)) {
-  console.log('usage: node --experimental-websocket tests/offline-test.mjs [--page dist/index.html] [--site URL] [--out DIR]');
+  console.log('usage: node --experimental-websocket tests/offline-test.mjs [--page out/index.html] [--site URL] [--out DIR]');
   process.exit(2);
 }
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'ti-offline-'));
@@ -92,7 +92,7 @@ try {
     [...document.querySelectorAll('.ti-page[data-page="new"] .build-where')].every((p) => /^Built in this page:/.test(p.textContent))`),
     'the New installer form says "Built in this page"', await js(`(document.querySelector('.build-where') || {}).textContent`));
   // "Build for" starts as the computer the page is open on, with the other
-  // two one tick away (web/new.js defaultTargetsToThisComputer). These runs
+  // two one tick away (src/web_client/new.js defaultTargetsToThisComputer). These runs
   // are on Linux, so Linux alone; the HTML keeps all three checked for
   // /classic, which has no JavaScript to narrow them.
   ok(await js(`(globalThis.tiCompat && tiCompat.env && tiCompat.env.os) === 'Linux'`),
@@ -169,9 +169,9 @@ try {
   }
   // Mode A is refused here, with a clear message.
   const a = await js(`tiLocalApi.request('/api/jobs', { method: 'POST', body: { runtime: 'python', mode: 'A', source: { kind: 'inline' }, files: { 'a/__main__.py': 'x' } } }).then(() => 'accepted', (e) => e.message)`);
-  ok(/build server/.test(a), 'mode A is refused offline', a);
+  ok(/build src/build_server/.test(a), 'mode A is refused offline', a);
   // GitHub sources used to be refused here for want of a build server.
-  // They are not any more (design.md 11.0, shared/github.js): what a
+  // They are not any more (design.md 11.0, src/shared/github.js): what a
   // GitHub source needs is a commit id and an install rule, and neither
   // has to be downloaded. What this copy of the page will not do is ask
   // GitHub for them -- a copy opened from disk contacts nothing -- so
@@ -194,7 +194,7 @@ try {
   })()`);
   ok(/saved copy/.test(ghRef), 'from disk, a GitHub repo at its latest commit is refused because the page contacts nothing', ghRef);
   ok(/Install command/.test(ghRef) && /commit id/.test(ghRef), 'and it names the two fields that make asking GitHub unnecessary', ghRef);
-  ok(!/needs the build server/.test(ghRef), 'and never says it needs a build server, because it does not', ghRef);
+  ok(!/needs the build src/build_server/.test(ghRef), 'and never says it needs a build server, because it does not', ghRef);
 
   // And with those two fields, the same page builds a real GitHub
   // installer with no build server and no network at all.
@@ -514,7 +514,7 @@ async function checkWhereStates() {
 // the main form now, and the form says how much we actually know. The
 // edited-versus-default distinction is what the GUI Python bug turned on,
 // so it is checked through the real form rather than through the mapping
-// alone (server/test/form.test.js covers that side).
+// alone (src/build_server/test/form.test.js covers that side).
 async function checkLaunchField() {
   await js(`location.hash = '#new'`);
   await sleep(300);
@@ -676,7 +676,7 @@ async function checkArchitecture() {
     /nothing to choose here/.test(await js(`document.getElementById('arch-cover-note').textContent`)),
     'the form says an online installer covers them all and picks on the machine');
 
-  // Every target and architecture in shared/form-job.js has a box, and the box
+  // Every target and architecture in src/shared/form-job.js has a box, and the box
   // is greyed out with a reason exactly when the form says there is no
   // build. The two must not be able to disagree.
   for (const rt of ['python', 'node', 'go']) {

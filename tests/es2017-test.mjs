@@ -1,14 +1,14 @@
 // The one-file site's scripts must run in the page's oldest browsers
 // (docs/plan.md 1.11: Firefox 52 ESR, Chrome 58+, Safari 12, EdgeHTML 18).
-// This parses every script in dist/index.html as an ES2017 classic script
+// This parses every script in out/index.html as an ES2017 classic script
 // (acorn, ecmaVersion 2017, which also rejects newer regular expression
 // syntax) and fails on anything newer. It also looks for built-ins newer
-// than that floor which web/polyfills.js does not add, and -- since it
+// than that floor which src/web_client/polyfills.js does not add, and -- since it
 // already has the built page split into markup and scripts -- for em and
 // en dashes, which the operator does not want and which have now been
 // removed three times.
 //
-//   node tests/es2017-test.mjs [dist/index.html]
+//   node tests/es2017-test.mjs [out/index.html]
 //
 // acorn is a dev-only dependency (tests/package.json); the page has none.
 import fs from 'node:fs';
@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url';
 import * as acorn from 'acorn';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const file = process.argv[2] || path.join(REPO, 'dist/index.html');
+const file = process.argv[2] || path.join(REPO, 'out/index.html');
 const html = fs.readFileSync(file, 'utf8');
 
 let passed = 0, failed = 0;
@@ -27,7 +27,7 @@ function ok(cond, name, extra) {
 }
 
 // Executable scripts: no type, or a JavaScript type, and the page's code
-// blocks (type text/x-ti-js, run by web/page-loader.js). Data blocks are
+// blocks (type text/x-ti-js, run by src/web_client/page-loader.js). Data blocks are
 // skipped, and so is the ES5 copy (tests/es5-test.mjs checks it).
 const scripts = [];
 const re = /<script(\s[^>]*)?>([\s\S]*?)<\/script>/gi;
@@ -54,7 +54,7 @@ for (const s of scripts) {
   }
 }
 
-// Built-ins newer than the floor. Polyfilled ones (web/polyfills.js) are
+// Built-ins newer than the floor. Polyfilled ones (src/web_client/polyfills.js) are
 // fine; so is anything behind a feature test, listed in ALLOWED.
 const NEW_METHODS = ['replaceAll', 'findLast', 'findLastIndex', 'allSettled', 'structuredClone', 'randomUUID', 'showPicker',
   'toSorted', 'toReversed', 'toSpliced', 'groupBy', 'trimStart', 'trimEnd', 'at', 'hasIndices', 'withResolvers', 'transferToImageBitmap'];
@@ -88,7 +88,7 @@ for (const [name, s] of [['main', main], ['resedit', vendor]]) {
   })(ast, null);
 }
 const bad = found.filter(([what, where]) => !ALLOWED.some(([w, s]) => w === what && s === where));
-ok(!bad.length, 'no built-ins newer than the floor outside feature tests and web/polyfills.js',
+ok(!bad.length, 'no built-ins newer than the floor outside feature tests and src/web_client/polyfills.js',
   bad.slice(0, 20).map(([w, s, l]) => w + ' (' + s + ' line ' + l + ')').join(', '));
 
 /* ---------- em and en dashes ---------- */
@@ -102,7 +102,7 @@ ok(!bad.length, 'no built-ins newer than the floor outside feature tests and web
 // The markup is the page with its <script> elements taken out: the data
 // blocks are the runtime catalogue and the base installers, and what is
 // in those is not ours to rewrite. The executable scripts are checked
-// too, since a dash in a string (web/sign-ui.js had one) reaches the page
+// too, since a dash in a string (src/web_client/sign-ui.js had one) reaches the page
 // just the same.
 const DASHES = [
   ['\u2014', 'em dash'], ['\u2013', 'en dash'],

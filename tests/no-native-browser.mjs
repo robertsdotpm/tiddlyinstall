@@ -54,7 +54,7 @@ export async function checkNativeState(ok, js) {
 
 // The :has() rules at work, in either mode: choosing things in the New
 // installer form, by click and from script, shows and hides what the CSS
-// says. (In --no-native mode this is the stand-in in web/has-shim.js.)
+// says. (In --no-native mode this is the stand-in in src/web_client/has-shim.js.)
 export async function checkHasRules(ok, js) {
   const disp = (sel) => js(`getComputedStyle(document.querySelector(${JSON.stringify(sel)})).display`);
   const mode = noNativeArg ? 'stand-in' : 'native :has()';

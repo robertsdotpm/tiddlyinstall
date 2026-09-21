@@ -26,7 +26,7 @@ them is obvious:
     and with more than one host, a file on one and not the other means
     the plans that name the second fall back to the vendor;
   * the local runtime store, because a mirror URL only reaches a plan
-    through LocalIndex (server/lib/catalog.js), which walks *this
+    through LocalIndex (src/build_server/lib/catalog.js), which walks *this
     machine's* copies and fills in the release's `local` path. A file
     that is on a mirror host but that this machine has never seen has no
     `local`, so its plans name the vendor alone and the copy is never
@@ -152,7 +152,7 @@ def load_hosts(path, only, remote, kind):
 
 # The mirror serves a file at its path under the base, and a server
 # un-escapes a request path once, so a `%` in a file's own name has to be
-# written `%25` (the same rule as shared/resolve.js mirrorURL).
+# written `%25` (the same rule as src/shared/resolve.js mirrorURL).
 def url_for(base, path):
     return base.rstrip("/") + "/" + path.replace("%", "%25")
 

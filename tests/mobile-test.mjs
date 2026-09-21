@@ -1,4 +1,4 @@
-// The one-file site (dist/index.html, plan.md section 1.11) on phones and
+// The one-file site (out/index.html, plan.md section 1.11) on phones and
 // small screens. Headless Chrome with phone emulation over the DevTools
 // protocol (a mobile viewport, touch, and an Android Chrome user agent and
 // client hints), at 320, 360, 390, 414 and 768 CSS px; and optionally
@@ -24,7 +24,7 @@
 //   - the New installer form says where a build will happen;
 //   - the outage banner and footer fit.
 //
-//   node --experimental-websocket tests/mobile-test.mjs [--page dist/index.html | --site URL]
+//   node --experimental-websocket tests/mobile-test.mjs [--page out/index.html | --site URL]
 //        [--widths 320,360,...] [--shots DIR] [--desktop DIR] [--webkit debian12] [--no-chrome]
 //        [--cdp http://127.0.0.1:9222]
 //
@@ -43,18 +43,18 @@ import os from 'node:os';
 import path from 'node:path';
 import { launchChrome, connectCdp, sleep } from './browsers/cdp.mjs';
 import { Checker, STARTED, waitFor as waitForIn, buildHello, makeSignFixtures, gpgVerify, setVal, $text } from './browsers/steps.mjs';
-import { readInstaller } from '../shared/tifile.js';
+import { readInstaller } from '../src/shared/tifile.js';
 import { execFileSync, spawnSync } from 'node:child_process';
 
 if (typeof WebSocket === 'undefined') {
-  console.log('usage: node --experimental-websocket tests/mobile-test.mjs [--page dist/index.html | --site URL] [--shots DIR]');
+  console.log('usage: node --experimental-websocket tests/mobile-test.mjs [--page out/index.html | --site URL] [--shots DIR]');
   process.exit(2);
 }
 const argv = process.argv.slice(2);
 const arg = (k, d) => (argv.includes(k) ? argv[argv.indexOf(k) + 1] : d);
 const flag = (k) => argv.includes(k);
 const HERE = path.dirname(new URL(import.meta.url).pathname);
-const PAGE = path.resolve(arg('--page', path.join(HERE, '..', 'dist', 'index.html')));
+const PAGE = path.resolve(arg('--page', path.join(HERE, '..', 'out', 'index.html')));
 const SITE = arg('--site');
 // A bare origin gets its '/'; a URL with a path or query is used as it is.
 let URL0 = SITE ? (/^https?:\/\/[^/?#]+$/.test(SITE) ? SITE + '/' : SITE) : 'file://' + PAGE;
@@ -311,7 +311,7 @@ async function header(w, shots) {
 // Where installers are built, in the header. It must be readable at 320 px
 // without being shortened away or dropped: a state that vanishes on a
 // phone is the state someone is most likely to get wrong. Its words come
-// from web/api.js buildWhere(), so they are also what the banner is
+// from src/web_client/api.js buildWhere(), so they are also what the banner is
 // saying.
 function whereRead() {
   return B.js(`(() => {
@@ -579,8 +579,8 @@ async function deviceDownloads(job) {
   await B.tap('#sign-go');
   const st = await waitFor(`/Saved|Couldn/.test(${$text('sign-status')}) && ${$text('sign-status')}`, 'pgp signing');
   ok(/Saved/.test(st), `${tag} signs the .run`, st);
-  const pubName = `Phone ${run} TEST <phone@example.invalid>`.replace(/[^A-Za-z0-9._-]+/g, '_').slice(0, 40) + '.pub.asc';   // web/sign-ui.js fileSafe
-  // On a phone the signature is a tap of its own (web/sign-ui.js).
+  const pubName = `Phone ${run} TEST <phone@example.invalid>`.replace(/[^A-Za-z0-9._-]+/g, '_').slice(0, 40) + '.pub.asc';   // src/web_client/sign-ui.js fileSafe
+  // On a phone the signature is a tap of its own (src/web_client/sign-ui.js).
   ok(/Now save its signature/.test(st) && await B.js(visible('#sign-asc-again')), `${tag} after signing, the signature is offered as its own tap`, st);
   await B.tap('#sign-asc-again');
   const present = [];
@@ -608,7 +608,7 @@ async function allSections(w, shots) {
   await banner(w, shots);
 }
 
-/* ---------- web/browser-check.js: phones recognised ---------- */
+/* ---------- src/web_client/browser-check.js: phones recognised ---------- */
 
 // What the page makes of phone and tablet user agents: the OS, "a phone or
 // tablet", and whether it offers the folder picker (caniuse: Safari from

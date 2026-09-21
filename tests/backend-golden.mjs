@@ -1,7 +1,7 @@
-// Regression test for the build server (server/) against saved ("golden")
+// Regression test for the build server (src/build_server/) against saved ("golden")
 // answers.
 //
-//   node tests/backend-golden.mjs [--server http://127.0.0.1:8080] [--data server/data]
+//   node tests/backend-golden.mjs [--server http://127.0.0.1:8080] [--data src/build_server/data]
 //        [--runtimes a,b] [--quick] [--rate-limits]
 //   node tests/backend-golden.mjs --record URL --data DIR [--rate-limits]
 //
@@ -67,7 +67,7 @@
 // answers were carried over again.
 //
 // Amended 2026-09-22 for `Read Me First.txt`, the readme the macOS base
-// now carries beside the app (installer/unix/macos-readme.txt). A full run
+// now carries beside the app (src/installers/unix/macos-readme.txt). A full run
 // against the new base failed 48 checks and no others -- every
 // "<label> macos: the .app's files" observation, each differing by exactly
 // one entry, `["Read Me First.txt", 33188]` (mode 0644). Those 48 arrays
@@ -85,14 +85,14 @@ import http from 'node:http';
 import os from 'node:os';
 import zlib from 'node:zlib';
 import crypto from 'node:crypto';
-import { readInstaller, zipEntryData, peInfo, peChecksum } from '../shared/tifile.js';
+import { readInstaller, zipEntryData, peInfo, peChecksum } from '../src/shared/tifile.js';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
 const HERE = path.dirname(new URL(import.meta.url).pathname);
 const REPO = path.join(HERE, '..');
 const RECORD = arg('--record');
 const SERVER = RECORD || arg('--server') || 'http://127.0.0.1:8080';
-const DATA = path.resolve(arg('--data') || path.join(REPO, 'server/data'));
+const DATA = path.resolve(arg('--data') || path.join(REPO, 'src/build_server/data'));
 const QUICK = process.argv.includes('--quick');
 const RATE = process.argv.includes('--rate-limits');
 const GOLDEN_FILE = path.join(HERE, 'golden', 'backend.json.br');
@@ -330,7 +330,7 @@ async function fixed() {
   // Paths: no listings, the site only, cleaned paths, 405s, redirects.
   const paths = [
     ['GET', '/index.html'], ['GET', '/css/'], ['GET', '/js/'], ['GET', '/mirror/'], ['GET', '/mirror'], ['GET', '/src/'], ['GET', '/src/nothing.tar.gz'],
-    ['GET', '/mirror/python'], ['GET', '/mirror/python/'], ['GET', '/mirror/../server/data/plan-signing-key.pem'],
+    ['GET', '/mirror/python'], ['GET', '/mirror/python/'], ['GET', '/mirror/../src/build_server/data/plan-signing-key.pem'],
     ['GET', '/mirror/%2e%2e/server/policy.json'], ['GET', '//api//health'], ['GET', '/server/policy.json'], ['GET', '/.git/config'],
     ['GET', '/README.md'], ['GET', '/api/nope'], ['GET', '/api/jobs'], ['GET', '/api/jobs/'], ['GET', '/api/jobs/j_nope'],
     ['POST', '/api/health'], ['PUT', '/api/jobs'], ['DELETE', '/'], ['GET', '/api/tsa'], ['POST', '/api/relay'],

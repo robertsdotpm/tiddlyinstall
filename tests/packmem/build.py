@@ -9,7 +9,7 @@ Writes:
                        (IE 11, Chrome 49, Firefox 52), the way the site's own
                        ES5 copy is made
 
-Both carry the *real* modules -- shared/tifile.js and everything it imports --
+Both carry the *real* modules -- src/shared/tifile.js and everything it imports --
 joined by tools/build_site.py's own `join_modules`, so what is measured is the
 shipping assembly path and not a sketch of it. The ES5 page is one file with
 no compression, because the point is to measure the browser, not the loader.
@@ -27,12 +27,14 @@ import build_site  # noqa: E402
 
 # tifile.js and its import graph, in dependency order (the front of
 # build_site.CORE_MODULES, minus what tifile does not need).
+# Spelled with build_site's own helpers, so a folder rename moves this
+# list with the one it is a prefix of instead of leaving it behind.
 MODULES = [
-    "web/lib/sha.js", "web/lib/hmac-pbkdf2.js", "web/lib/aes.js",
-    "web/lib/bignum.js", "web/lib/der.js", "web/lib/rsa.js", "web/lib/ec.js",
-    "web/lib/ed25519.js", "web/lib/cryptox.js",
-    "web/lib/inflate.js", "web/lib/deflate.js", "web/lib/zlib.js",
-    "shared/tifile.js",
+    *build_site.web_lib("sha.js", "hmac-pbkdf2.js", "aes.js"),
+    *build_site.web_lib("bignum.js", "der.js", "rsa.js", "ec.js"),
+    *build_site.web_lib("ed25519.js", "cryptox.js"),
+    *build_site.web_lib("inflate.js", "deflate.js", "zlib.js"),
+    *build_site.shared("tifile.js"),
 ]
 
 # A recorder ahead of everything, as tests/browsers/run.mjs does: a browser
@@ -117,7 +119,7 @@ def main():
         if r.returncode:
             sys.exit("build-es5.mjs failed:\n" + (r.stderr or "")[:3000])
         es5 = open(dest).read()
-    # web/legacy-dom.js is what the site's ES5 copy runs first (dataset and
+    # src/web_client/legacy-dom.js is what the site's ES5 copy runs first (dataset and
     # friends on IE); build-es5.mjs already prepends it and core-js.
     p = os.path.join(a.out, "packmem-es5.html")
     with open(p, "w") as f:

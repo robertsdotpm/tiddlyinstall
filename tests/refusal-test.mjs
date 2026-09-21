@@ -4,7 +4,7 @@
 //
 //   node tests/refusal-test.mjs [-catalog DIR] [-local DIR] [-policy FILE]
 //
-// Two refusals live in server/policy.json today:
+// Two refusals live in src/build_server/policy.json today:
 //
 //   R before 4.0 on Windows, for an app that installs something. CRAN
 //   retired the Windows package index for every R below 4.0, so
@@ -23,17 +23,17 @@
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadCatalog } from '../server/lib/catalog.js';
-import { resolve } from '../shared/resolve.js';
+import { loadCatalog } from '../src/build_server/lib/catalog.js';
+import { resolve } from '../src/shared/resolve.js';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const RUNTIMES = path.join(os.homedir(), 'projects/installer-builder-runtimes');
 const arg = (k, d) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : d);
 const cat = loadCatalog({
   dir: arg('-catalog', path.join(RUNTIMES, 'catalog')),
-  policyPath: arg('-policy', path.join(REPO, 'server/policy.json')),
+  policyPath: arg('-policy', path.join(REPO, 'src/build_server/policy.json')),
   localRoot: arg('-local', RUNTIMES),
-  cachePath: path.join(REPO, 'server/data/sha-cache.json'),
+  cachePath: path.join(REPO, 'src/build_server/data/sha-cache.json'),
 });
 
 let fails = 0;

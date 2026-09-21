@@ -2,10 +2,10 @@
 //
 // Everything here but `ustarHeader` is the shipping code: `tarWrite`,
 // `concatBytes`, `makeFooter`, `parseFooter` and `sha256Hex` come straight
-// out of shared/tifile.js, and `sha256Stream` out of web/lib/sha.js, which
+// out of src/shared/tifile.js, and `sha256Stream` out of src/web_client/lib/sha.js, which
 // is what a streaming build in the page would have to use (WebCrypto has no
 // incremental digest). `ustarHeader` is the server's one-member header
-// (server/lib/files.js) written out here because the browser bundle has no
+// (src/build_server/lib/files.js) written out here because the browser bundle has no
 // equivalent -- it is 512 bytes of format, and none of what is measured.
 var TI = (function () {
   var enc = new TextEncoder();

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Write tests/fixtures.js: small files made by Python's own tarfile and
 zipfile (and pefile for the PE checksum, if installed), so the browser code
-in shared/tifile.js is checked against independent implementations.
+in src/shared/tifile.js is checked against independent implementations.
 
     python3 tests/make_fixtures.py
 """
@@ -52,7 +52,7 @@ def _icon_image(size=16):
 def make_pe_with_icon(overlay=b"NSIS-FAKE-OVERLAY-DATA-" * 4):
     """A synthetic PE32 with a .rsrc holding one RT_GROUP_ICON (id 1) and its
     RT_ICON (id 1), plus a trailing overlay standing in for NSIS's data. Enough
-    for resedit-js to parse and for shared/icon.js setExeIcon to edit. Returns
+    for resedit-js to parse and for src/shared/icon.js setExeIcon to edit. Returns
     (bytes, group_id, overlay_len)."""
     RVA = 0x1000
     icon = _icon_image(16)

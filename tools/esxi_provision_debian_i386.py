@@ -101,7 +101,7 @@ d-i partman/confirm_nooverwrite boolean true
 d-i base-installer/install-recommends boolean true
 tasksel tasksel/first multiselect standard, ssh-server, xfce-desktop
 # zenity and kdialog are what the .run engine asks a desktop user with
-# (installer/unix/ti-engine.sh, ti_ask); xdg-utils and desktop-file-utils are
+# (src/installers/unix/ti-engine.sh, ti_ask); xdg-utils and desktop-file-utils are
 # what its menu and desktop entries go through.
 d-i pkgsel/include string open-vm-tools open-vm-tools-desktop sudo curl wget \
  xz-utils bzip2 unzip p7zip-full file ca-certificates zenity kdialog xdg-utils \

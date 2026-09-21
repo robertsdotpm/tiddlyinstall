@@ -1,7 +1,7 @@
 // The NSIS uninstaller survives a custom icon (docs/design.md section 5,
 // docs/spikes/uninstaller-icon/RESULTS.md).
 //
-//   node tests/uninstaller-icon-test.mjs [--base installer/windows/out/base.exe]
+//   node tests/uninstaller-icon-test.mjs [--base src/installers/windows/out/base.exe]
 //
 // Between 2026-09-18 and 2026-09-20 every Windows installer built with a
 // custom icon produced an `uninstall.exe` that would not start. `setExeIcon`
@@ -27,19 +27,19 @@
 //      images are still the custom ones, and the PE is still walkable.
 //
 // The resource walker below is written from the PE specification and shares
-// no code with shared/icon.js, so it is an independent reading of what that
+// no code with src/shared/icon.js, so it is an independent reading of what that
 // file wrote. The other half -- a real install and uninstall on Windows --
 // is the `icon` variant in tests/matrix/behaviour.py.
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import { fileURLToPath } from 'node:url';
-import { readInstaller, writeInstaller, peInfo, peChecksum } from '../shared/tifile.js';
-import { rasterSource, buildIco, setExeIcon } from '../shared/icon.js';
+import { readInstaller, writeInstaller, peInfo, peChecksum } from '../src/shared/tifile.js';
+import { rasterSource, buildIco, setExeIcon } from '../src/shared/icon.js';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const arg = (k, d) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : d);
-const BASE = path.resolve(REPO, arg('--base', 'installer/windows/out/base.exe'));
+const BASE = path.resolve(REPO, arg('--base', 'src/installers/windows/out/base.exe'));
 
 let passed = 0, failed = 0;
 function ok(cond, name, extra) {
@@ -117,7 +117,7 @@ const overlaps = (a0, a1, b0, b1) => a0 < b1 && b0 < a1;
 
 /* ---------- icons to test with ---------- */
 
-// A square RGBA PNG, deterministic. (zlib here, not web/lib/deflate.js: this is
+// A square RGBA PNG, deterministic. (zlib here, not src/web_client/lib/deflate.js: this is
 // test input, not output under test.)
 function png(size, flat) {
   const row = size * 4 + 1;
@@ -188,7 +188,7 @@ function stripToBmp(ico) {
 /* ---------- the checks ---------- */
 
 if (!fs.existsSync(BASE)) {
-  console.log('SKIP ' + BASE + ' is not built (installer/windows: make)');
+  console.log('SKIP ' + BASE + ' is not built (src/installers/windows: make)');
   process.exit(0);
 }
 const raw = new Uint8Array(fs.readFileSync(BASE));
@@ -273,9 +273,9 @@ async function variant(label, ico) {
       'no resource was overwritten by the patch');
   }
 
-  // The metadata block still appends and reads back (shared/tifile.js writes it
+  // The metadata block still appends and reads back (src/shared/tifile.js writes it
   // after the icon, and fixes the checksum again).
-  info.base = edited;                  // as shared/builder.js and web/edit.js do
+  info.base = edited;                  // as src/shared/builder.js and src/web_client/edit.js do
   info.pe = peInfo(edited);
   info.signed = false;
   const built = await writeInstaller(info, { record: RECORD });

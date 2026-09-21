@@ -39,8 +39,8 @@ from vmlock import VMLock                                  # noqa: E402
 REPO = HERE.parents[1]
 # A statically linked amd64 ELF we already ship, for proof 1: the engine's
 # own Ed25519 verifier for 64-bit Linux. On a 32-bit kernel it cannot run.
-AMD64_ELF = REPO / "installer/unix/verify/bin/tiverify-linux-x86_64"
-X86_ELF = REPO / "installer/unix/verify/bin/tiverify-linux-i386"
+AMD64_ELF = REPO / "src/installers/unix/verify/bin/tiverify-linux-x86_64"
+X86_ELF = REPO / "src/installers/unix/verify/bin/tiverify-linux-i386"
 
 results = []
 

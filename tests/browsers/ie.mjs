@@ -5,17 +5,17 @@
 // (InternetExplorer.Application, hidden) under cscript over SSH, and this
 // sends it one command at a time.
 //
-//   node tests/browsers/ie.mjs --machine 7 [--page dist/index.html] [--docmode 7|8|9|10]
+//   node tests/browsers/ie.mjs --machine 7 [--page out/index.html] [--docmode 7|8|9|10]
 //        [--no-record] [--keep]
 //   node tests/browsers/ie.mjs --machine xp --browser chromium49
 //
 // Every IE: the page loads from disk (a file:// copy, as a person would open
-// a saved page); web/browser-check.js runs and its bar says whether this
+// a saved page); src/web_client/browser-check.js runs and its bar says whether this
 // browser can run the builder and what to use instead; the static text
 // reads, dark on light; and the page throws no errors. IE 11 runs the
-// page's ES5 copy (web/page-loader.js), so there the same steps as run.mjs
+// page's ES5 copy (src/web_client/page-loader.js), so there the same steps as run.mjs
 // follow: sections and the :has()-driven form, an installer built with no
-// server and read back with shared/tifile.js, "Save this page" and the saved
+// server and read back with src/shared/tifile.js, "Save this page" and the saved
 // copy starting, and PGP and .pfx signing checked here with gpg and
 // osslsigncode. IE saves through navigator.msSaveOrOpenBlob, which the test
 // replaces to keep what is saved; files are given to the page's file inputs
@@ -52,7 +52,7 @@ import path from 'node:path';
 import { loadMachines, findMachine, freePort, Remote } from './remote.mjs';
 import { connectCdp } from './cdp.mjs';
 import { Checker, STARTED, checkSections, buildHello, checkJob, makeSignFixtures, osslVerify, gpgVerify, $text, setVal, checkBox, sleep } from './steps.mjs';
-import { readInstaller } from '../../shared/tifile.js';
+import { readInstaller } from '../../src/shared/tifile.js';
 import { writeCompat } from './compat.mjs';
 import { classicFields, checkFinished, MODE_LETTER } from './classic.mjs';
 
@@ -71,7 +71,7 @@ const ES5_TOOLS = path.join(ROOT, 'tools', 'es5', 'node_modules');
 const argv = process.argv.slice(2);
 const arg = (k, d) => (argv.includes(k) ? argv[argv.indexOf(k) + 1] : d);
 const flag = (k) => argv.includes(k);
-const PAGE = path.resolve(arg('--page', path.join(ROOT, 'dist', 'index.html')));
+const PAGE = path.resolve(arg('--page', path.join(ROOT, 'out', 'index.html')));
 const DOCMODE = arg('--docmode', '');
 const BROWSER = arg('--browser', 'ie');
 const C49 = 'C:\\tibrowsers\\chromium-49\\chrome.exe';
@@ -254,7 +254,7 @@ async function waitUntil(js, expr, what, ms = 90000) {
 }
 
 // Downloads, kept in the page by name instead of saved: IE saves Blobs
-// through navigator.msSaveOrOpenBlob (web/legacy-dom.js); Chromium clicks
+// through navigator.msSaveOrOpenBlob (src/web_client/legacy-dom.js); Chromium clicks
 // an <a download> with a blob: URL.
 const CAPTURE = `(() => { if (!window.__tiDl) { window.__tiDl = {};
   const keep = (b, n) => { window.__tiDl[n] = b; return true; };
@@ -519,7 +519,7 @@ async function runIe(machine) {
       else t.ok(v.ok, '.pfx: the signed .exe passes osslsigncode verify', v.out);
     }
     t.ok((await errs()).length === 0, 'no page errors while signing', (await errs()).join(' | '));
-    // "ES5 copy" in the result: web/browser-check.js suggests only browsers
+    // "ES5 copy" in the result: src/web_client/browser-check.js suggests only browsers
     // that pass on the page's own ES2017 code.
     return finish(t.failed ? 'fail' : 'pass', t.failed ? t.checks.filter((c) => c.pass === false).map((c) => c.name).slice(0, 3).join('; ') : detail.es5 ? 'ES5 copy' : '');
   } catch (e) {

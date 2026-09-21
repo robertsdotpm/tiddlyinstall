@@ -54,14 +54,14 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadCatalog } from '../server/lib/catalog.js';
-import { resolveFiles } from '../shared/resolve.js';
+import { loadCatalog } from '../src/build_server/lib/catalog.js';
+import { resolveFiles } from '../src/shared/resolve.js';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const RUNTIMES = path.join(os.homedir(), 'projects/installer-builder-runtimes');
 const o = {
-  catalog: path.join(RUNTIMES, 'catalog'), local: RUNTIMES, policy: path.join(REPO, 'server/policy.json'),
-  cache: path.join(REPO, 'server/data/sha-cache.json'), scope: 'every', runtime: '',
+  catalog: path.join(RUNTIMES, 'catalog'), local: RUNTIMES, policy: path.join(REPO, 'src/build_server/policy.json'),
+  cache: path.join(REPO, 'src/build_server/data/sha-cache.json'), scope: 'every', runtime: '',
   platforms: 'windows,macos,linux', out: '', sizes: '',
   excluded: path.join(REPO, 'runtime-metadata/store/mirror-excluded.json'),
 };
@@ -100,7 +100,7 @@ const POL = cat.policy.runtimes || {};
 
 /* ---------- which releases a version choice can reach ---------- */
 
-// shared/resolve.js `usable`, which is not exported: a release the policy
+// src/shared/resolve.js `usable`, which is not exported: a release the policy
 // lets a plan name at all. Kept in step with it by the plan check at the
 // bottom, which re-resolves and compares.
 const own = (x, k) => (x != null && typeof x === 'object' && Object.hasOwn(x, k) ? x[k] : undefined);
@@ -117,7 +117,7 @@ function usable(pol, e) {
   const f = own(pol.formats, e.os);
   return f == null || idx(f, e.format) >= 0;
 }
-// The architectures a plan can ever name (shared/resolve.js resolveFiles).
+// The architectures a plan can ever name (src/shared/resolve.js resolveFiles).
 const ARCHES = new Set(['amd64', 'arm64', 'x86', 'any', 'universal']);
 const cmpV = (a, b) => {
   for (let i = 0; i < Math.max(a.parts.length, b.parts.length); i++) {

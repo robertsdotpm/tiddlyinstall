@@ -5,7 +5,7 @@
 // names the upload and the install rules saw its files, and each installer
 // packs it.
 //
-//   node --experimental-websocket tests/upload-test.mjs [--page dist/index.html] [--site URL] [--out DIR] [--no-native]
+//   node --experimental-websocket tests/upload-test.mjs [--page out/index.html] [--site URL] [--out DIR] [--no-native]
 //
 // --no-native: as a browser without DecompressionStream, crypto.subtle,
 // BigInt or :has() (tests/no-native-browser.mjs).
@@ -21,11 +21,11 @@ import { noNativeArg, disableNative, checkNativeState } from './no-native-browse
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
 const HERE = path.dirname(new URL(import.meta.url).pathname);
-const PAGE = path.resolve(arg('--page') || path.join(HERE, '..', 'dist', 'index.html'));
+const PAGE = path.resolve(arg('--page') || path.join(HERE, '..', 'out', 'index.html'));
 const SITE = arg('--site');
 const OUT = arg('--out');
 if (typeof WebSocket === 'undefined' || !fs.existsSync(PAGE)) {
-  console.log('usage: node --experimental-websocket tests/upload-test.mjs [--page dist/index.html] [--site URL] [--out DIR]');
+  console.log('usage: node --experimental-websocket tests/upload-test.mjs [--page out/index.html] [--site URL] [--out DIR]');
   process.exit(2);
 }
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'ti-upload-'));
@@ -148,7 +148,7 @@ try {
       f.querySelector('button[type="submit"]').click();
       await new Promise((r) => setTimeout(r, 1500));
       return f.querySelector('.form-error').textContent; })()`);
-    ok(/need the source on the build server/.test(refused), 'served: mode A with a local source says why not', refused);
+    ok(/need the source on the build src/build_server/.test(refused), 'served: mode A with a local source says why not', refused);
   }
   ok(errors.length === 0, 'no page errors', errors.join(' | '));
 } catch (e) {

@@ -1,5 +1,5 @@
 // Writes what the one-file site (docs/plan.md section 1.11) needs from the
-// runtime catalogue: catalog.gz, the catalogue snapshot (shared/resolve.js
+// runtime catalogue: catalog.gz, the catalogue snapshot (src/shared/resolve.js
 // writeSnapshot), and runtimes.json, what GET /api/catalog/runtimes answers
 // (runtimesSummary, written as the server writes it). tools/build_site.py
 // runs it.
@@ -13,7 +13,7 @@
 // DIR/FOLDER.gz for each folder. With -from, only that, from a catalog.gz
 // already written (tools/build_site.py does this with the one it is given).
 //
-// The catalogue is loaded as the build server loads it (server/lib/
+// The catalogue is loaded as the build server loads it (src/build_server/lib/
 // catalog.js): with the index of our local copies and the hash cache, so
 // the snapshot carries our copies' SHA-256 and mirror paths.
 import fs from 'node:fs';
@@ -21,9 +21,9 @@ import os from 'node:os';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import { fileURLToPath } from 'node:url';
-import { loadCatalog } from '../server/lib/catalog.js';
-import { goJSON } from '../server/lib/gojson.js';
-import { writeSnapshot, runtimesSummary, splitSnapshot } from '../shared/resolve.js';
+import { loadCatalog } from '../src/build_server/lib/catalog.js';
+import { goJSON } from '../src/build_server/lib/gojson.js';
+import { writeSnapshot, runtimesSummary, splitSnapshot } from '../src/shared/resolve.js';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const RUNTIMES = path.join(os.homedir(), 'projects/installer-builder-runtimes');
@@ -31,8 +31,8 @@ const defs = {
   o: ['.', 'output folder'],
   catalog: [path.join(RUNTIMES, 'catalog'), 'runtime catalogue'],
   local: [RUNTIMES, 'our copies of catalogue files'],
-  policy: [path.join(REPO, 'server/policy.json'), 'resolver policy'],
-  cache: [path.join(REPO, 'server/data/sha-cache.json'), 'hash cache (the build server\'s)'],
+  policy: [path.join(REPO, 'src/build_server/policy.json'), 'resolver policy'],
+  cache: [path.join(REPO, 'src/build_server/data/sha-cache.json'), 'hash cache (the build server\'s)'],
   mirror: ['', "URL of our mirror in plans (default: the policy's mirror_base)"],
   split: ['', 'also write the split snapshot (index.json, FOLDER.gz) to this folder'],
   from: ['', 'split this catalog.gz instead of loading the catalogue (with -split)'],

@@ -1,16 +1,16 @@
 // The one-file site's copy for older browsers (docs/plan.md 1.11, "Older
 // browsers"), checked without a browser:
-//   - web/browser-check.js and web/page-loader.js parse as ES3, so IE 6-8
+//   - src/web_client/browser-check.js and src/web_client/page-loader.js parse as ES3, so IE 6-8
 //     read them (acorn, ecmaVersion 3: no trailing commas, no keywords as
 //     property names);
 //   - the ES5 copy (#ti-js-es5: raw deflate, base64) unpacks, is ASCII
 //     with no control characters (IE ends a string at a raw NUL), and parses
 //     as ES5; so does its inflater (#ti-js-es5-inflate);
-//   - the inflater, run as web/page-loader.js runs it with the typed-array
+//   - the inflater, run as src/web_client/page-loader.js runs it with the typed-array
 //     methods IE 11 lacks removed, unpacks the copy byte for byte;
 //   - the ES2017 code blocks are still there for current browsers.
 //
-//   node tests/es5-test.mjs [dist/index.html]
+//   node tests/es5-test.mjs [out/index.html]
 //
 // Real browsers: tests/browsers/ie.mjs (IE 11, Chromium 49), and
 // tests/browser-check-test.mjs runs the copy in Chrome.
@@ -22,7 +22,7 @@ import { fileURLToPath } from 'node:url';
 import * as acorn from 'acorn';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const file = process.argv[2] || path.join(REPO, 'dist/index.html');
+const file = process.argv[2] || path.join(REPO, 'out/index.html');
 const html = fs.readFileSync(file, 'utf8');
 
 let passed = 0, failed = 0;
@@ -47,8 +47,8 @@ for (const m of html.matchAll(/<script>([\s\S]*?)<\/script>/g)) classic.push(m[1
 ok(classic.length >= 2, 'found the page\'s classic scripts (' + classic.length + ')');
 const check = classic.find((s) => /FEATURES/.test(s) && /data-ti-missing/.test(s));
 const loader = classic.find((s) => /ti-js-es5/.test(s) && /TI_PRISTINE/.test(s));
-ok(check && !parses(check, 3), 'web/browser-check.js parses as ES3 (IE 6-8)', check ? parses(check, 3) : 'not found');
-ok(loader && !parses(loader, 3), 'web/page-loader.js parses as ES3', loader ? parses(loader, 3) : 'not found');
+ok(check && !parses(check, 3), 'src/web_client/browser-check.js parses as ES3 (IE 6-8)', check ? parses(check, 3) : 'not found');
+ok(loader && !parses(loader, 3), 'src/web_client/page-loader.js parses as ES3', loader ? parses(loader, 3) : 'not found');
 ok(html.indexOf('<meta http-equiv="X-UA-Compatible" content="IE=edge">') > 0 && html.indexOf('X-UA-Compatible') < html.indexOf('<script'),
   'X-UA-Compatible IE=edge comes before any script');
 ok(/^<!DOCTYPE html>\n<!-- saved from url=\(0014\)about:internet -->\r\n/.test(html), 'the Mark of the Web (with CRLF) follows the doctype');
@@ -72,7 +72,7 @@ if (es5 && inf) {
   const text = code.toString('latin1');
   const e1 = parses(text, 5);
   ok(!e1, 'the ES5 copy parses as ES5', e1);
-  ok(/legacy-dom|msSaveOrOpenBlob/.test(text) && /__ti_router/.test(text), 'it holds web/legacy-dom.js and the page');
+  ok(/legacy-dom|msSaveOrOpenBlob/.test(text) && /__ti_router/.test(text), 'it holds src/web_client/legacy-dom.js and the page');
   const e2 = parses(inf.text, 5);
   ok(!e2, 'its inflater parses as ES5', e2);
 

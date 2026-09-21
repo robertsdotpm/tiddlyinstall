@@ -1,7 +1,7 @@
-// Unit tests for shared/tifile.js. Open tests/tifile.html over http (ES modules
+// Unit tests for src/shared/tifile.js. Open tests/tifile.html over http (ES modules
 // don't load from file://), or headless:
 //   google-chrome --headless=new --virtual-time-budget=20000 --dump-dom http://127.0.0.1:8093/tests/tifile.html
-import * as ti from '../shared/tifile.js';
+import * as ti from '../src/shared/tifile.js';
 import { FX } from './fixtures.js';
 
 const out = document.getElementById('out');

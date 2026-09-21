@@ -1,4 +1,4 @@
-// Regression test for shared/builder.js against saved ("golden") answers: for
+// Regression test for src/shared/builder.js against saved ("golden") answers: for
 // each runtime's hello world (tests/matrix/projects.json), the record and
 // plan a build server made for the same POST /api/jobs body (mode C, every
 // platform), compared with what runJob makes in the page. Three differences
@@ -52,8 +52,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import crypto from 'node:crypto';
-import { loadSnapshot, resolve, splitSnapshot, openSplitSnapshot } from '../shared/resolve.js';
-import { runJob } from '../shared/builder.js';
+import { loadSnapshot, resolve, splitSnapshot, openSplitSnapshot } from '../src/shared/resolve.js';
+import { runJob } from '../src/shared/builder.js';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
 const RECORD = arg('--record');
@@ -64,7 +64,7 @@ const projects = JSON.parse(fs.readFileSync(path.join(HERE, 'matrix', 'projects.
 const only = arg('--runtimes') ? arg('--runtimes').split(',') : Object.keys(projects);
 const catBytes = fs.readFileSync(CAT_FILE);
 const catSha = crypto.createHash('sha256').update(catBytes).digest('hex');
-const BASES = { windows: 'installer/windows/out/base.exe', linux: 'installer/unix/out/ti-base.run', macos: 'installer/unix/out/ti-base-macos.zip' };
+const BASES = { windows: 'src/installers/windows/out/base.exe', linux: 'src/installers/unix/out/ti-base.run', macos: 'src/installers/unix/out/ti-base-macos.zip' };
 const base = (plat) => new Uint8Array(fs.readFileSync(path.join(HERE, '..', BASES[plat])));
 
 let passed = 0, failed = 0;

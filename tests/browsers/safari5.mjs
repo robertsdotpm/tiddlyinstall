@@ -1,7 +1,7 @@
 // Safari 5.1.7 for Windows (Apple's last Windows build, 2012) and the
 // page's graceful failure: it can't run the builder, so what matters is that
 // the page reads and its compatibility bar says so and recommends a browser
-// that works (web/browser-check.js). No driver exists for it, and it has no
+// that works (src/web_client/browser-check.js). No driver exists for it, and it has no
 // COM automation, so the page copy carries a small ES3 reporter
 // (safari5/reporter.js) that sends what it finds, 5 and 20 seconds after
 // loading, as image requests to 127.0.0.1:38517, where ticollect.exe
@@ -9,7 +9,7 @@
 // csc) logs them. Safari runs in the SSH session (safari5/drive.cmd), on its
 // hidden desktop: no screenshot is possible there.
 //
-//   node tests/browsers/safari5.mjs [--machine xp] [--page dist/index.html] [--seconds 35] [--no-record]
+//   node tests/browsers/safari5.mjs [--machine xp] [--page out/index.html] [--seconds 35] [--no-record]
 //   node tests/browsers/safari5.mjs --classic http://10.0.1.76:8080 [--mode ours|yours|unsigned] [--seconds 150] [--out DIR]
 //
 // --classic: the build server's plain-HTML path instead (docs/api.md "Plain
@@ -41,7 +41,7 @@ const ROOT = path.join(HERE, '..', '..');
 const argv = process.argv.slice(2);
 const arg = (k, d) => (argv.includes(k) ? argv[argv.indexOf(k) + 1] : d);
 const flag = (k) => argv.includes(k);
-const PAGE = path.resolve(arg('--page', path.join(ROOT, 'dist', 'index.html')));
+const PAGE = path.resolve(arg('--page', path.join(ROOT, 'out', 'index.html')));
 const SECONDS = Number(arg('--seconds', 35));
 const DIR = 'C:\\tibrowsers\\safari-5.1.7';
 

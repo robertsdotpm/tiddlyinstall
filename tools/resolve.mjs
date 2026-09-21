@@ -2,7 +2,7 @@
 // catalogue and the policy by eye; or, with -missing FAMILY, the files that
 // plans for that OS family download but that have no copy in our mirror (so
 // old machines on plain HTTP can't get them), as JSON. The catalogue is
-// loaded as the build server loads it (server/lib/catalog.js).
+// loaded as the build server loads it (src/build_server/lib/catalog.js).
 //
 //   node tools/resolve.mjs [-runtime python] [-select newest|asyncio|range|exact] [-range R]
 //                          [-platforms windows,macos,linux] [-package NAME [-version V]] [-install CMD]
@@ -13,14 +13,14 @@
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadCatalog } from '../server/lib/catalog.js';
-import { resolve, resolveFiles, validPackage, packagePolicyFor, packageProject, packageModule } from '../shared/resolve.js';
+import { loadCatalog } from '../src/build_server/lib/catalog.js';
+import { resolve, resolveFiles, validPackage, packagePolicyFor, packageProject, packageModule } from '../src/shared/resolve.js';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const RUNTIMES = path.join(os.homedir(), 'projects/installer-builder-runtimes');
 const o = {
-  catalog: path.join(RUNTIMES, 'catalog'), local: RUNTIMES, policy: path.join(REPO, 'server/policy.json'),
-  cache: path.join(REPO, 'server/data/sha-cache.json'), runtime: 'python', select: 'newest', range: '',
+  catalog: path.join(RUNTIMES, 'catalog'), local: RUNTIMES, policy: path.join(REPO, 'src/build_server/policy.json'),
+  cache: path.join(REPO, 'src/build_server/data/sha-cache.json'), runtime: 'python', select: 'newest', range: '',
   platforms: 'windows,macos,linux', package: '', version: '', install: '', missing: '',
 };
 const argv = process.argv.slice(2);

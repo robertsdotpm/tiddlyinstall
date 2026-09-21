@@ -2,7 +2,7 @@
 // protocol and checks what it downloads with osslsigncode and gpg.
 //
 //   node --experimental-websocket tests/sign-ui-test.mjs --site http://127.0.0.1:8080
-//        [--page file:///path/dist/index.html] [--no-timestamp] [--no-native]
+//        [--page file:///path/out/index.html] [--no-timestamp] [--no-native]
 //
 // --site is a running ibserver (it serves the site, and /api/tsa for the
 // timestamp); --page tests another copy of the editor against it. Keys are
@@ -13,7 +13,7 @@ import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { readInstaller } from '../shared/tifile.js';
+import { readInstaller } from '../src/shared/tifile.js';
 import { launchChrome, sleep } from './browsers/cdp.mjs';
 import { Checker, makeSignFixtures, osslVerify, gpgVerify, $text, clickId, setVal as setValIn, checkBox } from './browsers/steps.mjs';
 import { noNativeArg, disableNative, checkNativeState } from './no-native-browser.mjs';
@@ -121,7 +121,7 @@ try {
   v = osslOk(await download('remote.exe'), t('ca.crt'));
   if (!v.skip) ok(v.ok && (!TIMESTAMP || v.ts), 'ui: the remote-signed download passes osslsigncode verify', v.out);
 
-  // Windows, a cloud signing service (web/sign-services.js). No real
+  // Windows, a cloud signing service (src/web_client/sign-services.js). No real
   // provider can be called from a test, so the generic option -- the one
   // whose address the user gives -- is pointed at a mock, which exercises
   // the whole panel for real. The named providers are checked for what they
@@ -138,7 +138,7 @@ try {
     await js(`(() => { const s = document.getElementById('svc-name'); s.value = ${JSON.stringify(id)};
       s.dispatchEvent(new Event('change', { bubbles: true })); })()`);
     const t2 = await js(`document.getElementById('svc-about').textContent`);
-    const wants = id === 'azurets' ? /pass through the build server/
+    const wants = id === 'azurets' ? /pass through the build src/build_server/
       : id === 'digicert' ? /Nothing secret is typed/ : /stay in this browser/;
     if (!wants.test(t2) || !/Not yet tested against a live account/.test(t2) || !/contact address not yet set|tell us/.test(t2)) {
       allSaid = false;

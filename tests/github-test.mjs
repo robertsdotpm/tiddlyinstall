@@ -1,5 +1,5 @@
 // GitHub sources, written by the page and by the build server from the
-// same code (shared/github.js, design.md 11.0).
+// same code (src/shared/github.js, design.md 11.0).
 //
 //   node tests/github-test.mjs
 //
@@ -23,12 +23,12 @@ import http from 'node:http';
 import path from 'node:path';
 import { Readable } from 'node:stream';
 import { fileURLToPath } from 'node:url';
-import { Builder } from '../server/lib/jobs.js';
-import { loadCatalog } from '../server/lib/catalog.js';
-import { loadOrCreate } from '../server/lib/plansig.js';
-import { runJob, validate, githubWillAskApi } from '../shared/builder.js';
-import { browserGet, noNetworkGet, parseRepo, validRef, waitWords, resetSeconds } from '../shared/github.js';
-import { resolve } from '../shared/resolve.js';
+import { Builder } from '../src/build_server/lib/jobs.js';
+import { loadCatalog } from '../src/build_server/lib/catalog.js';
+import { loadOrCreate } from '../src/build_server/lib/plansig.js';
+import { runJob, validate, githubWillAskApi } from '../src/shared/builder.js';
+import { browserGet, noNetworkGet, parseRepo, validRef, waitWords, resetSeconds } from '../src/shared/github.js';
+import { resolve } from '../src/shared/resolve.js';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const RUNTIMES = path.join(process.env.HOME || '', 'projects', 'installer-builder-runtimes');
@@ -122,7 +122,7 @@ const toMock = (u) => String(u).replace('https://api.github.com', mock.url);
 const cat = loadCatalog({ dir: path.join(RUNTIMES, 'catalog'), policyPath: path.join(REPO, 'server', 'policy.json'), localRoot: '', cachePath: '/dev/null' });
 const BACKEND = 'http://127.0.0.1:1';
 
-// The server's own client, as server/test/helpers.js shapes it.
+// The server's own client, as src/build_server/test/helpers.js shapes it.
 async function serverFetch(url, opts = {}) {
   const r = await fetch(toMock(url), { method: opts.method || 'GET', headers: opts.headers, redirect: 'follow' });
   const body = r.body ? Readable.fromWeb(r.body) : Readable.from([]);
@@ -143,7 +143,7 @@ const builder = new Builder({ cat, data, bases: BASES, public: BACKEND, signer, 
 // thing that cannot differ by accident.
 const serverEnv = () => Object.assign(builder.env(), { now: () => FIXED });
 
-// The page's env (web/local-api.js env()): the page's own transport, no
+// The page's env (src/web_client/local-api.js env()): the page's own transport, no
 // registry client, a plan inside each installer.
 const pageEnv = () => ({
   catalog: cat, backend: BACKEND, embedPlan: true, packRuntimes: true, githubWho: 'page',
@@ -275,8 +275,8 @@ for (const [who, env, want] of [['the page', pageEnv, /this browser's address/],
     v({ source: { kind: 'github', value: 'psf/requests', ref: 'a/../../b' } }));
   ok(v({ source: { kind: 'github', value: 'psf/requests', ref: 'release/1.0' } }) === '(accepted)', 'a ref with a slash in it is fine');
   // And the refusal the page used to give for GitHub is gone.
-  ok(!/needs the build server/.test(v({})), 'a GitHub source is no longer refused for want of a build server', v({}));
-  ok(/plain URL needs the build server/.test(v({ source: { kind: 'url', value: 'https://example.com/x.tar.gz' } })),
+  ok(!/needs the build src/build_server/.test(v({})), 'a GitHub source is no longer refused for want of a build server', v({}));
+  ok(/plain URL needs the build src/build_server/.test(v({ source: { kind: 'url', value: 'https://example.com/x.tar.gz' } })),
     'a plain URL still is', v({ source: { kind: 'url', value: 'https://example.com/x.tar.gz' } }));
 }
 
@@ -306,8 +306,8 @@ for (const [who, env, want] of [['the page', pageEnv, /this browser's address/],
 // metadata rather than a file in the repository and is not a name any
 // rule is about.
 if (process.argv.includes('--live')) {
-  const { readRepo, archiveUrl } = await import('../shared/github.js');
-  const { tarNamesUnderTop } = await import('../server/lib/files.js');
+  const { readRepo, archiveUrl } = await import('../src/shared/github.js');
+  const { tarNamesUnderTop } = await import('../src/build_server/lib/files.js');
   const live = browserGet();
   const r = await readRepo(live, { owner: 'psf', repo: 'requests', ref: 'main', needNames: true });
   ok(/^[0-9a-f]{40}$/.test(r.commit), 'live: main resolves to a commit id', r.commit);

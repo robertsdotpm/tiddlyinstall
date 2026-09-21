@@ -13,7 +13,7 @@ listed in DEST/.fetch-failed.json, for copying by rsync instead.
 
 **Fetch into both the mirror host and the local runtime store, or the
 pull achieves nothing.** A mirror URL only reaches a plan through
-`LocalIndex` (server/lib/catalog.js), which walks *this machine's*
+`LocalIndex` (src/build_server/lib/catalog.js), which walks *this machine's*
 copies under ~/projects/installer-builder-runtimes and fills in the
 release's `local` path; the resolver then turns that path into the
 mirror URL. A file that exists on ovh1 but that this machine has never

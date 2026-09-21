@@ -1,9 +1,9 @@
-// Builds an installer for every "I'll write it here" template (shared/templates.js),
+// Builds an installer for every "I'll write it here" template (src/shared/templates.js),
 // the way the New installer page does: the form's fields as the page starts
 // them, with the template chosen and its files as the editor shows them,
-// turned into a job by shared/form-job.js (so the default launch command,
+// turned into a job by src/shared/form-job.js (so the default launch command,
 // build command, console flag and version range are the page's), then built
-// by shared/builder.js in this process, as the page builds without a build
+// by src/shared/builder.js in this process, as the page builds without a build
 // server (mode C, the plan inside the installer), or sent to a build server.
 //
 //   node tests/templates/build.mjs [--only python/window,go] [--platforms windows,linux,macos]
@@ -17,11 +17,11 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { TEMPLATES } from '../../shared/templates.js';
+import { TEMPLATES } from '../../src/shared/templates.js';
 import { formFor as formFields } from './form.mjs';
-import { jobFromForm } from '../../shared/form-job.js';
-import { runJob } from '../../shared/builder.js';
-import { loadCatalog } from '../../server/lib/catalog.js';
+import { jobFromForm } from '../../src/shared/form-job.js';
+import { runJob } from '../../src/shared/builder.js';
+import { loadCatalog } from '../../src/build_server/lib/catalog.js';
 
 const HERE = path.dirname(new URL(import.meta.url).pathname);
 const REPO = path.join(HERE, '..', '..');
@@ -40,17 +40,17 @@ function localEnv() {
   // A copy of the server's cache of our mirror's file hashes, so they aren't
   // worked out again (and the server's own file is left alone).
   const cache = path.join(OUT, 'sha-cache.json');
-  const serverCache = path.join(REPO, 'server/data/sha-cache.json');
+  const serverCache = path.join(REPO, 'src/build_server/data/sha-cache.json');
   fs.mkdirSync(OUT, { recursive: true });
   if (!fs.existsSync(cache) && fs.existsSync(serverCache)) fs.copyFileSync(serverCache, cache);
   const cat = loadCatalog({
     dir: path.join(home, 'projects/installer-builder-runtimes/catalog'),
-    policyPath: path.join(REPO, 'server/policy.json'),
+    policyPath: path.join(REPO, 'src/build_server/policy.json'),
     localRoot: path.join(home, 'projects/installer-builder-runtimes'),
     cachePath: cache,
   });
   if (arg('--mirror', '')) cat.policy.mirror_base = arg('--mirror', '');
-  const bases = { windows: 'installer/windows/out/base.exe', linux: 'installer/unix/out/ti-base.run', macos: 'installer/unix/out/ti-base-macos.zip' };
+  const bases = { windows: 'src/installers/windows/out/base.exe', linux: 'src/installers/unix/out/ti-base.run', macos: 'src/installers/unix/out/ti-base-macos.zip' };
   env = { catalog: cat, backend: '', embedPlan: true, base: (plat) => new Uint8Array(fs.readFileSync(path.join(REPO, bases[plat]))) };
   return env;
 }

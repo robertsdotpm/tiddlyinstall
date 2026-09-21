@@ -1,6 +1,6 @@
 // The packing measurement harness (docs/browser-packing.md).
 //
-// A classic script appended to a bundle of the real modules (shared/tifile.js
+// A classic script appended to a bundle of the real modules (src/shared/tifile.js
 // and what it imports), built by tests/packmem/build.py. It runs the *real*
 // assembly path -- tarWrite, concatBytes, the footer, the PE checksum, the
 // SHA-256, the Blob -- over a synthetic pack of a chosen size, and reports
@@ -123,7 +123,7 @@
 
   /* ---------- the three paths ---------- */
 
-  // What the page does today (web/local-api.js -> shared/builder.js
+  // What the page does today (src/web_client/local-api.js -> src/shared/builder.js
   // buildFile -> tifile.writeInstaller -> a Blob and an object URL).
   async function blobPath(step, mb) {
     var each = Math.floor((mb * MB) / MEMBERS);
@@ -181,7 +181,7 @@
   // finished length first (it is known -- every member's size is in the
   // record), allocate that one buffer, and write each member into it as it
   // arrives. The tar copy and the concat copy both disappear, and the
-  // SHA-256 is taken with web/lib/sha.js's streaming hash rather than
+  // SHA-256 is taken with src/web_client/lib/sha.js's streaming hash rather than
   // crypto.subtle, which cannot digest without a copy.
   async function oneBufPath(step, mb) {
     var each = Math.floor((mb * MB) / MEMBERS);
@@ -236,8 +236,8 @@
     return { ok: ok, bytes: blob.size };
   }
 
-  // The shipping path, as it is now: shared/tifile.js writeInstallerLayout,
-  // called the way web/local-api.js calls it, with members that are fetched
+  // The shipping path, as it is now: src/shared/tifile.js writeInstallerLayout,
+  // called the way src/web_client/local-api.js calls it, with members that are fetched
   // (here, made) one at a time and dropped as soon as they are copied in.
   // `onebuf` above is the sketch that was measured first and is kept for
   // comparison; this one is the code itself, so the two together say

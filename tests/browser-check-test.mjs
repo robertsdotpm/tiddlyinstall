@@ -1,10 +1,10 @@
-// Checks the page's browser check (web/browser-check.js) in headless Chrome:
+// Checks the page's browser check (src/web_client/browser-check.js) in headless Chrome:
 // no notice at all in a modern browser; with features taken away before
 // the page loads, the right notice in the right place; its details
 // (features, and the tested machine x browser matrix with the visitor's
 // nearest row marked); dismissing; and plain http.
 //
-// Which notice, and where, is the point of most of this (web/browser-check.js
+// Which notice, and where, is the point of most of this (src/web_client/browser-check.js
 // explains the rule): a feature with no stand-in means something cannot be
 // done here, so a bar goes under the header; a stand-in that only costs
 // time gets a line in the footer instead, because "the same installer,
@@ -19,7 +19,7 @@
 // upgrade to the browser already running, and blame the browser for the
 // page being served over plain http.
 //
-//   node --experimental-websocket tests/browser-check-test.mjs [--page dist/index.html]
+//   node --experimental-websocket tests/browser-check-test.mjs [--page out/index.html]
 //        [--site http://10.0.1.76:8080] [--shot FILE.png]
 import fs from 'node:fs';
 import os from 'node:os';
@@ -29,11 +29,11 @@ import { Checker, waitFor } from './browsers/steps.mjs';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
 const HERE = path.dirname(new URL(import.meta.url).pathname);
-const PAGE = path.resolve(arg('--page') || path.join(HERE, '..', 'dist', 'index.html'));
+const PAGE = path.resolve(arg('--page') || path.join(HERE, '..', 'out', 'index.html'));
 const SITE = arg('--site');
 const SHOT = arg('--shot');
 if (typeof WebSocket === 'undefined' || !fs.existsSync(PAGE)) {
-  console.log('usage: node --experimental-websocket tests/browser-check-test.mjs [--page dist/index.html] [--site URL] [--shot FILE.png]');
+  console.log('usage: node --experimental-websocket tests/browser-check-test.mjs [--page out/index.html] [--site URL] [--shot FILE.png]');
   process.exit(2);
 }
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'ti-bcheck-'));
@@ -91,7 +91,7 @@ try {
   ok(/compress/.test(degr) && /decompress/.test(degr) && /webcrypto/.test(degr), 'they are degraded (fallback)', degr);
   // Both have a stand-in, so nothing is impossible here: the same
   // installer, more slowly. That belongs in the footer, not at the top of
-  // every page (web/browser-check.js).
+  // every page (src/web_client/browser-check.js).
   ok(!await barShown() && await quietShown(), 'a stand-in that only costs time raises no bar');
   const box = await noticeBox();
   ok(box && box.inFooter, 'it is a line in the footer instead', JSON.stringify(box));
@@ -114,7 +114,7 @@ try {
   }
 
   // A JavaScript without async functions (IE 11, Chrome 49): the page runs
-  // its ES5 copy (web/page-loader.js), and the bar says so.
+  // its ES5 copy (src/web_client/page-loader.js), and the bar says so.
   const NO_ASYNC = '(function () { var F = Function; window.Function = function () { if (/async/.test(String(arguments[arguments.length - 1]))) throw new SyntaxError("old"); return F.apply(this, arguments); }; window.Function.prototype = F.prototype; })();';
   await open(FILE, NO_ASYNC);
   ok(await js(`document.documentElement.getAttribute('data-ti-missing') === '' && tiCompat.status.syntax === 'fallback'`), 'without ES2017 syntax: the ES5 copy stands in (fallback, nothing missing)',

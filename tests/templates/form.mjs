@@ -1,10 +1,10 @@
-// new.html's fields as the page starts them (the ones shared/form-job.js reads),
+// new.html's fields as the page starts them (the ones src/shared/form-job.js reads),
 // with "I'll write it here" chosen. The launch and build fields are left as
 // they were, so the template's own commands are used.
 //
 // Shared by build.mjs (which builds every template's installer) and
 // plan-test.mjs (which only resolves their plans).
-import { TEMPLATES, templateFields } from '../../shared/templates.js';
+import { TEMPLATES, templateFields } from '../../src/shared/templates.js';
 
 export function formFor(rt, id, platforms, mode = 'C') {
   const t = TEMPLATES[rt][id];

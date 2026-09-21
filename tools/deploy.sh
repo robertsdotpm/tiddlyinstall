@@ -15,7 +15,7 @@
 # yesterday's catalogue.
 #
 # Always builds from a clean worktree of HEAD, never from the working tree:
-# several agents share this checkout, and a dist built from someone's
+# several agents share this checkout, and an out/ built from someone's
 # half-finished edit is how unreviewed code reaches the server.
 set -eu
 
@@ -30,13 +30,15 @@ if [ -n "$(git status --porcelain -- ':!prompts' 2>/dev/null)" ]; then
 fi
 
 cat=${TI_CATALOG_DIR:-$HOME/projects/installer-builder-runtimes/catalog}
+# The clean checkout goes in $wt/co, not $wt/src: the repository has a
+# src/ of its own since 2026-09-22, and $wt/src/src/... read as a mistake.
 wt=$(mktemp -d "${TMPDIR:-/tmp}/ti-deploy.XXXXXX")
-trap 'git worktree remove "$wt/src" --force >/dev/null 2>&1 || true; rm -rf "$wt"' EXIT
+trap 'git worktree remove "$wt/co" --force >/dev/null 2>&1 || true; rm -rf "$wt"' EXIT
 
-git worktree add -q --detach "$wt/src" HEAD
+git worktree add -q --detach "$wt/co" HEAD
 # The bases and the ES5 toolchain are build outputs, not tracked files.
-for p in installer/windows/out installer/unix/out tools/es5/node_modules; do
-	[ -e "$here/$p" ] && ln -sfn "$here/$p" "$wt/src/$p"
+for p in src/installers/windows/out src/installers/unix/out tools/es5/node_modules; do
+	[ -e "$here/$p" ] && ln -sfn "$here/$p" "$wt/co/$p"
 done
 
 # The catalogue snapshot is most of the build's two minutes and changes only
@@ -68,13 +70,13 @@ else
 fi
 
 # shellcheck disable=SC2086
-(cd "$wt/src" && python3 tools/build_site.py $opts -o "$wt/src/dist" >"$wt/build.log" 2>&1) || {
+(cd "$wt/co" && python3 tools/build_site.py $opts -o "$wt/co/out" >"$wt/build.log" 2>&1) || {
 	tail -20 "$wt/build.log" >&2
 	echo "deploy: the build failed; nothing was changed." >&2
 	exit 1
 }
 
-cp -r "$wt/src/dist/." "$here/dist/"
+cp -r "$wt/co/out/." "$here/out/"
 [ "$restart" = 1 ] && systemctl --user restart ti-server && sleep 3
 
 # ---- the checks, which are why this script exists ----
@@ -91,9 +93,9 @@ fi
 
 # The bases the server hands out must be the ones in the tree: a page built
 # with a stale base ships an old engine to everyone who downloads from it.
-for b in windows:installer/windows/out/base.exe \
-         linux:installer/unix/out/ti-base.run \
-         macos:installer/unix/out/ti-base-macos.zip; do
+for b in windows:src/installers/windows/out/base.exe \
+         linux:src/installers/unix/out/ti-base.run \
+         macos:src/installers/unix/out/ti-base-macos.zip; do
 	name=${b%%:*}
 	path=${b#*:}
 	[ -f "$here/$path" ] || continue

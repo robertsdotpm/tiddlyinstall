@@ -1,5 +1,5 @@
 // Drives the runtime catalogue editor (#runtimes in the one-file site,
-// web/catalog-editor.js and web/overlay.js) in headless Chrome from file://:
+// src/web_client/catalog-editor.js and src/web_client/overlay.js) in headless Chrome from file://:
 // edits a Python release's mirror order and a recipe's steps, checks the
 // edits are kept across a reload, that the preview and a built installer's
 // plan follow them, that invalid edits are refused, revert, export, import
@@ -7,7 +7,7 @@
 // and that nothing breaks when storage throws. With --site, also checks the
 // editor says a build server's catalogue is used, and offers "No server".
 //
-//   node --experimental-websocket tests/catalog-editor-test.mjs [--page dist/index.html] [--site URL] [--shots DIR] [--no-native]
+//   node --experimental-websocket tests/catalog-editor-test.mjs [--page out/index.html] [--site URL] [--shots DIR] [--no-native]
 //
 // --no-native: as a browser without DecompressionStream, crypto.subtle,
 // BigInt or :has() (tests/no-native-browser.mjs).
@@ -15,16 +15,16 @@ import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { readInstaller } from '../shared/tifile.js';
+import { readInstaller } from '../src/shared/tifile.js';
 import { noNativeArg, disableNative, checkNativeState } from './no-native-browser.mjs';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
 const HERE = path.dirname(new URL(import.meta.url).pathname);
-const PAGE = path.resolve(arg('--page') || path.join(HERE, '..', 'dist', 'index.html'));
+const PAGE = path.resolve(arg('--page') || path.join(HERE, '..', 'out', 'index.html'));
 const SITE = arg('--site');
 const SHOTS = arg('--shots');
 if (typeof WebSocket === 'undefined' || !fs.existsSync(PAGE)) {
-  console.log('usage: node --experimental-websocket tests/catalog-editor-test.mjs [--page dist/index.html] [--site URL] [--shots DIR]');
+  console.log('usage: node --experimental-websocket tests/catalog-editor-test.mjs [--page out/index.html] [--site URL] [--shots DIR]');
   process.exit(2);
 }
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'ti-cated-'));
@@ -473,7 +473,7 @@ try {
   /* ---- served by a build server ---- */
   if (SITE) {
     await openEditor(SITE.replace(/\/$/, '') + '/');
-    ok(await js(`/build server/.test(document.getElementById('rt-mode').textContent) && /don't affect/.test(document.getElementById('rt-mode').textContent)`),
+    ok(await js(`/build src/build_server/.test(document.getElementById('rt-mode').textContent) && /don't affect/.test(document.getElementById('rt-mode').textContent)`),
       'served: the editor says the server\'s catalogue is used');
     await shot('editor-served.png');
     await js(`document.getElementById('rt-use-local').click()`);
