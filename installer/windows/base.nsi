@@ -2516,7 +2516,17 @@ Function NeedSummary
         ${Sum} "  $F2:  MISSING, will be installed (needs administrator rights)"
       ${EndIf}
     ${ElseIf} $K S== "nwhy"
-      ${Sum} "      why: $F1"
+      ; A catalogue `nwhy` is a sentence, not a label -- Ruby's is 225
+      ; characters -- and at indent 6 the review page sets it in Courier
+      ; New 8pt (tisig.c: indent >= 4 is monospace), where 225 characters
+      ; are about 1500 px in a control near 730. Left to the control it
+      ; broke into three lines ending on "minimal image."; wrapped at 74
+      ; like the rest of the page, it ends on nine words. Same words, and
+      ; the same wrap the Unix engine gives it.
+      StrCpy $CapInd1 "      why: "
+      StrCpy $CapInd2 "           "
+      StrCpy $U_a $F1
+      Call SumPara
     ${ElseIf} $1 != "0"
       ${Continue}
     ${ElseIf} $K S== "nfile"

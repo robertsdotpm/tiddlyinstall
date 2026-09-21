@@ -2106,7 +2106,15 @@ ti_needs_eval() {
 # The transparency screen's part.
 ti_needs_summary() {
 	[ "$ti_need_n" -gt 0 ] || return 0
-	printf '\nSYSTEM-WIDE PREREQUISITES (checked on this machine; installed for every user, not removed by the uninstaller)\n'
+	# Every other section on this screen wraps at 74 and this one did not,
+	# so it was the only part of the review a terminal had to break itself
+	# -- and a terminal breaks mid-word. A catalogue `nwhy` is a sentence,
+	# not a label: Ruby's is 225 characters, which came out as "...are
+	# compiled when t / he app's gems are installed". Same words, wrapped
+	# the way the rest of the screen is. The heading keeps its gloss, on
+	# the line below, because a 109-column heading is not a heading.
+	printf '\nSYSTEM-WIDE PREREQUISITES\n'
+	printf '  %s\n' "These are installed for every user, and the uninstaller does not remove them. Checked on this machine." | ti_wrap 74 2
 	i=1
 	while [ "$i" -le "$ti_need_n" ]; do
 		lbl=$(ti_sel need "$i" | cut -f2)
@@ -2114,25 +2122,28 @@ ti_needs_summary() {
 		*" $i "*)
 			case " $ti_need_manual " in
 			*" $i "*)
-				printf '  %s: MISSING, and this installer can'\''t install it here\n' "$lbl"
+				printf '  %s: MISSING, and this installer can'\''t install it here\n' "$lbl" | ti_wrap 74 2
 				h=$(ti_sel1 nhow "$i")
-				[ -n "$h" ] && printf '    what to do: %s\n' "$h"
-				[ -z "$h" ] && [ "$TI_OS" = linux ] && printf '    no package is known for %s\n' "${ti_pm:-this distribution (no apt-get, dnf, yum, zypper, apk or pacman found)}"
+				[ -n "$h" ] && printf '    what to do: %s\n' "$h" | ti_wrap 74 16
+				[ -z "$h" ] && [ "$TI_OS" = linux ] && printf '    no package is known for %s\n' "${ti_pm:-this distribution (no apt-get, dnf, yum, zypper, apk or pacman found)}" | ti_wrap 74 4
 				;;
-			*) printf '  %s: MISSING, will be installed\n' "$lbl" ;;
+			*) printf '  %s: MISSING, will be installed\n' "$lbl" | ti_wrap 74 2 ;;
 			esac
 			;;
-		*) printf '  %s: present\n' "$lbl" ;;
+		*) printf '  %s: present\n' "$lbl" | ti_wrap 74 2 ;;
 		esac
 		w=$(ti_sel1 nwhy "$i")
-		[ -n "$w" ] && printf '    why: %s\n' "$w"
+		[ -n "$w" ] && printf '    why: %s\n' "$w" | ti_wrap 74 9
 		i=$((i + 1))
 	done
 	if [ -n "$ti_need_pkgs" ]; then
-		printf '  Packages: %s (with %s)\n' "$ti_need_pkgs" "$ti_pm"
+		printf '  Packages: %s (with %s)\n' "$ti_need_pkgs" "$ti_pm" | ti_wrap 74 2
+		# Not ti_wrap: this is a command, and ti_wrap breaks at any space
+		# (see ti_cmd_wrap). A half-quoted package list is worse than a
+		# long line.
 		printf '  Runs as root: %s\n' "$TI_PKG_RUN"
 		if [ "$(id -u)" = 0 ]; then printf '  (this installer is running as root)\n'
-		else printf '  NEEDS ROOT for this step only (sudo, or pkexec on a desktop); the app itself installs for you\n'; fi
+		else printf '  NEEDS ROOT for this step only (sudo, or pkexec on a desktop); the app itself installs for you\n' | ti_wrap 74 2; fi
 	fi
 	return 0
 }
@@ -3481,9 +3492,13 @@ ti_install_main() {
 		[ -n "$TI_REC" ] && [ "$TI_OS" = linux ] && ic=$(ti_get "$TI_REC" icon)
 		[ -n "$ic" ] && printf '  Menu icon: the PNG packed in this installer (sha256 %s), copied to %s/icon.png\n' "$ic" "$TI_APP_DIR"
 		printf '  Uninstaller: %s/uninstall.sh\n' "$TI_APP_DIR"
-		[ "$TI_MENU" = 0 ] && printf '  To start it: %s/launch.sh, or run this installer again\n' "$TI_APP_DIR"
+		# The path is one unbreakable token, so wrapping this row can only
+		# ever put "installer again" on a line of its own. The second way
+		# to start it goes on its own row instead, as "(nothing else on
+		# this machine is changed)" already does under Into:.
+		[ "$TI_MENU" = 0 ] && printf '  To start it: %s/launch.sh\n               or run this installer again\n' "$TI_APP_DIR"
 		printf '  PATH: not changed\n'
-		ti_sel note | sed 's/^/\nNOTE: /'
+		ti_sel note | sed 's/^/\nNOTE: /' | ti_wrap 74 6
 		ti_needs_summary
 
 		printf '\nWHERE THIS INSTALLER AND ITS SETTINGS CAME FROM\n'
@@ -3514,7 +3529,7 @@ ti_install_main() {
 			[ "$TI_PLAN_KIND" = fetched ] && ti_pk=' (fetched now)'
 			printf '  Plan signed: %s%s\n' "$TI_PLAN_SIGNED" "$ti_pk"
 		fi
-		[ -n "$ti_revoke_note" ] && printf '  Revocations: %s\n' "$ti_revoke_note"
+		[ -n "$ti_revoke_note" ] && printf '  Revocations: %s\n' "$ti_revoke_note" | ti_wrap 74 15
 		[ -n "$ti_plan_warn" ] && printf '  WARNING: %s\n' "$ti_plan_warn"
 		[ -n "$ti_age_warn" ] && printf '  WARNING: %s\n' "$ti_age_warn"
 		printf '  Log:        %s\n' "$TI_LOG"
