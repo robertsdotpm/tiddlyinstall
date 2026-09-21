@@ -11,6 +11,7 @@ import { jobFromForm, BUILD_DEFAULTS, ENTRY_DEFAULTS, TEMPLATE_FILES, OFFLINE_TA
 import { templateLaunch } from '../shared/templates.js';
 import { mountWriteEditor } from './write-editor.js';
 import { mountOverlayConsent } from './overlay-consent.js';
+import { openNotices } from './open-notice.js';
 
 mountApiFooter();
 mountOverlayConsent();
@@ -687,6 +688,35 @@ defaultTargetsToThisComputer();
 
 form.addEventListener('change', paintOfflineSize);
 paintOfflineSize();
+
+/* ---------- what a recipient meets when they open it ---------- */
+
+// Under the signing choice, because it is part of that decision: the
+// platforms ticked at the top of the form and the mode chosen here decide
+// whether someone who is sent this file meets SmartScreen, Gatekeeper or
+// nothing. The wording is web/open-notice.js's, which the downloads on
+// build.html use too.
+const openNoticeBox = document.getElementById('open-notice');
+const openNoticeList = document.getElementById('open-notice-list');
+
+function paintOpenNotice() {
+  if (!openNoticeBox || !openNoticeList) return;
+  const platforms = ['windows', 'linux', 'macos'].filter((p) => checked('target_' + p));
+  const rows = openNotices(platforms, radio('mode', 'unsigned'));
+  openNoticeList.replaceChildren(...rows.map((r) => {
+    const li = document.createElement('li');
+    const name = document.createElement('strong');
+    name.textContent = r.label;
+    li.append(name, ' ' + r.text);
+    return li;
+  }));
+  // Nothing ticked, or mode A (disabled in this prototype): say nothing
+  // rather than something that isn't true of any file they will get.
+  openNoticeBox.hidden = !rows.length;
+}
+
+form.addEventListener('change', paintOpenNotice);
+paintOpenNotice();
 
 form.elements.runtime.addEventListener('change', () => { paintCatalog(); paintArchCover(); });
 paintArchCover();

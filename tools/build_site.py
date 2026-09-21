@@ -76,6 +76,7 @@ SITE_FILES = ["web", "shared", "vendor"]
 EARLY_MODULES = ["web/polyfills.js", "web/has-shim.js"]
 CORE_MODULES = [
     "web/api.js",
+    "web/open-notice.js",
     "shared/mirror-words.js", "shared/templates.js", "shared/form-job.js",
     "web/write-editor.js",
     "web/lib/sha.js", "web/lib/hmac-pbkdf2.js", "web/lib/aes.js",

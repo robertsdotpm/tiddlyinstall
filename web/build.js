@@ -6,6 +6,7 @@ import { apiRequest, absUrl, ApiError, apiBase, apiDefault, apiLocal, errorText,
 import { ARCH_LABEL, MAC_ARCH, FAMILY_ARCHES, archCoverage } from '../shared/form-job.js';
 import { mountOverlayConsent } from './overlay-consent.js';
 import { mirrorGapBuildWarning } from '../shared/mirror-words.js';
+import { openNotice } from './open-notice.js';
 
 mountApiFooter();
 mountOverlayConsent();
@@ -161,8 +162,26 @@ function paintFiles(job) {
     const how = f.platform === 'linux'
       ? '<br><span class="muted">In a terminal: <code>sh ' + esc(f.name) + '</code></span>'
       : '';
+    // What whoever is sent this file meets before the installer can say
+    // anything for itself: SmartScreen, Gatekeeper, or nothing at all. The
+    // same table the New installer form reads (web/open-notice.js), so the
+    // two screens say the same thing.
+    //
+    // It follows the file, not the mode that was asked for: `signed` is who
+    // the file is signed by, empty where it is signed by nobody, and that is
+    // what a recipient's computer will act on. A mode B download is unsigned
+    // at this point -- the publisher's key never reaches a build server, so
+    // they sign it after this page -- and the "Signed by" column beside this
+    // says so too. A file signed by us (mode A, disabled in this prototype)
+    // gets no notice: openNotice has nothing to say about a build nobody can
+    // make yet, and it is certainly not the publisher's own certificate.
+    const by = f.signed ? (/tiddlyinstall/i.test(f.signed) ? 'ours' : 'yours') : 'unsigned';
+    const meets = openNotice(f.platform, by);
+    const open = meets
+      ? '<br><span class="muted open-note"><span class="open-note-head">On opening it:</span> ' + esc(meets) + '</span>'
+      : '';
     return '<tr><td>' + link +
-      (f.sha256 ? '<br><span class="muted sha">SHA-256 <code>' + esc(f.sha256) + '</code></span>' : '') + how + '</td>' +
+      (f.sha256 ? '<br><span class="muted sha">SHA-256 <code>' + esc(f.sha256) + '</code></span>' : '') + how + open + '</td>' +
       '<td>' + esc(PLATFORM[f.platform] || f.platform) + '</td>' +
       '<td class="arch-col">' + archCell(f) + '</td>' +
       '<td>' + esc(humanSize(f.size)) + '</td>' +

@@ -1074,6 +1074,15 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
             </div>
           </div>
 
+          <!-- What a recipient meets before the installer gets to say
+               anything: SmartScreen, Gatekeeper, or nothing at all. The
+               words come from web/open-notice.js, which web/build.js reads
+               too, so the form and the downloads cannot drift apart. -->
+          <div class="note-box open-notice" id="open-notice" hidden>
+            <span class="eyebrow">What the people you send it to will see</span>
+            <ul id="open-notice-list"></ul>
+          </div>
+
           <p class="small muted" style="margin-bottom:0">Whichever you pick, the installer shows people what it will install, where it comes from, and who signed it before it changes anything.</p>
         </details>
 

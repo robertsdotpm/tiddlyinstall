@@ -1207,6 +1207,15 @@ form:has(#offline-on:checked) .offline-off-inline { display: none; }
 .choice.arch-off { opacity: 0.5; }
 
 .files-table .arch-col { min-width: 9em; }
+
+/* What the people who receive an installer will see when they open it
+   (web/open-notice.js): under the signing choice on the New installer
+   form, and beside each file on the build page. */
+.open-notice[hidden] { display: none; }
+.open-notice ul { margin: 6px 0 0; padding-left: 18px; }
+.open-notice li { margin: 4px 0; }
+.files-table .open-note { display: block; max-width: 46em; margin-top: 3px; }
+.files-table .open-note-head { font-weight: 600; }
 .rt-arch { flex-basis: 100%; }
 .rt-arch-yes { color: var(--ok); font-weight: 600; }
 .rt-arch-no { color: var(--warn); font-weight: 600; }
