@@ -708,7 +708,11 @@ export function githubWillAskApi(r) {
 function githubAdvice(needCommit, needNames, ref) {
   const parts = [];
   if (needNames) parts.push('give the command that installs this project (Customise → What gets installed → Install command)');
-  if (needCommit) parts.push('give the full 40-character commit id in place of ' + goQuote(ref) + ' (Customise → Source version)');
+  if (needCommit) {
+    parts.push(ref
+      ? 'give the full 40-character commit id in place of ' + goQuote(ref) + ' (Customise → Source version)'
+      : 'name the full 40-character commit id to build from (Customise → Source version)');
+  }
   if (!parts.length) return '';
   return ' To build now without asking GitHub anything, ' + parts.join(', and ') + '.';
 }
@@ -729,7 +733,7 @@ export async function githubSource(env, r) {
   } catch (e) {
     if (!e || !e.github) throw e;
     const where = at.owner + '/' + at.repo;
-    const advice = githubAdvice(needCommit, needNames, ref || 'the latest commit');
+    const advice = githubAdvice(needCommit, needNames, ref);
     if (e.kind === 'ratelimit') {
       const who = env.githubWho === 'server'
         ? 'the build server\'s address, which it shares with everyone using it,'
@@ -748,7 +752,15 @@ export async function githubSource(env, r) {
       throw bad('Couldn\'t reach GitHub\'s API (api.github.com) to read ' + where + ' (' + e.message + ').' +
         (advice || ' Try again when you are online.'));
     }
-    throw bad(e.message + advice);
+    // A file list GitHub cut short: an install command settles it, and a
+    // commit id would not, so only half the advice applies.
+    if (e.kind === 'truncated') throw bad(e.message + githubAdvice(false, needNames, ref));
+    // Anything else -- no such repository, no such ref, no commits, a
+    // repository GitHub has taken down -- is an answer, not an outage.
+    // Offering the two fields there would be telling someone how to pin a
+    // commit that is not there, and the install would fail later instead
+    // of now.
+    throw bad(e.message);
   }
   return {
     origin: repo.origin, commit: repo.commit, ref: repo.ref, resolved: repo.resolved,

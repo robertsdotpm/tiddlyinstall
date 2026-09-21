@@ -467,6 +467,8 @@ Press Enter to close</pre>
             <div class="field">
               <label for="ref">Tag, branch or commit</label>
               <input type="text" id="ref" name="ref" placeholder="v1.4.0" spellcheck="false">
+              <span class="hint">A branch or tag is looked up once and the <strong>commit it points at</strong> is what gets recorded -
+                a branch moves, so it is not a pin. The build page says which commit it was.</span>
             </div>
             <div class="field">
               <label for="subdir">Subfolder</label>
@@ -573,6 +575,10 @@ Press Enter to close</pre>
           <div class="field">
             <label for="install-cmd">Install command</label>
             <input type="text" id="install-cmd" name="install_cmd" placeholder="{python} -m pip install ." spellcheck="false">
+            <span class="hint">Left empty, it is worked out from the files at the top of the project
+              (<code>requirements.txt</code>, <code>package.json</code>, <code>Gemfile</code>&hellip;). For a GitHub repo that means
+              one look at GitHub's API; fill this in, and give a full 40-character commit id above, and nothing has to be asked of
+              GitHub at all - which is how a saved copy of this page builds one.</span>
           </div>
           <div class="field">
             <label for="extra-deps">Extra dependencies</label>

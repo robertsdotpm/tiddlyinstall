@@ -223,6 +223,18 @@ export function statusPage(view, request, { refresh = 3 } = {}) {
     // a vendor over modern HTTPS.
     const um = Array.isArray(r.unmirrored) ? r.unmirrored : [];
     if (um.length) body += '<div class="error">' + esc(mirrorGapBuildWarning(um.map((f) => f.name))) + '</div>\n';
+    // Which commit a GitHub source was pinned to (api.md `result.source`).
+    // The commit id is the whole of what identifies those bytes -- there is
+    // no stored SHA-256 for them -- so it is shown here as it is on the
+    // other build page, and a branch or tag is shown beside what it
+    // resolved to rather than instead of it.
+    const gs = r.source;
+    if (gs && gs.kind === 'github') {
+      body += '<p>Source: <code>' + esc(gs.repo) + '</code> at commit <code>' + esc(gs.commit) + '</code>' +
+        (gs.resolved ? ' (what <code>' + esc(gs.resolved) + '</code> pointed at when this was built)' : '') +
+        '. The installers download it from <code>' + esc(gs.url) + '</code> when they run, over HTTPS; there is no stored SHA-256 for it, ' +
+        'because the commit id is what names those bytes.</p>\n';
+    }
     if (r.record && /^[a-z0-9]+$/.test(r.record)) {
       body += '<p>Record <a href="../api/records/' + r.record + '"><code>' + r.record + '</code></a>: what the installers install, as the server stored it. ' +
         'Its current install plan, signed by the server: <a href="../api/plan/' + r.record + '">plan</a>.</p>\n';

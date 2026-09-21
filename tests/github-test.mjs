@@ -258,8 +258,10 @@ for (const [who, env, want] of [['the page', pageEnv, /this browser's address/],
 {
   const m = await err(runJob(body({ source: { kind: 'github', value: 'octo/nope' } }), pageEnv()));
   ok(/GitHub has no octo\/nope/.test(m), 'a repository that is not there says so', m);
+  ok(!/commit id/.test(m), 'and does not offer the two fields: pinning a commit that is not there only moves the failure later', m);
   const t = await err(runJob(body({ source: { kind: 'github', value: 'octo/huge' } }), pageEnv()));
   ok(/cut short the file list/.test(t), 'a truncated file list is refused, not treated as a short one', t);
+  ok(/Install command/.test(t) && !/commit id/.test(t), 'and offers the one field that settles it', t);
 }
 
 /* ---------- 5. what validate() refuses before any of that ---------- */
