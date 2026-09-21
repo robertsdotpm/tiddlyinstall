@@ -1331,6 +1331,52 @@ form:has(#unscript-tab-unix:checked) .unscript-panel-unix { display: block; }
 .api-ctl-err, .form-error { color: var(--fail); font-weight: 600; }
 .form-error[hidden], .api-ctl-err[hidden] { display: none; }
 
+/* Where installers are built, in the header of every page, beside the
+   spanner that changes it (web/api.js mountWhere). It paints from
+   buildWhere() alone, which is also what raises the outage banner, so the
+   two cannot say different things.
+
+   Never colour alone. Each state has its own mark -- a window, a tick, a
+   cross, a dashed ring with a question mark -- and its own word, because
+   colour is the first thing to go: a reader who cannot tell green from
+   red, and the floor's browsers, which get the light theme's flat colours
+   from tools/build_site.py legacy_css and no theme switching at all. */
+.where-chip {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  margin-right: 4px;
+  padding: 4px 9px;
+  background: none;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  font-family: var(--mono);
+  font-size: 0.72em;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  text-align: left;
+  color: var(--text);
+  cursor: pointer;
+}
+.where-chip:hover { border-color: var(--text); }
+.where-page:hover, .where-up:hover, .where-unknown:hover { background: var(--panel); }
+.where-mark { display: inline-flex; flex: none; margin-right: 6px; }
+.where-mark svg { display: block; }
+/* Only the name gives way when it is too long; the state word never does. */
+.where-host { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.where-state { flex: none; margin-left: 5px; font-weight: 600; white-space: nowrap; }
+.where-state::before { content: "\00b7"; margin-right: 5px; }
+.where-state:empty { display: none; }
+
+.where-page { color: var(--muted); }
+.where-page .where-mark, .where-page .where-host { color: var(--text); }
+.where-up { border-color: var(--accent-rule); color: var(--ok); }
+.where-up .where-host { color: var(--text); }
+.where-down { border-color: var(--fail); background: var(--fail-soft); color: var(--fail); }
+.where-down .where-host { color: var(--fail); }
+.where-unknown { border-style: dashed; color: var(--warn); }
+.where-unknown .where-host { color: var(--text); }
+
 /* Where a build happens: plain text, never a warning. */
 .build-where { margin: 14px 0 0; color: var(--muted); font-size: 0.875em; }
 .build-where strong { color: var(--text); }
@@ -1626,6 +1672,23 @@ html.ti-no-folder .needs-folder { display: none !important; }
   .site-header.ti-menu .theme-btn { grid-row: 1; grid-column: 2; }
   .site-header.ti-menu .settings { grid-row: 1; grid-column: 3; }
   .site-header.ti-menu .ti-menu-btn { display: inline-flex; grid-row: 1; grid-column: 4; }
+  /* Too wide to share the top row at 320 px, so it takes its own, full
+     width. It is never dropped: the state someone would get wrong is
+     exactly the one that vanished on their phone. */
+  .site-header.ti-menu .where-chip {
+    grid-row: 2; grid-column: 1 / -1;
+    justify-content: flex-start;
+    margin-right: 0; margin-top: 8px;
+    /* It has the width of the header to itself, so at 320 px the state
+       word drops to a second line rather than the name being cut: the
+       answer to "it does not fit" is more room, not fewer letters. */
+    flex-wrap: wrap;
+  }
+  .site-header.ti-menu .where-host { overflow: visible; white-space: normal; }
+  /* On its own line it needs no separator, and it lines up under the name
+     rather than under the mark. */
+  .site-header.ti-menu .where-state { flex-basis: 100%; margin-left: 20px; }
+  .site-header.ti-menu .where-state::before { content: none; }
   .site-header.ti-menu nav > a { display: none; grid-column: 1 / -1; }
   .site-header.ti-menu.menu-open nav > a {
     display: flex;

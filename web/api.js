@@ -67,6 +67,40 @@ let apiBaseUrl = explicitApi || defaultApi;
 // True when this page builds installers itself (no build server).
 export function apiLocal() { return apiBaseUrl === LOCAL; }
 
+// Has the build server now chosen actually answered this page? Set only
+// where we truly learn it (a reply to a request, a health check, or the
+// same-origin probe), and cleared whenever the chosen server changes.
+// buildWhere() below is why it exists: the header must not claim a server
+// is up because it is written down somewhere.
+let serverSeen = false;
+
+// Where installers are built, as far as we honestly know it. One answer,
+// shared by the header indicator (mountApiFooter), the outage banner and
+// the "Built in this page / by the build server" lines on the forms, so
+// the three of them cannot disagree:
+//
+//   'page'     no build server: this page builds installers itself
+//   'up'       the chosen build server has answered us
+//   'down'     it cannot be reached -- exactly when the banner is showing
+//   'unknown'  a server is chosen, but nothing has asked it yet
+//
+// 'unknown' is not a slower 'up'. probeSameOrigin only ever asks this
+// page's own origin, so a server typed into the settings panel is
+// genuinely unchecked until a call goes to it, and a tick we have not
+// earned is the kind of quiet lie this project exists not to tell.
+export function buildWhere() {
+  if (apiLocal()) return 'page';
+  if (isDown) return 'down';
+  return serverSeen ? 'up' : 'unknown';
+}
+
+// A copy saved to someone's disk has no build server and did not choose
+// that: it is the one file, off an http(s) page. The indicator says so as
+// a fact rather than dressing it up as a setting.
+export function buildWhereFixed() {
+  return apiLocal() && ONE_FILE && !pageIsHttp;
+}
+
 // A job this page built itself (files from the user's computer are, even
 // with a build server) and its record are answered by the page.
 function localPath(path) {
@@ -110,6 +144,9 @@ export function apiReady() {
       if (pageIsHttp && await probeSameOrigin()) {
         defaultApi = location.origin;
         if (!explicitApi) apiBaseUrl = defaultApi;
+        // The probe asked this origin and it answered, so if that is the
+        // server we are using, it is checked. Any other one is not.
+        if (apiBaseUrl === location.origin) serverSeen = true;
       }
       paintMode();
       paintApiFooter();
@@ -140,6 +177,8 @@ export function absUrl(path) {
 }
 
 export function setApiBase(url) {
+  // A different server is a server nobody has asked yet.
+  if (url !== apiBaseUrl) serverSeen = false;
   apiBaseUrl = url;
   paintMode();
   try {
@@ -208,11 +247,18 @@ function markDown() {
     isDown = true;
     failures = 0;
     document.documentElement.classList.add('api-down');
+    paintWhereChip();
     scheduleHealth();
   }
 }
 
 function markUp() {
+  // Every caller of this has just had an answer from the server, which is
+  // the only thing that earns the header's tick.
+  if (!apiLocal() && !serverSeen) {
+    serverSeen = true;
+    paintWhereChip();
+  }
   if (!isDown) return;
   isDown = false;
   failures = 0;
@@ -221,6 +267,7 @@ function markUp() {
   retryTimer = tickTimer = null;
   if (banner) banner.hidden = true;
   document.documentElement.classList.remove('api-down');
+  paintWhereChip();
   const w = upWaiters;
   upWaiters = [];
   w.forEach((f) => f());
@@ -334,9 +381,13 @@ export function errorText(e) {
 /* ---------- footer control ---------- */
 
 let footerEl = null;
+let whereEl = null;
 
+function prettyHost(u) {
+  return String(u).replace(/^https?:\/\//, '');
+}
 function prettyApi(u) {
-  return u === LOCAL ? 'none, this page builds installers itself' : String(u).replace(/^https?:\/\//, '');
+  return u === LOCAL ? 'none, this page builds installers itself' : prettyHost(u);
 }
 
 // Which features show: html.ti-local hides what needs a build server (mode
@@ -346,7 +397,72 @@ function paintMode() {
   document.documentElement.classList.toggle('ti-has-local', HAS_LOCAL);
 }
 
+/* ---------- the header indicator ---------- */
+
+// A mark per state, because colour is the first thing to go: a reader who
+// cannot tell green from red, and the floor's browsers without custom
+// properties, both get the shape. Each one is a different silhouette, not
+// a different colour of the same dot.
+const WHERE_MARKS = {
+  // A window: the page itself.
+  page: '<rect x="1.6" y="2.6" width="12.8" height="10.8"/><line x1="1.6" y1="6.2" x2="14.4" y2="6.2"/>',
+  up: '<circle cx="8" cy="8" r="6.2"/><polyline points="5.1,8.2 7.1,10.3 10.9,5.8"/>',
+  down: '<circle cx="8" cy="8" r="6.2"/><line x1="5.7" y1="5.7" x2="10.3" y2="10.3"/><line x1="10.3" y1="5.7" x2="5.7" y2="10.3"/>',
+  // Dashed, and a question mark: nothing has been established.
+  unknown: '<circle cx="8" cy="8" r="6.2" stroke-dasharray="2.3 1.9"/>' +
+    '<text x="8" y="11.4" text-anchor="middle" font-size="9" font-weight="700" fill="currentColor" stroke="none">?</text>'
+};
+const WHERE_WORDS = { up: 'reachable', down: 'not reachable', unknown: 'not checked' };
+const WHERE_SAID = {
+  up: 'reachable: it has answered this page, and it builds the installers.',
+  down: 'not reachable. Until it answers, nothing can be built there.',
+  unknown: 'not checked. Nothing has asked it yet, so whether it answers is not known.'
+};
+
+function mountWhere(before) {
+  whereEl = document.createElement('button');
+  whereEl.type = 'button';
+  whereEl.className = 'where-chip';
+  whereEl.setAttribute('aria-haspopup', 'true');
+  whereEl.setAttribute('aria-expanded', 'false');
+  whereEl.innerHTML =
+    '<span class="where-mark" aria-hidden="true"></span>' +
+    '<span class="where-host"></span><span class="where-state"></span>';
+  before.parentNode.insertBefore(whereEl, before);
+  return whereEl;
+}
+
+// Says where installers are being built, on every page, in the header. It
+// reads buildWhere() and nothing else, so it cannot drift from the banner.
+function paintWhereChip() {
+  if (!whereEl) return;
+  const state = buildWhere();
+  const fixed = buildWhereFixed();
+  whereEl.className = 'where-chip where-' + state + (fixed ? ' where-fixed' : '');
+  whereEl.querySelector('.where-mark').innerHTML =
+    '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false" fill="none" ' +
+    'stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
+    WHERE_MARKS[state] + '</svg>';
+  const host = whereEl.querySelector('.where-host');
+  const word = whereEl.querySelector('.where-state');
+  let said;
+  if (state === 'page') {
+    host.textContent = 'Built in this page';
+    word.textContent = '';
+    said = fixed
+      ? 'Built in this page. This is a saved copy, so there is no build server: your browser makes the installers.'
+      : 'Built in this page. No build server is chosen, so your browser makes the installers.';
+  } else {
+    host.textContent = 'Build server ' + prettyHost(apiBaseUrl);
+    word.textContent = WHERE_WORDS[state];   // its separator is in the CSS
+    said = 'Build server ' + apiBaseUrl + ' is ' + WHERE_SAID[state];
+  }
+  whereEl.title = said;
+  whereEl.setAttribute('aria-label', said + ' Open settings.');
+}
+
 function paintApiFooter() {
+  paintWhereChip();
   if (!footerEl) return;
   const a = footerEl.querySelector('.api-ctl-url');
   if (apiLocal()) {
@@ -360,9 +476,10 @@ function paintApiFooter() {
 }
 
 // A settings button (a spanner) in the site header opens a small panel
-// with the build server choice; "Save this page" goes in the footer when
-// the page is the one-file site. Carries a ?api= from the URL onto links to
-// the site's other pages.
+// with the build server choice, and beside it an indicator saying where
+// installers are being built (mountWhere) that opens the same panel;
+// "Save this page" goes in the footer when the page is the one-file site.
+// Carries a ?api= from the URL onto links to the site's other pages.
 const SPANNER = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">' +
   '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.1L3.3 17.4a1.4 1.4 0 0 0 0 2l1.3 1.3a1.4 1.4 0 0 0 2 0l6-6a4 4 0 0 0 5.1-5.4l-2.6 2.6-2.3-.6-.6-2.3z" ' +
   'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
@@ -392,6 +509,8 @@ export function mountApiFooter() {
     (HAS_LOCAL ? ' With no server, this page builds installers itself: modes B and C, code written here or package names.' : '') +
     '</p></form></div>';
   ((header && header.querySelector('nav')) || header || footer).appendChild(footerEl);
+  // Where installers are built, beside the spanner that changes it.
+  mountWhere(footerEl);
   if (header && header.querySelector('nav')) mountMenu(header);
   const panel = footerEl.querySelector('.settings-panel');
   const form = footerEl.querySelector('form');
@@ -399,19 +518,29 @@ export function mountApiFooter() {
   const err = footerEl.querySelector('.api-ctl-err');
   const edit = footerEl.querySelector('.api-ctl-edit');
   const showErr = (m) => { err.textContent = m || ''; err.hidden = !m; };
-  const close = () => { panel.hidden = true; edit.setAttribute('aria-expanded', 'false'); showErr(''); };
-  edit.addEventListener('click', () => {
-    if (panel.hidden) {
+  // The spanner and the indicator open the one panel: the indicator is a
+  // way to see the state and reach the control, not a second control.
+  const setOpen = (open) => {
+    panel.hidden = !open;
+    edit.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (whereEl) whereEl.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) {
       input.value = apiLocal() ? '' : apiBaseUrl;
-      panel.hidden = false;
-      edit.setAttribute('aria-expanded', 'true');
       input.focus();
       input.select();
-    } else close();
-  });
+    } else showErr('');
+  };
+  const close = () => setOpen(false);
+  const toggle = () => setOpen(panel.hidden);
+  edit.addEventListener('click', toggle);
+  if (whereEl) whereEl.addEventListener('click', toggle);
   // Closes on Escape or a click outside it.
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) close(); });
-  document.addEventListener('click', (e) => { if (!panel.hidden && !footerEl.contains(e.target)) close(); });
+  document.addEventListener('click', (e) => {
+    if (panel.hidden) return;
+    if (footerEl.contains(e.target) || (whereEl && whereEl.contains(e.target))) return;
+    close();
+  });
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     e.stopPropagation();

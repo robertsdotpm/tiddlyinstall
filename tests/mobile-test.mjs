@@ -9,7 +9,8 @@
 //     element reaches past the viewport unless it is inside a container
 //     that scrolls (a wide table scrolls in its own box, not the page);
 //   - the header's menu opens and its links work; the settings panel stays
-//     inside the viewport;
+//     inside the viewport; the "where installers are built" indicator is
+//     there at every width, its words fit whole, and it opens that panel;
 //   - touch targets are at least 40 px high, and text fields have 16 px
 //     text (iOS zooms into smaller ones on focus);
 //   - an unsigned installer builds from the New installer form, and its
@@ -300,7 +301,39 @@ async function header(w, shots) {
   await audit(w, 'settings', { shots });
   await B.js(`document.querySelector('.api-ctl-cancel').click()`);
   await sleep(100);
+  await whereChip(w);
   if (menu && await B.js(`document.querySelector('.ti-menu-btn').getAttribute('aria-expanded') === 'true'`)) await B.tap('.ti-menu-btn');
+}
+
+// Where installers are built, in the header. It must be readable at 320 px
+// without being shortened away or dropped: a state that vanishes on a
+// phone is the state someone is most likely to get wrong. Its words come
+// from web/api.js buildWhere(), so they are also what the banner is
+// saying.
+function whereRead() {
+  return B.js(`(() => {
+    const c = document.querySelector('.site-header .where-chip');
+    if (!c) return null;
+    const r = c.getBoundingClientRect(), h = c.querySelector('.where-host');
+    return { text: c.textContent.replace(/\\s+/g, ' ').trim(), cls: c.className,
+      left: Math.round(r.left), right: Math.round(r.right), height: Math.round(r.height),
+      shown: c.getClientRects().length > 0, cut: h.scrollWidth > h.clientWidth + 1,
+      marks: c.querySelectorAll('.where-mark svg > *').length }; })()`);
+}
+
+async function whereChip(w) {
+  const c = await whereRead();
+  ok(c && c.shown && c.left >= 0 && c.right <= w,
+    `${B.name} ${w}px header: the "where installers are built" indicator shows inside the viewport`, JSON.stringify(c));
+  ok(c && /^(Built in this page|Build server )/.test(c.text) && !c.cut && c.marks > 0,
+    `${B.name} ${w}px header: its words fit whole, and it carries a mark as well as a colour`, JSON.stringify(c));
+  // One control, reached two ways: the indicator opens the panel the
+  // spanner opens, rather than being a second place to change the server.
+  await B.tap('.site-header .where-chip');
+  const open = await B.js(`!document.querySelector('.settings-panel').hidden && document.querySelectorAll('.api-ctl-input').length === 1`);
+  ok(open, `${B.name} ${w}px header: tapping it opens the one settings panel`);
+  await B.js(`document.querySelector('.api-ctl-cancel').click()`);
+  await sleep(100);
 }
 
 async function newInstaller(w, shots) {
@@ -440,6 +473,14 @@ async function banner(w, shots) {
   await open(u.href);
   await waitFor(`!!document.querySelector('.api-banner') && !document.querySelector('.api-banner').hidden`, 'the outage banner', 30000);
   await B.js(`window.scrollTo(0, 0)`);
+  // The banner and the header must not say different things about the
+  // same server, and the header must still fit while saying the longest
+  // of its words.
+  const c = await whereRead();
+  ok(c && /\bwhere-down\b/.test(c.cls) && /^Build server 127\.0\.0\.1:9\s*not reachable$/.test(c.text),
+    `${B.name} ${w}px banner: the header says the build server is not reachable, as the banner does`, JSON.stringify(c));
+  ok(c && c.shown && c.left >= 0 && c.right <= w && !c.cut,
+    `${B.name} ${w}px banner: and it still fits, with its longest words`, JSON.stringify(c));
   await audit(w, 'banner', { shots });
   await B.js(`window.scrollTo(0, document.body.scrollHeight)`);
   await audit(w, 'footer', { targets: true });

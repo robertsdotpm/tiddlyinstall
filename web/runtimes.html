@@ -164,5 +164,9 @@
   </footer>
 
   <script type="module" src="catalog-editor.js"></script>
+  <!-- The header's settings and the "where installers are built" indicator.
+       The one-file site mounts them once for its shared header; as separate
+       pages this one had neither. -->
+  <script type="module">import { mountApiFooter } from './api.js'; mountApiFooter();</script>
 </body>
 </html>

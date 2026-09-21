@@ -216,7 +216,7 @@ function paintBackend() {
   if (!b) return;
   if (apiBase() !== apiDefault() && !apiLocal()) {
     b.textContent = 'This build and its downloads come from ' + apiBase() +
-      ', not the default build server. If you did not choose that, change it at the bottom of the page before downloading anything.';
+      ', not the default build server. If you did not choose that, change it with the build-server indicator in the header before downloading anything.';
     b.hidden = false;
   } else {
     b.hidden = true;
@@ -352,7 +352,7 @@ async function poll() {
     if (seq !== pollSeq) return;
     if (e instanceof ApiError && e.status === 404) {
       $('job-view').hidden = true;
-      showError(apiLocal() ? e.message : 'No build with id ' + id + ' on ' + apiBase() + '. It may have expired, or this page is pointed at a different build server (see the bottom of the page).');
+      showError(apiLocal() ? e.message : 'No build with id ' + id + ' on ' + apiBase() + '. It may have expired, or this page is pointed at a different build server (the header says which).');
       finished = true;
       return;
     }

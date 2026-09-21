@@ -13,6 +13,7 @@
 // --out keeps the built installers (with a builds.json like
 // tests/matrix/build.py writes), for running them on the test machines.
 import fs from 'node:fs';
+import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
 import { launchChrome, sleep } from './browsers/cdp.mjs';
@@ -66,6 +67,24 @@ try {
   ok(JSON.stringify(await js(`tiLocalApi.unpacked()`)) === '[]', 'starting and the runtimes summary unpack no catalogue folder', JSON.stringify(await js(`tiLocalApi.unpacked()`)));
   ok(await js(`document.documentElement.classList.contains('ti-local')`), 'from disk, the page builds installers itself');
   ok(/none, this page builds/.test(await js(`document.querySelector('.api-ctl-url').textContent`)), 'the footer says there is no build server');
+  // And the header says it without being asked, on every page: the state
+  // changes what the page can do, so it should never have to be looked up.
+  // Opened from disk this is a fact, not a setting -- a saved copy has no
+  // build server to be reachable or not.
+  let ch = await chipState();
+  ok(ch && ch.shown && ch.inHeader, 'the header carries the "where installers are built" indicator', JSON.stringify(ch));
+  ok(ch && /\bwhere-page\b/.test(ch.cls) && ch.host === 'Built in this page' && ch.state === '',
+    'from disk it says "Built in this page", with no reachable/not-reachable word to be wrong about', JSON.stringify(ch));
+  ok(ch && /\bwhere-fixed\b/.test(ch.cls) && /saved copy/.test(ch.title),
+    'and reads as a statement of fact, not a setting someone might change', ch && ch.title);
+  ok(ch && ch.mark === 'rect,line', 'with a mark of its own, so it is not colour alone', ch && ch.mark);
+  ok(await js(`(() => {
+    const c = document.querySelector('.where-chip'), p = document.querySelector('.settings-panel');
+    c.click(); const opened = !p.hidden && c.getAttribute('aria-expanded') === 'true';
+    c.click(); return opened && p.hidden; })()`),
+    'clicking it opens the one settings panel, and closes it again');
+  ok(await js(`document.querySelectorAll('.where-chip').length === 1 && document.querySelectorAll('.api-ctl-input').length === 1`),
+    'and there is still only one of it, and one build-server control');
   ok(await js(`getComputedStyle(document.getElementById('mode-ours').closest('label')).display === 'none' && document.getElementById('mode-unsigned').checked`),
     '"Signed by Installer Builder" is hidden and Unsigned is chosen');
   // Where a build happens, in plain words, before building (design.md 11.0 item 6).
@@ -174,11 +193,15 @@ try {
     ok(errors.length === 0, 'the saved copy starts without errors', errors.join(' | '));
     ok(/^Built in this page:/.test(await js(`document.querySelector('.ti-page[data-page="new"] .build-where').textContent`)),
       'the saved copy still says "Built in this page"', await js(`document.querySelector('.build-where').textContent`));
+    ch = await chipState();
+    ok(ch && /\bwhere-page where-fixed\b/.test(ch.cls) && ch.host === 'Built in this page' && /saved copy/.test(ch.title),
+      'and the saved copy\'s header says so as a fact, on every page of it', JSON.stringify(ch));
     const job = await buildHello({ runtime: 'python', mode: 'unsigned', name: 'Hello again', code: "print('hello')\n", platforms: ['linux'] });
     await checkJob(job, 'saved copy', 'python');
     await waitFor(js, `document.getElementById('job-where').textContent === 'Built in this page.'`, 'the saved copy\'s build page to say the same', 15000, errors);
     ok(true, 'the saved copy\'s build page says the same');
   }
+  await checkWhereStates();
   if (OUT) fs.writeFileSync(path.join(OUT, 'builds.json'), JSON.stringify(builds, null, 1));
 
   if (SITE) {
@@ -193,7 +216,16 @@ try {
       'served: the form says the build server builds it', await js(`document.querySelector('.build-where').textContent`));
     const rts = await js(`fetch('/api/catalog/runtimes').then(r => r.ok)`);
     ok(rts, 'served: the server answers the page');
+    // Served by a build server that answered the same-origin probe: the
+    // header names it, and shows it as reachable because it was asked.
+    ch = await chipState();
+    ok(ch && /\bwhere-up\b/.test(ch.cls) && ch.host === 'Build server ' + SITE.replace(/^https?:\/\//, '').replace(/\/$/, '') &&
+      /reachable$/.test(ch.state) && ch.mark === 'circle,polyline',
+      'served: the header names the build server and shows it as reachable', JSON.stringify(ch));
     await js(`document.querySelector('.api-ctl-edit').click(); document.querySelector('.api-ctl-local').click()`);
+    ch = await chipState();
+    ok(ch && /\bwhere-page\b/.test(ch.cls) && !/\bwhere-fixed\b/.test(ch.cls) && ch.host === 'Built in this page',
+      'served: choosing "No server" moves the header to "Built in this page" at once, as a choice and not a fact', JSON.stringify(ch));
     ok(await js(`document.documentElement.classList.contains('ti-local') && document.getElementById('mode-unsigned').checked`),
       'served: "No server" switches to building in the page, on Unsigned');
     ok(await js(`/^Built in this page:/.test(document.querySelector('.ti-page[data-page="new"] .build-where').textContent)`),
@@ -210,6 +242,120 @@ try {
 }
 console.log(`\n${t.passed} passed, ${t.failed} failed`);
 process.exit(t.failed ? 1 : 0);
+
+/* ---------- where installers are built, in the header ---------- */
+
+// Everything the indicator is saying, in one read.
+function chipState() {
+  return js(`(() => {
+    const c = document.querySelector('.where-chip');
+    if (!c) return null;
+    const r = c.getBoundingClientRect();
+    const b = document.querySelector('.api-banner');
+    return {
+      cls: c.className,
+      host: c.querySelector('.where-host').textContent,
+      state: c.querySelector('.where-state').textContent,
+      mark: Array.prototype.map.call(c.querySelectorAll('.where-mark svg > *'), (e) => e.tagName).join(','),
+      title: c.title,
+      label: c.getAttribute('aria-label'),
+      inHeader: !!c.closest('.site-header'),
+      shown: r.width > 0 && r.height > 0,
+      banner: !!(b && !b.hidden),
+      bannerUrl: b ? b.querySelector('.api-url').textContent : ''
+    };
+  })()`);
+}
+
+// A build server that answers, so the three states a server can be in can
+// be driven for real from a page opened off the disk. It replies to the
+// two calls the page makes on its own: the health check, and the runtimes
+// summary -- which it serves back exactly as this page's own builder gave
+// it, so the form has a catalogue it recognises.
+function startStub(runtimes) {
+  const srv = http.createServer((req, res) => {
+    const cors = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+    };
+    if (req.method === 'OPTIONS') { res.writeHead(204, cors); res.end(); return; }
+    const p = req.url.split('?')[0];
+    const body = p === '/api/catalog/runtimes' ? runtimes : { ok: true };
+    res.writeHead(200, Object.assign({ 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }, cors));
+    res.end(JSON.stringify(body));
+  });
+  return new Promise((res) => srv.listen(0, '127.0.0.1', () => res(srv)));
+}
+
+// The states a build server can be in, each reached the way a person
+// reaches it -- through the settings panel -- and each read off the header.
+// The one that matters most is the first: probeSameOrigin only ever asks
+// this page's own origin, so a server typed in by hand has not been
+// checked, and a tick there would be a lie the rest of the page would then
+// be believed on.
+async function checkWhereStates() {
+  await open(PAGE);
+  const runtimes = await js(`tiLocalApi.request('/api/catalog/runtimes')`);
+  const srv = await startStub(runtimes);
+  const url = 'http://127.0.0.1:' + srv.address().port;
+  try {
+    // 1. Typed in, not yet asked. Read in the same turn as the change, so
+    //    no answer can have come back yet: this is the honest "unknown".
+    const typed = await js(`(() => {
+      document.querySelector('.api-ctl-edit').click();
+      document.querySelector('.api-ctl-input').value = ${JSON.stringify(url)};
+      document.querySelector('.api-ctl-form').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+      const c = document.querySelector('.where-chip'), b = document.querySelector('.api-banner');
+      return { cls: c.className, host: c.querySelector('.where-host').textContent, state: c.querySelector('.where-state').textContent,
+        mark: Array.prototype.map.call(c.querySelectorAll('.where-mark svg > *'), (e) => e.tagName).join(','),
+        title: c.title, banner: !!(b && !b.hidden) }; })()`);
+    ok(/\bwhere-unknown\b/.test(typed.cls) && /not checked$/.test(typed.state),
+      'a build server nobody has asked shows as not checked, never as reachable', JSON.stringify(typed));
+    ok(typed.host === 'Build server 127.0.0.1:' + srv.address().port, 'and is named by its host', typed.host);
+    ok(typed.mark === 'circle,text', 'with a mark of its own (a dashed ring and a question mark)', typed.mark);
+    ok(!typed.banner, 'and no outage banner: not checked is not the same as not reachable');
+
+    // 2. It answers. Only now does the tick appear.
+    await waitFor(js, `/\\bwhere-up\\b/.test(document.querySelector('.where-chip').className)`,
+      'the indicator to turn to reachable once the server answers', 30000, errors);
+    let s = await chipState();
+    ok(/reachable$/.test(s.state) && !/not reachable/.test(s.state) && s.mark === 'circle,polyline',
+      'once it has answered, the same server is shown as reachable, with a tick', JSON.stringify(s));
+    ok(s.host === 'Build server 127.0.0.1:' + srv.address().port && !s.banner,
+      'still named, still no banner', JSON.stringify(s));
+
+    // 3. It stops. The indicator and the banner must say the same thing
+    //    about the same server: two of them disagreeing would be worse
+    //    than one. Re-choosing the server is what sends the next request.
+    srv.closeAllConnections();
+    await new Promise((res) => srv.close(res));
+    await js(`(() => { document.querySelector('.api-ctl-edit').click();
+      document.querySelector('.api-ctl-input').value = ${JSON.stringify(url)};
+      document.querySelector('.api-ctl-form').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true })); })()`);
+    await waitFor(js, `/\\bwhere-down\\b/.test(document.querySelector('.where-chip').className)`,
+      'the indicator to turn to not reachable', 40000, errors);
+    s = await chipState();
+    ok(/not reachable$/.test(s.state) && s.mark === 'circle,line,line',
+      'a build server that cannot be reached says so, with a cross', JSON.stringify(s));
+    ok(s.banner && s.bannerUrl === url, 'and the banner agrees, about the same server', JSON.stringify(s));
+
+    // 4. And it survives the change back, without waiting for anything.
+    const back = await js(`(() => {
+      document.querySelector('.api-ctl-edit').click();
+      document.querySelector('.api-ctl-local').click();
+      const c = document.querySelector('.where-chip'), b = document.querySelector('.api-banner');
+      return { cls: c.className, host: c.querySelector('.where-host').textContent,
+        mark: Array.prototype.map.call(c.querySelectorAll('.where-mark svg > *'), (e) => e.tagName).join(','),
+        banner: !!(b && !b.hidden), local: document.documentElement.classList.contains('ti-local') }; })()`);
+    ok(/\bwhere-page\b/.test(back.cls) && back.host === 'Built in this page' && back.mark === 'rect,line' && back.local,
+      '"No server" puts the header back to "Built in this page" in the same turn', JSON.stringify(back));
+    ok(!back.banner, 'and takes the banner down with it');
+  } finally {
+    try { srv.closeAllConnections(); srv.close(); } catch (e) { /* already closed */ }
+    await js(`localStorage.clear(); sessionStorage.clear()`);
+  }
+}
 
 // How the app starts: the one field a publisher must get right, because
 // it is the one thing about a project that cannot be inferred. It is in
