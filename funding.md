@@ -1,0 +1,251 @@
+# What money would buy
+
+> **None of the features on this page are implemented, and the reason is
+> money rather than work or willingness.** TiddlyInstall is built and
+> paid for by one person. Where something below is missing, unsigned,
+> untested or unreachable, it is because the certificate, the membership,
+> the domain or the hardware has not been bought -- not because it was
+> overlooked and not because it is hard. Each item says what it costs and
+> what it would unlock, so the trade is visible rather than implied.
+
+
+Things this project cannot do for free, what each costs, and what it
+unlocks. Written 2026-09-22, from decisions taken during development;
+prices are what they were then and should be checked before spending.
+
+Nothing here is a wish list. Every item is something that is currently
+either broken, untested, or unavailable to people outside one LAN, for
+a reason that is money rather than work. There is a section at the end
+for the opposite case -- the things that are *not* blocked by money,
+which is most of them.
+
+---
+
+## 1. Public hosting: a domain and TLS. ~£10-40 a year
+
+**Cheapest thing on this list and by far the most valuable.** Nobody
+outside the LAN can use TiddlyInstall at all today.
+
+The build server runs on `10.0.1.76:8080` and the mirror lives on
+ovh1, which already exists and is already paid for. What is missing is
+a name and a certificate: a domain (`warpgate.io` was the operator's
+choice), DNS, and a Let's Encrypt certificate, which is free.
+
+**What it unlocks**
+
+- **Anyone using it.** Every installer built today embeds
+  `http://10.0.1.76:8080/mirror` as its first download URL. For a
+  stranger that is an unroutable address that stalls until it times
+  out before falling back to the vendor.
+- **The mirror actually serving.** ovh1 holds 1,105 files and 131 GB
+  and serves none of it -- no vhost, 404 at `/mirror/`. Every old
+  machine that cannot complete a modern TLS handshake depends on that
+  mirror, which is most of the point of the project.
+- **WebCrypto.** Browsers withhold `crypto.subtle` from plain-http
+  pages, so the page falls back to its own JavaScript for hashing and
+  signing: correct, slower, and it puts a notice on every screen. On
+  https that notice disappears.
+- **Browser-side packing for anyone but the operator**, which can only
+  fetch from a mirror it can reach.
+
+---
+
+## 2. An Apple Developer Program membership. $99 a year
+
+**macOS installers are killed on arrival today**, and this is the only
+thing that fixes it.
+
+On macOS 15 and later, an app downloaded by a browser that is not
+notarized by Apple is not warned about -- it is terminated, with a
+dialog that explains nothing. Our installers are unsigned (an ad-hoc
+signature, measured, buys nothing over none), so every macOS user meets
+this. The way through is System Settings, Privacy & Security, Open
+Anyway, then open it again; the `Read Me First.txt` in the zip explains
+it, which is the best that can be done without paying.
+
+**What it unlocks**
+
+- **macOS installers that open by double-clicking**, which is the
+  entire macOS experience.
+- **The `.dmg`**, which is designed ([macos-packaging.md](docs/macos-packaging.md))
+  and deliberately unbuilt: a self-contained `.app` with the runtime
+  inside, dragged to Applications, which is what a Mac user expects
+  instead of a zip that dumps a folder in Downloads. A `.dmg`
+  Gatekeeper kills is no better than a `.zip` Gatekeeper kills, so the
+  work waits on the membership rather than the other way round.
+- **macOS stops being a permanently-red column** in the test matrix.
+  Every macOS cell currently reads `known` for this one reason, and a
+  platform that is always failing is a platform whose real regressions
+  nobody notices.
+
+**What it does not unlock, which matters.** Our Developer ID would let
+us notarize installers *we* sign -- mode A. For mode B (the publisher's
+own certificate) and mode C (unsigned), which is everything people
+would actually build in an alpha, it changes nothing. Those stay blocked
+unless the publisher notarizes their own.
+
+---
+
+## 3. A Windows code-signing certificate. ~£200-500 a year, plus a token or a signing service
+
+This is what "Signed by TiddlyInstall" (mode A) needs, and it is
+currently disabled in the interface for exactly this reason.
+
+Since June 2023 the private key must live on a hardware token or in a
+cloud signing service, so the certificate is not the only cost: budget
+for an HSM token or a service such as SSL.com eSigner, DigiCert
+KeyLocker or Azure Trusted Signing (~£10 a month, but organisation-only
+and identity-checked).
+
+**What it unlocks, and the honest version of it**
+
+Do not buy this expecting warnings to stop. **An EV certificate no
+longer bypasses SmartScreen** -- Microsoft removed that behaviour in
+2024 and now puts OV and EV in the same row: "flagged as unrecognized
+until reputation accumulates". Reputation is also partly per *file
+hash*, so every new build starts partly fresh.
+
+The real value is different and better: **reputation accrues on one
+certificate across every installer everyone builds**. An individual
+publisher signing their own release starts from zero every time and may
+never accumulate enough downloads to clear it. A shared certificate that
+has signed thousands of installers does. That is something we can offer
+that a lone developer cannot buy for themselves, and it is the strongest
+argument for mode A existing at all.
+
+Also unlocks: notarized macOS mode A (with item 2), and a reference
+implementation for publishers doing mode B.
+
+---
+
+## 4. Verifying the cloud signing integrations. ~£2 a month
+
+Six signing services are supported. **One has been tested against a
+real API** -- SSL.com's free sandbox -- and testing it found **three
+bugs, every one of which would have failed on a real account**: a
+base64/base32 mix-up that rejected the secret outright, a parameter that
+returned an empty list instead of an error, and a required field that
+was not required. The other five are written from documentation, and
+the sane assumption is that a similar crop is waiting in each.
+
+Google Cloud KMS and AWS KMS can be verified **without a code-signing
+certificate at all** -- a plain asymmetric key is about $1 a month each,
+no identity check, and signing a digest is the same API call. That would
+move two of the remaining five from "written from documentation" to
+"actually called".
+
+Azure Trusted Signing and DigiCert cannot be tested this way; both need
+a real, identity-checked account.
+
+*Declined 2026-09-21. Recorded because the reasoning may change once
+somebody tries to sign something for real.*
+
+---
+
+## 5. A second mirror. ~£1.50 a month, or free
+
+Everything depends on one host. If ovh1 is down or unreachable from
+where a user is, every installer falls back to vendor URLs -- which is
+precisely the path that fails on the old machines the mirror exists for.
+
+**Cloudflare R2** was costed at about $1.65 a month for 131 GB with
+**zero egress charges**, which is unusual and is the reason it came up.
+*Declined 2026-09-21*: the operator did not want pay-as-you-go bandwidth
+exposure, which is a fair objection to a class of pricing even where
+this particular product does not charge for it.
+
+If it is ever reconsidered, one finding must be checked first and is
+recorded as **unverified** in [design.md](docs/design.md) §11.2: whether
+a browser-less old machine can reach a Cloudflare host over plain
+`http://` at all. If it cannot, R2 is a fast path for modern machines
+only and **ovh1 remains the only path for the ones that need a mirror
+most** -- so it would be an addition, never a replacement.
+
+The free alternative, already begun: hunting public and institutional
+mirrors by hash. That doubled plain-http coverage from 10% to 21% and
+found the first ever mirror of the RubyInstaller binaries. It costs time
+rather than money.
+
+---
+
+## 6. Mirroring every version, not just the newest. A disk
+
+Our mirror holds the newest build of each runtime. But a publisher can
+pin an older version, and the resolver will happily choose a release
+nobody mirrored -- and that plan then carries **vendor URLs only**,
+which on Windows 7 can mean the download simply fails.
+
+Mirroring every version a plan can name was measured: **8,802 files,
+548 GB**. Java is 232 GB of it (Zulu ships a JDK *and* a JRE for every
+patch) and Go 189 GB.
+
+**ovh1 is not the constraint** -- 6.6 TB free. **This development
+machine is**: a mirror URL only reaches a plan through `LocalIndex`,
+which walks the local copies, and `/` here has about 21 GB free at 93%
+full. So the cost is either a disk for this machine, or the design
+change that decouples the two (teaching `LocalIndex` to trust a
+manifest), which is work rather than money.
+
+---
+
+## 7. Test hardware and licences. Tens of pounds, mostly
+
+Small amounts that remove real blind spots.
+
+- **A display for the Mac. ~£10.** The Mac test server is headless, so
+  the macOS Gatekeeper dialogs and Safari have never been photographed
+  or driven. An HDMI dummy plug, or enabling auto-login, fixes it.
+- **ARM64 hardware. ~£80.** Plans carry arm64 blocks for Windows and
+  Linux that have never run: the ESXi host is x86 and the only ARM
+  machine is the Mac. A Raspberry Pi or a small cloud ARM instance would
+  cover Linux arm64. *Windows on ARM was ruled out of scope.*
+- **Windows licences.** The LTSC 2021 evaluation expired and shut itself
+  down hourly until it was replaced with an LTSC 2024 evaluation, which
+  will expire too. Real keys would stop that clock.
+- **More RAM for the ESXi host.** It was at 98% memory allocation before
+  seven test VMs were right-sized; it is the reason new test machines
+  have to be justified rather than simply added.
+
+---
+
+## 8. Free, but needs an account
+
+- **A GitHub API token for the build server.** Unauthenticated
+  `api.github.com` allows 60 requests an hour *per address*. From a
+  browser that is the user's own address and fine; from a shared build
+  server it is 60 an hour for everybody, and it will run out. A token in
+  the server's environment raises it to 5,000. Costs nothing; belongs in
+  the server's environment and never in the form.
+- **Asking GitHub to garbage-collect** after the `prompts/` history
+  purge. Unreachable commits stay addressable by SHA through their API
+  for a while. The repo is private, so the exposure is nil, but it is a
+  free support request.
+
+---
+
+## What is *not* blocked by money
+
+Most of what is left. Recorded here so this document is not read as
+"everything waits on funding":
+
+- The capability statement, the review screen, the transparency work.
+- Browser-side packing, which is built and proven on machines down to a
+  744 MB 32-bit VM.
+- GitHub sources with no build server, built and proven.
+- The "standard installer" classification and the structured launch
+  shapes ([launch-shapes.md](docs/launch-shapes.md)) -- designed, and
+  waiting on a decision rather than a payment.
+- Revocation and expiry, built.
+- The admin system for takedowns and metadata.
+- An abuse process, which is a policy and a habit rather than a purchase
+  -- and which should exist *before* strangers can build installers,
+  because the moment they can, someone will try.
+
+---
+
+## If only one thing
+
+**Item 1.** A domain and a certificate, for the price of a takeaway,
+turn a thing one person can use on one network into a thing anyone can
+try. Everything else on this list improves something that already works;
+that one makes the work reachable.
