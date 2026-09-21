@@ -757,6 +757,21 @@ ti_flatname() { # text
 #
 # This is for prose, where any space is a fair break. A command is not
 # prose and has ti_cmd_wrap instead.
+#
+# **Every line of prose on the review screen goes through this**, at 74 for
+# the text screen (which is also what zenity and kdialog are shown -- see
+# the README: they are handed this same pre-wrapped file, they do not wrap
+# anything themselves) and at 68 for the macOS dialog's short form. Those
+# two numbers are the only widths that exist; no window size enters into
+# it. If you add a section, wrap it.
+#
+# SYSTEM-WIDE PREREQUISITES was written without this and stayed that way
+# until 2026-09-21. It was invisible because a screen that is not wrapped
+# still looks like text: the terminal wraps it instead, and a terminal
+# breaks mid-word, so a catalogue `nwhy` of 225 characters read "...are
+# compiled when t / he app's gems are installed", and zenity re-wrapped it
+# flush left and threw the indent away. Nothing failed; it just looked
+# like that to whoever installed Ruby.
 ti_wrap() {
 	awk -v w="$1" -v ind="$2" '
 	{ head = substr($0, 1, ind)

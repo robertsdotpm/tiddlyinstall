@@ -47,6 +47,31 @@ get is decided before anything is fetched:
 | **The whole text** | Any argument, no display, `TI_NO_GUI=1`, or a display we could not open. Printed to stderr at once, terminal scrollback and all, with the one-line decision above the `Install X? [y/N]` prompt. This is the ordinary way to install over SSH and it is not a consolation prize: it is the same text, unabridged |
 | **macOS** | Unchanged: a terminal gets the text, a double-clicked `.app` gets the `osascript` dialog with the full text behind "Details...". That dialog is not a review window, so taking a Terminal user out of the terminal would be a downgrade |
 
+**There are two widths, 74 and 68, and no others** (2026-09-21).
+**zenity and kdialog do not wrap anything**: `ti_confirm` hands them the
+same `$TI_WORK/confirm.txt` the terminal gets, already hard-wrapped at 74
+by `ti_wrap`, and shows it in a monospace box. So the window size decides
+how much you can see at once and nothing about where the lines break —
+`ti_dialog_size` is in pixels and is never converted back into columns.
+On a 1920x1080 screen the dialog is 980x820, and 74 monospace columns are
+about 590 px in it, so the widget never has to re-wrap; the 640 px floor
+would be reached only on a screen narrower than 720 px. macOS is the one
+exception, and it is a *second* pre-wrap rather than a widget: the short
+form is wrapped at 68 by the same function, and AppleScript's sheet then
+wraps whatever still overflows.
+
+The practical consequence, which is easy to get wrong: **a review-screen
+line that skips `ti_wrap` is not "wrapped by the dialog", it is not
+wrapped at all**, and whatever shows it breaks it — a terminal mid-word,
+zenity flush left with the indent thrown away. `SYSTEM-WIDE
+PREREQUISITES` did exactly that, unnoticed, until 2026-09-21: a
+catalogue `nwhy` is a sentence (Ruby's is 225 characters), and it read
+`...are compiled when t / he app's gems are installed`. Windows had the
+same fault in `NeedSummary`, worse, because at indent 6 `tisig.c` sets
+the line in Courier New 8 pt: about 1500 px in a control near 730. Both
+go through their wrappers now (`ti_wrap`, `SumPara`). If you add a
+section, wrap it.
+
 **"Any argument" means any argument at all** — `--yes`, `--plan=`,
 `--log=`, anything. Not a list of the interesting ones, because a list
 is a thing to keep in step with `ti_main`, and because there is no flag
@@ -100,10 +125,25 @@ engine is this same file, so an engine change reaches macOS as soon as
 the base is built there -- and `out/ti-base-macos.zip` on this machine
 is whatever was last built there, nothing more.
 
-**Last built 2026-09-21T11:57:18Z** on the Mac test server (macOS 26.2
+**Last built 2026-09-21T13:35:49Z** on the Mac test server (macOS 26.2
 `25C56`, arm64, `Matthew@the-mac-test-host`), from `ti-engine.sh` with the
-review screen telling the truth about a source that has no stored hash.
-Two lines where it used to print `0 B` and a bare `sha256 -`:
+review screen's last two wrapping faults fixed: `SYSTEM-WIDE
+PREREQUISITES` now goes through `ti_wrap` like every other section, and
+the signature's scope sits on its own line under the signer instead of
+running past 74 and stranding `installs)`.
+
+| | |
+| --- | --- |
+| `out/ti-base-macos.zip` | `6b149a3a01c35aac3cce7a87534ec3c9583d3f94870c78df0f8d9f1dc4224dba`, 69,901 bytes |
+| the engine inside it | `ti-engine.sh` with the baked lines filled, and **only** those four lines: diffed against the committed source, four lines differ |
+| plan signing key | `97930ea1888d1a12` (unchanged) |
+| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T13:35:49Z` / `1789997749` |
+| signature | ad-hoc; `codesign --verify --strict` is happy on the bundle **and** on the bundle re-extracted from the zip with `ditto` ("valid on disk", "satisfies its Designated Requirement", `Signature=adhoc`); `spctl -a` rejects it, as it must |
+
+The build before this one was **2026-09-21T11:57:18Z**, from
+`ti-engine.sh` with the review screen telling the truth about a source
+that has no stored hash. Two lines where it used to print `0 B` and a
+bare `sha256 -`:
 
 ```
   2. 0e322af87745eff34caffe4df68456ebc20d9068.tar.gz  (the project itself)
