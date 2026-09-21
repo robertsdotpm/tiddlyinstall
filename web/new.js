@@ -648,6 +648,43 @@ function paintOfflineSize() {
   } else offlineWarnBox.hidden = true;
 }
 
+// "Build for" starts as the computer this page is open on: someone making
+// an installer almost always wants to try it here first, and the other two
+// are one tick away. The HTML keeps all three checked, so /classic -- which
+// has no JavaScript to run this -- still builds for everything; unticking
+// happens only here, only when the form is untouched, and only when the OS
+// is one we build for. An unrecognised OS (a BSD, say) leaves all three, on
+// the grounds that a wrong guess is worse than no guess.
+const TARGET_FOR_OS = [[/Windows/i, 'windows'], [/^macOS|Mac OS|iOS|iPadOS/i, 'macos'], [/Linux|ChromeOS|Android/i, 'linux']];
+function defaultTargetsToThisComputer() {
+  const boxes = ['windows', 'linux', 'macos'].map((p) => form.elements['target_' + p]);
+  if (boxes.some((b) => !b) || boxes.some((b) => !b.checked)) return;   // touched, or restored: leave it
+  const env = (globalThis.tiCompat && globalThis.tiCompat.env) || {};
+  const hit = TARGET_FOR_OS.find(([re]) => re.test(String(env.os || '')));
+  if (!hit) return;
+  let changed = false;
+  for (const p of ['windows', 'linux', 'macos']) {
+    if (p === hit[1]) continue;
+    form.elements['target_' + p].checked = false;
+    changed = true;
+  }
+  if (!changed) return;
+  const note = document.createElement('p');
+  note.className = 'small muted';
+  note.id = 'target-default-note';
+  note.textContent = 'Set to ' + ({ windows: 'Windows', linux: 'Linux', macos: 'macOS' })[hit[1]] +
+    ', the computer you are on. Tick the others to build for them too — one installer per system, all from the same settings.';
+  const choices = form.querySelector('.inline-choices');
+  if (choices) choices.after(note);
+  // Drop the note once they choose for themselves; it has said its piece.
+  form.addEventListener('change', function once(e) {
+    if (!e.target || !/^target_/.test(e.target.name || '')) return;
+    note.remove();
+    form.removeEventListener('change', once);
+  });
+}
+defaultTargetsToThisComputer();
+
 form.addEventListener('change', paintOfflineSize);
 paintOfflineSize();
 

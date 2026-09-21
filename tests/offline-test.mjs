@@ -70,6 +70,26 @@ try {
   ok(await js(`[...document.querySelectorAll('.ti-page[data-page="new"] .build-where')].length >= 1 &&
     [...document.querySelectorAll('.ti-page[data-page="new"] .build-where')].every((p) => /^Built in this page:/.test(p.textContent))`),
     'the New installer form says "Built in this page"', await js(`(document.querySelector('.build-where') || {}).textContent`));
+  // "Build for" starts as the computer the page is open on, with the other
+  // two one tick away (web/new.js defaultTargetsToThisComputer). These runs
+  // are on Linux, so Linux alone; the HTML keeps all three checked for
+  // /classic, which has no JavaScript to narrow them.
+  ok(await js(`(globalThis.tiCompat && tiCompat.env && tiCompat.env.os) === 'Linux'`),
+    'the page knows which OS it is on', await js(`(globalThis.tiCompat && tiCompat.env || {}).os`));
+  ok(await js(`document.querySelector('[name=target_linux]').checked
+    && !document.querySelector('[name=target_windows]').checked
+    && !document.querySelector('[name=target_macos]').checked`),
+    '"Build for" defaults to this computer\'s system alone');
+  ok(/^Set to Linux, the computer you are on\./.test(await js(`(document.getElementById('target-default-note') || {}).textContent || ''`)),
+    'and says so, with how to add the others', await js(`(document.getElementById('target-default-note') || {}).textContent`));
+  // Ticking one of them for yourself retires the note, and does not undo
+  // the others: the default is a starting point, not a mode.
+  await js(`document.querySelector('[name=target_windows]').click()`);
+  ok(await js(`!document.getElementById('target-default-note')
+    && document.querySelector('[name=target_windows]').checked
+    && document.querySelector('[name=target_linux]').checked`),
+    'choosing for yourself drops the note and keeps both');
+  await js(`document.querySelector('[name=target_windows]').click()`);   // back as it was
   ok(await js(`getComputedStyle(document.getElementById('offline-on').closest('label')).display === 'none'`), 'packing runtimes is hidden');
   ok(await js(`getComputedStyle(document.getElementById('ts-on').closest('.online-only')).display === 'none'`), 'the timestamp relay is hidden');
   // Signing services whose API a browser can't call go through the build
