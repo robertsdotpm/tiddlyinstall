@@ -207,36 +207,44 @@ function checkBudget(bytes, plat, count) {
 // is assembled into one buffer (or written straight to the user's file);
 // `spec.data` is the macOS zip, which a zip library has already built.
 async function savePacked(hash, name, spec, plat, live) {
+  // A .exe with a custom icon carries a PE checksum, which is computed
+  // over the whole file and sits near its start, so it cannot be written
+  // to a file as the file is made: that one is held in memory even where
+  // there is a picker, and then the ordinary budget decides. Said here,
+  // before the work, rather than as a failure at the end of it.
+  const layout = spec.layout ? layoutOf(spec.layout) : null;
+  const streamable = !!(layout && saveTo && !spec.layout.fixChecksum);
+  if (layout && saveTo && !streamable) checkHeldBudget(layout, name);
+
   let size, sha256, blob = null, handle = null;
-  if (spec.layout && saveTo) {
+  if (streamable) {
     // Straight to the file the user chose, a chunk at a time: measured at
     // 4.3 GB written with the page holding 44-116 MB.
-    const dest = await saveTo.fileFor(name);
-    handle = dest.handle;
-    const w = await dest.handle.createWritable();
+    const w = await openDest(name);
+    handle = w.handle;
     try {
-      const r = await streamInstallerLayout({ write: (b) => w.write(b) }, layoutOf(spec.layout));
+      const r = await streamInstallerLayout({ write: (b) => w.stream.write(b) }, layout);
       size = r.size; sha256 = r.sha256;
-      await w.close();
-    } catch (x) { try { await w.abort(); } catch (e2) { /* the write failed anyway */ } throw x; }
+      await w.stream.close();
+    } catch (x) { try { await w.stream.abort(); } catch (e2) { /* the write failed anyway */ } throw x; }
   } else {
-    const built = spec.layout ? await writeInstallerLayout(layoutOf(spec.layout), { hash: true })
+    const built = layout ? await writeInstallerLayout(layout, { hash: true })
       : { data: spec.data, size: spec.data.length, sha256: await shaOf(spec.data) };
     size = built.size; sha256 = built.sha256;
     if (saveTo) {
-      // The macOS zip: a zip library builds it whole, so there is nothing
-      // to stream, but it still goes to the file the user chose.
-      const dest = await saveTo.fileFor(name);
-      handle = dest.handle;
-      const w = await dest.handle.createWritable();
-      try { await w.write(built.data); await w.close(); } catch (x) { try { await w.abort(); } catch (e2) { /* failed anyway */ } throw x; }
+      // Held in memory (a macOS zip, or a Windows file with a checksum),
+      // but still written to the file the user chose.
+      const w = await openDest(name);
+      handle = w.handle;
+      try { await w.stream.write(built.data); await w.stream.close(); }
+      catch (x) { try { await w.stream.abort(); } catch (e2) { /* failed anyway */ } throw x; }
     } else {
       blob = new Blob([built.data], { type: 'application/octet-stream' });
       // built.data goes out of scope here: the page's own copy is gone and
       // only the browser's Blob is left, which is what frees the next build.
     }
   }
-  await checkFooter({ blob, handle, size, name, footer: !!spec.layout });
+  await checkFooter({ blob, handle, size, name, footer: !!layout });
   const out = { size, sha256 };
   if (blob) {
     out.url = URL.createObjectURL(blob);
@@ -246,6 +254,24 @@ async function savePacked(hash, name, spec, plat, live) {
   // downloads, and the first should be there while the third is building.
   if (live) live({ platform: plat, name, size, sha256, url: out.url || '', saved: !!out.saved });
   return out;
+}
+
+async function openDest(name) {
+  const dest = await saveTo.fileFor(name);
+  return { handle: dest.handle, stream: await dest.handle.createWritable() };
+}
+
+// The budget for a file that has to be held whole even though a
+// destination was picked.
+function checkHeldBudget(layout, name) {
+  const total = layout.base.length + layout.record.length + layout.plan.length +
+    (layout.pack.length ? packTarSize(layout.pack) : 0) + 64;
+  const b = packBudget(packEnv(globalThis, { noPicker: true }));
+  if (total > b.mb * MB) {
+    throw new Error(name + ' is ' + Math.round(total / MB) + ' MB and has a custom icon, so it carries a checksum over the whole ' +
+      'file that can only be written by holding all of it at once -- and the limit here is ' + b.mb + ' MB, because ' + b.why +
+      '. Build it without a custom icon, pack fewer systems, or use a build server.');
+  }
 }
 
 const layoutOf = (l) => ({ base: l.base, record: l.record, plan: l.plan, pack: l.pack,
