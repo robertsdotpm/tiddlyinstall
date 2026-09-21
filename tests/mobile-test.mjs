@@ -293,9 +293,12 @@ async function header(w, shots) {
   ok(await B.js(`location.hash === '#runtimes'`), `${B.name} ${w}px header: a nav link goes to its section`);
   if (menu) ok(await B.js(`document.querySelector('.ti-menu-btn').getAttribute('aria-expanded') === 'false'`), `${B.name} ${w}px header: following a link closes the menu`);
   await go('#home');
-  // The settings panel.
+  // The settings panel, opened the only way there is: the indicator. The
+  // spanner that used to sit beside it was a second door to the same room.
   if (menu) await B.tap('.ti-menu-btn');
-  await B.tap('.settings-btn');
+  ok(await B.js(`!document.querySelector('.settings-btn') && !document.querySelector('#theme-btn')`),
+    `${B.name} ${w}px header: no settings spanner and no theme button`);
+  await B.tap('.site-header .where-chip');
   const p = await B.js(`(() => { const r = document.querySelector('.settings-panel').getBoundingClientRect(); return document.querySelector('.settings-panel').hidden ? null : [Math.round(r.left), Math.round(r.right), Math.round(r.width)]; })()`);
   ok(p && p[0] >= 0 && p[1] <= w, `${B.name} ${w}px header: the settings panel opens inside the viewport`, JSON.stringify(p));
   await audit(w, 'settings', { shots });
@@ -412,7 +415,7 @@ async function build(w, shots) {
   // Served by a build server, the build is the page's own ("No server" in
   // the settings, as a person would choose it): the steps read its jobs.
   if (!(await B.js(`document.documentElement.classList.contains('ti-local')`))) {
-    await B.js(`document.querySelector('.api-ctl-edit').click(); document.querySelector('.api-ctl-local').click()`);
+    await B.js(`document.querySelector('.where-chip').click(); document.querySelector('.api-ctl-local').click()`);
     await sleep(300);
   }
   const job = await buildHello(B.js, { runtime: 'python', mode: 'unsigned', name: 'Hello phone ' + w + (ADB ? ' ' + Date.now().toString(36) : ''), code: "print('hello from a phone')\n", platforms: ['windows', 'linux', 'macos'] });
@@ -684,7 +687,7 @@ async function desktop(dir) {
   await go('#runtimes');
   await waitFor(`!document.getElementById('rt-app').hidden && document.querySelectorAll('#rt-rel-list .rt-vrow').length > 3`, 'the Sources editor');
   await snap('sources');
-  await B.js(`document.querySelector('.settings-btn').click()`);
+  await B.js(`document.querySelector('.where-chip').click()`);
   await snap('settings');
   const a = await B.js(AUDIT);
   ok(a.sw <= a.iw, 'desktop 1400px: no sideways scrolling', a.wide.join(', '));

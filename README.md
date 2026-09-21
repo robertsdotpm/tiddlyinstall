@@ -43,7 +43,6 @@ page is lost.
 | `web/lib/sha.js`, `web/lib/hmac-pbkdf2.js`, `web/lib/aes.js` | SHA-1/256/384/512, HMAC, PBKDF2, AES-CBC and CFB, from FIPS 180-4, RFC 2104, RFC 8018 and FIPS 197 (ours) |
 | `web/lib/bignum.js`, `web/lib/rsa.js`, `web/lib/ec.js` | Big integers without BigInt (Montgomery multiplication), RSA PKCS#1 v1.5 (sign, verify, key generation), ECDSA P-256/384/521 with RFC 6979 nonces (ours) |
 | `web/lib/ed25519.js` | Ed25519, ported from [TweetNaCl-js](https://github.com/dchest/tweetnacl-js) (public domain) |
-| `web/theme.js` | Light or dark, and the button in the header that switches it. With nothing chosen the page follows the system; the button writes `<html data-theme="light">` or `"dark"` and remembers it in this browser, and `?theme=dark` on the URL sets it for one visit. A classic ES3 script in `<head>` (the one-file site inlines it), so it runs before the first paint and in browsers with no modules |
 | `web/has-shim.js`, `web/polyfills.js` | CSS `:has()` for browsers without it (classes kept on ancestors, the stylesheet rewritten in place), and the few newer built-ins the page uses. Both do nothing in current browsers |
 | `tests/fallback-test.mjs` | The plain-JavaScript compression and crypto against Node's zlib and WebCrypto, openssl, and the FIPS/RFC test vectors; the `:has()` rewrite (`TI_CATALOG_DIR=<folder with catalog.gz> node tests/fallback-test.mjs [--quick]`) |
 | `tests/es2017-test.mjs` | Parses the built `dist/index.html` as ES2017 (acorn, `cd tests && npm install` once) and fails on newer syntax or built-ins |

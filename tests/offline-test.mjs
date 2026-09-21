@@ -124,7 +124,8 @@ try {
     'the relayed signing services are not offered', await js(`[].map.call(document.getElementById('svc-name').options, (o) => o.value).join(',')`));
   await checkLaunchField();
   await checkArchitecture();
-  await checkSections(t, js);
+  const sections = await checkSections(t, js);
+  await checkPanelReachable(sections);
   const rt = await tiRuntimes();
   ok(rt.includes('python') && rt.includes('python2'), 'the runtimes summary is in the page', rt.join(','));
 
@@ -202,6 +203,7 @@ try {
     ok(true, 'the saved copy\'s build page says the same');
   }
   await checkWhereStates();
+  await checkHoverColours();
   if (OUT) fs.writeFileSync(path.join(OUT, 'builds.json'), JSON.stringify(builds, null, 1));
 
   if (SITE) {
@@ -222,7 +224,7 @@ try {
     ok(ch && /\bwhere-up\b/.test(ch.cls) && ch.host === 'Build server ' + SITE.replace(/^https?:\/\//, '').replace(/\/$/, '') &&
       /reachable$/.test(ch.state) && ch.mark === 'circle,polyline',
       'served: the header names the build server and shows it as reachable', JSON.stringify(ch));
-    await js(`document.querySelector('.api-ctl-edit').click(); document.querySelector('.api-ctl-local').click()`);
+    await js(`document.querySelector('.where-chip').click(); document.querySelector('.api-ctl-local').click()`);
     ch = await chipState();
     ok(ch && /\bwhere-page\b/.test(ch.cls) && !/\bwhere-fixed\b/.test(ch.cls) && ch.host === 'Built in this page',
       'served: choosing "No server" moves the header to "Built in this page" at once, as a choice and not a fact', JSON.stringify(ch));
@@ -242,6 +244,108 @@ try {
 }
 console.log(`\n${t.passed} passed, ${t.failed} failed`);
 process.exit(t.failed ? 1 : 0);
+
+/* ---------- the header, after the spanner and the theme button ---------- */
+
+// The indicator is now the only way into the settings panel, and the panel
+// is the only way to change or clear the build server. So it has to open
+// from every page, not just the one that happened to be open -- including
+// Sources, which had no header controls at all as a separate page.
+async function checkPanelReachable(sections) {
+  ok(await js(`!document.querySelector('.settings-btn') && !document.querySelector('.api-ctl-edit')`),
+    'the settings spanner is gone');
+  ok(await js(`!document.getElementById('theme-btn') && !document.querySelector('.theme-btn')`),
+    'and so is the theme button');
+  ok(!await js(`!!document.documentElement.getAttribute('data-theme')`),
+    'nothing sets data-theme any more: the page follows prefers-color-scheme',
+    await js(`document.documentElement.getAttribute('data-theme')`));
+  const bad = [];
+  for (const p of sections) {
+    await js(`location.hash = '#' + ${JSON.stringify(p)}`);
+    await sleep(150);
+    const r = await js(`(() => {
+      const c = document.querySelector('.site-header .where-chip'), panel = document.querySelector('.settings-panel');
+      if (!c || !panel) return 'no chip or panel';
+      c.click();
+      const open = !panel.hidden && !!document.querySelector('.api-ctl-input');
+      document.querySelector('.api-ctl-cancel').click();
+      return open && panel.hidden ? '' : 'panel did not open and close'; })()`);
+    if (r) bad.push(p + ': ' + r);
+  }
+  ok(!bad.length, 'and the settings panel opens from the indicator on every page', bad.join('; '));
+  await js(`location.hash = '#home'`);
+  await sleep(150);
+}
+
+// Hovering must not change what the chip is saying. The generic
+// `button:hover` paints an accent-coloured button, and the chip is a
+// button, so without its own hover colour the words went unreadable --
+// found by a person in ten seconds, by no test at all.
+async function checkHoverColours() {
+  const at = async (sel) => {
+    const [x, y] = await js(`(() => { const e = document.querySelector(${JSON.stringify(sel)});
+      e.scrollIntoView({ block: 'center' }); const r = e.getBoundingClientRect();
+      return [Math.round(r.left + r.width / 2), Math.round(r.top + r.height / 2)]; })()`);
+    await chrome.cdp('Input.dispatchMouseEvent', { type: 'mouseMoved', x, y, button: 'none' });
+    await sleep(120);
+    return js(`(() => { const e = document.querySelector(${JSON.stringify(sel)});
+      const cs = getComputedStyle(e);
+      return { hovered: e.matches(':hover'), color: cs.color, bg: cs.backgroundColor,
+        state: getComputedStyle(e.querySelector('.where-state') || e).color }; })()`);
+  };
+  const away = () => chrome.cdp('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 5, y: 400, button: 'none' });
+  // A token's value as the browser resolves it, so it can be compared with
+  // a computed colour (getPropertyValue gives the hex it was written as).
+  const token = (v) => js(`(() => { const e = document.createElement('span');
+    e.style.color = 'var(' + ${JSON.stringify(v)} + ')';
+    document.body.appendChild(e); const c = getComputedStyle(e).color; e.remove(); return c; })()`);
+  const was = await js(`(() => { const c = document.querySelector('.where-chip');
+    return [c.className, c.querySelector('.where-state').textContent]; })()`);
+  const bad = [];
+  for (const theme of ['dark', 'light']) {
+    await js(`document.documentElement.setAttribute('data-theme', ${JSON.stringify(theme)})`);
+    const accentText = await token('--accent-text');
+    const accentHover = await token('--accent-hover');
+    // Every state, since each sets its own colour and each had to restate
+    // it on hover. The class is what the CSS keys on, so setting it is
+    // enough to put the chip in that state for a style question.
+    for (const state of ['page', 'up', 'down', 'unknown']) {
+      await js(`(() => { const c = document.querySelector('.where-chip');
+        c.className = 'where-chip where-' + ${JSON.stringify(state)};
+        c.querySelector('.where-state').textContent = 'reachable'; })()`);
+      await away();
+      const rest = await js(`(() => { const e = document.querySelector('.where-chip');
+        return { color: getComputedStyle(e).color, state: getComputedStyle(e.querySelector('.where-state')).color }; })()`);
+      const hot = await at('.site-header .where-chip');
+      const where = theme + '/' + state;
+      if (!hot.hovered) bad.push(where + ': not hovered at all');
+      else if (hot.color !== rest.color || hot.state !== rest.state) bad.push(where + ': ' + JSON.stringify({ rest, hot }));
+      else if (hot.color === accentText) bad.push(where + ': accent-text ' + hot.color);
+    }
+    // The menu button is the other button in the header and has no accent
+    // style of its own either, so it is open to the same trap. It only
+    // shows on a narrow window -- a narrow one with a mouse, since a
+    // coarse pointer has no hover to measure.
+    await chrome.cdp('Emulation.setDeviceMetricsOverride', { width: 400, height: 800, deviceScaleFactor: 1, mobile: false });
+    await sleep(150);
+    const shows = await js(`!!document.querySelector('.ti-menu-btn') && document.querySelector('.ti-menu-btn').getClientRects().length > 0`);
+    ok(shows, theme + ': the menu button shows at 400 px (else the next check proves nothing)');
+    if (shows) {
+      await away();
+      const m = await at('.ti-menu-btn');
+      ok(m.hovered && m.color !== accentText && m.bg !== accentHover,
+        theme + ': hovering the menu button does not paint it with the accent', JSON.stringify({ m, accentText, accentHover }));
+    }
+    await chrome.cdp('Emulation.clearDeviceMetricsOverride');
+    await sleep(150);
+    await away();
+  }
+  ok(!bad.length, 'hovering the indicator never changes the colour it is saying things in, in either theme', bad.join(' | '));
+  await js(`(() => { document.documentElement.removeAttribute('data-theme');
+    const c = document.querySelector('.where-chip');
+    c.className = ${JSON.stringify(was[0])};
+    c.querySelector('.where-state').textContent = ${JSON.stringify(was[1])}; })()`);
+}
 
 /* ---------- where installers are built, in the header ---------- */
 
@@ -303,7 +407,7 @@ async function checkWhereStates() {
     // 1. Typed in, not yet asked. Read in the same turn as the change, so
     //    no answer can have come back yet: this is the honest "unknown".
     const typed = await js(`(() => {
-      document.querySelector('.api-ctl-edit').click();
+      document.querySelector('.where-chip').click();
       document.querySelector('.api-ctl-input').value = ${JSON.stringify(url)};
       document.querySelector('.api-ctl-form').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
       const c = document.querySelector('.where-chip'), b = document.querySelector('.api-banner');
@@ -330,7 +434,7 @@ async function checkWhereStates() {
     //    than one. Re-choosing the server is what sends the next request.
     srv.closeAllConnections();
     await new Promise((res) => srv.close(res));
-    await js(`(() => { document.querySelector('.api-ctl-edit').click();
+    await js(`(() => { document.querySelector('.where-chip').click();
       document.querySelector('.api-ctl-input').value = ${JSON.stringify(url)};
       document.querySelector('.api-ctl-form').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true })); })()`);
     await waitFor(js, `/\\bwhere-down\\b/.test(document.querySelector('.where-chip').className)`,
@@ -342,7 +446,7 @@ async function checkWhereStates() {
 
     // 4. And it survives the change back, without waiting for anything.
     const back = await js(`(() => {
-      document.querySelector('.api-ctl-edit').click();
+      document.querySelector('.where-chip').click();
       document.querySelector('.api-ctl-local').click();
       const c = document.querySelector('.where-chip'), b = document.querySelector('.api-banner');
       return { cls: c.className, host: c.querySelector('.where-host').textContent,

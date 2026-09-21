@@ -419,7 +419,7 @@ const WHERE_SAID = {
   unknown: 'not checked. Nothing has asked it yet, so whether it answers is not known.'
 };
 
-function mountWhere(before) {
+function mountWhere(parent) {
   whereEl = document.createElement('button');
   whereEl.type = 'button';
   whereEl.className = 'where-chip';
@@ -428,7 +428,9 @@ function mountWhere(before) {
   whereEl.innerHTML =
     '<span class="where-mark" aria-hidden="true"></span>' +
     '<span class="where-host"></span><span class="where-state"></span>';
-  before.parentNode.insertBefore(whereEl, before);
+  // Inside the control, before the panel it opens: in reading order, and
+  // so a click on either counts as a click inside.
+  parent.insertBefore(whereEl, parent.firstChild);
   return whereEl;
 }
 
@@ -472,18 +474,15 @@ function paintApiFooter() {
   }
   a.textContent = prettyApi(apiBaseUrl);
   a.title = apiBaseUrl === defaultApi ? apiBaseUrl + ' (default)' : apiBaseUrl + ' (chosen)';
-  footerEl.querySelector('.settings-btn').title = 'Settings. Build server: ' + prettyApi(apiBaseUrl);
 }
 
 // A settings button (a spanner) in the site header opens a small panel
 // with the build server choice, and beside it an indicator saying where
-// installers are being built (mountWhere) that opens the same panel;
+// installers are being built (mountWhere), which is also what opens the
+// panel -- there is no separate settings button: a spanner beside it was a
+// second door to the same room, and the indicator has to be there anyway.
 // "Save this page" goes in the footer when the page is the one-file site.
 // Carries a ?api= from the URL onto links to the site's other pages.
-const SPANNER = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">' +
-  '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.1L3.3 17.4a1.4 1.4 0 0 0 0 2l1.3 1.3a1.4 1.4 0 0 0 2 0l6-6a4 4 0 0 0 5.1-5.4l-2.6 2.6-2.3-.6-.6-2.3z" ' +
-  'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
-
 export function mountApiFooter() {
   if (footerEl) return;   // the one-file site's pages share one header
   const header = document.querySelector('.site-header');
@@ -491,7 +490,6 @@ export function mountApiFooter() {
   footerEl = document.createElement('div');
   footerEl.className = 'api-ctl settings';
   footerEl.innerHTML =
-    '<button type="button" class="settings-btn api-ctl-edit" aria-haspopup="true" aria-expanded="false" aria-label="Settings">' + SPANNER + '</button>' +
     '<div class="settings-panel" hidden>' +
     '<p class="settings-now"><span>Build server:</span> <a class="api-ctl-url" target="_blank" rel="noopener noreferrer"></a></p>' +
     '<form class="api-ctl-form">' +
@@ -508,22 +506,26 @@ export function mountApiFooter() {
     'A page served over HTTPS can\'t use a plain http:// server.' +
     (HAS_LOCAL ? ' With no server, this page builds installers itself: modes B and C, code written here or package names.' : '') +
     '</p></form></div>';
-  ((header && header.querySelector('nav')) || header || footer).appendChild(footerEl);
-  // Where installers are built, beside the spanner that changes it.
+  // Beside the wordmark, not at the end of the nav: it is a statement
+  // about the whole application, and among Home / New installer / ... it
+  // read as a fifth link. insertBefore(el, null) appends, so a header
+  // with no nav still gets it.
+  if (header) header.insertBefore(footerEl, header.querySelector('nav'));
+  else footer.appendChild(footerEl);
+  // Where installers are built, and the way to change it.
   mountWhere(footerEl);
   if (header && header.querySelector('nav')) mountMenu(header);
   const panel = footerEl.querySelector('.settings-panel');
   const form = footerEl.querySelector('form');
   const input = footerEl.querySelector('.api-ctl-input');
   const err = footerEl.querySelector('.api-ctl-err');
-  const edit = footerEl.querySelector('.api-ctl-edit');
   const showErr = (m) => { err.textContent = m || ''; err.hidden = !m; };
-  // The spanner and the indicator open the one panel: the indicator is a
-  // way to see the state and reach the control, not a second control.
+  // The indicator is the control: it says where builds happen and opens
+  // the panel that changes it. It is the only way in, so every page that
+  // calls mountApiFooter() must get one.
   const setOpen = (open) => {
     panel.hidden = !open;
-    edit.setAttribute('aria-expanded', open ? 'true' : 'false');
-    if (whereEl) whereEl.setAttribute('aria-expanded', open ? 'true' : 'false');
+    whereEl.setAttribute('aria-expanded', open ? 'true' : 'false');
     if (open) {
       input.value = apiLocal() ? '' : apiBaseUrl;
       input.focus();
@@ -532,14 +534,11 @@ export function mountApiFooter() {
   };
   const close = () => setOpen(false);
   const toggle = () => setOpen(panel.hidden);
-  edit.addEventListener('click', toggle);
-  if (whereEl) whereEl.addEventListener('click', toggle);
+  whereEl.addEventListener('click', toggle);
   // Closes on Escape or a click outside it.
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) close(); });
   document.addEventListener('click', (e) => {
-    if (panel.hidden) return;
-    if (footerEl.contains(e.target) || (whereEl && whereEl.contains(e.target))) return;
-    close();
+    if (!panel.hidden && !footerEl.contains(e.target)) close();
   });
   form.addEventListener('submit', (e) => {
     e.preventDefault();

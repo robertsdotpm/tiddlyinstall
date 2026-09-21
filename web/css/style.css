@@ -1303,13 +1303,6 @@ form:has(#unscript-tab-unix:checked) .unscript-panel-unix { display: block; }
 .api-banner button { padding: 5px 13px; }
 
 .settings { display: inline-flex; align-items: center; }
-.settings-btn {
-  display: inline-flex; align-items: center; justify-content: center;
-  padding: 5px 7px;
-  background: none; border: 1px solid transparent; border-radius: var(--radius);
-  color: var(--muted); cursor: pointer;
-}
-.settings-btn:hover, .settings-btn[aria-expanded="true"] { border-color: var(--rule-strong); background: var(--panel); color: var(--text-loud); }
 .settings-panel {
   position: absolute; right: 0; top: 100%; z-index: 60;
   width: 380px; max-width: calc(100vw - 32px);
@@ -1341,6 +1334,12 @@ form:has(#unscript-tab-unix:checked) .unscript-panel-unix { display: block; }
    colour is the first thing to go: a reader who cannot tell green from
    red, and the floor's browsers, which get the light theme's flat colours
    from tools/build_site.py legacy_css and no theme switching at all. */
+/* It sits beside the wordmark (web/api.js mountApiFooter), so it takes the
+   free space that flex's space-between would otherwise put between them,
+   and its panel opens from the left edge rather than the right. */
+.site-header > .api-ctl { margin-right: auto; }
+.site-header > .api-ctl .settings-panel { left: 0; right: auto; }
+
 .where-chip {
   display: inline-flex;
   align-items: center;
@@ -1358,8 +1357,15 @@ form:has(#unscript-tab-unix:checked) .unscript-panel-unix { display: block; }
   color: var(--text);
   cursor: pointer;
 }
-.where-chip:hover { border-color: var(--text); }
-.where-page:hover, .where-up:hover, .where-unknown:hover { background: var(--panel); }
+/* The generic button:hover above sets color: var(--accent-text), meant for
+   an accent-coloured button, and it outranks the state colours below. So
+   every hover here restates its own state's colour rather than picking a
+   new one: hovering must not change what the chip is saying. */
+.where-chip:hover { border-color: var(--text); color: var(--text); }
+.where-page:hover { background: var(--panel); color: var(--muted); }
+.where-up:hover { background: var(--panel); color: var(--ok); }
+.where-unknown:hover { background: var(--panel); color: var(--warn); }
+.where-down:hover { background: var(--fail-soft); color: var(--fail); }
 .where-mark { display: inline-flex; flex: none; margin-right: 6px; }
 .where-mark svg { display: block; }
 /* Only the name gives way when it is too long; the state word never does. */
@@ -1382,16 +1388,6 @@ form:has(#unscript-tab-unix:checked) .unscript-panel-unix { display: block; }
 .build-where strong { color: var(--text); }
 #job-where { margin: 0 0 14px; }
 #job-built:empty { display: none; }
-
-/* The theme control sits with the settings button. */
-.theme-btn {
-  display: inline-flex; align-items: center; justify-content: center;
-  padding: 5px 7px;
-  background: none; border: 1px solid transparent; border-radius: var(--radius);
-  color: var(--muted); cursor: pointer;
-  font-family: var(--mono); font-size: 0.78em; letter-spacing: 0.05em; text-transform: uppercase;
-}
-.theme-btn:hover { border-color: var(--rule-strong); background: var(--panel); color: var(--text-loud); }
 
 /* ==========================================================================
    15. Browser editor (edit.html)
@@ -1658,27 +1654,30 @@ html.ti-no-folder .needs-folder { display: none !important; }
   color: var(--text); cursor: pointer;
 }
 .ti-menu-btn[aria-expanded="true"] { background: var(--panel-2); }
+/* Its own hover, for the same reason as the chip's: without one the
+   generic button:hover paints it with the accent. */
+.ti-menu-btn:hover { border-color: var(--text); background: var(--panel); color: var(--text-loud); }
 
 @media (max-width: 599px) {
   .site-header.ti-menu {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto auto auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     grid-gap: 0 4px; gap: 0 4px;
     padding-top: 10px; padding-bottom: 10px;
     padding-block: 10px;
   }
   .site-header.ti-menu nav { display: contents; }
   .site-header.ti-menu .brand { grid-row: 1; grid-column: 1; }
-  .site-header.ti-menu .theme-btn { grid-row: 1; grid-column: 2; }
-  .site-header.ti-menu .settings { grid-row: 1; grid-column: 3; }
-  .site-header.ti-menu .ti-menu-btn { display: inline-flex; grid-row: 1; grid-column: 4; }
-  /* Too wide to share the top row at 320 px, so it takes its own, full
-     width. It is never dropped: the state someone would get wrong is
-     exactly the one that vanished on their phone. */
+  .site-header.ti-menu .ti-menu-btn { display: inline-flex; grid-row: 1; grid-column: 2; }
+  /* Too wide to share the top row at 320 px, so the indicator takes its
+     own, full width. It is never dropped: the state someone would get
+     wrong is exactly the one that vanished on their phone. */
+  /* margin-right: auto above would make it hug its content instead. */
+  .site-header.ti-menu .settings { grid-row: 2; grid-column: 1 / -1; margin-top: 8px; margin-right: 0; }
   .site-header.ti-menu .where-chip {
-    grid-row: 2; grid-column: 1 / -1;
+    flex: 1 1 auto;
     justify-content: flex-start;
-    margin-right: 0; margin-top: 8px;
+    margin-right: 0;
     /* It has the width of the header to itself, so at 320 px the state
        word drops to a second line rather than the name being cut: the
        answer to "it does not fit" is more room, not fewer letters. */
@@ -1751,7 +1750,7 @@ html.ti-no-folder .needs-folder { display: none !important; }
   button, .button { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; }
   button[hidden], .button[hidden] { display: none; }
   .link-button { min-height: 40px; }
-  .settings-btn, .ti-menu-btn, .theme-btn { min-width: 44px; min-height: 44px; }
+  .ti-menu-btn { min-width: 44px; min-height: 44px; }
   summary { min-height: 40px; padding-top: 8px; padding-bottom: 8px; }
   .customise > details > summary { align-items: center; }
   label.choice { min-height: 40px; margin-bottom: 2px; }

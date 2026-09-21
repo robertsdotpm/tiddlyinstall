@@ -95,7 +95,7 @@ PAGE_MODULES = ["web/new.js", "web/build.js", "web/edit.js", "web/catalog-editor
 # Read on their own, not joined: three classic scripts the page carries
 # inline (they must run before the modules, or without them), and the DOM
 # shims only the ES5 copy uses (tools/es5/build-es5.mjs).
-STANDALONE_SCRIPTS = ["web/browser-check.js", "web/theme.js", "web/page-loader.js",
+STANDALONE_SCRIPTS = ["web/browser-check.js", "web/page-loader.js",
                       "web/legacy-dom.js"]
 
 
@@ -512,9 +512,6 @@ def offline_page(catalog_dir, backend):
            # Too-old browsers get a message naming what's missing (a classic
            # script, so it runs where the module can't).
            "  <script>\n" + no_close_script(read("web/browser-check.js")) + "\n  </script>\n"
-           # Light or dark before the first paint, and the header's button
-           # (web/theme.js). ES3 too, so IE reads it.
-           "  <script>\n" + no_close_script(read("web/theme.js")) + "\n  </script>\n"
            "  <style>\n" + css + "\n  </style>\n</head>\n<body>\n  " + header + "\n"
            + NOSCRIPT.replace("{classic}", html.escape(backend.rstrip("/") + "/classic"))
            + "\n".join(sections) +
