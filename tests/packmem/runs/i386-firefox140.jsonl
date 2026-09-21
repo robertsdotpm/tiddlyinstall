@@ -1,0 +1,80 @@
+{"what": "page-loaded", "ua": "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", "run": "i386-firefox140", "t": 1789971457458}
+{"what": "begin", "ua": "Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0", "mode": "blob", "members": 4, "base": 6, "steps": "8,16,32,48,64,96,128,192,256,384", "dm": 0, "cores": 1, "mem": null, "run": "i386-firefox140", "t": 1789971457854, "seq": 1}
+{"step": "8", "what": "start", "mem": null, "mb": 8, "members": 4, "mode": "blob", "run": "i386-firefox140", "t": 1789971457857, "seq": 2}
+{"step": "8", "what": "pack-held", "mem": null, "bytes": 8388608, "run": "i386-firefox140", "t": 1789971460025, "seq": 3}
+{"step": "8", "what": "base-held", "mem": null, "run": "i386-firefox140", "t": 1789971462123, "seq": 4}
+{"step": "8", "what": "tar-written", "mem": null, "bytes": 8391680, "run": "i386-firefox140", "t": 1789971463904, "seq": 5}
+{"step": "8", "what": "concat", "mem": null, "bytes": 14683225, "run": "i386-firefox140", "t": 1789971465501, "seq": 6}
+{"step": "8", "what": "intermediates-dropped", "mem": null, "run": "i386-firefox140", "t": 1789971467003, "seq": 7}
+{"step": "8", "what": "hashed", "mem": null, "sha": "fc4570360540350b", "run": "i386-firefox140", "t": 1789971468932, "seq": 8}
+{"step": "8", "what": "blob", "mem": null, "bytes": 14683225, "run": "i386-firefox140", "t": 1789971470498, "seq": 9}
+{"step": "8", "what": "url", "mem": null, "run": "i386-firefox140", "t": 1789971472004, "seq": 10}
+{"step": "8", "what": "verified", "mem": null, "blobSize": 14683225, "footer": 8391680, "want": 8391680, "ok": true, "run": "i386-firefox140", "t": 1789971473512, "seq": 11}
+{"step": "8", "what": "done", "ok": true, "bytes": 14683225, "ms": 17160, "mem": null, "run": "i386-firefox140", "t": 1789971475017, "seq": 12}
+{"step": "8", "what": "after-gc", "mem": null, "run": "i386-firefox140", "t": 1789971478019, "seq": 13}
+{"step": "16", "what": "start", "mem": null, "mb": 16, "members": 4, "mode": "blob", "run": "i386-firefox140", "t": 1789971478019, "seq": 14}
+{"step": "16", "what": "pack-held", "mem": null, "bytes": 16777216, "run": "i386-firefox140", "t": 1789971480087, "seq": 15}
+{"step": "16", "what": "base-held", "mem": null, "run": "i386-firefox140", "t": 1789971481787, "seq": 16}
+{"step": "16", "what": "tar-written", "mem": null, "bytes": 16780288, "run": "i386-firefox140", "t": 1789971483325, "seq": 17}
+{"step": "16", "what": "concat", "mem": null, "bytes": 23071833, "run": "i386-firefox140", "t": 1789971484923, "seq": 18}
+{"step": "16", "what": "intermediates-dropped", "mem": null, "run": "i386-firefox140", "t": 1789971486428, "seq": 19}
+{"step": "16", "what": "hashed", "mem": null, "sha": "2c2a3eb6bca8c4c1", "run": "i386-firefox140", "t": 1789971489017, "seq": 20}
+{"step": "16", "what": "blob", "mem": null, "bytes": 23071833, "run": "i386-firefox140", "t": 1789971490618, "seq": 21}
+{"step": "16", "what": "url", "mem": null, "run": "i386-firefox140", "t": 1789971492120, "seq": 22}
+{"step": "16", "what": "verified", "mem": null, "blobSize": 23071833, "footer": 16780288, "want": 16780288, "ok": true, "run": "i386-firefox140", "t": 1789971493623, "seq": 23}
+{"step": "16", "what": "done", "ok": true, "bytes": 23071833, "ms": 17126, "mem": null, "run": "i386-firefox140", "t": 1789971495146, "seq": 24}
+{"step": "16", "what": "after-gc", "mem": null, "run": "i386-firefox140", "t": 1789971498148, "seq": 25}
+{"step": "32", "what": "start", "mem": null, "mb": 32, "members": 4, "mode": "blob", "run": "i386-firefox140", "t": 1789971498149, "seq": 26}
+{"step": "32", "what": "pack-held", "mem": null, "bytes": 33554432, "run": "i386-firefox140", "t": 1789971501170, "seq": 27}
+{"step": "32", "what": "base-held", "mem": null, "run": "i386-firefox140", "t": 1789971502976, "seq": 28}
+{"step": "32", "what": "tar-written", "mem": null, "bytes": 33557504, "run": "i386-firefox140", "t": 1789971504660, "seq": 29}
+{"step": "32", "what": "concat", "mem": null, "bytes": 39849049, "run": "i386-firefox140", "t": 1789971506320, "seq": 30}
+{"step": "32", "what": "intermediates-dropped", "mem": null, "run": "i386-firefox140", "t": 1789971508004, "seq": 31}
+{"step": "32", "what": "hashed", "mem": null, "sha": "e2892a86fda04501", "run": "i386-firefox140", "t": 1789971510136, "seq": 32}
+{"step": "32", "what": "blob", "mem": null, "bytes": 39849049, "run": "i386-firefox140", "t": 1789971511757, "seq": 33}
+{"step": "32", "what": "url", "mem": null, "run": "i386-firefox140", "t": 1789971513273, "seq": 34}
+{"step": "32", "what": "verified", "mem": null, "blobSize": 39849049, "footer": 33557504, "want": 33557504, "ok": true, "run": "i386-firefox140", "t": 1789971514778, "seq": 35}
+{"step": "32", "what": "done", "ok": true, "bytes": 39849049, "ms": 18194, "mem": null, "run": "i386-firefox140", "t": 1789971516343, "seq": 36}
+{"step": "32", "what": "after-gc", "mem": null, "run": "i386-firefox140", "t": 1789971519690, "seq": 37}
+{"step": "48", "what": "start", "mem": null, "mb": 48, "members": 4, "mode": "blob", "run": "i386-firefox140", "t": 1789971519692, "seq": 38}
+{"step": "48", "what": "pack-held", "mem": null, "bytes": 50331648, "run": "i386-firefox140", "t": 1789971522230, "seq": 39}
+{"step": "48", "what": "base-held", "mem": null, "run": "i386-firefox140", "t": 1789971523831, "seq": 40}
+{"step": "48", "what": "tar-written", "mem": null, "bytes": 50334720, "run": "i386-firefox140", "t": 1789971525378, "seq": 41}
+{"step": "48", "what": "concat", "mem": null, "bytes": 56626265, "run": "i386-firefox140", "t": 1789971526972, "seq": 42}
+{"step": "48", "what": "intermediates-dropped", "mem": null, "run": "i386-firefox140", "t": 1789971528476, "seq": 43}
+{"step": "48", "what": "hashed", "mem": null, "sha": "2ed9e994f8fc1485", "run": "i386-firefox140", "t": 1789971530776, "seq": 44}
+{"step": "48", "what": "blob", "mem": null, "bytes": 56626265, "run": "i386-firefox140", "t": 1789971532363, "seq": 45}
+{"step": "48", "what": "url", "mem": null, "run": "i386-firefox140", "t": 1789971533870, "seq": 46}
+{"step": "48", "what": "verified", "mem": null, "blobSize": 56626265, "footer": 50334720, "want": 50334720, "ok": true, "run": "i386-firefox140", "t": 1789971535380, "seq": 47}
+{"step": "48", "what": "done", "ok": true, "bytes": 56626265, "ms": 17192, "mem": null, "run": "i386-firefox140", "t": 1789971536884, "seq": 48}
+{"step": "48", "what": "after-gc", "mem": null, "run": "i386-firefox140", "t": 1789971539889, "seq": 49}
+{"step": "64", "what": "start", "mem": null, "mb": 64, "members": 4, "mode": "blob", "run": "i386-firefox140", "t": 1789971539891, "seq": 50}
+{"step": "64", "what": "pack-held", "mem": null, "bytes": 67108864, "run": "i386-firefox140", "t": 1789971542508, "seq": 51}
+{"step": "64", "what": "base-held", "mem": null, "run": "i386-firefox140", "t": 1789971544131, "seq": 52}
+{"step": "64", "what": "tar-written", "mem": null, "bytes": 67111936, "run": "i386-firefox140", "t": 1789971545718, "seq": 53}
+{"step": "64", "what": "concat", "mem": null, "bytes": 73403481, "run": "i386-firefox140", "t": 1789971547427, "seq": 54}
+{"step": "64", "what": "intermediates-dropped", "mem": null, "run": "i386-firefox140", "t": 1789971549054, "seq": 55}
+{"step": "64", "what": "hashed", "mem": null, "sha": "f7d5443dd424e60a", "run": "i386-firefox140", "t": 1789971553271, "seq": 56}
+{"step": "64", "what": "blob", "mem": null, "bytes": 73403481, "run": "i386-firefox140", "t": 1789971555155, "seq": 57}
+{"step": "64", "what": "url", "mem": null, "run": "i386-firefox140", "t": 1789971556685, "seq": 58}
+{"step": "64", "what": "verified", "mem": null, "blobSize": 73403481, "footer": 67111936, "want": 67111936, "ok": true, "run": "i386-firefox140", "t": 1789971558206, "seq": 59}
+{"step": "64", "what": "done", "ok": true, "bytes": 73403481, "ms": 19819, "mem": null, "run": "i386-firefox140", "t": 1789971559710, "seq": 60}
+{"step": "64", "what": "after-gc", "mem": null, "run": "i386-firefox140", "t": 1789971562723, "seq": 61}
+{"step": "96", "what": "start", "mem": null, "mb": 96, "members": 4, "mode": "blob", "run": "i386-firefox140", "t": 1789971562728, "seq": 62}
+{"step": "96", "what": "pack-held", "mem": null, "bytes": 100663296, "run": "i386-firefox140", "t": 1789971566160, "seq": 63}
+{"step": "96", "what": "base-held", "mem": null, "run": "i386-firefox140", "t": 1789971567770, "seq": 64}
+{"step": "96", "what": "tar-written", "mem": null, "bytes": 100666368, "run": "i386-firefox140", "t": 1789971569348, "seq": 65}
+{"step": "96", "what": "concat", "mem": null, "bytes": 106957913, "run": "i386-firefox140", "t": 1789971570981, "seq": 66}
+{"step": "96", "what": "intermediates-dropped", "mem": null, "run": "i386-firefox140", "t": 1789971572485, "seq": 67}
+{"step": "96", "what": "hashed", "mem": null, "sha": "4c6f026a5ea36f2b", "run": "i386-firefox140", "t": 1789971580932, "seq": 68}
+{"step": "96", "what": "blob", "mem": null, "bytes": 106957913, "run": "i386-firefox140", "t": 1789971586157, "seq": 69}
+{"step": "96", "what": "url", "mem": null, "run": "i386-firefox140", "t": 1789971588375, "seq": 70}
+{"step": "96", "what": "verified", "mem": null, "blobSize": 106957913, "footer": 100666368, "want": 100666368, "ok": true, "run": "i386-firefox140", "t": 1789971590197, "seq": 71}
+{"step": "96", "what": "done", "ok": true, "bytes": 106957913, "ms": 28970, "mem": null, "run": "i386-firefox140", "t": 1789971591698, "seq": 72}
+{"step": "96", "what": "after-gc", "mem": null, "run": "i386-firefox140", "t": 1789971594699, "seq": 73}
+{"step": "128", "what": "start", "mem": null, "mb": 128, "members": 4, "mode": "blob", "run": "i386-firefox140", "t": 1789971594717, "seq": 74}
+{"step": "128", "what": "pack-held", "mem": null, "bytes": 134217728, "run": "i386-firefox140", "t": 1789971598686, "seq": 75}
+{"step": "128", "what": "base-held", "mem": null, "run": "i386-firefox140", "t": 1789971600308, "seq": 76}
+{"step": "128", "what": "tar-written", "mem": null, "bytes": 134220800, "run": "i386-firefox140", "t": 1789971608763, "seq": 77}
+{"step": "128", "what": "concat", "mem": null, "bytes": 140512345, "run": "i386-firefox140", "t": 1789971620428, "seq": 78}
+{"step": "128", "what": "intermediates-dropped", "mem": null, "run": "i386-firefox140", "t": 1789971625072, "seq": 79}

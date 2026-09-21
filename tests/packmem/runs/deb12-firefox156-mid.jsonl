@@ -1,0 +1,66 @@
+{"what": "page-loaded", "ua": "Mozilla/5.0 (X11; Linux x86_64; rv:156.0) Gecko/20100101 Firefox/156.0", "run": "deb12-firefox156-mid", "t": 1789971999649}
+{"what": "begin", "ua": "Mozilla/5.0 (X11; Linux x86_64; rv:156.0) Gecko/20100101 Firefox/156.0", "mode": "blob", "members": 4, "base": 6, "steps": "512,640,768,896", "dm": 0, "cores": 2, "mem": null, "run": "deb12-firefox156-mid", "t": 1789972000095, "seq": 1}
+{"step": "512", "what": "start", "mem": null, "mb": 512, "members": 4, "mode": "blob", "run": "deb12-firefox156-mid", "t": 1789972000096, "seq": 2}
+{"step": "512", "what": "pack-held", "mem": null, "bytes": 536870912, "run": "deb12-firefox156-mid", "t": 1789972006330, "seq": 3}
+{"step": "512", "what": "base-held", "mem": null, "run": "deb12-firefox156-mid", "t": 1789972007400, "seq": 4}
+{"step": "512", "what": "tar-written", "mem": null, "bytes": 536873984, "run": "deb12-firefox156-mid", "t": 1789972008649, "seq": 5}
+{"step": "512", "what": "concat", "mem": null, "bytes": 543165529, "run": "deb12-firefox156-mid", "t": 1789972009999, "seq": 6}
+{"step": "512", "what": "intermediates-dropped", "mem": null, "run": "deb12-firefox156-mid", "t": 1789972011028, "seq": 7}
+{"step": "512", "what": "hashed", "mem": null, "sha": "8be752bcbbc0c2a6", "run": "deb12-firefox156-mid", "t": 1789972019225, "seq": 8}
+{"step": "512", "what": "blob", "mem": null, "bytes": 543165529, "run": "deb12-firefox156-mid", "t": 1789972022311, "seq": 9}
+{"step": "512", "what": "url", "mem": null, "run": "deb12-firefox156-mid", "t": 1789972024081, "seq": 10}
+{"step": "512", "what": "verified", "mem": null, "blobSize": 543165529, "footer": 536873984, "want": 536873984, "ok": true, "run": "deb12-firefox156-mid", "t": 1789972025082, "seq": 11}
+{"step": "512", "what": "done", "ok": true, "bytes": 543165529, "ms": 26008, "mem": null, "run": "deb12-firefox156-mid", "t": 1789972026104, "seq": 12}
+{"step": "512", "what": "after-gc", "mem": null, "run": "deb12-firefox156-mid", "t": 1789972028302, "seq": 13}
+{"step": "640", "what": "start", "mem": null, "mb": 640, "members": 4, "mode": "blob", "run": "deb12-firefox156-mid", "t": 1789972028303, "seq": 14}
+{"step": "640", "what": "pack-held", "mem": null, "bytes": 671088640, "run": "deb12-firefox156-mid", "t": 1789972035462, "seq": 15}
+{"step": "640", "what": "base-held", "mem": null, "run": "deb12-firefox156-mid", "t": 1789972036514, "seq": 16}
+{"step": "640", "what": "tar-written", "mem": null, "bytes": 671091712, "run": "deb12-firefox156-mid", "t": 1789972037838, "seq": 17}
+{"step": "640", "what": "concat", "mem": null, "bytes": 677383257, "run": "deb12-firefox156-mid", "t": 1789972039489, "seq": 18}
+{"step": "640", "what": "intermediates-dropped", "mem": null, "run": "deb12-firefox156-mid", "t": 1789972040566, "seq": 19}
+{"step": "640", "what": "hashed", "mem": null, "sha": "a669dd98046aa3b4", "run": "deb12-firefox156-mid", "t": 1789972050111, "seq": 20}
+{"what": "page-loaded", "ua": "Mozilla/5.0 (X11; Linux x86_64; rv:156.0) Gecko/20100101 Firefox/156.0", "run": "deb12-firefox156-mid", "t": 1789972498553}
+{"what": "begin", "ua": "Mozilla/5.0 (X11; Linux x86_64; rv:156.0) Gecko/20100101 Firefox/156.0", "mode": "blob", "members": 4, "base": 6, "steps": "384,512,640,768", "dm": 0, "cores": 2, "mem": null, "run": "deb12-firefox156-mid", "t": 1789972498923, "seq": 1}
+{"step": "384", "what": "start", "mem": null, "mb": 384, "members": 4, "mode": "blob", "run": "deb12-firefox156-mid", "t": 1789972498924, "seq": 2}
+{"step": "384", "what": "pack-held", "mem": null, "bytes": 402653184, "run": "deb12-firefox156-mid", "t": 1789972503668, "seq": 3}
+{"step": "384", "what": "base-held", "mem": null, "run": "deb12-firefox156-mid", "t": 1789972504724, "seq": 4}
+{"step": "384", "what": "tar-written", "mem": null, "bytes": 402656256, "run": "deb12-firefox156-mid", "t": 1789972505927, "seq": 5}
+{"step": "384", "what": "concat", "mem": null, "bytes": 408947801, "run": "deb12-firefox156-mid", "t": 1789972507138, "seq": 6}
+{"step": "384", "what": "intermediates-dropped", "mem": null, "run": "deb12-firefox156-mid", "t": 1789972508157, "seq": 7}
+{"step": "384", "what": "hashed", "mem": null, "sha": "8e924cd7ac51c077", "run": "deb12-firefox156-mid", "t": 1789972513718, "seq": 8}
+{"step": "384", "what": "blob", "mem": null, "bytes": 408947801, "run": "deb12-firefox156-mid", "t": 1789972515195, "seq": 9}
+{"step": "384", "what": "url", "mem": null, "run": "deb12-firefox156-mid", "t": 1789972516198, "seq": 10}
+{"step": "384", "what": "verified", "mem": null, "blobSize": 408947801, "footer": 402656256, "want": 402656256, "ok": true, "run": "deb12-firefox156-mid", "t": 1789972517198, "seq": 11}
+{"step": "384", "what": "done", "ok": true, "bytes": 408947801, "ms": 19276, "mem": null, "run": "deb12-firefox156-mid", "t": 1789972518200, "seq": 12}
+{"step": "384", "what": "after-gc", "mem": null, "run": "deb12-firefox156-mid", "t": 1789972520200, "seq": 13}
+{"step": "512", "what": "start", "mem": null, "mb": 512, "members": 4, "mode": "blob", "run": "deb12-firefox156-mid", "t": 1789972520200, "seq": 14}
+{"step": "512", "what": "pack-held", "mem": null, "bytes": 536870912, "run": "deb12-firefox156-mid", "t": 1789972525227, "seq": 15}
+{"step": "512", "what": "base-held", "mem": null, "run": "deb12-firefox156-mid", "t": 1789972526272, "seq": 16}
+{"step": "512", "what": "tar-written", "mem": null, "bytes": 536873984, "run": "deb12-firefox156-mid", "t": 1789972527468, "seq": 17}
+{"step": "512", "what": "concat", "mem": null, "bytes": 543165529, "run": "deb12-firefox156-mid", "t": 1789972528727, "seq": 18}
+{"step": "512", "what": "intermediates-dropped", "mem": null, "run": "deb12-firefox156-mid", "t": 1789972529748, "seq": 19}
+{"step": "512", "what": "hashed", "mem": null, "sha": "8be752bcbbc0c2a6", "run": "deb12-firefox156-mid", "t": 1789972537030, "seq": 20}
+{"step": "512", "what": "blob", "mem": null, "bytes": 543165529, "run": "deb12-firefox156-mid", "t": 1789972538766, "seq": 21}
+{"step": "512", "what": "url", "mem": null, "run": "deb12-firefox156-mid", "t": 1789972539784, "seq": 22}
+{"step": "512", "what": "verified", "mem": null, "blobSize": 543165529, "footer": 536873984, "want": 536873984, "ok": true, "run": "deb12-firefox156-mid", "t": 1789972540786, "seq": 23}
+{"step": "512", "what": "done", "ok": true, "bytes": 543165529, "ms": 21586, "mem": null, "run": "deb12-firefox156-mid", "t": 1789972541786, "seq": 24}
+{"step": "512", "what": "after-gc", "mem": null, "run": "deb12-firefox156-mid", "t": 1789972543787, "seq": 25}
+{"step": "640", "what": "start", "mem": null, "mb": 640, "members": 4, "mode": "blob", "run": "deb12-firefox156-mid", "t": 1789972543788, "seq": 26}
+{"step": "640", "what": "pack-held", "mem": null, "bytes": 671088640, "run": "deb12-firefox156-mid", "t": 1789972549101, "seq": 27}
+{"step": "640", "what": "base-held", "mem": null, "run": "deb12-firefox156-mid", "t": 1789972550224, "seq": 28}
+{"step": "640", "what": "tar-written", "mem": null, "bytes": 671091712, "run": "deb12-firefox156-mid", "t": 1789972551494, "seq": 29}
+{"step": "640", "what": "concat", "mem": null, "bytes": 677383257, "run": "deb12-firefox156-mid", "t": 1789972552817, "seq": 30}
+{"step": "640", "what": "intermediates-dropped", "mem": null, "run": "deb12-firefox156-mid", "t": 1789972553838, "seq": 31}
+{"step": "640", "what": "hashed", "mem": null, "sha": "a669dd98046aa3b4", "run": "deb12-firefox156-mid", "t": 1789972562736, "seq": 32}
+{"step": "640", "what": "blob", "mem": null, "bytes": 677383257, "run": "deb12-firefox156-mid", "t": 1789972564242, "seq": 33}
+{"step": "640", "what": "url", "mem": null, "run": "deb12-firefox156-mid", "t": 1789972565261, "seq": 34}
+{"step": "640", "what": "verified", "mem": null, "blobSize": 677383257, "footer": 671091712, "want": 671091712, "ok": true, "run": "deb12-firefox156-mid", "t": 1789972566264, "seq": 35}
+{"step": "640", "what": "done", "ok": true, "bytes": 677383257, "ms": 23490, "mem": null, "run": "deb12-firefox156-mid", "t": 1789972567278, "seq": 36}
+{"step": "640", "what": "after-gc", "mem": null, "run": "deb12-firefox156-mid", "t": 1789972569279, "seq": 37}
+{"step": "768", "what": "start", "mem": null, "mb": 768, "members": 4, "mode": "blob", "run": "deb12-firefox156-mid", "t": 1789972569280, "seq": 38}
+{"step": "768", "what": "pack-held", "mem": null, "bytes": 805306368, "run": "deb12-firefox156-mid", "t": 1789972575739, "seq": 39}
+{"step": "768", "what": "base-held", "mem": null, "run": "deb12-firefox156-mid", "t": 1789972576822, "seq": 40}
+{"step": "768", "what": "tar-written", "mem": null, "bytes": 805309440, "run": "deb12-firefox156-mid", "t": 1789972578150, "seq": 41}
+{"step": "768", "what": "concat", "mem": null, "bytes": 811600985, "run": "deb12-firefox156-mid", "t": 1789972579539, "seq": 42}
+{"step": "768", "what": "intermediates-dropped", "mem": null, "run": "deb12-firefox156-mid", "t": 1789972580576, "seq": 43}
+{"step": "768", "what": "hashed", "mem": null, "sha": "8cb92a6603d12116", "run": "deb12-firefox156-mid", "t": 1789972591963, "seq": 44}

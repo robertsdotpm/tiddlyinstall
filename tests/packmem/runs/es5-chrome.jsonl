@@ -1,0 +1,50 @@
+{"step": "128", "what": "base-held", "mem": {"used": 141420105, "limit": 4294967296}, "run": "es5-chrome", "t": 1789972010551, "seq": 16}
+{"what": "page-loaded", "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/144.0.0.0 Safari/537.36", "run": "es5-chrome", "t": 1789972010654}
+{"what": "begin", "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/144.0.0.0 Safari/537.36", "mode": "blob", "members": 4, "base": 6, "steps": "64,128,256", "dm": 8, "cores": 16, "mem": {"used": 2451466, "limit": 4294967296}, "run": "es5-chrome", "t": 1789972011066, "seq": 1}
+{"step": "64", "what": "start", "mem": {"used": 2451466, "limit": 4294967296}, "mb": 64, "members": 4, "mode": "blob", "run": "es5-chrome", "t": 1789972011070, "seq": 2}
+{"step": "128", "what": "tar-written", "mem": {"used": 275611997, "limit": 4294967296}, "bytes": 134220800, "run": "es5-chrome", "t": 1789972011667, "seq": 17}
+{"step": "64", "what": "pack-held", "mem": {"used": 69679866, "limit": 4294967296}, "bytes": 67108864, "run": "es5-chrome", "t": 1789972012514, "seq": 3}
+{"step": "128", "what": "concat", "mem": {"used": 416126742, "limit": 4294967296}, "bytes": 140512345, "run": "es5-chrome", "t": 1789972012795, "seq": 18}
+{"step": "64", "what": "base-held", "mem": {"used": 75386291, "limit": 4294967296}, "run": "es5-chrome", "t": 1789972013486, "seq": 4}
+{"step": "128", "what": "intermediates-dropped", "mem": {"used": 416101144, "limit": 4294967296}, "run": "es5-chrome", "t": 1789972013697, "seq": 19}
+{"step": "64", "what": "tar-written", "mem": {"used": 142523562, "limit": 4294967296}, "bytes": 67111936, "run": "es5-chrome", "t": 1789972014479, "seq": 5}
+{"step": "64", "what": "concat", "mem": {"used": 215824455, "limit": 4294967296}, "bytes": 73403481, "run": "es5-chrome", "t": 1789972015479, "seq": 6}
+{"step": "64", "what": "intermediates-dropped", "mem": {"used": 215822674, "limit": 4294967296}, "run": "es5-chrome", "t": 1789972016381, "seq": 7}
+{"step": "128", "what": "hashed", "mem": {"used": 416101740, "limit": 4294967296}, "sha": "fba08c587174413b", "run": "es5-chrome", "t": 1789972017296, "seq": 20}
+{"step": "128", "what": "blob", "mem": {"used": 416103564, "limit": 4294967296}, "bytes": 140512345, "run": "es5-chrome", "t": 1789972018377, "seq": 21}
+{"step": "64", "what": "hashed", "mem": {"used": 215843647, "limit": 4294967296}, "sha": "f7d5443dd424e60a", "run": "es5-chrome", "t": 1789972018684, "seq": 8}
+{"step": "128", "what": "url", "mem": {"used": 416104507, "limit": 4294967296}, "run": "es5-chrome", "t": 1789972019279, "seq": 22}
+{"step": "64", "what": "blob", "mem": {"used": 215845407, "limit": 4294967296}, "bytes": 73403481, "run": "es5-chrome", "t": 1789972019692, "seq": 9}
+{"step": "128", "what": "verified", "mem": {"used": 416107111, "limit": 4294967296}, "blobSize": 140512345, "footer": 134220800, "want": 134220800, "ok": true, "run": "es5-chrome", "t": 1789972020197, "seq": 23}
+{"step": "64", "what": "url", "mem": {"used": 215853606, "limit": 4294967296}, "run": "es5-chrome", "t": 1789972020594, "seq": 10}
+{"step": "128", "what": "done", "ok": true, "bytes": 140512345, "ms": 14426, "mem": {"used": 416110131, "limit": 4294967296}, "run": "es5-chrome", "t": 1789972021098, "seq": 24}
+{"step": "64", "what": "verified", "mem": {"used": 215859458, "limit": 4294967296}, "blobSize": 73403481, "footer": 67111936, "want": 67111936, "ok": true, "run": "es5-chrome", "t": 1789972021498, "seq": 11}
+{"step": "64", "what": "done", "ok": true, "bytes": 73403481, "ms": 11331, "mem": {"used": 215863306, "limit": 4294967296}, "run": "es5-chrome", "t": 1789972022399, "seq": 12}
+{"step": "128", "what": "after-gc", "mem": {"used": 416111455, "limit": 4294967296}, "run": "es5-chrome", "t": 1789972022900, "seq": 25}
+{"step": "256", "what": "start", "mem": {"used": 416111455, "limit": 4294967296}, "mb": 256, "members": 4, "mode": "blob", "run": "es5-chrome", "t": 1789972022901, "seq": 26}
+{"step": "64", "what": "after-gc", "mem": {"used": 215864966, "limit": 4294967296}, "run": "es5-chrome", "t": 1789972024200, "seq": 13}
+{"step": "128", "what": "start", "mem": {"used": 215864966, "limit": 4294967296}, "mb": 128, "members": 4, "mode": "blob", "run": "es5-chrome", "t": 1789972024202, "seq": 14}
+{"step": "256", "what": "pack-held", "mem": {"used": 269294854, "limit": 4294967296}, "bytes": 268435456, "run": "es5-chrome", "t": 1789972025603, "seq": 27}
+{"step": "256", "what": "base-held", "mem": {"used": 275618211, "limit": 4294967296}, "run": "es5-chrome", "t": 1789972026575, "seq": 28}
+{"step": "128", "what": "pack-held", "mem": {"used": 136165817, "limit": 4294967296}, "bytes": 134217728, "run": "es5-chrome", "t": 1789972027181, "seq": 15}
+{"step": "256", "what": "tar-written", "mem": {"used": 544024843, "limit": 4294967296}, "bytes": 268438528, "run": "es5-chrome", "t": 1789972027845, "seq": 29}
+{"step": "128", "what": "base-held", "mem": {"used": 142455302, "limit": 4294967296}, "run": "es5-chrome", "t": 1789972028148, "seq": 16}
+{"step": "256", "what": "concat", "mem": {"used": 818754308, "limit": 4294967296}, "bytes": 274730073, "run": "es5-chrome", "t": 1789972029097, "seq": 30}
+{"step": "128", "what": "tar-written", "mem": {"used": 276329916, "limit": 4294967296}, "bytes": 134220800, "run": "es5-chrome", "t": 1789972029223, "seq": 17}
+{"step": "256", "what": "intermediates-dropped", "mem": {"used": 818753478, "limit": 4294967296}, "run": "es5-chrome", "t": 1789972029999, "seq": 31}
+{"step": "128", "what": "concat", "mem": {"used": 416840721, "limit": 4294967296}, "bytes": 140512345, "run": "es5-chrome", "t": 1789972030353, "seq": 18}
+{"step": "128", "what": "intermediates-dropped", "mem": {"used": 416842149, "limit": 4294967296}, "run": "es5-chrome", "t": 1789972031254, "seq": 19}
+{"step": "128", "what": "hashed", "mem": {"used": 416852973, "limit": 4294967296}, "sha": "fba08c587174413b", "run": "es5-chrome", "t": 1789972035649, "seq": 20}
+{"step": "256", "what": "hashed", "mem": {"used": 818757058, "limit": 4294967296}, "sha": "507dc059633d667c", "run": "es5-chrome", "t": 1789972036103, "seq": 32}
+{"step": "128", "what": "blob", "mem": {"used": 416855129, "limit": 4294967296}, "bytes": 140512345, "run": "es5-chrome", "t": 1789972036730, "seq": 21}
+{"step": "256", "what": "blob", "mem": {"used": 818758722, "limit": 4294967296}, "bytes": 274730073, "run": "es5-chrome", "t": 1789972037366, "seq": 33}
+{"step": "128", "what": "url", "mem": {"used": 416856044, "limit": 4294967296}, "run": "es5-chrome", "t": 1789972037631, "seq": 22}
+{"step": "256", "what": "url", "mem": {"used": 275585169, "limit": 4294967296}, "run": "es5-chrome", "t": 1789972038268, "seq": 34}
+{"step": "128", "what": "verified", "mem": {"used": 416858540, "limit": 4294967296}, "blobSize": 140512345, "footer": 134220800, "want": 134220800, "ok": true, "run": "es5-chrome", "t": 1789972038533, "seq": 23}
+{"step": "256", "what": "verified", "mem": {"used": 275588897, "limit": 4294967296}, "blobSize": 274730073, "footer": 268438528, "want": 268438528, "ok": true, "run": "es5-chrome", "t": 1789972039176, "seq": 35}
+{"step": "128", "what": "done", "ok": true, "bytes": 140512345, "ms": 15233, "mem": {"used": 416861584, "limit": 4294967296}, "run": "es5-chrome", "t": 1789972039434, "seq": 24}
+{"step": "256", "what": "done", "ok": true, "bytes": 274730073, "ms": 17176, "mem": {"used": 275596357, "limit": 4294967296}, "run": "es5-chrome", "t": 1789972040077, "seq": 36}
+{"step": "128", "what": "after-gc", "mem": {"used": 1600455, "limit": 4294967296}, "run": "es5-chrome", "t": 1789972041278, "seq": 25}
+{"step": "256", "what": "start", "mem": {"used": 1600455, "limit": 4294967296}, "mb": 256, "members": 4, "mode": "blob", "run": "es5-chrome", "t": 1789972041318, "seq": 26}
+{"step": "256", "what": "after-gc", "mem": {"used": 275597681, "limit": 4294967296}, "run": "es5-chrome", "t": 1789972041879, "seq": 37}
+{"what": "end", "lastOk": 256, "failedAt": 0, "run": "es5-chrome", "t": 1789972041884, "seq": 38}

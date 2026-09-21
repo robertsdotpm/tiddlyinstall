@@ -1,0 +1,14 @@
+{"what": "begin", "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/144.0.0.0 Safari/537.36", "mode": "blob", "members": 4, "base": 6, "steps": "64", "dm": 8, "cores": 16, "mem": {"used": 905313, "limit": 4294967296}, "run": "shape-chrome", "t": 1789967771349, "seq": 1}
+{"step": "64", "what": "start", "mem": {"used": 905313, "limit": 4294967296}, "mb": 64, "members": 4, "mode": "blob", "run": "shape-chrome", "t": 1789967771352, "seq": 2}
+{"step": "64", "what": "pack-held", "mem": {"used": 68249634, "limit": 4294967296}, "bytes": 67108864, "run": "shape-chrome", "t": 1789967772775, "seq": 3}
+{"step": "64", "what": "base-held", "mem": {"used": 74504687, "limit": 4294967296}, "run": "shape-chrome", "t": 1789967773741, "seq": 4}
+{"step": "64", "what": "tar-written", "mem": {"used": 141638794, "limit": 4294967296}, "bytes": 67111936, "run": "shape-chrome", "t": 1789967774756, "seq": 5}
+{"step": "64", "what": "concat", "mem": {"used": 214760717, "limit": 4294967296}, "bytes": 73403481, "run": "shape-chrome", "t": 1789967775780, "seq": 6}
+{"step": "64", "what": "intermediates-dropped", "mem": {"used": 214760554, "limit": 4294967296}, "run": "shape-chrome", "t": 1789967776682, "seq": 7}
+{"step": "64", "what": "hashed", "mem": {"used": 214771275, "limit": 4294967296}, "sha": "f7d5443dd424e60a", "run": "shape-chrome", "t": 1789967778950, "seq": 8}
+{"step": "64", "what": "blob", "mem": {"used": 214775219, "limit": 4294967296}, "bytes": 73403481, "run": "shape-chrome", "t": 1789967779970, "seq": 9}
+{"step": "64", "what": "url", "mem": {"used": 214781690, "limit": 4294967296}, "run": "shape-chrome", "t": 1789967780872, "seq": 10}
+{"step": "64", "what": "verified", "mem": {"used": 214794746, "limit": 4294967296}, "blobSize": 73403481, "footer": 67111936, "want": 67111936, "ok": true, "run": "shape-chrome", "t": 1789967781779, "seq": 11}
+{"step": "64", "what": "done", "ok": true, "bytes": 73403481, "ms": 11330, "mem": {"used": 214798582, "limit": 4294967296}, "run": "shape-chrome", "t": 1789967782681, "seq": 12}
+{"step": "64", "what": "after-gc", "mem": {"used": 863133, "limit": 4294967296}, "run": "shape-chrome", "t": 1789967784482, "seq": 13}
+{"what": "end", "lastOk": 64, "failedAt": 0, "run": "shape-chrome", "t": 1789967784482, "seq": 14}

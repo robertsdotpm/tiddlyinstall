@@ -1,0 +1,4 @@
+{"what": "begin", "mb": 256, "delay": -2, "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36", "run": "xp-revoke", "t": 1790012102464}
+{"what": "click", "size": 268435456, "name": "packmem-256mb-never.bin", "run": "xp-revoke", "t": 1790012108276}
+{"what": "revoked", "after": "same-task", "run": "xp-revoke", "t": 1790012108287}
+{"what": "end", "run": "xp-revoke", "t": 1790012168294}

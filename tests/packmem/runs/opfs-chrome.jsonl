@@ -1,0 +1,48 @@
+{"what": "page-loaded", "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/144.0.0.0 Safari/537.36", "run": "opfs-chrome", "t": 1789970141827}
+{"what": "begin", "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/144.0.0.0 Safari/537.36", "mode": "opfs", "members": 4, "base": 6, "steps": "128,512,1024,2048,4096", "dm": 8, "cores": 16, "mem": {"used": 929200, "limit": 4294967296}, "run": "opfs-chrome", "t": 1789970142152, "seq": 1}
+{"step": "128", "what": "start", "mem": {"used": 929200, "limit": 4294967296}, "mb": 128, "members": 4, "mode": "opfs", "chunk": 4194304, "run": "opfs-chrome", "t": 1789970142176, "seq": 2}
+{"step": "128", "what": "base-written", "mem": {"used": 7319681, "limit": 4294967296}, "bytes": 6291481, "run": "opfs-chrome", "t": 1789970143143, "seq": 3}
+{"step": "128", "what": "member-0", "mem": {"used": 40902649, "limit": 4294967296}, "written": 39846425, "run": "opfs-chrome", "t": 1789970144885, "seq": 4}
+{"step": "128", "what": "member-1", "mem": {"used": 9534300, "limit": 4294967296}, "written": 73401369, "run": "opfs-chrome", "t": 1789970146555, "seq": 5}
+{"step": "128", "what": "member-2", "mem": {"used": 43117811, "limit": 4294967296}, "written": 106956313, "run": "opfs-chrome", "t": 1789970148200, "seq": 6}
+{"step": "128", "what": "member-3", "mem": {"used": 9333991, "limit": 4294967296}, "written": 140511257, "run": "opfs-chrome", "t": 1789970149846, "seq": 7}
+{"step": "128", "what": "closed", "mem": {"used": 9350082, "limit": 4294967296}, "written": 140512345, "onDisk": 140512345, "sha": "11e692ea3162de98", "run": "opfs-chrome", "t": 1789970150695, "seq": 8}
+{"step": "128", "what": "done", "ok": true, "bytes": 140512345, "ms": 9342, "mem": {"used": 9352870, "limit": 4294967296}, "run": "opfs-chrome", "t": 1789970151496, "seq": 9}
+{"step": "128", "what": "after-gc", "mem": {"used": 9354498, "limit": 4294967296}, "run": "opfs-chrome", "t": 1789970153097, "seq": 10}
+{"step": "512", "what": "start", "mem": {"used": 9354498, "limit": 4294967296}, "mb": 512, "members": 4, "mode": "opfs", "chunk": 4194304, "run": "opfs-chrome", "t": 1789970153100, "seq": 11}
+{"step": "512", "what": "base-written", "mem": {"used": 7252315, "limit": 4294967296}, "bytes": 6291481, "run": "opfs-chrome", "t": 1789970154061, "seq": 12}
+{"step": "512", "what": "member-0", "mem": {"used": 72298615, "limit": 4294967296}, "written": 140509721, "run": "opfs-chrome", "t": 1789970158143, "seq": 13}
+{"step": "512", "what": "member-1", "mem": {"used": 68079695, "limit": 4294967296}, "written": 274727961, "run": "opfs-chrome", "t": 1789970162241, "seq": 14}
+{"step": "512", "what": "member-2", "mem": {"used": 63884015, "limit": 4294967296}, "written": 408946201, "run": "opfs-chrome", "t": 1789970166290, "seq": 15}
+{"step": "512", "what": "member-3", "mem": {"used": 59687939, "limit": 4294967296}, "written": 543164441, "run": "opfs-chrome", "t": 1789970170296, "seq": 16}
+{"step": "512", "what": "closed", "mem": {"used": 59698658, "limit": 4294967296}, "written": 543165529, "onDisk": 543165529, "sha": "3f91784e3271b9b4", "run": "opfs-chrome", "t": 1789970171275, "seq": 17}
+{"step": "512", "what": "done", "ok": true, "bytes": 543165529, "ms": 18978, "mem": {"used": 59701454, "limit": 4294967296}, "run": "opfs-chrome", "t": 1789970172076, "seq": 18}
+{"step": "512", "what": "after-gc", "mem": {"used": 59702938, "limit": 4294967296}, "run": "opfs-chrome", "t": 1789970173677, "seq": 19}
+{"step": "1024", "what": "start", "mem": {"used": 59702938, "limit": 4294967296}, "mb": 1024, "members": 4, "mode": "opfs", "chunk": 4194304, "run": "opfs-chrome", "t": 1789970173682, "seq": 20}
+{"step": "1024", "what": "base-written", "mem": {"used": 66005279, "limit": 4294967296}, "bytes": 6291481, "run": "opfs-chrome", "t": 1789970174629, "seq": 21}
+{"step": "1024", "what": "member-0", "mem": {"used": 51298779, "limit": 4294967296}, "written": 274727449, "run": "opfs-chrome", "t": 1789970182265, "seq": 22}
+{"step": "1024", "what": "member-1", "mem": {"used": 38709423, "limit": 4294967296}, "written": 543163417, "run": "opfs-chrome", "t": 1789970189655, "seq": 23}
+{"step": "1024", "what": "member-2", "mem": {"used": 26121599, "limit": 4294967296}, "written": 811599385, "run": "opfs-chrome", "t": 1789970197178, "seq": 24}
+{"step": "1024", "what": "member-3", "mem": {"used": 13540355, "limit": 4294967296}, "written": 1080035353, "run": "opfs-chrome", "t": 1789970204668, "seq": 25}
+{"step": "1024", "what": "closed", "mem": {"used": 13557755, "limit": 4294967296}, "written": 1080036441, "onDisk": 1080036441, "sha": "39eee8f112cfb347", "run": "opfs-chrome", "t": 1789970205807, "seq": 26}
+{"step": "1024", "what": "done", "ok": true, "bytes": 1080036441, "ms": 32930, "mem": {"used": 13560887, "limit": 4294967296}, "run": "opfs-chrome", "t": 1789970206608, "seq": 27}
+{"step": "1024", "what": "after-gc", "mem": {"used": 13562207, "limit": 4294967296}, "run": "opfs-chrome", "t": 1789970208210, "seq": 28}
+{"step": "2048", "what": "start", "mem": {"used": 13562207, "limit": 4294967296}, "mb": 2048, "members": 4, "mode": "opfs", "chunk": 4194304, "run": "opfs-chrome", "t": 1789970208213, "seq": 29}
+{"step": "2048", "what": "base-written", "mem": {"used": 19864400, "limit": 4294967296}, "bytes": 6291481, "run": "opfs-chrome", "t": 1789970209174, "seq": 30}
+{"step": "2048", "what": "member-0", "mem": {"used": 59694331, "limit": 4294967296}, "written": 543162905, "run": "opfs-chrome", "t": 1789970223162, "seq": 31}
+{"step": "2048", "what": "member-1", "mem": {"used": 30322547, "limit": 4294967296}, "written": 1080034329, "run": "opfs-chrome", "t": 1789970236783, "seq": 32}
+{"step": "2048", "what": "member-2", "mem": {"used": 34518591, "limit": 4294967296}, "written": 1616905753, "run": "opfs-chrome", "t": 1789970363351, "seq": 33}
+{"step": "2048", "what": "member-3", "mem": {"used": 76450839, "limit": 4294967296}, "written": 2153777177, "run": "opfs-chrome", "t": 1789970376758, "seq": 34}
+{"step": "2048", "what": "closed", "mem": {"used": 5158431, "limit": 4294967296}, "written": 2153778265, "onDisk": 2153778265, "sha": "c51ced926fb7bc95", "run": "opfs-chrome", "t": 1789970378110, "seq": 35}
+{"step": "2048", "what": "done", "ok": true, "bytes": 2153778265, "ms": 170701, "mem": {"used": 5161443, "limit": 4294967296}, "run": "opfs-chrome", "t": 1789970378911, "seq": 36}
+{"step": "2048", "what": "after-gc", "mem": {"used": 5162763, "limit": 4294967296}, "run": "opfs-chrome", "t": 1789970380512, "seq": 37}
+{"step": "4096", "what": "start", "mem": {"used": 5162763, "limit": 4294967296}, "mb": 4096, "members": 4, "mode": "opfs", "chunk": 4194304, "run": "opfs-chrome", "t": 1789970380516, "seq": 38}
+{"step": "4096", "what": "base-written", "mem": {"used": 11464264, "limit": 4294967296}, "bytes": 6291481, "run": "opfs-chrome", "t": 1789970381469, "seq": 39}
+{"step": "4096", "what": "member-0", "mem": {"used": 17738175, "limit": 4294967296}, "written": 1080033817, "run": "opfs-chrome", "t": 1789970407372, "seq": 40}
+{"step": "4096", "what": "member-1", "mem": {"used": 26138303, "limit": 4294967296}, "written": 2153776153, "run": "opfs-chrome", "t": 1789970433493, "seq": 41}
+{"step": "4096", "what": "member-2", "mem": {"used": 34530047, "limit": 4294967296}, "written": 3227518489, "run": "opfs-chrome", "t": 1789970459524, "seq": 42}
+{"step": "4096", "what": "member-3", "mem": {"used": 42922887, "limit": 4294967296}, "written": 4301260825, "run": "opfs-chrome", "t": 1789970485950, "seq": 43}
+{"step": "4096", "what": "closed", "mem": {"used": 42933767, "limit": 4294967296}, "written": 4301261913, "onDisk": 4301261913, "sha": "381b146aa659f1ff", "run": "opfs-chrome", "t": 1789970487868, "seq": 44}
+{"step": "4096", "what": "done", "ok": true, "bytes": 4301261913, "ms": 108157, "mem": {"used": 42936751, "limit": 4294967296}, "run": "opfs-chrome", "t": 1789970488669, "seq": 45}
+{"step": "4096", "what": "after-gc", "mem": {"used": 42938071, "limit": 4294967296}, "run": "opfs-chrome", "t": 1789970490270, "seq": 46}
+{"what": "end", "lastOk": 4096, "failedAt": 0, "run": "opfs-chrome", "t": 1789970490271, "seq": 47}

@@ -1,0 +1,87 @@
+{"what": "page-loaded", "ua": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36", "run": "w7-chrome109", "t": 1790011100848}
+{"what": "begin", "ua": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36", "mode": "blob", "members": 4, "base": 6, "steps": "64,128,256,384,512,768,1024", "dm": 0, "cores": 2, "mem": {"used": 1480690, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011101237, "seq": 1}
+{"step": "64", "what": "start", "mem": {"used": 1480690, "limit": 2172387328}, "mb": 64, "members": 4, "mode": "blob", "run": "w7-chrome109", "t": 1790011101241, "seq": 2}
+{"step": "64", "what": "pack-held", "mem": {"used": 68575577, "limit": 2172387328}, "bytes": 67108864, "run": "w7-chrome109", "t": 1790011102978, "seq": 3}
+{"step": "64", "what": "base-held", "mem": {"used": 75303420, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011104242, "seq": 4}
+{"step": "64", "what": "tar-written", "mem": {"used": 142458280, "limit": 2172387328}, "bytes": 67111936, "run": "w7-chrome109", "t": 1790011105510, "seq": 5}
+{"step": "64", "what": "concat", "mem": {"used": 214992679, "limit": 2172387328}, "bytes": 73403481, "run": "w7-chrome109", "t": 1790011106792, "seq": 6}
+{"step": "64", "what": "intermediates-dropped", "mem": {"used": 215015996, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011108008, "seq": 7}
+{"step": "64", "what": "hashed", "mem": {"used": 148184722, "limit": 2172387328}, "sha": "f7d5443dd424e60a", "run": "w7-chrome109", "t": 1790011110159, "seq": 8}
+{"step": "64", "what": "blob", "mem": {"used": 148187366, "limit": 2172387328}, "bytes": 73403481, "run": "w7-chrome109", "t": 1790011111438, "seq": 9}
+{"step": "64", "what": "url", "mem": {"used": 148190705, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011112658, "seq": 10}
+{"step": "64", "what": "verified", "mem": {"used": 148194205, "limit": 2172387328}, "blobSize": 73403481, "footer": 67111936, "want": 67111936, "ok": true, "run": "w7-chrome109", "t": 1790011113877, "seq": 11}
+{"step": "64", "what": "done", "ok": true, "bytes": 73403481, "ms": 13838, "mem": {"used": 148197301, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011115078, "seq": 12}
+{"step": "64", "what": "after-gc", "mem": {"used": 148199153, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011117488, "seq": 13}
+{"step": "128", "what": "start", "mem": {"used": 148199153, "limit": 2172387328}, "mb": 128, "members": 4, "mode": "blob", "run": "w7-chrome109", "t": 1790011117491, "seq": 14}
+{"step": "128", "what": "pack-held", "mem": {"used": 135537144, "limit": 2172387328}, "bytes": 134217728, "run": "w7-chrome109", "t": 1790011119640, "seq": 15}
+{"step": "128", "what": "base-held", "mem": {"used": 141830657, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011120898, "seq": 16}
+{"step": "128", "what": "tar-written", "mem": {"used": 276061549, "limit": 2172387328}, "bytes": 134220800, "run": "w7-chrome109", "t": 1790011122216, "seq": 17}
+{"step": "128", "what": "concat", "mem": {"used": 416539070, "limit": 2172387328}, "bytes": 140512345, "run": "w7-chrome109", "t": 1790011123557, "seq": 18}
+{"step": "128", "what": "intermediates-dropped", "mem": {"used": 416329710, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011124774, "seq": 19}
+{"step": "128", "what": "hashed", "mem": {"used": 557265634, "limit": 2172387328}, "sha": "fba08c587174413b", "run": "w7-chrome109", "t": 1790011127646, "seq": 20}
+{"step": "128", "what": "blob", "mem": {"used": 557050441, "limit": 2172387328}, "bytes": 140512345, "run": "w7-chrome109", "t": 1790011129024, "seq": 21}
+{"step": "128", "what": "url", "mem": {"used": 557051776, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011130243, "seq": 22}
+{"step": "128", "what": "verified", "mem": {"used": 282324140, "limit": 2172387328}, "blobSize": 140512345, "footer": 134220800, "want": 134220800, "ok": true, "run": "w7-chrome109", "t": 1790011131457, "seq": 23}
+{"step": "128", "what": "done", "ok": true, "bytes": 140512345, "ms": 15182, "mem": {"used": 282326816, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011132673, "seq": 24}
+{"step": "128", "what": "after-gc", "mem": {"used": 282328428, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011135091, "seq": 25}
+{"step": "256", "what": "start", "mem": {"used": 282328428, "limit": 2172387328}, "mb": 256, "members": 4, "mode": "blob", "run": "w7-chrome109", "t": 1790011135093, "seq": 26}
+{"step": "256", "what": "pack-held", "mem": {"used": 269527331, "limit": 2172387328}, "bytes": 268435456, "run": "w7-chrome109", "t": 1790011138050, "seq": 27}
+{"step": "256", "what": "base-held", "mem": {"used": 276074336, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011139298, "seq": 28}
+{"step": "256", "what": "tar-written", "mem": {"used": 544522920, "limit": 2172387328}, "bytes": 268438528, "run": "w7-chrome109", "t": 1790011140740, "seq": 29}
+{"step": "256", "what": "concat", "mem": {"used": 819238270, "limit": 2172387328}, "bytes": 274730073, "run": "w7-chrome109", "t": 1790011142191, "seq": 30}
+{"step": "256", "what": "intermediates-dropped", "mem": {"used": 819235852, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011143407, "seq": 31}
+{"step": "256", "what": "hashed", "mem": {"used": 1094180110, "limit": 2172387328}, "sha": "507dc059633d667c", "run": "w7-chrome109", "t": 1790011147850, "seq": 32}
+{"step": "256", "what": "blob", "mem": {"used": 1093963982, "limit": 2172387328}, "bytes": 274730073, "run": "w7-chrome109", "t": 1790011149331, "seq": 33}
+{"step": "256", "what": "url", "mem": {"used": 1093965709, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011150558, "seq": 34}
+{"step": "256", "what": "verified", "mem": {"used": 550802737, "limit": 2172387328}, "blobSize": 274730073, "footer": 268438528, "want": 268438528, "ok": true, "run": "w7-chrome109", "t": 1790011151780, "seq": 35}
+{"step": "256", "what": "done", "ok": true, "bytes": 274730073, "ms": 17898, "mem": {"used": 550805237, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011152990, "seq": 36}
+{"step": "256", "what": "after-gc", "mem": {"used": 550806873, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011155410, "seq": 37}
+{"step": "384", "what": "start", "mem": {"used": 550806873, "limit": 2172387328}, "mb": 384, "members": 4, "mode": "blob", "run": "w7-chrome109", "t": 1790011155413, "seq": 38}
+{"step": "384", "what": "pack-held", "mem": {"used": 403747136, "limit": 2172387328}, "bytes": 402653184, "run": "w7-chrome109", "t": 1790011159537, "seq": 39}
+{"step": "384", "what": "base-held", "mem": {"used": 410280145, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011160787, "seq": 40}
+{"step": "384", "what": "tar-written", "mem": {"used": 812946481, "limit": 2172387328}, "bytes": 402656256, "run": "w7-chrome109", "t": 1790011162359, "seq": 41}
+{"step": "384", "what": "concat", "mem": {"used": 1221881191, "limit": 2172387328}, "bytes": 408947801, "run": "w7-chrome109", "t": 1790011163904, "seq": 42}
+{"step": "384", "what": "intermediates-dropped", "mem": {"used": 1221879038, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011165124, "seq": 43}
+{"step": "384", "what": "hashed", "mem": {"used": 1631071324, "limit": 2172387328}, "sha": "8e924cd7ac51c077", "run": "w7-chrome109", "t": 1790011171311, "seq": 44}
+{"step": "384", "what": "blob", "mem": {"used": 1630830616, "limit": 2172387328}, "bytes": 408947801, "run": "w7-chrome109", "t": 1790011172976, "seq": 45}
+{"step": "384", "what": "url", "mem": {"used": 1630832315, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011174192, "seq": 46}
+{"step": "384", "what": "verified", "mem": {"used": 819233887, "limit": 2172387328}, "blobSize": 408947801, "footer": 402656256, "want": 402656256, "ok": true, "run": "w7-chrome109", "t": 1790011175410, "seq": 47}
+{"step": "384", "what": "done", "ok": true, "bytes": 408947801, "ms": 21210, "mem": {"used": 819236387, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011176623, "seq": 48}
+{"step": "384", "what": "after-gc", "mem": {"used": 819238023, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011179042, "seq": 49}
+{"step": "512", "what": "start", "mem": {"used": 819238023, "limit": 2172387328}, "mb": 512, "members": 4, "mode": "blob", "run": "w7-chrome109", "t": 1790011179043, "seq": 50}
+{"step": "512", "what": "pack-held", "mem": {"used": 537971354, "limit": 2172387328}, "bytes": 536870912, "run": "w7-chrome109", "t": 1790011184002, "seq": 51}
+{"step": "512", "what": "base-held", "mem": {"used": 544267279, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011185276, "seq": 52}
+{"step": "512", "what": "tar-written", "mem": {"used": 1081151279, "limit": 2172387328}, "bytes": 536873984, "run": "w7-chrome109", "t": 1790011186954, "seq": 53}
+{"step": "512", "what": "concat", "mem": {"used": 1624302270, "limit": 2172387328}, "bytes": 543165529, "run": "w7-chrome109", "t": 1790011188636, "seq": 54}
+{"step": "512", "what": "intermediates-dropped", "mem": {"used": 1624530627, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011189860, "seq": 55}
+{"step": "512", "what": "hashed", "mem": {"used": 2167731315, "limit": 2172387328}, "sha": "8be752bcbbc0c2a6", "run": "w7-chrome109", "t": 1790011197955, "seq": 56}
+{"step": "512", "what": "blob", "mem": {"used": 2167697623, "limit": 2172387328}, "bytes": 543165529, "run": "w7-chrome109", "t": 1790011199736, "seq": 57}
+{"step": "512", "what": "url", "mem": {"used": 2167699322, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011200945, "seq": 58}
+{"step": "512", "what": "verified", "mem": {"used": 1087665438, "limit": 2172387328}, "blobSize": 543165529, "footer": 536873984, "want": 536873984, "ok": true, "run": "w7-chrome109", "t": 1790011202160, "seq": 59}
+{"step": "512", "what": "done", "ok": true, "bytes": 543165529, "ms": 24331, "mem": {"used": 1087667950, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011203375, "seq": 60}
+{"step": "512", "what": "after-gc", "mem": {"used": 1087669598, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011205791, "seq": 61}
+{"step": "768", "what": "start", "mem": {"used": 1087669598, "limit": 2172387328}, "mb": 768, "members": 4, "mode": "blob", "run": "w7-chrome109", "t": 1790011205795, "seq": 62}
+{"step": "768", "what": "pack-held", "mem": {"used": 806409577, "limit": 2172387328}, "bytes": 805306368, "run": "w7-chrome109", "t": 1790011212191, "seq": 63}
+{"step": "768", "what": "base-held", "mem": {"used": 812929450, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011213446, "seq": 64}
+{"step": "768", "what": "tar-written", "mem": {"used": 1618248906, "limit": 2172387328}, "bytes": 805309440, "run": "w7-chrome109", "t": 1790011215432, "seq": 65}
+{"step": "768", "what": "concat", "mem": {"used": 2429837153, "limit": 2172387328}, "bytes": 811600985, "run": "w7-chrome109", "t": 1790011217462, "seq": 66}
+{"step": "768", "what": "intermediates-dropped", "mem": {"used": 2429836434, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011218674, "seq": 67}
+{"step": "768", "what": "hashed", "mem": {"used": 3241442250, "limit": 2172387328}, "sha": "8cb92a6603d12116", "run": "w7-chrome109", "t": 1790011229612, "seq": 68}
+{"step": "768", "what": "blob", "mem": {"used": 3241435286, "limit": 2172387328}, "bytes": 811600985, "run": "w7-chrome109", "t": 1790011231662, "seq": 69}
+{"step": "768", "what": "url", "mem": {"used": 3241436985, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011232871, "seq": 70}
+{"step": "768", "what": "verified", "mem": {"used": 1624532189, "limit": 2172387328}, "blobSize": 811600985, "footer": 805309440, "want": 805309440, "ok": true, "run": "w7-chrome109", "t": 1790011234088, "seq": 71}
+{"step": "768", "what": "done", "ok": true, "bytes": 811600985, "ms": 29510, "mem": {"used": 1624534701, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011235304, "seq": 72}
+{"step": "768", "what": "after-gc", "mem": {"used": 1624536349, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011237722, "seq": 73}
+{"step": "1024", "what": "start", "mem": {"used": 1624536349, "limit": 2172387328}, "mb": 1024, "members": 4, "mode": "blob", "run": "w7-chrome109", "t": 1790011237725, "seq": 74}
+{"step": "1024", "what": "pack-held", "mem": {"used": 1074850136, "limit": 2172387328}, "bytes": 1073741824, "run": "w7-chrome109", "t": 1790011246140, "seq": 75}
+{"step": "1024", "what": "base-held", "mem": {"used": 1081143721, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011247391, "seq": 76}
+{"step": "1024", "what": "tar-written", "mem": {"used": 2155105169, "limit": 2172387328}, "bytes": 1073744896, "run": "w7-chrome109", "t": 1790011249434, "seq": 77}
+{"step": "1024", "what": "concat", "mem": {"used": 3235137646, "limit": 2172387328}, "bytes": 1080036441, "run": "w7-chrome109", "t": 1790011251531, "seq": 78}
+{"step": "1024", "what": "intermediates-dropped", "mem": {"used": 3235139322, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011252752, "seq": 79}
+{"step": "1024", "what": "hashed", "mem": {"used": 2161596682, "limit": 2172387328}, "sha": "a308b45dd0e1f3a4", "run": "w7-chrome109", "t": 1790011266278, "seq": 80}
+{"step": "1024", "what": "blob", "mem": {"used": 2161598538, "limit": 2172387328}, "bytes": 1080036441, "run": "w7-chrome109", "t": 1790011268399, "seq": 81}
+{"step": "1024", "what": "url", "mem": {"used": 2161600277, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011269874, "seq": 82}
+{"step": "1024", "what": "verified", "mem": {"used": 2161603429, "limit": 2172387328}, "blobSize": 1080036441, "footer": 1073744896, "want": 1073744896, "ok": true, "run": "w7-chrome109", "t": 1790011272986, "seq": 83}
+{"step": "1024", "what": "done", "ok": true, "bytes": 1080036441, "ms": 36481, "mem": {"used": 2161651193, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011274206, "seq": 84}
+{"step": "1024", "what": "after-gc", "mem": {"used": 2161652857, "limit": 2172387328}, "run": "w7-chrome109", "t": 1790011276620, "seq": 85}
+{"what": "end", "lastOk": 1024, "failedAt": 0, "run": "w7-chrome109", "t": 1790011276625, "seq": 86}

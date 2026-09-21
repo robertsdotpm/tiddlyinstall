@@ -1,0 +1,46 @@
+{"what": "page-loaded", "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36", "run": "deb12-chrome153", "t": 1789970152555}
+{"what": "begin", "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36", "mode": "blob", "members": 4, "base": 6, "steps": "64,256,512,1024,1536,2048", "dm": 0, "cores": 2, "mem": {"used": 889932, "limit": 2153512960}, "run": "deb12-chrome153", "t": 1789970152933, "seq": 1}
+{"step": "64", "what": "start", "mem": {"used": 889932, "limit": 2153512960}, "mb": 64, "members": 4, "mode": "blob", "run": "deb12-chrome153", "t": 1789970152982, "seq": 2}
+{"step": "64", "what": "pack-held", "mem": {"used": 68041162, "limit": 2153512960}, "bytes": 67108864, "run": "deb12-chrome153", "t": 1789970154502, "seq": 3}
+{"step": "64", "what": "base-held", "mem": {"used": 74337079, "limit": 2153512960}, "run": "deb12-chrome153", "t": 1789970155555, "seq": 4}
+{"step": "64", "what": "tar-written", "mem": {"used": 141471183, "limit": 2153512960}, "bytes": 67111936, "run": "deb12-chrome153", "t": 1789970156598, "seq": 5}
+{"step": "64", "what": "concat", "mem": {"used": 214734956, "limit": 2153512960}, "bytes": 73403481, "run": "deb12-chrome153", "t": 1789970157640, "seq": 6}
+{"step": "64", "what": "intermediates-dropped", "mem": {"used": 214734332, "limit": 2153512960}, "run": "deb12-chrome153", "t": 1789970158642, "seq": 7}
+{"step": "64", "what": "hashed", "mem": {"used": 147675994, "limit": 2153512960}, "sha": "f7d5443dd424e60a", "run": "deb12-chrome153", "t": 1789970160524, "seq": 8}
+{"step": "64", "what": "blob", "mem": {"used": 147690966, "limit": 2153512960}, "bytes": 73403481, "run": "deb12-chrome153", "t": 1789970161575, "seq": 9}
+{"step": "64", "what": "url", "mem": {"used": 147698433, "limit": 2153512960}, "run": "deb12-chrome153", "t": 1789970162577, "seq": 10}
+{"step": "64", "what": "verified", "mem": {"used": 148376805, "limit": 2153512960}, "blobSize": 73403481, "footer": 67111936, "want": 67111936, "ok": true, "run": "deb12-chrome153", "t": 1789970163580, "seq": 11}
+{"step": "64", "what": "done", "ok": true, "bytes": 73403481, "ms": 11600, "mem": {"used": 147713617, "limit": 2153512960}, "run": "deb12-chrome153", "t": 1789970164582, "seq": 12}
+{"step": "64", "what": "after-gc", "mem": {"used": 147714941, "limit": 2153512960}, "run": "deb12-chrome153", "t": 1789970166583, "seq": 13}
+{"step": "256", "what": "start", "mem": {"used": 147714941, "limit": 2153512960}, "mb": 256, "members": 4, "mode": "blob", "run": "deb12-chrome153", "t": 1789970166584, "seq": 14}
+{"step": "256", "what": "pack-held", "mem": {"used": 269314652, "limit": 2153512960}, "bytes": 268435456, "run": "deb12-chrome153", "t": 1789970169307, "seq": 15}
+{"step": "256", "what": "base-held", "mem": {"used": 275670677, "limit": 2153512960}, "run": "deb12-chrome153", "t": 1789970170347, "seq": 16}
+{"step": "256", "what": "tar-written", "mem": {"used": 544042361, "limit": 2153512960}, "bytes": 268438528, "run": "deb12-chrome153", "t": 1789970171479, "seq": 17}
+{"step": "256", "what": "concat", "mem": {"used": 818761502, "limit": 2153512960}, "bytes": 274730073, "run": "deb12-chrome153", "t": 1789970172594, "seq": 18}
+{"step": "256", "what": "intermediates-dropped", "mem": {"used": 818760742, "limit": 2153512960}, "run": "deb12-chrome153", "t": 1789970173597, "seq": 19}
+{"step": "256", "what": "hashed", "mem": {"used": 1093502794, "limit": 2153512960}, "sha": "507dc059633d667c", "run": "deb12-chrome153", "t": 1789970177661, "seq": 20}
+{"step": "256", "what": "blob", "mem": {"used": 1093498666, "limit": 2153512960}, "bytes": 274730073, "run": "deb12-chrome153", "t": 1789970178771, "seq": 21}
+{"step": "256", "what": "url", "mem": {"used": 1093499585, "limit": 2153512960}, "run": "deb12-chrome153", "t": 1789970179773, "seq": 22}
+{"step": "256", "what": "verified", "mem": {"used": 550336733, "limit": 2153512960}, "blobSize": 274730073, "footer": 268438528, "want": 268438528, "ok": true, "run": "deb12-chrome153", "t": 1789970180775, "seq": 23}
+{"step": "256", "what": "done", "ok": true, "bytes": 274730073, "ms": 15193, "mem": {"used": 550339749, "limit": 2153512960}, "run": "deb12-chrome153", "t": 1789970181777, "seq": 24}
+{"step": "256", "what": "after-gc", "mem": {"used": 550341233, "limit": 2153512960}, "run": "deb12-chrome153", "t": 1789970183778, "seq": 25}
+{"step": "512", "what": "start", "mem": {"used": 550341233, "limit": 2153512960}, "mb": 512, "members": 4, "mode": "blob", "run": "deb12-chrome153", "t": 1789970183779, "seq": 26}
+{"step": "512", "what": "pack-held", "mem": {"used": 1087202294, "limit": 2153512960}, "bytes": 536870912, "run": "deb12-chrome153", "t": 1789970187736, "seq": 27}
+{"step": "512", "what": "base-held", "mem": {"used": 544034525, "limit": 2153512960}, "run": "deb12-chrome153", "t": 1789970188784, "seq": 28}
+{"step": "512", "what": "tar-written", "mem": {"used": 1080918025, "limit": 2153512960}, "bytes": 536873984, "run": "deb12-chrome153", "t": 1789970189984, "seq": 29}
+{"step": "512", "what": "concat", "mem": {"used": 1624070458, "limit": 2153512960}, "bytes": 543165529, "run": "deb12-chrome153", "t": 1789970191454, "seq": 30}
+{"step": "512", "what": "intermediates-dropped", "mem": {"used": 1624071462, "limit": 2153512960}, "run": "deb12-chrome153", "t": 1789970192456, "seq": 31}
+{"step": "512", "what": "hashed", "mem": {"used": 2167251142, "limit": 2153512960}, "sha": "8be752bcbbc0c2a6", "run": "deb12-chrome153", "t": 1789970200004, "seq": 32}
+{"step": "512", "what": "blob", "mem": {"used": 2167246114, "limit": 2153512960}, "bytes": 543165529, "run": "deb12-chrome153", "t": 1789970201204, "seq": 33}
+{"step": "512", "what": "url", "mem": {"used": 2167247005, "limit": 2153512960}, "run": "deb12-chrome153", "t": 1789970202206, "seq": 34}
+{"step": "512", "what": "verified", "mem": {"used": 1087212201, "limit": 2153512960}, "blobSize": 543165529, "footer": 536873984, "want": 536873984, "ok": true, "run": "deb12-chrome153", "t": 1789970203210, "seq": 35}
+{"step": "512", "what": "done", "ok": true, "bytes": 543165529, "ms": 20432, "mem": {"used": 1087215061, "limit": 2153512960}, "run": "deb12-chrome153", "t": 1789970204211, "seq": 36}
+{"step": "512", "what": "after-gc", "mem": {"used": 1087217081, "limit": 2153512960}, "run": "deb12-chrome153", "t": 1789970206212, "seq": 37}
+{"step": "1024", "what": "start", "mem": {"used": 1087217081, "limit": 2153512960}, "mb": 1024, "members": 4, "mode": "blob", "run": "deb12-chrome153", "t": 1789970206213, "seq": 38}
+{"step": "1024", "what": "pack-held", "mem": {"used": 2160959894, "limit": 2153512960}, "bytes": 1073741824, "run": "deb12-chrome153", "t": 1789970213828, "seq": 39}
+{"step": "1024", "what": "base-held", "mem": {"used": 1080921237, "limit": 2153512960}, "run": "deb12-chrome153", "t": 1789970214915, "seq": 40}
+{"step": "1024", "what": "tar-written", "mem": {"used": 2154675761, "limit": 2153512960}, "bytes": 1073744896, "run": "deb12-chrome153", "t": 1789970216600, "seq": 41}
+{"step": "1024", "what": "concat", "mem": {"used": 3234698946, "limit": 2153512960}, "bytes": 1080036441, "run": "deb12-chrome153", "t": 1789970219239, "seq": 42}
+{"step": "1024", "what": "intermediates-dropped", "mem": {"used": 3234699974, "limit": 2153512960}, "run": "deb12-chrome153", "t": 1789970220964, "seq": 43}
+{"step": "1024", "what": "hashed", "mem": {"used": 2161952930, "limit": 2153512960}, "sha": "a308b45dd0e1f3a4", "run": "deb12-chrome153", "t": 1789970234997, "seq": 44}
+{"step": "1024", "what": "blob", "mem": {"used": 2161009658, "limit": 2153512960}, "bytes": 1080036441, "run": "deb12-chrome153", "t": 1789970237085, "seq": 45}

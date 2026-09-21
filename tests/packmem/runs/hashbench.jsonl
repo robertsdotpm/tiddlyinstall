@@ -1,0 +1,5 @@
+{"run": "hashbench", "what": "line", "error": "secureContext=true subtle=true"}
+{"run": "hashbench", "what": "line", "error": "crypto.subtle.digest  1315 ms  49 MB/s"}
+{"run": "hashbench", "what": "line", "error": "sha256Stream (pure JS) 749 ms  85 MB/s"}
+{"run": "hashbench", "what": "line", "error": "sha256 one shot (pure) 794 ms  81 MB/s"}
+{"run": "hashbench", "what": "end"}

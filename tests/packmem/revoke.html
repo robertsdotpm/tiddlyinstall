@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>packmem revoke</title></head><body>
+<h1>packmem revoke</h1>
+<div id="out"></div>
+<script>
+// When is it safe to revoke the object URL a download is reading from?
+//
+//   revoke.html?mb=512&delay=0&report=http://host:port/r&run=NAME
+//
+// Makes a Blob of `mb` megabytes, hands it to a download, revokes its object
+// URL `delay` ms later (delay=-1 never revokes; delay=-2 revokes in the same
+// task, on the line after click(), which is what code written without this
+// in mind does), and says what it did. The
+// harness then looks at the file that landed on disk: if it is short, the
+// revoke was too early. Run against a slow disk and a large file, because
+// that is the only place the race is wide enough to see.
+//
+// There is no event for "the browser has finished taking the blob": a
+// download started from an <a download> reports nothing back to the page.
+// That is the whole difficulty, and measuring it is the point.
+var Q = {};
+(function () {
+  var s = String(location.search || '').replace(/^\?/, ''), p = s ? s.split('&') : [];
+  for (var i = 0; i < p.length; i++) { var kv = p[i].split('='); Q[decodeURIComponent(kv[0])] = decodeURIComponent(kv[1] || ''); }
+})();
+var MB = parseFloat(Q.mb || '512');
+var DELAY = Q.delay === undefined ? 0 : parseFloat(Q.delay);
+var RUN = Q.run || 'revoke';
+function say(o) {
+  o.run = RUN; o.t = Date.now();
+  var d = document.createElement('div');
+  d.appendChild(document.createTextNode(JSON.stringify(o)));
+  document.getElementById('out').appendChild(d);
+  if (Q.report) { try { var x = new XMLHttpRequest(); x.open('POST', Q.report, true); x.send(JSON.stringify(o)); } catch (e) {} }
+}
+function filler(n) {
+  var u = new Uint8Array(n), x = 12345;
+  for (var i = 0; i < n; i++) { x = (x * 1664525 + 1013904223) >>> 0; u[i] = x >>> 24; }
+  return u;
+}
+window.onerror = function (m) { say({ what: 'error', error: String(m) }); };
+setTimeout(function () {
+  var n = Math.round(MB * 1024 * 1024);
+  say({ what: 'begin', mb: MB, delay: DELAY, ua: navigator.userAgent });
+  var blob = new Blob([filler(n)], { type: 'application/octet-stream' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'packmem-' + MB + 'mb-' + (DELAY < 0 ? 'never' : DELAY + 'ms') + '.bin';
+  document.body.appendChild(a);
+  say({ what: 'click', size: blob.size, name: a.download });
+  a.click();
+  if (DELAY === -2) {
+    URL.revokeObjectURL(url);
+    say({ what: 'revoked', after: 'same-task' });
+  } else if (DELAY >= 0) {
+    setTimeout(function () { URL.revokeObjectURL(url); say({ what: 'revoked', after: DELAY }); }, DELAY);
+  } else if (DELAY === -1) {
+    say({ what: 'not-revoked' });
+  }
+  setTimeout(function () { say({ what: 'end' }); }, Math.max(DELAY, 0) + 60000);
+}, 300);
+</script>
+</body></html>

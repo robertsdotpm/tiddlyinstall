@@ -1,0 +1,13 @@
+{"what": "page-loaded", "ua": "Mozilla/5.0 (Linux; Android 14; sdk_gphone64_x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36", "run": "android-chrome2", "t": 1789971185954}
+{"what": "begin", "ua": "Mozilla/5.0 (Linux; Android 14; sdk_gphone64_x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36", "mode": "blob", "members": 4, "base": 6, "steps": "640,768,896,1024", "dm": 0, "cores": 4, "mem": {"used": 10000000, "limit": 842000000}, "run": "android-chrome2", "t": 1789971186355, "seq": 1}
+{"step": "640", "what": "start", "mem": {"used": 10000000, "limit": 842000000}, "mb": 640, "members": 4, "mode": "blob", "run": "android-chrome2", "t": 1789971186360, "seq": 2}
+{"step": "640", "what": "pack-held", "mem": {"used": 10000000, "limit": 842000000}, "bytes": 671088640, "run": "android-chrome2", "t": 1789971196306, "seq": 3}
+{"step": "640", "what": "base-held", "mem": {"used": 10000000, "limit": 842000000}, "run": "android-chrome2", "t": 1789971197872, "seq": 4}
+{"step": "640", "what": "tar-written", "mem": {"used": 10000000, "limit": 842000000}, "bytes": 671091712, "run": "android-chrome2", "t": 1789971202980, "seq": 5}
+{"step": "640", "what": "concat", "mem": {"used": 10000000, "limit": 842000000}, "bytes": 677383257, "run": "android-chrome2", "t": 1789971208877, "seq": 6}
+{"step": "640", "what": "intermediates-dropped", "mem": {"used": 10000000, "limit": 842000000}, "run": "android-chrome2", "t": 1789971210394, "seq": 7}
+{"step": "640", "what": "hashed", "mem": {"used": 10000000, "limit": 842000000}, "sha": "a669dd98046aa3b4", "run": "android-chrome2", "t": 1789971228105, "seq": 8}
+{"step": "640", "what": "blob", "mem": {"used": 10000000, "limit": 842000000}, "bytes": 677383257, "run": "android-chrome2", "t": 1789971235031, "seq": 9}
+{"step": "640", "what": "url", "mem": {"used": 10000000, "limit": 842000000}, "run": "android-chrome2", "t": 1789971236754, "seq": 10}
+{"step": "640", "what": "failed", "error": "The requested file could not be read, typically due to permission problems that have occurred after a reference to a file was acquired.", "name": "NotReadableError", "ms": 51916, "mem": {"used": 10000000, "limit": 842000000}, "run": "android-chrome2", "t": 1789971238276, "seq": 11}
+{"what": "end", "lastOk": 0, "failedAt": 640, "run": "android-chrome2", "t": 1789971238277, "seq": 12}

@@ -1,0 +1,67 @@
+{"what": "begin", "ua": "Mozilla/5.0 (Windows NT 6.0; rv:52.0) Gecko/20100101 Firefox/52.0", "mode": "blob", "members": 4, "base": 6, "steps": "8,16,32,64,96,128,192,256", "dm": 0, "cores": 2, "mem": null, "run": "vista-firefox52-es5", "t": 1790011544924, "seq": 1}
+{"step": "8", "what": "start", "mem": null, "mb": 8, "members": 4, "mode": "blob", "run": "vista-firefox52-es5", "t": 1790011544930, "seq": 2}
+{"step": "8", "what": "pack-held", "mem": null, "bytes": 8388608, "run": "vista-firefox52-es5", "t": 1790011546570, "seq": 3}
+{"step": "8", "what": "base-held", "mem": null, "run": "vista-firefox52-es5", "t": 1790011548172, "seq": 4}
+{"step": "8", "what": "tar-written", "mem": null, "bytes": 8391680, "run": "vista-firefox52-es5", "t": 1790011549686, "seq": 5}
+{"step": "8", "what": "concat", "mem": null, "bytes": 14683225, "run": "vista-firefox52-es5", "t": 1790011551198, "seq": 6}
+{"step": "8", "what": "intermediates-dropped", "mem": null, "run": "vista-firefox52-es5", "t": 1790011552700, "seq": 7}
+{"step": "8", "what": "hashed", "mem": null, "sha": "fc4570360540350b", "run": "vista-firefox52-es5", "t": 1790011554326, "seq": 8}
+{"step": "8", "what": "blob", "mem": null, "bytes": 14683225, "run": "vista-firefox52-es5", "t": 1790011555840, "seq": 9}
+{"step": "8", "what": "url", "mem": null, "run": "vista-firefox52-es5", "t": 1790011557344, "seq": 10}
+{"step": "8", "what": "verified", "mem": null, "blobSize": 14683225, "footer": 8391680, "want": 8391680, "ok": true, "run": "vista-firefox52-es5", "t": 1790011558848, "seq": 11}
+{"step": "8", "what": "done", "ok": true, "bytes": 14683225, "ms": 15424, "mem": null, "run": "vista-firefox52-es5", "t": 1790011560354, "seq": 12}
+{"step": "8", "what": "after-gc", "mem": null, "run": "vista-firefox52-es5", "t": 1790011563370, "seq": 13}
+{"step": "16", "what": "start", "mem": null, "mb": 16, "members": 4, "mode": "blob", "run": "vista-firefox52-es5", "t": 1790011563374, "seq": 14}
+{"step": "16", "what": "pack-held", "mem": null, "bytes": 16777216, "run": "vista-firefox52-es5", "t": 1790011565182, "seq": 15}
+{"step": "16", "what": "base-held", "mem": null, "run": "vista-firefox52-es5", "t": 1790011566802, "seq": 16}
+{"step": "16", "what": "tar-written", "mem": null, "bytes": 16780288, "run": "vista-firefox52-es5", "t": 1790011568330, "seq": 17}
+{"step": "16", "what": "concat", "mem": null, "bytes": 23071833, "run": "vista-firefox52-es5", "t": 1790011569868, "seq": 18}
+{"step": "16", "what": "intermediates-dropped", "mem": null, "run": "vista-firefox52-es5", "t": 1790011571372, "seq": 19}
+{"step": "16", "what": "hashed", "mem": null, "sha": "2c2a3eb6bca8c4c1", "run": "vista-firefox52-es5", "t": 1790011573106, "seq": 20}
+{"step": "16", "what": "blob", "mem": null, "bytes": 23071833, "run": "vista-firefox52-es5", "t": 1790011574636, "seq": 21}
+{"step": "16", "what": "url", "mem": null, "run": "vista-firefox52-es5", "t": 1790011576146, "seq": 22}
+{"step": "16", "what": "verified", "mem": null, "blobSize": 23071833, "footer": 16780288, "want": 16780288, "ok": true, "run": "vista-firefox52-es5", "t": 1790011577662, "seq": 23}
+{"step": "16", "what": "done", "ok": true, "bytes": 23071833, "ms": 15800, "mem": null, "run": "vista-firefox52-es5", "t": 1790011579172, "seq": 24}
+{"step": "16", "what": "after-gc", "mem": null, "run": "vista-firefox52-es5", "t": 1790011582182, "seq": 25}
+{"step": "32", "what": "start", "mem": null, "mb": 32, "members": 4, "mode": "blob", "run": "vista-firefox52-es5", "t": 1790011582186, "seq": 26}
+{"step": "32", "what": "pack-held", "mem": null, "bytes": 33554432, "run": "vista-firefox52-es5", "t": 1790011584282, "seq": 27}
+{"step": "32", "what": "base-held", "mem": null, "run": "vista-firefox52-es5", "t": 1790011585922, "seq": 28}
+{"step": "32", "what": "tar-written", "mem": null, "bytes": 33557504, "run": "vista-firefox52-es5", "t": 1790011587476, "seq": 29}
+{"step": "32", "what": "concat", "mem": null, "bytes": 39849049, "run": "vista-firefox52-es5", "t": 1790011589024, "seq": 30}
+{"step": "32", "what": "intermediates-dropped", "mem": null, "run": "vista-firefox52-es5", "t": 1790011590528, "seq": 31}
+{"step": "32", "what": "hashed", "mem": null, "sha": "e2892a86fda04501", "run": "vista-firefox52-es5", "t": 1790011592430, "seq": 32}
+{"step": "32", "what": "blob", "mem": null, "bytes": 39849049, "run": "vista-firefox52-es5", "t": 1790011593970, "seq": 33}
+{"step": "32", "what": "url", "mem": null, "run": "vista-firefox52-es5", "t": 1790011595474, "seq": 34}
+{"step": "32", "what": "verified", "mem": null, "blobSize": 39849049, "footer": 33557504, "want": 33557504, "ok": true, "run": "vista-firefox52-es5", "t": 1790011596990, "seq": 35}
+{"step": "32", "what": "done", "ok": true, "bytes": 39849049, "ms": 16314, "mem": null, "run": "vista-firefox52-es5", "t": 1790011598500, "seq": 36}
+{"step": "32", "what": "after-gc", "mem": null, "run": "vista-firefox52-es5", "t": 1790011601512, "seq": 37}
+{"step": "64", "what": "start", "mem": null, "mb": 64, "members": 4, "mode": "blob", "run": "vista-firefox52-es5", "t": 1790011601514, "seq": 38}
+{"step": "64", "what": "pack-held", "mem": null, "bytes": 67108864, "run": "vista-firefox52-es5", "t": 1790011604118, "seq": 39}
+{"step": "64", "what": "base-held", "mem": null, "run": "vista-firefox52-es5", "t": 1790011605752, "seq": 40}
+{"step": "64", "what": "tar-written", "mem": null, "bytes": 67111936, "run": "vista-firefox52-es5", "t": 1790011607332, "seq": 41}
+{"step": "64", "what": "concat", "mem": null, "bytes": 73403481, "run": "vista-firefox52-es5", "t": 1790011608888, "seq": 42}
+{"step": "64", "what": "intermediates-dropped", "mem": null, "run": "vista-firefox52-es5", "t": 1790011610404, "seq": 43}
+{"step": "64", "what": "hashed", "mem": null, "sha": "f7d5443dd424e60a", "run": "vista-firefox52-es5", "t": 1790011612610, "seq": 44}
+{"step": "64", "what": "blob", "mem": null, "bytes": 73403481, "run": "vista-firefox52-es5", "t": 1790011614174, "seq": 45}
+{"step": "64", "what": "url", "mem": null, "run": "vista-firefox52-es5", "t": 1790011615692, "seq": 46}
+{"step": "64", "what": "verified", "mem": null, "blobSize": 73403481, "footer": 67111936, "want": 67111936, "ok": true, "run": "vista-firefox52-es5", "t": 1790011617208, "seq": 47}
+{"step": "64", "what": "done", "ok": true, "bytes": 73403481, "ms": 17204, "mem": null, "run": "vista-firefox52-es5", "t": 1790011618718, "seq": 48}
+{"step": "64", "what": "after-gc", "mem": null, "run": "vista-firefox52-es5", "t": 1790011621728, "seq": 49}
+{"step": "96", "what": "start", "mem": null, "mb": 96, "members": 4, "mode": "blob", "run": "vista-firefox52-es5", "t": 1790011621730, "seq": 50}
+{"step": "96", "what": "pack-held", "mem": null, "bytes": 100663296, "run": "vista-firefox52-es5", "t": 1790011625066, "seq": 51}
+{"step": "96", "what": "base-held", "mem": null, "run": "vista-firefox52-es5", "t": 1790011626720, "seq": 52}
+{"step": "96", "what": "tar-written", "mem": null, "bytes": 100666368, "run": "vista-firefox52-es5", "t": 1790011628326, "seq": 53}
+{"step": "96", "what": "concat", "mem": null, "bytes": 106957913, "run": "vista-firefox52-es5", "t": 1790011629972, "seq": 54}
+{"step": "96", "what": "intermediates-dropped", "mem": null, "run": "vista-firefox52-es5", "t": 1790011631480, "seq": 55}
+{"step": "96", "what": "hashed", "mem": null, "sha": "4c6f026a5ea36f2b", "run": "vista-firefox52-es5", "t": 1790011633776, "seq": 56}
+{"step": "96", "what": "blob", "mem": null, "bytes": 106957913, "run": "vista-firefox52-es5", "t": 1790011635362, "seq": 57}
+{"step": "96", "what": "url", "mem": null, "run": "vista-firefox52-es5", "t": 1790011636878, "seq": 58}
+{"step": "96", "what": "verified", "mem": null, "blobSize": 106957913, "footer": 100666368, "want": 100666368, "ok": true, "run": "vista-firefox52-es5", "t": 1790011638392, "seq": 59}
+{"step": "96", "what": "done", "ok": true, "bytes": 106957913, "ms": 18174, "mem": null, "run": "vista-firefox52-es5", "t": 1790011639904, "seq": 60}
+{"step": "96", "what": "after-gc", "mem": null, "run": "vista-firefox52-es5", "t": 1790011642914, "seq": 61}
+{"step": "128", "what": "start", "mem": null, "mb": 128, "members": 4, "mode": "blob", "run": "vista-firefox52-es5", "t": 1790011642916, "seq": 62}
+{"step": "128", "what": "pack-held", "mem": null, "bytes": 134217728, "run": "vista-firefox52-es5", "t": 1790011646878, "seq": 63}
+{"step": "128", "what": "base-held", "mem": null, "run": "vista-firefox52-es5", "t": 1790011648492, "seq": 64}
+{"step": "128", "what": "tar-written", "mem": null, "bytes": 134220800, "run": "vista-firefox52-es5", "t": 1790011650110, "seq": 65}
+{"step": "128", "what": "failed", "error": "out of memory", "name": "", "ms": 8760, "mem": null, "run": "vista-firefox52-es5", "t": 1790011651674, "seq": 66}
+{"what": "end", "lastOk": 96, "failedAt": 128, "run": "vista-firefox52-es5", "t": 1790011651674, "seq": 67}

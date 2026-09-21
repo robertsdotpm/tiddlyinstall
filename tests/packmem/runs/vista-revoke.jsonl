@@ -1,0 +1,4 @@
+{"what": "begin", "mb": 256, "delay": -2, "ua": "Mozilla/5.0 (Windows NT 6.0; rv:52.0) Gecko/20100101 Firefox/52.0", "run": "vista-revoke", "t": 1790012227076}
+{"what": "click", "size": 268435456, "name": "packmem-256mb-never.bin", "run": "vista-revoke", "t": 1790012231690}
+{"what": "revoked", "after": "same-task", "run": "vista-revoke", "t": 1790012231692}
+{"what": "end", "run": "vista-revoke", "t": 1790012291708}

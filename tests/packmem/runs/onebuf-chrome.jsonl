@@ -1,0 +1,15 @@
+{"what": "begin", "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/144.0.0.0 Safari/537.36", "mode": "onebuf", "members": 4, "base": 6, "steps": "64", "dm": 8, "cores": 16, "mem": {"used": 908836, "limit": 4294967296}, "run": "onebuf-chrome", "t": 1789967826577, "seq": 1}
+{"step": "64", "what": "start", "mem": {"used": 908836, "limit": 4294967296}, "mb": 64, "members": 4, "mode": "onebuf", "total": 73403481, "run": "onebuf-chrome", "t": 1789967826581, "seq": 2}
+{"step": "64", "what": "buffer-allocated", "mem": {"used": 74360376, "limit": 4294967296}, "bytes": 73403481, "run": "onebuf-chrome", "t": 1789967827483, "seq": 3}
+{"step": "64", "what": "base-copied", "mem": {"used": 80698039, "limit": 4294967296}, "at": 6291481, "run": "onebuf-chrome", "t": 1789967828465, "seq": 4}
+{"step": "64", "what": "member-0", "mem": {"used": 97487718, "limit": 4294967296}, "at": 23069209, "run": "onebuf-chrome", "t": 1789967829557, "seq": 5}
+{"step": "64", "what": "member-1", "mem": {"used": 114269374, "limit": 4294967296}, "at": 39846937, "run": "onebuf-chrome", "t": 1789967830638, "seq": 6}
+{"step": "64", "what": "member-2", "mem": {"used": 131050858, "limit": 4294967296}, "at": 56624665, "run": "onebuf-chrome", "t": 1789967831700, "seq": 7}
+{"step": "64", "what": "member-3", "mem": {"used": 147645386, "limit": 4294967296}, "at": 73402393, "run": "onebuf-chrome", "t": 1789967832785, "seq": 8}
+{"step": "64", "what": "assembled", "mem": {"used": 74246442, "limit": 4294967296}, "at": 73403481, "total": 73403481, "run": "onebuf-chrome", "t": 1789967833689, "seq": 9}
+{"step": "64", "what": "hashed", "mem": {"used": 74797166, "limit": 4294967296}, "sha": "f7d5443dd424e60a", "run": "onebuf-chrome", "t": 1789967835400, "seq": 10}
+{"step": "64", "what": "blob", "mem": {"used": 74802718, "limit": 4294967296}, "bytes": 73403481, "run": "onebuf-chrome", "t": 1789967836405, "seq": 11}
+{"step": "64", "what": "verified", "mem": {"used": 74813345, "limit": 4294967296}, "blobSize": 73403481, "ok": true, "run": "onebuf-chrome", "t": 1789967837309, "seq": 12}
+{"step": "64", "what": "done", "ok": true, "bytes": 73403481, "ms": 11631, "mem": {"used": 74816517, "limit": 4294967296}, "run": "onebuf-chrome", "t": 1789967838211, "seq": 13}
+{"step": "64", "what": "after-gc", "mem": {"used": 74818101, "limit": 4294967296}, "run": "onebuf-chrome", "t": 1789967840012, "seq": 14}
+{"what": "end", "lastOk": 64, "failedAt": 0, "run": "onebuf-chrome", "t": 1789967840013, "seq": 15}

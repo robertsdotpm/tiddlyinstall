@@ -1,0 +1,12 @@
+# Built pages (build.py remakes them; the ES5 one is 650 KB of core-js).
+out/
+# The samplers' and browsers' by-products. The runs' .jsonl files are kept:
+# they are the events every number in docs/browser-packing.md came from.
+runs/*.rss
+runs/*.pss
+runs/*.rssdev
+runs/*.meminfo
+runs/*.report
+runs/*.browser.log
+runs/*.log
+runs/*.cmd

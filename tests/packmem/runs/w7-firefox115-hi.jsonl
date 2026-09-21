@@ -1,0 +1,35 @@
+{"what": "page-loaded", "ua": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0", "run": "w7-firefox115-hi", "t": 1790010837131}
+{"what": "begin", "ua": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0", "mode": "blob", "members": 4, "base": 6, "steps": "1024,1536,2048,3072,4096", "dm": 0, "cores": 2, "mem": null, "run": "w7-firefox115-hi", "t": 1790010837509, "seq": 1}
+{"step": "1024", "what": "start", "mem": null, "mb": 1024, "members": 4, "mode": "blob", "run": "w7-firefox115-hi", "t": 1790010837511, "seq": 2}
+{"step": "1024", "what": "pack-held", "mem": null, "bytes": 1073741824, "run": "w7-firefox115-hi", "t": 1790010847629, "seq": 3}
+{"step": "1024", "what": "base-held", "mem": null, "run": "w7-firefox115-hi", "t": 1790010848883, "seq": 4}
+{"step": "1024", "what": "tar-written", "mem": null, "bytes": 1073744896, "run": "w7-firefox115-hi", "t": 1790010851350, "seq": 5}
+{"step": "1024", "what": "concat", "mem": null, "bytes": 1080036441, "run": "w7-firefox115-hi", "t": 1790010854281, "seq": 6}
+{"step": "1024", "what": "intermediates-dropped", "mem": null, "run": "w7-firefox115-hi", "t": 1790010855488, "seq": 7}
+{"step": "1024", "what": "hashed", "mem": null, "sha": "a308b45dd0e1f3a4", "run": "w7-firefox115-hi", "t": 1790010878484, "seq": 8}
+{"step": "1024", "what": "blob", "mem": null, "bytes": 1080036441, "run": "w7-firefox115-hi", "t": 1790010885692, "seq": 9}
+{"step": "1024", "what": "url", "mem": null, "run": "w7-firefox115-hi", "t": 1790010886901, "seq": 10}
+{"step": "1024", "what": "verified", "mem": null, "blobSize": 1080036441, "footer": 1073744896, "want": 1073744896, "ok": true, "run": "w7-firefox115-hi", "t": 1790010888112, "seq": 11}
+{"step": "1024", "what": "done", "ok": true, "bytes": 1080036441, "ms": 51803, "mem": null, "run": "w7-firefox115-hi", "t": 1790010889314, "seq": 12}
+{"step": "1024", "what": "after-gc", "mem": null, "run": "w7-firefox115-hi", "t": 1790010891722, "seq": 13}
+{"step": "1536", "what": "start", "mem": null, "mb": 1536, "members": 4, "mode": "blob", "run": "w7-firefox115-hi", "t": 1790010891723, "seq": 14}
+{"step": "1536", "what": "pack-held", "mem": null, "bytes": 1610612736, "run": "w7-firefox115-hi", "t": 1790010904215, "seq": 15}
+{"step": "1536", "what": "base-held", "mem": null, "run": "w7-firefox115-hi", "t": 1790010905462, "seq": 16}
+{"step": "1536", "what": "tar-written", "mem": null, "bytes": 1610615808, "run": "w7-firefox115-hi", "t": 1790010908155, "seq": 17}
+{"step": "1536", "what": "concat", "mem": null, "bytes": 1616907353, "run": "w7-firefox115-hi", "t": 1790010925383, "seq": 18}
+{"step": "1536", "what": "intermediates-dropped", "mem": null, "run": "w7-firefox115-hi", "t": 1790010926643, "seq": 19}
+{"step": "1536", "what": "hashed", "mem": null, "sha": "e358433c5ee2a408", "run": "w7-firefox115-hi", "t": 1790010971601, "seq": 20}
+{"step": "1536", "what": "blob", "mem": null, "bytes": 1616907353, "run": "w7-firefox115-hi", "t": 1790010975347, "seq": 21}
+{"step": "1536", "what": "url", "mem": null, "run": "w7-firefox115-hi", "t": 1790010976559, "seq": 22}
+{"step": "1536", "what": "verified", "mem": null, "blobSize": 1616907353, "footer": 1610615808, "want": 1610615808, "ok": true, "run": "w7-firefox115-hi", "t": 1790010977854, "seq": 23}
+{"step": "1536", "what": "done", "ok": true, "bytes": 1616907353, "ms": 87386, "mem": null, "run": "w7-firefox115-hi", "t": 1790010979109, "seq": 24}
+{"step": "1536", "what": "after-gc", "mem": null, "run": "w7-firefox115-hi", "t": 1790010981538, "seq": 25}
+{"step": "2048", "what": "start", "mem": null, "mb": 2048, "members": 4, "mode": "blob", "run": "w7-firefox115-hi", "t": 1790010981549, "seq": 26}
+{"step": "2048", "what": "pack-held", "mem": null, "bytes": 2147483648, "run": "w7-firefox115-hi", "t": 1790010999794, "seq": 27}
+{"step": "2048", "what": "base-held", "mem": null, "run": "w7-firefox115-hi", "t": 1790011001048, "seq": 28}
+{"step": "2048", "what": "tar-written", "mem": null, "bytes": 2147486720, "run": "w7-firefox115-hi", "t": 1790011007672, "seq": 29}
+{"step": "2048", "what": "concat", "mem": null, "bytes": 2153778265, "run": "w7-firefox115-hi", "t": 1790011033732, "seq": 30}
+{"step": "2048", "what": "intermediates-dropped", "mem": null, "run": "w7-firefox115-hi", "t": 1790011035013, "seq": 31}
+{"step": "2048", "what": "hashed", "mem": null, "sha": "eab7703c6806f624", "run": "w7-firefox115-hi", "t": 1790011080856, "seq": 32}
+{"step": "2048", "what": "failed", "error": "Blob constructor: ArrayBufferView branch of ((ArrayBufferView or ArrayBuffer) or Blob or USVString) can't be an ArrayBuffer or an ArrayBufferView larger than 2 GB", "name": "TypeError", "ms": 100592, "mem": null, "run": "w7-firefox115-hi", "t": 1790011082132, "seq": 33}
+{"what": "end", "lastOk": 1536, "failedAt": 2048, "run": "w7-firefox115-hi", "t": 1790011082134, "seq": 34}
