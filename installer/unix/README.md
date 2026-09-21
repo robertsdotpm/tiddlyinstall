@@ -38,22 +38,40 @@ sh install_node_hello_<hash>.run            # Linux (any file name works)
 TiddlyInstall.app/Contents/MacOS/install          # macOS, from a terminal
 ```
 
-**In a terminal the review is paged** (2026-09-21). It is about
-seventy-five lines and a terminal is twenty-four, so the top of it --
-what is being installed, and WHAT THIS INSTALL CAN DO -- used to scroll
-past before the question was asked. `$PAGER` if it is set, else
-`less -FRX`, else busybox's `more`; with none of them the text is
-printed as it always was. `-F` quits at once if it all fits, so a short
-review is unchanged; `-X` keeps it out of the alternate screen, so the
-text is still in the scrollback while you decide; `-R` keeps the colour.
-The question is **not** inside the pager: the one-line summary and
-`Install X? [y/N]` are printed after it exits. Only the `tty` path pages
--- never `--yes`, never a redirected stdout, never the log -- and
-`TI_NO_PAGER=1` turns it off. Tested on this machine, on Debian 12 i386
-(dash, mawk, real `less`) and on Alpine (busybox `sh`, busybox `less`
-and `more`), with `y`, with `n`, with `$PAGER` set, and with Ctrl-C
-inside the pager (nothing is installed and the terminal is left as it
-was).
+**How the review is shown** (2026-09-21). Three ways, and which one you
+get is decided before anything is fetched:
+
+| | |
+| --- | --- |
+| **A window** | No arguments, and a display we can see. `zenity --text-info` (monospace, Install and Cancel as the buttons), else `kdialog --textbox` followed by its yes/no. Scrollable, resizable, and the whole review is in it. This is what `sh installer.run` on a desktop gets, which is what the box at the top of the file tells people to type |
+| **The whole text** | Any argument, no display, `TI_NO_GUI=1`, or a display we could not open. Printed to stderr at once, terminal scrollback and all, with the one-line decision above the `Install X? [y/N]` prompt. This is the ordinary way to install over SSH and it is not a consolation prize: it is the same text, unabridged |
+| **macOS** | Unchanged: a terminal gets the text, a double-clicked `.app` gets the `osascript` dialog with the full text behind "Details...". That dialog is not a review window, so taking a Terminal user out of the terminal would be a downgrade |
+
+**"Any argument" means any argument at all** — `--yes`, `--plan=`,
+`--log=`, anything. Not a list of the interesting ones, because a list
+is a thing to keep in step with `ti_main`, and because there is no flag
+whose presence suggests somebody wants a dialog. The Finder's own
+`-psn_...` is not an argument anybody passed and does not count.
+`TI_NO_GUI=1` forces the text even on a desktop, for scripting and
+capture.
+
+**A display is only used when its socket can be seen** —
+`/tmp/.X11-unix/X<n>` for X11, `$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY` for
+Wayland. `$DISPLAY` being set is not evidence: a stale variable or an X
+forwarding that has gone away leaves it set and pointing at nothing,
+and **both zenity and kdialog hang** on a display that is not there
+rather than failing — no window, no error, no prompt (measured
+2026-09-21 with `DISPLAY=:91`). A display on another host, including
+the `localhost:10.0` an `ssh -X` gives, cannot be checked this cheaply
+and so never earns the window; it is only tried when there is no
+terminal either, which is where the alternative was an error anyway.
+If a dialog does start and then reports that it could not open the
+display, the terminal takes over with the review **and** the question,
+never one without the other.
+
+**kdialog's textbox is not monospace**, so the columns and the rules do
+not line up in it the way they do in zenity and in a terminal. zenity is
+tried first for that reason; kdialog is the fallback, not the equal.
 
 | Option | Meaning |
 | --- | --- |
@@ -74,10 +92,10 @@ engine is this same file, so an engine change reaches macOS as soon as
 the base is built there -- and `out/ti-base-macos.zip` on this machine
 is whatever was last built there, nothing more.
 
-**Last built 2026-09-21T05:08:22Z** on the Mac test server (macOS 26.2
+**Last built 2026-09-21T06:42:29Z** on the Mac test server (macOS 26.2
 `25C56`, arm64, `Matthew@the-mac-test-host`), from `ti-engine.sh` with the
 SHA-256 promise said once, a label on every file in the download list,
-the review paged in a terminal, and the
+the review shown in a window on a desktop, and the
 **capability statement** on the review screen (design.md 11.3 and
 docs/format.md section 3, "What engines must show: what this install can
 do"): WHAT THIS INSTALL CAN DO, above the warnings, saying what this
@@ -98,10 +116,10 @@ the same order, because it is the whole of what that dialog says.
 
 | | |
 | --- | --- |
-| `out/ti-base-macos.zip` | `2b9de6c000fd7168ba52e1279253aa5f3f13b91f9a14abec07f31ea4b96f92d5`, 67,171 bytes |
-| the engine inside it | `ebf2699a2a864272644fc378a20487bc12b1dd437a2f4eaa1d3ea80fbd825b24` (`ti-engine.sh` with the baked lines filled) |
+| `out/ti-base-macos.zip` | `c4ad32e1b59d23063459eb8b7d59cb6717cc01b0a060e60334c526da769366c0`, 68,182 bytes |
+| the engine inside it | `90911ebb0db5c36018ebc263f61f38cbfda7a822284c4465f49b80ef0df1debf` (`ti-engine.sh` with the baked lines filled) |
 | plan signing key | `97930ea1888d1a12` |
-| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T05:08:22Z` / `1789967302` |
+| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T06:42:29Z` / `1789972949` |
 | signature | ad-hoc; `codesign --verify --strict` is happy on the bundle **and** on the bundle re-extracted from the zip with `ditto` ("valid on disk", "satisfies its Designated Requirement") |
 
 **One bug this build fixes is macOS-only**, and it took running the

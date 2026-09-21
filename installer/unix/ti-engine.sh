@@ -9,8 +9,8 @@
 # folder and run `sh` followed by this file's name.                          #
 #                                                                            #
 # It then shows everything it would do -- what it downloads and from         #
-# where, where it puts it, what it runs -- and changes nothing until you     #
-# answer y.                                                                  #
+# where, where it puts it, what it runs -- and changes nothing until         #
+# you say so.                                                                #
 # -------------------------------------------------------------------------- #
 #
 # That box is for whoever double-clicked the file and got a text editor,
@@ -239,18 +239,95 @@ ti_download_quick() { # url out
 }
 
 # How the UI talks to the user: tty, zenity, kdialog, osascript, or none.
+# Is there a display we can actually put a window on? `$DISPLAY` being
+# set is not an answer to that. A stale variable, or an X forwarding
+# that has gone away, leaves it set and pointing at nothing -- and
+# measured on 2026-09-21, **both zenity and kdialog hang** on a display
+# that is not there rather than failing: no window, no error, no prompt,
+# forever. kdialog is worse than that, because with no display its
+# `--yesno` has been seen to exit 0, which the old code read as "the
+# person said install".
+#
+# So the socket is checked before either is started, and only a display
+# we can see counts as one we can use:
+#
+#   Wayland  the socket $WAYLAND_DISPLAY names, under $XDG_RUNTIME_DIR
+#   X11      /tmp/.X11-unix/X<n> for a local display
+#
+# A display on another host (`host:0`, or the `localhost:10.0` an
+# `ssh -X` gives, which is a TCP display with no local socket) cannot be
+# checked this cheaply, so it never earns the window -- it is only
+# tried as a last resort below, where the alternative was an error
+# anyway. Anyone reaching a machine over SSH has a terminal, and the
+# full text is what they get, which is the ordinary way to install on a
+# server.
+ti_display_ok() {
+	[ "${TI_NO_GUI-}" = 1 ] && return 1
+	if [ -n "${WAYLAND_DISPLAY-}" ]; then
+		case $WAYLAND_DISPLAY in
+		/*) [ -S "$WAYLAND_DISPLAY" ] && return 0 ;;
+		*) [ -n "${XDG_RUNTIME_DIR-}" ] && [ -S "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" ] && return 0 ;;
+		esac
+	fi
+	[ -n "${DISPLAY-}" ] || return 1
+	d=${DISPLAY##*/}            # `unix/:0` and the like
+	h=${d%%:*}
+	n=${d#*:}
+	n=${n%%.*}
+	case $n in '' | *[!0-9]*) return 1 ;; esac
+	case $h in
+	'' | unix) [ -S "/tmp/.X11-unix/X$n" ] ;;
+	*) return 1 ;;
+	esac
+}
+
+# A dialog tool that can draw on it.
+ti_gui_tool() {
+	ti_have zenity && { printf 'zenity'; return 0; }
+	ti_have kdialog && { printf 'kdialog'; return 0; }
+	return 1
+}
+
+# Which of the four ways of asking this run gets.
+#
+# **A window when there is a screen and nobody passed a flag** (the
+# operator, 2026-09-21). `sh installer.run` on a desktop is what the
+# box at the top of the file tells people to type, and the answer to it
+# should be a real window: scrollable, resizable, formatted, with
+# Install and Cancel as buttons. Seventy-five lines dumped into a
+# terminal is not that, and paging them was worse (design.md 3).
+#
+# **The text when the person is driving.** Any argument at all means
+# this run is scripted or deliberate -- `--yes`, `--plan=`, `--log=`,
+# anything -- and then the whole text goes to the terminal at once, to
+# be scrolled back through or captured, exactly as it always has. The
+# rule is "any argument" rather than a list of the interesting ones
+# because a list is a thing to keep in step with `ti_main`, and because
+# there is no flag whose presence suggests somebody wants a dialog.
+# The Finder's own `-psn_...` is not an argument anyone passed and does
+# not count.
+#
+# macOS keeps the terminal ahead of its dialog: that dialog is a small
+# one with the full text behind "Details...", not a review window, so
+# taking a Terminal user out of the terminal would be a downgrade.
 ti_pick_ui() {
+	if [ "${ti_args:-0}" = 0 ] && [ "$TI_OS" != macos ] && ti_display_ok; then
+		ti_ui=$(ti_gui_tool) && [ -n "$ti_ui" ] && return 0
+	fi
 	if [ -t 0 ] && [ -t 2 ]; then
 		ti_ui=tty
-	elif [ "$TI_OS" = macos ] && ti_have osascript; then
-		ti_ui=osascript
-	elif [ -n "$DISPLAY$WAYLAND_DISPLAY" ] && ti_have zenity; then
-		ti_ui=zenity
-	elif [ -n "$DISPLAY$WAYLAND_DISPLAY" ] && ti_have kdialog; then
-		ti_ui=kdialog
-	else
-		ti_ui=none
+		return 0
 	fi
+	if [ "$TI_OS" = macos ] && ti_have osascript; then
+		ti_ui=osascript
+		return 0
+	fi
+	# No terminal and no verified display: a display we could not check
+	# is better than refusing outright, which is what this did before.
+	if [ "${TI_NO_GUI-}" != 1 ] && [ -n "${DISPLAY-}${WAYLAND_DISPLAY-}" ]; then
+		ti_ui=$(ti_gui_tool) && [ -n "$ti_ui" ] && return 0
+	fi
+	ti_ui=none
 }
 
 ti_osa() { # script-on-stdin args...; plan text goes in argv, never into the script
@@ -282,72 +359,50 @@ EOF
 }
 
 # Ask to go ahead. $1 title, $2 full text file, $3 short question.
-# The review text is about seventy-five lines and a terminal is
-# twenty-four, so the top of it -- what is being installed, and what
-# this install can do -- has scrolled past before the question is
-# asked. Page it where there is something to page with (2026-09-21;
-# the operator's "it dumps all its text at once then you have to
-# scroll back up").
+# The whole text, then the question, in the terminal. The text is
+# longer than the screen, so by the time the question appears the top
+# of it -- what is being installed, and by whom -- has scrolled away;
+# one line stands above the prompt, the decision and not a second copy
+# of the screen (see "decide.txt", where it is written). Paging it was
+# tried on 2026-09-21 and taken out again the same day: design.md 3.
 #
-#   -F  quit at once if it all fits, so a short review behaves exactly
-#       as it did before there was a pager;
-#   -X  stay off the alternate screen, so the text is still in the
-#       scrollback after quitting -- somebody who has just read it and
-#       is deciding will want to look again;
-#   -R  keep the colour.
-#
-# $PAGER first, because whoever set it meant it; then `less`; then
-# busybox's `more`, which is what the i386 and Alpine machines have.
-# With none of them the text is printed as it always was: an installer
-# does not get to invent a pager.
-#
-# Three things this must not do. The question is never inside it -- the
-# one-line summary and `Install X? [y/N]` are printed after it exits,
-# on the terminal. The text is handed over as a **file name** and never
-# on stdin, because stdin is where the answer comes from and a pager
-# reading it would swallow the answer. And it is only ever reached from
-# the `tty` branch below, so the unattended path, a redirected stdout
-# and the log are byte for byte what they were.
-ti_pager() { # file -> 0 if it was paged
-	[ "${TI_NO_PAGER-}" = 1 ] && return 1
-	# Keep the file before anything touches $1: splitting $PAGER needs
-	# `set --`, which throws the positional parameters away, and losing
-	# the review file here means being asked to consent to a screen
-	# nobody showed you.
-	ti_pg_file=$1
-	ti_pg= ti_pg_colour=0
-	if [ -n "${PAGER-}" ]; then
-		# shellcheck disable=SC2086
-		set -- $PAGER
-		[ -n "${1:-}" ] && ti_have "$1" && { ti_pg=$PAGER; ti_pg_colour=1; }
+# This is also where a dialog lands when the screen turns out not to be
+# there, so it has to stay exactly as readable as it is when it is the
+# only thing on offer: over SSH with no display this is the ordinary
+# way to install a thing, not a consolation prize.
+ti_ask_tty() { # review-file question
+	if ti_want_colour; then ti_paint < "$1" >&2; else cat "$1" >&2; fi
+	if [ -s "$TI_WORK/decide.txt" ]; then
+		printf '\n' >&2
+		printf -- '----------------------------------------------------------------------\n' >&2
+		if ti_want_colour; then ti_paint < "$TI_WORK/decide.txt" >&2; else cat "$TI_WORK/decide.txt" >&2; fi
 	fi
-	if [ -z "$ti_pg" ]; then
-		if ti_have less; then ti_pg="less -FRX" ti_pg_colour=1
-		elif ti_have more; then ti_pg=more ti_pg_colour=0
-		else return 1
-		fi
+	printf '\n%s [y/N] ' "$2" >&2
+	read -r ans || return 1
+	case $ans in y | Y | yes | YES | Yes) return 0 ;; esac
+	return 1
+}
+
+# Did that dialog fail because there was no screen, rather than because
+# somebody pressed Cancel? ti_display_ok should have caught this before
+# either tool was started; this is the second line of defence, and it
+# is here because a "no" the person never gave and a "yes" they never
+# gave are both wrong, and kdialog has been seen to answer 0 with no
+# display at all.
+ti_gui_failed() { # stderr-file
+	[ -s "$1" ] || return 1
+	grep -qiE "cannot open display|could not open (the )?x display|unable to init server|failed to connect to|cannot connect to" "$1"
+}
+
+# When it does, the terminal takes over -- with the review and the
+# question, never one without the other.
+ti_gui_fallback() { # review-file question stderr-file
+	ti_log "No window could be opened; asking in the terminal instead. $(tr '\n' ' ' < "$3" | cut -c1-200)"
+	if [ -t 0 ] && [ -t 2 ]; then
+		ti_ask_tty "$1" "$2"
+		return
 	fi
-	if [ "$ti_pg_colour" = 1 ] && ti_want_colour; then
-		ti_paint < "$ti_pg_file" > "$TI_WORK/paged.txt"
-	else
-		cat "$ti_pg_file" > "$TI_WORK/paged.txt"
-	fi
-	[ -s "$TI_WORK/paged.txt" ] || return 1
-	# The text arrives on the pager's stdin, so its status line says `:`
-	# rather than a temporary path nobody needs to read; both `less` and
-	# busybox's `more` take their keys from /dev/tty in that case, which
-	# is why the answer to the question below -- read from this script's
-	# own stdin, further down -- is not swallowed. stdout goes to
-	# stderr, where this text has always gone.
-	# shellcheck disable=SC2086
-	$ti_pg < "$TI_WORK/paged.txt" >&2
-	# 126 and 127 are the shell saying it could not run the thing at
-	# all -- a $PAGER that is there but not executable, or a wrapper
-	# that is not really a pager. Then the text has not been shown and
-	# the caller prints it, because being asked to consent to a screen
-	# nobody showed you is the one outcome worse than scrolling.
-	case $? in 126 | 127) return 1 ;; esac
-	return 0
+	ti_fail "DISPLAY is set but no window could be opened on it, and there is no terminal to ask in. Run it in a terminal, or pass --yes to accept without asking."
 }
 
 ti_confirm() {
@@ -359,41 +414,47 @@ ti_confirm() {
 	set -- "$(ti_cleans "$1")" "$TI_WORK/confirm.txt" "$(ti_cleans "$3")"
 	case $ti_ui in
 	tty)
-		# In a terminal the text is longer than the screen, so by the time
-		# the question appears the top of it -- what is being installed,
-		# and by whom -- has scrolled away. One line of it stands above
-		# the prompt: the decision, not a second copy of the screen
-		# (see "decide.txt" where it is written).
-		if ! ti_pager "$2"; then
-			if ti_want_colour; then ti_paint < "$2" >&2; else cat "$2" >&2; fi
-		fi
-		if [ -s "$TI_WORK/decide.txt" ]; then
-			printf '\n' >&2
-			printf -- '----------------------------------------------------------------------\n' >&2
-			if ti_want_colour; then ti_paint < "$TI_WORK/decide.txt" >&2; else cat "$TI_WORK/decide.txt" >&2; fi
-		fi
-		printf '\n%s [y/N] ' "$3" >&2
-		read -r ans || return 1
-		case $ans in y | Y | yes | YES | Yes) return 0 ;; esac
-		return 1
+		ti_ask_tty "$2" "$3"
+		return
 		;;
 	zenity)
 		# Monospace, or the columns and the hashes do not line up; a
 		# button that says what it does, not "OK". A zenity too old for
 		# either answers 255 (a bad option), which a cancel never is.
+		#
+		# stderr is kept rather than thrown away: on this desktop even a
+		# working zenity prints libEGL noise, so it cannot be read as
+		# "something went wrong", but it is where a display that is not
+		# there says so, and a cancel that never happened must not be
+		# read as a cancel.
 		ti_dialog_size
+		ti_gerr=$TI_WORK/gui.err
 		zenity --text-info --title="$1 - $3" --filename="$2" --font="Monospace 10" \
 			--width=$ti_dlg_w --height=$ti_dlg_h \
-			--ok-label="Install" --cancel-label="Cancel" 2>/dev/null
+			--ok-label="Install" --cancel-label="Cancel" 2>"$ti_gerr"
 		rc=$?
-		[ $rc = 255 ] && { zenity --text-info --title="$1 - $3" --filename="$2" \
-			--width=$ti_dlg_w --height=$ti_dlg_h 2>/dev/null; rc=$?; }
+		if [ $rc = 255 ]; then
+			zenity --text-info --title="$1 - $3" --filename="$2" \
+				--width=$ti_dlg_w --height=$ti_dlg_h 2>"$ti_gerr"
+			rc=$?
+		fi
+		ti_gui_failed "$ti_gerr" && { ti_gui_fallback "$2" "$3" "$ti_gerr"; return; }
 		return $rc
 		;;
 	kdialog)
+		# Two dialogs, and the second one is the consent. With no
+		# display kdialog has been seen to answer 0 to both, so its
+		# stderr decides before its exit code does.
 		ti_dialog_size
-		kdialog --title "$1 - $3" --textbox "$2" $ti_dlg_w $ti_dlg_h &&
-			kdialog --title "$1" --yesno "$3"
+		ti_gerr=$TI_WORK/gui.err
+		kdialog --title "$1 - $3" --textbox "$2" $ti_dlg_w $ti_dlg_h 2>"$ti_gerr"
+		rc=$?
+		ti_gui_failed "$ti_gerr" && { ti_gui_fallback "$2" "$3" "$ti_gerr"; return; }
+		[ $rc = 0 ] || return $rc
+		kdialog --title "$1" --yesno "$3" 2>"$ti_gerr"
+		rc=$?
+		ti_gui_failed "$ti_gerr" && { ti_gui_fallback "$2" "$3" "$ti_gerr"; return; }
+		return $rc
 		;;
 	osascript)
 		while :; do
@@ -3703,6 +3764,13 @@ EOF
 }
 
 ti_main() {
+	# Any argument at all means this run is being driven rather than
+	# double-clicked, and the review goes to the terminal as text
+	# (ti_pick_ui). The Finder's own -psn_... is not one anybody typed.
+	ti_args=0
+	for a in "$@"; do
+		case $a in -psn_*) ;; *) ti_args=$((ti_args + 1)) ;; esac
+	done
 	for a in "$@"; do
 		case $a in
 		--record=*) opt_record=$(ti_abs "${a#*=}") ;;
