@@ -66,6 +66,17 @@
 // hiding it is what let an earlier bug through). The four rate-limit
 // answers were carried over again.
 //
+// Amended 2026-09-22 for `Read Me First.txt`, the readme the macOS base
+// now carries beside the app (installer/unix/macos-readme.txt). A full run
+// against the new base failed 48 checks and no others -- every
+// "<label> macos: the .app's files" observation, each differing by exactly
+// one entry, `["Read Me First.txt", 33188]` (mode 0644). Those 48 arrays
+// were amended in place rather than re-recorded: a `--record` run takes the
+// server's live catalogue, and an intended one-entry change is not worth
+// the chance of baking in someone else's half-finished catalogue edit (the
+// warning above, earned the hard way). A full run afterwards passes
+// 1,516 / 0.
+//
 // One run at a time: the lock below refuses a second run against the same
 // server and data folder, which used to interleave silently.
 import fs from 'node:fs';
