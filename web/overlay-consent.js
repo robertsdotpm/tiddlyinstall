@@ -32,7 +32,7 @@ function paint() {
   const kids = [
     el('p', { class: 'overlay-ask-head' },
       el('strong', { text: n + ' catalogue change' + (n === 1 ? '' : 's') + ' found in this browser' }),
-      ' — not used yet.'),
+      ' - not used yet.'),
     el('p', { class: 'small' },
       'They were saved here by a page on this computer, and they decide what the installers you build download and run. ',
       'Use them only if you made them yourself on the ', link, '.'),

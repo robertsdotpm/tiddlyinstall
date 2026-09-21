@@ -249,7 +249,7 @@ function paintCatalog() {
       // newest. It isn't only a 32-bit thing -- Go 1.10.8 on Vista, Java 8
       // on XP -- and it was never shown before.
       if (r.version && r.behind) {
-        v += ' <span class="arch-ceiling">— not the newest; ' + esc(entry.label || rt) + ' reaches ' +
+        v += ' <span class="arch-ceiling">- not the newest; ' + esc(entry.label || rt) + ' reaches ' +
           esc(r.behind) + ' on ' + esc(FAMILY_LABEL[r.family] || r.family) + '</span>';
       }
       return '<tr><td>' + esc(r.covers || r.family || '') + arch + '</td><td>' + v + '</td></tr>';
@@ -332,7 +332,7 @@ const EG_RT = 'tjfq5rqwnnrx';       // its runtime's folder
 // a typo. Matched against the command as written, not as expanded.
 const TOKEN_WHY = [
   ['{runtime}', (l, root) => 'the ' + l + ' this installer sets up, inside its own folder under ' + root +
-    ' — never one already on the computer'],
+    ' - never one already on the computer'],
   ['{bin}', (l) => 'that ' + l + '’s scripts folder'],
   ['{exe}', () => '“.exe” on Windows and nothing on Linux or macOS'],
 ];
@@ -499,8 +499,8 @@ const archCoverNote = document.getElementById('arch-cover-note');
 // stopped building it), but the same sentence serves an old OS version.
 function ceilingText(fam, a, cell, label) {
   return a === 'x86'
-    ? ' — the newest 32-bit build there is. ' + label + ' reaches ' + cell.behind + ' on ' + FAMILY_LABEL[fam] + ' otherwise.'
-    : ' — not the newest. ' + label + ' reaches ' + cell.behind + ' on ' + FAMILY_LABEL[fam] + ' elsewhere.';
+    ? ' - the newest 32-bit build there is. ' + label + ' reaches ' + cell.behind + ' on ' + FAMILY_LABEL[fam] + ' otherwise.'
+    : ' - not the newest. ' + label + ' reaches ' + cell.behind + ' on ' + FAMILY_LABEL[fam] + ' elsewhere.';
 }
 
 // A list item for one architecture: whether there is a build at all, the
@@ -673,7 +673,7 @@ function defaultTargetsToThisComputer() {
   note.className = 'small muted';
   note.id = 'target-default-note';
   note.textContent = 'Set to ' + ({ windows: 'Windows', linux: 'Linux', macos: 'macOS' })[hit[1]] +
-    ', the computer you are on. Tick the others to build for them too — one installer per system, all from the same settings.';
+    ', the computer you are on. Tick the others to build for them too - one installer per system, all from the same settings.';
   const choices = form.querySelector('.inline-choices');
   if (choices) choices.after(note);
   // Drop the note once they choose for themselves; it has said its piece.

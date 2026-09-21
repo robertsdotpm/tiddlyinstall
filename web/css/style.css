@@ -1,4 +1,4 @@
-/* TiddlyInstall — visual design.
+/* TiddlyInstall - visual design.
    Direction: "engineering instrument". Hairline rules, square corners, no
    shadows, monospace for anything the computer said (paths, commands,
    checksums, counts) and grotesque for anything a person said. One accent,
@@ -789,7 +789,7 @@ table td.num, table .mono, .versions td:nth-child(2) { font-family: var(--mono);
 .sha { font-family: var(--mono); font-size: 0.78em; word-break: break-all; color: var(--muted); }
 
 /* ==========================================================================
-   9. The manifest panel — "what this will do"
+   9. The manifest panel - "what this will do"
    The installer's own transparency screen, shown while authoring. Dark in
    both themes on purpose: it is a quotation of the installer, not the site.
    ========================================================================== */
@@ -1382,7 +1382,7 @@ html.ti-local .online-only { display: none !important; }
 .overlay-ask .actions { margin-top: 10px; }
 
 /* ==========================================================================
-   16. Sources — the catalogue editor (runtimes.html)
+   16. Sources - the catalogue editor (runtimes.html)
    ========================================================================== */
 
 .mono { font-family: var(--mono); font-size: 0.9em; }

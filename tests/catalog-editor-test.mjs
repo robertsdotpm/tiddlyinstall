@@ -211,7 +211,7 @@ try {
   // The releases filter spells out what an arch id means: "x86" is read as
   // either width by people who don't already know.
   const archOpts = await js(`[...document.getElementById('rt-f-arch').options].map((o) => o.textContent).join(' | ')`);
-  ok(/x86 — 32-bit \(/.test(archOpts) && /amd64 — 64-bit \(/.test(archOpts),
+  ok(/x86 - 32-bit \(/.test(archOpts) && /amd64 - 64-bit \(/.test(archOpts),
     'the releases filter spells out 32-bit and 64-bit', archOpts);
   // A runtime that does have 32-bit Linux says a different thing, from the
   // same catalogue: the page holds no opinion of its own.

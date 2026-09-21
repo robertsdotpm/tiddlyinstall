@@ -281,7 +281,7 @@ function paintArchFacts() {
   if (first) kids.push(el('span', { class: 'muted', text: 'none: this runtime has no releases for Windows, Linux or macOS' }));
   // 64-bit, for completeness: the same question the other way round.
   const wide = ['windows', 'linux', 'macos'].filter((os) => per[os].has('amd64') || per[os].has('arm64') || per[os].has('universal'));
-  kids.push(el('span', { class: 'muted', text: ' — 64-bit builds: ' + (wide.length ? wide.map((os) => OS_LABEL[os]).join(', ') : 'none') }));
+  kids.push(el('span', { class: 'muted', text: ' - 64-bit builds: ' + (wide.length ? wide.map((os) => OS_LABEL[os]).join(', ') : 'none') }));
   box.replaceChildren(...kids);
 }
 
@@ -320,7 +320,7 @@ function paintFilterOptions() {
   for (const k of ['os', 'arch', 'variant', 'format']) {
     const s = $('rt-f-' + k), cur = s.value;
     s.replaceChildren(opt('', 'Any'), ...count(k).map(([v, n]) =>
-      opt(v === '' ? ' none' : v, (v === '' ? '(none)' : v + (k === 'arch' && ARCH_NOTE[v] ? ' — ' + ARCH_NOTE[v] : '')) + ' (' + n.toLocaleString('en') + ')')));
+      opt(v === '' ? ' none' : v, (v === '' ? '(none)' : v + (k === 'arch' && ARCH_NOTE[v] ? ' - ' + ARCH_NOTE[v] : '')) + ' (' + n.toLocaleString('en') + ')')));
     s.value = [...s.options].some((o) => o.value === cur) ? cur : '';
   }
 }
@@ -368,7 +368,7 @@ function paintWindow() {
     try { file = fileName(r.v); } catch (e) { file = String(r.v.url || ''); }
     out.push(el('div', { class: 'rt-vrow' + (on ? ' selected' : '') + (r.st ? ' rt-row-' + r.st : ''), role: 'option', 'aria-selected': on ? 'true' : 'false', style: 'top:' + k * ROW + 'px', dataset: { k: String(k) } },
       el('span', { text: String((r.v.version != null ? r.v.version : '')) }), el('span', { text: String((r.v.os != null ? r.v.os : '')) }), el('span', { text: String((r.v.arch != null ? r.v.arch : '')) }),
-      el('span', { text: r.v.variant == null || r.v.variant === '' ? '—' : String(r.v.variant) }), el('span', { text: String((r.v.format != null ? r.v.format : '')) }),
+      el('span', { text: r.v.variant == null || r.v.variant === '' ? '-' : String(r.v.variant) }), el('span', { text: String((r.v.format != null ? r.v.format : '')) }),
       el('span', { class: 'rt-file', text: file, title: String(r.v.url || '') }), el('span', {}, badge(r.st))));
   }
   list.firstChild.replaceChildren(...out);
@@ -416,7 +416,7 @@ function paintRules() {
   s.replaceChildren(opt('', 'Any'), ...oses.map((o) => opt(o)));
   s.value = oses.includes(cur) ? cur : '';
   const n = tableRows('rule', $('rt-rule-table'), [
-    ['OS', (v) => v.os], ['Versions', (v) => v.versions || 'any'], ['Lowest OS', (v) => (v.min_os != null ? v.min_os : '—')], ['Highest', (v) => (v.max_os != null ? v.max_os : '')],
+    ['OS', (v) => v.os], ['Versions', (v) => v.versions || 'any'], ['Lowest OS', (v) => (v.min_os != null ? v.min_os : '-')], ['Highest', (v) => (v.max_os != null ? v.max_os : '')],
     ['Arch', (v) => matchText(v.arch)], ['Format', (v) => matchText((v.format != null ? v.format : v.match && v.match.format))],
     ['Variant', (v) => matchText((v.variant != null ? v.variant : v.match && v.match.variant))],
   ], (r) => !s.value || r.v.os === s.value);

@@ -350,7 +350,7 @@
     var t = table(), tr = el('tr');
     tr.appendChild(el('th', {}, 'Feature')); tr.appendChild(el('th', {}, 'Here')); tr.appendChild(el('th', {}, 'Without it'));
     t.add(tr);
-    var SYM = { 'native': '✓ native', 'fallback': '~ fallback', 'missing': '✗ missing', 'na': '– not used here', 'checking': '…' };
+    var SYM = { 'native': '✓ native', 'fallback': '~ fallback', 'missing': '✗ missing', 'na': '- not used here', 'checking': '…' };
     for (var i = 0; i < FEATURES.length; i++) {
       var f = FEATURES[i], s = status[f.id];
       tr = el('tr');

@@ -58,7 +58,7 @@ const SRC_LABELS = {
 function paintSourceLabels() {
   const [a, b] = SRC_LABELS[el('f-src-kind').value] || ['Value', 'Detail'];
   el('f-src-a-label').textContent = a;
-  el('f-src-b-label').textContent = b || '—';
+  el('f-src-b-label').textContent = b || '-';
   el('f-src-b').disabled = !b;
 }
 

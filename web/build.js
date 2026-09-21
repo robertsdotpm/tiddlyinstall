@@ -260,11 +260,11 @@ function paint(job) {
   if (job.status === 'queued') {
     pos = job.position > 0 ? job.position + ' ahead of you' : "You're next";
   } else if (job.status === 'running') pos = 'Being built now';
-  else pos = '—';
+  else pos = '-';
   $('job-position').textContent = pos;
   $('job-class').textContent = CLASS[job.class] || '';
 
-  $('job-eta').textContent = job.status === 'done' ? 'Done' : job.status === 'failed' ? '—' : humanEta(job.eta_seconds);
+  $('job-eta').textContent = job.status === 'done' ? 'Done' : job.status === 'failed' ? '-' : humanEta(job.eta_seconds);
 
   paintSteps(job);
   paintFiles(job);
