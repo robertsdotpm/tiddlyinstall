@@ -3134,10 +3134,18 @@ ti_install_main() {
 		i=$((i + 1))
 	done
 	src=$(ti_sel1 source)
+	# A source with no stored SHA-256 has no size either, and its `0` is
+	# not a measurement: GitHub makes the archive when it is asked for
+	# it, so nobody writing the plan could know how big it is (format.md,
+	# "Sources without a stored hash"). The total then has to say "more
+	# than", because a confident total that leaves a file out is the same
+	# lie as a confident "0 bytes" for the file itself.
+	ti_src_unsized=0
 	if [ -n "$src" ]; then
 		IFS=$tab
 		set -- $src
 		IFS=$ifs0
+		case ${2:-} in '' | -) ti_src_unsized=1 ;; esac
 		case ${3:-} in '' | *[!0-9]*) ;; *) ti_tot=$((ti_tot + $3)) ;; esac
 		if { [ -n "$TI_PACK_DIR" ] && [ -f "$TI_PACK_DIR/$2" ]; } ||
 			{ [ -n "$TI_PACK_TAR" ] && grep -qx "$2" "$TI_WORK/pack.list"; }; then :; else
@@ -3149,6 +3157,10 @@ ti_install_main() {
 	fi
 	ti_nall=$nfiles
 	[ -n "$src" ] && ti_nall=$((ti_nall + 1))
+	# Prefixes every printed total, so the three places that print one
+	# cannot drift apart.
+	ti_tot_pre=
+	[ "$ti_src_unsized" = 1 ] && ti_tot_pre='more than '
 	ti_hostlist=$(ti_hosts < "$ti_origins")
 	ti_norigin=$(wc -l < "$ti_origins" | tr -d ' ')
 	ti_nmirror=$(($(wc -l < "$ti_urls" | tr -d ' ') - ti_norigin))
@@ -3294,8 +3306,8 @@ ti_install_main() {
 				printf '  %-14snothing: all %s %s packed inside this installer\n' \
 					'Download:' "$ti_nall" "$(ti_plural "$ti_nall" 'file is' 'files are')"
 			else
-				printf '  %-14s%s %s, %s in total\n' \
-					'Download:' "$ti_nall" "$(ti_plural "$ti_nall" file files)" "$(ti_hsize $ti_tot)"
+				printf '  %-14s%s %s, %s%s in total\n' \
+					'Download:' "$ti_nall" "$(ti_plural "$ti_nall" file files)" "$ti_tot_pre" "$(ti_hsize $ti_tot)"
 				# Who the files are from, not every host that keeps a
 				# copy -- and the SHA-256 in the same breath, because
 				# that check is the reason the host matters as little
@@ -3331,8 +3343,8 @@ ti_install_main() {
 		if [ "$ti_nall" = 0 ]; then
 			printf '  Nothing.\n'
 		else
-			printf '  %s %s, %s in total.\n' \
-				"$ti_nall" "$(ti_plural "$ti_nall" file files)" "$(ti_hsize $ti_tot)"
+			printf '  %s %s, %s%s in total.\n' \
+				"$ti_nall" "$(ti_plural "$ti_nall" file files)" "$ti_tot_pre" "$(ti_hsize $ti_tot)"
 			# What that check does *not* reach (launch-shapes.md,
 			# recommendation 7). "Each one is checked against the
 			# SHA-256 below" is true of the files listed here and of
@@ -3373,8 +3385,23 @@ ti_install_main() {
 			set -- $src
 			IFS=$ifs0
 			printf '\n  %s. %s  (the project itself)\n' "$ti_nall" "$1"
-			ti_size_line "$3"
-			printf '     sha256 %s\n' "$2"
+			# A source with no stored hash has no size either, and
+			# both have to say so rather than print a value. "0 B"
+			# is a measurement nobody took, and a bare "sha256 -"
+			# reads as a missing field or a bug rather than as the
+			# deliberate thing it is. Same two sentences as the
+			# Windows engine prints (format.md, "Sources without a
+			# stored hash").
+			case ${2:-} in
+			'' | -)
+				printf '     size not known in advance: the archive is made when it is fetched\n'
+				printf '     no stored SHA-256: identified by its commit, fetched over HTTPS\n'
+				;;
+			*)
+				ti_size_line "$3"
+				printf '     sha256 %s\n' "$2"
+				;;
+			esac
 			if { [ -n "$TI_PACK_DIR" ] && [ -f "$TI_PACK_DIR/$2" ]; } || { [ -n "$TI_PACK_TAR" ] && grep -qx "$2" "$TI_WORK/pack.list"; }; then
 				printf '     from   the copy packed inside this installer\n'
 			fi
@@ -3565,8 +3592,8 @@ ti_install_main() {
 		printf '  From:      %s\n' "$ti_from_txt"
 		[ -n "$ti_rt_line" ] && printf '  Runtime:   %s\n' "$ti_rt_line"
 		if [ "$ti_nall" -gt 0 ] && [ "$ti_packed_all" != 1 ]; then
-			printf '  Download:  %s %s, %s\n' \
-				"$ti_nall" "$(ti_plural "$ti_nall" file files)" "$(ti_hsize $ti_tot)"
+			printf '  Download:  %s %s, %s%s\n' \
+				"$ti_nall" "$(ti_plural "$ti_nall" file files)" "$ti_tot_pre" "$(ti_hsize $ti_tot)"
 			if [ -n "$ti_hostlist" ] && [ "$ti_nmirror" -gt 0 ]; then
 				printf '  Sources:   %s, or a mirror of %s\n' \
 					"$ti_hostlist" "$(ti_itthem "$ti_nhost")" | ti_wrap 68 13

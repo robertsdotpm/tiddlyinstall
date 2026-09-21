@@ -119,6 +119,8 @@ Var SumHosts         ; the hosts the review page says files come from
 Var SumHostN         ; how many of them there are
 Var SumBytes         ; how many bytes it would download
 Var SumFiles         ; how many files
+Var SumUnsized       ; 1: one of them has no size in the plan, so $SumBytes
+                     ; is a floor and every total says "more than"
 Var SumRuns          ; how many commands it would run
 Var SumMirrors       ; download locations that are not a file's origin
 Var BackendHost      ; the host our own copies are served from
@@ -3934,6 +3936,7 @@ Function WriteSummary
   StrCpy $SumHostN 0
   StrCpy $SumBytes 0
   StrCpy $SumFiles 0
+  StrCpy $SumUnsized 0
   StrCpy $SumRuns 0
   StrCpy $SumMirrors 0
   StrCpy $CurU1 ""
@@ -3970,6 +3973,16 @@ Function WriteSummary
     StrCpy $U_a $SrcSize
     Call DecNum
     IntOp $SumBytes $SumBytes + $U_out
+    ; A source with no stored SHA-256 has no size either, and its `0` is
+    ; not a measurement: GitHub makes the archive when it is asked for
+    ; it, so nobody writing the plan could know how big it is (format.md,
+    ; "Sources without a stored hash"). Every total then says "more
+    ; than", because a confident total that leaves a file out is the same
+    ; lie as a confident "0 bytes" for the file itself.
+    ${If} $SrcSha == "-"
+    ${OrIf} $SrcSha == ""
+      StrCpy $SumUnsized 1
+    ${EndIf}
     ${If} $SrcUrl1 != ""
       StrCpy $U_a $SrcUrl1
       Call AddHost
@@ -4096,6 +4109,9 @@ Function WriteSummary
     StrCpy $U_a $SumBytes
     Call HumanSize
     StrCpy $0 $U_out
+    ${If} $SumUnsized = 1
+      StrCpy $0 "more than $0"
+    ${EndIf}
     StrCpy $U_a $SumFiles
     StrCpy $U_b "file"
     Call Plural
@@ -4161,6 +4177,9 @@ Function WriteSummary
     StrCpy $U_a $SumBytes
     Call HumanSize
     StrCpy $0 $U_out
+    ${If} $SumUnsized = 1
+      StrCpy $0 "more than $0"
+    ${EndIf}
     StrCpy $U_a $SumFiles
     StrCpy $U_b "file"
     Call Plural
@@ -4278,10 +4297,15 @@ Function WriteSummary
     Call HumanSize
     ${Sum} ""
     ${Sum} "  $2. $SrcName  (the project itself)"
-    ${Sum} "     $U_out ($SrcSize bytes)"
+    ; No stored hash means no size either, and "0 B (0 bytes)" is a
+    ; measurement nobody took. Say which it is (format.md, "Sources
+    ; without a stored hash"); the Linux engine prints the same two
+    ; lines.
     ${If} $SrcSha == "-"
+      ${Sum} "     size not known in advance: the archive is made when it is fetched"
       ${Sum} "     no stored SHA-256: identified by its commit, fetched over HTTPS"
     ${Else}
+      ${Sum} "     $U_out ($SrcSize bytes)"
       ${Sum} "     sha256 $SrcSha"
     ${EndIf}
     ${If} $SrcUrl1 != ""
@@ -5345,6 +5369,12 @@ Function FetchFile
   FileClose $FF_h
   ${If} $1 = 0
     ${FailWith} "$FF_name isn't packed in this installer and has no download location."
+  ${ElseIf} $FF_sha == "-"
+    ; There is no SHA-256 to have been wrong, so saying one was is a
+    ; reason nobody could act on. This file is fetched over HTTPS only
+    ; (format.md, "Sources without a stored hash"), which is the other
+    ; thing that can have failed, so say both.
+    ${FailWith} "Couldn't download $FF_name over HTTPS from any of its locations."
   ${Else}
     ${FailWith} "Couldn't download $FF_name from any of its locations with the right SHA-256."
   ${EndIf}

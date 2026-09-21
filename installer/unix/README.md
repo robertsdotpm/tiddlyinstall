@@ -100,10 +100,43 @@ engine is this same file, so an engine change reaches macOS as soon as
 the base is built there -- and `out/ti-base-macos.zip` on this machine
 is whatever was last built there, nothing more.
 
-**Last built 2026-09-21T11:13:48Z** on the Mac test server (macOS 26.2
+**Last built 2026-09-21T11:57:18Z** on the Mac test server (macOS 26.2
 `25C56`, arm64, `Matthew@the-mac-test-host`), from `ti-engine.sh` with the
-mode A row on the review screen saying what is true of the file rather
-than assuming it. The row is now one line --
+review screen telling the truth about a source that has no stored hash.
+Two lines where it used to print `0 B` and a bare `sha256 -`:
+
+```
+  2. 0e322af87745eff34caffe4df68456ebc20d9068.tar.gz  (the project itself)
+     size not known in advance: the archive is made when it is fetched
+     no stored SHA-256: identified by its commit, fetched over HTTPS
+```
+
+and, while such a file is in the list, **every total on the screen says
+"more than"** (`Download: 2 files, more than 34.2 MB in total`), because
+a confident total that leaves one file out is the same claim nobody
+measured, one size up. The second line is what the Windows engine has
+printed since 2026-09-20; the first is new in both. Text only; nothing
+it does changed.
+
+| | |
+| --- | --- |
+| `out/ti-base-macos.zip` | `d9379f42c9839e863455ac62046b985c73f3168a617c53a8c110afffa041b932`, 69,262 bytes |
+| the engine inside it | `ti-engine.sh` with the baked lines filled, and **only** those four lines: checked by diffing the extracted `Contents/MacOS/install` against the committed source |
+| plan signing key | `97930ea1888d1a12` (unchanged) |
+| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T11:57:18Z` / `1789991838` |
+| signature | ad-hoc; `codesign --verify --strict` is happy on the bundle **and** on the bundle re-extracted from the zip with `ditto` ("valid on disk", "satisfies its Designated Requirement", `Signature=adhoc`); `spctl -a` rejects it, as it must |
+
+There is still no checkout on the Mac: `ti-engine.sh`, `make_app.sh`,
+`plankey.sh`, `verify/bin/tiverify-macos-*` and the **public** plan
+signing key were copied to a temporary folder, built there with
+`TI_PLAN_PUBKEY_FILE` pointing at the copy, and the folder removed
+afterwards.
+
+The build before this one was **2026-09-21T11:13:48Z**, zip
+`7eaabafb3c29257412e56adc53c782c249356d36e3890e9460e3ac96feecbd89`
+(68,834 bytes), from `ti-engine.sh` with the mode A row on the review
+screen saying what is true of the file rather than assuming it. The row
+was made one line --
 
 ```
   Mode:       A (signed, and carrying no settings of its own): it installs only the app its file name names, from <backend>
@@ -116,15 +149,7 @@ and could disagree with it: "signed by TiddlyInstall" printed over a
 certificate. The mode A refusal and the `install.txt` log line dropped
 "Our signature" for the same reason. Text only; nothing it does changed.
 
-| | |
-| --- | --- |
-| `out/ti-base-macos.zip` | `7eaabafb3c29257412e56adc53c782c249356d36e3890e9460e3ac96feecbd89`, 68,834 bytes |
-| the engine inside it | `ti-engine.sh` with the baked lines filled, and **only** those four lines: checked by diffing the extracted `Contents/MacOS/install` against the committed source |
-| plan signing key | `97930ea1888d1a12` (unchanged) |
-| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T11:13:48Z` / `1789989228` |
-| signature | ad-hoc; `codesign --verify --strict` is happy on the bundle **and** on the bundle re-extracted from the zip with `ditto` ("valid on disk", "satisfies its Designated Requirement"); `spctl -a` rejects it, as it must |
-
-The build before this one was **2026-09-21T10:39:05Z**, zip
+The build before that was **2026-09-21T10:39:05Z**, zip
 `3c552f115cf303f44c56d4a57ecd823a93263721b8c3c620459c4e83052a312b`
 (68,623 bytes), engine
 `2eefef9ee145449cd8cef34eae9926ce9632897c3d299001b5c2e11aa2ae4a86`, from
