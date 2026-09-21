@@ -74,8 +74,8 @@
 // were amended in place rather than re-recorded: a `--record` run takes the
 // server's live catalogue, and an intended one-entry change is not worth
 // the chance of baking in someone else's half-finished catalogue edit (the
-// warning above, earned the hard way). A full run afterwards passes
-// 1,516 / 0.
+// warning above, earned the hard way). A full run afterwards, on
+// 2026-09-22, passed 1,515 with 0 failures and 1 skip.
 //
 // One run at a time: the lock below refuses a second run against the same
 // server and data folder, which used to interleave silently.
