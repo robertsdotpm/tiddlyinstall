@@ -100,7 +100,7 @@ engine is this same file, so an engine change reaches macOS as soon as
 the base is built there -- and `out/ti-base-macos.zip` on this machine
 is whatever was last built there, nothing more.
 
-**Last built 2026-09-21T06:42:29Z** on the Mac test server (macOS 26.2
+**Last built 2026-09-21T06:49:31Z** on the Mac test server (macOS 26.2
 `25C56`, arm64, `Matthew@the-mac-test-host`), from `ti-engine.sh` with the
 SHA-256 promise said once, a label on every file in the download list,
 the review shown in a window on a desktop, and the
@@ -124,10 +124,10 @@ the same order, because it is the whole of what that dialog says.
 
 | | |
 | --- | --- |
-| `out/ti-base-macos.zip` | `c4ad32e1b59d23063459eb8b7d59cb6717cc01b0a060e60334c526da769366c0`, 68,182 bytes |
-| the engine inside it | `90911ebb0db5c36018ebc263f61f38cbfda7a822284c4465f49b80ef0df1debf` (`ti-engine.sh` with the baked lines filled) |
+| `out/ti-base-macos.zip` | `4ca2c5c3ab59694b12d3beca317c45077eef1d7a0bd24260a86d9ddbb63f9313`, 68,366 bytes |
+| the engine inside it | `916478329f3b753d96262024fe4a5cf3f4856bb42ae2d6f0b17374ec5f5611e3` (`ti-engine.sh` with the baked lines filled) |
 | plan signing key | `97930ea1888d1a12` |
-| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T06:42:29Z` / `1789972949` |
+| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T06:49:31Z` / `1789973371` |
 | signature | ad-hoc; `codesign --verify --strict` is happy on the bundle **and** on the bundle re-extracted from the zip with `ditto` ("valid on disk", "satisfies its Designated Requirement") |
 
 **One bug this build fixes is macOS-only**, and it took running the
