@@ -1,6 +1,15 @@
 # TiddlyInstall (installer-builder)
 Build installers and executables for Windows, Linux, and macOS
 
+**What we sign is our installer program, never the software someone
+installs with it.** One reusable program (the *base installer*: the same
+bytes for everyone, which reads settings and installs what they name),
+plus settings chosen afterwards. A code signature on it says the program
+is ours and unmodified -- like the signature on a web browser, which
+says nothing about the sites you visit. The vocabulary every page and
+engine uses for this is [docs/design.md](docs/design.md) section 6,
+"What we sign, and the words for it"; wording that blurs it is a bug.
+
 ## Front end
 
 Plain HTML, CSS and ES modules (ES2017, so the one-file site runs in Firefox
@@ -14,8 +23,8 @@ CSS-only behaviours.
 | --- | --- |
 | `web/index.html` | What the service does |
 | `web/new.html` | The installer form. Submitting sends `POST /api/jobs` and opens the build's page. The "Newest that runs on the user's system" table comes from `GET /api/catalog/runtimes` when the server is reachable. Above each "Build installers" button it says where the build will happen: in this page, or on the build server (docs/plan.md section 1.11). "Signed by TiddlyInstall" is shown but off in this prototype (no code-signing certificate yet); Unsigned is the default |
-| `web/build.html#job=<id>` | One build, live: ticket number, place in the queue, estimated wait, progress, then downloads with sizes, SHA-256 and who signed them, and where the job was built. Survives reloads |
-| `web/edit.html` | Editor for unsigned (mode C) installers: open a `.exe`, `.run` or macOS `.zip`, edit its settings record, plan, packed files and **icon**, download it. Or start from a base installer. Nothing is uploaded |
+| `web/build.html#job=<id>` | One build, live: ticket number, place in the queue, estimated wait, progress, then downloads with sizes, SHA-256 and who signed each installer file, and where the job was built. Survives reloads |
+| `web/edit.html` | Editor for installer files that carry no signature (mode C; a signature covers every byte, so editing would break it): open a `.exe`, `.run` or macOS `.zip`, edit its settings record, plan, packed files and **icon**, download it. Or start from a base installer. Nothing is uploaded |
 | `web/runtimes.html` | The runtime catalogue editor: browse and change releases, recipes, support rules and policy, with a live plan preview. Changes are kept in this browser as an overlay and used when the page builds installers itself (docs/plan.md section 1.11) |
 | `web/create.html` | Redirects to `new.html#write` |
 | `web/builds.html` | Sample data still |
