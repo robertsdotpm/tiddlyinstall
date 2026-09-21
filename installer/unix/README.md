@@ -22,6 +22,17 @@ Builds go to `out/` (ignored by git).
 
 ## Running it
 
+**`sh <file>`, with no `chmod`.** A browser download has no executable
+bit and GNOME will not run a text file anyway, so a double-click opens
+the installer in an editor. `sh foo.run` needs no bit, so it is the one
+command worth telling anybody; tested at mode 644 under bash, dash and
+busybox. The engine's first lines say so to whoever opened it in the
+editor (design.md 3, "Opened in a text editor instead of run"), and
+`shared/builder.js` (`nameTheRun`) writes the app's name into that box
+in place, to the same byte length, because the verifier offsets baked
+into `TI_VERIFY_BLOBS` are absolute. Modes B and C only: a mode A file
+stays byte for byte the base we publish.
+
 ```
 sh install_node_hello_<hash>.run            # Linux (any file name works)
 TiddlyInstall.app/Contents/MacOS/install          # macOS, from a terminal
@@ -46,23 +57,24 @@ engine is this same file, so an engine change reaches macOS as soon as
 the base is built there -- and `out/ti-base-macos.zip` on this machine
 is whatever was last built there, nothing more.
 
-**Last built 2026-09-21T02:19:18Z** on the Mac test server (macOS 26.2
+**Last built 2026-09-21T02:55:39Z** on the Mac test server (macOS 26.2
 `25C56`, arm64, `Matthew@the-mac-test-host`), from `ti-engine.sh` with the
 review screen trimmed (design.md section 3, "Nothing is said twice": no
 machine line, no repeated project name, the origin of each download
 named and its mirrors counted, commands wrapped rather than cut and
-never broken inside a quoted path, and the heading saying we did not
-write the program). The engine is one file, so that change reached
+never broken inside a quoted path, the heading saying we did not write
+the program, one root in WHERE FILES GO, and the box at the top of the
+file for whoever opened it in a text editor). The engine is one file, so that change reached
 macOS only when this was rebuilt. The macOS dialog's short form is
 unchanged in shape: it is the whole of what that dialog says, so it
 repeats nothing.
 
 | | |
 | --- | --- |
-| `out/ti-base-macos.zip` | `e73ed1276d26f0331d54a526b764454578b7f18f22054f8adbe3bc4c0b667763`, 59,358 bytes |
-| the engine inside it | `bbdf076be29dda67170775f3c4203be2c39c1c7c8e33fbc446e59f9c07e072f7` (`ti-engine.sh` with the baked lines filled, and nothing else -- checked by diffing the two with those lines blanked) |
+| `out/ti-base-macos.zip` | `d6c3fd38dbaaba722ada38168f952d0adeb30bac4b5051b97c77d6cbd2c03ecf`, 60,778 bytes |
+| the engine inside it | `9af5cd3462d83a3001d21af58457ae5cd27fa652116dc5d6aab6d99e8a1c0c2a` (`ti-engine.sh` with the baked lines filled, and nothing else -- checked by diffing the two with those lines blanked) |
 | plan signing key | `97930ea1888d1a12` |
-| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T02:19:18Z` / `1789957158` |
+| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T02:55:39Z` / `1789959339` |
 | signature | ad-hoc; `codesign --verify --strict` is happy on the bundle **and** on the bundle re-extracted from the zip with `ditto` ("valid on disk", "satisfies its Designated Requirement") |
 
 The one before this was `b430ccb1fd7e85f7dc5cfbe662dfedb7a830239d19b6653e70bcf37b474df8ce`
@@ -127,6 +139,12 @@ at "the review screen's shape"; in short:
 - nothing is said twice (design.md section 3, "Nothing is said twice").
   What the screen leaves out, the log carries in full: every URL in the
   order they are tried, every command, and this machine.
+- whose commands they are is said once: every `step` in a plan is the
+  catalogue's recipe for the runtime, `install` and `launch` are about
+  the project, and WHAT IT RUNS ON THIS MACHINE is headed accordingly.
+- WHERE FILES GO shows the root once and the leaf folders under it,
+  with a line on why the runtime sits beside the app and not inside it
+  (design.md 1.1: short paths).
 - `ti_hsize` turns bytes into "34.2 MB", `ti_hosts` turns a list of
   URLs into the hosts behind them, `ti_origin_url` picks out the one a
   file comes from, `ti_wrap` wraps a `key: value` line so the value

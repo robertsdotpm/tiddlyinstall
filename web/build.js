@@ -152,8 +152,17 @@ function paintFiles(job) {
     const link = url ? '<a href="' + esc(url) + '" download="' + esc(f.name) + '">' + name + '</a>' : name;
     let signed = f.signed;
     if (!signed) signed = f.platform === 'linux' ? 'Not needed on Linux' : 'Unsigned';
+    // How to run a `.run`, ready to copy. A browser download has no
+    // executable bit and GNOME will not run a text file, so a
+    // double-click opens the installer in an editor; `sh <file>` needs
+    // no bit and no chmod, and works on a fresh download. The file's
+    // own first lines say the same thing to whoever gets there first
+    // (installer/unix/ti-engine.sh).
+    const how = f.platform === 'linux'
+      ? '<br><span class="muted">In a terminal: <code>sh ' + esc(f.name) + '</code></span>'
+      : '';
     return '<tr><td>' + link +
-      (f.sha256 ? '<br><span class="muted sha">SHA-256 <code>' + esc(f.sha256) + '</code></span>' : '') + '</td>' +
+      (f.sha256 ? '<br><span class="muted sha">SHA-256 <code>' + esc(f.sha256) + '</code></span>' : '') + how + '</td>' +
       '<td>' + esc(PLATFORM[f.platform] || f.platform) + '</td>' +
       '<td class="arch-col">' + archCell(f) + '</td>' +
       '<td>' + esc(humanSize(f.size)) + '</td>' +

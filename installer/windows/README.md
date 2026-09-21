@@ -232,6 +232,16 @@ are tried, and both are written into the log before anything is fetched,
 along with `This machine: Windows 10 build 19045, amd64.` and `Plan
 block 1 matches.`
 
+Two more things the page now says plainly. The commands under a
+download are **our recipe for the runtime, not the project's code** --
+said once, in the WHAT IT DOWNLOADS opening, because on this page the
+steps sit under the file they belong to rather than in a section of
+their own. And WHERE FILES GO shows `$Root` once with the leaf folders
+under it (a third pass over the block, for the `file` names) and why
+the runtime is beside the app and not inside it: paths inside it stay
+short, which is the whole reason for the flat layout (design.md 1.1)
+and for XP installing to `C:\ti`.
+
 **A command is wrapped, not cut,** while it fits in `TI_CMD_LINES`
 lines of `TI_CMD_W` columns (`CmdLine`), with the continuation indented
 so it reads as one command; past that it is shortened, with its length

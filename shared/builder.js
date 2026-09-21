@@ -683,6 +683,57 @@ async function baseFor(env, plat) {
   return toBytes(base);
 }
 
+// The first lines of a `.run` are for whoever double-clicked it and got a
+// text editor: a browser download has no executable bit and GNOME will
+// not run a text file, so what they see is our source. The box at the top
+// of installer/unix/ti-engine.sh tells that person what the file is and
+// how to run it, and this puts the app's name in it. The name comes from
+// the record, so it is right even when the file has been renamed -- which
+// is exactly why the *file* name is not written in: a download can be
+// renamed, and mode A retargets by renaming.
+//
+// Modes B and C only. A mode A file is byte for byte the base we
+// publish -- a property someone can check, and one the server tests
+// check -- so it keeps the generic line.
+//
+// Written **in place and to the same byte length**. The Ed25519 verifiers
+// appended after the script are found by absolute offsets baked into
+// TI_VERIFY_BLOBS (installer/unix/make_run.sh), so one byte more or less
+// and the installer could not check its own plan. A name too long for the
+// slot is left out and the generic line stands, which is true anyway.
+const RUN_SLOT = '# This is an installer made with TiddlyInstall.';
+
+function findBytes(hay, needle, from = 0) {
+  outer: for (let i = from; i + needle.length <= hay.length; i++) {
+    for (let j = 0; j < needle.length; j++) if (hay[i + j] !== needle[j]) continue outer;
+    return i;
+  }
+  return -1;
+}
+
+export function nameTheRun(base, appName) {
+  const name = String(appName || '').trim();
+  // A newline here would close the comment and the rest would be shell.
+  // validate() has already refused a control character in the name; this
+  // is the second lock on the same door, because this one writes bytes
+  // into a script.
+  if (!name || hasControl(name) || /[\r\n]/.test(name)) return base;
+  const at = findBytes(base, enc.encode('\n' + RUN_SLOT));
+  if (at < 0) return base;
+  const from = at + 1;
+  let end = from;
+  while (end < base.length && base[end] !== 0x0a) end++;
+  if (base[end - 1] !== 0x23) return base;             // the '#' that ends the box
+  const room = end - 1 - from;                         // room before it
+  const want = enc.encode('# This is an installer for ' + name + '.');
+  if (want.length > room) return base;
+  const out = base.slice();
+  out.set(want, from);
+  out.fill(0x20, from + want.length, from + room);
+  if (out.length !== base.length) throw new Error('the .run header slot changed length');
+  return out;
+}
+
 // Mode A: our signed base, renamed; the file name carries the record hash
 // (design.md section 3). The file is never changed (that would break our
 // signature), so no icon and no block: the record is only on the backend.
@@ -695,6 +746,11 @@ async function modeAFile(job, plat) {
     if (sb) { data = toBytes(sb.data); signedBy = sb.signedBy || ''; }
   }
   if (!data) data = await baseFor(env, plat);
+  // Not even the .run's header slot is filled in here, though a .run
+  // carries no signature and could take it. A mode A file being byte
+  // for byte the base we publish is a property someone can check, and
+  // server/test/build.test.js checks it; a nicer comment is not worth
+  // spending it. Mode A keeps the generic line, which is true.
   if (plat === 'macos') {
     // The .app is renamed after the file; its entries are copied as they
     // are, so its signature stays (tifile.MacZip with nothing added).
@@ -711,7 +767,8 @@ async function modeAFile(job, plat) {
 // any signature.
 async function buildFile(job, plat) {
   const { r, env, record, hash, app, stem, src, png, iconSha, progress, iconSrc } = job;
-  const base = await baseFor(env, plat);
+  let base = await baseFor(env, plat);
+  if (plat === 'linux') base = nameTheRun(base, r.name);
   const info = await readInstaller(base, 'base' + EXT[plat]);
   let plan = null;
   let pack = [];

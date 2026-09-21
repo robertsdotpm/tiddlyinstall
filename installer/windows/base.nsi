@@ -3390,9 +3390,9 @@ Function WriteFrom
   ${If} $CurOrigin != ""
     ${Sum} "     from   $CurOrigin"
     ${If} $CurMirrors = 1
-      ${Sum} "     or     1 other copy of it, in the log; whichever host answers, the file must match the sha256 above"
+      ${Sum} "     or     1 other copy of it, in the log"
     ${ElseIf} $CurMirrors > 1
-      ${Sum} "     or     $CurMirrors mirrors of it, every one of them in the log; whichever host answers, the file must match the sha256 above"
+      ${Sum} "     or     $CurMirrors mirrors of it, every one of them in the log"
     ${EndIf}
   ${EndIf}
   StrCpy $CurU1 ""
@@ -3638,14 +3638,14 @@ Function WriteSummary
         ${Else}
           StrCpy $1 "them"
         ${EndIf}
-        ${Sum} "  Sources:      $U_out, or a mirror of $1; every file is checked against its SHA-256 whichever host serves it"
+        ${Sum} "  Sources:      $U_out, or a mirror of $1; every file is checked against its SHA-256"
       ${Else}
         ${Sum} "  Sources:      $U_out; every file is checked against its SHA-256"
       ${EndIf}
     ${EndIf}
   ${EndIf}
   ${Sum} "  Into:         $AppDir"
-  ${Sum} "                (plus one folder per dependency beside it; nothing else on this machine is changed)"
+  ${Sum} "                (nothing else on this machine is changed)"
   ${If} $SumRuns > 0
     StrCpy $U_a $SumRuns
     StrCpy $U_b "command"
@@ -3689,6 +3689,8 @@ Function WriteSummary
     Call Plural
     ${Sum} "  $SumFiles $U_out, $0 in total. Each one is checked against the SHA-256"
     ${Sum} "  below before it is used; a file that does not match is not installed."
+    ${Sum} "  The commands under a file are our recipe for setting up that runtime,"
+    ${Sum} "  not the project's own code."
   ${EndIf}
   StrCpy $1 ""
   StrCpy $2 0
@@ -3778,21 +3780,48 @@ Function WriteSummary
   StrCpy $CurDir ""
   StrCpy $CurFile ""
   ${If} $TgtInstall != ""
-    ${Sum} "  Installs the project with:"
+    ${Sum} "  Installing the project:"
     StrCpy $U_a $TgtInstall
     Call Subst
     StrCpy $U_a $U_out
     Call CmdLine
   ${EndIf}
-  ${Sum} "  Starts the app with (this is what the shortcuts and launch.exe run):"
+  ${Sum} "  Starting it (this is what the shortcuts and launch.exe run):"
   StrCpy $U_a $TgtLaunch
   Call Subst
   StrCpy $U_a $U_out
   Call CmdLine
 
+  ; One place with parts, not two unrelated random names. A third pass
+  ; over the block, for the file folders: the runtime really is beside
+  ; the app and not inside it, and that is a decision worth a line.
+  ; Nesting it would put a 13-character folder on the front of every
+  ; path inside it, and Windows still breaks on long paths -- worst
+  ; inside Lib\site-packages, which is why XP installs to C:\ti at all
+  ; (design.md 1.1). Showing the root once is a presentation fix for
+  ; that layout, not a change to it.
   ${Sum} ""
   ${Sum} "WHERE FILES GO"
-  ${Sum} "  App:  $AppDir"
+  ${Sum} "  All of it in $Root:"
+  ${Sum} "    $AppId   the app"
+  Call OpenBlock
+  ${Do}
+    ${TiRead} $BH
+    ${If} ${Errors}
+      ${Break}
+    ${EndIf}
+    Call TiParseLine
+    ${If} $K S== "[target]"
+      ${Break}
+    ${ElseIf} $K S== "file"
+      StrCpy $1 $F1
+      StrCpy $U_a $F1
+      Call FolderHash
+      ${Sum} "    $U_out   $1"
+    ${EndIf}
+  ${Loop}
+  FileClose $BH
+  ${Sum} "  The runtime has its own folder beside the app rather than inside it, to keep the paths inside it short: Windows still breaks on long ones."
 
   ${Sum} ""
   ${Sum} "SHORTCUTS AND UNINSTALLER"

@@ -1,4 +1,36 @@
 #!/bin/sh
+# -------------------------------------------------------------------------- #
+# This is an installer made with TiddlyInstall.                              #
+#                                                                            #
+# If you are reading this in a text editor, a double-click opened it as      #
+# text instead of running it: a file downloaded over HTTP has no             #
+# executable bit, and GNOME's file manager will not run a text file          #
+# anyway. Nothing has happened. To install, open a terminal in this          #
+# folder and run `sh` followed by this file's name.                          #
+#                                                                            #
+# It then shows everything it would do -- what it downloads and from         #
+# where, where it puts it, what it runs -- and changes nothing until you     #
+# answer y.                                                                  #
+# -------------------------------------------------------------------------- #
+#
+# That box is for whoever double-clicked the file and got a text editor,
+# which is what a browser download of a `.run` usually ends in: no
+# executable bit, and GNOME will not run a text file anyway.
+#
+# Its "installer made with TiddlyInstall" line is a **fixed-width slot**:
+# shared/builder.js overwrites it with "This is an installer for <the
+# app>", from the record, whenever the name fits between the `#`s. In
+# place and to the same byte length, because the byte offsets of the
+# Ed25519 verifiers appended after this script are absolute and baked
+# into TI_VERIFY_BLOBS below (make_run.sh). A name too long to fit
+# leaves the line as it is, which is still true. The `#` ending each
+# line is what makes the slot's width survive an editor that strips
+# trailing spaces.
+#
+# The macOS .app carries this same file as Contents/MacOS/install, where
+# nobody ever opens it and where the text is left alone: a .zip opens by
+# double-click, and "run `sh` and this file's name" is true there too.
+#
 # TiddlyInstall base engine for Linux and macOS (POSIX sh + awk).
 #
 # One file, identical in every installer. It is the whole Linux `.run`
@@ -510,6 +542,11 @@ ti_host_of() { # url
 # that makes people stop reading the screen at all -- and nothing is
 # lost by counting them, because the log carries every URL in the order
 # they are tried, exactly as it carries every command in full.
+#
+# It says nothing about the checksum: the `sha256` line is two lines
+# above and the section's own opening sentence has already said a file
+# that does not match is not installed. Saying it a third time here is
+# the repetition this screen is supposed to be rid of.
 ti_from_lines() { # our-host < urls
 	awk -v me="$1" '
 	{ u[NR] = $0
@@ -525,7 +562,7 @@ ti_from_lines() { # our-host < urls
 	  printf "     from   %s\n", u[o]
 	  n = NR - 1
 	  if (n > 0)
-		printf "     or     %d %s of it, every one of them in the log; whichever host answers, the file must match the sha256 above\n", \
+		printf "     or     %d %s of it, every one of them in the log\n", \
 			n, (n == 1 ? "other copy" : "mirrors")
 	}'
 }
@@ -2884,9 +2921,11 @@ ti_install_main() {
 				# Who the files are from, not every host that keeps a
 				# copy -- and the SHA-256 in the same breath, because
 				# that check is the reason the host matters as little
-				# as it does.
+				# as it does. Saying *how little* ("whichever host
+				# serves it") is a qualifier on a qualifier and went on
+				# 2026-09-21.
 				if [ -n "$ti_hostlist" ] && [ "$ti_nmirror" -gt 0 ]; then
-					printf '  %-14s%s, or a mirror of %s; every file is checked against its SHA-256 whichever host serves it\n' \
+					printf '  %-14s%s, or a mirror of %s; every file is checked against its SHA-256\n' \
 						'Sources:' "$ti_hostlist" "$(ti_itthem "$ti_nhost")" | ti_wrap 74 16
 				elif [ -n "$ti_hostlist" ]; then
 					printf '  %-14s%s; every file is checked against its SHA-256\n' \
@@ -2894,8 +2933,12 @@ ti_install_main() {
 				fi
 			fi
 		fi
+		# "Plus one folder per dependency beside it" was doing two jobs
+		# badly: WHERE FILES GO now lists those folders under their one
+		# root and says why they are there, so all this line still owes
+		# the reader is the reassurance the whole screen exists to give.
 		printf '  %-14s%s\n' 'Into:' "$TI_APP_DIR"
-		printf '  %-14s(plus one folder per dependency beside it; nothing else on this machine is changed)\n' '' | ti_wrap 74 16
+		printf '  %-14s(nothing else on this machine is changed)\n' ''
 		[ "$ti_nrun" -gt 0 ] && printf '  %-14s%s %s on this machine (listed below)\n' \
 			'Then runs:' "$ti_nrun" "$(ti_plural "$ti_nrun" command commands)"
 		if [ $need_root = 1 ]; then
@@ -2943,11 +2986,26 @@ ti_install_main() {
 		fi
 
 		printf '\nWHAT IT RUNS ON THIS MACHINE\n'
+		# Whose commands these are, said once. "-m compileall -q -x
+		# 'bad_coding|badsyntax|lib2to3'" is not something a person can
+		# be asked to judge as the project's own code, and it is not
+		# the project's: every `step` in a plan comes from the
+		# catalogue's recipe for the runtime (shared/resolve.js writes
+		# them from the recipe, and a record cannot add one), while
+		# `install` and `launch` are about the project. That split is
+		# already in the plan, so saying it costs nothing and needs no
+		# new key -- it is the honest part of the "standard installer"
+		# idea (design.md 11.3), and none of the rest of it.
+		#
 		# A step's own description, when the plan carries one (format.md
 		# "Steps": an optional value appended to a `run` step), is what a
 		# person can actually judge -- "make Ruby work from the folder it
 		# is installed in" rather than 831 characters of shell. The
 		# command is still shown, and always in full in the log.
+		if [ "$ti_nrun" -gt 0 ]; then
+			printf '  Setting up %s. These commands are our recipe for this runtime, not\n' "${a_name:-the runtime}"
+			printf '  the project'"'"'s code:\n'
+		fi
 		ti_stepn=0
 		ti_sel step | awk -F"$tab" '$2 == "run" { print $3 "\t" $4 }' |
 			while IFS="$tab" read -r c d; do
@@ -2961,15 +3019,25 @@ ti_install_main() {
 			done
 		ins=$(ti_sel1 install)
 		if [ -n "$ins" ]; then
-			printf '  Then installs the project with:\n'
+			printf '  Installing the project:\n'
 			ti_cmd_line "$(ti_subst "$ins")"
 		fi
-		printf '  Starts the app with (this is what the menu entry and launch.sh run):\n'
+		printf '  Starting it (this is what the menu entry and launch.sh run):\n'
 		ti_cmd_line "$(ti_subst "$(ti_sel1 launch)")"
 
+		# One place with parts, not two unrelated random names. The
+		# runtime really is beside the app and not inside it, and that
+		# is a decision worth a line: nesting it would put a
+		# 13-character folder on the front of every path inside it, and
+		# Windows still breaks on long paths -- worst inside
+		# Lib\site-packages, which is why XP installs to C:\ti at all
+		# (design.md 1.1). Showing the root once is a presentation fix
+		# for that layout, not a change to it.
 		printf '\nWHERE FILES GO\n'
-		printf '  App:      %s\n' "$TI_APP_DIR"
-		printf '%s' "$TI_DIRMAP" | while IFS="$tab" read -r n d; do [ -n "$n" ] && printf '  %-9s %s\n' "$n:" "$d"; done
+		printf '  All of it in %s:\n' "$TI_ROOT"
+		printf '    %-14s the app\n' "${TI_APP_DIR##*/}"
+		printf '%s' "$TI_DIRMAP" | while IFS="$tab" read -r n d; do [ -n "$n" ] && printf '    %-14s %s\n' "${d##*/}" "$n"; done
+		printf '  The runtime has its own folder beside the app rather than inside it, to keep the paths inside it short.\n' | ti_wrap 74 2
 
 		printf '\nSHORTCUTS AND UNINSTALLER\n'
 		if [ "$TI_MENU" != 0 ]; then
