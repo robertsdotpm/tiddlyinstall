@@ -46,21 +46,23 @@ engine is this same file, so an engine change reaches macOS as soon as
 the base is built there -- and `out/ti-base-macos.zip` on this machine
 is whatever was last built there, nothing more.
 
-**Last built 2026-09-21T01:30:43Z** on the Mac test server (macOS 26.2
+**Last built 2026-09-21T02:19:18Z** on the Mac test server (macOS 26.2
 `25C56`, arm64, `Matthew@the-mac-test-host`), from `ti-engine.sh` with the
 review screen trimmed (design.md section 3, "Nothing is said twice": no
 machine line, no repeated project name, the origin of each download
-named and its mirrors counted, commands wrapped rather than cut). The
-engine is one file, so that change reached macOS only when this was
-rebuilt. The macOS dialog's short form is unchanged in shape: it is the
-whole of what that dialog says, so it repeats nothing.
+named and its mirrors counted, commands wrapped rather than cut and
+never broken inside a quoted path, and the heading saying we did not
+write the program). The engine is one file, so that change reached
+macOS only when this was rebuilt. The macOS dialog's short form is
+unchanged in shape: it is the whole of what that dialog says, so it
+repeats nothing.
 
 | | |
 | --- | --- |
-| `out/ti-base-macos.zip` | `475705a56c87adb7a8f922886cbfc06504909afb74eba3f6f86322d066e5099e`, 58,727 bytes |
-| the engine inside it | `51d12f0f5ee77800f629cc31d92050045fc487533fb6ce1ae6e74d9014dd5dc0` (`ti-engine.sh` with the baked lines filled, and nothing else -- checked by diffing the two with those lines blanked) |
+| `out/ti-base-macos.zip` | `e73ed1276d26f0331d54a526b764454578b7f18f22054f8adbe3bc4c0b667763`, 59,358 bytes |
+| the engine inside it | `bbdf076be29dda67170775f3c4203be2c39c1c7c8e33fbc446e59f9c07e072f7` (`ti-engine.sh` with the baked lines filled, and nothing else -- checked by diffing the two with those lines blanked) |
 | plan signing key | `97930ea1888d1a12` |
-| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T01:30:43Z` / `1789954243` |
+| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T02:19:18Z` / `1789957158` |
 | signature | ad-hoc; `codesign --verify --strict` is happy on the bundle **and** on the bundle re-extracted from the zip with `ditto` ("valid on disk", "satisfies its Designated Requirement") |
 
 The one before this was `b430ccb1fd7e85f7dc5cfbe662dfedb7a830239d19b6653e70bcf37b474df8ce`
@@ -128,8 +130,7 @@ at "the review screen's shape"; in short:
 - `ti_hsize` turns bytes into "34.2 MB", `ti_hosts` turns a list of
   URLs into the hosts behind them, `ti_origin_url` picks out the one a
   file comes from, `ti_wrap` wraps a `key: value` line so the value
-  keeps its column (and, with a third argument, indents the wrapped
-  lines further, which is how a wrapped command reads as one command).
+  keeps its column, and `ti_cmd_wrap` wraps a command.
 
 **Colour** is added by `ti_paint`, and only ever on the way to a
 terminal: the file stays plain, so nothing escapes into a log, a pipe or
@@ -156,9 +157,11 @@ there it is the whole of what the dialog says, with the full text behind
 **A command is wrapped, not cut,** while it fits in four lines
 (`ti_cmd_line`, `TI_CMD_LINES`), with the continuation indented to
 column 9 so it reads as one command. Past that it is shortened, with its
-length and a pointer to the log. `ti_cmd_line` renders a command and
-decides nothing about whether it is worth showing -- that is the
-caller's.
+length and a pointer to the log. The wrapping is `ti_cmd_wrap`, not
+`ti_wrap`: it breaks only at a space **outside double quotes**, because
+a break inside `"C:\Users\John Smith\…"` reads as two arguments when it
+is one path. `ti_cmd_line` renders a command and decides nothing about
+whether it is worth showing -- that is the caller's.
 
 **zenity** gets `--font="Monospace 10"` (columns and hashes do not line
 up in a proportional font), a bigger window and `--ok-label=Install`. A

@@ -370,6 +370,52 @@ ti_plural() { # n singular plural
 # How many wrapped lines a command may take before it is shortened
 # instead. Four is about a fifth of a 24-line terminal.
 TI_CMD_LINES=4
+TI_CMD_W=74           # wrap here
+TI_CMD_IND=5          # the first line starts in column 5
+TI_CMD_CONT=9         # and the rest in column 9
+
+# Wrap one command, breaking only at a space that is **outside double
+# quotes**. ti_wrap breaks at any space, which is right for prose and
+# wrong here: a Windows profile folder often has a space in it, so
+#
+#     msiexec /a "C:\Users\jörg
+#         müller\AppData\Local\Temp\…\core.msi" /qn …
+#
+# reads as two arguments when it is one path. (German Windows 11 is
+# where that showed, but "C:\Users\John Smith" is the ordinary case.)
+# A quoted run with no space in it is broken like anything else, and a
+# single run longer than the line is never broken at all: half a path
+# is worse than a long one.
+ti_cmd_wrap() { # text width first-indent continuation-indent
+	TI_CW=$1 awk -v w="$2" -v ind="$3" -v cont="$4" 'BEGIN {
+		s = ENVIRON["TI_CW"]
+		n = length(s)
+		pos = 1
+		first = 1
+		while (pos <= n) {
+			k = (first ? ind : cont)
+			room = w - k
+			pad = ""
+			for (i = 0; i < k; i++) pad = pad " "
+			if (n - pos + 1 <= room) { print pad substr(s, pos); break }
+			# the last space outside quotes that still fits, else the
+			# first one after the width
+			q = 0; last = 0; nxt = 0
+			for (i = pos; i <= n; i++) {
+				c = substr(s, i, 1)
+				if (c == "\"") { q = 1 - q; continue }
+				if (c != " " || q) continue
+				if (i - pos < room) last = i
+				else if (nxt == 0) nxt = i
+			}
+			cut = (last ? last : nxt)
+			if (cut == 0) { print pad substr(s, pos); break }
+			print pad substr(s, pos, cut - pos)
+			pos = cut + 1
+			first = 0
+		}
+	}'
+}
 
 # One command, rendered. It decides how to *show* a command and nothing
 # else: whether a command is worth showing at all is the caller's
@@ -387,13 +433,13 @@ TI_CMD_LINES=4
 # people to click through, which is the opposite of what it is for.
 #
 # Continuations are indented past the first line, so a wrapped command
-# reads as one command and not as two. A token longer than the width is
-# still never broken, as everywhere else here: half a path is worse
-# than a long one. The log has every command in full either way.
+# reads as one command and not as two, and a break never lands inside a
+# quoted path (ti_cmd_wrap, above). The log has every command in full
+# either way.
 ti_cmd_line() { # command
 	ti_c=$1
 	ti_cn=${#ti_c}
-	ti_cw=$(printf '     %s\n' "$ti_c" | ti_wrap 74 5 9)
+	ti_cw=$(ti_cmd_wrap "$ti_c" "$TI_CMD_W" "$TI_CMD_IND" "$TI_CMD_CONT")
 	if [ "$(printf '%s\n' "$ti_cw" | wc -l | tr -d ' ')" -le "$TI_CMD_LINES" ]; then
 		printf '%s\n' "$ti_cw"
 	else
@@ -502,22 +548,20 @@ ti_flatname() { # text
 # indented to match. A token longer than the width is never broken -- half
 # a URL is worse than a long one.
 #
-# $3, when it is given, is the column continuation lines are indented to
-# instead of $2. A wrapped command indents *past* its first line, so it
-# reads as one command and not as two of equal rank.
+# This is for prose, where any space is a fair break. A command is not
+# prose and has ti_cmd_wrap instead.
 ti_wrap() {
-	awk -v w="$1" -v ind="$2" -v cont="$3" '
-	BEGIN { if (cont == "") cont = ind }
+	awk -v w="$1" -v ind="$2" '
 	{ head = substr($0, 1, ind)
 	  if (length($0) <= ind) { print $0; next }
 	  pre = ""
-	  for (k = 0; k < cont; k++) pre = pre " "       # busybox awk has no %*s
+	  for (k = 0; k < ind; k++) pre = pre " "        # busybox awk has no %*s
 	  rest = substr($0, ind + 1)
 	  line = ""; out = 0; n = split(rest, t, " ")
 	  for (i = 1; i <= n; i++) {
 		if (t[i] == "") continue
 		if (line == "") line = t[i]
-		else if ((out ? cont : ind) + length(line) + 1 + length(t[i]) <= w) line = line " " t[i]
+		else if (ind + length(line) + 1 + length(t[i]) <= w) line = line " " t[i]
 		else { print (out++ ? pre : head) line; line = t[i] }
 	  }
 	  if (line != "") print (out++ ? pre : head) line

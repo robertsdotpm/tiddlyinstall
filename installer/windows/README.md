@@ -240,6 +240,13 @@ pages break a command in the same places. Four or more leading spaces
 is what makes `tisig::richtext` set a line in Courier New, which is what
 makes the breaks hold.
 
+A break lands only on a space **outside double quotes**, which matters
+more here than on the other engine: a Windows profile folder usually
+has a space in it, so ordinary word wrapping puts a line break inside
+`"C:\Users\John Smith\AppData\Local\Temp\…"` and it reads as two
+arguments. German Windows 11 (`C:\Users\jörg müller`) is where that
+showed.
+
 ## Engine notes
 
 - Downloads use INetC (`/CONNECTTIMEOUT 10 /RECEIVETIMEOUT 60`) and try

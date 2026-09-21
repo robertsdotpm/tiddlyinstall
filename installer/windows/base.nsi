@@ -3099,10 +3099,12 @@ FunctionEnd
 ; the two logs break a command in the same places. These lines are
 ; indented four or more spaces, so tisig::richtext sets them in Courier
 ; New and the breaks hold; continuations are indented past the first
-; line, so a wrapped command reads as one command and not as two. A
-; token longer than the width is never broken, as everywhere else here:
-; half a path is worse than a long one. The log has every command in
-; full either way.
+; line, so a wrapped command reads as one command and not as two; and a
+; break never lands inside a quoted path, which matters here more than
+; on the other engine because a Windows profile folder usually has a
+; space in it. A run longer than the width is never broken, as
+; everywhere else here: half a path is worse than a long one. The log
+; has every command in full either way.
 !define TI_CMD_W 74           ; wrap here
 !define TI_CMD_IND 5          ; the first line starts in column 5
 !define TI_CMD_CONT 9         ; and the rest in column 9
@@ -3114,7 +3116,10 @@ Function CmdLine
   Push $3
   Push $4
   Push $5
+  Push $6
+  Push $7
   Push $U_b
+  Push $U_c
   ${SumCmd} "  $U_a"
   StrLen $0 $U_a
   ; The longest that still fits: the first line's room plus the rest's,
@@ -3137,46 +3142,59 @@ Function CmdLine
         ${Sum} "$3$2"
         ${Break}
       ${EndIf}
-      ; the last space at or before the width...
-      StrCpy $1 $4
+      ; One scan of what is left: $5 is the last space outside quotes
+      ; that still fits, $6 the first one after the width, $U_c the
+      ; quote parity. Breaking at any space is what ti_wrap does and is
+      ; wrong for a command: a Windows profile folder usually has a
+      ; space in it, and
+      ;
+      ;   msiexec /a "C:\Users\John
+      ;       Smith\AppData\Local\Temp\...\core.msi" /qn ...
+      ;
+      ; reads as two arguments when it is one path.
+      StrCpy $5 0
+      StrCpy $6 0
+      StrCpy $U_c 0
+      StrCpy $1 0
       ${Do}
-        ${If} $1 <= 0
+        ${If} $1 >= $0
           ${Break}
         ${EndIf}
         StrCpy $U_b $2 1 $1
-        ${If} $U_b S== " "
-          ${Break}
+        ${If} $U_b S== "$\""
+          IntOp $U_c $U_c !
+        ${ElseIf} $U_b S== " "
+        ${AndIf} $U_c = 0
+          ${If} $1 < $4
+            StrCpy $5 $1
+          ${ElseIf} $6 = 0
+            StrCpy $6 $1
+          ${EndIf}
         ${EndIf}
-        IntOp $1 $1 - 1
+        IntOp $1 $1 + 1
       ${Loop}
-      ${If} $1 <= 0
-        ; ...or, for a token longer than the line, the first space after
-        ; it, because half a path is worse than a long one
-        StrCpy $1 $4
-        ${Do}
-          ${If} $1 >= $0
-            ${Break}
-          ${EndIf}
-          StrCpy $U_b $2 1 $1
-          ${If} $U_b S== " "
-            ${Break}
-          ${EndIf}
-          IntOp $1 $1 + 1
-        ${Loop}
-        ${If} $1 >= $0
-          ${Sum} "$3$2"
-          ${Break}
-        ${EndIf}
+      ${If} $5 > 0
+        StrCpy $1 $5
+      ${ElseIf} $6 > 0
+        ; a run longer than the line is never broken: half a path is
+        ; worse than a long one
+        StrCpy $1 $6
+      ${Else}
+        ${Sum} "$3$2"
+        ${Break}
       ${EndIf}
-      StrCpy $5 $2 $1
-      ${Sum} "$3$5"
+      StrCpy $7 $2 $1
+      ${Sum} "$3$7"
       IntOp $1 $1 + 1
       StrCpy $2 $2 "" $1
       StrCpy $3 "         "
       IntOp $4 ${TI_CMD_W} - ${TI_CMD_CONT}
     ${Loop}
   ${EndIf}
+  Pop $U_c
   Pop $U_b
+  Pop $7
+  Pop $6
   Pop $5
   Pop $4
   Pop $3
