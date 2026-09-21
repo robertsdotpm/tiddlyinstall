@@ -58,7 +58,7 @@ every few minutes is not.
   other agents' uncommitted work this way and recovered by luck. Stage
   explicit paths, and run `git diff --cached --stat` before every commit
   to be sure you are committing only your own files.
-- **Never commit `prompts/`, `dist/`, `node_modules` or data folders.**
+- **Never commit `prompts/`, `out/`, `node_modules` or data folders.**
 - **`pkill -f` and `pgrep -f` with a broad pattern match your own shell**
   and the waiter watching for them. This has cost hours here — once,
   sixteen watcher shells span for eight hours on a pattern that matched
@@ -67,7 +67,7 @@ every few minutes is not.
   your own; agents have overwritten each other's scripts.
 - **Credentials are never written to a file, a script, a log or a
   commit.** ESXi credentials are deliberately not available to agents.
-- **Build `dist/` only from committed code**, in a clean worktree, and
+- **Build `out/` only from committed code**, in a clean worktree, and
   after changing an engine, rebuild the bases — the macOS one **on the
   Mac**, never here, or it loses its ad-hoc signature and moves 48 golden
   observations for no reason.
