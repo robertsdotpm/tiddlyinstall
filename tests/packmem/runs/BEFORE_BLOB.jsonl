@@ -1,0 +1,15 @@
+{"what": "page-loaded", "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/144.0.0.0 Safari/537.36", "run": "BEFORE_BLOB", "t": 1789974137940}
+{"what": "begin", "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/144.0.0.0 Safari/537.36", "mode": "blob", "members": 4, "base": 6, "steps": "64", "dm": 8, "cores": 16, "mem": {"used": 937325, "limit": 4294967296}, "run": "BEFORE_BLOB", "t": 1789974138273, "seq": 1}
+{"step": "64", "what": "start", "mem": {"used": 937325, "limit": 4294967296}, "mb": 64, "members": 4, "mode": "blob", "run": "BEFORE_BLOB", "t": 1789974138277, "seq": 2}
+{"step": "64", "what": "pack-held", "mem": {"used": 68312032, "limit": 4294967296}, "bytes": 67108864, "run": "BEFORE_BLOB", "t": 1789974139724, "seq": 3}
+{"step": "64", "what": "base-held", "mem": {"used": 74399445, "limit": 4294967296}, "run": "BEFORE_BLOB", "t": 1789974140695, "seq": 4}
+{"step": "64", "what": "tar-written", "mem": {"used": 141531864, "limit": 4294967296}, "bytes": 67111936, "run": "BEFORE_BLOB", "t": 1789974141702, "seq": 5}
+{"step": "64", "what": "concat", "mem": {"used": 214775742, "limit": 4294967296}, "bytes": 73403481, "run": "BEFORE_BLOB", "t": 1789974142704, "seq": 6}
+{"step": "64", "what": "intermediates-dropped", "mem": {"used": 214775574, "limit": 4294967296}, "run": "BEFORE_BLOB", "t": 1789974143606, "seq": 7}
+{"step": "64", "what": "hashed", "mem": {"used": 214786295, "limit": 4294967296}, "sha": "f7d5443dd424e60a", "run": "BEFORE_BLOB", "t": 1789974145824, "seq": 8}
+{"step": "64", "what": "blob", "mem": {"used": 214790235, "limit": 4294967296}, "bytes": 73403481, "run": "BEFORE_BLOB", "t": 1789974146822, "seq": 9}
+{"step": "64", "what": "url", "mem": {"used": 214796706, "limit": 4294967296}, "run": "BEFORE_BLOB", "t": 1789974147724, "seq": 10}
+{"step": "64", "what": "verified", "mem": {"used": 215309386, "limit": 4294967296}, "blobSize": 73403481, "footer": 67111936, "want": 67111936, "ok": true, "run": "BEFORE_BLOB", "t": 1789974148628, "seq": 11}
+{"step": "64", "what": "done", "ok": true, "bytes": 73403481, "ms": 11253, "mem": {"used": 214813598, "limit": 4294967296}, "run": "BEFORE_BLOB", "t": 1789974149529, "seq": 12}
+{"step": "64", "what": "after-gc", "mem": {"used": 878149, "limit": 4294967296}, "run": "BEFORE_BLOB", "t": 1789974151331, "seq": 13}
+{"what": "end", "lastOk": 64, "failedAt": 0, "run": "BEFORE_BLOB", "t": 1789974151332, "seq": 14}

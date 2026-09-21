@@ -60,5 +60,8 @@ var TI = (function () {
     bytesToHex: __ti_tifile.bytesToHex,
     ustarHeader: ustarHeader,
     streamHash: streamHash,
+    // The shipping one-buffer assembler (mode=ship), so the path the page
+    // really runs is measured rather than a copy of it kept in step by hand.
+    writeInstallerLayout: __ti_tifile.writeInstallerLayout,
   };
 })();

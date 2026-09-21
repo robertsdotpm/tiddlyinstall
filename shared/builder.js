@@ -46,7 +46,7 @@
 //   env.signPlan(plan) signs an embedded plan (optional)
 //   env.now()          the record's `created` time, and the plan's `signed`
 //                      (default: now)
-import { toBytes, sha256Hex, recordHash, readInstaller, writeInstaller, tarWrite, installerExt, zipWrite, peInfo, zipRead, zipEntryData, zipUnixMode, zipIsDir, zipIsSymlink } from './tifile.js';
+import { toBytes, sha256Hex, recordHash, readInstaller, buildInstaller, tarWrite, installerExt, zipWrite, peInfo, zipRead, zipEntryData, zipUnixMode, zipIsDir, zipIsSymlink } from './tifile.js';
 import { resolve, resolveFiles, loadRuntimes, hasRuntime, validPackage, packagePolicyFor, packageProject, packageModule, pickBin, jsonField, goQuote, replacer, setRevoked } from './resolve.js';
 import { rasterSource, buildIco, buildIcns, setExeIcon, setMacIcon, checkIconPng } from './icon.js';
 import { inflate, deflate } from '../web/lib/zlib.js';
@@ -813,9 +813,17 @@ async function buildFile(job, plat) {
     const fixChecksum = !!(pe && new DataView(info.base.buffer, info.base.byteOffset, info.base.byteLength).getUint32(pe.checksumOff, true) !== 0);
     return emit(job, plat, name, { layout: { base: info.base, record: enc.encode(record), plan: enc.encode(plan || ''), pack, fixChecksum, checksumOff: pe ? pe.checksumOff : 0 } }, '');
   }
-  for (const m of pack) if (!m.data) m.data = await m.read();
-  const data = await writeInstaller(info, { record, plan, pack });
-  return emit(job, plat, name, { data }, '');
+  // A .zip has to hold its members to deflate them; an .exe or .run is
+  // assembled into one pre-sized buffer, so each packed file is read only
+  // when its bytes are about to be copied in and is dropped straight
+  // afterwards (docs/browser-packing.md section 7). Reading them all first
+  // would put a second copy of the whole pack beside the output.
+  if (info.kind === 'zip') for (const m of pack) if (!m.data) m.data = await m.read();
+  const built = await buildInstaller(info, { record, plan, pack }, {
+    hash: !env.save,     // with env.save the writer hashes what it stores
+    progress: (m) => progress('Packing ' + (m.label || m.name.slice(0, 12))),
+  });
+  return emit(job, plat, name, built, '');
 }
 
 async function emit(job, plat, name, spec, signed) {
@@ -824,10 +832,11 @@ async function emit(job, plat, name, spec, signed) {
     const s = await job.env.save(job.hash, name, spec);
     f.size = s.size;
     f.sha256 = s.sha256;
+    if (s.url) f.url = s.url;
   } else {
     f.data = spec.data;
     f.size = spec.data.length;
-    f.sha256 = await sha256Hex(spec.data);
+    f.sha256 = spec.sha256 || await sha256Hex(spec.data);
   }
   return f;
 }

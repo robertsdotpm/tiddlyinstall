@@ -10,6 +10,7 @@
 // web/lib/cryptox.js: the browser's own where it has them, else plain JavaScript.
 import { inflate as zInflate, deflate as zDeflate } from '../web/lib/zlib.js';
 import { digest } from '../web/lib/cryptox.js';
+import { sha256Stream } from '../web/lib/sha.js';
 
 const tiEnc = new TextEncoder();
 const tiDec = new TextDecoder();
@@ -202,48 +203,74 @@ function octal(n, width) {   // width includes the trailing NUL
   return n.toString(8).padStart(width - 1, '0') + '\0';
 }
 
-// members: [{name, data: Uint8Array, mode?, dir?}] -> ustar bytes. A name
-// over 100 bytes is split into ustar's prefix and name at a '/'.
+// One member's 512-byte ustar header. A name over 100 bytes is split into
+// ustar's prefix and name at a '/'. Written once and used by both writers
+// here -- tarWrite, which joins parts, and writeInstallerLayout, which
+// writes into one buffer -- so the two cannot drift apart. The server has
+// its own copy in Buffer form (server/lib/files.js ustarHeader), which
+// server/test/files.test.js checks against this one.
+export function ustarHeader(name, size, { mode = 0o644, mtime = 0, dir = false } = {}) {
+  if (size > 0o77777777777) throw new RangeError('tar member too large');
+  let nameBytes = tiEnc.encode(name);
+  let prefixBytes = null;
+  if (nameBytes.length > 100) {
+    let cut = -1;
+    for (let i = name.indexOf('/'); i >= 0; i = name.indexOf('/', i + 1)) {
+      if (tiEnc.encode(name.slice(0, i)).length <= 155 && tiEnc.encode(name.slice(i + 1)).length <= 100) { cut = i; break; }
+    }
+    if (cut < 0) throw new RangeError('tar name too long: ' + name);
+    prefixBytes = tiEnc.encode(name.slice(0, cut));
+    nameBytes = tiEnc.encode(name.slice(cut + 1));
+  }
+  const h = new Uint8Array(512);
+  h.set(nameBytes, 0);
+  if (prefixBytes) h.set(prefixBytes, 345);
+  tarField(h, 100, 8, octal(mode, 8));
+  tarField(h, 108, 8, octal(0, 8));
+  tarField(h, 116, 8, octal(0, 8));
+  tarField(h, 124, 12, octal(size, 12));
+  tarField(h, 136, 12, octal(mtime, 12));
+  tarField(h, 148, 8, '        ');
+  h[156] = dir ? 0x35 : 0x30;          // '5' folder, '0' regular file
+  tarField(h, 257, 6, 'ustar\0');
+  tarField(h, 263, 2, '00');
+  tarField(h, 329, 8, octal(0, 8));    // devmajor, devminor: as Go's archive/tar
+  tarField(h, 337, 8, octal(0, 8));    // writes them, so packs match byte for byte
+  let sum = 0;
+  for (let i = 0; i < 512; i++) sum += h[i];
+  tarField(h, 148, 8, sum.toString(8).padStart(6, '0') + '\0 ');
+  return h;
+}
+
+// members: [{name, data: Uint8Array, mode?, dir?}] -> ustar bytes.
 export function tarWrite(members) {
   const parts = [];
   for (const m of members) {
     const data = m.dir ? new Uint8Array(0) : toBytes(m.data);
-    if (data.length > 0o77777777777) throw new RangeError('tar member too large');
-    let nameBytes = tiEnc.encode(m.name);
-    let prefixBytes = null;
-    if (nameBytes.length > 100) {
-      const n = m.name;
-      let cut = -1;
-      for (let i = n.indexOf('/'); i >= 0; i = n.indexOf('/', i + 1)) {
-        if (tiEnc.encode(n.slice(0, i)).length <= 155 && tiEnc.encode(n.slice(i + 1)).length <= 100) { cut = i; break; }
-      }
-      if (cut < 0) throw new RangeError('tar name too long: ' + m.name);
-      prefixBytes = tiEnc.encode(n.slice(0, cut));
-      nameBytes = tiEnc.encode(n.slice(cut + 1));
-    }
-    const h = new Uint8Array(512);
-    h.set(nameBytes, 0);
-    if (prefixBytes) h.set(prefixBytes, 345);
-    tarField(h, 100, 8, octal(m.mode || 0o644, 8));
-    tarField(h, 108, 8, octal(0, 8));
-    tarField(h, 116, 8, octal(0, 8));
-    tarField(h, 124, 12, octal(data.length, 12));
-    tarField(h, 136, 12, octal(m.mtime || 0, 12));
-    tarField(h, 148, 8, '        ');
-    h[156] = m.dir ? 0x35 : 0x30;        // '5' folder, '0' regular file
-    tarField(h, 257, 6, 'ustar\0');
-    tarField(h, 263, 2, '00');
-    tarField(h, 329, 8, octal(0, 8));    // devmajor, devminor: as Go's archive/tar
-    tarField(h, 337, 8, octal(0, 8));    // writes them, so packs match byte for byte
-    let sum = 0;
-    for (let i = 0; i < 512; i++) sum += h[i];
-    tarField(h, 148, 8, sum.toString(8).padStart(6, '0') + '\0 ');
-    parts.push(h, data);
+    parts.push(ustarHeader(m.name, data.length, { mode: m.mode || 0o644, mtime: m.mtime || 0, dir: !!m.dir }), data);
     const padLen = (512 - (data.length % 512)) % 512;
     if (padLen) parts.push(new Uint8Array(padLen));
   }
   parts.push(new Uint8Array(1024));
   return concatBytes(parts);
+}
+
+// The exact length of a pack's tar, from its members' sizes alone (the
+// server's tifile.PackSize, and shared/builder.js packSize). Nothing is
+// read to work it out, which is what lets the output buffer be allocated
+// once, before the first member is fetched.
+export function packTarSize(members) {
+  let n = 1024;
+  for (const m of members) n += 512 + Math.ceil(memberSize(m) / 512) * 512;
+  return n;
+}
+
+function memberSize(m) {
+  const n = m.size != null ? m.size : (m.data ? toBytes(m.data).length : null);
+  if (n == null || !Number.isInteger(n) || n < 0) {
+    throw new Error('pack member ' + JSON.stringify(String(m.name).slice(0, 80)) + ' has no size, so the installer\'s length is not known before it is built');
+  }
+  return n;
 }
 
 function readStr(u8, off, len) {
@@ -591,32 +618,112 @@ async function readMacZip(u8, name) {
   return info;
 }
 
+// writeInstallerLayout assembles [base][record][plan][pack][footer] into
+// **one buffer, allocated once** (docs/browser-packing.md section 7), the
+// same layout server/lib/files.js writeInstallerFile streams to disk.
+//
+// The finished length is known before anything is read -- every member's
+// size is in the plan -- so the output is allocated up front and each
+// piece is written straight into it. That is the whole point: the old path
+// built the tar into its own array and then joined base+record+plan+tar
+// into a third, so three copies of the payload were alive at once (3.0x
+// the finished file, measured). Here there is one, plus whatever member is
+// in flight.
+//
+// `pack` members are {name, size, data} or {name, size, read()}: read() is
+// awaited one member at a time and its bytes are dropped as soon as they
+// are copied in, so a member fetched from the mirror never joins a list of
+// all of them. Members are **not** mutated, so nothing here keeps the pack
+// alive on the caller's behalf.
+//
+// With `hash` the SHA-256 comes back too, taken with web/lib/sha.js's
+// sha256Stream over the finished buffer rather than crypto.subtle.digest,
+// which cannot digest without taking a copy of the whole file.
+//
+//   layout: {base, record, plan, pack, zero?: [off, len], pe?}
+//   -> {data, size, packLen, sha256}
+export async function writeInstallerLayout(layout, { hash = false, progress } = {}) {
+  const base = toBytes(layout.base);
+  const record = toBytes(layout.record);
+  const plan = toBytes(layout.plan || '');
+  const pack = layout.pack || [];
+  const packLen = pack.length ? packTarSize(pack) : 0;
+  const total = base.length + record.length + plan.length + packLen + FOOTER_LEN;
+
+  const out = new Uint8Array(total);
+  let o = 0;
+  out.set(base, o); o += base.length;
+  // A region of the base to blank once it is in place (the PE certificate
+  // table entry of a signed .exe), done here so the base itself never has
+  // to be copied to be edited.
+  if (layout.zero) out.fill(0, layout.zero[0], layout.zero[0] + layout.zero[1]);
+  out.set(record, o); o += record.length;
+  out.set(plan, o); o += plan.length;
+  for (const m of pack) {
+    const size = memberSize(m);
+    out.set(ustarHeader(m.name, size), o); o += 512;
+    if (progress) progress(m);
+    let data = m.data ? toBytes(m.data) : toBytes(await m.read());
+    if (data.length !== size) {
+      throw new Error('pack: ' + JSON.stringify(String(m.name).slice(0, 80)) + ' is ' + data.length + ' bytes, not the ' + size + ' its plan gives');
+    }
+    out.set(data, o); o += size;
+    data = null;                                   // the one copy in flight, freed now
+    o += (512 - (size % 512)) % 512;
+  }
+  if (pack.length) o += 1024;                      // the two zero blocks that end a tar
+  out.set(makeFooter(record.length, plan.length, packLen), o); o += FOOTER_LEN;
+  if (o !== total) throw new Error('installer layout: wrote ' + o + ' of ' + total + ' bytes');
+
+  const pe = layout.pe;
+  if (pe) {
+    const dv = new DataView(out.buffer);
+    // Only keep a checksum up to date if the base had one; 0 means "none".
+    if (dv.getUint32(pe.checksumOff, true) !== 0) {
+      dv.setUint32(pe.checksumOff, peChecksum(out, pe.checksumOff), true);
+    }
+  }
+  const res = { data: out, size: total, packLen, sha256: '' };
+  if (hash) {
+    const h = sha256Stream();
+    h.update(out);
+    res.sha256 = bytesToHex(h.digest());
+  }
+  return res;
+}
+
 // Builds the edited installer. `edits` = {record, plan, pack}; anything left
 // out keeps the value read from the file. Returns a Uint8Array.
 export async function writeInstaller(info, edits = {}) {
+  return (await buildInstaller(info, edits)).data;
+}
+
+// writeInstaller, plus the file's SHA-256 when `hash` is asked for: one
+// pass over the buffer that is already there, instead of handing the whole
+// file to crypto.subtle for another copy of it. Returns {data, size, sha256}.
+export async function buildInstaller(info, edits = {}, opts = {}) {
   const record = toBytes(edits.record !== undefined ? edits.record : info.record);
   const planText = edits.plan !== undefined ? edits.plan : info.plan;
   const plan = toBytes(planText || '');
   const pack = edits.pack !== undefined ? edits.pack : info.pack;
   if (!record.length) throw new Error('The installer needs a record.');
 
-  if (info.kind === 'zip') return writeMacZip(info, record, plan, pack);
-
-  let base = info.base;
-  if (info.kind === 'exe' && info.signed && info.pe && info.pe.certDirOff != null) {
-    base = base.slice();
-    base.fill(0, info.pe.certDirOff, info.pe.certDirOff + 8);   // drop the certificate entry
-  }
-  const packBytes = pack.length ? tarWrite(pack) : new Uint8Array(0);
-  const out = concatBytes([base, record, plan, packBytes, makeFooter(record.length, plan.length, packBytes.length)]);
-  if (info.kind === 'exe' && info.pe) {
-    const dv = new DataView(out.buffer);
-    // Only keep a checksum up to date if the base had one; 0 means "none".
-    if (dv.getUint32(info.pe.checksumOff, true) !== 0) {
-      dv.setUint32(info.pe.checksumOff, peChecksum(out, info.pe.checksumOff), true);
+  if (info.kind === 'zip') {
+    const data = await writeMacZip(info, record, plan, pack);
+    let sha256 = '';
+    if (opts.hash) {
+      const h = sha256Stream();
+      h.update(data);
+      sha256 = bytesToHex(h.digest());
     }
+    return { data, size: data.length, sha256 };
   }
-  return out;
+  const signed = info.kind === 'exe' && info.signed && info.pe && info.pe.certDirOff != null;
+  return writeInstallerLayout({
+    base: info.base, record, plan, pack,
+    zero: signed ? [info.pe.certDirOff, 8] : null,   // drop the certificate entry
+    pe: info.kind === 'exe' ? info.pe : null,
+  }, opts);
 }
 
 async function writeMacZip(info, record, plan, pack) {

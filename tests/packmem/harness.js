@@ -14,12 +14,14 @@
 // URL query:
 //   steps=32,64,128,256      pack sizes in MB, tried in order
 //   members=4                pack members per step (the pack is split evenly)
-//   mode=blob|onebuf|opfs|chunk
+//   mode=blob|onebuf|ship|opfs|chunk
 //                            blob:   today's path (one Uint8Array, then a Blob)
 //                            onebuf: the same single file, assembled into one
 //                                    buffer allocated up front, hashed with a
 //                                    streaming SHA-256: no tar copy, no concat
 //                                    copy, no digest copy
+//                            ship:   the shipping code doing that
+//                                    (tifile.writeInstallerLayout)
 //                            opfs:   stream to an OPFS file, one chunk at a
 //                                    time (the save-picker shape)
 //                            chunk:  like opfs but no file, to price the loop
@@ -234,6 +236,55 @@
     return { ok: ok, bytes: blob.size };
   }
 
+  // The shipping path, as it is now: shared/tifile.js writeInstallerLayout,
+  // called the way web/local-api.js calls it, with members that are fetched
+  // (here, made) one at a time and dropped as soon as they are copied in.
+  // `onebuf` above is the sketch that was measured first and is kept for
+  // comparison; this one is the code itself, so the two together say
+  // whether the shipping version really got the saving the sketch promised.
+  async function shipPath(step, mb) {
+    var each = Math.floor((mb * MB) / MEMBERS);
+    var record = TI.enc('ti-record 1\nname packmem\n');
+    var baseLen = Math.round(BASE_MB * MB);
+    var pack = [];
+    for (var i = 0; i < MEMBERS; i++) pack.push(lazyMember(i, each));
+    await mark(step, 'start', { mb: mb, members: MEMBERS, mode: MODE });
+
+    var base = filler(baseLen, 99);
+    await mark(step, 'base-held');
+
+    var built = await TI.writeInstallerLayout({ base: base, record: record, plan: '', pack: pack }, {
+      hash: true,
+      progress: function (m) { say({ step: step, what: 'member', name: m.name.slice(0, 8), mem: selfMem() }); },
+    });
+    base = null; pack = null;
+    await mark(step, 'assembled-and-hashed', { bytes: built.size, sha: built.sha256.slice(0, 16) });
+
+    var blob = new Blob([built.data], { type: 'application/octet-stream' });
+    var total = built.size, packLen = built.packLen;
+    built = null;
+    await mark(step, 'blob', { bytes: blob.size });
+
+    var url = URL.createObjectURL(blob);
+    // The check the page makes before it hands the file over: read the
+    // footer back out of the Blob and see that it says what was written.
+    var tail = await readTail(blob, 64);
+    var f = footerFields(tail);
+    var ok = !!f && f.pack === packLen && blob.size === total;
+    await mark(step, 'verified', { blobSize: blob.size, footer: f ? f.pack : -1, want: packLen, ok: ok });
+    URL.revokeObjectURL(url);
+    return { ok: ok, bytes: blob.size };
+  }
+
+  // A member whose bytes do not exist until they are asked for: what a
+  // fetch from the mirror is, for the purpose of counting copies.
+  function lazyMember(i, each) {
+    return {
+      name: hex64(i), size: each,
+      read: function () { return Promise.resolve(filler(each, i + 1)); },
+    };
+  }
+
   // The save-picker shape: one chunk in memory at a time, written straight
   // out. Measured against OPFS, whose writable stream is the same
   // FileSystemWritableFileStream showSaveFilePicker() hands back, so the
@@ -353,6 +404,7 @@
   async function one(step, mb) {
     if (MODE === 'blob') return blobPath(step, mb);
     if (MODE === 'onebuf') return oneBufPath(step, mb);
+    if (MODE === 'ship') return shipPath(step, mb);
     var sink = MODE === 'opfs' ? await opfsSink('packmem-' + step + '.bin') : nullSink();
     return opfsPath(step, mb, sink);
   }

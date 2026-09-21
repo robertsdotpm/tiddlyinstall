@@ -1,0 +1,11 @@
+{"what": "page-loaded", "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/144.0.0.0 Safari/537.36", "run": "AFTER_SHIP", "t": 1789974159791}
+{"what": "begin", "ua": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/144.0.0.0 Safari/537.36", "mode": "ship", "members": 4, "base": 6, "steps": "64", "dm": 8, "cores": 16, "mem": {"used": 937327, "limit": 4294967296}, "run": "AFTER_SHIP", "t": 1789974160116, "seq": 1}
+{"step": "64", "what": "start", "mem": {"used": 937327, "limit": 4294967296}, "mb": 64, "members": 4, "mode": "ship", "run": "AFTER_SHIP", "t": 1789974160117, "seq": 2}
+{"step": "64", "what": "base-held", "mem": {"used": 7493960, "limit": 4294967296}, "run": "AFTER_SHIP", "t": 1789974161068, "seq": 3}
+{"step": "64", "what": "member", "name": "00000000", "mem": {"used": 80563368, "limit": 4294967296}, "run": "AFTER_SHIP", "t": 1789974161980, "seq": 4}
+{"step": "64", "what": "member", "name": "00000000", "mem": {"used": 97513431, "limit": 4294967296}, "run": "AFTER_SHIP", "t": 1789974162137, "seq": 5}
+{"step": "64", "what": "blob", "mem": {"used": 114697011, "limit": 4294967296}, "bytes": 73403481, "run": "AFTER_SHIP", "t": 1789974164405, "seq": 9}
+{"step": "64", "what": "verified", "mem": {"used": 115462846, "limit": 4294967296}, "blobSize": 73403481, "footer": 67111936, "want": 67111936, "ok": true, "run": "AFTER_SHIP", "t": 1789974165309, "seq": 10}
+{"step": "64", "what": "done", "ok": true, "bytes": 73403481, "ms": 6094, "mem": {"used": 114717270, "limit": 4294967296}, "run": "AFTER_SHIP", "t": 1789974166211, "seq": 11}
+{"step": "64", "what": "after-gc", "mem": {"used": 114719334, "limit": 4294967296}, "run": "AFTER_SHIP", "t": 1789974168013, "seq": 12}
+{"what": "end", "lastOk": 64, "failedAt": 0, "run": "AFTER_SHIP", "t": 1789974168014, "seq": 13}
