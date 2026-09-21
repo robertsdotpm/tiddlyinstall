@@ -253,20 +253,22 @@ EOF
 ti_confirm() {
 	[ "$opt_yes" = 1 ] && return 0
 	ti_clean < "$2" > "$TI_WORK/confirm.txt"
-	[ -f "$TI_WORK/short.txt" ] && { ti_clean < "$TI_WORK/short.txt" > "$TI_WORK/short.clean"; mv "$TI_WORK/short.clean" "$TI_WORK/short.txt"; }
+	for f in short decide; do
+		[ -f "$TI_WORK/$f.txt" ] && { ti_clean < "$TI_WORK/$f.txt" > "$TI_WORK/$f.clean"; mv "$TI_WORK/$f.clean" "$TI_WORK/$f.txt"; }
+	done
 	set -- "$(ti_cleans "$1")" "$TI_WORK/confirm.txt" "$(ti_cleans "$3")"
 	case $ti_ui in
 	tty)
 		# In a terminal the text is longer than the screen, so by the time
 		# the question appears the top of it -- what is being installed,
-		# and by whom -- has scrolled away. Repeat the short form just
-		# above the prompt, where the decision is actually made.
+		# and by whom -- has scrolled away. One line of it stands above
+		# the prompt: the decision, not a second copy of the screen
+		# (see "decide.txt" where it is written).
 		if ti_want_colour; then ti_paint < "$2" >&2; else cat "$2" >&2; fi
-		if [ -f "$TI_WORK/short.txt" ]; then
+		if [ -s "$TI_WORK/decide.txt" ]; then
 			printf '\n' >&2
 			printf -- '----------------------------------------------------------------------\n' >&2
-			if ti_want_colour; then ti_paint < "$TI_WORK/short.txt" >&2; else cat "$TI_WORK/short.txt" >&2; fi
-			printf '\n' >&2
+			if ti_want_colour; then ti_paint < "$TI_WORK/decide.txt" >&2; else cat "$TI_WORK/decide.txt" >&2; fi
 		fi
 		printf '\n%s [y/N] ' "$3" >&2
 		read -r ans || return 1
@@ -330,15 +332,24 @@ ti_progress_stop() {
 # ---------------------------------------------------------------- the review screen's shape
 #
 # The transparency screen (design.md section 3) has a lot to say, and a
-# wall of it is not consent. Three rules hold it together:
+# wall of it is not consent. Four rules hold it together:
 #
 #   * the answer to "should I run this?" is at the top (IN SHORT), the
 #     evidence below it;
 #   * a line is never longer than 78 characters unless it is a URL,
 #     which is never broken -- half a URL is worse than a long one;
+#   * nothing is said twice. A screen that repeats itself is a screen
+#     that teaches people it can be skimmed, and the promise this text
+#     exists to keep is that it is worth reading. What the log can hold
+#     instead of the screen -- every URL, every command in full -- the
+#     log holds (2026-09-21);
 #   * the file itself is always plain text. The log, zenity, kdialog and
 #     the macOS dialog all get exactly these bytes; only the terminal
 #     path paints them, and only when a terminal is really there.
+#
+# Only in a terminal does the text scroll away before the question is
+# reached, and only there is anything repeated above the prompt: one
+# line, written into decide.txt near the end of ti_install_main.
 
 # 35945651 -> "34.3 MB". Integer arithmetic: there is no bc on a busybox.
 ti_hsize() {
@@ -356,20 +367,35 @@ ti_plural() { # n singular plural
 	[ "$1" = 1 ] && printf '%s' "$2" || printf '%s' "$3"
 }
 
-# One command, as one line that cannot run off the screen.
+# How many wrapped lines a command may take before it is shortened
+# instead. Four is about a fifth of a 24-line terminal.
+TI_CMD_LINES=4
+
+# One command, rendered. It decides how to *show* a command and nothing
+# else: whether a command is worth showing at all is the caller's
+# question, and is deliberately kept out of here.
 #
-# The worst case in the catalogue today is Ruby's relocation step: 831
-# characters of shell on one line, then another of 351. Wrapped into the
-# body that is eleven lines of `ls | grep | head -1` that nobody can
-# review -- and a screen that cannot be reviewed teaches people to click
-# through, which is the opposite of what it is for. So a long command is
-# shown as its first line's worth, monospaced, with its length and a
-# pointer to the log, which always carries every command in full.
+# It is wrapped, not cut, while it fits. Up to 2026-09-21 anything over
+# 96 characters was replaced by its first 93 and "the whole command is
+# at the end of the log", which meant a 103-character launch command --
+# one wrapped line, and the most useful line on the screen, since it is
+# what the menu entry will run -- was hidden behind a pointer to a file.
+# The cut is for the case it was written for: the worst command in the
+# catalogue is Ruby's relocation step, 831 characters of shell on one
+# line, which wrapped is thirteen lines of `ls | grep | head -1` that
+# nobody can review -- and a screen that cannot be reviewed teaches
+# people to click through, which is the opposite of what it is for.
+#
+# Continuations are indented past the first line, so a wrapped command
+# reads as one command and not as two. A token longer than the width is
+# still never broken, as everywhere else here: half a path is worse
+# than a long one. The log has every command in full either way.
 ti_cmd_line() { # command
 	ti_c=$1
 	ti_cn=${#ti_c}
-	if [ "$ti_cn" -le 96 ]; then
-		printf '     %s\n' "$ti_c"
+	ti_cw=$(printf '     %s\n' "$ti_c" | ti_wrap 74 5 9)
+	if [ "$(printf '%s\n' "$ti_cw" | wc -l | tr -d ' ')" -le "$TI_CMD_LINES" ]; then
+		printf '%s\n' "$ti_cw"
 	else
 		printf '     %s...\n' "$(printf '%s' "$ti_c" | cut -c1-93)"
 		printf '     (%s characters in all; the whole command is at the end of the log)\n' "$ti_cn"
@@ -397,23 +423,101 @@ ti_hosts() {
 	     END { if (out != "") print out }'
 }
 
+# Which one of a file's URLs (stdin) is the place the file really comes
+# from. $1 is the host to treat as ours.
+#
+# A list of six hosts answers nobody's question. But the shortest true
+# answer is not the first URL either: the resolver writes a file's
+# locations as [our copy,] the vendor's own URL, other people's mirrors
+# of it, [our copy] (shared/resolve.js, `mirror_first`), and our copy is
+# normally first on purpose -- old machines often cannot complete a TLS
+# handshake to python.org, and a mirror we serve over plain HTTP is the
+# only way they get the file at all. So URL 1 is usually ours, and "from
+# 10.0.1.76:8080" is no more use to a person than the whole list.
+#
+# Our copy is the one on the host we are talking to, so the first URL
+# that is *not* on that host is the vendor's own. That is what the
+# screen names, with the rest counted as mirrors of it rather than
+# listed -- and never as "this is where it will be fetched from", which
+# would be the lie: it says where the file comes from, and the SHA-256
+# is what decides whether any given copy is used. With nothing but our
+# own host in the list (a file only we have) the first URL is all there
+# is, and is what is shown.
+ti_origin_url() { # our-host < urls
+	awk -v me="$1" '{ h = $0
+	       sub(/^[A-Za-z][A-Za-z0-9+.-]*:\/\//, "", h)
+	       sub(/[\/?#].*$/, "", h)
+	       sub(/^[^@]*@/, "", h)
+	       if (first == "") first = $0
+	       if (me == "" || h != me) { print $0; found = 1; exit } }
+	     END { if (!found && first != "") print first }'
+}
+
+# The host part of one URL.
+ti_host_of() { # url
+	printf '%s\n' "$1" | ti_hosts
+}
+
+# Where one file comes from, for the evidence section: the origin URL,
+# and the rest counted rather than listed. Seven URLs stacked one under
+# the other is not evidence anybody reads -- it is the same wall of text
+# that makes people stop reading the screen at all -- and nothing is
+# lost by counting them, because the log carries every URL in the order
+# they are tried, exactly as it carries every command in full.
+ti_from_lines() { # our-host < urls
+	awk -v me="$1" '
+	{ u[NR] = $0
+	  h = $0
+	  sub(/^[A-Za-z][A-Za-z0-9+.-]*:\/\//, "", h)
+	  sub(/[\/?#].*$/, "", h)
+	  sub(/^[^@]*@/, "", h)
+	  hh[NR] = h }
+	END {
+	  if (NR == 0) exit
+	  o = 1
+	  for (i = 1; i <= NR; i++) if (me == "" || hh[i] != me) { o = i; break }
+	  printf "     from   %s\n", u[o]
+	  n = NR - 1
+	  if (n > 0)
+		printf "     or     %d %s of it, every one of them in the log; whichever host answers, the file must match the sha256 above\n", \
+			n, (n == 1 ? "other copy" : "mirrors")
+	}'
+}
+
+# "a mirror of it" / "a mirror of them": the Sources line reads about
+# one origin far more often than several.
+ti_itthem() { [ "$1" = 1 ] && printf 'it' || printf 'them'; }
+
+# A name with its case and punctuation taken out, for asking whether two
+# lines of the screen are saying the same thing ("test b" / "test_b").
+# LC_ALL=C because a name is not always ASCII and macOS's tr stops on a
+# byte its locale does not like; here the bytes just pass through.
+ti_flatname() { # text
+	printf '%s' "$1" | LC_ALL=C tr '[:upper:]' '[:lower:]' | LC_ALL=C sed 's/[^a-z0-9]//g'
+}
+
 # Wrap a "key:<padding>value" line (stdin) so the value keeps its column.
 # $1 is the width to wrap at, $2 the column the value starts in: the first
 # $2 characters are left exactly as they are and every following line is
 # indented to match. A token longer than the width is never broken -- half
 # a URL is worse than a long one.
+#
+# $3, when it is given, is the column continuation lines are indented to
+# instead of $2. A wrapped command indents *past* its first line, so it
+# reads as one command and not as two of equal rank.
 ti_wrap() {
-	awk -v w="$1" -v ind="$2" '
+	awk -v w="$1" -v ind="$2" -v cont="$3" '
+	BEGIN { if (cont == "") cont = ind }
 	{ head = substr($0, 1, ind)
 	  if (length($0) <= ind) { print $0; next }
 	  pre = ""
-	  for (k = 0; k < ind; k++) pre = pre " "        # busybox awk has no %*s
+	  for (k = 0; k < cont; k++) pre = pre " "       # busybox awk has no %*s
 	  rest = substr($0, ind + 1)
 	  line = ""; out = 0; n = split(rest, t, " ")
 	  for (i = 1; i <= n; i++) {
 		if (t[i] == "") continue
 		if (line == "") line = t[i]
-		else if (ind + length(line) + 1 + length(t[i]) <= w) line = line " " t[i]
+		else if ((out ? cont : ind) + length(line) + 1 + length(t[i]) <= w) line = line " " t[i]
 		else { print (out++ ? pre : head) line; line = t[i] }
 	  }
 	  if (line != "") print (out++ ? pre : head) line
@@ -2569,13 +2673,32 @@ ti_install_main() {
 	# The .run's own sha256 belongs on a line of its own, not glued to the
 	# end of "Signed by:" where it pushes the answer off the screen.
 	ti_signed_short=$(printf '%s' "$ti_signed_by" | sed 's/; this file has sha256 .*//')
+	# A signature on the installer is not a word about the program in it,
+	# and "Signed by: TiddlyInstall" invites exactly that reading -- most
+	# of all in mode A, where the name on the certificate is ours. So
+	# where there is a signer, the line says what the signature covers.
+	ti_signed_scope=
+	case $ti_signed_short in
+	nobody* | unknown*) ;;
+	*) ti_signed_scope=' (this installer file; not the program it installs)' ;;
+	esac
 
 	# What the totals are, before anything is printed: a person deciding
-	# wants "2 files, 34.3 MB, from these three hosts" before they want
-	# four 200-character URLs.
+	# wants "2 files, 34.3 MB, and here is who they are from" before they
+	# want six 200-character URLs.
+	#
+	# Two lists are kept, not one: every URL (which goes in the log, so
+	# nothing is lost) and one origin URL per file (ti_origin_url, above),
+	# which is what the screen names. ti_nmirror is how many locations
+	# are left over once the origins are taken out -- the "or a mirror of
+	# it" the screen owns up to without spelling out.
+	ti_ourhost=$(ti_host_of "$backend")
 	ti_tot=0
 	ti_urls=$TI_WORK/urls.txt
+	ti_origins=$TI_WORK/origins.txt
+	ti_ufile=$TI_WORK/file-urls.txt
 	: > "$ti_urls"
+	: > "$ti_origins"
 	ti_packed_all=1
 	i=1
 	while [ "$i" -le "$nfiles" ]; do
@@ -2586,7 +2709,9 @@ ti_install_main() {
 		if { [ -n "$TI_PACK_DIR" ] && [ -f "$TI_PACK_DIR/$3" ]; } ||
 			{ [ -n "$TI_PACK_TAR" ] && grep -qx "$3" "$TI_WORK/pack.list"; }; then :; else
 			ti_packed_all=0
-			ti_sel url "$i" >> "$ti_urls"
+			ti_sel url "$i" > "$ti_ufile"
+			cat "$ti_ufile" >> "$ti_urls"
+			ti_origin_url "$ti_ourhost" < "$ti_ufile" >> "$ti_origins"
 		fi
 		i=$((i + 1))
 	done
@@ -2599,12 +2724,18 @@ ti_install_main() {
 		if { [ -n "$TI_PACK_DIR" ] && [ -f "$TI_PACK_DIR/$2" ]; } ||
 			{ [ -n "$TI_PACK_TAR" ] && grep -qx "$2" "$TI_WORK/pack.list"; }; then :; else
 			ti_packed_all=0
-			ti_sel srcurl >> "$ti_urls"
+			ti_sel srcurl > "$ti_ufile"
+			cat "$ti_ufile" >> "$ti_urls"
+			ti_origin_url "$ti_ourhost" < "$ti_ufile" >> "$ti_origins"
 		fi
 	fi
 	ti_nall=$nfiles
 	[ -n "$src" ] && ti_nall=$((ti_nall + 1))
-	ti_hostlist=$(ti_hosts < "$ti_urls")
+	ti_hostlist=$(ti_hosts < "$ti_origins")
+	ti_norigin=$(wc -l < "$ti_origins" | tr -d ' ')
+	ti_nmirror=$(($(wc -l < "$ti_urls" | tr -d ' ') - ti_norigin))
+	ti_nhost=$(printf '%s' "$ti_hostlist" | awk -F', ' '{ print NF }')
+	[ -n "$ti_hostlist" ] || ti_nhost=0
 	ti_nrun=$(ti_sel step | awk -F"$tab" '$2 == "run"' | wc -l | tr -d ' ')
 
 	# The runtime, from the *last* runtime line: the selection carries the
@@ -2625,6 +2756,21 @@ ti_install_main() {
 			ti_rt_line="$a_name $a_ver, $(ti_arch_words "$a_arch")$ti_rt_note"
 		else
 			ti_rt_line=$(printf '%s' "$rt" | tr '\t' ' ')
+		fi
+	fi
+
+	# Where the project comes from, and whether its name has to be said
+	# twice. "Installs: test b" over "Project: test_b" is two lines
+	# saying one thing: the project name earns a line of its own only
+	# when the screen does not already carry it, and it usually does --
+	# it is either the app's name with the punctuation changed, or the
+	# package that `From:` names in full.
+	ti_from_txt=$(ti_describe_source)
+	ti_show_project=0
+	if [ -n "$TI_PROJECT" ]; then
+		ti_pj=$(ti_flatname "$TI_PROJECT")
+		if [ -n "$ti_pj" ] && [ "$ti_pj" != "$(ti_flatname "$TI_NAME_DISP")" ]; then
+			case $(ti_flatname "$ti_from_txt") in *"$ti_pj"*) ;; *) ti_show_project=1 ;; esac
 		fi
 	fi
 
@@ -2652,14 +2798,26 @@ ti_install_main() {
 	fi
 	[ -n "$ti_rt_note" ] &&
 		printf '!  The runtime being installed is not this machine%s architecture%s.\n' "'s" "$ti_rt_note" >> "$ti_warn"
-	case $(ti_describe_source) in
+	case $ti_from_txt in
 	*'no stored hash'*) printf '!  The project is not pinned by a checksum: it is identified by its commit and fetched over HTTPS.\n' >> "$ti_warn" ;;
 	esac
+
+	# What this screen is *not* saying (design.md section 3, "What we do
+	# not vouch for"). Everything else here is about our side of it --
+	# every file checked against its SHA-256, where things go, who signed
+	# the installer -- and someone who reads all that care can reasonably
+	# come away thinking the program has been vetted. It has not: we have
+	# never looked at it. So the scope is stated in the heading, where it
+	# is read, and stated plainly: it belongs with "what is being
+	# installed", not among the warnings, because it is true of every
+	# install and an alarm that is always on is an alarm nobody hears.
+	ti_vouch="We package $TI_NAME_DISP; we did not write it and have not checked what its code does. Install it only if you trust whoever publishes it."
 
 	{
 		printf '======================================================================\n'
 		printf '  TiddlyInstall will install:  %s\n' "$TI_NAME_DISP"
 		printf '  Nothing has been changed yet.\n'
+		printf '  %s\n' "$ti_vouch" | ti_wrap 74 2
 		printf '======================================================================\n'
 		if [ -s "$ti_warn" ]; then
 			printf '\nBEFORE YOU SAY YES\n'
@@ -2669,18 +2827,27 @@ ti_install_main() {
 		fi
 		printf '\nIN SHORT\n'
 		printf '  %-14s%s\n' 'Installs:' "$TI_NAME_DISP"
-		printf '  %-14s%s\n' 'Project:' "$TI_PROJECT"
-		printf '  %-14s%s\n' 'From:' "$(ti_describe_source)" | ti_wrap 74 16
+		[ "$ti_show_project" = 1 ] && printf '  %-14s%s\n' 'Project:' "$TI_PROJECT"
+		printf '  %-14s%s\n' 'From:' "$ti_from_txt" | ti_wrap 74 16
 		[ -n "$ti_rt_line" ] && printf '  Runtime:      %s\n' "$ti_rt_line" | ti_wrap 74 16
-		printf '  %-14s%s\n' 'Machine:' "$TI_OSDESC"
 		if [ "$ti_nall" -gt 0 ]; then
 			if [ "$ti_packed_all" = 1 ]; then
 				printf '  %-14snothing: all %s %s packed inside this installer\n' \
 					'Download:' "$ti_nall" "$(ti_plural "$ti_nall" 'file is' 'files are')"
 			else
-				printf '  %-14s%s %s, %s in total, each checked against its SHA-256\n' \
-					'Download:' "$ti_nall" "$(ti_plural "$ti_nall" file files)" "$(ti_hsize $ti_tot)" | ti_wrap 74 16
-				[ -n "$ti_hostlist" ] && printf '  %-14s%s\n' 'Sources:' "$ti_hostlist" | ti_wrap 74 16
+				printf '  %-14s%s %s, %s in total\n' \
+					'Download:' "$ti_nall" "$(ti_plural "$ti_nall" file files)" "$(ti_hsize $ti_tot)"
+				# Who the files are from, not every host that keeps a
+				# copy -- and the SHA-256 in the same breath, because
+				# that check is the reason the host matters as little
+				# as it does.
+				if [ -n "$ti_hostlist" ] && [ "$ti_nmirror" -gt 0 ]; then
+					printf '  %-14s%s, or a mirror of %s; every file is checked against its SHA-256 whichever host serves it\n' \
+						'Sources:' "$ti_hostlist" "$(ti_itthem "$ti_nhost")" | ti_wrap 74 16
+				elif [ -n "$ti_hostlist" ]; then
+					printf '  %-14s%s; every file is checked against its SHA-256\n' \
+						'Sources:' "$ti_hostlist" | ti_wrap 74 16
+				fi
 			fi
 		fi
 		printf '  %-14s%s\n' 'Into:' "$TI_APP_DIR"
@@ -2692,7 +2859,7 @@ ti_install_main() {
 		else
 			printf '  %-14snot needed\n' 'Admin rights:'
 		fi
-		printf '  %-14s%s\n' 'Signed by:' "$ti_signed_short" | ti_wrap 74 16
+		printf '  %-14s%s%s\n' 'Signed by:' "$ti_signed_short" "$ti_signed_scope" | ti_wrap 74 16
 		[ -n "$ti_self_sha" ] && printf '  %-14sthis file has sha256 %s\n' '' "$ti_self_sha"
 		printf '  %-14s%s\n' 'Record:' "${TI_RECHASH:-none}"
 
@@ -2715,7 +2882,7 @@ ti_install_main() {
 			if { [ -n "$TI_PACK_DIR" ] && [ -f "$TI_PACK_DIR/$3" ]; } || { [ -n "$TI_PACK_TAR" ] && grep -qx "$3" "$TI_WORK/pack.list"; }; then
 				printf '     from   the copy packed inside this installer\n'
 			fi
-			ti_sel url "$i" | awk 'NR == 1 { print "     from   " $0; next } { print "     or     " $0 }'
+			ti_sel url "$i" | ti_from_lines "$ti_ourhost" | ti_wrap 74 12
 			i=$((i + 1))
 		done
 		if [ -n "$src" ]; then
@@ -2728,7 +2895,7 @@ ti_install_main() {
 			if { [ -n "$TI_PACK_DIR" ] && [ -f "$TI_PACK_DIR/$2" ]; } || { [ -n "$TI_PACK_TAR" ] && grep -qx "$2" "$TI_WORK/pack.list"; }; then
 				printf '     from   the copy packed inside this installer\n'
 			fi
-			ti_sel srcurl | awk 'NR == 1 { print "     from   " $0; next } { print "     or     " $0 }'
+			ti_sel srcurl | ti_from_lines "$ti_ourhost" | ti_wrap 74 12
 		fi
 
 		printf '\nWHAT IT RUNS ON THIS MACHINE\n'
@@ -2785,7 +2952,7 @@ ti_install_main() {
 		ti_needs_summary
 
 		printf '\nWHERE THIS INSTALLER AND ITS SETTINGS CAME FROM\n'
-		printf '  Signed by:  %s\n' "$ti_signed_short"
+		printf '  Signed by:  %s%s\n' "$ti_signed_short" "$ti_signed_scope" | ti_wrap 74 14
 		[ -n "$ti_self_sha" ] && printf '              this file has sha256 %s\n' "$ti_self_sha"
 		printf '  Settings:   %s\n' "$TI_ORIGIN"
 		[ "$TI_MODE_A" = 1 ] && printf '              mode A: a signed installer; only what its name names, from %s\n' "$TI_DEFAULT_BACKEND"
@@ -2809,25 +2976,87 @@ ti_install_main() {
 			printf '  launch:  %s\n' "$(ti_subst "$(ti_sel1 launch)")"
 		} >> "$TI_LOG"
 	fi
+	# The screen names where each file comes from and counts the mirrors;
+	# the log lists every one, in the order they are tried, so "every URL"
+	# is still written down before anything is fetched (design.md 3).
+	if [ -s "$ti_urls" ]; then
+		{
+			printf '\nEvery download location, in the order they are tried:\n'
+			i=1
+			while [ "$i" -le "$nfiles" ]; do
+				IFS=$tab
+				set -- $(ti_sel file "$i")
+				IFS=$ifs0
+				printf '  %s\n' "$2"
+				ti_sel url "$i" | sed 's/^/    /'
+				i=$((i + 1))
+			done
+			if [ -n "$src" ]; then
+				IFS=$tab
+				set -- $src
+				IFS=$ifs0
+				printf '  %s\n' "$1"
+				ti_sel srcurl | sed 's/^/    /'
+			fi
+		} >> "$TI_LOG"
+	fi
 
-	# The short form: the macOS dialog shows this and keeps the full text
-	# behind "Details...", and the terminal repeats it just above the
-	# question, where the full text has long since scrolled away.
+	# The short form. This is the **whole** of the macOS dialog, which
+	# keeps the full text behind "Details..." -- so on macOS it is not a
+	# repeat of anything and stays as it is. It is not printed in a
+	# terminal any more: see "decide.txt" below.
 	{
 		printf 'Install %s?\n\n' "$TI_NAME_DISP"
-		printf '  From:      %s\n' "$(ti_describe_source)"
+		# This dialog is the whole of what macOS shows, so the scope
+		# statement has to be in it and not only behind "Details...".
+		printf '%s\n\n' "$ti_vouch" | ti_wrap 68 0
+		printf '  From:      %s\n' "$ti_from_txt"
 		[ -n "$ti_rt_line" ] && printf '  Runtime:   %s\n' "$ti_rt_line"
 		if [ "$ti_nall" -gt 0 ] && [ "$ti_packed_all" != 1 ]; then
-			printf '  Download:  %s %s, %s, each checked against its SHA-256\n' \
+			printf '  Download:  %s %s, %s\n' \
 				"$ti_nall" "$(ti_plural "$ti_nall" file files)" "$(ti_hsize $ti_tot)"
-			[ -n "$ti_hostlist" ] && printf '  Sources:   %s\n' "$ti_hostlist" | ti_wrap 68 13
+			if [ -n "$ti_hostlist" ] && [ "$ti_nmirror" -gt 0 ]; then
+				printf '  Sources:   %s, or a mirror of %s; every file is checked against its SHA-256\n' \
+					"$ti_hostlist" "$(ti_itthem "$ti_nhost")" | ti_wrap 68 13
+			elif [ -n "$ti_hostlist" ]; then
+				printf '  Sources:   %s; every file is checked against its SHA-256\n' "$ti_hostlist" | ti_wrap 68 13
+			fi
 		fi
 		printf '  Into:      %s\n' "$TI_APP_DIR"
-		printf '  Signed by: %s\n' "$ti_signed_short" | ti_wrap 68 13
+		printf '  Signed by: %s%s\n' "$ti_signed_short" "$ti_signed_scope" | ti_wrap 68 13
 		[ $need_root = 1 ] && printf '  Admin:     yes%s\n' "$([ -n "$ti_need_pkgs" ] && printf ', for system packages only' || printf '')"
 		[ -s "$ti_warn" ] && sed 's/^!! /  ! /; s/^!  /  ! /' "$ti_warn" | ti_wrap 68 6
 		printf '\nNothing has been changed yet.'
 	} > "$TI_WORK/short.txt"
+
+	# What goes above the prompt in a terminal (design.md 3, "How it is
+	# shown matters"). The text really is longer than a screen -- around
+	# sixty lines for a typical app, against a terminal's twenty-four --
+	# so what is being installed and who signed it have scrolled off by
+	# the time the question is asked, and something has to stand there.
+	#
+	# Until now that something was the short form above, reprinted in
+	# full: seven lines that say again what the screen said, which is
+	# how you teach someone that the screen is not worth reading. What
+	# stands there now is the decision and nothing else -- the app, who
+	# signed it, whose code it is, where it is going -- on one wrapped
+	# line above the question.
+	#
+	# The `!!` warnings are the exception and are repeated: a plan that
+	# is unsigned, stale or withdrawn is the one thing on this screen
+	# that should stop somebody, and it is normally not there at all.
+	case $ti_signed_short in
+	nobody*) ti_signed_brief=unsigned ;;
+	unknown*) ti_signed_brief='signed by someone this machine cannot identify' ;;
+	*) ti_signed_brief="installer signed by $ti_signed_short" ;;
+	esac
+	{
+		grep '^!! ' "$ti_warn" 2>/dev/null | ti_wrap 74 3
+		printf '%s: %s%s, into %s. Its code is its publisher%s, not ours. Nothing has been changed yet.\n' \
+			"$TI_NAME_DISP" "$ti_signed_brief" \
+			"$([ $need_root = 1 ] && printf ', needs administrator rights' || printf '')" \
+			"$TI_APP_DIR" "'s" | ti_wrap 74 0
+	} > "$TI_WORK/decide.txt"
 	ti_confirm "TiddlyInstall" "$sum" "Install $TI_NAME_DISP?" || { ti_say "Cancelled; nothing was installed."; [ "$ti_log_is_temp" = 1 ] && rm -f "$TI_LOG"; exit 1; }
 
 	if [ $need_root = 1 ] && [ "$(id -u)" != 0 ]; then

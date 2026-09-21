@@ -46,23 +46,25 @@ engine is this same file, so an engine change reaches macOS as soon as
 the base is built there -- and `out/ti-base-macos.zip` on this machine
 is whatever was last built there, nothing more.
 
-**Last built 2026-09-20T11:10:56Z** on the Mac test server (macOS 26.2
+**Last built 2026-09-21T01:30:43Z** on the Mac test server (macOS 26.2
 `25C56`, arm64, `Matthew@the-mac-test-host`), from `ti-engine.sh` with the
-review screen's new shape (design.md section 3: BEFORE YOU SAY YES, IN
-SHORT, the evidence under it; colour on a terminal; a long command
-shortened on screen and kept whole in the log). The engine is one file,
-so that change reached macOS only when this was rebuilt.
+review screen trimmed (design.md section 3, "Nothing is said twice": no
+machine line, no repeated project name, the origin of each download
+named and its mirrors counted, commands wrapped rather than cut). The
+engine is one file, so that change reached macOS only when this was
+rebuilt. The macOS dialog's short form is unchanged in shape: it is the
+whole of what that dialog says, so it repeats nothing.
 
 | | |
 | --- | --- |
-| `out/ti-base-macos.zip` | `b430ccb1fd7e85f7dc5cfbe662dfedb7a830239d19b6653e70bcf37b474df8ce`, 54,896 bytes |
-| the engine inside it | `09dba13e163b660bf1c958a8572d994197091509102c10b5965709784bad767e` (`ti-engine.sh` with the baked lines filled, and nothing else -- checked by diffing the two with those lines blanked) |
+| `out/ti-base-macos.zip` | `475705a56c87adb7a8f922886cbfc06504909afb74eba3f6f86322d066e5099e`, 58,727 bytes |
+| the engine inside it | `51d12f0f5ee77800f629cc31d92050045fc487533fb6ce1ae6e74d9014dd5dc0` (`ti-engine.sh` with the baked lines filled, and nothing else -- checked by diffing the two with those lines blanked) |
 | plan signing key | `97930ea1888d1a12` |
-| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-20T11:10:56Z` / `1789902656` |
+| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T01:30:43Z` / `1789954243` |
 | signature | ad-hoc; `codesign --verify --strict` is happy on the bundle **and** on the bundle re-extracted from the zip with `ditto` ("valid on disk", "satisfies its Designated Requirement") |
 
-The one before this was `24cfc47c6e2626a07ae48df274a7087398cf74310410f62a4db152ad6e769d6e`
-(50,357 bytes), built 2026-09-20T09:16:00Z from the engine at `638c323`.
+The one before this was `b430ccb1fd7e85f7dc5cfbe662dfedb7a830239d19b6653e70bcf37b474df8ce`
+(54,896 bytes), built 2026-09-20T11:10:56Z from the engine at `566d31c`.
 
 `spctl -a` still rejects it, as it must: an ad-hoc signature is not a
 notarization ticket (docs/macos-packaging.md section 5).
@@ -116,13 +118,18 @@ at "the review screen's shape"; in short:
   an unsigned or stale plan, root, a prerequisite that cannot be
   installed here, a runtime built for another architecture, a project
   with no stored hash), then **IN SHORT** -- installs, from, runtime,
-  machine, download size, the *hosts* it downloads from, where it goes,
-  how many commands it runs, admin rights, who signed it, the record --
-  and the evidence under that.
+  download size, *who the files come from*, where they go, how many
+  commands it runs, admin rights, who signed it, the record -- and the
+  evidence under that.
 - nothing wraps past 78 columns except a URL, which is never broken.
+- nothing is said twice (design.md section 3, "Nothing is said twice").
+  What the screen leaves out, the log carries in full: every URL in the
+  order they are tried, every command, and this machine.
 - `ti_hsize` turns bytes into "34.2 MB", `ti_hosts` turns a list of
-  URLs into the hosts behind them, `ti_wrap` wraps a `key: value` line
-  so the value keeps its column.
+  URLs into the hosts behind them, `ti_origin_url` picks out the one a
+  file comes from, `ti_wrap` wraps a `key: value` line so the value
+  keeps its column (and, with a third argument, indents the wrapped
+  lines further, which is how a wrapped command reads as one command).
 
 **Colour** is added by `ti_paint`, and only ever on the way to a
 terminal: the file stays plain, so nothing escapes into a log, a pipe or
@@ -132,10 +139,26 @@ an unattended run; `TI_COLOR=0` or `1` overrides it either way. `tput` is
 used when it is there and a `TERM` list when it is not, because plenty
 of minimal systems have no terminfo at all.
 
-**In a terminal the text is longer than the screen**, so by the time the
-question appears the top of it has scrolled away. The short form is
-printed again immediately above the prompt -- the same text the macOS
-dialog shows with the full text behind "Details...".
+**In a terminal the text is longer than the screen** -- around sixty
+lines against twenty-four -- so by the time the question appears the top
+of it has scrolled away. One line stands above the prompt
+(`$TI_WORK/decide.txt`): the app, that nobody signed it, where it is
+going, and that nothing has been changed yet, with any `!!` warning
+above it. Up to 2026-09-21 the whole short form was reprinted there, and
+the operator's verdict was that it forced people to read the same thing
+twice; in a dialog, where the whole text is visible at once, nothing is
+reprinted and nothing ever was.
+
+**The short form** (`$TI_WORK/short.txt`) is now the macOS dialog alone:
+there it is the whole of what the dialog says, with the full text behind
+"Details...", so it is not a repeat of anything.
+
+**A command is wrapped, not cut,** while it fits in four lines
+(`ti_cmd_line`, `TI_CMD_LINES`), with the continuation indented to
+column 9 so it reads as one command. Past that it is shortened, with its
+length and a pointer to the log. `ti_cmd_line` renders a command and
+decides nothing about whether it is worth showing -- that is the
+caller's.
 
 **zenity** gets `--font="Monospace 10"` (columns and hashes do not line
 up in a proportional font), a bigger window and `--ok-label=Install`. A

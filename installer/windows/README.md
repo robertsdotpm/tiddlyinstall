@@ -210,10 +210,35 @@ shown -- only whether it can be read:
 
 The text itself is grouped so that the answer to "should I run this?"
 is at the top: a heading, then anything unusual (BEFORE YOU SAY YES),
-then IN SHORT -- what, from where, how big, from which hosts, where it
-goes, what it runs, who signed it -- and the evidence below that. It is
-the same shape as the other engine's, described in `ti-engine.sh` at
-"the review screen's shape".
+then IN SHORT -- what, from where, how big, who the files come from,
+where it goes, what it runs, who signed it -- and the evidence below
+that. It is the same shape as the other engine's, described in
+`ti-engine.sh` at "the review screen's shape".
+
+**Nothing is said twice (2026-09-21)**, which on this page meant three
+cuts (design.md section 3, "Nothing is said twice"): the machine's own
+Windows version and architecture, which a person already knows; the
+project name, when the page already carries it under Installs or From;
+and the full list of a file's download locations, of which the page now
+names the one the file comes from (`PickOrigin`, and format.md section
+3, "Which of a file's `url` lines the screen names") and counts the
+rest. Nothing is reprinted at the bottom and nothing ever was -- the
+whole page is in one scrolling box with Install and Cancel always
+visible, so there is nothing to scroll away from.
+
+What the page leaves out, the log carries: `commands.txt` holds every
+command in full and `urls.txt` every download location in the order they
+are tried, and both are written into the log before anything is fetched,
+along with `This machine: Windows 10 build 19045, amd64.` and `Plan
+block 1 matches.`
+
+**A command is wrapped, not cut,** while it fits in `TI_CMD_LINES`
+lines of `TI_CMD_W` columns (`CmdLine`), with the continuation indented
+so it reads as one command; past that it is shortened, with its length
+and a pointer to the log. The numbers are the other engine's, so the two
+pages break a command in the same places. Four or more leading spaces
+is what makes `tisig::richtext` set a line in Courier New, which is what
+makes the breaks hold.
 
 ## Engine notes
 

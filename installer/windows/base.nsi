@@ -114,10 +114,17 @@ Var HasBlock         ; 1: an appended metadata block
 Var ModeA            ; 1: signed base with no block (design.md 3): file name + built-in backend only
 Var SignedBy
 Var CmdH             ; every command in full, for the log
+Var UrlH             ; every download location in full, for the log
 Var SumHosts         ; the hosts the review page says files come from
+Var SumHostN         ; how many of them there are
 Var SumBytes         ; how many bytes it would download
 Var SumFiles         ; how many files
 Var SumRuns          ; how many commands it would run
+Var SumMirrors       ; download locations that are not a file's origin
+Var BackendHost      ; the host our own copies are served from
+Var CurU1            ; this file's first URL, and the first that is not ours
+Var CurOrigin
+Var CurMirrors       ; and how many of its locations are left over
 Var WinDX            ; how much wider the window was made at GUI init
 Var WinDY
 Var PackOff          ; offset of the pack in $EXEPATH (0 = none)
@@ -264,6 +271,14 @@ Var UnDeskAll
   FileWriteUTF16LE $CmdH "${MSG}$\r$\n"
 !macroend
 !define SumCmd "!insertmacro SumCmd"
+
+; The review page names where each file comes from and counts the rest;
+; this is where every URL is written down, in the order they are tried,
+; and it goes into the log with the commands (design.md section 3).
+!macro SumUrl MSG
+  FileWriteUTF16LE $UrlH "${MSG}$\r$\n"
+!macroend
+!define SumUrl "!insertmacro SumUrl"
 
 ; ---------------------------------------------------------------- pages
 
@@ -2977,6 +2992,11 @@ Function .onInit
   ${If} $Failed = 1
     Call InitFail
   ${EndIf}
+  ; The review page used to open with "Machine: Windows 10 build 19045,
+  ; amd64 (plan block 1)", which told a person what they already knew.
+  ; It is still worth writing down, so it is written here, where the
+  ; other engine has always written it (ti_log "Running as ... on ...").
+  ${Log} "This machine: Windows $WinVer build $WinBuild, $Arch."
   ${Log} "Plan block $TgtNo matches."
   ; A plan carried in this installer may name something since withdrawn,
   ; or simply be old: the revocation list answers that where there is a
@@ -3059,24 +3079,108 @@ Function Plural
   ${EndIf}
 FunctionEnd
 
-; One command in $U_a, written to the summary as a line that cannot run
-; off the screen. The worst case in the catalogue is Ruby's relocation
-; step: 831 characters of shell on one line. Wrapped into the body that
-; is a dozen lines nobody can review, and a screen nobody reviews is
-; what teaches people to click through. So a long one is shortened here
-; and kept in full in the log.
+; One command in $U_a, rendered onto the review page. It decides how to
+; *show* a command and nothing else: whether a command is worth showing
+; at all is the caller's question, and is deliberately kept out of here.
+;
+; It is wrapped, not cut, while it fits. Up to 2026-09-21 anything over
+; 96 characters was replaced by its first 93 and "the whole command is
+; at the end of the log", which meant a 103-character launch command --
+; one wrapped line, and the most useful line on the page, since it is
+; what the shortcut will run -- was hidden behind a pointer to a file.
+; The cut is for the case it was written for: the worst command in the
+; catalogue is Ruby's relocation step, 831 characters of shell on one
+; line, which wrapped is thirteen lines of `ls | grep | head -1` that
+; nobody can review -- and a page that cannot be reviewed teaches
+; people to click through, which is the opposite of what it is for.
+;
+; ${TI_CMD_W} and ${TI_CMD_LINES} are the same numbers the other engine
+; uses (installer/unix/ti-engine.sh, ti_cmd_line), so the two pages and
+; the two logs break a command in the same places. These lines are
+; indented four or more spaces, so tisig::richtext sets them in Courier
+; New and the breaks hold; continuations are indented past the first
+; line, so a wrapped command reads as one command and not as two. A
+; token longer than the width is never broken, as everywhere else here:
+; half a path is worse than a long one. The log has every command in
+; full either way.
+!define TI_CMD_W 74           ; wrap here
+!define TI_CMD_IND 5          ; the first line starts in column 5
+!define TI_CMD_CONT 9         ; and the rest in column 9
+!define TI_CMD_LINES 4        ; more wrapped lines than this: shorten it
 Function CmdLine
   Push $0
   Push $1
+  Push $2
+  Push $3
+  Push $4
+  Push $5
+  Push $U_b
   ${SumCmd} "  $U_a"
   StrLen $0 $U_a
-  ${If} $0 <= 96
-    ${Sum} "     $U_a"
-  ${Else}
+  ; The longest that still fits: the first line's room plus the rest's,
+  ; and one space joining each pair of lines.
+  IntOp $2 ${TI_CMD_W} - ${TI_CMD_CONT}
+  IntOp $2 $2 * ${TI_CMD_LINES}
+  IntOp $2 $2 + ${TI_CMD_CONT}
+  IntOp $2 $2 - ${TI_CMD_IND}
+  ${If} $0 > $2
     StrCpy $1 $U_a 93
     ${Sum} "     $1..."
     ${Sum} "     ($0 characters in all; the whole command is at the end of the log)"
+  ${Else}
+    StrCpy $2 $U_a                         ; what is left to print
+    StrCpy $3 "     "                      ; this line's indent
+    IntOp $4 ${TI_CMD_W} - ${TI_CMD_IND}   ; and its room
+    ${Do}
+      StrLen $0 $2
+      ${If} $0 <= $4
+        ${Sum} "$3$2"
+        ${Break}
+      ${EndIf}
+      ; the last space at or before the width...
+      StrCpy $1 $4
+      ${Do}
+        ${If} $1 <= 0
+          ${Break}
+        ${EndIf}
+        StrCpy $U_b $2 1 $1
+        ${If} $U_b S== " "
+          ${Break}
+        ${EndIf}
+        IntOp $1 $1 - 1
+      ${Loop}
+      ${If} $1 <= 0
+        ; ...or, for a token longer than the line, the first space after
+        ; it, because half a path is worse than a long one
+        StrCpy $1 $4
+        ${Do}
+          ${If} $1 >= $0
+            ${Break}
+          ${EndIf}
+          StrCpy $U_b $2 1 $1
+          ${If} $U_b S== " "
+            ${Break}
+          ${EndIf}
+          IntOp $1 $1 + 1
+        ${Loop}
+        ${If} $1 >= $0
+          ${Sum} "$3$2"
+          ${Break}
+        ${EndIf}
+      ${EndIf}
+      StrCpy $5 $2 $1
+      ${Sum} "$3$5"
+      IntOp $1 $1 + 1
+      StrCpy $2 $2 "" $1
+      StrCpy $3 "         "
+      IntOp $4 ${TI_CMD_W} - ${TI_CMD_CONT}
+    ${Loop}
   ${EndIf}
+  Pop $U_b
+  Pop $5
+  Pop $4
+  Pop $3
+  Pop $2
   Pop $1
   Pop $0
 FunctionEnd
@@ -3216,6 +3320,7 @@ Function AddHost
     StrCpy $U_a $1
     ${If} $U_out == 0
       StrCpy $SumHosts "$SumHosts$0, "
+      IntOp $SumHostN $SumHostN + 1
     ${EndIf}
   ${EndIf}
   Pop $1
@@ -3233,6 +3338,89 @@ Function HostList
   ${EndIf}
 FunctionEnd
 
+; Which of the URLs collected in $CurU1/$CurOrigin is the place the
+; current file really comes from. Same rule as the other engine's
+; ti_origin_url, and the same reason (installer/unix/ti-engine.sh):
+; the resolver writes a file's locations as [our copy,] the vendor's
+; own URL, other people's mirrors of it, [our copy], and our copy is
+; normally first on purpose, because plenty of old machines cannot
+; complete a TLS handshake to the vendor and a mirror we serve over
+; plain HTTP is the only way they get the file at all. So URL 1 is
+; usually ours, and naming it answers nobody's question. Ours is the
+; one on the host we are talking to; the first URL that is not on that
+; host is the vendor's own, and that is the one the page names.
+;
+; With nothing but our own host in the list (a file only we have) the
+; first URL is all there is, and it stops being counted as a mirror.
+Function PickOrigin
+  ${If} $CurU1 != ""
+  ${AndIf} $CurOrigin == ""
+    StrCpy $CurOrigin $CurU1
+    IntOp $CurMirrors $CurMirrors - 1
+  ${EndIf}
+FunctionEnd
+
+; Close off the file whose URLs have just been read (second pass): the
+; page gets the one place the file comes from, and a count of the other
+; places that hold a copy of it. Seven URLs stacked one under the other
+; is not evidence anybody reads -- it is the same wall of text that
+; makes people stop reading the page at all -- and nothing is lost by
+; counting them, because the log carries every URL in the order they
+; are tried, exactly as it carries every command in full.
+Function WriteFrom
+  Call PickOrigin
+  ${If} $CurOrigin != ""
+    ${Sum} "     from   $CurOrigin"
+    ${If} $CurMirrors = 1
+      ${Sum} "     or     1 other copy of it, in the log; whichever host answers, the file must match the sha256 above"
+    ${ElseIf} $CurMirrors > 1
+      ${Sum} "     or     $CurMirrors mirrors of it, every one of them in the log; whichever host answers, the file must match the sha256 above"
+    ${EndIf}
+  ${EndIf}
+  StrCpy $CurU1 ""
+  StrCpy $CurOrigin ""
+  StrCpy $CurMirrors 0
+FunctionEnd
+
+; Close off the file whose URLs have just been read (first pass): its
+; origin goes in the host list, the rest into the mirror count.
+Function SumOneFile
+  Call PickOrigin
+  ${If} $CurOrigin != ""
+    StrCpy $U_a $CurOrigin
+    Call AddHost
+  ${EndIf}
+  IntOp $SumMirrors $SumMirrors + $CurMirrors
+  StrCpy $CurU1 ""
+  StrCpy $CurOrigin ""
+  StrCpy $CurMirrors 0
+FunctionEnd
+
+; Count one URL towards the current file: remember the first, and the
+; first that is not on our own host.
+Function CountUrl   ; $U_a = the URL
+  Push $0
+  Push $1
+  StrCpy $1 $U_a
+  ${If} $CurU1 == ""
+    StrCpy $CurU1 $1
+  ${EndIf}
+  StrCpy $0 0
+  ${If} $CurOrigin == ""
+    Call HostOf
+    ${If} $U_out S!= $BackendHost
+      StrCpy $CurOrigin $1
+      StrCpy $0 1
+    ${EndIf}
+  ${EndIf}
+  ${If} $0 = 0
+    IntOp $CurMirrors $CurMirrors + 1
+  ${EndIf}
+  StrCpy $U_a $1
+  Pop $1
+  Pop $0
+FunctionEnd
+
 ; The transparency text (design.md section 3). Same shape as the other
 ; engine's (installer/unix/ti-engine.sh, "the review screen's shape"): what
 ; someone needs to decide with at the top, the evidence below it. The
@@ -3245,10 +3433,23 @@ Function WriteSummary
 
   ; First pass: how much would be downloaded, from where, and how many
   ; commands would run. None of it is printed until it can be summed up.
+  ;
+  ; "From where" is one host per file, not every host that keeps a copy
+  ; (PickOrigin, above): four of them on one line is the kind of detail
+  ; that gets a screen skimmed instead of read. $SumMirrors is what is
+  ; left over, and the page owns up to it rather than listing it.
+  StrCpy $U_a $Backend
+  Call HostOf
+  StrCpy $BackendHost $U_out
   StrCpy $SumHosts ""
+  StrCpy $SumHostN 0
   StrCpy $SumBytes 0
   StrCpy $SumFiles 0
   StrCpy $SumRuns 0
+  StrCpy $SumMirrors 0
+  StrCpy $CurU1 ""
+  StrCpy $CurOrigin ""
+  StrCpy $CurMirrors 0
   Call OpenBlock
   ${Do}
     ${TiRead} $BH
@@ -3259,15 +3460,14 @@ Function WriteSummary
     ${If} $K S== "[target]"
       ${Break}
     ${ElseIf} $K S== "file"
+      Call SumOneFile
       IntOp $SumFiles $SumFiles + 1
       StrCpy $U_a $F4
       Call DecNum
       IntOp $SumBytes $SumBytes + $U_out
-      StrCpy $2 "first"
     ${ElseIf} $K S== "url"
-    ${AndIf} $2 == "first"
       StrCpy $U_a $F1
-      Call AddHost
+      Call CountUrl
     ${ElseIf} $K S== "step"
       ${If} $F1 S== "run"
         IntOp $SumRuns $SumRuns + 1
@@ -3275,6 +3475,7 @@ Function WriteSummary
     ${EndIf}
   ${Loop}
   FileClose $BH
+  Call SumOneFile
   ${If} $SrcLine > 0
     IntOp $SumFiles $SumFiles + 1
     StrCpy $U_a $SrcSize
@@ -3291,9 +3492,27 @@ Function WriteSummary
   FileOpen $CmdH "$PLUGINSDIR\commands.txt" w
   FileWriteWord $CmdH 0xFEFF
   ${SumCmd} "Every command in full:"
+  FileOpen $UrlH "$PLUGINSDIR\urls.txt" w
+  FileWriteWord $UrlH 0xFEFF
+  ${SumUrl} "Every download location, in the order they are tried:"
+  ; the second pass fills in the rest; the counters start again for it
+  StrCpy $CurU1 ""
+  StrCpy $CurOrigin ""
+  StrCpy $CurMirrors 0
   ${Sum} "======================================================================"
   ${Sum} "  TiddlyInstall will install:  $AppName"
   ${Sum} "  Nothing has been changed yet."
+  ; What this page is *not* saying (design.md section 3, "What we do not
+  ; vouch for"). Everything else here is about our side of it -- every
+  ; file checked against its SHA-256, where things go, who signed the
+  ; installer -- and someone who reads all that care can reasonably come
+  ; away thinking the program has been vetted. It has not: we have never
+  ; looked at it. So the scope is stated in the heading, where it is
+  ; read, and stated plainly: it belongs with "what is being installed",
+  ; not among the warnings, because it is true of every install and an
+  ; alarm that is always on is an alarm nobody hears.
+  ${Sum} "  We package $AppName; we did not write it and have not checked what its code does."
+  ${Sum} "  Install it only if you trust whoever publishes it."
   ${Sum} "======================================================================"
 
   ; Anything unusual, first, where the decision is made. Every one of
@@ -3345,8 +3564,25 @@ Function WriteSummary
   ${Sum} ""
   ${Sum} "IN SHORT"
   ${Sum} "  Installs:     $AppName   (install id $AppId)"
+  ; "Installs: test b" over "Project: test_b" is two lines saying one
+  ; thing. The project name earns a line of its own only when the page
+  ; does not already carry it, and it usually does: it is either the
+  ; app's name with the punctuation changed, or the package `From:`
+  ; names in full. Both are compared with the case and the punctuation
+  ; taken out, which is the whole of the difference in practice.
   ${If} $Project != ""
-    ${Sum} "  Project:      $Project"
+    ${StrFilter} "$Project" "12-" "" "" $0
+    ${StrFilter} "$AppName" "12-" "" "" $1
+    ${If} $0 != ""
+    ${AndIf} $0 S!= $1
+      ${StrFilter} "$RecSource" "12-" "" "" $2
+      StrCpy $U_a $2
+      StrCpy $U_b $0
+      Call StrHas
+      ${If} $U_out = 0
+        ${Sum} "  Project:      $Project"
+      ${EndIf}
+    ${EndIf}
   ${EndIf}
   ${If} $RecSource != ""
     ${Sum} "  From:         $RecSource"
@@ -3361,7 +3597,6 @@ Function WriteSummary
       ${Sum} "  Runtime:      $TgtRuntime, $0$U_out"
     ${EndIf}
   ${EndIf}
-  ${Sum} "  Machine:      Windows $WinVer build $WinBuild, $Arch (plan block $TgtNo)"
   ${If} $SumFiles > 0
     StrCpy $U_a $SumBytes
     Call HumanSize
@@ -3372,11 +3607,23 @@ Function WriteSummary
     ${If} $PackLen > 0
       ${Sum} "  Download:     up to $SumFiles $U_out, $0; files packed inside this installer are used instead of downloading them"
     ${Else}
-      ${Sum} "  Download:     $SumFiles $U_out, $0 in total, each checked against its SHA-256"
+      ${Sum} "  Download:     $SumFiles $U_out, $0 in total"
     ${EndIf}
+    ; Who the files are from, not every host that keeps a copy -- and
+    ; the SHA-256 in the same breath, because that check is the reason
+    ; the host matters as little as it does.
     Call HostList
     ${If} $U_out != ""
-      ${Sum} "  Sources:      $U_out"
+      ${If} $SumMirrors > 0
+        ${If} $SumHostN = 1
+          StrCpy $1 "it"
+        ${Else}
+          StrCpy $1 "them"
+        ${EndIf}
+        ${Sum} "  Sources:      $U_out, or a mirror of $1; every file is checked against its SHA-256 whichever host serves it"
+      ${Else}
+        ${Sum} "  Sources:      $U_out; every file is checked against its SHA-256"
+      ${EndIf}
     ${EndIf}
   ${EndIf}
   ${Sum} "  Into:         $AppDir"
@@ -3394,8 +3641,13 @@ Function WriteSummary
   ${Else}
     ${Sum} "  Admin rights: not needed"
   ${EndIf}
+  ; A signature on the installer is not a word about the program in it,
+  ; and "Signed by: TiddlyInstall" invites exactly that reading -- most
+  ; of all in mode A, where the name on the certificate is ours. So
+  ; where there is a signer, the line says what the signature covers.
   ${If} $SignedBy != ""
-    ${Sum} "  Signed by:    $SignedBy (as the certificate names it; Windows checks the signature)"
+    ${Sum} "  Signed by:    $SignedBy (as the certificate names it; Windows checks the signature)."
+    ${Sum} "                It covers this installer file, not the program it installs."
   ${Else}
     ${Sum} "  Signed by:    nobody (this installer is unsigned)"
   ${EndIf}
@@ -3432,6 +3684,7 @@ Function WriteSummary
     ${If} $K S== "[target]"
       ${Break}
     ${ElseIf} $K S== "file"
+      Call WriteFrom
       StrCpy $CurName $F1
       StrCpy $U_a $F1
       Call FolderHash
@@ -3444,16 +3697,14 @@ Function WriteSummary
       ${Sum} "  $2. $F2"
       ${Sum} "     $U_out ($F4 bytes)"
       ${Sum} "     sha256 $F3"
-      StrCpy $1 "first"
+      ${SumUrl} "  $F2"
       ${Sum} "     into   $CurDir"
     ${ElseIf} $K S== "url"
-      ${If} $1 == "first"
-        ${Sum} "     from   $F1"
-        StrCpy $1 "more"
-      ${ElseIf} $1 == "more"
-        ${Sum} "     or     $F1"
-      ${EndIf}
+      StrCpy $U_a $F1
+      Call CountUrl
+      ${SumUrl} "    $F1"
     ${ElseIf} $K S== "step"
+      Call WriteFrom
       ${If} $F1 S== "run"
         ; a `run` step may carry its own description as a second value
         ; (format.md "Steps"); it is what a person can actually judge
@@ -3480,6 +3731,7 @@ Function WriteSummary
     ${EndIf}
   ${Loop}
   FileClose $BH
+  Call WriteFrom
   ${If} $SrcLine > 0
     IntOp $2 $2 + 1
     StrCpy $U_a $SrcSize
@@ -3494,6 +3746,8 @@ Function WriteSummary
     ${EndIf}
     ${If} $SrcUrl1 != ""
       ${Sum} "     from   $SrcUrl1"
+      ${SumUrl} "  $SrcName"
+      ${SumUrl} "    $SrcUrl1"
     ${EndIf}
   ${EndIf}
   ${If} $PackLen > 0
@@ -3555,12 +3809,14 @@ Function WriteSummary
   ${Sum} ""
   ${Sum} "WHERE THIS INSTALLER AND ITS SETTINGS CAME FROM"
   ${If} $SignedBy != ""
-    ${Sum} "  Signed by:  $SignedBy (as the certificate names it; Windows checks the signature)"
+    ${Sum} "  Signed by:  $SignedBy (as the certificate names it; Windows checks the signature)."
+    ${Sum} "              It covers this installer file, not the program it installs."
   ${Else}
     ${Sum} "  Signed by:  nobody (this installer is unsigned)"
   ${EndIf}
   ${If} $ModeA = 1
-    ${Sum} "  Mode:       signed by TiddlyInstall (mode A): installs only what its file name names, from ${TI_BACKEND}"
+    ${Sum} "  Mode:       signed by TiddlyInstall (mode A): installs only what its file name names, from ${TI_BACKEND}."
+    ${Sum} "              That signature is ours; the program it installs is not."
   ${EndIf}
   ${Sum} "  Settings:   $MetaSrc"
   ${Sum} "  Record:     $RecHash"
@@ -3586,9 +3842,11 @@ Function WriteSummary
   ${EndIf}
   FileClose $SumH
   FileClose $CmdH
+  FileClose $UrlH
   ; no control or bidi characters on the review page (plan text is shown as is otherwise)
   tisig::cleanfile "$PLUGINSDIR\summary.txt"
   tisig::cleanfile "$PLUGINSDIR\commands.txt"
+  tisig::cleanfile "$PLUGINSDIR\urls.txt"
   Pop $0
   Pop $2
   Pop $1
@@ -4987,6 +5245,21 @@ Function InstallMain
   ClearErrors
   FileOpen $0 "$PLUGINSDIR\commands.txt" r
   ${IfNot} ${Errors}
+    ${Do}
+      ClearErrors
+      FileReadUTF16LE $0 $1
+      ${If} ${Errors}
+        ${Break}
+      ${EndIf}
+      ${TiTrimNL} $1
+      ${Log} "$1"
+    ${Loop}
+    FileClose $0
+  ${EndIf}
+  ClearErrors
+  FileOpen $0 "$PLUGINSDIR\urls.txt" r
+  ${IfNot} ${Errors}
+    ${Log} ""
     ${Do}
       ClearErrors
       FileReadUTF16LE $0 $1
