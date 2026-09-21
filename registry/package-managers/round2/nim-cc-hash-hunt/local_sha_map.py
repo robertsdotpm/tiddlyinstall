@@ -10,7 +10,7 @@ import json, urllib.parse
 from pathlib import Path
 
 CAT = Path("/home/x/projects/installer-builder-runtimes/catalog")
-STORE = Path("/home/x/projects/installer-builder/runtime-metadata/store/sha256-local.json")
+STORE = Path("/home/x/projects/installer-builder/registry/store/sha256-local.json")
 
 
 def load():

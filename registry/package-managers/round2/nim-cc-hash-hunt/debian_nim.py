@@ -11,7 +11,7 @@ only accepted after a full download + sha256 match (see verify step).
 import json, re, sys, time, urllib.request
 from pathlib import Path
 
-CAT = Path("/home/x/projects/installer-builder/runtime-metadata")
+CAT = Path("/home/x/projects/installer-builder/registry")
 UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) installer-builder-catalog"}
 OUT = Path(__file__).resolve().parent / "debian_nim.json"
 

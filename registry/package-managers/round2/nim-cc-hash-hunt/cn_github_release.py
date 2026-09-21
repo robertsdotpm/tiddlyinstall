@@ -12,7 +12,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from probe import probe, HEADERS  # noqa: E402
 
-CAT = Path("/home/x/projects/installer-builder/runtime-metadata")
+CAT = Path("/home/x/projects/installer-builder/registry")
 HOSTS = {
     "mirrors.bfsu.edu.cn": "https://mirrors.bfsu.edu.cn/github-release/",
     "mirror.lzu.edu.cn": "https://mirror.lzu.edu.cn/github-release/",

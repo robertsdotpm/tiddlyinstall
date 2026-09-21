@@ -38,7 +38,7 @@
 // python2 changed, and only by two `note` lines: Python 2 on Linux and
 // macOS is Anaconda's conda package, which their terms forbid us to
 // mirror, so it is the one hello world whose plan can never name our
-// mirror (runtime-metadata/store/mirror-excluded.json). Every other
+// mirror (registry/store/mirror-excluded.json). Every other
 // runtime's record and plan are byte for byte what they were.
 //
 // A warning this recording earned the hard way: `--record URL` takes the

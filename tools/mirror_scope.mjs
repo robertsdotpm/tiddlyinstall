@@ -34,7 +34,7 @@
 // file must reach the mirror host *and* this machine's local store or the
 // pull achieves nothing (tools/mirror_check.py says why):
 //
-//   <DIR>/<folder>/download_plan_all.json   for runtime-metadata/tools/download.py
+//   <DIR>/<folder>/download_plan_all.json   for registry/tools/download.py
 //                                           (--plan-name download_plan_all.json),
 //                                           which fills the local store
 //   <DIR>/mirror-manifest-all.json          for tools/mirror_fetch.py, run on
@@ -63,7 +63,7 @@ const o = {
   catalog: path.join(RUNTIMES, 'catalog'), local: RUNTIMES, policy: path.join(REPO, 'src/build_server/policy.json'),
   cache: path.join(REPO, 'src/build_server/data/sha-cache.json'), scope: 'every', runtime: '',
   platforms: 'windows,macos,linux', out: '', sizes: '',
-  excluded: path.join(REPO, 'runtime-metadata/store/mirror-excluded.json'),
+  excluded: path.join(REPO, 'registry/store/mirror-excluded.json'),
 };
 const argv = process.argv.slice(2);
 for (let i = 0; i < argv.length; i++) {
@@ -82,7 +82,7 @@ const platforms = o.platforms.split(',').filter(Boolean);
 const only = o.runtime ? new Set(o.runtime.split(',').filter(Boolean)) : null;
 const extraSizes = o.sizes ? JSON.parse(fs.readFileSync(o.sizes, 'utf8')) : {};
 
-// Files we are not permitted to mirror at all (runtime-metadata/store/
+// Files we are not permitted to mirror at all (registry/store/
 // mirror-excluded.json: Anaconda's terms, today). They are counted and
 // named, and left out of the plan and the manifest, because "not fetched
 // yet" and "may never be fetched" are different states and only one of
@@ -214,7 +214,7 @@ console.log(`union: ${all.length} files, ${human(all.reduce((a, f) => a + sizeOf
   + (unknown ? `  (${unknown} of unrecorded size, counted as 0)` : ''));
 console.log(`to fetch: ${miss.length} files, ${human(miss.reduce((a, f) => a + sizeOf(f), 0))}`
   + `  -- into the mirror host AND this machine's local store, or the pull changes no plan`);
-if (banned) console.log(`left out: ${banned} file(s) we are not permitted to mirror (runtime-metadata/store/mirror-excluded.json)`);
+if (banned) console.log(`left out: ${banned} file(s) we are not permitted to mirror (registry/store/mirror-excluded.json)`);
 
 /* ---------- what a fetch needs ---------- */
 
@@ -249,7 +249,7 @@ if (o.out) {
     }
   }
   const find = (f) => byHash.get(String(f.sha256).toLowerCase()) || list(f.urls).map((u) => byURL.get(u)).find(Boolean) || null;
-  // runtime-metadata/tools/download.py target_path: the store path a file
+  // registry/tools/download.py target_path: the store path a file
   // gets. Repeated here so the manifest and the plan name the same path.
   const storePath = (e, url) => {
     const name = decodeURI(new URL(url).pathname).split('/').filter(Boolean).pop() || 'download';

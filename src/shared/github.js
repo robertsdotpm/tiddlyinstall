@@ -22,7 +22,7 @@
 // 404, and lists the rate-limit headers in `access-control-expose-headers`,
 // so a page can read `x-ratelimit-remaining` and `x-ratelimit-reset` and
 // say when to try again. codeload.github.com fails with a CORS TypeError in
-// the same page, as runtime-metadata/cors.json already recorded for
+// the same page, as registry/cors.json already recorded for
 // github.com. Recorded there too, under `api.github.com`.
 //
 // **Rate limits are the thing that will bite.** Unauthenticated the API

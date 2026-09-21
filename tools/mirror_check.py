@@ -11,10 +11,10 @@ may name the hosts it belongs on (`"hosts": ["ovh1"]`); without one it
 belongs on every host whose `holds` covers this manifest. Two manifests
 exist today, and they are deliberately separate:
 
-  runtime-metadata/store/mirror-manifest.json     what installers download
-  runtime-metadata/store/toolchain-manifest.json  what we build them with
+  registry/store/mirror-manifest.json     what installers download
+  registry/store/toolchain-manifest.json  what we build them with
 
-The hosts come from runtime-metadata/store/mirror-hosts.json, not from
+The hosts come from registry/store/mirror-hosts.json, not from
 this file, so a second mirror is a config line rather than a patch. A
 host is `ssh` (one walk of the tree answers everything) or `http` (ask
 for each file's headers under its `base`).
@@ -64,15 +64,15 @@ import urllib.error
 import urllib.request
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DEFAULT_MANIFEST = os.path.join(HERE, "runtime-metadata/store/mirror-manifest.json")
-DEFAULT_HOSTS = os.path.join(HERE, "runtime-metadata/store/mirror-hosts.json")
+DEFAULT_MANIFEST = os.path.join(HERE, "registry/store/mirror-manifest.json")
+DEFAULT_HOSTS = os.path.join(HERE, "registry/store/mirror-hosts.json")
 DEFAULT_LOCAL = os.path.expanduser("~/projects/installer-builder-runtimes")
 # The build toolchain is nothing a plan downloads, so its local copies sit
 # in a dot folder the resolver's LocalIndex does not walk: it must never be
 # able to mistake a .deb for a runtime download.
 TOOLCHAIN_LOCAL = os.path.join(DEFAULT_LOCAL, ".mirror")
-MANIFESTS = {"runtime": os.path.join(HERE, "runtime-metadata/store/mirror-manifest.json"),
-             "toolchain": os.path.join(HERE, "runtime-metadata/store/toolchain-manifest.json")}
+MANIFESTS = {"runtime": os.path.join(HERE, "registry/store/mirror-manifest.json"),
+             "toolchain": os.path.join(HERE, "registry/store/toolchain-manifest.json")}
 UA = {"User-Agent": "installer-builder-mirror-check/1"}
 
 # Asking an ssh host once, rather than once per file: the program goes

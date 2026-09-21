@@ -19,7 +19,8 @@ src/installers/      the Windows, Linux and macOS base installers (was installer
 src/shared/          the code the page and the server both run (was shared/)
 src/vendor/          third-party bundles (was vendor/)
 out/                 the built one-file site, gitignored (was dist/)
-docs/ tests/ tools/ runtime-metadata/     unchanged
+registry/            the runtime registry (was runtime-metadata/)
+docs/ tests/ tools/                       unchanged
 ```
 
 Renamed on 2026-09-22. Three things follow from it and are easy to get
@@ -29,6 +30,16 @@ server computes the repository root two levels up now, not one; and the
 `ti-server`, `ti-server-mac` and `ti-redis` systemd user units name the
 new paths -- a unit left pointing at the old one serves a stale page
 without saying so.
+
+**`registry/` is the runtime registry**: where to get each language's
+runtime, per OS, architecture and version. It is **not** a package
+registry. "Registry" on its own -- in this repository's code, on the
+review screen, on the installer form, in docs/launch-shapes.md's
+derivation ladder, and in the offline page's promise that nothing but
+registry lookups leaves the page -- still means npm, PyPI, RubyGems or
+crates.io, and none of that wording changed with the folder. So the
+folder is always written with its slash, and where a slash will not
+fit, write "the runtime registry".
 
 ## Front end
 
@@ -149,11 +160,11 @@ manifest, the local runtime store and the mirror host agree;
 `tools/mirror_scope.mjs` says what mirroring **every version we offer**
 would cost (files and bytes, per runtime) and, with `-out DIR`, writes
 both halves of the fetch — a `download_plan_all.json` per folder for
-`runtime-metadata/tools/download.py --plan` (the local store) and a
+`registry/tools/download.py --plan` (the local store) and a
 `mirror-manifest-all.json` for `mirror_fetch.py` (the mirror host) —
 from one enumeration, so the two cannot disagree about what is in scope.
 Files we have no permission to mirror are listed in
-`runtime-metadata/store/mirror-excluded.json` and left out of both.
+`registry/store/mirror-excluded.json` and left out of both.
 
 **Topping up the mirror is two halves: the mirror host *and* the local
 runtime store, or the pull achieves nothing.** A mirror URL only reaches
@@ -163,15 +174,15 @@ that is on the mirror host but that this machine has never seen has no
 `local` path, so its plans still name the vendor alone.
 `tools/mirror_check.py` exits non-zero on exactly that state, for the
 manifest and every mirror host in
-`runtime-metadata/store/mirror-hosts.json`.
+`registry/store/mirror-hosts.json`.
 
 Two manifests, deliberately separate:
-`runtime-metadata/store/mirror-manifest.json` is what installers
-download, and `runtime-metadata/store/toolchain-manifest.json` is what we
+`registry/store/mirror-manifest.json` is what installers
+download, and `registry/store/toolchain-manifest.json` is what we
 build them with (NSIS, osslsigncode, llvm-mingw, Redis) — no plan ever
 names those, and keeping them out is what lets the runtime check stay a
 clean pass or fail. Check the second with
-`tools/mirror_check.py runtime-metadata/store/toolchain-manifest.json`.
+`tools/mirror_check.py registry/store/toolchain-manifest.json`.
 
 ## Design notes
 
@@ -180,4 +191,4 @@ clean pass or fail. Check the second with
 - [macOS packaging](docs/macos-packaging.md): a self-contained `.app` in a `.dmg`, with measured sizes, and what Gatekeeper does to an app that isn't notarized
 - [Tested Python on old Windows](docs/windows-python-compat.md): known-good builds with working asyncio, per Windows version
 - [Test machines](docs/test-vms.md): VMs for testing installers
-- [Runtime catalog](runtime-metadata/README.md): where to download 13 languages' runtimes per OS, architecture and major version, mirrors, checksums, and per-version limitations (metadata backup; binaries live outside git)
+- [Runtime catalog](registry/README.md): where to download 13 languages' runtimes per OS, architecture and major version, mirrors, checksums, and per-version limitations (metadata backup; binaries live outside git)

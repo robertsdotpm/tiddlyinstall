@@ -17,8 +17,8 @@ rsync -a --delete \
   --exclude '.cache/' --exclude '*cache*.json' --exclude '*.log' --exclude '*.tmp' --exclude '*.part' \
   --exclude '*.pid' --exclude '*.dbg' --exclude '.write.lock' --exclude '.busy' --exclude 'pending_updates/' --exclude '__pycache__/' \
   --exclude 'store/' --exclude 'BACKUP.md' \
-  ~/projects/installer-builder-runtimes/catalog/ runtime-metadata/
-cp ~/projects/installer-builder-runtimes/{manifest.json,mirrors.json,README.md,TESTED-WINDOWS.md} runtime-metadata/store/
+  ~/projects/installer-builder-runtimes/catalog/ registry/
+cp ~/projects/installer-builder-runtimes/{manifest.json,mirrors.json,README.md,TESTED-WINDOWS.md} registry/store/
 ```
 
 Added 2026-09-18:

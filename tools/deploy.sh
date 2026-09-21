@@ -11,7 +11,7 @@
 #
 # Whoever lands the last change runs this. It takes about fifteen seconds
 # because the catalogue snapshot is reused (docs/format.md section 6); pass
-# TI_FRESH_CATALOG=1 after changing runtime-metadata/, or the page will carry
+# TI_FRESH_CATALOG=1 after changing registry/, or the page will carry
 # yesterday's catalogue.
 #
 # Always builds from a clean worktree of HEAD, never from the working tree:
@@ -42,12 +42,12 @@ for p in src/installers/windows/out src/installers/unix/out tools/es5/node_modul
 done
 
 # The catalogue snapshot is most of the build's two minutes and changes only
-# when runtime-metadata/ does, so it is cached and reused. The cache is keyed
-# on the newest file in runtime-metadata/, which is the only thing the
+# when registry/ does, so it is cached and reused. The cache is keyed
+# on the newest file in registry/, which is the only thing the
 # snapshot is made from -- so it cannot serve a stale catalogue without the
 # metadata having been touched, and touching the metadata invalidates it.
 cache=${TI_CATALOG_CACHE:-$HOME/.cache/tiddlyinstall}
-newest=$(find "$here/runtime-metadata" -type f -newer "$here/tools/snapshot.mjs" -printf '%T@\n' 2>/dev/null |
+newest=$(find "$here/registry" -type f -newer "$here/tools/snapshot.mjs" -printf '%T@\n' 2>/dev/null |
 	sort -rn | head -1)
 newest=${newest:-0}
 stamp="$cache/stamp"
@@ -58,7 +58,7 @@ if [ "${TI_FRESH_CATALOG:-0}" != "1" ] &&
 	opts="--catalog $cache"
 	echo "reusing the cached catalogue snapshot" >&2
 else
-	echo "making the catalogue snapshot (runtime-metadata changed, or no cache)" >&2
+	echo "making the catalogue snapshot (registry/ changed, or no cache)" >&2
 	mkdir -p "$cache"
 	if (cd "$here" && PATH="$HOME/.local/node/bin:$PATH" node tools/snapshot.mjs -o "$cache" >"$wt/snap.log" 2>&1); then
 		printf '%s' "$newest" > "$stamp"
