@@ -154,7 +154,7 @@ cp "$SRC" "$H/$F"
 env -i HOME="$H" PATH=/usr/local/bin:/usr/bin:/bin LANG=C sh "$H/$F" --yes --log="$H/i.log" </dev/null >/dev/null 2>&1
 echo "@install $?"
 echo "@osdesc"; sed -n 's/^Running as .* on //p' "$H/i.log" 2>/dev/null | head -1
-echo "@planarch"; sed -n '/^ *Runtime:/{p;q;}' "$H/i.log" 2>/dev/null
+echo "@planarch"; awk '/^ *Runtime:/ {f=1; print; next} f { if (substr($0,1,8) == "        ") print; else exit }' "$H/i.log" 2>/dev/null
 echo "@x"
 d=$(ls -d "$H"/.local/share/ti/*/launch.txt 2>/dev/null | head -1)
 if [ -n "$d" ]; then
@@ -252,7 +252,7 @@ fi
 TI_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --backend=http://127.0.0.1:8080 --log="$HOME/titest/i.log" </dev/null >/dev/null 2>&1
 echo "@install $?"
 echo "@osdesc"; sed -n 's/^Running as .* on //p' "$HOME/titest/i.log" 2>/dev/null | head -1
-echo "@planarch"; sed -n '/^ *Runtime:/{p;q;}' "$HOME/titest/i.log" 2>/dev/null
+echo "@planarch"; awk '/^ *Runtime:/ {f=1; print; next} f { if (substr($0,1,8) == "        ") print; else exit }' "$HOME/titest/i.log" 2>/dev/null
 echo "@x"
 d=$(ls -d "$HOME/Library/ti/"*/launch.txt "$HOME/Library/Application Support/ti/"*/launch.txt 2>/dev/null | head -1)
 if [ -n "$d" ]; then

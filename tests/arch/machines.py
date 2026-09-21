@@ -150,12 +150,26 @@ def plan_arch(line):
 
 
 def plan_arch_from_log(log):
-    """The plan's chosen architecture, from a whole install log."""
-    for line in (log or "").splitlines():
-        if line.strip().startswith("Runtime:"):
-            a = plan_arch(line)
-            if a:
-                return a
+    """The plan's chosen architecture, from a whole install log.
+
+    The Unix engine wraps this line (`ti_wrap 74 16`), so the note after
+    the architecture may run on to further lines indented by 16 spaces.
+    Those are joined back on before parsing: today the architecture is
+    always on the first line, but a longer runtime name would push it
+    over, and losing the witness silently is worse than the work.
+    """
+    lines = (log or "").splitlines()
+    for i, line in enumerate(lines):
+        if not line.strip().startswith("Runtime:"):
+            continue
+        joined = line
+        for cont in lines[i + 1:]:
+            if not cont.startswith(" " * 8) or not cont.strip():
+                break
+            joined += " " + cont.strip()
+        a = plan_arch(joined) or plan_arch(line)
+        if a:
+            return a
     return ""
 
 
@@ -246,7 +260,8 @@ def judge(target, parts, result, detail):
     first = (parts.get("osdesc_out", "") or "").strip().splitlines()
     seen = from_osdesc(first[0]) if first else from_log(parts.get("log_out", ""))
     elf, elf_lines = elf_seen(parts.get("elf_out", ""))
-    chose = plan_arch(parts.get("planarch_out", "").strip()) or plan_arch_from_log(parts.get("log_out", ""))
+    chose = (plan_arch_from_log(parts.get("planarch_out", ""))
+             or plan_arch_from_log(parts.get("log_out", "")))
     extras = {"arch": arch_of(target), "arch_seen": seen, "arch_elf": elf, "arch_plan": chose}
     if elf_lines:
         extras["arch_elf_files"] = elf_lines

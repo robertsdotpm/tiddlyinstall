@@ -70,6 +70,16 @@ check("plan arch, with the engine's note",
       machines.plan_arch("  Runtime:  ruby 3.4, 32-bit (x86) -- this machine is 64-bit, but the plan "
                          "has no 64-bit build of ruby for this system"), "x86")
 check("plan arch, an older plan with none", machines.plan_arch("  Runtime:  node"), "")
+# The Unix engine wraps this line (ti_wrap 74 16), so the note after the
+# architecture runs on, indented by 16 spaces.
+check("plan arch, wrapped over three lines", machines.plan_arch_from_log(
+      "IN SHORT\n"
+      "  Runtime:      ruby 3.4.5, 32-bit (x86) -- this machine is 64-bit, but\n"
+      "                the plan has no 64-bit build of ruby for this system\n"
+      "  Download:     17.7 MB\n"), "x86")
+check("plan arch, a wrap that splits before the architecture", machines.plan_arch_from_log(
+      "  Runtime:      averyverylongruntimename 10.0.100-preview.7.25380.108,\n"
+      "                64-bit (amd64)\n"), "amd64")
 check("plan arch, from a whole log", machines.plan_arch_from_log(
       "WHAT\n  Project:  hello\n  Runtime:  go 1.27.1, 32-bit (x86)\n  Machine:  Linux, 2.36 (236), x86\n"), "x86")
 

@@ -230,7 +230,7 @@ fi
 # .dbus: GTK's D-Bus autolaunch, which a desktop session's own bus makes unneeded.
 echo "@left"; (cd "$H" && find . -mindepth 1 ! -name i.log ! -name "$F" ! -name selftest.txt ! -name out.txt ! -name err.txt ! -path './.cache*' ! -path './.dbus*' | head -5)
 echo "@osdesc"; sed -n 's/^Running as .* on //p' "$H/i.log" 2>/dev/null | head -1
-echo "@planarch"; sed -n '/^ *Runtime:/{p;q;}' "$H/i.log" 2>/dev/null
+echo "@planarch"; awk '/^ *Runtime:/ {f=1; print; next} f { if (substr($0,1,8) == "        ") print; else exit }' "$H/i.log" 2>/dev/null
 echo "@x"
 echo "@log"; tail -12 "$H/i.log" 2>/dev/null
 [ "${KEEP:-}" = 1 ] || rm -rf "$H"
@@ -310,7 +310,7 @@ after=$(ls "$HOME/Applications" 2>/dev/null; [ -d "$HOME/Applications" ] && echo
 echo "@left"; ls "$HOME/Library/ti" "$HOME/Library/Application Support/ti" 2>/dev/null
 [ "$before" = "$after" ] || echo "Applications: $after"
 echo "@osdesc"; sed -n 's/^Running as .* on //p' "$HOME/titpl/i.log" 2>/dev/null | head -1
-echo "@planarch"; sed -n '/^ *Runtime:/{p;q;}' "$HOME/titpl/i.log" 2>/dev/null
+echo "@planarch"; awk '/^ *Runtime:/ {f=1; print; next} f { if (substr($0,1,8) == "        ") print; else exit }' "$HOME/titpl/i.log" 2>/dev/null
 echo "@x"
 echo "@log"; tail -12 "$HOME/titpl/i.log"
 '''

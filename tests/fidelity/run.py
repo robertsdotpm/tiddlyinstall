@@ -142,7 +142,7 @@ if [ -n "$d" ]; then
 fi
 echo "@left"; (cd "$H" && find . -mindepth 1 ! -name i.log ! -name i.out ! -name "$F" ! -path './.cache*' ! -path './.pki*' | head -5)
 echo "@osdesc"; sed -n 's/^Running as .* on //p' "$H/i.log" 2>/dev/null | head -1
-echo "@planarch"; sed -n '/^ *Runtime:/{p;q;}' "$H/i.log" 2>/dev/null
+echo "@planarch"; awk '/^ *Runtime:/ {f=1; print; next} f { if (substr($0,1,8) == "        ") print; else exit }' "$H/i.log" 2>/dev/null
 echo "@x"
 echo "@log"; cat "$H/i.log" 2>/dev/null
 rm -rf "$H"
@@ -192,7 +192,7 @@ if [ -n "$d" ]; then
 fi
 echo "@left"; ls "$HOME/Library/ti" "$HOME/Library/Application Support/ti" 2>/dev/null
 echo "@osdesc"; sed -n 's/^Running as .* on //p' "$HOME/tifid/i.log" 2>/dev/null | head -1
-echo "@planarch"; sed -n '/^ *Runtime:/{p;q;}' "$HOME/tifid/i.log" 2>/dev/null
+echo "@planarch"; awk '/^ *Runtime:/ {f=1; print; next} f { if (substr($0,1,8) == "        ") print; else exit }' "$HOME/tifid/i.log" 2>/dev/null
 echo "@x"
 echo "@log"; cat "$HOME/tifid/i.log"
 '''
