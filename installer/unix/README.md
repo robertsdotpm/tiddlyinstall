@@ -100,26 +100,39 @@ engine is this same file, so an engine change reaches macOS as soon as
 the base is built there -- and `out/ti-base-macos.zip` on this machine
 is whatever was last built there, nothing more.
 
-**Last built 2026-09-21T10:39:05Z** on the Mac test server (macOS 26.2
-`25C56`, arm64, `Matthew@the-mac-test-host`), from `ti-engine.sh` at `af77744`:
-mode A now says whose signature it is and what it is not. The review
-screen gained a `Mode:` row before `Settings:` -- "signed by
-TiddlyInstall (mode A): installs only what its file name names, from
-`<backend>`" and "That signature is ours; the program it installs is
-not." -- in the same place and the same words as the Windows engine, and
-the mode A refusal, the `install.txt` log line and `--help` now say *why*
-mode A takes no settings rather than saying the signature is about the
-app. Text only; nothing it does changed.
+**Last built 2026-09-21T11:13:48Z** on the Mac test server (macOS 26.2
+`25C56`, arm64, `Matthew@the-mac-test-host`), from `ti-engine.sh` with the
+mode A row on the review screen saying what is true of the file rather
+than assuming it. The row is now one line --
+
+```
+  Mode:       A (signed, and carrying no settings of its own): it installs only the app its file name names, from <backend>
+```
+
+-- and no longer claims a signer. The `Signed by:` line directly above
+already names one, read from the file, so naming one here said it twice
+and could disagree with it: "signed by TiddlyInstall" printed over a
+`.run`, which carries no signature at all, and over anyone else's
+certificate. The mode A refusal and the `install.txt` log line dropped
+"Our signature" for the same reason. Text only; nothing it does changed.
 
 | | |
 | --- | --- |
-| `out/ti-base-macos.zip` | `3c552f115cf303f44c56d4a57ecd823a93263721b8c3c620459c4e83052a312b`, 68,623 bytes |
-| the engine inside it | `2eefef9ee145449cd8cef34eae9926ce9632897c3d299001b5c2e11aa2ae4a86` (`ti-engine.sh` at `af77744` with the baked lines filled, and **only** those four lines: checked by diffing it against `git show af77744:installer/unix/ti-engine.sh`) |
+| `out/ti-base-macos.zip` | `7eaabafb3c29257412e56adc53c782c249356d36e3890e9460e3ac96feecbd89`, 68,834 bytes |
+| the engine inside it | `ti-engine.sh` with the baked lines filled, and **only** those four lines: checked by diffing the extracted `Contents/MacOS/install` against the committed source |
 | plan signing key | `97930ea1888d1a12` (unchanged) |
-| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T10:39:05Z` / `1789987145` |
+| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T11:13:48Z` / `1789989228` |
 | signature | ad-hoc; `codesign --verify --strict` is happy on the bundle **and** on the bundle re-extracted from the zip with `ditto` ("valid on disk", "satisfies its Designated Requirement"); `spctl -a` rejects it, as it must |
 
-The build before this one was **2026-09-21T06:54:39Z**, from `ti-engine.sh`
+The build before this one was **2026-09-21T10:39:05Z**, zip
+`3c552f115cf303f44c56d4a57ecd823a93263721b8c3c620459c4e83052a312b`
+(68,623 bytes), engine
+`2eefef9ee145449cd8cef34eae9926ce9632897c3d299001b5c2e11aa2ae4a86`, from
+`ti-engine.sh` at `af77744`, which gave mode A a `Mode:` row and a second
+line reading "That signature is ours; the program it installs is not."
+Both were replaced above.
+
+The one before that was **2026-09-21T06:54:39Z**, from `ti-engine.sh`
 with the SHA-256 promise said once, a label on every file in the download list,
 the review shown in a window on a desktop, and the
 **capability statement** on the review screen (design.md 11.3 and

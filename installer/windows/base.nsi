@@ -1489,7 +1489,7 @@ Function FindMetadata
   ${If} $SignedBy != ""
   ${AndIf} $HasBlock = 0
     StrCpy $ModeA 1
-    ${Log} "Signed base with no metadata block: mode A (file name and the built-in backend only)"
+    ${Log} "An installer program signed by $SignedBy, with no settings inside: mode A (its file name and the built-in backend only)"
   ${EndIf}
   ; 1. command line (not in mode A)
   StrCpy $1 ""
@@ -2669,7 +2669,7 @@ Function Usage
 /unsigned-plan$\taccept an unsigned /plan= file$\r$\n\
 /backend=URL$\twhere to fetch records and plans$\r$\n\
 /reinstall$\tinstall again even if this app, with these same settings, is already installed. Otherwise running the installer again starts the app (with /S it only says it is installed)$\r$\n$\r$\n\
-An installer signed by TiddlyInstall, with no settings of its own, takes none of /record=, /plan=, /unsigned-plan and /backend=: our signature is on this program, and it must not be read as covering settings someone else supplies." /SD IDOK
+A signed installer with no settings of its own takes none of /record=, /plan=, /unsigned-plan and /backend=: the signature is on the installer program, and must not be read as covering settings someone else supplies." /SD IDOK
   SetErrorLevel 0
   Quit
 FunctionEnd
@@ -4002,6 +4002,23 @@ Function WriteSummary
 
   ; Anything unusual, first, where the decision is made. Every one of
   ; these is also said again, in full, in its own section below.
+  ;
+  ; The architecture note is worked out BEFORE the heading, and the
+  ; heading is guarded on the note rather than on $TgtRtArch. They are
+  ; not the same condition: $TgtRtArch is set on every plan made since
+  ; 2026-09-20, the ordinary matching-architecture case included, and
+  ; ArchNote is empty there. Guarding the heading on $TgtRtArch alone
+  ; printed a bare "BEFORE YOU SAY YES" with nothing under it on the
+  ; commonest install there is (seen on Windows 8.1, 2026-09-21). A
+  ; warning block that is routinely empty teaches the reader that the
+  ; block means nothing, and this is the block that carries an unsigned
+  ; plan, a withdrawn build and a prerequisite that will stop the
+  ; install. A heading and its content get one condition, never two.
+  StrCpy $1 ""
+  ${If} $TgtRtArch != ""
+    Call ArchNote
+    StrCpy $1 $U_out
+  ${EndIf}
   StrCpy $0 0
   ${If} $PlanWarn != ""
     ${Sum} ""
@@ -4025,7 +4042,7 @@ Function WriteSummary
   ; cannot hold: nobody can be named for this file, or the build is not
   ; this computer's architecture.
   ${If} $SignedBy == ""
-  ${OrIf} $TgtRtArch != ""
+  ${OrIf} $1 != ""
     ${If} $0 = 0
       ${Sum} ""
       ${Sum} "BEFORE YOU SAY YES"
@@ -4035,11 +4052,8 @@ Function WriteSummary
   ${If} $SignedBy == ""
     ${Sum} "!  This installer is not signed, so Windows cannot tell you who made it."
   ${EndIf}
-  ${If} $TgtRtArch != ""
-    Call ArchNote
-    ${If} $U_out != ""
-      ${Sum} "!  The runtime being installed is not this machine's architecture$U_out"
-    ${EndIf}
+  ${If} $1 != ""
+    ${Sum} "!  The runtime being installed is not this machine's architecture$1"
   ${EndIf}
 
   ${Sum} ""
@@ -4367,9 +4381,18 @@ Function WriteSummary
   ${Else}
     ${Sum} "  Signed by:  nobody (this installer is unsigned)"
   ${EndIf}
+  ; What mode A adds is not who signed this -- the line above already
+  ; says that, read from the certificate in the file -- but that this
+  ; copy carries no settings of its own, so there is nothing for the
+  ; signature to have covered beyond the program itself. Naming a
+  ; signer here as well would say it twice, and hard-coding the name
+  ; ("signed by TiddlyInstall") made the screen state two different
+  ; names for one signature whenever the certificate was not ours,
+  ; which is what every developer sees with the test certificate
+  ; (2026-09-21). The trust screen never asserts a signer it has not
+  ; read from the file.
   ${If} $ModeA = 1
-    ${Sum} "  Mode:       signed by TiddlyInstall (mode A): installs only what its file name names, from ${TI_BACKEND}."
-    ${Sum} "              That signature is ours; the program it installs is not."
+    ${Sum} "  Mode:       A (signed, and carrying no settings of its own): it installs only the app its file name names, from ${TI_BACKEND}."
   ${EndIf}
   ${Sum} "  Settings:   $MetaSrc"
   ${Sum} "  Record:     $RecHash"

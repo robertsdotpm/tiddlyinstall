@@ -248,6 +248,25 @@ test('icons in mode C: in the .exe, the pack and the .app', { skip: skip || (!ha
   assert.equal(iz.record, rec);
 });
 
+// base-signed.exe is the mode A base and is a build artifact: until
+// 2026-09-21 nothing produced it, so an engine change rebuilt base.exe
+// and left every mode A installer shipping the engine before it. The
+// build makes it now (installer/windows/build.sh), and this is the gate
+// that says so out loud if it ever falls behind again -- a rebuild that
+// forgets it is silent everywhere else, because a stale signed base is
+// a perfectly valid installer for the wrong engine.
+test('the mode A base is not older than the base it is signed from',
+  { skip: skip || (!haveBases && 'no bases') }, () => {
+    const plain = path.join(BASES, 'windows', 'out', 'base.exe');
+    const signed = path.join(BASES, 'windows', 'out', 'base-signed.exe');
+    if (!fs.existsSync(signed)) return;      // no mode A base here at all
+    const a = fs.statSync(plain).mtimeMs, b = fs.statSync(signed).mtimeMs;
+    assert.ok(b >= a,
+      `base-signed.exe (${new Date(b).toISOString()}) is older than base.exe `
+      + `(${new Date(a).toISOString()}): every mode A installer would carry the previous engine. `
+      + 'Re-run installer/windows/build.sh.');
+  });
+
 test('icons in mode A: in the record, the files untouched', { skip: skip || (!haveBases && 'no bases') }, async (t) => {
   const b = builder(t, null);
   const { res, sha } = await iconJob(b, 'A', png(64));

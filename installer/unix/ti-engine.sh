@@ -1455,8 +1455,14 @@ ti_find_metadata() {
 		[ -n "$opt_plan" ] && given="$given --plan"
 		[ "$opt_unsigned" = 1 ] && given="$given --unsigned-plan"
 		[ -n "$opt_backend" ] && given="$given --backend"
-		[ -n "$given" ] && ti_fail "Our signature is on this installer program, and it covers no settings, so this copy installs only the app its own file name names, from $TI_DEFAULT_BACKEND. It doesn't accept$given. For your own settings use a base nobody has signed, or one you sign yourself (modes B and C)."
-		ti_log "Our signed installer program, with no settings inside: mode A (its file name and the built-in backend only)"
+		# "Our signature" is an assumption this code cannot check: on a
+		# .run mode A is only ever reached through TI_TEST_MODE_A, where
+		# there is no signature at all, and on macOS the signature is
+		# whichever Authority verified. Say what is true of every mode A
+		# copy -- it is signed and carries no settings -- and leave
+		# naming the signer to the review screen, which reads it.
+		[ -n "$given" ] && ti_fail "This installer program is signed and carries no settings of its own, so this copy installs only the app its own file name names, from $TI_DEFAULT_BACKEND. It doesn't accept$given. For your own settings use a base nobody has signed, or one you sign yourself (modes B and C)."
+		ti_log "A signed installer program with no settings inside: mode A (its file name and the built-in backend only)"
 	fi
 	# 1. Command-line options.
 	if [ -n "$opt_record$opt_plan" ]; then
@@ -3457,13 +3463,16 @@ ti_install_main() {
 		printf '  Signed by:  %s%s\n' "$ti_signed_short" "$ti_signed_scope" | ti_wrap 74 14
 		[ -n "$ti_self_sha" ] && printf '              this file has sha256 %s\n' "$ti_self_sha"
 		# Mode A reads as "a signed thing that can be pointed anywhere"
-		# unless it says whose signature it is and what that signature
-		# was ever about (design.md section 6, "What we sign, and the
-		# words for it"). Same two lines, in the same place, as the
-		# Windows engine.
+		# unless it says that this copy carries no settings of its own
+		# (design.md section 6, "What we sign, and the words for it").
+		# What it must NOT do is name a signer: the line above already
+		# does that, read from the file, and naming one here as well
+		# both says it twice and can disagree with it -- "signed by
+		# TiddlyInstall" over a .run, which carries no signature at
+		# all, or over somebody else's certificate. Same row, in the
+		# same place, as the Windows engine.
 		if [ "$TI_MODE_A" = 1 ]; then
-			printf '  Mode:       signed by TiddlyInstall (mode A): installs only what its file name names, from %s\n' "$TI_DEFAULT_BACKEND" | ti_wrap 74 14
-			printf '              That signature is ours; the program it installs is not.\n'
+			printf '  Mode:       A (signed, and carrying no settings of its own): it installs only the app its file name names, from %s\n' "$TI_DEFAULT_BACKEND" | ti_wrap 74 14
 		fi
 		printf '  Settings:   %s\n' "$TI_ORIGIN"
 		printf '  Plan:       %s\n' "$TI_PLAN_FROM"

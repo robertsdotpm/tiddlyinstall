@@ -40,6 +40,17 @@ bad() { printf 'FAIL %s\n' "$1"; fails=$((fails + 1)); }
 # The engine as it was before stale-plan handling (design.md 7.1). It
 # comes from git; TI_OLD_ENGINE_FILE names a copy of it instead, for a
 # machine with no checkout (the Mac).
+#
+# The pin must sit before 8a63e9e (stale plans in the engines,
+# 2026-09-20 17:05) or the case tests nothing, and every such commit is
+# also before the ib -> ti rename (3b4d1ef, 2026-09-21 00:25): the two
+# windows do not overlap, so there is no post-rename commit to move the
+# pin to. That is why the old engine gets its own copies of the record
+# and the plan in the old spelling (prepare and sign_all, "old_magic")
+# rather than the pin being moved forward. Only the first token of each
+# file differs, so the cases still test one thing: a plan carrying
+# `signed`, `maxage` and a nonce, read by an engine built before any of
+# them existed.
 OLD_REV=${TI_OLD_ENGINE_REV:-0bc46a6}
 NONCE=0123456789abcdef0123456789abcdef
 OTHER=fedcba9876543210fedcba9876543210
@@ -128,12 +139,33 @@ prepare() {
 	# pin forward nor leaving it where it is silently skips these cases.
 	elif git -C "$here/../.." show "$OLD_REV:bases/unix/ti-engine.sh" > "$D/old-engine.raw" 2>/dev/null; then
 		got_old=1
+	# ...and before the rename it was bases/unix/ib-engine.sh. All three
+	# spellings are tried because the pin has to sit *before* stale-plan
+	# handling (8a63e9e, 2026-09-20 17:05) and there is no commit after
+	# the ib -> ti rename (3b4d1ef, 2026-09-21 00:25) that also predates
+	# it: the two windows do not overlap, so the pin is necessarily an
+	# old-spelling engine and will stay one. Missing it is a failure
+	# below, not a note.
+	elif git -C "$here/../.." show "$OLD_REV:bases/unix/ib-engine.sh" > "$D/old-engine.raw" 2>/dev/null; then
+		got_old=1
 	fi
 	if [ -n "$got_old" ]; then
 		key=$(tr -d ' \r\n' < "$D/key/plan-signing-key.pub")
 		keyid=$(printf '%s' "$key" | openssl base64 -d -A | openssl dgst -sha256 | awk '{ print substr($NF, 1, 16) }')
+		# Both spellings of the baked lines: before the rename they were
+		# IB_PLAN_PUBKEY / IB_PLAN_KEYID. Filling neither leaves the old
+		# engine with no key, which refuses every plan -- a "failure"
+		# that would say nothing about what these cases are for.
 		sed -e "s|^TI_PLAN_PUBKEY=\$|TI_PLAN_PUBKEY=$key|" -e "s|^TI_PLAN_KEYID=\$|TI_PLAN_KEYID=$keyid|" \
+			-e "s|^IB_PLAN_PUBKEY=\$|IB_PLAN_PUBKEY=$key|" -e "s|^IB_PLAN_KEYID=\$|IB_PLAN_KEYID=$keyid|" \
 			"$D/old-engine.raw" > "$D/old-engine.sh"
+		grep -q '^\(TI\|IB\)_PLAN_PUBKEY=.\+' "$D/old-engine.sh" ||
+			bad "old engine: no TI_/IB_PLAN_PUBKEY line was filled in; it would refuse every plan"
+		# Which spelling of the format it reads. The pin is a pre-rename
+		# engine today and may not be forever, so this follows the file
+		# rather than the date.
+		old_magic=ti
+		grep -q 'ib-record' "$D/old-engine.raw" && old_magic=ib
 		chmod 755 "$D/old-engine.sh"
 		old_engine=$D/old-engine.sh
 		if [ "$MACOS" = 1 ]; then
@@ -145,7 +177,12 @@ prepare() {
 			old_engine=$D/old.app/Contents/MacOS/install
 		fi
 	else
-		printf 'note: no %s in git and no TI_OLD_ENGINE_FILE; the old-engine cases are skipped\n' "$OLD_REV"
+		# Not a note. These two cases went quiet for a day because the
+		# fallback path was never updated past the rename, and a skip
+		# that reads like a limitation is indistinguishable from a
+		# clean pass. If the old engine cannot be got, the suite fails
+		# and says what to do about it.
+		bad "old engine: no $OLD_REV:{installer/unix/ti-engine.sh,bases/unix/{ti,ib}-engine.sh} in git and no TI_OLD_ENGINE_FILE; the old-engine cases cannot run. Set TI_OLD_ENGINE_REV to a commit before 8a63e9e, or TI_OLD_ENGINE_FILE to a copy of that engine."
 	fi
 	printf '#!/bin/sh\necho hello\n' > "$D/rt/pkg/bin/hello"
 	chmod 755 "$D/rt/pkg/bin/hello"
@@ -162,10 +199,24 @@ prepare() {
 	# freshness work is reached.
 	when_os=linux
 	[ "$MACOS" = 1 ] && when_os=macos
+	# The old engine's own copy of the record, in whichever spelling it
+	# reads (old_magic, set above). Everything but the first token is
+	# the same bytes, so its cases still test "a plan with the new
+	# fields on an engine built before them" and nothing else. Its hash
+	# differs from $h because the bytes do, so it is served separately.
+	old_magic=${old_magic:-ti}
+	sed "1s/^ti-record/$old_magic-record/" "$D/record.txt" > "$D/old-record.txt"
+	oldh=$(python3 "$here/append_meta.py" hash "$D/old-record.txt")
+	echo "$oldh" > "$D/oldhash"
+	cp "$D/old-record.txt" "$D/srv/api/records/$oldh"
 	# $1 the header lines to add, $2 the request lines to add.
+	# $plan_magic and $plan_rec pick the spelling and the record hash,
+	# so the same plan can be written for either engine.
+	plan_magic=ti-plan
+	plan_rec=$h
 	plan() {
-		printf 'ti-plan\t1\n%srecord\t%s\nname\tFresh\nproject\thello\nappid\tfreshtestaaa\nconsole\t1\nmenu\t0\ndesktop\t0\nroot\tuser\nrootname\tti\n%s\n[target]\nwhen\t%s\t0\t9999\t*\nruntime\tnone\t1\nfile\trt\trt.tar.gz\t%s\t%s\nurl\t@BACKEND@/f/rt.tar.gz\nstep\tunpack\ttar.gz\t{dir}\t1\nexe\tbin/hello\nlaunch\t"{runtime}"\n' \
-			"$2" "$h" "$1" "$when_os" "$sha" "$size"
+		printf '%s\t1\n%srecord\t%s\nname\tFresh\nproject\thello\nappid\tfreshtestaaa\nconsole\t1\nmenu\t0\ndesktop\t0\nroot\tuser\nrootname\tti\n%s\n[target]\nwhen\t%s\t0\t9999\t*\nruntime\tnone\t1\nfile\trt\trt.tar.gz\t%s\t%s\nurl\t@BACKEND@/f/rt.tar.gz\nstep\tunpack\ttar.gz\t{dir}\t1\nexe\tbin/hello\nlaunch\t"{runtime}"\n' \
+			"$plan_magic" "$2" "$plan_rec" "$1" "$when_os" "$sha" "$size"
 	}
 }
 
@@ -174,7 +225,10 @@ sign_all() {
 	D=$1 B=$2
 	mk() { # name header-lines request-lines
 		plan "$2" "$3" | sed "s|@BACKEND@|$B|" > "$D/$1.unsigned"
-		plansig -data "$D/key" sign "$D/$1.unsigned" > "$D/$1.txt" || exit 1
+		# -kind follows $plan_magic: the signature is over the whole
+		# file, first token included, so an old-spelling plan has to be
+		# signed as one rather than rewritten afterwards.
+		plansig -data "$D/key" -kind "$plan_magic" sign "$D/$1.unsigned" > "$D/$1.txt" || exit 1
 	}
 	mk fresh "" ""
 	mk nonce-ok "" "request$(printf '\t')nonce$(printf '\t')$NONCE
@@ -190,6 +244,17 @@ maxage$(printf '\t')7776000
 	mk new-plan "signed$(printf '\t')$(ago 1)
 maxage$(printf '\t')7776000
 " ""
+	# The same two plans the old-engine cases use, in that engine's
+	# spelling and naming its copy of the record.
+	plan_magic=$old_magic-plan
+	plan_rec=$oldh
+	mk old-plan-for-old "signed$(printf '\t')$(ago 400)
+maxage$(printf '\t')7776000
+" ""
+	mk nonce-ok-for-old "" "request$(printf '\t')nonce$(printf '\t')$NONCE
+"
+	plan_magic=ti-plan
+	plan_rec=$h
 	# The revocation lists.
 	iss=$(date -u +%Y-%m-%dT%H:00:00Z)
 	rl() { # name serial entries...
@@ -281,9 +346,9 @@ cases() {
 	if [ -n "$old_engine" ]; then
 		# The engine from before this change, given a plan with `signed`,
 		# `maxage` and a `request nonce` line: unknown keys, so it installs.
-		one old-engine-new-plan 0 "Fresh" "$old_engine" --record="$D/record.txt" --plan="$D/old-plan.txt" --backend="$B"
-		cp "$D/nonce-ok.txt" "$D/srv/api/plan/$(cat "$D/hash")"
-		one old-engine-nonce-plan 0 "Fresh" "$old_engine" --record="$D/record.txt" --backend="$B"
+		one old-engine-new-plan 0 "Fresh" "$old_engine" --record="$D/old-record.txt" --plan="$D/old-plan-for-old.txt" --backend="$B"
+		cp "$D/nonce-ok-for-old.txt" "$D/srv/api/plan/$(cat "$D/oldhash")"
+		one old-engine-nonce-plan 0 "Fresh" "$old_engine" --record="$D/old-record.txt" --backend="$B"
 		cp "$D/fresh.txt" "$D/srv/api/plan/$(cat "$D/hash")"
 	fi
 	one new-engine-old-plan 0 "Fresh" "$(eng base)" --record="$D/record.txt" --plan="$D/fresh.txt" --backend="$B"
