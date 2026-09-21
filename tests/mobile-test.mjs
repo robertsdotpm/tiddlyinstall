@@ -16,7 +16,7 @@
 //   - an unsigned installer builds from the New installer form, and its
 //     download links wrap their SHA-256s;
 //   - the installer editor opens an .exe and a .run with their Sign panels;
-//   - the Sources editor stacks its runtimes above the content, its release
+//   - the Registry editor stacks its runtimes above the content, its release
 //     list scrolls by touch and draws the rows it scrolls to, and a release
 //     opens in a form;
 //   - the folder picker is hidden where phones have none, quietly: it raises
@@ -441,7 +441,7 @@ async function editor(w, shots) {
 
 async function sources(w, shots) {
   await go('#runtimes');
-  await waitFor(`!document.getElementById('rt-app').hidden && document.querySelectorAll('#rt-rel-list .rt-vrow').length > 3`, 'the Sources editor');
+  await waitFor(`!document.getElementById('rt-app').hidden && document.querySelectorAll('#rt-rel-list .rt-vrow').length > 3`, 'the Registry editor');
   const lay = await B.js(`(() => { const a = document.getElementById('rt-runtimes').getBoundingClientRect(), b = document.querySelector('.rt-main').getBoundingClientRect(); return [Math.round(a.bottom), Math.round(b.top), Math.round(a.right), Math.round(b.left)]; })()`);
   if (w < 800) ok(lay[0] <= lay[1] + 1, `${B.name} ${w}px sources: the runtimes are above the content`, JSON.stringify(lay));
   await audit(w, 'sources', { shots });
@@ -685,7 +685,7 @@ async function desktop(dir) {
   await waitFor(`!document.getElementById('sign-exe').hidden`, 'the Windows sign panel');
   await snap('edit-exe');
   await go('#runtimes');
-  await waitFor(`!document.getElementById('rt-app').hidden && document.querySelectorAll('#rt-rel-list .rt-vrow').length > 3`, 'the Sources editor');
+  await waitFor(`!document.getElementById('rt-app').hidden && document.querySelectorAll('#rt-rel-list .rt-vrow').length > 3`, 'the Registry editor');
   await snap('sources');
   await B.js(`document.querySelector('.where-chip').click()`);
   await snap('settings');

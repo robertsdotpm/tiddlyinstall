@@ -1433,7 +1433,7 @@ html.ti-local .online-only { display: none !important; }
 .overlay-ask .actions { margin-top: 10px; }
 
 /* ==========================================================================
-   16. Sources - the catalogue editor (runtimes.html)
+   16. Registry - the catalogue editor (runtimes.html)
    ========================================================================== */
 
 .mono { font-family: var(--mono); font-size: 0.9em; }

@@ -27,7 +27,7 @@ function paint() {
     box.replaceChildren();
     return;
   }
-  const link = el('a', { href: pageUrl('runtimes.html'), text: 'Sources page' });
+  const link = el('a', { href: pageUrl('runtimes.html'), text: 'Registry page' });
   // (replaceChildren would write a "null" of its own, so they are filtered.)
   const kids = [
     el('p', { class: 'overlay-ask-head' },

@@ -278,7 +278,7 @@ function paintCatalog() {
       }
     }
     table.tBodies[0].innerHTML = rows.join('');
-    hint.textContent = (apiLocal() ? 'From this page\'s catalogue' + (catalog.changed ? ', with your changes from the Sources page' : '') : 'From the build server\'s catalogue') +
+    hint.textContent = (apiLocal() ? 'From this page\'s catalogue' + (catalog.changed ? ', with your changes from the Registry page' : '') : 'From the build server\'s catalogue') +
       ': one row per install plan it makes for ' + (entry.label || rt) + ', by OS version and architecture. ' +
       'The installer carries them all and picks on the machine.';
     panel.classList.remove('py-panel');   // show it for every language with data
@@ -301,8 +301,8 @@ function paintCatalog() {
 //
 //   a GitHub repo, a URL, an upload -> we don't know at all: prominent,
 //     with why it matters;
-//   a package from a registry -> the registry names the program it
-//     installs and {bin} comes from that: present, quieter;
+//   a package from a package registry -> the package registry names the
+//     program it installs and {bin} comes from that: present, quieter;
 //   written here -> we wrote the template, so we know the file it starts:
 //     present, quieter, and the field shows the template's own command.
 //
@@ -411,13 +411,13 @@ function paintLaunch() {
   syncLaunchDefault();
   if (!launchField) return;
   const kind = sourceKindNow();
-  // Quiet where the default comes from something we can see: a registry's
-  // metadata, or a template we wrote.
+  // Quiet where the default comes from something we can see: a package
+  // registry's metadata, or a template we wrote.
   const known = kind === 'package' || kind === 'write';
   launchField.classList.toggle('launch-quiet', known);
   if (launchWhyRepo) {
     if (kind === 'package') {
-      launchWhyRepo.textContent = 'For a package from a registry the default is usually right: the registry says which program the package ' +
+      launchWhyRepo.textContent = 'For a package from a package registry the default is usually right: the package registry says which program the package ' +
         'installs, and that is what this runs. Change it only if your package starts some other way.';
       launchWhyRepo.classList.add('muted');
     } else {
@@ -837,7 +837,7 @@ function fetchCatalog() {
 }
 fetchCatalog();
 // The table follows the catalogue: another server, or changes made on the
-// Sources page (used when the page builds installers itself).
+// Registry page (used when the page builds installers itself).
 window.addEventListener('ti-api-change', () => { fetchCatalog(); paintOverlayNote(); });
 window.addEventListener('ti-overlay-change', () => { if (apiLocal()) fetchCatalog(); paintOverlayNote(); });
 
@@ -857,7 +857,7 @@ function paintOverlayNote() {
   if (!n) return;
   const link = document.createElement('a');
   link.href = pageUrl('runtimes.html');
-  link.textContent = 'Sources page';
+  link.textContent = 'Registry page';
   const what = n + ' catalogue change' + (n === 1 ? '' : 's') + ' made in this browser (';
   if (apiLocal()) {
     overlayNote.replaceChildren('Builds use ' + what, link, '). The installers\' review screens show the plan they carry.');

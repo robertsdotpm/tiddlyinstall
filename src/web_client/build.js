@@ -252,7 +252,7 @@ function paintCatalog(job) {
   const c = job.result && job.result.catalog;
   if (c && c.changed) {
     const n = Number(c.changes) || 0;
-    b.textContent = 'Made with a changed catalogue: ' + n + ' change' + (n === 1 ? '' : 's') + ' made in this browser on the Sources page. ' +
+    b.textContent = 'Made with a changed catalogue: ' + n + ' change' + (n === 1 ? '' : 's') + ' made in this browser on the Registry page. ' +
       'What these installers download and run comes from the plan inside them, and their review screens show it in full before installing.';
     b.hidden = false;
   } else b.hidden = true;

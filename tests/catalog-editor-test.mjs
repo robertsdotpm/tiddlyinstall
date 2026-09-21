@@ -202,7 +202,7 @@ try {
   // installed on at all. It is stated per OS, and 64-bit with it, so
   // neither is read off an empty filter.
   const pyArch = await js(`document.getElementById('rt-arch').textContent`);
-  ok(/^32-bit builds: /.test(pyArch), 'the Sources page states 32-bit availability for the open runtime', pyArch);
+  ok(/^32-bit builds: /.test(pyArch), 'the Registry page states 32-bit availability for the open runtime', pyArch);
   ok(/Windows: yes/.test(pyArch), 'Python has 32-bit Windows builds, and the page says so', pyArch);
   ok(/macOS: no \(Apple dropped 32-bit support in macOS 10\.15 \(2019\)\)/.test(pyArch),
     'macOS 32-bit is absent with its reason, not simply missing', pyArch);
@@ -372,7 +372,7 @@ try {
   await click('.overlay-ask-no');
   await sleep(300);
   ok(await js(`document.querySelector('.overlay-ask').hidden`) && /set aside for this session/.test(await js(`document.getElementById('rt-page-note').textContent`)),
-    '"Not now" sets them aside, and the Sources page says so', await js(`document.getElementById('rt-page-note').textContent`));
+    '"Not now" sets them aside, and the Registry page says so', await js(`document.getElementById('rt-page-note').textContent`));
   await reopen(PAGE);
   ok(await js(`document.querySelector('.overlay-ask').hidden`) && /^No changes/.test(await count()),
     'the answer is remembered for the session: no second question', await count());

@@ -298,7 +298,7 @@ process.exit(t.failed ? 1 : 0);
 // The indicator is now the only way into the settings panel, and the panel
 // is the only way to change or clear the build server. So it has to open
 // from every page, not just the one that happened to be open -- including
-// Sources, which had no header controls at all as a separate page.
+// Registry, which had no header controls at all as a separate page.
 async function checkPanelReachable(sections) {
   ok(await js(`!document.querySelector('.settings-btn') && !document.querySelector('.api-ctl-edit')`),
     'the settings spanner is gone');
