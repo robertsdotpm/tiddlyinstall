@@ -3767,6 +3767,10 @@ TiddlyInstall (Linux and macOS)
                       says it is installed)
   --backend=URL       where to fetch records and plans
   --uninstall         remove the app this uninstall.sh belongs to
+
+With no arguments and a screen to draw on, the review is shown in a
+window; with any argument it is printed here instead. TI_NO_GUI=1
+forces the text either way.
 EOF
 }
 
