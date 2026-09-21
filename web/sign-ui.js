@@ -221,7 +221,7 @@ function paintService() {
   const c = contactLink();
   html += '<p class="small muted">If this provider has changed and the page can no longer talk to it, please tell us' +
     (c ? ': <a href="' + esc(c.href) + '" rel="noopener noreferrer">' + esc(c.text) + '</a>.'
-       : ' &mdash; <em>[contact address not yet set: see docs/browser-signing.md]</em>.') +
+       : ' - <em>[contact address not yet set: see docs/browser-signing.md]</em>.') +
     (d.docs ? ' <a href="' + esc(d.docs) + '" target="_blank" rel="noopener noreferrer">Their documentation</a>.' : '') + '</p>';
   $('svc-about').innerHTML = html;
 

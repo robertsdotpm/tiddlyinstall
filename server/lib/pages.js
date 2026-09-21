@@ -115,7 +115,7 @@ export function classicPage(runtimes) {
     box('target_windows', 'Windows', true) + box('target_linux', 'Linux', true) + box('target_macos', 'macOS', true) +
     '</fieldset>\n' +
     '<fieldset><legend>Signing</legend>\n' +
-    '<p class="hint">A signature here goes on the installer program &mdash; the one we wrote, the same in every installer built here &mdash; ' +
+    '<p class="hint">A signature here goes on the installer program - the one we wrote, the same in every installer built here - ' +
     'and never on the software it installs. It says that program is what it claims to be and unaltered; it says nothing about your app.</p>\n' +
     radio('mode', 'ours', 'Signed by TiddlyInstall (not yet)', false,
       'Not available in this prototype: it needs a code-signing certificate, which we don\'t have yet.', true) +

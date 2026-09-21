@@ -3,7 +3,10 @@
 // This parses every script in dist/index.html as an ES2017 classic script
 // (acorn, ecmaVersion 2017, which also rejects newer regular expression
 // syntax) and fails on anything newer. It also looks for built-ins newer
-// than that floor which web/polyfills.js does not add.
+// than that floor which web/polyfills.js does not add, and -- since it
+// already has the built page split into markup and scripts -- for em and
+// en dashes, which the operator does not want and which have now been
+// removed three times.
 //
 //   node tests/es2017-test.mjs [dist/index.html]
 //
@@ -87,6 +90,41 @@ for (const [name, s] of [['main', main], ['resedit', vendor]]) {
 const bad = found.filter(([what, where]) => !ALLOWED.some(([w, s]) => w === what && s === where));
 ok(!bad.length, 'no built-ins newer than the floor outside feature tests and web/polyfills.js',
   bad.slice(0, 20).map(([w, s, l]) => w + ' (' + s + ' line ' + l + ')').join(', '));
+
+/* ---------- em and en dashes ---------- */
+
+// The operator does not want them on the page, and they have been removed
+// three times: first the literal characters, then the &mdash; entities a
+// grep for the characters never saw. So this looks for every spelling of
+// both, on the built page rather than in the sources, which is the one
+// place they all end up whichever way they were written.
+//
+// The markup is the page with its <script> elements taken out: the data
+// blocks are the runtime catalogue and the base installers, and what is
+// in those is not ours to rewrite. The executable scripts are checked
+// too, since a dash in a string (web/sign-ui.js had one) reaches the page
+// just the same.
+const DASHES = [
+  ['\u2014', 'em dash'], ['\u2013', 'en dash'],
+  ['&mdash;', '&mdash;'], ['&ndash;', '&ndash;'],
+  ['&#8212;', '&#8212;'], ['&#8211;', '&#8211;'],
+  ['&#x2014;', '&#x2014;'], ['&#x2013;', '&#x2013;'],
+  ['&#X2014;', '&#X2014;'], ['&#X2013;', '&#X2013;']
+];
+function dashesIn(where, text) {
+  const out = [];
+  for (const [needle, name] of DASHES) {
+    for (let i = text.indexOf(needle); i >= 0; i = text.indexOf(needle, i + 1)) {
+      out.push(where + ' ' + name + ': ...' + text.slice(Math.max(0, i - 45), i + needle.length + 25).replace(/\s+/g, ' ') + '...');
+    }
+  }
+  return out;
+}
+const markup = html.replace(/<script(\s[^>]*)?>[\s\S]*?<\/script>/gi, '');
+const dashes = dashesIn('markup', markup);
+for (const s of scripts) dashes.push(...dashesIn('script at line ' + s.line, s.src));
+ok(!dashes.length, 'no em or en dashes on the page, in any spelling (write a plain "-")',
+  dashes.slice(0, 8).join('\n      ') + (dashes.length > 8 ? '\n      ... and ' + (dashes.length - 8) + ' more' : ''));
 
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed ? 1 : 0);
