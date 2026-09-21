@@ -169,7 +169,7 @@ try {
   }
   // Mode A is refused here, with a clear message.
   const a = await js(`tiLocalApi.request('/api/jobs', { method: 'POST', body: { runtime: 'python', mode: 'A', source: { kind: 'inline' }, files: { 'a/__main__.py': 'x' } } }).then(() => 'accepted', (e) => e.message)`);
-  ok(/build src/build_server/.test(a), 'mode A is refused offline', a);
+  ok(/build server/.test(a), 'mode A is refused offline', a);
   // GitHub sources used to be refused here for want of a build server.
   // They are not any more (design.md 11.0, src/shared/github.js): what a
   // GitHub source needs is a commit id and an install rule, and neither
@@ -194,7 +194,7 @@ try {
   })()`);
   ok(/saved copy/.test(ghRef), 'from disk, a GitHub repo at its latest commit is refused because the page contacts nothing', ghRef);
   ok(/Install command/.test(ghRef) && /commit id/.test(ghRef), 'and it names the two fields that make asking GitHub unnecessary', ghRef);
-  ok(!/needs the build src/build_server/.test(ghRef), 'and never says it needs a build server, because it does not', ghRef);
+  ok(!/needs the build server/.test(ghRef), 'and never says it needs a build server, because it does not', ghRef);
 
   // And with those two fields, the same page builds a real GitHub
   // installer with no build server and no network at all.

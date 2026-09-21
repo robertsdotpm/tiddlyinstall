@@ -148,7 +148,7 @@ try {
       f.querySelector('button[type="submit"]').click();
       await new Promise((r) => setTimeout(r, 1500));
       return f.querySelector('.form-error').textContent; })()`);
-    ok(/need the source on the build src/build_server/.test(refused), 'served: mode A with a local source says why not', refused);
+    ok(/need the source on the build server/.test(refused), 'served: mode A with a local source says why not', refused);
   }
   ok(errors.length === 0, 'no page errors', errors.join(' | '));
 } catch (e) {

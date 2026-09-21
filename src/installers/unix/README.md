@@ -2,7 +2,7 @@
 
 One POSIX `sh` engine, [`ti-engine.sh`](ti-engine.sh), is the whole base
 installer on both systems (docs/plan.md 1.4). It reads the formats in
-[docs/format.md](../../docs/format.md) with `awk`. Nothing in it is
+[docs/format.md](../../../docs/format.md) with `awk`. Nothing in it is
 per-runtime: runtimes and their quirks arrive as plan data. Only platform
 plumbing branches on the OS: the downloader, the SHA-256 tool, the OS
 version, dialogs, and menu entries.
@@ -427,7 +427,7 @@ With a record and no plan, the plan comes from `<backend>/api/plan/<hash>`.
 
 ### Plan signatures
 
-The plan signing key ([format.md](../../docs/format.md), "Plan
+The plan signing key ([format.md](../../../docs/format.md), "Plan
 signature") is baked in at build time: `make_run.sh` and `make_app.sh`
 fill the engine's `TI_PLAN_PUBKEY=` and `TI_PLAN_KEYID=` lines
 (`plankey.sh`) from `TI_PLAN_PUBKEY_FILE`, by default

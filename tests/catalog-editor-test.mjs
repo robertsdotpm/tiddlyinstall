@@ -473,7 +473,7 @@ try {
   /* ---- served by a build server ---- */
   if (SITE) {
     await openEditor(SITE.replace(/\/$/, '') + '/');
-    ok(await js(`/build src/build_server/.test(document.getElementById('rt-mode').textContent) && /don't affect/.test(document.getElementById('rt-mode').textContent)`),
+    ok(await js(`/build server/.test(document.getElementById('rt-mode').textContent) && /don't affect/.test(document.getElementById('rt-mode').textContent)`),
       'served: the editor says the server\'s catalogue is used');
     await shot('editor-served.png');
     await js(`document.getElementById('rt-use-local').click()`);

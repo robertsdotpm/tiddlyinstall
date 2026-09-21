@@ -1,7 +1,7 @@
 # Windows base installer
 
 One NSIS installer for every app and runtime (plan.md 1.1). It reads a
-record and a plan ([docs/format.md](../../docs/format.md)), picks the
+record and a plan ([docs/format.md](../../../docs/format.md)), picks the
 plan's first `[target]` that matches the machine, downloads and checks
 each file, runs the recipe steps, installs the project, and writes the
 launcher, shortcuts, manifest and uninstaller. There is no per-runtime
@@ -33,7 +33,7 @@ python3 append_meta.py --show app.exe             # the footer an exe carries
 `makensis` is `~/.local/bin/makensis` (NSIS 3.09 with its stubs under
 `~/.local/opt/ti-tools`). `out/` is not committed.
 
-**The plan signing key** ([format.md](../../docs/format.md), "Plan
+**The plan signing key** ([format.md](../../../docs/format.md), "Plan
 signature") is built into the base: `build.sh` reads one line of base64
 (the raw 32-byte Ed25519 public key) from `TI_PLAN_PUBKEY_FILE`, by
 default `../../build_server/data/plan-signing-key.pub`, which the server writes

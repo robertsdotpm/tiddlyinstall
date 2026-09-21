@@ -32,7 +32,7 @@ import { resolve } from '../src/shared/resolve.js';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const RUNTIMES = path.join(process.env.HOME || '', 'projects', 'installer-builder-runtimes');
-const BASES = path.join(REPO, 'installer');
+const BASES = path.join(REPO, 'src', 'installers');
 const FIXED = new Date('2026-09-21T00:00:00Z');
 const COMMIT = 'dae7ef63b4df6eded86637f251fc4e3a06c3b479';
 
@@ -119,7 +119,7 @@ const toMock = (u) => String(u).replace('https://api.github.com', mock.url);
 
 /* ---------- the two sides ---------- */
 
-const cat = loadCatalog({ dir: path.join(RUNTIMES, 'catalog'), policyPath: path.join(REPO, 'server', 'policy.json'), localRoot: '', cachePath: '/dev/null' });
+const cat = loadCatalog({ dir: path.join(RUNTIMES, 'catalog'), policyPath: path.join(REPO, 'src', 'build_server', 'policy.json'), localRoot: '', cachePath: '/dev/null' });
 const BACKEND = 'http://127.0.0.1:1';
 
 // The server's own client, as src/build_server/test/helpers.js shapes it.
@@ -275,8 +275,8 @@ for (const [who, env, want] of [['the page', pageEnv, /this browser's address/],
     v({ source: { kind: 'github', value: 'psf/requests', ref: 'a/../../b' } }));
   ok(v({ source: { kind: 'github', value: 'psf/requests', ref: 'release/1.0' } }) === '(accepted)', 'a ref with a slash in it is fine');
   // And the refusal the page used to give for GitHub is gone.
-  ok(!/needs the build src/build_server/.test(v({})), 'a GitHub source is no longer refused for want of a build server', v({}));
-  ok(/plain URL needs the build src/build_server/.test(v({ source: { kind: 'url', value: 'https://example.com/x.tar.gz' } })),
+  ok(!/needs the build server/.test(v({})), 'a GitHub source is no longer refused for want of a build server', v({}));
+  ok(/plain URL needs the build server/.test(v({ source: { kind: 'url', value: 'https://example.com/x.tar.gz' } })),
     'a plain URL still is', v({ source: { kind: 'url', value: 'https://example.com/x.tar.gz' } }));
 }
 

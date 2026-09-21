@@ -12,7 +12,7 @@
 set -u
 here=$(cd "$(dirname "$0")" && pwd)
 node=${NODE:-$(command -v node || echo "$HOME/.local/node/bin/node")}
-plansig() { "$node" "$here/../../tools/plansig.mjs" "$@"; }
+plansig() { "$node" "$here/../../../tools/plansig.mjs" "$@"; }
 fails=0
 ok() { printf 'ok   %s\n' "$1"; }
 bad() { printf 'FAIL %s\n' "$1"; fails=$((fails + 1)); }

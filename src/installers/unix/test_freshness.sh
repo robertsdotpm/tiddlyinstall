@@ -32,7 +32,7 @@
 set -u
 here=$(cd "$(dirname "$0")" && pwd)
 node=${NODE:-$(command -v node || echo "$HOME/.local/node/bin/node")}
-plansig() { "$node" "$here/../../tools/plansig.mjs" "$@"; }
+plansig() { "$node" "$here/../../../tools/plansig.mjs" "$@"; }
 fails=0
 ok() { printf 'ok   %s\n' "$1"; }
 bad() { printf 'FAIL %s\n' "$1"; fails=$((fails + 1)); }
@@ -41,9 +41,14 @@ bad() { printf 'FAIL %s\n' "$1"; fails=$((fails + 1)); }
 # comes from git; TI_OLD_ENGINE_FILE names a copy of it instead, for a
 # machine with no checkout (the Mac).
 #
-# The pin must sit before 8a63e9e (stale plans in the engines,
+# Every hash below was re-pinned on 2026-09-22, after the history was
+# rewritten to purge prompts/ and every commit changed hash. A pin that
+# does not resolve fails loudly (the `bad` below), which is how this one
+# was noticed; do the same if the history is ever rewritten again.
+#
+# The pin must sit before 25d13cd (stale plans in the engines,
 # 2026-09-20 17:05) or the case tests nothing, and every such commit is
-# also before the ib -> ti rename (3b4d1ef, 2026-09-21 00:25): the two
+# also before the ib -> ti rename (fecccb4, 2026-09-21 00:25): the two
 # windows do not overlap, so there is no post-rename commit to move the
 # pin to. That is why the old engine gets its own copies of the record
 # and the plan in the old spelling (prepare and sign_all, "old_magic")
@@ -51,7 +56,7 @@ bad() { printf 'FAIL %s\n' "$1"; fails=$((fails + 1)); }
 # file differs, so the cases still test one thing: a plan carrying
 # `signed`, `maxage` and a nonce, read by an engine built before any of
 # them existed.
-OLD_REV=${TI_OLD_ENGINE_REV:-0bc46a6}
+OLD_REV=${TI_OLD_ENGINE_REV:-c886007}
 NONCE=0123456789abcdef0123456789abcdef
 OTHER=fedcba9876543210fedcba9876543210
 DAY=86400
@@ -131,22 +136,26 @@ prepare() {
 	got_old=""
 	if [ -n "${TI_OLD_ENGINE_FILE:-}" ]; then
 		cp "$TI_OLD_ENGINE_FILE" "$D/old-engine.raw" && got_old=1
-	elif git -C "$here/../.." show "$OLD_REV:src/installers/unix/ti-engine.sh" > "$D/old-engine.raw" 2>/dev/null; then
+	elif git -C "$here/../../.." show "$OLD_REV:src/installers/unix/ti-engine.sh" > "$D/old-engine.raw" 2>/dev/null; then
 		got_old=1
-	# Before the 2026-09-20 reorganisation the engine was bases/unix/, and
-	# $OLD_REV is deliberately a commit from before it, so the old path is
-	# the one that answers today. Both are tried so that neither moving the
-	# pin forward nor leaving it where it is silently skips these cases.
-	elif git -C "$here/../.." show "$OLD_REV:bases/unix/ti-engine.sh" > "$D/old-engine.raw" 2>/dev/null; then
+	# Between the two reorganisations it was installer/unix/ (2026-09-20
+	# 23:21 to 2026-09-22), and before the first it was bases/unix/.
+	# $OLD_REV is deliberately a commit from before both, so the oldest
+	# path is the one that answers today. All of them are tried so that
+	# neither moving the pin forward nor leaving it where it is silently
+	# skips these cases.
+	elif git -C "$here/../../.." show "$OLD_REV:installer/unix/ti-engine.sh" > "$D/old-engine.raw" 2>/dev/null; then
+		got_old=1
+	elif git -C "$here/../../.." show "$OLD_REV:bases/unix/ti-engine.sh" > "$D/old-engine.raw" 2>/dev/null; then
 		got_old=1
 	# ...and before the rename it was bases/unix/ib-engine.sh. All three
 	# spellings are tried because the pin has to sit *before* stale-plan
-	# handling (8a63e9e, 2026-09-20 17:05) and there is no commit after
-	# the ib -> ti rename (3b4d1ef, 2026-09-21 00:25) that also predates
+	# handling (25d13cd, 2026-09-20 17:05) and there is no commit after
+	# the ib -> ti rename (fecccb4, 2026-09-21 00:25) that also predates
 	# it: the two windows do not overlap, so the pin is necessarily an
 	# old-spelling engine and will stay one. Missing it is a failure
 	# below, not a note.
-	elif git -C "$here/../.." show "$OLD_REV:bases/unix/ib-engine.sh" > "$D/old-engine.raw" 2>/dev/null; then
+	elif git -C "$here/../../.." show "$OLD_REV:bases/unix/ib-engine.sh" > "$D/old-engine.raw" 2>/dev/null; then
 		got_old=1
 	fi
 	if [ -n "$got_old" ]; then
@@ -182,7 +191,7 @@ prepare() {
 		# that reads like a limitation is indistinguishable from a
 		# clean pass. If the old engine cannot be got, the suite fails
 		# and says what to do about it.
-		bad "old engine: no $OLD_REV:{src/installers/unix/ti-engine.sh,bases/unix/{ti,ib}-engine.sh} in git and no TI_OLD_ENGINE_FILE; the old-engine cases cannot run. Set TI_OLD_ENGINE_REV to a commit before 8a63e9e, or TI_OLD_ENGINE_FILE to a copy of that engine."
+		bad "old engine: no $OLD_REV:{src/installers,installer}/unix/ti-engine.sh and no $OLD_REV:bases/unix/{ti,ib}-engine.sh in git, and no TI_OLD_ENGINE_FILE; the old-engine cases cannot run. Set TI_OLD_ENGINE_REV to a commit before 25d13cd, or TI_OLD_ENGINE_FILE to a copy of that engine."
 	fi
 	printf '#!/bin/sh\necho hello\n' > "$D/rt/pkg/bin/hello"
 	chmod 755 "$D/rt/pkg/bin/hello"

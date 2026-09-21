@@ -651,7 +651,7 @@ await run('signing services', async () => {
         const d = SS.describe(s);
         if (!d.credentials || !d.evidence || !d.untested) continue;
         if (s.where === 'browser' && !/stay in this browser/.test(d.credentials)) continue;
-        if (s.where === 'server' && !/pass through the build src/build_server/.test(d.credentials)) continue;
+        if (s.where === 'server' && !/pass through the build server/.test(d.credentials)) continue;
         if (s.where === 'paste' && !/Nothing secret is typed/.test(d.credentials)) continue;
         said++;
       }
