@@ -1512,7 +1512,7 @@ Function FindMetadata
   ${EndIf}
   ${If} $1 != ""
   ${AndIf} $ModeA = 1
-    ${FailWith} "This installer is signed by $SignedBy and only installs the app its file name names, from ${TI_BACKEND}. It doesn't accept $1. For your own settings use an unsigned base or one you sign yourself (modes B and C)."
+    ${FailWith} "$SignedBy's signature is on this installer program, and it covers no settings, so this copy installs only the app its own file name names, from ${TI_BACKEND}. It doesn't accept $1. For your own settings use a base nobody has signed, or one you sign yourself (modes B and C)."
     Return
   ${EndIf}
   ${If} $1 == ""
@@ -1561,7 +1561,7 @@ Function FindMetadata
   ; 3. install.txt next to the installer (not in mode A)
   ${If} ${FileExists} "$EXEDIR\install.txt"
     ${If} $ModeA = 1
-      ${Log} "Ignoring $EXEDIR\install.txt: a signed installer only uses its file name."
+      ${Log} "Ignoring $EXEDIR\install.txt: an installer we signed takes its settings only from its file name."
     ${Else}
       StrCpy $RecFile "$EXEDIR\install.txt"
       StrCpy $MetaSrc "install.txt next to the installer"
@@ -2669,7 +2669,7 @@ Function Usage
 /unsigned-plan$\taccept an unsigned /plan= file$\r$\n\
 /backend=URL$\twhere to fetch records and plans$\r$\n\
 /reinstall$\tinstall again even if this app, with these same settings, is already installed. Otherwise running the installer again starts the app (with /S it only says it is installed)$\r$\n$\r$\n\
-A signed installer with no settings of its own takes none of /record=, /plan=, /unsigned-plan and /backend=." /SD IDOK
+An installer signed by TiddlyInstall, with no settings of its own, takes none of /record=, /plan=, /unsigned-plan and /backend=: our signature is on this program, and it must not be read as covering settings someone else supplies." /SD IDOK
   SetErrorLevel 0
   Quit
 FunctionEnd

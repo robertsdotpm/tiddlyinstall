@@ -1455,8 +1455,8 @@ ti_find_metadata() {
 		[ -n "$opt_plan" ] && given="$given --plan"
 		[ "$opt_unsigned" = 1 ] && given="$given --unsigned-plan"
 		[ -n "$opt_backend" ] && given="$given --backend"
-		[ -n "$given" ] && ti_fail "This installer is signed and only installs the app its name names, from $TI_DEFAULT_BACKEND. It doesn't accept$given. For your own settings use an unsigned base or one you sign yourself (modes B and C)."
-		ti_log "Signed base with no settings inside: mode A (its name and the built-in backend only)"
+		[ -n "$given" ] && ti_fail "Our signature is on this installer program, and it covers no settings, so this copy installs only the app its own file name names, from $TI_DEFAULT_BACKEND. It doesn't accept$given. For your own settings use a base nobody has signed, or one you sign yourself (modes B and C)."
+		ti_log "Our signed installer program, with no settings inside: mode A (its file name and the built-in backend only)"
 	fi
 	# 1. Command-line options.
 	if [ -n "$opt_record$opt_plan" ]; then
@@ -1473,7 +1473,7 @@ ti_find_metadata() {
 	# 3. install.txt next to the installer (a record, or a plan: a plan
 	# there is treated like --plan). Not in mode A.
 	if [ -f "$TI_HOME_DIR/install.txt" ] && [ "$TI_MODE_A" = 1 ]; then
-		ti_log "Ignoring $TI_HOME_DIR/install.txt: a signed installer only uses its name."
+		ti_log "Ignoring $TI_HOME_DIR/install.txt: an installer we signed takes its settings only from its file name."
 	elif [ -f "$TI_HOME_DIR/install.txt" ]; then
 		case $(sed -n 1p "$TI_HOME_DIR/install.txt") in
 		ti-plan*) TI_PLAN=$TI_HOME_DIR/install.txt TI_PLAN_KIND=cmdline ;;
@@ -3456,8 +3456,16 @@ ti_install_main() {
 		printf '\nWHERE THIS INSTALLER AND ITS SETTINGS CAME FROM\n'
 		printf '  Signed by:  %s%s\n' "$ti_signed_short" "$ti_signed_scope" | ti_wrap 74 14
 		[ -n "$ti_self_sha" ] && printf '              this file has sha256 %s\n' "$ti_self_sha"
+		# Mode A reads as "a signed thing that can be pointed anywhere"
+		# unless it says whose signature it is and what that signature
+		# was ever about (design.md section 6, "What we sign, and the
+		# words for it"). Same two lines, in the same place, as the
+		# Windows engine.
+		if [ "$TI_MODE_A" = 1 ]; then
+			printf '  Mode:       signed by TiddlyInstall (mode A): installs only what its file name names, from %s\n' "$TI_DEFAULT_BACKEND" | ti_wrap 74 14
+			printf '              That signature is ours; the program it installs is not.\n'
+		fi
 		printf '  Settings:   %s\n' "$TI_ORIGIN"
-		[ "$TI_MODE_A" = 1 ] && printf '              mode A: a signed installer; only what its name names, from %s\n' "$TI_DEFAULT_BACKEND"
 		printf '  Plan:       %s\n' "$TI_PLAN_FROM"
 		# Not `$(case ... in x) ... esac)`: the older bash that macOS
 		# ships as /bin/sh closes the command substitution at the first
