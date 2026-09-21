@@ -1,12 +1,23 @@
 // Checks the page's browser check (web/browser-check.js) in headless Chrome:
-// no bar in a modern browser; with features taken away before the page
-// loads, a bar that names the effect and recommends the browsers tested on
-// this OS; its details (features, and the tested machine x browser matrix
-// with the visitor's nearest row marked); dismissing; and plain http, where
-// the page runs on its own cryptography. Features with a stand-in in the
-// page (compression, WebCrypto, :has(), ...) show as "fallback"; ES2017
-// syntax too, where the page's ES5 copy can run instead (checked here by
-// running it); only a browser too old for that copy is told it "can't run".
+// no notice at all in a modern browser; with features taken away before
+// the page loads, the right notice in the right place; its details
+// (features, and the tested machine x browser matrix with the visitor's
+// nearest row marked); dismissing; and plain http.
+//
+// Which notice, and where, is the point of most of this (web/browser-check.js
+// explains the rule): a feature with no stand-in means something cannot be
+// done here, so a bar goes under the header; a stand-in that only costs
+// time gets a line in the footer instead, because "the same installer,
+// more slowly" is not worth the top of every page. Features with a
+// stand-in (compression, WebCrypto, :has(), ...) show as "fallback";
+// ES2017 syntax too, where the page's ES5 copy can run instead (checked
+// here by running it) -- that one is loud anyway, since it changes how the
+// whole page runs. Only a browser too old for that copy is told it
+// "can't run".
+//
+// Two things the check must not do, both found on the live site: offer an
+// upgrade to the browser already running, and blame the browser for the
+// page being served over plain http.
 //
 //   node --experimental-websocket tests/browser-check-test.mjs [--page dist/index.html]
 //        [--site http://10.0.1.76:8080] [--shot FILE.png]
@@ -40,8 +51,21 @@ async function open(url, remove) {
   await sleep(300);
   await waitFor(js, `document.readyState === 'complete' && document.documentElement.getAttribute('data-ti-ready') === '1'`, 'the browser check', 60000);
 }
-const barShown = () => js(`!!document.querySelector('.ti-compat-bar:not([hidden])')`);
+const barShown = () => js(`!!document.querySelector('.ti-compat-bar:not([hidden]):not(.ti-compat-quiet)')`);
+const quietShown = () => js(`!!document.querySelector('.ti-compat-bar.ti-compat-quiet:not([hidden])')`);
 const barText = () => js(`(document.querySelector('.ti-compat-bar .ti-compat-text') || {}).textContent || ''`);
+// Where the notice sits, and how wide it is next to the page's other
+// banner: two banners disagreeing about that would be its own bug.
+const noticeBox = () => js(`(() => {
+  const e = document.querySelector('.ti-compat-bar');
+  if (!e) return null;
+  const r = e.getBoundingClientRect(), cs = getComputedStyle(e);
+  const mainEl = document.querySelector('.ti-page:not([hidden]) main') || document.querySelector('main');
+  const main = mainEl.getBoundingClientRect();
+  return { inFooter: !!e.closest('footer'), afterHeader: e.previousElementSibling === document.querySelector('header'),
+    left: Math.round(r.left), right: Math.round(r.right), width: Math.round(r.width),
+    mainLeft: Math.round(main.left), mainRight: Math.round(main.right),
+    bg: cs.backgroundColor, color: cs.color, maxWidth: cs.maxWidth }; })()`);
 const FILE = 'file://' + PAGE;
 
 try {
@@ -65,10 +89,15 @@ try {
     await js(`document.documentElement.getAttribute('data-ti-missing')`));
   const degr = await js(`document.documentElement.getAttribute('data-ti-degraded')`);
   ok(/compress/.test(degr) && /decompress/.test(degr) && /webcrypto/.test(degr), 'they are degraded (fallback)', degr);
-  ok(await barShown() && !await js(`document.querySelector('.ti-compat-bar').classList.contains('ti-too-old')`), 'without them: a "with limits" bar');
+  // Both have a stand-in, so nothing is impossible here: the same
+  // installer, more slowly. That belongs in the footer, not at the top of
+  // every page (web/browser-check.js).
+  ok(!await barShown() && await quietShown(), 'a stand-in that only costs time raises no bar');
+  const box = await noticeBox();
+  ok(box && box.inFooter, 'it is a line in the footer instead', JSON.stringify(box));
   const text = await barText();
-  ok(/own JavaScript/.test(text), 'the bar says the page uses its own JavaScript', text);
-  ok(/Tested on Debian 12 and working: \w/.test(text), 'the bar recommends the browsers tested on the nearest OS (Linux: Debian 12)', text);
+  ok(/own JavaScript/.test(text), 'which says the page uses its own JavaScript', text);
+  ok(/Tested on Debian 12 and working: \w/.test(text), 'and recommends the browsers tested on the nearest OS (Linux: Debian 12)', text);
   await js(`document.querySelector('.ti-compat-more').click()`);
   const rows = await js(`Array.prototype.map.call(document.querySelectorAll('.ti-compat-details table:first-of-type tr'), (r) => r.textContent)`);
   ok(rows.some((r) => /CompressionStream.*~ fallback/.test(r)) && rows.some((r) => /:has\(\).*✓ native/.test(r)), 'details: each feature, native or fallback, and what that means', rows.join(' | '));
@@ -91,6 +120,19 @@ try {
   ok(await js(`document.documentElement.getAttribute('data-ti-missing') === '' && tiCompat.status.syntax === 'fallback'`), 'without ES2017 syntax: the ES5 copy stands in (fallback, nothing missing)',
     await js(`document.documentElement.getAttribute('data-ti-missing') + ' / ' + tiCompat.status.syntax`));
   ok(/copy for older browsers/.test(await barText()) && !await js(`document.querySelector('.ti-compat-bar').classList.contains('ti-too-old')`), 'the bar says it runs the copy for older browsers', await barText());
+  ok(await barShown() && !await quietShown(), 'and it is a bar, not a footer line: running the whole page differently is loud');
+  // Constrained like everything else on the page, .api-banner included.
+  // Wider than the 1240 px the page is held to, or the two coincide and
+  // the check proves nothing.
+  await chrome.cdp('Emulation.setDeviceMetricsOverride', { width: 1600, height: 900, deviceScaleFactor: 1, mobile: false });
+  await sleep(150);
+  const es5box = await noticeBox();
+  ok(es5box && es5box.width < 1600, 'the bar is narrower than the viewport (else this check proves nothing)', JSON.stringify(es5box));
+  ok(es5box && es5box.afterHeader && es5box.left === es5box.mainLeft && es5box.right === es5box.mainRight,
+    'the bar sits under the header and is exactly as wide as the page', JSON.stringify(es5box));
+  ok(es5box && es5box.maxWidth === '1240px', 'with the same max-width as .api-banner', es5box && es5box.maxWidth);
+  await chrome.cdp('Emulation.clearDeviceMetricsOverride');
+  await sleep(150);
   await waitFor(js, `!!(globalThis.tiLocalApi && document.querySelector('.save-ctl'))`, 'the ES5 copy to start', 60000);
   ok(await js(`window.TI_ES5 === true && document.documentElement.classList.contains('ti-local')`), 'the ES5 copy starts the page');
 
@@ -128,11 +170,76 @@ try {
   await open(FILE, 'delete window.OffscreenCanvas;');
   ok(!await barShown(), 'and it stays hidden after a reload, for this browser');
 
+  // The colours are the page's, in whichever theme is on: the bar carries
+  // its own CSS, so a hardcoded light one would only show on a dark site.
+  // (The case above dismissed this exact bar, so forget that first.)
+  await open(FILE);
+  await js(`localStorage.clear()`);
+  await open(FILE, 'delete window.OffscreenCanvas;');
+  ok(await barShown(), 'a bar to read the colours off');
+  const themed = {};
+  for (const theme of ['light', 'dark']) {
+    await js('document.documentElement.setAttribute("data-theme", "' + theme + '")');
+    await sleep(80);
+    themed[theme] = await js(`(() => { const e = document.querySelector('.ti-compat-bar'), cs = getComputedStyle(e);
+      const probe = document.createElement('span'); probe.style.color = 'var(--warn-soft)';
+      document.body.appendChild(probe); const want = getComputedStyle(probe).color; probe.remove();
+      return { bg: cs.backgroundColor, want: want }; })()`);
+  }
+  ok(themed.light.bg === themed.light.want && themed.dark.bg === themed.dark.want,
+    'the bar takes its colours from the page, so it follows the theme', JSON.stringify(themed));
+  ok(themed.light.bg !== themed.dark.bg, 'and they really are different in the two themes', JSON.stringify(themed));
+  await js(`document.documentElement.removeAttribute('data-theme')`);
+
+  // Never offer an upgrade to the browser that is running. Chrome 153 is
+  // what tests/browsers found working on Debian 12, so a visitor already
+  // on Chrome 153 must not be told to get it.
+  const tested = await js(`(JSON.parse(document.getElementById('ti-compat').textContent).results
+    .filter((r) => r[0] === 'debian12' && r[1] === 'chrome')[0] || [])[2]`);
+  ok(tested, 'the page knows which Chrome was tested on Debian 12', tested);
+  const asChrome = (v) => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/' + v + ' Safari/537.36';
+  await chrome.cdp('Emulation.setUserAgentOverride', { userAgent: asChrome(tested) });
+  await open(FILE, 'delete window.OffscreenCanvas; delete Navigator.prototype.userAgentData;');
+  const same = await barText();
+  const gets = await js(`Array.prototype.map.call(document.querySelectorAll('.ti-compat-get a'), (a) => a.textContent).join(', ')`);
+  ok(!/Chrome/.test(same), 'on the very version our tests passed on, Chrome is not among the browsers offered', same);
+  ok(gets && !/Chrome/.test(gets), 'nor among the Get links', gets);
+  ok(/icons must be PNG/.test(same), 'but it still says what is actually wrong', same);
+  // An older Chrome is a different matter: "Chrome 153" is the real advice.
+  await chrome.cdp('Emulation.setUserAgentOverride', { userAgent: asChrome('49.0.2623.112') });
+  await open(FILE, 'delete window.OffscreenCanvas; delete Navigator.prototype.userAgentData;');
+  const older = await barText();
+  ok(new RegExp('Get: Chrome ' + String(tested).split('.')[0]).test(await js(`document.querySelector('.ti-compat-bar').textContent`)),
+    'on an older Chrome it is offered, because there it is an upgrade', older);
+  await chrome.cdp('Emulation.setUserAgentOverride', { userAgent: '' });
+
+  // Not in a secure context: everything degraded follows from that, so the
+  // browser is not the problem and none is suggested.
+  const INSECURE = 'Object.defineProperty(window, "isSecureContext", { get: function () { return false; }, configurable: true });' +
+    'Object.defineProperty(window.crypto, "subtle", { get: function () {} });';
+  await open(FILE, INSECURE);
+  const http = await barText();
+  ok(await js(`window.isSecureContext === false`), 'the rig really did make it an insecure context (else this proves nothing)');
+  ok(!await barShown() && await quietShown(), 'insecure context: no bar at the top of the page');
+  ok(/not on https/.test(http) && /withholds WebCrypto/.test(http), 'it names http, not the browser', http);
+  ok(!/This browser/.test(http) && !/Get: /.test(http) && !await js(`!!document.querySelector('.ti-compat-get')`),
+    'and blames no browser, and offers none', http);
+  ok(/saved to disk/.test(http), 'and says where it does not happen', http);
+  // One degradation that is not about the secure context puts it back to
+  // talking about the browser.
+  await open(FILE, INSECURE + 'delete window.OffscreenCanvas;');
+  const mixed = await barText();
+  ok(/This browser can run TiddlyInstall/.test(mixed) && /icons must be PNG/.test(mixed),
+    'with anything else degraded too, it goes back to reporting the browser', mixed);
+
   // No WebCrypto at a plain-http LAN address: the page runs on its own.
   if (SITE) {
     await open(SITE.replace(/\/$/, '') + '/');
     const s = await barText();
-    ok(/with limits/.test(s) && /own JavaScript/.test(s) && /https, localhost and pages opened from disk/.test(s), 'plain http on a LAN address: it runs, on its own cryptography, and the bar says why', s);
+    ok(await js(`window.isSecureContext === false`), 'a plain-http LAN address is not a secure context');
+    ok(!await barShown() && await quietShown(), 'plain http on a LAN address: a footer line, not a bar');
+    ok(/not on https/.test(s) && /own JavaScript/.test(s) && !/Get: /.test(s),
+      'and it says the page is not on https, and suggests no browser', s);
     // Served by a build server, a browser that can't run the page is sent to that server's simple form.
     await open(SITE.replace(/\/$/, '') + '/', NO_ASYNC + 'window.atob = undefined;');
     const classic = await js(`(document.querySelector('.ti-compat-classic a') || {}).href || ''`);

@@ -12,11 +12,24 @@
 // 1.11); what is left without one is ES2017 syntax, getRandomValues, and the
 // optional folder picking and SVG icons.
 //
-// Shows, when anything isn't native, a slim bar under the header naming
-// the practical effect, and the browsers our tests found work on this OS
-// (tests/browsers/, embedded at build time as <script id="ti-compat">).
+// What it says, and how loudly, follows what the person loses:
+//
+//   - a feature with no stand-in ('missing'): something cannot be done
+//     here, so a bar under the header names it and the browsers our
+//     tests found work on this OS (tests/browsers/, embedded at build
+//     time as <script id="ti-compat">). A required one means the page
+//     can't run at all: a red bar that can't be dismissed.
+//   - a stand-in that only costs time ('fallback'): a line in the footer
+//     with the same Details, and nothing at the top of the page. It is
+//     the same installer, built more slowly. Two fallbacks are loud
+//     anyway ('loud' below), because they cost enough time to change the
+//     answer.
+//   - nothing but WebCrypto, on a page that isn't in a secure context:
+//     the browser is not the problem, http:// is, so it says that and
+//     suggests no browser at all.
+//
 // "Details" lists every feature and the tested machine x browser matrix,
-// with the visitor's nearest row marked. The bar can be dismissed, per
+// with the visitor's nearest row marked. A bar can be dismissed, per
 // browser version, unless the page can't work at all.
 //
 // For the tests: <html data-ti-missing="..."> (required features missing;
@@ -70,7 +83,7 @@
   // the page's stand-in means for the person).
   var FEATURES = [
     { id: 'syntax', name: 'JavaScript of 2017 (async functions)', required: true, effect: 'the page can\'t start',
-      fallback: ES5 ? 'the page runs its copy for older browsers (slower to start)' : null,
+      fallback: ES5 ? 'the page runs its copy for older browsers (slower to start)' : null, loud: true,
       test: function () { return syntax('async function f(a, ...b) { for (const c of a) await c; return class {}; }'); } },
     { id: 'random', name: 'crypto.getRandomValues', required: false, effect: 'can\'t sign installers or make keys (no secure random numbers); building and editing work',
       fallback: w.msCrypto && w.msCrypto.getRandomValues ? 'random numbers come from msCrypto (Internet Explorer\'s name for it)' : null,
@@ -78,7 +91,7 @@
     // IE 10: without it core-js can't add methods to the browser's typed
     // arrays, so the ES5 copy uses core-js's own, in plain JavaScript.
     { id: 'protos', name: 'Object.setPrototypeOf', required: false, effect: 'the page\'s copy for older browsers would be very slow',
-      fallback: 'typed arrays run on the page\'s own JavaScript: a build takes minutes and a lot of memory, and a Node.js one may not finish',
+      fallback: 'typed arrays run on the page\'s own JavaScript: a build takes minutes and a lot of memory, and a Node.js one may not finish', loud: true,
       test: function () { return typeof Object.setPrototypeOf === 'function' || '__proto__' in {}; } },
     { id: 'compress', name: 'CompressionStream (deflate-raw)', required: true, effect: 'can\'t build installers',
       fallback: 'compressing is done by the page\'s own JavaScript (slower)',
@@ -87,8 +100,7 @@
       fallback: 'unpacking is done by the page\'s own JavaScript (slower)',
       test: function () { return typeof w.DecompressionStream === 'function' && construct(w.DecompressionStream, 'deflate-raw') && !!(w.Blob && Blob.prototype.stream); } },
     { id: 'webcrypto', name: 'WebCrypto (crypto.subtle)', required: true, effect: 'can\'t hash, build or sign installers',
-      fallback: 'hashing and signing use the page\'s own JavaScript (slower: a large RSA key can take seconds)' +
-        (w.isSecureContext === false ? '; browsers keep WebCrypto to https, localhost and pages opened from disk' : ''),
+      fallback: 'hashing and signing use the page\'s own JavaScript (slower: a large RSA key can take seconds)', secure: true,
       test: function () { return !!subtle; } },
     { id: 'has', name: 'CSS :has()', required: true, effect: 'the forms can\'t show their parts (the code editor stays hidden)',
       fallback: 'a small script keeps the forms\' sections in step',
@@ -103,10 +115,10 @@
       fallback: 'the page carries its own UTF-8 encoder',
       test: function () { return typeof w.TextEncoder === 'function' && typeof w.TextDecoder === 'function'; } },
     { id: 'ed25519', name: 'WebCrypto Ed25519', required: false, effect: 'can\'t make or use Ed25519 PGP keys',
-      fallback: 'Ed25519 PGP keys use the page\'s own JavaScript',
+      fallback: 'Ed25519 PGP keys use the page\'s own JavaScript', secure: true,
       test: function () { return canImport(hex('d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a'), { name: 'Ed25519' }); } },
     { id: 'ecdsa', name: 'WebCrypto ECDSA P-256', required: false, effect: 'can\'t sign with EC (P-256) certificates',
-      fallback: 'EC certificates sign with the page\'s own JavaScript',
+      fallback: 'EC certificates sign with the page\'s own JavaScript', secure: true,
       test: function () {
         return canImport(hex('04' + '6b17d1f2e12c4247f8bce6e563a440f277037d812deb33a0f4a13945d898c296' +
           '4fe342e2fe1a7f9b8ee7eb4a7c0f9e162bce33576b315ececbb6406837bf51f5'), { name: 'ECDSA', namedCurve: 'P-256' });
@@ -214,6 +226,23 @@
 
   function missing() { return grep(FEATURES, function (f) { return f.required && status[f.id] === 'missing'; }); }
   function degraded() { return grep(FEATURES, function (f) { return status[f.id] === 'missing' || status[f.id] === 'fallback'; }); }
+  // What earns the top of every page. A bar is for what you cannot do
+  // here: a feature with no stand-in ('missing'), required or not. A
+  // fallback only costs time, and time is not worth a bar -- except where
+  // there is enough of it to change the answer, which those two say in
+  // their own words ('loud': the copy for older browsers, and typed
+  // arrays in JavaScript, where a build "may not finish"). Everything
+  // else stays in the details, in data-ti-degraded and in tiCompat.
+  function loud() { return grep(degraded(), function (f) { return status[f.id] === 'missing' || f.loud; }); }
+  // True when everything that is degraded is degraded only because this
+  // page is not in a secure context. Then the browser is not the problem
+  // and there is nothing to suggest: http:// is the problem.
+  function secureOnly() {
+    var deg = degraded();
+    if (w.isSecureContext !== false || !deg.length) return false;
+    for (var i = 0; i < deg.length; i++) if (!deg[i].secure) return false;
+    return true;
+  }
   function names(list) { return each(list, function (f) { return f.name; }).join('; '); }
   function ids(list) { return each(list, function (f) { return f.id; }).join(' '); }
   // Classes on <html> for the stylesheet (web/css/style.css, "Phones and small
@@ -294,6 +323,15 @@
       if (!best[fam]) order.push(fam);
       if (!best[fam] || parseInt(r[2], 10) > parseInt(best[fam][2], 10)) best[fam] = r;
     }
+    // Never offer an upgrade to the browser that is running: on Chrome
+    // 153, "Get: Chrome 153" is noise. It stays only when the tested one
+    // is genuinely newer, which is the real advice on Chrome 49 or IE 11.
+    var mine = browserId(env.browser), myMajor = parseInt(env.version, 10);
+    order = grep(order, function (fam) {
+      if (fam !== mine) return true;
+      var tested = parseInt(best[fam][2], 10);
+      return !!(tested && myMajor && tested > myMajor);
+    });
     return each(order, function (fam) {
       return { id: fam, name: label(c.browsers, fam) + ' ' + best[fam][2].split('.')[0], url: getUrl(fam, best[fam][2]) };
     });
@@ -301,17 +339,54 @@
 
   /* ---------- the bar and its details ---------- */
 
+  // This CSS is carried here, not in web/css/style.css, on purpose: part
+  // of this bar's job is to say "this browser can't run the page", which
+  // has to work when the stylesheet or the module never loaded.
+  //
+  // So every colour is written twice -- a flat light value, then the
+  // site's token -- which is the same shape tools/build_site.py
+  // legacy_css gives the rest of the stylesheet. With the stylesheet
+  // there it follows the theme, dark included; without it, or in a
+  // browser with no custom properties, it is light, which is what those
+  // browsers get everywhere else on the site.
+  //
+  // Width, padding and edges are .api-banner's (web/css/style.css section
+  // 14): constrained to the same 1240 px as the header, main and footer,
+  // background and all, since the site's two banners disagreeing about
+  // how wide a banner is would be its own bug.
   var CSS_TEXT =
-    '.ti-compat-bar{margin:0;padding:8px 16px;border-bottom:1px solid #d9b44a;background:#fff8e1;color:#3d2e00;font:14px/1.4 system-ui,sans-serif}' +
-    '.ti-compat-bar.ti-too-old{border-bottom:2px solid #b3261e;background:#fdecea;color:#410e0b}' +
-    '.ti-compat-bar a{color:#0b4bb3}' +
-    '.ti-compat-bar button{font:inherit;margin-left:8px;padding:1px 8px;cursor:pointer}' +
-    '.ti-compat-bar .ti-compat-details{margin-top:8px;max-height:60vh;overflow:auto;background:#fff;color:#222;padding:8px;border:1px solid #ccc}' +
+    '.ti-compat-bar{max-width:1240px;margin:11px auto 0;padding:11px 15px;' +
+      'border:1px solid #e2e0d8;border:1px solid var(--rule,#e2e0d8);' +
+      'border-left:3px solid #8a5a11;border-left:3px solid var(--warn,#8a5a11);' +
+      'background:#f6efdf;background:var(--warn-soft,#f6efdf);' +
+      'color:#1a1d22;color:var(--text,#1a1d22);' +
+      'font-family:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;font-family:var(--sans,system-ui,sans-serif);' +
+      'font-size:14px;line-height:1.45}' +
+    '.ti-compat-bar.ti-too-old{border-left-color:#a63328;border-left-color:var(--fail,#a63328);' +
+      'background:#f7eae8;background:var(--fail-soft,#f7eae8)}' +
+    '.ti-compat-bar a{color:#1f5d4c;color:var(--accent,#1f5d4c)}' +
+    '.ti-compat-actions{margin-top:7px}' +
+    '.ti-compat-bar button{font:inherit;margin:0 8px 0 0;padding:1px 8px;cursor:pointer;' +
+      'border:1px solid #c6c3b9;border:1px solid var(--rule-strong,#c6c3b9);border-radius:3px;' +
+      'background:transparent;color:#1a1d22;color:var(--text,#1a1d22)}' +
+    '.ti-compat-bar .ti-compat-details{margin-top:8px;max-height:60vh;overflow:auto;padding:8px;' +
+      'background:#ffffff;background:var(--panel,#ffffff);' +
+      'color:#1a1d22;color:var(--text,#1a1d22);' +
+      'border:1px solid #c6c3b9;border:1px solid var(--rule-strong,#c6c3b9)}' +
     '.ti-compat-bar table{border-collapse:collapse;font-size:13px;margin:4px 0 10px}' +
-    '.ti-compat-bar th,.ti-compat-bar td{border:1px solid #ddd;padding:2px 6px;text-align:left;vertical-align:top}' +
-    '.ti-compat-bar tr.ti-you td,.ti-compat-bar tr.ti-you th{background:#e3f2fd}.ti-compat-bar td.ti-you{outline:2px solid #1565c0}' +
-    '@media (max-width:768px),(pointer:coarse){.ti-compat-bar button{min-height:40px;margin:6px 8px 0 0;padding:4px 12px}}' +
-    '.ti-c-native,.ti-c-pass{color:#1b5e20}.ti-c-fallback{color:#8a6d00}.ti-c-missing,.ti-c-fail{color:#b3261e}.ti-c-unsupported{color:#6d4c41}';
+    '.ti-compat-bar th,.ti-compat-bar td{padding:2px 6px;text-align:left;vertical-align:top;' +
+      'border:1px solid #e2e0d8;border:1px solid var(--rule,#e2e0d8)}' +
+    '.ti-compat-bar tr.ti-you td,.ti-compat-bar tr.ti-you th{background:#e9efeb;background:var(--accent-soft,#e9efeb)}' +
+    '.ti-compat-bar td.ti-you{outline:2px solid #1f5d4c;outline:2px solid var(--accent,#1f5d4c)}' +
+    '@media (max-width:768px),(pointer:coarse){.ti-compat-bar button{min-height:40px;padding:4px 12px}}' +
+    '.ti-c-native,.ti-c-pass{color:#1f6b45;color:var(--ok,#1f6b45)}' +
+    '.ti-c-fallback{color:#8a5a11;color:var(--warn,#8a5a11)}' +
+    '.ti-c-missing,.ti-c-fail{color:#a63328;color:var(--fail,#a63328)}' +
+    '.ti-c-unsupported{color:#6d4c41;color:var(--faint,#6d4c41)}' +
+    // The quiet form: no bar, a line in the footer. Same box, so Details
+    // opens exactly as it does on the bar.
+    '.ti-compat-quiet{border:0;border-left:0;background:none;padding:10px 0 0;margin:0;font-size:13px;' +
+      'color:#5c6470;color:var(--muted,#5c6470)}';
 
   function el(tag, attrs, text) {
     var e = doc.createElement(tag);
@@ -329,12 +404,21 @@
   function dismissKey() { return 'ti-compat-dismissed:' + env.browser + ' ' + String(env.version).split('.')[0] + ':' + each(degraded(), function (f) { return f.id + '=' + status[f.id]; }).join(','); }
   function dismissed() { try { return w.localStorage.getItem(dismissKey()) === '1'; } catch (e) { return false; } }
 
-  // The bar's text, and the browsers to suggest ({name, url}).
-  function summary() {
-    var miss = missing(), deg = degraded();
+  // Not a browser's fault: the page is on plain http, so the browser
+  // withholds WebCrypto. Naming the browser here, or offering another
+  // one, would send someone to fix the wrong thing.
+  var HTTP_TEXT = 'This page is not on https, so the browser withholds WebCrypto: hashing and signing use the page\'s own ' +
+    'JavaScript, slower and otherwise the same. An https page, or a copy of this one saved to disk, gets it back.';
+
+  // What to say, and the browsers to suggest ({name, url}). `list` is the
+  // degradations worth saying: the loud ones for the bar, all of them for
+  // the quiet line in the footer.
+  function summary(list) {
+    var miss = missing();
+    if (!miss.length && secureOnly()) return { text: HTTP_TEXT, links: [] };
     var effects = [], seen = {};
-    for (var i = 0; i < deg.length; i++) {
-      var f = deg[i], e = status[f.id] === 'fallback' ? f.fallback : f.effect;
+    for (var i = 0; i < list.length; i++) {
+      var f = list[i], e = status[f.id] === 'fallback' ? f.fallback : f.effect;
       if (!seen[e]) { seen[e] = 1; effects.push(e); }
     }
     var text = miss.length
@@ -431,19 +515,25 @@
     mark();
     if (missing().length) { try { hideHidden(); } catch (e) { /* cosmetic */ } }
     doc.documentElement.setAttribute('data-ti-ready', '1');
-    var deg = degraded(), miss = missing();
+    var deg = degraded(), miss = missing(), say = loud();
     if (!deg.length || (!miss.length && dismissed())) { if (bar) show(bar, false); return; }
+    // Loud goes under the header, where it interrupts. Quiet goes in the
+    // footer: what is only slower here is worth being able to find, not
+    // worth the top of every page.
+    var quiet = !say.length;
     if (!bar) {
       addStyle(CSS_TEXT);
       bar = el('div', { 'class': 'ti-compat-bar', role: miss.length ? 'alert' : 'status' });
+      var footer = doc.getElementsByTagName('footer')[0];
       var header = doc.getElementsByTagName('header')[0];
-      if (header && header.parentNode) header.parentNode.insertBefore(bar, header.nextSibling);
+      if (quiet && footer) footer.appendChild(bar);
+      else if (header && header.parentNode) header.parentNode.insertBefore(bar, header.nextSibling);
       else doc.body.insertBefore(bar, doc.body.firstChild);
     }
     while (bar.firstChild) bar.removeChild(bar.firstChild);
     show(bar, true);
-    bar.className = 'ti-compat-bar' + (miss.length ? ' ti-too-old' : '');
-    var sum = summary();
+    bar.className = 'ti-compat-bar' + (miss.length ? ' ti-too-old' : '') + (quiet ? ' ti-compat-quiet' : '');
+    var sum = summary(quiet ? deg : say);
     bar.appendChild(el('span', { 'class': 'ti-compat-text' }, sum.text));
     if (sum.links.length) {
       var get = el('span', { 'class': 'ti-compat-get' }, ' Get: ');
@@ -451,6 +541,7 @@
         if (i) get.appendChild(doc.createTextNode(', '));
         get.appendChild(el('a', { href: sum.links[i].url, rel: 'noopener noreferrer', target: '_blank' }, sum.links[i].name));
       }
+      get.appendChild(doc.createTextNode('.'));
       bar.appendChild(get);
     }
     var classic = miss.length ? classicUrl() : null;
@@ -460,13 +551,17 @@
       simple.appendChild(doc.createTextNode(', which works in this browser.'));
       bar.appendChild(simple);
     }
+    // On their own line: a 44 px touch target sitting inside a sentence
+    // breaks the paragraph in two wherever the text happens to wrap.
+    var acts = el('div', { 'class': 'ti-compat-actions' });
     var more = el('button', { type: 'button', 'class': 'ti-compat-more', 'aria-expanded': 'false' }, 'Details');
-    bar.appendChild(more);
-    if (!miss.length) {
+    acts.appendChild(more);
+    if (!miss.length && !quiet) {
       var close = el('button', { type: 'button', 'class': 'ti-compat-dismiss' }, 'Dismiss');
       close.onclick = function () { try { w.localStorage.setItem(dismissKey(), '1'); } catch (e) { /* no storage: hide for now */ } show(bar, false); };
-      bar.appendChild(close);
+      acts.appendChild(close);
     }
+    bar.appendChild(acts);
     var box = null;
     more.onclick = function () {
       if (box) { box.parentNode.removeChild(box); box = null; more.setAttribute('aria-expanded', 'false'); return; }
