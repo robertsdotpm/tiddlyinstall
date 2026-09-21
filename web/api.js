@@ -101,6 +101,12 @@ export function buildWhereFixed() {
   return apiLocal() && ONE_FILE && !pageIsHttp;
 }
 
+// This page was opened from disk, not served. A copy saved to someone's
+// disk promises that nothing but a package registry lookup ever leaves
+// it, so the things the page would otherwise ask the internet -- the
+// GitHub API, for one -- are not asked from here (web/local-api.js).
+export function pageFromDisk() { return !pageIsHttp; }
+
 // A job this page built itself (files from the user's computer are, even
 // with a build server) and its record are answered by the page.
 function localPath(path) {
@@ -504,7 +510,8 @@ export function mountApiFooter() {
     '</div>' +
     '<p class="hint">Kept in this browser only, and shareable as <code>?api=</code> on the page URL. ' +
     'A page served over HTTPS can\'t use a plain http:// server.' +
-    (HAS_LOCAL ? ' With no server, this page builds installers itself: modes B and C, code written here or package names.' : '') +
+    (HAS_LOCAL ? ' With no server, this page builds installers itself: modes B and C, from code written here, ' +
+      'files from this computer, a GitHub repository or a package name.' : '') +
     '</p></form></div>';
   // Beside the wordmark, not at the end of the nav: it is a statement
   // about the whole application, and among Home / New installer / ... it

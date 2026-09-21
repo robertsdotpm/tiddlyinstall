@@ -21,9 +21,18 @@
 //   env.registryJSON(tmpl, name, version)  the server's registry lookups:
 //                      cached, public addresses only, Go's messages; throws
 //                      an error with .noPackage for a 404 or 410
-//   env.fetchSource(r) GitHub and URL sources -> {sha256, size, names,
-//                      project}, plus {origin, commit} for GitHub; absent:
-//                      those sources are refused
+//   env.fetchSource(r) URL sources -> {sha256, size, names, project};
+//                      absent: a URL source is refused. GitHub sources do
+//                      not use it: both sides read the repository from the
+//                      API through shared/github.js, so one form gives one
+//                      record wherever it is built
+//   env.githubGet(url, accept)  the GitHub API, when the caller has a
+//                      transport of its own (the server's public-only
+//                      client); default: the browser's fetch
+//   env.githubWho      who the API's 60-an-hour allowance is counted
+//                      against in a rate-limit message: 'page' (this
+//                      browser's own address, the default) or 'server'
+//                      (one address shared by everyone using it)
 //   env.storeSource(sha256, data)  keeps a written (inline) source
 //   env.storeRecord(hash, record)  publishes the record (the server refuses
 //                      a truncated-hash collision)
@@ -53,6 +62,7 @@ import { toBytes, sha256Hex, recordHash, readInstaller, buildInstaller, tarWrite
 import { resolve, resolveFiles, loadRuntimes, hasRuntime, validPackage, packagePolicyFor, packageProject, packageModule, pickBin, jsonField, goQuote, replacer, setRevoked } from './resolve.js';
 import { rasterSource, buildIco, buildIcns, setExeIcon, setMacIcon, checkIconPng } from './icon.js';
 import { OFFLINE_TARGETS, OFFLINE_TARGET_OS } from './form-job.js';
+import { githubRe, commitRe, validRef, parseRepo, browserGet, readRepo, needsApi, archiveUrl, archiveName } from './github.js';
 import { inflate, deflate } from '../web/lib/zlib.js';
 
 const enc = new TextEncoder();
@@ -71,7 +81,9 @@ export class RequestError extends Error {
 const versionRe = /^[A-Za-z0-9.*+!_-]{1,64}$/;
 const projectRe = /^[A-Za-z0-9_.-]{1,64}$/;
 const safeName = /[^a-z0-9_.-]+/g;
-export const githubRe = /^(?:https?:\/\/github\.com\/)?([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+?)(?:\.git)?\/?$/;
+// Kept exported from here: server/lib/jobs.js and the tests have always
+// imported it from the builder. It lives in shared/github.js now.
+export { githubRe };
 const PLATFORMS = ['windows', 'linux', 'macos'];
 const EXT = { windows: '.exe', linux: '.run', macos: '.zip' };
 
@@ -171,11 +183,28 @@ export function validate(r, env) {
     }
     case 'github':
       if (!githubRe.test(String(src.value || '').trim())) throw bad('GitHub source must be owner/repo or a github.com URL');
-      if (!env.fetchSource) throw offlineSource(src);
+      // The ref goes into the API address as it is written: an escaped
+      // slash is not the same ref to GitHub, so a ref we cannot write
+      // literally is refused rather than mangled.
+      if (src.ref != null && String(src.ref).trim() !== '' && !validRef(String(src.ref).trim())) {
+        throw bad('a branch, tag or commit can only contain letters, digits, dots, dashes, underscores and slashes');
+      }
+      // An offline installer carries every byte it needs, and a packed
+      // file is addressed by its SHA-256 (packed-files.md). A GitHub
+      // source has no stored SHA-256 by decision (design.md 11.0), so it
+      // cannot be packed -- and an "offline" installer that still had to
+      // reach GitHub for the app's own code would be the one thing in the
+      // file that was not offline. Refused on both sides, so the
+      // combination never exists and cannot be built two ways.
+      if (r.offline) {
+        throw bad('An offline installer carries every file inside it, and a GitHub repository can\'t go in: it is identified by its ' +
+          'commit rather than by a stored SHA-256, and a packed file is addressed by one. Untick "Also make offline installers", ' +
+          'or write the code here or upload it.');
+      }
       break;
     case 'url':
       if (!/^https?:\/\//.test(String(src.value || ''))) throw bad('source URL must be http(s)');
-      if (!env.fetchSource) throw offlineSource(src);
+      if (!env.fetchSource) throw offlineSource();
       break;
     case 'upload': {
       // An archive or folder from the user's computer (the page packs a
@@ -211,9 +240,15 @@ export function validate(r, env) {
   return r.mode === 'A' ? 'record' : 'build';
 }
 
-function offlineSource(src) {
-  return bad('Without a build server, the code has to be written on this page or be a package name: a browser can\'t download ' +
-    (src.kind === 'github' ? 'GitHub repositories' : 'other sites\' files') + ' itself, so that needs the build server.');
+// A URL source still needs a build server: the page would have to
+// download the archive to hash it, and an arbitrary site sends no CORS
+// headers. GitHub used to be refused here too; it no longer is, because
+// nothing about a GitHub source has to be downloaded to write the record
+// (design.md 11.0, shared/github.js).
+function offlineSource() {
+  return bad('Without a build server, the code has to be written on this page, uploaded from this computer, ' +
+    'be a GitHub repository or be a package name: a browser can\'t download other sites\' files itself to check them, ' +
+    'so a plain URL needs the build server.');
 }
 
 // Go's base64.StdEncoding.DecodeString: padding required, and \r and \n
@@ -500,7 +535,12 @@ function writeRecord(r, fields, backend, now) {
   add('select', r.select || 'newest');
   if (r.range) add('range', r.range);
   if (fields.pkg) add('source', 'package', fields.pkg.name, fields.pkg.version);
-  else if (r.source.kind === 'github') add('source', 'github', fields.src.origin, fields.src.commit, fields.src.sha256);
+  // A GitHub source carries no file hash at all (design.md 11.0): the
+  // commit id names the snapshot, GitHub's TLS vouches for the repo, and
+  // their generated archives are not byte-stable, so a stored hash goes
+  // stale and turns a working install into a failure. It is the last
+  // field on the line, so leaving it off shifts nothing.
+  else if (r.source.kind === 'github') add('source', 'github', fields.src.origin, fields.src.commit);
   else if (r.source.kind === 'url') add('source', 'url', r.source.value, fields.src.sha256);
   // inline and upload name the *tar*: we compress these ourselves, and the
   // page's deflate and the server's differ, so hashing the gzip made one
@@ -644,6 +684,80 @@ export function planPackFiles(planText, platform, targets) {
   return { files, blocks, skipped };
 }
 
+/* ---------- GitHub sources (shared/github.js) ---------- */
+
+// Which of the API's two questions a build has to ask.
+//
+// The commit is always needed: a branch or a tag is not a pin, so `main`
+// is resolved to the commit it points at now and *that* is what the
+// record names. The file list is needed only to choose the install rule,
+// and an install command the publisher wrote answers that outright --
+// projectInstall() returns a given command without looking at a single
+// file name. So "give the command yourself" is not a punishment for a
+// rate limit: it is the same installer with one field filled in, and with
+// a full commit id as well it needs no network at all, which is what lets
+// a saved copy of the page build a GitHub installer.
+const githubNeedsNames = (r) => String(r.install || '').trim() === '';
+
+export function githubWillAskApi(r) {
+  return needsApi(r.source && r.source.ref, githubNeedsNames(r));
+}
+
+// What to say when the API could not answer, in terms of the two fields
+// that make it unnecessary.
+function githubAdvice(needCommit, needNames, ref) {
+  const parts = [];
+  if (needNames) parts.push('give the command that installs this project (Customise → What gets installed → Install command)');
+  if (needCommit) parts.push('give the full 40-character commit id in place of ' + goQuote(ref) + ' (Customise → Source version)');
+  if (!parts.length) return '';
+  return ' To build now without asking GitHub anything, ' + parts.join(', and ') + '.';
+}
+
+// The app's source, for a GitHub repository, with no file downloaded and
+// no hash stored (design.md 11.0). `data` is deliberately absent: there
+// are no bytes here to pack, and buildFile() packs only what it has.
+export async function githubSource(env, r) {
+  const at = parseRepo(r.source.value);
+  if (!at) throw bad('GitHub source must be owner/repo or a github.com URL');
+  const ref = String(r.source.ref || '').trim();
+  const needNames = githubNeedsNames(r);
+  const needCommit = !commitRe.test(ref.toLowerCase());
+  const get = env.githubGet || browserGet(env.fetch);
+  let repo;
+  try {
+    repo = await readRepo(get, { owner: at.owner, repo: at.repo, ref, needNames, nowMs: env.now ? +env.now() : undefined });
+  } catch (e) {
+    if (!e || !e.github) throw e;
+    const where = at.owner + '/' + at.repo;
+    const advice = githubAdvice(needCommit, needNames, ref || 'the latest commit');
+    if (e.kind === 'ratelimit') {
+      const who = env.githubWho === 'server'
+        ? 'the build server\'s address, which it shares with everyone using it,'
+        : 'this browser\'s address';
+      throw bad('GitHub is rate-limiting us: its API allows ' + e.limit + ' requests an hour from one internet address, and ' +
+        who + ' has used them up. Try again ' + e.wait + '.' + advice);
+    }
+    if (e.kind === 'nonetwork') {
+      throw bad('This is a saved copy of the page, and a saved copy contacts nothing: it can\'t ask GitHub ' +
+        (needCommit ? 'which commit ' + goQuote(ref || 'the latest release') + ' of ' + where + ' is' : '') +
+        (needCommit && needNames ? ', or ' : '') +
+        (needNames ? 'what is at the top of ' + where : '') + '.' +
+        (advice || ' ') + ' It can still build a GitHub installer: the installer itself downloads the repository when it runs.');
+    }
+    if (e.kind === 'offline') {
+      throw bad('Couldn\'t reach GitHub\'s API (api.github.com) to read ' + where + ' (' + e.message + ').' +
+        (advice || ' Try again when you are online.'));
+    }
+    throw bad(e.message + advice);
+  }
+  return {
+    origin: repo.origin, commit: repo.commit, ref: repo.ref, resolved: repo.resolved,
+    project: repo.project, names: repo.names,
+    name: archiveName(repo.commit), sha256: '', tarSha: '', size: 0, strip: 1,
+    urls: [archiveUrl(repo.owner, repo.repo, repo.commit)],
+  };
+}
+
 // runJob builds a request (validate()d here too). Returns {record, hash,
 // app, stem, src, unmirrored, files: [{platform, name, data?, size,
 // sha256, signed, offline}]}: without env.save each file's bytes are in
@@ -681,12 +795,18 @@ export async function runJob(r, env, progress = () => {}) {
     // install), while the registry can be asked.
     pkg = await lookupPackage(env, r.runtime, r.source.value, r.source.version);
     project = packageProject(pol.package, pkg.name);
+  } else if (r.source.kind === 'github') {
+    src = await githubSource(env, r);
+    names = src.names;
+    project = src.project;
   } else {
     src = await env.fetchSource(r);
     names = src.names || [];
-    project = r.source.kind === 'github' ? src.project : projectName(r);
+    project = projectName(r);
   }
-  if (src && env.takenDown && await env.takenDown('sha ' + src.sha256)) throw new Error('this source has been taken down');
+  // A GitHub source has no hash to take down by; the takedown list names
+  // those by `source github owner/repo` instead (server/server.js).
+  if (src && src.sha256 && env.takenDown && await env.takenDown('sha ' + src.sha256)) throw new Error('this source has been taken down');
   let launch = r.launch || (pkg ? pol.package.launch : pol.launch) || '';
   if (pkg) launch = packageLaunch(launch, pol.package, pkg.name, pkg);
   const install = projectInstall(pol, r.install || '', !!pkg, names);
@@ -707,7 +827,9 @@ export async function runJob(r, env, progress = () => {}) {
     recordHash: hash, name, project, runtime: r.runtime, select: r.select || 'newest',
     range: r.range || '', launch, install, console: r.console !== false, menu: r.menu !== false,
     desktop: !!r.desktop, root: r.root || 'user', rootName: r.rootname || 'ti', platforms: [],
-    source: src ? { name: (src.tarSha || src.sha256) + '.tar.gz', sha256: src.sha256, tarSha: src.tarSha || '',
+    // A GitHub source names its file after the commit: it has no SHA-256
+    // to be named after (shared/github.js archiveName).
+    source: src ? { name: src.name || ((src.tarSha || src.sha256) + '.tar.gz'), sha256: src.sha256, tarSha: src.tarSha || '',
                     size: src.size, format: 'tar.gz', strip: src.strip, urls: src.urls || [] } : null,
     package: pkg ? pkg.name : '', packageVersion: pkg ? pkg.version : '',
     prerequisites: r.prerequisites || [], tools,
@@ -720,6 +842,12 @@ export async function runJob(r, env, progress = () => {}) {
   if (r.mode === 'A') stem += '_' + hash;
   const job = { r, env, record, hash, app, stem, src, png, iconSha, progress, iconSrc: null };
   const out = { record, hash, app, stem, src, png, iconSha, files: [], unmirrored: unmirrored(cat, app, r.platforms) };
+  // What a branch or tag turned out to be, for the build page to say. A
+  // record that says "pinned" while the UI only ever showed `main` would
+  // be a claim nobody could check (design.md 11.0).
+  if (r.source.kind === 'github') {
+    out.source = { kind: 'github', repo: src.origin, commit: src.commit, ref: src.ref, resolved: src.resolved, url: src.urls[0] };
+  }
   try {
     if (png && r.mode !== 'A') job.iconSrc = await rasterSource(png);
     for (const plat of r.platforms) {
@@ -842,7 +970,11 @@ async function buildFile(job, plat) {
     // the page: the plan names the source by its hash and there is no build
     // server to fetch it from, so an offline installer that left it out
     // would be the one thing in the file that still needed the network.
-    if (env.embedPlan && src) pack.unshift({ name: src.sha256, size: src.data.length, data: src.data });
+    // `src.data` is absent for a GitHub source -- nothing was downloaded,
+    // and there is no hash to address a packed copy by. validate()
+    // refuses offline + GitHub for exactly that reason, so this guard is
+    // the second lock on the same door.
+    if (env.embedPlan && src && src.data) pack.unshift({ name: src.sha256, size: src.data.length, data: src.data });
     if (info.kind === 'zip' && packSize(pack) > MAX_MAC_PACK) {
       throw new Error('the packed files come to ' + MB(packSize(pack)) + ' MB; macOS offline installers are limited to ' + MB(MAX_MAC_PACK) + ' MB for now');
     }
@@ -852,7 +984,9 @@ async function buildFile(job, plat) {
     if (env.revoked) setRevoked(env.catalog, await env.revoked());
     plan = resolve(env.catalog, Object.assign({}, app, { platforms: [plat] }));
     if (env.signPlan) plan = await env.signPlan(plan);
-    if (src) pack.push({ name: src.sha256, size: src.data.length, data: src.data });
+    // A GitHub source has no bytes here to pack: the installer fetches
+    // the archive from GitHub over HTTPS, pinned by its commit.
+    if (src && src.data) pack.push({ name: src.sha256, size: src.data.length, data: src.data });
   }
   if (iconSrc) {
     if (info.kind === 'exe') {

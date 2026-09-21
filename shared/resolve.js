@@ -1704,10 +1704,19 @@ function writePlan(cat, app, blocks) {
     // names for inline and upload sources (format.md, "Sources"). It is
     // there to tie the plan to the record, not to be verified instead of
     // the file: the file's hash pins the bytes, and the bytes pin the tar.
+    //
+    // A GitHub source has no stored hash at all (design.md 11.0), and the
+    // field is written `-` rather than left empty: a tab is IFS white
+    // space, so a run of tabs collapses and an empty field in the middle
+    // of a line shifts every field after it left, with no error
+    // (format.md section 1, "Sources without a stored hash"). Its size is
+    // 0 for the same reason it has no hash -- nothing downloaded it, so
+    // nobody here knows how big it is.
+    const sha = str(s.sha256) === '' ? '-' : s.sha256;
     if (str(s.tarSha) !== '' && s.tarSha !== s.sha256) {
-      w.add('source', s.name, s.sha256, String(s.size), s.format, String(s.strip), s.tarSha);
+      w.add('source', s.name, sha, String(s.size), s.format, String(s.strip), s.tarSha);
     } else {
-      w.add('source', s.name, s.sha256, String(s.size), s.format, String(s.strip));
+      w.add('source', s.name, sha, String(s.size), s.format, String(s.strip));
     }
     for (const u of s.urls) w.add('url', str(u));
   }

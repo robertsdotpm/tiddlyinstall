@@ -18,6 +18,23 @@
    ],
    "notes": "Redirects (301) to download.visualstudio.microsoft.com, which sends no ACAO; the vs_BuildTools short link sends ACAO * on the redirect hop, the vc_redist ones do not. Chrome fetch fails."
   },
+  "api.github.com": {
+   "host": "api.github.com",
+   "status": "yes",
+   "allow_origin": "*",
+   "redirects_to": [],
+   "path_rules": [],
+   "browser_confirmed": true,
+   "tested": "2026-09-21",
+   "samples": [
+    "https://api.github.com/repos/psf/requests/commits/HEAD",
+    "https://api.github.com/repos/psf/requests/commits/main",
+    "https://api.github.com/repos/psf/requests/git/trees/HEAD",
+    "https://api.github.com/repos/psf/requests",
+    "https://api.github.com/repos/psf/no-such-repo-xyz-123"
+   ],
+   "notes": "Sends access-control-allow-origin: * on 200 and on 404, with Accept: application/vnd.github.sha and application/vnd.github+json alike (both are CORS-safelisted values, so no preflight). access-control-expose-headers lists X-RateLimit-Limit/Remaining/Reset and Retry-After, so a page can read the rate limit and say when to try again. Confirmed in headless Chrome from a page served over http://127.0.0.1, not from documentation; codeload.github.com failed with a CORS TypeError in the same page, as the github.com entry records. This is what lets the page derive a GitHub source's commit and file list with no build server (shared/github.js, design.md 11.0). Unauthenticated: 60 requests an hour per internet address."
+  },
   "archive.org": {
    "host": "archive.org",
    "status": "no",

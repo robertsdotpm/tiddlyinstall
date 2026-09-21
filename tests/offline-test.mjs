@@ -170,8 +170,56 @@ try {
   // Mode A is refused here, with a clear message.
   const a = await js(`tiLocalApi.request('/api/jobs', { method: 'POST', body: { runtime: 'python', mode: 'A', source: { kind: 'inline' }, files: { 'a/__main__.py': 'x' } } }).then(() => 'accepted', (e) => e.message)`);
   ok(/build server/.test(a), 'mode A is refused offline', a);
-  const gh = await js(`tiLocalApi.request('/api/jobs', { method: 'POST', body: { runtime: 'python', mode: 'C', source: { kind: 'github', value: 'psf/requests' } } }).then(() => 'accepted', (e) => e.message)`);
-  ok(/build server/.test(gh), 'GitHub sources are refused offline, saying why', gh);
+  // GitHub sources used to be refused here for want of a build server.
+  // They are not any more (design.md 11.0, shared/github.js): what a
+  // GitHub source needs is a commit id and an install rule, and neither
+  // has to be downloaded. What this copy of the page will not do is ask
+  // GitHub for them -- a copy opened from disk contacts nothing -- so
+  // with a branch it refuses, and says which two fields make the
+  // question unnecessary.
+  //
+  // The refusal is the job's, not the form's: which commit a branch is
+  // can only be answered while the source is being resolved, so it
+  // arrives as a failed build the way a package registry lookup does.
+  // (The first version of this check read the POST's own answer, which
+  // is the queued job and always looks accepted.)
+  const ghRef = await js(`(async () => {
+    let j = await tiLocalApi.request('/api/jobs', { method: 'POST', body: { runtime: 'python', mode: 'C', source: { kind: 'github', value: 'psf/requests' } } })
+      .catch((e) => ({ status: 'failed', error: e.message }));
+    while (j.status !== 'done' && j.status !== 'failed') {
+      await new Promise((r) => setTimeout(r, 100));
+      j = await tiLocalApi.request('/api/jobs/' + j.id);
+    }
+    return j.status === 'done' ? 'built anyway' : j.error;
+  })()`);
+  ok(/saved copy/.test(ghRef), 'from disk, a GitHub repo at its latest commit is refused because the page contacts nothing', ghRef);
+  ok(/Install command/.test(ghRef) && /commit id/.test(ghRef), 'and it names the two fields that make asking GitHub unnecessary', ghRef);
+  ok(!/needs the build server/.test(ghRef), 'and never says it needs a build server, because it does not', ghRef);
+
+  // And with those two fields, the same page builds a real GitHub
+  // installer with no build server and no network at all.
+  const ghCommit = '7fd1a60b01f91b314f59955a4e4d4e80d8edf11d';
+  const ghJob = await js(`(async () => {
+    let j = await tiLocalApi.request('/api/jobs', { method: 'POST', body: ${JSON.stringify({
+    name: 'Hello GitHub', runtime: 'python', mode: 'C', platforms: ['linux'],
+    launch: '{runtime} -c "print(1)"', install: '{runtime} -c "print(2)"',
+    source: { kind: 'github', value: 'octocat/Hello-World', ref: ghCommit },
+  })} });
+    while (j.status !== 'done' && j.status !== 'failed') {
+      await new Promise((r) => setTimeout(r, 100));
+      j = await tiLocalApi.request('/api/jobs/' + j.id);
+    }
+    return j;
+  })()`);
+  ok(ghJob.status === 'done', 'a GitHub repo pinned to a commit builds in the page with no build server', ghJob.error);
+  ok(ghJob.result && ghJob.result.source && ghJob.result.source.commit === ghCommit,
+    'and the result says which commit it pinned', JSON.stringify(ghJob.result && ghJob.result.source));
+  if (ghJob.status === 'done') {
+    const rec = await js(`tiLocalApi.request('/api/records/' + ${JSON.stringify(ghJob.result.record)}, { as: 'text' })`);
+    ok(/source\tgithub\toctocat\/Hello-World\t7fd1a60b01f91b314f59955a4e4d4e80d8edf11d\n/.test(rec),
+      'the record names the repo and the commit, with no hash', JSON.stringify((rec.match(/^source.*$/m) || [])[0]));
+    await checkJob(ghJob, 'github C', 'python', OUT && 'github/C');
+  }
 
   const outside = requests.filter((u) => !/^(file|blob|data):/.test(u));
   ok(outside.length === 0, 'nothing was fetched from the network', outside.slice(0, 5).join(' '));

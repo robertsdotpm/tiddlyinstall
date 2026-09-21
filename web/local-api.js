@@ -1,8 +1,20 @@
 // The build server's API, answered inside the page (plan.md section 1.11).
 // The one-file site sets globalThis.tiLocalApi from here, and api.js sends
 // every call to it when there is no build server (opened from disk, or "No
-// server" chosen). Nothing leaves the browser except package registry
-// lookups, which only happen when a package's version isn't given.
+// server" chosen). Two things leave the browser, and nothing else:
+// package registry lookups, which only happen when a package's version
+// isn't given, and -- for a GitHub source -- api.github.com, to turn a
+// branch or tag into the commit the record pins and to read the names at
+// the top of the repository, which is how the install rule is chosen
+// (shared/github.js; the build server derives both the same way, from the
+// same code, so one form gives one record either side).
+//
+// **A copy saved to disk makes neither GitHub call.** Its promise is that
+// nothing leaves it, and a GitHub installer does not need the API: a full
+// commit id and an install command are exactly what the API would have
+// been asked for, and the refusal names those two fields. The installer
+// it builds still fetches the repository from GitHub when it runs --
+// that is the installer's job, not the page's.
 //
 // Jobs run through shared/builder.js, as on the server, with embedPlan: each
 // installer carries its plan (resolved from the catalogue snapshot in the
@@ -23,7 +35,8 @@
 // The catalogue is the snapshot with this browser's changes from the
 // Runtimes page on top (web/overlay.js effectiveCatalog). A build made with
 // changes says so in its result (`catalog`), and the build page shows it.
-import { ApiError } from './api.js';
+import { ApiError, pageFromDisk } from './api.js';
+import { noNetworkGet } from '../shared/github.js';
 import { validate, runJob, planPackFiles, MAX_PACK, MAX_MAC_PACK } from '../shared/builder.js';
 import { resolve } from '../shared/resolve.js';
 import { writeInstallerLayout, streamInstallerLayout, parseFooterTail, bytesToHex, packTarSize } from '../shared/tifile.js';
@@ -72,8 +85,15 @@ function view(j) {
 
 async function env() {
   const eff = await catalog();
-  return { catalog: eff.catalog, overlay: eff, base: (plat) => blockBytes('base-' + plat), backend: offlineInfo.backend || '',
-    embedPlan: true, packRuntimes: true };
+  const e = { catalog: eff.catalog, overlay: eff, base: (plat) => blockBytes('base-' + plat), backend: offlineInfo.backend || '',
+    embedPlan: true, packRuntimes: true, githubWho: 'page' };
+  // A GitHub source is pinned by its commit, and which commit a branch
+  // or tag is -- and which files are at the top of it -- comes from
+  // api.github.com, which answers browsers (shared/github.js). A copy
+  // saved to disk asks nothing: there the two answers have to be typed,
+  // and the refusal says which fields to type them into.
+  if (pageFromDisk()) e.githubGet = noNetworkGet();
+  return e;
 }
 
 /* ---------- offline installers, packed here (docs/browser-packing.md) ---------- */
@@ -340,6 +360,10 @@ async function build(body, e, progress, live) {
   // Downloads our mirror has no copy of, as the build server reports them
   // (server/lib/jobs.js): the build page warns the same way either way.
   if (out.unmirrored && out.unmirrored.length) res.unmirrored = out.unmirrored;
+  // What a branch or tag resolved to (shared/builder.js), exactly as the
+  // build server reports it: the build page says which commit was pinned
+  // either way.
+  if (out.source) res.source = out.source;
   // Made with a changed catalogue: the build page says so.
   if (e.overlay.applied) res.catalog = { changed: true, changes: e.overlay.applied, id: e.overlay.id };
   return res;

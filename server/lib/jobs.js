@@ -13,7 +13,8 @@ import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import { runJob, lookupPackage as lookupPackageJS, packageLaunch, githubRe, projectName, kvLine } from '../../shared/builder.js';
+import { runJob, lookupPackage as lookupPackageJS, packageLaunch, projectName, kvLine } from '../../shared/builder.js';
+import { GitHubError, archiveName, archiveUrl } from '../../shared/github.js';
 import { resolveFiles, validPackage, packagePolicyFor, packageProject, replacer, setRevoked } from '../../shared/resolve.js';
 import { recordHash } from '../../shared/tifile.js';
 import { decodeIconPng } from '../../shared/icon.js';
@@ -176,10 +177,27 @@ export class Builder {
         case 'inline':
           app.source = this.srcFile(l.val(1), 1);
           break;
-        case 'github':
-          app.source = this.srcFile(l.val(3), 1);
-          if (app.source) app.source.urls.push('https://codeload.github.com/' + l.val(1) + '/tar.gz/' + l.val(2));
+        case 'github': {
+          // `source github <owner/repo> <commit>`, with no hash
+          // (format.md, "Sources without a stored hash"): the file is
+          // named after the commit and fetched from GitHub over HTTPS.
+          // Its size is not known here and is written 0; nothing but the
+          // review screen reads it.
+          const [origin, commit, sha] = [l.val(1), l.val(2), l.val(3)];
+          const slash = origin.indexOf('/');
+          const owner = slash < 0 ? origin : origin.slice(0, slash);
+          const name = slash < 0 ? '' : origin.slice(slash + 1);
+          if (sha) {
+            // An older record that still carries one. A hash we happen to
+            // know is still checked (design.md 11.0); no writer makes one.
+            app.source = this.srcFile(sha, 1);
+            if (app.source) app.source.urls.push(archiveUrl(owner, name, commit));
+            break;
+          }
+          app.source = { name: archiveName(commit), sha256: '', tarSha: '', size: 0, format: 'tar.gz', strip: 1,
+            urls: [archiveUrl(owner, name, commit)] };
           break;
+        }
         case 'url':
           app.source = this.srcFile(l.val(2), -1);
           if (app.source) app.source.urls.push(l.val(1));
@@ -332,33 +350,36 @@ export class Builder {
     return res.bytes(limit);
   }
 
-  async githubCommit(owner, repo, ref) {
-    const u = 'https://api.github.com/repos/' + owner + '/' + repo + '/commits/' + ref;
+  // The GitHub API through the public-only client, in the shape
+  // shared/github.js reads: {status, headers, text}. The derivation on
+  // top of it is shared with the page, so one form gives one record
+  // wherever it is built (design.md 11.0).
+  //
+  // The 60-an-hour allowance is counted against this server's one
+  // address, shared by every user, so it will run out; `githubWho` makes
+  // the message say so, and the builder never falls back to no install
+  // rule.
+  async githubGet(url, accept) {
     let res;
     try {
-      res = await this.fetch(u, { headers: { Accept: 'application/vnd.github.sha' } });
+      res = await this.fetch(url, { headers: { Accept: accept } });
     } catch (e) {
-      throw new Error('Get "' + u + '": ' + e.message);
+      throw new GitHubError('offline', 'Get "' + url + '": ' + e.message);
     }
-    const body = (await res.upTo(4096)).toString('utf8');
-    if (res.status !== 200) throw new Error(`GitHub: ${owner}/${repo} at ${ref}: ${res.statusLine}`);
-    const sha = body.trim();
-    if (sha.length !== 40) throw new Error('GitHub returned an unexpected commit id');
-    return sha;
+    const text = (await res.upTo(1 << 20)).toString('utf8');
+    const h = res.headers || {};
+    const pick = {};
+    for (const k of ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-ratelimit-reset', 'retry-after']) {
+      if (h[k] !== undefined) pick[k] = String(h[k]);
+    }
+    return { status: res.status, headers: pick, text };
   }
 
-  // GitHub and URL sources, fetched through the public-only client and kept.
+  // URL sources, fetched through the public-only client and kept. GitHub
+  // sources are not here any more: nothing about one has to be
+  // downloaded to write its record, and keeping a copy would be a second
+  // answer to "what does this commit contain" (design.md 11.0).
   async fetchSource(r) {
-    if (r.source.kind === 'github') {
-      const m = githubRe.exec(r.source.value.trim());
-      const owner = m[1], repo = m[2];
-      const commit = await this.githubCommit(owner, repo, r.source.ref || 'HEAD');
-      const data = await this.fetchLimited('https://codeload.github.com/' + owner + '/' + repo + '/tar.gz/' + commit, 200 << 20);
-      const sha = sha256hex(data);
-      await writeAtomic(this.srcPath(sha), data);
-      return { sha256: sha, size: data.length, names: tarNamesUnderTop(data), project: repo.toLowerCase(),
-        origin: owner + '/' + repo, commit, strip: 1, urls: [] };
-    }
     const data = await this.fetchLimited(r.source.value, 200 << 20);
     if (!(data[0] === 0x1f && data[1] === 0x8b)) throw new Error('source URL must be a .tar.gz for now');
     const sha = sha256hex(data);
@@ -479,6 +500,8 @@ export class Builder {
       signedBase: (plat) => this.signedBase(plat),
       registryJSON: (t, n, v) => this.registryJSON(t, n, v),
       fetchSource: (r) => this.fetchSource(r),
+      githubGet: (url, accept) => this.githubGet(url, accept),
+      githubWho: 'server',
       storeSource: (sha, data) => writeAtomic(this.srcPath(sha), data),
       storeRecord: (hash, rec) => this.storeRecord(hash, rec),
       takenDown: (entry) => this.takenDown(entry),
@@ -505,6 +528,9 @@ export class Builder {
     // about (design.md 1.3). Left off entirely when there are none, so a
     // job that is fine looks exactly as it did.
     if (out.unmirrored && out.unmirrored.length) res.unmirrored = out.unmirrored;
+    // What a branch or tag resolved to, for the build page to say
+    // (api.md). Only GitHub sources have one.
+    if (out.source) res.source = out.source;
     return res;
   }
 }

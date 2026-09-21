@@ -273,6 +273,24 @@ function paintMirror(job) {
   } else b.hidden = true;
 }
 
+// Which commit a GitHub source was pinned to (api.md `result.source`).
+// A GitHub source carries no file hash: the commit id is the whole of
+// what identifies it, so it is the one thing the publisher has to be
+// able to read back. Saying "pinned" while the form only ever showed
+// `main` would be a claim nobody could check, so where a branch or tag
+// was resolved, both are shown.
+function paintSource(job) {
+  const b = $('job-source');
+  if (!b) return;
+  const s = job.result && job.result.source;
+  if (!s || s.kind !== 'github') { b.hidden = true; return; }
+  b.textContent = 'Source: ' + s.repo + ' at commit ' + s.commit +
+    (s.resolved ? ' (what ' + s.resolved + ' pointed at when this was built)' : '') +
+    '. These installers download it from ' + s.url + ' when they run, over HTTPS, and there is no stored ' +
+    'SHA-256 for it: the commit id is what names those bytes. Their review screens say the same.';
+  b.hidden = false;
+}
+
 function paint(job) {
   $('job-view').hidden = false;
   $('job-error').hidden = true;
@@ -280,6 +298,7 @@ function paint(job) {
   paintWhere(job);
   paintCatalog(job);
   paintMirror(job);
+  paintSource(job);
   const title = job.ticket != null ? 'Build #' + job.ticket : 'Build';
   $('job-title').textContent = title;
   document.title = title + ' · TiddlyInstall';

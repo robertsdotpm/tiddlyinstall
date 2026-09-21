@@ -87,7 +87,7 @@ CORE_MODULES = [
     "web/lib/x509.js", "web/lib/legacy.js", "web/lib/pkcs12.js",
     "web/lib/authenticode.js", "web/lib/pgp.js",
     "web/sign-services.js", "web/sign-ui.js",
-    "shared/resolve.js", "shared/builder.js",
+    "shared/resolve.js", "shared/github.js", "shared/builder.js",
     "web/overlay.js", "web/change-list.js", "web/overlay-consent.js",
     "web/local-api.js", "web/router.js",
 ]
