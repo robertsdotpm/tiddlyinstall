@@ -139,7 +139,7 @@ test('new.html: the form posts to the server, and names what the mapping reads',
 function defaults() {
   return {
     app_name: [''], source_kind: ['repo'], source: [''], runtime: ['python'], template: ['script'], rv_mode: ['newest'],
-    runtime_version: [''], runtime_exact: [''], install_cmd: [''], ref_type: ['latest'], ref: [''], subdir: [''],
+    runtime_version: [''], runtime_exact: [''], install_cmd: [''], ref_type: ['latest'], ref: [''],
     target_windows: ['on'], target_linux: ['on'], target_macos: ['on'], mode: ['ours'], root: ['user'], rootname: ['ti'],
     shortcut_menu: ['on'], uninstaller: ['on'], cleanup_pkg_cache: ['on'], cleanup_tools: ['remove'], cleanup_fail: ['remove'],
     uninstall_data: ['ask'], icon_choice: ['default'], entry_python: [ENTRY_DEFAULTS.python], entry_node: [ENTRY_DEFAULTS.node],

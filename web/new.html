@@ -40,8 +40,8 @@
     <!-- With JavaScript, web/new.js sends this as JSON (POST /api/jobs) and never
          submits it. Without, the browser posts it to the build server that
          served the page (POST /submit, docs/api.md "Plain form posts"). File
-         inputs without a name (certificates, keys, local files) and the access
-         token are never sent that way. -->
+         inputs without a name (certificates, keys, local files) are never sent
+         that way. -->
     <form id="new-form" action="submit" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 
       <!-- ================= Essentials ================= -->
@@ -470,16 +470,10 @@ Press Enter to close</pre>
               <span class="hint">A branch or tag is looked up once and the <strong>commit it points at</strong> is what gets recorded -
                 a branch moves, so it is not a pin. The build page says which commit it was.</span>
             </div>
-            <div class="field">
-              <label for="subdir">Subfolder</label>
-              <input type="text" id="subdir" name="subdir" placeholder="Repo root" spellcheck="false">
-            </div>
           </div>
-          <div class="field">
-            <label for="token">Access token (private repos only)</label>
-            <input type="password" id="token" autocomplete="off">
-            <span class="hint">Only used to download the source. Never put in the&nbsp;installer.</span>
-          </div>
+          <p class="small muted" style="margin-bottom:0"><strong>Public repositories only.</strong> An installer downloads the
+            repository itself, on the computer it runs on, and there is nowhere in it to keep a credential that would be safe to
+            hand out. A private repository would build here and then fail for everyone who ran it, so it is refused instead.</p>
         </details>
 
         <details>

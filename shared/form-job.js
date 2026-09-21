@@ -568,8 +568,6 @@ export function jobFromForm(f, { icon, local = null, problems = [] }) {
     const src = f.val('source');
     if (!src.trim()) problems.push('Say what to package: a GitHub repo URL or a package name.');
     job.source = parseSource(src, f.val('ref_type'), f.val('ref'));
-    const sub = f.val('subdir').trim();
-    if (sub) job.source.subdir = sub;
   }
   if (rv === 'range' && !job.range) problems.push('Enter the versions allowed, or pick another "Which version" option.');
   if (rv === 'exact' && !job.range) problems.push('Enter the exact version, or pick another "Which version" option.');
