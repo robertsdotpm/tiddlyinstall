@@ -435,7 +435,7 @@ export function mountApiFooter() {
     const save = document.createElement('p');
     save.className = 'save-ctl';
     save.innerHTML = '<button type="button" class="link-button save-page">Save this page</button> ' +
-      '<span class="muted">One file with everything inside. Opened from your disk it works with no build server.</span>' +
+      '<span class="muted">for one file with everything inside. Opened from your disk it works with no build server.</span>' +
       '<span class="muted mobile-only"> On a phone or tablet it goes to your downloads, to copy to a computer: phones may not open a saved page, or run it.</span>';
     footer.appendChild(save);
     save.querySelector('.save-page').addEventListener('click', savePage);
