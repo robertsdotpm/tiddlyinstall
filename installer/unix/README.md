@@ -55,7 +55,15 @@ whose presence suggests somebody wants a dialog. The Finder's own
 `TI_NO_GUI=1` forces the text even on a desktop, for scripting and
 capture.
 
-**A display is only used when its socket can be seen** —
+**A display is in one of three states, and only one earns a window.**
+`ok` (the socket is there), `unknown` (a display on another host, which
+cannot be checked from here) and `no` (nothing, or a local display
+whose socket is missing). A window needs `ok`. With no terminal either,
+`unknown` is still tried, because refusing outright is worse and is
+what this did before — but `no` never starts a dialog, because a local
+display whose socket has gone is exactly the case that hangs.
+
+**The socket is what is checked** —
 `/tmp/.X11-unix/X<n>` for X11, `$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY` for
 Wayland. `$DISPLAY` being set is not evidence: a stale variable or an X
 forwarding that has gone away leaves it set and pointing at nothing,

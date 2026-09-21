@@ -261,23 +261,28 @@ ti_download_quick() { # url out
 # anyway. Anyone reaching a machine over SSH has a terminal, and the
 # full text is what they get, which is the ordinary way to install on a
 # server.
-ti_display_ok() {
-	[ "${TI_NO_GUI-}" = 1 ] && return 1
+# `ok` a display we can see, `unknown` one we cannot check from here,
+# `no` nothing usable. Only `ok` earns a window; `unknown` is tried as a
+# last resort when there is no terminal either, which is no worse than
+# what this did before; `no` never starts a dialog at all, because a
+# local display whose socket is missing is precisely the one that hangs.
+ti_display_state() {
+	[ "${TI_NO_GUI-}" = 1 ] && { printf 'no'; return; }
 	if [ -n "${WAYLAND_DISPLAY-}" ]; then
 		case $WAYLAND_DISPLAY in
-		/*) [ -S "$WAYLAND_DISPLAY" ] && return 0 ;;
-		*) [ -n "${XDG_RUNTIME_DIR-}" ] && [ -S "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" ] && return 0 ;;
+		/*) [ -S "$WAYLAND_DISPLAY" ] && { printf 'ok'; return; } ;;
+		*) [ -n "${XDG_RUNTIME_DIR-}" ] && [ -S "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" ] && { printf 'ok'; return; } ;;
 		esac
 	fi
-	[ -n "${DISPLAY-}" ] || return 1
+	[ -n "${DISPLAY-}" ] || { printf 'no'; return; }
 	d=${DISPLAY##*/}            # `unix/:0` and the like
 	h=${d%%:*}
 	n=${d#*:}
 	n=${n%%.*}
-	case $n in '' | *[!0-9]*) return 1 ;; esac
+	case $n in '' | *[!0-9]*) printf 'no'; return ;; esac
 	case $h in
-	'' | unix) [ -S "/tmp/.X11-unix/X$n" ] ;;
-	*) return 1 ;;
+	'' | unix) [ -S "/tmp/.X11-unix/X$n" ] && printf 'ok' || printf 'no' ;;
+	*) printf 'unknown' ;;
 	esac
 }
 
@@ -311,7 +316,8 @@ ti_gui_tool() {
 # one with the full text behind "Details...", not a review window, so
 # taking a Terminal user out of the terminal would be a downgrade.
 ti_pick_ui() {
-	if [ "${ti_args:-0}" = 0 ] && [ "$TI_OS" != macos ] && ti_display_ok; then
+	ti_disp=$(ti_display_state)
+	if [ "${ti_args:-0}" = 0 ] && [ "$TI_OS" != macos ] && [ "$ti_disp" = ok ]; then
 		ti_ui=$(ti_gui_tool) && [ -n "$ti_ui" ] && return 0
 	fi
 	if [ -t 0 ] && [ -t 2 ]; then
@@ -322,9 +328,10 @@ ti_pick_ui() {
 		ti_ui=osascript
 		return 0
 	fi
-	# No terminal and no verified display: a display we could not check
-	# is better than refusing outright, which is what this did before.
-	if [ "${TI_NO_GUI-}" != 1 ] && [ -n "${DISPLAY-}${WAYLAND_DISPLAY-}" ]; then
+	# No terminal. A display we could see, or one we could not check, is
+	# better than refusing outright -- but never one we checked and found
+	# missing, which is the case that hangs.
+	if [ "$ti_disp" = ok ] || [ "$ti_disp" = unknown ]; then
 		ti_ui=$(ti_gui_tool) && [ -n "$ti_ui" ] && return 0
 	fi
 	ti_ui=none
