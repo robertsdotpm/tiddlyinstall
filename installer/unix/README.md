@@ -57,7 +57,7 @@ engine is this same file, so an engine change reaches macOS as soon as
 the base is built there -- and `out/ti-base-macos.zip` on this machine
 is whatever was last built there, nothing more.
 
-**Last built 2026-09-21T04:03:22Z** on the Mac test server (macOS 26.2
+**Last built 2026-09-21T04:15:43Z** on the Mac test server (macOS 26.2
 `25C56`, arm64, `Matthew@the-mac-test-host`), from `ti-engine.sh` with the
 **capability statement** on the review screen (design.md 11.3 and
 docs/format.md section 3, "What engines must show: what this install can
@@ -75,10 +75,10 @@ the same order, because it is the whole of what that dialog says.
 
 | | |
 | --- | --- |
-| `out/ti-base-macos.zip` | `0040ee9d8e0d6fab107d11abb933fd393e875aa6d60da6135f53429b2692d7e7`, 64,477 bytes |
-| the engine inside it | `a7e1d9c13267ca883384a8ec56eaf348930752c0ac38bbfdb3f8048273e548a6` (`ti-engine.sh` with the baked lines filled) |
+| `out/ti-base-macos.zip` | `c7379e24ac188587084326893a3e261a1ba6fe4204b99a3a77c81f6f95bade73`, 64,482 bytes |
+| the engine inside it | `9e505a71f9b7134c13f64f773f14a21cea64c01e9d41c3fed273ac700c282a6d` (`ti-engine.sh` with the baked lines filled) |
 | plan signing key | `97930ea1888d1a12` |
-| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T04:03:22Z` / `1789963402` |
+| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T04:15:43Z` / `1789964143` |
 | signature | ad-hoc; `codesign --verify --strict` is happy on the bundle **and** on the bundle re-extracted from the zip with `ditto` ("valid on disk", "satisfies its Designated Requirement") |
 
 The one before this was `d6c3fd38dbaaba722ada38168f952d0adeb30bac4b5051b97c77d6cbd2c03ecf`

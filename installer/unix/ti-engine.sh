@@ -2683,11 +2683,11 @@ ti_fetcher_of() { # command
 	case " $1 " in
 	*' -m pip '* | *'pip install'*) printf 'pip' ;;
 	*'npm-cli.js'* | *'npm install'* | *'npm ci'*) printf 'npm' ;;
-	*'bundle" install'* | *'bundle install'*) printf 'bundler' ;;
+	*bundle*) printf 'bundler' ;;
 	*'gem" install'* | *'gem install'*) printf 'RubyGems' ;;
 	*composer*) printf 'Composer' ;;
 	*cargo*) printf 'cargo' ;;
-	*'/go" '*) printf "Go's module fetcher" ;;
+	*'/go" '* | *'\go.exe"'*) printf "Go's module fetcher" ;;
 	*dotnet*) printf 'the .NET SDK, which restores NuGet packages' ;;
 	esac
 }
