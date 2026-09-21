@@ -127,13 +127,17 @@ export function makeFooter(recordLen, planLen, packLen) {
   return tiEnc.encode(s);
 }
 
-// Looks for a footer ending at `end`. Returns {start, record, plan, pack}
-// (lengths, and where the block starts) or null.
-export function parseFooter(u8, end = u8.length) {
-  if (end < FOOTER_LEN) return null;
-  const f = u8.subarray(end - FOOTER_LEN, end);
+// The three lengths in 64 bytes of footer, or null if they are not a
+// footer. Split out from parseFooter because the last 64 bytes are all a
+// page has when it reads a finished installer back out of a Blob to check
+// it before handing it over -- Android Chrome built and hashed a 640 MB
+// pack and then could not read its own last 64 bytes back
+// (docs/browser-packing.md section 5), and a truncated installer that
+// looks complete is the worst thing this can produce.
+export function parseFooterTail(f) {
+  if (!f || f.length !== FOOTER_LEN) return null;
   for (let i = 0; i < FOOTER_MAGIC.length; i++) if (f[i] !== FOOTER_MAGIC.charCodeAt(i)) return null;
-  if (f[63] !== 10) return null;
+  if (f[FOOTER_LEN - 1] !== 10) return null;
   const nums = [];
   for (const off of [8, 21, 34]) {
     let n = 0;
@@ -145,10 +149,18 @@ export function parseFooter(u8, end = u8.length) {
     if (f[off + 12] !== 32) return null;
     nums.push(n);
   }
-  const [record, plan, pack] = nums;
-  const start = end - FOOTER_LEN - record - plan - pack;
+  return { record: nums[0], plan: nums[1], pack: nums[2] };
+}
+
+// Looks for a footer ending at `end`. Returns {start, record, plan, pack}
+// (lengths, and where the block starts) or null.
+export function parseFooter(u8, end = u8.length) {
+  if (end < FOOTER_LEN) return null;
+  const t = parseFooterTail(u8.subarray(end - FOOTER_LEN, end));
+  if (!t) return null;
+  const start = end - FOOTER_LEN - t.record - t.plan - t.pack;
   if (start < 0) return null;
-  return { start, end, record, plan, pack };
+  return { start, end, record: t.record, plan: t.plan, pack: t.pack };
 }
 
 /* ---------- PE ---------- */
@@ -690,6 +702,59 @@ export async function writeInstallerLayout(layout, { hash = false, progress } = 
     res.sha256 = bytesToHex(h.digest());
   }
   return res;
+}
+
+// The same layout, written to a sink a piece at a time instead of into a
+// buffer: for `showSaveFilePicker()`, whose FileSystemWritableFileStream
+// takes each chunk straight to the user's file. Measured at 4.3 GB written
+// with the page holding 44-116 MB (docs/browser-packing.md section 8), so
+// where this path exists the ceiling is the installer format, not memory.
+//
+// `sink.write(bytes)` is awaited; the sink is not closed here, because the
+// caller has to check what was written before it says the file is good.
+// Returns {size, packLen, sha256}.
+//
+// A PE checksum cannot be written this way -- it is computed over the
+// whole file and lives near its start -- so a base that has one is
+// refused rather than written with a stale checksum that Windows would
+// call corrupt. The unsigned bases this page carries have none.
+export async function streamInstallerLayout(sink, layout, { progress } = {}) {
+  const base = toBytes(layout.base);
+  const record = toBytes(layout.record);
+  const plan = toBytes(layout.plan || '');
+  const pack = layout.pack || [];
+  if (layout.pe) {
+    const dv = new DataView(base.buffer, base.byteOffset, base.byteLength);
+    if (dv.getUint32(layout.pe.checksumOff, true) !== 0) throw new Error('this base has a PE checksum, which cannot be written to a file as it is made');
+  }
+  const packLen = pack.length ? packTarSize(pack) : 0;
+  const h = sha256Stream();
+  let size = 0;
+  const put = async (b) => { if (b.length) { await sink.write(b); h.update(b); size += b.length; } };
+  if (layout.zero) {
+    const head = base.slice(0, layout.zero[0] + layout.zero[1]);
+    head.fill(0, layout.zero[0]);
+    await put(head);
+    await put(base.subarray(head.length));
+  } else await put(base);
+  await put(record);
+  await put(plan);
+  for (const m of pack) {
+    const want = memberSize(m);
+    await put(ustarHeader(m.name, want));
+    if (progress) progress(m);
+    let data = m.data ? toBytes(m.data) : toBytes(await m.read());
+    if (data.length !== want) {
+      throw new Error('pack: ' + JSON.stringify(String(m.name).slice(0, 80)) + ' is ' + data.length + ' bytes, not the ' + want + ' its plan gives');
+    }
+    await put(data);
+    data = null;
+    const padLen = (512 - (want % 512)) % 512;
+    if (padLen) await put(new Uint8Array(padLen));
+  }
+  if (pack.length) await put(new Uint8Array(1024));
+  await put(makeFooter(record.length, plan.length, packLen));
+  return { size, packLen, sha256: bytesToHex(h.digest()) };
 }
 
 // Builds the edited installer. `edits` = {record, plan, pack}; anything left

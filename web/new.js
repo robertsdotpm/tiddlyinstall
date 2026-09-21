@@ -7,11 +7,13 @@ import { apiRequest, errorText, mountApiFooter, pageUrl, apiLocal, apiBase, apiR
 import { tarWrite } from '../shared/tifile.js';
 import { loadOverlay, overlayState, hasCatalog } from './overlay.js';
 import { jobFromForm, BUILD_DEFAULTS, ENTRY_DEFAULTS, TEMPLATE_FILES, OFFLINE_TARGETS, ARCH_LABEL, MAC_ARCH, FAMILY_ARCHES, FAMILY_LABEL, NO_32_BIT,
-  PACK_WARN_MB, PACK_MAX_MB, offlineField, offlineSizeMb, offlineTargets, archCoverage, vcmp, parseSource } from '../shared/form-job.js';
+  PACK_WARN_MB, PACK_MAX_MB, offlineField, offlineSizeMb, offlineTargets, archCoverage, vcmp, parseSource,
+  packBudget, packEnv } from '../shared/form-job.js';
 import { templateLaunch } from '../shared/templates.js';
 import { mountWriteEditor } from './write-editor.js';
 import { mountOverlayConsent } from './overlay-consent.js';
 import { openNotices } from './open-notice.js';
+import { setPackDestination } from './local-api.js';
 
 mountApiFooter();
 mountOverlayConsent();
@@ -201,6 +203,10 @@ form.addEventListener('submit', async (e) => {
     const { job, problems } = await buildJob();
     if (problems.length) { showError(problems.join(' ')); return; }
     showError('');
+    // A pack too big to hold in memory can still be written straight to a
+    // file, and the dialog that asks where needs the click that is still
+    // in hand (web/local-api.js savePacked).
+    if (job.offline && apiLocal()) await askWhereToPack(job);
     // Files from the user's computer are built by the page itself.
     const r = job.source.kind === 'upload' ? await localSubmit(job) : await apiRequest('/api/jobs', { method: 'POST', body: job });
     location.href = pageUrl('build.html', 'job=' + encodeURIComponent(r.id));
@@ -647,7 +653,98 @@ function paintOfflineSize() {
       'extra runtime; untick the ones your users don\'t have, or choose the zip under Shape.';
     offlineWarnBox.hidden = false;
   } else offlineWarnBox.hidden = true;
+  paintPackWhere(mb, platforms);
 }
+
+/* ---------- which side of the line this browser is on ---------- */
+
+// Packing happens in the browser when there is no build server, and what a
+// browser can hold was measured rather than assumed
+// (docs/browser-packing.md). The publisher finds out here, at the tick,
+// which of three answers applies -- and the two that are not "yes" say what
+// would change them, because both are fixed by changing something on this
+// screen.
+//
+// The size here is the form's estimate, so the words are "about"; the build
+// itself works out the exact total from the plan and refuses before
+// fetching anything if it is over. The estimate and the limit are compared
+// the same way in both places (shared/form-job.js packBudget).
+const offlineWhereBox = document.getElementById('offline-where');
+
+// The largest single installer decides, not the sum: Windows, Linux and
+// macOS are three files, built one after another, and the page holds one at
+// a time (web/local-api.js).
+function largestPackMb(platforms) {
+  let most = 0;
+  for (const p of platforms) {
+    let mb = 0;
+    for (const t of OFFLINE_TARGETS) {
+      if (t.platform !== p) continue;
+      for (const a of t.arches) if (checked(offlineField(t.id, a.arch))) mb += a.mb;
+    }
+    if (mb > most) most = mb;
+  }
+  return most;
+}
+
+function paintPackWhere(totalMb, platforms) {
+  if (!offlineWhereBox) return;
+  if (!apiLocal()) {
+    offlineWhereBox.className = 'small muted offline-only';
+    offlineWhereBox.textContent = 'The build server packs these, and its own copies of the runtimes go into the files.';
+    return;
+  }
+  const mb = largestPackMb(platforms);
+  const picker = typeof globalThis.showSaveFilePicker === 'function' || typeof globalThis.showDirectoryPicker === 'function';
+  const held = packBudget(packEnv(globalThis, { noPicker: true }));
+  const lines = [];
+  let cls = 'small muted offline-only';
+  if (mb <= held.mb) {
+    lines.push('Packed in this browser. The largest of these installers is about ' + mb + ' MB, and this browser is good for ' +
+      held.mb + ' MB in one file, because ' + held.why + '.');
+  } else if (picker) {
+    lines.push('Packed in this browser, and written straight to a file: the largest of these is about ' + mb + ' MB, more than the ' +
+      held.mb + ' MB this browser will hold in memory, so when you press Build it asks where to save and writes each installer ' +
+      'there as it is made.');
+  } else {
+    cls = 'small warn-box offline-only';
+    lines.push('Too big to pack in this browser: the largest of these is about ' + mb + ' MB and the limit here is ' + held.mb +
+      ' MB, because ' + held.why + '. Untick systems or architectures until it fits, use a build server, or use a browser that ' +
+      'can write a file as it is made (Chrome or Edge on a computer).');
+  }
+  // The one thing no browser can do, whatever its memory: fetch a file our
+  // mirror does not hold. Said as a fact about the choice, because it is
+  // decided by which version is being packed, not by this machine.
+  lines.push('Only files our mirror holds can be packed here -- a browser cannot download from the vendors, who send no ' +
+    'cross-origin header. If one is missing, the build says which before it fetches anything.');
+  offlineWhereBox.className = cls;
+  offlineWhereBox.textContent = lines.join(' ');
+}
+
+// The destination for a pack this browser will not hold in memory, taken
+// while the click that pressed Build is still fresh: a file picker needs
+// that, and a build takes minutes. One dialog for one installer, one folder
+// for several, and a cancel just falls back to the in-memory path, which
+// then refuses if it must.
+async function askWhereToPack(job) {
+  const platforms = job.platforms || [];
+  const mb = largestPackMb(platforms);
+  const held = packBudget(packEnv(globalThis, { noPicker: true }));
+  if (mb <= held.mb) return;
+  try {
+    if (platforms.length === 1 && typeof globalThis.showSaveFilePicker === 'function') {
+      const handle = await globalThis.showSaveFilePicker({ suggestedName: 'installer' + EXT_FOR[platforms[0]] });
+      setPackDestination({ fileFor: () => Promise.resolve({ handle }) });
+    } else if (typeof globalThis.showDirectoryPicker === 'function') {
+      const dir = await globalThis.showDirectoryPicker({ mode: 'readwrite' });
+      setPackDestination({ fileFor: (name) => dir.getFileHandle(name, { create: true }).then((handle) => ({ handle })) });
+    }
+  } catch (e) {
+    setPackDestination(null);        // cancelled: the in-memory path, or its refusal
+  }
+}
+
+const EXT_FOR = { windows: '.exe', linux: '.run', macos: '.zip' };
 
 // "Build for" starts as the computer this page is open on: someone making
 // an installer almost always wants to try it here first, and the other two

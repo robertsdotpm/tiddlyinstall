@@ -178,6 +178,108 @@ export function archCoverage(entry) {
 // and the architecture boxes feed the same number.
 export const PACK_WARN_MB = 500;
 export const PACK_MAX_MB = 1900;   // the metadata block's 32-bit offsets stop near 2 GiB
+// The macOS installer is a zip, and a zip is built whole: the same shape of
+// limit, under shared/builder.js MAX_MAC_PACK (1000 MB), which is where a
+// build is actually refused.
+export const PACK_MAC_MAX_MB = 900;
+
+/* ---------- what this browser can be trusted to pack ---------- */
+
+// docs/browser-packing.md measured what browsers really manage, machine by
+// machine: 96 MB on a 744 MB 32-bit VM and on Firefox 52, 192 MB on 32-bit
+// Edge, 256 MB on Windows XP, 512 MB on a phone, 1536 MB on anything with
+// room. Those are ceilings found by bisection -- the size at which the tab
+// died -- and the page cannot tell which row it is on: Supermium on 32-bit
+// XP reports itself as `Windows NT 10.0; Win64; x64`, and Firefox on a
+// 32-bit Linux VM reports `Linux x86_64`, so neither the OS nor the word
+// length can be read off the user agent. `jsHeapSizeLimit` is no better:
+// every Chromium measured exceeded its own reported limit, by 4.6 GB
+// against 4.0 on 64-bit and by 812 MB against 515 on XP.
+//
+// So the budget is not computed from a guess about the machine. It starts
+// at a size **every machine measured actually completed** and moves only
+// on things the page can know for certain:
+//
+//   - the floor, 96 MB, is the largest pack the two tightest machines
+//     finished -- and they finished it with the old three-copy path, which
+//     needed about twice the heap the one-buffer path now does. A size
+//     that was reached with twice the memory is the most conservative
+//     starting point there is evidence for, and it clears the largest
+//     single default installer (90 MB, macOS) that section 2 of the doc
+//     lists.
+//   - `navigator.deviceMemory` exists on Chromium only, is rounded down to
+//     a power of two and is capped at 8, and it describes the device, not
+//     what is free on it. It may therefore *raise* the budget only in the
+//     two steps below, each of which sits under a machine of half that
+//     size that was measured to work (a 3.9 GB Linux box packed 512 MB, a
+//     2 GB XP box packed 256 MB); and it *lowers* it when the device says
+//     it is small, because a phone with other apps open gets less than the
+//     emulator that was measured. Its absence means "unknown", which takes
+//     the floor rather than the benefit of the doubt.
+//   - what the page is already holding (`usedJSHeapSize`, Chromium again)
+//     comes off the top: an uploaded archive sits in the same heap the
+//     pack has to fit in.
+//   - `showSaveFilePicker()` changes the question entirely. Writing to the
+//     file as it is made held 44-116 MB while writing 4.3 GB, so the limit
+//     there is the installer format's own (32-bit offsets), not memory.
+//
+// Where it refuses, it says what would make it possible, because two of
+// the three answers are fixed by changing a tick. Refusing a pack that
+// would have worked costs someone a choice they could make differently;
+// letting a tab die costs them the work with no error to explain it.
+export const PACK_FLOOR_MB = 96;          // every machine measured finished this
+export const PACK_PAGE_HEAP_MB = 64;      // what the page itself may hold for free
+
+export function packBudget(env) {
+  const e = env || {};
+  const dm = typeof e.deviceMemory === 'number' && isFinite(e.deviceMemory) ? e.deviceMemory : 0;
+  const out = { mb: PACK_FLOOR_MB, stream: !!e.savePicker, why: '', deviceMemory: dm };
+  if (out.stream) {
+    out.mb = e.macZip ? PACK_MAC_MAX_MB : PACK_MAX_MB;
+    out.why = 'this browser can write the installer to a file as it is made, so its size is limited by the installer format, not by memory';
+    return capped(out, e);
+  }
+  if (dm === 0) out.why = 'this browser does not say how much memory this computer has, so the limit is the one every machine we measured managed';
+  else if (dm >= 8) { out.mb = 512; out.why = 'this computer reports 8 GB or more'; }
+  else if (dm >= 4) { out.mb = 256; out.why = 'this computer reports ' + dm + ' GB'; }
+  else { out.mb = 64; out.why = 'this computer reports only ' + dm + ' GB'; }
+  // A macOS pack is built as a zip, entry by entry, by a compressor that
+  // holds each one; that path has never been measured against a browser,
+  // so it gets half the budget and its own ceiling.
+  if (e.macZip) out.mb = Math.min(Math.round(out.mb / 2), PACK_MAC_MAX_MB);
+  const held = typeof e.usedHeapMb === 'number' && isFinite(e.usedHeapMb) ? e.usedHeapMb : 0;
+  if (held > PACK_PAGE_HEAP_MB) out.mb -= Math.round(held - PACK_PAGE_HEAP_MB);
+  if (out.mb < 0) out.mb = 0;
+  return capped(out, e);
+}
+
+// A ceiling somebody set by hand. It can only lower the budget -- a page
+// told to be more careful is safe, a page told to be braver is the tab
+// that dies -- and it is how a test reaches the refusal without a machine
+// that really is that small.
+function capped(out, e) {
+  if (typeof e.limitMb === 'number' && isFinite(e.limitMb) && e.limitMb >= 0 && e.limitMb < out.mb) {
+    out.mb = Math.round(e.limitMb);
+    out.why = 'this page has been set to pack at most ' + out.mb + ' MB (TI_PACK_MB)';
+  }
+  return out;
+}
+
+// What a browser can read off itself. Kept here so the page and the tests
+// ask the same question; `g` is a window (or a stand-in for one in a test).
+export function packEnv(g, opts) {
+  const o = opts || {};
+  const nav = (g && g.navigator) || {};
+  const perf = (g && g.performance) || {};
+  const mem = perf.memory;
+  return {
+    deviceMemory: typeof nav.deviceMemory === 'number' ? nav.deviceMemory : 0,
+    savePicker: !!(g && typeof g.showSaveFilePicker === 'function') && !o.noPicker,
+    usedHeapMb: mem && typeof mem.usedJSHeapSize === 'number' ? Math.round(mem.usedJSHeapSize / 1048576) : 0,
+    macZip: !!o.macZip,
+    limitMb: g && typeof g.TI_PACK_MB === 'number' ? g.TI_PACK_MB : undefined,
+  };
+}
 
 export const offlineField = (id, arch) => 'offline_' + id + '_' + arch;
 
@@ -218,6 +320,27 @@ export function offlineTargets(f) {
   }
   return out;
 }
+
+// Which OS versions each ticked target means, as the integers a plan's
+// `when <family> <min> <max> <arch>` line uses (shared/resolve.js
+// loadOSScale: Windows NT major.minor, so XP is 501, Vista 600, 7 is 601,
+// 8 is 602, 8.1 is 603 and both 10 and 11 are 1000). A pack built in the
+// browser carries the files of the plan blocks that cover these, and no
+// others, so "Must work offline on Windows XP" packs the build that runs
+// there rather than every Windows build in the plan.
+//
+// `null` means the whole family: Linux and macOS are ticked by
+// architecture alone, with no OS-version choice in the picker.
+//
+// This is the one place the form's names for systems meet the plan's
+// numbers for them. tests/offline-test.mjs checks that every target here
+// selects at least one block of a real plan, because a mapping that
+// silently matches nothing would pack an empty offline installer and look
+// exactly like one that worked.
+export const OFFLINE_TARGET_OS = {
+  win_1011: [1000], win_78: [601, 602, 603], win_vista: [600], win_xp: [501],
+  linux: null, mac: null,
+};
 
 // What those targets add, in MB (the same estimate the form shows).
 export function offlineSizeMb(targets, platforms) {

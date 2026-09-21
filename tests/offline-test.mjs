@@ -16,9 +16,11 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { launchChrome, sleep } from './browsers/cdp.mjs';
-import { Checker, STARTED, waitFor, checkSections, buildHello as buildHelloIn, checkJob as checkJobIn } from './browsers/steps.mjs';
+import { Checker, STARTED, waitFor, checkSections, fetchBlob, buildHello as buildHelloIn, checkJob as checkJobIn } from './browsers/steps.mjs';
 import { noNativeArg, disableNative, checkNativeState, checkHasRules } from './no-native-browser.mjs';
-import { OFFLINE_TARGETS, offlineField, ARCH_LABEL, ENTRY_DEFAULTS } from '../shared/form-job.js';
+import { OFFLINE_TARGETS, OFFLINE_TARGET_OS, offlineField, ARCH_LABEL, ENTRY_DEFAULTS, packBudget, PACK_FLOOR_MB } from '../shared/form-job.js';
+import { planPackFiles } from '../shared/builder.js';
+import { parseFooterTail, readInstaller } from '../shared/tifile.js';
 import { templateLaunch } from '../shared/templates.js';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
@@ -90,7 +92,11 @@ try {
     && document.querySelector('[name=target_linux]').checked`),
     'choosing for yourself drops the note and keeps both');
   await js(`document.querySelector('[name=target_windows]').click()`);   // back as it was
-  ok(await js(`getComputedStyle(document.getElementById('offline-on').closest('label')).display === 'none'`), 'packing runtimes is hidden');
+  // Packing the runtimes is offered with no build server: what a browser
+  // can hold was measured on every machine we have rather than assumed
+  // (docs/browser-packing.md). It used to be hidden here.
+  ok(await js(`getComputedStyle(document.getElementById('offline-on').closest('label')).display !== 'none' &&
+    !document.getElementById('offline-on').disabled`), 'packing runtimes is offered with no build server');
   ok(await js(`getComputedStyle(document.getElementById('ts-on').closest('.online-only')).display === 'none'`), 'the timestamp relay is hidden');
   // Signing services whose API a browser can't call go through the build
   // server's relay, so offline they don't exist (docs/browser-signing.md 3).
@@ -149,6 +155,11 @@ try {
 
   const outside = requests.filter((u) => !/^(file|blob|data):/.test(u));
   ok(outside.length === 0, 'nothing was fetched from the network', outside.slice(0, 5).join(' '));
+
+  // Everything above this line is an installer that downloads its runtime
+  // when it runs, and fetches nothing while it is built. Packing is the
+  // one thing here that does reach the network, and only to our mirror.
+  await checkPacking();
 
   // Save this page, then open the saved copy and build again from it.
   await js(`document.querySelector('.save-page').click()`);
@@ -422,4 +433,242 @@ async function checkArchitecture() {
 async function tiRuntimes() {
   const r = await js(`tiLocalApi.request('/api/catalog/runtimes')`);
   return (r.runtimes || []).map((x) => x.id);
+}
+
+/* ---------- packing the runtimes in, with no build server ---------- */
+
+// docs/browser-packing.md measured what a browser can do and this is the
+// feature built on it. Four things are checked here, in the page:
+//
+//   - the form says which side of the line this browser and this choice of
+//     systems are on, before the build rather than after the failure;
+//   - a pack over the budget is refused, before anything is fetched;
+//   - the installers are built one at a time and handed over as each one
+//     is finished, and the previous build's object URLs are let go;
+//   - the finished file's own footer is read back out of the Blob and
+//     agrees with what was written.
+//
+// The last one needs our mirror, because a pack is the runtime's real
+// bytes. Where the mirror cannot be reached the build is not attempted and
+// the run says so loudly rather than passing quietly; --pack-required
+// makes that a failure (for a run where the mirror is meant to be up).
+async function checkPacking() {
+  checkBudgetRule();
+  checkTargetMapping();
+  await js(`location.hash = '#new'`);
+  await sleep(300);
+  const set = (o) => js(`(async () => {
+    const f = document.getElementById('new-form');
+    const s = ${JSON.stringify(o)};
+    for (const p of ['windows', 'linux', 'macos']) f.elements['target_' + p].checked = s.platforms.indexOf(p) >= 0;
+    f.elements.offline.checked = !!s.offline;
+    for (const t of ${JSON.stringify(OFFLINE_TARGETS)}) for (const a of t.arches) {
+      const b = f.elements['offline_' + t.id + '_' + a.arch];
+      if (b) b.checked = (s.targets || []).indexOf(t.id + '_' + a.arch) >= 0;
+    }
+    f.dispatchEvent(new Event('change', { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 250));
+    const w = document.getElementById('offline-where');
+    return { text: w ? w.textContent : '', cls: w ? w.className : '', shown: !!(w && w.getClientRects().length) };
+  })()`);
+
+  // Inside the line: it says where it will be packed and what this browser
+  // is good for, with the mirror rule as a fact about the choice.
+  const small = await set({ platforms: ['linux'], offline: true, targets: ['linux_amd64'] });
+  ok(small.shown && /^Packed in this browser\./.test(small.text), 'the form says a pack this size is made here', small.text);
+  ok(/this browser is good for \d+ MB in one file, because /.test(small.text),
+    'and says what this browser is good for, and why', small.text);
+  ok(/Only files our mirror holds can be packed here/.test(small.text),
+    'and states the mirror rule as a fact about the choice', small.text);
+
+  // Outside it. TI_PACK_MB only ever lowers the budget, so this is the
+  // same refusal a small machine gets, on a machine that is not small.
+  await js(`globalThis.TI_PACK_MB = 4`);
+  const big = await set({ platforms: ['linux'], offline: true, targets: ['linux_amd64'] });
+  const picker = await js(`typeof globalThis.showSaveFilePicker === 'function' || typeof globalThis.showDirectoryPicker === 'function'`);
+  if (picker) {
+    ok(/written straight to a file/.test(big.text) && /more than the 4 MB this browser will hold in memory/.test(big.text),
+      'over the limit, with a save picker: it says it will write the file as it is made', big.text);
+  } else {
+    ok(/^Too big to pack in this browser/.test(big.text) && /Untick systems or architectures/.test(big.text),
+      'over the limit, with no save picker: it says so and what would fix it', big.text);
+  }
+
+  // And the build refuses, before fetching anything.
+  const before = requests.length;
+  const refused = await js(`(async () => {
+    let j = await tiLocalApi.request('/api/jobs', { method: 'POST', body: ${JSON.stringify(packBody(['linux'], ['linux_amd64']))} });
+    for (let i = 0; i < 200 && j.status !== 'done' && j.status !== 'failed'; i++) {
+      await new Promise((r) => setTimeout(r, 100));
+      j = await tiLocalApi.request('/api/jobs/' + j.id);
+    }
+    return { status: j.status, error: j.error };
+  })()`);
+  ok(refused.status === 'failed' && /the limit here is 4 MB/.test(refused.error),
+    'a pack over the limit is refused, saying the limit and why', JSON.stringify(refused));
+  ok(/Untick some systems or architectures/.test(refused.error), 'and what would make it possible', refused.error);
+  const fetchedWhileRefusing = requests.slice(before).filter((u) => /^https?:/.test(u));
+  ok(fetchedWhileRefusing.length === 0, 'and nothing was fetched before refusing', fetchedWhileRefusing.join(' '));
+  await js(`delete globalThis.TI_PACK_MB`);
+
+  // The real thing, which needs the mirror.
+  if (!await mirrorReachable()) {
+    console.log('SKIP a real pack: our mirror did not answer, so there is nothing to pack from');
+    if (process.argv.includes('--pack-required')) ok(false, 'our mirror answers, so a pack can be built');
+    return;
+  }
+  const job = await js(`(async () => {
+    let j = await tiLocalApi.request('/api/jobs', { method: 'POST', body: ${JSON.stringify(packBody(['linux', 'macos'], ['linux_amd64', 'mac_arm64']))} });
+    const partials = [];
+    for (let i = 0; i < 6000 && j.status !== 'done' && j.status !== 'failed'; i++) {
+      await new Promise((r) => setTimeout(r, 200));
+      j = await tiLocalApi.request('/api/jobs/' + j.id);
+      const n = (j.result && j.result.files || []).length;
+      if (j.status === 'running' && n && n > partials.length) partials.push(j.result.files[n - 1].name);
+    }
+    j.partials = partials;
+    return j;
+  })()`);
+  ok(job.status === 'done', 'a packed installer builds in the page', JSON.stringify({ e: job.error, p: job.progress }).slice(0, 300));
+  if (job.status !== 'done') return;
+  // Handed over as each one was finished: with two platforms the first
+  // download exists while the second is still being packed. This is what
+  // makes the ceiling the largest single installer and not the sum.
+  ok(job.partials.length >= 1, 'each installer is handed over as it is built, not all at the end', JSON.stringify(job.partials));
+  const files = job.result.files;
+  ok(files.length === 2 && files.every((f) => f.offline), 'both platforms came out, marked as offline installers',
+    JSON.stringify(files.map((f) => [f.platform, f.size, f.offline])));
+  for (const f of files) {
+    const seen = await js(`(async () => {
+      const b = await (await fetch(${JSON.stringify(f.url)})).blob();
+      const tail = new Uint8Array(await b.slice(b.size - 64).arrayBuffer());
+      let hex = '';
+      for (const x of tail) hex += x.toString(16).padStart(2, '0');
+      return { size: b.size, tail: hex };
+    })()`);
+    ok(seen.size === f.size, `${f.platform}: the file reads back at the length it was built`, seen.size + ' of ' + f.size);
+    const tail = Buffer.from(seen.tail, 'hex');
+    if (f.platform === 'macos') {
+      ok(tail.length === 64, 'macos: the zip reads its own last bytes back');   // a zip has no footer
+    } else {
+      const foot = parseFooterTail(new Uint8Array(tail));
+      ok(foot && foot.pack > 0 && foot.record > 0, `${f.platform}: the footer read back out of the finished file is a footer`, JSON.stringify(foot));
+    }
+  }
+  // The whole point, checked against the file itself: a real plan, and in
+  // the pack exactly the files that plan's ticked blocks name, plus the
+  // app's own source. Nothing here is taken on the builder's word.
+  const lin = files.find((f) => f.platform === 'linux');
+  if (lin) {
+    const data = await fetchBlob(js, lin.url);
+    const info = await readInstaller(data, lin.name);
+    ok(info.kind === 'run' && !!info.plan && !!info.record, 'the packed .run carries its record and its plan', info.kind);
+    const want = planPackFiles(info.plan, 'linux', ['linux_amd64']);
+    const names = new Set(info.pack.map((m) => m.name));
+    ok(want.files.length >= 1 && want.files.every((f) => names.has(f.sha256)),
+      'and holds every file the blocks that were ticked name', JSON.stringify(want.files.map((f) => f.label)));
+    ok(want.skipped >= 1 && info.pack.length === want.files.length + 1,
+      'and nothing else but the app\'s source: the unticked architectures are left out',
+      info.pack.length + ' members for ' + want.files.length + ' packed files, ' + want.skipped + ' blocks skipped');
+    for (const m of info.pack) {
+      const f = want.files.find((x) => x.sha256 === m.name);
+      if (f) ok(m.data.length === f.size, `the packed ${f.label} is the length its plan gives`, m.data.length + ' of ' + f.size);
+    }
+  }
+  // Only our mirror was asked, and only for files the plan names.
+  const urls = requests.filter((u) => /^https?:/.test(u));
+  ok(urls.length > 0 && urls.every((u) => u.indexOf('/mirror/') > 0),
+    'the packed files came from our mirror and nowhere else', urls.slice(0, 3).join(' '));
+  // The next build lets the last one's files go (docs/browser-packing.md
+  // section 6): the rule is "revoke when the next build starts", which
+  // needs no download-finished event, because there is none.
+  const old = files[0].url;
+  await buildHello({ runtime: 'python', mode: 'unsigned', name: 'After the pack', code: "print('hi')\n", platforms: ['linux'] });
+  ok(await js(`fetch(${JSON.stringify(old)}).then(() => false, () => true)`),
+    'the next build revokes the last one\'s downloads', old);
+  await js(`(() => { const f = document.getElementById('new-form'); f.reset();
+    f.dispatchEvent(new Event('change', { bubbles: true })); return true; })()`);
+}
+
+// The budget itself: a pure function, so it is checked here rather than by
+// finding a machine of each size. What matters is the shape of it -- the
+// floor when the browser says nothing, more only where the machine says it
+// has more, less for what the page already holds and for the macOS zip,
+// and the format's limit when the file can be streamed to disk.
+function checkBudgetRule() {
+  const b = (e) => packBudget(e).mb;
+  ok(b({}) === PACK_FLOOR_MB, 'a browser that says nothing about itself gets the measured floor', b({}));
+  ok(b({ deviceMemory: 8 }) > b({ deviceMemory: 4 }) && b({ deviceMemory: 4 }) > b({}),
+    'a machine that reports more memory gets more', [b({}), b({ deviceMemory: 4 }), b({ deviceMemory: 8 })].join(' '));
+  ok(b({ deviceMemory: 2 }) < PACK_FLOOR_MB, 'a machine that reports little gets less than the floor', b({ deviceMemory: 2 }));
+  ok(b({ deviceMemory: 8, usedHeapMb: 300 }) < b({ deviceMemory: 8 }),
+    'what the page already holds comes off the top', [b({ deviceMemory: 8 }), b({ deviceMemory: 8, usedHeapMb: 300 })].join(' '));
+  ok(b({ deviceMemory: 8, macZip: true }) < b({ deviceMemory: 8 }),
+    'the macOS zip, whose path has never been measured, gets less', b({ deviceMemory: 8, macZip: true }));
+  ok(b({ savePicker: true }) > 1000 && packBudget({ savePicker: true }).stream,
+    'writing to a file as it is made is limited by the format, not by memory', b({ savePicker: true }));
+  ok(b({ savePicker: true, limitMb: 10 }) === 10 && b({ deviceMemory: 8, limitMb: 10 }) === 10 &&
+    b({ deviceMemory: 8, limitMb: 9000 }) === b({ deviceMemory: 8 }),
+    'a hand-set ceiling only ever lowers it');
+  // A footer that does not read back as a footer is the failure this
+  // feature must never hand over, so the check that catches it is checked.
+  const good = new Uint8Array(64);
+  good.set(new TextEncoder().encode('TIMETA1 000000000042 000000000000 000000001024 '), 0);
+  good.fill(32, 47, 63);
+  good[63] = 10;
+  ok(parseFooterTail(good) && parseFooterTail(good).pack === 1024, 'a footer reads back as its three lengths');
+  const cut = good.slice(0, 63);
+  ok(parseFooterTail(cut) === null && parseFooterTail(good.slice(1)) === null, 'a short or shifted tail is not taken for one');
+}
+
+// Every system in the picker must select at least one block of a real
+// plan. A mapping that matched nothing would pack an empty installer and
+// look exactly like one that worked -- the failure this project keeps
+// finding -- so it is checked against the catalogue the page carries.
+function checkTargetMapping() {
+  for (const t of OFFLINE_TARGETS) {
+    const os = OFFLINE_TARGET_OS[t.id];
+    ok(os === null || (Array.isArray(os) && os.length > 0), `${t.id}: the picker's system has plan numbers`, JSON.stringify(os));
+  }
+  const plan = [
+    '[target]', 'when\twindows\t1000\t9999\tamd64', 'file\tpython\tcore.msi\t' + 'a'.repeat(64) + '\t100\tamd64', 'url\thttp://m/core.msi',
+    '[target]', 'when\twindows\t601\t603\tx86', 'file\tpython\told.msi\t' + 'b'.repeat(64) + '\t200\tx86', 'url\thttp://m/old.msi',
+    '[target]', 'when\twindows\t501\t501\tx86', 'file\tpython\txp.msi\t' + 'c'.repeat(64) + '\t300\tx86', 'url\thttp://m/xp.msi',
+  ].join('\n');
+  const only1011 = planPackFiles(plan, 'windows', ['win_1011_amd64']);
+  ok(only1011.files.length === 1 && only1011.files[0].label === 'core.msi' && only1011.skipped === 2,
+    'ticking Windows 10/11 packs that block and leaves the others out', JSON.stringify(only1011.files.map((f) => f.label)));
+  ok(only1011.files[0].urls.length === 1, 'and keeps the URLs of the file it takes', JSON.stringify(only1011.files[0].urls));
+  const xp = planPackFiles(plan, 'windows', ['win_xp_x86']);
+  ok(xp.files.length === 1 && xp.files[0].label === 'xp.msi', 'ticking Windows XP packs the build that runs there',
+    JSON.stringify(xp.files.map((f) => f.label)));
+  const both = planPackFiles(plan, 'windows', ['win_1011_amd64', 'win_78_x86']);
+  ok(both.files.length === 2 && both.blocks === 2, 'two systems pack two blocks', JSON.stringify(both.files.map((f) => f.label)));
+  ok(planPackFiles(plan, 'linux', ['win_1011_amd64']).files.length === 0, 'and a platform with nothing ticked packs nothing');
+}
+
+// A declaration, not a const: the checks above run while this module is
+// still being evaluated, so anything they call has to be hoisted.
+function packBody(platforms, targets) {
+  return {
+    name: 'Hello packed', project: 'hellopack', runtime: 'python', mode: 'C',
+    source: { kind: 'inline' }, files: { 'hellopack/__main__.py': "print('hello from a packed installer')\n" },
+    platforms, launch: '{runtime} -m hellopack', console: true, menu: true, offline: true,
+    pack: { offline_include: 'all', shape: 'single', offline_targets: targets },
+  };
+}
+
+// Is our mirror there? Asked from here, not from the page: the page's own
+// fetch is what is being tested, and a probe from it would be the same
+// call the test is meant to be checking.
+async function mirrorReachable() {
+  if (process.argv.includes('--no-pack')) return false;
+  const base = process.env.TI_MIRROR || 'http://10.0.1.76:8080/mirror/';
+  try {
+    const c = new AbortController();
+    const t = setTimeout(() => c.abort(), 8000);
+    const r = await fetch(base, { signal: c.signal });
+    clearTimeout(t);
+    return r.status < 500;
+  } catch (e) { return false; }
 }

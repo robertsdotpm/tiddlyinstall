@@ -150,7 +150,11 @@ function paintFiles(job) {
   $('job-files').innerHTML = files.map((f) => {
     const url = absUrl(f.url);   // '' if the backend gave a non-http(s) URL
     const name = '<code>' + esc(f.name) + '</code>';
-    const link = url ? '<a href="' + esc(url) + '" download="' + esc(f.name) + '">' + name + '</a>' : name;
+    // A packed installer the page wrote straight to the file the publisher
+    // chose has no link to give: it is already on their disk, and saying
+    // so is better than a name that looks like a dead link.
+    const link = url ? '<a href="' + esc(url) + '" download="' + esc(f.name) + '">' + name + '</a>'
+      : name + (f.saved ? '<br><span class="muted">Written to the file you chose, as it was built</span>' : '');
     let signed = f.signed;
     if (!signed) signed = f.platform === 'linux' ? 'Not needed on Linux' : 'Unsigned';
     // How to run a `.run`, ready to copy. A browser download has no

@@ -422,9 +422,15 @@ Press Enter to close</pre>
           and picks the right one on the computer it runs on, so there is nothing to choose here.
           Apple dropped 32-bit support in macOS 10.15, so no runtime has a 32-bit macOS build.</p>
 
-        <label class="choice not-ours online-only" style="margin-top:12px"><input type="checkbox" id="offline-on" name="offline">
+        <!-- Offered with or without a build server: packing in the browser
+             was measured on every machine we have (docs/browser-packing.md),
+             and #offline-where says which side of the line this browser and
+             this choice of systems are on, before the wait rather than
+             after the failure. -->
+        <label class="choice not-ours" style="margin-top:12px"><input type="checkbox" id="offline-on" name="offline">
           <span>Also make offline installers <span class="small muted">for computers without internet. Bigger files, packed in your browser.</span></span></label>
-        <p class="small muted ours-only online-only" style="margin:10px 0 0">Offline installers need the installer signed by you or left unsigned (Customise &rarr; Signing).</p>
+        <p class="small offline-only" id="offline-where" style="margin:8px 0 0"></p>
+        <p class="small muted ours-only" style="margin:10px 0 0">Offline installers need the installer signed by you or left unsigned (Customise &rarr; Signing).</p>
 
         <!-- The essentials end with their own button. Nothing here
              follows the viewport (css/style.css, .build-bar), so the only

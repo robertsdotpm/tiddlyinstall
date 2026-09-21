@@ -35,9 +35,12 @@
 //                      check is the backstop there
 //   env.iconPng(icon)  the icon's PNG bytes, or null (the server loads its
 //                      stored upload by icon.sha256); default: icon.data
-//   env.packPlan(hash, plat, progress)  offline: {plan (signed), files:
-//                      [{name: sha256, size, data | path, read()}]}
-//   env.save(hash, name, spec)  the server writes the file itself and
+//   env.packPlan(hash, plat, progress, app)  offline: {plan (signed by the
+//                      server; the page's own is unsigned), files:
+//                      [{name: sha256, size, data | path, read()}]}. `app`
+//                      is the resolved app, for a caller that has no store
+//                      to look the record up in (the page)
+//   env.save(hash, name, spec, plat)  the writer writes the file itself and
 //                      returns {size, sha256}. spec is {data} or, for .exe
 //                      and .run, {layout: {base, record, plan, pack,
 //                      fixChecksum}} so large packs can be streamed
@@ -49,6 +52,7 @@
 import { toBytes, sha256Hex, recordHash, readInstaller, buildInstaller, tarWrite, installerExt, zipWrite, peInfo, zipRead, zipEntryData, zipUnixMode, zipIsDir, zipIsSymlink } from './tifile.js';
 import { resolve, resolveFiles, loadRuntimes, hasRuntime, validPackage, packagePolicyFor, packageProject, packageModule, pickBin, jsonField, goQuote, replacer, setRevoked } from './resolve.js';
 import { rasterSource, buildIco, buildIcns, setExeIcon, setMacIcon, checkIconPng } from './icon.js';
+import { OFFLINE_TARGETS, OFFLINE_TARGET_OS } from './form-job.js';
 import { inflate, deflate } from '../web/lib/zlib.js';
 
 const enc = new TextEncoder();
@@ -583,6 +587,61 @@ function unmirrored(cat, app, platforms) {
   return out;
 }
 
+/* ---------- which of a plan's files an offline installer carries ---------- */
+
+// The files the plan blocks that cover the ticked targets download, and no
+// others. A plan for one platform can hold a dozen blocks -- every Windows
+// Python back to 3.4, each with its four .msi parts -- so packing the whole
+// platform would be 171 MB where the publisher asked for the 30 MB that
+// runs on Windows 10 and 11. The pack is a subset on purpose: a machine
+// the publisher did not tick still installs, by downloading, exactly as it
+// would from an online installer.
+//
+// `targets` are the form's `<system>_<arch>` ids (shared/form-job.js
+// OFFLINE_TARGETS), and OFFLINE_TARGET_OS says which OS versions each one
+// means in the plan's own numbers. A block is carried when a ticked target
+// shares its architecture and falls inside its OS range.
+//
+// Returns {files, blocks, skipped}: `blocks` and `skipped` are counts, so a
+// caller can tell "nothing was ticked for this platform" from "every block
+// was wanted", and never hand over an empty pack believing it packed
+// something.
+export function planPackFiles(planText, platform, targets) {
+  const want = [];
+  for (const t of OFFLINE_TARGETS) {
+    if (t.platform !== platform) continue;
+    for (const a of t.arches) {
+      if (targets && targets.indexOf(t.id + '_' + a.arch) < 0) continue;
+      want.push({ arch: a.arch, os: Object.hasOwn(OFFLINE_TARGET_OS, t.id) ? OFFLINE_TARGET_OS[t.id] : null });
+    }
+  }
+  const files = [], seen = new Set();
+  let blocks = 0, skipped = 0, take = false, at = null;
+  for (const raw of String(planText || '').split('\n')) {
+    const f = raw.replace(/\r$/, '').split('\t');
+    // `url` lines belong to the line above them, and other keys carry URLs
+    // too (the app's own source), so they are only read straight after a
+    // file this pack is taking.
+    if (f[0] !== 'url') { if (f[0] !== 'file') at = null; }
+    if (f[0] === 'when') {
+      const family = f[1], min = Number(f[2]), max = Number(f[3]);
+      const arches = String(f[4] || '').split(/\s+/).filter(Boolean);
+      take = family === platform && want.some((w) => arches.indexOf(w.arch) >= 0 &&
+        (w.os === null || w.os.some((v) => v >= min && v <= max)));
+      if (take) blocks++; else skipped++;
+    } else if (take && f[0] === 'file' && f.length >= 5) {
+      const sha256 = f[3], size = Number(f[4]);
+      if (!/^[0-9a-f]{64}$/.test(sha256) || !(size >= 0) || seen.has(sha256)) continue;
+      seen.add(sha256);
+      at = { id: f[1], label: f[2], name: sha256, sha256, size, urls: [] };
+      files.push(at);
+    } else if (f[0] === 'url' && at) {
+      at.urls.push(f[1]);
+    }
+  }
+  return { files, blocks, skipped };
+}
+
 // runJob builds a request (validate()d here too). Returns {record, hash,
 // app, stem, src, unmirrored, files: [{platform, name, data?, size,
 // sha256, signed, offline}]}: without env.save each file's bytes are in
@@ -773,10 +832,15 @@ async function buildFile(job, plat) {
   let plan = null;
   let pack = [];
   if (r.offline) {
-    const p = await env.packPlan(hash, plat, progress);
+    const p = await env.packPlan(hash, plat, progress, app);
     plan = p.plan;
     checkPackIndex(p.files, plan);
     pack = dedupPack(p.files);
+    // The app's own code, packed as it is for an online installer built in
+    // the page: the plan names the source by its hash and there is no build
+    // server to fetch it from, so an offline installer that left it out
+    // would be the one thing in the file that still needed the network.
+    if (env.embedPlan && src) pack.unshift({ name: src.sha256, size: src.data.length, data: src.data });
     if (info.kind === 'zip' && packSize(pack) > MAX_MAC_PACK) {
       throw new Error('the packed files come to ' + MB(packSize(pack)) + ' MB; macOS offline installers are limited to ' + MB(MAX_MAC_PACK) + ' MB for now');
     }
@@ -829,10 +893,13 @@ async function buildFile(job, plat) {
 async function emit(job, plat, name, spec, signed) {
   const f = { platform: plat, name, size: 0, sha256: '', signed, offline: !!job.r.offline };
   if (job.env.save) {
-    const s = await job.env.save(job.hash, name, spec);
+    const s = await job.env.save(job.hash, name, spec, plat);
     f.size = s.size;
     f.sha256 = s.sha256;
+    // A writer that has already handed the file over says where it went:
+    // the page's is an object URL, or the file the user chose.
     if (s.url) f.url = s.url;
+    if (s.saved) f.saved = true;
   } else {
     f.data = spec.data;
     f.size = spec.data.length;
