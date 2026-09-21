@@ -12,6 +12,7 @@ version, dialogs, and menu entries.
 | `ti-engine.sh` | The engine. Also copied into every installed app as `uninstall.sh` |
 | `make_run.sh` | Builds the Linux base `out/ti-base.run` (the engine, syntax-checked with dash, bash and busybox) |
 | `make_app.sh` | Builds the macOS base `out/TiddlyInstall.app` and `out/ti-base-macos.zip`. On a Mac it is ad-hoc signed and zipped with `ditto` |
+| `macos-readme.txt` | Goes into that zip as `Read Me First.txt`, **beside** the app. Below |
 | `verify/` | `tiverify`, the Ed25519 verifier the bases carry: source, `build.sh` (Zig), the built binaries |
 | `test_verify.sh` | Plan signature cases (good over plain HTTP, `--plan`, tampered, replayed, unsigned) with openssl shadowed |
 | `test_freshness.sh` | Stale plans (design.md 7.1): the nonce echoed, another nonce refused, none noted; the revocation list by record, source and file, cached and used offline, ignored when signed as the wrong kind; `signed`/`maxage` fresh, past `maxage`, past the hard limit, and **not refused when the clock can't be believed**; and a plan with the new fields on the engine from before them. Runs on Linux and on macOS (18/18 on both, 2026-09-20); on Darwin it builds and runs the `.app`, because a `.run` there has no verifier it can execute and LibreSSL cannot check Ed25519. `TI_OLD_ENGINE_FILE` stands in for the git checkout a Mac hasn't got |
@@ -117,6 +118,41 @@ tried first for that reason; kdialog is the fallback, not the equal.
 | `--reinstall` | Install again even when this app is already fully installed with the same record (below) |
 | `--uninstall` | Uninstall mode. `uninstall.sh` also switches to it by itself when `manifest.txt` is next to it |
 
+### `Read Me First.txt`, beside the app
+
+The zip holds two things: `TiddlyInstall.app` (renamed per installer by
+`shared/builder.js`) and `Read Me First.txt`, from `macos-readme.txt`.
+It is **beside** the bundle, not inside it: Finder shows a bundle as a
+single item, so a file under `Contents/` is invisible to the person who
+just extracted the zip and would never be read.
+
+It is the macOS counterpart of the `.run` header box — short, addressed
+to someone who has just extracted this and does not know what it is —
+and most of it is about what macOS is about to do to them: a
+browser-downloaded app that Apple has not notarized is **killed** on
+macOS 15 and later, with a dialog that offers no way forward, and the
+only route is System Settings → Privacy & Security → **Open Anyway**
+(Control-click → Open was removed in macOS 15), or `xattr -dr
+com.apple.quarantine`. docs/macos-packaging.md section 5 is where that
+was measured; an ad-hoc signature buys nothing over none, so the file
+says plainly that we have no Apple Developer ID. It also says that a
+copy that arrived by `curl`, `scp`, a USB stick or a file share is not
+quarantined and simply opens, which is why the matrix has never seen
+this.
+
+Two consequences worth knowing:
+
+- Being a **second top-level entry**, it changes what Archive Utility
+  does with the zip: a double-click now extracts a folder holding the
+  app and the readme, where before it dropped a bare `.app` into
+  Downloads. That is the point — the readme is next to the app instead
+  of being a file nobody opens.
+- The text is generic, because the base is. It cannot name the app (the
+  `.app` is renamed per installer and the record is not in it yet), so
+  it says "the app beside this file" and points at the installer's first
+  screen for the name. The `.run` slot-filling trick (`nameTheRun`) has
+  no equivalent here and nothing needs one.
+
 **The macOS base must be built on a Mac.** `make_app.sh` ad-hoc signs
 the bundle (`codesign -s -`) and zips it with `ditto` only there;
 anywhere else it writes an unsigned zip, which is not what mode A
@@ -125,20 +161,36 @@ engine is this same file, so an engine change reaches macOS as soon as
 the base is built there -- and `out/ti-base-macos.zip` on this machine
 is whatever was last built there, nothing more.
 
-**Last built 2026-09-21T13:35:49Z** on the Mac test server (macOS 26.2
-`25C56`, arm64, `Matthew@the-mac-test-host`), from `ti-engine.sh` with the
-review screen's last two wrapping faults fixed: `SYSTEM-WIDE
-PREREQUISITES` now goes through `ti_wrap` like every other section, and
-the signature's scope sits on its own line under the signer instead of
-running past 74 and stranding `installs)`.
+**Last built 2026-09-22T08:48:37+10:00** (`TI_BUILD_TIME`
+`2026-09-21T22:48:37Z`) on the Mac test server (macOS 26.2 `25C56`,
+arm64, `Matthew@the-mac-test-host`), for `Read Me First.txt`: the zip now
+holds the readme beside the app, and the engine inside it is unchanged
+from the build before.
 
 | | |
 | --- | --- |
-| `out/ti-base-macos.zip` | `6b149a3a01c35aac3cce7a87534ec3c9583d3f94870c78df0f8d9f1dc4224dba`, 69,901 bytes |
-| the engine inside it | `ti-engine.sh` with the baked lines filled, and **only** those four lines: diffed against the committed source, four lines differ |
+| `out/ti-base-macos.zip` | `7f2fb049c6b7f18f70d91b01c39158e25c801dc3cc39a3c7320e1e10fe90afe7`, 71,376 bytes |
+| the engine inside it | `ti-engine.sh` with the baked lines filled, and **only** those four lines: diffed against the committed source, four lines differ. `8a476ef672a6993a905c8695b3ed534157e5b9f5727cce7598e9009ac3d2e77f` |
+| `Read Me First.txt` | 1,961 bytes, mode 644, a top-level entry beside `TiddlyInstall.app/` |
 | plan signing key | `97930ea1888d1a12` (unchanged) |
-| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T13:35:49Z` / `1789997749` |
-| signature | ad-hoc; `codesign --verify --strict` is happy on the bundle **and** on the bundle re-extracted from the zip with `ditto` ("valid on disk", "satisfies its Designated Requirement", `Signature=adhoc`); `spctl -a` rejects it, as it must |
+| `TI_BUILD_TIME` / `TI_BUILD_EPOCH` | `2026-09-21T22:48:37Z` / `1790030917` |
+| signature | ad-hoc; `codesign --verify --strict` is happy on the bundle **and** on the bundle re-extracted from the zip with `ditto` ("valid on disk", "satisfies its Designated Requirement", `Signature=adhoc`); `spctl -a` rejects it, as it must. The readme is appended with `zip` after `ditto` has written the archive, which copies the app's entries through unchanged — that re-extract check is what proves it |
+
+The build before this one was rebuilt on 2026-09-21 at about 23:44
+local from the engine with the review-screen changes committed that
+evening, and this table was not updated for it: it recorded
+`6b149a3a…` / 69,901 bytes (`TI_BUILD_TIME` `2026-09-21T13:35:49Z`)
+while the file on disk was `57228a9db112dc6dba268891b05b8e2fbf507121bccf3a4380f863dbfcab0151`,
+70,278 bytes. Noted rather than reconstructed; the engine in it is the
+same source this build used.
+
+The build before that was **2026-09-21T13:35:49Z**, from `ti-engine.sh`
+with the review screen's last two wrapping faults fixed: `SYSTEM-WIDE
+PREREQUISITES` now goes through `ti_wrap` like every other section, and
+the signature's scope sits on its own line under the signer instead of
+running past 74 and stranding `installs)`. Its zip was
+`6b149a3a01c35aac3cce7a87534ec3c9583d3f94870c78df0f8d9f1dc4224dba`,
+69,901 bytes, `TI_BUILD_EPOCH` `1789997749`.
 
 The build before this one was **2026-09-21T11:57:18Z**, from
 `ti-engine.sh` with the review screen telling the truth about a source

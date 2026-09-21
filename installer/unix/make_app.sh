@@ -1,6 +1,7 @@
 #!/bin/sh
 # Build the macOS base: out/TiddlyInstall.app and out/ti-base-macos.zip.
 #
+#   Read Me First.txt                     macos-readme.txt, beside the app
 #   TiddlyInstall.app/Contents/Info.plist
 #   TiddlyInstall.app/Contents/MacOS/install      = ti-engine.sh
 #   TiddlyInstall.app/Contents/Resources/tiverify-{x86_64,arm64}   Ed25519 verifiers
@@ -13,12 +14,21 @@
 # On a Mac the bundle is ad-hoc signed (codesign -s -) and zipped with
 # ditto, which keeps permissions and the signature's extended attributes.
 # Elsewhere it is zipped with `zip -r -y` (permissions kept, unsigned).
+#
+# `Read Me First.txt` sits **beside** the app, not inside it: Finder shows
+# a bundle as one item, so anything under Contents/ is invisible to the
+# person who just extracted the zip. Being a second top-level entry, it
+# also makes Archive Utility extract into a folder rather than dropping a
+# bare .app in Downloads. shared/builder.js renames the .app per installer
+# and rewrites Contents/Resources/ti/; a top-level entry is outside both,
+# so it is carried through modes A, B and C untouched.
 set -eu
 here=$(cd "$(dirname "$0")" && pwd)
 outdir=${1:-$here/out}
 app=$outdir/TiddlyInstall.app
 zipf=$outdir/ti-base-macos.zip
-rm -rf "$app" "$zipf"
+readme='Read Me First.txt'
+rm -rf "$app" "$zipf" "$outdir/$readme"
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources/ti"
 . "$here/plankey.sh"
 bake_engine "$here/ti-engine.sh" "$app/Contents/MacOS/install"
@@ -46,12 +56,19 @@ cat > "$app/Contents/Info.plist" <<'PLIST'
 </dict>
 </plist>
 PLIST
+# Beside the app, never inside it. A missing readme is a build failure, not
+# a zip quietly short of a file nobody would notice was gone.
+[ -f "$here/macos-readme.txt" ] || { echo "make_app: $here/macos-readme.txt is missing" >&2; exit 1; }
+cp "$here/macos-readme.txt" "$outdir/$readme"
+chmod 644 "$outdir/$readme"
 if [ "$(uname -s)" = Darwin ]; then
 	codesign -s - --force "$app"
 	codesign --verify --verbose "$app"
-	(cd "$outdir" && ditto -c -k --keepParent TiddlyInstall.app "$zipf")
+	# ditto signs nothing and takes one item, so the readme is appended
+	# after it; `zip` copies the existing entries through unchanged.
+	(cd "$outdir" && ditto -c -k --keepParent TiddlyInstall.app "$zipf" && zip -q "$zipf" "$readme")
 else
 	echo "make_app: not on macOS; the bundle is NOT signed" >&2
-	(cd "$outdir" && zip -q -r -y "$zipf" TiddlyInstall.app)
+	(cd "$outdir" && zip -q -r -y "$zipf" TiddlyInstall.app "$readme")
 fi
 echo "$zipf ($(wc -c < "$zipf" | tr -d ' ') bytes)"
