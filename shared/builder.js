@@ -619,10 +619,12 @@ export function planPackFiles(planText, platform, targets) {
   let blocks = 0, skipped = 0, take = false, at = null;
   for (const raw of String(planText || '').split('\n')) {
     const f = raw.replace(/\r$/, '').split('\t');
-    // `url` lines belong to the line above them, and other keys carry URLs
-    // too (the app's own source), so they are only read straight after a
-    // file this pack is taking.
-    if (f[0] !== 'url') { if (f[0] !== 'file') at = null; }
+    // A `url` line belongs to the line above it, and keys other than
+    // `file` carry URLs too (the app's own source), so a URL is only
+    // taken when the line before it was a file this pack is taking --
+    // including when a `file` line was skipped, which would otherwise
+    // hand its URLs to the file before it.
+    if (f[0] !== 'url') at = null;
     if (f[0] === 'when') {
       const family = f[1], min = Number(f[2]), max = Number(f[3]);
       const arches = String(f[4] || '').split(/\s+/).filter(Boolean);

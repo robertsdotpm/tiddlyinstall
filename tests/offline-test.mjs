@@ -642,6 +642,18 @@ function checkTargetMapping() {
   const xp = planPackFiles(plan, 'windows', ['win_xp_x86']);
   ok(xp.files.length === 1 && xp.files[0].label === 'xp.msi', 'ticking Windows XP packs the build that runs there',
     JSON.stringify(xp.files.map((f) => f.label)));
+  // A URL belongs to the file above it, including when that file was
+  // skipped: the second copy of the same SHA-256 here must not hand its
+  // URLs to the file before it, which would be a URL for the wrong bytes.
+  const dup = [
+    '[target]', 'when\twindows\t1000\t9999\tamd64',
+    'file\tpython\tcore.msi\t' + 'a'.repeat(64) + '\t100\tamd64', 'url\thttp://m/core.msi',
+    'file\tpython\tsame.msi\t' + 'a'.repeat(64) + '\t100\tamd64', 'url\thttp://m/other.msi',
+    'file\tpython\tlib.msi\t' + 'd'.repeat(64) + '\t200\tamd64', 'url\thttp://m/lib.msi',
+  ].join('\n');
+  const dupSel = planPackFiles(dup, 'windows', ['win_1011_amd64']);
+  ok(dupSel.files.length === 2 && dupSel.files[0].urls.length === 1 && dupSel.files[0].urls[0] === 'http://m/core.msi',
+    'a skipped file does not give its URLs to the one before it', JSON.stringify(dupSel.files.map((f) => f.urls)));
   const both = planPackFiles(plan, 'windows', ['win_1011_amd64', 'win_78_x86']);
   ok(both.files.length === 2 && both.blocks === 2, 'two systems pack two blocks', JSON.stringify(both.files.map((f) => f.label)));
   ok(planPackFiles(plan, 'linux', ['win_1011_amd64']).files.length === 0, 'and a platform with nothing ticked packs nothing');
