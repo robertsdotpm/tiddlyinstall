@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sources · TiddlyInstall</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">
+      <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="2.5" y="2.5" width="19" height="19"></rect>
+        <line x1="12" y1="6" x2="12" y2="13"></line>
+        <polyline points="8.5 9.8 12 13.3 15.5 9.8"></polyline>
+        <line class="tray" x1="7" y1="17.5" x2="17" y2="17.5"></line>
+      </svg>
+      TiddlyInstall</a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="new.html">New installer</a>
+      <a href="edit.html">Edit installer</a>
+      <a href="runtimes.html" aria-current="page">Sources</a>
+    </nav>
+  </header>
+
+  <main class="wide" id="rt-editor">
+    <div class="page-head">
+      <span class="eyebrow"><span class="num">Catalogue</span> &nbsp;Sources</span>
+      <h1>Sources</h1>
+      <p class="lede">The catalogue this page builds from: every runtime release it can install, the steps
+        that install it, and the systems each one runs on. Change it here. Your changes stay in this
+        browser, as a short list on top of the catalogue built into the page.</p>
+    </div>
+
+    <p class="unavailable" id="rt-nocat" hidden>This copy of the page has no catalogue inside it. The runtime editor works in the one-file site (<code>out/index.html</code>, or a copy saved with &ldquo;Save this page&rdquo;).</p>
+    <p class="muted" id="rt-loading">Loading the catalogue…</p>
+
+    <div id="rt-app" hidden>
+      <div class="warn-box" id="rt-mode" role="status"></div>
+      <div class="warn-box" id="rt-store" role="status" hidden></div>
+
+      <section class="panel rt-changes" id="rt-changes">
+        <div class="rt-bar">
+          <strong id="rt-count">No changes</strong>
+          <span class="muted small" id="rt-where"></span>
+          <span class="rt-bar-actions">
+            <button type="button" class="secondary" id="rt-export">Export…</button>
+            <label class="button secondary rt-file">Import…<input type="file" id="rt-import" accept=".json,application/json"></label>
+            <button type="button" class="secondary" id="rt-reset">Reset all</button>
+          </span>
+        </div>
+        <p class="small muted" id="rt-page-note" hidden></p>
+        <div class="rt-confirm" id="rt-reset-confirm" hidden>
+          <span>Drop every change made in this browser and go back to the catalogue built into the page?</span>
+          <button type="button" id="rt-reset-yes">Reset all</button>
+          <button type="button" class="secondary" id="rt-reset-no">Keep them</button>
+        </div>
+        <details id="rt-changes-details">
+          <summary>What's changed</summary>
+          <ul class="rt-change-list" id="rt-change-list"></ul>
+        </details>
+      </section>
+
+      <section class="panel rt-review" id="rt-review" hidden>
+        <span class="eyebrow">Imported file</span>
+        <h2 class="section-title" id="rt-review-title">Review the imported changes</h2>
+        <p class="small">Nothing from this file is used until you apply it. Recipes run commands on the computers your installers go to, and sources decide what they download: read each change first.</p>
+        <ul class="rt-change-list" id="rt-review-list"></ul>
+        <p class="small error-text" id="rt-review-skipped" hidden></p>
+        <div class="actions">
+          <button type="button" id="rt-review-add">Add to my changes</button>
+          <button type="button" class="secondary" id="rt-review-replace">Replace my changes with these</button>
+          <button type="button" class="secondary" id="rt-review-cancel">Cancel</button>
+        </div>
+      </section>
+
+      <div class="rt-layout">
+        <nav class="rt-runtimes" id="rt-runtimes" aria-label="Runtimes"></nav>
+
+        <div class="rt-main">
+          <div class="rt-head">
+            <h2 id="rt-title"></h2>
+            <span class="muted small" id="rt-sub"></span>
+            <span class="small rt-arch" id="rt-arch"></span>
+          </div>
+          <div class="tabs" role="tablist" id="rt-tabs">
+            <button type="button" class="tab" role="tab" data-tab="releases">Releases</button>
+            <button type="button" class="tab" role="tab" data-tab="recipes">Recipes</button>
+            <button type="button" class="tab" role="tab" data-tab="rules">Support rules</button>
+            <button type="button" class="tab" role="tab" data-tab="policy">Policy</button>
+          </div>
+
+          <div id="rt-tab-releases" class="rt-tab">
+            <div class="rt-filters">
+              <label>OS <select id="rt-f-os"></select></label>
+              <label>Arch <select id="rt-f-arch"></select></label>
+              <label>Variant <select id="rt-f-variant"></select></label>
+              <label>Format <select id="rt-f-format"></select></label>
+              <label>Version <input type="text" id="rt-f-version" placeholder="3.12 or >=3.9,<3.13" spellcheck="false" autocomplete="off"></label>
+              <label class="choice"><input type="checkbox" id="rt-f-changed"> Changed only</label>
+            </div>
+            <div class="rt-listbar">
+              <span class="small muted" id="rt-rel-count"></span>
+              <button type="button" class="secondary small-button" id="rt-rel-add">+ Add a release</button>
+            </div>
+            <div class="rt-vhead" aria-hidden="true"><span>Version</span><span>OS</span><span>Arch</span><span>Variant</span><span>Format</span><span>File</span><span></span></div>
+            <div class="rt-vlist" id="rt-rel-list" tabindex="0" role="listbox" aria-label="Releases"><div class="rt-vspace"></div></div>
+          </div>
+
+          <div id="rt-tab-recipes" class="rt-tab" hidden>
+            <p class="small muted rt-tab-intro">A recipe is how a release gets installed: the steps run on the user's computer. The resolver picks, for each release, the recipe whose match fields fit it best.</p>
+            <div class="rt-listbar">
+              <span class="small muted" id="rt-rec-count"></span>
+              <button type="button" class="secondary small-button" id="rt-rec-add">+ Add a recipe</button>
+            </div>
+            <div class="table-wrap"><table class="rt-table" id="rt-rec-table"></table></div>
+          </div>
+
+          <div id="rt-tab-rules" class="rt-tab" hidden>
+            <p class="small muted rt-tab-intro">Support rules say which OS versions a release runs on. A release with no rule falls back to the catalogue's default floor.</p>
+            <div class="rt-listbar">
+              <label class="small">OS <select id="rt-rule-os"></select></label>
+              <span class="small muted" id="rt-rule-count"></span>
+              <button type="button" class="secondary small-button" id="rt-rule-add">+ Add a rule</button>
+            </div>
+            <div class="table-wrap"><table class="rt-table" id="rt-rule-table"></table></div>
+          </div>
+
+          <div id="rt-tab-policy" class="rt-tab" hidden></div>
+
+          <section class="panel rt-detail" id="rt-detail" hidden></section>
+
+          <section class="panel rt-preview" id="rt-preview">
+            <span class="eyebrow">Check before you save</span>
+            <h3 class="section-title">Preview: the plan the&nbsp;resolver&nbsp;makes</h3>
+            <p class="small muted section-intro">Worked out in this page by the same resolver builds use, with your changes (and the edit you're making, once it's valid) against the catalogue built into the page.</p>
+            <div class="rt-filters">
+              <label>Platform <select id="rt-p-family"><option value="windows">Windows</option><option value="macos">macOS</option><option value="linux">Linux</option></select></label>
+              <label>Which version <select id="rt-p-select"></select></label>
+              <label id="rt-p-range-label" hidden>Versions <input type="text" id="rt-p-range" spellcheck="false" autocomplete="off" placeholder=">=3.9,<3.13"></label>
+              <label class="choice"><input type="checkbox" id="rt-p-diffonly"> Differences only</label>
+            </div>
+            <p class="small" id="rt-p-status"></p>
+            <div class="table-wrap"><table class="rt-table rt-ptable" id="rt-p-table"></table></div>
+            <details id="rt-p-diff-wrap">
+              <summary id="rt-p-diff-sum">Plan lines that change</summary>
+              <pre class="rt-diff" id="rt-p-diff"></pre>
+            </details>
+            <details>
+              <summary>The whole plan, with&nbsp;your&nbsp;changes</summary>
+              <pre class="rt-plan" id="rt-p-plan"></pre>
+            </details>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Designed by <a href="https://robertsdotpm.github.io/">Matthew Roberts</a> and implemented by Claude.
+  </footer>
+
+  <script type="module" src="catalog-editor.js"></script>
+  <!-- The header's settings and the "where installers are built" indicator.
+       The one-file site mounts them once for its shared header; as separate
+       pages this one had neither. -->
+  <script type="module">import { mountApiFooter } from './api.js'; mountApiFooter();</script>
+</body>
+</html>
