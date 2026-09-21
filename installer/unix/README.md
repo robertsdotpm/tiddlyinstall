@@ -86,8 +86,12 @@ a machine-wide install, a system package, an unpinned project, a command
 the publisher wrote, an instruction the engine does not know, and the
 dependencies an `install` line fetches -- with the "we did not write
 this program" sentence written by the same code path. Administrator
-rights and an unpinned source left BEFORE YOU SAY YES with it, and the
-download section's SHA-256 claim is scoped to the files it lists. The
+rights and an unpinned source left BEFORE YOU SAY YES with it; the
+SHA-256 promise, which the `Sources:` line and WHAT IT DOWNLOADS were
+both making on top of the `sha256` under every file, is now made once,
+in the sentence that opens that section; and every file in the download
+list says what it is -- `(the runtime)`, `(part of the runtime)`,
+`(a tool the install needs)`, `(the project itself)`. The
 engine is one file, so that change reached macOS only when this was
 rebuilt. The macOS dialog's short form carries the same two claims, in
 the same order, because it is the whole of what that dialog says.
