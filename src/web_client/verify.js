@@ -19,7 +19,9 @@
 // these settings were ever published, whether the plan is still the one
 // the resolver produces, and whether it has been revoked since. Those
 // cannot live in the file, which is exactly why they need a server.
-import { readInstaller } from '../shared/tifile.js';
+import { readInstaller, parseKv, kvGet } from '../shared/tifile.js';
+import { resolve, loadRuntimes } from '../shared/resolve.js';
+import { effectiveCatalog, hasCatalog } from './overlay.js';
 import { apiRequest, apiBase, apiLocal, apiReady, errorText, mountApiFooter } from './api.js';
 import { sha256, sha256Stream } from './lib/sha.js';
 import { verify as ed25519Verify } from './lib/ed25519.js';
@@ -99,6 +101,13 @@ function rows(dl, list) {
 
 const PLATFORM = { exe: 'Windows', run: 'Linux', zip: 'macOS' };
 
+// The catalogue's label for a runtime id, so the page says "Python 3"
+// rather than "python". Falls back to the id, which is still readable.
+const RUNTIME_NAME = { python: 'Python 3', python2: 'Python 2', node: 'Node.js', ruby: 'Ruby', php: 'PHP',
+  java: 'Java', dotnet: '.NET', r: 'R', cc: 'C/C++', go: 'Go', rust: 'Rust', zig: 'Zig', nim: 'Nim',
+  none: 'no runtime' };
+const runtimeName = (id) => RUNTIME_NAME[id] || id;
+
 function hsize(n) {
   if (n < 1024) return n + ' bytes';
   if (n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
@@ -107,24 +116,120 @@ function hsize(n) {
 
 /* ---------- what the plan would do ---------- */
 
-function describe(planText) {
-  const lines = planLines(planText);
-  const get = (k) => (lines.find((l) => l.key === k) || { val: () => '' }).val(0);
-  const files = [];
-  const cmds = [];
-  let admin = false;
-  for (const l of lines) {
-    if (l.key === 'file') files.push({ name: l.val(0), file: l.val(1), sha: l.val(2), size: l.val(3), url: '' });
-    else if (l.key === 'url' && files.length) files[files.length - 1].url = l.val(0);
-    else if (l.key === 'step' && l.val(0) === 'run') cmds.push(l.f.slice(2).join(' '));
-    else if (l.key === 'install' && l.val(0)) cmds.push(l.val(0));
-    else if (l.key === 'admin' && l.val(0) === '1') admin = true;
+// A plan is a header and then one block per [target]: one OS and one
+// architecture each, and the engine picks the block for the machine it
+// lands on (docs/format.md section 3). Reading them as one list, which
+// this page did until 2026-09-22, adds every platform's downloads
+// together and describes an install nobody will ever get.
+function parsePlan(text) {
+  const head = [];
+  const blocks = [];
+  let cur = null;
+  for (const l of planLines(text)) {
+    if (l.key === '[target]') { cur = []; blocks.push(cur); continue; }
+    (cur || head).push(l);
   }
+  return { head, blocks };
+}
+
+const FAMILY = { windows: 'Windows', macos: 'macOS', linux: 'Linux' };
+const ARCH = { amd64: '64-bit (x64)', x86: '32-bit (x86)', arm64: '64-bit ARM', ppc: 'PowerPC' };
+
+function pick(lines, key) {
+  const l = lines.find((x) => x.key === key);
+  return l || null;
+}
+
+// One target: the machine it is for, the runtime it puts there, what it
+// downloads and what it runs. Sizes are the plan's own numbers.
+function describeTarget(block) {
+  const when = pick(block, 'when');
+  const rt = pick(block, 'runtime');
+  const covers = pick(block, 'covers');
+  const files = [];
+  for (const l of block) {
+    if (l.key === 'file') files.push({ name: l.val(0), file: l.val(1), sha: l.val(2), size: +l.val(3) || 0, urls: [] });
+    else if (l.key === 'url' && files.length) files[files.length - 1].urls.push(l.val(0));
+  }
+  const runs = [];
+  for (const l of block) {
+    if (l.key === 'step' && l.val(0) === 'run') runs.push(l.f.slice(2).join(' '));
+    else if (l.key === 'install' && l.val(0)) runs.push(l.val(0));
+  }
+  const arch = when ? when.val(3).split(' ')[0] : '';
+  return {
+    family: when ? when.val(0) : '',
+    arch,
+    covers: covers ? covers.val(0) : '',
+    runtime: rt ? rt.val(0) : '',
+    version: rt ? rt.val(1) : '',
+    files,
+    bytes: files.reduce((n, f) => n + f.size, 0),
+    runs,
+    admin: block.some((l) => l.key === 'admin' && l.val(0) === '1'),
+  };
+}
+
+function describe(planText) {
+  const { head, blocks } = parsePlan(planText);
+  const get = (k) => { const l = pick(head, k); return l ? l.val(0) : ''; };
+  const targets = blocks.map(describeTarget);
   return {
     name: get('name'), project: get('project'), appid: get('appid'), record: get('record'),
     launch: get('launch'), menu: get('menu'), desktop: get('desktop'), root: get('root'),
-    files, cmds, admin,
+    runtime: get('runtime'), maxage: get('maxage'), signedAt: get('signed'),
+    targets,
+    admin: targets.some((t) => t.admin),
   };
+}
+
+// The host a download really comes from, for the "from" column. Our own
+// mirror is named as ours rather than as an address nobody recognises.
+function hostOf(u) {
+  try {
+    const h = new URL(u).host;
+    return /\/mirror\//.test(u) ? h + ' (our mirror)' : h;
+  } catch (e) { return u || 'not given'; }
+}
+
+// An installer with no plan inside fetches one when it runs (mode A).
+// "Nothing here to read" was the wrong answer: this page carries the
+// same catalogue and the same resolver the build server uses, so it can
+// work out the plan the record asks for and show that instead. It is
+// not the plan the installer will get -- that one is made when it runs,
+// against the catalogue as it is then -- so it is labelled as ours.
+async function planFromRecord(recordText) {
+  if (!recordText || !hasCatalog || !hasCatalog()) return null;
+  let entries;
+  try { entries = parseKv(recordText); } catch (e) { return null; }
+  const one = (k) => { const v = kvGet(entries, k); return v && v.length ? v[0] : ''; };
+  const runtime = one('runtime');
+  if (!runtime) return null;
+  const app = {
+    name: one('name'), project: one('project'), runtime,
+    select: one('select') || 'newest', range: one('range'),
+    launch: one('launch'), install: one('install'),
+    console: one('console') === '1', menu: one('menu') === '1', desktop: one('desktop') === '1',
+    root: one('root') || 'user', rootname: one('rootname') || 'ti',
+    recordHash: 'preview',
+  };
+  const pkg = kvGet(entries, 'source');
+  if (pkg && pkg.length) {
+    const f = String(pkg[0]).split('\t');
+    if (f[0] === 'package') { app.package = f[1] || app.project; app.packageVersion = f[2] || ''; }
+  }
+  try {
+    const eff = await effectiveCatalog();
+    const cat = eff && eff.catalog ? eff.catalog : eff;
+    // The catalogue is split per runtime and the chunks are unpacked on
+    // demand (docs/format.md 6), so the folder has to be loaded before
+    // resolving or it throws notLoaded. Doing this synchronously is why
+    // the first version of this silently produced nothing at all.
+    await loadRuntimes(cat, [runtime]);
+    return resolve(cat, app);
+  } catch (e) {
+    return null;
+  }
 }
 
 /* ---------- the server checks ---------- */
@@ -251,7 +356,7 @@ async function open(file) {
     const sha = await hashFile(file);
     const bytes = new Uint8Array(await file.arrayBuffer());
     const info = await readInstaller(bytes, file.name);
-    paint(file, sha, info);
+    await paint(file, sha, info);
   } catch (e) {
     el('v-error').textContent = 'Could not read ' + file.name + ': ' + errorText(e);
     el('v-error').hidden = false;
@@ -260,8 +365,14 @@ async function open(file) {
   }
 }
 
-function paint(file, sha, info) {
-  const d = info.plan ? describe(info.plan) : null;
+async function paint(file, sha, info) {
+  let derived = false;
+  let planText = info.plan;
+  if (!planText) {
+    planText = await planFromRecord(info.record);
+    derived = !!planText;
+  }
+  const d = planText ? describe(planText) : null;
 
   rows(el('v-file-facts'), [
     ['Name', '<code>' + esc(file.name) + '</code>'],
@@ -274,26 +385,84 @@ function paint(file, sha, info) {
   ]);
 
   el('v-plan-none').hidden = !!d;
+  const note = el('v-plan-derived');
+  if (note) {
+    note.hidden = !derived;
+    note.innerHTML = derived
+      ? 'This installer does not carry a plan: it asks a build server for one when it runs. '
+        + 'What follows was worked out <strong>here</strong>, from the settings in the file and this page\'s own '
+        + 'catalogue, with the same resolver the build server uses. The installer\'s real plan is made when it runs, '
+        + 'so a newer runtime may have appeared by then.'
+      : '';
+  }
   if (d) {
+    const rtLabel = d.runtime || (d.targets.find((t) => t.runtime && t.runtime !== 'none') || {}).runtime || '';
+    // Versions differ per machine -- an old Windows gets an old Python on
+    // purpose -- so say the span rather than listing five numbers.
+    const vers = [];
+    for (const t of d.targets) if (t.version && vers.indexOf(t.version) < 0) vers.push(t.version);
+    const cmp = (a, b) => { const A = a.split('.').map(Number), B = b.split('.').map(Number);
+      for (let i = 0; i < 3; i++) if ((A[i] || 0) !== (B[i] || 0)) return (A[i] || 0) - (B[i] || 0);
+      return 0; };
+    vers.sort(cmp);
+    const verSays = vers.length > 1
+      ? vers[vers.length - 1] + ' <span class="small muted">on current systems, back to ' + vers[0] + ' on the oldest</span>'
+      : (vers[0] || '');
+    const totals = d.targets.map((t) => t.bytes).filter((n) => n > 0);
+    const runs = d.targets.reduce((n, t) => Math.max(n, t.runs.length), 0);
     rows(el('v-does'), [
       ['Installs', esc(d.name || d.project || 'an app')],
+      rtLabel && rtLabel !== 'none'
+        ? ['Runtime it installs', esc(runtimeName(rtLabel)) + ' ' + verSays
+          + '<br><span class="small muted">into the app\'s own folder. Nothing else on the machine is changed, and removing the app removes it.</span>']
+        : ['Runtime it installs', 'none; it runs what is already there'],
       ['Into', esc(d.root === 'machine' ? 'a folder for the whole machine' : "a folder of its own in the user's home")],
+      totals.length
+        ? ['Downloads', 'up to ' + esc(hsize(Math.max.apply(null, totals))) + ' <span class="small muted">on one machine, not the total of the table below</span>']
+        : ['Downloads', 'nothing; everything it needs is already inside'],
+      ['Runs', runs ? runs + ' command' + (runs === 1 ? '' : 's') + ' after unpacking' : 'no commands'],
       ['Admin rights', d.admin ? '<strong>yes</strong>' : 'not needed'],
-      ['Downloads', d.files.length ? d.files.length + ' file' + (d.files.length === 1 ? '' : 's') : 'nothing'],
-      ['Runs', d.cmds.length ? d.cmds.length + ' command' + (d.cmds.length === 1 ? '' : 's') + ' on the machine' : 'no commands'],
       ['Shortcuts', [d.menu === '1' ? 'app menu' : null, d.desktop === '1' ? 'desktop' : null].filter(Boolean).join(', ') || 'none'],
       d.launch ? ['Starts', '<code>' + esc(d.launch) + '</code>'] : null,
+
     ]);
+
+    // One row per target, because one machine gets exactly one of them.
+    // A plan has a block per OS-version range as well as per
+    // architecture, so the same machine and version appear more than
+    // once. Identical rows are folded together; the ranges they differ
+    // by are in "covers", which is shown rather than dropped.
     const tb = el('v-downloads').querySelector('tbody');
-    tb.innerHTML = d.files.map((f) => {
-      let host = '';
-      try { host = f.url ? new URL(f.url).host : ''; } catch (e) { host = f.url; }
-      return '<tr><td><code>' + esc(f.file || f.name) + '</code></td><td>' + esc(host || 'not given')
-        + '</td><td><code class="small">' + esc((f.sha || '').slice(0, 16)) + '&hellip;</code></td></tr>';
+    const seenRow = new Map();
+    for (const t of d.targets) {
+      const hosts = [];
+      for (const f of t.files) for (const u of f.urls) { const h = hostOf(u); if (hosts.indexOf(h) < 0) hosts.push(h); }
+      const key = [t.family, t.arch, t.runtime, t.version, t.bytes].join('|');
+      if (!seenRow.has(key)) seenRow.set(key, { t, hosts, covers: [] });
+      if (t.covers) seenRow.get(key).covers.push(t.covers);
+    }
+    tb.innerHTML = [...seenRow.values()].map(({ t, hosts, covers }) => {
+      const where = covers.join(', ').split(', ').filter((x, i, a) => x && a.indexOf(x) === i);
+      return '<tr><td>' + esc(FAMILY[t.family] || t.family) + '<br><span class="small muted">' + esc(ARCH[t.arch] || t.arch)
+        + (where.length ? ' &middot; ' + esc(where.slice(0, 2).join(', ')) + (where.length > 2 ? ' and ' + (where.length - 2) + ' more' : '') : '')
+        + '</span></td>'
+        + '<td>' + (t.version ? esc(runtimeName(t.runtime) + ' ' + t.version)
+          : '<span class="muted">' + (t.files.length ? 'none' : 'no build for this machine') + '</span>') + '</td>'
+        + '<td>' + (t.bytes ? esc(hsize(t.bytes)) : '<span class="muted">-</span>') + '</td>'
+        // No urls and no files is not "packed inside", it is nothing to
+        // fetch; saying the wrong reassuring thing is worse than saying
+        // the plain one.
+        + '<td class="small">' + (hosts.length
+          ? esc(hosts[0]) + (hosts.length > 1 ? '<br><span class="muted">or ' + (hosts.length - 1) + ' other source' + (hosts.length === 2 ? '' : 's') + '</span>' : '')
+          : '<span class="muted">' + (t.files.length ? 'packed inside' : 'nothing to fetch') + '</span>') + '</td></tr>';
     }).join('');
-    el('v-downloads-wrap').hidden = !d.files.length;
-    el('v-cmds').innerHTML = d.cmds.map((c) => '<li><code>' + esc(c) + '</code></li>').join('');
-    el('v-cmds-wrap').hidden = !d.cmds.length;
+    el('v-downloads-wrap').hidden = !d.targets.length;
+
+    // The commands, per target, with the same text shown once.
+    const seen = [];
+    for (const t of d.targets) for (const cmd of t.runs) if (seen.indexOf(cmd) < 0) seen.push(cmd);
+    el('v-cmds').innerHTML = seen.map((c) => '<li><code>' + esc(c) + '</code></li>').join('');
+    el('v-cmds-wrap').hidden = !seen.length;
   } else {
     el('v-downloads-wrap').hidden = true;
     el('v-cmds-wrap').hidden = true;

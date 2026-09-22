@@ -58,20 +58,23 @@
 
       <section class="panel">
         <h2 class="section-title">What it would do</h2>
-        <p class="small muted" id="v-plan-none" hidden>This installer carries no plan, so there is nothing here to
-          read. It would fetch one from a build server when it&nbsp;ran.</p>
+        <p class="small muted" id="v-plan-none" hidden>This installer carries no plan, and this page could not work one
+          out from its settings either, so there is nothing here to&nbsp;read.</p>
+        <p class="small note" id="v-plan-derived" hidden></p>
         <dl class="spec-list" id="v-does"></dl>
         <div id="v-downloads-wrap" hidden>
-          <span class="label">What it downloads</span>
+          <span class="label">One of these, whichever machine it lands on</span>
+          <p class="small muted" style="margin-top:0">An installer carries a block for each kind of machine and uses one of
+          them. The sizes are per machine, not&nbsp;added&nbsp;up.</p>
           <div class="table-wrap">
             <table class="small" id="v-downloads">
-              <thead><tr><th>File</th><th>From</th><th>SHA-256</th></tr></thead>
+              <thead><tr><th>Machine</th><th>Runtime it installs</th><th>Download</th><th>From</th></tr></thead>
               <tbody></tbody>
             </table>
           </div>
         </div>
         <div id="v-cmds-wrap" hidden>
-          <span class="label">Commands it runs</span>
+          <span class="label">Commands it runs on the machine</span>
           <p class="small muted" style="margin-top:0">What a command does is not decidable from its text, so these are
             listed rather than&nbsp;described.</p>
           <ul class="small" id="v-cmds"></ul>
