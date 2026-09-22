@@ -55,17 +55,35 @@ has() { grep -qF "$1" "$T/out"; }
 hasnt() { ! grep -qF "$1" "$T/out"; }
 
 # The screen rendered at all, or every check below is vacuously true.
-if has 'WHAT THIS INSTALL CAN DO'; then ok 'the review screen printed'
+if has 'TiddlyInstall - Review before installing'; then ok 'the review screen printed'
 else no 'the review screen printed' "$(head -5 "$T/out")"; fi
 
-# The two labels, and the gloss that says which is which.
-has 'Choices:' && ok 'the choices row is there' || no 'the choices row is there'
-has 'Recipe:' && ok 'the recipe row is there' || no 'the recipe row is there'
-has 'choices are what was picked in the web client' &&
-	ok 'and the pair is explained once, under the heading' ||
-	no 'and the pair is explained once, under the heading'
+# Every section, in the order a reader meets them.
+for sec in 'This installer will:' 'INSTALL SUMMARY' 'TRUST AND SECURITY' \
+	'DOWNLOADS' 'COMMANDS' 'APPLICATION LAUNCH' 'FILES AND SYSTEM CHANGES'; do
+	has "$sec" && ok "section: $sec" || no "section: $sec"
+done
+has 'NO CHANGES HAVE BEEN MADE YET.' && ok 'it says nothing has happened yet' ||
+	no 'it says nothing has happened yet'
+has 'Ready to install' && ok 'and says so again at the end' || no 'and says so again at the end'
+
+# The two words, and no trace of the ones they replaced.
+has 'Install recipe' && ok 'the recipe block is there' || no 'the recipe block is there'
+has 'Choices' && ok 'the choices block is there' || no 'the choices block is there'
 hasnt 'Settings:' && ok 'and nothing still says Settings' || no 'and nothing still says Settings'
 hasnt 'Plan:' && ok 'and nothing still says Plan' || no 'and nothing still says Plan'
+hasnt 'this plan' && ok 'and no sentence still says "this plan"' ||
+	no 'and no sentence still says "this plan"' "$(grep -n 'this plan' "$T/out" | head -2)"
+
+# The bullets are generated, so they have to follow the install. This
+# one asks for no admin and makes a menu entry.
+has '* Require no administrator rights' && ok 'the bullets follow the install (admin)' ||
+	no 'the bullets follow the install (admin)'
+has '* Add an application menu entry' && ok 'the bullets follow the install (menu)' ||
+	no 'the bullets follow the install (menu)'
+
+# Reading it without running it is the point of the other page.
+has '#verify' && ok 'it points at the Verify page' || no 'it points at the Verify page'
 
 # An unsigned .run says so in one word where it is used inside a
 # sentence, and at length only where it has a line of its own.
@@ -85,7 +103,11 @@ has 'we did' && has '"test recent unsigned a"' &&
 # what follows and end in a colon on purpose -- the first run of this
 # check flagged both of them, which is the same class of fault it is
 # here to catch.
-bad=$(grep -nE ', version *$|\(sha256 *\)|^  [A-Za-z][A-Za-z ]*: *$' "$T/out" || true)
+# Only the dangling-value shapes. A label alone on its line is normal
+# in this layout -- "Uninstaller:" with the path under it is deliberate,
+# and an earlier version of this check called that a fault, which would
+# have pushed the screen back towards cramming values into a column.
+bad=$(grep -nE ', version *$|\(sha256 *\)|: +$' "$T/out" || true)
 if [ -n "$bad" ]; then
 	no 'no label is left with nothing after it' "$(printf '%s' "$bad" | head -3)"
 else ok 'no label is left with nothing after it'; fi

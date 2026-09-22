@@ -3832,41 +3832,15 @@ FunctionEnd
 ; installation, one about the program -- and they are written together
 ; so that no later change can render one without the other
 ; (launch-shapes.md section 8, "Placement").
-Function CapSection
+Function CapFindings
+  ; Just the findings. The paragraph that used to lead them is now the
+  ; generated bullet list above, and the two claims that used to trail
+  ; them -- that nothing vouches for an unsigned recipe, and that we did
+  ; not write the program -- are in TRUST AND SECURITY, which is where a
+  ; reader looking for either would go.
   Push $0
-  StrCpy $CapInd1 "  "
-  StrCpy $CapInd2 "  "
-  ${If} $PlanWarn != ""
-    ; With nothing behind the catalogue's steps, "nothing unusual"
-    ; would be a statement about a document anybody could have written.
-    ; So the absence is never claimed here; the findings still are,
-    ; because a finding is only ever something extra.
-    ;
-    ; And the SHA-256 promise weakens rather than disappearing. Each
-    ; file is still checked, so saying nothing would leave a `sha256`
-    ; under every file for a reader to draw their own conclusion from;
-    ; but the hashes are the plan's own, and on a plan nobody vouches
-    ; for they show only that the download arrived as the plan said.
-    StrCpy $U_a "Nothing vouches for this plan, so what follows is only what the plan itself says, and anybody can write a plan. Each file is still checked against the SHA-256 beside it, but those hashes are the plan's own: they show a download arrived unchanged, and say nothing about what it is. Read the commands rather than this summary; the reason is under BEFORE YOU SAY YES."
-    Call SumPara
-    ${If} $CapN > 0
-      ${Sum} "  What it says it does:"
-    ${EndIf}
-  ${ElseIf} $CapN = 0
-    StrCpy $U_a "${TI_CAP_ORDINARY} Nothing here goes beyond that. What it writes is listed below, and that is all of it."
-    Call SumPara
-  ${Else}
-    StrCpy $U_a $CapN
-    Call CapNumber
-    ${If} $CapN = 1
-      StrCpy $U_a "${TI_CAP_ORDINARY} $U_out thing here goes beyond that:"
-    ${Else}
-      StrCpy $U_a "${TI_CAP_ORDINARY} $U_out things here go beyond that:"
-    ${EndIf}
-    Call SumPara
-  ${EndIf}
-  StrCpy $CapInd1 "    - "
-  StrCpy $CapInd2 "      "
+  StrCpy $CapInd1 "  ! "
+  StrCpy $CapInd2 "    "
   StrCpy $0 0
   ${Do}
     ${If} $0 >= $CapN
@@ -3890,17 +3864,8 @@ Function CapSection
     Call SumPara
     IntOp $0 $0 + 1
   ${Loop}
-  ; What this page is *not* saying (design.md section 3, "What we do not
-  ; vouch for"). Everything else here is about our side of it, and
-  ; someone who reads all that care can reasonably come away thinking
-  ; the program has been vetted. It has not: we have never looked at it.
   StrCpy $CapInd1 "  "
   StrCpy $CapInd2 "  "
-  ; The name is quoted: unquoted, a name with spaces runs into the
-  ; sentence -- "we did not write test recent unsigned a and have not
-  ; checked" reads as one clause with no program in it.
-  StrCpy $U_a 'That is about the install. The program itself is another matter: we did not write "$AppName" and have not checked what its code does. Install it only if you trust whoever publishes it.'
-  Call SumPara
   Pop $0
 FunctionEnd
 
@@ -4015,16 +3980,65 @@ Function WriteSummary
   StrCpy $CurOrigin ""
   StrCpy $CurMirrors 0
   ${Sum} "======================================================================"
-  ${Sum} "  TiddlyInstall will install:  $AppName"
-  ${Sum} "  Nothing has been changed yet."
+  ${Sum} "TiddlyInstall - Review before installing"
   ${Sum} "======================================================================"
+  ${Sum} ""
+  ${Sum} "$AppName"
+  ${Sum} ""
+  ${Sum} "NO CHANGES HAVE BEEN MADE YET."
   ; What this install can do that an ordinary one cannot, and -- as a
   ; separate claim, from the same code path -- whose program it is
   ; (CapSection, above). It is first because it is the answer to the
   ; question the page exists to ask.
   ${Sum} ""
-  ${Sum} "WHAT THIS INSTALL CAN DO"
-  Call CapSection
+  ${Sum} "This installer will:"
+  ${Sum} ""
+  ; Generated, never a fixed list: seven reassuring bullets that do not
+  ; change when the install does would be the most misleading thing on
+  ; this screen.
+  ${If} $SumFiles > 0
+    StrCpy $U_a $SumBytes
+    Call HumanSize
+    StrCpy $0 $U_out
+    StrCpy $U_a $SumFiles
+    StrCpy $U_b "file"
+    Call Plural
+    ${If} $PackLen > 0
+      ${Sum} "  * Use $SumFiles $U_out packed inside it where it can, checking each against a SHA-256"
+    ${Else}
+      ${Sum} "  * Download $SumFiles $U_out, $0, checking each against a SHA-256"
+    ${EndIf}
+  ${EndIf}
+  ${If} $RootMode == "system"
+    ${Sum} "  * Install for every user on this machine"
+  ${Else}
+    ${Sum} "  * Install for your user account only"
+  ${EndIf}
+  ${If} $TgtRuntime != ""
+    ${Sum} "  * Set up the $TgtRuntime runtime in a folder of its own"
+  ${EndIf}
+  ${If} $Menu == "0"
+    ${Sum} "  * Add an uninstaller, and no Start menu entry"
+  ${Else}
+    ${Sum} "  * Add a Start menu entry and an uninstaller"
+  ${EndIf}
+  ${If} $WantDesktop == "1"
+    ${Sum} "  * Add a desktop shortcut"
+  ${EndIf}
+  ${Sum} "  * Make no changes to PATH"
+  ${If} $NdMissing > 0
+    ${Sum} "  * Require administrator rights, to install $NdLabels for the whole computer"
+  ${ElseIf} $NeedAdmin = 1
+    ${Sum} "  * Require administrator rights"
+  ${Else}
+    ${Sum} "  * Require no administrator rights"
+  ${EndIf}
+  ${If} $CapN > 0
+    ${Sum} ""
+    ${Sum} "Beyond an ordinary install:"
+    ${Sum} ""
+    Call CapFindings
+  ${EndIf}
 
   ; Anything unusual, first, where the decision is made. Every one of
   ; these is also said again, in full, in its own section below.
@@ -4048,14 +4062,14 @@ Function WriteSummary
   StrCpy $0 0
   ${If} $PlanWarn != ""
     ${Sum} ""
-    ${Sum} "BEFORE YOU SAY YES"
+    ${Sum} "WARNINGS"
     StrCpy $0 1
     ${Sum} "!! $PlanWarn"
   ${EndIf}
   ${If} $AgeWarn != ""
     ${If} $0 = 0
       ${Sum} ""
-      ${Sum} "BEFORE YOU SAY YES"
+      ${Sum} "WARNINGS"
       StrCpy $0 1
     ${EndIf}
     ${Sum} "!! $AgeWarn"
@@ -4071,7 +4085,7 @@ Function WriteSummary
   ${OrIf} $1 != ""
     ${If} $0 = 0
       ${Sum} ""
-      ${Sum} "BEFORE YOU SAY YES"
+      ${Sum} "WARNINGS"
       StrCpy $0 1
     ${EndIf}
   ${EndIf}
@@ -4083,7 +4097,7 @@ Function WriteSummary
   ${EndIf}
 
   ${Sum} ""
-  ${Sum} "IN SHORT"
+  ${Sum} "INSTALL SUMMARY"
   ${Sum} "  Installs:     $AppName   (install id $AppId)"
   ; "Installs: test b" over "Project: test_b" is two lines saying one
   ; thing. The project name earns a line of its own only when the page
@@ -4169,13 +4183,53 @@ Function WriteSummary
   ; and "Signed by: TiddlyInstall" invites exactly that reading -- most
   ; of all in mode A, where the name on the certificate is ours. So
   ; where there is a signer, the line says what the signature covers.
-  ${If} $SignedBy != ""
-    ${Sum} "  Signed by:    $SignedBy (as the certificate names it; Windows checks the signature)."
-    ${Sum} "                It covers this installer file, not the program it installs."
-  ${Else}
-    ${Sum} "  Signed by:    nobody (this installer is unsigned)"
-  ${EndIf}
   ${Sum} "  Record:       $RecHash"
+
+  ${Sum} ""
+  ${Sum} "TRUST AND SECURITY"
+  ${Sum} ""
+  ${Sum} "  Installer signature"
+  ${If} $SignedBy != ""
+    ${Sum} "  Signed by $SignedBy, as the certificate names it; Windows checks the signature."
+    ${Sum} "  It covers this installer file, not the program it installs."
+  ${Else}
+    ${Sum} "  UNSIGNED"
+    ${Sum} "  Windows cannot tell you who made this file."
+  ${EndIf}
+  ${Sum} ""
+  ${Sum} "  Install recipe"
+  ${If} $PlanWarn != ""
+    StrCpy $U_a "Unsigned (see WARNINGS). Nothing vouches for it, so what this screen says is only what the recipe itself says, and anybody can write one. Each file is still checked against the SHA-256 beside it, but those hashes are the recipe's own: they show a download arrived unchanged, and say nothing about what it is."
+    Call SumPara
+  ${Else}
+    ${Sum} "  $PlanSrc"
+  ${EndIf}
+  ${If} $PlanSigned != ""
+    ${If} $PlanKind == "fetched"
+      ${Sum} "  Signed on $PlanSigned (fetched now)"
+    ${Else}
+      ${Sum} "  Signed on $PlanSigned (carried in this installer)"
+    ${EndIf}
+  ${EndIf}
+  ${If} $RevokeNote != ""
+    ${Sum} "  Revocations: $RevokeNote"
+  ${EndIf}
+  ${If} $ModeA = 1
+    StrCpy $U_a "Mode A (signed, and carrying no choices of its own): it installs only the app its file name names, from ${TI_BACKEND}."
+    Call SumPara
+  ${EndIf}
+  ${Sum} ""
+  ${Sum} "  Choices"
+  ${Sum} "  $MetaSrc"
+  ${Sum} "  (what was picked in the web client; the recipe above is what carries it out)"
+  ${Sum} ""
+  ${Sum} "  IMPORTANT"
+  StrCpy $U_a "TiddlyInstall checks that the files below are the files this recipe names. It does not check that the application itself is safe."
+  Call SumPara
+  StrCpy $U_a 'That is about the install. The program itself is another matter: we did not write "$AppName" and have not checked what its code does. Install it only if you trust whoever publishes it.'
+  Call SumPara
+  StrCpy $U_a "You can read all of this without running the installer: open ${TI_BACKEND}/#verify and drop this file on it."
+  Call SumPara
 
   ${If} $NdCount > 0
     ${Sum} ""
@@ -4183,7 +4237,7 @@ Function WriteSummary
   ${EndIf}
 
   ${Sum} ""
-  ${Sum} "WHAT IT DOWNLOADS"
+  ${Sum} "DOWNLOADS"
   ${If} $SumFiles = 0
     ${Sum} "  Nothing."
   ${Else}
@@ -4333,7 +4387,7 @@ Function WriteSummary
   ${EndIf}
 
   ${Sum} ""
-  ${Sum} "WHAT IT RUNS ON THIS MACHINE"
+  ${Sum} "COMMANDS"
   StrCpy $CurDir ""
   StrCpy $CurFile ""
   ${If} $TgtInstall != ""
@@ -4343,7 +4397,10 @@ Function WriteSummary
     StrCpy $U_a $U_out
     Call CmdLine
   ${EndIf}
-  ${Sum} "  Starting it (this is what the shortcuts and launch.exe run):"
+  ${Sum} ""
+  ${Sum} "APPLICATION LAUNCH"
+  ${Sum} ""
+  ${Sum} "  When you start $\"$AppName$\", its shortcuts and launch.exe run:"
   StrCpy $U_a $TgtLaunch
   Call Subst
   StrCpy $U_a $U_out
@@ -4358,7 +4415,7 @@ Function WriteSummary
   ; (design.md 1.1). Showing the root once is a presentation fix for
   ; that layout, not a change to it.
   ${Sum} ""
-  ${Sum} "WHERE FILES GO"
+  ${Sum} "FILES AND SYSTEM CHANGES"
   ${Sum} "  All of it in $Root:"
   ${Sum} "    $AppId   the app"
   Call OpenBlock
@@ -4381,7 +4438,6 @@ Function WriteSummary
   ${Sum} "  The runtime has its own folder beside the app rather than inside it, to keep the paths inside it short: Windows still breaks on long ones."
 
   ${Sum} ""
-  ${Sum} "SHORTCUTS AND UNINSTALLER"
   ${If} $Menu == "0"
     ${Sum} "  Shortcuts:  none in the Start menu (this app asks for no menu entry)"
     ${If} $WantDesktop == "1"
@@ -4410,50 +4466,16 @@ Function WriteSummary
     ${Sum} "  $TgtNote"
   ${EndIf}
 
-  ${Sum} ""
-  ${Sum} "WHERE THIS CAME FROM"
-  ${Sum} "  (choices are what was picked in the web client; the recipe is what carries them out)"
-  ${If} $SignedBy != ""
-    ${Sum} "  Signed by:  $SignedBy (as the certificate names it; Windows checks the signature)."
-    ${Sum} "              It covers this installer file, not the program it installs."
-  ${Else}
-    ${Sum} "  Signed by:  nobody (this installer is unsigned)"
-  ${EndIf}
-  ; What mode A adds is not who signed this -- the line above already
-  ; says that, read from the certificate in the file -- but that this
-  ; copy carries no settings of its own, so there is nothing for the
-  ; signature to have covered beyond the program itself. Naming a
-  ; signer here as well would say it twice, and hard-coding the name
-  ; ("signed by TiddlyInstall") made the screen state two different
-  ; names for one signature whenever the certificate was not ours,
-  ; which is what every developer sees with the test certificate
-  ; (2026-09-21). The trust screen never asserts a signer it has not
-  ; read from the file.
-  ${If} $ModeA = 1
-    ${Sum} "  Mode:       A (signed, and carrying no settings of its own): it installs only the app its file name names, from ${TI_BACKEND}."
-  ${EndIf}
-  ${Sum} "  Choices:    $MetaSrc"
-  ${Sum} "  Record:     $RecHash"
-  ${Sum} "  Recipe:     $PlanSrc"
-  ${If} $PlanSigned != ""
-    ${If} $PlanKind == "fetched"
-      ${Sum} "  Signed on:  $PlanSigned (fetched now)"
-    ${Else}
-      ${Sum} "  Signed on:  $PlanSigned (carried in this installer)"
-    ${EndIf}
-  ${EndIf}
-  ${If} $RevokeNote != ""
-    ${Sum} "  Revocations: $RevokeNote"
-  ${EndIf}
-  ${If} $PlanWarn != ""
-    ${Sum} "  WARNING:  $PlanWarn"
-  ${EndIf}
-  ${If} $AgeWarn != ""
-    ${Sum} "  WARNING:  $AgeWarn"
-  ${EndIf}
   ${If} $LogPath != ""
-    ${Sum} "  Log:        $LogPath"
+    ${Sum} ""
+    ${Sum} "  Install log: $LogPath"
   ${EndIf}
+
+  ${Sum} ""
+  ${Sum} "======================================================================"
+  ${Sum} "Ready to install $\"$AppName$\"."
+  ${Sum} "Nothing has been changed yet."
+  ${Sum} "======================================================================"
   FileClose $SumH
   FileClose $CmdH
   FileClose $UrlH
