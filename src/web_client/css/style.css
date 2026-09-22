@@ -993,6 +993,25 @@ form:has(#tpl-tray:checked) .tpl-gui-only { display: block; }
 }
 .dialog-close:hover { color: var(--text-loud); }
 
+/* Copy button beside a command. Quiet until hovered: the command is the
+   content, this is a convenience next to it. */
+.copy-btn {
+  margin-left: 8px;
+  padding: 1px 7px;
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 0.9em;
+  line-height: 1.5;
+  cursor: pointer;
+  vertical-align: baseline;
+}
+.copy-btn:hover { border-color: var(--rule-strong); color: var(--text-loud); }
+.copy-btn.copied { border-color: var(--accent); color: var(--accent); }
+.copy-btn.copy-failed { border-color: var(--rule-strong); color: var(--text-loud); }
+
 /* ==========================================================================
    11. Icon picker
    ========================================================================== */

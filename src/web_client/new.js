@@ -312,7 +312,6 @@ function paintCatalog() {
 const launchField = document.getElementById('launch-field');
 const launchWhyRepo = document.getElementById('launch-why-repo');
 const launchWhyWrite = document.getElementById('launch-why-write');
-const launchWhyRepoHtml = launchWhyRepo && launchWhyRepo.innerHTML;
 
 // <root> per platform and "Install for" (design.md 1.1), and the
 // illustrative folder names that section and this form's own "Install
@@ -415,14 +414,13 @@ function paintLaunch() {
   const known = kind === 'package' || kind === 'write';
   launchField.classList.toggle('launch-quiet', known);
   if (launchWhyRepo) {
-    if (kind === 'package') {
-      launchWhyRepo.textContent = 'For a package from a package registry the default is usually right: the package registry says which program the package ' +
-        'installs, and that is what this runs. Change it only if your package starts some other way.';
-      launchWhyRepo.classList.add('muted');
-    } else {
-      launchWhyRepo.innerHTML = launchWhyRepoHtml;
-      launchWhyRepo.classList.remove('muted');
-    }
+    // Only a package registry gets a sentence here. A GitHub repo used to
+    // get a paragraph explaining why we cannot know; the eyebrow says that.
+    launchWhyRepo.textContent = kind === 'package'
+      ? 'For a package from a package registry the default is usually right: the package registry says which program the package ' +
+        'installs, and that is what this runs. Change it only if your package starts some other way.'
+      : '';
+    launchWhyRepo.hidden = kind !== 'package';
   }
   if (launchWhyWrite && kind === 'write') {
     const fields = templateFilesOf() || {};

@@ -98,7 +98,7 @@ CORE_MODULES = [
     *web("api.js"),
     *web("open-notice.js"),
     *shared("mirror-words.js", "templates.js", "form-job.js"),
-    *web("write-editor.js", "dialog.js"),
+    *web("write-editor.js", "dialog.js", "copy.js"),
     *web_lib("sha.js", "hmac-pbkdf2.js", "aes.js"),
     *web_lib("bignum.js", "der.js", "rsa.js", "ec.js"),
     *web_lib("ed25519.js", "cryptox.js"),
@@ -535,7 +535,7 @@ def offline_page(catalog_dir, backend):
            "  <style>\n" + css + "\n  </style>\n</head>\n<body>\n  " + header + "\n"
            + NOSCRIPT.replace("{classic}", html.escape(backend.rstrip("/") + "/classic"))
            + "\n".join(sections) +
-           "\n  <footer class=\"site-footer\">\n    Designed by <a href=\"https://robertsdotpm.github.io/\">Matthew Roberts</a> and implemented by Claude.\n  </footer>\n"
+           "\n  <footer class=\"site-footer\">\n    Designed by <a href=\"https://robertsdotpm.github.io/\">Matthew Roberts</a> and implemented by Claude.\n    &middot; <a href=\"mailto:matthew@roberts.pm\">Hire me</a>\n  </footer>\n"
            + "\n".join(blocks + code_blocks) +
            "\n  <script>\n" + no_close_script(read(WEB + "/page-loader.js")) + "\n  </script>\n</body>\n</html>\n")
     return out, report

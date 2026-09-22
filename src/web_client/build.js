@@ -7,9 +7,11 @@ import { ARCH_LABEL, MAC_ARCH, FAMILY_ARCHES, archCoverage } from '../shared/for
 import { mountOverlayConsent } from './overlay-consent.js';
 import { mirrorGapBuildWarning } from '../shared/mirror-words.js';
 import { openNotice } from './open-notice.js';
+import { mountCopyButtons } from './copy.js';
 
 mountApiFooter();
 mountOverlayConsent();
+mountCopyButtons();
 
 const $ = (id) => document.getElementById(id);
 const POLL_MS = 2000;
@@ -163,8 +165,13 @@ function paintFiles(job) {
     // no bit and no chmod, and works on a fresh download. The file's
     // own first lines say the same thing to whoever gets there first
     // (src/installers/unix/ti-engine.sh).
+    // A browser download has no executable bit, so `sh <file>` is the
+    // thing to run; a copy button beside it saves retyping a name that
+    // carries a hash.
+    const cmd = 'sh ' + f.name;
     const how = f.platform === 'linux'
-      ? '<br><span class="muted">In a terminal: <code>sh ' + esc(f.name) + '</code></span>'
+      ? '<br><span class="muted">In a terminal: <code>' + esc(cmd) + '</code>' +
+        '<button type="button" class="copy-btn" data-copy="' + esc(cmd) + '">Copy</button></span>'
       : '';
     // What whoever is sent this file meets before the installer can say
     // anything for itself: SmartScreen, Gatekeeper, or nothing at all. The

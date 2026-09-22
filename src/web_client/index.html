@@ -32,8 +32,9 @@
         <p class="lede">
           No freezing and no bundlers that break. We install your project's real
           runtime and dependencies into a folder of its own, clone your project,
-          and install it against them. The result is an ordinary installer built
-          with NSIS on Windows and the Qt Installer Framework on Linux and&nbsp;macOS.
+          and install it against them. Windows installers are built with NSIS.
+          On Linux and macOS the installer is our own engine: one POSIX shell
+          script, with no framework for anyone to&nbsp;install.
         </p>
         <div class="actions" style="margin-top:22px">
           <a class="button big" href="new.html">Make an installer</a>
@@ -42,7 +43,7 @@
         <dl class="spec-list">
           <dt>Output</dt><dd><code>.exe</code> &middot; <code>.run</code> &middot; <code>.zip</code></dd>
           <dt>Languages</dt><dd>13, plus your own runtime</dd>
-          <dt>Oldest target</dt><dd>Windows XP &middot; glibc 2.17 Linux &middot; macOS 12</dd>
+          <dt>Oldest target</dt><dd>Windows XP &middot; glibc 2.17 Linux &middot; macOS&nbsp;10.9</dd>
           <dt>This page</dt><dd>One HTML file, no server, no network</dd>
         </dl>
       </div>
@@ -195,6 +196,7 @@ install_node_prettier.exe     -&gt; installs the "prettier" package
 
   <footer class="site-footer">
     Designed by <a href="https://robertsdotpm.github.io/">Matthew Roberts</a> and implemented by Claude.
+    &middot; <a href="mailto:matthew@roberts.pm">Hire me</a>
   </footer>
 
   <script type="module">import { mountApiFooter } from './api.js'; mountApiFooter();</script>

@@ -2758,6 +2758,98 @@ ti_launch_installed() {
 	exec /bin/sh "$l"
 }
 
+# Start a command detached, so this process can finish its own work and
+# exit without taking the app with it.
+ti_spawn() {
+	if ti_have setsid; then
+		(setsid "$@" >/dev/null 2>&1 &) 2>/dev/null && return 0
+	fi
+	(nohup "$@" >/dev/null 2>&1 &) 2>/dev/null
+	return 0
+}
+
+# Start the installed app from the finish dialog, and come back.
+# ti_launch_installed replaces this process, because there starting the
+# app was the whole job; here the install has just finished and still has
+# a log to copy and a temp tree to remove, so the app is detached instead.
+ti_start_detached() {
+	l=$TI_APP_DIR/launch.sh
+	ti_log "Starting $TI_NAME_DISP from the finish dialog: $l"
+	if [ "$TI_CONSOLE" = 1 ] && [ -z "${TI_NO_TERMINAL:-}" ]; then
+		# A console app started from a desktop has nowhere to print, so
+		# it gets a terminal window, as its menu entry would.
+		case $ti_ui in
+		osascript) ti_spawn open -a Terminal "$l"; return 0 ;;
+		zenity | kdialog)
+			if ti_have x-terminal-emulator; then ti_spawn x-terminal-emulator -e /bin/sh "$l"; return 0
+			elif ti_have gnome-terminal; then ti_spawn gnome-terminal -- /bin/sh "$l"; return 0
+			elif ti_have konsole; then ti_spawn konsole -e /bin/sh "$l"; return 0
+			elif ti_have xfce4-terminal; then ti_spawn xfce4-terminal -x /bin/sh "$l"; return 0
+			elif ti_have xterm; then ti_spawn xterm -e /bin/sh "$l"; return 0
+			fi
+			;;
+		esac
+	fi
+	ti_spawn /bin/sh "$l"
+	return 0
+}
+
+# The app's name, cleaned and short enough to be a dialog button. The
+# name comes from the plan, so it is a stranger's string: ti_cleans takes
+# the control characters out and this takes the length out, or a long
+# name pushes the other button off the dialog.
+ti_btn_name() {
+	n=$(ti_cleans "$TI_NAME_DISP")
+	[ -n "$n" ] || n="the app"
+	if [ "${#n}" -gt 40 ]; then
+		n="$(printf '%s' "$n" | cut -c1-37)..."
+	fi
+	printf '%s' "$n"
+}
+
+# The final dialog: the message, plus an offer to start what was just
+# installed. Windows has offered this on its finish page from the
+# beginning (base.nsi, MUI_FINISHPAGE_RUN "Run $AppName now"); Linux and
+# macOS had the text alone until 2026-09-22. Returns 0 to start it.
+#
+# Never reached with --yes or on a tty: the caller checks both, and an
+# unattended install must not start anything by itself.
+ti_finish_dialog() { # text
+	fd_t=$(ti_cleans "$1")
+	fd_b="Start $(ti_btn_name)"
+	case $ti_ui in
+	zenity)
+		# --question, not --info: only a question has two buttons. The
+		# icon is set back to the informational one, because nothing is
+		# being asked that has a wrong answer.
+		zenity --question --title="TiddlyInstall" --no-markup --text="$fd_t" \
+			--icon-name=dialog-information --ok-label="$fd_b" --cancel-label="Close" 2>/dev/null
+		return $?
+		;;
+	kdialog)
+		kdialog --title "TiddlyInstall" --yesno "$fd_t" --yes-label "$fd_b" --no-label "Close"
+		return $?
+		;;
+	osascript)
+		fd_r=$(ti_osa "TiddlyInstall" "$fd_t" "$fd_b" <<'EOF' 2>/dev/null
+on run argv
+	activate
+	set d to display dialog (item 2 of argv) with title (item 1 of argv) buttons {"Close", (item 3 of argv)} default button (item 3 of argv) with icon note
+	if button returned of d is (item 3 of argv) then
+		return "start"
+	end if
+	return "close"
+end run
+EOF
+		)
+		[ "$fd_r" = start ] && return 0
+		return 1
+		;;
+	esac
+	ti_message info "TiddlyInstall" "$fd_t"
+	return 1
+}
+
 # How to start and uninstall the app, one line each, for the final message.
 ti_start_hint() {
 	if [ "$TI_MENU" != 0 ]; then
@@ -3831,7 +3923,14 @@ ti_install_main() {
 	printf '%s\n' "$hint" | while IFS= read -r h; do ti_say "$h"; done
 	cp "$TI_LOG" "$TI_APP_DIR/install.log" 2>/dev/null
 	if [ "$opt_yes" != 1 ] && [ "$ti_ui" != tty ]; then
-		ti_message info "TiddlyInstall" "$TI_NAME_DISP is installed.${nl}${nl}$hint${nl}${nl}Log: $TI_APP_DIR/install.log"
+		if ti_finish_dialog "$TI_NAME_DISP is installed.${nl}${nl}$hint${nl}${nl}Log: $TI_APP_DIR/install.log"; then
+			ti_start_detached
+			# install.log was copied before the dialog, so that the path
+			# the dialog names exists while it is on screen. Copy it
+			# again now, or the log of this install is the only one that
+			# does not say the app was started from it.
+			cp "$TI_LOG" "$TI_APP_DIR/install.log" 2>/dev/null
+		fi
 	fi
 	[ "$ti_log_is_temp" = 1 ] && rm -f "$TI_LOG" && TI_LOG=
 	return 0

@@ -360,10 +360,11 @@ Press Enter to close</pre>
         <div class="field launch-field" id="launch-field">
           <span class="eyebrow">The one thing we cannot work&nbsp;out</span>
           <label for="entry-python">How does it start?</label>
-          <p class="small launch-why src-repo-only" id="launch-why-repo">We can work out how to <em>install</em> your project by reading its files: a
-            <code>requirements.txt</code> means pip, a <code>package.json</code> means npm. <strong>Nothing in a repo says how to run it.</strong>
-            A <code>main.py</code> might be a library, a command, or something you start with <code>-m</code>. Getting this wrong gives an
-            installer that installs perfectly and then starts&nbsp;nothing.</p>
+          <!-- Filled by new.js for a package from a package registry, and
+               empty otherwise. The repo justification that used to live here
+               was removed 2026-09-22: the eyebrow says it in five words and
+               the token examples below say what to write instead. -->
+          <p class="small launch-why muted src-repo-only" id="launch-why-repo" hidden></p>
           <p class="small launch-why src-local-only">Nothing in a folder of files says which one starts the app, so this is the one thing only you
             can tell us. Change it to match however you run the project&nbsp;today.</p>
           <p class="small launch-why muted src-write-only" id="launch-why-write">Set from the template you picked, which we wrote, so we know the file
@@ -1173,6 +1174,7 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
 
   <footer class="site-footer">
     Designed by <a href="https://robertsdotpm.github.io/">Matthew Roberts</a> and implemented by Claude.
+    &middot; <a href="mailto:matthew@roberts.pm">Hire me</a>
   </footer>
 
   <script type="module" src="new.js"></script>

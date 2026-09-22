@@ -550,10 +550,12 @@ async function checkLaunchField() {
       why: why.join(' ') };
   })()`);
 
-  // A GitHub repo: we cannot know, so it asks loudly and says why.
+  // A GitHub repo: we cannot know, so it asks loudly. The paragraph that
+  // explained why was removed 2026-09-22 -- the eyebrow says it in five
+  // words and the token examples below say what to write instead.
   let g = await at({ kind: 'repo', runtime: 'python', source: 'https://github.com/psf/requests' });
   ok(!g.quiet, 'a GitHub repo gets the prominent launch field', JSON.stringify(g));
-  ok(/Nothing in a repo says how to run it/.test(g.why), 'and says why it cannot be worked out', g.why);
+  ok(g.why === '', 'and does it without a paragraph of justification', JSON.stringify(g.why));
   ok(g.value === ENTRY_DEFAULTS.python && !g.edited, 'with the language default, unedited', JSON.stringify(g));
   // A package from a package registry (npm, PyPI, ...): the default comes
   // from that registry, so the same field is present but quieter. "Package
