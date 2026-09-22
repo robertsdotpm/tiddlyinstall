@@ -36,7 +36,7 @@
            (docs/design.md, "What we sign, and the words for it"). Every
            row below states a fact and leaves the judgement to the reader. -->
       <p class="lede">Drop an installer here and it is read in this page: what it installs, what it
-        downloads, what it runs, and who signed what. Nothing is executed, and with no build server
+        downloads, what it runs, and who signed what. Nothing is executed, and with no server
         set the file never leaves your&nbsp;computer.</p>
     </div>
 
@@ -81,13 +81,13 @@
         <h2 class="section-title">Who signed what</h2>
         <dl class="spec-list" id="v-signing"></dl>
         <p class="small muted" style="margin-bottom:0">A signature on the installer says who wrote the installer and that
-          it has not been altered since. A signature on the runtime install script says the recipe came from our build server
+          it has not been altered since. A signature on the runtime install script says it came from our server
           unchanged. Neither says anything about the software being&nbsp;installed.</p>
       </section>
 
       <section class="panel" id="v-server-panel">
-        <h2 class="section-title">Checked against the build server</h2>
-        <p class="small muted" id="v-server-none" hidden>No build server is set, so only what is inside the file could be
+        <h2 class="section-title">Checked against the server</h2>
+        <p class="small muted" id="v-server-none" hidden>No server is set, so only what is inside the file could be
           read. A server can also say whether it published these choices, whether it would still build the same
           thing today, and whether this installer has been withdrawn since it was&nbsp;built.</p>
         <dl class="spec-list" id="v-server"></dl>

@@ -133,7 +133,7 @@ if (folderInput) {
 
 /* ---------- where this build will happen ---------- */
 
-// The page can build installers itself or send the job to a build server,
+// The page can build installers itself or send the job to a server,
 // and which one it is changes what leaves this computer, so the form says
 // so plainly before the build (design.md 11.0 item 6). The build page says
 // the same for the finished job. Written as text into the page, so a saved
@@ -149,12 +149,12 @@ function paintWhere() {
   let main, rest;
   if (apiLocal()) {
     main = 'Built in this page';
-    rest = ': your browser makes the installers, and nothing is sent to a build server.';
+    rest = ': your browser makes the installers, and nothing is sent to a server.';
   } else if (uploaded) {
     main = 'Built in this page';
-    rest = ': files from your computer are packed here, not sent to the build server at ' + host + '.';
+    rest = ': files from your computer are packed here, not sent to the server at ' + host + '.';
   } else {
-    main = 'Built by the build server at ' + host;
+    main = 'Built by the server at ' + host;
     rest = ': your settings go there, and the installers come back.';
   }
   for (const box of whereBoxes) {
@@ -212,7 +212,7 @@ form.addEventListener('submit', async (e) => {
     const r = job.source.kind === 'upload' ? await localSubmit(job) : await apiRequest('/api/jobs', { method: 'POST', body: job });
     location.href = pageUrl('build.html', 'job=' + encodeURIComponent(r.id));
   } catch (err) {
-    showError((apiLocal() ? 'Couldn\'t build this: ' : 'The build server refused this: ') + errorText(err));
+    showError((apiLocal() ? 'Couldn\'t build this: ' : 'The server refused this: ') + errorText(err));
   } finally {
     sending = false;
     submitButtons.forEach((b, i) => { b.disabled = false; b.textContent = labels[i]; });
@@ -279,7 +279,7 @@ function paintCatalog() {
       }
     }
     table.tBodies[0].innerHTML = rows.join('');
-    hint.textContent = (apiLocal() ? 'From this page\'s catalogue' + (catalog.changed ? ', with your changes from the Registry page' : '') : 'From the build server\'s catalogue') +
+    hint.textContent = (apiLocal() ? 'From this page\'s catalogue' + (catalog.changed ? ', with your changes from the Registry page' : '') : 'From the server\'s catalogue') +
       ': one row per runtime install script it makes for ' + (entry.label || rt) + ', by OS version and architecture. ' +
       'The installer carries them all and picks on the machine.';
     panel.classList.remove('py-panel');   // show it for every language with data
@@ -615,7 +615,7 @@ function paintOfflineSize() {
 
 /* ---------- which side of the line this browser is on ---------- */
 
-// Packing happens in the browser when there is no build server, and what a
+// Packing happens in the browser when there is no server, and what a
 // browser can hold was measured rather than assumed
 // (docs/browser-packing.md). The publisher finds out here, at the tick,
 // which of three answers applies -- and the two that are not "yes" say what
@@ -648,7 +648,7 @@ function paintPackWhere(totalMb, platforms) {
   if (!offlineWhereBox) return;
   if (!apiLocal()) {
     offlineWhereBox.className = 'small muted offline-only';
-    offlineWhereBox.textContent = 'The build server packs these, and its own copies of the runtimes go into the files.';
+    offlineWhereBox.textContent = 'The server packs these, and its own copies of the runtimes go into the files.';
     return;
   }
   const mb = largestPackMb(platforms);
@@ -666,7 +666,7 @@ function paintPackWhere(totalMb, platforms) {
   } else {
     cls = 'small warn-box offline-only';
     lines.push('Too big to pack in this browser: the largest of these is about ' + mb + ' MB and the limit here is ' + held.mb +
-      ' MB, because ' + held.why + '. Untick systems or architectures until it fits, use a build server, or use a browser that ' +
+      ' MB, because ' + held.why + '. Untick systems or architectures until it fits, use the server, or use a browser that ' +
       'can write a file as it is made (Chrome or Edge on a computer).');
   }
   // The one thing no browser can do, whatever its memory: fetch a file our
@@ -831,7 +831,7 @@ function paintOverlayNote() {
     b.className = 'link-button';
     b.textContent = 'Build in this page instead';
     b.addEventListener('click', () => setApiBase(LOCAL));
-    overlayNote.replaceChildren('The build server uses its own catalogue, so your ' + what, link, ') aren\'t used. ', b);
+    overlayNote.replaceChildren('The server uses its own catalogue, so your ' + what, link, ') aren\'t used. ', b);
   }
 }
 if (hasCatalog()) loadOverlay().then(() => apiReady()).then(paintOverlayNote).catch(() => {});

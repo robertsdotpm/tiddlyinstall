@@ -3619,7 +3619,7 @@ ti_install_main() {
 				printf '    key %s\n' "$TI_PLAN_KEYID"
 				printf '  %s\n' 'Fetched over the network and checked here before anything was read, so a script altered on the way would have been refused.' | ti_wrap 74 2
 			else
-				printf '  %s\n' "Carried inside this file, signed by the TiddlyInstall key $TI_PLAN_KEYID, which says our build server produced it." | ti_wrap 74 2
+				printf '  %s\n' "Carried inside this file, signed by the TiddlyInstall key $TI_PLAN_KEYID, which says our server produced it." | ti_wrap 74 2
 				printf '  %s\n' 'That signature is checked by this file, against a key inside this file. It is worth exactly as much as the file itself, so it is not a second opinion: use the SHA-256 above for that.' | ti_wrap 74 2
 			fi
 		fi

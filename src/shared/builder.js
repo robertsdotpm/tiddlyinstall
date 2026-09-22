@@ -1,4 +1,4 @@
-// The job builder shared by the build server (src/build_server/, Node) and the
+// The job builder shared by the server (src/build_server/, Node) and the
 // offline page (plan.md section 1.11): a POST /api/jobs request
 // (docs/api.md) to its record, plans and installer files, following
 // docs/format.md. Everything that differs between the two lives in `env`:
@@ -39,7 +39,7 @@
 //   env.takenDown(entry)  true if the takedown list has this entry
 //   env.revoked()      the SHA-256s the revocation list names (design.md
 //                      7.1): the resolver skips those builds, here as on
-//                      the build server. A page with no backend has no
+//                      the server. A page with no backend has no
 //                      list and doesn't call it; the installer's own
 //                      check is the backstop there
 //   env.iconPng(icon)  the icon's PNG bytes, or null (the server loads its
@@ -54,7 +54,7 @@
 //                      and .run, {layout: {base, record, plan, pack,
 //                      fixChecksum}} so large packs can be streamed
 //   env.embedPlan      true: each installer carries its plan and packs the
-//                      app's source, so it needs no build server (offline page)
+//                      app's source, so it needs no server (offline page)
 //   env.signPlan(plan) signs an embedded plan (optional)
 //   env.now()          the record's `created` time, and the plan's `signed`
 //                      (default: now)
@@ -115,13 +115,13 @@ export function validate(r, env) {
   if (!hasRuntime(cat, String(r.runtime)) || !own(cat.policy.runtimes, r.runtime)) throw bad('unknown runtime ' + goQuote(String((r.runtime != null ? r.runtime : ''))));
   if (!['A', 'B', 'C'].includes(r.mode)) throw bad('mode must be A, B or C');
   if (!(env.modes || ['B', 'C']).includes(r.mode)) {
-    throw bad('Installers signed by ' + product + ' come from the build server. Without one, choose "Signed by you" or "Unsigned".');
+    throw bad('Installers signed by ' + product + ' come from the server. Without one, choose "Signed by you" or "Unsigned".');
   }
   if (r.offline && r.mode === 'A') {
     throw bad('offline installers can\'t be signed by ' + product + ' (design.md section 3); choose mode B or C');
   }
   if (r.offline && !env.packRuntimes) {
-    throw bad('Packing the runtimes into the installer needs the build server. Without one, untick it: the installer downloads them when it runs.');
+    throw bad('Packing the runtimes into the installer needs the server. Without one, untick it: the installer downloads them when it runs.');
   }
   if (!Array.isArray(r.platforms) || !r.platforms.length) r.platforms = PLATFORMS.slice();
   for (const p of r.platforms) if (!PLATFORMS.includes(p)) throw bad('unknown platform ' + goQuote(String((p != null ? p : ''))));
@@ -210,8 +210,8 @@ export function validate(r, env) {
       // An archive or folder from the user's computer (the page packs a
       // folder into a tar). Only the page's own builder takes these; the
       // server has no upload yet.
-      if (!env.embedPlan) throw bad('Files from your computer are built in the page itself, not on the build server.');
-      if (r.mode === 'A') throw bad('Installers we sign need the source on the build server: their settings are published by us and fetched by name, never carried in the file. For files from your computer, choose "Signed by you" or "Unsigned".');
+      if (!env.embedPlan) throw bad('Files from your computer are built in the page itself, not on the server.');
+      if (r.mode === 'A') throw bad('Installers we sign need the source on the server: their settings are published by us and fetched by name, never carried in the file. For files from your computer, choose "Signed by you" or "Unsigned".');
       const b64 = String(r.archive || '');
       if (!b64) throw bad('Pick an archive or a folder from your computer.');
       if (b64.length > Math.ceil(UPLOAD_MAX / 3) * 4) throw bad('The archive is over ' + MB(UPLOAD_MAX) + ' MB.');
@@ -240,15 +240,15 @@ export function validate(r, env) {
   return r.mode === 'A' ? 'record' : 'build';
 }
 
-// A URL source still needs a build server: the page would have to
+// A URL source still needs a server: the page would have to
 // download the archive to hash it, and an arbitrary site sends no CORS
 // headers. GitHub used to be refused here too; it no longer is, because
 // nothing about a GitHub source has to be downloaded to write the record
 // (design.md 11.0, src/shared/github.js).
 function offlineSource() {
-  return bad('Without a build server, the code has to be written on this page, uploaded from this computer, ' +
+  return bad('Without a server, the code has to be written on this page, uploaded from this computer, ' +
     'be a GitHub repository or be a package name: a browser can\'t download other sites\' files itself to check them, ' +
-    'so a plain URL needs the build server.');
+    'so a plain URL needs the server.');
 }
 
 // Go's base64.StdEncoding.DecodeString: padding required, and \r and \n
@@ -736,7 +736,7 @@ export async function githubSource(env, r) {
     const advice = githubAdvice(needCommit, needNames, ref);
     if (e.kind === 'ratelimit') {
       const who = env.githubWho === 'server'
-        ? 'the build server\'s address, which it shares with everyone using it,'
+        ? 'the server\'s address, which it shares with everyone using it,'
         : 'this browser\'s address';
       throw bad('GitHub is rate-limiting us: its API allows ' + e.limit + ' requests an hour from one internet address, and ' +
         who + ' has used them up. Try again ' + e.wait + '.' + advice);
@@ -846,7 +846,7 @@ export async function runJob(r, env, progress = () => {}) {
     package: pkg ? pkg.name : '', packageVersion: pkg ? pkg.version : '',
     prerequisites: r.prerequisites || [], tools,
     // A plan this page writes is made now, and says so (design.md 7.1);
-    // the build server passes the moment it serves a plan at. The record's
+    // the server passes the moment it serves a plan at. The record's
     // `created` is the same instant, so one build gives one time.
     signedAt: now,
   };
@@ -991,7 +991,7 @@ async function buildFile(job, plat) {
       throw new Error('the packed files come to ' + MB(packSize(pack)) + ' MB; macOS offline installers are limited to ' + MB(MAX_MAC_PACK) + ' MB for now');
     }
   } else if (env.embedPlan) {
-    // The same rule as the build server's, from the same list where the
+    // The same rule as the server's, from the same list where the
     // page has one (design.md 7.1).
     if (env.revoked) setRevoked(env.catalog, await env.revoked());
     plan = resolve(env.catalog, Object.assign({}, app, { platforms: [plat] }));

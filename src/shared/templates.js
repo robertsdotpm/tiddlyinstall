@@ -25,7 +25,7 @@
 // }
 //
 // new.html's editor is rendered from this (src/web_client/new.js), src/shared/form-job.js turns
-// a written app into a job with it (in the page and on the build server),
+// a written app into a job with it (in the page and on the server),
 // and tests/templates/ builds, installs and runs every one on the test
 // machines.
 //

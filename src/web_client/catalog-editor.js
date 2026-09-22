@@ -591,7 +591,7 @@ function releaseForm(form) {
     el('datalist', { id: 'rt-archs' }, ...archs.map((a) => opt(a))),
     el('datalist', { id: 'rt-formats' }, ...formats.map((a) => opt(a))),
     field('Download URL', textIn(() => d().url, (v) => { d().url = v; }, { type: 'url', class: 'mono' }), 'url',
-      'Tried first' + (S.files['policy.json'].mirror_first ? ', after the build server\'s own mirror (policy mirror_first)' : '') + ', then each mirror in order.'),
+      'Tried first' + (S.files['policy.json'].mirror_first ? ', after the server\'s own mirror (policy mirror_first)' : '') + ', then each mirror in order.'),
     el('div', { class: 'field rt-field', dataset: { err: 'mirrors' } }, el('span', { class: 'label', text: 'Mirrors, in the order tried' }),
       orderedList(() => d().mirrors, (v) => { d().mirrors = v; }, { placeholder: 'https://', errPrefix: 'mirrors', add: '+ Add a mirror' }), el('span', { class: 'rt-err' })),
     el('div', { class: 'row rt-row' },
@@ -991,7 +991,7 @@ function paintMode() {
     m.replaceChildren('This page builds installers itself, so builds use your changes. Each installer carries its plan, and its review screen shows it, changes included.');
   } else {
     m.className = 'warn-box';
-    m.replaceChildren('This page uses the build server at ', el('code', { text: apiBase() }),
+    m.replaceChildren('This page uses the server at ', el('code', { text: apiBase() }),
       ', which builds from its own catalogue: changes made here are kept in this browser but don\'t affect its builds. ',
       el('button', { type: 'button', class: 'secondary small-button', id: 'rt-use-local', text: 'Build in this page instead', onclick: () => setApiBase(LOCAL) }));
   }

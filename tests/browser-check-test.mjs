@@ -147,7 +147,7 @@ try {
   // It links the build server's simple form: from disk, the server the page was built for.
   const backend = await js(`JSON.parse(document.getElementById('ti-offline').textContent).backend`);
   const classic = await js(`(document.querySelector('.ti-compat-classic a') || {}).href || ''`);
-  ok(classic === backend.replace(/\/+$/, '') + '/classic', 'a "can\'t run" bar links the build server\'s simple form', classic);
+  ok(classic === backend.replace(/\/+$/, '') + '/classic', 'a "can\'t run" bar links the server\'s simple form', classic);
 
   // A visitor on Windows XP (Supermium's engine, no compression streams):
   // the XP row, and what works there.

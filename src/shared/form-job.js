@@ -1,5 +1,5 @@
 // The New installer form's fields -> a POST /api/jobs request (docs/api.md).
-// One mapping for both ways the form reaches the build server:
+// One mapping for both ways the form reaches the server:
 //
 //   - src/web_client/new.js, in the page: reads the form's elements and posts JSON;
 //   - src/build_server/server.js, for a plain form post (POST /submit, from browsers
@@ -563,7 +563,7 @@ export function jobFromForm(f, { icon, local = null, problems = [] }) {
       job.source = { kind: 'upload', value: local.name };
       job.archive = local.base64;
     }
-    if (mode === 'A') problems.push('Installers we sign need the source on the build server: their settings are published by us and fetched by name, never carried in the file. For files from your computer, choose "Signed by you" or "Unsigned" under Customise → Signing.');
+    if (mode === 'A') problems.push('Installers we sign need the source on the server: their settings are published by us and fetched by name, never carried in the file. For files from your computer, choose "Signed by you" or "Unsigned" under Customise → Signing.');
   } else {
     const src = f.val('source');
     if (!src.trim()) problems.push('Say what to package: a GitHub repo URL or a package name.');

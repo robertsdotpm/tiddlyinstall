@@ -3,7 +3,7 @@
 // would break it), edit its record, plan and packed files, download it.
 // Nothing leaves the browser. Base installers for "start a new one" come
 // from <script type="application/octet-stream" id="base-*"> blocks when the
-// page has them (the standalone page), else from the build server.
+// page has them (the standalone page), else from the server.
 import {
   readInstaller, writeInstaller, parseKv, serializeKv, kvGet, kvSet, newRecordText,
   recordHash, packMember, installerExt, toBytes, peInfo, bindPlan,

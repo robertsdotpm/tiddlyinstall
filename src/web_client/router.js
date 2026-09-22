@@ -7,7 +7,7 @@ import { apiLocal, apiReady } from './api.js';
 export function startRouter() {
   const pages = Array.from(document.querySelectorAll('.ti-page'));
   if (!pages.length) return;
-  // Mode A needs a build server: with none, Unsigned is chosen instead.
+  // Mode A needs a server: with none, Unsigned is chosen instead.
   const modeFits = () => {
     const ours = document.getElementById('mode-ours');
     const unsigned = document.getElementById('mode-unsigned');

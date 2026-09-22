@@ -335,7 +335,7 @@ async function whereChip(w) {
   const c = await whereRead();
   ok(c && c.shown && c.left >= 0 && c.right <= w,
     `${B.name} ${w}px header: the "where installers are built" indicator shows inside the viewport`, JSON.stringify(c));
-  ok(c && /^(Built in this page|Build server )/.test(c.text) && !c.cut && c.marks > 0,
+  ok(c && /^(Built in this page|Server )/.test(c.text) && !c.cut && c.marks > 0,
     `${B.name} ${w}px header: its words fit whole, and it carries a mark as well as a colour`, JSON.stringify(c));
   // One control, reached two ways: the indicator opens the panel the
   // spanner opens, rather than being a second place to change the server.
@@ -355,7 +355,7 @@ async function newInstaller(w, shots) {
     if (!e) return null; const r = e.getBoundingClientRect();
     return { text: e.textContent, left: Math.round(r.left), right: Math.round(r.right), height: Math.round(r.height),
       line: Math.round(parseFloat(getComputedStyle(e).lineHeight) || 20) }; })()`);
-  ok(where && /^Built (in this page|by the build server at )/.test(where.text),
+  ok(where && /^Built (in this page|by the server at )/.test(where.text),
     `${B.name} ${w}px new: it says where the build happens`, JSON.stringify(where));
   ok(where && where.left >= 0 && where.right <= w && where.height <= where.line * 3 + 4,
     `${B.name} ${w}px new: that line fits the width, in three lines or fewer`, JSON.stringify(where));
@@ -487,8 +487,8 @@ async function banner(w, shots) {
   // same server, and the header must still fit while saying the longest
   // of its words.
   const c = await whereRead();
-  ok(c && /\bwhere-down\b/.test(c.cls) && /^Build server 127\.0\.0\.1:9\s*not reachable$/.test(c.text),
-    `${B.name} ${w}px banner: the header says the build server is not reachable, as the banner does`, JSON.stringify(c));
+  ok(c && /\bwhere-down\b/.test(c.cls) && /^Server 127\.0\.0\.1:9\s*not reachable$/.test(c.text),
+    `${B.name} ${w}px banner: the header says the server is not reachable, as the banner does`, JSON.stringify(c));
   ok(c && c.shown && c.left >= 0 && c.right <= w && !c.cut,
     `${B.name} ${w}px banner: and it still fits, with its longest words`, JSON.stringify(c));
   await audit(w, 'banner', { shots });

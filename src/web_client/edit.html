@@ -59,7 +59,7 @@
         <button type="button" class="secondary" data-base="linux">Linux <code>.run</code></button>
         <button type="button" class="secondary" data-base="macos">macOS <code>.zip</code></button>
       </div>
-      <span class="hint" id="base-hint">A base installer is the reusable program with no settings in it yet: the part we wrote, which installs whatever its settings name. They come from the build server, or from inside this page when it is the self-contained editor.</span>
+      <span class="hint" id="base-hint">A base installer is the reusable program with no settings in it yet: the part we wrote, which installs whatever its settings name. They come from the server, or from inside this page when it is the self-contained editor.</span>
 
       <p class="file-summary" id="file-summary" hidden></p>
       <div class="warn-box small" id="signed-warning" hidden></div>
@@ -343,7 +343,7 @@
                 <option value="sslcom">SSL.com</option>
                 <option value="certum">Certum</option>
               </select>
-              <span class="hint">Timestamp servers don't accept calls from web pages, so the request goes through the build server,
+              <span class="hint">Timestamp servers don't accept calls from web pages, so the request goes through our server,
                 which forwards it. It carries only a hash of your signature.</span>
             </div>
           </div>

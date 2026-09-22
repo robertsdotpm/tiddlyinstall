@@ -68,7 +68,7 @@ try {
   await js(`tiLocalApi.request('/api/catalog/runtimes')`);
   ok(JSON.stringify(await js(`tiLocalApi.unpacked()`)) === '[]', 'starting and the runtimes summary unpack no catalogue folder', JSON.stringify(await js(`tiLocalApi.unpacked()`)));
   ok(await js(`document.documentElement.classList.contains('ti-local')`), 'from disk, the page builds installers itself');
-  ok(/none, this page builds/.test(await js(`document.querySelector('.api-ctl-url').textContent`)), 'the footer says there is no build server');
+  ok(/none, this page builds/.test(await js(`document.querySelector('.api-ctl-url').textContent`)), 'the footer says there is no server');
   // And the header says it without being asked, on every page: the state
   // changes what the page can do, so it should never have to be looked up.
   // Opened from disk this is a fact, not a setting -- a saved copy has no
@@ -118,7 +118,7 @@ try {
   // can hold was measured on every machine we have rather than assumed
   // (docs/browser-packing.md). It used to be hidden here.
   ok(await js(`getComputedStyle(document.getElementById('offline-on').closest('label')).display !== 'none' &&
-    !document.getElementById('offline-on').disabled`), 'packing runtimes is offered with no build server');
+    !document.getElementById('offline-on').disabled`), 'packing runtimes is offered with no server');
   ok(await js(`getComputedStyle(document.getElementById('ts-on').closest('.online-only')).display === 'none'`), 'the timestamp relay is hidden');
   // Signing services whose API a browser can't call go through the build
   // server's relay, so offline they don't exist (docs/browser-signing.md 3).
@@ -172,7 +172,7 @@ try {
   }
   // Mode A is refused here, with a clear message.
   const a = await js(`tiLocalApi.request('/api/jobs', { method: 'POST', body: { runtime: 'python', mode: 'A', source: { kind: 'inline' }, files: { 'a/__main__.py': 'x' } } }).then(() => 'accepted', (e) => e.message)`);
-  ok(/build server/.test(a), 'mode A is refused offline', a);
+  ok(/come from the server/.test(a), 'mode A is refused offline', a);
   // GitHub sources used to be refused here for want of a build server.
   // They are not any more (design.md 11.0, src/shared/github.js): what a
   // GitHub source needs is a commit id and an install rule, and neither
@@ -197,7 +197,7 @@ try {
   })()`);
   ok(/saved copy/.test(ghRef), 'from disk, a GitHub repo at its latest commit is refused because the page contacts nothing', ghRef);
   ok(/Install command/.test(ghRef) && /commit id/.test(ghRef), 'and it names the two fields that make asking GitHub unnecessary', ghRef);
-  ok(!/needs the build server/.test(ghRef), 'and never says it needs a build server, because it does not', ghRef);
+  ok(!/needs the server/.test(ghRef), 'and never says it needs a server, because it does not', ghRef);
 
   // And with those two fields, the same page builds a real GitHub
   // installer with no build server and no network at all.
@@ -265,14 +265,14 @@ try {
     ok(await js(`getComputedStyle(document.getElementById('mode-ours').closest('label')).display !== 'none' &&
       document.getElementById('mode-ours').disabled && document.getElementById('mode-unsigned').checked`),
       'served: "Signed by TiddlyInstall" is shown but off, and Unsigned is chosen');
-    ok(await js(`/^Built by the build server at /.test(document.querySelector('.ti-page[data-page="new"] .build-where').textContent)`),
+    ok(await js(`/^Built by the server at /.test(document.querySelector('.ti-page[data-page="new"] .build-where').textContent)`),
       'served: the form says the build server builds it', await js(`document.querySelector('.build-where').textContent`));
     const rts = await js(`fetch('/api/catalog/runtimes').then(r => r.ok)`);
     ok(rts, 'served: the server answers the page');
     // Served by a build server that answered the same-origin probe: the
     // header names it, and shows it as reachable because it was asked.
     ch = await chipState();
-    ok(ch && /\bwhere-up\b/.test(ch.cls) && ch.host === 'Build server ' + SITE.replace(/^https?:\/\//, '').replace(/\/$/, '') &&
+    ok(ch && /\bwhere-up\b/.test(ch.cls) && ch.host === 'Server ' + SITE.replace(/^https?:\/\//, '').replace(/\/$/, '') &&
       /reachable$/.test(ch.state) && ch.mark === 'circle,polyline',
       'served: the header names the build server and shows it as reachable', JSON.stringify(ch));
     await js(`document.querySelector('.where-chip').click(); document.querySelector('.api-ctl-local').click()`);
@@ -513,7 +513,7 @@ async function checkWhereStates() {
         title: c.title, banner: !!(b && !b.hidden) }; })()`);
     ok(/\bwhere-unknown\b/.test(typed.cls) && /not checked$/.test(typed.state),
       'a build server nobody has asked shows as not checked, never as reachable', JSON.stringify(typed));
-    ok(typed.host === 'Build server 127.0.0.1:' + srv.address().port, 'and is named by its host', typed.host);
+    ok(typed.host === 'Server 127.0.0.1:' + srv.address().port, 'and is named by its host', typed.host);
     ok(typed.mark === 'circle,text', 'with a mark of its own (a dashed ring and a question mark)', typed.mark);
     ok(!typed.banner, 'and no outage banner: not checked is not the same as not reachable');
 
@@ -523,7 +523,7 @@ async function checkWhereStates() {
     let s = await chipState();
     ok(/reachable$/.test(s.state) && !/not reachable/.test(s.state) && s.mark === 'circle,polyline',
       'once it has answered, the same server is shown as reachable, with a tick', JSON.stringify(s));
-    ok(s.host === 'Build server 127.0.0.1:' + srv.address().port && !s.banner,
+    ok(s.host === 'Server 127.0.0.1:' + srv.address().port && !s.banner,
       'still named, still no banner', JSON.stringify(s));
 
     // 3. It stops. The indicator and the banner must say the same thing

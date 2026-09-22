@@ -34,12 +34,12 @@
     </div>
 
     <noscript><p class="prototype-note">
-      Without JavaScript this form is sent to the build server as it is, and the server builds the installers
+      Without JavaScript this form is sent to the server as it is, and the server builds the installers
       (a page served by one). Editing, signing and files from your computer need&nbsp;JavaScript.
     </p></noscript>
 
     <!-- With JavaScript, src/web_client/new.js sends this as JSON (POST /api/jobs) and never
-         submits it. Without, the browser posts it to the build server that
+         submits it. Without, the browser posts it to the server that
          served the page (POST /submit, docs/api.md "Plain form posts"). File
          inputs without a name (certificates, keys, local files) are never sent
          that way. -->
@@ -445,7 +445,7 @@ Press Enter to close</pre>
           </div>
         </div>
 
-        <!-- Offered with or without a build server: packing in the browser
+        <!-- Offered with or without a server: packing in the browser
              was measured on every machine we have (docs/browser-packing.md),
              and #offline-where says which side of the line this browser and
              this choice of systems are on, before the wait rather than
@@ -461,7 +461,7 @@ Press Enter to close</pre>
              Customise; someone who is happy with the defaults should not
              have to scroll through them to send the form. -->
         <div class="build-early">
-          <p class="build-where new-where small">Built by the build&nbsp;server.</p>
+          <p class="build-where new-where small">Built by the&nbsp;server.</p>
           <div class="actions"><button type="submit">Build installers</button></div>
         </div>
       </section>
@@ -1163,7 +1163,7 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
             <code>.run</code> and <code>.zip</code><span class="offline-inline">, plus offline <code>…_offline.exe</code>, <code>.run</code> and <code>.zip</code></span>,
             <span class="by-mode mode-ours-inline">the installer program signed by TiddlyInstall (your settings are in the name, which no signature covers, so it stays valid)</span><span class="by-mode mode-yours-inline">signed by you</span><span class="by-mode mode-unsigned-inline">unsigned</span>.
           </p>
-          <p class="build-where new-where small">Built by the build&nbsp;server.</p>
+          <p class="build-where new-where small">Built by the&nbsp;server.</p>
         </div>
         <button type="submit" class="big">Build installers</button>
       </div>

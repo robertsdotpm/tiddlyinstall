@@ -1,7 +1,7 @@
-// The one client for the build server (docs/api.md).
+// The one client for the server (docs/api.md).
 //
 // Which server: `?api=` on the page URL, else the one saved in this browser,
-// else the default: this page's own origin when the build server is serving
+// else the default: this page's own origin when the server is serving
 // it, otherwise DEFAULT_REMOTE. The settings panel (mountApiFooter) shows it
 // and lets people change it, like netstats on warpgate.io.
 //
@@ -12,10 +12,12 @@
 // being submitted keeps its contents. A 4xx is the caller's problem: it is
 // thrown as an ApiError carrying the server's {error, code}.
 
+import { mountDialog } from './dialog.js';
+
 export const DEFAULT_REMOTE = 'http://10.0.1.76:8080';
 // The site is one file (tools/build_site.py, plan.md section 1.11) that
 // also carries its own builder, src/web_client/local-api.js, as globalThis.tiLocalApi.
-// LOCAL as the backend means "no build server: this page answers every
+// LOCAL as the backend means "no server: this page answers every
 // call itself". Opened from disk, the page starts that way.
 export const LOCAL = 'local';
 const HAS_LOCAL = !!globalThis.TI_HAS_LOCAL;
@@ -64,10 +66,10 @@ const explicitApi = localOk(readParamApi()) || normalizeApi(readParamApi()) || l
 let defaultApi = HAS_LOCAL && !pageIsHttp ? LOCAL : DEFAULT_REMOTE;
 let apiBaseUrl = explicitApi || defaultApi;
 
-// True when this page builds installers itself (no build server).
+// True when this page builds installers itself (no server).
 export function apiLocal() { return apiBaseUrl === LOCAL; }
 
-// Has the build server now chosen actually answered this page? Set only
+// Has the server now chosen actually answered this page? Set only
 // where we truly learn it (a reply to a request, a health check, or the
 // same-origin probe), and cleared whenever the chosen server changes.
 // buildWhere() below is why it exists: the header must not claim a server
@@ -76,11 +78,11 @@ let serverSeen = false;
 
 // Where installers are built, as far as we honestly know it. One answer,
 // shared by the header indicator (mountApiFooter), the outage banner and
-// the "Built in this page / by the build server" lines on the forms, so
+// the "Built in this page / by the server" lines on the forms, so
 // the three of them cannot disagree:
 //
-//   'page'     no build server: this page builds installers itself
-//   'up'       the chosen build server has answered us
+//   'page'     no server: this page builds installers itself
+//   'up'       the chosen server has answered us
 //   'down'     it cannot be reached -- exactly when the banner is showing
 //   'unknown'  a server is chosen, but nothing has asked it yet
 //
@@ -94,7 +96,7 @@ export function buildWhere() {
   return serverSeen ? 'up' : 'unknown';
 }
 
-// A copy saved to someone's disk has no build server and did not choose
+// A copy saved to someone's disk has no server and did not choose
 // that: it is the one file, off an http(s) page. The indicator says so as
 // a fact rather than dressing it up as a setting.
 export function buildWhereFixed() {
@@ -108,7 +110,7 @@ export function buildWhereFixed() {
 export function pageFromDisk() { return !pageIsHttp; }
 
 // A job this page built itself (files from the user's computer are, even
-// with a build server) and its record are answered by the page.
+// with a server) and its record are answered by the page.
 function localPath(path) {
   if (!HAS_LOCAL || !globalThis.tiLocalApi) return false;
   if (/^\/api\/jobs\/local-/.test(path)) return true;
@@ -121,7 +123,7 @@ export function localSubmit(body) {
 }
 let readyPromise = null;
 
-// Is this page served by a build server? Asked once per tab, and only when
+// Is this page served by a server? Asked once per tab, and only when
 // nothing more specific was chosen.
 async function probeSameOrigin() {
   let cached = null;
@@ -225,7 +227,7 @@ function ensureBanner() {
   banner.setAttribute('role', 'status');
   banner.hidden = true;
   banner.innerHTML =
-    '<span class="api-banner-text">Can\'t reach the build server at <code class="api-url"></code>. ' +
+    '<span class="api-banner-text">Can\'t reach the server at <code class="api-url"></code>. ' +
     '<span class="api-wait"></span></span> ' +
     '<button type="button" class="secondary api-try">Try now</button>' +
     (HAS_LOCAL ? ' <button type="button" class="secondary api-use-local">Build in this page instead</button>' : '');
@@ -396,7 +398,7 @@ function prettyApi(u) {
   return u === LOCAL ? 'none, this page builds installers itself' : prettyHost(u);
 }
 
-// Which features show: html.ti-local hides what needs a build server (mode
+// Which features show: html.ti-local hides what needs a server (mode
 // A, packing runtimes, the timestamp relay; src/web_client/css/style.css .online-only).
 function paintMode() {
   document.documentElement.classList.toggle('ti-local', apiLocal());
@@ -458,12 +460,12 @@ function paintWhereChip() {
     host.textContent = 'Built in this page';
     word.textContent = '';
     said = fixed
-      ? 'Built in this page. This is a saved copy, so there is no build server: your browser makes the installers.'
-      : 'Built in this page. No build server is chosen, so your browser makes the installers.';
+      ? 'Built in this page. This is a saved copy, so there is no server: your browser makes the installers.'
+      : 'Built in this page. No server is chosen, so your browser makes the installers.';
   } else {
-    host.textContent = 'Build server ' + prettyHost(apiBaseUrl);
+    host.textContent = 'Server ' + prettyHost(apiBaseUrl);
     word.textContent = WHERE_WORDS[state];   // its separator is in the CSS
-    said = 'Build server ' + apiBaseUrl + ' is ' + WHERE_SAID[state];
+    said = 'Server ' + apiBaseUrl + ' is ' + WHERE_SAID[state];
   }
   whereEl.title = said;
   whereEl.setAttribute('aria-label', said + ' Open settings.');
@@ -482,8 +484,34 @@ function paintApiFooter() {
   a.title = apiBaseUrl === defaultApi ? apiBaseUrl + ' (default)' : apiBaseUrl + ' (chosen)';
 }
 
+// What the server is for, behind a link in the settings panel rather than
+// in it: the panel is a place to change an address, and the answer to
+// "what do I lose without one" is six lines that would swamp it. The
+// wording is the page's, not ours -- "modes B and C" used to be in that
+// hint, and nobody outside this repository knows what a mode is.
+const WHAT_PANEL =
+  '<div class="api-what-panel" aria-label="What the server does">' +
+  '<div class="api-what-box">' +
+  '<div class="dialog-head"><strong>What the server does</strong>' +
+  '<button type="button" class="dialog-close api-ctl-what-close" aria-label="Close">&#10005;</button></div>' +
+  '<ul class="small">' +
+  '<li><strong>Builds the installers</strong>, instead of your browser. Mainly useful for offline ' +
+  'installers, which carry the runtime inside them and can be too big for a browser to assemble.</li>' +
+  '<li><strong>Signs the runtime install script</strong>, so anyone can check it came from us. ' +
+  'The key is only on the server, so this is the one thing a page can never do for itself.</li>' +
+  '<li><strong>Passes signing and timestamp requests through.</strong> Those services refuse calls ' +
+  'from web pages, so the server forwards them on your behalf.</li>' +
+  '<li><strong>Keeps copies of the runtimes</strong>, so an installer can still fetch them on an old ' +
+  'machine that cannot make a modern HTTPS connection.</li>' +
+  '<li><strong>Hands out the base installers</strong> and the list of runtimes this page offers.</li>' +
+  '<li><strong>Answers a plain form</strong>, for browsers that cannot run this page at all.</li>' +
+  '</ul>' +
+  '<p class="small muted">With no server, your browser does the building. Signing and the relay are ' +
+  'the parts it cannot do for itself.</p>' +
+  '</div></div>';
+
 // A settings button (a spanner) in the site header opens a small panel
-// with the build server choice, and beside it an indicator saying where
+// with the server choice, and beside it an indicator saying where
 // installers are being built (mountWhere), which is also what opens the
 // panel -- there is no separate settings button: a spanner beside it was a
 // second door to the same room, and the indicator has to be there anyway.
@@ -497,9 +525,9 @@ export function mountApiFooter() {
   footerEl.className = 'api-ctl settings';
   footerEl.innerHTML =
     '<div class="settings-panel" hidden>' +
-    '<p class="settings-now"><span>Build server:</span> <a class="api-ctl-url" target="_blank" rel="noopener noreferrer"></a></p>' +
+    '<p class="settings-now"><span>Server:</span> <a class="api-ctl-url" target="_blank" rel="noopener noreferrer"></a></p>' +
     '<form class="api-ctl-form">' +
-    '<label>Build server URL <input type="text" class="api-ctl-input" spellcheck="false" autocomplete="off" ' +
+    '<label>Server URL <input type="text" class="api-ctl-input" spellcheck="false" autocomplete="off" ' +
     'autocapitalize="off" placeholder="http://host:8080"></label>' +
     '<p class="api-ctl-err" hidden></p>' +
     '<div class="actions">' +
@@ -510,8 +538,9 @@ export function mountApiFooter() {
     '</div>' +
     '<p class="hint">Kept in this browser only, and shareable as <code>?api=</code> on the page URL. ' +
     'A page served over HTTPS can\'t use a plain http:// server.' +
-    (HAS_LOCAL ? ' With no server, this page builds installers itself: modes B and C, from code written here, ' +
-      'files from this computer, a GitHub repository or a package name.' : '') +
+    (HAS_LOCAL ? ' With no server, this page builds the installers itself -- everything except the ones we sign, ' +
+      'from code written here, files from this computer, a GitHub repository or a package name.' : '') +
+    ' <button type="button" class="link-button api-ctl-what" hidden>What does the server&nbsp;do?</button>' +
     '</p></form></div>';
   // Beside the wordmark, not at the end of the nav: it is a statement
   // about the whole application, and among Home / New installer / ... it
@@ -519,6 +548,18 @@ export function mountApiFooter() {
   // with no nav still gets it.
   if (header) header.insertBefore(footerEl, header.querySelector('nav'));
   else footer.appendChild(footerEl);
+  // On <body>, so nothing above it in the header can trap it in a
+  // stacking context.
+  const whatWrap = document.createElement('div');
+  whatWrap.innerHTML = WHAT_PANEL;
+  const whatPanel = whatWrap.firstChild;
+  document.body.appendChild(whatPanel);
+  mountDialog({
+    panel: whatPanel,
+    opener: footerEl.querySelector('.api-ctl-what'),
+    closers: [whatPanel.querySelector('.api-ctl-what-close')],
+  });
+
   // Where installers are built, and the way to change it.
   mountWhere(footerEl);
   if (header && header.querySelector('nav')) mountMenu(header);
@@ -570,7 +611,7 @@ export function mountApiFooter() {
     const save = document.createElement('p');
     save.className = 'save-ctl';
     save.innerHTML = '<button type="button" class="link-button save-page">Save this page</button> ' +
-      '<span class="muted">for one file with everything inside. Opened from your disk it works with no build server.</span>' +
+      '<span class="muted">for one file with everything inside. Opened from your disk it works with no server.</span>' +
       '<span class="muted mobile-only"> On a phone or tablet it goes to your downloads, to copy to a computer: phones may not open a saved page, or run it.</span>';
     footer.appendChild(save);
   }

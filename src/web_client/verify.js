@@ -14,7 +14,7 @@
 // reading the whole project is written to prevent. Every row states a
 // fact. The judgement is the reader's.
 //
-// Offline it can say what is in the file. With a build server it can
+// Offline it can say what is in the file. With a server it can
 // also say the things that decay after the file was written: whether
 // these settings were ever published, whether the plan is still the one
 // the resolver produces, and whether it has been revoked since. Those
@@ -194,7 +194,7 @@ function hostOf(u) {
 
 // An installer with no plan inside fetches one when it runs (mode A).
 // "Nothing here to read" was the wrong answer: this page carries the
-// same catalogue and the same resolver the build server uses, so it can
+// same catalogue and the same resolver the server uses, so it can
 // work out the plan the record asks for and show that instead. It is
 // not the plan the installer will get -- that one is made when it runs,
 // against the catalogue as it is then -- so it is labelled as ours.
@@ -283,7 +283,7 @@ async function planFromName(fileName) {
 // check that passed, which is the failure this project keeps meeting.
 async function serverChecks(info, d, out, derived, file) {
   const add = (k, v) => out.push([k, v]);
-  add('Build server', '<code>' + esc(apiBase()) + '</code>');
+  add('Server', '<code>' + esc(apiBase()) + '</code>');
 
   // The hash of the settings actually in the file, computed from their
   // bytes. The earlier version used d.record, which for an installer
@@ -533,7 +533,7 @@ async function paint(file, sha, info) {
     if (!s.signed) {
       sign.push(['The runtime install script', 'is <strong>not signed</strong> (' + esc(s.why) + '). It is only as trustworthy as this file']);
     } else if (!baked) {
-      sign.push(['The runtime install script', 'is signed, but this page carries no key to check it against. Set a build server and it can be checked']);
+      sign.push(['The runtime install script', 'is signed, but this page carries no key to check it against. Set a server and it can be checked']);
     } else {
       let ok = false;
       try { ok = ed25519Verify(baked, s.bytes, s.sig); } catch (e) { ok = false; }

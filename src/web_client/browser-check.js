@@ -475,9 +475,9 @@
     return t.t;
   }
 
-  // The build server's simple form (GET /classic: plain HTML, no
+  // The server's simple form (GET /classic: plain HTML, no
   // JavaScript), for browsers that can't run the page: this page's server
-  // when it came from one, else the build server this copy was made for.
+  // when it came from one, else the server this copy was made for.
   function classicUrl() {
     var proto = String(w.location && w.location.protocol);
     if (proto === 'http:' || proto === 'https:') return 'classic';
@@ -546,7 +546,7 @@
     var classic = miss.length ? classicUrl() : null;
     if (classic) {
       var simple = el('span', { 'class': 'ti-compat-classic' }, ' Or build installers with ');
-      simple.appendChild(el('a', { href: classic }, 'the build server\'s simple form'));
+      simple.appendChild(el('a', { href: classic }, 'the server\'s simple form'));
       simple.appendChild(doc.createTextNode(', which works in this browser.'));
       bar.appendChild(simple);
     }

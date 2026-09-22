@@ -13,7 +13,7 @@
 //
 // The panel keeps its content in normal flow until this runs, and only
 // then folds into a dialog with an opener. Not for the no-JavaScript
-// case -- that is served the build server's /classic form, which is a
+// case -- that is served the server's /classic form, which is a
 // different page and never had this list -- but so that the content is
 // never hidden by markup alone: if this module fails to load, or throws
 // before mounting, or the reader is in the moment before the bundle

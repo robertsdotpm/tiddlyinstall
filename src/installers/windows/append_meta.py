@@ -3,7 +3,7 @@
 
     [base][record][plan][pack][footer: 64 bytes]
 
-For testing the Windows base; the build server has its own implementation (src/shared/tifile.js).
+For testing the Windows base; the server has its own implementation (src/shared/tifile.js).
 
     append_meta.py base.exe out.exe --record record.txt [--plan plan.txt]
                    [--pack FILE ...] [--pack-dir DIR]

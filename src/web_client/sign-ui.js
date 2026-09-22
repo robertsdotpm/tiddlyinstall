@@ -2,7 +2,7 @@
 // or a remote signing service, OpenPGP detached signatures for .run.
 // Keys live in this module's variables only: never uploaded, never put in
 // storage, gone with the tab. Only a hash of the signature is sent anywhere
-// (to the timestamp server, through the build server's /api/tsa).
+// (to the timestamp server, through the server's /api/tsa).
 import { openPfx } from './lib/pkcs12.js';
 // beginPE/finishPE rather than signPE(digestSigner(...)) for the service
 // route: the certificate often arrives with the signature, so the chain
@@ -45,7 +45,7 @@ function describeCert(c, chain) {
 }
 
 function timestampFn() {
-  if (apiLocal() || !$('ts-on').checked) return null;   // the relay is the build server's
+  if (apiLocal() || !$('ts-on').checked) return null;   // the relay is the server's
   const name = $('ts-name').value;
   return async (req) => {
     let r;
@@ -54,7 +54,7 @@ function timestampFn() {
         method: 'POST', headers: { 'Content-Type': 'application/timestamp-query' }, body: req,
       });
     } catch (e) {
-      throw new Error('Couldn\'t reach the build server for the timestamp. Untick "Timestamp" to sign without one.');
+      throw new Error('Couldn\'t reach our server for the timestamp. Untick "Timestamp" to sign without one.');
     }
     if (!r.ok) {
       let msg = 'HTTP ' + r.status;
@@ -190,7 +190,7 @@ function svcChosen() {
   return sel ? service(sel.value) : null;
 }
 
-// The provider list, rebuilt whenever the build server changes: a relayed
+// The provider list, rebuilt whenever the server changes: a relayed
 // provider does not exist without one, so it is not offered in the offline
 // page (the same rule as the timestamp relay).
 function paintServiceList() {
@@ -212,7 +212,7 @@ function paintService() {
   if (!svc) return;
   const d = describe(svc);
   const where = svc.where === 'server'
-    ? '<strong>Through the build server.</strong> '
+    ? '<strong>Through the server.</strong> '
     : svc.where === 'paste' ? '<strong>By hand.</strong> ' : '<strong>Straight from this page.</strong> ';
   let html = '<p class="small" style="margin-top:0">' + esc(d.summary) + '</p>' +
     '<p class="small' + (svc.where === 'server' ? ' error-text' : ' muted') + '">' + where + esc(d.credentials) + '</p>';
@@ -539,7 +539,7 @@ export function mountSign({ build, download, kind }) {
   $('svc-name').addEventListener('change', () => { forgetCreds(); paintService(); });
   $('svc-finish').addEventListener('click', finishServicePaste);
   $('svc-cancel').addEventListener('click', () => cancelServicePaste());
-  // A relayed provider needs a build server, so the list changes with it.
+  // A relayed provider needs a server, so the list changes with it.
   paintServiceList();
   window.addEventListener('ti-api-change', paintServiceList);
   $('ts-on').addEventListener('change', () => { $('ts-name').disabled = !$('ts-on').checked; });

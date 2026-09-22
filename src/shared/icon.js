@@ -43,7 +43,7 @@ export async function loadResEdit() {
 // Decode PNG/SVG bytes into a source that can produce a square RGBA raster at
 // any size. Kept separate from the icon builders so tests can pass a synthetic
 // source without needing the browser's image decoder. PNGs are decoded and
-// scaled here in JS (pngDecode, resizeRGBA), so the build server and the
+// scaled here in JS (pngDecode, resizeRGBA), so the server and the
 // browser make the same bytes; anything else (SVG) needs the browser.
 export async function rasterSource(bytes) {
   const u8 = toBytes(bytes);

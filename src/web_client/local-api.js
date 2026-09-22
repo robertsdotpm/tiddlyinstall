@@ -1,12 +1,12 @@
-// The build server's API, answered inside the page (plan.md section 1.11).
+// The server's API, answered inside the page (plan.md section 1.11).
 // The one-file site sets globalThis.tiLocalApi from here, and api.js sends
-// every call to it when there is no build server (opened from disk, or "No
+// every call to it when there is no server (opened from disk, or "No
 // server" chosen). Two things leave the browser, and nothing else:
 // package registry lookups, which only happen when a package's version
 // isn't given, and -- for a GitHub source -- api.github.com, to turn a
 // branch or tag into the commit the record pins and to read the names at
 // the top of the repository, which is how the install rule is chosen
-// (src/shared/github.js; the build server derives both the same way, from the
+// (src/shared/github.js; the server derives both the same way, from the
 // same code, so one form gives one record either side).
 //
 // **A copy saved to disk makes neither GitHub call.** Its promise is that
@@ -18,7 +18,7 @@
 //
 // Jobs run through src/shared/builder.js, as on the server, with embedPlan: each
 // installer carries its plan (resolved from the catalogue snapshot in the
-// page) and packs the app's source, so it never needs a build server. The
+// page) and packs the app's source, so it never needs a server. The
 // plan is unsigned, which the engines accept for a plan inside the
 // installer, with a warning (format.md "Plan signature"). Runtimes still
 // download from their URLs when the installer runs.
@@ -98,7 +98,7 @@ async function env() {
 
 /* ---------- offline installers, packed here (docs/browser-packing.md) ---------- */
 
-// Packing runtimes into an installer used to need the build server. It was
+// Packing runtimes into an installer used to need the server. It was
 // measured instead (docs/browser-packing.md): every machine we have, down
 // to a 744 MB 32-bit VM and Firefox 52 on Vista, packs any single default
 // installer, and the ceiling is the largest single installer rather than
@@ -143,13 +143,13 @@ const mirrorBaseOf = (cat) => String((cat && cat.policy && cat.policy.mirror_bas
 // try: that would tell python.org who is building what, from the
 // publisher's own address. Our mirror answers `Access-Control-Allow-Origin:
 // *`, so a file it holds can be fetched and a file it does not hold is the
-// one thing here that really does need the build server.
+// one thing here that really does need the server.
 async function fetchMember(cat, f) {
   const base = mirrorBaseOf(cat);
   const urls = base ? f.urls.filter((u) => u.indexOf(base + '/') === 0) : [];
   if (!urls.length) {
     throw new Error('our mirror has no copy of ' + f.label + ', and a browser cannot fetch it from the vendor (they send no ' +
-      'Access-Control-Allow-Origin header). Build this one on a build server, or choose a version we mirror.');
+      'Access-Control-Allow-Origin header). Build this one on a server, or choose a version we mirror.');
   }
   const tried = [];
   for (const u of urls) {
@@ -210,13 +210,13 @@ function checkBudget(bytes, plat, count) {
   const mb = Math.round(bytes / MB);
   if (bytes > hard) {
     throw new Error('the packed files for ' + plat + ' come to ' + mb + ' MB, past the ' + Math.round(hard / MB) +
-      ' MB one installer can hold. Untick some systems or architectures, or build it on a build server.');
+      ' MB one installer can hold. Untick some systems or architectures, or build it on a server.');
   }
   if (bytes <= b.mb * MB) return b;
-  const fix = b.stream ? 'Untick some systems or architectures, or build it on a build server.'
+  const fix = b.stream ? 'Untick some systems or architectures, or build it on a server.'
     : (typeof globalThis.showSaveFilePicker === 'function'
       ? 'Untick some systems or architectures, or let the page save it straight to a file when you press Build.'
-      : 'Untick some systems or architectures, or build it on a build server. A browser that can write a file as it is made ' +
+      : 'Untick some systems or architectures, or build it on a server. A browser that can write a file as it is made ' +
         '(Chrome or Edge on a computer) has no such limit.');
   throw new Error('this browser is not being asked to hold ' + mb + ' MB: the limit here is ' + b.mb + ' MB, because ' +
     b.why + '. ' + fix + ' ' + count + ' file' + (count === 1 ? '' : 's') + ' would be packed.');
@@ -290,7 +290,7 @@ function checkHeldBudget(layout, name) {
   if (total > b.mb * MB) {
     throw new Error(name + ' is ' + Math.round(total / MB) + ' MB and has a custom icon, so it carries a checksum over the whole ' +
       'file that can only be written by holding all of it at once -- and the limit here is ' + b.mb + ' MB, because ' + b.why +
-      '. Build it without a custom icon, pack fewer systems, or use a build server.');
+      '. Build it without a custom icon, pack fewer systems, or use the server.');
   }
 }
 
@@ -320,7 +320,7 @@ async function checkFooter({ blob, handle, size, name, footer }) {
     }
   } catch (x) {
     throw new Error(name + ' was built, but this browser could not read it back to check it (' +
-      (x && x.message ? x.message : x) + '), so it is not being offered. Pack fewer systems, or build it on a build server.');
+      (x && x.message ? x.message : x) + '), so it is not being offered. Pack fewer systems, or build it on a server.');
   }
   // A macOS installer is a zip and has no metadata footer; for it the
   // check is that the file is there, is the length that was written, and
@@ -343,7 +343,7 @@ async function build(body, e, progress, live) {
   records.set(out.hash, out.record);
   const res = {
     // Where it was built, for the build page to say so (design.md 11.0
-    // item 6): this job never went near a build server.
+    // item 6): this job never went near a server.
     built: { where: 'page' },
     record: out.hash,
     files: out.files.map((f) => {
@@ -357,11 +357,11 @@ async function build(body, e, progress, live) {
       return o;
     }),
   };
-  // Downloads our mirror has no copy of, as the build server reports them
+  // Downloads our mirror has no copy of, as the server reports them
   // (src/build_server/lib/jobs.js): the build page warns the same way either way.
   if (out.unmirrored && out.unmirrored.length) res.unmirrored = out.unmirrored;
   // What a branch or tag resolved to (src/shared/builder.js), exactly as the
-  // build server reports it: the build page says which commit was pinned
+  // server reports it: the build page says which commit was pinned
   // either way.
   if (out.source) res.source = out.source;
   // Made with a changed catalogue: the build page says so.
@@ -400,7 +400,7 @@ async function submit(body) {
   return view(j);
 }
 
-const OFFLINE_ONLY = 'This needs a build server; the page is building installers itself (choose a server at the bottom of the page).';
+const OFFLINE_ONLY = 'This needs a server; the page is building installers itself (choose a server at the bottom of the page).';
 
 async function request(path, opts = {}) {
   const method = (opts.method || 'GET').toUpperCase();

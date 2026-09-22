@@ -29,7 +29,7 @@
 //                     CORS headers -- each one below was checked by
 //                     preflight, and the result is in `evidence`.
 //   where: 'server'   the API sends no CORS headers, so the call goes
-//                     through the build server's relay
+//                     through the server's relay
 //                     (src/build_server/lib/signrelay.js). The credential passes
 //                     through our server, which never logs or stores it.
 //                     Relayed providers do not exist in the offline
@@ -339,7 +339,7 @@ export function makeSend(opts) {
   const rewrite = o.rewrite || ((u) => u);
   return async function send(req) {
     // `rewrite` is a test hook, and it applies to the address this code
-    // dials. A relayed call dials the build server, not the provider, so the
+    // dials. A relayed call dials the server, not the provider, so the
     // provider's URL goes through untouched -- the relay judges the real one.
     const url = req.relay ? req.url : rewrite(req.url);
     const method = req.method || 'POST';
@@ -353,8 +353,8 @@ export function makeSend(opts) {
     }
     if (req.relay) {
       if (!o.relayBase) {
-        throw new ServiceError('This provider needs the build server to relay the call, and this page has no build server. ' +
-          'Use a build server, or the "Any service that signs a digest" option with a service your browser can call.');
+        throw new ServiceError('This provider needs our server to relay the call, and this page has no server set. ' +
+          'Set a server, or use the "Any service that signs a digest" option with a service your browser can call.');
       }
       // The credential goes in a header of its own, so the relay's code
       // makes plain what it forwards and forgets: src/build_server/lib/signrelay.js.
@@ -365,7 +365,7 @@ export function makeSend(opts) {
         JSON.stringify({ url: url, method: method, headers: headers, body: body === undefined ? null : body }));
       if (r.status !== 200) {
         const why = r.json && r.json.error ? r.json.error : 'HTTP ' + r.status;
-        throw new ServiceError('The build server would not relay that call: ' + why);
+        throw new ServiceError('The server would not relay that call: ' + why);
       }
       const env = r.json || {};
       return { status: env.status || 0, headers: env.headers || {}, text: env.text || '', json: env.body === undefined ? null : env.body };
@@ -662,10 +662,10 @@ const AZURETS = {
     'It signs a digest and hands back the certificate with it. Its certificates last three days, so always timestamp.',
   evidence: 'NOT callable from a page. A CORS preflight to <region>.codesigning.azure.net/…:sign answers ' +
     '405 Method Not Allowed with no Access-Control-* headers at all (checked 2026-09-18 and again 2026-09-20), ' +
-    'so the browser refuses the call before it is made. The build server relays it instead.',
+    'so the browser refuses the call before it is made. The server relays it instead.',
   docs: 'https://learn.microsoft.com/en-us/azure/trusted-signing/',
   certs: 'service',
-  relayNote: 'Your access token and the digest pass through the build server. It forwards them to ' +
+  relayNote: 'Your access token and the digest pass through the server. It forwards them to ' +
     'codesigning.azure.net and forgets them: nothing is stored, and the token is never written to a log. ' +
     'The token is short-lived (about an hour) and can only sign; it is not your Azure password. ' +
     'If you would rather nothing of yours touched our server, use the paste option instead, or run the relay yourself.',
@@ -932,7 +932,7 @@ export function service(id) {
   return null;
 }
 
-// Which providers a page can offer. Relayed ones need a build server, so
+// Which providers a page can offer. Relayed ones need a server, so
 // they do not exist in the offline one-file page -- the same rule the
 // timestamp relay follows (src/web_client/css/style.css .online-only).
 export function servicesFor(hasServer) {
@@ -944,7 +944,7 @@ export function servicesFor(hasServer) {
 export function credentialPath(svc) {
   if (svc.where === 'paste') return 'Nothing secret is typed into this page: you run the commands it shows, and paste back the signature.';
   if (svc.where === 'server') {
-    return 'These credentials pass through the build server. ' + (svc.relayNote || '');
+    return 'These credentials pass through the server. ' + (svc.relayNote || '');
   }
   return 'These credentials stay in this browser. The page calls ' + svc.name +
     ' directly, so nothing of yours reaches our server -- only the signing service sees them, and only the ' +

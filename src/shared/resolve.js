@@ -1363,7 +1363,7 @@ function usable(pol, e) {
 // and nothing here weakens it.
 //
 // The set lives on the catalogue, not on the request: it decides which
-// builds exist, and the page and the build server must make the same
+// builds exist, and the page and the server must make the same
 // choice from the same list. The memo keys carry `revokedKey`, so
 // changing the list can't serve a pick made under the old one.
 export function setRevoked(cat, hashes) {
@@ -1688,7 +1688,7 @@ function writePlan(cat, app, blocks) {
   w.add('rootname', orDefault(app.rootName, 'ti'));
   // When this plan was made, and how long a carried copy of it may be used
   // (design.md 7.1). Written only when the caller says at what moment it is
-  // being made, so the page and the build server, given the same moment,
+  // being made, so the page and the server, given the same moment,
   // write the same bytes -- and so a plan resolved with no time at all (an
   // old case, tools/resolve.mjs) is the plan it always was.
   const at = planTime(app.signedAt);

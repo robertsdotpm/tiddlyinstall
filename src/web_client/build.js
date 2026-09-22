@@ -181,7 +181,7 @@ function paintFiles(job) {
     // It follows the file, not the mode that was asked for: `signed` is who
     // the file is signed by, empty where it is signed by nobody, and that is
     // what a recipient's computer will act on. A mode B download is unsigned
-    // at this point -- the publisher's key never reaches a build server, so
+    // at this point -- the publisher's key never reaches a server, so
     // they sign it after this page -- and the "Signed by" column beside this
     // says so too. A file signed by us (mode A, disabled in this prototype)
     // gets no notice: openNotice has nothing to say about a build nobody can
@@ -233,14 +233,14 @@ function paintBackend() {
   if (!b) return;
   if (apiBase() !== apiDefault() && !apiLocal()) {
     b.textContent = 'This build and its downloads come from ' + apiBase() +
-      ', not the default build server. If you did not choose that, change it with the build-server indicator in the header before downloading anything.';
+      ', not the default server. If you did not choose that, change it with the server indicator in the header before downloading anything.';
     b.hidden = false;
   } else {
     b.hidden = true;
   }
 }
 
-// Where this build happened: in the page, or on a build server (design.md
+// Where this build happened: in the page, or on a server (design.md
 // 11.0 item 6). It comes from the job, not from what the page is pointed at
 // now: a job the page built itself says so in its result (src/web_client/local-api.js
 // `built`), and its id begins with "local-". Plain text, so a saved copy of
@@ -250,14 +250,14 @@ function paintWhere(job) {
   const inPage = (built && built.where === 'page') || /^local-/.test(String(job.id || '')) || apiLocal();
   const host = String(apiBase()).replace(/^https?:\/\//, '');
   const done = job.status === 'done' || job.status === 'failed';
-  const where = inPage ? 'in this page' : 'by the build server at ' + host;
+  const where = inPage ? 'in this page' : 'by the server at ' + host;
   const w = $('job-where');
   if (w) w.textContent = (done ? 'Built ' : 'Being built ') + where + '.';
   const b = $('job-built');
   if (b) {
     b.textContent = inPage
-      ? 'These installers were built in this page, by your browser. They were never on a build server.'
-      : 'These installers were built by the build server at ' + host + ', and downloaded from it.';
+      ? 'These installers were built in this page, by your browser. They were never on a server.'
+      : 'These installers were built by the server at ' + host + ', and downloaded from it.';
   }
 }
 
@@ -388,7 +388,7 @@ async function poll() {
     if (seq !== pollSeq) return;
     if (e instanceof ApiError && e.status === 404) {
       $('job-view').hidden = true;
-      showError(apiLocal() ? e.message : 'No build with id ' + id + ' on ' + apiBase() + '. It may have expired, or this page is pointed at a different build server (the header says which).');
+      showError(apiLocal() ? e.message : 'No build with id ' + id + ' on ' + apiBase() + '. It may have expired, or this page is pointed at a different server (the header says which).');
       finished = true;
       return;
     }

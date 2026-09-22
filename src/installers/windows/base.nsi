@@ -4265,7 +4265,7 @@ Function WriteSummary
       StrCpy $U_a "Fetched over the network and checked here before anything was read, so a script altered on the way would have been refused."
       Call SumPara
     ${Else}
-      StrCpy $U_a "Carried inside this file, signed by the TiddlyInstall key ${TI_PLAN_KEYID}, which says our build server produced it."
+      StrCpy $U_a "Carried inside this file, signed by the TiddlyInstall key ${TI_PLAN_KEYID}, which says our server produced it."
       Call SumPara
       StrCpy $U_a "That signature is checked by this file, against a key inside this file. It is worth exactly as much as the file itself, so it is not a second opinion: use the installer's SHA-256 for that."
       Call SumPara

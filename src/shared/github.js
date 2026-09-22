@@ -1,6 +1,6 @@
 // Reading a GitHub repository's shape from the GitHub API, the same code in
-// the page and on the build server (design.md 11.0, "GitHub sources without
-// a build server").
+// the page and on the server (design.md 11.0, "GitHub sources without
+// a server").
 //
 // Two things have to be known before a record can be written for a GitHub
 // source: **which commit** it names, and **what is at the top of it**, from
@@ -8,7 +8,7 @@
 // `package.json` -> npm, `Gemfile` -> bundler; docs/format.md
 // "`install default:<rule>`").
 //
-// The build server used to learn both by downloading the repo's tarball,
+// The server used to learn both by downloading the repo's tarball,
 // which a browser cannot do -- codeload.github.com sends no CORS headers,
 // and sends none by design. If the server kept deriving them that way and
 // the page derived them some other way, one form would give two records
@@ -27,7 +27,7 @@
 //
 // **Rate limits are the thing that will bite.** Unauthenticated the API
 // allows 60 requests an hour per internet address. From the page that is
-// the user's own address and is mostly plenty; on the build server it is
+// the user's own address and is mostly plenty; on the server it is
 // one address shared by everybody, and it will run out. Nothing here ever
 // falls back to "no install rule" -- a refusal that says what to do
 // instead is the whole of the graceful path, and the caller supplies the
@@ -198,7 +198,7 @@ export async function resolveCommit(get, owner, repo, ref, nowMs) {
 // truncated answer is a *shorter* list, and a shorter list silently picks
 // a different rule.
 //
-// Folders are left out. The build server read these names from the
+// Folders are left out. The server read these names from the
 // tarball, where a folder is an entry ending in `/` and so never equal to
 // `requirements.txt`; here a folder of that name would be, and a folder is
 // not a file a rule can be about.

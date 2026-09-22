@@ -1030,7 +1030,7 @@ form:has(#tpl-tray:checked) .tpl-gui-only { display: block; }
 /* The commit the page was built from. Last line of the footer, and
    quieter than the rest: it is a fact you go looking for, not one to
    read. It is written into the markup before the footer's JavaScript
-   parts (the build-server settings, the "save this page" line) are
+   parts (the server settings, the "save this page" line) are
    appended to the end, so mountApiFooter moves it back to last once it
    has added them. Not done with flex order: the footer's credit line is
    loose inline content, and a flex column makes each <a> in it a row of
@@ -1272,8 +1272,10 @@ form:has(#offline-on:checked) .offline-off-inline { display: none; }
 .arch-open { font-size: 0.9em; }
 
 /* Inline by default (no JavaScript); a dialog once dialog.js says so. */
-.arch-panel > .arch-dialog > .dialog-head { display: none; }
-.arch-panel.is-dialog {
+.arch-panel > .arch-dialog > .dialog-head,
+.api-what-panel > .api-what-box > .dialog-head { display: none; }
+.arch-panel.is-dialog,
+.api-what-panel.is-dialog {
   position: fixed;
   top: 0; right: 0; bottom: 0; left: 0;
   inset: 0;
@@ -1285,8 +1287,10 @@ form:has(#offline-on:checked) .offline-off-inline { display: none; }
   background: rgba(10, 12, 14, 0.62);
   background: rgb(10 12 14 / 0.62);
 }
-.arch-panel.is-dialog.open { display: flex; }
-.arch-panel.is-dialog > .arch-dialog {
+.arch-panel.is-dialog.open,
+.api-what-panel.is-dialog.open { display: flex; }
+.arch-panel.is-dialog > .arch-dialog,
+.api-what-panel.is-dialog > .api-what-box {
   width: 100%; max-width: 620px;
   width: min(620px, 100%);
   max-height: 82vh;
@@ -1296,9 +1300,15 @@ form:has(#offline-on:checked) .offline-off-inline { display: none; }
   border-top: 2px solid var(--accent);
   padding: 16px 18px 18px;
 }
-.arch-panel.is-dialog > .arch-dialog > .dialog-head { display: flex; }
+.arch-panel.is-dialog > .arch-dialog > .dialog-head,
+.api-what-panel.is-dialog > .api-what-box > .dialog-head { display: flex; }
 /* Inside the dialog the list is the content, so it starts at the top. */
 .arch-panel.is-dialog .arch-cover { margin-top: 0; }
+.api-what-panel.is-dialog { z-index: 70; }
+.api-what-panel li { margin-bottom: 8px; }
+/* Inline with no JavaScript would put six lines in the header, so
+   this one stays hidden until dialog.js can make it a dialog. */
+.api-what-panel:not(.is-dialog) { display: none; }
 
 .arch-cover { list-style: none; margin: 12px 0 6px; padding: 0; }
 .arch-cover > li { margin-bottom: 8px; }
@@ -1404,7 +1414,7 @@ form:has(#unscript-tab-unix:checked) .unscript-panel-unix { display: block; }
    ========================================================================== */
 
 /* One of the two things that may follow the viewport (the other is the
-   runtime column below). It exists only while the build server can't be
+   runtime column below). It exists only while the server can't be
    reached, it carries the two buttons that answer that ("Try now", "Build
    in this page instead"), and it goes away when the server comes back. An
    alert you can act on from wherever you are is the strong reason. */
@@ -1543,7 +1553,7 @@ form:has(#unscript-tab-unix:checked) .unscript-panel-unix { display: block; }
 .icon-edit img[hidden] { display: none; }
 .error-text { color: var(--fail); }
 
-/* The one-file site: with no build server, what needs one is hidden. */
+/* The one-file site: with no server, what needs one is hidden. */
 .local-only { display: none; }
 html.ti-local .local-only { display: inline; }
 html.ti-local .online-only { display: none !important; }
@@ -1951,7 +1961,7 @@ main.wide { max-width: 1240px; }
 /* The bar sits at the end of the form and scrolls away with it. The design
    pass had it pinned to the bottom of the window; the operator's call is
    that nothing in this interface follows the viewport without a strong
-   reason, and "You'll get ... unsigned. Built by the build server." in
+   reason, and "You'll get ... unsigned. Built by the server." in
    front of you for the whole scroll is not one. What it says is kept -- it
    is the last thing read before the button. */
 .build-bar {

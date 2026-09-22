@@ -96,10 +96,13 @@ def shared(*names):
 
 EARLY_MODULES = web("polyfills.js", "has-shim.js")
 CORE_MODULES = [
+    # dialog.js before api.js: the settings panel's "What the server does"
+    # is a dialog, and a module has to be listed before anything importing it.
+    *web("dialog.js"),
     *web("api.js"),
     *web("open-notice.js"),
     *shared("mirror-words.js", "templates.js", "form-job.js"),
-    *web("write-editor.js", "dialog.js", "copy.js"),
+    *web("write-editor.js", "copy.js"),
     *web_lib("sha.js", "hmac-pbkdf2.js", "aes.js"),
     *web_lib("bignum.js", "der.js", "rsa.js", "ec.js"),
     *web_lib("ed25519.js", "cryptox.js"),
