@@ -854,12 +854,34 @@ ti_paint() {
 	awk '
 	BEGIN { b = "\033[1m"; o = "\033[0m"; red = "\033[1;31m"
 		yel = "\033[33m"; dim = "\033[2m" }
+	# Structure follows a blank line; wrapped prose does not. Without
+	# this, any wrapped fragment that happened to look like a heading
+	# was bolded -- a line ending "...is not a second" left "opinion:"
+	# starting the next one, and it was painted as a label.
+	{ pb = lastblank; lastblank = ($0 ~ /^[ \t]*$/) }
 	/^!! /                        { print red $0 o; next }
 	/^!  /                        { print yel $0 o; next }
 	/^[-=]+$/                     { print dim $0 o; next }
 	/^[A-Z][A-Z0-9 ,.:()\/+-]*$/  { print b $0 o; next }
+	# A verdict on its own line, indented and shouting: UNSIGNED,
+	# SIGNED BY TIDDLYINSTALL, NO SIGNATURE... Anchored at both ends so
+	# a summary row like "  PATH   Not changed" is not caught by it.
+	/^  [A-Z][A-Z0-9 ,.()\/+-]*$/  { print b $0 o; next }
 	/^ +(sha256|from|or) /        { print dim $0 o; next }
-	/^  [A-Za-z][A-Za-z ]*: /     { k = index($0, ":"); print b substr($0, 1, k) o substr($0, k + 1); next }
+	# The key of a summary row, capped at eighteen characters as the
+	# RTF side has always been (tisig.c key_len stops at twenty).
+	# Without a cap, a wrapped line of prose that happens to contain a
+	# colon is bolded as though it were a label, which is what the line
+	# ending "downloaded it:" did as soon as the trust section grew
+	# sentences long enough to wrap.
+	#
+	# No apostrophes in here: this awk program is inside single quotes,
+	# and one closed it.
+	/^  [A-Z][A-Za-z ]{0,17}: /   { k = index($0, ":"); print b substr($0, 1, k) o substr($0, k + 1); next }
+	# A sub-heading inside a section: indented two, a few words, no
+	# colon, and no column gap -- the gap is what tells a heading from
+	# a row like "  Application      requests", which must stay plain.
+	/^  [A-Z][A-Za-z0-9 ()-]*$/ && pb && length($0) <= 42 && substr($0, 3) !~ /  / { print b $0 o; next }
 	                              { print }'
 }
 
@@ -3537,7 +3559,7 @@ ti_install_main() {
 		[ -n "$ti_signed_scope" ] && printf '  %s\n' "$ti_signed_scope" | ti_wrap 74 2
 		if [ -n "$ti_self_sha" ]; then
 			printf '\n  Installer SHA-256\n'
-			printf '  %s\n' "$ti_self_sha"
+			printf '    %s\n' "$ti_self_sha"
 			# Matches both spellings: "UNSIGNED" where signing was
 			# possible and skipped, and "NO SIGNATURE..." where the
 			# format has nowhere to put one. Either way nothing on this
@@ -3572,7 +3594,8 @@ ti_install_main() {
 		# loudest claim on the screen in the case where it means least.
 		if [ -z "$ti_plan_warn" ] && [ -n "$TI_PLAN_KEYID" ]; then
 			if [ "$TI_PLAN_KIND" = fetched ]; then
-				printf '  SIGNED BY TIDDLYINSTALL   key %s\n' "$TI_PLAN_KEYID"
+				printf '  SIGNED BY TIDDLYINSTALL\n'
+				printf '    key %s\n' "$TI_PLAN_KEYID"
 				printf '  %s\n' 'Fetched over the network and checked here before anything was read, so a script altered on the way would have been refused.' | ti_wrap 74 2
 			else
 				printf '  %s\n' "Carried inside this file, signed by the TiddlyInstall key $TI_PLAN_KEYID, which says our build server produced it." | ti_wrap 74 2

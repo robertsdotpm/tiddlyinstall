@@ -163,9 +163,22 @@ manifest), which is work rather than money.
 
 Small amounts that remove real blind spots.
 
-- **A display for the Mac. ~£10.** The Mac test server is headless, so
-  the macOS Gatekeeper dialogs and Safari have never been photographed
-  or driven. An HDMI dummy plug, or enabling auto-login, fixes it.
+- **A Mac. The operator owns none.** Every other platform here is a
+  machine or a VM on the LAN that can be watched while it installs
+  something; macOS is a rented, headless server reached over SSH, and it
+  is the only Mac there is. So macOS is not merely under-tested, it is
+  tested differently from everything else: the base is built there and
+  the automated cells run there, but nobody has ever sat in front of a
+  Mac and double-clicked one of these installers. The macOS review
+  dialog, Gatekeeper's refusal, the "Open Anyway" walk through System
+  Settings, what the `.app` looks like in Finder -- all of it is
+  reasoned about rather than seen. Two of today's bugs were found only
+  by rendering a screen and looking at it, which is the one thing that
+  cannot be done here.
+- **A display for the rented Mac. ~£10.** Failing a real Mac, this is
+  the cheap half: the server is headless, so the Gatekeeper dialogs and
+  Safari have never been photographed or driven. An HDMI dummy plug, or
+  enabling auto-login, fixes it.
 - **ARM64 hardware. ~£80.** Plans carry arm64 blocks for Windows and
   Linux that have never run: the ESXi host is x86 and the only ARM
   machine is the Mac. A Raspberry Pi or a small cloud ARM instance would

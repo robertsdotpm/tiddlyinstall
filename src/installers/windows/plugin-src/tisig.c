@@ -334,6 +334,51 @@ static int is_heading(const WCHAR *l, int len)
   return letters >= 3;
 }
 
+/* An indented verdict on a line of its own: UNSIGNED, SIGNED BY
+ * TIDDLYINSTALL, NO SIGNATURE... Two spaces then capitals to the end of
+ * the line. Anchored at both ends on purpose: a summary row such as
+ * "  PATH             Not changed" starts with capitals too and must
+ * stay a row. */
+static int is_indented_verdict(const WCHAR *l, int len)
+{
+  int i, letters = 0;
+  if (len < 5 || l[0] != ' ' || l[1] != ' ') return 0;
+  if (l[2] < 'A' || l[2] > 'Z') return 0;
+  for (i = 2; i < len; ++i) {
+    WCHAR c = l[i];
+    if (c >= 'A' && c <= 'Z') { letters++; continue; }
+    if (c >= '0' && c <= '9') continue;
+    if (c == ' ' || c == ',' || c == '.' || c == '(' || c == ')' ||
+        c == '/' || c == '+' || c == '-') continue;
+    return 0;
+  }
+  return letters >= 4;
+}
+
+/* A sub-heading inside a section: two spaces, a few words, no colon and
+ * no column gap. The gap is what separates a heading from a row:
+ * "Installer signature" is a heading, "Application      requests" is
+ * not, and the run of spaces is the only thing that tells them apart. */
+static int is_subheading(const WCHAR *l, int len, int prev_blank)
+{
+  int i;
+  /* After a blank line, and starting with a capital. Both are there to
+   * keep wrapped prose out: a sentence broken across lines can leave a
+   * fragment like "out)" sitting alone, which is short, has no colon
+   * and no column gap, and is not a heading. */
+  if (!prev_blank) return 0;
+  if (len < 5 || len > 42 || l[0] != ' ' || l[1] != ' ') return 0;
+  if (!(l[2] >= 'A' && l[2] <= 'Z')) return 0;
+  for (i = 2; i < len; ++i) {
+    WCHAR c = l[i];
+    if (c == ' ' && i + 1 < len && l[i + 1] == ' ') return 0;   /* a column gap */
+    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')) continue;
+    if (c == ' ' || c == '(' || c == ')' || c == '-') continue;
+    return 0;
+  }
+  return l[len - 1] != ' ';
+}
+
 /* A rule: nothing but = or -. */
 static int is_rule(const WCHAR *l, int len)
 {
@@ -349,7 +394,10 @@ static int key_len(const WCHAR *l, int len)
 {
   int i = 2;
   if (len < 5 || l[0] != ' ' || l[1] != ' ') return 0;
-  if (!((l[2] >= 'A' && l[2] <= 'Z') || (l[2] >= 'a' && l[2] <= 'z'))) return 0;
+  /* A capital, not any letter: wrapped prose can start a line with a
+   * lowercase word and a colon -- "opinion: use the SHA-256 above for
+   * that" -- which is a sentence, not a label. */
+  if (!(l[2] >= 'A' && l[2] <= 'Z')) return 0;
   while (i < len && l[i] != ':') {
     WCHAR c = l[i];
     if (!((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == ' ')) return 0;
@@ -367,6 +415,7 @@ static int indent_of(const WCHAR *l, int len)
 
 void __declspec(dllexport) __cdecl richtext(HWND parent, int size, WCHAR *vars, stack_t **top, void *extra)
 {
+  int prev_blank;
   WCHAR *arg, *path, *w;
   HANDLE h;
   HWND ctl;
@@ -451,8 +500,9 @@ void __declspec(dllexport) __cdecl richtext(HWND parent, int size, WCHAR *vars, 
            "\\viewkind4\\pard\\f0\\fs17\\cf1 ");
 
   start = 0;
+  prev_blank = 1;                      /* the first line follows nothing */
   for (i = 0; i <= n; ++i) {
-    int len, ind, kl;
+    int len, ind, kl, was_blank;
     const WCHAR *l;
     int j;
     if (i < n && w[i] != '\n') continue;
@@ -460,7 +510,17 @@ void __declspec(dllexport) __cdecl richtext(HWND parent, int size, WCHAR *vars, 
     len = (int)(i - start);
     if (len && l[len - 1] == '\r') len--;
     start = i + 1;
+    /* Read and updated here, before any branch below can continue out
+     * of the loop and skip it. */
+    was_blank = prev_blank;
+    prev_blank = (len == 0);
 
+    if (is_indented_verdict(l, len) || is_subheading(l, len, was_blank)) {
+      bstr(&b, "\\pard\\sb100\\sa20\\b ");
+      for (j = 0; j < len; ++j) brtf(&b, l[j]);
+      bstr(&b, "\\b0\\par\n");
+      continue;
+    }
     if (is_heading(l, len)) {
       mono_section = 0;
       short_section = (len == 8 && l[0] == 'I' && l[1] == 'N' && l[2] == ' ' && l[3] == 'S');
