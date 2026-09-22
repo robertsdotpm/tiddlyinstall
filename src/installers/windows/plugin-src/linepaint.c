@@ -89,5 +89,12 @@ int ti_key_len(const ti_wchar *l, int len)
     if (!((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == ' ')) return 0;
     if (++i > 20) return 0;
   }
-  return (i < len && l[i] == ':') ? i + 1 : 0;
+  if (i >= len || l[i] != ':') return 0;
+  /* A lone letter before the colon is a drive, not a label. Windows put
+   * "  All of it in C:" on the screen and this said label, so the path
+   * lost its drive to the value column and read "All of it in C:" then
+   * "\Users\...". Nothing on Linux has this shape, which is why it took
+   * rendering the screen on Windows to see it. */
+  if (l[i - 2] == ' ') return 0;
+  return i + 1;
 }

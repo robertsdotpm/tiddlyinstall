@@ -4255,7 +4255,13 @@ Function WriteSummary
   ${If} $PlanWarn == ""
   ${AndIf} "${TI_PLAN_KEYID}" != "?"
     ${If} $PlanKind == "fetched"
-      ${Sum} "  SIGNED BY TIDDLYINSTALL   key ${TI_PLAN_KEYID}"
+      ; The key on its own line, as the Unix engine prints it. With the
+      ; key on the same line the headline has lower case in it, so it is
+      ; not a verdict to either painter and renders as body text -- the
+      ; signed case came out quieter on screen than UNSIGNED, which is
+      ; backwards. Rendered on Windows 10 on 2026-09-22 to see it.
+      ${Sum} "  SIGNED BY TIDDLYINSTALL"
+      ${Sum} "    key ${TI_PLAN_KEYID}"
       StrCpy $U_a "Fetched over the network and checked here before anything was read, so a script altered on the way would have been refused."
       Call SumPara
     ${Else}
@@ -4458,11 +4464,28 @@ Function WriteSummary
   StrCpy $CurDir ""
   StrCpy $CurFile ""
   ${If} $TgtInstall != ""
+    ${Sum} ""
     ${Sum} "  Installing the project:"
     StrCpy $U_a $TgtInstall
     Call Subst
     StrCpy $U_a $U_out
     Call CmdLine
+  ${EndIf}
+  ; Something under the heading, always. This engine lists the runtime's
+  ; own commands beside the file each belongs to, under DOWNLOADS, so
+  ; with no project install command there was nothing here at all and
+  ; the screen showed a bare COMMANDS followed by the next heading --
+  ; seen by rendering it on Windows 10, 2026-09-22. The Unix engine has
+  ; said "No commands are run on this machine." in the empty case since
+  ; it was written; here that would be a lie whenever a runtime is set
+  ; up, so say where they are instead.
+  ${If} $SumRuns > 0
+    ${Sum} ""
+    StrCpy $U_a "The commands that set the runtime up are listed under DOWNLOADS, with the file each one belongs to."
+    Call SumPara
+  ${ElseIf} $TgtInstall == ""
+    ${Sum} ""
+    ${Sum} "  No commands are run on this machine."
   ${EndIf}
   ${Sum} ""
   ${Sum} "APPLICATION LAUNCH"

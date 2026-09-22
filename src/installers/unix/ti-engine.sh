@@ -889,9 +889,15 @@ ti_paint() {
 	# bolded it. The minimum length keeps the two in step over a
 	# one-letter key, which the RTF side is too short to reach.
 	#
+	# A lone letter before the colon is a drive, not a label:
+	# "  All of it in C:" is a path, and the RTF side used to tab the
+	# rest of it into the value column, which took the drive off the
+	# front of the path. Only Windows has this shape.
+	#
 	# No apostrophes in here: this awk program is inside single quotes,
 	# and one closed it.
-	/^  [A-Z][A-Za-z ]{0,17}:( |$)/ && length($0) >= 5 { k = index($0, ":"); print b substr($0, 1, k) o substr($0, k + 1); next }
+	/^  [A-Z][A-Za-z ]{0,17}:( |$)/ && length($0) >= 5 && substr($0, index($0, ":") - 2, 1) != " " {
+		k = index($0, ":"); print b substr($0, 1, k) o substr($0, k + 1); next }
 	# A sub-heading inside a section: indented two, a few words, no
 	# colon, and no column gap -- the gap is what tells a heading from
 	# a row like "  Application      requests", which must stay plain.

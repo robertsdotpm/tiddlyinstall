@@ -391,7 +391,7 @@ imports only `CreateFileW`, `ReadFile`, `WriteFile`, `SetFilePointer`,
 subsystem and OS version 5.1, so XP's loader takes it. Tested on XP SP3,
 Windows 7 and Windows 11. The committed DLL (llvm-mingw 20260908, no
 timestamp) has sha256
-`31fd5846dce508de65606b139ea829d3cce93f9372f8f510ad77747bfbec7c8f`.
+`b62124f4490a12d9127a2cf948cd6991f99b65a2ee252a4f052bdaadd593f25c`.
 
 ```sh
 LLVM_MINGW=~/.local/opt/llvm-mingw-20260908-msvcrt-ubuntu-22.04-x86_64 plugin-src/build.sh

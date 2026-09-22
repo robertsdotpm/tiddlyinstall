@@ -34,6 +34,8 @@ INSTALL SUMMARY
 
   A twenty one char key: x
   Ab: y
+  All of it in C:  \Users\matth\AppData\Local\ti:
+  Drive C: is not a label either
   U: one letter is too short for the RTF side to see
 
 Wrapped prose can leave a fragment sitting alone, and a fragment that
