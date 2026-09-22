@@ -20,7 +20,7 @@
 // the resolver produces, and whether it has been revoked since. Those
 // cannot live in the file, which is exactly why they need a server.
 import { readInstaller, parseKv, kvGet } from '../shared/tifile.js';
-import { resolve, loadRuntimes } from '../shared/resolve.js';
+import { resolve, loadRuntimes, packagePolicyFor, packageProject } from '../shared/resolve.js';
 import { effectiveCatalog, hasCatalog } from './overlay.js';
 import { apiRequest, apiBase, apiLocal, apiReady, errorText, mountApiFooter } from './api.js';
 import { sha256, sha256Stream } from './lib/sha.js';
@@ -232,6 +232,50 @@ async function planFromRecord(recordText) {
   }
 }
 
+// Mode A carries no settings block at all: the settings *are* the file
+// name, chosen after the installer was signed, which is why renaming one
+// retargets it (docs/design.md, "Why the file name, for mode A"). The
+// page read only the block, so every mode A installer came out as "no
+// settings, nothing to read" -- the one shape where reading the name is
+// the whole job. Same rule the Windows engine uses (base.nsi TiNameParts):
+// drop the extension, drop a trailing record-hash token if there is one,
+// require install_, then split at the first underscore.
+export function nameSettings(fileName) {
+  let n = String(fileName || '').replace(/\.(exe|run|zip)$/i, '');
+  n = n.replace(/_[a-z2-7]{26}$/i, '');
+  if (n.slice(0, 8).toLowerCase() !== 'install_') return null;
+  n = n.slice(8);
+  const i = n.indexOf('_');
+  if (i <= 0 || i >= n.length - 1) return null;
+  return { runtime: n.slice(0, i), pkg: n.slice(i + 1) };
+}
+
+// The plan a plain-name installer would get: the package from the
+// runtime's registry with every setting at its default, which is what
+// the server's nameRecord builds (src/build_server/lib/jobs.js).
+async function planFromName(fileName) {
+  const s = nameSettings(fileName);
+  if (!s || !hasCatalog || !hasCatalog()) return null;
+  try {
+    const eff = await effectiveCatalog();
+    const cat = eff && eff.catalog ? eff.catalog : eff;
+    await loadRuntimes(cat, [s.runtime]);
+    const pol = packagePolicyFor(cat, s.runtime);
+    if (!pol) return null;
+    const project = packageProject(pol, s.pkg) || s.pkg;
+    const plan = resolve(cat, {
+      name: project, project, runtime: s.runtime, select: 'newest',
+      package: s.pkg, packageVersion: '',
+      launch: typeof pol.launch === 'string' ? pol.launch : '',
+      install: 'default', console: true, menu: true, desktop: false,
+      root: 'user', rootname: 'ti', recordHash: 'preview',
+    });
+    return { plan, pkg: s.pkg, runtime: s.runtime };
+  } catch (e) {
+    return null;
+  }
+}
+
 /* ---------- the server checks ---------- */
 
 // Each returns a row, and each says what it could not do rather than
@@ -366,11 +410,16 @@ async function open(file) {
 }
 
 async function paint(file, sha, info) {
-  let derived = false;
+  let derived = '';
   let planText = info.plan;
+  let fromName = null;
   if (!planText) {
     planText = await planFromRecord(info.record);
-    derived = !!planText;
+    if (planText) derived = 'record';
+  }
+  if (!planText) {
+    fromName = await planFromName(file.name);
+    if (fromName) { planText = fromName.plan; derived = 'name'; }
   }
   const d = planText ? describe(planText) : null;
 
@@ -379,7 +428,12 @@ async function paint(file, sha, info) {
     ['Kind', esc(PLATFORM[info.kind] || info.kind) + ' installer (<code>.' + esc(info.kind) + '</code>)'],
     ['Size', esc(hsize(file.size))],
     ['SHA-256', '<code>' + esc(sha) + '</code><button type="button" class="copy-btn" data-copy="' + esc(sha) + '">Copy</button>'],
-    ['Settings', info.record ? 'carried in the file' : 'none in the file'],
+    ['Settings', info.record ? 'carried in the file'
+      : (nameSettings(file.name)
+        ? 'in the file name: runtime <code>' + esc(nameSettings(file.name).runtime) + '</code>, package <code>'
+          + esc(nameSettings(file.name).pkg) + '</code>'
+          + '<br><span class="small muted">chosen after this program was built, which is why renaming the file points it at a different package</span>'
+        : 'none in the file, and the name does not carry any either')],
     ['Plan', info.plan ? 'carried in the file' : 'none; it would fetch one when it ran'],
     info.pack && info.pack.length ? ['Packed files', info.pack.length + ' file' + (info.pack.length === 1 ? '' : 's') + ' inside, so it can install with no internet'] : null,
   ]);
@@ -389,10 +443,11 @@ async function paint(file, sha, info) {
   if (note) {
     note.hidden = !derived;
     note.innerHTML = derived
-      ? 'This installer does not carry a plan: it asks a build server for one when it runs. '
-        + 'What follows was worked out <strong>here</strong>, from the settings in the file and this page\'s own '
-        + 'catalogue, with the same resolver the build server uses. The installer\'s real plan is made when it runs, '
-        + 'so a newer runtime may have appeared by then.'
+      ? 'This installer does not carry a plan: it asks a build server for one when it runs. What follows was worked '
+        + 'out <strong>here</strong>, from '
+        + (derived === 'name' ? 'the package named in its file name' : 'the settings in the file')
+        + ' and this page\'s own catalogue, with the same resolver the build server uses. The installer\'s real plan '
+        + 'is made when it runs, so a newer runtime may have appeared by then.'
       : '';
   }
   if (d) {
