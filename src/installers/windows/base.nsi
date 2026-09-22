@@ -1645,7 +1645,9 @@ Function CheckPlan
   StrCpy $PlanWarn ""
   StrCpy $0 $PlanSig 2
   ${If} $0 == "ok"
-    StrCpy $PlanSrc "$PlanSrc; signed by the TiddlyInstall key ${TI_PLAN_KEYID}"
+    ; The headline in TRUST AND SECURITY says who signed it; this used
+    ; to append it here too, which is where it got lost mid-clause.
+    StrCpy $PlanSrc "$PlanSrc"
     Return
   ${EndIf}
   ${If} $PlanKind == "embedded"
@@ -3597,7 +3599,7 @@ FunctionEnd
 ; one -- an ordinary Python app trips one finding -- and a promise that
 ; only appears when nothing is found is one most people never see.
 ; Every file still prints its own `sha256` below.
-!define TI_CAP_ORDINARY "An ordinary install unpacks the files this plan names, each one checked against a SHA-256 in it, into folders of its own, for you alone, and runs nothing but our recipe for the runtime."
+!define TI_CAP_ORDINARY "An ordinary install unpacks the files it names, each one checked against a SHA-256 in it, into folders of its own, for you alone, and runs nothing but the runtime install script we wrote."
 
 ; Add one finding. $U_a is the sentence.
 Function CapAdd
@@ -4197,9 +4199,15 @@ Function WriteSummary
     ${Sum} "  Windows cannot tell you who made this file."
   ${EndIf}
   ${Sum} ""
-  ${Sum} "  Install recipe"
+  ${Sum} "  Runtime install script"
+  ; Signed is the good case; it gets the same shape as UNSIGNED above,
+  ; rather than whispering it mid-clause after a semicolon.
+  ${If} $PlanWarn == ""
+    ${Sum} "  SIGNED BY TIDDLYINSTALL   key ${TI_PLAN_KEYID}"
+    ${Sum} "  Checked on this machine before anything was read."
+  ${EndIf}
   ${If} $PlanWarn != ""
-    StrCpy $U_a "Unsigned (see WARNINGS). Nothing vouches for it, so what this screen says is only what the recipe itself says, and anybody can write one. Each file is still checked against the SHA-256 beside it, but those hashes are the recipe's own: they show a download arrived unchanged, and say nothing about what it is."
+    StrCpy $U_a "Unsigned (see WARNINGS). Nothing vouches for it, so what this screen says is only what the script itself says, and anybody can write one. Each file is still checked against the SHA-256 beside it, but those hashes are the script's own: they show a download arrived unchanged, and say nothing about what it is."
     Call SumPara
   ${Else}
     ${Sum} "  $PlanSrc"
@@ -4221,10 +4229,10 @@ Function WriteSummary
   ${Sum} ""
   ${Sum} "  Choices"
   ${Sum} "  $MetaSrc"
-  ${Sum} "  (what was picked in the web client; the recipe above is what carries it out)"
+  ${Sum} "  (what was picked in the web client; the script above is what carries it out)"
   ${Sum} ""
   ${Sum} "  IMPORTANT"
-  StrCpy $U_a "TiddlyInstall checks that the files below are the files this recipe names. It does not check that the application itself is safe."
+  StrCpy $U_a "TiddlyInstall checks that the files below are the files the runtime install script names. It does not check that the application itself is safe."
   Call SumPara
   StrCpy $U_a 'That is about the install. The program itself is another matter: we did not write "$AppName" and have not checked what its code does. Install it only if you trust whoever publishes it.'
   Call SumPara
@@ -4251,7 +4259,7 @@ Function WriteSummary
     StrCpy $U_b "file"
     Call Plural
     ${Sum} "  $SumFiles $U_out, $0 in total. The commands under a file are our"
-    ${Sum} "  recipe for setting up that runtime, not the project's own code."
+    ${Sum} "  runtime install script, not the project's own code."
     ; What that check does *not* reach (launch-shapes.md recommendation
     ; 7). "Each one is checked against the SHA-256 below" is true of the
     ; files listed here and of nothing else, and an `install` line a few

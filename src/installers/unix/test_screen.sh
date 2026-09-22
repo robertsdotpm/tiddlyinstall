@@ -68,7 +68,8 @@ has 'NO CHANGES HAVE BEEN MADE YET.' && ok 'it says nothing has happened yet' ||
 has 'Ready to install' && ok 'and says so again at the end' || no 'and says so again at the end'
 
 # The two words, and no trace of the ones they replaced.
-has 'Install recipe' && ok 'the recipe block is there' || no 'the recipe block is there'
+has 'Runtime install script' && ok 'the runtime install script block is there' ||
+	no 'the runtime install script block is there'
 has 'Choices' && ok 'the choices block is there' || no 'the choices block is there'
 hasnt 'Settings:' && ok 'and nothing still says Settings' || no 'and nothing still says Settings'
 hasnt 'Plan:' && ok 'and nothing still says Plan' || no 'and nothing still says Plan'

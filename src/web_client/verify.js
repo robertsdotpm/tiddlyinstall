@@ -526,18 +526,18 @@ async function paint(file, sha, info) {
     sign.push(['The installer file', 'is a macOS <code>.zip</code>; the app inside is checked by Gatekeeper when it is opened, not by this page']);
   }
   if (!info.plan) {
-    sign.push(['The install recipe', 'written when it runs, so there is none in the file to check. It is fetched, signed, at that point']);
+    sign.push(['The runtime install script', 'written when it runs, so there is none in the file to check. It is fetched, signed, at that point']);
   } else {
     const s = docSignature(info.plan, 'ti-plan');
     const baked = bakedKey();
     if (!s.signed) {
-      sign.push(['The install recipe', 'is <strong>not signed</strong> (' + esc(s.why) + '). It is only as trustworthy as this file']);
+      sign.push(['The runtime install script', 'is <strong>not signed</strong> (' + esc(s.why) + '). It is only as trustworthy as this file']);
     } else if (!baked) {
-      sign.push(['The install recipe', 'is signed, but this page carries no key to check it against. Set a build server and it can be checked']);
+      sign.push(['The runtime install script', 'is signed, but this page carries no key to check it against. Set a build server and it can be checked']);
     } else {
       let ok = false;
       try { ok = ed25519Verify(baked, s.bytes, s.sig); } catch (e) { ok = false; }
-      sign.push(['The install recipe', ok
+      sign.push(['The runtime install script', ok
         ? 'is signed by the TiddlyInstall key <code>' + esc(keyId(baked)) + '</code>, and the signature checks out'
         : '<strong>has a signature that does not check out</strong> against key <code>' + esc(keyId(baked)) + '</code>']);
     }

@@ -1074,13 +1074,15 @@ ti_check_plan() {
 	why=${sig#*:}
 	case $sig in
 	ok:*)
-		TI_PLAN_FROM="$TI_PLAN_FROM; signed by the TiddlyInstall key $TI_PLAN_KEYID (checked with ${sig#ok:})"
+		# The headline in TRUST AND SECURITY names the key; appending it here
+		# as well is where it used to get lost, mid-clause after a semicolon.
+		TI_PLAN_FROM="$TI_PLAN_FROM"
 		return 0
 		;;
 	esac
 	case $TI_PLAN_KIND in
 	embedded)
-		ti_plan_warn="The install recipe inside this file is not signed by the TiddlyInstall key ($why). It is only as trustworthy as the file carrying it."
+		ti_plan_warn="The runtime install script inside this file is not signed by the TiddlyInstall key ($why). It is only as trustworthy as the file carrying it."
 		;;
 	cmdline)
 		[ "$opt_unsigned" = 1 ] || ti_fail "The plan $TI_PLAN is not signed by the TiddlyInstall key ${TI_PLAN_KEYID:-} ($why). Use a plan saved from <backend>/api/plan/<record>, or add --unsigned-plan if you wrote it yourself."
@@ -3034,7 +3036,7 @@ ti_capabilities() {
 		f=
 		[ "$ti_ins_who" = ours ] && f=$(ti_fetcher_of "$ti_ins_cmd")
 		if [ -n "$f" ]; then
-			printf '%s\n' "installing the project runs $f, which works out what the project depends on, downloads it and runs its code. This recipe names none of that, and no SHA-256 in it covers any of it."
+			printf '%s\n' "installing the project runs $f, which works out what the project depends on, downloads it and runs its code. The runtime install script names none of that, and no SHA-256 in it covers any of it."
 		else
 			printf '%s\n' "what the command that installs the project reaches for, we cannot say. Anything it downloads is decided while you install: this plan does not name it and no SHA-256 here covers it."
 		fi
@@ -3515,11 +3517,19 @@ ti_install_main() {
 			printf '  %s\n' "$ti_self_sha"
 			printf '  %s\n' 'You can compare this with the value shown by the place you downloaded it from.' | ti_wrap 74 2
 		fi
-		printf '\n  Install recipe\n'
+		printf '\n  Runtime install script\n'
+		# Signed is the good case and used to whisper it, mid-clause
+		# after a semicolon, while UNSIGNED three lines above shouted.
+		# The state a reader is looking for gets the same shape either
+		# way.
+		if [ -z "$ti_plan_warn" ] && [ -n "$TI_PLAN_KEYID" ]; then
+			printf '  SIGNED BY TIDDLYINSTALL   key %s\n' "$TI_PLAN_KEYID"
+			printf '  %s\n' 'Checked on this machine before anything was read.' | ti_wrap 74 2
+		fi
 		if [ -n "$ti_plan_warn" ]; then
 			# The !! line is already under WARNINGS; this is the part
 			# that is not a warning but a limit on everything above.
-			printf '  %s\n' "Unsigned (see WARNINGS). Nothing vouches for it, so what this screen says is only what the recipe itself says, and anybody can write one. Each file is still checked against the SHA-256 beside it, but those hashes are the recipe's own: they show a download arrived unchanged, and say nothing about what it is." | ti_wrap 74 2
+			printf '  %s\n' "Unsigned (see WARNINGS). Nothing vouches for it, so what this screen says is only what the script itself says, and anybody can write one. Each file is still checked against the SHA-256 beside it, but those hashes are the script's own: they show a download arrived unchanged, and say nothing about what it is." | ti_wrap 74 2
 		else
 			printf '  %s\n' "$TI_PLAN_FROM" | ti_wrap 74 2
 		fi
@@ -3535,9 +3545,9 @@ ti_install_main() {
 		fi
 		printf '\n  Choices\n'
 		printf '  %s\n' "$TI_ORIGIN" | ti_wrap 74 2
-		printf '  %s\n' '(what was picked in the web client; the recipe above is what carries it out)' | ti_wrap 74 2
+		printf '  %s\n' '(what was picked in the web client; the script above is what carries it out)' | ti_wrap 74 2
 		printf '\n  IMPORTANT\n'
-		printf '  %s\n' 'TiddlyInstall checks that the files below are the files this recipe names. It does not check that the application itself is safe.' | ti_wrap 74 2
+		printf '  %s\n' 'TiddlyInstall checks that the files below are the files the runtime install script names. It does not check that the application itself is safe.' | ti_wrap 74 2
 		printf '  %s\n' "$ti_vouch" | ti_wrap 74 2
 		# Everything on this screen can be read without running the
 		# file, which is worth saying on the screen you only reach by
@@ -3594,7 +3604,7 @@ ti_install_main() {
 
 		printf '\nCOMMANDS\n'
 		if [ "$ti_nrun" -gt 0 ]; then
-			printf '\n  %s\n' "Setting up ${a_name:-the runtime}. These commands are our recipe for this runtime, not the project's code." | ti_wrap 74 2
+			printf '\n  %s\n' "Setting up ${a_name:-the runtime}. These are the runtime install script, written by us, not the project's code." | ti_wrap 74 2
 		fi
 		ti_stepn=0
 		ti_sel step | awk -F"$tab" '$2 == "run" { print $3 "\t" $4 }' |
@@ -3702,7 +3712,7 @@ ti_install_main() {
 		# ordinary one cannot, and that the program is not ours. Same
 		# order as the screen, and the same strings.
 		if [ -n "$ti_plan_warn" ]; then
-			printf '%s\n\n' "Nothing vouches for this recipe, so what follows is only what the recipe itself says. Each file is still checked against the SHA-256 beside it, but those hashes are the recipe's own." | ti_wrap 68 0
+			printf '%s\n\n' "Nothing vouches for this runtime install script, so what follows is only what the script itself says. Each file is still checked against the SHA-256 beside it, but those hashes are the script's own." | ti_wrap 68 0
 		fi
 		if [ "$ti_cap_n" = 0 ] && [ -z "$ti_plan_warn" ]; then
 			printf '%s\n\n' "$TI_CAP_ORDINARY Nothing here goes beyond that." | ti_wrap 68 0
