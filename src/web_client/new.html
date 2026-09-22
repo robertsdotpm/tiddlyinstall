@@ -77,7 +77,7 @@
         <div class="field src-repo-only">
           <label for="source">What do you want to package?</label>
           <input type="text" id="source" name="source" spellcheck="false"
-                 placeholder="https://github.com/owner/project   or   requests">
+                 placeholder="https://github.com/owner/project or package_name">
           <span class="hint">A GitHub repo URL, or a package name. No project yet? Choose <strong>I'll write it here</strong>.</span>
         </div>
 
@@ -417,8 +417,7 @@ Press Enter to close</pre>
             <ul class="arch-cover-arches"><li>64-bit Intel and Apple Silicon</li></ul></li>
         </ul>
         <p class="small muted arch-cover-note" id="arch-cover-note">One installer covers all of these: it carries a plan for each
-          and picks the right one on the computer it runs on, so there is nothing to choose here.
-          Apple dropped 32-bit support in macOS 10.15, so no runtime has a 32-bit macOS build.</p>
+          and picks the right one on the computer it runs on, so there is nothing to choose here.</p>
 
         <!-- Offered with or without a build server: packing in the browser
              was measured on every machine we have (docs/browser-packing.md),

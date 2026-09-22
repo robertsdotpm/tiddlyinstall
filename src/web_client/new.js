@@ -566,9 +566,12 @@ function paintArchCover() {
     out.replaceChildren(...kids);
   }
   if (archCoverNote) {
+    // One sentence, and only the part a publisher can act on. What Apple
+    // did in 2015 and what a 32-bit machine needs at install time are both
+    // true and neither changes anything they choose here, so they belong on
+    // the installer's own review screen, where they are, and not on the form.
     archCoverNote.textContent = 'One installer covers all of these: it carries a plan for each and picks the right one on the ' +
-      'computer it runs on, so there is nothing to choose here. ' + NO_32_BIT.macos +
-      ' A 32-bit machine can also need something a 64-bit one doesn\'t: the installer\'s review screen lists what it will install first.';
+      'computer it runs on, so there is nothing to choose here.';
   }
   paintOfflineArches(cov, label);
 }
