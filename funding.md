@@ -4,7 +4,7 @@
 > money rather than work or willingness.** TiddlyInstall is built and
 > paid for by one person. Where something below is missing, unsigned,
 > untested or unreachable, it is because the certificate, the membership,
-> the membership or the hardware has not been bought -- not because it was
+> the account or the hardware has not been bought -- not because it was
 > overlooked and not because it is hard. Each item says what it costs and
 > what it would unlock, so the trade is visible rather than implied.
 
