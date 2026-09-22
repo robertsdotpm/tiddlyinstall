@@ -133,7 +133,7 @@ function parsePlan(text) {
 }
 
 const FAMILY = { windows: 'Windows', macos: 'macOS', linux: 'Linux' };
-const ARCH = { amd64: '64-bit (x64)', x86: '32-bit (x86)', arm64: '64-bit ARM', ppc: 'PowerPC' };
+const ARCH = { amd64: '64-bit (x64)', x86: '32-bit (x86)', arm64: '64-bit ARM', ppc: 'PowerPC', '*': 'any architecture' };
 
 function pick(lines, key) {
   const l = lines.find((x) => x.key === key);
@@ -289,7 +289,7 @@ async function serverChecks(info, d, out) {
   // 1. Are these settings ones the server published? The record's name is
   //    the hash of its exact bytes, so a byte comparison is the whole test.
   if (!d.record) {
-    add('These settings', 'the plan names no record, so there is nothing to look up');
+    add('These settings', 'this file names no published settings, so there is nothing to look up');
   } else {
     try {
       const got = await apiRequest('/api/records/' + encodeURIComponent(d.record), { as: 'text' });
@@ -317,17 +317,17 @@ async function serverChecks(info, d, out) {
       const sig = docSignature(String(fresh), 'ti-plan');
       const live = sig.signed && String(fresh).indexOf(nonce) >= 0;
       add('The server answering now', live
-        ? 'signed a plan carrying the nonce this page just made, so this is a live answer and not a replay'
-        : '<strong>did not echo the nonce in a signed plan</strong>, so this answer could be a recording');
+        ? 'signed its answer with a one-off number this page just made up, so it is answering now and not a recording played back'
+        : '<strong>did not sign its answer with the one-off number this page sent</strong>, so it could be a recording');
       const same = String(fresh).replace(/\r/g, '') === String(info.plan || '').replace(/\r/g, '');
-      add('The plan in this file', same
-        ? 'is the plan the server gives for that record today'
-        : 'is <strong>not</strong> what the server gives today. That happens when the catalogue moved on, and also when a plan was altered; compare the downloads above with a fresh build');
+      add('The recipe in this file', same
+        ? 'is the one the server would hand out for these settings today'
+        : '<strong>differs from what the server would hand out today.</strong> That happens when a newer runtime came out, and also when a file was altered; compare the table above with a fresh build');
     } catch (e) {
-      add('The plan in this file', e && e.status === 451
-        ? '<strong>the record is taken down</strong> on this server'
+      add('The recipe in this file', e && e.status === 451
+        ? '<strong>this installer has been withdrawn</strong> on this server'
         : (e && (e.status === 404 || e.code === 'not_found')
-          ? 'cannot be compared: the server has no plan for a record it does not have'
+          ? 'cannot be compared: the server does not know these settings'
           : 'could not be compared: ' + esc(errorText(e))));
     }
   }
@@ -352,12 +352,12 @@ async function serverChecks(info, d, out) {
       try { ok = ed25519Verify(baked, rs.bytes, rs.sig); } catch (e) { ok = false; }
       sigSays = ok ? '' : ' <strong>The list\'s own signature does not check out</strong>, so it proves nothing.';
     }
-    add('Revocations', (revoked
-      ? '<strong>this record is on the revocation list.</strong> It was withdrawn after this file was made'
-      : 'not on the list issued ' + esc(meta('issued') || 'recently') + ' (serial ' + esc(meta('serial') || '?') + ')')
+    add('Withdrawn since?', (revoked
+      ? '<strong>yes. This installer was withdrawn after the file was made</strong>, which is the one thing a file can never know about itself'
+      : 'no, as of the list the server issued ' + esc(meta('issued') || 'recently'))
       + sigSays);
   } catch (e) {
-    add('Revocations', 'could not be fetched: ' + esc(errorText(e)));
+    add('Withdrawn since?', 'could not be checked: ' + esc(errorText(e)));
   }
 
   // 4. The signing key, which rotates. A plan signed by a retired key
@@ -434,54 +434,39 @@ async function paint(file, sha, info) {
           + esc(nameSettings(file.name).pkg) + '</code>'
           + '<br><span class="small muted">chosen after this program was built, which is why renaming the file points it at a different package</span>'
         : 'none in the file, and the name does not carry any either')],
-    ['Plan', info.plan ? 'carried in the file' : 'none; it would fetch one when it ran'],
+    ['Install recipe', info.plan
+      ? 'inside the file: the exact versions, files and checksums'
+      : 'worked out when it runs, on the computer it runs on<br>'
+        + '<span class="small muted">so every computer gets the newest version that works there</span>'],
     info.pack && info.pack.length ? ['Packed files', info.pack.length + ' file' + (info.pack.length === 1 ? '' : 's') + ' inside, so it can install with no internet'] : null,
   ]);
 
   el('v-plan-none').hidden = !!d;
   const note = el('v-plan-derived');
   if (note) {
-    note.hidden = !derived;
-    note.innerHTML = derived
-      ? 'This installer does not carry a plan: it asks a build server for one when it runs. What follows was worked '
-        + 'out <strong>here</strong>, from '
-        + (derived === 'name' ? 'the package named in its file name' : 'the settings in the file')
-        + ' and this page\'s own catalogue, with the same resolver the build server uses. The installer\'s real plan '
-        + 'is made when it runs, so a newer runtime may have appeared by then.'
-      : '';
+    // Both cases explain themselves, because the difference between them
+    // is the only thing on this page a reader has to hold in their head:
+    // either the file already says exactly what it will fetch, or it
+    // decides later and everything here is a reconstruction. Saying it
+    // only in the second case leaves the first looking more certain than
+    // it was ever claimed to be, and leaves "why is this one different?"
+    // unanswered.
+    note.hidden = !d;
+    note.className = 'small note' + (derived ? ' note-derived' : '');
+    note.innerHTML = !d ? ''
+      : (derived
+        ? '<strong>This installer works out its install recipe when it runs</strong>, so the file does not '
+          + 'carry one. It knows what to install - '
+          + (derived === 'name' ? 'the package named in the file name' : 'the settings inside it')
+          + ' - and works out the versions on the computer it lands on, so every computer gets the newest one '
+          + 'that works there. <strong>Below is the recipe it would use today</strong>, worked out here from the '
+          + 'same catalogue the build server uses. A newer version can change it.'
+        : '<strong>This installer carries its install recipe inside it.</strong> The exact versions, files and '
+          + 'checksums were decided when it was built, so what follows is not a guess - it is the recipe the '
+          + 'installer will follow, and the signature below covers it.');
   }
+
   if (d) {
-    const rtLabel = d.runtime || (d.targets.find((t) => t.runtime && t.runtime !== 'none') || {}).runtime || '';
-    // Versions differ per machine -- an old Windows gets an old Python on
-    // purpose -- so say the span rather than listing five numbers.
-    const vers = [];
-    for (const t of d.targets) if (t.version && vers.indexOf(t.version) < 0) vers.push(t.version);
-    const cmp = (a, b) => { const A = a.split('.').map(Number), B = b.split('.').map(Number);
-      for (let i = 0; i < 3; i++) if ((A[i] || 0) !== (B[i] || 0)) return (A[i] || 0) - (B[i] || 0);
-      return 0; };
-    vers.sort(cmp);
-    const verSays = vers.length > 1
-      ? vers[vers.length - 1] + ' <span class="small muted">on current systems, back to ' + vers[0] + ' on the oldest</span>'
-      : (vers[0] || '');
-    const totals = d.targets.map((t) => t.bytes).filter((n) => n > 0);
-    const runs = d.targets.reduce((n, t) => Math.max(n, t.runs.length), 0);
-    rows(el('v-does'), [
-      ['Installs', esc(d.name || d.project || 'an app')],
-      rtLabel && rtLabel !== 'none'
-        ? ['Runtime it installs', esc(runtimeName(rtLabel)) + ' ' + verSays
-          + '<br><span class="small muted">into the app\'s own folder. Nothing else on the machine is changed, and removing the app removes it.</span>']
-        : ['Runtime it installs', 'none; it runs what is already there'],
-      ['Into', esc(d.root === 'machine' ? 'a folder for the whole machine' : "a folder of its own in the user's home")],
-      totals.length
-        ? ['Downloads', 'up to ' + esc(hsize(Math.max.apply(null, totals))) + ' <span class="small muted">on one machine, not the total of the table below</span>']
-        : ['Downloads', 'nothing; everything it needs is already inside'],
-      ['Runs', runs ? runs + ' command' + (runs === 1 ? '' : 's') + ' after unpacking' : 'no commands'],
-      ['Admin rights', d.admin ? '<strong>yes</strong>' : 'not needed'],
-      ['Shortcuts', [d.menu === '1' ? 'app menu' : null, d.desktop === '1' ? 'desktop' : null].filter(Boolean).join(', ') || 'none'],
-      d.launch ? ['Starts', '<code>' + esc(d.launch) + '</code>'] : null,
-
-    ]);
-
     // One row per target, because one machine gets exactly one of them.
     // A plan has a block per OS-version range as well as per
     // architecture, so the same machine and version appear more than
@@ -537,18 +522,18 @@ async function paint(file, sha, info) {
     sign.push(['The installer file', 'is a macOS <code>.zip</code>; the app inside is checked by Gatekeeper when it is opened, not by this page']);
   }
   if (!info.plan) {
-    sign.push(['The plan', 'there is none in the file to check']);
+    sign.push(['The install recipe', 'not in the file, so there is nothing here to check. It is fetched, signed, when the installer runs']);
   } else {
     const s = docSignature(info.plan, 'ti-plan');
     const baked = bakedKey();
     if (!s.signed) {
-      sign.push(['The plan', 'is <strong>not signed</strong> (' + esc(s.why) + '). It is only as trustworthy as this file']);
+      sign.push(['The install recipe', 'is <strong>not signed</strong> (' + esc(s.why) + '). It is only as trustworthy as this file']);
     } else if (!baked) {
-      sign.push(['The plan', 'is signed, but this page carries no key to check it against. Set a build server and it can be checked']);
+      sign.push(['The install recipe', 'is signed, but this page carries no key to check it against. Set a build server and it can be checked']);
     } else {
       let ok = false;
       try { ok = ed25519Verify(baked, s.bytes, s.sig); } catch (e) { ok = false; }
-      sign.push(['The plan', ok
+      sign.push(['The install recipe', ok
         ? 'is signed by the TiddlyInstall key <code>' + esc(keyId(baked)) + '</code>, and the signature checks out'
         : '<strong>has a signature that does not check out</strong> against key <code>' + esc(keyId(baked)) + '</code>']);
     }

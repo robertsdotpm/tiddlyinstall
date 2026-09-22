@@ -1018,6 +1018,15 @@ form:has(#tpl-tray:checked) .tpl-gui-only { display: block; }
 .copy-btn.copied { border-color: var(--accent); color: var(--accent); }
 .copy-btn.copy-failed { border-color: var(--rule-strong); color: var(--text-loud); }
 
+/* The Verify page's panels stack a list, then a table, then another
+   heading. The wrappers carry no margin of their own, so a heading
+   landed flush on the table above it and read as that table's last row
+   rather than the next thing. */
+#v-out .panel > dl + div,
+#v-out .panel > div + div { margin-top: 24px; }
+#v-out .panel > .table-wrap + * { margin-top: 24px; }
+#v-out .panel .label + p { margin-top: 2px; }
+
 /* The commit the page was built from. Last line of the footer, and
    quieter than the rest: it is a fact you go looking for, not one to
    read. It is written into the markup before the footer's JavaScript

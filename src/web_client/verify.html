@@ -38,6 +38,11 @@
       <p class="lede">Drop an installer here and it is read in this page: what it installs, what it
         downloads, what it runs, and who signed what. Nothing is executed, and with no build server
         set the file never leaves your&nbsp;computer.</p>
+      <p class="small muted">Some installers carry their <strong>install recipe</strong> inside them: the exact
+        versions, files and checksums, fixed when the installer was built. Others work the recipe out when they
+        run, so every computer gets the newest version that works there. This page says which kind you have,
+        because for the first it shows what <em>will</em> happen and for the second what would
+        happen&nbsp;today.</p>
     </div>
 
     <div class="drop" id="v-drop">
@@ -58,8 +63,8 @@
 
       <section class="panel">
         <h2 class="section-title">What it would do</h2>
-        <p class="small muted" id="v-plan-none" hidden>This installer carries no plan, and this page could not work one
-          out from its settings either, so there is nothing here to&nbsp;read.</p>
+        <p class="small muted" id="v-plan-none" hidden>No install recipe in the file, and its name does not say what to
+          install either, so there is nothing here to&nbsp;read.</p>
         <p class="small note" id="v-plan-derived" hidden></p>
         <dl class="spec-list" id="v-does"></dl>
         <div id="v-downloads-wrap" hidden>
@@ -84,16 +89,16 @@
       <section class="panel">
         <h2 class="section-title">Who signed what</h2>
         <dl class="spec-list" id="v-signing"></dl>
-        <p class="small muted" style="margin-bottom:0">A signature on the installer program says who wrote that program
-          and that it has not been altered. A signature on the plan says the plan came from a resolver unchanged.
-          Neither is a statement about the software being&nbsp;installed.</p>
+        <p class="small muted" style="margin-bottom:0">A signature on the installer says who wrote the installer and that
+          it has not been altered since. A signature on the install recipe says the recipe came from our build server
+          unchanged. Neither says anything about the software being&nbsp;installed.</p>
       </section>
 
       <section class="panel" id="v-server-panel">
         <h2 class="section-title">Checked against the build server</h2>
         <p class="small muted" id="v-server-none" hidden>No build server is set, so only what is inside the file could be
-          read. A server can also say whether these settings are ones it published, whether the plan is still the one it
-          would give you, and whether it has been revoked since this file was&nbsp;built.</p>
+          read. A server can also say whether these settings are ones it published, whether it would still hand out the
+          same downloads today, and whether this installer has been withdrawn since it was&nbsp;built.</p>
         <dl class="spec-list" id="v-server"></dl>
       </section>
     </div>
