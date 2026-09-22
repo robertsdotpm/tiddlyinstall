@@ -309,11 +309,9 @@ function paintCatalog() {
 // The defaults themselves are unchanged (src/shared/form-job.js ENTRY_DEFAULTS).
 
 const launchField = document.getElementById('launch-field');
-const launchExample = document.getElementById('launch-example');
 const launchWhyRepo = document.getElementById('launch-why-repo');
 const launchWhyWrite = document.getElementById('launch-why-write');
 const launchWhyRepoHtml = launchWhyRepo && launchWhyRepo.innerHTML;
-const launchExampleHtml = launchExample && launchExample.innerHTML;
 
 // <root> per platform and "Install for" (design.md 1.1), and the
 // illustrative folder names that section and this form's own "Install
@@ -433,7 +431,6 @@ function paintLaunch() {
         '. Change it if you rename that file or start it another way.'
       : 'Set from the template you picked, which we wrote, so we know the file it starts. Change it if you start it another way.';
   }
-  paintLaunchExample();
 }
 
 // The template's files, for naming the one that starts (src/shared/templates.js).
@@ -445,48 +442,6 @@ function templateFilesOf() {
 // The command with the folders filled in, then a line for each token it
 // actually uses. An example beats a list: someone meeting {app_dir} for the
 // first time learns more from one expanded path than from four glosses.
-function paintLaunchExample() {
-  if (!launchExample) return;
-  const el = launchInput();
-  const cmd = el ? el.value.trim() : '';
-  if (!cmd) { launchExample.innerHTML = launchExampleHtml; return; }
-  const plat = examplePlatform();
-  const r = ROOTS[plat];
-  const root = r[val('root') === 'system' ? 'system' : 'user'] + (val('rootname').trim() || 'ti') + r.sep;
-  const project = exampleProject();
-  const appDir = root + EG_APP;
-  // Separators are converted the way the resolver does it: inside a
-  // {app_dir}/{data_dir}/{runtime_dir} path run only, up to a space or a
-  // quote, so an argument that happens to contain a slash is left alone.
-  const cmdSep = plat === 'windows'
-    ? cmd.replace(/\{(?:app_dir|data_dir|runtime_dir)\}[^ "]*/g, (m) => m.split('/').join('\\'))
-    : cmd;
-  const shown = cmdSep
-    .split('{app_dir}').join(appDir)
-    .split('{data_dir}').join(appDir + r.sep + 'data')
-    .split('{runtime_dir}').join(root + EG_RT)
-    .split('{project}').join(project)
-    .split('{exe}').join(plat === 'windows' ? '.exe' : '')
-    .split('{sep}').join(r.sep);
-  const label = runtimeLabel();
-  const kids = [];
-  const lead = document.createElement('span');
-  lead.className = 'hint';
-  lead.textContent = 'On ' + FAMILY_LABEL[plat] + ', for a project called \u201c' + project + '\u201d, that runs:';
-  kids.push(lead);
-  const code = document.createElement('code');
-  code.className = 'launch-eg';
-  code.textContent = shown;
-  kids.push(code);
-  const used = TOKEN_WHY.filter(([tok]) => cmd.indexOf(tok) >= 0);
-  if (used.length) {
-    const why = document.createElement('span');
-    why.className = 'hint';
-    why.textContent = used.map(([tok, f]) => tok + ' is ' + f(label, root)).join('. ') + '.';
-    kids.push(why);
-  }
-  launchExample.replaceChildren(...kids);
-}
 
 /* ---------- 32-bit and 64-bit: what an installer covers ---------- */
 

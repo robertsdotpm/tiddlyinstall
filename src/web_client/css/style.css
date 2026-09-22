@@ -577,19 +577,21 @@ details[open] > summary { margin-bottom: 12px; }
 /* The drill-down ledger: one row per group, its current value stated on the
    right in mono, so the whole of "everything else" can be read as a list of
    settled decisions rather than a pile of closed boxes. */
+/* Each group is its own card with air around it. They were rows in one
+   bordered block separated by hairlines, which reads as a single wall of
+   options rather than eight things you can skim and skip. */
 .customise {
-  border: 1px solid var(--rule);
-  background: var(--panel);
+  border: 0;
+  background: none;
 }
 .customise > details {
-  background: transparent;
-  border: 0;
-  border-top: 1px solid var(--rule);
-  border-radius: 0;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
   padding: 0;
-  margin: 0;
+  margin: 0 0 10px;
 }
-.customise > details:first-of-type { border-top: 0; }
+.customise > details:last-of-type { margin-bottom: 0; }
 .customise > details > summary {
   display: flex;
   flex-wrap: wrap;

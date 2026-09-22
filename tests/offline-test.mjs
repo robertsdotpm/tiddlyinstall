@@ -544,8 +544,7 @@ async function checkLaunchField() {
       .filter((p) => p.getClientRects().length).map((p) => p.textContent.replace(/\\s+/g, ' ').trim());
     return { value: e.value, def: e.defaultValue, edited: e.value !== e.defaultValue,
       quiet: document.getElementById('launch-field').classList.contains('launch-quiet'),
-      why: why.join(' '),
-      eg: document.getElementById('launch-example').textContent.replace(/\\s+/g, ' ').trim() };
+      why: why.join(' ') };
   })()`);
 
   // A GitHub repo: we cannot know, so it asks loudly and says why.
@@ -553,12 +552,6 @@ async function checkLaunchField() {
   ok(!g.quiet, 'a GitHub repo gets the prominent launch field', JSON.stringify(g));
   ok(/Nothing in a repo says how to run it/.test(g.why), 'and says why it cannot be worked out', g.why);
   ok(g.value === ENTRY_DEFAULTS.python && !g.edited, 'with the language default, unedited', JSON.stringify(g));
-  // The example expands the tokens for the chosen name and platform.
-  ok(/for a project called .requests./.test(g.eg) && /-m requests/.test(g.eg),
-    'the example expands {project} to the repo being packaged', g.eg);
-  ok(/\{runtime\} is the Python 3 this installer sets up/.test(g.eg),
-    'and explains only the tokens the command actually uses', g.eg);
-
   // A package from a package registry (npm, PyPI, ...): the default comes
   // from that registry, so the same field is present but quieter. "Package
   // registry" in full throughout, since `registry/` is ours.
@@ -570,7 +563,6 @@ async function checkLaunchField() {
   const up = await at({ kind: 'local', runtime: 'rust' });
   ok(!up.quiet, 'an upload gets the prominent launch field', JSON.stringify(up));
   ok(/Nothing in a folder of files says which one starts the app/.test(up.why), 'and says why', up.why);
-  ok(/target\/release\/myapp|target\\release\\myapp/.test(up.eg), 'the example expands {app_dir} for a compiled language', up.eg);
 
   // Written here: we wrote the template, so the field shows the command
   // that template really starts with -- not the language default, which is

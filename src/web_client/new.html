@@ -380,19 +380,6 @@ Press Enter to close</pre>
           <input type="text" class="entry entry-nim" name="entry_nim" value="{app_dir}/{project}" aria-label="Launch command" spellcheck="false">
           <input type="text" class="entry entry-none" id="entry-none" name="entry_none" value="{app_dir}/{project}" aria-label="Launch command" spellcheck="false">
 
-          <!-- Rewritten by src/web_client/new.js for the language, platform and name chosen:
-               the command with the folders filled in, then a gloss of only the
-               tokens it actually uses. This is the no-JavaScript fallback. -->
-          <div class="launch-example" id="launch-example">
-            <span class="eyebrow" style="margin-top:12px">On a Windows machine this becomes</span>
-            <code class="launch-eg">C:\ti\tjfq5rqwnnrx\python.exe -m requests</code>
-            <dl class="launch-tokens">
-              <dt>{runtime}</dt><dd>the runtime this installer sets up, never one already on the computer</dd>
-              <dt>{project}</dt><dd>your package name</dd>
-              <dt>{app_dir}</dt><dd>the app's own folder</dd>
-              <dt>{bin}</dt><dd>the runtime's scripts folder</dd>
-            </dl>
-          </div>
         </div>
 
         <hr>
