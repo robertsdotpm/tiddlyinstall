@@ -93,9 +93,10 @@
           signs with your own key. A copy saved to your disk asks nothing of the network except the
           runtime mirror, so a GitHub branch has to be given as a commit&nbsp;there.</dd>
         <dt>What a build server adds</dt>
-        <dd>One thing: installers signed by <em>us</em>. That certificate lives on the server and
-          never in this page, which is the whole reason the server exists. Everything else above is
-          this page's own&nbsp;work.</dd>
+        <dd>Two things. It signs the install script, so an installer can check the script came from
+          us and reached it unaltered. And it is where installers signed by <em>us</em> would be built,
+          once there is a certificate to sign them with - there is not one yet, so that option is off.
+          Everything else above is this page's own&nbsp;work.</dd>
       </dl>
       <div class="actions" style="margin-top:18px">
         <button type="button" class="button save-page">Save this page</button>

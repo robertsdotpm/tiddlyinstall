@@ -537,8 +537,15 @@ async function paint(file, sha, info) {
     } else {
       let ok = false;
       try { ok = ed25519Verify(baked, s.bytes, s.sig); } catch (e) { ok = false; }
+      // Worth more here than it is inside the installer. There, the
+      // script, the key and the code checking it are one file, so the
+      // check is the file vouching for itself; the installer's own
+      // screen says so. Here the checker is a different artifact that
+      // arrived by a different route, which is the whole reason this
+      // page can say something the installer cannot.
       sign.push(['The runtime install script', ok
         ? 'is signed by the TiddlyInstall key <code>' + esc(keyId(baked)) + '</code>, and the signature checks out'
+          + '<br><span class="small muted">checked here, by this page, against a key this page carries - not by the installer against a key inside itself</span>'
         : '<strong>has a signature that does not check out</strong> against key <code>' + esc(keyId(baked)) + '</code>']);
     }
   }

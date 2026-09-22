@@ -4197,26 +4197,66 @@ Function WriteSummary
   ${Else}
     ${Sum} "  UNSIGNED"
     ${Sum} "  Windows cannot tell you who made this file."
+    ; With no signature there is nothing on this machine that can vouch
+    ; for the file, so the one check left is the one that happens
+    ; somewhere else: comparing this hash with the page it came from.
+    ; The Unix engine has printed its own hash for this reason since
+    ; 2026-09-22; Windows printed nothing, which left an unsigned
+    ; Windows installer with no actionable check at all.
+    StrCpy $U_a "$EXEPATH"
+    Call Sha256File
+    ${If} $U_out != ""
+      ${Sum} ""
+      ${Sum} "  Installer SHA-256"
+      ${Sum} "  $U_out"
+      StrCpy $U_a "Nothing on this machine can vouch for this file. Compare this with the value shown where you downloaded it: that comparison happens outside the file, which is what makes it worth anything."
+      Call SumPara
+    ${EndIf}
   ${EndIf}
   ${Sum} ""
   ${Sum} "  Runtime install script"
-  ; Signed is the good case; it gets the same shape as UNSIGNED above,
-  ; rather than whispering it mid-clause after a semicolon.
+  ; A signature is worth something only when the thing checking it is not
+  ; the thing being vouched for.
+  ;
+  ;   fetched  -- this engine is intact and the network is not, so a
+  ;               script altered on the way is refused. Real, and the
+  ;               reason the signature exists.
+  ;   embedded -- the script, the key it is checked against and the code
+  ;               doing the checking are all the same file. Whoever could
+  ;               change one could change all three. Said plainly, not
+  ;               shouted as a verdict.
+  ;
+  ; Both used to print the same headline, which put the loudest claim on
+  ; the screen in the case where it means least.
+  ;
+  ; Guarded on the key id as the Unix engine is: TI_PLAN_KEYID defaults
+  ; to "?" when a base is built without a signing key, and an unguarded
+  ; headline would assert "SIGNED BY TIDDLYINSTALL key ?" -- trust
+  ; naming a key nobody has.
   ${If} $PlanWarn == ""
-    ${Sum} "  SIGNED BY TIDDLYINSTALL   key ${TI_PLAN_KEYID}"
-    ${Sum} "  Checked on this machine before anything was read."
+  ${AndIf} "${TI_PLAN_KEYID}" != "?"
+    ${If} $PlanKind == "fetched"
+      ${Sum} "  SIGNED BY TIDDLYINSTALL   key ${TI_PLAN_KEYID}"
+      StrCpy $U_a "Fetched over the network and checked here before anything was read, so a script altered on the way would have been refused."
+      Call SumPara
+    ${Else}
+      StrCpy $U_a "Carried inside this file, signed by the TiddlyInstall key ${TI_PLAN_KEYID}, which says our build server produced it."
+      Call SumPara
+      StrCpy $U_a "That signature is checked by this file, against a key inside this file. It is worth exactly as much as the file itself, so it is not a second opinion: use the installer's SHA-256 for that."
+      Call SumPara
+    ${EndIf}
   ${EndIf}
   ${If} $PlanWarn != ""
     StrCpy $U_a "Unsigned (see WARNINGS). Nothing vouches for it, so what this screen says is only what the script itself says, and anybody can write one. Each file is still checked against the SHA-256 beside it, but those hashes are the script's own: they show a download arrived unchanged, and say nothing about what it is."
     Call SumPara
-  ${Else}
+  ${ElseIf} $PlanKind != "embedded"
     ${Sum} "  $PlanSrc"
   ${EndIf}
   ${If} $PlanSigned != ""
     ${If} $PlanKind == "fetched"
       ${Sum} "  Signed on $PlanSigned (fetched now)"
     ${Else}
-      ${Sum} "  Signed on $PlanSigned (carried in this installer)"
+      ${Sum} "  Signed on $PlanSigned"
     ${EndIf}
   ${EndIf}
   ${If} $RevokeNote != ""

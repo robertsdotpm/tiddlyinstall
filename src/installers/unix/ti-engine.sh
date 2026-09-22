@@ -3515,27 +3515,58 @@ ti_install_main() {
 		if [ -n "$ti_self_sha" ]; then
 			printf '\n  Installer SHA-256\n'
 			printf '  %s\n' "$ti_self_sha"
-			printf '  %s\n' 'You can compare this with the value shown by the place you downloaded it from.' | ti_wrap 74 2
+			case $ti_signed_label in
+			UNSIGNED*)
+				# With no signature on the file, this is the only check
+				# left that happens anywhere but inside the file, so it
+				# is the one that counts and it says so.
+				printf '  %s\n' 'Nothing on this machine can vouch for this file. Compare this with the value shown where you downloaded it: that comparison happens outside the file, which is what makes it worth anything.' | ti_wrap 74 2
+				;;
+			*)
+				printf '  %s\n' 'You can compare this with the value shown by the place you downloaded it from.' | ti_wrap 74 2
+				;;
+			esac
 		fi
 		printf '\n  Runtime install script\n'
-		# Signed is the good case and used to whisper it, mid-clause
-		# after a semicolon, while UNSIGNED three lines above shouted.
-		# The state a reader is looking for gets the same shape either
-		# way.
+		# A signature is worth something only when the thing checking it
+		# is not the thing being vouched for.
+		#
+		#   fetched  -- this engine is intact and the network is not, so
+		#               a script changed on the way is refused. Real, and
+		#               the reason the signature exists at all.
+		#   embedded -- the script, the key it is checked against and
+		#               the code doing the checking are the same file.
+		#               Whoever could change one could change all three,
+		#               so the check proves nothing a reader did not
+		#               already have to assume. Said plainly rather than
+		#               shouted as a verdict.
+		#
+		# It used to print the same headline for both, which put the
+		# loudest claim on the screen in the case where it means least.
 		if [ -z "$ti_plan_warn" ] && [ -n "$TI_PLAN_KEYID" ]; then
-			printf '  SIGNED BY TIDDLYINSTALL   key %s\n' "$TI_PLAN_KEYID"
-			printf '  %s\n' 'Checked on this machine before anything was read.' | ti_wrap 74 2
+			if [ "$TI_PLAN_KIND" = fetched ]; then
+				printf '  SIGNED BY TIDDLYINSTALL   key %s\n' "$TI_PLAN_KEYID"
+				printf '  %s\n' 'Fetched over the network and checked here before anything was read, so a script altered on the way would have been refused.' | ti_wrap 74 2
+			else
+				printf '  %s\n' "Carried inside this file, signed by the TiddlyInstall key $TI_PLAN_KEYID, which says our build server produced it." | ti_wrap 74 2
+				printf '  %s\n' 'That signature is checked by this file, against a key inside this file. It is worth exactly as much as the file itself, so it is not a second opinion: use the SHA-256 above for that.' | ti_wrap 74 2
+			fi
 		fi
 		if [ -n "$ti_plan_warn" ]; then
 			# The !! line is already under WARNINGS; this is the part
 			# that is not a warning but a limit on everything above.
 			printf '  %s\n' "Unsigned (see WARNINGS). Nothing vouches for it, so what this screen says is only what the script itself says, and anybody can write one. Each file is still checked against the SHA-256 beside it, but those hashes are the script's own: they show a download arrived unchanged, and say nothing about what it is." | ti_wrap 74 2
-		else
+		elif [ "$TI_PLAN_FROM" != embedded ]; then
+			# Where it came from, unless that is "embedded" and the two
+			# lines above have just said so at length.
 			printf '  %s\n' "$TI_PLAN_FROM" | ti_wrap 74 2
 		fi
 		[ -n "$ti_age_warn" ] && printf '  %s\n' "$ti_age_warn" | ti_wrap 74 2
 		if [ -n "$TI_PLAN_SIGNED" ]; then
-			ti_pk=' (carried in this installer)'
+			# "(carried in this installer)" is already the whole of the
+			# paragraph above in the embedded case; only the fetched
+			# case adds anything by saying when.
+			ti_pk=
 			[ "$TI_PLAN_KIND" = fetched ] && ti_pk=' (fetched now)'
 			printf '  Signed on %s%s\n' "$TI_PLAN_SIGNED" "$ti_pk" | ti_wrap 74 2
 		fi
