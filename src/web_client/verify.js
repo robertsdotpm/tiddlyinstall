@@ -434,39 +434,55 @@ async function paint(file, sha, info) {
           + esc(nameSettings(file.name).pkg) + '</code>'
           + '<br><span class="small muted">chosen after this program was built, which is why renaming the file points it at a different package</span>'
         : 'none in the file, and the name does not carry any either')],
-    ['Install recipe', info.plan
-      ? 'inside the file: the exact versions, files and checksums'
-      : 'worked out when it runs, on the computer it runs on<br>'
-        + '<span class="small muted">so every computer gets the newest version that works there</span>'],
+
     info.pack && info.pack.length ? ['Packed files', info.pack.length + ' file' + (info.pack.length === 1 ? '' : 's') + ' inside, so it can install with no internet'] : null,
   ]);
 
   el('v-plan-none').hidden = !!d;
   const note = el('v-plan-derived');
   if (note) {
-    // Both cases explain themselves, because the difference between them
-    // is the only thing on this page a reader has to hold in their head:
-    // either the file already says exactly what it will fetch, or it
-    // decides later and everything here is a reconstruction. Saying it
-    // only in the second case leaves the first looking more certain than
-    // it was ever claimed to be, and leaves "why is this one different?"
-    // unanswered.
-    note.hidden = !d;
-    note.className = 'small note' + (derived ? ' note-derived' : '');
-    note.innerHTML = !d ? ''
-      : (derived
-        ? '<strong>This installer works out its install recipe when it runs</strong>, so the file does not '
-          + 'carry one. It knows what to install - '
-          + (derived === 'name' ? 'the package named in the file name' : 'the settings inside it')
-          + ' - and works out the versions on the computer it lands on, so every computer gets the newest one '
-          + 'that works there. <strong>Below is the recipe it would use today</strong>, worked out here from the '
-          + 'same catalogue the build server uses. A newer version can change it.'
-        : '<strong>This installer carries its install recipe inside it.</strong> The exact versions, files and '
-          + 'checksums were decided when it was built, so what follows is not a guess - it is the recipe the '
-          + 'installer will follow, and the signature below covers it.');
+    // One line, and only for the case where it changes what the table
+    // means. The version that explained both cases was three sentences
+    // of theory above a table that already said everything: the reader
+    // wants what it installs, not how installers work.
+    note.hidden = !d || !derived;
+    note.className = 'small muted';
+    note.innerHTML = d && derived
+      ? 'Versions are picked when it runs, so these are today\'s. A newer release would change them.'
+      : '';
   }
 
   if (d) {
+    const rtLabel = d.runtime || (d.targets.find((t) => t.runtime && t.runtime !== 'none') || {}).runtime || '';
+    // Versions differ per machine -- an old Windows gets an old Python on
+    // purpose -- so say the span rather than listing five numbers.
+    const vers = [];
+    for (const t of d.targets) if (t.version && vers.indexOf(t.version) < 0) vers.push(t.version);
+    const cmp = (a, b) => { const A = a.split('.').map(Number), B = b.split('.').map(Number);
+      for (let i = 0; i < 3; i++) if ((A[i] || 0) !== (B[i] || 0)) return (A[i] || 0) - (B[i] || 0);
+      return 0; };
+    vers.sort(cmp);
+    const verSays = vers.length > 1
+      ? vers[vers.length - 1] + ' <span class="small muted">on current systems, back to ' + vers[0] + ' on the oldest</span>'
+      : (vers[0] || '');
+    const totals = d.targets.map((t) => t.bytes).filter((n) => n > 0);
+    const runs = d.targets.reduce((n, t) => Math.max(n, t.runs.length), 0);
+    rows(el('v-does'), [
+      ['Installs', esc(d.name || d.project || 'an app')],
+      rtLabel && rtLabel !== 'none'
+        ? ['Runtime it installs', esc(runtimeName(rtLabel)) + ' ' + verSays
+          + '<br><span class="small muted">into the app\'s own folder. Nothing else on the machine is changed, and removing the app removes it.</span>']
+        : ['Runtime it installs', 'none; it runs what is already there'],
+      ['Into', esc(d.root === 'machine' ? 'a folder for the whole machine' : "a folder of its own in the user's home")],
+      totals.length
+        ? ['Downloads', 'up to ' + esc(hsize(Math.max.apply(null, totals))) + ' <span class="small muted">on one machine, not the total of the table below</span>']
+        : ['Downloads', 'nothing; everything it needs is already inside'],
+      ['Runs', runs ? runs + ' command' + (runs === 1 ? '' : 's') + ' after unpacking' : 'no commands'],
+      ['Admin rights', d.admin ? '<strong>yes</strong>' : 'not needed'],
+      ['Shortcuts', [d.menu === '1' ? 'app menu' : null, d.desktop === '1' ? 'desktop' : null].filter(Boolean).join(', ') || 'none'],
+      d.launch ? ['Starts', '<code>' + esc(d.launch) + '</code>'] : null,
+    ]);
+
     // One row per target, because one machine gets exactly one of them.
     // A plan has a block per OS-version range as well as per
     // architecture, so the same machine and version appear more than
@@ -522,7 +538,7 @@ async function paint(file, sha, info) {
     sign.push(['The installer file', 'is a macOS <code>.zip</code>; the app inside is checked by Gatekeeper when it is opened, not by this page']);
   }
   if (!info.plan) {
-    sign.push(['The install recipe', 'not in the file, so there is nothing here to check. It is fetched, signed, when the installer runs']);
+    sign.push(['The install recipe', 'written when it runs, so there is none in the file to check. It is fetched, signed, at that point']);
   } else {
     const s = docSignature(info.plan, 'ti-plan');
     const baked = bakedKey();
