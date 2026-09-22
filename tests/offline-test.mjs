@@ -285,6 +285,52 @@ try {
       'served: the wording follows the change to "No server"', await js(`document.querySelector('.build-where').textContent`));
     const job = await buildHello({ runtime: 'python', mode: 'unsigned', name: 'Hello no server', code: "print('hello')\n", platforms: ['linux'] });
     await checkJob(job, 'served, no server', 'python');
+
+    // A GitHub repo with no build server, given a branch rather than a
+    // commit. This is the half the from-disk tests above cannot cover:
+    // a served page is allowed to ask api.github.com which commit a
+    // branch is, and does it itself -- the build server is not involved
+    // and is switched off for this check. The home page said GitHub
+    // repos were a build-server feature until 2026-09-22; they are not,
+    // and this is what says so.
+    //
+    // api.github.com is stubbed rather than called: the answer must not
+    // depend on the network, on a rate limit, or on octocat still having
+    // that branch. Everything else is the real path.
+    const ghBranch = await js(`(async () => {
+      const real = window.fetch;
+      window.fetch = function (u, o) {
+        const s = String(u && u.url ? u.url : u);
+        if (s.indexOf('api.github.com') >= 0) {
+          // resolveCommit asks with Accept: application/vnd.github.sha,
+          // so the answer is the 40 characters and nothing else
+          // (src/shared/github.js). Anything JSON-shaped is refused.
+          return Promise.resolve(new Response('deadbeefcafe0000111122223333444455556666',
+            { status: 200, headers: { 'Content-Type': 'text/plain' } }));
+        }
+        return real.call(this, u, o);
+      };
+      try {
+        let j = await tiLocalApi.request('/api/jobs', { method: 'POST', body: {
+          name: 'Hello branch', runtime: 'python', mode: 'C', platforms: ['linux'],
+          launch: '{runtime} -c "print(1)"', install: '{runtime} -c "print(2)"',
+          source: { kind: 'github', value: 'octocat/Hello-World', ref: 'master' } } })
+          .catch((e) => ({ status: 'failed', error: e.message }));
+        while (j.status !== 'done' && j.status !== 'failed') {
+          await new Promise((r) => setTimeout(r, 100));
+          j = await tiLocalApi.request('/api/jobs/' + j.id);
+        }
+        return j;
+      } finally { window.fetch = real; }
+    })()`);
+    ok(ghBranch.status === 'done',
+      'served with no build server: a GitHub branch resolves and builds in the page', ghBranch.error);
+    ok(ghBranch.result && ghBranch.result.source && ghBranch.result.source.commit === 'deadbeefcafe0000111122223333444455556666',
+      'and it pinned the commit the branch pointed at, not the branch name',
+      JSON.stringify(ghBranch.result && ghBranch.result.source));
+    ok(!/build server/.test(String(ghBranch.error || '')),
+      'and nothing in the path asked for a build server', ghBranch.error);
+
     await js(`localStorage.clear()`);
   }
 } catch (e) {

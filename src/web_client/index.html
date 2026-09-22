@@ -87,12 +87,15 @@
            are a contrast -- with a server, without one -- so they are set as
            a contrast rather than as two more sentences in a row. -->
       <dl class="spec-list two-up">
-        <dt>Saved to your disk</dt>
-        <dd>It keeps working with no server at all: it builds installers from code you write here
-          or from packages, edits any installer nobody has signed, and signs with your&nbsp;own&nbsp;key.</dd>
-        <dt>With a build server</dt>
-        <dd>It hands that server the rest: installers we sign, GitHub repositories, and installers
-          with their runtimes packed&nbsp;inside.</dd>
+        <dt>With no server at all</dt>
+        <dd>Code you write here, a package, or a GitHub repository pinned to a commit. It edits any
+          installer nobody has signed, packs the runtimes inside for machines with no internet, and
+          signs with your own key. A copy saved to your disk asks nothing of the network except the
+          runtime mirror, so a GitHub branch has to be given as a commit&nbsp;there.</dd>
+        <dt>What a build server adds</dt>
+        <dd>One thing: installers signed by <em>us</em>. That certificate lives on the server and
+          never in this page, which is the whole reason the server exists. Everything else above is
+          this page's own&nbsp;work.</dd>
       </dl>
       <div class="actions" style="margin-top:18px">
         <button type="button" class="button save-page">Save this page</button>
@@ -144,7 +147,7 @@ macOS     /Library/Application Support/ti/tjfq5rqwnnrx/
       <h2>Write the app here</h2>
       <p class="measure">Pick Python, JavaScript (Node.js) or Ruby and a template - a script, a window
       app, a web page in a window or a tray app - then write your code in the browser, run it, and make
-      an installer from it with the same pipeline. It is one of the choices on the New installer&nbsp;page.</p>
+      an installer from it with the same pipeline, on the New installer page.</p>
       <p><a class="button secondary" href="new.html#write">Write an app</a></p>
     </section>
 
@@ -154,8 +157,8 @@ macOS     /Library/Application Support/ti/tjfq5rqwnnrx/
       <p class="measure">We wrote one installer program - the <em>base installer</em> - and
       every installer built here is that same program plus your settings. For example,
       <code>install_python_x.exe</code> is that program, with settings that say "install the Python
-      package <code>x</code>". The code is identical in every copy; only the settings change. That is
-      why it only has to be tested, hardened and signed&nbsp;once.</p>
+      package <code>x</code>". The code is identical in every copy and only the settings change, which
+      is why the program itself only has to be tested, hardened and signed once rather than once per app.</p>
 <pre>
 install_python_requests.exe   -&gt; installs the "requests" package
 install_python_black.exe      -&gt; installs the "black" package
@@ -169,9 +172,8 @@ install_node_prettier.exe     -&gt; installs the "prettier" package
       <p class="measure">A signature here is on <strong>the installer program</strong> - the one
       we wrote, identical in every copy - and never on the software it installs. It works like
       the signature on a web browser: it says who wrote the browser and that this copy is
-      unmodified, and nothing whatever about the sites you visit. What it does say is worth having.
-      The program that asks for your trust at install time is ours and unaltered, so the screen it
-      shows you can be&nbsp;believed.</p>
+      unmodified, and nothing about the sites you visit. The program that asks for your trust at
+      install time is ours and unaltered, so the screen it shows you can be believed.</p>
       <div class="grid">
         <section class="panel">
           <span class="eyebrow">Mode A</span>
@@ -198,10 +200,11 @@ install_node_prettier.exe     -&gt; installs the "prettier" package
       <span class="eyebrow"><span class="num">08</span> &nbsp;The promise</span>
       <h2>Nothing hidden</h2>
       <p class="measure">Every installer, whoever signed it, shows what it will install, where it
-      comes from, what it downloads, where files go and who signed the installer file, before it
+      comes from, what it downloads, where the files go and who signed the installer file, before it
       changes anything.
-      That screen - the one at the top of this page - is not a summary we write afterwards.
-      It is read from the installer's own settings block, so it cannot disagree with what happens&nbsp;next.</p>
+      That screen - the one at the top of this page - is not a summary we wrote afterwards.
+      It is read from the installer's own settings block, which is the same block the installer
+      follows, so it cannot disagree with what happens next.</p>
     </section>
   </main>
 
