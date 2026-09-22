@@ -1012,6 +1012,18 @@ form:has(#tpl-tray:checked) .tpl-gui-only { display: block; }
 .copy-btn.copied { border-color: var(--accent); color: var(--accent); }
 .copy-btn.copy-failed { border-color: var(--rule-strong); color: var(--text-loud); }
 
+/* The commit the page was built from. Its own line under the credit, and
+   quieter than it: it is a fact you go looking for, not one to read. */
+.build-stamp {
+  display: block;
+  margin-top: 6px;
+  color: var(--faint);
+  font-size: 0.88em;
+}
+.build-stamp code { font-size: 0.95em; }
+.build-stamp a { color: inherit; }
+.build-stamp a:hover { color: var(--accent); }
+
 /* ==========================================================================
    11. Icon picker
    ========================================================================== */

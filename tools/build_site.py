@@ -41,6 +41,7 @@ import stat
 import struct
 import subprocess
 import sys
+import urllib.parse
 import tempfile
 import zipfile
 import zlib
@@ -529,16 +530,48 @@ def offline_page(catalog_dir, backend):
            "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
            "  <title>TiddlyInstall</title>\n"
            f"  <meta name=\"generator\" content=\"tools/build_site.py, {rev}, {today}\">\n"
+           + favicon_links()
            # Too-old browsers get a message naming what's missing (a classic
            # script, so it runs where the module can't).
-           "  <script>\n" + no_close_script(read(WEB + "/browser-check.js")) + "\n  </script>\n"
+           + "  <script>\n" + no_close_script(read(WEB + "/browser-check.js")) + "\n  </script>\n"
            "  <style>\n" + css + "\n  </style>\n</head>\n<body>\n  " + header + "\n"
            + NOSCRIPT.replace("{classic}", html.escape(backend.rstrip("/") + "/classic"))
            + "\n".join(sections) +
-           "\n  <footer class=\"site-footer\">\n    Designed by <a href=\"https://robertsdotpm.github.io/\">Matthew Roberts</a> and implemented by Claude.\n    &middot; <a href=\"mailto:matthew@roberts.pm\">Hire me</a>\n  </footer>\n"
+           # The commit this page was built from, on the page rather than
+           # only in the HTML comment at the top: the comment is what
+           # tools/deploy.sh checks, but a person looking at a page and
+           # wondering whether it is the build they were told to test
+           # should not have to View Source to find out. Links to the
+           # commit itself, so the answer is one click rather than a
+           # string to go and look up.
+           '\n  <footer class="site-footer">\n'
+           '    Designed by <a href="https://robertsdotpm.github.io/">Matthew Roberts</a> and implemented by Claude.\n'
+           '    &middot; <a href="mailto:matthew@roberts.pm">Hire me</a>\n'
+           f'    <span class="build-stamp">Front end built from '
+           f'<a href="https://github.com/robertsdotpm/installer-builder/commit/{rev}"><code>{rev}</code></a>'
+           f' on {today}</span>\n'
+           '  </footer>\n'
            + "\n".join(blocks + code_blocks) +
            "\n  <script>\n" + no_close_script(read(WEB + "/page-loader.js")) + "\n  </script>\n</body>\n</html>\n")
     return out, report
+
+
+def favicon_links():
+    """Both favicons, inlined, because the page is one file opened from disk.
+
+    Two of them: an SVG favicon is only honoured from Chrome 80, Firefox
+    41 and Safari 9 with a plain .svg, and the browser floor here is
+    Chrome 58 / Safari 12 / IE 11, none of which would show one. So the
+    PNG is not a nicety, it is what most of the floor actually renders,
+    and the SVG is the upgrade for everything newer.
+    """
+    png = base64.b64encode(open(WEB + "/favicon.png", "rb").read()).decode("ascii")
+    # A data: URI for SVG only has to escape the characters that would end
+    # the attribute or the URI; "#" would otherwise start a fragment and
+    # cut the colour off.
+    svg = urllib.parse.quote(open(WEB + "/favicon.svg", encoding="utf8").read(), safe="/:=<>?;,'()[] ")
+    return ('  <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,' + png + '">\n'
+            '  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,' + svg + '">\n')
 
 
 def json_block(v):

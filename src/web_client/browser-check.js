@@ -404,18 +404,11 @@
   function dismissKey() { return 'ti-compat-dismissed:' + env.browser + ' ' + String(env.version).split('.')[0] + ':' + each(degraded(), function (f) { return f.id + '=' + status[f.id]; }).join(','); }
   function dismissed() { try { return w.localStorage.getItem(dismissKey()) === '1'; } catch (e) { return false; } }
 
-  // Not a browser's fault: the page is on plain http, so the browser
-  // withholds WebCrypto. Naming the browser here, or offering another
-  // one, would send someone to fix the wrong thing.
-  var HTTP_TEXT = 'This page is not on https, so the browser withholds WebCrypto: hashing and signing use the page\'s own ' +
-    'JavaScript, slower and otherwise the same. An https page, or a copy of this one saved to disk, gets it back.';
-
   // What to say, and the browsers to suggest ({name, url}). `list` is the
   // degradations worth saying: the loud ones for the bar, all of them for
   // the quiet line in the footer.
   function summary(list) {
     var miss = missing();
-    if (!miss.length && secureOnly()) return { text: HTTP_TEXT, links: [] };
     var effects = [], seen = {};
     for (var i = 0; i < list.length; i++) {
       var f = list[i], e = status[f.id] === 'fallback' ? f.fallback : f.effect;
@@ -517,6 +510,12 @@
     doc.documentElement.setAttribute('data-ti-ready', '1');
     var deg = degraded(), miss = missing(), say = loud();
     if (!deg.length || (!miss.length && dismissed())) { if (bar) show(bar, false); return; }
+    // Plain http withholds WebCrypto, so hashing and signing fall back to
+    // this page's own JavaScript: slower, same result. That is not a
+    // browser fault, not a thing the reader can act on from here, and was
+    // the only notice most visitors ever saw. Removed 2026-09-22: say
+    // nothing rather than spend the one banner on it.
+    if (!miss.length && secureOnly()) { if (bar) show(bar, false); return; }
     // Loud goes under the header, where it interrupts. Quiet goes in the
     // footer: what is only slower here is worth being able to find, not
     // worth the top of every page.

@@ -2913,7 +2913,12 @@ ti_signer() {
 		esac
 	else
 		[ -n "$ti_self_sha" ] || ti_self_sha=$(ti_sha256 "$TI_SELF")
-		printf 'nobody (.run files carry no signature); this file has sha256 %s' "$ti_self_sha"
+		# Not "nobody", which reads as "nobody vouches for any of this" --
+		# and reads it three lines above a "Plan:" line saying the plan IS
+		# signed by our key. Nothing signs a .run because Linux checks
+		# nothing when it runs one: there is no mechanism to have used,
+		# which is a different statement from having skipped one.
+		printf 'nothing - Linux checks no signature when it runs a .run file; this file has sha256 %s' "$ti_self_sha"
 	fi
 }
 
@@ -3205,6 +3210,12 @@ ti_install_main() {
 	# ---- transparency (design.md section 3; the shape is set out at
 	# "the review screen's shape", above)
 	sum=$TI_WORK/summary.txt
+	# ti_signer runs in a command substitution, so every variable it sets
+	# dies with that subshell. ti_self_sha was assigned only in there, so
+	# the "this file has sha256" line below -- and the one on the short
+	# screen -- has never printed on any .run install. Found 2026-09-22
+	# by writing a line that pointed at it. Compute it out here.
+	[ -n "$TI_BUNDLE" ] || [ -n "$ti_self_sha" ] || ti_self_sha=$(ti_sha256 "$TI_SELF")
 	ti_signed_by=$(ti_signer)
 	# The .run's own sha256 belongs on a line of its own, not glued to the
 	# end of "Signed by:" where it pushes the answer off the screen.
@@ -3224,6 +3235,11 @@ ti_install_main() {
 	# on 2026-09-21, and any shorter way of saying it says less.
 	ti_signed_scope=
 	case $ti_signed_short in
+	# The .run case. A signature over a file that carries its own
+	# verifier proves nothing -- whoever changed the payload changed the
+	# check with it -- so the honest pointer is not to a signature we
+	# could add, but to the one comparison that happens outside the file.
+	nothing*) ti_signed_scope='(compare the sha256 below with the one shown where you downloaded it)' ;;
 	nobody* | unknown*) ;;
 	*) ti_signed_scope='(this installer file; not the program it installs)' ;;
 	esac

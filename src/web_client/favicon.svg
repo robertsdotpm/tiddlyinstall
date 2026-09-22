@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <!-- The header's brand mark (index.html .brand-mark), standalone: a
+       favicon gets no CSS, so the stroke colour is baked in. A mid green
+       rather than either theme's accent variable, because a tab strip
+       may be light or dark and this reads on both. The stroke is 2.2
+       rather than the header's 1.6: at 16px a 1.6 stroke on a 24 viewBox
+       is about one physical pixel and disappears. -->
+  <g fill="none" stroke="#2f9e7b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2.6" y="2.6" width="18.8" height="18.8" rx="2.4"/>
+    <line x1="12" y1="6.2" x2="12" y2="13.2"/>
+    <polyline points="8.4 9.7 12 13.3 15.6 9.7"/>
+    <line x1="7" y1="17.4" x2="17" y2="17.4"/>
+  </g>
+</svg>

@@ -220,11 +220,12 @@ try {
   await open(FILE, INSECURE);
   const http = await barText();
   ok(await js(`window.isSecureContext === false`), 'the rig really did make it an insecure context (else this proves nothing)');
-  ok(!await barShown() && await quietShown(), 'insecure context: no bar at the top of the page');
-  ok(/not on https/.test(http) && /withholds WebCrypto/.test(http), 'it names http, not the browser', http);
-  ok(!/This browser/.test(http) && !/Get: /.test(http) && !await js(`!!document.querySelector('.ti-compat-get')`),
-    'and blames no browser, and offers none', http);
-  ok(/saved to disk/.test(http), 'and says where it does not happen', http);
+  // Nothing at all, as of 2026-09-22. Plain http withholding WebCrypto
+  // only means hashing and signing run in this page's own JavaScript:
+  // slower, same result, and nothing the reader can do about it from
+  // here. It used to be the one notice most visitors ever saw.
+  ok(!await barShown() && !await quietShown(), 'insecure context: no bar and no footer line', http);
+  ok(http === '', 'and nothing is said about http at all', JSON.stringify(http));
   // One degradation that is not about the secure context puts it back to
   // talking about the browser.
   await open(FILE, INSECURE + 'delete window.OffscreenCanvas;');
@@ -237,9 +238,8 @@ try {
     await open(SITE.replace(/\/$/, '') + '/');
     const s = await barText();
     ok(await js(`window.isSecureContext === false`), 'a plain-http LAN address is not a secure context');
-    ok(!await barShown() && await quietShown(), 'plain http on a LAN address: a footer line, not a bar');
-    ok(/not on https/.test(s) && /own JavaScript/.test(s) && !/Get: /.test(s),
-      'and it says the page is not on https, and suggests no browser', s);
+    ok(!await barShown() && !await quietShown(), 'plain http on a LAN address: nothing is shown');
+    ok(s === '', 'and it says nothing about http', JSON.stringify(s));
     // Served by a build server, a browser that can't run the page is sent to that server's simple form.
     await open(SITE.replace(/\/$/, '') + '/', NO_ASYNC + 'window.atob = undefined;');
     const classic = await js(`(document.querySelector('.ti-compat-classic a') || {}).href || ''`);
