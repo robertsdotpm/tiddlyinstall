@@ -2890,7 +2890,7 @@ ti_describe_source() {
 			printf 'GitHub %s, commit %s (no stored hash: identified by the commit, fetched over HTTPS)' "$2" "$3"
 		fi
 		;;
-	package) printf 'package %s, version %s' "$2" "$3" ;;
+	package) if [ -n "$3" ]; then printf 'package %s, version %s' "$2" "$3"; else printf 'package %s (newest)' "$2"; fi ;;
 	url) printf '%s (sha256 %s)' "$2" "$3" ;;
 	inline) printf 'code written on the site (sha256 %s)' "$2" ;;
 	*) printf '%s' "$s" ;;
@@ -3055,7 +3055,7 @@ ti_capabilities() {
 # is the common one -- an ordinary Python app trips one finding -- and a
 # promise that only appears when nothing is found is a promise most
 # people never see. Every file still prints its own `sha256` below.
-TI_CAP_ORDINARY="An ordinary install unpacks the files listed above, each one checked against its SHA-256, into folders of its own, for you alone, and runs only the setup steps we wrote for the runtime."
+TI_CAP_ORDINARY="An ordinary install unpacks the files listed below, each one checked against its SHA-256, into folders of its own, for you alone, and runs only the setup steps we wrote for the runtime."
 ti_cap_section() {
 	if [ -n "$ti_plan_warn" ]; then
 		# launch-shapes.md section 8, "What must never happen": with
@@ -3635,6 +3635,7 @@ ti_install_main() {
 		ti_needs_summary
 
 		printf '\nWHERE THIS CAME FROM\n'
+		printf '  (choices are what was picked in the web client; the recipe is what carries them out)\n' | ti_wrap 74 2
 		printf '  Signed by:  %s\n' "$ti_signed_short" | ti_wrap 74 14
 		[ -n "$ti_signed_scope" ] && printf '              %s\n' "$ti_signed_scope" | ti_wrap 74 14
 		[ -n "$ti_self_sha" ] && printf '              this file has sha256 %s\n' "$ti_self_sha"
@@ -3650,8 +3651,8 @@ ti_install_main() {
 		if [ "$TI_MODE_A" = 1 ]; then
 			printf '  Mode:       A (signed, and carrying no settings of its own): it installs only the app its file name names, from %s\n' "$TI_DEFAULT_BACKEND" | ti_wrap 74 14
 		fi
-		printf '  Choices:    %s\n' "$TI_ORIGIN"
-		printf '  Recipe:     %s\n' "$TI_PLAN_FROM"
+		printf '  Choices:    %s\n' "$TI_ORIGIN" | ti_wrap 74 14
+		printf '  Recipe:     %s\n' "$TI_PLAN_FROM" | ti_wrap 74 14
 		# Not `$(case ... in x) ... esac)`: the older bash that macOS
 		# ships as /bin/sh closes the command substitution at the first
 		# `)`, which is the one ending the case pattern, and prints the
@@ -3661,7 +3662,7 @@ ti_install_main() {
 		if [ -n "$TI_PLAN_SIGNED" ]; then
 			ti_pk=' (carried in this installer)'
 			[ "$TI_PLAN_KIND" = fetched ] && ti_pk=' (fetched now)'
-			printf '  Plan signed: %s%s\n' "$TI_PLAN_SIGNED" "$ti_pk"
+			printf '  Signed on:  %s%s\n' "$TI_PLAN_SIGNED" "$ti_pk"
 		fi
 		[ -n "$ti_revoke_note" ] && printf '  Revocations: %s\n' "$ti_revoke_note" | ti_wrap 74 15
 		[ -n "$ti_plan_warn" ] && printf '  WARNING: %s\n' "$ti_plan_warn"
@@ -3775,7 +3776,7 @@ ti_install_main() {
 	# is unsigned, stale or withdrawn is the one thing on this screen
 	# that should stop somebody, and it is normally not there at all.
 	case $ti_signed_short in
-	nobody*) ti_signed_brief=unsigned ;;
+	nothing* | nobody*) ti_signed_brief=unsigned ;;
 	unknown*) ti_signed_brief='signed by someone this machine cannot identify' ;;
 	*) ti_signed_brief="installer signed by $ti_signed_short" ;;
 	esac

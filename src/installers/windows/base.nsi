@@ -4412,6 +4412,7 @@ Function WriteSummary
 
   ${Sum} ""
   ${Sum} "WHERE THIS CAME FROM"
+  ${Sum} "  (choices are what was picked in the web client; the recipe is what carries them out)"
   ${If} $SignedBy != ""
     ${Sum} "  Signed by:  $SignedBy (as the certificate names it; Windows checks the signature)."
     ${Sum} "              It covers this installer file, not the program it installs."
@@ -4436,9 +4437,9 @@ Function WriteSummary
   ${Sum} "  Recipe:     $PlanSrc"
   ${If} $PlanSigned != ""
     ${If} $PlanKind == "fetched"
-      ${Sum} "  Plan signed: $PlanSigned (fetched now)"
+      ${Sum} "  Signed on:  $PlanSigned (fetched now)"
     ${Else}
-      ${Sum} "  Plan signed: $PlanSigned (carried in this installer)"
+      ${Sum} "  Signed on:  $PlanSigned (carried in this installer)"
     ${EndIf}
   ${EndIf}
   ${If} $RevokeNote != ""
