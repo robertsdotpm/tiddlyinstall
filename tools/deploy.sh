@@ -40,6 +40,15 @@ git worktree add -q --detach "$wt/co" HEAD
 for p in src/installers/windows/out src/installers/unix/out tools/es5/node_modules; do
 	[ -e "$here/$p" ] && ln -sfn "$here/$p" "$wt/co/$p"
 done
+# The plan signing public key lives in the server's data folder, which is
+# gitignored, so a clean worktree of HEAD has no key and the page is built
+# without one -- which is how 81c3435 shipped a Verify page that could not
+# check a single signature. The key is public (it is already inside every
+# base in the page); this makes it reachable from the checkout.
+if [ -f "$here/src/build_server/data/plan-signing-key.pub" ]; then
+	mkdir -p "$wt/co/src/build_server/data"
+	cp "$here/src/build_server/data/plan-signing-key.pub" "$wt/co/src/build_server/data/"
+fi
 
 # The catalogue snapshot is most of the build's two minutes and changes only
 # when registry/ does, so it is cached and reused. The cache is keyed
@@ -108,6 +117,15 @@ for b in windows:src/installers/windows/out/base.exe \
 		fail=1
 	fi
 done
+
+# The page must carry the plan signing key, or Verify silently cannot
+# check anything and says so in wording nobody reads as a failure.
+if curl -fsS "$url/" 2>/dev/null | grep -q 'id="ti-plan-pubkey"'; then
+	echo "ok    the page carries the plan signing key"
+else
+	echo "FAIL  the page has no plan signing key; Verify cannot check a signature"
+	fail=1
+fi
 
 if [ "$fail" != 0 ]; then
 	echo "deploy: the server is NOT serving what this tree holds. Do not tell anyone to test it." >&2

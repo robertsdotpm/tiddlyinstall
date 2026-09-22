@@ -150,10 +150,12 @@ async function serverChecks(info, d, out) {
         : '<strong>differ from the record the server holds under that hash.</strong> '
           + 'The settings in this file are not the ones it published');
     } catch (e) {
-      const m = errorText(e);
-      add('These settings', /404/.test(String(m))
-        ? 'the server does not have a record <code>' + esc(d.record) + '</code>. Anyone can write a record, so this only means it was not published there'
-        : 'could not be checked: ' + esc(m));
+      // errorText gives the server's words ("no such record"), never a
+      // status code, so ask the error rather than grepping its message.
+      const missing = e && (e.status === 404 || e.code === 'not_found');
+      add('These settings', missing
+        ? '<strong>the server has no record <code>' + esc(d.record) + '</code>.</strong> Anyone can write a record, so this means it was never published here, not that it is bad'
+        : 'could not be checked: ' + esc(errorText(e)));
     }
   }
 
@@ -173,10 +175,11 @@ async function serverChecks(info, d, out) {
         ? 'is the plan the server gives for that record today'
         : 'is <strong>not</strong> what the server gives today. That happens when the catalogue moved on, and also when a plan was altered; compare the downloads above with a fresh build');
     } catch (e) {
-      const m = errorText(e);
-      add('The plan in this file', /451/.test(String(m))
+      add('The plan in this file', e && e.status === 451
         ? '<strong>the record is taken down</strong> on this server'
-        : 'could not be compared: ' + esc(m));
+        : (e && (e.status === 404 || e.code === 'not_found')
+          ? 'cannot be compared: the server has no plan for a record it does not have'
+          : 'could not be compared: ' + esc(errorText(e))));
     }
   }
 
