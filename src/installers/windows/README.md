@@ -18,6 +18,7 @@ code in it. Unicode NSIS 3.09; runs on Windows XP SP3 to 11 and Server
 | `build.sh` | Builds `out/launcher.exe`, then `out/base.exe`, which embeds it and the plan signing key |
 | `append_meta.py` | Appends a metadata block (format.md section 4) to a base, for testing |
 | `plugins/x86-unicode/` | NSIS plugins (below) |
+| `shot_review.ps1` | Renders the review page on a Windows VM and captures the window, a screenful at a time. Driven by `tools/shot_windows_review.sh` |
 | `plugin-src/` | Source of our `tisig` plugin and its `build.sh`. `linepaint.c` is the review screen's line classifiers, kept apart so the host `cc` can build them for `test_paint.sh` |
 | `tools/7za.exe` | 7-Zip 9.20 command line, for `7z` and `tar.*` |
 
@@ -370,7 +371,28 @@ a line a heading rather than merely a line with no lower case in it.
 What the test does *not* compare is how a shape is then drawn: a rich
 edit can switch to grey Courier for indented detail and a terminal
 cannot, so each de-emphasises a different set of body lines, on
-purpose. Escaping `{`, `}`, `\` and
+purpose.
+
+And a rule set that both painters agree on can still be wrong, so on
+2026-09-22 the page was rendered on Windows for the first time
+(`tools/shot_windows_review.sh`, Windows 10, a real unsigned installer
+started in the interactive session and killed on the review page).
+Three faults, none of which any suite could see:
+
+  - `  SIGNED BY TIDDLYINSTALL   key <id>` was one line here and two on
+    Linux. With the key on the same line the headline has lower case in
+    it, so it is not a verdict, and the **signed** case rendered as
+    plain body -- quieter than `UNSIGNED` directly above it.
+  - `COMMANDS` was a heading with nothing under it whenever the project
+    had no install command of its own, which is the common case.
+  - `  All of it in C:` was painted as a label, which tabbed the rest
+    of the path into the value column and took the drive off the front
+    of it. No Linux path has that shape.
+
+The first two are text this engine alone emits, so they were out of
+reach of anything running on Linux; the third needed a Windows path to
+appear at all. The screen had never been rendered on Windows before,
+which is the only reason three faults were waiting on it. Escaping `{`, `}`, `\` and
 non-ASCII happens there rather than in NSIS, so a record someone else
 wrote cannot break out of the markup. It sends `EM_SETTEXTEX` with a
 code page other than 1200, which is what makes a rich edit read a buffer
