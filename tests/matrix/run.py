@@ -33,6 +33,10 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "arch"))
 import machines                                            # noqa: E402
 import vmlock                                              # noqa: E402
+# Not on this LAN: it reaches the build server through a reverse tunnel,
+# and the instance at the far end is a separate one with its own data
+# directory. Its installers have to be built against that instance --
+# see build.py's docstring, and docs/test-vms.md for the machine.
 MAC = "Matthew@the-mac-test-host"
 WINDOWS = {
     # name: (ssh target, default shell[, "profile"])

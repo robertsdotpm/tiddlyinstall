@@ -9,6 +9,19 @@ projects.json, follows the ticket until the job finishes, and downloads the
 files to <out>/<runtime>/<mode>/. Mode B files are then signed by a stand-in
 publisher (the "Example Publisher TEST" certificate) with osslsigncode, as a
 real publisher would after downloading. Writes <out>/builds.json.
+
+**The Mac is a different backend.** It is not on this LAN, so it reaches
+the build server through a reverse tunnel, and the instance at the far
+end of that tunnel is a separate one with its own data directory
+(`-addr 127.0.0.1:8081 -data data-mac`, whose `-public` is the tunnel's
+own address). An installer built against :8080 carries a record that the
+:8081 instance has never heard of, so the Mac fetches its plan and gets
+a 404 -- which looks exactly like a broken installer and is not. Build
+the Mac's:
+
+    build.py --backend http://127.0.0.1:8081 --platforms macos --out tests/matrix/out-mac
+
+and everything else against :8080. Cost an hour on 2026-09-22.
 """
 import argparse
 import json
