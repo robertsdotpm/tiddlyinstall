@@ -3,11 +3,16 @@
  * with the host's cc):
  *   test_host rfc8032               RFC 8032 section 7.1 vectors 1-3
  *   test_host <plan> <pubkey-b64>   prints ok / unsigned / bad and why
+ *
+ * And the line classifiers the RTF painter uses (linepaint.c), so the
+ * terminal painter can be compared against them without a Windows box:
+ *   test_host classify <file>       one class name per line of <file>
  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "plancheck.h"
+#include "linepaint.h"
 
 int ed25519_verify(unsigned char *buf, unsigned long long n, const unsigned char *s, const unsigned char *pk);
 
@@ -45,6 +50,56 @@ static int rfc8032(void)
   return fails ? 1 : 0;
 }
 
+/*
+ * Name the shape of every line of a screen, in the order richtext() asks
+ * the questions -- the order is part of the rule set, because a line can
+ * satisfy two rules and only the first one is what the reader sees.
+ *
+ * ASCII in, one class name per line out. The review text has been
+ * through ti_clean by the time either painter sees it, so anything
+ * outside ASCII is not a shape either painter has a rule for, and both
+ * leave it plain.
+ */
+static int classify(const char *path)
+{
+  static ti_wchar l[4096];
+  FILE *f = strcmp(path, "-") ? fopen(path, "rb") : stdin;
+  int c, len = 0, prev_blank = 1;
+  int blankish;
+  if (!f) { fprintf(stderr, "classify: cannot open %s\n", path); return 2; }
+  for (;;) {
+    c = fgetc(f);
+    if (c != EOF && c != '\n') {
+      if (len < (int)(sizeof l / sizeof *l)) l[len++] = (ti_wchar)(unsigned char)c;
+      continue;
+    }
+    if (c == EOF && len == 0) break;
+    if (len && l[len - 1] == '\r') len--;
+    {
+      int was_blank = prev_blank, i;
+      /* Whitespace-only counts as blank, as it does in ti_paint. The
+       * screen should never emit such a line, but the two painters must
+       * agree about it if one ever does. */
+      for (blankish = 1, i = 0; i < len; ++i)
+        if (l[i] != ' ' && l[i] != '\t') { blankish = 0; break; }
+      prev_blank = blankish;
+      if (blankish) puts("blank");
+      else if (ti_is_indented_verdict(l, len)) puts("verdict");
+      else if (ti_is_subheading(l, len, was_blank)) puts("subheading");
+      else if (ti_is_heading(l, len)) puts("heading");
+      else if (ti_is_rule(l, len)) puts("rule");
+      else if (len >= 3 && l[0] == '!' && l[1] == '!' && l[2] == ' ') puts("warn");
+      else if (len >= 3 && l[0] == '!' && l[1] == ' ' && l[2] == ' ') puts("note");
+      else if (ti_key_len(l, len)) puts("label");
+      else puts("plain");
+    }
+    len = 0;
+    if (c == EOF) break;
+  }
+  if (f != stdin) fclose(f);
+  return 0;
+}
+
 int main(int argc, char **argv)
 {
   FILE *f;
@@ -53,7 +108,8 @@ int main(int argc, char **argv)
   const char *why;
   int r;
   if (argc == 2 && !strcmp(argv[1], "rfc8032")) return rfc8032();
-  if (argc != 3) { fprintf(stderr, "usage: test_host rfc8032 | test_host plan pubkey\n"); return 2; }
+  if (argc == 3 && !strcmp(argv[1], "classify")) return classify(argv[2]);
+  if (argc != 3) { fprintf(stderr, "usage: test_host rfc8032 | test_host classify file | test_host plan pubkey\n"); return 2; }
   if (strlen(argv[2]) != 44 || ti_b64decode((unsigned char *)argv[2], 44, pk, 32)) { printf("error: bad key\n"); return 2; }
   f = fopen(argv[1], "rb");
   if (!f) { printf("error: can't open\n"); return 2; }

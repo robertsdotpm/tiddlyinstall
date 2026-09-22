@@ -18,7 +18,7 @@ code in it. Unicode NSIS 3.09; runs on Windows XP SP3 to 11 and Server
 | `build.sh` | Builds `out/launcher.exe`, then `out/base.exe`, which embeds it and the plan signing key |
 | `append_meta.py` | Appends a metadata block (format.md section 4) to a base, for testing |
 | `plugins/x86-unicode/` | NSIS plugins (below) |
-| `plugin-src/` | Source of our `tisig` plugin and its `build.sh` |
+| `plugin-src/` | Source of our `tisig` plugin and its `build.sh`. `linepaint.c` is the review screen's line classifiers, kept apart so the host `cc` can build them for `test_paint.sh` |
 | `tools/7za.exe` | 7-Zip 9.20 command line, for `7z` and `tar.*` |
 
 ```sh
@@ -351,7 +351,26 @@ bytes that go in the log), and the plugin turns it into RTF by the same
 rules the Linux and macOS engine paints a terminal with (`ti_paint` in
 `src/installers/unix/ti-engine.sh`): `!!` red, `!` amber, A HEADING IN CAPITALS
 bold, `  Key: value` with a bold key at a tab stop, anything indented
-four spaces or more in Courier New and grey. Escaping `{`, `}`, `\` and
+four spaces or more in Courier New and grey.
+
+Those rules are one rule set with two implementations, which is a thing
+that drifts. It did: the awk side never had the twenty-character cap on
+a label that the C side always had, so once the trust section grew
+sentences long enough to wrap, a wrapped line containing a colon was
+bolded as a label on Linux and left alone on Windows -- and nothing
+failed, because each side was self-consistent. So the five classifiers
+now live in `plugin-src/linepaint.c`, which builds with the host `cc`
+and no `windows.h`, `test_host classify` prints what they make of every
+line of a file, and `src/installers/unix/test_paint.sh` runs the same
+text through both painters and compares. Bringing them into line found
+four more disagreements: an empty label value (`Uninstaller:` with the
+path below), a note written with one space after the `!`, a heading
+containing an apostrophe, and the minimum number of capitals that makes
+a line a heading rather than merely a line with no lower case in it.
+What the test does *not* compare is how a shape is then drawn: a rich
+edit can switch to grey Courier for indented detail and a terminal
+cannot, so each de-emphasises a different set of body lines, on
+purpose. Escaping `{`, `}`, `\` and
 non-ASCII happens there rather than in NSIS, so a record someone else
 wrote cannot break out of the markup. It sends `EM_SETTEXTEX` with a
 code page other than 1200, which is what makes a rich edit read a buffer
@@ -372,7 +391,7 @@ imports only `CreateFileW`, `ReadFile`, `WriteFile`, `SetFilePointer`,
 subsystem and OS version 5.1, so XP's loader takes it. Tested on XP SP3,
 Windows 7 and Windows 11. The committed DLL (llvm-mingw 20260908, no
 timestamp) has sha256
-`249e9826ca62456778d05c0bf8de7e170b34e3c00c2b09dde9351ec2895dcdde`.
+`31fd5846dce508de65606b139ea829d3cce93f9372f8f510ad77747bfbec7c8f`.
 
 ```sh
 LLVM_MINGW=~/.local/opt/llvm-mingw-20260908-msvcrt-ubuntu-22.04-x86_64 plugin-src/build.sh
@@ -380,7 +399,8 @@ LLVM_MINGW=~/.local/opt/llvm-mingw-20260908-msvcrt-ubuntu-22.04-x86_64 plugin-sr
 
 `plugin-src/build.sh` also builds `test_host.c` with the host compiler
 and runs the RFC 8032 test vectors; `test_host <plan> <key>` checks a
-plan file the way the plugin does. llvm-mingw
+plan file the way the plugin does, and `test_host classify <file>` names
+the shape of every line the way `richtext` does. llvm-mingw
 (https://github.com/mstorsjo/llvm-mingw) is a tarball: unpack it
 anywhere, nothing is installed.
 

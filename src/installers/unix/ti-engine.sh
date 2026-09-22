@@ -853,7 +853,15 @@ ti_want_colour() {
 ti_paint() {
 	awk '
 	BEGIN { b = "\033[1m"; o = "\033[0m"; red = "\033[1;31m"
-		yel = "\033[33m"; dim = "\033[2m" }
+		yel = "\033[33m"; dim = "\033[2m"
+		# A heading may contain an apostrophe and this program is
+		# inside single quotes, so the pattern is built rather than
+		# written. The dash goes last or it starts a range.
+		q = sprintf("%c", 39)
+		hre = "^[A-Z][A-Z0-9 ,.:()/+" q "-]*$" }
+	# How many capitals, which is what tells a heading from a line that
+	# merely has no lower case in it. linepaint.c counts them too.
+	function caps(s,   t) { t = s; gsub(/[^A-Z]/, "", t); return length(t) }
 	# Structure follows a blank line; wrapped prose does not. Without
 	# this, any wrapped fragment that happened to look like a heading
 	# was bolded -- a line ending "...is not a second" left "opinion:"
@@ -862,26 +870,33 @@ ti_paint() {
 	/^!! /                        { print red $0 o; next }
 	/^!  /                        { print yel $0 o; next }
 	/^[-=]+$/                     { print dim $0 o; next }
-	/^[A-Z][A-Z0-9 ,.:()\/+-]*$/  { print b $0 o; next }
+	$0 ~ hre && caps($0) >= 3  { print b $0 o; next }
 	# A verdict on its own line, indented and shouting: UNSIGNED,
 	# SIGNED BY TIDDLYINSTALL, NO SIGNATURE... Anchored at both ends so
 	# a summary row like "  PATH   Not changed" is not caught by it.
-	/^  [A-Z][A-Z0-9 ,.()\/+-]*$/  { print b $0 o; next }
+	/^  [A-Z][A-Z0-9 ,.()\/+-]*$/ && length($0) >= 5 && caps(substr($0, 3)) >= 4 {
+		print b $0 o; next }
 	/^ +(sha256|from|or) /        { print dim $0 o; next }
 	# The key of a summary row, capped at eighteen characters as the
-	# RTF side has always been (tisig.c key_len stops at twenty).
+	# RTF side has always been (linepaint.c ti_key_len stops at twenty).
 	# Without a cap, a wrapped line of prose that happens to contain a
 	# colon is bolded as though it were a label, which is what the line
 	# ending "downloaded it:" did as soon as the trust section grew
 	# sentences long enough to wrap.
 	#
+	# The value may be empty: "Uninstaller:" with the path on the line
+	# below is a shape this screen uses, and the RTF side has always
+	# bolded it. The minimum length keeps the two in step over a
+	# one-letter key, which the RTF side is too short to reach.
+	#
 	# No apostrophes in here: this awk program is inside single quotes,
 	# and one closed it.
-	/^  [A-Z][A-Za-z ]{0,17}: /   { k = index($0, ":"); print b substr($0, 1, k) o substr($0, k + 1); next }
+	/^  [A-Z][A-Za-z ]{0,17}:( |$)/ && length($0) >= 5 { k = index($0, ":"); print b substr($0, 1, k) o substr($0, k + 1); next }
 	# A sub-heading inside a section: indented two, a few words, no
 	# colon, and no column gap -- the gap is what tells a heading from
 	# a row like "  Application      requests", which must stay plain.
-	/^  [A-Z][A-Za-z0-9 ()-]*$/ && pb && length($0) <= 42 && substr($0, 3) !~ /  / { print b $0 o; next }
+	/^  [A-Z][A-Za-z0-9 ()-]*$/ && pb && length($0) >= 5 && length($0) <= 42 &&
+		substr($0, 3) !~ /  / && $0 !~ / $/ { print b $0 o; next }
 	                              { print }'
 }
 

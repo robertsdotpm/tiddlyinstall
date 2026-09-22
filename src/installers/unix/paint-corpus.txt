@@ -1,0 +1,48 @@
+======================================================================
+TiddlyInstall - Review before installing
+======================================================================
+
+INSTALL SUMMARY
+
+  Program           test recent unsigned a
+  Application      requests
+  PATH             Not changed
+  Uninstaller:
+    /home/x/.local/share/ti/uninstall.sh
+
+  Installer signature
+  UNSIGNED
+  SIGNED BY TIDDLYINSTALL
+  NO SIGNATURE, AND NOTHING WOULD CHECK ONE
+  Signed on: 2026-09-22
+  Key: abc123
+
+  Runtime install script
+  Carried inside this file, signed by the TiddlyInstall key abc123. That
+  signature is checked by this file, against a key inside this file, which
+  is not a second opinion: use the SHA-256 above for that, or the Verify
+  page, which is a different program (it was not built by whoever built
+  this out)
+    sha256 4f2a9b0c
+    from https://example.invalid/rt.tar.gz
+    or the Verify page
+
+!! This installer asks for administrator rights.
+!  The runtime being installed is not this machine's architecture.
+! one space after the bang is not a note on either side
+  ! and an indented finding is body on both
+
+  A twenty one char key: x
+  Ab: y
+  U: one letter is too short for the RTF side to see
+
+Wrapped prose can leave a fragment sitting alone, and a fragment that
+follows a line of prose is not a sub-heading however much it looks like
+  Verify page instead
+
+  out)
+AB
+THIS MACHINE'S ARCHITECTURE
+  ABC
+----------------------------------------------------------------------
+Ready to install "test recent unsigned a".

@@ -48,8 +48,13 @@ python3 "$here/append_meta.py" run "$here/out/ti-base.run" -o "$T/i.run" \
 	--record "$T/a.rec" --plan "$T/a.plan" --pack "$T/pack" > /dev/null
 
 # Answer no: the screen is printed before anything is installed.
-printf 'n\n' | env -u DISPLAY -u WAYLAND_DISPLAY TI_NO_GUI=1 HOME="$T/home" \
+# NO_COLOR: `script` gives the engine a pty, so it would otherwise paint
+# the text, and an escape landing inside a phrase breaks the greps below.
+# It also makes this the painter's input, which is what test_paint.sh
+# wants out of TI_SCREEN_OUT.
+printf 'n\n' | env -u DISPLAY -u WAYLAND_DISPLAY TI_NO_GUI=1 NO_COLOR=1 HOME="$T/home" \
 	script -qec "sh $T/i.run --log=/dev/null" /dev/null 2>&1 | sed 's/\r$//' > "$T/out" || true
+[ -n "${TI_SCREEN_OUT:-}" ] && cp "$T/out" "$TI_SCREEN_OUT"
 
 has() { grep -qF "$1" "$T/out"; }
 hasnt() { ! grep -qF "$1" "$T/out"; }

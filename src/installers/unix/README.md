@@ -17,6 +17,9 @@ version, dialogs, and menu entries.
 | `test_verify.sh` | Plan signature cases (good over plain HTTP, `--plan`, tampered, replayed, unsigned) with openssl shadowed |
 | `test_freshness.sh` | Stale plans (design.md 7.1): the nonce echoed, another nonce refused, none noted; the revocation list by record, source and file, cached and used offline, ignored when signed as the wrong kind; `signed`/`maxage` fresh, past `maxage`, past the hard limit, and **not refused when the clock can't be believed**; and a plan with the new fields on the engine from before them. Runs on Linux and on macOS (18/18 on both, 2026-09-20); on Darwin it builds and runs the `.app`, because a `.run` there has no verifier it can execute and LibreSSL cannot check Ed25519. `TI_OLD_ENGINE_FILE` stands in for the git checkout a Mac hasn't got |
 | `test_prereqs.sh` | Prerequisites and the record icon |
+| `test_screen.sh` | Renders the review screen from a real install and asserts on the text. Every fault it catches is a fault in what the engine *says*, which the suites that check what it *does* pass straight through. `TI_SCREEN_OUT=<file>` keeps the rendered text |
+| `test_paint.sh` | One rule set, two painters: runs the same text through `ti_paint` (awk, here) and the classifiers behind `tisig::richtext` (C, `../windows/plugin-src/linepaint.c`, built with the host `cc`) and compares the shape each gives every line. Needs no mingw and no Windows |
+| `paint-corpus.txt` | Its corpus: every shape the screen uses, and every line either painter has ever got wrong |
 | `append_meta.py` | Test tool: adds a record, plan and pack to a `.run` (appended block) or a base zip (`Contents/Resources/ti/`). The Go server has its own implementation |
 
 Builds go to `out/` (ignored by git).

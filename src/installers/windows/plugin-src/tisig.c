@@ -11,6 +11,7 @@
  */
 #include <windows.h>
 #include "plancheck.h"
+#include "linepaint.h"
 
 typedef struct _stack_t {
   struct _stack_t *next;
@@ -318,94 +319,6 @@ static void brtf(ti_buf *b, WCHAR c)
   }
 }
 
-/* Is the line a heading: capitals, digits and a little punctuation. */
-static int is_heading(const WCHAR *l, int len)
-{
-  int i, letters = 0;
-  if (len < 3 || l[0] < 'A' || l[0] > 'Z') return 0;
-  for (i = 0; i < len; ++i) {
-    WCHAR c = l[i];
-    if (c >= 'A' && c <= 'Z') { letters++; continue; }
-    if (c >= '0' && c <= '9') continue;
-    if (c == ' ' || c == ',' || c == '.' || c == ':' || c == '(' || c == ')' ||
-        c == '/' || c == '+' || c == '-' || c == '\'') continue;
-    return 0;
-  }
-  return letters >= 3;
-}
-
-/* An indented verdict on a line of its own: UNSIGNED, SIGNED BY
- * TIDDLYINSTALL, NO SIGNATURE... Two spaces then capitals to the end of
- * the line. Anchored at both ends on purpose: a summary row such as
- * "  PATH             Not changed" starts with capitals too and must
- * stay a row. */
-static int is_indented_verdict(const WCHAR *l, int len)
-{
-  int i, letters = 0;
-  if (len < 5 || l[0] != ' ' || l[1] != ' ') return 0;
-  if (l[2] < 'A' || l[2] > 'Z') return 0;
-  for (i = 2; i < len; ++i) {
-    WCHAR c = l[i];
-    if (c >= 'A' && c <= 'Z') { letters++; continue; }
-    if (c >= '0' && c <= '9') continue;
-    if (c == ' ' || c == ',' || c == '.' || c == '(' || c == ')' ||
-        c == '/' || c == '+' || c == '-') continue;
-    return 0;
-  }
-  return letters >= 4;
-}
-
-/* A sub-heading inside a section: two spaces, a few words, no colon and
- * no column gap. The gap is what separates a heading from a row:
- * "Installer signature" is a heading, "Application      requests" is
- * not, and the run of spaces is the only thing that tells them apart. */
-static int is_subheading(const WCHAR *l, int len, int prev_blank)
-{
-  int i;
-  /* After a blank line, and starting with a capital. Both are there to
-   * keep wrapped prose out: a sentence broken across lines can leave a
-   * fragment like "out)" sitting alone, which is short, has no colon
-   * and no column gap, and is not a heading. */
-  if (!prev_blank) return 0;
-  if (len < 5 || len > 42 || l[0] != ' ' || l[1] != ' ') return 0;
-  if (!(l[2] >= 'A' && l[2] <= 'Z')) return 0;
-  for (i = 2; i < len; ++i) {
-    WCHAR c = l[i];
-    if (c == ' ' && i + 1 < len && l[i + 1] == ' ') return 0;   /* a column gap */
-    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')) continue;
-    if (c == ' ' || c == '(' || c == ')' || c == '-') continue;
-    return 0;
-  }
-  return l[len - 1] != ' ';
-}
-
-/* A rule: nothing but = or -. */
-static int is_rule(const WCHAR *l, int len)
-{
-  int i;
-  if (len < 4) return 0;
-  for (i = 0; i < len; ++i)
-    if (l[i] != '=' && l[i] != '-') return 0;
-  return 1;
-}
-
-/* `  Key: ` -> the length up to and including the colon, else 0. */
-static int key_len(const WCHAR *l, int len)
-{
-  int i = 2;
-  if (len < 5 || l[0] != ' ' || l[1] != ' ') return 0;
-  /* A capital, not any letter: wrapped prose can start a line with a
-   * lowercase word and a colon -- "opinion: use the SHA-256 above for
-   * that" -- which is a sentence, not a label. */
-  if (!(l[2] >= 'A' && l[2] <= 'Z')) return 0;
-  while (i < len && l[i] != ':') {
-    WCHAR c = l[i];
-    if (!((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == ' ')) return 0;
-    if (++i > 20) return 0;
-  }
-  return (i < len && l[i] == ':') ? i + 1 : 0;
-}
-
 static int indent_of(const WCHAR *l, int len)
 {
   int i = 0;
@@ -515,13 +428,13 @@ void __declspec(dllexport) __cdecl richtext(HWND parent, int size, WCHAR *vars, 
     was_blank = prev_blank;
     prev_blank = (len == 0);
 
-    if (is_indented_verdict(l, len) || is_subheading(l, len, was_blank)) {
+    if (ti_is_indented_verdict(l, len) || ti_is_subheading(l, len, was_blank)) {
       bstr(&b, "\\pard\\sb100\\sa20\\b ");
       for (j = 0; j < len; ++j) brtf(&b, l[j]);
       bstr(&b, "\\b0\\par\n");
       continue;
     }
-    if (is_heading(l, len)) {
+    if (ti_is_heading(l, len)) {
       mono_section = 0;
       short_section = (len == 8 && l[0] == 'I' && l[1] == 'N' && l[2] == ' ' && l[3] == 'S');
       for (j = 0; j + 4 <= len; ++j) {
@@ -533,7 +446,7 @@ void __declspec(dllexport) __cdecl richtext(HWND parent, int size, WCHAR *vars, 
       bstr(&b, "\\b0\\fs17\\par\n");
       continue;
     }
-    if (is_rule(l, len)) {
+    if (ti_is_rule(l, len)) {
       bstr(&b, "\\pard\\cf4 ");
       for (j = 0; j < len; ++j) brtf(&b, l[j]);
       bstr(&b, "\\cf1\\par\n");
@@ -545,7 +458,7 @@ void __declspec(dllexport) __cdecl richtext(HWND parent, int size, WCHAR *vars, 
       bstr(&b, "\\b0\\cf1\\par\n");
       continue;
     }
-    if (len >= 3 && l[0] == '!' && l[1] == ' ') {
+    if (len >= 3 && l[0] == '!' && l[1] == ' ' && l[2] == ' ') {
       bstr(&b, "\\pard\\cf3 ");
       for (j = 0; j < len; ++j) brtf(&b, l[j]);
       bstr(&b, "\\cf1\\par\n");
@@ -566,7 +479,7 @@ void __declspec(dllexport) __cdecl richtext(HWND parent, int size, WCHAR *vars, 
       bstr(&b, "\\cf1\\f0\\fs17\\par\n");
       continue;
     }
-    kl = key_len(l, len);
+    kl = ti_key_len(l, len);
     if (kl) {
       /* A proportional font cannot be lined up with spaces, so the run
        * of padding after the colon becomes a tab to a fixed stop. */

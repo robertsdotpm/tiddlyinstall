@@ -15,7 +15,7 @@ cc_win=$LLVM_MINGW/bin/i686-w64-mingw32-clang
 [ -x "$cc_win" ] || { echo "i686-w64-mingw32-clang not found; set LLVM_MINGW" >&2; exit 1; }
 
 t=$(mktemp)
-${CC:-cc} -O2 -Wall -Wno-sign-compare -o "$t" test_host.c plancheck.c ed25519_verify.c
+${CC:-cc} -O2 -Wall -Wno-sign-compare -o "$t" test_host.c plancheck.c ed25519_verify.c linepaint.c
 "$t" rfc8032
 rm -f "$t"
 
@@ -24,7 +24,7 @@ rm -f "$t"
 "$cc_win" -O2 -Wall -Wno-sign-compare -march=pentium-mmx -ffreestanding -fno-builtin \
 	-fno-stack-protector -fno-asynchronous-unwind-tables \
 	-shared -nostdlib -o ../plugins/x86-unicode/tisig.dll \
-	tisig.c plancheck.c ed25519_verify.c \
+	tisig.c plancheck.c ed25519_verify.c linepaint.c \
 	-Wl,--entry,_DllMain@12 -Wl,--major-subsystem-version,5 -Wl,--minor-subsystem-version,1 \
 	-Wl,--major-os-version,5 -Wl,--minor-os-version,1 -Wl,--no-insert-timestamp -Wl,-s \
 	-lkernel32 -luser32 "$($cc_win -print-libgcc-file-name)"
