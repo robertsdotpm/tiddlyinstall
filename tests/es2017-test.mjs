@@ -15,9 +15,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as acorn from 'acorn';
+import { assertFresh } from './fresh.mjs';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const file = process.argv[2] || path.join(REPO, 'out/index.html');
+assertFresh(file, REPO);
 const html = fs.readFileSync(file, 'utf8');
 
 let passed = 0, failed = 0;

@@ -33,14 +33,14 @@
           No freezing and no bundlers that break. We install your project's real
           runtime and dependencies into a folder of its own, clone your project,
           and install it against them. The result is an ordinary installer built
-          with NSIS on Windows and the Qt Installer Framework on Linux and macOS.
+          with NSIS on Windows and the Qt Installer Framework on Linux and&nbsp;macOS.
         </p>
         <div class="actions" style="margin-top:22px">
           <a class="button big" href="new.html">Make an installer</a>
           <a class="button secondary big" href="new.html#write">Write an app</a>
         </div>
         <dl class="spec-list">
-          <dt>Output</dt><dd><code>.exe</code> &middot; <code>.run</code> &middot; <code>.dmg</code></dd>
+          <dt>Output</dt><dd><code>.exe</code> &middot; <code>.run</code> &middot; <code>.zip</code></dd>
           <dt>Languages</dt><dd>13, plus your own runtime</dd>
           <dt>Oldest target</dt><dd>Windows XP &middot; glibc 2.17 Linux &middot; macOS 12</dd>
           <dt>This page</dt><dd>One HTML file, no server, no network</dd>
@@ -59,7 +59,7 @@
         </div>
         <div class="manifest-body">
           <dl>
-            <dt>Installs</dt><dd>requests 2.32.3 - from <code>github.com/psf/requests</code>, tag <code>v2.32.3</code></dd>
+            <dt>Installs</dt><dd>requests 2.32.3, from <code>github.com/psf/requests</code>&nbsp;<code>v2.32.3</code></dd>
             <dt>Runtime</dt><dd>Python 3.14.7 - newest that runs on this computer</dd>
             <dt>Into</dt><dd><code>C:\ti\k3m9q2x7v4p8\</code></dd>
             <dt>Signed by</dt><dd><span class="verified">Matthew Roberts</span> &middot; certificate valid.
@@ -70,7 +70,7 @@
           <div class="manifest-line"><span>python-3.14.7-amd64.exe <code>python.org</code></span><span class="m-size">28.1 MB</span></div>
           <div class="manifest-line"><span>requests + 4 dependencies <code>pypi.org</code></span><span class="m-size">1.4 MB</span></div>
           <div class="manifest-line"><span>Source archive <code>github.com</code></span><span class="m-size">0.2 MB</span></div>
-          <p class="manifest-note">Every file is checked against a checksum in the installer, and refused if it differs.</p>
+          <p class="manifest-note">Every file is checked against a checksum in the installer, and refused if it&nbsp;differs.</p>
         </div>
         <div class="manifest-foot">Shortcuts, uninstaller and PATH changes are listed the same way</div>
       </aside>
@@ -85,7 +85,7 @@
       working with no server: it builds installers for code you write here or for packages, edits
       any installer nobody has signed, and signs with your own key. When a build server is there,
       it uses it for the rest: installers we sign, GitHub repos, and installers with their runtimes
-      packed inside.</p>
+      packed&nbsp;inside.</p>
     </section>
 
     <section class="section">
@@ -95,19 +95,19 @@
         <section class="panel">
           <span class="eyebrow">Step one</span>
           <h3>Point at a repo</h3>
-          <p>Give us a GitHub repository and a branch, tag or commit. We clone the actual source code.</p>
+          <p>Give us a GitHub repository and a branch, tag or commit. We clone the actual source&nbsp;code.</p>
         </section>
         <section class="panel">
           <span class="eyebrow">Step two</span>
           <h3>Dependencies are handled&nbsp;for&nbsp;you</h3>
-          <p>At install time, the installer picks the newest runtime that matches your version range
-          and runs on the computer, and installs it in the app's own folder.</p>
+          <p>At install time it picks the newest runtime that matches your version range and runs
+          on that computer, then installs it into the app's own&nbsp;folder.</p>
         </section>
         <section class="panel">
           <span class="eyebrow">Step three</span>
           <h3>Build for every platform</h3>
-          <p>We package the result as a Windows <code>.exe</code> (NSIS) and a Linux <code>.run</code>
-          and macOS <code>.dmg</code> (Qt Installer Framework).</p>
+          <p>An ordinary <code>.exe</code> for Windows, built with NSIS, plus a <code>.run</code>
+          for Linux and a <code>.zip</code> for macOS - three real&nbsp;installers.</p>
         </section>
       </div>
     </section>
@@ -115,9 +115,9 @@
     <section class="section">
       <span class="eyebrow"><span class="num">04</span> &nbsp;Isolation</span>
       <h2>Every app gets its own folder</h2>
-      <p class="measure">Each app is installed with its own copy of every dependency, in folders with
-      short hashed names. Nothing is shared, so one app can never break another, and uninstalling
-      just deletes the app's folders. Disk space is cheap; broken installs aren't.</p>
+      <p class="measure">Each app gets its own copy of every dependency, in folders with short hashed
+      names. Nothing is shared, so one app can never break another, and uninstalling just deletes the
+      app's folders. Disk space is cheap; broken installs are&nbsp;not.</p>
 <pre>
 Windows   C:\ti\k3m9q2x7v4p8\     the app
           C:\ti\tjfq5rqwnnrx\     its Python 3.12.4
@@ -130,9 +130,9 @@ macOS     /Library/Application Support/ti/tjfq5rqwnnrx/
     <section class="section">
       <span class="eyebrow"><span class="num">05</span> &nbsp;No repo yet</span>
       <h2>Write the app here</h2>
-      <p class="measure">Pick Python, JavaScript (Node.js) or Ruby and a template (a script, a window
-      app, a web page in a window or a tray app), write your code in the browser, run it, and make an
-      installer from it with the same pipeline. It's one of the choices on the New installer page.</p>
+      <p class="measure">Pick Python, JavaScript (Node.js) or Ruby and a template - a script, a window
+      app, a web page in a window or a tray app - then write your code in the browser, run it, and make
+      an installer from it with the same pipeline. It is one of the choices on the New installer&nbsp;page.</p>
       <p><a class="button secondary" href="new.html#write">Write an app</a></p>
     </section>
 
@@ -143,7 +143,7 @@ macOS     /Library/Application Support/ti/tjfq5rqwnnrx/
       every installer built here is that same program plus your settings. For example,
       <code>install_python_x.exe</code> is that program, with settings that say "install the Python
       package <code>x</code>". The code is identical in every copy; only the settings change. That is
-      why it only has to be tested, hardened and signed once.</p>
+      why it only has to be tested, hardened and signed&nbsp;once.</p>
 <pre>
 install_python_requests.exe   -&gt; installs the "requests" package
 install_python_black.exe      -&gt; installs the "black" package
@@ -159,26 +159,25 @@ install_node_prettier.exe     -&gt; installs the "prettier" package
       the signature on a web browser: it says who wrote the browser and that this copy is
       unmodified, and nothing whatever about the sites you visit. What it does say is worth having.
       The program that asks for your trust at install time is ours and unaltered, so the screen it
-      shows you can be believed.</p>
+      shows you can be&nbsp;believed.</p>
       <div class="grid">
         <section class="panel">
           <span class="eyebrow">Mode A</span>
           <h3>We sign the installer</h3>
           <p>The fewest security warnings. Settings live in the file name, so renaming the file
           points it at a different package - and the signature stays valid, because it was
-          never a claim about what gets installed.</p>
+          never a claim about what gets&nbsp;installed.</p>
         </section>
         <section class="panel">
           <span class="eyebrow">Mode B</span>
           <h3>You sign the installer</h3>
-          <p>Your name and icon on the installer itself, with your own certificate and your own
-          reputation.</p>
+          <p>Your name and icon on the installer itself, with your own certificate and your own&nbsp;reputation.</p>
         </section>
         <section class="panel">
           <span class="eyebrow">Mode C</span>
           <h3>Nobody signs it</h3>
           <p>Fully editable. Change what it installs, its name and its icon in your browser, without
-          uploading the file.</p>
+          uploading the&nbsp;file.</p>
         </section>
       </div>
     </section>
@@ -190,7 +189,7 @@ install_node_prettier.exe     -&gt; installs the "prettier" package
       comes from, what it downloads, where files go and who signed the installer file, before it
       changes anything.
       That screen - the one at the top of this page - is not a summary we write afterwards.
-      It is read from the installer's own settings block, so it cannot disagree with what happens next.</p>
+      It is read from the installer's own settings block, so it cannot disagree with what happens&nbsp;next.</p>
     </section>
   </main>
 

@@ -29,12 +29,12 @@
       <span class="eyebrow"><span class="num">New</span> &nbsp;Installer</span>
       <h1>What should this installer install?</h1>
       <p class="lede">Five answers are enough. Everything under <strong>Customise</strong>
-      already has a sensible default, and states it without being opened.</p>
+      already has a sensible default, and states it without being&nbsp;opened.</p>
     </div>
 
     <noscript><p class="prototype-note">
       Without JavaScript this form is sent to the build server as it is, and the server builds the installers
-      (a page served by one). Editing, signing and files from your computer need JavaScript.
+      (a page served by one). Editing, signing and files from your computer need&nbsp;JavaScript.
     </p></noscript>
 
     <!-- With JavaScript, src/web_client/new.js sends this as JSON (POST /api/jobs) and never
@@ -49,7 +49,7 @@
         <span class="eyebrow"><span class="num">01</span> &nbsp;Essentials</span>
         <h2 class="section-title">The things only you know</h2>
         <p class="small muted section-intro">Used for the installer and for the installed app's launcher.
-          Leave the name blank to use the project's name. Pick an icon under Customise.</p>
+          Leave the name blank to use the project's name. Pick an icon under&nbsp;Customise.</p>
 
         <div class="field">
           <label for="app-name">Name</label>
@@ -112,7 +112,7 @@
           <span class="eyebrow">Required for this language</span>
           <h3 class="section-title">Your runtime download</h3>
           <p class="small muted" style="margin-top:0">There's no built-in runtime for this language, so tell the installer where to get one.
-            Fill in each platform you're building for.</p>
+            Fill in each platform you're building&nbsp;for.</p>
 
           <div class="tabs" role="tablist">
             <label class="tab crt-tab-win"><input type="radio" name="custom_rt_tab" id="crt-tab-win" checked> Windows</label>
@@ -234,14 +234,14 @@
             </div>
           </div>
 
-          <p class="small muted" style="margin-bottom:0">People see these URLs on the installer's &ldquo;what this will do&rdquo; screen before anything is downloaded.</p>
+          <p class="small muted" style="margin-bottom:0">People see these URLs on the installer's &ldquo;what this will do&rdquo; screen before anything is&nbsp;downloaded.</p>
         </div>
 
         <!-- ---- Language: C / C++ ---- -->
         <div class="custom-runtime lang-cc-only">
           <span class="eyebrow">Built on the user's computer</span>
           <h3 class="section-title">Build tools</h3>
-          <p class="small muted" style="margin-top:0">The installer installs a compiler into the app's own folder and builds your project on the user's computer.</p>
+          <p class="small muted" style="margin-top:0">The installer installs a compiler into the app's own folder and builds your project on the user's&nbsp;computer.</p>
 
           <div class="win-settings">
             <span class="label">Windows</span>
@@ -277,7 +277,7 @@
             <span class="hint">Runs in the project's folder with the compiler set up. The built program is what the app launches.</span>
           </div>
           <p class="small muted" style="margin-bottom:0"><span class="linux-settings">Linux: GCC or Clang from the catalogue. </span><span class="mac-settings">macOS: Clang from the catalogue, plus Apple's Xcode Command Line Tools. </span>
-            People see the compiler, and that the project's build scripts will run, before anything is installed.</p>
+            People see the compiler, and that the project's build scripts will run, before anything is&nbsp;installed.</p>
         </div>
 
         <!-- ---- Languages built on the user's computer ---- -->
@@ -295,13 +295,13 @@
             <input type="text" class="entry entry-nim" name="build_nim" value="nimble -y build" aria-label="Build command" spellcheck="false">
             <span class="hint">Runs in the project's folder with the compiler set up. Downloaded dependencies stay in the app's folder too.</span>
           </div>
-          <p class="small muted" style="margin-bottom:0">People see the compiler, and that the project's build scripts will run, before anything is installed.</p>
+          <p class="small muted" style="margin-bottom:0">People see the compiler, and that the project's build scripts will run, before anything is&nbsp;installed.</p>
         </div>
 
         <!-- ---- Code written on the site ---- -->
         <div class="write-block src-write-only">
-          <p class="unavailable write-needs-js">Writing code here needs JavaScript, which is off or missing in this browser. A GitHub repo or a package works without it.</p>
-          <p class="unavailable write-needs-lang" hidden>Writing code here needs a language. Pick one above (Other has no templates).</p>
+          <p class="unavailable write-needs-js">Writing code here needs JavaScript, which is off or missing in this browser. A GitHub repo or a package works without&nbsp;it.</p>
+          <p class="unavailable write-needs-lang" hidden>Writing code here needs a language. Pick one above (Other has no&nbsp;templates).</p>
 
           <!-- Rendered by src/web_client/write-editor.js from src/shared/templates.js: a card per
                kind of template the language has, and its files' editors. -->
@@ -311,21 +311,24 @@
 
             <div class="editor-toolbar" id="write-code" style="margin-top:20px">
               <span class="label" style="margin:0">Your code</span>
-              <a class="button secondary run-link" href="#run-output">&#9654; Run</a>
+              <button type="button" class="button secondary run-link" id="run-open">&#9654; Run</button>
             </div>
 
             <div class="template-editor"></div>
-            <p class="unavailable combo-unavailable" hidden>This template isn't available for this language yet. Pick another template.</p>
+            <p class="unavailable combo-unavailable" hidden>This template isn't available for this language yet. Pick another&nbsp;template.</p>
             <p class="small muted template-note" hidden></p>
 
             <p class="small muted editor-files">
               <button type="button" class="link-button">+ Add file</button>
             </p>
 
-            <!-- Run output: an overlay opened by the Run link (no JS, :target) -->
-            <div class="run-overlay" id="run-output" role="dialog" aria-label="Run output">
+            <!-- Run output. Opened by dialog.js, not by :target: the hash
+                 router sends an unknown hash to the home page, which hid this
+                 overlay's own ancestor (see src/web_client/dialog.js). -->
+            <div class="run-overlay" id="run-output" aria-label="Run output">
               <div class="run-dialog">
-                <div class="run-head"><strong>Output</strong><a href="#write-code" aria-label="Close">&#10005;</a></div>
+                <div class="dialog-head"><strong>Output</strong>
+                  <button type="button" class="dialog-close" id="run-close" aria-label="Close">&#10005;</button></div>
                 <div class="tpl tpl-script-only">
 <pre class="output-log">What's your name? Sam
 Hello, Sam!
@@ -334,7 +337,7 @@ Press Enter to close</pre>
                 </div>
                 <div class="tpl tpl-gui-only">
                   <p class="small" style="margin:0">App windows and tray icons can't be previewed in the browser.
-                    Download a test build to try it on your computer.</p>
+                    Download a test build to try it on your&nbsp;computer.</p>
                   <div class="actions" style="margin-top:10px">
                     <button type="button" class="secondary">Download test build</button>
                   </div>
@@ -360,11 +363,11 @@ Press Enter to close</pre>
           <p class="small launch-why src-repo-only" id="launch-why-repo">We can work out how to <em>install</em> your project by reading its files: a
             <code>requirements.txt</code> means pip, a <code>package.json</code> means npm. <strong>Nothing in a repo says how to run it.</strong>
             A <code>main.py</code> might be a library, a command, or something you start with <code>-m</code>. Getting this wrong gives an
-            installer that installs perfectly and then starts nothing.</p>
+            installer that installs perfectly and then starts&nbsp;nothing.</p>
           <p class="small launch-why src-local-only">Nothing in a folder of files says which one starts the app, so this is the one thing only you
-            can tell us. Change it to match however you run the project today.</p>
+            can tell us. Change it to match however you run the project&nbsp;today.</p>
           <p class="small launch-why muted src-write-only" id="launch-why-write">Set from the template you picked, which we wrote, so we know the file
-            it starts. Change it if you rename that file or start it another way.</p>
+            it starts. Change it if you rename that file or start it another&nbsp;way.</p>
 
           <input type="text" class="entry entry-python" id="entry-python" name="entry_python" value="{runtime} -m {project}" spellcheck="false">
           <input type="text" class="entry entry-node" id="entry-node" name="entry_node" value="{runtime} {app_dir}" aria-label="Launch command" spellcheck="false">
@@ -380,11 +383,37 @@ Press Enter to close</pre>
           <input type="text" class="entry entry-nim" name="entry_nim" value="{app_dir}/{project}" aria-label="Launch command" spellcheck="false">
           <input type="text" class="entry entry-none" id="entry-none" name="entry_none" value="{app_dir}/{project}" aria-label="Launch command" spellcheck="false">
 
+          <div class="launch-help">
+            <div>
+              <span class="label">What you can write</span>
+              <dl class="launch-tokens">
+                <dt>{runtime}</dt><dd>the runtime this installer sets up</dd>
+                <dt>{app_dir}</dt><dd>the folder your own code is installed into</dd>
+                <dt>{project}</dt><dd>your package name</dd>
+                <dt>{bin}</dt><dd>the runtime's scripts folder</dd>
+              </dl>
+            </div>
+            <div>
+              <span class="label">The four shapes</span>
+              <dl class="launch-tokens launch-egs">
+                <dt>{runtime} -m {project}</dt><dd>run the package as a module</dd>
+                <dt>{runtime} {app_dir}/main.py</dt><dd>run one file of your own code</dd>
+                <dt>{bin}/{project}</dt><dd>run a command the install made</dd>
+                <dt>{app_dir}/{project}</dt><dd>run a compiled program directly</dd>
+              </dl>
+            </div>
+          </div>
         </div>
 
         <hr>
 
-        <span class="label">Build for</span>
+        <div class="field-head">
+          <span class="label">Build for</span>
+          <!-- Unhidden by dialog.js, which also folds the panel below into
+               the dialog this opens. Hidden here so that a page whose script
+               never arrives shows the panel inline rather than losing it. -->
+          <button type="button" class="link-button arch-open" id="arch-open" hidden>What architecture is&nbsp;supported?</button>
+        </div>
         <div class="inline-choices">
           <label class="choice"><input type="checkbox" name="target_windows" checked> Windows</label>
           <label class="choice"><input type="checkbox" name="target_linux" checked> Linux</label>
@@ -395,6 +424,12 @@ Press Enter to close</pre>
              fact. One installer carries a plan block per architecture and picks
              on the machine it runs on (docs/format.md section 3). Each line is
              rewritten from the catalogue by src/web_client/new.js; this is the fallback. -->
+        <div class="arch-panel" id="arch-panel" aria-label="Architecture support">
+          <div class="arch-dialog">
+            <div class="dialog-head">
+              <strong>What architecture is supported?</strong>
+              <button type="button" class="dialog-close" id="arch-close" aria-label="Close">&#10005;</button>
+            </div>
         <ul class="arch-cover small" id="arch-cover">
           <li class="win-settings" data-family="windows"><strong>Windows</strong>
             <ul class="arch-cover-arches"><li>64-bit (x64) and 32-bit (x86)</li></ul></li>
@@ -404,7 +439,9 @@ Press Enter to close</pre>
             <ul class="arch-cover-arches"><li>64-bit Intel and Apple Silicon</li></ul></li>
         </ul>
         <p class="small muted arch-cover-note" id="arch-cover-note">One installer covers all of these: it carries a plan for each
-          and picks the right one on the computer it runs on, so there is nothing to choose here.</p>
+          and picks the right one on the computer it runs on, so there is nothing to choose&nbsp;here.</p>
+          </div>
+        </div>
 
         <!-- Offered with or without a build server: packing in the browser
              was measured on every machine we have (docs/browser-packing.md),
@@ -414,7 +451,7 @@ Press Enter to close</pre>
         <label class="choice not-ours" style="margin-top:12px"><input type="checkbox" id="offline-on" name="offline">
           <span>Also make offline installers <span class="small muted">for computers without internet. Bigger files, packed in your browser.</span></span></label>
         <p class="small offline-only" id="offline-where" style="margin:8px 0 0"></p>
-        <p class="small muted ours-only" style="margin:10px 0 0">Offline installers need the installer signed by you or left unsigned (Customise &rarr; Signing).</p>
+        <p class="small muted ours-only" style="margin:10px 0 0">Offline installers need the installer signed by you or left unsigned (Customise &rarr;&nbsp;Signing).</p>
 
         <!-- The essentials end with their own button. Nothing here
              follows the viewport (css/style.css, .build-bar), so the only
@@ -422,7 +459,7 @@ Press Enter to close</pre>
              Customise; someone who is happy with the defaults should not
              have to scroll through them to send the form. -->
         <div class="build-early">
-          <p class="build-where new-where small">Built by the build server.</p>
+          <p class="build-where new-where small">Built by the build&nbsp;server.</p>
           <div class="actions"><button type="submit">Build installers</button></div>
         </div>
       </section>
@@ -431,12 +468,10 @@ Press Enter to close</pre>
       <div class="else-head">
         <span class="eyebrow"><span class="num">02</span> &nbsp;Customise</span>
         <h2 class="section-title">Already decided, unless you say&nbsp;otherwise</h2>
-        <p class="small muted section-intro">Three groups. Each row states what it will do if you never open it.</p>
       </div>
 
       <div class="customise">
         <h3 class="customise-group">What gets installed</h3>
-        <p class="customise-group-hint small muted">Where the code comes from, the runtime it runs on, and what goes on&nbsp;each&nbsp;computer.</p>
 
         <details class="src-repo-only">
           <summary><span>Source version</span><span class="default">Latest release</span></summary>
@@ -459,13 +494,13 @@ Press Enter to close</pre>
           </div>
           <p class="small muted" style="margin-bottom:0"><strong>Public repositories only.</strong> An installer downloads the
             repository itself, on the computer it runs on, and there is nowhere in it to keep a credential that would be safe to
-            hand out. A private repository would build here and then fail for everyone who ran it, so it is refused instead.</p>
+            hand out. A private repository would build here and then fail for everyone who ran it, so it is refused&nbsp;instead.</p>
         </details>
 
         <details>
           <summary><span>Runtime and dependencies</span><span class="default">Newest that runs on the&nbsp;user's&nbsp;system</span></summary>
           <span class="label">Which version</span>
-          <p class="small muted" style="margin-top:0">Chosen by the installer on each user's computer, from the catalogue's record of which versions run on which systems.</p>
+          <p class="small muted" style="margin-top:0">Chosen by the installer on each user's computer, from the catalogue's record of which versions run on which&nbsp;systems.</p>
 
           <label class="choice"><input type="radio" name="rv_mode" value="newest" id="rv-newest" checked>
             <span><strong>Newest that runs on the user's system</strong> <span class="badge">default</span><br>
@@ -567,7 +602,7 @@ Press Enter to close</pre>
           </div>
           <details>
             <summary>Install locations</summary>
-            <p class="small">Every app gets its own copy of every dependency. Nothing is shared between apps, so one app can't break another, and uninstalling deletes the app's folders.</p>
+            <p class="small">Every app gets its own copy of every dependency. Nothing is shared between apps, so one app can't break another, and uninstalling deletes the app's&nbsp;folders.</p>
 <pre class="small">
 Windows  C:\ti\k3m9q2x7v4p8\     app
          C:\ti\tjfq5rqwnnrx\     its Python
@@ -620,18 +655,18 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
             </div>
           </div>
 
-          <p class="small muted platforms-none">Tick at least one platform above.</p>
+          <p class="small muted platforms-none">Tick at least one platform&nbsp;above.</p>
         </details>
 
         <details>
           <summary><span>Files in the installer</span><span class="default"><span class="ours-only-inline">Not with our signature</span><span class="not-ours-inline"><span class="offline-off-inline">2 of your files</span><span class="offline-inline">2 of your files, plus offline copies</span></span></span></summary>
 
           <p class="small ours-only" style="margin:0">An installer we sign can't carry packed files or offline copies. Our signature covers every byte of the installer file, and we won't put it over files we've never seen.
-            To add files, choose <strong>Signed by you</strong> or <strong>Unsigned</strong> under Signing.</p>
+            To add files, choose <strong>Signed by you</strong> or <strong>Unsigned</strong> under&nbsp;Signing.</p>
           <div class="not-ours">
 
             <p class="small" style="margin-top:0">Add files for the installer to put in your app's folder, or to run while installing:
-              data, a model, a manual, a driver. Packed files go into the installer in your browser. They're never uploaded to us, only their checksums.</p>
+              data, a model, a manual, a driver. Packed files go into the installer in your browser. They're never uploaded to us, only their&nbsp;checksums.</p>
 
             <h3 class="section-title">Your files</h3>
             <div class="table-wrap">
@@ -707,20 +742,20 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
               </div>
               <p class="small muted" style="margin:10px 0 0">Files given by <strong>URL</strong> are recorded with the build (only their checksum, fetched once).
                 A file you <strong>upload</strong> from this computer isn't sent to us: after the build you download the installer and add your file to it
-                in the browser on the <a href="edit.html">Edit installer</a> page, so a private file never leaves your machine.</p>
+                in the browser on the <a href="edit.html">Edit installer</a> page, so a private file never leaves your&nbsp;machine.</p>
             </details>
 
             <hr>
 
             <h3 class="section-title">Offline copies</h3>
-            <p class="small muted offline-off-only" style="margin:0">Packs everything the installer would download, for computers without internet. Tick <strong>Also make offline installers</strong> above to set this up.</p>
+            <p class="small muted offline-off-only" style="margin:0">Packs everything the installer would download, for computers without internet. Tick <strong>Also make offline installers</strong> above to set this&nbsp;up.</p>
 
             <div class="offline-only">
               <!-- Says "this form has the packed-target picker" in a plain post,
                    where unticked boxes are simply not sent (src/shared/form-job.js). -->
               <input type="hidden" name="offline_targets_form" value="1">
               <p class="small" style="margin-top:0">Offline copies also carry everything the normal installers would download:
-                the runtime, packages and source, and any of your files set to download when installing. The normal installers are still made too.</p>
+                the runtime, packages and source, and any of your files set to download when installing. The normal installers are still made&nbsp;too.</p>
 
               <span class="label">Include</span>
               <div class="choice-stack">
@@ -733,7 +768,7 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
               <span class="label">Must work offline on</span>
               <p class="small muted" style="margin-top:0">Online installers choose the right version <em>and the right architecture</em> on the user's computer.
                 Offline ones choose now, so every system <em>and architecture</em> ticked here adds its own runtime and packages to the file.
-                This is the one place architecture is a real choice, because each one is a whole extra runtime's worth of bytes.</p>
+                This is the one place architecture is a real choice, because each one is a whole extra runtime's worth of&nbsp;bytes.</p>
 
               <div class="table-wrap">
                 <table class="small offline-targets" id="offline-targets">
@@ -763,7 +798,7 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
                   </tbody>
                 </table>
               </div>
-              <p class="small offline-size" id="offline-size" role="status">About 155 MB of packed files, on top of the installer itself.</p>
+              <p class="small offline-size" id="offline-size" role="status">About 155 MB of packed files, on top of the installer&nbsp;itself.</p>
               <p class="warn-box small" id="offline-warn" hidden></p>
               <span class="hint">Sizes are estimates, one runtime per architecture. An architecture with no build in the catalogue for this
                 language is shown greyed out with the reason, rather than left out. With <strong>Newest tested with asyncio</strong>,
@@ -793,7 +828,7 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
 
               <p class="small muted">Every included file is checked against a checksum in the installer's settings, so a changed file is refused.
                 Files from download sites that don't let browsers fetch from them come through our download relay instead.
-                Only your own runtime downloads (Language: Other) may need you to download them yourself and drop them in.</p>
+                Only your own runtime downloads (Language: Other) may need you to download them yourself and drop them&nbsp;in.</p>
               <p class="small muted" style="margin-bottom:0">IT departments can also make an offline copy of any online installer, on a computer with internet:
                 <code>install_…exe --make-pack --targets win10-x64</code></p>
             </div>
@@ -801,11 +836,10 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
         </details>
 
         <h3 class="customise-group">How it looks and behaves</h3>
-        <p class="customise-group-hint small muted">What people see, and what happens when they install and remove it.</p>
 
         <details>
           <summary><span>Icon</span><span class="default">Default app icon</span></summary>
-          <p class="small muted" style="margin-top:0">Used for the installed app's shortcuts and launcher. Pick one, or upload your own.</p>
+          <p class="small muted" style="margin-top:0">Used for the installed app's shortcuts and launcher. Pick one, or upload your&nbsp;own.</p>
           <div class="icon-grid" role="radiogroup" aria-label="Icon">
             <label class="icon-tile">
               <input type="radio" name="icon_choice" value="default" checked>
@@ -904,7 +938,7 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
           <details>
             <summary>Install scripts</summary>
             <p class="small muted" style="margin-top:0">Optional. Scripts run after the user has seen what the installer will do and clicked Install.
-              People can view them on that screen. If a script exits with an error, the install stops and shows its output.</p>
+              People can view them on that screen. If a script exits with an error, the install stops and shows its&nbsp;output.</p>
 
             <div class="tabs" role="tablist">
               <label class="tab"><input type="radio" name="script_tab" id="script-tab-win" checked> Windows <span class="muted">(batch)</span></label>
@@ -944,7 +978,7 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
             <span>Register an uninstaller <span class="small muted">(Programs and Features on Windows, a menu entry and <code>--uninstall</code> elsewhere)</span></span></label>
 
           <span class="label" style="margin-top:12px">The app's data</span>
-          <p class="small muted" style="margin-top:0">Files the app saved in its data folder while it was used.</p>
+          <p class="small muted" style="margin-top:0">Files the app saved in its data folder while it was&nbsp;used.</p>
           <div class="choice-stack">
             <label class="choice"><input type="radio" name="uninstall_data" value="ask" checked>
               <span><strong>Ask</strong> <span class="badge">default</span> <span class="small muted">(a &ldquo;Also delete my data&rdquo; box, not ticked)</span></span></label>
@@ -957,7 +991,7 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
           <details>
             <summary>Before-removal script</summary>
             <p class="small muted" style="margin-top:0">Runs before anything is removed, e.g. to stop a background service. People can view it before uninstalling.
-              If it fails, its output is shown and the removal carries on.</p>
+              If it fails, its output is shown and the removal carries&nbsp;on.</p>
             <div class="tabs" role="tablist">
               <label class="tab"><input type="radio" name="unscript_tab" id="unscript-tab-win" checked> Windows <span class="muted">(batch)</span></label>
               <label class="tab"><input type="radio" name="unscript_tab" id="unscript-tab-unix"> Linux &amp; macOS <span class="muted">(sh)</span></label>
@@ -970,15 +1004,15 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
             </div>
             <span class="hint">Same variables as install scripts: <code>TI_APP_DIR</code>, <code>TI_RUNTIME_DIR</code>, <code>TI_APP_NAME</code>.</span>
           </details>
-          <p class="small muted" style="margin-bottom:0">Uninstalling deletes the app's own folders. Nothing shared with other apps is touched.</p>
+          <p class="small muted" style="margin-bottom:0">Uninstalling deletes the app's own folders. Nothing shared with other apps is&nbsp;touched.</p>
         </details>
 
         <details>
           <summary><span>Cleanup</span><span class="default">Remove build tools after building</span></summary>
-          <p class="small muted" style="margin-top:0">What the installer removes once the app is installed. Downloads and temporary files are always removed.</p>
+          <p class="small muted" style="margin-top:0">What the installer removes once the app is installed. Downloads and temporary files are always&nbsp;removed.</p>
 
           <span class="label">Build tools</span>
-          <p class="small muted" style="margin-top:0">The compiler and build caches, when the app is built on the user's computer (C/C++, Go, Rust, Zig, Nim). Often several hundred MB.</p>
+          <p class="small muted" style="margin-top:0">The compiler and build caches, when the app is built on the user's computer (C/C++, Go, Rust, Zig, Nim). Often several hundred&nbsp;MB.</p>
           <div class="choice-stack">
             <label class="choice"><input type="radio" name="cleanup_tools" value="remove" checked>
               <span><strong>Remove automatically</strong> <span class="badge">default</span><br>
@@ -1007,18 +1041,17 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
               <span><strong>Ask</strong> <span class="small muted">(offer to keep the files and build log for troubleshooting)</span></span></label>
           </div>
 
-          <p class="small muted" style="margin-bottom:0">The install log is always kept in the app's folder. Nothing outside the app's own folders is ever removed.</p>
+          <p class="small muted" style="margin-bottom:0">The install log is always kept in the app's folder. Nothing outside the app's own folders is ever&nbsp;removed.</p>
         </details>
 
         <h3 class="customise-group">Signing and the installer file</h3>
-        <p class="customise-group-hint small muted">Who signs the installer program, and the file it is built from.</p>
 
         <details>
           <summary><span>Signing</span><span class="default">Unsigned</span></summary>
           <p class="small muted">A signature here goes on <strong>the installer program</strong> - the
             one we wrote, the same in every installer built here - and never on the software it installs. It says the program
             that asks for someone's trust at install time is the one it claims to be, unaltered; it is not a word about your app,
-            which whoever signs cannot have checked.</p>
+            which whoever signs cannot have&nbsp;checked.</p>
           <div class="choice-stack">
             <label class="choice online-only choice-off"><input type="radio" name="mode" value="ours" id="mode-ours" disabled>
               <span><strong>Signed by TiddlyInstall</strong> <span class="badge badge-off">not yet</span><br>
@@ -1035,7 +1068,7 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
           </div>
 
           <div class="mode-yours-only">
-            <p class="small note-box" style="margin-top:0">Signing happens in your browser. Your key is never uploaded to us.</p>
+            <p class="small note-box" style="margin-top:0">Signing happens in your browser. Your key is never uploaded to&nbsp;us.</p>
             <span class="label">Windows</span>
             <div class="choice-stack">
               <label class="choice"><input type="radio" name="win_sign" value="service" checked>
@@ -1077,14 +1110,14 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
             <ul id="open-notice-list"></ul>
           </div>
 
-          <p class="small muted" style="margin-bottom:0">Whichever you pick, the installer shows people what it will install, where it comes from, and who signed the installer file, before it changes anything.</p>
+          <p class="small muted" style="margin-bottom:0">Whichever you pick, the installer shows people what it will install, where it comes from, and who signed the installer file, before it changes&nbsp;anything.</p>
         </details>
 
         <details>
           <summary><span>Base installer and metadata</span><span class="default"><span class="by-lang lang-python">install_python_x</span><span class="by-lang lang-python2">install_python2_x</span><span class="by-lang lang-node">install_node_x</span><span class="by-lang lang-ruby">install_ruby_x</span><span class="by-lang lang-php">install_php_x</span><span class="by-lang lang-java">install_java_x</span><span class="by-lang lang-dotnet">install_dotnet_x</span><span class="by-lang lang-r">install_r_x</span><span class="by-lang lang-cc">install_cpp_x</span><span class="by-lang lang-go">install_go_x</span><span class="by-lang lang-rust">install_rust_x</span><span class="by-lang lang-zig">install_zig_x</span><span class="by-lang lang-nim">install_nim_x</span><span class="by-lang lang-none">install_github_x</span></span></summary>
           <p class="small muted">The <strong>base installer</strong> is the reusable program your installer is built from:
             the part we wrote and maintain, which reads the settings below and installs what they name. It is the same in
-            every installer built here, which is why it only has to be tested and signed once.</p>
+            every installer built here, which is why it only has to be tested and signed&nbsp;once.</p>
           <div class="field">
             <label for="base">Base installer</label>
             <select id="base" name="base">
@@ -1125,10 +1158,10 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
           <span class="eyebrow">You'll get</span>
           <p class="small" style="margin:0">
             <code>install_<span class="by-lang lang-python">python</span><span class="by-lang lang-python2">python2</span><span class="by-lang lang-node">node</span><span class="by-lang lang-ruby">ruby</span><span class="by-lang lang-php">php</span><span class="by-lang lang-java">java</span><span class="by-lang lang-dotnet">dotnet</span><span class="by-lang lang-r">r</span><span class="by-lang lang-cc">cpp</span><span class="by-lang lang-go">go</span><span class="by-lang lang-rust">rust</span><span class="by-lang lang-zig">zig</span><span class="by-lang lang-nim">nim</span><span class="by-lang lang-none">app</span>_&lt;name&gt;<span class="by-mode mode-ours-inline">_&lt;hash&gt;</span>.exe</code>,
-            <code>.run</code> and <code>.dmg</code><span class="offline-inline">, plus offline <code>…_offline.exe</code>, <code>.run</code> and <code>.zip</code></span>,
+            <code>.run</code> and <code>.zip</code><span class="offline-inline">, plus offline <code>…_offline.exe</code>, <code>.run</code> and <code>.zip</code></span>,
             <span class="by-mode mode-ours-inline">the installer program signed by TiddlyInstall (your settings are in the name, which no signature covers, so it stays valid)</span><span class="by-mode mode-yours-inline">signed by you</span><span class="by-mode mode-unsigned-inline">unsigned</span>.
           </p>
-          <p class="build-where new-where small">Built by the build server.</p>
+          <p class="build-where new-where small">Built by the build&nbsp;server.</p>
         </div>
         <button type="submit" class="big">Build installers</button>
       </div>

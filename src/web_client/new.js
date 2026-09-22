@@ -11,6 +11,7 @@ import { jobFromForm, BUILD_DEFAULTS, ENTRY_DEFAULTS, TEMPLATE_FILES, OFFLINE_TA
   packBudget, packEnv } from '../shared/form-job.js';
 import { templateLaunch } from '../shared/templates.js';
 import { mountWriteEditor } from './write-editor.js';
+import { mountDialog } from './dialog.js';
 import { mountOverlayConsent } from './overlay-consent.js';
 import { openNotices } from './open-notice.js';
 import { setPackDestination } from './local-api.js';
@@ -718,28 +719,35 @@ function defaultTargetsToThisComputer() {
   const env = (globalThis.tiCompat && globalThis.tiCompat.env) || {};
   const hit = TARGET_FOR_OS.find(([re]) => re.test(String(env.os || '')));
   if (!hit) return;
-  let changed = false;
+  // No note explaining this: the three boxes show which one is ticked, and
+  // that they are boxes says the others can be ticked too.
   for (const p of ['windows', 'linux', 'macos']) {
-    if (p === hit[1]) continue;
-    form.elements['target_' + p].checked = false;
-    changed = true;
+    if (p !== hit[1]) form.elements['target_' + p].checked = false;
   }
-  if (!changed) return;
-  const note = document.createElement('p');
-  note.className = 'small muted';
-  note.id = 'target-default-note';
-  note.textContent = 'Set to ' + ({ windows: 'Windows', linux: 'Linux', macos: 'macOS' })[hit[1]] +
-    ', the computer you are on. Tick the others to build for them too - one installer per system, all from the same\u00a0settings.';
-  const choices = form.querySelector('.inline-choices');
-  if (choices) choices.after(note);
-  // Drop the note once they choose for themselves; it has said its piece.
-  form.addEventListener('change', function once(e) {
-    if (!e.target || !/^target_/.test(e.target.name || '')) return;
-    note.remove();
-    form.removeEventListener('change', once);
-  });
 }
 defaultTargetsToThisComputer();
+
+// The architecture coverage list is a wall of catalogue facts that answers
+// one question and then never changes, so it sits behind a link rather
+// than under the three checkboxes it belongs to. The panel is not hidden
+// in the markup -- dialog.js hides it -- so a page whose script does not
+// arrive shows the list inline instead of losing it.
+mountDialog({
+  panel: document.getElementById('arch-panel'),
+  opener: document.getElementById('arch-open'),
+  closers: [document.getElementById('arch-close')],
+  // Repaint on open: the language can change while the dialog is shut.
+  onOpen: paintArchCover,
+});
+
+// The Run preview was opened by :target until 2026-09-22, which routed the
+// page to Home and left the overlay 0x0 inside a hidden ancestor.
+mountDialog({
+  panel: document.getElementById('run-output'),
+  opener: document.getElementById('run-open'),
+  closers: [document.getElementById('run-close')],
+  reveal: false,
+});
 
 form.addEventListener('change', paintOfflineSize);
 paintOfflineSize();

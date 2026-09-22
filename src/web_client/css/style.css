@@ -628,19 +628,21 @@ details[open] > summary { margin-bottom: 12px; }
 .customise > details[open] > summary + * { margin-top: 16px; }
 .customise > details > *:last-child { margin-bottom: 18px; }
 
+/* Flush with the cards below it, not inset: each group is its own card
+   now, so an 18px inset here put every heading 18px right of every edge.
+   No rule either -- the cards carry borders, and a full-width line
+   directly above one read as a second, heavier border. */
 .customise > .customise-group {
-  margin: 0;
-  padding: 16px 18px 4px;
+  margin: 0 0 8px;
+  padding: 0;
   font-family: var(--mono);
   font-size: 0.75em;
   font-weight: 600;
   letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--faint);
-  border-top: 1px solid var(--rule);
 }
-.customise > .customise-group:first-child { border-top: 0; }
-.customise > .customise-group-hint { margin: 0; padding: 0 18px 12px; max-width: 70ch; }
+.customise > details + .customise-group { margin-top: 26px; }
 
 /* ---- Segmented "where's the code" and language chips ---- */
 
@@ -969,7 +971,7 @@ form:has(#tpl-tray:checked) .tpl-gui-only { display: block; }
   background: rgba(10, 12, 14, 0.62);
   background: rgb(10 12 14 / 0.62);
 }
-.run-overlay:target { display: flex; }
+.run-overlay.open { display: flex; }
 .run-dialog {
   width: 100%; max-width: 560px;
   width: min(560px, 100%);
@@ -979,8 +981,17 @@ form:has(#tpl-tray:checked) .tpl-gui-only { display: block; }
   border-radius: 0;
   padding: 16px 18px 18px;
 }
-.run-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.run-head a { text-decoration: none; font-size: 1.15em; }
+.dialog-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 12px; }
+.dialog-close {
+  background: none;
+  border: 0;
+  padding: 0 2px;
+  color: var(--muted);
+  font-size: 1.15em;
+  line-height: 1;
+  cursor: pointer;
+}
+.dialog-close:hover { color: var(--text-loud); }
 
 /* ==========================================================================
    11. Icon picker
@@ -1075,6 +1086,36 @@ form:has(#src-write:checked) .launch-field {
 }
 .launch-tokens dt { font-family: var(--mono); color: var(--accent); }
 .launch-tokens dd { margin: 0; color: var(--muted); }
+
+/* Tokens beside worked examples: the glossary says what each token means,
+   the examples say what a whole command looks like, and the second is what
+   people actually copy. Two columns so one does not read as a footnote to
+   the other. The examples column holds whole commands, so it stacks first
+   on a narrow screen rather than wrapping every line. */
+.launch-help {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  grid-gap: 14px 28px; gap: 14px 28px;
+  margin: 12px 0 0;
+  align-items: start;
+}
+.launch-help .label { margin-bottom: 2px; }
+.launch-help .launch-tokens { margin-top: 6px; }
+/* A whole command is one unit; breaking "{runtime} -m" over two lines is
+   worse than a little horizontal room, so keep the term on one line. */
+.launch-egs dt { white-space: nowrap; }
+@media (max-width: 760px) {
+  .launch-help { grid-template-columns: minmax(0, 1fr); }
+  .launch-egs dt { white-space: normal; }
+}
+/* Narrower than this the command is most of the width, so a description
+   beside it gets a four-word column ("run the / package / as a / module").
+   Put the description under its command instead. */
+@media (max-width: 520px) {
+  .launch-egs { grid-template-columns: minmax(0, 1fr); grid-gap: 0; gap: 0; }
+  .launch-egs dd { margin: 1px 0 9px; }
+  .launch-egs dd:last-child { margin-bottom: 0; }
+}
 
 /* Launch command follows the Language choice (no JS). */
 .entry { display: none; }
@@ -1173,6 +1214,40 @@ form:has(#offline-on:checked) .offline-off-inline { display: none; }
 }
 
 /* 32-bit and 64-bit: a statement of coverage, not a choice. */
+/* "Build for" and its right-hand opener on one baseline. */
+.field-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.field-head .label { margin-bottom: 0; }
+.arch-open { font-size: 0.9em; }
+
+/* Inline by default (no JavaScript); a dialog once dialog.js says so. */
+.arch-panel > .arch-dialog > .dialog-head { display: none; }
+.arch-panel.is-dialog {
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
+  inset: 0;
+  z-index: 10;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(10, 12, 14, 0.62);
+  background: rgb(10 12 14 / 0.62);
+}
+.arch-panel.is-dialog.open { display: flex; }
+.arch-panel.is-dialog > .arch-dialog {
+  width: 100%; max-width: 620px;
+  width: min(620px, 100%);
+  max-height: 82vh;
+  overflow-y: auto;
+  background: var(--panel);
+  border: 1px solid var(--rule-strong);
+  border-top: 2px solid var(--accent);
+  padding: 16px 18px 18px;
+}
+.arch-panel.is-dialog > .arch-dialog > .dialog-head { display: flex; }
+/* Inside the dialog the list is the content, so it starts at the top. */
+.arch-panel.is-dialog .arch-cover { margin-top: 0; }
+
 .arch-cover { list-style: none; margin: 12px 0 6px; padding: 0; }
 .arch-cover > li { margin-bottom: 8px; }
 .arch-cover > li > strong { color: var(--text-loud); }
@@ -1713,7 +1788,6 @@ html.ti-no-folder .needs-folder { display: none !important; }
   .customise > details > hr,
   .customise > details > h3,
   .customise > details > details { margin-left: 14px; margin-right: 14px; }
-  .customise > .customise-group, .customise > .customise-group-hint { padding-left: 14px; padding-right: 14px; }
   .rv-panel { margin-left: 0; }
   .launch-field { padding: 12px 13px; }
 

@@ -45,6 +45,7 @@ import { launchChrome, connectCdp, sleep } from './browsers/cdp.mjs';
 import { Checker, STARTED, waitFor as waitForIn, buildHello, makeSignFixtures, gpgVerify, setVal, $text } from './browsers/steps.mjs';
 import { readInstaller } from '../src/shared/tifile.js';
 import { execFileSync, spawnSync } from 'node:child_process';
+import { assertFresh } from './fresh.mjs';
 
 if (typeof WebSocket === 'undefined') {
   console.log('usage: node --experimental-websocket tests/mobile-test.mjs [--page out/index.html | --site URL] [--shots DIR]');
@@ -55,6 +56,7 @@ const arg = (k, d) => (argv.includes(k) ? argv[argv.indexOf(k) + 1] : d);
 const flag = (k) => argv.includes(k);
 const HERE = path.dirname(new URL(import.meta.url).pathname);
 const PAGE = path.resolve(arg('--page', path.join(HERE, '..', 'out', 'index.html')));
+assertFresh(PAGE, path.join(HERE, '..'));
 const SITE = arg('--site');
 // A bare origin gets its '/'; a URL with a path or query is used as it is.
 let URL0 = SITE ? (/^https?:\/\/[^/?#]+$/.test(SITE) ? SITE + '/' : SITE) : 'file://' + PAGE;

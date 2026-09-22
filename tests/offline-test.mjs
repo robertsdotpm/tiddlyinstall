@@ -23,10 +23,12 @@ import { OFFLINE_TARGETS, OFFLINE_TARGET_OS, offlineField, ARCH_LABEL, ENTRY_DEF
 import { planPackFiles } from '../src/shared/builder.js';
 import { parseFooterTail, readInstaller } from '../src/shared/tifile.js';
 import { templateLaunch } from '../src/shared/templates.js';
+import { assertFresh } from './fresh.mjs';
 
 const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
 const HERE = path.dirname(new URL(import.meta.url).pathname);
 const PAGE = path.resolve(arg('--page') || path.join(HERE, '..', 'out', 'index.html'));
+assertFresh(PAGE, path.join(HERE, '..'));
 const SITE = arg('--site');
 const OUT = arg('--out');
 if (typeof WebSocket === 'undefined' || !fs.existsSync(PAGE)) {
@@ -101,15 +103,16 @@ try {
     && !document.querySelector('[name=target_windows]').checked
     && !document.querySelector('[name=target_macos]').checked`),
     '"Build for" defaults to this computer\'s system alone');
-  ok(/^Set to Linux, the computer you are on\./.test(await js(`(document.getElementById('target-default-note') || {}).textContent || ''`)),
-    'and says so, with how to add the others', await js(`(document.getElementById('target-default-note') || {}).textContent`));
-  // Ticking one of them for yourself retires the note, and does not undo
-  // the others: the default is a starting point, not a mode.
+  // Silently: the boxes show which one is ticked, so a paragraph saying so
+  // was bloat (removed 2026-09-22). Nothing may explain it in prose again.
+  ok(!(await js(`/the computer you are on/.test(document.body.textContent)`)),
+    'and does it without a paragraph explaining that it did');
+  // Ticking one for yourself does not undo the others: the default is a
+  // starting point, not a mode.
   await js(`document.querySelector('[name=target_windows]').click()`);
-  ok(await js(`!document.getElementById('target-default-note')
-    && document.querySelector('[name=target_windows]').checked
+  ok(await js(`document.querySelector('[name=target_windows]').checked
     && document.querySelector('[name=target_linux]').checked`),
-    'choosing for yourself drops the note and keeps both');
+    'choosing for yourself keeps both');
   await js(`document.querySelector('[name=target_windows]').click()`);   // back as it was
   // Packing the runtimes is offered with no build server: what a browser
   // can hold was measured on every machine we have rather than assumed

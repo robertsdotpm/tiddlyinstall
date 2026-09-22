@@ -28,17 +28,17 @@
     <div class="page-head">
       <span class="eyebrow"><span class="num">Edit</span> &nbsp;Installer</span>
       <h1>Edit an installer</h1>
-      <p class="lede">Change what an installer installs, its name and its icon. Any installer file that
-        carries no signature can be edited here - a signature covers the whole file, so editing one would
-        break it. Editing happens in your browser. Your file is never uploaded.</p>
+      <p class="lede">Change what an installer installs, its name and its icon, in your browser.
+        Your file is never uploaded. Only an unsigned installer can be edited: a signature
+        covers the whole file, so any change breaks&nbsp;it.</p>
     </div>
 
     <div class="prototype-note" id="standalone-note" hidden>
-      <p style="margin-top:0">This is the self-contained editor: one file with the Windows, Linux and macOS base
-        installers inside. It works offline, from a USB stick or any web host.</p>
+      <p style="margin-top:0">One file, with the Windows, Linux and macOS base installers inside.
+        It works offline, from a USB stick or any web&nbsp;host.</p>
       <div class="actions"><button type="button" id="save-page" class="secondary">Save this page</button></div>
     </div>
-    <noscript><p class="prototype-note">The editor needs JavaScript. Your file still never leaves your computer.</p></noscript>
+    <noscript><p class="prototype-note">The editor needs JavaScript. Your file still never leaves your&nbsp;computer.</p></noscript>
 
     <section class="panel panel-accent">
       <span class="eyebrow"><span class="num">01</span> &nbsp;Open</span>
@@ -160,12 +160,26 @@
           <span class="eyebrow">The one thing we cannot work&nbsp;out</span>
           <label for="f-launch">Launch command</label>
           <input type="text" id="f-launch" data-key="launch" spellcheck="false">
-          <dl class="launch-tokens">
-            <dt>{runtime}</dt><dd>the runtime this installer sets up</dd>
-            <dt>{project}</dt><dd>your package name</dd>
-            <dt>{app_dir}</dt><dd>the app's own folder</dd>
-            <dt>{bin}</dt><dd>the runtime's scripts folder</dd>
-          </dl>
+        <div class="launch-help">
+          <div>
+            <span class="label">What you can write</span>
+            <dl class="launch-tokens">
+              <dt>{runtime}</dt><dd>the runtime this installer sets up</dd>
+              <dt>{app_dir}</dt><dd>the folder your own code is installed into</dd>
+              <dt>{project}</dt><dd>your package name</dd>
+              <dt>{bin}</dt><dd>the runtime's scripts folder</dd>
+            </dl>
+          </div>
+          <div>
+            <span class="label">The four shapes</span>
+            <dl class="launch-tokens launch-egs">
+              <dt>{runtime} -m {project}</dt><dd>run the package as a module</dd>
+              <dt>{runtime} {app_dir}/main.py</dt><dd>run one file of your own code</dd>
+              <dt>{bin}/{project}</dt><dd>run a command the install made</dd>
+              <dt>{app_dir}/{project}</dt><dd>run a compiled program directly</dd>
+            </dl>
+          </div>
+        </div>
         </div>
         <div class="field">
           <label for="f-install">Install command</label>
@@ -219,12 +233,12 @@
         <span class="eyebrow"><span class="num">03</span> &nbsp;Contents</span>
         <h2 class="section-title">Packed files</h2>
         <p class="small muted" style="margin-top:0">Files carried inside the installer. The installer uses a packed copy of any download
-          whose SHA-256 matches, instead of downloading it.</p>
+          whose SHA-256 matches, instead of downloading&nbsp;it.</p>
         <p class="small muted">A pack is addressed by hash, so a member's name says nothing about it. What names each one
           - including <strong>which is the 32-bit runtime and which the 64-bit</strong>, when an offline installer carries both -
           is the <strong>Install plan</strong> above: its <code>file</code> lines give each download's SHA-256 and its architecture, per
           <code>[target]</code> block (<code>docs/format.md</code> section 4). An installer packing more than one
-          architecture of a runtime must carry its plan rather than fetch it, or nothing can tell them apart.</p>
+          architecture of a runtime must carry its plan rather than fetch it, or nothing can tell them&nbsp;apart.</p>
         <ul class="pack-list" id="pack-list"></ul>
         <div class="field">
           <label for="pack-add">Add files</label>
@@ -251,8 +265,8 @@
       <section class="panel" id="sign-panel">
         <span class="eyebrow"><span class="num">05</span> &nbsp;Optional</span>
         <h2 class="section-title">Sign it yourself</h2>
-        <p class="small muted" style="margin-top:0">Sign the installer with your own certificate or key, here in the page.
-          Your key is never uploaded and never stored: it stays in this tab's memory until you close it.</p>
+        <p class="small muted" style="margin-top:0">Sign the installer with your own certificate or key,
+          here in the page. Your key is never uploaded or stored; it stays in this tab until you close&nbsp;it.</p>
 
         <div id="sign-exe" hidden>
           <span class="label">Your key</span>
@@ -336,7 +350,7 @@
 
         <div id="sign-run" hidden>
           <p class="small" style="margin-top:0">Linux doesn't check signatures itself. This makes a detached OpenPGP signature
-            (<code>.run.asc</code>) that people can check with <code>gpg --verify</code> against your public key.</p>
+            (<code>.run.asc</code>) that people can check with <code>gpg --verify</code> against your public&nbsp;key.</p>
           <span class="label">Your key</span>
           <div class="inline-choices">
             <label class="choice"><input type="radio" name="pgp-src" id="pgp-src-new" value="new" checked> Make a new key</label>
@@ -390,7 +404,7 @@
         <div id="sign-zip" hidden>
           <p class="small" style="margin-top:0">macOS apps can't be signed in the browser: macOS only opens a downloaded app
             that Apple has notarized, and notarizing means uploading the whole app to Apple with your developer account.
-            Download the installer above, then on a Mac with your Developer ID certificate:</p>
+            Download the installer above, then on a Mac with your Developer ID&nbsp;certificate:</p>
 <pre class="small">ditto -x -k install.zip . &amp;&amp; cd Install.app/Contents/Resources
 codesign -f -o runtime --timestamp -s "Developer ID Application: …" tiverify-arm64 tiverify-x86_64
 cd ../../.. &amp;&amp; codesign -f -o runtime --timestamp -s "Developer ID Application: …" Install.app
@@ -411,7 +425,7 @@ xcrun stapler staple Install.app &amp;&amp; ditto -c -k --keepParent Install.app
       <h2 class="section-title">Point one at another package by&nbsp;renaming&nbsp;it</h2>
       <p class="small">An installer we signed takes its settings from its file name. Our signature is over the installer
         program, and never covered the name, so renaming leaves it as valid as it was: it still says the program is ours
-        and unaltered, which is all it ever said.</p>
+        and unaltered, which is all it ever&nbsp;said.</p>
 <pre>
 install_python_requests.exe   installs requests
 install_python_black.exe      installs black

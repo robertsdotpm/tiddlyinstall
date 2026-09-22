@@ -98,7 +98,7 @@ CORE_MODULES = [
     *web("api.js"),
     *web("open-notice.js"),
     *shared("mirror-words.js", "templates.js", "form-job.js"),
-    *web("write-editor.js"),
+    *web("write-editor.js", "dialog.js"),
     *web_lib("sha.js", "hmac-pbkdf2.js", "aes.js"),
     *web_lib("bignum.js", "der.js", "rsa.js", "ec.js"),
     *web_lib("ed25519.js", "cryptox.js"),
