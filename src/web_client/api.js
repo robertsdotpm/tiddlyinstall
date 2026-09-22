@@ -497,8 +497,9 @@ const WHAT_PANEL =
   '<ul class="small">' +
   '<li><strong>Builds the installers</strong>, instead of your browser. Mainly useful for offline ' +
   'installers, which carry the runtime inside them and can be too big for a browser to assemble.</li>' +
-  '<li><strong>Signs the runtime install script</strong>, so anyone can check it came from us. ' +
-  'The key is only on the server, so this is the one thing a page can never do for itself.</li>' +
+  '<li><strong>Signs the runtime install script.</strong> Ours is the only key that can, and every ' +
+  'installer carries the matching public half -- so a signed script can be checked by anyone, on any ' +
+  'machine, years later, without asking us.</li>' +
   '<li><strong>Passes signing and timestamp requests through.</strong> Those services refuse calls ' +
   'from web pages, so the server forwards them on your behalf.</li>' +
   '<li><strong>Keeps copies of the runtimes</strong>, so an installer can still fetch them on an old ' +
@@ -506,8 +507,7 @@ const WHAT_PANEL =
   '<li><strong>Hands out the base installers</strong> and the list of runtimes this page offers.</li>' +
   '<li><strong>Answers a plain form</strong>, for browsers that cannot run this page at all.</li>' +
   '</ul>' +
-  '<p class="small muted">With no server, your browser does the building. Signing and the relay are ' +
-  'the parts it cannot do for itself.</p>' +
+  '<p class="small muted">With no server, your browser does the building. Signing and the relay are the parts it cannot do.</p>' +
   '</div></div>';
 
 // A settings button (a spanner) in the site header opens a small panel
@@ -526,6 +526,8 @@ export function mountApiFooter() {
   footerEl.innerHTML =
     '<div class="settings-panel" hidden>' +
     '<p class="settings-now"><span>Server:</span> <a class="api-ctl-url" target="_blank" rel="noopener noreferrer"></a></p>' +
+    '<p class="settings-what"><button type="button" class="link-button api-ctl-what" hidden>' +
+    'What does the server&nbsp;do?</button></p>' +
     '<form class="api-ctl-form">' +
     '<label>Server URL <input type="text" class="api-ctl-input" spellcheck="false" autocomplete="off" ' +
     'autocapitalize="off" placeholder="http://host:8080"></label>' +
@@ -537,11 +539,11 @@ export function mountApiFooter() {
     '<button type="button" class="secondary api-ctl-cancel">Close</button>' +
     '</div>' +
     '<p class="hint">Kept in this browser only, and shareable as <code>?api=</code> on the page URL. ' +
-    'A page served over HTTPS can\'t use a plain http:// server.' +
-    (HAS_LOCAL ? ' With no server, this page builds the installers itself -- everything except the ones we sign, ' +
-      'from code written here, files from this computer, a GitHub repository or a package name.' : '') +
-    ' <button type="button" class="link-button api-ctl-what" hidden>What does the server&nbsp;do?</button>' +
-    '</p></form></div>';
+    'A page served over HTTPS can\'t use a plain http:// server.</p>' +
+    (HAS_LOCAL ? '<p class="hint">With no server, this page builds the installers itself -- everything ' +
+      'except the ones we sign, from code written here, files from this computer, a GitHub repository ' +
+      'or a package name.</p>' : '') +
+    '</form></div>';
   // Beside the wordmark, not at the end of the nav: it is a statement
   // about the whole application, and among Home / New installer / ... it
   // read as a fifth link. insertBefore(el, null) appends, so a header
