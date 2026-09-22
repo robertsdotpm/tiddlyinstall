@@ -63,9 +63,7 @@
         <p class="small note" id="v-plan-derived" hidden></p>
         <dl class="spec-list" id="v-does"></dl>
         <div id="v-downloads-wrap" hidden>
-          <span class="label">One of these, whichever machine it lands on</span>
-          <p class="small muted" style="margin-top:0">An installer carries a block for each kind of machine and uses one of
-          them. The sizes are per machine, not&nbsp;added&nbsp;up.</p>
+          <span class="label">One of these, whichever machine it runs on</span>
           <div class="table-wrap">
             <table class="small" id="v-downloads">
               <thead><tr><th>Machine</th><th>Runtime it installs</th><th>Download</th><th>From</th></tr></thead>
@@ -74,9 +72,7 @@
           </div>
         </div>
         <div id="v-cmds-wrap" hidden>
-          <span class="label">Commands it runs on the machine</span>
-          <p class="small muted" style="margin-top:0">What a command does is not decidable from its text, so these are
-            listed rather than&nbsp;described.</p>
+          <span class="label">Commands it runs</span>
           <ul class="small" id="v-cmds"></ul>
         </div>
       </section>
@@ -92,8 +88,8 @@
       <section class="panel" id="v-server-panel">
         <h2 class="section-title">Checked against the build server</h2>
         <p class="small muted" id="v-server-none" hidden>No build server is set, so only what is inside the file could be
-          read. A server can also say whether these settings are ones it published, whether it would still hand out the
-          same downloads today, and whether this installer has been withdrawn since it was&nbsp;built.</p>
+          read. A server can also say whether it published these choices, whether it would still build the same
+          thing today, and whether this installer has been withdrawn since it was&nbsp;built.</p>
         <dl class="spec-list" id="v-server"></dl>
       </section>
     </div>

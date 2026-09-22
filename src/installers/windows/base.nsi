@@ -3896,7 +3896,10 @@ Function CapSection
   ; the program has been vetted. It has not: we have never looked at it.
   StrCpy $CapInd1 "  "
   StrCpy $CapInd2 "  "
-  StrCpy $U_a "That is about the install. The program itself is another matter: we did not write $AppName and have not checked what its code does. Install it only if you trust whoever publishes it."
+  ; The name is quoted: unquoted, a name with spaces runs into the
+  ; sentence -- "we did not write test recent unsigned a and have not
+  ; checked" reads as one clause with no program in it.
+  StrCpy $U_a 'That is about the install. The program itself is another matter: we did not write "$AppName" and have not checked what its code does. Install it only if you trust whoever publishes it.'
   Call SumPara
   Pop $0
 FunctionEnd
@@ -4408,7 +4411,7 @@ Function WriteSummary
   ${EndIf}
 
   ${Sum} ""
-  ${Sum} "WHERE THIS INSTALLER AND ITS SETTINGS CAME FROM"
+  ${Sum} "WHERE THIS CAME FROM"
   ${If} $SignedBy != ""
     ${Sum} "  Signed by:  $SignedBy (as the certificate names it; Windows checks the signature)."
     ${Sum} "              It covers this installer file, not the program it installs."
@@ -4428,9 +4431,9 @@ Function WriteSummary
   ${If} $ModeA = 1
     ${Sum} "  Mode:       A (signed, and carrying no settings of its own): it installs only the app its file name names, from ${TI_BACKEND}."
   ${EndIf}
-  ${Sum} "  Settings:   $MetaSrc"
+  ${Sum} "  Choices:    $MetaSrc"
   ${Sum} "  Record:     $RecHash"
-  ${Sum} "  Plan:       $PlanSrc"
+  ${Sum} "  Recipe:     $PlanSrc"
   ${If} $PlanSigned != ""
     ${If} $PlanKind == "fetched"
       ${Sum} "  Plan signed: $PlanSigned (fetched now)"

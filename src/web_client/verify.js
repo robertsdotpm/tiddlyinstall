@@ -19,7 +19,7 @@
 // these settings were ever published, whether the plan is still the one
 // the resolver produces, and whether it has been revoked since. Those
 // cannot live in the file, which is exactly why they need a server.
-import { readInstaller, parseKv, kvGet } from '../shared/tifile.js';
+import { readInstaller, parseKv, kvGet, recordHash } from '../shared/tifile.js';
 import { resolve, loadRuntimes, packagePolicyFor, packageProject } from '../shared/resolve.js';
 import { effectiveCatalog, hasCatalog } from './overlay.js';
 import { apiRequest, apiBase, apiLocal, apiReady, errorText, mountApiFooter } from './api.js';
@@ -281,102 +281,97 @@ async function planFromName(fileName) {
 // Each returns a row, and each says what it could not do rather than
 // going quiet: a check that silently did not run looks exactly like a
 // check that passed, which is the failure this project keeps meeting.
-async function serverChecks(info, d, out) {
+async function serverChecks(info, d, out, derived, file) {
   const add = (k, v) => out.push([k, v]);
-  const base = apiBase();
-  add('Build server', '<code>' + esc(base) + '</code>');
+  add('Build server', '<code>' + esc(apiBase()) + '</code>');
 
-  // 1. Are these settings ones the server published? The record's name is
-  //    the hash of its exact bytes, so a byte comparison is the whole test.
-  if (!d.record) {
-    add('These settings', 'this file names no published settings, so there is nothing to look up');
-  } else {
-    try {
-      const got = await apiRequest('/api/records/' + encodeURIComponent(d.record), { as: 'text' });
-      const mine = info.record == null ? '' : info.record;
-      add('These settings', String(got) === mine
-        ? 'match the record <code>' + esc(d.record) + '</code> the server holds, byte for byte'
-        : '<strong>differ from the record the server holds under that hash.</strong> '
-          + 'The settings in this file are not the ones it published');
-    } catch (e) {
-      // errorText gives the server's words ("no such record"), never a
-      // status code, so ask the error rather than grepping its message.
-      const missing = e && (e.status === 404 || e.code === 'not_found');
-      add('These settings', missing
-        ? '<strong>the server has no record <code>' + esc(d.record) + '</code>.</strong> Anyone can write a record, so this means it was never published here, not that it is bad'
-        : 'could not be checked: ' + esc(errorText(e)));
-    }
+  // The hash of the settings actually in the file, computed from their
+  // bytes. The earlier version used d.record, which for an installer
+  // whose contents this page worked out is the string "preview" -- so
+  // the server was asked about a record id that cannot exist and
+  // answered bad_hash, twice, in front of the reader.
+  let hash = '';
+  if (info.record) {
+    try { hash = await recordHash(info.record); } catch (e) { hash = ''; }
+  } else if (!derived && d && d.record) {
+    hash = d.record;
   }
 
-  // 2. Is the embedded plan still the plan? The nonce is echoed into the
-  //    signed bytes, so the answer cannot be a replayed capture.
-  if (d.record) {
+  const named = nameSettings(file.name);
+  if (!hash && named) {
+    // Nothing is fixed in the file; the server works out the same thing
+    // from the name, and its answer carries the id to check below.
+    try {
+      const txt = await apiRequest('/api/plan/name/' + encodeURIComponent(named.runtime) + '/'
+        + encodeURIComponent(named.pkg), { as: 'text' });
+      const rec = planLines(txt).find((l) => l.key === 'record');
+      hash = rec ? rec.val(0) : '';
+      add('Does the server know it?', 'yes, it builds <code>' + esc(named.pkg) + '</code> for '
+        + esc(runtimeName(named.runtime)) + ' and would install the same thing');
+    } catch (e) {
+      add('Does the server know it?', e && (e.status === 404 || e.code === 'not_found')
+        ? '<strong>no.</strong> It has no package <code>' + esc(named.pkg) + '</code> for ' + esc(runtimeName(named.runtime))
+        : (e && e.status === 451 ? '<strong>this installer has been withdrawn</strong>' : 'could not be asked: ' + esc(errorText(e))));
+    }
+  } else if (hash) {
+    try {
+      const got = await apiRequest('/api/records/' + encodeURIComponent(hash), { as: 'text' });
+      add('Does the server know it?', String(got) === String(info.record)
+        ? 'yes, byte for byte'
+        : '<strong>it has something different under the same id.</strong> This file is not what it published');
+    } catch (e) {
+      add('Does the server know it?', e && (e.status === 404 || e.code === 'not_found')
+        ? 'no. Anyone can build an installer, so this only means it was not built here'
+        : 'could not be asked: ' + esc(errorText(e)));
+    }
+  } else {
+    add('Does the server know it?', 'nothing in this file or its name identifies it, so there is nothing to ask about');
+  }
+
+  // Would it install the same thing today? Only meaningful where the
+  // file fixes its contents; where they are worked out at run time the
+  // answer is "whatever is newest", which the table already says.
+  if (hash && info.plan) {
     const nonce = hex(crypto.getRandomValues(new Uint8Array(16)));
     try {
-      const fresh = await apiRequest('/api/plan/' + encodeURIComponent(d.record) + '?nonce=' + nonce, { as: 'text' });
+      const fresh = await apiRequest('/api/plan/' + encodeURIComponent(hash) + '?nonce=' + nonce, { as: 'text' });
       const sig = docSignature(String(fresh), 'ti-plan');
-      const live = sig.signed && String(fresh).indexOf(nonce) >= 0;
-      add('The server answering now', live
-        ? 'signed its answer with a one-off number this page just made up, so it is answering now and not a recording played back'
-        : '<strong>did not sign its answer with the one-off number this page sent</strong>, so it could be a recording');
+      add('Answering live?', sig.signed && String(fresh).indexOf(nonce) >= 0
+        ? 'yes: it signed a one-off number this page just made up, so this is not a recording'
+        : '<strong>no: it did not sign the number this page sent</strong>, so this could be a recording');
       const same = String(fresh).replace(/\r/g, '') === String(info.plan || '').replace(/\r/g, '');
-      add('The recipe in this file', same
-        ? 'is the one the server would hand out for these settings today'
-        : '<strong>differs from what the server would hand out today.</strong> That happens when a newer runtime came out, and also when a file was altered; compare the table above with a fresh build');
+      add('Same as a fresh build?', same
+        ? 'yes, identical to what it would build today'
+        : '<strong>no.</strong> A newer version may have come out, or this file was changed; compare the table above');
     } catch (e) {
-      add('The recipe in this file', e && e.status === 451
-        ? '<strong>this installer has been withdrawn</strong> on this server'
-        : (e && (e.status === 404 || e.code === 'not_found')
-          ? 'cannot be compared: the server does not know these settings'
-          : 'could not be compared: ' + esc(errorText(e))));
+      add('Same as a fresh build?', e && e.status === 451
+        ? '<strong>this installer has been withdrawn</strong>'
+        : 'could not be compared: ' + esc(errorText(e)));
     }
   }
 
-  // 3. Revocation: news that postdates the file, so it can only come from
-  //    a server. This is the check no saved copy can ever make.
+  // Withdrawn since it was made: the one thing no file can know about
+  // itself, signed, and checked before it is believed.
   try {
     const rev = await apiRequest('/api/revocations', { as: 'text' });
     const lines = planLines(rev);
     const meta = (k) => (lines.find((l) => l.key === k) || { val: () => '' }).val(0);
-    const revoked = lines.some((l) => l.key === 'revoke' && l.val(0) === 'record' && l.val(1) === d.record);
-    // The list is signed with the same key as plans, so it is checked
-    // rather than believed: an unsigned "nothing is revoked" is exactly
-    // what someone suppressing a revocation would serve.
+    const revoked = hash && lines.some((l) => l.key === 'revoke' && l.val(0) === 'record' && l.val(1) === hash);
     const baked = bakedKey();
     const rs = docSignature(rev, 'ti-revocations');
     let sigSays = '';
-    if (!rs.signed) sigSays = ' <strong>The list is not signed</strong> (' + esc(rs.why) + '), so it proves nothing.';
-    else if (!baked) sigSays = ' The list is signed, but this page has no key to check it with.';
-    else {
+    if (!rs.signed) sigSays = ' <strong>The list is not signed</strong>, so it proves nothing.';
+    else if (baked) {
       let ok = false;
       try { ok = ed25519Verify(baked, rs.bytes, rs.sig); } catch (e) { ok = false; }
-      sigSays = ok ? '' : ' <strong>The list\'s own signature does not check out</strong>, so it proves nothing.';
+      if (!ok) sigSays = ' <strong>The list\'s signature does not check out</strong>, so it proves nothing.';
     }
     add('Withdrawn since?', (revoked
-      ? '<strong>yes. This installer was withdrawn after the file was made</strong>, which is the one thing a file can never know about itself'
-      : 'no, as of the list the server issued ' + esc(meta('issued') || 'recently'))
+      ? '<strong>yes, it was withdrawn after this file was made</strong>'
+      : (hash ? 'no, as of the list issued ' + esc(meta('issued') || 'recently') : 'cannot be told without knowing which installer this is'))
       + sigSays);
   } catch (e) {
     add('Withdrawn since?', 'could not be checked: ' + esc(errorText(e)));
-  }
-
-  // 4. The signing key, which rotates. A plan signed by a retired key
-  //    verifies against a stale baked copy and means nothing.
-  try {
-    const pk = await apiRequest('/api/pubkey');
-    const serverKey = pk && pk.key;
-    const baked = bakedKey();
-    if (serverKey && baked) {
-      const same = hex(b64bytes(serverKey)) === hex(baked);
-      add('Signing key', same
-        ? 'the key this page checks with is the one the server signs with (<code>' + esc(keyId(baked)) + '</code>)'
-        : '<strong>the server signs with a different key</strong> (<code>' + esc(keyId(b64bytes(serverKey)))
-          + '</code>) than this page checks with (<code>' + esc(keyId(baked)) + '</code>). The key was rotated');
-    } else if (serverKey) {
-      add('Signing key', 'the server signs with <code>' + esc(keyId(b64bytes(serverKey))) + '</code>; this page has no key of its own to compare');
-    }
-  } catch (e) {
-    add('Signing key', 'could not be fetched: ' + esc(errorText(e)));
   }
 }
 
@@ -428,12 +423,6 @@ async function paint(file, sha, info) {
     ['Kind', esc(PLATFORM[info.kind] || info.kind) + ' installer (<code>.' + esc(info.kind) + '</code>)'],
     ['Size', esc(hsize(file.size))],
     ['SHA-256', '<code>' + esc(sha) + '</code><button type="button" class="copy-btn" data-copy="' + esc(sha) + '">Copy</button>'],
-    ['Settings', info.record ? 'carried in the file'
-      : (nameSettings(file.name)
-        ? 'in the file name: runtime <code>' + esc(nameSettings(file.name).runtime) + '</code>, package <code>'
-          + esc(nameSettings(file.name).pkg) + '</code>'
-          + '<br><span class="small muted">chosen after this program was built, which is why renaming the file points it at a different package</span>'
-        : 'none in the file, and the name does not carry any either')],
 
     info.pack && info.pack.length ? ['Packed files', info.pack.length + ' file' + (info.pack.length === 1 ? '' : 's') + ' inside, so it can install with no internet'] : null,
   ]);
@@ -470,14 +459,13 @@ async function paint(file, sha, info) {
     rows(el('v-does'), [
       ['Installs', esc(d.name || d.project || 'an app')],
       rtLabel && rtLabel !== 'none'
-        ? ['Runtime it installs', esc(runtimeName(rtLabel)) + ' ' + verSays
-          + '<br><span class="small muted">into the app\'s own folder. Nothing else on the machine is changed, and removing the app removes it.</span>']
-        : ['Runtime it installs', 'none; it runs what is already there'],
+        ? ['Runtime', esc(runtimeName(rtLabel)) + ' ' + verSays]
+        : ['Runtime', 'none; it uses what is already there'],
       ['Into', esc(d.root === 'machine' ? 'a folder for the whole machine' : "a folder of its own in the user's home")],
       totals.length
-        ? ['Downloads', 'up to ' + esc(hsize(Math.max.apply(null, totals))) + ' <span class="small muted">on one machine, not the total of the table below</span>']
-        : ['Downloads', 'nothing; everything it needs is already inside'],
-      ['Runs', runs ? runs + ' command' + (runs === 1 ? '' : 's') + ' after unpacking' : 'no commands'],
+        ? ['Downloads', 'up to ' + esc(hsize(Math.max.apply(null, totals)))]
+        : ['Downloads', 'nothing'],
+      ['Runs', runs ? runs + ' command' + (runs === 1 ? '' : 's') : 'no commands'],
       ['Admin rights', d.admin ? '<strong>yes</strong>' : 'not needed'],
       ['Shortcuts', [d.menu === '1' ? 'app menu' : null, d.desktop === '1' ? 'desktop' : null].filter(Boolean).join(', ') || 'none'],
       d.launch ? ['Starts', '<code>' + esc(d.launch) + '</code>'] : null,
@@ -565,7 +553,7 @@ async function paint(file, sha, info) {
   el('v-server-none').hidden = !none;
   if (none || !d) return;
   const out = [];
-  serverChecks(info, d, out).then(() => rows(dl, out), (e) => rows(dl, [['Checks', 'could not run: ' + esc(errorText(e))]]));
+  serverChecks(info, d, out, derived, file).then(() => rows(dl, out), (e) => rows(dl, [['Checks', 'could not run: ' + esc(errorText(e))]]));
 }
 
 /* ---------- wiring ---------- */

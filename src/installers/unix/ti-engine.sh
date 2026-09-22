@@ -3055,7 +3055,7 @@ ti_capabilities() {
 # is the common one -- an ordinary Python app trips one finding -- and a
 # promise that only appears when nothing is found is a promise most
 # people never see. Every file still prints its own `sha256` below.
-TI_CAP_ORDINARY="An ordinary install unpacks the files this plan names, each one checked against a SHA-256 in it, into folders of its own, for you alone, and runs nothing but our recipe for the runtime."
+TI_CAP_ORDINARY="An ordinary install unpacks the files listed above, each one checked against its SHA-256, into folders of its own, for you alone, and runs only the setup steps we wrote for the runtime."
 ti_cap_section() {
 	if [ -n "$ti_plan_warn" ]; then
 		# launch-shapes.md section 8, "What must never happen": with
@@ -3424,7 +3424,7 @@ ti_install_main() {
 	# claims -- one about the installation, one about the program -- and
 	# a conditional that can render one without the other is a
 	# conditional that will eventually do it.
-	ti_vouch="That is about the install. The program itself is another matter: we did not write $TI_NAME_DISP and have not checked what its code does. Install it only if you trust whoever publishes it."
+	ti_vouch="That is about the install. The program itself is another matter: we did not write \"$TI_NAME_DISP\" and have not checked what its code does. Install it only if you trust whoever publishes it."
 
 	{
 		printf '======================================================================\n'
@@ -3634,7 +3634,7 @@ ti_install_main() {
 		ti_sel note | sed 's/^/\nNOTE: /' | ti_wrap 74 6
 		ti_needs_summary
 
-		printf '\nWHERE THIS INSTALLER AND ITS SETTINGS CAME FROM\n'
+		printf '\nWHERE THIS CAME FROM\n'
 		printf '  Signed by:  %s\n' "$ti_signed_short" | ti_wrap 74 14
 		[ -n "$ti_signed_scope" ] && printf '              %s\n' "$ti_signed_scope" | ti_wrap 74 14
 		[ -n "$ti_self_sha" ] && printf '              this file has sha256 %s\n' "$ti_self_sha"
@@ -3650,8 +3650,8 @@ ti_install_main() {
 		if [ "$TI_MODE_A" = 1 ]; then
 			printf '  Mode:       A (signed, and carrying no settings of its own): it installs only the app its file name names, from %s\n' "$TI_DEFAULT_BACKEND" | ti_wrap 74 14
 		fi
-		printf '  Settings:   %s\n' "$TI_ORIGIN"
-		printf '  Plan:       %s\n' "$TI_PLAN_FROM"
+		printf '  Choices:    %s\n' "$TI_ORIGIN"
+		printf '  Recipe:     %s\n' "$TI_PLAN_FROM"
 		# Not `$(case ... in x) ... esac)`: the older bash that macOS
 		# ships as /bin/sh closes the command substitution at the first
 		# `)`, which is the one ending the case pattern, and prints the
