@@ -85,12 +85,26 @@ fi
 	exit 1
 }
 
+url=${TI_SERVE_URL:-http://127.0.0.1:8080}
 cp -r "$wt/co/out/." "$here/out/"
-[ "$restart" = 1 ] && systemctl --user restart ti-server && sleep 3
+if [ "$restart" = 1 ]; then
+	systemctl --user restart ti-server
+	# Wait for it, rather than guessing. A flat `sleep 3` reported every
+	# check as failed on 2026-09-22 because that start took four
+	# seconds: "serving e3b0c442..." is the SHA-256 of nothing, which is
+	# what curl returns from a socket that is not listening yet. A
+	# deploy script whose job is proving what is served must not cry
+	# wolf about a server that is merely still starting.
+	i=0
+	while [ "$i" -lt 30 ]; do
+		curl -fsS -o /dev/null "$url/api/health" 2>/dev/null && break
+		i=$((i + 1))
+		sleep 1
+	done
+fi
 
 # ---- the checks, which are why this script exists ----
 fail=0
-url=${TI_SERVE_URL:-http://127.0.0.1:8080}
 
 served=$(curl -fsS "$url/" 2>/dev/null | grep -o 'Built from [0-9a-f]*' | head -1 | awk '{print $3}' || true)
 if [ "$served" = "$rev" ]; then
