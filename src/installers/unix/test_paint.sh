@@ -22,6 +22,12 @@
 # cannot, so each de-emphasises a different set of body lines. That
 # difference is deliberate. Bolding a sentence as though it were a
 # label is not.
+# This runs on Linux, where awk is mawk or gawk, and the engine also runs
+# on macOS, where it is the one-true-awk. Both painters were run by hand
+# over this corpus on the Mac on 2026-09-22 (awk version 20200816) and
+# the output was identical to here, intervals, built-up pattern and all.
+# Nothing automatic checks that, so it is worth redoing if the rules
+# change much.
 set -eu
 here=$(cd "$(dirname "$0")" && pwd)
 plug=$here/../windows/plugin-src
