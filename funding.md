@@ -4,7 +4,7 @@
 > money rather than work or willingness.** TiddlyInstall is built and
 > paid for by one person. Where something below is missing, unsigned,
 > untested or unreachable, it is because the certificate, the membership,
-> the domain or the hardware has not been bought -- not because it was
+> the membership or the hardware has not been bought -- not because it was
 > overlooked and not because it is hard. Each item says what it costs and
 > what it would unlock, so the trade is visible rather than implied.
 
@@ -21,36 +21,7 @@ which is most of them.
 
 ---
 
-## 1. Public hosting: a domain and TLS. ~£10-40 a year
-
-**Cheapest thing on this list and by far the most valuable.** Nobody
-outside the LAN can use TiddlyInstall at all today.
-
-The build server runs on `10.0.1.76:8080` and the mirror lives on
-ovh1, which already exists and is already paid for. What is missing is
-a name and a certificate: a domain (`warpgate.io` was the operator's
-choice), DNS, and a Let's Encrypt certificate, which is free.
-
-**What it unlocks**
-
-- **Anyone using it.** Every installer built today embeds
-  `http://10.0.1.76:8080/mirror` as its first download URL. For a
-  stranger that is an unroutable address that stalls until it times
-  out before falling back to the vendor.
-- **The mirror actually serving.** ovh1 holds 1,105 files and 131 GB
-  and serves none of it -- no vhost, 404 at `/mirror/`. Every old
-  machine that cannot complete a modern TLS handshake depends on that
-  mirror, which is most of the point of the project.
-- **WebCrypto.** Browsers withhold `crypto.subtle` from plain-http
-  pages, so the page falls back to its own JavaScript for hashing and
-  signing: correct, slower, and it puts a notice on every screen. On
-  https that notice disappears.
-- **Browser-side packing for anyone but the operator**, which can only
-  fetch from a mirror it can reach.
-
----
-
-## 2. An Apple Developer Program membership. $99 a year
+## 1. An Apple Developer Program membership. $99 a year
 
 **macOS installers are killed on arrival today**, and this is the only
 thing that fixes it.
@@ -86,7 +57,7 @@ unless the publisher notarizes their own.
 
 ---
 
-## 3. A Windows code-signing certificate. ~£200-500 a year, plus a token or a signing service
+## 2. A Windows code-signing certificate. ~£200-500 a year, plus a token or a signing service
 
 This is what "Signed by TiddlyInstall" (mode A) needs, and it is
 currently disabled in the interface for exactly this reason.
@@ -113,12 +84,12 @@ has signed thousands of installers does. That is something we can offer
 that a lone developer cannot buy for themselves, and it is the strongest
 argument for mode A existing at all.
 
-Also unlocks: notarized macOS mode A (with item 2), and a reference
+Also unlocks: notarized macOS mode A (with item 1), and a reference
 implementation for publishers doing mode B.
 
 ---
 
-## 4. Verifying the cloud signing integrations. ~£2 a month
+## 3. Verifying the cloud signing integrations. ~£2 a month
 
 Six signing services are supported. **One has been tested against a
 real API** -- SSL.com's free sandbox -- and testing it found **three
@@ -142,7 +113,7 @@ somebody tries to sign something for real.*
 
 ---
 
-## 5. A second mirror. ~£1.50 a month, or free
+## 4. A second mirror. ~£1.50 a month, or free
 
 Everything depends on one host. If ovh1 is down or unreachable from
 where a user is, every installer falls back to vendor URLs -- which is
@@ -168,7 +139,7 @@ rather than money.
 
 ---
 
-## 6. Mirroring every version, not just the newest. A disk
+## 5. Mirroring every version, not just the newest. A disk
 
 Our mirror holds the newest build of each runtime. But a publisher can
 pin an older version, and the resolver will happily choose a release
@@ -188,7 +159,7 @@ manifest), which is work rather than money.
 
 ---
 
-## 7. Test hardware and licences. Tens of pounds, mostly
+## 6. Test hardware and licences. Tens of pounds, mostly
 
 Small amounts that remove real blind spots.
 
@@ -208,7 +179,7 @@ Small amounts that remove real blind spots.
 
 ---
 
-## 8. Free, but needs an account
+## 7. Free, but needs an account
 
 - **A GitHub API token for the build server.** Unauthenticated
   `api.github.com` allows 60 requests an hour *per address*. From a
@@ -228,6 +199,17 @@ Small amounts that remove real blind spots.
 Most of what is left. Recorded here so this document is not read as
 "everything waits on funding":
 
+- **Making it reachable at all**, which is the single most valuable
+  thing outstanding and costs nothing: the domain is owned, ovh1 is
+  paid for, and Let's Encrypt is free. What is missing is a vhost
+  serving the mirror tree, a certificate, and `policy.mirror_base`
+  repointed from `http://10.0.1.76:8080/mirror` to the public URL.
+  Until that is done every installer built carries an unroutable
+  address as its first download location, the 131 GB mirror on ovh1
+  serves nobody, and the page runs without WebCrypto because browsers
+  withhold it from plain http. **This is work, not a purchase**, and it
+  outranks everything on the list above.
+
 - The capability statement, the review screen, the transparency work.
 - Browser-side packing, which is built and proven on machines down to a
   744 MB 32-bit VM.
@@ -245,7 +227,13 @@ Most of what is left. Recorded here so this document is not read as
 
 ## If only one thing
 
-**Item 1.** A domain and a certificate, for the price of a takeaway,
-turn a thing one person can use on one network into a thing anyone can
-try. Everything else on this list improves something that already works;
-that one makes the work reachable.
+**Item 1, the Apple membership, at $99.** It is the only item here that
+takes something from *broken* to *working*: macOS installers are killed
+on arrival today, for every user, and nothing else on this list changes
+that. Everything else improves something that already works, or removes
+a warning, or covers a blind spot.
+
+But note that the most valuable outstanding thing is not on this list at
+all -- deploying publicly costs nothing now that the domain is owned,
+and it is what turns a tool one person can use on one network into one
+anybody can try.
