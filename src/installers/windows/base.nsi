@@ -1159,14 +1159,14 @@ Function ReadPlan
   Call TiSplitTab
   ${If} $T_field S!= "ti-plan"
     FileClose $0
-    ${FailWith} "The plan is not a ti-plan file."
+    ${FailWith} "The runtime install script is not a ti-plan file."
     Goto rp_end
   ${EndIf}
   Call TiSplitTab
   IntOp $T_field $T_field + 0
   ${If} $T_field > 1
     FileClose $0
-    ${FailWith} "The plan's format version is newer than this installer understands. Download the installer again."
+    ${FailWith} "The runtime install script's format version is newer than this installer understands. Download the installer again."
     Goto rp_end
   ${EndIf}
   StrCpy $LineNo 1
@@ -1438,7 +1438,7 @@ Function ReadTarget
       StrCpy $U_a $F2
       Call IsPlainName
       ${If} $U_out = 0
-        ${FailWith} "The plan names a file with a path in it: $U_a"
+        ${FailWith} "The runtime install script names a file with a path in it: $U_a"
         ${Break}
       ${EndIf}
       StrCpy $U_a $0
@@ -1607,7 +1607,7 @@ Function FindMetadata
     ${Log} "Fetching a plan by name: $U_a"
     Call DownloadQuiet
     ${If} $U_out != "OK"
-      ${FailWith} "Couldn't fetch a plan for $TokRuntime/$TokProject from $Backend ($U_out)."
+      ${FailWith} "Couldn't fetch a runtime install script for $TokRuntime/$TokProject from $Backend ($U_out)."
       Return
     ${EndIf}
     StrCpy $PlanFile "$PLUGINSDIR\plan.txt"
@@ -1650,19 +1650,38 @@ Function CheckPlan
     StrCpy $PlanSrc "$PlanSrc"
     Return
   ${EndIf}
+  ; An absent signature and a wrong one are different findings, and this
+  ; called both "isn't signed" while printing a parenthetical that said
+  ; otherwise -- "isn't signed by the TiddlyInstall key (bad:the
+  ; signature does not match this plan and this installer's key)". A
+  ; missing signature is an omission; one that does not match is evidence
+  ; the bytes changed after it was made, which is the more serious
+  ; finding and was the one being hidden. Same classes the Unix engine
+  ; uses: unsigned / bad: / cannot:.
+  StrCpy $0 $PlanSig 4
+  StrCpy $1 $PlanSig 7
+  ${If} $PlanSig == "unsigned"
+    StrCpy $2 "carries no signature by the TiddlyInstall key"
+  ${ElseIf} $0 == "bad:"
+    StrCpy $2 "has a signature that does NOT match the TiddlyInstall key"
+  ${ElseIf} $1 == "cannot:"
+    StrCpy $2 "has a signature that could not be checked here"
+  ${Else}
+    StrCpy $2 "is not signed by the TiddlyInstall key"
+  ${EndIf}
   ${If} $PlanKind == "embedded"
-    StrCpy $PlanWarn "The embedded plan isn't signed by the TiddlyInstall key ($PlanSig). It is only as trustworthy as this installer file."
+    StrCpy $PlanWarn "The runtime install script inside this file $2 ($PlanSig). It is only as trustworthy as the file carrying it."
     Return
   ${EndIf}
   ${If} $PlanKind == "cmdline"
   ${AndIf} $UnsignedOK = 1
-    StrCpy $PlanWarn "The plan from the command line isn't signed ($PlanSig); /unsigned-plan was given."
+    StrCpy $PlanWarn "The runtime install script from the command line $2 ($PlanSig); /unsigned-plan was given."
     Return
   ${EndIf}
   ${If} $PlanKind == "cmdline"
-    ${FailWith} "The plan $PlanFile isn't signed by the TiddlyInstall key ${TI_PLAN_KEYID} ($PlanSig). Use a plan saved from <backend>/api/plan/<record>, or add /unsigned-plan if you wrote it yourself."
+    ${FailWith} "The runtime install script $PlanFile $2 ${TI_PLAN_KEYID} ($PlanSig). Use one saved from <backend>/api/plan/<record>, or add /unsigned-plan if you wrote it yourself."
   ${Else}
-    ${FailWith} "The install plan from $Backend isn't signed by the TiddlyInstall key ${TI_PLAN_KEYID} ($PlanSig). It may have been changed on the way; nothing was installed."
+    ${FailWith} "The runtime install script from $Backend $2 ${TI_PLAN_KEYID} ($PlanSig). It may have been changed on the way; nothing was installed."
   ${EndIf}
 FunctionEnd
 
@@ -1745,7 +1764,7 @@ Function CheckNonce
     Return
   ${EndIf}
   ${If} $PlanNonceGot S!= $PlanNonce
-    ${FailWith} "The install plan from $Backend is the answer to another request (it carries nonce $PlanNonceGot, not the $PlanNonce this installer sent). It may be an older plan replayed on the way; nothing was installed."
+    ${FailWith} "The runtime install script from $Backend is the answer to another request (it carries nonce $PlanNonceGot, not the $PlanNonce this installer sent). It may be an older plan replayed on the way; nothing was installed."
     Return
   ${EndIf}
   ${Log} "Nonce $PlanNonce echoed in the plan."
@@ -1970,7 +1989,7 @@ Function CheckAge
     Goto ca_end
   ${EndIf}
   ${If} $0 > ${TI_MAXAGE_LIMIT_DAYS}
-    ${FailWith} "This installer's plan was signed on $PlanSigned, $0 days ago, past the ${TI_MAXAGE_LIMIT_DAYS}-day limit. What it installs may since have been withdrawn or found unsafe. Get a current installer from $Backend and run that instead; nothing was installed."
+    ${FailWith} "This installer's runtime install script was signed on $PlanSigned, $0 days ago, past the ${TI_MAXAGE_LIMIT_DAYS}-day limit. What it installs may since have been withdrawn or found unsafe. Get a current installer from $Backend and run that instead; nothing was installed."
     Goto ca_end
   ${EndIf}
   StrCpy $AgeWarn "This installer's plan was signed on $PlanSigned, $0 days ago (it is meant to be used within $3 days). What it installs may have moved on. A current installer is at $Backend."
@@ -2993,7 +3012,7 @@ Function .onInit
     Call DownloadQuiet
     ${If} $U_out != "OK"
       Call TakenDownHint
-      ${FailWith} "Couldn't fetch the install plan from $Backend/api/plan/$RecHash ($U_out).$U_c Check the internet connection and try again."
+      ${FailWith} "Couldn't fetch the runtime install script from $Backend/api/plan/$RecHash ($U_out).$U_c Check the internet connection and try again."
       Call InitFail
     ${EndIf}
     StrCpy $PlanFile "$PLUGINSDIR\plan.txt"
@@ -3005,7 +3024,7 @@ Function .onInit
     ${EndIf}
   ${EndIf}
   ${IfNot} ${FileExists} "$PlanFile"
-    ${FailWith} "Can't read the plan $PlanFile."
+    ${FailWith} "Can't read the runtime install script $PlanFile."
     Call InitFail
   ${EndIf}
   Call CheckPlan
@@ -3023,7 +3042,7 @@ Function .onInit
       ${If} $PlanRec == ""
         StrCpy $PlanRec "none"
       ${EndIf}
-      ${FailWith} "The install plan is for record $PlanRec, but this installer's record is $RecHash. Nothing was installed."
+      ${FailWith} "The runtime install script is for record $PlanRec, but this installer's record is $RecHash. Nothing was installed."
       Call InitFail
     ${EndIf}
   ${Else}
@@ -3033,7 +3052,7 @@ Function .onInit
   ; which name it answers
   ${If} $PlanReqWant != ""
   ${AndIf} $PlanReq S!= $PlanReqWant
-    ${FailWith} "The plan from $Backend is not the answer for $TokRuntime/$TokProject. Nothing was installed."
+    ${FailWith} "The runtime install script from $Backend is not the answer for $TokRuntime/$TokProject. Nothing was installed."
     Call InitFail
   ${EndIf}
   ; ...and, for a fetched plan, the answer to *this* request rather than a
@@ -3050,13 +3069,13 @@ Function .onInit
   StrCpy $U_b 12
   Call TiIsB32
   ${If} $U_out = 0
-    ${FailWith} "The plan's appid '$AppId' isn't 12 base32 characters."
+    ${FailWith} "The runtime install script's appid '$AppId' isn't 12 base32 characters."
     Call InitFail
   ${EndIf}
   StrCpy $U_a $RootName
   Call IsPlainName
   ${If} $U_out = 0
-    ${FailWith} "The plan's rootname '$RootName' isn't a plain folder name."
+    ${FailWith} "The runtime install script's rootname '$RootName' isn't a plain folder name."
     Call InitFail
   ${EndIf}
   ${If} $AppName == ""
@@ -3069,12 +3088,12 @@ Function .onInit
     StrCpy $U_a $SrcName
     Call IsPlainName
     ${If} $U_out = 0
-      ${FailWith} "The plan's source file name '$SrcName' isn't a plain file name."
+      ${FailWith} "The runtime install script's source file name '$SrcName' isn't a plain file name."
       Call InitFail
     ${EndIf}
   ${EndIf}
   ${If} $TgtLine = 0
-    ${FailWith} "This app has no install plan for this version of Windows ($WinVer build $WinBuild, $Arch)."
+    ${FailWith} "This app has no runtime install script for this version of Windows ($WinVer build $WinBuild, $Arch)."
     Call InitFail
   ${EndIf}
 
@@ -3692,7 +3711,7 @@ Function CapScan
   Push $2
   StrCpy $CapN 0
   ${If} $CapUnknown != ""
-    StrCpy $U_a "it asks for things this installer does not recognise ($CapUnknown). We cannot tell you what they do, and a plan we cannot read all of is not one we can describe."
+    StrCpy $U_a "it asks for things this installer does not recognise ($CapUnknown). We cannot tell you what they do, and a script we cannot read all of is not one we can describe."
     Call CapAdd
   ${EndIf}
   StrCpy $0 0                     ; has administrator rights been accounted for?
@@ -3708,14 +3727,14 @@ Function CapScan
   ${EndIf}
   ${If} $NeedAdmin = 1
   ${AndIf} $0 = 0
-    StrCpy $U_a "it needs administrator rights: this plan's block asks for them."
+    StrCpy $U_a "it needs administrator rights: this script's block asks for them."
     Call CapAdd
   ${EndIf}
   ; The app's own source is the one download allowed to go unpinned
   ; (format.md, "Sources without a stored hash").
   ${If} $SrcLine > 0
   ${AndIf} $SrcSha == "-"
-    StrCpy $U_a "the project's own files carry no checksum in this plan: they are named by a commit id and fetched over HTTPS, and that is the whole of the check on them."
+    StrCpy $U_a "the project's own files carry no checksum in this script: they are named by a commit id and fetched over HTTPS, and that is the whole of the check on them."
     Call CapAdd
   ${EndIf}
   ${If} $TgtInstall != ""
@@ -3817,9 +3836,9 @@ Function CapScan
       ${EndIf}
     ${EndIf}
     ${If} $2 != ""
-      StrCpy $U_a "installing the project runs $2, which works out what the project depends on, downloads it and runs its code. This plan names none of that, and no SHA-256 in it covers any of it."
+      StrCpy $U_a "installing the project runs $2, which works out what the project depends on, downloads it and runs its code. The runtime install script names none of that, and no SHA-256 in it covers any of it."
     ${Else}
-      StrCpy $U_a "what the command that installs the project reaches for, we cannot say. Anything it downloads is decided while you install: this plan does not name it and no SHA-256 here covers it."
+      StrCpy $U_a "what the command that installs the project reaches for, we cannot say. Anything it downloads is decided while you install: this script does not name it and no SHA-256 here covers it."
     ${EndIf}
     Call CapAdd
   ${EndIf}

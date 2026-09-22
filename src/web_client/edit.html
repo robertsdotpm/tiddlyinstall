@@ -206,7 +206,7 @@
             <input type="text" id="f-rootname" data-key="rootname" spellcheck="false">
           </div>
           <div class="field">
-            <label for="f-backend">Plans fetched from</label>
+            <label for="f-backend">Install scripts fetched from</label>
             <input type="text" id="f-backend" data-key="backend" placeholder="https://ti.example" spellcheck="false">
           </div>
         </div>
@@ -221,7 +221,7 @@
           </div>
         </details>
         <details>
-          <summary>Install plan</summary>
+          <summary>Runtime install script</summary>
           <div class="field">
             <label for="plan-raw">Plan</label>
             <textarea id="plan-raw" rows="8" spellcheck="false" placeholder="Empty: the installer fetches the current plan online when it runs."></textarea>
@@ -237,9 +237,9 @@
           whose SHA-256 matches, instead of downloading&nbsp;it.</p>
         <p class="small muted">A pack is addressed by hash, so a member's name says nothing about it. What names each one
           - including <strong>which is the 32-bit runtime and which the 64-bit</strong>, when an offline installer carries both -
-          is the <strong>Install plan</strong> above: its <code>file</code> lines give each download's SHA-256 and its architecture, per
+          is the <strong>runtime install script</strong> above: its <code>file</code> lines give each download's SHA-256 and its architecture, per
           <code>[target]</code> block (<code>docs/format.md</code> section 4). An installer packing more than one
-          architecture of a runtime must carry its plan rather than fetch it, or nothing can tell them&nbsp;apart.</p>
+          architecture of a runtime must carry its script rather than fetch it, or nothing can tell them&nbsp;apart.</p>
         <ul class="pack-list" id="pack-list"></ul>
         <div class="field">
           <label for="pack-add">Add files</label>

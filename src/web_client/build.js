@@ -186,7 +186,16 @@ function paintFiles(job) {
     // says so too. A file signed by us (mode A, disabled in this prototype)
     // gets no notice: openNotice has nothing to say about a build nobody can
     // make yet, and it is certainly not the publisher's own certificate.
-    const by = f.signed ? (/tiddlyinstall/i.test(f.signed) ? 'ours' : 'yours') : 'unsigned';
+    // Not a substring test on the certificate subject. That decided a
+    // trust label from text the publisher chooses: in mode B they pick
+    // their own certificate, so any subject containing "tiddlyinstall"
+    // was reported to recipients as ours. It is also wrong in every
+    // case today -- mode A is disabled for want of a certificate, so a
+    // signature here can only be a publisher's.
+    //
+    // When mode A ships this must come from the job's mode, which the
+    // server knows, and never from the name on the certificate.
+    const by = f.signed ? 'yours' : 'unsigned';
     const meets = openNotice(f.platform, by);
     const open = meets
       ? '<br><span class="muted open-note"><span class="open-note-head">On opening it:</span> ' + esc(meets) + '</span>'
@@ -202,7 +211,7 @@ function paintFiles(job) {
   if (note) {
     const off = files.some((f) => f.offline);
     note.textContent = files.length
-      ? 'Each of these installers covers every architecture listed beside it, from the one file: it carries an install plan per ' +
+      ? 'Each of these installers covers every architecture listed beside it, from the one file: it carries a runtime install script per ' +
         'architecture and picks on the computer it runs on, and its review screen says which one it chose and why before it installs.' +
         (off ? ' An offline installer had to choose when it was built, so it only carries the architectures that were packed into it.' : '')
       : '';
@@ -260,7 +269,7 @@ function paintCatalog(job) {
   if (c && c.changed) {
     const n = Number(c.changes) || 0;
     b.textContent = 'Made with a changed catalogue: ' + n + ' change' + (n === 1 ? '' : 's') + ' made in this browser on the Registry page. ' +
-      'What these installers download and run comes from the plan inside them, and their review screens show it in full before installing.';
+      'What these installers download and run comes from the runtime install script inside them, and their review screens show it in full before installing.';
     b.hidden = false;
   } else b.hidden = true;
 }

@@ -37,9 +37,14 @@ cases() {
 	}
 	one fetched-http 0 "Plan signature: ok:tiverify" "$D/app_$(cat "$D/hash").run" --backend="$B"
 	one given-plan 0 "Plan signature: ok:tiverify" "$D/base.run" --record="$D/record.txt" --plan="$D/plan.txt"
-	one tampered 1 "does not match this plan" "$D/base.run" --record="$D/record.txt" --plan="$D/tampered.txt"
+	# A signature that is present but wrong and one that is absent must
+	# not say the same thing: absence is an omission, a mismatch is
+	# evidence the bytes changed after it was made. Both used to be
+	# reported as "not signed by the TiddlyInstall key", with only the
+	# parenthetical telling them apart (2026-09-22).
+	one tampered 1 "does NOT match the TiddlyInstall key" "$D/base.run" --record="$D/record.txt" --plan="$D/tampered.txt"
 	one replayed 1 "install plan is for record" "$D/base.run" --record="$D/record2.txt" --plan="$D/plan.txt"
-	one unsigned 1 "not signed by the TiddlyInstall key" "$D/base.run" --record="$D/record.txt" --plan="$D/unsigned.txt"
+	one unsigned 1 "carries no signature by the TiddlyInstall key" "$D/base.run" --record="$D/record.txt" --plan="$D/unsigned.txt"
 	rm -rf "$D/home" "$D/tmp"
 }
 

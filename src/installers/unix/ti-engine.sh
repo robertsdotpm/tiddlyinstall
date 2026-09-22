@@ -1080,27 +1080,39 @@ ti_check_plan() {
 		return 0
 		;;
 	esac
+	# An absent signature and a wrong one are different findings, and the
+	# sentence used to call both "not signed". Absence is an omission;
+	# a signature that does not match is evidence the bytes changed after
+	# it was made. Telling a reader the first when the second happened is
+	# the opposite of the useful thing, and the parenthetical that gave
+	# it away was doing all the work.
+	case $sig in
+	unsigned) ti_sig_verb='carries no signature by the TiddlyInstall key' ;;
+	bad:*)    ti_sig_verb='has a signature that does NOT match the TiddlyInstall key' ;;
+	cannot:*) ti_sig_verb='has a signature that could not be checked here' ;;
+	*)        ti_sig_verb='is not signed by the TiddlyInstall key' ;;
+	esac
 	case $TI_PLAN_KIND in
 	embedded)
-		ti_plan_warn="The runtime install script inside this file is not signed by the TiddlyInstall key ($why). It is only as trustworthy as the file carrying it."
+		ti_plan_warn="The runtime install script inside this file $ti_sig_verb ($why). It is only as trustworthy as the file carrying it."
 		;;
 	cmdline)
-		[ "$opt_unsigned" = 1 ] || ti_fail "The plan $TI_PLAN is not signed by the TiddlyInstall key ${TI_PLAN_KEYID:-} ($why). Use a plan saved from <backend>/api/plan/<record>, or add --unsigned-plan if you wrote it yourself."
-		ti_plan_warn="The plan is not signed ($why); --unsigned-plan was given."
+		[ "$opt_unsigned" = 1 ] || ti_fail "The runtime install script $TI_PLAN $ti_sig_verb ${TI_PLAN_KEYID:-} ($why). Use one saved from <backend>/api/plan/<record>, or add --unsigned-plan if you wrote it yourself."
+		ti_plan_warn="The runtime install script $ti_sig_verb ($why); --unsigned-plan was given."
 		;;
 	*)
 		case $sig in
 		cannot:*)
 			case $TI_PLAN_URL in
 			https://*)
-				ti_plan_warn="The plan's signature could not be checked ($why); it was accepted because it came over HTTPS from ${TI_PLAN_URL%%/api/*}."
+				ti_plan_warn="The runtime install script's signature could not be checked ($why); it was accepted because it came over HTTPS from ${TI_PLAN_URL%%/api/*}."
 				return 0
 				;;
 			esac
-			ti_fail "The install plan came over plain HTTP and its signature can't be checked here: $why. Install OpenSSL 1.1.1 or later, or use an HTTPS backend (--backend=https://...)."
+			ti_fail "The runtime install script came over plain HTTP and its signature can't be checked here: $why. Install OpenSSL 1.1.1 or later, or use an HTTPS backend (--backend=https://...)."
 			;;
 		esac
-		ti_fail "The install plan from ${TI_PLAN_URL%%/api/*} is not signed by the TiddlyInstall key ${TI_PLAN_KEYID:-} ($why). It may have been changed on the way; nothing was installed."
+		ti_fail "The runtime install script from ${TI_PLAN_URL%%/api/*} $ti_sig_verb ${TI_PLAN_KEYID:-} ($why). It may have been changed on the way; nothing was installed."
 		;;
 	esac
 }
@@ -1253,7 +1265,7 @@ ti_check_age() { # backend
 		[ "$now" -lt "$sec" ] && plausible=0   # a plan from the future: don't believe the clock
 	fi
 	if [ "$plausible" != 1 ]; then
-		ti_age_warn="This installer's plan was signed on $TI_PLAN_SIGNED, and this machine's clock says $(ti_clock_says), which can't be right (this installer was built $TI_BUILD_TIME), so how old the plan is can't be told. Nothing is refused for age."
+		ti_age_warn="This installer's runtime install script was signed on $TI_PLAN_SIGNED, and this machine's clock says $(ti_clock_says), which can't be right (this installer was built $TI_BUILD_TIME), so how old the plan is can't be told. Nothing is refused for age."
 		ti_log "Clock not plausible (now ${now:-unreadable}, built $bt); the plan's age is reported only."
 		return 0
 	fi
@@ -1263,9 +1275,9 @@ ti_check_age() { # backend
 	where=$1
 	[ -n "$where" ] || where=$TI_DEFAULT_BACKEND
 	if [ "$age" -gt "$TI_MAXAGE_LIMIT" ]; then
-		ti_fail "This installer's plan was signed on $TI_PLAN_SIGNED, $((age / 86400)) days ago, past the $((TI_MAXAGE_LIMIT / 86400))-day limit. What it installs may since have been withdrawn or found unsafe. Get a current installer from $where and run that instead; nothing was installed."
+		ti_fail "This installer's runtime install script was signed on $TI_PLAN_SIGNED, $((age / 86400)) days ago, past the $((TI_MAXAGE_LIMIT / 86400))-day limit. What it installs may since have been withdrawn or found unsafe. Get a current installer from $where and run that instead; nothing was installed."
 	fi
-	ti_age_warn="This installer's plan was signed on $TI_PLAN_SIGNED, $((age / 86400)) days ago (it is meant to be used within $((max / 86400)) days). What it installs may have moved on. A current installer is at $where."
+	ti_age_warn="This installer's runtime install script was signed on $TI_PLAN_SIGNED, $((age / 86400)) days ago (it is meant to be used within $((max / 86400)) days). What it installs may have moved on. A current installer is at $where."
 	return 0
 }
 
@@ -1377,7 +1389,7 @@ ti_revocations() { # backend
 		fi
 	fi
 	if [ -z "$got" ]; then
-		ti_revoke_note="no revocation list could be fetched or found on this machine, so only the plan's own age was checked"
+		ti_revoke_note="no revocation list could be fetched or found on this machine, so only the script's own age was checked"
 		return 0
 	fi
 	if [ "$got" != "$cache" ] && [ -n "$cache" ]; then
@@ -1960,7 +1972,7 @@ ti_step() { # type fields...
 		case $d in "$TI_APP_DIR" | "$TI_TMP") ti_fail "Step delete: refusing to delete $d" ;; esac
 		rm -rf "$d"
 		;;
-	*) ti_fail "Unknown step '$s_type' in the plan. Download the installer again." ;;
+	*) ti_fail "Unknown step '$s_type' in the runtime install script. Download the installer again." ;;
 	esac
 }
 
@@ -2107,7 +2119,7 @@ ti_needs_eval() {
 			ti_need_missing="$ti_need_missing $i"
 			pk=
 			[ -n "$ti_pm" ] && pk=$(ti_sel npkg "$i" | awk -F'\t' -v m="$ti_pm" '$1 == m { print $2; exit }')
-			case $pk in *[!A-Za-z0-9.+_:\ -]*) ti_fail "The plan names a package with characters that don't belong in one: $pk" ;; esac
+			case $pk in *[!A-Za-z0-9.+_:\ -]*) ti_fail "The runtime install script names a package with characters that don't belong in one: $pk" ;; esac
 			if [ -n "$pk" ]; then
 				ti_need_pkgs="${ti_need_pkgs:+$ti_need_pkgs }$pk"
 			else
@@ -2655,7 +2667,7 @@ ti_arch_note() { # build-arch runtime-name
 	case $1 in any | universal | "$TI_ARCH") return 0 ;; esac
 	case $TI_ARCH:$1 in
 	amd64:x86 | arm64:x86)
-		printf ' -- this machine is 64-bit, but the plan has no 64-bit build of %s for this system' "$2" ;;
+		printf ' -- this machine is 64-bit, but the runtime install script has no 64-bit build of %s for this system' "$2" ;;
 	arm64:amd64)
 		printf ' -- this machine is ARM; this is an Intel/AMD build' ;;
 	*)
@@ -3005,7 +3017,7 @@ ti_cap_number() { # n -> "One", "Two", ...
 ti_capabilities() {
 	u=$(ti_unknown_bits)
 	[ -n "$u" ] &&
-		printf '%s\n' "it asks for things this installer does not recognise ($u). We cannot tell you what they do, and a plan we cannot read all of is not one we can describe."
+		printf '%s\n' "it asks for things this installer does not recognise ($u). We cannot tell you what they do, and a script we cannot read all of is not one we can describe."
 	said_admin=0
 	if [ "$TI_SYSTEM" = 1 ]; then
 		printf '%s\n' "it installs for every user on this machine, into $TI_ROOT, and needs administrator rights to do it."
@@ -3016,12 +3028,12 @@ ti_capabilities() {
 		said_admin=1
 	fi
 	[ "$need_root" = 1 ] && [ "$said_admin" = 0 ] &&
-		printf '%s\n' "it needs administrator rights: this plan's block asks for them."
+		printf '%s\n' "it needs administrator rights: this script's block asks for them."
 	# The app's own source is the one download allowed to go unpinned
 	# (format.md, "Sources without a stored hash").
 	case ${ti_src_sha:-} in
 	'' | -) [ -n "$ti_src_name" ] &&
-		printf '%s\n' "the project's own files carry no checksum in this plan: they are named by a commit id and fetched over HTTPS, and that is the whole of the check on them." ;;
+		printf '%s\n' "the project's own files carry no checksum in this script: they are named by a commit id and fetched over HTTPS, and that is the whole of the check on them." ;;
 	esac
 	if [ -n "$ti_ins_cmd" ]; then
 		case $ti_ins_who in
@@ -3038,7 +3050,7 @@ ti_capabilities() {
 		if [ -n "$f" ]; then
 			printf '%s\n' "installing the project runs $f, which works out what the project depends on, downloads it and runs its code. The runtime install script names none of that, and no SHA-256 in it covers any of it."
 		else
-			printf '%s\n' "what the command that installs the project reaches for, we cannot say. Anything it downloads is decided while you install: this plan does not name it and no SHA-256 here covers it."
+			printf '%s\n' "what the command that installs the project reaches for, we cannot say. Anything it downloads is decided while you install: this script does not name it and no SHA-256 here covers it."
 		fi
 	fi
 	return 0
@@ -3215,15 +3227,26 @@ ti_install_main() {
 	# could add, but to the one comparison that happens outside the file.
 	nothing*) ti_signed_scope= ;;
 	nobody* | unknown*) ;;
-	*) ti_signed_scope='It covers this installer file, not the program it installs.' ;;
+	# Was "It covers this installer file, not the program it installs."
+	# -- the third copy of what IMPORTANT says at the foot of the same
+	# section. What is worth saying here instead is the part IMPORTANT
+	# does not: which artifact this signature is over.
+	*) ti_signed_scope='It covers this file, and was made before the settings below were chosen.' ;;
 	esac
 	# The signature as a heading and a reason, rather than one long
 	# sentence in a value column: "UNSIGNED" is the thing to see first,
 	# and why it is unsigned is a different sentence.
 	case $ti_signed_short in
 	nothing*)
-		ti_signed_label='UNSIGNED'
-		ti_signed_why='Linux does not check a signature when it runs a .run file, so these carry none.'
+		# Not "UNSIGNED", which is what Windows says and means something
+		# else there: that somebody could have signed this and did not.
+		# A .run has nowhere to put a signature and Linux would not look
+		# at one, so the absence is a fact about the format, not a
+		# finding about this file. The same word for both taught the
+		# reader to discount it in the case where it does mean
+		# something.
+		ti_signed_label='NO SIGNATURE, AND NOTHING WOULD CHECK ONE'
+		ti_signed_why='Linux runs a .run file without looking for a signature, so these do not carry one. On Windows or macOS an unsigned file is a choice; here there is no choice to make.'
 		;;
 	nobody*)
 		ti_signed_label='UNSIGNED'
@@ -3515,8 +3538,12 @@ ti_install_main() {
 		if [ -n "$ti_self_sha" ]; then
 			printf '\n  Installer SHA-256\n'
 			printf '  %s\n' "$ti_self_sha"
+			# Matches both spellings: "UNSIGNED" where signing was
+			# possible and skipped, and "NO SIGNATURE..." where the
+			# format has nowhere to put one. Either way nothing on this
+			# machine vouches for the file, which is what this says.
 			case $ti_signed_label in
-			UNSIGNED*)
+			UNSIGNED* | 'NO SIGNATURE'*)
 				# With no signature on the file, this is the only check
 				# left that happens anywhere but inside the file, so it
 				# is the one that counts and it says so.
@@ -3578,7 +3605,13 @@ ti_install_main() {
 		printf '  %s\n' "$TI_ORIGIN" | ti_wrap 74 2
 		printf '  %s\n' '(what was picked in the web client; the script above is what carries it out)' | ti_wrap 74 2
 		printf '\n  IMPORTANT\n'
-		printf '  %s\n' 'TiddlyInstall checks that the files below are the files the runtime install script names. It does not check that the application itself is safe.' | ti_wrap 74 2
+		# One statement of this, not three. The scope line under the
+		# installer signature ("It covers this installer file, not the
+		# program it installs") and the sentence that used to lead this
+		# block ("It does not check that the application itself is
+		# safe") were the same fact in other words, on a screen whose
+		# own rule is that nothing is said twice. This one names the
+		# program and says what to do about it, so it is the one kept.
 		printf '  %s\n' "$ti_vouch" | ti_wrap 74 2
 		# Everything on this screen can be read without running the
 		# file, which is worth saying on the screen you only reach by

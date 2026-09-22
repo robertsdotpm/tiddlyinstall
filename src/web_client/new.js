@@ -280,7 +280,7 @@ function paintCatalog() {
     }
     table.tBodies[0].innerHTML = rows.join('');
     hint.textContent = (apiLocal() ? 'From this page\'s catalogue' + (catalog.changed ? ', with your changes from the Registry page' : '') : 'From the build server\'s catalogue') +
-      ': one row per install plan it makes for ' + (entry.label || rt) + ', by OS version and architecture. ' +
+      ': one row per runtime install script it makes for ' + (entry.label || rt) + ', by OS version and architecture. ' +
       'The installer carries them all and picks on the machine.';
     panel.classList.remove('py-panel');   // show it for every language with data
   } else {
@@ -824,7 +824,7 @@ function paintOverlayNote() {
   link.textContent = 'Registry page';
   const what = n + ' catalogue change' + (n === 1 ? '' : 's') + ' made in this browser (';
   if (apiLocal()) {
-    overlayNote.replaceChildren('Builds use ' + what, link, '). The installers\' review screens show the plan they carry.');
+    overlayNote.replaceChildren('Builds use ' + what, link, '). The installers\' review screens show the script they carry.');
   } else {
     const b = document.createElement('button');
     b.type = 'button';

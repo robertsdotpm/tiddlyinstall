@@ -265,7 +265,7 @@ function load(info, displayName, note) {
 
   const parts = ['<strong>' + escHtml(displayName) + '</strong>', KIND_NAME[info.kind] || info.kind];
   parts.push(fresh ? 'no settings inside yet, starting new ones' : 'settings found');
-  if (info.plan) parts.push('has an install plan');
+  if (info.plan) parts.push('has a runtime install script');
   if (info.pack.length) parts.push(info.pack.length + ' packed file' + (info.pack.length === 1 ? '' : 's'));
   el('file-summary').innerHTML = parts.join(' · ') + (note ? '<br><span class="small muted">' + escHtml(note) + '</span>' : '');
   el('file-summary').hidden = false;
