@@ -289,7 +289,12 @@ async function header(w, shots) {
     ok(await opened(), `${B.name} ${w}px header: the menu button opens the menu`);
   }
   const links = await B.js(`Array.prototype.map.call(document.querySelectorAll('.site-header nav > a'), (a) => { const r = a.getBoundingClientRect(); return [a.textContent.trim(), Math.round(r.left), Math.round(r.right), Math.round(r.height), a.getClientRects().length > 0]; })`);
-  ok(links.length === 4 && links.every((l) => l[4] && l[1] >= 0 && l[2] <= w), `${B.name} ${w}px header: the four links show inside the viewport`, JSON.stringify(links));
+  // Count comes from the page, not a number written here: the nav grew
+  // from four to five when Verify was added (2026-09-22) and this was the
+  // only thing that noticed, by failing for the wrong reason.
+  const navCount = await B.js(`document.querySelectorAll('.site-header nav > a').length`);
+  ok(links.length === navCount && navCount >= 4 && links.every((l) => l[4] && l[1] >= 0 && l[2] <= w),
+    `${B.name} ${w}px header: all ${navCount} links show inside the viewport`, JSON.stringify(links));
   await audit(w, menu ? 'menu-open' : 'header', { shots });
   await B.tap('.site-header nav > a[href="#runtimes"]');
   ok(await B.js(`location.hash === '#runtimes'`), `${B.name} ${w}px header: a nav link goes to its section`);

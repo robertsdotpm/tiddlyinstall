@@ -573,8 +573,19 @@ export function mountApiFooter() {
       '<span class="muted">for one file with everything inside. Opened from your disk it works with no build server.</span>' +
       '<span class="muted mobile-only"> On a phone or tablet it goes to your downloads, to copy to a computer: phones may not open a saved page, or run it.</span>';
     footer.appendChild(save);
-    save.querySelector('.save-page').addEventListener('click', savePage);
   }
+  // Every "Save this page" button on the page, not only the footer's: the
+  // home page has one too, and a button that looks like it saves and does
+  // nothing is worse than no button.
+  if (typeof TI_PRISTINE !== 'undefined') {
+    document.querySelectorAll('.save-page').forEach((b) => b.addEventListener('click', savePage));
+  }
+  // The build stamp is written into the markup before any of this, so
+  // move it to the end now that the footer's own parts are in place.
+  // It is the quietest line in the footer and belongs under the rest.
+  const stamp = footer.querySelector && footer.querySelector('.build-stamp');
+  if (stamp) footer.appendChild(stamp);
+
   paintMode();
   paintApiFooter();
   apiReady();

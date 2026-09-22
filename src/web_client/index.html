@@ -20,6 +20,7 @@
       <a href="index.html" aria-current="page">Home</a>
       <a href="new.html">New installer</a>
       <a href="edit.html">Edit installer</a>
+      <a href="verify.html">Verify</a>
       <a href="runtimes.html">Registry</a>
     </nav>
   </header>
@@ -42,9 +43,9 @@
         </div>
         <dl class="spec-list">
           <dt>Output</dt><dd><code>.exe</code> &middot; <code>.run</code> &middot; <code>.zip</code></dd>
-          <dt>Languages</dt><dd>13, plus your own runtime</dd>
+          <dt>Languages</dt><dd>13, plus your own&nbsp;runtime</dd>
           <dt>Oldest target</dt><dd>Windows XP &middot; glibc 2.17 Linux &middot; macOS&nbsp;10.9</dd>
-          <dt>This page</dt><dd>One HTML file, no server, no network</dd>
+          <dt>This page</dt><dd>One HTML file, no server, no&nbsp;network</dd>
         </dl>
       </div>
 
@@ -61,10 +62,10 @@
         <div class="manifest-body">
           <dl>
             <dt>Installs</dt><dd>requests 2.32.3, from <code>github.com/psf/requests</code>&nbsp;<code>v2.32.3</code></dd>
-            <dt>Runtime</dt><dd>Python 3.14.7 - newest that runs on this computer</dd>
+            <dt>Runtime</dt><dd>Python 3.14.7 - newest that runs on this&nbsp;computer</dd>
             <dt>Into</dt><dd><code>C:\ti\k3m9q2x7v4p8\</code></dd>
             <dt>Signed by</dt><dd><span class="verified">Matthew Roberts</span> &middot; certificate valid.
-              It covers the installer, not the program it installs</dd>
+              It covers the installer, not the program it&nbsp;installs</dd>
           </dl>
           <hr class="manifest-sep">
           <span class="eyebrow">Will download</span>
@@ -81,12 +82,22 @@
       <span class="eyebrow"><span class="num">02</span> &nbsp;The unusual part</span>
       <h2>One file, like TiddlyWiki</h2>
       <p class="measure">TiddlyInstall is a single HTML file. This page carries the installer
-      programs, the runtime catalogue and all the code that makes, edits and signs
-      installers. Save it (at the bottom of the page) and open it from your disk, and it keeps
-      working with no server: it builds installers for code you write here or for packages, edits
-      any installer nobody has signed, and signs with your own key. When a build server is there,
-      it uses it for the rest: installers we sign, GitHub repos, and installers with their runtimes
-      packed&nbsp;inside.</p>
+      programs, the runtime catalogue, and all the code that makes, edits and&nbsp;signs&nbsp;them.</p>
+      <!-- Was one paragraph of six lines that read as a wall. The two halves
+           are a contrast -- with a server, without one -- so they are set as
+           a contrast rather than as two more sentences in a row. -->
+      <dl class="spec-list two-up">
+        <dt>Saved to your disk</dt>
+        <dd>It keeps working with no server at all: it builds installers from code you write here
+          or from packages, edits any installer nobody has signed, and signs with your&nbsp;own&nbsp;key.</dd>
+        <dt>With a build server</dt>
+        <dd>It hands that server the rest: installers we sign, GitHub repositories, and installers
+          with their runtimes packed&nbsp;inside.</dd>
+      </dl>
+      <div class="actions" style="margin-top:18px">
+        <button type="button" class="button save-page">Save this page</button>
+        <span class="small muted" style="align-self:center">about 6 MB, and it is the whole&nbsp;product</span>
+      </div>
     </section>
 
     <section class="section">

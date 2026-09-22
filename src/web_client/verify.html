@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verify installer · TiddlyInstall</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">
+      <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="2.5" y="2.5" width="19" height="19"></rect>
+        <line x1="12" y1="6" x2="12" y2="13"></line>
+        <polyline points="8.5 9.8 12 13.3 15.5 9.8"></polyline>
+        <line class="tray" x1="7" y1="17.5" x2="17" y2="17.5"></line>
+      </svg>
+      TiddlyInstall</a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="new.html">New installer</a>
+      <a href="edit.html">Edit installer</a>
+      <a href="verify.html" aria-current="page">Verify</a>
+      <a href="runtimes.html">Registry</a>
+    </nav>
+  </header>
+
+  <main class="narrow">
+    <div class="page-head">
+      <span class="eyebrow"><span class="num">Verify</span> &nbsp;Installer</span>
+      <h1>See what an installer will do, without running&nbsp;it</h1>
+      <!-- Deliberately no verdict anywhere on this page. A signature says
+           who made a thing, never that the thing is good, and a page that
+           answered "safe" or showed a tick would collapse that distinction
+           in exactly the way every other screen here works to keep open
+           (docs/design.md, "What we sign, and the words for it"). Every
+           row below states a fact and leaves the judgement to the reader. -->
+      <p class="lede">Drop an installer here and it is read in this page: what it installs, what it
+        downloads, what it runs, and who signed what. Nothing is executed, and with no build server
+        set the file never leaves your&nbsp;computer.</p>
+    </div>
+
+    <div class="drop" id="v-drop">
+      <p><strong>Drop an installer here</strong>, or
+        <label class="link-button" for="v-file">choose a file<input type="file" id="v-file" accept=".exe,.run,.zip" hidden></label>.</p>
+      <p class="small muted" style="margin:6px 0 0">A Windows <code>.exe</code>, a Linux <code>.run</code>,
+        or a macOS <code>.zip</code>. Large files are hashed in&nbsp;pieces.</p>
+    </div>
+
+    <p class="unavailable" id="v-error" hidden></p>
+    <p class="small muted" id="v-busy" hidden>Reading&nbsp;it...</p>
+
+    <div id="v-out" hidden>
+      <section class="panel">
+        <h2 class="section-title">The file</h2>
+        <dl class="spec-list" id="v-file-facts"></dl>
+      </section>
+
+      <section class="panel">
+        <h2 class="section-title">What it would do</h2>
+        <p class="small muted" id="v-plan-none" hidden>This installer carries no plan, so there is nothing here to
+          read. It would fetch one from a build server when it&nbsp;ran.</p>
+        <dl class="spec-list" id="v-does"></dl>
+        <div id="v-downloads-wrap" hidden>
+          <span class="label">What it downloads</span>
+          <div class="table-wrap">
+            <table class="small" id="v-downloads">
+              <thead><tr><th>File</th><th>From</th><th>SHA-256</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="v-cmds-wrap" hidden>
+          <span class="label">Commands it runs</span>
+          <p class="small muted" style="margin-top:0">What a command does is not decidable from its text, so these are
+            listed rather than&nbsp;described.</p>
+          <ul class="small" id="v-cmds"></ul>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="section-title">Who signed what</h2>
+        <dl class="spec-list" id="v-signing"></dl>
+        <p class="small muted" style="margin-bottom:0">A signature on the installer program says who wrote that program
+          and that it has not been altered. A signature on the plan says the plan came from a resolver unchanged.
+          Neither is a statement about the software being&nbsp;installed.</p>
+      </section>
+
+      <section class="panel" id="v-server-panel">
+        <h2 class="section-title">Checked against the build server</h2>
+        <p class="small muted" id="v-server-none" hidden>No build server is set, so only what is inside the file could be
+          read. A server can also say whether these settings are ones it published, whether the plan is still the one it
+          would give you, and whether it has been revoked since this file was&nbsp;built.</p>
+        <dl class="spec-list" id="v-server"></dl>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Designed by <a href="https://robertsdotpm.github.io/">Matthew Roberts</a> and implemented by Claude.
+    &middot; <a href="mailto:matthew@roberts.pm">Hire me</a>
+  </footer>
+  <script type="module" src="verify.js"></script>
+</body>
+</html>

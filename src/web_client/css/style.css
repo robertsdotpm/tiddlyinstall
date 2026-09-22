@@ -632,15 +632,21 @@ details[open] > summary { margin-bottom: 12px; }
    now, so an 18px inset here put every heading 18px right of every edge.
    No rule either -- the cards carry borders, and a full-width line
    directly above one read as a second, heavier border. */
+/* These are group headings, not eyebrows, so they are set to be read
+   rather than glanced at. --faint measures 6.0:1 on the dark background
+   and passes AA at this size; what made them hard to read was the type,
+   not the contrast -- 0.75em uppercase with 0.13em tracking is small,
+   wide-spaced caps, which the eye has to spell out. Bigger, tighter and
+   one step brighter (--muted, 6.8:1 dark, 5.5:1 light). */
 .customise > .customise-group {
   margin: 0 0 8px;
   padding: 0;
   font-family: var(--mono);
-  font-size: 0.75em;
-  font-weight: 600;
-  letter-spacing: 0.13em;
+  font-size: 0.84em;
+  font-weight: 700;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--faint);
+  color: var(--muted);
 }
 .customise > details + .customise-group { margin-top: 26px; }
 
@@ -1012,11 +1018,17 @@ form:has(#tpl-tray:checked) .tpl-gui-only { display: block; }
 .copy-btn.copied { border-color: var(--accent); color: var(--accent); }
 .copy-btn.copy-failed { border-color: var(--rule-strong); color: var(--text-loud); }
 
-/* The commit the page was built from. Its own line under the credit, and
-   quieter than it: it is a fact you go looking for, not one to read. */
+/* The commit the page was built from. Last line of the footer, and
+   quieter than the rest: it is a fact you go looking for, not one to
+   read. It is written into the markup before the footer's JavaScript
+   parts (the build-server settings, the "save this page" line) are
+   appended to the end, so mountApiFooter moves it back to last once it
+   has added them. Not done with flex order: the footer's credit line is
+   loose inline content, and a flex column makes each <a> in it a row of
+   its own. */
 .build-stamp {
   display: block;
-  margin-top: 6px;
+  margin-top: 10px;
   color: var(--faint);
   font-size: 0.88em;
 }

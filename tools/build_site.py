@@ -52,7 +52,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WEB = "src/web_client"
 SHARED = "src/shared"
 PAGES = [("home", WEB + "/index.html"), ("new", WEB + "/new.html"), ("build", WEB + "/build.html"),
-         ("edit", WEB + "/edit.html"), ("runtimes", WEB + "/runtimes.html")]
+         ("edit", WEB + "/edit.html"), ("verify", WEB + "/verify.html"), ("runtimes", WEB + "/runtimes.html")]
 # Other pages' links in the offline copy, by the file name a page links to.
 LINK_ALIASES = {"create.html": "#new&write", "builds.html": "#home", "bases.html": "#new"}
 # Copied to the regular site (--multi) as they are, keeping these names, so
@@ -112,7 +112,7 @@ CORE_MODULES = [
     *web("overlay.js", "change-list.js", "overlay-consent.js"),
     *web("local-api.js", "router.js"),
 ]
-PAGE_MODULES = web("new.js", "build.js", "edit.js", "catalog-editor.js")
+PAGE_MODULES = web("new.js", "build.js", "edit.js", "verify.js", "catalog-editor.js")
 # Read on their own, not joined: three classic scripts the page carries
 # inline (they must run before the modules, or without them), and the DOM
 # shims only the ES5 copy uses (tools/es5/build-es5.mjs).
@@ -468,6 +468,17 @@ def offline_page(catalog_dir, backend):
         index["summary"] = json.load(f)
     index_json = json_block(index)
     blocks.append(data_block("ti-catalog", index_json, "application/json"))
+    # The plan signing public key the bases are built with, so the Verify
+    # page checks a plan against the same key the engines do. A public
+    # key, and it is already inside every base in this file; this only
+    # makes it readable. Absent when the key file is not here: the page
+    # then says it cannot check rather than pretending it did.
+    keyfile = os.path.join(ROOT, "src/build_server/data/plan-signing-key.pub")
+    if os.path.isfile(keyfile):
+        blocks.append(data_block("ti-plan-pubkey", read(keyfile).strip(), "text/plain"))
+        report.append("  plan key %s" % read(keyfile).strip()[:16])
+    else:
+        report.append("  plan key NONE (%s not found); Verify cannot check plan signatures" % keyfile)
     for folder, data in chunks:
         blocks.append(data_block("ti-cat-" + folder, b64_block(data), extra=f' data-folder="{folder}"'))
     packed = sum(len(d) for _, d in chunks)
