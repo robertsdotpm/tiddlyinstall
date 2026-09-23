@@ -57,9 +57,20 @@ export function targetBlocks(planText) {
 // the page and the server have to agree.
 export function setRtScripts(cat, roots, leaves, sha256hex) {
   cat.rtscripts = (roots && leaves && leaves.length)
-    ? { roots: String(roots), leaves, sha256hex }
+    ? { roots: normaliseDoc(roots), leaves, sha256hex }
     : null;
   return cat;
+}
+
+// The server reads the roots document from a file; the page reads it out
+// of a <script> block, which carries the newlines the markup put around
+// it. Both have to end up with the same bytes or the two write different
+// `rtroots` lines for the same build -- which is the equivalence the
+// goldens exist to protect, and was 1 line different in 60 when this was
+// missing. Safe to trim: the signature covers everything *before* the
+// `sig` line, so what follows it is not signed.
+export function normaliseDoc(text) {
+  return String(text).replace(/^[\r\n]+/, '').replace(/\s+$/, '') + '\n';
 }
 
 // The root this document states for a runtime, or ''.

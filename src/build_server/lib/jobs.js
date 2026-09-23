@@ -16,6 +16,7 @@ import crypto from 'node:crypto';
 import { runJob, lookupPackage as lookupPackageJS, packageLaunch, projectName, kvLine } from '../../shared/builder.js';
 import { GitHubError, archiveName, archiveUrl } from '../../shared/github.js';
 import { resolveFiles, validPackage, packagePolicyFor, packageProject, replacer, setRevoked } from '../../shared/resolve.js';
+import { setRtScripts } from '../../shared/rtscript.js';
 import { recordHash } from '../../shared/tifile.js';
 import { decodeIconPng } from '../../shared/icon.js';
 import { safeFetch } from './netsafe.js';
@@ -236,6 +237,13 @@ export class Builder {
     // Right before resolving, not before the await: the list is read per
     // request and the resolve itself doesn't yield.
     setRevoked(this.cat, this.revokedFiles());
+    // The same proof material the page carries, from the same files, so
+    // a plan written here and a plan written in a browser come out
+    // identical. Without this the server emitted no `rtproof` lines and
+    // the page did, which is exactly the byte-for-byte equivalence the
+    // goldens exist to protect -- and they did not notice, because they
+    // set no proof material either and compared two proof-free builds.
+    setRtScripts(this.cat, this.rtRoots(), this.rtLeaves(app.runtime), sha256hex);
     const { plan, files } = resolveFiles(this.cat, app);
     const out = files.map((f) => Object.assign({}, f, { local: localPath(this.cat, f.local) }));
     if (app.source) {
@@ -265,6 +273,25 @@ export class Builder {
     const { plan, files } = await this.plan(hash, platforms);
     if (!this.signer) throw new Error('no plan signing key');
     return { plan: this.signer.signString(withNonce(addRequestLine(plan, 'name', runtime, name), nonce)), files };
+  }
+
+  /* ---------- signed runtime scripts (src/shared/rtscript.js) ---------- */
+
+  // Written by tools/sign_runtime_scripts.mjs into data/rtscripts/. Read
+  // from disk each time rather than cached at startup: the signer is run
+  // when the catalogue changes, and a server holding yesterday's roots
+  // would write proofs nothing could check.
+  rtRoots() {
+    try { return fs.readFileSync(path.join(this.data, 'rtscripts', 'roots.txt'), 'utf8'); }
+    catch (e) { return ''; }
+  }
+
+  rtLeaves(runtime) {
+    if (!/^[a-z0-9_-]+$/i.test(String(runtime || ''))) return [];
+    try {
+      const t = fs.readFileSync(path.join(this.data, 'rtscripts', runtime + '.leaves'), 'utf8');
+      return t.trim().split('\n').filter((l) => /^[0-9a-f]{64}$/.test(l));
+    } catch (e) { return []; }
   }
 
   /* ---------- packages ---------- */
