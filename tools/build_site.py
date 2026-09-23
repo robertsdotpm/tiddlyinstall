@@ -55,7 +55,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WEB = "src/web_client"
 SHARED = "src/shared"
 PAGES = [("home", WEB + "/index.html"), ("new", WEB + "/new.html"), ("build", WEB + "/build.html"),
-         ("edit", WEB + "/edit.html"), ("verify", WEB + "/verify.html"), ("runtimes", WEB + "/runtimes.html")]
+         ("edit", WEB + "/edit.html"), ("verify", WEB + "/verify.html"), ("runtimes", WEB + "/runtimes.html"), ("trust", WEB + "/trust.html")]
 # Other pages' links in the offline copy, by the file name a page links to.
 LINK_ALIASES = {"create.html": "#new&write", "builds.html": "#home", "bases.html": "#new"}
 # Copied to the regular site (--multi) as they are, keeping these names, so
@@ -118,7 +118,7 @@ CORE_MODULES = [
     *web("overlay.js", "change-list.js", "overlay-consent.js"),
     *web("local-api.js", "router.js"),
 ]
-PAGE_MODULES = web("new.js", "build.js", "edit.js", "verify.js", "catalog-editor.js")
+PAGE_MODULES = web("new.js", "build.js", "edit.js", "verify.js", "catalog-editor.js", "trust.js")
 # Read on their own, not joined: three classic scripts the page carries
 # inline (they must run before the modules, or without them), and the DOM
 # shims only the ES5 copy uses (tools/es5/build-es5.mjs).

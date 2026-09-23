@@ -1466,6 +1466,23 @@ form:has(#unscript-tab-unix:checked) .unscript-panel-unix { display: block; }
   color: var(--muted);
 }
 .settings-same[hidden] { display: none; }
+/* The Trust page's two diagrams. Plain boxes and text: they have to
+   read in both themes, at phone width, and with no font loaded. */
+.trust-fig { margin: 18px 0; }
+.trust-fig svg { width: 100%; height: auto; display: block; }
+.trust-fig .fig-box { fill: none; stroke: var(--rule-strong); stroke-width: 1; }
+.trust-fig .fig-ours { stroke: var(--accent); }
+.trust-fig .fig-ok { stroke: var(--accent); }
+.trust-fig .fig-yours { stroke-dasharray: 4 3; }
+.trust-fig .fig-h { fill: var(--text-loud); font: 600 14px/1.3 var(--sans, system-ui, sans-serif); }
+.trust-fig .fig-t { fill: var(--text); font: 13px/1.3 var(--sans, system-ui, sans-serif); }
+.trust-fig .fig-m { fill: var(--muted); font: 12.5px/1.3 var(--sans, system-ui, sans-serif); }
+.trust-fig .fig-c { fill: var(--muted); font: 12px/1.3 var(--sans, system-ui, sans-serif); text-anchor: middle; }
+.trust-fig .fig-arrow { stroke: var(--rule-strong); stroke-width: 1; }
+.trust-fig .fig-head { fill: var(--rule-strong); }
+.bad-text { color: var(--fail); }
+code.wrap { word-break: break-all; }
+
 .settings-age { margin: 0 0 6px; }
 .settings-age[hidden] { display: none; }
 .settings-age-note { margin: 0 0 10px; }

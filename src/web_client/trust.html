@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trust · TiddlyInstall</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">
+      <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="2.5" y="2.5" width="19" height="19"></rect>
+        <line x1="12" y1="6" x2="12" y2="13"></line>
+        <polyline points="8.5 9.8 12 13.3 15.5 9.8"></polyline>
+        <line class="tray" x1="7" y1="17.5" x2="17" y2="17.5"></line>
+      </svg>
+      TiddlyInstall</a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="new.html">New installer</a>
+      <a href="edit.html">Edit installer</a>
+      <a href="verify.html">Verify</a>
+      <a href="runtimes.html">Registry</a>
+      <a href="trust.html" aria-current="page">Trust</a>
+    </nav>
+  </header>
+
+  <main class="narrow">
+    <div class="page-head">
+      <span class="eyebrow"><span class="num">Trust</span> &nbsp;What is proved, and what is taken on faith</span>
+      <h1>What you are trusting, and why</h1>
+      <p class="lede measure">An installer is a program that changes your computer. This page says
+        exactly which parts of that we can prove to you, which parts you have to take on
+        someone's word, and whose word it is.</p>
+    </div>
+
+    <section class="panel">
+      <h2 class="section-title">The short version</h2>
+      <p class="measure">There are two different questions, and they have different answers.</p>
+      <dl class="spec-list">
+        <dt>What does it install?</dt>
+        <dd><strong>Proved.</strong> The runtime it downloads, the exact bytes it expects, where it
+          gets them and every command it runs against them are signed by us before anybody asks
+          for them. The installer checks that signature itself, on your machine, with no internet
+          connection needed.</dd>
+        <dt>Is the program itself any good?</dt>
+        <dd><strong>Not proved, and we could not honestly claim otherwise.</strong> We did not write
+          it and have not read it. That is between you and whoever published it -- which is what a
+          signature on the installer file is for, and why it carries their name and not ours.</dd>
+      </dl>
+      <p class="small muted" style="margin-bottom:0">Every installer says both of these on its own
+        screen, before it changes anything.</p>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">Who wrote which part</h2>
+      <p class="measure">An installer is built from two kinds of instruction. Keeping them apart is
+        the whole idea.</p>
+
+      <div class="trust-fig" role="img"
+           aria-label="An installer is made of two parts. The runtime install script, written by TiddlyInstall and signed. The choices, written by whoever built the installer and not signed.">
+        <svg viewBox="0 0 640 220" xmlns="http://www.w3.org/2000/svg">
+          <rect class="fig-box fig-ours" x="16" y="30" width="286" height="170" rx="3"></rect>
+          <text class="fig-h" x="34" y="58">Written by us, and signed</text>
+          <text class="fig-t" x="34" y="84">the runtime to fetch</text>
+          <text class="fig-t" x="34" y="106">its exact SHA-256</text>
+          <text class="fig-t" x="34" y="128">which mirrors to try</text>
+          <text class="fig-t" x="34" y="150">how to unpack it</text>
+          <text class="fig-t" x="34" y="172">what to run afterwards</text>
+          <rect class="fig-box fig-yours" x="338" y="30" width="286" height="170" rx="3"></rect>
+          <text class="fig-h" x="356" y="58">Written by whoever built it</text>
+          <text class="fig-t" x="356" y="84">the app's name</text>
+          <text class="fig-t" x="356" y="106">where it installs</text>
+          <text class="fig-t" x="356" y="128">how it is started</text>
+          <text class="fig-t" x="356" y="150">the app's own code</text>
+          <text class="fig-m" x="356" y="180">you chose these, or they did</text>
+          <text class="fig-c" x="320" y="18">one installer</text>
+        </svg>
+      </div>
+
+      <p class="measure">We sign what we wrote. Nobody needs us to vouch for the line that starts
+        <em>their</em> program: they wrote it, and they know what it says. Pretending to cover it
+        would make the signature mean less, not more.</p>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">How an installer proves it, with no internet</h2>
+      <p class="measure">The instructions for putting a runtime on your machine are the same for
+        everybody. Installing Python 3.14 on 64-bit Linux does not depend on which app you are
+        installing. So we can sign those instructions <em>in advance</em> -- long before anyone
+        asks for them -- and hand out a small receipt with each installer.</p>
+
+      <div class="trust-fig" role="img"
+           aria-label="We sign a list of every runtime instruction once. Each installer carries a small receipt for the one it uses. The installer checks the receipt against a key already inside it.">
+        <svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg">
+          <rect class="fig-box fig-ours" x="14" y="24" width="180" height="92" rx="3"></rect>
+          <text class="fig-h" x="30" y="50">We sign, in advance</text>
+          <text class="fig-t" x="30" y="74">every runtime</text>
+          <text class="fig-t" x="30" y="96">instruction we publish</text>
+
+          <rect class="fig-box" x="230" y="24" width="180" height="92" rx="3"></rect>
+          <text class="fig-h" x="246" y="50">Your installer</text>
+          <text class="fig-t" x="246" y="74">carries a receipt for</text>
+          <text class="fig-t" x="246" y="96">the one it uses</text>
+
+          <rect class="fig-box fig-ok" x="446" y="24" width="180" height="92" rx="3"></rect>
+          <text class="fig-h" x="462" y="50">Your machine checks</text>
+          <text class="fig-t" x="462" y="74">the receipt, using a</text>
+          <text class="fig-t" x="462" y="96">key inside the file</text>
+
+          <line class="fig-arrow" x1="196" y1="70" x2="226" y2="70"></line>
+          <polygon class="fig-head" points="226,70 218,66 218,74"></polygon>
+          <line class="fig-arrow" x1="412" y1="70" x2="442" y2="70"></line>
+          <polygon class="fig-head" points="442,70 434,66 434,74"></polygon>
+
+          <text class="fig-m" x="14" y="160">No network. No server. Nothing to ask anybody.</text>
+          <text class="fig-m" x="14" y="184">The receipt is about half a kilobyte, and takes a tenth of a second to check.</text>
+          <text class="fig-m" x="14" y="208">It never expires: a newer release does not invalidate an installer you already have.</text>
+          <text class="fig-m" x="14" y="232">Change one byte of the instructions and the receipt stops matching.</text>
+        </svg>
+      </div>
+
+      <p class="measure">This is why an installer built entirely inside your browser, with no server
+        involved at all, can still show that what it installs came from us. The browser never needs
+        a secret key, because it is only <em>carrying</em> signatures, never making them.</p>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">Two ways to use this, and what each one costs</h2>
+      <dl class="spec-list">
+        <dt>With our server</dt>
+        <dd>You trust the site you are on. It builds installers, signs the instructions, and can be
+          asked at install time whether anything has been withdrawn since. If the page and the
+          server are the same domain, that is <strong>one</strong> decision, not two -- and the
+          header says <em>Server: this site</em> when it is.</dd>
+        <dt>Saved to disk, no server</dt>
+        <dd>The page works on its own. It carries a dated, signed copy of everything it needs, and
+          says how old that copy is. What it cannot do is learn anything new: a runtime withdrawn
+          after your copy was saved is not known to it. Installers it builds say so, in those
+          words, rather than staying quiet.</dd>
+      </dl>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">What this page is carrying right now</h2>
+      <p class="measure">Not a description -- the actual contents of the file you are reading,
+        checked against its own key as the page loads.</p>
+      <dl class="spec-list" id="trust-carried"></dl>
+      <p class="small muted" style="margin-bottom:0">Anything that does not check out is shown as
+        failing and is not used. A signed list we cannot verify counts for nothing, exactly as if
+        it were not here.</p>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">Our keys</h2>
+      <p class="measure">One key signs everything above. It is public: it is already inside every
+        installer this page builds, and this only makes it readable.</p>
+      <dl class="spec-list" id="trust-keys"></dl>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">What we cannot prove to you</h2>
+      <p class="measure">Worth saying plainly, because a page about trust that only lists its
+        strengths is an advertisement.</p>
+      <ul class="small">
+        <li><strong>That the program is safe.</strong> We did not write it and have not read it.
+          Install it because you trust whoever published it, not because you trust us.</li>
+        <li><strong>That this page itself is genuine.</strong> A page cannot prove that about
+          itself. Drop a copy on the <a href="verify.html">Verify page</a> of a copy you already
+          trust, and it will say whether the two agree.</li>
+        <li><strong>That an unsigned installer file was not tampered with.</strong> Compare its
+          SHA-256 with the one shown where you downloaded it. That comparison happens outside the
+          file, which is what makes it worth anything.</li>
+        <li><strong>That we have not changed our minds about something.</strong> We keep a
+          record of everything we publish, chained so entries cannot be quietly rewritten -- and
+          every copy of this page in the world carries a fingerprint of that record as of the day
+          it was built. We hold the signing key, so a signature alone could not catch us
+          rewriting history. Copies in other people's hands can.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    Designed by <a href="https://robertsdotpm.github.io/">Matthew Roberts</a> and implemented by Claude.
+    If you like this software why not <a href="mailto:matthew@roberts.pm">hire me</a>?
+  </footer>
+
+  <script type="module" src="trust.js"></script>
+</body>
+</html>
