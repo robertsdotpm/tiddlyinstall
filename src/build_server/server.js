@@ -55,7 +55,7 @@ export function parseFlags(argv, home = os.homedir()) {
     keys: ['', 'where the plan signing private key lives (default $TI_KEYS, else ~/.config/tiddlyinstall/keys)'],
     site: [path.join(REPO, 'out'), 'static site to serve at / (tools/build_site.py writes it)'],
     bases: [path.join(REPO, 'src/installers'), 'base installers'],
-    public: ['http://10.0.1.76:8080', "this server's public URL"],
+    public: ['https://tiddlyinstall.warpgate.io', "this server's public URL"],
     workers: [2, 'concurrent jobs (records and builds; packs have one worker of their own)'],
     'redis-db': [0, 'Redis database number (a second instance needs its own)'],
     mirror: ['', "URL of our mirror in plans (default: the policy's mirror_base)"],

@@ -57,8 +57,13 @@ r=$HOME/tibrowsers
 [ -d "$r" ] || { echo "no tibrowsers here"; exit 0; }
 
 # Brave needs glibc 2.26 or newer, and does not build against musl.
-if ! ldd --version 2>/dev/null | head -1 | grep -qi glibc; then echo "skipped: not glibc (Brave has no musl build)"; exit 0; fi
-v=$(ldd --version | head -1 | sed 's/.* //')
+#
+# Detect musl rather than trying to recognise glibc: RHEL-family ldd says
+# "ldd (GNU libc) 2.28" with no "glibc" in it anywhere, so grepping for
+# that word skipped every CentOS and Rocky machine as if it were Alpine.
+if ldd --version 2>&1 | head -1 | grep -qi musl; then echo "skipped: musl (Brave has no musl build)"; exit 0; fi
+v=$(ldd --version 2>&1 | head -1 | sed 's/.* //')
+case $v in *[!0-9.]* | '') echo "skipped: cannot read the libc version ($v)"; exit 0 ;; esac
 maj=${v%%.*}; min=${v#*.}; min=${min%%.*}
 if [ "$maj" -lt 2 ] || { [ "$maj" -eq 2 ] && [ "$min" -lt 26 ]; }; then echo "skipped: glibc $v is older than Brave needs (2.26)"; exit 0; fi
 

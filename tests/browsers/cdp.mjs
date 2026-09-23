@@ -88,10 +88,22 @@ export async function connectCdp(base, { tries = 75 } = {}) {
     }
     throw new Error('timed out waiting for ' + what + (errors.length ? '; page errors: ' + errors.join(' | ') : ''));
   }
-  async function setFile(sel, file) {
-    const doc = await cdp('DOM.getDocument', { depth: 1 });
-    const q = await cdp('DOM.querySelector', { nodeId: doc.root.nodeId, selector: sel });
-    await cdp('DOM.setFileInputFiles', { nodeId: q.nodeId, files: [file] });
+  // DOM node ids go stale the moment the page's own script replaces a
+  // node, and between getDocument and setFileInputFiles there is room
+  // for exactly that -- so this failed with "could not find node with
+  // given id" on a page that was still settling. Ask again rather than
+  // depend on the timing.
+  async function setFile(sel, file, tries = 5) {
+    let last;
+    for (let i = 0; i < tries; i++) {
+      try {
+        const doc = await cdp('DOM.getDocument', { depth: 1 });
+        const q = await cdp('DOM.querySelector', { nodeId: doc.root.nodeId, selector: sel });
+        if (!q.nodeId) throw new Error('no node matches ' + sel);
+        return await cdp('DOM.setFileInputFiles', { nodeId: q.nodeId, files: [file] });
+      } catch (e) { last = e; await sleep(300); }
+    }
+    throw last;
   }
   async function close() { try { ws.close(); } catch (e) { /* closed */ } }
   return { cdp, js, waitFor, setFile, errors, requests, close };

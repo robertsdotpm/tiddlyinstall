@@ -33,7 +33,7 @@ import crypto from 'node:crypto';
 import { loadSnapshot, resolve, loadRuntimes, catalogRuntimeIDs } from '../src/shared/resolve.js';
 import { canonicalTarget, targetBlocks } from '../src/shared/rtscript.js';
 import { leafHash, treeRoot } from '../src/shared/merkle.js';
-import { loadOrCreate } from '../src/build_server/lib/plansig.js';
+import { loadOrCreate, defaultKeyDir } from '../src/build_server/lib/plansig.js';
 import { revocationsText } from '../src/build_server/lib/revocations.js';
 
 const RTSCRIPTS_KIND = 'ti-rtscripts';
@@ -53,7 +53,13 @@ const only = arg('--runtimes', '');
 const bytes = new Uint8Array(fs.readFileSync(path.join(catDir, 'catalog.gz')));
 const cat = await loadSnapshot(bytes);
 const raw = JSON.parse(zlib.gunzipSync(Buffer.from(bytes)).toString('utf8'));
-const { signer } = loadOrCreate('src/build_server/data', () => {});
+// The key lives outside the repository (plansig.js defaultKeyDir).
+// This said 'src/build_server/data' until 2026-09-23, and when the key
+// moved it did not fail -- loadOrCreate *creates* a key where it finds
+// none, so it quietly minted a new one, signed 8,891 runtime scripts
+// with it, and left its public half where build.sh bakes bases from.
+// Every base built after that carried a key nothing had signed with.
+const { signer } = loadOrCreate(defaultKeyDir(), () => {});
 
 const ids = catalogRuntimeIDs(cat).filter((r) => !only || only.split(',').includes(r));
 fs.mkdirSync(outDir, { recursive: true });

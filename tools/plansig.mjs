@@ -11,7 +11,7 @@
 //
 //   node tools/plansig.mjs -data DIR -kind ti-revocations sign list.txt
 import fs from 'node:fs';
-import { loadOrCreate, verify, verifyFor, keyID, recordOf } from '../src/build_server/lib/plansig.js';
+import { loadOrCreate, verify, verifyFor, keyID, recordOf, defaultKeyDir } from '../src/build_server/lib/plansig.js';
 
 function fail(msg) {
   process.stderr.write('plansig: ' + msg + '\n');
@@ -35,7 +35,7 @@ try { doc = fs.readFileSync(args[1]); } catch (e) { fail(e.message); }
 try {
   switch (args[0]) {
     case 'sign': {
-      const { signer } = loadOrCreate(flags.data, (s) => process.stderr.write(s + '\n'));
+      const { signer } = loadOrCreate(flags.data || defaultKeyDir(), (s) => process.stderr.write(s + '\n'));
       process.stdout.write(signer.signAs(flags.kind, doc));
       break;
     }

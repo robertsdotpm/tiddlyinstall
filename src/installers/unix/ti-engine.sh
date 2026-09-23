@@ -45,7 +45,7 @@
 # sha256 tool, OS version, dialogs, menu entries) branches on the OS.
 
 TI_ENGINE_VERSION=1
-TI_DEFAULT_BACKEND=http://10.0.1.76:8080
+TI_DEFAULT_BACKEND=https://tiddlyinstall.warpgate.io
 # Set from the record or --backend when somebody actually chose one;
 # empty means nothing was chosen and this engine filled in the address
 # above, which is not a reason to go and talk to it (ti_revocations).

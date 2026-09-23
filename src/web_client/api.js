@@ -16,7 +16,7 @@
 
 import { mountDialog } from './dialog.js';
 
-export const DEFAULT_REMOTE = 'http://10.0.1.76:8080';
+export const DEFAULT_REMOTE = 'https://tiddlyinstall.warpgate.io';
 // The site is one file (tools/build_site.py, plan.md section 1.11) that
 // also carries its own builder, src/web_client/local-api.js, as globalThis.tiLocalApi.
 // LOCAL as the backend means "no server: this page answers every

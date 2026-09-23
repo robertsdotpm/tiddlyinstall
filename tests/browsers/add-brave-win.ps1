@@ -26,7 +26,18 @@ $major = $bv.Split('.')[0]
 $drvDir = Get-ChildItem (Join-Path $root 'drivers') -Directory |
   Where-Object { $_.Name -like ("chromedriver-" + $major + ".*") } |
   Sort-Object Name | Select-Object -Last 1
-if (-not $drvDir) { Write-Output ('Brave ' + $bv + ' installed, but no chromedriver for Chromium ' + $major + ' here'); exit 0 }
+if (-not $drvDir) {
+  # No driver of Brave's own major here. Take the newest chromedriver on
+  # the machine anyway and let the harness correct it: drivers.mjs
+  # ensureDriver() exists for exactly this, and fetches the matching
+  # driver the first time a session fails on version. Refusing to add the
+  # entry instead means the browser is installed and never tested, which
+  # is the outcome this script exists to prevent.
+  $drvDir = Get-ChildItem (Join-Path $root 'drivers') -Directory |
+    Where-Object { $_.Name -like 'chromedriver-*' } | Sort-Object Name | Select-Object -Last 1
+  if (-not $drvDir) { Write-Output ('Brave ' + $bv + ' installed, but this machine has no chromedriver at all'); exit 0 }
+  Write-Output ('note: no chromedriver ' + $major + ' here; listing ' + $drvDir.Name + ' for ensureDriver to replace')
+}
 $drv = Join-Path $drvDir.FullName 'chromedriver.exe'
 
 $p = Join-Path $root 'browsers.json'

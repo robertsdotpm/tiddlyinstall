@@ -18,7 +18,7 @@ SetCompressor /SOLID lzma
 XPStyle on
 
 !ifndef TI_BACKEND
-  !define TI_BACKEND "http://10.0.1.76:8080"
+  !define TI_BACKEND "https://tiddlyinstall.warpgate.io"
 !endif
 !ifndef TI_VERSION
   !define TI_VERSION "0.1.0.0"
