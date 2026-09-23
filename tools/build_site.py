@@ -97,6 +97,25 @@ def shared(*names):
     return [SHARED + "/" + n for n in names]
 
 
+MIT_BODY = """Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE."""
+
+
 PIN_FILE = "plan-key.id"
 
 
@@ -612,6 +631,34 @@ def offline_page(catalog_dir, backend):
                      "  re-run tools/sign_runtime_scripts.mjs against this catalogue"
                      % (said[0][:16], have[:16]))
         report.append("  catalogue attested as the one baked in (%s)" % have[:16])
+
+    # The licences, inside the file they are about.
+    #
+    # The page carries resedit-js, pe-library and (in the ES5 copy) core-js,
+    # all MIT, and MIT says the copyright notice and permission notice go in
+    # "all copies or substantial portions". A one-file page that somebody
+    # saves and passes on is a copy. Until 2026-09-23 it carried the
+    # attributions and a pointer to vendor/LICENSE.* -- files that do not
+    # travel with it, so the pointer was to something the reader did not
+    # have. Three kilobytes fixes that.
+    notices = []
+    root_licence = os.path.join(ROOT, "LICENSE")
+    if os.path.isfile(root_licence):
+        notices.append("TiddlyInstall\n\n" + read(root_licence).strip())
+    for name, what in (("LICENSE.resedit", "resedit-js 2.0.3"),
+                       ("LICENSE.pe-library", "pe-library 1.0.1")):
+        p = os.path.join(ROOT, "src/vendor", name)
+        if os.path.isfile(p):
+            notices.append(what + "\n\n" + read(p).strip())
+    notices.append("core-js (in the ES5 copy of this page only)\n\n"
+                   "MIT License\n\nCopyright (c) 2014-2025 Denis Pushkarev\n\n"
+                   + MIT_BODY)
+    notices.append("Ed25519, ported from TweetNaCl-js\n\n"
+                   "Public domain. https://github.com/dchest/tweetnacl-js")
+    blocks.append(data_block("ti-licences",
+                             html.escape("\n\n----\n\n".join(notices)), "text/plain"))
+    report.append("  licences: %d notices, %d bytes" %
+                  (len(notices), sum(len(n) for n in notices)))
 
     takedown = os.path.join(ROOT, "src/build_server/data/takedown.txt")
     revoked, issued = [], ""
