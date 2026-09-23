@@ -716,6 +716,8 @@ async function paint(file, sha, info) {
     const signedStamp = info.plan && docSignature(info.plan, 'ti-plan').signed;
     sign.push(['Where it says it came from', recBackend
       ? '<code>' + esc(recBackend) + '</code>' +
+        ' <button type="button" class="link-button" id="v-ask-origin">Ask that server</button>' +
+        '<span id="v-ask-out"></span>' +
         (signedStamp
           ? '<br><span class="small muted">inside what the signature covers: the plan names this record by its hash, so this cannot be edited without breaking the signature above</span>'
           : '<br><span class="small muted">a claim, not a signed one: nothing here stops it saying anything. It is worth checking against that server, not against this file</span>')
@@ -734,6 +736,78 @@ async function paint(file, sha, info) {
   }
 
   rows(el('v-signing'), sign);
+
+  // Ask the server the file names whether it publishes the key that
+  // signed this file. Three artifacts instead of two: the file, this
+  // page, and whatever that address answers right now.
+  //
+  // Only ever on this page, never in an installer. An installer that
+  // phoned a server to ask whether it was legitimate would be asking
+  // the thing being vouched for, over a network it cannot trust, and
+  // the whole design is that it does not need to (docs/design.md 7.1).
+  //
+  // What this can settle: a file naming a server that publishes a
+  // different key is provably wrong. What it cannot: a hostile file
+  // naming a hostile server agrees with itself perfectly. So the answer
+  // is always stamped with the fact that it was asked, just now, over
+  // the network -- never folded in with the offline proof above.
+  const askBtn = document.getElementById('v-ask-origin');
+  if (askBtn) {
+    askBtn.addEventListener('click', async () => {
+      const out = document.getElementById('v-ask-out');
+      const say = (html) => { out.innerHTML = '<br><span class="small">' + html + '</span>'; };
+      askBtn.disabled = true;
+      say('asking ' + esc(recBackend) + '...');
+      if (location.protocol === 'https:' && /^http:/i.test(recBackend)) {
+        say('<strong>cannot ask it from here.</strong> This page came over HTTPS and that address is plain ' +
+          '<code>http</code>, which a browser refuses. Open this page over http, or use an https address for the server.');
+        askBtn.disabled = false;
+        return;
+      }
+      let j = null;
+      try {
+        const ctl = new AbortController();
+        const t = setTimeout(() => ctl.abort(), 15000);
+        const r = await fetch(recBackend.replace(/\/+$/, '') + '/api/pubkey', { cache: 'no-store', signal: ctl.signal });
+        clearTimeout(t);
+        if (!r.ok) throw new Error('it answered ' + r.status);
+        j = await r.json();
+      } catch (e) {
+        say('<strong>could not reach it</strong> (' + esc(String(e && e.message || e)) + '). That says nothing ' +
+          'about this file: a server can be down, moved or behind a network this browser cannot see.');
+        askBtn.disabled = false;
+        return;
+      }
+      let pub = null;
+      try { pub = b64bytes(j && j.key); } catch (e) { pub = null; }
+      if (!pub || pub.length !== 32) {
+        say('<strong>it did not answer with a key.</strong> Nothing here can be concluded.');
+        askBtn.disabled = false;
+        return;
+      }
+      const theirs = keyId(pub);
+      const baked = bakedKey();
+      const sig = info.plan ? docSignature(info.plan, 'ti-plan') : { signed: false };
+      let good = false;
+      if (sig.signed) { try { good = !!ed25519Verify(pub, sig.bytes, sig.sig); } catch (e) { good = false; } }
+      const same = baked && keyId(baked) === theirs;
+      let msg = 'Asked just now, over the network: <code>' + esc(recBackend) + '</code> publishes key <code>' +
+        esc(theirs) + '</code>';
+      msg += same ? ', the same key this page carries. ' : ', which is <strong>not</strong> the key this page carries. ';
+      if (!sig.signed) {
+        msg += 'This file carries no signature to check against it.';
+      } else if (good) {
+        msg += 'This file\'s signature checks out against it, so the server it names does vouch for it.';
+      } else {
+        msg += '<strong>This file\'s signature does not check out against it</strong> -- the file names that server ' +
+          'and that server did not sign it. Something is wrong with the file, the server, or both.';
+      }
+      msg += '<br><span class="muted">An answer over the network is not the offline proof above. It can show a file ' +
+        'is wrong; it cannot show one is right, because a file naming a server of its own agrees with itself.</span>';
+      say(msg);
+      askBtn.disabled = false;
+    });
+  }
 
   el('v-out').hidden = false;
 

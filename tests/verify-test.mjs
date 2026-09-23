@@ -14,6 +14,7 @@
 // "yes": a plan signed and proved, the same plan with its signature
 // removed (which is every installer built in a page, since a page holds
 // no key), and one with a byte of a download's hash changed.
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -57,6 +58,18 @@ const unsigned = await make('unsigned.exe', planText.split('\n').filter((l) => !
 const tamperedPlan = planText.replace(/^(file\t\S+\t\S+\t)([0-9a-f])/m, (m, a, b) => a + (b === '0' ? '1' : '0'));
 const tampered = await make('tampered.exe', tamperedPlan);
 if (tamperedPlan === planText) { console.error('could not tamper the fixture'); process.exit(2); }
+
+// Signed by a key that is not ours. This is not hypothetical: on
+// 2026-09-23 a tool with a stale path minted its own key and signed
+// 8,891 runtime scripts with it, and every file it produced verified
+// perfectly against itself. What catches that is a second artifact --
+// this page's key -- disagreeing.
+const strayKey = crypto.generateKeyPairSync('ed25519').privateKey;
+const bodyOf = (t) => t.split('\n').filter((l) => !l.startsWith('sig\t')).join('\n');
+const wrongBody = bodyOf(planText);
+const wrongKeyPlan = wrongBody + 'sig\ted25519\t' +
+  crypto.sign(null, Buffer.from(wrongBody, 'utf8'), strayKey).toString('base64') + '\n';
+const wrongKey = await make('wrongkey.exe', wrongKeyPlan);
 
 const c = await launchChrome({ profile: path.join(TMP, 'profile') });
 
@@ -106,6 +119,14 @@ ok(!r.error, 'a tampered installer is still read rather than refused outright', 
 ok(!/\bare ours\b/i.test(r.signing), 'a tampered runtime setup is NOT called ours', r.signing.slice(0, 250));
 ok(/do not prove|not signed|could not/i.test(r.signing),
   '...and the page says so', r.signing.slice(0, 250));
+
+/* ---------- signed by a key that is not ours ---------- */
+r = await verify(wrongKey);
+ok(!r.error, 'a file signed by another key is still read', r.error);
+ok(/does not check out/i.test(r.signing),
+  'and its signature is refused against the key this page carries', r.signing.slice(0, 250));
+ok(!/so our build server produced this file/i.test(r.signing),
+  '...and it is never called ours');
 
 /* ---------- the Trust page ---------- */
 //
