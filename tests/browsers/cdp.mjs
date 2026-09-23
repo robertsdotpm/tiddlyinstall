@@ -26,7 +26,21 @@ export async function launchChrome({ profile, downloads, binary, port } = {}) {
   const c = await connectCdp(`http://127.0.0.1:${port}`);
   c.proc = proc;
   const close = c.close;
-  c.close = async (signal) => { await close(); proc.kill(signal); await sleep(300); };
+  let killed = false;
+  const kill = (signal) => { if (!killed) { killed = true; try { proc.kill(signal); } catch (e) { /* gone */ } } };
+  // A test that throws before close() used to leave the browser running.
+  // Twenty-odd of them accumulate over an afternoon's work and then the
+  // next run fails on a port that is already taken or a node id from
+  // somebody else's document -- which looks exactly like a flaky test
+  // and is not one (2026-09-23).
+  const onExit = () => kill();
+  process.once('exit', onExit);
+  c.close = async (signal) => {
+    process.removeListener('exit', onExit);
+    await close();
+    kill(signal);
+    await sleep(300);
+  };
   await c.cdp('Runtime.enable');
   await c.cdp('Network.enable');
   await c.cdp('Page.enable');
