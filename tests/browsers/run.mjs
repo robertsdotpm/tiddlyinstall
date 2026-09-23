@@ -395,6 +395,16 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
         run, runAsync,
       };
     } else if (rec.protocol === 'playwright') {
+      // Put the server there before starting it. The machine has its own
+      // copy under playwright-<v>/server.mjs, and until 2026-09-23
+      // nothing ever replaced it: the harness ran whatever was installed.
+      // So when the websocket path was renamed /ib to /ti with everything
+      // else, the machines kept serving /ib and every WebKit run failed
+      // with "400 Bad Request" -- the one browser standing in for Safari,
+      // which we cannot drive at all. A file we run but never copy is a
+      // file that silently drifts.
+      const pwDir = entry.driver.replace(/[\\/][^\\/]*$/, '');
+      remote.put(path.join(HERE, 'playwright-server.mjs'), pwDir + '/server.mjs');
       ssh = remote.startDriver(entry, { port, log: (d) => driverLog.push(String(d)) });
       pwConn = await connectPlaywright(port, {
         remote, dl, tmp, log: (d) => driverLog.push(String(d)),
