@@ -1,14 +1,69 @@
-# TiddlyInstall (installer-builder)
-Build installers and executables for Windows, Linux, and macOS
+# TiddlyInstall
 
-**What we sign is our installer program, never the software someone
-installs with it.** One reusable program (the *base installer*: the same
-bytes for everyone, which reads settings and installs what they name),
-plus settings chosen afterwards. A code signature on it says the program
-is ours and unmodified -- like the signature on a web browser, which
-says nothing about the sites you visit. The vocabulary every page and
-engine uses for this is [docs/design.md](docs/design.md) section 6,
-"What we sign, and the words for it"; wording that blurs it is a bug.
+**Make an installer for a program, for Windows, Linux and macOS, from a
+web page that needs no server.**
+
+You point it at a program -- a GitHub repository, or a URL -- and say what
+it needs to run: Python, Node.js, Ruby, PHP, Java, .NET, R, Go, Rust,
+Zig, Nim, a C compiler. It builds an installer for each platform that
+brings that runtime with it, so the person installing does not have to
+have anything already.
+
+The page is one HTML file. Save it and it keeps working: no server, no
+network, no account. It targets machines as old as Windows XP, Linux with
+glibc 2.17, and macOS 10.9, and it can install any of 30,828 runtime
+releases from a catalogue built into the file.
+
+**[Open `tiddlyinstall.html`](tiddlyinstall.html)** -- download it and
+open it in a browser. That file is the whole product.
+
+## What it will and will not tell you
+
+An installer built here says, before it changes anything, exactly what it
+is about to do: what it downloads, the SHA-256 of each file, where things
+go, and what runs. Then it asks.
+
+Two of those claims are checkable and one is not, and the difference is
+the point:
+
+- **The runtime setup is ours, provably.** Every runtime install we
+  publish is signed in advance, and each installer carries a proof that
+  the steps inside it are the ones we published. Your machine checks that
+  proof against a key built into the installer, offline, with no network.
+  Change one byte of a download's hash and the proof stops matching.
+- **What we sign is our installer program, never the software someone
+  installs with it.** A code signature says the program is ours and
+  unmodified -- like the signature on a web browser, which says nothing
+  about the sites you visit.
+- **We cannot tell you the program is safe.** We did not write it and
+  have not read it. Install it because you trust whoever published it.
+
+The page has a **Trust** page that says all of this against the file you
+are actually holding -- checking the documents inside it as it loads,
+and saying so when one does not check out -- and a **Verify** page that
+reads an installer back and tells you what it can and cannot prove about
+it. Neither asks you to take its word for anything.
+
+## The signing key
+
+Everything we sign uses one Ed25519 key, id `97930ea1888d1a12`. It is
+named in [`plan-key.id`](plan-key.id), and every build from this
+repository refuses to proceed with a different one. Comparing a page's
+fingerprint with that file is a check made somewhere we do not control
+your copy of the page -- which is the only kind worth making.
+
+## Licence
+
+MIT, `LICENSE` at the root. Third-party code keeps its own notices and
+they travel with any copy of the one-file page; the list is under
+[Third-party code](#third-party-code).
+
+---
+
+# Working on the code
+
+Everything below is for people changing TiddlyInstall rather than using
+it.
 
 ## Where things are
 
@@ -60,7 +115,7 @@ CSS-only behaviours.
 | `src/web_client/create.html` | Redirects to `new.html#write` |
 | `src/web_client/builds.html` | Sample data still |
 
-## Licence
+## Third-party code
 
 MIT, `LICENSE` at the root. Third-party code keeps its own notices, and
 they travel with any copy of the one-file site, which carries all of it:
@@ -74,8 +129,8 @@ they travel with any copy of the one-file site, which carries all of it:
 
 **Which build server:** `?api=` on the page URL, else the one saved in this
 browser, else whichever server is serving the page: its own origin when a
-build server answers there, or `http://10.0.1.76:8080` when the page came
-from that address. A copy hosted anywhere else builds in the page and
+build server answers there, or `https://tiddlyinstall.warpgate.io` when the page came
+from there. A copy hosted anywhere else builds in the page and
 contacts nobody until **Default** is pressed, which offers the server the
 page was built with. Each page's footer shows which it is and has a
 **change** button. If the server can't be reached, a banner says so and the page retries
@@ -133,7 +188,7 @@ server on 2026-09-19; docs/plan.md section 1.8.)
 
 ```
 cd src/build_server && npm ci                      # BullMQ and ioredis
-node src/build_server/server.js -addr :8080 -redis 127.0.0.1:6390 -public http://10.0.1.76:8080
+node src/build_server/server.js -addr :8080 -redis 127.0.0.1:6390 -public https://tiddlyinstall.warpgate.io
 ```
 
 `node src/build_server/server.js -h` lists the flags: `-addr`, `-redis`,
