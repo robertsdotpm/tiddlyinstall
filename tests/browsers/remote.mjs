@@ -265,8 +265,21 @@ export class Remote {
       // By the driver's own exe: a .cmd wrapper runs <driverKind>.exe.
       if (entry.driver) this.sh(`taskkill /F /T /IM ${entry.driverKind}.exe`);
     } else {
-      // [i] so the pattern doesn't match this shell's own command line.
-      this.sh(`pkill -u "$(id -u)" -f '[i]bbrowsers/' ; true`);
+      // Everything this harness put on the machine lives under
+      // ~/tibrowsers, so that is what a leftover looks like.
+      //
+      // This said `[i]bbrowsers/` until 2026-09-23 -- the directory's
+      // name before the ib/ti rename -- so it matched nothing and
+      // cleaned nothing, for as long as the rename has been in. Drivers
+      // and browsers from earlier runs stayed up, and a later run on
+      // that machine would sometimes die with "session deleted as the
+      // browser has closed the connection". Nothing said so, because a
+      // pkill that matches nothing exits quietly.
+      //
+      // The brackets stop the pattern matching the shell running it,
+      // which is the same trap in a different place: `[t]ibrowsers`
+      // matches `tibrowsers` and not itself.
+      this.sh(`pkill -u "$(id -u)" -f '[t]ibrowsers/' ; true`);
     }
   }
 }
