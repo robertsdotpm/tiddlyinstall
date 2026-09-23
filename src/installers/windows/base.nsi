@@ -235,6 +235,7 @@ Var RegRootName
 Var RegKey
 Var Created          ; 1 once we have created the app folder
 Var SumH
+Var ReviewOut        ; /ti-review=<file>: write the review text there and install nothing
 ; function parameters
 Var FF_line
 Var FF_sha
@@ -2960,6 +2961,22 @@ Function .onInit
     StrCpy $LogPath ""
   ${EndIf}
   ClearErrors
+  ; Write the review text to a file and install nothing. The screen is
+  ; the one part of this engine no test could read: every suite checks
+  ; what it *does*, and three faults shipped on what it *says* before
+  ; anyone rendered it (tools/shot_windows_review.sh). This is how
+  ; test_screen_windows.sh gets the text, and it is the same file the
+  ; review page shows and the log keeps, so a test cannot pass against
+  ; text nobody sees.
+  ;
+  ; Safe to ship: it reads the plan and writes what the review page
+  ; would have said. It installs nothing, changes nothing and needs no
+  ; rights the review page does not.
+  ${TiGetOpt} "/ti-review=" $ReviewOut
+  ${If} ${Errors}
+    StrCpy $ReviewOut ""
+  ${EndIf}
+  ClearErrors
   ${TiGetOpt} "/ti-elevated" $0
   ${If} ${Errors}
     StrCpy $Elevated 0
@@ -3276,6 +3293,15 @@ Function .onInit
 
   Call CapScan
   Call WriteSummary
+  ${If} $ReviewOut != ""
+    FileClose $SumH
+    System::Call 'kernel32::CopyFileW(w "$PLUGINSDIR\summary.txt", w "$ReviewOut", i 0)i.r0'
+    ${If} $0 = 0
+      ${FailWith} "Could not write the review text to $ReviewOut."
+      Call InitFail
+    ${EndIf}
+    Quit
+  ${EndIf}
 FunctionEnd
 
 ; "1 file" / "2 files": no "(s)" on a screen someone is asked to consent to.
@@ -4298,16 +4324,18 @@ Function WriteSummary
   ; shape rules forbid. What is left is what a capability statement
   ; cannot hold: nobody can be named for this file, or the build is not
   ; this computer's architecture.
-  ${If} $SignedBy == ""
-  ${OrIf} $1 != ""
+  ; Not the unsigned case any more. BEFORE YOU TRUST IT says it with the
+  ; file's SHA-256 and the one comparison worth making, and a warning
+  ; that repeats a line three inches below it teaches the reader to skip
+  ; both. It is also the commonest state there is, and a WARNINGS
+  ; heading that is nearly always present is a heading that means
+  ; nothing by the time something real goes under it.
+  ${If} $1 != ""
     ${If} $0 = 0
       ${Sum} ""
       ${Sum} "WARNINGS"
       StrCpy $0 1
     ${EndIf}
-  ${EndIf}
-  ${If} $SignedBy == ""
-    ${Sum} "!  This installer is not signed, so Windows cannot tell you who made it."
   ${EndIf}
   ${If} $1 != ""
     ${Sum} "!  The runtime being installed is not this machine's architecture$1"
@@ -4624,15 +4652,15 @@ Function WriteSummary
         ${EndIf}
       ${EndIf}
       StrCpy $U_a "$FileRole"
-      StrCpy $U_b 18
+      StrCpy $U_b 17
       Call PadTo
-      StrCpy $PendRow "  $2. $U_out"
+      StrCpy $PendRow "  $2. $U_out "
       StrCpy $U_a $F4
       Call HumanSize
       StrCpy $U_a $U_out
-      StrCpy $U_b 11
+      StrCpy $U_b 10
       Call PadTo
-      StrCpy $PendRow "$PendRow$U_out"
+      StrCpy $PendRow "$PendRow$U_out "
       StrCpy $PendSha $F3
       ${SumUrl} "  $F2"
     ${ElseIf} $K S== "url"
@@ -4646,9 +4674,9 @@ Function WriteSummary
   ${If} $SrcLine > 0
     IntOp $2 $2 + 1
     StrCpy $U_a "Application"
-    StrCpy $U_b 18
+    StrCpy $U_b 17
     Call PadTo
-    StrCpy $PendRow "  $2. $U_out"
+    StrCpy $PendRow "  $2. $U_out "
     ${If} $SrcSha == "-"
       ; No stored hash means no size either, and "0 bytes" is a
       ; measurement nobody took (format.md, "Sources without a stored
@@ -4658,11 +4686,12 @@ Function WriteSummary
     ${Else}
       StrCpy $U_a $SrcSize
       Call HumanSize
+      StrCpy $U_a $U_out          ; HumanSize answers in $U_out; PadTo reads $U_a
       StrCpy $PendSha $SrcSha
     ${EndIf}
-    StrCpy $U_b 11
+    StrCpy $U_b 10
     Call PadTo
-    StrCpy $PendRow "$PendRow$U_out"
+    StrCpy $PendRow "$PendRow$U_out "
     StrCpy $CurU1 $SrcUrl1
     StrCpy $CurMirrors 1
     ${If} $SrcUrl1 != ""

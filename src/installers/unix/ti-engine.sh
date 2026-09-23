@@ -821,11 +821,14 @@ ti_cap1() { # word
 # spaces and so eats the padding that makes the columns columns. The
 # tail moves to a line of its own rather than the row being folded.
 ti_dl_row() { # n role size where
-	ti_row=$(printf '  %s. %-18s%-11s%s' "$1" "$2" "$3" "$4")
+	# %-17s and an explicit space, not %-18s: a role of eighteen
+	# characters or more runs straight into the size otherwise, and
+	# "part of the runtime884.0 kB" is what that looks like.
+	ti_row=$(printf '  %s. %-17s %-10s %s' "$1" "$2" "$3" "$4")
 	if [ ${#ti_row} -le 74 ]; then
 		printf '%s\n' "$ti_row"
 	else
-		printf '  %s. %-18s%s\n' "$1" "$2" "$3"
+		printf '  %s. %-17s %s\n' "$1" "$2" "$3"
 		printf '     %s\n' "$4" | ti_wrap 74 5
 	fi
 }
