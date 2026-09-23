@@ -22,6 +22,8 @@
 import { readInstaller, parseKv, kvGet, recordHash } from '../shared/tifile.js';
 import { resolve, loadRuntimes, packagePolicyFor, packageProject } from '../shared/resolve.js';
 import { parseReleases, checkChain, rootAt } from '../shared/ledger.js';
+import { canonicalTarget, targetBlocks, rootFor, normaliseDoc } from '../shared/rtscript.js';
+import { leafHash, rootFromProof } from '../shared/merkle.js';
 import { effectiveCatalog, hasCatalog } from './overlay.js';
 import { apiRequest, apiBase, apiLocal, apiReady, errorText, mountApiFooter } from './api.js';
 import { sha256, sha256Stream } from './lib/sha.js';
@@ -639,6 +641,19 @@ async function paint(file, sha, info) {
   } else {
     sign.push(['The installer file', 'is a macOS <code>.zip</code>; the app inside is checked by Gatekeeper when it is opened, not by this page']);
   }
+  // The runtime install script, proved against a signed root.
+  //
+  // The installer does this too, but here it means more: the key, the
+  // code and the roots all arrived by a different route from the file
+  // being checked. An installer checking itself proves the file is
+  // internally consistent; this proves it against something else.
+  let rtProved = false;
+  if (info.plan) {
+    const rt = rtScriptRows(info.plan);
+    for (const r of rt.rows) sign.push(r);
+    rtProved = rt.proved;
+  }
+
   // Which of the two ways it was made. Only our build server holds the
   // plan key, so a signature is also a statement of origin; without one
   // the record's `backend` is the best this file can say, and empty
@@ -652,7 +667,14 @@ async function paint(file, sha, info) {
   } else {
     const s = docSignature(info.plan, 'ti-plan');
     const baked = bakedKey();
-    if (!s.signed) {
+    if (!s.signed && rtProved) {
+      // With the steps proved a row above, "nothing can say where it
+      // came from" is not true any more and reads as a contradiction.
+      // What is genuinely unsigned here is the wrapper, so name that.
+      sign.push(['The runtime install script', 'as a whole is <strong>not signed</strong>, and does not need to be: ' +
+        'the part we wrote is proved above. What is unsigned is the app name, where it installs and how it is ' +
+        'started -- the choices whoever built this installer made, which they know and we never saw']);
+    } else if (!s.signed) {
       sign.push(['The runtime install script', 'is <strong>not signed</strong> (' + esc(s.why) + '). ' +
         (info.record && !recBackend
           ? 'It was worked out in a web page rather than by our build server -- a page has no signing key -- so nothing here can say where it came from'
@@ -707,3 +729,68 @@ drop.addEventListener('drop', (e) => {
   const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
   if (f) open(f);
 });
+
+/* ---------- the runtime install script (src/shared/rtscript.js) ---------- */
+
+// Rows for what the plan can prove about its own runtime steps. Returns
+// [] when the plan carries no proof at all, which is the ordinary state
+// of anything built before the catalogue was signed -- the signing rows
+// below then say what they always said.
+function rtScriptRows(planText) {
+  const none = { rows: [], proved: false };
+  const b64 = (planLines(planText).find((l) => l.key === 'rtroots') || { val: () => '' }).val(0);
+  if (!b64) return none;
+  let doc = '';
+  try { doc = normaliseDoc(new TextDecoder().decode(b64ToBytes(b64))); } catch (e) { doc = ''; }
+  if (!doc) return { rows: [['The runtime steps', '<strong>carry a proof that could not be read</strong>']], proved: false };
+
+  const baked = bakedKey();
+  const s = docSignature(doc, 'ti-rtscripts');
+  let sigOk = false;
+  if (baked && s.signed) { try { sigOk = ed25519Verify(baked, s.bytes, s.sig); } catch (e) { sigOk = false; } }
+  if (!sigOk) {
+    return { rows: [['The runtime steps', baked
+      ? '<strong>claim a signature that does not check out</strong> against key <code>' + esc(keyId(baked)) + '</code>'
+      : 'claim a signature, but this page carries no key to check it with']], proved: false };
+  }
+
+  const runtime = (planLines(planText).find((l) => l.key === 'runtime') || { val: () => '' }).val(0);
+  const want = rootFor(doc, runtime);
+  const issued = (planLines(doc).find((l) => l.key === 'issued') || { val: () => '' }).val(0);
+  if (!want) return { rows: [['The runtime steps', 'are signed, but the document names no root for <code>' + esc(runtime) + '</code>']], proved: false };
+
+  let proved = 0, missing = 0, wrong = 0;
+  for (const b of targetBlocks(planText)) {
+    if (b.indexOf('file\t') < 0) continue;      // a `fail` target installs nothing
+    const pl = b.split('\n').find((l) => l.indexOf('rtproof\t') === 0);
+    if (!pl) { missing++; continue; }
+    const steps = pl.split('\t').slice(1).filter((x) => x !== '-');
+    const reached = rootFromProof(leafHash(canonicalTarget(b), hashHex), steps, hashHex);
+    if (reached === want) proved++; else wrong++;
+  }
+  const total = proved + missing + wrong;
+  if (!total) return none;
+
+  const out = [];
+  if (wrong) {
+    out.push(['The runtime steps', '<strong>' + wrong + ' of ' + total + ' do not prove against the signed root</strong>. ' +
+      'The steps in this file are not the ones we published']);
+  } else if (proved === total) {
+    out.push(['The runtime steps', '<strong>are ours</strong>: all ' + total + ' proved against the root ' +
+      'signed by key <code>' + esc(keyId(baked)) + '</code>' + (issued ? ', published ' + esc(issued) : '') +
+      '<br><span class="small muted">the downloads, their SHA-256s and every command run against them. Not how it is ' +
+      'started, which is whoever built this installer wrote</span>']);
+  } else {
+    out.push(['The runtime steps', proved + ' of ' + total + ' proved against the signed root; ' + missing +
+      ' carry no proof, which is what a release older than the signing pass looks like']);
+  }
+  return { rows: out, proved: proved === total && total > 0 };
+}
+
+// base64 to bytes, without atob's unicode trouble.
+function b64ToBytes(b64) {
+  const bin = atob(String(b64).replace(/\s+/g, ''));
+  const u = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+  return u;
+}

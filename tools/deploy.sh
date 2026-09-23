@@ -78,6 +78,37 @@ else
 	fi
 fi
 
+# Sign the runtime install scripts whenever the catalogue has moved.
+#
+# This has to happen here or not at all. The leaf of every proof is the
+# SHA-256 of a resolved target block, so a catalogue that moves without
+# being re-signed moves every leaf: proofs stop matching, and what an
+# installer then shows is "not signed" -- a silent, total loss of the
+# claim, with nothing anywhere that looks broken. The signer takes about
+# fifteen seconds and only runs when it must.
+rtdir=$here/src/build_server/data/rtscripts
+if [ -f "$cache/catalog.gz" ]; then
+	if [ ! -f "$rtdir/roots.txt" ] || [ "$cache/catalog.gz" -nt "$rtdir/roots.txt" ]; then
+		echo "signing the runtime install scripts (the catalogue has moved)" >&2
+		if PATH="$HOME/.local/node/bin:$PATH" node "$here/tools/sign_runtime_scripts.mjs" \
+			--catalog "$cache" --out "$rtdir" > "$wt/sign.log" 2>&1; then
+			tail -3 "$wt/sign.log" >&2
+		else
+			tail -5 "$wt/sign.log" >&2
+			echo "deploy: signing failed; nothing was changed." >&2
+			exit 1
+		fi
+	else
+		echo "the runtime install scripts are already signed for this catalogue" >&2
+	fi
+fi
+# The page bakes the roots and leaf lists in, and a clean worktree has
+# neither -- they are generated, not tracked.
+if [ -d "$rtdir" ]; then
+	mkdir -p "$wt/co/src/build_server/data"
+	cp -r "$rtdir" "$wt/co/src/build_server/data/"
+fi
+
 # shellcheck disable=SC2086
 (cd "$wt/co" && python3 tools/build_site.py $opts -o "$wt/co/out" >"$wt/build.log" 2>&1) || {
 	tail -20 "$wt/build.log" >&2
