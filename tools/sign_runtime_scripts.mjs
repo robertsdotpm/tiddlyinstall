@@ -34,8 +34,11 @@ import { loadSnapshot, resolve, loadRuntimes, catalogRuntimeIDs } from '../src/s
 import { canonicalTarget, targetBlocks } from '../src/shared/rtscript.js';
 import { leafHash, treeRoot } from '../src/shared/merkle.js';
 import { loadOrCreate } from '../src/build_server/lib/plansig.js';
+import { revocationsText } from '../src/build_server/lib/revocations.js';
 
 const RTSCRIPTS_KIND = 'ti-rtscripts';
+const REVOCATIONS_KIND = 'ti-revocations';
+const CATALOG_KIND = 'ti-catalog-attest';
 const PLATFORMS = ['windows', 'linux', 'macos'];
 const sha256hex = (s) => crypto.createHash('sha256').update(s, 'utf8').digest('hex');
 const arg = (name, dflt) => {
@@ -103,8 +106,45 @@ for (const r of roots) doc += 'root\t' + r.rt + '\t' + r.root + '\t' + r.count +
 const signed = signer.signStringAs(RTSCRIPTS_KIND, doc);
 fs.writeFileSync(path.join(outDir, 'roots.txt'), signed);
 
+/* ---------- the other two documents the page carries ---------- */
+
+// Everything a page carries and acts on should be checkable against the
+// key it already has. The runtime scripts were the part that decides
+// what *runs*; these two decide what is *offered* and what is *refused*,
+// and were carried unsigned until 2026-09-23.
+//
+// Signed here rather than captured from a running server at deploy time:
+// this pass already holds the key, and a build that has to reach a
+// server to sign is a build that quietly does something else when the
+// server is not there.
+
+// The withdrawn-file list, in the same `ti-revocations` shape the server
+// serves at /api/revocations, so an engine and a page read one format.
+const takedownPath = path.join('src/build_server/data', 'takedown.txt');
+let takedown = [];
+let serial = 0;
+try {
+  takedown = fs.readFileSync(takedownPath, 'utf8').split('\n').map((l) => l.trim()).filter((l) => l && l[0] !== '#');
+  serial = Math.floor(fs.statSync(takedownPath).mtimeMs / 1000);
+} catch (e) { /* no list yet: a signed empty one still says "we looked" */ }
+const revDoc = signer.signStringAs(REVOCATIONS_KIND, revocationsText(takedown, { now: Date.now(), serial }));
+fs.writeFileSync(path.join(outDir, 'revocations.txt'), revDoc);
+
+// The catalogue: its digest and when it was signed. Not the catalogue
+// itself -- 2.1 MB, and the page already has it. What this adds is a
+// dated statement that the bytes in the page are the bytes we published,
+// checkable with the key the page carries.
+const catSha = crypto.createHash('sha256').update(Buffer.from(bytes)).digest('hex');
+let catDoc = CATALOG_KIND + '\t1\n';
+catDoc += 'issued\t' + rfc3339() + '\n';
+catDoc += 'sha256\t' + catSha + '\n';
+catDoc += 'bytes\t' + bytes.length + '\n';
+fs.writeFileSync(path.join(outDir, 'catalog.txt'), signer.signStringAs(CATALOG_KIND, catDoc));
+
 console.log('---');
 console.log(`${grand} signed runtime scripts across ${roots.length} runtimes`);
+console.log(`withdrawn-file list signed: ${takedown.length} entr${takedown.length === 1 ? 'y' : 'ies'}, serial ${serial}`);
+console.log(`catalogue attested: ${catSha.slice(0, 16)} (${(bytes.length / 1024 / 1024).toFixed(1)} MB)`);
 console.log(`leaf lists ${Math.round(grand * 65 / 1024)} KB, proof depth ${Math.ceil(Math.log2(Math.max(2, grand)))} steps`);
 if (grandMissed) console.log(`${grandMissed} version/platform pairs could not be resolved and are NOT signed`);
 console.log(`roots.txt written, signed as ${RTSCRIPTS_KIND}`);

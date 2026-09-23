@@ -170,57 +170,38 @@ try {
       if (files) builds[`${runtime}/${mode}`] = { status: 'done', record: job.result.record, files };
     }
   }
-  // A withdrawn build is not written into a page-built installer.
+  // The withdrawn-file list this page carries is signed, and is checked
+  // against the page's own key before a hash out of it is used.
   //
-  // resolve.js setRevoked() says the rule outright -- "the page and the
-  // server must make the same choice from the same list" -- but until
-  // 2026-09-23 only the build server was ever handed one. builder.js
-  // called setRevoked() with nothing, so the call was a no-op here and a
-  // page-built installer named whatever the catalogue said, withdrawn or
-  // not. An online installer was still covered by the engine fetching
-  // /api/revocations at install time; a fully offline one was covered
-  // nowhere, which is the case this is about.
-  //
-  // It calibrates itself rather than naming a hash: build once, take a
-  // SHA-256 the installer actually chose, withdraw *that*, build again.
-  // A hard-coded hash would stop testing anything the day the catalogue
-  // moved, and would look just as green.
+  // It used to be bare JSON, and this test used to prove the revocation
+  // path by writing a hash into that block. It cannot any more -- the
+  // page ignores a list it cannot check -- and that is the point: data a
+  // page acts on, carried unsigned beside a key that could have checked
+  // it, was the gap (2026-09-23). So the test is now the property that
+  // replaced it.
   {
-    const body = { name: 'Hello python', project: 'hello', source: { kind: 'inline' },
-      files: { 'hello.py': 'print("hello from python")' }, runtime: 'python', mode: 'C',
-      platforms: ['linux'], launch: '{runtime} hello.py', console: true, menu: true };
-    const buildText = `(async () => {
-      let j = await tiLocalApi.request('/api/jobs', { method: 'POST', body: ${JSON.stringify(body)} });
-      while (j.status !== 'done' && j.status !== 'failed') { await new Promise((r) => setTimeout(r, 100)); j = await tiLocalApi.request('/api/jobs/' + j.id); }
-      if (j.status !== 'done') return { err: j.error };
-      const f = j.result.files[0];
-      const txt = await fetch(f.url).then((r) => r.arrayBuffer()).then((b) => new TextDecoder('latin1').decode(b));
-      return { txt: txt };
-    })()`;
-    const first = await js(buildText);
-    // A `file` line of the plan, not any 64 hex characters in the file:
-    // the first hash in there is the project's own source, and revoking
-    // that changes no runtime choice at all -- which is how the first
-    // version of this check passed the fix and failed the control.
-    const m = first.txt && /\nfile\t[^\t\n]*\t[^\t\n]*\t([0-9a-f]{64})\t/.exec(first.txt);
-    const pick = m && m[1];
-    ok(!!pick, 'a page-built installer names a runtime download by its SHA-256', first.err || 'no file line');
-    if (pick) {
-      await js(`(() => { document.getElementById('ti-revocations').textContent =
-        JSON.stringify({ issued: '2026-01-01T00:00:00Z', sha: [${JSON.stringify(pick)}] }); return 1; })()`);
-      const second = await js(buildText);
-      // Either it picked a different build, or the target had nothing
-      // left and it said so. Both are the revocation being applied; only
-      // naming the withdrawn file again is the bug.
-      const named = second.txt ? second.txt.indexOf(pick) >= 0 : false;
-      const said = /withdrawn/i.test(second.err || '');
-      ok(!named && (second.txt || said),
-        'and once that hash is withdrawn, the next build does not name it',
-        named ? 'still named' : (second.err || 'ok'));
-      // Put it back, so nothing after this runs against a withdrawn catalogue.
-      await js(`(() => { document.getElementById('ti-revocations').textContent =
-        JSON.stringify({ issued: '', sha: [] }); return 1; })()`);
-    }
+    const r = await js(`tiLocalApi.revocations()`);
+    ok(r && r.signed === true, 'the withdrawn-file list in the page is signed by its own key', JSON.stringify(r));
+    ok(r && /^\d{4}-\d{2}-\d{2}T/.test(String(r.issued)), 'and says when it was issued', r && r.issued);
+    const cat = await js(`tiLocalApi.catalogAttest()`);
+    ok(cat && cat.signed === true && /^[0-9a-f]{64}$/.test(String(cat.sha256)),
+      'the catalogue this page carries is attested, signed, with a digest', JSON.stringify(cat));
+
+    // Tampering must not be believed: added entries, removed entries or
+    // a bumped serial all break the signature, and a list that does not
+    // verify revokes nothing rather than revoking what an attacker likes.
+    const after = await js(`(() => {
+      const n = document.getElementById('ti-revocations-signed');
+      const was = n.textContent;
+      n.textContent = was + '\\nrevoke\\tfile\\t' + 'a'.repeat(64);
+      const r = tiLocalApi.revocations();
+      n.textContent = was;
+      return { signed: r.signed, n: r.sha.length };
+    })()`);
+    ok(after && after.signed === false && after.n === 0,
+      'and a tampered list is refused rather than obeyed', JSON.stringify(after));
+    const back = await js(`tiLocalApi.revocations().signed`);
+    ok(back === true, 'and the real one still verifies afterwards', String(back));
   }
 
   // Mode A is refused here, with a clear message.

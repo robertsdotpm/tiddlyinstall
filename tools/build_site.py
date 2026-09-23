@@ -110,7 +110,7 @@ CORE_MODULES = [
     *web_lib("bignum.js", "der.js", "rsa.js", "ec.js"),
     *web_lib("ed25519.js", "cryptox.js"),
     *web_lib("inflate.js", "deflate.js", "zlib.js"),
-    *shared("tifile.js", "icon.js", "ledger.js", "merkle.js", "rtscript.js"),
+    *shared("tifile.js", "icon.js", "ledger.js", "merkle.js", "rtscript.js", "signeddoc.js"),
     *web_lib("x509.js", "legacy.js", "pkcs12.js"),
     *web_lib("authenticode.js", "pgp.js"),
     *web("sign-services.js", "sign-ui.js"),
@@ -546,11 +546,34 @@ def offline_page(catalog_dir, backend):
             packed_total += len(gz)
             blocks.append(data_block("ti-rtleaves-" + rt, b64_block(gz),
                                      extra=f' data-runtime="{rt}"'))
+        for name, blockid, what in (("revocations.txt", "ti-revocations-signed", "withdrawn-file list"),
+                                    ("catalog.txt", "ti-catalog-attest", "catalogue attestation")):
+            f = os.path.join(rtdir, name)
+            if os.path.isfile(f):
+                blocks.append(data_block(blockid, read(f).strip(), "text/plain"))
+                report.append("  %s: signed, %s" % (what, [l.split("\t")[1] for l in read(f).splitlines()
+                                                          if l.startswith("issued\t")][0]))
+            else:
+                report.append("  %s: NOT SIGNED (%s missing)" % (what, f))
         report.append("  runtime scripts: %d signed roots, leaf lists %d KB (%d KB in the page)"
                       % (len([l for l in read(rtroots).splitlines() if l.startswith("root\t")]),
                          raw_total // 1024, packed_total // 1024))
     else:
         report.append("  runtime scripts: NONE (%s not found); plans carry no proof" % rtroots)
+
+    # The attestation names a SHA-256; the page bakes a catalogue. If they
+    # are not the same bytes the page would carry a signed statement about
+    # a file it does not have, which is worse than carrying none.
+    attest = os.path.join(ROOT, "src/build_server/data/rtscripts/catalog.txt")
+    if os.path.isfile(attest) and os.path.isfile(os.path.join(catalog_dir, "catalog.gz")):
+        said = [l.split("\t")[1] for l in read(attest).splitlines() if l.startswith("sha256\t")]
+        with open(os.path.join(catalog_dir, "catalog.gz"), "rb") as f:
+            have = hashlib.sha256(f.read()).hexdigest()
+        if said and said[0] != have:
+            sys.exit("build_site.py: the catalogue attestation is for %s but this build uses %s;\n"
+                     "  re-run tools/sign_runtime_scripts.mjs against this catalogue"
+                     % (said[0][:16], have[:16]))
+        report.append("  catalogue attested as the one baked in (%s)" % have[:16])
 
     takedown = os.path.join(ROOT, "src/build_server/data/takedown.txt")
     revoked, issued = [], ""

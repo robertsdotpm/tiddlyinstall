@@ -39,7 +39,9 @@ import { ApiError, pageFromDisk, apiLocal, apiBase } from './api.js';
 import { noNetworkGet } from '../shared/github.js';
 import { validate, runJob, planPackFiles, MAX_PACK, MAX_MAC_PACK } from '../shared/builder.js';
 import { resolve, setRevoked } from '../shared/resolve.js';
-import { setRtScripts } from '../shared/rtscript.js';
+import { setRtScripts, normaliseDoc } from '../shared/rtscript.js';
+import { verifyDoc, docField } from '../shared/signeddoc.js';
+import { verify as ed25519Verify } from './lib/ed25519.js';
 import { inflate } from './lib/zlib.js';
 import { sha256 } from './lib/sha.js';
 import { writeInstallerLayout, streamInstallerLayout, parseFooterTail, bytesToHex, packTarSize } from '../shared/tifile.js';
@@ -99,15 +101,58 @@ function view(j) {
 // life of the tab, which is a stale-state hazard for no measurable gain
 // -- it is one small JSON parse per build. It also made the regression
 // test below impossible to write, which is usually the same smell.
+function b64bytes(t) {
+  const bin = atob(String(t).replace(/\s+/g, ''));
+  const u = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+  return u;
+}
+
+function pagePubKey() {
+  const n = document.getElementById('ti-plan-pubkey');
+  if (!n || !n.textContent.trim()) return null;
+  try { return b64bytes(n.textContent); } catch (e) { return null; }
+}
+
+// The withdrawn-file list this page carries, checked against the key
+// this page carries before a single hash out of it is used.
+//
+// It used to be bare JSON: a list of hashes with nothing saying who
+// wrote them. Carrying data a page acts on, unsigned, next to a key that
+// could have checked it was the gap (2026-09-23). A list that does not
+// verify is not "probably fine" -- it revokes nothing and says so, which
+// is the same as a page built before any of this existed.
 export function pageRevocations() {
-  try {
-    const n = document.getElementById('ti-revocations');
-    if (n) {
-      const d = JSON.parse(n.textContent);
-      if (d && Array.isArray(d.sha)) return { issued: String(d.issued || ''), sha: d.sha };
-    }
-  } catch (e) { /* a page built before this block, or a damaged one: revoke nothing */ }
-  return { issued: '', sha: [] };
+  const doc = blockText('ti-revocations-signed');
+  if (!doc) return { issued: '', sha: [], signed: false, why: 'this page carries no withdrawn-file list' };
+  if (!verifyDoc(doc, 'ti-revocations', pagePubKey(), b64bytes, ed25519Verify)) {
+    return { issued: '', sha: [], signed: false, why: 'the withdrawn-file list in this page is not signed by its own key' };
+  }
+  const sha = [];
+  for (const raw of doc.split('\n')) {
+    const f = raw.replace(/\r$/, '').split('\t');
+    if (f[0] !== 'revoke') continue;
+    const h = f[f.length - 1];
+    if (/^[0-9a-f]{64}$/i.test(h) && (f[1] === 'file' || f[1] === 'sha')) sha.push(h.toLowerCase());
+  }
+  return { issued: docField(doc, 'issued'), serial: docField(doc, 'serial'), sha, signed: true, why: '' };
+}
+
+// The catalogue this page carries, and when we said so. Same rule: a
+// statement that does not verify is no statement.
+export function pageCatalogAttest() {
+  const doc = blockText('ti-catalog-attest');
+  if (!doc) return { signed: false, issued: '', sha256: '' };
+  if (!verifyDoc(doc, 'ti-catalog-attest', pagePubKey(), b64bytes, ed25519Verify)) {
+    return { signed: false, issued: '', sha256: '' };
+  }
+  return { signed: true, issued: docField(doc, 'issued'), sha256: docField(doc, 'sha256') };
+}
+
+function blockText(id) {
+  const n = document.getElementById(id);
+  const t = n && !n.dataset.placeholder ? n.textContent : '';
+  return t ? normaliseDoc(t) : '';
 }
 
 // The signed runtime-script roots this page carries, and the sorted leaf
@@ -506,6 +551,7 @@ function url(path) {
 }
 
 export function installLocalApi() {
-  globalThis.tiLocalApi = { request, url, info: offlineInfo, unpacked: unpackedFolders };
+  globalThis.tiLocalApi = { request, url, info: offlineInfo, unpacked: unpackedFolders,
+    revocations: pageRevocations, catalogAttest: pageCatalogAttest };
   catalog().catch(() => { /* reported when a build needs it */ });
 }
