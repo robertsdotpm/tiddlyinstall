@@ -34,8 +34,8 @@ import urllib.request
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-KEYS = pathlib.Path(os.environ.get("TI_KEYS") or
-                    pathlib.Path.home() / ".config" / "tiddlyinstall" / "keys")
+KEYS = Path(os.environ.get("TI_KEYS") or
+                    Path.home() / ".config" / "tiddlyinstall" / "keys")
 # The stand-in publisher's certificate and key. They left the repository
 # on 2026-09-23 with the plan signing key: nothing private stays in a
 # tree that is going public, whatever .gitignore says.
