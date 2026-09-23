@@ -1722,6 +1722,13 @@ function writePlan(cat, app, blocks) {
     }
     for (const u of s.urls) w.add('url', str(u));
   }
+  // In the header, before the first [target]: an engine reads header
+  // values with a scan that stops at "[target]" (ti_get), so a line after
+  // the targets is a line it cannot see. It was at the end, and the
+  // engine found nothing while the proof itself was perfectly good.
+  if (cat.rtscripts && rootFor(cat.rtscripts.roots, app.runtime)) {
+    w.add('rtroots', rtB64(cat.rtscripts.roots));
+  }
   const pol = runtimePolicy(cat, app.runtime);
   const label = runtimeLabel(pol, app.runtime);
   for (const b of blocks) {
@@ -1774,10 +1781,6 @@ function writePlan(cat, app, blocks) {
         w.add('rtproof', ...(proof.length ? proof : ['-']));
       }
     }
-  }
-  if (cat.rtscripts && rootFor(cat.rtscripts.roots, app.runtime)) {
-    // Once, at the end: the signed document every proof above is against.
-    w.add('rtroots', rtB64(cat.rtscripts.roots));
   }
   return w.toString();
 }

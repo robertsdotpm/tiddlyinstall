@@ -1343,6 +1343,116 @@ ti_check_age() { # backend
 	return 0
 }
 
+# ---- the signed runtime install script (docs/format.md, rtscript)
+
+# Base64 decode with nothing but awk. openssl is exactly what this engine
+# cannot assume -- tiverify exists because the machines without it are
+# the ones we care about -- and `base64` is -d on GNU and -D on BSD.
+ti_b64d() {
+	awk '
+	BEGIN {
+		AB = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+		for (i = 1; i <= 64; i++) V[substr(AB, i, 1)] = i - 1
+		for (i = 0; i < 256; i++) C[i] = sprintf("%c", i)
+	}
+	{ s = s $0 }
+	END {
+		gsub(/[^A-Za-z0-9+\/=]/, "", s)
+		n = length(s); out = ""
+		for (i = 1; i <= n; i += 4) {
+			c1 = substr(s, i, 1); c2 = substr(s, i+1, 1)
+			c3 = substr(s, i+2, 1); c4 = substr(s, i+3, 1)
+			x = V[c1] * 262144 + V[c2] * 4096 + (c3 == "=" ? 0 : V[c3]) * 64 + (c4 == "=" ? 0 : V[c4])
+			out = out C[int(x / 65536)]
+			if (c3 != "=") out = out C[int((x % 65536) / 256)]
+			if (c4 != "=") out = out C[x % 256]
+			if (length(out) > 4000) { printf "%s", out; out = "" }
+		}
+		printf "%s", out
+	}'
+}
+
+# The Nth [target] block of the plan as it was written, minus the lines
+# that are not part of what was signed (src/shared/rtscript.js
+# NOT_SIGNED). This is the text whose SHA-256 is a leaf of the tree, so
+# it has to match what the resolver hashed to the byte.
+ti_target_canon() { # n
+	awk -v want="$1" -F'\t' '
+		$0 == "[target]" { n++; next }
+		n == want {
+			if ($0 == "") next
+			k = $1
+			if (k == "launch" || k == "rtproof" || k == "rtroots" || k == "rtsig" || k == "sig") next
+			print
+		}' "$TI_PLAN"
+}
+
+ti_target_proof() { # n -> one step per line
+	awk -v want="$1" -F'\t' '
+		$0 == "[target]" { n++; next }
+		n == want && $1 == "rtproof" {
+			for (i = 2; i <= NF; i++) if ($i != "-") print $i
+			exit
+		}' "$TI_PLAN"
+}
+
+# Walk a proof from a leaf to the root it reaches. Two forks a step: the
+# side and the sibling come off the string with parameter expansion, not
+# cut. On a 2003 machine every fork is worth removing.
+ti_merkle_walk() { # leaf < steps
+	h=$1
+	while IFS= read -r step; do
+		[ -n "$step" ] || continue
+		sib=${step#?}
+		side=${step%"$sib"}
+		case $sib in *[!0-9a-f]* | "") printf ''; return 0 ;; esac
+		[ ${#sib} -eq 64 ] || { printf ''; return 0; }
+		if [ "$side" = R ]; then pair=$h$sib; else pair=$sib$h; fi
+		h=$(printf 'ti-node\n%s' "$pair" | ti_sha256)
+	done
+	printf '%s' "$h"
+}
+
+# Is the runtime install script in this plan one we published?
+#
+# The whole point: this can be answered with no network and no
+# catalogue. The plan carries the signed roots document and a proof;
+# this engine already carries the public key. An installer built in
+# somebody's browser, with no key of its own and no server to ask, still
+# gets to show that the downloads and the commands came from us.
+#
+# Sets ti_rt_state (ok | none | bad | nokey), ti_rt_issued and
+# ti_rt_why. It never fails the install: what it changes is what the
+# screen is allowed to claim.
+ti_check_rtscript() { # target-index
+	ti_rt_state=none ti_rt_issued= ti_rt_why=
+	[ -n "$TI_PLAN" ] || return 0
+	b64=$(ti_get "$TI_PLAN" rtroots)
+	[ -n "$b64" ] || { ti_rt_why='this plan carries no runtime-script roots'; return 0; }
+	f=$TI_WORK/rtroots.txt
+	printf '%s' "$b64" | ti_b64d > "$f" 2>/dev/null || true
+	[ -s "$f" ] || { ti_rt_state=bad; ti_rt_why='the roots document could not be decoded'; return 0; }
+	sig=$(ti_doc_sig "$f" ti-rtscripts)
+	case $sig in
+	ok:*) ;;
+	cannot:*) ti_rt_state=nokey; ti_rt_why="the roots document could not be checked here (${sig#*:})"; return 0 ;;
+	*) ti_rt_state=bad; ti_rt_why="the roots document ${sig%%:*} (${sig#*:})"; return 0 ;;
+	esac
+	ti_rt_issued=$(ti_get "$f" issued)
+	rtname=$(ti_get "$TI_PLAN" runtime)
+	want=$(awk -F'\t' -v rt="$rtname" '$1 == "root" && $2 == rt { print $3; exit }' "$f")
+	case $want in '' | *[!0-9a-f]*) ti_rt_state=none; ti_rt_why="the roots document names no root for $rtname"; return 0 ;; esac
+	leaf=$(ti_target_canon "$1" | ti_sha256)
+	got=$(ti_target_proof "$1" | ti_merkle_walk "$leaf")
+	if [ "$got" = "$want" ]; then
+		ti_rt_state=ok
+	else
+		ti_rt_state=bad
+		ti_rt_why='the proof in this plan does not lead to the signed root'
+	fi
+	return 0
+}
+
 # ---- the signed revocation list (format.md section 7)
 
 # Where the last good list is kept, so an installer that can't reach a
@@ -3197,6 +3307,11 @@ ti_install_main() {
 	# withdrawn: the revocation list answers that where there is a network,
 	# and the plan's own `signed`/`maxage` where there is not. Both run
 	# before anything on this machine is changed.
+	# Is the runtime install script one we published? Answered here, from
+	# the plan and the key this engine carries -- no network, no
+	# catalogue. It changes nothing about the install; it decides what
+	# the screen is allowed to claim.
+	ti_check_rtscript "$(ti_sel1 target)"
 	ti_revocations "$backend"
 	ti_check_age "$backend"
 
@@ -3658,7 +3773,20 @@ ti_install_main() {
 				printf '  %s\n' 'That signature is checked by this file, against a key inside this file. It is worth exactly as much as the file itself, so it is not a second opinion: use the SHA-256 above for that.' | ti_wrap 74 2
 			fi
 		fi
-		if [ "$ti_plan_sigstate" = unsigned ]; then
+		if [ "$ti_rt_state" = ok ]; then
+			# The steps themselves are ours, proved against a signed
+			# root by this file with the key it carries -- no network,
+			# no catalogue, and nothing here had to trust the page that
+			# built it. This is the claim worth making, and it is a
+			# narrower one than "the plan is signed": what is proved is
+			# the part we wrote.
+			printf '  SIGNED BY TIDDLYINSTALL\n'
+			printf '  %s\n' 'The downloads, their SHA-256s and every command run against them were published by us, and are proved so by this file against a key it carries. Checked here, with no network.' | ti_wrap 74 2
+			[ -n "$ti_rt_issued" ] && printf '  %s\n' "Published $ti_rt_issued." | ti_wrap 74 2
+			printf '  %s\n' 'Not covered: how it is started, which is the line whoever built this installer wrote.' | ti_wrap 74 2
+		elif [ "$ti_rt_state" = bad ]; then
+			printf '  %s\n' "The runtime steps claim to be ours and the claim does not hold: $ti_rt_why. Treat this file as altered." | ti_wrap 74 2
+		elif [ "$ti_plan_sigstate" = unsigned ]; then
 			# Not a warning: the ordinary state of an installer built in
 			# a page, which has no key to sign with. What it costs is
 			# said once, plainly, and the sentence that used to be here
@@ -3676,13 +3804,16 @@ ti_install_main() {
 			printf '  %s\n' "$TI_PLAN_FROM" | ti_wrap 74 2
 		fi
 		[ -n "$ti_age_warn" ] && printf '  %s\n' "$ti_age_warn" | ti_wrap 74 2
-		if [ -n "$TI_PLAN_SIGNED" ]; then
+		if [ -n "$TI_PLAN_SIGNED" ] && [ "$ti_plan_sigstate" = ok ]; then
 			# "(carried in this installer)" is already the whole of the
 			# paragraph above in the embedded case; only the fetched
 			# case adds anything by saying when.
 			ti_pk=
 			[ "$TI_PLAN_KIND" = fetched ] && ti_pk=' (fetched now)'
 			printf '  Signed on %s%s\n' "$TI_PLAN_SIGNED" "$ti_pk" | ti_wrap 74 2
+		fi
+		if [ -n "$TI_PLAN_SIGNED" ] && [ "$ti_plan_sigstate" != ok ]; then
+			printf '  %s\n' "Written $TI_PLAN_SIGNED, by whoever built this installer." | ti_wrap 74 2
 		fi
 		[ -n "$ti_revoke_note" ] && printf '  Revocations: %s\n' "$ti_revoke_note" | ti_wrap 74 2
 		if [ "$TI_MODE_A" = 1 ]; then

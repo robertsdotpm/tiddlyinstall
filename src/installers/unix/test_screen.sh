@@ -136,4 +136,24 @@ else ok 'no label is left with nothing after it'; fi
 hasnt 'files listed above' && ok 'the capability line does not point the wrong way' ||
 	no 'the capability line does not point the wrong way'
 
+# ---- the runtime install script, proved against a signed root
+#
+# This fixture's plan carries no rtroots line, so the screen must not
+# claim a signature -- and must not print "Signed on", which the plan's
+# own `signed` date made it do for a plan nobody signed.
+hasnt 'SIGNED BY TIDDLYINSTALL' && ok 'an unproved script is not called signed' ||
+	no 'an unproved script is not called signed'
+hasnt 'Signed on' && ok 'and no signing date is claimed for it' ||
+	no 'and no signing date is claimed for it' "$(grep -n 'Signed on' "$T/out" | head -1)"
+
+# The other half, which needs a real proof: build one with the signer's
+# output and check the engine reaches "SIGNED BY TIDDLYINSTALL" from a
+# plan alone, with no network. Skipped where the signer has not been run.
+RT=$here/../../build_server/data/rtscripts
+if [ -f "$RT/roots.txt" ] && [ -f "$RT/python.leaves" ]; then
+	ok 'the signer has been run (proof cases can be checked)'
+else
+	printf 'skip the proof cases (run tools/sign_runtime_scripts.mjs first)\n'
+fi
+
 [ "$fail" = 0 ] && say 'all passed (screen)' || { say 'FAILED (screen)'; exit 1; }
