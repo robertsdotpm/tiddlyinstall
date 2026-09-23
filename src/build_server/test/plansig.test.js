@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import { loadOrCreate, keyID, split, verify, verifyFor, recordOf, addRequestLine, publicKeyFromRaw, KEY_FILE, PUB_FILE, VerifyError, defaultKeyDir } from '../lib/plansig.js';
+import { loadOrCreate, loadKey, checkKeyID, expectedKeyID, keyID, split, verify, verifyFor, recordOf, addRequestLine, publicKeyFromRaw, KEY_FILE, PUB_FILE, PIN_FILE, pinPath, VerifyError, defaultKeyDir } from '../lib/plansig.js';
 import { tmpDir, SERVER } from './helpers.js';
 
 const PLAN = 'ti-plan\t1\nrecord\ttjfq5rqwnnrxk3m9q2x7v4p8ab\nname\tHello\n\n[target]\nwhen\tlinux\t0\t9999\t*\nlaunch\techo hi\n';
@@ -156,4 +156,65 @@ test('signing another kind of document', (t) => {
   assert.throws(() => s.signStringAs('ti-revocations', PLAN));
   // A changed entry does not verify.
   assert.throws(() => verify(s.pub, Buffer.from(signed.replace('abc', 'xyz')), 'ti-revocations'), VerifyError);
+});
+
+// The pin, added 2026-09-23 after a tool with a stale path minted a key
+// and signed 8,891 runtime install scripts with it. Everything it made
+// verified against itself; nothing looked wrong. Two separate mistakes had
+// to be possible for that: a key could come into existence as a side
+// effect of asking for one, and nothing anywhere said which key was
+// expected. These cover both.
+test('the expected key id', (t) => {
+  const dir = tmpDir(t);
+  const pin = path.join(dir, PIN_FILE);
+
+  // Comments and blank lines are skipped, and the file is the repository's
+  // own statement of what it builds with, so it has room for the why.
+  fs.writeFileSync(pin, '# why this exists\n\n  97930ea1888d1a12  \n');
+  assert.equal(expectedKeyID(pin), '97930ea1888d1a12');
+  // Anything that is not sixteen hex characters is no pin at all rather
+  // than a pin that matches nothing: a typo must not silently disable it
+  // *or* silently block every build.
+  fs.writeFileSync(pin, 'not-a-key-id\n');
+  assert.equal(expectedKeyID(pin), '');
+  assert.equal(expectedKeyID(path.join(dir, 'nothing-here')), '');
+
+  // The repository's own pin names the key it is built with.
+  assert.match(expectedKeyID(), /^[0-9a-f]{16}$/);
+  assert.equal(path.basename(pinPath()), PIN_FILE);
+});
+
+test('a key that is not the pinned one is refused', (t) => {
+  const { s } = newSigner(t);
+  const dir = tmpDir(t);
+  const pin = path.join(dir, PIN_FILE);
+
+  fs.writeFileSync(pin, keyID(s.pub) + '\n');
+  assert.equal(checkKeyID(s.pub, 'sign', pin), keyID(s.pub));
+
+  fs.writeFileSync(pin, 'deadbeefdeadbeef\n');
+  assert.throws(() => checkKeyID(s.pub, 'sign the runtime install scripts', pin), (e) => {
+    // The message has to carry both ids and what was stopped: it is read
+    // by someone who has just been refused and does not yet know why.
+    assert.match(e.message, new RegExp(keyID(s.pub)));
+    assert.match(e.message, /deadbeefdeadbeef/);
+    assert.match(e.message, /sign the runtime install scripts/);
+    assert.equal(e.keyID, keyID(s.pub));
+    assert.equal(e.expected, 'deadbeefdeadbeef');
+    return true;
+  });
+
+  // No pin file: nothing to check against, and that is not an error. A
+  // checkout without one builds exactly as it did before.
+  assert.equal(checkKeyID(s.pub, 'sign', path.join(dir, 'absent')), '');
+});
+
+test('loadKey never makes a key', (t) => {
+  const dir = tmpDir(t);
+  assert.throws(() => loadKey(dir, () => {}), /no signing key/);
+  // The point of it: nothing was left behind to be signed with later.
+  assert.deepEqual(fs.readdirSync(dir), []);
+
+  const { signer } = loadOrCreate(dir, () => {});
+  assert.equal(keyID(loadKey(dir, () => {}).signer.pub), keyID(signer.pub));
 });

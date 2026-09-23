@@ -1,0 +1,27 @@
+# The plan signing key every build from this repository is expected to use.
+#
+# This file exists because on 2026-09-23 a tool with a stale path called
+# loadOrCreate against a directory the key had been moved out of. It did
+# what it was asked: it minted a new key, signed 8,891 runtime install
+# scripts with it, and the bases were built with it. Every artifact
+# verified perfectly -- against itself. Nothing looked broken. What caught
+# it was a second artifact, built at a different moment, disagreeing.
+#
+# So the expectation is written down here, in the repository, where it is
+# reviewable in git and cannot be produced by the same accident that
+# produces a key. The tools that make anything we ship check against it
+# and refuse: tools/sign_runtime_scripts.mjs, tools/build_site.py,
+# src/installers/unix/plankey.sh, src/installers/windows/build.sh, and
+# the server at startup.
+#
+# It is also the thing the Trust page tells a reader to check the
+# fingerprint against: "somewhere we do not control" means, for anyone
+# who is not us, this file in a public repository.
+#
+# Changing this line is how the key is rotated. That is a deliberate act
+# with a commit attached, which is the whole point. Everything signed by
+# the old key stays valid until it is revoked; see docs/operating.md.
+#
+# The id is the first 16 hex characters of SHA-256 over the raw 32-byte
+# Ed25519 public key.
+97930ea1888d1a12

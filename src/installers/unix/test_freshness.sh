@@ -98,7 +98,7 @@ build_base() { # name [SOURCE_DATE_EPOCH]
 			mv "$D/mk-$1/TiddlyInstall.app" "$D/$1.app" || exit 1
 			rm -rf "$D/mk-$1"
 		else
-			sh "$here/make_run.sh" "$D/$1.run" > /dev/null || exit 1
+			TI_PIN_FILE= sh "$here/make_run.sh" "$D/$1.run" > /dev/null || exit 1
 		fi
 	) || exit 1
 }
@@ -121,7 +121,9 @@ cache_file() {
 prepare() {
 	D=$1
 	mkdir -p "$D/key" "$D/rt/pkg/bin" "$D/srv/api/plan" "$D/srv/api/records" "$D/srv/api" "$D/srv/f"
-	plansig -data "$D/key" sign /dev/null > /dev/null 2>&1
+	# -create: this is the one call that makes the throwaway key. Signing
+	# does not make keys any more (2026-09-23), so the making is asked for.
+	plansig -data "$D/key" -create sign /dev/null > /dev/null 2>&1
 	[ -f "$D/key/plan-signing-key.pub" ] || { echo "could not make a key"; exit 1; }
 	build_base base
 	# A second base whose build time is ten years from now: to it, this

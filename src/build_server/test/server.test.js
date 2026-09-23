@@ -53,7 +53,11 @@ test('the server', { skip }, async (t) => {
   fs.mkdirSync(path.join(site, 'web', 'css'), { recursive: true });
   fs.writeFileSync(path.join(site, 'web', 'css', 'a.css'), 'body{}');
   const DB = await claimRedisDb(t, IORedis, REDIS, PINNED);
-  const o = parseFlags(['-redis', REDIS, '-redis-db', String(DB), '-data', data, '-site', site, '-public', 'http://127.0.0.1:1', '-workers', '1']);
+  const o = parseFlags(['-redis', REDIS, '-redis-db', String(DB), '-data', data, '-site', site, '-public', 'http://127.0.0.1:1', '-workers', '1',
+    // Its own key. Without this the server falls back to defaultKeyDir(),
+    // so this suite signed with whatever real key the machine had, and on a
+    // machine with none it made one there and left it behind.
+    '-keys', tmpDir(t)]);
   o.log = () => {};
   const s = new Server(o);
   await s.init();

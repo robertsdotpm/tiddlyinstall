@@ -54,9 +54,11 @@ cases() {
 prepare() {
 	D=$1
 	mkdir -p "$D/key" "$D/rt/pkg/bin" "$D/srv/api/plan" "$D/srv/api/records" "$D/srv/f"
-	plansig -data "$D/key" sign /dev/null > /dev/null 2>&1
+	# -create: this is the one call that makes the throwaway key. Signing
+	# does not make keys any more (2026-09-23), so the making is asked for.
+	plansig -data "$D/key" -create sign /dev/null > /dev/null 2>&1
 	[ -f "$D/key/plan-signing-key.pub" ] || { echo "could not make a key"; exit 1; }
-	TI_PLAN_PUBKEY_FILE=$D/key/plan-signing-key.pub sh "$here/make_run.sh" "$D/base.run" > /dev/null || exit 1
+	TI_PIN_FILE= TI_PLAN_PUBKEY_FILE=$D/key/plan-signing-key.pub sh "$here/make_run.sh" "$D/base.run" > /dev/null || exit 1
 	printf '#!/bin/sh\necho hello\n' > "$D/rt/pkg/bin/hello"
 	chmod 755 "$D/rt/pkg/bin/hello"
 	(cd "$D/rt" && tar -cf - pkg | gzip -c > "$D/srv/f/rt.tar.gz")

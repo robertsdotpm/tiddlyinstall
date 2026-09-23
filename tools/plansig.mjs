@@ -3,7 +3,8 @@
 // (src/build_server/lib/plansig.js). For tests and for operators; the server signs
 // plans itself.
 //
-//   node tools/plansig.mjs -data DIR sign plan.txt > signed.txt   (makes the key if DIR has none)
+//   node tools/plansig.mjs -data DIR sign plan.txt > signed.txt
+//   node tools/plansig.mjs -data DIR -create sign plan.txt        (makes a key if DIR has none)
 //   node tools/plansig.mjs -pub FILE verify signed.txt [record]   (FILE: plan-signing-key.pub)
 //
 // -kind KIND signs or checks another document the plan key signs, today
@@ -11,17 +12,18 @@
 //
 //   node tools/plansig.mjs -data DIR -kind ti-revocations sign list.txt
 import fs from 'node:fs';
-import { loadOrCreate, verify, verifyFor, keyID, recordOf, defaultKeyDir } from '../src/build_server/lib/plansig.js';
+import { loadKey, loadOrCreate, verify, verifyFor, keyID, recordOf, defaultKeyDir } from '../src/build_server/lib/plansig.js';
 
 function fail(msg) {
   process.stderr.write('plansig: ' + msg + '\n');
   process.exit(1);
 }
 
-const flags = { data: '', pub: '', kind: 'ti-plan' };
+const flags = { data: '', pub: '', kind: 'ti-plan', create: false };
 const args = [];
 const argv = process.argv.slice(2);
 for (let i = 0; i < argv.length; i++) {
+  if (/^--?create$/.test(argv[i])) { flags.create = true; continue; }
   const m = /^--?(data|pub|kind)(?:=(.*))?$/.exec(argv[i]);
   if (m) flags[m[1]] = m[2] !== undefined ? m[2] : argv[++i] ?? '';
   else args.push(argv[i]);
@@ -35,7 +37,14 @@ try { doc = fs.readFileSync(args[1]); } catch (e) { fail(e.message); }
 try {
   switch (args[0]) {
     case 'sign': {
-      const { signer } = loadOrCreate(flags.data || defaultKeyDir(), (s) => process.stderr.write(s + '\n'));
+      // Making a key has to be asked for. Until 2026-09-23 signing made one
+      // wherever it was pointed, so a tool run against a directory the key
+      // had been moved out of minted its own and signed 8,891 runtime
+      // scripts with it, all of which verified perfectly against each
+      // other. -create is for tests that want a throwaway key; without it
+      // a missing key is an error.
+      const load = flags.create ? loadOrCreate : loadKey;
+      const { signer } = load(flags.data || defaultKeyDir(), (s) => process.stderr.write(s + '\n'));
       process.stdout.write(signer.signAs(flags.kind, doc));
       break;
     }

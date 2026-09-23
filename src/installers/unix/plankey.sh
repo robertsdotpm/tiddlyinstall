@@ -12,6 +12,25 @@ bake_engine() {
 	[ ${#key} -eq 44 ] && [ "$(printf '%s' "$key" | openssl base64 -d -A 2>/dev/null | wc -c | tr -d ' ')" = 32 ] ||
 		{ echo "$keyfile: not a 32-byte Ed25519 public key" >&2; exit 1; }
 	keyid=$(printf '%s' "$key" | openssl base64 -d -A | openssl dgst -sha256 | awk '{ print substr($NF, 1, 16) }')
+
+	# Refuse a key this repository does not expect (plan-key.id). A base is
+	# where a wrong key does the most damage: it is baked in, shipped, and
+	# every installer built from it then checks plans against it and is
+	# satisfied. The pin is a second artifact, written at a different time,
+	# which is the only kind of check that catches this.
+# TI_PIN_FILE= (empty) turns it off, for a test building a base with a
+# throwaway key. Empty rather than absent, so it has to be meant.
+	pinfile=${TI_PIN_FILE-$here/../../../plan-key.id}
+	if [ -f "$pinfile" ]; then
+		# first line that is not blank and not a comment
+		want=$(sed -e 's/[[:space:]]*$//' -e '/^[[:space:]]*#/d' -e '/^$/d' "$pinfile" | head -1)
+		if [ -n "$want" ] && [ "$want" != "$keyid" ]; then
+			echo "this is key $keyid, and $pinfile says builds from this repository use $want." >&2
+			echo "  Refusing to bake it into a base. If the key really has been rotated," >&2
+			echo "  change plan-key.id in the same commit." >&2
+			exit 1
+		fi
+	fi
 	[ "$(grep -c '^TI_PLAN_PUBKEY=$' "$1")" = 1 ] && [ "$(grep -c '^TI_PLAN_KEYID=$' "$1")" = 1 ] ||
 		{ echo "$1: no empty TI_PLAN_PUBKEY= / TI_PLAN_KEYID= lines to fill" >&2; exit 1; }
 	# When this base was built. The engine uses it as the floor below which

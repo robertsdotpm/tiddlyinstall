@@ -21,7 +21,7 @@ bad() { printf 'FAIL %s\n' "$1"; fails=$((fails + 1)); }
 check() { if eval "$2"; then ok "$1"; else bad "$1"; [ -f "$T/out" ] && sed 's/^/     | /' "$T/out" | tail -n 12; fi; }
 
 TI_PLAN_PUBKEY_FILE=${TI_PLAN_PUBKEY_FILE:-$here/../../build_server/data/plan-signing-key.pub} \
-	sh "$here/make_run.sh" "$T/base.run" > /dev/null || { echo "make_run failed"; exit 1; }
+	TI_PIN_FILE= sh "$here/make_run.sh" "$T/base.run" > /dev/null || { echo "make_run failed"; exit 1; }
 
 # A tiny "runtime": bin/hello prints a line.
 mkdir -p "$T/rt/pkg/bin" "$T/pack"

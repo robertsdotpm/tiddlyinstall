@@ -10,9 +10,67 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 export const KEY_FILE = 'plan-signing-key.pem'; // PKCS#8 private key, mode 0600
 export const PUB_FILE = 'plan-signing-key.pub'; // base64 of the raw 32-byte public key; bases are built with it
+
+export const PIN_FILE = 'plan-key.id';          // the expected key id, tracked in the repository
+
+// Where plan-key.id is: the repository root, two levels up from here.
+export function pinPath() {
+  return path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..', PIN_FILE);
+}
+
+// The key id every build from this repository is expected to use, or ''
+// when there is no pin file. First non-blank, non-comment line.
+//
+// The pin is deliberately not checked inside loadOrCreate: a test that
+// makes a throwaway key in a temp directory is doing nothing wrong, and a
+// library primitive that refused it would only teach people to pass a
+// flag that turns the check off. It is checked where something we ship is
+// produced, by the callers below.
+export function expectedKeyID(file = pinPath()) {
+  let text;
+  try { text = fs.readFileSync(file, 'utf8'); } catch (e) { return ''; }
+  for (const raw of text.split('\n')) {
+    const l = raw.trim();
+    if (l === '' || l.startsWith('#')) continue;
+    return /^[0-9a-f]{16}$/.test(l) ? l : '';
+  }
+  return '';
+}
+
+// Throws unless `pub` is the key this repository expects. `what` names
+// what was about to be made with it, because the message is read by
+// someone who has just been stopped and needs to know what from.
+export function checkKeyID(pub, what, file = pinPath()) {
+  const want = expectedKeyID(file);
+  if (!want) return '';                       // no pin: nothing to check against
+  const got = keyID(pub);
+  if (got === want) return got;
+  const e = new Error(
+    `plansig: this is key ${got}, and ${file} says builds from this repository use ${want}.\n` +
+    `  Refusing to ${what} with it. Either the wrong key directory is in use (TI_KEYS, or\n` +
+    `  --keys), or a key was made by accident where one was expected to already exist. If the\n` +
+    `  key really has been rotated, change ${PIN_FILE} in the same commit.`);
+  e.keyID = got;
+  e.expected = want;
+  throw e;
+}
+
+// Loads the key from dir. Unlike loadOrCreate it never makes one: a
+// missing key is an error, which is what anything signing something we
+// publish wants. loadOrCreate's convenience is for a server's first run.
+export function loadKey(dir, log = console.log, alsoPub = '') {
+  if (!fs.existsSync(path.join(dir, KEY_FILE))) {
+    throw new Error(`plansig: no signing key in ${dir} (looked for ${KEY_FILE}).\n` +
+      `  Not making one: a key that appears by accident signs everything perfectly and is\n` +
+      `  wrong. Point TI_KEYS at the real one, or start the server once if this is a first run.`);
+  }
+  return loadOrCreate(dir, log, alsoPub);
+}
+
 
 const SIG_PREFIX = 'sig\ted25519\t';
 const PLAN_HEAD = Buffer.from('ti-plan\t');

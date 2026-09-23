@@ -126,6 +126,56 @@ if [ -d "$rtdir" ]; then
 	cp -r "$rtdir" "$wt/co/src/build_server/data/"
 fi
 
+# The bases must be newer than the engine they are built from.
+#
+# deploy.sh does not build them, and the macOS one cannot be built here at
+# all: it is made on a rented Mac and copied in. So the failure that has
+# to be caught is a deploy that quietly ships an engine from before the
+# last change to it. The check below compares to the served copy, which
+# does not help -- a stale base matches a stale base perfectly.
+#
+# A base is also stale when the signing key it was baked with has moved,
+# so plan-key.id counts as a source.
+stale=0
+check_base() {
+	name=$1
+	out=$2
+	shift 2
+	if [ ! -f "$here/$out" ]; then
+		echo "deploy: no $name base at $out; build it first." >&2
+		stale=1
+		return
+	fi
+	for src in "$@"; do
+		[ -e "$here/$src" ] || continue
+		newer=$(find "$here/$src" -newer "$here/$out" -print -quit 2>/dev/null || true)
+		if [ -n "$newer" ]; then
+			echo "deploy: the $name base is older than $newer." >&2
+			stale=1
+			return
+		fi
+	done
+	echo "ok    $name base is newer than its engine"
+}
+check_base windows src/installers/windows/out/base.exe \
+	src/installers/windows/base.nsi src/installers/windows/include \
+	src/installers/windows/plugin-src src/installers/windows/build.sh plan-key.id
+check_base linux src/installers/unix/out/ti-base.run \
+	src/installers/unix/ti-engine.sh src/installers/unix/make_run.sh \
+	src/installers/unix/plankey.sh plan-key.id
+check_base macos src/installers/unix/out/ti-base-macos.zip \
+	src/installers/unix/ti-engine.sh src/installers/unix/make_app.sh \
+	src/installers/unix/plankey.sh plan-key.id
+if [ "$stale" = 1 ]; then
+	echo "deploy: refusing to build a page around a stale base. Rebuild it:" >&2
+	echo "  windows  (cd src/installers/windows && ./build.sh)" >&2
+	echo "  linux    (cd src/installers/unix && sh make_run.sh)" >&2
+	echo "  macos    on the Mac: see src/installers/unix/README.md, then copy the zip back" >&2
+	echo "  or set TI_ALLOW_STALE_BASE=1 if you mean it." >&2
+	[ "${TI_ALLOW_STALE_BASE:-0}" = 1 ] || exit 1
+	echo "deploy: TI_ALLOW_STALE_BASE=1, carrying on." >&2
+fi
+
 # shellcheck disable=SC2086
 (cd "$wt/co" && python3 tools/build_site.py $opts -o "$wt/co/out" >"$wt/build.log" 2>&1) || {
 	tail -20 "$wt/build.log" >&2

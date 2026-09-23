@@ -33,7 +33,7 @@ import crypto from 'node:crypto';
 import { loadSnapshot, resolve, loadRuntimes, catalogRuntimeIDs } from '../src/shared/resolve.js';
 import { canonicalTarget, targetBlocks } from '../src/shared/rtscript.js';
 import { leafHash, treeRoot } from '../src/shared/merkle.js';
-import { loadOrCreate, defaultKeyDir } from '../src/build_server/lib/plansig.js';
+import { loadKey, checkKeyID, defaultKeyDir } from '../src/build_server/lib/plansig.js';
 import { revocationsText } from '../src/build_server/lib/revocations.js';
 
 const RTSCRIPTS_KIND = 'ti-rtscripts';
@@ -59,7 +59,10 @@ const raw = JSON.parse(zlib.gunzipSync(Buffer.from(bytes)).toString('utf8'));
 // none, so it quietly minted a new one, signed 8,891 runtime scripts
 // with it, and left its public half where build.sh bakes bases from.
 // Every base built after that carried a key nothing had signed with.
-const { signer } = loadOrCreate(defaultKeyDir(), () => {});
+// Two things stop a repeat: loadKey refuses to make a key, and checkKeyID
+// refuses one that is not the id plan-key.id names.
+const { signer } = loadKey(defaultKeyDir(), () => {});
+checkKeyID(signer.pub, 'sign the runtime install scripts');
 
 const ids = catalogRuntimeIDs(cat).filter((r) => !only || only.split(',').includes(r));
 fs.mkdirSync(outDir, { recursive: true });

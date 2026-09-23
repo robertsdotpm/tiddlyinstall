@@ -97,6 +97,29 @@ def shared(*names):
     return [SHARED + "/" + n for n in names]
 
 
+PIN_FILE = "plan-key.id"
+
+
+def expected_key_id():
+    """The key id plan-key.id names, or "" when there is no pin file.
+
+    The same file src/build_server/lib/plansig.js reads: first non-blank,
+    non-comment line, sixteen hex characters.
+    """
+    p = os.path.join(ROOT, PIN_FILE)
+    try:
+        with open(p, encoding="utf-8") as f:
+            text = f.read()
+    except OSError:
+        return ""
+    for raw in text.split("\n"):
+        l = raw.strip()
+        if not l or l.startswith("#"):
+            continue
+        return l if re.fullmatch(r"[0-9a-f]{16}", l) else ""
+    return ""
+
+
 EARLY_MODULES = web("polyfills.js", "has-shim.js")
 CORE_MODULES = [
     # dialog.js before api.js: the settings panel's "What the server does"
@@ -484,8 +507,20 @@ def offline_page(catalog_dir, backend):
     # then says it cannot check rather than pretending it did.
     keyfile = os.path.join(ROOT, "src/build_server/data/plan-signing-key.pub")
     if os.path.isfile(keyfile):
-        blocks.append(data_block("ti-plan-pubkey", read(keyfile).strip(), "text/plain"))
-        report.append("  plan key %s" % read(keyfile).strip()[:16])
+        pub_b64 = read(keyfile).strip()
+        # The key id, not the first 16 characters of the base64 -- which is
+        # what this said until 2026-09-23 and reads exactly like an id, so a
+        # build using the wrong key printed something reassuring and wrong.
+        key_id = hashlib.sha256(base64.b64decode(pub_b64)).hexdigest()[:16]
+        want = expected_key_id()
+        if want and key_id != want:
+            sys.exit("build_site.py: this key is %s and %s says builds from this repository\n"
+                     "  use %s. Refusing to bake it into the page. Either the wrong key\n"
+                     "  directory is in use, or a key was made where one was expected to exist.\n"
+                     "  If the key really has been rotated, change plan-key.id in the same commit."
+                     % (key_id, PIN_FILE, want))
+        blocks.append(data_block("ti-plan-pubkey", pub_b64, "text/plain"))
+        report.append("  plan key %s%s" % (key_id, " (pinned)" if want else ""))
     else:
         report.append("  plan key NONE (%s not found); Verify cannot check plan signatures" % keyfile)
     # The revocation list, so the page's resolver makes the same choice

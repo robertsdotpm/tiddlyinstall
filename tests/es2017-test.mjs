@@ -128,5 +128,26 @@ for (const s of scripts) dashes.push(...dashesIn('script at line ' + s.line, s.s
 ok(!dashes.length, 'no em or en dashes on the page, in any spelling (write a plain "-")',
   dashes.slice(0, 8).join('\n      ') + (dashes.length > 8 ? '\n      ... and ' + (dashes.length - 8) + ' more' : ''));
 
+// No fabricated build history on the published page.
+//
+// src/web_client/builds.html is a prototype and its rows are made up: job
+// 1042 building psf/requests right now, a build that failed three days
+// ago, an Admin link to a page that does not exist. It is not in
+// build_site.py's PAGES and "builds.html" is aliased to #home, so none of
+// it reaches the one-file build -- today. It is one line in PAGES away
+// from doing, and invented records of work this server never did would be
+// a poor thing to ship on a product whose argument is that it does not
+// ask to be believed. So it is checked rather than remembered.
+//
+// Only markers unique to that page: the landing page's picture of an
+// installer screen uses example names too, and that is an illustration
+// of what the product shows rather than a claim about what it has done.
+const INVENTED = [
+  'Prototype: sample', 'Every build this server has run',
+  'install_github_myapp', 'example/myapp', 'prettier/prettier', 'psf/black',
+];
+const invented = INVENTED.filter((n) => html.indexOf(n) >= 0);
+ok(!invented.length, 'no fabricated build history on the published page', invented.join(', '));
+
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed ? 1 : 0);

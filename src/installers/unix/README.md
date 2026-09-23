@@ -280,7 +280,16 @@ engine is one file, so that change reached macOS only when this was
 rebuilt. The macOS dialog's short form carries the same two claims, in
 the same order, because it is the whole of what that dialog says.
 
-Its zip was `07b3366106a8dfa5ac2758952edfdc8dd76f9b7be28ffa43fd0f240cfcf401ec`
+The current zip is `d50deff84975b3fe07d3e175ee5e23917d8830641988636558aa35bec1fff6f7`
+(78,637 bytes), its engine
+`0772fc382382cfde13f674df920513fd5c47304807b792dc2f442a29d50b31ea`, built
+2026-09-23T12:25:06Z. It is the first macOS base built with the key pin
+in place (`plan-key.id`, checked by `plankey.sh`), which is why the build
+line on the Mac names the key id: a base baked with the wrong key is the
+failure that pin exists for, and macOS is the one base nothing here can
+rebuild to check.
+
+The one before it was `07b3366106a8dfa5ac2758952edfdc8dd76f9b7be28ffa43fd0f240cfcf401ec`
 (68,441 bytes), its engine
 `cf895577e3a68cbd2601f4c4ba65f2dec3490ae899a6b83526112802c9cb8bb9`, built
 at `TI_BUILD_TIME` `2026-09-21T06:54:39Z` / `1789973679`.

@@ -18,7 +18,7 @@ import { decodeIconPng } from '../shared/icon.js';
 import { loadCatalog } from './lib/catalog.js';
 import { Builder, isHash26, isSHA256, isNonce } from './lib/jobs.js';
 import { JobQueue } from './lib/queue.js';
-import { loadOrCreate, defaultKeyDir, keyID, PUB_FILE, REVOCATIONS_KIND, RELEASES_KIND } from './lib/plansig.js';
+import { loadOrCreate, defaultKeyDir, keyID, checkKeyID, expectedKeyID, PUB_FILE, REVOCATIONS_KIND, RELEASES_KIND } from './lib/plansig.js';
 import { revocationsText } from './lib/revocations.js';
 import crypto from 'node:crypto';
 import { parseFile as parseReleaseFile, releasesText } from './lib/releases.js';
@@ -221,6 +221,13 @@ export class Server {
     const { signer, created } = loadOrCreate(keyDir, this.log, o.data);
     if (created) this.log(`made a new plan signing key in ${keyDir}; rebuild the bases with ${path.join(o.data, PUB_FILE)}`);
     this.log(`plan signing key ${keyID(signer.pub)} (${signer.publicBase64()})`);
+    // Refuse to serve with a key this repository does not expect. A server
+    // signing plans with the wrong key produces installers that verify
+    // against themselves and against nothing else, which is the failure
+    // this pin exists for. Only when the key came from the default
+    // directory: a test or a second instance pointed at its own key with
+    // --keys is doing that on purpose.
+    if (!o.keys && expectedKeyID()) checkKeyID(signer.pub, 'serve');
     this.signer = signer;
     this.q = new JobQueue(o.redis, o['redis-db'], o.workers);
     // Every outgoing fetch a user can influence (sources, packs, registries,
