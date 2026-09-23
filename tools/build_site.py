@@ -115,6 +115,9 @@ CORE_MODULES = [
     *web_lib("authenticode.js", "pgp.js"),
     *web("sign-services.js", "sign-ui.js"),
     *shared("resolve.js", "github.js", "builder.js"),
+    # catalog-refresh.js before overlay.js: overlay.js reads the catalogue
+    # through it, so a refreshed one stands in for the blocks baked in.
+    *web("catalog-refresh.js"),
     *web("overlay.js", "change-list.js", "overlay-consent.js"),
     *web("local-api.js", "router.js"),
 ]

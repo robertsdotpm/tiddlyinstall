@@ -49,13 +49,35 @@
             <button type="button" class="secondary" id="rt-export">Export…</button>
             <label class="button secondary rt-file">Import…<input type="file" id="rt-import" accept=".json,application/json"></label>
             <button type="button" class="secondary" id="rt-reset">Reset all</button>
+            <button type="button" class="secondary" id="rt-refresh">Refresh from a server…</button>
           </span>
         </div>
         <p class="small muted" id="rt-page-note" hidden></p>
+        <p class="small" id="rt-source" hidden></p>
         <div class="rt-confirm" id="rt-reset-confirm" hidden>
           <span>Drop every change made in this browser and go back to the catalogue built into the page?</span>
           <button type="button" id="rt-reset-yes">Reset all</button>
           <button type="button" class="secondary" id="rt-reset-no">Keep them</button>
+        </div>
+        <div class="rt-confirm rt-refresh-box" id="rt-refresh-box" hidden>
+          <p><strong>This replaces the whole catalogue in this page</strong> with the one that server is
+            serving now - every release, recipe and rule, for every runtime. The list you are looking
+            at will not be the same list afterwards. Your own changes are kept: they are a short list that
+            sits on top, and they are applied again to the new catalogue (any that no longer fit are shown
+            as not&nbsp;applied).</p>
+          <p class="small">The page checks what it is handed before it uses any of it. The server sends a
+            statement of the catalogue's SHA-256, signed with the TiddlyInstall key; this page checks that
+            signature against the key it was built with, then checks the file against the statement. If
+            either fails, nothing&nbsp;changes.</p>
+          <label class="rt-refresh-where">Server
+            <input type="text" id="rt-refresh-url" spellcheck="false" autocapitalize="off" autocorrect="off">
+          </label>
+          <div class="actions">
+            <button type="button" id="rt-refresh-go">Replace the catalogue</button>
+            <button type="button" class="secondary" id="rt-refresh-cancel">Cancel</button>
+          </div>
+          <p class="small" id="rt-refresh-status" role="status" hidden></p>
+          <p class="small error-text" id="rt-refresh-error" hidden></p>
         </div>
         <details id="rt-changes-details">
           <summary>What's changed</summary>

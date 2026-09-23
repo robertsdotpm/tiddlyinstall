@@ -110,6 +110,15 @@ if [ -f "$cache/catalog.gz" ]; then
 		echo "the runtime install scripts are already signed for this catalogue" >&2
 	fi
 fi
+
+# The catalogue as one file, where the server can serve it
+# (GET /api/catalog/archive). A saved copy of the page refreshes its
+# catalogue from that plus the attestation next to it, and checks the
+# pair against the key it was built with -- so this has to be the same
+# catalog.gz the signer just attested, not a fresh one.
+if [ -f "$cache/catalog.gz" ]; then
+	cp "$cache/catalog.gz" "$here/src/build_server/data/catalog.gz"
+fi
 # The page bakes the roots and leaf lists in, and a clean worktree has
 # neither -- they are generated, not tracked.
 if [ -d "$rtdir" ]; then

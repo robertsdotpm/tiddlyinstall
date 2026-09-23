@@ -9,6 +9,7 @@
 // still pins one. Skipped without Redis or the runtime catalogue.
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import http from 'node:http';
@@ -80,6 +81,50 @@ test('the server', { skip }, async (t) => {
     const rt = await json('/api/catalog/runtimes');
     assert.ok(rt.j.runtimes.some((x) => x.id === 'python'));
     assert.equal(rt.r.headers['cache-control'], 'public, max-age=300');
+  });
+
+  // The pair a saved copy of the page refreshes its catalogue from: the
+  // catalogue as one file, and the signed statement about it. Together
+  // they are the only way the page will take a catalogue off the network
+  // and then build installers from it, so what matters is that both are
+  // served, that the statement is about the file actually served, and
+  // that it is signed by this server's plan key. The catalogue here is a
+  // few bytes rather than the real one: these two routes serve a file and
+  // say nothing about what is in it, and the page's own checks are driven
+  // against a real catalogue in tests/catalog-refresh-test.mjs.
+  await t.test('catalogue archive and attestation', async () => {
+    const arc = Buffer.from('a stand-in for catalog.gz; these routes serve bytes\n');
+    fs.writeFileSync(path.join(data, 'catalog.gz'), arc);
+    fs.mkdirSync(path.join(data, 'rtscripts'), { recursive: true });
+    const hash = crypto.createHash('sha256').update(arc).digest('hex');
+    const doc = 'ti-catalog-attest\t1\nissued\t2026-09-23T00:00:00Z\nsha256\t' + hash + '\nbytes\t' + arc.length + '\n';
+    fs.writeFileSync(path.join(data, 'rtscripts', 'catalog.txt'), s.signer.signStringAs('ti-catalog-attest', doc));
+
+    const att = await get('/api/catalog/attest');
+    const got = await get('/api/catalog/archive');
+    assert.equal(att.status, 200);
+    assert.equal(got.status, 200);
+    assert.equal(att.headers['content-type'], 'text/plain; charset=utf-8');
+    assert.equal(got.headers['content-type'], 'application/gzip');
+    assert.ok(got.body.equals(arc), 'the archive is served byte for byte');
+
+    const said = (att.text.split('\n').find((l) => l.startsWith('sha256\t')) || '').split('\t')[1];
+    assert.equal(crypto.createHash('sha256').update(got.body).digest('hex'), said,
+      'the archive served is the one the statement is about');
+
+    const sig = (att.text.trimEnd().split('\n').pop() || '').split('\t');
+    assert.equal(sig[0], 'sig');
+    assert.equal(sig[1], 'ed25519');
+    const signed = att.text.slice(0, att.text.lastIndexOf('\nsig\t') + 1);
+    const pub = Buffer.from(fs.readFileSync(path.join(data, 'plan-signing-key.pub'), 'utf8').trim(), 'base64');
+    const key = crypto.createPublicKey({ key: Buffer.concat([Buffer.from('302a300506032b6570032100', 'hex'), pub]), format: 'der', type: 'spki' });
+    assert.ok(crypto.verify(null, Buffer.from(signed, 'utf8'), key, Buffer.from(sig[2], 'base64')),
+      "and it is signed by this server's plan key");
+
+    // A server deployed without a catalogue says so, rather than serving
+    // something else or failing in a way the page reads as a bad answer.
+    fs.rmSync(path.join(data, 'catalog.gz'));
+    assert.equal((await get('/api/catalog/archive')).status, 404);
   });
 
   await t.test('CORS and methods', async () => {

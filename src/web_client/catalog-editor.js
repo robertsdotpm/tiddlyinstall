@@ -8,13 +8,14 @@
 // Everything shown comes from the catalogue or from an imported file, so it
 // is written with textContent and DOM properties only (no innerHTML with
 // values).
-import { apiLocal, apiReady, apiBase, setApiBase, LOCAL, mountApiFooter } from './api.js';
+import { apiLocal, apiReady, apiBase, setApiBase, LOCAL, mountApiFooter, homeServer, normalizeApi } from './api.js';
 import { resolve, fileName } from '../shared/resolve.js';
 import * as O from './overlay.js';
 // The change list, and the DOM helpers it shares with this page. The same
 // list is shown by the prompt for changes found in storage.
 import { el, short, show, matchText, describeChange, changeItem as changeListItem } from './change-list.js';
 import { mountOverlayConsent } from './overlay-consent.js';
+import * as R from './catalog-refresh.js';
 
 mountApiFooter();
 mountOverlayConsent();
@@ -979,6 +980,7 @@ function paintChanges() {
       el('button', { type: 'button', class: 'link-button', text: 'Review them', onclick: () => review(po, 'this page file') }));
   }
   note.hidden = !note.firstChild;
+  paintSource();
   paintSaveOption();
 }
 
@@ -994,6 +996,88 @@ function paintMode() {
     m.replaceChildren('This page uses the server at ', el('code', { text: apiBase() }),
       ', which builds from its own catalogue: changes made here are kept in this browser but don\'t affect its builds. ',
       el('button', { type: 'button', class: 'secondary small-button', id: 'rt-use-local', text: 'Build in this page instead', onclick: () => setApiBase(LOCAL) }));
+  }
+}
+
+/* ---------- refreshing the catalogue from a build server ---------- */
+
+// Where the catalogue being shown came from. Silent for a page using the
+// one it was built with, which is the ordinary case and needs no notice.
+function paintSource() {
+  const p = $('rt-source');
+  const r = O.refreshedCatalog();
+  p.replaceChildren();
+  if (!r) { p.hidden = true; return; }
+  p.append('This catalogue was fetched from ', el('code', { text: r.backend }), ' on ' + r.at.slice(0, 10) +
+    ', and checked against key ', el('code', { text: r.keyId }), '. ',
+    el('button', { type: 'button', class: 'link-button', text: 'Go back to the one built into this page',
+      onclick: async () => { await R.clearStored(); O.setRefreshedCatalog(null); } }));
+  p.hidden = false;
+}
+
+let refreshing = false;
+function refreshStatusLine(text) {
+  const n = $('rt-refresh-status');
+  n.textContent = text || '';
+  n.hidden = !text;
+}
+
+function refreshError(e) {
+  const n = $('rt-refresh-error');
+  n.replaceChildren();
+  if (!e) { n.hidden = true; return; }
+  n.append(el('strong', { text: e.message }));
+  if (e.detail) n.append(' ' + e.detail);
+  n.hidden = false;
+}
+
+function openRefresh() {
+  refreshError(null);
+  refreshStatusLine('');
+  const cur = O.refreshedCatalog();
+  $('rt-refresh-url').value = (cur && cur.backend) || homeServer();
+  $('rt-refresh-box').hidden = false;
+  $('rt-refresh-url').focus();
+}
+
+async function doRefresh() {
+  if (refreshing) return;
+  const raw = $('rt-refresh-url').value;
+  const url = normalizeApi(raw);
+  if (!url) {
+    refreshError({ message: 'That is not an address this page can fetch from.', detail: 'It needs to be an http:// or https:// address.' });
+    return;
+  }
+  refreshing = true;
+  refreshError(null);
+  $('rt-refresh-go').disabled = true;
+  try {
+    const rec = await R.fetchCatalog(url, refreshStatusLine);
+    refreshStatusLine('Saving it in this browser…');
+    // Stored first, so a reload keeps it; then swapped in, which drops
+    // everything derived from the old catalogue and repaints.
+    try {
+      await R.writeStored(rec);
+    } catch (e) {
+      // Out of room, or a browser that won't keep data: the catalogue can
+      // still be used for this session, and saying so is better than
+      // refusing a fetch that worked.
+      refreshError({ message: 'Fetched and checked, but this browser would not store it.',
+        detail: (e && e.message ? e.message : String(e)) + ' It is in use for this tab only, and will be gone when the tab is closed.' });
+    }
+    O.setRefreshedCatalog(rec);
+    S.sel = null;
+    S.draft = undefined;
+    S.policyDraft = null;
+    refreshStatusLine('');
+    if ($('rt-refresh-error').hidden) $('rt-refresh-box').hidden = true;
+    paintAll();
+  } catch (e) {
+    refreshStatusLine('');
+    refreshError(e && e.message ? e : { message: String(e), detail: '' });
+  } finally {
+    refreshing = false;
+    $('rt-refresh-go').disabled = false;
   }
 }
 
@@ -1316,6 +1400,9 @@ async function start() {
   $('rt-export').addEventListener('click', exportOverlay);
   $('rt-import').addEventListener('change', (e) => { const f = e.target.files && e.target.files[0]; e.target.value = ''; if (f) importFile(f); });
   $('rt-reset').addEventListener('click', () => { $('rt-reset-confirm').hidden = false; });
+  $('rt-refresh').addEventListener('click', openRefresh);
+  $('rt-refresh-cancel').addEventListener('click', () => { $('rt-refresh-box').hidden = true; });
+  $('rt-refresh-go').addEventListener('click', doRefresh);
   $('rt-reset-no').addEventListener('click', () => { $('rt-reset-confirm').hidden = true; });
   $('rt-reset-yes').addEventListener('click', async () => { $('rt-reset-confirm').hidden = true; await O.setChanges([]); S.sel = null; S.draft = undefined; S.policyDraft = null; paintAll(); });
   $('rt-review-add').addEventListener('click', () => applyImport(false));

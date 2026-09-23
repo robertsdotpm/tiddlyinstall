@@ -40,6 +40,7 @@
 // Changes made here, and changes baked into the page file itself (#ti-overlay,
 // "Save this page"), are the person's own and need no answer.
 import { loadCatalogFiles, runtimesSummary, openCatalog, loadRuntimes, readChunk, SPLIT_FORMAT } from '../shared/resolve.js';
+import { readStored as readRefreshed } from './catalog-refresh.js';
 
 export const FORMAT = 'ti-catalog-overlay';
 const KEY = 'ti.catalog.overlay';
@@ -547,12 +548,43 @@ export function applyOverlay(files, changes) {
 //                    os_versions.json, compilers_min_os.json), the folders
 //                    with their release counts, and the runtimes summary
 //   #ti-cat-FOLDER   one folder's files, gzipped, base64
+// A catalogue fetched from a build server and checked against the key
+// this page carries (src/web_client/catalog-refresh.js), standing in for
+// the one built in. It is read through the same two functions the baked
+// blocks are, so everything downstream -- the index, the folders, the
+// resolver, the overlay on top -- is unchanged and does not know the
+// difference. Null means the page is using what it was built with.
+let refreshed = null;
+
+// Swapping the catalogue invalidates everything derived from the old one:
+// the parsed index, the unpacked folders, and the catalogue the overlay
+// was applied to. They are memoised, so they have to be dropped by hand.
+export function setRefreshedCatalog(r) {
+  refreshed = r;
+  index = undefined;
+  filesPromise = null;
+  loadedFolders.clear();
+  pendingFolders.clear();
+  emit();
+}
+
+// What the page is building from: null for the catalogue it was built
+// with, else where the current one came from and when.
+export function refreshedCatalog() {
+  return refreshed && { backend: refreshed.backend, at: refreshed.at, issued: refreshed.issued, sha256: refreshed.sha256, bytes: refreshed.bytes, keyId: refreshed.keyId, releases: refreshed.releases };
+}
+
 function block(id) {
+  if (refreshed && id === 'ti-catalog') return JSON.stringify(refreshed.index);
   const el = typeof document !== 'undefined' && document.getElementById(id);
   return el && !el.dataset.placeholder ? el.textContent : null;
 }
 
 function blockBytes(id) {
+  if (refreshed && id.indexOf('ti-cat-') === 0) {
+    const f = refreshed.folders[id.slice(7)];
+    return f ? new Uint8Array(f) : null;
+  }
   const t = block(id);
   if (t == null) return null;
   const s = atob(t.replace(/\s+/g, ''));
@@ -859,6 +891,15 @@ let loadPromise = null;
 export function loadOverlay() {
   if (!loadPromise) {
     loadPromise = (async () => {
+      // The catalogue first: the overlay is a list of changes *to* one, and
+      // which of them still apply depends on which catalogue is underneath.
+      // A refresh that cannot be read is not an error worth stopping for --
+      // the page falls back to the catalogue built into it, which is what a
+      // copy that has never been refreshed uses anyway.
+      try {
+        const r = await readRefreshed();
+        if (r) setRefreshedCatalog(r);
+      } catch (e) { /* the built-in catalogue */ }
       let stored = null;
       state.changes = [];
       state.pending = [];

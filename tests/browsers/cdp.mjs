@@ -8,6 +8,9 @@
 //   c.requests             // URLs it requested
 //   await c.close();
 import { spawn } from 'node:child_process';
+import path from 'node:path';
+import os from 'node:os';
+import fs from 'node:fs';
 
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -20,6 +23,10 @@ export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // the people this is built for.
 export async function launchChrome({ profile, downloads, binary, port } = {}) {
   binary = binary || process.env.TI_BROWSER || 'google-chrome';
+  // Without one, --user-data-dir=undefined made a folder called
+  // 'undefined' in whatever directory the test ran from, and left it
+  // there. A temporary one is what every caller meant.
+  if (!profile) profile = fs.mkdtempSync(path.join(os.tmpdir(), 'ti-chrome-'));
   port = port || 9300 + Math.floor(Math.random() * 600);
   const proc = spawn(binary, ['--headless=new', '--no-first-run', '--no-default-browser-check',
     '--remote-debugging-port=' + port, '--user-data-dir=' + profile, 'about:blank'], { stdio: 'ignore' });

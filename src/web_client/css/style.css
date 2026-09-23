@@ -1638,6 +1638,15 @@ html.ti-local .online-only { display: none !important; }
 .rt-file:focus-within { outline: 2px solid var(--accent); }
 .rt-confirm { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin-top: 12px; }
 .rt-confirm[hidden] { display: none; }
+
+/* Refreshing the catalogue from a build server: a block of prose and a
+   field, not a row of buttons, so .rt-confirm's flex row is undone. */
+.rt-refresh-box { display: block; border: 1px solid var(--rule); border-radius: var(--radius); padding: 14px 16px; background: var(--panel-2); }
+.rt-refresh-box[hidden] { display: none; }
+.rt-refresh-box > p { margin: 0 0 10px; }
+.rt-refresh-where { display: block; margin: 0 0 12px; font-weight: 600; }
+.rt-refresh-where input { display: block; width: 100%; max-width: 32rem; margin-top: 4px; font-weight: 400; font-family: var(--mono); font-size: 0.95em; }
+#rt-source { margin-top: 10px; }
 .rt-changes details { margin-top: 10px; }
 
 .rt-change-list { list-style: none; padding: 0; margin: 0; }

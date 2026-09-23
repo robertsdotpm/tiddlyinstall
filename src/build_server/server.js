@@ -373,6 +373,8 @@ export class Server {
       ['GET', ['api', 'plan', '*'], () => this.plan(req, res, seg[2], params)],
       ['GET', ['api', 'pubkey'], () => this.pubkey(req, res)],
       ['GET', ['api', 'catalog', 'runtimes'], () => this.runtimes(req, res)],
+      ['GET', ['api', 'catalog', 'archive'], () => this.catalogArchive(req, res)],
+      ['GET', ['api', 'catalog', 'attest'], () => this.catalogAttest(req, res)],
       ['GET', ['api', 'takedown'], () => this.takedown(req, res)],
       ['GET', ['api', 'revocations'], () => this.revocations(req, res)],
       ['GET', ['api', 'releases'], () => this.releases(req, res)],
@@ -633,6 +635,31 @@ export class Server {
     const body = this.runtimesJSON();
     res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=300' });
     res.end(body);
+  }
+
+  // GET /api/catalog/archive and /api/catalog/attest: the catalogue as one
+  // file, and the signed statement of its SHA-256. Together they are what a
+  // saved copy of the page needs to replace the catalogue built into it with
+  // the current one and still be able to prove where it came from -- the
+  // attestation is signed with the plan key, so the page checks it against
+  // the key it was built with and never has to trust the connection.
+  //
+  // The archive is the same catalog.gz tools/snapshot.mjs writes and
+  // tools/sign_runtime_scripts.mjs signed; deploy.sh puts it in the data
+  // folder. Missing means this server was not deployed with one, which is a
+  // 404 rather than an error: refreshing is an extra, not the service.
+  async catalogArchive(req, res) {
+    return serveFile(req, res, path.join(this.data, 'catalog.gz'), {
+      'Content-Type': 'application/gzip',
+      'Cache-Control': 'public, max-age=300',
+    });
+  }
+
+  async catalogAttest(req, res) {
+    return serveFile(req, res, path.join(this.data, 'rtscripts', 'catalog.txt'), {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'Cache-Control': 'public, max-age=300',
+    });
   }
 
   async takedown(req, res) {

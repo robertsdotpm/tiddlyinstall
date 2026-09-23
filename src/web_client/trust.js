@@ -15,6 +15,7 @@ import { verifyDoc, docField } from '../shared/signeddoc.js';
 import { normaliseDoc, rootFor } from '../shared/rtscript.js';
 import { verify as ed25519Verify } from './lib/ed25519.js';
 import { sha256 } from './lib/sha.js';
+import { readStored as readRefreshed } from './catalog-refresh.js';
 
 const el = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -89,12 +90,18 @@ function when(iso) {
   return m ? m[1] + ' ' + m[2] + ' UTC' : String(iso || '');
 }
 
-function paint() {
+async function paint() {
   const live = el('trust-live');
   const into = el('trust-carried');
   if (!live || !into) return;
   const pub = pubKey();
   into.innerHTML = '';
+
+  // Whether this copy is building from a catalogue fetched since it was
+  // made. Kept in IndexedDB, so it has to be asked for; a browser that
+  // will not answer means there is none, which is the ordinary case.
+  let refreshed = null;
+  try { refreshed = await readRefreshed(); } catch (e) { refreshed = null; }
 
   if (pub) {
     el('trust-fp').textContent = hex(sha256(pub)).slice(0, 16);
@@ -127,8 +134,23 @@ function paint() {
       ', as of ' + mono(when(docField(rev, 'issued'))) + '.');
   }
 
+  // The runtime list can be replaced after the page was built: the
+  // Registry page can fetch the current one from a build server
+  // (src/web_client/catalog-refresh.js). When it has been, saying only
+  // what the statement baked in says would be describing a catalogue this
+  // page is no longer using -- true of the file, wrong about the reader's
+  // situation, which is the worst kind of wrong for a page like this.
   const att = blockText('ti-catalog-attest');
-  if (!att) {
+  if (refreshed) {
+    row(into, 'The runtime list', true, 'Not the one built into this page: fetched from ' +
+      code(refreshed.backend) + ' on ' + mono(String(refreshed.at).slice(0, 10)) +
+      ' and checked against the key above before it was used. Fingerprint ' +
+      code(String(refreshed.sha256).slice(0, 32)));
+    if (att && verifyDoc(att, 'ti-catalog-attest', pub, b64bytes, ed25519Verify)) {
+      row(into, '...the one built in', null, 'Still in this file, unused. Published ' +
+        mono(when(docField(att, 'issued'))) + '. Fingerprint ' + code(docField(att, 'sha256').slice(0, 32)));
+    }
+  } else if (!att) {
     row(into, 'The runtime list', null, 'Carried, with no dated statement about it.');
   } else if (!verifyDoc(att, 'ti-catalog-attest', pub, b64bytes, ed25519Verify)) {
     row(into, 'The runtime list', false, 'The statement about it does not hold.');
@@ -171,4 +193,12 @@ function paint() {
 
 mountApiFooter();
 apiReady();
-paint();
+// Painted again when the catalogue is swapped (src/web_client/overlay.js
+// emits this), because the Registry page can replace it while this page
+// is open: a tab left on Trust would otherwise go on describing the
+// catalogue that was in use when it loaded.
+window.addEventListener('ti-overlay-change', () => { paint().catch(() => {}); });
+paint().catch((e) => {
+  const n = el('trust-nojs');
+  if (n) n.textContent = 'These checks could not be run in this browser (' + (e && e.message ? e.message : e) + ').';
+});
