@@ -113,7 +113,6 @@ CSS-only behaviours.
 | `src/web_client/edit.html` | Editor for installer files that carry no signature (mode C; a signature covers every byte, so editing would break it): open a `.exe`, `.run` or macOS `.zip`, edit its settings record, plan, packed files and **icon**, download it. Or start from a base installer. Nothing is uploaded |
 | `src/web_client/runtimes.html` | **Registry**, the runtime catalogue editor (the file name and the `#runtimes` section id keep the old spelling; only the label changed): browse and change releases, recipes, support rules and policy, with a live plan preview. Changes are kept in this browser as an overlay and used when the page builds installers itself (docs/plan.md section 1.11) |
 | `src/web_client/create.html` | Redirects to `new.html#write` |
-| `src/web_client/builds.html` | Sample data still |
 
 ## Third-party code
 

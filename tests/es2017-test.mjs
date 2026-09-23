@@ -130,18 +130,18 @@ ok(!dashes.length, 'no em or en dashes on the page, in any spelling (write a pla
 
 // No fabricated build history on the published page.
 //
-// src/web_client/builds.html is a prototype and its rows are made up: job
-// 1042 building psf/requests right now, a build that failed three days
-// ago, an Admin link to a page that does not exist. It is not in
-// build_site.py's PAGES and "builds.html" is aliased to #home, so none of
-// it reaches the one-file build -- today. It is one line in PAGES away
-// from doing, and invented records of work this server never did would be
-// a poor thing to ship on a product whose argument is that it does not
-// ask to be believed. So it is checked rather than remembered.
+// src/web_client/builds.html was a prototype whose rows were made up: job
+// 1042 building psf/requests right now, one that failed three days ago,
+// an Admin link to a page that never existed. It was deleted on
+// 2026-09-23 rather than wired up, because invented records of work a
+// server never did are a poor thing to ship on a product whose argument
+// is that it does not ask to be believed.
 //
-// Only markers unique to that page: the landing page's picture of an
-// installer screen uses example names too, and that is an illustration
-// of what the product shows rather than a claim about what it has done.
+// The check outlives the file. Deleting something is not the same as it
+// staying deleted, and the markers are cheap to look for. Only ones
+// unique to that page: the landing page's picture of an installer screen
+// uses example names too, and that is an illustration of what the product
+// shows rather than a claim about what it has done.
 const INVENTED = [
   'Prototype: sample', 'Every build this server has run',
   'install_github_myapp', 'example/myapp', 'prettier/prettier', 'psf/black',

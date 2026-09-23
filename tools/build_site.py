@@ -57,7 +57,7 @@ SHARED = "src/shared"
 PAGES = [("home", WEB + "/index.html"), ("new", WEB + "/new.html"), ("build", WEB + "/build.html"),
          ("edit", WEB + "/edit.html"), ("verify", WEB + "/verify.html"), ("runtimes", WEB + "/runtimes.html"), ("trust", WEB + "/trust.html")]
 # Other pages' links in the offline copy, by the file name a page links to.
-LINK_ALIASES = {"create.html": "#new&write", "builds.html": "#home", "bases.html": "#new"}
+LINK_ALIASES = {"create.html": "#new&write", "bases.html": "#new"}
 # Copied to the regular site (--multi) as they are, keeping these names, so
 # that the pages' relative paths (./x.js, ./lib/x.js, ../shared/x.js,
 # ../vendor/x.js) resolve there exactly as they do in the repository. The
