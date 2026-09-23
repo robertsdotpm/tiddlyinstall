@@ -6,7 +6,7 @@ import { apiRequest, absUrl, ApiError, apiBase, apiDefault, apiLocal, errorText,
 import { ARCH_LABEL, MAC_ARCH, FAMILY_ARCHES, archCoverage } from '../shared/form-job.js';
 import { mountOverlayConsent } from './overlay-consent.js';
 import { mirrorGapBuildWarning } from '../shared/mirror-words.js';
-import { openNotice } from './open-notice.js';
+import { openNotice, WINDOWS_OPEN_STEPS, detectWindows } from './open-notice.js';
 import { mountCopyButtons } from './copy.js';
 
 mountApiFooter();
@@ -200,13 +200,38 @@ function paintFiles(job) {
     const open = meets
       ? '<br><span class="muted open-note"><span class="open-note-head">On opening it:</span> ' + esc(meets) + '</span>'
       : '';
+    // ...and, on Windows, how to get past it, which is not the same answer
+    // on every version: Windows 11 does not always offer "Run anyway", and
+    // then clearing the download mark is the only way in. Folded away,
+    // because it is four versions of an answer most people need one of, and
+    // open by default where the browser has not told us which. All four are
+    // always here: whoever is sent this file is on a Windows we cannot see.
+    const steps = f.platform === 'windows'
+      ? '<details class="win-steps"><summary class="muted">If Windows will not open it</summary><ul>' +
+        WINDOWS_OPEN_STEPS.map((w) =>
+          '<li data-win="' + w.id + '"><strong>' + esc(w.label) + '</strong> ' + esc(w.text) + '</li>').join('') +
+        '</ul></details>'
+      : '';
     return '<tr><td>' + link +
-      (f.sha256 ? '<br><span class="muted sha">SHA-256 <code>' + esc(f.sha256) + '</code></span>' : '') + how + open + '</td>' +
+      (f.sha256 ? '<br><span class="muted sha">SHA-256 <code>' + esc(f.sha256) + '</code></span>' : '') + how + open + steps + '</td>' +
       '<td>' + esc(PLATFORM[f.platform] || f.platform) + '</td>' +
       '<td class="arch-col">' + archCell(f) + '</td>' +
       '<td>' + esc(humanSize(f.size)) + '</td>' +
       '<td>' + esc(signed) + '</td></tr>';
   }).join('');
+  // Which of the four applies to whoever is reading, where the browser
+  // will say. It only ever marks a row; nothing is hidden on the strength
+  // of it, because the file is usually for somebody else's machine.
+  detectWindows(function (win) {
+    if (!win) return;
+    const host = $('job-files');
+    if (!host) return;
+    const mine = host.querySelectorAll('li[data-win="' + win + '"]');
+    for (let i = 0; i < mine.length; i++) mine[i].className = 'win-mine';
+    const heads = host.querySelectorAll('details.win-steps > summary');
+    for (let i = 0; i < heads.length; i++) heads[i].textContent = 'If Windows ' + win + ' will not open it';
+  });
+
   const note = $('job-arch');
   if (note) {
     const off = files.some((f) => f.offline);

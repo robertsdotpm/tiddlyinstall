@@ -4896,7 +4896,8 @@ Function WriteSummary
   ${AndIf} $RtState != "ok"
     StrCpy $CapInd1 "  "
     StrCpy $CapInd2 "  "
-    StrCpy $U_a "The setup steps are the runtime setup, written by us, not the project's own code."
+    ${Sum} ""
+    StrCpy $U_a "These are the runtime setup: written by us, not the project's own code."
     Call SumPara
   ${EndIf}
   ${If} $TgtNote != ""

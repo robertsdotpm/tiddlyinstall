@@ -3987,21 +3987,21 @@ ti_install_main() {
 					[ "$ti_stepn" = 1 ] && lbl=Setup || lbl=
 					if [ -n "$d" ]; then
 						printf '  %-9s%s\n' "$lbl" "$d" | ti_wrap 74 11
-						ti_cmd_line "$(ti_subst "$c")"
+						ti_cmd_line "$(ti_tilde_all "$(ti_subst "$c")")"
 					else
-						ti_run_cmd "$lbl" "$(ti_subst "$c")"
+						ti_run_cmd "$lbl" "$(ti_tilde_all "$(ti_subst "$c")")"
 					fi
 				done
 		fi
 		ins=$(ti_sel1 install)
 		if [ -n "$ins" ]; then
-			ti_run_cmd Install "$(ti_subst "$ins")"
+			ti_run_cmd Install "$(ti_tilde_all "$(ti_subst "$ins")")"
 		fi
 		[ "$ti_nrun" = 0 ] && [ -z "$ins" ] && printf '  %-9s%s\n' 'Setup' 'nothing; no commands are run on this machine' | ti_wrap 74 11
 		ti_run_cmd Launch "$(ti_tilde_all "$(ti_subst "$(ti_sel1 launch)")")"
 		TI_CMD_IND=$ti_cmd_ind0 TI_CMD_CONT=$ti_cmd_cont0
 		if [ "$ti_nrun" -gt 0 ]; then
-			printf '  %s\n' "The setup steps are the runtime setup, written by us, not ${TI_PROJECT:-the project}'s code." | ti_wrap 74 2
+			printf '\n  %s\n' "These are the runtime setup: written by us, not ${TI_PROJECT:-the project}'s own code." | ti_wrap 74 2
 		fi
 
 		ti_sel note | sed 's/^/\nNOTE: /' | ti_wrap 74 5

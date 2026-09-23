@@ -70,6 +70,63 @@ const TEXT = {
   },
 };
 
+// What to do when Windows will not open it, which depends on the Windows.
+//
+// The line above says what the box looks like; this says how to get past
+// it, and the two are not the same answer on every version. On Windows 11
+// the "Run anyway" button is not always there: Smart App Control, which is
+// on by default on some clean installs, blocks an unrecognised app with no
+// way past in that box at all, and a managed machine can be set the same
+// way. What is left then is the mark itself. Windows puts a Zone.Identifier
+// on anything a browser downloaded and acts on that mark rather than on the
+// file, so clearing it -- Properties, Unblock -- is what makes the file
+// open. That step is missing from every version of this text we have shown
+// anyone, and it is the one the operator needed on Windows 11 (2026-09-23).
+//
+// All four are always rendered: most people building here are building for
+// somebody else, on a Windows we cannot see. Where we can tell which one
+// the reader is on, that row is marked, and the rest stay.
+export const WINDOWS_OPEN_STEPS = [
+  { id: '11', label: 'Windows 11',
+    text: 'SmartScreen shows "Windows protected your PC": More info \u2192 Run anyway. ' +
+      'Where that button is not there -- Smart App Control, or a machine someone else ' +
+      'manages -- right-click the file \u2192 Properties \u2192 General \u2192 tick Unblock \u2192 OK, ' +
+      'and open it again.' },
+  { id: '10', label: 'Windows 10',
+    text: 'The same "Windows protected your PC" box: More info \u2192 Run anyway. If it will not ' +
+      'start at all, right-click \u2192 Properties \u2192 General \u2192 Unblock \u2192 OK, then open it again.' },
+  { id: '8', label: 'Windows 8 and 8.1',
+    text: '"Windows SmartScreen prevented an unrecognized app from starting": More info \u2192 ' +
+      'Run anyway, or Properties \u2192 General \u2192 Unblock first.' },
+  { id: '7', label: 'Windows 7 and earlier',
+    text: 'No SmartScreen for a downloaded file: an "Open File - Security Warning" box saying ' +
+      'the publisher could not be verified. Press Run, or Properties \u2192 General \u2192 Unblock ' +
+      'to stop it asking.' },
+];
+
+// Which Windows the person reading this is on, as one of those ids, or ''
+// when we cannot tell. Asynchronous because 11 cannot be told from 10 any
+// other way: both say "Windows NT 10.0" in the user agent, and only client
+// hints carry the real version -- which only Chromium-based browsers have.
+// Everyone else gets '' and nothing is marked, which is the honest answer
+// rather than a guess of 10.
+export function detectWindows(cb) {
+  const ua = (typeof navigator === 'undefined' ? '' : navigator.userAgent) || '';
+  const m = /Windows NT ([\d.]+)/.exec(ua);
+  if (!m) { cb(''); return; }
+  const nt = parseFloat(m[1]);
+  if (nt < 6.2) { cb('7'); return; }        // 6.0 Vista, 6.1 Windows 7
+  if (nt < 10) { cb('8'); return; }         // 6.2 Windows 8, 6.3 Windows 8.1
+  const ch = navigator.userAgentData;
+  if (!ch || !ch.getHighEntropyValues) { cb(''); return; }
+  // The same rule browser-check.js uses: platformVersion's major is 13 or
+  // more on Windows 11, and 1..12 on Windows 10.
+  ch.getHighEntropyValues(['platformVersion']).then(function (h) {
+    const major = parseInt(h && h.platformVersion, 10);
+    cb(major >= 13 ? '11' : major > 0 ? '10' : '');
+  }, function () { cb(''); });
+}
+
 // One platform, one mode ('yours' or 'unsigned'). '' where there is nothing
 // honest to say -- an unknown platform, or mode A.
 export function openNotice(platform, mode) {

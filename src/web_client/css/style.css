@@ -1361,6 +1361,17 @@ form:has(#offline-on:checked) .offline-off-inline { display: none; }
 .open-notice li { margin: 4px 0; }
 .files-table .open-note { display: block; max-width: 46em; margin-top: 3px; }
 .files-table .open-note-head { font-weight: 600; }
+/* How to get past Windows, folded away: four versions of an answer most
+   people need one of. A browser that has no <details> shows the content
+   and nothing is lost, which is why the steps are not hidden with CSS. */
+.files-table .win-steps { display: block; max-width: 46em; margin-top: 4px; font-size: .92em; }
+.files-table .win-steps > summary { cursor: pointer; }
+.files-table .win-steps ul { margin: 4px 0 0; padding-left: 18px; }
+.files-table .win-steps li { margin: 3px 0; color: var(--muted); }
+/* The one the reader is on, where the browser said. A marker, not a
+   filter: the file is usually for somebody else's machine. */
+.files-table .win-steps li.win-mine { color: var(--text); }
+.files-table .win-steps li.win-mine strong { color: var(--text-loud); }
 .rt-arch { flex-basis: 100%; }
 .rt-arch-yes { color: var(--ok); font-weight: 600; }
 .rt-arch-no { color: var(--warn); font-weight: 600; }
