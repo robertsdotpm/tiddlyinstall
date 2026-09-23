@@ -1,0 +1,67 @@
+ti-plan	1
+request	nonce	625074b41fc85267df019ac5b537c780
+record	nrrkjuhz2vdkrp4fp4ywnn3qqs
+name	Hello python
+project	hello
+appid	3ftodqpas65w
+runtime	python
+console	1
+menu	1
+desktop	0
+root	user
+rootname	ti
+signed	2026-09-23T04:22:53Z
+maxage	7776000
+source	e8f3ee16c2ba9f82cbb397a7eeb7f830236095ca6576a6b1876587a1586bacfe.tar.gz	1af9e550a1cf412a050085e9b70d5ee1400485dd3eb4f5db9e3725ebc95fed86	106	tar.gz	1	e8f3ee16c2ba9f82cbb397a7eeb7f830236095ca6576a6b1876587a1586bacfe
+url	http://10.0.1.76:8080/src/e8f3ee16c2ba9f82cbb397a7eeb7f830236095ca6576a6b1876587a1586bacfe.tar.gz
+rtroots	dGktcnRzY3JpcHRzCTEKaXNzdWVkCTIwMjYtMDktMjNUMDQ6MDk6MDJaCnJvb3QJY2MJODljM2Q5OWY3ODk0NmJmMDRkYjAyOWUzY2QyMTgxMWUwMDE0YzVmNDg4MTZjYTI2YTg0Y2M3YjIxZjUwNTdhYgk0MApyb290CWRvdG5ldAk3ZGM4ODc5MWM2Mzc3ZjczODk5M2RmY2VhMjlkMzYxMzg2OGQyN2E0ZmJkNzA5ODhkNGZjNzlhOTUzNjU1ZjU0CTEwCnJvb3QJZ28JMWQwMzQ5NTc3MDM5MjIwMDhiZWNmMGVlMTMwNGFiZGFjYTI2YTY2MWVhZDE1YTkxMDQ1YTY0OTZkMDc0ZjIxYgkyMTc2CnJvb3QJamF2YQlmZjhkZDhiOWE0ZWJiMTAzOWJjYTcxZWU4NDI0YjgxOTRmYWIwY2FjMGJjZTQ2MzlkOWFmZTNlNWQ3MWFlNTVjCTE0ODUKcm9vdAluaW0JMjhkMWM3OWQ4ODMwMTBkYjYxZTJmNGUzMmM2MDczZWM4YjVkNGRiYmRlYjVkNjNiNzU4ZWY1OTBmMmY1NmZiOAkxNzEKcm9vdAlub2RlCTgxYjUwMjZkOWU3MDdhZTNhZDc4ZTg4NWQwMWRkNzFlNWRlYmRmNWZmZjVhMjk0YzU1YTZhZjJlOWU1NmIxZDkJMzY4NQpyb290CXBocAkzZmY2ZDA4MzU3NDQ5NTgzZGJkYjliZjY5MjZiMzgyM2QzYzA4NGQyMWVlZjc3ODQwMjU5MjU2OThlYjhjNjA1CTIyCnJvb3QJcHl0aG9uCTY0OTJlN2MxYWM1M2VkYmZmOWU2Y2ZmZWE5NDgzYWE5MzczODFmY2JiNDJjMDc4MjMzODIxMmRjMTk3M2Q4YzgJMzQ4CnJvb3QJcHl0aG9uMgk3MDJhNGNhNTdhYmYxZTJmMzM5NWNkYzhlMjNhOTNkMGQyZDM4MTAxOTg1YjUyOTYzMWJkYmQ0NjBjYTQxMGIxCTUKcm9vdAlyCTRkMDE2ZjlhYmNhMDg2Yzg1YmE3ZTY0ODU5NDExMTc0ODQyMjY1ODJhZTU3OGEzZTJiMWM4ZTQ3NGZmOGUyMjgJMTkKcm9vdAlydWJ5CTQ3Mzc0YmEzMDFlMTY4ZjRjYjJiZDJkMDMwNGE2ZGYyZjRiNjVjMDYyYWNiZjM1NWQ2ZDQ1YjQ3Y2FmMDQyZjkJMzUxCnJvb3QJcnVzdAlhYzE2ZTgwZDg2YzFkNzdjZmUzMWYzZmQwODIzOTA0NmVhMWJjZTg3ZTQ1ZGUzM2JhZjg2NDBjYmZmYWUxZDNhCTM3MApyb290CXppZwk5MGRmODk1YmE5ZDljMWMxZGI3OTM3YjM0YmJjZDYwMzllMzUyNDc1NmY1NzAxMWMxNzQ5NGQ5NzI0OGI2ODE4CTIwOQpzaWcJZWQyNTUxOQk0aW9EUVl2MmxmY3ZuTFlBNlpiUm5NRHBrZzFIUzZSQTAyOU1OeGt0bjhnRzV3cG9BM2Fra0pianlTVXJXWXhRejVXUzhKdGpvaUdLdDJKSXgwblBBdz09Cg==
+
+[target]
+when	linux	217	9999	amd64
+covers	Linux, glibc-2.41 (Debian 13), Linux, glibc-2.39 (Ubuntu 24.04), Linux, glibc-2.36 (Debian 12), Linux, glibc-2.35 (Ubuntu 22.04), Linux, glibc-2.34 (RHEL 9), Linux, glibc-2.31 (Ubuntu 20.04, Debian 11), Linux, glibc-2.28 (RHEL 8, Debian 10), Linux, glibc-2.27 (Ubuntu 18.04), Linux, glibc-2.24 (Debian 9), Linux, glibc-2.23 (Ubuntu 16.04), Linux, glibc-2.19 (Ubuntu 14.04, Debian 8), Linux, glibc-2.17 (RHEL/CentOS 7)
+runtime	python	3.14.7	amd64
+file	python	cpython-3.14.7+20260901-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz	3959f92825141e04adf44982d3a83ee57af0877e893b0796e04c1468749d9b04	35945651	amd64
+url	http://10.0.1.76:8080/mirror/python/linux/amd64/3.14.7-pbs_stripped/cpython-3.14.7%252B20260901-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz
+url	https://github.com/astral-sh/python-build-standalone/releases/download/20260901/cpython-3.14.7%2B20260901-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz
+url	https://registry.npmmirror.com/-/binary/python-build-standalone/20260901/cpython-3.14.7%2B20260901-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz
+url	https://cdn.npmmirror.com/binaries/python-build-standalone/20260901/cpython-3.14.7%2B20260901-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz
+step	unpack	tar.gz	{runtime_dir}	1
+step	run	"{runtime_dir}/bin/python3" -E -s -m compileall -q -x 'bad_coding|badsyntax|lib2to3' "{runtime_dir}/lib" || true
+exe	bin/python3
+unset	TCL_LIBRARY
+unset	TK_LIBRARY
+launch	"{runtime_dir}/bin/python3" -E -s hello.py
+rtproof	Lc7be98baca783d72064dc14fa037855df1c8dd908203cd92618cce502a94dd17	L9a69195f12ee7e069cd3c5ba211db0ce5bcc04ea4dce1207a86aa949c4ce8444	R352baeed303a390cfcbe5f70342efbbf1a2a89f896acb3fde36b253da9b709ee	Lbde08f8ad8f8e3dd857e2b3ea9406f2f8beb40dcc9786767facfa94bec5601f5	R6e735f7b66dbb15c91a1c61c083103a35d2c9028e87f1e56de49ae71dc031a3e	Rcbf0bc382e9657218e9a7a103a2164651ad016e12b1a4832ea2dd6cbbb7b39b4	R64fa42a4de1d7b044bf4767c981a992b9466e214f6e41526c118a3c9ecbe85c3	L55c1a7e7adee5b29e293c4b3fe10544e7160a38316cb6747cec4d312682421a3
+
+[target]
+when	linux	0	216	amd64
+covers	Linux, glibc-2.12 (RHEL/CentOS 6), Linux, glibc-2.5 (RHEL/CentOS 5), Linux, musl (Alpine 3.x)
+fail	No Python 3 release in the catalogue runs on Linux, glibc-2.12 (RHEL/CentOS 6), Linux, glibc-2.5 (RHEL/CentOS 5), Linux, musl (Alpine 3.x) (amd64).
+
+[target]
+when	linux	217	9999	arm64
+covers	Linux, glibc-2.41 (Debian 13), Linux, glibc-2.39 (Ubuntu 24.04), Linux, glibc-2.36 (Debian 12), Linux, glibc-2.35 (Ubuntu 22.04), Linux, glibc-2.34 (RHEL 9), Linux, glibc-2.31 (Ubuntu 20.04, Debian 11), Linux, glibc-2.28 (RHEL 8, Debian 10), Linux, glibc-2.27 (Ubuntu 18.04), Linux, glibc-2.24 (Debian 9), Linux, glibc-2.23 (Ubuntu 16.04), Linux, glibc-2.19 (Ubuntu 14.04, Debian 8), Linux, glibc-2.17 (RHEL/CentOS 7)
+runtime	python	3.14.7	arm64
+file	python	cpython-3.14.7+20260901-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz	8a0798baa8a2c27b5751d590aced543eaa85e20b3f73d93c1af049688acdc9c5	30224478	arm64
+url	http://10.0.1.76:8080/mirror/python/linux/arm64/3.14.7-pbs_stripped/cpython-3.14.7%252B20260901-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz
+url	https://github.com/astral-sh/python-build-standalone/releases/download/20260901/cpython-3.14.7%2B20260901-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz
+url	https://registry.npmmirror.com/-/binary/python-build-standalone/20260901/cpython-3.14.7%2B20260901-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz
+url	https://cdn.npmmirror.com/binaries/python-build-standalone/20260901/cpython-3.14.7%2B20260901-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz
+step	unpack	tar.gz	{runtime_dir}	1
+step	run	"{runtime_dir}/bin/python3" -E -s -m compileall -q -x 'bad_coding|badsyntax|lib2to3' "{runtime_dir}/lib" || true
+exe	bin/python3
+unset	TCL_LIBRARY
+unset	TK_LIBRARY
+launch	"{runtime_dir}/bin/python3" -E -s hello.py
+rtproof	Lcaa8368979d60dfeb2f42e6fa1d2485280e79bc9792d486e4b3acafffc2692f7	R27f44a0e2de39c306a4d54798a28db01ff1d163aa5b835954f2c6edae4763a82	Rf8864660fa5c15cc95d18093e094eff1eda00cb1f7aa9a8b77aafa576a526c99	Rbf90371d7cc194cacff081c05a4ffd3a2f7e7855eb8b35dae5ba5ffbc4765850	L50043f86ac17fa323adb3d1d7bb5352e453e02362f39495d5fca00f12ce53ca4	Rcbf0bc382e9657218e9a7a103a2164651ad016e12b1a4832ea2dd6cbbb7b39b4	R64fa42a4de1d7b044bf4767c981a992b9466e214f6e41526c118a3c9ecbe85c3	L55c1a7e7adee5b29e293c4b3fe10544e7160a38316cb6747cec4d312682421a3
+
+[target]
+when	linux	0	204	arm64
+covers	Linux, musl (Alpine 3.x)
+fail	No Python 3 release in the catalogue runs on Linux, musl (Alpine 3.x) (arm64).
+
+[target]
+when	linux	0	9999	x86
+covers	Linux, glibc-2.41 (Debian 13), Linux, glibc-2.39 (Ubuntu 24.04), Linux, glibc-2.36 (Debian 12), Linux, glibc-2.35 (Ubuntu 22.04), Linux, glibc-2.34 (RHEL 9), Linux, glibc-2.31 (Ubuntu 20.04, Debian 11), Linux, glibc-2.28 (RHEL 8, Debian 10), Linux, glibc-2.27 (Ubuntu 18.04), Linux, glibc-2.24 (Debian 9), Linux, glibc-2.23 (Ubuntu 16.04), Linux, glibc-2.19 (Ubuntu 14.04, Debian 8), Linux, glibc-2.17 (RHEL/CentOS 7), Linux, glibc-2.12 (RHEL/CentOS 6), Linux, glibc-2.5 (RHEL/CentOS 5), Linux, musl (Alpine 3.x)
+fail	No Python 3 release in the catalogue runs on Linux, glibc-2.41 (Debian 13), Linux, glibc-2.39 (Ubuntu 24.04), Linux, glibc-2.36 (Debian 12), Linux, glibc-2.35 (Ubuntu 22.04), Linux, glibc-2.34 (RHEL 9), Linux, glibc-2.31 (Ubuntu 20.04, Debian 11), Linux, glibc-2.28 (RHEL 8, Debian 10), Linux, glibc-2.27 (Ubuntu 18.04), Linux, glibc-2.24 (Debian 9), Linux, glibc-2.23 (Ubuntu 16.04), Linux, glibc-2.19 (Ubuntu 14.04, Debian 8), Linux, glibc-2.17 (RHEL/CentOS 7), Linux, glibc-2.12 (RHEL/CentOS 6), Linux, glibc-2.5 (RHEL/CentOS 5), Linux, musl (Alpine 3.x) (x86).
+sig	ed25519	Gkk8nkv1ObclbiJJAb1LIGeJcfRgQzXnSJJ9mNOA4/alDlXUu7jAu3jaw3pAfwv6IOzMqiF85WlBd3yV+uozAg==

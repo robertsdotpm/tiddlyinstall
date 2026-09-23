@@ -1436,6 +1436,11 @@ Function ReadTarget
     ${ElseIf} $K S== "npkg"
     ${ElseIf} $K S== "nstart"
     ${ElseIf} $K S== "nhow"
+    ${ElseIf} $K S== "rtroots"
+    ${ElseIf} $K S== "rtproof"
+      ; ours (docs/format.md section 6b): the runtime-script proof, read
+      ; by tisig::rtverify. Named here so the capability scan does not
+      ; report our own proof as something it cannot describe.
     ${ElseIf} $K S== "sig"
       ; the plan's signature line sits after the last block, so it is
       ; read here when the last block is the chosen one

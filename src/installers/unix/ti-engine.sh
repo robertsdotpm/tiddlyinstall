@@ -3155,7 +3155,7 @@ ti_signer() {
 # it were the whole of it. `srcurl` and `target` are ti_select_target's
 # own; `sig` survives into the selection when the chosen block is the
 # last one in the plan.
-TI_KNOWN_KEYS='target|record|name|project|appid|console|menu|desktop|root|rootname|signed|maxage|source|srcurl|request|sig|when|minbuild|covers|runtime|file|url|step|exe|env|unset|path|ienv|iunset|install|launch|admin|note|fail|need|nwhy|ncheck|nfile|nurl|nrun|nok|npkg|nstart|nhow'
+TI_KNOWN_KEYS='target|record|name|project|appid|console|menu|desktop|root|rootname|signed|maxage|source|srcurl|request|sig|when|minbuild|covers|runtime|file|url|step|exe|env|unset|path|ienv|iunset|install|launch|admin|note|fail|need|nwhy|ncheck|nfile|nurl|nrun|nok|npkg|nstart|nhow|rtroots|rtproof'
 TI_KNOWN_STEPS='unpack|run|mkdir|write|delete'
 
 ti_unknown_bits() { # -> "key, step foo" for everything in the selection we do not know

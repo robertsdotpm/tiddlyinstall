@@ -156,4 +156,50 @@ else
 	printf 'skip the proof cases (run tools/sign_runtime_scripts.mjs first)\n'
 fi
 
+# ---- the same screen, with a runtime-script proof on it
+#
+# Why this is separate, and why it exists at all. The fixture above has
+# no proof, so the proved branch of the screen had never rendered in any
+# test -- and two faults shipped through that gap on 2026-09-23: the
+# headline "SIGNED BY TIDDLYINSTALL" printed twice (a fetched plan and a
+# proof each printed their own), and the capability scan reported our own
+# `rtroots` and `rtproof` as things the installer could not describe,
+# because nobody had added them to its list of known keys.
+#
+# So: a real plan, with a real proof in it, rendered through the real
+# engine. test-proved.plan and test-proved.rec are committed together and
+# the plan's `record` line is that record's hash, so they cannot drift
+# apart. The proof is against the roots document inside the plan, which
+# means it stays valid however often the catalogue is re-signed.
+PP=$here/test-proved.plan
+PR=$here/test-proved.rec
+if [ -f "$PP" ] && [ -f "$PR" ]; then
+	mkdir -p "$T/p"
+	python3 "$here/append_meta.py" run "$here/out/ti-base.run" -o "$T/p.run" \
+		--record "$PR" --plan "$PP" > /dev/null
+	printf 'n\n' | env -u DISPLAY -u WAYLAND_DISPLAY TI_NO_GUI=1 NO_COLOR=1 HOME="$T/home" \
+		script -qec "sh $T/p.run --log=/dev/null" /dev/null 2>&1 | sed 's/\r$//' > "$T/proved" || true
+	phas() { grep -qF "$1" "$T/proved"; }
+	n=$(grep -c 'SIGNED BY TIDDLYINSTALL' "$T/proved" || true)
+
+	phas 'SIGNED BY TIDDLYINSTALL' && ok 'a proved script says so' ||
+		no 'a proved script says so' "$(sed -n '/Runtime install script/,/^$/p' "$T/proved" | head -4)"
+	[ "$n" = 1 ] && ok 'and says it exactly once' ||
+		no 'and says it exactly once' "$n occurrences"
+	phas 'proved so by this file against a key it' &&
+		ok 'and says what was proved and by what' ||
+		no 'and says what was proved and by what'
+	phas 'Not covered:' && ok 'and what was not' || no 'and what was not'
+	# The two keys the proof travels in are ours. An installer that
+	# reports them as unrecognised is telling the reader our own
+	# signature is something it cannot describe.
+	hasnt_p() { ! grep -qF "$1" "$T/proved"; }
+	hasnt_p 'does not recognise' && ok 'and does not call our own proof unrecognisable' ||
+		no 'and does not call our own proof unrecognisable' "$(grep -n 'does not recognise' "$T/proved" | head -1)"
+	hasnt_p 'rtroots' && ok 'and never shows the proof keys to the reader' ||
+		no 'and never shows the proof keys to the reader' "$(grep -n rtroots "$T/proved" | head -1)"
+else
+	printf 'skip the proved screen (no test-proved.plan)\n'
+fi
+
 [ "$fail" = 0 ] && say 'all passed (screen)' || { say 'FAILED (screen)'; exit 1; }

@@ -1,0 +1,15 @@
+ti-record	1
+name	Hello python
+project	hello
+runtime	python
+select	newest
+source	inline	e8f3ee16c2ba9f82cbb397a7eeb7f830236095ca6576a6b1876587a1586bacfe
+launch	{runtime} hello.py
+console	1
+menu	1
+desktop	0
+root	user
+rootname	ti
+platforms	linux
+backend	http://10.0.1.76:8080
+created	2026-09-23T04:22:45Z

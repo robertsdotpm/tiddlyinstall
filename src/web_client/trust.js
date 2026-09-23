@@ -1,10 +1,14 @@
 // The Trust page's live half: what this copy of the page is actually
 // carrying, checked as it loads.
 //
-// The point of doing it live rather than describing it: a page about
-// what can be proved should prove what it can, here, in front of the
-// reader. If a document in this file does not verify, this page says so
-// -- it does not quietly print the reassuring version.
+// Doing it live rather than describing it is the point. A page about
+// what can be proved should prove what it can, in front of the reader.
+// If a document in this file does not verify, this page says so and says
+// it is not used -- it does not print the reassuring version anyway.
+//
+// With scripting off, nothing here has run, so the markup ships with a
+// notice saying exactly that and this replaces it. The rest of the page
+// is static and reads either way.
 import { mountApiFooter, apiReady } from './api.js';
 import { mountCopyButtons } from './copy.js';
 import { verifyDoc, docField } from '../shared/signeddoc.js';
@@ -23,6 +27,8 @@ function b64bytes(t) {
   return u;
 }
 
+// data_block wraps its contents in newlines and textContent keeps them,
+// so the signed bytes would not begin where the signature says.
 function blockText(id) {
   const n = document.getElementById(id);
   const t = n && !n.dataset.placeholder ? n.textContent : '';
@@ -40,98 +46,126 @@ function pubKey() {
   try { return b64bytes(n.textContent); } catch (e) { return null; }
 }
 
-function rows(dl, list) {
-  dl.innerHTML = '';
-  for (const [k, v] of list) {
-    if (!k) continue;
-    const dt = document.createElement('dt');
-    dt.textContent = k;
-    const dd = document.createElement('dd');
-    dd.innerHTML = v;
-    dl.append(dt, dd);
-  }
+/* ---------- one row of "what this copy carries" ---------- */
+
+// The styles are inline to match the rest of this page, which is laid
+// out that way by design rather than through the site's classes.
+const ROW = 'display:flex; flex-wrap:wrap; align-items:baseline; padding:10px 0; border-bottom:1px solid var(--rule);';
+const ROW_FAIL = ROW + ' background:var(--fail-soft); margin:0 -10px; padding-left:10px; padding-right:10px;';
+const K = 'flex:0 0 190px; color:var(--text-loud); font-weight:600;';
+const V = 'flex:1 1 260px; min-width:0;';
+const BADGE = 'font-family:var(--mono); font-size:11.5px; font-weight:600; letter-spacing:0.06em; margin-right:8px;';
+const DOT = 'display:inline-block; width:8px; height:8px; margin-right:6px;';
+const MONO = 'font-family:var(--mono); font-size:13px;';
+const CODE = 'font-family:var(--mono); font-size:13px; background:var(--code-bg); padding:1px 5px; border-radius:2px; word-break:break-all;';
+
+const mono = (t) => '<span style="' + MONO + '">' + esc(t) + '</span>';
+const code = (t) => '<code style="' + CODE + '">' + esc(t) + '</code>';
+
+// Filled square when it checks out, hollow when it does not: the two
+// states differ by shape as well as by colour.
+function badge(ok) {
+  const colour = ok ? 'var(--ok)' : 'var(--fail)';
+  const dot = DOT + (ok ? ' background:' + colour + ';' : ' border:1.5px solid ' + colour + ';');
+  return '<span style="' + BADGE + ' color:' + colour + ';">' +
+    '<span aria-hidden="true" style="' + dot + '"></span>' +
+    (ok ? 'CHECKED' : 'DOES NOT CHECK OUT') + '</span>';
 }
 
-const yes = (s) => '<strong>' + s + '</strong>';
-const no = (s) => '<strong class="bad-text">' + s + '</strong>';
+// `state` is true (checked), false (does not check out), or null for a
+// row that is a fact rather than a check and so carries no badge.
+function row(into, label, state, detail) {
+  const d = document.createElement('div');
+  d.setAttribute('style', state === false ? ROW_FAIL : ROW);
+  d.innerHTML = '<strong style="' + K + '">' + esc(label) + '</strong><span style="' + V + '">' +
+    (state === null ? '' : badge(state)) + detail + '</span>';
+  into.appendChild(d);
+}
+
+// "2026-09-23T05:00:34Z" -> "2026-09-23 05:00 UTC": the seconds are
+// noise at this scale, and the zone should be said rather than implied.
+function when(iso) {
+  const m = /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})/.exec(String(iso));
+  return m ? m[1] + ' ' + m[2] + ' UTC' : String(iso || '');
+}
 
 function paint() {
+  const live = el('trust-live');
+  const into = el('trust-carried');
+  if (!live || !into) return;
   const pub = pubKey();
-  const out = [];
+  into.innerHTML = '';
 
-  // The runtime instructions, and how many of them are covered.
+  if (pub) {
+    el('trust-fp').textContent = hex(sha256(pub)).slice(0, 16);
+    el('trust-pk').textContent = document.getElementById('ti-plan-pubkey').textContent.trim();
+  }
+
   const roots = blockText('ti-rtroots');
   if (!roots) {
-    out.push(['Runtime instructions', no('none carried') + ' -- installers from this page cannot show what they install came from us']);
+    row(into, 'Runtime instructions', null, 'None carried, so installers from this page cannot show that what they install came from us.');
   } else if (!verifyDoc(roots, 'ti-rtscripts', pub, b64bytes, ed25519Verify)) {
-    out.push(['Runtime instructions', no('carried, but the signature does not check out')]);
+    row(into, 'Runtime instructions', false, 'They are ignored, exactly as if they were not here.');
   } else {
     let n = 0, total = 0;
     for (const raw of roots.split('\n')) {
       const f = raw.split('\t');
       if (f[0] === 'root') { n++; total += Number(f[3]) || 0; }
     }
-    out.push(['Runtime instructions', yes('signed and checked') + ' -- ' + total.toLocaleString() +
-      ' sets of instructions across ' + n + ' languages, published ' + esc(docField(roots, 'issued'))]);
+    row(into, 'Runtime instructions', true, total.toLocaleString() + ' sets across ' + n +
+      ' languages. Published ' + mono(when(docField(roots, 'issued'))) + '.');
   }
 
-  // The withdrawn list.
   const rev = blockText('ti-revocations-signed');
   if (!rev) {
-    out.push(['Withdrawn files', 'none carried']);
+    row(into, 'Withdrawn files', null, 'No list carried.');
   } else if (!verifyDoc(rev, 'ti-revocations', pub, b64bytes, ed25519Verify)) {
-    out.push(['Withdrawn files', no('the list does not check out') + ' -- it is ignored']);
+    row(into, 'Withdrawn files', false, 'The list is ignored, exactly as if it were not here.');
   } else {
     const n = rev.split('\n').filter((l) => l.indexOf('revoke\t') === 0).length;
-    out.push(['Withdrawn files', yes('signed and checked') + ' -- ' +
-      (n ? n + ' withdrawn' : 'nothing withdrawn') + ', as of ' + esc(docField(rev, 'issued'))]);
+    row(into, 'Withdrawn files', true, (n ? n + ' withdrawn' : 'Nothing withdrawn') +
+      ', as of ' + mono(when(docField(rev, 'issued'))) + '.');
   }
 
-  // The catalogue this page carries.
   const att = blockText('ti-catalog-attest');
   if (!att) {
-    out.push(['The runtime list', 'carried, with no dated statement about it']);
+    row(into, 'The runtime list', null, 'Carried, with no dated statement about it.');
   } else if (!verifyDoc(att, 'ti-catalog-attest', pub, b64bytes, ed25519Verify)) {
-    out.push(['The runtime list', no('the statement about it does not check out')]);
+    row(into, 'The runtime list', false, 'The statement about it does not hold.');
   } else {
-    out.push(['The runtime list', yes('signed and checked') + ' -- published ' +
-      esc(docField(att, 'issued')) + '<br><span class="small muted">fingerprint <code>' +
-      esc(docField(att, 'sha256').slice(0, 32)) + '...</code></span>']);
+    row(into, 'The runtime list', true, 'Published ' + mono(when(docField(att, 'issued'))) +
+      '. Fingerprint ' + code(docField(att, 'sha256').slice(0, 32)));
   }
 
-  // Where this copy sits in the record of what we have published.
+  const python = roots ? rootFor(roots, 'python') : '';
+  if (python) {
+    row(into, 'Example: Python', null, 'Every Python we publish comes down to one fingerprint, ' +
+      'signed by the key above. ' + code(python));
+  }
+
   const led = blockJSON('ti-ledger');
-  const off = blockJSON('ti-offline') || {};
   if (led && led.seq > 0) {
-    out.push(['Our published record', 'this copy was built when we had published ' + led.seq +
-      ' version' + (led.seq === 1 ? '' : 's') + '<br><span class="small muted">fingerprint <code>' +
-      esc(String(led.root).slice(0, 32)) + '...</code> -- a copy of this page held by anyone else ' +
-      'can be checked against ours, and disagreeing is the point</span>']);
+    row(into, 'Our published record', null, 'This copy was built when we had published ' + led.seq +
+      ' version' + (led.seq === 1 ? '' : 's') + '. Fingerprint ' + code(String(led.root).slice(0, 32)));
   }
-  out.push(['This page', 'built ' + esc(String(off.built || 'unknown')) +
-    (off.rev ? ' from <code>' + esc(String(off.rev)) + '</code>' : '')]);
-  rows(el('trust-carried'), out);
 
-  // The key. One, public, and already inside every installer built here.
-  const keys = [];
-  if (!pub) {
-    keys.push(['Signing key', no('this copy carries no key') + ' -- nothing in it can be checked']);
-  } else {
-    const id = hex(sha256(pub)).slice(0, 16);
-    const b64 = document.getElementById('ti-plan-pubkey').textContent.trim();
-    keys.push(['TiddlyInstall signing key', 'used for everything above: the runtime instructions, ' +
-      'the withdrawn list, the runtime list and our published record']);
-    keys.push(['Fingerprint', '<code>' + esc(id) + '</code><button type="button" class="copy-btn" data-copy="' + esc(id) + '">Copy</button>']);
-    keys.push(['Public key', '<code class="wrap">' + esc(b64) + '</code><button type="button" class="copy-btn" data-copy="' + esc(b64) + '">Copy</button>' +
-      '<br><span class="small muted">Ed25519. Public, and already inside every installer this page builds -- ' +
-      'this only makes it readable. Compare it with the one shown by a copy of this page you already trust.</span>']);
-    const pythonRoot = roots ? rootFor(roots, 'python') : '';
-    if (pythonRoot) {
-      keys.push(['Example: Python', 'the instructions for every Python we publish come down to one ' +
-        'fingerprint, signed by the key above<br><code class="wrap">' + esc(pythonRoot) + '</code>']);
-    }
+  const off = blockJSON('ti-offline') || {};
+  row(into, 'This page', null, 'Built ' + mono(String(off.built || 'unknown')) +
+    (off.rev ? ' from ' + code(String(off.rev)) : ''));
+
+  // Only now: the checks have run, so the notice saying they have not is
+  // no longer true.
+  const nojs = el('trust-nojs');
+  if (nojs) nojs.hidden = true;
+  live.hidden = false;
+
+  // The copy buttons take their text from the page, since the key is not
+  // known until it has been read out of it.
+  const btns = document.querySelectorAll('.trust-copy');
+  for (let i = 0; i < btns.length; i++) {
+    const from = document.getElementById(btns[i].getAttribute('data-copy-from'));
+    if (from) btns[i].setAttribute('data-copy', from.textContent);
   }
-  rows(el('trust-keys'), keys);
   mountCopyButtons(document);
 }
 

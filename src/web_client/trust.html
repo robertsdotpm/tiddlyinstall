@@ -26,169 +26,190 @@
     </nav>
   </header>
 
-  <main class="narrow">
-    <div class="page-head">
-      <span class="eyebrow"><span class="num">Trust</span> &nbsp;What is proved, and what is taken on faith</span>
-      <h1>What you are trusting, and why</h1>
-      <p class="lede measure">An installer is a program that changes your computer. This page says
-        exactly which parts of that we can prove to you, which parts you have to take on
-        someone's word, and whose word it is.</p>
+<main style="max-width:800px; margin:0 auto; padding:40px 16px 56px;">
+
+  <div style="padding-bottom:32px;">
+    <div style="font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:0.13em; text-transform:uppercase; color:var(--faint); margin-bottom:8px;">Trust</div>
+    <h1 style="margin:0 0 12px; font-size:32px; line-height:1.12; letter-spacing:-0.018em; font-weight:650; color:var(--text-loud); text-wrap:pretty;">What you are trusting, and why</h1>
+    <p style="margin:0; max-width:60ch; font-size:17px; line-height:1.5; color:var(--muted); text-wrap:pretty;">An installer is a program that changes your computer. It answers two questions, and only one of the answers is ours to prove.</p>
+  </div>
+
+  <section data-screen-label="01 Two questions" style="padding:32px 0 36px; border-top:1px solid var(--rule);">
+    <div style="font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:0.13em; text-transform:uppercase; color:var(--faint);"><span style="color:var(--accent);">01</span>  The short version</div>
+    <h2 style="margin:6px 0 20px; font-size:22px; line-height:1.2; letter-spacing:-0.012em; font-weight:650; color:var(--text-loud);">Two questions, two different answers</h2>
+
+    <div style="display:flex; flex-wrap:wrap; margin:0 -10px;">
+      <div style="flex:1 1 280px; min-width:0; margin:0 10px 20px;">
+        <h3 style="margin:0 0 4px; font-size:17px; font-weight:650; color:var(--text-loud);">What does it install?</h3>
+        <p style="margin:0 0 14px; display:flex; align-items:baseline;"><span aria-hidden="true" style="flex:none; width:10px; height:10px; margin-right:9px; background:var(--accent); border:1.5px solid var(--accent);"></span><span><strong style="color:var(--text-loud);">Proved.</strong> Signed by us in advance, checked by your machine with no network.</span></p>
+        <div role="img" aria-label="The part written by TiddlyInstall, and signed: the runtime to fetch, its exact SHA-256, which mirrors to try, how to unpack it, what to run afterwards.">
+          <svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" style="display:block; width:100%; height:auto;">
+            <rect x="1" y="1" width="318" height="188" rx="3" style="fill:none; stroke:var(--accent); stroke-width:1.5;"></rect>
+            <text x="20" y="34" style="fill:var(--text-loud); font-family:var(--sans); font-size:15px; font-weight:600;">Written by us, and signed</text>
+            <circle cx="25" cy="62" r="3.5" style="fill:var(--accent);"></circle>
+            <text x="38" y="67" style="fill:var(--text); font-family:var(--sans); font-size:14px;">the runtime to fetch</text>
+            <circle cx="25" cy="87" r="3.5" style="fill:var(--accent);"></circle>
+            <text x="38" y="92" style="fill:var(--text); font-family:var(--sans); font-size:14px;">its exact SHA-256</text>
+            <circle cx="25" cy="112" r="3.5" style="fill:var(--accent);"></circle>
+            <text x="38" y="117" style="fill:var(--text); font-family:var(--sans); font-size:14px;">which mirrors to try</text>
+            <circle cx="25" cy="137" r="3.5" style="fill:var(--accent);"></circle>
+            <text x="38" y="142" style="fill:var(--text); font-family:var(--sans); font-size:14px;">how to unpack it</text>
+            <circle cx="25" cy="162" r="3.5" style="fill:var(--accent);"></circle>
+            <text x="38" y="167" style="fill:var(--text); font-family:var(--sans); font-size:14px;">what to run afterwards</text>
+          </svg>
+        </div>
+      </div>
+      <div style="flex:1 1 280px; min-width:0; margin:0 10px 20px;">
+        <h3 style="margin:0 0 4px; font-size:17px; font-weight:650; color:var(--text-loud);">Is the program any good?</h3>
+        <p style="margin:0 0 14px; display:flex; align-items:baseline;"><span aria-hidden="true" style="flex:none; width:10px; height:10px; margin-right:9px; border:1.5px solid var(--muted);"></span><span><strong style="color:var(--text-loud);">Not proved by us.</strong> That is the publisher's word, and their signature on the file.</span></p>
+        <div role="img" aria-label="The part written by whoever built the installer, and not signed by us: the app's name, where it installs, how it is started, the app's own code.">
+          <svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" style="display:block; width:100%; height:auto;">
+            <rect x="1" y="1" width="318" height="188" rx="3" style="fill:none; stroke:var(--rule-strong); stroke-width:1.5; stroke-dasharray:5 4;"></rect>
+            <text x="20" y="34" style="fill:var(--text-loud); font-family:var(--sans); font-size:15px; font-weight:600;">Written by whoever built it</text>
+            <circle cx="25" cy="62" r="3.5" style="fill:none; stroke:var(--muted); stroke-width:1.3;"></circle>
+            <text x="38" y="67" style="fill:var(--text); font-family:var(--sans); font-size:14px;">the app's name</text>
+            <circle cx="25" cy="87" r="3.5" style="fill:none; stroke:var(--muted); stroke-width:1.3;"></circle>
+            <text x="38" y="92" style="fill:var(--text); font-family:var(--sans); font-size:14px;">where it installs</text>
+            <circle cx="25" cy="112" r="3.5" style="fill:none; stroke:var(--muted); stroke-width:1.3;"></circle>
+            <text x="38" y="117" style="fill:var(--text); font-family:var(--sans); font-size:14px;">how it is started</text>
+            <circle cx="25" cy="137" r="3.5" style="fill:none; stroke:var(--muted); stroke-width:1.3;"></circle>
+            <text x="38" y="142" style="fill:var(--text); font-family:var(--sans); font-size:14px;">the app's own code</text>
+            <text x="20" y="170" style="fill:var(--muted); font-family:var(--sans); font-size:13px;">you chose these, or they did</text>
+          </svg>
+        </div>
+      </div>
     </div>
 
-    <section class="panel">
-      <h2 class="section-title">The short version</h2>
-      <p class="measure">There are two different questions, and they have different answers.</p>
-      <dl class="spec-list">
-        <dt>What does it install?</dt>
-        <dd><strong>Proved.</strong> The runtime it downloads, the exact bytes it expects, where it
-          gets them and every command it runs against them are signed by us before anybody asks
-          for them. The installer checks that signature itself, on your machine, with no internet
-          connection needed.</dd>
-        <dt>Is the program itself any good?</dt>
-        <dd><strong>Not proved, and we could not honestly claim otherwise.</strong> We did not write
-          it and have not read it. That is between you and whoever published it -- which is what a
-          signature on the installer file is for, and why it carries their name and not ours.</dd>
-      </dl>
-      <p class="small muted" style="margin-bottom:0">Every installer says both of these on its own
-        screen, before it changes anything.</p>
-    </section>
+    <p style="margin:0; max-width:64ch; text-wrap:pretty;">We sign what we wrote, and nothing else. The publisher does not need us to vouch for the line that starts <em>their</em> program: they wrote it. Pretending to cover it would make our signature mean less, not more. Every installer shows both answers on its own screen before it changes anything.</p>
+  </section>
 
-    <section class="panel">
-      <h2 class="section-title">Who wrote which part</h2>
-      <p class="measure">An installer is built from two kinds of instruction. Keeping them apart is
-        the whole idea.</p>
+  <section data-screen-label="02 How the check works" style="padding:32px 0 36px; border-top:1px solid var(--rule);">
+    <div style="font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:0.13em; text-transform:uppercase; color:var(--faint);"><span style="color:var(--accent);">02</span>  How our half is proved</div>
+    <h2 style="margin:6px 0 10px; font-size:22px; line-height:1.2; letter-spacing:-0.012em; font-weight:650; color:var(--text-loud);">Your machine checks it, with no internet</h2>
+    <p style="margin:0 0 20px; max-width:64ch; text-wrap:pretty;">Installing Python 3.14 on 64-bit Linux is the same job whichever app needs it. So we sign those instructions once, before anyone asks, and every installer carries a small receipt for the ones it uses.</p>
 
-      <div class="trust-fig" role="img"
-           aria-label="An installer is made of two parts. The runtime install script, written by TiddlyInstall and signed. The choices, written by whoever built the installer and not signed.">
-        <svg viewBox="0 0 640 220" xmlns="http://www.w3.org/2000/svg">
-          <rect class="fig-box fig-ours" x="16" y="30" width="286" height="170" rx="3"></rect>
-          <text class="fig-h" x="34" y="58">Written by us, and signed</text>
-          <circle class="fig-dot fig-dot-ours" cx="38" cy="80" r="3"></circle>
-          <text class="fig-t" x="52" y="84">the runtime to fetch</text>
-          <circle class="fig-dot fig-dot-ours" cx="38" cy="102" r="3"></circle>
-          <text class="fig-t" x="52" y="106">its exact SHA-256</text>
-          <circle class="fig-dot fig-dot-ours" cx="38" cy="124" r="3"></circle>
-          <text class="fig-t" x="52" y="128">which mirrors to try</text>
-          <circle class="fig-dot fig-dot-ours" cx="38" cy="146" r="3"></circle>
-          <text class="fig-t" x="52" y="150">how to unpack it</text>
-          <circle class="fig-dot fig-dot-ours" cx="38" cy="168" r="3"></circle>
-          <text class="fig-t" x="52" y="172">what to run afterwards</text>
-          <rect class="fig-box fig-yours" x="338" y="30" width="286" height="170" rx="3"></rect>
-          <text class="fig-h" x="356" y="58">Written by whoever built it</text>
-          <circle class="fig-dot fig-dot-yours" cx="360" cy="80" r="3"></circle>
-          <text class="fig-t" x="374" y="84">the app's name</text>
-          <circle class="fig-dot fig-dot-yours" cx="360" cy="102" r="3"></circle>
-          <text class="fig-t" x="374" y="106">where it installs</text>
-          <circle class="fig-dot fig-dot-yours" cx="360" cy="124" r="3"></circle>
-          <text class="fig-t" x="374" y="128">how it is started</text>
-          <circle class="fig-dot fig-dot-yours" cx="360" cy="146" r="3"></circle>
-          <text class="fig-t" x="374" y="150">the app's own code</text>
-          <text class="fig-m" x="356" y="180">you chose these, or they did</text>
-          <text class="fig-c" x="320" y="18">one installer</text>
+    <div role="img" aria-label="Step 1: we sign every runtime instruction we publish, in advance. Step 2: your installer carries a receipt for the one it uses. Step 3: your machine checks the receipt against a key already inside the file." style="display:flex; flex-wrap:wrap; margin:0 -6px 16px;">
+      <div style="flex:1 1 200px; min-width:0; margin:0 6px 12px;">
+        <svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg" style="display:block; width:100%; height:auto;">
+          <rect x="1" y="1" width="238" height="118" rx="3" style="fill:none; stroke:var(--accent); stroke-width:1.5;"></rect>
+          <text x="18" y="30" style="fill:var(--accent); font-family:var(--mono); font-size:12px; font-weight:600; letter-spacing:1.5px;">1  US</text>
+          <text x="18" y="58" style="fill:var(--text-loud); font-family:var(--sans); font-size:15px; font-weight:600;">We sign, in advance</text>
+          <text x="18" y="82" style="fill:var(--text); font-family:var(--sans); font-size:14px;">every runtime instruction</text>
+          <text x="18" y="102" style="fill:var(--text); font-family:var(--sans); font-size:14px;">we publish, once</text>
         </svg>
       </div>
-
-      <p class="measure">We sign what we wrote. Nobody needs us to vouch for the line that starts
-        <em>their</em> program: they wrote it, and they know what it says. Pretending to cover it
-        would make the signature mean less, not more.</p>
-    </section>
-
-    <section class="panel">
-      <h2 class="section-title">How an installer proves it, with no internet</h2>
-      <p class="measure">The instructions for putting a runtime on your machine are the same for
-        everybody. Installing Python 3.14 on 64-bit Linux does not depend on which app you are
-        installing. So we can sign those instructions <em>in advance</em> -- long before anyone
-        asks for them -- and hand out a small receipt with each installer.</p>
-
-      <div class="trust-fig" role="img"
-           aria-label="We sign a list of every runtime instruction once. Each installer carries a small receipt for the one it uses. The installer checks the receipt against a key already inside it.">
-        <svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg">
-          <rect class="fig-box fig-ours" x="14" y="24" width="180" height="92" rx="3"></rect>
-          <text class="fig-h" x="30" y="50">We sign, in advance</text>
-          <text class="fig-t" x="30" y="74">every runtime</text>
-          <text class="fig-t" x="30" y="96">instruction we publish</text>
-
-          <rect class="fig-box" x="230" y="24" width="180" height="92" rx="3"></rect>
-          <text class="fig-h" x="246" y="50">Your installer</text>
-          <text class="fig-t" x="246" y="74">carries a receipt for</text>
-          <text class="fig-t" x="246" y="96">the one it uses</text>
-
-          <rect class="fig-box fig-ok" x="446" y="24" width="180" height="92" rx="3"></rect>
-          <text class="fig-h" x="462" y="50">Your machine checks</text>
-          <text class="fig-t" x="462" y="74">the receipt, using a</text>
-          <text class="fig-t" x="462" y="96">key inside the file</text>
-
-          <line class="fig-arrow" x1="196" y1="70" x2="226" y2="70"></line>
-          <polygon class="fig-head" points="226,70 218,66 218,74"></polygon>
-          <line class="fig-arrow" x1="412" y1="70" x2="442" y2="70"></line>
-          <polygon class="fig-head" points="442,70 434,66 434,74"></polygon>
-
-          <text class="fig-m" x="14" y="160">No network. No server. Nothing to ask anybody.</text>
-          <text class="fig-m" x="14" y="184">The receipt is about half a kilobyte, and takes a tenth of a second to check.</text>
-          <text class="fig-m" x="14" y="208">It never expires: a newer release does not invalidate an installer you already have.</text>
-          <text class="fig-m" x="14" y="232">Change one byte of the instructions and the receipt stops matching.</text>
+      <div style="flex:1 1 200px; min-width:0; margin:0 6px 12px;">
+        <svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg" style="display:block; width:100%; height:auto;">
+          <rect x="1" y="1" width="238" height="118" rx="3" style="fill:none; stroke:var(--rule-strong); stroke-width:1.5;"></rect>
+          <text x="18" y="30" style="fill:var(--faint); font-family:var(--mono); font-size:12px; font-weight:600; letter-spacing:1.5px;">2  THE FILE</text>
+          <text x="18" y="58" style="fill:var(--text-loud); font-family:var(--sans); font-size:15px; font-weight:600;">Your installer carries</text>
+          <text x="18" y="82" style="fill:var(--text); font-family:var(--sans); font-size:14px;">a receipt for the</text>
+          <text x="18" y="102" style="fill:var(--text); font-family:var(--sans); font-size:14px;">instructions it uses</text>
         </svg>
       </div>
+      <div style="flex:1 1 200px; min-width:0; margin:0 6px 12px;">
+        <svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg" style="display:block; width:100%; height:auto;">
+          <rect x="1" y="1" width="238" height="118" rx="3" style="fill:none; stroke:var(--rule-strong); stroke-width:1.5;"></rect>
+          <text x="18" y="30" style="fill:var(--faint); font-family:var(--mono); font-size:12px; font-weight:600; letter-spacing:1.5px;">3  YOUR MACHINE</text>
+          <text x="18" y="58" style="fill:var(--text-loud); font-family:var(--sans); font-size:15px; font-weight:600;">It checks the receipt</text>
+          <text x="18" y="82" style="fill:var(--text); font-family:var(--sans); font-size:14px;">against a key already</text>
+          <text x="18" y="102" style="fill:var(--text); font-family:var(--sans); font-size:14px;">inside the file</text>
+        </svg>
+      </div>
+    </div>
 
-      <p class="measure">This is why an installer built entirely inside your browser, with no server
-        involved at all, can still show that what it installs came from us. The browser never needs
-        a secret key, because it is only <em>carrying</em> signatures, never making them.</p>
-    </section>
+    <ul style="list-style:none; margin:0 0 20px; padding:0; max-width:64ch; border-top:1px solid var(--rule);">
+      <li style="padding:9px 0; border-bottom:1px solid var(--rule);"><strong style="color:var(--text-loud);">No network.</strong> No server, nothing to ask anybody.</li>
+      <li style="padding:9px 0; border-bottom:1px solid var(--rule);"><strong style="color:var(--text-loud);">Small and quick.</strong> About half a kilobyte, checked in about a tenth of a second.</li>
+      <li style="padding:9px 0; border-bottom:1px solid var(--rule);"><strong style="color:var(--text-loud);">Never expires.</strong> A newer release does not invalidate an installer you already have.</li>
+      <li style="padding:9px 0; border-bottom:1px solid var(--rule);"><strong style="color:var(--text-loud);">Tamper-evident.</strong> Change one byte of the instructions and the receipt stops matching.</li>
+    </ul>
+    <p style="margin:0; max-width:64ch; text-wrap:pretty;">This is why an installer built entirely inside your browser can still show that what it installs came from us. The browser never holds a secret key: it only <em>carries</em> signatures, it never makes them.</p>
+  </section>
 
-    <section class="panel">
-      <h2 class="section-title">Two ways to use this, and what each one costs</h2>
-      <dl class="spec-list">
-        <dt>With our server</dt>
-        <dd>You trust the site you are on. It builds installers, signs the instructions, and can be
-          asked at install time whether anything has been withdrawn since. If the page and the
-          server are the same domain, that is <strong>one</strong> decision, not two -- and the
-          header says <em>Server: this site</em> when it is.</dd>
-        <dt>Saved to disk, no server</dt>
-        <dd>The page works on its own. It carries a dated, signed copy of everything it needs, and
-          says how old that copy is. What it cannot do is learn anything new: a runtime withdrawn
-          after your copy was saved is not known to it. Installers it builds say so, in those
-          words, rather than staying quiet.</dd>
-      </dl>
-    </section>
+  <section data-screen-label="03 Online or saved" style="padding:32px 0 36px; border-top:1px solid var(--rule);">
+    <div style="font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:0.13em; text-transform:uppercase; color:var(--faint);"><span style="color:var(--accent);">03</span>  Where this page comes from</div>
+    <h2 style="margin:6px 0 20px; font-size:22px; line-height:1.2; letter-spacing:-0.012em; font-weight:650; color:var(--text-loud);">Online, or a copy saved to disk</h2>
 
-    <section class="panel">
-      <h2 class="section-title">What this page is carrying right now</h2>
-      <p class="measure">Not a description -- the actual contents of the file you are reading,
-        checked against its own key as the page loads.</p>
-      <dl class="spec-list" id="trust-carried"></dl>
-      <p class="small muted" style="margin-bottom:0">Anything that does not check out is shown as
-        failing and is not used. A signed list we cannot verify counts for nothing, exactly as if
-        it were not here.</p>
-    </section>
+    <div style="display:flex; flex-wrap:wrap; margin:0 -10px;">
+      <div style="flex:1 1 280px; min-width:0; margin:0 10px 20px; padding-top:12px; border-top:2px solid var(--rule-strong);">
+        <h3 style="margin:0 0 10px; font-size:16px; font-weight:650; color:var(--text-loud);">Online, with our server</h3>
+        <div style="font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--faint);">You trust</div>
+        <p style="margin:2px 0 12px; text-wrap:pretty;">The site you are on. When the page and its server are the same site, that is one decision, not two, and the header says <em>Server: this site</em>.</p>
+        <div style="font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--faint);">How current</div>
+        <p style="margin:2px 0 0; text-wrap:pretty;">Up to date. The server can be asked at install time whether anything has been withdrawn.</p>
+      </div>
+      <div style="flex:1 1 280px; min-width:0; margin:0 10px 20px; padding-top:12px; border-top:2px solid var(--rule-strong);">
+        <h3 style="margin:0 0 10px; font-size:16px; font-weight:650; color:var(--text-loud);">Saved to disk, no server</h3>
+        <div style="font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--faint);">You trust</div>
+        <p style="margin:2px 0 12px; text-wrap:pretty;">The copy you saved, and wherever you got it from.</p>
+        <div style="font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--faint);">How current</div>
+        <p style="margin:2px 0 0; text-wrap:pretty;">As of the day it was saved, and it says so. Installers it builds state that anything withdrawn since is not known.</p>
+      </div>
+    </div>
+    <p style="margin:0; max-width:64ch; color:var(--muted); text-wrap:pretty;">Either way, our half is proved the same way: on your machine, with no network.</p>
+  </section>
 
-    <section class="panel">
-      <h2 class="section-title">Our keys</h2>
-      <p class="measure">One key signs everything above. It is public: it is already inside every
-        installer this page builds, and this only makes it readable.</p>
-      <dl class="spec-list" id="trust-keys"></dl>
-    </section>
+  <section data-screen-label="04 What this copy carries" style="padding:32px 0 36px; border-top:1px solid var(--rule);">
+    <div style="font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:0.13em; text-transform:uppercase; color:var(--faint);"><span style="color:var(--accent);">04</span>  Check it yourself</div>
+    <h2 style="margin:6px 0 10px; font-size:22px; line-height:1.2; letter-spacing:-0.012em; font-weight:650; color:var(--text-loud);">Our key, and what this copy carries</h2>
+    <p style="margin:0 0 20px; max-width:64ch; text-wrap:pretty;">Not a description: the documents inside the file you are reading, checked against its own key as the page loaded.</p>
 
-    <section class="panel">
-      <h2 class="section-title">What we cannot prove to you</h2>
-      <p class="measure">Worth saying plainly, because a page about trust that only lists its
-        strengths is an advertisement.</p>
-      <ul class="small">
-        <li><strong>That the program is safe.</strong> We did not write it and have not read it.
-          Install it because you trust whoever published it, not because you trust us.</li>
-        <li><strong>That this page itself is genuine.</strong> A page cannot prove that about
-          itself. Drop a copy on the <a href="verify.html">Verify page</a> of a copy you already
-          trust, and it will say whether the two agree.</li>
-        <li><strong>That an unsigned installer file was not tampered with.</strong> Compare its
-          SHA-256 with the one shown where you downloaded it. That comparison happens outside the
-          file, which is what makes it worth anything.</li>
-        <li><strong>That we have not changed our minds about something.</strong> We keep a
-          record of everything we publish, chained so entries cannot be quietly rewritten -- and
-          every copy of this page in the world carries a fingerprint of that record as of the day
-          it was built. We hold the signing key, so a signature alone could not catch us
-          rewriting history. Copies in other people's hands can.</li>
-      </ul>
-    </section>
-  </main>
+    <div id="trust-nojs" style="padding:16px 18px; border:1px dashed var(--rule-strong); color:var(--muted); max-width:64ch;">Scripting is off, so nothing has been checked here. The key and the signed documents are still inside this file: turn scripting on to see them checked.</div>
+
+    <div id="trust-live" hidden>
+      <div style="background:var(--panel); border:1px solid var(--rule); border-top:2px solid var(--accent); padding:16px 18px; margin-bottom:24px;">
+        <div style="font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--faint); margin-bottom:10px;">TiddlyInstall signing key · Ed25519</div>
+        <div style="display:flex; flex-wrap:wrap; align-items:baseline; padding:6px 0; border-bottom:1px solid var(--rule);">
+          <span style="flex:0 0 110px; font-size:13px; color:var(--muted);">Fingerprint</span>
+          <span style="flex:1 1 200px; min-width:0;"><code style="font-family:var(--mono); font-size:13.5px; background:var(--code-bg); padding:1px 6px; border-radius:2px;"><span id="trust-fp"></span></code><button type="button" class="copy-btn trust-copy" data-copy-from="trust-fp" style="margin-left:8px; padding:1px 8px; background:none; border:1px solid var(--rule-strong); border-radius:3px; color:var(--muted); font:inherit; font-size:12px; cursor:pointer;">Copy</button></span>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; align-items:baseline; padding:6px 0;">
+          <span style="flex:0 0 110px; font-size:13px; color:var(--muted);">Public key</span>
+          <span style="flex:1 1 200px; min-width:0;"><code style="font-family:var(--mono); font-size:13.5px; background:var(--code-bg); padding:1px 6px; border-radius:2px; word-break:break-all;"><span id="trust-pk"></span></code><button type="button" class="copy-btn trust-copy" data-copy-from="trust-pk" style="margin-left:8px; padding:1px 8px; background:none; border:1px solid var(--rule-strong); border-radius:3px; color:var(--muted); font:inherit; font-size:12px; cursor:pointer;">Copy</button></span>
+        </div>
+        <p style="margin:10px 0 0; font-size:13.5px; color:var(--muted); max-width:64ch; text-wrap:pretty;">One key signs everything below. It is public and already inside every installer this page builds. Compare it with the one shown by a copy of this page you already trust.</p>
+      </div>
+
+      <div style="font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--faint); margin-bottom:6px;">Signed by this key, carried in this page</div>
+      <div id="trust-carried" style="border-top:1px solid var(--rule);"></div>
+      <p style="margin:12px 0 0; font-size:13.5px; color:var(--muted); max-width:64ch; text-wrap:pretty;">Anything that does not check out is marked as failing and is not used. A signed list we cannot verify counts for nothing.</p>
+    </div>
+  </section>
+
+  <section data-screen-label="05 What we cannot prove" style="padding:32px 0 0; border-top:1px solid var(--rule);">
+    <div style="font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:0.13em; text-transform:uppercase; color:var(--faint);"><span style="color:var(--accent);">05</span>  The limits</div>
+    <h2 style="margin:6px 0 10px; font-size:22px; line-height:1.2; letter-spacing:-0.012em; font-weight:650; color:var(--text-loud);">What we cannot prove to you</h2>
+    <p style="margin:0 0 20px; max-width:64ch; text-wrap:pretty;">Said plainly, because a page about trust that lists only its strengths is an advertisement. Each limit comes with what you can do about it.</p>
+
+    <div style="border-top:1px solid var(--rule-strong);">
+      <div style="display:flex; flex-wrap:wrap; padding:8px 0; border-bottom:1px solid var(--rule); font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:0.09em; text-transform:uppercase; color:var(--faint);">
+        <span style="flex:1 1 220px; margin-right:24px;">We cannot prove</span>
+        <span style="flex:1.4 1 280px;">What you can do instead</span>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; padding:12px 0; border-bottom:1px solid var(--rule);">
+        <div style="flex:1 1 220px; min-width:0; margin:0 24px 4px 0;"><strong style="color:var(--text-loud);">That the program is safe.</strong> We did not write it and have not read it.</div>
+        <div style="flex:1.4 1 280px; min-width:0; color:var(--muted);">Install it because you trust whoever published it. Their signature on the installer file is what names them.</div>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; padding:12px 0; border-bottom:1px solid var(--rule);">
+        <div style="flex:1 1 220px; min-width:0; margin:0 24px 4px 0;"><strong style="color:var(--text-loud);">That this page is genuine.</strong> A page cannot vouch for itself.</div>
+        <div style="flex:1.4 1 280px; min-width:0; color:var(--muted);">Drop this copy on the <a href="verify.html">Verify page</a> of a copy you already trust. It says whether the two agree.</div>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; padding:12px 0; border-bottom:1px solid var(--rule);">
+        <div style="flex:1 1 220px; min-width:0; margin:0 24px 4px 0;"><strong style="color:var(--text-loud);">That an unsigned installer file was not changed.</strong></div>
+        <div style="flex:1.4 1 280px; min-width:0; color:var(--muted);">Compare its SHA-256 with the one shown where you downloaded it. That check happens outside the file, which is what makes it worth anything.</div>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; padding:12px 0; border-bottom:1px solid var(--rule);">
+        <div style="flex:1 1 220px; min-width:0; margin:0 24px 4px 0;"><strong style="color:var(--text-loud);">That a saved copy knows what was withdrawn since.</strong></div>
+        <div style="flex:1.4 1 280px; min-width:0; color:var(--muted);">Use the page online, or save a fresh copy. A saved copy always says how old its lists are.</div>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; padding:12px 0; border-bottom:1px solid var(--rule);">
+        <div style="flex:1 1 220px; min-width:0; margin:0 24px 4px 0;"><strong style="color:var(--text-loud);">That we have not rewritten our own history.</strong> We hold the key, so a signature alone could not catch it.</div>
+        <div style="flex:1.4 1 280px; min-width:0; color:var(--muted);">Every copy of this page carries a fingerprint of our published record as of the day it was built. Copies in other people's hands can catch a rewrite, and the Verify page compares them.</div>
+      </div>
+    </div>
+  </section>
+</main>
 
   <footer class="site-footer">
     Designed by <a href="https://robertsdotpm.github.io/">Matthew Roberts</a> and implemented by Claude.
