@@ -60,6 +60,18 @@ CSS-only behaviours.
 | `src/web_client/create.html` | Redirects to `new.html#write` |
 | `src/web_client/builds.html` | Sample data still |
 
+## Licence
+
+MIT, `LICENSE` at the root. Third-party code keeps its own notices, and
+they travel with any copy of the one-file site, which carries all of it:
+
+| What | Licence | Where |
+| --- | --- | --- |
+| resedit-js 2.0.3, pe-library 1.0.1 | MIT, (c) 2018 jet | `src/vendor/LICENSE.resedit`, `src/vendor/LICENSE.pe-library` |
+| Ed25519, ported from TweetNaCl-js | public domain | `src/web_client/lib/ed25519.js` |
+| core-js (the ES5 build only) | MIT | `tests/../out/index.html` ES5 copy; upstream notice retained |
+| NSIS (the Windows base is built with it) | zlib/libpng, with an exception | nsis.sourceforge.io |
+
 **Which build server:** `?api=` on the page URL, else the one saved in this
 browser, else whichever server is serving the page: its own origin when a
 build server answers there, or `http://10.0.1.76:8080` when the page came

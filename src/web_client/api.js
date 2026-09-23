@@ -707,7 +707,17 @@ export function mountApiFooter() {
     e.preventDefault();
     e.stopPropagation();
     const url = localOk(input.value) || normalizeApi(input.value);
-    if (!url) { showErr('That is not an http(s) URL.'); return; }
+    if (!url) {
+      // An IPv6 address has to be bracketed in a URL, or its colons are
+      // read as a scheme. Worth saying: the server is reachable over
+      // IPv6 and "that is not an http(s) URL" tells somebody who typed
+      // one nothing about what to do instead.
+      const v = input.value.trim();
+      showErr(/^[0-9a-f:]+$/i.test(v) && (v.match(/:/g) || []).length > 1
+        ? 'An IPv6 address needs brackets: [' + v + ']:8080'
+        : 'That is not an http(s) URL.');
+      return;
+    }
     setApiBase(url);
     close();
   });

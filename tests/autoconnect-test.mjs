@@ -84,6 +84,17 @@ const after = await c.js("document.querySelector('.where-chip').getAttribute('ar
 after.indexOf(DEFAULT_REMOTE) >= 0 ? ok('Default still reaches the server it was built with')
   : no('Default still reaches the server it was built with', after);
 
+// ---- and that the server is actually usable from there, which is the
+// whole point of the default being a default. The page is on one origin
+// and the server on another, so this is CORS end to end in a browser and
+// not a header read off the source: the published copy will live on a
+// GitHub Pages domain and talk to the server from there.
+const reach = await c.js(`fetch(${JSON.stringify(DEFAULT_REMOTE)} + '/api/health', { cache: 'no-store' })
+  .then(function (r) { return r.json(); }).then(function (j) { return j && j.ok ? 'ok' : 'answered ' + JSON.stringify(j); },
+        function (e) { return 'failed: ' + e; })`);
+reach === 'ok' ? ok('...and the server answers that page across origins')
+  : no('...and the server answers that page across origins', reach);
+
 // ---- served by a build server: connect, as before
 r = await load(SITE + '/tiddlyinstall.html');
 !/where-page/.test(r.chip) ? ok('a page its own server handed over connects to it')
