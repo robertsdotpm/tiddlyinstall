@@ -35,7 +35,22 @@ for name in $names; do
 	ssh=$(python3 -c "
 import sys; sys.path.insert(0, '$repo/tests'); import vmlab
 print(vmlab.linux().get('$name', ''))")
-	if [ -z "$ssh" ]; then printf '%-14s %s\n' "$name" 'not a Linux machine in tests/vms.json'; continue; fi
+	if [ -z "$ssh" ]; then
+		# Windows takes a different route: an installer to fetch and a
+		# signature to check, and PowerShell to edit the manifest.
+		wssh=$(python3 -c "
+import sys; sys.path.insert(0, '$repo/tests'); import vmlab
+v = vmlab.windows().get('$name'); print(v[0] if v else '')")
+		if [ -n "$wssh" ]; then
+			scp -q "$here/add-brave-win.ps1" "$wssh:add-brave-win.ps1" 2>/dev/null &&
+				out=$(ssh -o ConnectTimeout=8 "$wssh" 'powershell -NoProfile -ExecutionPolicy Bypass -File add-brave-win.ps1' 2>&1 |
+					grep -viE 'CLIXML|Objs|^$' | tail -2)
+			printf '%-14s %s\n' "$name" "${out:-unreachable}"
+		else
+			printf '%-14s %s\n' "$name" 'not in tests/vms.json'
+		fi
+		continue
+	fi
 	out=$(ssh -o ConnectTimeout=8 -o BatchMode=yes "$ssh" 'sh -s' <<'REMOTE' 2>&1 | tail -3 || true
 set -eu
 r=$HOME/tibrowsers
