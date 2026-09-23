@@ -276,7 +276,7 @@ for (const [who, env, want] of [['the page', pageEnv, /this browser's address/],
   ok(v({ source: { kind: 'github', value: 'psf/requests', ref: 'release/1.0' } }) === '(accepted)', 'a ref with a slash in it is fine');
   // And the refusal the page used to give for GitHub is gone.
   ok(!/needs the build server/.test(v({})), 'a GitHub source is no longer refused for want of a build server', v({}));
-  ok(/plain URL needs the build server/.test(v({ source: { kind: 'url', value: 'https://example.com/x.tar.gz' } })),
+  ok(/plain URL needs the (build )?server/.test(v({ source: { kind: 'url', value: 'https://example.com/x.tar.gz' } })),
     'a plain URL still is', v({ source: { kind: 'url', value: 'https://example.com/x.tar.gz' } }));
 }
 

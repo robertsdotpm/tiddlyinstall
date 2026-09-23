@@ -11,7 +11,15 @@ import { spawn } from 'node:child_process';
 
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-export async function launchChrome({ profile, downloads, binary = 'google-chrome', port } = {}) {
+// Which browser. Every suite here launches through this one function, so
+// TI_BROWSER runs the whole lot against another Chromium without touching
+// any of them: TI_BROWSER=brave-browser node --experimental-websocket
+// tests/offline-test.mjs. Brave is the one that matters in practice --
+// it ships different download, shields and storage behaviour from
+// Chrome's, and a download that fails there fails for a real share of
+// the people this is built for.
+export async function launchChrome({ profile, downloads, binary, port } = {}) {
+  binary = binary || process.env.TI_BROWSER || 'google-chrome';
   port = port || 9300 + Math.floor(Math.random() * 600);
   const proc = spawn(binary, ['--headless=new', '--no-first-run', '--no-default-browser-check',
     '--remote-debugging-port=' + port, '--user-data-dir=' + profile, 'about:blank'], { stdio: 'ignore' });
