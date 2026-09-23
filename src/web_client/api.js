@@ -463,12 +463,22 @@ function paintWhereChip() {
       ? 'Built in this page. This is a saved copy, so there is no server: your browser makes the installers.'
       : 'Built in this page. No server is chosen, so your browser makes the installers.';
   } else {
-    host.textContent = 'Server ' + prettyHost(apiBaseUrl);
+    // Same origin: the host is in the address bar already, so naming it
+    // again says less than saying whose it is.
+    host.textContent = apiSameOrigin() ? 'Server: this site' : 'Server ' + prettyHost(apiBaseUrl);
     word.textContent = WHERE_WORDS[state];   // its separator is in the CSS
-    said = 'Server ' + apiBaseUrl + ' is ' + WHERE_SAID[state];
+    said = 'Server ' + apiBaseUrl + (apiSameOrigin() ? ' (this site) is ' : ' is ') + WHERE_SAID[state];
   }
   whereEl.title = said;
   whereEl.setAttribute('aria-label', said + ' Open settings.');
+}
+
+// Is the server this page's own origin? That is the difference between
+// one trust decision and two: served from the same domain, trusting the
+// page *is* trusting the server. Opened from disk there is no origin to
+// match, and apiLocal() has already answered.
+export function apiSameOrigin() {
+  try { return !apiLocal() && apiBaseUrl === location.origin; } catch (e) { return false; }
 }
 
 function paintApiFooter() {
@@ -482,6 +492,12 @@ function paintApiFooter() {
   }
   a.textContent = prettyApi(apiBaseUrl);
   a.title = apiBaseUrl === defaultApi ? apiBaseUrl + ' (default)' : apiBaseUrl + ' (chosen)';
+  const same = footerEl.querySelector('.settings-same');
+  if (same) {
+    same.hidden = !apiSameOrigin();
+    same.textContent = 'Served from this site, so trusting this page is trusting the server \u2014 ' +
+      'one decision, not two.';
+  }
 }
 
 // What the server is for, behind a link in the settings panel rather than
@@ -526,6 +542,7 @@ export function mountApiFooter() {
   footerEl.innerHTML =
     '<div class="settings-panel" hidden>' +
     '<p class="settings-now"><span>Server:</span> <a class="api-ctl-url" target="_blank" rel="noopener noreferrer"></a></p>' +
+    '<p class="small settings-same" hidden></p>' +
     '<p class="settings-what"><button type="button" class="link-button api-ctl-what" hidden>' +
     'What does the server&nbsp;do?</button></p>' +
     '<form class="api-ctl-form">' +

@@ -261,20 +261,29 @@ try {
     // The same file, served by a build server: it uses the server.
     await open(SITE.replace(/\/$/, '') + '/');
     ok(errors.length === 0, 'served: the page starts without errors', errors.join(' | '));
-    ok(!await js(`document.documentElement.classList.contains('ti-local')`), 'served: the page uses the build server');
+    ok(!await js(`document.documentElement.classList.contains('ti-local')`), 'served: the page uses the server');
     ok(await js(`getComputedStyle(document.getElementById('mode-ours').closest('label')).display !== 'none' &&
       document.getElementById('mode-ours').disabled && document.getElementById('mode-unsigned').checked`),
       'served: "Signed by TiddlyInstall" is shown but off, and Unsigned is chosen');
     ok(await js(`/^Built by the server at /.test(document.querySelector('.ti-page[data-page="new"] .build-where').textContent)`),
-      'served: the form says the build server builds it', await js(`document.querySelector('.build-where').textContent`));
+      'served: the form says the server builds it', await js(`document.querySelector('.build-where').textContent`));
     const rts = await js(`fetch('/api/catalog/runtimes').then(r => r.ok)`);
     ok(rts, 'served: the server answers the page');
-    // Served by a build server that answered the same-origin probe: the
-    // header names it, and shows it as reachable because it was asked.
+    // Served by a server that answered the same-origin probe. The chip
+    // says "this site" rather than naming a host that is already in the
+    // address bar: same origin is the whole of the simple trust model --
+    // trusting the page is trusting the server, one decision and not two
+    // -- and it was left for the reader to work out until 2026-09-23.
+    // The host is still in the tooltip.
     ch = await chipState();
-    ok(ch && /\bwhere-up\b/.test(ch.cls) && ch.host === 'Server ' + SITE.replace(/^https?:\/\//, '').replace(/\/$/, '') &&
+    ok(ch && /\bwhere-up\b/.test(ch.cls) && ch.host === 'Server: this site' &&
       /reachable$/.test(ch.state) && ch.mark === 'circle,polyline',
-      'served: the header names the build server and shows it as reachable', JSON.stringify(ch));
+      'served: the header says the server is this site, and reachable', JSON.stringify(ch));
+    ok(await js(`/\\(this site\\) is reachable/.test(document.querySelector('.where-chip').title)`),
+      'served: and the tooltip still carries the host it is');
+    ok(await js(`!document.querySelector('.settings-same').hidden`) === false ||
+       await js(`document.querySelector('.settings-same').textContent.indexOf('one decision, not two') > 0`),
+      'served: the panel says trusting the page is trusting the server');
     await js(`document.querySelector('.where-chip').click(); document.querySelector('.api-ctl-local').click()`);
     ch = await chipState();
     ok(ch && /\bwhere-page\b/.test(ch.cls) && !/\bwhere-fixed\b/.test(ch.cls) && ch.host === 'Built in this page',
