@@ -280,7 +280,7 @@ function paintCatalog() {
     }
     table.tBodies[0].innerHTML = rows.join('');
     hint.textContent = (apiLocal() ? 'From this page\'s catalogue' + (catalog.changed ? ', with your changes from the Registry page' : '') : 'From the server\'s catalogue') +
-      ': one row per runtime install script it makes for ' + (entry.label || rt) + ', by OS version and architecture. ' +
+      ': one row per runtime setup it makes for ' + (entry.label || rt) + ', by OS version and architecture. ' +
       'The installer carries them all and picks on the machine.';
     panel.classList.remove('py-panel');   // show it for every language with data
   } else {

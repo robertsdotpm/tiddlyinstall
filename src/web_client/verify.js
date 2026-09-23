@@ -641,7 +641,7 @@ async function paint(file, sha, info) {
   } else {
     sign.push(['The installer file', 'is a macOS <code>.zip</code>; the app inside is checked by Gatekeeper when it is opened, not by this page']);
   }
-  // The runtime install script, proved against a signed root.
+  // The runtime setup, proved against a signed root.
   //
   // The installer does this too, but here it means more: the key, the
   // code and the roots all arrived by a different route from the file
@@ -730,7 +730,7 @@ drop.addEventListener('drop', (e) => {
   if (f) open(f);
 });
 
-/* ---------- the runtime install script (src/shared/rtscript.js) ---------- */
+/* ---------- the runtime setup (src/shared/rtscript.js) ---------- */
 
 // Rows for what the plan can prove about its own runtime steps. Returns
 // [] when the plan carries no proof at all, which is the ordinary state

@@ -562,8 +562,8 @@ const WHAT_PANEL =
   '<ul class="small">' +
   '<li><strong>Builds the installers</strong>, instead of your browser. Mainly useful for offline ' +
   'installers, which carry the runtime inside them and can be too big for a browser to assemble.</li>' +
-  '<li><strong>Signs the runtime install script.</strong> Ours is the only key that can, and every ' +
-  'installer carries the matching public half -- so a signed script can be checked by anyone, on any ' +
+  '<li><strong>Signs the runtime setup.</strong> Ours is the only key that can, and every ' +
+  'installer carries the matching public half -- so a signed setup can be checked by anyone, on any ' +
   'machine, years later, without asking us.</li>' +
   '<li><strong>Passes signing and timestamp requests through.</strong> Those services refuse calls ' +
   'from web pages, so the server forwards them on your behalf.</li>' +

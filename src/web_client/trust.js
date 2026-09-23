@@ -103,16 +103,16 @@ function paint() {
 
   const roots = blockText('ti-rtroots');
   if (!roots) {
-    row(into, 'Runtime instructions', null, 'None carried, so installers from this page cannot show that what they install came from us.');
+    row(into, 'Runtime setups', null, 'None carried, so installers from this page cannot show that what they install came from us.');
   } else if (!verifyDoc(roots, 'ti-rtscripts', pub, b64bytes, ed25519Verify)) {
-    row(into, 'Runtime instructions', false, 'They are ignored, exactly as if they were not here.');
+    row(into, 'Runtime setups', false, 'They are ignored, exactly as if they were not here.');
   } else {
     let n = 0, total = 0;
     for (const raw of roots.split('\n')) {
       const f = raw.split('\t');
       if (f[0] === 'root') { n++; total += Number(f[3]) || 0; }
     }
-    row(into, 'Runtime instructions', true, total.toLocaleString() + ' sets across ' + n +
+    row(into, 'Runtime setups', true, total.toLocaleString() + ' sets across ' + n +
       ' languages. Published ' + mono(when(docField(roots, 'issued'))) + '.');
   }
 

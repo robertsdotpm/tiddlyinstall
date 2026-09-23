@@ -1236,26 +1236,26 @@ ti_check_plan() {
 		# page holds no key, and the screen used to meet that with a red
 		# block that read like a virus alert about our own output.
 		if [ "$ti_plan_sigstate" != unsigned ]; then
-			ti_plan_warn="The runtime install script inside this file $ti_sig_verb ($why)."
+			ti_plan_warn="The install plan inside this file $ti_sig_verb ($why)."
 		fi
 		;;
 	cmdline)
-		[ "$opt_unsigned" = 1 ] || ti_fail "The runtime install script $TI_PLAN $ti_sig_verb ${TI_PLAN_KEYID:-} ($why). Use one saved from <backend>/api/plan/<record>, or add --unsigned-plan if you wrote it yourself."
-		ti_plan_warn="The runtime install script $ti_sig_verb ($why); --unsigned-plan was given."
+		[ "$opt_unsigned" = 1 ] || ti_fail "The install plan $TI_PLAN $ti_sig_verb ${TI_PLAN_KEYID:-} ($why). Use one saved from <backend>/api/plan/<record>, or add --unsigned-plan if you wrote it yourself."
+		ti_plan_warn="The install plan $ti_sig_verb ($why); --unsigned-plan was given."
 		;;
 	*)
 		case $sig in
 		cannot:*)
 			case $TI_PLAN_URL in
 			https://*)
-				ti_plan_warn="The runtime install script's signature could not be checked ($why); it was accepted because it came over HTTPS from ${TI_PLAN_URL%%/api/*}."
+				ti_plan_warn="The install plan's signature could not be checked ($why); it was accepted because it came over HTTPS from ${TI_PLAN_URL%%/api/*}."
 				return 0
 				;;
 			esac
-			ti_fail "The runtime install script came over plain HTTP and its signature can't be checked here: $why. Install OpenSSL 1.1.1 or later, or use an HTTPS backend (--backend=https://...)."
+			ti_fail "The install plan came over plain HTTP and its signature can't be checked here: $why. Install OpenSSL 1.1.1 or later, or use an HTTPS backend (--backend=https://...)."
 			;;
 		esac
-		ti_fail "The runtime install script from ${TI_PLAN_URL%%/api/*} $ti_sig_verb ${TI_PLAN_KEYID:-} ($why). It may have been changed on the way; nothing was installed."
+		ti_fail "The install plan from ${TI_PLAN_URL%%/api/*} $ti_sig_verb ${TI_PLAN_KEYID:-} ($why). It may have been changed on the way; nothing was installed."
 		;;
 	esac
 }
@@ -1408,7 +1408,7 @@ ti_check_age() { # backend
 		[ "$now" -lt "$sec" ] && plausible=0   # a plan from the future: don't believe the clock
 	fi
 	if [ "$plausible" != 1 ]; then
-		ti_age_warn="This installer's runtime install script was signed on $TI_PLAN_SIGNED, and this machine's clock says $(ti_clock_says), which can't be right (this installer was built $TI_BUILD_TIME), so how old the plan is can't be told. Nothing is refused for age."
+		ti_age_warn="This installer's install plan was signed on $TI_PLAN_SIGNED, and this machine's clock says $(ti_clock_says), which can't be right (this installer was built $TI_BUILD_TIME), so how old the plan is can't be told. Nothing is refused for age."
 		ti_log "Clock not plausible (now ${now:-unreadable}, built $bt); the plan's age is reported only."
 		return 0
 	fi
@@ -1418,9 +1418,9 @@ ti_check_age() { # backend
 	where=$1
 	[ -n "$where" ] || where=$TI_DEFAULT_BACKEND
 	if [ "$age" -gt "$TI_MAXAGE_LIMIT" ]; then
-		ti_fail "This installer's runtime install script was signed on $TI_PLAN_SIGNED, $((age / 86400)) days ago, past the $((TI_MAXAGE_LIMIT / 86400))-day limit. What it installs may since have been withdrawn or found unsafe. Get a current installer from $where and run that instead; nothing was installed."
+		ti_fail "This installer's install plan was signed on $TI_PLAN_SIGNED, $((age / 86400)) days ago, past the $((TI_MAXAGE_LIMIT / 86400))-day limit. What it installs may since have been withdrawn or found unsafe. Get a current installer from $where and run that instead; nothing was installed."
 	fi
-	ti_age_warn="This installer's runtime install script was signed on $TI_PLAN_SIGNED, $((age / 86400)) days ago (it is meant to be used within $((max / 86400)) days). What it installs may have moved on. A current installer is at $where."
+	ti_age_warn="This installer's install plan was signed on $TI_PLAN_SIGNED, $((age / 86400)) days ago (it is meant to be used within $((max / 86400)) days). What it installs may have moved on. A current installer is at $where."
 	return 0
 }
 
@@ -2233,7 +2233,7 @@ ti_step() { # type fields...
 		case $d in "$TI_APP_DIR" | "$TI_TMP") ti_fail "Step delete: refusing to delete $d" ;; esac
 		rm -rf "$d"
 		;;
-	*) ti_fail "Unknown step '$s_type' in the runtime install script. Download the installer again." ;;
+	*) ti_fail "Unknown step '$s_type' in the runtime setup. Download the installer again." ;;
 	esac
 }
 
@@ -2380,7 +2380,7 @@ ti_needs_eval() {
 			ti_need_missing="$ti_need_missing $i"
 			pk=
 			[ -n "$ti_pm" ] && pk=$(ti_sel npkg "$i" | awk -F'\t' -v m="$ti_pm" '$1 == m { print $2; exit }')
-			case $pk in *[!A-Za-z0-9.+_:\ -]*) ti_fail "The runtime install script names a package with characters that don't belong in one: $pk" ;; esac
+			case $pk in *[!A-Za-z0-9.+_:\ -]*) ti_fail "The runtime setup names a package with characters that don't belong in one: $pk" ;; esac
 			if [ -n "$pk" ]; then
 				ti_need_pkgs="${ti_need_pkgs:+$ti_need_pkgs }$pk"
 			else
@@ -2928,7 +2928,7 @@ ti_arch_note() { # build-arch runtime-name
 	case $1 in any | universal | "$TI_ARCH") return 0 ;; esac
 	case $TI_ARCH:$1 in
 	amd64:x86 | arm64:x86)
-		printf ' -- this machine is 64-bit, but the runtime install script has no 64-bit build of %s for this system' "$2" ;;
+		printf ' -- this machine is 64-bit, but the runtime setup has no 64-bit build of %s for this system' "$2" ;;
 	arm64:amd64)
 		printf ' -- this machine is ARM; this is an Intel/AMD build' ;;
 	*)
@@ -3309,7 +3309,7 @@ ti_capabilities() {
 		f=
 		[ "$ti_ins_who" = ours ] && f=$(ti_fetcher_of "$ti_ins_cmd")
 		if [ -n "$f" ]; then
-			printf '%s\n' "installing the project runs $f, which works out what the project depends on, downloads it and runs its code. The runtime install script names none of that, and no SHA-256 in it covers any of it."
+			printf '%s\n' "installing the project runs $f, which works out what the project depends on, downloads it and runs its code. The runtime setup names none of that, and no SHA-256 in it covers any of it."
 		else
 			printf '%s\n' "what the command that installs the project reaches for, we cannot say. Anything it downloads is decided while you install: this script does not name it and no SHA-256 here covers it."
 		fi
@@ -4001,7 +4001,7 @@ ti_install_main() {
 		ti_run_cmd Launch "$(ti_tilde_all "$(ti_subst "$(ti_sel1 launch)")")"
 		TI_CMD_IND=$ti_cmd_ind0 TI_CMD_CONT=$ti_cmd_cont0
 		if [ "$ti_nrun" -gt 0 ]; then
-			printf '  %s\n' "The setup steps are the runtime install script, written by us, not ${TI_PROJECT:-the project}'s code." | ti_wrap 74 2
+			printf '  %s\n' "The setup steps are the runtime setup, written by us, not ${TI_PROJECT:-the project}'s code." | ti_wrap 74 2
 		fi
 
 		ti_sel note | sed 's/^/\nNOTE: /' | ti_wrap 74 5
@@ -4058,7 +4058,7 @@ ti_install_main() {
 		# ordinary one cannot, and that the program is not ours. Same
 		# order as the screen, and the same strings.
 		if [ -n "$ti_plan_warn" ]; then
-			printf '%s\n\n' "Nothing vouches for this runtime install script, so what follows is only what the script itself says. Each file is still checked against the SHA-256 beside it, but those hashes are the script's own." | ti_wrap 68 0
+			printf '%s\n\n' "Nothing vouches for this runtime setup, so what follows is only what the script itself says. Each file is still checked against the SHA-256 beside it, but those hashes are the script's own." | ti_wrap 68 0
 		fi
 		if [ "$ti_cap_n" = 0 ] && [ -z "$ti_plan_warn" ]; then
 			printf '%s\n\n' "$TI_CAP_ORDINARY Nothing here goes beyond that." | ti_wrap 68 0

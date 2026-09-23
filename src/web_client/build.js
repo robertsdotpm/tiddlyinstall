@@ -211,7 +211,7 @@ function paintFiles(job) {
   if (note) {
     const off = files.some((f) => f.offline);
     note.textContent = files.length
-      ? 'Each of these installers covers every architecture listed beside it, from the one file: it carries a runtime install script per ' +
+      ? 'Each of these installers covers every architecture listed beside it, from the one file: it carries a runtime setup per ' +
         'architecture and picks on the computer it runs on, and its review screen says which one it chose and why before it installs.' +
         (off ? ' An offline installer had to choose when it was built, so it only carries the architectures that were packed into it.' : '')
       : '';
@@ -269,7 +269,7 @@ function paintCatalog(job) {
   if (c && c.changed) {
     const n = Number(c.changes) || 0;
     b.textContent = 'Made with a changed catalogue: ' + n + ' change' + (n === 1 ? '' : 's') + ' made in this browser on the Registry page. ' +
-      'What these installers download and run comes from the runtime install script inside them, and their review screens show it in full before installing.';
+      'What these installers download and run comes from the runtime setup inside them, and their review screens show it in full before installing.';
     b.hidden = false;
   } else b.hidden = true;
 }

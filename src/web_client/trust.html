@@ -86,15 +86,15 @@
   <section data-screen-label="02 How the check works" style="padding:32px 0 36px; border-top:1px solid var(--rule);">
     <div style="font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:0.13em; text-transform:uppercase; color:var(--faint);"><span style="color:var(--accent);">02</span>  How our half is proved</div>
     <h2 style="margin:6px 0 10px; font-size:22px; line-height:1.2; letter-spacing:-0.012em; font-weight:650; color:var(--text-loud);">Your machine checks it, with no internet</h2>
-    <p style="margin:0 0 20px; max-width:64ch; text-wrap:pretty;">Installing Python 3.14 on 64-bit Linux is the same job whichever app needs it. So we sign those instructions once, before anyone asks, and every installer carries a small receipt for the ones it uses.</p>
+    <p style="margin:0 0 20px; max-width:64ch; text-wrap:pretty;">Installing Python 3.14 on 64-bit Linux is the same job whichever app needs it. So we sign each runtime setup once, before anyone asks, and every installer carries a small receipt for the ones it uses.</p>
 
-    <div role="img" aria-label="Step 1: we sign every runtime instruction we publish, in advance. Step 2: your installer carries a receipt for the one it uses. Step 3: your machine checks the receipt against a key already inside the file." style="display:flex; flex-wrap:wrap; margin:0 -6px 16px;">
+    <div role="img" aria-label="Step 1: we sign every runtime setup we publish, in advance. Step 2: your installer carries a receipt for the one it uses. Step 3: your machine checks the receipt against a key already inside the file." style="display:flex; flex-wrap:wrap; margin:0 -6px 16px;">
       <div style="flex:1 1 200px; min-width:0; margin:0 6px 12px;">
         <svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg" style="display:block; width:100%; height:auto;">
           <rect x="1" y="1" width="238" height="118" rx="3" style="fill:none; stroke:var(--accent); stroke-width:1.5;"></rect>
           <text x="18" y="30" style="fill:var(--accent); font-family:var(--mono); font-size:12px; font-weight:600; letter-spacing:1.5px;">1  US</text>
           <text x="18" y="58" style="fill:var(--text-loud); font-family:var(--sans); font-size:15px; font-weight:600;">We sign, in advance</text>
-          <text x="18" y="82" style="fill:var(--text); font-family:var(--sans); font-size:14px;">every runtime instruction</text>
+          <text x="18" y="82" style="fill:var(--text); font-family:var(--sans); font-size:14px;">every runtime setup</text>
           <text x="18" y="102" style="fill:var(--text); font-family:var(--sans); font-size:14px;">we publish, once</text>
         </svg>
       </div>
@@ -104,7 +104,7 @@
           <text x="18" y="30" style="fill:var(--faint); font-family:var(--mono); font-size:12px; font-weight:600; letter-spacing:1.5px;">2  THE FILE</text>
           <text x="18" y="58" style="fill:var(--text-loud); font-family:var(--sans); font-size:15px; font-weight:600;">Your installer carries</text>
           <text x="18" y="82" style="fill:var(--text); font-family:var(--sans); font-size:14px;">a receipt for the</text>
-          <text x="18" y="102" style="fill:var(--text); font-family:var(--sans); font-size:14px;">instructions it uses</text>
+          <text x="18" y="102" style="fill:var(--text); font-family:var(--sans); font-size:14px;">runtime setups it uses</text>
         </svg>
       </div>
       <div style="flex:1 1 200px; min-width:0; margin:0 6px 12px;">
@@ -122,7 +122,7 @@
       <li style="padding:9px 0; border-bottom:1px solid var(--rule);"><strong style="color:var(--text-loud);">No network.</strong> No server, nothing to ask anybody.</li>
       <li style="padding:9px 0; border-bottom:1px solid var(--rule);"><strong style="color:var(--text-loud);">Small and quick.</strong> About half a kilobyte, checked in about a tenth of a second.</li>
       <li style="padding:9px 0; border-bottom:1px solid var(--rule);"><strong style="color:var(--text-loud);">Never expires.</strong> A newer release does not invalidate an installer you already have.</li>
-      <li style="padding:9px 0; border-bottom:1px solid var(--rule);"><strong style="color:var(--text-loud);">Tamper-evident.</strong> Change one byte of the instructions and the receipt stops matching.</li>
+      <li style="padding:9px 0; border-bottom:1px solid var(--rule);"><strong style="color:var(--text-loud);">Tamper-evident.</strong> Change one byte of a runtime setup and the receipt stops matching.</li>
     </ul>
     <p style="margin:0; max-width:64ch; text-wrap:pretty;">This is why an installer built entirely inside your browser can still show that what it installs came from us. The browser never holds a secret key: it only <em>carries</em> signatures, it never makes them.</p>
   </section>

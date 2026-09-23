@@ -1173,14 +1173,14 @@ Function ReadPlan
   Call TiSplitTab
   ${If} $T_field S!= "ti-plan"
     FileClose $0
-    ${FailWith} "The runtime install script is not a ti-plan file."
+    ${FailWith} "The install plan is not a ti-plan file."
     Goto rp_end
   ${EndIf}
   Call TiSplitTab
   IntOp $T_field $T_field + 0
   ${If} $T_field > 1
     FileClose $0
-    ${FailWith} "The runtime install script's format version is newer than this installer understands. Download the installer again."
+    ${FailWith} "The install plan's format version is newer than this installer understands. Download the installer again."
     Goto rp_end
   ${EndIf}
   StrCpy $LineNo 1
@@ -1465,7 +1465,7 @@ Function ReadTarget
       StrCpy $U_a $F2
       Call IsPlainName
       ${If} $U_out = 0
-        ${FailWith} "The runtime install script names a file with a path in it: $U_a"
+        ${FailWith} "The runtime setup names a file with a path in it: $U_a"
         ${Break}
       ${EndIf}
       StrCpy $U_a $0
@@ -1634,7 +1634,7 @@ Function FindMetadata
     ${Log} "Fetching a plan by name: $U_a"
     Call DownloadQuiet
     ${If} $U_out != "OK"
-      ${FailWith} "Couldn't fetch a runtime install script for $TokRuntime/$TokProject from $Backend ($U_out)."
+      ${FailWith} "Couldn't fetch an install plan for $TokRuntime/$TokProject from $Backend ($U_out)."
       Return
     ${EndIf}
     StrCpy $PlanFile "$PLUGINSDIR\plan.txt"
@@ -1719,19 +1719,19 @@ Function CheckPlan
     ; and a red block about the ordinary case teaches people to ignore
     ; red blocks (2026-09-23).
     ${If} $PlanSigState != "unsigned"
-      StrCpy $PlanWarn "The runtime install script inside this file $2 ($PlanSig)."
+      StrCpy $PlanWarn "The install plan inside this file $2 ($PlanSig)."
     ${EndIf}
     Return
   ${EndIf}
   ${If} $PlanKind == "cmdline"
   ${AndIf} $UnsignedOK = 1
-    StrCpy $PlanWarn "The runtime install script from the command line $2 ($PlanSig); /unsigned-plan was given."
+    StrCpy $PlanWarn "The install plan from the command line $2 ($PlanSig); /unsigned-plan was given."
     Return
   ${EndIf}
   ${If} $PlanKind == "cmdline"
-    ${FailWith} "The runtime install script $PlanFile $2 ${TI_PLAN_KEYID} ($PlanSig). Use one saved from <backend>/api/plan/<record>, or add /unsigned-plan if you wrote it yourself."
+    ${FailWith} "The install plan $PlanFile $2 ${TI_PLAN_KEYID} ($PlanSig). Use one saved from <backend>/api/plan/<record>, or add /unsigned-plan if you wrote it yourself."
   ${Else}
-    ${FailWith} "The runtime install script from $Backend $2 ${TI_PLAN_KEYID} ($PlanSig). It may have been changed on the way; nothing was installed."
+    ${FailWith} "The install plan from $Backend $2 ${TI_PLAN_KEYID} ($PlanSig). It may have been changed on the way; nothing was installed."
   ${EndIf}
 FunctionEnd
 
@@ -1814,7 +1814,7 @@ Function CheckNonce
     Return
   ${EndIf}
   ${If} $PlanNonceGot S!= $PlanNonce
-    ${FailWith} "The runtime install script from $Backend is the answer to another request (it carries nonce $PlanNonceGot, not the $PlanNonce this installer sent). It may be an older plan replayed on the way; nothing was installed."
+    ${FailWith} "The install plan from $Backend is the answer to another request (it carries nonce $PlanNonceGot, not the $PlanNonce this installer sent). It may be an older plan replayed on the way; nothing was installed."
     Return
   ${EndIf}
   ${Log} "Nonce $PlanNonce echoed in the plan."
@@ -2039,7 +2039,7 @@ Function CheckAge
     Goto ca_end
   ${EndIf}
   ${If} $0 > ${TI_MAXAGE_LIMIT_DAYS}
-    ${FailWith} "This installer's runtime install script was signed on $PlanSigned, $0 days ago, past the ${TI_MAXAGE_LIMIT_DAYS}-day limit. What it installs may since have been withdrawn or found unsafe. Get a current installer from $Backend and run that instead; nothing was installed."
+    ${FailWith} "This installer's install plan was signed on $PlanSigned, $0 days ago, past the ${TI_MAXAGE_LIMIT_DAYS}-day limit. What it installs may since have been withdrawn or found unsafe. Get a current installer from $Backend and run that instead; nothing was installed."
     Goto ca_end
   ${EndIf}
   StrCpy $AgeWarn "This installer's plan was signed on $PlanSigned, $0 days ago (it is meant to be used within $3 days). What it installs may have moved on. A current installer is at $Backend."
@@ -3100,7 +3100,7 @@ Function .onInit
     Call DownloadQuiet
     ${If} $U_out != "OK"
       Call TakenDownHint
-      ${FailWith} "Couldn't fetch the runtime install script from $Backend/api/plan/$RecHash ($U_out).$U_c Check the internet connection and try again."
+      ${FailWith} "Couldn't fetch the install plan from $Backend/api/plan/$RecHash ($U_out).$U_c Check the internet connection and try again."
       Call InitFail
     ${EndIf}
     StrCpy $PlanFile "$PLUGINSDIR\plan.txt"
@@ -3112,7 +3112,7 @@ Function .onInit
     ${EndIf}
   ${EndIf}
   ${IfNot} ${FileExists} "$PlanFile"
-    ${FailWith} "Can't read the runtime install script $PlanFile."
+    ${FailWith} "Can't read the install plan $PlanFile."
     Call InitFail
   ${EndIf}
   Call CheckPlan
@@ -3130,7 +3130,7 @@ Function .onInit
       ${If} $PlanRec == ""
         StrCpy $PlanRec "none"
       ${EndIf}
-      ${FailWith} "The runtime install script is for record $PlanRec, but this installer's record is $RecHash. Nothing was installed."
+      ${FailWith} "The install plan is for record $PlanRec, but this installer's record is $RecHash. Nothing was installed."
       Call InitFail
     ${EndIf}
   ${Else}
@@ -3140,7 +3140,7 @@ Function .onInit
   ; which name it answers
   ${If} $PlanReqWant != ""
   ${AndIf} $PlanReq S!= $PlanReqWant
-    ${FailWith} "The runtime install script from $Backend is not the answer for $TokRuntime/$TokProject. Nothing was installed."
+    ${FailWith} "The install plan from $Backend is not the answer for $TokRuntime/$TokProject. Nothing was installed."
     Call InitFail
   ${EndIf}
   ; ...and, for a fetched plan, the answer to *this* request rather than a
@@ -3157,13 +3157,13 @@ Function .onInit
   StrCpy $U_b 12
   Call TiIsB32
   ${If} $U_out = 0
-    ${FailWith} "The runtime install script's appid '$AppId' isn't 12 base32 characters."
+    ${FailWith} "The install plan's appid '$AppId' isn't 12 base32 characters."
     Call InitFail
   ${EndIf}
   StrCpy $U_a $RootName
   Call IsPlainName
   ${If} $U_out = 0
-    ${FailWith} "The runtime install script's rootname '$RootName' isn't a plain folder name."
+    ${FailWith} "The install plan's rootname '$RootName' isn't a plain folder name."
     Call InitFail
   ${EndIf}
   ${If} $AppName == ""
@@ -3176,12 +3176,12 @@ Function .onInit
     StrCpy $U_a $SrcName
     Call IsPlainName
     ${If} $U_out = 0
-      ${FailWith} "The runtime install script's source file name '$SrcName' isn't a plain file name."
+      ${FailWith} "The install plan's source file name '$SrcName' isn't a plain file name."
       Call InitFail
     ${EndIf}
   ${EndIf}
   ${If} $TgtLine = 0
-    ${FailWith} "This app has no runtime install script for this version of Windows ($WinVer build $WinBuild, $Arch)."
+    ${FailWith} "This app has no runtime setup for this version of Windows ($WinVer build $WinBuild, $Arch)."
     Call InitFail
   ${EndIf}
 
@@ -3903,7 +3903,7 @@ FunctionEnd
 ; one -- an ordinary Python app trips one finding -- and a promise that
 ; only appears when nothing is found is one most people never see.
 ; Every file still prints its own `sha256` below.
-!define TI_CAP_ORDINARY "An ordinary install unpacks the files it names, each one checked against a SHA-256 in it, into folders of its own, for you alone, and runs nothing but the runtime install script we wrote."
+!define TI_CAP_ORDINARY "An ordinary install unpacks the files it names, each one checked against a SHA-256 in it, into folders of its own, for you alone, and runs nothing but the runtime setup we wrote."
 
 ; Add one finding. $U_a is the sentence.
 Function CapAdd
@@ -4121,7 +4121,7 @@ Function CapScan
       ${EndIf}
     ${EndIf}
     ${If} $2 != ""
-      StrCpy $U_a "installing the project runs $2, which works out what the project depends on, downloads it and runs its code. The runtime install script names none of that, and no SHA-256 in it covers any of it."
+      StrCpy $U_a "installing the project runs $2, which works out what the project depends on, downloads it and runs its code. The runtime setup names none of that, and no SHA-256 in it covers any of it."
     ${Else}
       StrCpy $U_a "what the command that installs the project reaches for, we cannot say. Anything it downloads is decided while you install: this script does not name it and no SHA-256 here covers it."
     ${EndIf}
@@ -4896,7 +4896,7 @@ Function WriteSummary
   ${AndIf} $RtState != "ok"
     StrCpy $CapInd1 "  "
     StrCpy $CapInd2 "  "
-    StrCpy $U_a "The setup steps are the runtime install script, written by us, not the project's own code."
+    StrCpy $U_a "The setup steps are the runtime setup, written by us, not the project's own code."
     Call SumPara
   ${EndIf}
   ${If} $TgtNote != ""
