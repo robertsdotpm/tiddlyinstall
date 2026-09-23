@@ -38,7 +38,7 @@
 import { ApiError, pageFromDisk } from './api.js';
 import { noNetworkGet } from '../shared/github.js';
 import { validate, runJob, planPackFiles, MAX_PACK, MAX_MAC_PACK } from '../shared/builder.js';
-import { resolve } from '../shared/resolve.js';
+import { resolve, setRevoked } from '../shared/resolve.js';
 import { writeInstallerLayout, streamInstallerLayout, parseFooterTail, bytesToHex, packTarSize } from '../shared/tifile.js';
 import { sha256Stream } from './lib/sha.js';
 import { packBudget, packEnv } from '../shared/form-job.js';
@@ -83,10 +83,38 @@ function view(j) {
   return v;
 }
 
+// The revocation list baked into this page (tools/build_site.py). Without
+// it the page's resolver would happily write a plan naming a build that
+// has been withdrawn: builder.js calls setRevoked(), but nothing in the
+// page ever supplied the hashes, so until 2026-09-23 it was a no-op here
+// and only the build server ever made the withdrawn-build choice.
+//
+// An online installer was still covered by the engine's own fetch of
+// /api/revocations at install time. A fully offline one was not covered
+// anywhere, which is the case this closes.
+// Read per build, not cached: a cache here held the first answer for the
+// life of the tab, which is a stale-state hazard for no measurable gain
+// -- it is one small JSON parse per build. It also made the regression
+// test below impossible to write, which is usually the same smell.
+export function pageRevocations() {
+  try {
+    const n = document.getElementById('ti-revocations');
+    if (n) {
+      const d = JSON.parse(n.textContent);
+      if (d && Array.isArray(d.sha)) return { issued: String(d.issued || ''), sha: d.sha };
+    }
+  } catch (e) { /* a page built before this block, or a damaged one: revoke nothing */ }
+  return { issued: '', sha: [] };
+}
+
 async function env() {
   const eff = await catalog();
   const e = { catalog: eff.catalog, overlay: eff, base: (plat) => blockBytes('base-' + plat), backend: offlineInfo.backend || '',
-    embedPlan: true, packRuntimes: true, githubWho: 'page' };
+    embedPlan: true, packRuntimes: true, githubWho: 'page',
+    revoked: () => pageRevocations().sha };
+  // On the catalogue itself, not only through builder.js: the offline
+  // path resolves in packPlan() below, which never goes near that call.
+  setRevoked(e.catalog, pageRevocations().sha);
   // A GitHub source is pinned by its commit, and which commit a branch
   // or tag is -- and which files are at the top of it -- comes from
   // api.github.com, which answers browsers (src/shared/github.js). A copy

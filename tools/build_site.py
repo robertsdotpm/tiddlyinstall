@@ -43,6 +43,7 @@ import subprocess
 import sys
 import urllib.parse
 import tempfile
+import time
 import zipfile
 import zlib
 
@@ -482,6 +483,37 @@ def offline_page(catalog_dir, backend):
         report.append("  plan key %s" % read(keyfile).strip()[:16])
     else:
         report.append("  plan key NONE (%s not found); Verify cannot check plan signatures" % keyfile)
+    # The revocation list, so the page's resolver makes the same choice
+    # the server's does. resolve.js setRevoked() says it outright -- "the
+    # page and the server must make the same choice from the same list" --
+    # but until 2026-09-23 only the build server was ever handed one, so
+    # builder.js's setRevoked call was a no-op in the page and a
+    # page-built installer got no resolve-time revocation at all. Online
+    # the engine's own fetch covered it; a fully offline installer had
+    # nothing.
+    #
+    # The hashes and when the list was last touched, not the signed
+    # document: a signature on a list embedded in the page that checks it
+    # would be vouching for itself. `issued` is here so the page can say
+    # how old its copy is, which is the only honest thing a saved copy can
+    # offer about it.
+    takedown = os.path.join(ROOT, "src/build_server/data/takedown.txt")
+    revoked, issued = [], ""
+    if os.path.isfile(takedown):
+        for line in read(takedown).splitlines():
+            m = re.match(r"^(?:sha|file)[ \t]+([0-9a-fA-F]{64})\s*$", line)
+            if m:
+                h = m.group(1).lower()
+                if h not in revoked:
+                    revoked.append(h)
+        issued = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(os.path.getmtime(takedown)))
+    revoked.sort()
+    blocks.append(data_block("ti-revocations",
+                             json_block({"issued": issued, "sha": revoked}), "application/json"))
+    report.append("  revocations: %d withdrawn file%s%s" %
+                  (len(revoked), "" if len(revoked) == 1 else "s",
+                   (", list of " + issued) if issued else " (no takedown.txt; the page revokes nothing)"))
+
     for folder, data in chunks:
         blocks.append(data_block("ti-cat-" + folder, b64_block(data), extra=f' data-folder="{folder}"'))
     packed = sum(len(d) for _, d in chunks)

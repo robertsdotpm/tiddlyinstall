@@ -170,6 +170,59 @@ try {
       if (files) builds[`${runtime}/${mode}`] = { status: 'done', record: job.result.record, files };
     }
   }
+  // A withdrawn build is not written into a page-built installer.
+  //
+  // resolve.js setRevoked() says the rule outright -- "the page and the
+  // server must make the same choice from the same list" -- but until
+  // 2026-09-23 only the build server was ever handed one. builder.js
+  // called setRevoked() with nothing, so the call was a no-op here and a
+  // page-built installer named whatever the catalogue said, withdrawn or
+  // not. An online installer was still covered by the engine fetching
+  // /api/revocations at install time; a fully offline one was covered
+  // nowhere, which is the case this is about.
+  //
+  // It calibrates itself rather than naming a hash: build once, take a
+  // SHA-256 the installer actually chose, withdraw *that*, build again.
+  // A hard-coded hash would stop testing anything the day the catalogue
+  // moved, and would look just as green.
+  {
+    const body = { name: 'Hello python', project: 'hello', source: { kind: 'inline' },
+      files: { 'hello.py': 'print("hello from python")' }, runtime: 'python', mode: 'C',
+      platforms: ['linux'], launch: '{runtime} hello.py', console: true, menu: true };
+    const buildText = `(async () => {
+      let j = await tiLocalApi.request('/api/jobs', { method: 'POST', body: ${JSON.stringify(body)} });
+      while (j.status !== 'done' && j.status !== 'failed') { await new Promise((r) => setTimeout(r, 100)); j = await tiLocalApi.request('/api/jobs/' + j.id); }
+      if (j.status !== 'done') return { err: j.error };
+      const f = j.result.files[0];
+      const txt = await fetch(f.url).then((r) => r.arrayBuffer()).then((b) => new TextDecoder('latin1').decode(b));
+      return { txt: txt };
+    })()`;
+    const first = await js(buildText);
+    // A `file` line of the plan, not any 64 hex characters in the file:
+    // the first hash in there is the project's own source, and revoking
+    // that changes no runtime choice at all -- which is how the first
+    // version of this check passed the fix and failed the control.
+    const m = first.txt && /\nfile\t[^\t\n]*\t[^\t\n]*\t([0-9a-f]{64})\t/.exec(first.txt);
+    const pick = m && m[1];
+    ok(!!pick, 'a page-built installer names a runtime download by its SHA-256', first.err || 'no file line');
+    if (pick) {
+      await js(`(() => { document.getElementById('ti-revocations').textContent =
+        JSON.stringify({ issued: '2026-01-01T00:00:00Z', sha: [${JSON.stringify(pick)}] }); return 1; })()`);
+      const second = await js(buildText);
+      // Either it picked a different build, or the target had nothing
+      // left and it said so. Both are the revocation being applied; only
+      // naming the withdrawn file again is the bug.
+      const named = second.txt ? second.txt.indexOf(pick) >= 0 : false;
+      const said = /withdrawn/i.test(second.err || '');
+      ok(!named && (second.txt || said),
+        'and once that hash is withdrawn, the next build does not name it',
+        named ? 'still named' : (second.err || 'ok'));
+      // Put it back, so nothing after this runs against a withdrawn catalogue.
+      await js(`(() => { document.getElementById('ti-revocations').textContent =
+        JSON.stringify({ issued: '', sha: [] }); return 1; })()`);
+    }
+  }
+
   // Mode A is refused here, with a clear message.
   const a = await js(`tiLocalApi.request('/api/jobs', { method: 'POST', body: { runtime: 'python', mode: 'A', source: { kind: 'inline' }, files: { 'a/__main__.py': 'x' } } }).then(() => 'accepted', (e) => e.message)`);
   ok(/come from the server/.test(a), 'mode A is refused offline', a);
