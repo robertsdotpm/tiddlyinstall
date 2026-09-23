@@ -83,6 +83,17 @@ ok(/choices/i.test(r.signing), '...and names the choices separately');
 ok(!/runtime install script/i.test(r.signing),
   '...and never calls two different things by one name', r.signing.slice(0, 200));
 
+// The chain a stranger can follow, added 2026-09-23: which server the
+// file names, and what did the checking. Both were true before and
+// neither was said, so a reader could not tell the check was made
+// against something other than the file being checked.
+ok(/where it says it came from/i.test(r.signing), 'it names where the file says it came from', r.signing.slice(0, 200));
+ok(/what checked it/i.test(r.signing), '...and what did the checking');
+ok(/a different file from the one being checked/i.test(r.signing),
+  '...and that the checker is not the thing being vouched for');
+ok(/does not, by itself, say whose key it is/i.test(r.signing),
+  '...and does not overclaim: agreement is not proof of whose key it is');
+
 /* ---------- the signature removed ---------- */
 r = await verify(unsigned);
 ok(!r.error, 'an unsigned installer is read without error', r.error);

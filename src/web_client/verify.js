@@ -691,12 +691,48 @@ async function paint(file, sha, info) {
       // screen says so. Here the checker is a different artifact that
       // arrived by a different route, which is the whole reason this
       // page can say something the installer cannot.
+      // What did the checking, and what that is worth, is its own row
+      // below -- said once, where a reader can see the whole chain
+      // together, rather than twice in different words.
       sign.push(['The choices', ok
         ? 'are signed by the TiddlyInstall key <code>' + esc(keyId(baked)) + '</code>, so our build server produced this file and nothing has changed it since'
-          + '<br><span class="small muted">checked here, by this page, against a key this page carries - not by the installer against a key inside itself</span>'
         : '<strong>carry a signature that does not check out</strong> against key <code>' + esc(keyId(baked)) + '</code>']);
     }
   }
+  // Where this file says it came from, and what that is worth.
+  //
+  // The chain a stranger can follow: the file names a server, this page
+  // carries a key, and the signature either checks out against that key
+  // or does not. All three were already true; none of them was said, so
+  // a reader had no way to see that the check was made against something
+  // other than the file being checked (the operator, 2026-09-23).
+  //
+  // What it can and cannot do is stated rather than implied. A file
+  // naming a server that publishes a different key is provably wrong. A
+  // hostile file naming a hostile server is perfectly consistent, so
+  // agreement here is not proof of anything -- the stamp buys
+  // falsifiability, not authenticity.
+  if (info.record) {
+    const signedStamp = info.plan && docSignature(info.plan, 'ti-plan').signed;
+    sign.push(['Where it says it came from', recBackend
+      ? '<code>' + esc(recBackend) + '</code>' +
+        (signedStamp
+          ? '<br><span class="small muted">inside what the signature covers: the plan names this record by its hash, so this cannot be edited without breaking the signature above</span>'
+          : '<br><span class="small muted">a claim, not a signed one: nothing here stops it saying anything. It is worth checking against that server, not against this file</span>')
+      : 'nowhere: it was built in a web page, with no server' +
+        '<br><span class="small muted">a page holds no signing key and never will, so there is nothing to have signed it</span>']);
+  }
+  {
+    const baked = bakedKey();
+    if (baked) {
+      sign.push(['What checked it', 'this page, against the key it carries, <code>' + esc(keyId(baked)) + '</code>' +
+        '<br><span class="small muted">a different file from the one being checked, fetched a different way -- which is the whole reason this page can say ' +
+        'something the installer cannot, since the installer checks itself against a key inside itself. ' +
+        'That this page and the file agree means neither has been altered on its own; it does not, by itself, say whose key it is. ' +
+        'What ties that key to us is that it is published: on the Trust page, in the release ledger, and in every copy of this page already saved to somebody else\'s disk</span>']);
+    }
+  }
+
   rows(el('v-signing'), sign);
 
   el('v-out').hidden = false;
