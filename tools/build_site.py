@@ -770,7 +770,13 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("-o", "--out", default=os.path.join(ROOT, "out"))
     ap.add_argument("--catalog", help="folder with catalog.gz and runtimes.json (default: make them)")
-    ap.add_argument("--backend", default="http://10.0.1.76:8080",
+    # The public server, not a machine on someone's desk. This was a lab
+    # address until 2026-09-23, and deploy.sh never passes --backend, so
+    # every build carried it -- including the one meant to be published,
+    # whose no-JavaScript fallback offered a link to it (2026-09-23).
+    # It has to agree with DEFAULT_REMOTE in src/web_client/api.js,
+    # TI_BACKEND in base.nsi and TI_DEFAULT_BACKEND in ti-engine.sh.
+    ap.add_argument("--backend", default="https://tiddlyinstall.warpgate.io",
                     help="build server named in records the page makes itself")
     ap.add_argument("--multi", action="store_true", help="also write the site as separate pages to out/site/")
     a = ap.parse_args()

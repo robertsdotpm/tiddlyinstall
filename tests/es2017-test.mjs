@@ -149,5 +149,44 @@ const INVENTED = [
 const invented = INVENTED.filter((n) => html.indexOf(n) >= 0);
 ok(!invented.length, 'no fabricated build history on the published page', invented.join(', '));
 
+// No private addresses on the published page, bar one that is known.
+//
+// tools/build_site.py's --backend defaulted to a machine on the lab
+// network, and deploy.sh never passes --backend, so every build carried
+// it -- including the one to be published, whose no-JavaScript fallback
+// offered "the build server's simple form" as a link to it (2026-09-23).
+// Three occurrences, in a file whose whole promise is that it works
+// without a server.
+//
+// RFC 1918 only. Loopback is not checked: 127.0.0.1 and localhost appear
+// a dozen times in the example projects (a sample app binding a port) and
+// in the signing-service address check, and all of that is correct.
+//
+// The exception is the catalogue policy's mirror_base, which is a real
+// service on the LAN build server and not a default anyone forgot.
+// Repointing it means changing the public surface of a machine that runs
+// something else of the operator's -- an alias for the mirror tree,
+// directory listings off, then the policy changed -- and design.md
+// section 1.3 records that as the operator's to do, not an agent's. So it
+// is named here rather than waved through: any *other* private address is
+// a failure, and when the mirror moves this check gets stricter by
+// deleting a line.
+const PRIVATE = /\b(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b/g;
+const KNOWN_MIRROR = '10.0.1.76';
+const addrs = [...new Set(html.match(PRIVATE) || [])];
+const unexpected = addrs.filter((a) => a !== KNOWN_MIRROR);
+ok(!unexpected.length, 'no unexpected private addresses on the published page', unexpected.join(', '));
+
+// And the known one is only ever the mirror. If it turns up somewhere
+// else -- a link, a default, a record -- that is the thing this check is
+// really for.
+const mirrorOnly = [];
+for (let i = html.indexOf(KNOWN_MIRROR); i >= 0; i = html.indexOf(KNOWN_MIRROR, i + 1)) {
+  const around = html.slice(Math.max(0, i - 160), i);
+  if (around.indexOf('mirror_base') < 0) mirrorOnly.push('...' + html.slice(Math.max(0, i - 90), i + 40).replace(/\s+/g, ' ') + '...');
+}
+ok(!mirrorOnly.length, 'the lab address appears only as the catalogue mirror',
+  mirrorOnly.slice(0, 3).join('\n      '));
+
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed ? 1 : 0);
