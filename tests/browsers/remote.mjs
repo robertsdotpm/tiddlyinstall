@@ -30,11 +30,32 @@ export function findMachine(machines, name) {
   return machines.find((m) => m.name === name || (m.os === 'windows' && 'win' + m.name === name));
 }
 
+// Ports this process has already handed out. freePort() asks the kernel
+// for a free one and then closes the socket, so between the answer and
+// the `ssh -L` that binds it there is a window -- and with --jobs 4 four
+// of these are open at once. Two jobs getting the same number means
+// ExitOnForwardFailure kills the second ssh before its driver ever
+// starts, and the run reports "driver not ready: connection refused",
+// which reads as a broken machine and is not one. Seen across every
+// machine and browser on 2026-09-23; the same command by hand worked
+// every time, which is what a race looks like.
+const handedOut = new Set();
+
 export function freePort() {
   return new Promise((res, rej) => {
-    const s = net.createServer();
-    s.once('error', rej);
-    s.listen(0, '127.0.0.1', () => { const p = s.address().port; s.close(() => res(p)); });
+    const tryOne = (left) => {
+      const s = net.createServer();
+      s.once('error', rej);
+      s.listen(0, '127.0.0.1', () => {
+        const p = s.address().port;
+        s.close(() => {
+          if (!handedOut.has(p)) { handedOut.add(p); return res(p); }
+          if (left <= 0) return rej(new Error('no free port that this run has not already used'));
+          tryOne(left - 1);
+        });
+      });
+    };
+    tryOne(20);
   });
 }
 
@@ -184,24 +205,38 @@ export class Remote {
   }
 
   // The machine's 127.0.0.1:remotePort reaches `to` (host:port) from here,
-  // on a connection of its own. Resolves to the ssh process, or to null
-  // with the reason when the SSH server refuses remote forwarding.
+  // on a connection of its own. Resolves to {proc, port}, or to null with
+  // the reason when the SSH server refuses remote forwarding.
+  //
+  // Pass 0 and the remote sshd picks the port, which is the only side
+  // that knows what is free there. The caller used to pick a random
+  // number in 30000-39000 and hope: nothing checked it against the
+  // remote machine at all, and with four jobs at once two of them
+  // choosing the same number is ordinary. What that cost was invisible
+  // -- "no reverse tunnel" is a note, not a failure, so the run went
+  // ahead and simply never opened the served page, which is the half
+  // that exercises talking to a build server (2026-09-23).
   async startReverse(remotePort, to) {
     // -v: ssh says "remote forward success" or "...failed" once the server answers.
     const p = spawn('ssh', [...SSH_OPTS, '-v', '-o', 'ExitOnForwardFailure=yes', '-N', '-R', `${remotePort}:${to}`, this.ssh], { stdio: ['ignore', 'ignore', 'pipe'] });
-    let err = '';
+    let err = '', allocated = 0;
     const verdict = await new Promise((res) => {
       const t = setTimeout(() => res('no answer from the SSH server in 45 s'), 45000);
       p.stderr.on('data', (d) => {
         err += d;
         if (/remote forward success/i.test(err)) { clearTimeout(t); res(null); }
+        // With -R 0: the server says which port it took.
+        const a = /Allocated port (\d+) for remote forward/i.exec(err);
+        if (a) allocated = Number(a[1]);
         const m = /^.*(remote port forwarding failed|forwarding failed).*$/im.exec(err);
         if (m) { clearTimeout(t); res(m[0].trim()); }
       });
       p.once('exit', () => { clearTimeout(t); res((err.trim().split('\n').filter((l) => !/^debug/.test(l)).pop()) || 'ssh exited'); });
     });
     if (verdict) { p.kill(); return { proc: null, why: verdict }; }
-    return { proc: p };
+    const port = remotePort || allocated;
+    if (!port) { p.kill(); return { proc: null, why: 'the SSH server did not say which port it took' }; }
+    return { proc: p, port };
   }
 
   // Stops any of the harness's drivers (and the browsers they started) on

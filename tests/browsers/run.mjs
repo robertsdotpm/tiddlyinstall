@@ -306,9 +306,9 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
     const port = await freePort();
     let reverse = null;
     if (served) {
-      const remotePort = 30000 + Math.floor(Math.random() * 9000);
-      const r = await remote.startReverse(remotePort, SERVER.replace(/^http:\/\//, ''));
-      if (r.proc) { reverse = { remotePort }; revProc = r.proc; } else { t.note('served', 'no reverse tunnel: ' + r.why); detail.served = 'no tunnel: ' + r.why; }
+      // 0: the remote sshd picks a port it knows is free there.
+      const r = await remote.startReverse(0, SERVER.replace(/^http:\/\//, ''));
+      if (r.proc) { reverse = { remotePort: r.port }; revProc = r.proc; } else { t.note('served', 'no reverse tunnel: ' + r.why); detail.served = 'no tunnel: ' + r.why; }
     }
     let js, setFile, pageErrors;
     remote.stopDrivers(entry);
