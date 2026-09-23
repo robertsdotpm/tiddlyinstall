@@ -452,11 +452,11 @@ async function paintPage(file, sha, text) {
     const more = [
       ['Signed ledger', sigOk
         ? 'yes, by the TiddlyInstall key <code>' + esc(keyId(baked)) + '</code>'
-        : '<strong>no</strong> &mdash; ' + (baked ? 'the signature does not check out' : 'this page carries no key to check it with')],
+        : '<strong>no</strong> -- ' + (baked ? 'the signature does not check out' : 'this page carries no key to check it with')],
       ['Its chain', chain.ok
         ? 'holds: ' + entries.length + ' release' + (entries.length === 1 ? '' : 's') +
           ', root <code>' + esc(chain.root.slice(0, 16)) + '</code>'
-        : '<strong>broken</strong> &mdash; ' + esc(chain.why)],
+        : '<strong>broken</strong> -- ' + esc(chain.why)],
       ['These bytes', hit
         ? '<strong>published</strong> as release ' + hit.seq + ' on ' + esc(hit.date) + ', from ' + rev(hit.rev)
         : '<strong>not in the ledger</strong>'],
@@ -465,23 +465,30 @@ async function paintPage(file, sha, text) {
     // root as of its own day inside it; if the log now disagrees about
     // what that root was, the log has been rewritten since -- and the
     // witness is a file the operator of that server does not hold.
+    let rewritten = false;
     if (mineLedger && mineLedger.seq > 0) {
       const was = rootAt(entries, mineLedger.seq, hashHex);
+      rewritten = !!was && was !== mineLedger.root;
       more.push(['Rewritten since your copy?', !was
         ? 'cannot be told: the ledger is shorter than your copy expects (' + entries.length +
           ' entries, yours witnessed ' + mineLedger.seq + ')'
         : was === mineLedger.root
-          ? 'no &mdash; it still agrees with the root your own copy was built with'
-          : '<strong>yes</strong> &mdash; your copy was built when release ' + mineLedger.seq +
+          ? 'no -- it still agrees with the root your own copy was built with'
+          : '<strong>yes</strong> -- your copy was built when release ' + mineLedger.seq +
             ' chained to <code>' + esc(String(mineLedger.root).slice(0, 16)) + '</code>, and this ledger says <code>' +
             esc(was.slice(0, 16)) + '</code>. One of them has been changed']);
     }
     rows(el('v-page-facts'), facts.concat(more));
-    el('v-page-note').innerHTML = hit && sigOk && chain.ok
-      ? 'Published by us, on the date above. The ledger is append-only and every copy of this page carries the root ' +
-        'as of the day it was built, so rewriting it means contradicting copies other people already hold.'
-      : 'A file not in the ledger is not proof of anything by itself &mdash; it may simply be older than the ledger, ' +
-        'or built from a checkout rather than published. Compare the SHA-256 with the one published for that commit.';
+    el('v-page-note').innerHTML = rewritten
+      ? '<strong>Whatever else this says, treat it as unresolved.</strong> The ledger is still signed by our key and ' +
+        'still chains to its own stated root -- a signature cannot catch a rewrite, because we hold the key. ' +
+        'What caught it is your own copy, which was built carrying the root of the day and does not agree. Either ' +
+        'this ledger has been changed, or your copy has.'
+      : hit && sigOk && chain.ok
+        ? 'Published by us, on the date above. The ledger is append-only and every copy of this page carries the root ' +
+          'as of the day it was built, so rewriting it means contradicting copies other people already hold.'
+        : 'A file not in the ledger is not proof of anything by itself -- it may simply be older than the ledger, ' +
+          'or built from a checkout rather than published. Compare the SHA-256 with the one published for that commit.';
   } catch (e) {
     el('v-page-note').textContent = 'The release ledger could not be fetched: ' + errorText(e);
   }
@@ -648,9 +655,9 @@ async function paint(file, sha, info) {
     if (!s.signed) {
       sign.push(['The runtime install script', 'is <strong>not signed</strong> (' + esc(s.why) + '). ' +
         (info.record && !recBackend
-          ? 'It was worked out in a web page rather than by our build server &mdash; a page has no signing key &mdash; so nothing here can say where it came from'
+          ? 'It was worked out in a web page rather than by our build server -- a page has no signing key -- so nothing here can say where it came from'
           : 'Nothing here can say where it came from') +
-        '<br><span class="small muted">what it does is listed above, and every file it names is checked against the SHA-256 beside it &mdash; but those hashes are the script\'s own</span>']);
+        '<br><span class="small muted">what it does is listed above, and every file it names is checked against the SHA-256 beside it -- but those hashes are the script\'s own</span>']);
     } else if (!baked) {
       sign.push(['The runtime install script', 'is signed, but this page carries no key to check it against. Set a server and it can be checked']);
     } else {

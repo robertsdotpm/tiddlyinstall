@@ -544,7 +544,7 @@ function paintApiFooter() {
   const same = footerEl.querySelector('.settings-same');
   if (same) {
     same.hidden = !apiSameOrigin();
-    same.textContent = 'Served from this site, so trusting this page is trusting the server \u2014 ' +
+    same.textContent = 'Served from this site, so trusting this page is trusting the server -- ' +
       'one decision, not two.';
   }
 }

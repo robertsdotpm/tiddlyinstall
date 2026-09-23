@@ -109,7 +109,7 @@ CORE_MODULES = [
     *web_lib("bignum.js", "der.js", "rsa.js", "ec.js"),
     *web_lib("ed25519.js", "cryptox.js"),
     *web_lib("inflate.js", "deflate.js", "zlib.js"),
-    *shared("tifile.js", "icon.js", "ledger.js"),
+    *shared("tifile.js", "icon.js", "ledger.js", "merkle.js", "rtscript.js"),
     *web_lib("x509.js", "legacy.js", "pkcs12.js"),
     *web_lib("authenticode.js", "pgp.js"),
     *web("sign-services.js", "sign-ui.js"),

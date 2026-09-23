@@ -1116,6 +1116,13 @@ ti_doc_sig() { # file kind
 # file, so an unsigned one is used with a warning.
 ti_check_plan() {
 	ti_plan_warn=
+	# ok | unsigned | bad | cannot. Separate from ti_plan_warn, which is
+	# now only for the findings that deserve the top of the screen:
+	# absence of a signature is the normal state of an installer built in
+	# a page, and shouting about the normal case is how people learn to
+	# ignore shouting (2026-09-23). A signature that does NOT match is a
+	# different finding and keeps the warning.
+	ti_plan_sigstate=ok
 	sig=$(ti_plan_sig "$TI_PLAN")
 	ti_log "Plan signature: $sig (key ${TI_PLAN_KEYID:-none})"
 	why=${sig#*:}
@@ -1134,14 +1141,22 @@ ti_check_plan() {
 	# the opposite of the useful thing, and the parenthetical that gave
 	# it away was doing all the work.
 	case $sig in
-	unsigned) ti_sig_verb='carries no signature by the TiddlyInstall key' ;;
-	bad:*)    ti_sig_verb='has a signature that does NOT match the TiddlyInstall key' ;;
-	cannot:*) ti_sig_verb='has a signature that could not be checked here' ;;
-	*)        ti_sig_verb='is not signed by the TiddlyInstall key' ;;
+	unsigned) ti_sig_verb='carries no signature by the TiddlyInstall key'; ti_plan_sigstate=unsigned ;;
+	bad:*)    ti_sig_verb='has a signature that does NOT match the TiddlyInstall key'; ti_plan_sigstate=bad ;;
+	cannot:*) ti_sig_verb='has a signature that could not be checked here'; ti_plan_sigstate=cannot ;;
+	*)        ti_sig_verb='is not signed by the TiddlyInstall key'; ti_plan_sigstate=bad ;;
 	esac
 	case $TI_PLAN_KIND in
 	embedded)
-		ti_plan_warn="The runtime install script inside this file $ti_sig_verb ($why). It is only as trustworthy as the file carrying it."
+		# Only a signature that fails to match reaches WARNINGS: that is
+		# evidence the bytes changed after somebody signed them. An
+		# absent one is said plainly in TRUST AND SECURITY instead --
+		# every installer built in a page has no signature, because a
+		# page holds no key, and the screen used to meet that with a red
+		# block that read like a virus alert about our own output.
+		if [ "$ti_plan_sigstate" != unsigned ]; then
+			ti_plan_warn="The runtime install script inside this file $ti_sig_verb ($why)."
+		fi
 		;;
 	cmdline)
 		[ "$opt_unsigned" = 1 ] || ti_fail "The runtime install script $TI_PLAN $ti_sig_verb ${TI_PLAN_KEYID:-} ($why). Use one saved from <backend>/api/plan/<record>, or add --unsigned-plan if you wrote it yourself."
@@ -2647,7 +2662,7 @@ ti_elevate() { # extra args...
 		# without a signature (embedded, or --unsigned-plan) stays accepted.
 		[ -n "$TI_REC" ] && set -- "$@" --record="$TI_REC"
 		[ -n "$TI_PLAN" ] && set -- "$@" --plan="$TI_PLAN"
-		[ -n "$TI_PLAN" ] && [ -n "$ti_plan_warn" ] && set -- "$@" --unsigned-plan
+		[ -n "$TI_PLAN" ] && [ "$ti_plan_sigstate" != ok ] && set -- "$@" --unsigned-plan
 	fi
 	[ -n "$TI_ORIGIN" ] && set -- "$@" --ti-origin="$TI_ORIGIN"
 	[ -n "$opt_backend" ] && set -- "$@" --backend="$opt_backend"
@@ -3487,7 +3502,7 @@ ti_install_main() {
 	ti_cap_n=$(wc -l < "$ti_caps" | tr -d ' ')
 	{
 		printf 'What this install can do that an ordinary one cannot: %s found' "$ti_cap_n"
-		[ -n "$ti_plan_warn" ] && printf ', and nothing vouches for the plan they were read from'
+		[ "$ti_plan_sigstate" != ok ] && printf ', and nothing vouches for the plan they were read from'
 		printf '.\n'
 		sed 's/^/  - /' "$ti_caps"
 	} >> "$TI_LOG"
@@ -3633,7 +3648,7 @@ ti_install_main() {
 		#
 		# It used to print the same headline for both, which put the
 		# loudest claim on the screen in the case where it means least.
-		if [ -z "$ti_plan_warn" ] && [ -n "$TI_PLAN_KEYID" ]; then
+		if [ "$ti_plan_sigstate" = ok ] && [ -n "$TI_PLAN_KEYID" ]; then
 			if [ "$TI_PLAN_KIND" = fetched ]; then
 				printf '  SIGNED BY TIDDLYINSTALL\n'
 				printf '    key %s\n' "$TI_PLAN_KEYID"
@@ -3643,10 +3658,18 @@ ti_install_main() {
 				printf '  %s\n' 'That signature is checked by this file, against a key inside this file. It is worth exactly as much as the file itself, so it is not a second opinion: use the SHA-256 above for that.' | ti_wrap 74 2
 			fi
 		fi
-		if [ -n "$ti_plan_warn" ]; then
+		if [ "$ti_plan_sigstate" = unsigned ]; then
+			# Not a warning: the ordinary state of an installer built in
+			# a page, which has no key to sign with. What it costs is
+			# said once, plainly, and the sentence that used to be here
+			# -- "anybody can write one" -- is gone: it was true of every
+			# installer ever made, and aimed at our own output.
+			printf '  %s\n' 'Not signed. Only our build server holds the key, and a page building in a browser has no way to reach it, so nothing here can say where this script came from.' | ti_wrap 74 2
+			printf '  %s\n' 'What it does is listed below in full, and every file it names is checked against the SHA-256 beside it -- though those hashes come from the script itself, so they show a download arrived unchanged and say nothing about what it is.' | ti_wrap 74 2
+		elif [ -n "$ti_plan_warn" ]; then
 			# The !! line is already under WARNINGS; this is the part
 			# that is not a warning but a limit on everything above.
-			printf '  %s\n' "Unsigned (see WARNINGS). Nothing vouches for it, so what this screen says is only what the script itself says, and anybody can write one. Each file is still checked against the SHA-256 beside it, but those hashes are the script's own: they show a download arrived unchanged, and say nothing about what it is." | ti_wrap 74 2
+			printf '  %s\n' "See WARNINGS. Nothing vouches for this script, so what this screen says is only what the script itself says. Each file is still checked against the SHA-256 beside it, but those hashes are the script's own: they show a download arrived unchanged, and say nothing about what it is." | ti_wrap 74 2
 		elif [ "$TI_PLAN_FROM" != embedded ]; then
 			# Where it came from, unless that is "embedded" and the two
 			# lines above have just said so at length.

@@ -100,6 +100,7 @@ Var PlanSrc
 Var PlanKind         ; fetched, cmdline or embedded
 Var PlanSig          ; tisig::check's answer
 Var PlanWarn         ; a warning for the review page
+Var PlanSigState     ; ok | unsigned | bad | cannot
 Var PlanRec          ; the plan header's `record`
 Var PlanReq          ; the plan header's first `request` (plans by name), fields joined by |
 Var PlanReqWant      ; what a plan by name must say there
@@ -1667,15 +1668,27 @@ Function CheckPlan
   StrCpy $1 $PlanSig 7
   ${If} $PlanSig == "unsigned"
     StrCpy $2 "carries no signature by the TiddlyInstall key"
+    StrCpy $PlanSigState "unsigned"
   ${ElseIf} $0 == "bad:"
     StrCpy $2 "has a signature that does NOT match the TiddlyInstall key"
+    StrCpy $PlanSigState "bad"
   ${ElseIf} $1 == "cannot:"
     StrCpy $2 "has a signature that could not be checked here"
+    StrCpy $PlanSigState "cannot"
   ${Else}
     StrCpy $2 "is not signed by the TiddlyInstall key"
+    StrCpy $PlanSigState "bad"
   ${EndIf}
   ${If} $PlanKind == "embedded"
-    StrCpy $PlanWarn "The runtime install script inside this file $2 ($PlanSig). It is only as trustworthy as the file carrying it."
+    ; Only a signature that fails to match reaches WARNINGS: that is
+    ; evidence the bytes changed after somebody signed them. An absent
+    ; one is said plainly in TRUST AND SECURITY instead -- every
+    ; installer built in a page has none, because a page holds no key,
+    ; and a red block about the ordinary case teaches people to ignore
+    ; red blocks (2026-09-23).
+    ${If} $PlanSigState != "unsigned"
+      StrCpy $PlanWarn "The runtime install script inside this file $2 ($PlanSig)."
+    ${EndIf}
     Return
   ${EndIf}
   ${If} $PlanKind == "cmdline"
@@ -2983,6 +2996,7 @@ Function .onInit
   StrCpy $PlanNonce ""
   StrCpy $PlanNonceGot ""
   StrCpy $PlanSigned ""
+  StrCpy $PlanSigState "ok"
   StrCpy $PlanMaxAge ""
   StrCpy $AgeWarn ""
   StrCpy $RevokeNote ""
@@ -4269,7 +4283,7 @@ Function WriteSummary
   ; to "?" when a base is built without a signing key, and an unguarded
   ; headline would assert "SIGNED BY TIDDLYINSTALL key ?" -- trust
   ; naming a key nobody has.
-  ${If} $PlanWarn == ""
+  ${If} $PlanSigState == "ok"
   ${AndIf} "${TI_PLAN_KEYID}" != "?"
     ${If} $PlanKind == "fetched"
       ; The key on its own line, as the Unix engine prints it. With the
@@ -4288,8 +4302,13 @@ Function WriteSummary
       Call SumPara
     ${EndIf}
   ${EndIf}
-  ${If} $PlanWarn != ""
-    StrCpy $U_a "Unsigned (see WARNINGS). Nothing vouches for it, so what this screen says is only what the script itself says, and anybody can write one. Each file is still checked against the SHA-256 beside it, but those hashes are the script's own: they show a download arrived unchanged, and say nothing about what it is."
+  ${If} $PlanSigState == "unsigned"
+    StrCpy $U_a "Not signed. Only our build server holds the key, and a page building in a browser has no way to reach it, so nothing here can say where this script came from."
+    Call SumPara
+    StrCpy $U_a "What it does is listed below in full, and every file it names is checked against the SHA-256 beside it -- though those hashes come from the script itself, so they show a download arrived unchanged and say nothing about what it is."
+    Call SumPara
+  ${ElseIf} $PlanWarn != ""
+    StrCpy $U_a "See WARNINGS. Nothing vouches for this script, so what this screen says is only what the script itself says. Each file is still checked against the SHA-256 beside it, but those hashes come from the script itself: they show a download arrived unchanged, and say nothing about what it is."
     Call SumPara
   ${ElseIf} $PlanKind != "embedded"
     ${Sum} "  $PlanSrc"
