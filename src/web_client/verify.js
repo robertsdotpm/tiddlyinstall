@@ -663,7 +663,7 @@ async function paint(file, sha, info) {
     ? (planLines(info.record).find((l) => l.key === 'backend') || { val: () => '' }).val(0)
     : '';
   if (!info.plan) {
-    sign.push(['The runtime install script', 'written when it runs, so there is none in the file to check. It is fetched, signed, at that point']);
+    sign.push(['The choices', 'are written when it runs, so there are none in the file to check. They are fetched, signed, at that point']);
   } else {
     const s = docSignature(info.plan, 'ti-plan');
     const baked = bakedKey();
@@ -671,17 +671,17 @@ async function paint(file, sha, info) {
       // With the steps proved a row above, "nothing can say where it
       // came from" is not true any more and reads as a contradiction.
       // What is genuinely unsigned here is the wrapper, so name that.
-      sign.push(['The runtime install script', 'as a whole is <strong>not signed</strong>, and does not need to be: ' +
-        'the part we wrote is proved above. What is unsigned is the app name, where it installs and how it is ' +
-        'started -- the choices whoever built this installer made, which they know and we never saw']);
+      sign.push(['The choices', '<strong>are not signed</strong>, and do not need to be: the part we wrote is proved ' +
+        'above. These are the app name, where it installs and how it is started -- what whoever built this ' +
+        'installer picked, which they know and we never saw']);
     } else if (!s.signed) {
-      sign.push(['The runtime install script', 'is <strong>not signed</strong> (' + esc(s.why) + '). ' +
+      sign.push(['The choices', '<strong>are not signed</strong> (' + esc(s.why) + '). ' +
         (info.record && !recBackend
           ? 'It was worked out in a web page rather than by our build server -- a page has no signing key -- so nothing here can say where it came from'
           : 'Nothing here can say where it came from') +
         '<br><span class="small muted">what it does is listed above, and every file it names is checked against the SHA-256 beside it -- but those hashes are the script\'s own</span>']);
     } else if (!baked) {
-      sign.push(['The runtime install script', 'is signed, but this page carries no key to check it against. Set a server and it can be checked']);
+      sign.push(['The choices', 'are signed, but this page carries no key to check them against. Set a server and they can be checked']);
     } else {
       let ok = false;
       try { ok = ed25519Verify(baked, s.bytes, s.sig); } catch (e) { ok = false; }
@@ -691,10 +691,10 @@ async function paint(file, sha, info) {
       // screen says so. Here the checker is a different artifact that
       // arrived by a different route, which is the whole reason this
       // page can say something the installer cannot.
-      sign.push(['The runtime install script', ok
-        ? 'is signed by the TiddlyInstall key <code>' + esc(keyId(baked)) + '</code>, so our build server produced it and nothing has changed it since'
+      sign.push(['The choices', ok
+        ? 'are signed by the TiddlyInstall key <code>' + esc(keyId(baked)) + '</code>, so our build server produced this file and nothing has changed it since'
           + '<br><span class="small muted">checked here, by this page, against a key this page carries - not by the installer against a key inside itself</span>'
-        : '<strong>has a signature that does not check out</strong> against key <code>' + esc(keyId(baked)) + '</code>']);
+        : '<strong>carry a signature that does not check out</strong> against key <code>' + esc(keyId(baked)) + '</code>']);
     }
   }
   rows(el('v-signing'), sign);
@@ -742,14 +742,14 @@ function rtScriptRows(planText) {
   if (!b64) return none;
   let doc = '';
   try { doc = normaliseDoc(new TextDecoder().decode(b64ToBytes(b64))); } catch (e) { doc = ''; }
-  if (!doc) return { rows: [['The runtime steps', '<strong>carry a proof that could not be read</strong>']], proved: false };
+  if (!doc) return { rows: [['The runtime setup', '<strong>carry a proof that could not be read</strong>']], proved: false };
 
   const baked = bakedKey();
   const s = docSignature(doc, 'ti-rtscripts');
   let sigOk = false;
   if (baked && s.signed) { try { sigOk = ed25519Verify(baked, s.bytes, s.sig); } catch (e) { sigOk = false; } }
   if (!sigOk) {
-    return { rows: [['The runtime steps', baked
+    return { rows: [['The runtime setup', baked
       ? '<strong>claim a signature that does not check out</strong> against key <code>' + esc(keyId(baked)) + '</code>'
       : 'claim a signature, but this page carries no key to check it with']], proved: false };
   }
@@ -757,7 +757,7 @@ function rtScriptRows(planText) {
   const runtime = (planLines(planText).find((l) => l.key === 'runtime') || { val: () => '' }).val(0);
   const want = rootFor(doc, runtime);
   const issued = (planLines(doc).find((l) => l.key === 'issued') || { val: () => '' }).val(0);
-  if (!want) return { rows: [['The runtime steps', 'are signed, but the document names no root for <code>' + esc(runtime) + '</code>']], proved: false };
+  if (!want) return { rows: [['The runtime setup', 'are signed, but the document names no root for <code>' + esc(runtime) + '</code>']], proved: false };
 
   let proved = 0, missing = 0, wrong = 0;
   for (const b of targetBlocks(planText)) {
@@ -773,15 +773,15 @@ function rtScriptRows(planText) {
 
   const out = [];
   if (wrong) {
-    out.push(['The runtime steps', '<strong>' + wrong + ' of ' + total + ' do not prove against the signed root</strong>. ' +
+    out.push(['The runtime setup', '<strong>' + wrong + ' of ' + total + ' do not prove against the signed root</strong>. ' +
       'The steps in this file are not the ones we published']);
   } else if (proved === total) {
-    out.push(['The runtime steps', '<strong>are ours</strong>: all ' + total + ' proved against the root ' +
+    out.push(['The runtime setup', '<strong>are ours</strong>: all ' + total + ' proved against the root ' +
       'signed by key <code>' + esc(keyId(baked)) + '</code>' + (issued ? ', published ' + esc(issued) : '') +
       '<br><span class="small muted">the downloads, their SHA-256s and every command run against them. Not how it is ' +
       'started, which is whoever built this installer wrote</span>']);
   } else {
-    out.push(['The runtime steps', proved + ' of ' + total + ' proved against the signed root; ' + missing +
+    out.push(['The runtime setup', proved + ' of ' + total + ' proved against the signed root; ' + missing +
       ' carry no proof, which is what a release older than the signing pass looks like']);
   }
   return { rows: out, proved: proved === total && total > 0 };

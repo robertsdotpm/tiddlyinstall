@@ -72,7 +72,7 @@
 
       <section class="panel">
         <h2 class="section-title">What it installs</h2>
-        <p class="small muted" id="v-plan-none" hidden>Neither this file nor its name says what to install, so no runtime install script
+        <p class="small muted" id="v-plan-none" hidden>Neither this file nor its name says what to install, so no runtime setup
           could be read or worked&nbsp;out.</p>
         <p class="small note" id="v-plan-derived" hidden></p>
         <dl class="spec-list" id="v-does"></dl>
@@ -95,10 +95,10 @@
         <h2 class="section-title">Who signed what</h2>
         <dl class="spec-list" id="v-signing"></dl>
         <p class="small muted" style="margin-bottom:0">A signature on the installer says who wrote the installer and that
-          it has not been altered since. A signature on the runtime install script says our build server produced it
-          and nothing has changed it since -- and a script with no signature was worked out somewhere else,
-          usually in a web page, which has no key to sign with. Neither kind says anything about the software
-          being&nbsp;installed.</p>
+          it has not been altered since. The runtime setup is signed separately, ahead of time, and is proved here
+          against that signature -- that is the part we wrote. The choices are signed only when our build server
+          made this file; one built in a web page cannot sign them, because a page holds no key. None of it says
+          anything about the software being&nbsp;installed.</p>
       </section>
 
       <section class="panel" id="v-server-panel">
