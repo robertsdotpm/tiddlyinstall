@@ -640,6 +640,23 @@ export function runtimeFolder(policy, id) {
 }
 
 // The folders changes are about (a policy change needs none).
+// Which runtimes a set of applied changes touches.
+//
+// It decides what can still be proved ours. A signed runtime install
+// script is signed as resolved text (src/shared/rtscript.js), so editing
+// a release changes that text, the leaf is not in the signed list, and
+// no proof is written -- correctly, since the steps are no longer ours.
+// The person who made the edit should hear that from the editor rather
+// than discover it as a missing line on an install screen.
+export function changedRuntimes(changes) {
+  const out = new Set();
+  for (const c of changes || []) {
+    const rt = c && c.path ? pathRuntime(c.path) : '';
+    if (rt) out.add(rt);
+  }
+  return out;
+}
+
 export function changedFolders(changes) {
   const out = new Set();
   for (const c of changes) if (Array.isArray(c.path) && c.path[0] !== 'policy.json' && typeof c.path[0] === 'string') out.add(c.path[0].split('/')[0]);

@@ -327,6 +327,28 @@ try {
   await sleep(300);
   ok(await js(`!document.getElementById('new-overlay-note').hidden && /Builds use 2 catalogue changes/.test(document.getElementById('new-overlay-note').textContent)`),
     'the New installer page says builds use the changes');
+  // And what the changes cost. A signed runtime install script is signed
+  // as resolved text (docs/format.md 6b), so editing a python release
+  // changes that text, the leaf is not in the signed list and no proof
+  // is written -- correct, since the steps are not ours any more. The
+  // person who made the edit should hear it here, not meet it weeks
+  // later as a line missing from somebody's install screen.
+  ok(await js(`/Installers using python can no longer show/.test(document.getElementById('new-overlay-note').textContent)`),
+    'and says python installers can no longer prove their runtime steps are ours',
+    await js(`document.getElementById('new-overlay-note').textContent`));
+  // The other half: the plan really does come out without a proof.
+  {
+    const blocks = plan.split('\n[target]\n').slice(1);
+    const withFile = blocks.filter((b) => b.indexOf('file\t') >= 0);
+    const withProof = withFile.filter((b) => b.indexOf('\nrtproof\t') >= 0 || b.indexOf('rtproof\t') === 0);
+    const edited = withFile.filter((b) => b.indexOf('step\trun\t' + STEP) >= 0);
+    const editedProved = edited.filter((b) => b.indexOf('rtproof\t') >= 0);
+    console.log('   targets with a download: ' + withFile.length + ', with a proof: ' + withProof.length +
+      ', carrying the edit: ' + edited.length + ' (proved: ' + editedProved.length + ')');
+    ok(edited.length > 0 && editedProved.length === 0,
+      'the target carrying the edit has no proof: it is not our script any more',
+      edited.length + ' edited, ' + editedProved.length + ' still proved');
+  }
   const summary = await js(`tiLocalApi.request('/api/catalog/runtimes')`);
   ok(summary && summary.changed === 2 && summary.runtimes.some((r) => r.id === 'python'), 'the "newest that runs" summary is worked out with the changes');
 

@@ -5,7 +5,7 @@
 // table from GET /api/catalog/runtimes.
 import { apiRequest, errorText, mountApiFooter, pageUrl, apiLocal, apiBase, apiReady, setApiBase, LOCAL, localSubmit } from './api.js';
 import { tarWrite } from '../shared/tifile.js';
-import { loadOverlay, overlayState, hasCatalog } from './overlay.js';
+import { loadOverlay, overlayState, hasCatalog, changedRuntimes } from './overlay.js';
 import { jobFromForm, BUILD_DEFAULTS, ENTRY_DEFAULTS, TEMPLATE_FILES, OFFLINE_TARGETS, ARCH_LABEL, MAC_ARCH, FAMILY_ARCHES, FAMILY_LABEL, NO_32_BIT,
   PACK_WARN_MB, PACK_MAX_MB, offlineField, offlineSizeMb, offlineTargets, archCoverage, vcmp, parseSource,
   packBudget, packEnv } from '../shared/form-job.js';
@@ -824,7 +824,14 @@ function paintOverlayNote() {
   link.textContent = 'Registry page';
   const what = n + ' catalogue change' + (n === 1 ? '' : 's') + ' made in this browser (';
   if (apiLocal()) {
-    overlayNote.replaceChildren('Builds use ' + what, link, '). The installers\' review screens show the script they carry.');
+    const rts = [...changedRuntimes(overlayState().changes)].sort();
+    const affected = rts.length
+      ? ' Installers using ' + (rts.length === 1 ? rts[0] : rts.slice(0, -1).join(', ') + ' or ' + rts[rts.length - 1]) +
+        ' can no longer show that their runtime steps came from us: what we signed is the steps as we published them, ' +
+        'and these are yours now. Everything else is unaffected.'
+      : '';
+    overlayNote.replaceChildren('Builds use ' + what, link, ').' + affected +
+      ' The installers\' review screens show the script they carry.');
   } else {
     const b = document.createElement('button');
     b.type = 'button';
