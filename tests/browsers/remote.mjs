@@ -239,6 +239,25 @@ export class Remote {
     return { proc: p, port };
   }
 
+  // A reverse tunnel, letting the far end choose the port where it can.
+  //
+  // Not every sshd will: Windows Server 2022's refuses `-R 0:` outright
+  // ("remote port forwarding failed for listen port 0"), so asking it to
+  // choose is worse than guessing there. Ask first, because only that
+  // side knows what is free; fall back to picking a number and trying a
+  // few, which is all we could ever do on those machines.
+  async reverse(to, tries = 4) {
+    const first = await this.startReverse(0, to);
+    if (first.proc) return first;
+    if (!/listen port 0/i.test(first.why || '')) return first;
+    let last = first;
+    for (let i = 0; i < tries; i++) {
+      last = await this.startReverse(30000 + Math.floor(Math.random() * 9000), to);
+      if (last.proc) return last;
+    }
+    return last;
+  }
+
   // Stops any of the harness's drivers (and the browsers they started) on
   // the machine. Only the harness runs these drivers from these folders.
   stopDrivers(entry) {
