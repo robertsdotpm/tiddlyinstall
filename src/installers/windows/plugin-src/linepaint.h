@@ -23,7 +23,7 @@
 typedef unsigned short ti_wchar;
 
 /* A section heading at the left margin: capitals, digits and a little
- * punctuation. "TRUST AND SECURITY". */
+ * punctuation. "BEFORE YOU TRUST IT". */
 int ti_is_heading(const ti_wchar *l, int len);
 
 /* A verdict on a line of its own, indented and shouting: "  UNSIGNED",

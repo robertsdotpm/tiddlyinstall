@@ -276,6 +276,36 @@ Function ${P}TiReadLine
       SetErrors                  ; IfErrors cleared it; callers test it again
       Return
     ${EndIf}
+    ; A line longer than NSIS_MAX_STRLEN (1024) comes back with no
+    ; newline on the end: FileRead stopped at the buffer, not at the
+    ; line. What follows is the rest of that line and is not a line of
+    ; its own, so it must not be parsed as one. `rtroots` is 1564
+    ; characters, and its tail was read as a plan key -- the review
+    ; screen told the reader this installer could not describe what it
+    ; does, and printed 500 bytes of base64 as the name of the thing it
+    ; could not describe (Windows 10, 2026-09-23).
+    ;
+    ; The remainder is swallowed here, so one physical line always
+    ; yields exactly one logical line. What is returned is that line cut
+    ; short, which is all an NSIS string can hold; anything that needs a
+    ; long value whole reads the file itself, as tisig::rtverify does.
+    Push $0
+    StrCpy $0 $T_line 1 -1
+    ${If} $0 != "$\n"
+      ${Do}
+        ClearErrors
+        FileReadUTF16LE $U_a $0
+        ${If} ${Errors}
+          ${Break}
+        ${EndIf}
+        StrCpy $0 $0 1 -1
+        ${If} $0 == "$\n"
+          ${Break}
+        ${EndIf}
+      ${Loop}
+      ClearErrors
+    ${EndIf}
+    Pop $0
     ${TiTrimNL} $T_line
     ${If} $T_line == ""
       ${Continue}

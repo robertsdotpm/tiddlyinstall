@@ -1,5 +1,5 @@
 # The review page is taller than its box, and the section the operator
-# called badly formatted (TRUST AND SECURITY) is below the fold. So:
+# called badly formatted (the trust section) is below the fold. So:
 # page down through the rich edit and capture each screenful.
 #
 # Only the installer's own window rectangle is captured, never the

@@ -64,29 +64,29 @@ if has 'TiddlyInstall - Review before installing'; then ok 'the review screen pr
 else no 'the review screen printed' "$(head -5 "$T/out")"; fi
 
 # Every section, in the order a reader meets them.
-for sec in 'This installer will:' 'INSTALL SUMMARY' 'TRUST AND SECURITY' \
-	'DOWNLOADS' 'COMMANDS' 'APPLICATION LAUNCH' 'FILES AND SYSTEM CHANGES'; do
+for sec in 'WHAT WILL HAPPEN' 'BEFORE YOU TRUST IT' 'DOWNLOADS' \
+	'WHERE THINGS GO' 'WHAT RUNS'; do
 	has "$sec" && ok "section: $sec" || no "section: $sec"
 done
-has 'NO CHANGES HAVE BEEN MADE YET.' && ok 'it says nothing has happened yet' ||
+has 'NOTHING HAS BEEN CHANGED YET.' && ok 'it says nothing has happened yet' ||
 	no 'it says nothing has happened yet'
 has 'Ready to install' && ok 'and says so again at the end' || no 'and says so again at the end'
 
 # The two words, and no trace of the ones they replaced.
-has 'Runtime install script' && ok 'the runtime install script block is there' ||
-	no 'the runtime install script block is there'
-has 'Choices' && ok 'the choices block is there' || no 'the choices block is there'
+has 'Runtime setup is' && ok 'the runtime setup item is there' ||
+	no 'the runtime setup item is there'
+has 'Choices came from' && ok 'the choices line is there' || no 'the choices line is there'
 hasnt 'Settings:' && ok 'and nothing still says Settings' || no 'and nothing still says Settings'
 hasnt 'Plan:' && ok 'and nothing still says Plan' || no 'and nothing still says Plan'
 hasnt 'this plan' && ok 'and no sentence still says "this plan"' ||
 	no 'and no sentence still says "this plan"' "$(grep -n 'this plan' "$T/out" | head -2)"
 
-# The bullets are generated, so they have to follow the install. This
+# WHAT WILL HAPPEN is generated, so it has to follow the install. This
 # one asks for no admin and makes a menu entry.
-has '* Require no administrator rights' && ok 'the bullets follow the install (admin)' ||
-	no 'the bullets follow the install (admin)'
-has '* Add an application menu entry' && ok 'the bullets follow the install (menu)' ||
-	no 'the bullets follow the install (menu)'
+has 'no admin rights' && ok 'what will happen follows the install (admin)' ||
+	no 'what will happen follows the install (admin)'
+has 'an app menu entry' && ok 'what will happen follows the install (menu)' ||
+	no 'what will happen follows the install (menu)'
 
 # Reading it without running it is the point of the other page.
 has '#verify' && ok 'it points at the Verify page' || no 'it points at the Verify page'
@@ -98,7 +98,7 @@ has '#verify' && ok 'it points at the Verify page' || no 'it points at the Verif
 # to. Both halves are checked -- that it says so, and that the fetch
 # really did not happen, since a note saying "no list was fetched"
 # printed next to a request that was made is the worst of both.
-has 'built without a server' && ok 'it says no revocation list was fetched' ||
+has 'Revocations not checked: built offline' && ok 'it says no revocation list was fetched' ||
 	no 'it says no revocation list was fetched'
 hasnt 'Checking the revocation list' &&
 	ok 'and no revocation list was asked for' ||
@@ -112,7 +112,7 @@ hasnt 'signed by nothing -' &&
 has 'unsigned, into' && ok 'it says "unsigned" there instead' || no 'it says "unsigned" there instead'
 
 # A name with spaces has to be quoted or it dissolves into the sentence.
-has 'we did' && has '"test recent unsigned a"' &&
+has 'did not write or review' && has '"test recent unsigned a"' &&
 	ok 'the program name is quoted where we disclaim it' ||
 	no 'the program name is quoted where we disclaim it' "$(grep -n 'did not write' "$T/out" | head -1)"
 
@@ -141,7 +141,7 @@ hasnt 'files listed above' && ok 'the capability line does not point the wrong w
 # This fixture's plan carries no rtroots line, so the screen must not
 # claim a signature -- and must not print "Signed on", which the plan's
 # own `signed` date made it do for a plan nobody signed.
-hasnt 'SIGNED BY TIDDLYINSTALL' && ok 'an unproved script is not called signed' ||
+hasnt 'Runtime setup is signed by' && ok 'an unproved script is not called signed' ||
 	no 'an unproved script is not called signed'
 hasnt 'Signed on' && ok 'and no signing date is claimed for it' ||
 	no 'and no signing date is claimed for it' "$(grep -n 'Signed on' "$T/out" | head -1)"
@@ -180,16 +180,16 @@ if [ -f "$PP" ] && [ -f "$PR" ]; then
 	printf 'n\n' | env -u DISPLAY -u WAYLAND_DISPLAY TI_NO_GUI=1 NO_COLOR=1 HOME="$T/home" \
 		script -qec "sh $T/p.run --log=/dev/null" /dev/null 2>&1 | sed 's/\r$//' > "$T/proved" || true
 	phas() { grep -qF "$1" "$T/proved"; }
-	n=$(grep -c 'SIGNED BY TIDDLYINSTALL' "$T/proved" || true)
+	n=$(grep -c 'Runtime setup is signed by TiddlyInstall' "$T/proved" || true)
 
-	phas 'SIGNED BY TIDDLYINSTALL' && ok 'a proved script says so' ||
-		no 'a proved script says so' "$(sed -n '/Runtime install script/,/^$/p' "$T/proved" | head -4)"
+	phas 'Runtime setup is signed by TiddlyInstall' && ok 'a proved script says so' ||
+		no 'a proved script says so' "$(sed -n '/BEFORE YOU TRUST IT/,/^DOWNLOADS/p' "$T/proved" | head -12)"
 	[ "$n" = 1 ] && ok 'and says it exactly once' ||
 		no 'and says it exactly once' "$n occurrences"
-	phas 'proved so by this file against a key it' &&
+	phas 'verified offline' &&
 		ok 'and says what was proved and by what' ||
 		no 'and says what was proved and by what'
-	phas 'Not covered:' && ok 'and what was not' || no 'and what was not'
+	phas 'not the launch command' && ok 'and what was not' || no 'and what was not'
 	# The two keys the proof travels in are ours. An installer that
 	# reports them as unrecognised is telling the reader our own
 	# signature is something it cannot describe.

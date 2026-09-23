@@ -203,6 +203,8 @@ Var Cap7
 Var CapUnknown       ; plan keys and step kinds this engine does not know, ", " joined
 Var CapInd1          ; SumPara: the first line's indent
 Var CapInd2          ; and every following line's
+Var PendRow          ; a DOWNLOADS row, held until its origin is known
+Var PendSha          ; and that row's SHA-256
 Var CompDirs         ; ", name, " for each `path {dir:<name>}`: the companion runtimes
 Var FileRole         ; what the file being printed is
 ; paths
@@ -1260,6 +1262,14 @@ Function ReadPlan
           StrCpy $SrcUrl1 $F1
         ${EndIf}
       ${ElseIf} $K S== "sig"
+      ${ElseIf} $K S== "rtroots"
+        ; ours (docs/format.md section 6b): the signed roots document the
+        ; runtime-script proofs are checked against. It is a *header*
+        ; key -- ti_get and this scan both stop at the first [target] --
+        ; and the block scan's list of our own keys, further down, does
+        ; not cover it. Missing here, it was reported to the reader as
+        ; something the installer could not describe, with 700 bytes of
+        ; base64 printed as its name (Windows 10, 2026-09-23).
       ${ElseIf} $K S== "runtime"
         ; the header's bare `runtime <id>`; the chosen block's line has
         ; the version and the architecture, and ReadTarget reads it
@@ -1659,7 +1669,7 @@ Function CheckPlan
   StrCpy $PlanWarn ""
   StrCpy $0 $PlanSig 2
   ${If} $0 == "ok"
-    ; The headline in TRUST AND SECURITY says who signed it; this used
+    ; The line in BEFORE YOU TRUST IT says who signed it; this used
     ; to append it here too, which is where it got lost mid-clause.
     StrCpy $PlanSrc "$PlanSrc"
     Return
@@ -1690,7 +1700,7 @@ Function CheckPlan
   ${If} $PlanKind == "embedded"
     ; Only a signature that fails to match reaches WARNINGS: that is
     ; evidence the bytes changed after somebody signed them. An absent
-    ; one is said plainly in TRUST AND SECURITY instead -- every
+    ; one is said plainly in BEFORE YOU TRUST IT instead -- every
     ; installer built in a page has none, because a page holds no key,
     ; and a red block about the ordinary case teaches people to ignore
     ; red blocks (2026-09-23).
@@ -3572,6 +3582,164 @@ FunctionEnd
 ;
 ; With nothing but our own host in the list (a file only we have) the
 ; first URL is all there is, and it stops being counted as a mirror.
+; A value padded on the right to $U_b characters, for the columns on the
+; review screen. A value longer than its column is left alone: the row
+; grows, rather than the value being cut to fit.
+Function PadTo
+  Push $0
+  Push $1
+  StrCpy $0 $U_a
+  ${Do}
+    StrLen $1 $0
+    ${If} $1 >= $U_b
+      ${Break}
+    ${EndIf}
+    StrCpy $0 "$0 "
+  ${Loop}
+  StrCpy $U_out $0
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; A word with its first letter raised: a plan's `file` names are
+; catalogue ids ("python"), and WHERE THINGS GO reads them as headings.
+Function Cap1
+  Push $0
+  Push $1
+  StrCpy $0 $U_a 1
+  StrCpy $1 $U_a "" 1
+  ${StrFilter} "$0" "+" "" "" $0
+  StrCpy $U_out "$0$1"
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; Does $U_a start with $U_b? Decides which mark a revocation note gets,
+; and nothing else.
+Function StrStarts
+  Push $0
+  StrLen $0 $U_b
+  StrCpy $0 $U_a $0
+  ${If} $0 S== $U_b
+    StrCpy $U_out 1
+  ${Else}
+    StrCpy $U_out 0
+  ${EndIf}
+  Pop $0
+FunctionEnd
+
+; The repository in a github.com URL: the path segment after the owner.
+; github.com hosts everybody, so the host on its own does not say whose
+; release a file is; the repository does.
+Function GhRepo
+  Push $0
+  Push $1
+  Push $2
+  Push $3
+  StrCpy $U_out ""
+  StrCpy $0 $U_a
+  StrLen $2 $0
+  StrCpy $1 0
+  ${Do}
+    ${If} $1 >= $2
+      Goto gh_done
+    ${EndIf}
+    StrCpy $3 $0 11 $1
+    ${If} $3 S== "github.com/"
+      IntOp $1 $1 + 11
+      StrCpy $0 $0 "" $1
+      ${Break}
+    ${EndIf}
+    IntOp $1 $1 + 1
+  ${Loop}
+  StrLen $2 $0
+  StrCpy $1 0
+  ${Do}
+    ${If} $1 >= $2
+      Goto gh_done
+    ${EndIf}
+    StrCpy $3 $0 1 $1
+    ${If} $3 == "/"
+      IntOp $1 $1 + 1
+      StrCpy $0 $0 "" $1
+      ${Break}
+    ${EndIf}
+    IntOp $1 $1 + 1
+  ${Loop}
+  StrLen $2 $0
+  StrCpy $1 0
+  ${Do}
+    ${If} $1 >= $2
+      ${Break}
+    ${EndIf}
+    StrCpy $3 $0 1 $1
+    ${If} $3 == "/"
+      StrCpy $0 $0 $1
+      ${Break}
+    ${EndIf}
+    IntOp $1 $1 + 1
+  ${Loop}
+  StrCpy $U_out $0
+  gh_done:
+  Pop $3
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; A held DOWNLOADS row, printed once its origin is known. It cannot be
+; printed when its `file` line is read, because the `url` lines that say
+; where it comes from follow it. Where a file comes from is a host and a
+; count of the other copies; the log keeps every URL in the order they
+; are tried, so nothing here is the only record of anything.
+Function FlushRow
+  Push $0
+  Push $1
+  Call PickOrigin
+  StrCpy $0 ""
+  ${If} $CurOrigin != ""
+    StrCpy $U_a $CurOrigin
+    Call HostOf
+    StrCpy $0 $U_out
+    ${If} $0 S== "github.com"
+      StrCpy $U_a $CurOrigin
+      Call GhRepo
+      ${If} $U_out != ""
+        StrCpy $0 "$0 ($U_out)"
+      ${EndIf}
+    ${EndIf}
+    ${If} $CurMirrors = 1
+      StrCpy $0 "$0 or 1 mirror"
+    ${ElseIf} $CurMirrors > 1
+      StrCpy $0 "$0 or $CurMirrors mirrors"
+    ${EndIf}
+  ${ElseIf} $PackLen > 0
+    StrCpy $0 "packed inside this installer"
+  ${EndIf}
+  ${If} $PendRow != ""
+    StrLen $1 "$PendRow$0"
+    ${If} $1 <= 74
+      ${Sum} "$PendRow$0"
+    ${Else}
+      ${Sum} "$PendRow"
+      StrCpy $CapInd1 "     "
+      StrCpy $CapInd2 "     "
+      StrCpy $U_a "$0"
+      Call SumPara
+    ${EndIf}
+    ${If} $PendSha != ""
+      ${Sum} "     SHA-256 $PendSha"
+    ${EndIf}
+  ${EndIf}
+  StrCpy $PendRow ""
+  StrCpy $PendSha ""
+  StrCpy $CurU1 ""
+  StrCpy $CurOrigin ""
+  StrCpy $CurMirrors 0
+  Pop $1
+  Pop $0
+FunctionEnd
+
 Function PickOrigin
   ${If} $CurU1 != ""
   ${AndIf} $CurOrigin == ""
@@ -3920,7 +4088,7 @@ Function CapFindings
   ; Just the findings. The paragraph that used to lead them is now the
   ; generated bullet list above, and the two claims that used to trail
   ; them -- that nothing vouches for an unsigned recipe, and that we did
-  ; not write the program -- are in TRUST AND SECURITY, which is where a
+  ; not write the program -- are in BEFORE YOU TRUST IT, which is where a
   ; reader looking for either would go.
   Push $0
   StrCpy $CapInd1 "  ! "
@@ -4063,64 +4231,29 @@ Function WriteSummary
   StrCpy $CurU1 ""
   StrCpy $CurOrigin ""
   StrCpy $CurMirrors 0
-  ${Sum} "======================================================================"
-  ${Sum} "TiddlyInstall - Review before installing"
-  ${Sum} "======================================================================"
-  ${Sum} ""
-  ${Sum} "$AppName"
-  ${Sum} ""
-  ${Sum} "NO CHANGES HAVE BEEN MADE YET."
-  ; What this install can do that an ordinary one cannot, and -- as a
-  ; separate claim, from the same code path -- whose program it is
-  ; (CapSection, above). It is first because it is the answer to the
-  ; question the page exists to ask.
-  ${Sum} ""
-  ${Sum} "This installer will:"
-  ${Sum} ""
-  ; Generated, never a fixed list: seven reassuring bullets that do not
-  ; change when the install does would be the most misleading thing on
-  ; this screen.
-  ${If} $SumFiles > 0
-    StrCpy $U_a $SumBytes
-    Call HumanSize
-    StrCpy $0 $U_out
-    StrCpy $U_a $SumFiles
-    StrCpy $U_b "file"
-    Call Plural
-    ${If} $PackLen > 0
-      ${Sum} "  * Use $SumFiles $U_out packed inside it where it can, checking each against a SHA-256"
-    ${Else}
-      ${Sum} "  * Download $SumFiles $U_out, $0, checking each against a SHA-256"
-    ${EndIf}
-  ${EndIf}
-  ${If} $RootMode == "system"
-    ${Sum} "  * Install for every user on this machine"
-  ${Else}
-    ${Sum} "  * Install for your user account only"
-  ${EndIf}
-  ${If} $TgtRuntime != ""
-    ${Sum} "  * Set up the $TgtRuntime runtime in a folder of its own"
-  ${EndIf}
-  ${If} $Menu == "0"
-    ${Sum} "  * Add an uninstaller, and no Start menu entry"
-  ${Else}
-    ${Sum} "  * Add a Start menu entry and an uninstaller"
-  ${EndIf}
-  ${If} $WantDesktop == "1"
-    ${Sum} "  * Add a desktop shortcut"
-  ${EndIf}
-  ${Sum} "  * Make no changes to PATH"
-  ${If} $NdMissing > 0
-    ${Sum} "  * Require administrator rights, to install $NdLabels for the whole computer"
-  ${ElseIf} $NeedAdmin = 1
-    ${Sum} "  * Require administrator rights"
-  ${Else}
-    ${Sum} "  * Require no administrator rights"
-  ${EndIf}
+  ; The screen's shape. Five sections, each answering one question a
+  ; person deciding actually has: what will happen, what to be careful
+  ; of, what is fetched, where it lands, what runs. Settled with the
+  ; operator on 2026-09-23 against a rendered screen and not a diff,
+  ; which is the only way anyone has ever found a fault in this text.
+  ; ti-engine.sh prints the same sections, in the same order, in the
+  ; same words: two engines saying it differently is two chances to say
+  ; it wrong.
+  ;
+  ; What went: INSTALL SUMMARY, a table that repeated the four sections
+  ; around it, and the paragraphs under TRUST AND SECURITY, which made
+  ; the same point at three lengths. Nothing it held was dropped -- the
+  ; source, the mirror count, the install record and the reason
+  ; administrator rights are wanted are folded into the sections below,
+  ; each one now next to the thing it qualifies.
+  StrCpy $CapInd1 ""
+  StrCpy $CapInd2 ""
+  StrCpy $U_a 'TiddlyInstall - Review before installing "$AppName"'
+  Call SumPara
+  ${Sum} "NOTHING HAS BEEN CHANGED YET."
   ${If} $CapN > 0
     ${Sum} ""
-    ${Sum} "Beyond an ordinary install:"
-    ${Sum} ""
+    ${Sum} "BEYOND AN ORDINARY INSTALL"
     Call CapFindings
   ${EndIf}
 
@@ -4180,13 +4313,69 @@ Function WriteSummary
     ${Sum} "!  The runtime being installed is not this machine's architecture$1"
   ${EndIf}
 
+  ; ---- WHAT WILL HAPPEN. Generated, never fixed: a reassuring list
+  ; that does not change when the install does would be the most
+  ; misleading thing on this screen.
   ${Sum} ""
-  ${Sum} "INSTALL SUMMARY"
-  ${Sum} "  Installs:     $AppName   (install id $AppId)"
+  ${Sum} "WHAT WILL HAPPEN"
+  ${If} $SumFiles > 0
+    StrCpy $U_a $SumBytes
+    Call HumanSize
+    StrCpy $0 $U_out
+    ${If} $SumUnsized = 1
+      StrCpy $0 "more than $0"
+    ${EndIf}
+    StrCpy $U_a $SumFiles
+    StrCpy $U_b "file"
+    Call Plural
+    StrCpy $CapInd1 "  Download   "
+    StrCpy $CapInd2 "             "
+    ${If} $PackLen > 0
+      StrCpy $U_a "up to $SumFiles $U_out, $0, each checked against a SHA-256; files packed inside this installer are used instead of downloading them"
+    ${Else}
+      StrCpy $U_a "$SumFiles $U_out, $0, each checked against a SHA-256"
+    ${EndIf}
+    Call SumPara
+  ${EndIf}
+  ${If} $RootMode == "system"
+    StrCpy $3 "for every user on this machine"
+  ${Else}
+    StrCpy $3 "for your user account only"
+  ${EndIf}
+  ${If} $NdMissing > 0
+    StrCpy $3 "$3; needs admin rights, to install $NdLabels for the whole computer"
+  ${ElseIf} $NeedAdmin = 1
+    StrCpy $3 "$3; needs admin rights"
+  ${Else}
+    StrCpy $3 "$3; no admin rights"
+  ${EndIf}
+  StrCpy $CapInd1 "  Install    "
+  StrCpy $CapInd2 "             "
+  StrCpy $U_a "$3; PATH unchanged"
+  Call SumPara
+  ${If} $TgtRuntime != ""
+    StrCpy $CapInd1 "  Runtime    "
+    StrCpy $CapInd2 "             "
+    ${If} $TgtRtArch == ""
+      StrCpy $U_a "$TgtRuntime, in its own folder"
+    ${Else}
+      Call ArchWords
+      StrCpy $0 $U_out
+      Call ArchNote
+      StrCpy $U_a "$TgtRuntime, $0$U_out, in its own folder"
+    ${EndIf}
+    Call SumPara
+  ${EndIf}
+  ${If} $RecSource != ""
+    StrCpy $CapInd1 "  Source     "
+    StrCpy $CapInd2 "             "
+    StrCpy $U_a "$RecSource"
+    Call SumPara
+  ${EndIf}
   ; "Installs: test b" over "Project: test_b" is two lines saying one
-  ; thing. The project name earns a line of its own only when the page
+  ; thing. The project name earns a line of its own only when the screen
   ; does not already carry it, and it usually does: it is either the
-  ; app's name with the punctuation changed, or the package `From:`
+  ; app's name with the punctuation changed, or the package `Source`
   ; names in full. Both are compared with the case and the punctuation
   ; taken out, which is the whole of the difference in practice.
   ${If} $Project != ""
@@ -4199,242 +4388,208 @@ Function WriteSummary
       StrCpy $U_b $0
       Call StrHas
       ${If} $U_out = 0
-        ${Sum} "  Project:      $Project"
+        ${Sum} "  Project    $Project"
       ${EndIf}
     ${EndIf}
   ${EndIf}
-  ${If} $RecSource != ""
-    ${Sum} "  From:         $RecSource"
-  ${EndIf}
-  ${If} $TgtRuntime != ""
-    ${If} $TgtRtArch == ""
-      ${Sum} "  Runtime:      $TgtRuntime"
-    ${Else}
-      Call ArchWords
-      StrCpy $0 $U_out
-      Call ArchNote
-      ${Sum} "  Runtime:      $TgtRuntime, $0$U_out"
-    ${EndIf}
-  ${EndIf}
-  ${If} $SumFiles > 0
-    StrCpy $U_a $SumBytes
-    Call HumanSize
-    StrCpy $0 $U_out
-    ${If} $SumUnsized = 1
-      StrCpy $0 "more than $0"
-    ${EndIf}
-    StrCpy $U_a $SumFiles
-    StrCpy $U_b "file"
-    Call Plural
-    ${If} $PackLen > 0
-      ${Sum} "  Download:     up to $SumFiles $U_out, $0; files packed inside this installer are used instead of downloading them"
-    ${Else}
-      ${Sum} "  Download:     $SumFiles $U_out, $0 in total"
-    ${EndIf}
-    ; Who the files are from, not every host that keeps a copy -- and
-    ; the SHA-256 in the same breath, because that check is the reason
-    ; the host matters as little as it does.
-    Call HostList
-    ${If} $U_out != ""
-      ${If} $SumMirrors > 0
-        ${If} $SumHostN = 1
-          StrCpy $1 "it"
-        ${Else}
-          StrCpy $1 "them"
-        ${EndIf}
-        ${Sum} "  Sources:      $U_out, or a mirror of $1"
-      ${Else}
-        ${Sum} "  Sources:      $U_out"
-      ${EndIf}
-    ${EndIf}
-  ${EndIf}
-  ${Sum} "  Into:         $AppDir"
-  ${Sum} "                (nothing else on this machine is changed)"
-  ${If} $SumRuns > 0
-    StrCpy $U_a $SumRuns
-    StrCpy $U_b "command"
-    Call Plural
-    ${Sum} "  Then runs:    $SumRuns $U_out on this machine (listed below)"
-  ${EndIf}
-  ${If} $NdMissing > 0
-    ${Sum} "  Admin rights: yes, to install $NdLabels for the whole computer"
-  ${ElseIf} $NeedAdmin = 1
-    ${Sum} "  Admin rights: yes"
+  ${If} $Menu == "0"
+    StrCpy $4 ""
   ${Else}
-    ${Sum} "  Admin rights: not needed"
+    StrCpy $4 "a Start menu entry"
   ${EndIf}
-  ; A signature on the installer is not a word about the program in it,
-  ; and "Signed by: TiddlyInstall" invites exactly that reading -- most
-  ; of all in mode A, where the name on the certificate is ours. So
-  ; where there is a signer, the line says what the signature covers.
-  ${Sum} "  Record:       $RecHash"
+  ${If} $WantDesktop == "1"
+    ${If} $4 == ""
+      StrCpy $4 "a desktop shortcut"
+    ${Else}
+      StrCpy $4 "$4, a desktop shortcut"
+    ${EndIf}
+  ${EndIf}
+  ${If} $4 == ""
+    StrCpy $4 "an uninstaller"
+  ${Else}
+    StrCpy $4 "$4 and an uninstaller"
+  ${EndIf}
+  StrCpy $CapInd1 "  Adds       "
+  StrCpy $CapInd2 "             "
+  StrCpy $U_a "$4"
+  Call SumPara
 
+  ; ---- BEFORE YOU TRUST IT. One item per claim, each marked with how
+  ; much it is worth, and none of them said twice. The marks are three
+  ; wide so every continuation lands in the same column: `!` worth
+  ; stopping on, `ok` a claim that held, `--` something nobody here
+  ; could check. ASCII, because the line painters measure in characters
+  ; and an old console does not have the glyphs.
   ${Sum} ""
-  ${Sum} "TRUST AND SECURITY"
+  ${Sum} "BEFORE YOU TRUST IT"
+  ; The continuation indent is two, not six, and the mark column is
+  ; only an alignment for a terminal. The RichEdit control renders this
+  ; text in a proportional font, where a run of leading spaces collapses
+  ; to one space's width: an item wrapped to six came out as a grey
+  ; monospace block under a sentence at the left margin, because the
+  ; painter reads an indent of four or more as a hash or a command
+  ; (plugin-src/tisig.c, "indented four or more"). ti-engine.sh keeps
+  ; six, where the terminal is monospace and the hang is real.
+
+  ; Whose program this is. Always first and always present: a reader who
+  ; gets through the rest of this section -- every file checked against
+  ; a SHA-256, who signed what, where it all goes -- can reasonably come
+  ; away thinking we vetted the program. We have never looked at it.
+  StrCpy $CapInd1 "  !   "
+  StrCpy $CapInd2 "  "
+  StrCpy $U_a 'TiddlyInstall did not write or review "$AppName". Install it only if you trust its publisher.'
+  Call SumPara
+
+  ; The installer file itself. A signature on it is not a word about the
+  ; program in it, and "Signed by TiddlyInstall" invites exactly that
+  ; reading -- most of all in mode A, where the name on the certificate
+  ; is ours. So where there is a signer, the line says what it covers.
   ${Sum} ""
-  ${Sum} "  Installer signature"
   ${If} $SignedBy != ""
-    ${Sum} "  Signed by $SignedBy, as the certificate names it; Windows checks the signature."
-    ${Sum} "  It covers this installer file, not the program it installs."
+    StrCpy $CapInd1 "  ok  "
+    StrCpy $CapInd2 "  "
+    StrCpy $U_a "Signed by $SignedBy, as the certificate names it; Windows checks the signature. It covers this installer file, not the program it installs."
+    Call SumPara
   ${Else}
-    ${Sum} "  UNSIGNED"
-    ${Sum} "  Windows cannot tell you who made this file."
     ; With no signature there is nothing on this machine that can vouch
     ; for the file, so the one check left is the one that happens
     ; somewhere else: comparing this hash with the page it came from.
-    ; The Unix engine has printed its own hash for this reason since
-    ; 2026-09-22; Windows printed nothing, which left an unsigned
-    ; Windows installer with no actionable check at all.
+    StrCpy $CapInd1 "  !   "
+    StrCpy $CapInd2 "  "
+    StrCpy $U_a "This installer is unsigned, so Windows cannot tell you who made it. Compare its SHA-256 with the one shown where you downloaded it:"
+    Call SumPara
     StrCpy $U_a "$EXEPATH"
     Call Sha256File
     ${If} $U_out != ""
-      ${Sum} ""
-      ${Sum} "  Installer SHA-256"
-      ${Sum} "  $U_out"
-      StrCpy $U_a "Nothing on this machine can vouch for this file. Compare this with the value shown where you downloaded it: that comparison happens outside the file, which is what makes it worth anything."
-      Call SumPara
+      ${Sum} "      $U_out"
     ${EndIf}
   ${EndIf}
-  ${Sum} ""
-  ${Sum} "  Runtime install script"
-  ; A signature is worth something only when the thing checking it is not
-  ; the thing being vouched for.
+
+  ; The runtime install script. A signature is worth something only when
+  ; the thing checking it is not the thing being vouched for, so the
+  ; three cases do not share a headline:
   ;
+  ;   proved   -- the steps are ours, proved against a signed Merkle
+  ;               root by this file with the key it carries. No network,
+  ;               no catalogue, and nothing here had to trust the page
+  ;               that built it.
   ;   fetched  -- this engine is intact and the network is not, so a
-  ;               script altered on the way is refused. Real, and the
-  ;               reason the signature exists.
-  ;   embedded -- the script, the key it is checked against and the code
-  ;               doing the checking are all the same file. Whoever could
-  ;               change one could change all three. Said plainly, not
-  ;               shouted as a verdict.
+  ;               script altered on the way is refused.
+  ;   embedded -- the script, the key and the code doing the checking are
+  ;               one file. Whoever could change one could change all
+  ;               three, so it is not a second opinion and gets no ok.
   ;
-  ; Both used to print the same headline, which put the loudest claim on
-  ; the screen in the case where it means least.
-  ;
-  ; Guarded on the key id as the Unix engine is: TI_PLAN_KEYID defaults
-  ; to "?" when a base is built without a signing key, and an unguarded
-  ; headline would assert "SIGNED BY TIDDLYINSTALL key ?" -- trust
-  ; naming a key nobody has.
-  ; One headline, whatever is true beneath it. The key on its own line:
-  ; with the key on the same line the headline has lower case in it, so
-  ; it is not a verdict to either painter and renders as body text --
-  ; the signed case came out quieter than UNSIGNED, which is backwards
-  ; (Windows 10, 2026-09-22).
-  ${If} "${TI_PLAN_KEYID}" != "?"
-    ${If} $RtState == "ok"
-      ${Sum} "  SIGNED BY TIDDLYINSTALL"
-      ${Sum} "    key ${TI_PLAN_KEYID}"
-    ${ElseIf} $PlanSigState == "ok"
-    ${AndIf} $PlanKind == "fetched"
-      ${Sum} "  SIGNED BY TIDDLYINSTALL"
-      ${Sum} "    key ${TI_PLAN_KEYID}"
-    ${EndIf}
-  ${EndIf}
-  ${If} $PlanSigState == "ok"
-  ${AndIf} "${TI_PLAN_KEYID}" != "?"
-    ${If} $PlanKind == "fetched"
-      StrCpy $U_a "Fetched over the network and checked here before anything was read, so a script altered on the way would have been refused."
-      Call SumPara
-    ${Else}
-      StrCpy $U_a "Carried inside this file, signed by the TiddlyInstall key ${TI_PLAN_KEYID}, which says our server produced it."
-      Call SumPara
-      StrCpy $U_a "That signature is checked by this file, against a key inside this file. It is worth exactly as much as the file itself, so it is not a second opinion: use the installer's SHA-256 for that."
-      Call SumPara
-    ${EndIf}
-  ${EndIf}
+  ; Guarded on the key id: TI_PLAN_KEYID is "?" when a base is built
+  ; without a signing key, and an unguarded line would name a key nobody
+  ; has.
+  ${Sum} ""
+  StrCpy $CapInd1 "  ok  "
+  StrCpy $CapInd2 "  "
   ${If} $RtState == "ok"
-    ; The steps themselves are ours, proved against a signed root by this
-    ; file with the key it carries -- no network, no catalogue, and
-    ; nothing here had to trust the page that built it. A narrower claim
-    ; than "the plan is signed", and a true one: what is proved is the
-    ; part we wrote. The headline is printed once, above: a fetched plan
-    ; earns the same one, and both firing put SIGNED BY TIDDLYINSTALL on
-    ; the screen twice in a row (seen on Windows 10, 2026-09-23).
-    StrCpy $U_a "The downloads, their SHA-256s and every command run against them were published by us, and are proved so by this file against a key it carries. Checked here, with no network."
+    ${If} "${TI_PLAN_KEYID}" != "?"
+      StrCpy $U_a "Runtime setup is signed by TiddlyInstall (key ${TI_PLAN_KEYID}), verified offline. Covers the downloads, their hashes and setup commands - not the launch command, which the builder wrote."
+    ${Else}
+      StrCpy $U_a "Runtime setup is signed by TiddlyInstall, verified offline. Covers the downloads, their hashes and setup commands - not the launch command, which the builder wrote."
+    ${EndIf}
     Call SumPara
     ${If} $RtIssued != ""
-      StrCpy $U_a "Published $RtIssued."
-      Call SumPara
+      ${Sum} "      Published $RtIssued."
     ${EndIf}
-    StrCpy $U_a "Not covered: how it is started, which is the line whoever built this installer wrote."
-    Call SumPara
   ${ElseIf} $RtState == "bad"
-    StrCpy $U_a "The runtime steps claim to be ours and the claim does not hold: $RtWhy. Treat this file as altered."
+    StrCpy $CapInd1 "  !   "
+    StrCpy $U_a "Runtime setup claims to be ours and the claim does not hold: $RtWhy. Treat this file as altered."
+    Call SumPara
+  ${ElseIf} $PlanSigState == "ok"
+  ${AndIf} "${TI_PLAN_KEYID}" != "?"
+  ${AndIf} $PlanKind == "fetched"
+    StrCpy $U_a "Runtime setup is signed by TiddlyInstall (key ${TI_PLAN_KEYID}), fetched and checked here before any of it was read, so a script altered on the way would have been refused."
+    Call SumPara
+  ${ElseIf} $PlanSigState == "ok"
+  ${AndIf} "${TI_PLAN_KEYID}" != "?"
+    StrCpy $CapInd1 "  --  "
+    StrCpy $U_a "Runtime setup carries a TiddlyInstall signature (key ${TI_PLAN_KEYID}), checked by this file against a key inside this file. It is worth what the file is worth, so it is not a second opinion: the SHA-256 above is."
     Call SumPara
   ${ElseIf} $PlanSigState == "unsigned"
-    StrCpy $U_a "Not signed. Only our build server holds the key, and a page building in a browser has no way to reach it, so nothing here can say where this script came from."
-    Call SumPara
-    StrCpy $U_a "What it does is listed below in full, and every file it names is checked against the SHA-256 beside it -- though those hashes come from the script itself, so they show a download arrived unchanged and say nothing about what it is."
+    ; The ordinary state of an installer built in a page, which has no
+    ; key to sign with. Said once, plainly.
+    StrCpy $CapInd1 "  --  "
+    StrCpy $U_a "Runtime setup is not signed: only our build server holds the key, and a page building in a browser cannot reach it. What it does is under WHAT RUNS in full, and every file is checked against the SHA-256 beside it - but those hashes are the setup script's own."
     Call SumPara
   ${ElseIf} $PlanWarn != ""
-    StrCpy $U_a "See WARNINGS. Nothing vouches for this script, so what this screen says is only what the script itself says. Each file is still checked against the SHA-256 beside it, but those hashes come from the script itself: they show a download arrived unchanged, and say nothing about what it is."
+    StrCpy $CapInd1 "  --  "
+    StrCpy $U_a "Nothing vouches for the runtime setup, so what this screen says is only what the setup itself says. See WARNINGS."
     Call SumPara
   ${ElseIf} $PlanKind != "embedded"
-    ${Sum} "  $PlanSrc"
-  ${EndIf}
-  ${If} $PlanSigned != ""
-    ${If} $PlanKind == "fetched"
-      ${Sum} "  Signed on $PlanSigned (fetched now)"
-    ${Else}
-      ${Sum} "  Signed on $PlanSigned"
-    ${EndIf}
-  ${EndIf}
-  ${If} $RevokeNote != ""
-    ${Sum} "  Revocations: $RevokeNote"
-  ${EndIf}
-  ${If} $ModeA = 1
-    StrCpy $U_a "Mode A (signed, and carrying no choices of its own): it installs only the app its file name names, from ${TI_BACKEND}."
+    StrCpy $CapInd1 "  --  "
+    StrCpy $U_a "Runtime setup came from $PlanSrc, and nothing here can say who wrote it."
     Call SumPara
   ${EndIf}
-  ${Sum} ""
-  ${Sum} "  Choices"
-  ${Sum} "  $MetaSrc"
-  ${Sum} "  (what was picked in the web client; the script above is what carries it out)"
-  ${Sum} ""
-  ${Sum} "  IMPORTANT"
-  StrCpy $U_a "TiddlyInstall checks that the files below are the files the runtime install script names. It does not check that the application itself is safe."
-  Call SumPara
-  StrCpy $U_a 'That is about the install. The program itself is another matter: we did not write "$AppName" and have not checked what its code does. Install it only if you trust whoever publishes it.'
-  Call SumPara
-  StrCpy $U_a "You can read all of this without running the installer: open ${TI_BACKEND}/#verify and drop this file on it."
-  Call SumPara
+  ${If} $PlanSigned != ""
+  ${AndIf} $PlanSigState != "ok"
+  ${AndIf} $RtState != "ok"
+    StrCpy $CapInd1 "      "
+    StrCpy $U_a "Written $PlanSigned, by whoever built this installer."
+    Call SumPara
+  ${EndIf}
 
+  ; What was withdrawn since. The note says which of the two happened;
+  ; the mark says whether anybody checked.
+  ${If} $RevokeNote != ""
+    ${Sum} ""
+    StrCpy $U_a $RevokeNote
+    StrCpy $U_b "checked"
+    Call StrStarts
+    ${If} $U_out = 1
+      StrCpy $CapInd1 "  ok  "
+    ${Else}
+      StrCpy $CapInd1 "  --  "
+    ${EndIf}
+    StrCpy $CapInd2 "  "
+    StrCpy $U_a "Revocations $RevokeNote"
+    Call SumPara
+  ${EndIf}
+  ${If} $ModeA = 1
+    ${Sum} ""
+    StrCpy $CapInd1 "  ok  "
+    StrCpy $CapInd2 "  "
+    StrCpy $U_a "Mode A: this installer carries no choices of its own and installs only the app its file name names, from ${TI_BACKEND}."
+    Call SumPara
+  ${EndIf}
+
+  ${Sum} ""
+  StrCpy $CapInd1 "  "
+  StrCpy $CapInd2 "  "
+  StrCpy $U_a "Choices came from $MetaSrc -- what was picked in the web client. The setup under WHAT RUNS is what carries them out."
+  Call SumPara
+  ; Everything here can be read without running the file, which is worth
+  ; saying on the screen you only reach by running it.
+  StrCpy $U_a "Verify without running: open ${TI_BACKEND}/#verify and drop this file on it."
+  Call SumPara
   ${If} $NdCount > 0
     ${Sum} ""
     Call NeedSummary
   ${EndIf}
 
+  ; ---- DOWNLOADS. One line per file and one for its hash. A row cannot
+  ; be printed when its `file` line is read, because the `url` lines that
+  ; say where it comes from follow it: the row is held in $PendRow and
+  ; flushed by FlushRow once the origin is known.
   ${Sum} ""
   ${Sum} "DOWNLOADS"
   ${If} $SumFiles = 0
-    ${Sum} "  Nothing."
-  ${Else}
-    StrCpy $U_a $SumBytes
-    Call HumanSize
-    StrCpy $0 $U_out
-    ${If} $SumUnsized = 1
-      StrCpy $0 "more than $0"
-    ${EndIf}
-    StrCpy $U_a $SumFiles
-    StrCpy $U_b "file"
-    Call Plural
-    ${Sum} "  $SumFiles $U_out, $0 in total. The commands under a file are our"
-    ${Sum} "  runtime install script, not the project's own code."
-    ; What that check does *not* reach (launch-shapes.md recommendation
-    ; 7). "Each one is checked against the SHA-256 below" is true of the
-    ; files listed here and of nothing else, and an `install` line a few
-    ; lines further down hands a package manager the job of choosing and
-    ; running more code. Both sentences were true and together they
-    ; misled.
-    ${If} $TgtInstall != ""
-      StrCpy $CapInd1 "  "
-      StrCpy $CapInd2 "  "
-      StrCpy $U_a "Installing the project downloads more than these, and nothing in this list covers those: see WHAT THIS INSTALL CAN DO, at the top."
-      Call SumPara
-    ${EndIf}
+    ${Sum} "  Nothing to download."
+  ${ElseIf} $TgtInstall != ""
+    ; What the SHA-256 check does *not* reach: an `install` line hands a
+    ; package manager the job of choosing and running more code.
+    StrCpy $CapInd1 "  "
+    StrCpy $CapInd2 "  "
+    StrCpy $U_a "Installing the project downloads more than these, and nothing in this list covers those: see BEYOND AN ORDINARY INSTALL, at the top."
+    Call SumPara
   ${EndIf}
   StrCpy $1 ""
   StrCpy $2 0
+  StrCpy $PendRow ""
+  StrCpy $PendSha ""
   Call OpenBlock
   ${Do}
     ${TiRead} $BH
@@ -4445,7 +4600,7 @@ Function WriteSummary
     ${If} $K S== "[target]"
       ${Break}
     ${ElseIf} $K S== "file"
-      Call WriteFrom
+      Call FlushRow
       StrCpy $CurName $F1
       StrCpy $U_a $F1
       Call FolderHash
@@ -4453,14 +4608,9 @@ Function WriteSummary
       StrCpy $CurFile "$DlDir\$F2"
       IntOp $2 $2 + 1
       ; What this file *is*, from where it sits in the plan and never
-      ; from its name (2026-09-21): the `file` whose name is the
-      ; runtime's id is the runtime; one whose folder goes on PATH is a
-      ; companion the recipe requires; every other one is part of the
-      ; runtime's own setup -- a release part (Windows Python is four
-      ; MSIs, which is the puzzle this removes) or an extra file the
-      ; recipe needs. The last is by elimination, and is sound only
-      ; because docs/format.md section 3 closes the list of what a
-      ; block's `file` lines may be.
+      ; from its name: the `file` whose name is the runtime's id is the
+      ; runtime; one whose folder goes on PATH is a companion the recipe
+      ; requires; every other one is part of the runtime's own setup.
       ${If} $F1 S== $TgtRtName
         StrCpy $FileRole "the runtime"
       ${Else}
@@ -4473,136 +4623,65 @@ Function WriteSummary
           StrCpy $FileRole "part of the runtime"
         ${EndIf}
       ${EndIf}
-      ; The role rides on the name line where it fits and drops to the
-      ; size line where it would wrap: these are the longest lines here
-      ; already, and a label that wrapped would undo the trimming.
-      StrLen $0 $F2
-      StrLen $U_out $FileRole
-      IntOp $0 $0 + $U_out
-      IntOp $0 $0 + 11
+      StrCpy $U_a "$FileRole"
+      StrCpy $U_b 18
+      Call PadTo
+      StrCpy $PendRow "  $2. $U_out"
       StrCpy $U_a $F4
       Call HumanSize
-      ${Sum} ""
-      ${If} $0 <= 74
-        ${Sum} "  $2. $F2  ($FileRole)"
-        ${Sum} "     $U_out ($F4 bytes)"
-      ${Else}
-        ${Sum} "  $2. $F2"
-        ${Sum} "     $U_out ($F4 bytes)  ($FileRole)"
-      ${EndIf}
-      ${Sum} "     sha256 $F3"
+      StrCpy $U_a $U_out
+      StrCpy $U_b 11
+      Call PadTo
+      StrCpy $PendRow "$PendRow$U_out"
+      StrCpy $PendSha $F3
       ${SumUrl} "  $F2"
-      ${Sum} "     into   $CurDir"
     ${ElseIf} $K S== "url"
       StrCpy $U_a $F1
       Call CountUrl
       ${SumUrl} "    $F1"
-    ${ElseIf} $K S== "step"
-      Call WriteFrom
-      ${If} $F1 S== "run"
-        ; a `run` step may carry its own description as a second value
-        ; (format.md "Steps"); it is what a person can actually judge
-        ${If} $F3 != ""
-          ${Sum} "     then runs a command: $F3"
-        ${Else}
-          ${Sum} "     then runs a command:"
-        ${EndIf}
-        StrCpy $U_a "$F2"
-        Call Subst
-        StrCpy $U_a $U_out
-        Call CmdLine
-      ${Else}
-        StrCpy $U_a "$F2"
-        ${If} $F3 != ""
-          StrCpy $U_a "$F2  $F3"
-        ${EndIf}
-        ${If} $F4 != ""
-          StrCpy $U_a "$U_a  $F4"
-        ${EndIf}
-        Call Subst
-        ${Sum} "     then $F1: $U_out"
-      ${EndIf}
     ${EndIf}
   ${Loop}
   FileClose $BH
-  Call WriteFrom
+  Call FlushRow
   ${If} $SrcLine > 0
     IntOp $2 $2 + 1
-    StrCpy $U_a $SrcSize
-    Call HumanSize
-    ${Sum} ""
-    ${Sum} "  $2. $SrcName  (the project itself)"
-    ; No stored hash means no size either, and "0 B (0 bytes)" is a
-    ; measurement nobody took. Say which it is (format.md, "Sources
-    ; without a stored hash"); the Linux engine prints the same two
-    ; lines.
+    StrCpy $U_a "Application"
+    StrCpy $U_b 18
+    Call PadTo
+    StrCpy $PendRow "  $2. $U_out"
     ${If} $SrcSha == "-"
-      ${Sum} "     size not known in advance: the archive is made when it is fetched"
-      ${Sum} "     no stored SHA-256: identified by its commit, fetched over HTTPS"
+      ; No stored hash means no size either, and "0 bytes" is a
+      ; measurement nobody took (format.md, "Sources without a stored
+      ; hash").
+      StrCpy $U_a "size unknown"
+      StrCpy $PendSha ""
     ${Else}
-      ${Sum} "     $U_out ($SrcSize bytes)"
-      ${Sum} "     sha256 $SrcSha"
+      StrCpy $U_a $SrcSize
+      Call HumanSize
+      StrCpy $PendSha $SrcSha
     ${EndIf}
+    StrCpy $U_b 11
+    Call PadTo
+    StrCpy $PendRow "$PendRow$U_out"
+    StrCpy $CurU1 $SrcUrl1
+    StrCpy $CurMirrors 1
     ${If} $SrcUrl1 != ""
-      ${Sum} "     from   $SrcUrl1"
       ${SumUrl} "  $SrcName"
       ${SumUrl} "    $SrcUrl1"
     ${EndIf}
+    Call FlushRow
+    ${If} $SrcSha == "-"
+      ${Sum} "     no stored SHA-256: identified by its commit, fetched over HTTPS"
+    ${EndIf}
   ${EndIf}
   ${If} $PackLen > 0
-    ${Sum} ""
     ${Sum} "  Files packed inside this installer are used instead of downloading them."
   ${EndIf}
 
+  ; ---- WHERE THINGS GO.
   ${Sum} ""
-  ${Sum} "COMMANDS"
-  StrCpy $CurDir ""
-  StrCpy $CurFile ""
-  ${If} $TgtInstall != ""
-    ${Sum} ""
-    ${Sum} "  Installing the project:"
-    StrCpy $U_a $TgtInstall
-    Call Subst
-    StrCpy $U_a $U_out
-    Call CmdLine
-  ${EndIf}
-  ; Something under the heading, always. This engine lists the runtime's
-  ; own commands beside the file each belongs to, under DOWNLOADS, so
-  ; with no project install command there was nothing here at all and
-  ; the screen showed a bare COMMANDS followed by the next heading --
-  ; seen by rendering it on Windows 10, 2026-09-22. The Unix engine has
-  ; said "No commands are run on this machine." in the empty case since
-  ; it was written; here that would be a lie whenever a runtime is set
-  ; up, so say where they are instead.
-  ${If} $SumRuns > 0
-    ${Sum} ""
-    StrCpy $U_a "The commands that set the runtime up are listed under DOWNLOADS, with the file each one belongs to."
-    Call SumPara
-  ${ElseIf} $TgtInstall == ""
-    ${Sum} ""
-    ${Sum} "  No commands are run on this machine."
-  ${EndIf}
-  ${Sum} ""
-  ${Sum} "APPLICATION LAUNCH"
-  ${Sum} ""
-  ${Sum} "  When you start $\"$AppName$\", its shortcuts and launch.exe run:"
-  StrCpy $U_a $TgtLaunch
-  Call Subst
-  StrCpy $U_a $U_out
-  Call CmdLine
-
-  ; One place with parts, not two unrelated random names. A third pass
-  ; over the block, for the file folders: the runtime really is beside
-  ; the app and not inside it, and that is a decision worth a line.
-  ; Nesting it would put a 13-character folder on the front of every
-  ; path inside it, and Windows still breaks on long paths -- worst
-  ; inside Lib\site-packages, which is why XP installs to C:\ti at all
-  ; (design.md 1.1). Showing the root once is a presentation fix for
-  ; that layout, not a change to it.
-  ${Sum} ""
-  ${Sum} "FILES AND SYSTEM CHANGES"
-  ${Sum} "  All of it in $Root:"
-  ${Sum} "    $AppId   the app"
+  ${Sum} "WHERE THINGS GO"
+  ${Sum} "  App         $AppDir"
   Call OpenBlock
   ${Do}
     ${TiRead} $BH
@@ -4615,52 +4694,142 @@ Function WriteSummary
     ${ElseIf} $K S== "file"
       StrCpy $1 $F1
       StrCpy $U_a $F1
+      Call Cap1
+      StrCpy $U_a $U_out
+      StrCpy $U_b 12
+      Call PadTo
+      StrCpy $3 $U_out
+      StrCpy $U_a $F1
       Call FolderHash
-      ${Sum} "    $U_out   $1"
+      ${Sum} "  $3$Root\$U_out"
     ${EndIf}
   ${Loop}
   FileClose $BH
-  ${Sum} "  The runtime has its own folder beside the app rather than inside it, to keep the paths inside it short: Windows still breaks on long ones."
-
-  ${Sum} ""
+  StrCpy $CapInd1 "  Shortcuts  "
+  StrCpy $CapInd2 "              "
   ${If} $Menu == "0"
-    ${Sum} "  Shortcuts:  none in the Start menu (this app asks for no menu entry)"
+    StrCpy $U_a "none in the Start menu: this app asks for no entry"
     ${If} $WantDesktop == "1"
-      ${Sum} "              a desktop shortcut '$SafeName'"
+      StrCpy $U_a "$U_a, but a desktop shortcut '$SafeName'"
     ${EndIf}
-    ${Sum} "  To start it:  $AppDir\launch.exe, or run this installer again"
+    Call SumPara
+    StrCpy $CapInd1 "  Start it   "
+    StrCpy $U_a "$AppDir\launch.exe, or run this installer again"
+    Call SumPara
   ${Else}
     ${If} $RootMode == "system"
-      ${Sum} "  Shortcuts:  Start menu folder '$SafeName' for all users, holding '$SafeName' and 'Uninstall $SafeName'"
+      StrCpy $U_a "Start menu folder '$SafeName' for all users, holding '$SafeName' and 'Uninstall $SafeName'"
     ${Else}
-      ${Sum} "  Shortcuts:  Start menu folder '$SafeName', holding '$SafeName' and 'Uninstall $SafeName'"
+      StrCpy $U_a "Start menu folder '$SafeName', holding '$SafeName' and 'Uninstall $SafeName'"
     ${EndIf}
     ${If} $WantDesktop == "1"
-      ${Sum} "              and a desktop shortcut '$SafeName'"
+      StrCpy $U_a "$U_a, and a desktop shortcut '$SafeName'"
     ${EndIf}
+    Call SumPara
   ${EndIf}
+  StrCpy $CapInd1 "  Uninstall  "
+  StrCpy $CapInd2 "              "
   ${If} $RootMode == "system"
-    ${Sum} "  Uninstaller:  $AppDir\uninstall.exe, listed in Add/Remove Programs (HKLM ...\Uninstall\ti-$AppId)"
+    StrCpy $U_a "$AppDir\uninstall.exe, listed in Add/Remove Programs (HKLM ...\Uninstall\ti-$AppId)"
   ${Else}
-    ${Sum} "  Uninstaller:  $AppDir\uninstall.exe, listed in Add/Remove Programs (HKCU ...\Uninstall\ti-$AppId)"
+    StrCpy $U_a "$AppDir\uninstall.exe, listed in Add/Remove Programs (HKCU ...\Uninstall\ti-$AppId)"
   ${EndIf}
-  ${Sum} "  PATH:  not changed"
+  Call SumPara
+  ${Sum} "  Record      $RecHash"
+  ${If} $LogPath != ""
+    ${Sum} "  Log         $LogPath"
+  ${EndIf}
+  ; Why two folders and not one, which is the question this section
+  ; otherwise leaves a reader holding.
+  StrCpy $CapInd1 "  "
+  StrCpy $CapInd2 "  "
+  StrCpy $U_a "The runtime has its own folder beside the app rather than inside it, to keep the paths inside it short: Windows still breaks on long ones."
+  Call SumPara
+
+  ; ---- WHAT RUNS. A second pass over the same block: the `step` lines
+  ; sit under the `file` they belong to, and Subst needs that file's
+  ; folder, so the walk is the same one DOWNLOADS makes.
+  ${Sum} ""
+  ${Sum} "WHAT RUNS"
+  StrCpy $2 0
+  Call OpenBlock
+  ${Do}
+    ${TiRead} $BH
+    ${If} ${Errors}
+      ${Break}
+    ${EndIf}
+    Call TiParseLine
+    ${If} $K S== "[target]"
+      ${Break}
+    ${ElseIf} $K S== "file"
+      StrCpy $CurName $F1
+      StrCpy $U_a $F1
+      Call FolderHash
+      StrCpy $CurDir "$Root\$U_out"
+      StrCpy $CurFile "$DlDir\$F2"
+    ${ElseIf} $K S== "step"
+    ${AndIf} $F1 S== "run"
+      IntOp $2 $2 + 1
+      ; a `run` step may carry its own description as a second value
+      ; (format.md "Steps"); it is what a person can actually judge, so
+      ; it is the row and the command goes under it.
+      ${If} $2 = 1
+        StrCpy $CapInd1 "  Setup    "
+      ${Else}
+        StrCpy $CapInd1 "           "
+      ${EndIf}
+      StrCpy $CapInd2 "           "
+      ${If} $F3 != ""
+        StrCpy $U_a "$F3"
+        Call SumPara
+      ${ElseIf} $2 = 1
+        ${Sum} "  Setup"
+      ${EndIf}
+      StrCpy $U_a "$F2"
+      Call Subst
+      StrCpy $U_a $U_out
+      Call CmdLine
+    ${EndIf}
+  ${Loop}
+  FileClose $BH
+  StrCpy $CurDir ""
+  StrCpy $CurFile ""
+  ${If} $TgtInstall != ""
+    ${Sum} "  Install  the project itself:"
+    StrCpy $U_a $TgtInstall
+    Call Subst
+    StrCpy $U_a $U_out
+    Call CmdLine
+  ${EndIf}
+  ${If} $2 = 0
+  ${AndIf} $TgtInstall == ""
+    ${Sum} "  Setup    nothing; no commands are run on this machine"
+  ${EndIf}
+  StrCpy $CapInd1 "  Launch   "
+  StrCpy $CapInd2 "           "
+  StrCpy $U_a "when you start $\"$AppName$\", its shortcuts and launch.exe run:"
+  Call SumPara
+  StrCpy $U_a $TgtLaunch
+  Call Subst
+  StrCpy $U_a $U_out
+  Call CmdLine
+  ${If} $2 > 0
+    StrCpy $CapInd1 "  "
+    StrCpy $CapInd2 "  "
+    StrCpy $U_a "The setup steps are the runtime install script, written by us, not the project's own code."
+    Call SumPara
+  ${EndIf}
   ${If} $TgtNote != ""
     ${Sum} ""
     ${Sum} "NOTE"
     ${Sum} "  $TgtNote"
   ${EndIf}
 
-  ${If} $LogPath != ""
-    ${Sum} ""
-    ${Sum} "  Install log: $LogPath"
-  ${EndIf}
-
   ${Sum} ""
-  ${Sum} "======================================================================"
-  ${Sum} "Ready to install $\"$AppName$\"."
-  ${Sum} "Nothing has been changed yet."
-  ${Sum} "======================================================================"
+  StrCpy $CapInd1 ""
+  StrCpy $CapInd2 ""
+  StrCpy $U_a 'Ready to install "$AppName". Nothing has been changed yet.'
+  Call SumPara
   FileClose $SumH
   FileClose $CmdH
   FileClose $UrlH
