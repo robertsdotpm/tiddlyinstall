@@ -77,6 +77,27 @@ async function loadArch(record) {
   archLabel = entry.label || m[1];
 }
 
+// Brave, and at least one download that is plain http://.
+function braveHttpNote(files) {
+  const el = $('job-brave');
+  if (!el) return;
+  el.hidden = true;
+  const insecure = files.some((f) => /^http:\/\//i.test(absUrl(f.url) || ''));
+  if (!insecure) return;
+  const brave = globalThis.navigator && navigator.brave;
+  if (!brave || typeof brave.isBrave !== 'function') return;
+  brave.isBrave().then((yes) => {
+    if (!yes) return;
+    el.innerHTML = '<strong>Brave will not download these over http.</strong> Brave rewrites ' +
+      '<code>http://</code> to <code>https://</code> for downloads, and this server answers plain ' +
+      'http on this address, so the download fails with "the file was not available from the ' +
+      'site" before it reaches us. Use an https address for the server if it has one, or ' +
+      '<strong>Save this page</strong> and build with no server: the page hands the installer ' +
+      'straight to you and nothing is downloaded from anywhere.';
+    el.hidden = false;
+  }, () => {});
+}
+
 function archCell(f) {
   const list = Array.isArray(f.arches) ? f.arches.filter((a) => typeof a === 'string') : null;
   if (list && list.length) {
@@ -219,6 +240,24 @@ function paintFiles(job) {
       '<td>' + esc(humanSize(f.size)) + '</td>' +
       '<td>' + esc(signed) + '</td></tr>';
   }).join('');
+  // Brave will not download from a plain-HTTP address.
+  //
+  // Not a fault in the file or the server: the request never leaves the
+  // browser. Brave upgrades http:// to https:// by default, which Chrome
+  // does not; where the server does not speak TLS on that port the
+  // download fails, and the downloads bubble reports "the file was not
+  // available from the site" -- a server error for something no server
+  // ever saw. Navigation falls back to http, so the page itself loads
+  // and only the download breaks, which is why it reads as our bug.
+  // Found on Windows 11, 2026-09-23; the server's log showed that
+  // machine fetching everything else on the same origin in the same
+  // minute, and no /dl/ request at all.
+  //
+  // Only said where it applies: Brave, and a link that is really
+  // http://. A page-built installer is handed over as a blob:, which has
+  // nothing to upgrade, and an https:// server is not affected.
+  braveHttpNote(files);
+
   // Which of the four applies to whoever is reading, where the browser
   // will say. It only ever marks a row; nothing is hidden on the strength
   // of it, because the file is usually for somebody else's machine.

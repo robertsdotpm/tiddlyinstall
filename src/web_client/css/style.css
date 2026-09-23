@@ -962,6 +962,8 @@ form:has(#tpl-tray:checked) .tpl-gui-only { display: block; }
 }
 .template-card[hidden], .combo[hidden], .write-editor[hidden], .unavailable[hidden],
 .template-note[hidden], .run-link[hidden], .editor-files[hidden] { display: none; }
+/* ...and the Brave-over-http note, which is one of these. */
+#job-brave[hidden] { display: none; }
 .template-note { margin: 8px 0 0; }
 
 /* Run output overlay, opened by the Run link via :target (no JS). */
