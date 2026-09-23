@@ -80,6 +80,24 @@ export class Remote {
 
   fileUrl(p) { return this.win ? 'file:///' + p.replace(/\\/g, '/') : 'file://' + p; }
 
+  // A static HTTP server on the machine, serving `root`, for a browser
+  // that will not be driven to a file:// URL.
+  //
+  // Safari is the one: safaridriver refuses to navigate to file://
+  // outright -- the page never loads, location.protocol stays
+  // "safari-resource:", and what the harness sees is "the page did not
+  // start", which for nine runs read like a browser that could not run
+  // the page. It runs it fine (2026-09-23: isSecureContext true,
+  // crypto.subtle present, over http on the same machine).
+  //
+  // Returns the ssh child process; kill it to stop the server.
+  startStaticServer(root, port, log) {
+    const cmd = `sh -c 'cd ${root} && python3 -m http.server ${port} --bind 127.0.0.1 </dev/null >/dev/null 2>&1 & p=$!; read x; kill $p 2>/dev/null; sleep 1; kill -9 $p 2>/dev/null'`;
+    const p = spawn('ssh', [...SSH_OPTS, this.ssh, cmd], { stdio: ['pipe', 'pipe', 'pipe'] });
+    if (log) { p.stdout.on('data', (d) => log(d)); p.stderr.on('data', (d) => log(d)); }
+    return p;
+  }
+
   // Reads browsers.json (and $HOME on Unix). Returns the parsed manifest.
   readManifest() {
     const r = this.win

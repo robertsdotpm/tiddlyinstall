@@ -22,7 +22,7 @@ BAT = r'''@echo off
 setlocal
 set T=C:\titest
 set ID=%APPID%
-"%T%\%FILE%" /S /log=%T%\install.log
+"%T%\%FILE%" /S %BACKENDARG% /log=%T%\install.log
 echo @install %ERRORLEVEL%
 set A=
 if exist "C:\ti\%ID%\launch.exe" set A=C:\ti\%ID%
@@ -112,7 +112,10 @@ def run_windows(vm, rt, mode, f, record, target):
     from run import sh, tail, plan_fails, verdict, arch_judge
     host = vm[0]
     name = f"Hello {rt}"
-    bat = BAT.replace("%APPID%", appid(record)).replace("%FILE%", Path(f).name).replace("%NAME%", name)
+    from run import BACKEND
+    backend_arg = "" if mode == "A" else "/backend=" + BACKEND
+    bat = (BAT.replace("%APPID%", appid(record)).replace("%FILE%", Path(f).name).replace("%NAME%", name)
+           .replace("%BACKENDARG%", backend_arg))
     if "profile" in vm[2:]:
         bat = in_profile(bat)
     win, scp = test_dir(vm)

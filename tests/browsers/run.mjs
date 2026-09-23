@@ -267,7 +267,7 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
   const rec = { time: new Date().toISOString(), machine: machine.name, browser: browserId, version: '', result: '', seed };
   const detail = { ...rec, checks: t.checks };
   const driverLog = [];
-  let cdpPort = 0, ssh = null, revProc = null, session = null, cdpConn = null, pwConn = null, entry = null, b = null;
+  let cdpPort = 0, ssh = null, revProc = null, staticProc = null, session = null, cdpConn = null, pwConn = null, entry = null, b = null;
   const tmp = fs.mkdtempSync(path.join(tmpRoot, 'run-'));
   const finish = (result, why) => {
     rec.result = why ? `${result}: ${why}` : result;
@@ -300,7 +300,31 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
     }
     const fx = await makeSignFixtures(tmp);
     for (const f of ['in.exe', 'in.run', 'rsa.pfx']) remote.put(fx.t(f), remote.dir('work', 'dl-' + runId, f));
-    const pageUrl = remote.fileUrl(remote.dir('work', pageName));
+    // Safari will not be driven to a file:// URL at all (remote.mjs
+    // startStaticServer), so it gets the same file over http from the
+    // machine it is running on. Everything else keeps file://, which is
+    // what a saved copy actually is.
+    const overHttp = entry.driverKind === 'safaridriver';
+    if (overHttp) {
+      // Safari has no WebDriver capability for the download folder -- the
+      // other three take it in their options -- so it is set as a
+      // preference on the machine before the session starts. Without it
+      // Safari saves to ~/Downloads, the harness looks in this run's
+      // folder, finds nothing, and reports it as the page failing to
+      // save. Which is how a browser that builds every installer
+      // correctly came out as a failure (2026-09-23).
+      remote.sh(`defaults write com.apple.Safari DownloadsPath ${JSON.stringify(dl)}`);
+      remote.sh('defaults write com.apple.Safari AlwaysPromptForDownloadFolder -bool false');
+      remote.sh('defaults write com.apple.Safari DownloadsClearingPolicy -int 0');
+    }
+    let staticPort = 0;
+    if (overHttp) {
+      staticPort = await freePort();
+      staticProc = remote.startStaticServer(remote.dir('work'), staticPort, null);
+      await sleep(2500);
+    }
+    const httpUrl = (...parts) => `http://127.0.0.1:${staticPort}/` + parts.join('/');
+    const pageUrl = overHttp ? httpUrl(pageName) : remote.fileUrl(remote.dir('work', pageName));
 
     // The driver (or DevTools, for a Chromium with no driver here).
     const port = await freePort();
@@ -484,7 +508,7 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
       detail.saveToDisk = 'no file';
     } else {
       detail.saveToDisk = 'saved';
-      await b.navigate(remote.fileUrl(remote.dir('work', 'dl-' + runId, savedName)));
+      await b.navigate(overHttp ? httpUrl('dl-' + runId, savedName) : remote.fileUrl(remote.dir('work', 'dl-' + runId, savedName)));
       const ok2 = await b.run(`try { return ${STARTED}; } catch (e) { return false; }`);
       let startedSaved = ok2;
       for (const end = Date.now() + 90000; Date.now() < end && !startedSaved; await sleep(500)) startedSaved = await js(STARTED);
@@ -586,6 +610,7 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
     if (/^(cdp|marionette)$/.test(rec.protocol) && cdpPort) remote.stopCdpBrowser(cdpPort);
     if (ssh) { try { ssh.stdin.end(); } catch (e) { /* gone */ } ssh.kill(); }
     if (revProc) revProc.kill();
+    if (staticProc) staticProc.kill();
     if (entry) remote.stopDrivers(entry);
     remote.remove(remote.dir('work', 'dl-' + runId));
     if (/^(cdp|marionette)$/.test(rec.protocol)) remote.remove(remote.dir('work', 'tiprof-' + runId));
