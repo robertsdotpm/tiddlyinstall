@@ -34,7 +34,7 @@ import urllib.request
 from pathlib import Path
 
 CATALOG = Path(__file__).resolve().parents[1]
-SCRATCH = Path("/tmp/claude-1000/-home-x-projects-soupchan/486236bc-c79b-4122-a479-de3b3a4a114a/scratchpad/pm")
+SCRATCH = Path(os.environ.get("PM_SCRATCH") or "/tmp/ti-pm")
 SCRATCH.mkdir(parents=True, exist_ok=True)
 UA = "Mozilla/5.0 (mine_version_managers.py; installer-builder-runtimes catalog mining)"
 
