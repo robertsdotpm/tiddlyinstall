@@ -657,10 +657,10 @@ ti_size_line() { # size [role]
 # says it is installed for the whole machine and survives the uninstall.
 ti_file_role() { # name -> what it is, or nothing
 	[ -n "$1" ] || return 0
-	if [ -n "$ti_rt_id" ] && [ "$1" = "$ti_rt_id" ]; then printf 'the runtime'; return 0; fi
+	if [ -n "$ti_rt_id" ] && [ "$1" = "$ti_rt_id" ]; then printf '%s runtime' "$(ti_cap1 "$1")"; return 0; fi
 	case " $ti_comp_names " in
 	*" $1 "*) printf 'a tool the install needs' ;;
-	*) printf 'part of the runtime' ;;
+	*) printf 'runtime part' ;;
 	esac
 }
 
@@ -814,6 +814,21 @@ ti_tilde() { # path
 ti_cap1() { # word
 	printf '%s%s' "$(printf '%s' "$1" | cut -c1 | LC_ALL=C tr '[:lower:]' '[:upper:]')" \
 		"$(printf '%s' "$1" | cut -c2-)"
+}
+
+# A WHAT RUNS row whose value is a command: the label sits on the
+# command's first line rather than on a line of its own introducing it.
+# ti_cmd_line always starts that line with TI_CMD_IND spaces, so the
+# label is written over them.
+# $HOME written as ~ wherever it appears in a command, which is a line
+# somebody reads rather than runs. The log keeps it in full.
+ti_tilde_all() { # text
+	case ${HOME:-} in '' | / | */) printf '%s' "$1"; return 0 ;; esac
+	printf '%s' "$1" | sed "s|$HOME/|~/|g"
+}
+
+ti_run_cmd() { # label command
+	ti_cmd_line "$2" | sed "1s/^ \{11\}/  $(printf '%-9s' "$1")/"
 }
 
 # One DOWNLOADS row: two padded columns and a tail that may be long.
@@ -3609,7 +3624,7 @@ ti_install_main() {
 		ti_rt_id=$1
 		if [ -n "$a_arch" ]; then
 			ti_rt_note=$(ti_arch_note "$a_arch" "$a_name")
-			ti_rt_line="$a_name $a_ver, $(ti_arch_words "$a_arch")$ti_rt_note"
+			ti_rt_line="$(ti_cap1 "$a_name") $a_ver, $(ti_arch_words "$a_arch")$ti_rt_note"
 		else
 			ti_rt_line=$(printf '%s' "$rt" | tr '\t' ' ')
 		fi
@@ -3736,13 +3751,13 @@ ti_install_main() {
 		if [ "$ti_cap_n" -gt 0 ]; then
 			printf '\nBEYOND AN ORDINARY INSTALL\n'
 			while IFS= read -r c; do
-				printf '  !   %s\n' "$c" | ti_wrap 74 6
+				printf '  !  %s\n' "$c" | ti_wrap 74 5
 			done < "$ti_caps"
 		fi
 		if [ -s "$ti_warn" ]; then
 			printf '\nWARNINGS\n'
 			while IFS= read -r w; do
-				printf '  %s\n' "$w" | ti_wrap 74 6
+				printf '  %s\n' "$w" | ti_wrap 74 5
 			done < "$ti_warn"
 		fi
 
@@ -3788,7 +3803,7 @@ ti_install_main() {
 		# checked against a SHA-256, who signed what, where it all goes
 		# -- can reasonably come away thinking we vetted the program.
 		# We have never looked at it.
-		printf '  !   %s\n' "$ti_vouch" | ti_wrap 74 6
+		printf '  !  %s\n' "$ti_vouch" | ti_wrap 74 5
 
 		# The installer file itself.
 		printf '\n'
@@ -3799,19 +3814,19 @@ ti_install_main() {
 			# about the format. With no signature, comparing the hash
 			# is the only check that happens anywhere but inside this
 			# file, which is what makes it the one worth doing.
-			printf '  !   %s\n' 'This installer is unsigned (Linux never checks .run signatures). Compare its SHA-256 with the one shown where you downloaded it:' | ti_wrap 74 6
-			[ -n "$ti_self_sha" ] && printf '      %s\n' "$ti_self_sha"
+			printf '  !  %s\n' 'This installer is unsigned (Linux never checks .run signatures). Compare its SHA-256 with the one shown where you downloaded it:' | ti_wrap 74 5
+			[ -n "$ti_self_sha" ] && printf '     %s\n' "$ti_self_sha"
 			;;
 		UNSIGNED*)
-			printf '  !   %s\n' "This installer is unsigned: $ti_signed_why Compare its SHA-256 with the one shown where you downloaded it:" | ti_wrap 74 6
-			[ -n "$ti_self_sha" ] && printf '      %s\n' "$ti_self_sha"
+			printf '  !  %s\n' "This installer is unsigned: $ti_signed_why Compare its SHA-256 with the one shown where you downloaded it:" | ti_wrap 74 5
+			[ -n "$ti_self_sha" ] && printf '     %s\n' "$ti_self_sha"
 			;;
 		'SIGNED, BUT'*)
-			printf '  !   %s\n' "This installer is signed, but this machine cannot identify the signer: $ti_signed_why" | ti_wrap 74 6
+			printf '  !  %s\n' "This installer is signed, but this machine cannot identify the signer: $ti_signed_why" | ti_wrap 74 5
 			[ -n "$ti_self_sha" ] && printf '      SHA-256 %s\n' "$ti_self_sha"
 			;;
 		*)
-			printf '  ok  %s\n' "$ti_signed_label.${ti_signed_scope:+ $ti_signed_scope}" | ti_wrap 74 6
+			printf '  ok %s\n' "$ti_signed_label.${ti_signed_scope:+ $ti_signed_scope}" | ti_wrap 74 5
 			[ -n "$ti_self_sha" ] && printf '      SHA-256 %s\n' "$ti_self_sha"
 			;;
 		esac
@@ -3832,27 +3847,27 @@ ti_install_main() {
 		#               opinion and does not get a tick.
 		printf '\n'
 		if [ "$ti_rt_state" = ok ]; then
-			printf '  ok  %s\n' "Runtime setup is signed by TiddlyInstall${TI_PLAN_KEYID:+ (key $TI_PLAN_KEYID)}, verified offline. Covers the downloads, their hashes and setup commands - not the launch command, which the builder wrote." | ti_wrap 74 6
-			[ -n "$ti_rt_issued" ] && printf '      %s\n' "Published $ti_rt_issued." | ti_wrap 74 6
+			printf '  ok %s\n' "Runtime setup is signed by TiddlyInstall${TI_PLAN_KEYID:+ (key $TI_PLAN_KEYID)}, verified offline. Covers the downloads, their hashes and setup commands - not the launch command, which the builder wrote." | ti_wrap 74 5
+			[ -n "$ti_rt_issued" ] && printf '     %s\n' "Published $ti_rt_issued." | ti_wrap 74 5
 		elif [ "$ti_rt_state" = bad ]; then
-			printf '  !   %s\n' "Runtime setup claims to be ours and the claim does not hold: $ti_rt_why. Treat this file as altered." | ti_wrap 74 6
+			printf '  !  %s\n' "Runtime setup claims to be ours and the claim does not hold: $ti_rt_why. Treat this file as altered." | ti_wrap 74 5
 		elif [ "$ti_plan_sigstate" = ok ] && [ -n "$TI_PLAN_KEYID" ] && [ "$TI_PLAN_KIND" = fetched ]; then
-			printf '  ok  %s\n' "Runtime setup is signed by TiddlyInstall (key $TI_PLAN_KEYID), fetched and checked here before any of it was read, so a script altered on the way would have been refused." | ti_wrap 74 6
+			printf '  ok %s\n' "Runtime setup is signed by TiddlyInstall (key $TI_PLAN_KEYID), fetched and checked here before any of it was read, so a script altered on the way would have been refused." | ti_wrap 74 5
 		elif [ "$ti_plan_sigstate" = ok ] && [ -n "$TI_PLAN_KEYID" ]; then
-			printf '  --  %s\n' "Runtime setup carries a TiddlyInstall signature (key $TI_PLAN_KEYID), checked by this file against a key inside this file. It is worth what the file is worth, so it is not a second opinion: the SHA-256 above is." | ti_wrap 74 6
+			printf '  -- %s\n' "Runtime setup carries a TiddlyInstall signature (key $TI_PLAN_KEYID), checked by this file against a key inside this file. It is worth what the file is worth, so it is not a second opinion: the SHA-256 above is." | ti_wrap 74 5
 		elif [ "$ti_plan_sigstate" = unsigned ]; then
 			# The ordinary state of an installer built in a page, which
 			# has no key to sign with. Said once, plainly, and without
 			# the sentence that used to be here -- "anybody can write
 			# one" -- which was true of every installer ever made.
-			printf '  --  %s\n' 'Runtime setup is not signed: only our build server holds the key, and a page building in a browser cannot reach it. What it does is under WHAT RUNS in full, and every file is checked against the SHA-256 beside it - but those hashes are the setup script'"'"'s own.' | ti_wrap 74 6
+			printf '  -- %s\n' 'Runtime setup is not signed: only our build server holds the key, and a page building in a browser cannot reach it. What it does is under WHAT RUNS in full, and every file is checked against the SHA-256 beside it - but those hashes are the setup script'"'"'s own.' | ti_wrap 74 5
 		elif [ -n "$ti_plan_warn" ]; then
-			printf '  --  %s\n' 'Nothing vouches for the runtime setup, so what this screen says is only what the setup itself says. See WARNINGS.' | ti_wrap 74 6
+			printf '  -- %s\n' 'Nothing vouches for the runtime setup, so what this screen says is only what the setup itself says. See WARNINGS.' | ti_wrap 74 5
 		elif [ "$TI_PLAN_FROM" != embedded ]; then
-			printf '  --  %s\n' "Runtime setup came from $TI_PLAN_FROM, and nothing here can say who wrote it." | ti_wrap 74 6
+			printf '  -- %s\n' "Runtime setup came from $TI_PLAN_FROM, and nothing here can say who wrote it." | ti_wrap 74 5
 		fi
 		if [ -n "$TI_PLAN_SIGNED" ] && [ "$ti_plan_sigstate" != ok ] && [ "$ti_rt_state" != ok ]; then
-			printf '      %s\n' "Written $TI_PLAN_SIGNED, by whoever built this installer." | ti_wrap 74 6
+			printf '     %s\n' "Written $TI_PLAN_SIGNED, by whoever built this installer." | ti_wrap 74 5
 		fi
 
 		# What was withdrawn since. The note says which of the two
@@ -3860,18 +3875,18 @@ ti_install_main() {
 		if [ -n "$ti_revoke_note" ]; then
 			printf '\n'
 			case $ti_revoke_note in
-			checked*) printf '  ok  Revocations %s\n' "$ti_revoke_note" | ti_wrap 74 6 ;;
-			*) printf '  --  Revocations %s\n' "$ti_revoke_note" | ti_wrap 74 6 ;;
+			checked*) printf '  ok  Revocations %s\n' "$ti_revoke_note" | ti_wrap 74 5 ;;
+			*) printf '  --  Revocations %s\n' "$ti_revoke_note" | ti_wrap 74 5 ;;
 			esac
 		fi
 		if [ "$TI_MODE_A" = 1 ]; then
-			printf '\n  ok  %s\n' "Mode A: this installer carries no choices of its own and installs only the app its file name names, from $TI_DEFAULT_BACKEND" | ti_wrap 74 6
+			printf '\n  ok %s\n' "Mode A: this installer carries no choices of its own and installs only the app its file name names, from $TI_DEFAULT_BACKEND" | ti_wrap 74 5
 		fi
 
 		printf '\n  %s\n' "Choices came from $TI_ORIGIN -- what was picked in the web client. The setup under WHAT RUNS is what carries them out." | ti_wrap 74 2
 		# Everything here can be read without running the file, which is
 		# worth saying on the screen you only reach by running it.
-		printf '  %s\n' "Verify without running: open $TI_DEFAULT_BACKEND/#verify and drop this file on it." | ti_wrap 74 2
+		printf '  %s\n' "Verify without running: drop this file on $TI_DEFAULT_BACKEND/#verify" | ti_wrap 74 2
 
 		# ---- DOWNLOADS. One line per file and one for its hash. Where
 		# it comes from is a host and a count; the log keeps every URL.
@@ -3927,7 +3942,7 @@ ti_install_main() {
 				printf '  %-12s%s/%s, with the app and its uninstaller\n' 'Applications' \
 					"$(ti_tilde "$([ $TI_SYSTEM = 1 ] && echo /Applications || echo "$HOME/Applications")")" "$TI_NAME_DISP" | ti_wrap 74 14
 			else
-				printf '  %-12s"%s" folder (ti-%s.* in the XDG menu folders)\n' 'Menu' "$TI_NAME_DISP" "$TI_APPID" | ti_wrap 74 14
+				printf '  %-12s"%s" folder (ti-%s.* in XDG menus)\n' 'Menu' "$TI_NAME_DISP" "$TI_APPID" | ti_wrap 74 14
 			fi
 		else
 			printf '  %-12s%s\n' 'Menu' "nothing in the $([ "$TI_OS" = macos ] && echo 'Applications folder' || echo 'app menu'): this app asks for no entry" | ti_wrap 74 14
@@ -3954,32 +3969,42 @@ ti_install_main() {
 		printf '\nWHAT RUNS\n'
 		ti_cmd_ind0=$TI_CMD_IND ti_cmd_cont0=$TI_CMD_CONT
 		TI_CMD_IND=11 TI_CMD_CONT=13
-		ti_stepn=0
-		ti_sel step | awk -F"$tab" '$2 == "run" { print $3 "\t" $4 }' |
-			while IFS="$tab" read -r c d; do
-				ti_stepn=$((ti_stepn + 1))
-				[ "$ti_stepn" = 1 ] && lbl=Setup || lbl=
-				if [ -n "$d" ]; then
-					printf '  %-9s%s\n' "$lbl" "$d" | ti_wrap 74 11
-				elif [ -n "$lbl" ]; then
-					printf '  %s\n' "$lbl"
-				fi
-				ti_cmd_line "$(ti_subst "$c")"
-			done
+		# The setup steps are the one thing on this screen that is
+		# proved ours. Printing them in full as well asks the reader to
+		# audit by eye the thing the signature was added so they would
+		# not have to -- and twenty lines of msiexec is how a screen
+		# teaches somebody to scroll past it. So: where they are proved,
+		# one line; where nothing vouches for them, every one of them,
+		# because then reading is all a person has. Either way the log
+		# and the Verify page carry them in full.
+		if [ "$ti_rt_state" = ok ] && [ "$ti_nrun" -gt 0 ]; then
+			printf '  %-9s%s\n' 'Setup' "$ti_nrun $(ti_plural "$ti_nrun" command commands) that set up ${a_name:-the runtime}, published by us and proved above. In the log in full, and at $TI_DEFAULT_BACKEND/#verify." | ti_wrap 74 11
+		else
+			ti_stepn=0
+			ti_sel step | awk -F"$tab" '$2 == "run" { print $3 "\t" $4 }' |
+				while IFS="$tab" read -r c d; do
+					ti_stepn=$((ti_stepn + 1))
+					[ "$ti_stepn" = 1 ] && lbl=Setup || lbl=
+					if [ -n "$d" ]; then
+						printf '  %-9s%s\n' "$lbl" "$d" | ti_wrap 74 11
+						ti_cmd_line "$(ti_subst "$c")"
+					else
+						ti_run_cmd "$lbl" "$(ti_subst "$c")"
+					fi
+				done
+		fi
 		ins=$(ti_sel1 install)
 		if [ -n "$ins" ]; then
-			printf '  %-9s%s\n' 'Install' 'the project itself:' | ti_wrap 74 11
-			ti_cmd_line "$(ti_subst "$ins")"
+			ti_run_cmd Install "$(ti_subst "$ins")"
 		fi
 		[ "$ti_nrun" = 0 ] && [ -z "$ins" ] && printf '  %-9s%s\n' 'Setup' 'nothing; no commands are run on this machine' | ti_wrap 74 11
-		printf '  %-9s%s\n' 'Launch' "when you start \"$TI_NAME_DISP\", its menu entry and launch.sh run:" | ti_wrap 74 11
-		ti_cmd_line "$(ti_subst "$(ti_sel1 launch)")"
+		ti_run_cmd Launch "$(ti_tilde_all "$(ti_subst "$(ti_sel1 launch)")")"
 		TI_CMD_IND=$ti_cmd_ind0 TI_CMD_CONT=$ti_cmd_cont0
 		if [ "$ti_nrun" -gt 0 ]; then
 			printf '  %s\n' "The setup steps are the runtime install script, written by us, not ${TI_PROJECT:-the project}'s code." | ti_wrap 74 2
 		fi
 
-		ti_sel note | sed 's/^/\nNOTE: /' | ti_wrap 74 6
+		ti_sel note | sed 's/^/\nNOTE: /' | ti_wrap 74 5
 		ti_needs_summary
 
 		printf '\nReady to install "%s". Nothing has been changed yet.\n' "$TI_NAME_DISP" | ti_wrap 74 0

@@ -387,6 +387,49 @@ static void brtf(ti_buf *b, WCHAR c)
   }
 }
 
+/* A marked item on the review screen: two spaces, a mark, and the text
+ * at column five.
+ *
+ *     !  TiddlyInstall did not write or review "Hello python".
+ *        Install it only if you trust its publisher.
+ *
+ * In a terminal the padding lines the wrapped lines up under the text.
+ * Here the font is proportional and a run of spaces collapses to one
+ * space's width, so the shape has to be asked for -- a hanging indent,
+ * the mark in the margin -- rather than spelled out with spaces. Asking
+ * for it with spaces is what turned these into grey monospace blocks
+ * under a sentence at the left margin, because an indent of four or
+ * more is read below as a hash or a command.
+ *
+ * Layout, not emphasis, so it lives here and not in linepaint.h: the
+ * shared rules say which lines are headings or warnings, and those are
+ * the same in both painters. How far a wrapped line is pushed in is not
+ * -- in a monospace terminal the spaces already do it.
+ *
+ * Returns 5 (where the text starts) for a marked line, else 0. */
+#define TI_MARK_COL 5
+static int mark_cols(const WCHAR *l, int len)
+{
+  int i;
+  if (len < TI_MARK_COL + 1 || l[0] != ' ' || l[1] != ' ' || l[2] == ' ') return 0;
+  if (l[2] == '!' && l[3] == ' ') i = 3;
+  else if (l[2] == 'o' && l[3] == 'k') i = 4;
+  else if (l[2] == '-' && l[3] == '-') i = 4;
+  else return 0;
+  while (i < TI_MARK_COL) { if (l[i] != ' ') return 0; i++; }
+  return l[TI_MARK_COL] == ' ' ? 0 : TI_MARK_COL;
+}
+
+/* One long unbroken token -- a hash, or a path with no spaces in it --
+ * is data, and stays monospace wherever it sits. */
+static int is_long_token(const WCHAR *l, int len, int from)
+{
+  int i;
+  if (len - from < 32) return 0;
+  for (i = from; i < len; ++i) if (l[i] == ' ') return 0;
+  return 1;
+}
+
 static int indent_of(const WCHAR *l, int len)
 {
   int i = 0;
@@ -405,7 +448,7 @@ void __declspec(dllexport) __cdecl richtext(HWND parent, int size, WCHAR *vars, 
   ti_buf b;
   ti_settextex st;
   LRESULT r;
-  int mono_section = 0, short_section = 0;
+  int mono_section = 0, short_section = 0, in_mark = 0, mc = 0;
   (void)parent; (void)vars; (void)extra;
 
   arg = (WCHAR *)GlobalAlloc(GPTR, (size_t)size * sizeof(WCHAR));
@@ -541,6 +584,24 @@ void __declspec(dllexport) __cdecl richtext(HWND parent, int size, WCHAR *vars, 
       bstr(&b, "\\par\n");
       continue;
     }
+    mc = mark_cols(l, len);
+    if (mc) {
+      in_mark = 1;
+      bstr(&b, "\\pard\\li450\\fi-450\\tx450 ");
+      for (j = 2; j < mc && l[j] != ' '; ++j) brtf(&b, l[j]);
+      bstr(&b, "\\tab ");
+      for (j = mc; j < len; ++j) brtf(&b, l[j]);
+      bstr(&b, "\\par\n");
+      continue;
+    }
+    if (in_mark && ind == TI_MARK_COL && len > ind) {
+      bstr(&b, is_long_token(l, len, ind)
+        ? "\\pard\\li450\\fi0\\f1\\fs16\\cf4 " : "\\pard\\li450\\fi0 ");
+      for (j = ind; j < len; ++j) brtf(&b, l[j]);
+      bstr(&b, is_long_token(l, len, ind) ? "\\cf1\\f0\\fs17\\par\n" : "\\par\n");
+      continue;
+    }
+    in_mark = 0;
     if (ind >= 4 || (mono_section && len > 0)) {
       bstr(&b, "\\pard\\f1\\fs16\\cf4 ");
       for (j = 0; j < len; ++j) brtf(&b, l[j]);

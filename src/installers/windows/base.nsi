@@ -235,6 +235,8 @@ Var RegRootName
 Var RegKey
 Var Created          ; 1 once we have created the app folder
 Var SumH
+Var CmdLabel         ; a label written over a command's first indent
+Var CmdCont          ; and what its wrapped lines are indented by
 Var ReviewOut        ; /ti-review=<file>: write the review text there and install nothing
 ; function parameters
 Var FF_line
@@ -1685,7 +1687,18 @@ Function CheckPlan
   ; uses: unsigned / bad: / cannot:.
   StrCpy $0 $PlanSig 4
   StrCpy $1 $PlanSig 7
-  ${If} $PlanSig == "unsigned"
+  ; A prefix, not the whole string. ti_plan_sig answers "unsigned" on
+  ; its own here and "unsigned: no signature line" there, and an exact
+  ; match sent every page-built installer -- which is every installer
+  ; built with no server, so the common case -- down the ${Else} arm and
+  ; called it "bad". That put a red !! WARNINGS block reading "is not
+  ; signed by the TiddlyInstall key" on the ordinary state of our own
+  ; output, which is the one thing this screen is not allowed to do.
+  ; The Unix engine matches the bare word and never showed it, so no
+  ; fixture with an unsigned embedded plan ever reached this arm
+  ; (found by the operator on Windows, 2026-09-23).
+  StrCpy $3 $PlanSig 8
+  ${If} $3 == "unsigned"
     StrCpy $2 "carries no signature by the TiddlyInstall key"
     StrCpy $PlanSigState "unsigned"
   ${ElseIf} $0 == "bad:"
@@ -3359,6 +3372,15 @@ Function CmdLine
   Push $U_b
   Push $U_c
   ${SumCmd} "  $U_a"
+  ; A label written over this command's first indent, so WHAT RUNS reads
+  ; "Launch   <command>" rather than a sentence introducing one.
+  StrCpy $7 "     "
+  StrCpy $CmdCont "         "
+  ${If} $CmdLabel != ""
+    StrCpy $7 $CmdLabel
+    StrCpy $CmdLabel ""
+    StrCpy $CmdCont "           "
+  ${EndIf}
   StrLen $0 $U_a
   ; The longest that still fits: the first line's room plus the rest's,
   ; and one space joining each pair of lines.
@@ -3368,11 +3390,11 @@ Function CmdLine
   IntOp $2 $2 - ${TI_CMD_IND}
   ${If} $0 > $2
     StrCpy $1 $U_a 93
-    ${Sum} "     $1..."
+    ${Sum} "$7$1..."
     ${Sum} "     ($0 characters in all; the whole command is at the end of the log)"
   ${Else}
     StrCpy $2 $U_a                         ; what is left to print
-    StrCpy $3 "     "                      ; this line's indent
+    StrCpy $3 $7                           ; this line's indent
     IntOp $4 ${TI_CMD_W} - ${TI_CMD_IND}   ; and its room
     ${Do}
       StrLen $0 $2
@@ -3425,7 +3447,7 @@ Function CmdLine
       ${Sum} "$3$7"
       IntOp $1 $1 + 1
       StrCpy $2 $2 "" $1
-      StrCpy $3 "         "
+      StrCpy $3 $CmdCont
       IntOp $4 ${TI_CMD_W} - ${TI_CMD_CONT}
     ${Loop}
   ${EndIf}
@@ -4368,7 +4390,7 @@ Function WriteSummary
   ${If} $RootMode == "system"
     StrCpy $3 "for every user on this machine"
   ${Else}
-    StrCpy $3 "for your user account only"
+    StrCpy $3 "for your user only"
   ${EndIf}
   ${If} $NdMissing > 0
     StrCpy $3 "$3; needs admin rights, to install $NdLabels for the whole computer"
@@ -4385,12 +4407,17 @@ Function WriteSummary
     StrCpy $CapInd1 "  Runtime    "
     StrCpy $CapInd2 "             "
     ${If} $TgtRtArch == ""
-      StrCpy $U_a "$TgtRuntime, in its own folder"
+      StrCpy $U_a $TgtRuntime
+      Call Cap1
+      StrCpy $U_a "$U_out, in its own folder"
     ${Else}
       Call ArchWords
       StrCpy $0 $U_out
       Call ArchNote
-      StrCpy $U_a "$TgtRuntime, $0$U_out, in its own folder"
+      StrCpy $4 "$0$U_out"
+      StrCpy $U_a $TgtRuntime
+      Call Cap1
+      StrCpy $U_a "$U_out, $4, in its own folder"
     ${EndIf}
     Call SumPara
   ${EndIf}
@@ -4450,21 +4477,17 @@ Function WriteSummary
   ; and an old console does not have the glyphs.
   ${Sum} ""
   ${Sum} "BEFORE YOU TRUST IT"
-  ; The continuation indent is two, not six, and the mark column is
-  ; only an alignment for a terminal. The RichEdit control renders this
-  ; text in a proportional font, where a run of leading spaces collapses
-  ; to one space's width: an item wrapped to six came out as a grey
-  ; monospace block under a sentence at the left margin, because the
-  ; painter reads an indent of four or more as a hash or a command
-  ; (plugin-src/tisig.c, "indented four or more"). ti-engine.sh keeps
-  ; six, where the terminal is monospace and the hang is real.
+  ; The mark hangs in the margin and the text starts at column five, as
+  ; it does in the other engine. The spaces are for a terminal; here
+  ; they collapse, so tisig.c's mark_cols reads this shape and asks
+  ; RichEdit for a real hanging indent instead.
 
   ; Whose program this is. Always first and always present: a reader who
   ; gets through the rest of this section -- every file checked against
   ; a SHA-256, who signed what, where it all goes -- can reasonably come
   ; away thinking we vetted the program. We have never looked at it.
-  StrCpy $CapInd1 "  !   "
-  StrCpy $CapInd2 "  "
+  StrCpy $CapInd1 "  !  "
+  StrCpy $CapInd2 "     "
   StrCpy $U_a 'TiddlyInstall did not write or review "$AppName". Install it only if you trust its publisher.'
   Call SumPara
 
@@ -4474,22 +4497,22 @@ Function WriteSummary
   ; is ours. So where there is a signer, the line says what it covers.
   ${Sum} ""
   ${If} $SignedBy != ""
-    StrCpy $CapInd1 "  ok  "
-    StrCpy $CapInd2 "  "
+    StrCpy $CapInd1 "  ok "
+    StrCpy $CapInd2 "     "
     StrCpy $U_a "Signed by $SignedBy, as the certificate names it; Windows checks the signature. It covers this installer file, not the program it installs."
     Call SumPara
   ${Else}
     ; With no signature there is nothing on this machine that can vouch
     ; for the file, so the one check left is the one that happens
     ; somewhere else: comparing this hash with the page it came from.
-    StrCpy $CapInd1 "  !   "
-    StrCpy $CapInd2 "  "
+    StrCpy $CapInd1 "  !  "
+    StrCpy $CapInd2 "     "
     StrCpy $U_a "This installer is unsigned, so Windows cannot tell you who made it. Compare its SHA-256 with the one shown where you downloaded it:"
     Call SumPara
     StrCpy $U_a "$EXEPATH"
     Call Sha256File
     ${If} $U_out != ""
-      ${Sum} "      $U_out"
+      ${Sum} "     $U_out"
     ${EndIf}
   ${EndIf}
 
@@ -4511,8 +4534,8 @@ Function WriteSummary
   ; without a signing key, and an unguarded line would name a key nobody
   ; has.
   ${Sum} ""
-  StrCpy $CapInd1 "  ok  "
-  StrCpy $CapInd2 "  "
+  StrCpy $CapInd1 "  ok "
+  StrCpy $CapInd2 "     "
   ${If} $RtState == "ok"
     ${If} "${TI_PLAN_KEYID}" != "?"
       StrCpy $U_a "Runtime setup is signed by TiddlyInstall (key ${TI_PLAN_KEYID}), verified offline. Covers the downloads, their hashes and setup commands - not the launch command, which the builder wrote."
@@ -4521,10 +4544,10 @@ Function WriteSummary
     ${EndIf}
     Call SumPara
     ${If} $RtIssued != ""
-      ${Sum} "      Published $RtIssued."
+      ${Sum} "     Published $RtIssued."
     ${EndIf}
   ${ElseIf} $RtState == "bad"
-    StrCpy $CapInd1 "  !   "
+    StrCpy $CapInd1 "  !  "
     StrCpy $U_a "Runtime setup claims to be ours and the claim does not hold: $RtWhy. Treat this file as altered."
     Call SumPara
   ${ElseIf} $PlanSigState == "ok"
@@ -4534,28 +4557,28 @@ Function WriteSummary
     Call SumPara
   ${ElseIf} $PlanSigState == "ok"
   ${AndIf} "${TI_PLAN_KEYID}" != "?"
-    StrCpy $CapInd1 "  --  "
+    StrCpy $CapInd1 "  -- "
     StrCpy $U_a "Runtime setup carries a TiddlyInstall signature (key ${TI_PLAN_KEYID}), checked by this file against a key inside this file. It is worth what the file is worth, so it is not a second opinion: the SHA-256 above is."
     Call SumPara
   ${ElseIf} $PlanSigState == "unsigned"
     ; The ordinary state of an installer built in a page, which has no
     ; key to sign with. Said once, plainly.
-    StrCpy $CapInd1 "  --  "
+    StrCpy $CapInd1 "  -- "
     StrCpy $U_a "Runtime setup is not signed: only our build server holds the key, and a page building in a browser cannot reach it. What it does is under WHAT RUNS in full, and every file is checked against the SHA-256 beside it - but those hashes are the setup script's own."
     Call SumPara
   ${ElseIf} $PlanWarn != ""
-    StrCpy $CapInd1 "  --  "
+    StrCpy $CapInd1 "  -- "
     StrCpy $U_a "Nothing vouches for the runtime setup, so what this screen says is only what the setup itself says. See WARNINGS."
     Call SumPara
   ${ElseIf} $PlanKind != "embedded"
-    StrCpy $CapInd1 "  --  "
+    StrCpy $CapInd1 "  -- "
     StrCpy $U_a "Runtime setup came from $PlanSrc, and nothing here can say who wrote it."
     Call SumPara
   ${EndIf}
   ${If} $PlanSigned != ""
   ${AndIf} $PlanSigState != "ok"
   ${AndIf} $RtState != "ok"
-    StrCpy $CapInd1 "      "
+    StrCpy $CapInd1 "     "
     StrCpy $U_a "Written $PlanSigned, by whoever built this installer."
     Call SumPara
   ${EndIf}
@@ -4568,18 +4591,18 @@ Function WriteSummary
     StrCpy $U_b "checked"
     Call StrStarts
     ${If} $U_out = 1
-      StrCpy $CapInd1 "  ok  "
+      StrCpy $CapInd1 "  ok "
     ${Else}
-      StrCpy $CapInd1 "  --  "
+      StrCpy $CapInd1 "  -- "
     ${EndIf}
-    StrCpy $CapInd2 "  "
+    StrCpy $CapInd2 "     "
     StrCpy $U_a "Revocations $RevokeNote"
     Call SumPara
   ${EndIf}
   ${If} $ModeA = 1
     ${Sum} ""
-    StrCpy $CapInd1 "  ok  "
-    StrCpy $CapInd2 "  "
+    StrCpy $CapInd1 "  ok "
+    StrCpy $CapInd2 "     "
     StrCpy $U_a "Mode A: this installer carries no choices of its own and installs only the app its file name names, from ${TI_BACKEND}."
     Call SumPara
   ${EndIf}
@@ -4591,7 +4614,7 @@ Function WriteSummary
   Call SumPara
   ; Everything here can be read without running the file, which is worth
   ; saying on the screen you only reach by running it.
-  StrCpy $U_a "Verify without running: open ${TI_BACKEND}/#verify and drop this file on it."
+  StrCpy $U_a "Verify without running: drop this file on ${TI_BACKEND}/#verify"
   Call SumPara
   ${If} $NdCount > 0
     ${Sum} ""
@@ -4640,7 +4663,9 @@ Function WriteSummary
       ; runtime; one whose folder goes on PATH is a companion the recipe
       ; requires; every other one is part of the runtime's own setup.
       ${If} $F1 S== $TgtRtName
-        StrCpy $FileRole "the runtime"
+        StrCpy $U_a $F1
+        Call Cap1
+        StrCpy $FileRole "$U_out runtime"
       ${Else}
         StrCpy $U_a $CompDirs
         StrCpy $U_b ", $F1, "
@@ -4648,7 +4673,7 @@ Function WriteSummary
         ${If} $U_out = 1
           StrCpy $FileRole "a tool the install needs"
         ${Else}
-          StrCpy $FileRole "part of the runtime"
+          StrCpy $FileRole "runtime part"
         ${EndIf}
       ${EndIf}
       StrCpy $U_a "$FileRole"
@@ -4734,7 +4759,7 @@ Function WriteSummary
     ${EndIf}
   ${Loop}
   FileClose $BH
-  StrCpy $CapInd1 "  Shortcuts  "
+  StrCpy $CapInd1 "  Shortcuts   "
   StrCpy $CapInd2 "              "
   ${If} $Menu == "0"
     StrCpy $U_a "none in the Start menu: this app asks for no entry"
@@ -4742,7 +4767,7 @@ Function WriteSummary
       StrCpy $U_a "$U_a, but a desktop shortcut '$SafeName'"
     ${EndIf}
     Call SumPara
-    StrCpy $CapInd1 "  Start it   "
+    StrCpy $CapInd1 "  Start it     "
     StrCpy $U_a "$AppDir\launch.exe, or run this installer again"
     Call SumPara
   ${Else}
@@ -4756,7 +4781,7 @@ Function WriteSummary
     ${EndIf}
     Call SumPara
   ${EndIf}
-  StrCpy $CapInd1 "  Uninstall  "
+  StrCpy $CapInd1 "  Uninstall   "
   StrCpy $CapInd2 "              "
   ${If} $RootMode == "system"
     StrCpy $U_a "$AppDir\uninstall.exe, listed in Add/Remove Programs (HKLM ...\Uninstall\ti-$AppId)"
@@ -4780,6 +4805,24 @@ Function WriteSummary
   ; folder, so the walk is the same one DOWNLOADS makes.
   ${Sum} ""
   ${Sum} "WHAT RUNS"
+  ; The setup steps are the one thing on this screen that is proved
+  ; ours. Printing them in full as well asks the reader to audit by eye
+  ; the thing the signature was added so they would not have to -- and
+  ; twenty lines of msiexec is how a screen teaches somebody to scroll
+  ; past it. So: where they are proved, one line; where nothing vouches
+  ; for them, every one of them, because then reading is all a person
+  ; has. Either way the log and the Verify page carry them in full.
+  ${If} $RtState == "ok"
+  ${AndIf} $SumRuns > 0
+    StrCpy $U_a $SumRuns
+    StrCpy $U_b "command"
+    Call Plural
+    StrCpy $CapInd1 "  Setup    "
+    StrCpy $CapInd2 "           "
+    StrCpy $U_a "$SumRuns $U_out that set up the $TgtRuntime runtime, published by us and proved above. In the log in full, and at ${TI_BACKEND}/#verify."
+    Call SumPara
+    StrCpy $2 $SumRuns
+  ${Else}
   StrCpy $2 0
   Call OpenBlock
   ${Do}
@@ -4812,7 +4855,7 @@ Function WriteSummary
         StrCpy $U_a "$F3"
         Call SumPara
       ${ElseIf} $2 = 1
-        ${Sum} "  Setup"
+        StrCpy $CmdLabel "  Setup    "
       ${EndIf}
       StrCpy $U_a "$F2"
       Call Subst
@@ -4821,10 +4864,11 @@ Function WriteSummary
     ${EndIf}
   ${Loop}
   FileClose $BH
+  ${EndIf}
   StrCpy $CurDir ""
   StrCpy $CurFile ""
   ${If} $TgtInstall != ""
-    ${Sum} "  Install  the project itself:"
+    StrCpy $CmdLabel "  Install  "
     StrCpy $U_a $TgtInstall
     Call Subst
     StrCpy $U_a $U_out
@@ -4834,15 +4878,13 @@ Function WriteSummary
   ${AndIf} $TgtInstall == ""
     ${Sum} "  Setup    nothing; no commands are run on this machine"
   ${EndIf}
-  StrCpy $CapInd1 "  Launch   "
-  StrCpy $CapInd2 "           "
-  StrCpy $U_a "when you start $\"$AppName$\", its shortcuts and launch.exe run:"
-  Call SumPara
+  StrCpy $CmdLabel "  Launch   "
   StrCpy $U_a $TgtLaunch
   Call Subst
   StrCpy $U_a $U_out
   Call CmdLine
   ${If} $2 > 0
+  ${AndIf} $RtState != "ok"
     StrCpy $CapInd1 "  "
     StrCpy $CapInd2 "  "
     StrCpy $U_a "The setup steps are the runtime install script, written by us, not the project's own code."
