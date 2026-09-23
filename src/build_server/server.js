@@ -765,6 +765,12 @@ export class Server {
   // names are the ones tools/build_site.py writes: index.html at the top,
   // and with --multi the repository's own src/web_client/, src/shared/ and src/vendor/.
   async siteFile(req, res, p) {
+    // /tiddlyinstall.html is the page itself, under the name it saves
+    // as (SAVE_AS in src/web_client/api.js). A link people can read --
+    // and the name of the file they end up with, so the two agree. In
+    // the one-file build there is no such file on disk; in --multi the
+    // pages are separate and index.html is still the one this means.
+    if (p === '/tiddlyinstall.html') p = '/';
     const ok = p === '/' || p.startsWith('/web/') || p.startsWith('/shared/') || p.startsWith('/img/') || p.startsWith('/vendor/') ||
       (p.split('/').length === 2 && (p.endsWith('.html') || p.endsWith('.ico')));
     if (!ok) return notFound(res);

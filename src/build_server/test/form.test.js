@@ -225,7 +225,7 @@ test('new.html: the packed-target picker offers every architecture, with its siz
   // And the ordinary (online) case says what is covered, and that it is not
   // a choice.
   assert.match(NEW_HTML, /<ul class="arch-cover small" id="arch-cover">/);
-  assert.match(NEW_HTML, /picks the right one on the computer it runs on, so there is nothing to choose here/);
+  assert.match(NEW_HTML, /picks the right one on the computer it runs on, so there is nothing to choose(?:&nbsp;| )here/);
 });
 
 test('src/shared/form-job.js: an offline pack names its architectures, and is refused when too big', () => {

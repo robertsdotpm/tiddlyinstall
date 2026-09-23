@@ -96,6 +96,9 @@ test('the server', { skip }, async (t) => {
 
   await t.test('no listings; the site only; clean paths', async () => {
     assert.equal((await get('/')).text, '<!doctype html><title>t</title>');
+    assert.equal((await get('/tiddlyinstall.html')).text, '<!doctype html><title>t</title>',
+      '/tiddlyinstall.html is the page itself, under the name it saves as');
+    assert.equal((await get('/tiddlyinstall.html')).status, 200, 'served, not redirected');
     assert.equal((await get('/web/css/a.css')).text, 'body{}');
     for (const p of ['/web/css/', '/css/a.css', '/mirror/', '/src/', '/mirror/python/', '/README.md', '/server/policy.json', '/server/data/plan-signing-key.pem']) assert.equal((await get(p)).status, 404, p);
     const r1 = await get('/index.html');
