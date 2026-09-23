@@ -50,6 +50,19 @@
     <p class="unavailable" id="v-error" hidden></p>
     <p class="small muted" id="v-busy" hidden>Reading&nbsp;it...</p>
 
+    <!-- Drop a copy of TiddlyInstall itself here and it says whether it is
+         the same build as the one you are reading. Nobody asked for this;
+         it exists because the question "is this copy of the page real?"
+         is the same question the rest of the page answers about
+         installers, and it would be odd to refuse it. -->
+    <div id="v-page-out" hidden>
+      <section class="panel">
+        <h2 class="section-title">This is a copy of TiddlyInstall</h2>
+        <dl class="spec-list" id="v-page-facts"></dl>
+        <p class="small muted" id="v-page-note" style="margin-bottom:0"></p>
+      </section>
+    </div>
+
     <div id="v-out" hidden>
       <section class="panel">
         <h2 class="section-title">The file</h2>
@@ -81,8 +94,10 @@
         <h2 class="section-title">Who signed what</h2>
         <dl class="spec-list" id="v-signing"></dl>
         <p class="small muted" style="margin-bottom:0">A signature on the installer says who wrote the installer and that
-          it has not been altered since. A signature on the runtime install script says it came from our server
-          unchanged. Neither says anything about the software being&nbsp;installed.</p>
+          it has not been altered since. A signature on the runtime install script says our build server produced it
+          and nothing has changed it since &mdash; and a script with no signature was worked out somewhere else,
+          usually in a web page, which has no key to sign with. Neither kind says anything about the software
+          being&nbsp;installed.</p>
       </section>
 
       <section class="panel" id="v-server-panel">

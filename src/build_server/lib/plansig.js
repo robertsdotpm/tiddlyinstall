@@ -21,6 +21,7 @@ const PLAN_HEAD = Buffer.from('ti-plan\t');
 // plan signature can never be read as one, or the other way round.
 export const PLAN_KIND = 'ti-plan';
 export const REVOCATIONS_KIND = 'ti-revocations';
+export const RELEASES_KIND = 'ti-releases';
 const headOf = (kind) => Buffer.from(kind + '\t');
 
 function rawPublic(keyObject) {

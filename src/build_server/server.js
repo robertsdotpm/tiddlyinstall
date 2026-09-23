@@ -18,8 +18,12 @@ import { decodeIconPng } from '../shared/icon.js';
 import { loadCatalog } from './lib/catalog.js';
 import { Builder, isHash26, isSHA256, isNonce } from './lib/jobs.js';
 import { JobQueue } from './lib/queue.js';
-import { loadOrCreate, keyID, PUB_FILE, REVOCATIONS_KIND } from './lib/plansig.js';
+import { loadOrCreate, keyID, PUB_FILE, REVOCATIONS_KIND, RELEASES_KIND } from './lib/plansig.js';
 import { revocationsText } from './lib/revocations.js';
+import crypto from 'node:crypto';
+import { parseFile as parseReleaseFile, releasesText } from './lib/releases.js';
+// The same digest the page computes over the same bytes (shared/ledger.js).
+const sha256hex = (str) => crypto.createHash('sha256').update(str, 'utf8').digest('hex');
 import { safeFetch } from './lib/netsafe.js';
 import { Limiter } from './lib/limiter.js';
 import { signRelay } from './lib/signrelay.js';
@@ -243,6 +247,7 @@ export class Server {
   /* ---------- takedown ---------- */
 
   takedownPath() { return path.join(this.data, 'takedown.txt'); }
+  releasesPath() { return path.join(this.data, 'releases.txt'); }
 
   takedownList() {
     let text;
@@ -364,6 +369,7 @@ export class Server {
       ['GET', ['api', 'catalog', 'runtimes'], () => this.runtimes(req, res)],
       ['GET', ['api', 'takedown'], () => this.takedown(req, res)],
       ['GET', ['api', 'revocations'], () => this.revocations(req, res)],
+      ['GET', ['api', 'releases'], () => this.releases(req, res)],
       ['GET', ['api', 'relay'], () => this.relay(req, res, params)],
       ['POST', ['api', 'tsa'], () => this.tsa(req, res, params)],
       ['POST', ['api', 'sign', '*'], () => this.sign(req, res, seg[2])],
@@ -638,6 +644,20 @@ export class Server {
     const doc = revocationsText(this.takedownList(), { now: Date.now(), serial });
     const body = this.signer.signStringAs(REVOCATIONS_KIND, doc);
     res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=300', 'Content-Length': Buffer.byteLength(body) });
+    res.end(body);
+  }
+
+  // GET /api/releases: the release ledger, chained and signed with the
+  // plan key (src/shared/ledger.js). What it is for: a copy of the page
+  // can check another copy against a record outside both of them, and --
+  // because every copy carries the root as of the day it was built --
+  // can tell whether this log has been rewritten behind it.
+  async releases(req, res) {
+    let text = '';
+    try { text = fs.readFileSync(this.releasesPath(), 'utf8'); } catch (e) { /* none yet */ }
+    const doc = releasesText(parseReleaseFile(text), sha256hex, { now: Date.now() });
+    const body = this.signer.signStringAs(RELEASES_KIND, doc);
+    res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=60', 'Content-Length': Buffer.byteLength(body) });
     res.end(body);
   }
 

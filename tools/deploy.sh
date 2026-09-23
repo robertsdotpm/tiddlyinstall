@@ -132,6 +132,28 @@ for b in windows:src/installers/windows/out/base.exe \
 	fi
 done
 
+# One line of the release ledger, appended only once the page served has
+# been proved to be HEAD's (src/shared/ledger.js). A page cannot carry
+# its own hash, so this entry is written after the page exists and the
+# page carries the root from *before* it -- the same reason a
+# transparency log's tree head never covers the entry being added.
+#
+# Appended, never rewritten: the whole value of the chain is that an
+# older copy of the page holds a root that a rewrite would contradict.
+if [ "$fail" = 0 ] && [ -f "$here/out/index.html" ]; then
+	ledger=$here/src/build_server/data/releases.txt
+	page_sha=$(sha256sum "$here/out/index.html" | cut -d' ' -f1)
+	if [ -f "$ledger" ] && grep -q "	$page_sha\$" "$ledger"; then
+		echo "ok    the release ledger already has these bytes"
+	else
+		mkdir -p "$(dirname "$ledger")"
+		seq=$(awk -F'\t' 'NF >= 4 && $1 + 0 > n { n = $1 + 0 } END { print n + 1 }' "$ledger" 2>/dev/null)
+		[ -n "$seq" ] || seq=1
+		printf '%s\t%s\t%s\t%s\n' "$seq" "$(date -u +%Y-%m-%d)" "$rev" "$page_sha" >> "$ledger"
+		echo "ok    release $seq added to the ledger ($(echo "$page_sha" | cut -c1-16))"
+	fi
+fi
+
 # The page must carry the plan signing key, or Verify silently cannot
 # check anything and says so in wording nobody reads as a failure.
 if curl -fsS "$url/" 2>/dev/null | grep -q 'id="ti-plan-pubkey"'; then

@@ -31,6 +31,7 @@ tools/snapshot.mjs -from catalog.gz -split splits it for the page.
 import argparse
 import base64
 import datetime
+import hashlib
 import html
 import io
 import json
@@ -108,7 +109,7 @@ CORE_MODULES = [
     *web_lib("bignum.js", "der.js", "rsa.js", "ec.js"),
     *web_lib("ed25519.js", "cryptox.js"),
     *web_lib("inflate.js", "deflate.js", "zlib.js"),
-    *shared("tifile.js", "icon.js"),
+    *shared("tifile.js", "icon.js", "ledger.js"),
     *web_lib("x509.js", "legacy.js", "pkcs12.js"),
     *web_lib("authenticode.js", "pgp.js"),
     *web("sign-services.js", "sign-ui.js"),
@@ -497,6 +498,30 @@ def offline_page(catalog_dir, backend):
     # would be vouching for itself. `issued` is here so the page can say
     # how old its copy is, which is the only honest thing a saved copy can
     # offer about it.
+    # The release ledger's root as this page was built: every copy in the
+    # wild then witnesses what the log said on its own build date, and a
+    # rewrite has to contradict files other people already hold. It is the
+    # root *before* this page's own entry, which does not exist yet --
+    # this page has to be built before it can be hashed.
+    ledger = os.path.join(ROOT, "src/build_server/data/releases.txt")
+    lroot, lseq = "0" * 64, 0
+    if os.path.isfile(ledger):
+        for line in read(ledger).splitlines():
+            f = line.rstrip("\r").split("\t")
+            if len(f) < 4 or not re.fullmatch(r"[0-9a-f]{64}", f[3]):
+                continue
+            try:
+                n = int(f[0])
+            except ValueError:
+                continue
+            if n != lseq + 1:
+                continue      # a gap: stop rather than chain across it
+            lroot = hashlib.sha256((lroot + "\n" + "\t".join(f[:4])).encode()).hexdigest()
+            lseq = n
+    blocks.append(data_block("ti-ledger", json_block({"seq": lseq, "root": lroot}),
+                             "application/json"))
+    report.append("  ledger: %d release%s, root %s" % (lseq, "" if lseq == 1 else "s", lroot[:16]))
+
     takedown = os.path.join(ROOT, "src/build_server/data/takedown.txt")
     revoked, issued = [], ""
     if os.path.isfile(takedown):

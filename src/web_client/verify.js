@@ -21,6 +21,7 @@
 // cannot live in the file, which is exactly why they need a server.
 import { readInstaller, parseKv, kvGet, recordHash } from '../shared/tifile.js';
 import { resolve, loadRuntimes, packagePolicyFor, packageProject } from '../shared/resolve.js';
+import { parseReleases, checkChain, rootAt } from '../shared/ledger.js';
 import { effectiveCatalog, hasCatalog } from './overlay.js';
 import { apiRequest, apiBase, apiLocal, apiReady, errorText, mountApiFooter } from './api.js';
 import { sha256, sha256Stream } from './lib/sha.js';
@@ -387,13 +388,119 @@ async function hashFile(file) {
   return hex(h.digest());
 }
 
+// The digest the ledger chains with. The server computes it over the
+// same UTF-8 bytes with node's crypto, and the two have to agree
+// exactly or every root differs (src/shared/ledger.js).
+function hashHex(text) {
+  return hex(sha256(new TextEncoder().encode(text)));
+}
+
+// A copy of TiddlyInstall itself, rather than something it built. The
+// page you are reading is one too, so it can answer without a server:
+// TI_PRISTINE is this page exactly as it arrived, before any script
+// touched it, which is the same bytes a "save this page" would write.
+//
+// What it can say is narrow and is said narrowly: *the same build as
+// yours*, which is worth exactly as much as yours is. A page cannot
+// carry its own hash, and a hostile copy can claim any commit it likes,
+// so the commit it names is reported as a claim and never as a finding.
+function pageBlock(text, id) {
+  const m = new RegExp('id="' + id + '"[^>]*>([\\s\\S]*?)</script>').exec(text);
+  if (!m) return null;
+  try { return JSON.parse(m[1]); } catch (e) { return null; }
+}
+
+function isTiddlyInstallPage(text) {
+  return /<title>[^<]*TiddlyInstall/i.test(text) && text.indexOf('id="ti-offline"') > 0;
+}
+
+async function paintPage(file, sha, text) {
+  const them = pageBlock(text, 'ti-offline') || {};
+  const rev = (v) => v ? '<code>' + esc(String(v).slice(0, 12)) + '</code>' : '<span class="muted">not stated</span>';
+  const facts = [
+    ['Name', '<code>' + esc(file.name) + '</code>'],
+    ['Size', esc(hsize(file.size))],
+    ['SHA-256', '<code>' + esc(sha) + '</code><button type="button" class="copy-btn" data-copy="' + esc(sha) + '">Copy</button>'],
+    ['It says it was built', esc(String(them.built || 'not stated')) + ' from ' + rev(them.rev)],
+  ];
+  rows(el('v-page-facts'), facts);
+  el('v-page-note').textContent = 'Looking it up in the release ledger\u2026';
+  el('v-page-out').hidden = false;
+
+  // Against the ledger, not against this page. Comparing two copies tells
+  // you only that they differ, and the likeliest reason is that one of
+  // them is newer -- which is not an answer to "is this one real?".
+  const mineLedger = (typeof TI_PRISTINE !== 'undefined' && pageBlock(TI_PRISTINE, 'ti-ledger')) || null;
+  if (apiLocal() || !apiBase()) {
+    el('v-page-note').innerHTML = 'No server is set, so there is nothing outside this file to check it against. ' +
+      'A page cannot carry its own hash and any copy can claim any commit, so the date and commit above are what ' +
+      'this file <em>says</em> about itself. Set a server and the release ledger can be asked.';
+    return;
+  }
+  try {
+    const doc = await apiRequest('/api/releases', { as: 'text' });
+    const baked = bakedKey();
+    const s2 = docSignature(doc, 'ti-releases');
+    let sigOk = false;
+    if (baked && s2.signed) { try { sigOk = ed25519Verify(baked, s2.bytes, s2.sig); } catch (e) { sigOk = false; } }
+    const lines = planLines(doc);
+    const stated = (lines.find((l) => l.key === 'root') || { val: () => '' }).val(0);
+    const entries = parseReleases(doc);
+    const chain = checkChain(entries, stated, hashHex);
+    const hit = entries.find((e) => e.sha256 === sha);
+
+    const more = [
+      ['Signed ledger', sigOk
+        ? 'yes, by the TiddlyInstall key <code>' + esc(keyId(baked)) + '</code>'
+        : '<strong>no</strong> &mdash; ' + (baked ? 'the signature does not check out' : 'this page carries no key to check it with')],
+      ['Its chain', chain.ok
+        ? 'holds: ' + entries.length + ' release' + (entries.length === 1 ? '' : 's') +
+          ', root <code>' + esc(chain.root.slice(0, 16)) + '</code>'
+        : '<strong>broken</strong> &mdash; ' + esc(chain.why)],
+      ['These bytes', hit
+        ? '<strong>published</strong> as release ' + hit.seq + ' on ' + esc(hit.date) + ', from ' + rev(hit.rev)
+        : '<strong>not in the ledger</strong>'],
+    ];
+    // The part a list alone could not do. This page was built with the
+    // root as of its own day inside it; if the log now disagrees about
+    // what that root was, the log has been rewritten since -- and the
+    // witness is a file the operator of that server does not hold.
+    if (mineLedger && mineLedger.seq > 0) {
+      const was = rootAt(entries, mineLedger.seq, hashHex);
+      more.push(['Rewritten since your copy?', !was
+        ? 'cannot be told: the ledger is shorter than your copy expects (' + entries.length +
+          ' entries, yours witnessed ' + mineLedger.seq + ')'
+        : was === mineLedger.root
+          ? 'no &mdash; it still agrees with the root your own copy was built with'
+          : '<strong>yes</strong> &mdash; your copy was built when release ' + mineLedger.seq +
+            ' chained to <code>' + esc(String(mineLedger.root).slice(0, 16)) + '</code>, and this ledger says <code>' +
+            esc(was.slice(0, 16)) + '</code>. One of them has been changed']);
+    }
+    rows(el('v-page-facts'), facts.concat(more));
+    el('v-page-note').innerHTML = hit && sigOk && chain.ok
+      ? 'Published by us, on the date above. The ledger is append-only and every copy of this page carries the root ' +
+        'as of the day it was built, so rewriting it means contradicting copies other people already hold.'
+      : 'A file not in the ledger is not proof of anything by itself &mdash; it may simply be older than the ledger, ' +
+        'or built from a checkout rather than published. Compare the SHA-256 with the one published for that commit.';
+  } catch (e) {
+    el('v-page-note').textContent = 'The release ledger could not be fetched: ' + errorText(e);
+  }
+}
+
 async function open(file) {
   el('v-error').hidden = true;
   el('v-out').hidden = true;
+  el('v-page-out').hidden = true;
   el('v-busy').hidden = false;
   try {
     const sha = await hashFile(file);
     const bytes = new Uint8Array(await file.arrayBuffer());
+    // Before readInstaller, which would only say it does not know the
+    // format -- an unhelpful answer to a reasonable question.
+    if (/\.html?$/i.test(file.name) || file.type === 'text/html') {
+      const text = new TextDecoder('utf-8').decode(bytes);
+      if (isTiddlyInstallPage(text)) { await paintPage(file, sha, text); return; }
+    }
     const info = await readInstaller(bytes, file.name);
     await paint(file, sha, info);
   } catch (e) {
@@ -525,13 +632,25 @@ async function paint(file, sha, info) {
   } else {
     sign.push(['The installer file', 'is a macOS <code>.zip</code>; the app inside is checked by Gatekeeper when it is opened, not by this page']);
   }
+  // Which of the two ways it was made. Only our build server holds the
+  // plan key, so a signature is also a statement of origin; without one
+  // the record's `backend` is the best this file can say, and empty
+  // means it was built with no server at all -- in a page, which cannot
+  // sign because the key is not there and never will be (2026-09-23).
+  const recBackend = info.record
+    ? (planLines(info.record).find((l) => l.key === 'backend') || { val: () => '' }).val(0)
+    : '';
   if (!info.plan) {
     sign.push(['The runtime install script', 'written when it runs, so there is none in the file to check. It is fetched, signed, at that point']);
   } else {
     const s = docSignature(info.plan, 'ti-plan');
     const baked = bakedKey();
     if (!s.signed) {
-      sign.push(['The runtime install script', 'is <strong>not signed</strong> (' + esc(s.why) + '). It is only as trustworthy as this file']);
+      sign.push(['The runtime install script', 'is <strong>not signed</strong> (' + esc(s.why) + '). ' +
+        (info.record && !recBackend
+          ? 'It was worked out in a web page rather than by our build server &mdash; a page has no signing key &mdash; so nothing here can say where it came from'
+          : 'Nothing here can say where it came from') +
+        '<br><span class="small muted">what it does is listed above, and every file it names is checked against the SHA-256 beside it &mdash; but those hashes are the script\'s own</span>']);
     } else if (!baked) {
       sign.push(['The runtime install script', 'is signed, but this page carries no key to check it against. Set a server and it can be checked']);
     } else {
@@ -544,7 +663,7 @@ async function paint(file, sha, info) {
       // arrived by a different route, which is the whole reason this
       // page can say something the installer cannot.
       sign.push(['The runtime install script', ok
-        ? 'is signed by the TiddlyInstall key <code>' + esc(keyId(baked)) + '</code>, and the signature checks out'
+        ? 'is signed by the TiddlyInstall key <code>' + esc(keyId(baked)) + '</code>, so our build server produced it and nothing has changed it since'
           + '<br><span class="small muted">checked here, by this page, against a key this page carries - not by the installer against a key inside itself</span>'
         : '<strong>has a signature that does not check out</strong> against key <code>' + esc(keyId(baked)) + '</code>']);
     }
