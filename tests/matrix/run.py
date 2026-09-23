@@ -23,6 +23,7 @@ import argparse
 import atexit
 import json
 import os
+import socket
 import shlex
 import subprocess
 import sys
@@ -120,12 +121,39 @@ def verdict(reason):
 arch_judge = machines.judge
 
 
+# The build server the machine under test should ask.
+#
+# Until 2026-09-23 nothing here said: the Linux and Windows runs used
+# whatever backend was baked into the base, and that default happened to
+# be this machine's LAN address, so the matrix worked by accident. The
+# moment the default became the public server (which is not deployed) every
+# run failed at the first fetch. macOS always passed --backend explicitly;
+# now they all do.
+#
+# $TI_MATRIX_BACKEND overrides. Otherwise this machine's own address on the
+# network the VMs are on, found by asking the kernel which source address it
+# would use -- no packet is sent, and no address is written down here.
+def default_backend():
+    v = os.environ.get("TI_MATRIX_BACKEND")
+    if v:
+        return v
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.connect(("10.255.255.255", 1))
+        return "http://%s:8080" % s.getsockname()[0]
+    finally:
+        s.close()
+
+
+BACKEND = default_backend()
+
 # Linux: this machine, a throwaway home, no desktop session -------------
 
 def run_linux(rt, mode, f, target="linux"):
     # The script makes its own throwaway home under $TMPROOT and removes it.
     env = {"HOME": os.path.expanduser("~"), "PATH": "/usr/local/bin:/usr/bin:/bin",
-           "LANG": "C.UTF-8", "SRC": str(Path(f).resolve()), "F": Path(f).name}
+           "LANG": "C.UTF-8", "SRC": str(Path(f).resolve()), "F": Path(f).name,
+           "BACKEND": BACKEND}
     if os.environ.get("TMPDIR"):
         env["TMPDIR"] = os.environ["TMPDIR"]
     code, out, err = sh(["sh", "-c", LOCAL_SCRIPT], env=env)
@@ -139,7 +167,7 @@ LINUX_BODY = machines.ELF_PROBE_SH + r'''
 set -u
 H=$(mktemp -d "$TMPROOT/ibm-XXXXXX")
 cp "$SRC" "$H/$F"
-env -i HOME="$H" PATH=/usr/local/bin:/usr/bin:/bin LANG=C sh "$H/$F" --yes --log="$H/i.log" </dev/null >/dev/null 2>&1
+env -i HOME="$H" PATH=/usr/local/bin:/usr/bin:/bin LANG=C sh "$H/$F" --yes --backend="$BACKEND" --log="$H/i.log" </dev/null >/dev/null 2>&1
 echo "@install $?"
 echo "@osdesc"; sed -n 's/^Running as .* on //p' "$H/i.log" 2>/dev/null | head -1
 echo "@planarch"; awk '/^ *Runtime:/ {f=1; print; next} f { if (substr($0,1,8) == "        ") print; else exit }' "$H/i.log" 2>/dev/null
@@ -167,7 +195,7 @@ def run_linux_vm(host, rt, mode, f, target):
     code, _, err = sh(["scp", "-q", f, f"{host}:titest/{name}"], timeout=300)
     if code:
         return "fail", "scp: " + err.strip(), {}
-    code, out, err = sh(["ssh", host, f"TMPROOT=/tmp F={shlex.quote(name)} sh -s"], input=LINUX_SCRIPT)
+    code, out, err = sh(["ssh", host, f"TMPROOT=/tmp BACKEND={shlex.quote(BACKEND)} F={shlex.quote(name)} sh -s"], input=LINUX_SCRIPT)
     return parse_unix(rt, out, err, target)
 
 
@@ -177,7 +205,7 @@ def run_sandbox(target, rt, mode, f):
     import sandbox
     src = Path(f).resolve().parent
     rc, out, err = sandbox.run_script(
-        target, SANDBOX_SCRIPT, env={"HOME": "/home/ti", "F": Path(f).name,
+        target, SANDBOX_SCRIPT, env={"HOME": "/home/ti", "F": Path(f).name, "BACKEND": BACKEND,
                                      "PATH": "/usr/local/bin:/usr/bin:/bin"},
         ro={src: "/tisrc"}, timeout=INSTALL_TIMEOUT)
     if rc == 124:
