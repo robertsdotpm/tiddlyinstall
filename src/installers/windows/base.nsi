@@ -2169,7 +2169,13 @@ Function Revocations
   ; (2026-09-23). Said rather than done quietly: a file withdrawn after
   ; this installer was made cannot reach it.
   ${If} $BackendGiven = 0
-    StrCpy $RevokeNote "this installer was built without a server, so no revocation list was fetched: what it installs was checked against the list the builder had, and anything withdrawn since is not known here"
+    ; When, where the plan says: "anything withdrawn since" is a date a
+    ; person can act on, and "since this installer was made" is not.
+    StrCpy $0 ""
+    ${If} $PlanSigned != ""
+      StrCpy $0 " after $PlanSigned"
+    ${EndIf}
+    StrCpy $RevokeNote "not checked: built offline, so anything withdrawn$0 is unknown here"
     Goto rv_end
   ${EndIf}
   StrCpy $2 ""                        ; the UTF-16 list to use
@@ -2205,7 +2211,7 @@ Function Revocations
       StrCpy $U_a "$2"
       StrCpy $U_b "issued"
       Call DocValue
-      StrCpy $RevokeNote "the backend couldn't be reached; the last list this machine saw (issued $U_out) was used"
+      StrCpy $RevokeNote "not fetched: the backend couldn't be reached; the last list this machine saw (issued $U_out) was used"
     ${Else}
       StrCpy $U_a "$PLUGINSDIR\revocations-cache.u16"
       Call DocSerial
@@ -2219,7 +2225,7 @@ Function Revocations
     ${EndIf}
   ${EndIf}
   ${If} $2 == ""
-    StrCpy $RevokeNote "no revocation list could be fetched or found on this machine, so only the plan's own age was checked"
+    StrCpy $RevokeNote "not checked: no list could be fetched or found on this machine, so only the plan's own age was checked"
     Goto rv_end
   ${EndIf}
   ${If} $2 == "$PLUGINSDIR\revocations.u16"
@@ -4534,7 +4540,7 @@ Function WriteSummary
   ; without a signing key, and an unguarded line would name a key nobody
   ; has.
   ${Sum} ""
-  StrCpy $CapInd1 "  ok "
+  StrCpy $CapInd1 "  -- "
   StrCpy $CapInd2 "     "
   ${If} $RtState == "ok"
     ${If} "${TI_PLAN_KEYID}" != "?"
@@ -4614,6 +4620,7 @@ Function WriteSummary
   Call SumPara
   ; Everything here can be read without running the file, which is worth
   ; saying on the screen you only reach by running it.
+  ${Sum} ""
   StrCpy $U_a "Verify without running: drop this file on ${TI_BACKEND}/#verify"
   Call SumPara
   ${If} $NdCount > 0
@@ -4729,6 +4736,7 @@ Function WriteSummary
     ${EndIf}
   ${EndIf}
   ${If} $PackLen > 0
+    ${Sum} ""
     ${Sum} "  Files packed inside this installer are used instead of downloading them."
   ${EndIf}
 
@@ -4797,6 +4805,7 @@ Function WriteSummary
   ; otherwise leaves a reader holding.
   StrCpy $CapInd1 "  "
   StrCpy $CapInd2 "  "
+  ${Sum} ""
   StrCpy $U_a "The runtime has its own folder beside the app rather than inside it, to keep the paths inside it short: Windows still breaks on long ones."
   Call SumPara
 

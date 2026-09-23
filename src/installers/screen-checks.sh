@@ -118,7 +118,7 @@ screen_check() {
 	proved | unsigned)
 		# The proof does not depend on the plan's own signature, so
 		# stripping the signature must not change this line.
-		sc_n=$(grep -c '^  ok Runtime setup is signed by TiddlyInstall' "$sc_f" || true)
+		sc_n=$(grep -c '^  -- Runtime setup is signed by TiddlyInstall' "$sc_f" || true)
 		[ "$sc_n" = 1 ] && ok "$(sc_say 'a proved setup says so, once')" ||
 			no "$(sc_say 'a proved setup says so, once')" "$sc_n occurrences"
 		sc_has 'verified offline' && ok "$(sc_say 'and says it was checked with no network')" ||

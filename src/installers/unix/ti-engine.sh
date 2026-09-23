@@ -3847,12 +3847,12 @@ ti_install_main() {
 		#               opinion and does not get a tick.
 		printf '\n'
 		if [ "$ti_rt_state" = ok ]; then
-			printf '  ok %s\n' "Runtime setup is signed by TiddlyInstall${TI_PLAN_KEYID:+ (key $TI_PLAN_KEYID)}, verified offline. Covers the downloads, their hashes and setup commands - not the launch command, which the builder wrote." | ti_wrap 74 5
+			printf '  -- %s\n' "Runtime setup is signed by TiddlyInstall${TI_PLAN_KEYID:+ (key $TI_PLAN_KEYID)}, verified offline. Covers the downloads, their hashes and setup commands - not the launch command, which the builder wrote." | ti_wrap 74 5
 			[ -n "$ti_rt_issued" ] && printf '     %s\n' "Published $ti_rt_issued." | ti_wrap 74 5
 		elif [ "$ti_rt_state" = bad ]; then
 			printf '  !  %s\n' "Runtime setup claims to be ours and the claim does not hold: $ti_rt_why. Treat this file as altered." | ti_wrap 74 5
 		elif [ "$ti_plan_sigstate" = ok ] && [ -n "$TI_PLAN_KEYID" ] && [ "$TI_PLAN_KIND" = fetched ]; then
-			printf '  ok %s\n' "Runtime setup is signed by TiddlyInstall (key $TI_PLAN_KEYID), fetched and checked here before any of it was read, so a script altered on the way would have been refused." | ti_wrap 74 5
+			printf '  -- %s\n' "Runtime setup is signed by TiddlyInstall (key $TI_PLAN_KEYID), fetched and checked here before any of it was read, so a script altered on the way would have been refused." | ti_wrap 74 5
 		elif [ "$ti_plan_sigstate" = ok ] && [ -n "$TI_PLAN_KEYID" ]; then
 			printf '  -- %s\n' "Runtime setup carries a TiddlyInstall signature (key $TI_PLAN_KEYID), checked by this file against a key inside this file. It is worth what the file is worth, so it is not a second opinion: the SHA-256 above is." | ti_wrap 74 5
 		elif [ "$ti_plan_sigstate" = unsigned ]; then
@@ -3886,7 +3886,7 @@ ti_install_main() {
 		printf '\n  %s\n' "Choices came from $TI_ORIGIN -- what was picked in the web client. The setup under WHAT RUNS is what carries them out." | ti_wrap 74 2
 		# Everything here can be read without running the file, which is
 		# worth saying on the screen you only reach by running it.
-		printf '  %s\n' "Verify without running: drop this file on $TI_DEFAULT_BACKEND/#verify" | ti_wrap 74 2
+		printf '\n  %s\n' "Verify without running: drop this file on $TI_DEFAULT_BACKEND/#verify" | ti_wrap 74 2
 
 		# ---- DOWNLOADS. One line per file and one for its hash. Where
 		# it comes from is a host and a count; the log keeps every URL.
@@ -3961,7 +3961,7 @@ ti_install_main() {
 		printf '  %-12s%s\n' 'Log' "$TI_LOG" | ti_wrap 74 14
 		# Why two folders and not one, which is the question this
 		# section otherwise leaves a reader holding.
-		printf '  %s\n' 'The runtime sits beside the application rather than inside it, so paths within the runtime stay short.' | ti_wrap 74 2
+		printf '\n  %s\n' 'The runtime sits beside the application rather than inside it, so paths within the runtime stay short.' | ti_wrap 74 2
 
 		# ---- WHAT RUNS. The description says what a step is for; the
 		# command below it is what actually runs, because the claim
