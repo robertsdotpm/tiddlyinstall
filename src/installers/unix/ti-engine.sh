@@ -3763,10 +3763,12 @@ ti_install_main() {
 		#
 		# It used to print the same headline for both, which put the
 		# loudest claim on the screen in the case where it means least.
+		if [ "$ti_rt_state" = ok ] || { [ "$ti_plan_sigstate" = ok ] && [ -n "$TI_PLAN_KEYID" ] && [ "$TI_PLAN_KIND" = fetched ]; }; then
+			printf '  SIGNED BY TIDDLYINSTALL\n'
+			[ -n "$TI_PLAN_KEYID" ] && printf '    key %s\n' "$TI_PLAN_KEYID"
+		fi
 		if [ "$ti_plan_sigstate" = ok ] && [ -n "$TI_PLAN_KEYID" ]; then
 			if [ "$TI_PLAN_KIND" = fetched ]; then
-				printf '  SIGNED BY TIDDLYINSTALL\n'
-				printf '    key %s\n' "$TI_PLAN_KEYID"
 				printf '  %s\n' 'Fetched over the network and checked here before anything was read, so a script altered on the way would have been refused.' | ti_wrap 74 2
 			else
 				printf '  %s\n' "Carried inside this file, signed by the TiddlyInstall key $TI_PLAN_KEYID, which says our server produced it." | ti_wrap 74 2
@@ -3779,8 +3781,8 @@ ti_install_main() {
 			# no catalogue, and nothing here had to trust the page that
 			# built it. This is the claim worth making, and it is a
 			# narrower one than "the plan is signed": what is proved is
-			# the part we wrote.
-			printf '  SIGNED BY TIDDLYINSTALL\n'
+			# the part we wrote. The headline for it is printed above,
+			# once, because a fetched plan earns the same one.
 			printf '  %s\n' 'The downloads, their SHA-256s and every command run against them were published by us, and are proved so by this file against a key it carries. Checked here, with no network.' | ti_wrap 74 2
 			[ -n "$ti_rt_issued" ] && printf '  %s\n' "Published $ti_rt_issued." | ti_wrap 74 2
 			printf '  %s\n' 'Not covered: how it is started, which is the line whoever built this installer wrote.' | ti_wrap 74 2

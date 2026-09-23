@@ -4310,16 +4310,24 @@ Function WriteSummary
   ; to "?" when a base is built without a signing key, and an unguarded
   ; headline would assert "SIGNED BY TIDDLYINSTALL key ?" -- trust
   ; naming a key nobody has.
+  ; One headline, whatever is true beneath it. The key on its own line:
+  ; with the key on the same line the headline has lower case in it, so
+  ; it is not a verdict to either painter and renders as body text --
+  ; the signed case came out quieter than UNSIGNED, which is backwards
+  ; (Windows 10, 2026-09-22).
+  ${If} "${TI_PLAN_KEYID}" != "?"
+    ${If} $RtState == "ok"
+      ${Sum} "  SIGNED BY TIDDLYINSTALL"
+      ${Sum} "    key ${TI_PLAN_KEYID}"
+    ${ElseIf} $PlanSigState == "ok"
+    ${AndIf} $PlanKind == "fetched"
+      ${Sum} "  SIGNED BY TIDDLYINSTALL"
+      ${Sum} "    key ${TI_PLAN_KEYID}"
+    ${EndIf}
+  ${EndIf}
   ${If} $PlanSigState == "ok"
   ${AndIf} "${TI_PLAN_KEYID}" != "?"
     ${If} $PlanKind == "fetched"
-      ; The key on its own line, as the Unix engine prints it. With the
-      ; key on the same line the headline has lower case in it, so it is
-      ; not a verdict to either painter and renders as body text -- the
-      ; signed case came out quieter on screen than UNSIGNED, which is
-      ; backwards. Rendered on Windows 10 on 2026-09-22 to see it.
-      ${Sum} "  SIGNED BY TIDDLYINSTALL"
-      ${Sum} "    key ${TI_PLAN_KEYID}"
       StrCpy $U_a "Fetched over the network and checked here before anything was read, so a script altered on the way would have been refused."
       Call SumPara
     ${Else}
@@ -4334,8 +4342,9 @@ Function WriteSummary
     ; file with the key it carries -- no network, no catalogue, and
     ; nothing here had to trust the page that built it. A narrower claim
     ; than "the plan is signed", and a true one: what is proved is the
-    ; part we wrote.
-    ${Sum} "  SIGNED BY TIDDLYINSTALL"
+    ; part we wrote. The headline is printed once, above: a fetched plan
+    ; earns the same one, and both firing put SIGNED BY TIDDLYINSTALL on
+    ; the screen twice in a row (seen on Windows 10, 2026-09-23).
     StrCpy $U_a "The downloads, their SHA-256s and every command run against them were published by us, and are proved so by this file against a key it carries. Checked here, with no network."
     Call SumPara
     ${If} $RtIssued != ""

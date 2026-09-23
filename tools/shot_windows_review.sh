@@ -43,7 +43,7 @@ ssh "$TI_WIN" "schtasks /Create /TN TIShotReview /TR \"powershell -NoProfile -Ex
 # at once, and the pictures are yesterday's. Ask PowerShell to remove
 # it -- cmd's `rmdir` fails here with "cannot find the path specified",
 # because the SSH session's working directory does not exist.
-ssh "$TI_WIN" 'powershell -NoProfile -Command "Remove-Item -Recurse -Force C:\titest\shots -ErrorAction SilentlyContinue"'
+ssh "$TI_WIN" 'powershell -NoProfile -Command "Remove-Item -Recurse -Force C:\titest\shots -ErrorAction SilentlyContinue"' || true
 ssh "$TI_WIN" 'schtasks /Run /TN TIShotReview' >/dev/null
 
 i=0
