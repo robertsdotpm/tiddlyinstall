@@ -19,6 +19,12 @@
 // (the app's name, where it installs, the record it answers) and the
 // app's own source. We did not write those and should not vouch for them.
 
+// Lines that are not part of what was signed. `launch` is the user's.
+// `rtproof` and `rtroots` are the proof itself, which cannot be inside
+// the thing it proves -- the signer hashed these blocks before either
+// line existed. `sig` is the plan's own signature, which trails the last
+// target and is not part of it.
+export const NOT_SIGNED = ['launch', 'rtproof', 'rtroots', 'rtsig', 'sig'];
 export const RTSIG_KEY = 'rtsig';
 
 // The signable text of one target block, given the block exactly as the
@@ -31,7 +37,7 @@ export function canonicalTarget(block) {
     const line = raw.replace(/\r$/, '');
     if (line === '') continue;
     const key = line.split('\t')[0];
-    if (key === 'launch' || key === RTSIG_KEY || key === 'sig') continue;
+    if (NOT_SIGNED.indexOf(key) >= 0) continue;
     keep.push(line);
   }
   return keep.join('\n') + '\n';
@@ -43,4 +49,24 @@ export function canonicalTarget(block) {
 export function targetBlocks(planText) {
   const parts = String(planText).split('\n[target]\n');
   return parts.slice(1);
+}
+
+// The signed roots document and one runtime's sorted leaf hashes, for
+// the resolver to write proofs from. Same shape as setRevoked(): it goes
+// on the catalogue, because it decides what gets written into a plan and
+// the page and the server have to agree.
+export function setRtScripts(cat, roots, leaves, sha256hex) {
+  cat.rtscripts = (roots && leaves && leaves.length)
+    ? { roots: String(roots), leaves, sha256hex }
+    : null;
+  return cat;
+}
+
+// The root this document states for a runtime, or ''.
+export function rootFor(rootsDoc, runtime) {
+  for (const raw of String(rootsDoc).split('\n')) {
+    const f = raw.replace(/\r$/, '').split('\t');
+    if (f[0] === 'root' && f[1] === runtime && /^[0-9a-f]{64}$/.test(f[2] || '')) return f[2];
+  }
+  return '';
 }

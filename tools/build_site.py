@@ -32,6 +32,7 @@ import argparse
 import base64
 import datetime
 import hashlib
+import gzip
 import html
 import io
 import json
@@ -521,6 +522,35 @@ def offline_page(catalog_dir, backend):
     blocks.append(data_block("ti-ledger", json_block({"seq": lseq, "root": lroot}),
                              "application/json"))
     report.append("  ledger: %d release%s, root %s" % (lseq, "" if lseq == 1 else "s", lroot[:16]))
+
+    # The signed runtime-script roots, and one sorted leaf list per
+    # runtime. Together they let a page-built installer carry a proof
+    # that its runtime steps are ours -- checked by the installer against
+    # the key it already has, with no catalogue, no resolver and no
+    # network (src/shared/rtscript.js, tools/sign_runtime_scripts.mjs).
+    #
+    # Gzipped like the catalogue folders: hex compresses by about half,
+    # and a saved copy of this page is a file somebody carries around.
+    rtdir = os.path.join(ROOT, "src/build_server/data/rtscripts")
+    rtroots = os.path.join(rtdir, "roots.txt")
+    if os.path.isfile(rtroots):
+        blocks.append(data_block("ti-rtroots", read(rtroots).strip(), "text/plain"))
+        raw_total = packed_total = 0
+        for name in sorted(os.listdir(rtdir)):
+            if not name.endswith(".leaves"):
+                continue
+            rt = name[: -len(".leaves")]
+            data = read(os.path.join(rtdir, name)).encode()
+            gz = gzip.compress(data, 9)
+            raw_total += len(data)
+            packed_total += len(gz)
+            blocks.append(data_block("ti-rtleaves-" + rt, b64_block(gz),
+                                     extra=f' data-runtime="{rt}"'))
+        report.append("  runtime scripts: %d signed roots, leaf lists %d KB (%d KB in the page)"
+                      % (len([l for l in read(rtroots).splitlines() if l.startswith("root\t")]),
+                         raw_total // 1024, packed_total // 1024))
+    else:
+        report.append("  runtime scripts: NONE (%s not found); plans carry no proof" % rtroots)
 
     takedown = os.path.join(ROOT, "src/build_server/data/takedown.txt")
     revoked, issued = [], ""

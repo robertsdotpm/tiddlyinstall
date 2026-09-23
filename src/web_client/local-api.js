@@ -39,6 +39,9 @@ import { ApiError, pageFromDisk, apiLocal, apiBase } from './api.js';
 import { noNetworkGet } from '../shared/github.js';
 import { validate, runJob, planPackFiles, MAX_PACK, MAX_MAC_PACK } from '../shared/builder.js';
 import { resolve, setRevoked } from '../shared/resolve.js';
+import { setRtScripts } from '../shared/rtscript.js';
+import { inflate } from './lib/zlib.js';
+import { sha256 } from './lib/sha.js';
 import { writeInstallerLayout, streamInstallerLayout, parseFooterTail, bytesToHex, packTarSize } from '../shared/tifile.js';
 import { sha256Stream } from './lib/sha.js';
 import { packBudget, packEnv } from '../shared/form-job.js';
@@ -107,7 +110,36 @@ export function pageRevocations() {
   return { issued: '', sha: [] };
 }
 
-async function env() {
+// The signed runtime-script roots this page carries, and the sorted leaf
+// list for one runtime, gunzipped on demand -- the lists come to 564 KB
+// and only the runtime being built is ever needed.
+//
+// Without these a plan carries no proof and the installer says the
+// runtime steps are unsigned, which is true: a page built before the
+// catalogue was signed has nothing to prove them with.
+const leafCache = new Map();
+async function rtLeaves(runtime) {
+  if (leafCache.has(runtime)) return leafCache.get(runtime);
+  let out = [];
+  try {
+    const gz = blockBytes('ti-rtleaves-' + runtime);
+    if (gz) {
+      const text = new TextDecoder().decode(await inflate(gz, 'gzip'));
+      out = text.trim().split('\n').filter((l) => /^[0-9a-f]{64}$/.test(l));
+    }
+  } catch (e) { out = []; }
+  leafCache.set(runtime, out);
+  return out;
+}
+
+const rtSha256Hex = (text) => {
+  const d = sha256(new TextEncoder().encode(text));
+  let out = '';
+  for (let i = 0; i < d.length; i++) out += (d[i] < 16 ? '0' : '') + d[i].toString(16);
+  return out;
+};
+
+async function env(runtime) {
   const eff = await catalog();
   const e = { catalog: eff.catalog, overlay: eff, base: (plat) => blockBytes('base-' + plat), backend: '',
     embedPlan: true, packRuntimes: true, githubWho: 'page',
@@ -122,6 +154,12 @@ async function env() {
   // On the catalogue itself, not only through builder.js: the offline
   // path resolves in packPlan() below, which never goes near that call.
   setRevoked(e.catalog, pageRevocations().sha);
+  // The proof material for this build's runtime, so the plan can carry a
+  // proof that its runtime steps came from our catalogue. On the
+  // catalogue rather than the request, because the page and the server
+  // have to write the same proof from the same data.
+  const roots = block('ti-rtroots');
+  setRtScripts(e.catalog, roots, runtime ? await rtLeaves(runtime) : [], rtSha256Hex);
   // A GitHub source is pinned by its commit, and which commit a branch
   // or tag is -- and which files are at the top of it -- comes from
   // api.github.com, which answers browsers (src/shared/github.js). A copy
@@ -410,7 +448,7 @@ async function submit(body) {
   // move on while it runs.
   let e;
   try {
-    e = await env();
+    e = await env(body && body.runtime);
     validate(JSON.parse(JSON.stringify(body)), e);
   } catch (x) {
     throw new ApiError(x.status || 400, x.message, x.code || 'invalid');

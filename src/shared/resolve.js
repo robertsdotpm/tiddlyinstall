@@ -21,6 +21,8 @@
 import { inflate, deflate } from '../web_client/lib/zlib.js';
 import { digest } from '../web_client/lib/cryptox.js';
 import { mirrorGapNote } from './mirror-words.js';
+import { canonicalTarget, rootFor } from './rtscript.js';
+import { leafHash, proofFor } from './merkle.js';
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();
@@ -1723,6 +1725,12 @@ function writePlan(cat, app, blocks) {
   const pol = runtimePolicy(cat, app.runtime);
   const label = runtimeLabel(pol, app.runtime);
   for (const b of blocks) {
+    // Before the "[target]" line, not after `covers`: what the signer
+    // hashed is the whole block as an engine reads it back, `when` and
+    // `covers` included. Slicing from the wrong place gave a leaf that
+    // was in no tree, and the only symptom was a plan with no proofs in
+    // it -- which looks exactly like a catalogue that was never signed.
+    const before = w.toString().length;
     w.raw('\n[target]\n');
     w.add('when', b.family, String(b.min), String(b.max), b.arches.join(' '));
     if (b.minBuild > 0) w.add('minbuild', String(b.minBuild));
@@ -1748,7 +1756,28 @@ function writePlan(cat, app, blocks) {
       w.add('fail', no);
       continue;
     }
+    // The proof that these steps are ours (src/shared/rtscript.js). Taken
+    // from what writeTarget just wrote, so what is proved is exactly what
+    // an engine reads back -- not a second rendering of the same data
+    // that could drift from it.
     writeTarget(cat, w, app, pol, b);
+    if (cat.rtscripts) {
+      const canon = canonicalTarget(w.toString().slice(before).replace(/^\n\[target\]\n/, ''));
+      const leaf = leafHash(canon, cat.rtscripts.sha256hex);
+      const i = cat.rtscripts.leaves.indexOf(leaf);
+      // Not in the list means this release was never signed -- an old
+      // pinned version the signer could not reach. The plan then says
+      // nothing rather than something unprovable, and the engine reports
+      // the script as unsigned, which is the truth.
+      if (i >= 0) {
+        const proof = proofFor(cat.rtscripts.leaves, i, cat.rtscripts.sha256hex);
+        w.add('rtproof', ...(proof.length ? proof : ['-']));
+      }
+    }
+  }
+  if (cat.rtscripts && rootFor(cat.rtscripts.roots, app.runtime)) {
+    // Once, at the end: the signed document every proof above is against.
+    w.add('rtroots', rtB64(cat.rtscripts.roots));
   }
   return w.toString();
 }
@@ -2111,4 +2140,21 @@ export function jsonField(v, path) {
     v = own(v, k);
   }
   return (v != null ? v : null);
+}
+
+// base64 of a UTF-8 string. The signed roots document is multi-line and
+// ends with its own `sig` line, and a plan is one record per line, so it
+// travels encoded. Written out rather than reaching for btoa (absent in
+// node) or Buffer (absent in a browser).
+const B64AB = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+function rtB64(text) {
+  const u = new TextEncoder().encode(String(text));
+  let out = '';
+  for (let i = 0; i < u.length; i += 3) {
+    const a = u[i], b = i + 1 < u.length ? u[i + 1] : 0, c = i + 2 < u.length ? u[i + 2] : 0;
+    out += B64AB[a >> 2] + B64AB[((a & 3) << 4) | (b >> 4)];
+    out += i + 1 < u.length ? B64AB[((b & 15) << 2) | (c >> 6)] : '=';
+    out += i + 2 < u.length ? B64AB[c & 63] : '=';
+  }
+  return out;
 }
