@@ -106,6 +106,8 @@ function maskRecord(t) {
 }
 function maskPlan(t) {
   return t.replace(/^signed\t.*$/m, 'signed\t<time>')
+    .replace(/^rtroots\t.*$/m, 'rtroots\t<roots>')
+    .replace(/^rtproof\t.*$/gm, 'rtproof\t<proof>')
     .replace(/\nsig\ted25519\t\S+\n?$/, '\n')
     .replace(/^(source\t[0-9a-f]{64}\.tar\.gz\t)[0-9a-f]{64}\t\d+/m, '$1<gzip>\t<size>')
     .replace(/^url\t\S+\/src\/[0-9a-f]{64}\.tar\.gz\n/m, '')
@@ -196,6 +198,39 @@ if (RECORD) {
 /* ---------- the check ---------- */
 
 const golden = JSON.parse(zlib.brotliDecompressSync(fs.readFileSync(GOLDEN_FILE)));
+// Masking rtroots/rtproof above means the goldens cannot see them, so
+// the property they protect is checked directly: whatever proofs a plan
+// carries, the page and the server must write the same ones. They are
+// both this same resolver with the same proof material, so a difference
+// here means one side was handed something the other was not.
+{
+  const { setRtScripts } = await import('../src/shared/rtscript.js');
+  const { loadSnapshot: ls } = await import('../src/shared/resolve.js');
+  const rtDir = path.join(HERE, '..', 'src', 'build_server', 'data', 'rtscripts');
+  let roots = '';
+  try { roots = fs.readFileSync(path.join(rtDir, 'roots.txt'), 'utf8'); } catch (e) { roots = ''; }
+  if (!roots) {
+    console.log('PASS the proof material is absent, so there is nothing to compare (run tools/sign_runtime_scripts.mjs)');
+    passed++;
+  } else {
+    const hex = (str) => crypto.createHash('sha256').update(str, 'utf8').digest('hex');
+    const leaves = fs.readFileSync(path.join(rtDir, 'python.leaves'), 'utf8').trim().split('\n');
+    const app = { name: 'Hello python', project: 'hello', runtime: 'python', platforms: ['linux'],
+      launch: '{runtime} hello.py', mode: 'C', root: 'user' };
+    const a = await ls(new Uint8Array(catBytes));
+    const b = await ls(new Uint8Array(catBytes));
+    await (await import('../src/shared/resolve.js')).loadRuntimes(a, ['python']);
+    await (await import('../src/shared/resolve.js')).loadRuntimes(b, ['python']);
+    setRtScripts(a, roots, leaves, hex);
+    setRtScripts(b, roots, leaves, hex);
+    const { resolve: rs } = await import('../src/shared/resolve.js');
+    const pa = rs(a, app), pb = rs(b, app);
+    const proofs = (t) => t.split('\n').filter((l) => l.indexOf('rtproof\t') === 0 || l.indexOf('rtroots\t') === 0);
+    ok(proofs(pa).length > 0, 'a plan resolved with proof material carries proofs', String(proofs(pa).length));
+    ok(pa === pb, 'and two resolves of the same request write identical proofs');
+  }
+}
+
 ok(golden.catalogSha256 === catSha, 'tests/golden/catalog.gz is the snapshot the goldens were made with', `golden ${golden.catalogSha256}, file ${catSha}`);
 const whole = await loadSnapshot(new Uint8Array(catBytes));
 // As the server loads it (everything), and as the one-file site does: a

@@ -7,12 +7,17 @@
  * And the line classifiers the RTF painter uses (linepaint.c), so the
  * terminal painter can be compared against them without a Windows box:
  *   test_host classify <file>       one class name per line of <file>
+ *
+ * And the runtime-script check the Windows engine runs (rtcheck.c), on a
+ * real plan, so it is tested on Linux rather than on faith:
+ *   test_host rtverify <plan> <pubkey-b64> <target-index>
  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "plancheck.h"
 #include "linepaint.h"
+#include "rtcheck.h"
 
 int ed25519_verify(unsigned char *buf, unsigned long long n, const unsigned char *s, const unsigned char *pk);
 
@@ -100,6 +105,28 @@ static int classify(const char *path)
   return 0;
 }
 
+static int rtverify(const char *planfile, const char *keyb64, long idx)
+{
+  unsigned char pk[32], *buf;
+  char issued[64];
+  const char *why = "";
+  FILE *f = fopen(planfile, "rb");
+  long n;
+  int r;
+  if (strlen(keyb64) != 44 || ti_b64decode((const unsigned char *)keyb64, 44, pk, 32)) {
+    printf("error: bad key\n"); return 2;
+  }
+  if (!f) { printf("error: can't open %s\n", planfile); return 2; }
+  fseek(f, 0, SEEK_END); n = ftell(f); fseek(f, 0, SEEK_SET);
+  buf = malloc((size_t)n + 1);
+  if (!buf || fread(buf, 1, (size_t)n, f) != (size_t)n) { printf("error: can't read\n"); return 2; }
+  fclose(f);
+  r = ti_rt_check(buf, (unsigned long)n, pk, idx, issued, &why);
+  printf("%s\t%s\t%s\n", r == TI_RT_OK ? "ok" : r == TI_RT_NONE ? "none" : "bad", issued, why);
+  free(buf);
+  return r == TI_RT_OK ? 0 : 1;
+}
+
 int main(int argc, char **argv)
 {
   FILE *f;
@@ -109,6 +136,7 @@ int main(int argc, char **argv)
   int r;
   if (argc == 2 && !strcmp(argv[1], "rfc8032")) return rfc8032();
   if (argc == 3 && !strcmp(argv[1], "classify")) return classify(argv[2]);
+  if (argc == 5 && !strcmp(argv[1], "rtverify")) return rtverify(argv[2], argv[3], atol(argv[4]));
   if (argc != 3) { fprintf(stderr, "usage: test_host rfc8032 | test_host classify file | test_host plan pubkey\n"); return 2; }
   if (strlen(argv[2]) != 44 || ti_b64decode((unsigned char *)argv[2], 44, pk, 32)) { printf("error: bad key\n"); return 2; }
   f = fopen(argv[1], "rb");

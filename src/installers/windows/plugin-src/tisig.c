@@ -12,6 +12,8 @@
 #include <windows.h>
 #include "plancheck.h"
 #include "linepaint.h"
+#include "sha256.h"
+#include "rtcheck.h"
 
 typedef struct _stack_t {
   struct _stack_t *next;
@@ -152,6 +154,72 @@ void __declspec(dllexport) __cdecl checkdoc(HWND parent, int size, WCHAR *vars, 
 {
   (void)parent; (void)vars; (void)extra;
   docheck(size, top, "", 1);
+}
+
+/* ---------------------------------------------------------------- rtverify
+ *
+ *   tisig::rtverify "<plan file>" "<public key>" "<target index>"
+ *   Pop $0    ; "ok", "none: <why>" or "bad: <why>"
+ *   Pop $1    ; when the roots document was published, or ""
+ *
+ * The deciding is in rtcheck.c, which has no windows.h in it and is
+ * tested on Linux by test_host (plugin-src/build.sh). This is the file
+ * reading and the stack plumbing, which is all that has to be Windows.
+ *
+ * In C rather than NSIS for two reasons. The roots document is about
+ * 1,560 characters of base64 and an NSIS string is 1,024, so a script
+ * reading that line would truncate it and never know it had. And a
+ * proof walk is twelve SHA-256s of a short string, which NSIS can only
+ * do by writing twelve temporary files.
+ */
+void __declspec(dllexport) __cdecl rtverify(HWND parent, int size, WCHAR *vars, stack_t **top, void *extra)
+{
+  WCHAR *path, key[128], idxs[32], w[80];
+  unsigned char pk[32], kb[44];
+  HANDLE h;
+  DWORD n = 0, got = 0;
+  unsigned char *buf;
+  const char *why = "";
+  char issued[64];
+  long idx = 0;
+  int i, r;
+
+  (void)parent; (void)vars; (void)extra;
+  issued[0] = 0;
+  path = (WCHAR *)GlobalAlloc(GPTR, (size_t)size * sizeof(WCHAR));
+  if (!path) return;
+  if (pop(top, path, size) || pop(top, key, 128) || pop(top, idxs, 32)) {
+    GlobalFree(path);
+    push(top, L"", 1);
+    result(top, size, "none", "tisig::rtverify needs a plan, a key and a target index");
+    return;
+  }
+  for (i = 0; idxs[i] >= '0' && idxs[i] <= '9'; i++) idx = idx * 10 + (idxs[i] - '0');
+  for (i = 0; i < 44 && key[i]; ++i) kb[i] = key[i] < 128 ? (unsigned char)key[i] : '?';
+  if (i != 44 || key[44] || ti_b64decode(kb, 44, pk, 32) || idx < 1) {
+    GlobalFree(path);
+    push(top, L"", 1);
+    result(top, size, "none", "this installer carries no usable key");
+    return;
+  }
+  h = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+  GlobalFree(path);
+  if (h == INVALID_HANDLE_VALUE) { push(top, L"", 1); result(top, size, "none", "the plan could not be opened"); return; }
+  n = GetFileSize(h, NULL);
+  if (n == INVALID_FILE_SIZE || n > MAX_PLAN) { CloseHandle(h); push(top, L"", 1); result(top, size, "none", "the plan is too large"); return; }
+  buf = (unsigned char *)GlobalAlloc(GPTR, (SIZE_T)n + 1);
+  if (!buf) { CloseHandle(h); push(top, L"", 1); result(top, size, "none", "out of memory"); return; }
+  if (n && (!ReadFile(h, buf, n, &got, NULL) || got != n)) {
+    CloseHandle(h); GlobalFree(buf); push(top, L"", 1);
+    result(top, size, "none", "the plan could not be read"); return;
+  }
+  CloseHandle(h);
+  r = ti_rt_check(buf, n, pk, idx, issued, &why);
+  GlobalFree(buf);
+  for (i = 0; i < 63 && issued[i]; i++) w[i] = (WCHAR)(unsigned char)issued[i];
+  w[i] = 0;
+  push(top, w, i + 1);
+  result(top, size, r == TI_RT_OK ? "ok" : r == TI_RT_NONE ? "none" : "bad", r == TI_RT_OK ? "" : why);
 }
 
 /*

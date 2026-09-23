@@ -180,7 +180,13 @@ if [ "$fail" = 0 ] && [ -f "$here/out/index.html" ]; then
 		mkdir -p "$(dirname "$ledger")"
 		seq=$(awk -F'\t' 'NF >= 4 && $1 + 0 > n { n = $1 + 0 } END { print n + 1 }' "$ledger" 2>/dev/null)
 		[ -n "$seq" ] || seq=1
-		printf '%s\t%s\t%s\t%s\n' "$seq" "$(date -u +%Y-%m-%d)" "$rev" "$page_sha" >> "$ledger"
+		rtall=
+		if [ -f "$rtdir/roots.txt" ]; then
+			rtall=$(awk -F'\t' '$1 == "root" { printf "%s\t%s\n", $2, $3 }' "$rtdir/roots.txt" |
+				sha256sum | cut -d' ' -f1)
+		fi
+		printf '%s\t%s\t%s\t%s%s\n' "$seq" "$(date -u +%Y-%m-%d)" "$rev" "$page_sha" \
+			"${rtall:+	$rtall}" >> "$ledger"
 		echo "ok    release $seq added to the ledger ($(echo "$page_sha" | cut -c1-16))"
 	fi
 fi

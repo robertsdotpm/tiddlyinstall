@@ -23,7 +23,9 @@ export function parseLine(line) {
   if (!isFinite(seq) || seq < 1 || Math.trunc(seq) !== seq) return null;
   if (!/^[0-9a-f]{64}$/.test(f[3])) return null;
   if (f[1].indexOf('\t') >= 0 || f[2].indexOf('\t') >= 0) return null;
-  return { seq, date: f[1], rev: f[2], sha256: f[3] };
+  const e = { seq, date: f[1], rev: f[2], sha256: f[3] };
+  if (f.length > 4 && /^[0-9a-f]{64}$/.test(f[4])) e.rtroot = f[4];
+  return e;
 }
 
 export function parseFile(text) {

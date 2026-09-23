@@ -101,6 +101,9 @@ Var PlanKind         ; fetched, cmdline or embedded
 Var PlanSig          ; tisig::check's answer
 Var PlanWarn         ; a warning for the review page
 Var PlanSigState     ; ok | unsigned | bad | cannot
+Var RtState          ; ok | none | bad: is the runtime script one we published
+Var RtIssued         ; when the roots document was published
+Var RtWhy
 Var PlanRec          ; the plan header's `record`
 Var PlanReq          ; the plan header's first `request` (plans by name), fields joined by |
 Var PlanReqWant      ; what a plan by name must say there
@@ -2997,6 +3000,9 @@ Function .onInit
   StrCpy $PlanNonceGot ""
   StrCpy $PlanSigned ""
   StrCpy $PlanSigState "ok"
+  StrCpy $RtState "none"
+  StrCpy $RtIssued ""
+  StrCpy $RtWhy ""
   StrCpy $PlanMaxAge ""
   StrCpy $AgeWarn ""
   StrCpy $RevokeNote ""
@@ -3171,6 +3177,27 @@ Function .onInit
   ; or simply be old: the revocation list answers that where there is a
   ; network, and the plan's own `signed`/`maxage` where there is not.
   ; Both run before anything on this machine is changed.
+  ; Is the runtime install script one we published? Decided from the
+  ; plan and the key this installer carries -- no network, no catalogue
+  ; (plugin-src/rtcheck.c, src/shared/rtscript.js). It changes nothing
+  ; about the install; it decides what the screen may claim.
+  tisig::rtverify "$PlanFile" "${TI_PLAN_PUBKEY}" "$TgtNo"
+  Pop $0
+  Pop $RtIssued
+  StrCpy $1 $0 3
+  ${If} $1 == "ok"
+    StrCpy $RtState "ok"
+  ${Else}
+    StrCpy $1 $0 4
+    ${If} $1 == "bad"
+      StrCpy $RtState "bad"
+    ${Else}
+      StrCpy $RtState "none"
+    ${EndIf}
+    StrCpy $RtWhy $0 1024 5
+  ${EndIf}
+  ${Log} "Runtime script: $0"
+
   Call Revocations
   ${If} $Failed = 1
     Call InitFail
@@ -4302,7 +4329,25 @@ Function WriteSummary
       Call SumPara
     ${EndIf}
   ${EndIf}
-  ${If} $PlanSigState == "unsigned"
+  ${If} $RtState == "ok"
+    ; The steps themselves are ours, proved against a signed root by this
+    ; file with the key it carries -- no network, no catalogue, and
+    ; nothing here had to trust the page that built it. A narrower claim
+    ; than "the plan is signed", and a true one: what is proved is the
+    ; part we wrote.
+    ${Sum} "  SIGNED BY TIDDLYINSTALL"
+    StrCpy $U_a "The downloads, their SHA-256s and every command run against them were published by us, and are proved so by this file against a key it carries. Checked here, with no network."
+    Call SumPara
+    ${If} $RtIssued != ""
+      StrCpy $U_a "Published $RtIssued."
+      Call SumPara
+    ${EndIf}
+    StrCpy $U_a "Not covered: how it is started, which is the line whoever built this installer wrote."
+    Call SumPara
+  ${ElseIf} $RtState == "bad"
+    StrCpy $U_a "The runtime steps claim to be ours and the claim does not hold: $RtWhy. Treat this file as altered."
+    Call SumPara
+  ${ElseIf} $PlanSigState == "unsigned"
     StrCpy $U_a "Not signed. Only our build server holds the key, and a page building in a browser has no way to reach it, so nothing here can say where this script came from."
     Call SumPara
     StrCpy $U_a "What it does is listed below in full, and every file it names is checked against the SHA-256 beside it -- though those hashes come from the script itself, so they show a download arrived unchanged and say nothing about what it is."

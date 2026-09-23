@@ -26,7 +26,19 @@
 export const ZERO_ROOT = '0'.repeat(64);
 
 export function entryLine(e) {
-  return [e.seq, e.date, e.rev, e.sha256].join('\t');
+  const base = [e.seq, e.date, e.rev, e.sha256];
+  // The runtime-script roots as of this release, when there were any.
+  // Optional, so entries written before this field still chain to the
+  // same roots they always did -- an append-only log cannot go back and
+  // add a field to what is already in it.
+  //
+  // Why it is here at all: the tree is signed with a key we hold, so we
+  // could re-sign a changed tree and nothing in the signature would say
+  // so. Putting its root in the chain means changing it contradicts
+  // every copy of the page already in the wild, which is the one thing
+  // we cannot do quietly.
+  if (e.rtroot) base.push(e.rtroot);
+  return base.join('\t');
 }
 
 // Every root from the first entry to the last, in order.
@@ -56,7 +68,9 @@ export function parseReleases(text) {
     const seq = Number(f[1]);
     if (!isFinite(seq) || seq < 1) continue;
     if (!/^[0-9a-f]{64}$/.test(f[4])) continue;
-    out.push({ seq, date: f[2], rev: f[3], sha256: f[4] });
+    const e = { seq, date: f[2], rev: f[3], sha256: f[4] };
+    if (f.length > 5 && /^[0-9a-f]{64}$/.test(f[5])) e.rtroot = f[5];
+    out.push(e);
   }
   return out;
 }

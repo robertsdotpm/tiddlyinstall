@@ -40,7 +40,7 @@ ok() { printf 'ok   %s\n' "$1"; }
 # The C side, built with the host cc -- no mingw and no Windows needed,
 # which is the whole reason the classifiers live in a file of their own.
 ${CC:-cc} -O2 -w -o "$T/classify" "$plug/test_host.c" "$plug/plancheck.c" \
-	"$plug/ed25519_verify.c" "$plug/linepaint.c"
+	"$plug/ed25519_verify.c" "$plug/linepaint.c" "$plug/sha256.c" "$plug/rtcheck.c"
 
 # The awk side, lifted out of the engine so the real function is what
 # runs -- a copy here would be a third implementation to keep in step.
