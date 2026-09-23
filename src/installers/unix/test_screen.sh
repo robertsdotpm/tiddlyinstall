@@ -91,6 +91,19 @@ has '* Add an application menu entry' && ok 'the bullets follow the install (men
 # Reading it without running it is the point of the other page.
 has '#verify' && ok 'it points at the Verify page' || no 'it points at the Verify page'
 
+# Built with no server, so it asks nobody. The record in this fixture
+# carries no `backend`, which used to fall through to the address the
+# engine was compiled with and then fetch a revocation list from it: a
+# host the builder never picked and the person running it never agreed
+# to. Both halves are checked -- that it says so, and that the fetch
+# really did not happen, since a note saying "no list was fetched"
+# printed next to a request that was made is the worst of both.
+has 'built without a server' && ok 'it says no revocation list was fetched' ||
+	no 'it says no revocation list was fetched'
+hasnt 'Checking the revocation list' &&
+	ok 'and no revocation list was asked for' ||
+	no 'and no revocation list was asked for' "$(grep -n 'revocation list' "$T/out" | head -2)"
+
 # An unsigned .run says so in one word where it is used inside a
 # sentence, and at length only where it has a line of its own.
 hasnt 'signed by nothing -' &&

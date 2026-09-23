@@ -46,6 +46,10 @@
 
 TI_ENGINE_VERSION=1
 TI_DEFAULT_BACKEND=http://10.0.1.76:8080
+# Set from the record or --backend when somebody actually chose one;
+# empty means nothing was chosen and this engine filled in the address
+# above, which is not a reason to go and talk to it (ti_revocations).
+ti_backend_given=
 # The plan signing key (docs/format.md "Plan signature"): base64 of the raw Ed25519
 # public key, and its id. make_run.sh / make_app.sh fill these in.
 TI_PLAN_PUBKEY=
@@ -1405,6 +1409,14 @@ ti_revocations() { # backend
 	ti_revoke_note=
 	case $TI_PLAN_KIND in fetched) return 0 ;; esac
 	[ "$TI_MODE_A" = 1 ] && return 0
+	# Built with no server: it carries the plan the page worked out, from
+	# the list that page carried, and asks nobody. Said rather than done
+	# quietly, because what it costs is real -- a file withdrawn after
+	# this installer was made cannot reach it.
+	if [ -z "$ti_backend_given" ]; then
+		ti_revoke_note='this installer was built without a server, so no revocation list was fetched: what it installs was checked against the list the builder had, and anything withdrawn since is not known here'
+		return 0
+	fi
 	url=$1/api/revocations
 	f=$TI_WORK/revocations.txt
 	got=
@@ -3121,6 +3133,14 @@ ti_install_main() {
 	[ -n "$TI_RECHASH" ] && ti_installed_offline "$TI_RECHASH" "$TI_REC"
 	backend=$opt_backend
 	[ -z "$backend" ] && [ -n "$TI_REC" ] && [ "$TI_MODE_A" != 1 ] && backend=$(ti_get "$TI_REC" backend)
+	# Whether anybody actually chose one, as against this engine filling
+	# in the address it was compiled with. An installer built with no
+	# server used to fall through to that address and then ask it for a
+	# revocation list at install time -- a host the builder never picked
+	# and the person running it never agreed to (2026-09-23). The
+	# fallback stays for what genuinely has nowhere else to go: an
+	# installer that carries no plan has to fetch one from somewhere.
+	ti_backend_given=$backend
 	[ -z "$backend" ] && backend=$TI_DEFAULT_BACKEND
 	backend=${backend%/}
 	case $TI_PLAN_KIND in

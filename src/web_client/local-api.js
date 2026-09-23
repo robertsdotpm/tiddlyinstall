@@ -35,7 +35,7 @@
 // The catalogue is the snapshot with this browser's changes from the
 // Runtimes page on top (src/web_client/overlay.js effectiveCatalog). A build made with
 // changes says so in its result (`catalog`), and the build page shows it.
-import { ApiError, pageFromDisk } from './api.js';
+import { ApiError, pageFromDisk, apiLocal, apiBase } from './api.js';
 import { noNetworkGet } from '../shared/github.js';
 import { validate, runJob, planPackFiles, MAX_PACK, MAX_MAC_PACK } from '../shared/builder.js';
 import { resolve, setRevoked } from '../shared/resolve.js';
@@ -109,9 +109,16 @@ export function pageRevocations() {
 
 async function env() {
   const eff = await catalog();
-  const e = { catalog: eff.catalog, overlay: eff, base: (plat) => blockBytes('base-' + plat), backend: offlineInfo.backend || '',
+  const e = { catalog: eff.catalog, overlay: eff, base: (plat) => blockBytes('base-' + plat), backend: '',
     embedPlan: true, packRuntimes: true, githubWho: 'page',
     revoked: () => pageRevocations().sha };
+  // The server choice is one decision, and it governs the installer too.
+  // This used to write the address baked into the page whatever was
+  // chosen, so an installer built with "No server" still asked a host at
+  // install time -- one the builder never picked and the person running
+  // it never agreed to. Chosen a server: the installer checks with it.
+  // Not: the installer carries what this page knew and contacts nobody.
+  e.backend = apiLocal() ? '' : apiBase();
   // On the catalogue itself, not only through builder.js: the offline
   // path resolves in packPlan() below, which never goes near that call.
   setRevoked(e.catalog, pageRevocations().sha);

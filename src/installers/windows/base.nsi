@@ -93,6 +93,8 @@ Var PlanU16
 Var RecHash          ; 26-char base32 hash of the record
 Var Backend
 Var OptBackend
+Var BackendGiven     ; 1 when somebody chose one, 0 when this engine
+                     ; filled in the address it was compiled with
 Var MetaSrc          ; where the record came from, for the transparency page
 Var PlanSrc
 Var PlanKind         ; fetched, cmdline or embedded
@@ -1111,7 +1113,10 @@ Function ReadRecord
     ${If} $K S== "backend"
     ${AndIf} $OptBackend == ""
     ${AndIf} $ModeA = 0
-      StrCpy $Backend $F1
+      ${If} $F1 != ""
+        StrCpy $Backend $F1
+        StrCpy $BackendGiven 1
+      ${EndIf}
     ${ElseIf} $K S== "source"
       StrCpy $RecSource "$F1 $F2"
       ${If} $F3 != ""
@@ -2112,6 +2117,16 @@ Function Revocations
   ${OrIf} $ModeA = 1
     Goto rv_end
   ${EndIf}
+  ; Built with no server: it carries the plan the page worked out, from
+  ; the list that page carried, and asks nobody. It used to fall through
+  ; to the address this engine was compiled with and ask that -- a host
+  ; the builder never picked and the person running it never agreed to
+  ; (2026-09-23). Said rather than done quietly: a file withdrawn after
+  ; this installer was made cannot reach it.
+  ${If} $BackendGiven = 0
+    StrCpy $RevokeNote "this installer was built without a server, so no revocation list was fetched: what it installs was checked against the list the builder had, and anything withdrawn since is not known here"
+    Goto rv_end
+  ${EndIf}
   StrCpy $2 ""                        ; the UTF-16 list to use
   StrCpy $3 "$LOCALAPPDATA\TiddlyInstall\revocations.txt"
   StrCpy $U_a "$Backend/api/revocations"
@@ -2974,12 +2989,14 @@ Function .onInit
   StrCpy $ShaList "$PLUGINSDIR\shas.txt"
 
   StrCpy $Backend "${TI_BACKEND}"
+  StrCpy $BackendGiven 0
   ClearErrors
   ${TiGetOpt} "/backend=" $OptBackend
   ${If} ${Errors}
     StrCpy $OptBackend ""
   ${Else}
     StrCpy $Backend $OptBackend
+    StrCpy $BackendGiven 1
   ${EndIf}
 
   ; record and plan

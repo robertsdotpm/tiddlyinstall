@@ -473,6 +473,54 @@ function paintWhereChip() {
   whereEl.setAttribute('aria-label', said + ' Open settings.');
 }
 
+// How old is the catalogue baked into this page, and does it matter yet?
+//
+// Only with no server: with one, the build is resolved against that
+// server's live catalogue and this copy's age does not come into it. So
+// the line appears exactly where it is actionable, and the action is the
+// control it sits under.
+//
+// The page cannot fetch a fresher one -- that is the whole point -- so
+// this says the age and where a current one comes from, and nothing else.
+function pageBuilt() {
+  try {
+    const n = document.getElementById('ti-offline');
+    const d = JSON.parse(n.textContent);
+    return String(d.built || '');
+  } catch (e) { return ''; }
+}
+
+function daysSince(iso) {
+  const t = Date.parse(/^\d{4}-\d{2}-\d{2}$/.test(iso) ? iso + 'T00:00:00Z' : iso);
+  if (!isFinite(t)) return -1;
+  return Math.floor((Date.now() - t) / 86400000);
+}
+
+function paintCatalogueAge() {
+  const line = footerEl && footerEl.querySelector('.settings-age');
+  const note = footerEl && footerEl.querySelector('.settings-age-note');
+  if (!line || !note) return;
+  const built = pageBuilt();
+  const days = built ? daysSince(built) : -1;
+  if (!apiLocal() || days < 0) { line.hidden = true; note.hidden = true; return; }
+  line.hidden = false;
+  const age = days <= 0 ? 'today' : days === 1 ? 'yesterday' : days + ' days old';
+  line.textContent = 'Runtime list in this page: ' + built + ' (' + age + '). ';
+  const more = document.createElement('button');
+  more.type = 'button';
+  more.className = 'link-button';
+  more.textContent = 'Why it matters';
+  more.addEventListener('click', () => {
+    note.hidden = !note.hidden;
+    more.textContent = note.hidden ? 'Why it matters' : 'Hide';
+  });
+  line.appendChild(more);
+  note.textContent = 'With no server, your installers are built from this list, and a copy of ' +
+    'this page can only ever know what it knew when it was saved. Newer runtime versions, and ' +
+    'anything withdrawn since, are not in it. Choose a server and builds are worked out ' +
+    'against a current one instead.';
+}
+
 // Is the server this page's own origin? That is the difference between
 // one trust decision and two: served from the same domain, trusting the
 // page *is* trusting the server. Opened from disk there is no origin to
@@ -492,6 +540,7 @@ function paintApiFooter() {
   }
   a.textContent = prettyApi(apiBaseUrl);
   a.title = apiBaseUrl === defaultApi ? apiBaseUrl + ' (default)' : apiBaseUrl + ' (chosen)';
+  paintCatalogueAge();
   const same = footerEl.querySelector('.settings-same');
   if (same) {
     same.hidden = !apiSameOrigin();
@@ -543,6 +592,8 @@ export function mountApiFooter() {
     '<div class="settings-panel" hidden>' +
     '<p class="settings-now"><span>Server:</span> <a class="api-ctl-url" target="_blank" rel="noopener noreferrer"></a></p>' +
     '<p class="small settings-same" hidden></p>' +
+    '<p class="small settings-age" hidden></p>' +
+    '<p class="small muted settings-age-note" hidden></p>' +
     '<p class="settings-what"><button type="button" class="link-button api-ctl-what" hidden>' +
     'What does the server&nbsp;do?</button></p>' +
     '<form class="api-ctl-form">' +
