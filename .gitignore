@@ -5,3 +5,13 @@ tools/es5/node_modules/
 tests/browsers/node_modules/
 tests/browsers/.safari5-*/
 /prompts/
+
+# The test machines: addresses, usernames, the operator's own lab. Local
+# infrastructure, no use to anyone else, and this repository is public.
+# tests/vms.example.json is the shape; $TI_VMS names another file.
+/tests/vms.json
+# Per-run browser output. usage.jsonl is the record that matters; these
+# are 339 files of detail carrying local paths, and nothing reads them.
+/tests/browsers/results/
+# Notes about that lab, kept beside the repo rather than in it.
+/docs/local/

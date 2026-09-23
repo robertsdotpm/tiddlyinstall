@@ -10,7 +10,7 @@
 - `GET /done?run=NAME` says whether that run has ended.
 
 The page is served over plain HTTP because most of the test VMs cannot
-reverse-tunnel (docs/test-vms.md), which means it is not a secure context
+reverse-tunnel (docs/local/test-vms.md), which means it is not a secure context
 and `crypto.subtle` is absent. That is not a gap in the measurement: the
 bundle's own cryptox.js falls back to the pure-JavaScript SHA-256, which is
 what those browsers would use anyway, and the memory shape of the hash is

@@ -277,7 +277,7 @@
     },
     {
      "kind": "vm-test",
-     "source": "operator test VMs (installer-builder/docs/test-vms.md), 2026-09-18: Vista SP2 (6.0.6003, x86): 3.7.0 and 3.7.9 x86 embeddable zips -> 'import sys, asyncio' OK. XP SP3: 3.5.0 x86 embeddable zip never started (hung on a loader error dialog, killed after 90 s)"
+     "source": "operator test VMs (installer-builder/docs/local/test-vms.md), 2026-09-18: Vista SP2 (6.0.6003, x86): 3.7.0 and 3.7.9 x86 embeddable zips -> 'import sys, asyncio' OK. XP SP3: 3.5.0 x86 embeddable zip never started (hung on a loader error dialog, killed after 90 s)"
     },
     {
      "kind": "vendor-doc",
@@ -324,7 +324,7 @@
     },
     {
      "kind": "vm-test",
-     "source": "operator test VMs (installer-builder/docs/test-vms.md), 2026-09-18: Vista SP2: 3.8.0 x86 embeddable zip exits 0xC0000139 (STATUS_ENTRYPOINT_NOT_FOUND). Windows 7 SP1 (6.1.7601.24545, x64): 3.8.10 x86 and amd64 embeddable zips -> asyncio OK"
+     "source": "operator test VMs (installer-builder/docs/local/test-vms.md), 2026-09-18: Vista SP2: 3.8.0 x86 embeddable zip exits 0xC0000139 (STATUS_ENTRYPOINT_NOT_FOUND). Windows 7 SP1 (6.1.7601.24545, x64): 3.8.10 x86 and amd64 embeddable zips -> asyncio OK"
     },
     {
      "kind": "vm-test",
@@ -377,7 +377,7 @@
     },
     {
      "kind": "vm-test",
-     "source": "operator test VMs (installer-builder/docs/test-vms.md), 2026-09-18: Vista SP2: 3.8.0 x86 embeddable zip exits 0xC0000139 (STATUS_ENTRYPOINT_NOT_FOUND). Windows 7 SP1 (6.1.7601.24545, x64): 3.8.10 x86 and amd64 embeddable zips -> asyncio OK"
+     "source": "operator test VMs (installer-builder/docs/local/test-vms.md), 2026-09-18: Vista SP2: 3.8.0 x86 embeddable zip exits 0xC0000139 (STATUS_ENTRYPOINT_NOT_FOUND). Windows 7 SP1 (6.1.7601.24545, x64): 3.8.10 x86 and amd64 embeddable zips -> asyncio OK"
     }
    ],
    "confidence": "high",
@@ -422,7 +422,7 @@
     },
     {
      "kind": "vm-test",
-     "source": "operator test VMs (installer-builder/docs/test-vms.md), 2026-09-18: Windows 7 SP1: 3.9.0 x86 and amd64 embeddable zips exit 0xC0000135 (STATUS_DLL_NOT_FOUND). Windows 8.1 (6.3.9600, x64): 3.11.9 amd64 embeddable zip -> asyncio OK"
+     "source": "operator test VMs (installer-builder/docs/local/test-vms.md), 2026-09-18: Windows 7 SP1: 3.9.0 x86 and amd64 embeddable zips exit 0xC0000135 (STATUS_DLL_NOT_FOUND). Windows 8.1 (6.3.9600, x64): 3.11.9 amd64 embeddable zip -> asyncio OK"
     }
    ],
    "confidence": "medium",
@@ -470,7 +470,7 @@
     },
     {
      "kind": "vm-test",
-     "source": "operator test VMs (installer-builder/docs/test-vms.md), 2026-09-18: Windows 7 SP1: 3.9.0 x86 and amd64 embeddable zips exit 0xC0000135 (STATUS_DLL_NOT_FOUND). Windows 8.1 (6.3.9600, x64): 3.11.9 amd64 embeddable zip -> asyncio OK"
+     "source": "operator test VMs (installer-builder/docs/local/test-vms.md), 2026-09-18: Windows 7 SP1: 3.9.0 x86 and amd64 embeddable zips exit 0xC0000135 (STATUS_DLL_NOT_FOUND). Windows 8.1 (6.3.9600, x64): 3.11.9 amd64 embeddable zip -> asyncio OK"
     }
    ],
    "confidence": "high",
@@ -510,7 +510,7 @@
     },
     {
      "kind": "vm-test",
-     "source": "operator test VMs (installer-builder/docs/test-vms.md), 2026-09-18: Windows 8.1 (6.3.9600.20778, x64): 3.12.10 x86+amd64, 3.13.0 x86+amd64, 3.13.15 amd64, 3.14.0 amd64 and 3.14.7 x86+amd64 embeddable zips -> 'import sys, asyncio' OK. Windows 10 22H2 (19045), 11 (26100) and Server 2022 (20348): 3.14.7 x86+amd64 -> OK"
+     "source": "operator test VMs (installer-builder/docs/local/test-vms.md), 2026-09-18: Windows 8.1 (6.3.9600.20778, x64): 3.12.10 x86+amd64, 3.13.0 x86+amd64, 3.13.15 amd64, 3.14.0 amd64 and 3.14.7 x86+amd64 embeddable zips -> 'import sys, asyncio' OK. Windows 10 22H2 (19045), 11 (26100) and Server 2022 (20348): 3.14.7 x86+amd64 -> OK"
     },
     {
      "kind": "vendor-doc",
@@ -555,7 +555,7 @@
     },
     {
      "kind": "vm-test",
-     "source": "operator test VMs (installer-builder/docs/test-vms.md), 2026-09-18: Windows 8.1 (6.3.9600.20778, x64): 3.12.10 x86+amd64, 3.13.0 x86+amd64, 3.13.15 amd64, 3.14.0 amd64 and 3.14.7 x86+amd64 embeddable zips -> 'import sys, asyncio' OK. Windows 10 22H2 (19045), 11 (26100) and Server 2022 (20348): 3.14.7 x86+amd64 -> OK"
+     "source": "operator test VMs (installer-builder/docs/local/test-vms.md), 2026-09-18: Windows 8.1 (6.3.9600.20778, x64): 3.12.10 x86+amd64, 3.13.0 x86+amd64, 3.13.15 amd64, 3.14.0 amd64 and 3.14.7 x86+amd64 embeddable zips -> 'import sys, asyncio' OK. Windows 10 22H2 (19045), 11 (26100) and Server 2022 (20348): 3.14.7 x86+amd64 -> OK"
     },
     {
      "kind": "vendor-doc",
@@ -670,7 +670,7 @@
     },
     {
      "kind": "vm-test",
-     "source": "operator test VMs (installer-builder/docs/test-vms.md), 2026-09-18: Windows 8.1 (6.3.9600.20778, x64): 3.12.10 x86+amd64, 3.13.0 x86+amd64, 3.13.15 amd64, 3.14.0 amd64 and 3.14.7 x86+amd64 embeddable zips -> 'import sys, asyncio' OK. Windows 10 22H2 (19045), 11 (26100) and Server 2022 (20348): 3.14.7 x86+amd64 -> OK"
+     "source": "operator test VMs (installer-builder/docs/local/test-vms.md), 2026-09-18: Windows 8.1 (6.3.9600.20778, x64): 3.12.10 x86+amd64, 3.13.0 x86+amd64, 3.13.15 amd64, 3.14.0 amd64 and 3.14.7 x86+amd64 embeddable zips -> 'import sys, asyncio' OK. Windows 10 22H2 (19045), 11 (26100) and Server 2022 (20348): 3.14.7 x86+amd64 -> OK"
     },
     {
      "kind": "vendor-doc",
@@ -714,7 +714,7 @@
     },
     {
      "kind": "vm-test",
-     "source": "operator test VMs (installer-builder/docs/test-vms.md), 2026-09-18: Windows 8.1 (6.3.9600.20778, x64): 3.12.10 x86+amd64, 3.13.0 x86+amd64, 3.13.15 amd64, 3.14.0 amd64 and 3.14.7 x86+amd64 embeddable zips -> 'import sys, asyncio' OK. Windows 10 22H2 (19045), 11 (26100) and Server 2022 (20348): 3.14.7 x86+amd64 -> OK"
+     "source": "operator test VMs (installer-builder/docs/local/test-vms.md), 2026-09-18: Windows 8.1 (6.3.9600.20778, x64): 3.12.10 x86+amd64, 3.13.0 x86+amd64, 3.13.15 amd64, 3.14.0 amd64 and 3.14.7 x86+amd64 embeddable zips -> 'import sys, asyncio' OK. Windows 10 22H2 (19045), 11 (26100) and Server 2022 (20348): 3.14.7 x86+amd64 -> OK"
     }
    ],
    "confidence": "high",

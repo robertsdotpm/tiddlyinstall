@@ -41,7 +41,7 @@
 //
 // --browser chromium49: the same steps in Chromium 49 on XP (the last
 // Chrome there; Google's snapshot build r369909, 49.0.2623.0, in
-// C:\tibrowsers\chromium-49, docs/test-vms.md), over the DevTools protocol:
+// C:\tibrowsers\chromium-49, docs/local/test-vms.md), over the DevTools protocol:
 // it has no async functions either, so it runs the ES5 copy too. Recorded
 // as browser "chromium".
 import { spawn, spawnSync } from 'node:child_process';

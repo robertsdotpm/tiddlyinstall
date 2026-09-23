@@ -22,17 +22,26 @@
 #
 # It captures the installer's own window rectangle, never the desktop.
 # These machines have logged-in console sessions and a full-screen grab
-# would take whatever else is on them; docs/test-vms.md has the rule and
-# why it was written. Do not point this at 10.0.1.123, which is the
-# operator's own screen.
+# would take whatever else is on them; docs/local/test-vms.md has the rule and
+# why it was written. It refuses any machine listed as a console in
+# tests/vms.json: somebody is logged in to those.
 set -eu
 here=$(cd "$(dirname "$0")/.." && pwd)
-: "${TI_WIN:?set TI_WIN=user@host (a Windows test VM, never 10.0.1.123)}"
+: "${TI_WIN:?set TI_WIN=user@host (a Windows test VM, never a console one)}"
 exe=${1:?usage: shot_windows_review.sh <installer.exe> [outdir]}
 out=${2:-$here/out/win-review}
-case $TI_WIN in
-*10.0.1.123) echo "that is the operator's own screen; pick another VM" >&2; exit 1 ;;
-esac
+# Never the machine somebody is sitting in front of: a window on their
+# screen, and a grab that takes whatever else is on it. Which machine
+# that is lives with the other addresses (tests/vmlab.py), not here.
+if python3 -c "
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path('$here/tests').resolve()))
+import vmlab
+sys.exit(0 if vmlab.is_console('$TI_WIN') else 1)
+" 2>/dev/null; then
+	echo "that is a machine somebody is logged in to; pick another VM" >&2
+	exit 1
+fi
 
 ps1=$here/src/installers/windows/shot_review.ps1
 scp -q "$ps1" "$exe" "$TI_WIN:C:/titest/"

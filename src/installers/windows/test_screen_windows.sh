@@ -26,15 +26,24 @@ no() { fail=1; printf 'FAIL %s\n' "$1"; [ -n "${2:-}" ] && printf '     %s\n' "$
 ok() { printf 'ok   %s\n' "$1"; }
 
 if [ -z "${TI_WIN:-}" ]; then
-	echo 'skip (set TI_WIN=user@host to run this; see docs/test-vms.md)'
+	echo 'skip (set TI_WIN=user@host to run this; see docs/local/test-vms.md)'
 	exit 0
 fi
 # These machines have logged-in console sessions and one of them is the
 # operator's own screen. Nothing here takes a picture, but the rule is
 # the rule and the address is easy to paste by mistake.
-case $TI_WIN in
-*10.0.1.123) echo 'that is the operator'"'"'s own screen; pick another VM' >&2; exit 1 ;;
-esac
+# Never the machine somebody is sitting in front of: a window on their
+# screen, and a grab that takes whatever else is on it. Which machine
+# that is lives with the other addresses (tests/vmlab.py), not here.
+if python3 -c "
+import sys, pathlib
+sys.path.insert(0, str(pathlib.Path('$here/../../../tests').resolve()))
+import vmlab
+sys.exit(0 if vmlab.is_console('$TI_WIN') else 1)
+" 2>/dev/null; then
+	echo "that is a machine somebody is logged in to; pick another VM" >&2
+	exit 1
+fi
 command -v node >/dev/null || { echo 'node is needed to build the fixtures' >&2; exit 1; }
 [ -f "$here/out/base.exe" ] || { echo 'no out/base.exe; run build.sh first' >&2; exit 1; }
 

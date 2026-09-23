@@ -22,9 +22,9 @@ usage: machines.py            list the machines, their arch and where the
 # id -> label, family, arch, libc, kind, how we know the arch.
 #
 # "measured" means `uname -m` or %PROCESSOR_ARCHITECTURE% was read off the
-# machine on 2026-09-20; "docs" means docs/test-vms.md says so.
+# machine on 2026-09-20; "docs" means docs/local/test-vms.md says so.
 MACHINES = {
-    # Windows (docs/test-vms.md)
+    # Windows (docs/local/test-vms.md)
     "xp":        dict(label="XP",              family="windows", arch="x86",   kind="vm",   why="measured"),
     "vista":     dict(label="Vista",           family="windows", arch="x86",   kind="vm",   why="measured"),
     "7":         dict(label="Win 7",           family="windows", arch="amd64", kind="vm",   why="docs"),
@@ -37,7 +37,7 @@ MACHINES = {
     "ltsc2024":  dict(label="LTSC 2024",       family="windows", arch="amd64", kind="vm",   why="docs"),
     "11de":      dict(label="Win 11 DE (Jörg)", family="windows", arch="amd64", kind="vm",  why="docs"),
     "2025core":  dict(label="Srv 2025 Core",   family="windows", arch="amd64", kind="vm",   why="measured"),
-    # Linux VMs on the ESXi host, all 64-bit (docs/test-vms.md)
+    # Linux VMs on the ESXi host, all 64-bit (docs/local/test-vms.md)
     "centos6":   dict(label="CentOS 6",        family="linux", arch="amd64", libc="glibc", kind="vm", why="measured"),
     "centos7":   dict(label="CentOS 7",        family="linux", arch="amd64", libc="glibc", kind="vm", why="measured"),
     "ubuntu1404": dict(label="Ubuntu 14.04",   family="linux", arch="amd64", libc="glibc", kind="vm", why="measured"),
@@ -48,7 +48,7 @@ MACHINES = {
     "ubuntu2204": dict(label="Ubuntu 22.04",   family="linux", arch="amd64", libc="glibc", kind="vm", why="measured"),
     "debian12":  dict(label="Debian 12",       family="linux", arch="amd64", libc="glibc", kind="vm", why="measured"),
     "alpine":    dict(label="Alpine 3.24",     family="linux", arch="amd64", libc="musl",  kind="vm", why="measured"),
-    # The 32-bit Linux VM on ESXi (docs/test-vms.md, "The 32-bit Linux VM"):
+    # The 32-bit Linux VM on ESXi (docs/local/test-vms.md, "The 32-bit Linux VM"):
     # a real 32-bit kernel, a desktop, and sudo, which the containers below
     # cannot show. tests/arch/prove32.py is what proves each of those.
     "debian12x86": dict(label="Debian 12 i386 VM", family="linux", arch="x86", libc="glibc",

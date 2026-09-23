@@ -35,7 +35,7 @@ rules below as the actual protection:
   keyboard.
 - **`10.0.1.123` (Windows 11) has a live logged-in console session** and
   counts exactly as `:0` does. No console-session installs, no
-  screenshots. Drive it with `/S /log=` instead. `docs/test-vms.md` has
+  screenshots. Drive it with `/S /log=` instead. `docs/local/test-vms.md` has
   the detail.
 
 Where to run GUI things instead, in order of preference:

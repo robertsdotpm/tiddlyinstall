@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Provision the 32-bit Linux test VM on ESXi, installed unattended
-(docs/test-vms.md, "The 32-bit Linux VM").
+(docs/local/test-vms.md, "The 32-bit Linux VM").
 
 usage: VM_PASSWORD=... GOVC_URL=... GOVC_USERNAME=... GOVC_PASSWORD=... \\
        esxi_provision_debian_i386.py <workdir> <debian-i386-netinst.iso>
@@ -23,7 +23,7 @@ What it does:
      on DHCP, BIOS firmware (a 32-bit guest cannot boot 64-bit UEFI, the
      same reason the Windows 10 x86 VM is BIOS) -- attaches the ISO and
      powers it on.
-  4. Waits for SSH and prints the address and MAC for docs/test-vms.md.
+  4. Waits for SSH and prints the address and MAC for docs/local/test-vms.md.
 
 The preseed makes user `x` with the operator's password and both of the
 operator's SSH keys, passwordless sudo (as the other Linux VMs have),
@@ -56,7 +56,7 @@ HOST = "ti-debian12-i386"
 ISO_SHA256 = "71506f6fa501d4ad50d0835666f5102e9c9b090123ca2668b995a911009c0a69"
 ISO_SIZE = 687865856
 
-PRESEED = r"""# Debian 12 i386, the 32-bit Linux test machine (docs/test-vms.md).
+PRESEED = r"""# Debian 12 i386, the 32-bit Linux test machine (docs/local/test-vms.md).
 d-i debian-installer/locale string en_GB.UTF-8
 d-i debian-installer/language string en
 d-i debian-installer/country string GB
@@ -315,7 +315,7 @@ def main():
             mac = line.split(":", 1)[1].strip()
     print(f"created {name} on {ds}: 1 vCPU, {a.memory} MB, {a.disk} GB thin, MAC {mac}")
     print("the install takes about 20 minutes; then find it by its MAC and add it to "
-          "docs/test-vms.md, tests/arch/machines.py and the harnesses' LINUX_VMS")
+          "docs/local/test-vms.md, tests/arch/machines.py and the harnesses' LINUX_VMS")
 
     deadline = time.time() + 60 * 60
     while time.time() < deadline:

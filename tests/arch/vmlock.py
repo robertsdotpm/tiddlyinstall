@@ -31,7 +31,7 @@ This is a real lock:
 usage:
 
     from vmlock import VMLock
-    with VMLock(host="x@10.0.1.231", windows=True, who="matrix 7") as lock:
+    with VMLock(host="user@host", windows=True, who="matrix 7") as lock:
         ...                       # the machine is ours for the duration
 
 `VMLock(..., wait=0)` raises `Busy` at once instead of waiting.

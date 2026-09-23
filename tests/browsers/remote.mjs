@@ -3,7 +3,7 @@
 // browser manifest, copy files, start a WebDriver driver bound to
 // 127.0.0.1 there and reach it through `ssh -L`, clean up.
 //
-// On each machine (docs/test-vms.md, "Browsers"):
+// On each machine (docs/local/test-vms.md, "Browsers"):
 //   Windows      C:\tibrowsers\browsers.json, drivers\, work\
 //   Linux, Mac   ~/tibrowsers/browsers.json, drivers/, work/
 import { spawn, spawnSync, execFileSync } from 'node:child_process';

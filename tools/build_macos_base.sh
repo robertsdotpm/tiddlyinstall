@@ -10,7 +10,7 @@
 #
 # The address is not written down here on purpose -- the Mac is on the
 # public internet and still accepts passwords. Ask the operator, or see
-# docs/test-vms.md.
+# docs/local/test-vms.md.
 #
 # Three things the build needs are not in git, which is the whole
 # reason this script exists rather than a line in a README that is

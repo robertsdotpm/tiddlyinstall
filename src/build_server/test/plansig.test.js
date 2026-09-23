@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import { loadOrCreate, keyID, split, verify, verifyFor, recordOf, addRequestLine, publicKeyFromRaw, KEY_FILE, PUB_FILE, VerifyError } from '../lib/plansig.js';
+import { loadOrCreate, keyID, split, verify, verifyFor, recordOf, addRequestLine, publicKeyFromRaw, KEY_FILE, PUB_FILE, VerifyError, defaultKeyDir } from '../lib/plansig.js';
 import { tmpDir, SERVER } from './helpers.js';
 
 const PLAN = 'ti-plan\t1\nrecord\ttjfq5rqwnnrxk3m9q2x7v4p8ab\nname\tHello\n\n[target]\nwhen\tlinux\t0\t9999\t*\nlaunch\techo hi\n';
@@ -42,8 +42,11 @@ test('a key readable by others is used, with a warning', (t) => {
 });
 
 test('the server\'s key loads and signs deterministically', (t) => {
-  const key = path.join(SERVER, 'data', KEY_FILE);
-  if (!fs.existsSync(key)) return t.skip('no src/build_server/data key');
+  // Wherever the running server keeps it, which is no longer under the
+  // repository: the private key left the tree on 2026-09-23 so that no
+  // .gitignore has to be right for it to stay out of a public commit.
+  const key = path.join(defaultKeyDir(), KEY_FILE);
+  if (!fs.existsSync(key)) return t.skip('no key in ' + defaultKeyDir());
   const dir = tmpDir(t);
   fs.copyFileSync(key, path.join(dir, KEY_FILE));
   fs.chmodSync(path.join(dir, KEY_FILE), 0o600);

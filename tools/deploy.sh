@@ -11,7 +11,7 @@
 #
 # Whoever lands the last change runs this. It takes about fifteen seconds
 # because the catalogue snapshot is reused (docs/format.md section 6); pass
-# TI_FRESH_CATALOG=1 after changing registry/, or the page will carry
+# TI_FRESH_CATALOG=1 to rebuild the snapshot regardless, or the page will carry
 # yesterday's catalogue.
 #
 # Always builds from a clean worktree of HEAD, never from the working tree:
@@ -50,13 +50,21 @@ if [ -f "$here/src/build_server/data/plan-signing-key.pub" ]; then
 	cp "$here/src/build_server/data/plan-signing-key.pub" "$wt/co/src/build_server/data/"
 fi
 
-# The catalogue snapshot is most of the build's two minutes and changes only
-# when registry/ does, so it is cached and reused. The cache is keyed
-# on the newest file in registry/, which is the only thing the
-# snapshot is made from -- so it cannot serve a stale catalogue without the
-# metadata having been touched, and touching the metadata invalidates it.
+# The catalogue snapshot is most of the build's two minutes, so it is
+# cached and reused. The key is the newest file in what the snapshot is
+# actually made from, so it cannot serve a stale catalogue without that
+# having been touched, and touching it invalidates the cache.
+#
+# That used to be registry/, and the comment here said registry/ was
+# "the only thing the snapshot is made from". It is not, and never was:
+# tools/snapshot.mjs reads ~/projects/installer-builder-runtimes and
+# nothing else. So updating the catalogue left the key unchanged and
+# deploy reused a snapshot from before it -- the one thing the key
+# exists to prevent (2026-09-23). registry/ is where the catalogue was
+# researched; the catalogue is a different directory, outside this repo.
 cache=${TI_CATALOG_CACHE:-$HOME/.cache/tiddlyinstall}
-newest=$(find "$here/registry" -type f -newer "$here/tools/snapshot.mjs" -printf '%T@\n' 2>/dev/null |
+snapsrc=${TI_RUNTIMES:-$HOME/projects/installer-builder-runtimes}
+newest=$(find "$snapsrc" -type f -newer "$here/tools/snapshot.mjs" -printf '%T@\n' 2>/dev/null |
 	sort -rn | head -1)
 newest=${newest:-0}
 stamp="$cache/stamp"
@@ -67,7 +75,7 @@ if [ "${TI_FRESH_CATALOG:-0}" != "1" ] &&
 	opts="--catalog $cache"
 	echo "reusing the cached catalogue snapshot" >&2
 else
-	echo "making the catalogue snapshot (registry/ changed, or no cache)" >&2
+	echo "making the catalogue snapshot (the catalogue changed, or no cache)" >&2
 	mkdir -p "$cache"
 	if (cd "$here" && PATH="$HOME/.local/node/bin:$PATH" node tools/snapshot.mjs -o "$cache" >"$wt/snap.log" 2>&1); then
 		printf '%s' "$newest" > "$stamp"

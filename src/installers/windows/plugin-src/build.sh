@@ -21,7 +21,7 @@ ${CC:-cc} -O2 -Wall -Wno-sign-compare -o "$t" test_host.c plancheck.c ed25519_ve
 # The runtime-script check the Windows engine runs (rtcheck.c), against a
 # real plan, on Linux. The fixture carries its own signed roots document,
 # so it stays valid however often the catalogue is re-signed.
-key=$(cat test-plan.key)
+key=$(cat test-plan.pub)
 say() { printf '%-34s %s\n' "$1" "$2"; }
 r1=$("$t" rtverify test-plan.txt "$key" 1 || true)
 r2=$("$t" rtverify test-plan.txt "$key" 2 || true)

@@ -1,0 +1,29 @@
+{
+  "_": "Copy to tests/vms.json and fill in. TI_VMS names a different file. `console` lists machines somebody is logged in to: nothing drives those visibly.",
+  "windows": {
+    "xp": [
+      "user@host",
+      "cmd"
+    ],
+    "7": [
+      "user@host",
+      "cmd"
+    ],
+    "10": [
+      "user@host",
+      "cmd"
+    ],
+    "11": [
+      "user@host",
+      "powershell"
+    ]
+  },
+  "linux": {
+    "debian12": "user@host",
+    "ubuntu2204": "user@host"
+  },
+  "mac": "user@host",
+  "console": [
+    "user@host"
+  ]
+}

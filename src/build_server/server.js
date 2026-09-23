@@ -18,7 +18,7 @@ import { decodeIconPng } from '../shared/icon.js';
 import { loadCatalog } from './lib/catalog.js';
 import { Builder, isHash26, isSHA256, isNonce } from './lib/jobs.js';
 import { JobQueue } from './lib/queue.js';
-import { loadOrCreate, keyID, PUB_FILE, REVOCATIONS_KIND, RELEASES_KIND } from './lib/plansig.js';
+import { loadOrCreate, defaultKeyDir, keyID, PUB_FILE, REVOCATIONS_KIND, RELEASES_KIND } from './lib/plansig.js';
 import { revocationsText } from './lib/revocations.js';
 import crypto from 'node:crypto';
 import { parseFile as parseReleaseFile, releasesText } from './lib/releases.js';
@@ -52,6 +52,7 @@ export function parseFlags(argv, home = os.homedir()) {
     local: [path.join(home, 'projects/installer-builder-runtimes'), 'our copies of catalogue files (served at /mirror/)'],
     policy: [path.join(HERE, 'policy.json'), 'resolver policy'],
     data: [path.join(HERE, 'data'), 'data folder'],
+    keys: ['', 'where the plan signing private key lives (default $TI_KEYS, else ~/.config/tiddlyinstall/keys)'],
     site: [path.join(REPO, 'out'), 'static site to serve at / (tools/build_site.py writes it)'],
     bases: [path.join(REPO, 'src/installers'), 'base installers'],
     public: ['http://10.0.1.76:8080', "this server's public URL"],
@@ -212,8 +213,13 @@ export class Server {
     this.cat = loadCatalog({ dir: o.catalog, policyPath: o.policy, localRoot: o.local, cachePath: path.join(o.data, 'sha-cache.json') });
     if (o.mirror !== '') this.cat.policy.mirror_base = o.mirror;
     if (o['mirror-last']) this.cat.policy.mirror_first = false;
-    const { signer, created } = loadOrCreate(o.data, this.log);
-    if (created) this.log(`made a new plan signing key in ${o.data}; rebuild the bases with ${path.join(o.data, PUB_FILE)}`);
+    // The private key is not kept in the data directory or anywhere under
+    // the repository: see defaultKeyDir(). The public half is copied into
+    // the data directory as well, because that is where the base builds
+    // read it from and it is not a secret.
+    const keyDir = o.keys || defaultKeyDir();
+    const { signer, created } = loadOrCreate(keyDir, this.log, o.data);
+    if (created) this.log(`made a new plan signing key in ${keyDir}; rebuild the bases with ${path.join(o.data, PUB_FILE)}`);
     this.log(`plan signing key ${keyID(signer.pub)} (${signer.publicBase64()})`);
     this.signer = signer;
     this.q = new JobQueue(o.redis, o['redis-db'], o.workers);

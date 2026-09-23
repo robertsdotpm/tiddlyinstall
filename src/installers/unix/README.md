@@ -166,7 +166,7 @@ is whatever was last built there, nothing more.
 
 **Last built 2026-09-22T09:13:40+10:00** (`TI_BUILD_TIME`
 `2026-09-21T23:13:40Z`) on the Mac test server (macOS 26.2 `25C56`,
-arm64, `Matthew@the-mac-test-host`), from `src/installers/unix/`: the folder
+arm64, the address in `docs/local/test-vms.md`), from `src/installers/unix/`: the folder
 move put `src/` into the engine's own comments, so the engine's bytes
 changed and all three bases were rebuilt. Nothing it *does* changed.
 

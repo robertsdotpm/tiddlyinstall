@@ -23,7 +23,7 @@
 // side then checks the links on that page (tests/browsers/classic.mjs).
 // Results go to results/ only.
 //
-// Safari is installed from Apple's own SafariSetup.exe (docs/test-vms.md):
+// Safari is installed from Apple's own SafariSetup.exe (docs/local/test-vms.md):
 // Safari.msi only, out of the installer's cabinet. On Windows 7 it crashes
 // at start (0xC0000005 in JIT code: DEP is AlwaysOn there); XP (DEP OptIn)
 // runs it. Results go to usage.jsonl as browser "safari", and results/.

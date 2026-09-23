@@ -1,7 +1,7 @@
 # After the first full Windows Update (update.ps1 runs this as SYSTEM):
 # turn off what keeps a slow test VM busy. Only for the installer-test VMs
 # made by tools/esxi_provision_windows.py; the older Windows VMs keep
-# Defender and updates on, as real users have them (docs/test-vms.md).
+# Defender and updates on, as real users have them (docs/local/test-vms.md).
 # Every step logs what it did and what Windows refused: C:\tisetup\quiet.log.
 $ErrorActionPreference = 'Continue'
 $here = 'C:\tisetup'

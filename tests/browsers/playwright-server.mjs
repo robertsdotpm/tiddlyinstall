@@ -3,7 +3,7 @@
 // ssh -L and drives it with tests/browsers/playwright.mjs) until it's
 // killed. Installed on a machine as ~/tibrowsers/playwright-<v>/server.mjs
 // beside its node_modules, with server.sh setting PLAYWRIGHT_BROWSERS_PATH
-// and the Node to use (docs/test-vms.md).
+// and the Node to use (docs/local/test-vms.md).
 //   node server.mjs --port=PORT
 import { webkit } from './node_modules/playwright-core/index.mjs';
 const port = Number((process.argv.find((a) => a.startsWith('--port=')) || '').slice(7));

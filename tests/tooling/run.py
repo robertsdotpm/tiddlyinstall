@@ -17,6 +17,8 @@ This is tests/fidelity/run.py's harness with the Windows VM list and the
 "another harness is using this VM" wait from tests/templates/run.py, and
 one cell per (runtime, major) instead of per runtime.
 """
+import pathlib
+import sys
 import argparse
 import atexit
 import sys as _sys
@@ -34,29 +36,19 @@ import time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-MAC = "Matthew@the-mac-test-host"
-WINDOWS = {
-    "xp": "matthew@10.0.1.132",
-    "vista": "x@10.0.1.167",
-    "7": "x@10.0.1.231",
-    "8.1": "x@10.0.1.165",
-    "10": "matth@10.0.1.199",
-    "11": "matth@10.0.1.123",
-    "2022": "administrator@10.0.1.248",
-    "10x86": "x@10.0.1.47",
-    "ltsc2021": "x@10.0.1.86",
-    "2025core": "x@10.0.1.124",
-    "11de": "Jörg Müller@10.0.1.83",
-}
-# Run from a folder in the user's profile, not C:\titool: the German VM's
-# profile is "C:\Users\jörg müller" (a space and non-ASCII letters).
-PROFILE = {"11de"}
-LINUX_VMS = {
-    "centos6": "x@10.0.1.183", "centos7": "x@10.0.1.221", "ubuntu1404": "x@10.0.1.117",
-    "ubuntu1604": "x@10.0.1.112", "ubuntu1804": "x@10.0.1.144", "rocky8": "x@10.0.1.131",
-    "ubuntu2004": "x@10.0.1.118", "ubuntu2204": "x@10.0.1.203", "debian12": "x@10.0.1.235",
-    "alpine": "x@10.0.1.200",
-}
+# The machines are not listed here. They are the operator's own lab --
+# addresses, usernames, a rented Mac -- which is local infrastructure and
+# not part of the software, and this repository is public. tests/vmlab.py
+# reads tests/vms.json (gitignored; tests/vms.example.json shows the
+# shape, $TI_VMS names another file). Four harnesses used to carry their
+# own copy of the same map, so an address that changed had to be changed
+# four times and was not.
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
+import vmlab
+
+MAC = vmlab.mac()
+WINDOWS = {k: v[0] for k, v in vmlab.windows().items()}
+LINUX_VMS = vmlab.linux()
 TIMEOUT = 3600
 
 

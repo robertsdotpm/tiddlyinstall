@@ -31,6 +31,7 @@ Window, tray and web apps need a desktop session:
     visible windows' titles.
   - The Mac has no display: only console and web templates run there.
 """
+import pathlib
 import argparse
 import atexit
 import base64
@@ -48,37 +49,19 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "arch"))
 import machines                                            # noqa: E402
 import vmlock                                              # noqa: E402
-MAC = "Matthew@the-mac-test-host"
-# Windows VMs: name -> ssh target (tests/matrix/run.py has the full list).
-WINDOWS = {
-    "xp": "matthew@10.0.1.132",
-    "vista": "x@10.0.1.167",
-    "7": "x@10.0.1.231",
-    "8.1": "x@10.0.1.165",
-    "10": "matth@10.0.1.199",
-    "11": "matth@10.0.1.123",
-    "2022": "administrator@10.0.1.248",
-    "10x86": "x@10.0.1.47",
-    "ltsc2021": "x@10.0.1.86",
-    "2025core": "x@10.0.1.124",
-    "11de": "Jörg Müller@10.0.1.83",
-}
-# Run from a folder in the user's profile, not C:\titpl, with every path
-# quoted: the German VM's profile is "C:\Users\jörg müller" (a space and
-# non-ASCII letters), where a downloaded installer would start from.
-PROFILE = {"11de"}
-# No desktop: window and tray templates have no display there.
-NO_DESKTOP = {"2025core": "Server Core has no desktop: no display for GUI templates"}
-LINUX_VMS = {
-    "centos6": "x@10.0.1.183", "centos7": "x@10.0.1.221", "ubuntu1404": "x@10.0.1.117",
-    "ubuntu1604": "x@10.0.1.112", "ubuntu1804": "x@10.0.1.144", "rocky8": "x@10.0.1.131",
-    "ubuntu2004": "x@10.0.1.118", "ubuntu2204": "x@10.0.1.203", "debian12": "x@10.0.1.235",
-    "alpine": "x@10.0.1.200",
-    # The 32-bit VM (docs/test-vms.md). Fill in its address once
-    # tools/esxi_provision_debian_i386.py has made it and DHCP has given
-    # it one; tests/arch/machines.py already knows what it is.
-    "debian12x86": "x@10.0.1.160",
-}
+# The machines are not listed here. They are the operator's own lab --
+# addresses, usernames, a rented Mac -- which is local infrastructure and
+# not part of the software, and this repository is public. tests/vmlab.py
+# reads tests/vms.json (gitignored; tests/vms.example.json shows the
+# shape, $TI_VMS names another file). Four harnesses used to carry their
+# own copy of the same map, so an address that changed had to be changed
+# four times and was not.
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
+import vmlab
+
+MAC = vmlab.mac()
+WINDOWS = {k: v[0] for k, v in vmlab.windows().items()}
+LINUX_VMS = vmlab.linux()
 # 32-bit Linux, in a container on this machine (tests/arch/sandbox.py). No
 # display and no D-Bus there, so window and tray templates can't run.
 SANDBOXES = ("debian12-i386", "debian12-i386-libs", "alpine324-i386")

@@ -70,11 +70,28 @@ export class Signer {
   signStringAs(kind, doc) { return this.signAs(kind, Buffer.from(doc, 'utf8')).toString('utf8'); }
 }
 
+// Where the private key lives, when nothing says otherwise.
+//
+// Not the data directory, and not anywhere under the repository. The
+// repository is going public and the thing that must never leave is the
+// one file that cannot be replaced: every installer ever built carries
+// the public half, so losing this key ends the chain for all of them and
+// leaking it lets somebody else sign as us. Keeping it out of the tree
+// means no .gitignore has to be right for it to stay private.
+//
+// $TI_KEYS overrides, and -keys on the server.
+export function defaultKeyDir() {
+  return process.env.TI_KEYS ||
+    path.join(process.env.HOME || process.env.USERPROFILE || '.', '.config', 'tiddlyinstall', 'keys');
+}
+
 // loadOrCreate reads the key from dir, or makes one if there is none. The
 // public key file is (re)written from the private key every time, so it
-// can't drift from it. Returns {signer, created}.
-export function loadOrCreate(dir, log = console.log) {
-  fs.mkdirSync(dir, { recursive: true });
+// can't drift from it. `alsoPub` gets a copy of the public half: the base
+// builds read it from the data directory, and it is not a secret.
+// Returns {signer, created}.
+export function loadOrCreate(dir, log = console.log, alsoPub = '') {
+  fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
   const kp = path.join(dir, KEY_FILE);
   let signer, created = false;
   let pem = null;
@@ -100,12 +117,15 @@ export function loadOrCreate(dir, log = console.log) {
     signer = new Signer(key);
   }
   const pub = signer.publicBase64() + '\n';
-  const pp = path.join(dir, PUB_FILE);
-  let old = null;
-  try { old = fs.readFileSync(pp, 'utf8'); } catch (e) { /* none yet */ }
-  if (old !== pub) {
-    fs.writeFileSync(pp + '.tmp', pub, { mode: 0o644 });
-    fs.renameSync(pp + '.tmp', pp);
+  for (const d of alsoPub && alsoPub !== dir ? [dir, alsoPub] : [dir]) {
+    const pp = path.join(d, PUB_FILE);
+    let old = null;
+    try { old = fs.readFileSync(pp, 'utf8'); } catch (e) { /* none yet */ }
+    if (old !== pub) {
+      fs.mkdirSync(d, { recursive: true });
+      fs.writeFileSync(pp + '.tmp', pub, { mode: 0o644 });
+      fs.renameSync(pp + '.tmp', pp);
+    }
   }
   return { signer, created };
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Provision a Windows test VM on ESXi from a Microsoft evaluation ISO,
-installed unattended (docs/test-vms.md, "Windows test VMs").
+installed unattended (docs/local/test-vms.md, "Windows test VMs").
 
 usage: VM_PASSWORD=... ESX_SSH="ssh root@esxi" GOVC_URL=... GOVC_USERNAME=... GOVC_PASSWORD=... \\
        esxi_provision_windows.py <workdir> <profile> <install.iso> [--datastore DS] [--name NAME]
@@ -223,7 +223,7 @@ def vmfs_path(ds):
 
 
 def upload(ds, local, remote):
-    """One upload at a time, then check the size (docs/test-vms.md: parallel
+    """One upload at a time, then check the size (docs/local/test-vms.md: parallel
     uploads were cut short without an error)."""
     run(["govc", "datastore.upload", "-ds", ds, str(local), remote], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     want = Path(local).stat().st_size

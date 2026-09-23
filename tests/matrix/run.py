@@ -18,6 +18,7 @@ detected (`arch_seen`), and the ELF class of what it installed
 64-bit kernel an amd64 runtime would run perfectly well and the cell would
 otherwise be green.
 """
+import pathlib
 import argparse
 import atexit
 import json
@@ -36,37 +37,20 @@ import vmlock                                              # noqa: E402
 # Not on this LAN: it reaches the build server through a reverse tunnel,
 # and the instance at the far end is a separate one with its own data
 # directory. Its installers have to be built against that instance --
-# see build.py's docstring, and docs/test-vms.md for the machine.
-MAC = "Matthew@the-mac-test-host"
-WINDOWS = {
-    # name: (ssh target, default shell[, "profile"])
-    "xp": ("matthew@10.0.1.132", "cmd"),
-    "vista": ("x@10.0.1.167", "cmd"),
-    "7": ("x@10.0.1.231", "cmd"),
-    "8.1": ("x@10.0.1.165", "cmd"),
-    "10": ("matth@10.0.1.199", "cmd"),
-    "11": ("matth@10.0.1.123", "powershell"),
-    "2022": ("administrator@10.0.1.248", "cmd"),
-    # ESXi installer-test VMs from tools/esxi_provision_windows.py (docs/test-vms.md).
-    "10x86": ("x@10.0.1.47", "cmd"),
-    "ltsc2021": ("x@10.0.1.86", "cmd"),
-    "ltsc2024": ("x@10.0.1.209", "cmd"),
-    "2025core": ("x@10.0.1.124", "cmd"),
-    # German Windows 11: runs as the awkward-name user, from a folder in
-    # that user's profile ("profile": see run_windows.py).
-    "11de": ("Jörg Müller@10.0.1.83", "cmd", "profile"),
-}
-# Linux test VMs on the ESXi host (docs/test-vms.md): name -> ssh target.
-LINUX_VMS = {
-    "centos6": "x@10.0.1.183", "centos7": "x@10.0.1.221", "ubuntu1404": "x@10.0.1.117",
-    "ubuntu1604": "x@10.0.1.112", "ubuntu1804": "x@10.0.1.144", "rocky8": "x@10.0.1.131",
-    "ubuntu2004": "x@10.0.1.118", "ubuntu2204": "x@10.0.1.203", "debian12": "x@10.0.1.235",
-    "alpine": "x@10.0.1.200",
-    # The 32-bit VM (docs/test-vms.md): a real 32-bit kernel, a desktop
-    # and sudo, which the containers below cannot show. Made by
-    # tools/esxi_provision_debian_i386.py; address from DHCP 2026-09-21.
-    "debian12x86": "x@10.0.1.160",
-}
+# see build.py's docstring, and docs/local/test-vms.md for the machine.
+# The machines are not listed here. They are the operator's own lab --
+# addresses, usernames, a rented Mac -- which is local infrastructure and
+# not part of the software, and this repository is public. tests/vmlab.py
+# reads tests/vms.json (gitignored; tests/vms.example.json shows the
+# shape, $TI_VMS names another file). Four harnesses used to carry their
+# own copy of the same map, so an address that changed had to be changed
+# four times and was not.
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
+import vmlab
+
+MAC = vmlab.mac()
+WINDOWS = vmlab.windows()
+LINUX_VMS = vmlab.linux()
 # 32-bit Linux, in a container on this machine (tests/arch/mkroot.py makes
 # the roots; sandbox.py says what a container can and cannot show).
 SANDBOXES = ("debian12-i386", "debian12-i386-libs", "alpine324-i386")
