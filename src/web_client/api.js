@@ -1,8 +1,10 @@
 // The one client for the server (docs/api.md).
 //
 // Which server: `?api=` on the page URL, else the one saved in this browser,
-// else the default: this page's own origin when the server is serving
-// it, otherwise DEFAULT_REMOTE. The settings panel (mountApiFooter) shows it
+// else whichever server is serving this page -- its own origin, or the
+// address baked in at build time when the page came from there. A copy
+// hosted anywhere else builds in the page and asks nobody, until somebody
+// presses Default. The settings panel (mountApiFooter) shows which it is
 // and lets people change it, like netstats on warpgate.io.
 //
 // Every call goes through apiRequest(). A network error or a 5xx marks the
@@ -60,10 +62,41 @@ export function normalizeApi(v) {
 }
 
 const pageIsHttp = typeof location !== 'undefined' && /^https?:$/.test(location.protocol);
+
+// Is this page being served from the address it was built to talk to?
+//
+// The difference decides whether anything is asked of a server before a
+// person asks for it. A copy of this file can be hosted anywhere -- that
+// is the point of it being one file -- and a copy on somebody else's site
+// used to call DEFAULT_REMOTE on load and route that visitor's builds
+// through it: a server neither of them picked, told about every build, and
+// able to answer with whatever it liked. Being served by a server is a
+// decision the visitor already made by opening the page; being served by
+// somebody else is not a decision about our server at all.
+//
+// Path-aware, because DEFAULT_REMOTE may sit under one behind a proxy: an
+// origin match alone would call any page on that host "the build server".
+function servedByDefault() {
+  if (!pageIsHttp) return false;
+  const d = normalizeApi(DEFAULT_REMOTE);
+  if (!d) return false;
+  try {
+    const u = new URL(d);
+    if (u.origin !== location.origin) return false;
+    const base = u.pathname.replace(/\/+$/, '');
+    return !base || location.pathname === base || location.pathname.indexOf(base + '/') === 0;
+  } catch (e) { return false; }
+}
 const localOk = (v) => (HAS_LOCAL && String(v || '').trim() === LOCAL ? LOCAL : null);
 const explicitApi = localOk(readParamApi()) || normalizeApi(readParamApi()) || localOk(readStoredApi()) || normalizeApi(readStoredApi());
-// Opened from disk (or any non-http page) with its own builder: no server.
-let defaultApi = HAS_LOCAL && !pageIsHttp ? LOCAL : DEFAULT_REMOTE;
+// Opened from disk, or served by anyone but the build server: this page
+// builds the installers itself and asks nobody. Where it cannot -- a
+// build with no local builder in it -- there is nothing to fall back to
+// but the server. probeSameOrigin(), below, is what still connects a page
+// its own server handed over, whatever address that server is on.
+let defaultApi = HAS_LOCAL && !servedByDefault() ? LOCAL : DEFAULT_REMOTE;
+// The origin the probe found a server on, so "Default" can offer it.
+let serverOrigin = '';
 let apiBaseUrl = explicitApi || defaultApi;
 
 // True when this page builds installers itself (no server).
@@ -150,6 +183,7 @@ export function apiReady() {
   if (!readyPromise) {
     readyPromise = (async () => {
       if (pageIsHttp && await probeSameOrigin()) {
+        serverOrigin = location.origin;
         defaultApi = location.origin;
         if (!explicitApi) apiBaseUrl = defaultApi;
         // The probe asked this origin and it answered, so if that is the
@@ -166,6 +200,14 @@ export function apiReady() {
 
 export function apiBase() { return apiBaseUrl; }
 export function apiDefault() { return defaultApi; }
+
+// The server this page was built to talk to, whether or not it is being
+// used: the origin serving the page when that is a server, else the
+// address baked in at build time. This is what Default offers, and it is
+// deliberately not `defaultApi` -- off-site, the default is to build here
+// and ask nobody, and Default is then the way to reach the server on
+// purpose rather than by loading a page.
+export function homeServer() { return serverOrigin || DEFAULT_REMOTE; }
 
 // A backend-relative path ("/dl/x") as an absolute URL. An absolute value from
 // the server (a download URL) is only trusted when it is http(s): a hostile
@@ -461,7 +503,10 @@ function paintWhereChip() {
     word.textContent = '';
     said = fixed
       ? 'Built in this page. This is a saved copy, so there is no server: your browser makes the installers.'
-      : 'Built in this page. No server is chosen, so your browser makes the installers.';
+      : servedByDefault()
+        ? 'Built in this page. No server is chosen, so your browser makes the installers.'
+        : 'Built in this page. This copy is hosted somewhere other than the build server, so none is used ' +
+          'unless you pick one: your browser makes the installers.';
   } else {
     // Same origin: the host is in the address bar already, so naming it
     // again says less than saying whose it is.
@@ -667,7 +712,7 @@ export function mountApiFooter() {
     close();
   });
   footerEl.querySelector('.api-ctl-default').addEventListener('click', () => {
-    setApiBase(defaultApi);
+    setApiBase(homeServer());
     close();
   });
   if (HAS_LOCAL) {

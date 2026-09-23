@@ -61,9 +61,12 @@ CSS-only behaviours.
 | `src/web_client/builds.html` | Sample data still |
 
 **Which build server:** `?api=` on the page URL, else the one saved in this
-browser, else the page's own origin if the build server serves it, else
-`http://10.0.1.76:8080`. Each page's footer shows it and has a **change**
-button. If the server can't be reached, a banner says so and the page retries
+browser, else whichever server is serving the page: its own origin when a
+build server answers there, or `http://10.0.1.76:8080` when the page came
+from that address. A copy hosted anywhere else builds in the page and
+contacts nobody until **Default** is pressed, which offers the server the
+page was built with. Each page's footer shows which it is and has a
+**change** button. If the server can't be reached, a banner says so and the page retries
 with backoff (1 s up to 60 s) and carries on once it's back. Nothing on the
 page is lost.
 
@@ -88,6 +91,7 @@ page is lost.
 | `src/installers/screen-checks.sh` | What the review screen must say, asserted once and run over both engines' output from one fixture (`src/installers/test-proved.plan`, which carries a windows and a linux target). The screen is written twice and every fault found in it since 2026-09-21 was in what it *says*, which no suite that checks what the engine *does* can see |
 | `src/installers/unix/test_screen_cases.sh` | Renders the screen with this engine in the three states that decide what it may claim -- the plan signed and the setup proved, the signature gone, neither -- and reads it back through `screen-checks.sh` |
 | `src/installers/windows/test_screen_windows.sh` | The same three, on Windows: `TI_WIN=user@host src/installers/windows/test_screen_windows.sh`. The installer is run with `/ti-review=<file>`, which writes the review text and installs nothing; it is the same file the review page shows and the log keeps. Skipped with no `TI_WIN` |
+| `tests/autoconnect-test.mjs` | Which server a page connects to on its own, and which it does not: a copy hosted anywhere else must build in the page and ask the built-in default *nothing* (every request the page makes is checked, not just what it says), while a page its own server handed over still connects. `node --experimental-websocket tests/autoconnect-test.mjs [--site URL]` |
 | `tests/es2017-test.mjs` | Parses the built `out/index.html` as ES2017 (acorn, `cd tests && npm install` once) and fails on newer syntax or built-ins |
 | `tests/no-native.mjs`, `tests/no-native-browser.mjs` | Run a test as an old browser: `node --import ./tests/no-native.mjs tests/sign-test.mjs` (no streams, `crypto.subtle` or BigInt in Node), and `--no-native` on `offline-test.mjs`, `upload-test.mjs`, `catalog-editor-test.mjs` and `sign-ui-test.mjs` (the same in Chrome, and no `:has()`) |
 | `tests/catalog-editor-test.mjs` | The Registry page in headless Chrome: edits, reload, preview, a built installer's plan, revert, export, import (a hostile file too), reset, the once-a-session question about changes found in storage, blocked storage (`node --experimental-websocket tests/catalog-editor-test.mjs [--site URL]`) |
