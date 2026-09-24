@@ -958,7 +958,15 @@ async function modeAFile(job, plat) {
     const info = await readInstaller(data, 'base.zip');
     renameApp(info, stem + '.app');
     data = zipWrite(info.entries);
-    signedBy = 'ad-hoc (test)';
+    // Read, not asserted. make_app.sh ad-hoc signs the .app when codesign
+    // is to hand and leaves it unsigned when it is not, and this said
+    // "ad-hoc (test)" either way -- a statement about the bytes made
+    // without looking at them, on the one screen whose whole job is to
+    // say what was checked. A signed bundle carries its seal in
+    // Contents/_CodeSignature/CodeResources, and renaming the bundle
+    // leaves that alone, which is why the rename above is safe.
+    signedBy = info.entries.some((e) => /(^|\/)Contents\/_CodeSignature\/CodeResources$/.test(e.name))
+      ? 'ad-hoc (test)' : '';
   }
   return emit(job, plat, name, { data }, signedBy);
 }
