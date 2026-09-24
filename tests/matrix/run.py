@@ -121,7 +121,14 @@ def verdict(reason):
 arch_judge = machines.judge
 
 
-# The build server the machine under test should ask.
+# The build server the machine under test should ask -- in modes B and C.
+#
+# Mode A is the installer that carries no settings: it reads the record
+# hash out of its own file name and fetches from the backend *baked into
+# the base*. Passing --backend there overrides the one thing mode A is for,
+# and the Linux engine accepts it (only the publisher-signed Windows base
+# refuses). So mode A is run with no --backend at all, and what it proves
+# is that the baked address is reachable and serving that record.
 #
 # Until 2026-09-23 nothing here said: the Linux and Windows runs used
 # whatever backend was baked into the base, and that default happened to
@@ -149,11 +156,16 @@ BACKEND = default_backend()
 
 # Linux: this machine, a throwaway home, no desktop session -------------
 
+def backend_arg(mode):
+    """--backend for B and C, nothing for A (see BACKEND above)."""
+    return "" if mode == "A" else '--backend="%s"' % BACKEND
+
+
 def run_linux(rt, mode, f, target="linux"):
     # The script makes its own throwaway home under $TMPROOT and removes it.
     env = {"HOME": os.path.expanduser("~"), "PATH": "/usr/local/bin:/usr/bin:/bin",
            "LANG": "C.UTF-8", "SRC": str(Path(f).resolve()), "F": Path(f).name,
-           "BACKEND": BACKEND}
+           "BACKENDARG": backend_arg(mode)}
     if os.environ.get("TMPDIR"):
         env["TMPDIR"] = os.environ["TMPDIR"]
     code, out, err = sh(["sh", "-c", LOCAL_SCRIPT], env=env)
@@ -167,7 +179,7 @@ LINUX_BODY = machines.ELF_PROBE_SH + r'''
 set -u
 H=$(mktemp -d "$TMPROOT/ibm-XXXXXX")
 cp "$SRC" "$H/$F"
-env -i HOME="$H" PATH=/usr/local/bin:/usr/bin:/bin LANG=C sh "$H/$F" --yes --backend="$BACKEND" --log="$H/i.log" </dev/null >/dev/null 2>&1
+env -i HOME="$H" PATH=/usr/local/bin:/usr/bin:/bin LANG=C sh "$H/$F" --yes $BACKENDARG --log="$H/i.log" </dev/null >/dev/null 2>&1
 echo "@install $?"
 echo "@osdesc"; sed -n 's/^Running as .* on //p' "$H/i.log" 2>/dev/null | head -1
 echo "@planarch"; awk '/^ *Runtime:/ {f=1; print; next} f { if (substr($0,1,8) == "        ") print; else exit }' "$H/i.log" 2>/dev/null
@@ -195,7 +207,7 @@ def run_linux_vm(host, rt, mode, f, target):
     code, _, err = sh(["scp", "-q", f, f"{host}:titest/{name}"], timeout=300)
     if code:
         return "fail", "scp: " + err.strip(), {}
-    code, out, err = sh(["ssh", host, f"TMPROOT=/tmp BACKEND={shlex.quote(BACKEND)} F={shlex.quote(name)} sh -s"], input=LINUX_SCRIPT)
+    code, out, err = sh(["ssh", host, f"TMPROOT=/tmp BACKENDARG={shlex.quote(backend_arg(mode))} F={shlex.quote(name)} sh -s"], input=LINUX_SCRIPT)
     return parse_unix(rt, out, err, target)
 
 
@@ -205,7 +217,7 @@ def run_sandbox(target, rt, mode, f):
     import sandbox
     src = Path(f).resolve().parent
     rc, out, err = sandbox.run_script(
-        target, SANDBOX_SCRIPT, env={"HOME": "/home/ti", "F": Path(f).name, "BACKEND": BACKEND,
+        target, SANDBOX_SCRIPT, env={"HOME": "/home/ti", "F": Path(f).name, "BACKENDARG": backend_arg(mode),
                                      "PATH": "/usr/local/bin:/usr/bin:/bin"},
         ro={src: "/tisrc"}, timeout=INSTALL_TIMEOUT)
     if rc == 124:
