@@ -60,6 +60,7 @@ export function parseFlags(argv, home = os.homedir()) {
     'redis-db': [0, 'Redis database number (a second instance needs its own)'],
     mirror: ['', "URL of our mirror in plans (default: the policy's mirror_base)"],
     'mirror-last': [false, "list our mirror after the vendors' URLs (for machines that reach us over a slow link)"],
+    'trust-proxy': [false, 'take the caller from X-Forwarded-For when the connection comes from loopback (set this only when a reverse proxy is genuinely in front, or every rate limit becomes spoofable)'],
   };
   const out = {};
   for (const [k, [v]] of Object.entries(defs)) out[k] = v;
@@ -115,9 +116,30 @@ function fmtDur(ms) {
   return out + String(Number(s.toFixed(3))) + 's';
 }
 
-function clientIP(req) {
-  const a = req.socket.remoteAddress || '';
-  return a.startsWith('::ffff:') ? a.slice(7) : a;
+const bare = (a) => (String(a || '').startsWith('::ffff:') ? String(a).slice(7) : String(a || ''));
+const loopback = (a) => a === '127.0.0.1' || a === '::1' || a.startsWith('127.');
+
+// Who to rate-limit and to log.
+//
+// The documented deployment puts this server on 127.0.0.1 behind Apache,
+// and the socket peer is then 127.0.0.1 for everybody: every per-address
+// limit becomes one global bucket, and every log line names the proxy.
+// So when the peer really is loopback and the operator has said a proxy
+// is in front, take the last hop of X-Forwarded-For -- the last, because
+// each proxy appends, so the rightmost entry is the one our own proxy
+// wrote and the only one a caller could not forge. Without -trust-proxy
+// the header is ignored entirely: honouring it on a directly exposed
+// server would let anyone reset their own limit with a header.
+export function clientIP(req, trustProxy) {
+  const peer = bare(req.socket.remoteAddress);
+  if (!trustProxy || !loopback(peer)) return peer;
+  const xff = String(req.headers['x-forwarded-for'] || '');
+  if (xff) {
+    const hops = xff.split(',').map((h) => bare(h.trim())).filter(Boolean);
+    if (hops.length) return hops[hops.length - 1];
+  }
+  const fwd = /for=\"?\[?([^\];,\" ]+)/i.exec(String(req.headers.forwarded || ''));
+  return fwd ? bare(fwd[1]) : peer;
 }
 
 function writeJSON(res, status, v, headers = {}) {
@@ -217,6 +239,7 @@ export class Server {
     // the repository: see defaultKeyDir(). The public half is copied into
     // the data directory as well, because that is where the base builds
     // read it from and it is not a secret.
+    this.trustProxy = !!o['trust-proxy'];
     const keyDir = o.keys || defaultKeyDir();
     const { signer, created } = loadOrCreate(keyDir, this.log, o.data);
     if (created) this.log(`made a new plan signing key in ${keyDir}; rebuild the bases with ${path.join(o.data, PUB_FILE)}`);
@@ -325,7 +348,7 @@ export class Server {
         // Status polls stay out of the log (a status page reloads itself
         // every 3 s); its last view, with the downloads, is logged.
         if (!p.startsWith('/api/jobs/') && p !== '/api/health' && !res.tiQuiet) {
-          this.log(`${clientIP(req)} ${req.method} ${p} ${fmtDur(Date.now() - start)}`);
+          this.log(`${clientIP(req, this.trustProxy)} ${req.method} ${p} ${fmtDur(Date.now() - start)}`);
         }
       });
       // CORS: every route, every origin; no route uses cookies or credentials.
@@ -423,7 +446,7 @@ export class Server {
   }
 
   async submit(req, res) {
-    if (!this.limiter.allow(clientIP(req))) {
+    if (!this.limiter.allow(clientIP(req, this.trustProxy))) {
       return apiError(res, 429, 'rate_limited', RATE_LIMITED);
     }
     // Up to 1 MB of inline source plus a 1 MB icon in base64.
@@ -487,7 +510,7 @@ export class Server {
       res.writeHead(status, PAGE_HEADERS);
       res.end(refusedPage(messages));
     };
-    if (!this.limiter.allow(clientIP(req))) return refuse(429, [RATE_LIMITED]);
+    if (!this.limiter.allow(clientIP(req, this.trustProxy))) return refuse(429, [RATE_LIMITED]);
     let body;
     try {
       body = await readBody(req, res, BODY_MAX + 1);
@@ -596,7 +619,7 @@ export class Server {
   // with default settings". The record is stored, so the plan's `record`
   // line names something /api/records serves and the takedown list can name.
   async planByName(req, res, rt, name, params) {
-    if (!this.nameLimiter.allow(clientIP(req))) {
+    if (!this.nameLimiter.allow(clientIP(req, this.trustProxy))) {
       return apiError(res, 429, 'rate_limited', 'Too many plans by name from your address; try again in a minute.');
     }
     if (Buffer.byteLength(rt) > 20 || Buffer.byteLength(name) > 100) return apiError(res, 400, 'invalid', 'name too long');
@@ -704,7 +727,7 @@ export class Server {
   // relay fetches catalogue files for pages on hosts without CORS
   // (packed-files.md 4.2). Only URLs the catalogue lists are allowed.
   async relay(req, res, params) {
-    if (!this.relayLimiter.allow(clientIP(req))) {
+    if (!this.relayLimiter.allow(clientIP(req, this.trustProxy))) {
       return apiError(res, 429, 'rate_limited', 'Too many relay requests; try again in a minute.');
     }
     const u = params.get('url') ?? '';
@@ -735,7 +758,7 @@ export class Server {
   // (docs/browser-signing.md 2.4). The request holds only a hash of a
   // signature. Nothing is stored or logged beyond the usual request line.
   async tsa(req, res, params) {
-    if (!this.relayLimiter.allow(clientIP(req))) {
+    if (!this.relayLimiter.allow(clientIP(req, this.trustProxy))) {
       return apiError(res, 429, 'rate_limited', 'Too many relay requests; try again in a minute.');
     }
     const name = params.get('name') ?? '';
@@ -766,7 +789,7 @@ export class Server {
   // that matter -- the per-provider URL allow-list, and that the credential
   // is forwarded and forgotten -- are all in that file.
   async sign(req, res, provider) {
-    if (!this.relayLimiter.allow(clientIP(req))) {
+    if (!this.relayLimiter.allow(clientIP(req, this.trustProxy))) {
       return apiError(res, 429, 'rate_limited', 'Too many relay requests; try again in a minute.');
     }
     return signRelay(req, res, provider, { readBody, apiError, writeJSON });
