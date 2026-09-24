@@ -1,0 +1,21 @@
+# The bytes of every binary that decides whether a signature is good.
+#
+# tiverify is what checks the Ed25519 signature on a plan for Linux and
+# macOS; tisig.dll does the same job on Windows, and also walks the
+# Merkle proof. Until 2026-09-24 every hash recorded for the first five
+# was wrong -- the binaries were rebuilt and the table was not -- and the
+# sixth had no recorded hash anywhere in the tree at all. The engines'
+# known-answer test catches a broken verifier, not a targeted one: a
+# verifier that also accepts one extra key answers RFC 8032 correctly.
+#
+# So this file is the record, it is in git, and the build scripts check
+# against it. Rebuilding a binary means changing this file in a commit,
+# which is the point -- the same reason plan-key.id exists.
+#
+# Check by hand: sha256sum -c SHA256SUMS (from the repository root).
+904fd4cd84b3b086de244ec287cd8aa269589425bea27d47a25d1701fb9862bf  src/installers/unix/verify/bin/tiverify-linux-x86_64
+8e83c0998ff3dd203e41886d905237a910ce33b8d6012dd44d107f0e7c0f0e45  src/installers/unix/verify/bin/tiverify-linux-aarch64
+325deeb71c4ad34ea6dccf6f7995968ffe1d5b3e42e3a0393519cadba952456c  src/installers/unix/verify/bin/tiverify-linux-i386
+4e243a55f2e8a43ca01d5a048cc2e22500de983439f0a8d072e5a80dd56cb795  src/installers/unix/verify/bin/tiverify-macos-x86_64
+d74d169830d148fa6c135835f6ed86712d7e3c57ee4e5d058916db12927d926a  src/installers/unix/verify/bin/tiverify-macos-arm64
+86e608325fcaf790cca7bb77d6a7dc6b70b6105b09a478bc9e83e030f21647de  src/installers/windows/plugins/x86-unicode/tisig.dll

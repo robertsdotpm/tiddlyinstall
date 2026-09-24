@@ -38,11 +38,11 @@ with a changed message) on the host's binary.
 
 | File | Target | SHA-256 |
 | --- | --- | --- |
-| `bin/tiverify-linux-x86_64` | x86_64-linux-musl | `6e2629f2f55378697bb6eac9b44c70106eb42b4958ed464f8287ec5cf570e9d4` |
-| `bin/tiverify-linux-aarch64` | aarch64-linux-musl | `b3a75141dd35f4dc6f558a878f5c7769dca92267408fc3881156f8b070e50061` |
-| `bin/tiverify-linux-i386` | x86-linux-musl | `ced3c7072fb5fcb58b60dcbb35fa1e87196d66763b7949b0f047bd556ac9f2db` |
-| `bin/tiverify-macos-x86_64` | x86_64-macos | `1cd498383492397ee62b0e2964ea449d92a5279b3ca4f23d46ab9bc112fce6fb` |
-| `bin/tiverify-macos-arm64` | aarch64-macos | `c9badcb89b6ee2e1f8314258668f960672ffa111fe27b05bf337490f72359ae2` |
+| `bin/tiverify-linux-x86_64` | x86_64-linux-musl | `904fd4cd84b3b086de244ec287cd8aa269589425bea27d47a25d1701fb9862bf` |
+| `bin/tiverify-linux-aarch64` | aarch64-linux-musl | `8e83c0998ff3dd203e41886d905237a910ce33b8d6012dd44d107f0e7c0f0e45` |
+| `bin/tiverify-linux-i386` | x86-linux-musl | `325deeb71c4ad34ea6dccf6f7995968ffe1d5b3e42e3a0393519cadba952456c` |
+| `bin/tiverify-macos-x86_64` | x86_64-macos | `4e243a55f2e8a43ca01d5a048cc2e22500de983439f0a8d072e5a80dd56cb795` |
+| `bin/tiverify-macos-arm64` | aarch64-macos | `d74d169830d148fa6c135835f6ed86712d7e3c57ee4e5d058916db12927d926a` |
 
 Built with Zig 0.15.2. Tested: `selftest.sh` on this Linux host
 (x86_64, i386, and aarch64 under qemu-user) and on macOS 26.2 arm64; the

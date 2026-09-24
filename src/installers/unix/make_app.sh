@@ -23,6 +23,28 @@
 # and rewrites Contents/Resources/ti/; a top-level entry is outside both,
 # so it is carried through modes A, B and C untouched.
 set -eu
+
+# Refuse a verifier this repository does not expect (SHA256SUMS).
+#
+# tiverify is what decides whether a plan's signature is good on this
+# platform. Its recorded hashes were all wrong until 2026-09-24 -- the
+# binaries were rebuilt and the table was not -- and nothing compared
+# them, so "the bytes we published" was an unbacked claim about the one
+# component the whole chain rests on. The known-answer test in the engine
+# is not this check: a verifier backdoored to accept one extra key still
+# answers the RFC 8032 vectors correctly.
+ti_check_blobs() { # file...
+	root=$1; shift
+	sums=$root/SHA256SUMS
+	[ -f "$sums" ] || { echo "no $sums to check binaries against" >&2; exit 1; }
+	for f in "$@"; do
+		[ -f "$root/$f" ] || { echo "$f is missing" >&2; exit 1; }
+		want=$(awk -v p="$f" '$2 == p || $2 == "./" p { print $1; exit }' "$sums")
+		[ -n "$want" ] || { echo "$f is not recorded in $sums" >&2; exit 1; }
+		got=$(sha256sum "$root/$f" 2>/dev/null | cut -d" " -f1)
+		[ "$got" = "$want" ] || { echo "$f does not match $sums ($got, expected $want)" >&2; exit 1; }
+	done
+}
 here=$(cd "$(dirname "$0")" && pwd)
 outdir=${1:-$here/out}
 app=$outdir/TiddlyInstall.app
@@ -35,6 +57,7 @@ bake_engine "$here/ti-engine.sh" "$app/Contents/MacOS/install"
 chmod 755 "$app/Contents/MacOS/install"
 # Our Ed25519 verifiers (verify/), picked by `uname -m`.
 for a in x86_64 arm64; do
+	ti_check_blobs "$here/../../.." "src/installers/unix/verify/bin/tiverify-macos-$a"
 	cp "$here/verify/bin/tiverify-macos-$a" "$app/Contents/Resources/tiverify-$a"
 	chmod 755 "$app/Contents/Resources/tiverify-$a"
 done

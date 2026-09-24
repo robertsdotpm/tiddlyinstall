@@ -8,6 +8,28 @@
 # appended later, after the engine's final `exit $?` line: sh stops
 # reading at `exit`, so the appended bytes are never parsed.
 set -eu
+
+# Refuse a verifier this repository does not expect (SHA256SUMS).
+#
+# tiverify is what decides whether a plan's signature is good on this
+# platform. Its recorded hashes were all wrong until 2026-09-24 -- the
+# binaries were rebuilt and the table was not -- and nothing compared
+# them, so "the bytes we published" was an unbacked claim about the one
+# component the whole chain rests on. The known-answer test in the engine
+# is not this check: a verifier backdoored to accept one extra key still
+# answers the RFC 8032 vectors correctly.
+ti_check_blobs() { # file...
+	root=$1; shift
+	sums=$root/SHA256SUMS
+	[ -f "$sums" ] || { echo "no $sums to check binaries against" >&2; exit 1; }
+	for f in "$@"; do
+		[ -f "$root/$f" ] || { echo "$f is missing" >&2; exit 1; }
+		want=$(awk -v p="$f" '$2 == p || $2 == "./" p { print $1; exit }' "$sums")
+		[ -n "$want" ] || { echo "$f is not recorded in $sums" >&2; exit 1; }
+		got=$(sha256sum "$root/$f" 2>/dev/null | cut -d" " -f1)
+		[ "$got" = "$want" ] || { echo "$f does not match $sums ($got, expected $want)" >&2; exit 1; }
+	done
+}
 here=$(cd "$(dirname "$0")" && pwd)
 out=${1:-$here/out/ti-base.run}
 mkdir -p "$(dirname "$out")"
@@ -37,6 +59,10 @@ bake_engine "$eng" "$out.tmp"
 # script's size is known before they are filled in.
 [ "$(grep -c '^TI_VERIFY_BLOBS=$' "$out.tmp")" = 1 ] || { echo "make_run: no empty TI_VERIFY_BLOBS= line" >&2; exit 1; }
 blobs="amd64:$here/verify/bin/tiverify-linux-x86_64 arm64:$here/verify/bin/tiverify-linux-aarch64 x86:$here/verify/bin/tiverify-linux-i386"
+ti_check_blobs "$here/../../.." \
+	"src/installers/unix/verify/bin/tiverify-linux-x86_64" \
+	"src/installers/unix/verify/bin/tiverify-linux-aarch64" \
+	"src/installers/unix/verify/bin/tiverify-linux-i386"
 zero=
 for b in $blobs; do zero="$zero ${b%%:*}:0000000000:0000000000"; done
 sed "s|^TI_VERIFY_BLOBS=\$|TI_VERIFY_BLOBS='${zero# }'|" "$out.tmp" > "$out.tmp2"

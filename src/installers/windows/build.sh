@@ -17,6 +17,28 @@ export PATH
 command -v makensis >/dev/null || { echo "makensis not found (expected ~/.local/bin/makensis)" >&2; exit 1; }
 mkdir -p out
 
+# Refuse a plugin this repository does not expect (SHA256SUMS).
+#
+# tisig.dll performs every plan-signature check and every Merkle proof
+# walk on Windows. makensis links whatever bytes sit at that path, and
+# until 2026-09-24 the DLL's hash was recorded nowhere in the tree at
+# all -- so the build validated the signing key exhaustively and then
+# took the thing that uses it on faith.
+ti_check_blobs() { # root file-relative-to-root...
+	root=$1; shift
+	sums=$root/SHA256SUMS
+	[ -f "$sums" ] || { echo "no $sums to check binaries against" >&2; exit 1; }
+	for f in "$@"; do
+		[ -f "$root/$f" ] || { echo "$f is missing" >&2; exit 1; }
+		want=$(awk -v p="$f" '$2 == p || $2 == "./" p { print $1; exit }' "$sums")
+		[ -n "$want" ] || { echo "$f is not recorded in $sums" >&2; exit 1; }
+		got=$(sha256sum "$root/$f" 2>/dev/null | cut -d" " -f1)
+		[ "$got" = "$want" ] || { echo "$f does not match $sums ($got, expected $want)" >&2; exit 1; }
+	done
+}
+
+ti_check_blobs "../../.." "src/installers/windows/plugins/x86-unicode/tisig.dll"
+
 # The plan signing key (docs/format.md "Plan signature"): one line, base64 of 32 bytes.
 keyfile=${TI_PLAN_PUBKEY_FILE:-../../build_server/data/plan-signing-key.pub}
 [ -f "$keyfile" ] || { echo "no plan signing key at $keyfile: start the server once (it makes one), or set TI_PLAN_PUBKEY_FILE" >&2; exit 1; }
