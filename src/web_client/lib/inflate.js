@@ -56,8 +56,13 @@ function fixedTables() {
 
 // Inflates raw deflate data from src[start]. Returns {out, end}, end
 // being the offset just past the last block (for a trailer after it).
-export function inflateRawAt(src, start, sizeHint) {
-  let out = new Uint8Array(Math.max(1024, sizeHint || src.length * 4));
+export function inflateRawAt(src, start, sizeHint, maxOut) {
+  // maxOut is a ceiling, not a hint. Deflate reaches 1032:1, so a
+  // megabyte of input is a gigabyte of output and grow() would
+  // double its way there without ever asking whether the caller
+  // wanted that much.
+  const cap = maxOut > 0 ? maxOut : Infinity;
+  let out = new Uint8Array(Math.max(1024, Math.min(cap, sizeHint || src.length * 4)));
   let op = 0;
   let pos = start, bitbuf = 0, bitcnt = 0;
   const len = src.length;
@@ -77,8 +82,10 @@ export function inflateRawAt(src, start, sizeHint) {
   };
   const grow = (n) => {
     if (op + n <= out.length) return;
+    if (op + n > cap) fail('the compressed data expands past the limit this caller allowed');
     let size = out.length * 2;
     while (size < op + n) size *= 2;
+    if (size > cap) size = op + n;
     const o2 = new Uint8Array(size);
     o2.set(out.subarray(0, op));
     out = o2;
@@ -192,9 +199,9 @@ export function adler32(u8) {
 const u32le = (u8, o) => (u8[o] | (u8[o + 1] << 8) | (u8[o + 2] << 16) | (u8[o + 3] << 24)) >>> 0;
 const u32be = (u8, o) => ((u8[o] << 24) | (u8[o + 1] << 16) | (u8[o + 2] << 8) | u8[o + 3]) >>> 0;
 
-function gunzip(src) {
+function gunzip(src, maxOut) {
   const parts = [];
-  let o = 0;
+  let o = 0, got = 0;
   do {
     if (src.length < o + 18 || src[o] !== 0x1f || src[o + 1] !== 0x8b) fail('not gzip data');
     if (src[o + 2] !== 8) fail('unknown gzip compression method');
@@ -207,11 +214,14 @@ function gunzip(src) {
     if (p > src.length) fail('truncated gzip header');
     // ISIZE (the size mod 2^32) is only a hint for a single member.
     const hint = o === 0 ? u32le(src, src.length - 4) : 0;
-    const r = inflateRawAt(src, p, Math.min(hint, 1032 * src.length + 1024));   // 1032:1 is deflate's best
+    // The budget is what is left across all members, not per member:
+    // concatenated members would otherwise each get the whole cap.
+    const r = inflateRawAt(src, p, Math.min(hint, 1032 * src.length + 1024), maxOut > 0 ? maxOut - got : 0);
     if (r.end + 8 > src.length) fail('truncated gzip trailer');
     if (crc32(r.out) !== u32le(src, r.end)) fail('gzip CRC mismatch');
     if ((r.out.length >>> 0) !== u32le(src, r.end + 4)) fail('gzip size mismatch');
     parts.push(r.out);
+    got += r.out.length;
     o = r.end + 8;
   } while (o < src.length && src[o] === 0x1f);                      // concatenated members
   if (o !== src.length) fail('junk after the gzip data');
@@ -224,23 +234,23 @@ function gunzip(src) {
   return out;
 }
 
-function unzlib(src) {
+function unzlib(src, maxOut) {
   if (src.length < 6) fail('truncated zlib data');
   const cmf = src[0], flg = src[1];
   if ((cmf & 15) !== 8 || ((cmf << 8) | flg) % 31) fail('not zlib data');
   if (flg & 32) fail('zlib preset dictionaries are not supported');
-  const r = inflateRawAt(src, 2);
+  const r = inflateRawAt(src, 2, 0, maxOut);
   if (r.end + 4 > src.length) fail('truncated zlib trailer');
   if (adler32(r.out) !== u32be(src, r.end)) fail('zlib checksum mismatch');
   if (r.end + 4 !== src.length) fail('junk after the zlib data');
   return r.out;
 }
 
-export function inflate(u8, format, sizeHint) {
-  if (format === 'gzip') return gunzip(u8);
-  if (format === 'deflate') return unzlib(u8);
+export function inflate(u8, format, sizeHint, maxOut) {
+  if (format === 'gzip') return gunzip(u8, maxOut);
+  if (format === 'deflate') return unzlib(u8, maxOut);
   if (format === 'deflate-raw') {
-    const r = inflateRawAt(u8, 0, sizeHint);
+    const r = inflateRawAt(u8, 0, sizeHint, maxOut);
     if (r.end !== u8.length) fail('junk after the deflate data');
     return r.out;
   }

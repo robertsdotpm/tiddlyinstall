@@ -111,7 +111,7 @@ export async function decodeIconPng(bytes) {
   }
 }
 
-const inflateZlib = (u8) => inflate(u8, 'deflate');
+const inflateZlib = (u8, maxOut) => inflate(u8, 'deflate', maxOut);
 
 // PNG bytes -> {width, height, data} with 8-bit RGBA data (not
 // premultiplied). Every colour type and bit depth, and Adam7 interlacing.
@@ -145,7 +145,13 @@ export async function pngDecode(bytes) {
   const z = new Uint8Array(total);
   total = 0;
   for (const d of idat) { z.set(d, total); total += d.length; }
-  const raw = await inflateZlib(z);
+  // The IHDR is already validated, so the exact size of a well formed
+  // image is known: w*h*4 for the pixels at the widest channel count
+  // and depth this decoder writes, plus one filter byte a row. A PNG
+  // that inflates past that is not a PNG this can use, whatever it
+  // claims -- and refusing here is what keeps a 1 MB upload from
+  // becoming a gigabyte in the process that accepted it.
+  const raw = await inflateZlib(z, w * h * 4 + h + 64);
   const bpp = Math.max(1, (channels * depth) >> 3);        // bytes per pixel, for filtering
   const out = new Uint8Array(w * h * 4);
   const maxv = (1 << depth) - 1;

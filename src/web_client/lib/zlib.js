@@ -23,22 +23,47 @@ function nativeStream(Cls, format) {
   try { return new G[Cls](format); } catch (e) { return null; }       // format not supported
 }
 
-async function through(u8, stream) {
+// Response.arrayBuffer() would buffer the whole stream before anyone
+// could object to its size, so with a ceiling we read it ourselves and
+// stop at the first chunk that crosses it. Deflate reaches 1032:1, so a
+// megabyte of attacker-chosen input is a gigabyte of memory in the
+// process that accepted it.
+async function through(u8, stream, maxOut) {
   const s = new Blob([u8]).stream().pipeThrough(stream);
-  return new Uint8Array(await new Response(s).arrayBuffer());
+  if (!(maxOut > 0)) return new Uint8Array(await new Response(s).arrayBuffer());
+  const rd = s.getReader();
+  const parts = [];
+  let n = 0;
+  for (;;) {
+    const { done, value } = await rd.read();
+    if (done) break;
+    n += value.length;
+    if (n > maxOut) {
+      try { await rd.cancel(); } catch (e) { /* already gone */ }
+      throw new Error('inflate: the compressed data expands past the limit this caller allowed');
+    }
+    parts.push(value);
+  }
+  const out = new Uint8Array(n);
+  let at = 0;
+  for (const p of parts) { out.set(p, at); at += p.length; }
+  return out;
 }
 
-async function run(Cls, u8, format, pure) {
+async function run(Cls, u8, format, pure, maxOut) {
   const s = nativeStream(Cls, format);
-  if (!s) return pure(u8, format);
+  if (!s) return pure(u8, format, 0, maxOut);
   try {
-    return await through(u8, s);
+    return await through(u8, s, maxOut);
   } catch (e) {
-    try { return pure(u8, format); } catch (e2) { throw e; }
+    // A refusal is the answer, not a reason to try the other path: the
+    // pure one would spend the same memory reaching the same verdict.
+    if (/expands past the limit/.test(String(e && e.message))) throw e;
+    try { return pure(u8, format, 0, maxOut); } catch (e2) { throw e; }
   }
 }
 
-export function inflate(u8, format) { return run('DecompressionStream', u8, format, pureInflate); }
+export function inflate(u8, format, maxOut) { return run('DecompressionStream', u8, format, pureInflate, maxOut); }
 export function deflate(u8, format) { return run('CompressionStream', u8, format, pureDeflate); }
 
 // Which path a format would take here (for tests and the diagnostics line).

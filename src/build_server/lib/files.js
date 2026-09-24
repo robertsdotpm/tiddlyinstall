@@ -346,10 +346,18 @@ function paxRecords(data) {
 // first error as build.tarNames does: PAX ('x') and GNU long-name ('L',
 // 'K') headers apply to the next entry; a PAX global header ('g') is
 // returned itself, as Go does.
+// Only the entry names are wanted, so the whole archive is decompressed
+// to read 512-byte headers. That is fine for a source tarball and is a
+// gigabyte of the main process for a bomb: gzip reaches 1032:1, so the
+// 200 MB ceiling on the download is no ceiling here. 64 MiB is far above
+// any source archive whose listing matters, and the refusal is a null
+// like any other unreadable archive.
+const MAX_TAR = 64 * 1024 * 1024;
+
 export function gzTarNames(gz) {
   let b;
   try {
-    b = zlib.gunzipSync(gz);
+    b = zlib.gunzipSync(gz, { maxOutputLength: MAX_TAR });
   } catch (e) {
     return null;
   }

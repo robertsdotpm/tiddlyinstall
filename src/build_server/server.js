@@ -598,6 +598,13 @@ export class Server {
   }
 
   async plan(req, res, h, params) {
+    // Signing a plan resolves the record and re-reads its source archive
+    // every time (Builder.srcFile), so this is the most expensive thing
+    // an anonymous caller can ask for repeatedly -- and it was the one
+    // route with no limiter, while plan-by-name beside it has one.
+    if (!this.nameLimiter.allow(clientIP(req, this.trustProxy))) {
+      return apiError(res, 429, 'rate_limited', RATE_LIMITED);
+    }
     if (!isHash26(h)) return apiError(res, 400, 'bad_hash', 'not a record hash');
     if (this.takenDown('record ' + h)) return apiError(res, 451, 'taken_down', 'This installer has been taken down.');
     const p = params.get('os');
