@@ -67,7 +67,7 @@ const catSha = crypto.createHash('sha256').update(catBytes).digest('hex');
 const BASES = { windows: 'src/installers/windows/out/base.exe', linux: 'src/installers/unix/out/ti-base.run', macos: 'src/installers/unix/out/ti-base-macos.zip' };
 const base = (plat) => new Uint8Array(fs.readFileSync(path.join(HERE, '..', BASES[plat])));
 
-let passed = 0, failed = 0;
+let passed = 0, failed = 0, skipped = 0;
 function ok(cond, name, extra) {
   if (cond) { passed++; console.log('PASS ' + name); }
   else { failed++; console.log('FAIL ' + name + (extra !== undefined ? '\n' + extra : '')); }
@@ -210,8 +210,12 @@ const golden = JSON.parse(zlib.brotliDecompressSync(fs.readFileSync(GOLDEN_FILE)
   let roots = '';
   try { roots = fs.readFileSync(path.join(rtDir, 'roots.txt'), 'utf8'); } catch (e) { roots = ''; }
   if (!roots) {
-    console.log('PASS the proof material is absent, so there is nothing to compare (run tools/sign_runtime_scripts.mjs)');
-    passed++;
+    // Not a pass. This check did not run, and counting it as one is how
+    // a suite reports "159 passed" on a clone where the proof material
+    // has never existed -- which is every clone but the one machine that
+    // runs the signer.
+    console.log('SKIP the proof material is absent, so this did not run (tools/sign_runtime_scripts.mjs)');
+    skipped++;
   } else {
     const hex = (str) => crypto.createHash('sha256').update(str, 'utf8').digest('hex');
     const leaves = fs.readFileSync(path.join(rtDir, 'python.leaves'), 'utf8').trim().split('\n');
@@ -226,8 +230,8 @@ const golden = JSON.parse(zlib.brotliDecompressSync(fs.readFileSync(GOLDEN_FILE)
     let liveBytes = null;
     try { liveBytes = fs.readFileSync(liveCat); } catch (e) { liveBytes = null; }
     if (!liveBytes) {
-      console.log('PASS the working catalogue is not here, so proofs cannot be compared (' + liveCat + ')');
-      passed++;
+      console.log('SKIP the working catalogue is not here, so proofs were not compared (' + liveCat + ')');
+      skipped++;
     } else {
     const a = await ls(new Uint8Array(liveBytes));
     const b = await ls(new Uint8Array(liveBytes));
@@ -295,5 +299,5 @@ for (const [how, catFor] of ways) {
     }
   }
 }
-console.log(`\n${passed} passed, ${failed} failed`);
+console.log(`\n${passed} passed, ${failed} failed` + (skipped ? `, ${skipped} did not run` : ''));
 process.exit(failed ? 1 : 0);

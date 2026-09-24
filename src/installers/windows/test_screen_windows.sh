@@ -26,8 +26,12 @@ no() { fail=1; printf 'FAIL %s\n' "$1"; [ -n "${2:-}" ] && printf '     %s\n' "$
 ok() { printf 'ok   %s\n' "$1"; }
 
 if [ -z "${TI_WIN:-}" ]; then
-	echo 'skip (set TI_WIN=user@host to run this; see docs/local/test-vms.md)'
-	exit 0
+	# Exit 2, not 0. Not run and passed are different facts, and a caller
+	# collecting exit codes cannot tell them apart if this says 0 -- which
+	# is how "every engine suite is green" came to include this one on
+	# machines that never ran it.
+	echo 'not run: set TI_WIN=user@host to run this (see the operator notes)'
+	exit 2
 fi
 # These machines have logged-in console sessions and one of them is the
 # operator's own screen. Nothing here takes a picture, but the rule is

@@ -138,7 +138,7 @@ try {
     await js(`(() => { const s = document.getElementById('svc-name'); s.value = ${JSON.stringify(id)};
       s.dispatchEvent(new Event('change', { bubbles: true })); })()`);
     const t2 = await js(`document.getElementById('svc-about').textContent`);
-    const wants = id === 'azurets' ? /pass through the build server/
+    const wants = id === 'azurets' ? /pass through the server/
       : id === 'digicert' ? /Nothing secret is typed/ : /stay in this browser/;
     if (!wants.test(t2) || !/Not yet tested against a live account/.test(t2) || !/contact address not yet set|tell us/.test(t2)) {
       allSaid = false;

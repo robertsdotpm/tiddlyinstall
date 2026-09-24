@@ -45,6 +45,8 @@ cases() {
 	one tampered 1 "does NOT match the TiddlyInstall key" "$D/base.run" --record="$D/record.txt" --plan="$D/tampered.txt"
 	one replayed 1 "install plan is for record" "$D/base.run" --record="$D/record2.txt" --plan="$D/plan.txt"
 	one unsigned 1 "carries no signature by the TiddlyInstall key" "$D/base.run" --record="$D/record.txt" --plan="$D/unsigned.txt"
+	# The download control itself, in the failing direction.
+	one wrong-bytes 1 "with the expected SHA-256 from any source" "$D/base.run" --record="$D/record.txt" --plan="$D/plan-wrongbytes.txt"
 	rm -rf "$D/home" "$D/tmp"
 }
 
@@ -62,6 +64,14 @@ prepare() {
 	printf '#!/bin/sh\necho hello\n' > "$D/rt/pkg/bin/hello"
 	chmod 755 "$D/rt/pkg/bin/hello"
 	(cd "$D/rt" && tar -cf - pkg | gzip -c > "$D/srv/f/rt.tar.gz")
+	# The same archive with one more file in it: a real tar.gz that
+	# unpacks cleanly and is simply not the bytes the plan names. This
+	# is what a compromised mirror serves, and until 2026-09-24 no test
+	# anywhere handed the engine one -- the SHA-256 comparison is the
+	# control every download rests on and it had no negative case.
+	printf '#!/bin/sh\necho pwned\n' > "$D/rt/pkg/bin/extra"
+	(cd "$D/rt" && tar -cf - pkg | gzip -c > "$D/srv/f/rt-wrong.tar.gz")
+	rm -f "$D/rt/pkg/bin/extra"
 	sha=$(sha256sum "$D/srv/f/rt.tar.gz" | cut -d' ' -f1)
 	size=$(wc -c < "$D/srv/f/rt.tar.gz" | tr -d ' ')
 	rec() { printf 'ti-record\t1\nname\tVerify %s\nproject\thello\nruntime\tnone\nselect\tnewest\nlaunch\t{runtime}\nconsole\t1\nmenu\t0\ndesktop\t0\nroot\tuser\nrootname\tti\n' "$1"; }
@@ -78,6 +88,11 @@ sign() { # DIR BACKEND: the plan with the backend's URL, signed, and its variant
 	sed "s|@BACKEND@|$2|" "$D/unsigned.tmpl" > "$D/unsigned.txt"
 	plansig -data "$D/key" sign "$D/unsigned.txt" > "$D/plan.txt" || exit 1
 	sed 's/^name\tVerify one$/name\tVerify 0ne/' "$D/plan.txt" > "$D/tampered.txt"
+	# Signed correctly, names the right SHA-256, and points at a URL
+	# serving something else. Nothing about the plan is wrong; the
+	# source is. The engine must refuse it on the hash alone.
+	sed 's|/f/rt\.tar\.gz|/f/rt-wrong.tar.gz|' "$D/unsigned.txt" > "$D/unsigned-wrong.txt"
+	plansig -data "$D/key" sign "$D/unsigned-wrong.txt" > "$D/plan-wrongbytes.txt" || exit 1
 	cp "$D/record.txt" "$D/srv/api/records/$(cat "$D/hash")"
 	cp "$D/plan.txt" "$D/srv/api/plan/$(cat "$D/hash")"
 	cp "$D/base.run" "$D/app_$(cat "$D/hash").run"

@@ -665,7 +665,7 @@ const AZURETS = {
     'so the browser refuses the call before it is made. The server relays it instead.',
   docs: 'https://learn.microsoft.com/en-us/azure/trusted-signing/',
   certs: 'service',
-  relayNote: 'Your access token and the digest pass through the server. It forwards them to ' +
+  relayNote: 'It forwards them to ' +
     'codesigning.azure.net and forgets them: nothing is stored, and the token is never written to a log. ' +
     'The token is short-lived (about an hour) and can only sign; it is not your Azure password. ' +
     'If you would rather nothing of yours touched our server, use the paste option instead, or run the relay yourself.',
@@ -944,7 +944,7 @@ export function servicesFor(hasServer) {
 export function credentialPath(svc) {
   if (svc.where === 'paste') return 'Nothing secret is typed into this page: you run the commands it shows, and paste back the signature.';
   if (svc.where === 'server') {
-    return 'These credentials pass through the server. ' + (svc.relayNote || '');
+    return 'Your access token and the digest pass through the server. ' + (svc.relayNote || '');
   }
   return 'These credentials stay in this browser. The page calls ' + svc.name +
     ' directly, so nothing of yours reaches our server -- only the signing service sees them, and only the ' +
