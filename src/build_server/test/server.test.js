@@ -253,6 +253,19 @@ test('the server', { skip }, async (t) => {
     const td = await json('/api/jobs', { method: 'POST', body: JSON.stringify({ runtime: 'python', mode: 'C', source: { kind: 'github', value: 'https://github.com/A/B.git' } }) });
     assert.deepEqual([td.status, td.j.code], [451, 'taken_down']);
     assert.deepEqual((await json('/api/takedown')).j.entries, ['record ' + hash, 'sha ' + src, 'source github a/b']);
+
+    // A source entry on its own, naming this record's actual source, and
+    // carrying a reason after the key. Until 2026-09-24 it reached only
+    // acceptJob: the installer already built from that source went on
+    // being served and fresh plans went on being signed for it, while
+    // takedown.mjs printed "ok (added)". The reason made it worse -- the
+    // list was matched whole-line, so an entry an operator wrote a note
+    // on matched nothing at all.
+    fs.writeFileSync(path.join(data, 'takedown.txt'), 'source inline ' + src + '\treported 2026-09-24\n');
+    for (const p of ['/api/records/' + hash, '/api/plan/' + hash, f.url]) {
+      assert.equal((await get(p)).status, 451, 'source-only takedown should reach ' + p);
+    }
+    fs.rmSync(path.join(data, 'takedown.txt'));
   });
 
   await t.test('the signed revocation list', async () => {

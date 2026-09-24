@@ -296,8 +296,38 @@ export class Server {
     return out.length ? out : null;   // Go's nil slice: "entries": null
   }
 
+  // A list entry may carry a reason after the key (format.md), so a
+  // whole-line comparison silently ignored every entry an operator wrote
+  // a reason on -- which is the ones they cared most about.
   takenDown(entry) {
-    return (this.takedownList() || []).includes(entry);
+    for (const e of this.takedownList() || []) {
+      if (e === entry || e.startsWith(entry + ' ') || e.startsWith(entry + '\t')) return true;
+    }
+    return false;
+  }
+
+  // The source a stored record names, as a takedown key.
+  //
+  // `source github owner/repo` was tested once, at acceptJob, so it
+  // stopped new builds and nothing else: the .exe already built from that
+  // repository went on being served, and the server went on signing fresh
+  // plans for it, while takedown.mjs printed "ok ... (added)" and
+  // operating.md said the entry withdraws "anything built from that
+  // repository". The serving paths have to resolve it too.
+  recordSourceKey(hash) {
+    let text;
+    try { text = fs.readFileSync(this.b.recordPath(hash), 'utf8'); } catch (e) { return ''; }
+    for (const raw of text.split('\n')) {
+      const f = raw.replace(/\r$/, '').split('\t');
+      if (f[0] === 'source' && f[1] && f[2]) return Server.sourceKey(f[1], f[2]);
+    }
+    return '';
+  }
+
+  takenDownRecord(hash) {
+    if (this.takenDown('record ' + hash)) return true;
+    const k = this.recordSourceKey(hash);
+    return k !== '' && this.takenDown(k);
   }
 
   // A download by its SHA-256. `sha <hash>` names one of our stored files
@@ -306,8 +336,7 @@ export class Server {
   // runtime build named by many records at once is reached. A file we do
   // store is refused by either.
   takenDownSha(sha) {
-    const list = this.takedownList() || [];
-    return list.includes('sha ' + sha) || list.includes('file ' + sha);
+    return this.takenDown('sha ' + sha) || this.takenDown('file ' + sha);
   }
 
   // The SHA-256s the list names, for the resolver: a withdrawn build is
@@ -590,7 +619,7 @@ export class Server {
 
   async record(req, res, h) {
     if (!isHash26(h)) return apiError(res, 400, 'bad_hash', 'not a record hash');
-    if (this.takenDown('record ' + h)) return apiError(res, 451, 'taken_down', 'This installer has been taken down.');
+    if (this.takenDownRecord(h)) return apiError(res, 451, 'taken_down', 'This installer has been taken down.');
     let b;
     try { b = fs.readFileSync(this.b.recordPath(h)); } catch (e) { return apiError(res, 404, 'not_found', 'no such record'); }
     res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=31536000, immutable', 'Content-Length': b.length });
@@ -606,7 +635,7 @@ export class Server {
       return apiError(res, 429, 'rate_limited', RATE_LIMITED);
     }
     if (!isHash26(h)) return apiError(res, 400, 'bad_hash', 'not a record hash');
-    if (this.takenDown('record ' + h)) return apiError(res, 451, 'taken_down', 'This installer has been taken down.');
+    if (this.takenDownRecord(h)) return apiError(res, 451, 'taken_down', 'This installer has been taken down.');
     const p = params.get('os');
     const nonce = params.get('nonce') ?? '';
     if (nonce !== '' && !isNonce(nonce)) return apiError(res, 400, 'invalid', 'nonce must be 32 hexadecimal characters');
@@ -649,7 +678,7 @@ export class Server {
     }
     let hash;
     try { hash = await this.b.nameRecord(rt, norm); } catch (e) { return apiError(res, 500, 'record_failed', e.message); }
-    if (this.takenDown('record ' + hash)) return apiError(res, 451, 'taken_down', 'This installer has been taken down.');
+    if (this.takenDownRecord(hash)) return apiError(res, 451, 'taken_down', 'This installer has been taken down.');
     const p = params.get('os');
     let plan;
     try {
@@ -804,7 +833,7 @@ export class Server {
 
   async dl(req, res, hash, name) {
     if (!isHash26(hash) || /[/\\]/.test(name) || name.startsWith('.')) return notFound(res);
-    if (this.takenDown('record ' + hash)) return apiError(res, 451, 'taken_down', 'This installer has been taken down.');
+    if (this.takenDownRecord(hash)) return apiError(res, 451, 'taken_down', 'This installer has been taken down.');
     const p = path.join(this.data, 'dl', hash, name);
     return serveFile(req, res, p, { 'Content-Disposition': 'attachment; filename=' + goQuote(name), 'Content-Type': 'application/octet-stream' });
   }
