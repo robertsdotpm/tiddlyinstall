@@ -158,7 +158,7 @@ BACKEND = default_backend()
 
 def backend_arg(mode):
     """--backend for B and C, nothing for A (see BACKEND above)."""
-    return "" if mode == "A" else '--backend="%s"' % BACKEND
+    return "" if mode == "A" else "--backend=%s" % BACKEND
 
 
 def run_linux(rt, mode, f, target="linux"):
