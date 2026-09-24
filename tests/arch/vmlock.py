@@ -39,6 +39,7 @@ usage:
 two harnesses against one machine on purpose.
 """
 import os
+import base64
 import re
 import socket
 import subprocess
@@ -65,6 +66,31 @@ def _sh(cmd, timeout=60):
         return 124, "", "timed out"
 
 
+# PowerShell, sent so that no shell can mangle it.
+#
+# These VMs answer ssh with PowerShell, not cmd, and the Windows commands
+# here were `cmd /c "powershell -NoProfile -Command \"...\""`. Under a
+# PowerShell shell that nesting collapses and the *text* comes back instead
+# of the result: exit 0, no output, no error. _age() saw no number, returned
+# None, and the stale-lock takeover could never fire -- the same fault as
+# the GNU/BSD `stat` one, on the other platform, so the takeover had never
+# worked anywhere but macOS. It cost 25 minutes of a matrix run on
+# 2026-09-25, waiting on a lock whose holder was long dead.
+#
+# -EncodedCommand takes base64 of UTF-16LE: alphanumeric plus +/=, with
+# nothing for either shell to quote, escape or interpret. It runs whichever
+# of the two answers, which is what this has to be true for, because the
+# shell is per-VM and this code is not told which it is.
+def _ps(script):
+    return "powershell -NoProfile -EncodedCommand " + base64.b64encode(
+        script.encode("utf-16-le")).decode("ascii")
+
+
+# A PowerShell single-quoted literal.
+def _q(v):
+    return "'" + str(v).replace("'", "''") + "'"
+
+
 class VMLock:
     def __init__(self, host, windows, who, wait=WAIT, quiet=False):
         self.host, self.windows, self.who = host, windows, who
@@ -85,9 +111,11 @@ class VMLock:
         """Try to create the lock. Returns (True, '') or (False, holder)."""
         line = self._line()
         if self.windows:
-            cmd = (f'cmd /c "mkdir {self.dir} 2>nul && ('
-                   f'echo {line}> {self.dir}\\holder & echo @TOOK'
-                   f') || (type {self.dir}\\holder 2>nul & echo @HELD)"')
+            cmd = _ps("$d = %s; $h = Join-Path $d 'holder'\n"
+                      "try { New-Item -ItemType Directory -Path $d -ErrorAction Stop | Out-Null }\n"
+                      "catch { if (Test-Path $h) { Get-Content $h }; '@HELD'; exit 0 }\n"
+                      "Set-Content -Path $h -Value %s -Encoding ASCII\n"
+                      "'@TOOK'\n" % (_q(self.dir), _q(line)))
         else:
             cmd = (f"sh -c 'if mkdir {self.dir} 2>/dev/null; then "
                    f"printf \"%s\\n\" \"{line}\" > {self.dir}/holder; echo @TOOK; "
@@ -104,9 +132,10 @@ class VMLock:
     def _age(self):
         """Seconds since the holder's heartbeat, or None if it is gone."""
         if self.windows:
-            cmd = (f'cmd /c "powershell -NoProfile -Command '
-                   f'\\"if (Test-Path {self.dir}\\holder) {{ '
-                   f'[int]((Get-Date) - (Get-Item {self.dir}\\holder).LastWriteTime).TotalSeconds }}\\""')
+            cmd = _ps("$h = Join-Path %s 'holder'\n"
+                      "if (Test-Path $h) {\n"
+                      "  [int]((Get-Date) - (Get-Item $h).LastWriteTime).TotalSeconds\n"
+                      "}\n" % _q(self.dir))
         else:
             # GNU first, then BSD -- and check that what came back is a
             # number, both times.
@@ -142,13 +171,15 @@ class VMLock:
 
     def _touch(self):
         if self.windows:
-            cmd = f'cmd /c "echo {self._line()}> {self.dir}\\holder"'
+            cmd = _ps("Set-Content -Path (Join-Path %s 'holder') -Value %s -Encoding ASCII"
+                      % (_q(self.dir), _q(self._line())))
         else:
             cmd = f"sh -c 'printf \"%s\\n\" \"{self._line()}\" > {self.dir}/holder'"
         _sh(["ssh", "-o", "BatchMode=yes", self.host, cmd], timeout=90)
 
     def _break(self):
-        rm = f'cmd /c "rd /s /q {self.dir}"' if self.windows else f"sh -c 'rm -rf {self.dir}'"
+        rm = (_ps("Remove-Item -Recurse -Force %s -ErrorAction SilentlyContinue" % _q(self.dir))
+              if self.windows else f"sh -c 'rm -rf {self.dir}'")
         _sh(["ssh", "-o", "BatchMode=yes", self.host, rm], timeout=90)
 
     # ---- the loop ----------------------------------------------------
