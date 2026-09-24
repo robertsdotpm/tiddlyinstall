@@ -92,13 +92,15 @@ function idb(mode, f) {
   });
 }
 
-// What is kept: the split catalogue, and the signed statement it came
-// with. The statement is about catalog.gz, and what is stored is that
-// file taken apart, so the hash cannot be checked again from storage --
-// it was checked once, against these bytes, before anything was written.
-// Keeping the statement is still worth it: it is what the page shows when
-// asked where this catalogue came from, and its signature is checked
-// again every time the catalogue is loaded.
+// What is kept: the archive the signed statement is about, that archive
+// taken apart for use, and the statement itself. Both halves are needed.
+// Another page on the same origin can write to this database -- they
+// share one in Chrome -- so nothing that comes back is ours until it has
+// been proved, and a digest this page wrote beside the data would be
+// forgeable by the same writer that replaced the data. The only anchor
+// is the sha256 inside the signed statement, over the archive; so the
+// signature is checked, the archive is checked against it, and the split
+// catalogue is re-derived from the archive rather than trusted.
 export async function readStored() {
   let rec;
   try { rec = await idb('readonly', (s) => s.get(KEY)); } catch (e) { return null; }
@@ -111,6 +113,34 @@ export async function readStored() {
   let ok = false;
   if (key && s.signed) { try { ok = ed25519Verify(key, s.bytes, s.sig); } catch (e) { ok = false; } }
   if (!ok) { await clearStored(); return null; }
+
+  // A verified statement about an archive says nothing about an index
+  // somebody else wrote next to it. block()/blockBytes() serve these
+  // bytes to every build, so a forged index chooses both the URL a file
+  // comes from and the sha256 it is checked against.
+  const want = String(docField(String(rec.attest || ''), 'sha256') || '').toLowerCase();
+  let raw = rec.raw;
+  if (raw instanceof ArrayBuffer) raw = new Uint8Array(raw);
+  if (!/^[0-9a-f]{64}$/.test(want) || !(raw instanceof Uint8Array) || hex(sha256(raw)) !== want) {
+    await clearStored();
+    return null;
+  }
+  try {
+    const cat = await loadSnapshot(raw);
+    await loadAllRuntimes(cat);
+    const summary = runtimesSummary(cat);
+    const { index, chunks } = await splitSnapshot(cat);
+    index.summary = summary;
+    const folders = {};
+    for (const c of chunks) folders[c.folder] = c.bytes;
+    rec.raw = raw;
+    rec.index = index;
+    rec.folders = folders;
+    rec.sha256 = want;
+  } catch (e) {
+    await clearStored();
+    return null;
+  }
   return rec;
 }
 
@@ -224,6 +254,11 @@ export async function fetchCatalog(backend, onStep) {
     issued,
     sha256: want,
     bytes: buf.length,
+    // Kept so the catalogue can be bound to the signature again on the
+    // way out of storage. These bytes are the ones the statement names
+    // and they were hash-checked above, so they are the only thing in
+    // this record that another writer cannot forge past.
+    raw: buf,
     attest,
     keyId: keyId(key),
     index,

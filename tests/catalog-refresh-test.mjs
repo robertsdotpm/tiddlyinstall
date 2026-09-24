@@ -245,6 +245,82 @@ await openRegistry();
 ok(await c.js("(function(){var s=document.getElementById('rt-source');return !s || s.hidden;})()"),
   '...and it stays gone after a reload, so the stored copy was dropped too');
 
+/* ---------- a stored catalogue somebody else edited ---------- */
+//
+// Another page on this origin shares the database (Chrome gives file://
+// pages one). Checking the statement's signature and then trusting the
+// index stored beside it would be no control at all: the index chooses
+// both the URL every file is fetched from and the SHA-256 it is checked
+// against, so whoever can write it can write the installer's downloads.
+// The archive the statement names is the only authenticated anchor, so
+// the index is re-derived from it every time the record is read.
+r = await refresh('good');
+ok(!r.error, 'a fresh refresh, to have something stored to edit', String(r.error).slice(0, 200));
+
+const poked = await c.js(`new Promise(function (res, rej) {
+  var open = indexedDB.open('tiddlyinstall', 1);
+  open.onerror = function () { rej(open.error); };
+  open.onsuccess = function () {
+    var db = open.result, out = 'no record';
+    var tx = db.transaction('kv', 'readwrite');
+    var st = tx.objectStore('kv');
+    var g = st.get('ti-catalog-refresh');
+    g.onsuccess = function () {
+      var rec = g.result;
+      if (!rec) return;
+      rec.index = rec.index || {};
+      rec.index.summary = 'TAMPERED';
+      rec.index.folders = {};
+      st.put(rec, 'ti-catalog-refresh');
+      out = 'edited';
+    };
+    tx.oncomplete = function () { db.close(); res(out); };
+    tx.onerror = function () { db.close(); rej(tx.error); };
+  };
+})`);
+ok(poked === 'edited', 'the stored catalogue really can be edited by anything sharing this origin', String(poked));
+
+await openRegistry();
+// The edit is discarded rather than rejected: the index is re-derived
+// from the archive, which is still the one the statement names, so the
+// reader keeps the catalogue they fetched and the attacker gets nothing.
+ok(await c.js("(function(){var s=document.getElementById('rt-source');return !!(s && !s.hidden);})()"),
+  'an edited index does not cost the reader the catalogue they fetched');
+ok(await c.js("(function(){var n=document.getElementById('rt-runtimes');return (n.innerText||'').split('\\n').filter(Boolean).length;})()") === before,
+  '...and the list is the real one, so the edit was discarded and not read');
+
+/* ---------- and when the archive itself is replaced ---------- */
+// Now nothing in the record is authenticated, so there is nothing to
+// re-derive from and the whole thing goes.
+const wrecked = await c.js(`new Promise(function (res, rej) {
+  var open = indexedDB.open('tiddlyinstall', 1);
+  open.onerror = function () { rej(open.error); };
+  open.onsuccess = function () {
+    var db = open.result, out = 'no record';
+    var tx = db.transaction('kv', 'readwrite');
+    var st = tx.objectStore('kv');
+    var g = st.get('ti-catalog-refresh');
+    g.onsuccess = function () {
+      var rec = g.result;
+      if (!rec || !rec.raw) return;
+      var b = new Uint8Array(rec.raw);
+      b[Math.floor(b.length / 2)] ^= 0xff;
+      rec.raw = b;
+      st.put(rec, 'ti-catalog-refresh');
+      out = 'wrecked';
+    };
+    tx.oncomplete = function () { db.close(); res(out); };
+    tx.onerror = function () { db.close(); rej(tx.error); };
+  };
+})`);
+ok(wrecked === 'wrecked', 'the stored archive can be replaced too', String(wrecked));
+
+await openRegistry();
+ok(await c.js("(function(){var s=document.getElementById('rt-source');return !s || s.hidden;})()"),
+  'a stored archive that is not the one signed is dropped, not used');
+ok(await c.js("(function(){var n=document.getElementById('rt-runtimes');return (n.innerText||'').split('\\n').filter(Boolean).length;})()") === before,
+  '...and the page falls back to the catalogue built into it');
+
 await c.close();
 srv.close();
 fs.rmSync(TMP, { recursive: true, force: true });

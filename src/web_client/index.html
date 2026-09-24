@@ -73,7 +73,7 @@
           <div class="manifest-line"><span>python-3.14.7-amd64.exe <code>python.org</code></span><span class="m-size">28.1 MB</span></div>
           <div class="manifest-line"><span>requests + 4 dependencies <code>pypi.org</code></span><span class="m-size">1.4 MB</span></div>
           <div class="manifest-line"><span>Source archive <code>github.com</code></span><span class="m-size">0.2 MB</span></div>
-          <p class="manifest-note">Every file is checked against a checksum in the installer, and refused if it&nbsp;differs.</p>
+          <p class="manifest-note">Every file the installer <em>names</em> is checked against a checksum in it, and refused if it&nbsp;differs. The last two are not among them: the source archive is identified by its commit and fetched over HTTPS, and what pip fetches is decided while you&nbsp;install.</p>
         </div>
         <div class="manifest-foot">Shortcuts, uninstaller and PATH changes are listed the same way</div>
       </aside>
