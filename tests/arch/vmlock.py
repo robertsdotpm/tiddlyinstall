@@ -108,12 +108,37 @@ class VMLock:
                    f'\\"if (Test-Path {self.dir}\\holder) {{ '
                    f'[int]((Get-Date) - (Get-Item {self.dir}\\holder).LastWriteTime).TotalSeconds }}\\""')
         else:
+            # GNU first, then BSD -- and check that what came back is a
+            # number, both times.
+            #
+            # It used to be `stat -f %m || stat -c %Y`, which reads as
+            # "try BSD, fall back to GNU" and is not what happens. On GNU
+            # coreutils `-f` is not a format flag, it is "show the
+            # filesystem this file is on", and it *succeeds*: `stat -f %m
+            # holder` prints a block of filesystem statistics and exits 0,
+            # so the `||` never fires, $m is six lines of prose, and
+            # $((now - m)) is "Illegal number". _age() returned None for
+            # every Linux VM, which is every Linux VM in the lab, so the
+            # stale-lock takeover this file exists for has never once run
+            # on one. Found when a lock left by a killed run at 21:39
+            # stopped the matrix dead at 21:58 -- 15-minute staleness,
+            # measured never.
             cmd = (f"sh -c 'f={self.dir}/holder; [ -f \"$f\" ] || exit 0; "
-                   f"now=$(date +%s); m=$(stat -f %m \"$f\" 2>/dev/null || stat -c %Y \"$f\" 2>/dev/null); "
-                   f"[ -n \"$m\" ] && echo $((now - m))'")
+                   f"now=$(date +%s); m=$(stat -c %Y \"$f\" 2>/dev/null); "
+                   f"case \"$m\" in \"\"|*[!0-9]*) m=$(stat -f %m \"$f\" 2>/dev/null) ;; esac; "
+                   f"case \"$m\" in \"\"|*[!0-9]*) exit 0 ;; esac; "
+                   f"echo $((now - m))'")
         code, out, _ = _sh(["ssh", "-o", "BatchMode=yes", self.host, cmd], timeout=90)
-        m = re.search(r"-?\d+", out or "")
-        return int(m.group(0)) if (code == 0 and m) else None
+        if code != 0:
+            return None
+        # The last all-digits line, not the first number anywhere in the
+        # output: a shell that printed a warning first must not be read as
+        # an age.
+        for line in reversed((out or "").splitlines()):
+            line = line.strip()
+            if re.fullmatch(r"\d+", line):
+                return int(line)
+        return None
 
     def _touch(self):
         if self.windows:
