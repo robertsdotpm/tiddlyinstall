@@ -8,9 +8,8 @@
 #
 #   TI_MAC=user@host tools/build_macos_base.sh
 #
-# The address is not written down here on purpose -- the Mac is on the
-# public internet and still accepts passwords. Ask the operator, or see
-# docs/local/test-vms.md.
+# The address is not written down here on purpose: it is a machine, not
+# part of the software. Ask the operator for it.
 #
 # Three things the build needs are not in git, which is the whole
 # reason this script exists rather than a line in a README that is
