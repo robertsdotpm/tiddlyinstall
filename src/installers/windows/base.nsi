@@ -5809,41 +5809,36 @@ FunctionEnd
 ; Get the file declared at plan line $FF_line (sha $FF_sha, name $FF_name):
 ; the pack first, then each of its url lines in order. Result in $FF_path.
 
-; The offset into a file's vendor list, from the file's own SHA-256.
-; Same rule as ti_spread in the unix engine: fold every hex digit,
-; reducing as it goes, then take it modulo the number of vendors. The
-; whole hash and not a prefix, because k = h % n would otherwise turn on
-; the low bits of the first few digits and two files sharing them would
-; share a vendor. In: $FF_sha, $FF_nv. Out: $FF_k.
+; The offset into a file's vendor list: random, once per run.
+;
+; Same rule as ti_spread in the unix engine, and it changed for the same
+; reason. It used to fold the file's own SHA-256, which is the same hash
+; on every machine -- so every copy of one file asked one vendor first,
+; for ever, and the files most people install are exactly the ones whose
+; load would pile up. Installs are what has to be spread, not files.
+;
+; The seed is the tick count mixed with the process id: this decides who
+; is asked first and nothing else. Every source is checked against the
+; same SHA-256 before it is used, so a poor seed costs a retry and can
+; cost nothing more. In: $FF_nv. Out: $FF_k.
 Function FfSpreadK
   Push $0
   Push $1
-  Push $2
-  Push $3
   StrCpy $FF_k 0
   ${If} $FF_nv <= 1
     Goto sk_end
   ${EndIf}
-  StrLen $2 $FF_sha
-  StrCpy $3 0
-  StrCpy $1 0
-  ${Do}
-    ${If} $3 >= $2
-      ${Break}
-    ${EndIf}
-    StrCpy $0 $FF_sha 1 $3
-    ; hex digit -> value; anything else counts as 0, which is harmless
-    StrCpy $0 "0x$0"
-    IntOp $0 $0 + 0
-    IntOp $1 $1 * 16
-    IntOp $1 $1 + $0
-    IntOp $1 $1 % 1000003
-    IntOp $3 $3 + 1
-  ${Loop}
-  IntOp $FF_k $1 % $FF_nv
+  System::Call 'kernel32::GetTickCount() i .r0'
+  System::Call 'kernel32::GetCurrentProcessId() i .r1'
+  ; The tick count moves in steps of 10-16 ms, so its low bits are poor
+  ; on their own; the pid mixes them up, and both are folded rather than
+  ; added so a small vendor count still sees every value.
+  IntOp $0 $0 / 7
+  IntOp $1 $1 * 2654435
+  IntOp $0 $0 + $1
+  IntOp $0 $0 & 0x7FFFFFFF
+  IntOp $FF_k $0 % $FF_nv
   sk_end:
-  Pop $3
-  Pop $2
   Pop $1
   Pop $0
 FunctionEnd
