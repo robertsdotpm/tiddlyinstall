@@ -177,7 +177,13 @@ def expected_key_id():
         l = raw.strip()
         if not l or l.startswith("#"):
             continue
-        return l if re.fullmatch(r"[0-9a-f]{16}", l) else ""
+        # As plansig.js: a line that is not a key id is a broken pin, not
+        # an absent one, and the two shell readers of this same file both
+        # stop rather than carry on without it.
+        if not re.fullmatch(r"[0-9a-f]{16}", l):
+            raise SystemExit("%s is not a key id: %r. Fix it or remove the file; "
+                             "a pin that cannot be read is not a pin." % (p, l[:40]))
+        return l
     return ""
 
 
