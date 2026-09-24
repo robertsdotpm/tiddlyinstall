@@ -15,3 +15,8 @@ tests/browsers/.safari5-*/
 /tests/browsers/results/
 # Notes about that lab, kept beside the repo rather than in it.
 /docs/local/
+
+# Working design notes. Moved out of the repository on 2026-09-24: they
+# are notes to think with, not documentation, and documentation written
+# for a reader is a separate job. See CLAUDE.md.
+docs/

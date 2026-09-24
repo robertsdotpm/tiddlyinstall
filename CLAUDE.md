@@ -1,5 +1,30 @@
 # Working on TiddlyInstall
 
+## The design notes are not in this repository
+
+They were removed from the tree, and from the history, on 2026-09-24.
+They are working notes -- written to think with, long, and in places
+behind the code. Documentation written for a reader is a separate job
+and has not been done. Do not reconstruct them here, and do not treat
+them as a specification: where a note and the code disagree, the code
+is what ships.
+
+    /home/x/tiddlyinstall-docs/
+
+That folder holds every file that was under `docs/`, at the state it was
+removed, plus `audit-2026-09-24.md` (the security audit) and
+`history-scrub-plan-2026-09-24.md`. Paths inside it match the old ones,
+so a comment citing `docs/format.md` section 4 means
+`/home/x/tiddlyinstall-docs/format.md` section 4, and
+`docs/local/test-vms.md` means `local/test-vms.md` under that folder.
+
+Roughly 530 such citations remain in comments across the source. They
+are pointers into that material, not broken links to be mechanically
+rewritten; leave them unless the surrounding comment is being rewritten
+anyway. The two that were visible to a user on screen, and the README's
+links, were removed when the folder was.
+
+
 ## Never put anything on the operator's screen
 
 This machine has a person sitting at it, working, while you run. Their
@@ -35,8 +60,8 @@ rules below as the actual protection:
   keyboard.
 - **`10.0.1.123` (Windows 11) has a live logged-in console session** and
   counts exactly as `:0` does. No console-session installs, no
-  screenshots. Drive it with `/S /log=` instead. `docs/local/test-vms.md` has
-  the detail.
+  screenshots. Drive it with `/S /log=` instead. `local/test-vms.md` in the notes folder
+  above has the detail.
 
 Where to run GUI things instead, in order of preference:
 

@@ -80,7 +80,7 @@ src/shared/          the code the page and the server both run (was shared/)
 src/vendor/          third-party bundles (was vendor/)
 out/                 the built one-file site, gitignored (was dist/)
 registry/            the runtime registry (was runtime-metadata/)
-docs/ tests/ tools/                       unchanged
+tests/ tools/                             unchanged
 ```
 
 Renamed on 2026-09-22. Three things follow from it and are easy to get
@@ -105,7 +105,7 @@ fit, write "the runtime registry".
 
 Plain HTML, CSS and ES modules (ES2017, so the one-file site runs in Firefox
 52 ESR, Chrome 58+, Safari 12; docs/plan.md section 1.11). No framework. The pages talk
-to the build server ([docs/api.md](docs/api.md)); serve them over http
+to the build server (see the API notes); serve them over http
 (`python3 -m http.server` at the repository root, then open
 `/src/web_client/index.html`), since browsers don't load ES modules from `file://`. Without JavaScript the pages still show the form and its
 CSS-only behaviours.
@@ -195,7 +195,7 @@ google-chrome --headless=new --virtual-time-budget=20000 --dump-dom http://127.0
 (`node:http`, no web framework), with BullMQ and ioredis for the job queue
 on Redis. It runs the same JavaScript as the page: `src/shared/resolve.js` (plans),
 `src/shared/builder.js` (jobs), `src/shared/tifile.js` (installer files) and `src/shared/icon.js`
-(icons). It serves the API ([docs/api.md](docs/api.md)), the one-file site
+(icons). It serves the API (see the API notes), the one-file site
 from `out/` (`python3 tools/build_site.py` writes it), our copies of the
 runtime files at `/mirror/`, and the built installers. (It replaced a Go
 server on 2026-09-19; docs/plan.md section 1.8.)
@@ -276,9 +276,13 @@ clean pass or fail. Check the second with
 
 ## Design notes
 
-- [Design](docs/design.md): the whole design, decisions and open questions
-- [Packed files](docs/packed-files.md): files carried inside an installer (your own files, extra installers to run, offline copies of downloads), and how the installer stays signed
-- [macOS packaging](docs/macos-packaging.md): a self-contained `.app` in a `.dmg`, with measured sizes, and what Gatekeeper does to an app that isn't notarized
-- [Tested Python on old Windows](docs/windows-python-compat.md): known-good builds with working asyncio, per Windows version
-- [Test machines](docs/local/test-vms.md): VMs for testing installers
+The design notes this project was built from are not in the repository.
+They are working notes -- long, written to think with rather than to be
+read, and in places out of date with the code. Documentation written for
+someone else to read is a separate job and has not been done yet.
+
+Comments throughout the source cite them by their old paths
+(`docs/design.md`, `docs/format.md` section 4, and so on). Those are
+pointers into that material, not files here.
+
 - [Runtime catalog](registry/README.md): where to download 13 languages' runtimes per OS, architecture and major version, mirrors, checksums, and per-version limitations (metadata backup; binaries live outside git)
