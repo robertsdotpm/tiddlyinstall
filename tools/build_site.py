@@ -116,6 +116,43 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE."""
 
 
+# The repository the published page belongs to.
+#
+# The one-file build takes each page's body with `</header>(.*?)<footer`,
+# so every page's own footer is discarded and this one is appended in its
+# place. That is fine until someone edits the footer in the pages -- which
+# happened: all seven were changed to name this repository and the build
+# went on emitting the old one, silently, for days. So the pages are
+# checked against this below rather than trusted to agree.
+REPO_URL = "https://github.com/robertsdotpm/tiddlyinstall"
+
+
+def check_footer_links():
+    """Every page's footer must name REPO_URL.
+
+    Not cosmetic: the footer is the only place the published page says
+    where it came from, and an edit to it in the pages does nothing at
+    all. A mismatch here means somebody made that edit and has not been
+    told it was thrown away.
+    """
+    import glob
+    wrong = []
+    for p in sorted(glob.glob(os.path.join(WEB, "*.html"))):
+        text = read(p)
+        m = re.search(r'<footer class="site-footer">(.*?)</footer>', text, re.S)
+        if not m:
+            continue
+        found = re.findall(r'https://github\.com/[A-Za-z0-9._/-]+', m.group(1))
+        for u in found:
+            if u.rstrip("/") != REPO_URL:
+                wrong.append("%s: footer names %s" % (os.path.basename(p), u))
+    if wrong:
+        sys.exit("build_site.py: the page footers disagree with REPO_URL (%s).\n  %s\n"
+                 "  The one-file build discards the pages' footers and writes its own, so\n"
+                 "  editing them there has no effect. Change REPO_URL, or change them back."
+                 % (REPO_URL, "\n  ".join(wrong)))
+
+
 PIN_FILE = "plan-key.id"
 
 
@@ -731,7 +768,7 @@ def offline_page(catalog_dir, backend):
         "  here is lost the next time anyone does.\n"
         "\n"
         f"  Built from {rev} on {today}.\n"
-        "  https://github.com/robertsdotpm/installer-builder\n"
+        f"  {REPO_URL}\n"
         "-->\n")
     out = ("<!DOCTYPE html>\n" + MOTW + banner + "<html lang=\"en\">\n<head>\n"
            "  <meta charset=\"utf-8\">\n"
@@ -754,10 +791,10 @@ def offline_page(catalog_dir, backend):
            # commit itself, so the answer is one click rather than a
            # string to go and look up.
            '\n  <footer class="site-footer">\n'
-           '    Designed by <a href="https://robertsdotpm.github.io/">Matthew Roberts</a> and implemented by Claude.\n'
-           '    &middot; <a href="mailto:matthew@roberts.pm">Hire me</a>\n'
+           f'    Designed by <a href="{REPO_URL}">Matthew Roberts</a> and implemented by Claude.\n'
+           '    If you like this software why not <a href="mailto:matthew@roberts.pm">hire me</a>?\n'
            f'    <span class="build-stamp">Front end built from '
-           f'<a href="https://github.com/robertsdotpm/installer-builder/commit/{rev}"><code>{rev}</code></a>'
+           f'<a href="{REPO_URL}/commit/{rev}"><code>{rev}</code></a>'
            f' on {today}</span>\n'
            '  </footer>\n'
            + "\n".join(blocks + code_blocks) +
@@ -814,6 +851,7 @@ def make_snapshot(tmp):
 
 
 def main():
+    check_footer_links()
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("-o", "--out", default=os.path.join(ROOT, "out"))
     ap.add_argument("--catalog", help="folder with catalog.gz and runtimes.json (default: make them)")
