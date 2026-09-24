@@ -285,9 +285,22 @@ export class Server {
   takedownPath() { return path.join(this.data, 'takedown.txt'); }
   releasesPath() { return path.join(this.data, 'releases.txt'); }
 
-  takedownList() {
+  // A missing list and an unreadable one are different facts. Both
+  // returned null, so a takedown.txt that could not be read -- a
+  // permission, a disk error, a half-written file -- was published and
+  // signed as "nothing has been withdrawn", which is a false statement
+  // carrying our signature. `strict` refuses instead; the callers that
+  // only need to test one entry still fail closed on their own.
+  takedownList(strict) {
     let text;
-    try { text = fs.readFileSync(this.takedownPath(), 'utf8'); } catch (e) { return null; }
+    try {
+      text = fs.readFileSync(this.takedownPath(), 'utf8');
+    } catch (e) {
+      if (e && e.code === 'ENOENT') return null;
+      this.log('takedown.txt could not be read: ' + (e && e.message));
+      if (strict) throw e;
+      return null;
+    }
     const out = [];
     for (const raw of text.split('\n')) {
       const l = raw.replace(/^[\s\u0085\u00a0]+|[\s\u0085\u00a0]+$/g, '');
@@ -740,7 +753,14 @@ export class Server {
   async revocations(req, res) {
     let serial = 0;
     try { serial = Math.floor(fs.statSync(this.takedownPath()).mtimeMs / 1000); } catch (e) { /* no list yet */ }
-    const doc = revocationsText(this.takedownList(), { now: Date.now(), serial });
+    let entries;
+    try {
+      entries = this.takedownList(true);
+    } catch (e) {
+      // Saying nothing beats signing something untrue.
+      return apiError(res, 503, 'unavailable', 'The withdrawal list cannot be read here just now.');
+    }
+    const doc = revocationsText(entries, { now: Date.now(), serial });
     const body = this.signer.signStringAs(REVOCATIONS_KIND, doc);
     res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=300', 'Content-Length': Buffer.byteLength(body) });
     res.end(body);

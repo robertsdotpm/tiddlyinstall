@@ -399,7 +399,30 @@ async function serverChecks(info, d, out, derived, file) {
     const rev = await apiRequest('/api/revocations', { as: 'text' });
     const lines = planLines(rev);
     const meta = (k) => (lines.find((l) => l.key === k) || { val: () => '' }).val(0);
-    const revoked = hash && lines.some((l) => l.key === 'revoke' && l.val(0) === 'record' && l.val(1) === hash);
+    // Every kind the engines match, not just the record hash. A list can
+    // withdraw a record, the source it was built from, or the bytes of a
+    // download by SHA-256 (`sha` for one we store, `file` for the bytes
+    // wherever they come from). Checking one of five and then printing an
+    // unqualified "no" is the page answering a narrower question than the
+    // one it asks.
+    const revokes = lines.filter((l) => l.key === 'revoke');
+    const hasRevoke = (kind, ...vals) => revokes.some((l) =>
+      l.val(0) === kind && vals.every((v, i) => String(l.val(i + 1) || '').toLowerCase() === String(v).toLowerCase()));
+    const srcLine = info.record ? planLines(String(info.record)).find((l) => l.key === 'source') : null;
+    const srcKind = srcLine ? srcLine.val(0) : '';
+    let srcVal = srcLine ? String(srcLine.val(1) || '').trim().toLowerCase() : '';
+    if (srcKind === 'github') {
+      srcVal = srcVal.replace(/^https?:\/\//, '').replace(/^github\.com\//, '').replace(/\/$/, '').replace(/\.git$/, '');
+    }
+    const planShas = [];
+    for (const t of (d ? d.targets : [])) {
+      for (const f of t.files || []) if (/^[0-9a-f]{64}$/.test(String(f.sha || ''))) planShas.push(f.sha);
+      for (const f of t.needFiles || []) if (/^[0-9a-f]{64}$/.test(String(f.sha || ''))) planShas.push(f.sha);
+    }
+    const byFile = planShas.filter((h) => hasRevoke('sha', h) || hasRevoke('file', h));
+    const revoked = (hash && hasRevoke('record', hash)) ||
+      (srcKind !== '' && srcVal !== '' && hasRevoke('source', srcKind, srcVal)) ||
+      byFile.length > 0;
     const baked = bakedKey();
     const rs = docSignature(rev, 'ti-revocations');
     let sigSays = '';
@@ -410,7 +433,8 @@ async function serverChecks(info, d, out, derived, file) {
       if (!ok) sigSays = ' <strong>The list\'s signature does not check out</strong>, so it proves nothing.';
     }
     add('Withdrawn since?', (revoked
-      ? '<strong>yes, it was withdrawn after this file was made</strong>'
+      ? '<strong>yes, it was withdrawn after this file was made</strong>' +
+        (byFile.length ? ' (a file it downloads: ' + esc(byFile[0].slice(0, 16)) + '…)' : '')
       : (hash ? 'no, as of the list issued ' + esc(meta('issued') || 'recently') : 'cannot be told without knowing which installer this is'))
       + sigSays);
   } catch (e) {

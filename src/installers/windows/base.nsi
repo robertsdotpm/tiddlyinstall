@@ -2212,6 +2212,22 @@ Function Revocations
   ; install, so the freshest one is used even when `expires` has passed:
   ; refusing something later un-revoked is the recoverable mistake.
   ${If} ${FileExists} "$3"
+    ; The cache is a file on this machine, which anything on this machine
+    ; could have written. It is checked exactly as the fetched list is.
+    ; Until 2026-09-24 it was not checked at all, and the serial
+    ; comparison below let an unverified file displace a list that had
+    ; just been fetched and verified. Forging one installs nothing, but
+    ; it denies every install on the machine while the screen says the
+    ; check was done. An unverified cache is deleted rather than kept, or
+    ; it would go on refusing every genuine list that followed it.
+    tisig::checkdoc "$3" "${TI_PLAN_PUBKEY}" "ti-revocations"
+    Pop $0
+    StrCpy $1 $0 2
+    ${If} $1 != "ok"
+      ${Log} "The cached revocation list at $3: $0; ignoring it."
+      Delete "$3"
+      Goto rv_nocache
+    ${EndIf}
     StrCpy $U_a "$3"
     StrCpy $U_b "$PLUGINSDIR\revocations-cache.u16"
     Call TiUtf8ToUtf16
@@ -2233,6 +2249,7 @@ Function Revocations
       ${EndIf}
     ${EndIf}
   ${EndIf}
+  rv_nocache:
   ${If} $2 == ""
     StrCpy $RevokeNote "not checked: no list could be fetched or found on this machine, so only the plan's own age was checked"
     Goto rv_end

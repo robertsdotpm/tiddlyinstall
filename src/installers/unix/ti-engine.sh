@@ -1667,10 +1667,25 @@ ti_revocations() { # backend
 		ti_log "Could not fetch $url.$(ti_http_why)"
 	fi
 	cache=$(ti_revoke_cache)
+	# The cache is a file on this machine, which anything on this machine
+	# could have written. It is checked exactly as the fetched list is.
+	# Until 2026-09-24 it was not checked at all, and the rule below --
+	# the higher serial wins -- let an unverified file displace a list
+	# that had just been fetched and verified. Forging one is not an
+	# install of anything, but it can deny every install on the machine
+	# and the screen said the check had been done.
+	cache_ok=
+	if [ -n "$cache" ] && [ -f "$cache" ]; then
+		csig=$(ti_doc_sig "$cache" ti-revocations)
+		case $csig in
+		ok:*) cache_ok=1 ;;
+		*) ti_log "The cached revocation list $csig; ignoring it." ;;
+		esac
+	fi
 	# The freshest list wins, and a list is honoured even when `expires`
 	# has passed: it can only ever deny an install, so trusting a stale
 	# one is the recoverable mistake (design.md 7.1).
-	if [ -n "$cache" ] && [ -f "$cache" ]; then
+	if [ -n "$cache_ok" ]; then
 		if [ -z "$got" ]; then
 			got=$cache
 			ti_revoke_note="not fetched: the backend could not be reached; the last list this machine saw (issued $(ti_get "$cache" issued)) was used"
@@ -1685,7 +1700,11 @@ ti_revocations() { # backend
 	fi
 	if [ "$got" != "$cache" ] && [ -n "$cache" ]; then
 		if mkdir -p "$(dirname "$cache")" 2>/dev/null; then
-			if [ ! -f "$cache" ] || [ "$(ti_revoke_serial "$got")" -ge "$(ti_revoke_serial "$cache")" ]; then
+			# An unverified cache is overwritten whatever serial it
+			# claims, or a forged one would sit there refusing every
+			# genuine list that followed it.
+			if [ ! -f "$cache" ] || [ -z "$cache_ok" ] ||
+				[ "$(ti_revoke_serial "$got")" -ge "$(ti_revoke_serial "$cache")" ]; then
 				cp "$got" "$cache.tmp.$$" 2>/dev/null && mv "$cache.tmp.$$" "$cache" 2>/dev/null
 				rm -f "$cache.tmp.$$" 2>/dev/null
 			fi
