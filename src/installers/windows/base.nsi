@@ -896,7 +896,12 @@ Function FindBlock
 FunctionEnd
 
 ; Name of the Authenticode signer (as the certificate states it) -> $SignedBy.
-; Windows itself verifies the signature (file Properties, SmartScreen).
+; Nothing here verifies it. CryptQueryObject parses the embedded
+; PKCS#7 and CertGetNameStringW reads the subject name out of it; no
+; digest is recomputed and no chain is built. Windows checks the
+; signature in Properties and on a file carrying a mark of the web,
+; neither of which happens on the path this installer takes
+; (RequestExecutionLevel user, so there is no UAC publisher line).
 Function GetSigner
   Push $0
   Push $1
@@ -1577,7 +1582,7 @@ Function FindMetadata
   ; 2. appended block (FindBlock extracted it)
   ${If} $HasBlock = 1
     ${If} $SignedBy != ""
-      StrCpy $MetaSrc "the block appended to this installer, before its signature"
+      StrCpy $MetaSrc "the block appended to this installer"
     ${Else}
       StrCpy $MetaSrc "the block appended to this installer (unsigned, editable)"
     ${EndIf}
@@ -4503,23 +4508,30 @@ Function WriteSummary
   ; is ours. So where there is a signer, the line says what it covers.
   ${Sum} ""
   ${If} $SignedBy != ""
-    StrCpy $CapInd1 "  ok "
+    ; `--` and not `ok`: the legend above says `ok` is a claim that held,
+    ; and nothing here held it. FindBlock sets $SignedBy from the PE
+    ; certificate table having a non-zero offset and size, and GetSigner
+    ; reads the subject name out of that table -- no digest, no chain, no
+    ; WinVerifyTrust anywhere in this tree. The name is whatever the
+    ; certificate says, which is whatever whoever attached it chose.
+    StrCpy $CapInd1 "  -- "
     StrCpy $CapInd2 "     "
-    StrCpy $U_a "Signed by $SignedBy, as the certificate names it; Windows checks the signature. It covers this installer file, not the program it installs."
+    StrCpy $U_a "This file carries a certificate naming $SignedBy. Nothing here checked that signature: Windows checks it in the file's Properties, under Digital Signatures, and when the file carries a mark of the web. If it holds, it covers this installer file, not the program it installs. Either way, compare its SHA-256 with the one shown where you downloaded it:"
     Call SumPara
   ${Else}
-    ; With no signature there is nothing on this machine that can vouch
-    ; for the file, so the one check left is the one that happens
-    ; somewhere else: comparing this hash with the page it came from.
     StrCpy $CapInd1 "  !  "
     StrCpy $CapInd2 "     "
     StrCpy $U_a "This installer is unsigned, so Windows cannot tell you who made it. Compare its SHA-256 with the one shown where you downloaded it:"
     Call SumPara
-    StrCpy $U_a "$EXEPATH"
-    Call Sha256File
-    ${If} $U_out != ""
-      ${Sum} "     $U_out"
-    ${EndIf}
+  ${EndIf}
+  ; The hash prints either way. It is the one check on this screen a
+  ; reader can act on, and it does not depend on anything here having
+  ; verified anything -- so a certificate nobody checked must not be able
+  ; to delete it, which is what it did while the branch above owned it.
+  StrCpy $U_a "$EXEPATH"
+  Call Sha256File
+  ${If} $U_out != ""
+    ${Sum} "     $U_out"
   ${EndIf}
 
   ; The runtime install script. A signature is worth something only when

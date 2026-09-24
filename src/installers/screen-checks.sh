@@ -160,6 +160,25 @@ screen_check() {
 		;;
 	esac
 
+	# ---- the installer file's own certificate
+	#
+	# Only the Windows engine has one to talk about; a .run carries no
+	# signature and says so. Nothing in either engine verifies an
+	# Authenticode signature -- FindBlock reads the PE certificate table's
+	# offset and size, GetSigner reads the subject name out of it, and
+	# there is no WinVerifyTrust anywhere in this tree -- so the line must
+	# not say the signature was checked, and must not be allowed to
+	# swallow the SHA-256, which is the one check a reader can act on.
+	# Until 2026-09-24 it did both: `ok Signed by <name> ... Windows
+	# checks the signature`, with the hash printed only when there was no
+	# certificate at all.
+	sc_hasnt 'Windows checks the signature' &&
+		ok "$(sc_say 'the screen does not say a signature was checked that nothing checked')" ||
+		no "$(sc_say 'the screen does not say a signature was checked that nothing checked')" "$(grep -n 'Windows checks' "$sc_f" | head -2)"
+	sc_re '^ +[0-9a-f]{64}$' &&
+		ok "$(sc_say 'the installer file SHA-256 is printed, certificate or not')" ||
+		no "$(sc_say 'the installer file SHA-256 is printed, certificate or not')" "$(sed -n '/BEFORE YOU TRUST/,/^DOWNLOADS/p' "$sc_f" | head -20)"
+
 	# ---- the ordinary state of our own output is never an alarm
 	#
 	# A page holds no key, so every installer built without a server has
