@@ -52,6 +52,28 @@ const strayKey = crypto.generateKeyPairSync('ed25519').privateKey;
 const body = attestText.split('\n').filter((l) => !l.startsWith('sig\t')).join('\n');
 const strayAttest = body + 'sig\ted25519\t' + crypto.sign(null, Buffer.from(body, 'utf8'), strayKey).toString('base64') + '\n';
 
+// An older catalogue, correctly signed by the real key. Nothing is wrong
+// with it -- it is one we published, just not the newest -- and that is
+// the point: every check that looks at the signature passes, and taking
+// it would move the reader back to a runtime list from before a
+// withdrawal. Two of them: one older than the catalogue baked into the
+// page, and one between the baked date and a date this browser has
+// already accepted, which is the case the floor used to miss.
+const KEYPEM = process.env.TI_PLAN_KEY ||
+  path.join(os.homedir(), '.config/tiddlyinstall/keys/plan-signing-key.pem');
+const realKey = fs.existsSync(KEYPEM) ? crypto.createPrivateKey(fs.readFileSync(KEYPEM)) : null;
+const reissue = (when) => {
+  const lines = attestText.split('\n')
+    .filter((l) => !l.startsWith('sig\t'))
+    .map((l) => (l.startsWith('issued\t') ? 'issued\t' + when : l));
+  const b = lines.join('\n');
+  return b + 'sig\ted25519\t' + crypto.sign(null, Buffer.from(b, 'utf8'), realKey).toString('base64') + '\n';
+};
+const issuedNow = (attestText.split('\n').find((l) => l.startsWith('issued\t')) || '').split('\t')[1] || '';
+const olderAttest = realKey ? reissue('2000-01-01T00:00:00Z') : null;
+const betweenAttest = realKey ? reissue(issuedNow) : null;   // same date as baked; the floor comes from storage
+const newerAttest = realKey ? reissue('2099-01-01T00:00:00Z') : null;
+
 // A byte of the catalogue changed, with the real signed statement about
 // the original. This is a server (or a proxy) handing over something
 // other than what was signed.
@@ -72,7 +94,8 @@ const srv = http.createServer((req, res) => {
   if (mode === 'missing') { res.writeHead(404, { 'Content-Type': 'text/plain' }); return res.end('not found\n'); }
   if (p === '/api/catalog/attest') {
     res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
-    return res.end(mode === 'straykey' ? strayAttest : attestText);
+    const which = { straykey: strayAttest, older: olderAttest, between: betweenAttest, newer: newerAttest };
+    return res.end(which[mode] || attestText);
   }
   if (p === '/api/catalog/archive') {
     const b = mode === 'tampered' ? tampered : archive;
@@ -320,6 +343,38 @@ ok(await c.js("(function(){var s=document.getElementById('rt-source');return !s 
   'a stored archive that is not the one signed is dropped, not used');
 ok(await c.js("(function(){var n=document.getElementById('rt-runtimes');return (n.innerText||'').split('\\n').filter(Boolean).length;})()") === before,
   '...and the page falls back to the catalogue built into it');
+
+/* ---------- a correctly signed catalogue that is not the newest ---------- */
+
+// Every signature check passes on these. What refuses them is the
+// freshness floor, and the floor has two sources: the catalogue baked
+// into this page, and whatever this browser accepted since. The second
+// was missing -- a refresh to a March catalogue left February still
+// "newer than baked", so one refusal could be undone by the next
+// request.
+if (!realKey) {
+  console.log('SKIP the downgrade checks: no plan signing key at ' + KEYPEM);
+} else {
+  await openRegistry();
+  const old1 = await refresh('older');
+  ok(/older than the one this browser already has/.test(old1.error),
+    'a correctly signed catalogue older than the page refuses, and says why', JSON.stringify(old1).slice(0, 300));
+  ok(await c.js("(function(){var s=document.getElementById('rt-source');return !s || s.hidden;})()"),
+    '...and nothing was replaced');
+
+  // Accept a newer one, so the floor now comes from storage rather than
+  // from the page, and then offer the page's own date back.
+  const up = await refresh('newer');
+  ok(!up.error && /./.test(up.source), 'a newer catalogue is accepted', JSON.stringify(up).slice(0, 200));
+
+  await openRegistry();
+  const back = await refresh('between');
+  ok(/older than the one this browser already has/.test(back.error),
+    'and one issued before it -- newer than the page, older than what is stored -- is refused too',
+    JSON.stringify(back).slice(0, 300));
+  ok(/accepted here earlier/.test(back.error),
+    '...naming storage, not the page, as what it was measured against', JSON.stringify(back).slice(0, 300));
+}
 
 await c.close();
 srv.close();

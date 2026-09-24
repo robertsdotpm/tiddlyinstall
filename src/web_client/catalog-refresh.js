@@ -155,6 +155,21 @@ export async function readStored() {
   return rec;
 }
 
+// The `issued` line of the catalogue this browser has already accepted,
+// or '' when there is none. Its signature is checked, because every page
+// on this origin shares the store; nothing else is read, so this costs
+// one signature rather than a snapshot load.
+async function storedIssued() {
+  let rec;
+  try { rec = await idb('readonly', (s) => s.get(KEY)); } catch (e) { return ''; }
+  if (!rec || rec.v !== 1) return '';
+  const key = bakedKey();
+  const sig = docSignature(String(rec.attest || ''), ATTEST_KIND, b64bytes);
+  if (!key || !sig.signed) return '';
+  try { if (!ed25519Verify(key, sig.bytes, sig.sig)) return ''; } catch (e) { return ''; }
+  return String(docField(String(rec.attest || ''), 'issued') || '');
+}
+
 export async function writeStored(rec) {
   await idb('readwrite', (s) => s.put(rec, KEY));
 }
@@ -231,11 +246,20 @@ export async function fetchCatalog(backend, onStep) {
   // back to a runtime list from before a withdrawal or a version bump.
   // The page carries its own attestation, so the comparison costs
   // nothing and needs no network.
+  //
+  // The floor is the later of two: what this page was built with, and
+  // what this browser has already accepted. Comparing only against the
+  // baked one left a window -- refresh to a catalogue issued in March,
+  // and one issued in February is still "newer than baked" and would be
+  // taken, undoing the first refresh with every signature intact.
   const mineAttest = bakedAttest();
   const mineIssued = mineAttest ? String(docField(mineAttest, 'issued') || '') : '';
-  if (issued && mineIssued && issued < mineIssued) {
-    throw new RefreshError('That server\'s catalogue is older than the one in this page.',
-      'It is signed correctly and issued ' + issued + ', and this page carries one issued ' + mineIssued
+  const haveIssued = await storedIssued();
+  const floor = haveIssued > mineIssued ? haveIssued : mineIssued;
+  if (issued && floor && issued < floor) {
+    throw new RefreshError('That server\'s catalogue is older than the one this browser already has.',
+      'It is signed correctly and issued ' + issued + ', and the one in use was issued ' + floor
+      + (floor === haveIssued && haveIssued !== mineIssued ? ' (accepted here earlier)' : ' (built into this page)')
       + '. Nothing has been changed.');
   }
 
