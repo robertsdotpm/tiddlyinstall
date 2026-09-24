@@ -272,8 +272,30 @@ if [ "$Q" = 1 ]; then
   xattr -p com.apple.quarantine "$app" > /dev/null 2>&1 ||
     xattr -w com.apple.quarantine "$qval" "$app" 2>/dev/null
   echo "@quarantine $(xattr -p com.apple.quarantine "$app" 2>/dev/null || echo none)"
-  TI_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --backend=http://127.0.0.1:8080 --log="$HOME/titest/q.log" </dev/null > /dev/null 2>&1
-  echo "@qexit $?"
+  # Gatekeeper's refusal is not always a SIGKILL. On some macOS versions
+  # it goes through CoreServicesUIAgent and puts up a dialog, and the
+  # installer then waits for a button nobody can press over ssh: measured
+  # on 2026-09-25, a cell that used to take 40 seconds sat for 22 minutes
+  # with the agent alive beside it, and the per-cell ssh timeout is 1800s.
+  # Bounded, and the two outcomes are reported apart: `blocked` is still
+  # Gatekeeper refusing, it just refused with a dialog.
+  TI_NO_TERMINAL=1 "$app/Contents/MacOS/install" --yes --backend=http://127.0.0.1:8080 --log="$HOME/titest/q.log" </dev/null > /dev/null 2>&1 &
+  qpid=$!
+  qn=0
+  while kill -0 "$qpid" 2>/dev/null; do
+    qn=$((qn + 1))
+    [ "$qn" -ge 60 ] && break
+    sleep 1
+  done
+  if kill -0 "$qpid" 2>/dev/null; then
+    kill -9 "$qpid" 2>/dev/null
+    pkill -x CoreServicesUIAgent 2>/dev/null
+    wait "$qpid" 2>/dev/null
+    echo "@qexit blocked"
+  else
+    wait "$qpid"
+    echo "@qexit $?"
+  fi
   echo "@spctl"; spctl -a -vv "$app" 2>&1 | head -2
   xattr -dr com.apple.quarantine "$app" 2>/dev/null
 fi
@@ -382,7 +404,9 @@ def mac_gatekeeper(out, r, d, extra):
     q = parts.get("qexit")
     if q is None or q == "0":
         return r, d, extra                      # --no-quarantine, or it ran
-    why = "killed by Gatekeeper" if q in ("137", "-9") else f"exit {q}"
+    why = ("killed by Gatekeeper" if q in ("137", "-9")
+           else "blocked by a Gatekeeper dialog, which nothing here can answer" if q == "blocked"
+           else f"exit {q}")
     head = f"quarantined (as a browser download): {why}"
     if r == "pass":
         return "known", f"{head} -- {KNOWN['mac-gatekeeper']}; with the flag cleared: {d}", extra
