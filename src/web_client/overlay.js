@@ -31,19 +31,39 @@
 // access is wrapped: with storage blocked the overlay lives in memory for
 // the tab, and the editor says so.
 //
-// Changes *found* in storage are not used until the person says so, once per
-// session (design.md 11.0 item 3): pages opened from disk share one
-// localStorage in Chrome, so another local HTML file could plant changes a
-// saved TiddlyInstall would build with. Until answered they are `pending`,
-// out of `changes` and so out of every build and preview; the answer is kept
-// in sessionStorage (SESSION_KEY), so it lasts for the tab and no longer.
-// Changes made here, and changes baked into the page file itself (#ti-overlay,
-// "Save this page"), are the person's own and need no answer.
+// Changes *found* in storage are not used until the person says so
+// (design.md 11.0 item 3): pages opened from disk share one localStorage
+// in Chrome, so another local HTML file could plant changes a saved
+// TiddlyInstall would build with. Until answered they are `pending`, out
+// of `changes` and so out of every build and preview. Changes made here,
+// and changes baked into the page file itself (#ti-overlay, "Save this
+// page"), are the person's own and need no answer.
+//
+// A "yes" is never read back from storage; a "no" is.
+//
+// The answer used to be kept whole in sessionStorage under a hash of the
+// changes it answered -- and the writer this gate defends against shares
+// that storage. It could plant the changes and the "yes" for those exact
+// changes together, and the question would never be asked. A gate whose
+// answer the attacker can supply is not a gate.
+//
+// Keeping it only in memory would close that and ask again after every
+// reload, including of someone working on their own changes. So the two
+// answers are not treated alike, because they are not alike: a refusal
+// that somebody forges leaves the changes unused, which is what a
+// refusal does anyway, while a forged permission is the whole attack.
+// "Not now" therefore lasts for the tab as it always did, and "use
+// them" holds for this page load and is asked for again after a reload.
 import { loadCatalogFiles, runtimesSummary, openCatalog, loadRuntimes, readChunk, SPLIT_FORMAT } from '../shared/resolve.js';
 import { readStored as readRefreshed } from './catalog-refresh.js';
 
 export const FORMAT = 'ti-catalog-overlay';
 const KEY = 'ti.catalog.overlay';
+// This page load's answer: {a, h} or null. A 'yes' lives here and
+// nowhere else -- see the note at the top of this file.
+let answered = null;
+// A 'no' also goes here, where it survives a reload. Nothing else is
+// ever read out of it, so a forged entry can only refuse.
 const SESSION_KEY = 'ti.catalog.overlay.session';
 const STORE_LS_MAX = 256 * 1024;       // characters kept in localStorage
 const IDB_NAME = 'ti-catalog-overlay';
@@ -777,17 +797,30 @@ export function overlayState() {
 // page writing to the shared storage) is asked about again.
 //   'yes' | 'no' for these very changes, else null (ask).
 function sessionAnswer(changes) {
+  const h = hashValue(changes);
+  const v = answered;
+  if (v && (v.a === 'yes' || v.a === 'no') && v.h === h) return v.a;
+  // From storage, 'no' and nothing else.
   try {
     const raw = sessionStorage.getItem(SESSION_KEY);
     if (!raw) return null;
-    const v = JSON.parse(raw);
-    if (!v || (v.a !== 'yes' && v.a !== 'no') || v.h !== hashValue(changes)) return null;
-    return v.a;
-  } catch (e) { return null; }     // blocked or damaged: ask, never assume yes
+    const w = JSON.parse(raw);
+    if (w && w.a === 'no' && w.h === h) return 'no';
+  } catch (e) { /* blocked or damaged: ask, never assume yes */ }
+  return null;
 }
 
 function rememberAnswer(a, changes) {
-  try { sessionStorage.setItem(SESSION_KEY, JSON.stringify({ a, h: hashValue(changes) })); } catch (e) { /* lasts for this page only */ }
+  const h = hashValue(changes);
+  answered = { a, h };
+  try {
+    // Saying yes withdraws an earlier "Not now" for the same changes.
+    // Without this the old refusal outlives the agreement: the person
+    // says use them, reloads, and finds them quietly set aside again
+    // with nothing asked -- safe, and baffling.
+    if (a === 'no') sessionStorage.setItem(SESSION_KEY, JSON.stringify({ a, h }));
+    else sessionStorage.removeItem(SESSION_KEY);
+  } catch (e) { /* this page load only */ }
 }
 
 // Answers the prompt: `use` takes the pending changes into use; otherwise

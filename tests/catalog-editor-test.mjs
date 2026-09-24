@@ -402,9 +402,16 @@ try {
   await waitFor(`/2 changes/.test(document.getElementById('rt-count').textContent)`, 'the changes to be taken into use');
   const agreed = await buildWindows('Hello agreed');
   ok(agreed.plan.includes('step\trun\t' + STEP), 'once they are agreed to, builds use them');
+  // A "yes" is not read back from storage: the writer this gate defends
+  // against shares that storage and could plant the permission beside the
+  // changes. So agreeing holds for this page load, and a reload asks
+  // again -- while "Not now" above does survive the reload, because a
+  // forged refusal can only leave the changes unused.
   await reopen(PAGE);
-  ok(await js(`document.querySelector('.overlay-ask').hidden`) && /2 changes/.test(await count()),
-    'and they stay in use for the rest of the session', await count());
+  ok(!(await js(`document.querySelector('.overlay-ask').hidden`)) && /^No changes/.test(await count()),
+    'after a reload the agreement is asked for again, and until then they are not in use', await count());
+  ok(await js(`(function(){try{var r=sessionStorage.getItem('ti.catalog.overlay.session');return !r || JSON.parse(r).a !== 'yes';}catch(e){return true}})()`),
+    'and no "yes" was written to storage for anything else to find');
   await js(`localStorage.clear(); sessionStorage.clear()`);
   await reopen(PAGE);
 
