@@ -125,12 +125,14 @@ MIT, `LICENSE` at the root.
 
 The one-file page carries the notices for the code that is *in the page*
 -- they are in its `ti-licences` block, so they travel with any copy of
-it. The Windows base additionally ships `7za.exe` (7-Zip 9.20, LGPL 2.1)
-and three NSIS plugin DLLs, and their notices are **not** in that block
-yet: the sentence that used to be here said every notice travelled with
-every copy, and for those it was not true. Until they are added, the
-table below is where they are recorded, and the LGPL's written offer for
-7-Zip's source is at <https://www.7-zip.org/>.
+it. That now includes **7-Zip 9.20** (`7za.exe`, inside the Windows base,
+inside the page): the LGPL asks for the licence itself rather than an
+attribution line, so the full text of LGPL 2.1 is in the block, with a
+pointer to the source at <https://www.7-zip.org/download.html>.
+tools/build_site.py refuses to build a page without it.
+
+Still outside the block: the three NSIS plugin DLLs in the Windows base.
+The table below is where those are recorded.
 
 | What | Licence | Where |
 | --- | --- | --- |
@@ -138,7 +140,7 @@ table below is where they are recorded, and the LGPL's written offer for
 | Ed25519, ported from TweetNaCl-js | public domain | `src/web_client/lib/ed25519.js` |
 | core-js (the ES5 build only) | MIT | `tests/../out/index.html` ES5 copy; upstream notice retained |
 | NSIS (the Windows base is built with it) | zlib/libpng, with an exception | nsis.sourceforge.io |
-| 7-Zip 9.20 (`7za.exe`, shipped inside the Windows base) | LGPL 2.1 | <https://www.7-zip.org/>, `src/installers/windows/README.md` |
+| 7-Zip 9.20 (`7za.exe`, inside the Windows base, and so inside the page) | LGPL 2.1 | full text in the page's `ti-licences` block, and `src/vendor/LICENSE.7zip-lgpl-2.1`; source at <https://www.7-zip.org/download.html> |
 | NSIS plugins (`tisig.dll` is ours; the others ship with NSIS) | zlib/libpng, with an exception | nsis.sourceforge.io |
 
 **Which build server:** `?api=` on the page URL, else the one saved in this

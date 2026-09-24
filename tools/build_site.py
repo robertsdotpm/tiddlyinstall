@@ -703,6 +703,26 @@ def offline_page(catalog_dir, backend):
                    + MIT_BODY)
     notices.append("Ed25519, ported from TweetNaCl-js\n\n"
                    "Public domain. https://github.com/dchest/tweetnacl-js")
+    # 7-Zip is the one thing here that is not MIT-ish, and the LGPL asks
+    # for more than an attribution line: the licence itself has to travel
+    # with the binary, and the recipient has to be told where the source
+    # is. 7za.exe 9.20 is inside base.exe, base.exe is inside this page,
+    # so a saved copy of this page is a copy of 7za.exe and this is where
+    # the notice belongs. It is 26 KB of the 7 MB.
+    sevenzip = os.path.join(ROOT, "src/vendor/LICENSE.7zip-lgpl-2.1")
+    if os.path.isfile(sevenzip):
+        notices.append(
+            "7-Zip 9.20 (7za.exe, inside the Windows installer this page builds)\n\n"
+            "Copyright (C) 1999-2010 Igor Pavlov.\n"
+            "Licensed under the GNU Lesser General Public License version 2.1,\n"
+            "reproduced in full below. This build carries no unRAR code.\n\n"
+            "The source for this version is published by its author at\n"
+            "https://www.7-zip.org/download.html (7-Zip 9.20 source code), and\n"
+            "the LGPL's rights to modify and relink it are exercised there.\n\n"
+            + read(sevenzip).strip())
+    else:
+        raise SystemExit("missing %s: the page ships 7za.exe and the LGPL "
+                         "requires its licence to travel with it" % sevenzip)
     blocks.append(data_block("ti-licences",
                              html.escape("\n\n----\n\n".join(notices)), "text/plain"))
     report.append("  licences: %d notices, %d bytes" %
