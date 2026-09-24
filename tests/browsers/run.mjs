@@ -543,6 +543,19 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
     }
 
     // 5. The editor's signing: PGP (.run) and a .pfx (.exe).
+    //
+    // Not through safaridriver. It sets a file input -- the element takes
+    // the file and reports its name and size -- but Safari never issues the
+    // sandbox grant that a real pick carries, so every read of the content
+    // fails with NotReadableError: arrayBuffer, slice().arrayBuffer,
+    // FileReader and stream() alike, and a 5-byte text file exactly as a
+    // 247 KB installer. Probed directly on Safari 26.2 on 2026-09-24. The
+    // section needs a readable File, so it cannot run here; `note` makes
+    // the cell incomplete, which is what a section that did not run means.
+    // Everything before and after this section does run on Safari.
+    if (entry.driverKind === 'safaridriver') {
+      t.note('editor signing', 'safaridriver sets the file input but Safari refuses the page every read of a file set that way (NotReadableError); section skipped');
+    } else {
     await b.navigate(pageUrl + '#edit');
     for (const end = Date.now() + 90000; Date.now() < end && !(await js(STARTED)); await sleep(500));
     await js(`location.hash = '#edit'`);
@@ -603,6 +616,7 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
       detail.pfx = 'signed';
     }
     t.ok((await pageErrors()).length === 0, 'no page errors while signing', (await pageErrors()).join(' | '));
+    }
 
     // 6. Served by the build server, through the tunnel, as localhost.
     if (reverse) {
