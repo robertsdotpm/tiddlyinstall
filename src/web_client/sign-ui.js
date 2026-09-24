@@ -179,10 +179,12 @@ const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': 
 function forgetCreds() {
   if (creds) for (const k in creds) if (Object.prototype.hasOwnProperty.call(creds, k)) creds[k] = '';
   creds = null;
-  const box = $('svc-fields');
-  if (!box) return;
-  const inputs = box.querySelectorAll('input, textarea');
-  for (let i = 0; i < inputs.length; i++) if (inputs[i].dataset.secret === '1') inputs[i].value = '';
+  // The whole page, not one panel. #pfx-pass, #pgp-pass and #pgp-sec-pass
+  // are static markup in edit.html, outside #svc-fields, so a sweep of
+  // that panel left three password fields holding their values after
+  // pagehide -- which is the one moment this function exists for.
+  const inputs = document.querySelectorAll('input[data-secret="1"], textarea[data-secret="1"]');
+  for (let i = 0; i < inputs.length; i++) inputs[i].value = '';
 }
 
 function svcChosen() {
@@ -217,7 +219,13 @@ function paintService() {
   let html = '<p class="small" style="margin-top:0">' + esc(d.summary) + '</p>' +
     '<p class="small' + (svc.where === 'server' ? ' error-text' : ' muted') + '">' + where + esc(d.credentials) + '</p>';
   if (d.warning) html += '<p class="small error-text">' + esc(d.warning) + '</p>';
-  html += '<p class="small muted"><strong>' + esc(UNTESTED) + '</strong> ' + esc(d.evidence) + '</p>';
+  // d.untested is svc.verified where there is one, else the shared
+  // UNTESTED line. Rendering the constant instead meant every
+  // provider said "not yet tested against a live account", including
+  // the one that has been through a real HSM sandbox -- the panel
+  // underclaiming what was actually done, and the evidence computed
+  // and thrown away.
+  html += '<p class="small muted"><strong>' + esc(d.untested) + '</strong> ' + esc(d.evidence) + '</p>';
   const c = contactLink();
   html += '<p class="small muted">If this provider has changed and the page can no longer talk to it, please tell us' +
     (c ? ': <a href="' + esc(c.href) + '" rel="noopener noreferrer">' + esc(c.text) + '</a>.'

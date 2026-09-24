@@ -396,7 +396,12 @@ export class Server {
       // CORS: every route, every origin; no route uses cookies or credentials.
       res.setHeader('Access-Control-Allow-Origin', '*');
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+      // X-TI-Sign-Auth is not CORS-safelisted, so without it here every
+      // preflight from a page this server did not serve is refused --
+      // which is exactly and only the audience the relay exists for.
+      // The page then reported "the server would not relay that call:
+      // HTTP 0", blaming the server for a request it never received.
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-TI-Sign-Auth');
       res.setHeader('Access-Control-Expose-Headers', 'Content-Length, Content-Disposition, ETag');
       res.setHeader('Access-Control-Max-Age', '86400');
       if (req.method === 'OPTIONS') {

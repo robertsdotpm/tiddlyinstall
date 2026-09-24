@@ -44,6 +44,32 @@ function v6Bytes(s) {
 // Go's netip: a.Unmap().IsGlobalUnicast() && !IsPrivate() && !IsLoopback()
 // && !IsLinkLocalUnicast() && not CGNAT && !IsUnspecified() && !IsMulticast().
 // Stricter than Go in one place: 0.0.0.0/8 ("this network") is refused too.
+// Credentials belong to the origin they were meant for.
+//
+// signrelay.js puts a publisher's bearer token in these headers and says
+// it is "never sent anywhere but the one upstream URL the allow-list
+// permits". The allow-list judges the first URL; these headers used to
+// follow up to ten redirects wherever they led, so any upstream able to
+// answer with a Location could collect the token. Dropping them when the
+// origin changes is what every browser does, and it is what makes that
+// sentence true.
+//
+// Exported because a control that cannot be called on its own tends not
+// to be tested: safeFetch refuses private addresses, so a live two-hop
+// test of this cannot be written against loopback.
+export const CREDENTIAL_HEADERS = ['authorization', 'x-ti-sign-auth', 'cookie', 'proxy-authorization'];
+
+export const originOf = (u) => { try { return new URL(u).origin; } catch (e) { return ''; } };
+
+export function acrossRedirect(headers, fromOrigin, toUrl) {
+  if (originOf(toUrl) === fromOrigin) return headers;
+  const out = {};
+  for (const k of Object.keys(headers)) {
+    if (CREDENTIAL_HEADERS.indexOf(k.toLowerCase()) < 0) out[k] = headers[k];
+  }
+  return out;
+}
+
 export function isPublic(addr) {
   addr = String(addr || '');
   if (addr.startsWith('[') && addr.endsWith(']')) addr = addr.slice(1, -1);
@@ -155,13 +181,24 @@ export async function safeFetch(url, opts = {}) {
   let method = (opts.method || 'GET').toUpperCase();
   let body = opts.body ?? null;
   let current = String(url);
+  // Credentials belong to the origin they were meant for. The signing
+  // relay puts a publisher's bearer token in these headers and its own
+  // comment says it is "never sent anywhere but the one upstream URL the
+  // allow-list permits" -- but the allow-list judges the first URL, and
+  // these headers used to follow up to ten redirects wherever they led.
+  // Dropping them when the origin changes is what every browser does,
+  // and it is what makes that sentence true.
+  let headers = Object.assign({}, opts.headers || {});
+  let origin = originOf(current);
   try {
     for (let hop = 0; ; hop++) {
-      const res = await request(current, method, opts.headers || {}, body, ac.signal);
+      const res = await request(current, method, headers, body, ac.signal);
       if (REDIRECTS.has(res.statusCode) && res.headers.location) {
         res.resume();
         if (hop >= 9) throw new Error('stopped after 10 redirects');
         current = new URL(res.headers.location, current).toString();
+        headers = acrossRedirect(headers, origin, current);
+        origin = originOf(current);
         if (res.statusCode !== 307 && res.statusCode !== 308 && method !== 'GET' && method !== 'HEAD') {
           method = 'GET';
           body = null;

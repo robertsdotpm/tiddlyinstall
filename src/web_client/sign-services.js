@@ -360,6 +360,12 @@ export function makeSend(opts) {
       // makes plain what it forwards and forgets: src/build_server/lib/signrelay.js.
       const auth = headers.Authorization;
       delete headers.Authorization;
+      // The publisher's token goes in this request, so the transport is
+      // not optional. GENERIC already requires https of a service URL;
+      // the relay asked nothing of its own.
+      if (!/^https:\/\//i.test(String(o.relayBase || '')) && !/^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:|\/|$)/i.test(String(o.relayBase || ''))) {
+        throw new ServiceError('This page will not send your credentials to a server over plain HTTP (' + o.relayBase + ').');
+      }
       const r = await rawSend(fetchImpl, o.relayBase + '/api/sign/' + req.relay, 'POST',
         auth ? { 'Content-Type': 'application/json', 'X-TI-Sign-Auth': auth } : { 'Content-Type': 'application/json' },
         JSON.stringify({ url: url, method: method, headers: headers, body: body === undefined ? null : body }));
@@ -569,11 +575,26 @@ const GCPKMS = {
 
 /* ---------- AWS KMS ---------- */
 
+// Only what finishPE can write and verifyWith can check: SHA-256, and
+// PKCS#1 v1.5 for RSA. ECDSA_SHA_384 and the PSS and P-384 options on
+// the Azure side were offered too, and the service would perform and
+// bill a real signing operation before this page told the publisher
+// "the signature does not verify with any of the certificates given" --
+// pointing them at their certificate for a limitation of ours.
 const AWS_ALGS = [
   ['RSASSA_PKCS1_V1_5_SHA_256', 'RSASSA_PKCS1_V1_5_SHA_256 (RSA, what Authenticode wants)'],
   ['ECDSA_SHA_256', 'ECDSA_SHA_256 (a P-256 key)'],
-  ['ECDSA_SHA_384', 'ECDSA_SHA_384 (a P-384 key)'],
 ];
+
+// Refused before the call rather than after it: a billed signature this
+// page cannot turn into a file helps nobody.
+export const UNWRITABLE_ALGS = ['PS256', 'ES384', 'ECDSA_SHA_384', 'RSASSA_PSS_SHA_256', 'RSASSA_PSS_SHA_384', 'ECDSA_SHA_512'];
+export function refuseUnwritable(alg) {
+  if (UNWRITABLE_ALGS.indexOf(String(alg)) >= 0) {
+    throw new ServiceError('This page writes SHA-256 Authenticode signatures, PKCS#1 v1.5 for RSA, and cannot read ' +
+      alg + ' back out of the file afterwards. Choose RS256 or ES256 (RSASSA_PKCS1_V1_5_SHA_256 or ECDSA_SHA_256 on AWS).');
+  }
+}
 
 const AWSKMS = {
   id: 'awskms',
@@ -615,6 +636,7 @@ const AWSKMS = {
     need(creds, ['region', 'keyId', 'accessKeyId', 'secretAccessKey'], 'AWS KMS');
     const region = trimmed(creds, 'region');
     if (!/^[a-z0-9-]{4,32}$/.test(region)) throw new ServiceError('That is not an AWS region name (something like us-east-1).');
+    refuseUnwritable(trimmed(creds, 'algorithm'));
     const host = 'kms.' + region + '.amazonaws.com';
     const body = JSON.stringify({
       KeyId: trimmed(creds, 'keyId'),
@@ -678,7 +700,7 @@ const AZURETS = {
         '"az account get-access-token --resource https://codesigning.azure.net --query accessToken -o tsv". ' +
         'The identity needs the "Trusted Signing Certificate Profile Signer" role.',
     }),
-    F('algorithm', 'Signature algorithm', { type: 'select', options: [['RS256', 'RS256 (RSA)'], ['PS256', 'PS256 (RSA-PSS)'], ['ES256', 'ES256 (P-256)'], ['ES384', 'ES384 (P-384)']] }),
+    F('algorithm', 'Signature algorithm', { type: 'select', options: [['RS256', 'RS256 (RSA)'], ['ES256', 'ES256 (P-256)']] }),
   ],
   explain(status, body) {
     if (status === 403) {
@@ -703,6 +725,7 @@ const AZURETS = {
   },
   async sign(creds, digest, ctx) {
     need(creds, ['region', 'account', 'profile', 'accessToken'], 'Azure Trusted Signing');
+    refuseUnwritable(trimmed(creds, 'algorithm'));
     const base = AZURETS.base(creds);
     const headers = { Authorization: 'Bearer ' + String(creds.accessToken || '').trim(), 'Content-Type': 'application/json' };
     const fail = (r) => { throw new ServiceError(AZURETS.explain(r.status, r.json || r.text)); };

@@ -140,7 +140,12 @@ try {
     const t2 = await js(`document.getElementById('svc-about').textContent`);
     const wants = id === 'azurets' ? /pass through the server/
       : id === 'digicert' ? /Nothing secret is typed/ : /stay in this browser/;
-    if (!wants.test(t2) || !/Not yet tested against a live account/.test(t2) || !/contact address not yet set|tell us/.test(t2)) {
+    // Per provider, not one line for all of them. Requiring the shared
+    // UNTESTED sentence everywhere is what kept sign-ui rendering the
+    // constant instead of the evidence describe() works out: the
+    // assertion held the bug in place.
+    const evidence = id === 'sslcom' ? /sandbox/i : /Not yet tested against a live account/;
+    if (!wants.test(t2) || !evidence.test(t2) || !/contact address not yet set|tell us/.test(t2)) {
       allSaid = false;
       saidWhat = id + ': ' + t2.slice(0, 160);
     }

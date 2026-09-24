@@ -3,7 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import http from 'node:http';
-import { isPublic, safeFetch } from '../lib/netsafe.js';
+import { isPublic, safeFetch, acrossRedirect } from '../lib/netsafe.js';
 
 test('isPublic', () => {
   const want = {
@@ -39,4 +39,31 @@ test('refuses private and link-local addresses', async () => {
 test('refuses other schemes', async () => {
   await assert.rejects(safeFetch('file:///etc/passwd'), /unsupported protocol scheme/);
   await assert.rejects(safeFetch('ftp://example.com/x'), /unsupported protocol scheme/);
+});
+
+// Credentials stop at the origin they were meant for.
+//
+// safeFetch refuses private addresses, so a live two-hop test of this
+// cannot be written against loopback -- the first version of this test
+// set an option safeFetch does not have, never reached either server,
+// and asserted over an empty array. The decision is a function now, so
+// it can be asked directly.
+test('a redirect that changes origin drops the credential headers', () => {
+  const h = { 'X-TI-Sign-Auth': 'Bearer s3cret', Authorization: 'Bearer s3cret', Cookie: 'a=b', Accept: 'application/json' };
+  const a = 'https://one.example';
+
+  const same = acrossRedirect(h, a, 'https://one.example/next');
+  assert.equal(same['X-TI-Sign-Auth'], 'Bearer s3cret', 'a same-origin hop keeps them');
+  assert.equal(same.Accept, 'application/json');
+
+  for (const to of ['https://two.example/x', 'http://one.example/x', 'https://one.example:8443/x']) {
+    const gone = acrossRedirect(h, a, to);
+    assert.equal(gone['X-TI-Sign-Auth'], undefined, 'the relay header does not survive ' + to);
+    assert.equal(gone.Authorization, undefined, 'nor does Authorization: ' + to);
+    assert.equal(gone.Cookie, undefined, 'nor does Cookie: ' + to);
+    assert.equal(gone.Accept, 'application/json', 'ordinary headers are kept: ' + to);
+  }
+
+  // The original is not mutated: the caller's object is reused per hop.
+  assert.equal(h['X-TI-Sign-Auth'], 'Bearer s3cret');
 });
