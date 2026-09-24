@@ -179,7 +179,7 @@
       "confidence": "high",
       "sources": [
         "https://github.com/abbodi1406/vcredist/releases/tag/v0.35.0",
-        "/home/x/projects/installer-builder-runtimes/TESTED-WINDOWS.md",
+        "TESTED-WINDOWS.md (the operator's runtime notes)",
         "stored file deps/windows/any/vcredist-aio/0.35.0/VisualCppRedist_AIO_x86_x64.exe: 7z SFX; switches read from its ;!@Install@! config block and Installer.cmd (v0.35.0)"
       ],
       "notes": "Identified: abbodi1406's 'Visual C++ Redistributable AIO' v0.35.0, a 7-Zip SFX (version resource 14.28.29213.0) wrapping Installer.cmd and the Microsoft MSIs. Switches, verified from the SFX config: /ai quiet, all packages (runs 'Installer.cmd /quiet'); /gm2 hides the extraction dialog; /y passive with progress; /aiA quiet + hide ARP entries; /aiV VC++ only (no VSTOR / VB extras); /ai5 /ai8 /aiX /ai2 /ai3 /ai9 install only 2005 / 2008 / 2010 / 2012 / 2013 / 2015-2019 and combine (e.g. /aiX239); /aiT VSTOR only; /aiE extras only; /aiC passive without the UCRT; /aiR auto-uninstall everything; /aiD debug log to the Desktop without installing. The single-version switches run msiexec on the bundled MSIs directly with '/qn /norestart' and skip the removal pass. /ai is what the operator's tested XP/Vista setup uses; consider '/ai9 /gm2' (2015-2019 only) when an app needs just vcruntime140, to shrink the blast radius. It is a third-party repackaging of Microsoft files, which is a licence and supply-chain question for the operator; the SHA-256 in TESTED-WINDOWS.md should be checked before running it."
