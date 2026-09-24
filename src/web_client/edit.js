@@ -289,9 +289,28 @@ async function openBytes(bytes, name, note) {
   }
 }
 
+// The read itself can fail, and separately from anything wrong with the
+// file's contents: a file that moved or was deleted between the pick and
+// the read, a network volume that went away, or a browser that hands back
+// a File it will not let the page read (Safari does this for a file set by
+// WebDriver -- size intact, every read NotReadableError). Until now the
+// await sat outside openBytes's try, so that rejection was unhandled: no
+// message, no error box, the editor simply did nothing.
+async function openPicked(f) {
+  let bytes;
+  try {
+    bytes = new Uint8Array(await f.arrayBuffer());
+  } catch (e) {
+    showError('Couldn\'t read ' + f.name + ': ' + errorText(e) +
+      ' The file was found but could not be read. Try picking it again, or copy it somewhere local first.');
+    return;
+  }
+  return openBytes(bytes, f.name);
+}
+
 el('installer').addEventListener('change', async (e) => {
   const f = e.target.files && e.target.files[0];
-  if (f) openBytes(new Uint8Array(await f.arrayBuffer()), f.name);
+  if (f) await openPicked(f);
 });
 
 const drop = el('drop');
@@ -300,7 +319,7 @@ const drop = el('drop');
 drop.addEventListener('drop', async (e) => {
   e.preventDefault();
   const f = e.dataTransfer.files && e.dataTransfer.files[0];
-  if (f) openBytes(new Uint8Array(await f.arrayBuffer()), f.name);
+  if (f) await openPicked(f);
 });
 // Dropping a file anywhere else shouldn't navigate away from the edits.
 window.addEventListener('dragover', (e) => e.preventDefault());

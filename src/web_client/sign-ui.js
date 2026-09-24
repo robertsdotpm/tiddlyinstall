@@ -376,7 +376,16 @@ async function makePgpKey() {
 
 async function importPgpKey() {
   const f = $('pgp-file').files && $('pgp-file').files[0];
-  const input = f ? new Uint8Array(await f.arrayBuffer()) : $('pgp-paste').value;
+  // The read can fail on a file that is there: it moved, the volume went
+  // away, the browser will not let the page read it. Outside a try that
+  // rejection was unhandled and the status line never changed.
+  let input;
+  try {
+    input = f ? new Uint8Array(await f.arrayBuffer()) : $('pgp-paste').value;
+  } catch (e) {
+    setText('pgp-status', 'Couldn\'t read ' + f.name + ': ' + errorText(e), true);
+    return;
+  }
   if (!f && !input.trim()) { setText('pgp-status', 'Choose your exported secret key, or paste it.', true); return; }
   setText('pgp-status', 'Opening…');
   try {

@@ -100,7 +100,15 @@ if (archiveInput) {
   archiveInput.addEventListener('change', async () => {
     const f = archiveInput.files && archiveInput.files[0];
     if (!f) return;
-    localPick = { name: f.name, bytes: new Uint8Array(await f.arrayBuffer()) };
+    // A read that fails here used to reject with nobody listening: the hint
+    // kept its old text and the form went on to build without the archive.
+    try {
+      localPick = { name: f.name, bytes: new Uint8Array(await f.arrayBuffer()) };
+    } catch (e) {
+      localPick = null;
+      showPicked('Couldn\'t read ' + f.name + ': ' + errorText(e));
+      return;
+    }
     showPicked(f.name + ' (' + humanBytes(f.size) + ')');
   });
 }
@@ -119,7 +127,14 @@ if (folderInput) {
         const d = parts.slice(0, i).join('/') + '/';
         if (!dirs.has(d)) { dirs.add(d); members.push({ name: d, dir: true, mode: 0o755 }); }
       }
-      const data = new Uint8Array(await f.arrayBuffer());
+      let data;
+      try {
+        data = new Uint8Array(await f.arrayBuffer());
+      } catch (e) {
+        localPick = null;
+        showPicked('Couldn\'t read ' + rel + ': ' + errorText(e));
+        return;
+      }
       total += data.length;
       // Browsers don't say which files are executable; scripts with a #! are.
       const exec = data[0] === 0x23 && data[1] === 0x21;
