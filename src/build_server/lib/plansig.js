@@ -18,7 +18,18 @@ export const PUB_FILE = 'plan-signing-key.pub'; // base64 of the raw 32-byte pub
 export const PIN_FILE = 'plan-key.id';          // the expected key id, tracked in the repository
 
 // Where plan-key.id is: the repository root, two levels up from here.
+//
+// TI_PIN_FILE names a different one, and TI_PIN_FILE= (defined but empty)
+// turns the pin off -- the same contract unix/plankey.sh and
+// windows/build.sh already honour. It exists for suites that sign with a
+// throwaway key on purpose. Until now only the shell read it, so the JS
+// side had no way to say so and `-keys` was used as a stand-in, which
+// meant pointing a real server at another key directory switched off the
+// one check that says the key is the one every installer expects.
 export function pinPath() {
+  if (typeof process !== 'undefined' && process.env && process.env.TI_PIN_FILE !== undefined) {
+    return process.env.TI_PIN_FILE;
+  }
   return path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..', PIN_FILE);
 }
 
@@ -31,12 +42,22 @@ export function pinPath() {
 // flag that turns the check off. It is checked where something we ship is
 // produced, by the callers below.
 export function expectedKeyID(file = pinPath()) {
+  if (!file) return '';                 // TI_PIN_FILE= : no pin, deliberately
   let text;
   try { text = fs.readFileSync(file, 'utf8'); } catch (e) { return ''; }
   for (const raw of text.split('\n')) {
     const l = raw.trim();
     if (l === '' || l.startsWith('#')) continue;
-    return /^[0-9a-f]{16}$/.test(l) ? l : '';
+    // A line that is not a key id is a broken pin, not a missing one.
+    // Returning '' for both let a corrupted or truncated plan-key.id
+    // silently switch off the check the file exists to make -- while
+    // windows/build.sh and unix/plankey.sh, reading the same file, both
+    // stop. Absent is still absent: no file at all returns '' above.
+    if (!/^[0-9a-f]{16}$/.test(l)) {
+      throw new Error(file + ' is not a key id: ' + JSON.stringify(l.slice(0, 40))
+        + '. Fix it or remove the file; a pin that cannot be read is not a pin.');
+    }
+    return l;
   }
   return '';
 }

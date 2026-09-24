@@ -59,6 +59,15 @@ test('the server', { skip }, async (t) => {
     // machine with none it made one there and left it behind.
     '-keys', tmpDir(t)]);
   o.log = () => {};
+  // This suite signs with a throwaway key on purpose, so the repository's
+  // pin cannot apply to it. TI_PIN_FILE= is what turns the pin off for
+  // exactly that case, as the engine's own test scripts already do --
+  // `-keys` used to imply it, which meant pointing a real server at a
+  // different key directory silently switched off the check that says the
+  // key is the one every installer in the field expects.
+  const pinWas = process.env.TI_PIN_FILE;
+  process.env.TI_PIN_FILE = '';
+  t.after(() => { if (pinWas === undefined) delete process.env.TI_PIN_FILE; else process.env.TI_PIN_FILE = pinWas; });
   const s = new Server(o);
   await s.init();
   s.serveWorkers();

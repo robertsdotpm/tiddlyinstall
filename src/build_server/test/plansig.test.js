@@ -175,8 +175,12 @@ test('the expected key id', (t) => {
   // Anything that is not sixteen hex characters is no pin at all rather
   // than a pin that matches nothing: a typo must not silently disable it
   // *or* silently block every build.
+  // A broken pin is not a missing pin. Returning '' for both let a
+  // corrupted plan-key.id switch off the check the file exists to make,
+  // while windows/build.sh and unix/plankey.sh, reading the same file,
+  // both stop. No file at all is still absent.
   fs.writeFileSync(pin, 'not-a-key-id\n');
-  assert.equal(expectedKeyID(pin), '');
+  assert.throws(() => expectedKeyID(pin), /is not a key id/);
   assert.equal(expectedKeyID(path.join(dir, 'nothing-here')), '');
 
   // The repository's own pin names the key it is built with.

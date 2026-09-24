@@ -43,6 +43,17 @@ const MAX_ARCHIVE = 64 * 1024 * 1024;
 
 const hex = (u8) => Array.prototype.map.call(u8, (b) => ('0' + b.toString(16)).slice(-2)).join('');
 
+// The attestation this page was built with, straight out of its own DOM.
+// trust.js and local-api.js each have their own copy of this three-line
+// reader; neither is exported, so this is the third rather than a new
+// dependency between them.
+function bakedAttest() {
+  try {
+    const n = document.getElementById(ATTEST_KIND);
+    return n && !n.dataset.placeholder ? String(n.textContent || '') : '';
+  } catch (e) { return ''; }
+}
+
 function b64bytes(s) {
   const bin = atob(String(s).trim());
   const out = new Uint8Array(bin.length);
@@ -213,6 +224,19 @@ export async function fetchCatalog(backend, onStep) {
   if (!/^[0-9a-f]{64}$/.test(want)) throw new RefreshError('That server\'s statement names no catalogue.', 'It carries no usable sha256 line.');
   if (Number.isFinite(said) && said > MAX_ARCHIVE) {
     throw new RefreshError('That server\'s catalogue is ' + Math.round(said / (1024 * 1024)) + ' MB, which is more than this page will load.', '');
+  }
+
+  // A correctly signed catalogue older than the one baked into this page
+  // is a downgrade: every signature checks out, and the reader is moved
+  // back to a runtime list from before a withdrawal or a version bump.
+  // The page carries its own attestation, so the comparison costs
+  // nothing and needs no network.
+  const mineAttest = bakedAttest();
+  const mineIssued = mineAttest ? String(docField(mineAttest, 'issued') || '') : '';
+  if (issued && mineIssued && issued < mineIssued) {
+    throw new RefreshError('That server\'s catalogue is older than the one in this page.',
+      'It is signed correctly and issued ' + issued + ', and this page carries one issued ' + mineIssued
+      + '. Nothing has been changed.');
   }
 
   step('Fetching the catalogue…');

@@ -250,7 +250,15 @@ export class Server {
     // this pin exists for. Only when the key came from the default
     // directory: a test or a second instance pointed at its own key with
     // --keys is doing that on purpose.
-    if (!o.keys && expectedKeyID()) checkKeyID(signer.pub, 'serve');
+    // Whatever key was actually loaded, against the pin. `-keys` was
+    // treated as a reason to skip this, so pointing the server at a
+    // different key directory switched off the one check that says
+    // the key is the one every installer in the field expects --
+    // exactly the circumstance the pin was written for (plan-key.id:
+    // a tool with a stale path minted a key and signed 8,891 scripts
+    // with it). TI_PIN_FILE= still turns it off for the engine tests,
+    // which build bases with throwaway keys on purpose.
+    if (expectedKeyID()) checkKeyID(signer.pub, 'serve');
     this.signer = signer;
     this.q = new JobQueue(o.redis, o['redis-db'], o.workers);
     // Every outgoing fetch a user can influence (sources, packs, registries,
