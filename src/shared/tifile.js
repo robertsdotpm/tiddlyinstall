@@ -305,8 +305,18 @@ export function tarRead(u8) {
     let name = readStr(h, 0, 100);
     const prefix = readStr(h, 345, 155);
     if (prefix && readStr(h, 257, 6).startsWith('ustar')) name = prefix + '/' + name;
+    // parseInt accepts a leading minus, and the guard below is one-sided,
+    // so an octal size of `-1000` passed both and then made the advance
+    // at the foot of the loop move `o` *backwards* by 512 -- cancelling
+    // the 512 added here and leaving the loop reading the same header
+    // for ever. A 1 KB crafted .run with a valid checksum was enough:
+    // the Verify page showed a spinner and node died of heap exhaustion
+    // under a 200 MB cap. Nothing threw, so the try/catch around the
+    // caller could not help, and a silent spinner is this project's own
+    // named failure mode.
     const size = parseInt(readStr(h, 124, 12).trim() || '0', 8);
     const type = h[156];
+    if (!Number.isFinite(size) || size < 0) throw new Error('tar member has a size that is not a count: ' + size);
     o += 512;
     if (o + size > u8.length) throw new Error('tar member runs past the end');
     if (type === 0x30 || type === 0) {
@@ -316,7 +326,11 @@ export function tarRead(u8) {
       if (!/^[0-9a-f]{64}$/.test(name)) throw new Error('pack member has a non-hash name: ' + JSON.stringify(name.slice(0, 80)));
       out.push({ name, data: u8.subarray(o, o + size) });
     }
-    o += Math.ceil(size / 512) * 512;
+    const step = Math.ceil(size / 512) * 512;
+    // Belt: whatever the header said, the offset must move forward or the
+    // loop is not a loop over members any more.
+    if (!(step >= 0) || (step === 0 && size !== 0)) throw new Error('tar member does not advance');
+    o += step;
   }
   return out;
 }

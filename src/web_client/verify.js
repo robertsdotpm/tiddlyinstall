@@ -348,7 +348,20 @@ async function serverChecks(info, d, out, derived, file) {
     try {
       const txt = await apiRequest('/api/plan/name/' + encodeURIComponent(named.runtime) + '/'
         + encodeURIComponent(named.pkg), { as: 'text' });
-      const rec = planLines(txt).find((l) => l.key === 'record');
+      // Verify before reading, the pattern used five times elsewhere in
+      // this file. The record taken out of this reply decides which
+      // installer the withdrawal list is then asked about, so a rewritten
+      // `record` line produced an unqualified "Withdrawn since? no" while
+      // the list's own signature checked out perfectly and none of the
+      // caveat machinery below had anything to say.
+      const nsig = docSignature(String(txt), 'ti-plan');
+      const nbaked = bakedKey();
+      let nok = false;
+      if (nsig.signed && nbaked) { try { nok = ed25519Verify(nbaked, nsig.bytes, nsig.sig); } catch (e) { nok = false; } }
+      if (!nok) throw new Error(nbaked
+        ? 'the server\'s answer for that name is not signed by the key this page carries'
+        : 'this page carries no key, so the server\'s answer for that name cannot be checked');
+      const rec = planLines(new TextDecoder().decode(nsig.bytes)).find((l) => l.key === 'record');
       hash = rec ? rec.val(0) : '';
       add('Does the server know it?', 'yes, it builds <code>' + esc(named.pkg) + '</code> for '
         + esc(runtimeName(named.runtime)) + ' and would install the same thing');
@@ -542,10 +555,16 @@ async function paintPage(file, sha, text) {
       ['Signed ledger', sigOk
         ? 'yes, by the TiddlyInstall key <code>' + esc(keyId(baked)) + '</code>'
         : '<strong>no</strong> -- ' + (baked ? 'the signature does not check out' : 'this page carries no key to check it with')],
-      ['Its chain', chain.ok
-        ? 'holds: ' + entries.length + ' release' + (entries.length === 1 ? '' : 's') +
-          ', root <code>' + esc(chain.root.slice(0, 16)) + '</code>'
-        : '<strong>broken</strong> -- ' + esc(chain.why)],
+      // Both of the rows below read the ledger document. If its signature
+      // did not check out, they are statements about a document nothing
+      // vouches for, and "published as release 24" is exactly the sentence
+      // a forged ledger would want shown.
+      ['Its chain', !sigOk
+        ? '<strong>not checked</strong> -- the ledger\'s own signature did not, so what it says about itself proves nothing'
+        : chain.ok
+          ? 'holds: ' + entries.length + ' release' + (entries.length === 1 ? '' : 's') +
+            ', root <code>' + esc(chain.root.slice(0, 16)) + '</code>'
+          : '<strong>broken</strong> -- ' + esc(chain.why)],
       // "Save this page" writes documentElement.outerHTML, which is the
       // browser's re-serialisation of the DOM and not the bytes the
       // server sent -- attribute order, entity escaping and the
@@ -561,7 +580,9 @@ async function paintPage(file, sha, text) {
       // it is. Both readings are stated, because this page cannot tell
       // them apart: the Mark-of-the-Web comment that a save prepends is
       // in the served file too, so there is no marker to test.
-      ['These bytes', hit
+      ['These bytes', !sigOk
+        ? '<strong>not checked</strong> -- against an unsigned ledger, being in it means nothing'
+        : hit
         ? '<strong>published</strong> as release ' + hit.seq + ' on ' + esc(hit.date) + ', from ' + rev(hit.rev)
         : '<strong>not in the ledger</strong> &mdash; either these bytes were never published, or this is a copy '
           + 'saved from a browser, which rewrites the page as it saves it and so can never match. A file downloaded '

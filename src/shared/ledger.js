@@ -85,6 +85,13 @@ export function checkChain(entries, stated, sha256hex) {
     }
   }
   const root = chainRoot(entries, sha256hex);
+  // A ledger with no `root` line of its own is accepted, and that is
+  // deliberate (tests/proof-test.mjs). The audit called it fail-open,
+  // but `stated` is only the document's own convenience copy: the check
+  // a rewritten log has to defeat is in verify.js, which compares the
+  // root computed here against the one baked into this page on the day
+  // it was built. Making the absence fatal would refuse older ledgers
+  // and gain nothing.
   if (stated && stated !== root) {
     return { ok: false, why: 'the root it states is not what its own entries chain to', root };
   }
