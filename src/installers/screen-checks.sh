@@ -16,6 +16,8 @@
 #   case: proved   the plan is signed and the setup is proved ours
 #         unsigned the signature is gone, the proof is not
 #         bare     neither, so nothing vouches for the setup
+#         noproof  rtroots kept, rtproof gone: a release the signer
+#                  could not reach, which is absent, not wrong
 
 screen_check() {
 	sc_f=$1 sc_case=$2 sc_eng=$3
@@ -135,7 +137,7 @@ screen_check() {
 		[ "$sc_runs" -le 12 ] && ok "$(sc_say 'and does not list them')" ||
 			no "$(sc_say 'and does not list them')" "$sc_runs lines under WHAT RUNS"
 		;;
-	bare)
+	bare | noproof)
 		sc_has 'Runtime setup is not signed' &&
 			ok "$(sc_say 'an unproved setup says nothing vouches for it')" ||
 			no "$(sc_say 'an unproved setup says nothing vouches for it')" "$(sed -n '/BEFORE YOU TRUST/,/^DOWNLOADS/p' "$sc_f" | head -20)"
@@ -147,6 +149,14 @@ screen_check() {
 		sc_has 'WHAT RUNS' && sc_re '^  Setup +[^ ]' &&
 			ok "$(sc_say 'WHAT RUNS lists the setup in full')" ||
 			no "$(sc_say 'WHAT RUNS lists the setup in full')"
+		# An absent proof is not a failed one. `noproof` keeps rtroots
+		# and drops rtproof -- a release the signer could not reach --
+		# and the engine walked the empty proof, got its own leaf back
+		# and called the file altered. `bare` never caught it because it
+		# strips rtroots too, so the check is never reached.
+		sc_hasnt 'Treat this file as altered' &&
+			ok "$(sc_say 'an absent proof is not called tampering')" ||
+			no "$(sc_say 'an absent proof is not called tampering')" "$(sed -n '/BEFORE YOU TRUST/,/^DOWNLOADS/p' "$sc_f" | head -20)"
 		;;
 	esac
 
@@ -160,7 +170,7 @@ screen_check() {
 	# its test for "unsigned" was an exact match against a string that
 	# carries a reason after it (found by the operator, 2026-09-23).
 	case $sc_case in
-	proved | unsigned | bare)
+	proved | unsigned | bare | noproof)
 		sc_hasnt '!!' && ok "$(sc_say 'nothing is shouted at the reader')" ||
 			no "$(sc_say 'nothing is shouted at the reader')" "$(grep -n '!!' "$sc_f" | head -2)"
 		sc_hasnt 'WARNINGS' && ok "$(sc_say 'and there is no WARNINGS block')" ||

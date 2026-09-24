@@ -28,9 +28,14 @@ REC=$here/../test-proved.rec
 # leaves the target with no proof either.
 awk -F'\t' '$1 != "sig"' "$PLAN" > "$T/unsigned.plan"
 awk -F'\t' '$1 != "sig" && $1 != "rtroots" && $1 != "rtproof"' "$PLAN" > "$T/bare.plan"
+# rtroots kept, rtproof gone: what an ordinary build gets when the
+# signer never reached its release. `bare` drops rtroots too, so it
+# never reaches the proof check at all -- which is why the engine could
+# call an honest file altered for weeks with this harness green.
+awk -F'\t' '$1 != "sig" && $1 != "rtproof"' "$PLAN" > "$T/noproof.plan"
 cp "$PLAN" "$T/proved.plan"
 
-for case in proved unsigned bare; do
+for case in proved unsigned bare noproof; do
 	mkdir -p "$T/home-$case"
 	python3 "$here/append_meta.py" run "$here/out/ti-base.run" -o "$T/$case.run" \
 		--record "$REC" --plan "$T/$case.plan" > /dev/null

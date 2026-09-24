@@ -1019,7 +1019,18 @@ ti_select_target() { # plan > selection
 	/^#/ || /^[ \t]*$/ { next }
 	!head { head = 1; next }
 	$0 == "[target]" { t++; n[t] = 0; next }
-	t == 0 { if ($1 == "url") print "srcurl\t" rest(2); else print; next }
+	t == 0 {
+		# The header is not the block. Passing it through verbatim let a
+		# header line pose as a line of the chosen [target] -- a `step`
+		# for file 1, or a `target` that sends the proof at another
+		# block. Only the keys writePlan writes (resolve.js) and the
+		# the `request` the server adds come through; the rest is
+		# named, not run.
+		if ($1 == "url") { print "srcurl\t" rest(2) }
+		else if ($1 ~ /^(record|name|project|appid|runtime|console|menu|desktop|root|rootname|signed|maxage|source|request|rtroots)$/) { print }
+		else { print "unknownkey\t" $1 }
+		next
+	}
 	{ n[t]++; L[t, n[t]] = $0 }
 	$1 == "when" && !chosen && $2 == os && ver + 0 >= $3 + 0 && ver + 0 <= $4 + 0 {
 		k = split($5, a, " ")
@@ -3261,6 +3272,7 @@ TI_KNOWN_STEPS='unpack|run|mkdir|write|delete'
 ti_unknown_bits() { # -> "key, step foo" for everything in the selection we do not know
 	awk -F'\t' -v keys="^($TI_KNOWN_KEYS)\$" -v steps="^($TI_KNOWN_STEPS)\$" '
 	function note(w) { if (!(w in seen)) { seen[w] = 1; out = out (out == "" ? "" : ", ") w } }
+	$1 == "unknownkey" { note($2); next }
 	$1 == "step" && $3 !~ steps { note("step " $3); next }
 	$1 !~ keys { note($1) }
 	END { if (out != "") print out }' "$TI_SEL"
@@ -3411,7 +3423,7 @@ ti_install_main() {
 	# the plan and the key this engine carries -- no network, no
 	# catalogue. It changes nothing about the install; it decides what
 	# the screen is allowed to claim.
-	ti_check_rtscript "$(ti_sel1 target)"
+	ti_check_rtscript "$(ti_sel target | sed -n '$p')"
 	ti_revocations "$backend"
 	ti_check_age "$backend"
 
