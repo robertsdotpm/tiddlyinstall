@@ -48,12 +48,39 @@ def api(backend, path, body=None):
         return json.load(r)
 
 
-def build(backend, runtime, mode, platforms, proj):
+# The repository the --github runs build from. Its top level holds one
+# small program per language whose files do not collide, so the same
+# checkout serves several runtimes and each runs from the root of it.
+GITHUB_REPO = "robertsdotpm/install_from_github"
+# The runtimes whose project sits at the top level there. The rest are in
+# subdirectories (each brings a build file that would confuse the others),
+# and a launch command pointing into a subdirectory is a different thing
+# to test, so they are left out rather than half-covered.
+GITHUB_RUNTIMES = ["python", "node", "ruby", "php", "r", "java"]
+
+
+def build(backend, runtime, mode, platforms, proj, source="inline"):
+    """source "inline": the files go in the request, which is what the
+    matrix has always done. source "github": the server fetches them from
+    a real repository, resolves the ref to a commit and pins it -- the
+    path docs/test-coverage.md gap 5 said nothing ever installed."""
+    if source == "github":
+        body = {"name": f"Hello {runtime} (github)", "project": proj["project"],
+                "source": {"kind": "github", "value": GITHUB_REPO},
+                "runtime": runtime, "mode": mode, "platforms": platforms,
+                "launch": proj["launch"], "console": True, "menu": True}
+        if proj.get("install"):
+            body["install"] = proj["install"]
+        return _submit(backend, body, runtime, mode)
     body = {"name": f"Hello {runtime}", "project": proj["project"], "source": {"kind": "inline"},
             "files": proj["files"], "runtime": runtime, "mode": mode, "platforms": platforms,
             "launch": proj["launch"], "console": True, "menu": True}
     if proj.get("install"):
         body["install"] = proj["install"]
+    return _submit(backend, body, runtime, mode)
+
+
+def _submit(backend, body, runtime, mode):
     while True:
         try:
             j = api(backend, "/api/jobs", body)
@@ -85,14 +112,23 @@ def main():
     ap.add_argument("--modes", default="A,B,C")
     ap.add_argument("--platforms", default="windows,linux,macos")
     ap.add_argument("--out", default=str(HERE / "out"))
+    ap.add_argument("--github", action="store_true",
+                    help="build from %s instead of sending the files inline" % GITHUB_REPO)
     a = ap.parse_args()
     projects = json.loads((HERE / "projects.json").read_text())["projects"]
     runtimes = a.runtimes.split(",") if a.runtimes else list(projects)
     out = Path(a.out)
     results = json.loads((out / "builds.json").read_text()) if (out / "builds.json").exists() else {}
+    if a.github:
+        skipped = [r for r in runtimes if r not in GITHUB_RUNTIMES]
+        runtimes = [r for r in runtimes if r in GITHUB_RUNTIMES]
+        if skipped:
+            print("  --github: skipping %s (their projects are in subdirectories there)"
+                  % ",".join(skipped))
     for rt in runtimes:
         for mode in a.modes.split(","):
-            j = build(a.backend, rt, mode, a.platforms.split(","), projects[rt])
+            j = build(a.backend, rt, mode, a.platforms.split(","), projects[rt],
+                      "github" if a.github else "inline")
             key = f"{rt}/{mode}"
             if j["status"] != "done":
                 print(f"  {key}: FAILED: {j.get('error')}")
