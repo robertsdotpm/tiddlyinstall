@@ -17,6 +17,27 @@
 import { mountDialog } from './dialog.js';
 
 export const DEFAULT_REMOTE = 'https://tiddlyinstall.warpgate.io';
+// The same server, by address.
+//
+// For a machine whose DNS is broken -- which is the ordinary state of the
+// old systems this product exists for (design.md 1.3: "DNS is often
+// misconfigured or blocked") -- the name above resolves to nothing and
+// the page has no server at all. These reach it anyway.
+//
+// Plain http, because no certificate authority issues for a bare address:
+// https://<address>/ is a name mismatch whatever is served, and no
+// browser accepts that quietly. That is sound here for the same reason
+// the mirror is -- what the page fetches from a build server is a record
+// and a signed plan, and the signature is checked against the key built
+// into this page, not against the connection.
+//
+// Only tried from a page that is not itself https, because a browser will
+// not let an https page fetch http at all (mixed content). That is the
+// right shape anyway: the case this is for is a copy saved to disk.
+export const DEFAULT_REMOTE_IPS = [
+  'http://158.69.27.176',
+  'http://[2607:5300:60:80b0::1]',
+];
 // The site is one file (tools/build_site.py, plan.md section 1.11) that
 // also carries its own builder, src/web_client/local-api.js, as globalThis.tiLocalApi.
 // LOCAL as the backend means "no server: this page answers every
@@ -333,18 +354,56 @@ function scheduleHealth() {
   paintBanner();
 }
 
+// The addresses worth trying when `base` will not answer: the same server
+// by address, and only when `base` is the one this page was built with.
+// A backend somebody chose by hand is theirs, and falling back from it to
+// our machine would be answering a question nobody asked.
+function fallbacksFor(base) {
+  if (typeof location !== 'undefined' && location.protocol === 'https:') return [];
+  if (normalizeApi(base) !== normalizeApi(DEFAULT_REMOTE)) return [];
+  return DEFAULT_REMOTE_IPS.slice();
+}
+
+async function healthOf(base) {
+  try {
+    const r = await timedFetch(base + '/api/health', { cache: 'no-store' });
+    return r.status < 500;
+  } catch (e) { return false; }
+}
+
 async function checkHealth() {
   clearTimeout(retryTimer);
   retryAt = -1;
   paintBanner();
-  let ok = false;
-  try {
-    const r = await timedFetch(apiBaseUrl + '/api/health', { cache: 'no-store' });
-    ok = r.status < 500;
-  } catch (e) { ok = false; }
+  let ok = await healthOf(apiBaseUrl);
+  // The name did not answer. Try the same server by address before
+  // giving up and waiting out another backoff: if DNS is what is broken,
+  // waiting will not fix it, and the page would sit there saying the
+  // server is down while it is answering perfectly well.
+  if (!ok) {
+    for (const alt of fallbacksFor(apiBaseUrl)) {
+      if (await healthOf(alt)) {
+        // Not setApiBase: this is not the person's choice and must not be
+        // written to their storage as one. It lasts for the tab, and the
+        // footer shows the address so it is never a silent substitution.
+        apiBaseUrl = alt;
+        usingFallback = alt;
+        paintMode();
+        paintApiFooter();
+        if (banner) banner.querySelector('.api-url').textContent = apiBaseUrl;
+        window.dispatchEvent(new CustomEvent('ti-api-change', { detail: { url: alt, fallback: true } }));
+        ok = true;
+        break;
+      }
+    }
+  }
   if (ok) markUp();
   else if (isDown) scheduleHealth();
 }
+
+// The address this page fell back to, or '' when it is using the name.
+let usingFallback = '';
+export function apiFallback() { return usingFallback; }
 
 export function tryNow() {
   if (isDown) checkHealth();

@@ -21,14 +21,18 @@ export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // it ships different download, shields and storage behaviour from
 // Chrome's, and a download that fails there fails for a real share of
 // the people this is built for.
-export async function launchChrome({ profile, downloads, binary, port } = {}) {
+export async function launchChrome({ profile, downloads, binary, port, args = [] } = {}) {
   binary = binary || process.env.TI_BROWSER || 'google-chrome';
   // Without one, --user-data-dir=undefined made a folder called
   // 'undefined' in whatever directory the test ran from, and left it
   // there. A temporary one is what every caller meant.
   if (!profile) profile = fs.mkdtempSync(path.join(os.tmpdir(), 'ti-chrome-'));
   port = port || 9300 + Math.floor(Math.random() * 600);
+  // `args` is for tests that need the browser itself configured -- notably
+  // --host-resolver-rules, which is the only honest way to try a page on a
+  // machine whose DNS does not work.
   const proc = spawn(binary, ['--headless=new', '--no-first-run', '--no-default-browser-check',
+    ...args,
     '--remote-debugging-port=' + port, '--user-data-dir=' + profile, 'about:blank'], { stdio: 'ignore' });
   const c = await connectCdp(`http://127.0.0.1:${port}`);
   c.proc = proc;
