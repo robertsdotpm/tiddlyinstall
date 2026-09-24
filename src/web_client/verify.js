@@ -159,6 +159,20 @@ function describeTarget(block) {
     if (l.key === 'step' && l.val(0) === 'run') runs.push(l.f.slice(2).join(' '));
     else if (l.key === 'install' && l.val(0)) runs.push(l.val(0));
   }
+  // Prerequisites (format.md "Prerequisites"): a `need` and the n* lines
+  // that follow it. They are why an install into the user's own folder
+  // can still want administrator rights -- but only when the thing is
+  // missing, so the screen has to say "only if", never a flat yes.
+  const needs = [];
+  for (const l of block) {
+    if (l.key === 'need') { needs.push({ label: l.val(1) || l.val(0), files: [], runs: [], bytes: 0 }); continue; }
+    if (!needs.length) continue;
+    const q = needs[needs.length - 1];
+    if (l.key === 'nfile') { q.files.push({ file: l.val(0), sha: l.val(1), size: +l.val(2) || 0, urls: [] }); q.bytes += +l.val(2) || 0; }
+    else if (l.key === 'nurl' && q.files.length) q.files[q.files.length - 1].urls.push(l.val(0));
+    else if (l.key === 'nrun') q.runs.push(l.val(0));
+    else if (l.key === 'npkg') q.runs.push(l.val(0) + ' ' + l.val(1));
+  }
   const arch = when ? when.val(3).split(' ')[0] : '';
   return {
     family: when ? when.val(0) : '',
@@ -169,6 +183,10 @@ function describeTarget(block) {
     files,
     bytes: files.reduce((n, f) => n + f.size, 0),
     runs,
+    needs,
+    needRuns: needs.reduce((a, q) => a.concat(q.runs), []),
+    needFiles: needs.reduce((a, q) => a.concat(q.files), []),
+    needBytes: needs.reduce((a, q) => a + q.bytes, 0),
     admin: block.some((l) => l.key === 'admin' && l.val(0) === '1'),
   };
 }
@@ -338,11 +356,33 @@ async function serverChecks(info, d, out, derived, file) {
     const nonce = hex(crypto.getRandomValues(new Uint8Array(16)));
     try {
       const fresh = await apiRequest('/api/plan/' + encodeURIComponent(hash) + '?nonce=' + nonce, { as: 'text' });
+      // docSignature only says a sig line is well formed. Every other
+      // reader in this file pairs it with ed25519Verify; this row used to
+      // treat `signed` as a verdict, and looked for the nonce anywhere in
+      // the document rather than inside the bytes the signature covers.
       const sig = docSignature(String(fresh), 'ti-plan');
-      add('Answering live?', sig.signed && String(fresh).indexOf(nonce) >= 0
-        ? 'yes: it signed a one-off number this page just made up, so this is not a recording'
-        : '<strong>no: it did not sign the number this page sent</strong>, so this could be a recording');
-      const same = String(fresh).replace(/\r/g, '') === String(info.plan || '').replace(/\r/g, '');
+      const bakedLive = bakedKey();
+      let live;
+      if (!sig.signed) live = '<strong>no: the answer carries no signature</strong>, so this could be a recording';
+      else if (!bakedLive) live = 'cannot be told: this page carries no key to check the answer against';
+      else {
+        let okLive = false;
+        try { okLive = ed25519Verify(bakedLive, sig.bytes, sig.sig); } catch (e) { okLive = false; }
+        const echoed = okLive && planLines(new TextDecoder().decode(sig.bytes))
+          .some((l) => l.key === 'request' && l.val(0) === 'nonce' && l.val(1) === nonce);
+        live = !okLive
+          ? '<strong>no: the signature on the answer does not check out</strong>'
+          : echoed
+            ? 'yes: it signed a one-off number this page just made up, so this is not a recording'
+            : 'not proved: the answer is signed but carries no number, which is what an older backend looks like. A replayed older plan cannot be ruled out.';
+      }
+      add('Answering live?', live);
+      // The server writes `request nonce <n>` into the answer it signs
+      // (build_server/lib/jobs.js), so comparing the bytes would call
+      // every genuine unmodified installer changed.
+      const bare = (t) => String(t).replace(/\r/g, '').split('\n')
+        .filter((l) => !/^request\tnonce\t/.test(l)).join('\n');
+      const same = bare(fresh) === bare(info.plan || '');
       add('Same as a fresh build?', same
         ? 'yes, identical to what it would build today'
         : '<strong>no.</strong> A newer version may have come out, or this file was changed; compare the table above');
@@ -570,19 +610,24 @@ async function paint(file, sha, info) {
     const verSays = vers.length > 1
       ? vers[vers.length - 1] + ' <span class="small muted">on current systems, back to ' + vers[0] + ' on the oldest</span>'
       : (vers[0] || '');
-    const totals = d.targets.map((t) => t.bytes).filter((n) => n > 0);
-    const runs = d.targets.reduce((n, t) => Math.max(n, t.runs.length), 0);
+    const totals = d.targets.map((t) => t.bytes + t.needBytes).filter((n) => n > 0);
+    const runs = d.targets.reduce((n, t) => Math.max(n, t.runs.length + t.needRuns.length), 0);
     rows(el('v-does'), [
       ['Installs', esc(d.name || d.project || 'an app')],
       rtLabel && rtLabel !== 'none'
         ? ['Runtime', esc(runtimeName(rtLabel)) + ' ' + verSays]
         : ['Runtime', 'none; it uses what is already there'],
-      ['Into', esc(d.root === 'machine' ? 'a folder for the whole machine' : "a folder of its own in the user's home")],
+      ['Into', esc(d.root === 'system' ? 'a folder for the whole machine' : "a folder of its own in the user's home")],
       totals.length
         ? ['Downloads', 'up to ' + esc(hsize(Math.max.apply(null, totals)))]
         : ['Downloads', 'nothing'],
       ['Runs', runs ? runs + ' command' + (runs === 1 ? '' : 's') : 'no commands'],
-      ['Admin rights', d.admin ? '<strong>yes</strong>' : 'not needed'],
+      // design.md 1.1: rights are asked for when the folder is shared, or
+      // when a prerequisite is missing. `admin` is a real format key no
+      // writer emits yet, so on its own it was always false.
+      ['Admin rights', d.root === 'system' || d.admin
+        ? '<strong>yes</strong>'
+        : (d.targets.some((t) => t.needRuns.length) ? 'only if a prerequisite is missing' : 'not needed')],
       ['Shortcuts', [d.menu === '1' ? 'app menu' : null, d.desktop === '1' ? 'desktop' : null].filter(Boolean).join(', ') || 'none'],
       d.launch ? ['Starts', '<code>' + esc(d.launch) + '</code>'] : null,
     ]);
@@ -695,7 +740,7 @@ async function paint(file, sha, info) {
       // below -- said once, where a reader can see the whole chain
       // together, rather than twice in different words.
       sign.push(['The choices', ok
-        ? 'are signed by the TiddlyInstall key <code>' + esc(keyId(baked)) + '</code>, so our build server produced this file and nothing has changed it since'
+        ? 'are signed by the TiddlyInstall key <code>' + esc(keyId(baked)) + '</code>, so our build server wrote these settings and they have not changed since. That signature covers the settings and the record they name, not the installer program carrying them: no signature covers that, so compare this file\'s SHA-256 above with the one published where you got it'
         : '<strong>carry a signature that does not check out</strong> against key <code>' + esc(keyId(baked)) + '</code>']);
     }
   }
@@ -730,7 +775,7 @@ async function paint(file, sha, info) {
       sign.push(['What checked it', 'this page, against the key it carries, <code>' + esc(keyId(baked)) + '</code>' +
         '<br><span class="small muted">a different file from the one being checked, fetched a different way -- which is the whole reason this page can say ' +
         'something the installer cannot, since the installer checks itself against a key inside itself. ' +
-        'That this page and the file agree means neither has been altered on its own; it does not, by itself, say whose key it is. ' +
+        'That this page and the file agree means the settings in the file have not been altered on their own; it does not, by itself, say whose key it is. ' +
         'What ties that key to us is that it is published: on the Trust page, in the release ledger, and in every copy of this page already saved to somebody else\'s disk</span>']);
     }
   }
