@@ -570,7 +570,7 @@ export async function readInstaller(input, name = '') {
   const kind = detectKind(u8, name);
   if (kind === 'zip') return readMacZip(u8, name);
 
-  const info = { kind, name, record: null, plan: null, pack: [], signed: false, signedWhy: '', pe: null, hadBlock: false };
+  const info = { kind, name, record: null, plan: null, pack: [], signed: false, signedWhy: '', pe: null, hadBlock: false, footerBad: false };
   let end = u8.length;
   if (kind === 'exe') {
     const pe = peInfo(u8);
@@ -597,6 +597,20 @@ export async function readInstaller(input, name = '') {
     info.pack = f.pack ? tarRead(u8.subarray(o, o + f.pack)) : [];
   } else {
     info.base = u8.subarray(0, end);
+    // A near miss is not the same as no block. The two engines parse the
+    // footer more loosely than this does -- a space where the newline
+    // should be, a stray character in a length -- so a file they will
+    // read a record and a plan out of, and install from, can arrive here
+    // as "nothing to check". The page must not then describe it as a
+    // file with no settings in it: it has settings, they are about to
+    // run, and this reader could not make sense of them.
+    for (let k = 0; k <= 7 && end - k >= FOOTER_LEN; k++) {
+      const t = u8.subarray(end - k - FOOTER_LEN, end - k);
+      let magic = true;
+      for (let i = 0; i < FOOTER_MAGIC.length; i++) if (t[i] !== FOOTER_MAGIC.charCodeAt(i)) { magic = false; break; }
+      if (magic) { info.footerBad = true; break; }
+      if (u8[end - k - 1] !== 0) break;
+    }
   }
   return info;
 }

@@ -588,11 +588,17 @@ async function paint(file, sha, info) {
   let derived = '';
   let planText = info.plan;
   let fromName = null;
-  if (!planText) {
+  // Neither fall-through is safe on a file whose settings block this
+  // reader could not parse. The engines parse it more loosely, so there
+  // is a record and a plan in there that will run; working one out from
+  // the record we could not read, or from the file name, and painting it
+  // as what this file installs would describe something else entirely --
+  // and the name is attacker-chosen.
+  if (!planText && !info.footerBad) {
     planText = await planFromRecord(info.record);
     if (planText) derived = 'record';
   }
-  if (!planText) {
+  if (!planText && !info.footerBad) {
     fromName = await planFromName(file.name);
     if (fromName) { planText = fromName.plan; derived = 'name'; }
   }
@@ -731,7 +737,16 @@ async function paint(file, sha, info) {
   const recBackend = info.record
     ? (planLines(info.record).find((l) => l.key === 'backend') || { val: () => '' }).val(0)
     : '';
-  if (!info.plan) {
+  if (info.footerBad) {
+    // This file ends with something that says it is a settings block and
+    // does not parse here. Both engines read the footer more loosely than
+    // this page does, so a file they will read a record and a plan out of
+    // -- and install from -- reaches this point looking empty. Saying
+    // "there are none in the file to check" about it is the page stating
+    // as fact the one thing it does not know.
+    sign.push(['The choices', '<strong>could not be read</strong>: this file ends with something that claims to be a settings block ' +
+      'and does not match the format, so nothing here describes what it will do. An installer that runs it may read it anyway.']);
+  } else if (!info.plan) {
     sign.push(['The choices', 'are written when it runs, so there are none in the file to check. They are fetched, signed, at that point']);
   } else {
     const s = docSignature(info.plan, 'ti-plan');

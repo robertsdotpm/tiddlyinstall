@@ -123,6 +123,11 @@ export function inflateRawAt(src, start, sizeHint, maxOut) {
     if (type === 1) { const f = fixedTables(); lit = f[0]; dist = f[1]; }
     else if (type === 2) {
       const hlit = bits(5) + 257, hdist = bits(5) + 1, hclen = bits(4) + 4;
+      // RFC 1951: 286 literal/length codes and 30 distance codes are
+      // the most that exist. Five bits reach 288 and 32, so a stream
+      // can name codes the alphabet does not have; refusing here is
+      // what keeps them from being built into a table and indexed.
+      if (hlit > 286 || hdist > 30) fail('too many codes in the dynamic Huffman header');
       const cl = new Uint8Array(19);
       for (let i = 0; i < hclen; i++) cl[CL_ORDER[i]] = bits(3);
       const clt = buildTable(cl, 19);

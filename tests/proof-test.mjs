@@ -124,6 +124,34 @@ for (const n of [1, 2, 3, 4, 5, 7, 8, 9, 16, 17]) {
      'for every block, not just the first');
 }
 
+/* ---------- the settings block, read three ways ---------- */
+//
+// The two engines parse the footer more loosely than tifile.js does: a
+// space where the closing newline should be is a block they will read a
+// record and a plan out of, and install from, and that this reader
+// rejects. Rejecting it is defensible; describing the file afterwards as
+// one with no settings in it is not, and that is what the Verify page
+// did -- "there are none in the file to check", about a file that has
+// them and is about to run them. readInstaller records the near miss so
+// the page can say what it actually knows.
+{
+  const { readInstaller } = await import('../src/shared/tifile.js');
+  const mk = (last) => {
+    const base = Buffer.from('#!/bin/sh\nexit 0\n');
+    const f = Buffer.alloc(64, 0x20);
+    Buffer.from('TIMETA1 ').copy(f, 0);
+    for (const off of [8, 21, 34]) Buffer.from('000000000000').copy(f, off);
+    f[20] = 0x20; f[33] = 0x20; f[46] = 0x20;
+    f[63] = last;
+    return new Uint8Array(Buffer.concat([base, f]));
+  };
+  const good = await readInstaller(mk(0x0a), 'install_python_x.run');
+  ok(good.hadBlock === true && good.footerBad === false, 'a well formed settings block is read');
+  const near = await readInstaller(mk(0x20), 'install_python_x.run');
+  ok(near.hadBlock === false, 'a block ending in a space instead of a newline is not read');
+  ok(near.footerBad === true, '...and is reported as unreadable rather than as absent');
+}
+
 /* ---------- ledger ---------- */
 
 const entries = [
