@@ -1937,11 +1937,20 @@ function writeTarget(cat, w, app, pol, b) {
     const cvt = versionTokens(ce.v);
     const cfix = (s) => fix(cvt(splitJoin(s, '{runtime_dir}', '{dir}')));
     addOpt(w, 'file', [n.req.runtime, fileName(ce), ce.sha256, String(ce.size)], archOf(ce));
+    // The same order every other emitter uses. This one put our mirror
+    // first whatever mirror_first said, and never added the by-address
+    // fallbacks -- so a machine whose DNS does not work reached the
+    // vendors for its runtime and then failed on its companion, late,
+    // after the downloads it could do had already happened.
     const cm = mirrorURL(cat, ce.local);
+    const cByIP = mirrorURLsByIP(cat, ce.local);
     const cseen = new Set();
-    for (const u of [cm, ce.url, ...(ce.mirrors || []).map(str), cm]) {
-      if (u !== '' && !cseen.has(u)) { cseen.add(u); w.add('url', u); }
-    }
+    const cadd = (u) => { if (u !== '' && !cseen.has(u)) { cseen.add(u); w.add('url', u); } };
+    if (own(cat.policy, 'mirror_first') === true) { cadd(cm); for (const u of cByIP) cadd(u); }
+    cadd(ce.url);
+    for (const m of ce.mirrors || []) cadd(str(m));
+    cadd(cm);
+    for (const u of cByIP) cadd(u);
     for (const st of n.p.recipe.steps) {
       if (st.unpack != null) addUnpack(w, st, cfix(orDefault(str(st.to), '{dir}')));
       else if (st.run != null) w.add('step', 'run', cfix(goSprint(st.run)));

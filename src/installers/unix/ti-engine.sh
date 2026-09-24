@@ -2005,7 +2005,9 @@ ti_obtain() { # sha256 out urls-file label [unpinned]
 
 ti_move_into() { # entry dest: move, merging folders that already exist
 	b=$(basename "$1")
-	if [ -d "$2/$b" ] && [ -d "$1" ] && [ ! -h "$1" ]; then
+	# `[ -d "$2/$b" ]` follows a symbolic link, so a link in the
+	# destination that points at a directory made this copy into it.
+	if [ -d "$2/$b" ] && [ ! -h "$2/$b" ] && [ -d "$1" ] && [ ! -h "$1" ]; then
 		cp -RPp "$1/." "$2/$b/" && rm -rf "$1"
 	else
 		mv -f "$1" "$2/"
@@ -2134,8 +2136,14 @@ ti_unpack() { # format archive dest strip exclude
 	st=$u_dst/.ti-unpack.$$
 	rm -rf "$st"
 	mkdir "$st" || return 1
+	# -o is --no-same-owner; on GNU tar a superuser still restores modes
+	# by default, so a setuid member from a compromised upstream release
+	# would land in /opt/ti with its bits intact. Nothing this unpacks
+	# needs to be setuid.
 	to=
 	[ "$(id -u)" = 0 ] && to=o
+	u_noperm=
+	[ "$(id -u)" = 0 ] && tar --help 2>&1 | grep -q -- --no-same-permissions && u_noperm=--no-same-permissions
 	rc=0
 	# What the unpacker itself can be told to leave out. Whatever it
 	# still writes, ti_ex_prune deletes below.
@@ -2152,25 +2160,25 @@ ti_unpack() { # format archive dest strip exclude
 	set -- $u_args
 	IFS=$u_ifs
 	case $u_fmt in
-	tar) (cd "$st" && tar -x${to}f "$u_arc" "$@") >> "$TI_LOG" 2>&1 || rc=1 ;;
+	tar) (cd "$st" && tar $u_noperm -x${to}f "$u_arc" "$@") >> "$TI_LOG" 2>&1 || rc=1 ;;
 	tar.gz | tgz)
 		rm -f "$TI_WORK/pipe.err"
-		{ gzip -dc "$u_arc" || : > "$TI_WORK/pipe.err"; } | (cd "$st" && tar -x${to}f - "$@") >> "$TI_LOG" 2>&1 || rc=1
+		{ gzip -dc "$u_arc" || : > "$TI_WORK/pipe.err"; } | (cd "$st" && tar $u_noperm -x${to}f - "$@") >> "$TI_LOG" 2>&1 || rc=1
 		[ -f "$TI_WORK/pipe.err" ] && rc=1
 		;;
 	tar.bz2 | tbz2)
 		if ti_have bzip2; then
 			rm -f "$TI_WORK/pipe.err"
-			{ bzip2 -dc "$u_arc" || : > "$TI_WORK/pipe.err"; } | (cd "$st" && tar -x${to}f - "$@") >> "$TI_LOG" 2>&1 || rc=1
+			{ bzip2 -dc "$u_arc" || : > "$TI_WORK/pipe.err"; } | (cd "$st" && tar $u_noperm -x${to}f - "$@") >> "$TI_LOG" 2>&1 || rc=1
 			[ -f "$TI_WORK/pipe.err" ] && rc=1
 		else
-			(cd "$st" && tar -xj${to}f "$u_arc" "$@") >> "$TI_LOG" 2>&1 || rc=1
+			(cd "$st" && tar $u_noperm -xj${to}f "$u_arc" "$@") >> "$TI_LOG" 2>&1 || rc=1
 		fi
 		;;
 	tar.xz | txz)
 		if ti_have xz; then
 			rm -f "$TI_WORK/pipe.err"
-			{ xz -dc "$u_arc" || : > "$TI_WORK/pipe.err"; } | (cd "$st" && tar -x${to}f - "$@") >> "$TI_LOG" 2>&1 || rc=1
+			{ xz -dc "$u_arc" || : > "$TI_WORK/pipe.err"; } | (cd "$st" && tar $u_noperm -x${to}f - "$@") >> "$TI_LOG" 2>&1 || rc=1
 			[ -f "$TI_WORK/pipe.err" ] && rc=1
 		else
 			# macOS has no xz, but its tar (libarchive) reads .xz itself.
@@ -2241,6 +2249,21 @@ ti_unpack() { # format archive dest strip exclude
 		for u_d in $u_lv; do
 			for e in "$u_d"/* "$u_d"/.[!.]* "$u_d"/..?*; do
 				[ -e "$e" ] || [ -h "$e" ] || continue
+				# A symbolic link does not move into the app's folder.
+				# The engine writes launch.txt, uninstall.sh and
+				# manifest.txt through that path with `>`, and an
+				# all-users install has re-executed itself under sudo
+				# by then -- so a link named manifest.txt in a project
+				# archive is a root-owned write wherever it points, on
+				# an install whose screen shows no command at all. The
+				# browser packer already refuses these on the zip path
+				# (builder.js zipIsSymlink); a GitHub tarball never
+				# reached that check.
+				if [ -h "$e" ]; then
+					ti_log "  skipping $(basename "$e"): the archive has it as a symbolic link"
+					rm -f "$e"
+					continue
+				fi
 				u_ents="$u_ents$e$u_nl"
 			done
 		done
@@ -3937,6 +3960,16 @@ ti_install_main() {
 			[ -n "$ti_rt_issued" ] && printf '     %s\n' "Published $ti_rt_issued." | ti_wrap 74 5
 		elif [ "$ti_rt_state" = bad ]; then
 			printf '  !  %s\n' "Runtime setup claims to be ours and the claim does not hold: $ti_rt_why. Treat this file as altered." | ti_wrap 74 5
+		elif [ "$ti_rt_state" = nokey ]; then
+			# ti_check_rtscript sets this when ti_doc_sig answers
+			# `cannot`: no runnable tiverify for this CPU, a noexec
+			# TMPDIR, an OpenSSL without Ed25519. Without an arm of its
+			# own it fell through to the `unsigned` line below and said
+			# "Runtime setup is not signed", which is a statement about
+			# the file. What was actually established is a statement
+			# about this machine, and the plan's identical case already
+			# says so correctly.
+			printf '  -- %s\n' "Runtime setup carries a proof this machine could not check: $ti_rt_why. That is not the same as unsigned - nothing here can tell you either way, so treat what follows as the file's own account of itself." | ti_wrap 74 5
 		elif [ "$ti_plan_sigstate" = ok ] && [ -n "$TI_PLAN_KEYID" ] && [ "$TI_PLAN_KIND" = fetched ]; then
 			printf '  -- %s\n' "Runtime setup is signed by TiddlyInstall (key $TI_PLAN_KEYID), fetched and checked here before any of it was read, so a script altered on the way would have been refused." | ti_wrap 74 5
 		elif [ "$ti_plan_sigstate" = ok ] && [ -n "$TI_PLAN_KEYID" ]; then
