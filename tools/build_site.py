@@ -137,7 +137,12 @@ def check_footer_links():
     """
     import glob
     wrong = []
-    for p in sorted(glob.glob(os.path.join(WEB, "*.html"))):
+    # WEB is relative ("src/web_client"), so this globbed against the
+    # caller's directory. Run from anywhere but the repository root it
+    # matched nothing, and a check over no files passes -- the footer
+    # check reporting success having read not one page. read() joins
+    # against ROOT for exactly this reason.
+    for p in sorted(glob.glob(os.path.join(ROOT, WEB, "*.html"))):
         text = read(p)
         m = re.search(r'<footer class="site-footer">(.*?)</footer>', text, re.S)
         if not m:

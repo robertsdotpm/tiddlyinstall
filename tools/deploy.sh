@@ -64,8 +64,13 @@ fi
 # researched; the catalogue is a different directory, outside this repo.
 cache=${TI_CATALOG_CACHE:-$HOME/.cache/tiddlyinstall}
 snapsrc=${TI_RUNTIMES:-$HOME/projects/installer-builder-runtimes}
-newest=$(find "$snapsrc" -type f -newer "$here/tools/snapshot.mjs" -printf '%T@\n' 2>/dev/null |
-	sort -rn | head -1)
+# Key the cache on what the snapshot is made of, not on mtimes measured
+# against one file in this repository. `-newer tools/snapshot.mjs` asks
+# whether a catalogue file is newer than a script it has nothing to do
+# with: today that is true of 1 file in 3,114, and a restore that
+# preserves mtimes -- rsync -a, a tarball, a pulled release -- leaves
+# every file "older" and silently reuses the previous catalogue.
+newest=$(find "$snapsrc" -type f -printf '%s %T@ %p\n' 2>/dev/null | sort | sha256sum | cut -d' ' -f1)
 newest=${newest:-0}
 stamp="$cache/stamp"
 opts=""
@@ -241,7 +246,11 @@ done
 if [ "$fail" = 0 ] && [ -f "$here/out/index.html" ]; then
 	ledger=$here/src/build_server/data/releases.txt
 	page_sha=$(sha256sum "$here/out/index.html" | cut -d' ' -f1)
-	if [ -f "$ledger" ] && grep -q "	$page_sha\$" "$ledger"; then
+	# The field, not the end of the line: releases.txt grew a fifth
+	# column (the runtime-roots hash) and this anchor stopped matching,
+	# so the branch below was dead and a redeploy of identical bytes
+	# appended a duplicate row to an append-only hash-chained ledger.
+	if [ -f "$ledger" ] && grep -qE "	$page_sha(	|\$)" "$ledger"; then
 		echo "ok    the release ledger already has these bytes"
 	else
 		mkdir -p "$(dirname "$ledger")"
