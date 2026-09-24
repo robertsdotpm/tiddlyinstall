@@ -1,5 +1,5 @@
 {
- "mirror_base": "http://10.0.1.76:8080/mirror",
+ "mirror_base": "http://tiddlyinstall.warpgate.io/mirror",
  "mirror_first": true,
  "external_tmp_files": [
   "get-pip.py",
