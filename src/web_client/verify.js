@@ -584,7 +584,7 @@ async function paintPage(file, sha, text) {
         ? '<strong>not checked</strong> -- against an unsigned ledger, being in it means nothing'
         : hit
         ? '<strong>published</strong> as release ' + hit.seq + ' on ' + esc(hit.date) + ', from ' + rev(hit.rev)
-        : '<strong>not in the ledger</strong> &mdash; either these bytes were never published, or this is a copy '
+        : '<strong>not in the ledger</strong> - either these bytes were never published, or this is a copy '
           + 'saved from a browser, which rewrites the page as it saves it and so can never match. A file downloaded '
           + 'from the server is the one to compare.'],
     ];
