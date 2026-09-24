@@ -31,6 +31,12 @@ here=$(cd "$(dirname "$0")/.." && pwd)
 rev=$(git -C "$here" rev-parse --short HEAD)
 key=$here/src/build_server/data/plan-signing-key.pub
 [ -f "$key" ] || { echo "no $key; the base would carry no signing key" >&2; exit 1; }
+# SHA256SUMS lives at the repository root and the archive below carries
+# only src/installers/unix, so make_app.sh's check for the verifier
+# binaries would find nothing to check against. It goes over with the
+# key, for the same reason the key does.
+sums=$here/SHA256SUMS
+[ -f "$sums" ] || { echo "no $sums; the base's verifier could not be checked" >&2; exit 1; }
 
 if ! git -C "$here" diff --quiet -- src/installers/unix; then
 	echo "src/installers/unix has uncommitted changes; the base is built from HEAD ($rev)" >&2
@@ -43,6 +49,7 @@ git -C "$here" archive HEAD src/installers/unix |
 	ssh "$TI_MAC" 'rm -rf ~/ti-build && mkdir -p ~/ti-build && tar -x -C ~/ti-build'
 ssh "$TI_MAC" 'mkdir -p ~/ti-build/src/build_server/data'
 scp -q "$key" "$TI_MAC:ti-build/src/build_server/data/plan-signing-key.pub"
+scp -q "$sums" "$TI_MAC:ti-build/SHA256SUMS"
 ssh "$TI_MAC" "printf 'HEAD %s\n' '$rev' > ~/ti-build/COMMIT
 	chmod +x ~/ti-build/src/installers/unix/verify/bin/tiverify-macos-*
 	cd ~/ti-build/src/installers/unix && sh make_app.sh"
