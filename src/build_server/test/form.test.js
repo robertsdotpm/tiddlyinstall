@@ -167,7 +167,9 @@ test('src/shared/form-job.js: a plain post of the form reads as the page reads i
   assert.equal(job.offline, true);
   // /classic has no packed-target picker, so ticking "offline" there takes
   // the defaults rather than asking for nothing (src/shared/form-job.js).
-  assert.deepEqual(job.pack, { offline_include: 'all', shape: 'single',
+  // offline_include is gone: nothing read it, so both of its values
+  // produced the same file and the form no longer sends it.
+  assert.deepEqual(job.pack, { shape: 'single',
     offline_targets: ['win_1011_amd64', 'linux_amd64', 'mac_amd64', 'mac_arm64'] });
   // An edited launch command is kept.
   ({ job } = jobFromForm(postedForm({ ...defaults(), source_kind: ['write'], entry_python: ['{runtime} other.py'] }), { icon }));

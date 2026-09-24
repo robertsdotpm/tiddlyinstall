@@ -11,9 +11,18 @@ export class BadJSON extends Error {}
 const S = 'string', B = 'bool', PB = '*bool', AS = '[]string', MS = 'map[string]string';
 const SOURCE = { kind: S, value: S, ref: S, version: S };
 const ICON = { choice: S, data: S, filename: S, type: S, sha256: S };
+// tools and prerequisites were missing, and decodeInto drops what the
+// spec does not name. The page sends both (form-job.js) and the builder
+// reads both, so a build submitted over HTTP lost them silently: a
+// ticked "this project uses cgo" was discarded and the installer shipped
+// with no C toolchain, while the same form built inside the page kept it
+// -- two different records, and two different record hashes, for
+// identical settings. The 400s docs/api.md promises for these fields
+// could never fire either, because the values never arrived.
 const REQUEST = {
   name: S, project: S, source: SOURCE, runtime: S, select: S, range: S, launch: S, install: S,
   console: PB, menu: PB, desktop: B, root: S, rootname: S, platforms: AS, mode: S, offline: B,
+  tools: AS, prerequisites: AS,
   files: MS, icon: { ptr: ICON },
 };
 

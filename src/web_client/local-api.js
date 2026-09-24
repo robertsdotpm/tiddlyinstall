@@ -295,6 +295,17 @@ async function fetchMember(cat, f) {
     throw new Error('our mirror has no copy of ' + f.label + ', and a browser cannot fetch it from the vendor (they send no ' +
       'Access-Control-Allow-Origin header). Build this one on a server, or choose a version we mirror.');
   }
+  // A page served over HTTPS cannot fetch an http:// mirror: the browser
+  // refuses it as mixed content before any request is made, and the
+  // failure arrives as an ordinary network error. Saying so is the
+  // difference between "the mirror is down" and "this copy of the page
+  // cannot reach it, and no copy of it ever will". api.js and
+  // catalog-refresh.js both already make this distinction.
+  if (typeof location !== 'undefined' && location.protocol === 'https:' &&
+      urls.every((u) => /^http:/i.test(u))) {
+    throw new Error('this copy of the page is served over HTTPS and our mirror is plain HTTP, so the browser will not '
+      + 'fetch ' + f.label + ' from it. Build this one on a server, or open a copy of this page that is not served over HTTPS.');
+  }
   const tried = [];
   for (const u of urls) {
     let res;

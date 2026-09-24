@@ -381,7 +381,18 @@ export function postedForm(fields) {
 // else is a package name.
 export function parseSource(text, refType, ref) {
   const v = text.trim();
-  const gh = /^(?:https?:\/\/)?(?:www\.)?github\.com\/([^/\s]+)\/([^/\s#?]+)/i.exec(v);
+  // Anchored at both ends. Unanchored, https://github.com/psf/requests/
+  // tree/v2.31.0 matched the owner and repo and the rest of the path --
+  // the tag the publisher typed -- was silently dropped, so a pinned
+  // URL built whatever HEAD happened to be. A URL carrying a ref is
+  // refused with the fields that do pin it named, rather than quietly
+  // meaning something else.
+  const gh = /^(?:https?:\/\/)?(?:www\.)?github\.com\/([^/\s]+)\/([^/\s#?]+?)(?:\.git)?\/?$/i.exec(v);
+  const ghDeep = !gh && /^(?:https?:\/\/)?(?:www\.)?github\.com\/[^/\s]+\/[^/\s]+\/\S+/i.test(v);
+  if (ghDeep) {
+    throw new Error('That GitHub URL points at something inside the repository. Give the repository itself '
+      + '(github.com/owner/repo) and choose the tag, branch or commit under "Which version", so the pin is recorded.');
+  }
   const pinned = refType && refType !== 'latest' && ref.trim() ? ref.trim() : '';
   if (gh || /^[\w.-]+\/[\w.-]+$/.test(v)) {
     const [owner, repo] = gh ? [gh[1], gh[2]] : v.split('/');
@@ -447,7 +458,6 @@ function packField(f, mode, platforms, problems, localMb) {
   if (mode === 'A') return null;   // mode A never carries packed content
   const pack = {};
   if (f.checked('offline')) {
-    pack.offline_include = radio(f, 'offline_include', 'all');
     // Each entry is `<system>_<arch>` (form-job.js OFFLINE_TARGETS), so the
     // request says 32-bit and 64-bit apart rather than naming a system and
     // leaving the architecture to be guessed.

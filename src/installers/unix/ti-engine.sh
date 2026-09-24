@@ -1343,6 +1343,15 @@ ti_check_nonce() {
 	if [ -z "$got" ]; then
 		ti_log "Nonce $TI_NONCE sent; the plan carries none (an older backend)."
 		TI_PLAN_FROM="$TI_PLAN_FROM; no nonce in the answer (an older backend), so an older plan replayed on the way can't be ruled out"
+		# ...and say it where it will be read. TI_PLAN_FROM is printed
+		# only on the unsigned arm of the review screen, so for a plan
+		# that is correctly signed -- which a replayed one is, because it
+		# is one we really signed -- this caveat was computed and thrown
+		# away. The nonce is the only thing standing between a fetched
+		# plan and a replay (design.md 7.1: the age check and the
+		# revocation list are both switched off for this kind), so its
+		# absence is the whole story, not a footnote.
+		ti_nonce_note="The backend did not echo the one-off number this installer sent, so it is an older backend and a plan we signed earlier, replayed on the way, cannot be ruled out."
 		return 0
 	fi
 	[ "$got" = "$TI_NONCE" ] ||
@@ -3875,13 +3884,24 @@ ti_install_main() {
 		# most misleading thing on this screen.
 		printf '\nWHAT WILL HAPPEN\n'
 		if [ "$ti_nall" -gt 0 ]; then
-			if [ "$ti_packed_all" = 1 ]; then
-				printf '  %-11s%s %s carried inside it, each checked against a SHA-256\n' \
-					'Unpack' "$ti_nall" "$(ti_plural "$ti_nall" file files)" | ti_wrap 74 13
+			# "each checked against a SHA-256" is not true of all of them
+			# when the project's own source has none -- it is named by a
+			# commit and fetched over HTTPS, and the detail below says so.
+			# ti_src_unsized is the same test that already turns the byte
+			# total into "more than", so the summary is qualified from the
+			# fact the screen already has.
+			if [ "$ti_src_unsized" = 1 ]; then
+				ti_sha_clause="all but the project's own checked against a SHA-256"
 			else
-				printf '  %-11s%s %s, %s%s, each checked against a SHA-256\n' \
+				ti_sha_clause="each checked against a SHA-256"
+			fi
+			if [ "$ti_packed_all" = 1 ]; then
+				printf '  %-11s%s %s carried inside it, %s\n' \
+					'Unpack' "$ti_nall" "$(ti_plural "$ti_nall" file files)" "$ti_sha_clause" | ti_wrap 74 13
+			else
+				printf '  %-11s%s %s, %s%s, %s\n' \
 					'Download' "$ti_nall" "$(ti_plural "$ti_nall" file files)" \
-					"$ti_tot_pre" "$(ti_hsize $ti_tot)" | ti_wrap 74 13
+					"$ti_tot_pre" "$(ti_hsize $ti_tot)" "$ti_sha_clause" | ti_wrap 74 13
 			fi
 		fi
 		ti_inst_txt='for your user only'
@@ -3956,7 +3976,7 @@ ti_install_main() {
 		#               opinion and does not get a tick.
 		printf '\n'
 		if [ "$ti_rt_state" = ok ]; then
-			printf '  -- %s\n' "Runtime setup is signed by TiddlyInstall${TI_PLAN_KEYID:+ (key $TI_PLAN_KEYID)}, verified offline. Covers the downloads, their hashes and setup commands - not the launch command, which the builder wrote." | ti_wrap 74 5
+			printf '  -- %s\n' "Runtime setup is signed by TiddlyInstall${TI_PLAN_KEYID:+ (key $TI_PLAN_KEYID)}, verified offline. Covers the runtime downloads below, their hashes and the setup commands - not the launch command, and not the project's own files, which whoever built this installer chose." | ti_wrap 74 5
 			[ -n "$ti_rt_issued" ] && printf '     %s\n' "Published $ti_rt_issued." | ti_wrap 74 5
 		elif [ "$ti_rt_state" = bad ]; then
 			printf '  !  %s\n' "Runtime setup claims to be ours and the claim does not hold: $ti_rt_why. Treat this file as altered." | ti_wrap 74 5
@@ -3972,6 +3992,7 @@ ti_install_main() {
 			printf '  -- %s\n' "Runtime setup carries a proof this machine could not check: $ti_rt_why. That is not the same as unsigned - nothing here can tell you either way, so treat what follows as the file's own account of itself." | ti_wrap 74 5
 		elif [ "$ti_plan_sigstate" = ok ] && [ -n "$TI_PLAN_KEYID" ] && [ "$TI_PLAN_KIND" = fetched ]; then
 			printf '  -- %s\n' "Runtime setup is signed by TiddlyInstall (key $TI_PLAN_KEYID), fetched and checked here before any of it was read, so a script altered on the way would have been refused." | ti_wrap 74 5
+			[ -n "${ti_nonce_note:-}" ] && printf '  !  %s\n' "$ti_nonce_note" | ti_wrap 74 5
 		elif [ "$ti_plan_sigstate" = ok ] && [ -n "$TI_PLAN_KEYID" ]; then
 			printf '  -- %s\n' "Runtime setup carries a TiddlyInstall signature (key $TI_PLAN_KEYID), checked by this file against a key inside this file. It is worth what the file is worth, so it is not a second opinion: the SHA-256 above is." | ti_wrap 74 5
 		elif [ "$ti_plan_sigstate" = unsigned ]; then

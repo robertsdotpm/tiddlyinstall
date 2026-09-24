@@ -1051,7 +1051,7 @@ function packBody(platforms, targets) {
     name: 'Hello packed', project: 'hellopack', runtime: 'python', mode: 'C',
     source: { kind: 'inline' }, files: { 'hellopack/__main__.py': "print('hello from a packed installer')\n" },
     platforms, launch: '{runtime} -m hellopack', console: true, menu: true, offline: true,
-    pack: { offline_include: 'all', shape: 'single', offline_targets: targets },
+    pack: { shape: 'single', offline_targets: targets },
   };
 }
 

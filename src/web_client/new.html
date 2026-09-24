@@ -759,14 +759,9 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
               <input type="hidden" name="offline_targets_form" value="1">
               <p class="small" style="margin-top:0">Offline copies also carry everything the normal installers would download:
                 the runtime, packages and source, and any of your files set to download when installing. The normal installers are still made&nbsp;too.</p>
-
-              <span class="label">Include</span>
-              <div class="choice-stack">
-                <label class="choice"><input type="radio" name="offline_include" value="all" checked>
-                  <span><strong>Everything</strong><br><span class="small muted">Installs with no internet at all.</span></span></label>
-                <label class="choice"><input type="radio" name="offline_include" value="runtime">
-                  <span><strong>The runtime only</strong><br><span class="small muted">Smaller. Your app's packages are still downloaded at install time.</span></span></label>
-              </div>
+              <p class="small muted" style="margin-top:0">A choice of <em>everything</em> or <em>the runtime only</em> used to
+                sit here. Nothing read it: both produced the same file. Packing an app's own packages separately is not built
+                yet, so the option is gone rather than offering a smaller build that was never smaller.</p>
 
               <span class="label">Must work offline on</span>
               <p class="small muted" style="margin-top:0">Online installers choose the right version <em>and the right architecture</em> on the user's computer.
@@ -821,7 +816,7 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
               <div class="table-wrap">
                 <table class="small">
                   <tbody>
-                    <tr class="win-settings"><th scope="row">Windows</th><td>One <code>.exe</code>. The files sit inside its signature block, so the signature stays valid.</td></tr>
+                    <tr class="win-settings"><th scope="row">Windows</th><td>One <code>.exe</code>. The files are added before any signature, so sign it afterwards if you are signing it &mdash; adding them to a file that is already signed would break the signature.</td></tr>
                     <tr class="linux-settings"><th scope="row">Linux</th><td>One <code>.run</code>.</td></tr>
                     <tr class="mac-settings"><th scope="row">macOS</th><td>A <code>.zip</code> with the app and a folder of files next to it. macOS apps can't carry extra files without breaking their signature.
                       Users keep the two together.</td></tr>
@@ -1086,22 +1081,11 @@ macOS    /Library/Application Support/ti/tjfq5rqwnnrx/
               <input type="file" id="win-cert" accept=".pfx,.p12">
             </div>
             <span class="label" style="margin-top:8px">macOS</span>
-            <div class="field">
-              <label for="mac-cert">Developer ID Application certificate (.p12)</label>
-              <input type="file" id="mac-cert" accept=".p12">
-              <span class="hint">Loaded into this page only.</span>
-            </div>
-            <div class="row">
-              <div class="field">
-                <label for="apple-team">Apple Team ID</label>
-                <input type="text" id="apple-team" name="apple_team" placeholder="ABCDE12345">
-              </div>
-              <div class="field">
-                <label for="apple-key">App Store Connect API key (.p8)</label>
-                <input type="file" id="apple-key" accept=".p8">
-                <span class="hint">Used to send the macOS build to Apple for notarization, from your browser.</span>
-              </div>
-            </div>
+            <p class="small muted" style="margin:4px 0 0">macOS signing and notarization are
+              <strong>not built yet</strong>. The fields that were here collected a Developer ID
+              certificate and an App Store Connect key and nothing read them, so they are gone
+              rather than sitting there looking like a feature. Sign and notarize the
+              <code>.app</code> yourself after downloading it; the page does not touch it.</p>
           </div>
 
           <!-- What a recipient meets before the installer gets to say

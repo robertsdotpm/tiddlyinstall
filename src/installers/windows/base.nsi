@@ -4577,9 +4577,9 @@ Function WriteSummary
   StrCpy $CapInd2 "     "
   ${If} $RtState == "ok"
     ${If} "${TI_PLAN_KEYID}" != "?"
-      StrCpy $U_a "Runtime setup is signed by TiddlyInstall (key ${TI_PLAN_KEYID}), verified offline. Covers the downloads, their hashes and setup commands - not the launch command, which the builder wrote."
+      StrCpy $U_a "Runtime setup is signed by TiddlyInstall (key ${TI_PLAN_KEYID}), verified offline. Covers the runtime downloads below, their hashes and the setup commands - not the launch command, and not the project's own files, which whoever built this installer chose."
     ${Else}
-      StrCpy $U_a "Runtime setup is signed by TiddlyInstall, verified offline. Covers the downloads, their hashes and setup commands - not the launch command, which the builder wrote."
+      StrCpy $U_a "Runtime setup is signed by TiddlyInstall, verified offline. Covers the runtime downloads below, their hashes and the setup commands - not the launch command, and not the project's own files, which whoever built this installer chose."
     ${EndIf}
     Call SumPara
     ${If} $RtIssued != ""
@@ -6525,6 +6525,20 @@ Function InstallMain
   ClearErrors
   CreateDirectory "$Root"
   ${If} $RootMode == "system"
+    ; A reparse point at $Root -- a junction an unprivileged user can make
+    ; at C:\ti before the install runs -- would have SecureRoot apply an
+    ; administrators-only DACL to whatever it points at, from the elevated
+    ; process. Refuse rather than re-own a directory chosen by somebody
+    ; else. 0x400 is FILE_ATTRIBUTE_REPARSE_POINT; -1 is
+    ; INVALID_FILE_ATTRIBUTES, which CreateDirectory above rules out.
+    System::Call 'kernel32::GetFileAttributesW(w R0) i .r1' ? '' ($Root)
+    ${If} $1 != -1
+      IntOp $2 $1 & 0x400
+      ${If} $2 <> 0
+        ${FailWith} "$Root is a junction or a symbolic link, not a folder. Refusing to take ownership of whatever it points at. Remove it and run this again."
+        Return
+      ${EndIf}
+    ${EndIf}
     Call SecureRoot
     ${If} $Failed = 1
       Return
