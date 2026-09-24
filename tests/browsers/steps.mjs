@@ -25,7 +25,15 @@ export class Checker {
     if (!this.quiet) console.log(this.prefix + (pass ? 'PASS ' : 'FAIL ') + name + (detail !== undefined ? ' -- ' + detail : ''));
     return pass;
   }
+  // A note is a check that did not run: the download folder was empty,
+  // the browser could not be driven to the step, the fixture was absent.
+  // It set no `pass` field and never touched `failed`, so a cell that
+  // skipped its saved-copy checks entirely still finished 'pass' -- 38
+  // of the 40 results carrying one recorded exactly that, several of
+  // them the newest run for their cell. Counted now, and the verdict
+  // says so.
   note(name, detail) {
+    this.noted = (this.noted || 0) + 1;
     this.checks.push({ name, note: String(detail).slice(0, 600) });
     if (!this.quiet) console.log(this.prefix + 'NOTE ' + name + ' -- ' + String(detail).slice(0, 300));
   }

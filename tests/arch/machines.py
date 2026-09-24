@@ -265,6 +265,15 @@ def judge(target, parts, result, detail):
     extras = {"arch": arch_of(target), "arch_seen": seen, "arch_elf": elf, "arch_plan": chose}
     if elf_lines:
         extras["arch_elf_files"] = elf_lines
+    # Every comparison in check() is guarded on its witness being there,
+    # so a cell with no witness passes them all without testing anything.
+    # Of the passing cells, most carried no arch_elf and many no
+    # arch_seen, while the published note said "every cell also checks
+    # it ... or the cell fails". Record what was missing so the count is
+    # visible instead of being read as coverage.
+    missing = [k for k, v in (("arch_seen", seen), ("arch_elf", elf), ("arch_plan", chose)) if not v]
+    if missing:
+        extras["arch_unwitnessed"] = " ".join(missing)
     bad = check(target, seen, elf if result == "pass" else (), chose)
     if bad:
         return "fail", "; ".join(bad) + (f" ({detail})" if detail else ""), extras

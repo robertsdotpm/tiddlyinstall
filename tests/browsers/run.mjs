@@ -621,7 +621,12 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
         t.ok(false, 'served (http://localhost through the tunnel): the page starts', e.message);
       }
     }
-    return finish(t.failed ? 'fail' : 'pass', t.failed ? t.checks.filter((c) => c.pass === false).map((c) => c.name).slice(0, 3).join('; ') : '');
+    // 'incomplete' is not 'pass'. A cell that skipped checks has not
+    // shown the thing those checks were for, and reporting it green
+    // makes the grid say more than the run established.
+    if (t.failed) return finish('fail', t.checks.filter((c) => c.pass === false).map((c) => c.name).slice(0, 3).join('; '));
+    if (t.noted) return finish('incomplete', t.checks.filter((c) => c.note !== undefined).map((c) => c.name).slice(0, 3).join('; '));
+    return finish('pass', '');
   } catch (e) {
     t.checks.push({ name: 'run', pass: false, detail: String(e.stack || e).slice(0, 1500) });
     const infra = /^(driver|no driver|scp|.*no browsers\.json|session not created|no connection|timeout)/i.test(e.message) || !b;

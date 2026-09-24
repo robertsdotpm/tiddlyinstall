@@ -90,11 +90,23 @@ for rt in RTS:
     if not any(k[1] == rt for k in last):
         continue
     out.append(f"| {rt} | " + " | ".join(cell(t, rt) for t in targets) + " |")
-tot = collections.Counter(r["result"] for r in last.values())
-out += ["", f"**{len(last)} cells: {tot['pass']} pass, {tot['n/a']} n/a, {tot['no-plan']} no plan block, "
-        f"{tot['known']} known failure, {tot['fail']} fail.**", ""]
+# Count what the grid draws. The rows above skip a runtime that is not in
+# RTS, so counting every result made the total larger than the table it
+# sits under -- the extra cells were behaviour rows the grid never draws,
+# and the difference read as coverage nobody could point at.
+drawn = {k: r for k, r in last.items() if k[1] in RTS}
+tot = collections.Counter(r["result"] for r in drawn.values())
+out += ["", f"**{len(drawn)} cells: {tot['pass']} pass, {tot['n/a']} n/a, {tot['no-plan']} no plan block, "
+        f"{tot['known']} known failure, {tot['fail']} fail.**"
+        + (f" ({len(last) - len(drawn)} more results are not runtime cells and are not drawn above.)"
+           if len(last) != len(drawn) else ""), ""]
 
-by_arch = collections.Counter((r.get("arch") or machines.arch_of(r["target"]), r["result"]) for r in last.values())
+unwitnessed = sum(1 for r in drawn.values() if r.get("arch_unwitnessed"))
+if unwitnessed:
+    out += [f"{unwitnessed} of those cells are missing at least one architecture witness "
+            "(`arch_unwitnessed` names which), so their architecture comparisons did not run.", ""]
+
+by_arch = collections.Counter((r.get("arch") or machines.arch_of(r["target"]), r["result"]) for r in drawn.values())
 arches = sorted({a for a, _ in by_arch})
 out += ["By architecture:", "",
         "| Architecture | cells | pass | n/a | no plan block | known | fail |",
