@@ -3318,6 +3318,30 @@ Function .onInit
     ${FailWith} "This app needs $NdLabels installed first, for the whole computer, which needs administrator rights, and this silent install (/S) doesn't have them. Run it from an elevated command prompt, or install that first. $NdHow"
     Call InitFail
   ${EndIf}
+  ; A per-user install must not be carried out by somebody else's account.
+  ;
+  ; Elevating here relaunches the whole installer under the account that
+  ; answers the UAC prompt, and everything after that resolves against
+  ; THAT account: $LOCALAPPDATA, the Start menu, the uninstall entry. So
+  ; a "for your user only" install performed by an administrator lands
+  ; in the administrator's profile, where the person who asked for it
+  ; cannot launch it -- and the review screen has already told them it
+  ; was going to their own. It is not a failed install; it is a
+  ; successful install of someone else's copy.
+  ;
+  ; That only arises when the sole reason to elevate is a missing
+  ; machine-wide prerequisite ($RootMode is still "user"). A `system`
+  ; install is meant to be performed by an administrator and is
+  ; unaffected. Rather than do the wrong thing quietly, say what is in
+  ; the way and what the two ways round it are.
+  ${If} $NeedAdmin = 1
+  ${AndIf} $U_out = 0
+  ${AndIf} $RootMode != "system"
+  ${AndIf} $NdMissing > 0
+    ${Log} "Refused before installing: a per-user install would be performed by the elevating account."
+    ${FailWith} "This app needs $NdLabels installed for the whole computer first, which needs administrator rights -- but the app itself is going into your own user account. Doing both at once would install it into the administrator's account instead of yours. Install $NdLabels first (as an administrator), then run this again; nothing has been installed. $NdHow"
+    Call InitFail
+  ${EndIf}
   ${If} $NeedAdmin = 1
   ${AndIf} $U_out = 0
     ${If} $WinVer < 600
@@ -3391,7 +3415,20 @@ FunctionEnd
 !define TI_CMD_W 74           ; wrap here
 !define TI_CMD_IND 5          ; the first line starts in column 5
 !define TI_CMD_CONT 9         ; and the rest in column 9
-!define TI_CMD_LINES 4        ; more wrapped lines than this: shorten it
+; More wrapped lines than this and the command is shortened. It was 4 --
+; a budget of 65*4+4 = 264 characters -- and what a command over that got
+; was its first 93 characters and a pointer to "the end of the log". On
+; Windows that log does not exist until the install has started, so the
+; person deciding whether to consent was sent to a file that consenting
+; is what creates. Ruby's Windows setup is over the old budget today.
+;
+; The review page is a scrolling read-only edit control (ReviewEdit,
+; ES_MULTILINE | WS_VSCROLL), so a long command costs scrolling and
+; nothing else. 16 lines is 65*16+4 = 1044 characters, past the 1023 a
+; NSIS string can hold at NSIS_MAX_STRLEN=1024, so with this build every
+; command prints in full and wrapped. The branch below stays for a
+; large-strings build, and says something true now.
+!define TI_CMD_LINES 16
 Function CmdLine
   Push $0
   Push $1
@@ -3423,7 +3460,10 @@ Function CmdLine
   ${If} $0 > $2
     StrCpy $1 $U_a 93
     ${Sum} "$7$1..."
-    ${Sum} "     ($0 characters in all; the whole command is at the end of the log)"
+    ${Sum} "     ($0 characters in all. The rest is not shown here and is not"
+    ${Sum} "     anywhere you can read yet: it goes to the log this installer"
+    ${Sum} "     writes once you press Install. Do not consent to a command on"
+    ${Sum} "     the strength of its first 93 characters.)"
   ${Else}
     StrCpy $2 $U_a                         ; what is left to print
     StrCpy $3 $7                           ; this line's indent
