@@ -855,7 +855,7 @@ ti_dl_row() { # n role size where
 # is the only record of anything.
 ti_dl_where() { # sha urls
 	if { [ -n "$TI_PACK_DIR" ] && [ -f "$TI_PACK_DIR/$1" ]; } ||
-		{ [ -n "$TI_PACK_TAR" ] && grep -qx "$1" "$TI_WORK/pack.list" 2>/dev/null; }; then
+		{ [ -n "$TI_PACK_TAR" ] && grep -qxF "$1" "$TI_WORK/pack.list" 2>/dev/null; }; then
 		ti_where='packed inside this installer'
 		return 0
 	fi
@@ -1975,7 +1975,7 @@ ti_obtain() { # sha256 out urls-file label [unpinned]
 	if [ -n "$TI_PACK_DIR" ] && [ -f "$TI_PACK_DIR/$1" ]; then
 		cp "$TI_PACK_DIR/$1" "$2"
 		ti_log "  from the pack"
-	elif [ -n "$TI_PACK_TAR" ] && grep -qx "$1" "$TI_WORK/pack.list"; then
+	elif [ -n "$TI_PACK_TAR" ] && grep -qxF "$1" "$TI_WORK/pack.list"; then
 		(cd "$(dirname "$2")" && tar -xf "$TI_PACK_TAR" "$1" && mv "$1" "$(basename "$2")")
 		ti_log "  from the pack"
 	fi
@@ -3646,7 +3646,7 @@ ti_install_main() {
 		IFS=$ifs0
 		case ${4:-} in '' | *[!0-9]*) ;; *) ti_tot=$((ti_tot + $4)) ;; esac
 		if { [ -n "$TI_PACK_DIR" ] && [ -f "$TI_PACK_DIR/$3" ]; } ||
-			{ [ -n "$TI_PACK_TAR" ] && grep -qx "$3" "$TI_WORK/pack.list"; }; then :; else
+			{ [ -n "$TI_PACK_TAR" ] && grep -qxF "$3" "$TI_WORK/pack.list"; }; then :; else
 			ti_packed_all=0
 			ti_sel url "$i" > "$ti_ufile"
 			cat "$ti_ufile" >> "$ti_urls"
@@ -3669,7 +3669,7 @@ ti_install_main() {
 		case ${2:-} in '' | -) ti_src_unsized=1 ;; esac
 		case ${3:-} in '' | *[!0-9]*) ;; *) ti_tot=$((ti_tot + $3)) ;; esac
 		if { [ -n "$TI_PACK_DIR" ] && [ -f "$TI_PACK_DIR/$2" ]; } ||
-			{ [ -n "$TI_PACK_TAR" ] && grep -qx "$2" "$TI_WORK/pack.list"; }; then :; else
+			{ [ -n "$TI_PACK_TAR" ] && grep -qxF "$2" "$TI_WORK/pack.list"; }; then :; else
 			ti_packed_all=0
 			ti_sel srcurl > "$ti_ufile"
 			cat "$ti_ufile" >> "$ti_urls"

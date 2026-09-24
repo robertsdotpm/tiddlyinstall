@@ -197,7 +197,11 @@ function describe(planText) {
   const targets = blocks.map(describeTarget);
   return {
     name: get('name'), project: get('project'), appid: get('appid'), record: get('record'),
-    launch: get('launch'), menu: get('menu'), desktop: get('desktop'), root: get('root'),
+    // resolve.js writes `launch` as the last line of the target block,
+    // not in the header, so reading it here always gave '' and the
+    // "Starts" row below has never been shown to anybody.
+    launch: (blocks.map((b) => (pick(b, 'launch') || { val: () => '' }).val(0)).find((v) => v) || ''),
+    menu: get('menu'), desktop: get('desktop'), root: get('root'),
     runtime: get('runtime'), maxage: get('maxage'), signedAt: get('signed'),
     targets,
     admin: targets.some((t) => t.admin),
@@ -206,10 +210,29 @@ function describe(planText) {
 
 // The host a download really comes from, for the "from" column. Our own
 // mirror is named as ours rather than as an address nobody recognises.
+function ourMirrorOrigins() {
+  const out = [];
+  try {
+    const pol = (effectiveCatalog && effectiveCatalog() || {}).policy || {};
+    for (const b of [pol.mirror_base].concat(Array.isArray(pol.mirror_base_ips) ? pol.mirror_base_ips : [])) {
+      if (typeof b === 'string' && b !== '') { try { out.push(new URL(b).origin); } catch (e) { /* not a URL */ } }
+    }
+  } catch (e) { /* no catalogue here */ }
+  return out;
+}
+
 function hostOf(u) {
   try {
     const h = new URL(u).host;
-    return /\/mirror\//.test(u) ? h + ' (our mirror)' : h;
+    // Compared against the mirror the policy actually names, by origin.
+    // It used to be /\/mirror\// tested against the whole URL, so
+    // https://evil.example/mirror/x.tgz -- an attacker-chosen first URL
+    // in a plan -- was labelled "(our mirror)" in the one column a
+    // reader uses to judge where the code is coming from.
+    const ours = ourMirrorOrigins();
+    let origin = '';
+    try { origin = new URL(u).origin; } catch (e) { origin = ''; }
+    return ours.indexOf(origin) >= 0 ? h + ' (our mirror)' : h;
   } catch (e) { return u || 'not given'; }
 }
 
@@ -338,7 +361,7 @@ async function serverChecks(info, d, out, derived, file) {
     try {
       const got = await apiRequest('/api/records/' + encodeURIComponent(hash), { as: 'text' });
       add('Does the server know it?', String(got) === String(info.record)
-        ? 'yes, byte for byte'
+        ? 'yes, the same text'
         : '<strong>it has something different under the same id.</strong> This file is not what it published');
     } catch (e) {
       add('Does the server know it?', e && (e.status === 404 || e.code === 'not_found')
@@ -610,7 +633,26 @@ async function paint(file, sha, info) {
     ['Size', esc(hsize(file.size))],
     ['SHA-256', '<code>' + esc(sha) + '</code><button type="button" class="copy-btn" data-copy="' + esc(sha) + '">Copy</button>'],
 
-    info.pack && info.pack.length ? ['Packed files', info.pack.length + ' file' + (info.pack.length === 1 ? '' : 's') + ' inside, so it can install with no internet'] : null,
+    info.pack && info.pack.length ? ['Packed files', (() => {
+      // "so it can install with no internet" is only true when the pack
+      // covers every file the plan names. builder.js puts the app's own
+      // source into the pack for ordinary online builds too, so counting
+      // members claimed it for files that still have to be downloaded --
+      // three rows above a Downloads total that said otherwise.
+      const want = [];
+      for (const t of (d ? d.targets : [])) {
+        for (const f of t.files || []) if (f.sha) want.push(String(f.sha).toLowerCase());
+        for (const f of t.needFiles || []) if (f.sha) want.push(String(f.sha).toLowerCase());
+      }
+      const have = new Set((info.pack || []).map((m) => String(m.name || '').toLowerCase()));
+      const missing = want.filter((h) => !have.has(h));
+      const n = info.pack.length + ' file' + (info.pack.length === 1 ? '' : 's') + ' inside';
+      if (!want.length) return n;
+      return missing.length === 0
+        ? n + ', covering every file this plan names, so it can install with no internet'
+        : n + ', but ' + missing.length + ' of the ' + want.length + ' files this plan names ' +
+          (missing.length === 1 ? 'is' : 'are') + ' not among them, so it still needs the network';
+    })()] : null,
   ]);
 
   el('v-plan-none').hidden = !!d;
@@ -955,7 +997,13 @@ function rtScriptRows(planText) {
 
   let proved = 0, missing = 0, wrong = 0;
   for (const b of targetBlocks(planText)) {
-    if (b.indexOf('file\t') < 0) continue;      // a `fail` target installs nothing
+    // A block with no `file` line is not necessarily a `fail` block: it
+    // can carry `install` or `npkg`, which the engine runs through
+    // sh -c. Skipping it here took it out of the denominator, so
+    // "all N proved, every command run against them" was said about a
+    // set that excluded the commands with nothing vouching for them.
+    if (b.indexOf('file\t') < 0 && b.indexOf('install\t') < 0 &&
+        b.indexOf('step\t') < 0 && b.indexOf('npkg\t') < 0) continue;   // nothing to install, nothing to vouch for
     const pl = b.split('\n').find((l) => l.indexOf('rtproof\t') === 0);
     if (!pl) { missing++; continue; }
     const steps = pl.split('\t').slice(1).filter((x) => x !== '-');
