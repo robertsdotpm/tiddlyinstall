@@ -52,6 +52,28 @@ def good(p, e):
     return not e.get("sha256") or sha256_file(p) == e["sha256"]
 
 
+# Hash the same file from another host. None when no other host could be
+# read at all (so the caller falls back to what it has), the agreeing URL
+# when they match, False when one answered and disagreed.
+def corroborate(want, size, urls):
+    reached = False
+    for u in urls:
+        try:
+            h = hashlib.sha256()
+            n = 0
+            req = urllib.request.Request(u, headers={"User-Agent": UA})
+            with urllib.request.urlopen(req, timeout=60) as r:
+                for b in iter(lambda: r.read(1 << 20), b""):
+                    h.update(b)
+                    n += len(b)
+        except Exception:
+            continue
+        reached = True
+        if n == size and h.hexdigest() == want:
+            return u
+    return False if reached else None
+
+
 def fetch(e, dest, log):
     p = os.path.join(dest, e["path"])
     if good(p, e):
@@ -72,6 +94,24 @@ def fetch(e, dest, log):
                 errs.append(f"{u}: sha256 mismatch")
             elif not e.get("sha256") and size != e["size"]:
                 errs.append(f"{u}: size {size} != {e['size']}")
+            elif not e.get("sha256"):
+                # No hash in the manifest, so the length is the only thing
+                # that was compared -- and a third-party host that wanted
+                # to put something else on our mirror would match it. Ask a
+                # second host for the same file and require the two to
+                # agree. It is not the vendor's own hash, but two unrelated
+                # hosts serving the same bytes is a great deal more than
+                # "it was the right number of bytes".
+                other = [v for v in e["urls"] if v != u]
+                second = corroborate(h.hexdigest(), size, other) if other else None
+                if second is None:
+                    os.replace(part, p)
+                    return e["path"], "ok-size-only", u
+                if second is False:
+                    errs.append(f"{u}: no second source agreed on the bytes")
+                else:
+                    os.replace(part, p)
+                    return e["path"], "ok-corroborated", f"{u} + {second}"
             else:
                 os.replace(part, p)
                 return e["path"], "ok", u
@@ -95,6 +135,8 @@ def main():
     # hold everything up.
     entries.sort(key=lambda e: e["size"])
     failed = []
+    sizeonly = []
+    corrob = []
     done = 0
     t0 = time.time()
     with open(os.path.join(dest, ".fetch-log.jsonl"), "a") as log, cf.ThreadPoolExecutor(jobs) as ex:
@@ -108,8 +150,25 @@ def main():
                 log.flush()
             if status == "failed":
                 failed.append({"path": path, "size": e["size"], "errors": info})
+            elif status == "ok-size-only":
+                sizeonly.append(path)
+            elif status == "ok-corroborated":
+                corrob.append(path)
     json.dump(failed, open(os.path.join(dest, ".fetch-failed.json"), "w"), indent=1)
     print(f"done: {done} files, {len(failed)} failed, {round(time.time() - t0)} s")
+    # Not a fault and not a clean pass either. A run that says nothing here
+    # used to read as "every file verified", and for the entries with no
+    # sha256 in the manifest it never was.
+    if corrob:
+        print(f"  {len(corrob)} had no sha256 in the manifest and were confirmed "
+              f"against a second host")
+    if sizeonly:
+        print(f"  {len(sizeonly)} had no sha256 in the manifest and no second host "
+              f"to ask: accepted on length alone")
+        for x in sizeonly[:10]:
+            print("    " + x)
+        if len(sizeonly) > 10:
+            print(f"    ... and {len(sizeonly) - 10} more")
 
 
 if __name__ == "__main__":
