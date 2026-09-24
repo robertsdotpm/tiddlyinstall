@@ -1137,14 +1137,47 @@ const mirrorURL = (cat, local) => {
   return base.replace(/\/+$/, '') + '/' + splitJoin(splitJoin(local, '\\', '/'), '%', '%25');
 };
 
+// The same file on our mirror, by address instead of by name.
+//
+// Why only ours. On the machines this matters for, DNS is often
+// misconfigured or blocked (design.md 1.3), and an address gets past
+// that. It cannot be done for anybody else's mirror: measured on
+// 2026-09-24, every one of the busiest hosts in the catalogue refuses a
+// connection to https://<address>/ outright (name mismatch, and most want
+// SNI), and their plain-http ports answer 301 to the https name -- which
+// sends a client whose DNS does not work to a name it cannot resolve.
+// 7,603 of the 7,795 download URLs are https. So an address list for the
+// vendors would be URLs that cannot work, and several are CDNs handing
+// out eight rotating addresses anyway.
+//
+// Ours works because we serve it: plain http, no redirect, and every
+// download is checked against a hash in the signed plan, so the transport
+// is not being trusted (docs/operating.md, "The mirror").
+function mirrorURLsByIP(cat, local) {
+  const bases = list(own(cat.policy, 'mirror_base_ips'));
+  if (local === '' || !bases.length) return [];
+  const tail = '/' + splitJoin(splitJoin(local, '\\', '/'), '%', '%25');
+  const out = [];
+  for (const b of bases) {
+    const base = str(b);
+    if (base !== '') out.push(base.replace(/\/+$/, '') + tail);
+  }
+  return out;
+}
+
 // Catalog.prereqURLs
 function prereqURLs(cat, f) {
   const mirror = mirrorURL(cat, str(f.local));
+  const byIP = mirrorURLsByIP(cat, str(f.local));
   const out = [], seen = new Set();
   const add = (u) => { if (u !== '' && !seen.has(u)) { seen.add(u); out.push(u); } };
-  if (own(cat.policy, 'mirror_first') === true) add(mirror);
+  // Name first, then our addresses, then the vendors: a machine whose DNS
+  // works uses the name, and one whose DNS does not fails it immediately
+  // and reaches us on the next line rather than after every vendor.
+  if (own(cat.policy, 'mirror_first') === true) { add(mirror); for (const u of byIP) add(u); }
   for (const u of list(f.urls)) add(str(u));
   add(mirror);
+  for (const u of byIP) add(u);
   return out;
 }
 
@@ -1234,7 +1267,8 @@ function extraURLs(cat, x) {
   const out = [], seen = new Set();
   const add = (u) => { if (u !== '' && !seen.has(u)) { seen.add(u); out.push(u); } };
   const mirror = mirrorURL(cat, extraLocal(cat, x));
-  if (own(cat.policy, 'mirror_first') === true) add(mirror);
+  const byIP = mirrorURLsByIP(cat, extraLocal(cat, x));
+  if (own(cat.policy, 'mirror_first') === true) { add(mirror); for (const u of byIP) add(u); }
   if (x.part) {
     add(x.src.url);
     for (const m of x.src.mirrors || []) add(str(m));
@@ -1865,10 +1899,12 @@ function writeTarget(cat, w, app, pol, b) {
   const seen = new Set();
   const addURL = (u) => { if (u !== '' && !seen.has(u)) { seen.add(u); w.add('url', u); } };
   const mirror = mirrorURL(cat, e.local);
-  if (own(cat.policy, 'mirror_first') === true) addURL(mirror);
+  const byIP = mirrorURLsByIP(cat, e.local);
+  if (own(cat.policy, 'mirror_first') === true) { addURL(mirror); for (const u of byIP) addURL(u); }
   addURL(e.url);
   for (const m of e.mirrors || []) addURL(str(m));
   addURL(mirror);
+  for (const u of byIP) addURL(u);
   // Recipe steps; from the first that needs an extra file on, they wait
   // for the extra files (Go's comment in writeTarget says why).
   const step = (st, fix) => {
