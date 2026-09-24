@@ -14,6 +14,7 @@
 // file names) is untrusted: it goes through esc() and nothing else. Links
 // are relative, so the pages work behind a proxy under a sub-path too.
 import { mirrorGapBuildWarning } from '../../shared/mirror-words.js';
+import { openNotices } from '../../web_client/open-notice.js';
 
 export function esc(s) {
   return String(s === null || s === undefined ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -238,6 +239,19 @@ export function statusPage(view, request, { refresh = 3 } = {}) {
     if (r.record && /^[a-z0-9]+$/.test(r.record)) {
       body += '<p>Record <a href="../api/records/' + r.record + '"><code>' + r.record + '</code></a>: what the installers install, as the server stored it. ' +
         'Its current install plan, signed by the server: <a href="../api/plan/' + r.record + '">plan</a>.</p>\n';
+    }
+    // What the person who receives one of these files meets when they open
+    // it, from the same table the two JavaScript screens read
+    // (src/web_client/open-notice.js), so the three cannot drift apart.
+    // This page used to say nothing at all -- and a browser-downloaded
+    // macOS build with no notarization ticket is not warned about, it is
+    // killed, so the reader most likely to be sending installers onward
+    // was the one reader not told.
+    const notices = openNotices(files.map((f) => f.platform), mode === 'B' ? 'yours' : 'unsigned');
+    if (notices.length) {
+      body += '<h2>What the person opening it sees</h2>\n<table class="facts">\n' +
+        notices.map((n) => '<tr><th>' + esc(n.label) + '</th><td>' + esc(n.text) + '</td></tr>').join('\n') +
+        '\n</table>\n';
     }
     body += '<div class="box">Each installer shows what it will install, where from, and who signed the installer file, before it changes anything. ' +
       'Install plans are checked against the server\'s signature and every download against its SHA-256, so these files don\'t depend on the ' +
