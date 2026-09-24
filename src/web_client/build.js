@@ -66,7 +66,10 @@ let archFor = '';            // the record it was worked out for
 
 async function loadArch(record) {
   if (!record || archFor === record) return;
-  archFor = record;
+  // Set after the work, not before it. Marking the record done up front
+  // meant a single failed fetch -- a dropped connection, a 500 -- left
+  // the page believing it had already loaded this record's architecture
+  // coverage, and it never tried again for as long as the page was open.
   const rec = await apiRequest('/api/records/' + encodeURIComponent(record), { as: 'text' });
   const m = /^runtime\t(\S+)$/m.exec(String(rec));
   if (!m) return;
@@ -75,6 +78,7 @@ async function loadArch(record) {
   if (!entry) return;
   archCov = archCoverage(entry);
   archLabel = entry.label || m[1];
+  archFor = record;
 }
 
 // Brave, and at least one download that is plain http://.

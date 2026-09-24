@@ -245,13 +245,39 @@ async function env(runtime) {
 let saveTo = null;
 export function setPackDestination(dest) { saveTo = dest || null; }
 
-// Object URLs the last build handed over. Revoked when the next one starts:
-// by then the browser has long taken whatever was downloaded, and the rule
-// needs no completion event, which `<a download>` does not have.
-let handedOver = [];
-function releasePrevious() {
-  for (const u of handedOver) { try { URL.revokeObjectURL(u); } catch (e) { /* gone already */ } }
-  handedOver = [];
+// Object URLs the builds handed over, one list per build.
+//
+// This was a single list emptied at the top of every submit(). build.js
+// goes on rendering the previous job's result as a live download link
+// beside its SHA-256, so starting a second build revoked links that were
+// still on screen -- and nothing serialises submit() (new.js releases
+// its `sending` guard before the detached build starts), so it could
+// revoke the links of a build still running, which hands its three
+// platforms over one at a time on purpose.
+//
+// The rule stays what browser-packing.md section 6 says it is: the last
+// build's files are let go when the next one starts, because <a download>
+// has no completion event to wait for and one installer at a time is what
+// makes the ceiling the largest single file rather than the sum.
+//
+// What was wrong was narrower. Nothing serialises submit() -- new.js
+// releases its `sending` guard before the detached build starts -- so a
+// second build could revoke the links of a build that was still running,
+// which publishes its three platforms one at a time on purpose. A
+// generation is released only once its own build has finished.
+let generations = [{ urls: [], done: false }];
+function handOver(url) { generations[generations.length - 1].urls.push(url); }
+function newGeneration() {
+  for (const g of generations) {
+    if (!g.done) continue;
+    for (const u of g.urls) { try { URL.revokeObjectURL(u); } catch (e) { /* gone already */ } }
+    g.urls = [];
+    g.spent = true;
+  }
+  generations = generations.filter((g) => !g.spent);
+  const g = { urls: [], done: false };
+  generations.push(g);
+  return g;
 }
 
 const mirrorBaseOf = (cat) => String((cat && cat.policy && cat.policy.mirror_base) || '').replace(/\/+$/, '');
@@ -386,7 +412,7 @@ async function savePacked(hash, name, spec, plat, live) {
   const out = { size, sha256 };
   if (blob) {
     out.url = URL.createObjectURL(blob);
-    handedOver.push(out.url);
+    handOver(out.url);
   } else out.saved = true;
   // Handed over now, not at the end of the job: three platforms are three
   // downloads, and the first should be there while the third is building.
@@ -470,7 +496,7 @@ async function build(body, e, progress, live) {
       else if (f.saved) o.saved = true;         // written to the file the user chose
       else {
         o.url = URL.createObjectURL(new Blob([f.data], { type: 'application/octet-stream' }));
-        handedOver.push(o.url);
+        handOver(o.url);
       }
       return o;
     }),
@@ -498,9 +524,7 @@ async function submit(body) {
   } catch (x) {
     throw new ApiError(x.status || 400, x.message, x.code || 'invalid');
   }
-  // The last build's files are let go now: one installer at a time is what
-  // makes the ceiling the largest single file rather than the sum.
-  releasePrevious();
+  const gen = newGeneration();
   const dest = saveTo;
   const j = { id: 'local-' + nextTicket, ticket: nextTicket++, status: 'running', progress: 'Starting', error: '' };
   jobs.set(j.id, j);
@@ -512,7 +536,7 @@ async function submit(body) {
     j.result.files.push(f);
   };
   build(body, e, (m) => { j.progress = m; }, live)
-    .then((res) => { j.result = res; j.status = 'done'; j.progress = 'Done'; })
+    .then((res) => { j.result = res; j.status = 'done'; j.progress = 'Done'; gen.done = true; })
     .catch((x) => { j.status = 'failed'; j.error = x && x.message ? x.message : String(x); })
     .then(() => { if (saveTo === dest) setPackDestination(null); });
   return view(j);

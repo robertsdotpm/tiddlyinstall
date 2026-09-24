@@ -18,7 +18,23 @@ import path from 'node:path';
 // What build_site.py reads. registry/ is deliberately absent: the
 // catalogue is snapshotted and cached on purpose (tools/deploy.sh), so
 // treating it as a source would cry stale on every cached build.
-const SOURCES = ['src/web_client', 'src/shared', 'tools/build_site.py'];
+// Everything build_site.py opens, not the three that were easy to name.
+// The prebuilt bases matter most: they are binaries the guard never
+// stat'd, so editing base.nsi and rebuilding the page without rebuilding
+// base.exe shipped the unfixed Windows engine with every suite green --
+// which is exactly the failure this file exists to stop, one level down.
+// src/build_server/data is deliberately not here as a whole: it holds
+// live server state and would cry stale on every run. The two files the
+// page actually bakes in are named individually.
+const SOURCES = [
+  'src/web_client', 'src/shared', 'tools/build_site.py',
+  'src/installers/windows/out', 'src/installers/unix/out',
+  'src/vendor/resedit-bundle.js',
+  'src/build_server/data/plan-signing-key.pub',
+  'src/build_server/data/rtscripts',
+  'tests/browsers/compat.json',
+  'LICENSE',
+];
 
 function newest(p, acc) {
   let st;

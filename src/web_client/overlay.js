@@ -522,7 +522,7 @@ export function applyOverlay(files, changes) {
       return;
     }
     const base = parent === out ? files[key] : parent[key];
-    const id = path.slice(0, -1).join(' ');
+    const id = path.slice(0, -1).join('\u0000');
     if (!arrays.has(id)) arrays.set(id, { parent, key, base: Array.isArray(base) ? base : [], repl: new Map(), removed: new Set(), added: [] });
     const a = arrays.get(id);
     a.parent = parent;
@@ -565,6 +565,11 @@ export function setRefreshedCatalog(r) {
   filesPromise = null;
   loadedFolders.clear();
   pendingFolders.clear();
+  // Anything already unpacking belongs to the catalogue that has just
+  // been replaced. Clearing the sets is not enough on its own: an unpack
+  // in flight would finish afterwards and add its folder to the new
+  // catalogue's loaded set, having read the old one's bytes.
+  generation++;
   emit();
 }
 
@@ -622,6 +627,9 @@ export function catalogFolders() {
 }
 
 let filesPromise = null;
+// Bumped whenever the catalogue is replaced, so work started against
+// the old one can tell that it is no longer wanted.
+let generation = 0;
 const loadedFolders = new Set();
 const pendingFolders = new Map();
 // The catalogue files built into the page, named as in a snapshot, shared
@@ -647,10 +655,13 @@ export async function ensureFolders(folders) {
   await Promise.all([...new Set(folders)].filter((f) => typeof f === 'string' && Object.hasOwn(ix.folders, f) && !loadedFolders.has(f)).map((f) => {
     let p = pendingFolders.get(f);
     if (!p) {
+      const mine = generation;
       p = (async () => {
         const bytes = blockBytes('ti-cat-' + f);
         if (!bytes) throw new Error('the catalogue in this page has no ' + f + ' folder');
-        Object.assign(files, await readChunk(bytes, f));
+        const chunk = await readChunk(bytes, f);
+        if (mine !== generation) return;        // a different catalogue is in use now
+        Object.assign(files, chunk);
         loadedFolders.add(f);
       })();
       pendingFolders.set(f, p);

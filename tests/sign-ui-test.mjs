@@ -128,7 +128,13 @@ try {
   // say and for what happens to a credential, which is the part that would
   // hurt if it were wrong.
   await check('sign-src-service', true);
-  await waitFor(`!document.getElementById('sign-service').hidden && document.getElementById('svc-name').options.length > 3`, 'the service panel');
+  // Wait for the provider this asserts on, not for "more than three".
+  // The list is painted before the page knows whether it has a server,
+  // and the relayed provider is added when that settles; a wait that
+  // the shorter list already satisfies reads the panel mid-flight and
+  // blames the page for the test's timing.
+  await waitFor(`!document.getElementById('sign-service').hidden && ` +
+    `[].some.call(document.getElementById('svc-name').options, (o) => o.value === 'azurets')`, 'the service panel');
   const ids = await js(`[].map.call(document.getElementById('svc-name').options, (o) => o.value).join(',')`);
   ok(ids === 'sslcom,gcpkms,awskms,azurets,digicert,generic', 'ui: served, every provider is offered including the relayed one', ids);
 

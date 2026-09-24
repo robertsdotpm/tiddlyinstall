@@ -549,6 +549,16 @@ export function mountSign({ build, download, kind }) {
   $('svc-cancel').addEventListener('click', () => cancelServicePaste());
   // A relayed provider needs a server, so the list changes with it.
   paintServiceList();
+  // ...and again once the page knows whether it has a server.
+  //
+  // servicesFor() hides the relayed provider when there is none, and
+  // apiLocal() is true until the same-origin probe in apiReady() has
+  // answered. Painting once, synchronously, meant a page the build
+  // server had just served could offer one provider fewer than it has --
+  // and nothing repainted, so it stayed that way for the session. The
+  // selection is preserved across the repaint, so this is invisible
+  // unless it changes something.
+  Promise.resolve().then(() => apiReady()).then(() => paintServiceList(), () => {});
   window.addEventListener('ti-api-change', paintServiceList);
   $('ts-on').addEventListener('change', () => { $('ts-name').disabled = !$('ts-on').checked; });
   $('remote-finish').addEventListener('click', finishRemote);

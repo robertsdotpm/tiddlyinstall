@@ -321,7 +321,7 @@ function paintFilterOptions() {
   for (const k of ['os', 'arch', 'variant', 'format']) {
     const s = $('rt-f-' + k), cur = s.value;
     s.replaceChildren(opt('', 'Any'), ...count(k).map(([v, n]) =>
-      opt(v === '' ? ' none' : v, (v === '' ? '(none)' : v + (k === 'arch' && ARCH_NOTE[v] ? ' - ' + ARCH_NOTE[v] : '')) + ' (' + n.toLocaleString('en') + ')')));
+      opt(v === '' ? '\u0000none' : v, (v === '' ? '(none)' : v + (k === 'arch' && ARCH_NOTE[v] ? ' - ' + ARCH_NOTE[v] : '')) + ' (' + n.toLocaleString('en') + ')')));
     s.value = [...s.options].some((o) => o.value === cur) ? cur : '';
   }
 }
@@ -330,7 +330,7 @@ function paintReleases() {
   const rows = releaseRows();
   const f = F();
   const vf = versionFilter(f.version);
-  const want = (k, v) => !f[k] || (f[k] === ' none' ? ((v != null ? v : '')) === '' : v === f[k]);
+  const want = (k, v) => !f[k] || (f[k] === '\u0000none' ? ((v != null ? v : '')) === '' : v === f[k]);
   S.filtered = rows.filter((r) => want('os', r.v.os) && want('arch', r.v.arch) && want('variant', r.v.variant) && want('format', r.v.format) &&
     (!vf || vf(String(r.v.version))) && (!f.changed || r.st));
   const bad = f.version && /^[<>=!~]/.test(f.version.trim()) && O.specError(f.version.trim());
@@ -1141,7 +1141,12 @@ function exportOverlay() {
   const a = el('a', { href: URL.createObjectURL(new Blob([text], { type: 'application/json' })), download: 'tiddlyinstall-catalog-changes.json' });
   document.body.append(a);
   a.click();
-  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  // 120 s, not 1 s: api.js:862-873 explains why. iOS Safari hands the
+  // blob to its own download machinery and fetches it afterwards, so
+  // a URL revoked a second later is a download that silently never
+  // happens. The repo already fixed this twice elsewhere and this
+  // export kept the old number.
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 120000);
 }
 
 /* ---------- "Save this page" with the changes ---------- */
@@ -1356,8 +1361,14 @@ async function start() {
     return;
   }
   try {
-    S.files = await O.baseFiles();
+    // loadOverlay installs a refreshed catalogue if one is stored, and
+    // baseFiles() reads what is installed now. Taken in this order, a
+    // page opened at #runtimes with a stored refresh captured the baked
+    // files, then swapped the catalogue under them -- every runtime
+    // showed 0 releases beneath a caption saying the fetched catalogue
+    // was in use.
     await O.loadOverlay();
+    S.files = await O.baseFiles();
   } catch (e) {
     $('rt-loading').textContent = 'Couldn\'t read the catalogue in this page: ' + (e && e.message ? e.message : e);
     return;
