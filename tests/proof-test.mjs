@@ -22,7 +22,7 @@ import crypto from 'node:crypto';
 import { NODE_PREFIX, leafHash, nodeHash, buildLevels, treeRoot, proofFor, rootFromProof } from '../src/shared/merkle.js';
 import { ZERO_ROOT, entryLine, chainRoots, chainRoot, parseReleases, checkChain, rootAt } from '../src/shared/ledger.js';
 import { docSignature, verifyDoc, docField } from '../src/shared/signeddoc.js';
-import { canonicalTarget } from '../src/shared/rtscript.js';
+import { canonicalTarget, targetBlocks } from '../src/shared/rtscript.js';
 
 let pass = 0, fail = 0;
 const ok = (c, m, d) => { if (c) { pass++; console.log('PASS ' + m); } else { fail++; console.log('FAIL ' + m + (d ? '\n     ' + d : '')); } };
@@ -102,6 +102,26 @@ for (const n of [1, 2, 3, 4, 5, 7, 8, 9, 16, 17]) {
   const canon = canonicalTarget(blk);
   ok(canon.startsWith('when\t'), 'a canonical target block begins "when\\t", so no leaf can look like a node');
   ok(!canon.includes('\nlaunch\t'), 'and the launch line is not in it: the builder wrote that, not us');
+}
+
+// Line endings must not decide what gets signed. A plan can pick up CRLF
+// on the way -- an install.txt written in Notepad, a transport that
+// converts -- and if the readers disagree about what a separator is, one
+// of them proves a block another one does not run. The shell engine did
+// exactly that until 2026-09-24: ti_select_target stripped a trailing
+// \r and ti_target_canon did not, so `[target]\r` was a separator for
+// the selector and block content for the hasher.
+{
+  const b1 = 'when\tlinux\t0\t9999\t*\nfile\tpython\tx.tgz\t' + 'c'.repeat(64) + '\t1';
+  const b2 = 'when\tlinux\t0\t9999\t*\nfile\tpython\ty.tgz\t' + 'b'.repeat(64) + '\t1';
+  const lf = 'ti-plan\t1\nrecord\tdead\n[target]\n' + b1 + '\n[target]\n' + b2 + '\n';
+  const crlf = lf.replace(/\n/g, '\r\n');
+  ok(targetBlocks(lf).length === 2, 'a two-block plan has two target blocks');
+  ok(targetBlocks(crlf).length === 2, 'and still two when the plan is CRLF: a separator is a separator either way');
+  ok(canonicalTarget(targetBlocks(crlf)[0]) === canonicalTarget(targetBlocks(lf)[0]),
+     'the canonical text is identical either way, so the leaf does not depend on line endings');
+  ok(canonicalTarget(targetBlocks(crlf)[1]) === canonicalTarget(targetBlocks(lf)[1]),
+     'for every block, not just the first');
 }
 
 /* ---------- ledger ---------- */

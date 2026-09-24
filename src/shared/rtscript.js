@@ -47,7 +47,7 @@ export function canonicalTarget(block) {
 // "[target]" line itself). Used by the engines and the Verify page to
 // re-derive what was signed.
 export function targetBlocks(planText) {
-  const parts = String(planText).split('\n[target]\n');
+  const parts = String(planText).split(/\n\[target\]\r?\n/);
   return parts.slice(1);
 }
 

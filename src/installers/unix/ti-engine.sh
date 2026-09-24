@@ -1459,6 +1459,7 @@ ti_b64d() {
 # it has to match what the resolver hashed to the byte.
 ti_target_canon() { # n
 	awk -v want="$1" -F'\t' '
+		{ sub(/\r$/, "") }
 		$0 == "[target]" { n++; next }
 		n == want {
 			if ($0 == "") next
@@ -1470,11 +1471,26 @@ ti_target_canon() { # n
 
 ti_target_proof() { # n -> one step per line
 	awk -v want="$1" -F'\t' '
+		{ sub(/\r$/, "") }
 		$0 == "[target]" { n++; next }
 		n == want && $1 == "rtproof" {
 			for (i = 2; i <= NF; i++) if ($i != "-") print $i
 			exit
 		}' "$TI_PLAN"
+}
+
+# Whether target N carries an `rtproof` line at all. A proof that is
+# absent and a proof that does not reach the root are different answers:
+# the C plugin has always said so (plugin-src/rtcheck.c, TI_RT_NONE) and
+# format.md says "saying nothing beats saying something unprovable".
+# `rtproof	-` is a legitimate single-leaf proof, so this asks about the
+# line, not about the steps it yields.
+ti_target_has_proof() { # n
+	awk -v want="$1" -F'\t' '
+		{ sub(/\r$/, "") }
+		$0 == "[target]" { n++; next }
+		n == want && $1 == "rtproof" { found = 1; exit }
+		END { exit(found ? 0 : 1) }' "$TI_PLAN"
 }
 
 # Walk a proof from a leaf to the root it reaches. Two forks a step: the
@@ -1527,9 +1543,12 @@ ti_check_rtscript() { # target-index
 	got=$(ti_target_proof "$1" | ti_merkle_walk "$leaf")
 	if [ "$got" = "$want" ]; then
 		ti_rt_state=ok
-	else
+	elif ti_target_has_proof "$1"; then
 		ti_rt_state=bad
 		ti_rt_why='the proof in this plan does not lead to the signed root'
+	else
+		ti_rt_state=none
+		ti_rt_why='this target carries no proof'
 	fi
 	return 0
 }
