@@ -1912,6 +1912,41 @@ ti_inside() {
 # It is an explicit argument rather than "no hash means don't check", so
 # a `file` line that somehow arrives without one still fails closed
 # instead of being installed unchecked.
+# Spread the load across the vendors a file is listed at.
+#
+# The plan names the same file at several places, and trying them in the
+# order written sends every installer in the world at whichever one is
+# first. The offset comes from the file's own SHA-256 -- already in the
+# plan, already covered by its signature, and already on this machine --
+# so it is fixed for a given file, spread evenly across files, and needs
+# no random number generator to go wrong on an old system.
+#
+# Only the vendors rotate. Our own mirror is a fallback, not a vendor, so
+# everything from the first `/mirror/` line on keeps its place; with
+# mirror_first off those are the tail, and with it on the tail is empty
+# and nothing moves. Reordering is safe at any time because every source
+# is checked against the same SHA-256 before it is used -- the order
+# decides who serves the bytes, never which bytes are accepted.
+ti_spread() { # sha256 urls-file
+	awk -v seed="$1" '
+	BEGIN { for (i = 0; i < 16; i++) hexv[substr("0123456789abcdef", i + 1, 1)] = i }
+	{ u[++n] = $0; if (!cut && index($0, "/mirror/")) cut = n }
+	END {
+		last = (cut ? cut - 1 : n)
+		k = 0
+		if (last > 1) {
+			# The whole hash, reduced as it goes: k = h % last would
+			# otherwise depend on the low bits of the first few digits
+			# alone, and two files sharing them would share a vendor.
+			h = 0
+			for (i = 1; i <= length(seed); i++) h = (h * 16 + hexv[substr(seed, i, 1)]) % 1000003
+			k = h % last
+		}
+		for (i = 0; i < last; i++) print u[(i + k) % last + 1]
+		for (i = last + 1; i <= n; i++) print u[i]
+	}' "$2"
+}
+
 ti_obtain() { # sha256 out urls-file label [unpinned]
 	if [ -z "$1" ] || [ "$1" = - ]; then
 		[ "${5:-}" = unpinned ] || { ti_log "refusing a file with no SHA-256"; return 1; }
@@ -1930,6 +1965,7 @@ ti_obtain() { # sha256 out urls-file label [unpinned]
 		ti_say "  the packed copy of $4 has the wrong SHA-256; trying downloads"
 		rm -f "$2"
 	fi
+	ti_spread "$1" "$3" > "$TI_WORK/urls.ord" 2>/dev/null || cp "$3" "$TI_WORK/urls.ord"
 	while IFS= read -r u <&4; do
 		[ -n "$u" ] || continue
 		ti_say "  downloading $u"
@@ -1944,7 +1980,7 @@ ti_obtain() { # sha256 out urls-file label [unpinned]
 			ti_say "  download failed: $u"
 		fi
 		rm -f "$2.part"
-	done 4< "$3"
+	done 4< "$TI_WORK/urls.ord"
 	return 1
 }
 

@@ -4,7 +4,7 @@
   "http://158.69.27.176/mirror",
   "http://[2607:5300:60:80b0::1]/mirror"
  ],
- "mirror_first": true,
+ "mirror_first": false,
  "external_tmp_files": [
   "get-pip.py",
   "7z.exe",
