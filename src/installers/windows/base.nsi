@@ -246,6 +246,10 @@ Var FF_name
 Var FF_path
 Var FF_h
 Var FF_t
+Var FF_k             ; FetchFile: which vendor to try first (FfSpreadK)
+Var FF_nv            ; FetchFile: how many vendors this file has
+Var FF_phase         ; FetchFile: 0 = vendors from $FF_k on, 1 = the rest
+Var FF_vi            ; FetchFile: which vendor this line is
 Var RC_cmd
 Var RC_cwd
 Var RC_quiet
@@ -5747,6 +5751,46 @@ FunctionEnd
 
 ; Get the file declared at plan line $FF_line (sha $FF_sha, name $FF_name):
 ; the pack first, then each of its url lines in order. Result in $FF_path.
+
+; The offset into a file's vendor list, from the file's own SHA-256.
+; Same rule as ti_spread in the unix engine: fold every hex digit,
+; reducing as it goes, then take it modulo the number of vendors. The
+; whole hash and not a prefix, because k = h % n would otherwise turn on
+; the low bits of the first few digits and two files sharing them would
+; share a vendor. In: $FF_sha, $FF_nv. Out: $FF_k.
+Function FfSpreadK
+  Push $0
+  Push $1
+  Push $2
+  Push $3
+  StrCpy $FF_k 0
+  ${If} $FF_nv <= 1
+    Goto sk_end
+  ${EndIf}
+  StrLen $2 $FF_sha
+  StrCpy $3 0
+  StrCpy $1 0
+  ${Do}
+    ${If} $3 >= $2
+      ${Break}
+    ${EndIf}
+    StrCpy $0 $FF_sha 1 $3
+    ; hex digit -> value; anything else counts as 0, which is harmless
+    StrCpy $0 "0x$0"
+    IntOp $0 $0 + 0
+    IntOp $1 $1 * 16
+    IntOp $1 $1 + $0
+    IntOp $1 $1 % 1000003
+    IntOp $3 $3 + 1
+  ${Loop}
+  IntOp $FF_k $1 % $FF_nv
+  sk_end:
+  Pop $3
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
 Function FetchFile
   Push $0
   Push $1
@@ -5778,6 +5822,63 @@ Function FetchFile
       Delete "$FF_path"
     ${EndIf}
   ${EndIf}
+  ; Spread the load across the vendors this file is listed at, the way
+  ; ti_spread does in the unix engine: count them, pick a starting one
+  ; from the file's own SHA-256, and try the rest first. Our own mirror
+  ; is a fallback rather than a vendor, so anything with /mirror/ in it
+  ; is not counted and is left where it is, at the end. Reordering is
+  ; safe because every source is checked against the same SHA-256 before
+  ; it is used: the order decides who serves the bytes, never which
+  ; bytes are accepted.
+  StrCpy $FF_nv 0
+  FileOpen $FF_h $PlanU16 r
+  StrCpy $0 0
+  ${Do}
+    ${If} $0 >= $FF_line
+      ${Break}
+    ${EndIf}
+    ${TiRead} $FF_h
+    IntOp $0 $0 + 1
+  ${Loop}
+  ${Do}
+    ${TiRead} $FF_h
+    ${If} ${Errors}
+      ${Break}
+    ${EndIf}
+    Call TiParseLine
+    ${If} $FF_ukey S== "nurl"
+      ${If} $K S== "need"
+      ${OrIf} $K S== "file"
+      ${OrIf} $K S== "[target]"
+        ${Break}
+      ${EndIf}
+      ${If} $K S!= "nurl"
+        ${Continue}
+      ${EndIf}
+    ${Else}
+      ${If} $K S== "step"
+        ${Continue}
+      ${EndIf}
+      ${If} $K S!= "url"
+        ${Break}
+      ${EndIf}
+    ${EndIf}
+    StrCpy $U_a $F1
+    StrCpy $U_b "/mirror/"
+    Call TiContains
+    ${If} $U_out = 0
+      IntOp $FF_nv $FF_nv + 1
+    ${EndIf}
+  ${Loop}
+  FileClose $FF_h
+  Call FfSpreadK
+
+  ; Two passes: the vendors from $FF_k on, then the ones before it. The
+  ; mirror lines sit at the end of the list and are only reached on the
+  ; second, so every vendor is tried before we serve it ourselves.
+  StrCpy $FF_phase 0
+  ff_pass:
+  StrCpy $FF_vi 0
   FileOpen $FF_h $PlanU16 r
   StrCpy $0 0
   ${Do}
@@ -5819,6 +5920,29 @@ Function FetchFile
         ${Continue}
       ${EndIf}
     ${EndIf}
+    StrCpy $U_a $F1
+    StrCpy $U_b "/mirror/"
+    Call TiContains
+    ${If} $U_out = 0
+      ; a vendor: in on this pass only if it is on the right side of $FF_k
+      ${If} $FF_phase = 0
+        ${If} $FF_vi < $FF_k
+          IntOp $FF_vi $FF_vi + 1
+          ${Continue}
+        ${EndIf}
+      ${Else}
+        ${If} $FF_vi >= $FF_k
+          IntOp $FF_vi $FF_vi + 1
+          ${Continue}
+        ${EndIf}
+      ${EndIf}
+      IntOp $FF_vi $FF_vi + 1
+    ${ElseIf} $FF_phase = 0
+      ${If} $FF_k > 0
+        ; ours, and vendors are not exhausted yet
+        ${Continue}
+      ${EndIf}
+    ${EndIf}
     StrCpy $1 1
     ${Log} "Downloading $F1"
     StrCpy $U_a $F1
@@ -5850,6 +5974,12 @@ Function FetchFile
     Delete "$FF_path"
   ${Loop}
   FileClose $FF_h
+  ${If} $FF_phase = 0
+    ${If} $FF_k > 0
+      StrCpy $FF_phase 1
+      Goto ff_pass
+    ${EndIf}
+  ${EndIf}
   ${If} $1 = 0
     ${FailWith} "$FF_name isn't packed in this installer and has no download location."
   ${ElseIf} $FF_sha == "-"
