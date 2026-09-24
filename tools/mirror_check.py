@@ -46,9 +46,16 @@ some are deliberate. They are worth knowing about because nothing would
 put them back if that host were rebuilt from the manifest.
 
 Sizes are compared always -- that is what LocalIndex matches on, with
-the name -- and `--sha` hashes every file everywhere, which is slow and
-rarely what you want after mirror_fetch.py, since it verified the hashes
-as it fetched.
+the name -- and `--sha` hashes every file everywhere, which is slow.
+
+`--sha` cannot check an entry the manifest gives no sha256 for. There
+are 243 such entries of 1,105 in the runtime manifest today, and for
+those the answer is the length and nothing more. The count is printed
+per place and the paths listed at the end, because a run that said
+nothing used to be read as "every byte checked" when a fifth of it was
+not. mirror_fetch.py is under the same limit and for the same entries:
+what it verified as it fetched is what the manifest gave it to verify
+against.
 
 Exit status is 0 when everything agrees and 1 when it does not, so this
 can be a check rather than something to read.
@@ -209,8 +216,16 @@ def look_http(host, entries, want_sha, jobs=8):
 
 
 def judge(entries, got, want_sha):
-    """(missing, wrong) for one place."""
-    missing, wrong = [], []
+    """(missing, wrong, unhashed) for one place.
+
+    `unhashed` is what --sha could not check: an entry the manifest gives
+    no sha256 for is compared on size and nothing else, and until now that
+    was indistinguishable in the output from one that hashed correctly. On
+    today's runtime manifest that is 243 of 1,105 entries, so a --sha run
+    that printed no complaint had verified the bytes of four fifths of
+    what it looked at and the length of the rest.
+    """
+    missing, wrong, unhashed = [], [], []
     for e in entries:
         g = got.get(e["path"])
         if g is None:
@@ -221,7 +236,9 @@ def judge(entries, got, want_sha):
             wrong.append("%s: %d bytes, the manifest says %d" % (e["path"], size, e["size"]))
         elif want_sha and e.get("sha256") and sha != e["sha256"]:
             wrong.append("%s: sha256 %s, the manifest says %s" % (e["path"], sha[:16], e["sha256"][:16]))
-    return missing, wrong
+        elif want_sha and not e.get("sha256"):
+            unhashed.append(e["path"])
+    return missing, wrong, unhashed
 
 
 def main():
@@ -247,14 +264,17 @@ def main():
     width = max([5] + [len(h["id"]) for h in hosts])
     bad = False
     missing = {}                      # place -> [paths]
+    unhashed = {}                     # place -> [paths --sha could only size-check]
     extra = {}                        # host id -> [paths it holds that the manifest doesn't list]
 
     if not a.no_local:
         got = look_local(a.local, entries, a.sha)
-        m, w = judge(entries, got, a.sha)
+        m, w, u = judge(entries, got, a.sha)
         missing["local"] = m
-        print("%-*s %d present, %d missing%s" % (width, "local", len(entries) - len(m), len(m),
-                                                 ", %d wrong" % len(w) if w else ""))
+        unhashed["local"] = u
+        print("%-*s %d present, %d missing%s%s" % (width, "local", len(entries) - len(m), len(m),
+                                                   ", %d wrong" % len(w) if w else "",
+                                                   ", %d size-only (no sha256 in the manifest)" % len(u) if u else ""))
         for x in w:
             print("  local wrong: " + x)
         bad = bad or bool(w)
@@ -278,11 +298,13 @@ def main():
             extra[h["id"]] = sorted(set(held) - asked)
         else:
             got = look_http(h, want, a.sha)
-        m, w = judge(want, got, a.sha)
+        m, w, u = judge(want, got, a.sha)
         missing[h["id"]] = m
-        print("%-*s %d present, %d missing%s%s%s" % (
+        unhashed[h["id"]] = u
+        print("%-*s %d present, %d missing%s%s%s%s" % (
             width, h["id"], len(want) - len(m), len(m),
             ", %d wrong" % len(w) if w else "",
+            ", %d size-only (no sha256 in the manifest)" % len(u) if u else "",
             ", %d not for this host" % skipped if skipped else "",
             ", %d not in the manifest" % len(extra[h["id"]]) if extra.get(h["id"]) else ""))
         for x in w:
@@ -313,6 +335,13 @@ def main():
                  only_here,
                  ": the plans that name %s fall back to the vendor." % place)
     show("In the manifest and nowhere", sorted(everywhere), ": never fetched.")
+    # Not a fault, and not a pass either: --sha looked at these and could
+    # only compare their length, because the manifest carries no sha256
+    # for them. Listed so that a quiet run is not read as a hashed one.
+    if a.sha:
+        seen = sorted({p for paths in unhashed.values() for p in paths})
+        show("Checked on size alone", seen,
+             ": the manifest gives no sha256 for these, so --sha compared their length.")
     for hid, paths in extra.items():
         # Not a fault: things deliberately on a host that no plan downloads
         # (the build toolchain has its own manifest, for instance). Worth
