@@ -79,8 +79,31 @@ def verify(path, e):
                 h.update(chunk)
         how = f"{c['algo']} vendor" + (" (of decompressed contents)" if c.get("applies_to") == "decompressed" else "")
         return h.hexdigest().lower() == c["value"].lower(), how
+    # No vendor checksum. Before falling back to a length, use a hash
+    # somebody else published for the same file.
+    #
+    # add_mirrors.py has been collecting these for a long time -- 2,649
+    # entries carry one, from winget manifests, distribution packaging and
+    # other third parties -- under `checksum_corroboration`, and nothing
+    # in the project has ever read one. They were the answer to exactly
+    # this case and were filed instead of used. An independently sourced
+    # hash is weaker evidence than the vendor's own, and it is far
+    # stronger than "the file is the right length", which is what these
+    # entries were getting.
+    cc = e.get("checksum_corroboration") or []
+    for c2 in cc:
+        try:
+            algo, want = c2["algo"], c2["value"].lower()
+            h = hashlib.new(algo)
+        except (KeyError, TypeError, ValueError):
+            continue
+        with open(path, "rb") as f:
+            for chunk in iter(lambda: f.read(1 << 20), b""):
+                h.update(chunk)
+        src = str(c2.get("source") or "an unnamed third party")
+        return h.hexdigest().lower() == want, f"{algo} corroborated by {src}"
     if e.get("size"):
-        return path.stat().st_size == e["size"], "size only (no vendor checksum)"
+        return path.stat().st_size == e["size"], "size only (no vendor checksum, none corroborated)"
     return path.stat().st_size > 0, "unverified (no checksum or size)"
 
 
