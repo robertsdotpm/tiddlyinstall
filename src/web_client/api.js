@@ -62,8 +62,26 @@ export class ApiError extends Error {
 
 /* ---------- which backend ---------- */
 
+// A saved copy will not take a *remote* server out of storage.
+//
+// Pages opened from disk share one localStorage in Chrome, so any other
+// local HTML file can write ti.api, and it was honoured at module scope
+// with nothing asked: every build, and every download link, would come
+// from an address somebody else chose. build.js:296 says so on the build
+// page afterwards, which is a notice and not a gate.
+//
+// A served page is different -- its origin is the server's own, so only
+// that server can write the key -- and that is where setting a server on
+// purpose actually matters. So the rule is by protocol, not by value:
+// served, the stored server is honoured as before; from disk, only
+// `local` is, which is what a saved copy does anyway and is the one
+// direction a forged value cannot exploit. Setting a server by hand in
+// the footer still works, for that page load.
 function readStoredApi() {
-  try { return localStorage.getItem(API_KEY) || ''; } catch (e) { return ''; }
+  let v;
+  try { v = localStorage.getItem(API_KEY) || ''; } catch (e) { return ''; }
+  if (typeof location !== 'undefined' && /^https?:$/.test(location.protocol)) return v;
+  return String(v).trim() === LOCAL ? v : '';
 }
 function readParamApi() {
   try { return new URLSearchParams(location.search).get('api') || ''; } catch (e) { return ''; }
