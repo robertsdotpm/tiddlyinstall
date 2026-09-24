@@ -6389,8 +6389,22 @@ Function ClearOldInstall
   Pop $0
 FunctionEnd
 
-; Remove what this run created.
+; Remove what this run created -- and only that.
+;
+; A runtime folder under $Root carries a .ti-owner naming the app that
+; made it, written immediately after the folder in DoFiles, and a folder
+; that already exists makes DoFiles fail before it is touched: "already
+; exists and doesn't belong to this install. Remove it or uninstall the
+; app that owns it." Rollback then ran and removed it anyway, so the
+; refusal was advice the installer did not take itself.
+;
+; It now makes the same ownership check the overwrite path (CleanOld) and
+; the uninstaller make. The gap between CreateDirectory and the .ti-owner
+; write is the one case this leaves a folder of ours behind, and it will
+; be empty. An empty folder is a far smaller harm than deleting a runtime
+; another app installed.
 Function Cleanup
+  Push $0
   ${Log} "Removing partly installed folders"
   StrCpy $T_rest $FileMap
   Call TiSplitTab
@@ -6400,8 +6414,16 @@ Function Cleanup
     ${EndIf}
     Call TiSplitTab
     Call TiSplitTab
-    ${If} ${FileExists} "$Root\$T_field\*.*"
-      RMDir /r "$Root\$T_field"
+    StrCpy $0 "$Root\$T_field"
+    ${If} ${FileExists} "$0\*.*"
+      StrCpy $U_a $0
+      Call TiOwnerOf
+      ${If} $U_out S== $AppId
+        ${Log} "  remove $0"
+        RMDir /r "$0"
+      ${Else}
+        ${Log} "  kept $0: its .ti-owner doesn't name this app"
+      ${EndIf}
     ${EndIf}
   ${Loop}
   ${If} $Created = 1
@@ -6422,6 +6444,7 @@ Function Cleanup
     ${EndIf}
   ${EndIf}
   RMDir "$Root"
+  Pop $0
 FunctionEnd
 
 ; root system: only administrators and SYSTEM may change <root> and what
