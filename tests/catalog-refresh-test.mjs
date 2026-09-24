@@ -22,7 +22,7 @@ import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { launchChrome } from './browsers/cdp.mjs';
+import { launchChrome, sleep } from './browsers/cdp.mjs';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const arg = (n, d) => { const i = process.argv.indexOf(n); return i > 0 ? process.argv[i + 1] : d; };
@@ -208,6 +208,31 @@ ok(/not the one built into this page/i.test(trust), 'the Trust page says the run
 ok(trust.indexOf('127.0.0.1:' + PORT) >= 0, '...and names the server it came from', trust.slice(0, 400));
 ok(/checked against the key above/i.test(trust), '...and that it was checked against the key before it was used');
 ok(/the one built in/i.test(trust), '...and still accounts for the one baked into the file');
+
+// Every row exactly once.
+//
+// paint() became async when it had to ask IndexedDB about the refresh,
+// and it is also re-run when the catalogue is swapped. With a refresh
+// stored, both happen on load: the paint at the bottom of trust.js and
+// the one the overlay's load event triggers. Both emptied the table and
+// appended after their await, so every row came out twice -- reported by
+// the operator from a screenshot, because nothing here was looking. It is
+// invisible to any check that greps for a phrase: the words were all
+// right, there were two of each.
+await sleep(2500);   // let a second paint land if one is coming
+const rowCounts = await c.js(`(function(){
+  var out = {}, into = document.getElementById('trust-carried');
+  var heads = into.querySelectorAll('strong');
+  for (var i = 0; i < heads.length; i++) {
+    var k = (heads[i].textContent || '').trim();
+    if (k) out[k] = (out[k] || 0) + 1;
+  }
+  return out;
+})()`);
+const dupes = Object.entries(rowCounts).filter(([, n]) => n !== 1);
+ok(Object.keys(rowCounts).length >= 4, 'the Trust page lists what this copy carries', JSON.stringify(rowCounts));
+ok(!dupes.length, 'every Trust row appears exactly once, with a refreshed catalogue stored',
+  dupes.map(([k, n]) => k + ' x' + n).join(', '));
 
 /* ---------- going back ---------- */
 await reloadTo('#runtimes', "(function(){var s=document.getElementById('rt-source');return s && !s.hidden;})()", 'the Registry page again');

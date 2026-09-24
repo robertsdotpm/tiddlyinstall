@@ -90,18 +90,30 @@ function when(iso) {
   return m ? m[1] + ' ' + m[2] + ' UTC' : String(iso || '');
 }
 
+// Which paint is the current one. paint() became async on 2026-09-23 (it
+// has to ask IndexedDB whether the catalogue was refreshed) and is also
+// run again when the catalogue changes. Two of them overlap: the one at
+// the bottom of this file, and the one the overlay's load event triggers.
+// Both used to empty the table and then, after their await, append to it
+// -- so every row appeared twice. Emptying after the await is not enough
+// on its own; the later paint has to be able to say it has been
+// superseded, or a slow one can still finish on top of a fast one.
+let painting = 0;
+
 async function paint() {
   const live = el('trust-live');
   const into = el('trust-carried');
   if (!live || !into) return;
+  const mine = ++painting;
   const pub = pubKey();
-  into.innerHTML = '';
 
   // Whether this copy is building from a catalogue fetched since it was
   // made. Kept in IndexedDB, so it has to be asked for; a browser that
   // will not answer means there is none, which is the ordinary case.
   let refreshed = null;
   try { refreshed = await readRefreshed(); } catch (e) { refreshed = null; }
+  if (mine !== painting) return;          // a newer paint started while we waited
+  into.innerHTML = '';
 
   if (pub) {
     el('trust-fp').textContent = hex(sha256(pub)).slice(0, 16);
