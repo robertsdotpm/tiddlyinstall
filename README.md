@@ -27,10 +27,15 @@ Two of those claims are checkable and one is not, and the difference is
 the point:
 
 - **The runtime setup is ours, provably.** Every runtime install we
-  publish is signed in advance, and each installer carries a proof that
-  the steps inside it are the ones we published. Your machine checks that
-  proof against a key built into the installer, offline, with no network.
-  Change one byte of a download's hash and the proof stops matching.
+  publish is signed in advance, and an installer that uses one unchanged
+  carries a proof that the steps inside it are the ones we published.
+  Your machine checks that proof against a key built into the installer,
+  offline, with no network. Change one byte of a download's hash and the
+  proof stops matching. Two things we cannot sign in advance, because
+  they are not written until you ask: an install command a publisher
+  wrote themselves, and a package build, whose command carries the
+  package name. Those carry no proof, and the installer says so rather
+  than implying one.
 - **What we sign is our installer program, never the software someone
   installs with it.** A code signature says the program is ours and
   unmodified -- like the signature on a web browser, which says nothing

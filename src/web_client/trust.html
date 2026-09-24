@@ -86,7 +86,7 @@
   <section data-screen-label="02 How the check works" style="padding:32px 0 36px; border-top:1px solid var(--rule);">
     <div style="font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:0.13em; text-transform:uppercase; color:var(--faint);"><span style="color:var(--accent);">02</span>  How our half is proved</div>
     <h2 style="margin:6px 0 10px; font-size:22px; line-height:1.2; letter-spacing:-0.012em; font-weight:650; color:var(--text-loud);">Your machine checks it, with no internet</h2>
-    <p style="margin:0 0 20px; max-width:64ch; text-wrap:pretty;">Installing Python 3.14 on 64-bit Linux is the same job whichever app needs it. So we sign each runtime setup once, before anyone asks, and every installer carries a small receipt for the ones it uses.</p>
+    <p style="margin:0 0 20px; max-width:64ch; text-wrap:pretty;">Installing Python 3.14 on 64-bit Linux is the same job whichever app needs it. So we sign each runtime setup once, before anyone asks, and an installer that uses one unchanged carries a small receipt for it. An install command a publisher wrote, or a package build whose command carries the package name, is not written until you ask and so cannot be signed in advance: those carry no receipt, and the installer says so.</p>
 
     <div role="img" aria-label="Step 1: we sign every runtime setup we publish, in advance. Step 2: your installer carries a receipt for the one it uses. Step 3: your machine checks the receipt against a key already inside the file." style="display:flex; flex-wrap:wrap; margin:0 -6px 16px;">
       <div style="flex:1 1 200px; min-width:0; margin:0 6px 12px;">

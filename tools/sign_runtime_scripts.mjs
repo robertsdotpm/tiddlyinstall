@@ -82,12 +82,28 @@ for (const rt of ids) {
   // version chosen resolves to is the commonest script of all, and it is
   // not always identical to the newest pinned one.
   const wants = [{ select: 'newest' }, ...versions.map((v) => ({ select: 'exact', range: v }))];
+  // ...crossed with the install shapes a build can carry. `install`,
+  // `ienv` and `iunset` are written inside the [target] block and are not
+  // in NOT_SIGNED, so they are inside the leaf: a plan resolved with no
+  // install line hashes to a different leaf from the same plan with one.
+  // Enumerating only the first meant the proof was quietly absent for
+  // every build of a project that installs itself -- which is any repo
+  // with a pyproject.toml, package.json, Gemfile or composer.json, i.e.
+  // the ordinary case (builder.js projectInstall). Two shapes still
+  // cannot be enumerated and are not meant to be: a package build
+  // interpolates the package name into the command, and a publisher can
+  // write their own. Those get no proof, and the wording says so.
+  const pol = ((cat.policy && cat.policy.runtimes) || {})[rt] || {};
+  const rules = Array.isArray(pol.install_rules) ? pol.install_rules : [];
+  const installs = ['', 'default'].concat(
+    rules.map((r) => r && r.id).filter(Boolean).map((id) => 'default:' + id));
   for (const w of wants) {
     for (const plat of PLATFORMS) {
+     for (const install of installs) {
       let plan;
       try {
         plan = resolve(cat, Object.assign({ name: 'x', project: 'x', runtime: rt, platforms: [plat],
-          launch: '{runtime}', mode: 'C', root: 'user' }, w));
+          launch: '{runtime}', mode: 'C', root: 'user', install }, w));
       } catch (e) { missed++; continue; }
       for (const b of targetBlocks(plan)) {
         const c = canonicalTarget(b);
@@ -95,6 +111,7 @@ for (const rt of ids) {
         if (c.indexOf('\nfile\t') < 0 && c.indexOf('file\t') !== 0) continue;
         leaves.add(leafHash(c, sha256hex));
       }
+     }
     }
   }
   const sorted = [...leaves].sort();

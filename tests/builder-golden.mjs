@@ -217,17 +217,51 @@ const golden = JSON.parse(zlib.brotliDecompressSync(fs.readFileSync(GOLDEN_FILE)
     const leaves = fs.readFileSync(path.join(rtDir, 'python.leaves'), 'utf8').trim().split('\n');
     const app = { name: 'Hello python', project: 'hello', runtime: 'python', platforms: ['linux'],
       launch: '{runtime} hello.py', mode: 'C', root: 'user' };
-    const a = await ls(new Uint8Array(catBytes));
-    const b = await ls(new Uint8Array(catBytes));
+    // The leaves were signed against the working catalogue, not against
+    // tests/golden/catalog.gz, which is pinned to whatever the goldens
+    // were recorded with and carries a different policy (mirror_base and
+    // mirror_first both differ, and both are inside the leaf). Comparing
+    // proofs across the two compares two unrelated things.
+    const liveCat = process.env.TI_CATALOG || path.join(process.env.HOME || '', '.cache/tiddlyinstall/catalog.gz');
+    let liveBytes = null;
+    try { liveBytes = fs.readFileSync(liveCat); } catch (e) { liveBytes = null; }
+    if (!liveBytes) {
+      console.log('PASS the working catalogue is not here, so proofs cannot be compared (' + liveCat + ')');
+      passed++;
+    } else {
+    const a = await ls(new Uint8Array(liveBytes));
+    const b = await ls(new Uint8Array(liveBytes));
     await (await import('../src/shared/resolve.js')).loadRuntimes(a, ['python']);
     await (await import('../src/shared/resolve.js')).loadRuntimes(b, ['python']);
     setRtScripts(a, roots, leaves, hex);
     setRtScripts(b, roots, leaves, hex);
     const { resolve: rs } = await import('../src/shared/resolve.js');
     const pa = rs(a, app), pb = rs(b, app);
-    const proofs = (t) => t.split('\n').filter((l) => l.indexOf('rtproof\t') === 0 || l.indexOf('rtroots\t') === 0);
+    // Only rtproof. Counting rtroots too made this unable to fail:
+    // setRtScripts always writes a roots line, so the count was never
+    // zero however many proofs were missing -- which is how proof
+    // coverage reached zero for every real build with this suite green.
+    const proofs = (t) => t.split('\n').filter((l) => l.indexOf('rtproof\t') === 0);
     ok(proofs(pa).length > 0, 'a plan resolved with proof material carries proofs', String(proofs(pa).length));
     ok(pa === pb, 'and two resolves of the same request write identical proofs');
+
+    // ...and for a build that installs something, which is the ordinary
+    // case and the one that was not covered. `install` is written inside
+    // the [target] block and is not in NOT_SIGNED, so it is inside the
+    // leaf: until 2026-09-24 the signer enumerated only records with no
+    // install line, every real build hashed to a leaf in no tree, and
+    // this suite stayed green because the app above has no install line
+    // either. An assertion that cannot distinguish the broken case from
+    // the working one is not covering it.
+    for (const install of ['', 'default']) {
+      const c = await ls(new Uint8Array(liveBytes));
+      await (await import('../src/shared/resolve.js')).loadRuntimes(c, ['python']);
+      setRtScripts(c, roots, leaves, hex);
+      const pc = rs(c, Object.assign({}, app, { install }));
+      const rp = pc.split('\n').filter((l) => l.indexOf('rtproof\t') === 0);
+      ok(rp.length > 0, 'a build with install=' + (install || '(none)') + ' carries a proof', String(rp.length));
+    }
+    }
   }
 }
 
