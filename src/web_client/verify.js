@@ -546,9 +546,26 @@ async function paintPage(file, sha, text) {
         ? 'holds: ' + entries.length + ' release' + (entries.length === 1 ? '' : 's') +
           ', root <code>' + esc(chain.root.slice(0, 16)) + '</code>'
         : '<strong>broken</strong> -- ' + esc(chain.why)],
+      // "Save this page" writes documentElement.outerHTML, which is the
+      // browser's re-serialisation of the DOM and not the bytes the
+      // server sent -- attribute order, entity escaping and the
+      // browser-check attributes all move. So a saved copy can never
+      // match the ledger, and reporting that as "not in the ledger"
+      // reads as a warning about the file when it is a fact about how it
+      // was made. page-loader prepends the Mark-of-the-Web comment when
+      // it takes that snapshot, and the served file has none, so the
+      // file says which it is.
+      // A copy made with "Save this page" is documentElement.outerHTML --
+      // the browser's re-serialisation of the DOM, not the bytes the
+      // server sent -- so it can never match the ledger however genuine
+      // it is. Both readings are stated, because this page cannot tell
+      // them apart: the Mark-of-the-Web comment that a save prepends is
+      // in the served file too, so there is no marker to test.
       ['These bytes', hit
         ? '<strong>published</strong> as release ' + hit.seq + ' on ' + esc(hit.date) + ', from ' + rev(hit.rev)
-        : '<strong>not in the ledger</strong>'],
+        : '<strong>not in the ledger</strong> &mdash; either these bytes were never published, or this is a copy '
+          + 'saved from a browser, which rewrites the page as it saves it and so can never match. A file downloaded '
+          + 'from the server is the one to compare.'],
     ];
     // The part a list alone could not do. This page was built with the
     // root as of its own day inside it; if the log now disagrees about

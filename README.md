@@ -121,8 +121,16 @@ CSS-only behaviours.
 
 ## Third-party code
 
-MIT, `LICENSE` at the root. Third-party code keeps its own notices, and
-they travel with any copy of the one-file site, which carries all of it:
+MIT, `LICENSE` at the root.
+
+The one-file page carries the notices for the code that is *in the page*
+-- they are in its `ti-licences` block, so they travel with any copy of
+it. The Windows base additionally ships `7za.exe` (7-Zip 9.20, LGPL 2.1)
+and three NSIS plugin DLLs, and their notices are **not** in that block
+yet: the sentence that used to be here said every notice travelled with
+every copy, and for those it was not true. Until they are added, the
+table below is where they are recorded, and the LGPL's written offer for
+7-Zip's source is at <https://www.7-zip.org/>.
 
 | What | Licence | Where |
 | --- | --- | --- |
@@ -130,6 +138,8 @@ they travel with any copy of the one-file site, which carries all of it:
 | Ed25519, ported from TweetNaCl-js | public domain | `src/web_client/lib/ed25519.js` |
 | core-js (the ES5 build only) | MIT | `tests/../out/index.html` ES5 copy; upstream notice retained |
 | NSIS (the Windows base is built with it) | zlib/libpng, with an exception | nsis.sourceforge.io |
+| 7-Zip 9.20 (`7za.exe`, shipped inside the Windows base) | LGPL 2.1 | <https://www.7-zip.org/>, `src/installers/windows/README.md` |
+| NSIS plugins (`tisig.dll` is ours; the others ship with NSIS) | zlib/libpng, with an exception | nsis.sourceforge.io |
 
 **Which build server:** `?api=` on the page URL, else the one saved in this
 browser, else whichever server is serving the page: its own origin when a
