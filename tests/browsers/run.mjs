@@ -313,9 +313,23 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
       // folder, finds nothing, and reports it as the page failing to
       // save. Which is how a browser that builds every installer
       // correctly came out as a failure (2026-09-23).
-      remote.sh(`defaults write com.apple.Safari DownloadsPath ${JSON.stringify(dl)}`);
+      // Safari is sandboxed, so it cannot write to an arbitrary folder
+      // however the preference is set -- pointing DownloadsPath at this
+      // run's directory looked right and saved nothing. ~/Downloads is
+      // inside what its container permits, so it saves there and the file
+      // is moved across afterwards.
+      remote.sh('defaults write com.apple.Safari DownloadsPath "$HOME/Downloads"');
       remote.sh('defaults write com.apple.Safari AlwaysPromptForDownloadFolder -bool false');
       remote.sh('defaults write com.apple.Safari DownloadsClearingPolicy -int 0');
+      remote.sh('rm -f "$HOME/Downloads/tiddlyinstall.html" "$HOME/Downloads/tiddlyinstall-"*.html');
+      // The same sandbox stops Safari *reading* a file input's path under
+      // ~/tibrowsers, so the signing fixtures go where it is allowed too.
+      // Without this the file input stays empty, #sign-run never appears,
+      // and it reads as the signing panel being broken in Safari.
+      remote.sh('mkdir -p "$HOME/Downloads/tifix"');
+      for (const f of ['in.exe', 'in.run', 'rsa.pfx']) {
+        remote.sh('cp ' + JSON.stringify(remote.dir('work', 'dl-' + runId, f)) + ' "$HOME/Downloads/tifix/"');
+      }
     }
     let staticPort = 0;
     if (overHttp) {
@@ -324,6 +338,10 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
       await sleep(2500);
     }
     const httpUrl = (...parts) => `http://127.0.0.1:${staticPort}/` + parts.join('/');
+    // Where a fixture is, for setFile. Safari reads it from its own
+    // allowed folder; everything else from this run's directory.
+    const fixture = (name) => (overHttp ? remote.home + '/Downloads/tifix/' + name
+      : remote.dir('work', 'dl-' + runId, name));
     const pageUrl = overHttp ? httpUrl(pageName) : remote.fileUrl(remote.dir('work', pageName));
 
     // The driver (or DevTools, for a Chromium with no driver here).
@@ -500,6 +518,12 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
     if (html) t.ok(html.length > 1e6 && html.toString('utf8', 0, 200).includes('<!DOCTYPE html>'), 'Save this page makes the whole page', html.length);
     let savedName = null;
     for (const end = Date.now() + 30000; Date.now() < end && !savedName; await sleep(1000)) {
+      // Safari saved into ~/Downloads (see above): move it where every
+      // other browser puts it, so the rest of this is the same test.
+      if (overHttp) {
+        const r = remote.sh('mv "$HOME/Downloads/tiddlyinstall.html" ' + JSON.stringify(dl) + '/ 2>/dev/null; true');
+        if (r && r.code !== 0) { /* not there yet */ }
+      }
       const files = remote.list(dl);
       if (files.includes('tiddlyinstall.html') && !files.some((f) => /\.(part|crdownload|download)$/.test(f))) savedName = 'tiddlyinstall.html';
     }
@@ -523,7 +547,7 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
     for (const end = Date.now() + 90000; Date.now() < end && !(await js(STARTED)); await sleep(500));
     await js(`location.hash = '#edit'`);
     await js(CAPTURE);
-    await setFile('#installer', remote.dir('work', 'dl-' + runId, 'in.run'));
+    await setFile('#installer', fixture('in.run'));
     await waitUntil(js, `!document.getElementById('sign-run').hidden`, 'the Linux sign panel');
     await setVal(js, 'pgp-uid', 'Browser Test TEST <bt@example.invalid>');
     const makeKey = async (type) => {
@@ -555,10 +579,10 @@ async function runPair(machine, browserId, { seed, served, tmpRoot }) {
       const back = await readInstaller(new Uint8Array(files.run), 'app.run');
       t.ok(back.record === fx.RECORD, 'PGP: the signed .run keeps its record');
     }
-    await setFile('#installer', remote.dir('work', 'dl-' + runId, 'in.exe'));
+    await setFile('#installer', fixture('in.exe'));
     await waitUntil(js, `!document.getElementById('sign-exe').hidden`, 'the Windows sign panel');
     if (await js(`!!document.getElementById('ts-on')`)) await checkBox(js, 'ts-on', false);
-    await setFile('#pfx-file', remote.dir('work', 'dl-' + runId, 'rsa.pfx'));
+    await setFile('#pfx-file', fixture('rsa.pfx'));
     await setVal(js, 'pfx-pass', fx.PW);
     await js(`document.getElementById('pfx-open').click()`);
     const ps = await waitUntil(js, `/Signs as|rror|Wrong|can't|Couldn/.test(${$text('pfx-status')}) && ${$text('pfx-status')}`, 'the .pfx', 120000);
