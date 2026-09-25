@@ -237,14 +237,19 @@ ti_b32() {
 		print o }'
 }
 
-ti_download() { # url out
-	ti_log "  GET $1"
+# $3, when given, is the Host: header to send -- used when $1 addresses
+# the server by IP and the name is what picks the site out of it. Only
+# curl and wget can send one; FreeBSD's fetch(1) has no option for it,
+# so a `fetch`-only machine simply does not get the address fallback,
+# which is no worse than before it existed.
+ti_download() { # url out [host-header]
+	ti_log "  GET $1${3:+ (Host: $3)}"
 	ti_http=
 	if ti_have curl; then
 		ti_http=$(ti_nohome curl -fL -sS --connect-timeout 20 --speed-limit 1024 --speed-time 60 --retry 2 \
-			-w '%{http_code}' -o "$2" "$1" 2>> "$TI_LOG")
+			${3:+-H "Host: $3"} -w '%{http_code}' -o "$2" "$1" 2>> "$TI_LOG")
 	elif ti_have wget; then
-		ti_nohome wget -q -T 60 -t 2 -O "$2" "$1" >> "$TI_LOG" 2>&1
+		ti_nohome wget -q -T 60 -t 2 ${3:+--header="Host: $3"} -O "$2" "$1" >> "$TI_LOG" 2>&1
 	else
 		ti_fail "No downloader (curl or wget) on this machine."
 	fi
@@ -2103,9 +2108,71 @@ ti_obtain() { # sha256 out urls-file label [unpinned]
 			ti_say "  wrong SHA-256 from $u ($got); trying the next source"
 		else
 			ti_say "  download failed: $u"
+			# The name may simply not resolve. If the plan carries
+			# addresses for this host, try them before moving on:
+			# the next URL is usually a different vendor with the
+			# same problem, and our own mirror -- which is last --
+			# holds 1,256 of the catalogue's 82,105 files, so for
+			# most downloads it is not the safety net it looks like.
+			rm -f "$2.part"
+			if ti_get_by_addr "$u" "$2" "$1"; then
+				mv "$2.part" "$2"
+				return 0
+			fi
 		fi
 		rm -f "$2.part"
 	done 4< "$TI_WORK/urls.ord"
+	return 1
+}
+
+# The plan's `addr` lines: `addr<TAB>host<TAB>ip ip ...`, one per host
+# whose site is known to answer plain HTTP when addressed by IP with the
+# name in a Host: header. Written by src/shared/resolve.js from the
+# catalogue's policy, so they are as fresh as the catalogue.
+#
+# This is the download half of the same idea as ti_backend_bases: a
+# machine whose DNS does not work can still reach a server whose address
+# it was told. It is a *fallback*, tried only after a URL has failed on
+# its own terms, and it changes nothing about what is accepted -- every
+# file is still checked against the SHA-256 in the signed plan, which is
+# what makes fetching it in clear sound (the same bargain /mirror/ makes).
+#
+# Measured 2026-09-25 across the catalogue's download hosts: 9 of them,
+# carrying 35,327 of 81,007 URLs (43.6%), serve byte-identical files this
+# way; the rest redirect to https or refuse. Only the ones that work are
+# listed, so a failure here is a genuine one rather than a guess.
+ti_addr_ips() { # host -> the addresses for it, one per line
+	[ -s "$TI_SEL" ] || return 0
+	awk -F'\t' -v h="$1" '$1 == "addr" && $2 == h { for (i = 3; i <= NF; i++) if ($i != "") print $i }' "$TI_SEL"
+}
+
+# Retry $1 by address. $2 is where to put it, $3 the wanted SHA-256.
+# Prints nothing and returns 1 when there is nothing to try.
+ti_get_by_addr() { # url out sha256
+	case $1 in
+	http://* | https://*) ;;
+	*) return 1 ;;
+	esac
+	ga_rest=${1#*://}
+	ga_host=${ga_rest%%/*}
+	ga_path=/${ga_rest#*/}
+	[ "$ga_host" = "$ga_rest" ] && ga_path=/
+	# A URL that already names an address, or carries a port or
+	# credentials, is left alone: there is nothing to look up and
+	# nothing sensible to put in a Host: header.
+	case $ga_host in *[!a-zA-Z0-9.-]*) return 1 ;; esac
+	ti_addr_ips "$ga_host" > "$TI_WORK/ips" || return 1
+	[ -s "$TI_WORK/ips" ] || return 1
+	while IFS= read -r ga_ip; do
+		[ -n "$ga_ip" ] || continue
+		case $ga_ip in *:*) ga_at="[$ga_ip]" ;; *) ga_at=$ga_ip ;; esac
+		ti_say "  trying $ga_host by address ($ga_ip)"
+		if ti_download "http://$ga_at$ga_path" "$2.part" "$ga_host"; then
+			[ "$(ti_sha256 "$2.part")" = "$3" ] && return 0
+			ti_say "  wrong SHA-256 from $ga_ip; ignoring it"
+		fi
+		rm -f "$2.part"
+	done < "$TI_WORK/ips"
 	return 1
 }
 
@@ -3450,7 +3517,7 @@ ti_signer() {
 # it were the whole of it. `srcurl` and `target` are ti_select_target's
 # own; `sig` survives into the selection when the chosen block is the
 # last one in the plan.
-TI_KNOWN_KEYS='target|record|name|project|appid|console|menu|desktop|root|rootname|signed|maxage|source|srcurl|request|sig|when|minbuild|covers|runtime|file|url|step|exe|env|unset|path|ienv|iunset|install|launch|admin|note|fail|need|nwhy|ncheck|nfile|nurl|nrun|nok|npkg|nstart|nhow|rtroots|rtproof'
+TI_KNOWN_KEYS='target|record|name|project|appid|console|menu|desktop|root|rootname|signed|maxage|source|srcurl|request|sig|when|minbuild|covers|runtime|file|url|step|exe|env|unset|path|ienv|iunset|install|launch|admin|note|fail|need|nwhy|ncheck|nfile|nurl|nrun|nok|npkg|nstart|nhow|rtroots|rtproof|addr'
 TI_KNOWN_STEPS='unpack|run|mkdir|write|delete'
 
 ti_unknown_bits() { # -> "key, step foo" for everything in the selection we do not know
