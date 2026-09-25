@@ -199,6 +199,32 @@ Small amounts that remove real blind spots.
   **4,582 armv7 and armv6 entries are in the catalogue and the resolver
   never offers them**, so older 32-bit ARM hardware is told there is
   nothing for it -- a Pi covers both arches at once.
+- **A Chromebook. ~£200 second hand, or five minutes with somebody
+  else's.** ChromeOS is the one platform that is probably *already*
+  supported and has never once been run. Its Linux environment
+  (Crostini) is a Debian 12 container, and Debian 12 is a passing target,
+  so the reasoning is sound -- but reasoning is what it is.
+
+  Trying to stand one up on the ESXi host on 2026-09-25 is the argument
+  for the hardware. Google publishes no ChromeOS Flex disk image for
+  virtual machines, only a recovery image meant for a USB stick. That
+  image converts and imports correctly -- attached to a Linux VM it reads
+  back perfectly: intact GPT, all twelve ChromeOS partitions, boot code in
+  the MBR, and an EFI partition holding a valid bootx64.efi and grub.cfg
+  -- and ESXi's firmware will not boot it under either UEFI or BIOS.
+  ChromeOS Flex in a virtual machine is unsupported by Google, and this is
+  what that means in practice. The community images that *do* ship for
+  VMware are ChromiumOS derivatives with their own containers, so they
+  would answer a different question.
+
+  What a real device settles, which nothing here can: whether the stock
+  Crostini container has `xz` (it unpacks 1,034 of the 5,118 arm64
+  releases) and a downloader; whether ChromeOS's launcher really picks up
+  the .desktop file the installer writes; and what `df` reports, given the
+  container is btrfs inside a VM on a sparse file, so free space as the
+  container sees it is not free space on the Chromebook. Borrowing one for
+  five minutes answers all three.
+
 - **Windows licences.** Measured again on 2026-09-25, mid-test-run: the
   LTSC 2021 machine powers itself off about every 60 minutes because its
   evaluation licence has expired. `wlms.exe` logs it plainly ("The license
