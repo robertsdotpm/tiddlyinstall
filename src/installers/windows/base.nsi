@@ -105,6 +105,9 @@ Var PlanU16
 Var RecHash          ; 26-char base32 hash of the record
 Var Backend
 Var OptBackend
+Var DlHost           ; the Host: header DownloadHosted sends
+Var FF_apath
+Var FF_ip
 Var BackendUsed      ; the address that actually answered (BackendGet)
 Var BgIdx
 Var BgBase
@@ -721,6 +724,246 @@ Function Download
     inetc::get /CONNECTTIMEOUT 10 /RECEIVETIMEOUT 60 "$U_a" "$U_b" /END
   ${EndIf}
   Pop $U_out
+FunctionEnd
+
+; Download $U_a to $U_b sending `Host: $DlHost`, for a URL that names an
+; address rather than a name. INetC's /header takes the raw header line;
+; without it the server has no idea which of the sites it hosts is
+; wanted and answers 404 or 500 (measured against a CDN on 2026-09-25).
+Function DownloadHosted
+  Delete "$U_b"
+  ${If} ${Silent}
+    inetc::get /SILENT /CONNECTTIMEOUT 10 /RECEIVETIMEOUT 60 /header "Host: $DlHost" "$U_a" "$U_b" /END
+  ${Else}
+    inetc::get /CONNECTTIMEOUT 10 /RECEIVETIMEOUT 60 /header "Host: $DlHost" "$U_a" "$U_b" /END
+  ${EndIf}
+  Pop $U_out
+FunctionEnd
+
+; The plan's `addr` lines, spooled to a file as they are read.
+;
+; A file and not a variable: NSIS strings hold 1024 characters, and a
+; plan that downloads from a handful of hosts would sit close enough to
+; that to be a problem nobody would see until a long one silently lost
+; its tail (see the rtroots note in docs -- the same limit split a plan
+; line once already).
+;
+; $U_a host -> $U_out the addresses, space separated, or "".
+Function AddrsFor
+  Push $0
+  Push $1
+  Push $2
+  StrCpy $U_out ""
+  ${IfNot} ${FileExists} "$PLUGINSDIR\addrs.txt"
+    Goto af_done
+  ${EndIf}
+  FileOpen $0 "$PLUGINSDIR\addrs.txt" r
+  ${Do}
+    FileRead $0 $1
+    ${If} ${Errors}
+      ${Break}
+    ${EndIf}
+    ; "host<TAB>ip ip ...\r\n"
+    StrCpy $2 0
+    ${Do}
+      StrCpy $U_c $1 1 $2
+      ${If} $U_c == "$\t"
+      ${OrIf} $U_c == ""
+        ${Break}
+      ${EndIf}
+      IntOp $2 $2 + 1
+    ${Loop}
+    StrCpy $U_b $1 $2
+    ${If} $U_b S== $U_a
+      IntOp $2 $2 + 1
+      StrCpy $U_out $1 "" $2
+      ; strip the line ending
+      ${Do}
+        StrCpy $U_c $U_out "" -1
+        ${If} $U_c == "$\r"
+        ${OrIf} $U_c == "$\n"
+          StrCpy $U_out $U_out -1
+        ${Else}
+          ${Break}
+        ${EndIf}
+      ${Loop}
+      ${Break}
+    ${EndIf}
+  ${Loop}
+  FileClose $0
+af_done:
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; The host part of the URL $U_a -> $U_out, or "" when there is nothing
+; sensible to look up.
+;
+; Not HostOf, which is further down and answers a different question.
+; That one is for the review page -- "who am I about to download from"
+; -- so it extracts a host from whatever it is given, credentials and
+; all. This one is asked whether a URL may be retried by address, and
+; so it *refuses* rather than extracts: a port or a user@ means the
+; plain `Host: <name>` this would send is not the whole story, and a
+; guess there fetches the wrong thing rather than nothing.
+Function PlainHostOf
+  Push $0
+  Push $1
+  Push $2
+  StrCpy $U_out ""
+  StrCpy $0 $U_a 7
+  ${If} $0 == "http://"
+    StrCpy $1 7
+  ${Else}
+    StrCpy $0 $U_a 8
+    ${If} $0 != "https://"
+      Goto ho_done
+    ${EndIf}
+    StrCpy $1 8
+  ${EndIf}
+  StrCpy $2 $1
+  ${Do}
+    StrCpy $0 $U_a 1 $2
+    ${If} $0 == "/"
+    ${OrIf} $0 == ""
+      ${Break}
+    ${EndIf}
+    ; a port or credentials: not a plain name, leave it alone
+    ${If} $0 == ":"
+    ${OrIf} $0 == "@"
+      Goto ho_done
+    ${EndIf}
+    IntOp $2 $2 + 1
+  ${Loop}
+  IntOp $0 $2 - $1
+  StrCpy $U_out $U_a $0 $1
+ho_done:
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; $3 = "a b c" -> $FF_ip = "a", $3 = "b c"; empty when nothing is left,
+; which is how the caller's loop ends.
+Function NextWord
+  Push $0
+  Push $1
+  StrCpy $FF_ip ""
+  ${Do}
+    StrCpy $0 $3 1
+    ${If} $0 != " "
+      ${Break}
+    ${EndIf}
+    StrCpy $3 $3 "" 1
+  ${Loop}
+  ${If} $3 == ""
+    Goto nw_done
+  ${EndIf}
+  StrCpy $1 0
+  ${Do}
+    StrCpy $0 $3 1 $1
+    ${If} $0 == " "
+    ${OrIf} $0 == ""
+      ${Break}
+    ${EndIf}
+    IntOp $1 $1 + 1
+  ${Loop}
+  StrCpy $FF_ip $3 $1
+  StrCpy $3 $3 "" $1
+nw_done:
+  Pop $1
+  Pop $0
+FunctionEnd
+
+; Retry the URL $F1 against the addresses the plan gives for its host,
+; over plain HTTP with the name in a Host: header. $U_out = "OK" when one
+; of them delivered the file to $FF_path, else the caller's error stands.
+;
+; Only a name is retried. PlainHostOf refuses a URL that already carries
+; an address, a port or credentials, because the bare `Host: <name>` this
+; sends would not be the whole story and a guess fetches the wrong thing
+; rather than nothing.
+Function TryByAddress
+  Push $2
+  Push $3
+  Push $4
+  StrCpy $U_a $F1
+  Call PlainHostOf
+  StrCpy $2 $U_out
+  StrCpy $3 ""
+  ${If} $2 != ""
+    StrCpy $U_a $2
+    Call AddrsFor
+    StrCpy $3 $U_out
+  ${EndIf}
+  ${If} $3 == ""
+    StrCpy $U_out "no addresses for $2"
+    Goto tba_done
+  ${EndIf}
+  ; the path is whatever follows the host
+  StrLen $4 $2
+  StrCpy $U_a $F1 8
+  ${If} $U_a == "https://"
+    IntOp $4 $4 + 8
+  ${Else}
+    IntOp $4 $4 + 7
+  ${EndIf}
+  StrCpy $FF_apath $F1 "" $4
+  ${If} $FF_apath == ""
+    StrCpy $FF_apath "/"
+  ${EndIf}
+  StrCpy $DlHost $2
+  ${Do}
+    Call NextWord
+    ${If} $FF_ip == ""
+      ${Break}
+    ${EndIf}
+    Push $FF_ip
+    Call HasColon
+    Pop $U_c
+    ${If} $U_c == "1"
+      StrCpy $U_a "http://[$FF_ip]$FF_apath"
+    ${Else}
+      StrCpy $U_a "http://$FF_ip$FF_apath"
+    ${EndIf}
+    StrCpy $U_b $FF_path
+    ${Log} "  trying $2 by address ($FF_ip)"
+    Call DownloadHosted
+    ${If} $U_out == "OK"
+      ${Break}
+    ${EndIf}
+    ${Log} "    $U_out"
+  ${Loop}
+tba_done:
+  Pop $4
+  Pop $3
+  Pop $2
+FunctionEnd
+
+; "1" when the string on the stack holds a colon -- an IPv6 literal, which
+; a URL has to write in brackets.
+Function HasColon
+  Exch $0
+  Push $1
+  Push $2
+  StrCpy $2 0
+  StrLen $1 $0
+  ${Do}
+    ${If} $2 >= $1
+      StrCpy $0 "0"
+      ${Break}
+    ${EndIf}
+    StrCpy $U_c $0 1 $2
+    ${If} $U_c == ":"
+      StrCpy $0 "1"
+      ${Break}
+    ${EndIf}
+    IntOp $2 $2 + 1
+  ${Loop}
+  Pop $2
+  Pop $1
+  Exch $0
 FunctionEnd
 
 ; Same, with no progress window (used before the UI exists).
@@ -1378,6 +1621,16 @@ Function ReadPlan
         ; not cover it. Missing here, it was reported to the reader as
         ; something the installer could not describe, with 700 bytes of
         ; base64 printed as its name (Windows 10, 2026-09-23).
+      ${ElseIf} $K S== "addr"
+        ; `addr<TAB>host<TAB>ip ip ...`: where this plan's download hosts
+        ; can be reached when DNS cannot say. A header key, like rtroots
+        ; above -- and like rtroots, one this scan has to name, or the
+        ; reader is told the installer carries something it cannot
+        ; describe. Spooled to a file; see AddrsFor for why not a string.
+        FileOpen $9 "$PLUGINSDIR\addrs.txt" a
+        FileSeek $9 0 END
+        FileWrite $9 "$F1$\t$F2$\r$\n"
+        FileClose $9
       ${ElseIf} $K S== "runtime"
         ; the header's bare `runtime <id>`; the chosen block's line has
         ; the version and the architecture, and ReadTarget reads it
@@ -6109,7 +6362,21 @@ Function FetchFile
     IntOp $0 $0 / 1000
     ${If} $U_out != "OK"
       ${Log} "  failed after $0 s: $U_out"
-      ${Continue}
+      ; The name may simply not resolve, or TLS may be unreachable
+      ; here -- on XP and Vista every https vendor fails exactly
+      ; like this while plain HTTP works. If the plan carries
+      ; addresses for this host, try them before moving on: the
+      ; next URL is usually another vendor with the same problem,
+      ; and our own mirror at the end of the list holds 1,256 of
+      ; the catalogue's 82,105 files.
+      ;
+      ; Acceptance does not change. The SHA-256 check below is the
+      ; same one, and a wrong answer from an address is discarded
+      ; by it exactly as a wrong answer from the name would be.
+      Call TryByAddress
+      ${If} $U_out != "OK"
+        ${Continue}
+      ${EndIf}
     ${EndIf}
     ${Log} "  downloaded in $0 s"
     ${If} $FF_sha == "-"
