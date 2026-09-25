@@ -46,6 +46,31 @@
 
 TI_ENGINE_VERSION=1
 TI_DEFAULT_BACKEND=https://tiddlyinstall.warpgate.io
+# The same server, reached the other three ways, tried in this order when
+# the one above will not answer. A server is a *set* of addresses here --
+# (https://name, http://name, http://v4, http://v6) -- because the two
+# things that stop an old machine reaching it fail independently:
+#
+#   DNS    the name resolves to nothing. design.md 1.3: "on very old
+#          systems DNS is often misconfigured or blocked". The addresses
+#          are the answer, and they are the reason /api/ is served by
+#          address at all.
+#   TLS    the handshake never completes. Measured 2026-09-25: the vhost
+#          requires TLS 1.2 (options-ssl-apache.conf disables TLSv1 and
+#          TLSv1.1) while XP and Vista top out at TLS 1.0, so for them no
+#          certificate of any kind helps. Every mode A cell on those two
+#          failed here; every mode B and C cell passed.
+#
+# Plain http on the last three, and that is sound for the same reason the
+# mirror is served in clear: what comes back is checked, not trusted. The
+# record is checked against the SHA-256 in this installer's own file name,
+# and the plan and the revocation list carry the plan key's Ed25519
+# signature, which is checked against TI_PLAN_PUBKEY built into this file.
+# The transport was never what made any of them safe.
+#
+# No https by address: no certificate authority issues for a bare address,
+# so https://<address>/ is a name mismatch whatever is served.
+TI_DEFAULT_BACKEND_IPS='http://158.69.27.176 http://[2607:5300:60:80b0::1]'
 # Set from the record or --backend when somebody actually chose one;
 # empty means nothing was chosen and this engine filled in the address
 # above, which is not a reason to go and talk to it (ti_revocations).
@@ -212,16 +237,37 @@ ti_b32() {
 		print o }'
 }
 
-ti_download() { # url out
-	ti_log "  GET $1"
+# $3, when given, is the Host: header to send -- used when $1 addresses
+# the server by IP and the name is what picks the site out of it. Only
+# curl and wget can send one; FreeBSD's fetch(1) has no option for it,
+# so a `fetch`-only machine simply does not get the address fallback,
+# which is no worse than before it existed.
+ti_download() { # url out [host-header]
+	ti_log "  GET $1${3:+ (Host: $3)}"
 	ti_http=
 	if ti_have curl; then
 		ti_http=$(ti_nohome curl -fL -sS --connect-timeout 20 --speed-limit 1024 --speed-time 60 --retry 2 \
-			-w '%{http_code}' -o "$2" "$1" 2>> "$TI_LOG")
+			${3:+-H "Host: $3"} -w '%{http_code}' -o "$2" "$1" 2>> "$TI_LOG")
 	elif ti_have wget; then
-		ti_nohome wget -q -T 60 -t 2 -O "$2" "$1" >> "$TI_LOG" 2>&1
+		ti_nohome wget -q -T 60 -t 2 ${3:+--header="Host: $3"} -O "$2" "$1" >> "$TI_LOG" 2>&1
+	elif ti_have ftp; then
+		# OpenBSD's and NetBSD's ftp(1), which speaks HTTP and HTTPS.
+		# Last, and that order matters twice over. On a stock OpenBSD
+		# 7.9 it is the *only* downloader -- curl, wget, fetch and even
+		# bash are all absent, so before this the engine failed with
+		# "No downloader" and installed nothing at all. But on Ubuntu
+		# `ftp` is often netkit-ftp or tnftp, which may not take an
+		# http:// URL; those machines have curl or wget, so putting
+		# this last means the doubtful one is never reached.
+		#
+		# No -H: `ftp: unknown option -- H` (measured on 7.9), so a
+		# machine with only ftp gets ordinary downloads but not the
+		# by-address fallback, which needs a Host: header. -V silences
+		# the progress meter; there is no connect-timeout flag.
+		[ -n "${3:-}" ] && { ti_log "  ftp(1) cannot send a Host header; skipping the by-address try"; return 1; }
+		ti_nohome ftp -V -o "$2" "$1" >> "$TI_LOG" 2>&1
 	else
-		ti_fail "No downloader (curl or wget) on this machine."
+		ti_fail "No downloader (curl, wget or ftp) on this machine."
 	fi
 }
 
@@ -237,9 +283,67 @@ ti_download_quick() { # url out
 			-w '%{http_code}' -o "$2" "$1" 2>> "$TI_LOG")
 	elif ti_have wget; then
 		ti_nohome wget -q -T 10 -t 1 -O "$2" "$1" >> "$TI_LOG" 2>&1
+	elif ti_have ftp; then
+		ti_nohome ftp -V -o "$2" "$1" >> "$TI_LOG" 2>&1
 	else
 		return 1
 	fi
+}
+
+# The addresses worth trying for $1, best first.
+#
+# Only for the address this engine filled in itself. A backend somebody
+# chose -- --backend, or one named in a record -- is theirs, and falling
+# back from it to our machine would be answering a question nobody asked.
+# Same rule as fallbacksFor() in src/web_client/api.js.
+ti_backend_bases() { # backend
+	printf '%s\n' "$1"
+	[ "$1" = "$TI_DEFAULT_BACKEND" ] || return 0
+	printf 'http://%s\n' "${1#https://}"
+	for b in $TI_DEFAULT_BACKEND_IPS; do printf '%s\n' "$b"; done
+}
+
+# GET $2 from the server $1, trying each of its addresses. Writes $3.
+#
+# Stops at the first address that answers *at all*: a 404 or a 451 is an
+# answer, and asking the same server the same question by a different
+# route will get the same one. Only a transport failure -- curl reports
+# 000, or wget, which cannot report a code, reports nothing -- moves on
+# to the next address. Without that a taken-down installer (451) would
+# ask four times and then report the last failure rather than the
+# takedown, which is the message that actually tells the user what
+# happened.
+ti_backend_get() { # backend path out
+	ti_bg_last=
+	ti_backend_bases "$1" > "$TI_WORK/bases"
+	while IFS= read -r ti_bg_b; do
+		[ -n "$ti_bg_b" ] || continue
+		ti_download "$ti_bg_b$2" "$3" && { ti_bg_last=$ti_bg_b; return 0; }
+		case ${ti_http:-} in
+		'' | 000) ti_log "  $ti_bg_b$2: no answer; trying the next address" ;;
+		*) return 1 ;;
+		esac
+	done < "$TI_WORK/bases"
+	return 1
+}
+
+# The same, for a document the install can do without. The revocation
+# list is the one fetch here that is allowed to fail, so each address
+# gets the short timeout and no retries -- four quick tries still cost
+# less than the one long one this replaces, and on a machine with no DNS
+# the first three cost nothing at all.
+ti_backend_get_quick() { # backend path out
+	ti_bg_last=
+	ti_backend_bases "$1" > "$TI_WORK/bases.q"
+	while IFS= read -r ti_bg_b; do
+		[ -n "$ti_bg_b" ] || continue
+		ti_download_quick "$ti_bg_b$2" "$3" && { ti_bg_last=$ti_bg_b; return 0; }
+		case ${ti_http:-} in
+		'' | 000) ;;
+		*) return 1 ;;
+		esac
+	done < "$TI_WORK/bases.q"
+	return 1
 }
 
 # How the UI talks to the user: tty, zenity, kdialog, osascript, or none.
@@ -1027,7 +1131,7 @@ ti_select_target() { # plan > selection
 		# the `request` the server adds come through; the rest is
 		# named, not run.
 		if ($1 == "url") { print "srcurl\t" rest(2) }
-		else if ($1 ~ /^(record|name|project|appid|runtime|console|menu|desktop|root|rootname|signed|maxage|source|request|rtroots)$/) { print }
+		else if ($1 ~ /^(record|name|project|appid|runtime|console|menu|desktop|root|rootname|signed|maxage|source|request|rtroots|addr)$/) { print }
 		else { print "unknownkey\t" $1 }
 		next
 	}
@@ -1666,7 +1770,7 @@ ti_revocations() { # backend
 	f=$TI_WORK/revocations.txt
 	got=
 	ti_say "Checking the revocation list"
-	if ti_download_quick "$url" "$f" && [ -s "$f" ]; then
+	if ti_backend_get_quick "$1" /api/revocations "$f" && [ -s "$f" ]; then
 		sig=$(ti_doc_sig "$f" ti-revocations)
 		case $sig in
 		ok:*) got=$f ;;
@@ -1848,12 +1952,15 @@ ti_find_metadata() {
 		ti_installed_offline "$last"
 		backend=${opt_backend:-$TI_DEFAULT_BACKEND}
 		TI_REC=$TI_WORK/record.txt
-		ti_download "$backend/api/records/$last" "$TI_REC" ||
+		ti_backend_get "$backend" "/api/records/$last" "$TI_REC" ||
 			ti_fail "Could not fetch this installer's settings from $backend/api/records/$last.$(ti_http_why)"
 		got=$(ti_b32 "$(ti_sha256 "$TI_REC")" 26)
 		[ "$got" = "$last" ] ||
 			ti_fail "The settings fetched from $backend do not match this installer's name (hash $got, expected $last). Not installing."
-		TI_ORIGIN="record $last named in the file name, fetched from $backend and checked against its SHA-256"
+		# Which address answered, not which was asked for: on a machine
+		# with no DNS those differ, and the screen should say what
+		# actually happened.
+		TI_ORIGIN="record $last named in the file name, fetched from ${ti_bg_last:-$backend} and checked against its SHA-256"
 		return 0
 		;;
 	esac
@@ -1868,9 +1975,9 @@ ti_find_metadata() {
 		TI_PLAN=$TI_WORK/plan.txt TI_PLAN_KIND=fetched TI_PLAN_URL=$backend/api/plan/name/$rt/$pk
 		TI_PLAN_REQUEST="name$tab$rt$tab$pk"
 		ti_nonce "$rt/$pk"
-		ti_download "$TI_PLAN_URL$(ti_nonce_query)" "$TI_PLAN" ||
+		ti_backend_get "$backend" "/api/plan/name/$rt/$pk$(ti_nonce_query)" "$TI_PLAN" ||
 			ti_fail "This installer is named for $pk ($rt) but $backend has no plan for that name.$(ti_http_why)"
-		TI_ORIGIN="the file name (runtime $rt, package $pk); plan from $backend"
+		TI_ORIGIN="the file name (runtime $rt, package $pk); plan from ${ti_bg_last:-$backend}"
 		return 0
 		;;
 	esac
@@ -2019,9 +2126,71 @@ ti_obtain() { # sha256 out urls-file label [unpinned]
 			ti_say "  wrong SHA-256 from $u ($got); trying the next source"
 		else
 			ti_say "  download failed: $u"
+			# The name may simply not resolve. If the plan carries
+			# addresses for this host, try them before moving on:
+			# the next URL is usually a different vendor with the
+			# same problem, and our own mirror -- which is last --
+			# holds 1,256 of the catalogue's 82,105 files, so for
+			# most downloads it is not the safety net it looks like.
+			rm -f "$2.part"
+			if ti_get_by_addr "$u" "$2" "$1"; then
+				mv "$2.part" "$2"
+				return 0
+			fi
 		fi
 		rm -f "$2.part"
 	done 4< "$TI_WORK/urls.ord"
+	return 1
+}
+
+# The plan's `addr` lines: `addr<TAB>host<TAB>ip ip ...`, one per host
+# whose site is known to answer plain HTTP when addressed by IP with the
+# name in a Host: header. Written by src/shared/resolve.js from the
+# catalogue's policy, so they are as fresh as the catalogue.
+#
+# This is the download half of the same idea as ti_backend_bases: a
+# machine whose DNS does not work can still reach a server whose address
+# it was told. It is a *fallback*, tried only after a URL has failed on
+# its own terms, and it changes nothing about what is accepted -- every
+# file is still checked against the SHA-256 in the signed plan, which is
+# what makes fetching it in clear sound (the same bargain /mirror/ makes).
+#
+# Measured 2026-09-25 across the catalogue's download hosts: 9 of them,
+# carrying 35,327 of 81,007 URLs (43.6%), serve byte-identical files this
+# way; the rest redirect to https or refuse. Only the ones that work are
+# listed, so a failure here is a genuine one rather than a guess.
+ti_addr_ips() { # host -> the addresses for it, one per line
+	[ -s "$TI_SEL" ] || return 0
+	awk -F'\t' -v h="$1" '$1 == "addr" && $2 == h { for (i = 3; i <= NF; i++) if ($i != "") print $i }' "$TI_SEL"
+}
+
+# Retry $1 by address. $2 is where to put it, $3 the wanted SHA-256.
+# Prints nothing and returns 1 when there is nothing to try.
+ti_get_by_addr() { # url out sha256
+	case $1 in
+	http://* | https://*) ;;
+	*) return 1 ;;
+	esac
+	ga_rest=${1#*://}
+	ga_host=${ga_rest%%/*}
+	ga_path=/${ga_rest#*/}
+	[ "$ga_host" = "$ga_rest" ] && ga_path=/
+	# A URL that already names an address, or carries a port or
+	# credentials, is left alone: there is nothing to look up and
+	# nothing sensible to put in a Host: header.
+	case $ga_host in *[!a-zA-Z0-9.-]*) return 1 ;; esac
+	ti_addr_ips "$ga_host" > "$TI_WORK/ips" || return 1
+	[ -s "$TI_WORK/ips" ] || return 1
+	while IFS= read -r ga_ip; do
+		[ -n "$ga_ip" ] || continue
+		case $ga_ip in *:*) ga_at="[$ga_ip]" ;; *) ga_at=$ga_ip ;; esac
+		ti_say "  trying $ga_host by address ($ga_ip)"
+		if ti_download "http://$ga_at$ga_path" "$2.part" "$ga_host"; then
+			[ "$(ti_sha256 "$2.part")" = "$3" ] && return 0
+			ti_say "  wrong SHA-256 from $ga_ip; ignoring it"
+		fi
+		rm -f "$2.part"
+	done < "$TI_WORK/ips"
 	return 1
 }
 
@@ -3366,7 +3535,7 @@ ti_signer() {
 # it were the whole of it. `srcurl` and `target` are ti_select_target's
 # own; `sig` survives into the selection when the chosen block is the
 # last one in the plan.
-TI_KNOWN_KEYS='target|record|name|project|appid|console|menu|desktop|root|rootname|signed|maxage|source|srcurl|request|sig|when|minbuild|covers|runtime|file|url|step|exe|env|unset|path|ienv|iunset|install|launch|admin|note|fail|need|nwhy|ncheck|nfile|nurl|nrun|nok|npkg|nstart|nhow|rtroots|rtproof'
+TI_KNOWN_KEYS='target|record|name|project|appid|console|menu|desktop|root|rootname|signed|maxage|source|srcurl|request|sig|when|minbuild|covers|runtime|file|url|step|exe|env|unset|path|ienv|iunset|install|launch|admin|note|fail|need|nwhy|ncheck|nfile|nurl|nrun|nok|npkg|nstart|nhow|rtroots|rtproof|addr'
 TI_KNOWN_STEPS='unpack|run|mkdir|write|delete'
 
 ti_unknown_bits() { # -> "key, step foo" for everything in the selection we do not know
@@ -3489,8 +3658,9 @@ ti_install_main() {
 		TI_PLAN=$TI_WORK/plan.txt TI_PLAN_KIND=fetched TI_PLAN_URL=$backend/api/plan/$TI_RECHASH
 		ti_say "Fetching the install plan from $backend"
 		ti_nonce "$TI_RECHASH"
-		ti_download "$TI_PLAN_URL$(ti_nonce_query)" "$TI_PLAN" ||
+		ti_backend_get "$backend" "/api/plan/$TI_RECHASH$(ti_nonce_query)" "$TI_PLAN" ||
 			ti_fail "Could not fetch the install plan from $TI_PLAN_URL.$(ti_http_why)"
+		[ -n "$ti_bg_last" ] && TI_PLAN_URL=$ti_bg_last/api/plan/$TI_RECHASH
 		TI_PLAN_FROM=$TI_PLAN_URL
 	fi
 	ti_check_header "$TI_PLAN" ti-plan

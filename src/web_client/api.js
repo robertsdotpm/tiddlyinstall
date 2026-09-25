@@ -379,7 +379,14 @@ function scheduleHealth() {
 function fallbacksFor(base) {
   if (typeof location !== 'undefined' && location.protocol === 'https:') return [];
   if (normalizeApi(base) !== normalizeApi(DEFAULT_REMOTE)) return [];
-  return DEFAULT_REMOTE_IPS.slice();
+  // The same host without TLS, before the addresses. DNS and TLS fail
+  // independently: a machine whose DNS works but whose TLS cannot reach
+  // this host -- it requires TLS 1.2, and XP and Vista top out at
+  // TLS 1.0 -- is served by this rung and needs no address at all. The
+  // addresses then cover the case where the name resolves to nothing.
+  // Same set, and same order, as ti_backend_bases() in the unix engine
+  // and BackendRung in base.nsi.
+  return [DEFAULT_REMOTE.replace(/^https:/, 'http:')].concat(DEFAULT_REMOTE_IPS);
 }
 
 async function healthOf(base) {
