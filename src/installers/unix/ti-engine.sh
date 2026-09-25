@@ -46,6 +46,31 @@
 
 TI_ENGINE_VERSION=1
 TI_DEFAULT_BACKEND=https://tiddlyinstall.warpgate.io
+# The same server, reached the other three ways, tried in this order when
+# the one above will not answer. A server is a *set* of addresses here --
+# (https://name, http://name, http://v4, http://v6) -- because the two
+# things that stop an old machine reaching it fail independently:
+#
+#   DNS    the name resolves to nothing. design.md 1.3: "on very old
+#          systems DNS is often misconfigured or blocked". The addresses
+#          are the answer, and they are the reason /api/ is served by
+#          address at all.
+#   TLS    the handshake never completes. Measured 2026-09-25: the vhost
+#          requires TLS 1.2 (options-ssl-apache.conf disables TLSv1 and
+#          TLSv1.1) while XP and Vista top out at TLS 1.0, so for them no
+#          certificate of any kind helps. Every mode A cell on those two
+#          failed here; every mode B and C cell passed.
+#
+# Plain http on the last three, and that is sound for the same reason the
+# mirror is served in clear: what comes back is checked, not trusted. The
+# record is checked against the SHA-256 in this installer's own file name,
+# and the plan and the revocation list carry the plan key's Ed25519
+# signature, which is checked against TI_PLAN_PUBKEY built into this file.
+# The transport was never what made any of them safe.
+#
+# No https by address: no certificate authority issues for a bare address,
+# so https://<address>/ is a name mismatch whatever is served.
+TI_DEFAULT_BACKEND_IPS='http://158.69.27.176 http://[2607:5300:60:80b0::1]'
 # Set from the record or --backend when somebody actually chose one;
 # empty means nothing was chosen and this engine filled in the address
 # above, which is not a reason to go and talk to it (ti_revocations).
@@ -240,6 +265,62 @@ ti_download_quick() { # url out
 	else
 		return 1
 	fi
+}
+
+# The addresses worth trying for $1, best first.
+#
+# Only for the address this engine filled in itself. A backend somebody
+# chose -- --backend, or one named in a record -- is theirs, and falling
+# back from it to our machine would be answering a question nobody asked.
+# Same rule as fallbacksFor() in src/web_client/api.js.
+ti_backend_bases() { # backend
+	printf '%s\n' "$1"
+	[ "$1" = "$TI_DEFAULT_BACKEND" ] || return 0
+	printf 'http://%s\n' "${1#https://}"
+	for b in $TI_DEFAULT_BACKEND_IPS; do printf '%s\n' "$b"; done
+}
+
+# GET $2 from the server $1, trying each of its addresses. Writes $3.
+#
+# Stops at the first address that answers *at all*: a 404 or a 451 is an
+# answer, and asking the same server the same question by a different
+# route will get the same one. Only a transport failure -- curl reports
+# 000, or wget, which cannot report a code, reports nothing -- moves on
+# to the next address. Without that a taken-down installer (451) would
+# ask four times and then report the last failure rather than the
+# takedown, which is the message that actually tells the user what
+# happened.
+ti_backend_get() { # backend path out
+	ti_bg_last=
+	ti_backend_bases "$1" > "$TI_WORK/bases"
+	while IFS= read -r ti_bg_b; do
+		[ -n "$ti_bg_b" ] || continue
+		ti_download "$ti_bg_b$2" "$3" && { ti_bg_last=$ti_bg_b; return 0; }
+		case ${ti_http:-} in
+		'' | 000) ti_log "  $ti_bg_b$2: no answer; trying the next address" ;;
+		*) return 1 ;;
+		esac
+	done < "$TI_WORK/bases"
+	return 1
+}
+
+# The same, for a document the install can do without. The revocation
+# list is the one fetch here that is allowed to fail, so each address
+# gets the short timeout and no retries -- four quick tries still cost
+# less than the one long one this replaces, and on a machine with no DNS
+# the first three cost nothing at all.
+ti_backend_get_quick() { # backend path out
+	ti_bg_last=
+	ti_backend_bases "$1" > "$TI_WORK/bases.q"
+	while IFS= read -r ti_bg_b; do
+		[ -n "$ti_bg_b" ] || continue
+		ti_download_quick "$ti_bg_b$2" "$3" && { ti_bg_last=$ti_bg_b; return 0; }
+		case ${ti_http:-} in
+		'' | 000) ;;
+		*) return 1 ;;
+		esac
+	done < "$TI_WORK/bases.q"
+	return 1
 }
 
 # How the UI talks to the user: tty, zenity, kdialog, osascript, or none.
@@ -1666,7 +1747,7 @@ ti_revocations() { # backend
 	f=$TI_WORK/revocations.txt
 	got=
 	ti_say "Checking the revocation list"
-	if ti_download_quick "$url" "$f" && [ -s "$f" ]; then
+	if ti_backend_get_quick "$1" /api/revocations "$f" && [ -s "$f" ]; then
 		sig=$(ti_doc_sig "$f" ti-revocations)
 		case $sig in
 		ok:*) got=$f ;;
@@ -1848,12 +1929,15 @@ ti_find_metadata() {
 		ti_installed_offline "$last"
 		backend=${opt_backend:-$TI_DEFAULT_BACKEND}
 		TI_REC=$TI_WORK/record.txt
-		ti_download "$backend/api/records/$last" "$TI_REC" ||
+		ti_backend_get "$backend" "/api/records/$last" "$TI_REC" ||
 			ti_fail "Could not fetch this installer's settings from $backend/api/records/$last.$(ti_http_why)"
 		got=$(ti_b32 "$(ti_sha256 "$TI_REC")" 26)
 		[ "$got" = "$last" ] ||
 			ti_fail "The settings fetched from $backend do not match this installer's name (hash $got, expected $last). Not installing."
-		TI_ORIGIN="record $last named in the file name, fetched from $backend and checked against its SHA-256"
+		# Which address answered, not which was asked for: on a machine
+		# with no DNS those differ, and the screen should say what
+		# actually happened.
+		TI_ORIGIN="record $last named in the file name, fetched from ${ti_bg_last:-$backend} and checked against its SHA-256"
 		return 0
 		;;
 	esac
@@ -1868,9 +1952,9 @@ ti_find_metadata() {
 		TI_PLAN=$TI_WORK/plan.txt TI_PLAN_KIND=fetched TI_PLAN_URL=$backend/api/plan/name/$rt/$pk
 		TI_PLAN_REQUEST="name$tab$rt$tab$pk"
 		ti_nonce "$rt/$pk"
-		ti_download "$TI_PLAN_URL$(ti_nonce_query)" "$TI_PLAN" ||
+		ti_backend_get "$backend" "/api/plan/name/$rt/$pk$(ti_nonce_query)" "$TI_PLAN" ||
 			ti_fail "This installer is named for $pk ($rt) but $backend has no plan for that name.$(ti_http_why)"
-		TI_ORIGIN="the file name (runtime $rt, package $pk); plan from $backend"
+		TI_ORIGIN="the file name (runtime $rt, package $pk); plan from ${ti_bg_last:-$backend}"
 		return 0
 		;;
 	esac
@@ -3489,8 +3573,9 @@ ti_install_main() {
 		TI_PLAN=$TI_WORK/plan.txt TI_PLAN_KIND=fetched TI_PLAN_URL=$backend/api/plan/$TI_RECHASH
 		ti_say "Fetching the install plan from $backend"
 		ti_nonce "$TI_RECHASH"
-		ti_download "$TI_PLAN_URL$(ti_nonce_query)" "$TI_PLAN" ||
+		ti_backend_get "$backend" "/api/plan/$TI_RECHASH$(ti_nonce_query)" "$TI_PLAN" ||
 			ti_fail "Could not fetch the install plan from $TI_PLAN_URL.$(ti_http_why)"
+		[ -n "$ti_bg_last" ] && TI_PLAN_URL=$ti_bg_last/api/plan/$TI_RECHASH
 		TI_PLAN_FROM=$TI_PLAN_URL
 	fi
 	ti_check_header "$TI_PLAN" ti-plan
