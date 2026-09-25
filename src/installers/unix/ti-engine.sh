@@ -250,8 +250,24 @@ ti_download() { # url out [host-header]
 			${3:+-H "Host: $3"} -w '%{http_code}' -o "$2" "$1" 2>> "$TI_LOG")
 	elif ti_have wget; then
 		ti_nohome wget -q -T 60 -t 2 ${3:+--header="Host: $3"} -O "$2" "$1" >> "$TI_LOG" 2>&1
+	elif ti_have ftp; then
+		# OpenBSD's and NetBSD's ftp(1), which speaks HTTP and HTTPS.
+		# Last, and that order matters twice over. On a stock OpenBSD
+		# 7.9 it is the *only* downloader -- curl, wget, fetch and even
+		# bash are all absent, so before this the engine failed with
+		# "No downloader" and installed nothing at all. But on Ubuntu
+		# `ftp` is often netkit-ftp or tnftp, which may not take an
+		# http:// URL; those machines have curl or wget, so putting
+		# this last means the doubtful one is never reached.
+		#
+		# No -H: `ftp: unknown option -- H` (measured on 7.9), so a
+		# machine with only ftp gets ordinary downloads but not the
+		# by-address fallback, which needs a Host: header. -V silences
+		# the progress meter; there is no connect-timeout flag.
+		[ -n "${3:-}" ] && { ti_log "  ftp(1) cannot send a Host header; skipping the by-address try"; return 1; }
+		ti_nohome ftp -V -o "$2" "$1" >> "$TI_LOG" 2>&1
 	else
-		ti_fail "No downloader (curl or wget) on this machine."
+		ti_fail "No downloader (curl, wget or ftp) on this machine."
 	fi
 }
 
@@ -267,6 +283,8 @@ ti_download_quick() { # url out
 			-w '%{http_code}' -o "$2" "$1" 2>> "$TI_LOG")
 	elif ti_have wget; then
 		ti_nohome wget -q -T 10 -t 1 -O "$2" "$1" >> "$TI_LOG" 2>&1
+	elif ti_have ftp; then
+		ti_nohome ftp -V -o "$2" "$1" >> "$TI_LOG" 2>&1
 	else
 		return 1
 	fi
@@ -1113,7 +1131,7 @@ ti_select_target() { # plan > selection
 		# the `request` the server adds come through; the rest is
 		# named, not run.
 		if ($1 == "url") { print "srcurl\t" rest(2) }
-		else if ($1 ~ /^(record|name|project|appid|runtime|console|menu|desktop|root|rootname|signed|maxage|source|request|rtroots)$/) { print }
+		else if ($1 ~ /^(record|name|project|appid|runtime|console|menu|desktop|root|rootname|signed|maxage|source|request|rtroots|addr)$/) { print }
 		else { print "unknownkey\t" $1 }
 		next
 	}
