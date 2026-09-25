@@ -29,6 +29,17 @@ Two rules this keeps:
     tools/vendor_addrs.py [--write] [--registry DIR] [--policy FILE]
 
 Without --write it prints what it found and changes nothing.
+
+**--write means the catalogue has moved, so deploy after it.**
+policy.json is folded into catalog.gz by tools/snapshot.mjs, and a signed
+ti-catalog-attest document names that file's SHA-256. Changing
+vendor_addrs therefore changes the bytes the attestation is about.
+tools/deploy.sh re-signs whenever catalog.gz is newer than
+data/rtscripts/roots.txt, so the ordinary path handles it -- but writing
+here and not deploying leaves a catalogue whose attestation no longer
+matches, and the symptom is the worst kind: every runtime-script proof
+stops matching, installers say "not signed", and nothing anywhere looks
+broken. deploy.sh's own comment says the same thing at more length.
 """
 import argparse, json, os, re, socket, subprocess, sys
 from collections import Counter
