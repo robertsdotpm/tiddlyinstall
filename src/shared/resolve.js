@@ -1184,7 +1184,28 @@ function mirrorURLsByIP(cat, local) {
 // it looks like: 1,256 files against the catalogue's 82,105.
 function addVendorAddrs(cat, w) {
   const map = own(cat.policy, 'vendor_addrs');
-  if (!isMap(map)) return;
+  // Our own host belongs in here too, and it was the one host missing.
+  // A plan's `/src/` URL -- the project's own tarball -- is served from
+  // the backend over https like anything else, so on a machine that
+  // cannot do TLS 1.2 it failed after everything else had been recovered
+  // by address. Measured on XP 2026-09-25: the runtime installed, then
+  // "Couldn't download <sha>.tar.gz from any of its locations".
+  //
+  // The addresses are already known: policy.mirror_base_ips carries them
+  // for the mirror, and it is the same machine. Taken from there rather
+  // than written down twice.
+  const ours = {};
+  const mb = str(own(cat.policy, 'mirror_base'));
+  const mh = /^https?:\/\/([^/:@]+)/.exec(mb);
+  if (mh) {
+    const ips = [];
+    for (const b of list(own(cat.policy, 'mirror_base_ips'))) {
+      const m = /^https?:\/\/(\[[^\]]+\]|[^/:@]+)/.exec(str(b));
+      if (m) ips.push(m[1].replace(/^\[|\]$/g, ''));
+    }
+    if (ips.length) ours[mh[1]] = ips;
+  }
+  const look = (h) => (isMap(map) && Array.isArray(own(map, h)) ? own(map, h) : own(ours, h));
   const hosts = [], seen = new Set();
   for (const part of w.parts) {
     const tab = part.indexOf('\t');
@@ -1198,7 +1219,7 @@ function addVendorAddrs(cat, w) {
     const m = /^https?:\/\/([^/:@]+)(?:[/:]|$)/.exec(rest);
     if (!m) continue;
     const h = m[1];
-    if (seen.has(h) || !Array.isArray(own(map, h))) continue;
+    if (seen.has(h) || !Array.isArray(look(h))) continue;
     seen.add(h);
     hosts.push(h);
   }
@@ -1211,7 +1232,7 @@ function addVendorAddrs(cat, w) {
   // computed over them still matches.
   const lines = [];
   for (const h of hosts) {
-    const ips = list(own(map, h)).map(str).filter((x) => x !== '');
+    const ips = list(look(h)).map(str).filter((x) => x !== '');
     if (ips.length) lines.push('addr\t' + h + '\t' + ips.join(' ') + '\n');
   }
   if (!lines.length) return;
