@@ -179,13 +179,38 @@ Small amounts that remove real blind spots.
   the cheap half: the server is headless, so the Gatekeeper dialogs and
   Safari have never been photographed or driven. An HDMI dummy plug, or
   enabling auto-login, fixes it.
-- **ARM64 hardware. ~£80.** Plans carry arm64 blocks for Windows and
-  Linux that have never run: the ESXi host is x86 and the only ARM
-  machine is the Mac. A Raspberry Pi or a small cloud ARM instance would
-  cover Linux arm64. *Windows on ARM was ruled out of scope.*
-- **Windows licences.** The LTSC 2021 evaluation expired and shut itself
-  down hourly until it was replaced with an LTSC 2024 evaluation, which
-  will expire too. Real keys would stop that clock.
+- **ARM64 hardware. ~£80 once, or about £4 a month.** A Raspberry Pi, or
+  a small cloud ARM instance (Hetzner's CAX11 is the cheapest; ARM
+  capacity is often sold out). *Windows on ARM was ruled out of scope.*
+
+  This one got narrower on 2026-09-25 rather than going away. arm64 Linux
+  is now tested under emulation: `qemu-aarch64-static` with a binfmt_misc
+  entry, inside the existing sandbox machinery, which gives a real aarch64
+  *userland*. Five cells ran (python, go, java, node) and the very first
+  one found a real bug -- `RUNS_ON` claimed arm64 could run amd64, which
+  is true on macOS through Rosetta and false on Linux, so the one guard
+  meant to catch an arm64 machine being handed an amd64 build would have
+  passed it.
+
+  What emulation still cannot answer: it is an amd64 kernel with 4 KB
+  pages and qemu's instruction behaviour, so page-size assumptions,
+  kernel-specific behaviour and genuine silicon differences are untested.
+  5,118 arm64 Linux releases are offered on that basis. Separately,
+  **4,582 armv7 and armv6 entries are in the catalogue and the resolver
+  never offers them**, so older 32-bit ARM hardware is told there is
+  nothing for it -- a Pi covers both arches at once.
+- **Windows licences.** Measured again on 2026-09-25, mid-test-run: the
+  LTSC 2021 machine powers itself off about every 60 minutes because its
+  evaluation licence has expired. `wlms.exe` logs it plainly ("The license
+  period for this installation of Windows has expired"), and the event log
+  rules out every other explanation -- zero Kernel-Power 41, zero 6008,
+  zero BugCheck. It got 9 of 36 cells through one window and then died, so
+  those cells had to be thrown away. An Enterprise *Evaluation* edition
+  cannot be converted in place (`DISM`: "cannot be upgraded to any target
+  editions"), and Windows 10 LTSC 2021 is no longer sold, so the fix is a
+  rebuild from a current evaluation image -- of the *template*, since this
+  VM inherited a clock that had already run out. A real key would stop the
+  clock instead. LTSC 2024 is licensed and unaffected.
 - **More RAM for the ESXi host.** It was at 98% memory allocation before
   seven test VMs were right-sized; it is the reason new test machines
   have to be justified rather than simply added.
