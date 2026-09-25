@@ -20,6 +20,18 @@ XPStyle on
 !ifndef TI_BACKEND
   !define TI_BACKEND "https://tiddlyinstall.warpgate.io"
 !endif
+; The same server by address. A server is a set of four ways in --
+; (https://name, http://name, http://v4, http://v6) -- because the two
+; things that stop an old machine reaching it fail independently: DNS
+; (design.md 1.3, "on very old systems DNS is often misconfigured or
+; blocked") and TLS (this host requires TLS 1.2; XP and Vista top out at
+; TLS 1.0, so no certificate helps them). See BackendGet.
+!ifndef TI_BACKEND_V4
+  !define TI_BACKEND_V4 "http://158.69.27.176"
+!endif
+!ifndef TI_BACKEND_V6
+  !define TI_BACKEND_V6 "http://[2607:5300:60:80b0::1]"
+!endif
 !ifndef TI_VERSION
   !define TI_VERSION "0.1.0.0"
 !endif
@@ -93,6 +105,13 @@ Var PlanU16
 Var RecHash          ; 26-char base32 hash of the record
 Var Backend
 Var OptBackend
+Var BackendUsed      ; the address that actually answered (BackendGet)
+Var BgIdx
+Var BgBase
+Var BgErr
+Var BgPath
+Var BgDest
+Var BgOpt            ; 1 = the optional-document timeouts
 Var BackendGiven     ; 1 when somebody chose one, 0 when this engine
                      ; filled in the address it was compiled with
 Var MetaSrc          ; where the record came from, for the transparency page
@@ -718,6 +737,83 @@ Function DownloadOptional
   Delete "$U_b"
   inetc::get /SILENT /CONNECTTIMEOUT 5 /RECEIVETIMEOUT 15 "$U_a" "$U_b" /END
   Pop $U_out
+FunctionEnd
+
+; The addresses worth trying for $Backend, best first. $BgIdx in, $BgBase
+; out; "" when there are no more.
+;
+; Only the address this engine filled in itself expands. A backend
+; somebody chose -- /backend=, or one named in a record -- is theirs, and
+; falling back from it to our machine would answer a question nobody
+; asked. Same rule as fallbacksFor() in src/web_client/api.js and
+; ti_backend_bases() in the unix engine.
+Function BackendRung
+  Push $0
+  StrCpy $BgBase ""
+  ${If} $BgIdx = 0
+    StrCpy $BgBase $Backend
+  ${ElseIf} $BackendGiven = 1
+    StrCpy $BgBase ""
+  ${ElseIf} $BgIdx = 1
+    ; the same host without TLS
+    StrCpy $0 $Backend 8
+    ${If} $0 == "https://"
+      StrCpy $0 $Backend "" 8
+      StrCpy $BgBase "http://$0"
+    ${EndIf}
+  ${ElseIf} $BgIdx = 2
+    StrCpy $BgBase "${TI_BACKEND_V4}"
+  ${ElseIf} $BgIdx = 3
+    StrCpy $BgBase "${TI_BACKEND_V6}"
+  ${EndIf}
+  Pop $0
+FunctionEnd
+
+; GET $BgPath from the server, trying each of its addresses in turn.
+; $BgPath (starting with /) and $BgDest in; $U_out "OK" or an error, and
+; $BackendUsed = the address that answered. $BgOpt = 1 uses the
+; optional-document timeouts (the revocation list).
+;
+; Sound because nothing fetched here trusts the transport: the record is
+; checked against the SHA-256 in this installer's own file name, and the
+; plan and the revocation list carry the plan key's Ed25519 signature,
+; checked against the key built into this file. It is the rule this file
+; already states for downloads -- "a file with no SHA-256 must come over
+; HTTPS" -- applied to the fetches that always had one.
+;
+; On total failure it reports the *first* address's error, not the last.
+; That address is the canonical one, so its answer is the one worth
+; repeating: a 404 stays a 404, and a takedown stays the 451 that
+; TakenDownHint turns into a sentence the reader can act on. Reporting
+; the last rung instead would replace every real answer with whatever
+; the IPv6 attempt said on a machine with no IPv6.
+Function BackendGet
+  StrCpy $BackendUsed ""
+  StrCpy $BgErr ""
+  StrCpy $BgIdx 0
+  ${Do}
+    Call BackendRung
+    ${If} $BgBase == ""
+      ${ExitDo}
+    ${EndIf}
+    StrCpy $U_a "$BgBase$BgPath"
+    StrCpy $U_b $BgDest
+    ${If} $BgOpt = 1
+      Call DownloadOptional
+    ${Else}
+      Call DownloadQuiet
+    ${EndIf}
+    ${If} $U_out == "OK"
+      StrCpy $BackendUsed $BgBase
+      Return
+    ${EndIf}
+    ${If} $BgErr == ""
+      StrCpy $BgErr $U_out
+    ${EndIf}
+    ${Log} "  $BgBase$BgPath: $U_out"
+    IntOp $BgIdx $BgIdx + 1
+  ${Loop}
+  StrCpy $U_out $BgErr
 FunctionEnd
 
 ; Is this path inside one of this app's folders (app, runtime folders, tmp)?
@@ -1610,10 +1706,11 @@ Function FindMetadata
   Call ParseFileName
   ${If} $RecHash != ""
     Call OfflineInstalled               ; installed already? checked before fetching
-    StrCpy $U_a "$Backend/api/records/$RecHash"
-    StrCpy $U_b "$PLUGINSDIR\record.txt"
-    ${Log} "Fetching the record: $U_a"
-    Call DownloadQuiet
+    StrCpy $BgPath "/api/records/$RecHash"
+    StrCpy $BgDest "$PLUGINSDIR\record.txt"
+    StrCpy $BgOpt 0
+    ${Log} "Fetching the record: $Backend$BgPath"
+    Call BackendGet
     ${If} $U_out != "OK"
       Call TakenDownHint
       ${FailWith} "Couldn't fetch this installer's settings from $Backend/api/records/$RecHash ($U_out).$U_c"
@@ -1626,7 +1723,9 @@ Function FindMetadata
       Return
     ${EndIf}
     StrCpy $RecFile "$PLUGINSDIR\record.txt"
-    StrCpy $MetaSrc "the record $RecHash named in the file name, fetched from $Backend and checked against that hash"
+    ; the address that answered, not the one asked for: with no DNS they
+    ; differ, and the screen should say what actually happened
+    StrCpy $MetaSrc "the record $RecHash named in the file name, fetched from $BackendUsed and checked against that hash"
     Return
   ${EndIf}
   ; 5. plain file-name tokens: the plan is fetched by name
@@ -1634,14 +1733,15 @@ Function FindMetadata
   ${AndIf} $TokProject != ""
     StrCpy $U_a "$TokRuntime/$TokProject"
     Call MakeNonce
-    StrCpy $U_a "$Backend/api/plan/name/$TokRuntime/$TokProject"
-    StrCpy $PlanSrc "fetched from $U_a"
+    StrCpy $BgPath "/api/plan/name/$TokRuntime/$TokProject"
     ${If} $PlanNonce != ""
-      StrCpy $U_a "$U_a?nonce=$PlanNonce"
+      StrCpy $BgPath "$BgPath?nonce=$PlanNonce"
     ${EndIf}
-    StrCpy $U_b "$PLUGINSDIR\plan.txt"
-    ${Log} "Fetching a plan by name: $U_a"
-    Call DownloadQuiet
+    StrCpy $BgDest "$PLUGINSDIR\plan.txt"
+    StrCpy $BgOpt 0
+    ${Log} "Fetching a plan by name: $Backend$BgPath"
+    Call BackendGet
+    StrCpy $PlanSrc "fetched from $BackendUsed/api/plan/name/$TokRuntime/$TokProject"
     ${If} $U_out != "OK"
       ${FailWith} "Couldn't fetch an install plan for $TokRuntime/$TokProject from $Backend ($U_out)."
       Return
@@ -2189,10 +2289,11 @@ Function Revocations
   ${EndIf}
   StrCpy $2 ""                        ; the UTF-16 list to use
   StrCpy $3 "$LOCALAPPDATA\TiddlyInstall\revocations.txt"
-  StrCpy $U_a "$Backend/api/revocations"
-  StrCpy $U_b "$PLUGINSDIR\revocations.txt"
-  ${Log} "Fetching the revocation list: $U_a"
-  Call DownloadOptional
+  StrCpy $BgPath "/api/revocations"
+  StrCpy $BgDest "$PLUGINSDIR\revocations.txt"
+  StrCpy $BgOpt 1
+  ${Log} "Fetching the revocation list: $Backend$BgPath"
+  Call BackendGet
   ${If} $U_out == "OK"
     tisig::checkdoc "$PLUGINSDIR\revocations.txt" "${TI_PLAN_PUBKEY}" "ti-revocations"
     Pop $0
@@ -3117,13 +3218,14 @@ Function .onInit
   ${If} $PlanFile == ""
     StrCpy $U_a $RecHash
     Call MakeNonce
-    StrCpy $U_a "$Backend/api/plan/$RecHash"
+    StrCpy $BgPath "/api/plan/$RecHash"
     ${If} $PlanNonce != ""
-      StrCpy $U_a "$U_a?nonce=$PlanNonce"
+      StrCpy $BgPath "$BgPath?nonce=$PlanNonce"
     ${EndIf}
-    StrCpy $U_b "$PLUGINSDIR\plan.txt"
-    ${Log} "Fetching the plan: $U_a"
-    Call DownloadQuiet
+    StrCpy $BgDest "$PLUGINSDIR\plan.txt"
+    StrCpy $BgOpt 0
+    ${Log} "Fetching the plan: $Backend$BgPath"
+    Call BackendGet
     ${If} $U_out != "OK"
       Call TakenDownHint
       ${FailWith} "Couldn't fetch the install plan from $Backend/api/plan/$RecHash ($U_out).$U_c Check the internet connection and try again."
@@ -3131,8 +3233,8 @@ Function .onInit
     ${EndIf}
     StrCpy $PlanFile "$PLUGINSDIR\plan.txt"
     StrCpy $PlanKind "fetched"
-    StrCpy $PlanSrc "fetched from $Backend/api/plan/$RecHash"
-    StrCpy $0 $Backend 5
+    StrCpy $PlanSrc "fetched from $BackendUsed/api/plan/$RecHash"
+    StrCpy $0 $BackendUsed 5
     ${If} $0 == "http:"
       StrCpy $PlanSrc "$PlanSrc over plain HTTP"
     ${EndIf}
